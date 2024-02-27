@@ -22,65 +22,65 @@ import java.util.stream.Stream;
 
 /**
  * Controls Pac-Man using specified keys.
- * 
+ *
  * @author Armin Reichert
  */
 public class KeyboardSteering extends Steering implements EventHandler<KeyEvent> {
 
-	protected Map<KeyCodeCombination, Direction> dirByCombination = new HashMap<>();
-	protected Direction dir;
+    protected Map<KeyCodeCombination, Direction> dirByCombination = new HashMap<>();
+    protected Direction dir;
 
-	/**
-	 * Default steering: unmodified cursor keys.
-	 */
-	public KeyboardSteering() {
-		put(new KeyCodeCombination(KeyCode.UP), Direction.UP);
-		put(new KeyCodeCombination(KeyCode.DOWN), Direction.DOWN);
-		put(new KeyCodeCombination(KeyCode.LEFT), Direction.LEFT);
-		put(new KeyCodeCombination(KeyCode.RIGHT), Direction.RIGHT);
-	}
+    /**
+     * Default steering: unmodified cursor keys.
+     */
+    public KeyboardSteering() {
+        put(new KeyCodeCombination(KeyCode.UP), Direction.UP);
+        put(new KeyCodeCombination(KeyCode.DOWN), Direction.DOWN);
+        put(new KeyCodeCombination(KeyCode.LEFT), Direction.LEFT);
+        put(new KeyCodeCombination(KeyCode.RIGHT), Direction.RIGHT);
+    }
 
-	@Override
-	public void handle(KeyEvent event) {
-		if (combinations().noneMatch(c -> c.match(event))) {
-			return;
-		}
-		if (!isEnabled()) {
-			Logger.trace("Steering disabled, ignore key event '{}'", event.getCode());
-			event.consume();
-			return;
-		}
-		dir = computeDirection(event).orElse(null);
-		if (dir != null) {
-			event.consume();
-		}
-	}
+    @Override
+    public void handle(KeyEvent event) {
+        if (combinations().noneMatch(c -> c.match(event))) {
+            return;
+        }
+        if (!isEnabled()) {
+            Logger.trace("Steering disabled, ignore key event '{}'", event.getCode());
+            event.consume();
+            return;
+        }
+        dir = computeDirection(event).orElse(null);
+        if (dir != null) {
+            event.consume();
+        }
+    }
 
-	@Override
-	public void steer(GameLevel level, Creature guy) {
-		if (dir != null) {
-			guy.setWishDir(dir);
-			dir = null;
-		}
-	}
+    @Override
+    public void steer(GameLevel level, Creature guy) {
+        if (dir != null) {
+            guy.setWishDir(dir);
+            dir = null;
+        }
+    }
 
-	public void define(Direction dir, KeyCode code, Modifier... modifiers) {
-		dirByCombination.put(new KeyCodeCombination(code, modifiers), dir);
-	}
+    public void define(Direction dir, KeyCode code, Modifier... modifiers) {
+        dirByCombination.put(new KeyCodeCombination(code, modifiers), dir);
+    }
 
-	public void put(KeyCodeCombination combination, Direction dir) {
-		dirByCombination.put(combination, dir);
-	}
+    public void put(KeyCodeCombination combination, Direction dir) {
+        dirByCombination.put(combination, dir);
+    }
 
-	public Stream<KeyCodeCombination> combinations() {
-		return dirByCombination.keySet().stream();
-	}
+    public Stream<KeyCodeCombination> combinations() {
+        return dirByCombination.keySet().stream();
+    }
 
-	public boolean isSteeringEvent(KeyEvent event) {
-		return combinations().anyMatch(c -> c.match(event));
-	}
+    public boolean isSteeringEvent(KeyEvent event) {
+        return combinations().anyMatch(c -> c.match(event));
+    }
 
-	public Optional<Direction> computeDirection(KeyEvent event) {
-		return combinations().filter(c -> c.match(event)).findFirst().map(dirByCombination::get);
-	}
+    public Optional<Direction> computeDirection(KeyEvent event) {
+        return combinations().filter(c -> c.match(event)).findFirst().map(dirByCombination::get);
+    }
 }

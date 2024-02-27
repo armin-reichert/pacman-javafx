@@ -16,13 +16,13 @@ import java.util.Optional;
  */
 public interface Eatable3D {
 
-	Node getRoot();
+    Node getRoot();
 
-	void onEaten();
+    void onEaten();
 
-	Optional<Animation> getEatenAnimation();
+    Optional<Animation> getEatenAnimation();
 
-	Vector2i tile();
+    Vector2i tile();
 
-	Point3D position();
+    Point3D position();
 }

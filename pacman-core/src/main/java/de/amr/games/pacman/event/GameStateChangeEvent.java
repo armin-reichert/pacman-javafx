@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.GameModel;
 public class GameStateChangeEvent extends GameEvent {
 
     public final GameState oldState;
-    public final GameState  newState;
+    public final GameState newState;
 
     @Override
     public String toString() {

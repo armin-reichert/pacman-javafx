@@ -18,42 +18,42 @@ import static de.amr.games.pacman.lib.Globals.HTS;
  */
 public class CamFirstPerson implements CameraController {
 
-	private Pac pac;
+    private Pac pac;
 
-	public void setPac(Pac pac) {
-		this.pac = pac;
-	}
+    public void setPac(Pac pac) {
+        this.pac = pac;
+    }
 
-	@Override
-	public String toString() {
-		return "Near Player";
-	}
+    @Override
+    public String toString() {
+        return "Near Player";
+    }
 
-	@Override
-	public void reset(Camera cam) {
-		cam.setNearClip(0.1);
-		cam.setFarClip(1000.0);
-		cam.getTransforms().clear();
-		cam.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-		cam.getTransforms().add(new Rotate(90, Rotate.Y_AXIS));
-	}
+    @Override
+    public void reset(Camera cam) {
+        cam.setNearClip(0.1);
+        cam.setFarClip(1000.0);
+        cam.getTransforms().clear();
+        cam.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+        cam.getTransforms().add(new Rotate(90, Rotate.Y_AXIS));
+    }
 
-	@Override
-	public void update(Camera cam, Pac3D pac3D) {
-		var ref = pac.position().plus(pac.moveDir().vector().toFloatVec().scaled(6));
-		cam.setTranslateX(ref.x() - ArcadeWorld.TILES_X * HTS);
-		cam.setTranslateY(ref.y() - ArcadeWorld.TILES_Y * HTS);
-		cam.setTranslateZ(-6);
-		cam.setRotationAxis(Rotate.Z_AXIS);
-		cam.setRotate(rotate(pac.moveDir()));
-	}
+    @Override
+    public void update(Camera cam, Pac3D pac3D) {
+        var ref = pac.position().plus(pac.moveDir().vector().toFloatVec().scaled(6));
+        cam.setTranslateX(ref.x() - ArcadeWorld.TILES_X * HTS);
+        cam.setTranslateY(ref.y() - ArcadeWorld.TILES_Y * HTS);
+        cam.setTranslateZ(-6);
+        cam.setRotationAxis(Rotate.Z_AXIS);
+        cam.setRotate(rotate(pac.moveDir()));
+    }
 
-	private double rotate(Direction dir) {
-		return switch (dir) {
-		case LEFT -> 180;
-		case RIGHT -> 0;
-		case UP -> 270;
-		case DOWN -> 90;
-		};
-	}
+    private double rotate(Direction dir) {
+        return switch (dir) {
+            case LEFT -> 180;
+            case RIGHT -> 0;
+            case UP -> 270;
+            case DOWN -> 90;
+        };
+    }
 }

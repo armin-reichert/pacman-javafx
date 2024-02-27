@@ -10,7 +10,7 @@ import static javafx.application.Application.launch;
  * @author Armin Reichert
  */
 public class Main {
-	public static void main(String[] args) {
-		launch(PacManGames3dApp.class, args);
-	}
+    public static void main(String[] args) {
+        launch(PacManGames3dApp.class, args);
+    }
 }

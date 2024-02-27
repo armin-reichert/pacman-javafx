@@ -9,17 +9,17 @@ package de.amr.games.pacman.ui.fx.util;
  */
 public class Order<T extends Enum<T>> {
 
-	private final int[] reorderdIndex;
+    private final int[] reorderdIndex;
 
-	@SuppressWarnings("unchecked")
-	public Order(T... values) {
-		reorderdIndex = new int[values.length];
-		for (int i = 0; i < values.length; ++i) {
-			reorderdIndex[values[i].ordinal()] = i;
-		}
-	}
+    @SuppressWarnings("unchecked")
+    public Order(T... values) {
+        reorderdIndex = new int[values.length];
+        for (int i = 0; i < values.length; ++i) {
+            reorderdIndex[values[i].ordinal()] = i;
+        }
+    }
 
-	public int index(T enumValue) {
-		return reorderdIndex[enumValue.ordinal()];
-	}
+    public int index(T enumValue) {
+        return reorderdIndex[enumValue.ordinal()];
+    }
 }

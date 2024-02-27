@@ -9,7 +9,7 @@ package de.amr.games.pacman.ui.fx.v3d.model;
  */
 public class Model3DException extends RuntimeException {
 
-	public Model3DException(String message, Object... args) {
-		super(message.formatted(args));
-	}
+    public Model3DException(String message, Object... args) {
+        super(message.formatted(args));
+    }
 }

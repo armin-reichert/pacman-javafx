@@ -1,5 +1,3 @@
-
-
 ## Linux issues
 
 Ubuntu in VMWare player under Windows 10.
@@ -15,6 +13,7 @@ Codename:	jammy
 ```
 
 Starting from within IntelliJ after creating the jar using Gradle, the following exception occurs:
+
 ```
 Exception in thread "Thread-4" com.sun.media.jfxmedia.MediaException: Could not create player!
 	at javafx.media@21.0.2/com.sun.media.jfxmediaimpl.NativeMediaManager.getPlayer(NativeMediaManager.java:299)
@@ -36,6 +35,7 @@ sudo apt-install ffmpeg
 Now, 2D version works!
 
 But 3D features are not available! (Is this caused by running inside VMWare?):
+
 ```
 Feb 17, 2024 1:16:51 PM javafx.scene.paint.Material <init>
 WARNING: System can't support ConditionalFeature.SCENE3D
@@ -51,7 +51,8 @@ Feb 17, 2024 1:16:52 PM javafx.scene.shape.Mesh <init>
 WARNING: System can't support ConditionalFeature.SCENE3D
 ```
 
-Found this: https://stackoverflow.com/questions/30288837/warning-system-cant-support-conditionalfeature-scene3d-vmware-ubuntu
+Found
+this: https://stackoverflow.com/questions/30288837/warning-system-cant-support-conditionalfeature-scene3d-vmware-ubuntu
 
 Tried first: -Dprism.verbose=true
 
@@ -59,6 +60,7 @@ Tried first: -Dprism.verbose=true
 
 Ok, so let's try Maven. Call `mvn clean install -Pbuild-for-linux` first. Downloads half the internet, then gives
 error message
+
 ```
 Failed to execute goal io.github.fvarrui:javapackager:1.7.2:package (default) on project pacman-ui-fx-2d: JDK path doesn't exist: /home/armin/IdeaProjects/pacman-javafx/pacman-ui-fx-2d/C:/dev/linux/jdk-17.0.7 -> [Help 1]
 ```
@@ -159,9 +161,10 @@ Now try with Maven client: `mvn javafx:run -Dprism.verbose="true"`
 
 Same issue. No message from PRISM.
 
-Ok, so try this: 
+Ok, so try this:
 
-In IntelliJ, right-click over the "Main" class of the 3d subproject and select "More Run/Debug -> Modify Run Configuration..."
+In IntelliJ, right-click over the "Main" class of the 3d subproject and select "More Run/Debug -> Modify Run
+Configuration..."
 
 In the run configuration, add the VM parameters input field and enter `-Dprism.verbose=true -Dprism.forceGPU=true`.
 Then run the application. And, you won't believe what you see in the console:
@@ -201,6 +204,7 @@ PPSRenderer: scenario.effect - createShader: LinearConvolveShadow_20
 ```
 
 and below (whatever that means):
+
 ```
 vsync: true vpipe: true
 ```

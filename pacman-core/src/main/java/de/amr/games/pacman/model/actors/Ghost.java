@@ -21,363 +21,365 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
  * There are 4 ghosts with different "personalities".
- * 
+ *
  * @author Armin Reichert
  */
 public class Ghost extends Creature implements AnimationDirector {
 
-	public static final String ANIM_GHOST_NORMAL     = "normal";
-	public static final String ANIM_GHOST_FRIGHTENED = "frightened";
-	public static final String ANIM_GHOST_EYES       = "eyes";
-	public static final String ANIM_GHOST_FLASHING   = "flashing";
-	public static final String ANIM_GHOST_NUMBER     = "number";
-	public static final String ANIM_BLINKY_DAMAGED   = "damaged";
-	public static final String ANIM_BLINKY_STRETCHED = "stretched";
-	public static final String ANIM_BLINKY_PATCHED   = "patched";
-	public static final String ANIM_BLINKY_NAKED     = "naked";
+    public static final String ANIM_GHOST_NORMAL = "normal";
+    public static final String ANIM_GHOST_FRIGHTENED = "frightened";
+    public static final String ANIM_GHOST_EYES = "eyes";
+    public static final String ANIM_GHOST_FLASHING = "flashing";
+    public static final String ANIM_GHOST_NUMBER = "number";
+    public static final String ANIM_BLINKY_DAMAGED = "damaged";
+    public static final String ANIM_BLINKY_STRETCHED = "stretched";
+    public static final String ANIM_BLINKY_PATCHED = "patched";
+    public static final String ANIM_BLINKY_NAKED = "naked";
 
-	private final byte id;
-	private GhostState state;
-	private byte killedIndex;
-	private Consumer<Ghost> fnHuntingBehavior;
-	private Consumer<Ghost> fnFrightenedBehavior;
-	private Predicate<Direction> fnIsSteeringAllowed;
-	private House house;
-	private Vector2f revivalPosition;
-	private float speedReturningToHouse;
-	private float speedInsideHouse;
-	private Animations animations;
+    private final byte id;
+    private GhostState state;
+    private byte killedIndex;
+    private Consumer<Ghost> fnHuntingBehavior;
+    private Consumer<Ghost> fnFrightenedBehavior;
+    private Predicate<Direction> fnIsSteeringAllowed;
+    private House house;
+    private Vector2f revivalPosition;
+    private float speedReturningToHouse;
+    private float speedInsideHouse;
+    private Animations animations;
 
-	public Ghost(byte id, String name) {
-		super(name);
-		checkGhostID(id);
-		this.id = id;
-		reset();
-	}
+    public Ghost(byte id, String name) {
+        super(name);
+        checkGhostID(id);
+        this.id = id;
+        reset();
+    }
 
-	@Override
-	public String toString() {
-		return "Ghost{" +
-			"id=" + id +
-			", state=" + state +
-			", killedIndex=" + killedIndex +
-			'}';
-	}
+    @Override
+    public String toString() {
+        return "Ghost{" +
+            "id=" + id +
+            ", state=" + state +
+            ", killedIndex=" + killedIndex +
+            '}';
+    }
 
-	/**
-	 * The ghost ID. One of {@link GameModel#RED_GHOST}, {@link GameModel#PINK_GHOST}, {@link GameModel#CYAN_GHOST},
-	 * {@link GameModel#ORANGE_GHOST}.
-	 */
-	public byte id() {
-		return id;
-	}
+    /**
+     * The ghost ID. One of {@link GameModel#RED_GHOST}, {@link GameModel#PINK_GHOST}, {@link GameModel#CYAN_GHOST},
+     * {@link GameModel#ORANGE_GHOST}.
+     */
+    public byte id() {
+        return id;
+    }
 
-	public void setAnimations(Animations animations) {
-		this.animations = animations;
-	}
+    public void setAnimations(Animations animations) {
+        this.animations = animations;
+    }
 
-	@Override
-	public Optional<Animations> animations() {
-		return Optional.ofNullable(animations);
-	}
+    @Override
+    public Optional<Animations> animations() {
+        return Optional.ofNullable(animations);
+    }
 
-	@Override
-	public void reset() {
-		super.reset();
-		setKilledIndex(-1);
-	}
+    @Override
+    public void reset() {
+        super.reset();
+        setKilledIndex(-1);
+    }
 
-	public void setHouse(House house) {
-		checkNotNull(house);
-		this.house = house;
-	}
+    public void setHouse(House house) {
+        checkNotNull(house);
+        this.house = house;
+    }
 
-	public boolean insideHouse(House house) {
-		return house.contains(tile());
-	}
+    public boolean insideHouse(House house) {
+        return house.contains(tile());
+    }
 
-	public void setRevivalPosition(Vector2f revivalPosition) {
-		checkNotNull(revivalPosition);
-		this.revivalPosition = revivalPosition;
-	}
+    public void setRevivalPosition(Vector2f revivalPosition) {
+        checkNotNull(revivalPosition);
+        this.revivalPosition = revivalPosition;
+    }
 
-	public void setSpeedReturningToHouse(float pixelsPerTick) {
-		this.speedReturningToHouse = pixelsPerTick;
-	}
+    public void setSpeedReturningToHouse(float pixelsPerTick) {
+        this.speedReturningToHouse = pixelsPerTick;
+    }
 
-	public void setSpeedInsideHouse(float pixelsPerTick) {
-		this.speedInsideHouse = pixelsPerTick;
-	}
+    public void setSpeedInsideHouse(float pixelsPerTick) {
+        this.speedInsideHouse = pixelsPerTick;
+    }
 
-	public void setFnIsSteeringAllowed(Predicate<Direction> fnIsSteeringAllowed) {
-		checkNotNull(fnIsSteeringAllowed);
-		this.fnIsSteeringAllowed = fnIsSteeringAllowed;
-	}
+    public void setFnIsSteeringAllowed(Predicate<Direction> fnIsSteeringAllowed) {
+        checkNotNull(fnIsSteeringAllowed);
+        this.fnIsSteeringAllowed = fnIsSteeringAllowed;
+    }
 
-	/**
-	 * @return Index <code>(0,1,2,3)</code> telling when this ghost was killed during Pac-Man power phase. If not killed,
-	 *         value is -1.
-	 */
-	public byte killedIndex() {
-		return killedIndex;
-	}
+    /**
+     * @return Index <code>(0,1,2,3)</code> telling when this ghost was killed during Pac-Man power phase. If not killed,
+     * value is -1.
+     */
+    public byte killedIndex() {
+        return killedIndex;
+    }
 
-	public void setKilledIndex(int index) {
-		if (index < -1 || index > 3) {
-			throw new IllegalArgumentException("Killed index must be one of -1, 0, 1, 2, 3, but is: " + index);
-		}
-		this.killedIndex = (byte) index;
-	}
+    public void setKilledIndex(int index) {
+        if (index < -1 || index > 3) {
+            throw new IllegalArgumentException("Killed index must be one of -1, 0, 1, 2, 3, but is: " + index);
+        }
+        this.killedIndex = (byte) index;
+    }
 
-	public void setFnHuntingBehavior(Consumer<Ghost> fnHuntingBehavior) {
-		checkNotNull(fnHuntingBehavior);
-		this.fnHuntingBehavior = fnHuntingBehavior;
-	}
+    public void setFnHuntingBehavior(Consumer<Ghost> fnHuntingBehavior) {
+        checkNotNull(fnHuntingBehavior);
+        this.fnHuntingBehavior = fnHuntingBehavior;
+    }
 
-	public void setFnFrightenedBehavior(Consumer<Ghost> fnFrightenedBehavior) {
-		checkNotNull(fnFrightenedBehavior);
-		this.fnFrightenedBehavior = fnFrightenedBehavior;
-	}
+    public void setFnFrightenedBehavior(Consumer<Ghost> fnFrightenedBehavior) {
+        checkNotNull(fnFrightenedBehavior);
+        this.fnFrightenedBehavior = fnFrightenedBehavior;
+    }
 
-	@Override
-	public boolean canAccessTile(Vector2i tile) {
-		checkTileNotNull(tile);
-		var currentTile = tile();
-		for (var dir : Direction.values()) {
-			if (tile.equals(currentTile.plus(dir.vector())) && !fnIsSteeringAllowed.test(dir)) {
-				Logger.trace("Ghost {} cannot access tile {} because he cannot move {} at tile {}",
-					name(), tile, dir, currentTile);
-				return false;
-			}
-		}
-		if (house.door().occupies(tile)) {
-			return is(ENTERING_HOUSE, LEAVING_HOUSE);
-		}
-		return super.canAccessTile(tile);
-	}
+    @Override
+    public boolean canAccessTile(Vector2i tile) {
+        checkTileNotNull(tile);
+        var currentTile = tile();
+        for (var dir : Direction.values()) {
+            if (tile.equals(currentTile.plus(dir.vector())) && !fnIsSteeringAllowed.test(dir)) {
+                Logger.trace("Ghost {} cannot access tile {} because he cannot move {} at tile {}",
+                    name(), tile, dir, currentTile);
+                return false;
+            }
+        }
+        if (house.door().occupies(tile)) {
+            return is(ENTERING_HOUSE, LEAVING_HOUSE);
+        }
+        return super.canAccessTile(tile);
+    }
 
-	@Override
-	public boolean canReverse() {
-		return isNewTileEntered() && is(HUNTING_PAC, FRIGHTENED);
-	}
+    @Override
+    public boolean canReverse() {
+        return isNewTileEntered() && is(HUNTING_PAC, FRIGHTENED);
+    }
 
-	// Here begins the state machine part
+    // Here begins the state machine part
 
-	/** The current state of this ghost. */
-	public GhostState state() {
-		return state;
-	}
+    /**
+     * The current state of this ghost.
+     */
+    public GhostState state() {
+        return state;
+    }
 
-	/**
-	 * @param alternatives ghost states to be checked
-	 * @return <code>true</code> if this ghost is in any of the given states. If no alternatives are given, returns
-	 *         <code>false</code>
-	 */
-	public boolean is(GhostState... alternatives) {
-		if (state != null) {
-			return oneOf(state, alternatives);
-		}
-		Logger.error("Cannot check ghost state because it is undefined");
-		return false;
-	}
+    /**
+     * @param alternatives ghost states to be checked
+     * @return <code>true</code> if this ghost is in any of the given states. If no alternatives are given, returns
+     * <code>false</code>
+     */
+    public boolean is(GhostState... alternatives) {
+        if (state != null) {
+            return oneOf(state, alternatives);
+        }
+        Logger.error("Cannot check ghost state because it is undefined");
+        return false;
+    }
 
-	/**
-	 * Changes the state of this ghost.
-	 *
-	 * @param state the new state
-	 */
-	public void setState(GhostState state) {
-		checkNotNull(state);
-		this.state = state;
-		switch (state) {
-			case LOCKED, HUNTING_PAC, LEAVING_HOUSE  -> selectAnimation(ANIM_GHOST_NORMAL);
-			case EATEN                               -> selectAnimation(ANIM_GHOST_NUMBER, killedIndex);
-			case RETURNING_TO_HOUSE, ENTERING_HOUSE  -> selectAnimation(ANIM_GHOST_EYES);
-			case FRIGHTENED                          -> selectAnimation(ANIM_GHOST_FRIGHTENED);
-		}
-	}
+    /**
+     * Changes the state of this ghost.
+     *
+     * @param state the new state
+     */
+    public void setState(GhostState state) {
+        checkNotNull(state);
+        this.state = state;
+        switch (state) {
+            case LOCKED, HUNTING_PAC, LEAVING_HOUSE -> selectAnimation(ANIM_GHOST_NORMAL);
+            case EATEN -> selectAnimation(ANIM_GHOST_NUMBER, killedIndex);
+            case RETURNING_TO_HOUSE, ENTERING_HOUSE -> selectAnimation(ANIM_GHOST_EYES);
+            case FRIGHTENED -> selectAnimation(ANIM_GHOST_FRIGHTENED);
+        }
+    }
 
-	/**
-	 * Executes a single simulation step for this ghost in the current game level.
-	 *
-	 * @param pac Pac-Man or Ms. Pac-Man
-	 */
-	public void updateState(Pac pac) {
-		checkNotNull(pac);
-		switch (state) {
-			case LOCKED             -> updateStateLocked(pac);
-			case LEAVING_HOUSE      -> updateStateLeavingHouse(pac);
-			case HUNTING_PAC        -> updateStateHuntingPac();
-			case FRIGHTENED         -> updateStateFrightened(pac);
-			case EATEN              -> updateStateEaten();
-			case RETURNING_TO_HOUSE -> updateStateReturningToHouse();
-			case ENTERING_HOUSE     -> updateStateEnteringHouse();
-		}
-	}
+    /**
+     * Executes a single simulation step for this ghost in the current game level.
+     *
+     * @param pac Pac-Man or Ms. Pac-Man
+     */
+    public void updateState(Pac pac) {
+        checkNotNull(pac);
+        switch (state) {
+            case LOCKED -> updateStateLocked(pac);
+            case LEAVING_HOUSE -> updateStateLeavingHouse(pac);
+            case HUNTING_PAC -> updateStateHuntingPac();
+            case FRIGHTENED -> updateStateFrightened(pac);
+            case EATEN -> updateStateEaten();
+            case RETURNING_TO_HOUSE -> updateStateReturningToHouse();
+            case ENTERING_HOUSE -> updateStateEnteringHouse();
+        }
+    }
 
-	// --- LOCKED ---
+    // --- LOCKED ---
 
-	/**
-	 * In locked state, ghosts inside the house are bouncing up and down. They become blue when Pac-Man gets power
-	 * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
-	 */
-	private void updateStateLocked(Pac pac) {
-		if (insideHouse(house)) {
-			float minY = revivalPosition.y() - 4, maxY = revivalPosition.y() + 4;
-			setSpeed(speedInsideHouse);
-			move();
-			if (posY <= minY) {
-				setMoveAndWishDir(DOWN);
-			} else if (posY >= maxY) {
-				setMoveAndWishDir(UP);
-			}
-			posY = clamp(posY, minY, maxY);
-		} else {
-			setSpeed(0);
-		}
-		if (killable(pac)) {
-			updateFrightenedAnimation(pac);
-		} else {
-			selectAnimation(ANIM_GHOST_NORMAL);
-		}
-	}
+    /**
+     * In locked state, ghosts inside the house are bouncing up and down. They become blue when Pac-Man gets power
+     * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
+     */
+    private void updateStateLocked(Pac pac) {
+        if (insideHouse(house)) {
+            float minY = revivalPosition.y() - 4, maxY = revivalPosition.y() + 4;
+            setSpeed(speedInsideHouse);
+            move();
+            if (posY <= minY) {
+                setMoveAndWishDir(DOWN);
+            } else if (posY >= maxY) {
+                setMoveAndWishDir(UP);
+            }
+            posY = clamp(posY, minY, maxY);
+        } else {
+            setSpeed(0);
+        }
+        if (killable(pac)) {
+            updateFrightenedAnimation(pac);
+        } else {
+            selectAnimation(ANIM_GHOST_NORMAL);
+        }
+    }
 
-	// --- LEAVING_HOUSE ---
+    // --- LEAVING_HOUSE ---
 
-	/**
-	 * When a ghost leaves the house, he follows a specific route from his home/revival position to the house exit.
-	 * In the Arcade versions of Pac-Man and Ms.Pac-Man, the ghost first moves towards the vertical center of the house
-	 * and then raises up until he has passed the door on top of the house.
-	 * <p>
-	 * The ghost speed is slower than outside, but I do not know the exact value.
-	 */
-	private void updateStateLeavingHouse(Pac pac) {
-		Vector2f houseEntryPosition = house.door().entryPosition();
-		if (posY() <= houseEntryPosition.y()) {
-			// has raised and is outside house
-			setPosition(houseEntryPosition);
-			setMoveAndWishDir(LEFT);
-			newTileEntered = false; // force moving left until new tile is entered
-			if (killable(pac)) {
-				setState(FRIGHTENED);
-			} else {
-				killedIndex = -1; // TODO check this
-				setState(HUNTING_PAC);
-			}
-			return;
-		}
-		// move inside house
-		float centerX = center().x();
-		float houseCenterX = house.center().x();
-		if (differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
-			// align horizontally and raise
-			setPosX(houseCenterX - HTS);
-			setMoveAndWishDir(UP);
-		} else {
-			// move sidewards until center axis is reached
-			setMoveAndWishDir(centerX < houseCenterX ? RIGHT : LEFT);
-		}
-		setSpeed(speedInsideHouse);
-		move();
-		if (killable(pac)) {
-			updateFrightenedAnimation(pac);
-		} else {
-			selectAnimation(ANIM_GHOST_NORMAL);
-		}
-	}
+    /**
+     * When a ghost leaves the house, he follows a specific route from his home/revival position to the house exit.
+     * In the Arcade versions of Pac-Man and Ms.Pac-Man, the ghost first moves towards the vertical center of the house
+     * and then raises up until he has passed the door on top of the house.
+     * <p>
+     * The ghost speed is slower than outside, but I do not know the exact value.
+     */
+    private void updateStateLeavingHouse(Pac pac) {
+        Vector2f houseEntryPosition = house.door().entryPosition();
+        if (posY() <= houseEntryPosition.y()) {
+            // has raised and is outside house
+            setPosition(houseEntryPosition);
+            setMoveAndWishDir(LEFT);
+            newTileEntered = false; // force moving left until new tile is entered
+            if (killable(pac)) {
+                setState(FRIGHTENED);
+            } else {
+                killedIndex = -1; // TODO check this
+                setState(HUNTING_PAC);
+            }
+            return;
+        }
+        // move inside house
+        float centerX = center().x();
+        float houseCenterX = house.center().x();
+        if (differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
+            // align horizontally and raise
+            setPosX(houseCenterX - HTS);
+            setMoveAndWishDir(UP);
+        } else {
+            // move sidewards until center axis is reached
+            setMoveAndWishDir(centerX < houseCenterX ? RIGHT : LEFT);
+        }
+        setSpeed(speedInsideHouse);
+        move();
+        if (killable(pac)) {
+            updateFrightenedAnimation(pac);
+        } else {
+            selectAnimation(ANIM_GHOST_NORMAL);
+        }
+    }
 
-	// --- HUNTING_PAC ---
+    // --- HUNTING_PAC ---
 
-	/**
-	 * In each game level there are 4 alternating (scattering vs. chasing) hunting phases of different duration. The first
-	 * hunting phase is always a "scatter" phase where the ghosts retreat to their maze corners. After some time they
-	 * start chasing Pac-Man according to their character ("Shadow", "Speedy", "Bashful", "Pokey"). The 4th hunting phase
-	 * is an "infinite" chasing phase.
-	 * <p>
-	 */
-	private void updateStateHuntingPac() {
-		fnHuntingBehavior.accept(this);
-	}
+    /**
+     * In each game level there are 4 alternating (scattering vs. chasing) hunting phases of different duration. The first
+     * hunting phase is always a "scatter" phase where the ghosts retreat to their maze corners. After some time they
+     * start chasing Pac-Man according to their character ("Shadow", "Speedy", "Bashful", "Pokey"). The 4th hunting phase
+     * is an "infinite" chasing phase.
+     * <p>
+     */
+    private void updateStateHuntingPac() {
+        fnHuntingBehavior.accept(this);
+    }
 
-	// --- FRIGHTENED ---
+    // --- FRIGHTENED ---
 
-	/**
-	 * When frightened, a ghost moves randomly through the world, at each new tile he randomly decides where to move next.
-	 * Reversing the move direction is not allowed in this state either.
-	 * <p>
-	 * A frightened ghost has a blue color and starts flashing blue/white shortly (how long exactly?) before Pac-Man loses
-	 * his power. Speed is about half of the normal speed.
-	 */
-	private void updateStateFrightened(Pac pac) {
-		fnFrightenedBehavior.accept(this);
-		updateFrightenedAnimation(pac);
-	}
+    /**
+     * When frightened, a ghost moves randomly through the world, at each new tile he randomly decides where to move next.
+     * Reversing the move direction is not allowed in this state either.
+     * <p>
+     * A frightened ghost has a blue color and starts flashing blue/white shortly (how long exactly?) before Pac-Man loses
+     * his power. Speed is about half of the normal speed.
+     */
+    private void updateStateFrightened(Pac pac) {
+        fnFrightenedBehavior.accept(this);
+        updateFrightenedAnimation(pac);
+    }
 
-	private void updateFrightenedAnimation(Pac pac) {
-		if (pac.isPowerStartingToFade()) {
-			selectAnimation(ANIM_GHOST_FLASHING);
-		} else if (!pac.isPowerFading()) {
-			selectAnimation(ANIM_GHOST_FRIGHTENED);
-		}
-	}
+    private void updateFrightenedAnimation(Pac pac) {
+        if (pac.isPowerStartingToFade()) {
+            selectAnimation(ANIM_GHOST_FLASHING);
+        } else if (!pac.isPowerFading()) {
+            selectAnimation(ANIM_GHOST_FRIGHTENED);
+        }
+    }
 
-	private boolean killable(Pac pac) {
-		return pac.powerTimer().isRunning() && killedIndex == -1;
-	}
+    private boolean killable(Pac pac) {
+        return pac.powerTimer().isRunning() && killedIndex == -1;
+    }
 
-	// --- EATEN ---
+    // --- EATEN ---
 
-	/**
-	 * After a ghost is eaten by Pac-Man, he is displayed for a short time as the number of points earned for eating him.
-	 * The value doubles for each ghost eaten using the power of the same energizer.
-	 */
-	private void updateStateEaten() {
-		// wait for timeout
-	}
+    /**
+     * After a ghost is eaten by Pac-Man, he is displayed for a short time as the number of points earned for eating him.
+     * The value doubles for each ghost eaten using the power of the same energizer.
+     */
+    private void updateStateEaten() {
+        // wait for timeout
+    }
 
-	// --- RETURNING_TO_HOUSE ---
+    // --- RETURNING_TO_HOUSE ---
 
-	/**
-	 * After the short time being displayed by his value, the eaten ghost is displayed by his eyes only and returns
-	 * to the ghost house to be revived. Hallelujah!
-	 */
-	private void updateStateReturningToHouse() {
-		Vector2f houseEntry = house.door().entryPosition();
-		if (position().almostEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
-			setPosition(houseEntry);
-			setMoveAndWishDir(DOWN);
-			setState(ENTERING_HOUSE);
-		} else {
-			setSpeed(speedReturningToHouse);
-			setTargetTile(house.door().leftWing());
-			navigateTowardsTarget();
-			tryMoving();
-		}
-	}
+    /**
+     * After the short time being displayed by his value, the eaten ghost is displayed by his eyes only and returns
+     * to the ghost house to be revived. Hallelujah!
+     */
+    private void updateStateReturningToHouse() {
+        Vector2f houseEntry = house.door().entryPosition();
+        if (position().almostEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
+            setPosition(houseEntry);
+            setMoveAndWishDir(DOWN);
+            setState(ENTERING_HOUSE);
+        } else {
+            setSpeed(speedReturningToHouse);
+            setTargetTile(house.door().leftWing());
+            navigateTowardsTarget();
+            tryMoving();
+        }
+    }
 
-	// --- ENTERING_HOUSE ---
+    // --- ENTERING_HOUSE ---
 
-	/**
-	 * When an eaten ghost has arrived at the ghost house door, he falls down to the center of the house,
-	 * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
-	 */
-	private void updateStateEnteringHouse() {
-		Vector2f houseCenter = house.center();
-		if (posY >= houseCenter.y()) {
-			// reached ground
-			setPosY(houseCenter.y());
-			if (revivalPosition.x() < posX) {
-				setMoveAndWishDir(LEFT);
-			} else if (revivalPosition.x() > posX) {
-				setMoveAndWishDir(RIGHT);
-			}
-		}
-		setSpeed(speedReturningToHouse);
-		move();
-		if (posY >= revivalPosition.y() && differsAtMost(0.5 * speedReturningToHouse, posX, revivalPosition.x())) {
-			setPosition(revivalPosition);
-			setMoveAndWishDir(UP);
-			setState(LOCKED);
-		}
-	}
+    /**
+     * When an eaten ghost has arrived at the ghost house door, he falls down to the center of the house,
+     * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
+     */
+    private void updateStateEnteringHouse() {
+        Vector2f houseCenter = house.center();
+        if (posY >= houseCenter.y()) {
+            // reached ground
+            setPosY(houseCenter.y());
+            if (revivalPosition.x() < posX) {
+                setMoveAndWishDir(LEFT);
+            } else if (revivalPosition.x() > posX) {
+                setMoveAndWishDir(RIGHT);
+            }
+        }
+        setSpeed(speedReturningToHouse);
+        move();
+        if (posY >= revivalPosition.y() && differsAtMost(0.5 * speedReturningToHouse, posX, revivalPosition.x())) {
+            setPosition(revivalPosition);
+            setMoveAndWishDir(UP);
+            setState(LOCKED);
+        }
+    }
 }

@@ -9,54 +9,54 @@ import javafx.scene.Node;
 
 /**
  * Common interface of all game scenes (2D and 3D).
- * 
+ *
  * @author Armin Reichert
  */
 public interface GameScene extends GameEventListener {
 
-	boolean isScoreVisible();
+    boolean isScoreVisible();
 
-	void setScoreVisible(boolean visible);
+    void setScoreVisible(boolean visible);
 
-	/**
-	 * Called when the scene becomes the current one.
-	 */
-	default void init() {
-		// empty default
-	}
+    /**
+     * Called when the scene becomes the current one.
+     */
+    default void init() {
+        // empty default
+    }
 
-	/**
-	 * Called when the scene needs to be updated.
-	 */
-	void update();
+    /**
+     * Called when the scene needs to be updated.
+     */
+    void update();
 
-	/**
-	 * Called when the scene ends and gets replaced by another scene.
-	 */
-	default void end() {
-		// empty default
-	}
+    /**
+     * Called when the scene ends and gets replaced by another scene.
+     */
+    default void end() {
+        // empty default
+    }
 
-	/**
-	 * @return the root of the game scene (used to embed the scene into the scene graph)
-	 */
-	Node root();
+    /**
+     * @return the root of the game scene (used to embed the scene into the scene graph)
+     */
+    Node root();
 
-	/**
-	 * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.
-	 */
-	default void onSceneVariantSwitch() {
-		// empty default
-	}
+    /**
+     * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.
+     */
+    default void onSceneVariantSwitch() {
+        // empty default
+    }
 
-	/**
-	 * Handles keyboard input.
-	 */
-	default void handleKeyboardInput() {
-		// empty default
-	}
+    /**
+     * Handles keyboard input.
+     */
+    default void handleKeyboardInput() {
+        // empty default
+    }
 
-	GameSceneContext context();
+    GameSceneContext context();
 
-	void setContext(GameSceneContext context);
+    void setContext(GameSceneContext context);
 }

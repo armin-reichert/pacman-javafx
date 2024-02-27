@@ -18,31 +18,31 @@ import java.util.Locale;
  */
 public class PacManGames3dApp extends Application {
 
-	private final Settings settings = new Settings();
-	private PacManGames3dUI ui;
+    private final Settings settings = new Settings();
+    private PacManGames3dUI ui;
 
-	@Override
-	public void init() {
-		if (getParameters() != null) {
-			settings.merge(getParameters().getNamed());
-		}
-		GameController.create(settings.variant);
-		Logger.info("Game initialized: {}, locale: {}", settings, Locale.getDefault());
-		Logger.info("Java version is {}", System.getProperty("java.version"));
-	}
+    @Override
+    public void init() {
+        if (getParameters() != null) {
+            settings.merge(getParameters().getNamed());
+        }
+        GameController.create(settings.variant);
+        Logger.info("Game initialized: {}, locale: {}", settings, Locale.getDefault());
+        Logger.info("Java version is {}", System.getProperty("java.version"));
+    }
 
-	@Override
-	public void start(Stage stage) {
-		ui = new PacManGames3dUI(stage, settings);
-		GameEventManager.addListener(ui);
-		ui.showStartPage();
-		Logger.info("UI created. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
-		Logger.info("Theme: {}", ui.theme());
-	}
+    @Override
+    public void start(Stage stage) {
+        ui = new PacManGames3dUI(stage, settings);
+        GameEventManager.addListener(ui);
+        ui.showStartPage();
+        Logger.info("UI created. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
+        Logger.info("Theme: {}", ui.theme());
+    }
 
-	@Override
-	public void stop() {
-		ui.gameClock().stop();
-		Logger.info("Game stopped.");
-	}
+    @Override
+    public void stop() {
+        ui.gameClock().stop();
+        Logger.info("Game stopped.");
+    }
 }

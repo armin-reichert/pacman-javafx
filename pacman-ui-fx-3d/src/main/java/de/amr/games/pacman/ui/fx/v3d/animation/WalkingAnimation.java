@@ -11,11 +11,11 @@ import javafx.animation.Animation;
  */
 public interface WalkingAnimation {
 
-	void play();
+    void play();
 
-	void stop();
+    void stop();
 
-	void setPowerWalking(boolean power);
+    void setPowerWalking(boolean power);
 
-	Animation animation();
+    Animation animation();
 }

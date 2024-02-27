@@ -10,5 +10,5 @@ package de.amr.games.pacman.lib;
 @FunctionalInterface
 public interface FsmStateChangeListener<S> {
 
-	void onStateChange(S oldState, S neeState);
+    void onStateChange(S oldState, S neeState);
 }

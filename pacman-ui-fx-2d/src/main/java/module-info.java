@@ -3,17 +3,19 @@
  */
 open module de.amr.games.pacman.ui.fx {
 
-	// module is open to allow access to resources using class loader
+    // module is open to allow access to resources using class loader
 
-	requires javafx.graphics;
-	requires javafx.controls;
-	requires javafx.media;
-	requires org.tinylog.api;
-	requires de.amr.games.pacman;
+    requires javafx.graphics;
+    requires javafx.controls;
+    requires javafx.media;
+    requires org.tinylog.api;
+    requires de.amr.games.pacman;
 
-	exports de.amr.games.pacman.ui.fx;
-	exports de.amr.games.pacman.ui.fx.input;
-	exports de.amr.games.pacman.ui.fx.util;
-	exports de.amr.games.pacman.ui.fx.rendering2d;
-	exports de.amr.games.pacman.ui.fx.scene2d;
+    exports de.amr.games.pacman.ui.fx;
+    exports de.amr.games.pacman.ui.fx.input;
+    exports de.amr.games.pacman.ui.fx.util;
+    exports de.amr.games.pacman.ui.fx.rendering2d;
+    exports de.amr.games.pacman.ui.fx.scene2d;
+    exports de.amr.games.pacman.ui.fx.sound;
+    exports de.amr.games.pacman.ui.fx.page;
 }

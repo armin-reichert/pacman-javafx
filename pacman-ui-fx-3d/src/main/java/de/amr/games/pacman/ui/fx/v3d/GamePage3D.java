@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d;
 
-import de.amr.games.pacman.ui.fx.GamePage;
+import de.amr.games.pacman.ui.fx.page.GamePage;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -33,140 +33,140 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class GamePage3D extends GamePage {
 
-	private final BorderPane topLayer; // contains dashboard and picture-in-picture view
-	private final PictureInPicture pip;
-	private final Pane dashboard;
-	private final GamePageContextMenu contextMenu;
-	private final List<InfoBox> infoBoxes = new ArrayList<>();
+    private final BorderPane topLayer; // contains dashboard and picture-in-picture view
+    private final PictureInPicture pip;
+    private final Pane dashboard;
+    private final GamePageContextMenu contextMenu;
+    private final List<InfoBox> infoBoxes = new ArrayList<>();
 
-	public GamePage3D(Scene parentScene, GameSceneContext sceneContext, double width, double height) {
-		super(sceneContext, width, height);
+    public GamePage3D(Scene parentScene, GameSceneContext sceneContext, double width, double height) {
+        super(sceneContext, width, height);
 
-		pip = createPictureInPicture();
-		contextMenu = createContextMenu(parentScene);
-		dashboard = createDashboard();
+        pip = createPictureInPicture();
+        contextMenu = createContextMenu(parentScene);
+        dashboard = createDashboard();
 
-		topLayer = new BorderPane();
-		topLayer.setLeft(dashboard);
-		topLayer.setRight(pip.canvas());
+        topLayer = new BorderPane();
+        topLayer.setLeft(dashboard);
+        topLayer.setRight(pip.canvas());
 
-		canvasLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
+        canvasLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
 
-		getLayersContainer().getChildren().add(topLayer);
+        getLayersContainer().getChildren().add(topLayer);
 
-		PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateBackground3D());
-		PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground3D());
-		PY_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
-		dashboard.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());
+        PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateBackground3D());
+        PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground3D());
+        PY_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
+        dashboard.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());
 
-		updateTopLayer();
-	}
+        updateTopLayer();
+    }
 
-	private GamePageContextMenu createContextMenu(Scene parentScene) {
-		var menu = new GamePageContextMenu(sceneContext);
-		parentScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-			menu.hide();
-			if (e.getButton() == MouseButton.SECONDARY) {
-				sceneContext.currentGameScene().ifPresent(gameScene -> {
-					if (gameScene == sceneContext.sceneConfig().get("play") ||
-						gameScene == sceneContext.sceneConfig().get("play3D")) {
-						menu.rebuild(gameScene);
-						menu.show(parentScene.getRoot(), e.getScreenX(), e.getScreenY());
-					}
-				});
-			}
-		});
-		return menu;
-	}
+    private GamePageContextMenu createContextMenu(Scene parentScene) {
+        var menu = new GamePageContextMenu(sceneContext);
+        parentScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            menu.hide();
+            if (e.getButton() == MouseButton.SECONDARY) {
+                sceneContext.currentGameScene().ifPresent(gameScene -> {
+                    if (gameScene == sceneContext.sceneConfig().get("play") ||
+                        gameScene == sceneContext.sceneConfig().get("play3D")) {
+                        menu.rebuild(gameScene);
+                        menu.show(parentScene.getRoot(), e.getScreenX(), e.getScreenY());
+                    }
+                });
+            }
+        });
+        return menu;
+    }
 
-	private PictureInPicture createPictureInPicture() {
-		var pip = new PictureInPicture(sceneContext);
-		pip.opacityPy.bind(PY_PIP_OPACITY);
-		pip.heightPy.bind(PY_PIP_HEIGHT);
-		return pip;
-	}
+    private PictureInPicture createPictureInPicture() {
+        var pip = new PictureInPicture(sceneContext);
+        pip.opacityPy.bind(PY_PIP_OPACITY);
+        pip.heightPy.bind(PY_PIP_HEIGHT);
+        return pip;
+    }
 
-	private VBox createDashboard() {
-		var db = new VBox();
-		infoBoxes.add(new InfoBoxGeneral(sceneContext.theme(), sceneContext.tt("infobox.general.title")));
-		infoBoxes.add(new InfoBoxGameControl(sceneContext.theme(), sceneContext.tt("infobox.game_control.title")));
-		infoBoxes.add(new InfoBox3D(sceneContext.theme(), sceneContext.tt("infobox.3D_settings.title")));
-		infoBoxes.add(new InfoBoxGameInfo(sceneContext.theme(), sceneContext.tt("infobox.game_info.title")));
-		infoBoxes.add(new InfoBoxGhostsInfo(sceneContext.theme(), sceneContext.tt("infobox.ghosts_info.title")));
-		infoBoxes.add(new InfoBoxKeys(sceneContext.theme(), sceneContext.tt("infobox.keyboard_shortcuts.title")));
-		infoBoxes.add(new InfoBoxAbout(sceneContext.theme(), sceneContext.tt("infobox.about.title")));
-		infoBoxes.forEach(infoBox -> {
-			db.getChildren().add(infoBox.getRoot());
-			infoBox.init(sceneContext);
-		});
-		db.setVisible(false);
-		return db;
-	}
+    private VBox createDashboard() {
+        var db = new VBox();
+        infoBoxes.add(new InfoBoxGeneral(sceneContext.theme(), sceneContext.tt("infobox.general.title")));
+        infoBoxes.add(new InfoBoxGameControl(sceneContext.theme(), sceneContext.tt("infobox.game_control.title")));
+        infoBoxes.add(new InfoBox3D(sceneContext.theme(), sceneContext.tt("infobox.3D_settings.title")));
+        infoBoxes.add(new InfoBoxGameInfo(sceneContext.theme(), sceneContext.tt("infobox.game_info.title")));
+        infoBoxes.add(new InfoBoxGhostsInfo(sceneContext.theme(), sceneContext.tt("infobox.ghosts_info.title")));
+        infoBoxes.add(new InfoBoxKeys(sceneContext.theme(), sceneContext.tt("infobox.keyboard_shortcuts.title")));
+        infoBoxes.add(new InfoBoxAbout(sceneContext.theme(), sceneContext.tt("infobox.about.title")));
+        infoBoxes.forEach(infoBox -> {
+            db.getChildren().add(infoBox.getRoot());
+            infoBox.init(sceneContext);
+        });
+        db.setVisible(false);
+        return db;
+    }
 
-	@Override
-	public void onGameSceneChanged(GameScene newGameScene) {
-		if (isCurrentGameScene3D()) {
-			if (newGameScene == sceneContext.sceneConfig().get("play3D")) {
-				// Note: event handler is removed again in super.onGameSceneChanged() call
-				getLayersContainer().addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) sceneContext.gameController().manualPacSteering());
-			}
-			getLayersContainer().getChildren().set(0, newGameScene.root());
-		} else {
-			getLayersContainer().getChildren().set(0, canvasLayer);
-			super.onGameSceneChanged(newGameScene);
-		}
-		updateBackground3D();
-		updateHelpButton();
-		updateTopLayer();
-		contextMenu.hide();
-	}
+    @Override
+    public void onGameSceneChanged(GameScene newGameScene) {
+        if (isCurrentGameScene3D()) {
+            if (newGameScene == sceneContext.sceneConfig().get("play3D")) {
+                // Note: event handler is removed again in super.onGameSceneChanged() call
+                getLayersContainer().addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) sceneContext.gameController().manualPacSteering());
+            }
+            getLayersContainer().getChildren().set(0, newGameScene.root());
+        } else {
+            getLayersContainer().getChildren().set(0, canvasLayer);
+            super.onGameSceneChanged(newGameScene);
+        }
+        updateBackground3D();
+        updateHelpButton();
+        updateTopLayer();
+        contextMenu.hide();
+    }
 
-	private void updateTopLayer() {
-		topLayer.setVisible(dashboard.isVisible() || PY_PIP_ON.get());
-		getLayersContainer().requestFocus();
-	}
+    private void updateTopLayer() {
+        topLayer.setVisible(dashboard.isVisible() || PY_PIP_ON.get());
+        getLayersContainer().requestFocus();
+    }
 
-	private void updateBackground3D() {
-		if (isCurrentGameScene3D()) {
-			if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
-				getLayersContainer().setBackground(ResourceManager.coloredBackground(Color.BLACK));
-			} else {
-				var wallpaperKey = PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
-				getLayersContainer().setBackground(sceneContext.theme().background(wallpaperKey));
-			}
-		}
-	}
+    private void updateBackground3D() {
+        if (isCurrentGameScene3D()) {
+            if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
+                getLayersContainer().setBackground(ResourceManager.coloredBackground(Color.BLACK));
+            } else {
+                var wallpaperKey = PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
+                getLayersContainer().setBackground(sceneContext.theme().background(wallpaperKey));
+            }
+        }
+    }
 
-	private boolean isCurrentGameScene3D() {
-		return sceneContext.currentGameScene().isPresent()
-			&& sceneContext.currentGameScene().get() instanceof PlayScene3D;
-	}
+    private boolean isCurrentGameScene3D() {
+        return sceneContext.currentGameScene().isPresent()
+            && sceneContext.currentGameScene().get() instanceof PlayScene3D;
+    }
 
-	@Override
-	protected boolean isCurrentGameScene2D() {
-		return !isCurrentGameScene3D();
-	}
+    @Override
+    protected boolean isCurrentGameScene2D() {
+        return !isCurrentGameScene3D();
+    }
 
-	@Override
-	public void render() {
-		super.render();
-		contextMenu.updateState();
-		infoBoxes.forEach(InfoBox::update);
-		pip.canvas().setVisible(PY_PIP_ON.get() && isCurrentGameScene3D());
-		pip.draw();
-	}
+    @Override
+    public void render() {
+        super.render();
+        contextMenu.updateState();
+        infoBoxes.forEach(InfoBox::update);
+        pip.canvas().setVisible(PY_PIP_ON.get() && isCurrentGameScene3D());
+        pip.draw();
+    }
 
-	@Override
-	protected void handleKeyboardInput() {
-		var actionHandler = (ActionHandler3D) sceneContext.actionHandler();
-		if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
-			actionHandler.toggle2D3D();
-		} else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
-			dashboard.setVisible(!dashboard.isVisible());
-		} else if (Keyboard.pressed(KEY_TOGGLE_PIP_VIEW)) {
-			actionHandler.togglePipVisible();
-		} else {
-			super.handleKeyboardInput();
-		}
-	}
+    @Override
+    protected void handleKeyboardInput() {
+        var actionHandler = (ActionHandler3D) sceneContext.actionHandler();
+        if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
+            actionHandler.toggle2D3D();
+        } else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
+            dashboard.setVisible(!dashboard.isVisible());
+        } else if (Keyboard.pressed(KEY_TOGGLE_PIP_VIEW)) {
+            actionHandler.togglePipVisible();
+        } else {
+            super.handleKeyboardInput();
+        }
+    }
 }

@@ -17,19 +17,19 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class GameEvent {
 
-	public final GameEventType type;
-	public final GameModel     game;
-	public final Vector2i      tile;
+    public final GameEventType type;
+    public final GameModel game;
+    public final Vector2i tile;
 
-	public GameEvent(GameEventType type, GameModel game, Vector2i tile)  {
-		checkNotNull(type);
-		checkGameNotNull(game);
-		this.type = type;
-		this.game = game;
-		this.tile = tile;
-	}
+    public GameEvent(GameEventType type, GameModel game, Vector2i tile) {
+        checkNotNull(type);
+        checkGameNotNull(game);
+        this.type = type;
+        this.game = game;
+        this.tile = tile;
+    }
 
-	public Optional<Vector2i> tile() {
-		return Optional.ofNullable(tile);
-	}
+    public Optional<Vector2i> tile() {
+        return Optional.ofNullable(tile);
+    }
 }

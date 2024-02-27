@@ -40,27 +40,27 @@ import static de.amr.games.pacman.lib.Globals.v2f;
  */
 public class FoodOscillation extends Transition {
 
-	private static final Vector2f CENTER = v2f(0.5f * TS * ArcadeWorld.TILES_X, 0.5f * TS * ArcadeWorld.TILES_Y);
+    private static final Vector2f CENTER = v2f(0.5f * TS * ArcadeWorld.TILES_X, 0.5f * TS * ArcadeWorld.TILES_Y);
 
-	private final Group foodGroup;
+    private final Group foodGroup;
 
-	public FoodOscillation(Group foodGroup) {
-		this.foodGroup = foodGroup;
-		setCycleDuration(Duration.seconds(0.6));
-		setCycleCount(INDEFINITE);
-		setAutoReverse(true);
-		setInterpolator(Interpolator.LINEAR);
-	}
+    public FoodOscillation(Group foodGroup) {
+        this.foodGroup = foodGroup;
+        setCycleDuration(Duration.seconds(0.6));
+        setCycleCount(INDEFINITE);
+        setAutoReverse(true);
+        setInterpolator(Interpolator.LINEAR);
+    }
 
-	@Override
-	protected void interpolate(double t) {
-		for (var node : foodGroup.getChildren()) {
-			if (node.getUserData() instanceof Pellet3D pellet3D) {
-				var position2D = new Vector2f((float) pellet3D.position().getX(), (float) pellet3D.position().getY());
-				var centerDistance = position2D.euclideanDistance(CENTER);
-				double dz = 2 * Math.sin(2 * centerDistance) * t;
-				node.setTranslateZ(-4 + dz);
-			}
-		}
-	}
+    @Override
+    protected void interpolate(double t) {
+        for (var node : foodGroup.getChildren()) {
+            if (node.getUserData() instanceof Pellet3D pellet3D) {
+                var position2D = new Vector2f((float) pellet3D.position().getX(), (float) pellet3D.position().getY());
+                var centerDistance = position2D.euclideanDistance(CENTER);
+                double dz = 2 * Math.sin(2 * centerDistance) * t;
+                node.setTranslateZ(-4 + dz);
+            }
+        }
+    }
 }

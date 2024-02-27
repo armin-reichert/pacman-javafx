@@ -12,19 +12,19 @@ import javafx.scene.transform.Rotate;
  */
 public class CamTotal implements CameraController {
 
-	@Override
-	public void reset(Camera cam) {
-		cam.setNearClip(0.1);
-		cam.setFarClip(10000.0);
-		cam.setTranslateX(0);
-		cam.setTranslateY(340);
-		cam.setTranslateZ(-180);
-		cam.setRotationAxis(Rotate.X_AXIS);
-		cam.setRotate(60);
-	}
+    @Override
+    public void reset(Camera cam) {
+        cam.setNearClip(0.1);
+        cam.setFarClip(10000.0);
+        cam.setTranslateX(0);
+        cam.setTranslateY(340);
+        cam.setTranslateZ(-180);
+        cam.setRotationAxis(Rotate.X_AXIS);
+        cam.setRotate(60);
+    }
 
-	@Override
-	public String toString() {
-		return "Total";
-	}
+    @Override
+    public String toString() {
+        return "Total";
+    }
 }

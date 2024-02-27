@@ -15,30 +15,30 @@ import org.tinylog.Logger;
  */
 public class PacManGames2dApp extends Application {
 
-	private final Settings settings = new Settings();
-	private PacManGames2dUI ui;
+    private final Settings settings = new Settings();
+    private PacManGames2dUI ui;
 
-	@Override
-	public void init() {
-		if (getParameters() != null) {
-			settings.merge(getParameters().getNamed());
-		}
-		GameController.create(settings.variant);
-		Logger.info("Game initialized: {}", settings);
-	}
+    @Override
+    public void init() {
+        if (getParameters() != null) {
+            settings.merge(getParameters().getNamed());
+        }
+        GameController.create(settings.variant);
+        Logger.info("Game initialized: {}", settings);
+    }
 
-	@Override
-	public void start(Stage stage) {
-		ui = new PacManGames2dUI(stage, settings);
-		GameEventManager.addListener(ui);
-		ui.showStartPage();
-		Logger.info("UI initialized. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
-		Logger.info("Theme: {}", ui.theme());
-	}
+    @Override
+    public void start(Stage stage) {
+        ui = new PacManGames2dUI(stage, settings);
+        GameEventManager.addListener(ui);
+        ui.showStartPage();
+        Logger.info("UI initialized. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
+        Logger.info("Theme: {}", ui.theme());
+    }
 
-	@Override
-	public void stop() {
-		ui.gameClock().stop();
-		Logger.info("Game stopped.");
-	}
+    @Override
+    public void stop() {
+        ui.gameClock().stop();
+        Logger.info("Game stopped.");
+    }
 }

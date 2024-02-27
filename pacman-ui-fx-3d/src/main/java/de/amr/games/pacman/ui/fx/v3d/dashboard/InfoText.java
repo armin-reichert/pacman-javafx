@@ -11,34 +11,34 @@ import java.util.function.Supplier;
 
 /**
  * Text field whose text is conditionally computed.
- * 
+ *
  * @author Armin Reichert
  */
 public class InfoText extends Text {
 
-	public static final String NO_INFO = "n/a";
+    public static final String NO_INFO = "n/a";
 
-	private BooleanSupplier fnAvailable = () -> true;
-	private Supplier<?> fnText = () -> "Value";
+    private BooleanSupplier fnAvailable = () -> true;
+    private Supplier<?> fnText = () -> "Value";
 
-	public InfoText(String text) {
-		this(() -> text);
-	}
+    public InfoText(String text) {
+        this(() -> text);
+    }
 
-	public InfoText(Supplier<?> fnText) {
-		this.fnText = fnText;
-	}
+    public InfoText(Supplier<?> fnText) {
+        this.fnText = fnText;
+    }
 
-	public InfoText available(BooleanSupplier fnEvaluate) {
-		this.fnAvailable = fnEvaluate;
-		return this;
-	}
+    public InfoText available(BooleanSupplier fnEvaluate) {
+        this.fnAvailable = fnEvaluate;
+        return this;
+    }
 
-	public void update() {
-		if (fnAvailable.getAsBoolean()) {
-			setText(String.valueOf(fnText.get()));
-		} else {
-			setText(InfoText.NO_INFO);
-		}
-	}
+    public void update() {
+        if (fnAvailable.getAsBoolean()) {
+            setText(String.valueOf(fnText.get()));
+        } else {
+            setText(InfoText.NO_INFO);
+        }
+    }
 }

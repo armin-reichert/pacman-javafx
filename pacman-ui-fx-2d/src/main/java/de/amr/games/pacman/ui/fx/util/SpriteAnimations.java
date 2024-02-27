@@ -13,51 +13,51 @@ import org.tinylog.Logger;
  */
 public abstract class SpriteAnimations implements Animations {
 
-	protected String currentAnimationName;
+    protected String currentAnimationName;
 
-	public String currentAnimationName() {
-		return currentAnimationName;
-	}
+    public String currentAnimationName() {
+        return currentAnimationName;
+    }
 
-	@Override
-	public SpriteAnimation currentAnimation() {
-		return animation(currentAnimationName);
-	}
+    @Override
+    public SpriteAnimation currentAnimation() {
+        return animation(currentAnimationName);
+    }
 
-	public abstract Rectangle2D currentSprite();
+    public abstract Rectangle2D currentSprite();
 
-	public abstract SpriteAnimation animation(String name);
+    public abstract SpriteAnimation animation(String name);
 
-	@Override
-	public void select(String name, int index) {
-		if (!name.equals(currentAnimationName)) {
-			currentAnimationName = name;
-			if (currentAnimation() != null) {
-				currentAnimation().setFrameIndex(0);
-			} else {
-				Logger.warn("No animation with name {} exists", name);
-			}
-		}
-	}
+    @Override
+    public void select(String name, int index) {
+        if (!name.equals(currentAnimationName)) {
+            currentAnimationName = name;
+            if (currentAnimation() != null) {
+                currentAnimation().setFrameIndex(0);
+            } else {
+                Logger.warn("No animation with name {} exists", name);
+            }
+        }
+    }
 
-	@Override
-	public void startSelected() {
-		if (currentAnimation() != null) {
-			currentAnimation().start();
-		}
-	}
+    @Override
+    public void startSelected() {
+        if (currentAnimation() != null) {
+            currentAnimation().start();
+        }
+    }
 
-	@Override
-	public void stopSelected() {
-		if (currentAnimation() != null) {
-			currentAnimation().stop();
-		}
-	}
+    @Override
+    public void stopSelected() {
+        if (currentAnimation() != null) {
+            currentAnimation().stop();
+        }
+    }
 
-	@Override
-	public void resetSelected() {
-		if (currentAnimation() != null) {
-			currentAnimation().reset();
-		}
-	}
+    @Override
+    public void resetSelected() {
+        if (currentAnimation() != null) {
+            currentAnimation().reset();
+        }
+    }
 }

@@ -9,32 +9,32 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MoveResult {
-	public boolean moved;
-	public boolean tunnelEntered;
-	public boolean teleported;
-	private final List<String> messages = new ArrayList<>(3);
+    public boolean moved;
+    public boolean tunnelEntered;
+    public boolean teleported;
+    private final List<String> messages = new ArrayList<>(3);
 
-	public void clear() {
-		moved = false;
-		tunnelEntered = false;
-		teleported = false;
-		messages.clear();
-	}
+    public void clear() {
+        moved = false;
+        tunnelEntered = false;
+        teleported = false;
+        messages.clear();
+    }
 
-	public void addMessage(String message) {
-		messages.add(message);
-	}
+    public void addMessage(String message) {
+        messages.add(message);
+    }
 
-	public String summary() {
-		return messages.stream().collect(Collectors.joining(", "));
-	}
+    public String summary() {
+        return messages.stream().collect(Collectors.joining(", "));
+    }
 
-	@Override
-	public String toString() {
-		var sb = new StringBuilder("");
-		sb.append(tunnelEntered ? " entered tunnel" : "");
-		sb.append(teleported ? " teleported" : "");
-		sb.append(moved ? " moved" : "");
-		return sb.length() == 0 ? "" : "[" + sb.toString().trim() + "]";
-	}
+    @Override
+    public String toString() {
+        var sb = new StringBuilder("");
+        sb.append(tunnelEntered ? " entered tunnel" : "");
+        sb.append(teleported ? " teleported" : "");
+        sb.append(moved ? " moved" : "");
+        return sb.length() == 0 ? "" : "[" + sb.toString().trim() + "]";
+    }
 }

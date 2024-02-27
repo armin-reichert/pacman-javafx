@@ -23,90 +23,90 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * 3D energizer pellet.
- * 
+ *
  * @author Armin Reichert
  */
 public class Energizer3D implements Eatable3D {
 
-	private static final double MIN_SCALE = 0.25;
+    private static final double MIN_SCALE = 0.25;
 
-	private final Shape3D shape;
-	private final ScaleTransition pumping;
-	private Animation eatenAnimation;
+    private final Shape3D shape;
+    private final ScaleTransition pumping;
+    private Animation eatenAnimation;
 
-	public Energizer3D(double radius) {
-		requirePositive(radius, "Energizer radius must be positive but is %f");
+    public Energizer3D(double radius) {
+        requirePositive(radius, "Energizer radius must be positive but is %f");
 
-		shape = new Sphere(radius);
-		shape.setUserData(this);
+        shape = new Sphere(radius);
+        shape.setUserData(this);
 
-		pumping = new ScaleTransition(Duration.seconds(1.0 / 4), shape);
-		pumping.setAutoReverse(true);
-		pumping.setCycleCount(Animation.INDEFINITE);
-		pumping.setInterpolator(Interpolator.EASE_BOTH);
-		pumping.setFromX(1.0);
-		pumping.setFromY(1.0);
-		pumping.setFromZ(1.0);
-		pumping.setToX(MIN_SCALE);
-		pumping.setToY(MIN_SCALE);
-		pumping.setToZ(MIN_SCALE);
-	}
+        pumping = new ScaleTransition(Duration.seconds(1.0 / 4), shape);
+        pumping.setAutoReverse(true);
+        pumping.setCycleCount(Animation.INDEFINITE);
+        pumping.setInterpolator(Interpolator.EASE_BOTH);
+        pumping.setFromX(1.0);
+        pumping.setFromY(1.0);
+        pumping.setFromZ(1.0);
+        pumping.setToX(MIN_SCALE);
+        pumping.setToY(MIN_SCALE);
+        pumping.setToZ(MIN_SCALE);
+    }
 
-	@Override
-	public String toString() {
-		var pumpingText = pumping.getStatus() == Status.RUNNING ? ", pumping" : "";
-		return String.format("[Energizer%s, tile: %s, %s]", pumpingText, tile(), shape);
-	}
+    @Override
+    public String toString() {
+        var pumpingText = pumping.getStatus() == Status.RUNNING ? ", pumping" : "";
+        return String.format("[Energizer%s, tile: %s, %s]", pumpingText, tile(), shape);
+    }
 
-	public void placeAtTile(Vector2i tile) {
-		requireNonNull(tile);
+    public void placeAtTile(Vector2i tile) {
+        requireNonNull(tile);
 
-		shape.setTranslateX(tile.x() * TS + HTS);
-		shape.setTranslateY(tile.y() * TS + HTS);
-		shape.setTranslateZ(-HTS);
-	}
+        shape.setTranslateX(tile.x() * TS + HTS);
+        shape.setTranslateY(tile.y() * TS + HTS);
+        shape.setTranslateZ(-HTS);
+    }
 
-	@Override
-	public Point3D position() {
-		return new Point3D(shape.getTranslateX(), shape.getTranslateY(), shape.getTranslateZ());
-	}
+    @Override
+    public Point3D position() {
+        return new Point3D(shape.getTranslateX(), shape.getTranslateY(), shape.getTranslateZ());
+    }
 
-	@Override
-	public Vector2i tile() {
-		return tileAt((float) shape.getTranslateX(), (float) shape.getTranslateY());
-	}
+    @Override
+    public Vector2i tile() {
+        return tileAt((float) shape.getTranslateX(), (float) shape.getTranslateY());
+    }
 
-	@Override
-	public Shape3D getRoot() {
-		return shape;
-	}
+    @Override
+    public Shape3D getRoot() {
+        return shape;
+    }
 
-	@Override
-	public Optional<Animation> getEatenAnimation() {
-		return Optional.ofNullable(eatenAnimation);
-	}
+    @Override
+    public Optional<Animation> getEatenAnimation() {
+        return Optional.ofNullable(eatenAnimation);
+    }
 
-	public void setEatenAnimation(Animation animation) {
-		this.eatenAnimation = animation;
-	}
+    public void setEatenAnimation(Animation animation) {
+        this.eatenAnimation = animation;
+    }
 
-	@Override
-	public void onEaten() {
-		pumping.stop();
-		// TODO check this
-		var hideAfterDelay = Ufx.actionAfterSeconds(0.05, () -> shape.setVisible(false));
-		if (eatenAnimation != null) {
-			new SequentialTransition(hideAfterDelay, eatenAnimation).play();
-		} else {
-			hideAfterDelay.play();
-		}
-	}
+    @Override
+    public void onEaten() {
+        pumping.stop();
+        // TODO check this
+        var hideAfterDelay = Ufx.actionAfterSeconds(0.05, () -> shape.setVisible(false));
+        if (eatenAnimation != null) {
+            new SequentialTransition(hideAfterDelay, eatenAnimation).play();
+        } else {
+            hideAfterDelay.play();
+        }
+    }
 
-	public void startPumping() {
-		pumping.playFromStart();
-	}
+    public void startPumping() {
+        pumping.playFromStart();
+    }
 
-	public void stopPumping() {
-		pumping.stop();
-	}
+    public void stopPumping() {
+        pumping.stop();
+    }
 }

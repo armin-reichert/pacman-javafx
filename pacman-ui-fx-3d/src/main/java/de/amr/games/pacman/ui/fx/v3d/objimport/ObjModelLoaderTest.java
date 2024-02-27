@@ -14,14 +14,14 @@ import org.tinylog.Logger;
  */
 public class ObjModelLoaderTest {
 
-	public static void main(String[] args) {
-		if (args.length > 0) {
-			ResourceManager rm = () -> PacManGames3dUI.class;
-			var url = rm.url(args[0]);
-			var model = new Model3D(url);
-			System.out.println(model.contentReport());
-		} else {
-			Logger.error("Missing model file path (relative to asset folder)");
-		}
-	}
+    public static void main(String[] args) {
+        if (args.length > 0) {
+            ResourceManager rm = () -> PacManGames3dUI.class;
+            var url = rm.url(args[0]);
+            var model = new Model3D(url);
+            System.out.println(model.contentReport());
+        } else {
+            Logger.error("Missing model file path (relative to asset folder)");
+        }
+    }
 }

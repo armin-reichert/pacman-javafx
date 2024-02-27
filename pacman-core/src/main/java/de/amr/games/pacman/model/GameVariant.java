@@ -8,9 +8,9 @@ import de.amr.games.pacman.lib.EnumMethods;
 
 /**
  * Game variants that can be played.
- * 
+ *
  * @author Armin Reichert
  */
 public enum GameVariant implements EnumMethods<GameVariant> {
-	MS_PACMAN, PACMAN;
+    MS_PACMAN, PACMAN;
 }

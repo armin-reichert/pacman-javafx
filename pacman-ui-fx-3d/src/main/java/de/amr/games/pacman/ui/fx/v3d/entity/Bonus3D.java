@@ -26,112 +26,112 @@ import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * 3D bonus symbol.
- * 
+ *
  * @author Armin Reichert
  */
 public class Bonus3D {
 
-	private final Bonus bonus;
-	private final Image symbolImage;
-	private final Image pointsImage;
-	private final Box shape;
+    private final Bonus bonus;
+    private final Image symbolImage;
+    private final Image pointsImage;
+    private final Box shape;
 
-	private RotateTransition eatenAnimation;
-	private RotateTransition edibleAnimation;
+    private RotateTransition eatenAnimation;
+    private RotateTransition edibleAnimation;
 
-	public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage) {
-		checkNotNull(bonus);
-		checkNotNull(symbolImage);
-		checkNotNull(pointsImage);
+    public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage) {
+        checkNotNull(bonus);
+        checkNotNull(symbolImage);
+        checkNotNull(pointsImage);
 
-		this.bonus = bonus;
-		this.symbolImage = symbolImage;
-		this.pointsImage = pointsImage;
-		this.shape = new Box(TS, TS, TS);
+        this.bonus = bonus;
+        this.symbolImage = symbolImage;
+        this.pointsImage = pointsImage;
+        this.shape = new Box(TS, TS, TS);
 
-		edibleAnimation = new RotateTransition(Duration.seconds(1), shape);
-		edibleAnimation.setAxis(Rotate.Z_AXIS); // to trigger initial change
-		edibleAnimation.setFromAngle(0);
-		edibleAnimation.setToAngle(360);
-		edibleAnimation.setInterpolator(Interpolator.LINEAR);
-		edibleAnimation.setCycleCount(Animation.INDEFINITE);
+        edibleAnimation = new RotateTransition(Duration.seconds(1), shape);
+        edibleAnimation.setAxis(Rotate.Z_AXIS); // to trigger initial change
+        edibleAnimation.setFromAngle(0);
+        edibleAnimation.setToAngle(360);
+        edibleAnimation.setInterpolator(Interpolator.LINEAR);
+        edibleAnimation.setCycleCount(Animation.INDEFINITE);
 
-		eatenAnimation = new RotateTransition(Duration.seconds(1), shape);
-		eatenAnimation.setAxis(Rotate.X_AXIS);
-		eatenAnimation.setFromAngle(0);
-		eatenAnimation.setToAngle(360);
-		eatenAnimation.setInterpolator(Interpolator.LINEAR);
-		eatenAnimation.setRate(2);
-	}
+        eatenAnimation = new RotateTransition(Duration.seconds(1), shape);
+        eatenAnimation.setAxis(Rotate.X_AXIS);
+        eatenAnimation.setFromAngle(0);
+        eatenAnimation.setToAngle(360);
+        eatenAnimation.setInterpolator(Interpolator.LINEAR);
+        eatenAnimation.setRate(2);
+    }
 
-	public void update(GameLevel level) {
-		setPosition(bonus.entity().center());
-		boolean visible = bonus.state() != Bonus.STATE_INACTIVE && !outsideWorld(level.world());
-		shape.setVisible(visible);
-		updateEdibleAnimation();
-	}
+    public void update(GameLevel level) {
+        setPosition(bonus.entity().center());
+        boolean visible = bonus.state() != Bonus.STATE_INACTIVE && !outsideWorld(level.world());
+        shape.setVisible(visible);
+        updateEdibleAnimation();
+    }
 
-	private void updateEdibleAnimation() {
-		var rotationAxis = Rotate.X_AXIS; // default for static bonus
-		if (bonus instanceof MovingBonus movingBonus) {
-			rotationAxis = movingBonus.entity().moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-			if (movingBonus.entity().moveDir() == Direction.UP || movingBonus.entity().moveDir() == Direction.RIGHT) {
-				edibleAnimation.setRate(-1);
-			} else {
-				edibleAnimation.setRate(1);
-			}
-		}
-		if (!edibleAnimation.getAxis().equals(rotationAxis)) {
-			edibleAnimation.stop();
-			edibleAnimation.setAxis(rotationAxis);
-			edibleAnimation.play();
-		}
-	}
+    private void updateEdibleAnimation() {
+        var rotationAxis = Rotate.X_AXIS; // default for static bonus
+        if (bonus instanceof MovingBonus movingBonus) {
+            rotationAxis = movingBonus.entity().moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+            if (movingBonus.entity().moveDir() == Direction.UP || movingBonus.entity().moveDir() == Direction.RIGHT) {
+                edibleAnimation.setRate(-1);
+            } else {
+                edibleAnimation.setRate(1);
+            }
+        }
+        if (!edibleAnimation.getAxis().equals(rotationAxis)) {
+            edibleAnimation.stop();
+            edibleAnimation.setAxis(rotationAxis);
+            edibleAnimation.play();
+        }
+    }
 
-	public void showEdible() {
-		var imageView = new ImageView(symbolImage);
-		imageView.setPreserveRatio(true);
-		imageView.setFitWidth(TS);
-		showImage(imageView.getImage());
-		shape.setWidth(TS);
-		updateEdibleAnimation();
-		edibleAnimation.playFromStart();
-	}
+    public void showEdible() {
+        var imageView = new ImageView(symbolImage);
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(TS);
+        showImage(imageView.getImage());
+        shape.setWidth(TS);
+        updateEdibleAnimation();
+        edibleAnimation.playFromStart();
+    }
 
-	public void showEaten() {
-		var imageView = new ImageView(pointsImage);
-		imageView.setPreserveRatio(true);
-		imageView.setFitWidth(1.8 * TS);
-		showImage(imageView.getImage());
-		edibleAnimation.stop();
-		eatenAnimation.playFromStart();
-		shape.setRotationAxis(Rotate.X_AXIS);
-		shape.setRotate(0);
-		shape.setWidth(1.8 * TS);
-	}
+    public void showEaten() {
+        var imageView = new ImageView(pointsImage);
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(1.8 * TS);
+        showImage(imageView.getImage());
+        edibleAnimation.stop();
+        eatenAnimation.playFromStart();
+        shape.setRotationAxis(Rotate.X_AXIS);
+        shape.setRotate(0);
+        shape.setWidth(1.8 * TS);
+    }
 
-	private void showImage(Image texture) {
-		var material = new PhongMaterial(Color.WHITE);
-		material.setDiffuseMap(texture);
-		shape.setMaterial(material);
-	}
+    private void showImage(Image texture) {
+        var material = new PhongMaterial(Color.WHITE);
+        material.setDiffuseMap(texture);
+        shape.setMaterial(material);
+    }
 
-	public Node getRoot() {
-		return shape;
-	}
+    public Node getRoot() {
+        return shape;
+    }
 
-	public void hide() {
-		shape.setVisible(false);
-	}
+    public void hide() {
+        shape.setVisible(false);
+    }
 
-	public void setPosition(Vector2f position) {
-		shape.setTranslateX(position.x());
-		shape.setTranslateY(position.y());
-		shape.setTranslateZ(-HTS);
-	}
+    public void setPosition(Vector2f position) {
+        shape.setTranslateX(position.x());
+        shape.setTranslateY(position.y());
+        shape.setTranslateZ(-HTS);
+    }
 
-	private boolean outsideWorld(World world) {
-		double x = bonus.entity().center().x();
-		return x < HTS || x > world.numCols() * TS - HTS;
-	}
+    private boolean outsideWorld(World world) {
+        double x = bonus.entity().center().x();
+        return x < HTS || x > world.numCols() * TS - HTS;
+    }
 }

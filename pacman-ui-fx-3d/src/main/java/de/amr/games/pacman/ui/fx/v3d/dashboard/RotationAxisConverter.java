@@ -15,41 +15,41 @@ import java.util.Objects;
  */
 public class RotationAxisConverter extends StringConverter<Point3D> {
 
-	private final String txtX;
-	private final String txtY;
-	private final String txtZ;
+    private final String txtX;
+    private final String txtY;
+    private final String txtZ;
 
-	public RotationAxisConverter(String xAxisText, String yAxisText, String zAxisText) {
-		txtX = Objects.requireNonNull(xAxisText);
-		txtY = Objects.requireNonNull(yAxisText);
-		txtZ = Objects.requireNonNull(zAxisText);
-	}
+    public RotationAxisConverter(String xAxisText, String yAxisText, String zAxisText) {
+        txtX = Objects.requireNonNull(xAxisText);
+        txtY = Objects.requireNonNull(yAxisText);
+        txtZ = Objects.requireNonNull(zAxisText);
+    }
 
-	@Override
-	public String toString(Point3D p) {
-		if (p == null) {
-			return "";
-		}
-		if (p.equals(Rotate.X_AXIS)) {
-			return txtX;
-		}
-		if (p.equals(Rotate.Y_AXIS)) {
-			return txtY;
-		}
-		if (p.equals(Rotate.Z_AXIS)) {
-			return txtZ;
-		}
-		return p.toString();
-	}
+    @Override
+    public String toString(Point3D p) {
+        if (p == null) {
+            return "";
+        }
+        if (p.equals(Rotate.X_AXIS)) {
+            return txtX;
+        }
+        if (p.equals(Rotate.Y_AXIS)) {
+            return txtY;
+        }
+        if (p.equals(Rotate.Z_AXIS)) {
+            return txtZ;
+        }
+        return p.toString();
+    }
 
-	@Override
-	public Point3D fromString(String string) {
-		if (txtX.equals(string))
-			return Rotate.X_AXIS;
-		if (txtY.equals(string))
-			return Rotate.Y_AXIS;
-		if (txtZ.equals(string))
-			return Rotate.Z_AXIS;
-		return Point3D.ZERO;
-	}
+    @Override
+    public Point3D fromString(String string) {
+        if (txtX.equals(string))
+            return Rotate.X_AXIS;
+        if (txtY.equals(string))
+            return Rotate.Y_AXIS;
+        if (txtZ.equals(string))
+            return Rotate.Z_AXIS;
+        return Point3D.ZERO;
+    }
 }

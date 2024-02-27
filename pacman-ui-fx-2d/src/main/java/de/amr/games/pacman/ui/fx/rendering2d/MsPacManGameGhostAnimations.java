@@ -19,76 +19,76 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class MsPacManGameGhostAnimations extends SpriteAnimations {
 
-	private final Map<String, SpriteAnimation> animationsByName;
-	private final Ghost ghost;
-	private final MsPacManGameSpriteSheet spriteSheet;
+    private final Map<String, SpriteAnimation> animationsByName;
+    private final Ghost ghost;
+    private final MsPacManGameSpriteSheet spriteSheet;
 
-	public MsPacManGameGhostAnimations(Ghost ghost, MsPacManGameSpriteSheet spriteSheet) {
-		checkNotNull(ghost);
-		checkNotNull(spriteSheet);
-		this.ghost = ghost;
-		this.spriteSheet = spriteSheet;
+    public MsPacManGameGhostAnimations(Ghost ghost, MsPacManGameSpriteSheet spriteSheet) {
+        checkNotNull(ghost);
+        checkNotNull(spriteSheet);
+        this.ghost = ghost;
+        this.spriteSheet = spriteSheet;
 
-		var normal = SpriteAnimation.begin()
-			.sprites(spriteSheet.ghostNormalSprites(ghost.id(), Direction.LEFT))
-			.frameTicks(8)
-			.loop()
-			.end();
-		
-		var frightened = SpriteAnimation.begin()
-			.sprites(spriteSheet.ghostFrightenedSprites())
-			.frameTicks(8)
-			.loop()
-			.end();
-		
-		var flashing = SpriteAnimation.begin()
-			.sprites(spriteSheet.ghostFlashingSprites())
-			.frameTicks(6)
-			.loop()
-			.end();
-		
-		var eyes = SpriteAnimation.begin()
-			.sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
-			.end();
-		
-		var number = SpriteAnimation.begin()
-			.sprites(spriteSheet.ghostNumberSprites())
-			.end();
+        var normal = SpriteAnimation.begin()
+            .sprites(spriteSheet.ghostNormalSprites(ghost.id(), Direction.LEFT))
+            .frameTicks(8)
+            .loop()
+            .end();
 
-		animationsByName = Map.of(
-			Ghost.ANIM_GHOST_NORMAL,     normal,
-			Ghost.ANIM_GHOST_FRIGHTENED, frightened,
-			Ghost.ANIM_GHOST_FLASHING,   flashing,
-			Ghost.ANIM_GHOST_EYES,       eyes,
-			Ghost.ANIM_GHOST_NUMBER,     number);
+        var frightened = SpriteAnimation.begin()
+            .sprites(spriteSheet.ghostFrightenedSprites())
+            .frameTicks(8)
+            .loop()
+            .end();
 
-		// TODO check this
-		eyes.start();
-		frightened.start();
-		flashing.start();
-	}
+        var flashing = SpriteAnimation.begin()
+            .sprites(spriteSheet.ghostFlashingSprites())
+            .frameTicks(6)
+            .loop()
+            .end();
 
-	@Override
-	public SpriteAnimation animation(String name) {
-		return animationsByName.get(name);
-	}
+        var eyes = SpriteAnimation.begin()
+            .sprites(spriteSheet.ghostEyesSprites(Direction.LEFT))
+            .end();
 
-	@Override
-	public void select(String name, int index) {
-		super.select(name, index);
-		if (Ghost.ANIM_GHOST_NUMBER.equals(name)) {
-			animation(Ghost.ANIM_GHOST_NUMBER).setFrameIndex(index);
-		}
-	}
+        var number = SpriteAnimation.begin()
+            .sprites(spriteSheet.ghostNumberSprites())
+            .end();
 
-	@Override
-	public Rectangle2D currentSprite() {
-		var currentAnimation = currentAnimation();
-		if (Ghost.ANIM_GHOST_NORMAL.equals(currentAnimationName)) {
-			currentAnimation.setSprites(spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));
-		} else if (Ghost.ANIM_GHOST_EYES.equals(currentAnimationName)) {
-			currentAnimation.setSprites(spriteSheet.ghostEyesSprites(ghost.wishDir()));
-		}
-		return currentAnimation != null ? currentAnimation.currentSprite() : null;
-	}
+        animationsByName = Map.of(
+            Ghost.ANIM_GHOST_NORMAL, normal,
+            Ghost.ANIM_GHOST_FRIGHTENED, frightened,
+            Ghost.ANIM_GHOST_FLASHING, flashing,
+            Ghost.ANIM_GHOST_EYES, eyes,
+            Ghost.ANIM_GHOST_NUMBER, number);
+
+        // TODO check this
+        eyes.start();
+        frightened.start();
+        flashing.start();
+    }
+
+    @Override
+    public SpriteAnimation animation(String name) {
+        return animationsByName.get(name);
+    }
+
+    @Override
+    public void select(String name, int index) {
+        super.select(name, index);
+        if (Ghost.ANIM_GHOST_NUMBER.equals(name)) {
+            animation(Ghost.ANIM_GHOST_NUMBER).setFrameIndex(index);
+        }
+    }
+
+    @Override
+    public Rectangle2D currentSprite() {
+        var currentAnimation = currentAnimation();
+        if (Ghost.ANIM_GHOST_NORMAL.equals(currentAnimationName)) {
+            currentAnimation.setSprites(spriteSheet.ghostNormalSprites(ghost.id(), ghost.wishDir()));
+        } else if (Ghost.ANIM_GHOST_EYES.equals(currentAnimationName)) {
+            currentAnimation.setSprites(spriteSheet.ghostEyesSprites(ghost.wishDir()));
+        }
+        return currentAnimation != null ? currentAnimation.currentSprite() : null;
+    }
 }

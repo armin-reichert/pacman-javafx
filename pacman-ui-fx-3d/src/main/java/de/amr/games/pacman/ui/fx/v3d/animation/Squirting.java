@@ -39,153 +39,153 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public abstract class Squirting extends Transition {
 
-	public static class Drop extends Sphere {
-		private double vx;
-		private double vy;
-		private double vz;
+    public static class Drop extends Sphere {
+        private double vx;
+        private double vy;
+        private double vz;
 
-		private Drop(Squirting squirting, double radius) {
-			super(radius);
-			setMaterial(squirting.dropMaterial);
-			setTranslateX(squirting.origin.getX());
-			setTranslateY(squirting.origin.getY());
-			setTranslateZ(squirting.origin.getZ());
-			setVisible(false);
-		}
+        private Drop(Squirting squirting, double radius) {
+            super(radius);
+            setMaterial(squirting.dropMaterial);
+            setTranslateX(squirting.origin.getX());
+            setTranslateY(squirting.origin.getY());
+            setTranslateZ(squirting.origin.getZ());
+            setVisible(false);
+        }
 
-		private void setVelocity(double x, double y, double z) {
-			vx = x;
-			vy = y;
-			vz = z;
-		}
+        private void setVelocity(double x, double y, double z) {
+            vx = x;
+            vy = y;
+            vz = z;
+        }
 
-		private void move(Point3D gravity) {
-			setTranslateX(getTranslateX() + vx);
-			setTranslateY(getTranslateY() + vy);
-			setTranslateZ(getTranslateZ() + vz);
-			vx += gravity.getX();
-			vy += gravity.getY();
-			vz += gravity.getZ();
-		}
-	}
+        private void move(Point3D gravity) {
+            setTranslateX(getTranslateX() + vx);
+            setTranslateY(getTranslateY() + vy);
+            setTranslateZ(getTranslateZ() + vz);
+            vx += gravity.getX();
+            vy += gravity.getY();
+            vz += gravity.getZ();
+        }
+    }
 
-	private final Group particleGroup = new Group();
-	private PhongMaterial dropMaterial = new PhongMaterial();
-	private Point3D origin = new Point3D(0, 0, 0);
-	private Point3D gravity = new Point3D(0, 0, 0.1f);
-	private int dropCountMin = 20;
-	private int dropCountMax = 40;
-	private float dropRadiusMin = 0.1f;
-	private float dropRadiusMax = 1.0f;
-	private Point3D dropVelocityMin = new Point3D(-0.25f, -0.25f, -4.0f);
-	private Point3D dropVelocityMax = new Point3D(0.25f, 0.25f, -1.0f);
+    private final Group particleGroup = new Group();
+    private PhongMaterial dropMaterial = new PhongMaterial();
+    private Point3D origin = new Point3D(0, 0, 0);
+    private Point3D gravity = new Point3D(0, 0, 0.1f);
+    private int dropCountMin = 20;
+    private int dropCountMax = 40;
+    private float dropRadiusMin = 0.1f;
+    private float dropRadiusMax = 1.0f;
+    private Point3D dropVelocityMin = new Point3D(-0.25f, -0.25f, -4.0f);
+    private Point3D dropVelocityMax = new Point3D(0.25f, 0.25f, -1.0f);
 
-	protected Squirting(Group parent) {
-		setCycleDuration(Duration.seconds(2));
-		setOnFinished(e -> parent.getChildren().remove(particleGroup));
-		parent.getChildren().add(particleGroup);
-	}
+    protected Squirting(Group parent) {
+        setCycleDuration(Duration.seconds(2));
+        setOnFinished(e -> parent.getChildren().remove(particleGroup));
+        parent.getChildren().add(particleGroup);
+    }
 
-	public void setDropMaterial(PhongMaterial dropMaterial) {
-		this.dropMaterial = dropMaterial;
-	}
+    public void setDropMaterial(PhongMaterial dropMaterial) {
+        this.dropMaterial = dropMaterial;
+    }
 
-	public void setOrigin(float x, float y, float z) {
-		origin = new Point3D(x, y, z);
-	}
+    public void setOrigin(float x, float y, float z) {
+        origin = new Point3D(x, y, z);
+    }
 
-	public void setOrigin(Node node) {
-		setOrigin((float) node.getTranslateX(), (float) node.getTranslateY(), (float) node.getTranslateZ());
-	}
+    public void setOrigin(Node node) {
+        setOrigin((float) node.getTranslateX(), (float) node.getTranslateY(), (float) node.getTranslateZ());
+    }
 
-	public Point3D getGravity() {
-		return gravity;
-	}
+    public Point3D getGravity() {
+        return gravity;
+    }
 
-	public void setGravity(Point3D gravity) {
-		this.gravity = gravity;
-	}
+    public void setGravity(Point3D gravity) {
+        this.gravity = gravity;
+    }
 
-	public int getDropCountMin() {
-		return dropCountMin;
-	}
+    public int getDropCountMin() {
+        return dropCountMin;
+    }
 
-	public void setDropCountMin(int dropCountMin) {
-		this.dropCountMin = dropCountMin;
-	}
+    public void setDropCountMin(int dropCountMin) {
+        this.dropCountMin = dropCountMin;
+    }
 
-	public int getDropCountMax() {
-		return dropCountMax;
-	}
+    public int getDropCountMax() {
+        return dropCountMax;
+    }
 
-	public void setDropCountMax(int dropCountMax) {
-		this.dropCountMax = dropCountMax;
-	}
+    public void setDropCountMax(int dropCountMax) {
+        this.dropCountMax = dropCountMax;
+    }
 
-	public float getDropRadiusMin() {
-		return dropRadiusMin;
-	}
+    public float getDropRadiusMin() {
+        return dropRadiusMin;
+    }
 
-	public void setDropRadiusMin(float dropRadiusMin) {
-		this.dropRadiusMin = dropRadiusMin;
-	}
+    public void setDropRadiusMin(float dropRadiusMin) {
+        this.dropRadiusMin = dropRadiusMin;
+    }
 
-	public float getDropRadiusMax() {
-		return dropRadiusMax;
-	}
+    public float getDropRadiusMax() {
+        return dropRadiusMax;
+    }
 
-	public void setDropRadiusMax(float dropRadiusMax) {
-		this.dropRadiusMax = dropRadiusMax;
-	}
+    public void setDropRadiusMax(float dropRadiusMax) {
+        this.dropRadiusMax = dropRadiusMax;
+    }
 
-	public Point3D getDropVelocityMin() {
-		return dropVelocityMin;
-	}
+    public Point3D getDropVelocityMin() {
+        return dropVelocityMin;
+    }
 
-	public void setDropVelocityMin(Point3D dropVelocityMin) {
-		this.dropVelocityMin = dropVelocityMin;
-	}
+    public void setDropVelocityMin(Point3D dropVelocityMin) {
+        this.dropVelocityMin = dropVelocityMin;
+    }
 
-	public Point3D getDropVelocityMax() {
-		return dropVelocityMax;
-	}
+    public Point3D getDropVelocityMax() {
+        return dropVelocityMax;
+    }
 
-	public void setDropVelocityMax(Point3D dropVelocityMax) {
-		this.dropVelocityMax = dropVelocityMax;
-	}
+    public void setDropVelocityMax(Point3D dropVelocityMax) {
+        this.dropVelocityMax = dropVelocityMax;
+    }
 
-	public PhongMaterial getDropMaterial() {
-		return dropMaterial;
-	}
+    public PhongMaterial getDropMaterial() {
+        return dropMaterial;
+    }
 
-	protected abstract boolean reachesEndPosition(Drop drop);
+    protected abstract boolean reachesEndPosition(Drop drop);
 
-	private void createDrops() {
-		for (int i = 0; i < randomInt(dropCountMin, dropCountMax); ++i) {
-			var drop = new Drop(this, randomFloat(dropRadiusMin, dropRadiusMax));
-			drop.setVisible(true);
-			drop.setVelocity(//
-					randomDouble(dropVelocityMin.getX(), dropVelocityMax.getX()), //
-					randomDouble(dropVelocityMin.getY(), dropVelocityMax.getY()), //
-					randomDouble(dropVelocityMin.getZ(), dropVelocityMax.getZ()));
-			particleGroup.getChildren().add(drop);
-		}
-		Logger.trace("{} drops created", particleGroup.getChildren().size());
-	}
+    private void createDrops() {
+        for (int i = 0; i < randomInt(dropCountMin, dropCountMax); ++i) {
+            var drop = new Drop(this, randomFloat(dropRadiusMin, dropRadiusMax));
+            drop.setVisible(true);
+            drop.setVelocity(//
+                randomDouble(dropVelocityMin.getX(), dropVelocityMax.getX()), //
+                randomDouble(dropVelocityMin.getY(), dropVelocityMax.getY()), //
+                randomDouble(dropVelocityMin.getZ(), dropVelocityMax.getZ()));
+            particleGroup.getChildren().add(drop);
+        }
+        Logger.trace("{} drops created", particleGroup.getChildren().size());
+    }
 
-	@Override
-	protected void interpolate(double t) {
-		if (t == 0) {
-			createDrops();
-		}
-		for (var particle : particleGroup.getChildren()) {
-			var drop = (Drop) particle;
-			if (reachesEndPosition(drop)) {
-				drop.setVelocity(0, 0, 0);
-				drop.setScaleZ(0.1);
-			} else {
-				drop.move(gravity);
-			}
-		}
-	}
+    @Override
+    protected void interpolate(double t) {
+        if (t == 0) {
+            createDrops();
+        }
+        for (var particle : particleGroup.getChildren()) {
+            var drop = (Drop) particle;
+            if (reachesEndPosition(drop)) {
+                drop.setVelocity(0, 0, 0);
+                drop.setScaleZ(0.1);
+            } else {
+                drop.move(gravity);
+            }
+        }
+    }
 }

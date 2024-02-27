@@ -21,48 +21,48 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * 3D level counter.
- * 
+ *
  * @author Armin Reichert
  */
 public class LevelCounter3D {
 
-	private final Group root = new Group();
+    private final Group root = new Group();
 
-	public Node getRoot() {
-		return root;
-	}
+    public Node getRoot() {
+        return root;
+    }
 
-	public void update(Image[] symbolImages) {
-		requireNonNull(symbolImages);
-		root.getChildren().clear();
-		for (int i = 0; i < symbolImages.length; ++i) {
-			var symbolImage = symbolImages[i];
-			Box cube = createSpinningCube(TS, symbolImage, isEven(i));
-			cube.setTranslateX(-2 * i * TS);
-			cube.setTranslateY(0);
-			cube.setTranslateZ(-HTS);
-			root.getChildren().add(cube);
-		}
-	}
+    public void update(Image[] symbolImages) {
+        requireNonNull(symbolImages);
+        root.getChildren().clear();
+        for (int i = 0; i < symbolImages.length; ++i) {
+            var symbolImage = symbolImages[i];
+            Box cube = createSpinningCube(TS, symbolImage, isEven(i));
+            cube.setTranslateX(-2 * i * TS);
+            cube.setTranslateY(0);
+            cube.setTranslateZ(-HTS);
+            root.getChildren().add(cube);
+        }
+    }
 
-	public void setRightPosition(double x, double y, double z) {
-		root.setTranslateX(x);
-		root.setTranslateY(y);
-		root.setTranslateZ(z);
-	}
+    public void setRightPosition(double x, double y, double z) {
+        root.setTranslateX(x);
+        root.setTranslateY(y);
+        root.setTranslateZ(z);
+    }
 
-	private Box createSpinningCube(double size, Image texture, boolean forward) {
-		var material = new PhongMaterial(Color.WHITE);
-		material.setDiffuseMap(texture);
-		Box cube = new Box(size, size, size);
-		cube.setMaterial(material);
-		var spinning = new RotateTransition(Duration.seconds(6), cube);
-		spinning.setAxis(Rotate.X_AXIS);
-		spinning.setCycleCount(Animation.INDEFINITE);
-		spinning.setByAngle(360);
-		spinning.setRate(forward ? 1 : -1);
-		spinning.setInterpolator(Interpolator.LINEAR);
-		spinning.play();
-		return cube;
-	}
+    private Box createSpinningCube(double size, Image texture, boolean forward) {
+        var material = new PhongMaterial(Color.WHITE);
+        material.setDiffuseMap(texture);
+        Box cube = new Box(size, size, size);
+        cube.setMaterial(material);
+        var spinning = new RotateTransition(Duration.seconds(6), cube);
+        spinning.setAxis(Rotate.X_AXIS);
+        spinning.setCycleCount(Animation.INDEFINITE);
+        spinning.setByAngle(360);
+        spinning.setRate(forward ? 1 : -1);
+        spinning.setInterpolator(Interpolator.LINEAR);
+        spinning.play();
+        return cube;
+    }
 }

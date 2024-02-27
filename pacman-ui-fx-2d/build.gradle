@@ -13,7 +13,7 @@ println "Operating System: name='${os.name}' version='${os.version}' arch='${arc
 
 application {
     mainModule = 'de.amr.games.pacman.ui.fx'
-    mainClass  = 'de.amr.games.pacman.ui.fx.Main'
+    mainClass = 'de.amr.games.pacman.ui.fx.Main'
 }
 
 dependencies {

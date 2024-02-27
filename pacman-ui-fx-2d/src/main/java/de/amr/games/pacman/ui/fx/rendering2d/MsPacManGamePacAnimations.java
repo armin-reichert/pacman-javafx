@@ -19,53 +19,53 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class MsPacManGamePacAnimations extends SpriteAnimations {
 
-	private final Map<String, SpriteAnimation> animationsByName;
-	private final Pac pac;
-	private final MsPacManGameSpriteSheet spriteSheet;
+    private final Map<String, SpriteAnimation> animationsByName;
+    private final Pac pac;
+    private final MsPacManGameSpriteSheet spriteSheet;
 
-	public MsPacManGamePacAnimations(Pac pac, MsPacManGameSpriteSheet spriteSheet) {
-		checkNotNull(pac);
-		checkNotNull(spriteSheet);
-		this.pac = pac;
-		this.spriteSheet = spriteSheet;
+    public MsPacManGamePacAnimations(Pac pac, MsPacManGameSpriteSheet spriteSheet) {
+        checkNotNull(pac);
+        checkNotNull(spriteSheet);
+        this.pac = pac;
+        this.spriteSheet = spriteSheet;
 
-		var munching = SpriteAnimation.begin()
-			.sprites(spriteSheet.msPacManMunchingSprites(Direction.LEFT))
-			.loop()
-			.end();
-		
-		var dying = SpriteAnimation.begin()
-			.sprites(spriteSheet.msPacManDyingSprites())
-			.frameTicks(8)
-			.end();
-		
-		var husbandMunching = SpriteAnimation.begin()
-			.sprites(spriteSheet.pacManMunchingSprites(Direction.LEFT))
-			.frameTicks(2)
-			.loop()
-			.end();
+        var munching = SpriteAnimation.begin()
+            .sprites(spriteSheet.msPacManMunchingSprites(Direction.LEFT))
+            .loop()
+            .end();
 
-		animationsByName = Map.of(
-			Pac.ANIM_MUNCHING,         munching,
-			Pac.ANIM_DYING,            dying,
-			Pac.ANIM_HUSBAND_MUNCHING, husbandMunching
-		);
-	}
+        var dying = SpriteAnimation.begin()
+            .sprites(spriteSheet.msPacManDyingSprites())
+            .frameTicks(8)
+            .end();
 
-	@Override
-	public SpriteAnimation animation(String name) {
-		return animationsByName.get(name);
-	}
+        var husbandMunching = SpriteAnimation.begin()
+            .sprites(spriteSheet.pacManMunchingSprites(Direction.LEFT))
+            .frameTicks(2)
+            .loop()
+            .end();
 
-	@Override
-	public Rectangle2D currentSprite() {
-		var currentAnimation = currentAnimation();
-		if (Pac.ANIM_MUNCHING.equals(currentAnimationName)) {
-			currentAnimation.setSprites(spriteSheet.msPacManMunchingSprites(pac.moveDir()));
-		}
-		if (Pac.ANIM_HUSBAND_MUNCHING.equals(currentAnimationName)) {
-			currentAnimation.setSprites(spriteSheet.pacManMunchingSprites(pac.moveDir()));
-		}
-		return currentAnimation != null ? currentAnimation.currentSprite() : null;
-	}
+        animationsByName = Map.of(
+            Pac.ANIM_MUNCHING, munching,
+            Pac.ANIM_DYING, dying,
+            Pac.ANIM_HUSBAND_MUNCHING, husbandMunching
+        );
+    }
+
+    @Override
+    public SpriteAnimation animation(String name) {
+        return animationsByName.get(name);
+    }
+
+    @Override
+    public Rectangle2D currentSprite() {
+        var currentAnimation = currentAnimation();
+        if (Pac.ANIM_MUNCHING.equals(currentAnimationName)) {
+            currentAnimation.setSprites(spriteSheet.msPacManMunchingSprites(pac.moveDir()));
+        }
+        if (Pac.ANIM_HUSBAND_MUNCHING.equals(currentAnimationName)) {
+            currentAnimation.setSprites(spriteSheet.pacManMunchingSprites(pac.moveDir()));
+        }
+        return currentAnimation != null ? currentAnimation.currentSprite() : null;
+    }
 }

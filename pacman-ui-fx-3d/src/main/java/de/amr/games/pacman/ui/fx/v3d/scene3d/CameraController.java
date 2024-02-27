@@ -9,14 +9,14 @@ import javafx.scene.Camera;
 
 /**
  * Cameras for the 3D play scene.
- * 
+ *
  * @author Armin Reichert
  */
 public interface CameraController {
 
-	default void reset(Camera cam) {
-	}
+    default void reset(Camera cam) {
+    }
 
-	default void update(Camera cam, Pac3D pac3D) {
-	}
+    default void update(Camera cam, Pac3D pac3D) {
+    }
 }

@@ -13,9 +13,9 @@ println "Operating System: name='${os.name}' version='${os.version}' arch='${arc
 
 application {
     mainModule = 'de.amr.games.pacman.ui.fx.v3d'
-    mainClass  = 'de.amr.games.pacman.ui.fx.v3d.Main'
+    mainClass = 'de.amr.games.pacman.ui.fx.v3d.Main'
     if (os.isLinux()) {
-      applicationDefaultJvmArgs = ['-Dprism.forceGPU=true']
+        applicationDefaultJvmArgs = ['-Dprism.forceGPU=true']
     }
 }
 

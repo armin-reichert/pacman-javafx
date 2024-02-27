@@ -14,22 +14,22 @@ import javafx.util.Duration;
  */
 public class SinusCurveAnimation extends Transition {
 
-	public final DoubleProperty elongationPy = new SimpleDoubleProperty(this, "elongation");
+    public final DoubleProperty elongationPy = new SimpleDoubleProperty(this, "elongation");
 
-	private double amplitude;
+    private double amplitude;
 
-	public SinusCurveAnimation(int times) {
-		setCycleDuration(Duration.seconds(0.2));
-		setCycleCount(2 * times);
-		setAutoReverse(true);
-	}
+    public SinusCurveAnimation(int times) {
+        setCycleDuration(Duration.seconds(0.2));
+        setCycleCount(2 * times);
+        setAutoReverse(true);
+    }
 
-	public void setAmplitude(double value) {
-		this.amplitude = value;
-	}
+    public void setAmplitude(double value) {
+        this.amplitude = value;
+    }
 
-	@Override
-	protected void interpolate(double t) {
-		elongationPy.set(amplitude * Math.cos(t * Math.PI / 2));
-	}
+    @Override
+    protected void interpolate(double t) {
+        elongationPy.set(amplitude * Math.cos(t * Math.PI / 2));
+    }
 }

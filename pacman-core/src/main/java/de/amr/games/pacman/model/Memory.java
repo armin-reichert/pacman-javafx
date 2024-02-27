@@ -16,82 +16,82 @@ import java.util.Optional;
  * @author Armin Reichert
  */
 public class Memory {
-	Vector2i foodFoundTile;
-	public boolean energizerFound;
-	public byte bonusReachedIndex; // 0=first, 1=second, -1=no bonus
-	public boolean levelCompleted;
-	public boolean pacKilled;
-	public boolean pacPowerActive;
-	public boolean pacPowerStarts;
-	public boolean pacPowerLost;
-	public boolean pacPowerFading;
-	public List<Ghost> pacPrey;
-	public final List<Ghost> killedGhosts = new ArrayList<>(4);
+    Vector2i foodFoundTile;
+    public boolean energizerFound;
+    public byte bonusReachedIndex; // 0=first, 1=second, -1=no bonus
+    public boolean levelCompleted;
+    public boolean pacKilled;
+    public boolean pacPowerActive;
+    public boolean pacPowerStarts;
+    public boolean pacPowerLost;
+    public boolean pacPowerFading;
+    public List<Ghost> pacPrey;
+    public final List<Ghost> killedGhosts = new ArrayList<>(4);
 
-	public Memory() {
-		forgetEverything();
-	}
+    public Memory() {
+        forgetEverything();
+    }
 
-	public void forgetEverything() {
-		foodFoundTile = null;
-		energizerFound = false;
-		levelCompleted = false;
-		bonusReachedIndex = -1;
-		pacKilled = false;
-		pacPowerActive = false;
-		pacPowerStarts = false;
-		pacPowerLost = false;
-		pacPowerFading = false;
-		pacPrey = Collections.emptyList();
-		killedGhosts.clear();
-	}
+    public void forgetEverything() {
+        foodFoundTile = null;
+        energizerFound = false;
+        levelCompleted = false;
+        bonusReachedIndex = -1;
+        pacKilled = false;
+        pacPowerActive = false;
+        pacPowerStarts = false;
+        pacPowerLost = false;
+        pacPowerFading = false;
+        pacPrey = Collections.emptyList();
+        killedGhosts.clear();
+    }
 
-	public Optional<Vector2i> foodFoundTile() {
-		return Optional.of(foodFoundTile);
-	}
+    public Optional<Vector2i> foodFoundTile() {
+        return Optional.of(foodFoundTile);
+    }
 
-	@Override
-	public String toString() {
+    @Override
+    public String toString() {
 
-		var levelCompletedText = levelCompleted ? "Level completed" : "";
+        var levelCompletedText = levelCompleted ? "Level completed" : "";
 
-		var foodText = "";
-		if (foodFoundTile != null) {
-			foodText = String.format("%s at %s", energizerFound ? "Energizer" : "Pellet", foodFoundTile);
-		}
+        var foodText = "";
+        if (foodFoundTile != null) {
+            foodText = String.format("%s at %s", energizerFound ? "Energizer" : "Pellet", foodFoundTile);
+        }
 
-		var bonusText = "";
-		if (bonusReachedIndex != -1) {
-			bonusText = String.format("Bonus %d reached", bonusReachedIndex);
-		}
+        var bonusText = "";
+        if (bonusReachedIndex != -1) {
+            bonusText = String.format("Bonus %d reached", bonusReachedIndex);
+        }
 
-		var powerText = "";
-		if (pacPowerStarts) {
-			powerText += " starts";
-		}
-		if (pacPowerActive) {
-			powerText += " active";
-		}
-		if (pacPowerFading) {
-			powerText += " fading";
-		}
-		if (pacPowerLost) {
-			powerText += " lost";
-		}
-		if (!powerText.isEmpty()) {
-			powerText = "Pac power:" + powerText;
-		}
+        var powerText = "";
+        if (pacPowerStarts) {
+            powerText += " starts";
+        }
+        if (pacPowerActive) {
+            powerText += " active";
+        }
+        if (pacPowerFading) {
+            powerText += " fading";
+        }
+        if (pacPowerLost) {
+            powerText += " lost";
+        }
+        if (!powerText.isEmpty()) {
+            powerText = "Pac power:" + powerText;
+        }
 
-		var pacKilledText = pacKilled ? "Pac killed" : "";
+        var pacKilledText = pacKilled ? "Pac killed" : "";
 
-		var preyText = "";
-		if (!pacPrey.isEmpty()) {
-			preyText = String.format("Prey: %s", pacPrey);
-		}
+        var preyText = "";
+        if (!pacPrey.isEmpty()) {
+            preyText = String.format("Prey: %s", pacPrey);
+        }
 
-		var killedGhostsText = killedGhosts.isEmpty() ? "" : killedGhosts.toString();
+        var killedGhostsText = killedGhosts.isEmpty() ? "" : killedGhosts.toString();
 
-		return String.format("%s %s %s %s %s %s %s", levelCompletedText, foodText, bonusText, powerText,
-				pacKilledText, preyText, killedGhostsText);
-	}
+        return String.format("%s %s %s %s %s %s %s", levelCompletedText, foodText, bonusText, powerText,
+            pacKilledText, preyText, killedGhostsText);
+    }
 }
