@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.World;
@@ -35,7 +36,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 
 /**
- * 3D-model for the world in a game level. Creates walls/doors using information from the floor plan.
+ * 3D-model for the world in a game level. Walls and doors are created from 2D information specified by a floor plan.
  * 
  * @author Armin Reichert
  */
@@ -43,7 +44,7 @@ public class World3D {
 	private static final double FLOOR_THICKNESS = 0.25;
 
 	private static class WallData {
-		byte type;
+		byte type; // see FloorPlan
 		int x;
 		int y;
 		int numBricksX;
@@ -130,7 +131,7 @@ public class World3D {
 		var light = new PointLight();
 		light.setColor(lightColor);
 		light.setMaxRange(3 * TS);
-		var center = world.house().seat("middle");
+		Vector2f center = world.house().seat("middle");
 		light.setTranslateX(center.x() + HTS);
 		light.setTranslateY(center.y());
 		light.setTranslateZ(-TS);
@@ -187,7 +188,7 @@ public class World3D {
 		addVerticalWalls(floorPlan, createWallData(resolution));
 		addDoorWing(world.house().door().leftWing(), doorColor);
 		addDoorWing(world.house().door().rightWing(), doorColor);
-		Logger.info("Built 3D world (resolution={}, wall height={})", floorPlan.getResolution(), wallHeightPy.get());
+		Logger.info("3D world created (resolution={}, wall height={})", floorPlan.getResolution(), wallHeightPy.get());
 	}
 
 	public Stream<DoorWing3D> doorWings3D() {
@@ -270,15 +271,15 @@ public class World3D {
 		final Vector2i tile = floorPlan.tile(wallData.x, wallData.y);
 		final boolean ghostHouseWall = world.house().contains(tile);
 
-		var base = switch (wallData.type) {
-		case FloorPlan.HWALL -> horizontalWall(wallData);
-		case FloorPlan.VWALL -> verticalWall(wallData);
-		case FloorPlan.CORNER -> corner();
-		default -> throw new IllegalStateException();
+		Box base = switch (wallData.type) {
+			case FloorPlan.HWALL  -> horizontalWall(wallData);
+			case FloorPlan.VWALL  -> verticalWall(wallData);
+			case FloorPlan.CORNER -> corner();
+			default -> throw new IllegalStateException("Unknown wall type: " + wallData.type);
 		};
 		if (ghostHouseWall) {
 			base.setDepth(ghostHouseHeight);
-			base.setTranslateZ(-ghostHouseHeight / 2);
+			base.setTranslateZ(-0.5 * ghostHouseHeight);
 			base.setMaterial(houseMaterial);
 		} else {
 			base.depthProperty().bind(wallHeightPy);
@@ -286,11 +287,11 @@ public class World3D {
 			base.setMaterial(baseMaterial);
 		}
 
-		var top = switch (wallData.type) {
-		case FloorPlan.HWALL -> horizontalWall(wallData);
-		case FloorPlan.VWALL -> verticalWall(wallData);
-		case FloorPlan.CORNER -> corner();
-		default -> throw new IllegalStateException();
+		Box top = switch (wallData.type) {
+			case FloorPlan.HWALL -> horizontalWall(wallData);
+			case FloorPlan.VWALL -> verticalWall(wallData);
+			case FloorPlan.CORNER -> corner();
+			default -> throw new IllegalStateException("Unknown wall type: " + wallData.type);
 		};
 		top.setMaterial(topMaterial);
 		top.setDepth(topHeight);
@@ -301,7 +302,7 @@ public class World3D {
 					.bind(base.translateZProperty().subtract(wallHeightPy.add(topHeight + 0.1).multiply(0.5)));
 		}
 
-		var wall = new Group(base, top);
+		Group wall = new Group(base, top);
 		wall.setTranslateX((wallData.x + 0.5 * wallData.numBricksX) * wallData.brickSize);
 		wall.setTranslateY((wallData.y + 0.5 * wallData.numBricksY) * wallData.brickSize);
 		wall.setUserData(wallData);
@@ -340,9 +341,9 @@ public class World3D {
 	private void addFood() {
 		var foodMaterial = ResourceManager.coloredMaterial(foodColor);
 		world.tiles().filter(world::hasFoodAt).forEach(tile -> {
-			var food3D = world.isEnergizerTile(tile)//
-					? createEnergizer3D(tile, foodMaterial)//
-					: createNormalPellet3D(tile, foodMaterial);
+			Eatable3D food3D = world.isEnergizerTile(tile)
+				? createEnergizer3D(tile, foodMaterial)
+				: createNormalPellet3D(tile, foodMaterial);
 			foodGroup.getChildren().add(food3D.getRoot());
 		});
 	}
