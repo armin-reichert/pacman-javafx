@@ -145,7 +145,7 @@ public class SoundHandler implements GameEventListener {
         event.game.level().ifPresent(level -> {
             if (!level.isDemoLevel()) {
                 audioClip(event.game.variant(), "audio.pacman_power").stop();
-                ensureSirenStarted(event.game.variant(), level.huntingPhase() / 2);
+                ensureSirenStarted(event.game.variant(), level.huntingPhaseIndex() / 2);
             }
         });
     }

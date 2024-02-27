@@ -6,6 +6,7 @@ package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Creature;
+import org.tinylog.Logger;
 
 /**
  * @author Armin Reichert
@@ -32,5 +33,6 @@ public abstract class Steering {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+        Logger.info("Steering ({})) {}", getClass().getSimpleName(), enabled ? "enabled" : "disabled");
     }
 }

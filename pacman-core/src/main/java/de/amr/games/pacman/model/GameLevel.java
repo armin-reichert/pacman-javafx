@@ -72,7 +72,7 @@ public class GameLevel {
 
     private final Ghost[] ghosts;
 
-    private byte huntingPhase;
+    private byte huntingPhaseIndex;
 
     private byte numGhostsKilledInLevel;
 
@@ -184,7 +184,7 @@ public class GameLevel {
         ghosts().forEach(Ghost::hide);
         deactivateBonus();
         world.mazeFlashing().reset();
-        stopHuntingTimer();
+        stopHuntingPhase();
         Logger.trace("Game level {} ({}) ended.", levelNumber, game.variant());
     }
 
@@ -398,23 +398,23 @@ public class GameLevel {
      * respective corners and circle around the walls in their corner, phases 1, 3, 5, 7 are chasing phases where the
      * ghosts attack Pac-Man.
      *
-     * @param phase hunting phase (0..7)
+     * @param index hunting phase index (0..7)
      */
-    public void startHunting(int phase) {
-        if (phase < 0 || phase > 7) {
-            throw new IllegalArgumentException("Hunting phase must be 0..7, but is " + phase);
+    public void startHuntingPhase(int index) {
+        if (index < 0 || index > 7) {
+            throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + index);
         }
-        huntingPhase = (byte) phase;
+        huntingPhaseIndex = (byte) index;
         var durations = game.huntingDurations(levelNumber);
-        var ticks = durations[phase] == -1 ? TickTimer.INDEFINITE : durations[phase];
+        var ticks = durations[index] == -1 ? TickTimer.INDEFINITE : durations[index];
         huntingTimer.reset(ticks);
         huntingTimer.start();
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
-            phase, currentHuntingPhaseName(), huntingTimer.duration(),
+            index, currentHuntingPhaseName(), huntingTimer.duration(),
             (float) huntingTimer.duration() / GameModel.FPS, huntingTimer);
     }
 
-    private void stopHuntingTimer() {
+    private void stopHuntingPhase() {
         huntingTimer.stop();
         Logger.info("Hunting timer stopped");
     }
@@ -425,9 +425,9 @@ public class GameLevel {
      *
      * @return if new hunting phase has been started
      */
-    private boolean updateHuntingTimer() {
+    private boolean updateHuntingPhase() {
         if (huntingTimer.hasExpired()) {
-            startHunting(huntingPhase + 1);
+            startHuntingPhase(huntingPhaseIndex + 1);
             return true;
         }
         huntingTimer.advance();
@@ -437,8 +437,8 @@ public class GameLevel {
     /**
      * @return number of current phase <code>(0-7)
      */
-    public int huntingPhase() {
-        return huntingPhase;
+    public int huntingPhaseIndex() {
+        return huntingPhaseIndex;
     }
 
     /**
@@ -515,18 +515,18 @@ public class GameLevel {
      * @return (optional) index of current scattering phase <code>(0-3)</code>
      */
     public Optional<Integer> scatterPhase() {
-        return isEven(huntingPhase) ? Optional.of(huntingPhase / 2) : Optional.empty();
+        return isEven(huntingPhaseIndex) ? Optional.of(huntingPhaseIndex / 2) : Optional.empty();
     }
 
     /**
      * @return (optional) index of current chasing phase <code>(0-3)</code>
      */
     public Optional<Integer> chasingPhase() {
-        return isOdd(huntingPhase) ? Optional.of(huntingPhase / 2) : Optional.empty();
+        return isOdd(huntingPhaseIndex) ? Optional.of(huntingPhaseIndex / 2) : Optional.empty();
     }
 
     public String currentHuntingPhaseName() {
-        return isEven(huntingPhase) ? "Scattering" : "Chasing";
+        return isEven(huntingPhaseIndex) ? "Scattering" : "Chasing";
     }
 
     /**
@@ -687,9 +687,9 @@ public class GameLevel {
 
         // Update hunting timer
         if (thisFrame.pacPowerStarts || thisFrame.pacKilled) {
-            stopHuntingTimer();
+            stopHuntingPhase();
         } else {
-            boolean huntingPhaseChange = updateHuntingTimer();
+            boolean huntingPhaseChange = updateHuntingPhase();
             if (huntingPhaseChange) {
                 ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
             }

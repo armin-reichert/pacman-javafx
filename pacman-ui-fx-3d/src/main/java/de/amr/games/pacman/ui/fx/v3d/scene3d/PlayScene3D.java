@@ -229,7 +229,7 @@ public class PlayScene3D implements GameScene {
                 level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
             }
             if (!level3D.level().isDemoLevel()) {
-                context.soundHandler().ensureSirenStarted(context.gameVariant(), level3D.level().huntingPhase() / 2);
+                context.soundHandler().ensureSirenStarted(context.gameVariant(), level3D.level().huntingPhaseIndex() / 2);
             }
         }
     }
