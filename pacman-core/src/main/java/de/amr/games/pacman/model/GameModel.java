@@ -8,7 +8,6 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.RouteBasedSteering;
 import de.amr.games.pacman.lib.RuleBasedSteering;
 import de.amr.games.pacman.lib.Score;
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
@@ -21,7 +20,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.checkGameVariant;
+import static de.amr.games.pacman.lib.Globals.checkLevelNumber;
 import static de.amr.games.pacman.model.world.ArcadeWorld.*;
 
 /**
@@ -191,7 +191,7 @@ public class GameModel {
         if (variant == GameVariant.PACMAN || levelNumber <= 7) {
             levelCounter.add(level.bonusSymbol(0));
             if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
-                levelCounter.remove(0);
+                levelCounter.removeFirst();
             }
         }
         score.setLevelNumber(levelNumber);
