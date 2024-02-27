@@ -925,7 +925,7 @@ public class GameLevel {
                 bonus = new StaticBonus(symbol, points);
                 int ticks = randomInt(9 * FPS, 10 * FPS); // between 9 and 10 seconds
                 bonus.setEdible(ticks);
-                bonus.entity().setPosition(GameModel.BONUS_POSITION_PACMAN);
+                bonus.entity().setPosition(ArcadeWorld.BONUS_POSITION);
                 publishGameEvent(game, GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
             }
         }

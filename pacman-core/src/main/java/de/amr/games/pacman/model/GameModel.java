@@ -36,14 +36,10 @@ public class GameModel {
     public static final byte CYAN_GHOST = 2;
     public static final byte ORANGE_GHOST = 3;
 
-    /**
-     * Game loop frequency.
-     */
+    /** Game loop frequency. */
     public static final short FPS = 60;
 
-    /**
-     * Pixels/tick at 100% relative speed.
-     */
+    /** Pixels/tick at 100% relative speed. */
     public static final float SPEED_PX_100_PERCENT = 1.25f;
     public static final float SPEED_PX_INSIDE_HOUSE = 0.5f; // correct?
     public static final float SPEED_PX_RETURNING_TO_HOUSE = 2.0f; // correct?
@@ -139,8 +135,6 @@ public class GameModel {
     public static final byte PACMAN_KEY = 7;
 
     public static final byte[] BONUS_VALUES_PACMAN = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
-
-    public static final Vector2f BONUS_POSITION_PACMAN = halfTileRightOf(13, 20);
 
     private static final File HIGHSCORE_FILE_PACMAN = new File(System.getProperty("user.home"), "highscore-pacman.xml");
     private static final File HIGHSCORE_FILE_MS_PACMAN = new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
