@@ -44,7 +44,7 @@ public class InfoBoxGameInfo extends InfoBox {
     private String fmtHuntingPhase(GameLevel level) {
         var huntingTimer = level.huntingTimer();
         return "%s #%d%s".formatted(level.currentHuntingPhaseName(),
-            level.scatterPhase().isPresent() ? level.scatterPhase().getAsInt() : level.chasingPhase().orElse(42),
+            level.scatterPhase().isPresent() ? level.scatterPhase().get() : level.chasingPhase().orElse(42),
             huntingTimer.isStopped() ? " STOPPED" : "");
     }
 

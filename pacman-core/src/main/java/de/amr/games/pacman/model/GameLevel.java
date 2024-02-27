@@ -514,15 +514,15 @@ public class GameLevel {
     /**
      * @return (optional) index of current scattering phase <code>(0-3)</code>
      */
-    public OptionalInt scatterPhase() {
-        return isEven(huntingPhase) ? OptionalInt.of(huntingPhase / 2) : OptionalInt.empty();
+    public Optional<Integer> scatterPhase() {
+        return isEven(huntingPhase) ? Optional.of(huntingPhase / 2) : Optional.empty();
     }
 
     /**
      * @return (optional) index of current chasing phase <code>(0-3)</code>
      */
-    public OptionalInt chasingPhase() {
-        return isOdd(huntingPhase) ? OptionalInt.of(huntingPhase / 2) : OptionalInt.empty();
+    public Optional<Integer> chasingPhase() {
+        return isOdd(huntingPhase) ? Optional.of(huntingPhase / 2) : Optional.empty();
     }
 
     public String currentHuntingPhaseName() {
