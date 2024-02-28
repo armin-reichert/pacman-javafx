@@ -101,7 +101,7 @@ public class GameLevel {
         pac.setWorld(world);
         pac.setFadingTicks(PAC_POWER_FADES_TICKS); // not sure
 
-        ghosts = new Ghost[]{
+        ghosts = new Ghost[] {
             new Ghost(RED_GHOST, "Blinky"),
             new Ghost(PINK_GHOST, "Pinky"),
             new Ghost(CYAN_GHOST, "Inky"),

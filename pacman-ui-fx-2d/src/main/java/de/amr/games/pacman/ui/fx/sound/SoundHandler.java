@@ -29,8 +29,8 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 public class SoundHandler implements GameEventListener {
 
     private final Theme theme;
-    protected AudioClip voiceClip;
-    protected final Animation voiceClipExecution = new PauseTransition();
+    private AudioClip voiceClip;
+    private final Animation voiceClipExecution = new PauseTransition();
 
     public SoundHandler(Theme theme) {
         this.theme = theme;
@@ -39,19 +39,20 @@ public class SoundHandler implements GameEventListener {
     public AudioClip audioClip(GameVariant gameVariant, String clipName) {
         checkNotNull(gameVariant);
         checkNotNull(clipName);
-        return switch(gameVariant) {
+        return switch (gameVariant) {
             case MS_PACMAN -> theme.audioClip("mspacman." + clipName);
             case PACMAN -> theme.audioClip("pacman." + clipName);
         };
     }
 
-    private boolean isRealLevel(GameEvent event) {
-        return !event.game.level().map(GameLevel::isDemoLevel).orElse(true);
+    private GameLevel getLevel(GameEvent event) {
+        return event.game.level().orElse(null);
     }
 
     @Override
     public void onBonusEaten(GameEvent event) {
-        if (isRealLevel(event)) {
+        var level = getLevel(event);
+        if (level != null && !level.isDemoLevel()) {
             audioClip(event.game.variant(), "audio.bonus_eaten").play();
         }
     }
@@ -63,67 +64,72 @@ public class SoundHandler implements GameEventListener {
 
     @Override
     public void onExtraLifeWon(GameEvent event) {
-        if (isRealLevel(event)) {
+        var level = getLevel(event);
+        if (level != null && !level.isDemoLevel()) {
             audioClip(event.game.variant(), "audio.extra_life").play();
         }
     }
 
     @Override
     public void onGhostEaten(GameEvent event) {
-        if (isRealLevel(event)) {
+        var level = getLevel(event);
+        if (level != null && !level.isDemoLevel()) {
             audioClip(event.game.variant(), "audio.ghost_eaten").play();
         }
     }
 
     @Override
     public void onHuntingPhaseStarted(GameEvent event) {
-        event.game.level().ifPresent(level -> {
-            if (!level.isDemoLevel()) {
-                level.scatterPhase().ifPresent(phase -> ensureSirenStarted(event.game.variant(), phase));
-            }
-        });
+        var level = getLevel(event);
+        if (level != null && !level.isDemoLevel()) {
+            level.scatterPhase().ifPresent(phase -> ensureSirenStarted(event.game.variant(), phase));
+        }
     }
 
     @Override
     public void onIntermissionStarted(GameEvent event) {
-        int intermissionNumber = 0;
+        int number = 0; // undefined
         if (GameController.it().state() == GameState.INTERMISSION_TEST) {
-            intermissionNumber = GameController.it().intermissionTestNumber;
-        } else if (event.game.level().isPresent()) {
-            intermissionNumber = event.game.level().get().intermissionNumber();
+            number = GameController.it().intermissionTestNumber;
+        } else {
+            var level = getLevel(event);
+            if (level != null) {
+                number = level.intermissionNumber();
+            }
         }
-        if (intermissionNumber > 0) {
+        if (number != 0) {
             GameVariant variant = event.game.variant();
-            if (variant == GameVariant.MS_PACMAN) {
-                audioClip(variant, "audio.intermission." + intermissionNumber).play();
-            } else {
-                var clip = audioClip(variant, "audio.intermission");
-                int cycleCount = intermissionNumber == 1 || intermissionNumber == 3 ? 2 : 1;
-                clip.setCycleCount(cycleCount);
-                clip.play();
+            switch (variant) {
+                case MS_PACMAN -> audioClip(variant, "audio.intermission." + number).play();
+                case PACMAN -> {
+                    var clip = audioClip(variant, "audio.intermission");
+                    clip.setCycleCount(number == 1 || number == 3 ? 2 : 1);
+                    clip.play();
+                }
             }
         }
     }
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        event.game.level().ifPresent(level -> {
-            if (!level.isDemoLevel() && level.number() == 1) {
-                audioClip(event.game.variant(), "audio.game_ready").play();
-            }
-        });
+        var level = getLevel(event);
+        if (level != null && !level.isDemoLevel() && level.number() == 1) {
+            audioClip(event.game.variant(), "audio.game_ready").play();
+        }
     }
 
     @Override
     public void onPacDied(GameEvent event) {
-        if (isRealLevel(event)) {
+        var level = getLevel(event);
+        if (level != null && !level.isDemoLevel()) {
             audioClip(event.game.variant(), "audio.pacman_death").play();
         }
     }
 
     @Override
     public void onPacFoundFood(GameEvent event) {
-        if (isRealLevel(event)) {
+        var level = getLevel(event);
+        if (level != null && !level.isDemoLevel()) {
             //TODO (fixme) this does not sound 100% as in the original game
             ensureLoop(audioClip(event.game.variant(), "audio.pacman_munch"), AudioClip.INDEFINITE);
         }
@@ -131,7 +137,8 @@ public class SoundHandler implements GameEventListener {
 
     @Override
     public void onPacGetsPower(GameEvent event) {
-        if (isRealLevel(event)) {
+        var level = getLevel(event);
+        if (level != null && !level.isDemoLevel()) {
             stopSirens(event.game.variant());
             var clip = audioClip(event.game.variant(), "audio.pacman_power");
             clip.stop();
@@ -142,12 +149,11 @@ public class SoundHandler implements GameEventListener {
 
     @Override
     public void onPacLostPower(GameEvent event) {
-        event.game.level().ifPresent(level -> {
-            if (!level.isDemoLevel()) {
-                audioClip(event.game.variant(), "audio.pacman_power").stop();
-                ensureSirenStarted(event.game.variant(), level.huntingPhaseIndex() / 2);
-            }
-        });
+        var level = getLevel(event);
+        if (level != null && !level.isDemoLevel()) {
+            audioClip(event.game.variant(), "audio.pacman_power").stop();
+            ensureSirenStarted(event.game.variant(), level.huntingPhaseIndex() / 2);
+        }
     }
 
     @Override
