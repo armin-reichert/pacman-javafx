@@ -766,10 +766,10 @@ public class GameLevel {
     private void killGhost(Ghost ghost) {
         ghost.setKilledIndex(numGhostsKilledByEnergizer);
         ghost.setState(EATEN);
-        numGhostsKilledByEnergizer += 1;
-        thisFrame.killedGhosts.add(ghost);
-        int points = game.pointsForKillingGhost(ghost.killedIndex());
+        int points = game.pointsForKillingGhost(numGhostsKilledByEnergizer);
         game.scorePoints(points);
+        thisFrame.killedGhosts.add(ghost);
+        numGhostsKilledByEnergizer += 1;
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }
 
@@ -795,7 +795,7 @@ public class GameLevel {
                 // Blinky's "cruise elroy" state is re-enabled when orange ghost is unlocked
                 setCruiseElroyStateEnabled(true);
             }
-            Logger.info("{} unlocked: {}", unlocked.ghost().name(), unlocked.reason());
+            Logger.info("{} unlocked: {}", ghost.name(), unlocked.reason());
         });
     }
 
