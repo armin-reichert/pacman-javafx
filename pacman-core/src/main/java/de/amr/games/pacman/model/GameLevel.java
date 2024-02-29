@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
@@ -669,7 +668,8 @@ public class GameLevel {
         }
 
         // Now check who gets killed
-        thisFrame.pacPrey = ghosts(FRIGHTENED).filter(pac::sameTile).collect(Collectors.toList());
+        thisFrame.pacPrey.clear();
+        thisFrame.pacPrey.addAll(ghosts(FRIGHTENED).filter(pac::sameTile).toList());
         thisFrame.pacKilled = !GameController.it().isPacImmune() && ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
 
         // Update world
@@ -745,7 +745,8 @@ public class GameLevel {
      * Called by cheat action only.
      */
     public void killAllHuntingAndFrightenedGhosts() {
-        thisFrame.pacPrey = ghosts(HUNTING_PAC, FRIGHTENED).collect(Collectors.toList());
+        thisFrame.pacPrey.clear();
+        thisFrame.pacPrey.addAll(ghosts(HUNTING_PAC, FRIGHTENED).toList());
         numGhostsKilledByEnergizer = 0;
         killEdibleGhosts();
     }
