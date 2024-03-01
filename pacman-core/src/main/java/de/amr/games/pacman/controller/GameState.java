@@ -92,7 +92,7 @@ public enum GameState implements FsmState<GameModel> {
                 if (gameController().hasCredit() && !game.isPlaying()) { // start game
                     if (timer.tick() == 120) {
                         level.guys().forEach(Creature::show);
-                    } else if (timer.tick() == 240) {
+                    } else if (timer.tick() == 260) {
                         game.setPlaying(true);
                         level.startHuntingPhase(0);
                         gameController().changeState(GameState.HUNTING);
