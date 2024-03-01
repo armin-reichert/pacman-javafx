@@ -157,7 +157,7 @@ public enum GameState implements FsmState<GameModel> {
                 if (timer.hasExpired()) {
                     if (!gameController().hasCredit()) { // from demo level back to intro scene
                         gameController().changeState(INTRO);
-                    } else if (level.intermissionNumber() > 0) {
+                    } else if (level.data().intermissionNumber() > 0) {
                         gameController().changeState(INTERMISSION); // play intermission scene
                     } else {
                         gameController().changeState(CHANGING_TO_NEXT_LEVEL); // next level
@@ -167,7 +167,7 @@ public enum GameState implements FsmState<GameModel> {
                     level.pac().resetAnimation();
                     var flashing = level.world().mazeFlashing();
                     if (timer.atSecond(1)) {
-                        flashing.restart(2 * level.numFlashes());
+                        flashing.restart(2 * level.data().numFlashes());
                     } else {
                         flashing.tick();
                     }

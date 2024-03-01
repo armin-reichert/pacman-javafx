@@ -27,27 +27,13 @@ import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
- * A game level. Each level is parametrized by the following data:
- * <pre>
- * 	pacSpeedPercentage             = data[0];
- * 	ghostSpeedPercentage           = data[1];
- * 	ghostSpeedTunnelPercentage     = data[2];
- * 	elroy1DotsLeft                 = data[3];
- * 	elroy1SpeedPercentage          = data[4];
- * 	elroy2DotsLeft                 = data[5];
- * 	elroy2SpeedPercentage          = data[6];
- * 	pacSpeedPoweredPercentage      = data[7];
- * 	ghostSpeedFrightenedPercentage = data[8];
- * 	pacPowerSeconds                = data[9];
- * 	numFlashes                     = data[10];
- * 	intermissionNumber             = data[11];
- * 	</pre>
+ * A game level.
  *
  * @author Armin Reichert
  */
 public class GameLevel {
 
-    private final byte[] data;
+    private final GameLevelData data;
 
     private final GameModel game;
 
@@ -81,16 +67,16 @@ public class GameLevel {
 
     private byte cruiseElroyState;
 
-    public GameLevel(GameModel game, World world, int number, byte[] data, boolean demoLevel) {
+    public GameLevel(GameModel game, World world, int number, byte[] values, boolean demoLevel) {
         checkGameNotNull(game);
         checkNotNull(world);
         checkLevelNumber(number);
-        checkNotNull(data);
+        checkNotNull(values);
 
         this.game = game;
         this.world = world;
         this.levelNumber = number;
-        this.data = data;
+        this.data = new GameLevelData(values);
         this.demoLevel = demoLevel;
 
         boolean isMsPacManGame = game.variant() == GameVariant.MS_PACMAN;
@@ -189,89 +175,8 @@ public class GameLevel {
         Logger.trace("Game level {} ({}) ended.", levelNumber, game.variant());
     }
 
-
-    /**
-     * Relative Pac-Man speed (percentage of base speed).
-     */
-    public final byte pacSpeedPercentage() {
-        return data[0];
-    }
-
-    /**
-     * Relative ghost speed when hunting or scattering.
-     */
-    public final byte ghostSpeedPercentage() {
-        return data[1];
-    }
-
-    /**
-     * Relative ghost speed inside tunnel.
-     */
-    public final byte ghostSpeedTunnelPercentage() {
-        return data[2];
-    }
-
-    /**
-     * Number of pellets left when Blinky becomes "Cruise Elroy" grade 1.
-     */
-    public final byte elroy1DotsLeft() {
-        return data[3];
-    }
-
-    /**
-     * Relative speed of Blinky being "Cruise Elroy" grade 1.
-     */
-    public final byte elroy1SpeedPercentage() {
-        return data[4];
-    }
-
-    /**
-     * Number of pellets left when Blinky becomes "Cruise Elroy" grade 2.
-     */
-    public final byte elroy2DotsLeft() {
-        return data[5];
-    }
-
-    /**
-     * Relative speed of Blinky being "Cruise Elroy" grade 2.
-     */
-    public final byte elroy2SpeedPercentage() {
-        return data[6];
-    }
-
-    /**
-     * Relative speed of Pac-Man in power mode.
-     */
-    public final byte pacSpeedPoweredPercentage() {
-        return data[7];
-    }
-
-    /**
-     * Relative speed of frightened ghost.
-     */
-    public final byte ghostSpeedFrightenedPercentage() {
-        return data[8];
-    }
-
-    /**
-     * Number of seconds Pac-Man gets power.
-     */
-    public final byte pacPowerSeconds() {
-        return data[9];
-    }
-
-    /**
-     * Number of maze flashes at end of this level.
-     */
-    public final byte numFlashes() {
-        return data[10];
-    }
-
-    /**
-     * Number of intermission scene played after this level (1-3. 0 = no intermission).
-     */
-    public final byte intermissionNumber() {
-        return data[11];
+    public GameLevelData data() {
+        return data;
     }
 
     public GameModel game() {
@@ -486,8 +391,8 @@ public class GameLevel {
 
     private void ghostRoamsThroughWorld(Ghost ghost) {
         var speed = world().isTunnel(ghost.tile())
-            ? ghostSpeedTunnelPercentage()
-            : ghostSpeedFrightenedPercentage();
+            ? data.ghostSpeedTunnelPercentage()
+            : data.ghostSpeedFrightenedPercentage();
         if (!world.belongsToPortal(ghost.tile()) && (ghost.isNewTileEntered() || !ghost.moved())) {
             ghost.setWishDir(chooseFrightenedDirection(ghost));
         }
@@ -560,15 +465,15 @@ public class GameLevel {
      */
     public byte huntingSpeedPercentage(Ghost ghost) {
         if (world.isTunnel(ghost.tile())) {
-            return ghostSpeedTunnelPercentage();
+            return data.ghostSpeedTunnelPercentage();
         }
         if (ghost.id() == RED_GHOST && cruiseElroyState == 1) {
-            return elroy1SpeedPercentage();
+            return data.elroy1SpeedPercentage();
         }
         if (ghost.id() == RED_GHOST && cruiseElroyState == 2) {
-            return elroy2SpeedPercentage();
+            return data.elroy2SpeedPercentage();
         }
-        return ghostSpeedPercentage();
+        return data.ghostSpeedPercentage();
     }
 
     /* --- Here comes the main logic of the game. --- */
@@ -580,7 +485,7 @@ public class GameLevel {
             thisFrame.foodFoundTile = pacTile;
             thisFrame.energizerFound = world.isEnergizerTile(pacTile);
         }
-        if (thisFrame.energizerFound && pacPowerSeconds() > 0) {
+        if (thisFrame.energizerFound && data.pacPowerSeconds() > 0) {
             thisFrame.pacPowerStarts = true;
             thisFrame.pacPowerActive = true;
         } else {
@@ -609,16 +514,16 @@ public class GameLevel {
             game.scorePoints(GameModel.POINTS_NORMAL_PELLET);
         }
         ghostHouseManagement.onFoodFound();
-        if (world.uneatenFoodCount() == elroy1DotsLeft()) {
+        if (world.uneatenFoodCount() == data.elroy1DotsLeft()) {
             setCruiseElroyState(1);
-        } else if (world.uneatenFoodCount() == elroy2DotsLeft()) {
+        } else if (world.uneatenFoodCount() == data.elroy2DotsLeft()) {
             setCruiseElroyState(2);
         }
         publishGameEvent(game, GameEventType.PAC_FOUND_FOOD, foodTile);
     }
 
     private void handlePacPowerStarts() {
-        pac.powerTimer().restartSeconds(pacPowerSeconds());
+        pac.powerTimer().restartSeconds(data.pacPowerSeconds());
         Logger.info("{} power starting, duration {} ticks", pac.name(), pac.powerTimer().duration());
         ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
         ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
@@ -717,7 +622,7 @@ public class GameLevel {
                 publishGameEvent(game, GameEventType.BONUS_EATEN);
             } else if (timer.atSecond(6.5)) {
                 var flashing = world().mazeFlashing();
-                flashing.restart(2 * numFlashes());
+                flashing.restart(2 * data.numFlashes());
             } else if (timer.atSecond(12.0)) {
                 end();
                 game.createAndStartLevel(levelNumber + 1);

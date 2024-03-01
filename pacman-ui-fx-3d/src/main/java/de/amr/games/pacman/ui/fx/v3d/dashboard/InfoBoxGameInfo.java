@@ -21,7 +21,6 @@ public class InfoBoxGameInfo extends InfoBox {
 
         addInfo("Game Scene", () -> sceneContext.currentGameScene().isPresent()
             ? sceneContext.currentGameScene().get().getClass().getSimpleName() : "n/a");
-        //addInfo("", () -> "w=%.0f h=%.0f".formatted(gameScene().root().getWidth(), gameScene().root().getHeight()));
         addInfo("Game State", () -> "%s".formatted(sceneContext.gameState()));
         addInfo("", () -> "Running:   %s%s".formatted(sceneContext.gameState().timer().tick(),
             sceneContext.gameState().timer().isStopped() ? " (STOPPED)" : ""));
@@ -63,30 +62,30 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtGhostSpeed(GameLevel level) {
-        return fmtSpeed(level.ghostSpeedPercentage());
+        return fmtSpeed(level.data().ghostSpeedPercentage());
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level) {
-        return fmtSpeed(level.ghostSpeedFrightenedPercentage());
+        return fmtSpeed(level.data().ghostSpeedFrightenedPercentage());
     }
 
     private String fmtGhostSpeedTunnel(GameLevel level) {
-        return fmtSpeed(level.ghostSpeedTunnelPercentage());
+        return fmtSpeed(level.data().ghostSpeedTunnelPercentage());
     }
 
     private String fmtPacSpeed(GameLevel level) {
-        return fmtSpeed(level.pacSpeedPercentage());
+        return fmtSpeed(level.data().pacSpeedPercentage());
     }
 
     private String fmtPacSpeedPowered(GameLevel level) {
-        return fmtSpeed(level.pacSpeedPoweredPercentage());
+        return fmtSpeed(level.data().pacSpeedPoweredPercentage());
     }
 
     private String fmtPacPowerSeconds(GameLevel level) {
-        return "%d sec".formatted(level.pacPowerSeconds());
+        return "%d sec".formatted(level.data().pacPowerSeconds());
     }
 
     private String fmtNumFlashes(GameLevel level) {
-        return "%d".formatted(level.numFlashes());
+        return "%d".formatted(level.data().numFlashes());
     }
 }
