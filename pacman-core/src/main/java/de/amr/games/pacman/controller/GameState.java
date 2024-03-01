@@ -284,7 +284,6 @@ public enum GameState implements FsmState<GameModel> {
             game.updateHighScore();
             gameController().manualPacSteering().setEnabled(false);
             gameController().changeCredit(-1);
-            publishGameEvent(game, GameEventType.STOP_ALL_SOUNDS);
         }
 
         @Override

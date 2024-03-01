@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -67,6 +68,13 @@ public class SoundHandler implements GameEventListener {
         var level = getLevel(event);
         if (level != null && !level.isDemoLevel()) {
             audioClip(event.game.variant(), "audio.extra_life").play();
+        }
+    }
+
+    @Override
+    public void onGameStateChange(GameStateChangeEvent stateChangeEvent) {
+        if (stateChangeEvent.newState == GameState.GAME_OVER) {
+            stopAllSounds();
         }
     }
 
