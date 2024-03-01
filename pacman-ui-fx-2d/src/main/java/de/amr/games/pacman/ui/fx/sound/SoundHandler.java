@@ -94,7 +94,7 @@ public class SoundHandler implements GameEventListener {
         } else {
             var level = getLevel(event);
             if (level != null) {
-                number = level.intermissionNumber();
+                number = level.data().intermissionNumber();
             }
         }
         if (number != 0) {

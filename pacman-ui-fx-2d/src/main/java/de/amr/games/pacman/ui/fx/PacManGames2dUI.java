@@ -10,7 +10,6 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Globals;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.ArcadeWorld;
@@ -364,7 +363,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             case BOOT -> config.get("boot");
             case CREDIT -> config.get("credit");
             case INTRO -> config.get("intro");
-            case INTERMISSION -> config.get("cut" + gameLevel().map(GameLevel::intermissionNumber).orElse((byte) 1));
+            case INTERMISSION -> config.get("cut" + gameLevel().map(level -> level.data().intermissionNumber()).orElse((byte) 1));
             case INTERMISSION_TEST -> config.get("cut" + gameController().intermissionTestNumber);
             default -> config.get("play");
         };
