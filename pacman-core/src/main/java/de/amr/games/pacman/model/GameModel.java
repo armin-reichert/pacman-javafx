@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.RouteBasedSteering;
 import de.amr.games.pacman.lib.RuleBasedSteering;
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.world.ArcadeWorld;
-import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -176,11 +175,12 @@ public class GameModel {
      */
     public void createAndStartLevel(int levelNumber) {
         checkLevelNumber(levelNumber);
-        World world = switch (variant) {
-            case MS_PACMAN -> createMsPacManWorld(mapNumberMsPacMan(levelNumber));
-            case PACMAN -> createPacManWorld();
+        level = switch (variant) {
+            case MS_PACMAN -> new GameLevel(this, createMsPacManWorld(mapNumberMsPacMan(levelNumber)),
+                levelNumber, LEVEL_DATA[dataRow(levelNumber)], false);
+            case PACMAN -> new GameLevel(this, createPacManWorld(),
+                levelNumber, LEVEL_DATA[dataRow(levelNumber)], false);
         };
-        level = new GameLevel(this, world, levelNumber, LEVEL_DATA[dataRow(levelNumber)], false);
 
         if (levelNumber == 1) {
             levelCounter.clear();
@@ -206,31 +206,33 @@ public class GameModel {
     }
 
     /**
-     * Creates and starts the demo game level ("attract mode").
+     * Creates and starts the demo game level ("attract mode"). Behavior of the ghosts is different from the original
+     * Arcade game because they do not follow a predetermined path but change their direction randomly when frightened.
+     * In Pac-Man variant, Pac-Man at least follows the same path as in the Arcade game, but in Ms. Pac-Man game, she
+     * does not behave as in the Arcade game but hunts the ghosts using some goal-driven algorithm.
      */
     public void createAndStartDemoLevel() {
-        scoringEnabled = false;
         switch (variant) {
             case MS_PACMAN -> {
-                var world = createMsPacManWorld(1);
-                level = new GameLevel(this, world, 1, LEVEL_DATA[0], true);
-                // TODO this is not the exact behavior from the Arcade game
+                level = new GameLevel(this, createMsPacManWorld(1), 1, LEVEL_DATA[0], true);
                 level.pac().setSteering(new RuleBasedSteering());
             }
             case PACMAN -> {
-                var world = createPacManWorld();
-                level = new GameLevel(this, world, 1, LEVEL_DATA[0], true);
-                // TODO this is not the exact behavior from the Arcade game
+                level = new GameLevel(this, createPacManWorld(), 1, LEVEL_DATA[0], true);
                 level.pac().setSteering(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
             }
         }
+
+        scoringEnabled = false;
+        score.setLevelNumber(level.number());
+
         Logger.info("Demo level created ({})", variant);
         publishGameEvent(this, GameEventType.LEVEL_CREATED);
 
-        score.setLevelNumber(level.number());
+        // at this point the animations of Pac-Man and the ghosts must have been created!
         level.letsGetReadyToRumble(true);
-        Logger.info("Demo Level {} started ({})", level.number(), variant);
 
+        Logger.info("Demo Level {} started ({})", level.number(), variant);
         publishGameEvent(this, GameEventType.LEVEL_STARTED);
     }
 
