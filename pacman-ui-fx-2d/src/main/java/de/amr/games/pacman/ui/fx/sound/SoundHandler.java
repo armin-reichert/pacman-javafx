@@ -73,9 +73,10 @@ public class SoundHandler implements GameEventListener {
 
     @Override
     public void onGameStateChange(GameStateChangeEvent stateChangeEvent) {
-        if (stateChangeEvent.newState == GameState.GAME_OVER) {
-            stopAllSounds();
-        }
+        switch (stateChangeEvent.newState) {
+            case READY, PACMAN_DYING, LEVEL_COMPLETE, GAME_OVER -> stopAllSounds();
+            default -> {}
+        };
     }
 
     @Override

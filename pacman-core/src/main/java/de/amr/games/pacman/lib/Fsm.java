@@ -162,7 +162,7 @@ public abstract class Fsm<S extends FsmState<C>, C> {
             currentState.onUpdate(context());
         } catch (Exception x) {
             Logger.trace("Error updating state {}, timer={}", currentState, currentState.timer());
-            x.printStackTrace();
+            Logger.error(x);
         }
         if (currentState.timer().state() == State.READY) {
             currentState.timer().start();

@@ -206,9 +206,9 @@ public class GameModel {
     }
 
     /**
-     * Creates the demo game level ("attract mode").
+     * Creates and starts the demo game level ("attract mode").
      */
-    public void startDemoLevel() {
+    public void createAndStartDemoLevel() {
         scoringEnabled = false;
         switch (variant) {
             case MS_PACMAN -> {

@@ -28,7 +28,6 @@ import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 public enum GameState implements FsmState<GameModel> {
 
     BOOT { // "Das muss das Boot abkönnen!"
-
         @Override
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
@@ -63,54 +62,56 @@ public enum GameState implements FsmState<GameModel> {
 
     CREDIT {
         @Override
-        public void onUpdate(GameModel game) {
-            // nothing to do here
-        }
+        public void onUpdate(GameModel game) {}
     },
 
     READY {
         @Override
         public void onEnter(GameModel game) {
-            publishGameEvent(game, GameEventType.STOP_ALL_SOUNDS);
             if (!gameController().hasCredit()) { // ready for demo level
                 game.reset();
-                game.startDemoLevel();
-            } else if (game.isPlaying()) { // resume game
+            } else if (game.isPlaying()) { // resume running game
                 game.level().ifPresent(level -> level.letsGetReadyToRumble(true));
-            } else { // ready for new game
+            } else { // prepare new game
                 game.score().reset();
                 game.clearLevelCounter();
                 game.reset();
-                game.createAndStartLevel(1);
             }
         }
 
         @Override
         public void onUpdate(GameModel game) {
-            // not sure about exact timing
-            game.level().ifPresent(level -> {
-                if (gameController().hasCredit() && !game.isPlaying()) { // start game
-                    if (timer.tick() == 120) {
-                        level.guys().forEach(Creature::show);
-                    } else if (timer.tick() == 260) {
+            if (gameController().hasCredit() && !game.isPlaying()) { // new game
+                if (timer.tick() == 1) {
+                    game.createAndStartLevel(1);
+                } else if (timer.tick() == 120) {
+                    game.level().ifPresent(level -> level.guys().forEach(Creature::show));
+                } else if (timer.tick() == 260) {
+                    game.level().ifPresent(level -> {
                         game.setPlaying(true);
                         level.startHuntingPhase(0);
                         gameController().changeState(GameState.HUNTING);
-                    }
-                } else if (game.isPlaying()) { // resume game play
-                    if (timer.tick() == 90) {
-                        level.guys().forEach(Creature::show);
-                        level.startHuntingPhase(0);
-                        gameController().changeState(GameState.HUNTING);
-                    }
-                } else { // start demo level
-                    if (timer.tick() == 130) {
-                        level.guys().forEach(Creature::show);
-                        level.startHuntingPhase(0);
-                        gameController().changeState(GameState.HUNTING);
-                    }
+                    });
                 }
-            });
+            } else if (game.isPlaying()) { // resume game play
+                if (timer.tick() == 90) {
+                    game.level().ifPresent(level -> {
+                        level.guys().forEach(Creature::show);
+                        level.startHuntingPhase(0);
+                        gameController().changeState(GameState.HUNTING);
+                    });
+                }
+            } else { // start demo level
+                if (timer.tick() == 1) {
+                    game.createAndStartDemoLevel();
+                } else if (timer.tick() == 130) {
+                    game.level().ifPresent(level -> {
+                        level.guys().forEach(Creature::show);
+                        level.startHuntingPhase(0);
+                        gameController().changeState(GameState.HUNTING);
+                    });
+                }
+            }
         }
     },
 
@@ -148,7 +149,6 @@ public enum GameState implements FsmState<GameModel> {
             gameController().manualPacSteering().setEnabled(false);
             timer.restartSeconds(4);
             game.level().ifPresent(GameLevel::end);
-            publishGameEvent(game, GameEventType.STOP_ALL_SOUNDS);
         }
 
         @Override
@@ -197,8 +197,8 @@ public enum GameState implements FsmState<GameModel> {
     GHOST_DYING {
         @Override
         public void onEnter(GameModel game) {
-            timer.restartSeconds(1);
             game.level().ifPresent(level -> {
+                timer.restartSeconds(1);
                 level.pac().hide();
                 level.ghosts().forEach(Ghost::stopAnimation);
                 publishGameEvent(game, GameEventType.GHOST_EATEN);
@@ -207,17 +207,16 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            if (timer.hasExpired()) {
-                gameController().resumePreviousState();
-            } else {
-                game.level().ifPresent(level -> {
-                    var steering = level.pac().steering().orElse(gameController().pacSteering());
-                    steering.steer(level, level.pac());
+            game.level().ifPresent(level -> {
+                if (timer.hasExpired()) {
+                    gameController().resumePreviousState();
+                } else {
+                    level.pac().steering().orElse(gameController().pacSteering()).steer(level, level.pac());
                     level.ghosts(GhostState.EATEN, GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
                         .forEach(ghost -> ghost.updateState(level.pac()));
                     level.world().energizerBlinking().tick();
-                });
-            }
+                }
+            });
         }
 
         @Override
@@ -237,7 +236,6 @@ public enum GameState implements FsmState<GameModel> {
                 gameController().manualPacSteering().setEnabled(false);
                 timer.restartSeconds(4);
                 level.onPacKilled();
-                publishGameEvent(game, GameEventType.STOP_ALL_SOUNDS);
             });
         }
 

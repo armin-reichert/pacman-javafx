@@ -61,7 +61,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
         PRESENTING_GHOSTS {
             @Override
             public void onUpdate(PacManIntro intro) {
-                if (timer.atSecond(0)) {
+                if (timer.tick() == 1) {
                     intro.ghostInfo[intro.ghostIndex].pictureVisible = true;
                 } else if (timer.atSecond(1.0)) {
                     intro.ghostInfo[intro.ghostIndex].characterVisible = true;

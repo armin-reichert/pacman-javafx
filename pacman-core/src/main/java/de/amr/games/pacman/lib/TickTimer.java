@@ -40,7 +40,7 @@ public class TickTimer {
     private final String name;
     private State state;
     private long duration;
-    private long tick; // 0..(duration - 1)
+    private long tick;
     private List<Consumer<TickTimerEvent>> subscribers;
 
     public TickTimer(String name) {
@@ -88,7 +88,7 @@ public class TickTimer {
      */
     public void reset(long ticks) {
         duration = ticks;
-        tick = 0;
+        tick = 1;
         state = READY;
         Logger.trace("{} reset", this);
         fireEvent(new TickTimerEvent(Type.RESET, ticks));
@@ -126,6 +126,7 @@ public class TickTimer {
             }
             default: {
                 state = RUNNING;
+                tick = 1;
                 Logger.trace("{} started", this);
                 fireEvent(new TickTimerEvent(Type.STARTED));
                 break;
