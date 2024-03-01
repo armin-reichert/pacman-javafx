@@ -72,7 +72,11 @@ class GhostHouseManagement {
         globalDotCounterEnabled = false;
     }
 
-    public void onFoodFound() {
+	public House house() {
+		return house;
+	}
+
+	public void onFoodFound() {
         if (globalDotCounterEnabled) {
             if (level.ghost(ORANGE_GHOST).is(LOCKED) && globalDotCounter == 32) {
                 Logger.trace("{} inside house when counter reached 32", level.ghost(ORANGE_GHOST).name());
@@ -104,7 +108,7 @@ class GhostHouseManagement {
         Logger.trace("{} dot counter = {}", ghost.name(), ghostDotCounters[ghost.id()]);
     }
 
-    public Optional<GhostUnlockInfo> checkIfNextGhostCanLeaveHouse() {
+    public Optional<GhostUnlockInfo> unlockGhost() {
         Ghost candidate = Stream.of(RED_GHOST, PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
             .map(level::ghost)
             .filter(ghost -> ghost.is(LOCKED))

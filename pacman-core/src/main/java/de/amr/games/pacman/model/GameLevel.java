@@ -10,7 +10,6 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.world.ArcadeWorld;
-import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
@@ -539,7 +538,7 @@ public class GameLevel {
      */
     public void letsGetReadyToRumble(boolean guysVisible) {
         pac.reset();
-        pac.setPosition(halfTileRightOf(13, 26));
+        pac.setPosition(ArcadeWorld.PAC_POSITION);
         pac.setMoveAndWishDir(Direction.LEFT);
         pac.setVisible(guysVisible);
         pac.resetAnimation();
@@ -677,7 +676,7 @@ public class GameLevel {
         world.energizerBlinking().tick();
 
         // Update guys
-        unlockGhost(world().house());
+        unlockGhost();
         var steering = pac.steering().orElse(GameController.it().pacSteering());
         steering.steer(this, pac);
         pac.update(this);
@@ -782,10 +781,10 @@ public class GameLevel {
         Logger.info("{} died at tile {}", pac.name(), pac.tile());
     }
 
-    private void unlockGhost(House house) {
-        ghostHouseManagement.checkIfNextGhostCanLeaveHouse().ifPresent(unlocked -> {
-            var ghost = unlocked.ghost();
-            if (ghost.insideHouse(house)) {
+    private void unlockGhost() {
+        ghostHouseManagement.unlockGhost().ifPresent(unlocked -> {
+            Ghost ghost = unlocked.ghost();
+            if (ghost.insideHouse(ghostHouseManagement.house())) {
                 ghost.setState(LEAVING_HOUSE);
             } else {
                 ghost.setMoveAndWishDir(LEFT);

@@ -232,6 +232,8 @@ public interface ArcadeWorld {
     Vector2i SCATTER_TARGET_LEFT_LOWER_CORNER = v2i(0, 34);
     Vector2i SCATTER_TARGET_RIGHT_LOWER_CORNER = v2i(27, 34);
 
+    Vector2f PAC_POSITION = halfTileRightOf(13, 26);
+
     Vector2f BONUS_POSITION = halfTileRightOf(13, 20);
 
     NavigationPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
