@@ -116,20 +116,13 @@ public class TickTimer {
      */
     public void start() {
         switch (state) {
-            case RUNNING: {
-                Logger.trace("Timer {} not started, already running", this);
-                break;
-            }
-            case EXPIRED: {
-                Logger.trace("Timer {} not started, has expired", this);
-                break;
-            }
-            default: {
+            case RUNNING -> Logger.trace("Timer {} not started, already running", this);
+            case EXPIRED -> Logger.trace("Timer {} not started, has expired", this);
+            default -> {
                 state = RUNNING;
                 tick = 1;
                 Logger.trace("{} started", this);
                 fireEvent(new TickTimerEvent(Type.STARTED));
-                break;
             }
         }
     }
