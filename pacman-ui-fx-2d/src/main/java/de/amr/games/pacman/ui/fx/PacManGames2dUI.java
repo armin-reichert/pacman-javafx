@@ -391,9 +391,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         updateStage();
     }
 
-    private void changeGameScene(GameScene prevGameScene, GameScene newGameScene) {
-    }
-
     // GameSceneContext interface implementation
 
     @Override
