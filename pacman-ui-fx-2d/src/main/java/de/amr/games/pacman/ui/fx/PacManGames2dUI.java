@@ -57,31 +57,31 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(
         "de.amr.games.pacman.ui.fx.texts.messages", PacManGames2dUI.class.getModule());
 
-    public static final KeyCodeCombination KEY_SHOW_HELP = just(KeyCode.H);
-    public static final KeyCodeCombination KEY_PAUSE = just(KeyCode.P);
-    public static final KeyCodeCombination KEY_QUIT = just(KeyCode.Q);
-    public static final KeyCodeCombination KEY_SELECT_VARIANT = just(KeyCode.V);
+    public static final KeyCodeCombination KEY_SHOW_HELP            = just(KeyCode.H);
+    public static final KeyCodeCombination KEY_PAUSE                = just(KeyCode.P);
+    public static final KeyCodeCombination KEY_QUIT                 = just(KeyCode.Q);
+    public static final KeyCodeCombination KEY_SELECT_VARIANT       = just(KeyCode.V);
 
-    public static final KeyCodeCombination KEY_AUTOPILOT = alt(KeyCode.A);
-    public static final KeyCodeCombination KEY_PLAY_CUTSCENES = alt(KeyCode.C);
-    public static final KeyCodeCombination KEY_DEBUG_INFO = alt(KeyCode.D);
-    public static final KeyCodeCombination KEY_CHEAT_EAT_ALL = alt(KeyCode.E);
-    public static final KeyCodeCombination KEY_IMMUNITY = alt(KeyCode.I);
-    public static final KeyCodeCombination KEY_CHEAT_ADD_LIVES = alt(KeyCode.L);
-    public static final KeyCodeCombination KEY_CHEAT_NEXT_LEVEL = alt(KeyCode.N);
-    public static final KeyCodeCombination KEY_TEST_LEVELS = alt(KeyCode.T);
-    public static final KeyCodeCombination KEY_CHEAT_KILL_GHOSTS = alt(KeyCode.X);
+    public static final KeyCodeCombination KEY_AUTOPILOT            = alt(KeyCode.A);
+    public static final KeyCodeCombination KEY_PLAY_CUTSCENES       = alt(KeyCode.C);
+    public static final KeyCodeCombination KEY_DEBUG_INFO           = alt(KeyCode.D);
+    public static final KeyCodeCombination KEY_CHEAT_EAT_ALL        = alt(KeyCode.E);
+    public static final KeyCodeCombination KEY_IMMUNITY             = alt(KeyCode.I);
+    public static final KeyCodeCombination KEY_CHEAT_ADD_LIVES      = alt(KeyCode.L);
+    public static final KeyCodeCombination KEY_CHEAT_NEXT_LEVEL     = alt(KeyCode.N);
+    public static final KeyCodeCombination KEY_TEST_LEVELS          = alt(KeyCode.T);
+    public static final KeyCodeCombination KEY_CHEAT_KILL_GHOSTS    = alt(KeyCode.X);
 
-    public static final KeyCodeCombination[] KEYS_SHOW_GAME_PAGE = {just(KeyCode.SPACE), just(KeyCode.ENTER)};
-    public static final KeyCodeCombination[] KEYS_SINGLE_STEP = {just(KeyCode.SPACE), shift(KeyCode.P)};
-    public static final KeyCodeCombination KEY_TEN_STEPS = shift(KeyCode.SPACE);
-    public static final KeyCodeCombination KEY_SIMULATION_FASTER = alt(KeyCode.PLUS);
-    public static final KeyCodeCombination KEY_SIMULATION_SLOWER = alt(KeyCode.MINUS);
-    public static final KeyCodeCombination KEY_SIMULATION_NORMAL = alt(KeyCode.DIGIT0);
-    public static final KeyCodeCombination[] KEYS_START_GAME = {just(KeyCode.DIGIT1), just(KeyCode.NUMPAD1)};
-    public static final KeyCodeCombination[] KEYS_ADD_CREDIT = {just(KeyCode.DIGIT5), just(KeyCode.NUMPAD5)};
-    public static final KeyCodeCombination KEY_BOOT = just(KeyCode.F3);
-    public static final KeyCodeCombination KEY_FULLSCREEN = just(KeyCode.F11);
+    public static final KeyCodeCombination[] KEYS_SHOW_GAME_PAGE    = {just(KeyCode.SPACE), just(KeyCode.ENTER)};
+    public static final KeyCodeCombination[] KEYS_SINGLE_STEP       = {just(KeyCode.SPACE), shift(KeyCode.P)};
+    public static final KeyCodeCombination KEY_TEN_STEPS            = shift(KeyCode.SPACE);
+    public static final KeyCodeCombination KEY_SIMULATION_FASTER    = alt(KeyCode.PLUS);
+    public static final KeyCodeCombination KEY_SIMULATION_SLOWER    = alt(KeyCode.MINUS);
+    public static final KeyCodeCombination KEY_SIMULATION_NORMAL    = alt(KeyCode.DIGIT0);
+    public static final KeyCodeCombination[] KEYS_START_GAME        = {just(KeyCode.DIGIT1), just(KeyCode.NUMPAD1)};
+    public static final KeyCodeCombination[] KEYS_ADD_CREDIT        = {just(KeyCode.DIGIT5), just(KeyCode.NUMPAD5)};
+    public static final KeyCodeCombination KEY_BOOT                 = just(KeyCode.F3);
+    public static final KeyCodeCombination KEY_FULLSCREEN           = just(KeyCode.F11);
 
     public static final int CANVAS_WIDTH_UNSCALED = ArcadeWorld.TILES_X * Globals.TS; // 28*8 = 224
     public static final int CANVAS_HEIGHT_UNSCALED = ArcadeWorld.TILES_Y * Globals.TS; // 36*8 = 288
@@ -372,7 +372,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     protected void updateOrReloadGameScene(boolean reload) {
         var nextGameScene = sceneMatchingCurrentGameState();
         if (nextGameScene == null) {
-            throw new IllegalStateException("No game scene found for game state " + gameController().state());
+            throw new IllegalStateException("No game scene found for game state " + gameState());
         }
         Logger.info("updateOrReloadGameScene {}, reload={}", nextGameScene.getClass().getSimpleName(), reload);
         GameScene prevGameScene = gameScenePy.get();
@@ -667,5 +667,4 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             });
         }
     }
-
 }
