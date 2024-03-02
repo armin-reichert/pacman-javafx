@@ -88,7 +88,7 @@ public class TickTimer {
      */
     public void reset(long ticks) {
         duration = ticks;
-        tick = 1;
+        tick = 0;
         state = READY;
         Logger.trace("{} reset", this);
         fireEvent(new TickTimerEvent(Type.RESET, ticks));

@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 
@@ -100,6 +101,7 @@ public enum GameState implements FsmState<GameModel> {
                 // start new game
                 if (timer.tick() == 1) {
                     game.createAndStartLevel(1);
+                    Logger.trace("Timer tick == 1, create level 1: {}", timer);
                 } else if (timer.tick() == 120) {
                     game.level().ifPresent(level -> level.guys().forEach(Creature::show));
                 } else if (timer.tick() == 260) {
@@ -366,7 +368,7 @@ public enum GameState implements FsmState<GameModel> {
         }
     };
 
-    final TickTimer timer = new TickTimer("Timer-" + name());
+    final TickTimer timer = new TickTimer("GameState-Timer-" + name());
 
     GameController gameController() {
         return GameController.it();

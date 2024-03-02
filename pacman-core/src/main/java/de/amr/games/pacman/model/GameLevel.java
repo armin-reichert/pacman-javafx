@@ -589,7 +589,10 @@ public class GameLevel {
 
         // Update bonus
         if (bonus != null) {
-            checkPacEatsBonus(bonus);
+            boolean eaten = checkPacEatsBonus(bonus);
+            if (eaten) {
+                publishGameEvent(game, GameEventType.BONUS_EATEN);
+            }
             bonus.update(this);
         }
 

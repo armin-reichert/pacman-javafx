@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.util;
 
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
+import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -66,11 +67,18 @@ public class Ufx {
      * @param action       code to run
      * @return pause transition
      */
-    public static PauseTransition actionAfterSeconds(double delaySeconds, Runnable action) {
+    public static Transition actionAfterSeconds(double delaySeconds, Runnable action) {
         checkNotNull(action);
         PauseTransition pause = pauseSeconds(delaySeconds);
         pause.setOnFinished(e -> action.run());
         return pause;
+    }
+
+    public static Transition immediateAction(Runnable action) {
+        checkNotNull(action);
+        var transition = new PauseTransition(Duration.ZERO);
+        transition.setOnFinished(e -> action.run());
+        return transition;
     }
 
     /**

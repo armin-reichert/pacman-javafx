@@ -9,7 +9,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.GameScene;
@@ -20,15 +19,13 @@ import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.entity.*;
-import javafx.animation.Animation;
-import javafx.animation.Interpolator;
-import javafx.animation.RotateTransition;
-import javafx.animation.SequentialTransition;
+import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
@@ -39,14 +36,12 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
-import static de.amr.games.pacman.ui.fx.util.Ufx.actionAfterSeconds;
-import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
+import static de.amr.games.pacman.ui.fx.util.Ufx.*;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 
 /**
@@ -87,6 +82,7 @@ public class PlayScene3D implements GameScene {
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
 
         readyMessageText3D = new Text3D();
+        setScoreVisible(true);
 
         var sceneRoot = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
         // initial sub-scene size is irrelevant, gets bound to main scene size in init method
@@ -111,16 +107,14 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void init() {
-        setScoreVisible(true);
-        resetReadyMessageText3D();
         perspectivePy.bind(PY_3D_PERSPECTIVE);
-        context.gameLevel().ifPresent(this::replaceGameLevel3D);
         Logger.info("3D play scene initialized.");
     }
 
     @Override
     public void end() {
         perspectivePy.unbind();
+        Logger.info("3D play scene ended.");
     }
 
     @Override
@@ -189,12 +183,12 @@ public class PlayScene3D implements GameScene {
         Logger.info("3D game level {} created.", level.number());
     }
 
-    private void resetReadyMessageText3D() {
+    private void setReadyMessageText3D(String text) {
         readyMessageText3D.beginBatch();
         readyMessageText3D.setBgColor(Color.CORNFLOWERBLUE);
         readyMessageText3D.setTextColor(Color.YELLOW);
         readyMessageText3D.setFont(context.theme().font("font.arcade", 6));
-        readyMessageText3D.setText("");
+        readyMessageText3D.setText(text);
         readyMessageText3D.endBatch();
         readyMessageText3D.translate(0, 16, -4.5);
         readyMessageText3D.rotate(Rotate.X_AXIS, 90);
@@ -277,6 +271,22 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
+    public void onLevelCreated(GameEvent e) {
+        e.game.level().ifPresent(this::replaceGameLevel3D);
+    }
+
+    @Override
+    public void onLevelStarted(GameEvent e) {
+        e.game.level().ifPresent(level -> {
+            setReadyMessageText3D("READY!");
+            readyMessageText3D.setVisible(true);
+            level3D.pac3D().init();
+            Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
+            level3D.updateLevelCounter3D();
+        });
+    }
+
+    @Override
     public void onPacGetsPower(GameEvent e) {
         if (level3D != null) {
             level3D.pac3D().walkingAnimation().setPowerWalking(true);
@@ -292,94 +302,83 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onGameStateChange(GameStateChangeEvent e) {
-        if (level3D == null) {
-            Logger.error("Where is my 3D game level?");
-            return;
-        }
-        var level = level3D.level();
-
         switch (e.newState) {
 
-            case READY -> {
-                level3D.pac3D().init();
-                Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
-                var msg = "READY!";
-                if (!PY_WOKE_PUSSY.get() && inPercentOfCases(5)) {
-                    msg = pickFunnyReadyMessage(context.gameVariant());
-                }
-                readyMessageText3D.setText(msg);
-                readyMessageText3D.setVisible(true);
-            }
+            case READY ->
+                context.gameLevel().ifPresent(level -> {
+                    readyMessageText3D.setText("READY!");
+                    readyMessageText3D.setVisible(true);
+                    level3D.pac3D().init();
+                    Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
+                });
 
             case HUNTING -> {
+                level3D.pac3D().init();
+                Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
                 level3D.livesCounter3D().startAnimation();
                 level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
             }
 
-            case PACMAN_DYING -> {
-                level3D.world3D().foodOscillation().stop();
-                lockStateAndPlayAfterSeconds(1.0, level3D.pac3D().createDyingAnimation(context.gameVariant()));
-            }
+            case PACMAN_DYING -> lockStateAndPlayAfterSeconds(1.0, level3D.pac3D().createDyingAnimation(context.gameVariant()));
 
-            case GHOST_DYING -> {
-                Supplier<Rectangle2D[]> spriteSupplier = switch (context.gameVariant()) {
-                    case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet()::ghostNumberSprites;
-                    case PACMAN -> context.<PacManGameSpriteSheet>spriteSheet()::ghostNumberSprites;
-                };
-                level.thisFrame().killedGhosts.forEach(ghost -> {
-                    var numberImage = context.spriteSheet().subImage(spriteSupplier.get()[ghost.killedIndex()]);
-                    level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
+            case GHOST_DYING ->
+                context.gameLevel().ifPresent(level -> {
+                    Rectangle2D[] sprites = switch (context.gameVariant()) {
+                        case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
+                        case PACMAN    -> context.<PacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
+                    };
+                    var killedGhosts = level.thisFrame().killedGhosts;
+                    killedGhosts.forEach(ghost -> {
+                        Image numberImage = context.spriteSheet().subImage(sprites[ghost.killedIndex()]);
+                        level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
+                    });
                 });
-            }
 
-            case CHANGING_TO_NEXT_LEVEL -> {
-                keepGameStateForSeconds(3);
-                replaceGameLevel3D(level);
-                level3D.pac3D().init();
-                currentCamController().reset(camera);
-            }
+            case CHANGING_TO_NEXT_LEVEL ->
+                context.gameLevel().ifPresent(level -> {
+                    keepGameStateForSeconds(3);
+                    replaceGameLevel3D(level);
+                    level3D.pac3D().init();
+                    currentCamController().reset(camera);
+                });
 
-            case LEVEL_COMPLETE -> {
-                level3D.livesCounter3D().stopAnimation();
-                level3D.world3D().foodOscillation().stop();
-                // if cheat has been used to complete level, 3D food might still exist
-                level3D.world3D().eatables3D().forEach(level3D::eat);
-                // level complete animation is always played
-                var levelCompleteAnimation = createLevelCompleteAnimation(level);
-                // level change animation is played only if no intermission scene follows
-                var levelChangeAnimation = level.data().intermissionNumber() == 0 ? createLevelChangeAnimation() : pauseSeconds(0);
-                lockStateAndPlayAfterSeconds(1.0,
-                    levelCompleteAnimation,
-                    actionAfterSeconds(1.0, () -> {
-                        level.pac().hide();
-                        level3D.livesCounter3D().lightOnPy.set(false);
-                        // play sound / flash msg only if no intermission scene follows
-                        if (level.data().intermissionNumber() == 0) {
-                            context.clip("audio.level_complete").play();
-                            context.actionHandler().showFlashMessageSeconds(2, pickLevelCompleteMessage(level.number()));
-                        }
-                    }),
-                    levelChangeAnimation,
-                    actionAfterSeconds(0, () -> level3D.livesCounter3D().lightOnPy.set(true))
-                );
-            }
+            case LEVEL_COMPLETE ->
+                context.gameLevel().ifPresent(level -> {
+                    // if cheat has been used to complete level, 3D food might still exist:
+                    level3D.world3D().eatables3D().forEach(level3D::eat);
+                    level3D.livesCounter3D().stopAnimation();
+                    boolean intermissionAfterLevel = level.data().intermissionNumber() != 0;
+                    lockStateAndPlayAfterSeconds(1.0,
+                        createLevelCompleteAnimation(level),
+                        actionAfterSeconds(1.0, () -> {
+                            level.pac().hide();
+                            level3D.livesCounter3D().lightOnPy.set(false);
+                            if (!intermissionAfterLevel) {
+                                context.clip("audio.level_complete").play();
+                                context.actionHandler().showFlashMessageSeconds(2,
+                                    pickLevelCompleteMessage(level.number()));
+                            }
+                        }),
+                        intermissionAfterLevel ? pauseSeconds(0) : createLevelChangeAnimation(),
+                        immediateAction(() -> level3D.livesCounter3D().lightOnPy.set(true))
+                    );
+                });
 
             case GAME_OVER -> {
-                level3D.world3D().foodOscillation().stop();
+                keepGameStateForSeconds(3);
                 level3D.livesCounter3D().stopAnimation();
                 context.actionHandler().showFlashMessageSeconds(3, PICKER_GAME_OVER.next());
                 context.clip("audio.game_over").play();
-                keepGameStateForSeconds(3);
             }
 
-            case LEVEL_TEST -> {
-                PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
-                level.pac().setVisible(true);
-                level3D.pac3D().update();
-            }
+            case LEVEL_TEST ->
+                context.gameLevel().ifPresent(level -> {
+                    PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
+                    level.pac().setVisible(true);
+                    level3D.pac3D().update();
+                });
 
-            default -> {
-            }
+            default -> {}
         }
 
         // on state exit
@@ -392,25 +391,16 @@ public class PlayScene3D implements GameScene {
                         level3D.bonus3D().ifPresent(Bonus3D::hide);
                     }
                 }
-                default -> {
-                }
+                default -> {}
             }
         }
     }
 
-    private String pickFunnyReadyMessage(GameVariant gameVariant) {
-        return switch (gameVariant) {
-            case MS_PACMAN -> PICKER_READY_MS_PACMAN.next();
-            case PACMAN -> PICKER_READY_PACMAN.next();
-        };
-    }
-
     private String pickLevelCompleteMessage(int levelNumber) {
-        return "%s%n%n%s".formatted(PICKER_LEVEL_COMPLETE.next(),
-            message(context.messageBundles(), "level_complete", levelNumber));
+        return PICKER_LEVEL_COMPLETE.next() + "\n\n" + message(context.messageBundles(), "level_complete", levelNumber);
     }
 
-    private Animation createLevelChangeAnimation() {
+    private Transition createLevelChangeAnimation() {
         var rotation = new RotateTransition(Duration.seconds(1.5), level3D.root());
         rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
         rotation.setFromAngle(0);
@@ -427,7 +417,7 @@ public class PlayScene3D implements GameScene {
         );
     }
 
-    private Animation createLevelCompleteAnimation(GameLevel level) {
+    private Transition createLevelCompleteAnimation(GameLevel level) {
         if (level.data().numFlashes() == 0) {
             return pauseSeconds(1.0);
         }
@@ -441,15 +431,6 @@ public class PlayScene3D implements GameScene {
             PY_3D_WALL_HEIGHT.set(wallHeight);
         });
         return animation;
-    }
-
-    @Override
-    public void onLevelStarted(GameEvent e) {
-        if (level3D != null) {
-            level3D.updateLevelCounter3D();
-        } else {
-            Logger.error("WTF: Where is my 3D game level?");
-        }
     }
 
     private void updateSound() {

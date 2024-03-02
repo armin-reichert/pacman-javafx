@@ -71,10 +71,15 @@ public class SoundHandler implements GameEventListener {
         }
     }
 
+
     @Override
     public void onGameStateChange(GameStateChangeEvent stateChangeEvent) {
         switch (stateChangeEvent.newState) {
-            case READY, PACMAN_DYING, LEVEL_COMPLETE, GAME_OVER -> stopAllSounds();
+            case READY, PACMAN_DYING, LEVEL_COMPLETE -> stopAllSounds();
+            case GAME_OVER -> {
+                stopAllSounds();
+                audioClip((stateChangeEvent.game.variant()), "audio.game_over").play();
+            }
             default -> {}
         };
     }
@@ -124,6 +129,7 @@ public class SoundHandler implements GameEventListener {
         var level = getLevel(event);
         if (level != null && !level.isDemoLevel() && level.number() == 1) {
             audioClip(event.game.variant(), "audio.game_ready").play();
+            Logger.info("Play READY sound");
         }
     }
 
