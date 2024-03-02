@@ -70,6 +70,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./pacman-ui-fx-3d/build/jpackage/macOS-latest/pacman-javafx-3d-1.0.dmg
-            ./pacman-ui-fx-3d/build/jpackage/ubuntu-latest/pacman-javafx-3d_1.0-1_amd64.deb
-            ./pacman-ui-fx-3d/build/jpackage/windows-latest/pacman-javafx-3d-1.0.exe
+            ./pacman-ui-fx-3d/build/jpackage/macos-latest/*.dmg
+            ./pacman-ui-fx-3d/build/jpackage/ubuntu-latest/*.deb
+            ./pacman-ui-fx-3d/build/jpackage/windows-latest/*.exe
