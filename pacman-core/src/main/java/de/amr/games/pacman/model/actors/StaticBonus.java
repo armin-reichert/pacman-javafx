@@ -6,7 +6,6 @@ package de.amr.games.pacman.model.actors;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
@@ -20,13 +19,13 @@ public class StaticBonus extends Entity implements Bonus {
 
     private final byte symbol;
     private final int points;
-    private long timer;
+    private long countdown;
     private byte state;
 
     public StaticBonus(byte symbol, int points) {
         this.symbol = symbol;
         this.points = points;
-        this.timer = 0;
+        this.countdown = 0;
         this.state = Bonus.STATE_INACTIVE;
     }
 
@@ -40,7 +39,7 @@ public class StaticBonus extends Entity implements Bonus {
         return "StaticBonus{" +
             "symbol=" + symbol +
             ", points=" + points +
-            ", timer=" + timer +
+            ", countdown=" + countdown +
             ", state=" + state +
             '}';
     }
@@ -62,9 +61,10 @@ public class StaticBonus extends Entity implements Bonus {
 
     @Override
     public void setInactive() {
-        timer = 0;
+        countdown = 0;
+        visible = false;
         state = Bonus.STATE_INACTIVE;
-        hide();
+        Logger.trace("Bonus gets inactive: {}", this);
     }
 
     @Override
@@ -72,9 +72,10 @@ public class StaticBonus extends Entity implements Bonus {
         if (ticks <= 0) {
             throw new IllegalArgumentException("Bonus edible time must be larger than zero");
         }
-        timer = ticks;
+        countdown = ticks;
+        visible = true;
         state = Bonus.STATE_EDIBLE;
-        show();
+        Logger.trace("Bonus gets edible: {}", this);
     }
 
     @Override
@@ -82,41 +83,21 @@ public class StaticBonus extends Entity implements Bonus {
         if (ticks <= 0) {
             throw new IllegalArgumentException("Bonus edible time must be larger than zero");
         }
-        timer = ticks;
+        countdown = ticks;
         state = Bonus.STATE_EATEN;
-        Logger.info("Bonus eaten: {}", this);
-    }
-
-    private void expire() {
-        setInactive();
-        Logger.info("Bonus expired: {}", this);
+        Logger.trace("Bonus eaten: {}", this);
     }
 
     @Override
     public void update(GameLevel level) {
         switch (state) {
-            case STATE_INACTIVE -> {
-            }
-            case STATE_EDIBLE -> {
-                if (sameTile(level.pac())) {
-                    setEaten(GameModel.BONUS_POINTS_SHOWN_TICKS);
-                    // TODO does this belong here? I doubt it.
-                    level.game().scorePoints(points);
-                    Logger.info("Scored {} points for eating bonus {}", points, this);
-                    publishGameEvent(level.game(), GameEventType.BONUS_EATEN);
-                } else if (timer == 0) {
-                    expire();
+            case STATE_INACTIVE -> {}
+            case STATE_EDIBLE, STATE_EATEN -> {
+                if (countdown == 0) {
+                    setInactive();
                     publishGameEvent(level.game(), GameEventType.BONUS_EXPIRED, tile());
                 } else {
-                    --timer;
-                }
-            }
-            case STATE_EATEN -> {
-                if (timer == 0) {
-                    expire();
-                    publishGameEvent(level.game(), GameEventType.BONUS_EXPIRED, tile());
-                } else {
-                    --timer;
+                    --countdown;
                 }
             }
             default -> throw new IllegalStateException("Unknown bonus state: " + state);

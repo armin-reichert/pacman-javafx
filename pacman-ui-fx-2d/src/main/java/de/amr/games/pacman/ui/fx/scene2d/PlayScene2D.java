@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
@@ -18,6 +19,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import org.tinylog.Logger;
 
 import java.util.stream.Stream;
 

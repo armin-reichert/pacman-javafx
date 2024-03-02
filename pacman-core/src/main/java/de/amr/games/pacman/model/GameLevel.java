@@ -589,6 +589,7 @@ public class GameLevel {
 
         // Update bonus
         if (bonus != null) {
+            checkPacEatsBonus(bonus);
             bonus.update(this);
         }
 
@@ -801,6 +802,16 @@ public class GameLevel {
         if (bonus != null) {
             bonus.setInactive();
         }
+    }
+
+    private boolean checkPacEatsBonus(Bonus bonus) {
+        if (bonus.state() == Bonus.STATE_EDIBLE && pac.sameTile(bonus.entity())) {
+            bonus.setEaten(GameModel.BONUS_POINTS_SHOWN_TICKS);
+            game.scorePoints(bonus.points());
+            Logger.info("Scored {} points for eating bonus {}", bonus.points(), this);
+            return true;
+        }
+        return false;
     }
 
     /**

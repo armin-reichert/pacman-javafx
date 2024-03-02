@@ -360,20 +360,20 @@ public class GameModel {
     }
 
     public void updateHighScore() {
-        var file = highScoreFile();
         var savedHiscore = new Score();
-        loadScore(savedHiscore, file);
+        loadScore(savedHiscore, highScoreFile());
         if (highScore.points() > savedHiscore.points()) {
             var p = new Properties();
             p.setProperty("points", String.valueOf(highScore.points()));
             p.setProperty("level", String.valueOf(highScore.levelNumber()));
             p.setProperty("date", highScore.date().format(DateTimeFormatter.ISO_LOCAL_DATE));
-            p.setProperty("url", "https://github.com/armin-reichert/pacman-basic");
-            try (var out = new FileOutputStream(file)) {
+            p.setProperty("url", "https://github.com/armin-reichert/pacman-javafx");
+            try (var out = new FileOutputStream(highScoreFile())) {
                 p.storeToXML(out, String.format("%s High Score", variant));
-                Logger.info("High Score saved to '{}' Points: {} Level: {}", file, highScore.points(), highScore.levelNumber());
+                Logger.info("High Score saved to '{}' Points: {} Level: {}",
+                    highScoreFile(), highScore.points(), highScore.levelNumber());
             } catch (Exception x) {
-                Logger.error("High Score could not be saved to '{}': {}", file, x.getMessage());
+                Logger.error("High Score could not be saved to '{}': {}", highScoreFile(), x.getMessage());
             }
         }
     }
