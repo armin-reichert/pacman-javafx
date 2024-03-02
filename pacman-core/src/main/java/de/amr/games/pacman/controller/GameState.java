@@ -68,20 +68,36 @@ public enum GameState implements FsmState<GameModel> {
     READY {
         @Override
         public void onEnter(GameModel game) {
-            if (!gameController().hasCredit()) { // ready for demo level
-                game.reset();
-            } else if (game.isPlaying()) { // resume running game
+            if (game.isPlaying()) {
+                // resume running game
                 game.level().ifPresent(level -> level.letsGetReadyToRumble(true));
-            } else { // prepare new game
+            }
+            else if (gameController().hasCredit()) {
+                // prepare new game
+                game.reset();
                 game.score().reset();
                 game.clearLevelCounter();
+            }
+            else {
+                // prepare demo level
                 game.reset();
             }
         }
 
         @Override
         public void onUpdate(GameModel game) {
-            if (gameController().hasCredit() && !game.isPlaying()) { // new game
+            if (game.isPlaying()) {
+                // resume running game
+                if (timer.tick() == 90) {
+                    game.level().ifPresent(level -> {
+                        level.guys().forEach(Creature::show);
+                        level.startHuntingPhase(0);
+                        gameController().changeState(GameState.HUNTING);
+                    });
+                }
+            }
+            else if (gameController().hasCredit()) {
+                // start new game
                 if (timer.tick() == 1) {
                     game.createAndStartLevel(1);
                 } else if (timer.tick() == 120) {
@@ -93,20 +109,13 @@ public enum GameState implements FsmState<GameModel> {
                         gameController().changeState(GameState.HUNTING);
                     });
                 }
-            } else if (game.isPlaying()) { // resume game play
-                if (timer.tick() == 90) {
-                    game.level().ifPresent(level -> {
-                        level.guys().forEach(Creature::show);
-                        level.startHuntingPhase(0);
-                        gameController().changeState(GameState.HUNTING);
-                    });
-                }
-            } else { // start demo level
+            }
+            else {
+                // start demo level
                 if (timer.tick() == 1) {
                     game.createAndStartDemoLevel();
-                } else if (timer.tick() == 130) {
+                } else if (timer.tick() == 120) {
                     game.level().ifPresent(level -> {
-                        level.guys().forEach(Creature::show);
                         level.startHuntingPhase(0);
                         gameController().changeState(GameState.HUNTING);
                     });
@@ -277,7 +286,7 @@ public enum GameState implements FsmState<GameModel> {
     GAME_OVER {
         @Override
         public void onEnter(GameModel game) {
-            timer.restartSeconds(1.2); //TODO not sure about exact duration
+            timer.restartSeconds(1.25); //TODO not sure about exact duration
             game.updateHighScore();
             gameController().manualPacSteering().setEnabled(false);
             gameController().changeCredit(-1);
