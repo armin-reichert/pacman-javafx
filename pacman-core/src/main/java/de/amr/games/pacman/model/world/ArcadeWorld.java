@@ -1,13 +1,13 @@
 package de.amr.games.pacman.model.world;
 
-import de.amr.games.pacman.lib.NavigationPoint;
+import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.NavigationPoint.np;
+import static de.amr.games.pacman.lib.NavPoint.np;
 
 /**
  * The worlds from the original Arcade games.
@@ -236,7 +236,7 @@ public interface ArcadeWorld {
 
     Vector2f BONUS_POSITION = halfTileRightOf(13, 20);
 
-    NavigationPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
+    NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
         np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
         np(18, 23), np(18, 20), np(18, 17), np(15, 14), np(12, 14), np(9, 17),
         np(6, 17), np(6, 11), np(6, 8), np(6, 4), np(1, 8), np(6, 8),

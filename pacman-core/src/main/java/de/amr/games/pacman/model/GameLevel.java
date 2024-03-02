@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.NavigationPoint.np;
+import static de.amr.games.pacman.lib.NavPoint.np;
 import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
@@ -839,9 +839,8 @@ public class GameLevel {
                 byte symbol = bonusSymbols[bonusIndex];
                 int points = GameModel.BONUS_VALUES_PACMAN[symbol] * 100;
                 bonus = new StaticBonus(symbol, points);
-                int ticks = randomInt(9 * FPS, 10 * FPS); // between 9 and 10 seconds
-                bonus.setEdible(ticks);
                 bonus.entity().setPosition(ArcadeWorld.BONUS_POSITION);
+                bonus.setEdible(randomInt(9 * FPS, 10 * FPS));
                 publishGameEvent(game, GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
             }
         }
@@ -866,7 +865,7 @@ public class GameLevel {
             ? np(exitPortal.rightTunnelEnd().plus(1, 0))
             : np(exitPortal.leftTunnelEnd().minus(1, 0));
 
-        var route = new ArrayList<NavigationPoint>();
+        var route = new ArrayList<NavPoint>();
         route.add(startPoint);
         route.add(np(houseEntryTile));
         route.add(np(houseEntryTile.plus(0, houseHeight + 1)));

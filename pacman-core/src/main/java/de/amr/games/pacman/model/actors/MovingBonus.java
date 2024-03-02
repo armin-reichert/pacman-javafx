@@ -104,7 +104,7 @@ public class MovingBonus extends Creature implements Bonus {
         Logger.trace("Bonus eaten: {}", this);
     }
 
-    public void setRoute(List<NavigationPoint> route, boolean leftToRight) {
+    public void setRoute(List<NavPoint> route, boolean leftToRight) {
         centerOverTile(route.getFirst().tile());
         setMoveAndWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
         route.removeFirst();

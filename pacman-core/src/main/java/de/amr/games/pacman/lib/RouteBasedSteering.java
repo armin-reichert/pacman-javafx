@@ -18,18 +18,18 @@ import java.util.List;
  */
 public class RouteBasedSteering extends Steering {
 
-    private List<NavigationPoint> route = List.of();
+    private List<NavPoint> route = List.of();
     private int targetIndex;
     private boolean complete;
 
     public RouteBasedSteering() {
     }
 
-    public RouteBasedSteering(List<NavigationPoint> route) {
+    public RouteBasedSteering(List<NavPoint> route) {
         setRoute(route);
     }
 
-    public void setRoute(List<NavigationPoint> route) {
+    public void setRoute(List<NavPoint> route) {
         this.route = route;
         init();
     }
@@ -67,7 +67,7 @@ public class RouteBasedSteering extends Steering {
         }
     }
 
-    private NavigationPoint currentTarget() {
+    private NavPoint currentTarget() {
         return route.get(targetIndex);
     }
 }
