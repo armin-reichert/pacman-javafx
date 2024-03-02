@@ -374,23 +374,24 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (nextGameScene == null) {
             throw new IllegalStateException("No game scene found for game state " + gameController().state());
         }
-        if (reload || nextGameScene != gameScenePy.get()) {
-            setGameScene(nextGameScene);
+        Logger.info("updateOrReloadGameScene {}, reload={}", nextGameScene.getClass().getSimpleName(), reload);
+        GameScene prevGameScene = gameScenePy.get();
+        if (nextGameScene != prevGameScene || reload) {
+            if (prevGameScene != null) {
+                prevGameScene.end();
+                if (prevGameScene != sceneConfig().get("boot")) {
+                    soundHandler.stopVoice();
+                }
+            }
+            nextGameScene.setContext(this);
+            nextGameScene.init();
+            gameScenePy.set(nextGameScene);
+            Logger.trace("Game scene changed to {}", gameScenePy.get());
         }
         updateStage();
     }
 
-    protected void setGameScene(GameScene newGameScene) {
-        currentGameScene().ifPresent(prevGameScene -> {
-            prevGameScene.end();
-            if (prevGameScene != sceneConfig().get("boot")) {
-                soundHandler.stopVoice();
-            }
-        });
-        newGameScene.setContext(this);
-        newGameScene.init();
-        gameScenePy.set(newGameScene);
-        Logger.trace("Game scene changed to {}", gameScenePy.get());
+    private void changeGameScene(GameScene prevGameScene, GameScene newGameScene) {
     }
 
     // GameSceneContext interface implementation
