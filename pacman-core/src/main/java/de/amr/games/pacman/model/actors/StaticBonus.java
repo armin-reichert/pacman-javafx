@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.actors;
 
 import de.amr.games.pacman.event.GameEventType;
+import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import org.tinylog.Logger;
 
@@ -96,7 +97,7 @@ public class StaticBonus extends Entity implements Bonus {
                 if (countdown == 0) {
                     setInactive();
                     publishGameEvent(level.game(), GameEventType.BONUS_EXPIRED, tile());
-                } else {
+                } else if (countdown != TickTimer.INDEFINITE) {
                     --countdown;
                 }
             }

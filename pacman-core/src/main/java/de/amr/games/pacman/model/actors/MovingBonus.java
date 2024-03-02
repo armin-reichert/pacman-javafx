@@ -5,10 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.actors;
 
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.NavigationPoint;
-import de.amr.games.pacman.lib.Pulse;
-import de.amr.games.pacman.lib.RouteBasedSteering;
+import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.GameLevel;
 import org.tinylog.Logger;
 
@@ -142,7 +139,7 @@ public class MovingBonus extends Creature implements Bonus {
                     setInactive();
                     Logger.trace("Bonus expired: {}", this);
                     publishGameEvent(level.game(), GameEventType.BONUS_EXPIRED, tile());
-                } else {
+                } else if (countdown != TickTimer.INDEFINITE) {
                     --countdown;
                 }
             }
