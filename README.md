@@ -37,7 +37,7 @@ You need to have a [JDK 21](https://www.oracle.com/java/technologies/downloads/#
 
 ### Clone repository (only first time)
 
-- `cd /whatever/path/to/git`
+- `cd /whatever/path/to/your/repositories`
 - `git clone https://github.com/armin-reichert/pacman-javafx.git`
 
 ## Build project with Gradle
