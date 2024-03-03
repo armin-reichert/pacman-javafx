@@ -40,7 +40,8 @@ public class InfoBoxGeneral extends InfoBox {
     public InfoBoxGeneral(Theme theme, String title) {
         super(theme, title);
 
-        addInfo("Java Runtime", Runtime.version().toString());
+        addInfo("Java Version",   Runtime.version().toString());
+        addInfo("JavaFX Version", System.getProperty("javafx.runtime.version"));
 
         iconPlay = new ImageView(theme.image("icon.play"));
         iconStop = new ImageView(theme.image("icon.stop"));
