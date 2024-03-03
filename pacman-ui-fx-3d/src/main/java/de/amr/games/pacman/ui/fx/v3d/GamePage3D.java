@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d;
 
-import de.amr.games.pacman.ui.fx.page.GamePage;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
+import de.amr.games.pacman.ui.fx.page.GamePage;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.*;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PictureInPicture;
@@ -18,7 +18,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -35,16 +34,45 @@ public class GamePage3D extends GamePage {
 
     private final BorderPane topLayer; // contains dashboard and picture-in-picture view
     private final PictureInPicture pip;
-    private final Pane dashboard;
+    private final VBox dashboard;
     private final GamePageContextMenu contextMenu;
     private final List<InfoBox> infoBoxes = new ArrayList<>();
 
     public GamePage3D(Scene parentScene, GameSceneContext sceneContext, double width, double height) {
         super(sceneContext, width, height);
 
-        pip = createPictureInPicture();
-        contextMenu = createContextMenu(parentScene);
-        dashboard = createDashboard();
+        pip = new PictureInPicture(sceneContext);
+        pip.opacityPy.bind(PY_PIP_OPACITY);
+        pip.heightPy.bind(PY_PIP_HEIGHT);
+
+        infoBoxes.add(new InfoBoxGeneral(sceneContext.theme(), sceneContext.tt("infobox.general.title")));
+        infoBoxes.add(new InfoBoxGameControl(sceneContext.theme(), sceneContext.tt("infobox.game_control.title")));
+        infoBoxes.add(new InfoBox3D(sceneContext.theme(), sceneContext.tt("infobox.3D_settings.title")));
+        infoBoxes.add(new InfoBoxGameInfo(sceneContext.theme(), sceneContext.tt("infobox.game_info.title")));
+        infoBoxes.add(new InfoBoxGhostsInfo(sceneContext.theme(), sceneContext.tt("infobox.ghosts_info.title")));
+        infoBoxes.add(new InfoBoxKeys(sceneContext.theme(), sceneContext.tt("infobox.keyboard_shortcuts.title")));
+        infoBoxes.add(new InfoBoxAbout(sceneContext.theme(), sceneContext.tt("infobox.about.title")));
+
+        dashboard = new VBox();
+        dashboard.setVisible(false);
+        infoBoxes.forEach(infoBox -> {
+            dashboard.getChildren().add(infoBox.getRoot());
+            infoBox.init(sceneContext);
+        });
+
+        contextMenu = new GamePageContextMenu(sceneContext);
+        parentScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            contextMenu.hide();
+            if (e.getButton() == MouseButton.SECONDARY) {
+                sceneContext.currentGameScene().ifPresent(gameScene -> {
+                    if (gameScene == sceneContext.sceneConfig().get("play") ||
+                        gameScene == sceneContext.sceneConfig().get("play3D")) {
+                        contextMenu.rebuild(gameScene);
+                        contextMenu.show(parentScene.getRoot(), e.getScreenX(), e.getScreenY());
+                    }
+                });
+            }
+        });
 
         topLayer = new BorderPane();
         topLayer.setLeft(dashboard);
@@ -60,47 +88,6 @@ public class GamePage3D extends GamePage {
         dashboard.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());
 
         updateTopLayer();
-    }
-
-    private GamePageContextMenu createContextMenu(Scene parentScene) {
-        var menu = new GamePageContextMenu(sceneContext);
-        parentScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            menu.hide();
-            if (e.getButton() == MouseButton.SECONDARY) {
-                sceneContext.currentGameScene().ifPresent(gameScene -> {
-                    if (gameScene == sceneContext.sceneConfig().get("play") ||
-                        gameScene == sceneContext.sceneConfig().get("play3D")) {
-                        menu.rebuild(gameScene);
-                        menu.show(parentScene.getRoot(), e.getScreenX(), e.getScreenY());
-                    }
-                });
-            }
-        });
-        return menu;
-    }
-
-    private PictureInPicture createPictureInPicture() {
-        var pip = new PictureInPicture(sceneContext);
-        pip.opacityPy.bind(PY_PIP_OPACITY);
-        pip.heightPy.bind(PY_PIP_HEIGHT);
-        return pip;
-    }
-
-    private VBox createDashboard() {
-        var db = new VBox();
-        infoBoxes.add(new InfoBoxGeneral(sceneContext.theme(), sceneContext.tt("infobox.general.title")));
-        infoBoxes.add(new InfoBoxGameControl(sceneContext.theme(), sceneContext.tt("infobox.game_control.title")));
-        infoBoxes.add(new InfoBox3D(sceneContext.theme(), sceneContext.tt("infobox.3D_settings.title")));
-        infoBoxes.add(new InfoBoxGameInfo(sceneContext.theme(), sceneContext.tt("infobox.game_info.title")));
-        infoBoxes.add(new InfoBoxGhostsInfo(sceneContext.theme(), sceneContext.tt("infobox.ghosts_info.title")));
-        infoBoxes.add(new InfoBoxKeys(sceneContext.theme(), sceneContext.tt("infobox.keyboard_shortcuts.title")));
-        infoBoxes.add(new InfoBoxAbout(sceneContext.theme(), sceneContext.tt("infobox.about.title")));
-        infoBoxes.forEach(infoBox -> {
-            db.getChildren().add(infoBox.getRoot());
-            infoBox.init(sceneContext);
-        });
-        db.setVisible(false);
-        return db;
     }
 
     @Override
