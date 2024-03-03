@@ -83,6 +83,7 @@ public class GameLevel {
 
         pac = new Pac(isMsPacManGame ? "Ms. Pac-Man" : "Pac-Man");
         pac.setWorld(world);
+        pac.setBaseSpeed(SPEED_AT_100_PERCENT);
         pac.setFadingTicks(PAC_POWER_FADES_TICKS); // not sure
 
         ghosts = new Ghost[] {
@@ -98,8 +99,9 @@ public class GameLevel {
             ghost.setFnFrightenedBehavior(this::ghostRoamsThroughWorld);
             ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));
             ghost.setFnIsSteeringAllowed(dir -> isSteeringAllowed(ghost, dir));
-            ghost.setSpeedReturningToHouse(SPEED_PX_RETURNING_TO_HOUSE);
-            ghost.setSpeedInsideHouse(SPEED_PX_INSIDE_HOUSE);
+            ghost.setBaseSpeed(SPEED_AT_100_PERCENT);
+            ghost.setSpeedReturningToHouse(SPEED_GHOST_RETURNING_TO_HOUSE);
+            ghost.setSpeedInsideHouse(SPEED_GHOST_INSIDE_HOUSE);
         });
 
         ghostHouseManagement = new GhostHouseManagement(this, world.house());
@@ -878,6 +880,7 @@ public class GameLevel {
 
         var movingBonus = new MovingBonus(symbol, points);
         movingBonus.setWorld(world);
+        movingBonus.setBaseSpeed(SPEED_AT_100_PERCENT);
         movingBonus.setRoute(route, leftToRight);
         Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
         return movingBonus;

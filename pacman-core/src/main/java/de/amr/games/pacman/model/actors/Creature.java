@@ -7,7 +7,6 @@ package de.amr.games.pacman.model.actors;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.Portal;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
@@ -31,6 +30,7 @@ public abstract class Creature extends Entity {
     private Direction moveDir;
     private Direction wishDir;
     private Vector2i targetTile;
+    private float baseSpeed;
     protected World world;
     protected final MoveResult moveResult = new MoveResult();
     protected boolean newTileEntered;
@@ -61,6 +61,10 @@ public abstract class Creature extends Entity {
         newTileEntered = true;
         gotReverseCommand = false;
         canTeleport = true;
+    }
+
+    public void setBaseSpeed(float baseSpeed) {
+        this.baseSpeed = baseSpeed;
     }
 
     public World world() {
@@ -235,7 +239,7 @@ public abstract class Creature extends Entity {
         if (percentage < 0) {
             throw new IllegalArgumentException("Negative speed percentage: " + percentage);
         }
-        setSpeed((float) 0.01 * percentage * GameModel.SPEED_PX_100_PERCENT);
+        setSpeed((float) 0.01 * percentage * baseSpeed);
     }
 
     /**

@@ -38,10 +38,10 @@ public class GameModel {
     /** Game loop frequency. */
     public static final short FPS = 60;
 
-    /** Pixels/tick at 100% relative speed. */
-    public static final float SPEED_PX_100_PERCENT = 1.25f;
-    public static final float SPEED_PX_INSIDE_HOUSE = 0.5f; // correct?
-    public static final float SPEED_PX_RETURNING_TO_HOUSE = 2.0f; // correct?
+    /** Base speed of creatures (Pac-Man, ghosts, moving bonus). */
+    public static final float SPEED_AT_100_PERCENT = 1.25f;
+    public static final float SPEED_GHOST_INSIDE_HOUSE = 0.5f; // correct?
+    public static final float SPEED_GHOST_RETURNING_TO_HOUSE = 2.0f; // correct?
     public static final byte MAX_CREDIT = 99;
     public static final byte LEVEL_COUNTER_MAX_SYMBOLS = 7;
     public static final byte RESTING_TICKS_NORMAL_PELLET = 1;
