@@ -1,6 +1,5 @@
-# This workflow builds executables for Windows, Linux and Mac-OS and attaches the 3D-version executables to the
-# release (when a new release is published via the GitHub UI). 
-# Note that this works for a multi-project and has to be slightly adapted for a single-project.
+# Builds installers (exe, deb, dmg) for Windows, Linux and Mac-OS and attaches the installers for the
+# Pac-Man 3D game version to a release (when it is published via the GitHub UI).
 
 name: Release
 
@@ -33,23 +32,21 @@ jobs:
         run: echo $JAVA_HOME
       - name: Verify Gradle Wrapper
         uses: gradle/wrapper-validation-action@v2
-      - name: Execute jpackage
+      - name: Execute gradle jpackage
         run: ./gradlew --info --stacktrace jpackage
-
-      # simplify these steps
-      - name: Upload exe
+      - name: Upload Windows exe
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}
           path: pacman-ui-fx-3d/build/jpackage/*.exe
           if-no-files-found: ignore
-      - name: Upload deb
+      - name: Upload Linux deb
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}
           path: pacman-ui-fx-3d/build/jpackage/*.deb
           if-no-files-found: ignore
-      - name: Upload dmg
+      - name: Upload Mac-OS dmg
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}
@@ -60,13 +57,13 @@ jobs:
     needs: build-and-upload-artifacts
     runs-on: ubuntu-latest
     steps:
-      - name: Download ALL artifacts
+      - name: Download artifacts created for 3D game version
         uses: actions/download-artifact@v4
         with:
           path: pacman-ui-fx-3d/build/jpackage
       - name: List files
         run: ls -R
-      - name: Attach executables to release
+      - name: Attach installers to the release
         uses: softprops/action-gh-release@v1
         with:
           files: |
