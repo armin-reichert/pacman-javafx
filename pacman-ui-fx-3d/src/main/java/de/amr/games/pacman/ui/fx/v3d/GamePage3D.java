@@ -32,11 +32,39 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class GamePage3D extends GamePage {
 
+    private static class Dashboard extends VBox {
+
+        private final List<InfoBox> infoBoxes = new ArrayList<>();
+
+        private Dashboard(GameSceneContext sceneContext) {
+            infoBoxes.add(new InfoBoxGeneral(sceneContext.theme(), sceneContext.tt("infobox.general.title")));
+            infoBoxes.add(new InfoBoxGameControl(sceneContext.theme(), sceneContext.tt("infobox.game_control.title")));
+            infoBoxes.add(new InfoBox3D(sceneContext.theme(), sceneContext.tt("infobox.3D_settings.title")));
+            infoBoxes.add(new InfoBoxGameInfo(sceneContext.theme(), sceneContext.tt("infobox.game_info.title")));
+            infoBoxes.add(new InfoBoxGhostsInfo(sceneContext.theme(), sceneContext.tt("infobox.ghosts_info.title")));
+            infoBoxes.add(new InfoBoxKeys(sceneContext.theme(), sceneContext.tt("infobox.keyboard_shortcuts.title")));
+            infoBoxes.add(new InfoBoxAbout(sceneContext.theme(), sceneContext.tt("infobox.about.title")));
+            infoBoxes.forEach(infoBox -> {
+                getChildren().add(infoBox.getRoot());
+                infoBox.init(sceneContext);
+            });
+            setVisible(false);
+        }
+
+        private void update() {
+            infoBoxes.forEach(InfoBox::update);
+        }
+
+        private void toggleVisibility() {
+            setVisible(!isVisible());
+        }
+
+    }
+
     private final BorderPane topLayer; // contains dashboard and picture-in-picture view
     private final PictureInPicture pip;
-    private final VBox dashboard;
+    private final Dashboard dashboard;
     private final GamePageContextMenu contextMenu;
-    private final List<InfoBox> infoBoxes = new ArrayList<>();
 
     public GamePage3D(Scene parentScene, GameSceneContext sceneContext, double width, double height) {
         super(sceneContext, width, height);
@@ -45,20 +73,8 @@ public class GamePage3D extends GamePage {
         pip.opacityPy.bind(PY_PIP_OPACITY);
         pip.heightPy.bind(PY_PIP_HEIGHT);
 
-        infoBoxes.add(new InfoBoxGeneral(sceneContext.theme(), sceneContext.tt("infobox.general.title")));
-        infoBoxes.add(new InfoBoxGameControl(sceneContext.theme(), sceneContext.tt("infobox.game_control.title")));
-        infoBoxes.add(new InfoBox3D(sceneContext.theme(), sceneContext.tt("infobox.3D_settings.title")));
-        infoBoxes.add(new InfoBoxGameInfo(sceneContext.theme(), sceneContext.tt("infobox.game_info.title")));
-        infoBoxes.add(new InfoBoxGhostsInfo(sceneContext.theme(), sceneContext.tt("infobox.ghosts_info.title")));
-        infoBoxes.add(new InfoBoxKeys(sceneContext.theme(), sceneContext.tt("infobox.keyboard_shortcuts.title")));
-        infoBoxes.add(new InfoBoxAbout(sceneContext.theme(), sceneContext.tt("infobox.about.title")));
 
-        dashboard = new VBox();
-        dashboard.setVisible(false);
-        infoBoxes.forEach(infoBox -> {
-            dashboard.getChildren().add(infoBox.getRoot());
-            infoBox.init(sceneContext);
-        });
+        dashboard = new Dashboard(sceneContext);
 
         contextMenu = new GamePageContextMenu(sceneContext);
         parentScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
@@ -138,7 +154,7 @@ public class GamePage3D extends GamePage {
     public void render() {
         super.render();
         contextMenu.updateState();
-        infoBoxes.forEach(InfoBox::update);
+        dashboard.update();
         pip.canvas().setVisible(PY_PIP_ON.get() && isCurrentGameScene3D());
         pip.draw();
     }
@@ -149,7 +165,7 @@ public class GamePage3D extends GamePage {
         if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
             actionHandler.toggle2D3D();
         } else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
-            dashboard.setVisible(!dashboard.isVisible());
+            dashboard.toggleVisibility();
         } else if (Keyboard.pressed(KEY_TOGGLE_PIP_VIEW)) {
             actionHandler.togglePipVisible();
         } else {
