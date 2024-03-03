@@ -56,16 +56,16 @@ You need to have a [JDK 21](https://www.oracle.com/java/technologies/downloads/#
 
 ### Build Windows installers for both variants (2D and 3D)
 
-- `cd /whatever/path/to/git/pacman-javafx`
-- `mvnw clean install -Pbuild-for-windows`
+- `cd /whatever/path/to/your/repositories/pacman-javafx`
+- `./mvnw clean install -Pbuild-for-windows`
 
 ### Build user interface variants separately
 
-- `cd /whatever/path/to/git/pacman-javafx/pacman-ui-fx-2d`
-- `mvnw install -Djavafx.platform=win`   or `mvnw install -P build-for-windows` (Windows executables of 2D game)
+- `cd /whatever/path/to/your/repositories/pacman-javafx/pacman-ui-fx-2d`
+- `../mvnw install -Djavafx.platform=win`   or `mvnw install -P build-for-windows` (Windows executables of 2D game)
 
-- `cd /whatever/path/to/git/pacman-javafx/pacman-ui-fx-3d`
-- `mvnw install -Djavafx.platform=win`   or `mvnw install -P build-for-windows` (Windows executables of 2D+3D game)
+- `cd /whatever/path/to/your/repositories/pacman-javafx/pacman-ui-fx-3d`
+- `../mvnw install -Djavafx.platform=win`   or `mvnw install -P build-for-windows` (Windows executables of 2D+3D game)
 
 To be able to create the Windows executables, you need to first install the following tools:
 
@@ -76,8 +76,7 @@ as described in
 the [JavaPackager guide](https://github.com/fvarrui/JavaPackager/blob/master/docs/windows-tools-guide.md)
 (:clap: to [Francisco Vargas Ruiz](https://github.com/fvarrui)).
 
-I also had to add the paths "C:\Program Files (x86)\WiX Toolset v3.11\bin" and "C:\Program Files (x86)\Inno Setup 6" to
-my PATH variable.
+I also had to add the paths "C:\Program Files (x86)\WiX Toolset v3.11\bin" and "C:\Program Files (x86)\Inno Setup 6" to my PATH variable.
 
 ### Running the application(s) using Maven
 
