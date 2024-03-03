@@ -338,43 +338,44 @@ public class GameModel {
         };
     }
 
-    private static void loadScore(Score score, File file) {
-        try (var in = new FileInputStream(file)) {
-            var p = new Properties();
-            p.loadFromXML(in);
-            var points = Integer.parseInt(p.getProperty("points"));
-            var levelNumber = Integer.parseInt(p.getProperty("level"));
-            var date = LocalDate.parse(p.getProperty("date"), DateTimeFormatter.ISO_LOCAL_DATE);
-            score.setPoints(points);
-            score.setLevelNumber(levelNumber);
-            score.setDate(date);
-            Logger.info("Score loaded. File: '{}' Points: {} Level: {}", file.getAbsolutePath(), score.points(),
-                score.levelNumber());
-        } catch (Exception x) {
-            Logger.error("Score could not be loaded. File '{}' Reason: {}", file, x.getMessage());
-        }
-    }
-
     public void loadHighScore() {
         loadScore(highScore, highScoreFile());
     }
 
     public void updateHighScore() {
-        var savedHiscore = new Score();
-        loadScore(savedHiscore, highScoreFile());
-        if (highScore.points() > savedHiscore.points()) {
+        var oldHighScore = new Score();
+        loadScore(oldHighScore, highScoreFile());
+        if (highScore.points() > oldHighScore.points()) {
+            saveScore(highScore, highScoreFile(), String.format("%s High Score", variant));
+        }
+    }
+
+    private static void loadScore(Score score, File file) {
+        try (var in = new FileInputStream(file)) {
             var p = new Properties();
-            p.setProperty("points", String.valueOf(highScore.points()));
-            p.setProperty("level", String.valueOf(highScore.levelNumber()));
-            p.setProperty("date", highScore.date().format(DateTimeFormatter.ISO_LOCAL_DATE));
-            p.setProperty("url", "https://github.com/armin-reichert/pacman-javafx");
-            try (var out = new FileOutputStream(highScoreFile())) {
-                p.storeToXML(out, String.format("%s High Score", variant));
-                Logger.info("High Score saved to '{}' Points: {} Level: {}",
-                    highScoreFile(), highScore.points(), highScore.levelNumber());
-            } catch (Exception x) {
-                Logger.error("High Score could not be saved to '{}': {}", highScoreFile(), x.getMessage());
-            }
+            p.loadFromXML(in);
+            score.setPoints(Integer.parseInt(p.getProperty("points")));
+            score.setLevelNumber(Integer.parseInt(p.getProperty("level")));
+            score.setDate(LocalDate.parse(p.getProperty("date"), DateTimeFormatter.ISO_LOCAL_DATE));
+            Logger.info("Score loaded from file '{}'. Points: {} Level: {}", file.getAbsolutePath(), score.points(),
+                score.levelNumber());
+        } catch (Exception x) {
+            Logger.error("Score could not be loaded from file '{}'. Error: {}", file, x.getMessage());
+        }
+    }
+
+    private static void saveScore(Score score, File file, String description) {
+        var p = new Properties();
+        p.setProperty("points", String.valueOf(score.points()));
+        p.setProperty("level",  String.valueOf(score.levelNumber()));
+        p.setProperty("date",   score.date().format(DateTimeFormatter.ISO_LOCAL_DATE));
+        p.setProperty("url",    "https://github.com/armin-reichert/pacman-javafx");
+        try (var out = new FileOutputStream(file)) {
+            p.storeToXML(out, description);
+            Logger.info("Saved '{}' to file '{}'. Points: {} Level: {}",
+                description, file, score.points(), score.levelNumber());
+        } catch (Exception x) {
+            Logger.error("Score could not be saved to file '{}'. Error: {}", file, x.getMessage());
         }
     }
 }
