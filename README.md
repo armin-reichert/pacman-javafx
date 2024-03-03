@@ -25,12 +25,11 @@ Alt+3</kbd>).
 ## How to run
 
 In the [release folder](https://github.com/armin-reichert/pacman-javafx/releases) you find executables/installers (for
-Windows). On Windows, the application must be
-uninstalled first (if already installed), otherwise the installer crashes (no idea why).
+Windows). On Windows, the application must be uninstalled first (if already installed), otherwise the installer crashes (no idea why).
 
-If you want to have installers for other platforms e.g. Linux or Mac-OS, ask someone who is able to do that. I find it
-much too
-difficult and especialy much too tedious to achieve that (I am really too old for that shit).
+The Linux (.deb) installer has only been tested on Ubuntu inside a VM, it worked after installing the FFMPeg library (see [linux-issues.md](linux-issues.md)).
+
+The Mac-OS (.dmg) version has not been tested at all, any help is appreciated.
 
 ## How to build
 
