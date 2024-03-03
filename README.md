@@ -43,7 +43,7 @@ You need to have a [JDK 21](https://www.oracle.com/java/technologies/downloads/#
 ## Build project with Gradle
 
 - `cd pacman-javafx`
-- `./gradlew jpackage`: clean build and create installers in directories `pacman-ui-fx-2d/build/jpackage` and `pacman-ui-fx-3d/build/jpackage`
+- `./gradlew jpackage`: create installers in directories `pacman-ui-fx-2d/build/jpackage` and `pacman-ui-fx-3d/build/jpackage`
 
 (Note: Using `clean jpackage` always fails because the old exe-files cannot be deleted, see https://github.com/gradle/gradle/issues/26912). Manually deleting the build folder or clearing the exe-file's read-only flag helps)
 
