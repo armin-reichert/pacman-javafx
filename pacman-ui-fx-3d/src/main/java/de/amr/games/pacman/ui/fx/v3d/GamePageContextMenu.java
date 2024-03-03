@@ -6,7 +6,10 @@ import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -26,10 +29,23 @@ public class GamePageContextMenu extends ContextMenu {
     private ToggleGroup perspectivesToggleGroup;
     private final Font titleItemFont;
 
-    public GamePageContextMenu(GameSceneContext sceneContext) {
+    public GamePageContextMenu(GameSceneContext sceneContext, Scene parentScene) {
         checkNotNull(sceneContext);
+        checkNotNull(parentScene);
         this.sceneContext = sceneContext;
         titleItemFont = sceneContext.theme().font("font.handwriting", 18);
+        parentScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            hide();
+            if (e.getButton() == MouseButton.SECONDARY) {
+                sceneContext.currentGameScene().ifPresent(gameScene -> {
+                    if (gameScene == sceneContext.sceneConfig().get("play") ||
+                        gameScene == sceneContext.sceneConfig().get("play3D")) {
+                        rebuild(gameScene);
+                        show(parentScene.getRoot(), e.getScreenX(), e.getScreenY());
+                    }
+                });
+            }
+        });
     }
 
     public void rebuild(GameScene gameScene) {
@@ -76,7 +92,7 @@ public class GamePageContextMenu extends ContextMenu {
     private MenuItem createTitleItem(String title) {
         var text = new Text(title);
         text.setFont(titleItemFont);
-        text.setFill(Color.gray(0.4));
+        text.setFill(sceneContext.theme().color("palette.orange"));
         return new CustomMenuItem(text);
     }
 

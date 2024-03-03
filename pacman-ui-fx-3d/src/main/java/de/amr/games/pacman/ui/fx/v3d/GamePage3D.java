@@ -15,8 +15,6 @@ import de.amr.games.pacman.ui.fx.v3d.scene3d.PictureInPicture;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -61,7 +59,7 @@ public class GamePage3D extends GamePage {
 
     }
 
-    private final BorderPane topLayer; // contains dashboard and picture-in-picture view
+    private final BorderPane dashboardLayer;
     private final PictureInPicture pip;
     private final Dashboard dashboard;
     private final GamePageContextMenu contextMenu;
@@ -70,34 +68,19 @@ public class GamePage3D extends GamePage {
         super(sceneContext, width, height);
 
         pip = new PictureInPicture(sceneContext);
-        pip.opacityPy.bind(PY_PIP_OPACITY);
-        pip.heightPy.bind(PY_PIP_HEIGHT);
-
-
         dashboard = new Dashboard(sceneContext);
+        contextMenu = new GamePageContextMenu(sceneContext, parentScene);
 
-        contextMenu = new GamePageContextMenu(sceneContext);
-        parentScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            contextMenu.hide();
-            if (e.getButton() == MouseButton.SECONDARY) {
-                sceneContext.currentGameScene().ifPresent(gameScene -> {
-                    if (gameScene == sceneContext.sceneConfig().get("play") ||
-                        gameScene == sceneContext.sceneConfig().get("play3D")) {
-                        contextMenu.rebuild(gameScene);
-                        contextMenu.show(parentScene.getRoot(), e.getScreenX(), e.getScreenY());
-                    }
-                });
-            }
-        });
-
-        topLayer = new BorderPane();
-        topLayer.setLeft(dashboard);
-        topLayer.setRight(pip.canvas());
+        dashboardLayer = new BorderPane();
+        dashboardLayer.setLeft(dashboard);
+        dashboardLayer.setRight(pip.canvas());
+        getLayersContainer().getChildren().add(dashboardLayer);
 
         canvasLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
 
-        getLayersContainer().getChildren().add(topLayer);
-
+        // data binding
+        pip.opacityPy.bind(PY_PIP_OPACITY);
+        pip.heightPy.bind(PY_PIP_HEIGHT);
         PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateBackground3D());
         PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground3D());
         PY_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
@@ -125,7 +108,7 @@ public class GamePage3D extends GamePage {
     }
 
     private void updateTopLayer() {
-        topLayer.setVisible(dashboard.isVisible() || PY_PIP_ON.get());
+        dashboardLayer.setVisible(dashboard.isVisible() || PY_PIP_ON.get());
         getLayersContainer().requestFocus();
     }
 
