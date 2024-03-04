@@ -324,8 +324,8 @@ public class GameModel {
         if (!scoringEnabled) {
             return;
         }
-        var oldScore = score.points();
-        var newScore = oldScore + points;
+        int oldScore = score.points();
+        int newScore = oldScore + points;
         score.setPoints(newScore);
         if (newScore > highScore.points()) {
             highScore.setPoints(newScore);
@@ -366,12 +366,12 @@ public class GameModel {
     }
 
     private static void saveScore(Score score, File file, String description) {
-        var p = new Properties();
-        p.setProperty("points", String.valueOf(score.points()));
-        p.setProperty("level",  String.valueOf(score.levelNumber()));
-        p.setProperty("date",   score.date().format(DateTimeFormatter.ISO_LOCAL_DATE));
-        p.setProperty("url",    "https://github.com/armin-reichert/pacman-javafx");
         try (var out = new FileOutputStream(file)) {
+            var p = new Properties();
+            p.setProperty("points", String.valueOf(score.points()));
+            p.setProperty("level",  String.valueOf(score.levelNumber()));
+            p.setProperty("date",   score.date().format(DateTimeFormatter.ISO_LOCAL_DATE));
+            p.setProperty("url",    "https://github.com/armin-reichert/pacman-javafx");
             p.storeToXML(out, description);
             Logger.info("Saved '{}' to file '{}'. Points: {} Level: {}",
                 description, file, score.points(), score.levelNumber());
