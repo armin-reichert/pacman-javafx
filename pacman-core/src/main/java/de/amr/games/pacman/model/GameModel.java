@@ -358,8 +358,8 @@ public class GameModel {
             score.setPoints(Integer.parseInt(p.getProperty("points")));
             score.setLevelNumber(Integer.parseInt(p.getProperty("level")));
             score.setDate(LocalDate.parse(p.getProperty("date"), DateTimeFormatter.ISO_LOCAL_DATE));
-            Logger.info("Score loaded from file '{}'. Points: {} Level: {}", file.getAbsolutePath(), score.points(),
-                score.levelNumber());
+            Logger.info("Score loaded from file '{}'. Points: {} Level: {}",
+                file, score.points(), score.levelNumber());
         } catch (Exception x) {
             Logger.error("Score could not be loaded from file '{}'. Error: {}", file, x.getMessage());
         }
