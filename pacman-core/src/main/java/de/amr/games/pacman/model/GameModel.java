@@ -53,7 +53,7 @@ public class GameModel {
     public static final short BONUS_POINTS_SHOWN_TICKS = 2 * FPS; // unsure
     public static final short PAC_POWER_FADING_TICKS = 2 * FPS; // unsure
 
-    private static final byte[][] LEVEL_DATA = {
+    private static final byte[][] RAW_LEVEL_DATA = {
         /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0},
         /* 2*/ { 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5, 1},
         /* 3*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5, 0},
@@ -77,8 +77,9 @@ public class GameModel {
         /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0},
     };
 
-    private static int dataRow(int levelNumber) {
-        return (levelNumber - 1) < LEVEL_DATA.length ? (levelNumber - 1) : (LEVEL_DATA.length - 1);
+    private static GameLevelData levelData(int levelNumber) {
+        int index = Math.min(levelNumber - 1, RAW_LEVEL_DATA.length - 1);
+        return new GameLevelData(RAW_LEVEL_DATA[index]);
     }
 
     // Hunting duration (in ticks) of chase and scatter phases. See Pac-Man dossier.
@@ -184,9 +185,9 @@ public class GameModel {
         checkLevelNumber(levelNumber);
         level = switch (variant) {
             case MS_PACMAN -> new GameLevel(this, createMsPacManWorld(mapNumberMsPacMan(levelNumber)),
-                levelNumber, LEVEL_DATA[dataRow(levelNumber)], false);
+                levelNumber, levelData(levelNumber), false);
             case PACMAN -> new GameLevel(this, createPacManWorld(),
-                levelNumber, LEVEL_DATA[dataRow(levelNumber)], false);
+                levelNumber, levelData(levelNumber), false);
         };
 
         if (levelNumber == 1) {
@@ -221,11 +222,11 @@ public class GameModel {
     public void createAndStartDemoLevel() {
         switch (variant) {
             case MS_PACMAN -> {
-                level = new GameLevel(this, createMsPacManWorld(1), 1, LEVEL_DATA[0], true);
+                level = new GameLevel(this, createMsPacManWorld(1), 1, levelData(1), true);
                 level.pac().setSteering(new RuleBasedSteering());
             }
             case PACMAN -> {
-                level = new GameLevel(this, createPacManWorld(), 1, LEVEL_DATA[0], true);
+                level = new GameLevel(this, createPacManWorld(), 1, levelData(1), true);
                 level.pac().setSteering(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
             }
         }

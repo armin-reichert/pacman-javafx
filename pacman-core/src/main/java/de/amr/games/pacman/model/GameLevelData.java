@@ -3,113 +3,73 @@ package de.amr.games.pacman.model;
 import java.util.Arrays;
 
 /**
- * Each level is parameterized by the following data:
- *  <pre>
- * 	pacSpeedPercentage             = data[0];
- * 	ghostSpeedPercentage           = data[1];
- * 	ghostSpeedTunnelPercentage     = data[2];
- * 	elroy1DotsLeft                 = data[3];
- * 	elroy1SpeedPercentage          = data[4];
- * 	elroy2DotsLeft                 = data[5];
- * 	elroy2SpeedPercentage          = data[6];
- * 	pacSpeedPoweredPercentage      = data[7];
- * 	ghostSpeedFrightenedPercentage = data[8];
- * 	pacPowerSeconds                = data[9];
- * 	numFlashes                     = data[10];
- * 	intermissionNumber             = data[11];
- * 	</pre>
+ * Game level parameters.
+ *
+ * @author Armin Reichert
  */
-public class GameLevelData {
-
-    private final byte[] data;
-
-    public GameLevelData(byte[] data) {
-        this.data = Arrays.copyOf(data, data.length);
-    }
-
-    /**
+public record GameLevelData(
+    /*
      * Relative Pac-Man speed (percentage of base speed).
      */
-    public final byte pacSpeedPercentage() {
-        return data[0];
-    }
+    byte pacSpeedPercentage,
 
-    /**
+    /*
      * Relative ghost speed when hunting or scattering.
      */
-    public final byte ghostSpeedPercentage() {
-        return data[1];
-    }
+    byte ghostSpeedPercentage,
 
-    /**
+    /*
      * Relative ghost speed inside tunnel.
      */
-    public final byte ghostSpeedTunnelPercentage() {
-        return data[2];
-    }
+    byte ghostSpeedTunnelPercentage,
 
-    /**
+    /*
      * Number of pellets left when Blinky becomes "Cruise Elroy" grade 1.
      */
-    public final byte elroy1DotsLeft() {
-        return data[3];
-    }
+    byte elroy1DotsLeft,
 
-    /**
+    /*
      * Relative speed of Blinky being "Cruise Elroy" grade 1.
      */
-    public final byte elroy1SpeedPercentage() {
-        return data[4];
-    }
+    byte elroy1SpeedPercentage,
 
-    /**
+    /*
      * Number of pellets left when Blinky becomes "Cruise Elroy" grade 2.
      */
-    public final byte elroy2DotsLeft() {
-        return data[5];
-    }
+    byte elroy2DotsLeft,
 
-    /**
+    /*
      * Relative speed of Blinky being "Cruise Elroy" grade 2.
      */
-    public final byte elroy2SpeedPercentage() {
-        return data[6];
-    }
+    byte elroy2SpeedPercentage,
 
-    /**
+    /*
      * Relative speed of Pac-Man in power mode.
      */
-    public final byte pacSpeedPoweredPercentage() {
-        return data[7];
-    }
+    byte pacSpeedPoweredPercentage,
 
-    /**
+    /*
      * Relative speed of frightened ghost.
      */
-    public final byte ghostSpeedFrightenedPercentage() {
-        return data[8];
-    }
+    byte ghostSpeedFrightenedPercentage,
 
-    /**
+    /*
      * Number of seconds Pac-Man gets power.
      */
-    public final byte pacPowerSeconds() {
-        return data[9];
-    }
+    byte pacPowerSeconds,
 
-    /**
+    /*
      * Number of maze flashes at end of this level.
      */
-    public final byte numFlashes() {
-        return data[10];
-    }
+    byte numFlashes,
 
-    /**
+    /*
      * Number of intermission scene played after this level (1-3. 0 = no intermission).
      */
-    public final byte intermissionNumber() {
-        return data[11];
+    byte intermissionNumber)
+{
+    public GameLevelData(byte[] data) {
+        this(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8],
+            data[9], data[10], data[11]);
     }
-
-
 }

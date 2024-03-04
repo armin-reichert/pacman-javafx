@@ -67,16 +67,16 @@ public class GameLevel {
 
     private byte cruiseElroyState;
 
-    public GameLevel(GameModel game, World world, int number, byte[] values, boolean demoLevel) {
+    public GameLevel(GameModel game, World world, int levelNumber, GameLevelData levelData, boolean demoLevel) {
         checkGameNotNull(game);
         checkNotNull(world);
-        checkLevelNumber(number);
-        checkNotNull(values);
+        checkLevelNumber(levelNumber);
+        checkNotNull(levelData);
 
         this.game = game;
         this.world = world;
-        this.levelNumber = number;
-        this.data = new GameLevelData(values);
+        this.levelNumber = levelNumber;
+        this.data = levelData;
         this.demoLevel = demoLevel;
 
         boolean isMsPacManGame = game.variant() == GameVariant.MS_PACMAN;
@@ -110,7 +110,7 @@ public class GameLevel {
         bonusSymbols[0] = nextBonusSymbol();
         bonusSymbols[1] = nextBonusSymbol();
 
-        Logger.trace("Game level {} ({}) created.", levelNumber, game.variant());
+        Logger.trace("Game level {} ({}) created.", this.levelNumber, game.variant());
     }
 
     private Vector2i chasingTarget(byte ghostID) {
