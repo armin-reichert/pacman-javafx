@@ -25,7 +25,7 @@ import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 public class MovingBonus extends Creature implements Bonus {
 
     private final Pulse jumpAnimation = new Pulse(10, false);
-    private final RouteBasedSteering steering = new RouteBasedSteering();
+    private RouteBasedSteering steering;
     private final byte symbol;
     private final int points;
     private long countdown;
@@ -108,7 +108,7 @@ public class MovingBonus extends Creature implements Bonus {
         centerOverTile(route.getFirst().tile());
         setMoveAndWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
         route.removeFirst();
-        steering.setRoute(route);
+        steering = new RouteBasedSteering(this, route);
     }
 
     public float dy() {
@@ -123,7 +123,7 @@ public class MovingBonus extends Creature implements Bonus {
         switch (state) {
             case STATE_INACTIVE -> {}
             case STATE_EDIBLE -> {
-                steering.steer(level, this);
+                steering.steer(level);
                 if (steering.isComplete()) {
                     Logger.trace("Moving bonus reached target: {}", this);
                     setInactive();

@@ -15,17 +15,14 @@ public abstract class Steering {
 
     public static final Steering NONE = new Steering() {
         @Override
-        public void steer(GameLevel level, Creature guy) {
-        }
+        public void steer(GameLevel level) {}
     };
 
     private boolean enabled;
 
-    public void init() {
-        // implement if needed
-    }
+    public void init() {}
 
-    public abstract void steer(GameLevel level, Creature guy);
+    public abstract void steer(GameLevel level);
 
     public boolean isEnabled() {
         return enabled;

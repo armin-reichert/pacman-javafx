@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui.fx.v3d;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
+import de.amr.games.pacman.ui.fx.input.KeyboardPacSteering;
 import de.amr.games.pacman.ui.fx.page.GamePage;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.*;
@@ -94,7 +94,7 @@ public class GamePage3D extends GamePage {
         if (isCurrentGameScene3D()) {
             if (newGameScene == sceneContext.sceneConfig().get("play3D")) {
                 // Note: event handler is removed again in super.onGameSceneChanged() call
-                getLayersContainer().addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardSteering) sceneContext.gameController().manualPacSteering());
+                getLayersContainer().addEventHandler(KeyEvent.KEY_PRESSED, (KeyboardPacSteering) sceneContext.gameController().manualPacSteering());
             }
             getLayersContainer().getChildren().set(0, newGameScene.root());
         } else {

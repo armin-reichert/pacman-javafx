@@ -13,7 +13,7 @@ import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
+import de.amr.games.pacman.ui.fx.input.KeyboardPacSteering;
 import de.amr.games.pacman.ui.fx.page.GamePage;
 import de.amr.games.pacman.ui.fx.page.Page;
 import de.amr.games.pacman.ui.fx.page.StartPage;
@@ -344,7 +344,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     protected void configurePacSteering() {
-        gameController().setManualPacSteering(new KeyboardSteering());
+        gameController().setManualPacSteering(new KeyboardPacSteering());
     }
 
     protected void updateStage() {

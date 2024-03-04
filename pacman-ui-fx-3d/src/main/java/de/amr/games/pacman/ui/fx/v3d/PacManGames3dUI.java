@@ -10,7 +10,7 @@ import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.Settings;
-import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
+import de.amr.games.pacman.ui.fx.input.KeyboardPacSteering;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -256,7 +256,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     @Override
     protected void configurePacSteering() {
         // Enable steering with unmodified and CONTROL + cursor key
-        var steering = new KeyboardSteering();
+        var steering = new KeyboardPacSteering();
         steering.define(Direction.UP, KeyCode.UP, KeyCombination.CONTROL_DOWN);
         steering.define(Direction.DOWN, KeyCode.DOWN, KeyCombination.CONTROL_DOWN);
         steering.define(Direction.LEFT, KeyCode.LEFT, KeyCombination.CONTROL_DOWN);

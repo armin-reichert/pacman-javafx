@@ -7,7 +7,10 @@ package de.amr.games.pacman.lib;
 import de.amr.games.pacman.controller.Steering;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.actors.Pac;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -23,7 +26,7 @@ import static de.amr.games.pacman.lib.Globals.tileAt;
  *
  * @author Armin Reichert
  */
-public class RuleBasedSteering extends Steering {
+public class RuleBasedPacSteering extends Steering {
 
     private static class CollectedData {
 
@@ -65,8 +68,8 @@ public class RuleBasedSteering extends Steering {
     }
 
     @Override
-    public void steer(GameLevel level, Creature guy) {
-        if (guy.moved() && !guy.isNewTileEntered()) {
+    public void steer(GameLevel level) {
+        if (level.pac().moved() && !level.pac().isNewTileEntered()) {
             return;
         }
         var data = collectData(level);
@@ -129,7 +132,10 @@ public class RuleBasedSteering extends Steering {
         } else {
             pac.setTargetTile(findTileFarthestFromGhosts(level, findNearestFoodTiles(level)));
         }
-        pac.navigateTowardsTarget();
+        pac.targetTile().ifPresent(target -> {
+            pac.navigateTowardsTarget();
+            Logger.info("Navigated towards {}, moveDir={} wishDir={}", pac.targetTile(), pac.moveDir(), pac.wishDir());
+        });
     }
 
     private boolean isEdibleBonusNearPac(GameLevel level, Pac pac) {

@@ -6,7 +6,7 @@ package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Fsm;
-import de.amr.games.pacman.lib.RuleBasedSteering;
+import de.amr.games.pacman.lib.RuleBasedPacSteering;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import org.tinylog.Logger;
@@ -61,7 +61,7 @@ public class GameController extends Fsm<GameState, GameModel> {
         return it;
     }
 
-    private final Steering autopilot = new RuleBasedSteering();
+    private final Steering autopilot = new RuleBasedPacSteering();
     private Steering manualPacSteering = Steering.NONE;
     private int credit;
     private boolean pacAutoControlled;

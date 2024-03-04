@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.input.KeyboardSteering;
+import de.amr.games.pacman.ui.fx.input.KeyboardPacSteering;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.CanvasContainer;
 import de.amr.games.pacman.ui.fx.util.FadingPane;
@@ -83,12 +83,12 @@ public class GamePage extends CanvasContainer implements Page {
 
     public void onGameSceneChanged(GameScene newGameScene) {
         //TODO: find a better solution than adding/removing key handler, maybe adapter class?
-        if (sceneContext.gameController().manualPacSteering() instanceof KeyboardSteering keyboardSteering) {
+        if (sceneContext.gameController().manualPacSteering() instanceof KeyboardPacSteering keyboardPacSteering) {
             // if play scene gets active/inactive, add/remove key handler
             if (newGameScene == sceneContext.sceneConfig().get("play")) {
-                layersContainer.addEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
+                layersContainer.addEventHandler(KeyEvent.KEY_PRESSED, keyboardPacSteering);
             } else {
-                layersContainer.removeEventHandler(KeyEvent.KEY_PRESSED, keyboardSteering);
+                layersContainer.removeEventHandler(KeyEvent.KEY_PRESSED, keyboardPacSteering);
             }
         }
         if (newGameScene == sceneContext.sceneConfig().get("intro")) {

@@ -11,21 +11,24 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 /**
- * Steering of a creature based on a route.
+ * Steers a creature to follow a given route.
  *
  * @author Armin Reichert
  */
 public class RouteBasedSteering extends Steering {
 
+    private final Creature creature;
     private List<NavPoint> route = List.of();
     private int targetIndex;
     private boolean complete;
 
-    public RouteBasedSteering() {
-    }
-
-    public RouteBasedSteering(List<NavPoint> route) {
+    public RouteBasedSteering(Creature creature, List<NavPoint> route) {
+        checkNotNull(creature);
+        checkNotNull(route);
+        this.creature = creature;
         setRoute(route);
     }
 
@@ -41,17 +44,17 @@ public class RouteBasedSteering extends Steering {
     }
 
     @Override
-    public void steer(GameLevel level, Creature guy) {
-        guy.navigateTowardsTarget();
+    public void steer(GameLevel level) {
+        creature.navigateTowardsTarget();
         if (targetIndex == route.size()) {
             complete = true;
-        } else if (guy.targetTile().isEmpty()) {
-            guy.setTargetTile(currentTarget().tile());
-            guy.navigateTowardsTarget();
-            Logger.trace("New target tile for {}={}s", guy.name(), guy.targetTile().get());
-        } else if (guy.tile().equals(currentTarget().tile())) {
-            nextTarget(guy);
-            Logger.trace("New target tile for {}={}", guy.name(), guy.targetTile().get());
+        } else if (creature.targetTile().isEmpty()) {
+            creature.setTargetTile(currentTarget().tile());
+            creature.navigateTowardsTarget();
+            Logger.trace("New target tile for {}={}s", creature.name(), creature.targetTile().get());
+        } else if (creature.tile().equals(currentTarget().tile())) {
+            nextTarget(creature);
+            Logger.trace("New target tile for {}={}", creature.name(), creature.targetTile().get());
         }
     }
 
@@ -59,11 +62,11 @@ public class RouteBasedSteering extends Steering {
         return complete;
     }
 
-    private void nextTarget(Creature guy) {
+    private void nextTarget(Creature creature) {
         ++targetIndex;
         if (targetIndex < route.size()) {
-            guy.setTargetTile(currentTarget().tile());
-            guy.navigateTowardsTarget();
+            creature.setTargetTile(currentTarget().tile());
+            creature.navigateTowardsTarget();
         }
     }
 

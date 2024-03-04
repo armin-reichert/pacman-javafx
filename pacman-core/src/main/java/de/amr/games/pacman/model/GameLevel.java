@@ -585,7 +585,7 @@ public class GameLevel {
         // Update guys
         unlockGhost();
         var steering = pac.steering().orElse(GameController.it().pacSteering());
-        steering.steer(this, pac);
+        steering.steer(this);
         pac.update(this);
         ghosts().forEach(ghost -> ghost.updateState(pac));
 

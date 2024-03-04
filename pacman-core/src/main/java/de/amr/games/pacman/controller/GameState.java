@@ -221,7 +221,7 @@ public enum GameState implements FsmState<GameModel> {
                 if (timer.hasExpired()) {
                     gameController().resumePreviousState();
                 } else {
-                    level.pac().steering().orElse(gameController().pacSteering()).steer(level, level.pac());
+                    level.pac().steering().orElse(gameController().pacSteering()).steer(level);
                     level.ghosts(GhostState.EATEN, GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
                         .forEach(ghost -> ghost.updateState(level.pac()));
                     level.world().energizerBlinking().tick();

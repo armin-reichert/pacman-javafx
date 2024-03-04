@@ -6,7 +6,7 @@ package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.RouteBasedSteering;
-import de.amr.games.pacman.lib.RuleBasedSteering;
+import de.amr.games.pacman.lib.RuleBasedPacSteering;
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import org.tinylog.Logger;
@@ -223,11 +223,11 @@ public class GameModel {
         switch (variant) {
             case MS_PACMAN -> {
                 level = new GameLevel(this, createMsPacManWorld(1), 1, levelData(1), true);
-                level.pac().setSteering(new RuleBasedSteering());
+                level.pac().setSteering(new RuleBasedPacSteering());
             }
             case PACMAN -> {
                 level = new GameLevel(this, createPacManWorld(), 1, levelData(1), true);
-                level.pac().setSteering(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
+                level.pac().setSteering(new RouteBasedSteering(level.pac(), List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
             }
         }
 

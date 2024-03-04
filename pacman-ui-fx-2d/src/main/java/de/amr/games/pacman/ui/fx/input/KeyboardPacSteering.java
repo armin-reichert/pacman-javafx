@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui.fx.input;
 import de.amr.games.pacman.controller.Steering;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.actors.Creature;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -25,7 +24,7 @@ import java.util.stream.Stream;
  *
  * @author Armin Reichert
  */
-public class KeyboardSteering extends Steering implements EventHandler<KeyEvent> {
+public class KeyboardPacSteering extends Steering implements EventHandler<KeyEvent> {
 
     protected Map<KeyCodeCombination, Direction> dirByCombination = new HashMap<>();
     protected Direction dir;
@@ -33,7 +32,7 @@ public class KeyboardSteering extends Steering implements EventHandler<KeyEvent>
     /**
      * Default steering: unmodified cursor keys.
      */
-    public KeyboardSteering() {
+    public KeyboardPacSteering() {
         put(new KeyCodeCombination(KeyCode.UP), Direction.UP);
         put(new KeyCodeCombination(KeyCode.DOWN), Direction.DOWN);
         put(new KeyCodeCombination(KeyCode.LEFT), Direction.LEFT);
@@ -57,9 +56,9 @@ public class KeyboardSteering extends Steering implements EventHandler<KeyEvent>
     }
 
     @Override
-    public void steer(GameLevel level, Creature guy) {
+    public void steer(GameLevel level) {
         if (dir != null) {
-            guy.setWishDir(dir);
+            level.pac().setWishDir(dir);
             dir = null;
         }
     }
