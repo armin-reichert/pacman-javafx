@@ -1,7 +1,5 @@
 package de.amr.games.pacman.model;
 
-import java.util.Arrays;
-
 /**
  * Game level parameters.
  *
