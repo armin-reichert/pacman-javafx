@@ -22,27 +22,12 @@ import static de.amr.games.pacman.model.actors.GhostState.LOCKED;
  */
 class GhostHouseManagement {
 
-    public static class GhostUnlockInfo {
+    public record GhostUnlockInfo(Ghost ghost, String reason) {
 
         private static Optional<GhostUnlockInfo> of(Ghost ghost, String reason, Object... args) {
             return Optional.of(new GhostUnlockInfo(ghost, String.format(reason, args)));
         }
 
-        private final Ghost ghost;
-        private final String reason;
-
-        public GhostUnlockInfo(Ghost ghost, String reason) {
-            this.ghost = ghost;
-            this.reason = reason;
-        }
-
-        public Ghost ghost() {
-            return ghost;
-        }
-
-        public String reason() {
-            return reason;
-        }
     }
 
     private final GameLevel level;
