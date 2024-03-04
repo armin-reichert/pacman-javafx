@@ -374,7 +374,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (nextGameScene == null) {
             throw new IllegalStateException("No game scene found for game state " + gameState());
         }
-        Logger.info("updateOrReloadGameScene {}, reload={}", nextGameScene.getClass().getSimpleName(), reload);
+        Logger.trace("updateOrReloadGameScene({}), scene: {}", reload, nextGameScene.getClass().getSimpleName());
         GameScene prevGameScene = gameScenePy.get();
         if (nextGameScene != prevGameScene || reload) {
             if (prevGameScene != null) {

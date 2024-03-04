@@ -134,9 +134,16 @@ public class GameModel {
 
     public static final byte[] BONUS_VALUES_PACMAN = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
 
-    private static final File HIGHSCORE_FILE_PACMAN = new File(System.getProperty("user.home"), "highscore-pacman.xml");
-    private static final File HIGHSCORE_FILE_MS_PACMAN = new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
+    private static final File HIGHSCORE_DIRECTORY = new File(System.getProperty("user.home"));
+    private static final File HIGHSCORE_PACMAN    = new File(HIGHSCORE_DIRECTORY, "highscore-pacman.xml");
+    private static final File HIGHSCORE_MS_PACMAN = new File(HIGHSCORE_DIRECTORY, "highscore-ms_pacman.xml");
 
+    private static File highScoreFile(GameVariant variant) {
+        return switch (variant) {
+            case MS_PACMAN -> HIGHSCORE_MS_PACMAN;
+            case PACMAN    -> HIGHSCORE_PACMAN;
+        };
+    }
 
     private final GameVariant variant;
     private final List<Byte> levelCounter;
@@ -331,22 +338,16 @@ public class GameModel {
         }
     }
 
-    private File highScoreFile() {
-        return switch (variant) {
-            case MS_PACMAN -> HIGHSCORE_FILE_MS_PACMAN;
-            case PACMAN -> HIGHSCORE_FILE_PACMAN;
-        };
-    }
-
     public void loadHighScore() {
-        loadScore(highScore, highScoreFile());
+        loadScore(highScore, highScoreFile(variant));
     }
 
     public void updateHighScore() {
+        var file = highScoreFile(variant);
         var oldHighScore = new Score();
-        loadScore(oldHighScore, highScoreFile());
+        loadScore(oldHighScore, file);
         if (highScore.points() > oldHighScore.points()) {
-            saveScore(highScore, highScoreFile(), String.format("%s High Score", variant));
+            saveScore(highScore, file, String.format("%s High Score", variant));
         }
     }
 
