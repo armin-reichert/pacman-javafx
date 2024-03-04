@@ -30,9 +30,9 @@ import static de.amr.games.pacman.model.world.ArcadeWorld.*;
  */
 public class GameModel {
 
-    public static final byte RED_GHOST = 0;
-    public static final byte PINK_GHOST = 1;
-    public static final byte CYAN_GHOST = 2;
+    public static final byte RED_GHOST    = 0;
+    public static final byte PINK_GHOST   = 1;
+    public static final byte CYAN_GHOST   = 2;
     public static final byte ORANGE_GHOST = 3;
 
     /** Game loop frequency. */
@@ -49,9 +49,9 @@ public class GameModel {
     public static final byte POINTS_NORMAL_PELLET = 10;
     public static final byte POINTS_ENERGIZER = 50;
     public static final short POINTS_ALL_GHOSTS_KILLED_IN_LEVEL = 12_000;
-    public static final short EXTRA_LIFE_SCORE = 10000;
+    public static final short EXTRA_LIFE_SCORE = 10_000;
     public static final short BONUS_POINTS_SHOWN_TICKS = 2 * FPS; // unsure
-    public static final short PAC_POWER_FADES_TICKS = 2 * FPS - 1; // unsure
+    public static final short PAC_POWER_FADING_TICKS = 2 * FPS; // unsure
 
     private static final byte[][] LEVEL_DATA = {
         /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0},

@@ -43,7 +43,7 @@ public class PacManGameGhostAnimations extends SpriteAnimations {
 
         var flashing = SpriteAnimation.begin()
             .sprites(spriteSheet.ghostFlashingSprites())
-            .frameTicks(6)
+            .frameTicks(7)
             .loop()
             .end();
 

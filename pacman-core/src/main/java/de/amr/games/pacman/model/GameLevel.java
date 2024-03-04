@@ -84,7 +84,7 @@ public class GameLevel {
         pac = new Pac(isMsPacManGame ? "Ms. Pac-Man" : "Pac-Man");
         pac.setWorld(world);
         pac.setBaseSpeed(SPEED_AT_100_PERCENT);
-        pac.setFadingTicks(PAC_POWER_FADES_TICKS); // not sure
+        pac.setFadingTicks(PAC_POWER_FADING_TICKS); // not sure
 
         ghosts = new Ghost[] {
             new Ghost(RED_GHOST, "Blinky"),
@@ -491,7 +491,7 @@ public class GameLevel {
             thisFrame.pacPowerStarts = true;
             thisFrame.pacPowerActive = true;
         } else {
-            thisFrame.pacPowerFading = pac.powerTimer().remaining() == GameModel.PAC_POWER_FADES_TICKS;
+            thisFrame.pacPowerFading = pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS;
             thisFrame.pacPowerLost = pac.powerTimer().hasExpired();
             thisFrame.pacPowerActive = pac.powerTimer().isRunning();
         }
