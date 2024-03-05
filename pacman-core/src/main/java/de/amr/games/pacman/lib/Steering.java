@@ -2,7 +2,7 @@
 Copyright (c) 2021-2023 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.controller;
+package de.amr.games.pacman.lib;
 
 import de.amr.games.pacman.model.GameLevel;
 import org.tinylog.Logger;

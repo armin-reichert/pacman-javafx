@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib;
 
-import de.amr.games.pacman.controller.Steering;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Creature;
 import org.tinylog.Logger;

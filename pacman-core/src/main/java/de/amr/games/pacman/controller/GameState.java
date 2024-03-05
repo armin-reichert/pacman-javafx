@@ -50,7 +50,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
             game.setPlaying(false);
-            game.removeLevel();
+            game.setLevel(null);
         }
 
         @Override
@@ -100,7 +100,7 @@ public enum GameState implements FsmState<GameModel> {
             else if (gameController().hasCredit()) {
                 // start new game
                 if (timer.tick() == 1) {
-                    game.createAndStartLevel(1);
+                    gameController().createAndStartLevel(1);
                     Logger.trace("Timer tick == 1, create level 1: {}", timer);
                 } else if (timer.tick() == 120) {
                     game.level().ifPresent(level -> level.guys().forEach(Creature::show));
@@ -115,7 +115,7 @@ public enum GameState implements FsmState<GameModel> {
             else {
                 // start demo level
                 if (timer.tick() == 1) {
-                    game.createAndStartDemoLevel();
+                    gameController().createAndStartDemoLevel();
                 } else if (timer.tick() == 120) {
                     game.level().ifPresent(level -> {
                         level.startHuntingPhase(0);
@@ -193,7 +193,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.restartSeconds(1);
             enablePacSteering(false);
-            game.level().ifPresent(level -> game.createAndStartLevel(level.number() + 1));
+            game.level().ifPresent(level -> gameController().createAndStartLevel(level.number() + 1));
         }
 
         @Override
@@ -304,7 +304,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onExit(GameModel game) {
             game.setPlaying(false);
-            game.removeLevel();
+            game.setLevel(null);
         }
     },
 
@@ -334,7 +334,7 @@ public enum GameState implements FsmState<GameModel> {
             };
             timer.restartIndefinitely();
             game.reset();
-            game.createAndStartLevel(1);
+            gameController().createAndStartLevel(1);
             enablePacSteering(false);
         }
 

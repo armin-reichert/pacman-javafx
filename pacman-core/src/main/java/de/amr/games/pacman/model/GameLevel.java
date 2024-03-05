@@ -6,7 +6,6 @@ package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.controller.Steering;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.actors.*;
@@ -67,6 +66,8 @@ public class GameLevel {
     private byte numGhostsKilledByEnergizer;
 
     private byte cruiseElroyState;
+
+    private Steering autopilot;
 
     public GameLevel(GameModel game, World world, int levelNumber, GameLevelData levelData, boolean demoLevel) {
         checkGameNotNull(game);
@@ -209,12 +210,16 @@ public class GameLevel {
         return pac;
     }
 
+    public void setAutopilot(Steering autopilot) {
+        checkNotNull(autopilot);
+        this.autopilot = autopilot;
+    }
+
     public void steerPac() {
         if (pac == null) {
             Logger.error("Cannot steer Pac: No Pac available");
         } else if (GameController.it().isAutopilotEnabled() || isDemoLevel()) {
-            GameController.it().autopilot().steer(this);
-
+            autopilot.steer(this);
         } else if (pac.steering().isPresent()) {
             pac.steering().get().steer(this);
         } else {
@@ -643,7 +648,7 @@ public class GameLevel {
                 flashing.restart(2 * data.numFlashes());
             } else if (timer.atSecond(12.0)) {
                 end();
-                game.createAndStartLevel(levelNumber + 1);
+                GameController.it().createAndStartLevel(levelNumber + 1);
                 timer.restartIndefinitely();
                 publishGameEvent(game, GameEventType.LEVEL_STARTED);
             }

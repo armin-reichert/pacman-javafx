@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d;
 
-import de.amr.games.pacman.controller.Steering;
+import de.amr.games.pacman.lib.Steering;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.ArcadeWorld;

@@ -4,16 +4,23 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.controller;
 
+import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Fsm;
+import de.amr.games.pacman.lib.RouteBasedSteering;
 import de.amr.games.pacman.lib.RuleBasedPacSteering;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import org.tinylog.Logger;
+
+import java.util.List;
 
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.checkGameVariant;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.lib.Globals.checkLevelNumber;
+import static de.amr.games.pacman.model.world.ArcadeWorld.*;
 
 /**
  * Controller (in the sense of MVC) for both (Pac-Man, Ms. Pac-Man) game variants.
@@ -61,11 +68,10 @@ public class GameController extends Fsm<GameState, GameModel> {
         return it;
     }
 
-    private Steering autopilot = new RuleBasedPacSteering();
-    private boolean autopilotEnabled;
-    private boolean pacImmune;
     private GameModel game;
-    private int credit;
+    private boolean autopilotEnabled = false;
+    private boolean pacImmune = false;
+    private int credit = 0;
 
     /**
      * Used in intermission test mode.
@@ -116,15 +122,6 @@ public class GameController extends Fsm<GameState, GameModel> {
         return credit > 0;
     }
 
-    public Steering autopilot() {
-        return autopilot;
-    }
-
-    public void setAutopilot(Steering autopilot) {
-        checkNotNull(autopilot);
-        this.autopilot = autopilot;
-    }
-
     public boolean isAutopilotEnabled() {
         return autopilotEnabled;
     }
@@ -143,5 +140,76 @@ public class GameController extends Fsm<GameState, GameModel> {
 
     public void setPacImmune(boolean pacImmune) {
         this.pacImmune = pacImmune;
+    }
+
+    /**
+     * Starts new game level with the given number.
+     *
+     * @param levelNumber level number (starting at 1)
+     */
+    public void createAndStartLevel(int levelNumber) {
+        checkLevelNumber(levelNumber);
+        GameLevel level = switch (game.variant()) {
+            case MS_PACMAN -> new GameLevel(game, createMsPacManWorld(mapNumberMsPacMan(levelNumber)),
+                levelNumber, GameModel.levelData(levelNumber), false);
+            case PACMAN -> new GameLevel(game, createPacManWorld(),
+                levelNumber, GameModel.levelData(levelNumber), false);
+        };
+        level.setAutopilot(new RuleBasedPacSteering());
+        game.setLevel(level);
+
+        if (levelNumber == 1) {
+            game.clearLevelCounter();
+        }
+        // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
+        // (also inside the same level) whenever a bonus is earned. That's what I was told.
+        if (game.variant() == GameVariant.PACMAN || levelNumber <= 7) {
+            game.incrementLevelCounter(level.bonusSymbol(0));
+        }
+        game.score().setLevelNumber(levelNumber);
+
+        Logger.info("Level {} created ({})", levelNumber, game().variant());
+        publishGameEvent(game, GameEventType.LEVEL_CREATED);
+
+        // at this point the animations of Pac-Man and the ghosts must have been created!
+        level.letsGetReadyToRumble(false);
+
+        Logger.info("Level {} started ({})", levelNumber, game.variant());
+        publishGameEvent(game, GameEventType.LEVEL_STARTED);
+    }
+
+    /**
+     * Creates and starts the demo game level ("attract mode"). Behavior of the ghosts is different from the original
+     * Arcade game because they do not follow a predetermined path but change their direction randomly when frightened.
+     * In Pac-Man variant, Pac-Man at least follows the same path as in the Arcade game, but in Ms. Pac-Man game, she
+     * does not behave as in the Arcade game but hunts the ghosts using some goal-driven algorithm.
+     */
+    public void createAndStartDemoLevel() {
+        switch (game.variant()) {
+            case MS_PACMAN -> {
+                GameLevel level = new GameLevel(game, createMsPacManWorld(1), 1, GameModel.levelData(1), true);
+                level.setAutopilot(new RuleBasedPacSteering());
+                game.setLevel(level);
+                game.setScoringEnabled(false);
+                game.score().setLevelNumber(1);
+                Logger.info("Demo level created ({})", game.variant());
+                publishGameEvent(game, GameEventType.LEVEL_CREATED);
+            }
+            case PACMAN -> {
+                GameLevel level = new GameLevel(game, createPacManWorld(), 1, GameModel.levelData(1), true);
+                level.setAutopilot(new RouteBasedSteering(level.pac(), List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
+                game.setLevel(level);
+                game.setScoringEnabled(false);
+                game.score().setLevelNumber(1);
+                Logger.info("Demo level created ({})", game.variant());
+                publishGameEvent(game, GameEventType.LEVEL_CREATED);
+            }
+        }
+
+        // at this point the animations of Pac-Man and the ghosts must have been created!
+        game.level().ifPresent(level -> level.letsGetReadyToRumble(true));
+
+        Logger.info("Demo Level started ({})", game.variant());
+        publishGameEvent(game, GameEventType.LEVEL_STARTED);
     }
 }
