@@ -52,7 +52,7 @@ public class InfoBox3D extends InfoBox {
         addInfo("Camera", this::currentSceneCameraInfo).available(this::isCurrentGameScene3D);
         sliderPiPSceneHeight = addSlider("PiP Size", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
         sliderPiPOpacity = addSlider("PiP Opacity", 0.0, 1.0, PY_PIP_OPACITY.get());
-        sliderWallHeight = addSlider("Wall Height", 0.1, 8.5, PY_3D_WALL_HEIGHT.get());
+        sliderWallHeight = addSlider("Wall Height", 1, 9, PY_3D_WALL_HEIGHT.get());
         sliderWallThickness = addSlider("Wall Thickness", 0.1, 2.0, PY_3D_WALL_THICKNESS.get());
         cbEnergizerExplodes = addCheckBox("Energizer Explosion");
         cbNightMode = addCheckBox("Night Mode");
