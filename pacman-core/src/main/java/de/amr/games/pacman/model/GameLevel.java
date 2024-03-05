@@ -6,6 +6,7 @@ package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.controller.Steering;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.actors.*;
@@ -208,11 +209,16 @@ public class GameLevel {
         return pac;
     }
 
-    public void steerPac(Pac pac) {
-        if (GameController.it().isAutopilotEnabled()) {
+    public void steerPac() {
+        if (pac == null) {
+            Logger.error("Cannot steer Pac: No Pac available");
+        } else if (GameController.it().isAutopilotEnabled() || isDemoLevel()) {
             GameController.it().autopilot().steer(this);
+
         } else if (pac.steering().isPresent()) {
             pac.steering().get().steer(this);
+        } else {
+            Logger.error("Cannot steer Pac: No Pac steering available");
         }
     }
 

@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.RouteBasedSteering;
 import de.amr.games.pacman.lib.RuleBasedPacSteering;
@@ -208,6 +209,7 @@ public class GameModel {
 
         // at this point the animations of Pac-Man and the ghosts must have been created!
         level.letsGetReadyToRumble(false);
+        GameController.it().setAutopilot(new RuleBasedPacSteering());
 
         Logger.info("Level {} started ({})", levelNumber, variant);
         publishGameEvent(this, GameEventType.LEVEL_STARTED);
@@ -223,11 +225,11 @@ public class GameModel {
         switch (variant) {
             case MS_PACMAN -> {
                 level = new GameLevel(this, createMsPacManWorld(1), 1, levelData(1), true);
-                level.pac().setSteering(new RuleBasedPacSteering());
+                GameController.it().setAutopilot(new RuleBasedPacSteering());
             }
             case PACMAN -> {
                 level = new GameLevel(this, createPacManWorld(), 1, levelData(1), true);
-                level.pac().setSteering(new RouteBasedSteering(level.pac(), List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
+                GameController.it().setAutopilot(new RouteBasedSteering(level.pac(), List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
             }
         }
 

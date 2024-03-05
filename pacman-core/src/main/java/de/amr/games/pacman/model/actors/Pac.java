@@ -93,7 +93,7 @@ public class Pac extends Creature implements AnimationDirector {
             setPercentageSpeed(powerTimer.isRunning()
                 ? level.data().pacSpeedPoweredPercentage()
                 : level.data().pacSpeedPercentage());
-            level.steerPac(this);
+            level.steerPac(); // assuming I am the given level's Pac
             tryMoving();
             if (moved()) {
                 startAnimation();

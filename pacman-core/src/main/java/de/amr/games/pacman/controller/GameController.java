@@ -13,6 +13,7 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.checkGameVariant;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * Controller (in the sense of MVC) for both (Pac-Man, Ms. Pac-Man) game variants.
@@ -60,7 +61,7 @@ public class GameController extends Fsm<GameState, GameModel> {
         return it;
     }
 
-    private final Steering autopilot = new RuleBasedPacSteering();
+    private Steering autopilot = new RuleBasedPacSteering();
     private boolean autopilotEnabled;
     private boolean pacImmune;
     private GameModel game;
@@ -117,6 +118,11 @@ public class GameController extends Fsm<GameState, GameModel> {
 
     public Steering autopilot() {
         return autopilot;
+    }
+
+    public void setAutopilot(Steering autopilot) {
+        checkNotNull(autopilot);
+        this.autopilot = autopilot;
     }
 
     public boolean isAutopilotEnabled() {
