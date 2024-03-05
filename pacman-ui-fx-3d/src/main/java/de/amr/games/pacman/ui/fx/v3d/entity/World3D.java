@@ -266,10 +266,15 @@ public class World3D {
     }
 
     private void addCompositeWall(FloorPlan floorPlan, WallData wallData) {
+
         final double topHeight = 0.5;
         final double ghostHouseHeight = 9.0;
         final Vector2i tile = floorPlan.tile(wallData.x, wallData.y);
-        final boolean ghostHouseWall = world.house().contains(tile);
+
+        if (world.house().contains(tile)) {
+            addHouseWall(floorPlan, wallData);
+            return;
+        }
 
         Box base = switch (wallData.type) {
             case FloorPlan.HWALL -> horizontalWall(wallData);
@@ -277,15 +282,9 @@ public class World3D {
             case FloorPlan.CORNER -> corner();
             default -> throw new IllegalStateException("Unknown wall type: " + wallData.type);
         };
-        if (ghostHouseWall) {
-            base.setDepth(ghostHouseHeight);
-            base.setTranslateZ(-0.5 * ghostHouseHeight);
-            base.setMaterial(houseMaterial);
-        } else {
-            base.depthProperty().bind(wallHeightPy);
-            base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
-            base.setMaterial(baseMaterial);
-        }
+        base.depthProperty().bind(wallHeightPy);
+        base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
+        base.setMaterial(baseMaterial);
 
         Box top = switch (wallData.type) {
             case FloorPlan.HWALL -> horizontalWall(wallData);
@@ -295,12 +294,41 @@ public class World3D {
         };
         top.setMaterial(topMaterial);
         top.setDepth(topHeight);
-        if (ghostHouseWall) {
-            top.setTranslateZ(-ghostHouseHeight - 0.2);
-        } else {
-            top.translateZProperty()
-                .bind(base.translateZProperty().subtract(wallHeightPy.add(topHeight + 0.1).multiply(0.5)));
-        }
+        top.translateZProperty()
+            .bind(base.translateZProperty().subtract(wallHeightPy.add(topHeight + 0.1).multiply(0.5)));
+
+        Group wall = new Group(base, top);
+        wall.setTranslateX((wallData.x + 0.5 * wallData.numBricksX) * wallData.brickSize);
+        wall.setTranslateY((wallData.y + 0.5 * wallData.numBricksY) * wallData.brickSize);
+        wall.setUserData(wallData);
+
+        wallsGroup.getChildren().add(wall);
+    }
+
+    private void addHouseWall(FloorPlan floorPlan, WallData wallData) {
+        final double topHeight = 0.5;
+        final double houseHeight = 9.0;
+        final Vector2i tile = floorPlan.tile(wallData.x, wallData.y);
+
+        Box base = switch (wallData.type) {
+            case FloorPlan.HWALL -> horizontalWall(wallData);
+            case FloorPlan.VWALL -> verticalWall(wallData);
+            case FloorPlan.CORNER -> corner();
+            default -> throw new IllegalStateException("Unknown wall type: " + wallData.type);
+        };
+        base.setDepth(houseHeight);
+        base.setTranslateZ(-0.5 * houseHeight);
+        base.setMaterial(houseMaterial);
+
+        Box top = switch (wallData.type) {
+            case FloorPlan.HWALL -> horizontalWall(wallData);
+            case FloorPlan.VWALL -> verticalWall(wallData);
+            case FloorPlan.CORNER -> corner();
+            default -> throw new IllegalStateException("Unknown wall type: " + wallData.type);
+        };
+        top.setMaterial(topMaterial);
+        top.setDepth(topHeight);
+        top.setTranslateZ(-houseHeight - 0.2);
 
         Group wall = new Group(base, top);
         wall.setTranslateX((wallData.x + 0.5 * wallData.numBricksX) * wallData.brickSize);
