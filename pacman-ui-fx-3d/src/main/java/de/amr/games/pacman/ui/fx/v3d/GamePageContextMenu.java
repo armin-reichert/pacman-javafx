@@ -105,7 +105,7 @@ public class GamePageContextMenu extends ContextMenu {
             pipItem.setSelected(PY_PIP_ON.get());
         }
         if (autopilotItem != null) {
-            autopilotItem.setSelected(GameController.it().isPacAutoControlled());
+            autopilotItem.setSelected(GameController.it().isAutopilotEnabled());
         }
         if (immunityItem != null) {
             immunityItem.setSelected(GameController.it().isPacImmune());

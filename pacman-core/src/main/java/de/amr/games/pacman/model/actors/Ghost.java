@@ -204,7 +204,7 @@ public class Ghost extends Creature implements AnimationDirector {
      *
      * @param pac Pac-Man or Ms. Pac-Man
      */
-    public void updateState(Pac pac) {
+    public void update(Pac pac) {
         checkNotNull(pac);
         switch (state) {
             case LOCKED -> updateStateLocked(pac);

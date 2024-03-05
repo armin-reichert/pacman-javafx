@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.controller.Steering;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
@@ -223,7 +224,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         this.clock = createClock();
 
         addGameScenes();
-        configurePacSteering();
         configureStage(settings);
         stage.setScene(mainScene);
     }
@@ -341,10 +341,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         setPage(gamePage);
         clock.start();
         Logger.info("Clock started, speed={} Hz", clock.targetFrameratePy.get());
-    }
-
-    protected void configurePacSteering() {
-        gameController().setManualPacSteering(new KeyboardPacSteering());
     }
 
     protected void updateStage() {
@@ -475,16 +471,22 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             switch (e.game.variant()) {
                 case MS_PACMAN -> {
                     level.pac().setAnimations(new MsPacManGamePacAnimations(level.pac(), spriteSheet()));
+                    level.pac().setSteering(createKeyboardPacSteering());
                     level.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, spriteSheet())));
                     Logger.info("Created Ms. Pac-Man game creature animations for level #{}", level.number());
                 }
                 case PACMAN -> {
                     level.pac().setAnimations(new PacManGamePacAnimations(level.pac(), spriteSheet()));
+                    level.pac().setSteering(createKeyboardPacSteering());
                     level.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, spriteSheet())));
                     Logger.info("Created Pac-Man game creature animations for level #{}", level.number());
                 }
             }
         });
+    }
+
+    protected Steering createKeyboardPacSteering() {
+        return new KeyboardPacSteering();
     }
 
     // ActionHandler interface implementation
@@ -604,8 +606,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void toggleAutopilot() {
-        gameController().togglePacAutoControlled();
-        boolean auto = gameController().isPacAutoControlled();
+        gameController().toggleAutopilotEnabled();
+        boolean auto = gameController().isAutopilotEnabled();
         showFlashMessage(tt(auto ? "autopilot_on" : "autopilot_off"));
         soundHandler.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off");
     }

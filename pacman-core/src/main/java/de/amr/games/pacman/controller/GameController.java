@@ -13,7 +13,6 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.checkGameVariant;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * Controller (in the sense of MVC) for both (Pac-Man, Ms. Pac-Man) game variants.
@@ -62,11 +61,10 @@ public class GameController extends Fsm<GameState, GameModel> {
     }
 
     private final Steering autopilot = new RuleBasedPacSteering();
-    private Steering manualPacSteering = Steering.NONE;
-    private int credit;
-    private boolean pacAutoControlled;
+    private boolean autopilotEnabled;
     private boolean pacImmune;
     private GameModel game;
+    private int credit;
 
     /**
      * Used in intermission test mode.
@@ -117,16 +115,20 @@ public class GameController extends Fsm<GameState, GameModel> {
         return credit > 0;
     }
 
-    public boolean isPacAutoControlled() {
-        return pacAutoControlled;
+    public Steering autopilot() {
+        return autopilot;
     }
 
-    public void setPacAutoControlled(boolean pacAutoControlled) {
-        this.pacAutoControlled = pacAutoControlled;
+    public boolean isAutopilotEnabled() {
+        return autopilotEnabled;
     }
 
-    public void togglePacAutoControlled() {
-        pacAutoControlled = !pacAutoControlled;
+    public void setAutopilotEnabled(boolean autopilotEnabled) {
+        this.autopilotEnabled = autopilotEnabled;
+    }
+
+    public void toggleAutopilotEnabled() {
+        autopilotEnabled = !autopilotEnabled;
     }
 
     public boolean isPacImmune() {
@@ -135,18 +137,5 @@ public class GameController extends Fsm<GameState, GameModel> {
 
     public void setPacImmune(boolean pacImmune) {
         this.pacImmune = pacImmune;
-    }
-
-    public Steering pacSteering() {
-        return pacAutoControlled ? autopilot : manualPacSteering;
-    }
-
-    public Steering manualPacSteering() {
-        return manualPacSteering;
-    }
-
-    public void setManualPacSteering(Steering steering) {
-        checkNotNull(steering);
-        this.manualPacSteering = steering;
     }
 }

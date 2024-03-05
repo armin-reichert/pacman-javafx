@@ -81,7 +81,7 @@ public class InfoBoxGameControl extends InfoBox {
         comboGameVariant.setValue(sceneContext.game().variant());
         comboGameVariant.setDisable(sceneContext.gameState() != GameState.INTRO);
         comboInitialLives.setValue((int) sceneContext.game().initialLives());
-        cbAutopilot.setSelected(sceneContext.gameController().isPacAutoControlled());
+        cbAutopilot.setSelected(sceneContext.gameController().isAutopilotEnabled());
         cbImmunity.setSelected(sceneContext.gameController().isPacImmune());
         buttonsGameLevel[GAME_LEVEL_START].setDisable(!(sceneContext.gameController().hasCredit() && sceneContext.game().level().isEmpty()));
         buttonsGameLevel[GAME_LEVEL_QUIT].setDisable(sceneContext.game().level().isEmpty());

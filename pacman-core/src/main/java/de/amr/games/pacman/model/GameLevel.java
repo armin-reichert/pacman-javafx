@@ -49,7 +49,7 @@ public class GameLevel {
     private final TickTimer huntingTimer = new TickTimer("HuntingTimer");
 
     /**
-     * Memorizes what happens during a frame.
+     * Memory of what happens during current frame.
      */
     private final Memory thisFrame = new Memory();
 
@@ -206,6 +206,14 @@ public class GameLevel {
 
     public Pac pac() {
         return pac;
+    }
+
+    public void steerPac(Pac pac) {
+        if (GameController.it().isAutopilotEnabled()) {
+            GameController.it().autopilot().steer(this);
+        } else if (pac.steering().isPresent()) {
+            pac.steering().get().steer(this);
+        }
     }
 
     /**
@@ -582,12 +590,10 @@ public class GameLevel {
         world.mazeFlashing().tick();
         world.energizerBlinking().tick();
 
-        // Update guys
-        unlockGhost();
-        var steering = pac.steering().orElse(GameController.it().pacSteering());
-        steering.steer(this);
         pac.update(this);
-        ghosts().forEach(ghost -> ghost.updateState(pac));
+
+        unlockGhost();
+        ghosts().forEach(ghost -> ghost.update(pac));
 
         // Update bonus
         if (bonus != null) {
@@ -637,7 +643,7 @@ public class GameLevel {
             }
             world().energizerBlinking().tick();
             world().mazeFlashing().tick();
-            ghosts().forEach(ghost -> ghost.updateState(pac()));
+            ghosts().forEach(ghost -> ghost.update(pac()));
             bonus().ifPresent(bonus -> bonus.update(this));
         } else {
             GameController.it().restart(GameState.BOOT);

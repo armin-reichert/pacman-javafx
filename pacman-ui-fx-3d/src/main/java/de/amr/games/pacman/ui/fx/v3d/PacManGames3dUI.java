@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d;
 
+import de.amr.games.pacman.controller.Steering;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.ArcadeWorld;
@@ -253,15 +254,14 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         return this;
     }
 
-    @Override
-    protected void configurePacSteering() {
+    protected Steering createKeyboardPacSteering() {
         // Enable steering with unmodified and CONTROL + cursor key
         var steering = new KeyboardPacSteering();
         steering.define(Direction.UP, KeyCode.UP, KeyCombination.CONTROL_DOWN);
         steering.define(Direction.DOWN, KeyCode.DOWN, KeyCombination.CONTROL_DOWN);
         steering.define(Direction.LEFT, KeyCode.LEFT, KeyCombination.CONTROL_DOWN);
         steering.define(Direction.RIGHT, KeyCode.RIGHT, KeyCombination.CONTROL_DOWN);
-        gameController().setManualPacSteering(steering);
+        return steering;
     }
 
     @Override

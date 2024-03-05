@@ -5,7 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.page;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
@@ -21,7 +23,6 @@ import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Cursor;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -57,9 +58,15 @@ public class GamePage extends CanvasContainer implements Page {
 
         popupLayer.getChildren().addAll(helpButton, signature, helpInfoPopUp);
         layersContainer.getChildren().addAll(popupLayer, flashMessageLayer);
+
         layersContainer.setOnKeyPressed(e -> {
             Keyboard.handleKeyEvent(e);
             handleKeyboardInput();
+            sceneContext.gameLevel().map(GameLevel::pac).flatMap(Pac::steering).ifPresent(steering -> {
+                if (steering instanceof KeyboardPacSteering kps) {
+                    kps.handle(e);
+                }
+            });
             Keyboard.clearState();
         });
 
@@ -82,14 +89,8 @@ public class GamePage extends CanvasContainer implements Page {
     }
 
     public void onGameSceneChanged(GameScene newGameScene) {
-        //TODO: find a better solution than adding/removing key handler, maybe adapter class?
-        if (sceneContext.gameController().manualPacSteering() instanceof KeyboardPacSteering keyboardPacSteering) {
-            // if play scene gets active/inactive, add/remove key handler
-            if (newGameScene == sceneContext.sceneConfig().get("play")) {
-                layersContainer.addEventHandler(KeyEvent.KEY_PRESSED, keyboardPacSteering);
-            } else {
-                layersContainer.removeEventHandler(KeyEvent.KEY_PRESSED, keyboardPacSteering);
-            }
+        if (newGameScene instanceof GameScene2D scene2D) {
+            scene2D.setCanvas(canvas);
         }
         if (newGameScene == sceneContext.sceneConfig().get("intro")) {
             signatureAnimation.play();
@@ -97,11 +98,7 @@ public class GamePage extends CanvasContainer implements Page {
             signatureAnimation.stop();
             signature.setOpacity(0);
         }
-        if (newGameScene instanceof GameScene2D scene2D) {
-            scene2D.setCanvas(canvas);
-        }
         updateHelpButton();
-
         rescale(getScaling(), true);
     }
 
@@ -262,10 +259,10 @@ public class GamePage extends CanvasContainer implements Page {
         @Override
         public Pane createPane(Color backgroundColor, Font font) {
             var pane = super.createPane(backgroundColor, font);
-            var grid = (GridPane) pane.getChildren().get(0); // TODO improve
+            var grid = (GridPane) pane.getChildren().getFirst(); // TODO improve
             // add default entries:
             int nextFreeIndex = grid.getRowCount();
-            if (sceneContext.gameController().isPacAutoControlled()) {
+            if (sceneContext.gameController().isAutopilotEnabled()) {
                 var autoPilotEntry = text(sceneContext.tt("help.autopilot_on"), Color.ORANGE);
                 autoPilotEntry.setFont(font);
                 GridPane.setColumnSpan(autoPilotEntry, 2);

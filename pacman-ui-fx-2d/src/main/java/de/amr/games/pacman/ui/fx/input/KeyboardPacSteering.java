@@ -45,7 +45,7 @@ public class KeyboardPacSteering extends Steering implements EventHandler<KeyEve
             return;
         }
         if (!isEnabled()) {
-            Logger.trace("Steering disabled, ignore key event '{}'", event.getCode());
+            Logger.info("Steering disabled, ignore key event '{}'", event.getCode());
             event.consume();
             return;
         }
