@@ -149,29 +149,4 @@ public class GameController extends Fsm<GameState, GameModel> {
         checkNotNull(steering);
         this.manualPacSteering = steering;
     }
-
-    public void startPlaying() {
-        if (!hasCredit()) {
-            Logger.error("Cannot start playing: no credit");
-            return;
-        }
-        if (currentState == GameState.INTRO || currentState == GameState.CREDIT) {
-            changeState(GameState.READY);
-        } else {
-            Logger.error("Cannot start playing when in game state {}", currentState);
-        }
-    }
-
-    public void startIntermissionTest(int number) {
-        if (number < 1 || number > 3) {
-            Logger.error("Intermission test number must be 1, 2 or 3");
-            return;
-        }
-        if (currentState == GameState.INTRO) {
-            intermissionTestNumber = number;
-            changeState(GameState.INTERMISSION_TEST);
-        } else {
-            Logger.error("Intermission test can only be started from intro screen");
-        }
-    }
 }

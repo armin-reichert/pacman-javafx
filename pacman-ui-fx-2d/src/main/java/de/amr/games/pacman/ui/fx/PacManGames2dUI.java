@@ -508,13 +508,22 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public void startGame() {
         if (gameController().hasCredit()) {
             soundHandler.stopVoice();
-            gameController().startPlaying();
+            if (gameState() == GameState.INTRO || gameState() == GameState.CREDIT) {
+                gameController().changeState(GameState.READY);
+            } else {
+                Logger.error("Cannot start playing when in game state {}", gameState());
+            }
         }
     }
 
     @Override
     public void startCutscenesTest() {
-        gameController().startIntermissionTest(1);
+        if (gameState() == GameState.INTRO) {
+            gameController().intermissionTestNumber = 1;
+            gameController().changeState(GameState.INTERMISSION_TEST);
+        } else {
+            Logger.error("Intermission test can only be started from intro screen");
+        }
         showFlashMessage("Cut scenes");
     }
 
