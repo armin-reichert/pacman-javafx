@@ -40,9 +40,10 @@ public class PictureInPicture {
         canvas = new Canvas(h * aspectRatio, h);
         canvas.opacityProperty().bind(opacityPy);
         playScene2D = new PlayScene2D();
-        playScene2D.setCanvas(canvas);
         playScene2D.setScoreVisible(true);
         playScene2D.setContext(sceneContext);
+        playScene2D.setCanvas(canvas);
+        playScene2D.clearCanvas();
     }
 
     public Canvas canvas() {

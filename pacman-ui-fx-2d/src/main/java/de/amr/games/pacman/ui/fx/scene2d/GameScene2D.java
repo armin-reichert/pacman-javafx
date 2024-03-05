@@ -136,8 +136,9 @@ public abstract class GameScene2D implements GameScene {
         drawTileGrid(ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
     }
 
-    protected void clearCanvas() {
-        g.setFill(context.theme().color("canvas.background"));
+    public void clearCanvas() {
+        Color fillColor = context.theme() != null ? context.theme().color("canvas.background") : Color.BLACK;
+        g.setFill(fillColor);
         g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
     }
 

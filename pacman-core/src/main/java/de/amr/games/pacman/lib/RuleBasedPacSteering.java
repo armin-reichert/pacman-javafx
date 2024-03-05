@@ -134,7 +134,7 @@ public class RuleBasedPacSteering extends Steering {
         }
         pac.targetTile().ifPresent(target -> {
             pac.navigateTowardsTarget();
-            Logger.info("Navigated towards {}, moveDir={} wishDir={}", pac.targetTile(), pac.moveDir(), pac.wishDir());
+            Logger.trace("Navigated towards {}, moveDir={} wishDir={}", pac.targetTile(), pac.moveDir(), pac.wishDir());
         });
     }
 

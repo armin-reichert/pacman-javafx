@@ -89,9 +89,6 @@ public class GamePage extends CanvasContainer implements Page {
     }
 
     public void onGameSceneChanged(GameScene newGameScene) {
-        if (newGameScene instanceof GameScene2D scene2D) {
-            scene2D.setCanvas(canvas);
-        }
         if (newGameScene == sceneContext.sceneConfig().get("intro")) {
             signatureAnimation.play();
         } else {
@@ -100,6 +97,10 @@ public class GamePage extends CanvasContainer implements Page {
         }
         updateHelpButton();
         rescale(getScaling(), true);
+        if (newGameScene instanceof GameScene2D scene2D) {
+            scene2D.setCanvas(canvas);
+            scene2D.clearCanvas();
+        }
     }
 
     private void createDebugInfoBindings() {
