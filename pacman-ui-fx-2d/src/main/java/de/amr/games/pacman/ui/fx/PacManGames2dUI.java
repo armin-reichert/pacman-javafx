@@ -627,6 +627,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         }
         gameLevel().ifPresent(level -> {
             if (newLevelNumber > level.number()) {
+                soundHandler.stopAllSounds();
                 for (int n = level.number(); n < newLevelNumber - 1; ++n) {
                     gameController().createAndStartLevel(level.number() + 1);
                 }
@@ -673,6 +674,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public void cheatEnterNextLevel() {
         if (game().isPlaying() && gameState() == GameState.HUNTING) {
             gameLevel().ifPresent(level -> {
+                soundHandler.stopAllSounds();
                 level.world().tiles().forEach(level.world()::removeFood);
                 gameController().changeState(GameState.LEVEL_COMPLETE);
             });
