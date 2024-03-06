@@ -49,7 +49,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
-            game.setPlaying(false);
+            gameController().setPlaying(false);
             game.setLevel(null);
         }
 
@@ -69,7 +69,7 @@ public enum GameState implements FsmState<GameModel> {
     READY {
         @Override
         public void onEnter(GameModel game) {
-            if (game.isPlaying()) {
+            if (gameController().isPlaying()) {
                 // resume running game
                 game.level().ifPresent(level -> level.letsGetReadyToRumble(true));
             }
@@ -87,7 +87,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            if (game.isPlaying()) {
+            if (gameController().isPlaying()) {
                 // resume running game
                 if (timer.tick() == 90) {
                     game.level().ifPresent(level -> {
@@ -106,7 +106,7 @@ public enum GameState implements FsmState<GameModel> {
                     game.level().ifPresent(level -> level.guys().forEach(Creature::show));
                 } else if (timer.tick() == 260) {
                     game.level().ifPresent(level -> {
-                        game.setPlaying(true);
+                        gameController().setPlaying(true);
                         level.startHuntingPhase(0);
                         gameController().changeState(GameState.HUNTING);
                     });
@@ -303,7 +303,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onExit(GameModel game) {
-            game.setPlaying(false);
+            gameController().setPlaying(false);
             game.setLevel(null);
         }
     },
@@ -318,7 +318,8 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                gameController().changeState(gameController().hasCredit() && game.isPlaying() ? CHANGING_TO_NEXT_LEVEL : INTRO);
+                gameController().changeState(
+                    gameController().hasCredit() && gameController().isPlaying() ? CHANGING_TO_NEXT_LEVEL : INTRO);
             }
         }
     },

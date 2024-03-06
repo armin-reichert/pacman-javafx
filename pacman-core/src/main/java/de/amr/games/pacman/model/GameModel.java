@@ -148,7 +148,6 @@ public class GameModel {
     private GameLevel level;
     private short initialLives;
     private short lives;
-    private boolean playing;
 
     public GameModel(GameVariant variant) {
         checkGameVariant(variant);
@@ -165,7 +164,6 @@ public class GameModel {
     public void reset() {
         level = null;
         lives = initialLives;
-        playing = false;
         Logger.info("Game model ({}) reset", variant);
     }
 
@@ -190,14 +188,6 @@ public class GameModel {
     public int mazeNumber(int levelNumber) {
         checkLevelNumber(levelNumber);
         return variant == GameVariant.MS_PACMAN ? ArcadeWorld.mazeNumberMsPacMan(levelNumber) : 1;
-    }
-
-    public boolean isPlaying() {
-        return playing;
-    }
-
-    public void setPlaying(boolean playing) {
-        this.playing = playing;
     }
 
     public short initialLives() {

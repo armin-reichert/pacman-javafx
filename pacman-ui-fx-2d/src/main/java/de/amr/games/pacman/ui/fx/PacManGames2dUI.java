@@ -533,7 +533,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public void restartIntro() {
         soundHandler.stopAllSounds();
         currentGameScene().ifPresent(GameScene::end);
-        if (game().isPlaying()) {
+        if (gameController().isPlaying()) {
             gameController().changeCredit(-1);
         }
         gameController().restart(INTRO);
@@ -552,7 +552,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
      */
     @Override
     public void addCredit() {
-        if (!game().isPlaying()) {
+        if (!gameController().isPlaying()) {
             boolean added = gameController().changeCredit(1);
             if (added) {
                 publishGameEvent(game(), GameEventType.CREDIT_ADDED);
@@ -652,7 +652,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void cheatEatAllPellets() {
-        if (game().isPlaying() && gameState() == GameState.HUNTING) {
+        if (gameController().isPlaying() && gameState() == GameState.HUNTING) {
             gameLevel().ifPresent(level -> {
                 level.world().tiles().filter(not(level.world()::isEnergizerTile)).forEach(level.world()::removeFood);
                 publishGameEvent(game(), GameEventType.PAC_FOUND_FOOD);
@@ -662,7 +662,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void cheatKillAllEatableGhosts() {
-        if (game().isPlaying() && gameState() == GameState.HUNTING) {
+        if (gameController().isPlaying() && gameState() == GameState.HUNTING) {
             gameLevel().ifPresent(level -> {
                 level.killAllHuntingAndFrightenedGhosts();
                 gameController().changeState(GameState.GHOST_DYING);
@@ -672,7 +672,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void cheatEnterNextLevel() {
-        if (game().isPlaying() && gameState() == GameState.HUNTING) {
+        if (gameController().isPlaying() && gameState() == GameState.HUNTING) {
             gameLevel().ifPresent(level -> {
                 soundHandler.stopAllSounds();
                 level.world().tiles().forEach(level.world()::removeFood);
