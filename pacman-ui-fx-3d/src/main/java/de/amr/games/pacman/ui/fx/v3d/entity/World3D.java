@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.world.FloorPlan;
@@ -13,18 +12,17 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
-import de.amr.games.pacman.ui.fx.v3d.animation.FoodOscillation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
@@ -90,8 +88,6 @@ public class World3D {
     private final Group doorGroup = new Group();
     private final PointLight houseLight;
     private final Group foodGroup = new Group();
-    private final FoodOscillation foodOscillation;
-
     private final Color foodColor;
     private final Color doorColor;
     private final PhongMaterial wallBaseMaterial;
@@ -123,28 +119,23 @@ public class World3D {
 
         wallHeightPy.bind(PacManGames3dUI.PY_3D_WALL_HEIGHT);
 
-        this.houseMaterial = ResourceManager.coloredMaterial(ResourceManager.color(wallMiddleColor, 0.45));
+        this.houseMaterial = ResourceManager.coloredMaterial(ResourceManager.color(wallMiddleColor, 0.66));
 
-        this.houseLight = createGhostHouseLight(Color.GHOSTWHITE);
-        this.foodOscillation = new FoodOscillation(foodGroup);
+        houseLight = new PointLight();
+        houseLight.setColor(Color.YELLOW.desaturate());
+        houseLight.setMaxRange(3 * TS);
+        Vector2f center = world.house().topLeftTile().toFloatVec().plus(world.house().size().toFloatVec().scaled(0.5f));
+        houseLight.setTranslateX(center.x() + HTS);
+        houseLight.setTranslateY(center.y());
+        houseLight.setTranslateZ(-TS);
 
         buildFloor();
-        buildWorld(RESOLUTION);
+        buildWorld();
         addFood();
 
         root.getChildren().addAll(floorGroup, wallsGroup, doorGroup, /*houseLight,*/ foodGroup);
     }
 
-    private PointLight createGhostHouseLight(Color lightColor) {
-        var light = new PointLight();
-        light.setColor(lightColor);
-        light.setMaxRange(3 * TS);
-        Vector2f center = world.house().seat("middle");
-        light.setTranslateX(center.x() + HTS);
-        light.setTranslateY(center.y());
-        light.setTranslateZ(-TS);
-        return light;
-    }
 
     public Node getRoot() {
         return root;
@@ -152,10 +143,6 @@ public class World3D {
 
     public PointLight houseLighting() {
         return houseLight;
-    }
-
-    public FoodOscillation foodOscillation() {
-        return foodOscillation;
     }
 
     private void buildFloor() {
@@ -170,7 +157,7 @@ public class World3D {
     }
 
     private Box floor() {
-        return (Box) floorGroup.getChildren().get(0);
+        return (Box) floorGroup.getChildren().getFirst();
     }
 
     private void updateFloorMaterial(Box floor) {
@@ -182,18 +169,18 @@ public class World3D {
         floor.setMaterial(texture);
     }
 
-    private WallData createWallData(int resolution) {
+    private WallData createWallData() {
         var wallData = new WallData();
-        wallData.brickSize = (float) TS / resolution;
+        wallData.brickSize = (float) TS / RESOLUTION;
         return wallData;
     }
 
-    private void buildWorld(int resolution) {
-        var floorPlan = new FloorPlan(world, resolution);
+    private void buildWorld() {
+        var floorPlan = new FloorPlan(world, RESOLUTION);
         wallsGroup.getChildren().clear();
-        addCorners(floorPlan, createWallData(resolution));
-        addHorizontalWalls(floorPlan, createWallData(resolution));
-        addVerticalWalls(floorPlan, createWallData(resolution));
+        addCorners(floorPlan, createWallData());
+        addHorizontalWalls(floorPlan, createWallData());
+        addVerticalWalls(floorPlan, createWallData());
         addDoorWing(world.house().door().leftWing(), doorColor);
         addDoorWing(world.house().door().rightWing(), doorColor);
         Logger.info("3D world created (resolution={}, wall height={})", floorPlan.getResolution(), wallHeightPy.get());
@@ -224,12 +211,12 @@ public class World3D {
                     }
                     wallData.numBricksX++;
                 } else if (wallData.numBricksX > 0) {
-                    addCompositeWall(floorPlan, wallData);
+                    addWall(floorPlan, wallData);
                     wallData.numBricksX = 0;
                 }
             }
             if (wallData.numBricksX > 0 && y == floorPlan.sizeY() - 1) {
-                addCompositeWall(floorPlan, wallData);
+                addWall(floorPlan, wallData);
             }
         }
     }
@@ -248,12 +235,12 @@ public class World3D {
                     }
                     wallData.numBricksY++;
                 } else if (wallData.numBricksY > 0) {
-                    addCompositeWall(floorPlan, wallData);
+                    addWall(floorPlan, wallData);
                     wallData.numBricksY = 0;
                 }
             }
             if (wallData.numBricksY > 0 && x == floorPlan.sizeX() - 1) {
-                addCompositeWall(floorPlan, wallData);
+                addWall(floorPlan, wallData);
             }
         }
     }
@@ -267,39 +254,50 @@ public class World3D {
                 if (floorPlan.cell(x, y) == FloorPlan.CORNER) {
                     wallData.x = x;
                     wallData.y = y;
-                    addCompositeWall(floorPlan, wallData);
+                    addWall(floorPlan, wallData);
                 }
             }
         }
     }
 
-    private void addCompositeWall(FloorPlan floorPlan, WallData wallData) {
-        final Vector2i tile = floorPlan.tile(wallData.x, wallData.y);
+    private boolean isWallInsideHouse(FloorPlan floorPlan, WallData wallData, House house) {
+        Vector2i bottomRightTile = house.topLeftTile().plus(house.size());
+        double xMin = house.topLeftTile().x() * RESOLUTION;
+        double yMin = house.topLeftTile().y() * RESOLUTION;
+        double xMax = bottomRightTile.x() * RESOLUTION - RESOLUTION;
+        double yMax = bottomRightTile.y() * RESOLUTION - RESOLUTION;
+        return wallData.x > xMin && wallData.y > yMin && wallData.x <= xMax && wallData.y <= yMax;
+    }
 
-        if (world.house().contains(tile)) {
-            addHouseWall(floorPlan, wallData);
-            return;
+    private boolean isPartOfHouse(FloorPlan floorPlan, WallData wallData, House house) {
+        return house.contains(floorPlan.tile(wallData.x, wallData.y));
+    }
+
+    private void addWall(FloorPlan floorPlan, WallData wallData) {
+        if (isPartOfHouse(floorPlan, wallData, world.house())) {
+            if (!isWallInsideHouse(floorPlan, wallData, world.house())) {
+                addHouseWall(world.house(), wallData);
+            }
+        } else {
+            addMazeWall(wallData);
         }
+    }
 
-        Box base = createWallOfType(wallData);
-        Box middle = createWallOfType(wallData);
-        Box top = createWallOfType(wallData);
-        Group wall = new Group(base, middle, top);
-
-        base.setMaterial(wallBaseMaterial);
-        middle.setMaterial(wallMiddleMaterial);
-        top.setMaterial(wallTopMaterial);
-
+    private void addMazeWall(WallData wallData) {
         final double baseHeight = 0.25;
         final double topHeight = 0.1;
 
+        Box base = createBlock(wallData, wallBaseMaterial);
+        Box mid = createBlock(wallData, wallMiddleMaterial);
+        Box top = createBlock(wallData, wallTopMaterial);
+        Group wall = new Group(base, mid, top);
+
         base.setDepth(baseHeight);
         top.setDepth(topHeight);
+        mid.depthProperty().bind(wallHeightPy.subtract(baseHeight + topHeight));
 
-        middle.depthProperty().bind(wallHeightPy.subtract(baseHeight + topHeight));
-
-        top.translateZProperty().bind(middle.depthProperty().add(topHeight).multiply(-0.5));
-        base.translateZProperty().bind(middle.depthProperty().add(baseHeight).multiply(0.5));
+        top.translateZProperty().bind(mid.depthProperty().add(topHeight).multiply(-0.5));
+        base.translateZProperty().bind(mid.depthProperty().add(baseHeight).multiply(0.5));
 
         wall.setUserData(wallData);
         wall.setTranslateX((wallData.x + 0.5 * wallData.numBricksX) * wallData.brickSize);
@@ -309,77 +307,62 @@ public class World3D {
         wallsGroup.getChildren().add(wall);
     }
 
-    private Box createWallOfType(WallData wallData) {
-        return switch (wallData.type) {
-            case FloorPlan.HWALL -> horizontalWall(wallData);
-            case FloorPlan.VWALL -> verticalWall(wallData);
-            case FloorPlan.CORNER -> corner();
-            default -> throw new IllegalStateException("Unknown wall type: " + wallData.type);
-        };
-    }
-
-    private void addHouseWall(FloorPlan floorPlan, WallData wallData) {
-        final double topHeight = 0.5;
-        final double houseHeight = 9.0;
-        final Vector2i tile = floorPlan.tile(wallData.x, wallData.y);
-
-        House house = world.house();
-
-        double xMin = house.topLeftTile().x() * RESOLUTION;
-        double yMin = house.topLeftTile().y() * RESOLUTION;
-        var bottomRightTile = house.topLeftTile().plus(house.size());
-        double xMax = (bottomRightTile.x() - 1) * RESOLUTION;
-        double yMax = (bottomRightTile.y() - 1) * RESOLUTION;
-        if (wallData.x > xMin && wallData.y > yMin && wallData.x <= xMax && wallData.y <= yMax) {
-            return;
-        }
-        Logger.info("(xmin, ymin)=({}, {}), (xmax, ymax)=({}, {})", xMin, yMin, xMax, yMax);
-        Logger.info("addHouseWAll at ({}, {})", wallData.x, wallData.y);
-
-
-        Box base = createWallOfType(wallData);
-        Box top = createWallOfType(wallData);
+    private void addHouseWall(House house, WallData wallData) {
+        Box base = createBlock(wallData, houseMaterial);
+        Box top = createBlock(wallData, wallTopMaterial);
         Group wall = new Group(base, top);
 
-        base.setDepth(houseHeight);
-        base.setTranslateZ(-0.5 * houseHeight);
-        base.setMaterial(houseMaterial);
+        final double topHeight = 1.0;
+        final double baseHeight = 8.0;
 
-        top.setMaterial(wallTopMaterial);
+        base.setDepth(baseHeight);
         top.setDepth(topHeight);
-        top.setTranslateZ(-houseHeight - 0.2);
+        top.setTranslateZ(-0.58 * baseHeight); // why does 0.5 flicker?
 
         wall.setTranslateX((wallData.x + 0.5 * wallData.numBricksX) * wallData.brickSize);
         wall.setTranslateY((wallData.y + 0.5 * wallData.numBricksY) * wallData.brickSize);
+        wall.setTranslateZ(-0.5 * (baseHeight + topHeight));
         wall.setUserData(wallData);
 
         wallsGroup.getChildren().add(wall);
     }
 
-    private Box horizontalWall(WallData wallData) {
-        Box wall = new Box();
-        // without ...+1 there are gaps. why?
-        wall.setWidth((wallData.numBricksX + 1) * wallData.brickSize);
-        wall.heightProperty().bind(wallThicknessPy);
-        wall.drawModeProperty().bind(drawModePy);
-        return wall;
+    private Box createBlock(WallData wallData, Material material) {
+        return switch (wallData.type) {
+            case FloorPlan.HWALL -> createHBlock(wallData, material);
+            case FloorPlan.VWALL -> createVBlock(wallData, material);
+            case FloorPlan.CORNER -> createCornerBlock(material);
+            default -> throw new IllegalStateException("Unknown wall type: " + wallData.type);
+        };
     }
 
-    private Box verticalWall(WallData wallData) {
-        Box wall = new Box();
-        wall.widthProperty().bind(wallThicknessPy);
+    private Box createHBlock(WallData wallData, Material material) {
+        Box block = new Box();
+        block.setMaterial(material);
         // without ...+1 there are gaps. why?
-        wall.setHeight((wallData.numBricksY + 1) * wallData.brickSize);
-        wall.drawModeProperty().bind(drawModePy);
-        return wall;
+        block.setWidth((wallData.numBricksX + 1) * wallData.brickSize);
+        block.heightProperty().bind(wallThicknessPy);
+        block.drawModeProperty().bind(drawModePy);
+        return block;
     }
 
-    private Box corner() {
-        Box corner = new Box();
-        corner.widthProperty().bind(wallThicknessPy);
-        corner.heightProperty().bind(wallThicknessPy);
-        corner.drawModeProperty().bind(drawModePy);
-        return corner;
+    private Box createVBlock(WallData wallData, Material material) {
+        Box block = new Box();
+        block.setMaterial(material);
+        block.widthProperty().bind(wallThicknessPy);
+        // without ...+1 there are gaps. why?
+        block.setHeight((wallData.numBricksY + 1) * wallData.brickSize);
+        block.drawModeProperty().bind(drawModePy);
+        return block;
+    }
+
+    private Box createCornerBlock(Material material) {
+        Box block = new Box();
+        block.setMaterial(material);
+        block.widthProperty().bind(wallThicknessPy);
+        block.heightProperty().bind(wallThicknessPy);
+        block.drawModeProperty().bind(drawModePy);
+        return block;
     }
 
     // Food
