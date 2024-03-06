@@ -4,9 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.world.FloorPlan;
+import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -18,6 +20,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
@@ -41,7 +44,9 @@ import static de.amr.games.pacman.lib.Globals.*;
  * @author Armin Reichert
  */
 public class World3D {
-    private static final double FLOOR_THICKNESS = 0.25;
+
+    private static final int RESOLUTION = 4;
+    private static final double FLOOR_THICKNESS = 0.4;
 
     private static class WallData {
         byte type; // see FloorPlan
@@ -118,17 +123,16 @@ public class World3D {
 
         wallHeightPy.bind(PacManGames3dUI.PY_3D_WALL_HEIGHT);
 
-        var ghostHouseColor = wallMiddleColor;
-        this.houseMaterial = ResourceManager.coloredMaterial(ResourceManager.color(ghostHouseColor, 0.25));
+        this.houseMaterial = ResourceManager.coloredMaterial(ResourceManager.color(wallMiddleColor, 0.45));
 
-        this.houseLight = createGhostHouseLight(wallMiddleColor);
+        this.houseLight = createGhostHouseLight(Color.GHOSTWHITE);
         this.foodOscillation = new FoodOscillation(foodGroup);
 
         buildFloor();
-        buildWorld(4);
+        buildWorld(RESOLUTION);
         addFood();
 
-        root.getChildren().addAll(floorGroup, wallsGroup, doorGroup, houseLight, foodGroup);
+        root.getChildren().addAll(floorGroup, wallsGroup, doorGroup, /*houseLight,*/ foodGroup);
     }
 
     private PointLight createGhostHouseLight(Color lightColor) {
@@ -318,6 +322,20 @@ public class World3D {
         final double topHeight = 0.5;
         final double houseHeight = 9.0;
         final Vector2i tile = floorPlan.tile(wallData.x, wallData.y);
+
+        House house = world.house();
+
+        double xMin = house.topLeftTile().x() * RESOLUTION;
+        double yMin = house.topLeftTile().y() * RESOLUTION;
+        var bottomRightTile = house.topLeftTile().plus(house.size());
+        double xMax = (bottomRightTile.x() - 1) * RESOLUTION;
+        double yMax = (bottomRightTile.y() - 1) * RESOLUTION;
+        if (wallData.x > xMin && wallData.y > yMin && wallData.x <= xMax && wallData.y <= yMax) {
+            return;
+        }
+        Logger.info("(xmin, ymin)=({}, {}), (xmax, ymax)=({}, {})", xMin, yMin, xMax, yMax);
+        Logger.info("addHouseWAll at ({}, {})", wallData.x, wallData.y);
+
 
         Box base = createWallOfType(wallData);
         Box top = createWallOfType(wallData);

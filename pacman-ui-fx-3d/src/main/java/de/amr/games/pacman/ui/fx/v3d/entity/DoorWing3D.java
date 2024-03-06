@@ -19,8 +19,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.lib.Globals.checkTileNotNull;
+import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * Left/right wing of ghost house door.
@@ -50,10 +49,8 @@ public class DoorWing3D {
         for (int i = 0; i < 2; ++i) {
             var verticalBar = new Cylinder(1, 8);
             verticalBar.materialProperty().bind(barMaterialPy);
-            double x = tile.x() * 8 + i * 4 + 2;
-            double y = tile.y() * 8 + 4;
-            verticalBar.setTranslateX(x);
-            verticalBar.setTranslateY(y);
+            verticalBar.setTranslateX(i * 4 + 2);
+            verticalBar.setTranslateY(4);
             verticalBar.setTranslateZ(-4);
             verticalBar.setRotationAxis(Rotate.X_AXIS);
             verticalBar.setRotate(90);
@@ -63,12 +60,15 @@ public class DoorWing3D {
 
         var horizontalBar = new Cylinder(0.5, 9);
         horizontalBar.materialProperty().bind(barMaterialPy);
-        horizontalBar.setTranslateX(tile.x() * 8 + 4);
-        horizontalBar.setTranslateY(tile.y() * 8 + 4);
+        horizontalBar.setTranslateX(4);
+        horizontalBar.setTranslateY(4);
         horizontalBar.setTranslateZ(-4);
         horizontalBar.setRotationAxis(Rotate.Z_AXIS);
         horizontalBar.setRotate(90);
         root.getChildren().add(horizontalBar);
+
+        root.setTranslateX(tile.x() * TS);
+        root.setTranslateY(tile.y() * TS - 3);
 
         var fadeOut = new ColorChangeTransition(Duration.seconds(0.2),
             color, Color.TRANSPARENT, barMaterialPy.get().diffuseColorProperty()
