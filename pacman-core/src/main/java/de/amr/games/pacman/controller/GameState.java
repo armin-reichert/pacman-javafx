@@ -42,7 +42,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            /*if (timer.hasExpired())*/ {
+            if (timer.hasExpired()) {
                 gameController().changeState(INTRO);
             }
         }
