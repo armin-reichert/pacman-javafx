@@ -42,30 +42,13 @@ import static de.amr.games.pacman.model.world.ArcadeWorld.*;
  */
 public class GameController extends Fsm<GameState, GameModel> {
 
-    private static GameController it;
-
-    /**
-     * Creates the game controller singleton and sets the current game model to the given game variant.
-     *
-     * @param variant game variant to select
-     */
-    public static void create(GameVariant variant) {
-        if (it != null) {
-            throw new IllegalStateException("Game controller already created");
-        }
-        checkGameVariant(variant);
-        it = new GameController(variant);
-        Logger.info("Game controller created, selected game variant: {}", it.game.variant());
-    }
+    private static final GameController IT = new GameController(GameVariant.PACMAN);
 
     /**
      * @return the game controller singleton
      */
     public static GameController it() {
-        if (it == null) {
-            throw new IllegalStateException("Game Controller cannot be accessed before it has been created");
-        }
-        return it;
+        return IT;
     }
 
     private GameModel game;

@@ -25,7 +25,7 @@ public class PacManGameTest {
 
     @BeforeClass
     public static void setUp() {
-        GameController.create(GameVariant.PACMAN);
+        GameController.it().newGame(GameVariant.PACMAN);
     }
 
     @Before
@@ -38,11 +38,6 @@ public class PacManGameTest {
     @Test
     public void testGameControllerCreated() {
         assertNotNull(GameController.it());
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void testGameControllerCreatedTwice() {
-        GameController.create(GameVariant.MS_PACMAN);
     }
 
     @Test

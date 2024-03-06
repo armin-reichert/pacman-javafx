@@ -26,7 +26,7 @@ public class PacManGames3dApp extends Application {
         if (getParameters() != null) {
             settings.merge(getParameters().getNamed());
         }
-        GameController.create(settings.variant);
+        GameController.it().newGame(settings.variant);
         Logger.info("Game initialized: {}, locale: {}", settings, Locale.getDefault());
         Logger.info("Java version is {}", System.getProperty("java.version"));
     }
