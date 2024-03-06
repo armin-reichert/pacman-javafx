@@ -21,17 +21,15 @@ import static java.util.Objects.requireNonNull;
  */
 public class Text3D {
 
-    private Box box;
+    private final Box box;
     private double quality = 3;
     private Font font = Font.font(8);
-    private Color bgColor = Color.TRANSPARENT;
     private Color textColor = Color.RED;
     private String text = "";
     private boolean batchUpdate;
 
     public Text3D() {
         box = new Box(100, 10, 0.1);
-        box.setCache(true); // TODO needed?
     }
 
     private void updateImage() {
@@ -49,19 +47,23 @@ public class Text3D {
         double height = font.getSize() + padding;
         box.setWidth(width);
         box.setHeight(height);
+
         var canvas = new Canvas(width * quality, height * quality);
         var g = canvas.getGraphicsContext2D();
         var canvasFontSize = font.getSize() * quality;
-        g.setFill(bgColor);
+        g.setFill(Color.BLACK);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        g.setStroke(Color.WHITE);
+        g.setLineWidth(5);
+        g.strokeRect(0, 0, canvas.getWidth(), canvas.getHeight());
         g.setFont(Font.font(font.getFamily(), canvasFontSize));
         g.setFill(textColor);
-        // TODO how to center inside available space?
         g.fillText(text, 0.5 * quality * padding, 0.8 * quality * height);
+
         var image = canvas.snapshot(null, null);
         var material = new PhongMaterial();
         material.setDiffuseMap(image);
-        material.setBumpMap(image);
+        //material.setBumpMap(image);
         box.setMaterial(material);
         Logger.trace("New image produced");
     }
@@ -109,16 +111,6 @@ public class Text3D {
             return;
         }
         this.font = font;
-        updateImage();
-    }
-
-    public void setBgColor(Color color) {
-        requireNonNull(color);
-
-        if (color.equals(this.bgColor)) {
-            return;
-        }
-        this.bgColor = color;
         updateImage();
     }
 

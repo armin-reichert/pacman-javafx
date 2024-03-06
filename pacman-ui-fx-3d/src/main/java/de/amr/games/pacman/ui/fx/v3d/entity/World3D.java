@@ -43,6 +43,7 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class World3D {
 
+    public static final double HOUSE_OPACITY = 0.66;
     private static final int RESOLUTION = 4;
     private static final double FLOOR_THICKNESS = 0.4;
 
@@ -119,7 +120,7 @@ public class World3D {
 
         wallHeightPy.bind(PacManGames3dUI.PY_3D_WALL_HEIGHT);
 
-        this.houseMaterial = ResourceManager.coloredMaterial(ResourceManager.color(wallMiddleColor, 0.66));
+        houseMaterial = ResourceManager.coloredMaterial(ResourceManager.color(wallMiddleColor, HOUSE_OPACITY));
 
         houseLight = new PointLight();
         houseLight.setColor(Color.YELLOW.desaturate());

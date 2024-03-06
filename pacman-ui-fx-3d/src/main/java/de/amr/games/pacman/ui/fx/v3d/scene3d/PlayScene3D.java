@@ -16,6 +16,7 @@ import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.entity.*;
@@ -185,7 +186,6 @@ public class PlayScene3D implements GameScene {
 
     private void setReadyMessageText3D(String text) {
         readyMessageText3D.beginBatch();
-        readyMessageText3D.setBgColor(Color.CORNFLOWERBLUE);
         readyMessageText3D.setTextColor(Color.YELLOW);
         readyMessageText3D.setFont(context.theme().font("font.arcade", 6));
         readyMessageText3D.setText(text);
