@@ -75,15 +75,16 @@ public class GameModel {
     };
 
     public static GameLevelData levelData(int levelNumber) {
+        checkLevelNumber(levelNumber);
         int index = Math.min(levelNumber - 1, RAW_LEVEL_DATA.length - 1);
         return new GameLevelData(RAW_LEVEL_DATA[index]);
     }
 
     // Hunting duration (in ticks) of chase and scatter phases. See Pac-Man dossier.
     private static final int[][] HUNTING_DURATIONS_PACMAN = {
-        {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, -1}, // Level 1
-        {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS, 1033 * FPS, 1, -1}, // Level 2-4
-        {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS, 1, -1}, // Level 5+
+        {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS,   20 * FPS, 5 * FPS, -1}, // Level 1
+        {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS, 1033 * FPS,       1, -1}, // Levels 2-4
+        {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS,       1, -1}, // Levels 5+
     };
 
     /**
@@ -109,10 +110,9 @@ public class GameModel {
         };
     }
 
-    // Ms. Pac-Man bonus #3 is an orange, not a peach! (Found in official Arcade machine manual)
-
     public static final byte MS_PACMAN_CHERRIES = 0;
     public static final byte MS_PACMAN_STRAWBERRY = 1;
+    // An orange, not a peach! (Found in official Arcade machine manual)
     public static final byte MS_PACMAN_ORANGE = 2;
     public static final byte MS_PACMAN_PRETZEL = 3;
     public static final byte MS_PACMAN_APPLE = 4;
@@ -189,6 +189,7 @@ public class GameModel {
      * @return number of maze (not map) used in level, 1-based.
      */
     public int mazeNumber(int levelNumber) {
+        checkLevelNumber(levelNumber);
         return variant == GameVariant.MS_PACMAN ? ArcadeWorld.mazeNumberMsPacMan(levelNumber) : 1;
     }
 
@@ -255,13 +256,11 @@ public class GameModel {
         return points[index];
     }
 
-    public void scorePoints(int points) {
+    public void scorePoints(int points, int levelNumber) {
         if (points < 0) {
             throw new IllegalArgumentException("Scored points value must not be negative but is: " + points);
         }
-        if (level == null) {
-            throw new IllegalStateException("Cannot score points: No game level exists");
-        }
+        checkLevelNumber(levelNumber);
         if (!scoringEnabled) {
             return;
         }
@@ -270,7 +269,7 @@ public class GameModel {
         score.setPoints(newScore);
         if (newScore > highScore.points()) {
             highScore.setPoints(newScore);
-            highScore.setLevelNumber(level.number());
+            highScore.setLevelNumber(levelNumber);
             highScore.setDate(LocalDate.now());
         }
         if (oldScore < EXTRA_LIFE_SCORE && newScore >= EXTRA_LIFE_SCORE) {

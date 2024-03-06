@@ -137,7 +137,7 @@ public class PacManGameTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testScoreNegativePoints() {
-        game.scorePoints(-42);
+        game.scorePoints(-42, 1);
     }
 
     @Test

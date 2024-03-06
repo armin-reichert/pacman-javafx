@@ -528,11 +528,11 @@ public class GameLevel {
             numGhostsKilledByEnergizer = 0;
             pac.setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
             int points = GameModel.POINTS_ENERGIZER;
-            game.scorePoints(points);
+            game.scorePoints(points, levelNumber);
             Logger.info("Scored {} points for eating energizer", points);
         } else {
             pac.setRestingTicks(GameModel.RESTING_TICKS_NORMAL_PELLET);
-            game.scorePoints(GameModel.POINTS_NORMAL_PELLET);
+            game.scorePoints(GameModel.POINTS_NORMAL_PELLET, levelNumber);
         }
         ghostHouseManagement.onFoodFound();
         if (world.uneatenFoodCount() == data.elroy1DotsLeft()) {
@@ -684,7 +684,7 @@ public class GameLevel {
             numGhostsKilledInLevel += (byte) thisFrame.pacPrey.size();
             if (numGhostsKilledInLevel == 16) {
                 int points = GameModel.POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
-                game.scorePoints(points);
+                game.scorePoints(points, levelNumber);
                 Logger.info("Scored {} points for killing all ghosts at level {}", points, levelNumber);
             }
         }
@@ -694,7 +694,7 @@ public class GameLevel {
         ghost.setKilledIndex(numGhostsKilledByEnergizer);
         ghost.setState(EATEN);
         int points = game.pointsForKillingGhost(numGhostsKilledByEnergizer);
-        game.scorePoints(points);
+        game.scorePoints(points, levelNumber);
         thisFrame.killedGhosts.add(ghost);
         numGhostsKilledByEnergizer += 1;
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
@@ -829,7 +829,7 @@ public class GameLevel {
     private boolean checkPacEatsBonus(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE && pac.sameTile(bonus.entity())) {
             bonus.setEaten(GameModel.BONUS_POINTS_SHOWN_TICKS);
-            game.scorePoints(bonus.points());
+            game.scorePoints(bonus.points(), levelNumber);
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), this);
             return true;
         }
