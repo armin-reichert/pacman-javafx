@@ -89,20 +89,22 @@ public class World3D {
 
     private final Color foodColor;
     private final Color doorColor;
-    private final PhongMaterial wallMiddlePartMaterial;
-    private final PhongMaterial wallEdgePartsMaterial;
+    private final PhongMaterial wallBaseMaterial;
+    private final PhongMaterial wallMiddleMaterial;
+    private final PhongMaterial wallTopMaterial;
     private final PhongMaterial houseMaterial;
 
     public World3D(
         World world, Theme theme, Model3D pelletModel3D,
-        Color foodColor, Color wallMiddlePartColor, Color wallEdgePartsColor, Color doorColor
+        Color foodColor, Color wallBaseColor, Color wallMiddleColor, Color wallTopColor, Color doorColor
     ) {
         checkNotNull(world);
         checkNotNull(theme);
         checkNotNull(pelletModel3D);
         checkNotNull(foodColor);
-        checkNotNull(wallMiddlePartColor);
-        checkNotNull(wallEdgePartsColor);
+        checkNotNull(wallBaseColor);
+        checkNotNull(wallMiddleColor);
+        checkNotNull(wallTopColor);
         checkNotNull(doorColor);
 
         this.world = world;
@@ -110,17 +112,16 @@ public class World3D {
         this.pelletModel3D = pelletModel3D;
         this.foodColor = foodColor;
         this.doorColor = doorColor;
-        this.wallMiddlePartMaterial = ResourceManager.coloredMaterial(wallMiddlePartColor);
-        this.wallEdgePartsMaterial = ResourceManager.coloredMaterial(wallEdgePartsColor);
+        this.wallBaseMaterial = ResourceManager.coloredMaterial(wallBaseColor);
+        this.wallMiddleMaterial = ResourceManager.coloredMaterial(wallMiddleColor);
+        this.wallTopMaterial = ResourceManager.coloredMaterial(wallTopColor);
 
         wallHeightPy.bind(PacManGames3dUI.PY_3D_WALL_HEIGHT);
 
-        //TODO this should not depend on specific color value
-        var ghostHouseColor = wallMiddlePartColor.equals(Color.rgb(222, 222, 255))
-            ? Color.rgb(200, 200, 255) : wallMiddlePartColor;
+        var ghostHouseColor = wallMiddleColor;
         this.houseMaterial = ResourceManager.coloredMaterial(ResourceManager.color(ghostHouseColor, 0.25));
 
-        this.houseLight = createGhostHouseLight(wallMiddlePartColor);
+        this.houseLight = createGhostHouseLight(wallMiddleColor);
         this.foodOscillation = new FoodOscillation(foodGroup);
 
         buildFloor();
@@ -281,19 +282,20 @@ public class World3D {
         Box top = createWallOfType(wallData);
         Group wall = new Group(base, middle, top);
 
-        base.setMaterial(wallEdgePartsMaterial);
-        middle.setMaterial(wallData.type == FloorPlan.CORNER ? wallEdgePartsMaterial : wallMiddlePartMaterial);
-        top.setMaterial(wallEdgePartsMaterial);
+        base.setMaterial(wallBaseMaterial);
+        middle.setMaterial(wallMiddleMaterial);
+        top.setMaterial(wallTopMaterial);
 
-        final double edgesHeight = 0.25;
+        final double baseHeight = 0.25;
+        final double topHeight = 0.1;
 
-        base.setDepth(edgesHeight);
-        top.setDepth(edgesHeight);
+        base.setDepth(baseHeight);
+        top.setDepth(topHeight);
 
-        middle.depthProperty().bind(wallHeightPy.subtract(2 * edgesHeight));
+        middle.depthProperty().bind(wallHeightPy.subtract(baseHeight + topHeight));
 
-        top.translateZProperty().bind(middle.depthProperty().add(edgesHeight).multiply(-0.5));
-        base.translateZProperty().bind(middle.depthProperty().add(edgesHeight).multiply(0.5));
+        top.translateZProperty().bind(middle.depthProperty().add(topHeight).multiply(-0.5));
+        base.translateZProperty().bind(middle.depthProperty().add(baseHeight).multiply(0.5));
 
         wall.setUserData(wallData);
         wall.setTranslateX((wallData.x + 0.5 * wallData.numBricksX) * wallData.brickSize);
@@ -325,7 +327,7 @@ public class World3D {
         base.setTranslateZ(-0.5 * houseHeight);
         base.setMaterial(houseMaterial);
 
-        top.setMaterial(wallEdgePartsMaterial);
+        top.setMaterial(wallTopMaterial);
         top.setDepth(topHeight);
         top.setTranslateZ(-houseHeight - 0.2);
 

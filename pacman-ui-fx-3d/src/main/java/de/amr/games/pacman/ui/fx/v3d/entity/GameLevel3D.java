@@ -67,9 +67,11 @@ public class GameLevel3D {
                 int mazeNumber = level.game().mazeNumber(level.number());
                 var foodColor = theme.color("mspacman.maze.foodColor", mazeNumber - 1);
                 var wallBaseColor = theme.color("mspacman.maze.wallBaseColor", mazeNumber - 1);
+                var wallMiddleColor = theme.color("mspacman.maze.wallMiddleColor", mazeNumber - 1);
                 var wallTopColor = theme.color("mspacman.maze.wallTopColor", mazeNumber - 1);
                 var doorColor = theme.color("mspacman.maze.doorColor");
-                world3D = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallTopColor, doorColor);
+                world3D = new World3D(level.world(), theme, pelletModel3D,
+                    foodColor, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
                 pac3D = Pac3D.createMsPacMan3D(pacModel3D, theme, level.pac());
                 pacLight = new Pac3DLight(pac3D);
                 ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, ghostModel3D, theme)).toArray(Ghost3D[]::new);
@@ -78,9 +80,11 @@ public class GameLevel3D {
             case PACMAN -> {
                 var foodColor = theme.color("pacman.maze.foodColor");
                 var wallBaseColor = theme.color("pacman.maze.wallBaseColor");
+                var wallMiddleColor = theme.color("pacman.maze.wallMiddleColor");
                 var wallTopColor = theme.color("pacman.maze.wallTopColor");
                 var doorColor = theme.color("pacman.maze.doorColor");
-                world3D = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallTopColor, doorColor);
+                world3D = new World3D(level.world(), theme, pelletModel3D,
+                    foodColor, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
                 pac3D = Pac3D.createPacMan3D(pacModel3D, theme, level.pac());
                 pacLight = new Pac3DLight(pac3D);
                 ghosts3D = level.ghosts().map(ghost -> createGhost3D(ghost, ghostModel3D, theme)).toArray(Ghost3D[]::new);

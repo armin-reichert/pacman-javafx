@@ -171,6 +171,15 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         );
 
         THEME.addAllToArray("mspacman.maze.wallTopColor",
+            Color.rgb(255, 0, 0),
+            Color.rgb(222, 222, 255),
+            Color.rgb(222, 222, 255),
+            Color.rgb(255, 183, 81),
+            Color.rgb(255, 255, 0),
+            Color.rgb(255, 0, 0)
+        );
+
+        THEME.addAllToArray("mspacman.maze.wallMiddleColor",
             Color.rgb(255, 183, 174),
             Color.rgb(71, 183, 255),
             Color.rgb(222, 151, 81),
@@ -189,7 +198,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         THEME.set("mspacman.maze.doorColor", Color.rgb(255, 183, 255));
 
         THEME.set("pacman.maze.wallBaseColor", Color.rgb(33, 33, 255).brighter());
-        THEME.set("pacman.maze.wallTopColor", Color.rgb(33, 33, 255).darker());
+        THEME.set("pacman.maze.wallMiddleColor",Color.rgb(33, 33, 255).darker());
+        THEME.set("pacman.maze.wallTopColor", Color.rgb(33, 33, 255).brighter());
         THEME.set("pacman.maze.doorColor", Color.rgb(252, 181, 255));
 
         THEME.set("pacman.color.head", Color.rgb(255, 255, 0));
