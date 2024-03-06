@@ -102,22 +102,22 @@ public class SoundHandler implements GameEventListener {
 
     @Override
     public void onIntermissionStarted(GameEvent event) {
-        int number = 0; // undefined
+        int intermissionNumber = 0; // 0=undefined
         if (GameController.it().state() == GameState.INTERMISSION_TEST) {
-            number = GameController.it().intermissionTestNumber;
+            intermissionNumber = GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber");
         } else {
-            var level = getLevel(event);
+            GameLevel level = getLevel(event);
             if (level != null) {
-                number = level.data().intermissionNumber();
+                intermissionNumber = level.data().intermissionNumber();
             }
         }
-        if (number != 0) {
+        if (intermissionNumber != 0) {
             GameVariant variant = event.game.variant();
             switch (variant) {
-                case MS_PACMAN -> audioClip(variant, "audio.intermission." + number).play();
+                case MS_PACMAN -> audioClip(variant, "audio.intermission." + intermissionNumber).play();
                 case PACMAN -> {
                     var clip = audioClip(variant, "audio.intermission");
-                    clip.setCycleCount(number == 1 || number == 3 ? 2 : 1);
+                    clip.setCycleCount(intermissionNumber == 1 || intermissionNumber == 3 ? 2 : 1);
                     clip.play();
                 }
             }

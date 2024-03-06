@@ -16,6 +16,9 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import org.tinylog.Logger;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 
 /**
@@ -355,17 +358,18 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
             enablePacSteering(false);
+            setProperty("intermissionTestNumber", 1);
         }
 
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                if (gameController().intermissionTestNumber < 3) {
-                    ++gameController().intermissionTestNumber;
+                int number = this.<Integer>getProperty("intermissionTestNumber");
+                if (number < 3) {
+                    setProperty("intermissionTestNumber", number + 1);
                     timer.restartIndefinitely();
                     publishGameEvent(game, GameEventType.UNSPECIFIED_CHANGE);
                 } else {
-                    gameController().intermissionTestNumber = 1;
                     gameController().changeState(INTRO);
                 }
             }
@@ -385,5 +389,16 @@ public enum GameState implements FsmState<GameModel> {
     @Override
     public TickTimer timer() {
         return timer;
+    }
+
+    private final Map<String, Object> properties = new HashMap<>();
+
+    @SuppressWarnings("unchecked")
+    public <T> T getProperty(String key) {
+        return (T) properties.get(key);
+    }
+
+    public void setProperty(String key, Object value) {
+        properties.put(key, value);
     }
 }

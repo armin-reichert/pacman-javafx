@@ -360,7 +360,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             case CREDIT -> config.get("credit");
             case INTRO -> config.get("intro");
             case INTERMISSION -> config.get("cut" + gameLevel().map(level -> level.data().intermissionNumber()).orElse((byte) 1));
-            case INTERMISSION_TEST -> config.get("cut" + gameController().intermissionTestNumber);
+            case INTERMISSION_TEST -> config.get("cut" + gameState().<Integer>getProperty("intermissionTestNumber"));
             default -> config.get("play");
         };
     }
@@ -521,7 +521,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     @Override
     public void startCutscenesTest() {
         if (gameState() == GameState.INTRO) {
-            gameController().intermissionTestNumber = 1;
             gameController().changeState(GameState.INTERMISSION_TEST);
         } else {
             Logger.error("Intermission test can only be started from intro screen");

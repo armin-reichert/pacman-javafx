@@ -57,11 +57,6 @@ public class GameController extends Fsm<GameState, GameModel> {
     private boolean pacImmune = false;
     private int credit = 0;
 
-    /**
-     * Used in intermission test mode.
-     */
-    public int intermissionTestNumber;
-
     private GameController(GameVariant variant) {
         super(GameState.values());
         newGame(variant);
