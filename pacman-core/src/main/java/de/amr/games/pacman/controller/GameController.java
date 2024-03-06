@@ -190,8 +190,6 @@ public class GameController extends Fsm<GameState, GameModel> {
                 GameLevel level = new GameLevel(game, createMsPacManWorld(1), 1, GameModel.levelData(1), true);
                 level.setAutopilot(new RuleBasedPacSteering());
                 game.setLevel(level);
-                game.setScoringEnabled(false);
-                game.score().setLevelNumber(1);
                 Logger.info("Demo level created ({})", game.variant());
                 publishGameEvent(game, GameEventType.LEVEL_CREATED);
                 // at this point the animations of Pac-Man and the ghosts must have been created!
@@ -203,8 +201,6 @@ public class GameController extends Fsm<GameState, GameModel> {
                 GameLevel level = new GameLevel(game, createPacManWorld(), 1, GameModel.levelData(1), true);
                 level.setAutopilot(new RouteBasedSteering(level.pac(), List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
                 game.setLevel(level);
-                game.setScoringEnabled(false);
-                game.score().setLevelNumber(1);
                 Logger.info("Demo level created ({})", game.variant());
                 publishGameEvent(game, GameEventType.LEVEL_CREATED);
                 // at this point the animations of Pac-Man and the ghosts must have been created!

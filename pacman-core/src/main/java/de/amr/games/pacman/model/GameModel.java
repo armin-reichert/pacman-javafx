@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import org.tinylog.Logger;
@@ -16,7 +15,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.checkGameVariant;
 import static de.amr.games.pacman.lib.Globals.checkLevelNumber;
 
@@ -151,7 +149,6 @@ public class GameModel {
     private short initialLives;
     private short lives;
     private boolean playing;
-    private boolean scoringEnabled;
 
     public GameModel(GameVariant variant) {
         checkGameVariant(variant);
@@ -169,12 +166,14 @@ public class GameModel {
         level = null;
         lives = initialLives;
         playing = false;
-        scoringEnabled = true;
         Logger.info("Game model ({}) reset", variant);
     }
 
     public void setLevel(GameLevel level) {
         this.level = level;
+        if (level != null) {
+            score.setLevelNumber(level.number());
+        }
     }
 
     public Optional<GameLevel> level() {
@@ -209,7 +208,7 @@ public class GameModel {
         this.initialLives = initialLives;
     }
 
-    public short lives() {
+    public int lives() {
         return lives;
     }
 
@@ -239,10 +238,6 @@ public class GameModel {
         }
     }
 
-    public void setScoringEnabled(boolean scoringEnabled) {
-        this.scoringEnabled = scoringEnabled;
-    }
-
     public Score score() {
         return score;
     }
@@ -254,28 +249,6 @@ public class GameModel {
     public int pointsForKillingGhost(int index) {
         short[] points = { 200, 400, 800, 1600 };
         return points[index];
-    }
-
-    public void scorePoints(int points, int levelNumber) {
-        if (points < 0) {
-            throw new IllegalArgumentException("Scored points value must not be negative but is: " + points);
-        }
-        checkLevelNumber(levelNumber);
-        if (!scoringEnabled) {
-            return;
-        }
-        int oldScore = score.points();
-        int newScore = oldScore + points;
-        score.setPoints(newScore);
-        if (newScore > highScore.points()) {
-            highScore.setPoints(newScore);
-            highScore.setLevelNumber(levelNumber);
-            highScore.setDate(LocalDate.now());
-        }
-        if (oldScore < EXTRA_LIFE_SCORE && newScore >= EXTRA_LIFE_SCORE) {
-            lives += 1;
-            publishGameEvent(this, GameEventType.EXTRA_LIFE_WON);
-        }
     }
 
     public void loadHighScore() {
