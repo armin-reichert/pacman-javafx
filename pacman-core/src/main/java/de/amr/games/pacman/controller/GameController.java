@@ -194,6 +194,10 @@ public class GameController extends Fsm<GameState, GameModel> {
                 game.score().setLevelNumber(1);
                 Logger.info("Demo level created ({})", game.variant());
                 publishGameEvent(game, GameEventType.LEVEL_CREATED);
+                // at this point the animations of Pac-Man and the ghosts must have been created!
+                level.letsGetReadyToRumble(true);
+                Logger.info("Demo Level started ({})", game.variant());
+                publishGameEvent(game, GameEventType.LEVEL_STARTED);
             }
             case PACMAN -> {
                 GameLevel level = new GameLevel(game, createPacManWorld(), 1, GameModel.levelData(1), true);
@@ -203,13 +207,11 @@ public class GameController extends Fsm<GameState, GameModel> {
                 game.score().setLevelNumber(1);
                 Logger.info("Demo level created ({})", game.variant());
                 publishGameEvent(game, GameEventType.LEVEL_CREATED);
+                // at this point the animations of Pac-Man and the ghosts must have been created!
+                level.letsGetReadyToRumble(true);
+                Logger.info("Demo Level started ({})", game.variant());
+                publishGameEvent(game, GameEventType.LEVEL_STARTED);
             }
         }
-
-        // at this point the animations of Pac-Man and the ghosts must have been created!
-        game.level().ifPresent(level -> level.letsGetReadyToRumble(true));
-
-        Logger.info("Demo Level started ({})", game.variant());
-        publishGameEvent(game, GameEventType.LEVEL_STARTED);
     }
 }
