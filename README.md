@@ -75,7 +75,7 @@ To be able to create the Windows executables, you need to first install the foll
 
 as described in
 the [JavaPackager guide](https://github.com/fvarrui/JavaPackager/blob/master/docs/windows-tools-guide.md)
-(:clap: to [Francisco Vargas Ruiz](https://github.com/fvarrui)).
+(👏: to [Francisco Vargas Ruiz](https://github.com/fvarrui)).
 
 I also had to add the paths "C:\Program Files (x86)\WiX Toolset v3.11\bin" and "C:\Program Files (x86)\Inno Setup 6" to my PATH variable.
 
