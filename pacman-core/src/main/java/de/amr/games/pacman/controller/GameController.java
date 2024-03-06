@@ -153,9 +153,8 @@ public class GameController extends Fsm<GameState, GameModel> {
         if (game.variant() == GameVariant.PACMAN || levelNumber <= 7) {
             game.incrementLevelCounter(level.bonusSymbol(0));
         }
-        game.score().setLevelNumber(levelNumber);
 
-        Logger.info("Level {} created ({})", levelNumber, game().variant());
+        Logger.info("Level {} created ({})", levelNumber, game.variant());
         publishGameEvent(game, GameEventType.LEVEL_CREATED);
 
         // at this point the animations of Pac-Man and the ghosts must have been created!
