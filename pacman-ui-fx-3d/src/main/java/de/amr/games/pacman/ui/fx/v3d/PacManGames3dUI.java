@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d;
 
-import de.amr.games.pacman.lib.Steering;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Steering;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.GameScene;
@@ -61,96 +61,94 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static final float PIP_MIN_HEIGHT = 0.75f * ArcadeWorld.TILES_Y * TS;
     public static final float PIP_MAX_HEIGHT = 2.00f * ArcadeWorld.TILES_Y * TS;
 
-    public static final DoubleProperty PY_PIP_OPACITY = new SimpleDoubleProperty(0.66);
-    public static final DoubleProperty PY_PIP_HEIGHT = new SimpleDoubleProperty(ArcadeWorld.TILES_Y * TS);
-    public static final BooleanProperty PY_PIP_ON = new SimpleBooleanProperty(false);
-    public static final IntegerProperty PY_SIMULATION_STEPS = new SimpleIntegerProperty(1);
-    public static final BooleanProperty PY_3D_AXES_VISIBLE = new SimpleBooleanProperty(false);
+    public static final DoubleProperty PY_PIP_OPACITY            = new SimpleDoubleProperty(0.66);
+    public static final DoubleProperty PY_PIP_HEIGHT             = new SimpleDoubleProperty(ArcadeWorld.TILES_Y * TS);
+    public static final BooleanProperty PY_PIP_ON                = new SimpleBooleanProperty(false);
+    public static final IntegerProperty PY_SIMULATION_STEPS      = new SimpleIntegerProperty(1);
+    public static final BooleanProperty PY_3D_AXES_VISIBLE       = new SimpleBooleanProperty(false);
     public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE = new SimpleObjectProperty<>(DrawMode.FILL);
-    public static final BooleanProperty PY_3D_ENABLED = new SimpleBooleanProperty(true);
+    public static final BooleanProperty PY_3D_ENABLED            = new SimpleBooleanProperty(true);
     public static final BooleanProperty PY_3D_ENERGIZER_EXPLODES = new SimpleBooleanProperty(true);
-    public static final ObjectProperty<Color> PY_3D_FLOOR_COLOR = new SimpleObjectProperty<>(Color.grayRgb(0x33));
-    public static final StringProperty PY_3D_FLOOR_TEXTURE = new SimpleStringProperty("knobs");
-    public static final BooleanProperty PY_3D_FLOOR_TEXTURE_RND = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<Color> PY_3D_LIGHT_COLOR = new SimpleObjectProperty<>(Color.GHOSTWHITE);
-    public static final BooleanProperty PY_3D_NIGHT_MODE = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_3D_PAC_LIGHT_ENABLED = new SimpleBooleanProperty(true);
+    public static final ObjectProperty<Color> PY_3D_FLOOR_COLOR  = new SimpleObjectProperty<>(Color.grayRgb(0x33));
+    public static final StringProperty PY_3D_FLOOR_TEXTURE       = new SimpleStringProperty("knobs");
+    public static final BooleanProperty PY_3D_FLOOR_TEXTURE_RND  = new SimpleBooleanProperty(false);
+    public static final ObjectProperty<Color> PY_3D_LIGHT_COLOR  = new SimpleObjectProperty<>(Color.GHOSTWHITE);
+    public static final BooleanProperty PY_3D_NIGHT_MODE         = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
     public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
-    public static final DoubleProperty PY_3D_WALL_HEIGHT = new SimpleDoubleProperty(3.0);
-    public static final DoubleProperty PY_3D_WALL_THICKNESS = new SimpleDoubleProperty(0.5);
-    public static final BooleanProperty PY_WOKE_PUSSY = new SimpleBooleanProperty(false);
+    public static final DoubleProperty PY_3D_WALL_HEIGHT         = new SimpleDoubleProperty(3.0);
+    public static final DoubleProperty PY_3D_WALL_THICKNESS      = new SimpleDoubleProperty(1.5);
+    public static final BooleanProperty PY_WOKE_PUSSY            = new SimpleBooleanProperty(false);
 
     public static final KeyCodeCombination[] KEYS_TOGGLE_DASHBOARD = {just(KeyCode.F1), alt(KeyCode.B)};
-    public static final KeyCodeCombination KEY_TOGGLE_PIP_VIEW = just(KeyCode.F2);
-    public static final KeyCodeCombination KEY_TOGGLE_2D_3D = alt(KeyCode.DIGIT3);
-    public static final KeyCodeCombination KEY_PREV_PERSPECTIVE = alt(KeyCode.LEFT);
-    public static final KeyCodeCombination KEY_NEXT_PERSPECTIVE = alt(KeyCode.RIGHT);
+    public static final KeyCodeCombination KEY_TOGGLE_PIP_VIEW     = just(KeyCode.F2);
+    public static final KeyCodeCombination KEY_TOGGLE_2D_3D        = alt(KeyCode.DIGIT3);
+    public static final KeyCodeCombination KEY_PREV_PERSPECTIVE    = alt(KeyCode.LEFT);
+    public static final KeyCodeCombination KEY_NEXT_PERSPECTIVE    = alt(KeyCode.RIGHT);
 
-    public static final Picker<String> PICKER_READY_PACMAN = Picker.fromBundle(MSG_BUNDLE, "pacman.ready");
-    public static final Picker<String> PICKER_READY_MS_PACMAN = Picker.fromBundle(MSG_BUNDLE, "mspacman.ready");
-    //public static final Picker<String> PICKER_CHEATING                = Picker.fromBundle(MSG_BUNDLE, "cheating");
-    public static final Picker<String> PICKER_LEVEL_COMPLETE = Picker.fromBundle(MSG_BUNDLE, "level.complete");
-    public static final Picker<String> PICKER_GAME_OVER = Picker.fromBundle(MSG_BUNDLE, "game.over");
+    public static final Picker<String> PICKER_LEVEL_COMPLETE  = Picker.fromBundle(MSG_BUNDLE, "level.complete");
+    public static final Picker<String> PICKER_GAME_OVER       = Picker.fromBundle(MSG_BUNDLE, "game.over");
 
     public static final String NO_TEXTURE = "No Texture";
 
+    public static final ResourceManager RM = () -> PacManGames3dUI.class;
+
     static {
-        ResourceManager rm = () -> PacManGames3dUI.class;
 
-        THEME.set("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
-        THEME.set("model3D.ghost", new Model3D(rm.url("model3D/ghost.obj")));
-        THEME.set("model3D.pellet", new Model3D(rm.url("model3D/12206_Fruit_v1_L3.obj")));
+        THEME.set("model3D.pacman", new Model3D(RM.url("model3D/pacman.obj")));
+        THEME.set("model3D.ghost",  new Model3D(RM.url("model3D/ghost.obj")));
+        THEME.set("model3D.pellet", new Model3D(RM.url("model3D/12206_Fruit_v1_L3.obj")));
 
-        THEME.set("model3D.wallpaper", rm.imageBackground("graphics/sea-wallpaper.jpg",
+        THEME.set("model3D.wallpaper", RM.imageBackground("graphics/sea-wallpaper.jpg",
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
             BackgroundPosition.CENTER,
             new BackgroundSize(1, 1, true, true, false, true)
         ));
 
-        THEME.set("model3D.wallpaper.night", rm.imageBackground("graphics/sea-wallpaper-night.jpg",
+        THEME.set("model3D.wallpaper.night", RM.imageBackground("graphics/sea-wallpaper-night.jpg",
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
             BackgroundPosition.CENTER,
             new BackgroundSize(1, 1, true, true, false, true)
         ));
 
-        THEME.set("image.armin1970", rm.image("graphics/armin.jpg"));
-        THEME.set("icon.play", rm.image("graphics/icons/play.png"));
-        THEME.set("icon.stop", rm.image("graphics/icons/stop.png"));
-        THEME.set("icon.step", rm.image("graphics/icons/step.png"));
+        THEME.set("image.armin1970", RM.image("graphics/armin.jpg"));
+        THEME.set("icon.play",       RM.image("graphics/icons/play.png"));
+        THEME.set("icon.stop",       RM.image("graphics/icons/stop.png"));
+        THEME.set("icon.step",       RM.image("graphics/icons/step.png"));
 
         var textureNames = List.of("knobs", "plastic", "wood");
         for (var name : textureNames) {
             var texture = new PhongMaterial();
-            texture.setBumpMap(rm.image("graphics/textures/%s-bump.jpg".formatted(name)));
-            texture.setDiffuseMap(rm.image("graphics/textures/%s-diffuse.jpg".formatted(name)));
+            texture.setBumpMap   (RM.image("graphics/textures/%s-bump.jpg".formatted(name)));
+            texture.setDiffuseMap(RM.image("graphics/textures/%s-diffuse.jpg".formatted(name)));
             texture.diffuseColorProperty().bind(PY_3D_FLOOR_COLOR);
             THEME.set("texture." + name, texture);
         }
         THEME.addAllToArray("texture.names", textureNames.toArray());
 
-        THEME.set("ghost.0.color.normal.dress", THEME.color("palette.red"));
-        THEME.set("ghost.0.color.normal.eyeballs", THEME.color("palette.pale"));
-        THEME.set("ghost.0.color.normal.pupils", THEME.color("palette.blue"));
+        THEME.set("ghost.0.color.normal.dress",      THEME.color("palette.red"));
+        THEME.set("ghost.0.color.normal.eyeballs",   THEME.color("palette.pale"));
+        THEME.set("ghost.0.color.normal.pupils",     THEME.color("palette.blue"));
 
-        THEME.set("ghost.1.color.normal.dress", THEME.color("palette.pink"));
-        THEME.set("ghost.1.color.normal.eyeballs", THEME.color("palette.pale"));
-        THEME.set("ghost.1.color.normal.pupils", THEME.color("palette.blue"));
+        THEME.set("ghost.1.color.normal.dress",      THEME.color("palette.pink"));
+        THEME.set("ghost.1.color.normal.eyeballs",   THEME.color("palette.pale"));
+        THEME.set("ghost.1.color.normal.pupils",     THEME.color("palette.blue"));
 
-        THEME.set("ghost.2.color.normal.dress", THEME.color("palette.cyan"));
-        THEME.set("ghost.2.color.normal.eyeballs", THEME.color("palette.pale"));
-        THEME.set("ghost.2.color.normal.pupils", THEME.color("palette.blue"));
+        THEME.set("ghost.2.color.normal.dress",      THEME.color("palette.cyan"));
+        THEME.set("ghost.2.color.normal.eyeballs",   THEME.color("palette.pale"));
+        THEME.set("ghost.2.color.normal.pupils",     THEME.color("palette.blue"));
 
-        THEME.set("ghost.3.color.normal.dress", THEME.color("palette.orange"));
-        THEME.set("ghost.3.color.normal.eyeballs", THEME.color("palette.pale"));
-        THEME.set("ghost.3.color.normal.pupils", THEME.color("palette.blue"));
+        THEME.set("ghost.3.color.normal.dress",      THEME.color("palette.orange"));
+        THEME.set("ghost.3.color.normal.eyeballs",   THEME.color("palette.pale"));
+        THEME.set("ghost.3.color.normal.pupils",     THEME.color("palette.blue"));
 
-        THEME.set("ghost.color.frightened.dress", THEME.color("palette.blue"));
+        THEME.set("ghost.color.frightened.dress",    THEME.color("palette.blue"));
         THEME.set("ghost.color.frightened.eyeballs", THEME.color("palette.rose"));
-        THEME.set("ghost.color.frightened.pupils", THEME.color("palette.rose"));
+        THEME.set("ghost.color.frightened.pupils",   THEME.color("palette.rose"));
 
-        THEME.set("ghost.color.flashing.dress", THEME.color("palette.pale"));
-        THEME.set("ghost.color.flashing.eyeballs", THEME.color("palette.rose"));
-        THEME.set("ghost.color.flashing.pupils", THEME.color("palette.red"));
+        THEME.set("ghost.color.flashing.dress",      THEME.color("palette.pale"));
+        THEME.set("ghost.color.flashing.eyeballs",   THEME.color("palette.rose"));
+        THEME.set("ghost.color.flashing.pupils",     THEME.color("palette.red"));
 
         THEME.addAllToArray("mspacman.maze.foodColor",
             Color.rgb(222, 222, 255),
@@ -188,32 +186,32 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             Color.rgb(222, 183, 174)
         );
 
-        THEME.set("mspacman.color.head", Color.rgb(255, 255, 0));
-        THEME.set("mspacman.color.palate", Color.rgb(191, 79, 61));
-        THEME.set("mspacman.color.eyes", Color.rgb(33, 33, 33));
-        THEME.set("mspacman.color.boobs", Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
-        THEME.set("mspacman.color.hairbow", Color.rgb(255, 0, 0));
+        THEME.set("mspacman.color.head",           Color.rgb(255, 255, 0));
+        THEME.set("mspacman.color.palate",         Color.rgb(191, 79, 61));
+        THEME.set("mspacman.color.eyes",           Color.rgb(33, 33, 33));
+        THEME.set("mspacman.color.boobs",          Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
+        THEME.set("mspacman.color.hairbow",        Color.rgb(255, 0, 0));
         THEME.set("mspacman.color.hairbow.pearls", Color.rgb(33, 33, 255));
 
-        THEME.set("mspacman.maze.doorColor", Color.rgb(255, 183, 255));
+        THEME.set("mspacman.maze.doorColor",       Color.rgb(255, 183, 255));
 
-        THEME.set("pacman.maze.wallBaseColor", Color.rgb(33, 33, 255).brighter());
-        THEME.set("pacman.maze.wallMiddleColor",Color.rgb(33, 33, 255).darker());
-        THEME.set("pacman.maze.wallTopColor", Color.rgb(33, 33, 255).brighter());
-        THEME.set("pacman.maze.doorColor", Color.rgb(252, 181, 255));
+        THEME.set("pacman.maze.wallBaseColor",     Color.rgb(33, 33, 255).brighter());
+        THEME.set("pacman.maze.wallMiddleColor",   Color.rgb(33, 33, 255).darker());
+        THEME.set("pacman.maze.wallTopColor",      Color.rgb(33, 33, 255).brighter());
+        THEME.set("pacman.maze.doorColor",         Color.rgb(252, 181, 255));
 
-        THEME.set("pacman.color.head", Color.rgb(255, 255, 0));
-        THEME.set("pacman.color.palate", Color.rgb(191, 79, 61));
-        THEME.set("pacman.color.eyes", Color.rgb(33, 33, 33));
+        THEME.set("pacman.color.head",             Color.rgb(255, 255, 0));
+        THEME.set("pacman.color.palate",           Color.rgb(191, 79, 61));
+        THEME.set("pacman.color.eyes",             Color.rgb(33, 33, 33));
 
         // dashboard
-        THEME.set("infobox.min_col_width", 180);
-        THEME.set("infobox.min_label_width", 120);
-        THEME.set("infobox.text_color", Color.WHITE);
-        THEME.set("infobox.label_font", Font.font("Tahoma", 12));
-        THEME.set("infobox.text_font", Font.font("Tahoma", 12));
+        THEME.set("infobox.min_col_width",         180);
+        THEME.set("infobox.min_label_width",       120);
+        THEME.set("infobox.text_color",            Color.WHITE);
+        THEME.set("infobox.label_font",            Font.font("Tahoma", 12));
+        THEME.set("infobox.text_font",             Font.font("Tahoma", 12));
 
-        Logger.info("Pac-Man games 3D theme loaded");
+        Logger.info("3D theme loaded");
     }
 
     public PacManGames3dUI(Stage stage, Settings settings) {

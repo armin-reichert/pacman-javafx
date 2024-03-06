@@ -30,25 +30,21 @@ public class DoorWing3D {
 
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
-    private final ObjectProperty<PhongMaterial> barMaterialPy = new SimpleObjectProperty<>(this, "barMaterial",
-        new PhongMaterial(Color.GRAY));
-
     private final Group root = new Group();
-
     private final Transition doorAnimation;
-
-    private final Color color;
 
     public DoorWing3D(Vector2i tile, Color color) {
         checkTileNotNull(tile);
         checkNotNull(color);
 
-        this.color = color;
-        barMaterialPy.set(new PhongMaterial(color));
+        root.setTranslateX(tile.x() * TS);
+        root.setTranslateY(tile.y() * TS - 3);
+
+        PhongMaterial barMaterial = new PhongMaterial(color);
 
         for (int i = 0; i < 2; ++i) {
             var verticalBar = new Cylinder(1, 8);
-            verticalBar.materialProperty().bind(barMaterialPy);
+            verticalBar.setMaterial(barMaterial);
             verticalBar.setTranslateX(i * 4 + 2);
             verticalBar.setTranslateY(4);
             verticalBar.setTranslateZ(-4);
@@ -59,7 +55,7 @@ public class DoorWing3D {
         }
 
         var horizontalBar = new Cylinder(0.5, 9);
-        horizontalBar.materialProperty().bind(barMaterialPy);
+        horizontalBar.setMaterial(barMaterial);
         horizontalBar.setTranslateX(4);
         horizontalBar.setTranslateY(4);
         horizontalBar.setTranslateZ(-4);
@@ -67,14 +63,11 @@ public class DoorWing3D {
         horizontalBar.setRotate(90);
         root.getChildren().add(horizontalBar);
 
-        root.setTranslateX(tile.x() * TS);
-        root.setTranslateY(tile.y() * TS - 3);
-
         var fadeOut = new ColorChangeTransition(Duration.seconds(0.2),
-            color, Color.TRANSPARENT, barMaterialPy.get().diffuseColorProperty()
+            color, Color.TRANSPARENT, barMaterial.diffuseColorProperty()
         );
         var fadeIn = new ColorChangeTransition(Duration.seconds(0.6),
-            Color.TRANSPARENT, color, barMaterialPy.get().diffuseColorProperty()
+            Color.TRANSPARENT, color, barMaterial.diffuseColorProperty()
         );
         fadeIn.setDelay(Duration.seconds(0.2));
         doorAnimation = new SequentialTransition(fadeOut, fadeIn);
