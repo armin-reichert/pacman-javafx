@@ -68,7 +68,7 @@ public class Text3D {
         Logger.trace("New image produced");
     }
 
-    public Node getRoot() {
+    public Node root() {
         return box;
     }
 

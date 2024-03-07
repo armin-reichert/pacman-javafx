@@ -64,8 +64,7 @@ public class PlayScene3D implements GameScene {
         text3D.setFont(font);
         text3D.setText(text);
         text3D.endBatch();
-        // this is not pretty:
-        text3D.translate(0, 16, -4.5);
+        text3D.setVisible(true);
         text3D.rotate(Rotate.X_AXIS, 90);
         return text3D;
     }
@@ -89,6 +88,7 @@ public class PlayScene3D implements GameScene {
     // initial scene size is irrelevant, gets bound to main scene size anyway:
     private final SubScene fxSubScene = new SubScene(subSceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
     private GameLevel3D level3D;
+    private Text3D readyText3D;
     private GameSceneContext context;
     private boolean scoreVisible;
 
@@ -161,14 +161,32 @@ public class PlayScene3D implements GameScene {
         return camControllerMap.getOrDefault(perspectivePy.get(), camControllerMap.get(Perspective.TOTAL));
     }
 
-    private void showReadMessage(String text) {
-        var font = context.theme().font("font.arcade", 6);
-        var text3D = createReadyMessageText3D(text, font);
-        subSceneRoot.getChildren().set(CHILD_READY_MSG, text3D.getRoot());
+    private void showReadyMessage(String text) {
+        Logger.trace("show ready message");
+        readyText3D = createReadyMessageText3D(text, context.theme().font("font.arcade", 6));
+        readyText3D.root().setTranslateX(0);
+        readyText3D.root().setTranslateY(16);
+        readyText3D.root().setTranslateZ(5);
+        subSceneRoot.getChildren().set(CHILD_READY_MSG, readyText3D.root());
+        var animation = new TranslateTransition(Duration.seconds(1.5), readyText3D.root());
+        animation.setDelay(Duration.seconds(0.25));
+        animation.setFromZ(5);
+        animation.setToZ(-5);
+        animation.play();
     }
 
     private void hideReadyMessage() {
-        subSceneRoot.getChildren().set(CHILD_READY_MSG, new Group());
+        if (readyText3D == null) {
+            return;
+        }
+        var animation = new TranslateTransition(Duration.seconds(0.75), readyText3D.root());
+        animation.setToZ(5);
+        animation.setDelay(Duration.seconds(0.5));
+        animation.setOnFinished(e -> {
+            readyText3D = null;
+            subSceneRoot.getChildren().set(CHILD_READY_MSG, new Group());
+        });
+        animation.play();
     }
 
     private void replaceGameLevel3D(GameLevel level) {
@@ -194,7 +212,7 @@ public class PlayScene3D implements GameScene {
         level3D.scores3D().getRoot().rotateProperty().bind(camera.rotateProperty());
 
         if (context.gameState() == GameState.LEVEL_TEST) {
-            showReadMessage("LEVEL %s TEST".formatted(level.number()));
+            showReadyMessage("LEVEL %s TEST".formatted(level.number()));
         }
 
         if (PY_3D_FLOOR_TEXTURE_RND.get()) {
@@ -290,9 +308,6 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onLevelStarted(GameEvent e) {
         e.game.level().ifPresent(level -> {
-            showReadMessage("READY!");
-            level3D.pac3D().init();
-            Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
             level3D.updateLevelCounter3D();
         });
     }
@@ -315,12 +330,13 @@ public class PlayScene3D implements GameScene {
     public void onGameStateChange(GameStateChangeEvent e) {
         switch (e.newState) {
 
-            case READY ->
+            case READY -> {
+                showReadyMessage("READY!");
                 context.gameLevel().ifPresent(level -> {
-                    showReadMessage("READY!");
                     level3D.pac3D().init();
                     Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
                 });
+            }
 
             case HUNTING -> {
                 level3D.pac3D().init();
