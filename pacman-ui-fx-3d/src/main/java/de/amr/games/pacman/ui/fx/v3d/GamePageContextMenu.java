@@ -10,7 +10,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -21,18 +23,21 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PY_PIP_ON;
  * @author Armin Reichert
  */
 public class GamePageContextMenu extends ContextMenu {
+
+    // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
+    private static final Color TITLE_ITEM_COLOR = Color.CORNFLOWERBLUE;
+    private static final Font TITLE_ITEM_FONT = Font.font("Dialog", FontWeight.BLACK, 18);
+
     private final GameSceneContext sceneContext;
     private CheckMenuItem autopilotItem;
     private CheckMenuItem immunityItem;
     private CheckMenuItem pipItem;
     private ToggleGroup perspectivesToggleGroup;
-    private final Font titleItemFont;
 
     public GamePageContextMenu(GameSceneContext sceneContext, Scene parentScene) {
         checkNotNull(sceneContext);
         checkNotNull(parentScene);
         this.sceneContext = sceneContext;
-        titleItemFont = sceneContext.theme().font("font.handwriting", 18);
         parentScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             hide();
             if (e.getButton() == MouseButton.SECONDARY) {
@@ -90,8 +95,8 @@ public class GamePageContextMenu extends ContextMenu {
 
     private MenuItem createTitleItem(String title) {
         var text = new Text(title);
-        text.setFont(titleItemFont);
-        text.setFill(sceneContext.theme().color("palette.orange"));
+        text.setFont(TITLE_ITEM_FONT);
+        text.setFill(TITLE_ITEM_COLOR);
         return new CustomMenuItem(text);
     }
 

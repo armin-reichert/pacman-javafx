@@ -17,7 +17,6 @@ import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
-import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.entity.*;
@@ -27,6 +26,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -53,12 +54,15 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class PlayScene3D implements GameScene {
 
-    private static Text3D createReadyMessageText3D(Theme theme) {
+    private static final byte CHILD_LEVEL_3D  = 0;
+    private static final byte CHILD_READY_MSG = 1;
+
+    private static Text3D createReadyMessageText3D(String text, Font font) {
         Text3D text3D = new Text3D();
         text3D.beginBatch();
-        text3D.setTextColor(theme.color("palette.yellow"));
-        text3D.setFont(theme.font("font.arcade", 6));
-        text3D.setText("READY!");
+        text3D.setTextColor(Color.YELLOW);
+        text3D.setFont(font);
+        text3D.setText(text);
         text3D.endBatch();
         // this is not pretty:
         text3D.translate(0, 16, -4.5);
@@ -80,30 +84,27 @@ public class PlayScene3D implements GameScene {
         Perspective.NEAR_PLAYER,      new CamNearPlayer(),
         Perspective.TOTAL,            new CamTotal()
     ));
+    private final PerspectiveCamera camera = new PerspectiveCamera(true);
     private final Group subSceneRoot = new Group();
     // initial scene size is irrelevant, gets bound to main scene size anyway:
     private final SubScene fxSubScene = new SubScene(subSceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
-    private final PerspectiveCamera camera = new PerspectiveCamera(true);
-    private final AmbientLight ambientLight = new AmbientLight();
-    private final CoordSystem coordSystem = new CoordSystem();
-    private Text3D readyMessageText3D;
     private GameLevel3D level3D;
     private GameSceneContext context;
     private boolean scoreVisible;
 
     public PlayScene3D() {
-        fxSubScene.setCamera(camera);
-        perspectivePy.bind(PY_3D_PERSPECTIVE);
-        coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
+        var ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
+        var coordSystem = new CoordSystem();
+        coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
+        subSceneRoot.getChildren().setAll(new Group(), new Group(), coordSystem, ambientLight);
+        fxSubScene.setCamera(camera);
     }
 
     @Override
     public void init() {
         setScoreVisible(true);
-        readyMessageText3D = createReadyMessageText3D(context.theme());
-        // first child is placeholder for 3D level
-        subSceneRoot.getChildren().setAll(new Group(), readyMessageText3D.getRoot(), coordSystem, ambientLight);
+        perspectivePy.bind(PY_3D_PERSPECTIVE);
         Logger.info("3D play scene initialized.");
     }
 
@@ -160,6 +161,17 @@ public class PlayScene3D implements GameScene {
         return camControllerMap.getOrDefault(perspectivePy.get(), camControllerMap.get(Perspective.TOTAL));
     }
 
+    private void showReadMessage(String text) {
+        var font = context.theme().font("font.arcade", 6);
+        var text3D = createReadyMessageText3D(text, font);
+        subSceneRoot.getChildren().set(CHILD_READY_MSG, text3D.getRoot());
+    }
+
+    private void hideReadyMessage() {
+        subSceneRoot.getChildren().set(CHILD_READY_MSG, new Group());
+    }
+
+
     private void replaceGameLevel3D(GameLevel level) {
 
         //TODO In level 1 when switching between 2D and 3D view, the 3D level is always recreated. How to avoid this?
@@ -170,7 +182,7 @@ public class PlayScene3D implements GameScene {
 
         level3D = new GameLevel3D(level, context.theme(), context.spriteSheet());
         // replace initial placeholder or previous 3D level
-        subSceneRoot.getChildren().set(0, level3D.root());
+        subSceneRoot.getChildren().set(CHILD_LEVEL_3D, level3D.root());
 
         // center over origin
         double centerX = level.world().numCols() * HTS;
@@ -183,7 +195,7 @@ public class PlayScene3D implements GameScene {
         level3D.scores3D().getRoot().rotateProperty().bind(camera.rotateProperty());
 
         if (context.gameState() == GameState.LEVEL_TEST) {
-            readyMessageText3D.setText("LEVEL %s TEST".formatted(level.number()));
+            showReadMessage("LEVEL %s TEST".formatted(level.number()));
         }
 
         if (PY_3D_FLOOR_TEXTURE_RND.get()) {
@@ -215,10 +227,6 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onSceneVariantSwitch() {
-        if (level3D == null) {
-            Logger.error("Oh no, where is my 3D level?");
-            return;
-        }
         context.gameLevel().ifPresent(level -> {
             level3D.world3D().eatables3D().forEach(
                 eatable3D -> eatable3D.getRoot().setVisible(!level.world().hasEatenFoodAt(eatable3D.tile())));
@@ -229,6 +237,7 @@ public class PlayScene3D implements GameScene {
                 context.soundHandler().ensureSirenStarted(context.gameVariant(), level.huntingPhaseIndex() / 2);
             }
         });
+        hideReadyMessage();
     }
 
     @Override
@@ -282,7 +291,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onLevelStarted(GameEvent e) {
         e.game.level().ifPresent(level -> {
-            readyMessageText3D.setVisible(true);
+            showReadMessage("READY!");
             level3D.pac3D().init();
             Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
             level3D.updateLevelCounter3D();
@@ -309,8 +318,7 @@ public class PlayScene3D implements GameScene {
 
             case READY ->
                 context.gameLevel().ifPresent(level -> {
-                    readyMessageText3D.setText("READY!");
-                    readyMessageText3D.setVisible(true);
+                    showReadMessage("READY!");
                     level3D.pac3D().init();
                     Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
                 });
@@ -322,7 +330,7 @@ public class PlayScene3D implements GameScene {
                 level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
             }
 
-            case PACMAN_DYING -> lockStateAndPlayAfterSeconds(1.0, level3D.pac3D().createDyingAnimation(context.gameVariant()));
+            case PACMAN_DYING -> lockGameStateAndPlayAfterSeconds(1.0, level3D.pac3D().createDyingAnimation(context.gameVariant()));
 
             case GHOST_DYING ->
                 context.gameLevel().ifPresent(level -> {
@@ -339,7 +347,7 @@ public class PlayScene3D implements GameScene {
 
             case CHANGING_TO_NEXT_LEVEL ->
                 context.gameLevel().ifPresent(level -> {
-                    keepGameStateForSeconds(3);
+                    lockGameStateForSeconds(3);
                     replaceGameLevel3D(level);
                     level3D.pac3D().init();
                     currentCamController().reset(camera);
@@ -351,7 +359,7 @@ public class PlayScene3D implements GameScene {
                     level3D.world3D().eatables3D().forEach(level3D::eat);
                     level3D.livesCounter3D().stopAnimation();
                     boolean intermissionAfterLevel = level.data().intermissionNumber() != 0;
-                    lockStateAndPlayAfterSeconds(1.0,
+                    lockGameStateAndPlayAfterSeconds(1.0,
                         createLevelCompleteAnimation(level),
                         actionAfterSeconds(1.0, () -> {
                             level.pac().hide();
@@ -368,7 +376,7 @@ public class PlayScene3D implements GameScene {
                 });
 
             case GAME_OVER -> {
-                keepGameStateForSeconds(3);
+                lockGameStateForSeconds(3);
                 level3D.livesCounter3D().stopAnimation();
                 context.actionHandler().showFlashMessageSeconds(3, PICKER_GAME_OVER.next());
                 context.clip("audio.game_over").play();
@@ -387,7 +395,7 @@ public class PlayScene3D implements GameScene {
         // on state exit
         if (e.oldState != null) {
             switch (e.oldState) {
-                case READY -> readyMessageText3D.setVisible(false);
+                case READY -> hideReadyMessage();
                 case HUNTING -> {
                     if (e.newState != GameState.GHOST_DYING) {
                         level3D.world3D().energizers3D().forEach(Energizer3D::stopPumping);
@@ -453,19 +461,12 @@ public class PlayScene3D implements GameScene {
         });
     }
 
-    /**
-     * Keeps the current game state for given number of seconds, then forces the state timer to expire.
-     */
-    private void keepGameStateForSeconds(double seconds) {
+    private void lockGameStateForSeconds(double seconds) {
         context.gameState().timer().resetIndefinitely();
         actionAfterSeconds(seconds, () -> context.gameState().timer().expire()).play();
     }
 
-    /**
-     * Locks the current game state, waits given seconds, plays given animations and unlocks the state
-     * when the animations have finished.
-     */
-    private void lockStateAndPlayAfterSeconds(double seconds, Animation... animations) {
+    private void lockGameStateAndPlayAfterSeconds(double seconds, Animation... animations) {
         context.gameState().timer().resetIndefinitely();
         var animationSequence = new SequentialTransition(animations);
         if (seconds > 0) {
