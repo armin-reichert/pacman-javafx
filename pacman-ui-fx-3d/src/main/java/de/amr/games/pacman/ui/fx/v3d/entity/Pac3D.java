@@ -62,40 +62,40 @@ public class Pac3D {
     private final Rotate orientation = new Rotate();
     private WalkingAnimation walkingAnimation;
 
-    static Group createPacManGroup(Model3D model3D, Theme theme) {
-        var body = createBody(model3D, 9,
+    static Group createPacManGroup(Model3D model3D, Theme theme, double size) {
+        var body = createBody(model3D, size,
             theme.color("pacman.color.head"),
             theme.color("pacman.color.eyes"),
             theme.color("pacman.color.palate"));
         return new Group(body);
     }
 
-    static Group createMsPacManGroup(Model3D model3D, Theme theme) {
-        var body = createBody(model3D, 9,
+    static Group createMsPacManGroup(Model3D model3D, Theme theme, double size) {
+        var body = createBody(model3D, size,
             theme.color("mspacman.color.head"),
             theme.color("mspacman.color.eyes"),
             theme.color("mspacman.color.palate"));
-        return new Group(body, createFeminineParts(theme, 9));
+        return new Group(body, createFeminineParts(theme, size));
     }
 
-    public static Pac3D createPacMan3D(Model3D model3D, Theme theme, Pac pacMan) {
+    public static Pac3D createPacMan3D(Model3D model3D, Theme theme, Pac pacMan, double size) {
         checkNotNull(model3D);
         checkNotNull(theme);
         checkNotNull(pacMan);
 
-        var pac3D = new Pac3D(createPacManGroup(model3D, theme), pacMan, theme.color("pacman.color.head"));
+        var pac3D = new Pac3D(createPacManGroup(model3D, theme, size), pacMan, theme.color("pacman.color.head"));
         pac3D.walkingAnimation = new HeadBanging(pacMan, pac3D.root);
         pac3D.drawModePy.bind(PacManGames3dUI.PY_3D_DRAW_MODE);
 
         return pac3D;
     }
 
-    public static Pac3D createMsPacMan3D(Model3D model3D, Theme theme, Pac msPacMan) {
+    public static Pac3D createMsPacMan3D(Model3D model3D, Theme theme, Pac msPacMan, double size) {
         checkNotNull(model3D);
         checkNotNull(theme);
         checkNotNull(msPacMan);
 
-        var msPac3D = new Pac3D(createMsPacManGroup(model3D, theme), msPacMan, theme.color("mspacman.color.head"));
+        var msPac3D = new Pac3D(createMsPacManGroup(model3D, theme, size), msPacMan, theme.color("mspacman.color.head"));
         msPac3D.walkingAnimation = new HipSwaying(msPacMan, msPac3D.root);
         msPac3D.drawModePy.bind(PacManGames3dUI.PY_3D_DRAW_MODE);
 
