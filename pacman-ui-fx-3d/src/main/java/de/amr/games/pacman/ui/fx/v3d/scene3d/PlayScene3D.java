@@ -85,8 +85,8 @@ public class PlayScene3D implements GameScene {
     ));
     private final PerspectiveCamera camera = new PerspectiveCamera(true);
     private final Group subSceneRoot = new Group();
-    // initial scene size is irrelevant, gets bound to main scene size anyway:
-    private final SubScene fxSubScene = new SubScene(subSceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
+    private final SubScene fxSubScene;
+
     private GameLevel3D level3D;
     private Text3D readyText3D;
     private GameSceneContext context;
@@ -98,20 +98,29 @@ public class PlayScene3D implements GameScene {
         var coordSystem = new CoordSystem();
         coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
         subSceneRoot.getChildren().setAll(new Group(), new Group(), coordSystem, ambientLight);
+        // initial scene size is irrelevant, gets bound to parent scene later
+        fxSubScene = new SubScene(subSceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
         fxSubScene.setCamera(camera);
+        Logger.info("3D play scene created. {}", this);
+    }
+
+    public void setParentScene(Scene parentScene) {
+        fxSubScene.widthProperty().bind(parentScene.widthProperty());
+        fxSubScene.heightProperty().bind(parentScene.heightProperty());
+        Logger.info("3D play scene embedded. {}", this);
     }
 
     @Override
     public void init() {
         setScoreVisible(true);
         perspectivePy.bind(PY_3D_PERSPECTIVE);
-        Logger.info("3D play scene initialized.");
+        Logger.info("3D play scene init(). {}", this);
     }
 
     @Override
     public void end() {
         perspectivePy.unbind();
-        Logger.info("3D play scene ended.");
+        Logger.info("3D play scene end(). {}", this);
     }
 
     @Override
@@ -152,17 +161,12 @@ public class PlayScene3D implements GameScene {
         return fxSubScene;
     }
 
-    public void setParentScene(Scene parentScene) {
-        fxSubScene.widthProperty().bind(parentScene.widthProperty());
-        fxSubScene.heightProperty().bind(parentScene.heightProperty());
-    }
-
     private CameraController currentCamController() {
         return camControllerMap.getOrDefault(perspectivePy.get(), camControllerMap.get(Perspective.TOTAL));
     }
 
     private void showReadyMessage(String text) {
-        Logger.trace("show ready message");
+        Logger.trace("Show ready message");
         readyText3D = createReadyMessageText3D(text, context.theme().font("font.arcade", 6));
         readyText3D.root().setTranslateX(0);
         readyText3D.root().setTranslateY(16);
@@ -401,7 +405,10 @@ public class PlayScene3D implements GameScene {
                 context.gameLevel().ifPresent(level -> {
                     PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
                     level.pac().setVisible(true);
-                    level3D.pac3D().update();
+                    if (level3D == null) {
+                        replaceGameLevel3D(level);
+                        level3D.pac3D().update();
+                    }
                 });
 
             default -> {}
