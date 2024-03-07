@@ -24,13 +24,9 @@ import de.amr.games.pacman.ui.fx.v3d.entity.*;
 import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableDoubleValue;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -64,14 +60,12 @@ public class PlayScene3D implements GameScene {
         text3D.setFont(theme.font("font.arcade", 6));
         text3D.setText("READY!");
         text3D.endBatch();
+        // this is not pretty:
         text3D.translate(0, 16, -4.5);
         text3D.rotate(Rotate.X_AXIS, 90);
         return text3D;
     }
 
-    private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
-    private final SubScene fxSubScene;
-    private final PerspectiveCamera camera;
     private final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
         @Override
         protected void invalidated() {
@@ -79,6 +73,11 @@ public class PlayScene3D implements GameScene {
             currentCamController().reset(camera);
         }
     };
+
+    private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
+    // initial size is irrelevant, gets bound to main scene size anyway:
+    private final SubScene fxSubScene = new SubScene(new Group(), 42, 42, true, SceneAntialiasing.BALANCED);
+    private final PerspectiveCamera camera = new PerspectiveCamera(true);
     private final AmbientLight ambientLight = new AmbientLight();
     private final CoordSystem coordSystem = new CoordSystem();
     private Text3D readyMessageText3D;
@@ -91,38 +90,18 @@ public class PlayScene3D implements GameScene {
         camControllerMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
         camControllerMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
         camControllerMap.put(Perspective.TOTAL, new CamTotal());
-
+        fxSubScene.setCamera(camera);
+        perspectivePy.bind(PY_3D_PERSPECTIVE);
         coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
-
-        setScoreVisible(true);
-
-        // initial sub-scene size is irrelevant, gets bound to main scene size in init method
-        fxSubScene = new SubScene(new Group(), 42, 42, true, SceneAntialiasing.BALANCED);
-        camera = new PerspectiveCamera(true);
-        fxSubScene.setCamera(camera);
-    }
-
-    public PerspectiveCamera getCamera() {
-        return camera;
-    }
-
-    @Override
-    public void setContext(GameSceneContext context) {
-        this.context = context;
-    }
-
-    @Override
-    public GameSceneContext context() {
-        return context;
     }
 
     @Override
     public void init() {
+        setScoreVisible(true);
         readyMessageText3D = createReadyMessageText3D(context.theme());
         // first child is placeholder for 3D level
         fxSubScene.setRoot(new Group(new Group(), readyMessageText3D.getRoot(), coordSystem, ambientLight));
-        perspectivePy.bind(PY_3D_PERSPECTIVE);
         Logger.info("3D play scene initialized.");
     }
 
@@ -141,6 +120,20 @@ public class PlayScene3D implements GameScene {
         }
     }
 
+    public PerspectiveCamera camera() {
+        return camera;
+    }
+
+    @Override
+    public void setContext(GameSceneContext context) {
+        this.context = context;
+    }
+
+    @Override
+    public GameSceneContext context() {
+        return context;
+    }
+
     @Override
     public boolean isScoreVisible() {
         return scoreVisible;
@@ -156,9 +149,9 @@ public class PlayScene3D implements GameScene {
         return fxSubScene;
     }
 
-    public void bindSize(ObservableDoubleValue widthPy, ObservableDoubleValue heightPy) {
-        fxSubScene.widthProperty().bind(widthPy);
-        fxSubScene.heightProperty().bind(heightPy);
+    public void setParentScene(Scene parentScene) {
+        fxSubScene.widthProperty().bind(parentScene.widthProperty());
+        fxSubScene.heightProperty().bind(parentScene.heightProperty());
     }
 
     private CameraController currentCamController() {

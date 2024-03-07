@@ -104,7 +104,7 @@ public class InfoBox3D extends InfoBox {
     private String currentSceneCameraInfo() {
         if (sceneContext.currentGameScene().isPresent()
             && sceneContext.currentGameScene().get() instanceof PlayScene3D playScene3D) {
-            var camera = playScene3D.getCamera();
+            var camera = playScene3D.camera();
             return String.format("x=%.0f y=%.0f z=%.0f rot=%.0f",
                 camera.getTranslateX(), camera.getTranslateY(), camera.getTranslateZ(), camera.getRotate());
         }
