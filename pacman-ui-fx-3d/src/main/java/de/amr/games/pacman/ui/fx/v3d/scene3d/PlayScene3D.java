@@ -108,6 +108,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void init() {
+        createReadyMessageText3D();
         perspectivePy.bind(PY_3D_PERSPECTIVE);
         Logger.info("3D play scene initialized.");
     }
@@ -184,11 +185,11 @@ public class PlayScene3D implements GameScene {
         Logger.info("3D game level {} created.", level.number());
     }
 
-    private void setReadyMessageText3D(String text) {
+    private void createReadyMessageText3D() {
         readyMessageText3D.beginBatch();
         readyMessageText3D.setTextColor(Color.YELLOW);
         readyMessageText3D.setFont(context.theme().font("font.arcade", 6));
-        readyMessageText3D.setText(text);
+        readyMessageText3D.setText("READY!");
         readyMessageText3D.endBatch();
         readyMessageText3D.translate(0, 16, -4.5);
         readyMessageText3D.rotate(Rotate.X_AXIS, 90);
@@ -283,7 +284,6 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onLevelStarted(GameEvent e) {
         e.game.level().ifPresent(level -> {
-            setReadyMessageText3D("READY!");
             readyMessageText3D.setVisible(true);
             level3D.pac3D().init();
             Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
