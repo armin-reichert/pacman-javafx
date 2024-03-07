@@ -124,7 +124,7 @@ public class LivesCounter3D {
         standsGroup.getChildren().addAll(plate, pillar);
     }
 
-    public Node getRoot() {
+    public Node root() {
         return root;
     }
 

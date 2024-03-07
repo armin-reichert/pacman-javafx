@@ -6,14 +6,12 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.world.Door;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
@@ -29,9 +27,11 @@ import javafx.scene.paint.Color;
 
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PY_3D_DRAW_MODE;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PY_3D_PAC_LIGHT_ENABLED;
+import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.*;
 
 /**
  * @author Armin Reichert
@@ -42,7 +42,7 @@ public class GameLevel3D {
     private final Group root = new Group();
     private final World3D world3D;
     private final Pac3D pac3D;
-    private final Pac3DLight pacLight;
+    private final Pac3DLight pac3DLight;
     private final Ghost3D[] ghosts3D;
     private final LevelCounter3D levelCounter3D;
     private final LivesCounter3D livesCounter3D;
@@ -69,64 +69,60 @@ public class GameLevel3D {
         switch (level.game().variant()) {
             case MS_PACMAN -> {
                 int mazeNumber = level.game().mazeNumber(level.number());
-                var foodColor = theme.color("mspacman.maze.foodColor", mazeNumber - 1);
-                var wallBaseColor = theme.color("mspacman.maze.wallBaseColor", mazeNumber - 1);
+                var foodColor       = theme.color("mspacman.maze.foodColor", mazeNumber - 1);
+                var wallBaseColor   = theme.color("mspacman.maze.wallBaseColor", mazeNumber - 1);
                 var wallMiddleColor = theme.color("mspacman.maze.wallMiddleColor", mazeNumber - 1);
-                var wallTopColor = theme.color("mspacman.maze.wallTopColor", mazeNumber - 1);
-                var doorColor = theme.color("mspacman.maze.doorColor");
-                world3D = new World3D(level.world(), theme, pelletModel3D,
-                    foodColor, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
-                pac3D = Pac3D.createMsPacMan3D(pacModel3D, theme, level.pac(), pacSize);
-                pacLight = new Pac3DLight(pac3D);
+                var wallTopColor    = theme.color("mspacman.maze.wallTopColor", mazeNumber - 1);
+                var doorColor       = theme.color("mspacman.maze.doorColor");
+                world3D = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
+                pac3D = createMsPacMan3D(pacModel3D, theme, level.pac(), pacSize);
+                pac3DLight = new Pac3DLight(pac3D);
                 ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, ghostModel3D, theme, ghostSize)).toArray(Ghost3D[]::new);
-                livesCounter3D = new LivesCounter3D(() -> Pac3D.createMsPacManGroup(pacModel3D, theme, livesCounterPacSize), true);
+                livesCounter3D = new LivesCounter3D(() -> createMsPacManGroup(pacModel3D, theme, livesCounterPacSize), true);
             }
             case PACMAN -> {
-                var foodColor = theme.color("pacman.maze.foodColor");
-                var wallBaseColor = theme.color("pacman.maze.wallBaseColor");
+                var foodColor       = theme.color("pacman.maze.foodColor");
+                var wallBaseColor   = theme.color("pacman.maze.wallBaseColor");
                 var wallMiddleColor = theme.color("pacman.maze.wallMiddleColor");
-                var wallTopColor = theme.color("pacman.maze.wallTopColor");
-                var doorColor = theme.color("pacman.maze.doorColor");
-                world3D = new World3D(level.world(), theme, pelletModel3D,
-                    foodColor, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
-                pac3D = Pac3D.createPacMan3D(pacModel3D, theme, level.pac(), pacSize);
-                pacLight = new Pac3DLight(pac3D);
+                var wallTopColor    = theme.color("pacman.maze.wallTopColor");
+                var doorColor       = theme.color("pacman.maze.doorColor");
+                world3D = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
+                pac3D = createPacMan3D(pacModel3D, theme, level.pac(), pacSize);
+                pac3DLight = new Pac3DLight(pac3D);
                 ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, ghostModel3D, theme, ghostSize)).toArray(Ghost3D[]::new);
-                livesCounter3D = new LivesCounter3D(() -> Pac3D.createPacManGroup(pacModel3D, theme, livesCounterPacSize), false);
+                livesCounter3D = new LivesCounter3D(() -> createPacManGroup(pacModel3D, theme, livesCounterPacSize), false);
             }
             default -> throw new IllegalGameVariantException(level.game().variant());
         }
 
-        levelCounter3D = new LevelCounter3D();
-        updateLevelCounter3D();
-
-        scores3D = new Scores3D(theme.font("font.arcade", 8));
-
-        scores3D.setPosition(TS, -3 * TS, -3 * TS);
         livesCounter3D.setPosition(2 * TS, 2 * TS, 0);
+        levelCounter3D = new LevelCounter3D();
         levelCounter3D.setRightPosition((level.world().numCols() - 2) * TS, 2 * TS, -HTS);
+        updateLevelCounter3D();
+        scores3D = new Scores3D(theme.font("font.arcade", 8));
+        scores3D.setPosition(TS, -3 * TS, -3 * TS);
 
         root.getChildren().add(scores3D.getRoot());
         root.getChildren().add(levelCounter3D.getRoot());
-        root.getChildren().add(livesCounter3D.getRoot());
-        root.getChildren().addAll(pac3D.getRoot(), pacLight);
+        root.getChildren().add(livesCounter3D.root());
+        root.getChildren().addAll(pac3D.getRoot(), pac3DLight);
         for (int id = 0; id < 4; ++id) {
             root.getChildren().add(ghosts3D[id].root());
         }
         // World must be added *after* the guys. Otherwise, a semi-transparent house is not rendered correctly!
         root.getChildren().add(world3D.getRoot());
 
-        pac3D.lightedPy.bind(PacManGames3dUI.PY_3D_PAC_LIGHT_ENABLED);
-        ghosts3D[GameModel.RED_GHOST].drawModePy.bind(PacManGames3dUI.PY_3D_DRAW_MODE);
-        ghosts3D[GameModel.PINK_GHOST].drawModePy.bind(PacManGames3dUI.PY_3D_DRAW_MODE);
-        ghosts3D[GameModel.CYAN_GHOST].drawModePy.bind(PacManGames3dUI.PY_3D_DRAW_MODE);
-        ghosts3D[GameModel.ORANGE_GHOST].drawModePy.bind(PacManGames3dUI.PY_3D_DRAW_MODE);
-        world3D.drawModePy.bind(PacManGames3dUI.PY_3D_DRAW_MODE);
+        pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
+        ghosts3D[GameModel.RED_GHOST].drawModePy.bind(PY_3D_DRAW_MODE);
+        ghosts3D[GameModel.PINK_GHOST].drawModePy.bind(PY_3D_DRAW_MODE);
+        ghosts3D[GameModel.CYAN_GHOST].drawModePy.bind(PY_3D_DRAW_MODE);
+        ghosts3D[GameModel.ORANGE_GHOST].drawModePy.bind(PY_3D_DRAW_MODE);
+        world3D.drawModePy.bind(PY_3D_DRAW_MODE);
         world3D.floorColorPy.bind(PacManGames3dUI.PY_3D_FLOOR_COLOR);
         world3D.floorTexturePy.bind(PacManGames3dUI.PY_3D_FLOOR_TEXTURE);
         world3D.wallHeightPy.bind(PacManGames3dUI.PY_3D_WALL_HEIGHT);
         world3D.wallThicknessPy.bind(PacManGames3dUI.PY_3D_WALL_THICKNESS);
-        livesCounter3D.drawModePy.bind(PacManGames3dUI.PY_3D_DRAW_MODE);
+        livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
     }
 
     public void replaceBonus3D(Bonus bonus) {
@@ -159,22 +155,26 @@ public class GameLevel3D {
     }
 
     public void update() {
+        boolean hasCredit = GameController.it().hasCredit();
         pac3D.update();
-        Stream.of(ghosts3D).forEach(Ghost3D::update);
+        pac3DLight.update();
+        for (var ghost3D : ghosts3D) {
+            ghost3D.update();
+        }
         if (bonus3D != null) {
             bonus3D.update(level);
         }
+        // reconsider this:
         boolean hideOneLife = level.pac().isVisible() || GameController.it().state() == GameState.GHOST_DYING;
         int numLivesShown = hideOneLife ? level.game().lives() - 1 : level.game().lives();
         livesCounter3D.update(numLivesShown);
-        livesCounter3D.getRoot().setVisible(GameController.it().hasCredit());
+        livesCounter3D.root().setVisible(hasCredit);
         scores3D.update(level);
-        if (GameController.it().hasCredit()) {
+        if (hasCredit) {
             scores3D.setShowPoints(true);
         } else {
             scores3D.setShowText(Color.RED, "GAME OVER!");
         }
-        pacLight.update();
         updateHouseState();
     }
 
@@ -208,35 +208,23 @@ public class GameLevel3D {
     }
 
     private void updateHouseState() {
-        boolean isHouseActive = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+        boolean houseUsed = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
-        boolean accessGranted = isAccessGranted(level.ghosts(), level.world().house().door());
-        if (accessGranted) {
+        boolean houseOpen = level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+            .filter(ghost -> ghost.position().euclideanDistance(level.world().house().door().entryPosition()) <= 1.5 * TS)
+            .anyMatch(Ghost::isVisible);
+        world3D.houseLighting().setLightOn(houseUsed);
+        if (houseOpen) {
             world3D.doorWings3D().forEach(DoorWing3D::playTraversalAnimation);
         }
-        world3D.houseLighting().setLightOn(isHouseActive);
-    }
-
-    private boolean isAccessGranted(Stream<Ghost> ghosts, Door door) {
-        return ghosts.anyMatch(ghost -> ghost.isVisible()
-            && ghost.is(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            && ghost.position().euclideanDistance(door.entryPosition()) <= 1.5 * TS);
-    }
-
-    public GameLevel level() {
-        return level;
     }
 
     public Group root() {
         return root;
     }
 
-    public LivesCounter3D livesCounter3D() {
-        return livesCounter3D;
-    }
-
-    public World3D world3D() {
-        return world3D;
+    public int levelNumber() {
+        return level.number();
     }
 
     public Pac3D pac3D() {
@@ -248,8 +236,12 @@ public class GameLevel3D {
     }
 
     public Ghost3D ghost3D(byte id) {
-        Globals.checkGhostID(id);
+        checkGhostID(id);
         return ghosts3D[id];
+    }
+
+    public World3D world3D() {
+        return world3D;
     }
 
     public Optional<Bonus3D> bonus3D() {
@@ -258,5 +250,9 @@ public class GameLevel3D {
 
     public Scores3D scores3D() {
         return scores3D;
+    }
+
+    public LivesCounter3D livesCounter3D() {
+        return livesCounter3D;
     }
 }

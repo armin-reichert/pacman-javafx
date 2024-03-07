@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -154,7 +155,7 @@ public class PlayScene3D implements GameScene {
     private void replaceGameLevel3D(GameLevel level) {
 
         //TODO In level 1 when switching between 2D and 3D view, the 3D level is always recreated. How to avoid this?
-        if (level.number() > 1 && level3D != null && level3D.level().number() == level.number()) {
+        if (level.number() > 1 && level3D != null && level3D.levelNumber() == level.number()) {
             Logger.info("3D game level up-to-date");
             return;
         }
@@ -216,16 +217,20 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onSceneVariantSwitch() {
-        if (level3D != null) {
+        if (level3D == null) {
+            Logger.error("Oh no, where is my 3D level?");
+            return;
+        }
+        context.gameLevel().ifPresent(level -> {
             level3D.world3D().eatables3D().forEach(
-                eatable3D -> eatable3D.getRoot().setVisible(!level3D.level().world().hasEatenFoodAt(eatable3D.tile())));
+                eatable3D -> eatable3D.getRoot().setVisible(!level.world().hasEatenFoodAt(eatable3D.tile())));
             if (Globals.oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
                 level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
             }
-            if (!level3D.level().isDemoLevel()) {
-                context.soundHandler().ensureSirenStarted(context.gameVariant(), level3D.level().huntingPhaseIndex() / 2);
+            if (!level.isDemoLevel()) {
+                context.soundHandler().ensureSirenStarted(context.gameVariant(), level.huntingPhaseIndex() / 2);
             }
-        }
+        });
     }
 
     @Override
@@ -234,25 +239,26 @@ public class PlayScene3D implements GameScene {
             Logger.error("WTF: No 3D game level exists?");
             return;
         }
-        // When cheat "eat all pellets" has been used, no tile is present in the event.
-        // In that case, ensure that the 3D pellets are in sync with the model.
-        if (e.tile().isEmpty()) {
-            var world = level3D.level().world();
-            world.tiles()
-                .filter(world::hasEatenFoodAt)
-                .map(level3D.world3D()::eatableAt)
-                .flatMap(Optional::stream)
-                .forEach(Eatable3D::onEaten);
-        } else {
-            var tile = e.tile().get();
-            level3D.world3D().eatableAt(tile).ifPresent(level3D::eat);
-        }
+        context.gameLevel().ifPresent(level -> {
+            // When cheat "eat all pellets" has been used, no tile is present in the event.
+            // In that case, ensure that the 3D pellets are in sync with the model.
+            if (e.tile().isEmpty()) {
+                level.world().tiles()
+                    .filter(level.world()::hasEatenFoodAt)
+                    .map(level3D.world3D()::eatableAt)
+                    .flatMap(Optional::stream)
+                    .forEach(Eatable3D::onEaten);
+            } else {
+                Vector2i tile = e.tile().get();
+                level3D.world3D().eatableAt(tile).ifPresent(level3D::eat);
+            }
+        });
     }
 
     @Override
     public void onBonusActivated(GameEvent e) {
         if (level3D != null) {
-            level3D.level().bonus().ifPresent(level3D::replaceBonus3D);
+            context.gameLevel().flatMap(GameLevel::bonus).ifPresent(level3D::replaceBonus3D);
         }
     }
 
