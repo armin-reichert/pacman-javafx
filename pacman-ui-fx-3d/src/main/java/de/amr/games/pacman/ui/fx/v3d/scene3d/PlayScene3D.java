@@ -171,7 +171,6 @@ public class PlayScene3D implements GameScene {
         subSceneRoot.getChildren().set(CHILD_READY_MSG, new Group());
     }
 
-
     private void replaceGameLevel3D(GameLevel level) {
 
         //TODO In level 1 when switching between 2D and 3D view, the 3D level is always recreated. How to avoid this?
@@ -412,20 +411,24 @@ public class PlayScene3D implements GameScene {
     }
 
     private Transition createLevelChangeAnimation() {
-        var rotation = new RotateTransition(Duration.seconds(1.5), level3D.root());
-        rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
-        rotation.setFromAngle(0);
-        rotation.setToAngle(360);
-        rotation.setInterpolator(Interpolator.LINEAR);
         return new SequentialTransition(
             immediateAction(() -> {
                 perspectivePy.unbind();
                 perspectivePy.set(Perspective.TOTAL);
             }),
-            rotation,
+            createLevelRotateAnimation(),
             actionAfterSeconds(0.5, () -> context.clip("audio.sweep").play()),
             actionAfterSeconds(0.5, () -> perspectivePy.bind(PY_3D_PERSPECTIVE))
         );
+    }
+
+    private Transition createLevelRotateAnimation() {
+        var rotation = new RotateTransition(Duration.seconds(1.5), level3D.root());
+        rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
+        rotation.setFromAngle(0);
+        rotation.setToAngle(360);
+        rotation.setInterpolator(Interpolator.LINEAR);
+        return rotation;
     }
 
     private Transition createLevelCompleteAnimation(GameLevel level) {
