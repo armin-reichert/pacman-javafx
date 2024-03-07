@@ -87,7 +87,7 @@ public class ColoredGhost3D {
         root.getTransforms().add(Model3D.scale(root, size));
     }
 
-    public Node getRoot() {
+    public Node root() {
         return root;
     }
 

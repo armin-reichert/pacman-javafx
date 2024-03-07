@@ -76,7 +76,7 @@ public class Ghost3D {
         coloredGhost3D.eyeballsShape().drawModeProperty().bind(drawModePy);
         coloredGhost3D.pupilsShape().drawModeProperty().bind(drawModePy);
 
-        coloredGhostGroup = new Group(coloredGhost3D.getRoot());
+        coloredGhostGroup = new Group(coloredGhost3D.root());
         coloredGhostGroup.getTransforms().add(orientation);
 
         numberQuad = new Box(14, 8, 8);
@@ -90,7 +90,7 @@ public class Ghost3D {
         numberRotation.setInterpolator(Interpolator.LINEAR);
         numberRotation.setRate(0.75);
 
-        brakeAnimation = new RotateTransition(BRAKE_DURATION, coloredGhost3D.getRoot());
+        brakeAnimation = new RotateTransition(BRAKE_DURATION, coloredGhost3D.root());
         brakeAnimation.setAxis(Rotate.Y_AXIS);
         brakeAnimation.setFromAngle(0);
         brakeAnimation.setToAngle(-35);
@@ -106,6 +106,12 @@ public class Ghost3D {
         dressAnimation.setAutoReverse(true);
 
         setLook(Look.NORMAL);
+    }
+
+    public void setNumberImage(Image numberImage) {
+        var material = new PhongMaterial();
+        material.setDiffuseMap(numberImage);
+        numberQuad.setMaterial(material);
     }
 
     public Node root() {
@@ -186,22 +192,11 @@ public class Ghost3D {
                     coloredGhost3D.appearFrightened();
                 }
             }
-            case NUMBER -> {
-                if (numberRotation.getStatus() != Status.RUNNING) {
-                    numberRotation.playFromStart();
-                }
-            }
+            case NUMBER -> numberRotation.playFromStart();
         }
     }
 
     private Look frightenedOrFlashingLook() {
         return level.pac().isPowerFading() ? Look.FLASHING : Look.FRIGHTENED;
-    }
-
-    public void setNumberImage(Image numberImage) {
-        var material = new PhongMaterial();
-        material.setBumpMap(numberImage);
-        material.setDiffuseMap(numberImage);
-        numberQuad.setMaterial(material);
     }
 }
