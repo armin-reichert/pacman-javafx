@@ -107,7 +107,7 @@ public class GameLevel3D {
         root.getChildren().add(livesCounter3D.getRoot());
         root.getChildren().addAll(pac3D.getRoot(), pacLight);
         for (int id = 0; id < 4; ++id) {
-            root.getChildren().add(ghosts3D[id].getRoot());
+            root.getChildren().add(ghosts3D[id].root());
         }
         // World must be added *after* the guys. Otherwise, a semi-transparent house is not rendered correctly!
         root.getChildren().add(world3D.getRoot());

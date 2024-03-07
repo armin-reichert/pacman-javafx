@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.animation.Turn;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
@@ -55,11 +55,11 @@ public class Ghost3D {
     private final Group root;
     private final Group coloredGhostGroup;
     private final ColoredGhost3D coloredGhost3D;
-    private final Box numberQuad = new Box(14, 8, 8);
+    private final Box numberQuad;
     private final Rotate orientation = new Rotate();
     private final RotateTransition brakeAnimation;
     private final RotateTransition dressAnimation;
-    private final RotateTransition eatenAnimation;
+    private final RotateTransition numberRotation;
     private Image numberImage;
     private Look currentLook;
 
@@ -80,14 +80,16 @@ public class Ghost3D {
         coloredGhostGroup = new Group(coloredGhost3D.getRoot());
         coloredGhostGroup.getTransforms().add(orientation);
 
-        root = new Group(coloredGhostGroup, numberQuad);
+        numberQuad = new Box(14, 8, 8);
 
-        eatenAnimation = new RotateTransition(Duration.seconds(1), numberQuad);
-        eatenAnimation.setAxis(Rotate.X_AXIS);
-        eatenAnimation.setFromAngle(0);
-        eatenAnimation.setToAngle(360);
-        eatenAnimation.setInterpolator(Interpolator.LINEAR);
-        eatenAnimation.setRate(0.75);
+        root = new Group(coloredGhostGroup);
+
+        numberRotation = new RotateTransition(Duration.seconds(1), numberQuad);
+        numberRotation.setAxis(Rotate.X_AXIS);
+        numberRotation.setFromAngle(0);
+        numberRotation.setToAngle(360);
+        numberRotation.setInterpolator(Interpolator.LINEAR);
+        numberRotation.setRate(0.75);
 
         brakeAnimation = new RotateTransition(BRAKE_DURATION, coloredGhost3D.getRoot());
         brakeAnimation.setAxis(Rotate.Y_AXIS);
@@ -103,15 +105,18 @@ public class Ghost3D {
         dressAnimation.setToAngle(15);
         dressAnimation.setCycleCount(Animation.INDEFINITE);
         dressAnimation.setAutoReverse(true);
+
+        setLook(Look.NORMAL);
     }
 
-    public Node getRoot() {
+    public Node root() {
         return root;
     }
 
     public void init() {
         brakeAnimation.stop();
         dressAnimation.stop();
+        numberRotation.stop();
         updateTransform();
         updateLook();
     }
@@ -123,26 +128,27 @@ public class Ghost3D {
     }
 
     private void updateTransform() {
-        root.setTranslateX(ghost.center().x());
-        root.setTranslateY(ghost.center().y());
+        Vector2f position = ghost.center();
+        root.setTranslateX(position.x());
+        root.setTranslateY(position.y());
         root.setTranslateZ(-5);
+        // TODO: make transition to new wish dir if changed
         orientation.setAngle(Turn.angle(ghost.wishDir()));
-        coloredGhostGroup.setVisible(currentLook != Look.NUMBER);
-        numberQuad.setVisible(currentLook == Look.NUMBER);
-        root.setVisible(ghost.isVisible() && !outsideWorld(level.world()));
+        boolean outsideWorld = position.x() < 0 || position.x() > level.world().numCols() * TS;
+        root.setVisible(ghost.isVisible() && !outsideWorld);
     }
 
     private void updateAnimations() {
-        if (currentLook != Look.NUMBER) {
-            eatenAnimation.stop();
+        if (currentLook == Look.NUMBER) {
+            dressAnimation.stop();
+        } else {
+            numberRotation.stop();
             if (ghost.enteredTunnel()) {
                 brakeAnimation.playFromStart();
             }
             if (dressAnimation.getStatus() != Status.RUNNING) {
                 dressAnimation.play();
             }
-        } else {
-            dressAnimation.stop();
         }
     }
 
@@ -165,6 +171,11 @@ public class Ghost3D {
 
     private void setLook(Look newLook) {
         currentLook = newLook;
+        if (currentLook == Look.NUMBER) {
+            root.getChildren().setAll(numberQuad);
+        } else {
+            root.getChildren().setAll(coloredGhostGroup);
+        }
         switch (newLook) {
             case NORMAL     -> coloredGhost3D.appearNormal();
             case FRIGHTENED -> coloredGhost3D.appearFrightened();
@@ -181,8 +192,8 @@ public class Ghost3D {
                 material.setBumpMap(numberImage);
                 material.setDiffuseMap(numberImage);
                 numberQuad.setMaterial(material);
-                if (eatenAnimation.getStatus() != Status.RUNNING) {
-                    eatenAnimation.playFromStart();
+                if (numberRotation.getStatus() != Status.RUNNING) {
+                    numberRotation.playFromStart();
                 }
             }
         }
@@ -190,11 +201,6 @@ public class Ghost3D {
 
     private Look frightenedOrFlashingLook() {
         return level.pac().isPowerFading() ? Look.FLASHING : Look.FRIGHTENED;
-    }
-
-    private boolean outsideWorld(World world) {
-        double centerX = ghost.position().x() + HTS;
-        return centerX < 0 || centerX > world.numCols() * TS;
     }
 
     public void setNumberImage(Image numberImage) {
