@@ -162,40 +162,30 @@ public class Ghost3D {
     }
 
     private void updateLook() {
-        if (ghost.state() == null) {
-            Logger.error("Cannot update ghost 3D look because ghost state is undefined");
-            return;
-        }
         var newLook = switch (ghost.state()) {
-            case LOCKED, LEAVING_HOUSE -> normalOrFrightenedOrFlashingLook();
+            case LOCKED, LEAVING_HOUSE -> ghost.killable(level.pac()) ? frightenedOrFlashingLook() : Look.NORMAL;
             case FRIGHTENED -> frightenedOrFlashingLook();
             case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
             case EATEN -> Look.NUMBER;
             default -> Look.NORMAL;
         };
         if (currentLook != newLook) {
-            setLook(newLook, level.data().numFlashes());
+            setLook(newLook);
         }
     }
 
-    private void setLook(Look look, int numFlashes) {
-        this.currentLook = look;
-        switch (look) {
-            case NORMAL -> {
-                coloredGhost3D.appearNormal();
-            }
-            case FRIGHTENED -> {
-                coloredGhost3D.appearFrightened();
-            }
+    private void setLook(Look newLook) {
+        this.currentLook = newLook;
+        switch (newLook) {
+            case NORMAL     -> coloredGhost3D.appearNormal();
+            case FRIGHTENED -> coloredGhost3D.appearFrightened();
+            case EYES       -> coloredGhost3D.appearEyesOnly();
             case FLASHING -> {
-                if (numFlashes > 0) {
-                    coloredGhost3D.appearFlashing(numFlashes, 1.0);
+                if (level.data().numFlashes() > 0) {
+                    coloredGhost3D.appearFlashing(level.data().numFlashes(), 1.0);
                 } else {
                     coloredGhost3D.appearFrightened();
                 }
-            }
-            case EYES -> {
-                coloredGhost3D.appearEyesOnly();
             }
             case NUMBER -> {
                 var material = new PhongMaterial();
@@ -205,16 +195,8 @@ public class Ghost3D {
                 numberGroup.setTranslateX(ghost.center().x());
                 numberGroup.setTranslateY(ghost.center().y());
             }
-            default -> throw new IllegalArgumentException("Unknown Ghost3D look: %s ".formatted(look));
         }
-        showAsGhost(look != Look.NUMBER);
-    }
-
-    private Look normalOrFrightenedOrFlashingLook() {
-        if (level.pac().powerTimer().isRunning() && ghost.killedIndex() == -1) {
-            return frightenedOrFlashingLook();
-        }
-        return Look.NORMAL;
+        showAsGhost(newLook != Look.NUMBER);
     }
 
     private Look frightenedOrFlashingLook() {

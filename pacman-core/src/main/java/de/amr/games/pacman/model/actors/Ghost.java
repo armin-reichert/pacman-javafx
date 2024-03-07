@@ -323,7 +323,7 @@ public class Ghost extends Creature implements AnimationDirector {
         }
     }
 
-    private boolean killable(Pac pac) {
+    public boolean killable(Pac pac) {
         return pac.powerTimer().isRunning() && killedIndex == -1;
     }
 
