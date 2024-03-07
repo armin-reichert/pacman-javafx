@@ -17,7 +17,6 @@ import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.entity.*;
@@ -413,7 +412,7 @@ public class PlayScene3D implements GameScene {
         rotation.setToAngle(360);
         rotation.setInterpolator(Interpolator.LINEAR);
         return new SequentialTransition(
-            actionAfterSeconds(1.0, () -> {
+            immediateAction(() -> {
                 perspectivePy.unbind();
                 perspectivePy.set(Perspective.TOTAL);
             }),
