@@ -60,7 +60,6 @@ public class Ghost3D {
     private final RotateTransition brakeAnimation;
     private final RotateTransition dressAnimation;
     private final RotateTransition numberRotation;
-    private Image numberImage;
     private Look currentLook;
 
     public Ghost3D(GameLevel level, Ghost ghost, Model3D model3D, Theme theme, double size) {
@@ -169,14 +168,14 @@ public class Ghost3D {
         };
     }
 
-    private void setLook(Look newLook) {
-        currentLook = newLook;
+    private void setLook(Look look) {
+        currentLook = look;
         if (currentLook == Look.NUMBER) {
             root.getChildren().setAll(numberQuad);
         } else {
             root.getChildren().setAll(coloredGhostGroup);
         }
-        switch (newLook) {
+        switch (look) {
             case NORMAL     -> coloredGhost3D.appearNormal();
             case FRIGHTENED -> coloredGhost3D.appearFrightened();
             case EYES       -> coloredGhost3D.appearEyesOnly();
@@ -188,10 +187,6 @@ public class Ghost3D {
                 }
             }
             case NUMBER -> {
-                var material = new PhongMaterial();
-                material.setBumpMap(numberImage);
-                material.setDiffuseMap(numberImage);
-                numberQuad.setMaterial(material);
                 if (numberRotation.getStatus() != Status.RUNNING) {
                     numberRotation.playFromStart();
                 }
@@ -204,6 +199,9 @@ public class Ghost3D {
     }
 
     public void setNumberImage(Image numberImage) {
-        this.numberImage = numberImage;
+        var material = new PhongMaterial();
+        material.setBumpMap(numberImage);
+        material.setDiffuseMap(numberImage);
+        numberQuad.setMaterial(material);
     }
 }
