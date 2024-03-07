@@ -25,7 +25,6 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static java.util.Objects.requireNonNull;
@@ -35,11 +34,11 @@ import static java.util.Objects.requireNonNull;
  * <p>
  * A ghost is displayed in one of the following modes:
  * <ul>
- * <li>normal: colored ghost with blue eyes,
- * <li>frightened: blue ghost with empty pinkish eyes (ghost looking blind),
- * <li>frightened/flashing: blue-white flashing skin, pink-red flashing eyes,
- * <li>dead: blue eyes only,
- * <li>eaten: number cube showing eaten ghost's value.
+ * <li>{@link Look#NORMAL}: colored ghost with blue eyes,
+ * <li>{@link Look#FRIGHTENED}: blue ghost with empty pinkish eyes (ghost looking blind),
+ * <li>{@link Look#FLASHING}: blue-white flashing skin, pink-red flashing eyes,
+ * <li>{@link Look#EYES} blue eyes only,
+ * <li>{@link Look#NUMBER}: number cube showing eaten ghost's value.
  * </ul>
  *
  * @author Armin Reichert
@@ -48,9 +47,7 @@ public class Ghost3D {
 
     private static final Duration BRAKE_DURATION = Duration.seconds(0.4);
 
-    private enum Look {
-        NORMAL, FRIGHTENED, FLASHING, EYES, NUMBER;
-    }
+    public enum Look { NORMAL, FRIGHTENED, FLASHING, EYES, NUMBER }
 
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
@@ -151,31 +148,25 @@ public class Ghost3D {
         }
     }
 
-    private void showAsGhost(boolean showAsGhost) {
-        coloredGhostGroup.setVisible(showAsGhost);
-        numberCube.setVisible(!showAsGhost);
-        if (showAsGhost) {
-            eatenAnimation.stop();
-        } else if (eatenAnimation.getStatus() != Status.RUNNING) {
-            eatenAnimation.playFromStart();
+    private void updateLook() {
+        var newLook = computeLook();
+        if (currentLook != newLook) {
+            setLook(newLook);
         }
     }
 
-    private void updateLook() {
-        var newLook = switch (ghost.state()) {
+    private Look computeLook() {
+        return switch (ghost.state()) {
             case LOCKED, LEAVING_HOUSE -> ghost.killable(level.pac()) ? frightenedOrFlashingLook() : Look.NORMAL;
             case FRIGHTENED -> frightenedOrFlashingLook();
             case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
             case EATEN -> Look.NUMBER;
             default -> Look.NORMAL;
         };
-        if (currentLook != newLook) {
-            setLook(newLook);
-        }
     }
 
     private void setLook(Look newLook) {
-        this.currentLook = newLook;
+        currentLook = newLook;
         switch (newLook) {
             case NORMAL     -> coloredGhost3D.appearNormal();
             case FRIGHTENED -> coloredGhost3D.appearFrightened();
@@ -192,11 +183,21 @@ public class Ghost3D {
                 material.setBumpMap(numberImage);
                 material.setDiffuseMap(numberImage);
                 numberCube.setMaterial(material);
+                coloredGhostGroup.setVisible(false);
                 numberGroup.setTranslateX(ghost.center().x());
                 numberGroup.setTranslateY(ghost.center().y());
+                numberCube.setVisible(true);
+                if (eatenAnimation.getStatus() != Status.RUNNING) {
+                    eatenAnimation.playFromStart();
+                }
             }
         }
-        showAsGhost(newLook != Look.NUMBER);
+
+        if (newLook != Look.NUMBER) {
+            coloredGhostGroup.setVisible(true);
+            numberCube.setVisible(false);
+            eatenAnimation.stop();
+        }
     }
 
     private Look frightenedOrFlashingLook() {
