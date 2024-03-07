@@ -134,7 +134,7 @@ public class Ghost3D {
         position.setX(ghost.center().x());
         position.setY(ghost.center().y());
         position.setZ(-5);
-        orientation.setAngle(Turn.angle(ghost.moveDir()));
+        orientation.setAngle(Turn.angle(ghost.wishDir()));
         root.setVisible(ghost.isVisible() && !outsideWorld(level.world()));
     }
 
