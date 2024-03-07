@@ -54,10 +54,9 @@ public class Ghost3D {
     private final GameLevel level;
     private final Ghost ghost;
     private final Group root;
-    private final Group numberGroup;
     private final Group coloredGhostGroup;
     private final ColoredGhost3D coloredGhost3D;
-    private final Box numberCube = new Box(14, 8, 8);
+    private final Box numberQuad = new Box(14, 8, 8);
     private final Translate position = new Translate();
     private final Rotate orientation = new Rotate();
     private final RotateTransition brakeAnimation;
@@ -81,13 +80,12 @@ public class Ghost3D {
         coloredGhost3D.pupilsShape().drawModeProperty().bind(drawModePy);
 
         coloredGhostGroup = new Group(coloredGhost3D.getRoot());
-        coloredGhostGroup.getTransforms().addAll(position, orientation);
+        coloredGhostGroup.getTransforms().add(orientation);
 
-        numberGroup = new Group(numberCube);
+        root = new Group(coloredGhostGroup, numberQuad);
+        root.getTransforms().add(position);
 
-        root = new Group(coloredGhostGroup, numberGroup);
-
-        eatenAnimation = new RotateTransition(Duration.seconds(1), numberCube);
+        eatenAnimation = new RotateTransition(Duration.seconds(1), numberQuad);
         eatenAnimation.setAxis(Rotate.X_AXIS);
         eatenAnimation.setFromAngle(0);
         eatenAnimation.setToAngle(360);
@@ -182,11 +180,9 @@ public class Ghost3D {
                 var material = new PhongMaterial();
                 material.setBumpMap(numberImage);
                 material.setDiffuseMap(numberImage);
-                numberCube.setMaterial(material);
+                numberQuad.setMaterial(material);
                 coloredGhostGroup.setVisible(false);
-                numberGroup.setTranslateX(ghost.center().x());
-                numberGroup.setTranslateY(ghost.center().y());
-                numberCube.setVisible(true);
+                numberQuad.setVisible(true);
                 if (eatenAnimation.getStatus() != Status.RUNNING) {
                     eatenAnimation.playFromStart();
                 }
@@ -195,7 +191,7 @@ public class Ghost3D {
 
         if (newLook != Look.NUMBER) {
             coloredGhostGroup.setVisible(true);
-            numberCube.setVisible(false);
+            numberQuad.setVisible(false);
             eatenAnimation.stop();
         }
     }
