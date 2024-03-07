@@ -74,9 +74,15 @@ public class PlayScene3D implements GameScene {
         }
     };
 
-    private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
-    // initial size is irrelevant, gets bound to main scene size anyway:
-    private final SubScene fxSubScene = new SubScene(new Group(), 42, 42, true, SceneAntialiasing.BALANCED);
+    private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Map.of(
+        Perspective.DRONE,            new CamDrone(),
+        Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer(),
+        Perspective.NEAR_PLAYER,      new CamNearPlayer(),
+        Perspective.TOTAL,            new CamTotal()
+    ));
+    private final Group subSceneRoot = new Group();
+    // initial scene size is irrelevant, gets bound to main scene size anyway:
+    private final SubScene fxSubScene = new SubScene(subSceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
     private final PerspectiveCamera camera = new PerspectiveCamera(true);
     private final AmbientLight ambientLight = new AmbientLight();
     private final CoordSystem coordSystem = new CoordSystem();
@@ -86,10 +92,6 @@ public class PlayScene3D implements GameScene {
     private boolean scoreVisible;
 
     public PlayScene3D() {
-        camControllerMap.put(Perspective.DRONE, new CamDrone());
-        camControllerMap.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
-        camControllerMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
-        camControllerMap.put(Perspective.TOTAL, new CamTotal());
         fxSubScene.setCamera(camera);
         perspectivePy.bind(PY_3D_PERSPECTIVE);
         coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
@@ -101,7 +103,7 @@ public class PlayScene3D implements GameScene {
         setScoreVisible(true);
         readyMessageText3D = createReadyMessageText3D(context.theme());
         // first child is placeholder for 3D level
-        fxSubScene.setRoot(new Group(new Group(), readyMessageText3D.getRoot(), coordSystem, ambientLight));
+        subSceneRoot.getChildren().setAll(new Group(), readyMessageText3D.getRoot(), coordSystem, ambientLight);
         Logger.info("3D play scene initialized.");
     }
 
@@ -168,7 +170,7 @@ public class PlayScene3D implements GameScene {
 
         level3D = new GameLevel3D(level, context.theme(), context.spriteSheet());
         // replace initial placeholder or previous 3D level
-        ((Group) fxSubScene.getRoot()).getChildren().set(0, level3D.root());
+        subSceneRoot.getChildren().set(0, level3D.root());
 
         // center over origin
         double centerX = level.world().numCols() * HTS;
