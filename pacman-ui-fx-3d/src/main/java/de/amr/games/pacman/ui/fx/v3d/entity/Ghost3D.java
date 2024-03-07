@@ -127,11 +127,14 @@ public class Ghost3D {
         root.setTranslateY(ghost.center().y());
         root.setTranslateZ(-5);
         orientation.setAngle(Turn.angle(ghost.wishDir()));
+        coloredGhostGroup.setVisible(currentLook != Look.NUMBER);
+        numberQuad.setVisible(currentLook == Look.NUMBER);
         root.setVisible(ghost.isVisible() && !outsideWorld(level.world()));
     }
 
     private void updateAnimations() {
         if (currentLook != Look.NUMBER) {
+            eatenAnimation.stop();
             if (ghost.enteredTunnel()) {
                 brakeAnimation.playFromStart();
             }
@@ -178,18 +181,10 @@ public class Ghost3D {
                 material.setBumpMap(numberImage);
                 material.setDiffuseMap(numberImage);
                 numberQuad.setMaterial(material);
-                coloredGhostGroup.setVisible(false);
-                numberQuad.setVisible(true);
                 if (eatenAnimation.getStatus() != Status.RUNNING) {
                     eatenAnimation.playFromStart();
                 }
             }
-        }
-
-        if (newLook != Look.NUMBER) {
-            coloredGhostGroup.setVisible(true);
-            numberQuad.setVisible(false);
-            eatenAnimation.stop();
         }
     }
 
