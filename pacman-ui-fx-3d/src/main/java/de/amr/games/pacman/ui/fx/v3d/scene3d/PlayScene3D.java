@@ -17,6 +17,7 @@ import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.entity.*;
@@ -28,6 +29,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -55,6 +57,18 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class PlayScene3D implements GameScene {
 
+    private static Text3D createReadyMessageText3D(Theme theme) {
+        Text3D text3D = new Text3D();
+        text3D.beginBatch();
+        text3D.setTextColor(theme.color("palette.yellow"));
+        text3D.setFont(theme.font("font.arcade", 6));
+        text3D.setText("READY!");
+        text3D.endBatch();
+        text3D.translate(0, 16, -4.5);
+        text3D.rotate(Rotate.X_AXIS, 90);
+        return text3D;
+    }
+
     private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Perspective.class);
     private final SubScene fxSubScene;
     private final PerspectiveCamera camera;
@@ -65,7 +79,9 @@ public class PlayScene3D implements GameScene {
             currentCamController().reset(camera);
         }
     };
-    private final Text3D readyMessageText3D;
+    private final AmbientLight ambientLight = new AmbientLight();
+    private final CoordSystem coordSystem = new CoordSystem();
+    private Text3D readyMessageText3D;
     private GameLevel3D level3D;
     private GameSceneContext context;
     private boolean scoreVisible;
@@ -76,18 +92,13 @@ public class PlayScene3D implements GameScene {
         camControllerMap.put(Perspective.NEAR_PLAYER, new CamNearPlayer());
         camControllerMap.put(Perspective.TOTAL, new CamTotal());
 
-        var coordSystem = new CoordSystem();
         coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
-
-        var ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
 
-        readyMessageText3D = new Text3D();
         setScoreVisible(true);
 
-        var sceneRoot = new Group(new Text("<3D game level>"), coordSystem, ambientLight, readyMessageText3D.getRoot());
         // initial sub-scene size is irrelevant, gets bound to main scene size in init method
-        fxSubScene = new SubScene(sceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
+        fxSubScene = new SubScene(new Group(), 42, 42, true, SceneAntialiasing.BALANCED);
         camera = new PerspectiveCamera(true);
         fxSubScene.setCamera(camera);
     }
@@ -108,7 +119,9 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void init() {
-        createReadyMessageText3D();
+        readyMessageText3D = createReadyMessageText3D(context.theme());
+        // first child is placeholder for 3D level
+        fxSubScene.setRoot(new Group(new Group(), readyMessageText3D.getRoot(), coordSystem, ambientLight));
         perspectivePy.bind(PY_3D_PERSPECTIVE);
         Logger.info("3D play scene initialized.");
     }
@@ -183,16 +196,6 @@ public class PlayScene3D implements GameScene {
             PY_3D_FLOOR_TEXTURE.set(names.get(randomInt(0, names.size())));
         }
         Logger.info("3D game level {} created.", level.number());
-    }
-
-    private void createReadyMessageText3D() {
-        readyMessageText3D.beginBatch();
-        readyMessageText3D.setTextColor(Color.YELLOW);
-        readyMessageText3D.setFont(context.theme().font("font.arcade", 6));
-        readyMessageText3D.setText("READY!");
-        readyMessageText3D.endBatch();
-        readyMessageText3D.translate(0, 16, -4.5);
-        readyMessageText3D.rotate(Rotate.X_AXIS, 90);
     }
 
     @Override
