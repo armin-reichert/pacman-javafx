@@ -23,7 +23,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -57,7 +56,6 @@ public class Ghost3D {
     private final Group coloredGhostGroup;
     private final ColoredGhost3D coloredGhost3D;
     private final Box numberQuad = new Box(14, 8, 8);
-    private final Translate position = new Translate();
     private final Rotate orientation = new Rotate();
     private final RotateTransition brakeAnimation;
     private final RotateTransition dressAnimation;
@@ -83,7 +81,6 @@ public class Ghost3D {
         coloredGhostGroup.getTransforms().add(orientation);
 
         root = new Group(coloredGhostGroup, numberQuad);
-        root.getTransforms().add(position);
 
         eatenAnimation = new RotateTransition(Duration.seconds(1), numberQuad);
         eatenAnimation.setAxis(Rotate.X_AXIS);
@@ -126,9 +123,9 @@ public class Ghost3D {
     }
 
     private void updateTransform() {
-        position.setX(ghost.center().x());
-        position.setY(ghost.center().y());
-        position.setZ(-5);
+        root.setTranslateX(ghost.center().x());
+        root.setTranslateY(ghost.center().y());
+        root.setTranslateZ(-5);
         orientation.setAngle(Turn.angle(ghost.wishDir()));
         root.setVisible(ghost.isVisible() && !outsideWorld(level.world()));
     }
