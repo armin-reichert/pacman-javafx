@@ -25,6 +25,8 @@ public class PacManGames2dApp extends Application {
         }
         GameController.it().newGame(settings.variant);
         Logger.info("Game initialized: {}", settings);
+        Logger.info("Java version is {}", Runtime.version());
+        Logger.info("JavaFX version is {}", System.getProperty("javafx.runtime.version"));
     }
 
     @Override
