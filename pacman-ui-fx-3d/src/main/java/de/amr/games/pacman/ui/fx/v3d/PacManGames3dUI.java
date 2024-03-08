@@ -14,6 +14,7 @@ import de.amr.games.pacman.ui.fx.Settings;
 import de.amr.games.pacman.ui.fx.input.KeyboardPacSteering;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
@@ -91,66 +92,65 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     public static final String NO_TEXTURE = "No Texture";
 
-    public static final ResourceManager RM = () -> PacManGames3dUI.class;
+    private static void loadAssets3D(Theme theme) {
+        ResourceManager rm = () -> PacManGames3dUI.class;
 
-    static {
+        theme.set("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
+        theme.set("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
+        theme.set("model3D.pellet", new Model3D(rm.url("model3D/12206_Fruit_v1_L3.obj")));
 
-        THEME.set("model3D.pacman", new Model3D(RM.url("model3D/pacman.obj")));
-        THEME.set("model3D.ghost",  new Model3D(RM.url("model3D/ghost.obj")));
-        THEME.set("model3D.pellet", new Model3D(RM.url("model3D/12206_Fruit_v1_L3.obj")));
-
-        THEME.set("model3D.wallpaper", RM.imageBackground("graphics/sea-wallpaper.jpg",
+        theme.set("model3D.wallpaper", rm.imageBackground("graphics/sea-wallpaper.jpg",
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
             BackgroundPosition.CENTER,
             new BackgroundSize(1, 1, true, true, false, true)
         ));
 
-        THEME.set("model3D.wallpaper.night", RM.imageBackground("graphics/sea-wallpaper-night.jpg",
+        theme.set("model3D.wallpaper.night", rm.imageBackground("graphics/sea-wallpaper-night.jpg",
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
             BackgroundPosition.CENTER,
             new BackgroundSize(1, 1, true, true, false, true)
         ));
 
-        THEME.set("image.armin1970", RM.image("graphics/armin.jpg"));
-        THEME.set("icon.play",       RM.image("graphics/icons/play.png"));
-        THEME.set("icon.stop",       RM.image("graphics/icons/stop.png"));
-        THEME.set("icon.step",       RM.image("graphics/icons/step.png"));
+        theme.set("image.armin1970", rm.loadImage("graphics/armin.jpg"));
+        theme.set("icon.play",       rm.loadImage("graphics/icons/play.png"));
+        theme.set("icon.stop",       rm.loadImage("graphics/icons/stop.png"));
+        theme.set("icon.step",       rm.loadImage("graphics/icons/step.png"));
 
         var textureNames = List.of("knobs", "plastic", "wood");
         for (var name : textureNames) {
             var texture = new PhongMaterial();
-            texture.setBumpMap   (RM.image("graphics/textures/%s-bump.jpg".formatted(name)));
-            texture.setDiffuseMap(RM.image("graphics/textures/%s-diffuse.jpg".formatted(name)));
+            texture.setBumpMap   (rm.loadImage("graphics/textures/%s-bump.jpg".formatted(name)));
+            texture.setDiffuseMap(rm.loadImage("graphics/textures/%s-diffuse.jpg".formatted(name)));
             texture.diffuseColorProperty().bind(PY_3D_FLOOR_COLOR);
-            THEME.set("texture." + name, texture);
+            theme.set("texture." + name, texture);
         }
-        THEME.addAllToArray("texture.names", textureNames.toArray());
+        theme.addAllToArray("texture.names", textureNames.toArray());
 
-        THEME.set("ghost.0.color.normal.dress",      THEME.color("palette.red"));
-        THEME.set("ghost.0.color.normal.eyeballs",   THEME.color("palette.pale"));
-        THEME.set("ghost.0.color.normal.pupils",     THEME.color("palette.blue"));
+        theme.set("ghost.0.color.normal.dress",      theme.color("palette.red"));
+        theme.set("ghost.0.color.normal.eyeballs",   theme.color("palette.pale"));
+        theme.set("ghost.0.color.normal.pupils",     theme.color("palette.blue"));
 
-        THEME.set("ghost.1.color.normal.dress",      THEME.color("palette.pink"));
-        THEME.set("ghost.1.color.normal.eyeballs",   THEME.color("palette.pale"));
-        THEME.set("ghost.1.color.normal.pupils",     THEME.color("palette.blue"));
+        theme.set("ghost.1.color.normal.dress",      theme.color("palette.pink"));
+        theme.set("ghost.1.color.normal.eyeballs",   theme.color("palette.pale"));
+        theme.set("ghost.1.color.normal.pupils",     theme.color("palette.blue"));
 
-        THEME.set("ghost.2.color.normal.dress",      THEME.color("palette.cyan"));
-        THEME.set("ghost.2.color.normal.eyeballs",   THEME.color("palette.pale"));
-        THEME.set("ghost.2.color.normal.pupils",     THEME.color("palette.blue"));
+        theme.set("ghost.2.color.normal.dress",      theme.color("palette.cyan"));
+        theme.set("ghost.2.color.normal.eyeballs",   theme.color("palette.pale"));
+        theme.set("ghost.2.color.normal.pupils",     theme.color("palette.blue"));
 
-        THEME.set("ghost.3.color.normal.dress",      THEME.color("palette.orange"));
-        THEME.set("ghost.3.color.normal.eyeballs",   THEME.color("palette.pale"));
-        THEME.set("ghost.3.color.normal.pupils",     THEME.color("palette.blue"));
+        theme.set("ghost.3.color.normal.dress",      theme.color("palette.orange"));
+        theme.set("ghost.3.color.normal.eyeballs",   theme.color("palette.pale"));
+        theme.set("ghost.3.color.normal.pupils",     theme.color("palette.blue"));
 
-        THEME.set("ghost.color.frightened.dress",    THEME.color("palette.blue"));
-        THEME.set("ghost.color.frightened.eyeballs", THEME.color("palette.rose"));
-        THEME.set("ghost.color.frightened.pupils",   THEME.color("palette.rose"));
+        theme.set("ghost.color.frightened.dress",    theme.color("palette.blue"));
+        theme.set("ghost.color.frightened.eyeballs", theme.color("palette.rose"));
+        theme.set("ghost.color.frightened.pupils",   theme.color("palette.rose"));
 
-        THEME.set("ghost.color.flashing.dress",      THEME.color("palette.pale"));
-        THEME.set("ghost.color.flashing.eyeballs",   THEME.color("palette.rose"));
-        THEME.set("ghost.color.flashing.pupils",     THEME.color("palette.red"));
+        theme.set("ghost.color.flashing.dress",      theme.color("palette.pale"));
+        theme.set("ghost.color.flashing.eyeballs",   theme.color("palette.rose"));
+        theme.set("ghost.color.flashing.pupils",     theme.color("palette.red"));
 
-        THEME.addAllToArray("mspacman.maze.foodColor",
+        theme.addAllToArray("mspacman.maze.foodColor",
             Color.rgb(222, 222, 255),
             Color.rgb(255, 255, 0),
             Color.rgb(255, 0, 0),
@@ -159,7 +159,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             Color.rgb(222, 222, 255)
         );
 
-        THEME.addAllToArray("mspacman.maze.wallBaseColor",
+        theme.addAllToArray("mspacman.maze.wallBaseColor",
             Color.rgb(255, 0, 0),
             Color.rgb(222, 222, 255),
             Color.rgb(222, 222, 255),
@@ -168,7 +168,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             Color.rgb(255, 0, 0)
         );
 
-        THEME.addAllToArray("mspacman.maze.wallTopColor",
+        theme.addAllToArray("mspacman.maze.wallTopColor",
             Color.rgb(255, 0, 0),
             Color.rgb(222, 222, 255),
             Color.rgb(222, 222, 255),
@@ -177,7 +177,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             Color.rgb(255, 0, 0)
         );
 
-        THEME.addAllToArray("mspacman.maze.wallMiddleColor",
+        theme.addAllToArray("mspacman.maze.wallMiddleColor",
             Color.rgb(255, 183, 174),
             Color.rgb(71, 183, 255),
             Color.rgb(222, 151, 81),
@@ -186,32 +186,35 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             Color.rgb(222, 183, 174)
         );
 
-        THEME.set("mspacman.color.head",           Color.rgb(255, 255, 0));
-        THEME.set("mspacman.color.palate",         Color.rgb(191, 79, 61));
-        THEME.set("mspacman.color.eyes",           Color.rgb(33, 33, 33));
-        THEME.set("mspacman.color.boobs",          Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
-        THEME.set("mspacman.color.hairbow",        Color.rgb(255, 0, 0));
-        THEME.set("mspacman.color.hairbow.pearls", Color.rgb(33, 33, 255));
+        theme.set("mspacman.color.head",           Color.rgb(255, 255, 0));
+        theme.set("mspacman.color.palate",         Color.rgb(191, 79, 61));
+        theme.set("mspacman.color.eyes",           Color.rgb(33, 33, 33));
+        theme.set("mspacman.color.boobs",          Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
+        theme.set("mspacman.color.hairbow",        Color.rgb(255, 0, 0));
+        theme.set("mspacman.color.hairbow.pearls", Color.rgb(33, 33, 255));
 
-        THEME.set("mspacman.maze.doorColor",       Color.rgb(255, 183, 255));
+        theme.set("mspacman.maze.doorColor",       Color.rgb(255, 183, 255));
 
-        THEME.set("pacman.maze.wallBaseColor",     Color.rgb(33, 33, 255).brighter());
-        THEME.set("pacman.maze.wallMiddleColor",   Color.rgb(33, 33, 255).darker());
-        THEME.set("pacman.maze.wallTopColor",      Color.rgb(33, 33, 255).brighter());
-        THEME.set("pacman.maze.doorColor",         Color.rgb(252, 181, 255));
+        theme.set("pacman.maze.wallBaseColor",     Color.rgb(33, 33, 255).brighter());
+        theme.set("pacman.maze.wallMiddleColor",   Color.rgb(33, 33, 255).darker());
+        theme.set("pacman.maze.wallTopColor",      Color.rgb(33, 33, 255).brighter());
+        theme.set("pacman.maze.doorColor",         Color.rgb(252, 181, 255));
 
-        THEME.set("pacman.color.head",             Color.rgb(255, 255, 0));
-        THEME.set("pacman.color.palate",           Color.rgb(191, 79, 61));
-        THEME.set("pacman.color.eyes",             Color.rgb(33, 33, 33));
+        theme.set("pacman.color.head",             Color.rgb(255, 255, 0));
+        theme.set("pacman.color.palate",           Color.rgb(191, 79, 61));
+        theme.set("pacman.color.eyes",             Color.rgb(33, 33, 33));
 
         // dashboard
-        THEME.set("infobox.min_col_width",         180);
-        THEME.set("infobox.min_label_width",       120);
-        THEME.set("infobox.text_color",            Color.WHITE);
-        THEME.set("infobox.label_font",            Font.font("Tahoma", 12));
-        THEME.set("infobox.text_font",             Font.font("Tahoma", 12));
+        theme.set("infobox.min_col_width",         180);
+        theme.set("infobox.min_label_width",       120);
+        theme.set("infobox.text_color",            Color.WHITE);
+        theme.set("infobox.label_font",            Font.font("Tahoma", 12));
+        theme.set("infobox.text_font",             Font.font("Tahoma", 12));
+    }
 
-        Logger.info("3D theme loaded");
+    static {
+        loadAssets3D(PacManGames2dUI.THEME);
+        Logger.info("2D theme enriched by 3D assets");
     }
 
     public PacManGames3dUI(Stage stage, Settings settings) {

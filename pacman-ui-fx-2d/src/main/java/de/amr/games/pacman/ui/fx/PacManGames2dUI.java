@@ -5,12 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.Steering;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.lib.Steering;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
@@ -93,117 +93,118 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
 
-    protected static final Theme THEME = new Theme();
-
-    static {
-        final ResourceManager rm = () -> PacManGames2dUI.class;
+    private static void loadAssets2D(Theme theme) {
+        ResourceManager rm = () -> PacManGames2dUI.class;
 
         //
         // Common to both games
         //
 
-        THEME.set("palette.black",  Color.rgb(0, 0, 0));
-        THEME.set("palette.red",    Color.rgb(255, 0, 0));
-        THEME.set("palette.yellow", Color.rgb(255, 255, 0));
-        THEME.set("palette.pink",   Color.rgb(252, 181, 255));
-        THEME.set("palette.cyan",   Color.rgb(0, 255, 255));
-        THEME.set("palette.orange", Color.rgb(251, 190, 88));
-        THEME.set("palette.blue",   Color.rgb(33, 33, 255));
-        THEME.set("palette.pale",   Color.rgb(222, 222, 255));
-        THEME.set("palette.rose",   Color.rgb(252, 187, 179));
+        theme.set("palette.black",                    Color.rgb(0, 0, 0));
+        theme.set("palette.red",                      Color.rgb(255, 0, 0));
+        theme.set("palette.yellow",                   Color.rgb(255, 255, 0));
+        theme.set("palette.pink",                     Color.rgb(252, 181, 255));
+        theme.set("palette.cyan",                     Color.rgb(0, 255, 255));
+        theme.set("palette.orange",                   Color.rgb(251, 190, 88));
+        theme.set("palette.blue",                     Color.rgb(33, 33, 255));
+        theme.set("palette.pale",                     Color.rgb(222, 222, 255));
+        theme.set("palette.rose",                     Color.rgb(252, 187, 179));
 
+        theme.set("canvas.background",                theme.color("palette.black"));
 
-        THEME.set("canvas.background", THEME.color("palette.black"));
+        theme.set("ghost.0.color",                    theme.color("palette.red"));
+        theme.set("ghost.1.color",                    theme.color("palette.pink"));
+        theme.set("ghost.2.color",                    theme.color("palette.cyan"));
+        theme.set("ghost.3.color",                    theme.color("palette.orange"));
 
-        THEME.set("ghost.0.color", THEME.color("palette.red"));
-        THEME.set("ghost.1.color", THEME.color("palette.pink"));
-        THEME.set("ghost.2.color", THEME.color("palette.cyan"));
-        THEME.set("ghost.3.color", THEME.color("palette.orange"));
+        theme.set("startpage.button.bgColor",         Color.rgb(0, 155, 252, 0.8));
+        theme.set("startpage.button.color",           Color.WHITE);
+        theme.set("startpage.button.font",            rm.loadFont("fonts/emulogic.ttf", 30));
 
-        THEME.set("startpage.button.bgColor", Color.rgb(0, 155, 252, 0.8));
-        THEME.set("startpage.button.color", Color.WHITE);
-        THEME.set("startpage.button.font", rm.font("fonts/emulogic.ttf", 30));
+        theme.set("wallpaper.background",             rm.imageBackground("graphics/pacman_wallpaper.png"));
+        theme.set("wallpaper.color",                  Color.rgb(72, 78, 135));
 
-        THEME.set("wallpaper.background", rm.imageBackground("graphics/pacman_wallpaper.png"));
-        THEME.set("wallpaper.color", Color.rgb(72, 78, 135));
+        theme.set("font.arcade",                      rm.loadFont("fonts/emulogic.ttf", 8));
+        theme.set("font.handwriting",                 rm.loadFont("fonts/Molle-Italic.ttf", 9));
+        theme.set("font.monospaced",                  rm.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12));
 
-        THEME.set("font.arcade",        rm.font("fonts/emulogic.ttf", 8));
-        THEME.set("font.handwriting",   rm.font("fonts/Molle-Italic.ttf", 9));
-        THEME.set("font.monospaced",    rm.font("fonts/Inconsolata_Condensed-Bold.ttf", 12));
-
-        THEME.set("voice.explain",          rm.audioClip("sound/voice/press-key.mp3"));
-        THEME.set("voice.autopilot.off",    rm.audioClip("sound/voice/autopilot-off.mp3"));
-        THEME.set("voice.autopilot.on",     rm.audioClip("sound/voice/autopilot-on.mp3"));
-        THEME.set("voice.immunity.off",     rm.audioClip("sound/voice/immunity-off.mp3"));
-        THEME.set("voice.immunity.on",      rm.audioClip("sound/voice/immunity-on.mp3"));
+        theme.set("voice.explain",                    rm.loadAudioClip("sound/voice/press-key.mp3"));
+        theme.set("voice.autopilot.off",              rm.loadAudioClip("sound/voice/autopilot-off.mp3"));
+        theme.set("voice.autopilot.on",               rm.loadAudioClip("sound/voice/autopilot-on.mp3"));
+        theme.set("voice.immunity.off",               rm.loadAudioClip("sound/voice/immunity-off.mp3"));
+        theme.set("voice.immunity.on",                rm.loadAudioClip("sound/voice/immunity-on.mp3"));
 
         //
         // Ms. Pac-Man game
         //
-        THEME.set("mspacman.startpage.image", rm.image("graphics/mspacman/mspacman_flyer.png"));
-        THEME.set("mspacman.helpButton.icon", rm.image("graphics/icons/help-red-64.png"));
+        theme.set("mspacman.startpage.image",         rm.loadImage("graphics/mspacman/mspacman_flyer.png"));
+        theme.set("mspacman.helpButton.icon",         rm.loadImage("graphics/icons/help-red-64.png"));
 
-        THEME.set("mspacman.spritesheet", new MsPacManGameSpriteSheet(
-            rm.image("graphics/mspacman/mspacman_spritesheet.png"),
-            rm.image("graphics/mspacman/mazes_flashing.png")
-        ));
+        theme.set("mspacman.spritesheet", new MsPacManGameSpriteSheet(
+            rm.loadImage("graphics/mspacman/mspacman_spritesheet.png"),
+                rm.loadImage("graphics/mspacman/mazes_flashing.png")
+                    ));
 
-        THEME.set("mspacman.icon",          rm.image("graphics/icons/mspacman.png"));
-        THEME.set("mspacman.logo.midway",   rm.image("graphics/mspacman/midway_logo.png"));
+        theme.set("mspacman.icon",                    rm.loadImage("graphics/icons/mspacman.png"));
+        theme.set("mspacman.logo.midway",             rm.loadImage("graphics/mspacman/midway_logo.png"));
 
-        THEME.set("mspacman.audio.bonus_eaten",     rm.audioClip("sound/mspacman/Fruit.mp3"));
-        THEME.set("mspacman.audio.credit",          rm.audioClip("sound/mspacman/Credit.mp3"));
-        THEME.set("mspacman.audio.extra_life",      rm.audioClip("sound/mspacman/ExtraLife.mp3"));
-        THEME.set("mspacman.audio.game_ready",      rm.audioClip("sound/mspacman/Start.mp3"));
-        THEME.set("mspacman.audio.game_over",       rm.audioClip("sound/common/game-over.mp3"));
-        THEME.set("mspacman.audio.ghost_eaten",     rm.audioClip("sound/mspacman/Ghost.mp3"));
-        THEME.set("mspacman.audio.ghost_returning", rm.audioClip("sound/mspacman/GhostEyes.mp3"));
-        THEME.set("mspacman.audio.intermission.1",  rm.audioClip("sound/mspacman/Act1TheyMeet.mp3"));
-        THEME.set("mspacman.audio.intermission.2",  rm.audioClip("sound/mspacman/Act2TheChase.mp3"));
-        THEME.set("mspacman.audio.intermission.3",  rm.audioClip("sound/mspacman/Act3Junior.mp3"));
-        THEME.set("mspacman.audio.level_complete",  rm.audioClip("sound/common/level-complete.mp3"));
-        THEME.set("mspacman.audio.pacman_death",    rm.audioClip("sound/mspacman/Died.mp3"));
-        THEME.set("mspacman.audio.pacman_munch",    rm.audioClip("sound/mspacman/Pill.wav"));
-        THEME.set("mspacman.audio.pacman_power",    rm.audioClip("sound/mspacman/ScaredGhost.mp3"));
-        THEME.set("mspacman.audio.siren.1",         rm.audioClip("sound/mspacman/GhostNoise1.wav"));
-        THEME.set("mspacman.audio.siren.2",         rm.audioClip("sound/mspacman/GhostNoise1.wav"));// TODO
-        THEME.set("mspacman.audio.siren.3",         rm.audioClip("sound/mspacman/GhostNoise1.wav"));// TODO
-        THEME.set("mspacman.audio.siren.4",         rm.audioClip("sound/mspacman/GhostNoise1.wav"));// TODO
-        THEME.set("mspacman.audio.sweep",           rm.audioClip("sound/common/sweep.mp3"));
+        theme.set("mspacman.audio.bonus_eaten",       rm.loadAudioClip("sound/mspacman/Fruit.mp3"));
+        theme.set("mspacman.audio.credit",            rm.loadAudioClip("sound/mspacman/Credit.mp3"));
+        theme.set("mspacman.audio.extra_life",        rm.loadAudioClip("sound/mspacman/ExtraLife.mp3"));
+        theme.set("mspacman.audio.game_ready",        rm.loadAudioClip("sound/mspacman/Start.mp3"));
+        theme.set("mspacman.audio.game_over",         rm.loadAudioClip("sound/common/game-over.mp3"));
+        theme.set("mspacman.audio.ghost_eaten",       rm.loadAudioClip("sound/mspacman/Ghost.mp3"));
+        theme.set("mspacman.audio.ghost_returning",   rm.loadAudioClip("sound/mspacman/GhostEyes.mp3"));
+        theme.set("mspacman.audio.intermission.1",    rm.loadAudioClip("sound/mspacman/Act1TheyMeet.mp3"));
+        theme.set("mspacman.audio.intermission.2",    rm.loadAudioClip("sound/mspacman/Act2TheChase.mp3"));
+        theme.set("mspacman.audio.intermission.3",    rm.loadAudioClip("sound/mspacman/Act3Junior.mp3"));
+        theme.set("mspacman.audio.level_complete",    rm.loadAudioClip("sound/common/level-complete.mp3"));
+        theme.set("mspacman.audio.pacman_death",      rm.loadAudioClip("sound/mspacman/Died.mp3"));
+        theme.set("mspacman.audio.pacman_munch",      rm.loadAudioClip("sound/mspacman/Pill.wav"));
+        theme.set("mspacman.audio.pacman_power",      rm.loadAudioClip("sound/mspacman/ScaredGhost.mp3"));
+        theme.set("mspacman.audio.siren.1",           rm.loadAudioClip("sound/mspacman/GhostNoise1.wav"));
+        theme.set("mspacman.audio.siren.2",           rm.loadAudioClip("sound/mspacman/GhostNoise1.wav"));// TODO
+        theme.set("mspacman.audio.siren.3",           rm.loadAudioClip("sound/mspacman/GhostNoise1.wav"));// TODO
+        theme.set("mspacman.audio.siren.4",           rm.loadAudioClip("sound/mspacman/GhostNoise1.wav"));// TODO
+        theme.set("mspacman.audio.sweep",             rm.loadAudioClip("sound/common/sweep.mp3"));
 
         //
         // Pac-Man game
         //
-        THEME.set("pacman.startpage.image", rm.image("graphics/pacman/pacman_flyer.png"));
-        THEME.set("pacman.helpButton.icon", rm.image("graphics/icons/help-blue-64.png"));
+        theme.set("pacman.startpage.image",           rm.loadImage("graphics/pacman/pacman_flyer.png"));
+        theme.set("pacman.helpButton.icon",           rm.loadImage("graphics/icons/help-blue-64.png"));
 
-        THEME.set("pacman.spritesheet", new PacManGameSpriteSheet(
-            rm.image("graphics/pacman/pacman_spritesheet.png"),
-            rm.image("graphics/pacman/maze_flashing.png"))
-        );
+        theme.set("pacman.spritesheet", new PacManGameSpriteSheet(
+            rm.loadImage("graphics/pacman/pacman_spritesheet.png"),
+                rm.loadImage("graphics/pacman/maze_flashing.png"))
+                    );
 
-        THEME.set("pacman.icon", rm.image("graphics/icons/pacman.png"));
-        THEME.set("pacman.maze.foodColor", Color.rgb(254, 189, 180));
+        theme.set("pacman.icon",                      rm.loadImage("graphics/icons/pacman.png"));
+        theme.set("pacman.maze.foodColor",            Color.rgb(254, 189, 180));
 
-        THEME.set("pacman.audio.bonus_eaten",       rm.audioClip("sound/pacman/eat_fruit.mp3"));
-        THEME.set("pacman.audio.credit",            rm.audioClip("sound/pacman/credit.wav"));
-        THEME.set("pacman.audio.extra_life",        rm.audioClip("sound/pacman/extend.mp3"));
-        THEME.set("pacman.audio.game_ready",        rm.audioClip("sound/pacman/game_start.mp3"));
-        THEME.set("pacman.audio.game_over",         rm.audioClip("sound/common/game-over.mp3"));
-        THEME.set("pacman.audio.ghost_eaten",       rm.audioClip("sound/pacman/eat_ghost.mp3"));
-        THEME.set("pacman.audio.ghost_returning",   rm.audioClip("sound/pacman/retreating.mp3"));
-        THEME.set("pacman.audio.intermission",      rm.audioClip("sound/pacman/intermission.mp3"));
-        THEME.set("pacman.audio.level_complete",    rm.audioClip("sound/common/level-complete.mp3"));
-        THEME.set("pacman.audio.pacman_death",      rm.audioClip("sound/pacman/pacman_death.wav"));
-        THEME.set("pacman.audio.pacman_munch",      rm.audioClip("sound/pacman/doublemunch.wav"));
-        THEME.set("pacman.audio.pacman_power",      rm.audioClip("sound/pacman/ghost-turn-to-blue.mp3"));
-        THEME.set("pacman.audio.siren.1",           rm.audioClip("sound/pacman/siren_1.mp3"));
-        THEME.set("pacman.audio.siren.2",           rm.audioClip("sound/pacman/siren_2.mp3"));
-        THEME.set("pacman.audio.siren.3",           rm.audioClip("sound/pacman/siren_3.mp3"));
-        THEME.set("pacman.audio.siren.4",           rm.audioClip("sound/pacman/siren_4.mp3"));
-        THEME.set("pacman.audio.sweep",             rm.audioClip("sound/common/sweep.mp3"));
+        theme.set("pacman.audio.bonus_eaten",         rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));
+        theme.set("pacman.audio.credit",              rm.loadAudioClip("sound/pacman/credit.wav"));
+        theme.set("pacman.audio.extra_life",          rm.loadAudioClip("sound/pacman/extend.mp3"));
+        theme.set("pacman.audio.game_ready",          rm.loadAudioClip("sound/pacman/game_start.mp3"));
+        theme.set("pacman.audio.game_over",           rm.loadAudioClip("sound/common/game-over.mp3"));
+        theme.set("pacman.audio.ghost_eaten",         rm.loadAudioClip("sound/pacman/eat_ghost.mp3"));
+        theme.set("pacman.audio.ghost_returning",     rm.loadAudioClip("sound/pacman/retreating.mp3"));
+        theme.set("pacman.audio.intermission",        rm.loadAudioClip("sound/pacman/intermission.mp3"));
+        theme.set("pacman.audio.level_complete",      rm.loadAudioClip("sound/common/level-complete.mp3"));
+        theme.set("pacman.audio.pacman_death",        rm.loadAudioClip("sound/pacman/pacman_death.wav"));
+        theme.set("pacman.audio.pacman_munch",        rm.loadAudioClip("sound/pacman/doublemunch.wav"));
+        theme.set("pacman.audio.pacman_power",        rm.loadAudioClip("sound/pacman/ghost-turn-to-blue.mp3"));
+        theme.set("pacman.audio.siren.1",             rm.loadAudioClip("sound/pacman/siren_1.mp3"));
+        theme.set("pacman.audio.siren.2",             rm.loadAudioClip("sound/pacman/siren_2.mp3"));
+        theme.set("pacman.audio.siren.3",             rm.loadAudioClip("sound/pacman/siren_3.mp3"));
+        theme.set("pacman.audio.siren.4",             rm.loadAudioClip("sound/pacman/siren_4.mp3"));
+        theme.set("pacman.audio.sweep",               rm.loadAudioClip("sound/common/sweep.mp3"));
+    }
 
-        Logger.info("Pac-Man games 2D theme loaded");
+    protected static final Theme THEME = new Theme();
+    static {
+        loadAssets2D(THEME);
+        Logger.info("2D theme loaded");
     }
 
     protected final GameClock clock;

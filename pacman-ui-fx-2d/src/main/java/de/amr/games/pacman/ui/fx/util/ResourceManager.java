@@ -123,7 +123,7 @@ public interface ResourceManager {
      * @param relPath relative path (without leading slash) starting from resource root directory
      * @return audio clip from resource addressed by this path
      */
-    default AudioClip audioClip(String relPath) {
+    default AudioClip loadAudioClip(String relPath) {
         var url = url(relPath);
         return new AudioClip(url.toExternalForm());
     }
@@ -133,7 +133,7 @@ public interface ResourceManager {
      * @param size    font size (must be a positive number)
      * @return font loaded from resource addressed by this path. If no such font can be loaded, a default font is returned
      */
-    default Font font(String relPath, double size) {
+    default Font loadFont(String relPath, double size) {
         if (size <= 0) {
             throw new IllegalArgumentException(String.format("Font size must be positive but is %.2f", size));
         }
@@ -150,7 +150,7 @@ public interface ResourceManager {
      * @param relPath relative path to image (without leading slash) starting from resource root directory
      * @return image loaded from resource addressed by this path.
      */
-    default Image image(String relPath) {
+    default Image loadImage(String relPath) {
         var url = url(relPath);
         return new Image(url.toExternalForm());
     }
@@ -160,7 +160,7 @@ public interface ResourceManager {
      * @return image background with default properties, see {@link BackgroundImage}
      */
     default Background imageBackground(String relPath) {
-        var image = image(relPath);
+        var image = loadImage(relPath);
         return new Background(new BackgroundImage(image, null, null, null, null));
     }
 
@@ -170,7 +170,7 @@ public interface ResourceManager {
      */
     default Background imageBackground(String relPath, BackgroundRepeat repeatX, BackgroundRepeat repeatY,
                                        BackgroundPosition position, BackgroundSize size) {
-        var image = image(relPath);
+        var image = loadImage(relPath);
         return new Background(new BackgroundImage(image, repeatX, repeatY, position, size));
     }
 }
