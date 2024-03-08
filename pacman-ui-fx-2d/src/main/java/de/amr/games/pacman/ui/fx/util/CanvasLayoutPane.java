@@ -13,7 +13,7 @@ import org.tinylog.Logger;
  *
  * <p>TODO: needs testing</p>
  */
-public class CanvasContainer {
+public class CanvasLayoutPane {
 
     protected final StackPane layersContainer = new StackPane();
     protected final BorderPane canvasLayer = new BorderPane();
@@ -29,7 +29,7 @@ public class CanvasContainer {
     protected boolean canvasBorderEnabled = false;
     protected boolean discreteScaling = false;
 
-    public CanvasContainer() {
+    public CanvasLayoutPane() {
         canvasLayer.setCenter(canvasContainer);
         canvasContainer.setCenter(canvas);
         layersContainer.getChildren().add(canvasLayer);

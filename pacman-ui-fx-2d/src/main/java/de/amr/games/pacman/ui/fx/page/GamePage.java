@@ -13,7 +13,7 @@ import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardPacSteering;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
-import de.amr.games.pacman.ui.fx.util.CanvasContainer;
+import de.amr.games.pacman.ui.fx.util.CanvasLayoutPane;
 import de.amr.games.pacman.ui.fx.util.FadingPane;
 import de.amr.games.pacman.ui.fx.util.FlashMessageView;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -21,10 +21,8 @@ import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
-import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -41,7 +39,7 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.border;
 /**
  * @author Armin Reichert
  */
-public class GamePage extends CanvasContainer implements Page {
+public class GamePage extends CanvasLayoutPane implements Page {
 
     protected final GameSceneContext sceneContext;
     protected final FlashMessageView flashMessageLayer = new FlashMessageView();

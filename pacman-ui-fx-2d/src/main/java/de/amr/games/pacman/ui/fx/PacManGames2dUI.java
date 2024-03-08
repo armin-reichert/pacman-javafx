@@ -11,6 +11,8 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.ArcadeWorld;
@@ -32,6 +34,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -43,6 +46,7 @@ import java.util.*;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.input.Keyboard.*;
 import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
@@ -84,8 +88,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final KeyCodeCombination KEY_BOOT                 = just(KeyCode.F3);
     public static final KeyCodeCombination KEY_FULLSCREEN           = just(KeyCode.F11);
 
-    public static final int CANVAS_WIDTH_UNSCALED = ArcadeWorld.TILES_X * Globals.TS; // 28*8 = 224
-    public static final int CANVAS_HEIGHT_UNSCALED = ArcadeWorld.TILES_Y * Globals.TS; // 36*8 = 288
+    public static final int CANVAS_WIDTH_UNSCALED = ArcadeWorld.TILES_X * TS; // 28*8 = 224
+    public static final int CANVAS_HEIGHT_UNSCALED = ArcadeWorld.TILES_Y * TS; // 36*8 = 288
 
     public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
 
@@ -313,6 +317,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         page.setCanvasBorderColor(theme().color("palette.pale"));
         page.getCanvasLayer().setBackground(theme().background("wallpaper.background"));
         page.getCanvasContainer().setBackground(ResourceManager.coloredBackground(theme().color("canvas.background")));
+        page.getCanvas().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            double scaling = page.getScaling();
+            Vector2i tile = Globals.tileAt(new Vector2f((float)(e.getX() / scaling), (float)(e.getY() / scaling)));
+            Logger.info("Mouse click on canvas at ({}, {}, tile {}", e.getX(), e.getY(), tile);
+        });
+
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
         return page;
     }
