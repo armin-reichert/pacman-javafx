@@ -29,8 +29,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PY_3D_DRAW_MODE;
-import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PY_3D_PAC_LIGHT_ENABLED;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.*;
 
 /**
@@ -118,10 +117,14 @@ public class GameLevel3D {
         ghosts3D[GameModel.CYAN_GHOST].drawModePy.bind(PY_3D_DRAW_MODE);
         ghosts3D[GameModel.ORANGE_GHOST].drawModePy.bind(PY_3D_DRAW_MODE);
         world3D.drawModePy.bind(PY_3D_DRAW_MODE);
-        world3D.floorColorPy.bind(PacManGames3dUI.PY_3D_FLOOR_COLOR);
-        world3D.floorTexturePy.bind(PacManGames3dUI.PY_3D_FLOOR_TEXTURE);
-        world3D.wallHeightPy.bind(PacManGames3dUI.PY_3D_WALL_HEIGHT);
-        world3D.wallThicknessPy.bind(PacManGames3dUI.PY_3D_WALL_THICKNESS);
+        world3D.floorColorPy.bind(PY_3D_FLOOR_COLOR);
+        world3D.floorTexturePy.bind(PY_3D_FLOOR_TEXTURE);
+        world3D.wallHeightPy.bind(PY_3D_WALL_HEIGHT);
+        world3D.wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+        world3D.wallThicknessPy.bind(PY_3D_WALL_THICKNESS);
+        world3D.houseWallOpacityPy.bind(PY_3D_HOUSE_WALL_OPACITY);
+        world3D.houseWallThicknessPy.bind(PY_3D_HOUSE_WALL_THICKNESS);
+
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
     }
 

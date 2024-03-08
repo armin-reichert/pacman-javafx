@@ -91,7 +91,7 @@ public interface ResourceManager {
         return material;
     }
 
-    static Color color(Color color, double opacity) {
+    static Color opaqueColor(Color color, double opacity) {
         checkNotNull(color);
         return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
     }

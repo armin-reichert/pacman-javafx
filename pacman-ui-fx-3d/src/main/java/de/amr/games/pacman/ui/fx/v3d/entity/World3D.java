@@ -9,11 +9,11 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -35,6 +35,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.opaqueColor;
 
 /**
  * 3D-model for the world in a game level. Walls and doors are created from 2D information specified by a floor plan.
@@ -43,7 +45,6 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class World3D {
 
-    public static final double HOUSE_OPACITY = 0.66;
     private static final int RESOLUTION = 4;
     private static final double FLOOR_THICKNESS = 0.4;
 
@@ -57,8 +58,11 @@ public class World3D {
     }
 
     public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
-
+    public final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity", 0.5);
     public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
+
+    public final DoubleProperty houseWallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity", 0.5);
+    public final DoubleProperty houseWallThicknessPy = new SimpleDoubleProperty(this, "houseWallThickness", 0.2);
 
     public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture",
         PacManGames3dUI.NO_TEXTURE) {
@@ -91,9 +95,11 @@ public class World3D {
     private final Group foodGroup = new Group();
     private final Color foodColor;
     private final Color doorColor;
+
     private final PhongMaterial wallBaseMaterial;
     private final PhongMaterial wallMiddleMaterial;
     private final PhongMaterial wallTopMaterial;
+
     private final PhongMaterial houseMaterial;
 
     public World3D(
@@ -114,13 +120,18 @@ public class World3D {
         this.pelletModel3D = pelletModel3D;
         this.foodColor = foodColor;
         this.doorColor = doorColor;
-        this.wallBaseMaterial = ResourceManager.coloredMaterial(wallBaseColor);
-        this.wallMiddleMaterial = ResourceManager.coloredMaterial(wallMiddleColor);
-        this.wallTopMaterial = ResourceManager.coloredMaterial(wallTopColor);
 
-        wallHeightPy.bind(PacManGames3dUI.PY_3D_WALL_HEIGHT);
+        wallBaseMaterial   = coloredMaterial(wallBaseColor);
+        wallMiddleMaterial = coloredMaterial(opaqueColor(wallMiddleColor, wallOpacityPy.get()));
+        wallTopMaterial    = coloredMaterial(wallTopColor);
 
-        houseMaterial = ResourceManager.coloredMaterial(ResourceManager.color(wallMiddleColor, HOUSE_OPACITY));
+        wallOpacityPy.addListener((py, ov, nv) -> {
+            Color color = opaqueColor(wallMiddleColor, wallOpacityPy.get());
+            wallMiddleMaterial.setDiffuseColor(color);
+            wallMiddleMaterial.setSpecularColor(color.brighter());
+        });
+
+        houseMaterial = coloredMaterial(opaqueColor(wallMiddleColor, houseWallOpacityPy.get()));
 
         houseLight = new PointLight();
         houseLight.setColor(Color.YELLOW.desaturate());
@@ -165,7 +176,7 @@ public class World3D {
         String key = floorTexturePy.get();
         PhongMaterial texture = theme.get("texture." + key);
         if (texture == null) {
-            texture = ResourceManager.coloredMaterial(floorColorPy.get());
+            texture = coloredMaterial(floorColorPy.get());
         }
         floor.setMaterial(texture);
     }
@@ -261,7 +272,7 @@ public class World3D {
         }
     }
 
-    private boolean isWallInsideHouse(FloorPlan floorPlan, WallData wallData, House house) {
+    private boolean isWallInsideHouse(WallData wallData, House house) {
         Vector2i bottomRightTile = house.topLeftTile().plus(house.size());
         double xMin = house.topLeftTile().x() * RESOLUTION;
         double yMin = house.topLeftTile().y() * RESOLUTION;
@@ -276,8 +287,8 @@ public class World3D {
 
     private void addWall(FloorPlan floorPlan, WallData wallData) {
         if (isPartOfHouse(floorPlan, wallData, world.house())) {
-            if (!isWallInsideHouse(floorPlan, wallData, world.house())) {
-                addHouseWall(world.house(), wallData);
+            if (!isWallInsideHouse(wallData, world.house())) {
+                addHouseWall(wallData);
             }
         } else {
             addMazeWall(wallData);
@@ -288,9 +299,9 @@ public class World3D {
         final double baseHeight = 0.25;
         final double topHeight = 0.1;
 
-        Box base = createBlock(wallData, wallBaseMaterial);
-        Box mid = createBlock(wallData, wallMiddleMaterial);
-        Box top = createBlock(wallData, wallTopMaterial);
+        Box base = createBlock(wallData, wallBaseMaterial, wallThicknessPy);
+        Box mid = createBlock(wallData, wallMiddleMaterial, wallThicknessPy);
+        Box top = createBlock(wallData, wallTopMaterial, wallThicknessPy);
         Group wall = new Group(base, mid, top);
 
         base.setDepth(baseHeight);
@@ -308,11 +319,12 @@ public class World3D {
         wallsGroup.getChildren().add(wall);
     }
 
-    private void addHouseWall(House house, WallData wallData) {
-        Box base = createBlock(wallData, houseMaterial);
-        Box top = createBlock(wallData, wallTopMaterial);
+    private void addHouseWall(WallData wallData) {
+        Box base = createBlock(wallData, houseMaterial, houseWallThicknessPy);
+        Box top = createBlock(wallData, wallTopMaterial, houseWallThicknessPy);
         Group wall = new Group(base, top);
 
+        //TODO
         final double topHeight = 1.0;
         final double baseHeight = 8.0;
 
@@ -328,40 +340,40 @@ public class World3D {
         wallsGroup.getChildren().add(wall);
     }
 
-    private Box createBlock(WallData wallData, Material material) {
+    private Box createBlock(WallData wallData, Material material, DoubleProperty thicknessPy) {
         return switch (wallData.type) {
-            case FloorPlan.HWALL -> createHBlock(wallData, material);
-            case FloorPlan.VWALL -> createVBlock(wallData, material);
-            case FloorPlan.CORNER -> createCornerBlock(material);
+            case FloorPlan.HWALL -> createHBlock(wallData, material, thicknessPy);
+            case FloorPlan.VWALL -> createVBlock(wallData, material, thicknessPy);
+            case FloorPlan.CORNER -> createCornerBlock(material, thicknessPy);
             default -> throw new IllegalStateException("Unknown wall type: " + wallData.type);
         };
     }
 
-    private Box createHBlock(WallData wallData, Material material) {
+    private Box createHBlock(WallData wallData, Material material, DoubleProperty thicknessPy) {
         Box block = new Box();
         block.setMaterial(material);
         // without ...+1 there are gaps. why?
         block.setWidth((wallData.numBricksX + 1) * wallData.brickSize);
-        block.heightProperty().bind(wallThicknessPy);
+        block.heightProperty().bind(thicknessPy);
         block.drawModeProperty().bind(drawModePy);
         return block;
     }
 
-    private Box createVBlock(WallData wallData, Material material) {
+    private Box createVBlock(WallData wallData, Material material, DoubleProperty thicknessPy) {
         Box block = new Box();
         block.setMaterial(material);
-        block.widthProperty().bind(wallThicknessPy);
+        block.widthProperty().bind(thicknessPy);
         // without ...+1 there are gaps. why?
         block.setHeight((wallData.numBricksY + 1) * wallData.brickSize);
         block.drawModeProperty().bind(drawModePy);
         return block;
     }
 
-    private Box createCornerBlock(Material material) {
+    private Box createCornerBlock(Material material, DoubleProperty thicknessPy) {
         Box block = new Box();
         block.setMaterial(material);
-        block.widthProperty().bind(wallThicknessPy);
-        block.heightProperty().bind(wallThicknessPy);
+        block.widthProperty().bind(thicknessPy);
+        block.heightProperty().bind(thicknessPy);
         block.drawModeProperty().bind(drawModePy);
         return block;
     }
@@ -369,7 +381,7 @@ public class World3D {
     // Food
 
     private void addFood() {
-        var foodMaterial = ResourceManager.coloredMaterial(foodColor);
+        var foodMaterial = coloredMaterial(foodColor);
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             Eatable3D food3D = world.isEnergizerTile(tile)
                 ? createEnergizer3D(tile, foodMaterial)
@@ -398,7 +410,7 @@ public class World3D {
         squirting.setOrigin(energizer3D.root());
         squirting.setDropCountMin(15);
         squirting.setDropCountMax(45);
-        squirting.setDropMaterial(ResourceManager.coloredMaterial(foodColor.desaturate()));
+        squirting.setDropMaterial(coloredMaterial(foodColor.desaturate()));
         energizer3D.setEatenAnimation(squirting);
         return energizer3D;
     }

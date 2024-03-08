@@ -35,6 +35,7 @@ public class InfoBox3D extends InfoBox {
     private final Slider sliderPiPOpacity;
     private final CheckBox cbEnergizerExplodes;
     private final Slider sliderWallHeight;
+    private final Slider sliderWallOpacity;
     private final Slider sliderWallThickness;
     private final CheckBox cbPacLighted;
     private final CheckBox cbNightMode;
@@ -53,6 +54,7 @@ public class InfoBox3D extends InfoBox {
         sliderPiPSceneHeight = addSlider("PiP Size", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
         sliderPiPOpacity = addSlider("PiP Opacity", 0.0, 1.0, PY_PIP_OPACITY.get());
         sliderWallHeight = addSlider("Wall Height", 1, 9, PY_3D_WALL_HEIGHT.get());
+        sliderWallOpacity = addSlider("Wall Opacity", 0.1, 1, PY_3D_WALL_OPACITY.get());
         sliderWallThickness = addSlider("Wall Thickness", 0.1, 2.0, PY_3D_WALL_THICKNESS.get());
         cbEnergizerExplodes = addCheckBox("Energizer Explosion");
         cbNightMode = addCheckBox("Night Mode");
@@ -73,11 +75,13 @@ public class InfoBox3D extends InfoBox {
         sliderPiPSceneHeight.setValue(PY_PIP_HEIGHT.get());
         sliderPiPOpacity.setValue(PY_PIP_OPACITY.get());
         sliderWallHeight.setValue(PY_3D_WALL_HEIGHT.get());
+        sliderWallOpacity.setValue(PY_3D_WALL_OPACITY.get());
         sliderWallThickness.setValue(PY_3D_WALL_THICKNESS.get());
 
         sliderPiPSceneHeight.valueProperty().addListener((py, ov, nv) -> PY_PIP_HEIGHT.set(sliderPiPSceneHeight.getValue()));
         sliderPiPOpacity.valueProperty().bindBidirectional(PY_PIP_OPACITY);
         sliderWallHeight.valueProperty().bindBidirectional(PY_3D_WALL_HEIGHT);
+        sliderWallOpacity.valueProperty().bindBidirectional(PY_3D_WALL_OPACITY);
         sliderWallThickness.valueProperty().bindBidirectional(PY_3D_WALL_THICKNESS);
 
         comboPerspectives.setOnAction(e -> PY_3D_PERSPECTIVE.set(comboPerspectives.getValue()));
