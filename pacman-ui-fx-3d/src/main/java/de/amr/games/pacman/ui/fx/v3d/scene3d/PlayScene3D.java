@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui.fx.v3d.scene3d;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -56,6 +55,9 @@ public class PlayScene3D implements GameScene {
 
     private static final byte CHILD_LEVEL_3D  = 0;
     private static final byte CHILD_READY_MSG = 1;
+
+    private static final double READY_TEXT_OUT_Z = -5;
+    private static final double READY_TEXT_IN_Z  =  5;
 
     private static Text3D createText3D(String text, Font font) {
         Text3D text3D = new Text3D();
@@ -171,12 +173,12 @@ public class PlayScene3D implements GameScene {
         readyText3D = createText3D(text, context.theme().font("font.arcade", 6));
         readyText3D.root().setTranslateX(0);
         readyText3D.root().setTranslateY(16);
-        readyText3D.root().setTranslateZ(5);
+        readyText3D.root().setTranslateZ(READY_TEXT_IN_Z);
         subSceneRoot.getChildren().set(CHILD_READY_MSG, readyText3D.root());
         var animation = new TranslateTransition(Duration.seconds(1.5), readyText3D.root());
         animation.setDelay(Duration.seconds(0.25));
-        animation.setFromZ(5);
-        animation.setToZ(-5);
+        animation.setFromZ(READY_TEXT_IN_Z);
+        animation.setToZ(READY_TEXT_OUT_Z);
         animation.play();
     }
 
@@ -186,7 +188,7 @@ public class PlayScene3D implements GameScene {
         }
         var animation = new TranslateTransition(Duration.seconds(0.75), readyText3D.root());
         animation.setDelay(Duration.seconds(0.5));
-        animation.setToZ(5);
+        animation.setToZ(READY_TEXT_IN_Z);
         animation.setOnFinished(e -> {
             readyText3D = null;
             subSceneRoot.getChildren().set(CHILD_READY_MSG, new Group());
