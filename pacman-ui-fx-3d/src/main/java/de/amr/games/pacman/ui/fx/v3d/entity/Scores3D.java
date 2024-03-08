@@ -49,7 +49,7 @@ public class Scores3D {
         root.getChildren().add(grid);
     }
 
-    public Node getRoot() {
+    public Node root() {
         return root;
     }
 

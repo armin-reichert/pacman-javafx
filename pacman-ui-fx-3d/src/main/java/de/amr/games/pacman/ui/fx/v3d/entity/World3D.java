@@ -374,20 +374,20 @@ public class World3D {
             Eatable3D food3D = world.isEnergizerTile(tile)
                 ? createEnergizer3D(tile, foodMaterial)
                 : createNormalPellet3D(tile, foodMaterial);
-            foodGroup.getChildren().add(food3D.getRoot());
+            foodGroup.getChildren().add(food3D.root());
         });
     }
 
     private Pellet3D createNormalPellet3D(Vector2i tile, PhongMaterial material) {
         var pellet3D = new Pellet3D(pelletModel3D, 1.0);
-        pellet3D.getRoot().setMaterial(material);
+        pellet3D.root().setMaterial(material);
         pellet3D.placeAtTile(tile);
         return pellet3D;
     }
 
     private Energizer3D createEnergizer3D(Vector2i tile, PhongMaterial material) {
         var energizer3D = new Energizer3D(3.5);
-        energizer3D.getRoot().setMaterial(material);
+        energizer3D.root().setMaterial(material);
         energizer3D.placeAtTile(tile);
         var squirting = new Squirting(root) {
             @Override
@@ -395,7 +395,7 @@ public class World3D {
                 return drop.getTranslateZ() >= -1 && world.insideBounds(drop.getTranslateX(), drop.getTranslateY());
             }
         };
-        squirting.setOrigin(energizer3D.getRoot());
+        squirting.setOrigin(energizer3D.root());
         squirting.setDropCountMin(15);
         squirting.setDropCountMax(45);
         squirting.setDropMaterial(ResourceManager.coloredMaterial(foodColor.desaturate()));

@@ -102,7 +102,7 @@ public class GameLevel3D {
         scores3D = new Scores3D(theme.font("font.arcade", 8));
         scores3D.setPosition(TS, -3 * TS, -3 * TS);
 
-        root.getChildren().add(scores3D.getRoot());
+        root.getChildren().add(scores3D.root());
         root.getChildren().add(levelCounter3D.getRoot());
         root.getChildren().add(livesCounter3D.root());
         root.getChildren().addAll(pac3D.getRoot(), pac3DLight);
@@ -198,7 +198,7 @@ public class GameLevel3D {
         }
         // Delay hiding of pellet for some milliseconds because in case the player approaches the pellet from the right,
         // the pellet disappears too early (collision by same tile in game model is too simplistic).
-        var delayHiding = Ufx.actionAfterSeconds(0.05, () -> eatable3D.getRoot().setVisible(false));
+        var delayHiding = Ufx.actionAfterSeconds(0.05, () -> eatable3D.root().setVisible(false));
         var eatenAnimation = eatable3D.getEatenAnimation();
         if (eatenAnimation.isPresent() && PacManGames3dUI.PY_3D_ENERGIZER_EXPLODES.get()) {
             new SequentialTransition(delayHiding, eatenAnimation.get()).play();
