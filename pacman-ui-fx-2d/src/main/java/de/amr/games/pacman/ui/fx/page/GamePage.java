@@ -21,8 +21,10 @@ import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
+import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -59,6 +61,9 @@ public class GamePage extends CanvasContainer implements Page {
         popupLayer.getChildren().addAll(helpButton, signature, helpInfoPopUp);
         layersContainer.getChildren().addAll(popupLayer, flashMessageLayer);
 
+        popupLayer.setMouseTransparent(true);
+        flashMessageLayer.setMouseTransparent(true);
+
         layersContainer.setOnKeyPressed(e -> {
             Keyboard.handleKeyEvent(e);
             handleKeyboardInput();
@@ -69,7 +74,6 @@ public class GamePage extends CanvasContainer implements Page {
             });
             Keyboard.clearState();
         });
-
         setSize(width, height);
     }
 
