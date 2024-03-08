@@ -112,10 +112,9 @@ public class GameLevel3D {
         root.getChildren().add(world3D.getRoot());
 
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
-        ghosts3D[GameModel.RED_GHOST].drawModePy.bind(PY_3D_DRAW_MODE);
-        ghosts3D[GameModel.PINK_GHOST].drawModePy.bind(PY_3D_DRAW_MODE);
-        ghosts3D[GameModel.CYAN_GHOST].drawModePy.bind(PY_3D_DRAW_MODE);
-        ghosts3D[GameModel.ORANGE_GHOST].drawModePy.bind(PY_3D_DRAW_MODE);
+        for (var g3D: ghosts3D) {
+            g3D.drawModePy.bind(PY_3D_DRAW_MODE);
+        }
         world3D.drawModePy.bind(PY_3D_DRAW_MODE);
         world3D.floorColorPy.bind(PY_3D_FLOOR_COLOR);
         world3D.floorTexturePy.bind(PY_3D_FLOOR_TEXTURE);

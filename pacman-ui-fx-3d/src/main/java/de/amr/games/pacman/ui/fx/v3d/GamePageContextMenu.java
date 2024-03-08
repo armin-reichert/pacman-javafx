@@ -26,7 +26,7 @@ public class GamePageContextMenu extends ContextMenu {
 
     // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
     private static final Color TITLE_ITEM_COLOR = Color.CORNFLOWERBLUE;
-    private static final Font TITLE_ITEM_FONT = Font.font("Dialog", FontWeight.BLACK, 18);
+    private static final Font TITLE_ITEM_FONT = Font.font("Dialog", FontWeight.BLACK, 14);
 
     private final GameSceneContext sceneContext;
     private CheckMenuItem autopilotItem;
