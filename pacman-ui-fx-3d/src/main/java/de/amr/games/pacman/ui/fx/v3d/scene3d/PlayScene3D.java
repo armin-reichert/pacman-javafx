@@ -161,21 +161,24 @@ public class PlayScene3D implements GameScene {
         // replace initial placeholder or previous 3D level
         subSceneRoot.getChildren().set(CHILD_LEVEL_3D, level3D.root());
 
+        level3D.updateLevelCounterSprites();
         // keep the scores rotated such that the viewer always sees them frontally
         level3D.scores3D().root().rotationAxisProperty().bind(camera.rotationAxisProperty());
         level3D.scores3D().root().rotateProperty().bind(camera.rotateProperty());
-
-        if (context.gameState() == GameState.LEVEL_TEST) {
-            level3D.showReadyMessage("LEVEL %s TEST".formatted(level.number()));
-        } else {
-            level3D.showReadyMessage("READY!");
-        }
 
         if (PY_3D_FLOOR_TEXTURE_RND.get()) {
             List<String> names = context.theme().getArray("texture.names");
             PY_3D_FLOOR_TEXTURE.set(names.get(randomInt(0, names.size())));
         }
         Logger.info("3D game level {} created.", level.number());
+    }
+
+    private void showLevelMessage() {
+        if (context.gameState() == GameState.LEVEL_TEST && context.gameLevel().isPresent()) {
+            level3D.showMessage("TEST LEVEL %s".formatted(context.gameLevel().get()));
+        } else {
+            level3D.showMessage("READY!");
+        }
     }
 
     @Override
@@ -213,7 +216,7 @@ public class PlayScene3D implements GameScene {
                 context.soundHandler().ensureSirenStarted(context.gameVariant(), level.huntingPhaseIndex() / 2);
             }
         });
-        level3D.hideReadyMessage();
+        level3D.hideMessage();
     }
 
     @Override
@@ -262,14 +265,11 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onLevelCreated(GameEvent e) {
         e.game.level().ifPresent(this::replaceGameLevel3D);
-    }
-
-    @Override
-    public void onLevelStarted(GameEvent e) {
-        if (level3D != null) {
-            level3D.updateLevelCounterSprites();
-            level3D.showReadyMessage("READY!");
-        }
+        context.gameLevel().ifPresent(level -> {
+            if (level.number() == 1) {
+                showLevelMessage();
+            }
+        });
     }
 
     @Override
@@ -294,6 +294,7 @@ public class PlayScene3D implements GameScene {
                 if (level3D != null) {
                     level3D.pac3D().init();
                     Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
+                    showLevelMessage();
                 }
             }
 
@@ -397,7 +398,7 @@ public class PlayScene3D implements GameScene {
             switch (e.oldState) {
                 case READY -> {
                     assert level3D != null;
-                    level3D.hideReadyMessage();
+                    level3D.hideMessage();
                 }
                 case HUNTING -> {
                     if (level3D == null) {

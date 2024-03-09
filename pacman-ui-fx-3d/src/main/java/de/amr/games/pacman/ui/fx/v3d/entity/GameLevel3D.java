@@ -44,8 +44,8 @@ import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.*;
  */
 public class GameLevel3D {
 
-    private static final double READY_TEXT_EXTENDED_Z  = -5;
-    private static final double READY_TEXT_RETRACTED_Z =  5;
+    private static final double MESSAGE_EXTENDED_Z = -5;
+    private static final double MESSAGE_RETRACTED_Z =  5;
 
     private final GameLevel level;
     private final Group root = new Group();
@@ -58,7 +58,7 @@ public class GameLevel3D {
     private final LivesCounter3D livesCounter3D;
     private final Scores3D scores3D;
     private final SpriteSheet spriteSheet;
-    private final Text3D readyText3D;
+    private final Text3D messageText3D;
 
     private Bonus3D bonus3D;
 
@@ -106,11 +106,11 @@ public class GameLevel3D {
 
         var house = world.house();
         var inFrontOfHouse = house.topLeftTile().scaled(TS).toFloatVec().plus(house.size().x() * HTS, house.size().y() * TS);
-        readyText3D = Text3D.create("READY!", Color.YELLOW, theme.font("font.arcade", 6));
-        readyText3D.root().setTranslateX(inFrontOfHouse.x());
-        readyText3D.root().setTranslateY(inFrontOfHouse.y());
-        readyText3D.root().setTranslateZ(READY_TEXT_RETRACTED_Z);
-        readyText3D.rotate(Rotate.X_AXIS, 90);
+        messageText3D = Text3D.create("READY!", Color.YELLOW, theme.font("font.arcade", 6));
+        messageText3D.root().setTranslateX(inFrontOfHouse.x());
+        messageText3D.root().setTranslateY(inFrontOfHouse.y());
+        messageText3D.root().setTranslateZ(MESSAGE_RETRACTED_Z);
+        messageText3D.rotate(Rotate.X_AXIS, 90);
 
         livesCounter3D.root().setTranslateX(2 * TS);
         livesCounter3D.root().setTranslateY(2 * TS);
@@ -127,7 +127,7 @@ public class GameLevel3D {
         scores3D.root().setTranslateY(-3 * TS);
         scores3D.root().setTranslateZ(-3 * TS);
 
-        root.getChildren().add(readyText3D.root());
+        root.getChildren().add(messageText3D.root());
         root.getChildren().add(scores3D.root());
         root.getChildren().add(levelCounter3D.root());
         root.getChildren().add(livesCounter3D.root());
@@ -258,24 +258,23 @@ public class GameLevel3D {
         updateHouseState(level.world().house());
     }
 
-    public void showReadyMessage(String text) {
-        readyText3D.setText(text);
-        readyText3D.root().setVisible(true);
-        readyText3D.root().setTranslateZ(READY_TEXT_RETRACTED_Z);
-        var animation = new TranslateTransition(Duration.seconds(2.5), readyText3D.root());
-        animation.setDelay(Duration.seconds(0.25));
-        animation.setToZ(READY_TEXT_EXTENDED_Z);
+    public void showMessage(String text) {
+        messageText3D.setText(text);
+        messageText3D.root().setVisible(true);
+        messageText3D.root().setTranslateZ(MESSAGE_RETRACTED_Z);
+        var animation = new TranslateTransition(Duration.seconds(1.5), messageText3D.root());
+        animation.setToZ(MESSAGE_EXTENDED_Z);
         animation.play();
     }
 
-    public void hideReadyMessage() {
-        if (!readyText3D.root().isVisible()) {
+    public void hideMessage() {
+        if (!messageText3D.root().isVisible()) {
             return;
         }
-        var animation = new TranslateTransition(Duration.seconds(0.75), readyText3D.root());
+        var animation = new TranslateTransition(Duration.seconds(0.75), messageText3D.root());
         animation.setDelay(Duration.seconds(0.5));
-        animation.setToZ(READY_TEXT_RETRACTED_Z);
-        animation.setOnFinished(e -> readyText3D.root().setVisible(false));
+        animation.setToZ(MESSAGE_RETRACTED_Z);
+        animation.setOnFinished(e -> messageText3D.root().setVisible(false));
         animation.play();
     }
 
