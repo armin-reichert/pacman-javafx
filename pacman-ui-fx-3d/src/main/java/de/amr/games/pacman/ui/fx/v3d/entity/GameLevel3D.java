@@ -31,6 +31,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -44,10 +45,15 @@ import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.*;
  */
 public class GameLevel3D {
 
+    private static final double PAC_SIZE = 9.0;
+    private static final double GHOST_SIZE = 9.0;
+    private static final double LIVES_COUNTER_PAC_SIZE = 10.0;
     private static final double MESSAGE_EXTENDED_Z = -5;
     private static final double MESSAGE_RETRACTED_Z =  5;
 
     private final GameLevel level;
+    private final SpriteSheet spriteSheet;
+
     private final Group root = new Group();
     private final World3D world3D;
     private final Group foodGroup = new Group();
@@ -57,10 +63,8 @@ public class GameLevel3D {
     private final LevelCounter3D levelCounter3D;
     private final LivesCounter3D livesCounter3D;
     private final Scores3D scores3D;
-    private final SpriteSheet spriteSheet;
     private final Text3D messageText3D;
-
-    private Bonus3D bonus3D;
+    private        Bonus3D bonus3D;
 
     public GameLevel3D(GameLevel level, Theme theme, SpriteSheet spriteSheet) {
         checkLevelNotNull(level);
@@ -68,12 +72,14 @@ public class GameLevel3D {
         checkNotNull(spriteSheet);
 
         this.level = level;
-        this.spriteSheet = spriteSheet;
-
         World world = level.world();
-        double pacSize = 9.0;
-        double ghostSize = 9.0;
-        double livesCounterPacSize = 10.0;
+
+        this.spriteSheet = spriteSheet;
+        var textureMap = new HashMap<String, PhongMaterial>();
+        for (var textureName : theme.getArray("texture.names")) {
+            String key = "texture." + textureName;
+            textureMap.put(key, theme.get(key));
+        }
 
         switch (level.game().variant()) {
             case MS_PACMAN -> {
@@ -82,24 +88,24 @@ public class GameLevel3D {
                 var wallMiddleColor = theme.color("mspacman.maze.wallMiddleColor", mazeNumber - 1);
                 var wallTopColor    = theme.color("mspacman.maze.wallTopColor", mazeNumber - 1);
                 var doorColor       = theme.color("mspacman.maze.doorColor");
-                world3D = new World3D(world, theme, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
+                world3D = new World3D(world, textureMap, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
                 addFood(world, theme.color("mspacman.maze.foodColor", mazeNumber - 1), theme.get("model3D.pellet"));
-                pac3D = createMsPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), pacSize);
+                pac3D = createMsPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
                 pac3DLight = new Pac3DLight(pac3D);
-                ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, theme.get("model3D.ghost"), theme, ghostSize)).toArray(Ghost3D[]::new);
-                livesCounter3D = new LivesCounter3D(() -> createMsPacManGroup(theme.get("model3D.pacman"), theme, livesCounterPacSize), true);
+                ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, theme.get("model3D.ghost"), theme, GHOST_SIZE)).toArray(Ghost3D[]::new);
+                livesCounter3D = new LivesCounter3D(() -> createMsPacManGroup(theme.get("model3D.pacman"), theme, LIVES_COUNTER_PAC_SIZE), true);
             }
             case PACMAN -> {
                 var wallBaseColor   = theme.color("pacman.maze.wallBaseColor");
                 var wallMiddleColor = theme.color("pacman.maze.wallMiddleColor");
                 var wallTopColor    = theme.color("pacman.maze.wallTopColor");
                 var doorColor       = theme.color("pacman.maze.doorColor");
-                world3D = new World3D(world, theme, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
+                world3D = new World3D(world, textureMap, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
                 addFood(world, theme.color("pacman.maze.foodColor"), theme.get("model3D.pellet"));
-                pac3D = createPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), pacSize);
+                pac3D = createPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
                 pac3DLight = new Pac3DLight(pac3D);
-                ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, theme.get("model3D.ghost"), theme, ghostSize)).toArray(Ghost3D[]::new);
-                livesCounter3D = new LivesCounter3D(() -> createPacManGroup(theme.get("model3D.pacman"), theme, livesCounterPacSize), false);
+                ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, theme.get("model3D.ghost"), theme, GHOST_SIZE)).toArray(Ghost3D[]::new);
+                livesCounter3D = new LivesCounter3D(() -> createPacManGroup(theme.get("model3D.pacman"), theme, LIVES_COUNTER_PAC_SIZE), false);
             }
             default -> throw new IllegalGameVariantException(level.game().variant());
         }

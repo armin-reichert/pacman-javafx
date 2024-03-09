@@ -4,13 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -28,11 +27,13 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.opaqueColor;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.NO_TEXTURE;
 
 /**
  * 3D-model for the world in a game level. Walls and doors are created from 2D information specified by a floor plan.
@@ -60,26 +61,22 @@ public class World3D {
     public final DoubleProperty houseWallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity", 0.5);
     public final DoubleProperty houseWallThicknessPy = new SimpleDoubleProperty(this, "houseWallThickness", 0.2);
 
-    public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture",
-        PacManGames3dUI.NO_TEXTURE) {
+    public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture", NO_TEXTURE) {
         @Override
         protected void invalidated() {
-            Logger.trace("Floor texture change detected");
-            updateFloorMaterial(floor());
+            updateFloorMaterial();
         }
     };
 
     public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK) {
         @Override
         protected void invalidated() {
-            Logger.trace("Floor color change detected");
-            updateFloorMaterial(floor());
+            updateFloorMaterial();
         }
     };
 
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
-    private final Theme theme;
     private final World world;
     private final Group root = new Group();
     private final Group floorGroup = new Group();
@@ -92,19 +89,19 @@ public class World3D {
     private final PhongMaterial wallBaseMaterial;
     private final PhongMaterial wallMiddleMaterial;
     private final PhongMaterial wallTopMaterial;
-
     private final PhongMaterial houseMaterial;
+    private final Map<String, PhongMaterial> floorTextures;
 
-    public World3D(World world, Theme theme, Color wallBaseColor, Color wallMiddleColor, Color wallTopColor, Color doorColor) {
+    public World3D(World world, Map<String, PhongMaterial> floorTextures, Color wallBaseColor, Color wallMiddleColor, Color wallTopColor, Color doorColor) {
         checkNotNull(world);
-        checkNotNull(theme);
+        checkNotNull(floorTextures);
         checkNotNull(wallBaseColor);
         checkNotNull(wallMiddleColor);
         checkNotNull(wallTopColor);
         checkNotNull(doorColor);
 
         this.world = world;
-        this.theme = theme;
+        this.floorTextures = floorTextures;
         this.doorColor = doorColor;
 
         wallBaseMaterial   = coloredMaterial(wallBaseColor);
@@ -119,12 +116,12 @@ public class World3D {
 
         houseMaterial = coloredMaterial(opaqueColor(wallMiddleColor, houseWallOpacityPy.get()));
 
+        Vector2f houseCenter = world.house().topLeftTile().toFloatVec().scaled(TS).plus(world.house().size().toFloatVec().scaled(HTS));
         houseLight = new PointLight();
-        houseLight.setColor(Color.YELLOW.desaturate());
+        houseLight.setColor(Color.GHOSTWHITE);
         houseLight.setMaxRange(3 * TS);
-        Vector2f center = world.house().topLeftTile().toFloatVec().plus(world.house().size().toFloatVec().scaled(0.5f));
-        houseLight.setTranslateX(center.x() + HTS);
-        houseLight.setTranslateY(center.y());
+        houseLight.setTranslateX(houseCenter.x());
+        houseLight.setTranslateY(houseCenter.y());
         houseLight.setTranslateZ(-TS);
 
         buildFloor();
@@ -150,20 +147,15 @@ public class World3D {
         floor.drawModeProperty().bind(drawModePy);
         floorGroup.getChildren().add(floor);
         floorGroup.getTransforms().add(new Translate(0.5 * sizeX, 0.5 * sizeY, 0.5 * sizeZ));
-        updateFloorMaterial(floor);
+        updateFloorMaterial();
     }
 
     private Box floor() {
         return (Box) floorGroup.getChildren().getFirst();
     }
 
-    private void updateFloorMaterial(Box floor) {
-        String key = floorTexturePy.get();
-        PhongMaterial texture = theme.get("texture." + key);
-        if (texture == null) {
-            texture = coloredMaterial(floorColorPy.get());
-        }
-        floor.setMaterial(texture);
+    private void updateFloorMaterial() {
+        floor().setMaterial(floorTextures.getOrDefault("texture." + floorTexturePy.get(), coloredMaterial(floorColorPy.get())));
     }
 
     private WallData createWallData() {
