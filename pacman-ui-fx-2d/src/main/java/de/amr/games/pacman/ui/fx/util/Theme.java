@@ -50,7 +50,7 @@ public class Theme {
         arraysByName.computeIfAbsent(arrayName, name -> new ArrayList<>()).add(value);
     }
 
-    public void addAllToArray(String arrayName, Object... values) {
+    public void addAllToArray(String arrayName, Object[] values) {
         for (var value : values) {
             addToArray(arrayName, value);
         }

@@ -119,7 +119,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("icon.stop",       rm.loadImage("graphics/icons/stop.png"));
         theme.set("icon.step",       rm.loadImage("graphics/icons/step.png"));
 
-        var textureNames = List.of("knobs", "plastic", "wood");
+        String[] textureNames = {"knobs", "plastic", "wood"};
         for (var name : textureNames) {
             var texture = new PhongMaterial();
             texture.setBumpMap   (rm.loadImage("graphics/textures/%s-bump.jpg".formatted(name)));
@@ -127,7 +127,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             texture.diffuseColorProperty().bind(PY_3D_FLOOR_COLOR);
             theme.set("texture." + name, texture);
         }
-        theme.addAllToArray("texture.names", textureNames.toArray());
+        theme.addAllToArray("texture.names", textureNames);
 
         theme.set("ghost.0.color.normal.dress",      theme.color("palette.red"));
         theme.set("ghost.0.color.normal.eyeballs",   theme.color("palette.pale"));
@@ -153,41 +153,41 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("ghost.color.flashing.eyeballs",   theme.color("palette.rose"));
         theme.set("ghost.color.flashing.pupils",     theme.color("palette.red"));
 
-        theme.addAllToArray("mspacman.maze.foodColor",
+        theme.addAllToArray("mspacman.maze.foodColor", new Color[] {
             Color.rgb(222, 222, 255),
             Color.rgb(255, 255, 0),
             Color.rgb(255, 0, 0),
             Color.rgb(222, 222, 255),
             Color.rgb(0, 255, 255),
             Color.rgb(222, 222, 255)
-        );
+        });
 
-        theme.addAllToArray("mspacman.maze.wallBaseColor",
+        theme.addAllToArray("mspacman.maze.wallBaseColor", new Color[] {
             Color.rgb(255, 0, 0),
             Color.rgb(222, 222, 255),
             Color.rgb(222, 222, 255),
             Color.rgb(255, 183, 81),
             Color.rgb(255, 255, 0),
             Color.rgb(255, 0, 0)
-        );
+        });
 
-        theme.addAllToArray("mspacman.maze.wallTopColor",
+        theme.addAllToArray("mspacman.maze.wallTopColor", new Color[] {
             Color.rgb(255, 0, 0),
             Color.rgb(222, 222, 255),
             Color.rgb(222, 222, 255),
             Color.rgb(255, 183, 81),
             Color.rgb(255, 255, 0),
             Color.rgb(255, 0, 0)
-        );
+        });
 
-        theme.addAllToArray("mspacman.maze.wallMiddleColor",
+        theme.addAllToArray("mspacman.maze.wallMiddleColor", new Color[] {
             Color.rgb(255, 183, 174),
             Color.rgb(71, 183, 255),
             Color.rgb(222, 151, 81),
             Color.rgb(33, 33, 255),
             Color.rgb(255, 183, 255),
             Color.rgb(222, 183, 174)
-        );
+        });
 
         theme.set("mspacman.color.head",           Color.rgb(255, 255, 0));
         theme.set("mspacman.color.palate",         Color.rgb(191, 79, 61));
