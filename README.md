@@ -10,9 +10,11 @@ Both games (2D) can now also be played online:
 
 This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler technology (👏 to Bruno Salmon).
 
-## Video
+## Videos
 
-[![Pac-Man 3D Video](doc/pacman-maze.png)](https://magentacloud.de/s/qYDg6BKK7G6TxpB)
+[![Magenta Cloud](doc/pacman-maze.png)](https://magentacloud.de/s/qYDg6BKK7G6TxpB)
+
+[![YouTube](doc/pacman-maze.png)](https://www.youtube.com/watch?v=XeVjXU59buw)
 
 ## About this project
 
