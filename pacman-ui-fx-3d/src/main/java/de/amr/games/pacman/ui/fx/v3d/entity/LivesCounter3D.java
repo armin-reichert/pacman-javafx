@@ -50,7 +50,6 @@ public class LivesCounter3D {
     private final Group standsGroup = new Group();
 
     private final PhongMaterial pillarMaterial;
-
     private final PhongMaterial plateMaterial;
 
     private final List<Animation> animations = new ArrayList<>();
@@ -126,12 +125,6 @@ public class LivesCounter3D {
 
     public Node root() {
         return root;
-    }
-
-    public void setPosition(double x, double y, double z) {
-        root.setTranslateX(x);
-        root.setTranslateY(y);
-        root.setTranslateZ(z);
     }
 
     public void update(int numLives) {

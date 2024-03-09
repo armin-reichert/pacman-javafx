@@ -6,8 +6,8 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -20,13 +20,20 @@ import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.SequentialTransition;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
@@ -37,9 +44,24 @@ import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.*;
  */
 public class GameLevel3D {
 
+    private static final double READY_TEXT_OUT_Z = -5;
+    private static final double READY_TEXT_IN_Z  =  5;
+
+    private static Text3D createText3D(String text, Font font) {
+        Text3D text3D = new Text3D();
+        text3D.beginBatch();
+        text3D.setTextColor(Color.YELLOW);
+        text3D.setFont(font);
+        text3D.setText(text);
+        text3D.endBatch();
+        text3D.rotate(Rotate.X_AXIS, 90);
+        return text3D;
+    }
+
     private final GameLevel level;
     private final Group root = new Group();
     private final World3D world3D;
+    private final Group foodGroup;
     private final Pac3D pac3D;
     private final Pac3DLight pac3DLight;
     private final Ghost3D[] ghosts3D;
@@ -48,6 +70,7 @@ public class GameLevel3D {
     private final Scores3D scores3D;
     private final SpriteSheet spriteSheet;
     private Bonus3D bonus3D;
+    private final Text3D readyText3D;
 
     public GameLevel3D(GameLevel level, Theme theme, SpriteSheet spriteSheet) {
         checkLevelNotNull(level);
@@ -74,6 +97,7 @@ public class GameLevel3D {
                 var wallTopColor    = theme.color("mspacman.maze.wallTopColor", mazeNumber - 1);
                 var doorColor       = theme.color("mspacman.maze.doorColor");
                 world3D = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
+                foodGroup = world3D.addFood();
                 pac3D = createMsPacMan3D(pacModel3D, theme, level.pac(), pacSize);
                 pac3DLight = new Pac3DLight(pac3D);
                 ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, ghostModel3D, theme, ghostSize)).toArray(Ghost3D[]::new);
@@ -86,6 +110,7 @@ public class GameLevel3D {
                 var wallTopColor    = theme.color("pacman.maze.wallTopColor");
                 var doorColor       = theme.color("pacman.maze.doorColor");
                 world3D = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
+                foodGroup = world3D.addFood();
                 pac3D = createPacMan3D(pacModel3D, theme, level.pac(), pacSize);
                 pac3DLight = new Pac3DLight(pac3D);
                 ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, ghostModel3D, theme, ghostSize)).toArray(Ghost3D[]::new);
@@ -94,28 +119,43 @@ public class GameLevel3D {
             default -> throw new IllegalGameVariantException(level.game().variant());
         }
 
-        livesCounter3D.setPosition(2 * TS, 2 * TS, 0);
+        var house = level.world().house();
+        readyText3D = createText3D("READY!", theme.font("font.arcade", 6));
+        readyText3D.root().setTranslateX(0.5 * level.world().numCols() * TS);
+        readyText3D.root().setTranslateY(house.topLeftTile().plus(house.size()).y() * TS);
+
+        livesCounter3D.root().setTranslateX(2 * TS);
+        livesCounter3D.root().setTranslateY(2 * TS);
+
         levelCounter3D = new LevelCounter3D();
         levelCounter3D.setRightPosition((level.world().numCols() - 2) * TS, 2 * TS, -HTS);
         updateLevelCounter3D();
-        scores3D = new Scores3D(theme.font("font.arcade", 8));
-        scores3D.setPosition(TS, -3 * TS, -3 * TS);
 
+        scores3D = new Scores3D(theme.font("font.arcade", 8));
+        scores3D.root().setTranslateX(TS);
+        scores3D.root().setTranslateY(-3 * TS);
+        scores3D.root().setTranslateZ(-3 * TS);
+
+        root.getChildren().add(readyText3D.root());
         root.getChildren().add(scores3D.root());
-        root.getChildren().add(levelCounter3D.getRoot());
+        root.getChildren().add(levelCounter3D.root());
         root.getChildren().add(livesCounter3D.root());
         root.getChildren().addAll(pac3D.getRoot(), pac3DLight);
         for (int id = 0; id < 4; ++id) {
             root.getChildren().add(ghosts3D[id].root());
         }
-        // World must be added *after* the guys. Otherwise, a semi-transparent house is not rendered correctly!
+        root.getChildren().add(foodGroup);
+        // Walls must be added *after* the rest. Otherwise, transparency is not working correctly!
         root.getChildren().add(world3D.getRoot());
 
+        // Bindings
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
         for (var g3D: ghosts3D) {
             g3D.drawModePy.bind(PY_3D_DRAW_MODE);
         }
+        livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         world3D.drawModePy.bind(PY_3D_DRAW_MODE);
+
         world3D.floorColorPy.bind(PY_3D_FLOOR_COLOR);
         world3D.floorTexturePy.bind(PY_3D_FLOOR_TEXTURE);
         world3D.wallHeightPy.bind(PY_3D_WALL_HEIGHT);
@@ -124,7 +164,11 @@ public class GameLevel3D {
         world3D.houseWallOpacityPy.bind(PY_3D_HOUSE_WALL_OPACITY);
         world3D.houseWallThicknessPy.bind(PY_3D_HOUSE_WALL_THICKNESS);
 
-        livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
+        // center over origin
+        double centerX = level.world().numCols() * HTS;
+        double centerY = level.world().numRows() * HTS;
+        root.setTranslateX(-centerX);
+        root.setTranslateY(-centerY);
     }
 
     public void replaceBonus3D(Bonus bonus) {
@@ -134,7 +178,8 @@ public class GameLevel3D {
         }
         bonus3D = createBonus3D(bonus);
         bonus3D.showEdible();
-        root.getChildren().add(bonus3D.getRoot());
+        // add bonus before last element (wall group) to make transparency work
+        root.getChildren().add(root.getChildren().size() - 1, bonus3D.getRoot());
     }
 
     private Bonus3D createBonus3D(Bonus bonus) {
@@ -179,6 +224,30 @@ public class GameLevel3D {
         }
         updateHouseState();
     }
+
+    public void showReadyMessage(String text) {
+        Logger.info("Show ready message");
+        readyText3D.setText(text);
+        readyText3D.root().setVisible(true);
+        readyText3D.root().setTranslateZ(READY_TEXT_IN_Z);
+        var animation = new TranslateTransition(Duration.seconds(1.5), readyText3D.root());
+        animation.setDelay(Duration.seconds(0.25));
+        animation.setFromZ(READY_TEXT_IN_Z);
+        animation.setToZ(READY_TEXT_OUT_Z);
+        animation.play();
+    }
+
+    public void hideReadyMessage() {
+        if (!readyText3D.root().isVisible()) {
+            return;
+        }
+        var animation = new TranslateTransition(Duration.seconds(0.75), readyText3D.root());
+        animation.setDelay(Duration.seconds(0.5));
+        animation.setToZ(READY_TEXT_IN_Z);
+        animation.setOnFinished(e -> readyText3D.root().setVisible(false));
+        animation.play();
+    }
+
 
     public void updateLevelCounter3D() {
         Function<Byte, Rectangle2D> spriteSupplier = switch (level.game().variant()) {
@@ -256,5 +325,21 @@ public class GameLevel3D {
 
     public LivesCounter3D livesCounter3D() {
         return livesCounter3D;
+    }
+
+    /**
+     * @return all 3D pellets, including energizers
+     */
+    public Stream<Eatable3D> eatables3D() {
+        return foodGroup.getChildren().stream().map(Node::getUserData).map(Eatable3D.class::cast);
+    }
+
+    public Stream<Energizer3D> energizers3D() {
+        return eatables3D().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
+    }
+
+    public Optional<Eatable3D> eatableAt(Vector2i tile) {
+        checkTileNotNull(tile);
+        return eatables3D().filter(eatable -> eatable.tile().equals(tile)).findFirst();
     }
 }

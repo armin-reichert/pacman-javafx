@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import javafx.geometry.Point3D;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -21,6 +22,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Text3D {
 
+    private final Group root = new Group();
     private final Box box;
     private double quality = 3;
     private Font font = Font.font(8);
@@ -30,6 +32,7 @@ public class Text3D {
 
     public Text3D() {
         box = new Box(100, 10, 0.1);
+        root.getChildren().add(box);
     }
 
     private void updateImage() {
@@ -69,18 +72,11 @@ public class Text3D {
     }
 
     public Node root() {
-        return box;
-    }
-
-    public void translate(double x, double y, double z) {
-        box.setTranslateX(x);
-        box.setTranslateY(y);
-        box.setTranslateZ(z);
+        return root;
     }
 
     public void rotate(Point3D axis, double angle) {
         requireNonNull(axis);
-
         box.setRotationAxis(axis);
         box.setRotate(angle);
     }
@@ -106,7 +102,6 @@ public class Text3D {
 
     public void setFont(Font font) {
         requireNonNull(font);
-
         if (font.equals(this.font)) {
             return;
         }
@@ -116,7 +111,6 @@ public class Text3D {
 
     public void setTextColor(Color color) {
         requireNonNull(color);
-
         if (color.equals(this.textColor)) {
             return;
         }
@@ -133,9 +127,5 @@ public class Text3D {
         }
         this.text = text;
         updateImage();
-    }
-
-    public void setVisible(boolean visible) {
-        box.setVisible(visible);
     }
 }

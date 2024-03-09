@@ -28,7 +28,7 @@ public class LevelCounter3D {
 
     private final Group root = new Group();
 
-    public Node getRoot() {
+    public Node root() {
         return root;
     }
 

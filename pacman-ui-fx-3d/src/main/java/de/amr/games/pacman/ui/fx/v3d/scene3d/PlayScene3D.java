@@ -25,8 +25,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -54,22 +52,6 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 public class PlayScene3D implements GameScene {
 
     private static final byte CHILD_LEVEL_3D  = 0;
-    private static final byte CHILD_READY_MSG = 1;
-
-    private static final double READY_TEXT_OUT_Z = -5;
-    private static final double READY_TEXT_IN_Z  =  5;
-
-    private static Text3D createText3D(String text, Font font) {
-        Text3D text3D = new Text3D();
-        text3D.beginBatch();
-        text3D.setTextColor(Color.YELLOW);
-        text3D.setFont(font);
-        text3D.setText(text);
-        text3D.endBatch();
-        text3D.setVisible(true);
-        text3D.rotate(Rotate.X_AXIS, 90);
-        return text3D;
-    }
 
     private final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
         @Override
@@ -90,7 +72,6 @@ public class PlayScene3D implements GameScene {
     private final SubScene fxSubScene;
 
     private GameLevel3D level3D;
-    private Text3D readyText3D;
     private GameSceneContext context;
     private boolean scoreVisible;
 
@@ -168,34 +149,6 @@ public class PlayScene3D implements GameScene {
         return camControllerMap.getOrDefault(perspectivePy.get(), camControllerMap.get(Perspective.TOTAL));
     }
 
-    private void showReadyMessage(String text) {
-        Logger.trace("Show ready message");
-        readyText3D = createText3D(text, context.theme().font("font.arcade", 6));
-        readyText3D.root().setTranslateX(0);
-        readyText3D.root().setTranslateY(16);
-        readyText3D.root().setTranslateZ(READY_TEXT_IN_Z);
-        subSceneRoot.getChildren().set(CHILD_READY_MSG, readyText3D.root());
-        var animation = new TranslateTransition(Duration.seconds(1.5), readyText3D.root());
-        animation.setDelay(Duration.seconds(0.25));
-        animation.setFromZ(READY_TEXT_IN_Z);
-        animation.setToZ(READY_TEXT_OUT_Z);
-        animation.play();
-    }
-
-    private void hideReadyMessage() {
-        if (readyText3D == null) {
-            return;
-        }
-        var animation = new TranslateTransition(Duration.seconds(0.75), readyText3D.root());
-        animation.setDelay(Duration.seconds(0.5));
-        animation.setToZ(READY_TEXT_IN_Z);
-        animation.setOnFinished(e -> {
-            readyText3D = null;
-            subSceneRoot.getChildren().set(CHILD_READY_MSG, new Group());
-        });
-        animation.play();
-    }
-
     private void replaceGameLevel3D(GameLevel level) {
 
         //TODO In level 1 when switching between 2D and 3D view, the 3D level is always recreated. How to avoid this?
@@ -208,18 +161,14 @@ public class PlayScene3D implements GameScene {
         // replace initial placeholder or previous 3D level
         subSceneRoot.getChildren().set(CHILD_LEVEL_3D, level3D.root());
 
-        // center over origin
-        double centerX = level.world().numCols() * HTS;
-        double centerY = level.world().numRows() * HTS;
-        level3D.root().setTranslateX(-centerX);
-        level3D.root().setTranslateY(-centerY);
-
         // keep the scores rotated such that the viewer always sees them frontally
         level3D.scores3D().root().rotationAxisProperty().bind(camera.rotationAxisProperty());
         level3D.scores3D().root().rotateProperty().bind(camera.rotateProperty());
 
         if (context.gameState() == GameState.LEVEL_TEST) {
-            showReadyMessage("LEVEL %s TEST".formatted(level.number()));
+            level3D.showReadyMessage("LEVEL %s TEST".formatted(level.number()));
+        } else {
+            level3D.showReadyMessage("READY!");
         }
 
         if (PY_3D_FLOOR_TEXTURE_RND.get()) {
@@ -255,16 +204,16 @@ public class PlayScene3D implements GameScene {
             return;
         }
         context.gameLevel().ifPresent(level -> {
-            level3D.world3D().eatables3D().forEach(
+            level3D.eatables3D().forEach(
                 eatable3D -> eatable3D.root().setVisible(!level.world().hasEatenFoodAt(eatable3D.tile())));
             if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
-                level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
+                level3D.energizers3D().forEach(Energizer3D::startPumping);
             }
             if (!level.isDemoLevel() && context.gameState() == GameState.HUNTING) {
                 context.soundHandler().ensureSirenStarted(context.gameVariant(), level.huntingPhaseIndex() / 2);
             }
         });
-        hideReadyMessage();
+        level3D.hideReadyMessage();
     }
 
     @Override
@@ -279,12 +228,12 @@ public class PlayScene3D implements GameScene {
             if (e.tile().isEmpty()) {
                 level.world().tiles()
                     .filter(level.world()::hasEatenFoodAt)
-                    .map(level3D.world3D()::eatableAt)
+                    .map(level3D::eatableAt)
                     .flatMap(Optional::stream)
                     .forEach(Eatable3D::onEaten);
             } else {
                 Vector2i tile = e.tile().get();
-                level3D.world3D().eatableAt(tile).ifPresent(level3D::eat);
+                level3D.eatableAt(tile).ifPresent(level3D::eat);
             }
         });
     }
@@ -318,6 +267,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onLevelStarted(GameEvent e) {
         if (level3D != null) {
+            level3D.showReadyMessage("READY!");
             level3D.updateLevelCounter3D();
         }
     }
@@ -341,7 +291,6 @@ public class PlayScene3D implements GameScene {
         switch (e.newState) {
 
             case READY -> {
-                showReadyMessage("READY!");
                 if (level3D != null) {
                     level3D.pac3D().init();
                     Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
@@ -355,7 +304,7 @@ public class PlayScene3D implements GameScene {
                 level3D.pac3D().init();
                 Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
                 level3D.livesCounter3D().startAnimation();
-                level3D.world3D().energizers3D().forEach(Energizer3D::startPumping);
+                level3D.energizers3D().forEach(Energizer3D::startPumping);
             }
 
             case PACMAN_DYING -> {
@@ -400,7 +349,7 @@ public class PlayScene3D implements GameScene {
                 }
                 context.gameLevel().ifPresent(level -> {
                     // if cheat has been used to complete level, 3D food might still exist:
-                    level3D.world3D().eatables3D().forEach(level3D::eat);
+                    level3D.eatables3D().forEach(level3D::eat);
                     level3D.livesCounter3D().stopAnimation();
                     boolean intermissionAfterLevel = level.data().intermissionNumber() != 0;
                     lockGameStateAndPlayAfterSeconds(1.0,
@@ -446,13 +395,16 @@ public class PlayScene3D implements GameScene {
         // on state exit
         if (e.oldState != null) {
             switch (e.oldState) {
-                case READY -> hideReadyMessage();
+                case READY -> {
+                    assert level3D != null;
+                    level3D.hideReadyMessage();
+                }
                 case HUNTING -> {
                     if (level3D == null) {
                         throw new IllegalStateException("No 3D level exists!");
                     }
                     if (e.newState != GameState.GHOST_DYING) {
-                        level3D.world3D().energizers3D().forEach(Energizer3D::stopPumping);
+                        level3D.energizers3D().forEach(Energizer3D::stopPumping);
                         level3D.bonus3D().ifPresent(Bonus3D::hide);
                     }
                 }

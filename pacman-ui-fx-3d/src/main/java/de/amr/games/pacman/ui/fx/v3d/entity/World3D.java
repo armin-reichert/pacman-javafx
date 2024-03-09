@@ -92,7 +92,6 @@ public class World3D {
     private final List<DoorWing3D> doorWings3D = new ArrayList<>();
     private final Group doorGroup = new Group();
     private final PointLight houseLight;
-    private final Group foodGroup = new Group();
     private final Color foodColor;
     private final Color doorColor;
 
@@ -143,9 +142,8 @@ public class World3D {
 
         buildFloor();
         buildWorld();
-        addFood();
 
-        root.getChildren().addAll(floorGroup, wallsGroup, doorGroup, /*houseLight,*/ foodGroup);
+        root.getChildren().addAll(floorGroup, wallsGroup, doorGroup, houseLight);
     }
 
 
@@ -380,7 +378,8 @@ public class World3D {
 
     // Food
 
-    private void addFood() {
+    public Group addFood() {
+        var foodGroup = new Group();
         var foodMaterial = coloredMaterial(foodColor);
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             Eatable3D food3D = world.isEnergizerTile(tile)
@@ -388,6 +387,7 @@ public class World3D {
                 : createNormalPellet3D(tile, foodMaterial);
             foodGroup.getChildren().add(food3D.root());
         });
+        return foodGroup;
     }
 
     private Pellet3D createNormalPellet3D(Vector2i tile, PhongMaterial material) {
@@ -413,21 +413,5 @@ public class World3D {
         squirting.setDropMaterial(coloredMaterial(foodColor.desaturate()));
         energizer3D.setEatenAnimation(squirting);
         return energizer3D;
-    }
-
-    /**
-     * @return all 3D pellets, including energizers
-     */
-    public Stream<Eatable3D> eatables3D() {
-        return foodGroup.getChildren().stream().map(Node::getUserData).map(Eatable3D.class::cast);
-    }
-
-    public Stream<Energizer3D> energizers3D() {
-        return eatables3D().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
-    }
-
-    public Optional<Eatable3D> eatableAt(Vector2i tile) {
-        checkTileNotNull(tile);
-        return eatables3D().filter(eatable -> eatable.tile().equals(tile)).findFirst();
     }
 }
