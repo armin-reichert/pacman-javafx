@@ -22,6 +22,16 @@ import static java.util.Objects.requireNonNull;
  */
 public class Text3D {
 
+    public static Text3D create(String text, Color color, Font font) {
+        Text3D text3D = new Text3D();
+        text3D.beginBatch();
+        text3D.setTextColor(color);
+        text3D.setFont(font);
+        text3D.setText(text);
+        text3D.endBatch();
+        return text3D;
+    }
+
     private final Group root = new Group();
     private final Box box;
     private double quality = 3;
@@ -77,8 +87,8 @@ public class Text3D {
 
     public void rotate(Point3D axis, double angle) {
         requireNonNull(axis);
-        box.setRotationAxis(axis);
-        box.setRotate(angle);
+        root.setRotationAxis(axis);
+        root.setRotate(angle);
     }
 
     public void beginBatch() {

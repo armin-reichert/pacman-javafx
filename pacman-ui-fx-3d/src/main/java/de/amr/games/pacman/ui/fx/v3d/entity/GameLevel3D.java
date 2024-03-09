@@ -24,7 +24,6 @@ import javafx.animation.TranslateTransition;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -43,17 +42,6 @@ public class GameLevel3D {
 
     private static final double READY_TEXT_OUT_Z = -5;
     private static final double READY_TEXT_IN_Z  =  5;
-
-    private static Text3D createText3D(String text, Font font) {
-        Text3D text3D = new Text3D();
-        text3D.beginBatch();
-        text3D.setTextColor(Color.YELLOW);
-        text3D.setFont(font);
-        text3D.setText(text);
-        text3D.endBatch();
-        text3D.rotate(Rotate.X_AXIS, 90);
-        return text3D;
-    }
 
     private final GameLevel level;
     private final Group root = new Group();
@@ -117,7 +105,8 @@ public class GameLevel3D {
         }
 
         var house = level.world().house();
-        readyText3D = createText3D("READY!", theme.font("font.arcade", 6));
+        readyText3D = Text3D.create("READY!", Color.YELLOW, theme.font("font.arcade", 6));
+        readyText3D.rotate(Rotate.X_AXIS, 90);
         readyText3D.root().setTranslateX(0.5 * level.world().numCols() * TS);
         readyText3D.root().setTranslateY(house.topLeftTile().plus(house.size()).y() * TS);
 
