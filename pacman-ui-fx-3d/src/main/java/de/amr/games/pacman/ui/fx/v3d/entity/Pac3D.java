@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import de.amr.games.pacman.ui.fx.v3d.animation.HeadBanging;
 import de.amr.games.pacman.ui.fx.v3d.animation.HipSwaying;
 import de.amr.games.pacman.ui.fx.v3d.animation.WalkingAnimation;
@@ -171,7 +170,7 @@ public class Pac3D {
         meshView(pacNode, MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
     }
 
-    public Group getRoot() {
+    public Group root() {
         return root;
     }
 

@@ -12,6 +12,7 @@ import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
@@ -58,8 +59,9 @@ public class GameLevel3D {
     private final LivesCounter3D livesCounter3D;
     private final Scores3D scores3D;
     private final SpriteSheet spriteSheet;
-    private Bonus3D bonus3D;
     private final Text3D readyText3D;
+
+    private Bonus3D bonus3D;
 
     public GameLevel3D(GameLevel level, Theme theme, SpriteSheet spriteSheet) {
         checkLevelNotNull(level);
@@ -69,9 +71,7 @@ public class GameLevel3D {
         this.level = level;
         this.spriteSheet = spriteSheet;
 
-        var pacModel3D = theme.<Model3D>get("model3D.pacman");
-        var ghostModel3D = theme.<Model3D>get("model3D.ghost");
-
+        World world = level.world();
         double pacSize = 9.0;
         double ghostSize = 9.0;
         double livesCounterPacSize = 10.0;
@@ -83,29 +83,29 @@ public class GameLevel3D {
                 var wallMiddleColor = theme.color("mspacman.maze.wallMiddleColor", mazeNumber - 1);
                 var wallTopColor    = theme.color("mspacman.maze.wallTopColor", mazeNumber - 1);
                 var doorColor       = theme.color("mspacman.maze.doorColor");
-                world3D = new World3D(level.world(), theme, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
-                addFood(level.world(), theme.color("mspacman.maze.foodColor", mazeNumber - 1), theme.get("model3D.pellet"));
-                pac3D = createMsPacMan3D(pacModel3D, theme, level.pac(), pacSize);
+                world3D = new World3D(world, theme, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
+                addFood(world, theme.color("mspacman.maze.foodColor", mazeNumber - 1), theme.get("model3D.pellet"));
+                pac3D = createMsPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), pacSize);
                 pac3DLight = new Pac3DLight(pac3D);
-                ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, ghostModel3D, theme, ghostSize)).toArray(Ghost3D[]::new);
-                livesCounter3D = new LivesCounter3D(() -> createMsPacManGroup(pacModel3D, theme, livesCounterPacSize), true);
+                ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, theme.get("model3D.ghost"), theme, ghostSize)).toArray(Ghost3D[]::new);
+                livesCounter3D = new LivesCounter3D(() -> createMsPacManGroup(theme.get("model3D.pacman"), theme, livesCounterPacSize), true);
             }
             case PACMAN -> {
                 var wallBaseColor   = theme.color("pacman.maze.wallBaseColor");
                 var wallMiddleColor = theme.color("pacman.maze.wallMiddleColor");
                 var wallTopColor    = theme.color("pacman.maze.wallTopColor");
                 var doorColor       = theme.color("pacman.maze.doorColor");
-                world3D = new World3D(level.world(), theme, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
-                addFood(level.world(), theme.color("pacman.maze.foodColor"), theme.get("model3D.pellet"));
-                pac3D = createPacMan3D(pacModel3D, theme, level.pac(), pacSize);
+                world3D = new World3D(world, theme, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
+                addFood(world, theme.color("pacman.maze.foodColor"), theme.get("model3D.pellet"));
+                pac3D = createPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), pacSize);
                 pac3DLight = new Pac3DLight(pac3D);
-                ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, ghostModel3D, theme, ghostSize)).toArray(Ghost3D[]::new);
-                livesCounter3D = new LivesCounter3D(() -> createPacManGroup(pacModel3D, theme, livesCounterPacSize), false);
+                ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, theme.get("model3D.ghost"), theme, ghostSize)).toArray(Ghost3D[]::new);
+                livesCounter3D = new LivesCounter3D(() -> createPacManGroup(theme.get("model3D.pacman"), theme, livesCounterPacSize), false);
             }
             default -> throw new IllegalGameVariantException(level.game().variant());
         }
 
-        var house = level.world().house();
+        var house = world.house();
         var inFrontOfHouse = house.topLeftTile().scaled(TS).toFloatVec().plus(house.size().x() * HTS, house.size().y() * TS);
         readyText3D = Text3D.create("READY!", Color.YELLOW, theme.font("font.arcade", 6));
         readyText3D.root().setTranslateX(inFrontOfHouse.x());
@@ -118,7 +118,7 @@ public class GameLevel3D {
 
         levelCounter3D = new LevelCounter3D();
         // this is the *right* edge of the level counter:
-        levelCounter3D.root().setTranslateX((level.world().numCols() - 2) * TS);
+        levelCounter3D.root().setTranslateX((world.numCols() - 2) * TS);
         levelCounter3D.root().setTranslateY(2 * TS);
         levelCounter3D.root().setTranslateZ(-HTS);
         updateLevelCounterSprites();
@@ -132,13 +132,17 @@ public class GameLevel3D {
         root.getChildren().add(scores3D.root());
         root.getChildren().add(levelCounter3D.root());
         root.getChildren().add(livesCounter3D.root());
-        root.getChildren().addAll(pac3D.getRoot(), pac3DLight);
-        for (int id = 0; id < 4; ++id) {
-            root.getChildren().add(ghosts3D[id].root());
+        root.getChildren().addAll(pac3D.root(), pac3DLight);
+        for (var ghost3D : ghosts3D) {
+            root.getChildren().add(ghost3D.root());
         }
         root.getChildren().add(foodGroup);
         // Walls must be added *after* the rest. Otherwise, transparency is not working correctly!
-        root.getChildren().add(world3D.getRoot());
+        root.getChildren().add(world3D.root());
+
+        // center over origin
+        root.setTranslateX(-world.numCols() * HTS);
+        root.setTranslateY(-world.numRows() * HTS);
 
         // Bindings
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
@@ -157,12 +161,6 @@ public class GameLevel3D {
         world3D.wallThicknessPy     .bind(PY_3D_WALL_THICKNESS);
         world3D.houseWallOpacityPy  .bind(PY_3D_HOUSE_WALL_OPACITY);
         world3D.houseWallThicknessPy.bind(PY_3D_HOUSE_WALL_THICKNESS);
-
-        // center over origin
-        double centerX = level.world().numCols() * HTS;
-        double centerY = level.world().numRows() * HTS;
-        root.setTranslateX(-centerX);
-        root.setTranslateY(-centerY);
     }
 
     public void updateLevelCounterSprites() {
@@ -237,7 +235,9 @@ public class GameLevel3D {
 
 
     public void update() {
+        GameState gameState = GameController.it().state();
         boolean hasCredit = GameController.it().hasCredit();
+
         pac3D.update();
         pac3DLight.update();
         for (var ghost3D : ghosts3D) {
@@ -247,9 +247,8 @@ public class GameLevel3D {
             bonus3D.update(level);
         }
         // reconsider this:
-        boolean hideOneLife = level.pac().isVisible() || GameController.it().state() == GameState.GHOST_DYING;
-        int numLivesShown = hideOneLife ? level.game().lives() - 1 : level.game().lives();
-        livesCounter3D.update(numLivesShown);
+        boolean hideOne = level.pac().isVisible() || gameState == GameState.GHOST_DYING;
+        livesCounter3D.update(hideOne ? level.game().lives() - 1 : level.game().lives());
         livesCounter3D.root().setVisible(hasCredit);
         scores3D.update(level);
         if (hasCredit) {
@@ -257,11 +256,10 @@ public class GameLevel3D {
         } else {
             scores3D.setShowText(Color.RED, "GAME OVER!");
         }
-        updateHouseState();
+        updateHouseState(level.world().house());
     }
 
     public void showReadyMessage(String text) {
-        Logger.info("Show ready message");
         readyText3D.setText(text);
         readyText3D.root().setVisible(true);
         readyText3D.root().setTranslateZ(READY_TEXT_IN_Z);
@@ -300,11 +298,11 @@ public class GameLevel3D {
         }
     }
 
-    private void updateHouseState() {
+    private void updateHouseState(House house) {
         boolean houseUsed = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
         boolean houseOpen = level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            .filter(ghost -> ghost.position().euclideanDistance(level.world().house().door().entryPosition()) <= 1.5 * TS)
+            .filter(ghost -> ghost.position().euclideanDistance(house.door().entryPosition()) <= 1.5 * TS)
             .anyMatch(Ghost::isVisible);
         world3D.houseLighting().setLightOn(houseUsed);
         if (houseOpen) {
