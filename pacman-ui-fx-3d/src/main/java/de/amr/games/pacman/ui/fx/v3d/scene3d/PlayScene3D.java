@@ -267,8 +267,8 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onLevelStarted(GameEvent e) {
         if (level3D != null) {
+            level3D.updateLevelCounterSprites();
             level3D.showReadyMessage("READY!");
-            level3D.updateLevelCounter3D();
         }
     }
 

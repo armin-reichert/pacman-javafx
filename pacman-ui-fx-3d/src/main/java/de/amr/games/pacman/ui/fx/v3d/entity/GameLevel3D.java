@@ -21,10 +21,8 @@ import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
@@ -32,7 +30,6 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -129,7 +126,7 @@ public class GameLevel3D {
 
         levelCounter3D = new LevelCounter3D();
         levelCounter3D.setRightPosition((level.world().numCols() - 2) * TS, 2 * TS, -HTS);
-        updateLevelCounter3D();
+        updateLevelCounterSprites();
 
         scores3D = new Scores3D(theme.font("font.arcade", 8));
         scores3D.root().setTranslateX(TS);
@@ -169,6 +166,10 @@ public class GameLevel3D {
         double centerY = level.world().numRows() * HTS;
         root.setTranslateX(-centerX);
         root.setTranslateY(-centerY);
+    }
+
+    public void updateLevelCounterSprites() {
+        levelCounter3D.updateSprites(level.game().levelCounter(), spriteSheet, level.game().variant());
     }
 
     public void replaceBonus3D(Bonus bonus) {
@@ -248,19 +249,6 @@ public class GameLevel3D {
         animation.play();
     }
 
-
-    public void updateLevelCounter3D() {
-        Function<Byte, Rectangle2D> spriteSupplier = switch (level.game().variant()) {
-            case MS_PACMAN -> ((MsPacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;
-            case PACMAN -> ((PacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;
-        };
-        var bonusSprites = level.game().levelCounter().stream()
-            .map(spriteSupplier)
-            .map(spriteSheet::subImage)
-            .toArray(Image[]::new);
-        levelCounter3D.update(bonusSprites);
-    }
-
     public void eat(Eatable3D eatable3D) {
         checkNotNull(eatable3D);
 
@@ -321,6 +309,10 @@ public class GameLevel3D {
 
     public Scores3D scores3D() {
         return scores3D;
+    }
+
+    public LevelCounter3D levelCounter3D() {
+        return levelCounter3D;
     }
 
     public LivesCounter3D livesCounter3D() {

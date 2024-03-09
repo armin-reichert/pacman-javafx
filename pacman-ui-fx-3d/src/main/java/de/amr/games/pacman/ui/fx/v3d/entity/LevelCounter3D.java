@@ -4,9 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -15,6 +20,9 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+
+import java.util.List;
+import java.util.function.Function;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static java.util.Objects.requireNonNull;
@@ -51,6 +59,10 @@ public class LevelCounter3D {
         root.setTranslateZ(z);
     }
 
+    public void updateSprites(List<Byte> levelCounter, SpriteSheet spriteSheet, GameVariant variant) {
+        update(sprites(levelCounter, spriteSheet, variant));
+    }
+
     private Box createSpinningCube(double size, Image texture, boolean forward) {
         var material = new PhongMaterial(Color.WHITE);
         material.setDiffuseMap(texture);
@@ -64,5 +76,16 @@ public class LevelCounter3D {
         spinning.setInterpolator(Interpolator.LINEAR);
         spinning.play();
         return cube;
+    }
+
+    private Image[] sprites(List<Byte> levelCounter, SpriteSheet spriteSheet, GameVariant variant) {
+        Function<Byte, Rectangle2D> spriteSupplier = switch (variant) {
+            case MS_PACMAN -> ((MsPacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;
+            case PACMAN -> ((PacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;
+        };
+        return levelCounter.stream()
+            .map(spriteSupplier)
+            .map(spriteSheet::subImage)
+            .toArray(Image[]::new);
     }
 }
