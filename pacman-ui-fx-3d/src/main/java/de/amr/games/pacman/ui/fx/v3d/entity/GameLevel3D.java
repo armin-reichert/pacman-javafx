@@ -117,7 +117,10 @@ public class GameLevel3D {
         livesCounter3D.root().setTranslateY(2 * TS);
 
         levelCounter3D = new LevelCounter3D();
-        levelCounter3D.setRightPosition((level.world().numCols() - 2) * TS, 2 * TS, -HTS);
+        // this is the *right* edge of the level counter:
+        levelCounter3D.root().setTranslateX((level.world().numCols() - 2) * TS);
+        levelCounter3D.root().setTranslateY(2 * TS);
+        levelCounter3D.root().setTranslateZ(-HTS);
         updateLevelCounterSprites();
 
         scores3D = new Scores3D(theme.font("font.arcade", 8));

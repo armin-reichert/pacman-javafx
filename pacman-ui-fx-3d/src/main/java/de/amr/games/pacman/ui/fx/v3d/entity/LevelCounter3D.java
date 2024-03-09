@@ -53,12 +53,6 @@ public class LevelCounter3D {
         }
     }
 
-    public void setRightPosition(double x, double y, double z) {
-        root.setTranslateX(x);
-        root.setTranslateY(y);
-        root.setTranslateZ(z);
-    }
-
     public void updateSprites(List<Byte> levelCounter, SpriteSheet spriteSheet, GameVariant variant) {
         update(sprites(levelCounter, spriteSheet, variant));
     }
