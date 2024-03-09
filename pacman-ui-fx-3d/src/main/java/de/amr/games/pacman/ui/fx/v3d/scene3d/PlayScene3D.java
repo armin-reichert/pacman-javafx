@@ -174,11 +174,13 @@ public class PlayScene3D implements GameScene {
 
     private void showLevelMessage() {
         Logger.info("Show level message");
-        if (context.gameState() == GameState.LEVEL_TEST && context.gameLevel().isPresent()) {
-            level3D.showMessage("TEST LEVEL %s".formatted(context.gameLevel().get().number()));
-        } else {
-            level3D.showMessage("READY!");
-        }
+        context.gameLevel().ifPresent(level -> {
+            if (context.gameState() == GameState.LEVEL_TEST) {
+                level3D.showMessage("TEST LEVEL %s".formatted(level.number()));
+            } else if (!level.isDemoLevel()){
+                level3D.showMessage("READY!");
+            }
+        });
     }
 
     @Override
