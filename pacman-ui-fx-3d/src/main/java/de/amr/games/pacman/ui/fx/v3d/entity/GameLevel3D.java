@@ -12,18 +12,21 @@ import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
+import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -32,6 +35,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.*;
 
@@ -46,7 +50,7 @@ public class GameLevel3D {
     private final GameLevel level;
     private final Group root = new Group();
     private final World3D world3D;
-    private final Group foodGroup;
+    private final Group foodGroup = new Group();
     private final Pac3D pac3D;
     private final Pac3DLight pac3DLight;
     private final Ghost3D[] ghosts3D;
@@ -65,7 +69,6 @@ public class GameLevel3D {
         this.level = level;
         this.spriteSheet = spriteSheet;
 
-        var pelletModel3D = theme.<Model3D>get("model3D.pellet");
         var pacModel3D = theme.<Model3D>get("model3D.pacman");
         var ghostModel3D = theme.<Model3D>get("model3D.ghost");
 
@@ -76,26 +79,24 @@ public class GameLevel3D {
         switch (level.game().variant()) {
             case MS_PACMAN -> {
                 int mazeNumber = level.game().mazeNumber(level.number());
-                var foodColor       = theme.color("mspacman.maze.foodColor", mazeNumber - 1);
                 var wallBaseColor   = theme.color("mspacman.maze.wallBaseColor", mazeNumber - 1);
                 var wallMiddleColor = theme.color("mspacman.maze.wallMiddleColor", mazeNumber - 1);
                 var wallTopColor    = theme.color("mspacman.maze.wallTopColor", mazeNumber - 1);
                 var doorColor       = theme.color("mspacman.maze.doorColor");
-                world3D = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
-                foodGroup = world3D.addFood();
+                world3D = new World3D(level.world(), theme, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
+                addFood(level.world(), theme.color("mspacman.maze.foodColor", mazeNumber - 1), theme.get("model3D.pellet"));
                 pac3D = createMsPacMan3D(pacModel3D, theme, level.pac(), pacSize);
                 pac3DLight = new Pac3DLight(pac3D);
                 ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, ghostModel3D, theme, ghostSize)).toArray(Ghost3D[]::new);
                 livesCounter3D = new LivesCounter3D(() -> createMsPacManGroup(pacModel3D, theme, livesCounterPacSize), true);
             }
             case PACMAN -> {
-                var foodColor       = theme.color("pacman.maze.foodColor");
                 var wallBaseColor   = theme.color("pacman.maze.wallBaseColor");
                 var wallMiddleColor = theme.color("pacman.maze.wallMiddleColor");
                 var wallTopColor    = theme.color("pacman.maze.wallTopColor");
                 var doorColor       = theme.color("pacman.maze.doorColor");
-                world3D = new World3D(level.world(), theme, pelletModel3D, foodColor, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
-                foodGroup = world3D.addFood();
+                world3D = new World3D(level.world(), theme, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
+                addFood(level.world(), theme.color("pacman.maze.foodColor"), theme.get("model3D.pellet"));
                 pac3D = createPacMan3D(pacModel3D, theme, level.pac(), pacSize);
                 pac3DLight = new Pac3DLight(pac3D);
                 ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, ghostModel3D, theme, ghostSize)).toArray(Ghost3D[]::new);
@@ -105,10 +106,12 @@ public class GameLevel3D {
         }
 
         var house = level.world().house();
+        var inFrontOfHouse = house.topLeftTile().scaled(TS).toFloatVec().plus(house.size().x() * HTS, house.size().y() * TS);
         readyText3D = Text3D.create("READY!", Color.YELLOW, theme.font("font.arcade", 6));
+        readyText3D.root().setTranslateX(inFrontOfHouse.x());
+        readyText3D.root().setTranslateY(inFrontOfHouse.y());
+        readyText3D.root().setTranslateZ(READY_TEXT_IN_Z);
         readyText3D.rotate(Rotate.X_AXIS, 90);
-        readyText3D.root().setTranslateX(0.5 * level.world().numCols() * TS);
-        readyText3D.root().setTranslateY(house.topLeftTile().plus(house.size()).y() * TS);
 
         livesCounter3D.root().setTranslateX(2 * TS);
         livesCounter3D.root().setTranslateY(2 * TS);
@@ -136,18 +139,20 @@ public class GameLevel3D {
 
         // Bindings
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
+
+        pac3D.drawModePy.bind(PY_3D_DRAW_MODE);
         for (var g3D: ghosts3D) {
             g3D.drawModePy.bind(PY_3D_DRAW_MODE);
         }
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         world3D.drawModePy.bind(PY_3D_DRAW_MODE);
 
-        world3D.floorColorPy.bind(PY_3D_FLOOR_COLOR);
-        world3D.floorTexturePy.bind(PY_3D_FLOOR_TEXTURE);
-        world3D.wallHeightPy.bind(PY_3D_WALL_HEIGHT);
-        world3D.wallOpacityPy.bind(PY_3D_WALL_OPACITY);
-        world3D.wallThicknessPy.bind(PY_3D_WALL_THICKNESS);
-        world3D.houseWallOpacityPy.bind(PY_3D_HOUSE_WALL_OPACITY);
+        world3D.floorColorPy        .bind(PY_3D_FLOOR_COLOR);
+        world3D.floorTexturePy      .bind(PY_3D_FLOOR_TEXTURE);
+        world3D.wallHeightPy        .bind(PY_3D_WALL_HEIGHT);
+        world3D.wallOpacityPy       .bind(PY_3D_WALL_OPACITY);
+        world3D.wallThicknessPy     .bind(PY_3D_WALL_THICKNESS);
+        world3D.houseWallOpacityPy  .bind(PY_3D_HOUSE_WALL_OPACITY);
         world3D.houseWallThicknessPy.bind(PY_3D_HOUSE_WALL_THICKNESS);
 
         // center over origin
@@ -164,12 +169,12 @@ public class GameLevel3D {
     public void replaceBonus3D(Bonus bonus) {
         checkNotNull(bonus);
         if (bonus3D != null) {
-            root.getChildren().remove(bonus3D.getRoot());
+            root.getChildren().remove(bonus3D.root());
         }
         bonus3D = createBonus3D(bonus);
         bonus3D.showEdible();
         // add bonus before last element (wall group) to make transparency work
-        root.getChildren().add(root.getChildren().size() - 1, bonus3D.getRoot());
+        root.getChildren().add(root.getChildren().size() - 1, bonus3D.root());
     }
 
     private Bonus3D createBonus3D(Bonus bonus) {
@@ -190,6 +195,43 @@ public class GameLevel3D {
             default -> throw new IllegalGameVariantException(level.game().variant());
         }
     }
+
+    public void addFood(World world, Color foodColor, Model3D pelletModel3D) {
+        foodGroup.getChildren().clear();
+        var foodMaterial = coloredMaterial(foodColor);
+        world.tiles().filter(world::hasFoodAt).forEach(tile -> {
+            Eatable3D food3D = world.isEnergizerTile(tile)
+                ? createEnergizer3D(world, foodColor, tile, foodMaterial)
+                : createNormalPellet3D(pelletModel3D, tile, foodMaterial);
+            foodGroup.getChildren().add(food3D.root());
+        });
+    }
+
+    private Pellet3D createNormalPellet3D(Model3D pelletModel3D, Vector2i tile, PhongMaterial material) {
+        var pellet3D = new Pellet3D(pelletModel3D, 1.0);
+        pellet3D.root().setMaterial(material);
+        pellet3D.placeAtTile(tile);
+        return pellet3D;
+    }
+
+    private Energizer3D createEnergizer3D(World world, Color foodColor, Vector2i tile, PhongMaterial material) {
+        var energizer3D = new Energizer3D(3.5);
+        energizer3D.root().setMaterial(material);
+        energizer3D.placeAtTile(tile);
+        var squirting = new Squirting(root) {
+            @Override
+            protected boolean reachesEndPosition(Drop drop) {
+                return drop.getTranslateZ() >= -1 && world.insideBounds(drop.getTranslateX(), drop.getTranslateY());
+            }
+        };
+        squirting.setOrigin(energizer3D.root());
+        squirting.setDropCountMin(15);
+        squirting.setDropCountMax(45);
+        squirting.setDropMaterial(coloredMaterial(foodColor.desaturate()));
+        energizer3D.setEatenAnimation(squirting);
+        return energizer3D;
+    }
+
 
     public void update() {
         boolean hasCredit = GameController.it().hasCredit();

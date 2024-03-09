@@ -82,11 +82,8 @@ public class Pac3D {
         checkNotNull(model3D);
         checkNotNull(theme);
         checkNotNull(pacMan);
-
         var pac3D = new Pac3D(createPacManGroup(model3D, theme, size), pacMan, theme.color("pacman.color.head"));
         pac3D.walkingAnimation = new HeadBanging(pacMan, pac3D.root);
-        pac3D.drawModePy.bind(PacManGames3dUI.PY_3D_DRAW_MODE);
-
         return pac3D;
     }
 
@@ -94,11 +91,8 @@ public class Pac3D {
         checkNotNull(model3D);
         checkNotNull(theme);
         checkNotNull(msPacMan);
-
         var msPac3D = new Pac3D(createMsPacManGroup(model3D, theme, size), msPacMan, theme.color("mspacman.color.head"));
         msPac3D.walkingAnimation = new HipSwaying(msPacMan, msPac3D.root);
-        msPac3D.drawModePy.bind(PacManGames3dUI.PY_3D_DRAW_MODE);
-
         return msPac3D;
     }
 

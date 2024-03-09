@@ -35,9 +35,8 @@ public class Bonus3D {
     private final Image symbolImage;
     private final Image pointsImage;
     private final Box shape;
-
-    private RotateTransition eatenAnimation;
-    private RotateTransition edibleAnimation;
+    private final RotateTransition eatenAnimation;
+    private final RotateTransition edibleAnimation;
 
     public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage) {
         checkNotNull(bonus);
@@ -65,7 +64,10 @@ public class Bonus3D {
     }
 
     public void update(GameLevel level) {
-        setPosition(bonus.entity().center());
+        Vector2f bonusPosition = bonus.entity().center();
+        shape.setTranslateX(bonusPosition.x());
+        shape.setTranslateY(bonusPosition.y());
+        shape.setTranslateZ(-HTS);
         boolean visible = bonus.state() != Bonus.STATE_INACTIVE && !outsideWorld(level.world());
         shape.setVisible(visible);
         updateEdibleAnimation();
@@ -116,18 +118,12 @@ public class Bonus3D {
         shape.setMaterial(material);
     }
 
-    public Node getRoot() {
+    public Node root() {
         return shape;
     }
 
     public void hide() {
         shape.setVisible(false);
-    }
-
-    public void setPosition(Vector2f position) {
-        shape.setTranslateX(position.x());
-        shape.setTranslateY(position.y());
-        shape.setTranslateZ(-HTS);
     }
 
     private boolean outsideWorld(World world) {

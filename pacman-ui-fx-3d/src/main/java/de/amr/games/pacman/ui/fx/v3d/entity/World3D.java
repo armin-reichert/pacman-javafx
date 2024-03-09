@@ -84,7 +84,6 @@ public class World3D {
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     private final Theme theme;
-    private final Model3D pelletModel3D;
     private final World world;
     private final Group root = new Group();
     private final Group floorGroup = new Group();
@@ -92,7 +91,6 @@ public class World3D {
     private final List<DoorWing3D> doorWings3D = new ArrayList<>();
     private final Group doorGroup = new Group();
     private final PointLight houseLight;
-    private final Color foodColor;
     private final Color doorColor;
 
     private final PhongMaterial wallBaseMaterial;
@@ -101,14 +99,9 @@ public class World3D {
 
     private final PhongMaterial houseMaterial;
 
-    public World3D(
-        World world, Theme theme, Model3D pelletModel3D,
-        Color foodColor, Color wallBaseColor, Color wallMiddleColor, Color wallTopColor, Color doorColor
-    ) {
+    public World3D(World world, Theme theme, Color wallBaseColor, Color wallMiddleColor, Color wallTopColor, Color doorColor) {
         checkNotNull(world);
         checkNotNull(theme);
-        checkNotNull(pelletModel3D);
-        checkNotNull(foodColor);
         checkNotNull(wallBaseColor);
         checkNotNull(wallMiddleColor);
         checkNotNull(wallTopColor);
@@ -116,8 +109,6 @@ public class World3D {
 
         this.world = world;
         this.theme = theme;
-        this.pelletModel3D = pelletModel3D;
-        this.foodColor = foodColor;
         this.doorColor = doorColor;
 
         wallBaseMaterial   = coloredMaterial(wallBaseColor);
@@ -374,44 +365,5 @@ public class World3D {
         block.heightProperty().bind(thicknessPy);
         block.drawModeProperty().bind(drawModePy);
         return block;
-    }
-
-    // Food
-
-    public Group addFood() {
-        var foodGroup = new Group();
-        var foodMaterial = coloredMaterial(foodColor);
-        world.tiles().filter(world::hasFoodAt).forEach(tile -> {
-            Eatable3D food3D = world.isEnergizerTile(tile)
-                ? createEnergizer3D(tile, foodMaterial)
-                : createNormalPellet3D(tile, foodMaterial);
-            foodGroup.getChildren().add(food3D.root());
-        });
-        return foodGroup;
-    }
-
-    private Pellet3D createNormalPellet3D(Vector2i tile, PhongMaterial material) {
-        var pellet3D = new Pellet3D(pelletModel3D, 1.0);
-        pellet3D.root().setMaterial(material);
-        pellet3D.placeAtTile(tile);
-        return pellet3D;
-    }
-
-    private Energizer3D createEnergizer3D(Vector2i tile, PhongMaterial material) {
-        var energizer3D = new Energizer3D(3.5);
-        energizer3D.root().setMaterial(material);
-        energizer3D.placeAtTile(tile);
-        var squirting = new Squirting(root) {
-            @Override
-            protected boolean reachesEndPosition(Drop drop) {
-                return drop.getTranslateZ() >= -1 && world.insideBounds(drop.getTranslateX(), drop.getTranslateY());
-            }
-        };
-        squirting.setOrigin(energizer3D.root());
-        squirting.setDropCountMin(15);
-        squirting.setDropCountMax(45);
-        squirting.setDropMaterial(coloredMaterial(foodColor.desaturate()));
-        energizer3D.setEatenAnimation(squirting);
-        return energizer3D;
     }
 }
