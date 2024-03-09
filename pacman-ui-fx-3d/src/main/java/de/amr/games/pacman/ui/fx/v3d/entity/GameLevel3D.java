@@ -30,7 +30,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -45,8 +44,8 @@ import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.*;
  */
 public class GameLevel3D {
 
-    private static final double READY_TEXT_OUT_Z = -5;
-    private static final double READY_TEXT_IN_Z  =  5;
+    private static final double READY_TEXT_EXTENDED_Z  = -5;
+    private static final double READY_TEXT_RETRACTED_Z =  5;
 
     private final GameLevel level;
     private final Group root = new Group();
@@ -110,7 +109,7 @@ public class GameLevel3D {
         readyText3D = Text3D.create("READY!", Color.YELLOW, theme.font("font.arcade", 6));
         readyText3D.root().setTranslateX(inFrontOfHouse.x());
         readyText3D.root().setTranslateY(inFrontOfHouse.y());
-        readyText3D.root().setTranslateZ(READY_TEXT_IN_Z);
+        readyText3D.root().setTranslateZ(READY_TEXT_RETRACTED_Z);
         readyText3D.rotate(Rotate.X_AXIS, 90);
 
         livesCounter3D.root().setTranslateX(2 * TS);
@@ -262,11 +261,10 @@ public class GameLevel3D {
     public void showReadyMessage(String text) {
         readyText3D.setText(text);
         readyText3D.root().setVisible(true);
-        readyText3D.root().setTranslateZ(READY_TEXT_IN_Z);
-        var animation = new TranslateTransition(Duration.seconds(1.5), readyText3D.root());
+        readyText3D.root().setTranslateZ(READY_TEXT_RETRACTED_Z);
+        var animation = new TranslateTransition(Duration.seconds(2.5), readyText3D.root());
         animation.setDelay(Duration.seconds(0.25));
-        animation.setFromZ(READY_TEXT_IN_Z);
-        animation.setToZ(READY_TEXT_OUT_Z);
+        animation.setToZ(READY_TEXT_EXTENDED_Z);
         animation.play();
     }
 
@@ -276,7 +274,7 @@ public class GameLevel3D {
         }
         var animation = new TranslateTransition(Duration.seconds(0.75), readyText3D.root());
         animation.setDelay(Duration.seconds(0.5));
-        animation.setToZ(READY_TEXT_IN_Z);
+        animation.setToZ(READY_TEXT_RETRACTED_Z);
         animation.setOnFinished(e -> readyText3D.root().setVisible(false));
         animation.play();
     }
