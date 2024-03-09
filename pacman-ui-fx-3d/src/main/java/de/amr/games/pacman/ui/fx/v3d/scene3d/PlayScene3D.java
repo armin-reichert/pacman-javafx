@@ -56,7 +56,6 @@ public class PlayScene3D implements GameScene {
     private final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
         @Override
         protected void invalidated() {
-            Logger.info("Perspective set to {}", get());
             currentCamController().reset(camera);
         }
     };
@@ -174,8 +173,9 @@ public class PlayScene3D implements GameScene {
     }
 
     private void showLevelMessage() {
+        Logger.info("Show level message");
         if (context.gameState() == GameState.LEVEL_TEST && context.gameLevel().isPresent()) {
-            level3D.showMessage("TEST LEVEL %s".formatted(context.gameLevel().get()));
+            level3D.showMessage("TEST LEVEL %s".formatted(context.gameLevel().get().number()));
         } else {
             level3D.showMessage("READY!");
         }
@@ -265,8 +265,13 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onLevelCreated(GameEvent e) {
         e.game.level().ifPresent(this::replaceGameLevel3D);
+    }
+
+    @Override
+    public void onLevelStarted(GameEvent e) {
+        Logger.info("onLevel started");
         context.gameLevel().ifPresent(level -> {
-            if (level.number() == 1) {
+            if (level.number() == 1 || context.gameState() == GameState.LEVEL_TEST) {
                 showLevelMessage();
             }
         });

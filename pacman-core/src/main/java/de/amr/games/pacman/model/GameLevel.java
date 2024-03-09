@@ -672,7 +672,6 @@ public class GameLevel {
                 end();
                 GameController.it().createAndStartLevel(levelNumber + 1);
                 timer.restartIndefinitely();
-                publishGameEvent(game, GameEventType.LEVEL_STARTED);
             }
             world().energizerBlinking().tick();
             world().mazeFlashing().tick();
