@@ -240,8 +240,8 @@ public class Pac3D {
     }
 
     private Animation createPacManDyingAnimation() {
-        Duration duration = Duration.seconds(1.5);
-        short numSpins = 10;
+        Duration duration = Duration.seconds(1.0);
+        short numSpins = 6;
 
         var spinning = new RotateTransition(duration.divide(numSpins), root);
         spinning.setAxis(Rotate.Z_AXIS);
@@ -250,8 +250,8 @@ public class Pac3D {
         spinning.setInterpolator(Interpolator.LINEAR);
 
         var shrinking = new ScaleTransition(duration, root);
-        shrinking.setToX(0.75);
-        shrinking.setToY(0.75);
+        shrinking.setToX(0.5);
+        shrinking.setToY(0.5);
         shrinking.setToZ(0.0);
         shrinking.setInterpolator(Interpolator.LINEAR);
 
