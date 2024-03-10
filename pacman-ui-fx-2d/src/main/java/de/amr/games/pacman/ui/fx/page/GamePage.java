@@ -10,6 +10,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
+import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardPacSteering;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
@@ -59,7 +60,6 @@ public class GamePage extends CanvasLayoutPane implements Page {
         popupLayer.getChildren().addAll(helpButton, signature, helpInfoPopUp);
         layersContainer.getChildren().addAll(popupLayer, flashMessageLayer);
 
-        popupLayer.setMouseTransparent(true);
         flashMessageLayer.setMouseTransparent(true);
 
         layersContainer.setOnKeyPressed(e -> {
@@ -118,6 +118,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
             () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? border(Color.GREENYELLOW, 3) : null,
             PY_SHOW_DEBUG_INFO, sceneContext.gameSceneProperty()
         ));
+        popupLayer.mouseTransparentProperty().bind(PY_SHOW_DEBUG_INFO);
     }
 
     protected boolean isCurrentGameScene2D() {
