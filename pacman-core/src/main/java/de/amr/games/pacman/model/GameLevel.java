@@ -158,17 +158,17 @@ public class GameLevel {
         var house = world.house();
         return switch (ghostID) {
             case RED_GHOST, PINK_GHOST -> house.seat("middle");
-            case CYAN_GHOST   -> house.seat("left");
-            case ORANGE_GHOST -> house.seat("right");
+            case CYAN_GHOST            -> house.seat("left");
+            case ORANGE_GHOST          -> house.seat("right");
             default -> throw new IllegalGhostIDException(ghostID);
         };
     }
 
     public Vector2i ghostScatterTarget(byte ghostID) {
         return switch (ghostID) {
-            case RED_GHOST -> ArcadeWorld.SCATTER_TARGET_RIGHT_UPPER_CORNER;
-            case PINK_GHOST -> ArcadeWorld.SCATTER_TARGET_LEFT_UPPER_CORNER;
-            case CYAN_GHOST -> ArcadeWorld.SCATTER_TARGET_RIGHT_LOWER_CORNER;
+            case RED_GHOST    -> ArcadeWorld.SCATTER_TARGET_RIGHT_UPPER_CORNER;
+            case PINK_GHOST   -> ArcadeWorld.SCATTER_TARGET_LEFT_UPPER_CORNER;
+            case CYAN_GHOST   -> ArcadeWorld.SCATTER_TARGET_RIGHT_LOWER_CORNER;
             case ORANGE_GHOST -> ArcadeWorld.SCATTER_TARGET_LEFT_LOWER_CORNER;
             default -> throw new IllegalGhostIDException(ghostID);
         };
@@ -220,16 +220,11 @@ public class GameLevel {
         this.autopilot = autopilot;
     }
 
-    public void steerPac() {
-        if (pac == null) {
-            Logger.error("Cannot steer Pac: No Pac available");
-        } else if (GameController.it().isAutopilotEnabled() || isDemoLevel()) {
-            autopilot.steer(this);
-        } else if (pac.steering().isPresent()) {
-            pac.steering().get().steer(this);
-        } else {
-            Logger.error("Cannot steer Pac: No Pac steering available");
+    public Optional<Steering> pacSteering() {
+        if (GameController.it().isAutopilotEnabled() || isDemoLevel()) {
+            return Optional.of(autopilot);
         }
+        return pac != null ? pac.steering() : Optional.empty();
     }
 
     /**
