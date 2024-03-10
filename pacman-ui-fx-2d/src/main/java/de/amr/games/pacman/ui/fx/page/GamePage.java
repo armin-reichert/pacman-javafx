@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.page;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
@@ -34,6 +35,7 @@ import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.border;
 
@@ -72,6 +74,12 @@ public class GamePage extends CanvasLayoutPane implements Page {
             });
             Keyboard.clearState();
         });
+
+        canvas.setOnMouseMoved(e -> {
+            Vector2i tile = new Vector2i((int)(e.getX() / (getScaling() * TS)), (int)(e.getY() / (getScaling() * TS)));
+            Logger.info("tile={}", tile);
+        });
+
         setSize(width, height);
     }
 
