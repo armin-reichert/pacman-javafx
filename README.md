@@ -14,7 +14,7 @@ This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler
 
 [![Magenta Cloud](doc/pacman-maze.png)](https://magentacloud.de/s/qYDg6BKK7G6TxpB)
 
-[![YouTube](doc/pacman-maze.png)](https://www.youtube.com/watch?v=XeVjXU59buw)
+[![YouTube](doc/pacman-playscene.png)](https://www.youtube.com/watch?v=XeVjXU59buw)
 
 ## About this project
 
