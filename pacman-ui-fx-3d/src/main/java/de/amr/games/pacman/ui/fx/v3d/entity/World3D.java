@@ -174,16 +174,12 @@ public class World3D {
     public Group createDoor() {
         var door = new Group();
         for (var wing : List.of(world.house().door().leftWing(), world.house().door().rightWing())) {
-            addDoorWing(door, wing, doorColor);
             var doorWing3D = new DoorWing3D(wing, doorColor);
-            doorWing3D.drawModePy.bind(drawModePy);
             doorWing3D.root().setUserData(doorWing3D);
+            doorWing3D.drawModePy.bind(drawModePy);
             door.getChildren().add(doorWing3D.root());
         }
         return door;
-    }
-
-    private void addDoorWing(Group door, Vector2i tile, Color doorWingColor) {
     }
 
     private void addHorizontalWalls(FloorPlan floorPlan, WallData wallData) {
