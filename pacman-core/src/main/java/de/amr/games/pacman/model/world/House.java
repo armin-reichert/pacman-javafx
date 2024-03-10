@@ -22,7 +22,7 @@ public class House {
     private Door door;
     private Map<String, Vector2f> seatMap = new HashMap<>();
 
-    public void setMinTile(Vector2i minTile) {
+    public void setTopLeftTile(Vector2i minTile) {
         checkTileNotNull(minTile);
         this.minTile = minTile;
     }
