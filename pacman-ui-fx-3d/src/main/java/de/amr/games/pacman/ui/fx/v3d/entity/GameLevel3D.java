@@ -110,12 +110,9 @@ public class GameLevel3D {
             default -> throw new IllegalGameVariantException(level.game().variant());
         }
 
-        var house = world.house();
-        var inFrontOfHouse = house.topLeftTile().scaled(TS).toFloatVec().plus(house.size().x() * HTS, house.size().y() * TS);
         messageText3D = Text3D.create("READY!", Color.YELLOW, theme.font("font.arcade", 6));
-        messageText3D.root().setTranslateX(inFrontOfHouse.x());
-        messageText3D.root().setTranslateY(inFrontOfHouse.y());
         messageText3D.root().setTranslateZ(MESSAGE_RETRACTED_Z);
+        messageText3D.root().setVisible(false);
         messageText3D.rotate(Rotate.X_AXIS, 90);
 
         livesCounter3D.root().setTranslateX(2 * TS);
@@ -264,24 +261,19 @@ public class GameLevel3D {
         updateHouseState(level.world().house());
     }
 
-    public void showMessage(String text) {
+    public void showMessage(String text, Duration displayDuration, double x, double y) {
         messageText3D.setText(text);
         messageText3D.root().setVisible(true);
+        messageText3D.root().setTranslateX(x);
+        messageText3D.root().setTranslateY(y);
         messageText3D.root().setTranslateZ(MESSAGE_RETRACTED_Z);
-        var animation = new TranslateTransition(Duration.seconds(1.5), messageText3D.root());
-        animation.setToZ(MESSAGE_EXTENDED_Z);
-        animation.play();
-    }
-
-    public void hideMessage() {
-        if (!messageText3D.root().isVisible()) {
-            return;
-        }
-        var animation = new TranslateTransition(Duration.seconds(0.75), messageText3D.root());
-        animation.setDelay(Duration.seconds(0.5));
-        animation.setToZ(MESSAGE_RETRACTED_Z);
-        animation.setOnFinished(e -> messageText3D.root().setVisible(false));
-        animation.play();
+        var extend = new TranslateTransition(Duration.seconds(1.5), messageText3D.root());
+        extend.setToZ(MESSAGE_EXTENDED_Z);
+        var retract = new TranslateTransition(Duration.seconds(0.5), messageText3D.root());
+        retract.setDelay(displayDuration);
+        retract.setToZ(MESSAGE_RETRACTED_Z);
+        retract.setOnFinished(e -> messageText3D.root().setVisible(false));
+        new SequentialTransition(extend, retract).play();
     }
 
     public void eat(Eatable3D eatable3D) {

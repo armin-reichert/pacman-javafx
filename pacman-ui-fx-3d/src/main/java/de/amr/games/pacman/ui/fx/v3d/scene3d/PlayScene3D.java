@@ -79,7 +79,7 @@ public class PlayScene3D implements GameScene {
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
         var coordSystem = new CoordSystem();
         coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
-        subSceneRoot.getChildren().setAll(new Group(), new Group(), coordSystem, ambientLight);
+        subSceneRoot.getChildren().setAll(new Group(), coordSystem, ambientLight);
         // initial scene size is irrelevant, gets bound to parent scene later
         fxSubScene = new SubScene(subSceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
         fxSubScene.setCamera(camera);
@@ -173,12 +173,16 @@ public class PlayScene3D implements GameScene {
     }
 
     private void showLevelMessage() {
-        Logger.info("Show level message");
+        Logger.trace("Show level message");
         context.gameLevel().ifPresent(level -> {
             if (context.gameState() == GameState.LEVEL_TEST) {
-                level3D.showMessage("TEST LEVEL %s".formatted(level.number()));
+                level3D.showMessage("TEST LEVEL %s".formatted(level.number()), Duration.seconds(3),
+                    level.world().numCols() * HTS, 2 * TS);
             } else if (!level.isDemoLevel()){
-                level3D.showMessage("READY!");
+                var house = level.world().house();
+                var inFrontOfHouse = house.topLeftTile().scaled(TS).toFloatVec().plus(house.size().x() * HTS, house.size().y() * TS);
+                level3D.showMessage("READY!", Duration.seconds(2.5),
+                    inFrontOfHouse.x(), inFrontOfHouse.y());
             }
         });
     }
@@ -218,7 +222,6 @@ public class PlayScene3D implements GameScene {
                 context.soundHandler().ensureSirenStarted(context.gameVariant(), level.huntingPhaseIndex() / 2);
             }
         });
-        level3D.hideMessage();
     }
 
     @Override
@@ -394,6 +397,9 @@ public class PlayScene3D implements GameScene {
                     if (level3D == null) {
                         replaceGameLevel3D(level);
                         level3D.pac3D().update();
+                    } else {
+                        level3D.pac3D().init();
+                        Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
                     }
                 });
 
@@ -401,23 +407,9 @@ public class PlayScene3D implements GameScene {
         }
 
         // on state exit
-        if (e.oldState != null) {
-            switch (e.oldState) {
-                case READY -> {
-                    assert level3D != null;
-                    level3D.hideMessage();
-                }
-                case HUNTING -> {
-                    if (level3D == null) {
-                        throw new IllegalStateException("No 3D level exists!");
-                    }
-                    if (e.newState != GameState.GHOST_DYING) {
-                        level3D.energizers3D().forEach(Energizer3D::stopPumping);
-                        level3D.bonus3D().ifPresent(Bonus3D::hide);
-                    }
-                }
-                default -> {}
-            }
+        if (e.oldState == GameState.HUNTING && level3D != null) {
+            level3D.energizers3D().forEach(Energizer3D::stopPumping);
+            level3D.bonus3D().ifPresent(Bonus3D::hide);
         }
     }
 
