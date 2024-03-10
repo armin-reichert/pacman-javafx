@@ -263,19 +263,13 @@ public interface ArcadeWorld {
     }
 
     static House createArcadeHouse() {
-        Vector2i HOUSE_TOP_LEFT_TILE = v2i(10, 15);
-        Vector2i HOUSE_SIZE          = v2i(8, 5);
-        Vector2f HOUSE_SEAT_LEFT     = halfTileRightOf(11, 17);
-        Vector2f HOUSE_SEAT_MIDDLE   = halfTileRightOf(13, 17);
-        Vector2f HOUSE_SEAT_RIGHT    = halfTileRightOf(15, 17);
-        Door HOUSE_DOOR = new Door(v2i(13, 15), v2i(14, 15));
         var house = new House();
-        house.setTopLeftTile(HOUSE_TOP_LEFT_TILE);
-        house.setSize(HOUSE_SIZE);
-        house.setDoor(HOUSE_DOOR);
-        house.addSeat("left",   HOUSE_SEAT_LEFT);
-        house.addSeat("middle", HOUSE_SEAT_MIDDLE);
-        house.addSeat("right",  HOUSE_SEAT_RIGHT);
+        house.setTopLeftTile(v2i(10, 15));
+        house.setSize(v2i(8, 5));
+        house.setDoor(new Door(v2i(13, 15), v2i(14, 15)));
+        house.addSeat("left",   halfTileRightOf(11, 17));
+        house.addSeat("middle", halfTileRightOf(13, 17));
+        house.addSeat("right",  halfTileRightOf(15, 17));
         return house;
     }
 
