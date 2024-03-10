@@ -77,11 +77,11 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static final BooleanProperty PY_3D_NIGHT_MODE         = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
     public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
-    public static final DoubleProperty PY_3D_WALL_HEIGHT         = new SimpleDoubleProperty(3.0);
-    public static final DoubleProperty PY_3D_WALL_OPACITY        = new SimpleDoubleProperty(0.5);
-    public static final DoubleProperty PY_3D_WALL_THICKNESS      = new SimpleDoubleProperty(1.5);
-    public static final DoubleProperty PY_3D_HOUSE_WALL_OPACITY  = new SimpleDoubleProperty(0.5);
-    public static final DoubleProperty PY_3D_HOUSE_WALL_THICKNESS= new SimpleDoubleProperty(0.25);
+    public static final DoubleProperty PY_3D_WALL_HEIGHT         = new SimpleDoubleProperty(3.5);
+    public static final DoubleProperty PY_3D_WALL_OPACITY        = new SimpleDoubleProperty(0.9);
+    public static final DoubleProperty PY_3D_WALL_THICKNESS      = new SimpleDoubleProperty(1.0);
+    public static final DoubleProperty PY_3D_HOUSE_WALL_OPACITY  = new SimpleDoubleProperty(0.25);
+    public static final DoubleProperty PY_3D_HOUSE_WALL_THICKNESS= new SimpleDoubleProperty(1.0);
     public static final BooleanProperty PY_WOKE_PUSSY            = new SimpleBooleanProperty(false);
 
     public static final KeyCodeCombination[] KEYS_TOGGLE_DASHBOARD = {just(KeyCode.F1), alt(KeyCode.B)};
@@ -199,7 +199,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("mspacman.maze.doorColor",       Color.rgb(255, 183, 255));
 
         theme.set("pacman.maze.wallBaseColor",     Color.rgb(33, 33, 255).brighter());
-        theme.set("pacman.maze.wallMiddleColor",   Color.rgb(33, 33, 255).darker());
+        theme.set("pacman.maze.wallMiddleColor",   Color.rgb(33, 33, 255));
         theme.set("pacman.maze.wallTopColor",      Color.rgb(33, 33, 255).brighter());
         theme.set("pacman.maze.doorColor",         Color.rgb(252, 181, 255));
 

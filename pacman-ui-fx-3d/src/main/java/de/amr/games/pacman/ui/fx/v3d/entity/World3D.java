@@ -104,16 +104,16 @@ public class World3D {
         this.doorColor = doorColor;
 
         wallBaseMaterial   = coloredMaterial(wallBaseColor);
-        wallMiddleMaterial = coloredMaterial(opaqueColor(wallMiddleColor, wallOpacityPy.get()));
+        wallMiddleMaterial = coloredMaterial(opaqueColor(darker(wallMiddleColor), wallOpacityPy.get()));
         wallTopMaterial    = coloredMaterial(wallTopColor);
 
         wallOpacityPy.addListener((py, ov, nv) -> {
-            Color color = opaqueColor(wallMiddleColor, wallOpacityPy.get());
+            Color color = opaqueColor(darker(wallMiddleColor), wallOpacityPy.get());
             wallMiddleMaterial.setDiffuseColor(color);
             wallMiddleMaterial.setSpecularColor(color.brighter());
         });
 
-        houseMaterial = coloredMaterial(opaqueColor(wallMiddleColor, houseWallOpacityPy.get()));
+        houseMaterial = coloredMaterial(opaqueColor(darker(wallMiddleColor), houseWallOpacityPy.get()));
 
         Vector2f houseCenter = world.house().topLeftTile().toFloatVec().scaled(TS).plus(world.house().size().toFloatVec().scaled(HTS));
         houseLight = new PointLight();
@@ -129,6 +129,9 @@ public class World3D {
         root.getChildren().addAll(floorGroup, wallsGroup, doorGroup, houseLight);
     }
 
+    private static Color darker(Color color) {
+        return color.deriveColor(0, 1.0, 0.85, 1.0);
+    }
 
     public Node root() {
         return root;
