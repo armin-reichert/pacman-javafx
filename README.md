@@ -12,9 +12,11 @@ This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler
 
 ## Videos
 
-[![Magenta Cloud](doc/pacman-maze.png)](https://magentacloud.de/s/qYDg6BKK7G6TxpB)
+<div style="display:flex">
+  <div style="flex:1">[![Magenta Cloud](doc/pacman-maze.png)](https://magentacloud.de/s/qYDg6BKK7G6TxpB)</div>
+  <div style="flex:1">[![YouTube](doc/pacman-playscene.png)](https://www.youtube.com/watch?v=XeVjXU59buw)</div>div>
+</div>
 
-[![YouTube](doc/pacman-playscene.png)](https://www.youtube.com/watch?v=XeVjXU59buw)
 
 ## About this project
 
