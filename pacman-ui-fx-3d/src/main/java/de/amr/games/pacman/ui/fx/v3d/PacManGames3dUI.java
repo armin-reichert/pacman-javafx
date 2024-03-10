@@ -299,6 +299,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public void toggle2D3D() {
         currentGameScene().ifPresent(gameScene -> {
             Ufx.toggle(PY_3D_ENABLED);
+            gameScene = sceneMatchingCurrentGameState();
             if (isPlayScene(gameScene)) {
                 updateOrReloadGameScene(true);
                 gameScene.onSceneVariantSwitch();

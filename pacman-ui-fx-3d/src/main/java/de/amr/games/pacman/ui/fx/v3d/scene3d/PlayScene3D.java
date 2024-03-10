@@ -148,13 +148,6 @@ public class PlayScene3D implements GameScene {
     }
 
     private void replaceGameLevel3D(GameLevel level) {
-
-        //TODO In level 1 when switching between 2D and 3D view, the 3D level is always recreated. How to avoid this?
-        if (level.number() > 1 && level3D != null && level3D.levelNumber() == level.number()) {
-            Logger.info("3D game level up-to-date");
-            return;
-        }
-
         level3D = new GameLevel3D(level, context.theme(), context.spriteSheet());
         // replace initial placeholder or previous 3D level
         subSceneRoot.getChildren().set(CHILD_LEVEL_3D, level3D.root());
@@ -208,10 +201,10 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onSceneVariantSwitch() {
-        if (level3D == null) {
-            return;
-        }
         context.gameLevel().ifPresent(level -> {
+            if (level3D == null) {
+                replaceGameLevel3D(level);
+            }
             level3D.eatables3D().forEach(
                 eatable3D -> eatable3D.root().setVisible(!level.world().hasEatenFoodAt(eatable3D.tile())));
             if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
