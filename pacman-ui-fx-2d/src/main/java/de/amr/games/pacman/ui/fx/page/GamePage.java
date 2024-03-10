@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
-import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardPacSteering;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
@@ -76,7 +75,8 @@ public class GamePage extends CanvasLayoutPane implements Page {
         });
 
         canvas.setOnMouseMoved(e -> {
-            Vector2i tile = new Vector2i((int)(e.getX() / (getScaling() * TS)), (int)(e.getY() / (getScaling() * TS)));
+            double factor = getScaling() * TS;
+            Vector2i tile = new Vector2i((int)(e.getX() / factor), (int)(e.getY() / factor));
             Logger.info("tile={}", tile);
         });
 
