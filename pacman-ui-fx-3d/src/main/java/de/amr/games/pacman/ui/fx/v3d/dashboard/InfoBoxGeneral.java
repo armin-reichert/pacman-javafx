@@ -27,7 +27,6 @@ public class InfoBoxGeneral extends InfoBox {
     private final Spinner<Integer> spinnerSimulationSteps;
     private final Slider sliderTargetFPS;
     private final CheckBox cbUsePlayScene3D;
-    private final CheckBox cbPoliticallyCorrect;
     private final CheckBox cbDebugUI;
     private final CheckBox cbTimeMeasured;
     private final ImageView iconPlay;
@@ -72,7 +71,6 @@ public class InfoBoxGeneral extends InfoBox {
         addInfo("Total Updates", () -> sceneContext.gameClock().getUpdateCount());
 
         cbUsePlayScene3D = addCheckBox("3D Play Scene");
-        cbPoliticallyCorrect = addCheckBox("Woke Pussy Mode");
         cbDebugUI = addCheckBox("Show Debug Info");
         cbTimeMeasured = addCheckBox("Time Measured");
     }
@@ -85,7 +83,6 @@ public class InfoBoxGeneral extends InfoBox {
         sliderTargetFPS.valueProperty().addListener(
             (py, ov, nv) -> sceneContext.gameClock().targetFrameratePy.set(nv.intValue()));
         cbUsePlayScene3D.setOnAction(e -> actionHandler().toggle2D3D());
-        cbPoliticallyCorrect.setOnAction(e -> Ufx.toggle(PacManGames3dUI.PY_WOKE_PUSSY));
         cbDebugUI.setOnAction(e -> Ufx.toggle(PY_SHOW_DEBUG_INFO));
         cbTimeMeasured.setOnAction(e -> Ufx.toggle(sceneContext.gameClock().timeMeasuredPy));
     }
@@ -100,7 +97,6 @@ public class InfoBoxGeneral extends InfoBox {
         spinnerSimulationSteps.getValueFactory().setValue(PacManGames3dUI.PY_SIMULATION_STEPS.get());
         sliderTargetFPS.setValue(sceneContext.gameClock().targetFrameratePy.get());
         cbUsePlayScene3D.setSelected(PacManGames3dUI.PY_3D_ENABLED.get());
-        cbPoliticallyCorrect.setSelected(PacManGames3dUI.PY_WOKE_PUSSY.get());
         cbTimeMeasured.setSelected(sceneContext.gameClock().timeMeasuredPy.get());
         cbDebugUI.setSelected(PY_SHOW_DEBUG_INFO.get());
     }

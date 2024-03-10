@@ -82,7 +82,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static final DoubleProperty PY_3D_WALL_THICKNESS      = new SimpleDoubleProperty(1.0);
     public static final DoubleProperty PY_3D_HOUSE_WALL_OPACITY  = new SimpleDoubleProperty(0.25);
     public static final DoubleProperty PY_3D_HOUSE_WALL_THICKNESS= new SimpleDoubleProperty(1.0);
-    public static final BooleanProperty PY_WOKE_PUSSY            = new SimpleBooleanProperty(false);
 
     public static final KeyCodeCombination[] KEYS_TOGGLE_DASHBOARD = {just(KeyCode.F1), alt(KeyCode.B)};
     public static final KeyCodeCombination KEY_TOGGLE_PIP_VIEW     = just(KeyCode.F2);

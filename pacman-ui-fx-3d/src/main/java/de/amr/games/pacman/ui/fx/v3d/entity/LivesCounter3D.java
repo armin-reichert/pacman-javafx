@@ -38,7 +38,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class LivesCounter3D {
 
-    private static final double PILLAR_HEIGHT = 5.0;
+    private static final double PILLAR_HEIGHT = 8.0;
     private static final double PLATE_RADIUS = 6.0;
     private static final double PLATE_THICKNESS = 1.0;
 
