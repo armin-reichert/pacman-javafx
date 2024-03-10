@@ -168,8 +168,8 @@ public class PlayScene3D implements GameScene {
         Logger.trace("Show level message");
         context.gameLevel().ifPresent(level -> {
             if (context.gameState() == GameState.LEVEL_TEST) {
-                level3D.showMessage("TEST LEVEL %s".formatted(level.number()), Duration.seconds(3),
-                    level.world().numCols() * HTS, 2 * TS);
+                level3D.showMessage("TEST LEVEL %s".formatted(level.number()), Duration.seconds(5),
+                    level.world().numCols() * HTS, 34 * TS);
             } else if (!level.isDemoLevel()){
                 var house = level.world().house();
                 var inFrontOfHouse = house.topLeftTile().scaled(TS).toFloatVec().plus(house.size().x() * HTS, house.size().y() * TS);
@@ -388,6 +388,7 @@ public class PlayScene3D implements GameScene {
                     level.pac().setVisible(true);
                     if (level3D == null) {
                         replaceGameLevel3D(level);
+                        showLevelMessage();
                         level3D.pac3D().update();
                     } else {
                         level3D.pac3D().init();
