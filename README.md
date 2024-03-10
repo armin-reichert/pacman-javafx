@@ -12,9 +12,9 @@ This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler
 
 ## Videos
 
-<div style="display:flex">
-  <div style="flex:1"><a href="https://magentacloud.de/s/qYDg6BKK7G6TxpB"><img src="doc/pacman-maze.png"></a></div>
-  <div style="flex:1"><a href="https://www.youtube.com/watch?v=XeVjXU59buw"><img src="doc/pacman-playscene.png"></a></div>
+<div style="padding:10px">
+  <div style="width:50%;float:left"><a href="https://magentacloud.de/s/qYDg6BKK7G6TxpB"><img src="doc/pacman-maze.png"></a></div>
+  <div style="width:50%;float:left"><a href="https://www.youtube.com/watch?v=XeVjXU59buw"><img src="doc/pacman-playscene.png"></a></div>
 </div>
 
 
