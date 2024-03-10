@@ -173,7 +173,7 @@ public class PlayScene3D implements GameScene {
             } else if (!level.isDemoLevel()){
                 var house = level.world().house();
                 var inFrontOfHouse = house.topLeftTile().scaled(TS).toFloatVec().plus(house.size().x() * HTS, house.size().y() * TS);
-                level3D.showMessage("READY!", Duration.seconds(2.5),
+                level3D.showMessage("READY!", Duration.seconds(context.gameController().isPlaying() ? 0.5 : 2.5),
                     inFrontOfHouse.x(), inFrontOfHouse.y());
             }
         });
