@@ -73,7 +73,7 @@ public class DoorWing3D {
         doorAnimation = new SequentialTransition(fadeOut, fadeIn);
     }
 
-    public Node getRoot() {
+    public Node root() {
         return root;
     }
 

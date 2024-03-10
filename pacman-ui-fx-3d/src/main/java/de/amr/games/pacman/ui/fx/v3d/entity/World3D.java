@@ -24,10 +24,8 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Translate;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
@@ -80,8 +78,6 @@ public class World3D {
     private final Group root = new Group();
     private final Group floorGroup = new Group();
     private final Group wallsGroup = new Group();
-    private final List<DoorWing3D> doorWings3D = new ArrayList<>();
-    private final Group doorGroup = new Group();
     private final PointLight houseLight;
     private final Color doorColor;
 
@@ -126,7 +122,7 @@ public class World3D {
         buildFloor();
         buildWorld();
 
-        root.getChildren().addAll(floorGroup, wallsGroup, doorGroup, houseLight);
+        root.getChildren().addAll(floorGroup, wallsGroup, houseLight);
     }
 
     private static Color darker(Color color) {
@@ -172,20 +168,22 @@ public class World3D {
         addCorners(floorPlan, createWallData());
         addHorizontalWalls(floorPlan, createWallData());
         addVerticalWalls(floorPlan, createWallData());
-        addDoorWing(world.house().door().leftWing(), doorColor);
-        addDoorWing(world.house().door().rightWing(), doorColor);
         Logger.info("3D world created (resolution={}, wall height={})", floorPlan.getResolution(), wallHeightPy.get());
     }
 
-    public Stream<DoorWing3D> doorWings3D() {
-        return doorWings3D.stream();
+    public Group createDoor() {
+        var door = new Group();
+        for (var wing : List.of(world.house().door().leftWing(), world.house().door().rightWing())) {
+            addDoorWing(door, wing, doorColor);
+            var doorWing3D = new DoorWing3D(wing, doorColor);
+            doorWing3D.drawModePy.bind(drawModePy);
+            doorWing3D.root().setUserData(doorWing3D);
+            door.getChildren().add(doorWing3D.root());
+        }
+        return door;
     }
 
-    private void addDoorWing(Vector2i tile, Color doorWingColor) {
-        var doorWing3D = new DoorWing3D(tile, doorWingColor);
-        doorWing3D.drawModePy.bind(drawModePy);
-        doorWings3D.add(doorWing3D);
-        doorGroup.getChildren().add(doorWing3D.getRoot());
+    private void addDoorWing(Group door, Vector2i tile, Color doorWingColor) {
     }
 
     private void addHorizontalWalls(FloorPlan floorPlan, WallData wallData) {

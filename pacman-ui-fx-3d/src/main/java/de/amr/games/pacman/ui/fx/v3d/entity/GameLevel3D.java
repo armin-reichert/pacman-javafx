@@ -57,6 +57,7 @@ public class GameLevel3D {
 
     private final Group root = new Group();
     private final World3D world3D;
+    private final Group doorGroup;
     private final Group foodGroup = new Group();
     private final Pac3D pac3D;
     private final Pac3DLight pac3DLight;
@@ -90,6 +91,7 @@ public class GameLevel3D {
                 var wallTopColor    = theme.color("mspacman.maze.wallTopColor", mazeNumber - 1);
                 var doorColor       = theme.color("mspacman.maze.doorColor");
                 world3D = new World3D(world, textureMap, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
+                doorGroup = world3D.createDoor();
                 addFood(world, theme.color("mspacman.maze.foodColor", mazeNumber - 1), theme.get("model3D.pellet"));
                 pac3D = createMsPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
                 pac3DLight = new Pac3DLight(pac3D);
@@ -102,6 +104,7 @@ public class GameLevel3D {
                 var wallTopColor    = theme.color("pacman.maze.wallTopColor");
                 var doorColor       = theme.color("pacman.maze.doorColor");
                 world3D = new World3D(world, textureMap, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
+                doorGroup = world3D.createDoor();
                 addFood(world, theme.color("pacman.maze.foodColor"), theme.get("model3D.pellet"));
                 pac3D = createPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
                 pac3DLight = new Pac3DLight(pac3D);
@@ -140,6 +143,7 @@ public class GameLevel3D {
             root.getChildren().add(ghost3D.root());
         }
         root.getChildren().add(foodGroup);
+        root.getChildren().add(doorGroup);
         // Walls must be added *after* the rest. Otherwise, transparency is not working correctly!
         root.getChildren().add(world3D.root());
 
@@ -302,16 +306,15 @@ public class GameLevel3D {
             .anyMatch(Ghost::isVisible);
         world3D.houseLighting().setLightOn(houseUsed);
         if (houseOpen) {
-            world3D.doorWings3D().forEach(DoorWing3D::playTraversalAnimation);
+            for (var node : doorGroup.getChildren()) {
+                DoorWing3D wing3D = (DoorWing3D) node.getUserData();
+                wing3D.playTraversalAnimation();
+            }
         }
     }
 
     public Group root() {
         return root;
-    }
-
-    public int levelNumber() {
-        return level.number();
     }
 
     public Pac3D pac3D() {
