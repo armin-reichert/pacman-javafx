@@ -33,7 +33,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
@@ -303,7 +302,7 @@ public class PlayScene3D implements GameScene {
             case READY -> {
                 if (level3D != null) {
                     level3D.pac3D().init();
-                    Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
+                    level3D.ghosts3D().forEach(Ghost3D::init);
                     showLevelMessage();
                 }
             }
@@ -313,7 +312,7 @@ public class PlayScene3D implements GameScene {
                     throw new IllegalStateException("No 3D level exists!");
                 }
                 level3D.pac3D().init();
-                Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
+                level3D.ghosts3D().forEach(Ghost3D::init);
                 level3D.livesCounter3D().startAnimation();
                 level3D.energizers3D().forEach(Energizer3D::startPumping);
             }
@@ -399,7 +398,7 @@ public class PlayScene3D implements GameScene {
                         level3D.pac3D().update();
                     } else {
                         level3D.pac3D().init();
-                        Stream.of(level3D.ghosts3D()).forEach(Ghost3D::init);
+                        level3D.ghosts3D().forEach(Ghost3D::init);
                     }
                 });
 

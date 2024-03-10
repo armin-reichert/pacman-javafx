@@ -32,6 +32,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -59,7 +60,7 @@ public class GameLevel3D {
     private final Group foodGroup = new Group();
     private final Pac3D pac3D;
     private final Pac3DLight pac3DLight;
-    private final Ghost3D[] ghosts3D;
+    private final List<Ghost3D> ghosts3D;
     private final LevelCounter3D levelCounter3D;
     private final LivesCounter3D livesCounter3D;
     private final Scores3D scores3D;
@@ -92,7 +93,7 @@ public class GameLevel3D {
                 addFood(world, theme.color("mspacman.maze.foodColor", mazeNumber - 1), theme.get("model3D.pellet"));
                 pac3D = createMsPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
                 pac3DLight = new Pac3DLight(pac3D);
-                ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, theme.get("model3D.ghost"), theme, GHOST_SIZE)).toArray(Ghost3D[]::new);
+                ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, theme.get("model3D.ghost"), theme, GHOST_SIZE)).toList();
                 livesCounter3D = new LivesCounter3D(() -> createMsPacManGroup(theme.get("model3D.pacman"), theme, LIVES_COUNTER_PAC_SIZE), true);
             }
             case PACMAN -> {
@@ -104,7 +105,7 @@ public class GameLevel3D {
                 addFood(world, theme.color("pacman.maze.foodColor"), theme.get("model3D.pellet"));
                 pac3D = createPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
                 pac3DLight = new Pac3DLight(pac3D);
-                ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, theme.get("model3D.ghost"), theme, GHOST_SIZE)).toArray(Ghost3D[]::new);
+                ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, theme.get("model3D.ghost"), theme, GHOST_SIZE)).toList();
                 livesCounter3D = new LivesCounter3D(() -> createPacManGroup(theme.get("model3D.pacman"), theme, LIVES_COUNTER_PAC_SIZE), false);
             }
             default -> throw new IllegalGameVariantException(level.game().variant());
@@ -317,13 +318,13 @@ public class GameLevel3D {
         return pac3D;
     }
 
-    public Ghost3D[] ghosts3D() {
+    public List<Ghost3D> ghosts3D() {
         return ghosts3D;
     }
 
     public Ghost3D ghost3D(byte id) {
         checkGhostID(id);
-        return ghosts3D[id];
+        return ghosts3D.get(id);
     }
 
     public World3D world3D() {
