@@ -308,7 +308,7 @@ public class GameLevel3D {
         if (houseOpen) {
             for (var node : doorGroup.getChildren()) {
                 DoorWing3D wing3D = (DoorWing3D) node.getUserData();
-                wing3D.playTraversalAnimation();
+                wing3D.traversalAnimation().play();
             }
         }
     }

@@ -31,7 +31,7 @@ public class DoorWing3D {
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     private final Group root = new Group();
-    private final Transition doorAnimation;
+    private final Transition traversalAnimation;
 
     public DoorWing3D(Vector2i tile, Color color) {
         checkTileNotNull(tile);
@@ -70,14 +70,14 @@ public class DoorWing3D {
             Color.TRANSPARENT, color, barMaterial.diffuseColorProperty()
         );
         fadeIn.setDelay(Duration.seconds(0.2));
-        doorAnimation = new SequentialTransition(fadeOut, fadeIn);
+        traversalAnimation = new SequentialTransition(fadeOut, fadeIn);
     }
 
     public Node root() {
         return root;
     }
 
-    public void playTraversalAnimation() {
-        doorAnimation.play(); // if already running, does nothing
+    public Transition traversalAnimation() {
+        return traversalAnimation;
     }
 }
