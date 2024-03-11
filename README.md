@@ -19,7 +19,8 @@ This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler
 
 ## About this project
 
-This is an implementation of the Arcade games Pac-Man and Ms. Pac-Man (see [Pac-Man and Ms. Pac-Man games](https://github.com/armin-reichert/pacman-basic)) with a JavaFX user interface.
+This is an implementation of the classic Arcade games Pac-Man and Ms. Pac-Man in a JavaFX user interface. The game implementation is completely decoupled from the user interface such that also different user interfaces (e.g. a Swing UI) can be implemented without any change to the game code. (When developing the game, I originally maintained a Swing and a JavaFX UI in parallel to validate the UI abstraction, however the Swing UI got outdated and has been abandonded.)
+
 There is a 2D-only user interface version and an extended version where the play scene can be switched between 2D and 3D, even during the gameplay (key combination <kbd>
 Alt+3</kbd>). The game implementation tries to mimic the original Arcade version as good as possible, however there are some differences, e.g. in the "attract mode" behaviour, or the bonus behaviour in the Ms. Pac-Man game.
 
