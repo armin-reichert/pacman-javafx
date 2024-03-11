@@ -16,6 +16,5 @@ open module de.amr.games.pacman.ui.fx {
     exports de.amr.games.pacman.ui.fx.util;
     exports de.amr.games.pacman.ui.fx.rendering2d;
     exports de.amr.games.pacman.ui.fx.scene2d;
-    exports de.amr.games.pacman.ui.fx.sound;
     exports de.amr.games.pacman.ui.fx.page;
 }

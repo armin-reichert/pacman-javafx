@@ -5,8 +5,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.sound.SoundHandler;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -41,12 +39,6 @@ public interface GameSceneContext {
 
     <S extends SpriteSheet> S spriteSheet();
 
-    SoundHandler soundHandler();
-
-    default AudioClip clip(String key) {
-        return soundHandler().audioClip(game().variant(), key);
-    }
-
     default GameController gameController() {
         return GameController.it();
     }
@@ -67,7 +59,21 @@ public interface GameSceneContext {
         return game().level();
     }
 
-    default Optional<World> gameWorld() {
-        return game().level().map(GameLevel::world);
+    AudioClip audioClip(String key);
+
+    default void playAudioClip(String key) {
+        audioClip(key).play();
     }
+
+    default void stopAudioClip(String key) {
+        audioClip(key).stop();
+    }
+
+    void ensureSirenStarted(int sirenIndex);
+
+    void stopSirens();
+
+    void ensureAudioLoop(String key, int repetitions);
+
+    void ensureAudioLoop(String key);
 }

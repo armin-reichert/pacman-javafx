@@ -162,7 +162,7 @@ public class PlayScene2D extends GameScene2D {
     public void onSceneVariantSwitch() {
         context.gameLevel().ifPresent(level -> {
             if (!level.isDemoLevel() && context.gameState() == GameState.HUNTING) {
-                context.soundHandler().ensureSirenStarted(context.gameVariant(), level.huntingPhaseIndex() / 2);
+                context.ensureSirenStarted(level.huntingPhaseIndex() / 2);
             }
         });
     }
@@ -172,12 +172,12 @@ public class PlayScene2D extends GameScene2D {
             return;
         }
         if (level.pac().starvingTicks() > 8) { // TODO not sure
-            context.clip("audio.pacman_munch").stop();
+            context.stopAudioClip("audio.pacman_munch");
         }
         if (!level.thisFrame().pacKilled && level.ghosts(RETURNING_TO_HOUSE, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
-            context.soundHandler().ensureLoopEndless(context.clip("audio.ghost_returning"));
+            context.ensureAudioLoop("audio.ghost_returning");
         } else {
-            context.clip("audio.ghost_returning").stop();
+            context.stopAudioClip("audio.ghost_returning");
         }
     }
 }

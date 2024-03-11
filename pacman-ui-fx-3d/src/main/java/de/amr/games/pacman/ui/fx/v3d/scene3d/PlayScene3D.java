@@ -211,7 +211,7 @@ public class PlayScene3D implements GameScene {
                 level3D.energizers3D().forEach(Energizer3D::startPumping);
             }
             if (!level.isDemoLevel() && context.gameState() == GameState.HUNTING) {
-                context.soundHandler().ensureSirenStarted(context.gameVariant(), level.huntingPhaseIndex() / 2);
+                context.ensureSirenStarted(level.huntingPhaseIndex() / 2);
             }
         });
     }
@@ -361,7 +361,7 @@ public class PlayScene3D implements GameScene {
                             level.pac().hide();
                             level3D.livesCounter3D().lightOnPy.set(false);
                             if (!intermissionAfterLevel) {
-                                context.clip("audio.level_complete").play();
+                                context.playAudioClip("audio.level_complete");
                                 context.actionHandler().showFlashMessageSeconds(2,
                                     pickLevelCompleteMessage(level.number()));
                             }
@@ -379,7 +379,7 @@ public class PlayScene3D implements GameScene {
                 lockGameStateForSeconds(3);
                 level3D.livesCounter3D().stopAnimation();
                 context.actionHandler().showFlashMessageSeconds(3, PICKER_GAME_OVER.next());
-                context.clip("audio.game_over").play();
+                context.playAudioClip("audio.game_over");
             }
 
             case LEVEL_TEST ->
@@ -417,7 +417,7 @@ public class PlayScene3D implements GameScene {
                 perspectivePy.set(Perspective.TOTAL);
             }),
             createLevelRotateAnimation(),
-            actionAfterSeconds(0.5, () -> context.clip("audio.sweep").play()),
+            actionAfterSeconds(0.5, () -> context.playAudioClip("audio.sweep")),
             actionAfterSeconds(0.5, () -> perspectivePy.bind(PY_3D_PERSPECTIVE))
         );
     }
@@ -453,13 +453,13 @@ public class PlayScene3D implements GameScene {
                 return;
             }
             if (level.pac().starvingTicks() > 8) { // TODO not sure how this is done in Arcade game
-                context.clip("audio.pacman_munch").stop();
+                context.stopAudioClip("audio.pacman_munch");
             }
             if (!level.thisFrame().pacKilled && level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
                 .anyMatch(Ghost::isVisible)) {
-                context.soundHandler().ensureLoopEndless(context.clip("audio.ghost_returning"));
+                context.ensureAudioLoop("audio.ghost_returning");
             } else {
-                context.clip("audio.ghost_returning").stop();
+                context.stopAudioClip("audio.ghost_returning");
             }
         });
     }
