@@ -17,14 +17,12 @@ This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler
     <a href="https://www.youtube.com/watch?v=XeVjXU59buw"><img src="doc/pacman-playscene.png" style="width:500px"></a>
 </div>
 
-
 ## About this project
 
-JavaFX user interfaces for my
-UI-agnostic/faceless [Pac-Man and Ms. Pac-Man games](https://github.com/armin-reichert/pacman-basic). There is a 2D-only
-user interface and
-a full version where the play scene can be switched between 2D and 3D, even during the gameplay (key combination <kbd>
-Alt+3</kbd>).
+This is an implementation of the classic Arcade games Pac-Man and Ms. Pac-Man in a JavaFX user interface. The game implementation is completely decoupled from the user interface such that also different user interfaces (e.g. a Swing UI) can be implemented without any change to the game code. (When developing the game, I originally maintained a Swing and a JavaFX UI in parallel to validate the UI abstraction, however the Swing UI got outdated and has been abandonded.)
+
+There is a 2D-only user interface version and an extended version where the play scene can be switched between 2D and 3D, even during the gameplay (key combination <kbd>
+Alt+3</kbd>). The game implementation tries to mimic the original Arcade version as good as possible, however there are some differences, e.g. in the "attract mode" behaviour, or the bonus behaviour in the Ms. Pac-Man game.
 
 ## How to run
 
@@ -38,48 +36,49 @@ The Mac-OS (.dmg) version has not been tested at all, any help is appreciated.
 
 ## How to build
 
-You need to have a [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21) installed on your computer.
+Prerequisites: You need to have [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21) and [Git](https://github.com/git-guides/install-git) installed on your computer.
 
-### Clone repository (only first time)
+### Cloning the GitHub repository
 
 - `cd /whatever/path/to/your/repositories`
 - `git clone https://github.com/armin-reichert/pacman-javafx.git`
 
-## Build project with Gradle
+## Building with Gradle
 
 - `cd pacman-javafx`
-- `./gradlew jpackage`: create installers in directories `pacman-ui-fx-2d/build/jpackage` and `pacman-ui-fx-3d/build/jpackage`
+- `./gradlew jpackage`
 
-(Note: Using `clean jpackage` always fails because the old exe-files cannot be deleted, see https://github.com/gradle/gradle/issues/26912). Manually deleting the build folder or clearing the exe-file's read-only flag helps)
+This will create installers in the subdirectories `pacman-ui-fx-2d/build/jpackage` and `pacman-ui-fx-3d/build/jpackage`.
+
+(Note: On Windows, `gradlew clean jpackage` always fails because the old exe-files cannot be deleted, see https://github.com/gradle/gradle/issues/26912). Manually deleting the build folder or clearing the exe-file's read-only flag helps.)
 
 ### Running the application(s) using Gradle
 
-- 2D app: `./gradlew pacman-ui-fx-2d:run`
-- 3D app: `./gradlew pacman-ui-fx-3d:run`
+- Pac-Man 2D: `./gradlew pacman-ui-fx-2d:run`
+- Pac-Man 3D: `./gradlew pacman-ui-fx-3d:run`
 
-## Build project with Maven
+## Building with Maven
 
-### Build Windows installers for both variants (2D and 3D)
+### Building Windows installers (.exe)
 
 - `cd /whatever/path/to/your/repositories/pacman-javafx`
 - `./mvnw clean install -Pbuild-for-windows`
 
-### Build user interface variants separately
+### Build 2D and 3D user interface variants separately
 
 - `cd /whatever/path/to/your/repositories/pacman-javafx/pacman-ui-fx-2d`
-- `../mvnw install -Djavafx.platform=win`   or `mvnw install -P build-for-windows` (Windows executables of 2D game)
+- `../mvnw install -Djavafx.platform=win` or `mvnw install -P build-for-windows` (Windows executables of 2D game)
 
 - `cd /whatever/path/to/your/repositories/pacman-javafx/pacman-ui-fx-3d`
-- `../mvnw install -Djavafx.platform=win`   or `mvnw install -P build-for-windows` (Windows executables of 2D+3D game)
+- `../mvnw install -Djavafx.platform=win` or `mvnw install -P build-for-windows` (Windows executables of 2D+3D game)
 
-To be able to create the Windows executables, you need to first install the following tools:
+To be able to create the Windows executables, you need to have the following tools installed:
 
 - [Inno Setup](https://jrsoftware.org/isinfo.php)
 - [WiX toolset](https://wixtoolset.org/)
 
-as described in
-the [JavaPackager guide](https://github.com/fvarrui/JavaPackager/blob/master/docs/windows-tools-guide.md)
-(👏: to [Francisco Vargas Ruiz](https://github.com/fvarrui)).
+as described in the [JavaPackager guide](https://github.com/fvarrui/JavaPackager/blob/master/docs/windows-tools-guide.md)
+(👏 to [Francisco Vargas Ruiz](https://github.com/fvarrui)).
 
 I also had to add the paths "C:\Program Files (x86)\WiX Toolset v3.11\bin" and "C:\Program Files (x86)\Inno Setup 6" to my PATH variable.
 
@@ -89,62 +88,47 @@ In the 2D or 3D subproject folder, call `..\mvnw javafx:run`.
 
 ## How to use the application
 
-Starting the game and switching game variant:
+Start screen:
+- <kbd>V</kbd> Switches between Pac-Man and Ms. Pac-Man
 
-- <kbd>V</kbd> Switch between Pac-Man and Ms. Pac-Man (only possible on intro screen)
-- <kbd>5</kbd> Add credit ("insert coin")
-- <kbd>1</kbd> Start game
-- <kbd>H</kbd>Show/hide context-sensitive help
+Intro screen:
+- <kbd>5</kbd> Adds one credit ("inserts coin")
+- <kbd>1</kbd> Starts the game
+- <kbd>H</kbd>Shows/hides context-sensitive help
 
-Pac-Man steering:
+The keys <kbd>5</kbd> and <kbd>1</kbd> have been chosen because the [MAME](https://www.mamedev.org/) emulator uses them too.
 
-- Pac-Man is steered using the cursor keys. When the dashboard is open, these keys are taken away by the JavaFX widgets.
-  In that case, you can steer Pac-Man using key combination <kbd>CTRL</kbd>+cursor key.
+Pac-Man steering with the keyboard:
+
+- Pac-Man is steered using the *cursor keys*. When the dashboard is open (in the 3D app version), these keys are taken away by the JavaFX widgets.
+  In that case, you can use <kbd>CTRL</kbd>+cursor key.
 
 General shortcuts:
 
-- <kbd>F11</kbd> Enter full-screen mode
-- <kbd>Esc</kbd> Exit full-screen mode
-- <kbd>F1</kbd> or <kbd>Alt+B</kbd> Toggle dashboard
-- <kbd>F2</kbd> Toggle picture-in-picture view
-- <kbd>Alt+C</kbd> Play all intermission/cut scenes
-- <kbd>Alt+3</kbd> Toggle using 2D/3D play scene
+- <kbd>F11</kbd> Enters full-screen mode
+- <kbd>Esc</kbd> Exits full-screen mode
+- <kbd>F1</kbd> or <kbd>Alt+B</kbd> Toggles the dashboard on/off
+- <kbd>F2</kbd> Toggles the picture-in-picture view
+- <kbd>Alt+C</kbd> Plays all cut scenes (only from intro screen)
+- <kbd>Alt+3</kbd> Toggles between 2D and 3D play scene
 
 Play screen shortcuts:
 
-- <kbd>Alt+LEFT</kbd> Select previous camera perspective
-- <kbd>Alt+RIGHT</kbd> Select next camera perspective
-- <kbd>Q</kbd>Quit play scene and show intro screen
+- <kbd>Alt+LEFT</kbd> Selects the previous camera perspective
+- <kbd>Alt+RIGHT</kbd> Selects the next camera perspective
+- <kbd>Q</kbd>Quits the play scene and shows the intro screen
 
 Cheats:
 
-- <kbd>Alt+A</kbd> Toggle autopilot mode
-- <kbd>Alt+E</kbd> Eat all pills except the energizers
-- <kbd>Alt+I</kbd> Toggle immunity of player against ghost attacks
-- <kbd>Alt+L</kbd> Add 3 player lives
-- <kbd>Alt+N</kbd> Enter next game level
-- <kbd>Alt+X</kbd> Kill all ghosts outside of the ghosthouse
+- <kbd>Alt+A</kbd> Toggles manual/autopilot steering modes
+- <kbd>Alt+E</kbd> Eats all pellets (except the energizers)
+- <kbd>Alt+I</kbd> Toggles immunity of player against ghost attacks
+- <kbd>Alt+L</kbd> Adds 3 player lives
+- <kbd>Alt+N</kbd> Enters next game level
+- <kbd>Alt+X</kbd> Kills all ghosts outside of the ghost house
 
 ## How it looks
 
 ### 3D Play Scene
 
 ![Play Scene](doc/pacman-maze.png)
-
-### Dashboard
-
-![Dashboard](doc/dashboard-general.png)
-
-![Dashboard](doc/dashboard-shortcuts.png)
-
-![Dashboard](doc/dashboard-appearance.png)
-
-![Dashboard](doc/dashboard-3d-settings.png)
-
-![Dashboard](doc/dashboard-game-control.png)
-
-![Dashboard](doc/dashboard-game-info.png)
-
-![Dashboard](doc/dashboard-ghost-info.png)
-
-![Dashboard](doc/dashboard-about.png)
