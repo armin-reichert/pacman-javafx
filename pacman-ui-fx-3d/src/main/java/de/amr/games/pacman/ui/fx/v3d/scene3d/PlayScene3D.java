@@ -50,12 +50,13 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class PlayScene3D implements GameScene {
 
+    // Index where game level 3D is inserted into child list
     private static final byte CHILD_LEVEL_3D  = 0;
 
-    private final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
+    public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
         @Override
         protected void invalidated() {
-            currentCamController().reset(camera);
+            currentCamController().reset(fxSubScene.getCamera());
         }
     };
 
@@ -65,7 +66,7 @@ public class PlayScene3D implements GameScene {
         Perspective.NEAR_PLAYER,      new CamNearPlayer(),
         Perspective.TOTAL,            new CamTotal()
     ));
-    private final PerspectiveCamera camera = new PerspectiveCamera(true);
+
     private final Group subSceneRoot = new Group();
     private final SubScene fxSubScene;
 
@@ -82,7 +83,7 @@ public class PlayScene3D implements GameScene {
         subSceneRoot.getChildren().setAll(new Group(), coordSystem, ambientLight);
         // initial scene size is irrelevant, gets bound to parent scene later
         fxSubScene = new SubScene(subSceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
-        fxSubScene.setCamera(camera);
+        fxSubScene.setCamera(new PerspectiveCamera(true));
         Logger.info("3D play scene created. {}", this);
     }
 
@@ -109,7 +110,7 @@ public class PlayScene3D implements GameScene {
     public void update() {
         if (level3D != null) {
             level3D.update();
-            currentCamController().update(camera, level3D.pac3D());
+            currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
         }
         context.gameLevel().ifPresent(this::updateSound);
     }
@@ -140,8 +141,8 @@ public class PlayScene3D implements GameScene {
         return fxSubScene;
     }
 
-    public PerspectiveCamera camera() {
-        return camera;
+    public Camera camera() {
+        return fxSubScene.getCamera();
     }
 
     private CameraController currentCamController() {
@@ -153,8 +154,8 @@ public class PlayScene3D implements GameScene {
         Logger.info("3D game level {} created.", level.number());
         level3D.updateLevelCounterSprites();
         // keep the scores rotated such that the viewer always sees them frontally
-        level3D.scores3D().root().rotationAxisProperty().bind(camera.rotationAxisProperty());
-        level3D.scores3D().root().rotateProperty().bind(camera.rotateProperty());
+        level3D.scores3D().root().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
+        level3D.scores3D().root().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
         if (PY_3D_FLOOR_TEXTURE_RND.get()) {
             List<String> names = context.theme().getArray("texture.names");
             PY_3D_FLOOR_TEXTURE.set(names.get(randomInt(0, names.size())));
@@ -246,7 +247,7 @@ public class PlayScene3D implements GameScene {
                     lockGameStateForSeconds(3);
                     replaceGameLevel3D(level);
                     level3D.pac3D().init();
-                    currentCamController().reset(camera);
+                    currentCamController().reset(fxSubScene.getCamera());
                 });
             }
 
