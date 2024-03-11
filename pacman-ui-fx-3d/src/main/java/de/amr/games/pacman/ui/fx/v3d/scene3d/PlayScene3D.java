@@ -17,15 +17,15 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
-import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.entity.*;
-import javafx.animation.*;
+import javafx.animation.Animation;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
 import javafx.scene.image.Image;
-import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -288,8 +288,8 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void onGameStateChange(GameStateChangeEvent e) {
-        switch (e.newState) {
+    public void onGameStateChange(GameStateChangeEvent event) {
+        switch (event.newState) {
 
             case READY -> {
                 if (level3D != null) {
@@ -300,9 +300,7 @@ public class PlayScene3D implements GameScene {
             }
 
             case HUNTING -> {
-                if (level3D == null) {
-                    throw new IllegalStateException("No 3D level exists!");
-                }
+                assertLevel3DExists();
                 level3D.pac3D().init();
                 level3D.ghosts3D().forEach(Ghost3D::init);
                 level3D.livesCounter3D().startAnimation();
@@ -310,16 +308,12 @@ public class PlayScene3D implements GameScene {
             }
 
             case PACMAN_DYING -> {
-                if (level3D == null) {
-                    throw new IllegalStateException("No 3D level exists!");
-                }
+                assertLevel3DExists();
                 lockGameStateAndPlayAfterSeconds(1.0, level3D.pac3D().createDyingAnimation(context.gameVariant()));
             }
 
             case GHOST_DYING -> {
-                if (level3D == null) {
-                    throw new IllegalStateException("No 3D level exists!");
-                }
+                assertLevel3DExists();
                 context.gameLevel().ifPresent(level -> {
                     Rectangle2D[] sprites = switch (context.gameVariant()) {
                         case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
@@ -334,9 +328,7 @@ public class PlayScene3D implements GameScene {
             }
 
             case CHANGING_TO_NEXT_LEVEL -> {
-                if (level3D == null) {
-                    throw new IllegalStateException("No 3D level exists!");
-                }
+                assertLevel3DExists();
                 context.gameLevel().ifPresent(level -> {
                     lockGameStateForSeconds(3);
                     replaceGameLevel3D(level);
@@ -346,35 +338,17 @@ public class PlayScene3D implements GameScene {
             }
 
             case LEVEL_COMPLETE -> {
-                if (level3D == null) {
-                    throw new IllegalStateException("No 3D level exists!");
-                }
+                assertLevel3DExists();
                 context.gameLevel().ifPresent(level -> {
                     // if cheat has been used to complete level, 3D food might still exist:
                     level3D.eatables3D().forEach(level3D::eat);
                     level3D.livesCounter3D().stopAnimation();
-                    boolean intermissionAfterLevel = level.data().intermissionNumber() != 0;
-                    lockGameStateAndPlayAfterSeconds(1.0,
-                        createLevelCompleteAnimation(level),
-                        actionAfterSeconds(1.0, () -> {
-                            level.pac().hide();
-                            level3D.livesCounter3D().lightOnPy.set(false);
-                            if (!intermissionAfterLevel) {
-                                context.playAudioClip("audio.level_complete");
-                                context.actionHandler().showFlashMessageSeconds(2,
-                                    pickLevelCompleteMessage(level.number()));
-                            }
-                        }),
-                        intermissionAfterLevel ? pauseSeconds(0) : createLevelChangeAnimation(),
-                        immediateAction(() -> level3D.livesCounter3D().lightOnPy.set(true))
-                    );
+                    playLevelCompleteAnimation(level);
                 });
             }
 
             case GAME_OVER -> {
-                if (level3D == null) {
-                    throw new IllegalStateException("No 3D level exists!");
-                }
+                assertLevel3DExists();
                 lockGameStateForSeconds(3);
                 level3D.livesCounter3D().stopAnimation();
                 context.actionHandler().showFlashMessageSeconds(3, PICKER_GAME_OVER.next());
@@ -397,10 +371,33 @@ public class PlayScene3D implements GameScene {
         }
 
         // on state exit
-        if (e.oldState == GameState.HUNTING && level3D != null) {
+        if (event.oldState == GameState.HUNTING && level3D != null) {
             level3D.energizers3D().forEach(Energizer3D::stopPumping);
             level3D.bonus3D().ifPresent(Bonus3D::hide);
         }
+    }
+
+    private void assertLevel3DExists() {
+        if (level3D == null) {
+            throw new IllegalStateException("No 3D level exists!");
+        }
+    }
+
+    private void playLevelCompleteAnimation(GameLevel level) {
+        boolean noIntermission = level.data().intermissionNumber() == 0;
+        lockGameStateAndPlayAfterSeconds(1.0,
+            level3D.createLevelCompleteAnimation(),
+            actionAfterSeconds(1.0, () -> {
+                level.pac().hide();
+                level3D.livesCounter3D().lightOnPy.set(false);
+                if (noIntermission) {
+                    context.playAudioClip("audio.level_complete");
+                    context.actionHandler().showFlashMessageSeconds(2, pickLevelCompleteMessage(level.number()));
+                }
+            }),
+            noIntermission ? createLevelChangeAnimation() : pauseSeconds(0),
+            immediateAction(() -> level3D.livesCounter3D().lightOnPy.set(true))
+        );
     }
 
     private String pickLevelCompleteMessage(int levelNumber) {
@@ -413,36 +410,12 @@ public class PlayScene3D implements GameScene {
                 perspectivePy.unbind();
                 perspectivePy.set(Perspective.TOTAL);
             }),
-            createLevelRotateAnimation(),
+            level3D.createLevelRotateAnimation(),
             actionAfterSeconds(0.5, () -> context.playAudioClip("audio.sweep")),
             actionAfterSeconds(0.5, () -> perspectivePy.bind(PY_3D_PERSPECTIVE))
         );
     }
 
-    private Transition createLevelRotateAnimation() {
-        var rotation = new RotateTransition(Duration.seconds(1.5), level3D.root());
-        rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
-        rotation.setFromAngle(0);
-        rotation.setToAngle(360);
-        rotation.setInterpolator(Interpolator.LINEAR);
-        return rotation;
-    }
-
-    private Transition createLevelCompleteAnimation(GameLevel level) {
-        if (level.data().numFlashes() == 0) {
-            return pauseSeconds(1.0);
-        }
-        double wallHeight = PY_3D_WALL_HEIGHT.get();
-        var animation = new SinusCurveAnimation(level.data().numFlashes());
-        animation.setAmplitude(wallHeight);
-        animation.elongationPy.set(level3D.world3D().wallHeightPy.get());
-        level3D.world3D().wallHeightPy.bind(animation.elongationPy);
-        animation.setOnFinished(e -> {
-            level3D.world3D().wallHeightPy.bind(PY_3D_WALL_HEIGHT);
-            PY_3D_WALL_HEIGHT.set(wallHeight);
-        });
-        return animation;
-    }
 
     private void updateSound() {
         context.gameLevel().ifPresent(level -> {

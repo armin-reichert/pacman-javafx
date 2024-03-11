@@ -20,10 +20,10 @@ import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
+import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -38,6 +38,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
+import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.*;
 
@@ -240,7 +241,6 @@ public class GameLevel3D {
         return energizer3D;
     }
 
-
     public void update() {
         GameState gameState = GameController.it().state();
         boolean hasCredit = GameController.it().hasCredit();
@@ -298,6 +298,31 @@ public class GameLevel3D {
         }
     }
 
+    public Transition createLevelRotateAnimation() {
+        var rotation = new RotateTransition(Duration.seconds(1.5), root);
+        rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
+        rotation.setFromAngle(0);
+        rotation.setToAngle(360);
+        rotation.setInterpolator(Interpolator.LINEAR);
+        return rotation;
+    }
+
+    public Transition createLevelCompleteAnimation() {
+        if (level.data().numFlashes() == 0) {
+            return pauseSeconds(1.0);
+        }
+        double wallHeight = PY_3D_WALL_HEIGHT.get();
+        var animation = new SinusCurveAnimation(level.data().numFlashes());
+        animation.setAmplitude(wallHeight);
+        animation.elongationPy.set(world3D.wallHeightPy.get());
+        world3D.wallHeightPy.bind(animation.elongationPy);
+        animation.setOnFinished(e -> {
+            world3D.wallHeightPy.bind(PY_3D_WALL_HEIGHT);
+            PY_3D_WALL_HEIGHT.set(wallHeight);
+        });
+        return animation;
+    }
+
     private void updateHouseState(House house) {
         boolean houseUsed = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
@@ -330,20 +355,12 @@ public class GameLevel3D {
         return ghosts3D.get(id);
     }
 
-    public World3D world3D() {
-        return world3D;
-    }
-
     public Optional<Bonus3D> bonus3D() {
         return Optional.ofNullable(bonus3D);
     }
 
     public Scores3D scores3D() {
         return scores3D;
-    }
-
-    public LevelCounter3D levelCounter3D() {
-        return levelCounter3D;
     }
 
     public LivesCounter3D livesCounter3D() {
