@@ -17,7 +17,6 @@ This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler
     <a href="https://www.youtube.com/watch?v=XeVjXU59buw"><img src="doc/pacman-playscene.png" style="width:500px"></a>
 </div>
 
-
 ## About this project
 
 This is an implementation of the Arcade games Pac-Man and Ms. Pac-Man (see [Pac-Man and Ms. Pac-Man games](https://github.com/armin-reichert/pacman-basic)) with a JavaFX user interface.
@@ -88,12 +87,15 @@ In the 2D or 3D subproject folder, call `..\mvnw javafx:run`.
 
 ## How to use the application
 
-- <kbd>V</kbd> Switches between Pac-Man and Ms. Pac-Man (only on start screen)
+Start screen:
+- <kbd>V</kbd> Switches between Pac-Man and Ms. Pac-Man
+
+Intro screen:
 - <kbd>5</kbd> Adds one credit ("inserts coin")
 - <kbd>1</kbd> Starts the game
 - <kbd>H</kbd>Shows/hides context-sensitive help
 
-The keys <kbd>5</kbd> and <kbd>1</kbd> have been chose because the [MAME](https://www.mamedev.org/) emulator uses them too.
+The keys <kbd>5</kbd> and <kbd>1</kbd> have been chosen because the [MAME](https://www.mamedev.org/) emulator uses them too.
 
 Pac-Man steering with the keyboard:
 
