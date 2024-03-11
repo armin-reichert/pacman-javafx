@@ -38,7 +38,7 @@ The Mac-OS (.dmg) version has not been tested at all, any help is appreciated.
 
 ## How to build
 
-You need to have a [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21) installed on your computer.
+You need to have a [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21) and [Git](https://github.com/git-guides/install-git) installed on your computer.
 
 ### Clone repository (only first time)
 
