@@ -29,7 +29,6 @@ import javafx.scene.image.Image;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -60,12 +59,12 @@ public class PlayScene3D implements GameScene {
         }
     };
 
-    private final Map<Perspective, CameraController> camControllerMap = new EnumMap<>(Map.of(
+    private final Map<Perspective, CameraController> camControllerMap = Map.of(
         Perspective.DRONE,            new CamDrone(),
         Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer(),
         Perspective.NEAR_PLAYER,      new CamNearPlayer(),
         Perspective.TOTAL,            new CamTotal()
-    ));
+    );
 
     private final Group subSceneRoot = new Group();
     private final SubScene fxSubScene;
@@ -152,7 +151,6 @@ public class PlayScene3D implements GameScene {
     private void replaceGameLevel3D(GameLevel level) {
         level3D = new GameLevel3D(level, context.theme(), context.spriteSheet());
         Logger.info("3D game level {} created.", level.number());
-        level3D.updateLevelCounterSprites();
         // keep the scores rotated such that the viewer always sees them frontally
         level3D.scores3D().root().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
         level3D.scores3D().root().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
