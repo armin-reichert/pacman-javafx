@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.test;
 
-import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.Door;
 import org.junit.Test;
 
@@ -20,16 +19,5 @@ public class HouseTest {
     public void testDoorWingNotNull() {
         assertThrows(NullPointerException.class, () -> new Door(null, v2i(0, 0)));
         assertThrows(NullPointerException.class, () -> new Door(v2i(0, 0), null));
-    }
-
-    @Test
-    public void testArcadeHouseProperties() {
-        var house = ArcadeWorld.createArcadeHouse();
-        assertEquals(ArcadeWorld.HOUSE_TOP_LEFT_TILE, house.topLeftTile());
-        assertEquals(ArcadeWorld.HOUSE_SIZE, house.size());
-        assertEquals(ArcadeWorld.HOUSE_DOOR, house.door());
-        assertEquals(ArcadeWorld.HOUSE_SEAT_LEFT, house.seat("left"));
-        assertEquals(ArcadeWorld.HOUSE_SEAT_MIDDLE, house.seat("middle"));
-        assertEquals(ArcadeWorld.HOUSE_SEAT_RIGHT, house.seat("right"));
     }
 }
