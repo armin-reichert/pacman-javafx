@@ -165,16 +165,15 @@ public class PlayScene3D implements GameScene {
     }
 
     private void showLevelMessage() {
-        Logger.trace("Show level message");
+        Logger.info("showLevelMessage()");
         context.gameLevel().ifPresent(level -> {
             if (context.gameState() == GameState.LEVEL_TEST) {
-                level3D.showMessage("TEST LEVEL %s".formatted(level.number()), Duration.seconds(5),
-                    level.world().numCols() * HTS, 34 * TS);
+                level3D.showMessage("TEST LEVEL " + level.number(), 5, level.world().numCols() * HTS, 34 * TS);
             } else if (!level.isDemoLevel()){
                 var house = level.world().house();
-                var inFrontOfHouse = house.topLeftTile().scaled(TS).toFloatVec().plus(house.size().x() * HTS, house.size().y() * TS);
-                level3D.showMessage("READY!", Duration.seconds(context.gameController().isPlaying() ? 0.5 : 2.5),
-                    inFrontOfHouse.x(), inFrontOfHouse.y());
+                double x = (house.topLeftTile().x() + 0.5 * house.size().x()) * TS;
+                double y = (house.topLeftTile().y() + house.size().y()) * TS;
+                level3D.showMessage("READY!", context.gameController().isPlaying() ? 0.5 : 2.5, x, y);
             }
         });
     }
@@ -385,15 +384,13 @@ public class PlayScene3D implements GameScene {
             case LEVEL_TEST ->
                 context.gameLevel().ifPresent(level -> {
                     PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
-                    level.pac().setVisible(true);
-                    if (level3D == null) {
-                        replaceGameLevel3D(level);
-                        showLevelMessage();
-                        level3D.pac3D().update();
-                    } else {
-                        level3D.pac3D().init();
-                        level3D.ghosts3D().forEach(Ghost3D::init);
+                    level.letsGetReadyToRumble(true);
+                    replaceGameLevel3D(level);
+                    level3D.pac3D().init();
+                    for (Ghost3D ghost3D : level3D.ghosts3D()) {
+                        ghost3D.init();
                     }
+                    showLevelMessage();
                 });
 
             default -> {}

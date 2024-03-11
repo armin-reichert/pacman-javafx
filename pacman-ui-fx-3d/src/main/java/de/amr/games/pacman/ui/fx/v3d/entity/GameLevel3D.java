@@ -266,16 +266,16 @@ public class GameLevel3D {
         updateHouseState(level.world().house());
     }
 
-    public void showMessage(String text, Duration displayDuration, double x, double y) {
+    public void showMessage(String text, double displaySeconds, double x, double y) {
         messageText3D.setText(text);
         messageText3D.root().setVisible(true);
         messageText3D.root().setTranslateX(x);
         messageText3D.root().setTranslateY(y);
         messageText3D.root().setTranslateZ(MESSAGE_RETRACTED_Z);
-        var extend = new TranslateTransition(Duration.seconds(1.5), messageText3D.root());
+        var extend = new TranslateTransition(Duration.seconds(1), messageText3D.root());
         extend.setToZ(MESSAGE_EXTENDED_Z);
         var retract = new TranslateTransition(Duration.seconds(0.5), messageText3D.root());
-        retract.setDelay(displayDuration);
+        retract.setDelay(Duration.seconds(displaySeconds));
         retract.setToZ(MESSAGE_RETRACTED_Z);
         retract.setOnFinished(e -> messageText3D.root().setVisible(false));
         new SequentialTransition(extend, retract).play();
