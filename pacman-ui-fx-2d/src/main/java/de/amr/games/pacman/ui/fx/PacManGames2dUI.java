@@ -488,6 +488,66 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     @Override
+    public void onBonusEaten(GameEvent event) {
+        var level = event.game.level().orElse(null);
+        if (level != null && !level.isDemoLevel()) {
+            playAudioClip("audio.bonus_eaten");
+        }
+    }
+
+    @Override
+    public void onCreditAdded(GameEvent event) {
+        playAudioClip("audio.credit");
+    }
+
+    @Override
+    public void onExtraLifeWon(GameEvent event) {
+        var level = event.game.level().orElse(null);
+        if (level != null && !level.isDemoLevel()) {
+            playAudioClip("audio.extra_life");
+        }
+    }
+
+    @Override
+    public void onGhostEaten(GameEvent event) {
+        var level = event.game.level().orElse(null);
+        if (level != null && !level.isDemoLevel()) {
+            playAudioClip("audio.ghost_eaten");
+        }
+    }
+
+    @Override
+    public void onHuntingPhaseStarted(GameEvent event) {
+        var level = event.game.level().orElse(null);
+        if (level != null && !level.isDemoLevel()) {
+            level.scatterPhase().ifPresent(this::ensureSirenStarted);
+        }
+    }
+
+    @Override
+    public void onIntermissionStarted(GameEvent event) {
+        int intermissionNumber = 0; // 0=undefined
+        if (GameController.it().state() == GameState.INTERMISSION_TEST) {
+            intermissionNumber = GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber");
+        } else {
+            GameLevel level = event.game.level().orElse(null);
+            if (level != null) {
+                intermissionNumber = level.data().intermissionNumber();
+            }
+        }
+        if (intermissionNumber != 0) {
+            switch (gameVariant()) {
+                case MS_PACMAN -> playAudioClip("audio.intermission." + intermissionNumber);
+                case PACMAN -> {
+                    var clip = audioClip("audio.intermission");
+                    clip.setCycleCount(intermissionNumber == 1 || intermissionNumber == 3 ? 2 : 1);
+                    clip.play();
+                }
+            }
+        }
+    }
+
+    @Override
     public void onLevelCreated(GameEvent e) {
         // Found no better point in time to create and assign the sprite animations to the guys
         e.game.level().ifPresent(level -> {
@@ -509,68 +569,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     @Override
-    public void onBonusEaten(GameEvent event) {
-        var level = getLevel(event);
-        if (level != null && !level.isDemoLevel()) {
-            playAudioClip("audio.bonus_eaten");
-        }
-    }
-
-    @Override
-    public void onCreditAdded(GameEvent event) {
-        playAudioClip("audio.credit");
-    }
-
-    @Override
-    public void onExtraLifeWon(GameEvent event) {
-        var level = getLevel(event);
-        if (level != null && !level.isDemoLevel()) {
-            playAudioClip("audio.extra_life");
-        }
-    }
-
-    @Override
-    public void onGhostEaten(GameEvent event) {
-        var level = getLevel(event);
-        if (level != null && !level.isDemoLevel()) {
-            playAudioClip("audio.ghost_eaten");
-        }
-    }
-
-    @Override
-    public void onHuntingPhaseStarted(GameEvent event) {
-        var level = getLevel(event);
-        if (level != null && !level.isDemoLevel()) {
-            level.scatterPhase().ifPresent(this::ensureSirenStarted);
-        }
-    }
-
-    @Override
-    public void onIntermissionStarted(GameEvent event) {
-        int intermissionNumber = 0; // 0=undefined
-        if (GameController.it().state() == GameState.INTERMISSION_TEST) {
-            intermissionNumber = GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber");
-        } else {
-            GameLevel level = getLevel(event);
-            if (level != null) {
-                intermissionNumber = level.data().intermissionNumber();
-            }
-        }
-        if (intermissionNumber != 0) {
-            switch (gameVariant()) {
-                case MS_PACMAN -> playAudioClip("audio.intermission." + intermissionNumber);
-                case PACMAN -> {
-                    var clip = audioClip("audio.intermission");
-                    clip.setCycleCount(intermissionNumber == 1 || intermissionNumber == 3 ? 2 : 1);
-                    clip.play();
-                }
-            }
-        }
-    }
-
-    @Override
     public void onLevelStarted(GameEvent event) {
-        var level = getLevel(event);
+        var level = event.game.level().orElse(null);
         if (level != null && !level.isDemoLevel() && level.number() == 1) {
             playAudioClip("audio.game_ready");
         }
@@ -578,7 +578,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void onPacDied(GameEvent event) {
-        var level = getLevel(event);
+        var level = event.game.level().orElse(null);
         if (level != null && !level.isDemoLevel()) {
             playAudioClip("audio.pacman_death");
         }
@@ -586,7 +586,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void onPacFoundFood(GameEvent event) {
-        var level = getLevel(event);
+        var level = event.game.level().orElse(null);
         if (level != null && !level.isDemoLevel()) {
             //TODO (fixme) this does not sound 100% as in the original game
             ensureAudioLoop("audio.pacman_munch", AudioClip.INDEFINITE);
@@ -595,7 +595,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void onPacGetsPower(GameEvent event) {
-        var level = getLevel(event);
+        var level = event.game.level().orElse(null);
         if (level != null && !level.isDemoLevel()) {
             stopSirens();
             var clip = audioClip("audio.pacman_power");
@@ -607,7 +607,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void onPacLostPower(GameEvent event) {
-        var level = getLevel(event);
+        var level = event.game.level().orElse(null);
         if (level != null && !level.isDemoLevel()) {
             stopAudioClip("audio.pacman_power");
             ensureSirenStarted(level.huntingPhaseIndex() / 2);
@@ -812,7 +812,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     // Sound
 
-
     @Override
     public AudioClip audioClip(String key) {
         checkNotNull(key);
@@ -820,10 +819,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             case MS_PACMAN -> theme().audioClip("mspacman." + key);
             case PACMAN    -> theme().audioClip("pacman." + key);
         };
-    }
-
-    private GameLevel getLevel(GameEvent event) {
-        return event.game.level().orElse(null);
     }
 
     public void stopAllSounds() {
