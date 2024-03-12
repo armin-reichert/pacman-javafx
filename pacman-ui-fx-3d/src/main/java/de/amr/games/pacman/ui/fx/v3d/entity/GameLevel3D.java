@@ -92,7 +92,7 @@ public class GameLevel3D {
                 var wallMiddleColor = theme.color("mspacman.maze.wallMiddleColor", mazeNumber - 1);
                 var wallTopColor    = theme.color("mspacman.maze.wallTopColor", mazeNumber - 1);
                 var doorColor       = theme.color("mspacman.maze.doorColor");
-                var floorPlan = new FloorPlan(world,World3D.RESOLUTION);
+                var floorPlan = new FloorPlan(world, world.numRows() * World3D.RESOLUTION, world.numRows() * World3D.RESOLUTION, World3D.RESOLUTION);
                 world3D = new World3D(world, floorPlan, textureMap, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
                 door3D = world3D.createDoor();
                 createFood(world, theme.color("mspacman.maze.foodColor", mazeNumber - 1), theme.get("model3D.pellet"));
@@ -106,7 +106,7 @@ public class GameLevel3D {
                 var wallMiddleColor = theme.color("pacman.maze.wallMiddleColor");
                 var wallTopColor    = theme.color("pacman.maze.wallTopColor");
                 var doorColor       = theme.color("pacman.maze.doorColor");
-                var floorPlan = new FloorPlan(world,World3D.RESOLUTION);
+                var floorPlan = new FloorPlan(world, world.numRows() * World3D.RESOLUTION, world.numRows() * World3D.RESOLUTION, World3D.RESOLUTION);
                 world3D = new World3D(world, floorPlan, textureMap, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
                 door3D = world3D.createDoor();
                 createFood(world, theme.color("pacman.maze.foodColor"), theme.get("model3D.pellet"));

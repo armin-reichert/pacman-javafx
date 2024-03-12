@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class FloorPlanGenerator {
@@ -17,7 +16,9 @@ public class FloorPlanGenerator {
 
     public static void main(String[] args) throws IOException {
         Files.createDirectories(Paths.get(DIR.toURI()));
-        var floorPlan = new FloorPlan(ArcadeWorld.createPacManWorld(), 4);
+        int resolution = 4;
+        var world = ArcadeWorld.createPacManWorld();
+        var floorPlan = new FloorPlan(world, world.numCols() * resolution, world.numRows() * resolution, resolution);
         File file = new File(DIR, "pacman-floorPlan.txt");
         floorPlan.store(file);
         var floorPlan2 = FloorPlan.read(new FileInputStream(file));

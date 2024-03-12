@@ -87,8 +87,8 @@ public class World3D {
     private final PhongMaterial houseMaterial;
     private final Map<String, PhongMaterial> floorTextures;
 
-    public World3D(World world, FloorPlan floorPlan,
-                   Map<String, PhongMaterial> floorTextures, Color wallBaseColor, Color wallMiddleColor, Color wallTopColor, Color doorColor) {
+    public World3D(World world, FloorPlan floorPlan, Map<String, PhongMaterial> floorTextures,
+                   Color wallBaseColor, Color wallMiddleColor, Color wallTopColor, Color doorColor) {
         checkNotNull(world);
         checkNotNull(floorTextures);
         checkNotNull(wallBaseColor);
