@@ -234,39 +234,34 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         this.gamePage = createGamePage(mainScene);
         this.clock = createClock();
 
-        addGameScenes();
-        configureStage(settings);
-        stage.setScene(mainScene);
-    }
-
-    protected void addGameScenes() {
         gameScenesByVariant.put(GameVariant.MS_PACMAN, new HashMap<>(Map.of(
-            "boot", new BootScene(),
-            "intro", new MsPacManIntroScene(),
+            "boot",   new BootScene(),
+            "intro",  new MsPacManIntroScene(),
             "credit", new MsPacManCreditScene(),
-            "play", new PlayScene2D(),
-            "cut1", new MsPacManCutscene1(),
-            "cut2", new MsPacManCutscene2(),
-            "cut3", new MsPacManCutscene3()
+            "play",   new PlayScene2D(),
+            "cut1",   new MsPacManCutscene1(),
+            "cut2",   new MsPacManCutscene2(),
+            "cut3",   new MsPacManCutscene3()
         )));
-
         gameScenesByVariant.put(GameVariant.PACMAN, new HashMap<>(Map.of(
-            "boot", new BootScene(),
-            "intro", new PacManIntroScene(),
+            "boot",   new BootScene(),
+            "intro",  new PacManIntroScene(),
             "credit", new PacManCreditScene(),
-            "play", new PlayScene2D(),
-            "cut1", new PacManCutscene1(),
-            "cut2", new PacManCutscene2(),
-            "cut3", new PacManCutscene3()
+            "play",   new PlayScene2D(),
+            "cut1",   new PacManCutscene1(),
+            "cut2",   new PacManCutscene2(),
+            "cut3",   new PacManCutscene3()
         )));
-
         for (Map<String, GameScene> gameSceneMap : gameScenesByVariant.values()) {
-            for (GameScene gameScene : gameSceneMap.values()) {
+            for (var gameScene : gameSceneMap.values()) {
                 if (gameScene instanceof GameScene2D gameScene2D) {
                     gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
                 }
             }
         }
+
+        configureStage(settings);
+        stage.setScene(mainScene);
     }
 
     protected GameClock createClock() {

@@ -221,6 +221,11 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     public PacManGames3dUI(Stage stage, Settings settings) {
         super(stage, settings);
+        for (var gameVariant : GameVariant.values()) {
+            var playScene3D = new PlayScene3D();
+            playScene3D.setParentScene(mainScene);
+            gameScenesByVariant.get(gameVariant).put("play3D", playScene3D);
+        }
         PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
         PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
         int hour = LocalTime.now().getHour();
@@ -230,16 +235,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     @Override
     public List<ResourceBundle> messageBundles() {
         return List.of(MSG_BUNDLE, PacManGames2dUI.MSG_BUNDLE);
-    }
-
-    @Override
-    protected void addGameScenes() {
-        super.addGameScenes();
-        for (var gameVariant : GameVariant.values()) {
-            var playScene3D = new PlayScene3D();
-            playScene3D.setParentScene(mainScene);
-            gameScenesByVariant.get(gameVariant).put("play3D", playScene3D);
-        }
     }
 
     @Override
