@@ -35,7 +35,6 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.message;
 import static de.amr.games.pacman.ui.fx.util.Ufx.*;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 
@@ -387,7 +386,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private String pickLevelCompleteMessage(int levelNumber) {
-        return PICKER_LEVEL_COMPLETE.next() + "\n\n" + message(context.messageBundles(), "level_complete", levelNumber);
+        return PICKER_LEVEL_COMPLETE.next() + "\n\n" + context.tt("level_complete", levelNumber);
     }
 
     private Transition createLevelChangeAnimation() {

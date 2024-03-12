@@ -233,8 +233,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     }
 
     @Override
-    public List<ResourceBundle> messageBundles() {
-        return List.of(MSG_BUNDLE, PacManGames2dUI.MSG_BUNDLE);
+    public String tt(String key, Object... args) {
+        return message(List.of(PacManGames3dUI.MSG_BUNDLE, PacManGames2dUI.MSG_BUNDLE), key, args);
     }
 
     @Override

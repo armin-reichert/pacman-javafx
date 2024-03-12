@@ -33,8 +33,6 @@ public interface GameSceneContext {
 
     Theme theme();
 
-    List<ResourceBundle> messageBundles();
-
     String tt(String key, Object... args);
 
     <S extends SpriteSheet> S spriteSheet();

@@ -46,6 +46,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -401,15 +402,28 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     // GameSceneContext interface implementation
 
-    @Override
-    public List<ResourceBundle> messageBundles() {
-        return List.of(MSG_BUNDLE);
+    protected String message(List<ResourceBundle> bundles, String key, Object... args) {
+        checkNotNull(key);
+        for (var bundle : bundles) {
+            if (bundle.containsKey(key)) {
+                return MessageFormat.format(bundle.getString(key), args);
+            }
+        }
+        Logger.error("Missing localized text for key {}", key);
+        return null;
     }
 
+    /**
+     * Builds a resource key from the given key pattern and the arguments and returns the corresponding text from the
+     * first resource bundle containing the key.
+     *
+     * @param key     key in resource bundle
+     * @param args    optional arguments merged into the message (if pattern)
+     * @return localized text with arguments merged or {@code "<key">} if no text is available
+     */
     @Override
     public String tt(String key, Object... args) {
-        String text = ResourceManager.message(messageBundles(), key, args);
-        return text != null ? text : "<" + key + ">";
+        return message(List.of(MSG_BUNDLE), key, args);
     }
 
     @Override

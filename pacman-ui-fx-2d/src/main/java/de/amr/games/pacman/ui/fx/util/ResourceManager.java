@@ -42,27 +42,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public interface ResourceManager {
 
-    /**
-     * Builds a resource key from the given key pattern and the arguments and returns the corresponding text from the
-     * first resource bundle containing the key.
-     *
-     * @param bundles resource bundle list
-     * @param key     key in resource bundle
-     * @param args    optional arguments merged into the message (if pattern)
-     * @return localized text with arguments merged or {@code null} if no text is available
-     */
-    static String message(List<ResourceBundle> bundles, String key, Object... args) {
-        checkNotNull(bundles);
-        checkNotNull(key);
-        for (var bundle : bundles) {
-            if (bundle.containsKey(key)) {
-                return MessageFormat.format(bundle.getString(key), args);
-            }
-        }
-        Logger.error("Missing localized text for key {}", key);
-        return null;
-    }
-
     static Background coloredBackground(Color color) {
         checkNotNull(color);
         return new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
