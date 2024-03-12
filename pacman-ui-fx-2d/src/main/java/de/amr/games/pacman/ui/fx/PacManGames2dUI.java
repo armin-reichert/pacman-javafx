@@ -310,11 +310,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         page.setCanvasBorderColor(theme().color("palette.pale"));
         page.getCanvasLayer().setBackground(theme().background("wallpaper.background"));
         page.getCanvasContainer().setBackground(ResourceManager.coloredBackground(theme().color("canvas.background")));
-        page.getCanvas().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            double scaling = page.getScaling();
-            Vector2i tile = Globals.tileAt(new Vector2f((float)(e.getX() / scaling), (float)(e.getY() / scaling)));
-            Logger.info("Mouse click on canvas at ({}, {}, tile {}", e.getX(), e.getY(), tile);
-        });
 
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
         return page;
