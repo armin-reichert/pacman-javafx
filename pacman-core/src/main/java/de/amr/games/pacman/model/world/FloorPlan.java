@@ -19,11 +19,11 @@ import static de.amr.games.pacman.lib.Globals.v2i;
  */
 public class FloorPlan {
 
-    public static final byte EMPTY = 0;
+    public static final byte EMPTY  = 0;
     public static final byte CORNER = 1;
-    public static final byte HWALL = 2;
-    public static final byte VWALL = 3;
-    public static final byte DOOR = 4;
+    public static final byte HWALL  = 2;
+    public static final byte VWALL  = 3;
+    public static final byte DOOR   = 4;
 
     private static char symbol(byte b) {
         return switch (b) {
@@ -76,8 +76,6 @@ public class FloorPlan {
     private int sizeY;
     private int resolution;
 
-    //sizeXX = resolution * world.numCols();
-    //sizeY = resolution * world.numRows();
     public FloorPlan(World world, int sizeX, int sizeY, int resolution) {
         this.resolution = resolution;
         this.sizeX = sizeX;
