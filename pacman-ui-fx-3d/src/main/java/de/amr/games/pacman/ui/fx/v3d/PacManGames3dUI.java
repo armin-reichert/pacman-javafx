@@ -43,6 +43,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.input.Keyboard.alt;
 import static de.amr.games.pacman.ui.fx.input.Keyboard.just;
+import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
 
 /**
  * User interface for Pac-Man and Ms. Pac-Man games.
@@ -229,8 +230,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         }
         PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
         PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
-        int hour = LocalTime.now().getHour();
-        PY_3D_NIGHT_MODE.set(hour >= 20 || hour <= 5);
     }
 
     @Override
@@ -311,7 +310,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     @Override
     public void toggle2D3D() {
         currentGameScene().ifPresent(gameScene -> {
-            Ufx.toggle(PY_3D_ENABLED);
+            toggle(PY_3D_ENABLED);
             gameScene = sceneMatchingCurrentGameState();
             if (isPlayScene(gameScene)) {
                 updateOrReloadGameScene(true);
@@ -324,7 +323,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     @Override
     public void togglePipVisible() {
-        Ufx.toggle(PY_PIP_ON);
+        toggle(PY_PIP_ON);
         showFlashMessage(tt(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
     }
 }

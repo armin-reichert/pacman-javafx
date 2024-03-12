@@ -35,7 +35,6 @@ public class PacManGames2dApp extends Application {
         GameEventManager.addListener(ui);
         ui.showStartPage();
         Logger.info("UI initialized. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
-        Logger.info("Theme: {}", ui.theme());
     }
 
     @Override

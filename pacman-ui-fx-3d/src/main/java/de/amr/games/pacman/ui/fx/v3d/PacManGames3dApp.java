@@ -11,7 +11,10 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.time.LocalTime;
 import java.util.Locale;
+
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PY_3D_NIGHT_MODE;
 
 /**
  * @author Armin Reichert
@@ -36,9 +39,10 @@ public class PacManGames3dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGames3dUI(stage, settings);
         GameEventManager.addListener(ui);
+        int hour = LocalTime.now().getHour();
+        PY_3D_NIGHT_MODE.set(hour >= 20 || hour <= 5);
         ui.showStartPage();
         Logger.info("UI created. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
-        Logger.info("Theme: {}", ui.theme());
     }
 
     @Override
