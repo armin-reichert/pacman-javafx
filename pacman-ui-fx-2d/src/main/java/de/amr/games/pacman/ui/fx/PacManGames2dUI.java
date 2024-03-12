@@ -46,7 +46,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -230,10 +229,17 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         checkNotNull(settings);
 
         this.stage = stage;
-        this.mainScene = createMainScene();
-        this.startPage = createStartPage();
-        this.gamePage = createGamePage(mainScene);
-        this.clock = createClock();
+        mainScene = createMainScene();
+        startPage = createStartPage();
+        gamePage  = createGamePage(mainScene);
+
+        clock = new GameClock();
+        clock.pausedPy.addListener((py, ov, nv) -> updateStage());
+        clock.setOnTick(() -> {
+            gameController().update();
+            currentGameScene().ifPresent(GameScene::update);
+        });
+        clock.setOnRender(gamePage::render);
 
         gameScenesByVariant.put(GameVariant.MS_PACMAN, new HashMap<>(Map.of(
             "boot",   new BootScene(),
@@ -261,20 +267,11 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             }
         }
 
-        configureStage(settings);
+        stage.setFullScreen(settings.fullScreen);
+        stage.setMinWidth(CANVAS_WIDTH_UNSCALED);
+        stage.setMinHeight(CANVAS_HEIGHT_UNSCALED);
+        stage.centerOnScreen();
         stage.setScene(mainScene);
-    }
-
-    protected GameClock createClock() {
-        var clock = new GameClock();
-        clock.targetFrameratePy.set(GameModel.FPS);
-        clock.pausedPy.addListener((py, ov, nv) -> updateStage());
-        clock.setOnTick(() -> {
-            gameController().update();
-            currentGameScene().ifPresent(GameScene::update);
-        });
-        clock.setOnRender(gamePage::render);
-        return clock;
     }
 
     protected Scene createMainScene() {
@@ -285,13 +282,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         scene.widthProperty().addListener((py, ov, nv) -> currentPage.setSize(scene.getWidth(), scene.getHeight()));
         scene.heightProperty().addListener((py, ov, nv) -> currentPage.setSize(scene.getWidth(), scene.getHeight()));
         return scene;
-    }
-
-    protected void configureStage(Settings settings) {
-        stage.setFullScreen(settings.fullScreen);
-        stage.setMinWidth(CANVAS_WIDTH_UNSCALED);
-        stage.setMinHeight(CANVAS_HEIGHT_UNSCALED);
-        stage.centerOnScreen();
     }
 
     protected StartPage createStartPage() {
@@ -353,7 +343,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         reboot();
         setPage(gamePage);
         clock.start();
-        Logger.info("Clock started, speed={} Hz", clock.targetFrameratePy.get());
+        Logger.info("Clock started, speed={} Hz", clock.targetFrameRatePy.get());
     }
 
     protected void updateStage() {
@@ -711,17 +701,17 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void changeSimulationSpeed(int delta) {
-        int newRate = clock.targetFrameratePy.get() + delta;
+        int newRate = clock.targetFrameRatePy.get() + delta;
         if (newRate > 0) {
-            clock.targetFrameratePy.set(newRate);
+            clock.targetFrameRatePy.set(newRate);
             showFlashMessageSeconds(0.75, newRate + "Hz");
         }
     }
 
     @Override
     public void resetSimulationSpeed() {
-        clock.targetFrameratePy.set(GameModel.FPS);
-        showFlashMessageSeconds(0.75, clock.targetFrameratePy.get() + "Hz");
+        clock.targetFrameRatePy.set(GameModel.FPS);
+        showFlashMessageSeconds(0.75, clock.targetFrameRatePy.get() + "Hz");
     }
 
     @Override

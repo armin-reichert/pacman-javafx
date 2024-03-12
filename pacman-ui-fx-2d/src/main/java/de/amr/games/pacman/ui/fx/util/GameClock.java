@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.util;
 
+import de.amr.games.pacman.model.GameModel;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
@@ -22,11 +23,7 @@ import org.tinylog.Logger;
  */
 public class GameClock {
 
-    private static void snooze() {
-        // rest
-    }
-
-    public final IntegerProperty targetFrameratePy = new SimpleIntegerProperty(this, "targetFramerate", 60) {
+    public final IntegerProperty targetFrameRatePy = new SimpleIntegerProperty(this, "targetFrameRate", GameModel.FPS) {
         @Override
         protected void invalidated() {
             updateClock();
@@ -35,8 +32,8 @@ public class GameClock {
     public final BooleanProperty pausedPy = new SimpleBooleanProperty(this, "paused", false);
     public final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(this, "timeMeasured", false);
 
-    private Runnable onTick = GameClock::snooze;
-    private Runnable onRender = GameClock::snooze;
+    private Runnable onTick   = () -> {};
+    private Runnable onRender = () -> {};
     private Timeline timeline;
     private long updateCount;
     private long ticksPerSec;
@@ -44,7 +41,7 @@ public class GameClock {
     private long ticks;
 
     public GameClock() {
-        createTimeline();
+        createTimeline(targetFrameRatePy.get());
     }
 
     public void setOnTick(Runnable onTick) {
@@ -55,8 +52,7 @@ public class GameClock {
         this.onRender = onRender;
     }
 
-    private void createTimeline() {
-        int targetFPS = targetFrameratePy.get();
+    private void createTimeline(int targetFPS) {
         var tick = new KeyFrame(Duration.seconds(1.0 / targetFPS), e -> executeSingleStep(!isPaused()));
         timeline = new Timeline(targetFPS, tick);
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -67,7 +63,7 @@ public class GameClock {
         if (running) {
             timeline.stop();
         }
-        createTimeline();
+        createTimeline(targetFrameRatePy.get());
         if (running) {
             start();
         }

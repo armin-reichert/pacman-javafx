@@ -292,6 +292,23 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     }
 
     @Override
+    public void selectNextPerspective() {
+        PY_3D_PERSPECTIVE.set(PY_3D_PERSPECTIVE.get().next());
+        showFlashMessage(tt("camera_perspective", tt(PY_3D_PERSPECTIVE.get().name())));
+    }
+
+    @Override
+    public void selectPrevPerspective() {
+        PY_3D_PERSPECTIVE.set(PY_3D_PERSPECTIVE.get().prev());
+        showFlashMessage(tt("camera_perspective", tt(PY_3D_PERSPECTIVE.get().name())));
+    }
+
+    @Override
+    public void toggleDrawMode() {
+        PY_3D_DRAW_MODE.set(PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+    }
+
+    @Override
     public void toggle2D3D() {
         currentGameScene().ifPresent(gameScene -> {
             Ufx.toggle(PY_3D_ENABLED);
@@ -309,22 +326,5 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public void togglePipVisible() {
         Ufx.toggle(PY_PIP_ON);
         showFlashMessage(tt(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
-    }
-
-    @Override
-    public void selectNextPerspective() {
-        PY_3D_PERSPECTIVE.set(PY_3D_PERSPECTIVE.get().next());
-        showFlashMessage(tt("camera_perspective", tt(PY_3D_PERSPECTIVE.get().name())));
-    }
-
-    @Override
-    public void selectPrevPerspective() {
-        PY_3D_PERSPECTIVE.set(PY_3D_PERSPECTIVE.get().prev());
-        showFlashMessage(tt("camera_perspective", tt(PY_3D_PERSPECTIVE.get().name())));
-    }
-
-    @Override
-    public void toggleDrawMode() {
-        PY_3D_DRAW_MODE.set(PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
     }
 }
