@@ -10,16 +10,31 @@ import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.media.AudioClip;
+import org.tinylog.Logger;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 /**
  * @author Armin Reichert
  */
 public interface GameSceneContext {
+
+    static String message(List<ResourceBundle> bundles, String key, Object... args) {
+        checkNotNull(key);
+        for (var bundle : bundles) {
+            if (bundle.containsKey(key)) {
+                return MessageFormat.format(bundle.getString(key), args);
+            }
+        }
+        Logger.error("Missing localized text for key {}", key);
+        return null;
+    }
 
     GameClock gameClock();
 

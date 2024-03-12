@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Steering;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.GameScene;
+import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.Settings;
 import de.amr.games.pacman.ui.fx.input.KeyboardPacSteering;
@@ -234,7 +235,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     @Override
     public String tt(String key, Object... args) {
-        return message(List.of(PacManGames3dUI.MSG_BUNDLE, PacManGames2dUI.MSG_BUNDLE), key, args);
+        return GameSceneContext.message(List.of(PacManGames3dUI.MSG_BUNDLE, PacManGames2dUI.MSG_BUNDLE), key, args);
     }
 
     @Override

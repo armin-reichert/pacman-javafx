@@ -402,17 +402,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     // GameSceneContext interface implementation
 
-    protected String message(List<ResourceBundle> bundles, String key, Object... args) {
-        checkNotNull(key);
-        for (var bundle : bundles) {
-            if (bundle.containsKey(key)) {
-                return MessageFormat.format(bundle.getString(key), args);
-            }
-        }
-        Logger.error("Missing localized text for key {}", key);
-        return null;
-    }
-
     /**
      * Builds a resource key from the given key pattern and the arguments and returns the corresponding text from the
      * first resource bundle containing the key.
@@ -423,7 +412,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
      */
     @Override
     public String tt(String key, Object... args) {
-        return message(List.of(MSG_BUNDLE), key, args);
+        return GameSceneContext.message(List.of(MSG_BUNDLE), key, args);
     }
 
     @Override
