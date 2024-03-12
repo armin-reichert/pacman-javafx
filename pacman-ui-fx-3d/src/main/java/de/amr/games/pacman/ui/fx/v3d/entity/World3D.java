@@ -39,7 +39,7 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.NO_TEXTURE;
  */
 public class World3D {
 
-    private static final int RESOLUTION = 4;
+    public static final int RESOLUTION = 4;
     private static final double FLOOR_THICKNESS = 0.4;
 
     private static class WallData {
@@ -87,7 +87,8 @@ public class World3D {
     private final PhongMaterial houseMaterial;
     private final Map<String, PhongMaterial> floorTextures;
 
-    public World3D(World world, Map<String, PhongMaterial> floorTextures, Color wallBaseColor, Color wallMiddleColor, Color wallTopColor, Color doorColor) {
+    public World3D(World world, FloorPlan floorPlan,
+                   Map<String, PhongMaterial> floorTextures, Color wallBaseColor, Color wallMiddleColor, Color wallTopColor, Color doorColor) {
         checkNotNull(world);
         checkNotNull(floorTextures);
         checkNotNull(wallBaseColor);
@@ -120,7 +121,7 @@ public class World3D {
         houseLight.setTranslateZ(-TS);
 
         buildFloor();
-        buildWorld();
+        buildWorld(floorPlan);
 
         root.getChildren().addAll(floorGroup, wallsGroup, houseLight);
     }
@@ -162,8 +163,7 @@ public class World3D {
         return wallData;
     }
 
-    private void buildWorld() {
-        var floorPlan = new FloorPlan(world, RESOLUTION);
+    private void buildWorld(FloorPlan floorPlan) {
         wallsGroup.getChildren().clear();
         addCorners(floorPlan, createWallData());
         addHorizontalWalls(floorPlan, createWallData());

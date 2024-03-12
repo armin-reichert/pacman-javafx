@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.world;
 
 import de.amr.games.pacman.lib.Vector2i;
+import org.tinylog.Logger;
 
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.io.*;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.v2i;
@@ -37,9 +37,44 @@ public class FloorPlan {
         };
     }
 
-    private final byte[][] cells;
-    private final World world;
-    private final int resolution;
+
+    public static FloorPlan read(InputStream in) {
+        try (var rdr = new BufferedReader(new InputStreamReader(in))) {
+            var floorPlan = new FloorPlan();
+            int sizeX = 0;
+            int sizeY = 0;
+            String line = rdr.readLine();
+            while (line != null) {
+                if (line.startsWith("#")) {
+                    var setting = line.substring(1).trim();
+                    var keyValue = setting.split("=");
+                    if ("resolution".equals(keyValue[0])) {
+                        floorPlan.resolution = Integer.parseInt(keyValue[1]);
+                    }
+                    if ("cols".equals(keyValue[0])) {
+                        sizeX = Integer.parseInt(keyValue[1]);
+                    }
+                    if ("rows".equals(keyValue[0])) {
+                        sizeY = Integer.parseInt(keyValue[1]);
+                    }
+                    floorPlan.cells = new byte[sizeY][sizeX];
+                } else {
+                    //TODO
+                }
+                line = rdr.readLine();
+            }
+            return floorPlan;
+        } catch (Exception x) {
+            Logger.error("Could not read floor plan");
+            Logger.error(x);
+            return null;
+        }
+    }
+
+
+    private byte[][] cells;
+    private World world;
+    private int resolution;
 
     public FloorPlan(World world, int resolution) {
         checkNotNull(world);
@@ -52,6 +87,9 @@ public class FloorPlan {
         emptyCellsSurroundedByWalls(numCellsX, numCellsY);
         separateHorizontalWallsAndCorners(numCellsX, numCellsY);
         separateVerticalWallsAndCorners(numCellsX, numCellsY);
+    }
+
+    private FloorPlan() {
     }
 
     public byte cell(int x, int y) {
@@ -74,8 +112,21 @@ public class FloorPlan {
         return v2i(x / resolution, y / resolution);
     }
 
+    public void store(File file) {
+        try (var out = new FileWriter(file)) {
+            var pw = new PrintWriter(out);
+            print(pw, false);
+        } catch (Exception x) {
+            Logger.error("Could not write floor plan to file " + file);
+            Logger.error(x);
+        }
+    }
+
     public void print(Writer w, boolean useSymbols) {
         PrintWriter p = new PrintWriter(w);
+        p.println("# resolution=" + resolution);
+        p.println("# cols=" + sizeX());
+        p.println("# rows=" + sizeY());
         for (int y = 0; y < sizeY(); ++y) {
             for (int x = 0; x < sizeX(); ++x) {
                 p.print(useSymbols ? String.valueOf(symbol(cell(x, y))) : cell(x, y));

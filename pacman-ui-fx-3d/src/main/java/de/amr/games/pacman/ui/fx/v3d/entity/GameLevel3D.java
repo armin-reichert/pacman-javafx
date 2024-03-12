@@ -12,6 +12,7 @@ import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
@@ -47,7 +48,7 @@ import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.*;
  */
 public class GameLevel3D {
 
-    private static final double PAC_SIZE = 9.0;
+    private static final double PAC_SIZE   = 9.0;
     private static final double GHOST_SIZE = 9.0;
     private static final double LIVES_COUNTER_PAC_SIZE = 10.0;
     private static final double MESSAGE_EXTENDED_Z = -5;
@@ -58,7 +59,7 @@ public class GameLevel3D {
 
     private final Group root = new Group();
     private final World3D world3D;
-    private final Group doorGroup;
+    private final Group door3D;
     private final Group foodGroup = new Group();
     private final Pac3D pac3D;
     private final Pac3DLight pac3DLight;
@@ -91,9 +92,10 @@ public class GameLevel3D {
                 var wallMiddleColor = theme.color("mspacman.maze.wallMiddleColor", mazeNumber - 1);
                 var wallTopColor    = theme.color("mspacman.maze.wallTopColor", mazeNumber - 1);
                 var doorColor       = theme.color("mspacman.maze.doorColor");
-                world3D = new World3D(world, textureMap, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
-                doorGroup = world3D.createDoor();
-                addFood(world, theme.color("mspacman.maze.foodColor", mazeNumber - 1), theme.get("model3D.pellet"));
+                var floorPlan = new FloorPlan(world,World3D.RESOLUTION);
+                world3D = new World3D(world, floorPlan, textureMap, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
+                door3D = world3D.createDoor();
+                createFood(world, theme.color("mspacman.maze.foodColor", mazeNumber - 1), theme.get("model3D.pellet"));
                 pac3D = createMsPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
                 pac3DLight = new Pac3DLight(pac3D);
                 ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, theme.get("model3D.ghost"), theme, GHOST_SIZE)).toList();
@@ -104,9 +106,10 @@ public class GameLevel3D {
                 var wallMiddleColor = theme.color("pacman.maze.wallMiddleColor");
                 var wallTopColor    = theme.color("pacman.maze.wallTopColor");
                 var doorColor       = theme.color("pacman.maze.doorColor");
-                world3D = new World3D(world, textureMap, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
-                doorGroup = world3D.createDoor();
-                addFood(world, theme.color("pacman.maze.foodColor"), theme.get("model3D.pellet"));
+                var floorPlan = new FloorPlan(world,World3D.RESOLUTION);
+                world3D = new World3D(world, floorPlan, textureMap, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
+                door3D = world3D.createDoor();
+                createFood(world, theme.color("pacman.maze.foodColor"), theme.get("model3D.pellet"));
                 pac3D = createPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
                 pac3DLight = new Pac3DLight(pac3D);
                 ghosts3D = level.ghosts().map(ghost -> new Ghost3D(level, ghost, theme.get("model3D.ghost"), theme, GHOST_SIZE)).toList();
@@ -144,7 +147,7 @@ public class GameLevel3D {
             root.getChildren().add(ghost3D.root());
         }
         root.getChildren().add(foodGroup);
-        root.getChildren().add(doorGroup);
+        root.getChildren().add(door3D);
         // Walls must be added *after* the rest. Otherwise, transparency is not working correctly!
         root.getChildren().add(world3D.root());
 
@@ -205,8 +208,7 @@ public class GameLevel3D {
         }
     }
 
-    public void addFood(World world, Color foodColor, Model3D pelletModel3D) {
-        foodGroup.getChildren().clear();
+    public void createFood(World world, Color foodColor, Model3D pelletModel3D) {
         var foodMaterial = coloredMaterial(foodColor);
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             Eatable3D food3D = world.isEnergizerTile(tile)
@@ -331,7 +333,7 @@ public class GameLevel3D {
             .anyMatch(Ghost::isVisible);
         world3D.houseLighting().setLightOn(houseUsed);
         if (houseOpen) {
-            for (var node : doorGroup.getChildren()) {
+            for (var node : door3D.getChildren()) {
                 DoorWing3D wing3D = (DoorWing3D) node.getUserData();
                 wing3D.traversalAnimation().play();
             }
@@ -348,11 +350,6 @@ public class GameLevel3D {
 
     public List<Ghost3D> ghosts3D() {
         return ghosts3D;
-    }
-
-    public Ghost3D ghost3D(byte id) {
-        checkGhostID(id);
-        return ghosts3D.get(id);
     }
 
     public Optional<Bonus3D> bonus3D() {
