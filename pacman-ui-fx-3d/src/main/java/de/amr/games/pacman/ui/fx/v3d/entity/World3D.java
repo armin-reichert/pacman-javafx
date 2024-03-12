@@ -39,7 +39,6 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.NO_TEXTURE;
  */
 public class World3D {
 
-    public static final int RESOLUTION = 4;
     private static final double FLOOR_THICKNESS = 0.4;
 
     private static class WallData {
@@ -157,17 +156,17 @@ public class World3D {
         floor().setMaterial(floorTextures.getOrDefault("texture." + floorTexturePy.get(), coloredMaterial(floorColorPy.get())));
     }
 
-    private WallData createWallData() {
+    private WallData createWallData(FloorPlan floorPlan) {
         var wallData = new WallData();
-        wallData.brickSize = (float) TS / RESOLUTION;
+        wallData.brickSize = (float) TS / floorPlan.getResolution();
         return wallData;
     }
 
     private void buildWorld(FloorPlan floorPlan) {
         wallsGroup.getChildren().clear();
-        addCorners(floorPlan, createWallData());
-        addHorizontalWalls(floorPlan, createWallData());
-        addVerticalWalls(floorPlan, createWallData());
+        addCorners(floorPlan, createWallData(floorPlan));
+        addHorizontalWalls(floorPlan, createWallData(floorPlan));
+        addVerticalWalls(floorPlan, createWallData(floorPlan));
         Logger.info("3D world created (resolution={}, wall height={})", floorPlan.getResolution(), wallHeightPy.get());
     }
 
@@ -245,12 +244,13 @@ public class World3D {
         }
     }
 
-    private boolean isWallInsideHouse(WallData wallData, House house) {
+    private boolean isWallInsideHouse(FloorPlan floorPlan, WallData wallData, House house) {
+        int resolution = floorPlan.getResolution();
         Vector2i bottomRightTile = house.topLeftTile().plus(house.size());
-        double xMin = house.topLeftTile().x() * RESOLUTION;
-        double yMin = house.topLeftTile().y() * RESOLUTION;
-        double xMax = bottomRightTile.x() * RESOLUTION - RESOLUTION;
-        double yMax = bottomRightTile.y() * RESOLUTION - RESOLUTION;
+        double xMin = house.topLeftTile().x() * resolution;
+        double yMin = house.topLeftTile().y() * resolution;
+        double xMax = bottomRightTile.x() * resolution - resolution;
+        double yMax = bottomRightTile.y() * resolution - resolution;
         return wallData.x > xMin && wallData.y > yMin && wallData.x <= xMax && wallData.y <= yMax;
     }
 
@@ -260,7 +260,7 @@ public class World3D {
 
     private void addWall(FloorPlan floorPlan, WallData wallData) {
         if (isPartOfHouse(floorPlan, wallData, world.house())) {
-            if (!isWallInsideHouse(wallData, world.house())) {
+            if (!isWallInsideHouse(floorPlan, wallData, world.house())) {
                 addHouseWall(wallData);
             }
         } else {

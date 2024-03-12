@@ -48,6 +48,7 @@ import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.*;
  */
 public class GameLevel3D {
 
+    private static final int    FLOOR_PLAN_RESOLUTION = 4;
     private static final double PAC_SIZE   = 9.0;
     private static final double GHOST_SIZE = 9.0;
     private static final double LIVES_COUNTER_PAC_SIZE = 10.0;
@@ -92,8 +93,7 @@ public class GameLevel3D {
                 var wallMiddleColor = theme.color("mspacman.maze.wallMiddleColor", mazeNumber - 1);
                 var wallTopColor    = theme.color("mspacman.maze.wallTopColor", mazeNumber - 1);
                 var doorColor       = theme.color("mspacman.maze.doorColor");
-                var floorPlan = new FloorPlan(world, world.numRows() * World3D.RESOLUTION, world.numRows() * World3D.RESOLUTION, World3D.RESOLUTION);
-                world3D = new World3D(world, floorPlan, textureMap, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
+                world3D = new World3D(world, createFloorPlan(world), textureMap, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
                 door3D = world3D.createDoor();
                 createFood(world, theme.color("mspacman.maze.foodColor", mazeNumber - 1), theme.get("model3D.pellet"));
                 pac3D = createMsPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
@@ -106,8 +106,7 @@ public class GameLevel3D {
                 var wallMiddleColor = theme.color("pacman.maze.wallMiddleColor");
                 var wallTopColor    = theme.color("pacman.maze.wallTopColor");
                 var doorColor       = theme.color("pacman.maze.doorColor");
-                var floorPlan = new FloorPlan(world, world.numRows() * World3D.RESOLUTION, world.numRows() * World3D.RESOLUTION, World3D.RESOLUTION);
-                world3D = new World3D(world, floorPlan, textureMap, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
+                world3D = new World3D(world, createFloorPlan(world), textureMap, wallBaseColor, wallMiddleColor, wallTopColor, doorColor);
                 door3D = world3D.createDoor();
                 createFood(world, theme.color("pacman.maze.foodColor"), theme.get("model3D.pellet"));
                 pac3D = createPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
@@ -187,6 +186,11 @@ public class GameLevel3D {
         bonus3D.showEdible();
         // add bonus before last element (wall group) to make transparency work
         root.getChildren().add(root.getChildren().size() - 1, bonus3D.root());
+    }
+
+    private FloorPlan createFloorPlan(World world) {
+        return new FloorPlan(world,
+            world.numCols() * FLOOR_PLAN_RESOLUTION, world.numRows() * FLOOR_PLAN_RESOLUTION, FLOOR_PLAN_RESOLUTION);
     }
 
     private Bonus3D createBonus3D(Bonus bonus) {
