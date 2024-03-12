@@ -64,8 +64,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static final float PIP_MIN_HEIGHT = 0.75f * ArcadeWorld.TILES_Y * TS;
     public static final float PIP_MAX_HEIGHT = 2.00f * ArcadeWorld.TILES_Y * TS;
 
-    public static final DoubleProperty PY_PIP_HEIGHT                  = new SimpleDoubleProperty(ArcadeWorld.TILES_Y * TS);
-    public static final DoubleProperty PY_PIP_OPACITY                 = new SimpleDoubleProperty(0.66);
+    public static final DoubleProperty  PY_PIP_HEIGHT                 = new SimpleDoubleProperty(ArcadeWorld.TILES_Y * TS);
+    public static final DoubleProperty  PY_PIP_OPACITY                = new SimpleDoubleProperty(0.66);
     public static final BooleanProperty PY_PIP_ON                     = new SimpleBooleanProperty(false);
     public static final IntegerProperty PY_SIMULATION_STEPS           = new SimpleIntegerProperty(1);
     public static final BooleanProperty PY_3D_AXES_VISIBLE            = new SimpleBooleanProperty(false);
@@ -73,28 +73,28 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static final BooleanProperty PY_3D_ENABLED                 = new SimpleBooleanProperty(true);
     public static final BooleanProperty PY_3D_ENERGIZER_EXPLODES      = new SimpleBooleanProperty(true);
     public static final ObjectProperty<Color> PY_3D_FLOOR_COLOR       = new SimpleObjectProperty<>(Color.grayRgb(0x33));
-    public static final StringProperty PY_3D_FLOOR_TEXTURE            = new SimpleStringProperty("knobs");
+    public static final StringProperty  PY_3D_FLOOR_TEXTURE           = new SimpleStringProperty("knobs");
     public static final BooleanProperty PY_3D_FLOOR_TEXTURE_RND       = new SimpleBooleanProperty(false);
     public static final ObjectProperty<Color> PY_3D_LIGHT_COLOR       = new SimpleObjectProperty<>(Color.GHOSTWHITE);
     public static final BooleanProperty PY_3D_NIGHT_MODE              = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_3D_PAC_LIGHT_ENABLED       = new SimpleBooleanProperty(true);
     public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
-    public static final DoubleProperty PY_3D_WALL_HEIGHT              = new SimpleDoubleProperty(3.5);
-    public static final DoubleProperty PY_3D_WALL_OPACITY             = new SimpleDoubleProperty(0.9);
-    public static final DoubleProperty PY_3D_WALL_THICKNESS           = new SimpleDoubleProperty(1.0);
-    public static final DoubleProperty PY_3D_HOUSE_WALL_OPACITY       = new SimpleDoubleProperty(0.25);
-    public static final DoubleProperty PY_3D_HOUSE_WALL_THICKNESS     = new SimpleDoubleProperty(1.0);
+    public static final DoubleProperty  PY_3D_WALL_HEIGHT             = new SimpleDoubleProperty(3.5);
+    public static final DoubleProperty  PY_3D_WALL_OPACITY            = new SimpleDoubleProperty(0.9);
+    public static final DoubleProperty  PY_3D_WALL_THICKNESS          = new SimpleDoubleProperty(1.0);
+    public static final DoubleProperty  PY_3D_HOUSE_WALL_OPACITY      = new SimpleDoubleProperty(0.25);
+    public static final DoubleProperty  PY_3D_HOUSE_WALL_THICKNESS    = new SimpleDoubleProperty(1.0);
 
-    public static final KeyCodeCombination[] KEYS_TOGGLE_DASHBOARD = {just(KeyCode.F1), alt(KeyCode.B)};
-    public static final KeyCodeCombination KEY_TOGGLE_PIP_VIEW     = just(KeyCode.F2);
-    public static final KeyCodeCombination KEY_TOGGLE_2D_3D        = alt(KeyCode.DIGIT3);
-    public static final KeyCodeCombination KEY_PREV_PERSPECTIVE    = alt(KeyCode.LEFT);
-    public static final KeyCodeCombination KEY_NEXT_PERSPECTIVE    = alt(KeyCode.RIGHT);
+    public static final KeyCodeCombination[] KEYS_TOGGLE_DASHBOARD    = {just(KeyCode.F1), alt(KeyCode.B)};
+    public static final KeyCodeCombination KEY_TOGGLE_PIP_VIEW        = just(KeyCode.F2);
+    public static final KeyCodeCombination KEY_TOGGLE_2D_3D           = alt(KeyCode.DIGIT3);
+    public static final KeyCodeCombination KEY_PREV_PERSPECTIVE       = alt(KeyCode.LEFT);
+    public static final KeyCodeCombination KEY_NEXT_PERSPECTIVE       = alt(KeyCode.RIGHT);
 
-    public static final Picker<String> PICKER_LEVEL_COMPLETE = Picker.fromBundle(MSG_BUNDLE, "level.complete");
-    public static final Picker<String> PICKER_GAME_OVER      = Picker.fromBundle(MSG_BUNDLE, "game.over");
+    public static final Picker<String> PICKER_LEVEL_COMPLETE          = Picker.fromBundle(MSG_BUNDLE, "level.complete");
+    public static final Picker<String> PICKER_GAME_OVER               = Picker.fromBundle(MSG_BUNDLE, "game.over");
 
-    public static final String NO_TEXTURE = "No Texture";
+    public static final String NO_TEXTURE                             = "No Texture";
 
     private static void loadAssets3D(Theme theme) {
         ResourceManager rm = () -> PacManGames3dUI.class;
@@ -104,14 +104,12 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("model3D.pellet", new Model3D(rm.url("model3D/12206_Fruit_v1_L3.obj")));
 
         theme.set("model3D.wallpaper", rm.imageBackground("graphics/sea-wallpaper.jpg",
-            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-            BackgroundPosition.CENTER,
+            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
             new BackgroundSize(1, 1, true, true, false, true)
         ));
 
         theme.set("model3D.wallpaper.night", rm.imageBackground("graphics/sea-wallpaper-night.jpg",
-            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-            BackgroundPosition.CENTER,
+            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
             new BackgroundSize(1, 1, true, true, false, true)
         ));
 
@@ -120,15 +118,14 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("icon.stop",       rm.loadImage("graphics/icons/stop.png"));
         theme.set("icon.step",       rm.loadImage("graphics/icons/step.png"));
 
-        String[] textureNames = {"knobs", "plastic", "wood"};
-        for (var name : textureNames) {
+        theme.addAllToArray("texture.names", new String[] {"knobs", "plastic", "wood"});
+        for (var name : theme.getArray("texture.names")) {
             var texture = new PhongMaterial();
-            texture.setBumpMap   (rm.loadImage("graphics/textures/%s-bump.jpg".formatted(name)));
+            texture.setBumpMap(rm.loadImage("graphics/textures/%s-bump.jpg".formatted(name)));
             texture.setDiffuseMap(rm.loadImage("graphics/textures/%s-diffuse.jpg".formatted(name)));
             texture.diffuseColorProperty().bind(PY_3D_FLOOR_COLOR);
             theme.set("texture." + name, texture);
         }
-        theme.addAllToArray("texture.names", textureNames);
 
         theme.set("ghost.0.color.normal.dress",      theme.color("palette.red"));
         theme.set("ghost.0.color.normal.eyeballs",   theme.color("palette.pale"));
