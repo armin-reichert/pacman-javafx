@@ -94,7 +94,7 @@ public class GameLevel3D {
             case MS_PACMAN -> {
                 int mapNumber = ArcadeWorld.mapNumberMsPacMan(level.number());
                 int mazeIndex = level.game().mazeNumber(level.number()) - 1;
-                world3D = new World3D(world, getFloorPlan(GameVariant.MS_PACMAN, mapNumber, 4), textureMap,
+                world3D = new World3D(world, getFloorPlan(GameVariant.MS_PACMAN, mapNumber, FLOOR_PLAN_RESOLUTION), textureMap,
                     theme.color("mspacman.maze.wallBaseColor",   mazeIndex),
                     theme.color("mspacman.maze.wallMiddleColor", mazeIndex),
                     theme.color("mspacman.maze.wallTopColor",    mazeIndex),
@@ -109,7 +109,7 @@ public class GameLevel3D {
                     theme.get("model3D.pacman"), theme, LIVES_COUNTER_PAC_SIZE), true);
             }
             case PACMAN -> {
-                world3D = new World3D(world, getFloorPlan(GameVariant.PACMAN, 1, 4), textureMap,
+                world3D = new World3D(world, getFloorPlan(GameVariant.PACMAN, 1, FLOOR_PLAN_RESOLUTION), textureMap,
                     theme.color("pacman.maze.wallBaseColor"),
                     theme.color("pacman.maze.wallMiddleColor"),
                     theme.color("pacman.maze.wallTopColor"),
