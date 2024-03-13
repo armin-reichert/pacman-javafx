@@ -43,8 +43,6 @@ public class World3D {
     public final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity", 0.5);
     public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
 
-    public final DoubleProperty houseWallThicknessPy = new SimpleDoubleProperty(this, "houseWallThickness", 0.2);
-
     public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture", NO_TEXTURE) {
         @Override
         protected void invalidated() {
@@ -233,7 +231,7 @@ public class World3D {
     private void addWall(FloorPlan floorPlan, WallData wallData) {
         if (isPartOfHouse(floorPlan, wallData, world.house())) {
             if (!isWallInsideHouse(floorPlan, wallData, world.house())) {
-                wallsGroup.getChildren().add(factory.createHouseWall(wallData, houseWallThicknessPy));
+                wallsGroup.getChildren().add(factory.createHouseWall(wallData));
             }
         } else {
             wallsGroup.getChildren().add(factory.createMazeWall(wallData, wallThicknessPy, wallHeightPy));

@@ -184,7 +184,6 @@ public class GameLevel3D {
         world3D.wallHeightPy        .bind(PY_3D_WALL_HEIGHT);
         world3D.wallOpacityPy       .bind(PY_3D_WALL_OPACITY);
         world3D.wallThicknessPy     .bind(PY_3D_WALL_THICKNESS);
-        world3D.houseWallThicknessPy.bind(PY_3D_HOUSE_WALL_THICKNESS);
     }
 
     private FloorPlan getFloorPlan(GameVariant variant, int mapNumber, int resolution) {

@@ -24,9 +24,17 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.opaqueColor;
  */
 public class WallFactory {
 
+    private static final double HOUSE_WALL_THICKNESS  = 0.2;
+    private static final double HOUSE_WALL_OPACITY    = 0.25;
+    private static final double HOUSE_WALL_TOP_HEIGHT  = 1.0;
+    private static final double HOUSE_WALL_BASE_HEIGHT = 8.0;
+
+
     private static Color darker(Color color) {
         return color.deriveColor(0, 1.0, 0.85, 1.0);
     }
+
+    private final DoubleProperty houseWallThicknessPy = new SimpleDoubleProperty(this, "houseWallThickness", HOUSE_WALL_THICKNESS);
 
     public final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity", 0.5) {
         @Override
@@ -68,7 +76,7 @@ public class WallFactory {
     public void setWallMiddleColor(Color color) {
         this.wallMiddleColor = color;
         wallMiddleMaterial = coloredMaterial(opaqueColor(darker(color), wallOpacityPy.get()));
-        houseMaterial = coloredMaterial(opaqueColor(darker(color), 0.25));
+        houseMaterial = coloredMaterial(opaqueColor(darker(color), HOUSE_WALL_OPACITY));
     }
 
     public Color wallMiddleColor() {
@@ -108,21 +116,18 @@ public class WallFactory {
         return wall;
     }
 
-    public Group createHouseWall(WallData wallData, DoubleProperty thicknessPy) {
-        Box base = createBlock(wallData, houseMaterial, thicknessPy);
-        Box top = createBlock(wallData, wallTopMaterial, thicknessPy);
+    public Group createHouseWall(WallData wallData) {
+        Box base = createBlock(wallData, houseMaterial, houseWallThicknessPy);
+        Box top = createBlock(wallData, wallTopMaterial, houseWallThicknessPy);
         Group wall = new Group(base, top);
 
-        final double topHeight = 1.0;
-        final double baseHeight = 8.0;
-
-        base.setDepth(baseHeight);
-        top.setDepth(topHeight);
-        top.setTranslateZ(-0.58 * baseHeight); // why does 0.5 flicker?
+        base.setDepth(HOUSE_WALL_BASE_HEIGHT);
+        top.setDepth(HOUSE_WALL_TOP_HEIGHT);
+        top.setTranslateZ(-0.58 * HOUSE_WALL_BASE_HEIGHT); // why does 0.5 flicker?
 
         wall.setTranslateX((wallData.x + 0.5 * wallData.numBricksX) * wallData.brickSize);
         wall.setTranslateY((wallData.y + 0.5 * wallData.numBricksY) * wallData.brickSize);
-        wall.setTranslateZ(-0.5 * (baseHeight + topHeight));
+        wall.setTranslateZ(-0.5 * (HOUSE_WALL_BASE_HEIGHT + HOUSE_WALL_TOP_HEIGHT));
         wall.setUserData(wallData);
 
         return wall;
