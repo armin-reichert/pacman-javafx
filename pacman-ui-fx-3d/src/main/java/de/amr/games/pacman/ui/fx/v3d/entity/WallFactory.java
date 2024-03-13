@@ -47,6 +47,9 @@ public class WallFactory {
     private PhongMaterial wallMiddleMaterial;
     private PhongMaterial wallTopMaterial;
 
+    private PhongMaterial houseMaterial;
+
+
     public WallFactory() {
         setWallBaseColor(Color.BLACK);
         setWallMiddleColor(Color.RED);
@@ -58,14 +61,27 @@ public class WallFactory {
         wallBaseMaterial = coloredMaterial(color);
     }
 
+    public Color wallBaseColor() {
+        return wallBaseColor;
+    }
+
     public void setWallMiddleColor(Color color) {
         this.wallMiddleColor = color;
         wallMiddleMaterial = coloredMaterial(opaqueColor(darker(color), wallOpacityPy.get()));
+        houseMaterial = coloredMaterial(opaqueColor(darker(color), 0.25));
+    }
+
+    public Color wallMiddleColor() {
+        return wallMiddleColor;
     }
 
     public void setWallTopColor(Color color) {
         this.wallTopColor = color;
         wallTopMaterial = coloredMaterial(color);
+    }
+
+    public Color wallTopColor() {
+        return wallTopColor;
     }
 
     public Group createMazeWall(WallData wallData, DoubleProperty wallThicknessPy, DoubleProperty wallHeightPy) {
@@ -92,7 +108,7 @@ public class WallFactory {
         return wall;
     }
 
-    public Group createHouseWall(WallData wallData, Material houseMaterial, DoubleProperty thicknessPy) {
+    public Group createHouseWall(WallData wallData, DoubleProperty thicknessPy) {
         Box base = createBlock(wallData, houseMaterial, thicknessPy);
         Box top = createBlock(wallData, wallTopMaterial, thicknessPy);
         Group wall = new Group(base, top);

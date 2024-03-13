@@ -28,7 +28,6 @@ import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.opaqueColor;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.NO_TEXTURE;
 
 /**
@@ -44,7 +43,6 @@ public class World3D {
     public final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity", 0.5);
     public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
 
-    public final DoubleProperty houseWallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity", 0.5);
     public final DoubleProperty houseWallThicknessPy = new SimpleDoubleProperty(this, "houseWallThickness", 0.2);
 
     public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture", NO_TEXTURE) {
@@ -70,29 +68,20 @@ public class World3D {
     private final PointLight houseLight;
     private final Color doorColor;
 
-    private final WallFactory factory = new WallFactory();
-    private final PhongMaterial houseMaterial;
+    private final WallFactory factory;
     private final Map<String, PhongMaterial> floorTextures;
 
-    public World3D(World world, FloorPlan floorPlan, Map<String, PhongMaterial> floorTextures,
-                   Color wallBaseColor, Color wallMiddleColor, Color wallTopColor, Color doorColor) {
+    public World3D(World world, FloorPlan floorPlan, Map<String, PhongMaterial> floorTextures, WallFactory factory, Color doorColor) {
         checkNotNull(world);
         checkNotNull(floorTextures);
-        checkNotNull(wallBaseColor);
-        checkNotNull(wallMiddleColor);
-        checkNotNull(wallTopColor);
+        checkNotNull(factory);
         checkNotNull(doorColor);
 
         this.world = world;
         this.floorTextures = floorTextures;
         this.doorColor = doorColor;
-
-        factory.setWallBaseColor(wallBaseColor);
-        factory.setWallMiddleColor(wallMiddleColor);
-        factory.setWallTopColor(wallTopColor);
+        this.factory = factory;
         factory.wallOpacityPy.bind(wallOpacityPy);
-
-        houseMaterial = coloredMaterial(opaqueColor(darker(wallMiddleColor), houseWallOpacityPy.get()));
 
         Vector2f houseCenter = world.house().topLeftTile().toFloatVec().scaled(TS).plus(world.house().size().toFloatVec().scaled(HTS));
         houseLight = new PointLight();
@@ -244,7 +233,7 @@ public class World3D {
     private void addWall(FloorPlan floorPlan, WallData wallData) {
         if (isPartOfHouse(floorPlan, wallData, world.house())) {
             if (!isWallInsideHouse(floorPlan, wallData, world.house())) {
-                wallsGroup.getChildren().add(factory.createHouseWall(wallData, houseMaterial, houseWallThicknessPy));
+                wallsGroup.getChildren().add(factory.createHouseWall(wallData, houseWallThicknessPy));
             }
         } else {
             wallsGroup.getChildren().add(factory.createMazeWall(wallData, wallThicknessPy, wallHeightPy));
