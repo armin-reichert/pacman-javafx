@@ -40,9 +40,8 @@ public class FloorPlan {
     public static FloorPlan read(InputStream in) {
         try (var rdr = new BufferedReader(new InputStreamReader(in))) {
             var floorPlan = new FloorPlan();
-            int sizeX = 0;
-            int sizeY = 0;
             String line = rdr.readLine();
+            int row = 0;
             while (line != null) {
                 if (line.startsWith("#")) {
                     var setting = line.substring(1).trim();
@@ -51,14 +50,21 @@ public class FloorPlan {
                         floorPlan.resolution = Integer.parseInt(keyValue[1]);
                     }
                     if ("cols".equals(keyValue[0])) {
-                        sizeX = Integer.parseInt(keyValue[1]);
+                        floorPlan.sizeX = Integer.parseInt(keyValue[1]);
                     }
                     if ("rows".equals(keyValue[0])) {
-                        sizeY = Integer.parseInt(keyValue[1]);
+                        floorPlan.sizeY = Integer.parseInt(keyValue[1]);
                     }
-                    floorPlan.cells = new byte[sizeY][sizeX];
+                    floorPlan.cells = new byte[floorPlan.sizeY][floorPlan.sizeX];
                 } else {
-                    //TODO
+                    assert floorPlan.sizeX != 0;
+                    assert floorPlan.sizeY != 0;
+                    assert floorPlan.resolution != 0;
+                    assert line.length() == floorPlan.sizeX;
+                    for (int col = 0; col < line.length(); ++col) {
+                        floorPlan.cells[row][col] = Byte.parseByte(String.valueOf(line.charAt(col)));
+                    }
+                    ++row;
                 }
                 line = rdr.readLine();
             }

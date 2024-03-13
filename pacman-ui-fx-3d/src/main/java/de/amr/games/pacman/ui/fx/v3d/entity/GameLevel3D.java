@@ -8,15 +8,18 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
@@ -31,6 +34,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -78,9 +82,6 @@ public class GameLevel3D {
 
         this.level = level;
         var world = level.world();
-        var floorPlan = new FloorPlan(world,
-            world.numCols() * FLOOR_PLAN_RESOLUTION, world.numRows() * FLOOR_PLAN_RESOLUTION,
-            FLOOR_PLAN_RESOLUTION);
 
         this.spriteSheet = spriteSheet;
         var textureMap = new HashMap<String, PhongMaterial>();
@@ -91,8 +92,9 @@ public class GameLevel3D {
 
         switch (level.game().variant()) {
             case MS_PACMAN -> {
+                int mapNumber = ArcadeWorld.mapNumberMsPacMan(level.number());
                 int mazeIndex = level.game().mazeNumber(level.number()) - 1;
-                world3D = new World3D(world, floorPlan, textureMap,
+                world3D = new World3D(world, getFloorPlan(GameVariant.MS_PACMAN, mapNumber, 4), textureMap,
                     theme.color("mspacman.maze.wallBaseColor",   mazeIndex),
                     theme.color("mspacman.maze.wallMiddleColor", mazeIndex),
                     theme.color("mspacman.maze.wallTopColor",    mazeIndex),
@@ -107,7 +109,7 @@ public class GameLevel3D {
                     theme.get("model3D.pacman"), theme, LIVES_COUNTER_PAC_SIZE), true);
             }
             case PACMAN -> {
-                world3D = new World3D(world, floorPlan, textureMap,
+                world3D = new World3D(world, getFloorPlan(GameVariant.PACMAN, 1, 4), textureMap,
                     theme.color("pacman.maze.wallBaseColor"),
                     theme.color("pacman.maze.wallMiddleColor"),
                     theme.color("pacman.maze.wallTopColor"),
@@ -178,6 +180,23 @@ public class GameLevel3D {
         world3D.wallThicknessPy     .bind(PY_3D_WALL_THICKNESS);
         world3D.houseWallOpacityPy  .bind(PY_3D_HOUSE_WALL_OPACITY);
         world3D.houseWallThicknessPy.bind(PY_3D_HOUSE_WALL_THICKNESS);
+    }
+
+    private FloorPlan getFloorPlan(GameVariant variant, int mapNumber, int resolution) {
+        ResourceManager rm = () -> PacManGames3dUI.class;
+        String name = switch (variant) {
+            case MS_PACMAN -> "fp-mspacman-map-" + mapNumber + "-res-" + resolution + ".txt";
+            case PACMAN    -> "fp-pacman-map-"   + mapNumber + "-res-" + resolution + ".txt";
+        };
+        var url = rm.url("floorplans/" + name);
+        try {
+            var floorPlan = FloorPlan.read(url.openStream());
+            Logger.info("Floorplan read from URL {}", url);
+            return floorPlan;
+        } catch (Exception x) {
+            Logger.error(x);
+            throw new IllegalArgumentException("No Pac-Man floorplan found");
+        }
     }
 
     public void updateLevelCounterSprites() {

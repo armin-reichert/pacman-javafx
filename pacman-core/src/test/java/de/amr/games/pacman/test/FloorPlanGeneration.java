@@ -30,21 +30,21 @@ public class FloorPlanGeneration {
     }
 
     private static final File DIR = new File(System.getProperty("user.dir"), "tmp");
-    private static final String PACMAN_PATTERN = "fp-pacman-map%d-res-%d.txt";
-    private static final String MS_PACMAN_PATTERN = "fp-mspacman-map%d-res-%d.txt";
+    private static final String PACMAN_PATTERN    = "fp-pacman-map-%d-res-%d.txt";
+    private static final String MS_PACMAN_PATTERN = "fp-mspacman-map-%d-res-%d.txt";
 
     public static void test() {
         if (!DIR.exists()) {
             DIR.mkdir();
         }
-        Stream.of(8, 4, 2, 1).forEach(res -> {
+        Stream.of(4).forEach(res -> {
             createFloorPlan(createPacManWorld(), file(PACMAN_PATTERN, 1, res), res);
             createFloorPlan(createMsPacManWorld(1), file(MS_PACMAN_PATTERN, 1, res), res);
             createFloorPlan(createMsPacManWorld(2), file(MS_PACMAN_PATTERN, 2, res), res);
             createFloorPlan(createMsPacManWorld(3), file(MS_PACMAN_PATTERN, 3, res), res);
             createFloorPlan(createMsPacManWorld(4), file(MS_PACMAN_PATTERN, 4, res), res);
         });
-        Stream.of(8, 4, 2, 1).forEach(res -> {
+        Stream.of(4).forEach(res -> {
             assertTrue(file(PACMAN_PATTERN, 1, res).exists());
             assertTrue(file(MS_PACMAN_PATTERN, 1, res).exists());
             assertTrue(file(MS_PACMAN_PATTERN, 2, res).exists());
