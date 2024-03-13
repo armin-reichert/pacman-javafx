@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
@@ -35,13 +36,25 @@ import static java.util.Objects.requireNonNull;
 public class LevelCounter3D {
 
     private final Group root = new Group();
+    private final GameLevel level;
+
+    public LevelCounter3D(GameLevel level) {
+        this.level = level;
+    }
 
     public Node root() {
         return root;
     }
 
-    public void update(Image[] symbolImages) {
-        requireNonNull(symbolImages);
+    public void update(SpriteSheet spriteSheet) {
+        Function<Byte, Rectangle2D> spriteSupplier = switch (level.game().variant()) {
+            case MS_PACMAN -> ((MsPacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;
+            case PACMAN -> ((PacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;
+        };
+        Image[] symbolImages = level.game().levelCounter().stream()
+            .map(spriteSupplier)
+            .map(spriteSheet::subImage)
+            .toArray(Image[]::new);
         root.getChildren().clear();
         for (int i = 0; i < symbolImages.length; ++i) {
             var symbolImage = symbolImages[i];
@@ -66,16 +79,5 @@ public class LevelCounter3D {
         spinning.setInterpolator(Interpolator.LINEAR);
         spinning.play();
         return cube;
-    }
-
-    public Image[] sprites(List<Byte> levelCounter, SpriteSheet spriteSheet, GameVariant variant) {
-        Function<Byte, Rectangle2D> spriteSupplier = switch (variant) {
-            case MS_PACMAN -> ((MsPacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;
-            case PACMAN -> ((PacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;
-        };
-        return levelCounter.stream()
-            .map(spriteSupplier)
-            .map(spriteSheet::subImage)
-            .toArray(Image[]::new);
     }
 }
