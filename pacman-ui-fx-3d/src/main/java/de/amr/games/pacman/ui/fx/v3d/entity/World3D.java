@@ -23,7 +23,6 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Translate;
 import org.tinylog.Logger;
 
-import java.util.List;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -64,20 +63,17 @@ public class World3D {
     private final Group floorGroup = new Group();
     private final Group wallsGroup = new Group();
     private final PointLight houseLight;
-    private final Color doorColor;
 
     private final WallFactory factory;
     private final Map<String, PhongMaterial> floorTextures;
 
-    public World3D(World world, FloorPlan floorPlan, Map<String, PhongMaterial> floorTextures, WallFactory factory, Color doorColor) {
+    public World3D(World world, FloorPlan floorPlan, Map<String, PhongMaterial> floorTextures, WallFactory factory) {
         checkNotNull(world);
         checkNotNull(floorTextures);
         checkNotNull(factory);
-        checkNotNull(doorColor);
 
         this.world = world;
         this.floorTextures = floorTextures;
-        this.doorColor = doorColor;
         this.factory = factory;
         factory.wallOpacityPy.bind(wallOpacityPy);
 
@@ -93,10 +89,6 @@ public class World3D {
         buildWorld(floorPlan);
 
         root.getChildren().addAll(floorGroup, wallsGroup, houseLight);
-    }
-
-    private static Color darker(Color color) {
-        return color.deriveColor(0, 1.0, 0.85, 1.0);
     }
 
     public Node root() {
@@ -140,16 +132,6 @@ public class World3D {
         Logger.info("3D world created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
     }
 
-    public Group createDoor() {
-        var door = new Group();
-        for (var wing : List.of(world.house().door().leftWing(), world.house().door().rightWing())) {
-            var doorWing3D = new DoorWing3D(wing, doorColor);
-            doorWing3D.root().setUserData(doorWing3D);
-            doorWing3D.drawModePy.bind(drawModePy);
-            door.getChildren().add(doorWing3D.root());
-        }
-        return door;
-    }
 
     private void addHorizontalWalls(FloorPlan floorPlan, WallData wallData) {
         wallData.type = FloorPlan.HWALL;

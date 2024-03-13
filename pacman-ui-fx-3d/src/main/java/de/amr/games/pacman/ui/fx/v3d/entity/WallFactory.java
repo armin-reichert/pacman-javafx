@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
+import de.amr.games.pacman.model.world.Door;
 import de.amr.games.pacman.model.world.FloorPlan;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -15,6 +16,8 @@ import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
+
+import java.util.List;
 
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.opaqueColor;
@@ -50,6 +53,7 @@ public class WallFactory {
     private Color wallBaseColor;
     private Color wallMiddleColor;
     private Color wallTopColor;
+    private Color houseDoorColor;
 
     private PhongMaterial wallBaseMaterial;
     private PhongMaterial wallMiddleMaterial;
@@ -92,6 +96,14 @@ public class WallFactory {
         return wallTopColor;
     }
 
+    public void setHouseDoorColor(Color houseDoorColor) {
+        this.houseDoorColor = houseDoorColor;
+    }
+
+    public Color houseDoorColor() {
+        return houseDoorColor;
+    }
+
     public Group createMazeWall(WallData wallData, DoubleProperty wallThicknessPy, DoubleProperty wallHeightPy) {
         final double baseHeight = 0.25;
         final double topHeight = 0.1;
@@ -132,6 +144,18 @@ public class WallFactory {
 
         return wall;
     }
+
+    public Group createDoorGroup(Door door) {
+        var doorGroup = new Group();
+        for (var wing : List.of(door.leftWing(), door.rightWing())) {
+            var doorWing3D = new DoorWing3D(wing, houseDoorColor);
+            doorWing3D.root().setUserData(doorWing3D);
+            doorWing3D.drawModePy.bind(drawModePy);
+            doorGroup.getChildren().add(doorWing3D.root());
+        }
+        return doorGroup;
+    }
+
 
 
     public Box createBlock(WallData wallData, Material material, DoubleProperty thicknessPy) {

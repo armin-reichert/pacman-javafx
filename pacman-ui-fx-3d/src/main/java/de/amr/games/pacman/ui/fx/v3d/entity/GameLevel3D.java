@@ -97,9 +97,10 @@ public class GameLevel3D {
                 wallFactory.setWallBaseColor(theme.color("mspacman.maze.wallBaseColor", mazeIndex));
                 wallFactory.setWallMiddleColor(theme.color("mspacman.maze.wallMiddleColor", mazeIndex));
                 wallFactory.setWallTopColor(theme.color("mspacman.maze.wallTopColor", mazeIndex));
+                wallFactory.setHouseDoorColor(theme.color("mspacman.maze.doorColor"));
                 world3D = new World3D(world, getFloorPlan(GameVariant.MS_PACMAN, mapNumber, FLOOR_PLAN_RESOLUTION), textureMap,
-                    wallFactory, theme.color("mspacman.maze.doorColor"));
-                door3D = world3D.createDoor();
+                    wallFactory);
+                door3D = wallFactory.createDoorGroup(world.house().door());
                 createFood(world, theme.color("mspacman.maze.foodColor", mazeIndex), theme.get("model3D.pellet"));
                 pac3D = createMsPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
                 pac3D.setLight(new PointLight());
@@ -114,9 +115,10 @@ public class GameLevel3D {
                 wallFactory.setWallBaseColor(theme.color("pacman.maze.wallBaseColor"));
                 wallFactory.setWallMiddleColor(theme.color("pacman.maze.wallMiddleColor"));
                 wallFactory.setWallTopColor(theme.color("pacman.maze.wallTopColor"));
+                wallFactory.setHouseDoorColor(theme.color("pacman.maze.doorColor"));
                 world3D = new World3D(world, getFloorPlan(GameVariant.PACMAN, 1, FLOOR_PLAN_RESOLUTION), textureMap,
-                    wallFactory, theme.color("pacman.maze.doorColor"));
-                door3D = world3D.createDoor();
+                    wallFactory);
+                door3D = wallFactory.createDoorGroup(world.house().door());
                 createFood(world, theme.color("pacman.maze.foodColor"), theme.get("model3D.pellet"));
                 pac3D = createPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
                 pac3D.setLight(new PointLight());
