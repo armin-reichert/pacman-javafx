@@ -188,15 +188,7 @@ public class GameLevel3D {
             case MS_PACMAN -> "fp-mspacman-map-" + mapNumber + "-res-" + resolution + ".txt";
             case PACMAN    -> "fp-pacman-map-"   + mapNumber + "-res-" + resolution + ".txt";
         };
-        var url = rm.url("floorplans/" + name);
-        try {
-            var floorPlan = FloorPlan.read(url.openStream());
-            Logger.info("Floorplan read from URL {}", url);
-            return floorPlan;
-        } catch (Exception x) {
-            Logger.error(x);
-            throw new IllegalArgumentException("No Pac-Man floorplan found");
-        }
+        return FloorPlan.read(rm.url("floorplans/" + name));
     }
 
     public void updateLevelCounterSprites() {

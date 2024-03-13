@@ -158,7 +158,7 @@ public class World3D {
 
     private WallData createWallData(FloorPlan floorPlan) {
         var wallData = new WallData();
-        wallData.brickSize = (float) TS / floorPlan.getResolution();
+        wallData.brickSize = (float) TS / floorPlan.resolution();
         return wallData;
     }
 
@@ -167,7 +167,7 @@ public class World3D {
         addCorners(floorPlan, createWallData(floorPlan));
         addHorizontalWalls(floorPlan, createWallData(floorPlan));
         addVerticalWalls(floorPlan, createWallData(floorPlan));
-        Logger.info("3D world created (resolution={}, wall height={})", floorPlan.getResolution(), wallHeightPy.get());
+        Logger.info("3D world created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
     }
 
     public Group createDoor() {
@@ -245,7 +245,7 @@ public class World3D {
     }
 
     private boolean isWallInsideHouse(FloorPlan floorPlan, WallData wallData, House house) {
-        int resolution = floorPlan.getResolution();
+        int resolution = floorPlan.resolution();
         Vector2i bottomRightTile = house.topLeftTile().plus(house.size());
         double xMin = house.topLeftTile().x() * resolution;
         double yMin = house.topLeftTile().y() * resolution;

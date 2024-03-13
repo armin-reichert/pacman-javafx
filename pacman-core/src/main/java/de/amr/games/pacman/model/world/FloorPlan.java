@@ -8,7 +8,10 @@ import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
 import java.io.*;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
@@ -28,39 +31,41 @@ public class FloorPlan {
     private static char symbol(byte b) {
         return switch (b) {
             case CORNER -> '+';
-            case EMPTY -> ' ';
-            case HWALL -> '—';
-            case VWALL -> '|';
-            case DOOR -> 'd';
-            default -> '?';
+            case EMPTY  -> ' ';
+            case HWALL  -> '—';
+            case VWALL  -> '|';
+            case DOOR   -> 'd';
+            default     -> '?';
         };
     }
 
+    public static FloorPlan read(URL url) {
+        try {
+            return read(url.openStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static FloorPlan read(InputStream in) {
-        try (var rdr = new BufferedReader(new InputStreamReader(in))) {
+        try (var rdr = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
             var floorPlan = new FloorPlan();
-            String line = rdr.readLine();
             int row = 0;
+            String line = rdr.readLine();
             while (line != null) {
                 if (line.startsWith("#")) {
-                    var setting = line.substring(1).trim();
-                    var keyValue = setting.split("=");
-                    if ("resolution".equals(keyValue[0])) {
-                        floorPlan.resolution = Integer.parseInt(keyValue[1]);
+                    var keyValue = line.substring(1).split("=");
+                    var key = keyValue[0].trim();
+                    var value = keyValue[1].trim();
+                    switch (key) {
+                        case "resolution" -> floorPlan.resolution = Integer.parseInt(value);
+                        case "cols"       -> floorPlan.sizeX = Integer.parseInt(value);
+                        case "rows"       -> floorPlan.sizeY = Integer.parseInt(value);
                     }
-                    if ("cols".equals(keyValue[0])) {
-                        floorPlan.sizeX = Integer.parseInt(keyValue[1]);
-                    }
-                    if ("rows".equals(keyValue[0])) {
-                        floorPlan.sizeY = Integer.parseInt(keyValue[1]);
-                    }
-                    floorPlan.cells = new byte[floorPlan.sizeY][floorPlan.sizeX];
                 } else {
-                    assert floorPlan.sizeX != 0;
-                    assert floorPlan.sizeY != 0;
-                    assert floorPlan.resolution != 0;
-                    assert line.length() == floorPlan.sizeX;
+                    if (floorPlan.cells == null) {
+                        floorPlan.cells = new byte[floorPlan.sizeY][floorPlan.sizeX];
+                    }
                     for (int col = 0; col < line.length(); ++col) {
                         floorPlan.cells[row][col] = Byte.parseByte(String.valueOf(line.charAt(col)));
                     }
@@ -76,19 +81,19 @@ public class FloorPlan {
         }
     }
 
-
     private byte[][] cells;
     private int sizeX;
     private int sizeY;
     private int resolution;
 
     public FloorPlan(World world, int sizeX, int sizeY, int resolution) {
-        this.resolution = resolution;
+        checkNotNull(world);
         this.sizeX = sizeX;
         this.sizeY = sizeY;
+        this.resolution = resolution;
         cells = new byte[sizeY][sizeX];
         separateWallsFromEmptyCells(world);
-        emptyCellsSurroundedByWalls(world);
+        clearCellsSurroundedByWalls(world);
         separateHorizontalWallsAndCorners();
         separateVerticalWallsAndCorners();
     }
@@ -101,25 +106,25 @@ public class FloorPlan {
     }
 
     public int sizeX() {
-        return cells[0].length;
+        return sizeX;
     }
 
     public int sizeY() {
-        return cells.length;
+        return sizeY;
     }
 
-    public int getResolution() {
+    public int resolution() {
         return resolution;
     }
 
-    public Vector2i tile(int x, int y) {
-        return v2i(x / resolution, y / resolution);
+    public Vector2i tile(int cellX, int cellY) {
+        return v2i(cellX / resolution, cellY / resolution);
     }
 
-    public void store(File file) {
-        try (var out = new FileWriter(file)) {
-            var pw = new PrintWriter(out);
-            print(pw, false);
+    public void write(File file) {
+        checkNotNull(file);
+        try (var out = new FileWriter(file, StandardCharsets.UTF_8)) {
+            print(new PrintWriter(out), false);
         } catch (Exception x) {
             Logger.error("Could not write floor plan to file " + file);
             Logger.error(x);
@@ -127,6 +132,7 @@ public class FloorPlan {
     }
 
     public void print(Writer w, boolean useSymbols) {
+        checkNotNull(w);
         PrintWriter p = new PrintWriter(w);
         p.println("# resolution=" + resolution);
         p.println("# cols=" + sizeX());
@@ -236,7 +242,7 @@ public class FloorPlan {
         }
     }
 
-    private void emptyCellsSurroundedByWalls(World world) {
+    private void clearCellsSurroundedByWalls(World world) {
         for (int y = 0; y < sizeY; ++y) {
             for (int x = 0; x < sizeX; ++x) {
                 int i = (y % resolution) * resolution + (x % resolution);
