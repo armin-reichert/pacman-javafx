@@ -19,6 +19,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
@@ -49,17 +50,6 @@ public class Pac3D {
     public static final String MESH_ID_EYES = "PacMan.Eyes";
     public static final String MESH_ID_HEAD = "PacMan.Head";
     public static final String MESH_ID_PALATE = "PacMan.Palate";
-
-    public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
-    public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
-    public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
-
-    private final Pac pac;
-    private final Group root;
-    private final Color headColor;
-    private final Translate position = new Translate();
-    private final Rotate orientation = new Rotate();
-    private WalkingAnimation walkingAnimation;
 
     static Group createPacManGroup(Model3D model3D, Theme theme, double size) {
         var body = createBody(model3D, size,
@@ -160,6 +150,18 @@ public class Pac3D {
         return new Group(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
     }
 
+    public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+    public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
+    public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
+
+    private final Pac pac;
+    private final Group root;
+    private final Color headColor;
+    private final Translate position = new Translate();
+    private final Rotate orientation = new Rotate();
+    private WalkingAnimation walkingAnimation;
+    private PointLight light;
+
     private Pac3D(Node pacNode, Pac pac, Color headColor) {
         this.root = new Group(pacNode);
         this.pac = pac;
@@ -205,6 +207,33 @@ public class Pac3D {
         update();
     }
 
+    public void setLight(PointLight light) {
+        checkNotNull(light);
+        this.light = light;
+        light.setMaxRange(2 * TS);
+        light.translateXProperty().bind(position.xProperty());
+        light.translateYProperty().bind(position.yProperty());
+        light.setTranslateZ(-10);
+    }
+
+    public PointLight light() {
+        return light;
+    }
+
+    private void updateLight() {
+        if (light == null) {
+            return;
+        }
+        double radius = 0;
+        if (pac.powerTimer().duration() > 0) {
+            double t = (double) pac.powerTimer().remaining() / pac.powerTimer().duration();
+            radius = t * 6 * TS;
+        }
+        boolean hasPower = pac.powerTimer().isRunning();
+        light.setMaxRange(hasPower ? 2 * TS + radius : 0);
+        light.setLightOn(lightedPy.get() && pac.isVisible() && hasPower);
+    }
+
     public void update() {
         Vector2f center = pac.center();
         position.setX(center.x());
@@ -218,6 +247,7 @@ public class Pac3D {
         } else {
             walkingAnimation.play();
         }
+        updateLight();
     }
 
     private boolean outsideWorld() {

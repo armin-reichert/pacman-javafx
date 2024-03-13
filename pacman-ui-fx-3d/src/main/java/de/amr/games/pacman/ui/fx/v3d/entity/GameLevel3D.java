@@ -30,11 +30,11 @@ import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +67,6 @@ public class GameLevel3D {
     private final Group door3D;
     private final Group foodGroup = new Group();
     private final Pac3D pac3D;
-    private final Pac3DLight pac3DLight;
     private final List<Ghost3D> ghosts3D;
     private final LevelCounter3D levelCounter3D;
     private final LivesCounter3D livesCounter3D;
@@ -102,7 +101,8 @@ public class GameLevel3D {
                 door3D = world3D.createDoor();
                 createFood(world, theme.color("mspacman.maze.foodColor", mazeIndex), theme.get("model3D.pellet"));
                 pac3D = createMsPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
-                pac3DLight = new Pac3DLight(pac3D);
+                pac3D.setLight(new PointLight());
+                pac3D.light().setColor(Color.rgb(255, 255, 0, 0.75));
                 ghosts3D = level.ghosts()
                     .map(ghost -> new Ghost3D(level, ghost, theme.get("model3D.ghost"), theme, GHOST_SIZE)).toList();
                 livesCounter3D = new LivesCounter3D(() -> createMsPacManGroup(
@@ -117,7 +117,8 @@ public class GameLevel3D {
                 door3D = world3D.createDoor();
                 createFood(world, theme.color("pacman.maze.foodColor"), theme.get("model3D.pellet"));
                 pac3D = createPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
-                pac3DLight = new Pac3DLight(pac3D);
+                pac3D.setLight(new PointLight());
+                pac3D.light().setColor(Color.rgb(255, 255, 0, 0.75));
                 ghosts3D = level.ghosts()
                     .map(ghost -> new Ghost3D(level, ghost, theme.get("model3D.ghost"), theme, GHOST_SIZE)).toList();
                 livesCounter3D = new LivesCounter3D(() -> createPacManGroup(
@@ -150,7 +151,10 @@ public class GameLevel3D {
         root.getChildren().add(scores3D.root());
         root.getChildren().add(levelCounter3D.root());
         root.getChildren().add(livesCounter3D.root());
-        root.getChildren().addAll(pac3D.root(), pac3DLight);
+        root.getChildren().addAll(pac3D.root());
+        if (pac3D.light() != null) {
+            root.getChildren().add(pac3D.light());
+        }
         for (var ghost3D : ghosts3D) {
             root.getChildren().add(ghost3D.root());
         }
@@ -265,7 +269,6 @@ public class GameLevel3D {
         boolean hasCredit = GameController.it().hasCredit();
 
         pac3D.update();
-        pac3DLight.update();
         for (var ghost3D : ghosts3D) {
             ghost3D.update();
         }
