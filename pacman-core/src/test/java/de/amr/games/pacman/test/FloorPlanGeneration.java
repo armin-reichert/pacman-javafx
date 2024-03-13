@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.test;
 
-import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
@@ -15,6 +14,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.model.world.ArcadeWorld.createMsPacManWorld;
+import static de.amr.games.pacman.model.world.ArcadeWorld.createPacManWorld;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -37,11 +38,11 @@ public class FloorPlanGeneration {
             DIR.mkdir();
         }
         Stream.of(8, 4, 2, 1).forEach(res -> {
-            createFloorPlan(ArcadeWorld.createPacManWorld(), file(PACMAN_PATTERN, 1, res), res);
-            createFloorPlan(ArcadeWorld.createMsPacManWorld(1), file(MS_PACMAN_PATTERN, 1, res), res);
-            createFloorPlan(ArcadeWorld.createMsPacManWorld(2), file(MS_PACMAN_PATTERN, 2, res), res);
-            createFloorPlan(ArcadeWorld.createMsPacManWorld(3), file(MS_PACMAN_PATTERN, 3, res), res);
-            createFloorPlan(ArcadeWorld.createMsPacManWorld(4), file(MS_PACMAN_PATTERN, 4, res), res);
+            createFloorPlan(createPacManWorld(), file(PACMAN_PATTERN, 1, res), res);
+            createFloorPlan(createMsPacManWorld(1), file(MS_PACMAN_PATTERN, 1, res), res);
+            createFloorPlan(createMsPacManWorld(2), file(MS_PACMAN_PATTERN, 2, res), res);
+            createFloorPlan(createMsPacManWorld(3), file(MS_PACMAN_PATTERN, 3, res), res);
+            createFloorPlan(createMsPacManWorld(4), file(MS_PACMAN_PATTERN, 4, res), res);
         });
         Stream.of(8, 4, 2, 1).forEach(res -> {
             assertTrue(file(PACMAN_PATTERN, 1, res).exists());
@@ -65,7 +66,7 @@ public class FloorPlanGeneration {
             floorPlan.print(w, false);
             Logger.info("Created file {} ({})", file.getAbsolutePath(), timeLog);
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.error(e);
         }
     }
 }
