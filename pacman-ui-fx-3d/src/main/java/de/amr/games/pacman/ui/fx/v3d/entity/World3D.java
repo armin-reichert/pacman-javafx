@@ -17,7 +17,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
@@ -40,15 +39,6 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.NO_TEXTURE;
 public class World3D {
 
     private static final double FLOOR_THICKNESS = 0.4;
-
-    private static class WallData {
-        byte type; // see FloorPlan
-        int x;
-        int y;
-        int numBricksX;
-        int numBricksY;
-        float brickSize;
-    }
 
     public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
     public final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity", 0.5);
@@ -80,9 +70,7 @@ public class World3D {
     private final PointLight houseLight;
     private final Color doorColor;
 
-    private final PhongMaterial wallBaseMaterial;
-    private final PhongMaterial wallMiddleMaterial;
-    private final PhongMaterial wallTopMaterial;
+    private final WallFactory factory = new WallFactory();
     private final PhongMaterial houseMaterial;
     private final Map<String, PhongMaterial> floorTextures;
 
@@ -99,15 +87,10 @@ public class World3D {
         this.floorTextures = floorTextures;
         this.doorColor = doorColor;
 
-        wallBaseMaterial   = coloredMaterial(wallBaseColor);
-        wallMiddleMaterial = coloredMaterial(opaqueColor(darker(wallMiddleColor), wallOpacityPy.get()));
-        wallTopMaterial    = coloredMaterial(wallTopColor);
-
-        wallOpacityPy.addListener((py, ov, nv) -> {
-            Color color = opaqueColor(darker(wallMiddleColor), wallOpacityPy.get());
-            wallMiddleMaterial.setDiffuseColor(color);
-            wallMiddleMaterial.setSpecularColor(color.brighter());
-        });
+        factory.setWallBaseColor(wallBaseColor);
+        factory.setWallMiddleColor(wallMiddleColor);
+        factory.setWallTopColor(wallTopColor);
+        factory.wallOpacityPy.bind(wallOpacityPy);
 
         houseMaterial = coloredMaterial(opaqueColor(darker(wallMiddleColor), houseWallOpacityPy.get()));
 
@@ -261,93 +244,10 @@ public class World3D {
     private void addWall(FloorPlan floorPlan, WallData wallData) {
         if (isPartOfHouse(floorPlan, wallData, world.house())) {
             if (!isWallInsideHouse(floorPlan, wallData, world.house())) {
-                addHouseWall(wallData);
+                wallsGroup.getChildren().add(factory.createHouseWall(wallData, houseMaterial, houseWallThicknessPy));
             }
         } else {
-            addMazeWall(wallData);
+            wallsGroup.getChildren().add(factory.createMazeWall(wallData, wallThicknessPy, wallHeightPy));
         }
-    }
-
-    private void addMazeWall(WallData wallData) {
-        final double baseHeight = 0.25;
-        final double topHeight = 0.1;
-
-        Box base = createBlock(wallData, wallBaseMaterial, wallThicknessPy);
-        Box mid = createBlock(wallData, wallMiddleMaterial, wallThicknessPy);
-        Box top = createBlock(wallData, wallTopMaterial, wallThicknessPy);
-        Group wall = new Group(base, mid, top);
-
-        base.setDepth(baseHeight);
-        top.setDepth(topHeight);
-        mid.depthProperty().bind(wallHeightPy.subtract(baseHeight + topHeight));
-
-        top.translateZProperty().bind(mid.depthProperty().add(topHeight).multiply(-0.5));
-        base.translateZProperty().bind(mid.depthProperty().add(baseHeight).multiply(0.5));
-
-        wall.setUserData(wallData);
-        wall.setTranslateX((wallData.x + 0.5 * wallData.numBricksX) * wallData.brickSize);
-        wall.setTranslateY((wallData.y + 0.5 * wallData.numBricksY) * wallData.brickSize);
-        wall.translateZProperty().bind(wallHeightPy.multiply(-0.5));
-
-        wallsGroup.getChildren().add(wall);
-    }
-
-    private void addHouseWall(WallData wallData) {
-        Box base = createBlock(wallData, houseMaterial, houseWallThicknessPy);
-        Box top = createBlock(wallData, wallTopMaterial, houseWallThicknessPy);
-        Group wall = new Group(base, top);
-
-        //TODO
-        final double topHeight = 1.0;
-        final double baseHeight = 8.0;
-
-        base.setDepth(baseHeight);
-        top.setDepth(topHeight);
-        top.setTranslateZ(-0.58 * baseHeight); // why does 0.5 flicker?
-
-        wall.setTranslateX((wallData.x + 0.5 * wallData.numBricksX) * wallData.brickSize);
-        wall.setTranslateY((wallData.y + 0.5 * wallData.numBricksY) * wallData.brickSize);
-        wall.setTranslateZ(-0.5 * (baseHeight + topHeight));
-        wall.setUserData(wallData);
-
-        wallsGroup.getChildren().add(wall);
-    }
-
-    private Box createBlock(WallData wallData, Material material, DoubleProperty thicknessPy) {
-        return switch (wallData.type) {
-            case FloorPlan.HWALL -> createHBlock(wallData, material, thicknessPy);
-            case FloorPlan.VWALL -> createVBlock(wallData, material, thicknessPy);
-            case FloorPlan.CORNER -> createCornerBlock(material, thicknessPy);
-            default -> throw new IllegalStateException("Unknown wall type: " + wallData.type);
-        };
-    }
-
-    private Box createHBlock(WallData wallData, Material material, DoubleProperty thicknessPy) {
-        Box block = new Box();
-        block.setMaterial(material);
-        // without ...+1 there are gaps. why?
-        block.setWidth((wallData.numBricksX + 1) * wallData.brickSize);
-        block.heightProperty().bind(thicknessPy);
-        block.drawModeProperty().bind(drawModePy);
-        return block;
-    }
-
-    private Box createVBlock(WallData wallData, Material material, DoubleProperty thicknessPy) {
-        Box block = new Box();
-        block.setMaterial(material);
-        block.widthProperty().bind(thicknessPy);
-        // without ...+1 there are gaps. why?
-        block.setHeight((wallData.numBricksY + 1) * wallData.brickSize);
-        block.drawModeProperty().bind(drawModePy);
-        return block;
-    }
-
-    private Box createCornerBlock(Material material, DoubleProperty thicknessPy) {
-        Box block = new Box();
-        block.setMaterial(material);
-        block.widthProperty().bind(thicknessPy);
-        block.heightProperty().bind(thicknessPy);
-        block.drawModeProperty().bind(drawModePy);
-        return block;
     }
 }
