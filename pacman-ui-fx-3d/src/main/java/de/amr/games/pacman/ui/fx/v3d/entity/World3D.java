@@ -59,15 +59,17 @@ public class World3D {
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     private final World world;
+    private final MazeFactory factory;
+    private final Map<String, PhongMaterial> floorTextures;
     private final FloorPlan floorPlan;
     private final float brickSize;
+
     private final Group root = new Group();
     private final Group floorGroup = new Group();
     private final Group wallsGroup = new Group();
-    private final PointLight houseLight;
+    private final PointLight houseLight = new PointLight();
 
-    private final MazeFactory factory;
-    private final Map<String, PhongMaterial> floorTextures;
+    private Box floor;
 
     public World3D(World world, FloorPlan floorPlan, Map<String, PhongMaterial> floorTextures, MazeFactory factory) {
         checkNotNull(world);
@@ -82,8 +84,9 @@ public class World3D {
         this.factory = factory;
         factory.wallOpacityPy.bind(wallOpacityPy);
 
+        root.getChildren().addAll(floorGroup, wallsGroup, houseLight);
+
         Vector2f houseCenter = world.house().topLeftTile().toFloatVec().scaled(TS).plus(world.house().size().toFloatVec().scaled(HTS));
-        houseLight = new PointLight();
         houseLight.setColor(Color.GHOSTWHITE);
         houseLight.setMaxRange(3 * TS);
         houseLight.setTranslateX(houseCenter.x());
@@ -93,19 +96,17 @@ public class World3D {
         var sizeX = world.numCols() * TS - 1;
         var sizeY = world.numRows() * TS - 1;
         var sizeZ = FLOOR_THICKNESS;
-        var floor = new Box(sizeX, sizeY, sizeZ);
+        floor = new Box(sizeX, sizeY, sizeZ);
         floor.drawModeProperty().bind(drawModePy);
         floorGroup.getChildren().add(floor);
         floorGroup.getTransforms().add(new Translate(0.5 * sizeX, 0.5 * sizeY, 0.5 * sizeZ));
         updateFloorMaterial();
 
-        wallsGroup.getChildren().clear();
         addCorners();
         addHorizontalWalls();
         addVerticalWalls();
-        Logger.info("3D world created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
 
-        root.getChildren().addAll(floorGroup, wallsGroup, houseLight);
+        Logger.info("3D world created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
     }
 
     public Node root() {
@@ -117,7 +118,6 @@ public class World3D {
     }
 
     private void updateFloorMaterial() {
-        Box floor = (Box) floorGroup.getChildren().getFirst();
         var material = floorTextures.getOrDefault("texture." + floorTexturePy.get(), coloredMaterial(floorColorPy.get()));
         floor.setMaterial(material);
     }
