@@ -53,10 +53,6 @@ public class LevelCounter3D {
         }
     }
 
-    public void updateSprites(List<Byte> levelCounter, SpriteSheet spriteSheet, GameVariant variant) {
-        update(sprites(levelCounter, spriteSheet, variant));
-    }
-
     private Box createSpinningCube(double size, Image texture, boolean forward) {
         var material = new PhongMaterial(Color.WHITE);
         material.setDiffuseMap(texture);
@@ -72,7 +68,7 @@ public class LevelCounter3D {
         return cube;
     }
 
-    private Image[] sprites(List<Byte> levelCounter, SpriteSheet spriteSheet, GameVariant variant) {
+    public Image[] sprites(List<Byte> levelCounter, SpriteSheet spriteSheet, GameVariant variant) {
         Function<Byte, Rectangle2D> spriteSupplier = switch (variant) {
             case MS_PACMAN -> ((MsPacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;
             case PACMAN -> ((PacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;

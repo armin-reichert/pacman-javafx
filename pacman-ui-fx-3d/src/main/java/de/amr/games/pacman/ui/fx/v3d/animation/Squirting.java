@@ -69,7 +69,7 @@ public abstract class Squirting extends Transition {
         }
     }
 
-    private final Group particleGroup = new Group();
+    private final Group root = new Group();
     private PhongMaterial dropMaterial = new PhongMaterial();
     private Point3D origin = new Point3D(0, 0, 0);
     private Point3D gravity = new Point3D(0, 0, 0.1f);
@@ -80,10 +80,14 @@ public abstract class Squirting extends Transition {
     private Point3D dropVelocityMin = new Point3D(-0.25f, -0.25f, -4.0f);
     private Point3D dropVelocityMax = new Point3D(0.25f, 0.25f, -1.0f);
 
-    protected Squirting(Group parent) {
+    protected Squirting() {
         setCycleDuration(Duration.seconds(2));
-        setOnFinished(e -> parent.getChildren().remove(particleGroup));
-        parent.getChildren().add(particleGroup);
+    }
+
+    protected abstract boolean reachesEndPosition(Drop drop);
+
+    public Group root() {
+        return root;
     }
 
     public void setDropMaterial(PhongMaterial dropMaterial) {
@@ -158,8 +162,6 @@ public abstract class Squirting extends Transition {
         return dropMaterial;
     }
 
-    protected abstract boolean reachesEndPosition(Drop drop);
-
     private void createDrops() {
         for (int i = 0; i < randomInt(dropCountMin, dropCountMax); ++i) {
             var drop = new Drop(this, randomFloat(dropRadiusMin, dropRadiusMax));
@@ -168,9 +170,9 @@ public abstract class Squirting extends Transition {
                 randomDouble(dropVelocityMin.getX(), dropVelocityMax.getX()), //
                 randomDouble(dropVelocityMin.getY(), dropVelocityMax.getY()), //
                 randomDouble(dropVelocityMin.getZ(), dropVelocityMax.getZ()));
-            particleGroup.getChildren().add(drop);
+            root.getChildren().add(drop);
         }
-        Logger.trace("{} drops created", particleGroup.getChildren().size());
+        Logger.trace("{} drops created", root.getChildren().size());
     }
 
     @Override
@@ -178,7 +180,7 @@ public abstract class Squirting extends Transition {
         if (t == 0) {
             createDrops();
         }
-        for (var particle : particleGroup.getChildren()) {
+        for (var particle : root.getChildren()) {
             var drop = (Drop) particle;
             if (reachesEndPosition(drop)) {
                 drop.setVelocity(0, 0, 0);

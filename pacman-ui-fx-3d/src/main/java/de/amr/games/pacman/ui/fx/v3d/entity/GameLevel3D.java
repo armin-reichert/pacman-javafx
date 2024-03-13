@@ -140,7 +140,7 @@ public class GameLevel3D {
         levelCounter3D.root().setTranslateX((world.numCols() - 2) * TS);
         levelCounter3D.root().setTranslateY(2 * TS);
         levelCounter3D.root().setTranslateZ(-HTS);
-        updateLevelCounterSprites();
+        updateLevelCounter();
 
         scores3D = new Scores3D(theme.font("font.arcade", 8));
         scores3D.root().setTranslateX(TS);
@@ -184,7 +184,7 @@ public class GameLevel3D {
         world3D.wallThicknessPy     .bind(PY_3D_WALL_THICKNESS);
     }
 
-    private FloorPlan getFloorPlan(GameVariant variant, int mapNumber, int resolution) {
+    private static FloorPlan getFloorPlan(GameVariant variant, int mapNumber, int resolution) {
         ResourceManager rm = () -> PacManGames3dUI.class;
         String name = switch (variant) {
             case MS_PACMAN -> "fp-mspacman-map-" + mapNumber + "-res-" + resolution + ".txt";
@@ -193,8 +193,32 @@ public class GameLevel3D {
         return FloorPlan.read(rm.url("floorplans/" + name));
     }
 
-    public void updateLevelCounterSprites() {
-        levelCounter3D.updateSprites(level.game().levelCounter(), spriteSheet, level.game().variant());
+    public void update() {
+        GameState gameState = GameController.it().state();
+        boolean hasCredit = GameController.it().hasCredit();
+
+        pac3D.update();
+        for (var ghost3D : ghosts3D) {
+            ghost3D.update();
+        }
+        if (bonus3D != null) {
+            bonus3D.update(level);
+        }
+        // reconsider this:
+        boolean hideOne = level.pac().isVisible() || gameState == GameState.GHOST_DYING;
+        livesCounter3D.update(hideOne ? level.game().lives() - 1 : level.game().lives());
+        livesCounter3D.root().setVisible(hasCredit);
+        scores3D.update(level);
+        if (hasCredit) {
+            scores3D.setShowPoints(true);
+        } else {
+            scores3D.setShowText(Color.RED, "GAME OVER!");
+        }
+        updateHouseState(level.world().house());
+    }
+
+    public void updateLevelCounter() {
+        levelCounter3D.update(levelCounter3D.sprites(level.game().levelCounter(), spriteSheet, level.game().variant()));
     }
 
     public void replaceBonus3D(Bonus bonus) {
@@ -248,42 +272,25 @@ public class GameLevel3D {
         var energizer3D = new Energizer3D(3.5);
         energizer3D.root().setMaterial(material);
         energizer3D.placeAtTile(tile);
-        var squirting = new Squirting(root) {
+        var squirting = createEnergizerAnimation(world, energizer3D.root(), foodColor);
+        squirting.setOnFinished(e -> root.getChildren().remove(squirting.root()));
+        energizer3D.setEatenAnimation(squirting);
+        root.getChildren().add(squirting.root());
+        return energizer3D;
+    }
+
+    private Squirting createEnergizerAnimation(World world, Node energizerNode, Color foodColor) {
+        var squirting = new Squirting() {
             @Override
             protected boolean reachesEndPosition(Drop drop) {
                 return drop.getTranslateZ() >= -1 && world.insideBounds(drop.getTranslateX(), drop.getTranslateY());
             }
         };
-        squirting.setOrigin(energizer3D.root());
+        squirting.setOrigin(energizerNode);
         squirting.setDropCountMin(15);
         squirting.setDropCountMax(45);
         squirting.setDropMaterial(coloredMaterial(foodColor.desaturate()));
-        energizer3D.setEatenAnimation(squirting);
-        return energizer3D;
-    }
-
-    public void update() {
-        GameState gameState = GameController.it().state();
-        boolean hasCredit = GameController.it().hasCredit();
-
-        pac3D.update();
-        for (var ghost3D : ghosts3D) {
-            ghost3D.update();
-        }
-        if (bonus3D != null) {
-            bonus3D.update(level);
-        }
-        // reconsider this:
-        boolean hideOne = level.pac().isVisible() || gameState == GameState.GHOST_DYING;
-        livesCounter3D.update(hideOne ? level.game().lives() - 1 : level.game().lives());
-        livesCounter3D.root().setVisible(hasCredit);
-        scores3D.update(level);
-        if (hasCredit) {
-            scores3D.setShowPoints(true);
-        } else {
-            scores3D.setShowText(Color.RED, "GAME OVER!");
-        }
-        updateHouseState(level.world().house());
+        return squirting;
     }
 
     public void showMessage(String text, double displaySeconds, double x, double y) {

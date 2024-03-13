@@ -318,6 +318,7 @@ public class PlayScene3D implements GameScene {
                 showLevelMessage(level);
             }
         });
+        level3D.updateLevelCounter();
     }
 
     @Override
