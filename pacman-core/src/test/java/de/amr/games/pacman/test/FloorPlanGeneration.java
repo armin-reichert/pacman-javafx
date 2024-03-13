@@ -58,11 +58,11 @@ public class FloorPlanGeneration {
 
     private static void createFloorPlan(World world, File file, int resolution) {
         long time = System.nanoTime();
-        var floorPlan = new FloorPlan(world, resolution);
+        var floorPlan = new FloorPlan(world, resolution*world.numCols(), resolution*world.numRows(), resolution);
         time = System.nanoTime() - time;
         var timeLog = String.format("%.2f millis", time / 1e6);
         try (var w = new FileWriter(file, StandardCharsets.UTF_8)) {
-            floorPlan.print(w, true);
+            floorPlan.print(w, false);
             Logger.info("Created file {} ({})", file.getAbsolutePath(), timeLog);
         } catch (IOException e) {
             e.printStackTrace();
