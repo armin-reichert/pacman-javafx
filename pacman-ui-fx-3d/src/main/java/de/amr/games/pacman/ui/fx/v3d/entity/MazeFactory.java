@@ -27,11 +27,13 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.opaqueColor;
  */
 public class MazeFactory {
 
+    private static final double WALL_BASE_HEIGHT = 0.25;
+    private static final double WALL_TOP_HEIGHT  = 0.1;
+
     private static final double HOUSE_WALL_THICKNESS  = 0.2;
     private static final double HOUSE_WALL_OPACITY    = 0.25;
     private static final double HOUSE_WALL_TOP_HEIGHT  = 1.0;
     private static final double HOUSE_WALL_BASE_HEIGHT = 8.0;
-
 
     private static Color darker(Color color) {
         return color.deriveColor(0, 1.0, 0.85, 1.0);
@@ -105,20 +107,17 @@ public class MazeFactory {
     }
 
     public Group createMazeWall(WallData wallData, DoubleProperty wallThicknessPy, DoubleProperty wallHeightPy) {
-        final double baseHeight = 0.25;
-        final double topHeight = 0.1;
-
         Box base = createBlock(wallData, wallBaseMaterial, wallThicknessPy);
         Box mid = createBlock(wallData, wallMiddleMaterial, wallThicknessPy);
         Box top = createBlock(wallData, wallTopMaterial, wallThicknessPy);
         Group wall = new Group(base, mid, top);
 
-        base.setDepth(baseHeight);
-        top.setDepth(topHeight);
-        mid.depthProperty().bind(wallHeightPy.subtract(baseHeight + topHeight));
+        base.setDepth(WALL_BASE_HEIGHT);
+        top.setDepth(WALL_TOP_HEIGHT);
+        mid.depthProperty().bind(wallHeightPy.subtract(WALL_BASE_HEIGHT + WALL_TOP_HEIGHT));
 
-        top.translateZProperty().bind(mid.depthProperty().add(topHeight).multiply(-0.5));
-        base.translateZProperty().bind(mid.depthProperty().add(baseHeight).multiply(0.5));
+        top.translateZProperty().bind(mid.depthProperty().add(WALL_TOP_HEIGHT).multiply(-0.5));
+        base.translateZProperty().bind(mid.depthProperty().add(WALL_BASE_HEIGHT).multiply(0.5));
 
         wall.setUserData(wallData);
         wall.setTranslateX((wallData.x + 0.5 * wallData.numBricksX) * wallData.brickSize);
@@ -130,7 +129,7 @@ public class MazeFactory {
 
     public Group createHouseWall(WallData wallData) {
         Box base = createBlock(wallData, houseMaterial, houseWallThicknessPy);
-        Box top = createBlock(wallData, wallTopMaterial, houseWallThicknessPy);
+        Box top  = createBlock(wallData, wallTopMaterial, houseWallThicknessPy);
         Group wall = new Group(base, top);
 
         base.setDepth(HOUSE_WALL_BASE_HEIGHT);
@@ -156,42 +155,41 @@ public class MazeFactory {
         return doorGroup;
     }
 
-
-
-    public Box createBlock(WallData wallData, Material material, DoubleProperty thicknessPy) {
+    private Box createBlock(WallData wallData, Material material, DoubleProperty thicknessPy) {
         return switch (wallData.type) {
-            case FloorPlan.HWALL -> createHBlock(wallData, material, thicknessPy);
-            case FloorPlan.VWALL -> createVBlock(wallData, material, thicknessPy);
-            case FloorPlan.CORNER -> createCornerBlock(material, thicknessPy);
+            case FloorPlan.HWALL  -> createHBlock(wallData, material, thicknessPy);
+            case FloorPlan.VWALL  -> createVBlock(wallData, material, thicknessPy);
+            case FloorPlan.CORNER -> createCBlock(material, thicknessPy);
             default -> throw new IllegalStateException("Unknown wall type: " + wallData.type);
         };
     }
 
     private Box createHBlock(WallData wallData, Material material, DoubleProperty thicknessPy) {
-        Box block = new Box();
-        block.setMaterial(material);
+        Box block = newBlock(material);
         // without ...+1 there are gaps. why?
         block.setWidth((wallData.numBricksX + 1) * wallData.brickSize);
         block.heightProperty().bind(thicknessPy);
-        block.drawModeProperty().bind(drawModePy);
         return block;
     }
 
     private Box createVBlock(WallData wallData, Material material, DoubleProperty thicknessPy) {
-        Box block = new Box();
-        block.setMaterial(material);
+        Box block = newBlock(material);
         block.widthProperty().bind(thicknessPy);
         // without ...+1 there are gaps. why?
         block.setHeight((wallData.numBricksY + 1) * wallData.brickSize);
-        block.drawModeProperty().bind(drawModePy);
         return block;
     }
 
-    private Box createCornerBlock(Material material, DoubleProperty thicknessPy) {
-        Box block = new Box();
-        block.setMaterial(material);
+    private Box createCBlock(Material material, DoubleProperty thicknessPy) {
+        Box block = newBlock(material);
         block.widthProperty().bind(thicknessPy);
         block.heightProperty().bind(thicknessPy);
+        return block;
+    }
+
+    private Box newBlock(Material material) {
+        Box block = new Box();
+        block.setMaterial(material);
         block.drawModeProperty().bind(drawModePy);
         return block;
     }
