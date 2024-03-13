@@ -59,20 +59,23 @@ public class World3D {
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     private final World world;
+    private final FloorPlan floorPlan;
     private final Group root = new Group();
     private final Group floorGroup = new Group();
     private final Group wallsGroup = new Group();
     private final PointLight houseLight;
 
-    private final WallFactory factory;
+    private final MazeFactory factory;
     private final Map<String, PhongMaterial> floorTextures;
 
-    public World3D(World world, FloorPlan floorPlan, Map<String, PhongMaterial> floorTextures, WallFactory factory) {
+    public World3D(World world, FloorPlan floorPlan, Map<String, PhongMaterial> floorTextures, MazeFactory factory) {
         checkNotNull(world);
+        checkNotNull(floorPlan);
         checkNotNull(floorTextures);
         checkNotNull(factory);
 
         this.world = world;
+        this.floorPlan = floorPlan;
         this.floorTextures = floorTextures;
         this.factory = factory;
         factory.wallOpacityPy.bind(wallOpacityPy);
@@ -86,7 +89,7 @@ public class World3D {
         houseLight.setTranslateZ(-TS);
 
         buildFloor();
-        buildWorld(floorPlan);
+        buildWorld();
 
         root.getChildren().addAll(floorGroup, wallsGroup, houseLight);
     }
@@ -118,22 +121,22 @@ public class World3D {
         floor().setMaterial(floorTextures.getOrDefault("texture." + floorTexturePy.get(), coloredMaterial(floorColorPy.get())));
     }
 
-    private WallData createWallData(FloorPlan floorPlan) {
+    private WallData createWallData() {
         var wallData = new WallData();
         wallData.brickSize = (float) TS / floorPlan.resolution();
         return wallData;
     }
 
-    private void buildWorld(FloorPlan floorPlan) {
+    private void buildWorld() {
         wallsGroup.getChildren().clear();
-        addCorners(floorPlan, createWallData(floorPlan));
-        addHorizontalWalls(floorPlan, createWallData(floorPlan));
-        addVerticalWalls(floorPlan, createWallData(floorPlan));
+        addCorners(createWallData());
+        addHorizontalWalls(createWallData());
+        addVerticalWalls(createWallData());
         Logger.info("3D world created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
     }
 
 
-    private void addHorizontalWalls(FloorPlan floorPlan, WallData wallData) {
+    private void addHorizontalWalls(WallData wallData) {
         wallData.type = FloorPlan.HWALL;
         wallData.numBricksY = 1;
         for (int y = 0; y < floorPlan.sizeY(); ++y) {
@@ -147,17 +150,17 @@ public class World3D {
                     }
                     wallData.numBricksX++;
                 } else if (wallData.numBricksX > 0) {
-                    addWall(floorPlan, wallData);
+                    addWall(wallData);
                     wallData.numBricksX = 0;
                 }
             }
             if (wallData.numBricksX > 0 && y == floorPlan.sizeY() - 1) {
-                addWall(floorPlan, wallData);
+                addWall(wallData);
             }
         }
     }
 
-    private void addVerticalWalls(FloorPlan floorPlan, WallData wallData) {
+    private void addVerticalWalls(WallData wallData) {
         wallData.type = FloorPlan.VWALL;
         wallData.numBricksX = 1;
         for (int x = 0; x < floorPlan.sizeX(); ++x) {
@@ -171,17 +174,17 @@ public class World3D {
                     }
                     wallData.numBricksY++;
                 } else if (wallData.numBricksY > 0) {
-                    addWall(floorPlan, wallData);
+                    addWall(wallData);
                     wallData.numBricksY = 0;
                 }
             }
             if (wallData.numBricksY > 0 && x == floorPlan.sizeX() - 1) {
-                addWall(floorPlan, wallData);
+                addWall(wallData);
             }
         }
     }
 
-    private void addCorners(FloorPlan floorPlan, WallData wallData) {
+    private void addCorners(WallData wallData) {
         wallData.type = FloorPlan.CORNER;
         wallData.numBricksX = 1;
         wallData.numBricksY = 1;
@@ -190,13 +193,13 @@ public class World3D {
                 if (floorPlan.cell(x, y) == FloorPlan.CORNER) {
                     wallData.x = x;
                     wallData.y = y;
-                    addWall(floorPlan, wallData);
+                    addWall(wallData);
                 }
             }
         }
     }
 
-    private boolean isWallInsideHouse(FloorPlan floorPlan, WallData wallData, House house) {
+    private boolean isWallInsideHouse(WallData wallData, House house) {
         int resolution = floorPlan.resolution();
         Vector2i bottomRightTile = house.topLeftTile().plus(house.size());
         double xMin = house.topLeftTile().x() * resolution;
@@ -206,13 +209,11 @@ public class World3D {
         return wallData.x > xMin && wallData.y > yMin && wallData.x <= xMax && wallData.y <= yMax;
     }
 
-    private boolean isPartOfHouse(FloorPlan floorPlan, WallData wallData, House house) {
-        return house.contains(floorPlan.tile(wallData.x, wallData.y));
-    }
-
-    private void addWall(FloorPlan floorPlan, WallData wallData) {
-        if (isPartOfHouse(floorPlan, wallData, world.house())) {
-            if (!isWallInsideHouse(floorPlan, wallData, world.house())) {
+    private void addWall(WallData wallData) {
+        boolean partOfHouse = world.house().contains(floorPlan.tileOfCell(wallData.x, wallData.y));
+        if (partOfHouse) {
+            // only outer house wall gets built
+            if (!isWallInsideHouse(wallData, world.house())) {
                 wallsGroup.getChildren().add(factory.createHouseWall(wallData));
             }
         } else {

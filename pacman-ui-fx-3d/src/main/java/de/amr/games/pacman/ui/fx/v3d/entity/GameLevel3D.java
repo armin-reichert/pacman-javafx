@@ -93,14 +93,14 @@ public class GameLevel3D {
             case MS_PACMAN -> {
                 int mapNumber = ArcadeWorld.mapNumberMsPacMan(level.number());
                 int mazeIndex = level.game().mazeNumber(level.number()) - 1;
-                var wallFactory = new WallFactory();
-                wallFactory.setWallBaseColor(theme.color("mspacman.maze.wallBaseColor", mazeIndex));
-                wallFactory.setWallMiddleColor(theme.color("mspacman.maze.wallMiddleColor", mazeIndex));
-                wallFactory.setWallTopColor(theme.color("mspacman.maze.wallTopColor", mazeIndex));
-                wallFactory.setHouseDoorColor(theme.color("mspacman.maze.doorColor"));
+                var factory = new MazeFactory();
+                factory.setWallBaseColor(theme.color("mspacman.maze.wallBaseColor", mazeIndex));
+                factory.setWallMiddleColor(theme.color("mspacman.maze.wallMiddleColor", mazeIndex));
+                factory.setWallTopColor(theme.color("mspacman.maze.wallTopColor", mazeIndex));
+                factory.setHouseDoorColor(theme.color("mspacman.maze.doorColor"));
                 world3D = new World3D(world, getFloorPlan(GameVariant.MS_PACMAN, mapNumber, FLOOR_PLAN_RESOLUTION), textureMap,
-                    wallFactory);
-                door3D = wallFactory.createDoorGroup(world.house().door());
+                    factory);
+                door3D = factory.createDoorGroup(world.house().door());
                 createFood(world, theme.color("mspacman.maze.foodColor", mazeIndex), theme.get("model3D.pellet"));
                 pac3D = createMsPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
                 pac3D.setLight(new PointLight());
@@ -111,14 +111,10 @@ public class GameLevel3D {
                     theme.get("model3D.pacman"), theme, LIVES_COUNTER_PAC_SIZE), true);
             }
             case PACMAN -> {
-                var wallFactory = new WallFactory();
-                wallFactory.setWallBaseColor(theme.color("pacman.maze.wallBaseColor"));
-                wallFactory.setWallMiddleColor(theme.color("pacman.maze.wallMiddleColor"));
-                wallFactory.setWallTopColor(theme.color("pacman.maze.wallTopColor"));
-                wallFactory.setHouseDoorColor(theme.color("pacman.maze.doorColor"));
+                MazeFactory factory = theme.get("pacman.maze.factory");
                 world3D = new World3D(world, getFloorPlan(GameVariant.PACMAN, 1, FLOOR_PLAN_RESOLUTION), textureMap,
-                    wallFactory);
-                door3D = wallFactory.createDoorGroup(world.house().door());
+                    factory);
+                door3D = factory.createDoorGroup(world.house().door());
                 createFood(world, theme.color("pacman.maze.foodColor"), theme.get("model3D.pellet"));
                 pac3D = createPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
                 pac3D.setLight(new PointLight());

@@ -16,7 +16,7 @@ import de.amr.games.pacman.ui.fx.input.KeyboardPacSteering;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui.fx.util.Ufx;
+import de.amr.games.pacman.ui.fx.v3d.entity.MazeFactory;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
@@ -35,7 +35,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -194,10 +193,20 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
         theme.set("mspacman.maze.doorColor",       Color.rgb(255, 183, 255));
 
+
         theme.set("pacman.maze.wallBaseColor",     Color.rgb(33, 33, 255).brighter());
         theme.set("pacman.maze.wallMiddleColor",   Color.rgb(33, 33, 255));
         theme.set("pacman.maze.wallTopColor",      Color.rgb(33, 33, 255).brighter());
         theme.set("pacman.maze.doorColor",         Color.rgb(252, 181, 255));
+
+        {
+            var factory = new MazeFactory();
+            factory.setWallBaseColor  (theme.color("pacman.maze.wallBaseColor"));
+            factory.setWallMiddleColor(theme.color("pacman.maze.wallMiddleColor"));
+            factory.setWallTopColor   (theme.color("pacman.maze.wallTopColor"));
+            factory.setHouseDoorColor (theme.color("pacman.maze.doorColor"));
+            theme.set("pacman.maze.factory", factory);
+        }
 
         theme.set("pacman.color.head",             Color.rgb(255, 255, 0));
         theme.set("pacman.color.palate",           Color.rgb(191, 79, 61));

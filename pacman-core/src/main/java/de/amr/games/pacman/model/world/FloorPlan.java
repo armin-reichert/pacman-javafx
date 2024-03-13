@@ -117,7 +117,7 @@ public class FloorPlan {
         return resolution;
     }
 
-    public Vector2i tile(int cellX, int cellY) {
+    public Vector2i tileOfCell(int cellX, int cellY) {
         return v2i(cellX / resolution, cellY / resolution);
     }
 

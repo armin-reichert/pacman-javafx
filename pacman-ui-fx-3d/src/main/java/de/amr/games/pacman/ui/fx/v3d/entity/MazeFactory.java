@@ -25,7 +25,7 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.opaqueColor;
 /**
  * @author Armin Reichert
  */
-public class WallFactory {
+public class MazeFactory {
 
     private static final double HOUSE_WALL_THICKNESS  = 0.2;
     private static final double HOUSE_WALL_OPACITY    = 0.25;
@@ -62,7 +62,7 @@ public class WallFactory {
     private PhongMaterial houseMaterial;
 
 
-    public WallFactory() {
+    public MazeFactory() {
         setWallBaseColor(Color.BLACK);
         setWallMiddleColor(Color.RED);
         setWallTopColor(Color.GOLD);
