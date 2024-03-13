@@ -349,7 +349,7 @@ public class GameLevel3D {
         boolean houseOpen = level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .filter(ghost -> ghost.position().euclideanDistance(house.door().entryPosition()) <= 1.5 * TS)
             .anyMatch(Ghost::isVisible);
-        world3D.houseLighting().setLightOn(houseUsed);
+        world3D.setHouseLightOn(houseUsed);
         if (houseOpen) {
             for (var node : door3D.getChildren()) {
                 DoorWing3D wing3D = (DoorWing3D) node.getUserData();
