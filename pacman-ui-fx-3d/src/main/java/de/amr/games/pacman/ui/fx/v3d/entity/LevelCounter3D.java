@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
@@ -22,11 +21,9 @@ import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import java.util.List;
 import java.util.function.Function;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static java.util.Objects.requireNonNull;
 
 /**
  * 3D level counter.
@@ -36,17 +33,12 @@ import static java.util.Objects.requireNonNull;
 public class LevelCounter3D {
 
     private final Group root = new Group();
-    private final GameLevel level;
-
-    public LevelCounter3D(GameLevel level) {
-        this.level = level;
-    }
 
     public Node root() {
         return root;
     }
 
-    public void update(SpriteSheet spriteSheet) {
+    public void create(GameLevel level, SpriteSheet spriteSheet) {
         Function<Byte, Rectangle2D> spriteSupplier = switch (level.game().variant()) {
             case MS_PACMAN -> ((MsPacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;
             case PACMAN -> ((PacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;

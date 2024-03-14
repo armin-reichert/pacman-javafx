@@ -134,12 +134,12 @@ public class GameLevel3D {
         livesCounter3D.root().setTranslateX(2 * TS);
         livesCounter3D.root().setTranslateY(2 * TS);
 
-        levelCounter3D = new LevelCounter3D(level);
+        levelCounter3D = new LevelCounter3D();
+        createLevelCounter(level, spriteSheet);
         // this is the *right* edge of the level counter:
         levelCounter3D.root().setTranslateX((world.numCols() - 2) * TS);
         levelCounter3D.root().setTranslateY(2 * TS);
         levelCounter3D.root().setTranslateZ(-HTS);
-        updateLevelCounter();
 
         root.getChildren().add(messageText3D.root());
         root.getChildren().add(levelCounter3D.root());
@@ -204,8 +204,8 @@ public class GameLevel3D {
         updateHouseState(level.world().house());
     }
 
-    public void updateLevelCounter() {
-        levelCounter3D.update(spriteSheet);
+    public void createLevelCounter(GameLevel level, SpriteSheet spriteSheet) {
+        levelCounter3D.create(level,spriteSheet);
     }
 
     public void replaceBonus3D(Bonus bonus) {
