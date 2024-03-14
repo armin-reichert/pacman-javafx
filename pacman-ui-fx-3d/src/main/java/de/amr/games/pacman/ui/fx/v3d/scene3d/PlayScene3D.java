@@ -334,7 +334,7 @@ public class PlayScene3D implements GameScene {
             if (level.number() == 1 || context.gameState() == GameState.LEVEL_TEST) {
                 showLevelMessage(level);
             }
-            level3D.createLevelCounter(level, context.spriteSheet());
+            level3D.populateLevelCounter(level, context.spriteSheet());
         });
     }
 
