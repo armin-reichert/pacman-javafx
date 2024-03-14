@@ -113,7 +113,11 @@ public class GameLevel3D {
                     theme.get("model3D.pacman"), theme, LIVES_COUNTER_PAC_SIZE), true);
             }
             case PACMAN -> {
-                MazeFactory factory = theme.get("pacman.maze.factory");
+                MazeFactory factory = new MazeFactory();
+                factory.setWallBaseColor  (theme.color("pacman.maze.wallBaseColor"));
+                factory.setWallMiddleColor(theme.color("pacman.maze.wallMiddleColor"));
+                factory.setWallTopColor   (theme.color("pacman.maze.wallTopColor"));
+                factory.setHouseDoorColor (theme.color("pacman.maze.doorColor"));
                 world3D = new World3D(world, getFloorPlan(GameVariant.PACMAN, 1, FLOOR_PLAN_RESOLUTION), textureMap,
                     factory);
                 door3D = factory.createDoorGroup(world.house().door());

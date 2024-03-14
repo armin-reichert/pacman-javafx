@@ -16,7 +16,6 @@ import de.amr.games.pacman.ui.fx.input.KeyboardPacSteering;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui.fx.v3d.entity.MazeFactory;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
@@ -93,7 +92,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     public static final String NO_TEXTURE                             = "No Texture";
 
-    private static void loadAssets3D(Theme theme) {
+    private static void addAssets3D() {
+        Theme theme = PacManGames2dUI.THEME;
         ResourceManager rm = () -> PacManGames3dUI.class;
 
         theme.set("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
@@ -199,15 +199,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("pacman.maze.wallTopColor",      Color.rgb(33, 33, 255).brighter());
         theme.set("pacman.maze.doorColor",         Color.rgb(252, 181, 255));
 
-        {
-            var factory = new MazeFactory();
-            factory.setWallBaseColor  (theme.color("pacman.maze.wallBaseColor"));
-            factory.setWallMiddleColor(theme.color("pacman.maze.wallMiddleColor"));
-            factory.setWallTopColor   (theme.color("pacman.maze.wallTopColor"));
-            factory.setHouseDoorColor (theme.color("pacman.maze.doorColor"));
-            theme.set("pacman.maze.factory", factory);
-        }
-
         theme.set("pacman.color.head",             Color.rgb(255, 255, 0));
         theme.set("pacman.color.palate",           Color.rgb(191, 79, 61));
         theme.set("pacman.color.eyes",             Color.rgb(33, 33, 33));
@@ -221,8 +212,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     }
 
     static {
-        loadAssets3D(PacManGames2dUI.THEME);
-        Logger.info("2D theme enriched by 3D assets");
+        addAssets3D();
+        Logger.info("3D assets added to 2D theme.");
     }
 
     public PacManGames3dUI(Stage stage, Settings settings) {
