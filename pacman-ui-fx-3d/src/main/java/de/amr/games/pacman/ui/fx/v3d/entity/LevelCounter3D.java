@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
@@ -24,7 +23,8 @@ import javafx.util.Duration;
 
 import java.util.function.Function;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
  * 3D level counter.
@@ -40,39 +40,35 @@ public class LevelCounter3D {
     }
 
     public void populate(GameModel game, SpriteSheet spriteSheet) {
-        Function<Byte, Rectangle2D> spriteSupplier = switch (game.variant()) {
+        // that's ugly:
+        Function<Byte, Rectangle2D> fnSprite = switch (game.variant()) {
             case MS_PACMAN -> ((MsPacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;
-            case PACMAN -> ((PacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;
+            case    PACMAN -> ((PacManGameSpriteSheet)   spriteSheet)::bonusSymbolSprite;
         };
-        var symbolImages = game.levelCounter().stream()
-            .map(spriteSupplier)
-            .map(spriteSheet::subImage)
-            .toList();
         root.getChildren().clear();
-        boolean even = true;
+        double rate = 1;
         double x = 0;
-        for (var symbolImage : symbolImages) {
-            Box cube = createSpinningCube(TS, symbolImage, even);
-            cube.setTranslateX(x);
-            cube.setTranslateZ(-HTS);
-            root.getChildren().add(cube);
-            even = !even;
+        for (var image : game.levelCounter().stream().map(fnSprite).map(spriteSheet::subImage).toList()) {
+            addSpinningCube(x, image, rate);
+            rate = -rate;
             x -= 2 * TS;
         }
     }
 
-    private Box createSpinningCube(double size, Image texture, boolean forward) {
+    private void addSpinningCube(double x, Image texture, double rate) {
+        Box cube = new Box(TS, TS, TS);
+        cube.setTranslateX(x);
+        cube.setTranslateZ(-HTS);
         var material = new PhongMaterial(Color.WHITE);
         material.setDiffuseMap(texture);
-        Box cube = new Box(size, size, size);
         cube.setMaterial(material);
         var spinning = new RotateTransition(Duration.seconds(6), cube);
         spinning.setAxis(Rotate.X_AXIS);
         spinning.setCycleCount(Animation.INDEFINITE);
         spinning.setByAngle(360);
-        spinning.setRate(forward ? 1 : -1);
+        spinning.setRate(rate);
         spinning.setInterpolator(Interpolator.LINEAR);
         spinning.play();
-        return cube;
+        root.getChildren().add(cube);
     }
 }
