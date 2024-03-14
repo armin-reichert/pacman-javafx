@@ -337,6 +337,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onLevelStarted(GameEvent event) {
+        assertLevel3DExists();
         context.gameLevel().ifPresent(level -> {
             if (level.number() == 1 || context.gameState() == GameState.LEVEL_TEST) {
                 showLevelMessage(level);
