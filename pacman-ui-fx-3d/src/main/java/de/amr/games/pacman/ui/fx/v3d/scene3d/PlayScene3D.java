@@ -122,9 +122,9 @@ public class PlayScene3D implements GameScene {
                 level.game().score().points(), level.game().score().levelNumber(),
                 level.game().highScore().points(), level.game().highScore().levelNumber());
             if (context.gameController().hasCredit()) {
-                scores3D.setPointsDisplayed(true);
+                scores3D.hideText();
             } else {
-                scores3D.setShowText(Color.RED, "GAME OVER!");
+                scores3D.showText(Color.RED, "GAME OVER!");
             }
            updateSound(level);
         });

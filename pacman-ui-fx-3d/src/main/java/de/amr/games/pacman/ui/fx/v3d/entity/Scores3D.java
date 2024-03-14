@@ -27,7 +27,7 @@ public class Scores3D {
     private final GridPane grid = new GridPane();
     private final Text txtScore;
     private final Text txtHighScore;
-    private boolean pointsDisplayed = true;
+    private boolean textDisplayed;
 
     public Scores3D() {
         var txtScoreTitle = new Text("SCORE");
@@ -57,19 +57,19 @@ public class Scores3D {
         return grid;
     }
 
-    public void setShowText(Color color, String text) {
+    public void showText(Color color, String text) {
         requireNonNull(color);
         txtScore.setFill(color);
         txtScore.setText(text);
-        pointsDisplayed = false;
+        textDisplayed = true;
     }
 
-    public void setPointsDisplayed(boolean state) {
-        this.pointsDisplayed = state;
+    public void hideText() {
+        this.textDisplayed = false;
     }
 
     public void setScores(int score, int levelNumber, int highScore, int highScoreLevelNumber) {
-        if (pointsDisplayed) {
+        if (!textDisplayed) {
             txtScore.setFill(Color.YELLOW);
             txtScore.setText(String.format("%7d L%d", score, levelNumber));
         }
