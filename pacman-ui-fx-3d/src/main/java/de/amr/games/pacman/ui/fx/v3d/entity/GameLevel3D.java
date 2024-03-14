@@ -99,6 +99,7 @@ public class GameLevel3D {
                 factory.setWallMiddleColor(theme.color("mspacman.maze.wallMiddleColor", mazeIndex));
                 factory.setWallTopColor(theme.color("mspacman.maze.wallTopColor", mazeIndex));
                 factory.setHouseDoorColor(theme.color("mspacman.maze.doorColor"));
+                factory.drawModePy.bind(PY_3D_DRAW_MODE);
                 world3D = new World3D(world, getFloorPlan(GameVariant.MS_PACMAN, mapNumber, FLOOR_PLAN_RESOLUTION),
                     textureMap, factory);
                 door3D = factory.createDoorGroup(world.house().door());
@@ -118,6 +119,7 @@ public class GameLevel3D {
                 factory.setWallMiddleColor(theme.color("pacman.maze.wallMiddleColor"));
                 factory.setWallTopColor   (theme.color("pacman.maze.wallTopColor"));
                 factory.setHouseDoorColor (theme.color("pacman.maze.doorColor"));
+                factory.drawModePy.bind(PY_3D_DRAW_MODE);
                 world3D = new World3D(world, getFloorPlan(GameVariant.PACMAN, 1, FLOOR_PLAN_RESOLUTION), textureMap,
                     factory);
                 door3D = factory.createDoorGroup(world.house().door());
