@@ -118,16 +118,16 @@ public class PlayScene3D implements GameScene {
                 level3D.update();
                 currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
             }
-            scores3D.setScores(
-                level.game().score().points(), level.game().score().levelNumber(),
-                level.game().highScore().points(), level.game().highScore().levelNumber());
-            if (context.gameController().hasCredit()) {
-                scores3D.hideText();
-            } else {
-                scores3D.showText(Color.RED, "GAME OVER!");
-            }
            updateSound(level);
         });
+        scores3D.setScores(
+            context.game().score().points(),     context.game().score().levelNumber(),
+            context.game().highScore().points(), context.game().highScore().levelNumber());
+        if (context.gameController().hasCredit()) {
+            scores3D.hideText();
+        } else {
+            scores3D.showText(Color.RED, "GAME OVER!");
+        }
     }
 
     @Override
