@@ -211,7 +211,7 @@ public class PlayScene3D implements GameScene {
             if (level3D == null) {
                 replaceGameLevel3D(level);
             }
-            level3D.eatables3D().forEach(
+            level3D.allEatables().forEach(
                 eatable3D -> eatable3D.root().setVisible(!level.world().hasEatenFoodAt(eatable3D.tile())));
             if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
                 level3D.energizers3D().forEach(Energizer3D::startPumping);
@@ -280,7 +280,7 @@ public class PlayScene3D implements GameScene {
                 assertLevel3DExists();
                 context.gameLevel().ifPresent(level -> {
                     // if cheat has been used to complete level, 3D food might still exist:
-                    level3D.eatables3D().forEach(level3D::eat);
+                    level3D.allEatables().forEach(level3D::eat);
                     level3D.livesCounter3D().stopAnimation();
                     playLevelCompleteAnimation(level);
                 });

@@ -372,19 +372,16 @@ public class GameLevel3D {
         return livesCounter3D;
     }
 
-    /**
-     * @return all 3D pellets, including energizers
-     */
-    public Stream<Eatable3D> eatables3D() {
+    public Stream<Eatable3D> allEatables() {
         return foodGroup.getChildren().stream().map(Node::getUserData).map(Eatable3D.class::cast);
     }
 
     public Stream<Energizer3D> energizers3D() {
-        return eatables3D().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
+        return allEatables().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
     }
 
     public Optional<Eatable3D> eatableAt(Vector2i tile) {
         checkTileNotNull(tile);
-        return eatables3D().filter(eatable -> eatable.tile().equals(tile)).findFirst();
+        return allEatables().filter(eatable -> eatable.tile().equals(tile)).findFirst();
     }
 }
