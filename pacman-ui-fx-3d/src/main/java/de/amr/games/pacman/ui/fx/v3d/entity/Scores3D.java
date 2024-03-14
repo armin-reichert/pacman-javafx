@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import de.amr.games.pacman.model.GameLevel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
@@ -69,13 +68,12 @@ public class Scores3D {
         this.pointsDisplayed = state;
     }
 
-    public void updateScore(GameLevel level) {
-        requireNonNull(level);
+    public void setScores(int score, int levelNumber, int highScore, int highScoreLevelNumber) {
         if (pointsDisplayed) {
             txtScore.setFill(Color.YELLOW);
-            txtScore.setText(String.format("%7d L%d", level.game().score().points(), level.game().score().levelNumber()));
+            txtScore.setText(String.format("%7d L%d", score, levelNumber));
         }
         txtHighScore.setFill(Color.YELLOW);
-        txtHighScore.setText(String.format("%7d L%d", level.game().highScore().points(), level.game().highScore().levelNumber()));
+        txtHighScore.setText(String.format("%7d L%d", highScore, highScoreLevelNumber));
     }
 }

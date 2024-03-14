@@ -118,7 +118,9 @@ public class PlayScene3D implements GameScene {
                 level3D.update();
                 currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
             }
-            scores3D.updateScore(level);
+            scores3D.setScores(
+                level.game().score().points(), level.game().score().levelNumber(),
+                level.game().highScore().points(), level.game().highScore().levelNumber());
             if (context.gameController().hasCredit()) {
                 scores3D.setPointsDisplayed(true);
             } else {
