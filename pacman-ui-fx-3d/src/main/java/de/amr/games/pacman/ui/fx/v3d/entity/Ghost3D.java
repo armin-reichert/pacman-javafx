@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.animation.Turn;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
@@ -25,7 +26,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -50,8 +51,9 @@ public class Ghost3D {
 
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
-    private final GameLevel level;
     private final Ghost ghost;
+    private final int numFlashes;
+    private final Pac pac;
     private final Group root;
     private final Group coloredGhostGroup;
     private final ColoredGhost3D coloredGhost3D;
@@ -62,14 +64,15 @@ public class Ghost3D {
     private final RotateTransition numberRotation;
     private Look currentLook;
 
-    public Ghost3D(GameLevel level, Ghost ghost, Model3D model3D, Theme theme, double size) {
-        checkLevelNotNull(level);
-        requireNonNull(ghost);
+    public Ghost3D(Model3D model3D, Theme theme, Ghost ghost, Pac pac, int numFlashes, double size) {
         requireNonNull(model3D);
-        requirePositive(size, "Ghost3D size must be positive but is %f");
+        requireNonNull(theme);
+        requireNonNull(ghost);
+        requireNonNull(pac);
 
-        this.level = level;
         this.ghost = ghost;
+        this.numFlashes = numFlashes;
+        this.pac = pac;
 
         coloredGhost3D = new ColoredGhost3D(model3D, theme, ghost.id(), size);
         coloredGhost3D.dressShape().drawModeProperty().bind(drawModePy);
@@ -118,21 +121,21 @@ public class Ghost3D {
         return root;
     }
 
-    public void init() {
+    public void init(GameLevel level) {
         brakeAnimation.stop();
         dressAnimation.stop();
         numberRotation.stop();
-        updateTransform();
+        updateTransform(level);
         updateLook();
     }
 
-    public void update() {
-        updateTransform();
+    public void update(GameLevel level) {
+        updateTransform(level);
         updateLook();
         updateAnimations();
     }
 
-    private void updateTransform() {
+    private void updateTransform(GameLevel level) {
         Vector2f position = ghost.center();
         root.setTranslateX(position.x());
         root.setTranslateY(position.y());
@@ -166,7 +169,7 @@ public class Ghost3D {
 
     private Look computeLook() {
         return switch (ghost.state()) {
-            case LOCKED, LEAVING_HOUSE -> ghost.killable(level.pac()) ? frightenedOrFlashingLook() : Look.NORMAL;
+            case LOCKED, LEAVING_HOUSE -> ghost.killable(pac) ? frightenedOrFlashingLook() : Look.NORMAL;
             case FRIGHTENED -> frightenedOrFlashingLook();
             case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
             case EATEN -> Look.NUMBER;
@@ -186,8 +189,8 @@ public class Ghost3D {
             case FRIGHTENED -> coloredGhost3D.appearFrightened();
             case EYES       -> coloredGhost3D.appearEyesOnly();
             case FLASHING -> {
-                if (level.data().numFlashes() > 0) {
-                    coloredGhost3D.appearFlashing(level.data().numFlashes(), 1.0);
+                if (numFlashes > 0) {
+                    coloredGhost3D.appearFlashing(numFlashes, 1.0);
                 } else {
                     coloredGhost3D.appearFrightened();
                 }
@@ -197,6 +200,6 @@ public class Ghost3D {
     }
 
     private Look frightenedOrFlashingLook() {
-        return level.pac().isPowerFading() ? Look.FLASHING : Look.FRIGHTENED;
+        return pac.isPowerFading() ? Look.FLASHING : Look.FRIGHTENED;
     }
 }

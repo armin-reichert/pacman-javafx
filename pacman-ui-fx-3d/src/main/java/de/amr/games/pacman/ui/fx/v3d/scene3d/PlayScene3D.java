@@ -228,18 +228,22 @@ public class PlayScene3D implements GameScene {
 
             case READY -> {
                 if (level3D != null) {
-                    level3D.pac3D().init();
-                    level3D.ghosts3D().forEach(Ghost3D::init);
-                    context.gameLevel().ifPresent(this::showLevelMessage);
+                    context.gameLevel().ifPresent(level -> {
+                        level3D.pac3D().init();
+                        level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
+                        showLevelMessage(level);
+                    });
                 }
             }
 
             case HUNTING -> {
                 assertLevel3DExists();
-                level3D.pac3D().init();
-                level3D.ghosts3D().forEach(Ghost3D::init);
-                level3D.livesCounter3D().startAnimation();
-                level3D.energizers3D().forEach(Energizer3D::startPumping);
+                context.gameLevel().ifPresent(level -> {
+                    level3D.pac3D().init();
+                    level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
+                    level3D.livesCounter3D().startAnimation();
+                    level3D.energizers3D().forEach(Energizer3D::startPumping);
+                });
             }
 
             case PACMAN_DYING -> {
@@ -297,7 +301,7 @@ public class PlayScene3D implements GameScene {
                     replaceGameLevel3D(level);
                     level3D.pac3D().init();
                     for (Ghost3D ghost3D : level3D.ghosts3D()) {
-                        ghost3D.init();
+                        ghost3D.init(level);
                     }
                     showLevelMessage(level);
                 });

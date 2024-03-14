@@ -72,7 +72,8 @@ public class GameLevel3D {
     private final LevelCounter3D levelCounter3D;
     private final LivesCounter3D livesCounter3D;
     private final Text3D messageText3D;
-    private        Bonus3D bonus3D;
+
+    private Bonus3D bonus3D;
 
     public GameLevel3D(GameLevel level, Theme theme, SpriteSheet spriteSheet) {
         checkLevelNotNull(level);
@@ -98,15 +99,16 @@ public class GameLevel3D {
                 factory.setWallMiddleColor(theme.color("mspacman.maze.wallMiddleColor", mazeIndex));
                 factory.setWallTopColor(theme.color("mspacman.maze.wallTopColor", mazeIndex));
                 factory.setHouseDoorColor(theme.color("mspacman.maze.doorColor"));
-                world3D = new World3D(world, getFloorPlan(GameVariant.MS_PACMAN, mapNumber, FLOOR_PLAN_RESOLUTION), textureMap,
-                    factory);
+                world3D = new World3D(world, getFloorPlan(GameVariant.MS_PACMAN, mapNumber, FLOOR_PLAN_RESOLUTION),
+                    textureMap, factory);
                 door3D = factory.createDoorGroup(world.house().door());
                 createFood(world, theme.color("mspacman.maze.foodColor", mazeIndex), theme.get("model3D.pellet"));
                 pac3D = createMsPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
                 pac3D.setLight(new PointLight());
                 pac3D.light().setColor(Color.rgb(255, 255, 0, 0.75));
                 ghosts3D = level.ghosts()
-                    .map(ghost -> new Ghost3D(level, ghost, theme.get("model3D.ghost"), theme, GHOST_SIZE)).toList();
+                    .map(ghost -> new Ghost3D(theme.get("model3D.ghost"), theme, ghost, level.pac(), level.data().numFlashes(), GHOST_SIZE))
+                    .toList();
                 livesCounter3D = new LivesCounter3D(() -> createMsPacManGroup(
                     theme.get("model3D.pacman"), theme, LIVES_COUNTER_PAC_SIZE), true);
             }
@@ -120,7 +122,8 @@ public class GameLevel3D {
                 pac3D.setLight(new PointLight());
                 pac3D.light().setColor(Color.rgb(255, 255, 0, 0.75));
                 ghosts3D = level.ghosts()
-                    .map(ghost -> new Ghost3D(level, ghost, theme.get("model3D.ghost"), theme, GHOST_SIZE)).toList();
+                    .map(ghost -> new Ghost3D(theme.get("model3D.ghost"), theme, ghost, level.pac(), level.data().numFlashes(), GHOST_SIZE))
+                    .toList();
                 livesCounter3D = new LivesCounter3D(() -> createPacManGroup(
                     theme.get("model3D.pacman"), theme, LIVES_COUNTER_PAC_SIZE), false);
             }
@@ -189,7 +192,7 @@ public class GameLevel3D {
 
         pac3D.update();
         for (var ghost3D : ghosts3D) {
-            ghost3D.update();
+            ghost3D.update(level);
         }
         if (bonus3D != null) {
             bonus3D.update(level);
