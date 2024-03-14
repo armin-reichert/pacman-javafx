@@ -5,7 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.model.GameLevel;
-import javafx.scene.Group;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -22,66 +23,59 @@ import static java.util.Objects.requireNonNull;
  */
 public class Scores3D {
 
-    private final Group root = new Group();
-    private final Text txtScoreTitle;
+    public ObjectProperty<Font> fontPy = new SimpleObjectProperty<>(this, "font", Font.font("Courier", 12));
+
+    private final GridPane grid = new GridPane();
     private final Text txtScore;
-    private final Text txtHiscoreTitle;
-    private final Text txtHiscore;
-    private Color titleColor = Color.GHOSTWHITE;
-    private Color scoreColor = Color.YELLOW;
-    private Font font = Font.font("Courier", 12);
+    private final Text txtHighScore;
     private boolean pointsDisplayed = true;
 
     public Scores3D() {
-        txtScoreTitle = new Text("SCORE");
+        var txtScoreTitle = new Text("SCORE");
+        txtScoreTitle.setFill(Color.GHOSTWHITE);
+        txtScoreTitle.fontProperty().bind(fontPy);
+
         txtScore = new Text();
-        txtHiscoreTitle = new Text("HIGH SCORE");
-        txtHiscore = new Text();
-        GridPane grid = new GridPane();
+        txtScore.setFill(Color.YELLOW);
+        txtScore.fontProperty().bind(fontPy);
+
+        var txtHighScoreTitle = new Text("HIGH SCORE");
+        txtHighScoreTitle.setFill(Color.GHOSTWHITE);
+        txtHighScoreTitle.fontProperty().bind(fontPy);
+
+        txtHighScore = new Text();
+        txtHighScore.setFill(Color.YELLOW);
+        txtHighScore.fontProperty().bind(fontPy);
+
         grid.setHgap(5 * TS);
-        grid.add(txtScoreTitle, 0, 0);
-        grid.add(txtScore, 0, 1);
-        grid.add(txtHiscoreTitle, 1, 0);
-        grid.add(txtHiscore, 1, 1);
-        root.getChildren().add(grid);
+        grid.add(txtScoreTitle,  0,0);
+        grid.add(txtScore,       0,1);
+        grid.add(txtHighScoreTitle,1,0);
+        grid.add(txtHighScore,     1,1);
     }
 
     public Node root() {
-        return root;
-    }
-
-    public void setFont(Font font) {
-        requireNonNull(font);
-        this.font = font;
+        return grid;
     }
 
     public void setShowText(Color color, String text) {
         requireNonNull(color);
-
         txtScore.setFill(color);
         txtScore.setText(text);
         pointsDisplayed = false;
     }
 
-    public void setShowPoints(boolean show) {
-        this.pointsDisplayed = show;
+    public void setPointsDisplayed(boolean state) {
+        this.pointsDisplayed = state;
     }
 
-    public void update(GameLevel level) {
+    public void updateScore(GameLevel level) {
         requireNonNull(level);
-
-        txtScoreTitle.setFill(titleColor);
-        txtScoreTitle.setFont(font);
         if (pointsDisplayed) {
-            txtScore.setFont(font);
-            txtScore.setText(String.format("%7d L%d", level.game().score().points(), level.game().score().levelNumber()));
             txtScore.setFill(Color.YELLOW);
+            txtScore.setText(String.format("%7d L%d", level.game().score().points(), level.game().score().levelNumber()));
         }
-        txtHiscoreTitle.setFill(titleColor);
-        txtHiscoreTitle.setFont(font);
-        txtHiscore.setFill(scoreColor);
-        txtHiscore.setFont(font);
-        txtHiscore
-            .setText(String.format("%7d L%d", level.game().highScore().points(), level.game().highScore().levelNumber()));
+        txtHighScore.setFill(Color.YELLOW);
+        txtHighScore.setText(String.format("%7d L%d", level.game().highScore().points(), level.game().highScore().levelNumber()));
     }
 }

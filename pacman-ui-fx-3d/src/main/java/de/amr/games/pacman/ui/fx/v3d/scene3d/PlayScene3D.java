@@ -99,7 +99,8 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void init() {
-        scores3D.setFont(context.theme().font("font.arcade", 8));        setScoreVisible(true);
+        setScoreVisible(true);
+        scores3D.fontPy.set(context.theme().font("font.arcade", 8));
         perspectivePy.bind(PY_3D_PERSPECTIVE);
         Logger.info("3D play scene init(). {}", this);
     }
@@ -117,9 +118,9 @@ public class PlayScene3D implements GameScene {
                 level3D.update();
                 currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
             }
-            scores3D.update(level);
+            scores3D.updateScore(level);
             if (context.gameController().hasCredit()) {
-                scores3D.setShowPoints(true);
+                scores3D.setPointsDisplayed(true);
             } else {
                 scores3D.setShowText(Color.RED, "GAME OVER!");
             }
