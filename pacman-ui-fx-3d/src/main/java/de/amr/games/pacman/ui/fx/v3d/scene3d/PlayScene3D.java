@@ -26,6 +26,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -67,6 +68,7 @@ public class PlayScene3D implements GameScene {
 
     private final Group subSceneRoot = new Group();
     private final SubScene fxSubScene;
+    private final Scores3D scores3D;
 
     private GameLevel3D level3D;
     private GameSceneContext context;
@@ -77,11 +79,15 @@ public class PlayScene3D implements GameScene {
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
         var coordSystem = new CoordSystem();
         coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
+        scores3D = new Scores3D();
         // first child is placeholder for game level 3D
-        subSceneRoot.getChildren().setAll(new Group(), coordSystem, ambientLight);
+        subSceneRoot.getChildren().setAll(new Group(), scores3D.root(),  coordSystem, ambientLight);
         // initial scene size is irrelevant, gets bound to parent scene later
         fxSubScene = new SubScene(subSceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
         fxSubScene.setCamera(new PerspectiveCamera(true));
+        // keep the scores rotated such that the viewer always sees them frontally
+        scores3D.root().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
+        scores3D.root().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
         Logger.info("3D play scene created. {}", this);
     }
 
@@ -93,7 +99,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void init() {
-        setScoreVisible(true);
+        scores3D.setFont(context.theme().font("font.arcade", 8));        setScoreVisible(true);
         perspectivePy.bind(PY_3D_PERSPECTIVE);
         Logger.info("3D play scene init(). {}", this);
     }
@@ -106,11 +112,19 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void update() {
-        if (level3D != null) {
-            level3D.update();
-            currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
-        }
-        context.gameLevel().ifPresent(this::updateSound);
+        context.gameLevel().ifPresent(level -> {
+            if (level3D != null) {
+                level3D.update();
+                currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
+            }
+            scores3D.update(level);
+            if (context.gameController().hasCredit()) {
+                scores3D.setShowPoints(true);
+            } else {
+                scores3D.setShowText(Color.RED, "GAME OVER!");
+            }
+           updateSound(level);
+        });
     }
 
     @Override
@@ -149,16 +163,16 @@ public class PlayScene3D implements GameScene {
 
     private void replaceGameLevel3D(GameLevel level) {
         level3D = new GameLevel3D(level, context.theme(), context.spriteSheet());
-        Logger.info("3D game level {} created.", level.number());
-        // keep the scores rotated such that the viewer always sees them frontally
-        level3D.scores3D().root().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
-        level3D.scores3D().root().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
+        // replace initial placeholder or previous 3D level
+        subSceneRoot.getChildren().set(CHILD_LEVEL_3D, level3D.root());
+        scores3D.root().setTranslateX(level3D.root().getTranslateX() + TS);
+        scores3D.root().setTranslateY(level3D.root().getTranslateY() - 3 * TS);
+        scores3D.root().setTranslateZ(level3D.root().getTranslateZ() - 3 * TS);
         if (PY_3D_FLOOR_TEXTURE_RND.get()) {
             List<String> names = context.theme().getArray("texture.names");
             PY_3D_FLOOR_TEXTURE.set(names.get(randomInt(0, names.size())));
         }
-        // replace initial placeholder or previous 3D level
-        subSceneRoot.getChildren().set(CHILD_LEVEL_3D, level3D.root());
+        Logger.info("3D game level {} created.", level.number());
     }
 
     @Override

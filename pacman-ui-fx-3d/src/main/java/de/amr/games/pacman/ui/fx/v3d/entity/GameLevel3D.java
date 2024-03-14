@@ -70,7 +70,6 @@ public class GameLevel3D {
     private final List<Ghost3D> ghosts3D;
     private final LevelCounter3D levelCounter3D;
     private final LivesCounter3D livesCounter3D;
-    private final Scores3D scores3D;
     private final Text3D messageText3D;
     private        Bonus3D bonus3D;
 
@@ -142,13 +141,7 @@ public class GameLevel3D {
         levelCounter3D.root().setTranslateZ(-HTS);
         updateLevelCounter();
 
-        scores3D = new Scores3D(theme.font("font.arcade", 8));
-        scores3D.root().setTranslateX(TS);
-        scores3D.root().setTranslateY(-3 * TS);
-        scores3D.root().setTranslateZ(-3 * TS);
-
         root.getChildren().add(messageText3D.root());
-        root.getChildren().add(scores3D.root());
         root.getChildren().add(levelCounter3D.root());
         root.getChildren().add(livesCounter3D.root());
         root.getChildren().addAll(pac3D.root());
@@ -208,12 +201,6 @@ public class GameLevel3D {
         boolean hideOne = level.pac().isVisible() || gameState == GameState.GHOST_DYING;
         livesCounter3D.update(hideOne ? level.game().lives() - 1 : level.game().lives());
         livesCounter3D.root().setVisible(hasCredit);
-        scores3D.update(level);
-        if (hasCredit) {
-            scores3D.setShowPoints(true);
-        } else {
-            scores3D.setShowText(Color.RED, "GAME OVER!");
-        }
         updateHouseState(level.world().house());
     }
 
@@ -379,10 +366,6 @@ public class GameLevel3D {
 
     public Optional<Bonus3D> bonus3D() {
         return Optional.ofNullable(bonus3D);
-    }
-
-    public Scores3D scores3D() {
-        return scores3D;
     }
 
     public LivesCounter3D livesCounter3D() {

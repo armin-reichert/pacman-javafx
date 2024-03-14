@@ -32,10 +32,7 @@ public class Scores3D {
     private Font font = Font.font("Courier", 12);
     private boolean pointsDisplayed = true;
 
-    public Scores3D(Font font) {
-        requireNonNull(font);
-
-        this.font = font;
+    public Scores3D() {
         txtScoreTitle = new Text("SCORE");
         txtScore = new Text();
         txtHiscoreTitle = new Text("HIGH SCORE");
@@ -51,6 +48,11 @@ public class Scores3D {
 
     public Node root() {
         return root;
+    }
+
+    public void setFont(Font font) {
+        requireNonNull(font);
+        this.font = font;
     }
 
     public void setShowText(Color color, String text) {
