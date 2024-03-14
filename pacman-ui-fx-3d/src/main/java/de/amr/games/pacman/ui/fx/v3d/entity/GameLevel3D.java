@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -135,7 +136,7 @@ public class GameLevel3D {
         livesCounter3D.root().setTranslateY(2 * TS);
 
         levelCounter3D = new LevelCounter3D();
-        populateLevelCounter(level, spriteSheet);
+        populateLevelCounter(level.game(), spriteSheet);
         // this is the *right* edge of the level counter:
         levelCounter3D.root().setTranslateX((world.numCols() - 2) * TS);
         levelCounter3D.root().setTranslateY(2 * TS);
@@ -155,10 +156,6 @@ public class GameLevel3D {
         root.getChildren().add(door3D);
         // Walls must be added *after* the rest. Otherwise, transparency is not working correctly!
         root.getChildren().add(world3D.root());
-
-        // center over origin
-        root.setTranslateX(-world.numCols() * HTS);
-        root.setTranslateY(-world.numRows() * HTS);
 
         // Bindings
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
@@ -204,8 +201,8 @@ public class GameLevel3D {
         updateHouseState(level.world().house());
     }
 
-    public void populateLevelCounter(GameLevel level, SpriteSheet spriteSheet) {
-        levelCounter3D.create(level,spriteSheet);
+    public void populateLevelCounter(GameModel game, SpriteSheet spriteSheet) {
+        levelCounter3D.populate(game, spriteSheet);
     }
 
     public void replaceBonus3D(Bonus bonus) {

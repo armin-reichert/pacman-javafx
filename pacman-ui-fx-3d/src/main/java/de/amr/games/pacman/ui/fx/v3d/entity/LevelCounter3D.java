@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
@@ -38,23 +39,25 @@ public class LevelCounter3D {
         return root;
     }
 
-    public void create(GameLevel level, SpriteSheet spriteSheet) {
-        Function<Byte, Rectangle2D> spriteSupplier = switch (level.game().variant()) {
+    public void populate(GameModel game, SpriteSheet spriteSheet) {
+        Function<Byte, Rectangle2D> spriteSupplier = switch (game.variant()) {
             case MS_PACMAN -> ((MsPacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;
             case PACMAN -> ((PacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;
         };
-        Image[] symbolImages = level.game().levelCounter().stream()
+        var symbolImages = game.levelCounter().stream()
             .map(spriteSupplier)
             .map(spriteSheet::subImage)
-            .toArray(Image[]::new);
+            .toList();
         root.getChildren().clear();
-        for (int i = 0; i < symbolImages.length; ++i) {
-            var symbolImage = symbolImages[i];
-            Box cube = createSpinningCube(TS, symbolImage, isEven(i));
-            cube.setTranslateX(-2 * i * TS);
-            cube.setTranslateY(0);
+        boolean even = true;
+        double x = 0;
+        for (var symbolImage : symbolImages) {
+            Box cube = createSpinningCube(TS, symbolImage, even);
+            cube.setTranslateX(x);
             cube.setTranslateZ(-HTS);
             root.getChildren().add(cube);
+            even = !even;
+            x -= 2 * TS;
         }
     }
 

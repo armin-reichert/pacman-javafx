@@ -168,9 +168,16 @@ public class PlayScene3D implements GameScene {
         level3D = new GameLevel3D(level, context.theme(), context.spriteSheet());
         // replace initial placeholder or previous 3D level
         subSceneRoot.getChildren().set(CHILD_LEVEL_3D, level3D.root());
-        scores3D.root().setTranslateX(level3D.root().getTranslateX() + TS);
-        scores3D.root().setTranslateY(level3D.root().getTranslateY() - 3 * TS);
-        scores3D.root().setTranslateZ(level3D.root().getTranslateZ() - 3 * TS);
+
+        // center over origin
+        double tx = -level.world().numCols() * HTS;
+        double ty = -level.world().numRows() * HTS;
+        level3D.root().setTranslateX(tx);
+        level3D.root().setTranslateY(ty);
+        scores3D.root().setTranslateX(tx + TS);
+        scores3D.root().setTranslateY(ty - 3 * TS);
+        scores3D.root().setTranslateZ(- 3 * TS);
+
         if (PY_3D_FLOOR_TEXTURE_RND.get()) {
             List<String> names = context.theme().getArray("texture.names");
             PY_3D_FLOOR_TEXTURE.set(names.get(randomInt(0, names.size())));
@@ -334,7 +341,7 @@ public class PlayScene3D implements GameScene {
             if (level.number() == 1 || context.gameState() == GameState.LEVEL_TEST) {
                 showLevelMessage(level);
             }
-            level3D.populateLevelCounter(level, context.spriteSheet());
+            level3D.populateLevelCounter(context.game(), context.spriteSheet());
         });
     }
 
