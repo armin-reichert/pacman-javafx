@@ -90,6 +90,8 @@ public interface GameSceneContext {
         audioClip(key).stop();
     }
 
+    void stopAllSounds();
+
     void ensureSirenStarted(int sirenIndex);
 
     void stopSirens();

@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
@@ -62,6 +63,18 @@ public class PlayScene2D extends GameScene2D {
             context.actionHandler().cheatEnterNextLevel();
         } else if (Keyboard.pressed(KEY_CHEAT_KILL_GHOSTS)) {
             context.actionHandler().cheatKillAllEatableGhosts();
+        }
+    }
+
+    @Override
+    public void onGameStateChange(GameStateChangeEvent stateChangeEvent) {
+        switch (stateChangeEvent.newState) {
+            case READY, PACMAN_DYING, LEVEL_COMPLETE -> context.stopAllSounds();
+            case GAME_OVER -> {
+                context.stopAllSounds();
+                context.playAudioClip("audio.game_over");
+            }
+            default -> {}
         }
     }
 

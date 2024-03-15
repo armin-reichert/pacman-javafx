@@ -441,20 +441,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         Logger.trace("Received: {}", e);
         // call event specific hook method:
         GameEventListener.super.onGameEvent(e);
-        currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(e));
-    }
-
-    @Override
-    public void onGameStateChange(GameStateChangeEvent stateChangeEvent) {
         updateOrReloadGameScene(false);
-        switch (stateChangeEvent.newState) {
-            case READY, PACMAN_DYING, LEVEL_COMPLETE -> stopAllSounds();
-            case GAME_OVER -> {
-                stopAllSounds();
-                playAudioClip("audio.game_over");
-            }
-            default -> {}
-        }
+        currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(e));
     }
 
     @Override
@@ -796,6 +784,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         };
     }
 
+    @Override
     public void stopAllSounds() {
         theme().audioClips().filter(clip -> clip != voiceClip).forEach(AudioClip::stop);
         Logger.trace("All sounds stopped");

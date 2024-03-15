@@ -227,6 +227,7 @@ public class PlayScene3D implements GameScene {
         switch (event.newState) {
 
             case READY -> {
+                context.stopAllSounds();
                 if (level3D != null) {
                     context.gameLevel().ifPresent(level -> {
                         level3D.pac3D().init();
@@ -248,6 +249,7 @@ public class PlayScene3D implements GameScene {
 
             case PACMAN_DYING -> {
                 assertLevel3DExists();
+                context.stopAllSounds();
                 lockGameStateAndPlayAfterSeconds(1.0, level3D.pac3D().createDyingAnimation(context.gameVariant()));
             }
 
@@ -278,6 +280,7 @@ public class PlayScene3D implements GameScene {
 
             case LEVEL_COMPLETE -> {
                 assertLevel3DExists();
+                context.stopAllSounds();
                 context.gameLevel().ifPresent(level -> {
                     // if cheat has been used to complete level, 3D food might still exist:
                     level3D.allEatables().forEach(level3D::eat);
@@ -288,6 +291,7 @@ public class PlayScene3D implements GameScene {
 
             case GAME_OVER -> {
                 assertLevel3DExists();
+                context.stopAllSounds();
                 lockGameStateForSeconds(3);
                 level3D.livesCounter3D().stopAnimation();
                 context.actionHandler().showFlashMessageSeconds(3, PICKER_GAME_OVER.next());
