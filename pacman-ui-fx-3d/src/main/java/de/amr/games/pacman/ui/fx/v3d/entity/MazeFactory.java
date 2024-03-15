@@ -52,6 +52,8 @@ public class MazeFactory {
 
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
+    private final double brickSize;
+
     private Color wallBaseColor;
     private Color wallMiddleColor;
     private Color wallTopColor;
@@ -63,8 +65,8 @@ public class MazeFactory {
 
     private PhongMaterial houseMaterial;
 
-
-    public MazeFactory() {
+    public MazeFactory(double brickSize) {
+        this.brickSize = brickSize;
         setWallBaseColor(Color.BLACK);
         setWallMiddleColor(Color.RED);
         setWallTopColor(Color.GOLD);
@@ -120,8 +122,8 @@ public class MazeFactory {
         base.translateZProperty().bind(mid.depthProperty().add(WALL_BASE_HEIGHT).multiply(0.5));
 
         wall.setUserData(wallData);
-        wall.setTranslateX((wallData.x + 0.5 * wallData.numBricksX) * wallData.brickSize);
-        wall.setTranslateY((wallData.y + 0.5 * wallData.numBricksY) * wallData.brickSize);
+        wall.setTranslateX((wallData.x + 0.5 * wallData.numBricksX) * brickSize);
+        wall.setTranslateY((wallData.y + 0.5 * wallData.numBricksY) * brickSize);
         wall.translateZProperty().bind(wallHeightPy.multiply(-0.5));
 
         return wall;
@@ -136,8 +138,8 @@ public class MazeFactory {
         top.setDepth(HOUSE_WALL_TOP_HEIGHT);
         top.setTranslateZ(-0.58 * HOUSE_WALL_BASE_HEIGHT); // why does 0.5 flicker?
 
-        wall.setTranslateX((wallData.x + 0.5 * wallData.numBricksX) * wallData.brickSize);
-        wall.setTranslateY((wallData.y + 0.5 * wallData.numBricksY) * wallData.brickSize);
+        wall.setTranslateX((wallData.x + 0.5 * wallData.numBricksX) * brickSize);
+        wall.setTranslateY((wallData.y + 0.5 * wallData.numBricksY) * brickSize);
         wall.setTranslateZ(-0.5 * (HOUSE_WALL_BASE_HEIGHT + HOUSE_WALL_TOP_HEIGHT));
         wall.setUserData(wallData);
 
@@ -167,7 +169,7 @@ public class MazeFactory {
     private Box createHBlock(WallData wallData, Material material, DoubleProperty thicknessPy) {
         Box block = newBlock(material);
         // without ...+1 there are gaps. why?
-        block.setWidth((wallData.numBricksX + 1) * wallData.brickSize);
+        block.setWidth((wallData.numBricksX + 1) * brickSize);
         block.heightProperty().bind(thicknessPy);
         return block;
     }
@@ -176,7 +178,7 @@ public class MazeFactory {
         Box block = newBlock(material);
         block.widthProperty().bind(thicknessPy);
         // without ...+1 there are gaps. why?
-        block.setHeight((wallData.numBricksY + 1) * wallData.brickSize);
+        block.setHeight((wallData.numBricksY + 1) * brickSize);
         return block;
     }
 

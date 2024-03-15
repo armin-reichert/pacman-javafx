@@ -13,5 +13,4 @@ public class WallData {
     int y;
     int numBricksX;
     int numBricksY;
-    float brickSize;
 }

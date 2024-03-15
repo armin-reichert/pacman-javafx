@@ -41,7 +41,6 @@ public class World3D {
     private final World world;
     private final MazeFactory factory;
     private final FloorPlan floorPlan;
-    private final float brickSize;
 
     private final Group root = new Group();
     private final Group floorGroup = new Group();
@@ -57,7 +56,6 @@ public class World3D {
 
         this.world = world;
         this.floorPlan = floorPlan;
-        this.brickSize = (float) TS / floorPlan.resolution();
         this.factory = factory;
         factory.wallOpacityPy.bind(wallOpacityPy);
 
@@ -90,13 +88,16 @@ public class World3D {
         return floor3D;
     }
 
+    public double brickSize() {
+        return (float) TS / floorPlan.resolution();
+    }
+
     public void setHouseLightOn(boolean state) {
         houseLight.setLightOn(state);
     }
 
     private void addHorizontalWalls() {
         var wd = new WallData();
-        wd.brickSize = brickSize;
         wd.type = FloorPlan.HWALL;
         wd.numBricksY = 1;
         for (int y = 0; y < floorPlan.sizeY(); ++y) {
@@ -122,7 +123,6 @@ public class World3D {
 
     private void addVerticalWalls() {
         var wd = new WallData();
-        wd.brickSize = brickSize;
         wd.type = FloorPlan.VWALL;
         wd.numBricksX = 1;
         for (int x = 0; x < floorPlan.sizeX(); ++x) {
@@ -148,7 +148,6 @@ public class World3D {
 
     private void addCorners() {
         var wd = new WallData();
-        wd.brickSize = brickSize;
         wd.type = FloorPlan.CORNER;
         wd.numBricksX = 1;
         wd.numBricksY = 1;
@@ -163,16 +162,6 @@ public class World3D {
         }
     }
 
-    private boolean isWallInsideHouse(WallData wd, House house) {
-        int resolution = floorPlan.resolution();
-        Vector2i bottomRightTile = house.topLeftTile().plus(house.size());
-        double xMin = house.topLeftTile().x() * resolution;
-        double yMin = house.topLeftTile().y() * resolution;
-        double xMax = bottomRightTile.x() * resolution - resolution;
-        double yMax = bottomRightTile.y() * resolution - resolution;
-        return wd.x > xMin && wd.y > yMin && wd.x <= xMax && wd.y <= yMax;
-    }
-
     private void addWall(WallData wd) {
         boolean partOfHouse = world.house().contains(floorPlan.tileOfCell(wd.x, wd.y));
         if (!partOfHouse) {
@@ -181,5 +170,15 @@ public class World3D {
             // only outer house wall gets built
             wallsGroup.getChildren().add(factory.createHouseWall(wd));
         }
+    }
+
+    private boolean isWallInsideHouse(WallData wd, House house) {
+        int res = floorPlan.resolution();
+        Vector2i bottomRightTile = house.topLeftTile().plus(house.size());
+        double xMin = house.topLeftTile().x() * res;
+        double yMin = house.topLeftTile().y() * res;
+        double xMax = (bottomRightTile.x() - 1) * res;
+        double yMax = (bottomRightTile.y() - 1) * res;
+        return wd.x > xMin && wd.y > yMin && wd.x <= xMax && wd.y <= yMax;
     }
 }
