@@ -88,10 +88,6 @@ public class World3D {
         return floor3D;
     }
 
-    public double brickSize() {
-        return (float) TS / floorPlan.resolution();
-    }
-
     public void setHouseLightOn(boolean state) {
         houseLight.setLightOn(state);
     }
@@ -100,11 +96,11 @@ public class World3D {
         var wd = new WallData();
         wd.type = FloorPlan.HWALL;
         wd.numBricksY = 1;
-        for (int y = 0; y < floorPlan.sizeY(); ++y) {
+        for (short y = 0; y < floorPlan.sizeY(); ++y) {
             wd.x = -1;
             wd.y = y;
             wd.numBricksX = 0;
-            for (int x = 0; x < floorPlan.sizeX(); ++x) {
+            for (short x = 0; x < floorPlan.sizeX(); ++x) {
                 if (floorPlan.cell(x, y) == FloorPlan.HWALL) {
                     if (wd.numBricksX == 0) {
                         wd.x = x;
@@ -125,11 +121,11 @@ public class World3D {
         var wd = new WallData();
         wd.type = FloorPlan.VWALL;
         wd.numBricksX = 1;
-        for (int x = 0; x < floorPlan.sizeX(); ++x) {
+        for (short x = 0; x < floorPlan.sizeX(); ++x) {
             wd.x = x;
             wd.y = -1;
             wd.numBricksY = 0;
-            for (int y = 0; y < floorPlan.sizeY(); ++y) {
+            for (short y = 0; y < floorPlan.sizeY(); ++y) {
                 if (floorPlan.cell(x, y) == FloorPlan.VWALL) {
                     if (wd.numBricksY == 0) {
                         wd.y = y;
@@ -151,8 +147,8 @@ public class World3D {
         wd.type = FloorPlan.CORNER;
         wd.numBricksX = 1;
         wd.numBricksY = 1;
-        for (int x = 0; x < floorPlan.sizeX(); ++x) {
-            for (int y = 0; y < floorPlan.sizeY(); ++y) {
+        for (short x = 0; x < floorPlan.sizeX(); ++x) {
+            for (short y = 0; y < floorPlan.sizeY(); ++y) {
                 if (floorPlan.cell(x, y) == FloorPlan.CORNER) {
                     wd.x = x;
                     wd.y = y;
