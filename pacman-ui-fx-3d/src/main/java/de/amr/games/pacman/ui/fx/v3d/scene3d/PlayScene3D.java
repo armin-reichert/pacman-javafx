@@ -223,8 +223,8 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void onGameStateChange(GameStateChangeEvent event) {
-        switch (event.newState) {
+    public void onGameStateEntry(GameState state) {
+        switch (state) {
 
             case READY -> {
                 context.stopAllSounds();
@@ -232,6 +232,9 @@ public class PlayScene3D implements GameScene {
                     context.gameLevel().ifPresent(level -> {
                         level3D.pac3D().init();
                         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
+                        level3D.energizers3D().forEach(Energizer3D::stopPumping);
+                        level3D.bonus3D().ifPresent(Bonus3D::hide);
+                        level3D.livesCounter3D().stopAnimation();
                         showLevelMessage(level);
                     });
                 }
@@ -293,6 +296,8 @@ public class PlayScene3D implements GameScene {
                 assertLevel3DExists();
                 context.stopAllSounds();
                 lockGameStateForSeconds(3);
+                level3D.energizers3D().forEach(Energizer3D::stopPumping);
+                level3D.bonus3D().ifPresent(Bonus3D::hide);
                 level3D.livesCounter3D().stopAnimation();
                 context.actionHandler().showFlashMessageSeconds(3, PICKER_GAME_OVER.next());
                 context.playAudioClip("audio.game_over");
@@ -311,12 +316,6 @@ public class PlayScene3D implements GameScene {
                 });
 
             default -> {}
-        }
-
-        // on state exit
-        if (event.oldState == GameState.HUNTING && level3D != null) {
-            level3D.energizers3D().forEach(Energizer3D::stopPumping);
-            level3D.bonus3D().ifPresent(Bonus3D::hide);
         }
     }
 

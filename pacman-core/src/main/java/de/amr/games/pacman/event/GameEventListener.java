@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.event;
 
+import de.amr.games.pacman.controller.GameState;
+
 /**
  * Implemented by classes that listen to game events.
  *
@@ -23,7 +25,11 @@ public interface GameEventListener {
             case BONUS_EXPIRED -> onBonusExpired(event);
             case CREDIT_ADDED -> onCreditAdded(event);
             case EXTRA_LIFE_WON -> onExtraLifeWon(event);
-            case GAME_STATE_CHANGED -> onGameStateChange((GameStateChangeEvent) event);
+            case GAME_STATE_CHANGED -> {
+                var changeEvent = (GameStateChangeEvent) event;
+                onGameStateExit(changeEvent.oldState);
+                onGameStateEntry(changeEvent.newState);
+            }
             case GHOST_EATEN -> onGhostEaten(event);
             case GHOST_ENTERS_HOUSE -> onGhostEntersHouse(event);
             case GHOST_STARTS_RETURNING_HOME -> onGhostStartsReturningHome(event);
@@ -57,7 +63,10 @@ public interface GameEventListener {
     default void onBonusExpired(GameEvent e) {
     }
 
-    default void onGameStateChange(GameStateChangeEvent e) {
+    default void onGameStateExit(GameState state) {
+    }
+
+    default void onGameStateEntry(GameState state) {
     }
 
     default void onGhostEaten(GameEvent e) {
