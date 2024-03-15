@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui.fx.v3d.scene3d;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -36,7 +35,8 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
-import static de.amr.games.pacman.ui.fx.util.Ufx.*;
+import static de.amr.games.pacman.ui.fx.util.Ufx.actionAfterSeconds;
+import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 
 /**
@@ -414,7 +414,7 @@ public class PlayScene3D implements GameScene {
                 }
             }),
             noIntermission ? createLevelChangeAnimation() : pauseSeconds(0),
-            immediateAction(() -> level3D.livesCounter3D().lightOnPy.set(true))
+            actionAfterSeconds(0, () -> level3D.livesCounter3D().lightOnPy.set(true))
         );
     }
 
@@ -424,7 +424,7 @@ public class PlayScene3D implements GameScene {
 
     private Transition createLevelChangeAnimation() {
         return new SequentialTransition(
-            immediateAction(() -> {
+            actionAfterSeconds(0, () -> {
                 perspectivePy.unbind();
                 perspectivePy.set(Perspective.TOTAL);
             }),
