@@ -18,7 +18,6 @@ import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Translate;
 import org.tinylog.Logger;
@@ -26,8 +25,6 @@ import org.tinylog.Logger;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
-import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.NO_TEXTURE;
 
 /**
  * 3D-model for the world in a game level. Walls and doors are created from 2D information specified by a floor plan.
@@ -36,44 +33,9 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.NO_TEXTURE;
  */
 public class World3D {
 
-    public static class Floor extends Box {
-
-        static final double DEPTH = 0.4;
-
-        public final ObjectProperty<String> texturePy = new SimpleObjectProperty<>(this, "floorTexture", NO_TEXTURE) {
-            @Override
-            protected void invalidated() {
-                updateMaterial();
-            }
-        };
-
-        public final ObjectProperty<Color> colorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK) {
-            @Override
-            protected void invalidated() {
-                updateMaterial();
-            }
-        };
-
-        private final Map<String, PhongMaterial> textures;
-
-        public Floor(double sizeX, double sizeY, Map<String, PhongMaterial> textures) {
-            super(sizeX, sizeY, DEPTH);
-            checkNotNull(textures);
-            this.textures = textures;
-            updateMaterial();
-        }
-
-        private void updateMaterial() {
-            var material = textures.getOrDefault("texture." + texturePy.get(), coloredMaterial(colorPy.get()));
-            setMaterial(material);
-        }
-    }
-
-    public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
-    public final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity", 0.5);
-    public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.0);
-
-
+    public final DoubleProperty wallHeightPy         = new SimpleDoubleProperty(this, "wallHeight", 2.0);
+    public final DoubleProperty wallOpacityPy        = new SimpleDoubleProperty(this, "wallOpacity", 0.5);
+    public final DoubleProperty wallThicknessPy      = new SimpleDoubleProperty(this, "wallThickness", 1.0);
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     private final World world;
@@ -85,7 +47,7 @@ public class World3D {
     private final Group floorGroup = new Group();
     private final Group wallsGroup = new Group();
     private final PointLight houseLight = new PointLight();
-    private final Floor floor;
+    private final Floor3D floor3D;
 
     public World3D(World world, FloorPlan floorPlan, Map<String, PhongMaterial> floorTextures, MazeFactory factory) {
         checkNotNull(world);
@@ -108,10 +70,10 @@ public class World3D {
         houseLight.setTranslateY(houseCenter.y());
         houseLight.setTranslateZ(-TS);
 
-        floor = new Floor(world.numCols() * TS - 1, world.numRows() * TS - 1, floorTextures);
-        floor.drawModeProperty().bind(drawModePy);
-        floorGroup.getChildren().add(floor);
-        floorGroup.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
+        floor3D = new Floor3D(world.numCols() * TS - 1, world.numRows() * TS - 1, 0.4, floorTextures);
+        floor3D.drawModeProperty().bind(drawModePy);
+        floorGroup.getChildren().add(floor3D);
+        floorGroup.getTransforms().add(new Translate(0.5 * floor3D.getWidth(), 0.5 * floor3D.getHeight(), 0.5 * floor3D.getDepth()));
 
         addCorners();
         addHorizontalWalls();
@@ -124,8 +86,8 @@ public class World3D {
         return root;
     }
 
-    public Floor floor() {
-        return floor;
+    public Floor3D floor() {
+        return floor3D;
     }
 
     public void setHouseLightOn(boolean state) {
