@@ -176,11 +176,11 @@ public class GameLevel3D {
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         world3D.drawModePy.bind(PY_3D_DRAW_MODE);
 
-        world3D.floorColorPy        .bind(PY_3D_FLOOR_COLOR);
-        world3D.floorTexturePy      .bind(PY_3D_FLOOR_TEXTURE);
-        world3D.wallHeightPy        .bind(PY_3D_WALL_HEIGHT);
-        world3D.wallOpacityPy       .bind(PY_3D_WALL_OPACITY);
-        world3D.wallThicknessPy     .bind(PY_3D_WALL_THICKNESS);
+        world3D.floor().colorPy   .bind(PY_3D_FLOOR_COLOR);
+        world3D.floor().texturePy .bind(PY_3D_FLOOR_TEXTURE);
+        world3D.wallHeightPy      .bind(PY_3D_WALL_HEIGHT);
+        world3D.wallOpacityPy     .bind(PY_3D_WALL_OPACITY);
+        world3D.wallThicknessPy   .bind(PY_3D_WALL_THICKNESS);
     }
 
     private static FloorPlan getFloorPlan(GameVariant variant, int mapNumber, int resolution) {
