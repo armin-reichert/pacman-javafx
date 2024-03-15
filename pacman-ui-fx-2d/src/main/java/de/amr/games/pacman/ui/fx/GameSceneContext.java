@@ -48,6 +48,14 @@ public interface GameSceneContext {
 
     Theme theme();
 
+    /**
+     * Builds a resource key from the given key pattern and the arguments and returns the corresponding text from the
+     * first resource bundle containing the key.
+     *
+     * @param key     key in resource bundle
+     * @param args    optional arguments merged into the message (if pattern)
+     * @return localized text with arguments merged or {@code "<key">} if no text is available
+     */
     String tt(String key, Object... args);
 
     <S extends SpriteSheet> S spriteSheet();

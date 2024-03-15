@@ -29,6 +29,14 @@ public class GameEvent {
         this.tile = tile;
     }
 
+    @Override
+    public String toString() {
+        return "GameEvent{" +
+            "type=" + type +
+            ", tile=" + tile +
+            '}';
+    }
+
     public Optional<Vector2i> tile() {
         return Optional.ofNullable(tile);
     }

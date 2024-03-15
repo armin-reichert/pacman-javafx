@@ -387,14 +387,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     // GameSceneContext interface implementation
 
-    /**
-     * Builds a resource key from the given key pattern and the arguments and returns the corresponding text from the
-     * first resource bundle containing the key.
-     *
-     * @param key     key in resource bundle
-     * @param args    optional arguments merged into the message (if pattern)
-     * @return localized text with arguments merged or {@code "<key">} if no text is available
-     */
     @Override
     public String tt(String key, Object... args) {
         return GameSceneContext.message(List.of(MSG_BUNDLE), key, args);
@@ -434,7 +426,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public <S extends SpriteSheet> S spriteSheet() {
         return switch (gameVariant()) {
             case MS_PACMAN -> THEME.get("mspacman.spritesheet");
-            case PACMAN -> THEME.get("pacman.spritesheet");
+            case    PACMAN -> THEME.get("pacman.spritesheet");
         };
     }
 
@@ -446,7 +438,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void onGameEvent(GameEvent e) {
-        Logger.trace("Handle game event: {}", e);
+        Logger.trace("Received: {}", e);
         // call event specific hook method:
         GameEventListener.super.onGameEvent(e);
         currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(e));
