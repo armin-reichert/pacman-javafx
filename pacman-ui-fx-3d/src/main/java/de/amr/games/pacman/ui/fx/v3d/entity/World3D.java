@@ -203,13 +203,11 @@ public class World3D {
 
     private void addWall(WallData wd) {
         boolean partOfHouse = world.house().contains(floorPlan.tileOfCell(wd.x, wd.y));
-        if (partOfHouse) {
-            // only outer house wall gets built
-            if (!isWallInsideHouse(wd, world.house())) {
-                wallsGroup.getChildren().add(factory.createHouseWall(wd));
-            }
-        } else {
+        if (!partOfHouse) {
             wallsGroup.getChildren().add(factory.createMazeWall(wd, wallThicknessPy, wallHeightPy));
+        } else if (!isWallInsideHouse(wd, world.house())) {
+            // only outer house wall gets built
+            wallsGroup.getChildren().add(factory.createHouseWall(wd));
         }
     }
 }
