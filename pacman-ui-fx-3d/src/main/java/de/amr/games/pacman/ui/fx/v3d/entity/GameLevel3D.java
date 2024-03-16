@@ -89,46 +89,40 @@ public class GameLevel3D {
             String key = "texture." + textureName;
             textureMap.put(key, context.theme().get(key));
         }
+        var factory = new MazeFactory((float) TS / FLOOR_PLAN_RESOLUTION);
 
         switch (level.game().variant()) {
             case MS_PACMAN -> {
                 int mapNumber = ArcadeWorld.mapNumberMsPacMan(level.number());
                 int mazeIndex = level.game().mazeNumber(level.number()) - 1;
-                var factory = new MazeFactory((float) TS / FLOOR_PLAN_RESOLUTION);
-                factory.drawModePy.bind(PY_3D_DRAW_MODE);
                 factory.setWallBaseColor  (context.theme().color("mspacman.maze.wallBaseColor", mazeIndex));
                 factory.setWallMiddleColor(context.theme().color("mspacman.maze.wallMiddleColor", mazeIndex));
                 factory.setWallTopColor   (context.theme().color("mspacman.maze.wallTopColor", mazeIndex));
                 factory.setHouseDoorColor (context.theme().color("mspacman.maze.doorColor"));
                 world3D = new World3D(level.world(), getFloorPlan(mapNumber), textureMap, factory);
                 door3D = factory.createDoorGroup(level.world().house().door());
-                createFood(level.world(), context.theme().color("mspacman.maze.foodColor", mazeIndex));
-                pac3D = new Pac3D(createMsPacManShape(context.theme(), PAC_SIZE), level.pac(), context.theme().color("mspacman.color.head"));
+                createFood(context.theme().color("mspacman.maze.foodColor", mazeIndex));
+                pac3D = new Pac3D(createMsPacManShape(context.theme(), PAC_SIZE), level.pac(),
+                    context.theme().color("mspacman.color.head"));
                 pac3D.setWalkingAnimation(new HipSwaying(level.pac(), pac3D.root()));
                 pac3D.setLight(new PointLight());
                 pac3D.light().setColor(Color.rgb(255, 255, 0, 0.75));
-                ghosts3D = level.ghosts()
-                    .map(ghost -> new Ghost3D(context.theme().get("model3D.ghost"), context.theme(), ghost, level.pac(), level.data().numFlashes(), GHOST_SIZE))
-                    .toList();
+                ghosts3D = level.ghosts().map(this::createGhost3D).toList();
                 livesCounter3D = new LivesCounter3D(() -> createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), true);
             }
             case PACMAN -> {
-                var factory = new MazeFactory((float) TS / FLOOR_PLAN_RESOLUTION);
-                factory.drawModePy.bind(PY_3D_DRAW_MODE);
                 factory.setWallBaseColor  (context.theme().color("pacman.maze.wallBaseColor"));
                 factory.setWallMiddleColor(context.theme().color("pacman.maze.wallMiddleColor"));
                 factory.setWallTopColor   (context.theme().color("pacman.maze.wallTopColor"));
                 factory.setHouseDoorColor (context.theme().color("pacman.maze.doorColor"));
                 world3D = new World3D(level.world(), getFloorPlan(1), textureMap, factory);
                 door3D = factory.createDoorGroup(level.world().house().door());
-                createFood(level.world(), context.theme().color("pacman.maze.foodColor"));
+                createFood(context.theme().color("pacman.maze.foodColor"));
                 pac3D = new Pac3D(createPacManShape(context.theme(), PAC_SIZE), level.pac(), context.theme().color("pacman.color.head"));
                 pac3D.setWalkingAnimation(new HeadBanging(level.pac(), pac3D.root()));
                 pac3D.setLight(new PointLight());
                 pac3D.light().setColor(Color.rgb(255, 255, 0, 0.75));
-                ghosts3D = level.ghosts()
-                    .map(ghost -> new Ghost3D(context.theme().get("model3D.ghost"), context.theme(), ghost, level.pac(), level.data().numFlashes(), GHOST_SIZE))
-                    .toList();
+                ghosts3D = level.ghosts().map(this::createGhost3D).toList();
                 livesCounter3D = new LivesCounter3D(() -> createPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), false);
             }
             default -> throw new IllegalGameVariantException(level.game().variant());
@@ -165,15 +159,14 @@ public class GameLevel3D {
         root.getChildren().add(world3D.root());
 
         // Bindings
+        factory.drawModePy.bind(PY_3D_DRAW_MODE);
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
-
         pac3D.drawModePy.bind(PY_3D_DRAW_MODE);
         for (var g3D: ghosts3D) {
             g3D.drawModePy.bind(PY_3D_DRAW_MODE);
         }
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         world3D.drawModePy.bind(PY_3D_DRAW_MODE);
-
         world3D.floor().colorPy   .bind(PY_3D_FLOOR_COLOR);
         world3D.floor().texturePy .bind(PY_3D_FLOOR_TEXTURE);
         world3D.wallHeightPy      .bind(PY_3D_WALL_HEIGHT);
@@ -242,9 +235,20 @@ public class GameLevel3D {
         }
     }
 
-    private void createFood(World world, Color foodColor) {
+    private Ghost3D createGhost3D(Ghost ghost) {
+        return new Ghost3D(
+            context.theme().get("model3D.ghost"),
+            context.theme(),
+            ghost,
+            level.pac(),
+            level.data().numFlashes(),
+            GHOST_SIZE);
+    }
+
+    private void createFood(Color foodColor) {
         var foodMaterial = coloredMaterial(foodColor);
         var particleMaterial = coloredMaterial(foodColor.desaturate());
+        var world = level.world();
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             Eatable3D food3D = world.isEnergizerTile(tile)
                 ? createEnergizer3D(world, tile, foodMaterial, particleMaterial)
