@@ -99,7 +99,7 @@ public class GameLevel3D {
                 int mapNumber = ArcadeWorld.mapNumberMsPacMan(level.number());
                 int mazeIndex = level.game().mazeNumber(level.number()) - 1;
                 var factory = createMazeFactory(GameVariant.MS_PACMAN, mazeIndex);
-                floorPlan = getFloorPlan(mapNumber);
+                floorPlan = getFloorPlan(GameVariant.MS_PACMAN, mapNumber);
                 createWorld3D(factory);
                 door3D = factory.createDoorGroup(level.world().house().door());
                 createFood(level.world(), context.theme().color("mspacman.maze.foodColor", mazeIndex));
@@ -112,7 +112,7 @@ public class GameLevel3D {
             }
             case PACMAN -> {
                 var factory = createMazeFactory(GameVariant.PACMAN, 0);
-                floorPlan = getFloorPlan(1);
+                floorPlan = getFloorPlan(GameVariant.PACMAN, 1);
                 createWorld3D(factory);
                 door3D = factory.createDoorGroup(level.world().house().door());
                 createFood(level.world(), context.theme().color("pacman.maze.foodColor"));
@@ -189,9 +189,9 @@ public class GameLevel3D {
         return factory;
     }
 
-    private FloorPlan getFloorPlan(int mapNumber) {
+    private FloorPlan getFloorPlan(GameVariant variant, int mapNumber) {
         ResourceManager rm = () -> PacManGames3dUI.class;
-        String name = switch (level.game().variant()) {
+        String name = switch (variant) {
             case MS_PACMAN -> "fp-mspacman-map-" + mapNumber + "-res-" + FLOOR_PLAN_RESOLUTION + ".txt";
             case PACMAN    -> "fp-pacman-map-"   + mapNumber + "-res-" + FLOOR_PLAN_RESOLUTION + ".txt";
         };
