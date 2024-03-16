@@ -204,6 +204,21 @@ public class GameLevel3D {
         levelCounter3D.populate(game, spriteSheet);
     }
 
+    public void showMessage(String text, double displaySeconds, double x, double y) {
+        messageText3D.setText(text);
+        messageText3D.root().setVisible(true);
+        messageText3D.root().setTranslateX(x);
+        messageText3D.root().setTranslateY(y);
+        messageText3D.root().setTranslateZ(MESSAGE_RETRACTED_Z);
+        var extend = new TranslateTransition(Duration.seconds(1), messageText3D.root());
+        extend.setToZ(MESSAGE_EXTENDED_Z);
+        var retract = new TranslateTransition(Duration.seconds(0.5), messageText3D.root());
+        retract.setDelay(Duration.seconds(displaySeconds));
+        retract.setToZ(MESSAGE_RETRACTED_Z);
+        retract.setOnFinished(e -> messageText3D.root().setVisible(false));
+        new SequentialTransition(extend, retract).play();
+    }
+
     public void replaceBonus3D(Bonus bonus) {
         checkNotNull(bonus);
         if (bonus3D != null) {
@@ -249,58 +264,37 @@ public class GameLevel3D {
         var particleMaterial = coloredMaterial(foodColor.desaturate());
         var world = level.world();
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
-            Eatable3D food3D = world.isEnergizerTile(tile)
-                ? createEnergizer3D(world, tile, foodMaterial, particleMaterial)
-                : createNormalPellet3D(context.theme().get("model3D.pellet"), tile, foodMaterial);
-            foodGroup.getChildren().add(food3D.root());
+            if (world.isEnergizerTile(tile)) {
+                var energizer3D = new Energizer3D(3.5);
+                energizer3D.root().setMaterial(foodMaterial);
+                energizer3D.placeAtTile(tile);
+                addEnergizerAnimation(world, energizer3D, particleMaterial);
+                foodGroup.getChildren().add(energizer3D.root());
+
+            } else {
+                var pellet3D = new Pellet3D(context.theme().get("model3D.pellet"), 1.0);
+                pellet3D.root().setMaterial(foodMaterial);
+                pellet3D.placeAtTile(tile);
+                foodGroup.getChildren().add(pellet3D.root());
+            }
         });
     }
 
-    private Pellet3D createNormalPellet3D(Model3D pelletModel3D, Vector2i tile, PhongMaterial material) {
-        var pellet3D = new Pellet3D(pelletModel3D, 1.0);
-        pellet3D.root().setMaterial(material);
-        pellet3D.placeAtTile(tile);
-        return pellet3D;
-    }
-
-    private Energizer3D createEnergizer3D(World world, Vector2i tile, PhongMaterial material, PhongMaterial particleMaterial) {
-        var energizer3D = new Energizer3D(3.5);
-        energizer3D.root().setMaterial(material);
-        energizer3D.placeAtTile(tile);
-        var squirting = createEnergizerAnimation(world, energizer3D.root(), particleMaterial);
-        squirting.setOnFinished(e -> root.getChildren().remove(squirting.root()));
-        energizer3D.setEatenAnimation(squirting);
-        root.getChildren().add(squirting.root());
-        return energizer3D;
-    }
-
-    private Squirting createEnergizerAnimation(World world, Node energizerNode, PhongMaterial particleMaterial) {
+    private void addEnergizerAnimation(World world, Energizer3D energizer3D, PhongMaterial particleMaterial) {
         var squirting = new Squirting() {
             @Override
             protected boolean reachesEndPosition(Drop drop) {
                 return drop.getTranslateZ() >= -1 && world.insideBounds(drop.getTranslateX(), drop.getTranslateY());
             }
         };
-        squirting.setOrigin(energizerNode);
+        squirting.setOrigin(energizer3D.root());
         squirting.setDropCountMin(15);
         squirting.setDropCountMax(45);
         squirting.setDropMaterial(particleMaterial);
-        return squirting;
-    }
+        squirting.setOnFinished(e -> root.getChildren().remove(squirting.root()));
+        root.getChildren().add(squirting.root());
 
-    public void showMessage(String text, double displaySeconds, double x, double y) {
-        messageText3D.setText(text);
-        messageText3D.root().setVisible(true);
-        messageText3D.root().setTranslateX(x);
-        messageText3D.root().setTranslateY(y);
-        messageText3D.root().setTranslateZ(MESSAGE_RETRACTED_Z);
-        var extend = new TranslateTransition(Duration.seconds(1), messageText3D.root());
-        extend.setToZ(MESSAGE_EXTENDED_Z);
-        var retract = new TranslateTransition(Duration.seconds(0.5), messageText3D.root());
-        retract.setDelay(Duration.seconds(displaySeconds));
-        retract.setToZ(MESSAGE_RETRACTED_Z);
-        retract.setOnFinished(e -> messageText3D.root().setVisible(false));
-        new SequentialTransition(extend, retract).play();
+        energizer3D.setEatenAnimation(squirting);
     }
 
     public void eat(Eatable3D eatable3D) {

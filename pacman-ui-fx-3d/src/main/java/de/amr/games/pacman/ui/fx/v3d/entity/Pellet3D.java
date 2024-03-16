@@ -43,6 +43,7 @@ public class Pellet3D implements Eatable3D {
         shape.getTransforms().add(scaling);
     }
 
+    @Override
     public void placeAtTile(Vector2i tile) {
         requireNonNull(tile);
 

@@ -58,6 +58,7 @@ public class Energizer3D implements Eatable3D {
         return String.format("[Energizer%s, tile: %s, %s]", pumpingText, tile(), shape);
     }
 
+    @Override
     public void placeAtTile(Vector2i tile) {
         requireNonNull(tile);
 
