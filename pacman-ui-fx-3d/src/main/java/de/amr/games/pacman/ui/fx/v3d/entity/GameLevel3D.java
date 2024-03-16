@@ -32,15 +32,12 @@ import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
@@ -73,7 +70,6 @@ public class GameLevel3D {
     public final DoubleProperty wallHeightPy         = new SimpleDoubleProperty(this, "wallHeight", 2.0);
     public final DoubleProperty wallOpacityPy        = new SimpleDoubleProperty(this, "wallOpacity", 0.5);
     public final DoubleProperty wallThicknessPy      = new SimpleDoubleProperty(this, "wallThickness", 1.0);
-    public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     private final GameLevel level;
     private final GameSceneContext context;
@@ -89,7 +85,6 @@ public class GameLevel3D {
     private final LevelCounter3D levelCounter3D;
     private final LivesCounter3D livesCounter3D;
     private final Text3D messageText3D;
-    private Floor3D floor3D;
     private Bonus3D bonus3D;
 
     public GameLevel3D(GameLevel level, GameSceneContext context) {
@@ -168,9 +163,6 @@ public class GameLevel3D {
             g3D.drawModePy.bind(PY_3D_DRAW_MODE);
         }
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
-        drawModePy.bind(PY_3D_DRAW_MODE);
-        floor3D.colorPy   .bind(PY_3D_FLOOR_COLOR);
-        floor3D.texturePy .bind(PY_3D_FLOOR_TEXTURE);
         wallHeightPy      .bind(PY_3D_WALL_HEIGHT);
         wallOpacityPy     .bind(PY_3D_WALL_OPACITY);
         wallThicknessPy   .bind(PY_3D_WALL_THICKNESS);
@@ -428,8 +420,12 @@ public class GameLevel3D {
             String key = "texture." + textureName;
             floorTextures.put(key, context.theme().get(key));
         }
-        floor3D = new Floor3D(level.world().numCols() * TS - 1, level.world().numRows() * TS - 1, 0.4, floorTextures);
-        floor3D.drawModeProperty().bind(drawModePy);
+
+        var floor3D = new Floor3D(level.world().numCols() * TS - 1, level.world().numRows() * TS - 1, 0.4, floorTextures);
+        floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        floor3D.colorPy.bind(PY_3D_FLOOR_COLOR);
+        floor3D.texturePy.bind(PY_3D_FLOOR_TEXTURE);
+
         var floorGroup = new Group();
         floorGroup.getChildren().add(floor3D);
         floorGroup.getTransforms().add(new Translate(0.5 * floor3D.getWidth(), 0.5 * floor3D.getHeight(), 0.5 * floor3D.getDepth()));
@@ -441,11 +437,6 @@ public class GameLevel3D {
 
         worldGroup.getChildren().addAll(floorGroup, wallsGroup, houseLight);
         Logger.info("3D world created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
-    }
-
-
-    public Floor3D floor() {
-        return floor3D;
     }
 
     public void setHouseLightOn(boolean state) {
