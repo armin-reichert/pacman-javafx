@@ -8,8 +8,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui.fx.v3d.animation.HeadBanging;
-import de.amr.games.pacman.ui.fx.v3d.animation.HipSwaying;
 import de.amr.games.pacman.ui.fx.v3d.animation.WalkingAnimation;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.*;
@@ -51,7 +49,7 @@ public class Pac3D {
     public static final String MESH_ID_HEAD = "PacMan.Head";
     public static final String MESH_ID_PALATE = "PacMan.Palate";
 
-    static Group createPacManGroup(Model3D model3D, Theme theme, double size) {
+    public static Group createPacManShape(Model3D model3D, Theme theme, double size) {
         var body = createBody(model3D, size,
             theme.color("pacman.color.head"),
             theme.color("pacman.color.eyes"),
@@ -59,30 +57,12 @@ public class Pac3D {
         return new Group(body);
     }
 
-    static Group createMsPacManGroup(Model3D model3D, Theme theme, double size) {
+    public static Group createMsPacManShape(Model3D model3D, Theme theme, double size) {
         var body = createBody(model3D, size,
             theme.color("mspacman.color.head"),
             theme.color("mspacman.color.eyes"),
             theme.color("mspacman.color.palate"));
         return new Group(body, createFeminineParts(theme, size));
-    }
-
-    public static Pac3D createPacMan3D(Model3D model3D, Theme theme, Pac pacMan, double size) {
-        checkNotNull(model3D);
-        checkNotNull(theme);
-        checkNotNull(pacMan);
-        var pac3D = new Pac3D(createPacManGroup(model3D, theme, size), pacMan, theme.color("pacman.color.head"));
-        pac3D.walkingAnimation = new HeadBanging(pacMan, pac3D.root);
-        return pac3D;
-    }
-
-    public static Pac3D createMsPacMan3D(Model3D model3D, Theme theme, Pac msPacMan, double size) {
-        checkNotNull(model3D);
-        checkNotNull(theme);
-        checkNotNull(msPacMan);
-        var msPac3D = new Pac3D(createMsPacManGroup(model3D, theme, size), msPacMan, theme.color("mspacman.color.head"));
-        msPac3D.walkingAnimation = new HipSwaying(msPacMan, msPac3D.root);
-        return msPac3D;
     }
 
     private static Group createBody(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {
@@ -162,7 +142,7 @@ public class Pac3D {
     private WalkingAnimation walkingAnimation;
     private PointLight light;
 
-    private Pac3D(Node pacNode, Pac pac, Color headColor) {
+    public Pac3D(Node pacNode, Pac pac, Color headColor) {
         this.root = new Group(pacNode);
         this.pac = pac;
         this.headColor = headColor;
@@ -197,6 +177,10 @@ public class Pac3D {
 
     public WalkingAnimation walkingAnimation() {
         return walkingAnimation;
+    }
+
+    public void setWalkingAnimation(WalkingAnimation walkingAnimation) {
+        this.walkingAnimation = walkingAnimation;
     }
 
     public void init() {
