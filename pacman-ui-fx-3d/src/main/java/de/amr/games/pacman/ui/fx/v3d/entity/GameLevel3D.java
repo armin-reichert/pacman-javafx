@@ -104,7 +104,7 @@ public class GameLevel3D {
                 factory.setHouseDoorColor (theme.color("mspacman.maze.doorColor"));
                 world3D = new World3D(world, getFloorPlan(mapNumber), textureMap, factory);
                 door3D = factory.createDoorGroup(world.house().door());
-                createFood(world, theme.color("mspacman.maze.foodColor", mazeIndex), theme.get("model3D.pellet"));
+                createFood(world, theme, theme.color("mspacman.maze.foodColor", mazeIndex));
                 pac3D = new Pac3D(createMsPacManShape(theme, PAC_SIZE), level.pac(), theme.color("mspacman.color.head"));
                 pac3D.setWalkingAnimation(new HipSwaying(level.pac(), pac3D.root()));
                 pac3D.setLight(new PointLight());
@@ -123,7 +123,7 @@ public class GameLevel3D {
                 factory.setHouseDoorColor (theme.color("pacman.maze.doorColor"));
                 world3D = new World3D(world, getFloorPlan(1), textureMap, factory);
                 door3D = factory.createDoorGroup(world.house().door());
-                createFood(world, theme.color("pacman.maze.foodColor"), theme.get("model3D.pellet"));
+                createFood(world, theme, theme.color("pacman.maze.foodColor"));
                 pac3D = new Pac3D(createPacManShape(theme, PAC_SIZE), level.pac(), theme.color("pacman.color.head"));
                 pac3D.setWalkingAnimation(new HeadBanging(level.pac(), pac3D.root()));
                 pac3D.setLight(new PointLight());
@@ -244,12 +244,13 @@ public class GameLevel3D {
         }
     }
 
-    public void createFood(World world, Color foodColor, Model3D pelletModel3D) {
+    private void createFood(World world, Theme theme, Color foodColor) {
         var foodMaterial = coloredMaterial(foodColor);
+        var particleMaterial = coloredMaterial(foodColor.desaturate());
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             Eatable3D food3D = world.isEnergizerTile(tile)
-                ? createEnergizer3D(world, foodColor, tile, foodMaterial)
-                : createNormalPellet3D(pelletModel3D, tile, foodMaterial);
+                ? createEnergizer3D(world, tile, foodMaterial, particleMaterial)
+                : createNormalPellet3D(theme.get("model3D.pellet"), tile, foodMaterial);
             foodGroup.getChildren().add(food3D.root());
         });
     }
@@ -261,18 +262,18 @@ public class GameLevel3D {
         return pellet3D;
     }
 
-    private Energizer3D createEnergizer3D(World world, Color foodColor, Vector2i tile, PhongMaterial material) {
+    private Energizer3D createEnergizer3D(World world, Vector2i tile, PhongMaterial material, PhongMaterial particleMaterial) {
         var energizer3D = new Energizer3D(3.5);
         energizer3D.root().setMaterial(material);
         energizer3D.placeAtTile(tile);
-        var squirting = createEnergizerAnimation(world, energizer3D.root(), foodColor);
+        var squirting = createEnergizerAnimation(world, energizer3D.root(), particleMaterial);
         squirting.setOnFinished(e -> root.getChildren().remove(squirting.root()));
         energizer3D.setEatenAnimation(squirting);
         root.getChildren().add(squirting.root());
         return energizer3D;
     }
 
-    private Squirting createEnergizerAnimation(World world, Node energizerNode, Color foodColor) {
+    private Squirting createEnergizerAnimation(World world, Node energizerNode, PhongMaterial particleMaterial) {
         var squirting = new Squirting() {
             @Override
             protected boolean reachesEndPosition(Drop drop) {
@@ -282,7 +283,7 @@ public class GameLevel3D {
         squirting.setOrigin(energizerNode);
         squirting.setDropCountMin(15);
         squirting.setDropCountMax(45);
-        squirting.setDropMaterial(coloredMaterial(foodColor.desaturate()));
+        squirting.setDropMaterial(particleMaterial);
         return squirting;
     }
 
