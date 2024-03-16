@@ -17,18 +17,18 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class ColorChangeTransition extends Transition {
 
-    private final Color fromColor;
-    private final Color toColor;
-    private final ObjectProperty<Color> targetColorPy;
+    private final Color start;
+    private final Color end;
+    private final ObjectProperty<Color> clientColorPy;
 
-    public ColorChangeTransition(Duration duration, Color fromColor, Color toColor, ObjectProperty<Color> targetColorPy) {
+    public ColorChangeTransition(Duration duration, Color start, Color end, ObjectProperty<Color> clientColorPy) {
         checkNotNull(duration);
-        checkNotNull(fromColor);
-        checkNotNull(toColor);
-        checkNotNull(targetColorPy);
-        this.fromColor = fromColor;
-        this.toColor = toColor;
-        this.targetColorPy = targetColorPy;
+        checkNotNull(start);
+        checkNotNull(end);
+        checkNotNull(clientColorPy);
+        this.start = start;
+        this.end = end;
+        this.clientColorPy = clientColorPy;
         setCycleCount(1);
         setCycleDuration(duration);
         setInterpolator(Interpolator.LINEAR);
@@ -36,6 +36,6 @@ public class ColorChangeTransition extends Transition {
 
     @Override
     protected void interpolate(double t) {
-        targetColorPy.setValue(fromColor.interpolate(toColor, t));
+        clientColorPy.setValue(start.interpolate(end, t));
     }
 }
