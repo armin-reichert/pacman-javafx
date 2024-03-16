@@ -105,8 +105,7 @@ public class GameLevel3D {
                 pac3D = new Pac3D(createMsPacManShape(context.theme(), PAC_SIZE), level.pac(),
                     context.theme().color("mspacman.color.head"));
                 pac3D.setWalkingAnimation(new HipSwaying(level.pac(), pac3D.root()));
-                pac3D.setLight(new PointLight());
-                pac3D.light().setColor(Color.rgb(255, 255, 0, 0.75));
+                pac3D.setLight(new PointLight(Color.rgb(255, 255, 0, 0.75)));
                 ghosts3D = level.ghosts().map(this::createGhost3D).toList();
                 livesCounter3D = new LivesCounter3D(() -> createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), true);
             }
@@ -118,10 +117,10 @@ public class GameLevel3D {
                 world3D = new World3D(level.world(), getFloorPlan(1), textureMap, factory);
                 door3D = factory.createDoorGroup(level.world().house().door());
                 createFood(context.theme().color("pacman.maze.foodColor"));
-                pac3D = new Pac3D(createPacManShape(context.theme(), PAC_SIZE), level.pac(), context.theme().color("pacman.color.head"));
+                pac3D = new Pac3D(createPacManShape(context.theme(), PAC_SIZE), level.pac(),
+                    context.theme().color("pacman.color.head"));
                 pac3D.setWalkingAnimation(new HeadBanging(level.pac(), pac3D.root()));
-                pac3D.setLight(new PointLight());
-                pac3D.light().setColor(Color.rgb(255, 255, 0, 0.75));
+                pac3D.setLight(new PointLight(Color.rgb(255, 255, 0, 0.75)));
                 ghosts3D = level.ghosts().map(this::createGhost3D).toList();
                 livesCounter3D = new LivesCounter3D(() -> createPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), false);
             }
