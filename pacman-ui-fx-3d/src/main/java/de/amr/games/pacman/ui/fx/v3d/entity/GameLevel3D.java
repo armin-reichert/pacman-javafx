@@ -107,16 +107,14 @@ public class GameLevel3D {
                 world3D = new World3D(world, floorPlan, textureMap, factory);
                 door3D = factory.createDoorGroup(world.house().door());
                 createFood(world, theme.color("mspacman.maze.foodColor", mazeIndex), theme.get("model3D.pellet"));
-                pac3D = new Pac3D(createMsPacManShape(theme.get("model3D.pacman"), theme, PAC_SIZE),
-                    level.pac(), theme.color("mspacman.color.head"));
+                pac3D = new Pac3D(createMsPacManShape(theme, PAC_SIZE), level.pac(), theme.color("mspacman.color.head"));
                 pac3D.setWalkingAnimation(new HipSwaying(level.pac(), pac3D.root()));
                 pac3D.setLight(new PointLight());
                 pac3D.light().setColor(Color.rgb(255, 255, 0, 0.75));
                 ghosts3D = level.ghosts()
                     .map(ghost -> new Ghost3D(theme.get("model3D.ghost"), theme, ghost, level.pac(), level.data().numFlashes(), GHOST_SIZE))
                     .toList();
-                livesCounter3D = new LivesCounter3D(() -> createMsPacManShape(
-                    theme.get("model3D.pacman"), theme, LIVES_COUNTER_PAC_SIZE), true);
+                livesCounter3D = new LivesCounter3D(() -> createMsPacManShape(theme, LIVES_COUNTER_PAC_SIZE), true);
             }
             case PACMAN -> {
                 var floorPlan = getFloorPlan(GameVariant.PACMAN, 1, FLOOR_PLAN_RESOLUTION);
@@ -129,16 +127,14 @@ public class GameLevel3D {
                 world3D = new World3D(world, floorPlan, textureMap, factory);
                 door3D = factory.createDoorGroup(world.house().door());
                 createFood(world, theme.color("pacman.maze.foodColor"), theme.get("model3D.pellet"));
-                pac3D = new Pac3D(createPacManShape(theme.get("model3D.pacman"), theme, PAC_SIZE),
-                    level.pac(), theme.color("pacman.color.head"));
+                pac3D = new Pac3D(createPacManShape(theme, PAC_SIZE), level.pac(), theme.color("pacman.color.head"));
                 pac3D.setWalkingAnimation(new HeadBanging(level.pac(), pac3D.root()));
                 pac3D.setLight(new PointLight());
                 pac3D.light().setColor(Color.rgb(255, 255, 0, 0.75));
                 ghosts3D = level.ghosts()
                     .map(ghost -> new Ghost3D(theme.get("model3D.ghost"), theme, ghost, level.pac(), level.data().numFlashes(), GHOST_SIZE))
                     .toList();
-                livesCounter3D = new LivesCounter3D(() -> createPacManShape(
-                    theme.get("model3D.pacman"), theme, LIVES_COUNTER_PAC_SIZE), false);
+                livesCounter3D = new LivesCounter3D(() -> createPacManShape(theme, LIVES_COUNTER_PAC_SIZE), false);
             }
             default -> throw new IllegalGameVariantException(level.game().variant());
         }

@@ -49,16 +49,16 @@ public class Pac3D {
     public static final String MESH_ID_HEAD = "PacMan.Head";
     public static final String MESH_ID_PALATE = "PacMan.Palate";
 
-    public static Group createPacManShape(Model3D model3D, Theme theme, double size) {
-        var body = createBody(model3D, size,
+    public static Group createPacManShape(Theme theme, double size) {
+        var body = createBody(theme.get("model3D.pacman"), size,
             theme.color("pacman.color.head"),
             theme.color("pacman.color.eyes"),
             theme.color("pacman.color.palate"));
         return new Group(body);
     }
 
-    public static Group createMsPacManShape(Model3D model3D, Theme theme, double size) {
-        var body = createBody(model3D, size,
+    public static Group createMsPacManShape(Theme theme, double size) {
+        var body = createBody(theme.get("model3D.pacman"), size,
             theme.color("mspacman.color.head"),
             theme.color("mspacman.color.eyes"),
             theme.color("mspacman.color.palate"));

@@ -70,6 +70,7 @@ public class MazeFactory {
         setWallBaseColor(Color.BLACK);
         setWallMiddleColor(Color.RED);
         setWallTopColor(Color.GOLD);
+        setHouseDoorColor(Color.PINK);
     }
 
     public void setWallBaseColor(Color color) {
