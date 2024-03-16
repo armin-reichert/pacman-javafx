@@ -169,28 +169,24 @@ public class GameLevel3D {
     }
 
     private MazeFactory createMazeFactory(GameVariant variant, int mazeIndex) {
-        return switch (variant) {
+        var factory = new MazeFactory((float) TS / FLOOR_PLAN_RESOLUTION);
+        switch (variant) {
             case MS_PACMAN -> {
-                var factory = new MazeFactory((float) TS / FLOOR_PLAN_RESOLUTION);
-                factory.wallOpacityPy.bind(wallOpacityPy);
-                factory.drawModePy.bind(PY_3D_DRAW_MODE);
                 factory.setWallBaseColor  (context.theme().color("mspacman.maze.wallBaseColor", mazeIndex));
                 factory.setWallMiddleColor(context.theme().color("mspacman.maze.wallMiddleColor", mazeIndex));
                 factory.setWallTopColor   (context.theme().color("mspacman.maze.wallTopColor", mazeIndex));
                 factory.setHouseDoorColor (context.theme().color("mspacman.maze.doorColor"));
-                yield factory;
             }
             case PACMAN -> {
-                var factory = new MazeFactory((float) TS / FLOOR_PLAN_RESOLUTION);
-                factory.wallOpacityPy.bind(wallOpacityPy);
-                factory.drawModePy.bind(PY_3D_DRAW_MODE);
                 factory.setWallBaseColor  (context.theme().color("pacman.maze.wallBaseColor"));
                 factory.setWallMiddleColor(context.theme().color("pacman.maze.wallMiddleColor"));
                 factory.setWallTopColor   (context.theme().color("pacman.maze.wallTopColor"));
                 factory.setHouseDoorColor (context.theme().color("pacman.maze.doorColor"));
-                yield factory;
             }
-        };
+        }
+        factory.wallOpacityPy.bind(wallOpacityPy);
+        factory.drawModePy.bind(PY_3D_DRAW_MODE);
+        return factory;
     }
 
     private FloorPlan getFloorPlan(int mapNumber) {
