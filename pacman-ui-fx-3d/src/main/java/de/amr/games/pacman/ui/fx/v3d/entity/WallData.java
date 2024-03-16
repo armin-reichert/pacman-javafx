@@ -9,9 +9,8 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
  */
 public class WallData {
     byte type; // see FloorPlan
-    int x;
-    int y;
-    int numBricksX;
-    int numBricksY;
-    float brickSize;
+    short x;
+    short y;
+    short numBricksX;
+    short numBricksY;
 }

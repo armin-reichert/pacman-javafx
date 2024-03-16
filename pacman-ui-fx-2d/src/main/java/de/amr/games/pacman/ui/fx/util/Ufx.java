@@ -35,16 +35,12 @@ public class Ufx {
         booleanProperty.set(!booleanProperty.get());
     }
 
-    public static PhongMaterial createColorBoundMaterial(ObjectProperty<Color> colorProperty) {
+    public static PhongMaterial createColorBoundMaterial(ObjectProperty<Color> diffuseColorProperty) {
         var material = new PhongMaterial();
-        bindMaterialColorProperties(material, colorProperty);
-        return material;
-    }
-
-    public static void bindMaterialColorProperties(PhongMaterial material, ObjectProperty<Color> colorProperty) {
-        material.diffuseColorProperty().bind(colorProperty);
+        material.diffuseColorProperty().bind(diffuseColorProperty);
         material.specularColorProperty()
-            .bind(Bindings.createObjectBinding(() -> material.getDiffuseColor().brighter(), colorProperty));
+            .bind(Bindings.createObjectBinding(() -> diffuseColorProperty.get().brighter(), diffuseColorProperty));
+        return material;
     }
 
     /**
@@ -69,34 +65,8 @@ public class Ufx {
      */
     public static Transition actionAfterSeconds(double delaySeconds, Runnable action) {
         checkNotNull(action);
-        PauseTransition pause = pauseSeconds(delaySeconds);
+        PauseTransition pause = new PauseTransition(Duration.seconds(delaySeconds));
         pause.setOnFinished(e -> action.run());
         return pause;
-    }
-
-    public static Transition immediateAction(Runnable action) {
-        checkNotNull(action);
-        var transition = new PauseTransition(Duration.ZERO);
-        transition.setOnFinished(e -> action.run());
-        return transition;
-    }
-
-    /**
-     * @param source    source image
-     * @param exchanges map of color exchanges
-     * @return copy of source image with colors exchanged
-     */
-    public static Image colorsExchanged(Image source, Map<Color, Color> exchanges) {
-        WritableImage result = new WritableImage((int) source.getWidth(), (int) source.getHeight());
-        PixelWriter out = result.getPixelWriter();
-        for (int x = 0; x < source.getWidth(); ++x) {
-            for (int y = 0; y < source.getHeight(); ++y) {
-                Color color = source.getPixelReader().getColor(x, y);
-                if (exchanges.containsKey(color)) {
-                    out.setColor(x, y, exchanges.get(color));
-                }
-            }
-        }
-        return result;
     }
 }

@@ -94,14 +94,14 @@ public class GameLevel3D {
             case MS_PACMAN -> {
                 int mapNumber = ArcadeWorld.mapNumberMsPacMan(level.number());
                 int mazeIndex = level.game().mazeNumber(level.number()) - 1;
-                var factory = new MazeFactory();
+                var floorPlan = getFloorPlan(GameVariant.MS_PACMAN, mapNumber, FLOOR_PLAN_RESOLUTION);
+                var factory = new MazeFactory((float) TS / floorPlan.resolution());
                 factory.setWallBaseColor(theme.color("mspacman.maze.wallBaseColor", mazeIndex));
                 factory.setWallMiddleColor(theme.color("mspacman.maze.wallMiddleColor", mazeIndex));
                 factory.setWallTopColor(theme.color("mspacman.maze.wallTopColor", mazeIndex));
                 factory.setHouseDoorColor(theme.color("mspacman.maze.doorColor"));
                 factory.drawModePy.bind(PY_3D_DRAW_MODE);
-                world3D = new World3D(world, getFloorPlan(GameVariant.MS_PACMAN, mapNumber, FLOOR_PLAN_RESOLUTION),
-                    textureMap, factory);
+                world3D = new World3D(world, floorPlan, textureMap, factory);
                 door3D = factory.createDoorGroup(world.house().door());
                 createFood(world, theme.color("mspacman.maze.foodColor", mazeIndex), theme.get("model3D.pellet"));
                 pac3D = createMsPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
@@ -114,14 +114,14 @@ public class GameLevel3D {
                     theme.get("model3D.pacman"), theme, LIVES_COUNTER_PAC_SIZE), true);
             }
             case PACMAN -> {
-                MazeFactory factory = new MazeFactory();
+                var floorPlan = getFloorPlan(GameVariant.PACMAN, 1, FLOOR_PLAN_RESOLUTION);
+                var factory = new MazeFactory((float) TS / floorPlan.resolution());
                 factory.setWallBaseColor  (theme.color("pacman.maze.wallBaseColor"));
                 factory.setWallMiddleColor(theme.color("pacman.maze.wallMiddleColor"));
                 factory.setWallTopColor   (theme.color("pacman.maze.wallTopColor"));
                 factory.setHouseDoorColor (theme.color("pacman.maze.doorColor"));
                 factory.drawModePy.bind(PY_3D_DRAW_MODE);
-                world3D = new World3D(world, getFloorPlan(GameVariant.PACMAN, 1, FLOOR_PLAN_RESOLUTION), textureMap,
-                    factory);
+                world3D = new World3D(world, floorPlan, textureMap, factory);
                 door3D = factory.createDoorGroup(world.house().door());
                 createFood(world, theme.color("pacman.maze.foodColor"), theme.get("model3D.pellet"));
                 pac3D = createPacMan3D(theme.get("model3D.pacman"), theme, level.pac(), PAC_SIZE);
@@ -176,11 +176,11 @@ public class GameLevel3D {
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         world3D.drawModePy.bind(PY_3D_DRAW_MODE);
 
-        world3D.floorColorPy        .bind(PY_3D_FLOOR_COLOR);
-        world3D.floorTexturePy      .bind(PY_3D_FLOOR_TEXTURE);
-        world3D.wallHeightPy        .bind(PY_3D_WALL_HEIGHT);
-        world3D.wallOpacityPy       .bind(PY_3D_WALL_OPACITY);
-        world3D.wallThicknessPy     .bind(PY_3D_WALL_THICKNESS);
+        world3D.floor().colorPy   .bind(PY_3D_FLOOR_COLOR);
+        world3D.floor().texturePy .bind(PY_3D_FLOOR_TEXTURE);
+        world3D.wallHeightPy      .bind(PY_3D_WALL_HEIGHT);
+        world3D.wallOpacityPy     .bind(PY_3D_WALL_OPACITY);
+        world3D.wallThicknessPy   .bind(PY_3D_WALL_THICKNESS);
     }
 
     private static FloorPlan getFloorPlan(GameVariant variant, int mapNumber, int resolution) {

@@ -5,8 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui.fx.util.Ufx;
-import de.amr.games.pacman.ui.fx.v3d.animation.ColorFlashing;
+import de.amr.games.pacman.ui.fx.v3d.animation.ColorSwitchTransition;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.Animation.Status;
 import javafx.animation.ParallelTransition;
@@ -21,6 +20,7 @@ import javafx.scene.transform.Rotate;
 
 import static de.amr.games.pacman.lib.Globals.checkGhostID;
 import static de.amr.games.pacman.lib.Globals.requirePositive;
+import static de.amr.games.pacman.ui.fx.util.Ufx.createColorBoundMaterial;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -46,8 +46,8 @@ public class ColoredGhost3D {
     private final ObjectProperty<Color> pupilsColorPy = new SimpleObjectProperty<>(this, "pupilsColor", Color.BLUE);
 
     private ParallelTransition flashingAnimation;
-    private ColorFlashing dressFlashingAnimation;
-    private ColorFlashing pupilsFlashingAnimation;
+    private ColorSwitchTransition dressFlashingAnimation;
+    private ColorSwitchTransition pupilsFlashingAnimation;
 
     public ColoredGhost3D(Model3D model3D, Theme theme, byte id, double size) {
         requireNonNull(model3D);
@@ -59,15 +59,15 @@ public class ColoredGhost3D {
         this.id = id;
 
         dressShape = new MeshView(model3D.mesh(MESH_ID_GHOST_DRESS));
-        dressShape.setMaterial(Ufx.createColorBoundMaterial(dressColorPy));
+        dressShape.setMaterial(createColorBoundMaterial(dressColorPy));
         dressColorPy.set(theme.color("ghost.%d.color.normal.dress".formatted(id)));
 
         eyeballsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_EYEBALLS));
-        eyeballsShape.setMaterial(Ufx.createColorBoundMaterial(eyeballsColorPy));
+        eyeballsShape.setMaterial(createColorBoundMaterial(eyeballsColorPy));
         eyeballsColorPy.set(theme.color("ghost.%d.color.normal.eyeballs".formatted(id)));
 
         pupilsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_PUPILS));
-        pupilsShape.setMaterial(Ufx.createColorBoundMaterial(pupilsColorPy));
+        pupilsShape.setMaterial(createColorBoundMaterial(pupilsColorPy));
         pupilsColorPy.set(theme.color("ghost.%d.color.normal.pupils".formatted(id)));
 
         var centerTransform = Model3D.centerOverOrigin(dressShape);
@@ -145,10 +145,10 @@ public class ColoredGhost3D {
     }
 
     private void createFlashingAnimation(int numFlashes, double durationSeconds) {
-        dressFlashingAnimation = new ColorFlashing(theme.color("ghost.color.frightened.dress"),
+        dressFlashingAnimation = new ColorSwitchTransition(theme.color("ghost.color.frightened.dress"),
             theme.color("ghost.color.flashing.dress"), durationSeconds, numFlashes);
 
-        pupilsFlashingAnimation = new ColorFlashing(theme.color("ghost.color.frightened.pupils"),
+        pupilsFlashingAnimation = new ColorSwitchTransition(theme.color("ghost.color.frightened.pupils"),
             theme.color("ghost.color.flashing.pupils"), durationSeconds, numFlashes);
 
         flashingAnimation = new ParallelTransition(dressFlashingAnimation, pupilsFlashingAnimation);
