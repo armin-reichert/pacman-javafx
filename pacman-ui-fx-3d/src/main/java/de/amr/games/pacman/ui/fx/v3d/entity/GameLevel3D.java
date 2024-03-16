@@ -6,9 +6,11 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -29,13 +31,20 @@ import de.amr.games.pacman.ui.fx.v3d.animation.HipSwaying;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
 import javafx.animation.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,19 +70,26 @@ public class GameLevel3D {
     private static final double MESSAGE_EXTENDED_Z = -5;
     private static final double MESSAGE_RETRACTED_Z =  5;
 
+    public final DoubleProperty wallHeightPy         = new SimpleDoubleProperty(this, "wallHeight", 2.0);
+    public final DoubleProperty wallOpacityPy        = new SimpleDoubleProperty(this, "wallOpacity", 0.5);
+    public final DoubleProperty wallThicknessPy      = new SimpleDoubleProperty(this, "wallThickness", 1.0);
+    public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+
     private final GameLevel level;
     private final GameSceneContext context;
+    private final FloorPlan floorPlan;
 
     private final Group root = new Group();
-    private final World3D world3D;
+    private final Group worldGroup = new Group();
     private final Group door3D;
     private final Group foodGroup = new Group();
+    private final PointLight houseLight = new PointLight();
     private final Pac3D pac3D;
     private final List<Ghost3D> ghosts3D;
     private final LevelCounter3D levelCounter3D;
     private final LivesCounter3D livesCounter3D;
     private final Text3D messageText3D;
-
+    private Floor3D floor3D;
     private Bonus3D bonus3D;
 
     public GameLevel3D(GameLevel level, GameSceneContext context) {
@@ -83,22 +99,13 @@ public class GameLevel3D {
         this.level = level;
         this.context = context;
 
-        var textureMap = new HashMap<String, PhongMaterial>();
-        for (var textureName : context.theme().getArray("texture.names")) {
-            String key = "texture." + textureName;
-            textureMap.put(key, context.theme().get(key));
-        }
-        var factory = new MazeFactory((float) TS / FLOOR_PLAN_RESOLUTION);
-
         switch (level.game().variant()) {
             case MS_PACMAN -> {
                 int mapNumber = ArcadeWorld.mapNumberMsPacMan(level.number());
                 int mazeIndex = level.game().mazeNumber(level.number()) - 1;
-                factory.setWallBaseColor  (context.theme().color("mspacman.maze.wallBaseColor", mazeIndex));
-                factory.setWallMiddleColor(context.theme().color("mspacman.maze.wallMiddleColor", mazeIndex));
-                factory.setWallTopColor   (context.theme().color("mspacman.maze.wallTopColor", mazeIndex));
-                factory.setHouseDoorColor (context.theme().color("mspacman.maze.doorColor"));
-                world3D = new World3D(level.world(), getFloorPlan(mapNumber), textureMap, factory);
+                var factory = createMazeFactory(level.game().variant(), mazeIndex);
+                floorPlan = getFloorPlan(mapNumber);
+                createWorld3D(factory);
                 door3D = factory.createDoorGroup(level.world().house().door());
                 createFood(level.world(), context.theme().color("mspacman.maze.foodColor", mazeIndex));
                 pac3D = new Pac3D(createMsPacManShape(context.theme(), PAC_SIZE), level.pac(),
@@ -109,11 +116,9 @@ public class GameLevel3D {
                 livesCounter3D = new LivesCounter3D(() -> createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), true);
             }
             case PACMAN -> {
-                factory.setWallBaseColor  (context.theme().color("pacman.maze.wallBaseColor"));
-                factory.setWallMiddleColor(context.theme().color("pacman.maze.wallMiddleColor"));
-                factory.setWallTopColor   (context.theme().color("pacman.maze.wallTopColor"));
-                factory.setHouseDoorColor (context.theme().color("pacman.maze.doorColor"));
-                world3D = new World3D(level.world(), getFloorPlan(1), textureMap, factory);
+                var factory = createMazeFactory(level.game().variant(), 0);
+                floorPlan = getFloorPlan(1);
+                createWorld3D(factory);
                 door3D = factory.createDoorGroup(level.world().house().door());
                 createFood(level.world(), context.theme().color("pacman.maze.foodColor"));
                 pac3D = new Pac3D(createPacManShape(context.theme(), PAC_SIZE), level.pac(),
@@ -154,22 +159,46 @@ public class GameLevel3D {
         root.getChildren().add(foodGroup);
         root.getChildren().add(door3D);
         // Walls must be added *after* the rest. Otherwise, transparency is not working correctly!
-        root.getChildren().add(world3D.root());
+        root.getChildren().add(worldGroup);
 
         // Bindings
-        factory.drawModePy.bind(PY_3D_DRAW_MODE);
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
         pac3D.drawModePy.bind(PY_3D_DRAW_MODE);
         for (var g3D: ghosts3D) {
             g3D.drawModePy.bind(PY_3D_DRAW_MODE);
         }
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
-        world3D.drawModePy.bind(PY_3D_DRAW_MODE);
-        world3D.floor().colorPy   .bind(PY_3D_FLOOR_COLOR);
-        world3D.floor().texturePy .bind(PY_3D_FLOOR_TEXTURE);
-        world3D.wallHeightPy      .bind(PY_3D_WALL_HEIGHT);
-        world3D.wallOpacityPy     .bind(PY_3D_WALL_OPACITY);
-        world3D.wallThicknessPy   .bind(PY_3D_WALL_THICKNESS);
+        drawModePy.bind(PY_3D_DRAW_MODE);
+        floor3D.colorPy   .bind(PY_3D_FLOOR_COLOR);
+        floor3D.texturePy .bind(PY_3D_FLOOR_TEXTURE);
+        wallHeightPy      .bind(PY_3D_WALL_HEIGHT);
+        wallOpacityPy     .bind(PY_3D_WALL_OPACITY);
+        wallThicknessPy   .bind(PY_3D_WALL_THICKNESS);
+    }
+
+    private MazeFactory createMazeFactory(GameVariant variant, int mazeIndex) {
+        return switch (variant) {
+            case MS_PACMAN -> {
+                var factory = new MazeFactory((float) TS / FLOOR_PLAN_RESOLUTION);
+                factory.wallOpacityPy.bind(wallOpacityPy);
+                factory.drawModePy.bind(PY_3D_DRAW_MODE);
+                factory.setWallBaseColor  (context.theme().color("mspacman.maze.wallBaseColor", mazeIndex));
+                factory.setWallMiddleColor(context.theme().color("mspacman.maze.wallMiddleColor", mazeIndex));
+                factory.setWallTopColor   (context.theme().color("mspacman.maze.wallTopColor", mazeIndex));
+                factory.setHouseDoorColor (context.theme().color("mspacman.maze.doorColor"));
+                yield factory;
+            }
+            case PACMAN -> {
+                var factory = new MazeFactory((float) TS / FLOOR_PLAN_RESOLUTION);
+                factory.wallOpacityPy.bind(wallOpacityPy);
+                factory.drawModePy.bind(PY_3D_DRAW_MODE);
+                factory.setWallBaseColor  (context.theme().color("pacman.maze.wallBaseColor"));
+                factory.setWallMiddleColor(context.theme().color("pacman.maze.wallMiddleColor"));
+                factory.setWallTopColor   (context.theme().color("pacman.maze.wallTopColor"));
+                factory.setHouseDoorColor (context.theme().color("pacman.maze.doorColor"));
+                yield factory;
+            }
+        };
     }
 
     private FloorPlan getFloorPlan(int mapNumber) {
@@ -328,10 +357,10 @@ public class GameLevel3D {
         double wallHeight = PY_3D_WALL_HEIGHT.get();
         var animation = new SinusCurveAnimation(level.data().numFlashes());
         animation.setAmplitude(wallHeight);
-        animation.elongationPy.set(world3D.wallHeightPy.get());
-        world3D.wallHeightPy.bind(animation.elongationPy);
+        animation.elongationPy.set(wallHeightPy.get());
+        wallHeightPy.bind(animation.elongationPy);
         animation.setOnFinished(e -> {
-            world3D.wallHeightPy.bind(PY_3D_WALL_HEIGHT);
+            wallHeightPy.bind(PY_3D_WALL_HEIGHT);
             PY_3D_WALL_HEIGHT.set(wallHeight);
         });
         return animation;
@@ -343,7 +372,7 @@ public class GameLevel3D {
         boolean houseOpen = level.ghosts(GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .filter(ghost -> ghost.position().euclideanDistance(house.door().entryPosition()) <= 1.5 * TS)
             .anyMatch(Ghost::isVisible);
-        world3D.setHouseLightOn(houseUsed);
+        setHouseLightOn(houseUsed);
         if (houseOpen) {
             for (var node : door3D.getChildren()) {
                 DoorWing3D wing3D = (DoorWing3D) node.getUserData();
@@ -383,5 +412,129 @@ public class GameLevel3D {
     public Optional<Eatable3D> eatableAt(Vector2i tile) {
         checkTileNotNull(tile);
         return allEatables().filter(eatable -> eatable.tile().equals(tile)).findFirst();
+    }
+
+    private void createWorld3D(MazeFactory factory) {
+        House house = level.world().house();
+        Vector2f houseCenter = house.topLeftTile().toFloatVec().scaled(TS).plus(house.size().toFloatVec().scaled(HTS));
+        houseLight.setColor(Color.GHOSTWHITE);
+        houseLight.setMaxRange(3 * TS);
+        houseLight.setTranslateX(houseCenter.x());
+        houseLight.setTranslateY(houseCenter.y());
+        houseLight.setTranslateZ(-TS);
+
+        var floorTextures = new HashMap<String, PhongMaterial>();
+        for (var textureName : context.theme().getArray("texture.names")) {
+            String key = "texture." + textureName;
+            floorTextures.put(key, context.theme().get(key));
+        }
+        floor3D = new Floor3D(level.world().numCols() * TS - 1, level.world().numRows() * TS - 1, 0.4, floorTextures);
+        floor3D.drawModeProperty().bind(drawModePy);
+        var floorGroup = new Group();
+        floorGroup.getChildren().add(floor3D);
+        floorGroup.getTransforms().add(new Translate(0.5 * floor3D.getWidth(), 0.5 * floor3D.getHeight(), 0.5 * floor3D.getDepth()));
+
+        var wallsGroup = new Group();
+        addCorners(factory, wallsGroup);
+        addHorizontalWalls(factory, wallsGroup);
+        addVerticalWalls(factory, wallsGroup);
+
+        worldGroup.getChildren().addAll(floorGroup, wallsGroup, houseLight);
+        Logger.info("3D world created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
+    }
+
+
+    public Floor3D floor() {
+        return floor3D;
+    }
+
+    public void setHouseLightOn(boolean state) {
+        houseLight.setLightOn(state);
+    }
+
+    private void addHorizontalWalls(MazeFactory factory, Group wallsGroup) {
+        var wd = new WallData();
+        wd.type = FloorPlan.HWALL;
+        wd.numBricksY = 1;
+        for (short y = 0; y < floorPlan.sizeY(); ++y) {
+            wd.x = -1;
+            wd.y = y;
+            wd.numBricksX = 0;
+            for (short x = 0; x < floorPlan.sizeX(); ++x) {
+                if (floorPlan.cell(x, y) == FloorPlan.HWALL) {
+                    if (wd.numBricksX == 0) {
+                        wd.x = x;
+                    }
+                    wd.numBricksX++;
+                } else if (wd.numBricksX > 0) {
+                    addWall(factory, wallsGroup, wd);
+                    wd.numBricksX = 0;
+                }
+            }
+            if (wd.numBricksX > 0 && y == floorPlan.sizeY() - 1) {
+                addWall(factory, wallsGroup, wd);
+            }
+        }
+    }
+
+    private void addVerticalWalls(MazeFactory factory, Group wallsGroup) {
+        var wd = new WallData();
+        wd.type = FloorPlan.VWALL;
+        wd.numBricksX = 1;
+        for (short x = 0; x < floorPlan.sizeX(); ++x) {
+            wd.x = x;
+            wd.y = -1;
+            wd.numBricksY = 0;
+            for (short y = 0; y < floorPlan.sizeY(); ++y) {
+                if (floorPlan.cell(x, y) == FloorPlan.VWALL) {
+                    if (wd.numBricksY == 0) {
+                        wd.y = y;
+                    }
+                    wd.numBricksY++;
+                } else if (wd.numBricksY > 0) {
+                    addWall(factory, wallsGroup, wd);
+                    wd.numBricksY = 0;
+                }
+            }
+            if (wd.numBricksY > 0 && x == floorPlan.sizeX() - 1) {
+                addWall(factory, wallsGroup, wd);
+            }
+        }
+    }
+
+    private void addCorners(MazeFactory factory, Group wallsGroup) {
+        var wd = new WallData();
+        wd.type = FloorPlan.CORNER;
+        wd.numBricksX = 1;
+        wd.numBricksY = 1;
+        for (short x = 0; x < floorPlan.sizeX(); ++x) {
+            for (short y = 0; y < floorPlan.sizeY(); ++y) {
+                if (floorPlan.cell(x, y) == FloorPlan.CORNER) {
+                    wd.x = x;
+                    wd.y = y;
+                    addWall(factory, wallsGroup, wd);
+                }
+            }
+        }
+    }
+
+    private void addWall(MazeFactory factory, Group wallsGroup, WallData wd) {
+        boolean partOfHouse = level.world().house().contains(floorPlan.tileOfCell(wd.x, wd.y));
+        if (!partOfHouse) {
+            wallsGroup.getChildren().add(factory.createMazeWall(wd, wallThicknessPy, wallHeightPy));
+        } else if (!isWallInsideHouse(wd, level.world().house())) {
+            // only outer house wall gets built
+            wallsGroup.getChildren().add(factory.createHouseWall(wd));
+        }
+    }
+
+    private boolean isWallInsideHouse(WallData wd, House house) {
+        int res = floorPlan.resolution();
+        Vector2i bottomRightTile = house.topLeftTile().plus(house.size());
+        double xMin = house.topLeftTile().x() * res;
+        double yMin = house.topLeftTile().y() * res;
+        double xMax = (bottomRightTile.x() - 1) * res;
+        double yMax = (bottomRightTile.y() - 1) * res;
+        return wd.x > xMin && wd.y > yMin && wd.x <= xMax && wd.y <= yMax;
     }
 }
