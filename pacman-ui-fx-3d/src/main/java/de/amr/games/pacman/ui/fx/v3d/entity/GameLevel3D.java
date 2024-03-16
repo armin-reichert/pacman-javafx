@@ -98,7 +98,7 @@ public class GameLevel3D {
             case MS_PACMAN -> {
                 int mapNumber = ArcadeWorld.mapNumberMsPacMan(level.number());
                 int mazeIndex = level.game().mazeNumber(level.number()) - 1;
-                var factory = createMazeFactory(level.game().variant(), mazeIndex);
+                var factory = createMazeFactory(GameVariant.MS_PACMAN, mazeIndex);
                 floorPlan = getFloorPlan(mapNumber);
                 createWorld3D(factory);
                 door3D = factory.createDoorGroup(level.world().house().door());
@@ -111,7 +111,7 @@ public class GameLevel3D {
                 livesCounter3D = new LivesCounter3D(() -> createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), true);
             }
             case PACMAN -> {
-                var factory = createMazeFactory(level.game().variant(), 0);
+                var factory = createMazeFactory(GameVariant.PACMAN, 0);
                 floorPlan = getFloorPlan(1);
                 createWorld3D(factory);
                 door3D = factory.createDoorGroup(level.world().house().door());
