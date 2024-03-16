@@ -24,9 +24,9 @@ public class HeadBanging implements WalkingAnimation {
     private final Pac pac;
     private final RotateTransition animation;
 
-    public HeadBanging(Pac pac, Node node) {
+    public HeadBanging(Pac pac, Node pacNode) {
         this.pac = pac;
-        animation = new RotateTransition(DEFAULT_DURATION, node);
+        animation = new RotateTransition(DEFAULT_DURATION, pacNode);
         animation.setAxis(Rotate.X_AXIS);
         animation.setCycleCount(Animation.INDEFINITE);
         animation.setAutoReverse(true);

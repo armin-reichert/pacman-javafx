@@ -24,9 +24,9 @@ public class HipSwaying implements WalkingAnimation {
     private final Pac pac;
     private final RotateTransition animation;
 
-    public HipSwaying(Pac pac, Node node) {
+    public HipSwaying(Pac pac, Node pacNode) {
         this.pac = pac;
-        animation = new RotateTransition(DEFAULT_DURATION, node);
+        animation = new RotateTransition(DEFAULT_DURATION, pacNode);
         animation.setAxis(Rotate.Z_AXIS);
         animation.setCycleCount(Animation.INDEFINITE);
         animation.setAutoReverse(true);
