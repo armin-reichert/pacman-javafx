@@ -17,11 +17,11 @@ import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
-import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.util.Ufx;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import de.amr.games.pacman.ui.fx.v3d.animation.HeadBanging;
@@ -63,7 +63,7 @@ public class GameLevel3D {
     private static final double MESSAGE_RETRACTED_Z =  5;
 
     private final GameLevel level;
-    private final SpriteSheet spriteSheet;
+    private final GameSceneContext context;
 
     private final Group root = new Group();
     private final World3D world3D;
@@ -77,19 +77,17 @@ public class GameLevel3D {
 
     private Bonus3D bonus3D;
 
-    public GameLevel3D(GameLevel level, Theme theme, SpriteSheet spriteSheet) {
+    public GameLevel3D(GameLevel level, GameSceneContext context) {
         checkLevelNotNull(level);
-        checkNotNull(theme);
-        checkNotNull(spriteSheet);
+        checkNotNull(context);
 
         this.level = level;
-        var world = level.world();
+        this.context = context;
 
-        this.spriteSheet = spriteSheet;
         var textureMap = new HashMap<String, PhongMaterial>();
-        for (var textureName : theme.getArray("texture.names")) {
+        for (var textureName : context.theme().getArray("texture.names")) {
             String key = "texture." + textureName;
-            textureMap.put(key, theme.get(key));
+            textureMap.put(key, context.theme().get(key));
         }
 
         switch (level.game().variant()) {
@@ -98,45 +96,45 @@ public class GameLevel3D {
                 int mazeIndex = level.game().mazeNumber(level.number()) - 1;
                 var factory = new MazeFactory((float) TS / FLOOR_PLAN_RESOLUTION);
                 factory.drawModePy.bind(PY_3D_DRAW_MODE);
-                factory.setWallBaseColor  (theme.color("mspacman.maze.wallBaseColor", mazeIndex));
-                factory.setWallMiddleColor(theme.color("mspacman.maze.wallMiddleColor", mazeIndex));
-                factory.setWallTopColor   (theme.color("mspacman.maze.wallTopColor", mazeIndex));
-                factory.setHouseDoorColor (theme.color("mspacman.maze.doorColor"));
-                world3D = new World3D(world, getFloorPlan(mapNumber), textureMap, factory);
-                door3D = factory.createDoorGroup(world.house().door());
-                createFood(world, theme, theme.color("mspacman.maze.foodColor", mazeIndex));
-                pac3D = new Pac3D(createMsPacManShape(theme, PAC_SIZE), level.pac(), theme.color("mspacman.color.head"));
+                factory.setWallBaseColor  (context.theme().color("mspacman.maze.wallBaseColor", mazeIndex));
+                factory.setWallMiddleColor(context.theme().color("mspacman.maze.wallMiddleColor", mazeIndex));
+                factory.setWallTopColor   (context.theme().color("mspacman.maze.wallTopColor", mazeIndex));
+                factory.setHouseDoorColor (context.theme().color("mspacman.maze.doorColor"));
+                world3D = new World3D(level.world(), getFloorPlan(mapNumber), textureMap, factory);
+                door3D = factory.createDoorGroup(level.world().house().door());
+                createFood(level.world(), context.theme().color("mspacman.maze.foodColor", mazeIndex));
+                pac3D = new Pac3D(createMsPacManShape(context.theme(), PAC_SIZE), level.pac(), context.theme().color("mspacman.color.head"));
                 pac3D.setWalkingAnimation(new HipSwaying(level.pac(), pac3D.root()));
                 pac3D.setLight(new PointLight());
                 pac3D.light().setColor(Color.rgb(255, 255, 0, 0.75));
                 ghosts3D = level.ghosts()
-                    .map(ghost -> new Ghost3D(theme.get("model3D.ghost"), theme, ghost, level.pac(), level.data().numFlashes(), GHOST_SIZE))
+                    .map(ghost -> new Ghost3D(context.theme().get("model3D.ghost"), context.theme(), ghost, level.pac(), level.data().numFlashes(), GHOST_SIZE))
                     .toList();
-                livesCounter3D = new LivesCounter3D(() -> createMsPacManShape(theme, LIVES_COUNTER_PAC_SIZE), true);
+                livesCounter3D = new LivesCounter3D(() -> createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), true);
             }
             case PACMAN -> {
                 var factory = new MazeFactory((float) TS / FLOOR_PLAN_RESOLUTION);
                 factory.drawModePy.bind(PY_3D_DRAW_MODE);
-                factory.setWallBaseColor  (theme.color("pacman.maze.wallBaseColor"));
-                factory.setWallMiddleColor(theme.color("pacman.maze.wallMiddleColor"));
-                factory.setWallTopColor   (theme.color("pacman.maze.wallTopColor"));
-                factory.setHouseDoorColor (theme.color("pacman.maze.doorColor"));
-                world3D = new World3D(world, getFloorPlan(1), textureMap, factory);
-                door3D = factory.createDoorGroup(world.house().door());
-                createFood(world, theme, theme.color("pacman.maze.foodColor"));
-                pac3D = new Pac3D(createPacManShape(theme, PAC_SIZE), level.pac(), theme.color("pacman.color.head"));
+                factory.setWallBaseColor  (context.theme().color("pacman.maze.wallBaseColor"));
+                factory.setWallMiddleColor(context.theme().color("pacman.maze.wallMiddleColor"));
+                factory.setWallTopColor   (context.theme().color("pacman.maze.wallTopColor"));
+                factory.setHouseDoorColor (context.theme().color("pacman.maze.doorColor"));
+                world3D = new World3D(level.world(), getFloorPlan(1), textureMap, factory);
+                door3D = factory.createDoorGroup(level.world().house().door());
+                createFood(level.world(), context.theme().color("pacman.maze.foodColor"));
+                pac3D = new Pac3D(createPacManShape(context.theme(), PAC_SIZE), level.pac(), context.theme().color("pacman.color.head"));
                 pac3D.setWalkingAnimation(new HeadBanging(level.pac(), pac3D.root()));
                 pac3D.setLight(new PointLight());
                 pac3D.light().setColor(Color.rgb(255, 255, 0, 0.75));
                 ghosts3D = level.ghosts()
-                    .map(ghost -> new Ghost3D(theme.get("model3D.ghost"), theme, ghost, level.pac(), level.data().numFlashes(), GHOST_SIZE))
+                    .map(ghost -> new Ghost3D(context.theme().get("model3D.ghost"), context.theme(), ghost, level.pac(), level.data().numFlashes(), GHOST_SIZE))
                     .toList();
-                livesCounter3D = new LivesCounter3D(() -> createPacManShape(theme, LIVES_COUNTER_PAC_SIZE), false);
+                livesCounter3D = new LivesCounter3D(() -> createPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), false);
             }
             default -> throw new IllegalGameVariantException(level.game().variant());
         }
 
-        messageText3D = Text3D.create("READY!", Color.YELLOW, theme.font("font.arcade", 6));
+        messageText3D = Text3D.create("READY!", Color.YELLOW, context.theme().font("font.arcade", 6));
         messageText3D.root().setTranslateZ(MESSAGE_RETRACTED_Z);
         messageText3D.root().setVisible(false);
         messageText3D.rotate(Rotate.X_AXIS, 90);
@@ -145,9 +143,9 @@ public class GameLevel3D {
         livesCounter3D.root().setTranslateY(2 * TS);
 
         levelCounter3D = new LevelCounter3D();
-        populateLevelCounter(level.game(), spriteSheet);
+        populateLevelCounter(level.game(), context.spriteSheet());
         // this is the *right* edge of the level counter:
-        levelCounter3D.root().setTranslateX((world.numCols() - 2) * TS);
+        levelCounter3D.root().setTranslateX((level.world().numCols() - 2) * TS);
         levelCounter3D.root().setTranslateY(2 * TS);
         levelCounter3D.root().setTranslateZ(-HTS);
 
@@ -229,28 +227,28 @@ public class GameLevel3D {
         byte symbol = bonus.symbol();
         switch (level.game().variant()) {
             case PACMAN -> {
-                PacManGameSpriteSheet ss = (PacManGameSpriteSheet) spriteSheet;
+                PacManGameSpriteSheet ss = context.spriteSheet();
                 return new Bonus3D(bonus,
-                    spriteSheet.subImage(ss.bonusSymbolSprite(symbol)),
-                    spriteSheet.subImage(ss.bonusValueSprite(symbol)));
+                    ss.subImage(ss.bonusSymbolSprite(symbol)),
+                    ss.subImage(ss.bonusValueSprite(symbol)));
             }
             case MS_PACMAN -> {
-                MsPacManGameSpriteSheet ss = (MsPacManGameSpriteSheet) spriteSheet;
+                MsPacManGameSpriteSheet ss = context.spriteSheet();
                 return new Bonus3D(bonus,
-                    spriteSheet.subImage(ss.bonusSymbolSprite(symbol)),
-                    spriteSheet.subImage(ss.bonusValueSprite(symbol)));
+                    ss.subImage(ss.bonusSymbolSprite(symbol)),
+                    ss.subImage(ss.bonusValueSprite(symbol)));
             }
             default -> throw new IllegalGameVariantException(level.game().variant());
         }
     }
 
-    private void createFood(World world, Theme theme, Color foodColor) {
+    private void createFood(World world, Color foodColor) {
         var foodMaterial = coloredMaterial(foodColor);
         var particleMaterial = coloredMaterial(foodColor.desaturate());
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             Eatable3D food3D = world.isEnergizerTile(tile)
                 ? createEnergizer3D(world, tile, foodMaterial, particleMaterial)
-                : createNormalPellet3D(theme.get("model3D.pellet"), tile, foodMaterial);
+                : createNormalPellet3D(context.theme().get("model3D.pellet"), tile, foodMaterial);
             foodGroup.getChildren().add(food3D.root());
         });
     }
