@@ -77,7 +77,7 @@ public class GameLevel3D {
 
     private final Group root = new Group();
     private final Group wallsGroup = new Group();
-    private final Group door3D;
+    private       Group door3D;
     private final Group foodGroup = new Group();
     private final PointLight houseLight = new PointLight();
     private final Pac3D pac3D;
@@ -101,8 +101,7 @@ public class GameLevel3D {
                 var factory = createMazeFactory(GameVariant.MS_PACMAN, mazeIndex);
                 floorPlan = getFloorPlan(GameVariant.MS_PACMAN, mapNumber);
                 createWorld3D(factory);
-                door3D = factory.createDoorGroup(level.world().house().door());
-                createFood(level.world(), context.theme().color("mspacman.maze.foodColor", mazeIndex));
+                createFood(context.theme().color("mspacman.maze.foodColor", mazeIndex));
                 pac3D = new Pac3D(createMsPacManShape(context.theme(), PAC_SIZE), level.pac(),
                     context.theme().color("mspacman.color.head"));
                 pac3D.setWalkingAnimation(new HipSwaying(level.pac(), pac3D.root()));
@@ -114,8 +113,7 @@ public class GameLevel3D {
                 var factory = createMazeFactory(GameVariant.PACMAN, 0);
                 floorPlan = getFloorPlan(GameVariant.PACMAN, 1);
                 createWorld3D(factory);
-                door3D = factory.createDoorGroup(level.world().house().door());
-                createFood(level.world(), context.theme().color("pacman.maze.foodColor"));
+                createFood(context.theme().color("pacman.maze.foodColor"));
                 pac3D = new Pac3D(createPacManShape(context.theme(), PAC_SIZE), level.pac(),
                     context.theme().color("pacman.color.head"));
                 pac3D.setWalkingAnimation(new HeadBanging(level.pac(), pac3D.root()));
@@ -187,6 +185,131 @@ public class GameLevel3D {
         factory.wallOpacityPy.bind(wallOpacityPy);
         factory.drawModePy.bind(PY_3D_DRAW_MODE);
         return factory;
+    }
+
+    private void createWorld3D(MazeFactory factory) {
+        House house = level.world().house();
+        Vector2f houseCenter = house.topLeftTile().toFloatVec().scaled(TS).plus(house.size().toFloatVec().scaled(HTS));
+        houseLight.setColor(Color.GHOSTWHITE);
+        houseLight.setMaxRange(3 * TS);
+        houseLight.setTranslateX(houseCenter.x());
+        houseLight.setTranslateY(houseCenter.y());
+        houseLight.setTranslateZ(-TS);
+
+        door3D = factory.createDoorGroup(house.door());
+
+        var floorTextures = new HashMap<String, PhongMaterial>();
+        for (var textureName : context.theme().getArray("texture.names")) {
+            String key = "texture." + textureName;
+            floorTextures.put(key, context.theme().get(key));
+        }
+
+        var floor3D = new Floor3D(level.world().numCols() * TS - 1, level.world().numRows() * TS - 1, 0.4, floorTextures);
+        floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        floor3D.colorPy.bind(PY_3D_FLOOR_COLOR);
+        floor3D.texturePy.bind(PY_3D_FLOOR_TEXTURE);
+
+        var floorGroup = new Group();
+        floorGroup.getChildren().add(floor3D);
+        floorGroup.getTransforms().add(new Translate(0.5 * floor3D.getWidth(), 0.5 * floor3D.getHeight(), 0.5 * floor3D.getDepth()));
+
+        var wallsGroup = new Group();
+        addCorners(factory, wallsGroup);
+        addHorizontalWalls(factory, wallsGroup);
+        addVerticalWalls(factory, wallsGroup);
+
+        this.wallsGroup.getChildren().addAll(floorGroup, wallsGroup, houseLight);
+        Logger.info("3D world created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
+    }
+
+    public void setHouseLightOn(boolean state) {
+        houseLight.setLightOn(state);
+    }
+
+    private void addHorizontalWalls(MazeFactory factory, Group wallsGroup) {
+        var wd = new WallData();
+        wd.type = FloorPlan.HWALL;
+        wd.numBricksY = 1;
+        for (short y = 0; y < floorPlan.sizeY(); ++y) {
+            wd.x = -1;
+            wd.y = y;
+            wd.numBricksX = 0;
+            for (short x = 0; x < floorPlan.sizeX(); ++x) {
+                if (floorPlan.cell(x, y) == FloorPlan.HWALL) {
+                    if (wd.numBricksX == 0) {
+                        wd.x = x;
+                    }
+                    wd.numBricksX++;
+                } else if (wd.numBricksX > 0) {
+                    addWall(factory, wallsGroup, wd);
+                    wd.numBricksX = 0;
+                }
+            }
+            if (wd.numBricksX > 0 && y == floorPlan.sizeY() - 1) {
+                addWall(factory, wallsGroup, wd);
+            }
+        }
+    }
+
+    private void addVerticalWalls(MazeFactory factory, Group wallsGroup) {
+        var wd = new WallData();
+        wd.type = FloorPlan.VWALL;
+        wd.numBricksX = 1;
+        for (short x = 0; x < floorPlan.sizeX(); ++x) {
+            wd.x = x;
+            wd.y = -1;
+            wd.numBricksY = 0;
+            for (short y = 0; y < floorPlan.sizeY(); ++y) {
+                if (floorPlan.cell(x, y) == FloorPlan.VWALL) {
+                    if (wd.numBricksY == 0) {
+                        wd.y = y;
+                    }
+                    wd.numBricksY++;
+                } else if (wd.numBricksY > 0) {
+                    addWall(factory, wallsGroup, wd);
+                    wd.numBricksY = 0;
+                }
+            }
+            if (wd.numBricksY > 0 && x == floorPlan.sizeX() - 1) {
+                addWall(factory, wallsGroup, wd);
+            }
+        }
+    }
+
+    private void addCorners(MazeFactory factory, Group wallsGroup) {
+        var wd = new WallData();
+        wd.type = FloorPlan.CORNER;
+        wd.numBricksX = 1;
+        wd.numBricksY = 1;
+        for (short x = 0; x < floorPlan.sizeX(); ++x) {
+            for (short y = 0; y < floorPlan.sizeY(); ++y) {
+                if (floorPlan.cell(x, y) == FloorPlan.CORNER) {
+                    wd.x = x;
+                    wd.y = y;
+                    addWall(factory, wallsGroup, wd);
+                }
+            }
+        }
+    }
+
+    private void addWall(MazeFactory factory, Group wallsGroup, WallData wd) {
+        boolean partOfHouse = level.world().house().contains(floorPlan.tileOfCell(wd.x, wd.y));
+        if (!partOfHouse) {
+            wallsGroup.getChildren().add(factory.createMazeWall(wd, wallThicknessPy, wallHeightPy));
+        } else if (!isWallInsideHouse(wd, level.world().house())) {
+            // only outer house wall gets built
+            wallsGroup.getChildren().add(factory.createHouseWall(wd));
+        }
+    }
+
+    private boolean isWallInsideHouse(WallData wd, House house) {
+        int res = floorPlan.resolution();
+        Vector2i bottomRightTile = house.topLeftTile().plus(house.size());
+        double xMin = house.topLeftTile().x() * res;
+        double yMin = house.topLeftTile().y() * res;
+        double xMax = (bottomRightTile.x() - 1) * res;
+        double yMax = (bottomRightTile.y() - 1) * res;
+        return wd.x > xMin && wd.y > yMin && wd.x <= xMax && wd.y <= yMax;
     }
 
     private FloorPlan getFloorPlan(GameVariant variant, int mapNumber) {
@@ -275,7 +398,8 @@ public class GameLevel3D {
             GHOST_SIZE);
     }
 
-    private void createFood(World world, Color foodColor) {
+    private void createFood(Color foodColor) {
+        var world = level.world();
         var foodMaterial = coloredMaterial(foodColor);
         var particleMaterial = coloredMaterial(foodColor.desaturate());
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
@@ -400,128 +524,5 @@ public class GameLevel3D {
     public Optional<Eatable3D> eatableAt(Vector2i tile) {
         checkTileNotNull(tile);
         return allEatables().filter(eatable -> eatable.tile().equals(tile)).findFirst();
-    }
-
-    private void createWorld3D(MazeFactory factory) {
-        House house = level.world().house();
-        Vector2f houseCenter = house.topLeftTile().toFloatVec().scaled(TS).plus(house.size().toFloatVec().scaled(HTS));
-        houseLight.setColor(Color.GHOSTWHITE);
-        houseLight.setMaxRange(3 * TS);
-        houseLight.setTranslateX(houseCenter.x());
-        houseLight.setTranslateY(houseCenter.y());
-        houseLight.setTranslateZ(-TS);
-
-        var floorTextures = new HashMap<String, PhongMaterial>();
-        for (var textureName : context.theme().getArray("texture.names")) {
-            String key = "texture." + textureName;
-            floorTextures.put(key, context.theme().get(key));
-        }
-
-        var floor3D = new Floor3D(level.world().numCols() * TS - 1, level.world().numRows() * TS - 1, 0.4, floorTextures);
-        floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        floor3D.colorPy.bind(PY_3D_FLOOR_COLOR);
-        floor3D.texturePy.bind(PY_3D_FLOOR_TEXTURE);
-
-        var floorGroup = new Group();
-        floorGroup.getChildren().add(floor3D);
-        floorGroup.getTransforms().add(new Translate(0.5 * floor3D.getWidth(), 0.5 * floor3D.getHeight(), 0.5 * floor3D.getDepth()));
-
-        var wallsGroup = new Group();
-        addCorners(factory, wallsGroup);
-        addHorizontalWalls(factory, wallsGroup);
-        addVerticalWalls(factory, wallsGroup);
-
-        this.wallsGroup.getChildren().addAll(floorGroup, wallsGroup, houseLight);
-        Logger.info("3D world created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
-    }
-
-    public void setHouseLightOn(boolean state) {
-        houseLight.setLightOn(state);
-    }
-
-    private void addHorizontalWalls(MazeFactory factory, Group wallsGroup) {
-        var wd = new WallData();
-        wd.type = FloorPlan.HWALL;
-        wd.numBricksY = 1;
-        for (short y = 0; y < floorPlan.sizeY(); ++y) {
-            wd.x = -1;
-            wd.y = y;
-            wd.numBricksX = 0;
-            for (short x = 0; x < floorPlan.sizeX(); ++x) {
-                if (floorPlan.cell(x, y) == FloorPlan.HWALL) {
-                    if (wd.numBricksX == 0) {
-                        wd.x = x;
-                    }
-                    wd.numBricksX++;
-                } else if (wd.numBricksX > 0) {
-                    addWall(factory, wallsGroup, wd);
-                    wd.numBricksX = 0;
-                }
-            }
-            if (wd.numBricksX > 0 && y == floorPlan.sizeY() - 1) {
-                addWall(factory, wallsGroup, wd);
-            }
-        }
-    }
-
-    private void addVerticalWalls(MazeFactory factory, Group wallsGroup) {
-        var wd = new WallData();
-        wd.type = FloorPlan.VWALL;
-        wd.numBricksX = 1;
-        for (short x = 0; x < floorPlan.sizeX(); ++x) {
-            wd.x = x;
-            wd.y = -1;
-            wd.numBricksY = 0;
-            for (short y = 0; y < floorPlan.sizeY(); ++y) {
-                if (floorPlan.cell(x, y) == FloorPlan.VWALL) {
-                    if (wd.numBricksY == 0) {
-                        wd.y = y;
-                    }
-                    wd.numBricksY++;
-                } else if (wd.numBricksY > 0) {
-                    addWall(factory, wallsGroup, wd);
-                    wd.numBricksY = 0;
-                }
-            }
-            if (wd.numBricksY > 0 && x == floorPlan.sizeX() - 1) {
-                addWall(factory, wallsGroup, wd);
-            }
-        }
-    }
-
-    private void addCorners(MazeFactory factory, Group wallsGroup) {
-        var wd = new WallData();
-        wd.type = FloorPlan.CORNER;
-        wd.numBricksX = 1;
-        wd.numBricksY = 1;
-        for (short x = 0; x < floorPlan.sizeX(); ++x) {
-            for (short y = 0; y < floorPlan.sizeY(); ++y) {
-                if (floorPlan.cell(x, y) == FloorPlan.CORNER) {
-                    wd.x = x;
-                    wd.y = y;
-                    addWall(factory, wallsGroup, wd);
-                }
-            }
-        }
-    }
-
-    private void addWall(MazeFactory factory, Group wallsGroup, WallData wd) {
-        boolean partOfHouse = level.world().house().contains(floorPlan.tileOfCell(wd.x, wd.y));
-        if (!partOfHouse) {
-            wallsGroup.getChildren().add(factory.createMazeWall(wd, wallThicknessPy, wallHeightPy));
-        } else if (!isWallInsideHouse(wd, level.world().house())) {
-            // only outer house wall gets built
-            wallsGroup.getChildren().add(factory.createHouseWall(wd));
-        }
-    }
-
-    private boolean isWallInsideHouse(WallData wd, House house) {
-        int res = floorPlan.resolution();
-        Vector2i bottomRightTile = house.topLeftTile().plus(house.size());
-        double xMin = house.topLeftTile().x() * res;
-        double yMin = house.topLeftTile().y() * res;
-        double xMax = (bottomRightTile.x() - 1) * res;
-        double yMax = (bottomRightTile.y() - 1) * res;
-        return wd.x > xMin && wd.y > yMin && wd.x <= xMax && wd.y <= yMax;
     }
 }
