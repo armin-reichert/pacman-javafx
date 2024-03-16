@@ -28,7 +28,6 @@ import de.amr.games.pacman.ui.fx.v3d.animation.HeadBanging;
 import de.amr.games.pacman.ui.fx.v3d.animation.HipSwaying;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
-import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -101,7 +100,7 @@ public class GameLevel3D {
                 factory.setHouseDoorColor (context.theme().color("mspacman.maze.doorColor"));
                 world3D = new World3D(level.world(), getFloorPlan(mapNumber), textureMap, factory);
                 door3D = factory.createDoorGroup(level.world().house().door());
-                createFood(context.theme().color("mspacman.maze.foodColor", mazeIndex));
+                createFood(level.world(), context.theme().color("mspacman.maze.foodColor", mazeIndex));
                 pac3D = new Pac3D(createMsPacManShape(context.theme(), PAC_SIZE), level.pac(),
                     context.theme().color("mspacman.color.head"));
                 pac3D.setWalkingAnimation(new HipSwaying(level.pac(), pac3D.root()));
@@ -116,7 +115,7 @@ public class GameLevel3D {
                 factory.setHouseDoorColor (context.theme().color("pacman.maze.doorColor"));
                 world3D = new World3D(level.world(), getFloorPlan(1), textureMap, factory);
                 door3D = factory.createDoorGroup(level.world().house().door());
-                createFood(context.theme().color("pacman.maze.foodColor"));
+                createFood(level.world(), context.theme().color("pacman.maze.foodColor"));
                 pac3D = new Pac3D(createPacManShape(context.theme(), PAC_SIZE), level.pac(),
                     context.theme().color("pacman.color.head"));
                 pac3D.setWalkingAnimation(new HeadBanging(level.pac(), pac3D.root()));
@@ -259,10 +258,9 @@ public class GameLevel3D {
             GHOST_SIZE);
     }
 
-    private void createFood(Color foodColor) {
+    private void createFood(World world, Color foodColor) {
         var foodMaterial = coloredMaterial(foodColor);
         var particleMaterial = coloredMaterial(foodColor.desaturate());
-        var world = level.world();
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             if (world.isEnergizerTile(tile)) {
                 var energizer3D = new Energizer3D(3.5);
