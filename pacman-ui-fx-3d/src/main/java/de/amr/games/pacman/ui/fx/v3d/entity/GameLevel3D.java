@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -97,14 +96,13 @@ public class GameLevel3D {
             case MS_PACMAN -> {
                 int mapNumber = ArcadeWorld.mapNumberMsPacMan(level.number());
                 int mazeIndex = level.game().mazeNumber(level.number()) - 1;
-                var floorPlan = getFloorPlan(GameVariant.MS_PACMAN, mapNumber, FLOOR_PLAN_RESOLUTION);
-                var factory = new MazeFactory((float) TS / floorPlan.resolution());
-                factory.setWallBaseColor(theme.color("mspacman.maze.wallBaseColor", mazeIndex));
-                factory.setWallMiddleColor(theme.color("mspacman.maze.wallMiddleColor", mazeIndex));
-                factory.setWallTopColor(theme.color("mspacman.maze.wallTopColor", mazeIndex));
-                factory.setHouseDoorColor(theme.color("mspacman.maze.doorColor"));
+                var factory = new MazeFactory((float) TS / FLOOR_PLAN_RESOLUTION);
                 factory.drawModePy.bind(PY_3D_DRAW_MODE);
-                world3D = new World3D(world, floorPlan, textureMap, factory);
+                factory.setWallBaseColor  (theme.color("mspacman.maze.wallBaseColor", mazeIndex));
+                factory.setWallMiddleColor(theme.color("mspacman.maze.wallMiddleColor", mazeIndex));
+                factory.setWallTopColor   (theme.color("mspacman.maze.wallTopColor", mazeIndex));
+                factory.setHouseDoorColor (theme.color("mspacman.maze.doorColor"));
+                world3D = new World3D(world, getFloorPlan(mapNumber), textureMap, factory);
                 door3D = factory.createDoorGroup(world.house().door());
                 createFood(world, theme.color("mspacman.maze.foodColor", mazeIndex), theme.get("model3D.pellet"));
                 pac3D = new Pac3D(createMsPacManShape(theme, PAC_SIZE), level.pac(), theme.color("mspacman.color.head"));
@@ -117,14 +115,13 @@ public class GameLevel3D {
                 livesCounter3D = new LivesCounter3D(() -> createMsPacManShape(theme, LIVES_COUNTER_PAC_SIZE), true);
             }
             case PACMAN -> {
-                var floorPlan = getFloorPlan(GameVariant.PACMAN, 1, FLOOR_PLAN_RESOLUTION);
-                var factory = new MazeFactory((float) TS / floorPlan.resolution());
+                var factory = new MazeFactory((float) TS / FLOOR_PLAN_RESOLUTION);
+                factory.drawModePy.bind(PY_3D_DRAW_MODE);
                 factory.setWallBaseColor  (theme.color("pacman.maze.wallBaseColor"));
                 factory.setWallMiddleColor(theme.color("pacman.maze.wallMiddleColor"));
                 factory.setWallTopColor   (theme.color("pacman.maze.wallTopColor"));
                 factory.setHouseDoorColor (theme.color("pacman.maze.doorColor"));
-                factory.drawModePy.bind(PY_3D_DRAW_MODE);
-                world3D = new World3D(world, floorPlan, textureMap, factory);
+                world3D = new World3D(world, getFloorPlan(1), textureMap, factory);
                 door3D = factory.createDoorGroup(world.house().door());
                 createFood(world, theme.color("pacman.maze.foodColor"), theme.get("model3D.pellet"));
                 pac3D = new Pac3D(createPacManShape(theme, PAC_SIZE), level.pac(), theme.color("pacman.color.head"));
@@ -186,11 +183,11 @@ public class GameLevel3D {
         world3D.wallThicknessPy   .bind(PY_3D_WALL_THICKNESS);
     }
 
-    private static FloorPlan getFloorPlan(GameVariant variant, int mapNumber, int resolution) {
+    private FloorPlan getFloorPlan(int mapNumber) {
         ResourceManager rm = () -> PacManGames3dUI.class;
-        String name = switch (variant) {
-            case MS_PACMAN -> "fp-mspacman-map-" + mapNumber + "-res-" + resolution + ".txt";
-            case PACMAN    -> "fp-pacman-map-"   + mapNumber + "-res-" + resolution + ".txt";
+        String name = switch (level.game().variant()) {
+            case MS_PACMAN -> "fp-mspacman-map-" + mapNumber + "-res-" + FLOOR_PLAN_RESOLUTION + ".txt";
+            case PACMAN    -> "fp-pacman-map-"   + mapNumber + "-res-" + FLOOR_PLAN_RESOLUTION + ".txt";
         };
         return FloorPlan.read(rm.url("floorplans/" + name));
     }
