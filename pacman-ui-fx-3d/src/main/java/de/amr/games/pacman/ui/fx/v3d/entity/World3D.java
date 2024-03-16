@@ -39,12 +39,10 @@ public class World3D {
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     private final World world;
-    private final MazeFactory factory;
     private final FloorPlan floorPlan;
 
+    private final MazeFactory factory;
     private final Group root = new Group();
-    private final Group floorGroup = new Group();
-    private final Group wallsGroup = new Group();
     private final PointLight houseLight = new PointLight();
     private final Floor3D floor3D;
 
@@ -59,8 +57,6 @@ public class World3D {
         this.factory = factory;
         factory.wallOpacityPy.bind(wallOpacityPy);
 
-        root.getChildren().addAll(floorGroup, wallsGroup, houseLight);
-
         Vector2f houseCenter = world.house().topLeftTile().toFloatVec().scaled(TS).plus(world.house().size().toFloatVec().scaled(HTS));
         houseLight.setColor(Color.GHOSTWHITE);
         houseLight.setMaxRange(3 * TS);
@@ -70,13 +66,16 @@ public class World3D {
 
         floor3D = new Floor3D(world.numCols() * TS - 1, world.numRows() * TS - 1, 0.4, floorTextures);
         floor3D.drawModeProperty().bind(drawModePy);
+        var floorGroup = new Group();
         floorGroup.getChildren().add(floor3D);
         floorGroup.getTransforms().add(new Translate(0.5 * floor3D.getWidth(), 0.5 * floor3D.getHeight(), 0.5 * floor3D.getDepth()));
 
-        addCorners();
-        addHorizontalWalls();
-        addVerticalWalls();
+        var wallsGroup = new Group();
+        addCorners(wallsGroup);
+        addHorizontalWalls(wallsGroup);
+        addVerticalWalls(wallsGroup);
 
+        root.getChildren().addAll(floorGroup, wallsGroup, houseLight);
         Logger.info("3D world created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
     }
 
@@ -92,7 +91,7 @@ public class World3D {
         houseLight.setLightOn(state);
     }
 
-    private void addHorizontalWalls() {
+    private void addHorizontalWalls(Group wallsGroup) {
         var wd = new WallData();
         wd.type = FloorPlan.HWALL;
         wd.numBricksY = 1;
@@ -107,17 +106,17 @@ public class World3D {
                     }
                     wd.numBricksX++;
                 } else if (wd.numBricksX > 0) {
-                    addWall(wd);
+                    addWall(wallsGroup, wd);
                     wd.numBricksX = 0;
                 }
             }
             if (wd.numBricksX > 0 && y == floorPlan.sizeY() - 1) {
-                addWall(wd);
+                addWall(wallsGroup, wd);
             }
         }
     }
 
-    private void addVerticalWalls() {
+    private void addVerticalWalls(Group wallsGroup) {
         var wd = new WallData();
         wd.type = FloorPlan.VWALL;
         wd.numBricksX = 1;
@@ -132,17 +131,17 @@ public class World3D {
                     }
                     wd.numBricksY++;
                 } else if (wd.numBricksY > 0) {
-                    addWall(wd);
+                    addWall(wallsGroup, wd);
                     wd.numBricksY = 0;
                 }
             }
             if (wd.numBricksY > 0 && x == floorPlan.sizeX() - 1) {
-                addWall(wd);
+                addWall(wallsGroup, wd);
             }
         }
     }
 
-    private void addCorners() {
+    private void addCorners(Group wallsGroup) {
         var wd = new WallData();
         wd.type = FloorPlan.CORNER;
         wd.numBricksX = 1;
@@ -152,13 +151,13 @@ public class World3D {
                 if (floorPlan.cell(x, y) == FloorPlan.CORNER) {
                     wd.x = x;
                     wd.y = y;
-                    addWall(wd);
+                    addWall(wallsGroup, wd);
                 }
             }
         }
     }
 
-    private void addWall(WallData wd) {
+    private void addWall(Group wallsGroup, WallData wd) {
         boolean partOfHouse = world.house().contains(floorPlan.tileOfCell(wd.x, wd.y));
         if (!partOfHouse) {
             wallsGroup.getChildren().add(factory.createMazeWall(wd, wallThicknessPy, wallHeightPy));
