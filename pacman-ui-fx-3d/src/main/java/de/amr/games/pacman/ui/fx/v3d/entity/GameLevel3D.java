@@ -76,7 +76,7 @@ public class GameLevel3D {
     private final FloorPlan floorPlan;
 
     private final Group root = new Group();
-    private final Group worldGroup = new Group();
+    private final Group wallsGroup = new Group();
     private final Group door3D;
     private final Group foodGroup = new Group();
     private final PointLight houseLight = new PointLight();
@@ -154,7 +154,7 @@ public class GameLevel3D {
         root.getChildren().add(foodGroup);
         root.getChildren().add(door3D);
         // Walls must be added *after* the rest. Otherwise, transparency is not working correctly!
-        root.getChildren().add(worldGroup);
+        root.getChildren().add(wallsGroup);
 
         // Bindings
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
@@ -435,7 +435,7 @@ public class GameLevel3D {
         addHorizontalWalls(factory, wallsGroup);
         addVerticalWalls(factory, wallsGroup);
 
-        worldGroup.getChildren().addAll(floorGroup, wallsGroup, houseLight);
+        this.wallsGroup.getChildren().addAll(floorGroup, wallsGroup, houseLight);
         Logger.info("3D world created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
     }
 
