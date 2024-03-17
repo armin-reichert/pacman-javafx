@@ -72,9 +72,9 @@ public class GameLevel3D {
     private final GameLevel level;
     private final GameSceneContext context;
     private final FloorPlan floorPlan;
-
+    private final WallBuilder wallBuilder;
     private final Group root = new Group();
-    private final Group wallsGroup = new Group();
+    private final Group worldGroup = new Group();
     private       Group door3D;
     private final Group foodGroup = new Group();
     private final PointLight houseLight = new PointLight();
@@ -97,8 +97,8 @@ public class GameLevel3D {
                 int mapNumber  = ArcadeWorld.mapNumberMsPacMan(level.number());
                 int mazeNumber = ArcadeWorld.mazeNumberMsPacMan(level.number());
                 floorPlan = getFloorPlan(GameVariant.MS_PACMAN, mapNumber);
-                var wallBuilder = createWallBuilder(GameVariant.MS_PACMAN, mazeNumber);
-                createWorld3D(wallBuilder);
+                wallBuilder = createWallBuilder(GameVariant.MS_PACMAN, mazeNumber);
+                createWorld3D();
                 createFood3D(context.theme().color("mspacman.maze.foodColor", mazeNumber - 1));
                 pac3D = new Pac3D(createMsPacManShape(context.theme(), PAC_SIZE), level.pac(),
                     context.theme().color("mspacman.color.head"));
@@ -108,9 +108,9 @@ public class GameLevel3D {
                 livesCounter3D = new LivesCounter3D(() -> createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), true);
             }
             case PACMAN -> {
-                var wallBuilder = createWallBuilder(GameVariant.PACMAN, 1);
                 floorPlan = getFloorPlan(GameVariant.PACMAN, 1);
-                createWorld3D(wallBuilder);
+                wallBuilder = createWallBuilder(GameVariant.PACMAN, 1);
+                createWorld3D();
                 createFood3D(context.theme().color("pacman.maze.foodColor"));
                 pac3D = new Pac3D(createPacManShape(context.theme(), PAC_SIZE), level.pac(),
                     context.theme().color("pacman.color.head"));
@@ -148,7 +148,7 @@ public class GameLevel3D {
         root.getChildren().add(foodGroup);
         root.getChildren().add(door3D);
         // Walls must be added *after* the rest. Otherwise, transparency is not working correctly!
-        root.getChildren().add(wallsGroup);
+        root.getChildren().add(worldGroup);
 
         // Bindings
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
@@ -181,7 +181,7 @@ public class GameLevel3D {
         return wallBuilder;
     }
 
-    private void createWorld3D(WallBuilder wallBuilder) {
+    private void createWorld3D() {
         House house = level.world().house();
         Vector2f houseCenter = house.topLeftTile().toFloatVec().scaled(TS).plus(house.size().toFloatVec().scaled(HTS));
         houseLight.setColor(Color.GHOSTWHITE);
@@ -208,11 +208,9 @@ public class GameLevel3D {
         floorGroup.getTransforms().add(new Translate(0.5 * floor3D.getWidth(), 0.5 * floor3D.getHeight(), 0.5 * floor3D.getDepth()));
 
         var wallsGroup = new Group();
-        addCorners(wallBuilder, wallsGroup);
-        addHorizontalWalls(wallBuilder, wallsGroup);
-        addVerticalWalls(wallBuilder, wallsGroup);
+        addWalls(wallsGroup);
 
-        this.wallsGroup.getChildren().addAll(floorGroup, wallsGroup, houseLight);
+        worldGroup.getChildren().addAll(floorGroup, wallsGroup, houseLight);
         Logger.info("3D world created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
     }
 
@@ -220,7 +218,13 @@ public class GameLevel3D {
         houseLight.setLightOn(state);
     }
 
-    private void addHorizontalWalls(WallBuilder wallBuilder, Group wallsGroup) {
+    private void addWalls(Group wallsGroup) {
+        addCorners(wallsGroup);
+        addHorizontalWalls(wallsGroup);
+        addVerticalWalls(wallsGroup);
+    }
+
+    private void addHorizontalWalls(Group wallsGroup) {
         var wd = new WallData();
         wd.type = FloorPlan.HWALL;
         wd.numBricksY = 1;
@@ -235,17 +239,17 @@ public class GameLevel3D {
                     }
                     wd.numBricksX++;
                 } else if (wd.numBricksX > 0) {
-                    addWall(wallBuilder, wallsGroup, wd);
+                    addWall(wallsGroup, wd);
                     wd.numBricksX = 0;
                 }
             }
             if (wd.numBricksX > 0 && y == floorPlan.sizeY() - 1) {
-                addWall(wallBuilder, wallsGroup, wd);
+                addWall(wallsGroup, wd);
             }
         }
     }
 
-    private void addVerticalWalls(WallBuilder wallBuilder, Group wallsGroup) {
+    private void addVerticalWalls(Group wallsGroup) {
         var wd = new WallData();
         wd.type = FloorPlan.VWALL;
         wd.numBricksX = 1;
@@ -260,17 +264,17 @@ public class GameLevel3D {
                     }
                     wd.numBricksY++;
                 } else if (wd.numBricksY > 0) {
-                    addWall(wallBuilder, wallsGroup, wd);
+                    addWall(wallsGroup, wd);
                     wd.numBricksY = 0;
                 }
             }
             if (wd.numBricksY > 0 && x == floorPlan.sizeX() - 1) {
-                addWall(wallBuilder, wallsGroup, wd);
+                addWall(wallsGroup, wd);
             }
         }
     }
 
-    private void addCorners(WallBuilder wallBuilder, Group wallsGroup) {
+    private void addCorners(Group wallsGroup) {
         var wd = new WallData();
         wd.type = FloorPlan.CORNER;
         wd.numBricksX = 1;
@@ -280,13 +284,13 @@ public class GameLevel3D {
                 if (floorPlan.cell(x, y) == FloorPlan.CORNER) {
                     wd.x = x;
                     wd.y = y;
-                    addWall(wallBuilder, wallsGroup, wd);
+                    addWall(wallsGroup, wd);
                 }
             }
         }
     }
 
-    private void addWall(WallBuilder wallBuilder, Group wallsGroup, WallData wd) {
+    private void addWall(Group wallsGroup, WallData wd) {
         boolean partOfHouse = level.world().house().contains(floorPlan.tileOfCell(wd.x, wd.y));
         if (!partOfHouse) {
             wallsGroup.getChildren().add(wallBuilder.createMazeWall(wd, PY_3D_WALL_THICKNESS, wallHeightPy));
