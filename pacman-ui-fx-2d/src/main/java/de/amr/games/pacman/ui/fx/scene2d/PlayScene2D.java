@@ -80,10 +80,9 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         context.gameLevel().ifPresent(level -> {
-            if (context.gameVariant() == GameVariant.MS_PACMAN) {
-                drawMsPacManMaze(level.world(), context.game().mazeNumber(level.number()));
-            } else {
-                drawPacManMaze(level.world());
+            switch (context.gameVariant()) {
+                case MS_PACMAN -> drawMsPacManMaze(level.world(), ArcadeWorld.mazeNumberMsPacMan(level.number()));
+                case    PACMAN -> drawPacManMaze(level.world());
             }
             if (context.gameState() == GameState.LEVEL_TEST) {
                 drawText(String.format("TEST    L%d", level.number()),

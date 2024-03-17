@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.lib.Score;
-import de.amr.games.pacman.model.world.ArcadeWorld;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -180,14 +179,6 @@ public class GameModel {
 
     public GameVariant variant() {
         return variant;
-    }
-
-    /**
-     * @return number of maze (not map) used in level, 1-based.
-     */
-    public int mazeNumber(int levelNumber) {
-        checkLevelNumber(levelNumber);
-        return variant == GameVariant.MS_PACMAN ? ArcadeWorld.mazeNumberMsPacMan(levelNumber) : 1;
     }
 
     public short initialLives() {
