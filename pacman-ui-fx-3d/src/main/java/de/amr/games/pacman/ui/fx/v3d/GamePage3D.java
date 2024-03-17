@@ -14,12 +14,8 @@ import de.amr.games.pacman.ui.fx.v3d.scene3d.PictureInPicture;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 
@@ -27,35 +23,6 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  * @author Armin Reichert
  */
 public class GamePage3D extends GamePage {
-
-    private static class Dashboard extends VBox {
-
-        private final List<InfoBox> infoBoxes = new ArrayList<>();
-
-        private Dashboard(GameSceneContext sceneContext) {
-            infoBoxes.add(new InfoBoxGeneral(sceneContext.theme(), sceneContext.tt("infobox.general.title")));
-            infoBoxes.add(new InfoBoxGameControl(sceneContext.theme(), sceneContext.tt("infobox.game_control.title")));
-            infoBoxes.add(new InfoBox3D(sceneContext.theme(), sceneContext.tt("infobox.3D_settings.title")));
-            infoBoxes.add(new InfoBoxGameInfo(sceneContext.theme(), sceneContext.tt("infobox.game_info.title")));
-            infoBoxes.add(new InfoBoxGhostsInfo(sceneContext.theme(), sceneContext.tt("infobox.ghosts_info.title")));
-            infoBoxes.add(new InfoBoxKeys(sceneContext.theme(), sceneContext.tt("infobox.keyboard_shortcuts.title")));
-            infoBoxes.add(new InfoBoxAbout(sceneContext.theme(), sceneContext.tt("infobox.about.title")));
-            infoBoxes.forEach(infoBox -> {
-                getChildren().add(infoBox.getRoot());
-                infoBox.init(sceneContext);
-            });
-            setVisible(false);
-        }
-
-        private void update() {
-            infoBoxes.forEach(InfoBox::update);
-        }
-
-        private void toggleVisibility() {
-            setVisible(!isVisible());
-        }
-
-    }
 
     private final BorderPane dashboardLayer;
     private final PictureInPicture pip;
