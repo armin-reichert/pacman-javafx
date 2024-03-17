@@ -343,16 +343,17 @@ public class GameLevel3D {
 
     public void showMessage(String text, double displaySeconds, double x, double y) {
         messageText3D.setText(text);
-        messageText3D.root().setVisible(true);
-        messageText3D.root().setTranslateX(x);
-        messageText3D.root().setTranslateY(y);
-        messageText3D.root().setTranslateZ(MESSAGE_RETRACTED_Z);
-        var extend = new TranslateTransition(Duration.seconds(1), messageText3D.root());
+        Node node = messageText3D.root();
+        node.setVisible(true);
+        node.setTranslateX(x);
+        node.setTranslateY(y);
+        node.setTranslateZ(MESSAGE_RETRACTED_Z);
+        var extend = new TranslateTransition(Duration.seconds(1), node);
         extend.setToZ(MESSAGE_EXTENDED_Z);
-        var retract = new TranslateTransition(Duration.seconds(0.5), messageText3D.root());
+        var retract = new TranslateTransition(Duration.seconds(0.5), node);
         retract.setDelay(Duration.seconds(displaySeconds));
         retract.setToZ(MESSAGE_RETRACTED_Z);
-        retract.setOnFinished(e -> messageText3D.root().setVisible(false));
+        retract.setOnFinished(e -> node.setVisible(false));
         new SequentialTransition(extend, retract).play();
     }
 
