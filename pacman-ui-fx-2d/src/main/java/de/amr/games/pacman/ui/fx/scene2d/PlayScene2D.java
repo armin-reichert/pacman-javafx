@@ -42,7 +42,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        context.gameLevel().ifPresent(this::updateSound);
+        updateSound();
     }
 
     @Override
@@ -175,17 +175,19 @@ public class PlayScene2D extends GameScene2D {
         });
     }
 
-    private void updateSound(GameLevel level) {
-        if (level.isDemoLevel()) {
-            return;
-        }
-        if (level.pac().starvingTicks() > 8) { // TODO not sure
-            context.stopAudioClip("audio.pacman_munch");
-        }
-        if (!level.thisFrame().pacKilled && level.ghosts(RETURNING_TO_HOUSE, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
-            context.ensureAudioLoop("audio.ghost_returning");
-        } else {
-            context.stopAudioClip("audio.ghost_returning");
-        }
+    private void updateSound() {
+        context.gameLevel().ifPresent(level -> {
+            if (level.isDemoLevel()) {
+                return;
+            }
+            if (level.pac().starvingTicks() > 8) { // TODO not sure
+                context.stopAudioClip("audio.pacman_munch");
+            }
+            if (!level.thisFrame().pacKilled && level.ghosts(RETURNING_TO_HOUSE, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
+                context.ensureAudioLoop("audio.ghost_returning");
+            } else {
+                context.stopAudioClip("audio.ghost_returning");
+            }
+        });
     }
 }
