@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
@@ -27,8 +26,6 @@ import static de.amr.games.pacman.model.actors.GhostState.RETURNING_TO_HOUSE;
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
 
 /**
- * 2D play scene.
- *
  * @author Armin Reichert
  */
 public class PlayScene2D extends GameScene2D {
@@ -84,23 +81,23 @@ public class PlayScene2D extends GameScene2D {
                 case MS_PACMAN -> drawMsPacManMaze(level.world(), ArcadeWorld.mazeNumberMsPacMan(level.number()));
                 case    PACMAN -> drawPacManMaze(level.world());
             }
-            if (context.gameState() == GameState.LEVEL_TEST) {
-                drawText(String.format("TEST    L%d", level.number()),
-                    context.theme().color("palette.yellow"), sceneFont(8), t(8.5), t(21));
-            } else if (context.gameState() == GameState.GAME_OVER || !context.gameController().hasCredit()) {
-                // text "GAME OVER" is also drawn on demo mode screen
-                drawText("GAME  OVER", context.theme().color("palette.red"), sceneFont(8), t(9), t(21));
-            } else if (context.gameState() == GameState.READY) {
-                drawText("READY!", context.theme().color("palette.yellow"), sceneFont(8), t(11), t(21));
+            if (level.isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
+                // text "GAME OVER" is also drawn in demo mode
+                drawText("GAME  OVER", Color.RED, sceneFont(8), t(9), t(21));
+            } else {
+                switch (context.gameState()) {
+                    case READY      -> drawText("READY!", Color.YELLOW, sceneFont(8), t(11), t(21));
+                    case LEVEL_TEST -> drawText("TEST    L" + level.number(), Color.YELLOW, sceneFont(8), t(8.5), t(21));
+                }
             }
             level.bonus().ifPresent(this::drawBonus);
             drawPac(level.pac());
             Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
                 .map(level::ghost).forEach(this::drawGhost);
             if (!isCreditVisible()) {
-                boolean hideOne = level.pac().isVisible() || context.gameState() == GameState.GHOST_DYING;
-                int lives = hideOne ? context.game().lives() - 1 : context.game().lives();
-                drawLivesCounter(lives);
+                drawLivesCounter(level.pac().isVisible() || context.gameState() == GameState.GHOST_DYING
+                    ? context.game().lives() - 1
+                    : context.game().lives());
             }
             drawLevelCounter();
         });
