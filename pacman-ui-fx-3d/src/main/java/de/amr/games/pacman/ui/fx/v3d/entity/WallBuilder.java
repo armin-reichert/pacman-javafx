@@ -25,7 +25,7 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.opaqueColor;
 /**
  * @author Armin Reichert
  */
-public class MazeFactory {
+public class WallBuilder {
 
     private static final double WALL_BASE_HEIGHT = 0.25;
     private static final double WALL_TOP_HEIGHT  = 0.1;
@@ -65,7 +65,7 @@ public class MazeFactory {
 
     private PhongMaterial houseMaterial;
 
-    public MazeFactory(double brickSize) {
+    public WallBuilder(double brickSize) {
         this.brickSize = brickSize;
         setWallBaseColor(Color.BLACK);
         setWallMiddleColor(Color.RED);
