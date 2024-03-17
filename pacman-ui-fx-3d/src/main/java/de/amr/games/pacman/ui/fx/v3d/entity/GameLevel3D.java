@@ -50,6 +50,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
+import static de.amr.games.pacman.ui.fx.util.Ufx.actionAfterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.createMsPacManShape;
@@ -395,14 +396,13 @@ public class GameLevel3D {
     private void createFood3D(Color foodColor) {
         var world = level.world();
         var foodMaterial = coloredMaterial(foodColor);
-        var particleMaterial = coloredMaterial(foodColor.desaturate());
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             if (world.isEnergizerTile(tile)) {
                 var energizer3D = new Energizer3D(3.5);
                 energizer3D.root().setMaterial(foodMaterial);
                 energizer3D.placeAtTile(tile);
-                addEnergizerAnimation(world, energizer3D, particleMaterial);
                 foodGroup.getChildren().add(energizer3D.root());
+                addEnergizerAnimation(world, energizer3D, foodColor);
 
             } else {
                 var pellet3D = new Pellet3D(context.theme().get("model3D.pellet"), 1.0);
@@ -413,17 +413,17 @@ public class GameLevel3D {
         });
     }
 
-    private void addEnergizerAnimation(World world, Energizer3D energizer3D, PhongMaterial particleMaterial) {
+    private void addEnergizerAnimation(World world, Energizer3D energizer3D, Color foodColor) {
         var squirting = new Squirting() {
             @Override
-            protected boolean reachesEndPosition(Drop drop) {
+            protected boolean reachedFinalPosition(Drop drop) {
                 return drop.getTranslateZ() >= -1 && world.insideBounds(drop.getTranslateX(), drop.getTranslateY());
             }
         };
         squirting.setOrigin(energizer3D.root());
         squirting.setDropCountMin(15);
         squirting.setDropCountMax(45);
-        squirting.setDropMaterial(particleMaterial);
+        squirting.setDropMaterial(coloredMaterial(foodColor.desaturate()));
         squirting.setOnFinished(e -> root.getChildren().remove(squirting.root()));
         root.getChildren().add(squirting.root());
 
@@ -432,18 +432,17 @@ public class GameLevel3D {
 
     public void eat(Eatable3D eatable3D) {
         checkNotNull(eatable3D);
-
         if (eatable3D instanceof Energizer3D energizer3D) {
             energizer3D.stopPumping();
         }
         // Delay hiding of pellet for some milliseconds because in case the player approaches the pellet from the right,
-        // the pellet disappears too early (collision by same tile in game model is too simplistic).
-        var delayHiding = Ufx.actionAfterSeconds(0.05, () -> eatable3D.root().setVisible(false));
-        var eatenAnimation = eatable3D.getEatenAnimation();
-        if (eatenAnimation.isPresent() && PacManGames3dUI.PY_3D_ENERGIZER_EXPLODES.get()) {
-            new SequentialTransition(delayHiding, eatenAnimation.get()).play();
+        // the pellet disappears too early (collision by tile equality is too coarse).
+        var hiding = actionAfterSeconds(0.05, () -> eatable3D.root().setVisible(false));
+        var energizerExplosion = eatable3D.getEatenAnimation().orElse(null);
+        if (energizerExplosion != null && PY_3D_ENERGIZER_EXPLODES.get()) {
+            new SequentialTransition(hiding, energizerExplosion).play();
         } else {
-            delayHiding.play();
+            hiding.play();
         }
     }
 
@@ -460,15 +459,12 @@ public class GameLevel3D {
         if (level.data().numFlashes() == 0) {
             return pauseSeconds(1.0);
         }
-        double wallHeight = PY_3D_WALL_HEIGHT.get();
         var animation = new SinusCurveAnimation(level.data().numFlashes());
-        animation.setAmplitude(wallHeight);
+        animation.setOnFinished(e -> wallHeightPy.bind(PY_3D_WALL_HEIGHT));
+        animation.setAmplitude(wallHeightPy.get());
         animation.elongationPy.set(wallHeightPy.get());
+        // this should in fact be done on animation start:
         wallHeightPy.bind(animation.elongationPy);
-        animation.setOnFinished(e -> {
-            wallHeightPy.bind(PY_3D_WALL_HEIGHT);
-            PY_3D_WALL_HEIGHT.set(wallHeight);
-        });
         return animation;
     }
 

@@ -84,7 +84,7 @@ public abstract class Squirting extends Transition {
         setCycleDuration(Duration.seconds(2));
     }
 
-    protected abstract boolean reachesEndPosition(Drop drop);
+    protected abstract boolean reachedFinalPosition(Drop drop);
 
     public Group root() {
         return root;
@@ -182,7 +182,7 @@ public abstract class Squirting extends Transition {
         }
         for (var particle : root.getChildren()) {
             var drop = (Drop) particle;
-            if (reachesEndPosition(drop)) {
+            if (reachedFinalPosition(drop)) {
                 drop.setVelocity(0, 0, 0);
                 drop.setScaleZ(0.1);
             } else {
