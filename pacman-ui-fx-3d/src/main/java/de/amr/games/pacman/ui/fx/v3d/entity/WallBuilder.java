@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import de.amr.games.pacman.model.world.Door;
 import de.amr.games.pacman.model.world.FloorPlan;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -16,9 +15,6 @@ import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.opaqueColor;
@@ -58,7 +54,6 @@ public class WallBuilder {
     private Color wallBaseColor;
     private Color wallMiddleColor;
     private Color wallTopColor;
-    private Color houseDoorColor;
 
     private PhongMaterial wallBaseMaterial;
     private PhongMaterial wallMiddleMaterial;
@@ -71,7 +66,6 @@ public class WallBuilder {
         setWallBaseColor(Color.BLACK);
         setWallMiddleColor(Color.RED);
         setWallTopColor(Color.GOLD);
-        setHouseDoorColor(Color.PINK);
     }
 
     public void setWallBaseColor(Color color) {
@@ -100,14 +94,6 @@ public class WallBuilder {
 
     public Color wallTopColor() {
         return wallTopColor;
-    }
-
-    public void setHouseDoorColor(Color houseDoorColor) {
-        this.houseDoorColor = houseDoorColor;
-    }
-
-    public Color houseDoorColor() {
-        return houseDoorColor;
     }
 
     public Group createMazeWall(WallData wallData, DoubleProperty wallThicknessPy, DoubleProperty wallHeightPy) {
@@ -146,17 +132,6 @@ public class WallBuilder {
         wall.setUserData(wallData);
 
         return wall;
-    }
-
-    public List<DoorWing3D> createDoorWings(Door door) {
-        List<DoorWing3D> wings = new ArrayList<>(2);
-        for (var wing : List.of(door.leftWing(), door.rightWing())) {
-            var doorWing3D = new DoorWing3D(wing, houseDoorColor);
-            doorWing3D.root().setUserData(doorWing3D);
-            doorWing3D.drawModePy.bind(drawModePy);
-            wings.add(doorWing3D);
-        }
-        return wings;
     }
 
     private Box createBlock(WallData wallData, Material material, DoubleProperty thicknessPy) {

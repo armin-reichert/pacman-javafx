@@ -39,6 +39,7 @@ public class DoorWing3D {
 
         root.setTranslateX(tile.x() * TS);
         root.setTranslateY(tile.y() * TS - 3);
+        root.setUserData(this);
 
         PhongMaterial barMaterial = new PhongMaterial(color);
 

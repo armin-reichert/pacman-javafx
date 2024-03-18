@@ -15,10 +15,7 @@ import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.world.ArcadeWorld;
-import de.amr.games.pacman.model.world.FloorPlan;
-import de.amr.games.pacman.model.world.House;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.world.*;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
@@ -42,6 +39,7 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -169,13 +167,11 @@ public class GameLevel3D {
                 wallBuilder.setWallBaseColor  (context.theme().color("mspacman.maze.wallBaseColor",  mazeNumber - 1));
                 wallBuilder.setWallMiddleColor(context.theme().color("mspacman.maze.wallMiddleColor",mazeNumber - 1));
                 wallBuilder.setWallTopColor   (context.theme().color("mspacman.maze.wallTopColor",   mazeNumber - 1));
-                wallBuilder.setHouseDoorColor (context.theme().color("mspacman.maze.doorColor"));
             }
             case PACMAN -> {
                 wallBuilder.setWallBaseColor  (context.theme().color("pacman.maze.wallBaseColor"));
                 wallBuilder.setWallMiddleColor(context.theme().color("pacman.maze.wallMiddleColor"));
                 wallBuilder.setWallTopColor   (context.theme().color("pacman.maze.wallTopColor"));
-                wallBuilder.setHouseDoorColor (context.theme().color("pacman.maze.doorColor"));
             }
         }
         wallBuilder.wallOpacityPy.bind(PY_3D_WALL_OPACITY);
@@ -207,8 +203,7 @@ public class GameLevel3D {
         floorGroup.getChildren().add(floor3D);
         floorGroup.getTransforms().add(new Translate(0.5 * floor3D.getWidth(), 0.5 * floor3D.getHeight(), 0.5 * floor3D.getDepth()));
 
-        var doorWings = wallBuilder.createDoorWings(house.door());
-        doorGroup.getChildren().addAll(doorWings.stream().map(DoorWing3D::root).toList());
+        addDoor3D(house.door());
 
         var wallsGroup = new Group();
         addCorners(wallsGroup);
@@ -217,6 +212,18 @@ public class GameLevel3D {
 
         worldGroup.getChildren().addAll(houseLight, floorGroup, wallsGroup);
         Logger.info("3D game level created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
+    }
+
+    private void addDoor3D(Door door) {
+        Color color = switch (context.gameVariant()) {
+            case MS_PACMAN -> context.theme().color("mspacman.maze.doorColor");
+            case    PACMAN -> context.theme().color("pacman.maze.doorColor");
+        };
+        for (var wing : List.of(door.leftWing(), door.rightWing())) {
+            var doorWing3D = new DoorWing3D(wing, color);
+            doorWing3D.drawModePy.bind(PY_3D_DRAW_MODE);
+            doorGroup.getChildren().add(doorWing3D.root());
+        }
     }
 
     private void addHorizontalWalls(Group wallsGroup) {
