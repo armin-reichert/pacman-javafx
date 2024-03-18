@@ -71,7 +71,7 @@ public class BootScene extends GameScene2D {
     private void paintRandomSprites() {
         clearCanvas();
         for (int row = 0; row < ArcadeWorld.TILES_Y / 2; ++row) {
-            if (RND.nextInt(100) > 10) {
+            if (RND.nextInt(100) > 33) {
                 var region1 = randomSpriteSheetTile();
                 var region2 = randomSpriteSheetTile();
                 var splitX = ArcadeWorld.TILES_X / 8 + RND.nextInt(ArcadeWorld.TILES_X / 4);
