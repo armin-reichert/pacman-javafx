@@ -39,7 +39,6 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -69,81 +68,38 @@ public class GameLevel3D {
 
     private final GameLevel level;
     private final GameSceneContext context;
-    private final FloorPlan floorPlan;
-    private final WallBuilder wallBuilder;
+    private       FloorPlan floorPlan;
+    private       WallBuilder wallBuilder;
+
     private final Group root = new Group();
     private final Group worldGroup = new Group();
     private final Group doorGroup = new Group();
     private final Group foodGroup = new Group();
     private final PointLight houseLight = new PointLight();
-    private final Pac3D pac3D;
     private final List<Ghost3D> ghosts3D;
-    private final LevelCounter3D levelCounter3D;
-    private final LivesCounter3D livesCounter3D;
-    private final Text3D messageText3D;
+    private       Text3D messageText3D;
+    private       LevelCounter3D levelCounter3D;
+    private       LivesCounter3D livesCounter3D;
+    private       Pac3D pac3D;
     private       Bonus3D bonus3D;
 
     public GameLevel3D(GameLevel level, GameSceneContext context) {
         checkLevelNotNull(level);
         checkNotNull(context);
-
         this.level = level;
         this.context = context;
 
-        switch (context.gameVariant()) {
-            case MS_PACMAN -> {
-                int mapNumber  = ArcadeWorld.mapNumberMsPacMan(level.number());
-                int mazeNumber = ArcadeWorld.mazeNumberMsPacMan(level.number());
-                floorPlan = getFloorPlan(GameVariant.MS_PACMAN, mapNumber);
-                wallBuilder = createWallBuilder(GameVariant.MS_PACMAN, mazeNumber);
-                createWorld3D();
-                createFood3D(context.theme().color("mspacman.maze.foodColor", mazeNumber - 1));
-                pac3D = new Pac3D(createMsPacManShape(context.theme(), PAC_SIZE), level.pac(),
-                    context.theme().color("mspacman.color.head"));
-                pac3D.setWalkingAnimation(new HipSwaying(level.pac(), pac3D.root()));
-                pac3D.setLight(new PointLight(Color.rgb(255, 255, 0, 0.75)));
-                ghosts3D = level.ghosts().map(this::createGhost3D).toList();
-                livesCounter3D = new LivesCounter3D(() -> createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), true);
-            }
-            case PACMAN -> {
-                floorPlan = getFloorPlan(GameVariant.PACMAN, 1);
-                wallBuilder = createWallBuilder(GameVariant.PACMAN, 1);
-                createWorld3D();
-                createFood3D(context.theme().color("pacman.maze.foodColor"));
-                pac3D = new Pac3D(createPacManShape(context.theme(), PAC_SIZE), level.pac(),
-                    context.theme().color("pacman.color.head"));
-                pac3D.setWalkingAnimation(new HeadBanging(level.pac(), pac3D.root()));
-                pac3D.setLight(new PointLight(Color.rgb(255, 255, 0, 0.75)));
-                ghosts3D = level.ghosts().map(this::createGhost3D).toList();
-                livesCounter3D = new LivesCounter3D(() -> createPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), false);
-            }
-            default -> throw new IllegalGameVariantException(context.gameVariant());
-        }
+        createWorld3D();
+        createPac3D();
+        ghosts3D = level.ghosts().map(this::createGhost3D).toList();
 
-        messageText3D = Text3D.create("READY!", Color.YELLOW, context.theme().font("font.arcade", 6));
-        messageText3D.root().setTranslateZ(MESSAGE_RETRACTED_Z);
-        messageText3D.root().setVisible(false);
-        messageText3D.rotate(Rotate.X_AXIS, 90);
-
-        livesCounter3D.root().setTranslateX(2 * TS);
-        livesCounter3D.root().setTranslateY(2 * TS);
-
-        levelCounter3D = new LevelCounter3D();
-        populateLevelCounter(context.game(), context.spriteSheet());
-        // this is the *right* edge of the level counter:
-        levelCounter3D.root().setTranslateX((level.world().numCols() - 2) * TS);
-        levelCounter3D.root().setTranslateY(2 * TS);
-        levelCounter3D.root().setTranslateZ(-HTS);
-
-        root.getChildren().add(pac3D.root());
-        root.getChildren().add(pac3D.light());
+        root.getChildren().addAll(pac3D.root(), pac3D.light());
         for (var ghost3D : ghosts3D) {
             root.getChildren().add(ghost3D.root());
         }
         root.getChildren().add(messageText3D.root());
         root.getChildren().add(levelCounter3D.root());
         root.getChildren().add(livesCounter3D.root());
-
         root.getChildren().add(foodGroup);
         root.getChildren().add(doorGroup);
 
@@ -160,26 +116,56 @@ public class GameLevel3D {
         wallHeightPy.bind(PY_3D_WALL_HEIGHT);
     }
 
-    private WallBuilder createWallBuilder(GameVariant variant, int mazeNumber) {
-        var wallBuilder = new WallBuilder((float) TS / FLOOR_PLAN_RESOLUTION);
-        switch (variant) {
+    private void createPac3D() {
+        switch (context.gameVariant()) {
             case MS_PACMAN -> {
-                wallBuilder.setWallBaseColor  (context.theme().color("mspacman.maze.wallBaseColor",  mazeNumber - 1));
-                wallBuilder.setWallMiddleColor(context.theme().color("mspacman.maze.wallMiddleColor",mazeNumber - 1));
-                wallBuilder.setWallTopColor   (context.theme().color("mspacman.maze.wallTopColor",   mazeNumber - 1));
+                Color color = context.theme().color("mspacman.color.head");
+                pac3D = new Pac3D(createMsPacManShape(context.theme(), PAC_SIZE), level.pac(), color);
+                pac3D.setWalkingAnimation(new HipSwaying(level.pac(), pac3D.root()));
+                pac3D.setLight(new PointLight(color.desaturate()));
             }
             case PACMAN -> {
-                wallBuilder.setWallBaseColor  (context.theme().color("pacman.maze.wallBaseColor"));
-                wallBuilder.setWallMiddleColor(context.theme().color("pacman.maze.wallMiddleColor"));
-                wallBuilder.setWallTopColor   (context.theme().color("pacman.maze.wallTopColor"));
+                Color color = context.theme().color("pacman.color.head");
+                pac3D = new Pac3D(createPacManShape(context.theme(), PAC_SIZE), level.pac(), color);
+                pac3D.setWalkingAnimation(new HeadBanging(level.pac(), pac3D.root()));
+                pac3D.setLight(new PointLight(color.desaturate()));
             }
         }
-        wallBuilder.wallOpacityPy.bind(PY_3D_WALL_OPACITY);
-        wallBuilder.drawModePy.bind(PY_3D_DRAW_MODE);
-        return wallBuilder;
     }
 
     private void createWorld3D() {
+        switch (context.gameVariant()) {
+            case MS_PACMAN -> {
+                int mapNumber = ArcadeWorld.mapNumberMsPacMan(level.number());
+                int mazeNumber = ArcadeWorld.mazeNumberMsPacMan(level.number());
+                floorPlan = getFloorPlan(GameVariant.MS_PACMAN, mapNumber);
+                wallBuilder = createWallBuilder(GameVariant.MS_PACMAN, mazeNumber);
+                createFood3D(context.theme().color("mspacman.maze.foodColor", mazeNumber - 1));
+                livesCounter3D = new LivesCounter3D(() -> createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), true);
+            }
+            case PACMAN -> {
+                floorPlan = getFloorPlan(GameVariant.PACMAN, 1);
+                wallBuilder = createWallBuilder(GameVariant.PACMAN, 1);
+                createFood3D(context.theme().color("pacman.maze.foodColor"));
+                livesCounter3D = new LivesCounter3D(() -> createPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), false);
+            }
+        }
+
+        livesCounter3D.root().setTranslateX(2 * TS);
+        livesCounter3D.root().setTranslateY(2 * TS);
+
+        levelCounter3D = new LevelCounter3D();
+        // this is the *right* edge of the level counter:
+        levelCounter3D.root().setTranslateX((level.world().numCols() - 2) * TS);
+        levelCounter3D.root().setTranslateY(2 * TS);
+        levelCounter3D.root().setTranslateZ(-HTS);
+        populateLevelCounter(context.game(), context.spriteSheet());
+
+        messageText3D = Text3D.create("READY!", Color.YELLOW, context.theme().font("font.arcade", 6));
+        messageText3D.root().setTranslateZ(MESSAGE_RETRACTED_Z);
+        messageText3D.root().setVisible(false);
+        messageText3D.rotate(Rotate.X_AXIS, 90);
+
         House house = level.world().house();
         Vector2f houseCenter = house.topLeftTile().toFloatVec().scaled(TS).plus(house.size().toFloatVec().scaled(HTS));
         houseLight.setColor(Color.GHOSTWHITE);
@@ -212,6 +198,26 @@ public class GameLevel3D {
 
         worldGroup.getChildren().addAll(houseLight, floorGroup, wallsGroup);
         Logger.info("3D game level created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
+    }
+
+
+    private WallBuilder createWallBuilder(GameVariant variant, int mazeNumber) {
+        var wallBuilder = new WallBuilder((float) TS / FLOOR_PLAN_RESOLUTION);
+        switch (variant) {
+            case MS_PACMAN -> {
+                wallBuilder.setWallBaseColor  (context.theme().color("mspacman.maze.wallBaseColor",  mazeNumber - 1));
+                wallBuilder.setWallMiddleColor(context.theme().color("mspacman.maze.wallMiddleColor",mazeNumber - 1));
+                wallBuilder.setWallTopColor   (context.theme().color("mspacman.maze.wallTopColor",   mazeNumber - 1));
+            }
+            case PACMAN -> {
+                wallBuilder.setWallBaseColor  (context.theme().color("pacman.maze.wallBaseColor"));
+                wallBuilder.setWallMiddleColor(context.theme().color("pacman.maze.wallMiddleColor"));
+                wallBuilder.setWallTopColor   (context.theme().color("pacman.maze.wallTopColor"));
+            }
+        }
+        wallBuilder.wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+        wallBuilder.drawModePy.bind(PY_3D_DRAW_MODE);
+        return wallBuilder;
     }
 
     private void addDoor3D(Door door) {
