@@ -17,6 +17,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
@@ -147,15 +148,15 @@ public class WallBuilder {
         return wall;
     }
 
-    public Group createDoorGroup(Door door) {
-        var doorGroup = new Group();
+    public List<DoorWing3D> createDoorWings(Door door) {
+        List<DoorWing3D> wings = new ArrayList<>(2);
         for (var wing : List.of(door.leftWing(), door.rightWing())) {
             var doorWing3D = new DoorWing3D(wing, houseDoorColor);
             doorWing3D.root().setUserData(doorWing3D);
             doorWing3D.drawModePy.bind(drawModePy);
-            doorGroup.getChildren().add(doorWing3D.root());
+            wings.add(doorWing3D);
         }
-        return doorGroup;
+        return wings;
     }
 
     private Box createBlock(WallData wallData, Material material, DoubleProperty thicknessPy) {

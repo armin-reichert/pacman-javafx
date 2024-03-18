@@ -75,7 +75,7 @@ public class GameLevel3D {
     private final WallBuilder wallBuilder;
     private final Group root = new Group();
     private final Group worldGroup = new Group();
-    private       Group door3D;
+    private final Group doorGroup = new Group();
     private final Group foodGroup = new Group();
     private final PointLight houseLight = new PointLight();
     private final Pac3D pac3D;
@@ -83,7 +83,7 @@ public class GameLevel3D {
     private final LevelCounter3D levelCounter3D;
     private final LivesCounter3D livesCounter3D;
     private final Text3D messageText3D;
-    private Bonus3D bonus3D;
+    private       Bonus3D bonus3D;
 
     public GameLevel3D(GameLevel level, GameSceneContext context) {
         checkLevelNotNull(level);
@@ -147,7 +147,7 @@ public class GameLevel3D {
         root.getChildren().add(livesCounter3D.root());
 
         root.getChildren().add(foodGroup);
-        root.getChildren().add(door3D);
+        root.getChildren().add(doorGroup);
 
         // Walls must be added *last*, otherwise, transparency is not working correctly!
         root.getChildren().add(worldGroup);
@@ -192,8 +192,6 @@ public class GameLevel3D {
         houseLight.setTranslateY(houseCenter.y());
         houseLight.setTranslateZ(-TS);
 
-        door3D = wallBuilder.createDoorGroup(house.door());
-
         var floorTextures = new HashMap<String, PhongMaterial>();
         for (var textureName : context.theme().getArray("texture.names")) {
             String key = "texture." + textureName;
@@ -208,6 +206,9 @@ public class GameLevel3D {
         var floorGroup = new Group();
         floorGroup.getChildren().add(floor3D);
         floorGroup.getTransforms().add(new Translate(0.5 * floor3D.getWidth(), 0.5 * floor3D.getHeight(), 0.5 * floor3D.getDepth()));
+
+        var doorWings = wallBuilder.createDoorWings(house.door());
+        doorGroup.getChildren().addAll(doorWings.stream().map(DoorWing3D::root).toList());
 
         var wallsGroup = new Group();
         addCorners(wallsGroup);
@@ -477,7 +478,7 @@ public class GameLevel3D {
             .anyMatch(Ghost::isVisible);
         setHouseLightOn(houseUsed);
         if (houseOpen) {
-            for (var node : door3D.getChildren()) {
+            for (var node : doorGroup.getChildren()) {
                 DoorWing3D wing3D = (DoorWing3D) node.getUserData();
                 wing3D.traversalAnimation().play();
             }
