@@ -137,17 +137,19 @@ public class GameLevel3D {
         levelCounter3D.root().setTranslateY(2 * TS);
         levelCounter3D.root().setTranslateZ(-HTS);
 
-        root.getChildren().add(messageText3D.root());
-        root.getChildren().add(levelCounter3D.root());
-        root.getChildren().add(livesCounter3D.root());
-        root.getChildren().addAll(pac3D.root());
+        root.getChildren().add(pac3D.root());
         root.getChildren().add(pac3D.light());
         for (var ghost3D : ghosts3D) {
             root.getChildren().add(ghost3D.root());
         }
+        root.getChildren().add(messageText3D.root());
+        root.getChildren().add(levelCounter3D.root());
+        root.getChildren().add(livesCounter3D.root());
+
         root.getChildren().add(foodGroup);
         root.getChildren().add(door3D);
-        // Walls must be added *after* the rest. Otherwise, transparency is not working correctly!
+
+        // Walls must be added *last*, otherwise, transparency is not working correctly!
         root.getChildren().add(worldGroup);
 
         // Bindings
@@ -208,20 +210,12 @@ public class GameLevel3D {
         floorGroup.getTransforms().add(new Translate(0.5 * floor3D.getWidth(), 0.5 * floor3D.getHeight(), 0.5 * floor3D.getDepth()));
 
         var wallsGroup = new Group();
-        addWalls(wallsGroup);
-
-        worldGroup.getChildren().addAll(floorGroup, wallsGroup, houseLight);
-        Logger.info("3D world created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
-    }
-
-    public void setHouseLightOn(boolean state) {
-        houseLight.setLightOn(state);
-    }
-
-    private void addWalls(Group wallsGroup) {
         addCorners(wallsGroup);
         addHorizontalWalls(wallsGroup);
         addVerticalWalls(wallsGroup);
+
+        worldGroup.getChildren().addAll(houseLight, floorGroup, wallsGroup);
+        Logger.info("3D game level created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
     }
 
     private void addHorizontalWalls(Group wallsGroup) {
@@ -330,15 +324,19 @@ public class GameLevel3D {
         if (bonus3D != null) {
             bonus3D.update(level);
         }
+        updateHouseState(level.world().house());
         // reconsider this:
         boolean hideOne = level.pac().isVisible() || gameState == GameState.GHOST_DYING;
         livesCounter3D.update(hideOne ? level.game().lives() - 1 : level.game().lives());
         livesCounter3D.root().setVisible(hasCredit);
-        updateHouseState(level.world().house());
     }
 
     public void populateLevelCounter(GameModel game, SpriteSheet spriteSheet) {
         levelCounter3D.populate(game, spriteSheet);
+    }
+
+    public void setHouseLightOn(boolean state) {
+        houseLight.setLightOn(state);
     }
 
     public void showMessage(String text, double displaySeconds, double x, double y) {
@@ -364,8 +362,7 @@ public class GameLevel3D {
         }
         bonus3D = createBonus3D(bonus);
         bonus3D.showEdible();
-        // add bonus before last element (wall group) to make transparency work
-        root.getChildren().add(root.getChildren().size() - 1, bonus3D.root());
+        root.getChildren().add(2, bonus3D.root());
     }
 
     private Bonus3D createBonus3D(Bonus bonus) {
