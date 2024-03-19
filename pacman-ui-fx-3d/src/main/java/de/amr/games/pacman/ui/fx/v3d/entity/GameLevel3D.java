@@ -91,22 +91,17 @@ public class GameLevel3D {
         this.context = context;
 
         createWorld3D();
-        createMessage();
+        createMessage3D();
         createPac3D();
         ghosts3D = level.ghosts().map(this::createGhost3D).toList();
-        createLivesCounter();
-        createLevelCounter();
+        createLivesCounter3D();
+        createLevelCounter3D();
 
-        root.getChildren().addAll(pac3D.root(), pac3D.light());
         for (var ghost3D : ghosts3D) {
             root.getChildren().add(ghost3D.root());
         }
-        root.getChildren().add(messageText3D.root());
-        root.getChildren().add(levelCounter3D.root());
-        root.getChildren().add(livesCounter3D.root());
-        root.getChildren().add(foodGroup);
-        root.getChildren().add(doorGroup);
-
+        root.getChildren().addAll(pac3D.root(), pac3D.light(), messageText3D.root(), levelCounter3D.root(),
+            livesCounter3D.root(), foodGroup, doorGroup);
         // Walls must be added *last*, otherwise, transparency is not working correctly!
         root.getChildren().add(worldGroup);
 
@@ -187,7 +182,7 @@ public class GameLevel3D {
         Logger.info("3D game level created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
     }
 
-    private void createLivesCounter() {
+    private void createLivesCounter3D() {
         livesCounter3D = new LivesCounter3D(LIVES_COUNTER_MAX_SIZE);
         livesCounter3D.root().setTranslateX(2 * TS);
         livesCounter3D.root().setTranslateY(2 * TS);
@@ -209,7 +204,7 @@ public class GameLevel3D {
         }
     }
 
-    private void createLevelCounter() {
+    private void createLevelCounter3D() {
         levelCounter3D = new LevelCounter3D();
         // this is the *right* edge of the level counter:
         levelCounter3D.root().setTranslateX((level.world().numCols() - 2) * TS);
@@ -218,7 +213,7 @@ public class GameLevel3D {
         populateLevelCounter(context.game(), context.spriteSheet());
     }
 
-    private void createMessage() {
+    private void createMessage3D() {
         messageText3D = Text3D.create("READY!", Color.YELLOW, context.theme().font("font.arcade", 6));
         messageText3D.root().setTranslateZ(MESSAGE_RETRACTED_Z);
         messageText3D.root().setVisible(false);
