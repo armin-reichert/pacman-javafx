@@ -75,6 +75,7 @@ public class LivesCounter3D {
             pac3D.root().setRotationAxis(Rotate.Z_AXIS);
             pac3D.root().setRotate(180);
         }
+        pac3D.drawModePy.bind(drawModePy);
         pac3DList.add(pac3D);
         root.getChildren().add(pac3D.root());
 

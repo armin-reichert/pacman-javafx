@@ -184,6 +184,7 @@ public class GameLevel3D {
         livesCounter3D = new LivesCounter3D(LIVES_COUNTER_MAX_ENTRIES);
         livesCounter3D.root().setTranslateX(2 * TS);
         livesCounter3D.root().setTranslateY(2 * TS);
+        livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         switch (context.gameVariant()) {
             case MS_PACMAN -> {
                 for (int i = 0; i < LIVES_COUNTER_MAX_ENTRIES; ++i) {
