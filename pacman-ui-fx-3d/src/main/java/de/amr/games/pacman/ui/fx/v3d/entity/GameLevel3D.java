@@ -60,6 +60,7 @@ public class GameLevel3D {
     private static final int    FLOOR_PLAN_RESOLUTION = 4;
     private static final double PAC_SIZE   = 9.0;
     private static final double GHOST_SIZE = 9.0;
+    private static final int    LIVES_COUNTER_MAX_SIZE = 5;
     private static final double LIVES_COUNTER_PAC_SIZE = 10.0;
     private static final double MESSAGE_EXTENDED_Z = -5;
     private static final double MESSAGE_RETRACTED_Z =  5;
@@ -90,8 +91,11 @@ public class GameLevel3D {
         this.context = context;
 
         createWorld3D();
+        createMessage();
         createPac3D();
         ghosts3D = level.ghosts().map(this::createGhost3D).toList();
+        createLivesCounter();
+        createLevelCounter();
 
         root.getChildren().addAll(pac3D.root(), pac3D.light());
         for (var ghost3D : ghosts3D) {
@@ -141,36 +145,13 @@ public class GameLevel3D {
                 floorPlan = getFloorPlan(GameVariant.MS_PACMAN, mapNumber);
                 wallBuilder = createWallBuilder(GameVariant.MS_PACMAN, mazeNumber);
                 createFood3D(context.theme().color("mspacman.maze.foodColor", mazeNumber - 1));
-                Color color = context.theme().color("mspacman.color.head");
-                livesCounter3D = new LivesCounter3D(
-                    () -> new Pac3D(createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), color),
-                    true, 5);
             }
             case PACMAN -> {
                 floorPlan = getFloorPlan(GameVariant.PACMAN, 1);
                 wallBuilder = createWallBuilder(GameVariant.PACMAN, 1);
                 createFood3D(context.theme().color("pacman.maze.foodColor"));
-                Color color = context.theme().color("pacman.color.head");
-                livesCounter3D = new LivesCounter3D(
-                    () -> new Pac3D(createPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), color),
-                    false, 5);
             }
         }
-
-        livesCounter3D.root().setTranslateX(2 * TS);
-        livesCounter3D.root().setTranslateY(2 * TS);
-
-        levelCounter3D = new LevelCounter3D();
-        // this is the *right* edge of the level counter:
-        levelCounter3D.root().setTranslateX((level.world().numCols() - 2) * TS);
-        levelCounter3D.root().setTranslateY(2 * TS);
-        levelCounter3D.root().setTranslateZ(-HTS);
-        populateLevelCounter(context.game(), context.spriteSheet());
-
-        messageText3D = Text3D.create("READY!", Color.YELLOW, context.theme().font("font.arcade", 6));
-        messageText3D.root().setTranslateZ(MESSAGE_RETRACTED_Z);
-        messageText3D.root().setVisible(false);
-        messageText3D.rotate(Rotate.X_AXIS, 90);
 
         House house = level.world().house();
         Vector2f houseCenter = house.topLeftTile().toFloatVec().scaled(TS).plus(house.size().toFloatVec().scaled(HTS));
@@ -206,6 +187,43 @@ public class GameLevel3D {
         Logger.info("3D game level created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
     }
 
+    private void createLivesCounter() {
+        livesCounter3D = new LivesCounter3D(LIVES_COUNTER_MAX_SIZE);
+        livesCounter3D.root().setTranslateX(2 * TS);
+        livesCounter3D.root().setTranslateY(2 * TS);
+        switch (context.gameVariant()) {
+            case MS_PACMAN -> {
+                Color color = context.theme().color("mspacman.color.head");
+                for (int i = 0; i < LIVES_COUNTER_MAX_SIZE; ++i) {
+                    var shape = new Pac3D(createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), color);
+                    livesCounter3D.addItem(shape, i, true);
+                }
+            }
+            case PACMAN -> {
+                Color color = context.theme().color("pacman.color.head");
+                for (int i = 0; i < LIVES_COUNTER_MAX_SIZE; ++i) {
+                    var shape = new Pac3D(createPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), color);
+                    livesCounter3D.addItem(shape, i, false);
+                }
+            }
+        }
+    }
+
+    private void createLevelCounter() {
+        levelCounter3D = new LevelCounter3D();
+        // this is the *right* edge of the level counter:
+        levelCounter3D.root().setTranslateX((level.world().numCols() - 2) * TS);
+        levelCounter3D.root().setTranslateY(2 * TS);
+        levelCounter3D.root().setTranslateZ(-HTS);
+        populateLevelCounter(context.game(), context.spriteSheet());
+    }
+
+    private void createMessage() {
+        messageText3D = Text3D.create("READY!", Color.YELLOW, context.theme().font("font.arcade", 6));
+        messageText3D.root().setTranslateZ(MESSAGE_RETRACTED_Z);
+        messageText3D.root().setVisible(false);
+        messageText3D.rotate(Rotate.X_AXIS, 90);
+    }
 
     private WallBuilder createWallBuilder(GameVariant variant, int mazeNumber) {
         var wallBuilder = new WallBuilder((float) TS / FLOOR_PLAN_RESOLUTION);
