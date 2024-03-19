@@ -118,16 +118,14 @@ public class GameLevel3D {
     private void createPac3D() {
         switch (context.gameVariant()) {
             case MS_PACMAN -> {
-                Color color = context.theme().color("mspacman.color.head");
-                pac3D = new Pac3D(createMsPacManShape(context.theme(), PAC_SIZE), level.pac(), color);
+                pac3D = new Pac3D(createMsPacManShape(context.theme(), PAC_SIZE), level.pac());
                 pac3D.setWalkingAnimation(new HipSwaying(level.pac(), pac3D.root()));
-                pac3D.setLight(new PointLight(color.desaturate()));
+                pac3D.setLight(new PointLight(context.theme().color("mspacman.color.head").desaturate()));
             }
             case PACMAN -> {
-                Color color = context.theme().color("pacman.color.head");
-                pac3D = new Pac3D(createPacManShape(context.theme(), PAC_SIZE), level.pac(), color);
+                pac3D = new Pac3D(createPacManShape(context.theme(), PAC_SIZE), level.pac());
                 pac3D.setWalkingAnimation(new HeadBanging(level.pac(), pac3D.root()));
-                pac3D.setLight(new PointLight(color.desaturate()));
+                pac3D.setLight(new PointLight(context.theme().color("pacman.color.head").desaturate()));
             }
         }
     }
@@ -188,16 +186,14 @@ public class GameLevel3D {
         livesCounter3D.root().setTranslateY(2 * TS);
         switch (context.gameVariant()) {
             case MS_PACMAN -> {
-                Color color = context.theme().color("mspacman.color.head");
                 for (int i = 0; i < LIVES_COUNTER_MAX_SIZE; ++i) {
-                    var shape = new Pac3D(createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), color);
+                    var shape = new Pac3D(createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE));
                     livesCounter3D.addItem(shape, i, true);
                 }
             }
             case PACMAN -> {
-                Color color = context.theme().color("pacman.color.head");
                 for (int i = 0; i < LIVES_COUNTER_MAX_SIZE; ++i) {
-                    var shape = new Pac3D(createPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), color);
+                    var shape = new Pac3D(createPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE));
                     livesCounter3D.addItem(shape, i, false);
                 }
             }

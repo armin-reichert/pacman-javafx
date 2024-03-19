@@ -131,23 +131,19 @@ public class Pac3D {
     }
 
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
-    public final ObjectProperty<Color> headColorPy = new SimpleObjectProperty<>(this, "headColor", Color.YELLOW);
     public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
 
     private final Group root;
-    private final Color headColor;
     private final Translate position = new Translate();
     private final Rotate orientation = new Rotate();
     private Pac pac;
     private WalkingAnimation walkingAnimation;
     private PointLight light;
 
-    public Pac3D(Group shapeGroup, Pac pac, Color headColor) {
+    public Pac3D(Group shapeGroup, Pac pac) {
         checkNotNull(shapeGroup);
-        checkNotNull(headColor);
         this.root = new Group(shapeGroup);
         this.pac = pac;
-        this.headColor = headColor;
         shapeGroup.getTransforms().setAll(position, orientation);
         meshView(shapeGroup, MESH_ID_EYES).drawModeProperty().bind(drawModePy);
         meshView(shapeGroup, MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
@@ -158,13 +154,10 @@ public class Pac3D {
      * Creates a Pac3D without Pac reference. Used for 3D level life counters.
      *
      * @param shapeGroup Pac 3D shape
-     * @param headColor color of Pac's head
      */
-    public Pac3D(Group shapeGroup, Color headColor) {
+    public Pac3D(Group shapeGroup) {
         checkNotNull(shapeGroup);
-        checkNotNull(headColor);
         this.root = new Group(shapeGroup);
-        this.headColor = headColor;
         shapeGroup.getTransforms().setAll(position, orientation);
         meshView(shapeGroup, MESH_ID_EYES).drawModeProperty().bind(drawModePy);
         meshView(shapeGroup, MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
@@ -203,7 +196,6 @@ public class Pac3D {
     }
 
     public void init() {
-        headColorPy.set(headColor);
         root.setScaleX(1.0);
         root.setScaleY(1.0);
         root.setScaleZ(1.0);
