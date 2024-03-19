@@ -51,6 +51,8 @@ public class LivesCounter3D {
     private final List<Pac3D> pac3DList = new ArrayList<>();
     private final List<Animation> animations = new ArrayList<>();
 
+    private int index;
+
     public LivesCounter3D(int maxLives) {
         pillarMaterial = coloredMaterial(Color.rgb(100, 100, 100));
         plateMaterial = coloredMaterial(Color.rgb(180, 180, 180));
@@ -63,11 +65,11 @@ public class LivesCounter3D {
         root.getChildren().addAll(standsGroup, light);
     }
 
-    public void addItem(Pac3D pac3D, int position, boolean lookRight) {
-        addStand(2 * position * TS);
+    public void addItem(Pac3D pac3D, boolean lookRight) {
+        addStand(2 * index * TS);
 
         double radius = pac3D.root().getBoundsInLocal().getHeight() / 2f;
-        pac3D.position().setX(2 * position * TS);
+        pac3D.position().setX(2 * index * TS);
         pac3D.position().setZ(-(PILLAR_HEIGHT + PLATE_THICKNESS + radius));
         if (lookRight) {
             pac3D.root().setRotationAxis(Rotate.Z_AXIS);
@@ -82,6 +84,8 @@ public class LivesCounter3D {
         pacRotation.setInterpolator(Interpolator.LINEAR);
         pacRotation.setCycleCount(Animation.INDEFINITE);
         animations.add(pacRotation);
+
+        index += 1;
     }
 
     public void startAnimation() {

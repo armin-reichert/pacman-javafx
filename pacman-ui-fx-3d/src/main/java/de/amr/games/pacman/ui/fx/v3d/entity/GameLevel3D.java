@@ -60,7 +60,7 @@ public class GameLevel3D {
     private static final int    FLOOR_PLAN_RESOLUTION = 4;
     private static final double PAC_SIZE   = 9.0;
     private static final double GHOST_SIZE = 9.0;
-    private static final int    LIVES_COUNTER_MAX_SIZE = 5;
+    private static final int LIVES_COUNTER_MAX_ENTRIES = 5;
     private static final double LIVES_COUNTER_PAC_SIZE = 10.0;
     private static final double MESSAGE_EXTENDED_Z = -5;
     private static final double MESSAGE_RETRACTED_Z =  5;
@@ -181,20 +181,20 @@ public class GameLevel3D {
     }
 
     private void createLivesCounter3D() {
-        livesCounter3D = new LivesCounter3D(LIVES_COUNTER_MAX_SIZE);
+        livesCounter3D = new LivesCounter3D(LIVES_COUNTER_MAX_ENTRIES);
         livesCounter3D.root().setTranslateX(2 * TS);
         livesCounter3D.root().setTranslateY(2 * TS);
         switch (context.gameVariant()) {
             case MS_PACMAN -> {
-                for (int i = 0; i < LIVES_COUNTER_MAX_SIZE; ++i) {
-                    var shape = new Pac3D(createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE));
-                    livesCounter3D.addItem(shape, i, true);
+                for (int i = 0; i < LIVES_COUNTER_MAX_ENTRIES; ++i) {
+                    var shape = createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE);
+                    livesCounter3D.addItem(new Pac3D(shape), true);
                 }
             }
             case PACMAN -> {
-                for (int i = 0; i < LIVES_COUNTER_MAX_SIZE; ++i) {
-                    var shape = new Pac3D(createPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE));
-                    livesCounter3D.addItem(shape, i, false);
+                for (int i = 0; i < LIVES_COUNTER_MAX_ENTRIES; ++i) {
+                    var shape = createPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE);
+                    livesCounter3D.addItem(new Pac3D(shape), false);
                 }
             }
         }
