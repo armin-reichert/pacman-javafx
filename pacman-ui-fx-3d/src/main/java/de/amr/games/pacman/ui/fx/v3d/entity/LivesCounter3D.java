@@ -35,9 +35,12 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
  */
 public class LivesCounter3D {
 
+    private static final Color  PILLAR_COLOR = Color.grayRgb(100);
     private static final double PILLAR_HEIGHT = 8.0;
+    private static final Color  PLATE_COLOR = Color.grayRgb(180);
     private static final double PLATE_RADIUS = 6.0;
     private static final double PLATE_THICKNESS = 1.0;
+    private static final Color  LIGHT_COLOR = Color.CORNFLOWERBLUE;
 
     public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
@@ -54,20 +57,19 @@ public class LivesCounter3D {
     private int index;
 
     public LivesCounter3D(int maxLives) {
-        pillarMaterial = coloredMaterial(Color.rgb(100, 100, 100));
-        plateMaterial = coloredMaterial(Color.rgb(180, 180, 180));
-        var light = new PointLight(Color.CORNFLOWERBLUE);
-        light.setMaxRange(TS * (maxLives + 1));
+        pillarMaterial = coloredMaterial(PILLAR_COLOR);
+        plateMaterial = coloredMaterial(PLATE_COLOR);
+        var light = new PointLight(LIGHT_COLOR);
+        light.setMaxRange  (TS * (maxLives + 1));
         light.setTranslateX(TS * (maxLives - 1));
         light.setTranslateY(TS * (-1));
-        light.setTranslateZ(-PILLAR_HEIGHT - 20);
+        light.setTranslateZ(-(PILLAR_HEIGHT + 20));
         light.lightOnProperty().bind(lightOnPy);
         root.getChildren().addAll(standsGroup, light);
     }
 
     public void addItem(Pac3D pac3D, boolean lookRight) {
         addStand(2 * index * TS);
-
         double radius = pac3D.root().getBoundsInLocal().getHeight() / 2f;
         pac3D.position().setX(2 * index * TS);
         pac3D.position().setZ(-(PILLAR_HEIGHT + PLATE_THICKNESS + radius));
@@ -79,12 +81,12 @@ public class LivesCounter3D {
         pac3DList.add(pac3D);
         root.getChildren().add(pac3D.root());
 
-        var pacRotation = new RotateTransition(Duration.seconds(20.0), pac3D.root());
-        pacRotation.setAxis(Rotate.Z_AXIS);
-        pacRotation.setByAngle(360);
-        pacRotation.setInterpolator(Interpolator.LINEAR);
-        pacRotation.setCycleCount(Animation.INDEFINITE);
-        animations.add(pacRotation);
+        var rotation = new RotateTransition(Duration.seconds(20.0), pac3D.root());
+        rotation.setAxis(Rotate.Z_AXIS);
+        rotation.setByAngle(360);
+        rotation.setInterpolator(Interpolator.LINEAR);
+        rotation.setCycleCount(Animation.INDEFINITE);
+        animations.add(rotation);
 
         index += 1;
     }
