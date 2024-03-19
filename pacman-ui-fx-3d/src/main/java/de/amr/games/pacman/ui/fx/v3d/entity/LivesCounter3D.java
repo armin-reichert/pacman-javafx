@@ -4,9 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
-import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -29,6 +27,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -46,7 +45,7 @@ public class LivesCounter3D {
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     private final Group root = new Group();
-    private final Group pacShapesGroup = new Group();
+    private final Group pac3DGroup = new Group();
     private final Group standsGroup = new Group();
 
     private final PhongMaterial pillarMaterial;
@@ -54,35 +53,32 @@ public class LivesCounter3D {
 
     private final List<Animation> animations = new ArrayList<>();
 
-    public LivesCounter3D(Supplier<Node> pacShapeSupplier, boolean lookRight) {
+    public LivesCounter3D(Supplier<Pac3D> pacShapeSupplier, boolean lookRight) {
         requireNonNull(pacShapeSupplier);
 
-        pillarMaterial = ResourceManager.coloredMaterial(Color.rgb(100, 100, 100));
-        plateMaterial = ResourceManager.coloredMaterial(Color.rgb(180, 180, 180));
+        pillarMaterial = coloredMaterial(Color.rgb(100, 100, 100));
+        plateMaterial = coloredMaterial(Color.rgb(180, 180, 180));
 
         int maxLives = 5;
         for (int i = 0; i < maxLives; ++i) {
             addStand(2 * i * TS);
-
-            var pacShape = pacShapeSupplier.get();
-            pacShape.setTranslateX(2.0 * i * TS);
-            pacShape.setTranslateZ(-(PILLAR_HEIGHT + 5.5));
+            var pac3D = pacShapeSupplier.get();
+            double radius = pac3D.root().getBoundsInLocal().getHeight() / 2f;
+            pac3D.position().setX(2 * i * TS);
+            pac3D.position().setZ(-(PILLAR_HEIGHT + PLATE_THICKNESS + radius));
             if (lookRight) {
-                pacShape.setRotationAxis(Rotate.Z_AXIS);
-                pacShape.setRotate(180);
+                pac3D.root().setRotationAxis(Rotate.Z_AXIS);
+                pac3D.root().setRotate(180);
             }
-            Model3D.meshView(pacShape, Pac3D.MESH_ID_HEAD).drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);
-            Model3D.meshView(pacShape, Pac3D.MESH_ID_EYES).drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);
-            Model3D.meshView(pacShape, Pac3D.MESH_ID_PALATE).drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);
 
-            var plateRotation = new RotateTransition(Duration.seconds(20.0), pacShape);
+            var plateRotation = new RotateTransition(Duration.seconds(20.0), pac3D.root());
             plateRotation.setAxis(Rotate.Z_AXIS);
             plateRotation.setByAngle(360);
             plateRotation.setInterpolator(Interpolator.LINEAR);
             plateRotation.setCycleCount(Animation.INDEFINITE);
             animations.add(plateRotation);
 
-            pacShapesGroup.getChildren().add(pacShape);
+            pac3DGroup.getChildren().add(pac3D.root());
         }
 
         var light = new PointLight(Color.CORNFLOWERBLUE);
@@ -92,7 +88,7 @@ public class LivesCounter3D {
         light.setTranslateZ(-PILLAR_HEIGHT - 20);
         light.lightOnProperty().bind(lightOnPy);
 
-        root.getChildren().addAll(standsGroup, pacShapesGroup, light);
+        root.getChildren().addAll(standsGroup, pac3DGroup, light);
     }
 
     public void startAnimation() {
@@ -128,8 +124,8 @@ public class LivesCounter3D {
     }
 
     public void update(int numLives) {
-        for (int i = 0; i < pacShapesGroup.getChildren().size(); ++i) {
-            var node = pacShapesGroup.getChildren().get(i);
+        for (int i = 0; i < pac3DGroup.getChildren().size(); ++i) {
+            var node = pac3DGroup.getChildren().get(i);
             node.setVisible(i < numLives);
         }
     }
