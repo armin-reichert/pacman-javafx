@@ -185,19 +185,12 @@ public class GameLevel3D {
         livesCounter3D.root().setTranslateX(2 * TS);
         livesCounter3D.root().setTranslateY(2 * TS);
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
-        switch (context.gameVariant()) {
-            case MS_PACMAN -> {
-                for (int i = 0; i < LIVES_COUNTER_MAX_ENTRIES; ++i) {
-                    var shape = createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE);
-                    livesCounter3D.addItem(new Pac3D(shape), true);
-                }
-            }
-            case PACMAN -> {
-                for (int i = 0; i < LIVES_COUNTER_MAX_ENTRIES; ++i) {
-                    var shape = createPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE);
-                    livesCounter3D.addItem(new Pac3D(shape), false);
-                }
-            }
+        for (int i = 0; i < LIVES_COUNTER_MAX_ENTRIES; ++i) {
+            var shape = switch (context.gameVariant()) {
+                case MS_PACMAN -> createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE);
+                case    PACMAN -> createPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE);
+            };
+            livesCounter3D.addItem(new Pac3D(shape), true);
         }
     }
 
