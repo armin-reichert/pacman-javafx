@@ -144,7 +144,7 @@ public class GameLevel3D {
                 Color color = context.theme().color("mspacman.color.head");
                 livesCounter3D = new LivesCounter3D(
                     () -> new Pac3D(createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), color),
-                    true);
+                    true, 5);
             }
             case PACMAN -> {
                 floorPlan = getFloorPlan(GameVariant.PACMAN, 1);
@@ -153,7 +153,7 @@ public class GameLevel3D {
                 Color color = context.theme().color("pacman.color.head");
                 livesCounter3D = new LivesCounter3D(
                     () -> new Pac3D(createPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE), color),
-                    false);
+                    false, 5);
             }
         }
 

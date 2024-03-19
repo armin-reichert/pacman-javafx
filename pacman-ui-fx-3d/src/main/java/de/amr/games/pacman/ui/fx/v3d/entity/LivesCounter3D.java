@@ -45,40 +45,31 @@ public class LivesCounter3D {
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     private final Group root = new Group();
-    private final Group pac3DGroup = new Group();
     private final Group standsGroup = new Group();
 
     private final PhongMaterial pillarMaterial;
     private final PhongMaterial plateMaterial;
 
+    private final List<Pac3D> pac3DList = new ArrayList<>();
     private final List<Animation> animations = new ArrayList<>();
 
-    public LivesCounter3D(Supplier<Pac3D> pacShapeSupplier, boolean lookRight) {
+    public LivesCounter3D(Supplier<Pac3D> pacShapeSupplier, boolean lookRight, int maxLives) {
         requireNonNull(pacShapeSupplier);
 
         pillarMaterial = coloredMaterial(Color.rgb(100, 100, 100));
         plateMaterial = coloredMaterial(Color.rgb(180, 180, 180));
 
-        int maxLives = 5;
         for (int i = 0; i < maxLives; ++i) {
             addStand(2 * i * TS);
             var pac3D = pacShapeSupplier.get();
-            double radius = pac3D.root().getBoundsInLocal().getHeight() / 2f;
-            pac3D.position().setX(2 * i * TS);
-            pac3D.position().setZ(-(PILLAR_HEIGHT + PLATE_THICKNESS + radius));
-            if (lookRight) {
-                pac3D.root().setRotationAxis(Rotate.Z_AXIS);
-                pac3D.root().setRotate(180);
-            }
+            addPac(pac3D, i, lookRight);
 
-            var plateRotation = new RotateTransition(Duration.seconds(20.0), pac3D.root());
-            plateRotation.setAxis(Rotate.Z_AXIS);
-            plateRotation.setByAngle(360);
-            plateRotation.setInterpolator(Interpolator.LINEAR);
-            plateRotation.setCycleCount(Animation.INDEFINITE);
-            animations.add(plateRotation);
-
-            pac3DGroup.getChildren().add(pac3D.root());
+            var pacRotation = new RotateTransition(Duration.seconds(20.0), pac3D.root());
+            pacRotation.setAxis(Rotate.Z_AXIS);
+            pacRotation.setByAngle(360);
+            pacRotation.setInterpolator(Interpolator.LINEAR);
+            pacRotation.setCycleCount(Animation.INDEFINITE);
+            animations.add(pacRotation);
         }
 
         var light = new PointLight(Color.CORNFLOWERBLUE);
@@ -88,7 +79,19 @@ public class LivesCounter3D {
         light.setTranslateZ(-PILLAR_HEIGHT - 20);
         light.lightOnProperty().bind(lightOnPy);
 
-        root.getChildren().addAll(standsGroup, pac3DGroup, light);
+        root.getChildren().addAll(standsGroup, light);
+    }
+
+    public void addPac(Pac3D pac3D, int position, boolean lookRight) {
+        double radius = pac3D.root().getBoundsInLocal().getHeight() / 2f;
+        pac3D.position().setX(2 * position * TS);
+        pac3D.position().setZ(-(PILLAR_HEIGHT + PLATE_THICKNESS + radius));
+        if (lookRight) {
+            pac3D.root().setRotationAxis(Rotate.Z_AXIS);
+            pac3D.root().setRotate(180);
+        }
+        pac3DList.add(pac3D);
+        root.getChildren().add(pac3D.root());
     }
 
     public void startAnimation() {
@@ -124,9 +127,8 @@ public class LivesCounter3D {
     }
 
     public void update(int numLives) {
-        for (int i = 0; i < pac3DGroup.getChildren().size(); ++i) {
-            var node = pac3DGroup.getChildren().get(i);
-            node.setVisible(i < numLives);
+        for (int i = 0; i < pac3DList.size(); ++i) {
+            pac3DList.get(i).root().setVisible(i < numLives);
         }
     }
 }
