@@ -62,7 +62,6 @@ public class GameLevel3D {
     private static final double PAC_SIZE   = 9.0;
     private static final double GHOST_SIZE = 9.0;
 
-    private static final double LIVES_COUNTER_PAC_SIZE = 10.0;
     private static final double MESSAGE_EXTENDED_Z = -5;
     private static final double MESSAGE_RETRACTED_Z =  5;
 
@@ -198,20 +197,20 @@ public class GameLevel3D {
     private void createLivesCounter3D() {
         var theme = context.theme();
         livesCounter3D = new LivesCounter3D(
-            theme.get("livescounter.entries"),
+            theme.get  ("livescounter.entries"),
             theme.color("livescounter.pillar.color"),
-            theme.get("livescounter.pillar.height"),
+            theme.get  ("livescounter.pillar.height"),
             theme.color("livescounter.plate.color"),
-            theme.get("livescounter.plate.thickness"),
-            theme.get("livescounter.plate.radius"),
+            theme.get  ("livescounter.plate.thickness"),
+            theme.get  ("livescounter.plate.radius"),
             theme.color("livescounter.light.color"));
         livesCounter3D.root().setTranslateX(2 * TS);
         livesCounter3D.root().setTranslateY(2 * TS);
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         for (int i = 0; i < livesCounter3D.maxLives(); ++i) {
             var shape = switch (context.gameVariant()) {
-                case MS_PACMAN -> createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE);
-                case    PACMAN -> createPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE);
+                case MS_PACMAN -> createMsPacManShape(context.theme(), theme.get("livescounter.pac.size"));
+                case    PACMAN -> createPacManShape  (context.theme(), theme.get("livescounter.pac.size"));
             };
             livesCounter3D.addItem(new Pac3D(shape), true);
         }
