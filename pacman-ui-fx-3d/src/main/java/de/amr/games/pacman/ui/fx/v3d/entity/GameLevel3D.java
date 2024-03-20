@@ -136,12 +136,18 @@ public class GameLevel3D {
                 int mapNumber = ArcadeWorld.mapNumberMsPacMan(level.number());
                 int mazeNumber = ArcadeWorld.mazeNumberMsPacMan(level.number());
                 floorPlan = getFloorPlan(GameVariant.MS_PACMAN, mapNumber);
-                wallBuilder = createWallBuilder(GameVariant.MS_PACMAN, mazeNumber);
+                wallBuilder = createWallBuilder(
+                    context.theme().color("mspacman.maze.wallBaseColor",  mazeNumber - 1),
+                    context.theme().color("mspacman.maze.wallMiddleColor",mazeNumber - 1),
+                    context.theme().color("mspacman.maze.wallTopColor",   mazeNumber - 1));
                 createFood3D(context.theme().color("mspacman.maze.foodColor", mazeNumber - 1));
             }
             case PACMAN -> {
                 floorPlan = getFloorPlan(GameVariant.PACMAN, 1);
-                wallBuilder = createWallBuilder(GameVariant.PACMAN, 1);
+                wallBuilder = createWallBuilder(
+                    context.theme().color("pacman.maze.wallBaseColor"),
+                    context.theme().color("pacman.maze.wallMiddleColor"),
+                    context.theme().color("pacman.maze.wallTopColor"));
                 createFood3D(context.theme().color("pacman.maze.foodColor"));
             }
         }
@@ -174,7 +180,7 @@ public class GameLevel3D {
         addVerticalWalls(wallsGroup);
 
         worldGroup.getChildren().addAll(houseLight, floor3D, wallsGroup);
-        Logger.info("3D game level created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
+        Logger.info("3D world created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
     }
 
     private void createLivesCounter3D() {
@@ -207,20 +213,11 @@ public class GameLevel3D {
         messageText3D.rotate(Rotate.X_AXIS, 90);
     }
 
-    private WallBuilder createWallBuilder(GameVariant variant, int mazeNumber) {
+    private WallBuilder createWallBuilder(Color wallBaseColor, Color wallMiddleColor, Color wallTopColor) {
         var wallBuilder = new WallBuilder((float) TS / FLOOR_PLAN_RESOLUTION);
-        switch (variant) {
-            case MS_PACMAN -> {
-                wallBuilder.setWallBaseColor  (context.theme().color("mspacman.maze.wallBaseColor",  mazeNumber - 1));
-                wallBuilder.setWallMiddleColor(context.theme().color("mspacman.maze.wallMiddleColor",mazeNumber - 1));
-                wallBuilder.setWallTopColor   (context.theme().color("mspacman.maze.wallTopColor",   mazeNumber - 1));
-            }
-            case PACMAN -> {
-                wallBuilder.setWallBaseColor  (context.theme().color("pacman.maze.wallBaseColor"));
-                wallBuilder.setWallMiddleColor(context.theme().color("pacman.maze.wallMiddleColor"));
-                wallBuilder.setWallTopColor   (context.theme().color("pacman.maze.wallTopColor"));
-            }
-        }
+        wallBuilder.setWallBaseColor(wallBaseColor);
+        wallBuilder.setWallMiddleColor(wallMiddleColor);
+        wallBuilder.setWallTopColor(wallTopColor);
         wallBuilder.wallOpacityPy.bind(PY_3D_WALL_OPACITY);
         wallBuilder.drawModePy.bind(PY_3D_DRAW_MODE);
         return wallBuilder;
