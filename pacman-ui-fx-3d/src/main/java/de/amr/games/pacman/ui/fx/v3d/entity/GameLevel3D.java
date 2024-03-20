@@ -107,7 +107,7 @@ public class GameLevel3D {
         createLevelCounter3D();
 
         for (var ghost3D : ghosts3D) {
-            root.getChildren().add(ghost3D.root());
+            root.getChildren().add(ghost3D);
         }
         root.getChildren().addAll(pac3D.root(), pac3D.light(), messageText3D.root(), levelCounterGroup,
             livesCounter3D.root(), foodGroup, doorGroup);

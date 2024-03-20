@@ -18,7 +18,6 @@ import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -44,7 +43,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public class Ghost3D {
+public class Ghost3D extends Group {
 
     private static final Duration BRAKE_DURATION = Duration.seconds(0.4);
 
@@ -55,7 +54,6 @@ public class Ghost3D {
     private final Ghost ghost;
     private final int numFlashes;
     private final Pac pac;
-    private final Group root;
     private final Group coloredGhostGroup;
     private final ColoredGhost3D coloredGhost3D;
     private final Box numberQuad;
@@ -85,7 +83,7 @@ public class Ghost3D {
 
         numberQuad = new Box(14, 8, 8);
 
-        root = new Group(coloredGhostGroup);
+        getChildren().add(coloredGhostGroup);
 
         numberRotation = new RotateTransition(Duration.seconds(1), numberQuad);
         numberRotation.setAxis(Rotate.X_AXIS);
@@ -118,10 +116,6 @@ public class Ghost3D {
         numberQuad.setMaterial(material);
     }
 
-    public Node root() {
-        return root;
-    }
-
     public void init(GameLevel level) {
         brakeAnimation.stop();
         dressAnimation.stop();
@@ -138,13 +132,13 @@ public class Ghost3D {
 
     private void updateTransform(GameLevel level) {
         Vector2f position = ghost.center();
-        root.setTranslateX(position.x());
-        root.setTranslateY(position.y());
-        root.setTranslateZ(-5);
+        setTranslateX(position.x());
+        setTranslateY(position.y());
+        setTranslateZ(-5);
         // TODO: make transition to new wish dir if changed
         orientation.setAngle(Turn.angle(ghost.wishDir()));
         boolean outside = position.x() < HTS || position.x() > level.world().numCols() * TS - HTS;
-        root.setVisible(ghost.isVisible() && !outside);
+        setVisible(ghost.isVisible() && !outside);
     }
 
     private void updateAnimations() {
@@ -181,9 +175,9 @@ public class Ghost3D {
     private void setLook(Look look) {
         currentLook = look;
         if (currentLook == Look.NUMBER) {
-            root.getChildren().setAll(numberQuad);
+            getChildren().setAll(numberQuad);
         } else {
-            root.getChildren().setAll(coloredGhostGroup);
+            getChildren().setAll(coloredGhostGroup);
         }
         switch (look) {
             case NORMAL     -> coloredGhost3D.appearNormal();
