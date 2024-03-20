@@ -66,7 +66,7 @@ public class GameLevel3D {
     private static final double MESSAGE_EXTENDED_Z = -5;
     private static final double MESSAGE_RETRACTED_Z =  5;
 
-    private static FloorPlan getFloorPlan(GameVariant variant, int mapNumber) {
+    private static FloorPlan readFloorPlanFromFile(GameVariant variant, int mapNumber) {
         ResourceManager rm = () -> PacManGames3dUI.class;
         String variantMarker = switch (variant) {
             case MS_PACMAN -> "mspacman";
@@ -146,7 +146,7 @@ public class GameLevel3D {
             case MS_PACMAN -> {
                 int mapNumber = ArcadeWorld.mapNumberMsPacMan(level.number());
                 int mazeNumber = ArcadeWorld.mazeNumberMsPacMan(level.number());
-                floorPlan = getFloorPlan(GameVariant.MS_PACMAN, mapNumber);
+                floorPlan = readFloorPlanFromFile(GameVariant.MS_PACMAN, mapNumber);
                 wallBuilder = createWallBuilder(
                     context.theme().color("mspacman.maze.wallBaseColor",  mazeNumber - 1),
                     context.theme().color("mspacman.maze.wallMiddleColor",mazeNumber - 1),
@@ -154,7 +154,8 @@ public class GameLevel3D {
                 createFood3D(context.theme().color("mspacman.maze.foodColor", mazeNumber - 1));
             }
             case PACMAN -> {
-                floorPlan = getFloorPlan(GameVariant.PACMAN, 1);
+                // takes about 10 ms. Creating by code takes 25-30 ms.
+                floorPlan = readFloorPlanFromFile(GameVariant.PACMAN, 1);
                 wallBuilder = createWallBuilder(
                     context.theme().color("pacman.maze.wallBaseColor"),
                     context.theme().color("pacman.maze.wallMiddleColor"),

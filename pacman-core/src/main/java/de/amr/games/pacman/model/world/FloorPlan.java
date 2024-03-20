@@ -247,19 +247,13 @@ public class FloorPlan {
             for (int x = 0; x < sizeX; ++x) {
                 int i = (y % resolution) * resolution + (x % resolution);
                 Vector2i tile = v2i(x / resolution, y / resolution);
-                Vector2i n = northOf(tile, i);
-                Vector2i e = eastOf(tile, i);
-                Vector2i s = southOf(tile, i);
-                Vector2i w = westOf(tile, i);
+                Vector2i n = northOf(tile, i), e = eastOf(tile, i), s = southOf(tile, i), w = westOf(tile, i);
                 if (world.isWall(n) && world.isWall(e) && world.isWall(s) && world.isWall(w)) {
-                    Vector2i se = southOf(e, i);
-                    Vector2i sw = southOf(w, i);
-                    Vector2i ne = northOf(e, i);
-                    Vector2i nw = northOf(w, i);
-                    if (world.isWall(se) && !world.isWall(nw) || !world.isWall(se) && world.isWall(nw)
-                        || world.isWall(sw) && !world.isWall(ne) || !world.isWall(sw) && world.isWall(ne)) {
-                        // keep corner of wall region
-                    } else {
+                    Vector2i se = southOf(e, i), sw = southOf(w, i), ne = northOf(e, i), nw = northOf(w, i);
+                    if (!(  world.isWall(se) && !world.isWall(nw)
+                        || !world.isWall(se) &&  world.isWall(nw)
+                        ||  world.isWall(sw) && !world.isWall(ne)
+                        || !world.isWall(sw) &&  world.isWall(ne)) ) {
                         cells[y][x] = EMPTY;
                     }
                 }
