@@ -9,6 +9,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -20,6 +21,7 @@ import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import de.amr.games.pacman.ui.fx.v3d.animation.HeadBanging;
 import de.amr.games.pacman.ui.fx.v3d.animation.HipSwaying;
@@ -33,6 +35,7 @@ import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
@@ -84,10 +87,10 @@ public class GameLevel3D {
     private final Group worldGroup = new Group();
     private final Group doorGroup = new Group();
     private final Group foodGroup = new Group();
+    private final Group levelCounterGroup = new Group();
     private final PointLight houseLight = new PointLight();
     private final List<Ghost3D> ghosts3D;
     private       Text3D messageText3D;
-    private       LevelCounter3D levelCounter3D;
     private       LivesCounter3D livesCounter3D;
     private       Pac3D pac3D;
     private       Bonus3D bonus3D;
@@ -108,7 +111,7 @@ public class GameLevel3D {
         for (var ghost3D : ghosts3D) {
             root.getChildren().add(ghost3D.root());
         }
-        root.getChildren().addAll(pac3D.root(), pac3D.light(), messageText3D.root(), levelCounter3D.root(),
+        root.getChildren().addAll(pac3D.root(), pac3D.light(), messageText3D.root(), levelCounterGroup,
             livesCounter3D.root(), foodGroup, doorGroup);
         // Walls must be added *last*, otherwise, transparency is not working correctly!
         root.getChildren().add(worldGroup);
@@ -214,13 +217,34 @@ public class GameLevel3D {
         }
     }
 
-    private void createLevelCounter3D() {
-        levelCounter3D = new LevelCounter3D();
+    public void createLevelCounter3D() {
         // this is the *right* edge of the level counter:
-        levelCounter3D.root().setTranslateX((level.world().numCols() - 2) * TS);
-        levelCounter3D.root().setTranslateY(2 * TS);
-        levelCounter3D.root().setTranslateZ(-HTS);
-        levelCounter3D.populate(context.game(), context.spriteSheet());
+        levelCounterGroup.setTranslateX((level.world().numCols() - 2) * TS);
+        levelCounterGroup.setTranslateY(2 * TS);
+        levelCounterGroup.setTranslateZ(-HTS);
+        levelCounterGroup.getChildren().clear();
+        for (byte symbol : context.game().levelCounter()) {
+            Box cube = new Box(TS, TS, TS);
+            var material = new PhongMaterial(Color.WHITE);
+            var sprite = switch (context.gameVariant()) {
+                case MS_PACMAN -> ((MsPacManGameSpriteSheet) context.spriteSheet()).bonusSymbolSprite(symbol);
+                case    PACMAN -> ((PacManGameSpriteSheet)   context.spriteSheet()).bonusSymbolSprite(symbol);
+            };
+            material.setDiffuseMap(context.spriteSheet().subImage(sprite));
+            cube.setMaterial(material);
+            int count = levelCounterGroup.getChildren().size();
+            cube.setTranslateX(-count * 2 * TS);
+            cube.setTranslateZ(-HTS);
+
+            var spinning = new RotateTransition(Duration.seconds(6), cube);
+            spinning.setAxis(Rotate.X_AXIS);
+            spinning.setCycleCount(Animation.INDEFINITE);
+            spinning.setByAngle(360);
+            spinning.setRate(count % 2 == 0 ? 1 : -1);
+            spinning.setInterpolator(Interpolator.LINEAR);
+            spinning.play();
+            levelCounterGroup.getChildren().add(cube);
+        }
     }
 
     private void createMessage3D() {
@@ -523,10 +547,6 @@ public class GameLevel3D {
 
     public LivesCounter3D livesCounter3D() {
         return livesCounter3D;
-    }
-
-    public LevelCounter3D levelCounter3D() {
-        return levelCounter3D;
     }
 
     public Stream<Eatable3D> allEatables() {
