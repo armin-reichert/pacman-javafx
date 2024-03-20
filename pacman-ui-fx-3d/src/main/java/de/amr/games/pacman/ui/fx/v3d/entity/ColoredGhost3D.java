@@ -12,7 +12,6 @@ import javafx.animation.ParallelTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
@@ -26,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Armin Reichert
  */
-public class ColoredGhost3D {
+public class ColoredGhost3D extends Group {
 
     public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
     public static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
@@ -34,7 +33,6 @@ public class ColoredGhost3D {
 
     private final byte id;
     private final Theme theme;
-    private final Group root;
     private final Group eyesGroup;
     private final Group dressGroup;
     private final Shape3D dressShape;
@@ -78,17 +76,13 @@ public class ColoredGhost3D {
         eyesGroup = new Group(pupilsShape, eyeballsShape);
         eyesGroup.getTransforms().add(centerTransform);
 
-        root = new Group(dressGroup, eyesGroup);
+        getChildren().setAll(dressGroup, eyesGroup);
 
         // TODO fix orientation in obj file
-        root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
-        root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
-        root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-        root.getTransforms().add(Model3D.scale(root, size));
-    }
-
-    public Node root() {
-        return root;
+        getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
+        getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+        getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+        getTransforms().add(Model3D.scale(this, size));
     }
 
     public Group getEyesGroup() {

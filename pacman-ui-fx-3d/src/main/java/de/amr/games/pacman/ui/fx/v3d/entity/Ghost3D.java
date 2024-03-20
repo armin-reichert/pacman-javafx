@@ -78,7 +78,7 @@ public class Ghost3D extends Group {
         coloredGhost3D.eyeballsShape().drawModeProperty().bind(drawModePy);
         coloredGhost3D.pupilsShape().drawModeProperty().bind(drawModePy);
 
-        coloredGhostGroup = new Group(coloredGhost3D.root());
+        coloredGhostGroup = new Group(coloredGhost3D);
         coloredGhostGroup.getTransforms().add(orientation);
 
         numberQuad = new Box(14, 8, 8);
@@ -92,7 +92,7 @@ public class Ghost3D extends Group {
         numberRotation.setInterpolator(Interpolator.LINEAR);
         numberRotation.setRate(0.75);
 
-        brakeAnimation = new RotateTransition(BRAKE_DURATION, coloredGhost3D.root());
+        brakeAnimation = new RotateTransition(BRAKE_DURATION, coloredGhost3D);
         brakeAnimation.setAxis(Rotate.Y_AXIS);
         brakeAnimation.setFromAngle(0);
         brakeAnimation.setToAngle(-35);
