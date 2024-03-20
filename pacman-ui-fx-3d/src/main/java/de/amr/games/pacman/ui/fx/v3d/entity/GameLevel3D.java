@@ -15,6 +15,7 @@ import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.*;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
@@ -102,7 +103,7 @@ public class GameLevel3D {
 
         createWorld3D();
         createMessage3D();
-        createPac3D();
+        createPac3D(level.pac());
         ghosts3D = level.ghosts().map(this::createGhost3D).toList();
         createLivesCounter3D();
         createLevelCounter3D();
@@ -125,16 +126,16 @@ public class GameLevel3D {
         wallHeightPy.bind(PY_3D_WALL_HEIGHT);
     }
 
-    private void createPac3D() {
+    private void createPac3D(Pac pac) {
         switch (context.gameVariant()) {
             case MS_PACMAN -> {
-                pac3D = new Pac3D(createMsPacManShape(context.theme(), PAC_SIZE), level.pac());
-                pac3D.setWalkingAnimation(new HipSwaying(level.pac(), pac3D.root()));
+                pac3D = new Pac3D(createMsPacManShape(context.theme(), PAC_SIZE), pac);
+                pac3D.setWalkingAnimation(new HipSwaying(pac, pac3D.root()));
                 pac3D.setLight(new PointLight(context.theme().color("mspacman.color.head").desaturate()));
             }
             case PACMAN -> {
-                pac3D = new Pac3D(createPacManShape(context.theme(), PAC_SIZE), level.pac());
-                pac3D.setWalkingAnimation(new HeadBanging(level.pac(), pac3D.root()));
+                pac3D = new Pac3D(createPacManShape(context.theme(), PAC_SIZE), pac);
+                pac3D.setWalkingAnimation(new HeadBanging(pac, pac3D.root()));
                 pac3D.setLight(new PointLight(context.theme().color("pacman.color.head").desaturate()));
             }
         }
