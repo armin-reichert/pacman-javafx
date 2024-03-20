@@ -164,10 +164,7 @@ public class GameLevel3D {
         floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
         floor3D.colorPy.bind(PY_3D_FLOOR_COLOR);
         floor3D.texturePy.bind(PY_3D_FLOOR_TEXTURE);
-
-        var floorGroup = new Group();
-        floorGroup.getChildren().add(floor3D);
-        floorGroup.getTransforms().add(new Translate(0.5 * floor3D.getWidth(), 0.5 * floor3D.getHeight(), 0.5 * floor3D.getDepth()));
+        floor3D.getTransforms().add(new Translate(0.5 * floor3D.getWidth(), 0.5 * floor3D.getHeight(), 0.5 * floor3D.getDepth()));
 
         addDoor3D(house.door());
 
@@ -176,7 +173,7 @@ public class GameLevel3D {
         addHorizontalWalls(wallsGroup);
         addVerticalWalls(wallsGroup);
 
-        worldGroup.getChildren().addAll(houseLight, floorGroup, wallsGroup);
+        worldGroup.getChildren().addAll(houseLight, floor3D, wallsGroup);
         Logger.info("3D game level created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
     }
 
