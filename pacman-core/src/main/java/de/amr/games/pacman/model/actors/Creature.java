@@ -302,6 +302,10 @@ public abstract class Creature extends Entity {
         return moveResult.tunnelEntered;
     }
 
+    public boolean leftTunnel() {
+        return moveResult.tunnelLeft;
+    }
+
     /**
      * Tries moving through the game world.
      * <p>
@@ -398,9 +402,24 @@ public abstract class Creature extends Entity {
             move();
         }
 
-        newTileEntered = !tileBeforeMove.equals(tile());
+        Vector2i currentTile = tile();
+
+        newTileEntered = !tileBeforeMove.equals(currentTile);
         moveResult.moved = true;
-        moveResult.tunnelEntered = !world().isTunnel(tileBeforeMove) && world().isTunnel(tile());
+        moveResult.tunnelEntered = world.isTunnel(currentTile)
+            && !world.isTunnel(tileBeforeMove)
+            && !world.belongsToPortal(tileBeforeMove);
+        moveResult.tunnelLeft = !world.isTunnel(currentTile)
+            && world.isTunnel(tileBeforeMove)
+            && !world.belongsToPortal(currentTile);
+
         moveResult.addMessage(String.format("%5s (%.2f pixels)", dir, newVelocity.length()));
+
+        if (moveResult.tunnelEntered) {
+            Logger.trace("Tunnel entered by {}", name());
+        }
+        if (moveResult.tunnelLeft) {
+            Logger.trace("Tunnel left by {}", name());
+        }
     }
 }

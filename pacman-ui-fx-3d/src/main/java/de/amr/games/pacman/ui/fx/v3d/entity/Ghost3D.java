@@ -26,6 +26,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static java.util.Objects.requireNonNull;
 
@@ -142,8 +143,8 @@ public class Ghost3D {
         root.setTranslateZ(-5);
         // TODO: make transition to new wish dir if changed
         orientation.setAngle(Turn.angle(ghost.wishDir()));
-        boolean outsideWorld = position.x() < 0 || position.x() > level.world().numCols() * TS;
-        root.setVisible(ghost.isVisible() && !outsideWorld);
+        boolean outside = position.x() < HTS || position.x() > level.world().numCols() * TS - HTS;
+        root.setVisible(ghost.isVisible() && !outside);
     }
 
     private void updateAnimations() {

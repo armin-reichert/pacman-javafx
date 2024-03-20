@@ -6,17 +6,18 @@ package de.amr.games.pacman.model.actors;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MoveResult {
     public boolean moved;
     public boolean tunnelEntered;
+    public boolean tunnelLeft;
     public boolean teleported;
     private final List<String> messages = new ArrayList<>(3);
 
     public void clear() {
         moved = false;
         tunnelEntered = false;
+        tunnelLeft = false;
         teleported = false;
         messages.clear();
     }
@@ -26,15 +27,16 @@ public class MoveResult {
     }
 
     public String summary() {
-        return messages.stream().collect(Collectors.joining(", "));
+        return String.join(", ", messages);
     }
 
     @Override
     public String toString() {
-        var sb = new StringBuilder("");
+        var sb = new StringBuilder();
         sb.append(tunnelEntered ? " entered tunnel" : "");
+        sb.append(tunnelLeft ? " left tunnel" : "");
         sb.append(teleported ? " teleported" : "");
         sb.append(moved ? " moved" : "");
-        return sb.length() == 0 ? "" : "[" + sb.toString().trim() + "]";
+        return sb.isEmpty() ? "" : "[" + sb.toString().trim() + "]";
     }
 }
