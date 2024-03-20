@@ -62,14 +62,6 @@ public class GameLevel3D {
     private static final double PAC_SIZE   = 9.0;
     private static final double GHOST_SIZE = 9.0;
 
-    private static final int    LIVES_COUNTER_MAX_ENTRIES = 5;
-    private static final Color  LIVES_COUNTER_PILLAR_COLOR = Color.grayRgb(120);
-    private static final double LIVES_COUNTER_PILLAR_HEIGHT = 8.0;
-    private static final Color  LIVES_COUNTER_PLATE_COLOR = Color.grayRgb(180);
-    private static final double LIVES_COUNTER_PLATE_RADIUS = 6.0;
-    private static final double LIVES_COUNTER_PLATE_THICKNESS = 1.0;
-    private static final Color  LIVES_COUNTER_LIGHT_COLOR = Color.CORNFLOWERBLUE;
-
     private static final double LIVES_COUNTER_PAC_SIZE = 10.0;
     private static final double MESSAGE_EXTENDED_Z = -5;
     private static final double MESSAGE_RETRACTED_Z =  5;
@@ -204,14 +196,19 @@ public class GameLevel3D {
     }
 
     private void createLivesCounter3D() {
-        livesCounter3D = new LivesCounter3D(LIVES_COUNTER_MAX_ENTRIES,
-            LIVES_COUNTER_PILLAR_COLOR, LIVES_COUNTER_PILLAR_HEIGHT,
-            LIVES_COUNTER_PLATE_COLOR, LIVES_COUNTER_PLATE_THICKNESS, LIVES_COUNTER_PLATE_RADIUS,
-            LIVES_COUNTER_LIGHT_COLOR);
+        var theme = context.theme();
+        livesCounter3D = new LivesCounter3D(
+            theme.get("livescounter.entries"),
+            theme.color("livescounter.pillar.color"),
+            theme.get("livescounter.pillar.height"),
+            theme.color("livescounter.plate.color"),
+            theme.get("livescounter.plate.thickness"),
+            theme.get("livescounter.plate.radius"),
+            theme.color("livescounter.light.color"));
         livesCounter3D.root().setTranslateX(2 * TS);
         livesCounter3D.root().setTranslateY(2 * TS);
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
-        for (int i = 0; i < LIVES_COUNTER_MAX_ENTRIES; ++i) {
+        for (int i = 0; i < livesCounter3D.maxLives(); ++i) {
             var shape = switch (context.gameVariant()) {
                 case MS_PACMAN -> createMsPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE);
                 case    PACMAN -> createPacManShape(context.theme(), LIVES_COUNTER_PAC_SIZE);

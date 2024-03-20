@@ -203,6 +203,15 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("pacman.color.palate",           Color.rgb(191, 79, 61));
         theme.set("pacman.color.eyes",             Color.rgb(33, 33, 33));
 
+        // lives counter
+        theme.set("livescounter.entries",          5);
+        theme.set("livescounter.pillar.color",     Color.grayRgb(120));
+        theme.set("livescounter.pillar.height",    8.0);
+        theme.set("livescounter.plate.color",      Color.grayRgb(180));
+        theme.set("livescounter.plate.radius",     6.0);
+        theme.set("livescounter.plate.thickness",  1.0);
+        theme.set("livescounter.light.color",      Color.CORNFLOWERBLUE);
+
         // dashboard
         theme.set("infobox.min_col_width",         180);
         theme.set("infobox.min_label_width",       120);

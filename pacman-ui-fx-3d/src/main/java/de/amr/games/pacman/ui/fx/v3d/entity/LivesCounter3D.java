@@ -35,7 +35,6 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
  */
 public class LivesCounter3D {
 
-
     public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
@@ -48,6 +47,7 @@ public class LivesCounter3D {
     private final List<Pac3D> pac3DList = new ArrayList<>();
     private final List<Animation> animations = new ArrayList<>();
 
+    private final int maxLives;
     private final double pillarHeight;
     private final double plateRadius;
     private final double plateThickness;
@@ -58,6 +58,7 @@ public class LivesCounter3D {
                           Color pillarColor, double pillarHeight,
                           Color plateColor, double plateThickness, double plateRadius,
                           Color lightColor) {
+        this.maxLives = maxLives;
         this.pillarHeight = pillarHeight;
         this.plateThickness = plateThickness;
         this.plateRadius = plateRadius;
@@ -120,8 +121,12 @@ public class LivesCounter3D {
         return root;
     }
 
+    public int maxLives() {
+        return maxLives;
+    }
+
     public void update(int numLives) {
-        for (int i = 0; i < pac3DList.size(); ++i) {
+        for (int i = 0; i < maxLives; ++i) {
             pac3DList.get(i).root().setVisible(i < numLives);
         }
     }
