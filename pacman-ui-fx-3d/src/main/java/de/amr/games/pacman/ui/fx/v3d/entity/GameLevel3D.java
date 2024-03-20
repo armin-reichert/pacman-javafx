@@ -65,6 +65,16 @@ public class GameLevel3D {
     private static final double MESSAGE_EXTENDED_Z = -5;
     private static final double MESSAGE_RETRACTED_Z =  5;
 
+    private static FloorPlan getFloorPlan(GameVariant variant, int mapNumber) {
+        ResourceManager rm = () -> PacManGames3dUI.class;
+        String variantMarker = switch (variant) {
+            case MS_PACMAN -> "mspacman";
+            case PACMAN    -> "pacman";
+        };
+        var path = String.format("floorplans/fp-%s-map-%d-res-%d.txt", variantMarker, mapNumber, FLOOR_PLAN_RESOLUTION);
+        return FloorPlan.read(rm.url(path));
+    }
+
     public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
 
     private final GameLevel level;
@@ -319,15 +329,6 @@ public class GameLevel3D {
         double xMax = (bottomRightTile.x() - 1) * res;
         double yMax = (bottomRightTile.y() - 1) * res;
         return wd.x > xMin && wd.y > yMin && wd.x <= xMax && wd.y <= yMax;
-    }
-
-    private FloorPlan getFloorPlan(GameVariant variant, int mapNumber) {
-        ResourceManager rm = () -> PacManGames3dUI.class;
-        String name = switch (variant) {
-            case MS_PACMAN -> "fp-mspacman-map-" + mapNumber + "-res-" + FLOOR_PLAN_RESOLUTION + ".txt";
-            case PACMAN    -> "fp-pacman-map-"   + mapNumber + "-res-" + FLOOR_PLAN_RESOLUTION + ".txt";
-        };
-        return FloorPlan.read(rm.url("floorplans/" + name));
     }
 
     public void update() {
