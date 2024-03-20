@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -21,7 +20,6 @@ import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import de.amr.games.pacman.ui.fx.v3d.animation.HeadBanging;
 import de.amr.games.pacman.ui.fx.v3d.animation.HipSwaying;
@@ -222,7 +220,7 @@ public class GameLevel3D {
         levelCounter3D.root().setTranslateX((level.world().numCols() - 2) * TS);
         levelCounter3D.root().setTranslateY(2 * TS);
         levelCounter3D.root().setTranslateZ(-HTS);
-        populateLevelCounter(context.game(), context.spriteSheet());
+        levelCounter3D.populate(context.game(), context.spriteSheet());
     }
 
     private void createMessage3D() {
@@ -356,10 +354,6 @@ public class GameLevel3D {
         boolean hideOne = level.pac().isVisible() || gameState == GameState.GHOST_DYING;
         livesCounter3D.update(hideOne ? level.game().lives() - 1 : level.game().lives());
         livesCounter3D.root().setVisible(hasCredit);
-    }
-
-    public void populateLevelCounter(GameModel game, SpriteSheet spriteSheet) {
-        levelCounter3D.populate(game, spriteSheet);
     }
 
     public void setHouseLightOn(boolean state) {
@@ -529,6 +523,10 @@ public class GameLevel3D {
 
     public LivesCounter3D livesCounter3D() {
         return livesCounter3D;
+    }
+
+    public LevelCounter3D levelCounter3D() {
+        return levelCounter3D;
     }
 
     public Stream<Eatable3D> allEatables() {

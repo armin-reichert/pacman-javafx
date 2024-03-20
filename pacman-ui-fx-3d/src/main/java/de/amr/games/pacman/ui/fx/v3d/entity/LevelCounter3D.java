@@ -11,7 +11,6 @@ import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -20,8 +19,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-
-import java.util.function.Function;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -40,22 +37,19 @@ public class LevelCounter3D {
     }
 
     public void populate(GameModel game, SpriteSheet spriteSheet) {
-        // that's ugly:
-        Function<Byte, Rectangle2D> fnSprite = switch (game.variant()) {
-            case MS_PACMAN -> ((MsPacManGameSpriteSheet) spriteSheet)::bonusSymbolSprite;
-            case    PACMAN -> ((PacManGameSpriteSheet)   spriteSheet)::bonusSymbolSprite;
-        };
         root.getChildren().clear();
-        double rate = 1;
-        double x = 0;
-        for (var image : game.levelCounter().stream().map(fnSprite).map(spriteSheet::subImage).toList()) {
-            addSpinningCube(x, image, rate);
-            rate = -rate;
-            x -= 2 * TS;
+        for (byte symbol : game.levelCounter()) {
+            var sprite = switch (game.variant()) {
+                case MS_PACMAN -> ((MsPacManGameSpriteSheet) spriteSheet).bonusSymbolSprite(symbol);
+                case    PACMAN -> ((PacManGameSpriteSheet)   spriteSheet).bonusSymbolSprite(symbol);
+            };
+            int count = root.getChildren().size();
+            var entry = createEntry(-count * 2 * TS, spriteSheet.subImage(sprite), count % 2 == 0 ? 1 : -1);
+            root.getChildren().add(entry);
         }
     }
 
-    private void addSpinningCube(double x, Image texture, double rate) {
+    private Box createEntry(double x, Image texture, double rate) {
         Box cube = new Box(TS, TS, TS);
         cube.setTranslateX(x);
         cube.setTranslateZ(-HTS);
@@ -69,6 +63,6 @@ public class LevelCounter3D {
         spinning.setRate(rate);
         spinning.setInterpolator(Interpolator.LINEAR);
         spinning.play();
-        root.getChildren().add(cube);
+        return cube;
     }
 }
