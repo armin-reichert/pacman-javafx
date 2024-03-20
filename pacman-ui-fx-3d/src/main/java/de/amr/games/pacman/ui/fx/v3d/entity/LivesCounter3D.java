@@ -35,12 +35,6 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
  */
 public class LivesCounter3D {
 
-    private static final Color  PILLAR_COLOR = Color.grayRgb(100);
-    private static final double PILLAR_HEIGHT = 8.0;
-    private static final Color  PLATE_COLOR = Color.grayRgb(180);
-    private static final double PLATE_RADIUS = 6.0;
-    private static final double PLATE_THICKNESS = 1.0;
-    private static final Color  LIGHT_COLOR = Color.CORNFLOWERBLUE;
 
     public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
@@ -54,16 +48,26 @@ public class LivesCounter3D {
     private final List<Pac3D> pac3DList = new ArrayList<>();
     private final List<Animation> animations = new ArrayList<>();
 
+    private final double pillarHeight;
+    private final double plateRadius;
+    private final double plateThickness;
+
     private int index;
 
-    public LivesCounter3D(int maxLives) {
-        pillarMaterial = coloredMaterial(PILLAR_COLOR);
-        plateMaterial = coloredMaterial(PLATE_COLOR);
-        var light = new PointLight(LIGHT_COLOR);
+    public LivesCounter3D(int maxLives,
+                          Color pillarColor, double pillarHeight,
+                          Color plateColor, double plateThickness, double plateRadius,
+                          Color lightColor) {
+        this.pillarHeight = pillarHeight;
+        this.plateThickness = plateThickness;
+        this.plateRadius = plateRadius;
+        pillarMaterial = coloredMaterial(pillarColor);
+        plateMaterial = coloredMaterial(plateColor);
+        var light = new PointLight(lightColor);
         light.setMaxRange  (TS * (maxLives + 1));
         light.setTranslateX(TS * (maxLives - 1));
         light.setTranslateY(TS * (-1));
-        light.setTranslateZ(-(PILLAR_HEIGHT + 20));
+        light.setTranslateZ(-(pillarHeight + 20));
         light.lightOnProperty().bind(lightOnPy);
         root.getChildren().addAll(standsGroup, light);
     }
@@ -72,7 +76,7 @@ public class LivesCounter3D {
         addStand(2 * index * TS);
         double radius = pac3D.root().getBoundsInLocal().getHeight() / 2f;
         pac3D.position().setX(2 * index * TS);
-        pac3D.position().setZ(-(PILLAR_HEIGHT + PLATE_THICKNESS + radius));
+        pac3D.position().setZ(-(pillarHeight + plateThickness + radius));
         if (lookRight) {
             pac3D.root().setRotationAxis(Rotate.Z_AXIS);
             pac3D.root().setRotate(180);
@@ -83,35 +87,28 @@ public class LivesCounter3D {
 
         var rotation = new RotateTransition(Duration.seconds(20.0), pac3D.root());
         rotation.setAxis(Rotate.Z_AXIS);
-        rotation.setByAngle(360);
+        rotation.setByAngle(180);
         rotation.setInterpolator(Interpolator.LINEAR);
         rotation.setCycleCount(Animation.INDEFINITE);
+        rotation.setAutoReverse(true);
         animations.add(rotation);
 
         index += 1;
     }
 
-    public void startAnimation() {
-        animations.forEach(Animation::play);
-    }
-
-    public void stopAnimation() {
-        animations.forEach(Animation::stop);
-    }
-
     private void addStand(double x) {
-        var plate = new Cylinder(PLATE_RADIUS, PLATE_THICKNESS);
+        var plate = new Cylinder(plateRadius, plateThickness);
         plate.setMaterial(plateMaterial);
         plate.setTranslateX(x);
-        plate.setTranslateZ(-PILLAR_HEIGHT - PLATE_THICKNESS);
+        plate.setTranslateZ(-pillarHeight - plateThickness);
         plate.setRotationAxis(Rotate.X_AXIS);
         plate.setRotate(90);
         plate.drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);
 
-        var pillar = new Cylinder(1, PILLAR_HEIGHT);
+        var pillar = new Cylinder(1, pillarHeight);
         pillar.setMaterial(pillarMaterial);
         pillar.setTranslateX(x);
-        pillar.setTranslateZ(-0.5 * PILLAR_HEIGHT);
+        pillar.setTranslateZ(-0.5 * pillarHeight);
         pillar.setRotationAxis(Rotate.X_AXIS);
         pillar.setRotate(90);
         pillar.drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);
@@ -127,5 +124,13 @@ public class LivesCounter3D {
         for (int i = 0; i < pac3DList.size(); ++i) {
             pac3DList.get(i).root().setVisible(i < numLives);
         }
+    }
+
+    public void startAnimation() {
+        animations.forEach(Animation::play);
+    }
+
+    public void stopAnimation() {
+        animations.forEach(Animation::stop);
     }
 }

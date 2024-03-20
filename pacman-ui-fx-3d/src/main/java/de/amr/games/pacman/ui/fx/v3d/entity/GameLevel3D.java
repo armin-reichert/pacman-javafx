@@ -61,7 +61,15 @@ public class GameLevel3D {
     private static final int    FLOOR_PLAN_RESOLUTION = 4;
     private static final double PAC_SIZE   = 9.0;
     private static final double GHOST_SIZE = 9.0;
-    private static final int LIVES_COUNTER_MAX_ENTRIES = 5;
+
+    private static final int    LIVES_COUNTER_MAX_ENTRIES = 5;
+    private static final Color  LIVES_COUNTER_PILLAR_COLOR = Color.grayRgb(120);
+    private static final double LIVES_COUNTER_PILLAR_HEIGHT = 8.0;
+    private static final Color  LIVES_COUNTER_PLATE_COLOR = Color.grayRgb(180);
+    private static final double LIVES_COUNTER_PLATE_RADIUS = 6.0;
+    private static final double LIVES_COUNTER_PLATE_THICKNESS = 1.0;
+    private static final Color  LIVES_COUNTER_LIGHT_COLOR = Color.CORNFLOWERBLUE;
+
     private static final double LIVES_COUNTER_PAC_SIZE = 10.0;
     private static final double MESSAGE_EXTENDED_Z = -5;
     private static final double MESSAGE_RETRACTED_Z =  5;
@@ -196,7 +204,10 @@ public class GameLevel3D {
     }
 
     private void createLivesCounter3D() {
-        livesCounter3D = new LivesCounter3D(LIVES_COUNTER_MAX_ENTRIES);
+        livesCounter3D = new LivesCounter3D(LIVES_COUNTER_MAX_ENTRIES,
+            LIVES_COUNTER_PILLAR_COLOR, LIVES_COUNTER_PILLAR_HEIGHT,
+            LIVES_COUNTER_PLATE_COLOR, LIVES_COUNTER_PLATE_THICKNESS, LIVES_COUNTER_PLATE_RADIUS,
+            LIVES_COUNTER_LIGHT_COLOR);
         livesCounter3D.root().setTranslateX(2 * TS);
         livesCounter3D.root().setTranslateY(2 * TS);
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
