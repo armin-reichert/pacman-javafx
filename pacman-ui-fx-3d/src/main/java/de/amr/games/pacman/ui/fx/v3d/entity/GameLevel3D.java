@@ -105,19 +105,14 @@ public class GameLevel3D extends Group {
         createLevelCounter3D();
         createMessage3D();
 
-        for (var ghost3D : ghosts3D) {
-            getChildren().add(ghost3D);
-        }
-        getChildren().addAll(pac3D, pac3D.light(), messageText3D, levelCounterGroup,
-            livesCounter3D, foodGroup, doorGroup);
-        // Walls must be added *last*, otherwise, transparency is not working correctly!
-        getChildren().add(worldGroup);
+        getChildren().addAll(ghosts3D);
+        // Walls must be added *last*! Otherwise, transparency is not working correctly.
+        getChildren().addAll(pac3D, pac3D.light(), messageText3D, levelCounterGroup, livesCounter3D, foodGroup, doorGroup, worldGroup);
 
-        // Bindings
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
         pac3D.drawModePy.bind(PY_3D_DRAW_MODE);
-        for (var g3D: ghosts3D) {
-            g3D.drawModePy.bind(PY_3D_DRAW_MODE);
+        for (var ghost3D: ghosts3D) {
+            ghost3D.drawModePy.bind(PY_3D_DRAW_MODE);
         }
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         wallHeightPy.bind(PY_3D_WALL_HEIGHT);
