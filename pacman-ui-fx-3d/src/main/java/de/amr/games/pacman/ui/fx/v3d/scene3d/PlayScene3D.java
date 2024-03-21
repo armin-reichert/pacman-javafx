@@ -87,15 +87,15 @@ public class PlayScene3D implements GameScene {
         coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
         scores3D = new Scores3D();
-        scores3D.root().setTranslateX(TS);
-        scores3D.root().setTranslateY(-3.5 * TS);
-        scores3D.root().setTranslateZ(-3 * TS);
+        scores3D.setTranslateX(TS);
+        scores3D.setTranslateY(-3.5 * TS);
+        scores3D.setTranslateZ(-3 * TS);
         // keep the scores rotated such that the viewer always sees them frontally
-        scores3D.root().rotationAxisProperty().bind(camera.rotationAxisProperty());
-        scores3D.root().rotateProperty().bind(camera.rotateProperty());
+        scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
+        scores3D.rotateProperty().bind(camera.rotateProperty());
 
         // first child is placeholder for game level 3D
-        subSceneRoot.getChildren().addAll(new Group(), scores3D.root(),  coordSystem, ambientLight);
+        subSceneRoot.getChildren().addAll(new Group(), scores3D,  coordSystem, ambientLight);
 
         Logger.info("3D play scene created. {}", this);
     }

@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -20,11 +19,10 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public class Scores3D {
+public class Scores3D extends GridPane {
 
     public ObjectProperty<Font> fontPy = new SimpleObjectProperty<>(this, "font", Font.font("Courier", 12));
 
-    private final GridPane grid = new GridPane();
     private final Text txtScore;
     private final Text txtHighScore;
     private boolean textDisplayed;
@@ -46,15 +44,11 @@ public class Scores3D {
         txtHighScore.setFill(Color.YELLOW);
         txtHighScore.fontProperty().bind(fontPy);
 
-        grid.setHgap(5 * TS);
-        grid.add(txtScoreTitle,  0,0);
-        grid.add(txtScore,       0,1);
-        grid.add(txtHighScoreTitle,1,0);
-        grid.add(txtHighScore,     1,1);
-    }
-
-    public Node root() {
-        return grid;
+        setHgap(5 * TS);
+        add(txtScoreTitle,  0,0);
+        add(txtScore,       0,1);
+        add(txtHighScoreTitle,1,0);
+        add(txtHighScore,     1,1);
     }
 
     public void showText(Color color, String text) {
