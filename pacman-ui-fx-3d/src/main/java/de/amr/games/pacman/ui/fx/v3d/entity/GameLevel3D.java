@@ -108,7 +108,7 @@ public class GameLevel3D extends Group {
         for (var ghost3D : ghosts3D) {
             getChildren().add(ghost3D);
         }
-        getChildren().addAll(pac3D.root(), pac3D.light(), messageText3D.root(), levelCounterGroup,
+        getChildren().addAll(pac3D, pac3D.light(), messageText3D.root(), levelCounterGroup,
             livesCounter3D, foodGroup, doorGroup);
         // Walls must be added *last*, otherwise, transparency is not working correctly!
         getChildren().add(worldGroup);
@@ -127,12 +127,12 @@ public class GameLevel3D extends Group {
         switch (context.gameVariant()) {
             case MS_PACMAN -> {
                 pac3D = new Pac3D(createMsPacManShape(context.theme(), PAC_SIZE), pac);
-                pac3D.setWalkingAnimation(new HipSwaying(pac, pac3D.root()));
+                pac3D.setWalkingAnimation(new HipSwaying(pac, pac3D));
                 pac3D.setLight(new PointLight(context.theme().color("mspacman.color.head").desaturate()));
             }
             case PACMAN -> {
                 pac3D = new Pac3D(createPacManShape(context.theme(), PAC_SIZE), pac);
-                pac3D.setWalkingAnimation(new HeadBanging(pac, pac3D.root()));
+                pac3D.setWalkingAnimation(new HeadBanging(pac, pac3D));
                 pac3D.setLight(new PointLight(context.theme().color("pacman.color.head").desaturate()));
             }
         }

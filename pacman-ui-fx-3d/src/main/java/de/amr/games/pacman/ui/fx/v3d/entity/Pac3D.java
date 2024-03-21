@@ -43,7 +43,7 @@ import static de.amr.games.pacman.ui.fx.v3d.model.Model3D.meshView;
  *
  * @author Armin Reichert
  */
-public class Pac3D {
+public class Pac3D extends Group {
 
     public static final String MESH_ID_EYES = "PacMan.Eyes";
     public static final String MESH_ID_HEAD = "PacMan.Head";
@@ -133,7 +133,6 @@ public class Pac3D {
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
     public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
 
-    private final Group root;
     private final Translate position = new Translate();
     private final Rotate orientation = new Rotate();
     private Pac pac;
@@ -142,7 +141,7 @@ public class Pac3D {
 
     public Pac3D(Group shapeGroup, Pac pac) {
         checkNotNull(shapeGroup);
-        this.root = new Group(shapeGroup);
+        getChildren().add(shapeGroup);
         this.pac = pac;
         shapeGroup.getTransforms().setAll(position, orientation);
         meshView(shapeGroup, MESH_ID_EYES).drawModeProperty().bind(drawModePy);
@@ -157,15 +156,11 @@ public class Pac3D {
      */
     public Pac3D(Group shapeGroup) {
         checkNotNull(shapeGroup);
-        this.root = new Group(shapeGroup);
+        getChildren().add(shapeGroup);
         shapeGroup.getTransforms().setAll(position, orientation);
         meshView(shapeGroup, MESH_ID_EYES).drawModeProperty().bind(drawModePy);
         meshView(shapeGroup, MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
         meshView(shapeGroup, MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
-    }
-
-    public Group root() {
-        return root;
     }
 
     public Pac pac() {
@@ -196,9 +191,9 @@ public class Pac3D {
     }
 
     public void init() {
-        root.setScaleX(1.0);
-        root.setScaleY(1.0);
-        root.setScaleZ(1.0);
+        setScaleX(1.0);
+        setScaleY(1.0);
+        setScaleZ(1.0);
         update();
     }
 
@@ -236,7 +231,7 @@ public class Pac3D {
         position.setZ(-5.0);
         orientation.setAxis(Rotate.Z_AXIS);
         orientation.setAngle(angle(pac.moveDir()));
-        root.setVisible(pac.isVisible() && !outsideWorld());
+        setVisible(pac.isVisible() && !outsideWorld());
         if (pac.isStandingStill()) {
             walkingAnimation.stop();
         } else {
@@ -250,7 +245,7 @@ public class Pac3D {
     }
 
     private Animation createMsPacManDyingAnimation() {
-        var spin = new RotateTransition(Duration.seconds(0.5), root);
+        var spin = new RotateTransition(Duration.seconds(0.5), this);
         spin.setAxis(Rotate.X_AXIS); //TODO check this
         spin.setFromAngle(0);
         spin.setToAngle(360);
@@ -268,19 +263,19 @@ public class Pac3D {
         Duration duration = Duration.seconds(1.0);
         short numSpins = 6;
 
-        var spinning = new RotateTransition(duration.divide(numSpins), root);
+        var spinning = new RotateTransition(duration.divide(numSpins), this);
         spinning.setAxis(Rotate.Z_AXIS);
         spinning.setByAngle(360);
         spinning.setCycleCount(numSpins);
         spinning.setInterpolator(Interpolator.LINEAR);
 
-        var shrinking = new ScaleTransition(duration, root);
+        var shrinking = new ScaleTransition(duration, this);
         shrinking.setToX(0.5);
         shrinking.setToY(0.5);
         shrinking.setToZ(0.0);
         shrinking.setInterpolator(Interpolator.LINEAR);
 
-        var falling = new TranslateTransition(duration, root);
+        var falling = new TranslateTransition(duration, this);
         falling.setToZ(4);
         falling.setInterpolator(Interpolator.EASE_IN);
 
@@ -293,8 +288,8 @@ public class Pac3D {
         );
 
         animation.setOnFinished(e -> {
-            root.setVisible(false);
-            root.setTranslateZ(0);
+            setVisible(false);
+            setTranslateZ(0);
         });
 
         return animation;

@@ -13,7 +13,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -75,18 +74,18 @@ public class LivesCounter3D extends Group {
     public void addItem(Pac3D pac3D, boolean lookRight) {
         int x = pac3DList.size() * 2 * TS;
         addStand(x);
-        double radius = pac3D.root().getBoundsInLocal().getHeight() / 2f;
+        double radius = pac3D.getBoundsInLocal().getHeight() / 2f;
         pac3D.position().setX(x);
         pac3D.position().setZ(-(pillarHeight + plateThickness + radius));
         if (lookRight) {
-            pac3D.root().setRotationAxis(Rotate.Z_AXIS);
-            pac3D.root().setRotate(180);
+            pac3D.setRotationAxis(Rotate.Z_AXIS);
+            pac3D.setRotate(180);
         }
         pac3D.drawModePy.bind(drawModePy);
         pac3DList.add(pac3D);
-        getChildren().add(pac3D.root());
+        getChildren().add(pac3D);
 
-        var rotation = new RotateTransition(Duration.seconds(20.0), pac3D.root());
+        var rotation = new RotateTransition(Duration.seconds(20.0), pac3D);
         rotation.setAxis(Rotate.Z_AXIS);
         rotation.setByAngle(180);
         rotation.setInterpolator(Interpolator.LINEAR);
@@ -121,7 +120,7 @@ public class LivesCounter3D extends Group {
 
     public void update(int numLives) {
         for (int i = 0; i < maxLives; ++i) {
-            pac3DList.get(i).root().setVisible(i < numLives);
+            pac3DList.get(i).setVisible(i < numLives);
         }
     }
 
