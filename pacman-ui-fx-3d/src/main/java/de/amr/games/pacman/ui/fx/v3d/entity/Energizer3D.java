@@ -26,21 +26,19 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public class Energizer3D implements Eatable3D {
+public class Energizer3D extends Sphere implements Eatable3D {
 
     private static final double MIN_SCALE = 0.25;
 
-    private final Shape3D shape;
     private final ScaleTransition pumping;
     private Animation eatenAnimation;
 
     public Energizer3D(double radius) {
         requirePositive(radius, "Energizer radius must be positive but is %f");
+        setRadius(radius);
+        setUserData(this);
 
-        shape = new Sphere(radius);
-        shape.setUserData(this);
-
-        pumping = new ScaleTransition(Duration.seconds(1.0 / 4), shape);
+        pumping = new ScaleTransition(Duration.seconds(1.0 / 4), this);
         pumping.setAutoReverse(true);
         pumping.setCycleCount(Animation.INDEFINITE);
         pumping.setInterpolator(Interpolator.EASE_BOTH);
@@ -55,31 +53,30 @@ public class Energizer3D implements Eatable3D {
     @Override
     public String toString() {
         var pumpingText = pumping.getStatus() == Status.RUNNING ? ", pumping" : "";
-        return String.format("[Energizer%s, tile: %s, %s]", pumpingText, tile(), shape);
+        return String.format("[Energizer%s, tile: %s, %s]", pumpingText, tile(), this);
     }
 
     @Override
     public void placeAtTile(Vector2i tile) {
         requireNonNull(tile);
-
-        shape.setTranslateX(tile.x() * TS + HTS);
-        shape.setTranslateY(tile.y() * TS + HTS);
-        shape.setTranslateZ(-HTS);
+        setTranslateX(tile.x() * TS + HTS);
+        setTranslateY(tile.y() * TS + HTS);
+        setTranslateZ(-HTS);
     }
 
     @Override
     public Point3D position() {
-        return new Point3D(shape.getTranslateX(), shape.getTranslateY(), shape.getTranslateZ());
+        return new Point3D(getTranslateX(), getTranslateY(), getTranslateZ());
     }
 
     @Override
     public Vector2i tile() {
-        return tileAt((float) shape.getTranslateX(), (float) shape.getTranslateY());
+        return tileAt((float) getTranslateX(), (float) getTranslateY());
     }
 
     @Override
     public Shape3D root() {
-        return shape;
+        return this;
     }
 
     @Override
@@ -95,7 +92,7 @@ public class Energizer3D implements Eatable3D {
     public void onEaten() {
         pumping.stop();
         // TODO check this
-        var hideAfterDelay = Ufx.actionAfterSeconds(0.05, () -> shape.setVisible(false));
+        var hideAfterDelay = Ufx.actionAfterSeconds(0.05, () -> setVisible(false));
         if (eatenAnimation != null) {
             new SequentialTransition(hideAfterDelay, eatenAnimation).play();
         } else {
