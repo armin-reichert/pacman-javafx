@@ -18,9 +18,10 @@ public class ObjModelLoaderTest {
             ResourceManager rm = () -> PacManGames3dUI.class;
             var url = rm.url(args[0]);
             var model = new Model3D(url);
-            System.out.println(model.contentReport());
+            Logger.info("Loading OBJ model from URL '{}'", url);
+            Logger.info(model.contentReport());
         } else {
-            Logger.error("Missing model file path (relative to asset folder)");
+            Logger.error("No model path program argument (e.g. 'model3D/ghost.obj') specified");
         }
     }
 }
