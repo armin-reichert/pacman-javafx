@@ -365,9 +365,7 @@ public class GameLevel3D {
         boolean hasCredit = GameController.it().hasCredit();
 
         pac3D.update();
-        for (var ghost3D : ghosts3D) {
-            ghost3D.update(level);
-        }
+        ghosts3D().forEach(Ghost3D::update);
         if (bonus3D != null) {
             bonus3D.update(level);
         }

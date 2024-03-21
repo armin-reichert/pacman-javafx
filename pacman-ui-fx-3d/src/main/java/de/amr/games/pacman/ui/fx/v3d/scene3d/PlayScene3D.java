@@ -231,7 +231,7 @@ public class PlayScene3D implements GameScene {
                 if (level3D != null) {
                     context.gameLevel().ifPresent(level -> {
                         level3D.pac3D().init();
-                        level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
+                        level3D.ghosts3D().forEach(Ghost3D::init);
                         level3D.energizers3D().forEach(Energizer3D::stopPumping);
                         level3D.bonus3D().ifPresent(Bonus3D::hide);
                         level3D.livesCounter3D().stopAnimation();
@@ -244,7 +244,7 @@ public class PlayScene3D implements GameScene {
                 assertLevel3DExists();
                 context.gameLevel().ifPresent(level -> {
                     level3D.pac3D().init();
-                    level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level));
+                    level3D.ghosts3D().forEach(Ghost3D::init);
                     level3D.livesCounter3D().startAnimation();
                     level3D.energizers3D().forEach(Energizer3D::startPumping);
                 });
@@ -309,9 +309,7 @@ public class PlayScene3D implements GameScene {
                     level.letsGetReadyToRumble(true);
                     replaceGameLevel3D(level);
                     level3D.pac3D().init();
-                    for (Ghost3D ghost3D : level3D.ghosts3D()) {
-                        ghost3D.init(level);
-                    }
+                    level3D.ghosts3D().forEach(Ghost3D::init);
                     showLevelMessage(level);
                 });
 

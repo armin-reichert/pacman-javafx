@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -45,7 +44,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Ghost3D extends Group {
 
-    private static final Duration BRAKE_DURATION = Duration.seconds(0.4);
+    private static final Duration BRAKE_DURATION = Duration.seconds(0.5);
 
     public enum Look { NORMAL, FRIGHTENED, FLASHING, EYES, NUMBER }
 
@@ -116,28 +115,28 @@ public class Ghost3D extends Group {
         numberQuad.setMaterial(material);
     }
 
-    public void init(GameLevel level) {
+    public void init() {
         brakeAnimation.stop();
         dressAnimation.stop();
         numberRotation.stop();
-        updateTransform(level);
+        updateTransform();
         updateLook();
     }
 
-    public void update(GameLevel level) {
-        updateTransform(level);
+    public void update() {
+        updateTransform();
         updateLook();
         updateAnimations();
     }
 
-    private void updateTransform(GameLevel level) {
+    private void updateTransform() {
         Vector2f position = ghost.center();
         setTranslateX(position.x());
         setTranslateY(position.y());
         setTranslateZ(-5);
         // TODO: make transition to new wish dir if changed
         orientation.setAngle(Turn.angle(ghost.wishDir()));
-        boolean outside = position.x() < HTS || position.x() > level.world().numCols() * TS - HTS;
+        boolean outside = position.x() < HTS || position.x() > ghost.world().numCols() * TS - HTS;
         setVisible(ghost.isVisible() && !outside);
     }
 
