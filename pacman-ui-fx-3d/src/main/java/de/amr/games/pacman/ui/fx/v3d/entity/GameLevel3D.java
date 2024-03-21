@@ -398,11 +398,12 @@ public class GameLevel3D extends Group {
     public void replaceBonus3D(Bonus bonus) {
         checkNotNull(bonus);
         if (bonus3D != null) {
-            getChildren().remove(bonus3D);
+            worldGroup.getChildren().remove(bonus3D);
         }
         bonus3D = createBonus3D(bonus);
         bonus3D.showEdible();
-        getChildren().add(2, bonus3D);
+        //getChildren().add(2, bonus3D);
+        worldGroup.getChildren().add(bonus3D);
     }
 
     private Bonus3D createBonus3D(Bonus bonus) {

@@ -90,30 +90,29 @@ public class Bonus3D extends Box {
     }
 
     public void showEdible() {
-        var imageView = new ImageView(symbolImage);
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(TS);
-        showImage(imageView.getImage());
         setWidth(TS);
         setVisible(true);
+        var imageView = new ImageView(symbolImage);
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(getWidth());
+        showImage(imageView.getImage());
         updateEdibleAnimation();
         edibleAnimation.playFromStart();
     }
 
     public void showEaten() {
+        setRotationAxis(Rotate.X_AXIS);
+        setRotate(0);
+        setWidth(1.8 * TS);
         var imageView = new ImageView(pointsImage);
         imageView.setPreserveRatio(true);
         imageView.setFitWidth(1.8 * TS);
         showImage(imageView.getImage());
-        edibleAnimation.stop();
         eatenAnimation.playFromStart();
-        setRotationAxis(Rotate.X_AXIS);
-        setRotate(0);
-        setWidth(1.8 * TS);
     }
 
     private void showImage(Image texture) {
-        var material = new PhongMaterial(Color.WHITE);
+        var material = new PhongMaterial(Color.GHOSTWHITE);
         material.setDiffuseMap(texture);
         setMaterial(material);
     }
