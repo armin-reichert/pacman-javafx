@@ -51,8 +51,6 @@ public class LivesCounter3D extends Group {
     private final double plateRadius;
     private final double plateThickness;
 
-    private int index;
-
     public LivesCounter3D(int maxLives,
                           Color pillarColor, double pillarHeight,
                           Color plateColor, double plateThickness, double plateRadius,
@@ -75,9 +73,10 @@ public class LivesCounter3D extends Group {
     }
 
     public void addItem(Pac3D pac3D, boolean lookRight) {
-        addStand(2 * index * TS);
+        int x = pac3DList.size() * 2 * TS;
+        addStand(x);
         double radius = pac3D.root().getBoundsInLocal().getHeight() / 2f;
-        pac3D.position().setX(2 * index * TS);
+        pac3D.position().setX(x);
         pac3D.position().setZ(-(pillarHeight + plateThickness + radius));
         if (lookRight) {
             pac3D.root().setRotationAxis(Rotate.Z_AXIS);
@@ -94,8 +93,6 @@ public class LivesCounter3D extends Group {
         rotation.setCycleCount(Animation.INDEFINITE);
         rotation.setAutoReverse(true);
         animations.add(rotation);
-
-        index += 1;
     }
 
     private void addStand(double x) {
