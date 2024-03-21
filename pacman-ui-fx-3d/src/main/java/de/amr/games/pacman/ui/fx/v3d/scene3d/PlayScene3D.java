@@ -75,19 +75,28 @@ public class PlayScene3D implements GameScene {
     private boolean scoreVisible;
 
     public PlayScene3D() {
-        var ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
-        var coordSystem = new CoordSystem();
-        coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
-        scores3D = new Scores3D();
-        // first child is placeholder for game level 3D
-        subSceneRoot.getChildren().setAll(new Group(), scores3D.root(),  coordSystem, ambientLight);
         // initial scene size is irrelevant, gets bound to parent scene later
         fxSubScene = new SubScene(subSceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
-        fxSubScene.setCamera(new PerspectiveCamera(true));
+        var camera = new PerspectiveCamera(true);
+        fxSubScene.setCamera(camera);
+
+        var ambientLight = new AmbientLight();
+        ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
+
+        var coordSystem = new CoordSystem();
+        coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
+
+        scores3D = new Scores3D();
+        scores3D.root().setTranslateX(TS);
+        scores3D.root().setTranslateY(-3.5 * TS);
+        scores3D.root().setTranslateZ(-3 * TS);
         // keep the scores rotated such that the viewer always sees them frontally
-        scores3D.root().rotationAxisProperty().bind(fxSubScene.getCamera().rotationAxisProperty());
-        scores3D.root().rotateProperty().bind(fxSubScene.getCamera().rotateProperty());
+        scores3D.root().rotationAxisProperty().bind(camera.rotationAxisProperty());
+        scores3D.root().rotateProperty().bind(camera.rotateProperty());
+
+        // first child is placeholder for game level 3D
+        subSceneRoot.getChildren().addAll(new Group(), scores3D.root(),  coordSystem, ambientLight);
+
         Logger.info("3D play scene created. {}", this);
     }
 
@@ -172,11 +181,9 @@ public class PlayScene3D implements GameScene {
         // center over origin
         double tx = -level.world().numCols() * HTS;
         double ty = -level.world().numRows() * HTS;
-        level3D.root().setTranslateX(tx);
-        level3D.root().setTranslateY(ty);
-        scores3D.root().setTranslateX(tx + TS);
-        scores3D.root().setTranslateY(ty - 3 * TS);
-        scores3D.root().setTranslateZ(- 3 * TS);
+
+        subSceneRoot.setTranslateX(tx);
+        subSceneRoot.setTranslateY(ty);
 
         if (PY_3D_FLOOR_TEXTURE_RND.get()) {
             List<String> names = context.theme().getArray("texture.names");
