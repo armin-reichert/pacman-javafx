@@ -24,7 +24,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -181,7 +180,6 @@ public class PlayScene3D implements GameScene {
         // center over origin
         double tx = -level.world().numCols() * HTS;
         double ty = -level.world().numRows() * HTS;
-
         subSceneRoot.setTranslateX(tx);
         subSceneRoot.setTranslateY(ty);
 
@@ -263,6 +261,17 @@ public class PlayScene3D implements GameScene {
                 lockGameStateAndPlayAfterSeconds(1.0, level3D.pac3D().createDyingAnimation(context.gameVariant()));
             }
 
+            case GAME_OVER -> {
+                assertLevel3DExists();
+                context.stopAllSounds();
+                context.gameState().timer().restartSeconds(3);
+                level3D.energizers3D().forEach(Energizer3D::stopPumping);
+                level3D.bonus3D().ifPresent(Bonus3D::hide);
+                level3D.livesCounter3D().stopAnimation();
+                context.actionHandler().showFlashMessageSeconds(3, PICKER_GAME_OVER.next());
+                context.playAudioClip("audio.game_over");
+            }
+
             case GHOST_DYING -> {
                 assertLevel3DExists();
                 context.gameLevel().ifPresent(level -> {
@@ -270,21 +279,10 @@ public class PlayScene3D implements GameScene {
                         case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
                         case PACMAN    -> context.<PacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
                     };
-                    var killedGhosts = level.thisFrame().killedGhosts;
-                    killedGhosts.forEach(ghost -> {
-                        Image numberImage = context.spriteSheet().subImage(sprites[ghost.killedIndex()]);
+                    level.thisFrame().killedGhosts.forEach(ghost -> {
+                        var numberImage = context.spriteSheet().subImage(sprites[ghost.killedIndex()]);
                         level3D.ghosts3D().get(ghost.id()).setNumberImage(numberImage);
                     });
-                });
-            }
-
-            case CHANGING_TO_NEXT_LEVEL -> {
-                assertLevel3DExists();
-                context.gameLevel().ifPresent(level -> {
-                    lockGameStateForSeconds(3);
-                    replaceGameLevel3D(level);
-                    level3D.pac3D().init();
-                    currentCamController().reset(fxSubScene.getCamera());
                 });
             }
 
@@ -299,15 +297,14 @@ public class PlayScene3D implements GameScene {
                 });
             }
 
-            case GAME_OVER -> {
+            case CHANGING_TO_NEXT_LEVEL -> {
                 assertLevel3DExists();
-                context.stopAllSounds();
-                lockGameStateForSeconds(3);
-                level3D.energizers3D().forEach(Energizer3D::stopPumping);
-                level3D.bonus3D().ifPresent(Bonus3D::hide);
-                level3D.livesCounter3D().stopAnimation();
-                context.actionHandler().showFlashMessageSeconds(3, PICKER_GAME_OVER.next());
-                context.playAudioClip("audio.game_over");
+                context.gameLevel().ifPresent(level -> {
+                    context.gameState().timer().restartSeconds(3);
+                    replaceGameLevel3D(level);
+                    level3D.pac3D().init();
+                    currentCamController().reset(fxSubScene.getCamera());
+                });
             }
 
             case LEVEL_TEST ->
@@ -400,9 +397,10 @@ public class PlayScene3D implements GameScene {
             level3D.showMessage("TEST LEVEL " + level.number(), 5, level.world().numCols() * HTS, 34 * TS);
         } else if (!level.isDemoLevel()){
             var house = level.world().house();
-            double x = (house.topLeftTile().x() + 0.5 * house.size().x()) * TS;
-            double y = (house.topLeftTile().y() + house.size().y()) * TS;
-            level3D.showMessage("READY!", context.gameController().isPlaying() ? 0.5 : 2.5, x, y);
+            double x = TS * (house.topLeftTile().x() + 0.5 * house.size().x());
+            double y = TS * (house.topLeftTile().y() +       house.size().y());
+            double seconds = context.gameController().isPlaying() ? 0.5 : 2.5;
+            level3D.showMessage("READY!", seconds, x, y);
         }
     }
 
@@ -439,7 +437,6 @@ public class PlayScene3D implements GameScene {
         );
     }
 
-
     private void updateSound(GameLevel level) {
         if (level.isDemoLevel()) {
             return;
@@ -455,17 +452,10 @@ public class PlayScene3D implements GameScene {
         }
     }
 
-    private void lockGameStateForSeconds(double seconds) {
-        context.gameState().timer().resetIndefinitely();
-        actionAfterSeconds(seconds, () -> context.gameState().timer().expire()).play();
-    }
-
     private void lockGameStateAndPlayAfterSeconds(double seconds, Animation... animations) {
         context.gameState().timer().resetIndefinitely();
         var animationSequence = new SequentialTransition(animations);
-        if (seconds > 0) {
-            animationSequence.setDelay(Duration.seconds(seconds));
-        }
+        animationSequence.setDelay(Duration.seconds(seconds));
         animationSequence.setOnFinished(e -> context.gameState().timer().expire());
         animationSequence.play();
     }
