@@ -99,16 +99,16 @@ public class GameLevel3D extends Group {
         this.context = context;
 
         createWorld3D();
-        createMessage3D();
         createPac3D(level.pac());
         ghosts3D = level.ghosts().map(this::createGhost3D).toList();
         createLivesCounter3D();
         createLevelCounter3D();
+        createMessage3D();
 
         for (var ghost3D : ghosts3D) {
             getChildren().add(ghost3D);
         }
-        getChildren().addAll(pac3D, pac3D.light(), messageText3D.root(), levelCounterGroup,
+        getChildren().addAll(pac3D, pac3D.light(), messageText3D, levelCounterGroup,
             livesCounter3D, foodGroup, doorGroup);
         // Walls must be added *last*, otherwise, transparency is not working correctly!
         getChildren().add(worldGroup);
@@ -245,9 +245,14 @@ public class GameLevel3D extends Group {
     }
 
     private void createMessage3D() {
-        messageText3D = Text3D.create("READY!", Color.YELLOW, context.theme().font("font.arcade", 6));
-        messageText3D.root().setTranslateZ(MESSAGE_RETRACTED_Z);
-        messageText3D.root().setVisible(false);
+        messageText3D = new Text3D();
+        messageText3D.beginBatch();
+        messageText3D.setBorderColor(Color.WHITE);
+        messageText3D.setTextColor(Color.YELLOW);
+        messageText3D.setFont(context.theme().font("font.arcade", 6));
+        messageText3D.endBatch();
+        messageText3D.setTranslateZ(MESSAGE_RETRACTED_Z);
+        messageText3D.setVisible(false);
         messageText3D.rotate(Rotate.X_AXIS, 90);
     }
 
@@ -381,17 +386,16 @@ public class GameLevel3D extends Group {
 
     public void showMessage(String text, double displaySeconds, double x, double y) {
         messageText3D.setText(text);
-        Node node = messageText3D.root();
-        node.setVisible(true);
-        node.setTranslateX(x);
-        node.setTranslateY(y);
-        node.setTranslateZ(MESSAGE_RETRACTED_Z);
-        var extend = new TranslateTransition(Duration.seconds(1), node);
+        messageText3D.setVisible(true);
+        messageText3D.setTranslateX(x);
+        messageText3D.setTranslateY(y);
+        messageText3D.setTranslateZ(MESSAGE_RETRACTED_Z);
+        var extend = new TranslateTransition(Duration.seconds(1), messageText3D);
         extend.setToZ(MESSAGE_EXTENDED_Z);
-        var retract = new TranslateTransition(Duration.seconds(0.5), node);
+        var retract = new TranslateTransition(Duration.seconds(0.5), messageText3D);
         retract.setDelay(Duration.seconds(displaySeconds));
         retract.setToZ(MESSAGE_RETRACTED_Z);
-        retract.setOnFinished(e -> node.setVisible(false));
+        retract.setOnFinished(e -> messageText3D.setVisible(false));
         new SequentialTransition(extend, retract).play();
     }
 
