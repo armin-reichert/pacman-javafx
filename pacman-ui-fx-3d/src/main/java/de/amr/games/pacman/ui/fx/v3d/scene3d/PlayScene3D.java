@@ -176,7 +176,7 @@ public class PlayScene3D implements GameScene {
     private void replaceGameLevel3D(GameLevel level) {
         level3D = new GameLevel3D(level, context);
         // replace initial placeholder or previous 3D level
-        subSceneRoot.getChildren().set(CHILD_LEVEL_3D, level3D.root());
+        subSceneRoot.getChildren().set(CHILD_LEVEL_3D, level3D);
 
         // center over origin
         double tx = -level.world().numCols() * HTS;

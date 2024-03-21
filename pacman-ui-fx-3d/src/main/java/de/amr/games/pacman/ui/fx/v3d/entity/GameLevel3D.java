@@ -55,7 +55,7 @@ import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.createPacManShape;
 /**
  * @author Armin Reichert
  */
-public class GameLevel3D {
+public class GameLevel3D extends Group {
 
     private static final int    FLOOR_PLAN_RESOLUTION = 4;
     private static final double PAC_SIZE   = 9.0;
@@ -81,7 +81,6 @@ public class GameLevel3D {
     private       FloorPlan floorPlan;
     private       WallBuilder wallBuilder;
 
-    private final Group root = new Group();
     private final Group worldGroup = new Group();
     private final Group doorGroup = new Group();
     private final Group foodGroup = new Group();
@@ -107,12 +106,12 @@ public class GameLevel3D {
         createLevelCounter3D();
 
         for (var ghost3D : ghosts3D) {
-            root.getChildren().add(ghost3D);
+            getChildren().add(ghost3D);
         }
-        root.getChildren().addAll(pac3D.root(), pac3D.light(), messageText3D.root(), levelCounterGroup,
+        getChildren().addAll(pac3D.root(), pac3D.light(), messageText3D.root(), levelCounterGroup,
             livesCounter3D.root(), foodGroup, doorGroup);
         // Walls must be added *last*, otherwise, transparency is not working correctly!
-        root.getChildren().add(worldGroup);
+        getChildren().add(worldGroup);
 
         // Bindings
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
@@ -399,11 +398,11 @@ public class GameLevel3D {
     public void replaceBonus3D(Bonus bonus) {
         checkNotNull(bonus);
         if (bonus3D != null) {
-            root.getChildren().remove(bonus3D.root());
+            getChildren().remove(bonus3D.root());
         }
         bonus3D = createBonus3D(bonus);
         bonus3D.showEdible();
-        root.getChildren().add(2, bonus3D.root());
+        getChildren().add(2, bonus3D.root());
     }
 
     private Bonus3D createBonus3D(Bonus bonus) {
@@ -466,8 +465,8 @@ public class GameLevel3D {
         squirting.setDropCountMin(15);
         squirting.setDropCountMax(45);
         squirting.setDropMaterial(coloredMaterial(foodColor.desaturate()));
-        squirting.setOnFinished(e -> root.getChildren().remove(squirting.root()));
-        root.getChildren().add(squirting.root());
+        squirting.setOnFinished(e -> getChildren().remove(squirting.root()));
+        getChildren().add(squirting.root());
 
         energizer3D.setEatenAnimation(squirting);
     }
@@ -489,7 +488,7 @@ public class GameLevel3D {
     }
 
     public Transition createLevelRotateAnimation() {
-        var rotation = new RotateTransition(Duration.seconds(1.5), root);
+        var rotation = new RotateTransition(Duration.seconds(1.5), this);
         rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
         rotation.setFromAngle(0);
         rotation.setToAngle(360);
@@ -523,10 +522,6 @@ public class GameLevel3D {
                 wing3D.traversalAnimation().play();
             }
         }
-    }
-
-    public Group root() {
-        return root;
     }
 
     public Pac3D pac3D() {
