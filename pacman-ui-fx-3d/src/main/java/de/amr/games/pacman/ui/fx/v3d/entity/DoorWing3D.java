@@ -26,20 +26,19 @@ import static de.amr.games.pacman.lib.Globals.*;
  *
  * @author Armin Reichert
  */
-public class DoorWing3D {
+public class DoorWing3D extends Group {
 
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
-    private final Group root = new Group();
     private final Transition traversalAnimation;
 
     public DoorWing3D(Vector2i tile, Color color) {
         checkTileNotNull(tile);
         checkNotNull(color);
 
-        root.setTranslateX(tile.x() * TS);
-        root.setTranslateY(tile.y() * TS - 3);
-        root.setUserData(this);
+        setTranslateX(tile.x() * TS);
+        setTranslateY(tile.y() * TS - 3);
+        setUserData(this);
 
         PhongMaterial barMaterial = new PhongMaterial(color);
 
@@ -52,7 +51,7 @@ public class DoorWing3D {
             verticalBar.setRotationAxis(Rotate.X_AXIS);
             verticalBar.setRotate(90);
             verticalBar.drawModeProperty().bind(drawModePy);
-            root.getChildren().add(verticalBar);
+            getChildren().add(verticalBar);
         }
 
         var horizontalBar = new Cylinder(0.5, 9);
@@ -62,7 +61,7 @@ public class DoorWing3D {
         horizontalBar.setTranslateZ(-4);
         horizontalBar.setRotationAxis(Rotate.Z_AXIS);
         horizontalBar.setRotate(90);
-        root.getChildren().add(horizontalBar);
+        getChildren().add(horizontalBar);
 
         var fadeOut = new ColorChangeTransition(Duration.seconds(0.2),
             color, Color.TRANSPARENT, barMaterial.diffuseColorProperty()
@@ -72,10 +71,6 @@ public class DoorWing3D {
         );
         fadeIn.setDelay(Duration.seconds(0.2));
         traversalAnimation = new SequentialTransition(fadeOut, fadeIn);
-    }
-
-    public Node root() {
-        return root;
     }
 
     public Transition traversalAnimation() {

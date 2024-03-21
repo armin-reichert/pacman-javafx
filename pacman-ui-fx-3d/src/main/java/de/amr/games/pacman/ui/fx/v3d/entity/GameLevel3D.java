@@ -274,7 +274,7 @@ public class GameLevel3D extends Group {
         for (var wing : List.of(door.leftWing(), door.rightWing())) {
             var doorWing3D = new DoorWing3D(wing, color);
             doorWing3D.drawModePy.bind(PY_3D_DRAW_MODE);
-            doorGroup.getChildren().add(doorWing3D.root());
+            doorGroup.getChildren().add(doorWing3D);
         }
     }
 
