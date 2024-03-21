@@ -109,7 +109,7 @@ public class GameLevel3D extends Group {
             getChildren().add(ghost3D);
         }
         getChildren().addAll(pac3D.root(), pac3D.light(), messageText3D.root(), levelCounterGroup,
-            livesCounter3D.root(), foodGroup, doorGroup);
+            livesCounter3D, foodGroup, doorGroup);
         // Walls must be added *last*, otherwise, transparency is not working correctly!
         getChildren().add(worldGroup);
 
@@ -202,8 +202,8 @@ public class GameLevel3D extends Group {
             theme.get  ("livescounter.plate.thickness"),
             theme.get  ("livescounter.plate.radius"),
             theme.color("livescounter.light.color"));
-        livesCounter3D.root().setTranslateX(2 * TS);
-        livesCounter3D.root().setTranslateY(2 * TS);
+        livesCounter3D.setTranslateX(2 * TS);
+        livesCounter3D.setTranslateY(2 * TS);
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         for (int i = 0; i < livesCounter3D.maxLives(); ++i) {
             var shape = switch (context.gameVariant()) {
@@ -372,7 +372,7 @@ public class GameLevel3D extends Group {
         // reconsider this:
         boolean hideOne = level.pac().isVisible() || gameState == GameState.GHOST_DYING;
         livesCounter3D.update(hideOne ? level.game().lives() - 1 : level.game().lives());
-        livesCounter3D.root().setVisible(hasCredit);
+        livesCounter3D.setVisible(hasCredit);
     }
 
     public void setHouseLightOn(boolean state) {

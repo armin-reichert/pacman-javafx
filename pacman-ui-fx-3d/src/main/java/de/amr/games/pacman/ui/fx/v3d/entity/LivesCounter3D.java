@@ -33,12 +33,11 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
  *
  * @author Armin Reichert
  */
-public class LivesCounter3D {
+public class LivesCounter3D extends Group {
 
     public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
-    private final Group root = new Group();
     private final Group standsGroup = new Group();
 
     private final PhongMaterial pillarMaterial;
@@ -64,13 +63,15 @@ public class LivesCounter3D {
         this.plateRadius = plateRadius;
         pillarMaterial = coloredMaterial(pillarColor);
         plateMaterial = coloredMaterial(plateColor);
+
         var light = new PointLight(lightColor);
         light.setMaxRange  (TS * (maxLives + 1));
         light.setTranslateX(TS * (maxLives - 1));
         light.setTranslateY(TS * (-1));
         light.setTranslateZ(-(pillarHeight + 20));
         light.lightOnProperty().bind(lightOnPy);
-        root.getChildren().addAll(standsGroup, light);
+
+        getChildren().addAll(standsGroup, light);
     }
 
     public void addItem(Pac3D pac3D, boolean lookRight) {
@@ -84,7 +85,7 @@ public class LivesCounter3D {
         }
         pac3D.drawModePy.bind(drawModePy);
         pac3DList.add(pac3D);
-        root.getChildren().add(pac3D.root());
+        getChildren().add(pac3D.root());
 
         var rotation = new RotateTransition(Duration.seconds(20.0), pac3D.root());
         rotation.setAxis(Rotate.Z_AXIS);
@@ -115,10 +116,6 @@ public class LivesCounter3D {
         pillar.drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);
 
         standsGroup.getChildren().addAll(plate, pillar);
-    }
-
-    public Node root() {
-        return root;
     }
 
     public int maxLives() {
