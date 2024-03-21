@@ -6,14 +6,12 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.world.World;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -29,16 +27,17 @@ import static de.amr.games.pacman.lib.Globals.*;
  *
  * @author Armin Reichert
  */
-public class Bonus3D {
+public class Bonus3D extends Box {
 
     private final Bonus bonus;
     private final Image symbolImage;
     private final Image pointsImage;
-    private final Box shape;
     private final RotateTransition eatenAnimation;
     private final RotateTransition edibleAnimation;
 
     public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage) {
+        super(TS, TS, TS);
+
         checkNotNull(bonus);
         checkNotNull(symbolImage);
         checkNotNull(pointsImage);
@@ -46,16 +45,15 @@ public class Bonus3D {
         this.bonus = bonus;
         this.symbolImage = symbolImage;
         this.pointsImage = pointsImage;
-        this.shape = new Box(TS, TS, TS);
 
-        edibleAnimation = new RotateTransition(Duration.seconds(1), shape);
+        edibleAnimation = new RotateTransition(Duration.seconds(1), this);
         edibleAnimation.setAxis(Rotate.Z_AXIS); // to trigger initial change
         edibleAnimation.setFromAngle(0);
         edibleAnimation.setToAngle(360);
         edibleAnimation.setInterpolator(Interpolator.LINEAR);
         edibleAnimation.setCycleCount(Animation.INDEFINITE);
 
-        eatenAnimation = new RotateTransition(Duration.seconds(1), shape);
+        eatenAnimation = new RotateTransition(Duration.seconds(1), this);
         eatenAnimation.setAxis(Rotate.X_AXIS);
         eatenAnimation.setFromAngle(0);
         eatenAnimation.setToAngle(360);
@@ -63,13 +61,14 @@ public class Bonus3D {
         eatenAnimation.setRate(2);
     }
 
-    public void update(GameLevel level) {
-        Vector2f bonusPosition = bonus.entity().center();
-        shape.setTranslateX(bonusPosition.x());
-        shape.setTranslateY(bonusPosition.y());
-        shape.setTranslateZ(-HTS);
-        boolean visible = bonus.state() != Bonus.STATE_INACTIVE && !outsideWorld(level.world());
-        shape.setVisible(visible);
+    public void update(World world) {
+        Vector2f position = bonus.entity().center();
+        setTranslateX(position.x());
+        setTranslateY(position.y());
+        setTranslateZ(-HTS);
+        boolean outside = position.x() < HTS || position.x() > world.numCols() * TS - HTS;
+        boolean visible = bonus.state() != Bonus.STATE_INACTIVE && !outside;
+        setVisible(visible);
         updateEdibleAnimation();
     }
 
@@ -95,7 +94,8 @@ public class Bonus3D {
         imageView.setPreserveRatio(true);
         imageView.setFitWidth(TS);
         showImage(imageView.getImage());
-        shape.setWidth(TS);
+        setWidth(TS);
+        setVisible(true);
         updateEdibleAnimation();
         edibleAnimation.playFromStart();
     }
@@ -107,27 +107,14 @@ public class Bonus3D {
         showImage(imageView.getImage());
         edibleAnimation.stop();
         eatenAnimation.playFromStart();
-        shape.setRotationAxis(Rotate.X_AXIS);
-        shape.setRotate(0);
-        shape.setWidth(1.8 * TS);
+        setRotationAxis(Rotate.X_AXIS);
+        setRotate(0);
+        setWidth(1.8 * TS);
     }
 
     private void showImage(Image texture) {
         var material = new PhongMaterial(Color.WHITE);
         material.setDiffuseMap(texture);
-        shape.setMaterial(material);
-    }
-
-    public Node root() {
-        return shape;
-    }
-
-    public void hide() {
-        shape.setVisible(false);
-    }
-
-    private boolean outsideWorld(World world) {
-        double x = bonus.entity().center().x();
-        return x < HTS || x > world.numCols() * TS - HTS;
+        setMaterial(material);
     }
 }

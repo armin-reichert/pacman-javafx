@@ -238,7 +238,7 @@ public class PlayScene3D implements GameScene {
                         level3D.pac3D().init();
                         level3D.ghosts3D().forEach(Ghost3D::init);
                         level3D.energizers3D().forEach(Energizer3D::stopPumping);
-                        level3D.bonus3D().ifPresent(Bonus3D::hide);
+                        level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                         level3D.livesCounter3D().stopAnimation();
                         showLevelMessage(level);
                     });
@@ -266,7 +266,7 @@ public class PlayScene3D implements GameScene {
                 context.stopAllSounds();
                 context.gameState().timer().restartSeconds(3);
                 level3D.energizers3D().forEach(Energizer3D::stopPumping);
-                level3D.bonus3D().ifPresent(Bonus3D::hide);
+                level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                 level3D.livesCounter3D().stopAnimation();
                 context.actionHandler().showFlashMessageSeconds(3, PICKER_GAME_OVER.next());
                 context.playAudioClip("audio.game_over");
@@ -336,7 +336,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onBonusExpired(GameEvent event) {
         assertLevel3DExists();
-        level3D.bonus3D().ifPresent(Bonus3D::hide);
+        level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
     }
 
     @Override

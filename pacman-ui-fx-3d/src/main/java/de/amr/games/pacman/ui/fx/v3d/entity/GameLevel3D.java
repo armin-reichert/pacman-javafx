@@ -366,7 +366,7 @@ public class GameLevel3D extends Group {
         pac3D.update();
         ghosts3D().forEach(Ghost3D::update);
         if (bonus3D != null) {
-            bonus3D.update(level);
+            bonus3D.update(level.world());
         }
         updateHouseState(level.world().house());
         // reconsider this:
@@ -398,11 +398,11 @@ public class GameLevel3D extends Group {
     public void replaceBonus3D(Bonus bonus) {
         checkNotNull(bonus);
         if (bonus3D != null) {
-            getChildren().remove(bonus3D.root());
+            getChildren().remove(bonus3D);
         }
         bonus3D = createBonus3D(bonus);
         bonus3D.showEdible();
-        getChildren().add(2, bonus3D.root());
+        getChildren().add(2, bonus3D);
     }
 
     private Bonus3D createBonus3D(Bonus bonus) {
