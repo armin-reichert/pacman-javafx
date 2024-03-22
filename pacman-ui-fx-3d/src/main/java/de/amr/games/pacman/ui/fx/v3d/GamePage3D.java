@@ -8,11 +8,15 @@ import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.page.GamePage;
+import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.*;
-import de.amr.games.pacman.ui.fx.v3d.scene3d.PictureInPicture;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -25,16 +29,23 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 public class GamePage3D extends GamePage {
 
     private final BorderPane dashboardLayer;
-    private final PictureInPicture pip;
     private final Dashboard dashboard;
     private final GamePageContextMenu contextMenu;
+
+    private final DoubleProperty pipHeightPy = new SimpleDoubleProperty(this, "pipHeight", PIP_MIN_HEIGHT) {
+        @Override
+        protected void invalidated() {
+              pip.setScaling(get() / CANVAS_HEIGHT_UNSCALED);
+        }
+    };
+    private final PlayScene2D pip = new PlayScene2D();
 
     public GamePage3D(Scene parentScene, GameSceneContext sceneContext, double width, double height) {
         super(sceneContext, width, height);
 
-        pip = new PictureInPicture(sceneContext);
         dashboard = new Dashboard(sceneContext);
         contextMenu = new GamePageContextMenu(sceneContext, parentScene);
+        initPip();
 
         dashboardLayer = new BorderPane();
         dashboardLayer.setLeft(dashboard);
@@ -44,14 +55,25 @@ public class GamePage3D extends GamePage {
         canvasLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
 
         // data binding
-        pip.opacityPy.bind(PY_PIP_OPACITY);
-        pip.heightPy.bind(PY_PIP_HEIGHT);
+        pipHeightPy.bind(PY_PIP_HEIGHT);
         PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateBackground3D());
         PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground3D());
         PY_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
         dashboard.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());
 
         updateTopLayer();
+    }
+
+    private void initPip() {
+        final double ASPECT_RATIO = (double) CANVAS_WIDTH_UNSCALED / CANVAS_HEIGHT_UNSCALED;
+        pip.setContext(sceneContext);
+        var canvas = new Canvas(42, 42);
+        canvas.heightProperty().bind(pipHeightPy);
+        canvas.widthProperty().bind(Bindings.createDoubleBinding(() -> pipHeightPy.get() * ASPECT_RATIO, pipHeightPy));
+        canvas.opacityProperty().bind(PY_PIP_OPACITY);
+        pip.setCanvas(canvas);
+        pip.setScaling(pipHeightPy.get() / CANVAS_HEIGHT_UNSCALED);
+        pip.setScoreVisible(true);
     }
 
     @Override
