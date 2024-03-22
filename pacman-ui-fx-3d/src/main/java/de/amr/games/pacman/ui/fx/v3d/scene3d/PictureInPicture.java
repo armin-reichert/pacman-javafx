@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.v3d.scene3d;
 
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
@@ -19,28 +20,25 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PIP_MIN_HEIGHT;
  */
 public class PictureInPicture extends PlayScene2D {
 
-    private final Canvas canvas;
+    private static final double ASPECT_RATIO = (double) CANVAS_WIDTH_UNSCALED / CANVAS_HEIGHT_UNSCALED;
 
     public final DoubleProperty heightPy = new SimpleDoubleProperty(this, "height", PIP_MIN_HEIGHT) {
         @Override
         protected void invalidated() {
-            double scaling = get() / CANVAS_HEIGHT_UNSCALED;
-            canvas.setWidth(CANVAS_WIDTH_UNSCALED * scaling);
-            canvas.setHeight(CANVAS_HEIGHT_UNSCALED * scaling);
-            setScaling(scaling);
+            setScaling(get() / CANVAS_HEIGHT_UNSCALED);
         }
     };
 
     public final DoubleProperty opacityPy = new SimpleDoubleProperty(this, "opacity", 1.0);
 
     public PictureInPicture(GameSceneContext sceneContext) {
-        double height = heightPy.doubleValue();
-        double aspectRatio = (double) CANVAS_WIDTH_UNSCALED / CANVAS_HEIGHT_UNSCALED;
-        canvas = new Canvas(height * aspectRatio, height);
-        canvas.opacityProperty().bind(opacityPy);
-        setScoreVisible(true);
         setContext(sceneContext);
+        var canvas = new Canvas(42, 42);
+        canvas.heightProperty().bind(heightPy);
+        canvas.widthProperty().bind(Bindings.createDoubleBinding(() -> heightPy.get() * ASPECT_RATIO, heightPy));
+        canvas.opacityProperty().bind(opacityPy);
         setCanvas(canvas);
-        clearCanvas();
+        setScaling(heightPy.get() / CANVAS_HEIGHT_UNSCALED);
+        setScoreVisible(true);
     }
 }
