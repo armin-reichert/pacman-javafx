@@ -61,9 +61,6 @@ public class GameLevel3D extends Group {
     private static final double PAC_SIZE   = 9.0;
     private static final double GHOST_SIZE = 9.0;
 
-    private static final double MESSAGE_EXTENDED_Z = -5;
-    private static final double MESSAGE_RETRACTED_Z =  5;
-
     private static FloorPlan readFloorPlanFromFile(GameVariant variant, int mapNumber) {
         ResourceManager rm = () -> PacManGames3dUI.class;
         String variantMarker = switch (variant) {
@@ -246,7 +243,8 @@ public class GameLevel3D extends Group {
         messageText3D.setTextColor(Color.YELLOW);
         messageText3D.setFont(context.theme().font("font.arcade", 6));
         messageText3D.endBatch();
-        messageText3D.setTranslateZ(MESSAGE_RETRACTED_Z);
+        double height = messageText3D.getBoundsInLocal().getHeight();
+        messageText3D.setTranslateZ(height/2f);
         messageText3D.setVisible(false);
         messageText3D.rotate(Rotate.X_AXIS, 90);
     }
@@ -382,16 +380,17 @@ public class GameLevel3D extends Group {
     public void showMessage(String text, double displaySeconds, double x, double y) {
         messageText3D.setText(text);
         messageText3D.setVisible(true);
+        double dist = 0.5 * messageText3D.getBoundsInLocal().getHeight();
         messageText3D.setTranslateX(x);
         messageText3D.setTranslateY(y);
-        messageText3D.setTranslateZ(MESSAGE_RETRACTED_Z);
-        var extend = new TranslateTransition(Duration.seconds(1), messageText3D);
-        extend.setToZ(MESSAGE_EXTENDED_Z);
-        var retract = new TranslateTransition(Duration.seconds(0.5), messageText3D);
-        retract.setDelay(Duration.seconds(displaySeconds));
-        retract.setToZ(MESSAGE_RETRACTED_Z);
-        retract.setOnFinished(e -> messageText3D.setVisible(false));
-        new SequentialTransition(extend, retract).play();
+        messageText3D.setTranslateZ(dist);
+        var moveOutAnimation = new TranslateTransition(Duration.seconds(1), messageText3D);
+        moveOutAnimation.setToZ(-dist);
+        var moveInAnimation = new TranslateTransition(Duration.seconds(0.5), messageText3D);
+        moveInAnimation.setDelay(Duration.seconds(displaySeconds));
+        moveInAnimation.setToZ(dist);
+        moveInAnimation.setOnFinished(e -> messageText3D.setVisible(false));
+        new SequentialTransition(moveOutAnimation, moveInAnimation).play();
     }
 
     public void replaceBonus3D(Bonus bonus) {
@@ -399,29 +398,20 @@ public class GameLevel3D extends Group {
         if (bonus3D != null) {
             worldGroup.getChildren().remove(bonus3D);
         }
-        bonus3D = createBonus3D(bonus);
-        bonus3D.showEdible();
-        //getChildren().add(2, bonus3D);
-        worldGroup.getChildren().add(bonus3D);
-    }
-
-    private Bonus3D createBonus3D(Bonus bonus) {
-        byte symbol = bonus.symbol();
         switch (level.game().variant()) {
             case PACMAN -> {
                 PacManGameSpriteSheet ss = context.spriteSheet();
-                return new Bonus3D(bonus,
-                    ss.subImage(ss.bonusSymbolSprite(symbol)),
-                    ss.subImage(ss.bonusValueSprite(symbol)));
+                bonus3D = new Bonus3D(bonus,
+                    ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));
             }
             case MS_PACMAN -> {
                 MsPacManGameSpriteSheet ss = context.spriteSheet();
-                return new Bonus3D(bonus,
-                    ss.subImage(ss.bonusSymbolSprite(symbol)),
-                    ss.subImage(ss.bonusValueSprite(symbol)));
+                bonus3D = new Bonus3D(bonus,
+                    ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));
             }
-            default -> throw new IllegalGameVariantException(level.game().variant());
         }
+        bonus3D.showEdible();
+        worldGroup.getChildren().add(bonus3D);
     }
 
     private Ghost3D createGhost3D(Ghost ghost) {
