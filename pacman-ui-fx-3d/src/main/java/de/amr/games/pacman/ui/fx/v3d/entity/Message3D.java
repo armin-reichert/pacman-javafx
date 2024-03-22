@@ -19,16 +19,16 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Armin Reichert
  */
-public class Text3D extends Group {
+public class Message3D extends Group {
 
-    public static Text3D create(String text, Color color, Font font) {
-        Text3D text3D = new Text3D();
-        text3D.beginBatch();
-        text3D.setTextColor(color);
-        text3D.setFont(font);
-        text3D.setText(text);
-        text3D.endBatch();
-        return text3D;
+    public static Message3D create(String text, Color color, Font font) {
+        Message3D message3D = new Message3D();
+        message3D.beginBatch();
+        message3D.setTextColor(color);
+        message3D.setFont(font);
+        message3D.setText(text);
+        message3D.endBatch();
+        return message3D;
     }
 
     private final Box blackboard;
@@ -39,7 +39,7 @@ public class Text3D extends Group {
     private String text;
     private boolean batchUpdate;
 
-    public Text3D() {
+    public Message3D() {
         blackboard = new Box(100, 10, 0.1);
         getChildren().add(blackboard);
         beginBatch();

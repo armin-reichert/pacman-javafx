@@ -83,7 +83,7 @@ public class GameLevel3D extends Group {
     private final Group levelCounterGroup = new Group();
     private final PointLight houseLight = new PointLight();
     private final List<Ghost3D> ghosts3D;
-    private       Text3D messageText3D;
+    private Message3D message3D;
     private       LivesCounter3D livesCounter3D;
     private       Pac3D pac3D;
     private       Bonus3D bonus3D;
@@ -103,7 +103,7 @@ public class GameLevel3D extends Group {
 
         getChildren().addAll(ghosts3D);
         // Walls must be added *last*! Otherwise, transparency is not working correctly.
-        getChildren().addAll(pac3D, pac3D.light(), messageText3D, levelCounterGroup, livesCounter3D, foodGroup, doorGroup, worldGroup);
+        getChildren().addAll(pac3D, pac3D.light(), message3D, levelCounterGroup, livesCounter3D, foodGroup, doorGroup, worldGroup);
 
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
         pac3D.drawModePy.bind(PY_3D_DRAW_MODE);
@@ -240,16 +240,30 @@ public class GameLevel3D extends Group {
     }
 
     private void createMessage3D() {
-        messageText3D = new Text3D();
-        messageText3D.beginBatch();
-        messageText3D.setBorderColor(Color.WHITE);
-        messageText3D.setTextColor(Color.YELLOW);
-        messageText3D.setFont(context.theme().font("font.arcade", 6));
-        messageText3D.endBatch();
-        double height = messageText3D.getBoundsInLocal().getHeight();
-        messageText3D.setTranslateZ(height/2f);
-        messageText3D.setVisible(false);
-        messageText3D.rotate(Rotate.X_AXIS, 90);
+        message3D = new Message3D();
+        message3D.beginBatch();
+        message3D.setBorderColor(Color.WHITE);
+        message3D.setTextColor(Color.YELLOW);
+        message3D.setFont(context.theme().font("font.arcade", 6));
+        message3D.setVisible(false);
+        message3D.endBatch();
+    }
+
+    public void showMessage(String text, double displaySeconds, double x, double y) {
+        message3D.setText(text);
+        message3D.setVisible(true);
+        message3D.rotate(Rotate.X_AXIS, 90);
+        double dist = 0.5 * message3D.getBoundsInLocal().getHeight();
+        message3D.setTranslateX(x);
+        message3D.setTranslateY(y);
+        message3D.setTranslateZ(dist);
+        var moveOutAnimation = new TranslateTransition(Duration.seconds(1), message3D);
+        moveOutAnimation.setToZ(-dist);
+        var moveInAnimation = new TranslateTransition(Duration.seconds(0.5), message3D);
+        moveInAnimation.setDelay(Duration.seconds(displaySeconds));
+        moveInAnimation.setToZ(dist);
+        moveInAnimation.setOnFinished(e -> message3D.setVisible(false));
+        new SequentialTransition(moveOutAnimation, moveInAnimation).play();
     }
 
     private WallBuilder createWallBuilder(Color wallBaseColor, Color wallMiddleColor, Color wallTopColor) {
@@ -378,22 +392,6 @@ public class GameLevel3D extends Group {
 
     public void setHouseLightOn(boolean state) {
         houseLight.setLightOn(state);
-    }
-
-    public void showMessage(String text, double displaySeconds, double x, double y) {
-        messageText3D.setText(text);
-        messageText3D.setVisible(true);
-        double dist = 0.5 * messageText3D.getBoundsInLocal().getHeight();
-        messageText3D.setTranslateX(x);
-        messageText3D.setTranslateY(y);
-        messageText3D.setTranslateZ(dist);
-        var moveOutAnimation = new TranslateTransition(Duration.seconds(1), messageText3D);
-        moveOutAnimation.setToZ(-dist);
-        var moveInAnimation = new TranslateTransition(Duration.seconds(0.5), messageText3D);
-        moveInAnimation.setDelay(Duration.seconds(displaySeconds));
-        moveInAnimation.setToZ(dist);
-        moveInAnimation.setOnFinished(e -> messageText3D.setVisible(false));
-        new SequentialTransition(moveOutAnimation, moveInAnimation).play();
     }
 
     public void replaceBonus3D(Bonus bonus) {
