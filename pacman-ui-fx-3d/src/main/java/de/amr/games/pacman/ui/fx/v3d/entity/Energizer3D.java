@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.ui.fx.util.Ufx;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
@@ -19,6 +18,7 @@ import javafx.util.Duration;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui.fx.util.Ufx.doAfterSeconds;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -92,7 +92,7 @@ public class Energizer3D extends Sphere implements Eatable3D {
     public void onEaten() {
         pumping.stop();
         // TODO check this
-        var hideAfterDelay = Ufx.actionAfterSeconds(0.05, () -> setVisible(false));
+        var hideAfterDelay = doAfterSeconds(0.05, () -> setVisible(false));
         if (eatenAnimation != null) {
             new SequentialTransition(hideAfterDelay, eatenAnimation).play();
         } else {

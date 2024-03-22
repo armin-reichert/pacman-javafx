@@ -45,7 +45,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
-import static de.amr.games.pacman.ui.fx.util.Ufx.actionAfterSeconds;
+import static de.amr.games.pacman.ui.fx.util.Ufx.doAfterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.createMsPacManShape;
@@ -469,7 +469,7 @@ public class GameLevel3D extends Group {
         }
         // Delay hiding of pellet for some milliseconds because in case the player approaches the pellet from the right,
         // the pellet disappears too early (collision by tile equality is too coarse).
-        var hiding = actionAfterSeconds(0.05, () -> eatable3D.root().setVisible(false));
+        var hiding = doAfterSeconds(0.05, () -> eatable3D.root().setVisible(false));
         var energizerExplosion = eatable3D.getEatenAnimation().orElse(null);
         if (energizerExplosion != null && PY_3D_ENERGIZER_EXPLODES.get()) {
             new SequentialTransition(hiding, energizerExplosion).play();

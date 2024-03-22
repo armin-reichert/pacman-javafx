@@ -30,8 +30,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
-import static de.amr.games.pacman.ui.fx.util.Ufx.actionAfterSeconds;
-import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
+import static de.amr.games.pacman.ui.fx.util.Ufx.*;
 import static de.amr.games.pacman.ui.fx.v3d.animation.Turn.angle;
 import static de.amr.games.pacman.ui.fx.v3d.model.Model3D.meshView;
 
@@ -281,7 +280,7 @@ public class Pac3D extends Group {
 
         //TODO does not yet work as I want to
         var animation = new SequentialTransition(
-            actionAfterSeconds(0, this::init),
+            doNow(this::init),
             pauseSeconds(0.5),
             new ParallelTransition(spinning, shrinking, falling),
             pauseSeconds(1.0)

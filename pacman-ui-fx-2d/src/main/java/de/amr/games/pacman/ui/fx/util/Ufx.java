@@ -10,14 +10,9 @@ import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
-
-import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -63,10 +58,21 @@ public class Ufx {
      * @param action       code to run
      * @return pause transition
      */
-    public static Transition actionAfterSeconds(double delaySeconds, Runnable action) {
+    public static Transition doAfterSeconds(double delaySeconds, Runnable action) {
         checkNotNull(action);
-        PauseTransition pause = new PauseTransition(Duration.seconds(delaySeconds));
+        var pause = new PauseTransition(Duration.seconds(delaySeconds));
         pause.setOnFinished(e -> action.run());
         return pause;
+    }
+
+    public static Transition doNow(Runnable action) {
+        checkNotNull(action);
+        var wrapper = new Transition() {
+            @Override
+            protected void interpolate(double frac) {
+            }
+        };
+        wrapper.setOnFinished(e -> action.run());
+        return wrapper;
     }
 }
