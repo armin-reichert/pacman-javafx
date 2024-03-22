@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -207,32 +206,36 @@ public class GameLevel3D extends Group {
     }
 
     public void createLevelCounter3D() {
+        double spacing = 2 * TS;
         // this is the *right* edge of the level counter:
-        levelCounterGroup.setTranslateX((level.world().numCols() - 2) * TS);
-        levelCounterGroup.setTranslateY(2 * TS);
-        levelCounterGroup.setTranslateZ(-HTS);
+        levelCounterGroup.setTranslateX(level.world().numCols() * TS - spacing);
+        levelCounterGroup.setTranslateY(spacing);
+        levelCounterGroup.setTranslateZ(-6);
         levelCounterGroup.getChildren().clear();
+        int n = 0;
         for (byte symbol : context.game().levelCounter()) {
             Box cube = new Box(TS, TS, TS);
+            cube.setTranslateX(-n * spacing);
+            cube.setTranslateZ(-HTS);
+            levelCounterGroup.getChildren().add(cube);
+
             var material = new PhongMaterial(Color.WHITE);
             var sprite = switch (context.gameVariant()) {
-                case MS_PACMAN -> ((MsPacManGameSpriteSheet) context.spriteSheet()).bonusSymbolSprite(symbol);
-                case    PACMAN -> ((PacManGameSpriteSheet)   context.spriteSheet()).bonusSymbolSprite(symbol);
+                case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
+                case    PACMAN -> context.<PacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
             };
             material.setDiffuseMap(context.spriteSheet().subImage(sprite));
             cube.setMaterial(material);
-            int count = levelCounterGroup.getChildren().size();
-            cube.setTranslateX(-count * 2 * TS);
-            cube.setTranslateZ(-HTS);
 
             var spinning = new RotateTransition(Duration.seconds(6), cube);
             spinning.setAxis(Rotate.X_AXIS);
             spinning.setCycleCount(Animation.INDEFINITE);
             spinning.setByAngle(360);
-            spinning.setRate(count % 2 == 0 ? 1 : -1);
+            spinning.setRate(n % 2 == 0 ? 1 : -1);
             spinning.setInterpolator(Interpolator.LINEAR);
             spinning.play();
-            levelCounterGroup.getChildren().add(cube);
+
+            n += 1;
         }
     }
 
@@ -400,12 +403,12 @@ public class GameLevel3D extends Group {
         }
         switch (level.game().variant()) {
             case PACMAN -> {
-                PacManGameSpriteSheet ss = context.spriteSheet();
+                var ss = context.<PacManGameSpriteSheet>spriteSheet();
                 bonus3D = new Bonus3D(bonus,
                     ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));
             }
             case MS_PACMAN -> {
-                MsPacManGameSpriteSheet ss = context.spriteSheet();
+                var ss = context.<MsPacManGameSpriteSheet>spriteSheet();
                 bonus3D = new Bonus3D(bonus,
                     ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));
             }
