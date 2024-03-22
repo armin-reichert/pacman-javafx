@@ -17,7 +17,9 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PIP_MIN_HEIGHT;
 /**
  * @author Armin Reichert
  */
-public class PictureInPicture {
+public class PictureInPicture extends PlayScene2D {
+
+    private final Canvas canvas;
 
     public final DoubleProperty heightPy = new SimpleDoubleProperty(this, "height", PIP_MIN_HEIGHT) {
         @Override
@@ -25,32 +27,20 @@ public class PictureInPicture {
             double scaling = get() / CANVAS_HEIGHT_UNSCALED;
             canvas.setWidth(CANVAS_WIDTH_UNSCALED * scaling);
             canvas.setHeight(CANVAS_HEIGHT_UNSCALED * scaling);
-            playScene2D.setScaling(scaling);
+            setScaling(scaling);
         }
     };
 
     public final DoubleProperty opacityPy = new SimpleDoubleProperty(this, "opacity", 1.0);
 
-    private final Canvas canvas;
-    private final PlayScene2D playScene2D;
-
     public PictureInPicture(GameSceneContext sceneContext) {
-        double h = heightPy.doubleValue();
+        double height = heightPy.doubleValue();
         double aspectRatio = (double) CANVAS_WIDTH_UNSCALED / CANVAS_HEIGHT_UNSCALED;
-        canvas = new Canvas(h * aspectRatio, h);
+        canvas = new Canvas(height * aspectRatio, height);
         canvas.opacityProperty().bind(opacityPy);
-        playScene2D = new PlayScene2D();
-        playScene2D.setScoreVisible(true);
-        playScene2D.setContext(sceneContext);
-        playScene2D.setCanvas(canvas);
-        playScene2D.clearCanvas();
-    }
-
-    public Canvas canvas() {
-        return canvas;
-    }
-
-    public void draw() {
-        playScene2D.draw();
+        setScoreVisible(true);
+        setContext(sceneContext);
+        setCanvas(canvas);
+        clearCanvas();
     }
 }
