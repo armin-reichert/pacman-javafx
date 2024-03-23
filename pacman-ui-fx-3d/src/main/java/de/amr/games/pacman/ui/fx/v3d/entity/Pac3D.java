@@ -42,9 +42,9 @@ import static de.amr.games.pacman.ui.fx.v3d.model.Model3D.meshView;
  */
 public class Pac3D extends Group {
 
-    public static final String MESH_ID_EYES   = "PacMan.Eyes";
-    public static final String MESH_ID_HEAD   = "PacMan.Head";
-    public static final String MESH_ID_PALATE = "PacMan.Palate";
+    private static final String MESH_ID_EYES   = "PacMan.Eyes";
+    private static final String MESH_ID_HEAD   = "PacMan.Head";
+    private static final String MESH_ID_PALATE = "PacMan.Palate";
 
     public static Group createPacBody(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {
         var head = new MeshView(model3D.mesh(MESH_ID_HEAD));
@@ -117,29 +117,16 @@ public class Pac3D extends Group {
     private final Translate position = new Translate();
     private final Rotate orientation = new Rotate();
     private final Group shapeGroup;
-    private Pac pac;
+    private final Pac pac;
     private WalkingAnimation walkingAnimation;
     private PointLight light;
 
     public Pac3D(Group shapeGroup, Pac pac) {
         checkNotNull(shapeGroup);
         this.shapeGroup = shapeGroup;
-        getChildren().add(shapeGroup);
         this.pac = pac;
         shapeGroup.getTransforms().setAll(position, orientation);
-        meshViews().forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
-    }
-
-    /**
-     * Creates a Pac3D without Pac reference. Used for 3D level life counters.
-     *
-     * @param shapeGroup Pac 3D shape
-     */
-    public Pac3D(Group shapeGroup) {
-        checkNotNull(shapeGroup);
-        this.shapeGroup = shapeGroup;
         getChildren().add(shapeGroup);
-        shapeGroup.getTransforms().setAll(position, orientation);
         meshViews().forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
     }
 

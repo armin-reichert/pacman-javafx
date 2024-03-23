@@ -221,7 +221,7 @@ public class GameLevel3D extends Group {
                 case MS_PACMAN -> createMsPacManShape(theme.get("livescounter.pac.size"));
                 case    PACMAN -> createPacManShape  (theme.get("livescounter.pac.size"));
             };
-            livesCounter3D.addItem(new Pac3D(shape), true);
+            livesCounter3D.addItem(new Pac3D(shape, null), true);
         }
     }
 
