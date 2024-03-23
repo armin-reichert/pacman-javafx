@@ -174,13 +174,6 @@ public class Pac3D extends Group {
         return position;
     }
 
-    public Animation createDyingAnimation(GameVariant variant) {
-        return switch (variant) {
-            case MS_PACMAN -> createMsPacManDyingAnimation();
-            case PACMAN -> createPacManDyingAnimation();
-        };
-    }
-
     public WalkingAnimation walkingAnimation() {
         return walkingAnimation;
     }
@@ -243,7 +236,7 @@ public class Pac3D extends Group {
         return position.getX() < HTS || position.getX() > TS * pac.world().numCols() - HTS;
     }
 
-    private Animation createMsPacManDyingAnimation() {
+    public Animation createMsPacManDyingAnimation() {
         var spin = new RotateTransition(Duration.seconds(0.5), this);
         spin.setAxis(Rotate.X_AXIS); //TODO check this
         spin.setFromAngle(0);
@@ -258,7 +251,7 @@ public class Pac3D extends Group {
         );
     }
 
-    private Animation createPacManDyingAnimation() {
+    public Animation createPacManDyingAnimation() {
         Duration duration = Duration.seconds(1.0);
         short numSpins = 6;
 

@@ -258,7 +258,11 @@ public class PlayScene3D implements GameScene {
             case PACMAN_DYING -> {
                 assertLevel3DExists();
                 context.stopAllSounds();
-                lockGameStateAndPlayAfterSeconds(1.0, level3D.pac3D().createDyingAnimation(context.gameVariant()));
+                var animation = switch (context.gameVariant()) {
+                    case MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
+                    case PACMAN -> level3D.pac3D().createPacManDyingAnimation();
+                };
+                lockGameStateAndPlayAfterSeconds(1.0, animation);
             }
 
             case GAME_OVER -> {
