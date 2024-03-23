@@ -29,12 +29,12 @@ import static java.util.Objects.requireNonNull;
  */
 public class Model3D {
 
-    public static Translate centerOverOrigin(Node node) {
+    public static Translate centeredOverOrigin(Node node) {
         var bounds = node.getBoundsInLocal();
         return new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
     }
 
-    public static Scale scale(Node node, double size) {
+    public static Scale scaled(Node node, double size) {
         var bounds = node.getBoundsInLocal();
         return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
     }

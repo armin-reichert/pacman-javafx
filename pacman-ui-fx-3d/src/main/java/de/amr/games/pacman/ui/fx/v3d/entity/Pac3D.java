@@ -14,7 +14,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -59,11 +58,11 @@ public class Pac3D extends Group {
         palate.setId(Model3D.cssID(MESH_ID_PALATE));
         palate.setMaterial(coloredMaterial(palateColor));
 
-        var centerTransform = Model3D.centerOverOrigin(head);
-        Stream.of(head, eyes, palate).map(Node::getTransforms).forEach(tf -> tf.add(centerTransform));
+        var centeredOverOrigin = Model3D.centeredOverOrigin(head);
+        Stream.of(head, eyes, palate).forEach(node -> node.getTransforms().add(centeredOverOrigin));
 
         var root = new Group(head, eyes, palate);
-        root.getTransforms().add(Model3D.scale(root, size));
+        root.getTransforms().add(Model3D.scaled(root, size));
 
         // TODO check/fix Pac-Man mesh position and rotation in .obj file
         root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));

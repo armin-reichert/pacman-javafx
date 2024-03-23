@@ -11,9 +11,6 @@ import de.amr.games.pacman.model.GameLevel;
 
 import java.util.Optional;
 
-import static de.amr.games.pacman.model.actors.GhostState.ENTERING_HOUSE;
-import static de.amr.games.pacman.model.actors.GhostState.LEAVING_HOUSE;
-
 /**
  * Pac-Man / Ms. Pac-Man.
  *

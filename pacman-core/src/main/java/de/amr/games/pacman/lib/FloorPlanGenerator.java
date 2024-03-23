@@ -6,7 +6,6 @@ import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 

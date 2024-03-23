@@ -14,10 +14,7 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.net.URL;
-import java.text.MessageFormat;
-import java.util.List;
 import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 

@@ -68,13 +68,13 @@ public class ColoredGhost3D extends Group {
         pupilsShape.setMaterial(createColorBoundMaterial(pupilsColorPy));
         pupilsColorPy.set(theme.color("ghost.%d.color.normal.pupils".formatted(id)));
 
-        var centerTransform = Model3D.centerOverOrigin(dressShape);
-        dressShape.getTransforms().add(centerTransform);
+        var centeredOverOrigin = Model3D.centeredOverOrigin(dressShape);
+        dressShape.getTransforms().add(centeredOverOrigin);
 
         dressGroup = new Group(dressShape);
 
         eyesGroup = new Group(pupilsShape, eyeballsShape);
-        eyesGroup.getTransforms().add(centerTransform);
+        eyesGroup.getTransforms().add(centeredOverOrigin);
 
         getChildren().setAll(dressGroup, eyesGroup);
 
@@ -82,7 +82,7 @@ public class ColoredGhost3D extends Group {
         getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
         getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
         getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-        getTransforms().add(Model3D.scale(this, size));
+        getTransforms().add(Model3D.scaled(this, size));
     }
 
     public Group getEyesGroup() {

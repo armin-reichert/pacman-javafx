@@ -10,7 +10,7 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.page.GamePage;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.v3d.dashboard.*;
+import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
