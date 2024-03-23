@@ -47,6 +47,18 @@ public class MovingBonus extends Creature implements Bonus {
     }
 
     @Override
+    public boolean canAccessTile(Vector2i tile) {
+        if (world.house().contains(tile)) {
+            return false;
+        }
+        if (world.insideBounds(tile)) {
+            return !world.isWall(tile);
+        }
+        return world.belongsToPortal(tile);
+    }
+
+
+    @Override
     public MovingBonus entity() {
         return this;
     }

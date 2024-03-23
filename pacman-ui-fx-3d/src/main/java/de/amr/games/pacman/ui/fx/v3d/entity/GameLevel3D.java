@@ -56,9 +56,9 @@ import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.createPacBody;
  */
 public class GameLevel3D extends Group {
 
-    private static final int    FLOOR_PLAN_RESOLUTION = 4;
-    private static final double PAC_SIZE   = 9.0;
-    private static final double GHOST_SIZE = 9.0;
+    private static final byte  FLOOR_PLAN_RESOLUTION = 4;
+    private static final float PAC_SIZE   = 9.0f;
+    private static final float GHOST_SIZE = 9.0f;
 
     private static FloorPlan readFloorPlanFromFile(GameVariant variant, int mapNumber) {
         ResourceManager rm = () -> PacManGames3dUI.class;
@@ -83,7 +83,7 @@ public class GameLevel3D extends Group {
     private final Group levelCounterGroup = new Group();
     private final PointLight houseLight = new PointLight();
     private final List<Ghost3D> ghosts3D;
-    private Message3D message3D;
+    private       Message3D message3D;
     private       LivesCounter3D livesCounter3D;
     private       Pac3D pac3D;
     private       Bonus3D bonus3D;
@@ -107,9 +107,7 @@ public class GameLevel3D extends Group {
 
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
         pac3D.drawModePy.bind(PY_3D_DRAW_MODE);
-        for (var ghost3D: ghosts3D) {
-            ghost3D.drawModePy.bind(PY_3D_DRAW_MODE);
-        }
+        ghosts3D.forEach(ghost3D -> ghost3D.drawModePy.bind(PY_3D_DRAW_MODE));
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         wallHeightPy.bind(PY_3D_WALL_HEIGHT);
     }
@@ -152,7 +150,7 @@ public class GameLevel3D extends Group {
     private void createWorld3D() {
         switch (context.gameVariant()) {
             case MS_PACMAN -> {
-                int mapNumber = ArcadeWorld.mapNumberMsPacMan(level.number());
+                int mapNumber  = ArcadeWorld.mapNumberMsPacMan(level.number());
                 int mazeNumber = ArcadeWorld.mazeNumberMsPacMan(level.number());
                 floorPlan = readFloorPlanFromFile(GameVariant.MS_PACMAN, mapNumber);
                 wallBuilder = createWallBuilder(
@@ -162,7 +160,6 @@ public class GameLevel3D extends Group {
                 createFood3D(context.theme().color("mspacman.maze.foodColor", mazeNumber - 1));
             }
             case PACMAN -> {
-                // takes about 10 ms. Creating by code takes 25-30 ms.
                 floorPlan = readFloorPlanFromFile(GameVariant.PACMAN, 1);
                 wallBuilder = createWallBuilder(
                     context.theme().color("pacman.maze.wallBaseColor"),

@@ -78,6 +78,12 @@ public abstract class Creature extends Entity {
     public abstract boolean canReverse();
 
     /**
+     * @param tile some tile inside or outside the world
+     * @return if this creature can access the given tile
+     */
+    public abstract boolean canAccessTile(Vector2i tile);
+
+    /**
      * Tells if the creature entered a new tile with its last move or placement.
      */
     public boolean isNewTileEntered() {
@@ -156,18 +162,6 @@ public abstract class Creature extends Entity {
     public Vector2i tilesAheadBuggy(int numTiles) {
         Vector2i ahead = tile().plus(moveDir.vector().scaled(numTiles));
         return moveDir == Direction.UP ? ahead.minus(numTiles, 0) : ahead;
-    }
-
-    /**
-     * @param tile some tile inside or outside the world
-     * @return if this creature can access the given tile
-     */
-    public boolean canAccessTile(Vector2i tile) {
-        checkTileNotNull(tile);
-        if (world().insideBounds(tile)) {
-            return !world().isWall(tile) && !world().house().door().occupies(tile);
-        }
-        return world().belongsToPortal(tile);
     }
 
     /**

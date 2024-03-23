@@ -142,18 +142,25 @@ public class Ghost extends Creature implements AnimationDirector {
     @Override
     public boolean canAccessTile(Vector2i tile) {
         checkTileNotNull(tile);
+
+        // simplify this!
         var currentTile = tile();
         for (var dir : Direction.values()) {
-            if (tile.equals(currentTile.plus(dir.vector())) && !fnIsSteeringAllowed.test(dir)) {
+            var neighborTowardsDir = currentTile.plus(dir.vector());
+            if (neighborTowardsDir.equals(tile) && !fnIsSteeringAllowed.test(dir)) {
                 Logger.trace("Ghost {} cannot access tile {} because he cannot move {} at tile {}",
                     name(), tile, dir, currentTile);
                 return false;
             }
         }
+
         if (house.door().occupies(tile)) {
             return is(ENTERING_HOUSE, LEAVING_HOUSE);
         }
-        return super.canAccessTile(tile);
+        if (world.insideBounds(tile)) {
+            return !world.isWall(tile);
+        }
+        return world.belongsToPortal(tile);
     }
 
     @Override

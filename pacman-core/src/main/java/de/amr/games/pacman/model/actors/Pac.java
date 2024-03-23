@@ -6,9 +6,13 @@ package de.amr.games.pacman.model.actors;
 
 import de.amr.games.pacman.lib.Steering;
 import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 
 import java.util.Optional;
+
+import static de.amr.games.pacman.model.actors.GhostState.ENTERING_HOUSE;
+import static de.amr.games.pacman.model.actors.GhostState.LEAVING_HOUSE;
 
 /**
  * Pac-Man / Ms. Pac-Man.
@@ -72,6 +76,17 @@ public class Pac extends Creature implements AnimationDirector {
     @Override
     public boolean canReverse() {
         return isNewTileEntered();
+    }
+
+    @Override
+    public boolean canAccessTile(Vector2i tile) {
+        if (world.house().contains(tile)) {
+            return false;
+        }
+        if (world.insideBounds(tile)) {
+            return !world.isWall(tile);
+        }
+        return world.belongsToPortal(tile);
     }
 
     @Override
