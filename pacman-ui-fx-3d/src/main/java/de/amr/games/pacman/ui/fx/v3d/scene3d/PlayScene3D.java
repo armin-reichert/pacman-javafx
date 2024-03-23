@@ -394,8 +394,9 @@ public class PlayScene3D implements GameScene {
 
     private void showLevelMessage(GameLevel level) {
         if (context.gameState() == GameState.LEVEL_TEST) {
-            level3D.showMessage("TEST LEVEL " + level.number(), 5, level.world().numCols() * HTS, 34 * TS);
-        } else if (!level.isDemoLevel()){
+            level3D.showMessage("TEST LEVEL " + level.number(), 5,
+                level.world().numCols() * HTS, (level.world().numRows() - 2) * TS);
+        } else if (!level.isDemoLevel()) {
             var house = level.world().house();
             double x = TS * (house.topLeftTile().x() + 0.5 * house.size().x());
             double y = TS * (house.topLeftTile().y() +       house.size().y());

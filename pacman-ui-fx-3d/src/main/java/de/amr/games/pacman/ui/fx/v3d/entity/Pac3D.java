@@ -196,6 +196,22 @@ public class Pac3D extends Group {
         update();
     }
 
+    public void update() {
+        Vector2f center = pac.center();
+        position.setX(center.x());
+        position.setY(center.y());
+        position.setZ(-5.0);
+        orientation.setAxis(Rotate.Z_AXIS);
+        orientation.setAngle(angle(pac.moveDir()));
+        setVisible(pac.isVisible() && !outsideWorld());
+        if (pac.isStandingStill()) {
+            walkingAnimation.stop();
+        } else {
+            walkingAnimation.play();
+        }
+        updateLight();
+    }
+
     public void setLight(PointLight light) {
         checkNotNull(light);
         this.light = light;
@@ -221,22 +237,6 @@ public class Pac3D extends Group {
         boolean hasPower = pac.powerTimer().isRunning();
         light.setMaxRange(hasPower ? 2 * TS + radius : 0);
         light.setLightOn(lightedPy.get() && pac.isVisible() && hasPower);
-    }
-
-    public void update() {
-        Vector2f center = pac.center();
-        position.setX(center.x());
-        position.setY(center.y());
-        position.setZ(-5.0);
-        orientation.setAxis(Rotate.Z_AXIS);
-        orientation.setAngle(angle(pac.moveDir()));
-        setVisible(pac.isVisible() && !outsideWorld());
-        if (pac.isStandingStill()) {
-            walkingAnimation.stop();
-        } else {
-            walkingAnimation.play();
-        }
-        updateLight();
     }
 
     private boolean outsideWorld() {
@@ -279,18 +279,14 @@ public class Pac3D extends Group {
         falling.setInterpolator(Interpolator.EASE_IN);
 
         //TODO does not yet work as I want to
-        var animation = new SequentialTransition(
+        return new SequentialTransition(
             doNow(this::init),
             pauseSeconds(0.5),
             new ParallelTransition(spinning, shrinking, falling),
-            pauseSeconds(1.0)
+            doAfterSeconds(1.0, () -> {
+                setVisible(false);
+                setTranslateZ(0);
+            })
         );
-
-        animation.setOnFinished(e -> {
-            setVisible(false);
-            setTranslateZ(0);
-        });
-
-        return animation;
     }
 }
