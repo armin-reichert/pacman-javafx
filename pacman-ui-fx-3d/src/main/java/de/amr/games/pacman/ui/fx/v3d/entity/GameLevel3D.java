@@ -539,6 +539,14 @@ public class GameLevel3D extends Group {
         return allEatables().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
     }
 
+    public void startEnergizerAnimation() {
+        energizers3D().forEach(Energizer3D::startPumping);
+    }
+
+    public void stopEnergizerAnimation() {
+        energizers3D().forEach(Energizer3D::stopPumping);
+    }
+
     public Optional<Eatable3D> eatableAt(Vector2i tile) {
         checkTileNotNull(tile);
         return allEatables().filter(eatable -> eatable.tile().equals(tile)).findFirst();

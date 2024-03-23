@@ -219,7 +219,7 @@ public class PlayScene3D implements GameScene {
             level3D.allEatables().forEach(
                 eatable3D -> eatable3D.root().setVisible(!level.world().hasEatenFoodAt(eatable3D.tile())));
             if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
-                level3D.energizers3D().forEach(Energizer3D::startPumping);
+                level3D.startEnergizerAnimation();
             }
             if (!level.isDemoLevel() && context.gameState() == GameState.HUNTING) {
                 context.ensureSirenStarted(level.huntingPhaseIndex() / 2);
@@ -237,7 +237,7 @@ public class PlayScene3D implements GameScene {
                     context.gameLevel().ifPresent(level -> {
                         level3D.pac3D().init();
                         level3D.ghosts3D().forEach(Ghost3D::init);
-                        level3D.energizers3D().forEach(Energizer3D::stopPumping);
+                        level3D.stopEnergizerAnimation();
                         level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                         level3D.livesCounter3D().stopAnimation();
                         showLevelMessage(level);
@@ -251,7 +251,7 @@ public class PlayScene3D implements GameScene {
                     level3D.pac3D().init();
                     level3D.ghosts3D().forEach(Ghost3D::init);
                     level3D.livesCounter3D().startAnimation();
-                    level3D.energizers3D().forEach(Energizer3D::startPumping);
+                    level3D.startEnergizerAnimation();
                 });
             }
 
@@ -265,7 +265,7 @@ public class PlayScene3D implements GameScene {
                 assertLevel3DExists();
                 context.stopAllSounds();
                 context.gameState().timer().restartSeconds(3);
-                level3D.energizers3D().forEach(Energizer3D::stopPumping);
+                level3D.stopEnergizerAnimation();
                 level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                 level3D.livesCounter3D().stopAnimation();
                 context.actionHandler().showFlashMessageSeconds(3, PICKER_GAME_OVER.next());
