@@ -86,9 +86,6 @@ public class PlayScene3D implements GameScene {
         coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
         scores3D = new Scores3D();
-        scores3D.setTranslateX(TS);
-        scores3D.setTranslateY(-3.5 * TS);
-        scores3D.setTranslateZ(-3 * TS);
         // keep the scores rotated such that the viewer always sees them frontally
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
@@ -177,11 +174,12 @@ public class PlayScene3D implements GameScene {
         // replace initial placeholder or previous 3D level
         subSceneRoot.getChildren().set(CHILD_LEVEL_3D, level3D);
 
-        // center over origin
-        double tx = -level.world().numCols() * HTS;
-        double ty = -level.world().numRows() * HTS;
-        subSceneRoot.setTranslateX(tx);
-        subSceneRoot.setTranslateY(ty);
+        level3D.setTranslateX(-level.world().numCols() * HTS);
+        level3D.setTranslateY(-level.world().numRows() * HTS);
+
+        scores3D.setTranslateX(level3D.getTranslateX() + TS);
+        scores3D.setTranslateY(level3D.getTranslateY() -3.5 * TS);
+        scores3D.setTranslateZ(-3 * TS);
 
         if (PY_3D_FLOOR_TEXTURE_RND.get()) {
             List<String> names = context.theme().getArray("texture.names");
