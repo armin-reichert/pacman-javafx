@@ -14,10 +14,7 @@ import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
@@ -95,13 +92,22 @@ public class GameLevel {
             new Ghost(CYAN_GHOST, "Inky"),
             new Ghost(ORANGE_GHOST, isMsPacManGame ? "Sue" : "Clyde")
         };
+        Map<Vector2i, List<Direction>> forbiddenMoves = switch (game.variant()) {
+            case MS_PACMAN -> Collections.emptyMap();
+            case PACMAN -> {
+                var up = List.of(UP);
+                var map = new HashMap<Vector2i, List<Direction>>();
+                ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> map.put(tile, up));
+                yield map;
+            }
+        };
         ghosts().forEach(ghost -> {
             ghost.setWorld(world);
             ghost.setHouse(world.house());
             ghost.setFnHuntingBehavior(isMsPacManGame ? this::ghostHuntsInMsPacManGame : this::ghostHuntsInPacManGame);
             ghost.setFnFrightenedBehavior(this::ghostRoamsThroughWorld);
             ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));
-            ghost.setFnIsSteeringAllowed(dir -> isSteeringAllowed(ghost, dir));
+            ghost.setForbiddenMoves(forbiddenMoves);
             ghost.setBaseSpeed(SPEED_AT_100_PERCENT);
             ghost.setSpeedReturningToHouse(SPEED_GHOST_RETURNING_TO_HOUSE);
             ghost.setSpeedInsideHouse(SPEED_GHOST_INSIDE_HOUSE);
@@ -295,29 +301,6 @@ public class GameLevel {
 
     public int numGhostsKilledByEnergizer() {
         return numGhostsKilledByEnergizer;
-    }
-
-    /**
-     * @param ghost a ghost
-     * @param dir   a direction
-     * @return tells if the ghost can steer towards the given direction
-     */
-    public boolean isSteeringAllowed(Ghost ghost, Direction dir) {
-        checkNotNull(ghost);
-        checkNotNull(dir);
-        if (upwardsBlockedTiles().isEmpty()) {
-            return true;
-        }
-        // In the Pac-Man game, *hunting* ghosts cannot move upwards at specific tiles
-        boolean upwardsBlocked = upwardsBlockedTiles().contains(ghost.tile());
-        return !(upwardsBlocked && dir == UP && ghost.is(HUNTING_PAC));
-    }
-
-    public List<Vector2i> upwardsBlockedTiles() {
-        return switch (game.variant()) {
-            case MS_PACMAN -> Collections.emptyList();
-            case PACMAN -> ArcadeWorld.PACMAN_RED_ZONE;
-        };
     }
 
     /**

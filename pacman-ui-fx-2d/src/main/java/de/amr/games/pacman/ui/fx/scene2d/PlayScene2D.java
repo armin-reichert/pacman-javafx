@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
@@ -154,13 +155,15 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void drawSceneInfo() {
         drawTileGrid(ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
-        context.gameLevel().ifPresent(level -> level.upwardsBlockedTiles().forEach(tile -> {
-            // "No Trespassing" symbol
-            g.setFill(Color.RED);
-            g.fillOval(s(t(tile.x())), s(t(tile.y() - 1)), s(TS), s(TS));
-            g.setFill(Color.WHITE);
-            g.fillRect(s(t(tile.x()) + 1), s(t(tile.y()) - HTS - 1), s(TS - 2), s(2));
-        }));
+        if (context.gameVariant() == GameVariant.PACMAN) {
+            context.gameLevel().ifPresent(level -> ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> {
+                // "No Trespassing" symbol
+                g.setFill(Color.RED);
+                g.fillOval(s(t(tile.x())), s(t(tile.y() - 1)), s(TS), s(TS));
+                g.setFill(Color.WHITE);
+                g.fillRect(s(t(tile.x()) + 1), s(t(tile.y()) - HTS - 1), s(TS - 2), s(2));
+            }));
+        }
         g.setFill(Color.YELLOW);
         g.setFont(Font.font("Sans", FontWeight.BOLD, 24));
         g.fillText(String.format("%s %d", context.gameState(), context.gameState().timer().tick()), 0, 80);

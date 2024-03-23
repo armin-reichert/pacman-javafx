@@ -11,9 +11,11 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.House;
 import org.tinylog.Logger;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
@@ -41,12 +43,12 @@ public class Ghost extends Creature implements AnimationDirector {
     private byte killedIndex;
     private Consumer<Ghost> fnHuntingBehavior;
     private Consumer<Ghost> fnFrightenedBehavior;
-    private Predicate<Direction> fnIsSteeringAllowed;
     private House house;
     private Vector2f revivalPosition;
     private float speedReturningToHouse;
     private float speedInsideHouse;
     private Animations animations;
+    private Map<Vector2i, List<Direction>> forbiddenMoves = Collections.emptyMap();
 
     public Ghost(byte id, String name) {
         super(name);
@@ -109,9 +111,8 @@ public class Ghost extends Creature implements AnimationDirector {
         this.speedInsideHouse = pixelsPerTick;
     }
 
-    public void setFnIsSteeringAllowed(Predicate<Direction> fnIsSteeringAllowed) {
-        checkNotNull(fnIsSteeringAllowed);
-        this.fnIsSteeringAllowed = fnIsSteeringAllowed;
+    public void setForbiddenMoves(Map<Vector2i, List<Direction>> forbiddenMoves) {
+        this.forbiddenMoves = forbiddenMoves;
     }
 
     /**
@@ -143,14 +144,16 @@ public class Ghost extends Creature implements AnimationDirector {
     public boolean canAccessTile(Vector2i tile) {
         checkTileNotNull(tile);
 
-        // simplify this!
-        var currentTile = tile();
-        for (var dir : Direction.values()) {
-            var neighborTowardsDir = currentTile.plus(dir.vector());
-            if (neighborTowardsDir.equals(tile) && !fnIsSteeringAllowed.test(dir)) {
-                Logger.trace("Ghost {} cannot access tile {} because he cannot move {} at tile {}",
-                    name(), tile, dir, currentTile);
-                return false;
+        // hunting ghosts cannot move up at certain tiles in Pac-Man game
+        if (state == HUNTING_PAC) {
+            var currentTile = tile();
+            if (forbiddenMoves.containsKey(currentTile)) {
+                for (Direction forbiddenDir : forbiddenMoves.get(currentTile)) {
+                    if (currentTile.plus(forbiddenDir.vector()).equals(tile)) {
+                        Logger.trace("Hunting {} cannot move {} at {}", name(), forbiddenDir, currentTile);
+                        return false;
+                    }
+                }
             }
         }
 
