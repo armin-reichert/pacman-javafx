@@ -43,7 +43,7 @@ public class Model3D {
         requireNonNull(tree);
         requireNonNull(id);
 
-        var cssID = cssID(id);
+        var cssID = toCSS_ID(id);
         var node = tree.lookup("#" + cssID);
         if (node == null) {
             throw new IllegalArgumentException("No mesh view with ID '%s' found".formatted(cssID));
@@ -55,12 +55,12 @@ public class Model3D {
             "Node with CSS ID '%s' is not a MeshView but a %s".formatted(cssID, node.getClass()));
     }
 
-    public static String cssID(String id) {
+    public static String toCSS_ID(String id) {
         // TODO what else need to be escaped?
         return id.replace('.', '-');
     }
 
-    private final Map<String, Mesh> meshes = new HashMap<>();
+    private final Map<String, Mesh> meshesByName = new HashMap<>();
     private final Map<String, PhongMaterial> materials = new HashMap<>();
 
     public Model3D(URL url) {
@@ -70,30 +70,30 @@ public class Model3D {
         var urlString = url.toExternalForm();
         int lastSlash = urlString.lastIndexOf('/');
         var fileName = urlString.substring(lastSlash + 1);
-        Logger.trace("*** Load 3D model from file '{}'. URL: {}", fileName, url);
+        Logger.trace("Load 3D model from file '{}'. URL: {}", fileName, url);
         try {
             var importer = new ObjImporter(url.toExternalForm());
             for (var meshName : importer.getMeshNames()) {
                 var mesh = importer.getMesh(meshName);
                 ObjImporter.validateTriangleMesh(mesh);
-                meshes.put(meshName, mesh);
+                meshesByName.put(meshName, mesh);
             }
             for (var materialMap : importer.materialLibrary()) {
                 for (var entry : materialMap.entrySet()) {
                     materials.put(entry.getKey(), (PhongMaterial) entry.getValue());
                 }
             }
-            Logger.trace(contentReport());
+            Logger.trace(contentAsText(url));
         } catch (IOException e) {
             Logger.error(e);
         }
     }
 
-    public String contentReport() {
+    public String contentAsText(URL url) {
         var sb = new StringBuilder();
-        sb.append("Model content:\n");
+        sb.append("3D model loaded from URL ").append(url).append("\n");
         sb.append("\tMeshes:\n");
-        for (var entry : meshes.entrySet()) {
+        for (var entry : meshesByName.entrySet()) {
             sb.append("\t\t'%s': %s%n".formatted(entry.getKey(), entry.getValue()));
         }
         sb.append("\tMaterials:\n");
@@ -104,8 +104,8 @@ public class Model3D {
     }
 
     public Mesh mesh(String name) {
-        if (meshes.containsKey(name)) {
-            return meshes.get(name);
+        if (meshesByName.containsKey(name)) {
+            return meshesByName.get(name);
         }
         throw new Model3DException("No mesh with name %s found", name);
     }

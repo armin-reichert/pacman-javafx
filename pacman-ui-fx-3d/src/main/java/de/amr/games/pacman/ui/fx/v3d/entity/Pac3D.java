@@ -47,15 +47,15 @@ public class Pac3D extends Group {
 
     public static Group createPacBody(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {
         var head = new MeshView(model3D.mesh(MESH_ID_HEAD));
-        head.setId(Model3D.cssID(MESH_ID_HEAD));
+        head.setId(Model3D.toCSS_ID(MESH_ID_HEAD));
         head.setMaterial(coloredMaterial(headColor));
 
         var eyes = new MeshView(model3D.mesh(MESH_ID_EYES));
-        eyes.setId(Model3D.cssID(MESH_ID_EYES));
+        eyes.setId(Model3D.toCSS_ID(MESH_ID_EYES));
         eyes.setMaterial(coloredMaterial(eyesColor));
 
         var palate = new MeshView(model3D.mesh(MESH_ID_PALATE));
-        palate.setId(Model3D.cssID(MESH_ID_PALATE));
+        palate.setId(Model3D.toCSS_ID(MESH_ID_PALATE));
         palate.setMaterial(coloredMaterial(palateColor));
 
         var centeredOverOrigin = Model3D.centeredOverOrigin(head);
