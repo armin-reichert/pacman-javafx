@@ -31,47 +31,27 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public class GameLevel {
 
-    private final GameLevelData data;
-
-    private final GameModel game;
-
-    private final GhostHouseManagement ghostHouseManagement;
-
-    /**
-     * 1-based level number.
-     */
     private final int levelNumber;
-
     private final boolean demoLevel;
-
+    private final GameLevelData data;
+    private final GameModel game;
+    private final GhostHouseManagement ghostHouseManagement;
     private final TickTimer huntingTimer = new TickTimer("HuntingTimer");
-
-    /**
-     * Memory of what happens during current frame.
-     */
-    private final Memory thisFrame = new Memory();
-
+    private final Memory currentFrameEvents = new Memory();
     private final World world;
-
     private final Pac pac;
-
     private final Ghost[] ghosts;
-
     private byte huntingPhaseIndex;
-
     private byte numGhostsKilledInLevel;
-
     private byte numGhostsKilledByEnergizer;
-
     private byte cruiseElroyState;
-
     private Steering autopilot;
 
-    public GameLevel(GameModel game, World world, int levelNumber, GameLevelData levelData, boolean demoLevel) {
-        checkGameNotNull(game);
-        checkNotNull(world);
+    public GameLevel(int levelNumber, GameLevelData levelData, GameModel game, World world, boolean demoLevel) {
         checkLevelNumber(levelNumber);
         checkNotNull(levelData);
+        checkGameNotNull(game);
+        checkNotNull(world);
 
         this.game = game;
         this.world = world;
@@ -266,7 +246,7 @@ public class GameLevel {
      * @return information about what happened during the current simulation step
      */
     public Memory thisFrame() {
-        return thisFrame;
+        return currentFrameEvents;
     }
 
     /**
@@ -483,31 +463,31 @@ public class GameLevel {
     /* --- Here comes the main logic of the game. --- */
 
     private void collectInformation() {
-        thisFrame.forgetEverything(); // Ich scholze jetzt!
+        currentFrameEvents.forgetEverything(); // Ich scholze jetzt!
         var pacTile = pac.tile();
         if (world.hasFoodAt(pacTile)) {
-            thisFrame.foodFoundTile = pacTile;
-            thisFrame.energizerFound = world.isEnergizerTile(pacTile);
+            currentFrameEvents.foodFoundTile = pacTile;
+            currentFrameEvents.energizerFound = world.isEnergizerTile(pacTile);
         }
-        if (thisFrame.energizerFound && data.pacPowerSeconds() > 0) {
-            thisFrame.pacPowerStarts = true;
-            thisFrame.pacPowerActive = true;
+        if (currentFrameEvents.energizerFound && data.pacPowerSeconds() > 0) {
+            currentFrameEvents.pacPowerStarts = true;
+            currentFrameEvents.pacPowerActive = true;
         } else {
-            thisFrame.pacPowerFading = pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS;
-            thisFrame.pacPowerLost = pac.powerTimer().hasExpired();
-            thisFrame.pacPowerActive = pac.powerTimer().isRunning();
+            currentFrameEvents.pacPowerFading = pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS;
+            currentFrameEvents.pacPowerLost = pac.powerTimer().hasExpired();
+            currentFrameEvents.pacPowerActive = pac.powerTimer().isRunning();
         }
     }
 
     private void handleFoodFound(Vector2i foodTile) {
         world.removeFood(foodTile);
         if (world.uneatenFoodCount() == 0) {
-            thisFrame.levelCompleted = true;
+            currentFrameEvents.levelCompleted = true;
         }
         if (isBonusReached()) {
-            thisFrame.bonusReachedIndex += 1;
+            currentFrameEvents.bonusReachedIndex += 1;
         }
-        if (thisFrame.energizerFound) {
+        if (currentFrameEvents.energizerFound) {
             numGhostsKilledByEnergizer = 0;
             pac.setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
             int points = GameModel.POINTS_ENERGIZER;
@@ -569,37 +549,37 @@ public class GameLevel {
         collectInformation();
 
         // Food found?
-        if (thisFrame.foodFoundTile != null) {
+        if (currentFrameEvents.foodFoundTile != null) {
             pac.endStarving();
-            handleFoodFound(thisFrame.foodFoundTile);
+            handleFoodFound(currentFrameEvents.foodFoundTile);
         } else {
             pac.starve();
         }
 
         // Level complete?
-        if (thisFrame.levelCompleted) {
+        if (currentFrameEvents.levelCompleted) {
             logWhatHappenedThisFrame();
             return;
         }
 
         // Bonus?
-        if (thisFrame.bonusReachedIndex != -1) {
-            handleBonusReached(thisFrame.bonusReachedIndex);
+        if (currentFrameEvents.bonusReachedIndex != -1) {
+            handleBonusReached(currentFrameEvents.bonusReachedIndex);
         }
 
         // Pac power state changed?
-        if (thisFrame.pacPowerStarts) {
+        if (currentFrameEvents.pacPowerStarts) {
             handlePacPowerStarts();
-        } else if (thisFrame.pacPowerFading) {
+        } else if (currentFrameEvents.pacPowerFading) {
             publishGameEvent(game, GameEventType.PAC_STARTS_LOSING_POWER);
-        } else if (thisFrame.pacPowerLost) {
+        } else if (currentFrameEvents.pacPowerLost) {
             handlePacPowerLost();
         }
 
         // Now check who gets killed
-        thisFrame.pacPrey.clear();
-        thisFrame.pacPrey.addAll(ghosts(FRIGHTENED).filter(pac::sameTile).toList());
-        thisFrame.pacKilled = !GameController.it().isPacImmune() && ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
+        currentFrameEvents.pacPrey.clear();
+        currentFrameEvents.pacPrey.addAll(ghosts(FRIGHTENED).filter(pac::sameTile).toList());
+        currentFrameEvents.pacKilled = !GameController.it().isPacImmune() && ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
 
         // Update world
         world.mazeFlashing().tick();
@@ -620,7 +600,7 @@ public class GameLevel {
         }
 
         // Update hunting timer
-        if (thisFrame.pacPowerStarts || thisFrame.pacKilled) {
+        if (currentFrameEvents.pacPowerStarts || currentFrameEvents.pacKilled) {
             stopHuntingPhase();
         } else {
             boolean huntingPhaseChange = updateHuntingPhase();
@@ -665,7 +645,7 @@ public class GameLevel {
     }
 
     private void logWhatHappenedThisFrame() {
-        var memoText = thisFrame.toString();
+        var memoText = currentFrameEvents.toString();
         if (!memoText.isBlank()) {
             Logger.trace(memoText);
         }
@@ -675,16 +655,16 @@ public class GameLevel {
      * Called by cheat action only.
      */
     public void killAllHuntingAndFrightenedGhosts() {
-        thisFrame.pacPrey.clear();
-        thisFrame.pacPrey.addAll(ghosts(HUNTING_PAC, FRIGHTENED).toList());
+        currentFrameEvents.pacPrey.clear();
+        currentFrameEvents.pacPrey.addAll(ghosts(HUNTING_PAC, FRIGHTENED).toList());
         numGhostsKilledByEnergizer = 0;
         killEdibleGhosts();
     }
 
     public void killEdibleGhosts() {
-        if (!thisFrame.pacPrey.isEmpty()) {
-            thisFrame.pacPrey.forEach(this::killGhost);
-            numGhostsKilledInLevel += (byte) thisFrame.pacPrey.size();
+        if (!currentFrameEvents.pacPrey.isEmpty()) {
+            currentFrameEvents.pacPrey.forEach(this::killGhost);
+            numGhostsKilledInLevel += (byte) currentFrameEvents.pacPrey.size();
             if (numGhostsKilledInLevel == 16) {
                 int points = GameModel.POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
                 scorePoints(points);
@@ -698,7 +678,7 @@ public class GameLevel {
         ghost.setState(EATEN);
         int points = game.pointsForKillingGhost(numGhostsKilledByEnergizer);
         scorePoints(points);
-        thisFrame.killedGhosts.add(ghost);
+        currentFrameEvents.killedGhosts.add(ghost);
         numGhostsKilledByEnergizer += 1;
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }
