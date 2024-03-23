@@ -739,14 +739,14 @@ public class GameLevel {
             case MS_PACMAN -> nextMsPacManBonusSymbol();
             // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
             case PACMAN -> switch (levelNumber) {
-                case 1 -> GameModel.PACMAN_CHERRIES;
-                case 2 -> GameModel.PACMAN_STRAWBERRY;
-                case 3, 4 -> GameModel.PACMAN_PEACH;
-                case 5, 6 -> GameModel.PACMAN_APPLE;
-                case 7, 8 -> GameModel.PACMAN_GRAPES;
-                case 9, 10 -> GameModel.PACMAN_GALAXIAN;
+                case 1 ->      GameModel.PACMAN_CHERRIES;
+                case 2 ->      GameModel.PACMAN_STRAWBERRY;
+                case 3, 4 ->   GameModel.PACMAN_PEACH;
+                case 5, 6 ->   GameModel.PACMAN_APPLE;
+                case 7, 8 ->   GameModel.PACMAN_GRAPES;
+                case 9, 10 ->  GameModel.PACMAN_GALAXIAN;
                 case 11, 12 -> GameModel.PACMAN_BELL;
-                default -> GameModel.PACMAN_KEY;
+                default ->     GameModel.PACMAN_KEY;
             };
         };
     }
