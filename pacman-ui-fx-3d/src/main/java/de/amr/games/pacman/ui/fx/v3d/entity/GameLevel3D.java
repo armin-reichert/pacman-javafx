@@ -20,8 +20,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
-import de.amr.games.pacman.ui.fx.v3d.animation.HeadBanging;
-import de.amr.games.pacman.ui.fx.v3d.animation.HipSwaying;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
 import javafx.animation.*;
@@ -48,8 +46,6 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
 import static de.amr.games.pacman.ui.fx.util.Ufx.doAfterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
-import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.createFemaleParts;
-import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.createPacBody;
 
 /**
  * @author Armin Reichert
@@ -82,10 +78,10 @@ public class GameLevel3D extends Group {
     private final Group foodGroup = new Group();
     private final Group levelCounterGroup = new Group();
     private final PointLight houseLight = new PointLight();
+    private final Pac3D pac3D;
     private final List<Ghost3D> ghosts3D;
     private       Message3D message3D;
     private       LivesCounter3D livesCounter3D;
-    private       Pac3D pac3D;
     private       Bonus3D bonus3D;
 
     public GameLevel3D(GameLevel level, GameSceneContext context) {
@@ -94,9 +90,9 @@ public class GameLevel3D extends Group {
         this.level = level;
         this.context = context;
 
-        createWorld3D();
-        createPac3D(level.pac());
+        pac3D = createPac3D(level.pac());
         ghosts3D = level.ghosts().map(this::createGhost3D).toList();
+        createWorld3D();
         createLivesCounter3D();
         createLevelCounter3D();
         createMessage3D();
@@ -112,39 +108,11 @@ public class GameLevel3D extends Group {
         wallHeightPy.bind(PY_3D_WALL_HEIGHT);
     }
 
-    private void createPac3D(Pac pac) {
-        switch (context.gameVariant()) {
-            case MS_PACMAN -> {
-                pac3D = new Pac3D(createMsPacManShape(PAC_SIZE), pac);
-                pac3D.setWalkingAnimation(new HipSwaying(pac, pac3D));
-                pac3D.setLight(new PointLight(context.theme().color("mspacman.color.head").desaturate()));
-            }
-            case PACMAN -> {
-                pac3D = new Pac3D(createPacManShape(PAC_SIZE), pac);
-                pac3D.setWalkingAnimation(new HeadBanging(pac, pac3D));
-                pac3D.setLight(new PointLight(context.theme().color("pacman.color.head").desaturate()));
-            }
-        }
-    }
-
-    private Group createPacManShape(double size) {
-        var body = createPacBody(context.theme().get("model3D.pacman"), size,
-            context.theme().color("pacman.color.head"),
-            context.theme().color("pacman.color.eyes"),
-            context.theme().color("pacman.color.palate"));
-        return new Group(body);
-    }
-
-    private Group createMsPacManShape(double size) {
-        var body = createPacBody(context.theme().get("model3D.pacman"), size,
-            context.theme().color("mspacman.color.head"),
-            context.theme().color("mspacman.color.eyes"),
-            context.theme().color("mspacman.color.palate"));
-        var femaleParts = createFemaleParts(size,
-            context.theme().color("mspacman.color.hairbow"),
-            context.theme().color("mspacman.color.hairbow.pearls"),
-            context.theme().color("mspacman.color.boobs"));
-        return new Group(body, femaleParts);
+    private Pac3D createPac3D(Pac pac) {
+        return switch (context.gameVariant()) {
+            case MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), pac, PAC_SIZE);
+            case    PACMAN -> Pac3D.createPacMan3D(context.theme(), pac, PAC_SIZE);
+        };
     }
 
     private void createWorld3D() {
@@ -214,11 +182,11 @@ public class GameLevel3D extends Group {
         livesCounter3D.setTranslateY(2 * TS);
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         for (int i = 0; i < livesCounter3D.maxLives(); ++i) {
-            var shape = switch (context.gameVariant()) {
-                case MS_PACMAN -> createMsPacManShape(theme.get("livescounter.pac.size"));
-                case    PACMAN -> createPacManShape  (theme.get("livescounter.pac.size"));
+            var pac3D = switch (context.gameVariant()) {
+                case MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), null, theme.get("livescounter.pac.size"));
+                case    PACMAN -> Pac3D.createPacMan3D(context.theme(), null,  theme.get("livescounter.pac.size"));
             };
-            livesCounter3D.addItem(new Pac3D(shape, null), true);
+            livesCounter3D.addItem(pac3D, true);
         }
     }
 
