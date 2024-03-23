@@ -5,9 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.animation.WalkingAnimation;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.*;
@@ -44,27 +42,11 @@ import static de.amr.games.pacman.ui.fx.v3d.model.Model3D.meshView;
  */
 public class Pac3D extends Group {
 
-    public static final String MESH_ID_EYES = "PacMan.Eyes";
-    public static final String MESH_ID_HEAD = "PacMan.Head";
+    public static final String MESH_ID_EYES   = "PacMan.Eyes";
+    public static final String MESH_ID_HEAD   = "PacMan.Head";
     public static final String MESH_ID_PALATE = "PacMan.Palate";
 
-    public static Group createPacManShape(Theme theme, double size) {
-        var body = createBody(theme.get("model3D.pacman"), size,
-            theme.color("pacman.color.head"),
-            theme.color("pacman.color.eyes"),
-            theme.color("pacman.color.palate"));
-        return new Group(body);
-    }
-
-    public static Group createMsPacManShape(Theme theme, double size) {
-        var body = createBody(theme.get("model3D.pacman"), size,
-            theme.color("mspacman.color.head"),
-            theme.color("mspacman.color.eyes"),
-            theme.color("mspacman.color.palate"));
-        return new Group(body, createFeminineParts(theme, size));
-    }
-
-    private static Group createBody(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {
+    public static Group createPacBody(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {
         var head = new MeshView(model3D.mesh(MESH_ID_HEAD));
         head.setId(Model3D.cssID(MESH_ID_HEAD));
         head.setMaterial(coloredMaterial(headColor));
@@ -91,8 +73,8 @@ public class Pac3D extends Group {
         return root;
     }
 
-    private static Group createFeminineParts(Theme theme, double pacSize) {
-        var bowMaterial = coloredMaterial(theme.color("mspacman.color.hairbow"));
+    public static Group addFemaleLook(Color hairBowColor, Color hairBowPearlsColor, Color boobsColor, double pacSize) {
+        var bowMaterial = coloredMaterial(hairBowColor);
 
         var bowLeft = new Sphere(1.2);
         bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -pacSize * 0.55));
@@ -102,7 +84,7 @@ public class Pac3D extends Group {
         bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -pacSize * 0.55));
         bowRight.setMaterial(bowMaterial);
 
-        var pearlMaterial = coloredMaterial(theme.color("mspacman.color.hairbow.pearls"));
+        var pearlMaterial = coloredMaterial(hairBowPearlsColor);
 
         var pearlLeft = new Sphere(0.4);
         pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacSize * 0.58));
@@ -116,7 +98,7 @@ public class Pac3D extends Group {
         beautySpot.setMaterial(coloredMaterial(Color.rgb(100, 100, 100)));
         beautySpot.getTransforms().addAll(new Translate(-1.8, -3.7, -1));
 
-        var silicone = coloredMaterial(theme.color("mspacman.color.boobs"));
+        var silicone = coloredMaterial(boobsColor);
 
         var boobLeft = new Sphere(1.5);
         boobLeft.setMaterial(silicone);
@@ -134,18 +116,18 @@ public class Pac3D extends Group {
 
     private final Translate position = new Translate();
     private final Rotate orientation = new Rotate();
+    private final Group shapeGroup;
     private Pac pac;
     private WalkingAnimation walkingAnimation;
     private PointLight light;
 
     public Pac3D(Group shapeGroup, Pac pac) {
         checkNotNull(shapeGroup);
+        this.shapeGroup = shapeGroup;
         getChildren().add(shapeGroup);
         this.pac = pac;
         shapeGroup.getTransforms().setAll(position, orientation);
-        meshView(shapeGroup, MESH_ID_EYES).drawModeProperty().bind(drawModePy);
-        meshView(shapeGroup, MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
-        meshView(shapeGroup, MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
+        meshViews().forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
     }
 
     /**
@@ -155,11 +137,14 @@ public class Pac3D extends Group {
      */
     public Pac3D(Group shapeGroup) {
         checkNotNull(shapeGroup);
+        this.shapeGroup = shapeGroup;
         getChildren().add(shapeGroup);
         shapeGroup.getTransforms().setAll(position, orientation);
-        meshView(shapeGroup, MESH_ID_EYES).drawModeProperty().bind(drawModePy);
-        meshView(shapeGroup, MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
-        meshView(shapeGroup, MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
+        meshViews().forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
+    }
+
+    public Stream<MeshView> meshViews() {
+        return Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE).map(id -> meshView(shapeGroup, id));
     }
 
     public Pac pac() {

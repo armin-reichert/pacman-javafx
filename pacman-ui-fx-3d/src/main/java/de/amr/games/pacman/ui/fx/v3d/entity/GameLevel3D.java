@@ -48,8 +48,8 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
 import static de.amr.games.pacman.ui.fx.util.Ufx.doAfterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
-import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.createMsPacManShape;
-import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.createPacManShape;
+import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.addFemaleLook;
+import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.createPacBody;
 
 /**
  * @author Armin Reichert
@@ -117,16 +117,36 @@ public class GameLevel3D extends Group {
     private void createPac3D(Pac pac) {
         switch (context.gameVariant()) {
             case MS_PACMAN -> {
-                pac3D = new Pac3D(createMsPacManShape(context.theme(), PAC_SIZE), pac);
+                pac3D = new Pac3D(createMsPacManShape(PAC_SIZE), pac);
                 pac3D.setWalkingAnimation(new HipSwaying(pac, pac3D));
                 pac3D.setLight(new PointLight(context.theme().color("mspacman.color.head").desaturate()));
             }
             case PACMAN -> {
-                pac3D = new Pac3D(createPacManShape(context.theme(), PAC_SIZE), pac);
+                pac3D = new Pac3D(createPacManShape(PAC_SIZE), pac);
                 pac3D.setWalkingAnimation(new HeadBanging(pac, pac3D));
                 pac3D.setLight(new PointLight(context.theme().color("pacman.color.head").desaturate()));
             }
         }
+    }
+
+    private Group createPacManShape(double size) {
+        var body = createPacBody(context.theme().get("model3D.pacman"), size,
+            context.theme().color("pacman.color.head"),
+            context.theme().color("pacman.color.eyes"),
+            context.theme().color("pacman.color.palate"));
+        return new Group(body);
+    }
+
+    private Group createMsPacManShape(double size) {
+        var body = createPacBody(context.theme().get("model3D.pacman"), size,
+            context.theme().color("mspacman.color.head"),
+            context.theme().color("mspacman.color.eyes"),
+            context.theme().color("mspacman.color.palate"));
+        return new Group(body, addFemaleLook(
+            context.theme().color("mspacman.color.hairbow"),
+            context.theme().color("mspacman.color.hairbow.pearls"),
+            context.theme().color("mspacman.color.boobs"),
+            size));
     }
 
     private void createWorld3D() {
@@ -198,8 +218,8 @@ public class GameLevel3D extends Group {
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         for (int i = 0; i < livesCounter3D.maxLives(); ++i) {
             var shape = switch (context.gameVariant()) {
-                case MS_PACMAN -> createMsPacManShape(context.theme(), theme.get("livescounter.pac.size"));
-                case    PACMAN -> createPacManShape  (context.theme(), theme.get("livescounter.pac.size"));
+                case MS_PACMAN -> createMsPacManShape(theme.get("livescounter.pac.size"));
+                case    PACMAN -> createPacManShape  (theme.get("livescounter.pac.size"));
             };
             livesCounter3D.addItem(new Pac3D(shape), true);
         }
