@@ -48,7 +48,7 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
 import static de.amr.games.pacman.ui.fx.util.Ufx.doAfterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
-import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.addFemaleLook;
+import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.createFemaleParts;
 import static de.amr.games.pacman.ui.fx.v3d.entity.Pac3D.createPacBody;
 
 /**
@@ -140,11 +140,11 @@ public class GameLevel3D extends Group {
             context.theme().color("mspacman.color.head"),
             context.theme().color("mspacman.color.eyes"),
             context.theme().color("mspacman.color.palate"));
-        return new Group(body, addFemaleLook(
+        var femaleParts = createFemaleParts(size,
             context.theme().color("mspacman.color.hairbow"),
             context.theme().color("mspacman.color.hairbow.pearls"),
-            context.theme().color("mspacman.color.boobs"),
-            size));
+            context.theme().color("mspacman.color.boobs"));
+        return new Group(body, femaleParts);
     }
 
     private void createWorld3D() {

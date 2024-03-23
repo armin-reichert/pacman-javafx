@@ -73,7 +73,7 @@ public class Pac3D extends Group {
         return root;
     }
 
-    public static Group addFemaleLook(Color hairBowColor, Color hairBowPearlsColor, Color boobsColor, double pacSize) {
+    public static Group createFemaleParts(double pacSize, Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
         var bowMaterial = coloredMaterial(hairBowColor);
 
         var bowLeft = new Sphere(1.2);
