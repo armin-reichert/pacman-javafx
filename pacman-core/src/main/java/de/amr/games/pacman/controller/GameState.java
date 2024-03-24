@@ -145,6 +145,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             game.level().ifPresent(level -> {
                 level.simulateOneFrame();
+                level.thisFrame().report();
                 if (level.thisFrame().levelCompleted) {
                     gameController().changeState(LEVEL_COMPLETE);
                 } else if (level.thisFrame().pacKilled) {

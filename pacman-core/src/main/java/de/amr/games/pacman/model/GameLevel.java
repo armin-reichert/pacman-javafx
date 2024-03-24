@@ -37,7 +37,6 @@ public class GameLevel {
     private final GameModel game;
     private final GhostHouseManagement ghostHouseManagement;
     private final TickTimer huntingTimer = new TickTimer("HuntingTimer");
-    private final Memory frameMemory = new Memory();
     private final World world;
     private final Pac pac;
     private final Ghost[] ghosts;
@@ -46,6 +45,7 @@ public class GameLevel {
     private byte numGhostsKilledByEnergizer;
     private byte cruiseElroyState;
     private Steering autopilot;
+    private Memory frameMemory;
 
     public GameLevel(int levelNumber, GameLevelData levelData, GameModel game, World world, boolean demoLevel) {
         checkLevelNumber(levelNumber);
@@ -58,6 +58,8 @@ public class GameLevel {
         this.levelNumber = levelNumber;
         this.data = levelData;
         this.demoLevel = demoLevel;
+
+        frameMemory = new Memory();
 
         pac = new Pac(game.variant() == GameVariant.MS_PACMAN ? "Ms. Pac-Man" : "Pac-Man");
         pac.setWorld(world);
@@ -475,13 +477,10 @@ public class GameLevel {
     }
 
     public void simulateOneFrame() {
-        frameMemory.forgetEverything(); // Ich scholze jetzt!
+        frameMemory = new Memory(); // Ich scholze jetzt!
         final Vector2i pacTile = pac.tile();
 
-        boolean foodFound = false;
-        boolean energizerFound = false;
         if (world.hasFoodAt(pacTile)) {
-            foodFound = true;
             pac.endStarving();
             world.removeFood(pacTile);
             if (world.uneatenFoodCount() == 0) {
@@ -491,7 +490,7 @@ public class GameLevel {
                 frameMemory.bonusReachedIndex += 1;
             }
             if (world.isEnergizerTile(pacTile)) {
-                energizerFound = true;
+                frameMemory.energizerFound = true;
                 numGhostsKilledByEnergizer = 0;
                 pac.setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
                 int points = GameModel.POINTS_ENERGIZER;
@@ -512,18 +511,17 @@ public class GameLevel {
             pac.starve();
         }
 
-        if (frameMemory.levelCompleted) {
-            logWhatHappenedThisFrame();
-            return;
-        }
-
         // Bonus
         if (frameMemory.bonusReachedIndex != -1) {
             handleBonusReached(frameMemory.bonusReachedIndex);
         }
 
+        if (frameMemory.levelCompleted) {
+            return;
+        }
+
         // Pac power state
-        if (energizerFound && data.pacPowerSeconds() > 0) {
+        if (frameMemory.energizerFound && data.pacPowerSeconds() > 0) {
             handlePacPowerStarts();
         } else if (pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS) {
             publishGameEvent(game, GameEventType.PAC_STARTS_LOSING_POWER);
@@ -545,7 +543,7 @@ public class GameLevel {
         unlockGhost();
         ghosts().forEach(ghost -> ghost.update(pac));
 
-        // Update bonus
+        // Update bonus state
         if (bonus != null) {
             boolean eaten = checkPacEatsBonus(bonus);
             if (eaten) {
@@ -565,7 +563,6 @@ public class GameLevel {
                 huntingTimer.advance();
             }
         }
-        logWhatHappenedThisFrame();
     }
 
     public void simulateOneTestFrame(TickTimer timer, int lastTestedLevel) {
@@ -601,13 +598,6 @@ public class GameLevel {
             bonus().ifPresent(bonus -> bonus.update(this));
         } else {
             GameController.it().restart(GameState.BOOT);
-        }
-    }
-
-    private void logWhatHappenedThisFrame() {
-        var memoText = frameMemory.toString();
-        if (!memoText.isBlank()) {
-            Logger.trace(memoText);
         }
     }
 

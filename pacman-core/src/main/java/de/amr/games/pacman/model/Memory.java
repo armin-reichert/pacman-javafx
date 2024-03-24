@@ -5,54 +5,46 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.model.actors.Ghost;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Armin Reichert
  */
 public class Memory {
-    public byte bonusReachedIndex; // 0=first, 1=second, -1=no bonus
-    public boolean levelCompleted;
-    public boolean pacKilled;
+
+    public boolean energizerFound = false;
+    public byte bonusReachedIndex = -1; // 0=first, 1=second, -1=no bonus
+    public boolean levelCompleted = false;
+    public boolean pacKilled = false;
     public final List<Ghost> pacPrey = new ArrayList<>(4);
     public final List<Ghost> killedGhosts = new ArrayList<>(4);
 
-    public Memory() {
-        forgetEverything();
-    }
-
-    /**
-     * Ich scholze jetzt.
-     */
-    public void forgetEverything() {
-        bonusReachedIndex = -1;
-        levelCompleted = false;
-        pacKilled = false;
-        pacPrey.clear();
-        killedGhosts.clear();
-    }
-
-    @Override
-    public String toString() {
-        String levelCompleted = this.levelCompleted ? "Level completed" : "";
-        String bonus = bonusReachedIndex != -1
-            ? String.format("Bonus %d reached", bonusReachedIndex)
-            : "";
-        var power = new StringBuilder();
-        if (!power.isEmpty()) {
-            power.insert(0, "Pac power:");
+    public void report() {
+        List<String> report = new ArrayList<>();
+        if (energizerFound) {
+            report.add("- Energizer found");
         }
-        String killed = pacKilled ? "Pac killed" : "";
-        String prey = pacPrey.isEmpty() ? "" : String.format("Prey: %s", pacPrey);
-        String killedGhosts = this.killedGhosts.isEmpty() ? "" : this.killedGhosts.toString();
-
-        String summary = Stream.of(levelCompleted, bonus, power.toString(), killed, prey, killedGhosts)
-            .filter(s -> !s.isEmpty())
-            .collect(Collectors.joining(" "));
-        return summary.isBlank() ? "" : String.format("[Last frame: %s]", summary);
+        if (bonusReachedIndex != -1) {
+            report.add("- Bonus reached: " + bonusReachedIndex);
+        }
+        if (levelCompleted) {
+            report.add("- Level completed");
+        }
+        if (pacKilled) {
+            report.add("- Pac killed");
+        }
+        if (!pacPrey.isEmpty()) {
+            report.add("- Pac prey: " + pacPrey);
+        }
+        if (!killedGhosts.isEmpty()) {
+            report.add("- Ghosts killed: " + killedGhosts);
+        }
+        if (!report.isEmpty()) {
+            Logger.info("What happened last frame:");
+            Logger.info(String.join("\n", report));
+        }
     }
 }
