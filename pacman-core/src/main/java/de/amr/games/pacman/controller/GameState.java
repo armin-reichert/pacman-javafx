@@ -146,7 +146,7 @@ public enum GameState implements FsmState<GameModel> {
             game.level().ifPresent(level -> {
                 level.world().energizerBlinking().tick();
                 GameState nextState = level.doHuntingFrame();
-                level.thisFrame().report();
+                level.eventLog().report();
                 if (nextState != GameState.HUNTING) {
                     gameController().changeState(nextState);
                 }

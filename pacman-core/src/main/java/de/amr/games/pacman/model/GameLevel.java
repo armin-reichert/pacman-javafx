@@ -31,6 +31,53 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public class GameLevel {
 
+    public static class EventLog {
+        public Vector2i foundFoodAtTile = null;
+        public boolean energizerFound = false;
+        public int bonusIndex = -1;
+        public boolean bonusEaten = false;
+        public boolean pacGetsPower = false;
+        public boolean pacStartsLosingPower = false;
+        public boolean pacLostPower = false;
+        public boolean pacDied = false;
+        public final List<Ghost> killedGhosts = new ArrayList<>(4);
+
+        public void report() {
+            List<String> report = new ArrayList<>();
+            if (energizerFound) {
+                report.add("- Energizer found at " + foundFoodAtTile);
+            }
+            if (bonusIndex != -1) {
+                report.add("- Bonus reached, index=" + bonusIndex);
+            }
+            if (bonusEaten) {
+                report.add("- Bonus eaten");
+            }
+            if (pacGetsPower) {
+                report.add("- Pac gained power");
+            }
+            if (pacStartsLosingPower) {
+                report.add("- Pac starts losing power");
+            }
+            if (pacLostPower) {
+                report.add("- Pac lost power");
+            }
+            if (pacDied) {
+                report.add("- Pac died");
+            }
+            if (!killedGhosts.isEmpty()) {
+                report.add("- Ghosts killed: " + killedGhosts.stream().map(Ghost::name).toList());
+            }
+            if (!report.isEmpty()) {
+                Logger.info("Latest News:");
+                for (var msg : report) {
+                    Logger.info(msg);
+                }
+            }
+        }
+
+    }
+
     private final int levelNumber;
     private final boolean demoLevel;
     private final GameLevelData data;
@@ -45,7 +92,7 @@ public class GameLevel {
     private byte numGhostsKilledByEnergizer;
     private byte cruiseElroyState;
     private Steering autopilot;
-    private FrameLog frameLog;
+    private EventLog eventLog;
     private int bonusReachedIndex; // -1=no bonus, 0=first, 1=second
 
     public GameLevel(int levelNumber, GameLevelData levelData, GameModel game, World world, boolean demoLevel) {
@@ -60,7 +107,7 @@ public class GameLevel {
         this.data = levelData;
         this.demoLevel = demoLevel;
 
-        frameLog = new FrameLog();
+        eventLog = new EventLog();
         bonusReachedIndex = -1;
 
         pac = new Pac(game.variant() == GameVariant.MS_PACMAN ? "Ms. Pac-Man" : "Pac-Man");
@@ -234,10 +281,10 @@ public class GameLevel {
     }
 
     /**
-     * @return information about what happened during the current simulation step
+     * @return information about what happened during the current (hunting) frame
      */
-    public FrameLog thisFrame() {
-        return frameLog;
+    public EventLog eventLog() {
+        return eventLog;
     }
 
     /**
@@ -462,11 +509,11 @@ public class GameLevel {
     private void updateFood() {
         final Vector2i pacTile = pac.tile();
         if (world.hasFoodAt(pacTile)) {
-            frameLog.foundFoodAtTile = pacTile;
+            eventLog.foundFoodAtTile = pacTile;
             pac.endStarving();
             world.removeFood(pacTile);
             if (world.isEnergizerTile(pacTile)) {
-                frameLog.energizerFound = true;
+                eventLog.energizerFound = true;
                 numGhostsKilledByEnergizer = 0;
                 pac.setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
                 int points = GameModel.POINTS_ENERGIZER;
@@ -489,15 +536,15 @@ public class GameLevel {
     }
 
     private void updatePacPower() {
-        if (frameLog.energizerFound && data.pacPowerSeconds() > 0) {
+        if (eventLog.energizerFound && data.pacPowerSeconds() > 0) {
             stopHuntingPhase();
             pac.powerTimer().restartSeconds(data.pacPowerSeconds());
             ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
-            frameLog.pacGetsPower = true;
+            eventLog.pacGetsPower = true;
             publishGameEvent(game, GameEventType.PAC_GETS_POWER);
         } else if (pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS) {
-            frameLog.pacStartsLosingPower = true;
+            eventLog.pacStartsLosingPower = true;
             publishGameEvent(game, GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (pac.powerTimer().hasExpired()) {
             pac.powerTimer().stop();
@@ -505,7 +552,7 @@ public class GameLevel {
             huntingTimer.start();
             Logger.info("Hunting timer restarted");
             ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
-            frameLog.pacLostPower = true;
+            eventLog.pacLostPower = true;
             publishGameEvent(game, GameEventType.PAC_LOST_POWER);
         }
     }
@@ -514,7 +561,7 @@ public class GameLevel {
         if (bonus != null) {
             boolean eaten = checkPacEatsBonus(bonus);
             if (eaten) {
-                frameLog.bonusEaten = true;
+                eventLog.bonusEaten = true;
                 publishGameEvent(game, GameEventType.BONUS_EATEN);
             }
             bonus.update(this);
@@ -531,15 +578,15 @@ public class GameLevel {
     }
 
     public GameState doHuntingFrame() {
-        frameLog = new FrameLog(); // Ich scholze jetzt!
+        eventLog = new EventLog(); // Ich scholze jetzt!
 
         pac.update(this);
         unlockGhost();
         ghosts().forEach(ghost -> ghost.update(pac));
         updateFood();
-        if (frameLog.foundFoodAtTile != null && getBonusReachedIndex()) {
+        if (eventLog.foundFoodAtTile != null && getBonusReachedIndex()) {
             onBonusReached(++bonusReachedIndex);
-            frameLog.bonusIndex = bonusReachedIndex;
+            eventLog.bonusIndex = bonusReachedIndex;
         }
         updatePacPower();
         updateBonus();
@@ -551,7 +598,7 @@ public class GameLevel {
         var killers = ghosts(HUNTING_PAC).filter(pac::sameTile).toList();
         if (!killers.isEmpty() && !GameController.it().isPacImmune()) {
             stopHuntingPhase();
-            frameLog.pacDied = true;
+            eventLog.pacDied = true;
             return GameState.PACMAN_DYING;
         }
         var prey = ghosts(FRIGHTENED).filter(pac::sameTile).toList();
@@ -623,7 +670,7 @@ public class GameLevel {
         ghost.setState(EATEN);
         int points = game.pointsForKillingGhost(numGhostsKilledByEnergizer);
         scorePoints(points);
-        frameLog.killedGhosts.add(ghost);
+        eventLog.killedGhosts.add(ghost);
         numGhostsKilledByEnergizer += 1;
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }
