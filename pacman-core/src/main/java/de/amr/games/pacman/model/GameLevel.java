@@ -580,9 +580,7 @@ public class GameLevel {
         }
     }
 
-    public GameState doHuntingStep() {
-        eventLog = new EventLog();
-        pac.update(this);
+    private void updateGhosts() {
         ghostHouseAccessControl.unlockGhost().ifPresent(unlocked -> {
             if (unlocked.ghost().insideHouse(ghostHouseAccessControl.house())) {
                 unlocked.ghost().setState(LEAVING_HOUSE);
@@ -598,6 +596,12 @@ public class GameLevel {
             eventLog.unlockedGhost = unlocked.ghost();
         });
         ghosts().forEach(ghost -> ghost.update(pac));
+    }
+
+    public GameState doHuntingStep() {
+        eventLog = new EventLog();
+        pac.update(this);
+        updateGhosts();
         updateFood();
         if (eventLog.foundFoodAtTile != null && getBonusReachedIndex()) {
             onBonusReached(++bonusReachedIndex);
