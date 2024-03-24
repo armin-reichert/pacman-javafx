@@ -457,25 +457,6 @@ public class GameLevel {
         }
     }
 
-    private void handlePacPowerStarts() {
-        stopHuntingPhase();
-        pac.powerTimer().restartSeconds(data.pacPowerSeconds());
-        Logger.info("{} power starting, duration {} ticks", pac.name(), pac.powerTimer().duration());
-        ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-        ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
-        publishGameEvent(game, GameEventType.PAC_GETS_POWER);
-    }
-
-    private void handlePacPowerLost() {
-        Logger.info("{} power ends, timer: {}", pac.name(), pac.powerTimer());
-        pac.powerTimer().stop();
-        pac.powerTimer().resetIndefinitely();
-        huntingTimer.start();
-        Logger.info("Hunting timer restarted");
-        ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
-        publishGameEvent(game, GameEventType.PAC_LOST_POWER);
-    }
-
     public GameState doHuntingFrame() {
         frameMemory = new Memory(); // Ich scholze jetzt!
         final Vector2i pacTile = pac.tile();
@@ -489,9 +470,6 @@ public class GameLevel {
             frameMemory.foodFoundAt = pacTile;
             pac.endStarving();
             world.removeFood(pacTile);
-            if (world.uneatenFoodCount() == 0) {
-                frameMemory.levelCompleted = true;
-            }
             if (isBonusReached()) {
                 frameMemory.bonusReachedIndex += 1;
             }
@@ -524,11 +502,23 @@ public class GameLevel {
 
         // Pac power state
         if (frameMemory.energizerFound && data.pacPowerSeconds() > 0) {
-            handlePacPowerStarts();
+            stopHuntingPhase();
+            pac.powerTimer().restartSeconds(data.pacPowerSeconds());
+            ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
+            ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
+            frameMemory.pacGetsPower = true;
+            publishGameEvent(game, GameEventType.PAC_GETS_POWER);
         } else if (pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS) {
+            frameMemory.pacStartsLosingPower = true;
             publishGameEvent(game, GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (pac.powerTimer().hasExpired()) {
-            handlePacPowerLost();
+            pac.powerTimer().stop();
+            pac.powerTimer().resetIndefinitely();
+            huntingTimer.start();
+            Logger.info("Hunting timer restarted");
+            ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
+            frameMemory.pacLostPower = true;
+            publishGameEvent(game, GameEventType.PAC_LOST_POWER);
         }
 
         // Update bonus state
@@ -540,33 +530,29 @@ public class GameLevel {
             bonus.update(this);
         }
 
-        // Update hunting timer
-        if (frameMemory.pacKilled) {
-            stopHuntingPhase();
+        if (huntingTimer.hasExpired()) {
+            ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
+            startHuntingPhase(huntingPhaseIndex + 1);
         } else {
-            if (huntingTimer.hasExpired()) {
-                ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
-                startHuntingPhase(huntingPhaseIndex + 1);
-            } else {
-                huntingTimer.advance();
-            }
+            huntingTimer.advance();
         }
 
-        // Now check who gets killed
-        frameMemory.pacPrey.clear();
-        frameMemory.pacPrey.addAll(ghosts(FRIGHTENED).filter(pac::sameTile).toList());
-        frameMemory.pacKilled = !GameController.it().isPacImmune() && ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
-
-        if (frameMemory.levelCompleted) {
+        if (world.uneatenFoodCount() == 0) {
             return GameState.LEVEL_COMPLETE;
         }
-        if (frameMemory.pacKilled) {
+
+        var killers = ghosts(HUNTING_PAC).filter(pac::sameTile).toList();
+        if (!killers.isEmpty() && !GameController.it().isPacImmune()) {
+            stopHuntingPhase();
             return GameState.PACMAN_DYING;
         }
-        if (frameMemory.pacPrey.size() > 0) {
-            killEdibleGhosts();
+
+        var prey = ghosts(FRIGHTENED).filter(pac::sameTile).toList();
+        if (!prey.isEmpty()) {
+            killGhosts(prey);
             return GameState.GHOST_DYING;
         }
+
         return GameState.HUNTING;
     }
 
@@ -610,16 +596,14 @@ public class GameLevel {
      * Called by cheat action only.
      */
     public void killAllHuntingAndFrightenedGhosts() {
-        frameMemory.pacPrey.clear();
-        frameMemory.pacPrey.addAll(ghosts(HUNTING_PAC, FRIGHTENED).toList());
         numGhostsKilledByEnergizer = 0;
-        killEdibleGhosts();
+        killGhosts(ghosts(FRIGHTENED, HUNTING_PAC).toList());
     }
 
-    public void killEdibleGhosts() {
-        if (!frameMemory.pacPrey.isEmpty()) {
-            frameMemory.pacPrey.forEach(this::killGhost);
-            numGhostsKilledInLevel += (byte) frameMemory.pacPrey.size();
+    public void killGhosts(List<Ghost> prey) {
+        if (!prey.isEmpty()) {
+            prey.forEach(this::killGhost);
+            numGhostsKilledInLevel += (byte) prey.size();
             if (numGhostsKilledInLevel == 16) {
                 int points = GameModel.POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
                 scorePoints(points);

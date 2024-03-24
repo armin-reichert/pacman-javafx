@@ -18,10 +18,10 @@ public class Memory {
 
     public Vector2i foodFoundAt = null;
     public boolean energizerFound = false;
+    public boolean pacGetsPower = false;
+    public boolean pacStartsLosingPower = false;
+    public boolean pacLostPower = false;
     public byte bonusReachedIndex = -1; // 0=first, 1=second, -1=no bonus
-    public boolean levelCompleted = false;
-    public boolean pacKilled = false;
-    public final List<Ghost> pacPrey = new ArrayList<>(4);
     public final List<Ghost> killedGhosts = new ArrayList<>(4);
 
     public void report() {
@@ -29,24 +29,26 @@ public class Memory {
         if (energizerFound) {
             report.add("- Energizer found at " + foodFoundAt);
         }
+        if (pacGetsPower) {
+            report.add("- Pac gained power");
+        }
+        if (pacStartsLosingPower) {
+            report.add("- Pac starts losing power");
+        }
+        if (pacLostPower) {
+            report.add("- Pac lost power");
+        }
         if (bonusReachedIndex != -1) {
             report.add("- Bonus reached: " + bonusReachedIndex);
         }
-        if (levelCompleted) {
-            report.add("- Level completed");
-        }
-        if (pacKilled) {
-            report.add("- Pac killed");
-        }
-        if (!pacPrey.isEmpty()) {
-            report.add("- Pac prey: " + pacPrey);
-        }
         if (!killedGhosts.isEmpty()) {
-            report.add("- Ghosts killed: " + killedGhosts);
+            report.add("- Ghosts killed: " + killedGhosts.stream().map(Ghost::name).toList());
         }
         if (!report.isEmpty()) {
-            Logger.info("What happened last frame:");
-            Logger.info(String.join("\n", report));
+            Logger.info("Notable events in last frame:");
+            for (var msg : report) {
+                Logger.info(msg);
+            }
         }
     }
 }

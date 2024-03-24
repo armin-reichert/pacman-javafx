@@ -127,6 +127,10 @@ public class Pac extends Creature implements AnimationDirector {
         powerTimer.stop();
     }
 
+    public boolean isDead() {
+        return dead;
+    }
+
     public void setFadingTicks(int fadingTicks) {
         this.fadingTicks = fadingTicks;
     }
