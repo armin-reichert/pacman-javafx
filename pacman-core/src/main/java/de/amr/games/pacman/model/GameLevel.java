@@ -75,7 +75,6 @@ public class GameLevel {
                 }
             }
         }
-
     }
 
     private final int levelNumber;
@@ -609,7 +608,7 @@ public class GameLevel {
         return GameState.HUNTING;
     }
 
-    public void simulateOneTestFrame(TickTimer timer, int lastTestedLevel) {
+    public void doLevelTestFrame(TickTimer timer, int lastTestedLevel) {
         if (number() <= lastTestedLevel) {
             if (timer.atSecond(0.5)) {
                 guys().forEach(Creature::show);
