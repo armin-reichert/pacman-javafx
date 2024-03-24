@@ -17,7 +17,6 @@ import java.util.stream.Stream;
  */
 public class Memory {
     public Vector2i foodLocation;
-    public boolean energizerFound;
     public byte bonusReachedIndex; // 0=first, 1=second, -1=no bonus
     public boolean levelCompleted;
     public boolean pacKilled;
@@ -36,7 +35,6 @@ public class Memory {
      */
     public void forgetEverything() {
         foodLocation = null;
-        energizerFound = false;
         bonusReachedIndex = -1;
         levelCompleted = false;
         pacKilled = false;
@@ -51,7 +49,7 @@ public class Memory {
     public String toString() {
         String levelCompleted = this.levelCompleted ? "Level completed" : "";
         String food = foodLocation != null
-            ? String.format("%s eaten at %s", energizerFound ? "Energizer" : "Pellet", foodLocation)
+            ? String.format("%s eaten at %s", "Pellet", foodLocation)
             : "";
         String bonus = bonusReachedIndex != -1
             ? String.format("Bonus %d reached", bonusReachedIndex)

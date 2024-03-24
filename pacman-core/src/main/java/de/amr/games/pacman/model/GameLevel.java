@@ -434,15 +434,15 @@ public class GameLevel {
 
     /* --- Here comes the main logic of the game. --- */
 
-    private void handleFoodFound(Vector2i foodTile) {
-        world.removeFood(foodTile);
+    private void handleFoodFound() {
+        world.removeFood(frameEvents.foodLocation);
         if (world.uneatenFoodCount() == 0) {
             frameEvents.levelCompleted = true;
         }
         if (isBonusReached()) {
             frameEvents.bonusReachedIndex += 1;
         }
-        if (frameEvents.energizerFound) {
+        if (world.isEnergizerTile(frameEvents.foodLocation)) {
             numGhostsKilledByEnergizer = 0;
             pac.setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
             int points = GameModel.POINTS_ENERGIZER;
@@ -458,7 +458,7 @@ public class GameLevel {
         } else if (world.uneatenFoodCount() == data.elroy2DotsLeft()) {
             setCruiseElroyState(2);
         }
-        publishGameEvent(game, GameEventType.PAC_FOUND_FOOD, foodTile);
+        publishGameEvent(game, GameEventType.PAC_FOUND_FOOD, frameEvents.foodLocation);
     }
 
     private void scorePoints(int points) {
@@ -507,18 +507,14 @@ public class GameLevel {
         final var pacTile = pac.tile();
         if (world.hasFoodAt(pacTile)) {
             frameEvents.foodLocation = pacTile;
-            frameEvents.energizerFound = world.isEnergizerTile(pacTile);
+            frameEvents.pacPowerStarts = world.isEnergizerTile(pacTile) && data.pacPowerSeconds() > 0;
         }
-        if (frameEvents.energizerFound && data.pacPowerSeconds() > 0) {
-            frameEvents.pacPowerStarts = true;
-        } else {
-            frameEvents.pacPowerFading = pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS;
-            frameEvents.pacPowerLost   = pac.powerTimer().hasExpired();
-        }
+        frameEvents.pacPowerFading = pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS;
+        frameEvents.pacPowerLost   = pac.powerTimer().hasExpired();
 
         if (frameEvents.foodLocation != null) {
             pac.endStarving();
-            handleFoodFound(frameEvents.foodLocation);
+            handleFoodFound();
         } else {
             pac.starve();
         }
