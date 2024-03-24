@@ -120,7 +120,7 @@ public class PacManGameTest {
         for (int levelNumber = 1; levelNumber <= 21; ++levelNumber) {
             GameController.it().createAndStartLevel(levelNumber);
             game.level().ifPresent(level -> {
-                level.handleBonusReached(0);
+                level.onBonusReached(0);
                 assertTrue(level.bonus().isPresent());
                 level.bonus().ifPresent(bonus -> {
                     assertTrue(bonus instanceof StaticBonus);

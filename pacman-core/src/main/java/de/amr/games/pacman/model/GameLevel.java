@@ -457,15 +457,8 @@ public class GameLevel {
         }
     }
 
-    public GameState doHuntingFrame() {
-        frameMemory = new Memory(); // Ich scholze jetzt!
+    private void updateFood() {
         final Vector2i pacTile = pac.tile();
-
-        pac.update(this);
-        unlockGhost();
-        ghosts().forEach(ghost -> ghost.update(pac));
-        world.energizerBlinking().tick();
-
         if (world.hasFoodAt(pacTile)) {
             frameMemory.foodFoundAt = pacTile;
             pac.endStarving();
@@ -494,13 +487,9 @@ public class GameLevel {
         } else {
             pac.starve();
         }
+    }
 
-        // Bonus
-        if (frameMemory.bonusReachedIndex != -1) {
-            handleBonusReached(frameMemory.bonusReachedIndex);
-        }
-
-        // Pac power state
+    private void updatePacPower() {
         if (frameMemory.energizerFound && data.pacPowerSeconds() > 0) {
             stopHuntingPhase();
             pac.powerTimer().restartSeconds(data.pacPowerSeconds());
@@ -520,8 +509,9 @@ public class GameLevel {
             frameMemory.pacLostPower = true;
             publishGameEvent(game, GameEventType.PAC_LOST_POWER);
         }
+    }
 
-        // Update bonus state
+    private void updateBonus() {
         if (bonus != null) {
             boolean eaten = checkPacEatsBonus(bonus);
             if (eaten) {
@@ -529,30 +519,44 @@ public class GameLevel {
             }
             bonus.update(this);
         }
+    }
 
+    private void updateHuntingTimer( ) {
         if (huntingTimer.hasExpired()) {
             ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
             startHuntingPhase(huntingPhaseIndex + 1);
         } else {
             huntingTimer.advance();
         }
+    }
+
+    public GameState doHuntingFrame() {
+        frameMemory = new Memory(); // Ich scholze jetzt!
+
+        pac.update(this);
+        unlockGhost();
+        ghosts().forEach(ghost -> ghost.update(pac));
+        updateFood();
+        if (frameMemory.bonusReachedIndex != -1) {
+            onBonusReached(frameMemory.bonusReachedIndex);
+        }
+        updatePacPower();
+        updateBonus();
+        updateHuntingTimer();
 
         if (world.uneatenFoodCount() == 0) {
             return GameState.LEVEL_COMPLETE;
         }
-
         var killers = ghosts(HUNTING_PAC).filter(pac::sameTile).toList();
         if (!killers.isEmpty() && !GameController.it().isPacImmune()) {
             stopHuntingPhase();
             return GameState.PACMAN_DYING;
         }
-
         var prey = ghosts(FRIGHTENED).filter(pac::sameTile).toList();
         if (!prey.isEmpty()) {
             killGhosts(prey);
             return GameState.GHOST_DYING;
         }
-
         return GameState.HUNTING;
     }
 
@@ -561,12 +565,12 @@ public class GameLevel {
             if (timer.atSecond(0.5)) {
                 guys().forEach(Creature::show);
             } else if (timer.atSecond(1.5)) {
-                handleBonusReached(0);
+                onBonusReached(0);
             } else if (timer.atSecond(2.5)) {
                 bonus().ifPresent(bonus -> bonus.setEaten(120));
                 publishGameEvent(game, GameEventType.BONUS_EATEN);
             } else if (timer.atSecond(4.5)) {
-                handleBonusReached(1);
+                onBonusReached(1);
             } else if (timer.atSecond(5.5)) {
                 guys().forEach(Creature::hide);
                 bonus().ifPresent(bonus -> bonus.setEaten(60));
@@ -759,11 +763,11 @@ public class GameLevel {
     }
 
     /**
-     * Handles bonus achievement (public access for unit tests and level test).
+     * Called on bonus achievement (public access for unit tests and level test).
      *
      * @param bonusIndex bonus index (0 or 1).
      */
-    public void handleBonusReached(int bonusIndex) {
+    public void onBonusReached(int bonusIndex) {
         if (bonusIndex < 0 || bonusIndex > 1) {
             throw new IllegalArgumentException("Bonus index must be 0 or 1 but is " + bonusIndex);
         }
