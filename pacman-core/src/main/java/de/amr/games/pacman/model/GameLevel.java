@@ -297,21 +297,6 @@ public class GameLevel {
     }
 
     /**
-     * Advances the current hunting phase and enters the next phase when the current phase ends. On every change between
-     * phases, the living ghosts outside the ghost house reverse their move direction.
-     *
-     * @return if new hunting phase has been started
-     */
-    private boolean updateHuntingPhase() {
-        if (huntingTimer.hasExpired()) {
-            startHuntingPhase(huntingPhaseIndex + 1);
-            return true;
-        }
-        huntingTimer.advance();
-        return false;
-    }
-
-    /**
      * @return number of current phase <code>(0-7)
      */
     public int huntingPhaseIndex() {
@@ -590,12 +575,13 @@ public class GameLevel {
         if (currentFrameEvents.pacPowerStarts || currentFrameEvents.pacKilled) {
             stopHuntingPhase();
         } else {
-            boolean huntingPhaseChange = updateHuntingPhase();
-            if (huntingPhaseChange) {
+            if (huntingTimer.hasExpired()) {
                 ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
+                startHuntingPhase(huntingPhaseIndex + 1);
+            } else {
+                huntingTimer.advance();
             }
         }
-
         logWhatHappenedThisFrame();
     }
 
