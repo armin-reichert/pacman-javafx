@@ -37,7 +37,7 @@ public class GameLevel {
     private final GameModel game;
     private final GhostHouseManagement ghostHouseManagement;
     private final TickTimer huntingTimer = new TickTimer("HuntingTimer");
-    private final Memory frameEvents = new Memory();
+    private final Memory frameMemory = new Memory();
     private final World world;
     private final Pac pac;
     private final Ghost[] ghosts;
@@ -233,7 +233,7 @@ public class GameLevel {
      * @return information about what happened during the current simulation step
      */
     public Memory thisFrame() {
-        return frameEvents;
+        return frameMemory;
     }
 
     /**
@@ -434,33 +434,6 @@ public class GameLevel {
 
     /* --- Here comes the main logic of the game. --- */
 
-    private void handleFoodFound() {
-        world.removeFood(frameEvents.foodLocation);
-        if (world.uneatenFoodCount() == 0) {
-            frameEvents.levelCompleted = true;
-        }
-        if (isBonusReached()) {
-            frameEvents.bonusReachedIndex += 1;
-        }
-        if (world.isEnergizerTile(frameEvents.foodLocation)) {
-            numGhostsKilledByEnergizer = 0;
-            pac.setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
-            int points = GameModel.POINTS_ENERGIZER;
-            scorePoints(points);
-            Logger.info("Scored {} points for eating energizer", points);
-        } else {
-            pac.setRestingTicks(GameModel.RESTING_TICKS_NORMAL_PELLET);
-            scorePoints(GameModel.POINTS_NORMAL_PELLET);
-        }
-        ghostHouseManagement.onFoodFound();
-        if (world.uneatenFoodCount() == data.elroy1DotsLeft()) {
-            setCruiseElroyState(1);
-        } else if (world.uneatenFoodCount() == data.elroy2DotsLeft()) {
-            setCruiseElroyState(2);
-        }
-        publishGameEvent(game, GameEventType.PAC_FOUND_FOOD, frameEvents.foodLocation);
-    }
-
     private void scorePoints(int points) {
         if (points < 0) {
             throw new IllegalArgumentException("Cannot score negative value: " + points);
@@ -501,48 +474,65 @@ public class GameLevel {
     }
 
     public void simulateOneFrame() {
-        frameEvents.forgetEverything(); // Ich scholze jetzt!
+        frameMemory.forgetEverything(); // Ich scholze jetzt!
+        final Vector2i pacTile = pac.tile();
 
-        // Food found?
-        final var pacTile = pac.tile();
         if (world.hasFoodAt(pacTile)) {
-            frameEvents.foodLocation = pacTile;
-            frameEvents.pacPowerStarts = world.isEnergizerTile(pacTile) && data.pacPowerSeconds() > 0;
-        }
-        frameEvents.pacPowerFading = pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS;
-        frameEvents.pacPowerLost   = pac.powerTimer().hasExpired();
-
-        if (frameEvents.foodLocation != null) {
+            frameMemory.pacPowerStarts = world.isEnergizerTile(pacTile) && data.pacPowerSeconds() > 0;
             pac.endStarving();
-            handleFoodFound();
+            world.removeFood(pacTile);
+            if (world.uneatenFoodCount() == 0) {
+                frameMemory.levelCompleted = true;
+            }
+            if (isBonusReached()) {
+                frameMemory.bonusReachedIndex += 1;
+            }
+            if (world.isEnergizerTile(pacTile)) {
+                numGhostsKilledByEnergizer = 0;
+                pac.setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
+                int points = GameModel.POINTS_ENERGIZER;
+                scorePoints(points);
+                Logger.info("Scored {} points for eating energizer", points);
+            } else {
+                pac.setRestingTicks(GameModel.RESTING_TICKS_NORMAL_PELLET);
+                scorePoints(GameModel.POINTS_NORMAL_PELLET);
+            }
+            ghostHouseManagement.onFoodFound();
+            if (world.uneatenFoodCount() == data.elroy1DotsLeft()) {
+                setCruiseElroyState(1);
+            } else if (world.uneatenFoodCount() == data.elroy2DotsLeft()) {
+                setCruiseElroyState(2);
+            }
+            publishGameEvent(game, GameEventType.PAC_FOUND_FOOD, pacTile);
         } else {
             pac.starve();
         }
 
-        // Level complete?
-        if (frameEvents.levelCompleted) {
+        if (frameMemory.levelCompleted) {
             logWhatHappenedThisFrame();
             return;
         }
 
         // Bonus?
-        if (frameEvents.bonusReachedIndex != -1) {
-            handleBonusReached(frameEvents.bonusReachedIndex);
+        if (frameMemory.bonusReachedIndex != -1) {
+            handleBonusReached(frameMemory.bonusReachedIndex);
         }
 
         // Pac power state changed?
-        if (frameEvents.pacPowerStarts) {
+        frameMemory.pacPowerFading = pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS;
+        frameMemory.pacPowerLost   = pac.powerTimer().hasExpired();
+        if (frameMemory.pacPowerStarts) {
             handlePacPowerStarts();
-        } else if (frameEvents.pacPowerFading) {
+        } else if (frameMemory.pacPowerFading) {
             publishGameEvent(game, GameEventType.PAC_STARTS_LOSING_POWER);
-        } else if (frameEvents.pacPowerLost) {
+        } else if (frameMemory.pacPowerLost) {
             handlePacPowerLost();
         }
 
         // Now check who gets killed
-        frameEvents.pacPrey.clear();
-        frameEvents.pacPrey.addAll(ghosts(FRIGHTENED).filter(pac::sameTile).toList());
-        frameEvents.pacKilled = !GameController.it().isPacImmune() && ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
+        frameMemory.pacPrey.clear();
+        frameMemory.pacPrey.addAll(ghosts(FRIGHTENED).filter(pac::sameTile).toList());
+        frameMemory.pacKilled = !GameController.it().isPacImmune() && ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
 
         // Update world
         world.mazeFlashing().tick();
@@ -563,7 +553,7 @@ public class GameLevel {
         }
 
         // Update hunting timer
-        if (frameEvents.pacPowerStarts || frameEvents.pacKilled) {
+        if (frameMemory.pacPowerStarts || frameMemory.pacKilled) {
             stopHuntingPhase();
         } else {
             if (huntingTimer.hasExpired()) {
@@ -613,7 +603,7 @@ public class GameLevel {
     }
 
     private void logWhatHappenedThisFrame() {
-        var memoText = frameEvents.toString();
+        var memoText = frameMemory.toString();
         if (!memoText.isBlank()) {
             Logger.trace(memoText);
         }
@@ -623,16 +613,16 @@ public class GameLevel {
      * Called by cheat action only.
      */
     public void killAllHuntingAndFrightenedGhosts() {
-        frameEvents.pacPrey.clear();
-        frameEvents.pacPrey.addAll(ghosts(HUNTING_PAC, FRIGHTENED).toList());
+        frameMemory.pacPrey.clear();
+        frameMemory.pacPrey.addAll(ghosts(HUNTING_PAC, FRIGHTENED).toList());
         numGhostsKilledByEnergizer = 0;
         killEdibleGhosts();
     }
 
     public void killEdibleGhosts() {
-        if (!frameEvents.pacPrey.isEmpty()) {
-            frameEvents.pacPrey.forEach(this::killGhost);
-            numGhostsKilledInLevel += (byte) frameEvents.pacPrey.size();
+        if (!frameMemory.pacPrey.isEmpty()) {
+            frameMemory.pacPrey.forEach(this::killGhost);
+            numGhostsKilledInLevel += (byte) frameMemory.pacPrey.size();
             if (numGhostsKilledInLevel == 16) {
                 int points = GameModel.POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
                 scorePoints(points);
@@ -646,7 +636,7 @@ public class GameLevel {
         ghost.setState(EATEN);
         int points = game.pointsForKillingGhost(numGhostsKilledByEnergizer);
         scorePoints(points);
-        frameEvents.killedGhosts.add(ghost);
+        frameMemory.killedGhosts.add(ghost);
         numGhostsKilledByEnergizer += 1;
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }

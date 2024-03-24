@@ -16,7 +16,6 @@ import java.util.stream.Stream;
  * @author Armin Reichert
  */
 public class Memory {
-    public Vector2i foodLocation;
     public byte bonusReachedIndex; // 0=first, 1=second, -1=no bonus
     public boolean levelCompleted;
     public boolean pacKilled;
@@ -34,7 +33,6 @@ public class Memory {
      * Ich scholze jetzt.
      */
     public void forgetEverything() {
-        foodLocation = null;
         bonusReachedIndex = -1;
         levelCompleted = false;
         pacKilled = false;
@@ -48,9 +46,6 @@ public class Memory {
     @Override
     public String toString() {
         String levelCompleted = this.levelCompleted ? "Level completed" : "";
-        String food = foodLocation != null
-            ? String.format("%s eaten at %s", "Pellet", foodLocation)
-            : "";
         String bonus = bonusReachedIndex != -1
             ? String.format("Bonus %d reached", bonusReachedIndex)
             : "";
@@ -65,7 +60,7 @@ public class Memory {
         String prey = pacPrey.isEmpty() ? "" : String.format("Prey: %s", pacPrey);
         String killedGhosts = this.killedGhosts.isEmpty() ? "" : this.killedGhosts.toString();
 
-        String summary = Stream.of(levelCompleted, food, bonus, power.toString(), killed, prey, killedGhosts)
+        String summary = Stream.of(levelCompleted, bonus, power.toString(), killed, prey, killedGhosts)
             .filter(s -> !s.isEmpty())
             .collect(Collectors.joining(" "));
         return summary.isBlank() ? "" : String.format("[Last frame: %s]", summary);
