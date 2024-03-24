@@ -343,7 +343,11 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onLevelCreated(GameEvent event) {
-        event.game.level().ifPresent(this::replaceGameLevel3D);
+        event.game.level().ifPresent(level -> {
+            if (level.number() == 1) {
+                replaceGameLevel3D(level);
+            }
+        });
     }
 
     @Override
