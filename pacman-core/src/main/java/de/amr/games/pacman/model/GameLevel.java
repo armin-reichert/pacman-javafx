@@ -481,6 +481,7 @@ public class GameLevel {
         final Vector2i pacTile = pac.tile();
 
         if (world.hasFoodAt(pacTile)) {
+            frameMemory.foodFoundAt = pacTile;
             pac.endStarving();
             world.removeFood(pacTile);
             if (world.uneatenFoodCount() == 0) {

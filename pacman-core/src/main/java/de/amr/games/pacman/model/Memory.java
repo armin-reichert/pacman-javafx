@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Ghost;
 import org.tinylog.Logger;
 
@@ -15,6 +16,7 @@ import java.util.List;
  */
 public class Memory {
 
+    public Vector2i foodFoundAt = null;
     public boolean energizerFound = false;
     public byte bonusReachedIndex = -1; // 0=first, 1=second, -1=no bonus
     public boolean levelCompleted = false;
@@ -25,7 +27,7 @@ public class Memory {
     public void report() {
         List<String> report = new ArrayList<>();
         if (energizerFound) {
-            report.add("- Energizer found");
+            report.add("- Energizer found at " + foodFoundAt);
         }
         if (bonusReachedIndex != -1) {
             report.add("- Bonus reached: " + bonusReachedIndex);
