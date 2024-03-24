@@ -14,20 +14,28 @@ import java.util.List;
 /**
  * @author Armin Reichert
  */
-public class Memory {
+public class FrameLog {
 
-    public Vector2i foodFoundAt = null;
+    public Vector2i foundFoodAtTile = null;
     public boolean energizerFound = false;
+    public int bonusIndex = -1;
+    public boolean bonusEaten = false;
     public boolean pacGetsPower = false;
     public boolean pacStartsLosingPower = false;
     public boolean pacLostPower = false;
-    public byte bonusReachedIndex = -1; // 0=first, 1=second, -1=no bonus
+    public boolean pacDied = false;
     public final List<Ghost> killedGhosts = new ArrayList<>(4);
 
     public void report() {
         List<String> report = new ArrayList<>();
         if (energizerFound) {
-            report.add("- Energizer found at " + foodFoundAt);
+            report.add("- Energizer found at " + foundFoodAtTile);
+        }
+        if (bonusIndex != -1) {
+            report.add("- Bonus reached, index=" + bonusIndex);
+        }
+        if (bonusEaten) {
+            report.add("- Bonus eaten");
         }
         if (pacGetsPower) {
             report.add("- Pac gained power");
@@ -38,14 +46,14 @@ public class Memory {
         if (pacLostPower) {
             report.add("- Pac lost power");
         }
-        if (bonusReachedIndex != -1) {
-            report.add("- Bonus reached: " + bonusReachedIndex);
+        if (pacDied) {
+            report.add("- Pac died");
         }
         if (!killedGhosts.isEmpty()) {
             report.add("- Ghosts killed: " + killedGhosts.stream().map(Ghost::name).toList());
         }
         if (!report.isEmpty()) {
-            Logger.info("Notable events in last frame:");
+            Logger.info("Latest News:");
             for (var msg : report) {
                 Logger.info(msg);
             }

@@ -45,7 +45,8 @@ public class GameLevel {
     private byte numGhostsKilledByEnergizer;
     private byte cruiseElroyState;
     private Steering autopilot;
-    private Memory frameMemory;
+    private FrameLog frameLog;
+    private int bonusReachedIndex; // -1=no bonus, 0=first, 1=second
 
     public GameLevel(int levelNumber, GameLevelData levelData, GameModel game, World world, boolean demoLevel) {
         checkLevelNumber(levelNumber);
@@ -59,7 +60,8 @@ public class GameLevel {
         this.data = levelData;
         this.demoLevel = demoLevel;
 
-        frameMemory = new Memory();
+        frameLog = new FrameLog();
+        bonusReachedIndex = -1;
 
         pac = new Pac(game.variant() == GameVariant.MS_PACMAN ? "Ms. Pac-Man" : "Pac-Man");
         pac.setWorld(world);
@@ -234,8 +236,8 @@ public class GameLevel {
     /**
      * @return information about what happened during the current simulation step
      */
-    public Memory thisFrame() {
-        return frameMemory;
+    public FrameLog thisFrame() {
+        return frameLog;
     }
 
     /**
@@ -257,7 +259,7 @@ public class GameLevel {
         Logger.trace("Cruise Elroy state set to {}", cruiseElroyState);
     }
 
-    private void setCruiseElroyStateEnabled(boolean enabled) {
+    private void enableCruiseElroyState(boolean enabled) {
         if (enabled && cruiseElroyState < 0 || !enabled && cruiseElroyState > 0) {
             cruiseElroyState = (byte) (-cruiseElroyState);
             Logger.trace("Cruise Elroy state set to {}", cruiseElroyState);
@@ -460,14 +462,11 @@ public class GameLevel {
     private void updateFood() {
         final Vector2i pacTile = pac.tile();
         if (world.hasFoodAt(pacTile)) {
-            frameMemory.foodFoundAt = pacTile;
+            frameLog.foundFoodAtTile = pacTile;
             pac.endStarving();
             world.removeFood(pacTile);
-            if (isBonusReached()) {
-                frameMemory.bonusReachedIndex += 1;
-            }
             if (world.isEnergizerTile(pacTile)) {
-                frameMemory.energizerFound = true;
+                frameLog.energizerFound = true;
                 numGhostsKilledByEnergizer = 0;
                 pac.setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
                 int points = GameModel.POINTS_ENERGIZER;
@@ -490,15 +489,15 @@ public class GameLevel {
     }
 
     private void updatePacPower() {
-        if (frameMemory.energizerFound && data.pacPowerSeconds() > 0) {
+        if (frameLog.energizerFound && data.pacPowerSeconds() > 0) {
             stopHuntingPhase();
             pac.powerTimer().restartSeconds(data.pacPowerSeconds());
             ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
-            frameMemory.pacGetsPower = true;
+            frameLog.pacGetsPower = true;
             publishGameEvent(game, GameEventType.PAC_GETS_POWER);
         } else if (pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS) {
-            frameMemory.pacStartsLosingPower = true;
+            frameLog.pacStartsLosingPower = true;
             publishGameEvent(game, GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (pac.powerTimer().hasExpired()) {
             pac.powerTimer().stop();
@@ -506,7 +505,7 @@ public class GameLevel {
             huntingTimer.start();
             Logger.info("Hunting timer restarted");
             ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
-            frameMemory.pacLostPower = true;
+            frameLog.pacLostPower = true;
             publishGameEvent(game, GameEventType.PAC_LOST_POWER);
         }
     }
@@ -515,6 +514,7 @@ public class GameLevel {
         if (bonus != null) {
             boolean eaten = checkPacEatsBonus(bonus);
             if (eaten) {
+                frameLog.bonusEaten = true;
                 publishGameEvent(game, GameEventType.BONUS_EATEN);
             }
             bonus.update(this);
@@ -531,14 +531,15 @@ public class GameLevel {
     }
 
     public GameState doHuntingFrame() {
-        frameMemory = new Memory(); // Ich scholze jetzt!
+        frameLog = new FrameLog(); // Ich scholze jetzt!
 
         pac.update(this);
         unlockGhost();
         ghosts().forEach(ghost -> ghost.update(pac));
         updateFood();
-        if (frameMemory.bonusReachedIndex != -1) {
-            onBonusReached(frameMemory.bonusReachedIndex);
+        if (frameLog.foundFoodAtTile != null && getBonusReachedIndex()) {
+            onBonusReached(++bonusReachedIndex);
+            frameLog.bonusIndex = bonusReachedIndex;
         }
         updatePacPower();
         updateBonus();
@@ -550,6 +551,7 @@ public class GameLevel {
         var killers = ghosts(HUNTING_PAC).filter(pac::sameTile).toList();
         if (!killers.isEmpty() && !GameController.it().isPacImmune()) {
             stopHuntingPhase();
+            frameLog.pacDied = true;
             return GameState.PACMAN_DYING;
         }
         var prey = ghosts(FRIGHTENED).filter(pac::sameTile).toList();
@@ -621,7 +623,7 @@ public class GameLevel {
         ghost.setState(EATEN);
         int points = game.pointsForKillingGhost(numGhostsKilledByEnergizer);
         scorePoints(points);
-        frameMemory.killedGhosts.add(ghost);
+        frameLog.killedGhosts.add(ghost);
         numGhostsKilledByEnergizer += 1;
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }
@@ -629,10 +631,9 @@ public class GameLevel {
     // Pac-Man
 
     public void onPacKilled() {
-        pac.killed();
+        pac.kill();
         ghostHouseManagement.onPacKilled();
-        setCruiseElroyStateEnabled(false);
-        Logger.info("{} died at tile {}", pac.name(), pac.tile());
+        enableCruiseElroyState(false);
     }
 
     private void unlockGhost() {
@@ -646,7 +647,7 @@ public class GameLevel {
             }
             if (ghost.id() == ORANGE_GHOST && cruiseElroyState < 0) {
                 // Blinky's "cruise elroy" state is re-enabled when orange ghost is unlocked
-                setCruiseElroyStateEnabled(true);
+                enableCruiseElroyState(true);
             }
             Logger.trace("{} unlocked: {}", ghost.name(), unlocked.reason());
         });
@@ -731,7 +732,7 @@ public class GameLevel {
         };
     }
 
-    public boolean isBonusReached() {
+    public boolean getBonusReachedIndex() {
         return switch (game.variant()) {
             case MS_PACMAN -> world().eatenFoodCount() == 64 || world().eatenFoodCount() == 176;
             case PACMAN -> world().eatenFoodCount() == 70 || world().eatenFoodCount() == 170;
