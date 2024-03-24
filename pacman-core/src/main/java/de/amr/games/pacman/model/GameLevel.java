@@ -603,7 +603,7 @@ public class GameLevel {
         pac.update(this);
         updateGhosts();
         updateFood();
-        if (eventLog.foundFoodAtTile != null && getBonusReachedIndex()) {
+        if (eventLog.foundFoodAtTile != null && isBonusReached()) {
             onBonusReached(++bonusReachedIndex);
             eventLog.bonusIndex = bonusReachedIndex;
         }
@@ -781,10 +781,10 @@ public class GameLevel {
         };
     }
 
-    public boolean getBonusReachedIndex() {
+    public boolean isBonusReached() {
         return switch (game.variant()) {
             case MS_PACMAN -> world().eatenFoodCount() == 64 || world().eatenFoodCount() == 176;
-            case PACMAN -> world().eatenFoodCount() == 70 || world().eatenFoodCount() == 170;
+            case    PACMAN -> world().eatenFoodCount() == 70 || world().eatenFoodCount() == 170;
         };
     }
 
