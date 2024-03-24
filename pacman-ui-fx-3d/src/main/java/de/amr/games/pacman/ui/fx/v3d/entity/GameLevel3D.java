@@ -238,15 +238,15 @@ public class GameLevel3D extends Group {
         message3D.setText(text);
         message3D.setVisible(true);
         message3D.rotate(Rotate.X_AXIS, 90);
-        double dist = 0.5 * message3D.getBoundsInLocal().getHeight();
+        double radius = 0.5 * message3D.getBoundsInLocal().getHeight();
         message3D.setTranslateX(x);
         message3D.setTranslateY(y);
-        message3D.setTranslateZ(dist);
+        message3D.setTranslateZ(radius);
         var moveOutAnimation = new TranslateTransition(Duration.seconds(1), message3D);
-        moveOutAnimation.setToZ(-dist);
+        moveOutAnimation.setToZ(-(radius + 0.8 * wallHeightPy.get()));
         var moveInAnimation = new TranslateTransition(Duration.seconds(0.5), message3D);
         moveInAnimation.setDelay(Duration.seconds(displaySeconds));
-        moveInAnimation.setToZ(dist);
+        moveInAnimation.setToZ(radius);
         moveInAnimation.setOnFinished(e -> message3D.setVisible(false));
         new SequentialTransition(moveOutAnimation, moveInAnimation).play();
     }
