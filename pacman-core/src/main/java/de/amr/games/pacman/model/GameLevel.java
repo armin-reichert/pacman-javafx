@@ -40,6 +40,7 @@ public class GameLevel {
         public boolean pacStartsLosingPower = false;
         public boolean pacLostPower = false;
         public boolean pacDied = false;
+        public Ghost unlockedGhost;
         public final List<Ghost> killedGhosts = new ArrayList<>(4);
 
         public void report() {
@@ -65,6 +66,9 @@ public class GameLevel {
             if (pacDied) {
                 report.add("- Pac died");
             }
+            if (unlockedGhost != null) {
+                report.add("- Unlocked " + unlockedGhost.name());
+            }
             if (!killedGhosts.isEmpty()) {
                 report.add("- Ghosts killed: " + killedGhosts.stream().map(Ghost::name).toList());
             }
@@ -81,7 +85,7 @@ public class GameLevel {
     private final boolean demoLevel;
     private final GameLevelData data;
     private final GameModel game;
-    private final GhostHouseManagement ghostHouseManagement;
+    private final GhostHouseManagement ghostHouseAccessControl;
     private final TickTimer huntingTimer = new TickTimer("HuntingTimer");
     private final World world;
     private final Pac pac;
@@ -138,7 +142,7 @@ public class GameLevel {
             ghost.setSpeedInsideHouse(SPEED_GHOST_INSIDE_HOUSE);
         });
 
-        ghostHouseManagement = new GhostHouseManagement(this, world.house());
+        ghostHouseAccessControl = new GhostHouseManagement(this, world.house());
 
         bonusSymbols = new byte[2];
         bonusSymbols[0] = nextBonusSymbol();
@@ -522,7 +526,7 @@ public class GameLevel {
                 pac.setRestingTicks(GameModel.RESTING_TICKS_NORMAL_PELLET);
                 scorePoints(GameModel.POINTS_NORMAL_PELLET);
             }
-            ghostHouseManagement.onFoodFound();
+            ghostHouseAccessControl.onFoodFound();
             if (world.uneatenFoodCount() == data.elroy1DotsLeft()) {
                 setCruiseElroyState(1);
             } else if (world.uneatenFoodCount() == data.elroy2DotsLeft()) {
@@ -576,11 +580,23 @@ public class GameLevel {
         }
     }
 
-    public GameState doHuntingFrame() {
-        eventLog = new EventLog(); // Ich scholze jetzt!
-
+    public GameState doHuntingStep() {
+        eventLog = new EventLog();
         pac.update(this);
-        unlockGhost();
+        ghostHouseAccessControl.unlockGhost().ifPresent(unlocked -> {
+            if (unlocked.ghost().insideHouse(ghostHouseAccessControl.house())) {
+                unlocked.ghost().setState(LEAVING_HOUSE);
+            } else {
+                unlocked.ghost().setMoveAndWishDir(LEFT);
+                unlocked.ghost().setState(HUNTING_PAC);
+            }
+            if (unlocked.ghost().id() == ORANGE_GHOST && cruiseElroyState < 0) {
+                // Blinky's "cruise elroy" state is re-enabled when orange ghost is unlocked
+                enableCruiseElroyState(true);
+                Logger.trace("Cruise elroy mode re-enabled");
+            }
+            eventLog.unlockedGhost = unlocked.ghost();
+        });
         ghosts().forEach(ghost -> ghost.update(pac));
         updateFood();
         if (eventLog.foundFoodAtTile != null && getBonusReachedIndex()) {
@@ -608,7 +624,7 @@ public class GameLevel {
         return GameState.HUNTING;
     }
 
-    public void doLevelTestFrame(TickTimer timer, int lastTestedLevel) {
+    public void doLevelTestStep(TickTimer timer, int lastTestedLevel) {
         if (number() <= lastTestedLevel) {
             if (timer.atSecond(0.5)) {
                 guys().forEach(Creature::show);
@@ -678,25 +694,8 @@ public class GameLevel {
 
     public void onPacKilled() {
         pac.kill();
-        ghostHouseManagement.onPacKilled();
+        ghostHouseAccessControl.onPacKilled();
         enableCruiseElroyState(false);
-    }
-
-    private void unlockGhost() {
-        ghostHouseManagement.unlockGhost().ifPresent(unlocked -> {
-            Ghost ghost = unlocked.ghost();
-            if (ghost.insideHouse(ghostHouseManagement.house())) {
-                ghost.setState(LEAVING_HOUSE);
-            } else {
-                ghost.setMoveAndWishDir(LEFT);
-                ghost.setState(HUNTING_PAC);
-            }
-            if (ghost.id() == ORANGE_GHOST && cruiseElroyState < 0) {
-                // Blinky's "cruise elroy" state is re-enabled when orange ghost is unlocked
-                enableCruiseElroyState(true);
-            }
-            Logger.trace("{} unlocked: {}", ghost.name(), unlocked.reason());
-        });
     }
 
     // Bonus Management

@@ -145,7 +145,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             game.level().ifPresent(level -> {
                 level.world().energizerBlinking().tick();
-                GameState nextState = level.doHuntingFrame();
+                GameState nextState = level.doHuntingStep();
                 level.eventLog().report();
                 if (nextState != GameState.HUNTING) {
                     gameController().changeState(nextState);
@@ -349,7 +349,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            game.level().ifPresent(level -> level.doLevelTestFrame(timer, lastTestedLevel));
+            game.level().ifPresent(level -> level.doLevelTestStep(timer, lastTestedLevel));
         }
 
         @Override
