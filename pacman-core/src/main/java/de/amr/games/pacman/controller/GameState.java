@@ -144,15 +144,10 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             game.level().ifPresent(level -> {
-                level.simulateOneFrame();
+                GameState nextState = level.doHuntingFrame();
                 level.thisFrame().report();
-                if (level.thisFrame().levelCompleted) {
-                    gameController().changeState(LEVEL_COMPLETE);
-                } else if (level.thisFrame().pacKilled) {
-                    gameController().changeState(PACMAN_DYING);
-                } else if (!level.thisFrame().pacPrey.isEmpty()) {
-                    level.killEdibleGhosts();
-                    gameController().changeState(GHOST_DYING);
+                if (nextState != GameState.HUNTING) {
+                    gameController().changeState(nextState);
                 }
             });
         }
