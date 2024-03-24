@@ -476,9 +476,14 @@ public class GameLevel {
         publishGameEvent(game, GameEventType.PAC_LOST_POWER);
     }
 
-    public void simulateOneFrame() {
+    public GameState doHuntingFrame() {
         frameMemory = new Memory(); // Ich scholze jetzt!
         final Vector2i pacTile = pac.tile();
+
+        pac.update(this);
+        unlockGhost();
+        ghosts().forEach(ghost -> ghost.update(pac));
+        world.energizerBlinking().tick();
 
         if (world.hasFoodAt(pacTile)) {
             frameMemory.foodFoundAt = pacTile;
@@ -517,10 +522,6 @@ public class GameLevel {
             handleBonusReached(frameMemory.bonusReachedIndex);
         }
 
-        if (frameMemory.levelCompleted) {
-            return;
-        }
-
         // Pac power state
         if (frameMemory.energizerFound && data.pacPowerSeconds() > 0) {
             handlePacPowerStarts();
@@ -529,20 +530,6 @@ public class GameLevel {
         } else if (pac.powerTimer().hasExpired()) {
             handlePacPowerLost();
         }
-
-        // Now check who gets killed
-        frameMemory.pacPrey.clear();
-        frameMemory.pacPrey.addAll(ghosts(FRIGHTENED).filter(pac::sameTile).toList());
-        frameMemory.pacKilled = !GameController.it().isPacImmune() && ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
-
-        // Update world
-        world.mazeFlashing().tick();
-        world.energizerBlinking().tick();
-
-        pac.update(this);
-
-        unlockGhost();
-        ghosts().forEach(ghost -> ghost.update(pac));
 
         // Update bonus state
         if (bonus != null) {
@@ -564,6 +551,23 @@ public class GameLevel {
                 huntingTimer.advance();
             }
         }
+
+        // Now check who gets killed
+        frameMemory.pacPrey.clear();
+        frameMemory.pacPrey.addAll(ghosts(FRIGHTENED).filter(pac::sameTile).toList());
+        frameMemory.pacKilled = !GameController.it().isPacImmune() && ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
+
+        if (frameMemory.levelCompleted) {
+            return GameState.LEVEL_COMPLETE;
+        }
+        if (frameMemory.pacKilled) {
+            return GameState.PACMAN_DYING;
+        }
+        if (frameMemory.pacPrey.size() > 0) {
+            killEdibleGhosts();
+            return GameState.GHOST_DYING;
+        }
+        return GameState.HUNTING;
     }
 
     public void simulateOneTestFrame(TickTimer timer, int lastTestedLevel) {
