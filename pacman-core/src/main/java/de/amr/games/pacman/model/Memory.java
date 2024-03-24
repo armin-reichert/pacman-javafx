@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Ghost;
 
 import java.util.ArrayList;
@@ -19,9 +18,6 @@ public class Memory {
     public byte bonusReachedIndex; // 0=first, 1=second, -1=no bonus
     public boolean levelCompleted;
     public boolean pacKilled;
-    public boolean pacPowerStarts;
-    public boolean pacPowerLost;
-    public boolean pacPowerFading;
     public final List<Ghost> pacPrey = new ArrayList<>(4);
     public final List<Ghost> killedGhosts = new ArrayList<>(4);
 
@@ -36,9 +32,6 @@ public class Memory {
         bonusReachedIndex = -1;
         levelCompleted = false;
         pacKilled = false;
-        pacPowerStarts = false;
-        pacPowerLost = false;
-        pacPowerFading = false;
         pacPrey.clear();
         killedGhosts.clear();
     }
@@ -50,9 +43,6 @@ public class Memory {
             ? String.format("Bonus %d reached", bonusReachedIndex)
             : "";
         var power = new StringBuilder();
-        power.append(pacPowerStarts ? " starts" : "");
-        power.append(pacPowerFading ? " fading" : "");
-        power.append(pacPowerLost   ? " lost" : "");
         if (!power.isEmpty()) {
             power.insert(0, "Pac power:");
         }

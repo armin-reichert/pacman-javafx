@@ -456,6 +456,7 @@ public class GameLevel {
     }
 
     private void handlePacPowerStarts() {
+        stopHuntingPhase();
         pac.powerTimer().restartSeconds(data.pacPowerSeconds());
         Logger.info("{} power starting, duration {} ticks", pac.name(), pac.powerTimer().duration());
         ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
@@ -477,8 +478,10 @@ public class GameLevel {
         frameMemory.forgetEverything(); // Ich scholze jetzt!
         final Vector2i pacTile = pac.tile();
 
+        boolean foodFound = false;
+        boolean energizerFound = false;
         if (world.hasFoodAt(pacTile)) {
-            frameMemory.pacPowerStarts = world.isEnergizerTile(pacTile) && data.pacPowerSeconds() > 0;
+            foodFound = true;
             pac.endStarving();
             world.removeFood(pacTile);
             if (world.uneatenFoodCount() == 0) {
@@ -488,6 +491,7 @@ public class GameLevel {
                 frameMemory.bonusReachedIndex += 1;
             }
             if (world.isEnergizerTile(pacTile)) {
+                energizerFound = true;
                 numGhostsKilledByEnergizer = 0;
                 pac.setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
                 int points = GameModel.POINTS_ENERGIZER;
@@ -513,19 +517,17 @@ public class GameLevel {
             return;
         }
 
-        // Bonus?
+        // Bonus
         if (frameMemory.bonusReachedIndex != -1) {
             handleBonusReached(frameMemory.bonusReachedIndex);
         }
 
-        // Pac power state changed?
-        frameMemory.pacPowerFading = pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS;
-        frameMemory.pacPowerLost   = pac.powerTimer().hasExpired();
-        if (frameMemory.pacPowerStarts) {
+        // Pac power state
+        if (energizerFound && data.pacPowerSeconds() > 0) {
             handlePacPowerStarts();
-        } else if (frameMemory.pacPowerFading) {
+        } else if (pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS) {
             publishGameEvent(game, GameEventType.PAC_STARTS_LOSING_POWER);
-        } else if (frameMemory.pacPowerLost) {
+        } else if (pac.powerTimer().hasExpired()) {
             handlePacPowerLost();
         }
 
@@ -553,7 +555,7 @@ public class GameLevel {
         }
 
         // Update hunting timer
-        if (frameMemory.pacPowerStarts || frameMemory.pacKilled) {
+        if (frameMemory.pacKilled) {
             stopHuntingPhase();
         } else {
             if (huntingTimer.hasExpired()) {
