@@ -160,9 +160,17 @@ public enum GameState implements FsmState<GameModel> {
     LEVEL_COMPLETE {
         @Override
         public void onEnter(GameModel game) {
-            timer.restartSeconds(4);
-            enablePacSteering(false);
-            game.level().ifPresent(GameLevel::end);
+            game.level().ifPresent(level -> {
+                timer.restartSeconds(4);
+                enablePacSteering(false);
+                level.pac().setRestingTicks(Pac.REST_INDEFINITE);
+                level.pac().selectAnimation(Pac.ANIM_MUNCHING);
+                level.ghosts().forEach(Ghost::hide);
+                level.deactivateBonus();
+                level.world().mazeFlashing().reset();
+                level.stopHuntingPhase();
+                Logger.trace("Game level {} ({}) ended.", level.number(), game.variant());
+            });
         }
 
         @Override

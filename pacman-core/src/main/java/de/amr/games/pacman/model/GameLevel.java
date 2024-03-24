@@ -59,9 +59,7 @@ public class GameLevel {
         this.data = levelData;
         this.demoLevel = demoLevel;
 
-        boolean isMsPacManGame = game.variant() == GameVariant.MS_PACMAN;
-
-        pac = new Pac(isMsPacManGame ? "Ms. Pac-Man" : "Pac-Man");
+        pac = new Pac(game.variant() == GameVariant.MS_PACMAN ? "Ms. Pac-Man" : "Pac-Man");
         pac.setWorld(world);
         pac.setBaseSpeed(SPEED_AT_100_PERCENT);
         pac.setFadingTicks(PAC_POWER_FADING_TICKS); // not sure
@@ -70,21 +68,18 @@ public class GameLevel {
             new Ghost(RED_GHOST, "Blinky"),
             new Ghost(PINK_GHOST, "Pinky"),
             new Ghost(CYAN_GHOST, "Inky"),
-            new Ghost(ORANGE_GHOST, isMsPacManGame ? "Sue" : "Clyde")
+            new Ghost(ORANGE_GHOST, game.variant() == GameVariant.MS_PACMAN ? "Sue" : "Clyde")
         };
-        Map<Vector2i, List<Direction>> forbiddenMoves = switch (game.variant()) {
-            case MS_PACMAN -> Collections.emptyMap();
-            case PACMAN -> {
-                var up = List.of(UP);
-                var map = new HashMap<Vector2i, List<Direction>>();
-                ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> map.put(tile, up));
-                yield map;
-            }
-        };
+        final Map<Vector2i, List<Direction>> forbiddenMoves = new HashMap<>();
+        if (game.variant() == GameVariant.PACMAN) {
+            var up = List.of(UP);
+            ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbiddenMoves.put(tile, up));
+        }
         ghosts().forEach(ghost -> {
             ghost.setWorld(world);
             ghost.setHouse(world.house());
-            ghost.setFnHuntingBehavior(isMsPacManGame ? this::ghostHuntsInMsPacManGame : this::ghostHuntsInPacManGame);
+            ghost.setFnHuntingBehavior(game.variant() == GameVariant.MS_PACMAN
+                ? this::ghostHuntsInMsPacManGame : this::ghostHuntsInPacManGame);
             ghost.setFnFrightenedBehavior(this::ghostRoamsThroughWorld);
             ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));
             ghost.setForbiddenMoves(forbiddenMoves);
@@ -119,6 +114,7 @@ public class GameLevel {
     }
 
     public Direction initialGhostDirection(byte ghostID) {
+        checkGhostID(ghostID);
         return switch (ghostID) {
             case RED_GHOST -> LEFT;
             case PINK_GHOST -> DOWN;
@@ -151,6 +147,7 @@ public class GameLevel {
     }
 
     public Vector2i ghostScatterTarget(byte ghostID) {
+        checkGhostID(ghostID);
         return switch (ghostID) {
             case RED_GHOST    -> ArcadeWorld.SCATTER_TARGET_RIGHT_UPPER_CORNER;
             case PINK_GHOST   -> ArcadeWorld.SCATTER_TARGET_LEFT_UPPER_CORNER;
@@ -158,16 +155,6 @@ public class GameLevel {
             case ORANGE_GHOST -> ArcadeWorld.SCATTER_TARGET_LEFT_LOWER_CORNER;
             default -> throw new IllegalGhostIDException(ghostID);
         };
-    }
-
-    public void end() {
-        pac.setRestingTicks(Pac.REST_INDEFINITE);
-        pac.selectAnimation(Pac.ANIM_MUNCHING);
-        ghosts().forEach(Ghost::hide);
-        deactivateBonus();
-        world.mazeFlashing().reset();
-        stopHuntingPhase();
-        Logger.trace("Game level {} ({}) ended.", levelNumber, game.variant());
     }
 
     public GameLevelData data() {
@@ -304,7 +291,7 @@ public class GameLevel {
             (float) huntingTimer.duration() / GameModel.FPS, huntingTimer);
     }
 
-    private void stopHuntingPhase() {
+    public void stopHuntingPhase() {
         huntingTimer.stop();
         Logger.info("Hunting timer stopped");
     }
@@ -631,7 +618,11 @@ public class GameLevel {
                 var flashing = world().mazeFlashing();
                 flashing.restart(2 * data.numFlashes());
             } else if (timer.atSecond(12.0)) {
-                end();
+                pac.setRestingTicks(Pac.REST_INDEFINITE);
+                pac.selectAnimation(Pac.ANIM_MUNCHING);
+                ghosts().forEach(Ghost::hide);
+                deactivateBonus();
+                world().mazeFlashing().reset();
                 GameController.it().createAndStartLevel(levelNumber + 1);
                 timer.restartIndefinitely();
             }
