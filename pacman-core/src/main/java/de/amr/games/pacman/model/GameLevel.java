@@ -631,19 +631,20 @@ public class GameLevel {
     public void doLevelTestStep(TickTimer timer, int lastTestedLevel) {
         if (number() <= lastTestedLevel) {
             if (timer.atSecond(0.5)) {
-                guys().forEach(Creature::show);
+                letsGetReadyToRumble(true);
             } else if (timer.atSecond(1.5)) {
                 onBonusReached(0);
-            } else if (timer.atSecond(2.5)) {
+            } else if (timer.atSecond(3.5)) {
                 bonus().ifPresent(bonus -> bonus.setEaten(120));
                 publishGameEvent(game, GameEventType.BONUS_EATEN);
             } else if (timer.atSecond(4.5)) {
+                bonus.setInactive();//TODO
                 onBonusReached(1);
-            } else if (timer.atSecond(5.5)) {
-                guys().forEach(Creature::hide);
+            } else if (timer.atSecond(6.5)) {
                 bonus().ifPresent(bonus -> bonus.setEaten(60));
                 publishGameEvent(game, GameEventType.BONUS_EATEN);
-            } else if (timer.atSecond(6.5)) {
+            } else if (timer.atSecond(8.5)) {
+                guys().forEach(Creature::hide);
                 var flashing = world().mazeFlashing();
                 flashing.restart(2 * data.numFlashes());
             } else if (timer.atSecond(12.0)) {
