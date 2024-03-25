@@ -81,11 +81,56 @@ public class GameLevel {
         }
     }
 
+
+    // Ghost house logic
+
+    public record GhostUnlockInfo(Ghost ghost, String reason) {
+
+        private static Optional<GhostUnlockInfo> of(Ghost ghost, String reason, Object... args) {
+            return Optional.of(new GhostUnlockInfo(ghost, String.format(reason, args)));
+        }
+
+    }
+
+    public class HouseData {
+        private final long pacStarvingTicksLimit;
+        private final byte[] globalGhostDotLimits;
+        private final byte[] privateGhostDotLimits;
+        private final int[] ghostDotCounters;
+        private int globalDotCounter;
+        private boolean globalDotCounterEnabled;
+
+        private HouseData() {
+            pacStarvingTicksLimit = levelNumber < 5 ? 4 * GameModel.FPS : 3 * GameModel.FPS;
+            globalGhostDotLimits = new byte[] {-1, 7, 17, -1};
+            privateGhostDotLimits = switch (levelNumber) {
+                case 1  -> new byte[] {0, 0, 30, 60};
+                case 2  -> new byte[] {0, 0,  0, 50};
+                default -> new byte[] {0, 0,  0, 0};
+            };
+            ghostDotCounters = new int[] {0, 0, 0, 0};
+            globalDotCounter = 0;
+            globalDotCounterEnabled = false;
+        }
+        public void resetGlobalDotCounterAndSetEnabled(boolean enabled) {
+            globalDotCounter = 0;
+            globalDotCounterEnabled = enabled;
+            Logger.trace("Global dot counter reset to 0 and {}", enabled ? "enabled" : "disabled");
+        }
+
+        public void increaseGhostDotCounter(Ghost ghost) {
+            ghostDotCounters[ghost.id()]++;
+            Logger.trace("{} dot counter = {}", ghost.name(), ghostDotCounters[ghost.id()]);
+        }
+
+    }
+    private final HouseData houseData;
+
+
     private final int levelNumber;
     private final boolean demoLevel;
     private final GameLevelData data;
     private final GameModel game;
-    private final GhostHouseManagement ghostHouseAccessControl;
     private final TickTimer huntingTimer = new TickTimer("HuntingTimer");
     private final World world;
     private final Pac pac;
@@ -142,7 +187,7 @@ public class GameLevel {
             ghost.setSpeedInsideHouse(SPEED_GHOST_INSIDE_HOUSE);
         });
 
-        ghostHouseAccessControl = new GhostHouseManagement(this, world.house());
+        houseData = new HouseData();
 
         bonusSymbols = new byte[2];
         bonusSymbols[0] = nextBonusSymbol();
@@ -242,10 +287,6 @@ public class GameLevel {
         return pac;
     }
 
-    public GhostHouseManagement ghostHouseAccessControl() {
-        return ghostHouseAccessControl;
-    }
-
     public void setAutopilot(Steering autopilot) {
         checkNotNull(autopilot);
         this.autopilot = autopilot;
@@ -292,6 +333,10 @@ public class GameLevel {
      */
     public EventLog eventLog() {
         return eventLog;
+    }
+
+    public HouseData houseData() {
+        return houseData;
     }
 
     /**
@@ -523,7 +568,20 @@ public class GameLevel {
                 pac.eatPellet();
                 scorePoints(GameModel.POINTS_NORMAL_PELLET);
             }
-            ghostHouseAccessControl.onFoodFound();
+            if (houseData.globalDotCounterEnabled) {
+                if (ghost(ORANGE_GHOST).is(LOCKED) && houseData.globalDotCounter == 32) {
+                    Logger.trace("{} inside house when counter reached 32", ghost(ORANGE_GHOST).name());
+                    houseData.resetGlobalDotCounterAndSetEnabled(false);
+                } else {
+                    houseData.globalDotCounter++;
+                    Logger.trace("Global dot counter = {}", houseData.globalDotCounter);
+                }
+            } else {
+                ghosts(LOCKED)
+                    .filter(ghost -> ghost.insideHouse(world().house()))
+                    .findFirst()
+                    .ifPresent(houseData::increaseGhostDotCounter);
+            }
             world.removeFood(pacTile);
             if (world.uneatenFoodCount() == data.elroy1DotsLeft()) {
                 setCruiseElroyState(1);
@@ -579,8 +637,8 @@ public class GameLevel {
     }
 
     private void updateGhosts() {
-        ghostHouseAccessControl.unlockGhost().ifPresent(unlocked -> {
-            if (unlocked.ghost().insideHouse(ghostHouseAccessControl.house())) {
+        unlockGhost().ifPresent(unlocked -> {
+            if (unlocked.ghost().insideHouse(world().house())) {
                 unlocked.ghost().setState(LEAVING_HOUSE);
             } else {
                 unlocked.ghost().setMoveAndWishDir(LEFT);
@@ -594,6 +652,38 @@ public class GameLevel {
             eventLog.unlockedGhost = unlocked.ghost();
         });
         ghosts().forEach(ghost -> ghost.update(pac));
+    }
+
+    private Optional<GhostUnlockInfo> unlockGhost() {
+        Ghost candidate = Stream.of(RED_GHOST, PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
+            .map(this::ghost)
+            .filter(ghost -> ghost.is(LOCKED))
+            .findFirst()
+            .orElse(null);
+
+        if (candidate == null) {
+            return Optional.empty();
+        }
+        // Blinky always gets unlocked immediately
+        if (candidate.id() == RED_GHOST) {
+            return GhostUnlockInfo.of(candidate, "Red ghost gets unlocked immediately");
+        }
+        // check private dot counter first (if enabled)
+        if (!houseData.globalDotCounterEnabled && houseData.ghostDotCounters[candidate.id()] >= houseData.privateGhostDotLimits[candidate.id()]) {
+            return GhostUnlockInfo.of(candidate, "Private dot counter at limit (%d)", houseData.privateGhostDotLimits[candidate.id()]);
+        }
+        // check global dot counter
+        var globalDotLimit = houseData.globalGhostDotLimits[candidate.id()] == -1 ? Integer.MAX_VALUE : houseData.globalGhostDotLimits[candidate.id()];
+        if (houseData.globalDotCounter >= globalDotLimit) {
+            return GhostUnlockInfo.of(candidate, "Global dot counter at limit (%d)", globalDotLimit);
+        }
+        // check Pac-Man starving time
+        if (pac.starvingTicks() >= houseData.pacStarvingTicksLimit) {
+            pac.endStarving(); // TODO change pac state here?
+            Logger.trace("Pac-Man starving timer reset to 0");
+            return GhostUnlockInfo.of(candidate, "%s reached starving limit (%d ticks)", pac.name(), houseData.pacStarvingTicksLimit);
+        }
+        return Optional.empty();
     }
 
     public GameState doHuntingStep() {
