@@ -44,38 +44,38 @@ public class GameLevel {
         public final List<Ghost> killedGhosts = new ArrayList<>(4);
 
         public void report() {
-            List<String> report = new ArrayList<>();
+            List<String> news = new ArrayList<>();
             if (energizerFound) {
-                report.add("- Energizer found at " + foundFoodAtTile);
+                news.add("Energizer found at " + foundFoodAtTile);
             }
             if (bonusIndex != -1) {
-                report.add("- Bonus reached, index=" + bonusIndex);
+                news.add("Bonus reached, index=" + bonusIndex);
             }
             if (bonusEaten) {
-                report.add("- Bonus eaten");
+                news.add("Bonus eaten");
             }
             if (pacGetsPower) {
-                report.add("- Pac gained power");
+                news.add("Pac gained power");
             }
             if (pacStartsLosingPower) {
-                report.add("- Pac starts losing power");
+                news.add("Pac starts losing power");
             }
             if (pacLostPower) {
-                report.add("- Pac lost power");
+                news.add("Pac lost power");
             }
             if (pacDied) {
-                report.add("- Pac died");
+                news.add("Pac died");
             }
             if (unlockedGhost != null) {
-                report.add("- Unlocked " + unlockedGhost.name());
+                news.add("Unlocked " + unlockedGhost.name());
             }
             if (!killedGhosts.isEmpty()) {
-                report.add("- Ghosts killed: " + killedGhosts.stream().map(Ghost::name).toList());
+                news.add("Ghosts killed: " + killedGhosts.stream().map(Ghost::name).toList());
             }
-            if (!report.isEmpty()) {
+            if (!news.isEmpty()) {
                 Logger.info("Latest News:");
-                for (var msg : report) {
-                    Logger.info(msg);
+                for (var msg : news) {
+                    Logger.info("- " + msg);
                 }
             }
         }

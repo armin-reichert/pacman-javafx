@@ -107,13 +107,13 @@ public class PlayScene3D implements GameScene {
         setScoreVisible(true);
         scores3D.fontPy.set(context.theme().font("font.arcade", 8));
         perspectivePy.bind(PY_3D_PERSPECTIVE);
-        Logger.info("3D play scene init(). {}", this);
+        Logger.info("3D play scene initialized. {}", this);
     }
 
     @Override
     public void end() {
         perspectivePy.unbind();
-        Logger.info("3D play scene end(). {}", this);
+        Logger.info("3D play scene ended. {}", this);
     }
 
     @Override
@@ -125,8 +125,7 @@ public class PlayScene3D implements GameScene {
             }
            updateSound(level);
         });
-        scores3D.setScores(
-            context.game().score().points(),     context.game().score().levelNumber(),
+        scores3D.setScores(context.game().score().points(), context.game().score().levelNumber(),
             context.game().highScore().points(), context.game().highScore().levelNumber());
         if (context.gameController().hasCredit()) {
             scores3D.hideText();
