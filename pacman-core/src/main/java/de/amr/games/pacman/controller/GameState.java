@@ -263,9 +263,9 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             game.level().ifPresent(level -> {
                 if (timer.atSecond(1)) {
+                    level.ghosts().forEach(Ghost::hide);
                     level.pac().selectAnimation(Pac.ANIM_DYING);
                     level.pac().resetAnimation();
-                    level.ghosts().forEach(Ghost::hide);
                 } else if (timer.atSecond(1.4)) {
                     level.pac().startAnimation();
                     publishGameEvent(game, GameEventType.PAC_DIED);
@@ -276,8 +276,7 @@ public enum GameState implements FsmState<GameModel> {
                         level.world().energizerBlinking().stop();
                     }
                 } else if (timer.hasExpired()) {
-                    if (!gameController().hasCredit()) {
-                        // end of demo level
+                    if (!gameController().hasCredit()) { // end of demo level
                         gameController().changeState(INTRO);
                     } else {
                         gameController().changeState(game.lives() == 0 ? GAME_OVER : READY);

@@ -141,7 +141,8 @@ public class Pac extends Creature implements AnimationDirector {
 
     public void die() {
         powerTimer.stop(); // necessary?
-        freeze();
+        setSpeed(0);
+        stopAnimation();
         dead = true;
     }
 
