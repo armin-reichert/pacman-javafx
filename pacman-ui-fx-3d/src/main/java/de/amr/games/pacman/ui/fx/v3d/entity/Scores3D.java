@@ -58,7 +58,7 @@ public class Scores3D extends GridPane {
         textDisplayed = true;
     }
 
-    public void hideText() {
+    public void showScore() {
         this.textDisplayed = false;
     }
 

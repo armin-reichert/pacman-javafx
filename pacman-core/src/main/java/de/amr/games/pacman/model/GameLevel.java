@@ -404,19 +404,14 @@ public class GameLevel {
             ? data.ghostSpeedTunnelPercentage()
             : data.ghostSpeedFrightenedPercentage();
         if (!world.belongsToPortal(ghost.tile()) && (ghost.isNewTileEntered() || !ghost.moved())) {
-            ghost.setWishDir(chooseFrightenedDirection(ghost));
+            Direction dir = pseudoRandomDirection();
+            while (dir == ghost.moveDir().opposite() || !ghost.canAccessTile(ghost.tile().plus(dir.vector()))) {
+                dir = dir.nextClockwise();
+            }
+            ghost.setWishDir(dir);
         }
         ghost.setPercentageSpeed(speed);
         ghost.tryMoving();
-    }
-
-    private Direction chooseFrightenedDirection(Ghost ghost) {
-        Direction opposite = ghost.moveDir().opposite();
-        Direction dir = pseudoRandomDirection();
-        while (dir == opposite || !ghost.canAccessTile(ghost.tile().plus(dir.vector()))) {
-            dir = dir.nextClockwise();
-        }
-        return dir;
     }
 
     private Direction pseudoRandomDirection() {

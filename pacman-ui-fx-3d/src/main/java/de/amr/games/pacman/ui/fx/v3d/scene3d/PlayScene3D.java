@@ -47,8 +47,7 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class PlayScene3D implements GameScene {
 
-    // Index where game level 3D is inserted into child list
-    private static final byte CHILD_LEVEL_3D  = 0;
+    private static final byte CHILD_INDEX_LEVEL_3D = 0;
 
     public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
         @Override
@@ -125,10 +124,11 @@ public class PlayScene3D implements GameScene {
             }
            updateSound(level);
         });
-        scores3D.setScores(context.game().score().points(), context.game().score().levelNumber(),
+        scores3D.setScores(
+            context.game().score().points(), context.game().score().levelNumber(),
             context.game().highScore().points(), context.game().highScore().levelNumber());
         if (context.gameController().hasCredit()) {
-            scores3D.hideText();
+            scores3D.showScore();
         } else {
             scores3D.showText(Color.RED, "GAME OVER!");
         }
@@ -171,7 +171,7 @@ public class PlayScene3D implements GameScene {
     private void replaceGameLevel3D(GameLevel level) {
         level3D = new GameLevel3D(level, context);
         // replace initial placeholder or previous 3D level
-        subSceneRoot.getChildren().set(CHILD_LEVEL_3D, level3D);
+        subSceneRoot.getChildren().set(CHILD_INDEX_LEVEL_3D, level3D);
 
         level3D.setTranslateX(-level.world().numCols() * HTS);
         level3D.setTranslateY(-level.world().numRows() * HTS);
