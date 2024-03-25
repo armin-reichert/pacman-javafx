@@ -249,10 +249,13 @@ public enum GameState implements FsmState<GameModel> {
     PACMAN_DYING {
         @Override
         public void onEnter(GameModel game) {
+            timer.restartSeconds(4);
             enablePacSteering(false);
             game.level().ifPresent(level -> {
-                timer.restartSeconds(4);
-                level.onPacKilled();
+                level.stopHuntingPhase();
+                level.ghostHouseAccessControl().resetGlobalDotCounterAndSetEnabled(true);
+                level.enableCruiseElroyState(false);
+                level.pac().die();
             });
         }
 

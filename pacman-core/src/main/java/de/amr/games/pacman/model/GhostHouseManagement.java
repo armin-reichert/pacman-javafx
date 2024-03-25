@@ -20,7 +20,7 @@ import static de.amr.games.pacman.model.actors.GhostState.LOCKED;
  * @author Armin Reichert
  * @see <a href="https://pacman.holenet.info/">Pac-Man Dossier by Jamey Pittman</a>
  */
-class GhostHouseManagement {
+public class GhostHouseManagement {
 
     public record GhostUnlockInfo(Ghost ghost, String reason) {
 
@@ -78,11 +78,7 @@ class GhostHouseManagement {
         }
     }
 
-    public void onPacKilled() {
-        resetGlobalDotCounterAndSetEnabled(true);
-    }
-
-    private void resetGlobalDotCounterAndSetEnabled(boolean enabled) {
+    public void resetGlobalDotCounterAndSetEnabled(boolean enabled) {
         globalDotCounter = 0;
         globalDotCounterEnabled = enabled;
         Logger.trace("Global dot counter reset to 0 and {}", enabled ? "enabled" : "disabled");

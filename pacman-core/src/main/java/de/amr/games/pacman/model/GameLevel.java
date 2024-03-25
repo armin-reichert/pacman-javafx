@@ -242,6 +242,10 @@ public class GameLevel {
         return pac;
     }
 
+    public GhostHouseManagement ghostHouseAccessControl() {
+        return ghostHouseAccessControl;
+    }
+
     public void setAutopilot(Steering autopilot) {
         checkNotNull(autopilot);
         this.autopilot = autopilot;
@@ -309,7 +313,7 @@ public class GameLevel {
         Logger.trace("Cruise Elroy state set to {}", cruiseElroyState);
     }
 
-    private void enableCruiseElroyState(boolean enabled) {
+    public void enableCruiseElroyState(boolean enabled) {
         if (enabled && cruiseElroyState < 0 || !enabled && cruiseElroyState > 0) {
             cruiseElroyState = (byte) (-cruiseElroyState);
             Logger.trace("Cruise Elroy state set to {}", cruiseElroyState);
@@ -610,7 +614,6 @@ public class GameLevel {
         }
         var killers = ghosts(HUNTING_PAC).filter(pac::sameTile).toList();
         if (!killers.isEmpty() && !GameController.it().isPacImmune()) {
-            stopHuntingPhase();
             eventLog.pacDied = true;
             return GameState.PACMAN_DYING;
         }
@@ -686,14 +689,6 @@ public class GameLevel {
         eventLog.killedGhosts.add(ghost);
         numGhostsKilledByEnergizer += 1;
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
-    }
-
-    // Pac-Man
-
-    public void onPacKilled() {
-        pac.die();
-        ghostHouseAccessControl.onPacKilled();
-        enableCruiseElroyState(false);
     }
 
     // Bonus Management
