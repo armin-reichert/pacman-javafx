@@ -110,7 +110,7 @@ public class PacManGameTest {
             var pac = level.pac();
             pac.setSpeed(42);
             assertEquals(42.0, pac.velocity().length(), Vector2f.EPSILON);
-            pac.kill();
+            pac.die();
             assertEquals(0.0, pac.velocity().length(), Vector2f.EPSILON);
         });
     }

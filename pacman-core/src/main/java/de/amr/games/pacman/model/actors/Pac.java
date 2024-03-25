@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Steering;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 
 import java.util.Optional;
 
@@ -35,7 +36,7 @@ public class Pac extends Creature implements AnimationDirector {
     private boolean dead;
     private byte restingTicks;
     private long starvingTicks;
-    private int fadingTicks;
+    private int powerFadingTicks;
     private Steering steering;
 
     private Animations animations;
@@ -118,30 +119,47 @@ public class Pac extends Creature implements AnimationDirector {
         powerTimer.advance();
     }
 
-    public void kill() {
-        stopAnimation();
+    public void eatPellet() {
+        endStarving();
+        setRestingTicks(GameModel.RESTING_TICKS_NORMAL_PELLET);
+    }
+
+    public void eatEnergizer() {
+        endStarving();
+        setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
+    }
+
+    /**
+     * When a level is complete, Pac-Man is displayed in its full beauty and does not move anymore.
+     */
+    public void freeze() {
         setSpeed(0);
+        setRestingTicks(Pac.REST_INDEFINITE);
+        selectAnimation(Pac.ANIM_MUNCHING);
+        stopAnimation();
+    }
+
+    public void die() {
+        powerTimer.stop(); // necessary?
+        freeze();
         dead = true;
-        starvingTicks = 0;
-        restingTicks = 0;
-        powerTimer.stop();
     }
 
     public boolean isDead() {
         return dead;
     }
 
-    public void setFadingTicks(int fadingTicks) {
-        this.fadingTicks = fadingTicks;
+    public void setPowerFadingTicks(int fadingTicks) {
+        this.powerFadingTicks = fadingTicks;
     }
 
     public boolean isPowerFading() {
-        return powerTimer.isRunning() && powerTimer.remaining() <= fadingTicks;
+        return powerTimer.isRunning() && powerTimer.remaining() <= powerFadingTicks;
     }
 
-    public boolean isPowerStartingToFade() {
-        return powerTimer.isRunning() && powerTimer.remaining() == fadingTicks
-            || powerTimer().duration() < fadingTicks && powerTimer().tick() == 1;
+    public boolean isPowerFadingStarting() {
+        return powerTimer.isRunning() && powerTimer.remaining() == powerFadingTicks
+            || powerTimer().duration() < powerFadingTicks && powerTimer().tick() == 1;
     }
 
     public TickTimer powerTimer() {
@@ -161,7 +179,7 @@ public class Pac extends Creature implements AnimationDirector {
         }
     }
 
-    /* Number of ticks since Pac has eaten a pellet or energizer. */
+    /* Number of ticks passed since Pac has eaten a pellet or energizer. */
     public long starvingTicks() {
         return starvingTicks;
     }

@@ -116,7 +116,7 @@ public class GameLevel {
         pac = new Pac(game.variant() == GameVariant.MS_PACMAN ? "Ms. Pac-Man" : "Pac-Man");
         pac.setWorld(world);
         pac.setBaseSpeed(SPEED_AT_100_PERCENT);
-        pac.setFadingTicks(PAC_POWER_FADING_TICKS); // not sure
+        pac.setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure
 
         ghosts = new Ghost[] {
             new Ghost(RED_GHOST, "Blinky"),
@@ -414,7 +414,7 @@ public class GameLevel {
         ghost.tryMoving();
     }
 
-    private Direction pseudoRandomDirection() {
+    private static Direction pseudoRandomDirection() {
         float rnd = Globals.randomFloat(0, 100);
         if (rnd < 16.3) return UP;
         if (rnd < 16.3 + 25.2) return RIGHT;
@@ -508,20 +508,19 @@ public class GameLevel {
         final Vector2i pacTile = pac.tile();
         if (world.hasFoodAt(pacTile)) {
             eventLog.foundFoodAtTile = pacTile;
-            pac.endStarving();
-            world.removeFood(pacTile);
             if (world.isEnergizerTile(pacTile)) {
                 eventLog.energizerFound = true;
                 numGhostsKilledByEnergizer = 0;
-                pac.setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
+                pac.eatEnergizer();
                 int points = GameModel.POINTS_ENERGIZER;
                 scorePoints(points);
                 Logger.info("Scored {} points for eating energizer", points);
             } else {
-                pac.setRestingTicks(GameModel.RESTING_TICKS_NORMAL_PELLET);
+                pac.eatPellet();
                 scorePoints(GameModel.POINTS_NORMAL_PELLET);
             }
             ghostHouseAccessControl.onFoodFound();
+            world.removeFood(pacTile);
             if (world.uneatenFoodCount() == data.elroy1DotsLeft()) {
                 setCruiseElroyState(1);
             } else if (world.uneatenFoodCount() == data.elroy2DotsLeft()) {
@@ -643,8 +642,7 @@ public class GameLevel {
                 var flashing = world().mazeFlashing();
                 flashing.restart(2 * data.numFlashes());
             } else if (timer.atSecond(12.0)) {
-                pac.setRestingTicks(Pac.REST_INDEFINITE);
-                pac.selectAnimation(Pac.ANIM_MUNCHING);
+                pac.freeze();
                 ghosts().forEach(Ghost::hide);
                 deactivateBonus();
                 world().mazeFlashing().reset();
@@ -693,7 +691,7 @@ public class GameLevel {
     // Pac-Man
 
     public void onPacKilled() {
-        pac.kill();
+        pac.die();
         ghostHouseAccessControl.onPacKilled();
         enableCruiseElroyState(false);
     }

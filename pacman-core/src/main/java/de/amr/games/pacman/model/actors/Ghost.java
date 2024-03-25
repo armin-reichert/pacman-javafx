@@ -326,7 +326,7 @@ public class Ghost extends Creature implements AnimationDirector {
     }
 
     private void updateFrightenedAnimation(Pac pac) {
-        if (pac.isPowerStartingToFade()) {
+        if (pac.isPowerFadingStarting()) {
             selectAnimation(ANIM_GHOST_FLASHING);
         } else if (!pac.isPowerFading()) {
             selectAnimation(ANIM_GHOST_FRIGHTENED);

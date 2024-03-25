@@ -160,8 +160,7 @@ public enum GameState implements FsmState<GameModel> {
             game.level().ifPresent(level -> {
                 timer.restartSeconds(4);
                 enablePacSteering(false);
-                level.pac().setRestingTicks(Pac.REST_INDEFINITE);
-                level.pac().selectAnimation(Pac.ANIM_MUNCHING);
+                level.pac().freeze();
                 level.ghosts().forEach(Ghost::hide);
                 level.deactivateBonus();
                 level.world().mazeFlashing().reset();
