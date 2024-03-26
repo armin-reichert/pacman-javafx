@@ -42,7 +42,7 @@ public class GameLevel {
     private final Ghost[] ghosts;
     private final GhostHouseControl houseControl;
     private byte huntingPhaseIndex;
-    private byte numGhostsKilledInLevel;
+    private byte totalNumGhostsKilled;
     private byte cruiseElroyState;
     private Steering autopilot;
     private HuntingStepEventLog eventLog;
@@ -271,8 +271,8 @@ public class GameLevel {
         }
     }
 
-    public int numGhostsKilledInLevel() {
-        return numGhostsKilledInLevel;
+    public int totalNumGhostsKilled() {
+        return totalNumGhostsKilled;
     }
 
     /**
@@ -612,7 +612,7 @@ public class GameLevel {
     public void killGhosts(List<Ghost> prey) {
         if (!prey.isEmpty()) {
             prey.forEach(this::killGhost);
-            if (numGhostsKilledInLevel == 16) {
+            if (totalNumGhostsKilled == 16) {
                 int points = GameModel.POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
                 scorePoints(points);
                 Logger.info("Scored {} points for killing all ghosts at level {}", points, levelNumber);
@@ -625,10 +625,10 @@ public class GameLevel {
         pac.victims().add(ghost);
         ghost.setState(EATEN);
         ghost.selectAnimation(Ghost.ANIM_GHOST_NUMBER, pac.victims().size() - 1);
-        Logger.info("{} NUMBER animation index {}", ghost.name(), pac.victims().size() - 1);
+        Logger.trace("{} NUMBER animation index {}", ghost.name(), pac.victims().size() - 1);
         scorePoints(points);
         eventLog.killedGhosts.add(ghost);
-        numGhostsKilledInLevel += 1;
+        totalNumGhostsKilled += 1;
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }
 

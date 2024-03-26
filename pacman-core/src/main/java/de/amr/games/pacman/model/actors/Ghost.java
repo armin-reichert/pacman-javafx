@@ -178,7 +178,7 @@ public class Ghost extends Creature implements AnimationDirector {
     public void setState(GhostState state) {
         checkNotNull(state);
         if (this.state == state) {
-            Logger.info("{} is already in state {}", name(), state);
+            Logger.trace("{} is already in state {}", name(), state);
         }
         this.state = state;
         switch (state) {
