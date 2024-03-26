@@ -28,17 +28,9 @@ import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
- * A game level.
- *
  * @author Armin Reichert
  */
 public class GameLevel {
-
-    public record GhostUnlockInfo(Ghost ghost, String reason) {
-        public GhostUnlockInfo(Ghost ghost, String reason, Object... args) {
-            this(ghost, String.format(reason, args));
-        }
-    }
 
     private final int levelNumber;
     private final boolean demoLevel;
@@ -542,7 +534,7 @@ public class GameLevel {
     private void updateGhosts() {
         houseControl.unlockGhost(this).ifPresent(unlocked -> {
             var ghost = unlocked.ghost();
-            Logger.info("{} unlocked: {}", ghost.name(), unlocked.reason);
+            Logger.info("{} unlocked: {}", ghost.name(), unlocked.reason());
             if (ghost.insideHouse(world.house())) {
                 ghost.setState(LEAVING_HOUSE);
             } else {

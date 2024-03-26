@@ -141,7 +141,7 @@ public class GhostHouseControl {
         }
     }
 
-    public Optional<GameLevel.GhostUnlockInfo> unlockGhost(GameLevel level) {
+    public Optional<GhostUnlockInfo> unlockGhost(GameLevel level) {
         Ghost candidate = Stream.of(RED_GHOST, PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
             .map(level::ghost)
             .filter(ghost -> ghost.is(LOCKED))
@@ -153,25 +153,25 @@ public class GhostHouseControl {
         }
         // Blinky always gets unlocked immediately
         if (candidate.id() == RED_GHOST) {
-            return Optional.of(new GameLevel.GhostUnlockInfo(candidate, "Red ghost gets unlocked immediately"));
+            return Optional.of(new GhostUnlockInfo(candidate, "Red ghost gets unlocked immediately"));
         }
         // check private dot counter first (if enabled)
         if (!globalCounterEnabled
             && counters[candidate.id()] >= privateDotLimit(level.number(), candidate)) {
-            return Optional.of(new GameLevel.GhostUnlockInfo(candidate,
+            return Optional.of(new GhostUnlockInfo(candidate,
                 "Private dot counter at limit (%d)", privateDotLimit(level.number(), candidate)));
         }
         // check global dot counter
         var globalDotLimit = globalLimits[candidate.id()] == -1
             ? Integer.MAX_VALUE : globalLimits[candidate.id()];
         if (globalCounter >= globalDotLimit) {
-            return Optional.of(new GameLevel.GhostUnlockInfo(candidate, "Global dot counter at limit (%d)", globalDotLimit));
+            return Optional.of(new GhostUnlockInfo(candidate, "Global dot counter at limit (%d)", globalDotLimit));
         }
         // check Pac-Man starving time
         if (level.pac().starvingTicks() >= pacStarvingLimitTicks) {
             level.pac().endStarving(); // TODO change pac state here?
             Logger.info("Pac-Man starving timer reset to 0");
-            return Optional.of(new GameLevel.GhostUnlockInfo(candidate,
+            return Optional.of(new GhostUnlockInfo(candidate,
                 "%s reached starving limit (%d ticks)", level.pac().name(), pacStarvingLimitTicks));
         }
         return Optional.empty();
