@@ -14,12 +14,10 @@ import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.world.House;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 
@@ -255,7 +253,7 @@ public enum GameState implements FsmState<GameModel> {
             enablePacSteering(false);
             game.level().ifPresent(level -> {
                 level.stopHuntingPhase();
-                level.houseData().resetGlobalDotCounterAndSetEnabled(true);
+                level.houseData().resetGlobalCounterAndSetEnabled(true);
                 level.enableCruiseElroyState(false);
                 level.pac().die();
             });
