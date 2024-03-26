@@ -227,7 +227,7 @@ public class Ghost extends Creature implements AnimationDirector {
         } else {
             setSpeed(0);
         }
-        if (pac.powerTimer().isRunning()) {
+        if (pac.powerTimer().isRunning() && !pac.victims().contains(this)) {
             updateFrightenedAnimation(pac);
         } else {
             selectAnimation(ANIM_GHOST_NORMAL);
@@ -270,6 +270,11 @@ public class Ghost extends Creature implements AnimationDirector {
         }
         setSpeed(speedInsideHouse);
         move();
+        if (pac.powerTimer().isRunning() && !pac.victims().contains(this)) {
+            updateFrightenedAnimation(pac);
+        } else {
+            selectAnimation(ANIM_GHOST_NORMAL);
+        }
     }
 
     // --- HUNTING_PAC ---
