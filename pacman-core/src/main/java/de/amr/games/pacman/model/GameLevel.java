@@ -173,14 +173,14 @@ public class GameLevel {
       *  </pre>
       */
     public static class GhostHouseControl {
-        private final long pacStarvingLimitTicks;
+        private final byte pacStarvingLimitTicks;
         private final byte[] globalLimits = {-1, 7, 17, -1};
         private final int[] counters = {0, 0, 0, 0};
         private int globalCounter = 0;
         private boolean globalCounterEnabled = false;
 
         private GhostHouseControl(int levelNumber) {
-            pacStarvingLimitTicks = (levelNumber < 5 ? 4 : 3) * GameModel.FPS;
+            pacStarvingLimitTicks = (byte) (levelNumber < 5 ? 240 : 180);
         }
 
         private byte privateDotLimit(int levelNumber, Ghost ghost) {
