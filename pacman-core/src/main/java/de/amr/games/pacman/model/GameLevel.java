@@ -43,7 +43,6 @@ public class GameLevel {
     private final GhostHouseControl houseControl;
     private byte huntingPhaseIndex;
     private byte numGhostsKilledInLevel;
-    private byte numGhostsKilledByEnergizer;
     private byte cruiseElroyState;
     private Steering autopilot;
     private HuntingStepEventLog eventLog;
@@ -276,10 +275,6 @@ public class GameLevel {
         return numGhostsKilledInLevel;
     }
 
-    public int numGhostsKilledByEnergizer() {
-        return numGhostsKilledByEnergizer;
-    }
-
     /**
      * Hunting happens in different phases. Phases 0, 2, 4, 6 are scattering phases where the ghosts target for their
      * respective corners and circle around the walls in their corner, phases 1, 3, 5, 7 are chasing phases where the
@@ -467,7 +462,6 @@ public class GameLevel {
             eventLog.foundFoodAtTile = pacTile;
             if (world.isEnergizerTile(pacTile)) {
                 eventLog.energizerFound = true;
-                numGhostsKilledByEnergizer = 0;
                 pac.eatEnergizer();
                 int points = GameModel.POINTS_ENERGIZER;
                 scorePoints(points);
@@ -623,7 +617,7 @@ public class GameLevel {
      * Called by cheat action only.
      */
     public void killAllHuntingAndFrightenedGhosts() {
-        numGhostsKilledByEnergizer = 0;
+        pac.victims().clear();
         killGhosts(ghosts(FRIGHTENED, HUNTING_PAC).toList());
     }
 
@@ -639,13 +633,14 @@ public class GameLevel {
     }
 
     private void killGhost(Ghost ghost) {
-        ghost.setKilledIndex(numGhostsKilledByEnergizer);
+        int points = game.pointsForKillingGhost(pac.victims().size());
+        pac.victims().add(ghost);
         ghost.setState(EATEN);
-        int points = game.pointsForKillingGhost(numGhostsKilledByEnergizer);
+        ghost.selectAnimation(Ghost.ANIM_GHOST_NUMBER, pac.victims().size() - 1);
+        Logger.info("{} NUMBER animation index {}", ghost.name(), pac.victims().size() - 1);
         scorePoints(points);
         eventLog.killedGhosts.add(ghost);
         numGhostsKilledInLevel += 1;
-        numGhostsKilledByEnergizer += 1;
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }
 

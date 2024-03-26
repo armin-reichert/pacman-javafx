@@ -147,6 +147,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
                 intro.ghostKilledTime = timer.tick();
                 intro.pacMan.setMoveDir(Direction.RIGHT);
                 intro.pacMan.setSpeed(intro.chaseSpeed);
+                intro.pacMan.victims().clear();
             }
 
             @Override
@@ -161,9 +162,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
                     .filter(ghost -> ghost.is(FRIGHTENED) && ghost.sameTile(intro.pacMan))
                     .findFirst()
                     .ifPresent(victim -> {
-                        //TODO(robustness) If killedIndex not set *before* changing state, animation frame index is invalid!
-                        victim.setKilledIndex(victim.id());
-                        victim.setState(EATEN);
+                        intro.pacMan.victims().add(victim);
                         intro.ghostKilledTime = timer.tick();
                         intro.pacMan.hide();
                         intro.pacMan.setSpeed(0);
@@ -171,6 +170,8 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
                             ghost.setSpeed(0);
                             ghost.stopAnimation();
                         });
+                        victim.setState(EATEN);
+                        victim.selectAnimation(Ghost.ANIM_GHOST_NUMBER, intro.pacMan.victims().size() - 1);
                     });
 
                 // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on

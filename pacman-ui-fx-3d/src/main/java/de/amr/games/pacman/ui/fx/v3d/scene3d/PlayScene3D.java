@@ -281,7 +281,8 @@ public class PlayScene3D implements GameScene {
                         case PACMAN    -> context.<PacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
                     };
                     level.eventLog().killedGhosts.forEach(ghost -> {
-                        var numberImage = context.spriteSheet().subImage(sprites[ghost.killedIndex()]);
+                        int index = level.pac().victims().indexOf(ghost);
+                        var numberImage = context.spriteSheet().subImage(sprites[index]);
                         level3D.ghosts3D().get(ghost.id()).setNumberImage(numberImage);
                     });
                 });

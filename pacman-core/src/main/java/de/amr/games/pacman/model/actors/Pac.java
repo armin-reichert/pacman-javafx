@@ -10,6 +10,8 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -38,6 +40,7 @@ public class Pac extends Creature implements AnimationDirector {
     private long starvingTicks;
     private int powerFadingTicks;
     private Steering steering;
+    private final List<Ghost> victims = new ArrayList<>();
 
     private Animations animations;
 
@@ -117,6 +120,13 @@ public class Pac extends Creature implements AnimationDirector {
             --restingTicks;
         }
         powerTimer.advance();
+        if (powerTimer.hasExpired()) {
+            victims.clear();
+        }
+    }
+
+    public List<Ghost> victims() {
+        return victims;
     }
 
     public void eatPellet() {
@@ -127,6 +137,7 @@ public class Pac extends Creature implements AnimationDirector {
     public void eatEnergizer() {
         endStarving();
         setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
+        victims.clear();
     }
 
     /**

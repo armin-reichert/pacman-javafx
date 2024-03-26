@@ -40,7 +40,6 @@ public class Ghost extends Creature implements AnimationDirector {
 
     private final byte id;
     private GhostState state;
-    private byte killedIndex;
     private Consumer<Ghost> fnHuntingBehavior;
     private Consumer<Ghost> fnFrightenedBehavior;
     private House house;
@@ -62,7 +61,6 @@ public class Ghost extends Creature implements AnimationDirector {
         return "Ghost{" +
             "id=" + id +
             ", state=" + state +
-            ", killedIndex=" + killedIndex +
             '}';
     }
 
@@ -81,12 +79,6 @@ public class Ghost extends Creature implements AnimationDirector {
     @Override
     public Optional<Animations> animations() {
         return Optional.ofNullable(animations);
-    }
-
-    @Override
-    public void reset() {
-        super.reset();
-        setKilledIndex(-1);
     }
 
     public void setHouse(House house) {
@@ -113,21 +105,6 @@ public class Ghost extends Creature implements AnimationDirector {
 
     public void setForbiddenMoves(Map<Vector2i, List<Direction>> forbiddenMoves) {
         this.forbiddenMoves = forbiddenMoves;
-    }
-
-    /**
-     * @return Index <code>(0,1,2,3)</code> telling when this ghost was killed during Pac-Man power phase. If not killed,
-     * value is -1.
-     */
-    public byte killedIndex() {
-        return killedIndex;
-    }
-
-    public void setKilledIndex(int index) {
-        if (index < -1 || index > 3) {
-            throw new IllegalArgumentException("Killed index must be one of -1, 0, 1, 2, 3, but is: " + index);
-        }
-        this.killedIndex = (byte) index;
     }
 
     public void setFnHuntingBehavior(Consumer<Ghost> fnHuntingBehavior) {
@@ -206,7 +183,6 @@ public class Ghost extends Creature implements AnimationDirector {
         this.state = state;
         switch (state) {
             case LOCKED, HUNTING_PAC -> selectAnimation(ANIM_GHOST_NORMAL);
-            case EATEN -> selectAnimation(ANIM_GHOST_NUMBER);
             case ENTERING_HOUSE, RETURNING_TO_HOUSE -> selectAnimation(ANIM_GHOST_EYES);
             case FRIGHTENED -> selectAnimation(ANIM_GHOST_FRIGHTENED);
             default -> {}
@@ -225,7 +201,7 @@ public class Ghost extends Creature implements AnimationDirector {
             case LEAVING_HOUSE -> updateStateLeavingHouse(pac);
             case HUNTING_PAC -> updateStateHuntingPac();
             case FRIGHTENED -> updateStateFrightened(pac);
-            case EATEN -> updateStateEaten();
+            case EATEN -> updateStateEaten(pac);
             case RETURNING_TO_HOUSE -> updateStateReturningToHouse();
             case ENTERING_HOUSE -> updateStateEnteringHouse();
         }
@@ -274,10 +250,9 @@ public class Ghost extends Creature implements AnimationDirector {
             setPosition(houseEntryPosition);
             setMoveAndWishDir(LEFT);
             newTileEntered = false; // force moving left until new tile is entered
-            if (pac.powerTimer().isRunning() && killedIndex == -1) {
+            if (pac.powerTimer().isRunning() && !pac.victims().contains(this)) {
                 setState(FRIGHTENED);
             } else {
-                killedIndex = -1; // TODO check this
                 setState(HUNTING_PAC);
             }
             return;
@@ -338,8 +313,7 @@ public class Ghost extends Creature implements AnimationDirector {
      * After a ghost is eaten by Pac-Man, he is displayed for a short time as the number of points earned for eating him.
      * The value doubles for each ghost eaten using the power of the same energizer.
      */
-    private void updateStateEaten() {
-        // wait for timeout
+    private void updateStateEaten(Pac pac) {
     }
 
     // --- RETURNING_TO_HOUSE ---
