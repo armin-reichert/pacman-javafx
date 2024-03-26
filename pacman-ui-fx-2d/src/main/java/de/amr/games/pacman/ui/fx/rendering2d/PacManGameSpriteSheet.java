@@ -54,6 +54,12 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         return emptyMazeSprite;
     }
 
+    private final Rectangle2D energizerSprite = rect(8, 24, 8, 8);
+
+    public Rectangle2D getEnergizerSprite() {
+        return energizerSprite;
+    }
+
     private final Rectangle2D[] ghostNumberSprites = array(
         rect(456, 133, 15, 7),  // 200
         rect(472, 133, 15, 7),  // 400

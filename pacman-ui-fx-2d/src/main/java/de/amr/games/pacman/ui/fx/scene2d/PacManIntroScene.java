@@ -121,8 +121,8 @@ public class PacManIntroScene extends GameScene2D {
 
     private void drawBlinkingEnergizer() {
         if (intro.blinking.on()) {
-            g.setFill(context.theme().color("pacman.maze.foodColor"));
-            g.fillOval(s(t(intro.leftTileX)), s(t(20)), s(TS), s(TS));
+            drawSprite(context.<PacManGameSpriteSheet>spriteSheet().getEnergizerSprite(),
+                t(intro.leftTileX),t(20));
         }
     }
 
@@ -151,11 +151,11 @@ public class PacManIntroScene extends GameScene2D {
         g.setFill(context.theme().color("pacman.maze.foodColor"));
         g.fillRect(s(t(tx) + 4), s(t(ty - 1) + 4), s(2), s(2));
         if (intro.blinking.on()) {
-            g.fillOval(s(t(tx)), s(t(ty + 1)), s(TS), s(TS));
+            drawSprite(context.<PacManGameSpriteSheet>spriteSheet().getEnergizerSprite(), t(tx), t(ty + 1));
         }
-        drawText("10", color, font8, t(tx + 2), t(ty));
+        drawText("10",  color, font8, t(tx + 2), t(ty));
         drawText("PTS", color, font6, t(tx + 5), t(ty));
-        drawText("50", color, font8, t(tx + 2), t(ty + 2));
+        drawText("50",  color, font8, t(tx + 2), t(ty + 2));
         drawText("PTS", color, font6, t(tx + 5), t(ty + 2));
     }
 }
