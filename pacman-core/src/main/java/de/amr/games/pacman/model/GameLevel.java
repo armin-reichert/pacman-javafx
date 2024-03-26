@@ -173,14 +173,14 @@ public class GameLevel {
       *  </pre>
       */
     public static class GhostHouseControl {
-        private final byte pacStarvingLimitTicks;
+        private final short pacStarvingLimitTicks;
         private final byte[] globalLimits = {-1, 7, 17, -1};
         private final int[] counters = {0, 0, 0, 0};
         private int globalCounter = 0;
         private boolean globalCounterEnabled = false;
 
         private GhostHouseControl(int levelNumber) {
-            pacStarvingLimitTicks = (byte) (levelNumber < 5 ? 240 : 180);
+            pacStarvingLimitTicks = (short) (levelNumber < 5 ? 240 : 180);
         }
 
         private byte privateDotLimit(int levelNumber, Ghost ghost) {
@@ -752,6 +752,7 @@ public class GameLevel {
     private void updateGhosts() {
         houseData.unlockGhost(this).ifPresent(unlocked -> {
             var ghost = unlocked.ghost();
+            Logger.info("{} unlocked: {}", ghost.name(), unlocked.reason);
             if (ghost.insideHouse(world.house())) {
                 ghost.setState(LEAVING_HOUSE);
             } else {
