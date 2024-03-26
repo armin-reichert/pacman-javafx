@@ -284,6 +284,17 @@ public abstract class Creature extends Entity {
         return Optional.ofNullable(targetDir);
     }
 
+    public void roam(World world, byte relSpeed, Direction dir) {
+        if (!world.belongsToPortal(tile()) && (isNewTileEntered() || !moved())) {
+            while (dir == moveDir().opposite() || !canAccessTile(tile().plus(dir.vector()))) {
+                dir = dir.nextClockwise();
+            }
+            setWishDir(dir);
+        }
+        setPercentageSpeed(relSpeed);
+        tryMoving();
+    }
+
     public boolean moved() {
         return moveResult.moved;
     }

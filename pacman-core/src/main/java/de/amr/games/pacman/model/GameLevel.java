@@ -67,7 +67,7 @@ public class GameLevel {
         pac = new Pac(game.variant() == GameVariant.MS_PACMAN ? "Ms. Pac-Man" : "Pac-Man");
         pac.setWorld(world);
         pac.setBaseSpeed(SPEED_AT_100_PERCENT);
-        pac.setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure
+        pac.setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
 
         ghosts = new Ghost[] {
             new Ghost(RED_GHOST, "Blinky"),
@@ -79,7 +79,7 @@ public class GameLevel {
         ghosts().forEach(ghost -> {
             ghost.setWorld(world);
             ghost.setHouse(world.house());
-            ghost.setFnFrightenedBehavior(frightenedGhost -> roamThroughWorld(frightenedGhost, frightenedSpeed(frightenedGhost)));
+            ghost.setFnFrightenedBehavior(refugee -> refugee.roam(world, frightenedSpeed(refugee), pseudoRandomDirection()));
             ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));
             ghost.setBaseSpeed(SPEED_AT_100_PERCENT);
             ghost.setSpeedReturningToHouse(SPEED_GHOST_RETURNING_TO_HOUSE);
@@ -331,35 +331,23 @@ public class GameLevel {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void letGhostHuntInMsPacManGame(Ghost ghost) {
-        boolean cruiseElroy = ghost.id() == RED_GHOST && cruiseElroyState > 0;
+        byte relSpeed = huntingSpeedPercentage(ghost);
         if (scatterPhase().isPresent() && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-            roamThroughWorld(ghost, huntingSpeedPercentage(ghost));
-        } else if (chasingPhase().isPresent() || cruiseElroy) {
-            ghost.followTarget(chasingTarget(ghost.id()), huntingSpeedPercentage(ghost));
+            ghost.roam(world, relSpeed, pseudoRandomDirection());
+        } else if (chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState > 0) {
+            ghost.followTarget(chasingTarget(ghost.id()), relSpeed);
         } else {
-            ghost.followTarget(ghostScatterTarget(ghost.id()), huntingSpeedPercentage(ghost));
+            ghost.followTarget(ghostScatterTarget(ghost.id()), relSpeed);
         }
     }
 
     private void letGhostHuntInPacManGame(Ghost ghost) {
-        boolean cruiseElroy = ghost.id() == RED_GHOST && cruiseElroyState > 0;
-        if (chasingPhase().isPresent() || cruiseElroy) {
-            ghost.followTarget(chasingTarget(ghost.id()), huntingSpeedPercentage(ghost));
+        byte relSpeed = huntingSpeedPercentage(ghost);
+        if (chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState > 0) {
+            ghost.followTarget(chasingTarget(ghost.id()), relSpeed);
         } else {
-            ghost.followTarget(ghostScatterTarget(ghost.id()), huntingSpeedPercentage(ghost));
+            ghost.followTarget(ghostScatterTarget(ghost.id()), relSpeed);
         }
-    }
-
-    private void roamThroughWorld(Creature creature, byte relSpeed) {
-        if (!world.belongsToPortal(creature.tile()) && (creature.isNewTileEntered() || !creature.moved())) {
-            Direction dir = pseudoRandomDirection();
-            while (dir == creature.moveDir().opposite() || !creature.canAccessTile(creature.tile().plus(dir.vector()))) {
-                dir = dir.nextClockwise();
-            }
-            creature.setWishDir(dir);
-        }
-        creature.setPercentageSpeed(relSpeed);
-        creature.tryMoving();
     }
 
     private byte frightenedSpeed(Ghost ghost) {
