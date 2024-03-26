@@ -81,18 +81,14 @@ public class GameLevel {
         }
     }
 
-
-    // Ghost house logic
-
     public record GhostUnlockInfo(Ghost ghost, String reason) {
 
         private static Optional<GhostUnlockInfo> of(Ghost ghost, String reason, Object... args) {
             return Optional.of(new GhostUnlockInfo(ghost, String.format(reason, args)));
         }
-
     }
 
-    public class HouseData {
+    public static class HouseData {
         private final long pacStarvingTicksLimit;
         private final byte[] globalGhostDotLimits;
         private final byte[] privateGhostDotLimits;
@@ -100,7 +96,7 @@ public class GameLevel {
         private int globalDotCounter;
         private boolean globalDotCounterEnabled;
 
-        private HouseData() {
+        private HouseData(int levelNumber) {
             pacStarvingTicksLimit = levelNumber < 5 ? 4 * GameModel.FPS : 3 * GameModel.FPS;
             globalGhostDotLimits = new byte[] {-1, 7, 17, -1};
             privateGhostDotLimits = switch (levelNumber) {
@@ -112,6 +108,7 @@ public class GameLevel {
             globalDotCounter = 0;
             globalDotCounterEnabled = false;
         }
+
         public void resetGlobalDotCounterAndSetEnabled(boolean enabled) {
             globalDotCounter = 0;
             globalDotCounterEnabled = enabled;
@@ -122,10 +119,7 @@ public class GameLevel {
             ghostDotCounters[ghost.id()]++;
             Logger.trace("{} dot counter = {}", ghost.name(), ghostDotCounters[ghost.id()]);
         }
-
     }
-    private final HouseData houseData;
-
 
     private final int levelNumber;
     private final boolean demoLevel;
@@ -135,6 +129,7 @@ public class GameLevel {
     private final World world;
     private final Pac pac;
     private final Ghost[] ghosts;
+    private final HouseData houseData;
     private byte huntingPhaseIndex;
     private byte numGhostsKilledInLevel;
     private byte numGhostsKilledByEnergizer;
@@ -155,6 +150,7 @@ public class GameLevel {
         this.data = levelData;
         this.demoLevel = demoLevel;
 
+        houseData = new HouseData(levelNumber);
         eventLog = new EventLog();
         bonusReachedIndex = -1;
 
@@ -169,31 +165,35 @@ public class GameLevel {
             new Ghost(CYAN_GHOST, "Inky"),
             new Ghost(ORANGE_GHOST, game.variant() == GameVariant.MS_PACMAN ? "Sue" : "Clyde")
         };
-        final Map<Vector2i, List<Direction>> forbiddenMoves = new HashMap<>();
-        if (game.variant() == GameVariant.PACMAN) {
-            var up = List.of(UP);
-            ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbiddenMoves.put(tile, up));
-        }
+
         ghosts().forEach(ghost -> {
             ghost.setWorld(world);
             ghost.setHouse(world.house());
-            ghost.setFnHuntingBehavior(game.variant() == GameVariant.MS_PACMAN
-                ? this::ghostHuntsInMsPacManGame : this::ghostHuntsInPacManGame);
-            ghost.setFnFrightenedBehavior(this::ghostRoamsThroughWorld);
+            ghost.setFnFrightenedBehavior(frightenedGhost -> roamThroughWorld(frightenedGhost, frightenedSpeed(frightenedGhost)));
             ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));
-            ghost.setForbiddenMoves(forbiddenMoves);
             ghost.setBaseSpeed(SPEED_AT_100_PERCENT);
             ghost.setSpeedReturningToHouse(SPEED_GHOST_RETURNING_TO_HOUSE);
             ghost.setSpeedInsideHouse(SPEED_GHOST_INSIDE_HOUSE);
         });
 
-        houseData = new HouseData();
+        switch (game.variant()) {
+            case MS_PACMAN -> ghosts().forEach(ghost -> ghost.setFnHuntingBehavior(this::letGhostHuntInMsPacManGame));
+            case PACMAN -> {
+                var forbiddenMovesAtTile = new HashMap<Vector2i, List<Direction>>();
+                var up = List.of(UP);
+                ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbiddenMovesAtTile.put(tile, up));
+                ghosts().forEach(ghost -> {
+                    ghost.setForbiddenMoves(forbiddenMovesAtTile);
+                    ghost.setFnHuntingBehavior(this::letGhostHuntInPacManGame);
+                });
+            }
+        }
 
         bonusSymbols = new byte[2];
         bonusSymbols[0] = nextBonusSymbol();
         bonusSymbols[1] = nextBonusSymbol();
 
-        Logger.trace("Game level {} ({}) created.", this.levelNumber, game.variant());
+        Logger.trace("Game level {} ({}) created.", levelNumber, game.variant());
     }
 
     private Vector2i chasingTarget(byte ghostID) {
@@ -421,46 +421,40 @@ public class GameLevel {
      *
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
-    private void ghostHuntsInMsPacManGame(Ghost ghost) {
+    private void letGhostHuntInMsPacManGame(Ghost ghost) {
         boolean cruiseElroy = ghost.id() == RED_GHOST && cruiseElroyState > 0;
         if (scatterPhase().isPresent() && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-            ghostRoamsThroughWorld(ghost);
+            roamThroughWorld(ghost, huntingSpeedPercentage(ghost));
         } else if (chasingPhase().isPresent() || cruiseElroy) {
-            ghostFollowsTarget(ghost, chasingTarget(ghost.id()), huntingSpeedPercentage(ghost));
+            ghost.followTarget(chasingTarget(ghost.id()), huntingSpeedPercentage(ghost));
         } else {
-            ghostFollowsTarget(ghost, ghostScatterTarget(ghost.id()), huntingSpeedPercentage(ghost));
+            ghost.followTarget(ghostScatterTarget(ghost.id()), huntingSpeedPercentage(ghost));
         }
     }
 
-    private void ghostHuntsInPacManGame(Ghost ghost) {
+    private void letGhostHuntInPacManGame(Ghost ghost) {
         boolean cruiseElroy = ghost.id() == RED_GHOST && cruiseElroyState > 0;
         if (chasingPhase().isPresent() || cruiseElroy) {
-            ghostFollowsTarget(ghost, chasingTarget(ghost.id()), huntingSpeedPercentage(ghost));
+            ghost.followTarget(chasingTarget(ghost.id()), huntingSpeedPercentage(ghost));
         } else {
-            ghostFollowsTarget(ghost, ghostScatterTarget(ghost.id()), huntingSpeedPercentage(ghost));
+            ghost.followTarget(ghostScatterTarget(ghost.id()), huntingSpeedPercentage(ghost));
         }
     }
 
-    private void ghostFollowsTarget(Ghost ghost, Vector2i targetTile, byte relSpeed) {
-        ghost.setPercentageSpeed(relSpeed);
-        ghost.setTargetTile(targetTile);
-        ghost.navigateTowardsTarget();
-        ghost.tryMoving();
-    }
-
-    private void ghostRoamsThroughWorld(Ghost ghost) {
-        var speed = world().isTunnel(ghost.tile())
-            ? data.ghostSpeedTunnelPercentage()
-            : data.ghostSpeedFrightenedPercentage();
-        if (!world.belongsToPortal(ghost.tile()) && (ghost.isNewTileEntered() || !ghost.moved())) {
+    private void roamThroughWorld(Creature creature, byte relSpeed) {
+        if (!world.belongsToPortal(creature.tile()) && (creature.isNewTileEntered() || !creature.moved())) {
             Direction dir = pseudoRandomDirection();
-            while (dir == ghost.moveDir().opposite() || !ghost.canAccessTile(ghost.tile().plus(dir.vector()))) {
+            while (dir == creature.moveDir().opposite() || !creature.canAccessTile(creature.tile().plus(dir.vector()))) {
                 dir = dir.nextClockwise();
             }
-            ghost.setWishDir(dir);
+            creature.setWishDir(dir);
         }
-        ghost.setPercentageSpeed(speed);
-        ghost.tryMoving();
+        creature.setPercentageSpeed(relSpeed);
+        creature.tryMoving();
+    }
+
+    private byte frightenedSpeed(Ghost ghost) {
+        return world().isTunnel(ghost.tile()) ? data.ghostSpeedTunnelPercentage() : data.ghostSpeedFrightenedPercentage();
     }
 
     private static Direction pseudoRandomDirection() {

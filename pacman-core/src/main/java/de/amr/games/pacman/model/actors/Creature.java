@@ -300,6 +300,13 @@ public abstract class Creature extends Entity {
         return moveResult.tunnelLeft;
     }
 
+    public void followTarget(Vector2i targetTile, byte relSpeed) {
+        setPercentageSpeed(relSpeed);
+        setTargetTile(targetTile);
+        navigateTowardsTarget();
+        tryMoving();
+    }
+
     /**
      * Tries moving through the game world.
      * <p>
