@@ -180,7 +180,7 @@ public class GameLevel {
         private boolean globalCounterEnabled = false;
 
         private GhostHouseControl(int levelNumber) {
-            pacStarvingLimitTicks = (short) (levelNumber < 5 ? 240 : 180);
+            pacStarvingLimitTicks = (short) (levelNumber < 5 ? 240 : 180); // 4 sec : 3 sec
         }
 
         private byte privateDotLimit(int levelNumber, Ghost ghost) {
@@ -467,10 +467,6 @@ public class GameLevel {
         return eventLog;
     }
 
-    public GhostHouseControl houseData() {
-        return houseData;
-    }
-
     /**
      * @return Blinky's "cruise elroy" state. Values: <code>0, 1, 2, -1, -2</code>. (0=off, negative=disabled).
      */
@@ -536,6 +532,13 @@ public class GameLevel {
      */
     public int huntingPhaseIndex() {
         return huntingPhaseIndex;
+    }
+
+    public void letPacDie() {
+        stopHuntingPhase();
+        houseData.resetGlobalCounterAndSetEnabled(true);
+        enableCruiseElroyState(false);
+        pac.die();
     }
 
     /**

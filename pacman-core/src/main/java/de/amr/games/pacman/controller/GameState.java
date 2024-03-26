@@ -251,12 +251,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.restartSeconds(4);
             enablePacSteering(false);
-            game.level().ifPresent(level -> {
-                level.stopHuntingPhase();
-                level.houseData().resetGlobalCounterAndSetEnabled(true);
-                level.enableCruiseElroyState(false);
-                level.pac().die();
-            });
+            game.level().ifPresent(GameLevel::letPacDie);
         }
 
         @Override
