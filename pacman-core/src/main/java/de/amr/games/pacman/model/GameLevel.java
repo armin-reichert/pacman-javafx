@@ -34,56 +34,6 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public class GameLevel {
 
-    public static class EventLog {
-        public Vector2i foundFoodAtTile = null;
-        public boolean energizerFound = false;
-        public int bonusIndex = -1;
-        public boolean bonusEaten = false;
-        public boolean pacGetsPower = false;
-        public boolean pacStartsLosingPower = false;
-        public boolean pacLostPower = false;
-        public boolean pacDied = false;
-        public Ghost unlockedGhost;
-        public final List<Ghost> killedGhosts = new ArrayList<>(4);
-
-        public void report() {
-            List<String> news = new ArrayList<>();
-            if (energizerFound) {
-                news.add("Energizer found at " + foundFoodAtTile);
-            }
-            if (bonusIndex != -1) {
-                news.add("Bonus reached, index=" + bonusIndex);
-            }
-            if (bonusEaten) {
-                news.add("Bonus eaten");
-            }
-            if (pacGetsPower) {
-                news.add("Pac gained power");
-            }
-            if (pacStartsLosingPower) {
-                news.add("Pac starts losing power");
-            }
-            if (pacLostPower) {
-                news.add("Pac lost power");
-            }
-            if (pacDied) {
-                news.add("Pac died");
-            }
-            if (unlockedGhost != null) {
-                news.add("Unlocked " + unlockedGhost.name());
-            }
-            if (!killedGhosts.isEmpty()) {
-                news.add("Ghosts killed: " + killedGhosts.stream().map(Ghost::name).toList());
-            }
-            if (!news.isEmpty()) {
-                Logger.info("Latest News:");
-                for (var msg : news) {
-                    Logger.info("- " + msg);
-                }
-            }
-        }
-    }
-
     public record GhostUnlockInfo(Ghost ghost, String reason) {
         public GhostUnlockInfo(Ghost ghost, String reason, Object... args) {
             this(ghost, String.format(reason, args));
@@ -98,13 +48,13 @@ public class GameLevel {
     private final World world;
     private final Pac pac;
     private final Ghost[] ghosts;
-    private final GhostHouseControl houseData;
+    private final GhostHouseControl houseControl;
     private byte huntingPhaseIndex;
     private byte numGhostsKilledInLevel;
     private byte numGhostsKilledByEnergizer;
     private byte cruiseElroyState;
     private Steering autopilot;
-    private EventLog eventLog;
+    private HuntingStepEventLog eventLog;
     private int bonusReachedIndex; // -1=no bonus, 0=first, 1=second
 
     public GameLevel(int levelNumber, GameLevelData levelData, GameModel game, World world, boolean demoLevel) {
@@ -119,8 +69,8 @@ public class GameLevel {
         this.data = levelData;
         this.demoLevel = demoLevel;
 
-        houseData = new GhostHouseControl(levelNumber);
-        eventLog = new EventLog();
+        houseControl = new GhostHouseControl(levelNumber);
+        eventLog = new HuntingStepEventLog();
         bonusReachedIndex = -1;
 
         pac = new Pac(game.variant() == GameVariant.MS_PACMAN ? "Ms. Pac-Man" : "Pac-Man");
@@ -300,7 +250,7 @@ public class GameLevel {
     /**
      * @return information about what happened during the current (hunting) frame
      */
-    public EventLog eventLog() {
+    public HuntingStepEventLog eventLog() {
         return eventLog;
     }
 
@@ -373,7 +323,7 @@ public class GameLevel {
 
     public void letPacDie() {
         stopHuntingPhase();
-        houseData.resetGlobalCounterAndSetEnabled(true);
+        houseControl.resetGlobalCounterAndSetEnabled(true);
         enableCruiseElroyState(false);
         pac.die();
     }
@@ -534,7 +484,7 @@ public class GameLevel {
                 pac.eatPellet();
                 scorePoints(GameModel.POINTS_NORMAL_PELLET);
             }
-            houseData.updateDotCount(this);
+            houseControl.updateDotCount(this);
             world.removeFood(pacTile);
             if (world.uneatenFoodCount() == data.elroy1DotsLeft()) {
                 setCruiseElroyState(1);
@@ -590,7 +540,7 @@ public class GameLevel {
     }
 
     private void updateGhosts() {
-        houseData.unlockGhost(this).ifPresent(unlocked -> {
+        houseControl.unlockGhost(this).ifPresent(unlocked -> {
             var ghost = unlocked.ghost();
             Logger.info("{} unlocked: {}", ghost.name(), unlocked.reason);
             if (ghost.insideHouse(world.house())) {
@@ -609,7 +559,7 @@ public class GameLevel {
     }
 
     public GameState doHuntingStep() {
-        eventLog = new EventLog();
+        eventLog = new HuntingStepEventLog();
         pac.update(this);
         updateGhosts();
         updateFood();
