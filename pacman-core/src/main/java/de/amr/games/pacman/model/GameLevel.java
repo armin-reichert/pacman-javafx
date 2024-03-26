@@ -550,19 +550,23 @@ public class GameLevel {
         ghosts().forEach(ghost -> ghost.update(pac));
     }
 
+    private void checkIfBonusReached() {
+        if (eventLog.foundFoodAtTile != null && isBonusReached()) {
+            onBonusReached(++bonusReachedIndex);
+            eventLog.bonusIndex = bonusReachedIndex;
+        }
+    }
+
     public GameState doHuntingStep() {
         eventLog = new HuntingStepEventLog();
         pac.update(this);
         updateGhosts();
         updateFood();
-        if (eventLog.foundFoodAtTile != null && isBonusReached()) {
-            onBonusReached(++bonusReachedIndex);
-            eventLog.bonusIndex = bonusReachedIndex;
-        }
+        checkIfBonusReached();
         updatePacPower();
         updateBonus();
         updateHuntingTimer();
-
+        // what next?
         if (world.uneatenFoodCount() == 0) {
             return GameState.LEVEL_COMPLETE;
         }
@@ -626,7 +630,6 @@ public class GameLevel {
     public void killGhosts(List<Ghost> prey) {
         if (!prey.isEmpty()) {
             prey.forEach(this::killGhost);
-            numGhostsKilledInLevel += (byte) prey.size();
             if (numGhostsKilledInLevel == 16) {
                 int points = GameModel.POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
                 scorePoints(points);
@@ -641,6 +644,7 @@ public class GameLevel {
         int points = game.pointsForKillingGhost(numGhostsKilledByEnergizer);
         scorePoints(points);
         eventLog.killedGhosts.add(ghost);
+        numGhostsKilledInLevel += 1;
         numGhostsKilledByEnergizer += 1;
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }

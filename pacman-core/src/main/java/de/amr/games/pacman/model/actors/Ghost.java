@@ -200,12 +200,16 @@ public class Ghost extends Creature implements AnimationDirector {
      */
     public void setState(GhostState state) {
         checkNotNull(state);
+        if (this.state == state) {
+            Logger.info("{} is already in state {}", name(), state);
+        }
         this.state = state;
         switch (state) {
-            case LOCKED, HUNTING_PAC, LEAVING_HOUSE -> selectAnimation(ANIM_GHOST_NORMAL);
-            case EATEN -> selectAnimation(ANIM_GHOST_NUMBER, killedIndex);
-            case RETURNING_TO_HOUSE, ENTERING_HOUSE -> selectAnimation(ANIM_GHOST_EYES);
+            case LOCKED, HUNTING_PAC -> selectAnimation(ANIM_GHOST_NORMAL);
+            case EATEN -> selectAnimation(ANIM_GHOST_NUMBER);
+            case ENTERING_HOUSE, RETURNING_TO_HOUSE -> selectAnimation(ANIM_GHOST_EYES);
             case FRIGHTENED -> selectAnimation(ANIM_GHOST_FRIGHTENED);
+            default -> {}
         }
     }
 
@@ -247,7 +251,7 @@ public class Ghost extends Creature implements AnimationDirector {
         } else {
             setSpeed(0);
         }
-        if (killable(pac)) {
+        if (pac.powerTimer().isRunning()) {
             updateFrightenedAnimation(pac);
         } else {
             selectAnimation(ANIM_GHOST_NORMAL);
@@ -270,7 +274,7 @@ public class Ghost extends Creature implements AnimationDirector {
             setPosition(houseEntryPosition);
             setMoveAndWishDir(LEFT);
             newTileEntered = false; // force moving left until new tile is entered
-            if (killable(pac)) {
+            if (pac.powerTimer().isRunning() && killedIndex == -1) {
                 setState(FRIGHTENED);
             } else {
                 killedIndex = -1; // TODO check this
@@ -291,11 +295,6 @@ public class Ghost extends Creature implements AnimationDirector {
         }
         setSpeed(speedInsideHouse);
         move();
-        if (killable(pac)) {
-            updateFrightenedAnimation(pac);
-        } else {
-            selectAnimation(ANIM_GHOST_NORMAL);
-        }
     }
 
     // --- HUNTING_PAC ---
@@ -331,10 +330,6 @@ public class Ghost extends Creature implements AnimationDirector {
         } else if (!pac.isPowerFading()) {
             selectAnimation(ANIM_GHOST_FRIGHTENED);
         }
-    }
-
-    public boolean killable(Pac pac) {
-        return pac.powerTimer().isRunning() && killedIndex == -1;
     }
 
     // --- EATEN ---

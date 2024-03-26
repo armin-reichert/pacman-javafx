@@ -163,7 +163,7 @@ public class Ghost3D extends Group {
 
     private Look computeLook() {
         return switch (ghost.state()) {
-            case LOCKED, LEAVING_HOUSE -> ghost.killable(pac) ? frightenedOrFlashingLook() : Look.NORMAL;
+            case LOCKED, LEAVING_HOUSE -> pac.powerTimer().isRunning()? frightenedOrFlashingLook() : Look.NORMAL;
             case FRIGHTENED -> frightenedOrFlashingLook();
             case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
             case EATEN -> Look.NUMBER;

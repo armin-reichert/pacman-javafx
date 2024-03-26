@@ -12,7 +12,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGamePacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 
 /**
