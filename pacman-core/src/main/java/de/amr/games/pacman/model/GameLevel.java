@@ -92,11 +92,11 @@ public class GameLevel {
 
     /**
       * From the Pac-Man dossier:
-      *  <p></p>
+      *  <p>
       *  Commonly referred to as the ghost house or monster pen, this cordoned-off area in the center of the maze is the
       *  domain of the four ghosts and off-limits to Pac-Man.
-      * 
-      *  <p></p>
+      * </p>
+      *  <p>
       *  Whenever a level is completed or a life is lost, the ghosts are returned to their starting positions in and around
       *  the ghost house before play continues—Blinky is always located just above and outside, while the other three are
       *  placed inside: Inky on the left, Pinky in the middle, and Clyde on the right.
@@ -108,8 +108,8 @@ public class GameLevel {
       *  other three ghosts leave home is an involved process based on several variables and conditions.
       *  The rest of this section will deal with them exclusively. Accordingly, any mention of “the ghosts” below refers t
       *  o Pinky, Inky, and Clyde, but not Blinky.
-      * 
-      *  <p></p>
+      *  </p>
+      *  <p>
       *  The first control used to evaluate when the ghosts leave home is a personal counter each ghost retains for
       *  tracking the number of dots Pac-Man eats. Each ghost's “dot counter” is reset to zero when a level begins and can
       *  only be active when inside the ghost house, but only one ghost's counter can be active at any given time regardless
@@ -119,8 +119,8 @@ public class GameLevel {
       *  If the preferred ghost reaches or exceeds his dot limit, it immediately exits the house and its dot counter is
       *  deactivated (but not reset). The most-preferred ghost still waiting inside the house (if any) activates its timer
       *  at this point and begins counting dots.
-      * 
-      *  <p></p>
+      *  </p>
+      *  <p>
       *  Pinky's dot limit is always set to zero, causing him to leave home immediately when every level begins.
       *  For the first level, Inky has a limit of 30 dots, and Clyde has a limit of 60. This results in Pinky exiting
       *  immediately which, in turn, activates Inky's dot counter. His counter must then reach or exceed 30 dots before
@@ -129,8 +129,8 @@ public class GameLevel {
       *  is changed from 30 to zero, while Clyde's is changed from 60 to 50. Inky will exit the house as soon as the level
       *  begins from now on. Starting at level three, all the ghosts have a dot limit of zero for the remainder of the game
       *  and will leave the ghost house immediately at the start of every level.
-      * 
-      *  <p></p>
+      *  </p>
+      *  <p>
       *  Whenever a life is lost, the system disables (but does not reset) the ghosts' individual dot counters and uses
       *  a global dot counter instead. This counter is enabled and reset to zero after a life is lost, counting the number
       *  of dots eaten from that point forward. The three ghosts inside the house must wait for this special counter to
@@ -140,8 +140,8 @@ public class GameLevel {
       *  appropriate time, the global counter is reset to zero and deactivated, and the ghosts' personal dot limits are
       *  re-enabled and used as before for determining when to leave the house (including Clyde who is still in the house
       *  at this time).
-      * 
-      *  <p></p>
+      *  </p>
+      *  <p>
       *  If dot counters were the only control, Pac-Man could simply stop eating dots early on and keep the ghosts
       *  trapped inside the house forever. Consequently, a separate timer control was implemented to handle this case by
       *  tracking the amount of time elapsed since Pac-Man has last eaten a dot. This timer is always running but gets
@@ -150,8 +150,8 @@ public class GameLevel {
       *  the timer is reset to zero. The same order of preference described above is used by this control as well.
       *  The game begins with an initial timer limit of four seconds, but lowers to it to three seconds starting with
       *  level five.
-      * 
-      *  <p></p>
+      *  </p>
+      *  <p>
       *  The more astute reader may have already noticed there is subtle flaw in this system resulting in a way to
       *  keep Pinky, Inky, and Clyde inside the ghost house for a very long time after eating them.
       *  The trick involves having to sacrifice a life in order to reset and enable the global dot counter,
@@ -169,6 +169,7 @@ public class GameLevel {
       *  once those numbers are exceeded, the counter has no way to release the ghosts associated with them.
       *  The only control left to release the ghosts is the timer which can be easily avoided by eating a dot every
       *  so often to reset it.
+      *  </p>
       *  </pre>
       */
     public static class GhostHouseControl {
