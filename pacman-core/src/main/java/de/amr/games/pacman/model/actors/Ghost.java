@@ -28,15 +28,15 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public class Ghost extends Creature implements AnimationDirector {
 
-    public static final String ANIM_GHOST_NORMAL = "normal";
+    public static final String ANIM_GHOST_NORMAL     = "normal";
     public static final String ANIM_GHOST_FRIGHTENED = "frightened";
-    public static final String ANIM_GHOST_EYES = "eyes";
-    public static final String ANIM_GHOST_FLASHING = "flashing";
-    public static final String ANIM_GHOST_NUMBER = "number";
-    public static final String ANIM_BLINKY_DAMAGED = "damaged";
+    public static final String ANIM_GHOST_EYES       = "eyes";
+    public static final String ANIM_GHOST_FLASHING   = "flashing";
+    public static final String ANIM_GHOST_NUMBER     = "number";
+    public static final String ANIM_BLINKY_DAMAGED   = "damaged";
     public static final String ANIM_BLINKY_STRETCHED = "stretched";
-    public static final String ANIM_BLINKY_PATCHED = "patched";
-    public static final String ANIM_BLINKY_NAKED = "naked";
+    public static final String ANIM_BLINKY_PATCHED   = "patched";
+    public static final String ANIM_BLINKY_NAKED     = "naked";
 
     private final byte id;
     private GhostState state;
@@ -49,6 +49,11 @@ public class Ghost extends Creature implements AnimationDirector {
     private Animations animations;
     private Map<Vector2i, List<Direction>> forbiddenMoves = Collections.emptyMap();
 
+    /**
+     * @param id  The ghost ID. One of {@link GameModel#RED_GHOST}, {@link GameModel#PINK_GHOST}, {@link GameModel#CYAN_GHOST},
+     * {@link GameModel#ORANGE_GHOST}.
+     * @param name the ghost's readable name e.g. "Pinky"
+     */
     public Ghost(byte id, String name) {
         super(name);
         checkGhostID(id);
@@ -64,10 +69,6 @@ public class Ghost extends Creature implements AnimationDirector {
             '}';
     }
 
-    /**
-     * The ghost ID. One of {@link GameModel#RED_GHOST}, {@link GameModel#PINK_GHOST}, {@link GameModel#CYAN_GHOST},
-     * {@link GameModel#ORANGE_GHOST}.
-     */
     public byte id() {
         return id;
     }
@@ -90,31 +91,31 @@ public class Ghost extends Creature implements AnimationDirector {
         return house.contains(tile());
     }
 
-    public void setRevivalPosition(Vector2f revivalPosition) {
-        checkNotNull(revivalPosition);
-        this.revivalPosition = revivalPosition;
+    public void setRevivalPosition(Vector2f position) {
+        checkNotNull(position);
+        revivalPosition = position;
     }
 
     public void setSpeedReturningToHouse(float pixelsPerTick) {
-        this.speedReturningToHouse = pixelsPerTick;
+        speedReturningToHouse = pixelsPerTick;
     }
 
     public void setSpeedInsideHouse(float pixelsPerTick) {
-        this.speedInsideHouse = pixelsPerTick;
+        speedInsideHouse = pixelsPerTick;
     }
 
-    public void setForbiddenMoves(Map<Vector2i, List<Direction>> forbiddenMoves) {
-        this.forbiddenMoves = forbiddenMoves;
+    public void setForbiddenMoves(Map<Vector2i, List<Direction>> moves) {
+        forbiddenMoves = moves;
     }
 
-    public void setFnHuntingBehavior(Consumer<Ghost> fnHuntingBehavior) {
-        checkNotNull(fnHuntingBehavior);
-        this.fnHuntingBehavior = fnHuntingBehavior;
+    public void setFnHuntingBehavior(Consumer<Ghost> function) {
+        checkNotNull(function);
+        fnHuntingBehavior = function;
     }
 
-    public void setFnFrightenedBehavior(Consumer<Ghost> fnFrightenedBehavior) {
-        checkNotNull(fnFrightenedBehavior);
-        this.fnFrightenedBehavior = fnFrightenedBehavior;
+    public void setFnFrightenedBehavior(Consumer<Ghost> function) {
+        checkNotNull(function);
+        fnFrightenedBehavior = function;
     }
 
     @Override
@@ -125,15 +126,14 @@ public class Ghost extends Creature implements AnimationDirector {
         if (state == HUNTING_PAC) {
             var currentTile = tile();
             if (forbiddenMoves.containsKey(currentTile)) {
-                for (Direction forbiddenDir : forbiddenMoves.get(currentTile)) {
-                    if (currentTile.plus(forbiddenDir.vector()).equals(tile)) {
-                        Logger.trace("Hunting {} cannot move {} at {}", name(), forbiddenDir, currentTile);
+                for (Direction dir : forbiddenMoves.get(currentTile)) {
+                    if (currentTile.plus(dir.vector()).equals(tile)) {
+                        Logger.trace("Hunting {} cannot move {} at {}", name(), dir, currentTile);
                         return false;
                     }
                 }
             }
         }
-
         if (house.door().occupies(tile)) {
             return is(ENTERING_HOUSE, LEAVING_HOUSE);
         }
@@ -145,7 +145,7 @@ public class Ghost extends Creature implements AnimationDirector {
 
     @Override
     public boolean canReverse() {
-        return isNewTileEntered() && is(HUNTING_PAC, FRIGHTENED);
+        return newTileEntered && is(HUNTING_PAC, FRIGHTENED);
     }
 
     // Here begins the state machine part
@@ -163,11 +163,10 @@ public class Ghost extends Creature implements AnimationDirector {
      * <code>false</code>
      */
     public boolean is(GhostState... alternatives) {
-        if (state != null) {
-            return oneOf(state, alternatives);
+        if (state == null) {
+            throw new IllegalStateException("Ghost state is not defined");
         }
-        Logger.error("Cannot check ghost state because it is undefined");
-        return false;
+        return oneOf(state, alternatives);
     }
 
     /**
