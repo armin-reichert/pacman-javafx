@@ -98,8 +98,9 @@ import static de.amr.games.pacman.model.actors.GhostState.LOCKED;
  * @author Armin Reichert
  */
 public class GhostHouseControl {
+    private static final byte UNLIMITED = -1;
     private final short pacStarvingLimitTicks;
-    private final byte[] globalLimits = {-1, 7, 17, -1};
+    private final byte[] globalLimits = {UNLIMITED, 7, 17, UNLIMITED};
     private final int[] counters = {0, 0, 0, 0};
     private int globalCounter = 0;
     private boolean globalCounterEnabled = false;
@@ -142,35 +143,27 @@ public class GhostHouseControl {
     }
 
     public Optional<GhostUnlockInfo> unlockGhost(GameLevel level) {
-        Ghost candidate = Stream.of(RED_GHOST, PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
-            .map(level::ghost)
-            .filter(ghost -> ghost.is(LOCKED))
-            .findFirst()
-            .orElse(null);
-
+        if (level.ghost(RED_GHOST).is(LOCKED)) {
+            return Optional.of(new GhostUnlockInfo(level.ghost(RED_GHOST), "Gets unlocked immediately"));
+        }
+        Ghost candidate = Stream.of(PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
+            .map(level::ghost).filter(ghost -> ghost.is(LOCKED)).findFirst().orElse(null);
         if (candidate == null) {
             return Optional.empty();
         }
-        // Blinky always gets unlocked immediately
-        if (candidate.id() == RED_GHOST) {
-            return Optional.of(new GhostUnlockInfo(candidate, "Red ghost gets unlocked immediately"));
-        }
         // check private dot counter first (if enabled)
-        if (!globalCounterEnabled
-            && counters[candidate.id()] >= privateDotLimit(level.number(), candidate)) {
+        if (!globalCounterEnabled && counters[candidate.id()] >= privateDotLimit(level.number(), candidate)) {
             return Optional.of(new GhostUnlockInfo(candidate,
                 "Private dot counter at limit (%d)", privateDotLimit(level.number(), candidate)));
         }
         // check global dot counter
-        var globalDotLimit = globalLimits[candidate.id()] == -1
-            ? Integer.MAX_VALUE : globalLimits[candidate.id()];
-        if (globalCounter >= globalDotLimit) {
-            return Optional.of(new GhostUnlockInfo(candidate, "Global dot counter at limit (%d)", globalDotLimit));
+        if (globalLimits[candidate.id()] != UNLIMITED && globalCounter >= globalLimits[candidate.id()]) {
+            return Optional.of(new GhostUnlockInfo(candidate,
+            "Global dot counter at limit (%d)", globalLimits[candidate.id()]));
         }
         // check Pac-Man starving time
         if (level.pac().starvingTicks() >= pacStarvingLimitTicks) {
-            level.pac().endStarving(); // TODO change pac state here?
-            Logger.trace("Pac-Man starving timer reset to 0");
+            level.pac().endStarving();
             return Optional.of(new GhostUnlockInfo(candidate,
                 "%s reached starving limit (%d ticks)", level.pac().name(), pacStarvingLimitTicks));
         }

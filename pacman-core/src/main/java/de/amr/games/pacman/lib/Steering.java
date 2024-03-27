@@ -29,6 +29,6 @@ public abstract class Steering {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        Logger.info("Steering ({})) {}", getClass().getSimpleName(), enabled ? "enabled" : "disabled");
+        Logger.trace("Steering ({})) {}", getClass().getSimpleName(), enabled ? "enabled" : "disabled");
     }
 }
