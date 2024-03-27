@@ -111,7 +111,7 @@ public class Pac extends Creature implements AnimationDirector {
                 : level.data().pacSpeedPercentage());
             level.pacSteering().ifPresent(steering -> steering.steer(level));
             tryMoving();
-            if (moved()) {
+            if (hasMoved()) {
                 startAnimation();
             } else {
                 stopAnimation();
@@ -205,7 +205,7 @@ public class Pac extends Creature implements AnimationDirector {
     }
 
     public boolean isStandingStill() {
-        return velocity().length() == 0 || !moved() || restingTicks == REST_INDEFINITE;
+        return velocity().length() == 0 || !hasMoved() || restingTicks == REST_INDEFINITE;
     }
 
     public Optional<Steering> steering() {

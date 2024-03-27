@@ -196,13 +196,13 @@ public class Ghost extends Creature implements AnimationDirector {
     public void update(Pac pac) {
         checkNotNull(pac);
         switch (state) {
-            case LOCKED -> updateStateLocked(pac);
-            case LEAVING_HOUSE -> updateStateLeavingHouse(pac);
-            case HUNTING_PAC -> updateStateHuntingPac();
-            case FRIGHTENED -> updateStateFrightened(pac);
-            case EATEN -> updateStateEaten(pac);
+            case LOCKED             -> updateStateLocked(pac);
+            case LEAVING_HOUSE      -> updateStateLeavingHouse(pac);
+            case HUNTING_PAC        -> updateStateHuntingPac();
+            case FRIGHTENED         -> updateStateFrightened(pac);
+            case EATEN              -> updateStateEaten(pac);
             case RETURNING_TO_HOUSE -> updateStateReturningToHouse();
-            case ENTERING_HOUSE -> updateStateEnteringHouse();
+            case ENTERING_HOUSE     -> updateStateEnteringHouse();
         }
     }
 

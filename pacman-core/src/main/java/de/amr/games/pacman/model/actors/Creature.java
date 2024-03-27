@@ -38,14 +38,14 @@ public abstract class Creature extends Entity {
     protected boolean canTeleport;
     protected float corneringSpeedUp;
 
+    /**
+     *  @param name Readable name, for display and logging purposes.
+     */
     protected Creature(String name) {
         checkNotNull(name, "Name of creature must not be null");
         this.name = name;
     }
 
-    /**
-     * Readable name, for display and logging purposes.
-     */
     public String name() {
         return name;
     }
@@ -63,8 +63,8 @@ public abstract class Creature extends Entity {
         canTeleport = true;
     }
 
-    public void setBaseSpeed(float baseSpeed) {
-        this.baseSpeed = baseSpeed;
+    public void setBaseSpeed(float pixelsPerTick) {
+        baseSpeed = pixelsPerTick;
     }
 
     public World world() {
@@ -72,6 +72,7 @@ public abstract class Creature extends Entity {
     }
 
     public void setWorld(World world) {
+        checkNotNull(world);
         this.world = world;
     }
 
@@ -149,19 +150,6 @@ public abstract class Creature extends Entity {
      */
     public void centerOverTile(Vector2i tile) {
         placeAtTile(tile, 0, 0);
-    }
-
-    /**
-     * Simulates the overflow bug from the original Arcade version.
-     *
-     * @param numTiles number of tiles
-     * @return the tile located the given number of tiles in front of the creature (towards move direction). In case
-     * creature looks up, additional n tiles are added towards left. This simulates an overflow error in the
-     * original Arcade game.
-     */
-    public Vector2i tilesAheadBuggy(int numTiles) {
-        Vector2i ahead = tile().plus(moveDir.vector().scaled(numTiles));
-        return moveDir == Direction.UP ? ahead.minus(numTiles, 0) : ahead;
     }
 
     /**
@@ -255,7 +243,7 @@ public abstract class Creature extends Entity {
         if (targetTile == null) {
             return;
         }
-        if (!newTileEntered && moved()) {
+        if (!newTileEntered && hasMoved()) {
             return; // we don't need no navigation, dim dit diddit diddit dim dit diddit diddit...
         }
         if (world().belongsToPortal(tile())) {
@@ -284,30 +272,19 @@ public abstract class Creature extends Entity {
         return Optional.ofNullable(targetDir);
     }
 
-    public void roam(World world, byte relSpeed, Direction dir) {
-        if (!world.belongsToPortal(tile()) && (isNewTileEntered() || !moved())) {
-            while (dir == moveDir().opposite() || !canAccessTile(tile().plus(dir.vector()))) {
-                dir = dir.nextClockwise();
-            }
-            setWishDir(dir);
-        }
-        setPercentageSpeed(relSpeed);
-        tryMoving();
-    }
-
-    public boolean moved() {
+    public boolean hasMoved() {
         return moveResult.moved;
     }
 
-    public boolean teleported() {
+    public boolean hasTeleported() {
         return moveResult.teleported;
     }
 
-    public boolean enteredTunnel() {
+    public boolean hasEnteredTunnel() {
         return moveResult.tunnelEntered;
     }
 
-    public boolean leftTunnel() {
+    public boolean hasLeftTunnel() {
         return moveResult.tunnelLeft;
     }
 
@@ -315,6 +292,17 @@ public abstract class Creature extends Entity {
         setPercentageSpeed(relSpeed);
         setTargetTile(targetTile);
         navigateTowardsTarget();
+        tryMoving();
+    }
+
+    public void roam(World world, byte relSpeed, Direction dir) {
+        if (!world.belongsToPortal(tile()) && (isNewTileEntered() || !hasMoved())) {
+            while (dir == moveDir().opposite() || !canAccessTile(tile().plus(dir.vector()))) {
+                dir = dir.nextClockwise();
+            }
+            setWishDir(dir);
+        }
+        setPercentageSpeed(relSpeed);
         tryMoving();
     }
 
@@ -326,9 +314,9 @@ public abstract class Creature extends Entity {
      */
     public void tryMoving() {
         moveResult.clear();
-        tryTeleport(world().portals());
+        tryTeleport(world.portals());
         if (!moveResult.teleported) {
-            checkReverseCommand();
+            executeReverseCommand();
             tryMoving(wishDir);
             if (moveResult.moved) {
                 setMoveDir(wishDir);
@@ -341,7 +329,7 @@ public abstract class Creature extends Entity {
         }
     }
 
-    private void checkReverseCommand() {
+    private void executeReverseCommand() {
         if (gotReverseCommand && canReverse()) {
             setWishDir(moveDir.opposite());
             gotReverseCommand = false;
@@ -428,10 +416,10 @@ public abstract class Creature extends Entity {
         moveResult.addMessage(String.format("%5s (%.2f pixels)", dir, newVelocity.length()));
 
         if (moveResult.tunnelEntered) {
-            Logger.trace("Tunnel entered by {}", name());
+            Logger.trace("{} entered tunnel", name);
         }
         if (moveResult.tunnelLeft) {
-            Logger.trace("Tunnel left by {}", name());
+            Logger.trace("{} left tunnel", name);
         }
     }
 }
