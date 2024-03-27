@@ -424,9 +424,6 @@ public class GameLevel {
     /* --- Here comes the main logic of the game. --- */
 
     private void scorePoints(int points) {
-        if (points < 0) {
-            throw new IllegalArgumentException("Cannot score negative value: " + points);
-        }
         if (demoLevel) {
             return;
         }
@@ -451,9 +448,8 @@ public class GameLevel {
             if (world.isEnergizerTile(pacTile)) {
                 eventLog.energizerFound = true;
                 pac.eatEnergizer();
-                int points = GameModel.POINTS_ENERGIZER;
-                scorePoints(points);
-                Logger.info("Scored {} points for eating energizer", points);
+                scorePoints(GameModel.POINTS_ENERGIZER);
+                Logger.info("Scored {} points for eating energizer", GameModel.POINTS_ENERGIZER);
             } else {
                 pac.eatPellet();
                 scorePoints(GameModel.POINTS_NORMAL_PELLET);
@@ -486,7 +482,7 @@ public class GameLevel {
             pac.powerTimer().stop();
             pac.powerTimer().resetIndefinitely();
             huntingTimer.start();
-            Logger.info("Hunting timer restarted");
+            Logger.info("Hunting timer started");
             ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
             eventLog.pacLostPower = true;
             publishGameEvent(game, GameEventType.PAC_LOST_POWER);
@@ -525,7 +521,7 @@ public class GameLevel {
             }
             if (ghost.id() == ORANGE_GHOST && cruiseElroyState < 0) {
                 enableCruiseElroyState(true);
-                Logger.trace("Cruise elroy mode is re-enabled because Clyde/Sue exits house");
+                Logger.trace("Cruise elroy mode re-enabled because {} exits house", ghost.name());
             }
             eventLog.unlockedGhost = ghost;
         });
@@ -621,14 +617,12 @@ public class GameLevel {
     }
 
     private void killGhost(Ghost ghost) {
-        int points = game.pointsForKillingGhost(pac.victims().size());
-        pac.victims().add(ghost);
-        ghost.setState(EATEN);
-        ghost.selectAnimation(Ghost.ANIM_GHOST_NUMBER, pac.victims().size() - 1);
-        Logger.trace("{} NUMBER animation index {}", ghost.name(), pac.victims().size() - 1);
-        scorePoints(points);
-        eventLog.killedGhosts.add(ghost);
         totalNumGhostsKilled += 1;
+        int points = game.pointsForKillingGhost(pac.victims().size());
+        ghost.eaten(pac.victims().size());
+        pac.victims().add(ghost);
+        eventLog.killedGhosts.add(ghost);
+        scorePoints(points);
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }
 

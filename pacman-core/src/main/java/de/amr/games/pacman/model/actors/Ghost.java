@@ -207,6 +207,11 @@ public class Ghost extends Creature implements AnimationDirector {
         }
     }
 
+    public void eaten(int index) {
+        setState(EATEN);
+        selectAnimation(ANIM_GHOST_NUMBER, index);
+    }
+
     // --- LOCKED ---
 
     /**
