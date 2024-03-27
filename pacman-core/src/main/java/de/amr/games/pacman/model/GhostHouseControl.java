@@ -99,18 +99,19 @@ import static de.amr.games.pacman.model.actors.GhostState.LOCKED;
  */
 public class GhostHouseControl {
     private static final byte UNLIMITED = -1;
-    private final short pacStarvingLimitTicks;
-    private final byte[] globalLimits = {UNLIMITED, 7, 17, UNLIMITED};
-    private final int[] counters = {0, 0, 0, 0};
-    private int globalCounter = 0;
-    private boolean globalCounterEnabled = false;
 
-    GhostHouseControl(int levelNumber) {
-        pacStarvingLimitTicks = (short) (levelNumber < 5 ? 240 : 180); // 4 sec : 3 sec
+    private final byte[] globalLimits = {UNLIMITED, 7, 17, UNLIMITED};
+    private final int[]  counters = {0, 0, 0, 0};
+    private final int    pacStarvingLimitTicks;
+    private int          globalCounter = 0;
+    private boolean      globalCounterEnabled = false;
+
+    public GhostHouseControl(int levelNumber) {
+        pacStarvingLimitTicks = levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec
     }
 
     private byte privateDotLimit(int levelNumber, Ghost ghost) {
-        if (levelNumber == 1 && ghost.id() == CYAN_GHOST) return 30;
+        if (levelNumber == 1 && ghost.id() == CYAN_GHOST)   return 30;
         if (levelNumber == 1 && ghost.id() == ORANGE_GHOST) return 60;
         if (levelNumber == 2 && ghost.id() == ORANGE_GHOST) return 50;
         return 0;
@@ -119,13 +120,13 @@ public class GhostHouseControl {
     public void resetGlobalCounterAndSetEnabled(boolean enabled) {
         globalCounter = 0;
         globalCounterEnabled = enabled;
-        Logger.trace("Global dot counter reset to 0 and {}", enabled ? "enabled" : "disabled");
+        Logger.trace("Global dot counter set to 0 and {}", enabled ? "enabled" : "disabled");
     }
 
     public void updateDotCount(GameLevel level) {
         if (globalCounterEnabled) {
             if (level.ghost(ORANGE_GHOST).is(LOCKED) && globalCounter == 32) {
-                Logger.trace("{} inside house when counter reached 32", level.ghost(ORANGE_GHOST).name());
+                Logger.trace("{} inside house when global counter reached 32", level.ghost(ORANGE_GHOST).name());
                 resetGlobalCounterAndSetEnabled(false);
             } else {
                 globalCounter++;
@@ -134,8 +135,7 @@ public class GhostHouseControl {
         } else {
             level.ghosts(LOCKED)
                 .filter(ghost -> ghost.insideHouse(level.world().house()))
-                .findFirst()
-                .ifPresent(ghost -> {
+                .findFirst().ifPresent(ghost -> {
                     counters[ghost.id()]++;
                     Logger.trace("{} dot counter = {}", ghost.name(), counters[ghost.id()]);
                 });
