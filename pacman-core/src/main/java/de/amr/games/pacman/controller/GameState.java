@@ -10,10 +10,7 @@ import de.amr.games.pacman.lib.FsmState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.Creature;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.*;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -162,7 +159,7 @@ public enum GameState implements FsmState<GameModel> {
                 enablePacSteering(false);
                 level.pac().freeze();
                 level.ghosts().forEach(Ghost::hide);
-                level.deactivateBonus();
+                level.bonus().ifPresent(Bonus::setInactive);
                 level.world().mazeFlashing().reset();
                 level.stopHuntingPhase();
                 Logger.trace("Game level {} ({}) ended.", level.number(), game.variant());
@@ -281,7 +278,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onExit(GameModel context) {
-            context.level().ifPresent(GameLevel::deactivateBonus);
+            context.level().flatMap(GameLevel::bonus).ifPresent(Bonus::setInactive);
         }
     },
 

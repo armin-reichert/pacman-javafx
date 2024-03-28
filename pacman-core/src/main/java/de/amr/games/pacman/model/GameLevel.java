@@ -595,7 +595,7 @@ public class GameLevel {
             } else if (timer.atSecond(12.0)) {
                 pac.freeze();
                 ghosts().forEach(Ghost::hide);
-                deactivateBonus();
+                bonus().ifPresent(Bonus::setInactive);
                 world().mazeFlashing().reset();
                 GameController.it().createAndStartLevel(levelNumber + 1);
                 timer.restartIndefinitely();
@@ -732,17 +732,11 @@ public class GameLevel {
         return bonusSymbols[index];
     }
 
-    public void deactivateBonus() {
-        if (bonus != null) {
-            bonus.setInactive();
-        }
-    }
-
     private boolean checkPacEatsBonus(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE && pac.sameTile(bonus.entity())) {
             bonus.setEaten(GameModel.BONUS_POINTS_SHOWN_TICKS);
             scorePoints(bonus.points());
-            Logger.info("Scored {} points for eating bonus {}", bonus.points(), this);
+            Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             return true;
         }
         return false;
