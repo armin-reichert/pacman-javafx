@@ -18,7 +18,7 @@ public class CanvasLayoutPane {
     protected final StackPane layersContainer = new StackPane();
     protected final BorderPane canvasLayer = new BorderPane();
     protected final BorderPane canvasContainer = new BorderPane();
-    protected final Canvas canvas = new Canvas();
+    private final Canvas canvas = new Canvas();
 
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
 

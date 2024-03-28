@@ -38,6 +38,8 @@ public class GamePage3D extends GamePage {
               pip.setScaling(get() / CANVAS_HEIGHT_UNSCALED);
         }
     };
+
+    private final Canvas pipCanvas = new Canvas();
     private final PlayScene2D pip = new PlayScene2D();
 
     public GamePage3D(Scene parentScene, GameSceneContext sceneContext, double width, double height) {
@@ -67,11 +69,10 @@ public class GamePage3D extends GamePage {
     private void initPip() {
         final double ASPECT_RATIO = (double) CANVAS_WIDTH_UNSCALED / CANVAS_HEIGHT_UNSCALED;
         pip.setContext(sceneContext);
-        var canvas = new Canvas(42, 42);
-        canvas.heightProperty().bind(pipHeightPy);
-        canvas.widthProperty().bind(Bindings.createDoubleBinding(() -> pipHeightPy.get() * ASPECT_RATIO, pipHeightPy));
-        canvas.opacityProperty().bind(PY_PIP_OPACITY);
-        pip.setCanvas(canvas);
+        pipCanvas.heightProperty().bind(pipHeightPy);
+        pipCanvas.widthProperty().bind(Bindings.createDoubleBinding(() -> pipHeightPy.get() * ASPECT_RATIO, pipHeightPy));
+        pipCanvas.opacityProperty().bind(PY_PIP_OPACITY);
+        pip.setCanvas(pipCanvas);
         pip.setScaling(pipHeightPy.get() / CANVAS_HEIGHT_UNSCALED);
         pip.setScoreVisible(true);
     }

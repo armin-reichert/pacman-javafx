@@ -74,7 +74,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
             Keyboard.clearState();
         });
 
-        canvas.setOnMouseMoved(e -> {
+        getCanvas().setOnMouseMoved(e -> {
             double factor = getScaling() * TS;
             Vector2i tile = new Vector2i((int)(e.getX() / factor), (int)(e.getY() / factor));
             Logger.info("tile={}", tile);
@@ -108,7 +108,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
         updateHelpButton();
         rescale(getScaling(), true);
         if (newGameScene instanceof GameScene2D scene2D) {
-            scene2D.setCanvas(canvas);
+            scene2D.setCanvas(getCanvas());
             scene2D.clearCanvas();
         }
     }
