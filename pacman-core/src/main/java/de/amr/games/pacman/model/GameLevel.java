@@ -41,6 +41,8 @@ public class GameLevel {
     private final Pac pac;
     private final Ghost[] ghosts;
     private final GhostHouseControl houseControl;
+    private final byte[] bonusSymbols = new byte[2];
+    private Bonus bonus;
     private byte huntingPhaseIndex;
     private byte totalNumGhostsKilled;
     private byte cruiseElroyState;
@@ -98,7 +100,6 @@ public class GameLevel {
             }
         }
 
-        bonusSymbols = new byte[2];
         bonusSymbols[0] = nextBonusSymbol();
         bonusSymbols[1] = nextBonusSymbol();
 
@@ -626,40 +627,25 @@ public class GameLevel {
 
     // Bonus Management
 
-    private final byte[] bonusSymbols;
-    private Bonus bonus;
-
-    private byte nextBonusSymbol() {
-        return switch (game.variant()) {
-            case MS_PACMAN -> nextMsPacManBonusSymbol();
-            // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
-            case PACMAN -> switch (levelNumber) {
-                case 1 ->      GameModel.PACMAN_CHERRIES;
-                case 2 ->      GameModel.PACMAN_STRAWBERRY;
-                case 3, 4 ->   GameModel.PACMAN_PEACH;
-                case 5, 6 ->   GameModel.PACMAN_APPLE;
-                case 7, 8 ->   GameModel.PACMAN_GRAPES;
-                case 9, 10 ->  GameModel.PACMAN_GALAXIAN;
-                case 11, 12 -> GameModel.PACMAN_BELL;
-                default ->     GameModel.PACMAN_KEY;
-            };
-        };
-    }
-
     /**
-     * (Got this info from Reddit user <b>damselindis</b>, see
-     * <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>)
-     * <p>
-     * <cite>
+     * <p>Got this information from
+     * <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>:
+     * </p>
+     * <p><em>
      * The exact fruit mechanics are as follows: After 64 dots are consumed, the game spawns the first fruit of the level.
      * After 176 dots are consumed, the game attempts to spawn the second fruit of the level. If the first fruit is still
      * present in the level when (or eaten very shortly before) the 176th dot is consumed, the second fruit will not
-     * spawn. Dying while a fruit is on screen causes it to immediately disappear and never return.
+     * spawn.</em></p>
+     *
+     * <p><b>Dying while a fruit is on screen causes it to immediately disappear and never return.
+     * (TODO: what does never mean here? For the rest of the game?)</b></p>
+     *
+     * <p><em>
      * The type of fruit is determined by the level count - levels 1-7 will always have two cherries, two strawberries,
      * etc. until two bananas on level 7. On level 8 and beyond, the fruit type is randomly selected using the weights in
      * the following table:
-     * </cite>
-     * </p>
+     * </em></p>
+     *
      * <table>
      * <tr>
      *   <th>Cherry</th>
@@ -681,25 +667,38 @@ public class GameLevel {
      * </tr>
      * </table>
      */
-    private byte nextMsPacManBonusSymbol() {
-        return switch (levelNumber) {
-            case 1 -> GameModel.MS_PACMAN_CHERRIES;
-            case 2 -> GameModel.MS_PACMAN_STRAWBERRY;
-            case 3 -> GameModel.MS_PACMAN_ORANGE;
-            case 4 -> GameModel.MS_PACMAN_PRETZEL;
-            case 5 -> GameModel.MS_PACMAN_APPLE;
-            case 6 -> GameModel.MS_PACMAN_PEAR;
-            case 7 -> GameModel.MS_PACMAN_BANANA;
-            default -> {
-                int random = randomInt(0, 320);
-                if (random <  50) yield GameModel.MS_PACMAN_CHERRIES;
-                if (random < 100) yield GameModel.MS_PACMAN_STRAWBERRY;
-                if (random < 150) yield GameModel.MS_PACMAN_ORANGE;
-                if (random < 200) yield GameModel.MS_PACMAN_PRETZEL;
-                if (random < 240) yield GameModel.MS_PACMAN_APPLE;
-                if (random < 280) yield GameModel.MS_PACMAN_PEAR;
-                yield GameModel.MS_PACMAN_BANANA;
-            }
+    private byte nextBonusSymbol() {
+        return switch (game.variant()) {
+            case MS_PACMAN -> switch (levelNumber) {
+                case 1 -> GameModel.MS_PACMAN_CHERRIES;
+                case 2 -> GameModel.MS_PACMAN_STRAWBERRY;
+                case 3 -> GameModel.MS_PACMAN_ORANGE;
+                case 4 -> GameModel.MS_PACMAN_PRETZEL;
+                case 5 -> GameModel.MS_PACMAN_APPLE;
+                case 6 -> GameModel.MS_PACMAN_PEAR;
+                case 7 -> GameModel.MS_PACMAN_BANANA;
+                default -> {
+                    int random = randomInt(0, 320);
+                    if (random <  50) yield GameModel.MS_PACMAN_CHERRIES;
+                    if (random < 100) yield GameModel.MS_PACMAN_STRAWBERRY;
+                    if (random < 150) yield GameModel.MS_PACMAN_ORANGE;
+                    if (random < 200) yield GameModel.MS_PACMAN_PRETZEL;
+                    if (random < 240) yield GameModel.MS_PACMAN_APPLE;
+                    if (random < 280) yield GameModel.MS_PACMAN_PEAR;
+                    else              yield GameModel.MS_PACMAN_BANANA;
+                }
+            };
+            // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
+            case PACMAN -> switch (levelNumber) {
+                case 1 ->      GameModel.PACMAN_CHERRIES;
+                case 2 ->      GameModel.PACMAN_STRAWBERRY;
+                case 3, 4 ->   GameModel.PACMAN_PEACH;
+                case 5, 6 ->   GameModel.PACMAN_APPLE;
+                case 7, 8 ->   GameModel.PACMAN_GRAPES;
+                case 9, 10 ->  GameModel.PACMAN_GALAXIAN;
+                case 11, 12 -> GameModel.PACMAN_BELL;
+                default ->     GameModel.PACMAN_KEY;
+            };
         };
     }
 
