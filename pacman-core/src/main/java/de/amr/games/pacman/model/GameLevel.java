@@ -105,34 +105,6 @@ public class GameLevel {
         Logger.trace("Game level {} ({}) created.", levelNumber, game.variant());
     }
 
-    private Vector2i chasingTarget(byte ghostID) {
-        return switch (ghostID) {
-            // Blinky: attacks Pac-Man directly
-            case RED_GHOST -> pac.tile();
-            // Pinky: ambushes Pac-Man
-            case PINK_GHOST -> tilesAheadWithOverflowBug(pac, 4);
-            // Inky: attacks from opposite side as Blinky
-            case CYAN_GHOST -> tilesAheadWithOverflowBug(pac,2).scaled(2).minus(ghosts[RED_GHOST].tile());
-            // Clyde/Sue: attacks directly but retreats if Pac is near
-            case ORANGE_GHOST -> ghosts[ORANGE_GHOST].tile().euclideanDistance(pac.tile()) < 8
-                ? ghostScatterTarget(ORANGE_GHOST)
-                : pac.tile();
-            default -> throw new IllegalGhostIDException(ghostID);
-        };
-    }
-
-    /**
-     * @param numTiles number of tiles
-     * @return the tile located the given number of tiles towards the current move direction of the creature.
-     * In case the creature looks UP, additional {@code numTiles} tiles are added towards LEFT.
-     * This simulates an overflow bug in the original Arcade games.
-     */
-    public Vector2i tilesAheadWithOverflowBug(Creature creature, int numTiles) {
-        Vector2i ahead = creature.tile().plus(creature.moveDir().vector().scaled(numTiles));
-        return creature.moveDir() == Direction.UP ? ahead.minus(numTiles, 0) : ahead;
-    }
-
-
     public Direction initialGhostDirection(byte ghostID) {
         checkGhostID(ghostID);
         return switch (ghostID) {
@@ -347,6 +319,33 @@ public class GameLevel {
         } else {
             ghost.followTarget(ghostScatterTarget(ghost.id()), relSpeed);
         }
+    }
+
+    private Vector2i chasingTarget(byte ghostID) {
+        return switch (ghostID) {
+            // Blinky: attacks Pac-Man directly
+            case RED_GHOST -> pac.tile();
+            // Pinky: ambushes Pac-Man
+            case PINK_GHOST -> tilesAheadWithOverflowBug(pac, 4);
+            // Inky: attacks from opposite side as Blinky
+            case CYAN_GHOST -> tilesAheadWithOverflowBug(pac,2).scaled(2).minus(ghosts[RED_GHOST].tile());
+            // Clyde/Sue: attacks directly but retreats if Pac is near
+            case ORANGE_GHOST -> ghosts[ORANGE_GHOST].tile().euclideanDistance(pac.tile()) < 8
+                ? ghostScatterTarget(ORANGE_GHOST)
+                : pac.tile();
+            default -> throw new IllegalGhostIDException(ghostID);
+        };
+    }
+
+    /**
+     * @param numTiles number of tiles
+     * @return the tile located the given number of tiles towards the current move direction of the creature.
+     * In case the creature looks UP, additional {@code numTiles} tiles are added towards LEFT.
+     * This simulates an overflow bug in the original Arcade games.
+     */
+    private static Vector2i tilesAheadWithOverflowBug(Creature creature, int numTiles) {
+        Vector2i ahead = creature.tile().plus(creature.moveDir().vector().scaled(numTiles));
+        return creature.moveDir() == Direction.UP ? ahead.minus(numTiles, 0) : ahead;
     }
 
     private byte frightenedSpeed(Ghost ghost) {
