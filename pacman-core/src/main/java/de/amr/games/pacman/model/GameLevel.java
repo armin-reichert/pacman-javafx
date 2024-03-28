@@ -78,7 +78,7 @@ public class GameLevel {
         ghosts().forEach(ghost -> {
             ghost.setWorld(world);
             ghost.setHouse(world.house());
-            ghost.setFnFrightenedBehavior(refugee -> refugee.roam(world, frightenedSpeed(refugee), pseudoRandomDirection()));
+            ghost.setFrightenedBehavior(this::frightenedGhostBehavior);
             ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));
             ghost.setBaseSpeed(SPEED_AT_100_PERCENT);
             ghost.setSpeedReturningToHouse(SPEED_GHOST_RETURNING_TO_HOUSE);
@@ -86,14 +86,14 @@ public class GameLevel {
         });
 
         switch (game.variant()) {
-            case MS_PACMAN -> ghosts().forEach(ghost -> ghost.setFnHuntingBehavior(this::letGhostHuntInMsPacManGame));
+            case MS_PACMAN -> ghosts().forEach(ghost -> ghost.setHuntingBehavior(this::huntingBehaviorMsPacManGame));
             case PACMAN -> {
                 var forbiddenMovesAtTile = new HashMap<Vector2i, List<Direction>>();
                 var up = List.of(UP);
                 ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbiddenMovesAtTile.put(tile, up));
                 ghosts().forEach(ghost -> {
                     ghost.setForbiddenMoves(forbiddenMovesAtTile);
-                    ghost.setFnHuntingBehavior(this::letGhostHuntInPacManGame);
+                    ghost.setHuntingBehavior(this::huntingBehaviorPacManGame);
                 });
             }
         }
@@ -292,27 +292,16 @@ public class GameLevel {
      * the original intention had been to randomize the scatter target of *all* ghosts in Ms. Pac-Man
      * but because of a bug, only the scatter target of Blinky and Pinky would have been affected. Who knows?
      * </p>
-     * <br>
-     * <p>
-     * Frightened ghosts choose a "random" direction when they enter a new tile. If the chosen direction
-     * can be taken, it is stored and taken as soon as possible.
-     * Otherwise, the remaining directions are checked in clockwise order.
-     * </p>
-     *
-     * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
-    private void letGhostHuntInMsPacManGame(Ghost ghost) {
-        byte relSpeed = huntingSpeedPercentage(ghost);
+    private void huntingBehaviorMsPacManGame(Ghost ghost) {
         if (scatterPhase().isPresent() && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-            ghost.roam(world, relSpeed, pseudoRandomDirection());
-        } else if (chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState > 0) {
-            ghost.followTarget(chasingTarget(ghost.id()), relSpeed);
+            ghost.roam(world, huntingSpeedPercentage(ghost), pseudoRandomDirection());
         } else {
-            ghost.followTarget(ghostScatterTarget(ghost.id()), relSpeed);
+            huntingBehaviorPacManGame(ghost);
         }
     }
 
-    private void letGhostHuntInPacManGame(Ghost ghost) {
+    private void huntingBehaviorPacManGame(Ghost ghost) {
         byte relSpeed = huntingSpeedPercentage(ghost);
         if (chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState > 0) {
             ghost.followTarget(chasingTarget(ghost.id()), relSpeed);
@@ -348,8 +337,19 @@ public class GameLevel {
         return creature.moveDir() == Direction.UP ? ahead.minus(numTiles, 0) : ahead;
     }
 
-    private byte frightenedSpeed(Ghost ghost) {
-        return world().isTunnel(ghost.tile()) ? data.ghostSpeedTunnelPercentage() : data.ghostSpeedFrightenedPercentage();
+    /**
+     * <p>
+     * Frightened ghosts choose a "random" direction when they enter a new tile. If the chosen direction
+     * can be taken, it is stored and taken as soon as possible. Otherwise, the remaining directions are checked in
+     * clockwise order.
+     * </p>
+     *
+     * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
+     */
+    private void frightenedGhostBehavior(Ghost ghost) {
+        byte relSpeed = world().isTunnel(ghost.tile())
+            ? data.ghostSpeedTunnelPercentage() : data.ghostSpeedFrightenedPercentage();
+        ghost.roam(world, relSpeed, pseudoRandomDirection());
     }
 
     private static Direction pseudoRandomDirection() {

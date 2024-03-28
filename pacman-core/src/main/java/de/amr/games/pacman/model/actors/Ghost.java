@@ -40,8 +40,8 @@ public class Ghost extends Creature implements AnimationDirector {
 
     private final byte id;
     private GhostState state;
-    private Consumer<Ghost> fnHuntingBehavior;
-    private Consumer<Ghost> fnFrightenedBehavior;
+    private Consumer<Ghost> huntingBehavior;
+    private Consumer<Ghost> frightenedBehavior;
     private House house;
     private Vector2f revivalPosition;
     private float speedReturningToHouse;
@@ -108,14 +108,17 @@ public class Ghost extends Creature implements AnimationDirector {
         forbiddenMoves = moves;
     }
 
-    public void setFnHuntingBehavior(Consumer<Ghost> function) {
+    public void setHuntingBehavior(Consumer<Ghost> function) {
         checkNotNull(function);
-        fnHuntingBehavior = function;
+        huntingBehavior = function;
     }
 
-    public void setFnFrightenedBehavior(Consumer<Ghost> function) {
+    /**
+     * @param function function specifying the behavior when frightened
+     */
+    public void setFrightenedBehavior(Consumer<Ghost> function) {
         checkNotNull(function);
-        fnFrightenedBehavior = function;
+        frightenedBehavior = function;
     }
 
     @Override
@@ -291,7 +294,7 @@ public class Ghost extends Creature implements AnimationDirector {
      * <p>
      */
     private void updateStateHuntingPac() {
-        fnHuntingBehavior.accept(this);
+        huntingBehavior.accept(this);
     }
 
     // --- FRIGHTENED ---
@@ -304,7 +307,7 @@ public class Ghost extends Creature implements AnimationDirector {
      * his power. Speed is about half of the normal speed.
      */
     private void updateStateFrightened(Pac pac) {
-        fnFrightenedBehavior.accept(this);
+        frightenedBehavior.accept(this);
         updateFrightenedAnimation(pac);
     }
 
