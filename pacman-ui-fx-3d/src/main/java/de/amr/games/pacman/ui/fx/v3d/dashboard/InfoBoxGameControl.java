@@ -9,11 +9,14 @@ import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
+import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
+
+import static de.amr.games.pacman.ui.fx.PacManGames2dUI.PY_USE_AUTOPILOT;
 
 /**
  * Game related settings.
@@ -82,7 +85,7 @@ public class InfoBoxGameControl extends InfoBox {
         comboGameVariant.setValue(sceneContext.game().variant());
         comboGameVariant.setDisable(sceneContext.gameState() != GameState.INTRO);
         comboInitialLives.setValue((int) sceneContext.game().initialLives());
-        cbAutopilot.setSelected(sceneContext.gameController().isAutopilotEnabled());
+        cbAutopilot.setSelected(PY_USE_AUTOPILOT.get());
         cbImmunity.setSelected(sceneContext.gameController().isPacImmune());
         buttonsGameLevel[GAME_LEVEL_START].setDisable(!canStartLevel());
         buttonsGameLevel[GAME_LEVEL_QUIT].setDisable(sceneContext.game().level().isEmpty());

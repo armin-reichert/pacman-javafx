@@ -53,7 +53,6 @@ public class GameController extends Fsm<GameState, GameModel> {
 
     private GameModel game;
     private boolean playing = false;
-    private boolean autopilotEnabled = false;
     private boolean pacImmune = false;
     private int credit = 0;
 
@@ -101,18 +100,6 @@ public class GameController extends Fsm<GameState, GameModel> {
         return credit > 0;
     }
 
-    public boolean isAutopilotEnabled() {
-        return autopilotEnabled;
-    }
-
-    public void setAutopilotEnabled(boolean autopilotEnabled) {
-        this.autopilotEnabled = autopilotEnabled;
-    }
-
-    public void toggleAutopilotEnabled() {
-        autopilotEnabled = !autopilotEnabled;
-    }
-
     public boolean isPacImmune() {
         return pacImmune;
     }
@@ -140,7 +127,7 @@ public class GameController extends Fsm<GameState, GameModel> {
             case MS_PACMAN -> {
                 var level = new GameLevel(levelNumber, GameModel.levelData(levelNumber),game,
                     createMsPacManWorld(mapNumberMsPacMan(levelNumber)), false);
-                level.setAutopilot(new RuleBasedPacSteering());
+                level.pac().setAutopilot(new RuleBasedPacSteering());
                 game.setLevel(level);
                 Logger.info("Level {} created ({})", levelNumber, game.variant());
                 publishGameEvent(game, GameEventType.LEVEL_CREATED);
@@ -159,7 +146,7 @@ public class GameController extends Fsm<GameState, GameModel> {
             }
             case PACMAN -> {
                 var level = new GameLevel(levelNumber, GameModel.levelData(levelNumber), game, createPacManWorld(), false);
-                level.setAutopilot(new RuleBasedPacSteering());
+                level.pac().setAutopilot(new RuleBasedPacSteering());
                 game.setLevel(level);
                 Logger.info("Level {} created ({})", levelNumber, game.variant());
                 publishGameEvent(game, GameEventType.LEVEL_CREATED);
@@ -186,7 +173,8 @@ public class GameController extends Fsm<GameState, GameModel> {
             case MS_PACMAN -> {
                 GameLevel level = new GameLevel(1, GameModel.levelData(1), game,
                     createMsPacManWorld(1),  true);
-                level.setAutopilot(new RuleBasedPacSteering());
+                level.pac().setAutopilot(new RuleBasedPacSteering());
+                level.pac().setUseAutopilot(true);
                 game.setLevel(level);
                 Logger.info("Demo level created ({})", game.variant());
                 publishGameEvent(game, GameEventType.LEVEL_CREATED);
@@ -197,7 +185,8 @@ public class GameController extends Fsm<GameState, GameModel> {
             }
             case PACMAN -> {
                 GameLevel level = new GameLevel(1, GameModel.levelData(1), game, createPacManWorld(),true);
-                level.setAutopilot(new RouteBasedSteering(level.pac(), List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
+                level.pac().setAutopilot(new RouteBasedSteering(level.pac(), List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
+                level.pac().setUseAutopilot(true);
                 game.setLevel(level);
                 Logger.info("Demo level created ({})", game.variant());
                 publishGameEvent(game, GameEventType.LEVEL_CREATED);

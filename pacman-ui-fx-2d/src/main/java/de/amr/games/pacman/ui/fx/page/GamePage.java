@@ -66,7 +66,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
         layersContainer.setOnKeyPressed(e -> {
             Keyboard.handleKeyEvent(e);
             handleKeyboardInput();
-            sceneContext.gameLevel().map(GameLevel::pac).flatMap(Pac::steering).ifPresent(steering -> {
+            sceneContext.gameLevel().map(GameLevel::pac).map(Pac::manualSteering).ifPresent(steering -> {
                 if (steering instanceof KeyboardPacSteering kps) {
                     kps.handle(e);
                 }
@@ -274,7 +274,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
             var grid = (GridPane) pane.getChildren().getFirst(); // TODO improve
             // add default entries:
             int nextFreeIndex = grid.getRowCount();
-            if (sceneContext.gameController().isAutopilotEnabled()) {
+            if (PY_USE_AUTOPILOT.get()) {
                 var autoPilotEntry = text(sceneContext.tt("help.autopilot_on"), Color.ORANGE);
                 autoPilotEntry.setFont(font);
                 GridPane.setColumnSpan(autoPilotEntry, 2);

@@ -39,7 +39,11 @@ public class Pac extends Creature implements AnimationDirector {
     private byte restingTicks;
     private long starvingTicks;
     private int powerFadingTicks;
-    private Steering steering;
+
+    private Steering manualSteering;
+    private Steering autopilot;
+    private boolean useAutopilot;
+
     private final List<Ghost> victims = new ArrayList<>();
 
     private Animations animations;
@@ -109,7 +113,11 @@ public class Pac extends Creature implements AnimationDirector {
             setPercentageSpeed(powerTimer.isRunning()
                 ? level.data().pacSpeedPoweredPercentage()
                 : level.data().pacSpeedPercentage());
-            level.pacSteering().ifPresent(steering -> steering.steer(level));
+            if (useAutopilot) {
+                autopilot.steer(level);
+            } else {
+                manualSteering.steer(level);
+            }
             tryMoving();
             if (hasMoved()) {
                 startAnimation();
@@ -208,11 +216,19 @@ public class Pac extends Creature implements AnimationDirector {
         return velocity().length() == 0 || !hasMoved() || restingTicks == REST_INDEFINITE;
     }
 
-    public Optional<Steering> steering() {
-        return Optional.ofNullable(steering);
+    public Steering manualSteering() {
+        return manualSteering;
     }
 
-    public void setSteering(Steering steering) {
-        this.steering = steering;
+    public void setManualSteering(Steering manualSteering) {
+        this.manualSteering = manualSteering;
+    }
+
+    public void setAutopilot(Steering autopilot) {
+        this.autopilot = autopilot;
+    }
+
+    public void setUseAutopilot(boolean useAutopilot) {
+        this.useAutopilot = useAutopilot;
     }
 }

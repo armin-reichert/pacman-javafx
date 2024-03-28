@@ -92,6 +92,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final int CANVAS_WIDTH_UNSCALED = ArcadeWorld.TILES_X * TS; // 28*8 = 224
     public static final int CANVAS_HEIGHT_UNSCALED = ArcadeWorld.TILES_Y * TS; // 36*8 = 288
 
+    public static final BooleanProperty PY_USE_AUTOPILOT   = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
 
     private static void loadAssets2D(Theme theme) {
@@ -214,6 +215,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     protected final Scene mainScene;
     protected final StartPage startPage;
     protected final GamePage gamePage;
+    protected Steering keyboardSteering;
     protected Page currentPage;
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
     private AudioClip voiceClip;
@@ -227,6 +229,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         mainScene = createMainScene();
         startPage = createStartPage();
         gamePage  = createGamePage(mainScene);
+        keyboardSteering = new KeyboardPacSteering();
 
         clock = new GameClock();
         clock.pausedPy.addListener((py, ov, nv) -> updateStage());
@@ -425,10 +428,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         };
     }
 
-    protected Steering createKeyboardPacSteering() {
-        return new KeyboardPacSteering();
-    }
-
     // GameEventListener interface implementation
 
     @Override
@@ -512,13 +511,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             switch (e.game.variant()) {
                 case MS_PACMAN -> {
                     level.pac().setAnimations(new MsPacManGamePacAnimations(level.pac(), spriteSheet()));
-                    level.pac().setSteering(createKeyboardPacSteering());
+                    level.pac().setManualSteering(keyboardSteering);
                     level.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, spriteSheet())));
                     Logger.info("Created Ms. Pac-Man game creature animations for level #{}", level.number());
                 }
                 case PACMAN -> {
                     level.pac().setAnimations(new PacManGamePacAnimations(level.pac(), spriteSheet()));
-                    level.pac().setSteering(createKeyboardPacSteering());
+                    level.pac().setManualSteering(keyboardSteering);
                     level.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, spriteSheet())));
                     Logger.info("Created Pac-Man game creature animations for level #{}", level.number());
                 }
@@ -693,8 +692,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void toggleAutopilot() {
-        gameController().toggleAutopilotEnabled();
-        boolean auto = gameController().isAutopilotEnabled();
+        toggle(PY_USE_AUTOPILOT);
+        boolean auto = PY_USE_AUTOPILOT.get();
         showFlashMessage(tt(auto ? "autopilot_on" : "autopilot_off"));
         playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
     }

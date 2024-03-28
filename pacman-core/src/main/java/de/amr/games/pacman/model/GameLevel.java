@@ -44,7 +44,6 @@ public class GameLevel {
     private byte huntingPhaseIndex;
     private byte totalNumGhostsKilled;
     private byte cruiseElroyState;
-    private Steering autopilot;
     private HuntingStepEventLog eventLog;
     private int bonusReachedIndex; // -1=no bonus, 0=first, 1=second
 
@@ -207,18 +206,6 @@ public class GameLevel {
 
     public Pac pac() {
         return pac;
-    }
-
-    public void setAutopilot(Steering autopilot) {
-        checkNotNull(autopilot);
-        this.autopilot = autopilot;
-    }
-
-    public Optional<Steering> pacSteering() {
-        if (GameController.it().isAutopilotEnabled() || isDemoLevel()) {
-            return Optional.of(autopilot);
-        }
-        return pac != null ? pac.steering() : Optional.empty();
     }
 
     /**

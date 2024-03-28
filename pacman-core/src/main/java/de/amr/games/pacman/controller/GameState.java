@@ -130,7 +130,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             game.level().ifPresent(level -> {
-                enablePacSteering(true);
+                enableManualPacSteering(true);
                 level.pac().startAnimation();
                 level.ghosts().forEach(Ghost::startAnimation);
                 level.world().energizerBlinking().restart();
@@ -156,7 +156,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             game.level().ifPresent(level -> {
                 timer.restartSeconds(4);
-                enablePacSteering(false);
+                enableManualPacSteering(false);
                 level.pac().freeze();
                 level.ghosts().forEach(Ghost::hide);
                 level.bonus().ifPresent(Bonus::setInactive);
@@ -196,7 +196,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartSeconds(1);
-            enablePacSteering(false);
+            enableManualPacSteering(false);
             game.level().ifPresent(level -> gameController().createAndStartLevel(level.number() + 1));
         }
 
@@ -247,7 +247,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartSeconds(4);
-            enablePacSteering(false);
+            enableManualPacSteering(false);
             game.level().ifPresent(GameLevel::letPacDie);
         }
 
@@ -285,7 +285,7 @@ public enum GameState implements FsmState<GameModel> {
     GAME_OVER {
         @Override
         public void onEnter(GameModel game) {
-            enablePacSteering(false);
+            enableManualPacSteering(false);
             timer.restartSeconds(1.25); //TODO not sure about exact duration
             game.updateHighScore();
             gameController().changeCredit(-1);
@@ -309,7 +309,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
-            enablePacSteering(false);
+            enableManualPacSteering(false);
         }
 
         @Override
@@ -333,7 +333,7 @@ public enum GameState implements FsmState<GameModel> {
             timer.restartIndefinitely();
             game.reset();
             gameController().createAndStartLevel(1);
-            enablePacSteering(false);
+            enableManualPacSteering(false);
         }
 
         @Override
@@ -351,7 +351,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
-            enablePacSteering(false);
+            enableManualPacSteering(false);
             setProperty("intermissionTestNumber", 1);
         }
 
@@ -376,8 +376,8 @@ public enum GameState implements FsmState<GameModel> {
         return GameController.it();
     }
 
-    void enablePacSteering(boolean enabled) {
-        gameController().game().level().map(GameLevel::pac).flatMap(Pac::steering).ifPresent(s -> s.setEnabled(enabled));
+    void enableManualPacSteering(boolean enabled) {
+        gameController().game().level().ifPresent(level -> level.pac().manualSteering().setEnabled(enabled));
     }
 
     @Override

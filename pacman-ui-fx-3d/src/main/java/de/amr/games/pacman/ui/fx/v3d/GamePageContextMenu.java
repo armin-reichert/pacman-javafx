@@ -16,6 +16,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui.fx.PacManGames2dUI.PY_USE_AUTOPILOT;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PY_3D_PERSPECTIVE;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PY_PIP_ON;
 
@@ -110,7 +111,7 @@ public class GamePageContextMenu extends ContextMenu {
             pipItem.setSelected(PY_PIP_ON.get());
         }
         if (autopilotItem != null) {
-            autopilotItem.setSelected(GameController.it().isAutopilotEnabled());
+            autopilotItem.setSelected(PY_USE_AUTOPILOT.get());
         }
         if (immunityItem != null) {
             immunityItem.setSelected(GameController.it().isPacImmune());

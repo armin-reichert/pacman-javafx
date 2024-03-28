@@ -122,6 +122,9 @@ public class PlayScene3D implements GameScene {
                 level3D.update();
                 currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
             }
+            if (!level.isDemoLevel()) {
+                level.pac().setUseAutopilot(PY_USE_AUTOPILOT.get());
+            }
            updateSound(level);
         });
         scores3D.setScores(
