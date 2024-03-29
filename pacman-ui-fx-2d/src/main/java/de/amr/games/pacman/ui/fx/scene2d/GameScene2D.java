@@ -260,6 +260,28 @@ public abstract class GameScene2D implements GameScene {
     }
 
     /**
+     * Draws the given image scaled into this scene.
+     * @param image image
+     * @param x unscaled x
+     * @param y unscaled y
+     * @param width unscaled width
+     * @param height unscaled height
+     */
+    protected void drawImage(Image image, double x, double y, double width, double height) {
+        g.drawImage(image, s(x), s(y), s(width), s(height));
+    }
+
+    /**
+     * Draws the given image scaled into this scene.
+     * @param image image
+     * @param x unscaled x
+     * @param y unscaled y
+     */
+    protected void drawImage(Image image, double x, double y) {
+        drawImage(image, x, y, image.getWidth(), image.getHeight());
+    }
+
+    /**
      * Draws a sprite using the current scene scaling.
      *
      * @param source sprite sheet source
@@ -321,7 +343,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected void drawMsPacManCopyright(double x, double y) {
         Image logo = context.theme().get("mspacman.logo.midway");
-        g.drawImage(logo, s(x), s(y + 2), s(TS * 4 - 2), s(TS * 4));
+        drawImage(logo, x, y + 2, TS * 4 - 2, TS * 4);
         g.setFill(context.theme().color("palette.red"));
         g.setFont(sceneFont(8));
         g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2));

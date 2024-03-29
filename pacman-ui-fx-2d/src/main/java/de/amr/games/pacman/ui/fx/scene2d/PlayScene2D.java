@@ -109,8 +109,7 @@ public class PlayScene2D extends GameScene2D {
         double x = 0, y = t(3);
         if (world.mazeFlashing().isRunning()) {
             if (world.mazeFlashing().on()) {
-                var flashingMaze = sheet.getFlashingMazeImage();
-                g.drawImage(flashingMaze, s(x), s(y), s(flashingMaze.getWidth()), s(flashingMaze.getHeight()));
+                drawImage(sheet.getFlashingMazeImage(), x, y);
             } else {
                 drawSprite(sheet.getEmptyMazeSprite(), x, y);
             }
@@ -166,7 +165,7 @@ public class PlayScene2D extends GameScene2D {
         }
         g.setFill(Color.YELLOW);
         g.setFont(Font.font("Sans", FontWeight.BOLD, 24));
-        g.fillText(String.format("%s %d", context.gameState(), context.gameState().timer().tick()), 0, 80);
+        g.fillText(String.format("%s %d", context.gameState(), context.gameState().timer().tick()), 0, 64);
     }
 
     @Override
