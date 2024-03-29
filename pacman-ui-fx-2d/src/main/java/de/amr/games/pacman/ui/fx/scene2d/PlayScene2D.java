@@ -93,9 +93,9 @@ public class PlayScene2D extends GameScene2D {
             }
             level.bonus().ifPresent(this::drawBonus);
             drawPac(level.pac());
-            Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
-                .map(level::ghost).forEach(this::drawGhost);
+            level.ghosts().toList().reversed().forEach(this::drawGhost);
             if (!isCreditVisible()) {
+                // check this
                 drawLivesCounter(level.pac().isVisible() || context.gameState() == GameState.GHOST_DYING
                     ? context.game().lives() - 1
                     : context.game().lives());
@@ -133,10 +133,8 @@ public class PlayScene2D extends GameScene2D {
                 drawSprite(sheet.source(), sheet.emptyMaze(mazeNumber), x, y);
             }
         } else {
-            // draw filled maze and hide eaten food (including energizers)
             drawSprite(sheet.filledMaze(mazeNumber), x, y);
             world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
-            // energizer animation
             if (world.energizerBlinking().off()) {
                 world.energizerTiles().forEach(tile -> hideTileContent(world, tile));
             }
