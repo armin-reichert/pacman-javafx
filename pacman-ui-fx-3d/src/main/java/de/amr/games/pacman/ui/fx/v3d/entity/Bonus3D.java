@@ -30,22 +30,30 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class Bonus3D extends Box {
 
+    private static final double SYMBOL_WIDTH = TS;
+    private static final double POINTS_WIDTH = 1.8 * TS;
+
     private final Bonus bonus;
-    private final Image symbolImage;
-    private final Image pointsImage;
+    private final ImageView symbolImageView;
+    private final ImageView pointsImageView;
     private final RotateTransition eatenAnimation;
     private final RotateTransition edibleAnimation;
 
     public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage) {
-        super(TS, TS, TS);
+        super(SYMBOL_WIDTH, TS, TS);
 
         checkNotNull(bonus);
         checkNotNull(symbolImage);
         checkNotNull(pointsImage);
 
         this.bonus = bonus;
-        this.symbolImage = symbolImage;
-        this.pointsImage = pointsImage;
+        symbolImageView = new ImageView(symbolImage);
+        symbolImageView.setPreserveRatio(true);
+        symbolImageView.setFitWidth(getWidth());
+
+        pointsImageView = new ImageView(pointsImage);
+        pointsImageView.setPreserveRatio(true);
+        pointsImageView.setFitWidth(POINTS_WIDTH);
 
         edibleAnimation = new RotateTransition(Duration.seconds(1), this);
         edibleAnimation.setAxis(Rotate.Z_AXIS); // to trigger initial change
@@ -87,12 +95,9 @@ public class Bonus3D extends Box {
     }
 
     public void showEdible() {
-        setWidth(TS);
         setVisible(true);
-        var imageView = new ImageView(symbolImage);
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(getWidth());
-        showImage(imageView.getImage());
+        setWidth(SYMBOL_WIDTH);
+        setTexture(symbolImageView.getImage());
         if (bonus instanceof MovingBonus movingBonus) {
             updateMovingBonusRotation(movingBonus);
         } else {
@@ -102,17 +107,15 @@ public class Bonus3D extends Box {
     }
 
     public void showEaten() {
+        setVisible(true);
+        setWidth(POINTS_WIDTH);
+        setTexture(pointsImageView.getImage());
         setRotationAxis(Rotate.X_AXIS);
         setRotate(0);
-        setWidth(1.8 * TS);
-        var imageView = new ImageView(pointsImage);
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(1.8 * TS);
-        showImage(imageView.getImage());
         eatenAnimation.playFromStart();
     }
 
-    private void showImage(Image texture) {
+    private void setTexture(Image texture) {
         var material = new PhongMaterial(Color.GHOSTWHITE);
         material.setDiffuseMap(texture);
         setMaterial(material);
