@@ -12,6 +12,7 @@ import de.amr.games.pacman.model.world.World;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.geometry.Point3D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -66,22 +67,18 @@ public class Bonus3D extends Box {
         setTranslateX(position.x());
         setTranslateY(position.y());
         setTranslateZ(-HTS);
-        boolean outside = position.x() < HTS || position.x() > world.numCols() * TS - HTS;
-        boolean visible = bonus.state() != Bonus.STATE_INACTIVE && !outside;
+        boolean outsideWorld = position.x() < HTS || position.x() > world.numCols() * TS - HTS;
+        boolean visible = !(bonus.state() == Bonus.STATE_INACTIVE || outsideWorld);
         setVisible(visible);
-        updateEdibleAnimation();
+        if (edibleAnimation.getStatus() == Animation.Status.RUNNING && bonus instanceof MovingBonus movingBonus) {
+            updateMovingBonusRotation(movingBonus);
+        }
     }
 
-    private void updateEdibleAnimation() {
-        var rotationAxis = Rotate.X_AXIS; // default for static bonus
-        if (bonus instanceof MovingBonus movingBonus) {
-            rotationAxis = movingBonus.entity().moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-            if (movingBonus.entity().moveDir() == Direction.UP || movingBonus.entity().moveDir() == Direction.RIGHT) {
-                edibleAnimation.setRate(-1);
-            } else {
-                edibleAnimation.setRate(1);
-            }
-        }
+    private void updateMovingBonusRotation(MovingBonus movingBonus) {
+        Direction moveDir = movingBonus.entity().moveDir();
+        Point3D rotationAxis = moveDir.isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+        edibleAnimation.setRate(moveDir == Direction.DOWN || moveDir == Direction.LEFT ? 1 : -1);
         if (!edibleAnimation.getAxis().equals(rotationAxis)) {
             edibleAnimation.stop();
             edibleAnimation.setAxis(rotationAxis);
@@ -96,7 +93,11 @@ public class Bonus3D extends Box {
         imageView.setPreserveRatio(true);
         imageView.setFitWidth(getWidth());
         showImage(imageView.getImage());
-        updateEdibleAnimation();
+        if (bonus instanceof MovingBonus movingBonus) {
+            updateMovingBonusRotation(movingBonus);
+        } else {
+            edibleAnimation.setAxis(Rotate.X_AXIS);
+        }
         edibleAnimation.playFromStart();
     }
 
