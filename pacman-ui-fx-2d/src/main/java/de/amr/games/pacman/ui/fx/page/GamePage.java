@@ -64,14 +64,12 @@ public class GamePage extends CanvasLayoutPane implements Page {
         flashMessageLayer.setMouseTransparent(true);
 
         layersContainer.setOnKeyPressed(e -> {
-            Keyboard.handleKeyEvent(e);
             handleKeyboardInput();
             sceneContext.gameLevel().map(GameLevel::pac).map(Pac::manualSteering).ifPresent(steering -> {
                 if (steering instanceof KeyboardPacSteering kps) {
                     kps.handle(e);
                 }
             });
-            Keyboard.clearState();
         });
 
         getCanvas().setOnMouseMoved(e -> {

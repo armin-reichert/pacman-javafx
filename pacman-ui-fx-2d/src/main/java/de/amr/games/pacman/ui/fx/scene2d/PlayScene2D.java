@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.ArcadeWorld;
@@ -17,8 +16,6 @@ import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-
-import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.ENTERING_HOUSE;

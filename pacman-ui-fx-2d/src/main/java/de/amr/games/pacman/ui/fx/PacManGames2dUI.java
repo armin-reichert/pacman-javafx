@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.ArcadeWorld;
+import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardPacSteering;
 import de.amr.games.pacman.ui.fx.page.GamePage;
 import de.amr.games.pacman.ui.fx.page.Page;
@@ -230,6 +231,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         startPage = createStartPage();
         gamePage  = createGamePage(mainScene);
         keyboardSteering = new KeyboardPacSteering();
+
+        Keyboard.handleKeyEventsFor(mainScene);
 
         clock = new GameClock();
         clock.pausedPy.addListener((py, ov, nv) -> updateStage());
