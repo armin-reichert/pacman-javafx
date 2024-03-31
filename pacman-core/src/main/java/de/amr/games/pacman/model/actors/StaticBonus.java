@@ -27,7 +27,7 @@ public class StaticBonus extends Entity implements Bonus {
         this.symbol = symbol;
         this.points = points;
         this.countdown = 0;
-        this.state = Bonus.STATE_INACTIVE;
+        this.state = STATE_INACTIVE;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class StaticBonus extends Entity implements Bonus {
             "symbol=" + symbol +
             ", points=" + points +
             ", countdown=" + countdown +
-            ", state=" + state +
+            ", state=" + stateName() +
             '}';
     }
 
@@ -64,8 +64,8 @@ public class StaticBonus extends Entity implements Bonus {
     public void setInactive() {
         countdown = 0;
         visible = false;
-        state = Bonus.STATE_INACTIVE;
-        Logger.trace("Bonus gets inactive: {}", this);
+        state = STATE_INACTIVE;
+        Logger.trace("Bonus inactive: {}", this);
     }
 
     @Override
@@ -75,8 +75,8 @@ public class StaticBonus extends Entity implements Bonus {
         }
         countdown = ticks;
         visible = true;
-        state = Bonus.STATE_EDIBLE;
-        Logger.trace("Bonus gets edible: {}", this);
+        state = STATE_EDIBLE;
+        Logger.trace("Bonus edible: {}", this);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class StaticBonus extends Entity implements Bonus {
             throw new IllegalArgumentException("Bonus edible time must be larger than zero");
         }
         countdown = ticks;
-        state = Bonus.STATE_EATEN;
+        state = STATE_EATEN;
         Logger.trace("Bonus eaten: {}", this);
     }
 

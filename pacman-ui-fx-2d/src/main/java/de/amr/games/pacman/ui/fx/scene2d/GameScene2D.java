@@ -196,7 +196,7 @@ public abstract class GameScene2D implements GameScene {
                 if (bonus instanceof MovingBonus movingBonus) {
                     //TODO reconsider this way of implementing the jumping bonus
                     g.save();
-                    g.translate(0, movingBonus.dy());
+                    g.translate(0, movingBonus.elongationY());
                     if (bonus.state() == Bonus.STATE_EDIBLE) {
                         drawEntitySprite(bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
                     } else if (bonus.state() == Bonus.STATE_EATEN) {

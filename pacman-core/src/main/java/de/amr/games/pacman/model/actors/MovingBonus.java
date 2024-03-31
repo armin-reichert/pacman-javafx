@@ -12,6 +12,7 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * A bonus that tumbles through the world, starting at some portal, making one round around the ghost house and leaving
@@ -24,12 +25,12 @@ import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
  */
 public class MovingBonus extends Creature implements Bonus {
 
-    private final Pulse jumpAnimation = new Pulse(10, false);
-    private RouteBasedSteering steering;
+    private final Pulse animation = new Pulse(10, false);
     private final byte symbol;
     private final int points;
-    private long countdown;
     private byte state;
+    private long countdown;
+    private RouteBasedSteering steering;
 
     public MovingBonus(byte symbol, int points) {
         super("MovingBonus-" + symbol);
@@ -38,7 +39,7 @@ public class MovingBonus extends Creature implements Bonus {
         reset();
         canTeleport = false; // override default from Creature
         countdown = 0;
-        state = Bonus.STATE_INACTIVE;
+        state = STATE_INACTIVE;
     }
 
     @Override
@@ -69,7 +70,7 @@ public class MovingBonus extends Creature implements Bonus {
             "symbol=" + symbol +
             ", points=" + points +
             ", countdown=" + countdown +
-            ", state=" + state +
+            ", state=" + stateName() +
             '}';
     }
 
@@ -90,44 +91,45 @@ public class MovingBonus extends Creature implements Bonus {
 
     @Override
     public void setInactive() {
-        jumpAnimation.stop();
+        animation.stop();
         setSpeed(0);
         hide();
-        state = Bonus.STATE_INACTIVE;
-        Logger.trace("Bonus gets inactive: {}", this);
+        state = STATE_INACTIVE;
+        Logger.trace("Bonus inactive: {}", this);
     }
 
     @Override
     public void setEdible(long ticks) {
-        jumpAnimation.restart();
+        animation.restart();
         setSpeed(0.5f); // how fast in the original game?
         setTargetTile(null);
         show();
         countdown = ticks;
-        state = Bonus.STATE_EDIBLE;
-        Logger.trace("Bonus gets edible: {}", this);
+        state = STATE_EDIBLE;
+        Logger.trace("Bonus edible: {}", this);
     }
 
     @Override
     public void setEaten(long ticks) {
-        jumpAnimation.stop();
+        animation.stop();
         countdown = ticks;
-        state = Bonus.STATE_EATEN;
+        state = STATE_EATEN;
         Logger.trace("Bonus eaten: {}", this);
     }
 
     public void setRoute(List<NavPoint> route, boolean leftToRight) {
+        checkNotNull(route);
         centerOverTile(route.getFirst().tile());
         setMoveAndWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
         route.removeFirst();
         steering = new RouteBasedSteering(this, route);
     }
 
-    public float dy() {
-        if (!jumpAnimation.isRunning()) {
+    public float elongationY() {
+        if (!animation.isRunning()) {
             return 0;
         }
-        return jumpAnimation.on() ? -3f : 3f;
+        return animation.on() ? -3f : 3f;
     }
 
     @Override
@@ -143,7 +145,7 @@ public class MovingBonus extends Creature implements Bonus {
                 } else {
                     navigateTowardsTarget();
                     tryMoving();
-                    jumpAnimation.tick();
+                    animation.tick();
                 }
             }
             case STATE_EATEN -> {
