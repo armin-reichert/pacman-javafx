@@ -127,7 +127,7 @@ public class GameController extends Fsm<GameState, GameModel> {
             case MS_PACMAN -> {
                 var level = new GameLevel(levelNumber, GameModel.levelData(levelNumber),game,
                     createMsPacManWorld(mapNumberMsPacMan(levelNumber)), false);
-                level.pac().setAutopilot(new RuleBasedPacSteering());
+                level.pac().setAutopilot(new RuleBasedPacSteering(level));
                 game.setLevel(level);
                 Logger.info("Level {} created ({})", levelNumber, game.variant());
                 publishGameEvent(game, GameEventType.LEVEL_CREATED);
@@ -146,7 +146,7 @@ public class GameController extends Fsm<GameState, GameModel> {
             }
             case PACMAN -> {
                 var level = new GameLevel(levelNumber, GameModel.levelData(levelNumber), game, createPacManWorld(), false);
-                level.pac().setAutopilot(new RuleBasedPacSteering());
+                level.pac().setAutopilot(new RuleBasedPacSteering(level));
                 game.setLevel(level);
                 Logger.info("Level {} created ({})", levelNumber, game.variant());
                 publishGameEvent(game, GameEventType.LEVEL_CREATED);
@@ -173,7 +173,7 @@ public class GameController extends Fsm<GameState, GameModel> {
             case MS_PACMAN -> {
                 GameLevel level = new GameLevel(1, GameModel.levelData(1), game,
                     createMsPacManWorld(1),  true);
-                level.pac().setAutopilot(new RuleBasedPacSteering());
+                level.pac().setAutopilot(new RuleBasedPacSteering(level));
                 level.pac().setUseAutopilot(true);
                 game.setLevel(level);
                 Logger.info("Demo level created ({})", game.variant());
@@ -185,7 +185,7 @@ public class GameController extends Fsm<GameState, GameModel> {
             }
             case PACMAN -> {
                 GameLevel level = new GameLevel(1, GameModel.levelData(1), game, createPacManWorld(),true);
-                level.pac().setAutopilot(new RouteBasedSteering(level.pac(), List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
+                level.pac().setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
                 level.pac().setUseAutopilot(true);
                 game.setLevel(level);
                 Logger.info("Demo level created ({})", game.variant());

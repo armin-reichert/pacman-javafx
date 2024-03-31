@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib;
 
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.actors.Creature;
 import org.tinylog.Logger;
 
@@ -19,15 +18,12 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class RouteBasedSteering extends Steering {
 
-    private final Creature creature;
     private List<NavPoint> route = List.of();
     private int targetIndex;
     private boolean complete;
 
-    public RouteBasedSteering(Creature creature, List<NavPoint> route) {
-        checkNotNull(creature);
+    public RouteBasedSteering(List<NavPoint> route) {
         checkNotNull(route);
-        this.creature = creature;
         setRoute(route);
     }
 
@@ -43,7 +39,7 @@ public class RouteBasedSteering extends Steering {
     }
 
     @Override
-    public void steer(GameLevel level) {
+    public void steer(Creature creature) {
         creature.navigateTowardsTarget();
         if (targetIndex == route.size()) {
             complete = true;

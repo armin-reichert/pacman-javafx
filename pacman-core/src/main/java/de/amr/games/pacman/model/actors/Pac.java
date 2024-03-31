@@ -114,9 +114,9 @@ public class Pac extends Creature implements AnimationDirector {
                 ? level.data().pacSpeedPoweredPercentage()
                 : level.data().pacSpeedPercentage());
             if (useAutopilot) {
-                autopilot.steer(level);
+                autopilot.steer(this);
             } else {
-                manualSteering.steer(level);
+                manualSteering.steer(this);
             }
             tryMoving();
             if (hasMoved()) {

@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.fx.input;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Steering;
-import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.actors.Creature;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import org.tinylog.Logger;
@@ -27,18 +27,18 @@ public class KeyboardPacSteering extends Steering {
      * Default steering: unmodified cursor keys.
      */
     public KeyboardPacSteering() {
-        mappings.put(Keyboard.just(KeyCode.UP), Direction.UP);
-        mappings.put(Keyboard.just(KeyCode.DOWN), Direction.DOWN);
-        mappings.put(Keyboard.just(KeyCode.LEFT), Direction.LEFT);
+        mappings.put(Keyboard.just(KeyCode.UP),    Direction.UP);
+        mappings.put(Keyboard.just(KeyCode.DOWN),  Direction.DOWN);
+        mappings.put(Keyboard.just(KeyCode.LEFT),  Direction.LEFT);
         mappings.put(Keyboard.just(KeyCode.RIGHT), Direction.RIGHT);
     }
 
     @Override
-    public void steer(GameLevel level) {
+    public void steer(Creature creature) {
         if (isEnabled()) {
             for (var combination : mappings.keySet()) {
                 if (Keyboard.pressed(combination)) {
-                    level.pac().setWishDir(mappings.get(combination));
+                    creature.setWishDir(mappings.get(combination));
                 }
             }
         } else {

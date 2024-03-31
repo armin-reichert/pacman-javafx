@@ -122,7 +122,7 @@ public class MovingBonus extends Creature implements Bonus {
         centerOverTile(route.getFirst().tile());
         setMoveAndWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
         route.removeFirst();
-        steering = new RouteBasedSteering(this, route);
+        steering = new RouteBasedSteering(route);
     }
 
     public float elongationY() {
@@ -137,7 +137,7 @@ public class MovingBonus extends Creature implements Bonus {
         switch (state) {
             case STATE_INACTIVE -> {}
             case STATE_EDIBLE -> {
-                steering.steer(level);
+                steering.steer(this);
                 if (steering.isComplete()) {
                     Logger.trace("Moving bonus reached target: {}", this);
                     setInactive();
