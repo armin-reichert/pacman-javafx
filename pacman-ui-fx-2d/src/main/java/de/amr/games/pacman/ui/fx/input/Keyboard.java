@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.input;
 
-import javafx.scene.Scene;
+import javafx.event.EventTarget;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -24,9 +24,9 @@ public class Keyboard {
     private static final Set<KeyCodeCombination> registeredCombinations = new HashSet<>();
     private static Set<KeyCodeCombination> matchingCombinations = new HashSet<>();
 
-    public static void handleKeyEventsFor(Scene scene) {
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, Keyboard::updateMatchingCombinations);
-        scene.addEventFilter(KeyEvent.KEY_RELEASED, Keyboard::updateMatchingCombinations);
+    public static void handleKeyEventsFor(EventTarget target) {
+        target.addEventFilter(KeyEvent.KEY_PRESSED, Keyboard::updateMatchingCombinations);
+        target.addEventFilter(KeyEvent.KEY_RELEASED, Keyboard::updateMatchingCombinations);
     }
 
     /**
