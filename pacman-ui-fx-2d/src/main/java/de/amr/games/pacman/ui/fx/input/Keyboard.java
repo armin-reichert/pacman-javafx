@@ -29,18 +29,37 @@ public class Keyboard {
         scene.addEventFilter(KeyEvent.KEY_RELEASED, Keyboard::updateMatchingCombinations);
     }
 
+    /**
+     * Registers key code combination consisting of  no modifier and given code.
+     * @param code key code
+     * @return key code combination
+     */
     public static KeyCodeCombination just(KeyCode code) {
         return register(new KeyCodeCombination(code));
     }
 
+    /**
+     * Registers key code combination consisting of {@code Alt} modifier and given code.
+     * @param code key code
+     * @return key code combination
+     */
     public static KeyCodeCombination alt(KeyCode code) {
         return register(new KeyCodeCombination(code, KeyCombination.ALT_DOWN));
     }
 
+    /**
+     * Registers key code combination consisting of {@code Shift} modifier and given code.
+     * @param code key code
+     * @return key code combination
+     */
     public static KeyCodeCombination shift(KeyCode code) {
         return register(new KeyCodeCombination(code, KeyCombination.SHIFT_DOWN));
     }
 
+    /**
+     * @param combinations list of key combinations
+     * @return tells if any of the given key combinations is matched by the current keyboard state
+     */
     public static boolean pressed(KeyCodeCombination... combinations) {
         var match = Arrays.stream(combinations).filter(matchingCombinations::contains).findFirst();
         if (match.isPresent()) {
