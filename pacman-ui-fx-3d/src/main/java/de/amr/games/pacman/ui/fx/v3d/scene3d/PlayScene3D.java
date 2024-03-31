@@ -339,7 +339,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onBonusExpired(GameEvent event) {
         assertLevel3DExists();
-        level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
+        level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
     }
 
     @Override

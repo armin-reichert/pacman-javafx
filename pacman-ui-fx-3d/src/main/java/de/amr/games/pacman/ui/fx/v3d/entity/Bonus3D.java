@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
+import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.model.world.World;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -49,7 +50,7 @@ public class Bonus3D extends Box {
         this.bonus = bonus;
         symbolImageView = new ImageView(symbolImage);
         symbolImageView.setPreserveRatio(true);
-        symbolImageView.setFitWidth(getWidth());
+        symbolImageView.setFitWidth(SYMBOL_WIDTH);
 
         pointsImageView = new ImageView(pointsImage);
         pointsImageView.setPreserveRatio(true);
@@ -79,12 +80,11 @@ public class Bonus3D extends Box {
         boolean visible = !(bonus.state() == Bonus.STATE_INACTIVE || outsideWorld);
         setVisible(visible);
         if (edibleAnimation.getStatus() == Animation.Status.RUNNING && bonus instanceof MovingBonus movingBonus) {
-            updateMovingBonusRotation(movingBonus);
+            updateMovingBonusEdibleAnimation(movingBonus.entity().moveDir());
         }
     }
 
-    private void updateMovingBonusRotation(MovingBonus movingBonus) {
-        Direction moveDir = movingBonus.entity().moveDir();
+    private void updateMovingBonusEdibleAnimation(Direction moveDir) {
         Point3D rotationAxis = moveDir.isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
         edibleAnimation.setRate(moveDir == Direction.DOWN || moveDir == Direction.LEFT ? 1 : -1);
         if (!edibleAnimation.getAxis().equals(rotationAxis)) {
@@ -98,12 +98,15 @@ public class Bonus3D extends Box {
         setVisible(true);
         setWidth(SYMBOL_WIDTH);
         setTexture(symbolImageView.getImage());
-        if (bonus instanceof MovingBonus movingBonus) {
-            updateMovingBonusRotation(movingBonus);
-        } else {
+        if (bonus instanceof StaticBonus) {
             edibleAnimation.setAxis(Rotate.X_AXIS);
         }
         edibleAnimation.playFromStart();
+    }
+
+    public void onBonusExpired() {
+        edibleAnimation.stop();
+        setVisible(false);
     }
 
     public void showEaten() {
@@ -112,6 +115,7 @@ public class Bonus3D extends Box {
         setTexture(pointsImageView.getImage());
         setRotationAxis(Rotate.X_AXIS);
         setRotate(0);
+        edibleAnimation.stop();
         eatenAnimation.playFromStart();
     }
 
