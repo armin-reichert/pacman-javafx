@@ -57,6 +57,15 @@ public class Keyboard {
     }
 
     /**
+     * Registers key code combination consisting of {@code Control} modifier and given code.
+     * @param code key code
+     * @return key code combination
+     */
+    public static KeyCodeCombination control(KeyCode code) {
+        return register(new KeyCodeCombination(code, KeyCombination.CONTROL_DOWN));
+    }
+
+    /**
      * @param combinations list of key combinations
      * @return tells if any of the given key combinations is matched by the current keyboard state
      */

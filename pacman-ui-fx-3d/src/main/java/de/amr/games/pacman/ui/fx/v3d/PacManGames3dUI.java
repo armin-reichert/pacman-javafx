@@ -12,6 +12,7 @@ import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.Settings;
+import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.input.KeyboardPacSteering;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
@@ -23,7 +24,6 @@ import javafx.beans.property.*;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
@@ -268,12 +268,12 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     }
 
     protected Steering createKeyboardPacSteering() {
-        // Enable steering with unmodified and CONTROL + cursor key
+        // Enable steering with unmodified *and* with CONTROL+CursorKey
         var steering = new KeyboardPacSteering();
-        steering.define(Direction.UP, KeyCode.UP, KeyCombination.CONTROL_DOWN);
-        steering.define(Direction.DOWN, KeyCode.DOWN, KeyCombination.CONTROL_DOWN);
-        steering.define(Direction.LEFT, KeyCode.LEFT, KeyCombination.CONTROL_DOWN);
-        steering.define(Direction.RIGHT, KeyCode.RIGHT, KeyCombination.CONTROL_DOWN);
+        steering.mappings.put(Keyboard.control(KeyCode.UP),    Direction.UP);
+        steering.mappings.put(Keyboard.control(KeyCode.DOWN),  Direction.DOWN);
+        steering.mappings.put(Keyboard.control(KeyCode.LEFT),  Direction.LEFT);
+        steering.mappings.put(Keyboard.control(KeyCode.RIGHT), Direction.RIGHT);
         return steering;
     }
 

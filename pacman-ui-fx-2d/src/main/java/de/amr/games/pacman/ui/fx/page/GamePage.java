@@ -65,11 +65,6 @@ public class GamePage extends CanvasLayoutPane implements Page {
 
         layersContainer.setOnKeyPressed(e -> {
             handleKeyboardInput();
-            sceneContext.gameLevel().map(GameLevel::pac).map(Pac::manualSteering).ifPresent(steering -> {
-                if (steering instanceof KeyboardPacSteering kps) {
-                    kps.handle(e);
-                }
-            });
         });
 
         getCanvas().setOnMouseMoved(e -> {
