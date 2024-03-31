@@ -4,16 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d;
 
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Steering;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.Settings;
-import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.input.KeyboardPacSteering;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -265,16 +261,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     @Override
     public ActionHandler3D actionHandler() {
         return this;
-    }
-
-    protected Steering createKeyboardPacSteering() {
-        // Enable steering with unmodified *and* with CONTROL+CursorKey
-        var steering = new KeyboardPacSteering();
-        steering.mappings.put(Keyboard.control(KeyCode.UP),    Direction.UP);
-        steering.mappings.put(Keyboard.control(KeyCode.DOWN),  Direction.DOWN);
-        steering.mappings.put(Keyboard.control(KeyCode.LEFT),  Direction.LEFT);
-        steering.mappings.put(Keyboard.control(KeyCode.RIGHT), Direction.RIGHT);
-        return steering;
     }
 
     @Override

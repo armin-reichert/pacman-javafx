@@ -11,10 +11,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * @author Armin Reichert
@@ -22,11 +19,14 @@ import java.util.stream.Collectors;
 public class Keyboard {
 
     private static final Set<KeyCodeCombination> registeredCombinations = new HashSet<>();
-    private static Set<KeyCodeCombination> matchingCombinations = new HashSet<>();
+    private static final List<KeyCodeCombination> matchingCombinations = new ArrayList<>(3);
 
     public static void handleKeyEventsFor(EventTarget target) {
-        target.addEventFilter(KeyEvent.KEY_PRESSED, Keyboard::updateMatchingCombinations);
-        target.addEventFilter(KeyEvent.KEY_RELEASED, Keyboard::updateMatchingCombinations);
+        target.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+            matchingCombinations.clear();
+            registeredCombinations.stream().filter(c -> c.match(e)).forEach(matchingCombinations::add);
+        });
+        target.addEventFilter(KeyEvent.KEY_RELEASED, e -> matchingCombinations.clear());
     }
 
     /**
@@ -76,12 +76,6 @@ public class Keyboard {
             return true;
         }
         return false;
-    }
-
-    private static void updateMatchingCombinations(KeyEvent e) {
-        matchingCombinations = registeredCombinations.stream()
-            .filter(combination -> combination.match(e))
-            .collect(Collectors.toSet());
     }
 
     private static KeyCodeCombination register(KeyCodeCombination combination) {

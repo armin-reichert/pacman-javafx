@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Steering;
 import de.amr.games.pacman.model.GameLevel;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,10 +35,14 @@ public class KeyboardPacSteering extends Steering {
 
     @Override
     public void steer(GameLevel level) {
-        for (var combination : mappings.keySet()) {
-            if (Keyboard.pressed(combination)) {
-                level.pac().setWishDir(mappings.get(combination));
+        if (isEnabled()) {
+            for (var combination : mappings.keySet()) {
+                if (Keyboard.pressed(combination)) {
+                    level.pac().setWishDir(mappings.get(combination));
+                }
             }
+        } else {
+            Logger.info("Steering is disabled");
         }
     }
 }
