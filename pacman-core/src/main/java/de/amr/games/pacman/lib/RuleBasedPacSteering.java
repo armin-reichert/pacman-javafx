@@ -22,7 +22,7 @@ import static de.amr.games.pacman.lib.Globals.tileAt;
  *
  * @author Armin Reichert
  */
-public class RuleBasedPacSteering extends Steering {
+public class RuleBasedPacSteering implements Steering {
 
     private static class CollectedData {
 

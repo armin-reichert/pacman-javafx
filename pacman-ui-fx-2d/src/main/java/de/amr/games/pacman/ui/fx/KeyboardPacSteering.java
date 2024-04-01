@@ -19,7 +19,7 @@ import java.util.Map;
  *
  * @author Armin Reichert
  */
-public class KeyboardPacSteering extends Steering {
+public class KeyboardPacSteering implements Steering {
 
     public final Map<KeyCodeCombination, Direction> mappings = new HashMap<>();
 

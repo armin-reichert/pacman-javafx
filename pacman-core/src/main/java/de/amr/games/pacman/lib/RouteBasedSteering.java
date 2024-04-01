@@ -16,7 +16,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  *
  * @author Armin Reichert
  */
-public class RouteBasedSteering extends Steering {
+public class RouteBasedSteering implements Steering {
 
     private List<NavPoint> route = List.of();
     private int targetIndex;

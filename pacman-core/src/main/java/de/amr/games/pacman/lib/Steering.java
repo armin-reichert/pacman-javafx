@@ -9,9 +9,9 @@ import de.amr.games.pacman.model.actors.Creature;
 /**
  * @author Armin Reichert
  */
-public abstract class Steering {
+public interface Steering {
 
-    public void init() {}
+    default void init() {}
 
-    public abstract void steer(Creature creature);
+    void steer(Creature creature);
 }
