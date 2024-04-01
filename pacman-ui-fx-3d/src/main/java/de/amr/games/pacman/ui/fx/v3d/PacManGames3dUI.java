@@ -35,8 +35,8 @@ import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui.fx.input.Keyboard.alt;
-import static de.amr.games.pacman.ui.fx.input.Keyboard.just;
+import static de.amr.games.pacman.ui.fx.Keyboard.alt;
+import static de.amr.games.pacman.ui.fx.Keyboard.just;
 import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
 
 /**

@@ -63,12 +63,12 @@ public class Bonus3D extends Box {
         edibleAnimation.setInterpolator(Interpolator.LINEAR);
         edibleAnimation.setCycleCount(Animation.INDEFINITE);
 
-        eatenAnimation = new RotateTransition(Duration.seconds(1), this);
+        eatenAnimation = new RotateTransition(Duration.seconds(2), this);
         eatenAnimation.setAxis(Rotate.X_AXIS);
-        eatenAnimation.setFromAngle(0);
-        eatenAnimation.setToAngle(360);
+        eatenAnimation.setByAngle(360);
         eatenAnimation.setInterpolator(Interpolator.LINEAR);
         eatenAnimation.setRate(2);
+        eatenAnimation.setCycleCount(2);
     }
 
     public void update(World world) {
@@ -110,6 +110,7 @@ public class Bonus3D extends Box {
     }
 
     public void showEaten() {
+        edibleAnimation.stop();
         setVisible(true);
         setWidth(POINTS_WIDTH);
         setTexture(pointsImageView.getImage());

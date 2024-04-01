@@ -2,7 +2,7 @@
 Copyright (c) 2021-2023 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui.fx.input;
+package de.amr.games.pacman.ui.fx;
 
 import javafx.event.EventTarget;
 import javafx.scene.input.KeyCode;

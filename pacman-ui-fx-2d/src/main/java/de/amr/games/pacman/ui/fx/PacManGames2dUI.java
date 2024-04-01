@@ -14,8 +14,6 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.ArcadeWorld;
-import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.input.KeyboardPacSteering;
 import de.amr.games.pacman.ui.fx.page.GamePage;
 import de.amr.games.pacman.ui.fx.page.Page;
 import de.amr.games.pacman.ui.fx.page.StartPage;
@@ -50,7 +48,7 @@ import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui.fx.input.Keyboard.*;
+import static de.amr.games.pacman.ui.fx.Keyboard.*;
 import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
