@@ -46,7 +46,7 @@ public class GameLevel {
     private byte huntingPhaseIndex;
     private byte totalNumGhostsKilled;
     private byte cruiseElroyState;
-    private HuntingStepEventLog eventLog;
+    private SimulationStepEventLog eventLog;
     private byte bonusReachedIndex; // -1=no bonus, 0=first, 1=second
 
     public GameLevel(int levelNumber, GameLevelData levelData, GameModel game, World world, boolean demoLevel) {
@@ -62,7 +62,7 @@ public class GameLevel {
         this.demoLevel = demoLevel;
 
         houseControl = new GhostHouseControl(levelNumber);
-        eventLog = new HuntingStepEventLog();
+        eventLog = new SimulationStepEventLog();
         bonusReachedIndex = -1;
 
         pac = new Pac(game.variant() == GameVariant.MS_PACMAN ? "Ms. Pac-Man" : "Pac-Man");
@@ -211,7 +211,7 @@ public class GameLevel {
     /**
      * @return information about what happened during the current (hunting) frame
      */
-    public HuntingStepEventLog eventLog() {
+    public SimulationStepEventLog eventLog() {
         return eventLog;
     }
 
@@ -441,7 +441,7 @@ public class GameLevel {
     private void updateFood() {
         final Vector2i pacTile = pac.tile();
         if (world.hasFoodAt(pacTile)) {
-            eventLog.foundFoodAtTile = pacTile;
+            eventLog.foodFoundTile = pacTile;
             if (world.isEnergizerTile(pacTile)) {
                 eventLog.energizerFound = true;
                 pac.eatEnergizer();
@@ -531,7 +531,7 @@ public class GameLevel {
     }
 
     public GameState doHuntingStep() {
-        eventLog = new HuntingStepEventLog();
+        eventLog = new SimulationStepEventLog();
         pac.update(this);
         updateGhosts();
         updateFood();
