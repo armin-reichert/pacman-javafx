@@ -764,24 +764,22 @@ public class GameLevel {
      * TODO: This is not the exact behavior as in the original Arcade game.
      **/
     private Bonus createMovingBonus(byte symbol, int points, boolean leftToRight) {
-        var houseHeight = world.house().size().y();
-        var houseEntryTile = tileAt(world.house().door().entryPosition());
-        var portals = world.portals();
+        var house       = world.house();
+        var houseEntry  = tileAt(house.door().entryPosition());
+        var houseEntryOpposite = houseEntry.plus(0, house.size().y() + 1);
+
+        var portals     = world.portals();
         var entryPortal = portals.get(RND.nextInt(portals.size()));
-        var exitPortal = portals.get(RND.nextInt(portals.size()));
-        var startPoint = leftToRight
-            ? np(entryPortal.leftTunnelEnd())
-            : np(entryPortal.rightTunnelEnd());
-        var exitPoint = leftToRight
-            ? np(exitPortal.rightTunnelEnd().plus(1, 0))
-            : np(exitPortal.leftTunnelEnd().minus(1, 0));
+        var exitPortal  = portals.get(RND.nextInt(portals.size()));
 
         var route = new ArrayList<NavPoint>();
-        route.add(startPoint);
-        route.add(np(houseEntryTile));
-        route.add(np(houseEntryTile.plus(0, houseHeight + 1)));
-        route.add(np(houseEntryTile));
-        route.add(exitPoint);
+        route.add(np(leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd()));
+        route.add(np(houseEntry));
+        route.add(np(houseEntryOpposite));
+        route.add(np(houseEntry));
+        route.add(np(leftToRight
+            ? exitPortal.rightTunnelEnd().plus(1, 0)
+            : exitPortal.leftTunnelEnd().minus(1, 0)));
         route.trimToSize();
 
         var movingBonus = new MovingBonus(symbol, points);
