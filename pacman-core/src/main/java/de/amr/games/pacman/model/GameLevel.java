@@ -118,23 +118,21 @@ public class GameLevel {
 
     public Vector2f initialGhostPosition(byte ghostID) {
         checkGhostID(ghostID);
-        var house = world.house();
         return switch (ghostID) {
-            case RED_GHOST    -> house.door().entryPosition();
-            case PINK_GHOST   -> house.seat("middle");
-            case CYAN_GHOST   -> house.seat("left");
-            case ORANGE_GHOST -> house.seat("right");
+            case RED_GHOST    -> world.house().door().entryPosition();
+            case PINK_GHOST   -> ArcadeWorld.HOUSE_MIDDLE_SEAT;
+            case CYAN_GHOST   -> ArcadeWorld.HOUSE_LEFT_SEAT;
+            case ORANGE_GHOST -> ArcadeWorld.HOUSE_RIGHT_SEAT;
             default -> throw new IllegalGhostIDException(ghostID);
         };
     }
 
     public Vector2f ghostRevivalPosition(byte ghostID) {
         checkGhostID(ghostID);
-        var house = world.house();
         return switch (ghostID) {
-            case RED_GHOST, PINK_GHOST -> house.seat("middle");
-            case CYAN_GHOST            -> house.seat("left");
-            case ORANGE_GHOST          -> house.seat("right");
+            case RED_GHOST, PINK_GHOST -> ArcadeWorld.HOUSE_MIDDLE_SEAT;
+            case CYAN_GHOST            -> ArcadeWorld.HOUSE_LEFT_SEAT;
+            case ORANGE_GHOST          -> ArcadeWorld.HOUSE_RIGHT_SEAT;
             default -> throw new IllegalGhostIDException(ghostID);
         };
     }
