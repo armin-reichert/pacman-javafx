@@ -42,7 +42,7 @@ public class KeyboardPacSteering extends Steering {
                 }
             }
         } else {
-            Logger.info("Steering is disabled");
+            Logger.info("Cannot steer {}: Steering is disabled", creature.name());
         }
     }
 }
