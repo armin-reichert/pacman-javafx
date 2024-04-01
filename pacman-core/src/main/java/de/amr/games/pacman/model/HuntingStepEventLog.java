@@ -19,7 +19,7 @@ import java.util.List;
 public class HuntingStepEventLog {
     public Vector2i foundFoodAtTile = null;
     public boolean energizerFound = false;
-    public int bonusIndex = -1;
+    public byte bonusIndex = -1;
     public boolean bonusEaten = false;
     public boolean pacGetsPower = false;
     public boolean pacStartsLosingPower = false;

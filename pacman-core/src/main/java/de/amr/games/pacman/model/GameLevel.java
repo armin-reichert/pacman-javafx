@@ -47,7 +47,7 @@ public class GameLevel {
     private byte totalNumGhostsKilled;
     private byte cruiseElroyState;
     private HuntingStepEventLog eventLog;
-    private int bonusReachedIndex; // -1=no bonus, 0=first, 1=second
+    private byte bonusReachedIndex; // -1=no bonus, 0=first, 1=second
 
     public GameLevel(int levelNumber, GameLevelData levelData, GameModel game, World world, boolean demoLevel) {
         checkLevelNumber(levelNumber);
@@ -458,6 +458,11 @@ public class GameLevel {
             } else if (world.uneatenFoodCount() == data.elroy2DotsLeft()) {
                 setCruiseElroyState(2);
             }
+            if (isBonusReached()) {
+                bonusReachedIndex += 1;
+                eventLog.bonusIndex = bonusReachedIndex;
+                onBonusReached(bonusReachedIndex);
+            }
             publishGameEvent(game, GameEventType.PAC_FOUND_FOOD, pacTile);
         } else {
             pac.starve();
@@ -525,19 +530,11 @@ public class GameLevel {
         ghosts().forEach(ghost -> ghost.update(pac));
     }
 
-    private void checkIfBonusReached() {
-        if (eventLog.foundFoodAtTile != null && isBonusReached()) {
-            onBonusReached(++bonusReachedIndex);
-            eventLog.bonusIndex = bonusReachedIndex;
-        }
-    }
-
     public GameState doHuntingStep() {
         eventLog = new HuntingStepEventLog();
         pac.update(this);
         updateGhosts();
         updateFood();
-        checkIfBonusReached();
         updatePacPower();
         updateBonus();
         updateHuntingTimer();
