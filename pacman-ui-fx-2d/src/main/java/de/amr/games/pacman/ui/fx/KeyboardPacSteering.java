@@ -7,9 +7,9 @@ package de.amr.games.pacman.ui.fx;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Steering;
 import de.amr.games.pacman.model.actors.Creature;
+import de.amr.games.pacman.ui.fx.util.Keyboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,14 +39,10 @@ public class KeyboardPacSteering extends Steering {
 
     @Override
     public void steer(Creature creature) {
-        if (isEnabled()) {
-            for (var combination : mappings.keySet()) {
-                if (Keyboard.pressed(combination)) {
-                    creature.setWishDir(mappings.get(combination));
-                }
+        for (var combination : mappings.keySet()) {
+            if (Keyboard.pressed(combination)) {
+                creature.setWishDir(mappings.get(combination));
             }
-        } else {
-            Logger.info("Cannot steer {}: Steering is disabled", creature.name());
         }
     }
 }

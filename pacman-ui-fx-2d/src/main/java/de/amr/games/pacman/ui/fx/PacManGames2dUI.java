@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Steering;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -19,10 +18,7 @@ import de.amr.games.pacman.ui.fx.page.Page;
 import de.amr.games.pacman.ui.fx.page.StartPage;
 import de.amr.games.pacman.ui.fx.rendering2d.*;
 import de.amr.games.pacman.ui.fx.scene2d.*;
-import de.amr.games.pacman.ui.fx.util.GameClock;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.util.SpriteSheet;
-import de.amr.games.pacman.ui.fx.util.Theme;
+import de.amr.games.pacman.ui.fx.util.*;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.BooleanProperty;
@@ -48,7 +44,7 @@ import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui.fx.Keyboard.*;
+import static de.amr.games.pacman.ui.fx.util.Keyboard.*;
 import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
@@ -214,7 +210,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     protected final Scene mainScene;
     protected final StartPage startPage;
     protected final GamePage gamePage;
-    protected Steering keyboardSteering;
     protected Page currentPage;
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
     private AudioClip voiceClip;
@@ -228,7 +223,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         mainScene = createMainScene();
         startPage = createStartPage();
         gamePage  = createGamePage(mainScene);
-        keyboardSteering = new KeyboardPacSteering();
 
         Keyboard.handleKeyEventsFor(mainScene);
 
@@ -512,16 +506,17 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             switch (e.game.variant()) {
                 case MS_PACMAN -> {
                     level.pac().setAnimations(new MsPacManGamePacAnimations(level.pac(), spriteSheet()));
-                    level.pac().setManualSteering(keyboardSteering);
                     level.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, spriteSheet())));
                     Logger.info("Created Ms. Pac-Man game creature animations for level #{}", level.number());
                 }
                 case PACMAN -> {
                     level.pac().setAnimations(new PacManGamePacAnimations(level.pac(), spriteSheet()));
-                    level.pac().setManualSteering(keyboardSteering);
                     level.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, spriteSheet())));
                     Logger.info("Created Pac-Man game creature animations for level #{}", level.number());
                 }
+            }
+            if (!level.isDemoLevel()) {
+                level.pac().setManualSteering(new KeyboardPacSteering());
             }
         });
     }
