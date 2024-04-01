@@ -26,7 +26,9 @@ public class Keyboard {
             matchingCombinations.clear();
             registeredCombinations.stream().filter(c -> c.match(e)).forEach(matchingCombinations::add);
         });
-        target.addEventFilter(KeyEvent.KEY_RELEASED, e -> matchingCombinations.clear());
+        target.addEventFilter(KeyEvent.KEY_RELEASED, e -> {
+            matchingCombinations.clear();
+        });
     }
 
     /**

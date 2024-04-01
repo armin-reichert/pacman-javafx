@@ -27,10 +27,14 @@ public class KeyboardPacSteering extends Steering {
      * Default steering: unmodified cursor keys.
      */
     public KeyboardPacSteering() {
-        mappings.put(Keyboard.just(KeyCode.UP),    Direction.UP);
-        mappings.put(Keyboard.just(KeyCode.DOWN),  Direction.DOWN);
-        mappings.put(Keyboard.just(KeyCode.LEFT),  Direction.LEFT);
-        mappings.put(Keyboard.just(KeyCode.RIGHT), Direction.RIGHT);
+        mappings.put(Keyboard.just(KeyCode.UP),       Direction.UP);
+        mappings.put(Keyboard.just(KeyCode.DOWN),     Direction.DOWN);
+        mappings.put(Keyboard.just(KeyCode.LEFT),     Direction.LEFT);
+        mappings.put(Keyboard.just(KeyCode.RIGHT),    Direction.RIGHT);
+        mappings.put(Keyboard.control(KeyCode.UP),    Direction.UP);
+        mappings.put(Keyboard.control(KeyCode.DOWN),  Direction.DOWN);
+        mappings.put(Keyboard.control(KeyCode.LEFT),  Direction.LEFT);
+        mappings.put(Keyboard.control(KeyCode.RIGHT), Direction.RIGHT);
     }
 
     @Override
