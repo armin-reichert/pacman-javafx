@@ -46,11 +46,11 @@ public class PacManGameTest {
         var level = game.level().get();
         assertEquals(1, level.number());
         assertEquals(0, level.totalNumGhostsKilled());
-<<<<<<< HEAD
+//<<<<<<< HEAD
 //        assertEquals(0, level.numGhostsKilledByEnergizer());
-=======
+//=======
         assertEquals(0, level.pac().victims().size());
->>>>>>> 96bfc088d0755e5f9d696897be79e589805e034b
+//>>>>>>> 96bfc088d0755e5f9d696897be79e589805e034b
         assertEquals(0, level.cruiseElroyState());
     }
 
@@ -67,34 +67,29 @@ public class PacManGameTest {
     public void testGhostsCreatedAndInitialized() {
         game.level().ifPresent(level -> {
             var redGhost = level.ghost(GameModel.RED_GHOST);
-<<<<<<< HEAD
-//            assertEquals(-1, redGhost.killedIndex());
-=======
->>>>>>> 96bfc088d0755e5f9d696897be79e589805e034b
+
+
+
             assertNotEquals(Vector2f.ZERO, level.ghostRevivalPosition(redGhost.id()));
             assertNotEquals(Vector2i.ZERO, level.ghostScatterTarget(redGhost.id()));
 
             var pinkGhost = level.ghost(GameModel.PINK_GHOST);
-<<<<<<< HEAD
-//            assertEquals(-1, pinkGhost.killedIndex());
-=======
->>>>>>> 96bfc088d0755e5f9d696897be79e589805e034b
+
+
             assertNotEquals(Vector2f.ZERO, level.ghostRevivalPosition(pinkGhost.id()));
             assertNotEquals(Vector2i.ZERO, level.ghostScatterTarget(pinkGhost.id()));
 
             var cyanGhost = level.ghost(GameModel.CYAN_GHOST);
-<<<<<<< HEAD
+
 //            assertEquals(-1, cyanGhost.killedIndex());
-=======
->>>>>>> 96bfc088d0755e5f9d696897be79e589805e034b
+
             assertNotEquals(Vector2f.ZERO, level.ghostRevivalPosition(cyanGhost.id()));
             assertNotEquals(Vector2i.ZERO, level.ghostScatterTarget(cyanGhost.id()));
 
             var orangeGhost = level.ghost(GameModel.ORANGE_GHOST);
-<<<<<<< HEAD
+
 //            assertEquals(-1, orangeGhost.killedIndex());
-=======
->>>>>>> 96bfc088d0755e5f9d696897be79e589805e034b
+
             assertNotEquals(Vector2f.ZERO, level.ghostRevivalPosition(orangeGhost.id()));
             assertNotEquals(Vector2i.ZERO, level.ghostScatterTarget(orangeGhost.id()));
         });
@@ -155,14 +150,13 @@ public class PacManGameTest {
         assertEquals(0, GameController.it().credit());
     }
 
-<<<<<<< HEAD
+
 //    @Test(expected = IllegalArgumentException.class)
 //    public void testIllegalKilledIndex() {
 //        game.level().ifPresent(level -> level.ghost(GameModel.RED_GHOST).setKilledIndex(42));
 //    }
 
-=======
->>>>>>> 96bfc088d0755e5f9d696897be79e589805e034b
+
     @Test
     public void testLegalCruiseElroyState() {
         game.level().ifPresent(level -> {
