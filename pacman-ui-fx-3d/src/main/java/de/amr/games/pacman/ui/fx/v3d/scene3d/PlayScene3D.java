@@ -414,9 +414,7 @@ public class PlayScene3D implements GameScene {
 
     private void playLevelCompleteAnimation(GameLevel level) {
         boolean noIntermission = level.data().intermissionNumber() == 0;
-        if (noIntermission) {
-            context.actionHandler().showFlashMessageSeconds(2, pickLevelCompleteMessage(level.number()));
-        }
+        context.actionHandler().showFlashMessageSeconds(2, pickLevelCompleteMessage(level.number()));
         var animation = new SequentialTransition(
             pauseSeconds(1),
             level3D.createLevelCompleteAnimation(),
