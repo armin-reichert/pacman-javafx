@@ -14,10 +14,7 @@ import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
@@ -764,15 +761,15 @@ public class GameLevel {
         var entryPortal = portals.get(RND.nextInt(portals.size()));
         var exitPortal  = portals.get(RND.nextInt(portals.size()));
 
-        var route = new ArrayList<NavPoint>();
-        route.add(np(leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd()));
-        route.add(np(houseEntry));
-        route.add(np(houseEntryOpposite));
-        route.add(np(houseEntry));
-        route.add(np(leftToRight
-            ? exitPortal.rightTunnelEnd().plus(1, 0)
-            : exitPortal.leftTunnelEnd().minus(1, 0)));
-        route.trimToSize();
+        var route = List.of(
+            np(leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd()),
+            np(houseEntry),
+            np(houseEntryOpposite),
+            np(houseEntry),
+            np(leftToRight
+                ? exitPortal.rightTunnelEnd().plus(1, 0)
+                : exitPortal.leftTunnelEnd().minus(1, 0))
+        );
 
         var movingBonus = new MovingBonus(symbol, points);
         movingBonus.setWorld(world);
