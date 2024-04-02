@@ -253,7 +253,7 @@ public enum GameState implements FsmState<GameModel> {
 
         static final int TICK_HIDE_GHOSTS = 60;
         static final int TICK_START_PAC_ANIMATION = 90;
-        static final int TICK_START_PAC_HIDE = 180;
+        static final int TICK_HIDE_PAC = 180;
 
         @Override
         public void onEnter(GameModel game) {
@@ -273,7 +273,7 @@ public enum GameState implements FsmState<GameModel> {
                 } else if (timer.tick() == TICK_START_PAC_ANIMATION) {
                     level.pac().startAnimation();
                     publishGameEvent(game, GameEventType.PAC_DIED);
-                } else if (timer.tick() == TICK_START_PAC_HIDE) {
+                } else if (timer.tick() == TICK_HIDE_PAC) {
                     level.pac().hide();
                     game.loseLife();
                 } else if (timer.hasExpired()) {
