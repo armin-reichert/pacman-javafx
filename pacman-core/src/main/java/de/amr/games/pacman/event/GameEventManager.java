@@ -26,7 +26,7 @@ public class GameEventManager {
     }
 
     public static void publishGameEvent(GameModel game, GameEventType type) {
-        publishGameEvent(new GameEvent(type, game, null));
+        publishGameEvent(new GameEvent(type, game));
     }
 
     public static void publishGameEvent(GameModel game, GameEventType type, Vector2i tile) {

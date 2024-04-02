@@ -29,7 +29,11 @@ public class GameEvent {
         this.tile = tile;
     }
 
-    @Override
+    public GameEvent(GameEventType type, GameModel game) {
+        this(type, game, null);
+    }
+
+        @Override
     public String toString() {
         return "GameEvent{" +
             "type=" + type +

@@ -100,8 +100,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            if (gameController().isPlaying()) {
-                // resume running game
+            if (gameController().isPlaying()) { // resume running game
                 if (timer.tick() == TICK_RESUME_GAME) {
                     game.level().ifPresent(level -> {
                         level.pac().show();
@@ -144,7 +143,7 @@ public enum GameState implements FsmState<GameModel> {
                 level.pac().startAnimation();
                 level.ghosts().forEach(Ghost::startAnimation);
                 level.world().energizerBlinking().restart();
-                publishGameEvent(new GameEvent(GameEventType.HUNTING_PHASE_STARTED, game, null));
+                publishGameEvent(new GameEvent(GameEventType.HUNTING_PHASE_STARTED, game));
             });
         }
 
