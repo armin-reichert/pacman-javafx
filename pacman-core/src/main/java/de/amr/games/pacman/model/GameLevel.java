@@ -611,12 +611,13 @@ public class GameLevel {
     }
 
     private void killGhost(Ghost ghost) {
-        totalNumGhostsKilled += 1;
-        int points = game.pointsForKillingGhost(pac.victims().size());
-        ghost.eaten(pac.victims().size());
+        int killedSoFar = pac.victims().size();
+        int points = game.pointsForKillingGhost(killedSoFar);
+        scorePoints(points);
+        ghost.eaten(killedSoFar);
         pac.victims().add(ghost);
         eventLog.killedGhosts.add(ghost);
-        scorePoints(points);
+        totalNumGhostsKilled += 1;
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }
 
