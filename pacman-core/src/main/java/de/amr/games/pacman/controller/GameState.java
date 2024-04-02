@@ -178,12 +178,12 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             game.level().ifPresent(level -> {
                 if (timer.hasExpired()) {
-                    if (!gameController().hasCredit()) { // from demo level back to intro scene
+                    if (level.isDemoLevel()) { // just in case demo level is completed: back to intro scene
                         gameController().changeState(INTRO);
                     } else if (level.data().intermissionNumber() > 0) {
-                        gameController().changeState(INTERMISSION); // play intermission scene
+                        gameController().changeState(INTERMISSION);
                     } else {
-                        gameController().changeState(CHANGING_TO_NEXT_LEVEL); // next level
+                        gameController().changeState(CHANGING_TO_NEXT_LEVEL);
                     }
                 } else {
                     level.pac().stopAnimation();
