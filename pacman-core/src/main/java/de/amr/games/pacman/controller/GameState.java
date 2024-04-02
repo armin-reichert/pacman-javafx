@@ -70,6 +70,16 @@ public enum GameState implements FsmState<GameModel> {
     },
 
     READY {
+
+        static final int TICK_NEW_GAME_CREATE_LEVEL  = 1;
+        static final int TICK_NEW_GAME_SHOW_GUYS     = 120;
+        static final int TICK_NEW_GAME_START_PLAYING = 260;
+
+        static final int TICK_DEMO_LEVEL_CREATE_LEVEL = 1;
+        static final int TICK_DEMO_LEVEL_START_PLAYING = 120;
+
+        static final int TICK_RESUME_GAME = 90;
+
         @Override
         public void onEnter(GameModel game) {
             if (gameController().isPlaying()) {
@@ -92,7 +102,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             if (gameController().isPlaying()) {
                 // resume running game
-                if (timer.tick() == 90) {
+                if (timer.tick() == TICK_RESUME_GAME) {
                     game.level().ifPresent(level -> {
                         level.pac().show();
                         level.ghosts().forEach(Ghost::show);
@@ -101,30 +111,24 @@ public enum GameState implements FsmState<GameModel> {
                     });
                 }
             }
-            else if (gameController().hasCredit()) {
-                // start new game
-                if (timer.tick() == 1) {
-                    gameController().createAndStartLevel(1);
-                    Logger.trace("Timer tick == 1, create level 1: {}", timer);
-                } else if (timer.tick() == 120) {
-                    game.level().ifPresent(level -> {
+            else if (gameController().hasCredit()) { // start new game
+                switch ((int) timer.tick()) {
+                    case TICK_NEW_GAME_CREATE_LEVEL -> gameController().createAndStartLevel(1);
+                    case TICK_NEW_GAME_SHOW_GUYS -> game.level().ifPresent(level -> {
                         level.pac().show();
                         level.ghosts().forEach(Ghost::show);
                     });
-                } else if (timer.tick() == 260) {
-                    game.level().ifPresent(level -> {
+                    case TICK_NEW_GAME_START_PLAYING -> game.level().ifPresent(level -> {
                         gameController().setPlaying(true);
                         level.startHuntingPhase(0);
                         gameController().changeState(GameState.HUNTING);
                     });
                 }
             }
-            else {
-                // start demo level
-                if (timer.tick() == 1) {
-                    gameController().createAndStartDemoLevel();
-                } else if (timer.tick() == 120) {
-                    game.level().ifPresent(level -> {
+            else { // start demo level
+                switch ((int) timer.tick()) {
+                    case TICK_DEMO_LEVEL_CREATE_LEVEL -> gameController().createAndStartDemoLevel();
+                    case TICK_DEMO_LEVEL_START_PLAYING -> game.level().ifPresent(level -> {
                         level.startHuntingPhase(0);
                         gameController().changeState(GameState.HUNTING);
                     });
