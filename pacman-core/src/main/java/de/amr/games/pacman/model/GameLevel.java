@@ -202,13 +202,6 @@ public class GameLevel {
     }
 
     /**
-     * @return Pac-Man and the ghosts in order RED, PINK, CYAN, ORANGE
-     */
-    public Stream<Creature> guys() {
-        return Stream.of(pac, ghosts[RED_GHOST], ghosts[PINK_GHOST], ghosts[CYAN_GHOST], ghosts[ORANGE_GHOST]);
-    }
-
-    /**
      * @return information about what happened during the current (hunting) frame
      */
     public SimulationStepEventLog eventLog() {
@@ -571,7 +564,8 @@ public class GameLevel {
                 bonus().ifPresent(bonus -> bonus.setEaten(60));
                 publishGameEvent(game, GameEventType.BONUS_EATEN);
             } else if (timer.atSecond(8.5)) {
-                guys().forEach(Creature::hide);
+                pac.hide();
+                ghosts().forEach(Ghost::hide);
                 var flashing = world().mazeFlashing();
                 flashing.restart(2 * data.numFlashes());
             } else if (timer.atSecond(12.0)) {

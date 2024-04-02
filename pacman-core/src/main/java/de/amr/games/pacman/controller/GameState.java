@@ -10,7 +10,10 @@ import de.amr.games.pacman.lib.FsmState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.actors.Pac;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -91,7 +94,8 @@ public enum GameState implements FsmState<GameModel> {
                 // resume running game
                 if (timer.tick() == 90) {
                     game.level().ifPresent(level -> {
-                        level.guys().forEach(Creature::show);
+                        level.pac().show();
+                        level.ghosts().forEach(Ghost::show);
                         level.startHuntingPhase(0);
                         gameController().changeState(GameState.HUNTING);
                     });
@@ -103,7 +107,10 @@ public enum GameState implements FsmState<GameModel> {
                     gameController().createAndStartLevel(1);
                     Logger.trace("Timer tick == 1, create level 1: {}", timer);
                 } else if (timer.tick() == 120) {
-                    game.level().ifPresent(level -> level.guys().forEach(Creature::show));
+                    game.level().ifPresent(level -> {
+                        level.pac().show();
+                        level.ghosts().forEach(Ghost::show);
+                    });
                 } else if (timer.tick() == 260) {
                     game.level().ifPresent(level -> {
                         gameController().setPlaying(true);
