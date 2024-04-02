@@ -184,6 +184,10 @@ public class Pac extends Creature implements AnimationDirector {
         return (powerTimerr || powerTimer1);
     }
 
+
+
+
+
     public TickTimer powerTimer() {
         return powerTimer;
     }
