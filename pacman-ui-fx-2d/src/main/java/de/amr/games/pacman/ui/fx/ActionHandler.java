@@ -46,4 +46,5 @@ public interface ActionHandler {
     void cheatEnterNextLevel();
 
     void cheatKillAllEatableGhosts();
+    void toggle2D3D();
 }

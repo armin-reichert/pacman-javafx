@@ -178,8 +178,10 @@ public class Pac extends Creature implements AnimationDirector {
     }
 
     public boolean isPowerFadingStarting() {
-        return powerTimer.isRunning() && powerTimer.remaining() == powerFadingTicks
-            || powerTimer().duration() < powerFadingTicks && powerTimer().tick() == 1;
+
+        boolean powerTimerr = powerTimer.isRunning() && powerTimer.remaining() == powerFadingTicks;
+        boolean powerTimer1 = powerTimer().duration() < powerFadingTicks && powerTimer().tick() == 1;
+        return (powerTimerr || powerTimer1);
     }
 
     public TickTimer powerTimer() {

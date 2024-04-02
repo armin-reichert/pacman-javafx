@@ -57,33 +57,7 @@ public class GamePageContextMenu extends ContextMenu {
         var actionHandler = (ActionHandler3D) sceneContext.actionHandler();
         getItems().clear();
         getItems().add(createTitleItem(sceneContext.tt("scene_display")));
-        if (gameScene instanceof PlayScene2D) {
-            var item = new MenuItem(sceneContext.tt("use_3D_scene"));
-            item.setOnAction(e -> actionHandler.toggle2D3D());
-            getItems().add(item);
-        } else if (gameScene instanceof PlayScene3D) {
-            var item = new MenuItem(sceneContext.tt("use_2D_scene"));
-            item.setOnAction(e -> actionHandler.toggle2D3D());
-            getItems().add(item);
-            pipItem = new CheckMenuItem(sceneContext.tt("pip"));
-            pipItem.setOnAction(e -> actionHandler.togglePipVisible());
-            getItems().add(pipItem);
-
-            getItems().add(createTitleItem(sceneContext.tt("select_perspective")));
-            perspectivesToggleGroup = new ToggleGroup();
-            for (var p : Perspective.values()) {
-                var rmi = new RadioMenuItem(sceneContext.tt(p.name()));
-                rmi.setUserData(p);
-                rmi.setToggleGroup(perspectivesToggleGroup);
-                getItems().add(rmi);
-            }
-            perspectivesToggleGroup.selectedToggleProperty().addListener((py, ov, nv) -> {
-                if (nv != null) {
-                    // Note: These are the user data of the radio menu item!
-                    PY_3D_PERSPECTIVE.set((Perspective) nv.getUserData());
-                }
-            });
-        }
+        gameScene.configureContextMenu(gameScene,sceneContext,getItems());
 
         getItems().add(createTitleItem(sceneContext.tt("pacman")));
         autopilotItem = new CheckMenuItem(sceneContext.tt("autopilot"));

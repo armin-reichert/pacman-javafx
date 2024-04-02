@@ -16,15 +16,21 @@ import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
+import de.amr.games.pacman.ui.fx.v3d.GamePageContextMenu;
 import de.amr.games.pacman.ui.fx.v3d.entity.*;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -337,10 +343,16 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
+//    public void onBonusExpired(GameEvent event) {
+//        assertLevel3DExists();
+//        level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
+//    }
+
     public void onBonusExpired(GameEvent event) {
         assertLevel3DExists();
         level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
     }
+
 
     @Override
     public void onLevelCreated(GameEvent event) {
@@ -466,5 +478,38 @@ public class PlayScene3D implements GameScene {
         animation.setDelay(Duration.seconds(seconds));
         animation.setOnFinished(e -> context.gameState().timer().expire());
         animation.play();
+    }
+
+    public void configureContextMenu(GameScene gameScene, GameSceneContext sceneContext, ObservableList<MenuItem> items){
+        var actionHandler = (ActionHandler3D) sceneContext.actionHandler();
+        var item = new MenuItem(sceneContext.tt("use_2D_scene"));
+        item.setOnAction(e -> actionHandler.toggle2D3D());
+        items.add(item);
+        CheckMenuItem pipItem = new CheckMenuItem(sceneContext.tt("pip"));
+        pipItem.setOnAction(e -> actionHandler.togglePipVisible());
+        items.add(pipItem);
+
+        items.add(createTitleItem(sceneContext.tt("select_perspective")));
+        ToggleGroup perspectivesToggleGroup = new ToggleGroup();
+        for (var p : Perspective.values()) {
+            var rmi = new RadioMenuItem(sceneContext.tt(p.name()));
+            rmi.setUserData(p);
+            rmi.setToggleGroup(perspectivesToggleGroup);
+            items.add(rmi);
+        }
+        perspectivesToggleGroup.selectedToggleProperty().addListener((py, ov, nv) -> {
+            if (nv != null) {
+                // Note: These are the user data of the radio menu item!
+                PY_3D_PERSPECTIVE.set((Perspective) nv.getUserData());
+            }
+        });
+    }
+    private static final Color TITLE_ITEM_COLOR = Color.CORNFLOWERBLUE;
+    private static final Font TITLE_ITEM_FONT = Font.font("Dialog", FontWeight.BLACK, 14);
+    private MenuItem createTitleItem(String title) {
+        var text = new Text(title);
+        text.setFont(TITLE_ITEM_FONT);
+        text.setFill(TITLE_ITEM_COLOR);
+        return new CustomMenuItem(text);
     }
 }

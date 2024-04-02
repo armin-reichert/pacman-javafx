@@ -9,6 +9,13 @@
     </parent>
 
     <artifactId>pacman-core</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>org.tinylog</groupId>
+            <artifactId>tinylog-api</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+    </dependencies>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
 

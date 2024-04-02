@@ -5,7 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx;
 
 import de.amr.games.pacman.event.GameEventListener;
+//import de.amr.games.pacman.ui.fx.v3d.GamePageContextMenu;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.MenuItem;
 
 /**
  * Common interface of all game scenes (2D and 3D).
@@ -59,4 +62,5 @@ public interface GameScene extends GameEventListener {
     GameSceneContext context();
 
     void setContext(GameSceneContext context);
+    public abstract void configureContextMenu(GameScene gameScene, GameSceneContext sceneContext, ObservableList<MenuItem> items);
 }

@@ -6,19 +6,24 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.ActionHandler;
+import de.amr.games.pacman.ui.fx.GameScene;
+import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
+//import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
+//import de.amr.games.pacman.ui.fx.v3d.GamePageContextMenu;
+//import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
+import javafx.collections.ObservableList;
+import javafx.scene.control.MenuItem;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-
-import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.ENTERING_HOUSE;
@@ -62,6 +67,15 @@ public class PlayScene2D extends GameScene2D {
             context.actionHandler().cheatKillAllEatableGhosts();
         }
     }
+
+    public void configureContextMenu(GameScene gameScene, GameSceneContext sceneContext, ObservableList<MenuItem> items){
+        var actionHandler = (ActionHandler) sceneContext.actionHandler();
+        var item = new MenuItem(sceneContext.tt("use_3D_scene"));
+        item.setOnAction(e -> actionHandler.toggle2D3D());
+        items.add(item);
+//        getItems().add(item);
+    }
+
 
     @Override
     public void onGameStateEntry(GameState state) {
@@ -190,4 +204,6 @@ public class PlayScene2D extends GameScene2D {
             }
         });
     }
+
+
 }

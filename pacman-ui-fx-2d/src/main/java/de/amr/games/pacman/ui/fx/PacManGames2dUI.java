@@ -843,4 +843,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             voiceClipExecution.stop();
         }
     }
+
+    public void toggle2D3D(){
+    }
 }

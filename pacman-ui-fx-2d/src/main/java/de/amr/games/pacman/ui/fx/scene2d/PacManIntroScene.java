@@ -44,6 +44,8 @@ public class PacManIntroScene extends GameScene2D {
         intro.changeState(State.START);
     }
 
+
+
     @Override
     public void update() {
         intro.update();
@@ -157,4 +159,7 @@ public class PacManIntroScene extends GameScene2D {
         drawText("50",  color, font8, t(tx + 2), t(ty + 2));
         drawText("PTS", color, font6, t(tx + 5), t(ty + 2));
     }
+
+    public void toggle2D3D(){
+}
 }

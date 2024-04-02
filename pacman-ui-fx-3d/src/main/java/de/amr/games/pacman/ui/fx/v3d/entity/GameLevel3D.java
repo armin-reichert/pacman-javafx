@@ -93,7 +93,8 @@ public class GameLevel3D extends Group {
         pac3D = createPac3D(level.pac());
         ghosts3D = level.ghosts().map(this::createGhost3D).toList();
         createWorld3D();
-        createLivesCounter3D();
+//        createLivesCounter3D();
+        LivesCounter3D.createLivesCounter3D(context);
         createLevelCounter3D();
         createMessage3D();
 
@@ -168,27 +169,7 @@ public class GameLevel3D extends Group {
         Logger.info("3D world created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
     }
 
-    private void createLivesCounter3D() {
-        var theme = context.theme();
-        livesCounter3D = new LivesCounter3D(
-            theme.get  ("livescounter.entries"),
-            theme.color("livescounter.pillar.color"),
-            theme.get  ("livescounter.pillar.height"),
-            theme.color("livescounter.plate.color"),
-            theme.get  ("livescounter.plate.thickness"),
-            theme.get  ("livescounter.plate.radius"),
-            theme.color("livescounter.light.color"));
-        livesCounter3D.setTranslateX(2 * TS);
-        livesCounter3D.setTranslateY(2 * TS);
-        livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
-        for (int i = 0; i < livesCounter3D.maxLives(); ++i) {
-            var pac3D = switch (context.gameVariant()) {
-                case MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), null, theme.get("livescounter.pac.size"));
-                case    PACMAN -> Pac3D.createPacMan3D(context.theme(), null,  theme.get("livescounter.pac.size"));
-            };
-            livesCounter3D.addItem(pac3D, true);
-        }
-    }
+
 
     public void createLevelCounter3D() {
         double spacing = 2 * TS;

@@ -562,39 +562,73 @@ public class GameLevel {
 
     public void doLevelTestStep(TickTimer timer, int lastTestedLevel) {
         if (number() <= lastTestedLevel) {
-            if (timer.atSecond(0.5)) {
-                letsGetReadyToRumble(true);
-            } else if (timer.atSecond(1.5)) {
-                onBonusReached(0);
-            } else if (timer.atSecond(3.5)) {
-                bonus().ifPresent(bonus -> bonus.setEaten(120));
-                publishGameEvent(game, GameEventType.BONUS_EATEN);
-            } else if (timer.atSecond(4.5)) {
-                bonus.setInactive();//TODO
-                onBonusReached(1);
-            } else if (timer.atSecond(6.5)) {
-                bonus().ifPresent(bonus -> bonus.setEaten(60));
-                publishGameEvent(game, GameEventType.BONUS_EATEN);
-            } else if (timer.atSecond(8.5)) {
-                guys().forEach(Creature::hide);
-                var flashing = world().mazeFlashing();
-                flashing.restart(2 * data.numFlashes());
-            } else if (timer.atSecond(12.0)) {
-                pac.freeze();
-                ghosts().forEach(Ghost::hide);
-                bonus().ifPresent(Bonus::setInactive);
-                world().mazeFlashing().reset();
-                GameController.it().createAndStartLevel(levelNumber + 1);
-                timer.restartIndefinitely();
-            }
-            world().energizerBlinking().tick();
-            world().mazeFlashing().tick();
-            ghosts().forEach(ghost -> ghost.update(pac()));
-            bonus().ifPresent(bonus -> bonus.update(this));
+            handleEarlyTestSteps(timer);
+            handleMidTestSteps(timer);
+            handleLateTestSteps(timer);
+            updateWorldState();
         } else {
             GameController.it().restart(GameState.BOOT);
         }
     }
+
+    private static final double READY_TO_RUMBLE_TIME = 0.5;
+    private static final double FIRST_BONUS_TIME = 1.5;
+    private static final double EAT_BONUS_TIME = 3.5;
+    private static final double DEACTIVATE_BONUS_TIME = 4.5;
+    private static final double SECOND_EAT_BONUS_TIME = 6.5;
+    private static final double MAZE_FLASHING_TIME = 8.5;
+    private static final double LATE_TEST_STEP_TIME = 12.0;
+
+    private static final int BONUS_EATEN_DURATION = 120;
+    private static final int SECOND_BONUS_DURATION = 60;
+
+    private static final int FIRST_BONUS_INDEX = 0;
+    private static final int FLASH_FACTOR = 2;
+
+
+    private void handleEarlyTestSteps(TickTimer timer) {
+        if (timer.atSecond(READY_TO_RUMBLE_TIME)) {
+            letsGetReadyToRumble(true);
+        } else if (timer.atSecond(FIRST_BONUS_TIME)) {
+            onBonusReached(FIRST_BONUS_INDEX);
+        } else if (timer.atSecond(EAT_BONUS_TIME)) {
+
+            bonus().ifPresent(bonus -> bonus.setEaten(BONUS_EATEN_DURATION));
+            publishGameEvent(game, GameEventType.BONUS_EATEN);
+        }
+    }
+
+    private void handleMidTestSteps(TickTimer timer) {
+        if (timer.atSecond(DEACTIVATE_BONUS_TIME)) {
+            bonus().ifPresent(Bonus::setInactive);
+            onBonusReached(1);
+        } else if (timer.atSecond(SECOND_EAT_BONUS_TIME)) {
+
+            bonus().ifPresent(bonus -> bonus.setEaten(SECOND_BONUS_DURATION));
+            publishGameEvent(game, GameEventType.BONUS_EATEN);
+        } else if (timer.atSecond(MAZE_FLASHING_TIME)) {
+            guys().forEach(Creature::hide);
+            world().mazeFlashing().restart(FLASH_FACTOR * data.numFlashes());
+        }
+    }
+
+    private void handleLateTestSteps(TickTimer timer) {
+        if (timer.atSecond(LATE_TEST_STEP_TIME)) {
+            pac.freeze();
+            ghosts().forEach(Ghost::hide);
+            bonus().ifPresent(Bonus::setInactive);
+            world().mazeFlashing().reset();
+            GameController.it().createAndStartLevel(levelNumber + 1);
+        }
+    }
+
+    private void updateWorldState() {
+        world().energizerBlinking().tick();
+        world().mazeFlashing().tick();
+        ghosts().forEach(ghost -> ghost.update(pac()));
+        bonus().ifPresent(bonus -> bonus.update(this));
+    }
+
 
     /**
      * Called by cheat action only.

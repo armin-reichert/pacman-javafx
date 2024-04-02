@@ -13,14 +13,18 @@ import de.amr.games.pacman.ui.fx.rendering2d.ClapperboardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimations;
+//import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
+//import de.amr.games.pacman.ui.fx.v3d.GamePageContextMenu;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -383,4 +387,9 @@ public abstract class GameScene2D implements GameScene {
             g.strokeLine(s(TS * (col)), 0, s(TS * (col)), s(tilesY * TS));
         }
     }
+
+    public void configureContextMenu(GameScene gameScene, GameSceneContext sceneContext, ObservableList<MenuItem> items){
+
+    }
+
 }

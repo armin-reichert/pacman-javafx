@@ -242,18 +242,37 @@ public class FloorPlan {
         }
     }
 
+
+
+
+    private boolean checkForCardinalDirections(World world,Vector2i[] arr){
+        return world.isWall(arr[0]) && world.isWall(arr[1]) && world.isWall(arr[2]) && world.isWall(arr[3]);
+    }
+
+
+    private boolean checkForOrdinalDirections(World world,Vector2i[] arr){
+        boolean c1 = world.isWall(arr[0]) && !world.isWall(arr[3]);
+        boolean c2 =  !world.isWall(arr[0]) &&  world.isWall(arr[3]);
+        boolean c3 = world.isWall(arr[1]) && !world.isWall(arr[2]);
+        boolean c4 = !world.isWall(arr[1]) &&  world.isWall(arr[2]);
+        return !(  c1 || c2 ||  c3 || c4);
+    }
+
+
+
+
+
     private void clearCellsSurroundedByWalls(World world) {
         for (int y = 0; y < sizeY; ++y) {
             for (int x = 0; x < sizeX; ++x) {
                 int i = (y % resolution) * resolution + (x % resolution);
                 Vector2i tile = v2i(x / resolution, y / resolution);
                 Vector2i n = northOf(tile, i), e = eastOf(tile, i), s = southOf(tile, i), w = westOf(tile, i);
-                if (world.isWall(n) && world.isWall(e) && world.isWall(s) && world.isWall(w)) {
+                Vector2i[] arr={n,e,s,w};
+                if (checkForCardinalDirections(world,arr)) {
                     Vector2i se = southOf(e, i), sw = southOf(w, i), ne = northOf(e, i), nw = northOf(w, i);
-                    if (!(  world.isWall(se) && !world.isWall(nw)
-                        || !world.isWall(se) &&  world.isWall(nw)
-                        ||  world.isWall(sw) && !world.isWall(ne)
-                        || !world.isWall(sw) &&  world.isWall(ne)) ) {
+                    arr= new Vector2i[]{se, sw, ne, nw};
+                    if ( checkForOrdinalDirections(world,arr)) {
                         cells[y][x] = EMPTY;
                     }
                 }

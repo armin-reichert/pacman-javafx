@@ -11,6 +11,7 @@ open module de.amr.games.pacman.ui.fx {
     requires org.tinylog.api;
     requires de.amr.games.pacman;
 
+
     exports de.amr.games.pacman.ui.fx;
     exports de.amr.games.pacman.ui.fx.input;
     exports de.amr.games.pacman.ui.fx.util;
