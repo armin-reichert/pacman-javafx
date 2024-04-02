@@ -414,14 +414,17 @@ public class PlayScene3D implements GameScene {
 
     private void playLevelCompleteAnimation(GameLevel level) {
         boolean noIntermission = level.data().intermissionNumber() == 0;
+        if (noIntermission) {
+            context.actionHandler().showFlashMessageSeconds(2, pickLevelCompleteMessage(level.number()));
+        }
         var animation = new SequentialTransition(
+            pauseSeconds(1),
             level3D.createLevelCompleteAnimation(),
             doAfterSeconds(1.0, () -> {
                 level.pac().hide();
                 level3D.livesCounter3D().lightOnPy.set(false);
                 if (noIntermission) {
                     context.playAudioClip("audio.level_complete");
-                    context.actionHandler().showFlashMessageSeconds(2, pickLevelCompleteMessage(level.number()));
                 }
             }),
             noIntermission ? createLevelChangeAnimation() : pauseSeconds(0),
