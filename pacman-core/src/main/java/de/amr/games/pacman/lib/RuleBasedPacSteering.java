@@ -6,10 +6,7 @@ package de.amr.games.pacman.lib;
 
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.*;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -25,7 +22,7 @@ import static de.amr.games.pacman.lib.Globals.tileAt;
  *
  * @author Armin Reichert
  */
-public class RuleBasedPacSteering extends Steering {
+public class RuleBasedPacSteering implements Steering {
 
     private static class CollectedData {
 
@@ -66,9 +63,16 @@ public class RuleBasedPacSteering extends Steering {
         }
     }
 
+
+    private final GameLevel level;
+
+    public RuleBasedPacSteering(GameLevel level) {
+        this.level = level;
+    }
+
     @Override
-    public void steer(GameLevel level) {
-        if (level.pac().hasMoved() && !level.pac().isNewTileEntered()) {
+    public void steer(Creature creature) {
+        if (creature.hasMoved() && !creature.isNewTileEntered()) {
             return;
         }
         var data = collectData(level);

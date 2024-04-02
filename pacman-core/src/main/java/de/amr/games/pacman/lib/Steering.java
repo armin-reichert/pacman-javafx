@@ -4,31 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib;
 
-import de.amr.games.pacman.model.GameLevel;
-import org.tinylog.Logger;
+import de.amr.games.pacman.model.actors.Creature;
 
 /**
  * @author Armin Reichert
  */
-public abstract class Steering {
+public interface Steering {
 
-    public static final Steering NONE = new Steering() {
-        @Override
-        public void steer(GameLevel level) {}
-    };
+    default void init() {}
 
-    private boolean enabled;
-
-    public void init() {}
-
-    public abstract void steer(GameLevel level);
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-        Logger.trace("Steering ({})) {}", getClass().getSimpleName(), enabled ? "enabled" : "disabled");
-    }
+    void steer(Creature creature);
 }

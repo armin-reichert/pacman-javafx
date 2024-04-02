@@ -15,6 +15,15 @@ public interface Bonus {
     byte STATE_EDIBLE = 1;
     byte STATE_EATEN = 2;
 
+    default String stateName() {
+        return switch (state()) {
+            case STATE_EATEN -> "eaten";
+            case STATE_EDIBLE -> "edible";
+            case STATE_INACTIVE -> "inactive";
+            default -> throw new IllegalStateException("Unknown bonus state: " + state());
+        };
+    }
+
     /**
      * @return Entity representing this bonus in the world.
      */

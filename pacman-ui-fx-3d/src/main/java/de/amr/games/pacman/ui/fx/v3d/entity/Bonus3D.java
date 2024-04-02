@@ -8,10 +8,12 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
+import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.model.world.World;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.geometry.Point3D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -29,22 +31,30 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class Bonus3D extends Box {
 
+    private static final double SYMBOL_WIDTH = TS;
+    private static final double POINTS_WIDTH = 1.8 * TS;
+
     private final Bonus bonus;
-    private final Image symbolImage;
-    private final Image pointsImage;
+    private final ImageView symbolImageView;
+    private final ImageView pointsImageView;
     private final RotateTransition eatenAnimation;
     private final RotateTransition edibleAnimation;
 
     public Bonus3D(Bonus bonus, Image symbolImage, Image pointsImage) {
-        super(TS, TS, TS);
+        super(SYMBOL_WIDTH, TS, TS);
 
         checkNotNull(bonus);
         checkNotNull(symbolImage);
         checkNotNull(pointsImage);
 
         this.bonus = bonus;
-        this.symbolImage = symbolImage;
-        this.pointsImage = pointsImage;
+        symbolImageView = new ImageView(symbolImage);
+        symbolImageView.setPreserveRatio(true);
+        symbolImageView.setFitWidth(SYMBOL_WIDTH);
+
+        pointsImageView = new ImageView(pointsImage);
+        pointsImageView.setPreserveRatio(true);
+        pointsImageView.setFitWidth(POINTS_WIDTH);
 
         edibleAnimation = new RotateTransition(Duration.seconds(1), this);
         edibleAnimation.setAxis(Rotate.Z_AXIS); // to trigger initial change
@@ -53,12 +63,12 @@ public class Bonus3D extends Box {
         edibleAnimation.setInterpolator(Interpolator.LINEAR);
         edibleAnimation.setCycleCount(Animation.INDEFINITE);
 
-        eatenAnimation = new RotateTransition(Duration.seconds(1), this);
+        eatenAnimation = new RotateTransition(Duration.seconds(2), this);
         eatenAnimation.setAxis(Rotate.X_AXIS);
-        eatenAnimation.setFromAngle(0);
-        eatenAnimation.setToAngle(360);
+        eatenAnimation.setByAngle(360);
         eatenAnimation.setInterpolator(Interpolator.LINEAR);
         eatenAnimation.setRate(2);
+        eatenAnimation.setCycleCount(2);
     }
 
     public void update(World world) {
@@ -66,22 +76,17 @@ public class Bonus3D extends Box {
         setTranslateX(position.x());
         setTranslateY(position.y());
         setTranslateZ(-HTS);
-        boolean outside = position.x() < HTS || position.x() > world.numCols() * TS - HTS;
-        boolean visible = bonus.state() != Bonus.STATE_INACTIVE && !outside;
+        boolean outsideWorld = position.x() < HTS || position.x() > world.numCols() * TS - HTS;
+        boolean visible = !(bonus.state() == Bonus.STATE_INACTIVE || outsideWorld);
         setVisible(visible);
-        updateEdibleAnimation();
+        if (edibleAnimation.getStatus() == Animation.Status.RUNNING && bonus instanceof MovingBonus movingBonus) {
+            updateMovingBonusEdibleAnimation(movingBonus.entity().moveDir());
+        }
     }
 
-    private void updateEdibleAnimation() {
-        var rotationAxis = Rotate.X_AXIS; // default for static bonus
-        if (bonus instanceof MovingBonus movingBonus) {
-            rotationAxis = movingBonus.entity().moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-            if (movingBonus.entity().moveDir() == Direction.UP || movingBonus.entity().moveDir() == Direction.RIGHT) {
-                edibleAnimation.setRate(-1);
-            } else {
-                edibleAnimation.setRate(1);
-            }
-        }
+    private void updateMovingBonusEdibleAnimation(Direction moveDir) {
+        Point3D rotationAxis = moveDir.isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+        edibleAnimation.setRate(moveDir == Direction.DOWN || moveDir == Direction.LEFT ? 1 : -1);
         if (!edibleAnimation.getAxis().equals(rotationAxis)) {
             edibleAnimation.stop();
             edibleAnimation.setAxis(rotationAxis);
@@ -90,28 +95,32 @@ public class Bonus3D extends Box {
     }
 
     public void showEdible() {
-        setWidth(TS);
         setVisible(true);
-        var imageView = new ImageView(symbolImage);
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(getWidth());
-        showImage(imageView.getImage());
-        updateEdibleAnimation();
+        setWidth(SYMBOL_WIDTH);
+        setTexture(symbolImageView.getImage());
+        if (bonus instanceof StaticBonus) {
+            edibleAnimation.setAxis(Rotate.X_AXIS);
+        }
         edibleAnimation.playFromStart();
     }
 
+    public void onBonusExpired() {
+        edibleAnimation.stop();
+        setVisible(false);
+    }
+
     public void showEaten() {
+        edibleAnimation.stop();
+        setVisible(true);
+        setWidth(POINTS_WIDTH);
+        setTexture(pointsImageView.getImage());
         setRotationAxis(Rotate.X_AXIS);
         setRotate(0);
-        setWidth(1.8 * TS);
-        var imageView = new ImageView(pointsImage);
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(1.8 * TS);
-        showImage(imageView.getImage());
+        edibleAnimation.stop();
         eatenAnimation.playFromStart();
     }
 
-    private void showImage(Image texture) {
+    private void setTexture(Image texture) {
         var material = new PhongMaterial(Color.GHOSTWHITE);
         material.setDiffuseMap(texture);
         setMaterial(material);

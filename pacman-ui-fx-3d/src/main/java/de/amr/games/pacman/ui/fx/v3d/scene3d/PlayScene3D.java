@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
-import de.amr.games.pacman.ui.fx.input.Keyboard;
+import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
@@ -350,7 +350,7 @@ public class PlayScene3D implements GameScene {
 
     public void onBonusExpired(GameEvent event) {
         assertLevel3DExists();
-        level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
+        level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
     }
 
 

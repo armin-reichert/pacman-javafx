@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.fx.v3d;
 
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
-import de.amr.games.pacman.ui.fx.input.Keyboard;
+import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.page.GamePage;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;

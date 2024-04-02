@@ -4,15 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d;
 
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Steering;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.Settings;
-import de.amr.games.pacman.ui.fx.input.KeyboardPacSteering;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -23,7 +20,6 @@ import javafx.beans.property.*;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
@@ -39,8 +35,8 @@ import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui.fx.input.Keyboard.alt;
-import static de.amr.games.pacman.ui.fx.input.Keyboard.just;
+import static de.amr.games.pacman.ui.fx.util.Keyboard.alt;
+import static de.amr.games.pacman.ui.fx.util.Keyboard.just;
 import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
 
 /**
@@ -265,16 +261,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     @Override
     public ActionHandler3D actionHandler() {
         return this;
-    }
-
-    protected Steering createKeyboardPacSteering() {
-        // Enable steering with unmodified and CONTROL + cursor key
-        var steering = new KeyboardPacSteering();
-        steering.define(Direction.UP, KeyCode.UP, KeyCombination.CONTROL_DOWN);
-        steering.define(Direction.DOWN, KeyCode.DOWN, KeyCombination.CONTROL_DOWN);
-        steering.define(Direction.LEFT, KeyCode.LEFT, KeyCombination.CONTROL_DOWN);
-        steering.define(Direction.RIGHT, KeyCode.RIGHT, KeyCombination.CONTROL_DOWN);
-        return steering;
     }
 
     @Override

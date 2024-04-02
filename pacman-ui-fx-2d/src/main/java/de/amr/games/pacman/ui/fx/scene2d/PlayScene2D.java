@@ -10,10 +10,14 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
+<<<<<<< HEAD
 import de.amr.games.pacman.ui.fx.ActionHandler;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.input.Keyboard;
+=======
+import de.amr.games.pacman.ui.fx.util.Keyboard;
+>>>>>>> 96bfc088d0755e5f9d696897be79e589805e034b
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 //import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;

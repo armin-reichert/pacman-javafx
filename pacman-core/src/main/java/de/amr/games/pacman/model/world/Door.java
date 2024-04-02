@@ -7,31 +7,16 @@ package de.amr.games.pacman.model.world;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 
-import java.util.Objects;
-
 import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * @author Armin Reichert
  */
-public final class Door {
+public record Door(Vector2i leftWing, Vector2i rightWing) {
 
-    private final Vector2i leftWing;
-    private final Vector2i rightWing;
-
-    public Door(Vector2i leftWing, Vector2i rightWing) {
+    public Door {
         checkNotNull(leftWing);
         checkNotNull(rightWing);
-        this.leftWing = leftWing;
-        this.rightWing = rightWing;
-    }
-
-    public Vector2i leftWing() {
-        return leftWing;
-    }
-
-    public Vector2i rightWing() {
-        return rightWing;
     }
 
     /**
@@ -47,22 +32,5 @@ public final class Door {
      */
     public Vector2f entryPosition() {
         return v2f(TS * rightWing.x() - HTS, TS * (rightWing.y() - 1));
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(leftWing, rightWing);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Door other = (Door) obj;
-        return Objects.equals(leftWing, other.leftWing) && Objects.equals(rightWing, other.rightWing);
     }
 }

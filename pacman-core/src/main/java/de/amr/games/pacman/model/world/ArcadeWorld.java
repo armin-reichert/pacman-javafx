@@ -262,14 +262,15 @@ public interface ArcadeWorld {
         return world;
     }
 
+    static final Vector2f HOUSE_LEFT_SEAT = halfTileRightOf(11, 17);
+    static final Vector2f HOUSE_MIDDLE_SEAT = halfTileRightOf(13, 17);
+    static final Vector2f HOUSE_RIGHT_SEAT = halfTileRightOf(15, 17);
+
     static House createArcadeHouse() {
         var house = new House();
         house.setTopLeftTile(v2i(10, 15));
         house.setSize(v2i(8, 5));
         house.setDoor(new Door(v2i(13, 15), v2i(14, 15)));
-        house.addSeat("left",   halfTileRightOf(11, 17));
-        house.addSeat("middle", halfTileRightOf(13, 17));
-        house.addSeat("right",  halfTileRightOf(15, 17));
         return house;
     }
 

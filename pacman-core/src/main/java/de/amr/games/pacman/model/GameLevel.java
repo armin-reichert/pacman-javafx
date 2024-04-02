@@ -46,8 +46,8 @@ public class GameLevel {
     private byte huntingPhaseIndex;
     private byte totalNumGhostsKilled;
     private byte cruiseElroyState;
-    private HuntingStepEventLog eventLog;
-    private int bonusReachedIndex; // -1=no bonus, 0=first, 1=second
+    private SimulationStepEventLog eventLog;
+    private byte bonusReachedIndex; // -1=no bonus, 0=first, 1=second
 
     public GameLevel(int levelNumber, GameLevelData levelData, GameModel game, World world, boolean demoLevel) {
         checkLevelNumber(levelNumber);
@@ -62,7 +62,7 @@ public class GameLevel {
         this.demoLevel = demoLevel;
 
         houseControl = new GhostHouseControl(levelNumber);
-        eventLog = new HuntingStepEventLog();
+        eventLog = new SimulationStepEventLog();
         bonusReachedIndex = -1;
 
         pac = new Pac(game.variant() == GameVariant.MS_PACMAN ? "Ms. Pac-Man" : "Pac-Man");
@@ -118,23 +118,21 @@ public class GameLevel {
 
     public Vector2f initialGhostPosition(byte ghostID) {
         checkGhostID(ghostID);
-        var house = world.house();
         return switch (ghostID) {
-            case RED_GHOST    -> house.door().entryPosition();
-            case PINK_GHOST   -> house.seat("middle");
-            case CYAN_GHOST   -> house.seat("left");
-            case ORANGE_GHOST -> house.seat("right");
+            case RED_GHOST    -> world.house().door().entryPosition();
+            case PINK_GHOST   -> ArcadeWorld.HOUSE_MIDDLE_SEAT;
+            case CYAN_GHOST   -> ArcadeWorld.HOUSE_LEFT_SEAT;
+            case ORANGE_GHOST -> ArcadeWorld.HOUSE_RIGHT_SEAT;
             default -> throw new IllegalGhostIDException(ghostID);
         };
     }
 
     public Vector2f ghostRevivalPosition(byte ghostID) {
         checkGhostID(ghostID);
-        var house = world.house();
         return switch (ghostID) {
-            case RED_GHOST, PINK_GHOST -> house.seat("middle");
-            case CYAN_GHOST            -> house.seat("left");
-            case ORANGE_GHOST          -> house.seat("right");
+            case RED_GHOST, PINK_GHOST -> ArcadeWorld.HOUSE_MIDDLE_SEAT;
+            case CYAN_GHOST            -> ArcadeWorld.HOUSE_LEFT_SEAT;
+            case ORANGE_GHOST          -> ArcadeWorld.HOUSE_RIGHT_SEAT;
             default -> throw new IllegalGhostIDException(ghostID);
         };
     }
@@ -213,7 +211,7 @@ public class GameLevel {
     /**
      * @return information about what happened during the current (hunting) frame
      */
-    public HuntingStepEventLog eventLog() {
+    public SimulationStepEventLog eventLog() {
         return eventLog;
     }
 
@@ -443,7 +441,7 @@ public class GameLevel {
     private void updateFood() {
         final Vector2i pacTile = pac.tile();
         if (world.hasFoodAt(pacTile)) {
-            eventLog.foundFoodAtTile = pacTile;
+            eventLog.foodFoundTile = pacTile;
             if (world.isEnergizerTile(pacTile)) {
                 eventLog.energizerFound = true;
                 pac.eatEnergizer();
@@ -459,6 +457,11 @@ public class GameLevel {
                 setCruiseElroyState(1);
             } else if (world.uneatenFoodCount() == data.elroy2DotsLeft()) {
                 setCruiseElroyState(2);
+            }
+            if (isBonusReached()) {
+                bonusReachedIndex += 1;
+                eventLog.bonusIndex = bonusReachedIndex;
+                onBonusReached(bonusReachedIndex);
             }
             publishGameEvent(game, GameEventType.PAC_FOUND_FOOD, pacTile);
         } else {
@@ -527,19 +530,11 @@ public class GameLevel {
         ghosts().forEach(ghost -> ghost.update(pac));
     }
 
-    private void checkIfBonusReached() {
-        if (eventLog.foundFoodAtTile != null && isBonusReached()) {
-            onBonusReached(++bonusReachedIndex);
-            eventLog.bonusIndex = bonusReachedIndex;
-        }
-    }
-
     public GameState doHuntingStep() {
-        eventLog = new HuntingStepEventLog();
+        eventLog = new SimulationStepEventLog();
         pac.update(this);
         updateGhosts();
         updateFood();
-        checkIfBonusReached();
         updatePacPower();
         updateBonus();
         updateHuntingTimer();
@@ -800,24 +795,22 @@ public class GameLevel {
      * TODO: This is not the exact behavior as in the original Arcade game.
      **/
     private Bonus createMovingBonus(byte symbol, int points, boolean leftToRight) {
-        var houseHeight = world.house().size().y();
-        var houseEntryTile = tileAt(world.house().door().entryPosition());
-        var portals = world.portals();
+        var house       = world.house();
+        var houseEntry  = tileAt(house.door().entryPosition());
+        var houseEntryOpposite = houseEntry.plus(0, house.size().y() + 1);
+
+        var portals     = world.portals();
         var entryPortal = portals.get(RND.nextInt(portals.size()));
-        var exitPortal = portals.get(RND.nextInt(portals.size()));
-        var startPoint = leftToRight
-            ? np(entryPortal.leftTunnelEnd())
-            : np(entryPortal.rightTunnelEnd());
-        var exitPoint = leftToRight
-            ? np(exitPortal.rightTunnelEnd().plus(1, 0))
-            : np(exitPortal.leftTunnelEnd().minus(1, 0));
+        var exitPortal  = portals.get(RND.nextInt(portals.size()));
 
         var route = new ArrayList<NavPoint>();
-        route.add(startPoint);
-        route.add(np(houseEntryTile));
-        route.add(np(houseEntryTile.plus(0, houseHeight + 1)));
-        route.add(np(houseEntryTile));
-        route.add(exitPoint);
+        route.add(np(leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd()));
+        route.add(np(houseEntry));
+        route.add(np(houseEntryOpposite));
+        route.add(np(houseEntry));
+        route.add(np(leftToRight
+            ? exitPortal.rightTunnelEnd().plus(1, 0)
+            : exitPortal.leftTunnelEnd().minus(1, 0)));
         route.trimToSize();
 
         var movingBonus = new MovingBonus(symbol, points);

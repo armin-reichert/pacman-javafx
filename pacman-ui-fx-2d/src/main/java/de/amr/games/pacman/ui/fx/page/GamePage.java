@@ -6,13 +6,10 @@ package de.amr.games.pacman.ui.fx.page;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
-import de.amr.games.pacman.ui.fx.input.Keyboard;
-import de.amr.games.pacman.ui.fx.input.KeyboardPacSteering;
+import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.CanvasLayoutPane;
 import de.amr.games.pacman.ui.fx.util.FadingPane;
@@ -64,14 +61,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
         flashMessageLayer.setMouseTransparent(true);
 
         layersContainer.setOnKeyPressed(e -> {
-            Keyboard.handleKeyEvent(e);
             handleKeyboardInput();
-            sceneContext.gameLevel().map(GameLevel::pac).map(Pac::manualSteering).ifPresent(steering -> {
-                if (steering instanceof KeyboardPacSteering kps) {
-                    kps.handle(e);
-                }
-            });
-            Keyboard.clearState();
         });
 
         getCanvas().setOnMouseMoved(e -> {
