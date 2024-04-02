@@ -250,6 +250,11 @@ public enum GameState implements FsmState<GameModel> {
     },
 
     PACMAN_DYING {
+
+        static final int TICK_HIDE_GHOSTS = 60;
+        static final int TICK_START_PAC_ANIMATION = 90;
+        static final int TICK_START_PAC_HIDE = 180;
+
         @Override
         public void onEnter(GameModel game) {
             timer.restartSeconds(4);
@@ -261,14 +266,14 @@ public enum GameState implements FsmState<GameModel> {
             game.level().ifPresent(level -> {
                 level.world().energizerBlinking().tick();
                 level.pac().update(level);
-                if (timer.atSecond(1)) {
+                if (timer.tick() == TICK_HIDE_GHOSTS) {
                     level.ghosts().forEach(Ghost::hide);
                     level.pac().selectAnimation(Pac.ANIM_DYING);
                     level.pac().resetAnimation();
-                } else if (timer.atSecond(1.4)) {
+                } else if (timer.tick() == TICK_START_PAC_ANIMATION) {
                     level.pac().startAnimation();
                     publishGameEvent(game, GameEventType.PAC_DIED);
-                } else if (timer.atSecond(3.0)) {
+                } else if (timer.tick() == TICK_START_PAC_HIDE) {
                     level.pac().hide();
                     game.loseLife();
                 } else if (timer.hasExpired()) {
