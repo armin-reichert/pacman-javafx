@@ -293,9 +293,13 @@ public enum GameState implements FsmState<GameModel> {
     },
 
     GAME_OVER {
+
+        static final int TICKS_STATE_DURATION = 75;
+
         @Override
         public void onEnter(GameModel game) {
-            timer.restartSeconds(1.25); //TODO not sure about exact duration
+            timer.reset(TICKS_STATE_DURATION);
+            timer.start();
             game.updateHighScore();
             gameController().changeCredit(-1);
         }
