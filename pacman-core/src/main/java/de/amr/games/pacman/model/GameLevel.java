@@ -774,7 +774,8 @@ public class GameLevel {
         var movingBonus = new MovingBonus(symbol, points);
         movingBonus.setWorld(world);
         movingBonus.setBaseSpeed(SPEED_AT_100_PERCENT);
-        movingBonus.setRoute(route, leftToRight);
+        // pass copy of list because route gets modified
+        movingBonus.setRoute(new ArrayList<>(route), leftToRight);
         Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
         return movingBonus;
     }
