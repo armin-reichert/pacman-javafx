@@ -114,7 +114,7 @@ public class MsPacManIntro extends Fsm<MsPacManIntro.State, MsPacManIntro> {
                 if (ghost.moveDir() == Direction.UP) {
                     if (intro.ticksUntilLifting > 0) {
                         intro.ticksUntilLifting -= 1;
-                        Logger.trace("Ticks until lifting {}: {}", ghost.name(), intro.ticksUntilLifting);
+                        Logger.trace("Ticks until lifting {}: {}", ghost.name, intro.ticksUntilLifting);
                         return;
                     }
                     if (ghost.posY() <= intro.stopY + ghost.id() * 16) {

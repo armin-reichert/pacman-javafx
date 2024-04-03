@@ -22,12 +22,14 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public abstract class Creature extends Entity {
 
-    private final String name;
+    public final String name;
+    public final MoveResult moveResult = new MoveResult();
+
     private Direction moveDir;
     private Direction wishDir;
     private Vector2i targetTile;
     private float baseSpeed;
-    public final MoveResult moveResult = new MoveResult();
+
     protected boolean newTileEntered;
     protected boolean gotReverseCommand;
     protected boolean canTeleport;
@@ -39,10 +41,6 @@ public abstract class Creature extends Entity {
     protected Creature(String name) {
         checkNotNull(name, "Name of creature must not be null");
         this.name = name;
-    }
-
-    public String name() {
-        return name;
     }
 
     public void reset() {
@@ -220,13 +218,5 @@ public abstract class Creature extends Entity {
             throw new IllegalArgumentException("Negative pixel speed: " + pixelSpeed);
         }
         setVelocity(pixelSpeed == 0 ? Vector2f.ZERO : moveDir.vector().toFloatVec().scaled(pixelSpeed));
-    }
-
-    public void executeReverseCommand() {
-        if (gotReverseCommand && canReverse()) {
-            setWishDir(moveDir.opposite());
-            gotReverseCommand = false;
-            Logger.trace("{}: [turned around]", name);
-        }
     }
 }

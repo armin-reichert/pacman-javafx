@@ -43,18 +43,18 @@ public class RuleBasedPacSteering implements Steering {
         public String toString() {
             StringBuilder s = new StringBuilder("-- Begin autopilot info\n");
             if (hunterAhead != null) {
-                s.append(String.format("Hunter ahead:  %s, distance: %.2g\n", hunterAhead.name(), hunterAheadDistance));
+                s.append(String.format("Hunter ahead:  %s, distance: %.2g\n", hunterAhead.name, hunterAheadDistance));
             } else {
                 s.append("No hunter ahead\n");
             }
             if (hunterBehind != null) {
-                s.append(String.format("Hunter behind: %s, distance: %.2g\n", hunterBehind.name(), hunterBehindDistance));
+                s.append(String.format("Hunter behind: %s, distance: %.2g\n", hunterBehind.name, hunterBehindDistance));
             } else {
                 s.append("No hunter behind\n");
             }
             for (int i = 0; i < frightenedGhosts.size(); ++i) {
                 Ghost ghost = frightenedGhosts.get(i);
-                s.append(String.format("Prey: %s, distance: %.2g\n", ghost.name(), frightenedGhostsDistance.get(i)));
+                s.append(String.format("Prey: %s, distance: %.2g\n", ghost.name, frightenedGhostsDistance.get(i)));
             }
             if (frightenedGhosts.isEmpty()) {
                 s.append("No prey\n");
@@ -110,10 +110,10 @@ public class RuleBasedPacSteering implements Steering {
             Direction escapeDir;
             if (data.hunterBehind != null) {
                 escapeDir = findEscapeDirectionExcluding(level, EnumSet.of(pac.moveDir(), pac.moveDir().opposite()));
-                Logger.trace("Detected ghost {} behind, escape direction is {}", data.hunterAhead.name(), escapeDir);
+                Logger.trace("Detected ghost {} behind, escape direction is {}", data.hunterAhead.name, escapeDir);
             } else {
                 escapeDir = findEscapeDirectionExcluding(level, EnumSet.of(pac.moveDir()));
-                Logger.trace("Detected ghost {} ahead, escape direction is {}", data.hunterAhead.name(), escapeDir);
+                Logger.trace("Detected ghost {} ahead, escape direction is {}", data.hunterAhead.name, escapeDir);
             }
             if (escapeDir != null) {
                 pac.setWishDir(escapeDir);
@@ -127,7 +127,7 @@ public class RuleBasedPacSteering implements Steering {
 
         if (!data.frightenedGhosts.isEmpty() && pac.powerTimer().remaining() >= GameModel.FPS) {
             Ghost prey = data.frightenedGhosts.getFirst();
-            Logger.trace("Detected frightened ghost {} {} tiles away", prey.name(),
+            Logger.trace("Detected frightened ghost {} {} tiles away", prey.name,
                 prey.tile().manhattanDistance(pac.tile()));
             pac.setTargetTile(prey.tile());
         } else if (isEdibleBonusNearPac(level, pac)) {

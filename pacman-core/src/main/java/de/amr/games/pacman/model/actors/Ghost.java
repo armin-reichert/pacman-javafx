@@ -134,7 +134,7 @@ public class Ghost extends Creature implements AnimationDirector {
             if (forbiddenMoves.containsKey(currentTile)) {
                 for (Direction dir : forbiddenMoves.get(currentTile)) {
                     if (currentTile.plus(dir.vector()).equals(tile)) {
-                        Logger.trace("Hunting {} cannot move {} at {}", name(), dir, currentTile);
+                        Logger.trace("Hunting {} cannot move {} at {}", name, dir, currentTile);
                         return false;
                     }
                 }
@@ -183,7 +183,7 @@ public class Ghost extends Creature implements AnimationDirector {
     public void setState(GhostState state) {
         checkNotNull(state);
         if (this.state == state) {
-            Logger.trace("{} is already in state {}", name(), state);
+            Logger.trace("{} is already in state {}", name, state);
         }
         this.state = state;
         switch (state) {

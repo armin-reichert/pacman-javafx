@@ -111,7 +111,7 @@ public class PacManIntroScene extends GameScene2D {
                 drawText(text, color, font, t(tx + 3), t(ty + 1));
             }
             if (ghostInfo.nicknameVisible) {
-                var text = QUOTE + ghostInfo.ghost.name() + QUOTE;
+                var text = QUOTE + ghostInfo.ghost.name + QUOTE;
                 var color = context.theme().color("ghost." + id + ".color");
                 drawText(text, color, font, t(tx + 14), t(ty + 1));
             }

@@ -126,7 +126,7 @@ public class GhostHouseControl {
     public void updateDotCount(GameLevel level) {
         if (globalCounterEnabled) {
             if (level.ghost(ORANGE_GHOST).is(LOCKED) && globalCounter == 32) {
-                Logger.trace("{} inside house when global counter reached 32", level.ghost(ORANGE_GHOST).name());
+                Logger.trace("{} inside house when global counter reached 32", level.ghost(ORANGE_GHOST).name);
                 resetGlobalCounterAndSetEnabled(false);
             } else {
                 globalCounter++;
@@ -137,7 +137,7 @@ public class GhostHouseControl {
                 .filter(ghost -> ghost.insideHouse(level.world().house()))
                 .findFirst().ifPresent(ghost -> {
                     counters[ghost.id()]++;
-                    Logger.trace("{} dot counter = {}", ghost.name(), counters[ghost.id()]);
+                    Logger.trace("{} dot counter = {}", ghost.name, counters[ghost.id()]);
                 });
         }
     }
@@ -165,7 +165,7 @@ public class GhostHouseControl {
         if (level.pac().starvingTicks() >= pacStarvingLimitTicks) {
             level.pac().endStarving();
             return Optional.of(new GhostUnlockInfo(candidate,
-                "%s reached starving limit (%d ticks)", level.pac().name(), pacStarvingLimitTicks));
+                "%s reached starving limit (%d ticks)", level.pac().name, pacStarvingLimitTicks));
         }
         return Optional.empty();
     }

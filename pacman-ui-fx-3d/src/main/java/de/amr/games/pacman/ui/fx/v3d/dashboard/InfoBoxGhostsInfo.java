@@ -53,11 +53,11 @@ public class InfoBoxGhostsInfo extends InfoBox {
     }
 
     private String ghostNameAndState(GameLevel level, Ghost ghost) {
-        var ghostName = ghost.name();
+        String name = ghost.name;
         if (ghost.id() == GameModel.RED_GHOST && level.cruiseElroyState() > 0) {
-            ghostName = "Elroy" + level.cruiseElroyState();
+            name = "Elroy" + level.cruiseElroyState();
         }
-        return String.format("%s (%s)", ghostName, ghostState(level, ghost));
+        return String.format("%s (%s)", name, ghostState(level, ghost));
     }
 
     private String ghostAnimation(GameLevel level, Ghost ghost) {

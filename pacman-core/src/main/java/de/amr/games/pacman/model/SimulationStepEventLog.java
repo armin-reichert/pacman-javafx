@@ -52,10 +52,10 @@ public class SimulationStepEventLog {
             messages.add("Pac died");
         }
         if (unlockedGhost != null) {
-            messages.add("Unlocked " + unlockedGhost.name());
+            messages.add("Unlocked " + unlockedGhost.name);
         }
         if (!killedGhosts.isEmpty()) {
-            messages.add("Ghosts killed: " + killedGhosts.stream().map(Ghost::name).toList());
+            messages.add("Ghosts killed: " + killedGhosts.stream().map(ghost -> ghost.name).toList());
         }
         if (!messages.isEmpty()) {
             Logger.info("During last step:");

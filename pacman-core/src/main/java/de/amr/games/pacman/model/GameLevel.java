@@ -507,7 +507,7 @@ public class GameLevel {
     private void updateGhosts() {
         houseControl.unlockGhost(this).ifPresent(unlocked -> {
             var ghost = unlocked.ghost();
-            Logger.info("{} unlocked: {}", ghost.name(), unlocked.reason());
+            Logger.info("{} unlocked: {}", ghost.name, unlocked.reason());
             if (ghost.insideHouse(world.house())) {
                 ghost.setState(LEAVING_HOUSE);
             } else {
@@ -516,7 +516,7 @@ public class GameLevel {
             }
             if (ghost.id() == ORANGE_GHOST && cruiseElroyState < 0) {
                 enableCruiseElroyState(true);
-                Logger.trace("Cruise elroy mode re-enabled because {} exits house", ghost.name());
+                Logger.trace("Cruise elroy mode re-enabled because {} exits house", ghost.name);
             }
             eventLog.unlockedGhost = ghost;
         });
@@ -612,7 +612,7 @@ public class GameLevel {
         pac.victims().add(ghost);
         eventLog.killedGhosts.add(ghost);
         totalNumGhostsKilled += 1;
-        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
+        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name, ghost.tile());
     }
 
     // Bonus Management
