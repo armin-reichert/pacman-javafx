@@ -5,11 +5,13 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.lib;
 
 import de.amr.games.pacman.model.actors.Creature;
+import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.model.actors.CreatureMovement.navigateTowardsTarget;
 
 /**
  * Steers a creature to follow a given route.
@@ -39,16 +41,16 @@ public class RouteBasedSteering implements Steering {
     }
 
     @Override
-    public void steer(Creature creature) {
-        creature.navigateTowardsTarget();
+    public void steer(Creature creature, World world) {
+        navigateTowardsTarget(creature, world);
         if (targetIndex == route.size()) {
             complete = true;
         } else if (creature.targetTile().isEmpty()) {
             creature.setTargetTile(currentTarget().tile());
-            creature.navigateTowardsTarget();
+            navigateTowardsTarget(creature, world);
             Logger.trace("New target tile for {}={}s", creature.name(), creature.targetTile().get());
         } else if (creature.tile().equals(currentTarget().tile())) {
-            nextTarget(creature);
+            nextTarget(creature, world);
             Logger.trace("New target tile for {}={}", creature.name(), creature.targetTile().get());
         }
     }
@@ -57,11 +59,11 @@ public class RouteBasedSteering implements Steering {
         return complete;
     }
 
-    private void nextTarget(Creature creature) {
+    private void nextTarget(Creature creature, World world) {
         ++targetIndex;
         if (targetIndex < route.size()) {
             creature.setTargetTile(currentTarget().tile());
-            creature.navigateTowardsTarget();
+            navigateTowardsTarget(creature, world);
         }
     }
 

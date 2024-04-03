@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.animation.Turn;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
@@ -115,28 +116,28 @@ public class Ghost3D extends Group {
         numberQuad.setMaterial(material);
     }
 
-    public void init() {
+    public void init(World world) {
         brakeAnimation.stop();
         dressAnimation.stop();
         numberRotation.stop();
-        updateTransform();
+        updateTransform(world);
         updateLook();
     }
 
-    public void update() {
-        updateTransform();
+    public void update(World world) {
+        updateTransform(world);
         updateLook();
         updateAnimations();
     }
 
-    private void updateTransform() {
+    private void updateTransform(World world) {
         Vector2f position = ghost.center();
         setTranslateX(position.x());
         setTranslateY(position.y());
         setTranslateZ(-5);
         // TODO: make transition to new wish dir if changed
         orientation.setAngle(Turn.angle(ghost.wishDir()));
-        boolean outside = position.x() < HTS || position.x() > ghost.world().numCols() * TS - HTS;
+        boolean outside = position.x() < HTS || position.x() > world.numCols() * TS - HTS;
         setVisible(ghost.isVisible() && !outside);
     }
 
@@ -145,7 +146,7 @@ public class Ghost3D extends Group {
             dressAnimation.stop();
         } else {
             numberRotation.stop();
-            if (ghost.hasEnteredTunnel()) {
+            if (ghost.moveResult.tunnelEntered) {
                 brakeAnimation.playFromStart();
             }
             if (dressAnimation.getStatus() != Status.RUNNING) {

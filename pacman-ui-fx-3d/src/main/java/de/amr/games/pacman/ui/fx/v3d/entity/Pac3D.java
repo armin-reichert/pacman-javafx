@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.animation.HeadBanging;
 import de.amr.games.pacman.ui.fx.v3d.animation.HipSwaying;
@@ -201,21 +202,21 @@ public class Pac3D extends Group {
         this.walkingAnimation = walkingAnimation;
     }
 
-    public void init() {
+    public void init(World world) {
         setScaleX(1.0);
         setScaleY(1.0);
         setScaleZ(1.0);
-        update();
+        update(world);
     }
 
-    public void update() {
+    public void update(World world) {
         Vector2f center = pac.center();
         position.setX(center.x());
         position.setY(center.y());
         position.setZ(-5.0);
         orientation.setAxis(Rotate.Z_AXIS);
         orientation.setAngle(angle(pac.moveDir()));
-        setVisible(pac.isVisible() && !outsideWorld());
+        setVisible(pac.isVisible() && !outsideWorld(world));
         if (pac.isStandingStill()) {
             walkingAnimation.stop();
         } else {
@@ -251,8 +252,8 @@ public class Pac3D extends Group {
         light.setLightOn(lightedPy.get() && pac.isVisible() && hasPower);
     }
 
-    private boolean outsideWorld() {
-        return position.getX() < HTS || position.getX() > TS * pac.world().numCols() - HTS;
+    private boolean outsideWorld(World world) {
+        return position.getX() < HTS || position.getX() > TS * world.numCols() - HTS;
     }
 
     public Animation createMsPacManDyingAnimation() {
@@ -270,7 +271,7 @@ public class Pac3D extends Group {
         );
     }
 
-    public Animation createPacManDyingAnimation() {
+    public Animation createPacManDyingAnimation(World world) {
         Duration duration = Duration.seconds(1.0);
         short numSpins = 6;
 
@@ -292,7 +293,7 @@ public class Pac3D extends Group {
 
         //TODO does not yet work as I want to
         return new SequentialTransition(
-            doNow(this::init),
+            doNow(() -> init(world)),
             pauseSeconds(0.5),
             new ParallelTransition(spinning, shrinking, falling),
             doAfterSeconds(1.0, () -> {

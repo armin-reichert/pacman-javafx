@@ -14,7 +14,10 @@ import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
@@ -22,6 +25,8 @@ import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
 import static de.amr.games.pacman.model.GameModel.*;
+import static de.amr.games.pacman.model.actors.CreatureMovement.followTarget;
+import static de.amr.games.pacman.model.actors.CreatureMovement.roam;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
@@ -63,7 +68,6 @@ public class GameLevel {
         bonusReachedIndex = -1;
 
         pac = new Pac(game.variant() == GameVariant.MS_PACMAN ? "Ms. Pac-Man" : "Pac-Man");
-        pac.setWorld(world);
         pac.setBaseSpeed(SPEED_AT_100_PERCENT);
         pac.setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
 
@@ -75,7 +79,6 @@ public class GameLevel {
         };
 
         ghosts().forEach(ghost -> {
-            ghost.setWorld(world);
             ghost.setHouse(world.house());
             ghost.setFrightenedBehavior(this::frightenedGhostBehavior);
             ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));
@@ -284,7 +287,7 @@ public class GameLevel {
      */
     private void huntingBehaviorMsPacManGame(Ghost ghost) {
         if (scatterPhase().isPresent() && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-            ghost.roam(world, huntingSpeedPercentage(ghost), pseudoRandomDirection());
+            roam(ghost, world, huntingSpeedPercentage(ghost), pseudoRandomDirection());
         } else {
             huntingBehaviorPacManGame(ghost);
         }
@@ -293,9 +296,9 @@ public class GameLevel {
     private void huntingBehaviorPacManGame(Ghost ghost) {
         byte relSpeed = huntingSpeedPercentage(ghost);
         if (chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState > 0) {
-            ghost.followTarget(chasingTarget(ghost.id()), relSpeed);
+            followTarget(ghost, world, chasingTarget(ghost.id()), relSpeed);
         } else {
-            ghost.followTarget(ghostScatterTarget(ghost.id()), relSpeed);
+            followTarget(ghost, world, ghostScatterTarget(ghost.id()), relSpeed);
         }
     }
 
@@ -338,7 +341,7 @@ public class GameLevel {
     private void frightenedGhostBehavior(Ghost ghost) {
         byte relSpeed = world().isTunnel(ghost.tile())
             ? data.ghostSpeedTunnelPercentage() : data.ghostSpeedFrightenedPercentage();
-        ghost.roam(world, relSpeed, pseudoRandomDirection());
+        roam(ghost, world, relSpeed, pseudoRandomDirection());
     }
 
     private static Direction pseudoRandomDirection() {
@@ -517,7 +520,7 @@ public class GameLevel {
             }
             eventLog.unlockedGhost = ghost;
         });
-        ghosts().forEach(ghost -> ghost.update(pac));
+        ghosts().forEach(ghost -> ghost.update(pac, world));
     }
 
     public GameState doHuntingStep() {
@@ -575,7 +578,7 @@ public class GameLevel {
             }
             world().energizerBlinking().tick();
             world().mazeFlashing().tick();
-            ghosts().forEach(ghost -> ghost.update(pac()));
+            ghosts().forEach(ghost -> ghost.update(pac, world));
             bonus().ifPresent(bonus -> bonus.update(this));
         } else {
             GameController.it().restart(GameState.BOOT);
@@ -772,7 +775,6 @@ public class GameLevel {
         );
 
         var movingBonus = new MovingBonus(symbol, points);
-        movingBonus.setWorld(world);
         movingBonus.setBaseSpeed(SPEED_AT_100_PERCENT);
         // pass copy of list because route gets modified
         movingBonus.setRoute(new ArrayList<>(route), leftToRight);

@@ -12,11 +12,14 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
-import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
-import de.amr.games.pacman.ui.fx.v3d.entity.*;
+import de.amr.games.pacman.ui.fx.v3d.entity.Bonus3D;
+import de.amr.games.pacman.ui.fx.v3d.entity.Eatable3D;
+import de.amr.games.pacman.ui.fx.v3d.entity.GameLevel3D;
+import de.amr.games.pacman.ui.fx.v3d.entity.Scores3D;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
@@ -119,7 +122,7 @@ public class PlayScene3D implements GameScene {
     public void update() {
         context.gameLevel().ifPresent(level -> {
             if (level3D != null) {
-                level3D.update();
+                level3D.update(level.world());
                 currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
             }
             level.pac().setUseAutopilot(level.isDemoLevel() || PY_USE_AUTOPILOT.get());
@@ -233,8 +236,8 @@ public class PlayScene3D implements GameScene {
                 context.stopAllSounds();
                 if (level3D != null) {
                     context.gameLevel().ifPresent(level -> {
-                        level3D.pac3D().init();
-                        level3D.ghosts3D().forEach(Ghost3D::init);
+                        level3D.pac3D().init(level.world());
+                        level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level.world()));
                         level3D.stopEnergizerAnimation();
                         level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                         level3D.livesCounter3D().stopAnimation();
@@ -246,21 +249,23 @@ public class PlayScene3D implements GameScene {
             case HUNTING -> {
                 assertLevel3DExists();
                 context.gameLevel().ifPresent(level -> {
-                    level3D.pac3D().init();
-                    level3D.ghosts3D().forEach(Ghost3D::init);
+                    level3D.pac3D().init(level.world());
+                    level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level.world()));
                     level3D.livesCounter3D().startAnimation();
                     level3D.startEnergizerAnimation();
                 });
             }
 
             case PACMAN_DYING -> {
-                assertLevel3DExists();
-                context.stopAllSounds();
-                var animation = switch (context.gameVariant()) {
-                    case MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
-                    case PACMAN -> level3D.pac3D().createPacManDyingAnimation();
-                };
-                lockGameStateAndPlayAfterSeconds(1.0, animation);
+                context.gameLevel().ifPresent(level -> {
+                    assertLevel3DExists();
+                    context.stopAllSounds();
+                    var animation = switch (context.gameVariant()) {
+                        case MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
+                        case PACMAN -> level3D.pac3D().createPacManDyingAnimation(level.world());
+                    };
+                    lockGameStateAndPlayAfterSeconds(1.0, animation);
+                });
             }
 
             case GAME_OVER -> {
@@ -301,11 +306,11 @@ public class PlayScene3D implements GameScene {
             }
 
             case CHANGING_TO_NEXT_LEVEL -> {
-                assertLevel3DExists();
                 context.gameLevel().ifPresent(level -> {
+                    assertLevel3DExists();
                     context.gameState().timer().restartSeconds(3);
                     replaceGameLevel3D(level);
-                    level3D.pac3D().init();
+                    level3D.pac3D().init(level.world());
                     currentCamController().reset(fxSubScene.getCamera());
                 });
             }
@@ -315,8 +320,8 @@ public class PlayScene3D implements GameScene {
                     PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
                     level.letsGetReadyToRumble(true);
                     replaceGameLevel3D(level);
-                    level3D.pac3D().init();
-                    level3D.ghosts3D().forEach(Ghost3D::init);
+                    level3D.pac3D().init(level.world());
+                    level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level.world()));
                     showLevelMessage(level);
                 });
 

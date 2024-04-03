@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.House;
+import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.util.Collections;
@@ -19,6 +20,8 @@ import java.util.function.Consumer;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.model.actors.CreatureMovement.navigateTowardsTarget;
+import static de.amr.games.pacman.model.actors.CreatureMovement.tryMoving;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
@@ -122,7 +125,7 @@ public class Ghost extends Creature implements AnimationDirector {
     }
 
     @Override
-    public boolean canAccessTile(Vector2i tile) {
+    public boolean canAccessTile(Vector2i tile, World world) {
         checkTileNotNull(tile);
 
         // hunting ghosts cannot move up at certain tiles in Pac-Man game
@@ -196,15 +199,15 @@ public class Ghost extends Creature implements AnimationDirector {
      *
      * @param pac Pac-Man or Ms. Pac-Man
      */
-    public void update(Pac pac) {
+    public void update(Pac pac, World world) {
         checkNotNull(pac);
         switch (state) {
             case LOCKED             -> updateStateLocked(pac);
             case LEAVING_HOUSE      -> updateStateLeavingHouse(pac);
             case HUNTING_PAC        -> updateStateHuntingPac();
             case FRIGHTENED         -> updateStateFrightened(pac);
-            case EATEN              -> updateStateEaten(pac);
-            case RETURNING_TO_HOUSE -> updateStateReturningToHouse();
+            case EATEN              -> updateStateEaten();
+            case RETURNING_TO_HOUSE -> updateStateReturningToHouse(world);
             case ENTERING_HOUSE     -> updateStateEnteringHouse();
         }
     }
@@ -325,7 +328,7 @@ public class Ghost extends Creature implements AnimationDirector {
      * After a ghost is eaten by Pac-Man, he is displayed for a short time as the number of points earned for eating him.
      * The value doubles for each ghost eaten using the power of the same energizer.
      */
-    private void updateStateEaten(Pac pac) {
+    private void updateStateEaten() {
     }
 
     // --- RETURNING_TO_HOUSE ---
@@ -334,7 +337,7 @@ public class Ghost extends Creature implements AnimationDirector {
      * After the short time being displayed by his value, the eaten ghost is displayed by his eyes only and returns
      * to the ghost house to be revived. Hallelujah!
      */
-    private void updateStateReturningToHouse() {
+    private void updateStateReturningToHouse(World world) {
         Vector2f houseEntry = house.door().entryPosition();
         if (position().almostEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
             setPosition(houseEntry);
@@ -343,8 +346,8 @@ public class Ghost extends Creature implements AnimationDirector {
         } else {
             setSpeed(speedReturningToHouse);
             setTargetTile(house.door().leftWing());
-            navigateTowardsTarget();
-            tryMoving();
+            navigateTowardsTarget(this, world);
+            tryMoving(this, world);
         }
     }
 

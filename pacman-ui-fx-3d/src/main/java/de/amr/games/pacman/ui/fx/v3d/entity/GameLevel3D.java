@@ -359,12 +359,12 @@ public class GameLevel3D extends Group {
         return wd.x > xMin && wd.y > yMin && wd.x <= xMax && wd.y <= yMax;
     }
 
-    public void update() {
+    public void update(World world) {
         GameState gameState = GameController.it().state();
         boolean hasCredit = GameController.it().hasCredit();
 
-        pac3D.update();
-        ghosts3D().forEach(Ghost3D::update);
+        pac3D.update(level.world());
+        ghosts3D().forEach(ghost3D -> ghost3D.update(world));
         if (bonus3D != null) {
             bonus3D.update(level.world());
         }

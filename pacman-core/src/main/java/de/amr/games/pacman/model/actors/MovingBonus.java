@@ -7,12 +7,15 @@ package de.amr.games.pacman.model.actors;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.util.List;
 
 import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.model.actors.CreatureMovement.navigateTowardsTarget;
+import static de.amr.games.pacman.model.actors.CreatureMovement.tryMoving;
 
 /**
  * A bonus that tumbles through the world, starting at some portal, making one round around the ghost house and leaving
@@ -48,7 +51,7 @@ public class MovingBonus extends Creature implements Bonus {
     }
 
     @Override
-    public boolean canAccessTile(Vector2i tile) {
+    public boolean canAccessTile(Vector2i tile, World world) {
         if (world.house().contains(tile)) {
             return false;
         }
@@ -137,14 +140,14 @@ public class MovingBonus extends Creature implements Bonus {
         switch (state) {
             case STATE_INACTIVE -> {}
             case STATE_EDIBLE -> {
-                steering.steer(this);
+                steering.steer(this, level.world());
                 if (steering.isComplete()) {
                     Logger.trace("Moving bonus reached target: {}", this);
                     setInactive();
                     publishGameEvent(level.game(), GameEventType.BONUS_EXPIRED, tile());
                 } else {
-                    navigateTowardsTarget();
-                    tryMoving();
+                    navigateTowardsTarget(this, level.world());
+                    tryMoving(this, level.world());
                     animation.tick();
                 }
             }

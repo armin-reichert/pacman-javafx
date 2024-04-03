@@ -7,6 +7,7 @@ package de.amr.games.pacman.lib;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -71,8 +72,8 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     @Override
-    public void steer(Creature creature) {
-        if (creature.hasMoved() && !creature.isNewTileEntered()) {
+    public void steer(Creature creature, World world) {
+        if (creature.moveResult.moved && !creature.isNewTileEntered()) {
             return;
         }
         var data = collectData(level);
@@ -121,11 +122,11 @@ public class RuleBasedPacSteering implements Steering {
         }
 
         // when not escaping ghost, keep move direction at least until next intersection
-        if (pac.hasMoved() && !level.world().isIntersection(pac.tile()))
+        if (pac.moveResult.moved && !level.world().isIntersection(pac.tile()))
             return;
 
         if (!data.frightenedGhosts.isEmpty() && pac.powerTimer().remaining() >= GameModel.FPS) {
-            Ghost prey = data.frightenedGhosts.get(0);
+            Ghost prey = data.frightenedGhosts.getFirst();
             Logger.trace("Detected frightened ghost {} {} tiles away", prey.name(),
                 prey.tile().manhattanDistance(pac.tile()));
             pac.setTargetTile(prey.tile());
@@ -136,7 +137,7 @@ public class RuleBasedPacSteering implements Steering {
             pac.setTargetTile(findTileFarthestFromGhosts(level, findNearestFoodTiles(level)));
         }
         pac.targetTile().ifPresent(target -> {
-            pac.navigateTowardsTarget();
+            CreatureMovement.navigateTowardsTarget(pac, level.world());
             Logger.trace("Navigated towards {}, moveDir={} wishDir={}", pac.targetTile(), pac.moveDir(), pac.wishDir());
         });
     }
@@ -158,7 +159,7 @@ public class RuleBasedPacSteering implements Steering {
         boolean energizerFound = false;
         for (int i = 1; i <= CollectedData.MAX_GHOST_AHEAD_DETECTION_DIST; ++i) {
             Vector2i ahead = pacManTile.plus(pac.moveDir().vector().scaled(i));
-            if (!pac.canAccessTile(ahead)) {
+            if (!pac.canAccessTile(ahead, level.world())) {
                 break;
             }
             if (level.world().isEnergizerTile(ahead) && !level.world().hasEatenFoodAt(ahead)) {
@@ -185,7 +186,7 @@ public class RuleBasedPacSteering implements Steering {
         var pacManTile = pac.tile();
         for (int i = 1; i <= CollectedData.MAX_GHOST_BEHIND_DETECTION_DIST; ++i) {
             var behind = pacManTile.plus(pac.moveDir().opposite().vector().scaled(i));
-            if (!pac.canAccessTile(behind)) {
+            if (!pac.canAccessTile(behind, level.world())) {
                 break;
             }
             Iterable<Ghost> huntingGhosts = level.ghosts(GhostState.HUNTING_PAC)::iterator;
@@ -207,7 +208,7 @@ public class RuleBasedPacSteering implements Steering {
                 continue;
             }
             Vector2i neighbor = pacManTile.plus(dir.vector());
-            if (pac.canAccessTile(neighbor)) {
+            if (pac.canAccessTile(neighbor, level.world())) {
                 escapes.add(dir);
             }
         }
@@ -217,7 +218,7 @@ public class RuleBasedPacSteering implements Steering {
                 return escape;
             }
         }
-        return escapes.isEmpty() ? null : escapes.get(0);
+        return escapes.isEmpty() ? null : escapes.getFirst();
     }
 
     private List<Vector2i> findNearestFoodTiles(GameLevel level) {

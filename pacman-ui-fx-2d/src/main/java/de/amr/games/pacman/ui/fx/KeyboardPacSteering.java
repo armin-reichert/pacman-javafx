@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui.fx;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Steering;
 import de.amr.games.pacman.model.actors.Creature;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -38,7 +39,7 @@ public class KeyboardPacSteering implements Steering {
     }
 
     @Override
-    public void steer(Creature creature) {
+    public void steer(Creature creature, World world) {
         for (var combination : mappings.keySet()) {
             if (Keyboard.pressed(combination)) {
                 creature.setWishDir(mappings.get(combination));

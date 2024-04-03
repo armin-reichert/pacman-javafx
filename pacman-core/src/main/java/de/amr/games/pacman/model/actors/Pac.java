@@ -9,10 +9,13 @@ import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static de.amr.games.pacman.model.actors.CreatureMovement.tryMoving;
 
 /**
  * Pac-Man / Ms. Pac-Man.
@@ -84,7 +87,7 @@ public class Pac extends Creature implements AnimationDirector {
     }
 
     @Override
-    public boolean canAccessTile(Vector2i tile) {
+    public boolean canAccessTile(Vector2i tile, World world) {
         if (world.house().contains(tile)) {
             return false;
         }
@@ -114,12 +117,12 @@ public class Pac extends Creature implements AnimationDirector {
                 ? level.data().pacSpeedPoweredPercentage()
                 : level.data().pacSpeedPercentage());
             if (useAutopilot) {
-                autopilot.steer(this);
+                autopilot.steer(this, level.world());
             } else {
-                manualSteering.steer(this);
+                manualSteering.steer(this, level.world());
             }
-            tryMoving();
-            if (hasMoved()) {
+            tryMoving(this, level.world());
+            if (moveResult.moved) {
                 startAnimation();
             } else {
                 stopAnimation();
@@ -213,7 +216,7 @@ public class Pac extends Creature implements AnimationDirector {
     }
 
     public boolean isStandingStill() {
-        return velocity().length() == 0 || !hasMoved() || restingTicks == REST_INDEFINITE;
+        return velocity().length() == 0 || !moveResult.moved|| restingTicks == REST_INDEFINITE;
     }
 
     public Steering manualSteering() {
