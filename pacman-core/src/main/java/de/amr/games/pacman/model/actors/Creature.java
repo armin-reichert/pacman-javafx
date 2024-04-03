@@ -30,7 +30,7 @@ public abstract class Creature extends Entity {
     private Vector2i targetTile;
     private float baseSpeed;
 
-    public boolean newTileEntered;
+    protected boolean newTileEntered;
     protected boolean gotReverseCommand;
     protected boolean canTeleport;
     protected float corneringSpeedUp;
@@ -203,5 +203,9 @@ public abstract class Creature extends Entity {
             throw new IllegalArgumentException("Negative pixel speed: " + pixelSpeed);
         }
         setVelocity(pixelSpeed == 0 ? Vector2f.ZERO : moveDir.vector().toFloatVec().scaled(pixelSpeed));
+    }
+
+    public boolean isNewTileEntered() {
+        return newTileEntered;
     }
 }
