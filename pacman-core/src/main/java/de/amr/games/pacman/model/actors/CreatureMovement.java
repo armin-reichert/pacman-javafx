@@ -22,9 +22,20 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public interface CreatureMovement {
 
+    /** Order in which directions are selected when navigation decision is met. */
     Direction[] DIRECTION_PRIORITY = {UP, LEFT, DOWN, RIGHT};
 
+    /**
+     * Implements the rules by which a creature (ghost) decides how to reach its current target tile.
+     *
+     * @param creature a creature (ghost, moving bonus)
+     * @param world the world/maze
+     * @return optional direction the creature takes to reach its current target tile
+     */
     static Optional<Direction> computeTargetDirection(Creature creature, World world) {
+        if (creature.targetTile().isEmpty()) {
+            return Optional.empty();
+        }
         final var currentTile = creature.tile();
         Direction targetDir = null;
         float minDistance = Float.MAX_VALUE;
@@ -46,14 +57,16 @@ public interface CreatureMovement {
 
     /**
      * Sets the new wish direction for reaching the target tile.
+     *
+     * @param creature a creature (ghost, moving bonus)
+     * @param world the world/maze
      */
     static void navigateTowardsTarget(Creature creature, World world) {
         if (creature.targetTile().isEmpty()) {
             return;
         }
         if (!creature.newTileEntered && creature.moveResult.moved) {
-            // we don't need no navigation, dim dit diddit diddit...
-            return;
+            return; // we don't need no navigation, dim dit diddit diddit...
         }
         if (world.belongsToPortal(creature.tile())) {
             return; // inside portal, no navigation happens
@@ -61,6 +74,14 @@ public interface CreatureMovement {
         computeTargetDirection(creature, world).ifPresent(creature::setWishDir);
     }
 
+    /**
+     * Lets a creature follow the given target tile.
+     *
+     * @param creature a creature (ghost, moving bonus)
+     * @param world the world/maze
+     * @param targetTile the target tile e.g. Pac-Man's current tile
+     * @param relSpeed the relative speed (in percentage of base speed)
+     */
     static void followTarget(Creature creature, World world, Vector2i targetTile, byte relSpeed) {
         creature.setPercentageSpeed(relSpeed);
         creature.setTargetTile(targetTile);
@@ -69,10 +90,19 @@ public interface CreatureMovement {
     }
 
 
+    /**
+     * Lets a creature randomly roam through the world.
+     *
+     * @param creature a creature (ghost, moving bonus)
+     * @param world the world/maze
+     * @param relSpeed the relative speed (in percentage of base speed)
+     * @param dir the intended direction. If this direction cannot be taken, try the other directions in clockwise order
+     */
     static void roam(Creature creature, World world, byte relSpeed, Direction dir) {
-        if (!world.belongsToPortal(creature.tile()) && (creature.isNewTileEntered() || !creature.moveResult.moved)) {
-            while (dir == creature.moveDir().opposite() || !creature.canAccessTile(
-                creature.tile().plus(dir.vector()), world)) {
+        Vector2i currentTile = creature.tile();
+        if (!world.belongsToPortal(currentTile) && (creature.isNewTileEntered() || !creature.moveResult.moved)) {
+            while (dir == creature.moveDir().opposite()
+                || !creature.canAccessTile(currentTile.plus(dir.vector()), world)) {
                 dir = dir.nextClockwise();
             }
             creature.setWishDir(dir);
@@ -86,6 +116,9 @@ public interface CreatureMovement {
      * <p>
      * First checks if the creature can teleport, then if the creature can move to its wish direction. If this is not
      * possible, it keeps moving to its current move direction.
+     *
+     * @param creature a creature (ghost, moving bonus)
+     * @param world the world/maze
      */
     static void tryMoving(Creature creature, World world) {
         creature.moveResult.clear();
@@ -104,6 +137,12 @@ public interface CreatureMovement {
         }
     }
 
+    /**
+     * Tries to teleport a creature through a portal.
+     *
+     * @param creature a creature (ghost, moving bonus)
+     * @param portals list of available portals
+     */
     static void tryTeleport(Creature creature, List<Portal> portals) {
         if (creature.canTeleport) {
             for (var portal : portals) {
@@ -115,23 +154,36 @@ public interface CreatureMovement {
         }
     }
 
+    /**
+     * Tries to teleport a creature through a portal.
+     *
+     * @param creature a creature (ghost, moving bonus)
+     * @param portal a portal
+     */
     static void tryTeleport(Creature creature, Portal portal) {
         var tile = creature.tile();
-        var old_pos_x = creature.posX;
-        var old_pos_y = creature.posY;
+        var oldX = creature.posX;
+        var oldY = creature.posY;
         if (tile.y() == portal.leftTunnelEnd().y() && creature.posX < portal.leftTunnelEnd().x() - portal.depth() * TS) {
             creature.centerOverTile(portal.rightTunnelEnd());
             creature.moveResult.teleported = true;
             creature.moveResult.addMessage(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
-                creature.name(), old_pos_x, old_pos_y, creature.posX, creature.posY));
+                creature.name(), oldX, oldY, creature.posX, creature.posY));
         } else if (tile.equals(portal.rightTunnelEnd().plus(portal.depth(), 0))) {
             creature.centerOverTile(portal.leftTunnelEnd().minus(portal.depth(), 0));
             creature.moveResult.teleported = true;
             creature.moveResult.addMessage(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
-                creature.name(), old_pos_x, old_pos_y, creature.posX, creature.posY));
+                creature.name(), oldX, oldY, creature.posX, creature.posY));
         }
     }
 
+    /**
+     * Tries to move a creature towards the given directory. Handles collisions with walls and moving around corners.
+     *
+     * @param creature a creature (ghost, moving bonus)
+     * @param world the world/maze
+     * @param dir the direction to move
+     */
     static void tryMoving(Creature creature, World world, Direction dir) {
         final Vector2i tileBeforeMove = creature.tile();
         final Vector2f dirVector = dir.vector().toFloatVec();
