@@ -83,7 +83,7 @@ public class Pac extends Creature implements AnimationDirector {
 
     @Override
     public boolean canReverse() {
-        return isNewTileEntered();
+        return newTileEntered;
     }
 
     @Override

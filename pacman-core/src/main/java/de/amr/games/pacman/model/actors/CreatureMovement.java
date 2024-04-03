@@ -100,7 +100,7 @@ public interface CreatureMovement {
      */
     static void roam(Creature creature, World world, byte relSpeed, Direction dir) {
         Vector2i currentTile = creature.tile();
-        if (!world.belongsToPortal(currentTile) && (creature.isNewTileEntered() || !creature.moveResult.moved)) {
+        if (!world.belongsToPortal(currentTile) && (creature.newTileEntered || !creature.moveResult.moved)) {
             while (dir == creature.moveDir().opposite()
                 || !creature.canAccessTile(currentTile.plus(dir.vector()), world)) {
                 dir = dir.nextClockwise();

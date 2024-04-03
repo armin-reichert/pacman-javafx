@@ -30,7 +30,7 @@ public abstract class Creature extends Entity {
     private Vector2i targetTile;
     private float baseSpeed;
 
-    protected boolean newTileEntered;
+    public boolean newTileEntered;
     protected boolean gotReverseCommand;
     protected boolean canTeleport;
     protected float corneringSpeedUp;
@@ -67,21 +67,6 @@ public abstract class Creature extends Entity {
      * @return if this creature can access the given tile
      */
     public abstract boolean canAccessTile(Vector2i tile, World world);
-
-    /**
-     * Tells if the creature entered a new tile with its last move or placement.
-     */
-    public boolean isNewTileEntered() {
-        return newTileEntered;
-    }
-
-    public void setCanTeleport(boolean canTeleport) {
-        this.canTeleport = canTeleport;
-    }
-
-    public boolean canTeleport() {
-        return canTeleport;
-    }
 
     /**
      * Sets the tile this creature tries to reach (can be an unreachable tile or <code>null</code>).
