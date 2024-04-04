@@ -56,6 +56,9 @@ public abstract class Creature extends Entity {
      */
     public abstract String name();
 
+    /**
+     * @return {@code true} if this creature can reverse ist direction in its current state
+     */
     public abstract boolean canReverse();
 
     /**
@@ -96,25 +99,12 @@ public abstract class Creature extends Entity {
     }
 
     /**
-     * Places this creature at the given tile coordinate with the given tile offsets. Updates the
-     * <code>newTileEntered</code> state.
-     *
-     * @param tile tile
-     * @param ox   x-offset inside tile
-     * @param oy   y-offset inside tile
-     */
-    public void placeAtTile(Vector2i tile, float ox, float oy) {
-        checkTileNotNull(tile);
-        placeAtTile(tile.x(), tile.y(), ox, oy);
-    }
-
-    /**
      * Places this creature centered over the given tile.
      *
      * @param tile tile where creature is placed
      */
     public void centerOverTile(Vector2i tile) {
-        placeAtTile(tile, 0, 0);
+        placeAtTile(tile.x(), tile.y(), 0, 0);
     }
 
     /**
