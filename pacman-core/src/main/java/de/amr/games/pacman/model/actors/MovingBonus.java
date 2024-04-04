@@ -116,12 +116,45 @@ public class MovingBonus extends Creature implements Bonus {
         Logger.trace("Bonus edible: {}", this);
     }
 
+    private void updateStateEdible(GameLevel level) {
+        steering.steer(this, level.world());
+        if (steering.isComplete()) {
+            Logger.trace("Moving bonus reached target: {}", this);
+            setInactive();
+            publishGameEvent(level.game(), GameEventType.BONUS_EXPIRED, tile());
+        } else {
+            navigateTowardsTarget(this, level.world());
+            tryMoving(this, level.world());
+            animation.tick();
+        }
+    }
+
     @Override
     public void setEaten(long ticks) {
         animation.stop();
         countdown = ticks;
         state = STATE_EATEN;
         Logger.trace("Bonus eaten: {}", this);
+    }
+
+    private void updateStateEaten(GameLevel level) {
+        if (countdown == 0) {
+            Logger.trace("Bonus expired: {}", this);
+            setInactive();
+            publishGameEvent(level.game(), GameEventType.BONUS_EXPIRED, tile());
+        } else if (countdown != TickTimer.INDEFINITE) {
+            --countdown;
+        }
+    }
+
+    @Override
+    public void update(GameLevel level) {
+        switch (state) {
+            case STATE_INACTIVE -> {}
+            case STATE_EDIBLE   -> updateStateEdible(level);
+            case STATE_EATEN    -> updateStateEaten(level);
+            default             -> throw new IllegalStateException("Unknown bonus state: " + state);
+        }
     }
 
     public void setRoute(List<NavPoint> route, boolean leftToRight) {
@@ -137,34 +170,5 @@ public class MovingBonus extends Creature implements Bonus {
             return 0;
         }
         return animation.on() ? -3f : 3f;
-    }
-
-    @Override
-    public void update(GameLevel level) {
-        switch (state) {
-            case STATE_INACTIVE -> {}
-            case STATE_EDIBLE -> {
-                steering.steer(this, level.world());
-                if (steering.isComplete()) {
-                    Logger.trace("Moving bonus reached target: {}", this);
-                    setInactive();
-                    publishGameEvent(level.game(), GameEventType.BONUS_EXPIRED, tile());
-                } else {
-                    navigateTowardsTarget(this, level.world());
-                    tryMoving(this, level.world());
-                    animation.tick();
-                }
-            }
-            case STATE_EATEN -> {
-                if (countdown == 0) {
-                    setInactive();
-                    Logger.trace("Bonus expired: {}", this);
-                    publishGameEvent(level.game(), GameEventType.BONUS_EXPIRED, tile());
-                } else if (countdown != TickTimer.INDEFINITE) {
-                    --countdown;
-                }
-            }
-            default -> throw new IllegalStateException("Unknown bonus state: " + state);
-        }
     }
 }
