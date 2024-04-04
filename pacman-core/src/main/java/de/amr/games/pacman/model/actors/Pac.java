@@ -146,17 +146,6 @@ public class Pac extends Creature implements AnimationDirector {
         return victims;
     }
 
-    public void eatPellet() {
-        endStarving();
-        setRestingTicks(GameModel.RESTING_TICKS_NORMAL_PELLET);
-    }
-
-    public void eatEnergizer() {
-        endStarving();
-        setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
-        victims.clear();
-    }
-
     /**
      * When a level is complete, Pac-Man is displayed in its full beauty and does not move anymore.
      */

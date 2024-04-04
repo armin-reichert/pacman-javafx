@@ -437,13 +437,15 @@ public class GameLevel {
         final Vector2i pacTile = pac.tile();
         if (world.hasFoodAt(pacTile)) {
             eventLog.foodFoundTile = pacTile;
+            pac.endStarving();
             if (world.isEnergizerTile(pacTile)) {
                 eventLog.energizerFound = true;
-                pac.eatEnergizer();
+                pac.setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
+                pac.victims().clear();
                 scorePoints(GameModel.POINTS_ENERGIZER);
                 Logger.info("Scored {} points for eating energizer", GameModel.POINTS_ENERGIZER);
             } else {
-                pac.eatPellet();
+                pac.setRestingTicks(GameModel.RESTING_TICKS_NORMAL_PELLET);
                 scorePoints(GameModel.POINTS_NORMAL_PELLET);
             }
             houseControl.updateDotCount(this);
