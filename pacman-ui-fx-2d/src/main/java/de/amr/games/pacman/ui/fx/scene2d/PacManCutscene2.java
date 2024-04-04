@@ -17,7 +17,7 @@ import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
+import static de.amr.games.pacman.controller.GameController.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.t;
 
 /**

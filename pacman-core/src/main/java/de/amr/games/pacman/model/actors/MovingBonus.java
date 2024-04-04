@@ -12,7 +12,7 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
+import static de.amr.games.pacman.controller.GameController.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.actors.CreatureMovement.navigateTowardsTarget;
 import static de.amr.games.pacman.model.actors.CreatureMovement.tryMoving;

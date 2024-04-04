@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.event.GameEventManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -32,7 +31,7 @@ public class PacManGames2dApp extends Application {
     @Override
     public void start(Stage stage) {
         ui = new PacManGames2dUI(stage, settings);
-        GameEventManager.addListener(ui);
+        GameController.addListener(ui);
         ui.showStartPage();
         Logger.info("UI initialized. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }

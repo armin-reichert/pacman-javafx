@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
+import static de.amr.games.pacman.controller.GameController.publishGameEvent;
 
 /**
  * Bonus that appears for some time at a fixed position before it gets eaten or vanishes.

@@ -19,7 +19,8 @@ import org.tinylog.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
+import static de.amr.games.pacman.controller.GameController.publishGameEvent;
+
 
 /**
  * Game states of the Pac-Man/Ms. Pac-Man game.

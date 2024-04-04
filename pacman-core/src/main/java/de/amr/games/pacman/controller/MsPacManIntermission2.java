@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.actors.Pac;
 
-import static de.amr.games.pacman.event.GameEventManager.publishGameEvent;
+import static de.amr.games.pacman.controller.GameController.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.TS;
 
 /**

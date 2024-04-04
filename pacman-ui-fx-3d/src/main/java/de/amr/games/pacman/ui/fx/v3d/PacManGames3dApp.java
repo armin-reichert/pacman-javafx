@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.event.GameEventManager;
 import de.amr.games.pacman.ui.fx.Settings;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -38,7 +37,7 @@ public class PacManGames3dApp extends Application {
     @Override
     public void start(Stage stage) {
         ui = new PacManGames3dUI(stage, settings);
-        GameEventManager.addListener(ui);
+        GameController.addListener(ui);
         int hour = LocalTime.now().getHour();
         PY_3D_NIGHT_MODE.set(hour >= 20 || hour <= 5);
         ui.showStartPage();
