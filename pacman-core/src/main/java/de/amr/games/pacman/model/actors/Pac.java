@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Steering;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
 
 import java.util.ArrayList;
@@ -167,8 +166,8 @@ public class Pac extends Creature implements AnimationDirector {
         return dead;
     }
 
-    public void setPowerFadingTicks(int fadingTicks) {
-        this.powerFadingTicks = fadingTicks;
+    public void setPowerFadingTicks(int ticks) {
+        powerFadingTicks = ticks;
     }
 
     public boolean isPowerFading() {
@@ -182,11 +181,6 @@ public class Pac extends Creature implements AnimationDirector {
 
     public TickTimer powerTimer() {
         return powerTimer;
-    }
-
-    /* Number of ticks Pac is resting and not moving (1 after eating pellet, 3 after eating energizer). */
-    public byte restingTicks() {
-        return restingTicks;
     }
 
     public void setRestingTicks(byte ticks) {
