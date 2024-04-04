@@ -191,7 +191,9 @@ public class Pac extends Creature implements AnimationDirector {
         }
     }
 
-    /* Number of ticks passed since Pac has eaten a pellet or energizer. */
+    /**
+     *  @return number of ticks passed since Pac has eaten a pellet or energizer.
+     */
     public long starvingTicks() {
         return starvingTicks;
     }
@@ -204,23 +206,23 @@ public class Pac extends Creature implements AnimationDirector {
         starvingTicks = 0;
     }
 
+    /**
+     * @return {@code true} if Pac-Man has run against a wall and could not move, its speed is zero
+     * or if he is resting for an indefinite time.
+     */
     public boolean isStandingStill() {
-        return velocity().length() == 0 || !moveResult.moved|| restingTicks == REST_INDEFINITE;
+        return velocity().length() == 0 || !moveResult.moved || restingTicks == REST_INDEFINITE;
     }
 
-    public Steering manualSteering() {
-        return manualSteering;
+    public void setManualSteering(Steering steering) {
+        manualSteering = steering;
     }
 
-    public void setManualSteering(Steering manualSteering) {
-        this.manualSteering = manualSteering;
+    public void setAutopilot(Steering steering) {
+        autopilot = steering;
     }
 
-    public void setAutopilot(Steering autopilot) {
-        this.autopilot = autopilot;
-    }
-
-    public void setUseAutopilot(boolean useAutopilot) {
-        this.useAutopilot = useAutopilot;
+    public void setUseAutopilot(boolean value) {
+        useAutopilot = value;
     }
 }

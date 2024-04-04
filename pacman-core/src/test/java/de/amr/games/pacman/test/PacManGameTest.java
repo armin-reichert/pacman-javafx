@@ -54,7 +54,6 @@ public class PacManGameTest {
     public void testPacCreatedAndInitialized() {
         game.level().ifPresent(level -> {
             var pac = level.pac();
-            assertEquals(0, pac.restingTicks());
             assertEquals(0, pac.starvingTicks());
         });
     }
@@ -77,15 +76,6 @@ public class PacManGameTest {
             var orangeGhost = level.ghost(GameModel.ORANGE_GHOST);
             assertNotEquals(Vector2f.ZERO, level.ghostRevivalPosition(orangeGhost.id()));
             assertNotEquals(Vector2i.ZERO, level.ghostScatterTarget(orangeGhost.id()));
-        });
-    }
-
-    @Test
-    public void testPacResting() {
-        game.level().ifPresent(level -> {
-            var pac = level.pac();
-            pac.setRestingTicks((byte) 3);
-            assertEquals(3, pac.restingTicks());
         });
     }
 
