@@ -65,12 +65,12 @@ public class GameController extends Fsm<GameState, GameModel> {
         gameEventListeners.remove(gameEventListener);
     }
 
-    public static void publishGameEvent(GameModel game, GameEventType type) {
-        publishGameEvent(new GameEvent(type, game));
+    public static void publishGameEvent(GameEventType type) {
+        publishGameEvent(new GameEvent(type, it().game));
     }
 
-    public static void publishGameEvent(GameModel game, GameEventType type, Vector2i tile) {
-        publishGameEvent(new GameEvent(type, game, tile));
+    public static void publishGameEvent(GameEventType type, Vector2i tile) {
+        publishGameEvent(new GameEvent(type, it().game, tile));
     }
 
     public static void publishGameEvent(GameEvent event) {
@@ -158,7 +158,7 @@ public class GameController extends Fsm<GameState, GameModel> {
                 level.pac().setAutopilot(new RuleBasedPacSteering(level));
                 game.setLevel(level);
                 Logger.info("Level {} created ({})", levelNumber, game.variant());
-                publishGameEvent(game, GameEventType.LEVEL_CREATED);
+                publishGameEvent(GameEventType.LEVEL_CREATED);
                 if (levelNumber == 1) {
                     game.clearLevelCounter();
                 }
@@ -170,14 +170,14 @@ public class GameController extends Fsm<GameState, GameModel> {
                 // At this point, the animations of Pac-Man and the ghosts must have been created!
                 level.letsGetReadyToRumble(false);
                 Logger.info("Level {} started ({})", levelNumber, game.variant());
-                publishGameEvent(game, GameEventType.LEVEL_STARTED);
+                publishGameEvent(GameEventType.LEVEL_STARTED);
             }
             case PACMAN -> {
                 var level = new GameLevel(levelNumber, GameModel.levelData(levelNumber), game, createPacManWorld(), false);
                 level.pac().setAutopilot(new RuleBasedPacSteering(level));
                 game.setLevel(level);
                 Logger.info("Level {} created ({})", levelNumber, game.variant());
-                publishGameEvent(game, GameEventType.LEVEL_CREATED);
+                publishGameEvent(GameEventType.LEVEL_CREATED);
                 if (levelNumber == 1) {
                     game.clearLevelCounter();
                 }
@@ -185,7 +185,7 @@ public class GameController extends Fsm<GameState, GameModel> {
                 // At this point, the animations of Pac-Man and the ghosts must have been created!
                 level.letsGetReadyToRumble(false);
                 Logger.info("Level {} started ({})", levelNumber, game.variant());
-                publishGameEvent(game, GameEventType.LEVEL_STARTED);
+                publishGameEvent(GameEventType.LEVEL_STARTED);
             }
         }
     }
@@ -205,11 +205,11 @@ public class GameController extends Fsm<GameState, GameModel> {
                 level.pac().setUseAutopilot(true);
                 game.setLevel(level);
                 Logger.info("Demo level created ({})", game.variant());
-                publishGameEvent(game, GameEventType.LEVEL_CREATED);
+                publishGameEvent(GameEventType.LEVEL_CREATED);
                 // At this point, the animations of Pac-Man and the ghosts must have been created!
                 level.letsGetReadyToRumble(true);
                 Logger.info("Demo Level started ({})", game.variant());
-                publishGameEvent(game, GameEventType.LEVEL_STARTED);
+                publishGameEvent(GameEventType.LEVEL_STARTED);
             }
             case PACMAN -> {
                 GameLevel level = new GameLevel(1, GameModel.levelData(1), game, createPacManWorld(),true);
@@ -217,11 +217,11 @@ public class GameController extends Fsm<GameState, GameModel> {
                 level.pac().setUseAutopilot(true);
                 game.setLevel(level);
                 Logger.info("Demo level created ({})", game.variant());
-                publishGameEvent(game, GameEventType.LEVEL_CREATED);
+                publishGameEvent(GameEventType.LEVEL_CREATED);
                 // At this point, the animations of Pac-Man and the ghosts must have been created!
                 level.letsGetReadyToRumble(true);
                 Logger.info("Demo Level started ({})", game.variant());
-                publishGameEvent(game, GameEventType.LEVEL_STARTED);
+                publishGameEvent(GameEventType.LEVEL_STARTED);
             }
         }
     }

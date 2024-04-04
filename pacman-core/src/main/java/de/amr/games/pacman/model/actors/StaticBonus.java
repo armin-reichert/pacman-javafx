@@ -96,7 +96,7 @@ public class StaticBonus extends Entity implements Bonus {
             case STATE_EDIBLE, STATE_EATEN -> {
                 if (countdown == 0) {
                     setInactive();
-                    publishGameEvent(level.game(), GameEventType.BONUS_EXPIRED, tile());
+                    publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
                 } else if (countdown != TickTimer.INDEFINITE) {
                     --countdown;
                 }

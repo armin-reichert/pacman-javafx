@@ -52,7 +52,7 @@ public class PacManCutscene1 extends GameScene2D {
         if (initialDelay > 0) {
             --initialDelay;
             if (initialDelay == 0) {
-                publishGameEvent(context.game(), GameEventType.INTERMISSION_STARTED);
+                publishGameEvent(GameEventType.INTERMISSION_STARTED);
             }
             return;
         }

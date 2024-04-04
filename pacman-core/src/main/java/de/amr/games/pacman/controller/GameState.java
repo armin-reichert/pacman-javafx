@@ -223,7 +223,7 @@ public enum GameState implements FsmState<GameModel> {
                 timer.restartSeconds(1);
                 level.pac().hide();
                 level.ghosts().forEach(Ghost::stopAnimation);
-                publishGameEvent(game, GameEventType.GHOST_EATEN);
+                publishGameEvent(GameEventType.GHOST_EATEN);
             });
         }
 
@@ -273,7 +273,7 @@ public enum GameState implements FsmState<GameModel> {
                     level.pac().resetAnimation();
                 } else if (timer.tick() == TICK_START_PAC_ANIMATION) {
                     level.pac().startAnimation();
-                    publishGameEvent(game, GameEventType.PAC_DIED);
+                    publishGameEvent(GameEventType.PAC_DIED);
                 } else if (timer.tick() == TICK_HIDE_PAC) {
                     level.pac().hide();
                     game.loseLife();
@@ -373,7 +373,7 @@ public enum GameState implements FsmState<GameModel> {
                 if (number < 3) {
                     setProperty("intermissionTestNumber", number + 1);
                     timer.restartIndefinitely();
-                    publishGameEvent(game, GameEventType.UNSPECIFIED_CHANGE);
+                    publishGameEvent(GameEventType.UNSPECIFIED_CHANGE);
                 } else {
                     gameController().changeState(INTRO);
                 }

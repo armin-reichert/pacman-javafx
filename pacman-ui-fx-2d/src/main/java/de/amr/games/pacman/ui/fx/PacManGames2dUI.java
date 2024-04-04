@@ -637,7 +637,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (!gameController().isPlaying()) {
             boolean added = gameController().changeCredit(1);
             if (added) {
-                publishGameEvent(game(), GameEventType.CREDIT_ADDED);
+                publishGameEvent(GameEventType.CREDIT_ADDED);
             }
             if (gameState() != GameState.CREDIT) {
                 gameController().changeState(GameState.CREDIT);
@@ -737,7 +737,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (gameController().isPlaying() && gameState() == GameState.HUNTING) {
             gameLevel().ifPresent(level -> {
                 level.world().tiles().filter(not(level.world()::isEnergizerTile)).forEach(level.world()::removeFood);
-                publishGameEvent(game(), GameEventType.PAC_FOUND_FOOD);
+                publishGameEvent(GameEventType.PAC_FOUND_FOOD);
             });
         }
     }

@@ -121,7 +121,7 @@ public class MovingBonus extends Creature implements Bonus {
         if (steering.isComplete()) {
             Logger.trace("Moving bonus reached target: {}", this);
             setInactive();
-            publishGameEvent(level.game(), GameEventType.BONUS_EXPIRED, tile());
+            publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
         } else {
             navigateTowardsTarget(this, level.world());
             tryMoving(this, level.world());
@@ -141,7 +141,7 @@ public class MovingBonus extends Creature implements Bonus {
         if (countdown == 0) {
             Logger.trace("Bonus expired: {}", this);
             setInactive();
-            publishGameEvent(level.game(), GameEventType.BONUS_EXPIRED, tile());
+            publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
         } else if (countdown != TickTimer.INDEFINITE) {
             --countdown;
         }
