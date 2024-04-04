@@ -36,13 +36,17 @@ public class MovingBonus extends Creature implements Bonus {
     private RouteBasedSteering steering;
 
     public MovingBonus(byte symbol, int points) {
-        super("MovingBonus-" + symbol);
         this.symbol = symbol;
         this.points = points;
         reset();
         canTeleport = false; // override default from Creature
         countdown = 0;
         state = STATE_INACTIVE;
+    }
+
+    @Override
+    public String name() {
+        return "MovingBonus-symbol-" + symbol + "-points-" + points;
     }
 
     @Override

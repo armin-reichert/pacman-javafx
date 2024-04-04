@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.actors.CreatureMovement.tryMoving;
 
 /**
@@ -37,6 +38,7 @@ public class Pac extends Creature implements AnimationDirector {
 
     public static final byte REST_INDEFINITE = -1;
 
+    private final String name;
     private final TickTimer powerTimer = new TickTimer("PacPower");
     private boolean dead;
     private byte restingTicks;
@@ -52,8 +54,13 @@ public class Pac extends Creature implements AnimationDirector {
     private Animations animations;
 
     public Pac(String name) {
-        super(name);
+        checkNotNull(name);
+        this.name = name;
         reset();
+    }
+
+    public String name() {
+        return name;
     }
 
     @Override

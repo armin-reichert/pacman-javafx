@@ -127,7 +127,7 @@ public interface CreatureMovement {
             if (creature.gotReverseCommand && creature.canReverse()) {
                 creature.setWishDir(creature.moveDir().opposite());
                 creature.gotReverseCommand = false;
-                Logger.trace("{}: [turned around]", creature.name);
+                Logger.trace("{}: [turned around]", creature.name());
             }
             tryMoving(creature, world, creature.wishDir());
             if (creature.moveResult.moved) {
@@ -137,7 +137,7 @@ public interface CreatureMovement {
             }
         }
         if (creature.moveResult.teleported || creature.moveResult.moved) {
-            Logger.trace("{}: {} {} {}", creature.name, creature.moveResult, creature.moveResult.summary(), creature);
+            Logger.trace("{}: {} {} {}", creature.name(), creature.moveResult, creature.moveResult.summary(), creature);
         }
     }
 
@@ -172,12 +172,12 @@ public interface CreatureMovement {
             creature.centerOverTile(portal.rightTunnelEnd());
             creature.moveResult.teleported = true;
             creature.moveResult.addMessage(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
-                creature.name, oldX, oldY, creature.posX, creature.posY));
+                creature.name(), oldX, oldY, creature.posX, creature.posY));
         } else if (tile.equals(portal.rightTunnelEnd().plus(portal.depth(), 0))) {
             creature.centerOverTile(portal.leftTunnelEnd().minus(portal.depth(), 0));
             creature.moveResult.teleported = true;
             creature.moveResult.addMessage(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
-                creature.name, oldX, oldY, creature.posX, creature.posY));
+                creature.name(), oldX, oldY, creature.posX, creature.posY));
         }
     }
 
@@ -217,7 +217,7 @@ public interface CreatureMovement {
 
         if (isTurn && creature.corneringSpeedUp > 0) {
             creature.setVelocity(newVelocity.plus(dirVector.scaled(creature.corneringSpeedUp)));
-            Logger.trace("{} velocity around corner: {}", creature.name, creature.velocity().length());
+            Logger.trace("{} velocity around corner: {}", creature.name(), creature.velocity().length());
             creature.move();
             creature.setVelocity(newVelocity);
         } else {
@@ -239,10 +239,10 @@ public interface CreatureMovement {
         creature.moveResult.addMessage(String.format("%5s (%.2f pixels)", dir, newVelocity.length()));
 
         if (creature.moveResult.tunnelEntered) {
-            Logger.trace("{} entered tunnel", creature.name);
+            Logger.trace("{} entered tunnel", creature.name());
         }
         if (creature.moveResult.tunnelLeft) {
-            Logger.trace("{} left tunnel", creature.name);
+            Logger.trace("{} left tunnel", creature.name());
         }
     }
 }

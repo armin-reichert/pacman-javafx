@@ -42,6 +42,7 @@ public class Ghost extends Creature implements AnimationDirector {
     public static final String ANIM_BLINKY_NAKED     = "naked";
 
     private final byte id;
+    private final String name;
     private GhostState state;
     private Consumer<Ghost> huntingBehavior;
     private Consumer<Ghost> frightenedBehavior;
@@ -55,12 +56,13 @@ public class Ghost extends Creature implements AnimationDirector {
     /**
      * @param id  The ghost ID. One of {@link GameModel#RED_GHOST}, {@link GameModel#PINK_GHOST}, {@link GameModel#CYAN_GHOST},
      * {@link GameModel#ORANGE_GHOST}.
-     * @param name the ghost's readable name e.g. "Pinky"
+     * @param name the ghost's readable name, e.g. "Pinky"
      */
     public Ghost(byte id, String name) {
-        super(name);
         checkGhostID(id);
+        checkNotNull(name);
         this.id = id;
+        this.name = name;
         reset();
     }
 
@@ -74,6 +76,10 @@ public class Ghost extends Creature implements AnimationDirector {
 
     public byte id() {
         return id;
+    }
+
+    public String name() {
+        return name;
     }
 
     public void setAnimations(Animations animations) {

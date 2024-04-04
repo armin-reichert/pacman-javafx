@@ -48,10 +48,10 @@ public class RouteBasedSteering implements Steering {
         } else if (creature.targetTile().isEmpty()) {
             creature.setTargetTile(currentTarget().tile());
             navigateTowardsTarget(creature, world);
-            Logger.trace("New target tile for {}={}s", creature.name, creature.targetTile().get());
+            Logger.trace("New target tile for {}={}s", creature.name(), creature.targetTile().get());
         } else if (creature.tile().equals(currentTarget().tile())) {
             nextTarget(creature, world);
-            Logger.trace("New target tile for {}={}", creature.name, creature.targetTile().get());
+            Logger.trace("New target tile for {}={}", creature.name(), creature.targetTile().get());
         }
     }
 

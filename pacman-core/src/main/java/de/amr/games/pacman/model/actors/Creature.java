@@ -22,7 +22,6 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public abstract class Creature extends Entity {
 
-    public final String name;
     public final MoveResult moveResult = new MoveResult();
 
     private Direction moveDir;
@@ -34,14 +33,6 @@ public abstract class Creature extends Entity {
     protected boolean gotReverseCommand;
     protected boolean canTeleport;
     protected float corneringSpeedUp;
-
-    /**
-     *  @param name Readable name, for display and logging purposes.
-     */
-    protected Creature(String name) {
-        checkNotNull(name, "Name of creature must not be null");
-        this.name = name;
-    }
 
     public void reset() {
         super.reset();
@@ -59,6 +50,11 @@ public abstract class Creature extends Entity {
     public void setBaseSpeed(float pixelsPerTick) {
         baseSpeed = pixelsPerTick;
     }
+
+    /**
+     * @return readable name, used for UI and logging
+     */
+    public abstract String name();
 
     public abstract boolean canReverse();
 
@@ -131,7 +127,7 @@ public abstract class Creature extends Entity {
         if (moveDir != dir) {
             moveDir = dir;
             setVelocity(moveDir.vector().toFloatVec().scaled(velocity().length()));
-            Logger.trace("{}: New moveDir: {}. {}", name, moveDir, this);
+            Logger.trace("{}: New moveDir: {}. {}", name(), moveDir, this);
         }
     }
 
@@ -151,7 +147,7 @@ public abstract class Creature extends Entity {
         checkDirectionNotNull(dir);
         if (wishDir != dir) {
             wishDir = dir;
-            Logger.trace("{}: New wishDir: {}. {}", name, wishDir, this);
+            Logger.trace("{}: New wishDir: {}. {}", name(), wishDir, this);
         }
     }
 
@@ -178,7 +174,7 @@ public abstract class Creature extends Entity {
     public void reverseAsSoonAsPossible() {
         gotReverseCommand = true;
         newTileEntered = false;
-        Logger.trace("{} (moveDir={}, wishDir={}) got command to reverse direction", name, moveDir, wishDir);
+        Logger.trace("{} (moveDir={}, wishDir={}) got command to reverse direction", name(), moveDir, wishDir);
     }
 
     /**

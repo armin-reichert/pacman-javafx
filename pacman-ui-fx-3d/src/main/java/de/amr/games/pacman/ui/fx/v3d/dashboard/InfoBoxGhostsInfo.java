@@ -53,7 +53,7 @@ public class InfoBoxGhostsInfo extends InfoBox {
     }
 
     private String ghostNameAndState(GameLevel level, Ghost ghost) {
-        String name = ghost.name;
+        String name = ghost.name();
         if (ghost.id() == GameModel.RED_GHOST && level.cruiseElroyState() > 0) {
             name = "Elroy" + level.cruiseElroyState();
         }
