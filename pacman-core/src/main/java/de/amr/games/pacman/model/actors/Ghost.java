@@ -63,7 +63,6 @@ public class Ghost extends Creature implements AnimationDirector {
         checkNotNull(name);
         this.id = id;
         this.name = name;
-        reset();
     }
 
     @Override

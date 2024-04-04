@@ -56,7 +56,6 @@ public class Pac extends Creature implements AnimationDirector {
     public Pac(String name) {
         checkNotNull(name);
         this.name = name;
-        reset();
     }
 
     public String name() {

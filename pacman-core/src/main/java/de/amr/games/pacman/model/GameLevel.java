@@ -68,6 +68,7 @@ public class GameLevel {
         bonusReachedIndex = -1;
 
         pac = new Pac(game.variant() == GameVariant.MS_PACMAN ? "Ms. Pac-Man" : "Pac-Man");
+        pac.reset();
         pac.setBaseSpeed(SPEED_AT_100_PERCENT);
         pac.setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
 
@@ -79,6 +80,7 @@ public class GameLevel {
         };
 
         ghosts().forEach(ghost -> {
+            ghost.reset();
             ghost.setHouse(world.house());
             ghost.setFrightenedBehavior(this::frightenedGhostBehavior);
             ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));

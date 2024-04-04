@@ -34,14 +34,14 @@ public abstract class Creature extends Entity {
     protected boolean canTeleport;
     protected float corneringSpeedUp;
 
+    public Creature() {
+    }
+
     public void reset() {
         super.reset();
-
-        moveDir = RIGHT;
-        wishDir = RIGHT;
-        targetTile = null;
-
         moveResult.clear();
+        setMoveAndWishDir(RIGHT); // updates velocity vector!
+        targetTile = null;
         newTileEntered = true;
         gotReverseCommand = false;
         canTeleport = true;
