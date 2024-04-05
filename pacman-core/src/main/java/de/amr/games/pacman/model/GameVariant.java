@@ -5,9 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.lib.EnumMethods;
-
 import java.io.File;
-
 import static de.amr.games.pacman.model.GameModel.FPS;
 
 /**
@@ -31,20 +29,23 @@ public enum GameVariant implements EnumMethods<GameVariant> {
             {5 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 5+
         };
 
+        @Override
         public String pacName() {
             return "Ms. Pac-Man";
         }
 
+        @Override
         public String ghostName(byte id) {
             return switch(id) {
-                case GameModel.RED_GHOST -> "Blinky";
-                case GameModel.PINK_GHOST -> "Pinky";
-                case GameModel.CYAN_GHOST -> "Inky";
+                case GameModel.RED_GHOST    -> "Blinky";
+                case GameModel.PINK_GHOST   -> "Pinky";
+                case GameModel.CYAN_GHOST   -> "Inky";
                 case GameModel.ORANGE_GHOST -> "Sue";
                 default -> throw new IllegalGhostIDException(id);
             };
         }
 
+        @Override
         public int bonusValue(byte symbol) {
             return BONUS_VALUE_BY_100[symbol] * 100;
         }
@@ -65,7 +66,6 @@ public enum GameVariant implements EnumMethods<GameVariant> {
 
         private static final byte[] BONUS_VALUE_BY_100 = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
 
-
         // Hunting duration (in ticks) of chase and scatter phases. See Pac-Man dossier.
         private static final int[][] HUNTING_DURATIONS = {
             {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS,   20 * FPS, 5 * FPS, -1}, // Level 1
@@ -73,10 +73,12 @@ public enum GameVariant implements EnumMethods<GameVariant> {
             {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS,       1, -1}, // Levels 5+
         };
 
+        @Override
         public String pacName() {
             return "Pac-Man";
         }
 
+        @Override
         public String ghostName(byte id) {
             return switch(id) {
                 case GameModel.RED_GHOST -> "Blinky";
@@ -87,6 +89,7 @@ public enum GameVariant implements EnumMethods<GameVariant> {
             };
         }
 
+        @Override
         public int bonusValue(byte symbol) {
             return BONUS_VALUE_BY_100[symbol] * 100;
         }
