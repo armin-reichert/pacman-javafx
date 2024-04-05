@@ -67,17 +67,13 @@ public class GameLevel {
         eventLog = new SimulationStepEventLog();
         bonusReachedIndex = -1;
 
-        pac = new Pac(game.variant() == GameVariant.MS_PACMAN ? "Ms. Pac-Man" : "Pac-Man");
+        pac = new Pac(game.variant().pacName());
         pac.reset();
         pac.setBaseSpeed(SPEED_AT_100_PERCENT);
         pac.setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
 
-        ghosts = new Ghost[] {
-            new Ghost(RED_GHOST, "Blinky"),
-            new Ghost(PINK_GHOST, "Pinky"),
-            new Ghost(CYAN_GHOST, "Inky"),
-            new Ghost(ORANGE_GHOST, game.variant() == GameVariant.MS_PACMAN ? "Sue" : "Clyde")
-        };
+        ghosts = Stream.of(RED_GHOST, PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
+            .map(id -> new Ghost(id, game.variant().ghostName(id))).toArray(Ghost[]::new);
 
         ghosts().forEach(ghost -> {
             ghost.reset();
