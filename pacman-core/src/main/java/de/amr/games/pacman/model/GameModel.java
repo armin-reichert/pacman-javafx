@@ -119,22 +119,6 @@ public enum GameModel implements EnumMethods<GameModel> {
         }
     };
 
-    public abstract String pacName();
-
-    public abstract String ghostName(byte id);
-
-    public abstract int bonusValue(byte symbol);
-
-    public abstract int[] huntingDurations(int levelNumber);
-
-    public abstract File highScoreFile();
-
-    // Why does the default implementation returns NULL as soon as the enum classes have methods?
-    @Override
-    public GameModel[] enumValues() {
-        return new GameModel[] {GameModel.MS_PACMAN, GameModel.PACMAN};
-    }
-
     public static final byte RED_GHOST    = 0;
     public static final byte PINK_GHOST   = 1;
     public static final byte CYAN_GHOST   = 2;
@@ -188,12 +172,57 @@ public enum GameModel implements EnumMethods<GameModel> {
         return new GameLevelData(RAW_LEVEL_DATA[index]);
     }
 
+    private static void loadScore(Score score, File file) {
+        try (var in = new FileInputStream(file)) {
+            var p = new Properties();
+            p.loadFromXML(in);
+            score.setPoints(Integer.parseInt(p.getProperty("points")));
+            score.setLevelNumber(Integer.parseInt(p.getProperty("level")));
+            score.setDate(LocalDate.parse(p.getProperty("date"), DateTimeFormatter.ISO_LOCAL_DATE));
+            Logger.info("Score loaded from file '{}'. Points: {} Level: {}",
+                file, score.points(), score.levelNumber());
+        } catch (Exception x) {
+            Logger.error("Score could not be loaded from file '{}'. Error: {}", file, x.getMessage());
+        }
+    }
+
+    private static void saveScore(Score score, File file, String description) {
+        try (var out = new FileOutputStream(file)) {
+            var p = new Properties();
+            p.setProperty("points", String.valueOf(score.points()));
+            p.setProperty("level",  String.valueOf(score.levelNumber()));
+            p.setProperty("date",   score.date().format(DateTimeFormatter.ISO_LOCAL_DATE));
+            p.setProperty("url",    "https://github.com/armin-reichert/pacman-javafx");
+            p.storeToXML(out, description);
+            Logger.info("Saved '{}' to file '{}'. Points: {} Level: {}",
+                description, file, score.points(), score.levelNumber());
+        } catch (Exception x) {
+            Logger.error("Score could not be saved to file '{}'. Error: {}", file, x.getMessage());
+        }
+    }
+
     private final List<Byte> levelCounter = new LinkedList<>();
     private final Score score = new Score();
     private final Score highScore = new Score();
     private GameLevel level;
     private short initialLives = 3;
     private short lives;
+
+    public abstract String pacName();
+
+    public abstract String ghostName(byte id);
+
+    public abstract int bonusValue(byte symbol);
+
+    public abstract int[] huntingDurations(int levelNumber);
+
+    public abstract File highScoreFile();
+
+    // Why does the default implementation returns NULL as soon as the enum classes have methods?
+    @Override
+    public GameModel[] enumValues() {
+        return new GameModel[] {GameModel.MS_PACMAN, GameModel.PACMAN};
+    }
 
     /**
      * Resets the game and deletes the current level. Credit, immunity and scores remain unchanged.
@@ -278,34 +307,4 @@ public enum GameModel implements EnumMethods<GameModel> {
             saveScore(highScore, file, String.format("%s High Score", this));
         }
     }
-
-    private static void loadScore(Score score, File file) {
-        try (var in = new FileInputStream(file)) {
-            var p = new Properties();
-            p.loadFromXML(in);
-            score.setPoints(Integer.parseInt(p.getProperty("points")));
-            score.setLevelNumber(Integer.parseInt(p.getProperty("level")));
-            score.setDate(LocalDate.parse(p.getProperty("date"), DateTimeFormatter.ISO_LOCAL_DATE));
-            Logger.info("Score loaded from file '{}'. Points: {} Level: {}",
-                file, score.points(), score.levelNumber());
-        } catch (Exception x) {
-            Logger.error("Score could not be loaded from file '{}'. Error: {}", file, x.getMessage());
-        }
-    }
-
-    private static void saveScore(Score score, File file, String description) {
-        try (var out = new FileOutputStream(file)) {
-            var p = new Properties();
-            p.setProperty("points", String.valueOf(score.points()));
-            p.setProperty("level",  String.valueOf(score.levelNumber()));
-            p.setProperty("date",   score.date().format(DateTimeFormatter.ISO_LOCAL_DATE));
-            p.setProperty("url",    "https://github.com/armin-reichert/pacman-javafx");
-            p.storeToXML(out, description);
-            Logger.info("Saved '{}' to file '{}'. Points: {} Level: {}",
-                description, file, score.points(), score.levelNumber());
-        } catch (Exception x) {
-            Logger.error("Score could not be saved to file '{}'. Error: {}", file, x.getMessage());
-        }
-    }
-
 }
