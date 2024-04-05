@@ -109,7 +109,7 @@ public class PacManGameTest {
                 assertTrue(level.bonus().isPresent());
                 level.bonus().ifPresent(bonus -> {
                     assertTrue(bonus instanceof StaticBonus);
-                    assertEquals(GameModel.BONUS_VALUES_PACMAN[bonus.symbol()] * 100, bonus.points());
+                    assertEquals(game.bonusValue(bonus.symbol()), bonus.points());
                 });
             });
         }
