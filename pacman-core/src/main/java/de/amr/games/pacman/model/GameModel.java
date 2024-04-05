@@ -77,36 +77,6 @@ public class GameModel {
         return new GameLevelData(RAW_LEVEL_DATA[index]);
     }
 
-    // Hunting duration (in ticks) of chase and scatter phases. See Pac-Man dossier.
-    private static final int[][] HUNTING_DURATIONS_PACMAN = {
-        {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS,   20 * FPS, 5 * FPS, -1}, // Level 1
-        {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS, 1033 * FPS,       1, -1}, // Levels 2-4
-        {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS,       1, -1}, // Levels 5+
-    };
-
-    /**
-     * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
-     *
-     * @see <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>
-     * @see <a href=" https://github.com/armin-reichert/pacman-basic/blob/main/doc/mspacman-details-reddit-user-damselindis.md">GitHub</a>
-     */
-    private static final int[][] HUNTING_DURATIONS_MS_PACMAN = {
-        {7 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 1-4
-        {5 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 5+
-    };
-
-    public int[] huntingDurations(int levelNumber) {
-        checkLevelNumber(levelNumber);
-        return switch (variant) {
-            case MS_PACMAN -> HUNTING_DURATIONS_MS_PACMAN[levelNumber <= 4 ? 0 : 1];
-            case PACMAN -> switch (levelNumber) {
-                case 1 -> HUNTING_DURATIONS_PACMAN[0];
-                case 2, 3, 4 -> HUNTING_DURATIONS_PACMAN[1];
-                default -> HUNTING_DURATIONS_PACMAN[2];
-            };
-        };
-    }
-
     public static final byte MS_PACMAN_CHERRIES = 0;
     public static final byte MS_PACMAN_STRAWBERRY = 1;
     // An orange, not a peach! (Found in official Arcade machine manual)

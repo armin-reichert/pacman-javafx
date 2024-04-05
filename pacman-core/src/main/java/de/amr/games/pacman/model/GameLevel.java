@@ -248,7 +248,7 @@ public class GameLevel {
             throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + index);
         }
         huntingPhaseIndex = (byte) index;
-        var durations = game.huntingDurations(levelNumber);
+        var durations = game.variant().huntingDurations(levelNumber);
         var ticks = durations[index] == -1 ? TickTimer.INDEFINITE : durations[index];
         huntingTimer.reset(ticks);
         huntingTimer.start();
