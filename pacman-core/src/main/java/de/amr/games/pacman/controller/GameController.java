@@ -14,7 +14,6 @@ import de.amr.games.pacman.lib.RuleBasedPacSteering;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import org.tinylog.Logger;
@@ -46,7 +45,7 @@ import static de.amr.games.pacman.model.world.ArcadeWorld.*;
  */
 public class GameController extends Fsm<GameState, GameModel> {
 
-    private static final GameController IT = new GameController(GameVariant.PACMAN);
+    private static final GameController IT = new GameController(GameModel.PACMAN);
 
     /**
      * @return the game controller singleton
@@ -86,16 +85,16 @@ public class GameController extends Fsm<GameState, GameModel> {
     private boolean pacImmune = false;
     private int credit = 0;
 
-    private GameController(GameVariant variant) {
+    private GameController(GameModel variant) {
         super(GameState.values());
         newGame(variant);
         // map FSM state change events to game events
         addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
     }
 
-    public void newGame(GameVariant variant) {
+    public void newGame(GameModel variant) {
         checkGameVariant(variant);
-        game = new GameModel(variant);
+        game = variant;
     }
 
     @Override
@@ -153,7 +152,7 @@ public class GameController extends Fsm<GameState, GameModel> {
      */
     public void createAndStartLevel(int levelNumber) {
         checkLevelNumber(levelNumber);
-        GameLevel level = switch (game.variant()) {
+        GameLevel level = switch (game) {
             case MS_PACMAN -> new GameLevel(game, levelNumber, levelData(levelNumber), createMsPacManWorld(mapNumberMsPacMan(levelNumber)), false);
             case    PACMAN -> new GameLevel(game, levelNumber, levelData(levelNumber), createPacManWorld(), false);
         };
@@ -161,21 +160,21 @@ public class GameController extends Fsm<GameState, GameModel> {
         if (levelNumber == 1) {
             game.clearLevelCounter();
         }
-        if (game.variant() == GameVariant.PACMAN) {
+        if (game == GameModel.PACMAN) {
             game.incrementLevelCounter(level.bonusSymbol(0));
         }
-        else if (game.variant() == GameVariant.MS_PACMAN && levelNumber <= 7) {
+        else if (game == GameModel.MS_PACMAN && levelNumber <= 7) {
             // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
             // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
             game.incrementLevelCounter(level.bonusSymbol(0));
         }
         level.pac().setAutopilot(new RuleBasedPacSteering(level));
-        Logger.info("Level {} created ({})", levelNumber, game.variant());
+        Logger.info("Level {} created ({})", levelNumber, game);
         publishGameEvent(GameEventType.LEVEL_CREATED);
 
         // At this point, the animations of Pac-Man and the ghosts must have been created!
         level.letsGetReadyToRumble(false);
-        Logger.info("Level {} started ({})", levelNumber, game.variant());
+        Logger.info("Level {} started ({})", levelNumber, game);
         publishGameEvent(GameEventType.LEVEL_STARTED);
     }
 
@@ -187,7 +186,7 @@ public class GameController extends Fsm<GameState, GameModel> {
      */
     public void createAndStartDemoLevel() {
         GameLevel level;
-        switch (game.variant()) {
+        switch (game) {
             case MS_PACMAN -> {
                 level = new GameLevel(game,1, levelData(1), createMsPacManWorld(1),  true);
                 level.pac().setAutopilot(new RuleBasedPacSteering(level));
@@ -196,16 +195,16 @@ public class GameController extends Fsm<GameState, GameModel> {
                 level = new GameLevel(game, 1, levelData(1), createPacManWorld(),true);
                 level.pac().setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
             }
-            default -> throw new IllegalGameVariantException(game.variant());
+            default -> throw new IllegalGameVariantException(game);
         }
         game.setLevel(level);
         level.pac().setUseAutopilot(true);
-        Logger.info("Demo level created ({})", game.variant());
+        Logger.info("Demo level created ({})", game);
         publishGameEvent(GameEventType.LEVEL_CREATED);
 
         // At this point, the animations of Pac-Man and the ghosts have been created!
         level.letsGetReadyToRumble(true);
-        Logger.info("Demo Level started ({})", game.variant());
+        Logger.info("Demo Level started ({})", game);
         publishGameEvent(GameEventType.LEVEL_STARTED);
     }
 }

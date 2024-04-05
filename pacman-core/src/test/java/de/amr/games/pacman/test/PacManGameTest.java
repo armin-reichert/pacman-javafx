@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -25,7 +24,7 @@ public class PacManGameTest {
 
     @BeforeClass
     public static void setUp() {
-        GameController.it().newGame(GameVariant.PACMAN);
+        GameController.it().newGame(GameModel.PACMAN);
     }
 
     @Before

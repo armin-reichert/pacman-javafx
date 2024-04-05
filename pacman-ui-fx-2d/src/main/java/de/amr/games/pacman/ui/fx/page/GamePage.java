@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.fx.page;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
@@ -21,6 +21,7 @@ import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Cursor;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -60,9 +61,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
 
         flashMessageLayer.setMouseTransparent(true);
 
-        layersContainer.setOnKeyPressed(e -> {
-            handleKeyboardInput();
-        });
+        layersContainer.setOnKeyPressed(this::handle);
 
         getCanvas().setOnMouseMoved(e -> {
             double factor = getScaling() * TS;
@@ -196,7 +195,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
         ));
 
         signature.translateYProperty().bind(Bindings.createDoubleBinding(
-            () -> switch (sceneContext.gameVariant()) {
+            () -> switch (sceneContext.game()) {
                 case MS_PACMAN -> 40 * getScaling(); // TODO fixme
                 case PACMAN -> 28 * getScaling(); // TODO fixme
             }, scalingPy
@@ -227,7 +226,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
 
     protected void updateHelpButton() {
         ImageView imageView = (ImageView) helpButton.getCenter();
-        var image = sceneContext.theme().image(switch (sceneContext.gameVariant()) {
+        var image = sceneContext.theme().image(switch (sceneContext.game()) {
             case MS_PACMAN -> "mspacman.helpButton.icon";
             case PACMAN -> "pacman.helpButton.icon";
         });
@@ -247,6 +246,10 @@ public class GamePage extends CanvasLayoutPane implements Page {
         }
         var gameScene = sceneContext.currentGameScene().get();
         return gameScene != sceneContext.sceneConfig().get("boot");
+    }
+
+    private void handle(KeyEvent e) {
+        handleKeyboardInput();
     }
 
     public class HelpInfo extends PageInfo {
@@ -302,7 +305,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
     }
 
     private void showHelpInfoPopUp() {
-        var bgColor = sceneContext.gameVariant() == GameVariant.MS_PACMAN
+        var bgColor = sceneContext.game() == GameModel.MS_PACMAN
             ? Color.rgb(255, 0, 0, 0.8)
             : Color.rgb(33, 33, 255, 0.8);
         var font = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * getScaling()));
@@ -318,7 +321,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
             info.addLocalizedEntry("help.start_game", "1");
         }
         info.addLocalizedEntry("help.add_credit", "5");
-        info.addLocalizedEntry(sceneContext.gameVariant() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
+        info.addLocalizedEntry(sceneContext.game() == GameModel.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
     }
 
     private void addInfoForQuittingScene(HelpInfo info) {

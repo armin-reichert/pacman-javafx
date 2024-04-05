@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.GameModel;
 import javafx.scene.input.KeyCode;
 
 import java.util.Collections;
@@ -37,7 +37,7 @@ public class Settings {
     }
 
     public boolean fullScreen;
-    public GameVariant variant;
+    public GameModel variant;
     public float zoom;
     public Map<Direction, KeyCode> keyMap;
 
@@ -47,7 +47,7 @@ public class Settings {
 
     public Settings(Map<String, String> map) {
         fullScreen = false;
-        variant = GameVariant.PACMAN;
+        variant = GameModel.PACMAN;
         zoom = 2;
         keyMap = keyMap("cursor");
         merge(map);
@@ -58,7 +58,7 @@ public class Settings {
             fullScreen = Boolean.parseBoolean(map.get("fullScreen"));
         }
         if (map.containsKey("variant")) {
-            variant = GameVariant.valueOf(map.get("variant"));
+            variant = GameModel.valueOf(map.get("variant"));
         }
         if (map.containsKey("zoom")) {
             zoom = Float.parseFloat(map.get("zoom"));

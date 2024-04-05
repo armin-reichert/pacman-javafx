@@ -7,9 +7,7 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
-import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -32,7 +30,7 @@ public class InfoBoxGameControl extends InfoBox {
     private static final int INTERMISSION_TEST_START = 0;
     private static final int INTERMISSION_TEST_QUIT = 1;
 
-    private final ComboBox<GameVariant> comboGameVariant;
+    private final ComboBox<GameModel> comboGameVariant;
     private final ComboBox<Integer> comboInitialLives;
     private final Button[] buttonsGameLevel;
     private final Button[] buttonsIntermissionTest;
@@ -44,7 +42,7 @@ public class InfoBoxGameControl extends InfoBox {
     public InfoBoxGameControl(Theme theme, String title) {
         super(theme, title);
 
-        comboGameVariant = addComboBox("Variant", GameVariant.MS_PACMAN, GameVariant.PACMAN);
+        comboGameVariant = addComboBox("Variant", GameModel.MS_PACMAN, GameModel.PACMAN);
         comboInitialLives = addComboBox("Initial Lives", 3, 5);
         buttonsGameLevel = addButtonList("Game Level", "Start", "Quit", "Next");
         buttonsIntermissionTest = addButtonList("Cut Scenes Test", "Start", "Quit");
@@ -59,7 +57,7 @@ public class InfoBoxGameControl extends InfoBox {
         super.init(sceneContext);
         comboGameVariant.setOnAction(e -> {
             var selectedVariant = comboGameVariant.getValue();
-            if (selectedVariant != sceneContext.game().variant()) {
+            if (selectedVariant != sceneContext.game()) {
                 sceneContext.gameController().newGame(selectedVariant);
                 sceneContext.gameController().restart(GameState.BOOT);
             }
@@ -82,7 +80,7 @@ public class InfoBoxGameControl extends InfoBox {
     public void update() {
         super.update();
 
-        comboGameVariant.setValue(sceneContext.game().variant());
+        comboGameVariant.setValue(sceneContext.game());
         comboGameVariant.setDisable(sceneContext.gameState() != GameState.INTRO);
         comboInitialLives.setValue((int) sceneContext.game().initialLives());
         cbAutopilot.setSelected(PY_USE_AUTOPILOT.get());

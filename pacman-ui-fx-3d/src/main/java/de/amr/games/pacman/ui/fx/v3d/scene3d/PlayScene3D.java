@@ -260,7 +260,7 @@ public class PlayScene3D implements GameScene {
                 context.gameLevel().ifPresent(level -> {
                     assertLevel3DExists();
                     context.stopAllSounds();
-                    var animation = switch (context.gameVariant()) {
+                    var animation = switch (context.game()) {
                         case MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
                         case PACMAN -> level3D.pac3D().createPacManDyingAnimation(level.world());
                     };
@@ -282,7 +282,7 @@ public class PlayScene3D implements GameScene {
             case GHOST_DYING -> {
                 assertLevel3DExists();
                 context.gameLevel().ifPresent(level -> {
-                    Rectangle2D[] sprites = switch (context.gameVariant()) {
+                    Rectangle2D[] sprites = switch (context.game()) {
                         case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
                         case PACMAN    -> context.<PacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
                     };

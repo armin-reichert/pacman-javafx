@@ -9,7 +9,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -56,7 +56,7 @@ public class GameLevel3D extends Group {
     private static final float PAC_SIZE   = 9.0f;
     private static final float GHOST_SIZE = 9.0f;
 
-    private static FloorPlan readFloorPlanFromFile(GameVariant variant, int mapNumber) {
+    private static FloorPlan readFloorPlanFromFile(GameModel variant, int mapNumber) {
         ResourceManager rm = () -> PacManGames3dUI.class;
         String variantMarker = switch (variant) {
             case MS_PACMAN -> "mspacman";
@@ -109,18 +109,18 @@ public class GameLevel3D extends Group {
     }
 
     private Pac3D createPac3D(Pac pac) {
-        return switch (context.gameVariant()) {
+        return switch (context.game()) {
             case MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), pac, PAC_SIZE);
             case    PACMAN -> Pac3D.createPacMan3D(context.theme(), pac, PAC_SIZE);
         };
     }
 
     private void createWorld3D() {
-        switch (context.gameVariant()) {
+        switch (context.game()) {
             case MS_PACMAN -> {
                 int mapNumber  = ArcadeWorld.mapNumberMsPacMan(level.number());
                 int mazeNumber = ArcadeWorld.mazeNumberMsPacMan(level.number());
-                floorPlan = readFloorPlanFromFile(GameVariant.MS_PACMAN, mapNumber);
+                floorPlan = readFloorPlanFromFile(GameModel.MS_PACMAN, mapNumber);
                 wallBuilder = createWallBuilder(
                     context.theme().color("mspacman.maze.wallBaseColor",  mazeNumber - 1),
                     context.theme().color("mspacman.maze.wallMiddleColor",mazeNumber - 1),
@@ -128,7 +128,7 @@ public class GameLevel3D extends Group {
                 createFood3D(context.theme().color("mspacman.maze.foodColor", mazeNumber - 1));
             }
             case PACMAN -> {
-                floorPlan = readFloorPlanFromFile(GameVariant.PACMAN, 1);
+                floorPlan = readFloorPlanFromFile(GameModel.PACMAN, 1);
                 wallBuilder = createWallBuilder(
                     context.theme().color("pacman.maze.wallBaseColor"),
                     context.theme().color("pacman.maze.wallMiddleColor"),
@@ -182,7 +182,7 @@ public class GameLevel3D extends Group {
         livesCounter3D.setTranslateY(2 * TS);
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         for (int i = 0; i < livesCounter3D.maxLives(); ++i) {
-            var pac3D = switch (context.gameVariant()) {
+            var pac3D = switch (context.game()) {
                 case MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), null, theme.get("livescounter.pac.size"));
                 case    PACMAN -> Pac3D.createPacMan3D(context.theme(), null,  theme.get("livescounter.pac.size"));
             };
@@ -205,7 +205,7 @@ public class GameLevel3D extends Group {
             levelCounterGroup.getChildren().add(cube);
 
             var material = new PhongMaterial(Color.WHITE);
-            var sprite = switch (context.gameVariant()) {
+            var sprite = switch (context.game()) {
                 case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
                 case    PACMAN -> context.<PacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
             };
@@ -262,7 +262,7 @@ public class GameLevel3D extends Group {
     }
 
     private void addDoor3D(Door door) {
-        Color color = switch (context.gameVariant()) {
+        Color color = switch (context.game()) {
             case MS_PACMAN -> context.theme().color("mspacman.maze.doorColor");
             case    PACMAN -> context.theme().color("pacman.maze.doorColor");
         };
@@ -384,7 +384,7 @@ public class GameLevel3D extends Group {
         if (bonus3D != null) {
             worldGroup.getChildren().remove(bonus3D);
         }
-        switch (level.game().variant()) {
+        switch (level.game()) {
             case PACMAN -> {
                 var ss = context.<PacManGameSpriteSheet>spriteSheet();
                 bonus3D = new Bonus3D(bonus,

@@ -171,7 +171,7 @@ public enum GameState implements FsmState<GameModel> {
                 level.bonus().ifPresent(Bonus::setInactive);
                 level.world().mazeFlashing().reset();
                 level.stopHuntingPhase();
-                Logger.trace("Game level {} ({}) ended.", level.number(), game.variant());
+                Logger.trace("Game level {} ({}) ended.", level.number(), game);
             });
         }
 
@@ -339,7 +339,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            lastTestedLevel = switch (game.variant()) {
+            lastTestedLevel = switch (game) {
                 case MS_PACMAN -> 18;
                 case PACMAN -> 20;
             };

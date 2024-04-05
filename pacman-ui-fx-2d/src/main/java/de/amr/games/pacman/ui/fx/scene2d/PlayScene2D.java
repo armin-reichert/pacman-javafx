@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
@@ -75,7 +75,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         context.gameLevel().ifPresent(level -> {
-            switch (context.gameVariant()) {
+            switch (context.game()) {
                 case MS_PACMAN -> drawMsPacManMaze(level.world(), ArcadeWorld.mazeNumberMsPacMan(level.number()));
                 case    PACMAN -> drawPacManMaze(level.world());
             }
@@ -149,7 +149,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void drawSceneInfo() {
         drawTileGrid(ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
-        if (context.gameVariant() == GameVariant.PACMAN) {
+        if (context.game() == GameModel.PACMAN) {
             context.gameLevel().ifPresent(level -> ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> {
                 // "No Trespassing" symbol
                 g.setFill(Color.RED);

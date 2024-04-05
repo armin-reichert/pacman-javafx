@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import de.amr.games.pacman.lib.EnumMethods;
 import de.amr.games.pacman.lib.Score;
 import org.tinylog.Logger;
 
@@ -14,15 +15,125 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static de.amr.games.pacman.lib.Globals.checkGameVariant;
 import static de.amr.games.pacman.lib.Globals.checkLevelNumber;
 
 /**
- * Pac-Man / Ms. Pac-Man game model.
+ * Game models/variants that can be played.
  *
  * @author Armin Reichert
  */
-public class GameModel {
+public enum GameModel implements EnumMethods<GameModel> {
+
+    MS_PACMAN {
+
+        private static final byte[] BONUS_VALUE_BY_100 = {1, 2, 5, 7, 10, 20, 50}; // * 100
+
+        /**
+         * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
+         *
+         * @see <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>
+         * @see <a href=" https://github.com/armin-reichert/pacman-basic/blob/main/doc/mspacman-details-reddit-user-damselindis.md">GitHub</a>
+         */
+        private static final int[][] HUNTING_DURATIONS = {
+            {7 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 1-4
+            {5 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 5+
+        };
+
+        @Override
+        public String pacName() {
+            return "Ms. Pac-Man";
+        }
+
+        @Override
+        public String ghostName(byte id) {
+            return switch(id) {
+                case RED_GHOST    -> "Blinky";
+                case PINK_GHOST   -> "Pinky";
+                case CYAN_GHOST   -> "Inky";
+                case ORANGE_GHOST -> "Sue";
+                default -> throw new IllegalGhostIDException(id);
+            };
+        }
+
+        @Override
+        public int bonusValue(byte symbol) {
+            return BONUS_VALUE_BY_100[symbol] * 100;
+        }
+
+        @Override
+        public int[] huntingDurations(int levelNumber) {
+            return HUNTING_DURATIONS[levelNumber <= 4 ? 0 : 1];
+        }
+
+        @Override
+        public File highScoreFile() {
+            return new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
+        }
+    },
+
+
+    PACMAN {
+
+        private static final byte[] BONUS_VALUE_BY_100 = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
+
+        // Hunting duration (in ticks) of chase and scatter phases. See Pac-Man dossier.
+        private static final int[][] HUNTING_DURATIONS = {
+            {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS,   20 * FPS, 5 * FPS, -1}, // Level 1
+            {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS, 1033 * FPS,       1, -1}, // Levels 2-4
+            {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS,       1, -1}, // Levels 5+
+        };
+
+        @Override
+        public String pacName() {
+            return "Pac-Man";
+        }
+
+        @Override
+        public String ghostName(byte id) {
+            return switch(id) {
+                case RED_GHOST -> "Blinky";
+                case PINK_GHOST -> "Pinky";
+                case CYAN_GHOST -> "Inky";
+                case ORANGE_GHOST -> "Clyde";
+                default -> throw new IllegalGhostIDException(id);
+            };
+        }
+
+        @Override
+        public int bonusValue(byte symbol) {
+            return BONUS_VALUE_BY_100[symbol] * 100;
+        }
+
+        @Override
+        public int[] huntingDurations(int levelNumber) {
+            return switch (levelNumber) {
+                case 1 -> HUNTING_DURATIONS[0];
+                case 2, 3, 4 -> HUNTING_DURATIONS[1];
+                default -> HUNTING_DURATIONS[2];
+            };
+        }
+
+        @Override
+        public File highScoreFile() {
+            return new File(System.getProperty("user.home"), "highscore-pacman.xml");
+        }
+    };
+
+    public abstract String pacName();
+
+    public abstract String ghostName(byte id);
+
+    public abstract int bonusValue(byte symbol);
+
+    public abstract int[] huntingDurations(int levelNumber);
+
+    public abstract File highScoreFile();
+
+    // Why does the default implementation returns NULL as soon as the enum classes have methods?
+    @Override
+    public GameModel[] enumValues() {
+        return new GameModel[] {GameModel.MS_PACMAN, GameModel.PACMAN};
+    }
 
     public static final byte RED_GHOST    = 0;
     public static final byte PINK_GHOST   = 1;
@@ -77,22 +188,12 @@ public class GameModel {
         return new GameLevelData(RAW_LEVEL_DATA[index]);
     }
 
-    private final GameVariant variant;
-    private final List<Byte> levelCounter;
-    private final Score score;
-    private final Score highScore;
+    private final List<Byte> levelCounter = new LinkedList<>();
+    private final Score score = new Score();
+    private final Score highScore = new Score();
     private GameLevel level;
-    private short initialLives;
+    private short initialLives = 3;
     private short lives;
-
-    public GameModel(GameVariant variant) {
-        checkGameVariant(variant);
-        this.variant = variant;
-        levelCounter = new LinkedList<>();
-        score = new Score();
-        highScore = new Score();
-        initialLives = 3;
-    }
 
     /**
      * Resets the game and deletes the current level. Credit, immunity and scores remain unchanged.
@@ -100,7 +201,7 @@ public class GameModel {
     public void reset() {
         level = null;
         lives = initialLives;
-        Logger.info("Game model ({}) reset", variant);
+        Logger.info("Game model ({}) reset", this);
     }
 
     public void setLevel(GameLevel level) {
@@ -112,10 +213,6 @@ public class GameModel {
 
     public Optional<GameLevel> level() {
         return Optional.ofNullable(level);
-    }
-
-    public GameVariant variant() {
-        return variant;
     }
 
     public short initialLives() {
@@ -170,15 +267,15 @@ public class GameModel {
     }
 
     public void loadHighScore() {
-        loadScore(highScore, variant.highScoreFile());
+        loadScore(highScore, highScoreFile());
     }
 
     public void updateHighScore() {
-        var file = variant.highScoreFile();
+        var file = highScoreFile();
         var oldHighScore = new Score();
         loadScore(oldHighScore, file);
         if (highScore.points() > oldHighScore.points()) {
-            saveScore(highScore, file, String.format("%s High Score", variant));
+            saveScore(highScore, file, String.format("%s High Score", this));
         }
     }
 
@@ -210,4 +307,5 @@ public class GameModel {
             Logger.error("Score could not be saved to file '{}'. Error: {}", file, x.getMessage());
         }
     }
+
 }

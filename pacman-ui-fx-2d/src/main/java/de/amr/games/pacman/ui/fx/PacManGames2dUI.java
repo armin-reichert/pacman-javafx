@@ -11,7 +11,6 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.page.GamePage;
 import de.amr.games.pacman.ui.fx.page.Page;
@@ -205,7 +204,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     protected final GameClock clock;
-    protected final Map<GameVariant, Map<String, GameScene>> gameScenesByVariant = new EnumMap<>(GameVariant.class);
+    protected final Map<GameModel, Map<String, GameScene>> gameScenesByVariant = new EnumMap<>(GameModel.class);
     protected final Stage stage;
     protected final Scene mainScene;
     protected final StartPage startPage;
@@ -234,7 +233,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         });
         clock.setOnRender(gamePage::render);
 
-        gameScenesByVariant.put(GameVariant.MS_PACMAN, new HashMap<>(Map.of(
+        gameScenesByVariant.put(GameModel.MS_PACMAN, new HashMap<>(Map.of(
             "boot",   new BootScene(),
             "intro",  new MsPacManIntroScene(),
             "credit", new MsPacManCreditScene(),
@@ -243,7 +242,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             "cut2",   new MsPacManCutscene2(),
             "cut3",   new MsPacManCutscene3()
         )));
-        gameScenesByVariant.put(GameVariant.PACMAN, new HashMap<>(Map.of(
+        gameScenesByVariant.put(GameModel.PACMAN, new HashMap<>(Map.of(
             "boot",   new BootScene(),
             "intro",  new PacManIntroScene(),
             "credit", new PacManCreditScene(),
@@ -322,7 +321,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             clock.stop();
             Logger.info("Clock stopped.");
         }
-        startPage.setGameVariant(gameVariant());
+        startPage.setGameVariant(game());
         setPage(startPage);
     }
 
@@ -335,7 +334,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     protected void updateStage() {
-        String variantKey = gameVariant() == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
+        String variantKey = game() == GameModel.MS_PACMAN ? "mspacman" : "pacman";
         String titleKey = "app.title." + variantKey;
         if (clock.isPaused()) {
             titleKey += ".paused";
@@ -407,7 +406,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public Map<String, GameScene> sceneConfig() {
-        return gameScenesByVariant.get(gameVariant());
+        return gameScenesByVariant.get(game());
     }
 
     @Override
@@ -417,7 +416,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public <S extends SpriteSheet> S spriteSheet() {
-        return switch (gameVariant()) {
+        return switch (game()) {
             case MS_PACMAN -> THEME.get("mspacman.spritesheet");
             case    PACMAN -> THEME.get("pacman.spritesheet");
         };
@@ -488,7 +487,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             }
         }
         if (intermissionNumber != 0) {
-            switch (gameVariant()) {
+            switch (game()) {
                 case MS_PACMAN -> playAudioClip("audio.intermission." + intermissionNumber);
                 case PACMAN -> {
                     var clip = audioClip("audio.intermission");
@@ -503,7 +502,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public void onLevelCreated(GameEvent e) {
         // Found no better point in time to create and assign the sprite animations to the guys
         e.game.level().ifPresent(level -> {
-            switch (e.game.variant()) {
+            switch (e.game) {
                 case MS_PACMAN -> {
                     level.pac().setAnimations(new MsPacManGamePacAnimations(level.pac(), spriteSheet()));
                     level.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, spriteSheet())));
@@ -681,7 +680,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void switchGameVariant() {
-        gameController().newGame(gameVariant().next());
+        gameController().newGame(game().next());
         gameController().restart(GameState.BOOT);
         showStartPage();
     }
@@ -769,7 +768,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     @Override
     public AudioClip audioClip(String key) {
         checkNotNull(key);
-        return switch (gameVariant()) {
+        return switch (game()) {
             case MS_PACMAN -> theme().audioClip("mspacman." + key);
             case PACMAN    -> theme().audioClip("pacman." + key);
         };

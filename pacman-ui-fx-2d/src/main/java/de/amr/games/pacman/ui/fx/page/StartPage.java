@@ -1,6 +1,6 @@
 package de.amr.games.pacman.ui.fx.page;
 
-import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.event.EventHandler;
@@ -66,7 +66,7 @@ public class StartPage implements Page {
         return root;
     }
 
-    public void setGameVariant(GameVariant gameVariant) {
+    public void setGameVariant(GameModel gameVariant) {
         checkGameVariant(gameVariant);
         content.setBackground(switch (gameVariant) {
             case MS_PACMAN -> backgroundMsPacManGame;

@@ -94,8 +94,8 @@ public class Globals {
         }
     }
 
-    public static void checkGameVariant(GameVariant variant) {
-        if (variant != GameVariant.MS_PACMAN && variant != GameVariant.PACMAN) {
+    public static void checkGameVariant(GameModel variant) {
+        if (variant != GameModel.MS_PACMAN && variant != GameModel.PACMAN) {
             throw new IllegalGameVariantException(variant);
         }
     }

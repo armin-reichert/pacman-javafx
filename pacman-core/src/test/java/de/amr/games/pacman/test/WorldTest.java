@@ -6,7 +6,6 @@ package de.amr.games.pacman.test;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;

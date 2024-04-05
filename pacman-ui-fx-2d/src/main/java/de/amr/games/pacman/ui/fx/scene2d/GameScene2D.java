@@ -158,7 +158,7 @@ public abstract class GameScene2D implements GameScene {
         double x = t(ArcadeWorld.TILES_X - 4);
         double y = t(ArcadeWorld.TILES_Y - 2);
         for (byte symbol : context.game().levelCounter()) {
-            var sprite = switch (context.gameVariant()) {
+            var sprite = switch (context.game()) {
                 case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
                 case PACMAN -> context.<PacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
             };
@@ -171,7 +171,7 @@ public abstract class GameScene2D implements GameScene {
         if (numLivesDisplayed == 0) {
             return;
         }
-        var sprite = switch (context.gameVariant()) {
+        var sprite = switch (context.game()) {
             case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().livesCounterSprite();
             case PACMAN -> context.<PacManGameSpriteSheet>spriteSheet().livesCounterSprite();
         };
@@ -190,7 +190,7 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected void drawBonus(Bonus bonus) {
-        switch (context.gameVariant()) {
+        switch (context.game()) {
             case MS_PACMAN -> {
                 var ss = context.<MsPacManGameSpriteSheet>spriteSheet();
                 if (bonus instanceof MovingBonus movingBonus) {

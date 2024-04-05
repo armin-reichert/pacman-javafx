@@ -4,7 +4,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -70,10 +69,6 @@ public interface GameSceneContext {
 
     default GameModel game() {
         return GameController.it().game();
-    }
-
-    default GameVariant gameVariant() {
-        return game().variant();
     }
 
     default Optional<GameLevel> gameLevel() {

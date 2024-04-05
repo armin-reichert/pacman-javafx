@@ -67,13 +67,13 @@ public class GameLevel {
         eventLog = new SimulationStepEventLog();
         bonusReachedIndex = -1;
 
-        pac = new Pac(game.variant().pacName());
+        pac = new Pac(game.pacName());
         pac.reset();
         pac.setBaseSpeed(SPEED_AT_100_PERCENT);
         pac.setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
 
         ghosts = Stream.of(RED_GHOST, PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
-            .map(id -> new Ghost(id, game.variant().ghostName(id))).toArray(Ghost[]::new);
+            .map(id -> new Ghost(id, game.ghostName(id))).toArray(Ghost[]::new);
 
         ghosts().forEach(ghost -> {
             ghost.reset();
@@ -85,7 +85,7 @@ public class GameLevel {
             ghost.setSpeedInsideHouse(SPEED_GHOST_INSIDE_HOUSE);
         });
 
-        switch (game.variant()) {
+        switch (game) {
             case MS_PACMAN -> ghosts().forEach(ghost -> ghost.setHuntingBehavior(this::huntingBehaviorMsPacManGame));
             case PACMAN -> {
                 var forbiddenMovesAtTile = new HashMap<Vector2i, List<Direction>>();
@@ -101,7 +101,7 @@ public class GameLevel {
         bonusSymbols[0] = nextBonusSymbol();
         bonusSymbols[1] = nextBonusSymbol();
 
-        Logger.trace("Game level {} ({}) created.", levelNumber, game.variant());
+        Logger.trace("Game level {} ({}) created.", levelNumber, game);
     }
 
     public Direction initialGhostDirection(byte ghostID) {
@@ -248,7 +248,7 @@ public class GameLevel {
             throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + index);
         }
         huntingPhaseIndex = (byte) index;
-        var durations = game.variant().huntingDurations(levelNumber);
+        var durations = game.huntingDurations(levelNumber);
         var ticks = durations[index] == -1 ? TickTimer.INDEFINITE : durations[index];
         huntingTimer.reset(ticks);
         huntingTimer.start();
@@ -658,7 +658,7 @@ public class GameLevel {
      * </table>
      */
     private byte nextBonusSymbol() {
-        return switch (game.variant()) {
+        return switch (game) {
             case MS_PACMAN -> switch (levelNumber) {
                 case 1 -> 0; // Cherries
                 case 2 -> 1; // Strawberry
@@ -693,7 +693,7 @@ public class GameLevel {
     }
 
     public boolean isBonusReached() {
-        return switch (game.variant()) {
+        return switch (game) {
             case MS_PACMAN -> world().eatenFoodCount() == 64 || world().eatenFoodCount() == 176;
             case    PACMAN -> world().eatenFoodCount() == 70 || world().eatenFoodCount() == 170;
         };
@@ -726,21 +726,21 @@ public class GameLevel {
         if (bonusIndex < 0 || bonusIndex > 1) {
             throw new IllegalArgumentException("Bonus index must be 0 or 1 but is " + bonusIndex);
         }
-        switch (game.variant()) {
+        switch (game) {
             case MS_PACMAN -> {
                 if (bonusIndex == 1 && bonus != null && bonus.state() != Bonus.STATE_INACTIVE) {
                     Logger.info("First bonus still active, skip second one");
                     return;
                 }
                 byte symbol = bonusSymbols[bonusIndex];
-                int points = game.variant().bonusValue(symbol);
+                int points = game.bonusValue(symbol);
                 bonus = createMovingBonus(symbol, points, RND.nextBoolean());
                 bonus.setEdible(TickTimer.INDEFINITE);
                 publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
             }
             case PACMAN -> {
                 byte symbol = bonusSymbols[bonusIndex];
-                int points = game.variant().bonusValue(symbol);
+                int points = game.bonusValue(symbol);
                 bonus = new StaticBonus(symbol, points);
                 bonus.entity().setPosition(ArcadeWorld.BONUS_POSITION);
                 bonus.setEdible(randomInt(9 * FPS, 10 * FPS));
