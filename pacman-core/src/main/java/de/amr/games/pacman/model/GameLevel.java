@@ -51,10 +51,10 @@ public class GameLevel {
     private SimulationStepEventLog eventLog;
     private byte bonusReachedIndex; // -1=no bonus, 0=first, 1=second
 
-    public GameLevel(int levelNumber, GameLevelData levelData, GameModel game, World world, boolean demoLevel) {
+    public GameLevel(GameModel game, int levelNumber, GameLevelData levelData, World world, boolean demoLevel) {
+        checkGameNotNull(game);
         checkLevelNumber(levelNumber);
         checkNotNull(levelData);
-        checkGameNotNull(game);
         checkNotNull(world);
 
         this.game = game;
