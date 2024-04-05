@@ -91,9 +91,9 @@ public enum GameModel implements EnumMethods<GameModel> {
         @Override
         public String ghostName(byte id) {
             return switch(id) {
-                case RED_GHOST -> "Blinky";
-                case PINK_GHOST -> "Pinky";
-                case CYAN_GHOST -> "Inky";
+                case RED_GHOST    -> "Blinky";
+                case PINK_GHOST   -> "Pinky";
+                case CYAN_GHOST   -> "Inky";
                 case ORANGE_GHOST -> "Clyde";
                 default -> throw new IllegalGhostIDException(id);
             };
@@ -107,9 +107,9 @@ public enum GameModel implements EnumMethods<GameModel> {
         @Override
         public int[] huntingDurations(int levelNumber) {
             return switch (levelNumber) {
-                case 1 -> HUNTING_DURATIONS[0];
+                case 1       -> HUNTING_DURATIONS[0];
                 case 2, 3, 4 -> HUNTING_DURATIONS[1];
-                default -> HUNTING_DURATIONS[2];
+                default      -> HUNTING_DURATIONS[2];
             };
         }
 
@@ -291,8 +291,8 @@ public enum GameModel implements EnumMethods<GameModel> {
     }
 
     public int pointsForKillingGhost(int index) {
-        short[] points = { 200, 400, 800, 1600 };
-        return points[index];
+        byte[] factors = { 2, 4, 8, 16 };
+        return factors[index] * 100;
     }
 
     public void loadHighScore() {
@@ -304,7 +304,7 @@ public enum GameModel implements EnumMethods<GameModel> {
         var oldHighScore = new Score();
         loadScore(oldHighScore, file);
         if (highScore.points() > oldHighScore.points()) {
-            saveScore(highScore, file, String.format("%s High Score", this));
+            saveScore(highScore, file, String.format("%s High Score", name()));
         }
     }
 }
