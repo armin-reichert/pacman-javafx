@@ -23,7 +23,6 @@ import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.levelData;
-import static de.amr.games.pacman.model.world.ArcadeWorld.*;
 
 /**
  * Controller (in the sense of MVC) for both (Pac-Man, Ms. Pac-Man) game variants.
@@ -152,10 +151,7 @@ public class GameController extends Fsm<GameState, GameModel> {
      */
     public void createAndStartLevel(int levelNumber) {
         checkLevelNumber(levelNumber);
-        GameLevel level = switch (game) {
-            case MS_PACMAN -> new GameLevel(game, levelNumber, levelData(levelNumber), createMsPacManWorld(mapNumberMsPacMan(levelNumber)), false);
-            case    PACMAN -> new GameLevel(game, levelNumber, levelData(levelNumber), createPacManWorld(), false);
-        };
+        var level = new GameLevel(game, levelNumber, levelData(levelNumber), game.createWorld(levelNumber), false);
         game.setLevel(level);
         if (levelNumber == 1) {
             game.clearLevelCounter();
@@ -185,19 +181,13 @@ public class GameController extends Fsm<GameState, GameModel> {
      * does not behave as in the Arcade game but hunts the ghosts using some goal-driven algorithm.
      */
     public void createAndStartDemoLevel() {
-        GameLevel level;
-        switch (game) {
-            case MS_PACMAN -> {
-                level = new GameLevel(game,1, levelData(1), createMsPacManWorld(1),  true);
-                level.pac().setAutopilot(new RuleBasedPacSteering(level));
-            }
-            case PACMAN -> {
-                level = new GameLevel(game, 1, levelData(1), createPacManWorld(),true);
-                level.pac().setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
-            }
-            default -> throw new IllegalGameVariantException(game);
-        }
+        var level = new GameLevel(game,1, levelData(1), game.createWorld(1),  true);
+        var autopilot = switch (game) {
+            case MS_PACMAN -> new RuleBasedPacSteering(level);
+            case    PACMAN -> new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE));
+        };
         game.setLevel(level);
+        level.pac().setAutopilot(autopilot);
         level.pac().setUseAutopilot(true);
         Logger.info("Demo level created ({})", game);
         publishGameEvent(GameEventType.LEVEL_CREATED);

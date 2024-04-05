@@ -6,6 +6,7 @@ package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.lib.EnumMethods;
 import de.amr.games.pacman.lib.Score;
+import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -16,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static de.amr.games.pacman.lib.Globals.checkLevelNumber;
+import static de.amr.games.pacman.model.world.ArcadeWorld.*;
 
 /**
  * Game models/variants that can be played.
@@ -69,6 +71,11 @@ public enum GameModel implements EnumMethods<GameModel> {
         public File highScoreFile() {
             return new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
         }
+
+        @Override
+        public World createWorld(int levelNumber) {
+            return createMsPacManWorld(mapNumberMsPacMan(levelNumber));
+        }
     },
 
 
@@ -116,6 +123,11 @@ public enum GameModel implements EnumMethods<GameModel> {
         @Override
         public File highScoreFile() {
             return new File(System.getProperty("user.home"), "highscore-pacman.xml");
+        }
+
+        @Override
+        public World createWorld(int levelNumber) {
+            return createPacManWorld();
         }
     };
 
@@ -217,6 +229,8 @@ public enum GameModel implements EnumMethods<GameModel> {
     public abstract int[] huntingDurations(int levelNumber);
 
     public abstract File highScoreFile();
+
+    public abstract World createWorld(int levelNumber);
 
     // Why does the default implementation returns NULL as soon as the enum classes have methods?
     @Override
