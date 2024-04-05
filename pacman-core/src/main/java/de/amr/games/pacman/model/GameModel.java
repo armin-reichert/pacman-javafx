@@ -77,9 +77,6 @@ public class GameModel {
         return new GameLevelData(RAW_LEVEL_DATA[index]);
     }
 
-    public static final byte[] BONUS_VALUES_MS_PACMAN = {1, 2, 5, 7, 10, 20, 50}; // * 100
-    public static final byte[] BONUS_VALUES_PACMAN    = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
-
     private final GameVariant variant;
     private final List<Byte> levelCounter;
     private final Score score;

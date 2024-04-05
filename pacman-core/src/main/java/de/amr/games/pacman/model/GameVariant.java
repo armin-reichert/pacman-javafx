@@ -18,16 +18,7 @@ import static de.amr.games.pacman.model.GameModel.FPS;
 public enum GameVariant implements EnumMethods<GameVariant> {
     MS_PACMAN {
 
-        public static final byte MS_PACMAN_CHERRIES = 0;
-        public static final byte MS_PACMAN_STRAWBERRY = 1;
-        // An orange, not a peach! (Found in official Arcade machine manual)
-        public static final byte MS_PACMAN_ORANGE = 2;
-        public static final byte MS_PACMAN_PRETZEL = 3;
-        public static final byte MS_PACMAN_APPLE = 4;
-        public static final byte MS_PACMAN_PEAR = 5;
-        public static final byte MS_PACMAN_BANANA = 6;
-
-        public static final byte[] BONUS_VALUES_MS_PACMAN = {1, 2, 5, 7, 10, 20, 50}; // * 100
+        private static final byte[] BONUS_VALUE_BY_100 = {1, 2, 5, 7, 10, 20, 50}; // * 100
 
         /**
          * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
@@ -54,6 +45,10 @@ public enum GameVariant implements EnumMethods<GameVariant> {
             };
         }
 
+        public int bonusValue(byte symbol) {
+            return BONUS_VALUE_BY_100[symbol] * 100;
+        }
+
         @Override
         public int[] huntingDurations(int levelNumber) {
             return HUNTING_DURATIONS[levelNumber <= 4 ? 0 : 1];
@@ -67,6 +62,9 @@ public enum GameVariant implements EnumMethods<GameVariant> {
 
 
     PACMAN {
+
+        private static final byte[] BONUS_VALUE_BY_100 = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
+
 
         // Hunting duration (in ticks) of chase and scatter phases. See Pac-Man dossier.
         private static final int[][] HUNTING_DURATIONS = {
@@ -89,6 +87,10 @@ public enum GameVariant implements EnumMethods<GameVariant> {
             };
         }
 
+        public int bonusValue(byte symbol) {
+            return BONUS_VALUE_BY_100[symbol] * 100;
+        }
+
         @Override
         public int[] huntingDurations(int levelNumber) {
             return switch (levelNumber) {
@@ -107,6 +109,8 @@ public enum GameVariant implements EnumMethods<GameVariant> {
     public abstract String pacName();
 
     public abstract String ghostName(byte id);
+
+    public abstract int bonusValue(byte symbol);
 
     public abstract int[] huntingDurations(int levelNumber);
 

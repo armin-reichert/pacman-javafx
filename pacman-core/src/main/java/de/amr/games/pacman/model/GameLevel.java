@@ -733,14 +733,14 @@ public class GameLevel {
                     return;
                 }
                 byte symbol = bonusSymbols[bonusIndex];
-                int points = GameModel.BONUS_VALUES_MS_PACMAN[symbol] * 100;
+                int points = game.variant().bonusValue(symbol);
                 bonus = createMovingBonus(symbol, points, RND.nextBoolean());
                 bonus.setEdible(TickTimer.INDEFINITE);
                 publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
             }
             case PACMAN -> {
                 byte symbol = bonusSymbols[bonusIndex];
-                int points = GameModel.BONUS_VALUES_PACMAN[symbol] * 100;
+                int points = game.variant().bonusValue(symbol);
                 bonus = new StaticBonus(symbol, points);
                 bonus.entity().setPosition(ArcadeWorld.BONUS_POSITION);
                 bonus.setEdible(randomInt(9 * FPS, 10 * FPS));
