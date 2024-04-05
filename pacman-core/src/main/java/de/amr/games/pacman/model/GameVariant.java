@@ -18,6 +18,17 @@ import static de.amr.games.pacman.model.GameModel.FPS;
 public enum GameVariant implements EnumMethods<GameVariant> {
     MS_PACMAN {
 
+        public static final byte MS_PACMAN_CHERRIES = 0;
+        public static final byte MS_PACMAN_STRAWBERRY = 1;
+        // An orange, not a peach! (Found in official Arcade machine manual)
+        public static final byte MS_PACMAN_ORANGE = 2;
+        public static final byte MS_PACMAN_PRETZEL = 3;
+        public static final byte MS_PACMAN_APPLE = 4;
+        public static final byte MS_PACMAN_PEAR = 5;
+        public static final byte MS_PACMAN_BANANA = 6;
+
+        public static final byte[] BONUS_VALUES_MS_PACMAN = {1, 2, 5, 7, 10, 20, 50}; // * 100
+
         /**
          * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
          *

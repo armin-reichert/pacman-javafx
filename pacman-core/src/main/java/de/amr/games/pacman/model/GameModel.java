@@ -77,27 +77,8 @@ public class GameModel {
         return new GameLevelData(RAW_LEVEL_DATA[index]);
     }
 
-    public static final byte MS_PACMAN_CHERRIES = 0;
-    public static final byte MS_PACMAN_STRAWBERRY = 1;
-    // An orange, not a peach! (Found in official Arcade machine manual)
-    public static final byte MS_PACMAN_ORANGE = 2;
-    public static final byte MS_PACMAN_PRETZEL = 3;
-    public static final byte MS_PACMAN_APPLE = 4;
-    public static final byte MS_PACMAN_PEAR = 5;
-    public static final byte MS_PACMAN_BANANA = 6;
-
     public static final byte[] BONUS_VALUES_MS_PACMAN = {1, 2, 5, 7, 10, 20, 50}; // * 100
-
-    public static final byte PACMAN_CHERRIES = 0;
-    public static final byte PACMAN_STRAWBERRY = 1;
-    public static final byte PACMAN_PEACH = 2;
-    public static final byte PACMAN_APPLE = 3;
-    public static final byte PACMAN_GRAPES = 4;
-    public static final byte PACMAN_GALAXIAN = 5;
-    public static final byte PACMAN_BELL = 6;
-    public static final byte PACMAN_KEY = 7;
-
-    public static final byte[] BONUS_VALUES_PACMAN = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
+    public static final byte[] BONUS_VALUES_PACMAN    = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
 
     private final GameVariant variant;
     private final List<Byte> levelCounter;
