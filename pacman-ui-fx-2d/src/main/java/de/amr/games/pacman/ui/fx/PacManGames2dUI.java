@@ -42,6 +42,8 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
+import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.ui.fx.util.Keyboard.*;
 import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
 import static java.util.function.Predicate.not;
@@ -744,7 +746,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public void cheatKillAllEatableGhosts() {
         if (game().isPlaying() && gameState() == GameState.HUNTING) {
             gameLevel().ifPresent(level -> {
-                level.killAllHuntingAndFrightenedGhosts();
+                level.pac().victims().clear();
+                level.killGhosts(level.ghosts(FRIGHTENED, HUNTING_PAC).toList());
                 level.eventLog().report();
                 gameController().changeState(GameState.GHOST_DYING);
             });

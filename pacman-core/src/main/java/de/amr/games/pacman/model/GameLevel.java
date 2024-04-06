@@ -583,14 +583,6 @@ public class GameLevel {
         }
     }
 
-    /**
-     * Called by cheat action only.
-     */
-    public void killAllHuntingAndFrightenedGhosts() {
-        pac.victims().clear();
-        killGhosts(ghosts(FRIGHTENED, HUNTING_PAC).toList());
-    }
-
     public void killGhosts(List<Ghost> prey) {
         if (!prey.isEmpty()) {
             prey.forEach(this::killGhost);
