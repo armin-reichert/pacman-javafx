@@ -450,7 +450,7 @@ public class GameLevel {
             } else if (world.uneatenFoodCount() == data.elroy2DotsLeft()) {
                 setCruiseElroyState(2);
             }
-            if (isBonusReached()) {
+            if (game.isBonusReached(this)) {
                 bonusReachedIndex += 1;
                 eventLog.bonusIndex = bonusReachedIndex;
                 onBonusReached(bonusReachedIndex);
@@ -615,13 +615,6 @@ public class GameLevel {
     }
 
     // Bonus Management
-
-    public boolean isBonusReached() {
-        return switch (game) {
-            case MS_PACMAN -> world().eatenFoodCount() == 64 || world().eatenFoodCount() == 176;
-            case    PACMAN -> world().eatenFoodCount() == 70 || world().eatenFoodCount() == 170;
-        };
-    }
 
     public Optional<Bonus> bonus() {
         return Optional.ofNullable(bonus);

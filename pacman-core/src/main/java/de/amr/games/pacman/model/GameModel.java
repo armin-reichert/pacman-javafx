@@ -56,6 +56,11 @@ public enum GameModel implements EnumMethods<GameModel> {
             };
         }
 
+        public boolean isBonusReached(GameLevel level) {
+            return level.world().eatenFoodCount() == 64 || level.world().eatenFoodCount() == 176;
+        }
+
+
         /**
          * <p>Got this information from
          * <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>:
@@ -205,6 +210,10 @@ public enum GameModel implements EnumMethods<GameModel> {
             };
         }
 
+        public boolean isBonusReached(GameLevel level) {
+            return level.world().eatenFoodCount() == 70 || level.world().eatenFoodCount() == 170;
+        }
+
         // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
         public byte nextBonusSymbol(int levelNumber) {
             return switch (levelNumber) {
@@ -338,6 +347,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
     public abstract String ghostName(byte id);
 
+    public abstract boolean isBonusReached(GameLevel level);
 
     public abstract byte nextBonusSymbol(int levelNumber);
 
