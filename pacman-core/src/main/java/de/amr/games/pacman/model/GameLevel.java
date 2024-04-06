@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.controller.GameController.publishGameEvent;
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
@@ -425,7 +424,7 @@ public class GameLevel {
         }
         if (oldScore < EXTRA_LIFE_SCORE && newScore >= EXTRA_LIFE_SCORE) {
             game.addLives((short) 1);
-            publishGameEvent(GameEventType.EXTRA_LIFE_WON);
+            game.publishGameEvent(GameEventType.EXTRA_LIFE_WON);
         }
     }
 
@@ -456,7 +455,7 @@ public class GameLevel {
                 eventLog.bonusIndex = bonusReachedIndex;
                 onBonusReached(bonusReachedIndex);
             }
-            publishGameEvent(GameEventType.PAC_FOUND_FOOD, pacTile);
+            game.publishGameEvent(GameEventType.PAC_FOUND_FOOD, pacTile);
         } else {
             pac.starve();
         }
@@ -469,10 +468,10 @@ public class GameLevel {
             ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
             eventLog.pacGetsPower = true;
-            publishGameEvent(GameEventType.PAC_GETS_POWER);
+            game.publishGameEvent(GameEventType.PAC_GETS_POWER);
         } else if (pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS) {
             eventLog.pacStartsLosingPower = true;
-            publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
+            game.publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (pac.powerTimer().hasExpired()) {
             pac.powerTimer().stop();
             pac.powerTimer().resetIndefinitely();
@@ -480,7 +479,7 @@ public class GameLevel {
             Logger.info("Hunting timer started");
             ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
             eventLog.pacLostPower = true;
-            publishGameEvent(GameEventType.PAC_LOST_POWER);
+            game.publishGameEvent(GameEventType.PAC_LOST_POWER);
         }
     }
 
@@ -489,7 +488,7 @@ public class GameLevel {
             boolean eaten = checkPacEatsBonus(bonus);
             if (eaten) {
                 eventLog.bonusEaten = true;
-                publishGameEvent(GameEventType.BONUS_EATEN);
+                game.publishGameEvent(GameEventType.BONUS_EATEN);
             }
             bonus.update(this);
         }
@@ -556,13 +555,13 @@ public class GameLevel {
                 onBonusReached(0);
             } else if (timer.atSecond(3.5)) {
                 bonus().ifPresent(bonus -> bonus.setEaten(120));
-                publishGameEvent(GameEventType.BONUS_EATEN);
+                game.publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer.atSecond(4.5)) {
                 bonus.setInactive();//TODO
                 onBonusReached(1);
             } else if (timer.atSecond(6.5)) {
                 bonus().ifPresent(bonus -> bonus.setEaten(60));
-                publishGameEvent(GameEventType.BONUS_EATEN);
+                game.publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer.atSecond(8.5)) {
                 pac.hide();
                 ghosts().forEach(Ghost::hide);
@@ -736,7 +735,7 @@ public class GameLevel {
                 int points = game.bonusValue(symbol);
                 bonus = createMovingBonus(symbol, points, RND.nextBoolean());
                 bonus.setEdible(TickTimer.INDEFINITE);
-                publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
+                game.publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
             }
             case PACMAN -> {
                 byte symbol = bonusSymbols[bonusIndex];
@@ -744,7 +743,7 @@ public class GameLevel {
                 bonus = new StaticBonus(symbol, points);
                 bonus.entity().setPosition(ArcadeWorld.BONUS_POSITION);
                 bonus.setEdible(randomInt(9 * FPS, 10 * FPS));
-                publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
+                game.publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
             }
         }
     }

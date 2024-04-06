@@ -4,11 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import de.amr.games.pacman.event.GameEvent;
+import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.EnumMethods;
-import de.amr.games.pacman.lib.RouteBasedSteering;
-import de.amr.games.pacman.lib.RuleBasedPacSteering;
-import de.amr.games.pacman.lib.Score;
+import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
@@ -20,8 +19,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static de.amr.games.pacman.controller.GameController.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.checkLevelNumber;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.world.ArcadeWorld.*;
 
 /**
@@ -413,4 +412,26 @@ public enum GameModel implements EnumMethods<GameModel> {
             saveScore(highScore, file, String.format("%s High Score", name()));
         }
     }
+
+
+    private final List<GameEventListener> gameEventListeners = new ArrayList<>();
+
+    public void addListener(GameEventListener listener) {
+        checkNotNull(listener);
+        gameEventListeners.add(listener);
+    }
+
+    public void publishGameEvent(GameEventType type) {
+        publish(new GameEvent(type, this));
+    }
+
+    public void publishGameEvent(GameEventType type, Vector2i tile) {
+        publish(new GameEvent(type, this, tile));
+    }
+
+    public void publish(GameEvent event) {
+        Logger.trace("Publish game event: {}", event);
+        gameEventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
+    }
+
 }

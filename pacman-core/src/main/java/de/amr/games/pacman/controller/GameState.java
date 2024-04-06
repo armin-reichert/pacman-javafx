@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.controller;
 
-import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.FsmState;
 import de.amr.games.pacman.lib.TickTimer;
@@ -19,7 +18,6 @@ import org.tinylog.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.games.pacman.controller.GameController.publishGameEvent;
 
 
 /**
@@ -144,7 +142,7 @@ public enum GameState implements FsmState<GameModel> {
                 level.pac().startAnimation();
                 level.ghosts().forEach(Ghost::startAnimation);
                 level.world().energizerBlinking().restart();
-                publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
+                game.publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
             });
         }
 
@@ -223,7 +221,7 @@ public enum GameState implements FsmState<GameModel> {
                 timer.restartSeconds(1);
                 level.pac().hide();
                 level.ghosts().forEach(Ghost::stopAnimation);
-                publishGameEvent(GameEventType.GHOST_EATEN);
+                game.publishGameEvent(GameEventType.GHOST_EATEN);
             });
         }
 
@@ -273,7 +271,7 @@ public enum GameState implements FsmState<GameModel> {
                     level.pac().resetAnimation();
                 } else if (timer.tick() == TICK_START_PAC_ANIMATION) {
                     level.pac().startAnimation();
-                    publishGameEvent(GameEventType.PAC_DIED);
+                    game.publishGameEvent(GameEventType.PAC_DIED);
                 } else if (timer.tick() == TICK_HIDE_PAC) {
                     level.pac().hide();
                     game.loseLife();
@@ -373,7 +371,7 @@ public enum GameState implements FsmState<GameModel> {
                 if (number < 3) {
                     setProperty("intermissionTestNumber", number + 1);
                     timer.restartIndefinitely();
-                    publishGameEvent(GameEventType.UNSPECIFIED_CHANGE);
+                    game.publishGameEvent(GameEventType.UNSPECIFIED_CHANGE);
                 } else {
                     gameController().changeState(INTRO);
                 }

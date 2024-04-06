@@ -4,17 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.controller;
 
-import de.amr.games.pacman.event.GameEvent;
-import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Fsm;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
-import org.tinylog.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -47,26 +39,6 @@ public class GameController extends Fsm<GameState, GameModel> {
         return IT;
     }
 
-    private static final List<GameEventListener> gameEventListeners = new ArrayList<>();
-
-    public static void addListener(GameEventListener listener) {
-        checkNotNull(listener);
-        gameEventListeners.add(listener);
-    }
-
-    public static void publishGameEvent(GameEventType type) {
-        publish(new GameEvent(type, it().game));
-    }
-
-    public static void publishGameEvent(GameEventType type, Vector2i tile) {
-        publish(new GameEvent(type, it().game, tile));
-    }
-
-    private static void publish(GameEvent event) {
-        Logger.trace("Publish game event: {}", event);
-        gameEventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
-    }
-
     private GameModel game;
     private boolean pacImmune = false;
     private int credit = 0;
@@ -75,7 +47,7 @@ public class GameController extends Fsm<GameState, GameModel> {
         super(GameState.values());
         selectGame(variant);
         // map FSM state change events to game events
-        addStateChangeListener((oldState, newState) -> publish(new GameStateChangeEvent(game, oldState, newState)));
+        addStateChangeListener((oldState, newState) -> game.publish(new GameStateChangeEvent(game, oldState, newState)));
     }
 
     public void selectGame(GameModel variant) {

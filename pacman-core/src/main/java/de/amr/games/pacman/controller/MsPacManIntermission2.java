@@ -7,9 +7,9 @@ package de.amr.games.pacman.controller;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Pac;
 
-import static de.amr.games.pacman.controller.GameController.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
@@ -63,7 +63,7 @@ public class MsPacManIntermission2 {
 
     private void updateStateFlap() {
         if (stateTimer.hasExpired()) {
-            publishGameEvent(GameEventType.INTERMISSION_STARTED);
+            GameModel.MS_PACMAN.publishGameEvent(GameEventType.INTERMISSION_STARTED);
             enterStateChasing();
         }
     }

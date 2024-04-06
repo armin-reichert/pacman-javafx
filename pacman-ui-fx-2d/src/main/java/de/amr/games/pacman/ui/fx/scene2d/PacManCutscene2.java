@@ -17,7 +17,6 @@ import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.controller.GameController.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.t;
 
 /**
@@ -61,7 +60,7 @@ public class PacManCutscene2 extends GameScene2D {
         if (initialDelay > 0) {
             --initialDelay;
             if (initialDelay == 0) {
-                publishGameEvent(GameEventType.INTERMISSION_STARTED);
+                GameModel.PACMAN.publishGameEvent(GameEventType.INTERMISSION_STARTED);
             }
             return;
         }

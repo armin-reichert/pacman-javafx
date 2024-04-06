@@ -39,7 +39,6 @@ import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.controller.GameController.publishGameEvent;
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -636,7 +635,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (!game().isPlaying()) {
             boolean added = gameController().changeCredit(1);
             if (added) {
-                publishGameEvent(GameEventType.CREDIT_ADDED);
+                game().publishGameEvent(GameEventType.CREDIT_ADDED);
             }
             if (gameState() != GameState.CREDIT) {
                 gameController().changeState(GameState.CREDIT);
@@ -736,7 +735,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (game().isPlaying() && gameState() == GameState.HUNTING) {
             gameLevel().ifPresent(level -> {
                 level.world().tiles().filter(not(level.world()::isEnergizerTile)).forEach(level.world()::removeFood);
-                publishGameEvent(GameEventType.PAC_FOUND_FOOD);
+                game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
             });
         }
     }

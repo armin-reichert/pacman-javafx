@@ -12,7 +12,6 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.games.pacman.controller.GameController.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.actors.CreatureMovement.navigateTowardsTarget;
 import static de.amr.games.pacman.model.actors.CreatureMovement.tryMoving;
@@ -121,7 +120,7 @@ public class MovingBonus extends Creature implements Bonus {
         if (steering.isComplete()) {
             Logger.trace("Moving bonus reached target: {}", this);
             setInactive();
-            publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
+            level.game().publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
         } else {
             navigateTowardsTarget(this, level.world());
             tryMoving(this, level.world());
@@ -141,7 +140,7 @@ public class MovingBonus extends Creature implements Bonus {
         if (countdown == 0) {
             Logger.trace("Bonus expired: {}", this);
             setInactive();
-            publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
+            level.game().publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
         } else if (countdown != TickTimer.INDEFINITE) {
             --countdown;
         }

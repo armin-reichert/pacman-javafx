@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 
-import static de.amr.games.pacman.controller.GameController.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
@@ -89,7 +88,7 @@ public class MsPacManIntermission1 {
 
     private void updateStateFlap() {
         if (stateTimer.atSecond(1)) {
-            publishGameEvent(GameEventType.INTERMISSION_STARTED);
+            GameModel.MS_PACMAN.publishGameEvent(GameEventType.INTERMISSION_STARTED);
         } else if (stateTimer.hasExpired()) {
             enterStateChasedByGhosts();
         }
