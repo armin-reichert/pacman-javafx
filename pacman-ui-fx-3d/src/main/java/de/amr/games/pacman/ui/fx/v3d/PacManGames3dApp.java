@@ -28,7 +28,7 @@ public class PacManGames3dApp extends Application {
         if (getParameters() != null) {
             settings.merge(getParameters().getNamed());
         }
-        GameController.it().newGame(settings.variant);
+        GameController.it().selectGame(settings.variant);
         Logger.info("Game initialized: {}, locale: {}", settings, Locale.getDefault());
         Logger.info("Java version is {}", Runtime.version());
         Logger.info("JavaFX version is {}", System.getProperty("javafx.runtime.version"));

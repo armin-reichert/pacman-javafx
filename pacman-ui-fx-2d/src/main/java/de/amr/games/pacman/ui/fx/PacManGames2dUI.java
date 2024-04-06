@@ -680,7 +680,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void switchGameVariant() {
-        gameController().newGame(game().next());
+        gameController().selectGame(game().next());
         gameController().restart(GameState.BOOT);
         showStartPage();
     }

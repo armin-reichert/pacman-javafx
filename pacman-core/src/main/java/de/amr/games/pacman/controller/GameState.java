@@ -144,7 +144,7 @@ public enum GameState implements FsmState<GameModel> {
                 level.pac().startAnimation();
                 level.ghosts().forEach(Ghost::startAnimation);
                 level.world().energizerBlinking().restart();
-                publishGameEvent(new GameEvent(GameEventType.HUNTING_PHASE_STARTED, game));
+                publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
             });
         }
 

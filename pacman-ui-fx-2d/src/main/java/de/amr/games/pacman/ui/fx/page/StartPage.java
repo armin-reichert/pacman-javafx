@@ -16,7 +16,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-import static de.amr.games.pacman.lib.Globals.checkGameVariant;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static javafx.scene.layout.BackgroundSize.AUTO;
 
@@ -67,7 +66,7 @@ public class StartPage implements Page {
     }
 
     public void setGameVariant(GameModel gameVariant) {
-        checkGameVariant(gameVariant);
+        checkNotNull(gameVariant);
         content.setBackground(switch (gameVariant) {
             case MS_PACMAN -> backgroundMsPacManGame;
             case PACMAN -> backgroundPacManGame;

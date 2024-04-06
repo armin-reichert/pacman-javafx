@@ -4,7 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib;
 
-import de.amr.games.pacman.model.*;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.IllegalGhostIDException;
+import de.amr.games.pacman.model.IllegalLevelNumberException;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -91,12 +94,6 @@ public class Globals {
     public static void checkGhostID(byte id) {
         if (id < 0 || id > 3) {
             throw new IllegalGhostIDException(id);
-        }
-    }
-
-    public static void checkGameVariant(GameModel variant) {
-        if (variant != GameModel.MS_PACMAN && variant != GameModel.PACMAN) {
-            throw new IllegalGameVariantException(variant);
         }
     }
 

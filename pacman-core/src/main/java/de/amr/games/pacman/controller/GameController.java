@@ -16,7 +16,6 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.checkGameVariant;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
@@ -50,29 +49,28 @@ public class GameController extends Fsm<GameState, GameModel> {
 
     private static final List<GameEventListener> gameEventListeners = new ArrayList<>();
 
-    public static void addListener(GameEventListener gameEventListener) {
-        checkNotNull(gameEventListener);
-        gameEventListeners.add(gameEventListener);
+    public static void addListener(GameEventListener listener) {
+        checkNotNull(listener);
+        gameEventListeners.add(listener);
     }
 
-    public static void removeListener(GameEventListener gameEventListener) {
-        checkNotNull(gameEventListener);
-        gameEventListeners.remove(gameEventListener);
+    public static void removeListener(GameEventListener listener) {
+        checkNotNull(listener);
+        gameEventListeners.remove(listener);
     }
 
     public static void publishGameEvent(GameEventType type) {
-        publishGameEvent(new GameEvent(type, it().game));
+        publish(new GameEvent(type, it().game));
     }
 
     public static void publishGameEvent(GameEventType type, Vector2i tile) {
-        publishGameEvent(new GameEvent(type, it().game, tile));
+        publish(new GameEvent(type, it().game, tile));
     }
 
-    public static void publishGameEvent(GameEvent event) {
+    private static void publish(GameEvent event) {
         Logger.trace("Publish game event: {}", event);
         gameEventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
     }
-
 
     private GameModel game;
     private boolean pacImmune = false;
@@ -80,13 +78,13 @@ public class GameController extends Fsm<GameState, GameModel> {
 
     private GameController(GameModel variant) {
         super(GameState.values());
-        newGame(variant);
+        selectGame(variant);
         // map FSM state change events to game events
-        addStateChangeListener((oldState, newState) -> publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
+        addStateChangeListener((oldState, newState) -> publish(new GameStateChangeEvent(game, oldState, newState)));
     }
 
-    public void newGame(GameModel variant) {
-        checkGameVariant(variant);
+    public void selectGame(GameModel variant) {
+        checkNotNull(variant);
         game = variant;
     }
 
