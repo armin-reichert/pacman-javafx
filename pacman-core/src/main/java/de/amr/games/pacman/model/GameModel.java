@@ -117,13 +117,13 @@ public enum GameModel implements EnumMethods<GameModel> {
                 case 7 -> 6; // Banana
                 default -> {
                     int random = randomInt(0, 320);
-                    if (random <  50) yield 0;
-                    if (random < 100) yield 1;
-                    if (random < 150) yield 2;
-                    if (random < 200) yield 3;
-                    if (random < 240) yield 4;
-                    if (random < 280) yield 5;
-                    else              yield 6;
+                    if (random <  50) yield 0; // 5/32
+                    if (random < 100) yield 1; // 5/32
+                    if (random < 150) yield 2; // 5/32
+                    if (random < 200) yield 3; // 5/32
+                    if (random < 240) yield 4; // 4/32
+                    if (random < 280) yield 5; // 4/32
+                    else              yield 6; // 4/32
                 }
             };
         }
@@ -190,7 +190,7 @@ public enum GameModel implements EnumMethods<GameModel> {
         @Override
         public void createAndStartLevel(int levelNumber) {
             checkLevelNumber(levelNumber);
-            var level = new GameLevel(this, levelNumber, levelData(levelNumber), createWorld(levelNumber), false);
+            var level = new GameLevel(levelNumber, levelData(levelNumber), createWorld(levelNumber), false);
             setLevel(level);
             if (levelNumber == 1) {
                 clearLevelCounter();
@@ -212,7 +212,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         @Override
         public void createAndStartDemoLevel() {
-            var level = new GameLevel(this,1, levelData(1), createWorld(1),  true);
+            var level = new GameLevel(1, levelData(1), createWorld(1),  true);
             setLevel(level);
             level.pac().setAutopilot(new RuleBasedPacSteering(level));
             level.pac().setUseAutopilot(true);
@@ -301,7 +301,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         public void createAndStartLevel(int levelNumber) {
             checkLevelNumber(levelNumber);
-            var level = new GameLevel(this, levelNumber, levelData(levelNumber), createPacManWorld(), false);
+            var level = new GameLevel(levelNumber, levelData(levelNumber), createPacManWorld(), false);
             setLevel(level);
             if (levelNumber == 1) {
                 clearLevelCounter();
@@ -319,7 +319,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         @Override
         public void createAndStartDemoLevel() {
-            var level = new GameLevel(this,1, levelData(1), createPacManWorld(),  true);
+            var level = new GameLevel(1, levelData(1), createPacManWorld(),  true);
             setLevel(level);
             level.pac().setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
             level.pac().setUseAutopilot(true);

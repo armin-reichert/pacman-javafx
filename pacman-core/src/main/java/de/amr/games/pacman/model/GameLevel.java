@@ -34,7 +34,6 @@ public class GameLevel {
     private final int levelNumber;
     private final boolean demoLevel;
     private final GameLevelData data;
-    private final GameModel game;
     private final TickTimer huntingTimer = new TickTimer("HuntingTimer");
     private final World world;
     private final Pac pac;
@@ -48,13 +47,11 @@ public class GameLevel {
     private SimulationStepEventLog eventLog;
     private byte bonusReachedIndex; // -1=no bonus, 0=first, 1=second
 
-    public GameLevel(GameModel game, int levelNumber, GameLevelData levelData, World world, boolean demoLevel) {
-        checkGameNotNull(game);
+    public GameLevel(int levelNumber, GameLevelData levelData, World world, boolean demoLevel) {
         checkLevelNumber(levelNumber);
         checkNotNull(levelData);
         checkNotNull(world);
 
-        this.game = game;
         this.world = world;
         this.levelNumber = levelNumber;
         this.data = levelData;
@@ -64,13 +61,13 @@ public class GameLevel {
         eventLog = new SimulationStepEventLog();
         bonusReachedIndex = -1;
 
-        pac = new Pac(game.pacName());
+        pac = new Pac(game().pacName());
         pac.reset();
         pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
         pac.setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
 
         ghosts = Stream.of(RED_GHOST, PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
-            .map(id -> new Ghost(id, game.ghostName(id))).toArray(Ghost[]::new);
+            .map(id -> new Ghost(id, game().ghostName(id))).toArray(Ghost[]::new);
 
         ghosts().forEach(ghost -> {
             ghost.reset();
@@ -82,7 +79,8 @@ public class GameLevel {
             ghost.setPixelPerTickInhouse(PPS_GHOST_INHOUSE / (float) FPS);
         });
 
-        switch (game) {
+        //TODO avoid switch over game variant
+        switch (game()) {
             case MS_PACMAN -> ghosts().forEach(ghost -> ghost.setHuntingBehavior(this::huntingBehaviorMsPacManGame));
             case PACMAN -> {
                 var forbiddenMovesAtTile = new HashMap<Vector2i, List<Direction>>();
@@ -95,9 +93,9 @@ public class GameLevel {
             }
         }
 
-        bonusSymbols = game.supplyBonusSymbols(levelNumber);
+        bonusSymbols = game().supplyBonusSymbols(levelNumber);
 
-        Logger.trace("Game level {} ({}) created.", levelNumber, game);
+        Logger.trace("Game level {} created.", levelNumber);
     }
 
     public Direction initialGhostDirection(byte ghostID) {
@@ -147,7 +145,7 @@ public class GameLevel {
     }
 
     public GameModel game() {
-        return game;
+        return GameController.it().game();
     }
 
     public TickTimer huntingTimer() {
@@ -244,7 +242,7 @@ public class GameLevel {
             throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + index);
         }
         huntingPhaseIndex = (byte) index;
-        var durations = game.huntingDurations(levelNumber);
+        var durations = game().huntingDurations(levelNumber);
         var ticks = durations[index] == -1 ? TickTimer.INDEFINITE : durations[index];
         huntingTimer.reset(ticks);
         huntingTimer.start();
@@ -411,17 +409,17 @@ public class GameLevel {
         if (demoLevel) {
             return;
         }
-        int oldScore = game.score().points();
+        int oldScore = game().score().points();
         int newScore = oldScore + points;
-        game.score().setPoints(newScore);
-        if (newScore > game.highScore().points()) {
-            game.highScore().setPoints(newScore);
-            game.highScore().setLevelNumber(levelNumber);
-            game.highScore().setDate(LocalDate.now());
+        game().score().setPoints(newScore);
+        if (newScore > game().highScore().points()) {
+            game().highScore().setPoints(newScore);
+            game().highScore().setLevelNumber(levelNumber);
+            game().highScore().setDate(LocalDate.now());
         }
         if (oldScore < EXTRA_LIFE_SCORE && newScore >= EXTRA_LIFE_SCORE) {
-            game.addLives((short) 1);
-            game.publishGameEvent(GameEventType.EXTRA_LIFE_WON);
+            game().addLives((short) 1);
+            game().publishGameEvent(GameEventType.EXTRA_LIFE_WON);
         }
     }
 
@@ -447,12 +445,12 @@ public class GameLevel {
             } else if (world.uneatenFoodCount() == data.elroy2DotsLeft()) {
                 setCruiseElroyState(2);
             }
-            if (game.isBonusReached(this)) {
+            if (game().isBonusReached(this)) {
                 bonusReachedIndex += 1;
                 eventLog.bonusIndex = bonusReachedIndex;
                 onBonusReached(bonusReachedIndex);
             }
-            game.publishGameEvent(GameEventType.PAC_FOUND_FOOD, pacTile);
+            game().publishGameEvent(GameEventType.PAC_FOUND_FOOD, pacTile);
         } else {
             pac.starve();
         }
@@ -465,10 +463,10 @@ public class GameLevel {
             ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
             eventLog.pacGetsPower = true;
-            game.publishGameEvent(GameEventType.PAC_GETS_POWER);
+            game().publishGameEvent(GameEventType.PAC_GETS_POWER);
         } else if (pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS) {
             eventLog.pacStartsLosingPower = true;
-            game.publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
+            game().publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (pac.powerTimer().hasExpired()) {
             pac.powerTimer().stop();
             pac.powerTimer().resetIndefinitely();
@@ -476,17 +474,21 @@ public class GameLevel {
             Logger.info("Hunting timer started");
             ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
             eventLog.pacLostPower = true;
-            game.publishGameEvent(GameEventType.PAC_LOST_POWER);
+            game().publishGameEvent(GameEventType.PAC_LOST_POWER);
         }
     }
 
     private void updateBonus() {
-        if (bonus != null) {
-            boolean eaten = checkBonusEaten(bonus);
-            if (eaten) {
-                eventLog.bonusEaten = true;
-                game.publishGameEvent(GameEventType.BONUS_EATEN);
-            }
+        if (bonus == null) {
+            return;
+        }
+        if (bonus.state() == Bonus.STATE_EDIBLE && pac.sameTile(bonus.entity())) {
+            bonus.setEaten(GameModel.BONUS_POINTS_SHOWN_TICKS);
+            scorePoints(bonus.points());
+            Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
+            eventLog.bonusEaten = true;
+            game().publishGameEvent(GameEventType.BONUS_EATEN);
+        } else {
             bonus.update(this);
         }
     }
@@ -552,13 +554,13 @@ public class GameLevel {
                 onBonusReached(0);
             } else if (timer.atSecond(3.5)) {
                 bonus().ifPresent(bonus -> bonus.setEaten(120));
-                game.publishGameEvent(GameEventType.BONUS_EATEN);
+                game().publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer.atSecond(4.5)) {
                 bonus.setInactive();//TODO
                 onBonusReached(1);
             } else if (timer.atSecond(6.5)) {
                 bonus().ifPresent(bonus -> bonus.setEaten(60));
-                game.publishGameEvent(GameEventType.BONUS_EATEN);
+                game().publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer.atSecond(8.5)) {
                 pac.hide();
                 ghosts().forEach(Ghost::hide);
@@ -569,7 +571,7 @@ public class GameLevel {
                 ghosts().forEach(Ghost::hide);
                 bonus().ifPresent(Bonus::setInactive);
                 world().mazeFlashing().reset();
-                game.createAndStartLevel(levelNumber + 1);
+                game().createAndStartLevel(levelNumber + 1);
                 timer.restartIndefinitely();
             }
             world().energizerBlinking().tick();
@@ -602,7 +604,7 @@ public class GameLevel {
 
     private void killGhost(Ghost ghost) {
         int killedSoFar = pac.victims().size();
-        int points = game.pointsForKillingGhost(killedSoFar);
+        int points = game().pointsForKillingGhost(killedSoFar);
         scorePoints(points);
         ghost.eaten(killedSoFar);
         pac.victims().add(ghost);
@@ -621,25 +623,15 @@ public class GameLevel {
         return bonusSymbols.get(index);
     }
 
-    private boolean checkBonusEaten(Bonus bonus) {
-        if (bonus.state() == Bonus.STATE_EDIBLE && pac.sameTile(bonus.entity())) {
-            bonus.setEaten(GameModel.BONUS_POINTS_SHOWN_TICKS);
-            scorePoints(bonus.points());
-            Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-            return true;
-        }
-        return false;
-    }
-
     /**
      * Called on bonus achievement (public access for unit tests and level test).
      *
      * @param bonusIndex bonus index (0 or 1).
      */
     public void onBonusReached(int bonusIndex) {
-        bonus = game.createNextBonus(world, bonus, bonusIndex, bonusSymbol(bonusIndex));
+        bonus = game().createNextBonus(world, bonus, bonusIndex, bonusSymbol(bonusIndex));
         if (bonus != null) {
-            game.publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
+            game().publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
         }
     }
 }
