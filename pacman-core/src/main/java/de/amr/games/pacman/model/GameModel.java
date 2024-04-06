@@ -205,7 +205,7 @@ public enum GameModel implements EnumMethods<GameModel> {
     public static final short FPS = 60;
 
     /** Base speed of creatures (Pac-Man, ghosts, moving bonus). */
-    public static final float SPEED_AT_100_PERCENT = 1.25f;
+    public static final byte SPEED_100_PERCENT = 75; // pixels/sec
     public static final float SPEED_GHOST_INSIDE_HOUSE = 0.5f; // correct?
     public static final float SPEED_GHOST_RETURNING_TO_HOUSE = 2.0f; // correct?
     public static final byte MAX_CREDIT = 99;

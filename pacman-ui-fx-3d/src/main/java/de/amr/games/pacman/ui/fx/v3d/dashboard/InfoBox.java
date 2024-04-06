@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 public abstract class InfoBox {
 
     public static String fmtSpeed(byte percentage) {
-        return String.format("%.2f px/s (%d%%)", GameModel.SPEED_AT_100_PERCENT * percentage * 0.01f, percentage);
+        return String.format("%.2f px/s (%d%%)", GameModel.SPEED_100_PERCENT * percentage * 0.01f, percentage);
     }
 
     protected final Theme theme;

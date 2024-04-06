@@ -48,7 +48,10 @@ public abstract class Creature extends Entity {
         canTeleport = true;
     }
 
-    public void setBaseSpeed(float pixelsPerTick) {
+    /**
+     * @param pixelsPerTick number of pixels the creature moves in one tick
+     */
+    public void setPixelSpeedPerTick(float pixelsPerTick) {
         baseSpeed = pixelsPerTick;
     }
 
