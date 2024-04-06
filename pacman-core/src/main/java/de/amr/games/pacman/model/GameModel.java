@@ -357,7 +357,7 @@ public enum GameModel implements EnumMethods<GameModel> {
     public static final short BONUS_POINTS_SHOWN_TICKS = 2 * FPS; // unsure
     public static final short PAC_POWER_FADING_TICKS = 2 * FPS; // unsure
 
-    private static final byte[][] RAW_LEVEL_DATA = {
+    protected static final byte[][] RAW_LEVEL_DATA = {
         /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0},
         /* 2*/ { 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5, 1},
         /* 3*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5, 0},
