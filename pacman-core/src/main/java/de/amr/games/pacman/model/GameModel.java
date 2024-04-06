@@ -193,12 +193,12 @@ public enum GameModel implements EnumMethods<GameModel> {
             var level = new GameLevel(levelNumber, levelData(levelNumber), createWorld(levelNumber), false);
             setLevel(level);
             if (levelNumber == 1) {
-                levelCounter().clear();
+                levelCounter.clear();
             }
             if (levelNumber <= 7) {
                 // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
                 // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
-                incrementLevelCounter(level.bonusSymbol(0));
+                addSymbolToLevelCounter(level.bonusSymbol(0));
             }
             level.pac().setAutopilot(new RuleBasedPacSteering(level));
             Logger.info("Level {} created ({})", levelNumber, this);
@@ -305,9 +305,9 @@ public enum GameModel implements EnumMethods<GameModel> {
             var level = new GameLevel(levelNumber, levelData(levelNumber), createPacManWorld(), false);
             setLevel(level);
             if (levelNumber == 1) {
-                levelCounter().clear();
+                levelCounter.clear();
             }
-            incrementLevelCounter(level.bonusSymbol(0));
+            addSymbolToLevelCounter(level.bonusSymbol(0));
             level.pac().setAutopilot(new RuleBasedPacSteering(level));
             Logger.info("Level {} created ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_CREATED);
@@ -387,14 +387,15 @@ public enum GameModel implements EnumMethods<GameModel> {
         return new GameLevelData(RAW_LEVEL_DATA[index]);
     }
 
-    private final List<GameEventListener> gameEventListeners = new ArrayList<>();
-    private final List<Byte> levelCounter = new LinkedList<>();
-    private final Score score = new Score();
-    private final Score highScore = new Score();
-    private GameLevel level;
-    private boolean playing;
-    private short initialLives = 3;
-    private short lives;
+    protected final List<GameEventListener> gameEventListeners = new ArrayList<>();
+    protected final List<Byte> levelCounter = new LinkedList<>();
+    protected final Score score = new Score();
+    protected final Score highScore = new Score();
+
+    protected GameLevel level;
+    protected boolean playing;
+    protected short initialLives = 3;
+    protected short lives;
 
     public abstract String pacName();
 
@@ -492,7 +493,7 @@ public enum GameModel implements EnumMethods<GameModel> {
         return levelCounter;
     }
 
-    public void incrementLevelCounter(byte symbol) {
+    public void addSymbolToLevelCounter(byte symbol) {
         levelCounter.add(symbol);
         if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
             levelCounter.removeFirst();
