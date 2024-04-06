@@ -26,14 +26,14 @@ public class InfoBoxKeys extends InfoBox {
         addInfo("Alt+C", "Play Cut-Scenes")
             .available(() -> sceneContext.gameState() == GameState.INTRO);
         addInfo("Alt+E", "Eat All Simple Pellets")
-            .available(() -> sceneContext.gameController().isPlaying());
+            .available(() -> sceneContext.game().isPlaying());
         addInfo("Alt+I", "Player Immunity On/Off");
         addInfo("Alt+L", "Add 3 Player Lives")
-            .available(() -> sceneContext.gameController().isPlaying());
+            .available(() -> sceneContext.game().isPlaying());
         addInfo("Alt+N", "Next Level")
-            .available(() -> sceneContext.gameController().isPlaying());
+            .available(() -> sceneContext.game().isPlaying());
         addInfo("Alt+X", "Kill Hunting Ghosts")
-            .available(() -> sceneContext.gameController().isPlaying());
+            .available(() -> sceneContext.game().isPlaying());
         addInfo("Alt+LEFT", () -> PY_3D_PERSPECTIVE.get().prev().name())
             .available(this::isCurrentGameScene3D);
         addInfo("Alt+RIGHT", () -> PY_3D_PERSPECTIVE.get().next().name())

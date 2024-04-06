@@ -75,7 +75,6 @@ public class GameController extends Fsm<GameState, GameModel> {
 
 
     private GameModel game;
-    private boolean playing = false;
     private boolean pacImmune = false;
     private int credit = 0;
 
@@ -130,13 +129,4 @@ public class GameController extends Fsm<GameState, GameModel> {
     public void setPacImmune(boolean pacImmune) {
         this.pacImmune = pacImmune;
     }
-
-    public boolean isPlaying() {
-        return playing;
-    }
-
-    public void setPlaying(boolean playing) {
-        this.playing = playing;
-    }
-
 }

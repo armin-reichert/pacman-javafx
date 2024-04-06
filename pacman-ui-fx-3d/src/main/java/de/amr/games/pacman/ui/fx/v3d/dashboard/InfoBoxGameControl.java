@@ -92,7 +92,7 @@ public class InfoBoxGameControl extends InfoBox {
             sceneContext.gameState() == GameState.INTERMISSION_TEST || sceneContext.gameState() != GameState.INTRO);
         buttonsIntermissionTest[INTERMISSION_TEST_QUIT].setDisable(sceneContext.gameState() != GameState.INTERMISSION_TEST);
         sceneContext.game().level().ifPresent(level -> spinnerGameLevel.getValueFactory().setValue(level.number()));
-        if (!sceneContext.gameController().isPlaying() || sceneContext.gameState() == GameState.CHANGING_TO_NEXT_LEVEL) {
+        if (!sceneContext.game().isPlaying() || sceneContext.gameState() == GameState.CHANGING_TO_NEXT_LEVEL) {
             spinnerGameLevel.setDisable(true);
         } else {
             spinnerGameLevel.setDisable(sceneContext.gameState() != GameState.READY
@@ -108,7 +108,7 @@ public class InfoBoxGameControl extends InfoBox {
     }
 
     private boolean canEnterNextLevel() {
-        return sceneContext.gameController().isPlaying()
+        return sceneContext.game().isPlaying()
             && Globals.oneOf(sceneContext.gameState(), GameState.HUNTING);
     }
 }

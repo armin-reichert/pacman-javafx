@@ -287,6 +287,7 @@ public enum GameModel implements EnumMethods<GameModel> {
     private final Score score = new Score();
     private final Score highScore = new Score();
     private GameLevel level;
+    private boolean playing;
     private short initialLives = 3;
     private short lives;
 
@@ -299,6 +300,14 @@ public enum GameModel implements EnumMethods<GameModel> {
     public abstract int[] huntingDurations(int levelNumber);
 
     public abstract File highScoreFile();
+
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
+    }
+
+    public boolean isPlaying() {
+        return playing;
+    }
 
     /**
      * Starts new game level with the given number.

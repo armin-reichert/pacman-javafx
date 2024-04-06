@@ -412,7 +412,7 @@ public class PlayScene3D implements GameScene {
             var house = level.world().house();
             double x = TS * (house.topLeftTile().x() + 0.5 * house.size().x());
             double y = TS * (house.topLeftTile().y() +       house.size().y());
-            double seconds = context.gameController().isPlaying() ? 0.5 : 2.5;
+            double seconds = context.game().isPlaying() ? 0.5 : 2.5;
             level3D.showMessage("READY!", seconds, x, y);
         }
     }

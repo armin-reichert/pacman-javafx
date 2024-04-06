@@ -53,7 +53,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
-            gameController().setPlaying(false);
+            game.setPlaying(false);
             game.setLevel(null);
         }
 
@@ -83,7 +83,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            if (gameController().isPlaying()) {
+            if (game.isPlaying()) {
                 // resume running game
                 game.level().ifPresent(level -> level.letsGetReadyToRumble(true));
             }
@@ -101,7 +101,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            if (gameController().isPlaying()) { // resume running game
+            if (game.isPlaying()) { // resume running game
                 if (timer.tick() == TICK_RESUME_GAME) {
                     game.level().ifPresent(level -> {
                         level.pac().show();
@@ -119,7 +119,7 @@ public enum GameState implements FsmState<GameModel> {
                         level.ghosts().forEach(Ghost::show);
                     });
                     case TICK_NEW_GAME_START_PLAYING -> game.level().ifPresent(level -> {
-                        gameController().setPlaying(true);
+                        game.setPlaying(true);
                         level.startHuntingPhase(0);
                         gameController().changeState(GameState.HUNTING);
                     });
@@ -314,7 +314,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onExit(GameModel game) {
-            gameController().setPlaying(false);
+            game.setPlaying(false);
             game.setLevel(null);
         }
     },
@@ -329,7 +329,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 gameController().changeState(
-                    gameController().hasCredit() && gameController().isPlaying() ? CHANGING_TO_NEXT_LEVEL : INTRO);
+                    gameController().hasCredit() && game.isPlaying() ? CHANGING_TO_NEXT_LEVEL : INTRO);
             }
         }
     },
