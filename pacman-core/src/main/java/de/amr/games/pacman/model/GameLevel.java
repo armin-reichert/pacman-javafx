@@ -14,7 +14,6 @@ import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +21,6 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.NavPoint.np;
 import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.model.actors.CreatureMovement.followTarget;
 import static de.amr.games.pacman.model.actors.CreatureMovement.roam;
@@ -42,7 +40,7 @@ public class GameLevel {
     private final Pac pac;
     private final Ghost[] ghosts;
     private final GhostHouseControl houseControl;
-    private final byte[] bonusSymbols = new byte[2];
+    private final List<Byte> bonusSymbols;
     private Bonus bonus;
     private byte huntingPhaseIndex;
     private byte totalNumGhostsKilled;
@@ -68,7 +66,7 @@ public class GameLevel {
 
         pac = new Pac(game.pacName());
         pac.reset();
-        pac.setPixelPerTickAt100Percent(PPS_AT_100_PERCENT / (float) FPS);
+        pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
         pac.setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
 
         ghosts = Stream.of(RED_GHOST, PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
@@ -79,7 +77,7 @@ public class GameLevel {
             ghost.setHouse(world.house());
             ghost.setFrightenedBehavior(this::frightenedGhostBehavior);
             ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));
-            ghost.setPixelPerTickAt100Percent(PPS_AT_100_PERCENT / (float) FPS);
+            ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
             ghost.setPixelPerTickReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
             ghost.setPixelPerTickInhouse(PPS_GHOST_INHOUSE / (float) FPS);
         });
@@ -97,8 +95,7 @@ public class GameLevel {
             }
         }
 
-        bonusSymbols[0] = game.nextBonusSymbol(levelNumber);
-        bonusSymbols[1] = game.nextBonusSymbol(levelNumber);
+        bonusSymbols = game.supplyBonusSymbols(levelNumber);
 
         Logger.trace("Game level {} ({}) created.", levelNumber, game);
     }
@@ -485,7 +482,7 @@ public class GameLevel {
 
     private void updateBonus() {
         if (bonus != null) {
-            boolean eaten = checkPacEatsBonus(bonus);
+            boolean eaten = checkBonusEaten(bonus);
             if (eaten) {
                 eventLog.bonusEaten = true;
                 game.publishGameEvent(GameEventType.BONUS_EATEN);
@@ -621,10 +618,10 @@ public class GameLevel {
     }
 
     public byte bonusSymbol(int index) {
-        return bonusSymbols[index];
+        return bonusSymbols.get(index);
     }
 
-    private boolean checkPacEatsBonus(Bonus bonus) {
+    private boolean checkBonusEaten(Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE && pac.sameTile(bonus.entity())) {
             bonus.setEaten(GameModel.BONUS_POINTS_SHOWN_TICKS);
             scorePoints(bonus.points());
@@ -640,62 +637,9 @@ public class GameLevel {
      * @param bonusIndex bonus index (0 or 1).
      */
     public void onBonusReached(int bonusIndex) {
-        if (bonusIndex < 0 || bonusIndex > 1) {
-            throw new IllegalArgumentException("Bonus index must be 0 or 1 but is " + bonusIndex);
+        bonus = game.createNextBonus(world, bonus, bonusIndex, bonusSymbol(bonusIndex));
+        if (bonus != null) {
+            game.publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
         }
-        switch (game) {
-            case MS_PACMAN -> {
-                if (bonusIndex == 1 && bonus != null && bonus.state() != Bonus.STATE_INACTIVE) {
-                    Logger.info("First bonus still active, skip second one");
-                    return;
-                }
-                byte symbol = bonusSymbols[bonusIndex];
-                int points = game.bonusValue(symbol);
-                bonus = createMovingBonus(symbol, points, RND.nextBoolean());
-                bonus.setEdible(TickTimer.INDEFINITE);
-                game.publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
-            }
-            case PACMAN -> {
-                byte symbol = bonusSymbols[bonusIndex];
-                int points = game.bonusValue(symbol);
-                bonus = new StaticBonus(symbol, points);
-                bonus.entity().setPosition(ArcadeWorld.BONUS_POSITION);
-                bonus.setEdible(randomInt(9 * FPS, 10 * FPS));
-                game.publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
-            }
-        }
-    }
-
-    /**
-     * The moving bonus enters the world at a random portal, walks to the house entry, takes a tour around the house and
-     * finally leaves the world through a random portal on the opposite side of the world.
-     * <p>
-     * TODO: This is not the exact behavior as in the original Arcade game.
-     **/
-    private Bonus createMovingBonus(byte symbol, int points, boolean leftToRight) {
-        var house       = world.house();
-        var houseEntry  = tileAt(house.door().entryPosition());
-        var houseEntryOpposite = houseEntry.plus(0, house.size().y() + 1);
-
-        var portals     = world.portals();
-        var entryPortal = portals.get(RND.nextInt(portals.size()));
-        var exitPortal  = portals.get(RND.nextInt(portals.size()));
-
-        var route = List.of(
-            np(leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd()),
-            np(houseEntry),
-            np(houseEntryOpposite),
-            np(houseEntry),
-            np(leftToRight
-                ? exitPortal.rightTunnelEnd().plus(1, 0)
-                : exitPortal.leftTunnelEnd().minus(1, 0))
-        );
-
-        var movingBonus = new MovingBonus(symbol, points);
-        movingBonus.setPixelPerTickAt100Percent(PPS_AT_100_PERCENT / (float) FPS);
-        // pass copy of list because route gets modified
-        movingBonus.setRoute(new ArrayList<>(route), leftToRight);
-        Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
-        return movingBonus;
     }
 }

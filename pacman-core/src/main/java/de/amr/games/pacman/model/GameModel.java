@@ -8,6 +8,9 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
+import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.model.actors.MovingBonus;
+import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
@@ -16,6 +19,7 @@ import java.io.File;
 import java.util.*;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.NavPoint.np;
 import static de.amr.games.pacman.model.world.ArcadeWorld.*;
 
 /**
@@ -130,6 +134,46 @@ public enum GameModel implements EnumMethods<GameModel> {
         }
 
         @Override
+        public Bonus createNextBonus(World world, Bonus existingBonus, int bonusIndex, byte symbol) {
+            if (existingBonus != null && existingBonus.state() != Bonus.STATE_INACTIVE) {
+                Logger.info("Previous bonus is still active, skip this one");
+                return null;
+            }
+            var bonus = createMovingBonus(world, symbol, bonusValue(symbol), RND.nextBoolean());
+            bonus.setEdible(TickTimer.INDEFINITE);
+            return bonus;
+        }
+
+        /**
+         * The moving bonus enters the world at a random portal, walks to the house entry, takes a tour around the house and
+         * finally leaves the world through a random portal on the opposite side of the world.
+         * <p>
+         * TODO: This is not the exact behavior as in the original Arcade game.
+         **/
+        private Bonus createMovingBonus(World world, byte symbol, int points, boolean leftToRight) {
+            var houseEntry = tileAt(world.house().door().entryPosition());
+            var houseEntryOpposite= houseEntry.plus(0, world.house().size().y() + 1);
+            var entryPortal = world.portals().get(RND.nextInt(world.portals().size()));
+            var exitPortal  = world.portals().get(RND.nextInt(world.portals().size()));
+
+            var route = List.of(
+                np(leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd()),
+                np(houseEntry),
+                np(houseEntryOpposite),
+                np(houseEntry),
+                np(leftToRight ? exitPortal.rightTunnelEnd().plus(1, 0) : exitPortal.leftTunnelEnd().minus(1, 0))
+            );
+
+            var movingBonus = new MovingBonus(symbol, points);
+            movingBonus.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+            // pass copy of list because route gets modified
+            movingBonus.setRoute(new ArrayList<>(route), leftToRight);
+            Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
+            return movingBonus;
+        }
+
+
+        @Override
         public int[] huntingDurations(int levelNumber) {
             return HUNTING_DURATIONS[levelNumber <= 4 ? 0 : 1];
         }
@@ -226,6 +270,14 @@ public enum GameModel implements EnumMethods<GameModel> {
                 case 11, 12 -> 6; // Bell
                 default ->     7; // Key
             };
+        }
+
+        @Override
+        public Bonus createNextBonus(World world, Bonus existingBonus, int bonusIndex, byte symbol) {
+            var bonus = new StaticBonus(symbol, bonusValue(symbol));
+            bonus.entity().setPosition(ArcadeWorld.BONUS_POSITION);
+            bonus.setEdible(randomInt(9 * FPS, 10 * FPS));
+            return bonus;
         }
 
         @Override
@@ -352,6 +404,12 @@ public enum GameModel implements EnumMethods<GameModel> {
     public abstract byte nextBonusSymbol(int levelNumber);
 
     public abstract int bonusValue(byte symbol);
+
+    public List<Byte> supplyBonusSymbols(int levelNumber) {
+        return List.of(nextBonusSymbol(levelNumber), nextBonusSymbol(levelNumber));
+    }
+
+    public abstract Bonus createNextBonus(World world, Bonus bonus, int bonusIndex, byte symbol);
 
     public abstract int[] huntingDurations(int levelNumber);
 
