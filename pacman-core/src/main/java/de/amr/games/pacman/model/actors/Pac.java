@@ -22,7 +22,7 @@ import static de.amr.games.pacman.model.actors.CreatureMovement.tryMoving;
  *
  * @author Armin Reichert
  */
-public class Pac extends Creature implements AnimationDirector {
+public class Pac extends Creature {
 
     public static final String ANIM_MUNCHING = "munching";
     public static final String ANIM_DYING = "dying";
@@ -81,9 +81,36 @@ public class Pac extends Creature implements AnimationDirector {
         this.animations = animations;
     }
 
-    @Override
     public Optional<Animations> animations() {
         return Optional.ofNullable(animations);
+    }
+
+    public void selectAnimation(String name) {
+        selectAnimation(name, 0);
+    }
+
+    public void selectAnimation(String name, int index) {
+        if (animations != null) {
+            animations.select(name, index);
+        }
+    }
+
+    public void startAnimation() {
+        if (animations != null) {
+            animations.startSelected();
+        }
+    }
+
+    public void stopAnimation() {
+        if (animations != null) {
+            animations.stopSelected();
+        }
+    }
+
+    public void resetAnimation() {
+        if (animations != null) {
+            animations.resetSelected();
+        }
     }
 
     @Override
