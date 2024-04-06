@@ -595,8 +595,9 @@ public class GameLevel {
     }
 
     private void killGhost(Ghost ghost) {
+        byte[] multiple = { 2, 4, 8, 16 };
         int killedSoFar = pac.victims().size();
-        int points = game().pointsForKillingGhost(killedSoFar);
+        int points = 100 * multiple[killedSoFar];
         scorePoints(points);
         ghost.eaten(killedSoFar);
         pac.victims().add(ghost);

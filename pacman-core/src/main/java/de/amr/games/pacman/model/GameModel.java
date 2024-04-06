@@ -510,11 +510,6 @@ public enum GameModel implements EnumMethods<GameModel> {
         return highScore;
     }
 
-    public int pointsForKillingGhost(int index) {
-        byte[] factors = { 2, 4, 8, 16 };
-        return factors[index] * 100;
-    }
-
     public void updateHighScore() {
         var file = highScoreFile();
         var oldHighScore = new Score();
