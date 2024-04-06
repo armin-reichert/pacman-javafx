@@ -193,7 +193,7 @@ public enum GameModel implements EnumMethods<GameModel> {
             var level = new GameLevel(levelNumber, levelData(levelNumber), createWorld(levelNumber), false);
             setLevel(level);
             if (levelNumber == 1) {
-                clearLevelCounter();
+                levelCounter().clear();
             }
             if (levelNumber <= 7) {
                 // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
@@ -299,12 +299,13 @@ public enum GameModel implements EnumMethods<GameModel> {
             return new File(System.getProperty("user.home"), "highscore-pacman.xml");
         }
 
+        @Override
         public void createAndStartLevel(int levelNumber) {
             checkLevelNumber(levelNumber);
             var level = new GameLevel(levelNumber, levelData(levelNumber), createPacManWorld(), false);
             setLevel(level);
             if (levelNumber == 1) {
-                clearLevelCounter();
+                levelCounter().clear();
             }
             incrementLevelCounter(level.bonusSymbol(0));
             level.pac().setAutopilot(new RuleBasedPacSteering(level));
@@ -488,11 +489,7 @@ public enum GameModel implements EnumMethods<GameModel> {
     }
 
     public List<Byte> levelCounter() {
-        return Collections.unmodifiableList(levelCounter);
-    }
-
-    public void clearLevelCounter() {
-        levelCounter.clear();
+        return levelCounter;
     }
 
     public void incrementLevelCounter(byte symbol) {
