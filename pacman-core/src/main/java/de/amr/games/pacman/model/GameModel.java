@@ -13,10 +13,6 @@ import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static de.amr.games.pacman.lib.Globals.checkLevelNumber;
@@ -253,35 +249,7 @@ public enum GameModel implements EnumMethods<GameModel> {
         return new GameLevelData(RAW_LEVEL_DATA[index]);
     }
 
-    private static void loadScore(Score score, File file) {
-        try (var in = new FileInputStream(file)) {
-            var p = new Properties();
-            p.loadFromXML(in);
-            score.setPoints(Integer.parseInt(p.getProperty("points")));
-            score.setLevelNumber(Integer.parseInt(p.getProperty("level")));
-            score.setDate(LocalDate.parse(p.getProperty("date"), DateTimeFormatter.ISO_LOCAL_DATE));
-            Logger.info("Score loaded from file '{}'. Points: {} Level: {}",
-                file, score.points(), score.levelNumber());
-        } catch (Exception x) {
-            Logger.error("Score could not be loaded from file '{}'. Error: {}", file, x.getMessage());
-        }
-    }
-
-    private static void saveScore(Score score, File file, String description) {
-        try (var out = new FileOutputStream(file)) {
-            var p = new Properties();
-            p.setProperty("points", String.valueOf(score.points()));
-            p.setProperty("level",  String.valueOf(score.levelNumber()));
-            p.setProperty("date",   score.date().format(DateTimeFormatter.ISO_LOCAL_DATE));
-            p.setProperty("url",    "https://github.com/armin-reichert/pacman-javafx");
-            p.storeToXML(out, description);
-            Logger.info("Saved '{}' to file '{}'. Points: {} Level: {}",
-                description, file, score.points(), score.levelNumber());
-        } catch (Exception x) {
-            Logger.error("Score could not be saved to file '{}'. Error: {}", file, x.getMessage());
-        }
-    }
-
+    private final List<GameEventListener> gameEventListeners = new ArrayList<>();
     private final List<Byte> levelCounter = new LinkedList<>();
     private final Score score = new Score();
     private final Score highScore = new Score();
@@ -401,20 +369,17 @@ public enum GameModel implements EnumMethods<GameModel> {
     }
 
     public void loadHighScore() {
-        loadScore(highScore, highScoreFile());
+        highScore.loadFromFile(highScoreFile());
     }
 
     public void updateHighScore() {
         var file = highScoreFile();
         var oldHighScore = new Score();
-        loadScore(oldHighScore, file);
+        oldHighScore.loadFromFile(file);
         if (highScore.points() > oldHighScore.points()) {
-            saveScore(highScore, file, String.format("%s High Score", name()));
+            highScore.saveToFile(file, String.format("%s High Score", name()));
         }
     }
-
-
-    private final List<GameEventListener> gameEventListeners = new ArrayList<>();
 
     public void addListener(GameEventListener listener) {
         checkNotNull(listener);
@@ -433,5 +398,4 @@ public enum GameModel implements EnumMethods<GameModel> {
         Logger.trace("Publish game event: {}", event);
         gameEventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
     }
-
 }
