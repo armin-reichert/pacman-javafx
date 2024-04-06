@@ -32,8 +32,9 @@ public class PacManGames2dApp extends Application {
     @Override
     public void start(Stage stage) {
         ui = new PacManGames2dUI(stage, settings);
-        GameModel.MS_PACMAN.addListener(ui);
-        GameModel.PACMAN.addListener(ui);
+        for (var game : GameModel.values()) {
+            game.addListener(ui);
+        }
         ui.showStartPage();
         Logger.info("UI initialized. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }

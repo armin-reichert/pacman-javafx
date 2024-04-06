@@ -38,8 +38,9 @@ public class PacManGames3dApp extends Application {
     @Override
     public void start(Stage stage) {
         ui = new PacManGames3dUI(stage, settings);
-        GameModel.MS_PACMAN.addListener(ui);
-        GameModel.PACMAN.addListener(ui);
+        for (var game : GameModel.values()) {
+            game.addListener(ui);
+        }
         int hour = LocalTime.now().getHour();
         PY_3D_NIGHT_MODE.set(hour >= 20 || hour <= 5);
         ui.showStartPage();
