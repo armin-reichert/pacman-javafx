@@ -105,11 +105,11 @@ public class Ghost extends Creature {
         revivalPosition = position;
     }
 
-    public void setSpeedReturningToHouse(float pixelsPerTick) {
+    public void setPixelPerTickReturningHome(float pixelsPerTick) {
         speedReturningToHouse = pixelsPerTick;
     }
 
-    public void setSpeedInsideHouse(float pixelsPerTick) {
+    public void setPixelPerTickInhouse(float pixelsPerTick) {
         speedInsideHouse = pixelsPerTick;
     }
 

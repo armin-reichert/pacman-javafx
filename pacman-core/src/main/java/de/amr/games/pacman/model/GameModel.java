@@ -202,12 +202,12 @@ public enum GameModel implements EnumMethods<GameModel> {
     public static final byte ORANGE_GHOST = 3;
 
     /** Game loop frequency. */
-    public static final short FPS = 60;
+    public static final byte FPS = 60;
 
     /** Base speed of creatures (Pac-Man, ghosts, moving bonus). */
-    public static final byte SPEED_100_PERCENT = 75; // pixels/sec
-    public static final float SPEED_GHOST_INSIDE_HOUSE = 0.5f; // correct?
-    public static final float SPEED_GHOST_RETURNING_TO_HOUSE = 2.0f; // correct?
+    public static final byte PPS_AT_100_PERCENT = 75; // base speed (at 100% relative speed) in pixels/sec
+    public static final byte PPS_GHOST_INHOUSE = 38; // correct?
+    public static final short PPS_GHOST_RETURNING_HOME = 150; // correct?
     public static final byte MAX_CREDIT = 99;
     public static final byte LEVEL_COUNTER_MAX_SYMBOLS = 7;
     public static final byte RESTING_TICKS_NORMAL_PELLET = 1;

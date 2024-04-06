@@ -51,7 +51,7 @@ public abstract class Creature extends Entity {
     /**
      * @param pixelsPerTick number of pixels the creature moves in one tick
      */
-    public void setPixelSpeedPerTick(float pixelsPerTick) {
+    public void setPixelPerTickAt100Percent(float pixelsPerTick) {
         baseSpeed = pixelsPerTick;
     }
 

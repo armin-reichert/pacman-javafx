@@ -68,7 +68,7 @@ public class GameLevel {
 
         pac = new Pac(game.pacName());
         pac.reset();
-        pac.setPixelSpeedPerTick(SPEED_100_PERCENT / (float) FPS);
+        pac.setPixelPerTickAt100Percent(PPS_AT_100_PERCENT / (float) FPS);
         pac.setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
 
         ghosts = Stream.of(RED_GHOST, PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
@@ -79,9 +79,9 @@ public class GameLevel {
             ghost.setHouse(world.house());
             ghost.setFrightenedBehavior(this::frightenedGhostBehavior);
             ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));
-            ghost.setPixelSpeedPerTick(SPEED_100_PERCENT / (float) FPS);
-            ghost.setSpeedReturningToHouse(SPEED_GHOST_RETURNING_TO_HOUSE);
-            ghost.setSpeedInsideHouse(SPEED_GHOST_INSIDE_HOUSE);
+            ghost.setPixelPerTickAt100Percent(PPS_AT_100_PERCENT / (float) FPS);
+            ghost.setPixelPerTickReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
+            ghost.setPixelPerTickInhouse(PPS_GHOST_INHOUSE / (float) FPS);
         });
 
         switch (game) {
@@ -774,7 +774,7 @@ public class GameLevel {
         );
 
         var movingBonus = new MovingBonus(symbol, points);
-        movingBonus.setPixelSpeedPerTick(SPEED_100_PERCENT / (float) FPS);
+        movingBonus.setPixelPerTickAt100Percent(PPS_AT_100_PERCENT / (float) FPS);
         // pass copy of list because route gets modified
         movingBonus.setRoute(new ArrayList<>(route), leftToRight);
         Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
