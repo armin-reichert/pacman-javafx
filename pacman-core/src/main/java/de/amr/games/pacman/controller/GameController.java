@@ -9,19 +9,15 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Fsm;
-import de.amr.games.pacman.lib.RouteBasedSteering;
-import de.amr.games.pacman.lib.RuleBasedPacSteering;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.world.ArcadeWorld;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.GameModel.levelData;
+import static de.amr.games.pacman.lib.Globals.checkGameVariant;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * Controller (in the sense of MVC) for both (Pac-Man, Ms. Pac-Man) game variants.
@@ -143,57 +139,4 @@ public class GameController extends Fsm<GameState, GameModel> {
         this.playing = playing;
     }
 
-    /**
-     * Starts new game level with the given number.
-     *
-     * @param levelNumber level number (starting at 1)
-     */
-    public void createAndStartLevel(int levelNumber) {
-        checkLevelNumber(levelNumber);
-        var level = new GameLevel(game, levelNumber, levelData(levelNumber), game.createWorld(levelNumber), false);
-        game.setLevel(level);
-        if (levelNumber == 1) {
-            game.clearLevelCounter();
-        }
-        if (game == GameModel.PACMAN) {
-            game.incrementLevelCounter(level.bonusSymbol(0));
-        }
-        else if (game == GameModel.MS_PACMAN && levelNumber <= 7) {
-            // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
-            // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
-            game.incrementLevelCounter(level.bonusSymbol(0));
-        }
-        level.pac().setAutopilot(new RuleBasedPacSteering(level));
-        Logger.info("Level {} created ({})", levelNumber, game);
-        publishGameEvent(GameEventType.LEVEL_CREATED);
-
-        // At this point, the animations of Pac-Man and the ghosts must have been created!
-        level.letsGetReadyToRumble(false);
-        Logger.info("Level {} started ({})", levelNumber, game);
-        publishGameEvent(GameEventType.LEVEL_STARTED);
-    }
-
-    /**
-     * Creates and starts the demo game level ("attract mode"). Behavior of the ghosts is different from the original
-     * Arcade game because they do not follow a predetermined path but change their direction randomly when frightened.
-     * In Pac-Man variant, Pac-Man at least follows the same path as in the Arcade game, but in Ms. Pac-Man game, she
-     * does not behave as in the Arcade game but hunts the ghosts using some goal-driven algorithm.
-     */
-    public void createAndStartDemoLevel() {
-        var level = new GameLevel(game,1, levelData(1), game.createWorld(1),  true);
-        var autopilot = switch (game) {
-            case MS_PACMAN -> new RuleBasedPacSteering(level);
-            case    PACMAN -> new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE));
-        };
-        game.setLevel(level);
-        level.pac().setAutopilot(autopilot);
-        level.pac().setUseAutopilot(true);
-        Logger.info("Demo level created ({})", game);
-        publishGameEvent(GameEventType.LEVEL_CREATED);
-
-        // At this point, the animations of Pac-Man and the ghosts have been created!
-        level.letsGetReadyToRumble(true);
-        Logger.info("Demo Level started ({})", game);
-        publishGameEvent(GameEventType.LEVEL_STARTED);
-    }
 }

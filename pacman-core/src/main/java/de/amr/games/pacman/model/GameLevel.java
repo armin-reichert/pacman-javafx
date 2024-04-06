@@ -573,7 +573,7 @@ public class GameLevel {
                 ghosts().forEach(Ghost::hide);
                 bonus().ifPresent(Bonus::setInactive);
                 world().mazeFlashing().reset();
-                GameController.it().createAndStartLevel(levelNumber + 1);
+                game.createAndStartLevel(levelNumber + 1);
                 timer.restartIndefinitely();
             }
             world().energizerBlinking().tick();

@@ -4,8 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.EnumMethods;
+import de.amr.games.pacman.lib.RouteBasedSteering;
+import de.amr.games.pacman.lib.RuleBasedPacSteering;
 import de.amr.games.pacman.lib.Score;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
@@ -16,6 +20,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static de.amr.games.pacman.controller.GameController.publishGameEvent;
 import static de.amr.games.pacman.lib.Globals.checkLevelNumber;
 import static de.amr.games.pacman.model.world.ArcadeWorld.*;
 
@@ -72,12 +77,49 @@ public enum GameModel implements EnumMethods<GameModel> {
             return new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
         }
 
-        @Override
-        public World createWorld(int levelNumber) {
+        private World createWorld(int levelNumber) {
             return createMsPacManWorld(mapNumberMsPacMan(levelNumber));
         }
-    },
 
+        @Override
+        public void createAndStartLevel(int levelNumber) {
+            checkLevelNumber(levelNumber);
+            var level = new GameLevel(this, levelNumber, levelData(levelNumber), createWorld(levelNumber), false);
+            setLevel(level);
+            if (levelNumber == 1) {
+                clearLevelCounter();
+            }
+            if (levelNumber <= 7) {
+                // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
+                // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
+                incrementLevelCounter(level.bonusSymbol(0));
+            }
+            level.pac().setAutopilot(new RuleBasedPacSteering(level));
+            Logger.info("Level {} created ({})", levelNumber, this);
+            publishGameEvent(GameEventType.LEVEL_CREATED);
+
+            // At this point, the animations of Pac-Man and the ghosts must have been created!
+            level.letsGetReadyToRumble(false);
+            Logger.info("Level {} started ({})", levelNumber, this);
+            publishGameEvent(GameEventType.LEVEL_STARTED);
+        }
+
+        @Override
+        public void createAndStartDemoLevel() {
+            var level = new GameLevel(this,1, levelData(1), createWorld(1),  true);
+            setLevel(level);
+            level.pac().setAutopilot(new RuleBasedPacSteering(level));
+            level.pac().setUseAutopilot(true);
+            Logger.info("Demo level created ({})", this);
+            publishGameEvent(GameEventType.LEVEL_CREATED);
+
+            // At this point, the animations of Pac-Man and the ghosts have been created!
+            level.letsGetReadyToRumble(true);
+            Logger.info("Demo Level started ({})", this);
+            publishGameEvent(GameEventType.LEVEL_STARTED);
+        }
+
+    },
 
     PACMAN {
 
@@ -125,9 +167,37 @@ public enum GameModel implements EnumMethods<GameModel> {
             return new File(System.getProperty("user.home"), "highscore-pacman.xml");
         }
 
+        public void createAndStartLevel(int levelNumber) {
+            checkLevelNumber(levelNumber);
+            var level = new GameLevel(this, levelNumber, levelData(levelNumber), createPacManWorld(), false);
+            setLevel(level);
+            if (levelNumber == 1) {
+                clearLevelCounter();
+            }
+            incrementLevelCounter(level.bonusSymbol(0));
+            level.pac().setAutopilot(new RuleBasedPacSteering(level));
+            Logger.info("Level {} created ({})", levelNumber, this);
+            publishGameEvent(GameEventType.LEVEL_CREATED);
+
+            // At this point, the animations of Pac-Man and the ghosts must have been created!
+            level.letsGetReadyToRumble(false);
+            Logger.info("Level {} started ({})", levelNumber, this);
+            publishGameEvent(GameEventType.LEVEL_STARTED);
+        }
+
         @Override
-        public World createWorld(int levelNumber) {
-            return createPacManWorld();
+        public void createAndStartDemoLevel() {
+            var level = new GameLevel(this,1, levelData(1), createPacManWorld(),  true);
+            setLevel(level);
+            level.pac().setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
+            level.pac().setUseAutopilot(true);
+            Logger.info("Demo level created ({})", this);
+            publishGameEvent(GameEventType.LEVEL_CREATED);
+
+            // At this point, the animations of Pac-Man and the ghosts have been created!
+            level.letsGetReadyToRumble(true);
+            Logger.info("Demo Level started ({})", this);
+            publishGameEvent(GameEventType.LEVEL_STARTED);
         }
     };
 
@@ -230,7 +300,20 @@ public enum GameModel implements EnumMethods<GameModel> {
 
     public abstract File highScoreFile();
 
-    public abstract World createWorld(int levelNumber);
+    /**
+     * Starts new game level with the given number.
+     *
+     * @param levelNumber level number (starting at 1)
+     */
+    public abstract void createAndStartLevel(int levelNumber);
+
+    /**
+     * Creates and starts the demo game level ("attract mode"). Behavior of the ghosts is different from the original
+     * Arcade game because they do not follow a predetermined path but change their direction randomly when frightened.
+     * In Pac-Man variant, Pac-Man at least follows the same path as in the Arcade game, but in Ms. Pac-Man game, she
+     * does not behave as in the Arcade game but hunts the ghosts using some goal-driven algorithm.
+     */
+    public abstract void createAndStartDemoLevel();
 
     // Why does the default implementation returns NULL as soon as the enum classes have methods?
     @Override
