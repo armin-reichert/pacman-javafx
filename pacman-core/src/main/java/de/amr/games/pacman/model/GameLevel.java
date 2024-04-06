@@ -97,8 +97,8 @@ public class GameLevel {
             }
         }
 
-        bonusSymbols[0] = nextBonusSymbol();
-        bonusSymbols[1] = nextBonusSymbol();
+        bonusSymbols[0] = game.nextBonusSymbol(levelNumber);
+        bonusSymbols[1] = game.nextBonusSymbol(levelNumber);
 
         Logger.trace("Game level {} ({}) created.", levelNumber, game);
     }
@@ -615,81 +615,6 @@ public class GameLevel {
     }
 
     // Bonus Management
-
-    /**
-     * <p>Got this information from
-     * <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>:
-     * </p>
-     * <p><em>
-     * The exact fruit mechanics are as follows: After 64 dots are consumed, the game spawns the first fruit of the level.
-     * After 176 dots are consumed, the game attempts to spawn the second fruit of the level. If the first fruit is still
-     * present in the level when (or eaten very shortly before) the 176th dot is consumed, the second fruit will not
-     * spawn.</em></p>
-     *
-     * <p><b>Dying while a fruit is on screen causes it to immediately disappear and never return.
-     * (TODO: what does never mean here? For the rest of the game?)</b></p>
-     *
-     * <p><em>
-     * The type of fruit is determined by the level count - levels 1-7 will always have two cherries, two strawberries,
-     * etc. until two bananas on level 7. On level 8 and beyond, the fruit type is randomly selected using the weights in
-     * the following table:
-     * </em></p>
-     *
-     * <table>
-     * <tr>
-     *   <th>Cherry</th>
-     *   <th>Strawberry</th>
-     *   <th>Peach</th>
-     *   <th>Pretzel</th>
-     *   <th>Apple</th>
-     *   <th>Pear</th>
-     *   <th>Banana</th>
-     * </tr>
-     * <tr align="right">
-     *   <td>5/32</td>
-     *   <td>5/32</td>
-     *   <td>5/32</td>
-     *   <td>5/32</td>
-     *   <td>4/32</td>
-     *   <td>4/32</td>
-     *   <td>4/32</td>
-     * </tr>
-     * </table>
-     */
-    private byte nextBonusSymbol() {
-        return switch (game) {
-            case MS_PACMAN -> switch (levelNumber) {
-                case 1 -> 0; // Cherries
-                case 2 -> 1; // Strawberry
-                case 3 -> 2; // Orange (not peach!)
-                case 4 -> 3; // Pretzel (a Brez'n, Herrgottsakra!)
-                case 5 -> 4; // Apple
-                case 6 -> 5; // Pear
-                case 7 -> 6; // Banana
-                default -> {
-                    int random = randomInt(0, 320);
-                    if (random <  50) yield 0;
-                    if (random < 100) yield 1;
-                    if (random < 150) yield 2;
-                    if (random < 200) yield 3;
-                    if (random < 240) yield 4;
-                    if (random < 280) yield 5;
-                    else              yield 6;
-                }
-            };
-            // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
-            case PACMAN -> switch (levelNumber) {
-                case 1 ->      0; // Cherries
-                case 2 ->      1; // Strawberry;
-                case 3, 4 ->   2; // peach
-                case 5, 6 ->   3; // Apple;
-                case 7, 8 ->   4; // Grapes;
-                case 9, 10 ->  5; // Galaxian
-                case 11, 12 -> 6; // Bell
-                default ->     7; // Key
-            };
-        };
-    }
 
     public boolean isBonusReached() {
         return switch (game) {
