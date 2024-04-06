@@ -72,7 +72,7 @@ public class Keyboard {
     public static boolean pressed(KeyCodeCombination... combinations) {
         var match = Arrays.stream(combinations).filter(matchingCombinations::contains).findFirst();
         if (match.isPresent()) {
-            Logger.info("Matching key combination: " + match.get());
+            Logger.trace("Matching key combination: " + match.get());
             return true;
         }
         return false;
