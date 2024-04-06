@@ -32,7 +32,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  * @author Armin Reichert
  * @see <a href="https://github.com/armin-reichert">GitHub</a>
  * @see <a href="https://pacman.holenet.info">Jamey Pittman: The Pac-Man Dossier</a>
- * @see <a href= "https://gameinternals.com/understanding-pac-man-ghost-behavior">Chad Birch: Understanding ghost
+ * @see <a href="https://gameinternals.com/understanding-pac-man-ghost-behavior">Chad Birch: Understanding ghost
  * behavior</a>
  * @see <a href="http://superpacman.com/mspacman/">Ms. Pac-Man</a>
  */
@@ -52,11 +52,6 @@ public class GameController extends Fsm<GameState, GameModel> {
     public static void addListener(GameEventListener listener) {
         checkNotNull(listener);
         gameEventListeners.add(listener);
-    }
-
-    public static void removeListener(GameEventListener listener) {
-        checkNotNull(listener);
-        gameEventListeners.remove(listener);
     }
 
     public static void publishGameEvent(GameEventType type) {
