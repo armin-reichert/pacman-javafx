@@ -515,10 +515,6 @@ public enum GameModel implements EnumMethods<GameModel> {
         return factors[index] * 100;
     }
 
-    public void loadHighScore() {
-        highScore.loadFromFile(highScoreFile());
-    }
-
     public void updateHighScore() {
         var file = highScoreFile();
         var oldHighScore = new Score();

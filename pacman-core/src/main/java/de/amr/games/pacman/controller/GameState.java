@@ -36,7 +36,7 @@ public enum GameState implements FsmState<GameModel> {
             timer.restartIndefinitely();
             game.clearLevelCounter();
             game.score().reset();
-            game.loadHighScore();
+            game.highScore().loadFromFile(game.highScoreFile());
         }
 
         @Override
