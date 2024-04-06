@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  *
  * @author Armin Reichert
  */
-public class Ghost extends Creature implements AnimationDirector {
+public class Ghost extends Creature {
 
     public static final String ANIM_GHOST_NORMAL     = "normal";
     public static final String ANIM_GHOST_FRIGHTENED = "frightened";
@@ -53,8 +53,11 @@ public class Ghost extends Creature implements AnimationDirector {
     private Map<Vector2i, List<Direction>> forbiddenMoves = Collections.emptyMap();
 
     /**
-     * @param id  The ghost ID. One of {@link GameModel#RED_GHOST}, {@link GameModel#PINK_GHOST}, {@link GameModel#CYAN_GHOST},
-     * {@link GameModel#ORANGE_GHOST}.
+     * @param id  The ghost ID. One of
+     * {@link de.amr.games.pacman.model.GameModel#RED_GHOST},
+     * {@link de.amr.games.pacman.model.GameModel#PINK_GHOST},
+     * {@link de.amr.games.pacman.model.GameModel#CYAN_GHOST},
+     * {@link de.amr.games.pacman.model.GameModel#ORANGE_GHOST}.
      * @param name the ghost's readable name, e.g. "Pinky"
      */
     public Ghost(byte id, String name) {
@@ -84,7 +87,6 @@ public class Ghost extends Creature implements AnimationDirector {
         this.animations = animations;
     }
 
-    @Override
     public Optional<Animations> animations() {
         return Optional.ofNullable(animations);
     }
@@ -156,6 +158,34 @@ public class Ghost extends Creature implements AnimationDirector {
     @Override
     public boolean canReverse() {
         return newTileEntered && is(HUNTING_PAC, FRIGHTENED);
+    }
+
+    public void selectAnimation(String name) {
+        selectAnimation(name, 0);
+    }
+
+    public void selectAnimation(String name, int index) {
+        if (animations != null) {
+            animations.select(name, index);
+        }
+    }
+
+    public void startAnimation() {
+        if (animations != null) {
+            animations.startSelected();
+        }
+    }
+
+    public void stopAnimation() {
+        if (animations != null) {
+            animations.stopSelected();
+        }
+    }
+
+    public void resetAnimation() {
+        if (animations != null) {
+            animations.resetSelected();
+        }
     }
 
     // Here begins the state machine part

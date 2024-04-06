@@ -10,10 +10,10 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
-import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.util.Keyboard;
 
 import static de.amr.games.pacman.lib.Globals.t;
 

@@ -14,7 +14,6 @@ import de.amr.games.pacman.lib.RuleBasedPacSteering;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import org.tinylog.Logger;
 
