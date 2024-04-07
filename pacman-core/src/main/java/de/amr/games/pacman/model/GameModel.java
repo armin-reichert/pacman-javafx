@@ -132,7 +132,7 @@ public enum GameModel implements EnumMethods<GameModel> {
                 Logger.info("Previous bonus is still active, skip this one");
                 return Optional.empty();
             }
-            var bonus = createMovingBonus(world, symbol, bonusValue(symbol), RND.nextBoolean());
+            var bonus = createMovingBonus(world, symbol, RND.nextBoolean());
             bonus.setEdible(TickTimer.INDEFINITE);
             return Optional.of(bonus);
         }
@@ -143,7 +143,7 @@ public enum GameModel implements EnumMethods<GameModel> {
          * <p>
          * TODO: This is not the exact behavior as in the original Arcade game.
          **/
-        private Bonus createMovingBonus(World world, byte symbol, int points, boolean leftToRight) {
+        private Bonus createMovingBonus(World world, byte symbol, boolean leftToRight) {
             var houseEntry = tileAt(world.house().door().entryPosition());
             var houseEntryOpposite= houseEntry.plus(0, world.house().size().y() + 1);
             var entryPortal = world.portals().get(RND.nextInt(world.portals().size()));
@@ -157,7 +157,7 @@ public enum GameModel implements EnumMethods<GameModel> {
                 np(leftToRight ? exitPortal.rightTunnelEnd().plus(1, 0) : exitPortal.leftTunnelEnd().minus(1, 0))
             );
 
-            var movingBonus = new MovingBonus(symbol, points);
+            var movingBonus = new MovingBonus(symbol, bonusValue(symbol));
             movingBonus.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
             // pass copy of list because route gets modified
             movingBonus.setRoute(new ArrayList<>(route), leftToRight);
