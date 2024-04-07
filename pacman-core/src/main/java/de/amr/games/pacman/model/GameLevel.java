@@ -89,7 +89,7 @@ public class GameLevel {
         ghosts().forEach(ghost -> {
             ghost.reset();
             ghost.setHouse(world.house());
-            ghost.setFrightenedBehavior(this::frightenedGhostBehavior);
+            ghost.setFrightenedBehavior(g -> roam(g, world, frightenedGhostRelSpeed(g), pseudoRandomDirection()));
             ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));
             ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
             ghost.setPixelPerTickReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
@@ -327,19 +327,8 @@ public class GameLevel {
         };
     }
 
-    /**
-     * <p>
-     * Frightened ghosts choose a "random" direction when they enter a new tile. If the chosen direction
-     * can be taken, it is stored and taken as soon as possible. Otherwise, the remaining directions are checked in
-     * clockwise order.
-     * </p>
-     *
-     * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
-     */
-    private void frightenedGhostBehavior(Ghost ghost) {
-        byte relSpeed = world.isTunnel(ghost.tile())
-            ? data.ghostSpeedTunnelPercentage() : data.ghostSpeedFrightenedPercentage();
-        roam(ghost, world, relSpeed, pseudoRandomDirection());
+    private byte frightenedGhostRelSpeed(Ghost ghost) {
+        return world.isTunnel(ghost.tile()) ? data.ghostSpeedTunnelPercentage() : data.ghostSpeedFrightenedPercentage();
     }
 
     private static Direction pseudoRandomDirection() {

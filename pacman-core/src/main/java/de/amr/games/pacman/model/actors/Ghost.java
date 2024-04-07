@@ -337,11 +337,16 @@ public class Ghost extends Creature {
     // --- FRIGHTENED ---
 
     /**
-     * When frightened, a ghost moves randomly through the world, at each new tile he randomly decides where to move next.
-     * Reversing the move direction is not allowed in this state either.
      * <p>
      * A frightened ghost has a blue color and starts flashing blue/white shortly (how long exactly?) before Pac-Man loses
-     * his power. Speed is about half of the normal speed.
+     * his power. Speed is about half of the normal speed. Reversing the move direction is not allowed in this state either.
+     * </p><p>
+     * Frightened ghosts choose a "random" direction when they enter a new tile. If the chosen direction
+     * can be taken, it is stored and taken as soon as possible. Otherwise, the remaining directions are checked in
+     * clockwise order.
+     * </p>
+     *
+     * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void updateStateFrightened(Pac pac) {
         frightenedBehavior.accept(this);

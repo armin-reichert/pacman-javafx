@@ -489,11 +489,10 @@ public enum GameModel implements EnumMethods<GameModel> {
     }
 
     public void updateHighScore() {
-        var file = highScoreFile();
         var oldHighScore = new Score();
-        oldHighScore.loadFromFile(file);
+        oldHighScore.loadFromFile(highScoreFile());
         if (highScore.points() > oldHighScore.points()) {
-            highScore.saveToFile(file, String.format("%s High Score", name()));
+            highScore.saveToFile(highScoreFile(), String.format("%s High Score", name()));
         }
     }
 
