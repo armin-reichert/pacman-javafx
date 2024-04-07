@@ -36,6 +36,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         private static final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
         private static final byte[] BONUS_VALUE_BY_100 = {1, 2, 5, 7, 10, 20, 50}; // * 100
+        private static final String[] GHOST_NAMES = { "Blinky", "Pinky", "Inky", "Sue" };
 
         /**
          * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
@@ -55,13 +56,8 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         @Override
         public String ghostName(byte id) {
-            return switch(id) {
-                case RED_GHOST    -> "Blinky";
-                case PINK_GHOST   -> "Pinky";
-                case CYAN_GHOST   -> "Inky";
-                case ORANGE_GHOST -> "Sue";
-                default -> throw new IllegalGhostIDException(id);
-            };
+            checkGhostID(id);
+            return GHOST_NAMES[id];
         }
 
         public boolean isBonusReached(GameLevel level) {
@@ -234,6 +230,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         private static final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-pacman.xml");
         private static final byte[] BONUS_VALUE_BY_100 = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
+        private static final String[] GHOST_NAMES = { "Blinky", "Pinky", "Inky", "Clyde" };
 
         // Hunting duration (in ticks) of chase and scatter phases. See Pac-Man dossier.
         private static final int[][] HUNTING_DURATIONS = {
@@ -249,13 +246,8 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         @Override
         public String ghostName(byte id) {
-            return switch(id) {
-                case RED_GHOST    -> "Blinky";
-                case PINK_GHOST   -> "Pinky";
-                case CYAN_GHOST   -> "Inky";
-                case ORANGE_GHOST -> "Clyde";
-                default -> throw new IllegalGhostIDException(id);
-            };
+            checkGhostID(id);
+            return GHOST_NAMES[id];
         }
 
         public boolean isBonusReached(GameLevel level) {
