@@ -60,6 +60,7 @@ public enum GameModel implements EnumMethods<GameModel> {
             return GHOST_NAMES[id];
         }
 
+        @Override
         public boolean isBonusReached(GameLevel level) {
             return level.world().eatenFoodCount() == 64 || level.world().eatenFoodCount() == 176;
         }
@@ -171,7 +172,6 @@ public enum GameModel implements EnumMethods<GameModel> {
             return movingBonus;
         }
 
-
         @Override
         public int[] huntingDurations(int levelNumber) {
             return HUNTING_DURATIONS[levelNumber <= 4 ? 0 : 1];
@@ -182,14 +182,10 @@ public enum GameModel implements EnumMethods<GameModel> {
             return HIGH_SCORE_FILE;
         }
 
-        private World createWorld(int levelNumber) {
-            return createMsPacManWorld(mapNumberMsPacMan(levelNumber));
-        }
-
         @Override
         public void createAndStartLevel(int levelNumber) {
             checkLevelNumber(levelNumber);
-            var level = new GameLevel(levelData(levelNumber, false), createWorld(levelNumber));
+            var level = new GameLevel(levelData(levelNumber, false), createMsPacManWorld(mapNumberMsPacMan(levelNumber)));
             setLevel(level);
             if (levelNumber == 1) {
                 levelCounter.clear();
@@ -211,7 +207,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         @Override
         public void createAndStartDemoLevel() {
-            var level = new GameLevel(levelData(1, true), createWorld(1));
+            var level = new GameLevel(levelData(1, true), createMsPacManWorld(1));
             setLevel(level);
             level.pac().setAutopilot(new RuleBasedPacSteering(level));
             level.pac().setUseAutopilot(true);
@@ -250,11 +246,13 @@ public enum GameModel implements EnumMethods<GameModel> {
             return GHOST_NAMES[id];
         }
 
+        @Override
         public boolean isBonusReached(GameLevel level) {
             return level.world().eatenFoodCount() == 70 || level.world().eatenFoodCount() == 170;
         }
 
         // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
+        @Override
         public byte nextBonusSymbol(int levelNumber) {
             return switch (levelNumber) {
                 case 1 ->      0; // Cherries
