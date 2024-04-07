@@ -16,7 +16,10 @@ import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
@@ -190,7 +193,7 @@ public enum GameModel implements EnumMethods<GameModel> {
         @Override
         public void createAndStartLevel(int levelNumber) {
             checkLevelNumber(levelNumber);
-            var level = new GameLevel(levelNumber, levelData(levelNumber), createWorld(levelNumber), false);
+            var level = new GameLevel(levelData(levelNumber), createWorld(levelNumber), false);
             setLevel(level);
             if (levelNumber == 1) {
                 levelCounter.clear();
@@ -212,7 +215,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         @Override
         public void createAndStartDemoLevel() {
-            var level = new GameLevel(1, levelData(1), createWorld(1),  true);
+            var level = new GameLevel(levelData(1), createWorld(1),  true);
             setLevel(level);
             level.pac().setAutopilot(new RuleBasedPacSteering(level));
             level.pac().setUseAutopilot(true);
@@ -302,7 +305,7 @@ public enum GameModel implements EnumMethods<GameModel> {
         @Override
         public void createAndStartLevel(int levelNumber) {
             checkLevelNumber(levelNumber);
-            var level = new GameLevel(levelNumber, levelData(levelNumber), createPacManWorld(), false);
+            var level = new GameLevel(levelData(levelNumber), createPacManWorld(), false);
             setLevel(level);
             if (levelNumber == 1) {
                 levelCounter.clear();
@@ -320,7 +323,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         @Override
         public void createAndStartDemoLevel() {
-            var level = new GameLevel(1, levelData(1), createPacManWorld(),  true);
+            var level = new GameLevel(levelData(1), createPacManWorld(),  true);
             setLevel(level);
             level.pac().setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
             level.pac().setUseAutopilot(true);
@@ -381,10 +384,10 @@ public enum GameModel implements EnumMethods<GameModel> {
         /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0},
     };
 
-    public static GameLevelData levelData(int levelNumber) {
+    public static GameLevel.Data levelData(int levelNumber) {
         checkLevelNumber(levelNumber);
         int index = Math.min(levelNumber - 1, RAW_LEVEL_DATA.length - 1);
-        return new GameLevelData(RAW_LEVEL_DATA[index]);
+        return new GameLevel.Data(levelNumber, RAW_LEVEL_DATA[index]);
     }
 
     protected final List<GameEventListener> gameEventListeners = new ArrayList<>();

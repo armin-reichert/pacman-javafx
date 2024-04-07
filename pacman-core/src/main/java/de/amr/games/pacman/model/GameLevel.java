@@ -31,9 +31,29 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public class GameLevel {
 
-    private final int levelNumber;
+    public record Data(
+        int number, // Level number, starts at 1.
+        byte pacSpeedPercentage, // Relative Pac-Man speed (percentage of base speed).
+        byte ghostSpeedPercentage, // Relative ghost speed when hunting or scattering.
+        byte ghostSpeedTunnelPercentage, // Relative ghost speed inside tunnel.
+        byte elroy1DotsLeft,//  Number of pellets left when Blinky becomes "Cruise Elroy" grade 1.
+        byte elroy1SpeedPercentage, // Relative speed of Blinky being "Cruise Elroy" grade 1.
+        byte elroy2DotsLeft, // Number of pellets left when Blinky becomes "Cruise Elroy" grade 2.
+        byte elroy2SpeedPercentage, //Relative speed of Blinky being "Cruise Elroy" grade 2.
+        byte pacSpeedPoweredPercentage, // Relative speed of Pac-Man in power mode.
+        byte ghostSpeedFrightenedPercentage, // Relative speed of frightened ghost.
+        byte pacPowerSeconds, // Number of seconds Pac-Man gets power.
+        byte numFlashes, // Number of maze flashes at end of this level.
+        byte intermissionNumber) // Number of intermission scene played after this level (1-3. 0 = no intermission).
+    {
+        public Data(int number, byte[] data) {
+            this(number, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8],
+                data[9], data[10], data[11]);
+        }
+    }
+
+    private final Data data;
     private final boolean demoLevel;
-    private final GameLevelData data;
     private final TickTimer huntingTimer = new TickTimer("HuntingTimer");
     private final World world;
     private final Pac pac;
@@ -47,17 +67,15 @@ public class GameLevel {
     private SimulationStepEventLog eventLog;
     private byte bonusReachedIndex; // -1=no bonus, 0=first, 1=second
 
-    public GameLevel(int levelNumber, GameLevelData levelData, World world, boolean demoLevel) {
-        checkLevelNumber(levelNumber);
+    public GameLevel(Data levelData, World world, boolean demoLevel) {
         checkNotNull(levelData);
         checkNotNull(world);
 
         this.world = world;
-        this.levelNumber = levelNumber;
         this.data = levelData;
         this.demoLevel = demoLevel;
 
-        houseControl = new GhostHouseControl(levelNumber);
+        houseControl = new GhostHouseControl(levelData.number());
         eventLog = new SimulationStepEventLog();
         bonusReachedIndex = -1;
 
@@ -93,9 +111,9 @@ public class GameLevel {
             }
         }
 
-        bonusSymbols = game().supplyBonusSymbols(levelNumber);
+        bonusSymbols = game().supplyBonusSymbols(levelData.number());
 
-        Logger.trace("Game level {} created.", levelNumber);
+        Logger.trace("Game level {} created.", levelData.number());
     }
 
     public Direction initialGhostDirection(byte ghostID) {
@@ -140,7 +158,7 @@ public class GameLevel {
         };
     }
 
-    public GameLevelData data() {
+    public Data data() {
         return data;
     }
 
@@ -160,7 +178,7 @@ public class GameLevel {
      * @return level number, starting with 1.
      */
     public int number() {
-        return levelNumber;
+        return data().number();
     }
 
     public World world() {
@@ -242,7 +260,7 @@ public class GameLevel {
             throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + index);
         }
         huntingPhaseIndex = (byte) index;
-        var durations = game().huntingDurations(levelNumber);
+        var durations = game().huntingDurations(number());
         var ticks = durations[index] == -1 ? TickTimer.INDEFINITE : durations[index];
         huntingTimer.reset(ticks);
         huntingTimer.start();
@@ -414,7 +432,7 @@ public class GameLevel {
         game().score().setPoints(newScore);
         if (newScore > game().highScore().points()) {
             game().highScore().setPoints(newScore);
-            game().highScore().setLevelNumber(levelNumber);
+            game().highScore().setLevelNumber(number());
             game().highScore().setDate(LocalDate.now());
         }
         if (oldScore < EXTRA_LIFE_SCORE && newScore >= EXTRA_LIFE_SCORE) {
@@ -571,7 +589,7 @@ public class GameLevel {
                 ghosts().forEach(Ghost::hide);
                 bonus().ifPresent(Bonus::setInactive);
                 world().mazeFlashing().reset();
-                game().createAndStartLevel(levelNumber + 1);
+                game().createAndStartLevel(number() + 1);
                 timer.restartIndefinitely();
             }
             world().energizerBlinking().tick();
@@ -589,7 +607,7 @@ public class GameLevel {
             if (totalNumGhostsKilled == 16) {
                 int points = GameModel.POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
                 scorePoints(points);
-                Logger.info("Scored {} points for killing all ghosts at level {}", points, levelNumber);
+                Logger.info("Scored {} points for killing all ghosts at level {}", points, number());
             }
         }
     }
