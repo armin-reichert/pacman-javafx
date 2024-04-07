@@ -33,6 +33,7 @@ public class GameLevel {
 
     public record Data(
         int number, // Level number, starts at 1.
+        boolean demoLevel,
         byte pacSpeedPercentage, // Relative Pac-Man speed (percentage of base speed).
         byte ghostSpeedPercentage, // Relative ghost speed when hunting or scattering.
         byte ghostSpeedTunnelPercentage, // Relative ghost speed inside tunnel.
@@ -44,16 +45,15 @@ public class GameLevel {
         byte ghostSpeedFrightenedPercentage, // Relative speed of frightened ghost.
         byte pacPowerSeconds, // Number of seconds Pac-Man gets power.
         byte numFlashes, // Number of maze flashes at end of this level.
-        byte intermissionNumber) // Number of intermission scene played after this level (1-3. 0 = no intermission).
+        byte intermissionNumber) // Number (1,2,3) of intermission scene played after this level (0=no intermission).
     {
-        public Data(int number, byte[] data) {
-            this(number, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8],
+        public Data(int number, boolean demoLevel, byte[] data) {
+            this(number, demoLevel, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8],
                 data[9], data[10], data[11]);
         }
     }
 
     private final Data data;
-    private final boolean demoLevel;
     private final TickTimer huntingTimer = new TickTimer("HuntingTimer");
     private final World world;
     private final Pac pac;
@@ -67,13 +67,12 @@ public class GameLevel {
     private SimulationStepEventLog eventLog;
     private byte bonusReachedIndex; // -1=no bonus, 0=first, 1=second
 
-    public GameLevel(Data levelData, World world, boolean demoLevel) {
+    public GameLevel(Data levelData, World world) {
         checkNotNull(levelData);
         checkNotNull(world);
 
         this.world = world;
         this.data = levelData;
-        this.demoLevel = demoLevel;
 
         houseControl = new GhostHouseControl(levelData.number());
         eventLog = new SimulationStepEventLog();
@@ -171,7 +170,7 @@ public class GameLevel {
     }
 
     public boolean isDemoLevel() {
-        return demoLevel;
+        return data.demoLevel();
     }
 
     /**
@@ -424,7 +423,7 @@ public class GameLevel {
     /* --- Here comes the main logic of the game. --- */
 
     private void scorePoints(int points) {
-        if (demoLevel) {
+        if (isDemoLevel()) {
             return;
         }
         int oldScore = game().score().points();
