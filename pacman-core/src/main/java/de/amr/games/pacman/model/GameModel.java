@@ -34,6 +34,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
     MS_PACMAN {
 
+        private static final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
         private static final byte[] BONUS_VALUE_BY_100 = {1, 2, 5, 7, 10, 20, 50}; // * 100
 
         /**
@@ -66,7 +67,6 @@ public enum GameModel implements EnumMethods<GameModel> {
         public boolean isBonusReached(GameLevel level) {
             return level.world().eatenFoodCount() == 64 || level.world().eatenFoodCount() == 176;
         }
-
 
         /**
          * <p>Got this information from
@@ -183,7 +183,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         @Override
         public File highScoreFile() {
-            return new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
+            return HIGH_SCORE_FILE;
         }
 
         private World createWorld(int levelNumber) {
@@ -232,6 +232,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
     PACMAN {
 
+        private static final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-pacman.xml");
         private static final byte[] BONUS_VALUE_BY_100 = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
 
         // Hunting duration (in ticks) of chase and scatter phases. See Pac-Man dossier.
@@ -299,7 +300,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         @Override
         public File highScoreFile() {
-            return new File(System.getProperty("user.home"), "highscore-pacman.xml");
+            return HIGH_SCORE_FILE;
         }
 
         @Override
