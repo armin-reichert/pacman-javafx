@@ -35,7 +35,7 @@ public enum GameModel implements EnumMethods<GameModel> {
     MS_PACMAN {
 
         private static final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
-        private static final byte[] BONUS_VALUE_BY_100 = {1, 2, 5, 7, 10, 20, 50}; // * 100
+        private static final byte[] BONUS_VALUE_FACTOR = {1, 2, 5, 7, 10, 20, 50}; // * 100
         private static final String[] GHOST_NAMES = { "Blinky", "Pinky", "Inky", "Sue" };
 
         /**
@@ -123,7 +123,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         @Override
         public int bonusValue(byte symbol) {
-            return BONUS_VALUE_BY_100[symbol] * 100;
+            return BONUS_VALUE_FACTOR[symbol] * 100;
         }
 
         @Override
@@ -220,7 +220,7 @@ public enum GameModel implements EnumMethods<GameModel> {
         private static final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-pacman.xml");
         private static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {7 /* default */, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
 
-        private static final byte[] BONUS_VALUE_BY_100 = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
+        private static final byte[] BONUS_VALUE_FACTOR = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
         private static final String[] GHOST_NAMES = { "Blinky", "Pinky", "Inky", "Clyde" };
 
         // Hunting duration (in ticks) of chase and scatter phases. See Pac-Man dossier.
@@ -262,7 +262,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         @Override
         public int bonusValue(byte symbol) {
-            return BONUS_VALUE_BY_100[symbol] * 100;
+            return BONUS_VALUE_FACTOR[symbol] * 100;
         }
 
         @Override
