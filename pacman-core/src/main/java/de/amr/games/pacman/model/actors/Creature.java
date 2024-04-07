@@ -163,6 +163,17 @@ public abstract class Creature extends Entity {
     }
 
     /**
+     * @param numTiles number of tiles
+     * @return the tile located the given number of tiles towards the current move direction of the creature.
+     * In case the creature looks UP, additional {@code numTiles} tiles are added towards LEFT.
+     * This simulates an overflow bug in the original Arcade games.
+     */
+    public Vector2i tilesAheadWithOverflowBug(int numTiles) {
+        Vector2i ahead = tile().plus(moveDir.vector().scaled(numTiles));
+        return moveDir == Direction.UP ? ahead.minus(numTiles, 0) : ahead;
+    }
+
+    /**
      * Signals that this creature should reverse its move direction as soon as possible.
      */
     public void reverseAsSoonAsPossible() {
