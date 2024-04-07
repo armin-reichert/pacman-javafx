@@ -178,7 +178,7 @@ public enum GameModel implements EnumMethods<GameModel> {
         @Override
         public void createAndStartLevel(int levelNumber) {
             checkLevelNumber(levelNumber);
-            var level = new GameLevel(levelData(levelNumber, false), createMsPacManWorld(mapNumberMsPacMan(levelNumber)));
+            var level = new GameLevel(createLevelData(levelNumber, false), createMsPacManWorld(mapNumberMsPacMan(levelNumber)));
             setLevel(level);
             if (levelNumber == 1) {
                 levelCounter.clear();
@@ -200,7 +200,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         @Override
         public void createAndStartDemoLevel() {
-            var level = new GameLevel(levelData(1, true), createMsPacManWorld(1));
+            var level = new GameLevel(createLevelData(1, true), createMsPacManWorld(1));
             setLevel(level);
             level.pac().setAutopilot(new RuleBasedPacSteering(level));
             level.pac().setUseAutopilot(true);
@@ -282,7 +282,7 @@ public enum GameModel implements EnumMethods<GameModel> {
         @Override
         public void createAndStartLevel(int levelNumber) {
             checkLevelNumber(levelNumber);
-            var level = new GameLevel(levelData(levelNumber, false), createPacManWorld());
+            var level = new GameLevel(createLevelData(levelNumber, false), createPacManWorld());
             setLevel(level);
             if (levelNumber == 1) {
                 levelCounter.clear();
@@ -300,7 +300,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         @Override
         public void createAndStartDemoLevel() {
-            var level = new GameLevel(levelData(1, true), createPacManWorld());
+            var level = new GameLevel(createLevelData(1, true), createPacManWorld());
             setLevel(level);
             level.pac().setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
             level.pac().setUseAutopilot(true);
@@ -361,7 +361,7 @@ public enum GameModel implements EnumMethods<GameModel> {
         /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0},
     };
 
-    public static GameLevel.Data levelData(int levelNumber, boolean demoLevel) {
+    public static GameLevel.Data createLevelData(int levelNumber, boolean demoLevel) {
         checkLevelNumber(levelNumber);
         int index = Math.min(levelNumber - 1, RAW_LEVEL_DATA.length - 1);
         return new GameLevel.Data(levelNumber, demoLevel, RAW_LEVEL_DATA[index]);
