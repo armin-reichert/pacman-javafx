@@ -107,25 +107,18 @@ public enum GameModel implements EnumMethods<GameModel> {
          */
         @Override
         public byte nextBonusSymbol(int levelNumber) {
-            return switch (levelNumber) {
-                case 1 -> 0; // Cherries
-                case 2 -> 1; // Strawberry
-                case 3 -> 2; // Orange (not peach!)
-                case 4 -> 3; // Pretzel (a Brez'n, Herrgottsakra!)
-                case 5 -> 4; // Apple
-                case 6 -> 5; // Pear
-                case 7 -> 6; // Banana
-                default -> {
-                    int random = randomInt(0, 320);
-                    if (random <  50) yield 0; // 5/32
-                    if (random < 100) yield 1; // 5/32
-                    if (random < 150) yield 2; // 5/32
-                    if (random < 200) yield 3; // 5/32
-                    if (random < 240) yield 4; // 4/32
-                    if (random < 280) yield 5; // 4/32
-                    else              yield 6; // 4/32
-                }
-            };
+            checkLevelNumber(levelNumber);
+            if (levelNumber <= 7) {
+                return (byte) (levelNumber - 1);
+            }
+            int choice = randomInt(0, 320);
+            if (choice <  50) return 0; // 5/32 probability
+            if (choice < 100) return 1; // 5/32
+            if (choice < 150) return 2; // 5/32
+            if (choice < 200) return 3; // 5/32
+            if (choice < 240) return 4; // 4/32
+            if (choice < 280) return 5; // 4/32
+            else              return 6; // 4/32
         }
 
         @Override
@@ -225,6 +218,8 @@ public enum GameModel implements EnumMethods<GameModel> {
     PACMAN {
 
         private static final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-pacman.xml");
+        private static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {7 /* default */, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
+
         private static final byte[] BONUS_VALUE_BY_100 = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
         private static final String[] GHOST_NAMES = { "Blinky", "Pinky", "Inky", "Clyde" };
 
@@ -254,16 +249,7 @@ public enum GameModel implements EnumMethods<GameModel> {
         // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
         @Override
         public byte nextBonusSymbol(int levelNumber) {
-            return switch (levelNumber) {
-                case 1 ->      0; // Cherries
-                case 2 ->      1; // Strawberry;
-                case 3, 4 ->   2; // peach
-                case 5, 6 ->   3; // Apple;
-                case 7, 8 ->   4; // Grapes;
-                case 9, 10 ->  5; // Galaxian
-                case 11, 12 -> 6; // Bell
-                default ->     7; // Key
-            };
+            return BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber < 13 ? levelNumber : 0];
         }
 
         @Override
