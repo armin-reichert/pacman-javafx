@@ -348,7 +348,7 @@ public class GameLevel {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void frightenedGhostBehavior(Ghost ghost) {
-        byte relSpeed = world().isTunnel(ghost.tile())
+        byte relSpeed = world.isTunnel(ghost.tile())
             ? data.ghostSpeedTunnelPercentage() : data.ghostSpeedFrightenedPercentage();
         roam(ghost, world, relSpeed, pseudoRandomDirection());
     }
@@ -573,7 +573,7 @@ public class GameLevel {
                 bonus().ifPresent(bonus -> bonus.setEaten(120));
                 game().publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer.atSecond(4.5)) {
-                bonus.setInactive();//TODO
+                bonus().ifPresent(Bonus::setInactive); // needed?
                 onBonusReached(1);
             } else if (timer.atSecond(6.5)) {
                 bonus().ifPresent(bonus -> bonus.setEaten(60));
@@ -581,18 +581,17 @@ public class GameLevel {
             } else if (timer.atSecond(8.5)) {
                 pac.hide();
                 ghosts().forEach(Ghost::hide);
-                var flashing = world().mazeFlashing();
-                flashing.restart(2 * data.numFlashes());
+                world.mazeFlashing().restart(2 * data.numFlashes());
             } else if (timer.atSecond(12.0)) {
+                timer.restartIndefinitely();
                 pac.freeze();
                 ghosts().forEach(Ghost::hide);
                 bonus().ifPresent(Bonus::setInactive);
-                world().mazeFlashing().reset();
+                world.mazeFlashing().reset();
                 game().createAndStartLevel(number() + 1);
-                timer.restartIndefinitely();
             }
-            world().energizerBlinking().tick();
-            world().mazeFlashing().tick();
+            world.energizerBlinking().tick();
+            world.mazeFlashing().tick();
             ghosts().forEach(ghost -> ghost.update(pac, world));
             bonus().ifPresent(bonus -> bonus.update(this));
         } else {
@@ -636,10 +635,13 @@ public class GameLevel {
     /**
      * Called on bonus achievement (public access for unit tests and level test).
      *
-     * @param bonusIndex bonus index (0 or 1).
+     * @param index bonus index (0 or 1).
      */
-    public void onBonusReached(int bonusIndex) {
-        bonus = game().createNextBonus(world, bonus, bonusIndex, bonusSymbol(bonusIndex));
+    public void onBonusReached(int index) {
+        if (index < 0 || index > 1) {
+            throw new IllegalArgumentException("Bonus index must be 0 or 1");
+        }
+        bonus = game().createNextBonus(world, bonus, index, bonusSymbol(index)).orElse(null);
         if (bonus != null) {
             game().publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
         }

@@ -137,14 +137,14 @@ public enum GameModel implements EnumMethods<GameModel> {
         }
 
         @Override
-        public Bonus createNextBonus(World world, Bonus existingBonus, int bonusIndex, byte symbol) {
+        public Optional<Bonus> createNextBonus(World world, Bonus existingBonus, int bonusIndex, byte symbol) {
             if (existingBonus != null && existingBonus.state() != Bonus.STATE_INACTIVE) {
                 Logger.info("Previous bonus is still active, skip this one");
-                return null;
+                return Optional.empty();
             }
             var bonus = createMovingBonus(world, symbol, bonusValue(symbol), RND.nextBoolean());
             bonus.setEdible(TickTimer.INDEFINITE);
-            return bonus;
+            return Optional.of(bonus);
         }
 
         /**
@@ -276,11 +276,11 @@ public enum GameModel implements EnumMethods<GameModel> {
         }
 
         @Override
-        public Bonus createNextBonus(World world, Bonus existingBonus, int bonusIndex, byte symbol) {
+        public Optional<Bonus> createNextBonus(World world, Bonus existingBonus, int bonusIndex, byte symbol) {
             var bonus = new StaticBonus(symbol, bonusValue(symbol));
             bonus.entity().setPosition(ArcadeWorld.BONUS_POSITION);
             bonus.setEdible(randomInt(9 * FPS, 10 * FPS));
-            return bonus;
+            return Optional.of(bonus);
         }
 
         @Override
@@ -414,7 +414,7 @@ public enum GameModel implements EnumMethods<GameModel> {
         return List.of(nextBonusSymbol(levelNumber), nextBonusSymbol(levelNumber));
     }
 
-    public abstract Bonus createNextBonus(World world, Bonus bonus, int bonusIndex, byte symbol);
+    public abstract Optional<Bonus> createNextBonus(World world, Bonus bonus, int bonusIndex, byte symbol);
 
     public abstract int[] huntingDurations(int levelNumber);
 
