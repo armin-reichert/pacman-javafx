@@ -733,7 +733,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void cheatAddLives() {
-        game().addLives((short) 3);
+        game().addLives(3);
         showFlashMessage(tt("cheat_add_lives", game().lives()));
     }
 

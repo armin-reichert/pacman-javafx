@@ -99,7 +99,7 @@ public interface GameModel {
 
     int lives();
 
-    void addLives(short lives);
+    void addLives(int lives);
 
     void loseLife();
 
@@ -112,6 +112,8 @@ public interface GameModel {
     Score score();
 
     Score highScore();
+
+    void scorePoints(int levelNumber, int points);
 
     void updateHighScore();
 

@@ -17,6 +17,7 @@ import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -438,8 +439,8 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
     }
 
     @Override
-    public void addLives(short lives) {
-        this.lives += lives;
+    public void addLives(int lives) {
+        this.lives += (short) lives;
     }
 
     @Override
@@ -466,6 +467,22 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
     @Override
     public Score score() {
         return score;
+    }
+
+    @Override
+    public void scorePoints(int levelNumber, int points) {
+        int oldScore = score.points();
+        int newScore = oldScore + points;
+        score.setPoints(newScore);
+        if (newScore > highScore.points()) {
+            highScore.setPoints(newScore);
+            highScore.setLevelNumber(levelNumber);
+            highScore.setDate(LocalDate.now());
+        }
+        if (oldScore < EXTRA_LIFE_SCORE && newScore >= EXTRA_LIFE_SCORE) {
+            addLives(1);
+            publishGameEvent(GameEventType.EXTRA_LIFE_WON);
+        }
     }
 
     @Override

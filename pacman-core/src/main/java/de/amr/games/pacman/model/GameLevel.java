@@ -376,20 +376,8 @@ public class GameLevel {
     /* --- Here comes the main logic of the game. --- */
 
     private void scorePoints(int points) {
-        if (isDemoLevel()) {
-            return;
-        }
-        int oldScore = game().score().points();
-        int newScore = oldScore + points;
-        game().score().setPoints(newScore);
-        if (newScore > game().highScore().points()) {
-            game().highScore().setPoints(newScore);
-            game().highScore().setLevelNumber(number());
-            game().highScore().setDate(LocalDate.now());
-        }
-        if (oldScore < GameModel.EXTRA_LIFE_SCORE && newScore >= GameModel.EXTRA_LIFE_SCORE) {
-            game().addLives((short) 1);
-            game().publishGameEvent(GameEventType.EXTRA_LIFE_WON);
+        if (!isDemoLevel()) {
+            game().scorePoints(number(), points);
         }
     }
 
