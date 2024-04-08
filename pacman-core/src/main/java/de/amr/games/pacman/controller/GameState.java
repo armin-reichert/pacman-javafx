@@ -234,7 +234,7 @@ public enum GameState implements FsmState<GameModel> {
                     gameController().resumePreviousState();
                 } else {
                     level.ghosts(GhostState.EATEN, GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
-                        .forEach(ghost -> ghost.update(level.pac(), level.world()));
+                        .forEach(ghost -> ghost.update(level));
                     level.world().energizerBlinking().tick();
                 }
             });

@@ -7,6 +7,7 @@ package de.amr.games.pacman.model.actors;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
@@ -16,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static de.amr.games.pacman.lib.Direction.*;
@@ -44,7 +46,7 @@ public class Ghost extends Creature {
     private final byte id;
     private final String name;
     private GhostState state;
-    private Consumer<Ghost> huntingBehavior;
+    private BiConsumer<Ghost, GameLevel> huntingBehavior;
     private Consumer<Ghost> frightenedBehavior;
     private House house;
     private Vector2f revivalPosition;
@@ -106,11 +108,11 @@ public class Ghost extends Creature {
         revivalPosition = position;
     }
 
-    public void setPixelPerTickReturningHome(float pixelsPerTick) {
+    public void setSpeedReturningHome(float pixelsPerTick) {
         speedReturningToHouse = pixelsPerTick;
     }
 
-    public void setPixelPerTickInhouse(float pixelsPerTick) {
+    public void setSpeedInsideHouse(float pixelsPerTick) {
         speedInsideHouse = pixelsPerTick;
     }
 
@@ -118,7 +120,7 @@ public class Ghost extends Creature {
         forbiddenMoves = moves;
     }
 
-    public void setHuntingBehavior(Consumer<Ghost> function) {
+    public void setHuntingBehavior(BiConsumer<Ghost, GameLevel> function) {
         checkNotNull(function);
         huntingBehavior = function;
     }
@@ -232,17 +234,17 @@ public class Ghost extends Creature {
     /**
      * Executes a single simulation step for this ghost in the current game level.
      *
-     * @param pac Pac-Man or Ms. Pac-Man
+     * @param level game level
      */
-    public void update(Pac pac, World world) {
-        checkNotNull(pac);
+    public void update(GameLevel level) {
+        checkLevelNotNull(level);
         switch (state) {
-            case LOCKED             -> updateStateLocked(pac);
-            case LEAVING_HOUSE      -> updateStateLeavingHouse(pac);
-            case HUNTING_PAC        -> updateStateHuntingPac();
-            case FRIGHTENED         -> updateStateFrightened(pac);
+            case LOCKED             -> updateStateLocked(level.pac());
+            case LEAVING_HOUSE      -> updateStateLeavingHouse(level.pac());
+            case HUNTING_PAC        -> updateStateHuntingPac(level);
+            case FRIGHTENED         -> updateStateFrightened(level.pac());
             case EATEN              -> updateStateEaten();
-            case RETURNING_TO_HOUSE -> updateStateReturningToHouse(world);
+            case RETURNING_TO_HOUSE -> updateStateReturningToHouse(level.world());
             case ENTERING_HOUSE     -> updateStateEnteringHouse();
         }
     }
@@ -331,8 +333,8 @@ public class Ghost extends Creature {
      * is an "infinite" chasing phase.
      * <p>
      */
-    private void updateStateHuntingPac() {
-        huntingBehavior.accept(this);
+    private void updateStateHuntingPac(GameLevel level) {
+        huntingBehavior.accept(this, level);
     }
 
     // --- FRIGHTENED ---

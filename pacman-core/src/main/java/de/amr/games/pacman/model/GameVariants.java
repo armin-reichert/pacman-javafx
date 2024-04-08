@@ -9,6 +9,7 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.model.world.ArcadeWorld;
@@ -23,6 +24,8 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
+import static de.amr.games.pacman.model.actors.CreatureMovement.followTarget;
+import static de.amr.games.pacman.model.actors.CreatureMovement.roam;
 import static de.amr.games.pacman.model.world.ArcadeWorld.*;
 
 /**
@@ -216,6 +219,21 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
             publishGameEvent(GameEventType.LEVEL_STARTED);
         }
 
+        /**
+         * <p>
+         * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* hunting/scatter phase. Some say,
+         * the original intention had been to randomize the scatter target of *all* ghosts in Ms. Pac-Man
+         * but because of a bug, only the scatter target of Blinky and Pinky would have been affected. Who knows?
+         * </p>
+         */
+        @Override
+        public void huntingBehaviour(Ghost ghost, GameLevel level) {
+            if (level.scatterPhase().isPresent() && (ghost.id() == GameModel.RED_GHOST || ghost.id() == GameModel.PINK_GHOST)) {
+                roam(ghost, level.world(), level.huntingSpeedPercentage(ghost), level.pseudoRandomDirection());
+            } else {
+                PACMAN.huntingBehaviour(ghost, level);
+            }
+        }
     },
 
     PACMAN {
@@ -316,6 +334,16 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
             level.letsGetReadyToRumble(true);
             Logger.info("Demo Level started ({})", this);
             publishGameEvent(GameEventType.LEVEL_STARTED);
+        }
+
+        @Override
+        public void huntingBehaviour(Ghost ghost, GameLevel level) {
+            byte relSpeed = level.huntingSpeedPercentage(ghost);
+            if (level.chasingPhase().isPresent() || ghost.id() == GameModel.RED_GHOST && level.cruiseElroyState() > 0) {
+                followTarget(ghost, level.world(), level.chasingTarget(ghost.id()), relSpeed);
+            } else {
+                followTarget(ghost, level.world(), level.ghostScatterTarget(ghost.id()), relSpeed);
+            }
         }
     };
 

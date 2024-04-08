@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.actors.CreatureMovement.followTarget;
 import static de.amr.games.pacman.model.actors.CreatureMovement.roam;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
@@ -92,23 +91,21 @@ public class GameLevel {
             ghost.reset();
             ghost.setHouse(world.house());
             ghost.setFrightenedBehavior(g -> roam(g, world, frightenedGhostRelSpeed(g), pseudoRandomDirection()));
+            ghost.setHuntingBehavior(game()::huntingBehaviour);
             ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));
             ghost.setBaseSpeed(GameModel.PPS_AT_100_PERCENT / (float) GameModel.FPS);
-            ghost.setPixelPerTickReturningHome(GameModel.PPS_GHOST_RETURNING_HOME / (float) GameModel.FPS);
-            ghost.setPixelPerTickInhouse(GameModel.PPS_GHOST_INHOUSE / (float) GameModel.FPS);
+            ghost.setSpeedReturningHome(GameModel.PPS_GHOST_RETURNING_HOME / (float) GameModel.FPS);
+            ghost.setSpeedInsideHouse(GameModel.PPS_GHOST_INHOUSE / (float) GameModel.FPS);
         });
 
         //TODO avoid switch over game variant
         switch (game()) {
-            case GameVariants.MS_PACMAN -> ghosts().forEach(ghost -> ghost.setHuntingBehavior(this::huntingBehaviorMsPacManGame));
+            case GameVariants.MS_PACMAN -> {}
             case GameVariants.PACMAN -> {
                 var forbiddenMovesAtTile = new HashMap<Vector2i, List<Direction>>();
                 var up = List.of(UP);
                 ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbiddenMovesAtTile.put(tile, up));
-                ghosts().forEach(ghost -> {
-                    ghost.setForbiddenMoves(forbiddenMovesAtTile);
-                    ghost.setHuntingBehavior(this::huntingBehaviorPacManGame);
-                });
+                ghosts().forEach(ghost -> ghost.setForbiddenMoves(forbiddenMovesAtTile));
             }
             default -> throw new IllegalGameVariantException(game());
         }
@@ -289,31 +286,7 @@ public class GameLevel {
         pac.die();
     }
 
-    /**
-     * <p>
-     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* hunting/scatter phase. Some say,
-     * the original intention had been to randomize the scatter target of *all* ghosts in Ms. Pac-Man
-     * but because of a bug, only the scatter target of Blinky and Pinky would have been affected. Who knows?
-     * </p>
-     */
-    private void huntingBehaviorMsPacManGame(Ghost ghost) {
-        if (scatterPhase().isPresent() && (ghost.id() == GameModel.RED_GHOST || ghost.id() == GameModel.PINK_GHOST)) {
-            roam(ghost, world, huntingSpeedPercentage(ghost), pseudoRandomDirection());
-        } else {
-            huntingBehaviorPacManGame(ghost);
-        }
-    }
-
-    private void huntingBehaviorPacManGame(Ghost ghost) {
-        byte relSpeed = huntingSpeedPercentage(ghost);
-        if (chasingPhase().isPresent() || ghost.id() == GameModel.RED_GHOST && cruiseElroyState > 0) {
-            followTarget(ghost, world, chasingTarget(ghost.id()), relSpeed);
-        } else {
-            followTarget(ghost, world, ghostScatterTarget(ghost.id()), relSpeed);
-        }
-    }
-
-    private Vector2i chasingTarget(byte ghostID) {
+    public Vector2i chasingTarget(byte ghostID) {
         return switch (ghostID) {
             // Blinky: attacks Pac-Man directly
             case GameModel.RED_GHOST -> pac.tile();
@@ -333,7 +306,7 @@ public class GameLevel {
         return world.isTunnel(ghost.tile()) ? data.ghostSpeedTunnelPercentage() : data.ghostSpeedFrightenedPercentage();
     }
 
-    private static Direction pseudoRandomDirection() {
+    public Direction pseudoRandomDirection() {
         float rnd = Globals.randomFloat(0, 100);
         if (rnd < 16.3) return UP;
         if (rnd < 16.3 + 25.2) return RIGHT;
@@ -515,7 +488,7 @@ public class GameLevel {
             }
             eventLog.unlockedGhost = ghost;
         });
-        ghosts().forEach(ghost -> ghost.update(pac, world));
+        ghosts().forEach(ghost -> ghost.update(this));
     }
 
     public GameState doHuntingStep() {
@@ -572,7 +545,7 @@ public class GameLevel {
             }
             world.energizerBlinking().tick();
             world.mazeFlashing().tick();
-            ghosts().forEach(ghost -> ghost.update(pac, world));
+            ghosts().forEach(ghost -> ghost.update(this));
             bonus().ifPresent(bonus -> bonus.update(this));
         } else {
             GameController.it().restart(GameState.BOOT);

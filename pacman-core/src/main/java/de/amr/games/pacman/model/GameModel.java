@@ -10,6 +10,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
@@ -105,6 +106,8 @@ public interface GameModel {
     List<Byte> levelCounter();
 
     void addSymbolToLevelCounter(byte symbol);
+
+    void huntingBehaviour(Ghost ghost, GameLevel level);
 
     Score score();
 
