@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.fx.page;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameModels;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
@@ -301,7 +301,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
     }
 
     private void showHelpInfoPopUp() {
-        var bgColor = sceneContext.game() == GameModel.MS_PACMAN
+        var bgColor = sceneContext.game() == GameModels.MS_PACMAN
             ? Color.rgb(255, 0, 0, 0.8)
             : Color.rgb(33, 33, 255, 0.8);
         var font = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * getScaling()));
@@ -317,7 +317,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
             info.addLocalizedEntry("help.start_game", "1");
         }
         info.addLocalizedEntry("help.add_credit", "5");
-        info.addLocalizedEntry(sceneContext.game() == GameModel.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
+        info.addLocalizedEntry(sceneContext.game() == GameModels.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
     }
 
     private void addInfoForQuittingScene(HelpInfo info) {

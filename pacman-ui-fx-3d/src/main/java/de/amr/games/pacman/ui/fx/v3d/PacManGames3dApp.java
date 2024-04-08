@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameModels;
 import de.amr.games.pacman.ui.fx.Settings;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -38,7 +38,7 @@ public class PacManGames3dApp extends Application {
     @Override
     public void start(Stage stage) {
         ui = new PacManGames3dUI(stage, settings);
-        for (var game : GameModel.values()) {
+        for (var game : GameModels.values()) {
             game.addGameEventListener(ui);
         }
         int hour = LocalTime.now().getHour();

@@ -7,6 +7,7 @@ package de.amr.games.pacman.model.actors;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
@@ -54,10 +55,10 @@ public class Ghost extends Creature {
 
     /**
      * @param id  The ghost ID. One of
-     * {@link de.amr.games.pacman.model.GameModel#RED_GHOST},
-     * {@link de.amr.games.pacman.model.GameModel#PINK_GHOST},
-     * {@link de.amr.games.pacman.model.GameModel#CYAN_GHOST},
-     * {@link de.amr.games.pacman.model.GameModel#ORANGE_GHOST}.
+     * {@link GameModel#RED_GHOST},
+     * {@link GameModel#PINK_GHOST},
+     * {@link GameModel#CYAN_GHOST},
+     * {@link GameModel#ORANGE_GHOST}.
      * @param name the ghost's readable name, e.g. "Pinky"
      */
     public Ghost(byte id, String name) {

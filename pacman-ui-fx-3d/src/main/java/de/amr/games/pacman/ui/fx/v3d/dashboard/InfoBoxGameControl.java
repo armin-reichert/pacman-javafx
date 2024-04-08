@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Globals;
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameModels;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.scene.control.Button;
@@ -32,7 +32,7 @@ public class InfoBoxGameControl extends InfoBox {
     private static final int INTERMISSION_TEST_QUIT = 1;
 
     private final Spinner<Integer> spinnerCredit;
-    private final ComboBox<GameModel> comboGameVariant;
+    private final ComboBox<GameModels> comboGameVariant;
     private final ComboBox<Integer> comboInitialLives;
     private final Button[] buttonsLevelActions;
     private final Spinner<Integer> spinnerLevelNumber;
@@ -44,7 +44,7 @@ public class InfoBoxGameControl extends InfoBox {
         super(theme, title);
 
         spinnerCredit = addSpinner("Credit", 0, GameController.MAX_CREDIT, 0);
-        comboGameVariant = addComboBox("Variant", GameModel.MS_PACMAN, GameModel.PACMAN);
+        comboGameVariant = addComboBox("Variant", GameModels.MS_PACMAN, GameModels.PACMAN);
         comboInitialLives = addComboBox("Initial Lives", 3, 5);
         buttonsLevelActions = addButtonList("Game Level", "Start", "Quit", "Next");
         spinnerLevelNumber = addSpinner("Level Number", 1, 100, 1);

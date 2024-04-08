@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.model.actors.CreatureMovement.followTarget;
 import static de.amr.games.pacman.model.actors.CreatureMovement.roam;
 import static de.amr.games.pacman.model.actors.GhostState.*;
@@ -83,10 +82,10 @@ public class GameLevel {
 
         pac = new Pac(game().pacName());
         pac.reset();
-        pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-        pac.setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
+        pac.setBaseSpeed(GameModel.PPS_AT_100_PERCENT / (float) GameModel.FPS);
+        pac.setPowerFadingTicks(GameModel.PAC_POWER_FADING_TICKS); // not sure about duration
 
-        ghosts = Stream.of(RED_GHOST, PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
+        ghosts = Stream.of(GameModel.RED_GHOST, GameModel.PINK_GHOST, GameModel.CYAN_GHOST, GameModel.ORANGE_GHOST)
             .map(id -> new Ghost(id, game().ghostName(id))).toArray(Ghost[]::new);
 
         ghosts().forEach(ghost -> {
@@ -94,9 +93,9 @@ public class GameLevel {
             ghost.setHouse(world.house());
             ghost.setFrightenedBehavior(g -> roam(g, world, frightenedGhostRelSpeed(g), pseudoRandomDirection()));
             ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));
-            ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-            ghost.setPixelPerTickReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
-            ghost.setPixelPerTickInhouse(PPS_GHOST_INHOUSE / (float) FPS);
+            ghost.setBaseSpeed(GameModel.PPS_AT_100_PERCENT / (float) GameModel.FPS);
+            ghost.setPixelPerTickReturningHome(GameModel.PPS_GHOST_RETURNING_HOME / (float) GameModel.FPS);
+            ghost.setPixelPerTickInhouse(GameModel.PPS_GHOST_INHOUSE / (float) GameModel.FPS);
         });
 
         //TODO avoid switch over game variant
@@ -120,9 +119,9 @@ public class GameLevel {
     public Direction initialGhostDirection(byte ghostID) {
         checkGhostID(ghostID);
         return switch (ghostID) {
-            case RED_GHOST -> LEFT;
-            case PINK_GHOST -> DOWN;
-            case CYAN_GHOST, ORANGE_GHOST -> UP;
+            case GameModel.RED_GHOST -> LEFT;
+            case GameModel.PINK_GHOST -> DOWN;
+            case GameModel.CYAN_GHOST, GameModel.ORANGE_GHOST -> UP;
             default -> throw new IllegalGhostIDException(ghostID);
         };
     }
@@ -130,10 +129,10 @@ public class GameLevel {
     public Vector2f initialGhostPosition(byte ghostID) {
         checkGhostID(ghostID);
         return switch (ghostID) {
-            case RED_GHOST    -> world.house().door().entryPosition();
-            case PINK_GHOST   -> ArcadeWorld.HOUSE_MIDDLE_SEAT;
-            case CYAN_GHOST   -> ArcadeWorld.HOUSE_LEFT_SEAT;
-            case ORANGE_GHOST -> ArcadeWorld.HOUSE_RIGHT_SEAT;
+            case GameModel.RED_GHOST    -> world.house().door().entryPosition();
+            case GameModel.PINK_GHOST   -> ArcadeWorld.HOUSE_MIDDLE_SEAT;
+            case GameModel.CYAN_GHOST   -> ArcadeWorld.HOUSE_LEFT_SEAT;
+            case GameModel.ORANGE_GHOST -> ArcadeWorld.HOUSE_RIGHT_SEAT;
             default -> throw new IllegalGhostIDException(ghostID);
         };
     }
@@ -141,9 +140,9 @@ public class GameLevel {
     public Vector2f ghostRevivalPosition(byte ghostID) {
         checkGhostID(ghostID);
         return switch (ghostID) {
-            case RED_GHOST, PINK_GHOST -> ArcadeWorld.HOUSE_MIDDLE_SEAT;
-            case CYAN_GHOST            -> ArcadeWorld.HOUSE_LEFT_SEAT;
-            case ORANGE_GHOST          -> ArcadeWorld.HOUSE_RIGHT_SEAT;
+            case GameModel.RED_GHOST, GameModel.PINK_GHOST -> ArcadeWorld.HOUSE_MIDDLE_SEAT;
+            case GameModel.CYAN_GHOST            -> ArcadeWorld.HOUSE_LEFT_SEAT;
+            case GameModel.ORANGE_GHOST          -> ArcadeWorld.HOUSE_RIGHT_SEAT;
             default -> throw new IllegalGhostIDException(ghostID);
         };
     }
@@ -151,10 +150,10 @@ public class GameLevel {
     public Vector2i ghostScatterTarget(byte ghostID) {
         checkGhostID(ghostID);
         return switch (ghostID) {
-            case RED_GHOST    -> ArcadeWorld.SCATTER_TARGET_RIGHT_UPPER_CORNER;
-            case PINK_GHOST   -> ArcadeWorld.SCATTER_TARGET_LEFT_UPPER_CORNER;
-            case CYAN_GHOST   -> ArcadeWorld.SCATTER_TARGET_RIGHT_LOWER_CORNER;
-            case ORANGE_GHOST -> ArcadeWorld.SCATTER_TARGET_LEFT_LOWER_CORNER;
+            case GameModel.RED_GHOST    -> ArcadeWorld.SCATTER_TARGET_RIGHT_UPPER_CORNER;
+            case GameModel.PINK_GHOST   -> ArcadeWorld.SCATTER_TARGET_LEFT_UPPER_CORNER;
+            case GameModel.CYAN_GHOST   -> ArcadeWorld.SCATTER_TARGET_RIGHT_LOWER_CORNER;
+            case GameModel.ORANGE_GHOST -> ArcadeWorld.SCATTER_TARGET_LEFT_LOWER_CORNER;
             default -> throw new IllegalGhostIDException(ghostID);
         };
     }
@@ -163,7 +162,7 @@ public class GameLevel {
         return data;
     }
 
-    public GameModel game() {
+    public GameModels game() {
         return GameController.it().game();
     }
 
@@ -297,7 +296,7 @@ public class GameLevel {
      * </p>
      */
     private void huntingBehaviorMsPacManGame(Ghost ghost) {
-        if (scatterPhase().isPresent() && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
+        if (scatterPhase().isPresent() && (ghost.id() == GameModel.RED_GHOST || ghost.id() == GameModel.PINK_GHOST)) {
             roam(ghost, world, huntingSpeedPercentage(ghost), pseudoRandomDirection());
         } else {
             huntingBehaviorPacManGame(ghost);
@@ -306,7 +305,7 @@ public class GameLevel {
 
     private void huntingBehaviorPacManGame(Ghost ghost) {
         byte relSpeed = huntingSpeedPercentage(ghost);
-        if (chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState > 0) {
+        if (chasingPhase().isPresent() || ghost.id() == GameModel.RED_GHOST && cruiseElroyState > 0) {
             followTarget(ghost, world, chasingTarget(ghost.id()), relSpeed);
         } else {
             followTarget(ghost, world, ghostScatterTarget(ghost.id()), relSpeed);
@@ -316,14 +315,14 @@ public class GameLevel {
     private Vector2i chasingTarget(byte ghostID) {
         return switch (ghostID) {
             // Blinky: attacks Pac-Man directly
-            case RED_GHOST -> pac.tile();
+            case GameModel.RED_GHOST -> pac.tile();
             // Pinky: ambushes Pac-Man
-            case PINK_GHOST -> pac.tilesAheadWithOverflowBug(4);
+            case GameModel.PINK_GHOST -> pac.tilesAheadWithOverflowBug(4);
             // Inky: attacks from opposite side as Blinky
-            case CYAN_GHOST -> pac.tilesAheadWithOverflowBug(2).scaled(2).minus(ghosts[RED_GHOST].tile());
+            case GameModel.CYAN_GHOST -> pac.tilesAheadWithOverflowBug(2).scaled(2).minus(ghosts[GameModel.RED_GHOST].tile());
             // Clyde/Sue: attacks directly but retreats if Pac is near
-            case ORANGE_GHOST -> ghosts[ORANGE_GHOST].tile().euclideanDistance(pac.tile()) < 8
-                ? ghostScatterTarget(ORANGE_GHOST)
+            case GameModel.ORANGE_GHOST -> ghosts[GameModel.ORANGE_GHOST].tile().euclideanDistance(pac.tile()) < 8
+                ? ghostScatterTarget(GameModel.ORANGE_GHOST)
                 : pac.tile();
             default -> throw new IllegalGhostIDException(ghostID);
         };
@@ -391,10 +390,10 @@ public class GameLevel {
         if (world.isTunnel(ghost.tile())) {
             return data.ghostSpeedTunnelPercentage();
         }
-        if (ghost.id() == RED_GHOST && cruiseElroyState == 1) {
+        if (ghost.id() == GameModel.RED_GHOST && cruiseElroyState == 1) {
             return data.elroy1SpeedPercentage();
         }
-        if (ghost.id() == RED_GHOST && cruiseElroyState == 2) {
+        if (ghost.id() == GameModel.RED_GHOST && cruiseElroyState == 2) {
             return data.elroy2SpeedPercentage();
         }
         return data.ghostSpeedPercentage();
@@ -414,7 +413,7 @@ public class GameLevel {
             game().highScore().setLevelNumber(number());
             game().highScore().setDate(LocalDate.now());
         }
-        if (oldScore < EXTRA_LIFE_SCORE && newScore >= EXTRA_LIFE_SCORE) {
+        if (oldScore < GameModel.EXTRA_LIFE_SCORE && newScore >= GameModel.EXTRA_LIFE_SCORE) {
             game().addLives((short) 1);
             game().publishGameEvent(GameEventType.EXTRA_LIFE_WON);
         }
@@ -509,7 +508,7 @@ public class GameLevel {
                 ghost.setMoveAndWishDir(LEFT);
                 ghost.setState(HUNTING_PAC);
             }
-            if (ghost.id() == ORANGE_GHOST && cruiseElroyState < 0) {
+            if (ghost.id() == GameModel.ORANGE_GHOST && cruiseElroyState < 0) {
                 enableCruiseElroyState(true);
                 Logger.trace("Cruise elroy mode re-enabled because {} exits house", ghost.name());
             }

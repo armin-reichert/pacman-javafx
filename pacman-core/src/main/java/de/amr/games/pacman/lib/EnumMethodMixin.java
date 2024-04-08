@@ -8,7 +8,7 @@ package de.amr.games.pacman.lib;
  * @param <E> enum type which should get these methods
  * @author Armin Reichert
  */
-public interface EnumMethods<E extends Enum<E>> {
+public interface EnumMethodMixin<E extends Enum<E>> {
 
     @SuppressWarnings("unchecked")
     default Class<E> getEnumClass() {

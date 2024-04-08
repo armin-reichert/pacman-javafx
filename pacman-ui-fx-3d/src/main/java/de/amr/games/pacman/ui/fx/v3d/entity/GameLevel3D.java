@@ -9,7 +9,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameModels;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -56,7 +56,7 @@ public class GameLevel3D extends Group {
     private static final float PAC_SIZE   = 9.0f;
     private static final float GHOST_SIZE = 9.0f;
 
-    private static FloorPlan readFloorPlanFromFile(GameModel variant, int mapNumber) {
+    private static FloorPlan readFloorPlanFromFile(GameModels variant, int mapNumber) {
         ResourceManager rm = () -> PacManGames3dUI.class;
         String variantMarker = switch (variant) {
             case MS_PACMAN -> "mspacman";
@@ -120,7 +120,7 @@ public class GameLevel3D extends Group {
             case MS_PACMAN -> {
                 int mapNumber  = ArcadeWorld.mapNumberMsPacMan(level.number());
                 int mazeNumber = ArcadeWorld.mazeNumberMsPacMan(level.number());
-                floorPlan = readFloorPlanFromFile(GameModel.MS_PACMAN, mapNumber);
+                floorPlan = readFloorPlanFromFile(GameModels.MS_PACMAN, mapNumber);
                 wallBuilder = createWallBuilder(
                     context.theme().color("mspacman.maze.wallBaseColor",  mazeNumber - 1),
                     context.theme().color("mspacman.maze.wallMiddleColor",mazeNumber - 1),
@@ -128,7 +128,7 @@ public class GameLevel3D extends Group {
                 createFood3D(context.theme().color("mspacman.maze.foodColor", mazeNumber - 1));
             }
             case PACMAN -> {
-                floorPlan = readFloorPlanFromFile(GameModel.PACMAN, 1);
+                floorPlan = readFloorPlanFromFile(GameModels.PACMAN, 1);
                 wallBuilder = createWallBuilder(
                     context.theme().color("pacman.maze.wallBaseColor"),
                     context.theme().color("pacman.maze.wallMiddleColor"),

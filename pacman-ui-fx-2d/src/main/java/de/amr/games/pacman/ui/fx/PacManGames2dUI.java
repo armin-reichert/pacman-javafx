@@ -11,6 +11,7 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameModels;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.page.GamePage;
 import de.amr.games.pacman.ui.fx.page.Page;
@@ -205,7 +206,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     protected final GameClock clock;
-    protected final Map<GameModel, Map<String, GameScene>> gameScenesByVariant = new EnumMap<>(GameModel.class);
+    protected final Map<GameModels, Map<String, GameScene>> gameScenesByVariant = new EnumMap<>(GameModels.class);
     protected final Stage stage;
     protected final Scene mainScene;
     protected final StartPage startPage;
@@ -234,7 +235,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         });
         clock.setOnRender(gamePage::render);
 
-        gameScenesByVariant.put(GameModel.MS_PACMAN, new HashMap<>(Map.of(
+        gameScenesByVariant.put(GameModels.MS_PACMAN, new HashMap<>(Map.of(
             "boot",   new BootScene(),
             "intro",  new MsPacManIntroScene(),
             "credit", new MsPacManCreditScene(),
@@ -243,7 +244,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             "cut2",   new MsPacManCutscene2(),
             "cut3",   new MsPacManCutscene3()
         )));
-        gameScenesByVariant.put(GameModel.PACMAN, new HashMap<>(Map.of(
+        gameScenesByVariant.put(GameModels.PACMAN, new HashMap<>(Map.of(
             "boot",   new BootScene(),
             "intro",  new PacManIntroScene(),
             "credit", new PacManCreditScene(),
@@ -335,7 +336,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     protected void updateStage() {
-        String variantKey = game() == GameModel.MS_PACMAN ? "mspacman" : "pacman";
+        String variantKey = game() == GameModels.MS_PACMAN ? "mspacman" : "pacman";
         String titleKey = "app.title." + variantKey;
         if (clock.isPaused()) {
             titleKey += ".paused";

@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameModels;
 import de.amr.games.pacman.ui.fx.util.GameClock;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -67,7 +67,7 @@ public interface GameSceneContext {
         return GameController.it().state();
     }
 
-    default GameModel game() {
+    default GameModels game() {
         return GameController.it().game();
     }
 

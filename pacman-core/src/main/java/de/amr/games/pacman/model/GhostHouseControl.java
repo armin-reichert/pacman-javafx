@@ -10,7 +10,6 @@ import org.tinylog.Logger;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.model.actors.GhostState.LOCKED;
 
 /**
@@ -111,9 +110,9 @@ public class GhostHouseControl {
     }
 
     private byte privateDotLimit(int levelNumber, Ghost ghost) {
-        if (levelNumber == 1 && ghost.id() == CYAN_GHOST)   return 30;
-        if (levelNumber == 1 && ghost.id() == ORANGE_GHOST) return 60;
-        if (levelNumber == 2 && ghost.id() == ORANGE_GHOST) return 50;
+        if (levelNumber == 1 && ghost.id() == GameModel.CYAN_GHOST)   return 30;
+        if (levelNumber == 1 && ghost.id() == GameModel.ORANGE_GHOST) return 60;
+        if (levelNumber == 2 && ghost.id() == GameModel.ORANGE_GHOST) return 50;
         return 0;
     }
 
@@ -125,8 +124,8 @@ public class GhostHouseControl {
 
     public void updateDotCount(GameLevel level) {
         if (globalCounterEnabled) {
-            if (level.ghost(ORANGE_GHOST).is(LOCKED) && globalCounter == 32) {
-                Logger.trace("{} inside house when global counter reached 32", level.ghost(ORANGE_GHOST).name());
+            if (level.ghost(GameModel.ORANGE_GHOST).is(LOCKED) && globalCounter == 32) {
+                Logger.trace("{} inside house when global counter reached 32", level.ghost(GameModel.ORANGE_GHOST).name());
                 resetGlobalCounterAndSetEnabled(false);
             } else {
                 globalCounter++;
@@ -143,10 +142,10 @@ public class GhostHouseControl {
     }
 
     public Optional<GhostUnlockInfo> unlockGhost(GameLevel level) {
-        if (level.ghost(RED_GHOST).is(LOCKED)) {
-            return Optional.of(new GhostUnlockInfo(level.ghost(RED_GHOST), "Gets unlocked immediately"));
+        if (level.ghost(GameModel.RED_GHOST).is(LOCKED)) {
+            return Optional.of(new GhostUnlockInfo(level.ghost(GameModel.RED_GHOST), "Gets unlocked immediately"));
         }
-        Ghost candidate = Stream.of(PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
+        Ghost candidate = Stream.of(GameModel.PINK_GHOST, GameModel.CYAN_GHOST, GameModel.ORANGE_GHOST)
             .map(level::ghost).filter(ghost -> ghost.is(LOCKED)).findFirst().orElse(null);
         if (candidate == null) {
             return Optional.empty();
