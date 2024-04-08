@@ -327,7 +327,6 @@ public enum GameModel implements EnumMethods<GameModel> {
     public static final byte PPS_AT_100_PERCENT = 75; // base speed (at 100% relative speed) in pixels/sec
     public static final byte PPS_GHOST_INHOUSE = 38; // correct?
     public static final short PPS_GHOST_RETURNING_HOME = 150; // correct?
-    public static final byte MAX_CREDIT = 99;
     public static final byte LEVEL_COUNTER_MAX_SYMBOLS = 7;
     public static final byte RESTING_TICKS_NORMAL_PELLET = 1;
     public static final byte RESTING_TICKS_ENERGIZER = 3;

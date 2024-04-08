@@ -30,6 +30,8 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class GameController extends Fsm<GameState, GameModel> {
 
+    public static final byte MAX_CREDIT = 99;
+
     private static final GameController IT = new GameController(GameModel.PACMAN);
 
     /**
@@ -72,7 +74,7 @@ public class GameController extends Fsm<GameState, GameModel> {
     }
 
     public boolean setCredit(int credit) {
-        if (0 <= credit && credit <= GameModel.MAX_CREDIT) {
+        if (0 <= credit && credit <= MAX_CREDIT) {
             this.credit = credit;
             return true;
         }

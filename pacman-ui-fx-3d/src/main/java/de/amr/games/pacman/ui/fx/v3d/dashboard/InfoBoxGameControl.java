@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameModel;
@@ -42,7 +43,7 @@ public class InfoBoxGameControl extends InfoBox {
     public InfoBoxGameControl(Theme theme, String title) {
         super(theme, title);
 
-        spinnerCredit = addSpinner("Credit", 0, GameModel.MAX_CREDIT, 0);
+        spinnerCredit = addSpinner("Credit", 0, GameController.MAX_CREDIT, 0);
         comboGameVariant = addComboBox("Variant", GameModel.MS_PACMAN, GameModel.PACMAN);
         comboInitialLives = addComboBox("Initial Lives", 3, 5);
         buttonsLevelActions = addButtonList("Game Level", "Start", "Quit", "Next");
