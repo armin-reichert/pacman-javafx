@@ -9,7 +9,8 @@ import de.amr.games.pacman.lib.FsmState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameModels;
+import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -339,9 +340,10 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             lastTestedLevel = switch (game) {
-                case GameModels.MS_PACMAN -> 18;
-                case GameModels.PACMAN -> 20;
-                default -> throw new IllegalArgumentException("Illegal game model value: " + game);
+                case GameVariants.MS_PACMAN -> 18;
+                case GameVariants.PACMAN -> 20;
+                default -> throw new IllegalGameVariantException(game);
+
             };
             timer.restartIndefinitely();
             game.reset();

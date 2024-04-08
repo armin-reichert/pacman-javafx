@@ -30,7 +30,7 @@ import static de.amr.games.pacman.model.world.ArcadeWorld.*;
  *
  * @author Armin Reichert
  */
-public enum GameModels implements GameModel, EnumMethodMixin<GameModels> {
+public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
 
     MS_PACMAN {
 
@@ -360,8 +360,8 @@ public enum GameModels implements GameModel, EnumMethodMixin<GameModels> {
 
     // Why does the default implementation return NULL as soon as the enum classes have methods?
     @Override
-    public GameModels[] enumValues() {
-        return new GameModels[] {GameModels.MS_PACMAN, GameModels.PACMAN};
+    public GameVariants[] enumValues() {
+        return new GameVariants[] {GameVariants.MS_PACMAN, GameVariants.PACMAN};
     }
 
     @Override

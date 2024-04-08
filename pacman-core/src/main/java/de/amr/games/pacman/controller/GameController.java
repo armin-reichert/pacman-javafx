@@ -6,7 +6,8 @@ package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Fsm;
-import de.amr.games.pacman.model.GameModels;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariants;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -14,7 +15,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  * Controller (in the sense of MVC) for both (Pac-Man, Ms. Pac-Man) game variants.
  * <p>
  * A finite-state machine with states defined in {@link GameState}. The game data are stored in the model of the
- * selected game, see {@link GameModels}. Scene selection is not controlled by this class but left to the specific user
+ * selected game, see {@link GameVariants}. Scene selection is not controlled by this class but left to the specific user
  * interface implementations.
  * <p>
  * <li>Exact level data for Ms. Pac-Man still not available. Any hints appreciated!
@@ -28,11 +29,11 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  * behavior</a>
  * @see <a href="http://superpacman.com/mspacman/">Ms. Pac-Man</a>
  */
-public class GameController extends Fsm<GameState, GameModels> {
+public class GameController extends Fsm<GameState, GameModel> {
 
     public static final byte MAX_CREDIT = 99;
 
-    private static final GameController IT = new GameController(GameModels.PACMAN);
+    private static final GameController IT = new GameController(GameVariants.PACMAN);
 
     /**
      * @return the game controller singleton
@@ -41,28 +42,28 @@ public class GameController extends Fsm<GameState, GameModels> {
         return IT;
     }
 
-    private GameModels game;
+    private GameModel game;
     private boolean pacImmune = false;
     private int credit = 0;
 
-    private GameController(GameModels variant) {
+    private GameController(GameModel variant) {
         super(GameState.values());
         selectGame(variant);
         // map FSM state change events to game events
         addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
     }
 
-    public void selectGame(GameModels variant) {
+    public void selectGame(GameModel variant) {
         checkNotNull(variant);
         game = variant;
     }
 
     @Override
-    public GameModels context() {
+    public GameModel context() {
         return game;
     }
 
-    public GameModels game() {
+    public GameModel game() {
         return game;
     }
 

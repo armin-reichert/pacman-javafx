@@ -160,8 +160,7 @@ public abstract class InfoBox {
         return addCheckBox(labelText, null);
     }
 
-    @SuppressWarnings("unchecked")
-    protected <T> ComboBox<T> addComboBox(String labelText, T... items) {
+    protected <T> ComboBox<T> addComboBox(String labelText, T[] items) {
         var combo = new ComboBox<>(FXCollections.observableArrayList(items));
         combo.setStyle(style(textFont));
         addRow(labelText, combo);

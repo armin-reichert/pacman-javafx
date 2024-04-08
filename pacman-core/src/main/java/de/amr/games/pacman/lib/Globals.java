@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.lib;
 
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModels;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.IllegalGhostIDException;
 import de.amr.games.pacman.model.IllegalLevelNumberException;
 
@@ -87,7 +87,7 @@ public class Globals {
         Objects.requireNonNull(value, message);
     }
 
-    public static void checkGameNotNull(GameModels game) {
+    public static void checkGameNotNull(GameModel game) {
         checkNotNull(game, MSG_GAME_NULL);
     }
 

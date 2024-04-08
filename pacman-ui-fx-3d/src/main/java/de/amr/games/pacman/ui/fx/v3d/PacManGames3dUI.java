@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d;
 
-import de.amr.games.pacman.model.GameModels;
+import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
@@ -224,7 +224,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     public PacManGames3dUI(Stage stage, Settings settings) {
         super(stage, settings);
-        for (var gameVariant : GameModels.values()) {
+        for (var gameVariant : GameVariants.values()) {
             var playScene3D = new PlayScene3D();
             playScene3D.setParentScene(mainScene);
             gameScenesByVariant.get(gameVariant).put("play3D", playScene3D);
@@ -265,7 +265,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     @Override
     protected void updateStage() {
-        var variantKey = game() == GameModels.MS_PACMAN ? "mspacman" : "pacman";
+        var variantKey = game() == GameVariants.MS_PACMAN ? "mspacman" : "pacman";
         var titleKey = "app.title." + variantKey + (gameClock().isPaused() ? ".paused" : "");
         var dimension = tt(PY_3D_ENABLED.get() ? "threeD" : "twoD");
         stage.setTitle(tt(titleKey, dimension));

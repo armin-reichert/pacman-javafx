@@ -1,7 +1,7 @@
 package de.amr.games.pacman.event;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.model.GameModels;
+import de.amr.games.pacman.model.GameModel;
 
 /**
  * @author Armin Reichert
@@ -20,7 +20,7 @@ public class GameStateChangeEvent extends GameEvent {
             '}';
     }
 
-    public GameStateChangeEvent(GameModels game, GameState oldState, GameState newState) {
+    public GameStateChangeEvent(GameModel game, GameState oldState, GameState newState) {
         super(GameEventType.GAME_STATE_CHANGED, game);
         this.oldState = oldState;
         this.newState = newState;

@@ -6,7 +6,8 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameModels;
+import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
@@ -76,8 +77,9 @@ public class PlayScene2D extends GameScene2D {
     protected void drawSceneContent() {
         context.gameLevel().ifPresent(level -> {
             switch (context.game()) {
-                case MS_PACMAN -> drawMsPacManMaze(level.world(), ArcadeWorld.mazeNumberMsPacMan(level.number()));
-                case    PACMAN -> drawPacManMaze(level.world());
+                case GameVariants.MS_PACMAN -> drawMsPacManMaze(level.world(), ArcadeWorld.mazeNumberMsPacMan(level.number()));
+                case GameVariants.PACMAN -> drawPacManMaze(level.world());
+                default -> throw new IllegalGameVariantException(context.game());
             }
             if (level.isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
                 // text "GAME OVER" is also drawn in demo mode
@@ -149,7 +151,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void drawSceneInfo() {
         drawTileGrid(ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
-        if (context.game() == GameModels.PACMAN) {
+        if (context.game() == GameVariants.PACMAN) {
             context.gameLevel().ifPresent(level -> ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> {
                 // "No Trespassing" symbol
                 g.setFill(Color.RED);

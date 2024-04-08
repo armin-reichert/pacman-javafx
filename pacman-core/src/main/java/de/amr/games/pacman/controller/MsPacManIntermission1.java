@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameModels;
+import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
@@ -89,7 +89,7 @@ public class MsPacManIntermission1 {
 
     private void updateStateFlap() {
         if (stateTimer.atSecond(1)) {
-            GameModels.MS_PACMAN.publishGameEvent(GameEventType.INTERMISSION_STARTED);
+            GameVariants.MS_PACMAN.publishGameEvent(GameEventType.INTERMISSION_STARTED);
         } else if (stateTimer.hasExpired()) {
             enterStateChasedByGhosts();
         }

@@ -6,7 +6,8 @@ package de.amr.games.pacman.ui.fx.page;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameModels;
+import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
@@ -192,8 +193,9 @@ public class GamePage extends CanvasLayoutPane implements Page {
 
         signature.translateYProperty().bind(Bindings.createDoubleBinding(
             () -> switch (sceneContext.game()) {
-                case MS_PACMAN -> 40 * getScaling(); // TODO fixme
-                case PACMAN -> 28 * getScaling(); // TODO fixme
+                case GameVariants.MS_PACMAN -> 40 * getScaling(); // TODO fixme
+                case GameVariants.PACMAN -> 28 * getScaling(); // TODO fixme
+                default -> throw new IllegalGameVariantException(sceneContext.game());
             }, scalingPy
         ));
 
@@ -223,8 +225,9 @@ public class GamePage extends CanvasLayoutPane implements Page {
     protected void updateHelpButton() {
         ImageView imageView = (ImageView) helpButton.getCenter();
         var image = sceneContext.theme().image(switch (sceneContext.game()) {
-            case MS_PACMAN -> "mspacman.helpButton.icon";
-            case PACMAN -> "pacman.helpButton.icon";
+            case GameVariants.MS_PACMAN -> "mspacman.helpButton.icon";
+            case GameVariants.PACMAN -> "pacman.helpButton.icon";
+            default -> throw new IllegalGameVariantException(sceneContext.game());
         });
         double size = Math.ceil(12 * getScaling());
         imageView.setImage(image);
@@ -301,7 +304,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
     }
 
     private void showHelpInfoPopUp() {
-        var bgColor = sceneContext.game() == GameModels.MS_PACMAN
+        var bgColor = sceneContext.game() == GameVariants.MS_PACMAN
             ? Color.rgb(255, 0, 0, 0.8)
             : Color.rgb(33, 33, 255, 0.8);
         var font = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * getScaling()));
@@ -317,7 +320,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
             info.addLocalizedEntry("help.start_game", "1");
         }
         info.addLocalizedEntry("help.add_credit", "5");
-        info.addLocalizedEntry(sceneContext.game() == GameModels.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
+        info.addLocalizedEntry(sceneContext.game() == GameVariants.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
     }
 
     private void addInfoForQuittingScene(HelpInfo info) {

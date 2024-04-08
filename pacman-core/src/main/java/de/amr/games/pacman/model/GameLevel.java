@@ -100,8 +100,8 @@ public class GameLevel {
 
         //TODO avoid switch over game variant
         switch (game()) {
-            case GameModels.MS_PACMAN -> ghosts().forEach(ghost -> ghost.setHuntingBehavior(this::huntingBehaviorMsPacManGame));
-            case GameModels.PACMAN -> {
+            case GameVariants.MS_PACMAN -> ghosts().forEach(ghost -> ghost.setHuntingBehavior(this::huntingBehaviorMsPacManGame));
+            case GameVariants.PACMAN -> {
                 var forbiddenMovesAtTile = new HashMap<Vector2i, List<Direction>>();
                 var up = List.of(UP);
                 ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbiddenMovesAtTile.put(tile, up));

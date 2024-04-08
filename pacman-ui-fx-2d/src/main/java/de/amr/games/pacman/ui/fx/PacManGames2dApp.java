@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.model.GameModels;
+import de.amr.games.pacman.model.GameVariants;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -32,7 +32,7 @@ public class PacManGames2dApp extends Application {
     @Override
     public void start(Stage stage) {
         ui = new PacManGames2dUI(stage, settings);
-        for (var game : GameModels.values()) {
+        for (var game : GameVariants.values()) {
             game.addGameEventListener(ui);
         }
         ui.showStartPage();
