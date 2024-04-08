@@ -258,21 +258,17 @@ public interface ArcadeWorld {
                 String.format("Arcade map must have %d columns and %d rows but has %d columns and %d rows",
                     TILES_X, TILES_Y, world.numCols(), world.numRows()));
         }
-        world.setHouse(createArcadeHouse());
-        return world;
-    }
-
-    static final Vector2f HOUSE_LEFT_SEAT = halfTileRightOf(11, 17);
-    static final Vector2f HOUSE_MIDDLE_SEAT = halfTileRightOf(13, 17);
-    static final Vector2f HOUSE_RIGHT_SEAT = halfTileRightOf(15, 17);
-
-    static House createArcadeHouse() {
         var house = new House();
         house.setTopLeftTile(v2i(10, 15));
         house.setSize(v2i(8, 5));
         house.setDoor(new Door(v2i(13, 15), v2i(14, 15)));
-        return house;
+        world.setHouse(house);
+        return world;
     }
+
+    Vector2f HOUSE_LEFT_SEAT   = halfTileRightOf(11, 17);
+    Vector2f HOUSE_MIDDLE_SEAT = halfTileRightOf(13, 17);
+    Vector2f HOUSE_RIGHT_SEAT  = halfTileRightOf(15, 17);
 
     /**
      * In Ms. Pac-Man, there are 4 maps used by the 6 mazes. Up to level 13, the mazes are:
