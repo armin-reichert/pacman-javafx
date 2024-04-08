@@ -34,9 +34,10 @@ public enum GameModel implements EnumMethods<GameModel> {
 
     MS_PACMAN {
 
-        private static final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
-        private static final byte[] BONUS_VALUE_FACTOR = {1, 2, 5, 7, 10, 20, 50}; // * 100
-        private static final String[] GHOST_NAMES = { "Blinky", "Pinky", "Inky", "Sue" };
+        final String PAC_NAME = "Ms. Pac-Man";
+        final String[] GHOST_NAMES = { "Blinky", "Pinky", "Inky", "Sue" };
+        final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50}; // * 100
+        final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
 
         /**
          * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
@@ -44,14 +45,14 @@ public enum GameModel implements EnumMethods<GameModel> {
          * @see <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>
          * @see <a href=" https://github.com/armin-reichert/pacman-basic/blob/main/doc/mspacman-details-reddit-user-damselindis.md">GitHub</a>
          */
-        private static final int[][] HUNTING_DURATIONS = {
+        final int[][] HUNTING_DURATIONS = {
             {7 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 1-4
             {5 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 5+
         };
 
         @Override
         public String pacName() {
-            return "Ms. Pac-Man";
+            return PAC_NAME;
         }
 
         @Override
@@ -123,7 +124,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         @Override
         public int bonusValue(byte symbol) {
-            return BONUS_VALUE_FACTOR[symbol] * 100;
+            return BONUS_VALUE_FACTORS[symbol] * 100;
         }
 
         @Override
@@ -138,8 +139,8 @@ public enum GameModel implements EnumMethods<GameModel> {
         }
 
         /**
-         * The moving bonus enters the world at a random portal, walks to the house entry, takes a tour around the house and
-         * finally leaves the world through a random portal on the opposite side of the world.
+         * The moving bonus enters the world at a random portal, walks to the house entry, takes a tour around the
+         * house and finally leaves the world through a random portal on the opposite side of the world.
          * <p>
          * TODO: This is not the exact behavior as in the original Arcade game.
          **/
@@ -217,14 +218,14 @@ public enum GameModel implements EnumMethods<GameModel> {
 
     PACMAN {
 
-        private static final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-pacman.xml");
-        private static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {7 /* default */, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
-
-        private static final byte[] BONUS_VALUE_FACTOR = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
-        private static final String[] GHOST_NAMES = { "Blinky", "Pinky", "Inky", "Clyde" };
+        final String PAC_NAME = "Pac-Man";
+        final String[] GHOST_NAMES = { "Blinky", "Pinky", "Inky", "Clyde" };
+        final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {7 /* default */, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
+        final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
+        final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-pacman.xml");
 
         // Hunting duration (in ticks) of chase and scatter phases. See Pac-Man dossier.
-        private static final int[][] HUNTING_DURATIONS = {
+        final int[][] HUNTING_DURATIONS = {
             {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS,   20 * FPS, 5 * FPS, -1}, // Level 1
             {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS, 1033 * FPS,       1, -1}, // Levels 2-4
             {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS,       1, -1}, // Levels 5+
@@ -232,7 +233,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         @Override
         public String pacName() {
-            return "Pac-Man";
+            return PAC_NAME;
         }
 
         @Override
@@ -262,7 +263,7 @@ public enum GameModel implements EnumMethods<GameModel> {
 
         @Override
         public int bonusValue(byte symbol) {
-            return BONUS_VALUE_FACTOR[symbol] * 100;
+            return BONUS_VALUE_FACTORS[symbol] * 100;
         }
 
         @Override
