@@ -30,7 +30,7 @@ import static de.amr.games.pacman.model.world.ArcadeWorld.*;
  *
  * @author Armin Reichert
  */
-public enum GameModel implements EnumMethods<GameModel> {
+public enum GameModel implements GameModelInterface, EnumMethods<GameModel> {
 
     MS_PACMAN {
 
@@ -337,7 +337,7 @@ public enum GameModel implements EnumMethods<GameModel> {
     public static final short BONUS_POINTS_SHOWN_TICKS = 2 * FPS; // unsure
     public static final short PAC_POWER_FADING_TICKS = 2 * FPS; // unsure
 
-    protected static final byte[][] RAW_LEVEL_DATA = {
+    static final byte[][] RAW_LEVEL_DATA = {
         /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0},
         /* 2*/ { 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5, 1},
         /* 3*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5, 0},
@@ -367,7 +367,6 @@ public enum GameModel implements EnumMethods<GameModel> {
         return new GameLevel.Data(levelNumber, demoLevel, RAW_LEVEL_DATA[index]);
     }
 
-    protected final List<GameEventListener> gameEventListeners = new ArrayList<>();
     protected final List<Byte> levelCounter = new LinkedList<>();
     protected final Score score = new Score();
     protected final Score highScore = new Score();
@@ -377,60 +376,30 @@ public enum GameModel implements EnumMethods<GameModel> {
     protected short initialLives = 3;
     protected short lives;
 
-    public abstract String pacName();
-
-    public abstract String ghostName(byte id);
-
-    public abstract boolean isBonusReached(GameLevel level);
-
-    public abstract byte nextBonusSymbol(int levelNumber);
-
-    public abstract int bonusValue(byte symbol);
-
-    public abstract Optional<Bonus> createNextBonus(World world, Bonus bonus, int bonusIndex, byte symbol);
-
-    public abstract int[] huntingDurations(int levelNumber);
-
-    public abstract File highScoreFile();
-
-    public void setPlaying(boolean playing) {
-        this.playing = playing;
-    }
-
-    public boolean isPlaying() {
-        return playing;
-    }
-
-    /**
-     * Starts new game level with the given number.
-     *
-     * @param levelNumber level number (starting at 1)
-     */
-    public abstract void createAndStartLevel(int levelNumber);
-
-    /**
-     * Creates and starts the demo game level ("attract mode"). Behavior of the ghosts is different from the original
-     * Arcade game because they do not follow a predetermined path but change their direction randomly when frightened.
-     * In Pac-Man variant, Pac-Man at least follows the same path as in the Arcade game, but in Ms. Pac-Man game, she
-     * does not behave as in the Arcade game but hunts the ghosts using some goal-driven algorithm.
-     */
-    public abstract void createAndStartDemoLevel();
-
     // Why does the default implementation returns NULL as soon as the enum classes have methods?
     @Override
     public GameModel[] enumValues() {
         return new GameModel[] {GameModel.MS_PACMAN, GameModel.PACMAN};
     }
 
-    /**
-     * Resets the game and deletes the current level. Credit, immunity and scores remain unchanged.
-     */
+    @Override
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return playing;
+    }
+
+    @Override
     public void reset() {
         level = null;
         lives = initialLives;
         Logger.info("Game model ({}) reset", this);
     }
 
+    @Override
     public void setLevel(GameLevel level) {
         this.level = level;
         if (level != null) {
@@ -438,26 +407,32 @@ public enum GameModel implements EnumMethods<GameModel> {
         }
     }
 
+    @Override
     public Optional<GameLevel> level() {
         return Optional.ofNullable(level);
     }
 
+    @Override
     public short initialLives() {
         return initialLives;
     }
 
+    @Override
     public void setInitialLives(short initialLives) {
         this.initialLives = initialLives;
     }
 
+    @Override
     public int lives() {
         return lives;
     }
 
+    @Override
     public void addLives(short lives) {
         this.lives += lives;
     }
 
+    @Override
     public void loseLife() {
         if (lives == 0) {
             throw new IllegalArgumentException("No life left to loose :-(");
@@ -465,10 +440,12 @@ public enum GameModel implements EnumMethods<GameModel> {
         --lives;
     }
 
+    @Override
     public List<Byte> levelCounter() {
         return levelCounter;
     }
 
+    @Override
     public void addSymbolToLevelCounter(byte symbol) {
         levelCounter.add(symbol);
         if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
@@ -476,14 +453,17 @@ public enum GameModel implements EnumMethods<GameModel> {
         }
     }
 
+    @Override
     public Score score() {
         return score;
     }
 
+    @Override
     public Score highScore() {
         return highScore;
     }
 
+    @Override
     public void updateHighScore() {
         var oldHighScore = new Score();
         oldHighScore.loadFromFile(highScoreFile());
@@ -492,7 +472,11 @@ public enum GameModel implements EnumMethods<GameModel> {
         }
     }
 
-    public void addListener(GameEventListener listener) {
+    // Game Event Support
+
+    protected final List<GameEventListener> gameEventListeners = new ArrayList<>();
+
+    public void addGameEventListener(GameEventListener listener) {
         checkNotNull(listener);
         gameEventListeners.add(listener);
     }

@@ -33,7 +33,7 @@ public class PacManGames2dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGames2dUI(stage, settings);
         for (var game : GameModel.values()) {
-            game.addListener(ui);
+            game.addGameEventListener(ui);
         }
         ui.showStartPage();
         Logger.info("UI initialized. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());

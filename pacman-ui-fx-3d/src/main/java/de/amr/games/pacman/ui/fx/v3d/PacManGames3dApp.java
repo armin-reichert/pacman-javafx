@@ -39,7 +39,7 @@ public class PacManGames3dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGames3dUI(stage, settings);
         for (var game : GameModel.values()) {
-            game.addListener(ui);
+            game.addGameEventListener(ui);
         }
         int hour = LocalTime.now().getHour();
         PY_3D_NIGHT_MODE.set(hour >= 20 || hour <= 5);
