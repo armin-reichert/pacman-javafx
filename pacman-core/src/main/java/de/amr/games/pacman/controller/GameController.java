@@ -47,7 +47,7 @@ public class GameController extends Fsm<GameState, GameModel> {
         super(GameState.values());
         selectGame(variant);
         // map FSM state change events to game events
-        addStateChangeListener((oldState, newState) -> game.publish(new GameStateChangeEvent(game, oldState, newState)));
+        addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
     }
 
     public void selectGame(GameModel variant) {

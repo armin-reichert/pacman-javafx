@@ -503,14 +503,14 @@ public enum GameModel implements EnumMethods<GameModel> {
     }
 
     public void publishGameEvent(GameEventType type) {
-        publish(new GameEvent(type, this));
+        publishGameEvent(new GameEvent(type, this));
     }
 
     public void publishGameEvent(GameEventType type, Vector2i tile) {
-        publish(new GameEvent(type, this, tile));
+        publishGameEvent(new GameEvent(type, this, tile));
     }
 
-    public void publish(GameEvent event) {
+    public void publishGameEvent(GameEvent event) {
         Logger.trace("Publish game event: {}", event);
         gameEventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
     }
