@@ -8,6 +8,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.FsmState;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameModels;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -28,11 +29,11 @@ import java.util.Map;
  *
  * @author Armin Reichert
  */
-public enum GameState implements FsmState<GameModels> {
+public enum GameState implements FsmState<GameModel> {
 
     BOOT { // "Das muss das Boot abkönnen!"
         @Override
-        public void onEnter(GameModels game) {
+        public void onEnter(GameModel game) {
             timer.restartIndefinitely();
             game.levelCounter().clear();
             game.score().reset();
@@ -40,7 +41,7 @@ public enum GameState implements FsmState<GameModels> {
         }
 
         @Override
-        public void onUpdate(GameModels game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 gameController().changeState(INTRO);
             }
@@ -49,14 +50,14 @@ public enum GameState implements FsmState<GameModels> {
 
     INTRO {
         @Override
-        public void onEnter(GameModels game) {
+        public void onEnter(GameModel game) {
             timer.restartIndefinitely();
             game.setPlaying(false);
             game.setLevel(null);
         }
 
         @Override
-        public void onUpdate(GameModels game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 gameController().changeState(READY);
             }
@@ -65,7 +66,7 @@ public enum GameState implements FsmState<GameModels> {
 
     CREDIT {
         @Override
-        public void onUpdate(GameModels game) {}
+        public void onUpdate(GameModel game) {}
     },
 
     READY {
@@ -80,7 +81,7 @@ public enum GameState implements FsmState<GameModels> {
         static final int TICK_RESUME_GAME = 90;
 
         @Override
-        public void onEnter(GameModels game) {
+        public void onEnter(GameModel game) {
             if (game.isPlaying()) {
                 // resume running game
                 game.level().ifPresent(level -> level.letsGetReadyToRumble(true));
@@ -98,7 +99,7 @@ public enum GameState implements FsmState<GameModels> {
         }
 
         @Override
-        public void onUpdate(GameModels game) {
+        public void onUpdate(GameModel game) {
             if (game.isPlaying()) { // resume running game
                 if (timer.tick() == TICK_RESUME_GAME) {
                     game.level().ifPresent(level -> {
@@ -137,7 +138,7 @@ public enum GameState implements FsmState<GameModels> {
 
     HUNTING {
         @Override
-        public void onEnter(GameModels game) {
+        public void onEnter(GameModel game) {
             game.level().ifPresent(level -> {
                 level.pac().startAnimation();
                 level.ghosts().forEach(Ghost::startAnimation);
@@ -147,7 +148,7 @@ public enum GameState implements FsmState<GameModels> {
         }
 
         @Override
-        public void onUpdate(GameModels game) {
+        public void onUpdate(GameModel game) {
             game.level().ifPresent(level -> {
                 level.world().energizerBlinking().tick();
                 GameState nextState = level.doHuntingStep();
@@ -161,7 +162,7 @@ public enum GameState implements FsmState<GameModels> {
 
     LEVEL_COMPLETE {
         @Override
-        public void onEnter(GameModels game) {
+        public void onEnter(GameModel game) {
             game.level().ifPresent(level -> {
                 timer.restartSeconds(4);
                 level.pac().freeze();
@@ -174,7 +175,7 @@ public enum GameState implements FsmState<GameModels> {
         }
 
         @Override
-        public void onUpdate(GameModels game) {
+        public void onUpdate(GameModel game) {
             game.level().ifPresent(level -> {
                 if (timer.hasExpired()) {
                     if (level.isDemoLevel()) { // just in case demo level is completed: back to intro scene
@@ -201,13 +202,13 @@ public enum GameState implements FsmState<GameModels> {
 
     CHANGING_TO_NEXT_LEVEL {
         @Override
-        public void onEnter(GameModels game) {
+        public void onEnter(GameModel game) {
             timer.restartSeconds(1);
             game.level().ifPresent(level -> game.createAndStartLevel(level.number() + 1));
         }
 
         @Override
-        public void onUpdate(GameModels game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 gameController().changeState(READY);
             }
@@ -216,7 +217,7 @@ public enum GameState implements FsmState<GameModels> {
 
     GHOST_DYING {
         @Override
-        public void onEnter(GameModels game) {
+        public void onEnter(GameModel game) {
             game.level().ifPresent(level -> {
                 timer.restartSeconds(1);
                 level.pac().hide();
@@ -226,7 +227,7 @@ public enum GameState implements FsmState<GameModels> {
         }
 
         @Override
-        public void onUpdate(GameModels game) {
+        public void onUpdate(GameModel game) {
             game.level().ifPresent(level -> {
                 if (timer.hasExpired()) {
                     gameController().resumePreviousState();
@@ -239,7 +240,7 @@ public enum GameState implements FsmState<GameModels> {
         }
 
         @Override
-        public void onExit(GameModels game) {
+        public void onExit(GameModel game) {
             game.level().ifPresent(level -> {
                 level.pac().show();
                 level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_TO_HOUSE));
@@ -255,13 +256,13 @@ public enum GameState implements FsmState<GameModels> {
         static final int TICK_HIDE_PAC = 180;
 
         @Override
-        public void onEnter(GameModels game) {
+        public void onEnter(GameModel game) {
             timer.restartSeconds(4);
             game.level().ifPresent(GameLevel::letPacDie);
         }
 
         @Override
-        public void onUpdate(GameModels game) {
+        public void onUpdate(GameModel game) {
             game.level().ifPresent(level -> {
                 level.world().energizerBlinking().tick();
                 level.pac().update(level);
@@ -286,7 +287,7 @@ public enum GameState implements FsmState<GameModels> {
         }
 
         @Override
-        public void onExit(GameModels context) {
+        public void onExit(GameModel context) {
             context.level().flatMap(GameLevel::bonus).ifPresent(Bonus::setInactive);
         }
     },
@@ -296,7 +297,7 @@ public enum GameState implements FsmState<GameModels> {
         static final int TICKS_STATE_DURATION = 75;
 
         @Override
-        public void onEnter(GameModels game) {
+        public void onEnter(GameModel game) {
             timer.reset(TICKS_STATE_DURATION);
             timer.start();
             game.updateHighScore();
@@ -304,14 +305,14 @@ public enum GameState implements FsmState<GameModels> {
         }
 
         @Override
-        public void onUpdate(GameModels game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 gameController().changeState(gameController().hasCredit() ? CREDIT : INTRO);
             }
         }
 
         @Override
-        public void onExit(GameModels game) {
+        public void onExit(GameModel game) {
             game.setPlaying(false);
             game.setLevel(null);
         }
@@ -319,12 +320,12 @@ public enum GameState implements FsmState<GameModels> {
 
     INTERMISSION {
         @Override
-        public void onEnter(GameModels game) {
+        public void onEnter(GameModel game) {
             timer.restartIndefinitely();
         }
 
         @Override
-        public void onUpdate(GameModels game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 gameController().changeState(
                     gameController().hasCredit() && game.isPlaying() ? CHANGING_TO_NEXT_LEVEL : INTRO);
@@ -336,10 +337,11 @@ public enum GameState implements FsmState<GameModels> {
         private int lastTestedLevel;
 
         @Override
-        public void onEnter(GameModels game) {
+        public void onEnter(GameModel game) {
             lastTestedLevel = switch (game) {
-                case MS_PACMAN -> 18;
-                case PACMAN -> 20;
+                case GameModels.MS_PACMAN -> 18;
+                case GameModels.PACMAN -> 20;
+                default -> throw new IllegalArgumentException("Illegal game model value: " + game);
             };
             timer.restartIndefinitely();
             game.reset();
@@ -347,25 +349,25 @@ public enum GameState implements FsmState<GameModels> {
         }
 
         @Override
-        public void onUpdate(GameModels game) {
+        public void onUpdate(GameModel game) {
             game.level().ifPresent(level -> level.doLevelTestStep(timer, lastTestedLevel));
         }
 
         @Override
-        public void onExit(GameModels game) {
+        public void onExit(GameModel game) {
             game.levelCounter().clear();
         }
     },
 
     INTERMISSION_TEST {
         @Override
-        public void onEnter(GameModels game) {
+        public void onEnter(GameModel game) {
             timer.restartIndefinitely();
             setProperty("intermissionTestNumber", 1);
         }
 
         @Override
-        public void onUpdate(GameModels game) {
+        public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 int number = this.<Integer>getProperty("intermissionTestNumber");
                 if (number < 3) {

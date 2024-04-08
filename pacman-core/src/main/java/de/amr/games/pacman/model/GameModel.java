@@ -4,13 +4,20 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import de.amr.games.pacman.event.GameEvent;
+import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Score;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.world.World;
+import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
+
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * Common interface of all game variants.
@@ -104,4 +111,12 @@ public interface GameModel {
     Score highScore();
 
     void updateHighScore();
+
+    void addGameEventListener(GameEventListener listener);
+
+    void publishGameEvent(GameEventType type);
+
+    void publishGameEvent(GameEventType type, Vector2i tile);
+
+    void publishGameEvent(GameEvent event);
 }

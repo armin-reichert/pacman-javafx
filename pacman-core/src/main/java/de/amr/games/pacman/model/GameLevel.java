@@ -100,8 +100,8 @@ public class GameLevel {
 
         //TODO avoid switch over game variant
         switch (game()) {
-            case MS_PACMAN -> ghosts().forEach(ghost -> ghost.setHuntingBehavior(this::huntingBehaviorMsPacManGame));
-            case PACMAN -> {
+            case GameModels.MS_PACMAN -> ghosts().forEach(ghost -> ghost.setHuntingBehavior(this::huntingBehaviorMsPacManGame));
+            case GameModels.PACMAN -> {
                 var forbiddenMovesAtTile = new HashMap<Vector2i, List<Direction>>();
                 var up = List.of(UP);
                 ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbiddenMovesAtTile.put(tile, up));
@@ -110,6 +110,7 @@ public class GameLevel {
                     ghost.setHuntingBehavior(this::huntingBehaviorPacManGame);
                 });
             }
+            default -> throw new IllegalGameVariantException(game());
         }
 
         bonusSymbols = List.of(game().nextBonusSymbol(number()), game().nextBonusSymbol(number()));
@@ -162,7 +163,7 @@ public class GameLevel {
         return data;
     }
 
-    public GameModels game() {
+    public GameModel game() {
         return GameController.it().game();
     }
 

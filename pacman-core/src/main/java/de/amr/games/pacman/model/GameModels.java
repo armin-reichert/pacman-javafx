@@ -458,19 +458,23 @@ public enum GameModels implements GameModel, EnumMethodMixin<GameModels> {
 
     final List<GameEventListener> gameEventListeners = new ArrayList<>();
 
+    @Override
     public void addGameEventListener(GameEventListener listener) {
         checkNotNull(listener);
         gameEventListeners.add(listener);
     }
 
+    @Override
     public void publishGameEvent(GameEventType type) {
         publishGameEvent(new GameEvent(type, this));
     }
 
+    @Override
     public void publishGameEvent(GameEventType type, Vector2i tile) {
         publishGameEvent(new GameEvent(type, this, tile));
     }
 
+    @Override
     public void publishGameEvent(GameEvent event) {
         Logger.trace("Publish game event: {}", event);
         gameEventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
