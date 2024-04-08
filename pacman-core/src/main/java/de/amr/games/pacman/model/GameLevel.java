@@ -8,7 +8,10 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
-import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.actors.Bonus;
+import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
@@ -110,8 +113,7 @@ public class GameLevel {
             }
         }
 
-        bonusSymbols = game().supplyBonusSymbols(levelData.number());
-
+        bonusSymbols = List.of(game().nextBonusSymbol(number()), game().nextBonusSymbol(number()));
         Logger.trace("Game level {} created.", levelData.number());
     }
 

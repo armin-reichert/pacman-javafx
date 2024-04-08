@@ -387,10 +387,6 @@ public enum GameModel implements EnumMethods<GameModel> {
 
     public abstract int bonusValue(byte symbol);
 
-    public List<Byte> supplyBonusSymbols(int levelNumber) {
-        return List.of(nextBonusSymbol(levelNumber), nextBonusSymbol(levelNumber));
-    }
-
     public abstract Optional<Bonus> createNextBonus(World world, Bonus bonus, int bonusIndex, byte symbol);
 
     public abstract int[] huntingDurations(int levelNumber);
