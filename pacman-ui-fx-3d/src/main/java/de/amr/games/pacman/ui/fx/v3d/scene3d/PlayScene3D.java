@@ -8,6 +8,8 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui.fx.GameScene;
@@ -261,8 +263,9 @@ public class PlayScene3D implements GameScene {
                     assertLevel3DExists();
                     context.stopAllSounds();
                     var animation = switch (context.game()) {
-                        case MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
-                        case PACMAN -> level3D.pac3D().createPacManDyingAnimation(level.world());
+                        case GameVariants.MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
+                        case GameVariants.PACMAN -> level3D.pac3D().createPacManDyingAnimation(level.world());
+                        default -> throw new IllegalGameVariantException(context.game());
                     };
                     lockGameStateAndPlayAfterSeconds(1.0, animation);
                 });
@@ -283,8 +286,9 @@ public class PlayScene3D implements GameScene {
                 assertLevel3DExists();
                 context.gameLevel().ifPresent(level -> {
                     Rectangle2D[] sprites = switch (context.game()) {
-                        case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
-                        case PACMAN    -> context.<PacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
+                        case GameVariants.MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
+                        case GameVariants.PACMAN    -> context.<PacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
+                        default -> throw new IllegalGameVariantException(context.game());
                     };
                     level.eventLog().killedGhosts.forEach(ghost -> {
                         int index = level.pac().victims().indexOf(ghost);

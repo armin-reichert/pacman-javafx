@@ -5,6 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.lib.Score;
+import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.GameScene;
@@ -159,8 +161,9 @@ public abstract class GameScene2D implements GameScene {
         double y = t(ArcadeWorld.TILES_Y - 2);
         for (byte symbol : context.game().levelCounter()) {
             var sprite = switch (context.game()) {
-                case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
-                case PACMAN -> context.<PacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
+                case GameVariants.MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
+                case GameVariants.PACMAN -> context.<PacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
+                default -> throw new IllegalGameVariantException(context.game());
             };
             drawSprite(sprite, x, y);
             x -= TS * 2;
@@ -172,8 +175,9 @@ public abstract class GameScene2D implements GameScene {
             return;
         }
         var sprite = switch (context.game()) {
-            case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().livesCounterSprite();
-            case PACMAN -> context.<PacManGameSpriteSheet>spriteSheet().livesCounterSprite();
+            case GameVariants.MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().livesCounterSprite();
+            case GameVariants.PACMAN -> context.<PacManGameSpriteSheet>spriteSheet().livesCounterSprite();
+            default -> throw new IllegalGameVariantException(context.game());
         };
         var x = TS * 2;
         var y = TS * (ArcadeWorld.TILES_Y - 2);
@@ -191,7 +195,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected void drawBonus(Bonus bonus) {
         switch (context.game()) {
-            case MS_PACMAN -> {
+            case GameVariants.MS_PACMAN -> {
                 var ss = context.<MsPacManGameSpriteSheet>spriteSheet();
                 if (bonus instanceof MovingBonus movingBonus) {
                     //TODO reconsider this way of implementing the jumping bonus
@@ -205,7 +209,7 @@ public abstract class GameScene2D implements GameScene {
                     g.restore();
                 }
             }
-            case PACMAN -> {
+            case GameVariants.PACMAN -> {
                 var ss = context.<PacManGameSpriteSheet>spriteSheet();
                 if (bonus.state() == Bonus.STATE_EDIBLE) {
                     drawEntitySprite(bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
@@ -213,6 +217,8 @@ public abstract class GameScene2D implements GameScene {
                     drawEntitySprite(bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
                 }
             }
+            default -> throw new IllegalGameVariantException(context.game());
+
         }
     }
 

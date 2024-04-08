@@ -113,14 +113,15 @@ public class GameLevel3D extends Group {
 
     private Pac3D createPac3D(Pac pac) {
         return switch (context.game()) {
-            case MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), pac, PAC_SIZE);
-            case    PACMAN -> Pac3D.createPacMan3D(context.theme(), pac, PAC_SIZE);
+            case GameVariants.MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), pac, PAC_SIZE);
+            case GameVariants.PACMAN -> Pac3D.createPacMan3D(context.theme(), pac, PAC_SIZE);
+            default -> throw new IllegalGameVariantException(context.game());
         };
     }
 
     private void createWorld3D() {
         switch (context.game()) {
-            case MS_PACMAN -> {
+            case GameVariants.MS_PACMAN -> {
                 int mapNumber  = ArcadeWorld.mapNumberMsPacMan(level.number());
                 int mazeNumber = ArcadeWorld.mazeNumberMsPacMan(level.number());
                 floorPlan = readFloorPlanFromFile(GameVariants.MS_PACMAN, mapNumber);
@@ -130,7 +131,7 @@ public class GameLevel3D extends Group {
                     context.theme().color("mspacman.maze.wallTopColor",   mazeNumber - 1));
                 createFood3D(context.theme().color("mspacman.maze.foodColor", mazeNumber - 1));
             }
-            case PACMAN -> {
+            case GameVariants.PACMAN -> {
                 floorPlan = readFloorPlanFromFile(GameVariants.PACMAN, 1);
                 wallBuilder = createWallBuilder(
                     context.theme().color("pacman.maze.wallBaseColor"),
@@ -138,6 +139,7 @@ public class GameLevel3D extends Group {
                     context.theme().color("pacman.maze.wallTopColor"));
                 createFood3D(context.theme().color("pacman.maze.foodColor"));
             }
+            default -> throw new IllegalGameVariantException(context.game());
         }
 
         House house = level.world().house();
@@ -186,8 +188,9 @@ public class GameLevel3D extends Group {
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         for (int i = 0; i < livesCounter3D.maxLives(); ++i) {
             var pac3D = switch (context.game()) {
-                case MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), null, theme.get("livescounter.pac.size"));
-                case    PACMAN -> Pac3D.createPacMan3D(context.theme(), null,  theme.get("livescounter.pac.size"));
+                case GameVariants.MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), null, theme.get("livescounter.pac.size"));
+                case GameVariants.PACMAN -> Pac3D.createPacMan3D(context.theme(), null,  theme.get("livescounter.pac.size"));
+                default -> throw new IllegalGameVariantException(context.game());
             };
             livesCounter3D.addItem(pac3D, true);
         }
@@ -209,8 +212,9 @@ public class GameLevel3D extends Group {
 
             var material = new PhongMaterial(Color.WHITE);
             var sprite = switch (context.game()) {
-                case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
-                case    PACMAN -> context.<PacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
+                case GameVariants.MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
+                case GameVariants.PACMAN -> context.<PacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
+                default -> throw new IllegalGameVariantException(context.game());
             };
             material.setDiffuseMap(context.spriteSheet().subImage(sprite));
             cube.setMaterial(material);
@@ -266,8 +270,9 @@ public class GameLevel3D extends Group {
 
     private void addDoor3D(Door door) {
         Color color = switch (context.game()) {
-            case MS_PACMAN -> context.theme().color("mspacman.maze.doorColor");
-            case    PACMAN -> context.theme().color("pacman.maze.doorColor");
+            case GameVariants.MS_PACMAN -> context.theme().color("mspacman.maze.doorColor");
+            case GameVariants.PACMAN -> context.theme().color("pacman.maze.doorColor");
+            default -> throw new IllegalGameVariantException(context.game());
         };
         for (var wing : List.of(door.leftWing(), door.rightWing())) {
             var doorWing3D = new DoorWing3D(wing, color);

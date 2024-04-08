@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
  */
 public class PacManGameTest {
 
-    private GameVariants game;
+    private GameModel game;
 
     @BeforeClass
     public static void setUp() {
