@@ -16,7 +16,6 @@ import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -393,8 +392,8 @@ public class GameLevel {
                 scorePoints(GameModel.POINTS_ENERGIZER);
                 Logger.info("Scored {} points for eating energizer", GameModel.POINTS_ENERGIZER);
             } else {
-                pac.setRestingTicks(GameModel.RESTING_TICKS_NORMAL_PELLET);
-                scorePoints(GameModel.POINTS_NORMAL_PELLET);
+                pac.setRestingTicks(GameModel.RESTING_TICKS_PELLET);
+                scorePoints(GameModel.POINTS_PELLET);
             }
             houseControl.updateDotCount(this);
             world.removeFood(pacTile);

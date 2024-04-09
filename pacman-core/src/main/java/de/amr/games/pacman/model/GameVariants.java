@@ -429,8 +429,8 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
     }
 
     @Override
-    public void setInitialLives(short initialLives) {
-        this.initialLives = initialLives;
+    public void setInitialLives(int lives) {
+        initialLives = (short) lives;
     }
 
     @Override
