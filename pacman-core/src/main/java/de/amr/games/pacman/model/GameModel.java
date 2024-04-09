@@ -39,8 +39,8 @@ public interface GameModel {
     short BONUS_POINTS_SHOWN_TICKS = 2 * FPS; // unsure
     /** Base speed of creatures (Pac-Man, ghosts, moving bonus). */
     short PPS_AT_100_PERCENT = 75;
-    short PPS_GHOST_INHOUSE = 38; // correct?
-    short PPS_GHOST_RETURNING_HOME = 150; // correct?
+    short PPS_GHOST_INHOUSE = 30; // correct?
+    short PPS_GHOST_RETURNING_HOME = 120; // correct?
     byte RESTING_TICKS_NORMAL_PELLET = 1;
     byte RESTING_TICKS_ENERGIZER = 3;
     short POINTS_NORMAL_PELLET = 10;
