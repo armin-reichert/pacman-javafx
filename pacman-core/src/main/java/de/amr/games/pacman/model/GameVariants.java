@@ -229,7 +229,8 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
          */
         @Override
         public void huntingBehaviour(Ghost ghost, GameLevel level) {
-            if (level.scatterPhase().isPresent() && (ghost.id() == GameModel.RED_GHOST || ghost.id() == GameModel.PINK_GHOST)) {
+            if (level.scatterPhase().isPresent() && level.scatterPhase().get() == 0
+                && (ghost.id() == GameModel.RED_GHOST || ghost.id() == GameModel.PINK_GHOST)) {
                 roam(ghost, level.world(), level.huntingSpeedPercentage(ghost), level.pseudoRandomDirection());
             } else {
                 PACMAN.huntingBehaviour(ghost, level);
