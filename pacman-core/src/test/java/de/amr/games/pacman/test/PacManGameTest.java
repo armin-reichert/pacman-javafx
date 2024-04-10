@@ -44,7 +44,7 @@ public class PacManGameTest {
     public void testLevelInitialized() {
         assertTrue(game.level().isPresent());
         var level = game.level().get();
-        assertEquals(1, level.number());
+        assertEquals(1, level.levelNumber());
         assertEquals(0, level.totalNumGhostsKilled());
         assertEquals(0, level.pac().victims().size());
         assertEquals(0, level.cruiseElroyState());
@@ -63,19 +63,19 @@ public class PacManGameTest {
         game.level().ifPresent(level -> {
             var redGhost = level.ghost(GameModel.RED_GHOST);
             assertNotEquals(Vector2f.ZERO, level.ghostRevivalPosition(redGhost.id()));
-            assertNotEquals(Vector2i.ZERO, level.ghostScatterTarget(redGhost.id()));
+            assertNotEquals(Vector2i.ZERO, level.world().ghostScatterTarget(redGhost.id()));
 
             var pinkGhost = level.ghost(GameModel.PINK_GHOST);
             assertNotEquals(Vector2f.ZERO, level.ghostRevivalPosition(pinkGhost.id()));
-            assertNotEquals(Vector2i.ZERO, level.ghostScatterTarget(pinkGhost.id()));
+            assertNotEquals(Vector2i.ZERO, level.world().ghostScatterTarget(pinkGhost.id()));
 
             var cyanGhost = level.ghost(GameModel.CYAN_GHOST);
             assertNotEquals(Vector2f.ZERO, level.ghostRevivalPosition(cyanGhost.id()));
-            assertNotEquals(Vector2i.ZERO, level.ghostScatterTarget(cyanGhost.id()));
+            assertNotEquals(Vector2i.ZERO, level.world().ghostScatterTarget(cyanGhost.id()));
 
             var orangeGhost = level.ghost(GameModel.ORANGE_GHOST);
             assertNotEquals(Vector2f.ZERO, level.ghostRevivalPosition(orangeGhost.id()));
-            assertNotEquals(Vector2i.ZERO, level.ghostScatterTarget(orangeGhost.id()));
+            assertNotEquals(Vector2i.ZERO, level.world().ghostScatterTarget(orangeGhost.id()));
         });
     }
 
