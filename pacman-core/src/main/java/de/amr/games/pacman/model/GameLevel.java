@@ -7,7 +7,10 @@ package de.amr.games.pacman.model;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.*;
+import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -91,7 +94,7 @@ public class GameLevel {
             ghost.setHouse(world.house());
             ghost.setFrightenedBehavior(g -> roam(g, world, frightenedGhostRelSpeed(g), pseudoRandomDirection()));
             ghost.setHuntingBehavior(game()::huntingBehaviour);
-            ghost.setRevivalPosition(ghostRevivalPosition(ghost.id()));
+            ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
             ghost.setBaseSpeed(GameModel.PPS_AT_100_PERCENT / (float) GameModel.FPS);
             ghost.setSpeedReturningHome(GameModel.PPS_GHOST_RETURNING_HOME / (float) GameModel.FPS);
             ghost.setSpeedInsideHouse(GameModel.PPS_GHOST_INHOUSE / (float) GameModel.FPS);
@@ -111,27 +114,6 @@ public class GameLevel {
 
         bonusSymbols = List.of(game().nextBonusSymbol(levelNumber()), game().nextBonusSymbol(levelNumber()));
         Logger.trace("Game level {} created.", levelData.levelNumber());
-    }
-
-    public Vector2f initialGhostPosition(byte ghostID) {
-        checkGhostID(ghostID);
-        return switch (ghostID) {
-            case RED_GHOST    -> world.house().door().entryPosition();
-            case PINK_GHOST   -> ArcadeWorld.HOUSE_MIDDLE_SEAT;
-            case CYAN_GHOST   -> ArcadeWorld.HOUSE_LEFT_SEAT;
-            case ORANGE_GHOST -> ArcadeWorld.HOUSE_RIGHT_SEAT;
-            default -> throw new IllegalGhostIDException(ghostID);
-        };
-    }
-
-    public Vector2f ghostRevivalPosition(byte ghostID) {
-        checkGhostID(ghostID);
-        return switch (ghostID) {
-            case RED_GHOST, PINK_GHOST -> ArcadeWorld.HOUSE_MIDDLE_SEAT;
-            case CYAN_GHOST            -> ArcadeWorld.HOUSE_LEFT_SEAT;
-            case ORANGE_GHOST          -> ArcadeWorld.HOUSE_RIGHT_SEAT;
-            default -> throw new IllegalGhostIDException(ghostID);
-        };
     }
 
     public Data data() {
@@ -314,20 +296,19 @@ public class GameLevel {
      * Pac-Man and the ghosts are placed at their initial positions and locked. The bonus, Pac-Man power timer and
      * energizer pulse are reset too.
      *
-     * @param guysVisible if the guys are visible
+     * @param visible if the guys are visible
      */
-    public void letsGetReadyToRumble(boolean guysVisible) {
+    public void letsGetReadyToRumble(boolean visible) {
         pac.reset();
         pac.setPosition(ArcadeWorld.PAC_POSITION);
         pac.setMoveAndWishDir(Direction.LEFT);
-        pac.setVisible(guysVisible);
+        pac.setVisible(visible);
         pac.resetAnimation();
-        Direction[] directions = { LEFT, DOWN, UP, UP };
         ghosts().forEach(ghost -> {
             ghost.reset();
-            ghost.setPosition(initialGhostPosition(ghost.id()));
-            ghost.setMoveAndWishDir(directions[ghost.id()]);
-            ghost.setVisible(guysVisible);
+            ghost.setPosition(GHOST_POSITIONS_ON_START[ghost.id()]);
+            ghost.setMoveAndWishDir(GHOST_DIRECTIONS_ON_START[ghost.id()]);
+            ghost.setVisible(visible);
             ghost.setState(LOCKED);
             ghost.resetAnimation();
         });

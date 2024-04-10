@@ -255,20 +255,25 @@ public interface ArcadeWorld {
                     TILES_X, TILES_Y, world.numCols(), world.numRows()));
         }
 
-        var house = new House();
-        house.setTopLeftTile(v2i(10, 15));
-        house.setSize(v2i(8, 5));
-        house.setDoor(new Door(v2i(13, 15), v2i(14, 15)));
-        world.setHouse(house);
-
         world.setScatterTarget(RED_GHOST,    v2i(25,  0)); // near right-upper corner
         world.setScatterTarget(PINK_GHOST,   v2i( 2,  0)); // near left-upper corner
         world.setScatterTarget(CYAN_GHOST,   v2i(27, 34)); // near right-lower corner
         world.setScatterTarget(ORANGE_GHOST, v2i( 0, 34)); // near left-lower corner
 
+        world.setHouse(HOUSE);
+
         return world;
     }
 
+    static House createHouse() {
+        var house = new House();
+        house.setTopLeftTile(v2i(10, 15));
+        house.setSize(v2i(8, 5));
+        house.setDoor(new Door(v2i(13, 15), v2i(14, 15)));
+        return house;
+    }
+
+    House HOUSE = createHouse();
     Vector2f HOUSE_LEFT_SEAT   = halfTileRightOf(11, 17);
     Vector2f HOUSE_MIDDLE_SEAT = halfTileRightOf(13, 17);
     Vector2f HOUSE_RIGHT_SEAT  = halfTileRightOf(15, 17);

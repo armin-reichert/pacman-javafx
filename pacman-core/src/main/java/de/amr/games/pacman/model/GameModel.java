@@ -7,17 +7,18 @@ package de.amr.games.pacman.model;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Score;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
-
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * Common interface of all game variants.
@@ -31,6 +32,27 @@ public interface GameModel {
     byte PINK_GHOST   = 1;
     byte CYAN_GHOST   = 2;
     byte ORANGE_GHOST = 3;
+
+    Direction[] GHOST_DIRECTIONS_ON_START = {
+        Direction.LEFT,
+        Direction.DOWN,
+        Direction.UP,
+        Direction.UP
+    };
+
+    Vector2f[] GHOST_POSITIONS_ON_START = {
+        ArcadeWorld.HOUSE.door().entryPosition(),
+        ArcadeWorld.HOUSE_MIDDLE_SEAT,
+        ArcadeWorld.HOUSE_LEFT_SEAT,
+        ArcadeWorld.HOUSE_RIGHT_SEAT
+    };
+
+    Vector2f[] GHOST_REVIVAL_POSITIONS = {
+        ArcadeWorld.HOUSE_MIDDLE_SEAT,
+        ArcadeWorld.HOUSE_MIDDLE_SEAT,
+        ArcadeWorld.HOUSE_LEFT_SEAT,
+        ArcadeWorld.HOUSE_RIGHT_SEAT
+    };
 
     /** Game loop frequency, ticks per second. */
     short FPS = 60;
