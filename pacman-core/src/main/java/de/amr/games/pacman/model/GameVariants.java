@@ -290,6 +290,7 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
 
         @Override
         public int[] huntingDurations(int levelNumber) {
+            checkLevelNumber(levelNumber);
             return switch (levelNumber) {
                 case 1       -> HUNTING_DURATIONS[0];
                 case 2, 3, 4 -> HUNTING_DURATIONS[1];

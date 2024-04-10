@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.model.actors.CreatureMovement.roam;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
@@ -58,7 +59,6 @@ public class GameLevel {
     private final World world;
     private final Pac pac;
     private final Ghost[] ghosts;
-    private final GhostHouseControl houseControl;
     private final List<Byte> bonusSymbols;
     private Bonus bonus;
     private byte huntingPhaseIndex;
@@ -74,16 +74,16 @@ public class GameLevel {
         this.world = world;
         this.data = levelData;
 
-        houseControl = new GhostHouseControl(levelData.number());
         eventLog = new SimulationStepEventLog();
         bonusReachedIndex = -1;
+        initGhostHouseControl();
 
         pac = new Pac(game().pacName());
         pac.reset();
         pac.setBaseSpeed(GameModel.PPS_AT_100_PERCENT / (float) GameModel.FPS);
         pac.setPowerFadingTicks(GameModel.PAC_POWER_FADING_TICKS); // not sure about duration
 
-        ghosts = Stream.of(GameModel.RED_GHOST, GameModel.PINK_GHOST, GameModel.CYAN_GHOST, GameModel.ORANGE_GHOST)
+        ghosts = Stream.of(RED_GHOST, PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
             .map(id -> new Ghost(id, game().ghostName(id))).toArray(Ghost[]::new);
 
         ghosts().forEach(ghost -> {
@@ -116,9 +116,9 @@ public class GameLevel {
     public Direction initialGhostDirection(byte ghostID) {
         checkGhostID(ghostID);
         return switch (ghostID) {
-            case GameModel.RED_GHOST -> LEFT;
-            case GameModel.PINK_GHOST -> DOWN;
-            case GameModel.CYAN_GHOST, GameModel.ORANGE_GHOST -> UP;
+            case RED_GHOST -> LEFT;
+            case PINK_GHOST -> DOWN;
+            case CYAN_GHOST, ORANGE_GHOST -> UP;
             default -> throw new IllegalGhostIDException(ghostID);
         };
     }
@@ -126,10 +126,10 @@ public class GameLevel {
     public Vector2f initialGhostPosition(byte ghostID) {
         checkGhostID(ghostID);
         return switch (ghostID) {
-            case GameModel.RED_GHOST    -> world.house().door().entryPosition();
-            case GameModel.PINK_GHOST   -> ArcadeWorld.HOUSE_MIDDLE_SEAT;
-            case GameModel.CYAN_GHOST   -> ArcadeWorld.HOUSE_LEFT_SEAT;
-            case GameModel.ORANGE_GHOST -> ArcadeWorld.HOUSE_RIGHT_SEAT;
+            case RED_GHOST    -> world.house().door().entryPosition();
+            case PINK_GHOST   -> ArcadeWorld.HOUSE_MIDDLE_SEAT;
+            case CYAN_GHOST   -> ArcadeWorld.HOUSE_LEFT_SEAT;
+            case ORANGE_GHOST -> ArcadeWorld.HOUSE_RIGHT_SEAT;
             default -> throw new IllegalGhostIDException(ghostID);
         };
     }
@@ -137,9 +137,9 @@ public class GameLevel {
     public Vector2f ghostRevivalPosition(byte ghostID) {
         checkGhostID(ghostID);
         return switch (ghostID) {
-            case GameModel.RED_GHOST, GameModel.PINK_GHOST -> ArcadeWorld.HOUSE_MIDDLE_SEAT;
-            case GameModel.CYAN_GHOST            -> ArcadeWorld.HOUSE_LEFT_SEAT;
-            case GameModel.ORANGE_GHOST          -> ArcadeWorld.HOUSE_RIGHT_SEAT;
+            case RED_GHOST, PINK_GHOST -> ArcadeWorld.HOUSE_MIDDLE_SEAT;
+            case CYAN_GHOST            -> ArcadeWorld.HOUSE_LEFT_SEAT;
+            case ORANGE_GHOST          -> ArcadeWorld.HOUSE_RIGHT_SEAT;
             default -> throw new IllegalGhostIDException(ghostID);
         };
     }
@@ -147,10 +147,10 @@ public class GameLevel {
     public Vector2i ghostScatterTarget(byte ghostID) {
         checkGhostID(ghostID);
         return switch (ghostID) {
-            case GameModel.RED_GHOST    -> ArcadeWorld.SCATTER_TARGET_RIGHT_UPPER_CORNER;
-            case GameModel.PINK_GHOST   -> ArcadeWorld.SCATTER_TARGET_LEFT_UPPER_CORNER;
-            case GameModel.CYAN_GHOST   -> ArcadeWorld.SCATTER_TARGET_RIGHT_LOWER_CORNER;
-            case GameModel.ORANGE_GHOST -> ArcadeWorld.SCATTER_TARGET_LEFT_LOWER_CORNER;
+            case RED_GHOST    -> ArcadeWorld.SCATTER_TARGET_RIGHT_UPPER_CORNER;
+            case PINK_GHOST   -> ArcadeWorld.SCATTER_TARGET_LEFT_UPPER_CORNER;
+            case CYAN_GHOST   -> ArcadeWorld.SCATTER_TARGET_RIGHT_LOWER_CORNER;
+            case ORANGE_GHOST -> ArcadeWorld.SCATTER_TARGET_LEFT_LOWER_CORNER;
             default -> throw new IllegalGhostIDException(ghostID);
         };
     }
@@ -280,7 +280,7 @@ public class GameLevel {
 
     public void letPacDie() {
         stopHuntingPhase();
-        houseControl.resetGlobalCounterAndSetEnabled(true);
+        resetGlobalDotCounterAndSetEnabled(true);
         enableCruiseElroyState(false);
         pac.die();
     }
@@ -288,14 +288,14 @@ public class GameLevel {
     public Vector2i chasingTarget(byte ghostID) {
         return switch (ghostID) {
             // Blinky: attacks Pac-Man directly
-            case GameModel.RED_GHOST -> pac.tile();
+            case RED_GHOST -> pac.tile();
             // Pinky: ambushes Pac-Man
-            case GameModel.PINK_GHOST -> pac.tilesAheadWithOverflowBug(4);
+            case PINK_GHOST -> pac.tilesAheadWithOverflowBug(4);
             // Inky: attacks from opposite side as Blinky
-            case GameModel.CYAN_GHOST -> pac.tilesAheadWithOverflowBug(2).scaled(2).minus(ghosts[GameModel.RED_GHOST].tile());
+            case CYAN_GHOST -> pac.tilesAheadWithOverflowBug(2).scaled(2).minus(ghosts[RED_GHOST].tile());
             // Clyde/Sue: attacks directly but retreats if Pac is near
-            case GameModel.ORANGE_GHOST -> ghosts[GameModel.ORANGE_GHOST].tile().euclideanDistance(pac.tile()) < 8
-                ? ghostScatterTarget(GameModel.ORANGE_GHOST)
+            case ORANGE_GHOST -> ghosts[ORANGE_GHOST].tile().euclideanDistance(pac.tile()) < 8
+                ? ghostScatterTarget(ORANGE_GHOST)
                 : pac.tile();
             default -> throw new IllegalGhostIDException(ghostID);
         };
@@ -363,10 +363,10 @@ public class GameLevel {
         if (world.isTunnel(ghost.tile())) {
             return data.ghostSpeedTunnelPercentage();
         }
-        if (ghost.id() == GameModel.RED_GHOST && cruiseElroyState == 1) {
+        if (ghost.id() == RED_GHOST && cruiseElroyState == 1) {
             return data.elroy1SpeedPercentage();
         }
-        if (ghost.id() == GameModel.RED_GHOST && cruiseElroyState == 2) {
+        if (ghost.id() == RED_GHOST && cruiseElroyState == 2) {
             return data.elroy2SpeedPercentage();
         }
         return data.ghostSpeedPercentage();
@@ -395,7 +395,7 @@ public class GameLevel {
                 pac.setRestingTicks(GameModel.RESTING_TICKS_PELLET);
                 scorePoints(GameModel.POINTS_PELLET);
             }
-            houseControl.updateDotCount(this);
+            updateDotCount();
             world.removeFood(pacTile);
             if (world.uneatenFoodCount() == data.elroy1DotsLeft()) {
                 setCruiseElroyState(1);
@@ -460,7 +460,7 @@ public class GameLevel {
     }
 
     private void updateGhosts() {
-        houseControl.unlockGhost(this).ifPresent(unlocked -> {
+        unlockGhost().ifPresent(unlocked -> {
             var ghost = unlocked.ghost();
             Logger.info("{} unlocked: {}", ghost.name(), unlocked.reason());
             if (ghost.insideHouse(world.house())) {
@@ -469,7 +469,7 @@ public class GameLevel {
                 ghost.setMoveAndWishDir(LEFT);
                 ghost.setState(HUNTING_PAC);
             }
-            if (ghost.id() == GameModel.ORANGE_GHOST && cruiseElroyState < 0) {
+            if (ghost.id() == ORANGE_GHOST && cruiseElroyState < 0) {
                 enableCruiseElroyState(true);
                 Logger.trace("Cruise elroy mode re-enabled because {} exits house", ghost.name());
             }
@@ -585,5 +585,165 @@ public class GameLevel {
         if (bonus != null) {
             game().publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
         }
+    }
+
+    // Ghost house access control
+
+    private static final byte UNLIMITED = -1;
+
+    private byte[]  globalDotLimits;
+    private int[] dotCounters;
+    private int     pacStarvingLimitTicks;
+    private int globalDotCounter;
+    private boolean globalDotCounterEnabled;
+
+    /**
+     * From the Pac-Man dossier:
+     * <p>
+     * Commonly referred to as the ghost house or monster pen, this cordoned-off area in the center of the maze is the
+     * domain of the four ghosts and off-limits to Pac-Man.
+     * </p>
+     * <p>
+     * Whenever a level is completed or a life is lost, the ghosts are returned to their starting positions in and around
+     * the ghost house before play continues—Blinky is always located just above and outside, while the other three are
+     * placed inside: Inky on the left, Pinky in the middle, and Clyde on the right.
+     * The pink door on top is used by the ghosts to enter or exit the house. Once a ghost leaves, however, it cannot
+     * reenter unless it is first captured by Pac-Man—then the disembodied eyes can return home to be revived.
+     * Since Blinky is already on the outside after a level is completed or a life is lost, the only time he can get
+     * inside the ghost house is after Pac-Man captures him, and he immediately turns around to leave once revived.
+     * That's about all there is to know about Blinky's behavior in terms of the ghost house, but determining when the
+     * other three ghosts leave home is an involved process based on several variables and conditions.
+     * The rest of this section will deal with them exclusively. Accordingly, any mention of “the ghosts” below refers t
+     * o Pinky, Inky, and Clyde, but not Blinky.
+     * </p>
+     * <p>
+     * The first control used to evaluate when the ghosts leave home is a personal counter each ghost retains for
+     * tracking the number of dots Pac-Man eats. Each ghost's “dot counter” is reset to zero when a level begins and can
+     * only be active when inside the ghost house, but only one ghost's counter can be active at any given time regardless
+     * of how many ghosts are inside. The order of preference for choosing which ghost's counter to activate is:
+     * Pinky, then Inky, and then Clyde. For every dot Pac-Man eats, the preferred ghost in the house (if any) gets its
+     * dot counter increased by one. Each ghost also has a “dot limit” associated with his counter, per level.
+     * If the preferred ghost reaches or exceeds his dot limit, it immediately exits the house and its dot counter is
+     * deactivated (but not reset). The most-preferred ghost still waiting inside the house (if any) activates its timer
+     * at this point and begins counting dots.
+     * </p>
+     * <p>
+     * Pinky's dot limit is always set to zero, causing him to leave home immediately when every level begins.
+     * For the first level, Inky has a limit of 30 dots, and Clyde has a limit of 60. This results in Pinky exiting
+     * immediately which, in turn, activates Inky's dot counter. His counter must then reach or exceed 30 dots before
+     * he can leave the house. Once Inky starts to leave, Clyde's counter (which is still at zero) is activated and
+     * starts counting dots. When his counter reaches or exceeds 60, he may exit. On the second level, Inky's dot limit
+     * is changed from 30 to zero, while Clyde's is changed from 60 to 50. Inky will exit the house as soon as the level
+     * begins from now on. Starting at level three, all the ghosts have a dot limit of zero for the remainder of the game
+     * and will leave the ghost house immediately at the start of every level.
+     * </p>
+     * <p>
+     * Whenever a life is lost, the system disables (but does not reset) the ghosts' individual dot counters and uses
+     * a global dot counter instead. This counter is enabled and reset to zero after a life is lost, counting the number
+     * of dots eaten from that point forward. The three ghosts inside the house must wait for this special counter to
+     * tell them when to leave. Pinky is released when the counter value is equal to 7 and Inky is released when it
+     * equals 17. The only way to deactivate the counter is for Clyde to be inside the house when the counter equals 32;
+     * otherwise, it will keep counting dots even after the ghost house is empty. If Clyde is present at the
+     * appropriate time, the global counter is reset to zero and deactivated, and the ghosts' personal dot limits are
+     * re-enabled and used as before for determining when to leave the house (including Clyde who is still in the house
+     * at this time).
+     * </p>
+     * <p>
+     * If dot counters were the only control, Pac-Man could simply stop eating dots early on and keep the ghosts
+     * trapped inside the house forever. Consequently, a separate timer control was implemented to handle this case by
+     * tracking the amount of time elapsed since Pac-Man has last eaten a dot. This timer is always running but gets
+     * reset to zero each time a dot is eaten. Anytime Pac-Man avoids eating dots long enough for the timer to reach
+     * its limit, the most-preferred ghost waiting in the ghost house (if any) is forced to leave immediately, and
+     * the timer is reset to zero. The same order of preference described above is used by this control as well.
+     * The game begins with an initial timer limit of four seconds, but lowers to it to three seconds starting with
+     * level five.
+     * </p>
+     * <p>
+     * The more astute reader may have already noticed there is subtle flaw in this system resulting in a way to
+     * keep Pinky, Inky, and Clyde inside the ghost house for a very long time after eating them.
+     * The trick involves having to sacrifice a life in order to reset and enable the global dot counter,
+     * and then making sure Clyde exits the house before that counter is equal to 32.
+     * This is accomplished by avoiding eating dots and waiting for the timer limit to force Clyde out.
+     * Once Clyde is moving for the exit, start eating dots again until at least 32 dots have been consumed since
+     * the life was lost. Now head for an energizer and gobble up some ghosts. Blinky will leave the house immediately
+     * as usual, but the other three ghosts will remain “stuck” inside as long as Pac-Man continues eating dots with
+     * sufficient frequency as not to trigger the control timer. Why does this happen?
+     * The key lies in how the global dot counter works—it cannot be deactivated if Clyde is outside the house when
+     * the counter has a value of 32. By letting the timer force Clyde out before 32 dots are eaten, the global dot
+     * counter will keep counting dots instead of deactivating when it reaches 32. Now when the ghosts are eaten by
+     * Pac-Man and return home, they will still be using the global dot counter to determine when to leave.
+     * As previously described, however, this counter's logic only checks for three values: 7, 17, and 32, and
+     * once those numbers are exceeded, the counter has no way to release the ghosts associated with them.
+     * The only control left to release the ghosts is the timer which can be easily avoided by eating a dot every
+     * so often to reset it.
+     * </p>
+     * </pre>
+     */
+    private void initGhostHouseControl() {
+        globalDotLimits = new byte[] {UNLIMITED, 7, 17, UNLIMITED};
+        dotCounters = new int[] {0, 0, 0, 0};
+        pacStarvingLimitTicks = 0;
+        globalDotCounter = 0;
+        globalDotCounterEnabled = false;
+        pacStarvingLimitTicks = number() < 5 ? 240 : 180; // 4 sec : 3 sec
+    }
+
+    private static byte privateDotLimit(int levelNumber, byte ghostID) {
+        if (levelNumber == 1 && ghostID == CYAN_GHOST)   return 30;
+        if (levelNumber == 1 && ghostID == ORANGE_GHOST) return 60;
+        if (levelNumber == 2 && ghostID == ORANGE_GHOST) return 50;
+        return 0;
+    }
+
+    private void resetGlobalDotCounterAndSetEnabled(boolean enabled) {
+        globalDotCounter = 0;
+        globalDotCounterEnabled = enabled;
+        Logger.trace("Global dot counter set to 0 and {}", enabled ? "enabled" : "disabled");
+    }
+
+    private void updateDotCount() {
+        if (globalDotCounterEnabled) {
+            if (ghost(ORANGE_GHOST).is(LOCKED) && globalDotCounter == 32) {
+                Logger.trace("{} inside house when global counter reached 32", ghost(ORANGE_GHOST).name());
+                resetGlobalDotCounterAndSetEnabled(false);
+            } else {
+                globalDotCounter++;
+                Logger.trace("Global dot counter = {}", globalDotCounter);
+            }
+        } else {
+            ghosts(LOCKED).filter(ghost -> ghost.insideHouse(world.house())).findFirst().ifPresent(ghost -> {
+                    dotCounters[ghost.id()]++;
+                    Logger.trace("{} dot counter = {}", ghost.name(), dotCounters[ghost.id()]);
+                });
+        }
+    }
+
+    private Optional<GhostUnlockInfo> unlockGhost() {
+        if (ghost(RED_GHOST).is(LOCKED)) {
+            return Optional.of(new GhostUnlockInfo(ghost(RED_GHOST), "Gets unlocked immediately"));
+        }
+        Ghost candidate = Stream.of(PINK_GHOST, CYAN_GHOST, ORANGE_GHOST).map(this::ghost)
+            .filter(ghost -> ghost.is(LOCKED))
+            .findFirst().orElse(null);
+        if (candidate == null) {
+            return Optional.empty();
+        }
+        // check private dot counter first (if enabled)
+        if (!globalDotCounterEnabled && dotCounters[candidate.id()] >= privateDotLimit(number(), candidate.id())) {
+            return Optional.of(new GhostUnlockInfo(candidate,
+                "Private dot counter at limit (%d)", privateDotLimit(number(), candidate.id())));
+        }
+        // check global dot counter
+        if (globalDotLimits[candidate.id()] != UNLIMITED && globalDotCounter >= globalDotLimits[candidate.id()]) {
+            return Optional.of(new GhostUnlockInfo(candidate,
+                "Global dot counter at limit (%d)", globalDotLimits[candidate.id()]));
+        }
+        // check Pac-Man starving time
+        if (pac.starvingTicks() >= pacStarvingLimitTicks) {
+            pac.endStarving();
+            return Optional.of(new GhostUnlockInfo(candidate,
+                "%s reached starving limit (%d ticks)", pac.name(), pacStarvingLimitTicks));
+        }
+        return Optional.empty();
     }
 }
