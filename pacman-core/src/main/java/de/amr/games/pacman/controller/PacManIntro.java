@@ -152,14 +152,14 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
 
             @Override
             public void onUpdate(PacManIntro intro) {
-                if (intro.ghosts().allMatch(ghost -> ghost.is(EATEN))) {
+                if (intro.ghosts().allMatch(ghost -> ghost.inState(EATEN))) {
                     intro.pacMan.hide();
                     intro.changeState(READY_TO_PLAY);
                     return;
                 }
 
                 intro.ghosts()
-                    .filter(ghost -> ghost.is(FRIGHTENED) && ghost.sameTile(intro.pacMan))
+                    .filter(ghost -> ghost.inState(FRIGHTENED) && ghost.sameTile(intro.pacMan))
                     .findFirst()
                     .ifPresent(victim -> {
                         intro.pacMan.victims().add(victim);
@@ -179,7 +179,7 @@ public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
                     intro.pacMan.show();
                     intro.pacMan.setSpeed(intro.chaseSpeed);
                     intro.ghosts().forEach(ghost -> {
-                        if (ghost.is(EATEN)) {
+                        if (ghost.inState(EATEN)) {
                             ghost.hide();
                         } else {
                             ghost.show();

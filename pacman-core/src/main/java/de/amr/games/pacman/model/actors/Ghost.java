@@ -150,7 +150,7 @@ public class Ghost extends Creature {
             }
         }
         if (house.door().occupies(tile)) {
-            return is(ENTERING_HOUSE, LEAVING_HOUSE);
+            return inState(ENTERING_HOUSE, LEAVING_HOUSE);
         }
         if (world.insideBounds(tile)) {
             return !world.isWall(tile);
@@ -160,7 +160,7 @@ public class Ghost extends Creature {
 
     @Override
     public boolean canReverse() {
-        return newTileEntered && is(HUNTING_PAC, FRIGHTENED);
+        return newTileEntered && inState(HUNTING_PAC, FRIGHTENED);
     }
 
     public void selectAnimation(String name) {
@@ -201,15 +201,16 @@ public class Ghost extends Creature {
     }
 
     /**
-     * @param alternatives ghost states to be checked
-     * @return <code>true</code> if this ghost is in any of the given states. If no alternatives are given, returns
+     * @param stateAlternatives ghost states to be checked
+     * @return <code>true</code> if this ghost is in any of the given states.
+     * If no alternatives are given, an exception is thrown.
      * <code>false</code>
      */
-    public boolean is(GhostState... alternatives) {
-        if (state == null) {
-            throw new IllegalStateException("Ghost state is not defined");
+    public boolean inState(GhostState... stateAlternatives) {
+        if (stateAlternatives.length == 0) {
+            throw new IllegalArgumentException("No states to check for ghost");
         }
-        return oneOf(state, alternatives);
+        return oneOf(state, stateAlternatives);
     }
 
     /**

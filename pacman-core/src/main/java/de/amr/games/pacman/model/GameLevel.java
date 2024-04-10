@@ -191,7 +191,7 @@ public class GameLevel {
      */
     public Stream<Ghost> ghosts(GhostState... states) {
         if (states.length > 0) {
-            return Stream.of(ghosts).filter(ghost -> ghost.is(states));
+            return Stream.of(ghosts).filter(ghost -> ghost.inState(states));
         }
         // when no states are given, return *all* ghosts (ghost.is() would return *no* ghosts!)
         return Stream.of(ghosts);
@@ -692,7 +692,7 @@ public class GameLevel {
 
     private void updateDotCount() {
         if (globalDotCounterEnabled) {
-            if (ghost(ORANGE_GHOST).is(LOCKED) && globalDotCounter == 32) {
+            if (ghost(ORANGE_GHOST).inState(LOCKED) && globalDotCounter == 32) {
                 Logger.trace("{} inside house when global counter reached 32", ghost(ORANGE_GHOST).name());
                 resetGlobalDotCounterAndSetEnabled(false);
             } else {
@@ -708,11 +708,11 @@ public class GameLevel {
     }
 
     private Optional<GhostUnlockInfo> unlockGhost() {
-        if (ghost(RED_GHOST).is(LOCKED)) {
+        if (ghost(RED_GHOST).inState(LOCKED)) {
             return Optional.of(new GhostUnlockInfo(ghost(RED_GHOST), "Gets unlocked immediately"));
         }
         Ghost candidate = Stream.of(PINK_GHOST, CYAN_GHOST, ORANGE_GHOST).map(this::ghost)
-            .filter(ghost -> ghost.is(LOCKED))
+            .filter(ghost -> ghost.inState(LOCKED))
             .findFirst().orElse(null);
         if (candidate == null) {
             return Optional.empty();
