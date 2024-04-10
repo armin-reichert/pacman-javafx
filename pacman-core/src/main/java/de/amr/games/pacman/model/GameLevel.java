@@ -105,16 +105,11 @@ public class GameLevel {
             ghost.setSpeedInsideHouse(GameModel.PPS_GHOST_INHOUSE / (float) GameModel.FPS);
         });
 
-        //TODO avoid switch over game variant
-        switch (game()) {
-            case GameVariants.MS_PACMAN -> {}
-            case GameVariants.PACMAN -> {
-                var forbiddenMovesAtTile = new HashMap<Vector2i, List<Direction>>();
-                var up = List.of(UP);
-                ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbiddenMovesAtTile.put(tile, up));
-                ghosts().forEach(ghost -> ghost.setForbiddenMoves(forbiddenMovesAtTile));
-            }
-            default -> throw new IllegalGameVariantException(game());
+        if (game() == GameVariants.PACMAN) {
+            var forbidden = new HashMap<Vector2i, List<Direction>>();
+            var up = List.of(UP);
+            ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbidden.put(tile, up));
+            ghosts().forEach(ghost -> ghost.setForbiddenMoves(forbidden));
         }
 
         bonusSymbols = List.of(game().nextBonusSymbol(levelNumber), game().nextBonusSymbol(levelNumber));
