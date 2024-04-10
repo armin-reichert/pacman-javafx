@@ -33,7 +33,7 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
 public class GameLevel {
 
     public record Data(
-        int number, // Level number, starts at 1.
+        int levelNumber, // Level number, starts at 1.
         boolean demoLevel,
         byte pacSpeedPercentage, // Relative Pac-Man speed (percentage of base speed).
         byte ghostSpeedPercentage, // Relative ghost speed when hunting or scattering.
@@ -48,8 +48,8 @@ public class GameLevel {
         byte numFlashes, // Number of maze flashes at end of this level.
         byte intermissionNumber) // Number (1,2,3) of intermission scene played after this level (0=no intermission).
     {
-        public Data(int number, boolean demoLevel, byte[] data) {
-            this(number, demoLevel, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8],
+        public Data(int no, boolean demoLevel, byte[] data) {
+            this(no, demoLevel, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8],
                 data[9], data[10], data[11]);
         }
     }
@@ -109,8 +109,8 @@ public class GameLevel {
             default -> throw new IllegalGameVariantException(game());
         }
 
-        bonusSymbols = List.of(game().nextBonusSymbol(number()), game().nextBonusSymbol(number()));
-        Logger.trace("Game level {} created.", levelData.number());
+        bonusSymbols = List.of(game().nextBonusSymbol(levelNumber()), game().nextBonusSymbol(levelNumber()));
+        Logger.trace("Game level {} created.", levelData.levelNumber());
     }
 
     public Direction initialGhostDirection(byte ghostID) {
@@ -174,8 +174,8 @@ public class GameLevel {
     /**
      * @return level number, starting with 1.
      */
-    public int number() {
-        return data().number();
+    public int levelNumber() {
+        return data().levelNumber();
     }
 
     public World world() {
@@ -257,7 +257,7 @@ public class GameLevel {
             throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + index);
         }
         huntingPhaseIndex = (byte) index;
-        var durations = game().huntingDurations(number());
+        var durations = game().huntingDurations(levelNumber());
         var ticks = durations[index] == -1 ? TickTimer.INDEFINITE : durations[index];
         huntingTimer.reset(ticks);
         huntingTimer.start();
@@ -376,7 +376,7 @@ public class GameLevel {
 
     private void scorePoints(int points) {
         if (!isDemoLevel()) {
-            game().scorePoints(number(), points);
+            game().scorePoints(levelNumber(), points);
         }
     }
 
@@ -504,7 +504,7 @@ public class GameLevel {
     }
 
     public void doLevelTestStep(TickTimer timer, int lastTestedLevel) {
-        if (number() <= lastTestedLevel) {
+        if (levelNumber() <= lastTestedLevel) {
             if (timer.atSecond(0.5)) {
                 letsGetReadyToRumble(true);
             } else if (timer.atSecond(1.5)) {
@@ -528,7 +528,7 @@ public class GameLevel {
                 ghosts().forEach(Ghost::hide);
                 bonus().ifPresent(Bonus::setInactive);
                 world.mazeFlashing().reset();
-                game().createAndStartLevel(number() + 1);
+                game().createAndStartLevel(levelNumber() + 1);
             }
             world.energizerBlinking().tick();
             world.mazeFlashing().tick();
@@ -545,7 +545,7 @@ public class GameLevel {
             if (totalNumGhostsKilled == 16) {
                 int points = GameModel.POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
                 scorePoints(points);
-                Logger.info("Scored {} points for killing all ghosts at level {}", points, number());
+                Logger.info("Scored {} points for killing all ghosts at level {}", points, levelNumber());
             }
         }
     }
@@ -685,7 +685,7 @@ public class GameLevel {
         pacStarvingLimitTicks = 0;
         globalDotCounter = 0;
         globalDotCounterEnabled = false;
-        pacStarvingLimitTicks = number() < 5 ? 240 : 180; // 4 sec : 3 sec
+        pacStarvingLimitTicks = levelNumber() < 5 ? 240 : 180; // 4 sec : 3 sec
     }
 
     private static byte privateDotLimit(int levelNumber, byte ghostID) {
@@ -729,9 +729,9 @@ public class GameLevel {
             return Optional.empty();
         }
         // check private dot counter first (if enabled)
-        if (!globalDotCounterEnabled && dotCounters[candidate.id()] >= privateDotLimit(number(), candidate.id())) {
+        if (!globalDotCounterEnabled && dotCounters[candidate.id()] >= privateDotLimit(levelNumber(), candidate.id())) {
             return Optional.of(new GhostUnlockInfo(candidate,
-                "Private dot counter at limit (%d)", privateDotLimit(number(), candidate.id())));
+                "Private dot counter at limit (%d)", privateDotLimit(levelNumber(), candidate.id())));
         }
         // check global dot counter
         if (globalDotLimits[candidate.id()] != UNLIMITED && globalDotCounter >= globalDotLimits[candidate.id()]) {

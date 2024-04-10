@@ -416,7 +416,7 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
     public void setLevel(GameLevel level) {
         this.level = level;
         if (level != null) {
-            score.setLevelNumber(level.number());
+            score.setLevelNumber(level.levelNumber());
         }
     }
 
