@@ -18,11 +18,9 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
 import static de.amr.games.pacman.model.actors.CreatureMovement.followTarget;
@@ -305,8 +303,8 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
         @Override
         public void createAndStartLevel(int levelNumber) {
             checkLevelNumber(levelNumber);
-            var level = new GameLevel(levelNumber, false, RAW_LEVEL_DATA[levelDataIndex(levelNumber)],
-                createPacManWorld());
+            var level = new GameLevel(levelNumber, false, RAW_LEVEL_DATA[levelDataIndex(levelNumber)], createPacManWorld());
+            addForbiddenMoves(level);
             setLevel(level);
             if (levelNumber == 1) {
                 levelCounter.clear();
@@ -325,6 +323,7 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
         @Override
         public void createAndStartDemoLevel() {
             var level = new GameLevel(1, true, RAW_LEVEL_DATA[0], createPacManWorld());
+            addForbiddenMoves(level);
             setLevel(level);
             level.pac().setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
             level.pac().setUseAutopilot(true);
@@ -335,6 +334,13 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
             level.letsGetReadyToRumble(true);
             Logger.info("Demo Level started ({})", this);
             publishGameEvent(GameEventType.LEVEL_STARTED);
+        }
+
+        private void addForbiddenMoves(GameLevel level) {
+            var forbidden = new HashMap<Vector2i, List<Direction>>();
+            var up = List.of(UP);
+            ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbidden.put(tile, up));
+            level.ghosts().forEach(ghost -> ghost.setForbiddenMoves(forbidden));
         }
 
         @Override

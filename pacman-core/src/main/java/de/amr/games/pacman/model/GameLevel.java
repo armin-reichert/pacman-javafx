@@ -105,13 +105,6 @@ public class GameLevel {
             ghost.setSpeedInsideHouse(GameModel.PPS_GHOST_INHOUSE / (float) GameModel.FPS);
         });
 
-        if (game() == GameVariants.PACMAN) {
-            var forbidden = new HashMap<Vector2i, List<Direction>>();
-            var up = List.of(UP);
-            ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbidden.put(tile, up));
-            ghosts().forEach(ghost -> ghost.setForbiddenMoves(forbidden));
-        }
-
         bonusSymbols = List.of(game().nextBonusSymbol(levelNumber), game().nextBonusSymbol(levelNumber));
         Logger.trace("Game level {} created.", levelNumber);
     }
