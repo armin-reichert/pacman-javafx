@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.test;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
@@ -59,12 +60,13 @@ public class PacManGameTest {
         assertEquals(ArcadeWorld.TILES_X, world.numCols());
         assertEquals(ArcadeWorld.TILES_Y, world.numRows());
 
+        Direction[] directions = { Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP };
         for (var id: List.of(RED_GHOST, PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)) {
             var ghost = level.ghost(id);
             assertEquals(0f, ghost.velocity().length(), 0);
             assertEquals(level.initialGhostPosition(ghost.id()), ghost.position());
-            assertEquals(level.initialGhostDirection(ghost.id()), ghost.moveDir());
-            assertEquals(level.initialGhostDirection(ghost.id()), ghost.wishDir());
+            assertEquals(directions[ghost.id()], ghost.moveDir());
+            assertEquals(directions[ghost.id()], ghost.wishDir());
             assertNotEquals(Vector2f.ZERO, level.ghostRevivalPosition(ghost.id()));
             assertNotEquals(Vector2i.ZERO, level.world().ghostScatterTarget(ghost.id()));
         }

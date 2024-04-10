@@ -113,16 +113,6 @@ public class GameLevel {
         Logger.trace("Game level {} created.", levelData.levelNumber());
     }
 
-    public Direction initialGhostDirection(byte ghostID) {
-        checkGhostID(ghostID);
-        return switch (ghostID) {
-            case RED_GHOST -> LEFT;
-            case PINK_GHOST -> DOWN;
-            case CYAN_GHOST, ORANGE_GHOST -> UP;
-            default -> throw new IllegalGhostIDException(ghostID);
-        };
-    }
-
     public Vector2f initialGhostPosition(byte ghostID) {
         checkGhostID(ghostID);
         return switch (ghostID) {
@@ -332,10 +322,11 @@ public class GameLevel {
         pac.setMoveAndWishDir(Direction.LEFT);
         pac.setVisible(guysVisible);
         pac.resetAnimation();
+        Direction[] directions = { LEFT, DOWN, UP, UP };
         ghosts().forEach(ghost -> {
             ghost.reset();
             ghost.setPosition(initialGhostPosition(ghost.id()));
-            ghost.setMoveAndWishDir(initialGhostDirection(ghost.id()));
+            ghost.setMoveAndWishDir(directions[ghost.id()]);
             ghost.setVisible(guysVisible);
             ghost.setState(LOCKED);
             ghost.resetAnimation();
