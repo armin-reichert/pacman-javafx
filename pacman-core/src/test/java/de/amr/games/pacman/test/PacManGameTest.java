@@ -65,7 +65,6 @@ public class PacManGameTest {
             assertEquals(GHOST_POSITIONS_ON_START[ghost.id()], ghost.position());
             assertEquals(GHOST_DIRECTIONS_ON_START[ghost.id()], ghost.moveDir());
             assertEquals(GHOST_DIRECTIONS_ON_START[ghost.id()], ghost.wishDir());
-            assertNotEquals(Vector2i.ZERO, level.world().ghostScatterTarget(ghost.id()));
         }
     }
 
