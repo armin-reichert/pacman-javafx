@@ -349,7 +349,7 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
             if (level.chasingPhase().isPresent() || ghost.id() == RED_GHOST && level.cruiseElroyState() > 0) {
                 followTarget(ghost, level.world(), level.chasingTarget(ghost.id()), relSpeed);
             } else {
-                followTarget(ghost, level.world(), level.world().ghostScatterTarget(ghost.id()), relSpeed);
+                followTarget(ghost, level.world(), ghostScatterTarget(ghost.id()), relSpeed);
             }
         }
     };
@@ -392,6 +392,16 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
     boolean playing;
     short initialLives = 3;
     short lives;
+
+    protected Vector2i ghostScatterTarget(byte ghostID) {
+        return switch (ghostID) {
+            case RED_GHOST -> SCATTER_TILE_NE;
+            case PINK_GHOST -> SCATTER_TILE_NW;
+            case CYAN_GHOST -> SCATTER_TILE_SE;
+            case ORANGE_GHOST -> SCATTER_TILE_SW;
+            default -> throw new IllegalGhostIDException(ghostID);
+        };
+    }
 
     // Why does the default implementation return NULL as soon as the enum classes have methods?
     @Override
