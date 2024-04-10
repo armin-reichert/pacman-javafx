@@ -164,7 +164,7 @@ public class GameLevel {
      * @return level number, starting with 1.
      */
     public int levelNumber() {
-        return data().levelNumber();
+        return data.levelNumber();
     }
 
     public World world() {
