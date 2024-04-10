@@ -144,17 +144,6 @@ public class GameLevel {
         };
     }
 
-    public Vector2i ghostScatterTarget(byte ghostID) {
-        checkGhostID(ghostID);
-        return switch (ghostID) {
-            case RED_GHOST    -> ArcadeWorld.SCATTER_TARGET_RIGHT_UPPER_CORNER;
-            case PINK_GHOST   -> ArcadeWorld.SCATTER_TARGET_LEFT_UPPER_CORNER;
-            case CYAN_GHOST   -> ArcadeWorld.SCATTER_TARGET_RIGHT_LOWER_CORNER;
-            case ORANGE_GHOST -> ArcadeWorld.SCATTER_TARGET_LEFT_LOWER_CORNER;
-            default -> throw new IllegalGhostIDException(ghostID);
-        };
-    }
-
     public Data data() {
         return data;
     }
@@ -295,7 +284,7 @@ public class GameLevel {
             case CYAN_GHOST -> pac.tilesAheadWithOverflowBug(2).scaled(2).minus(ghosts[RED_GHOST].tile());
             // Clyde/Sue: attacks directly but retreats if Pac is near
             case ORANGE_GHOST -> ghosts[ORANGE_GHOST].tile().euclideanDistance(pac.tile()) < 8
-                ? ghostScatterTarget(ORANGE_GHOST)
+                ? world.ghostScatterTarget(ORANGE_GHOST)
                 : pac.tile();
             default -> throw new IllegalGhostIDException(ghostID);
         };

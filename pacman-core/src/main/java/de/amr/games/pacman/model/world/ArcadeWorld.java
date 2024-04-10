@@ -8,6 +8,7 @@ import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
+import static de.amr.games.pacman.model.GameModel.*;
 
 /**
  * The worlds from the original Arcade games.
@@ -220,11 +221,6 @@ public interface ArcadeWorld {
         }
     };
 
-    Vector2i SCATTER_TARGET_LEFT_UPPER_CORNER  = v2i(2, 0);
-    Vector2i SCATTER_TARGET_RIGHT_UPPER_CORNER = v2i(25, 0);
-    Vector2i SCATTER_TARGET_LEFT_LOWER_CORNER  = v2i(0, 34);
-    Vector2i SCATTER_TARGET_RIGHT_LOWER_CORNER = v2i(27, 34);
-
     Vector2f BONUS_POSITION = halfTileRightOf(13, 20);
     Vector2f PAC_POSITION   = halfTileRightOf(13, 26);
 
@@ -258,11 +254,18 @@ public interface ArcadeWorld {
                 String.format("Arcade map must have %d columns and %d rows but has %d columns and %d rows",
                     TILES_X, TILES_Y, world.numCols(), world.numRows()));
         }
+
         var house = new House();
         house.setTopLeftTile(v2i(10, 15));
         house.setSize(v2i(8, 5));
         house.setDoor(new Door(v2i(13, 15), v2i(14, 15)));
         world.setHouse(house);
+
+        world.setScatterTarget(RED_GHOST,    v2i(25,  0)); // near right-upper corner
+        world.setScatterTarget(PINK_GHOST,   v2i( 2,  0)); // near left-upper corner
+        world.setScatterTarget(CYAN_GHOST,   v2i(27, 34)); // near right-lower corner
+        world.setScatterTarget(ORANGE_GHOST, v2i( 0, 34)); // near left-lower corner
+
         return world;
     }
 

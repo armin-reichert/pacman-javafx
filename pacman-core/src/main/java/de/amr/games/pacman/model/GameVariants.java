@@ -345,7 +345,7 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
             if (level.chasingPhase().isPresent() || ghost.id() == RED_GHOST && level.cruiseElroyState() > 0) {
                 followTarget(ghost, level.world(), level.chasingTarget(ghost.id()), relSpeed);
             } else {
-                followTarget(ghost, level.world(), level.ghostScatterTarget(ghost.id()), relSpeed);
+                followTarget(ghost, level.world(), level.world().ghostScatterTarget(ghost.id()), relSpeed);
             }
         }
     };

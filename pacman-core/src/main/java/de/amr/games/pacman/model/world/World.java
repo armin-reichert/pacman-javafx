@@ -57,6 +57,7 @@ public class World {
 
     private final byte[][] tileMap;
     private final List<Vector2i> energizerTiles;
+    private final Vector2i[] scatterTargetTiles;
     private final BitSet eaten;
     private final List<Portal> portals;
     private final Pulse energizerBlinking;
@@ -89,6 +90,8 @@ public class World {
         totalFoodCount = (int) tiles().filter(this::isFoodTile).count();
         uneatenFoodCount = totalFoodCount;
 
+        scatterTargetTiles = new Vector2i[4];
+
         // Animations
         energizerBlinking = new Pulse(10, true);
         mazeFlashing = new Pulse(10, false);
@@ -101,6 +104,16 @@ public class World {
     public void setHouse(House house) {
         checkNotNull(house);
         this.house = house;
+    }
+
+    public void setScatterTarget(byte ghostID, Vector2i tile) {
+        checkGhostID(ghostID);
+        scatterTargetTiles[ghostID] = tile;
+    }
+
+    public Vector2i ghostScatterTarget(byte ghostID) {
+        checkGhostID(ghostID);
+        return scatterTargetTiles[ghostID];
     }
 
     public Pulse energizerBlinking() {
