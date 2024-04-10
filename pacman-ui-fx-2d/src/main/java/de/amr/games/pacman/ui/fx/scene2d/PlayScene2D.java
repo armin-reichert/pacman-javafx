@@ -77,7 +77,7 @@ public class PlayScene2D extends GameScene2D {
     protected void drawSceneContent() {
         context.gameLevel().ifPresent(level -> {
             switch (context.game()) {
-                case GameVariants.MS_PACMAN -> drawMsPacManMaze(level.world(), ArcadeWorld.mazeNumberMsPacMan(level.levelNumber()));
+                case GameVariants.MS_PACMAN -> drawMsPacManMaze(level.world(), ArcadeWorld.mazeNumberMsPacMan(level.levelNumber));
                 case GameVariants.PACMAN -> drawPacManMaze(level.world());
                 default -> throw new IllegalGameVariantException(context.game());
             }
@@ -87,7 +87,7 @@ public class PlayScene2D extends GameScene2D {
             } else {
                 switch (context.gameState()) {
                     case READY      -> drawText("READY!", Color.YELLOW, sceneFont(8), t(11), t(21));
-                    case LEVEL_TEST -> drawText("TEST    L" + level.levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(21));
+                    case LEVEL_TEST -> drawText("TEST    L" + level.levelNumber, Color.YELLOW, sceneFont(8), t(8.5), t(21));
                 }
             }
             level.bonus().ifPresent(this::drawBonus);

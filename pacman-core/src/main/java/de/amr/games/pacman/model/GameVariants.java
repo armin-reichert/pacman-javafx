@@ -183,8 +183,8 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
         @Override
         public void createAndStartLevel(int levelNumber) {
             checkLevelNumber(levelNumber);
-            var data = new GameLevel.Data(levelNumber, false, RAW_LEVEL_DATA[levelDataIndex(levelNumber)]);
-            var level = new GameLevel(data, createMsPacManWorld(mapNumberMsPacMan(levelNumber)));
+            var level = new GameLevel(levelNumber, false, RAW_LEVEL_DATA[levelDataIndex(levelNumber)],
+                createMsPacManWorld(mapNumberMsPacMan(levelNumber)));
             setLevel(level);
             if (levelNumber == 1) {
                 levelCounter.clear();
@@ -206,8 +206,7 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
 
         @Override
         public void createAndStartDemoLevel() {
-            var data = new GameLevel.Data(1, true, RAW_LEVEL_DATA[0]);
-            var level = new GameLevel(data, createMsPacManWorld(1));
+            var level = new GameLevel(1, true, RAW_LEVEL_DATA[0], createMsPacManWorld(1));
             setLevel(level);
             level.pac().setAutopilot(new RuleBasedPacSteering(level));
             level.pac().setUseAutopilot(true);
@@ -306,8 +305,8 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
         @Override
         public void createAndStartLevel(int levelNumber) {
             checkLevelNumber(levelNumber);
-            var data = new GameLevel.Data(levelNumber, false, RAW_LEVEL_DATA[levelDataIndex(levelNumber)]);
-            var level = new GameLevel(data, createPacManWorld());
+            var level = new GameLevel(levelNumber, false, RAW_LEVEL_DATA[levelDataIndex(levelNumber)],
+                createPacManWorld());
             setLevel(level);
             if (levelNumber == 1) {
                 levelCounter.clear();
@@ -325,8 +324,7 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
 
         @Override
         public void createAndStartDemoLevel() {
-            var data = new GameLevel.Data(1, true, RAW_LEVEL_DATA[0]);
-            var level = new GameLevel(data, createPacManWorld());
+            var level = new GameLevel(1, true, RAW_LEVEL_DATA[0], createPacManWorld());
             setLevel(level);
             level.pac().setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
             level.pac().setUseAutopilot(true);
@@ -416,7 +414,7 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
     public void setLevel(GameLevel level) {
         this.level = level;
         if (level != null) {
-            score.setLevelNumber(level.levelNumber());
+            score.setLevelNumber(level.levelNumber);
         }
     }
 

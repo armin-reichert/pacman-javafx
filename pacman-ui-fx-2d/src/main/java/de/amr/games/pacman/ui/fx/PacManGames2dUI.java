@@ -352,7 +352,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             case BOOT -> config.get("boot");
             case CREDIT -> config.get("credit");
             case INTRO -> config.get("intro");
-            case INTERMISSION -> config.get("cut" + gameLevel().map(level -> level.data().intermissionNumber()).orElse((byte) 1));
+            case INTERMISSION -> config.get("cut" + gameLevel().map(level -> level.intermissionNumber).orElse((byte) 1));
             case INTERMISSION_TEST -> config.get("cut" + gameState().<Integer>getProperty("intermissionTestNumber"));
             default -> config.get("play");
         };
@@ -487,7 +487,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         } else {
             GameLevel level = event.game.level().orElse(null);
             if (level != null) {
-                intermissionNumber = level.data().intermissionNumber();
+                intermissionNumber = level.intermissionNumber;
             }
         }
         if (intermissionNumber != 0) {
@@ -511,12 +511,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
                 case GameVariants.MS_PACMAN -> {
                     level.pac().setAnimations(new MsPacManGamePacAnimations(level.pac(), spriteSheet()));
                     level.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, spriteSheet())));
-                    Logger.info("Created Ms. Pac-Man game creature animations for level #{}", level.levelNumber());
+                    Logger.info("Created Ms. Pac-Man game creature animations for level #{}", level.levelNumber);
                 }
                 case GameVariants.PACMAN -> {
                     level.pac().setAnimations(new PacManGamePacAnimations(level.pac(), spriteSheet()));
                     level.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, spriteSheet())));
-                    Logger.info("Created Pac-Man game creature animations for level #{}", level.levelNumber());
+                    Logger.info("Created Pac-Man game creature animations for level #{}", level.levelNumber);
                 }
                 default -> throw new IllegalGameVariantException(e.game);
             }
@@ -529,7 +529,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     @Override
     public void onLevelStarted(GameEvent event) {
         var level = event.game.level().orElse(null);
-        if (level != null && !level.isDemoLevel() && level.levelNumber() == 1) {
+        if (level != null && !level.isDemoLevel() && level.levelNumber == 1) {
             playAudioClip("audio.game_ready");
         }
     }
@@ -713,10 +713,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             return;
         }
         gameLevel().ifPresent(level -> {
-            if (newLevelNumber > level.levelNumber()) {
+            if (newLevelNumber > level.levelNumber) {
                 stopAllSounds();
-                for (int n = level.levelNumber(); n < newLevelNumber - 1; ++n) {
-                    game().createAndStartLevel(level.levelNumber() + 1);
+                for (int n = level.levelNumber; n < newLevelNumber - 1; ++n) {
+                    game().createAndStartLevel(level.levelNumber + 1);
                 }
                 gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
             }

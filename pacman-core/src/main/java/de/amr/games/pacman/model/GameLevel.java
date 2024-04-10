@@ -35,29 +35,21 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public class GameLevel {
 
-    public record Data(
-        int levelNumber, // Level number, starts at 1.
-        boolean demoLevel,
-        byte pacSpeedPercentage, // Relative Pac-Man speed (percentage of base speed).
-        byte ghostSpeedPercentage, // Relative ghost speed when hunting or scattering.
-        byte ghostSpeedTunnelPercentage, // Relative ghost speed inside tunnel.
-        byte elroy1DotsLeft,//  Number of pellets left when Blinky becomes "Cruise Elroy" grade 1.
-        byte elroy1SpeedPercentage, // Relative speed of Blinky being "Cruise Elroy" grade 1.
-        byte elroy2DotsLeft, // Number of pellets left when Blinky becomes "Cruise Elroy" grade 2.
-        byte elroy2SpeedPercentage, //Relative speed of Blinky being "Cruise Elroy" grade 2.
-        byte pacSpeedPoweredPercentage, // Relative speed of Pac-Man in power mode.
-        byte ghostSpeedFrightenedPercentage, // Relative speed of frightened ghost.
-        byte pacPowerSeconds, // Number of seconds Pac-Man gets power.
-        byte numFlashes, // Number of maze flashes at end of this level.
-        byte intermissionNumber) // Number (1,2,3) of intermission scene played after this level (0=no intermission).
-    {
-        public Data(int no, boolean demoLevel, byte[] data) {
-            this(no, demoLevel, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8],
-                data[9], data[10], data[11]);
-        }
-    }
+    public final int levelNumber; // Level number; starts at 1.
+    public final boolean demoLevel;
+    public final byte pacSpeedPercentage; // Relative Pac-Man speed (percentage of base speed).
+    public final byte ghostSpeedPercentage; // Relative ghost speed when hunting or scattering.
+    public final byte ghostSpeedTunnelPercentage; // Relative ghost speed inside tunnel.
+    public final byte elroy1DotsLeft;//  Number of pellets left when Blinky becomes "Cruise Elroy" grade 1.
+    public final byte elroy1SpeedPercentage; // Relative speed of Blinky being "Cruise Elroy" grade 1.
+    public final byte elroy2DotsLeft; // Number of pellets left when Blinky becomes "Cruise Elroy" grade 2.
+    public final byte elroy2SpeedPercentage; //Relative speed of Blinky being "Cruise Elroy" grade 2.
+    public final byte pacSpeedPoweredPercentage; // Relative speed of Pac-Man in power mode.
+    public final byte ghostSpeedFrightenedPercentage; // Relative speed of frightened ghost.
+    public final byte pacPowerSeconds; // Number of seconds Pac-Man gets power.
+    public final byte numFlashes; // Number of maze flashes at end of this level.
+    public final byte intermissionNumber; // Number (1,2,3) of intermission scene played after this level (0=no intermission).
 
-    private final Data data;
     private final TickTimer huntingTimer = new TickTimer("HuntingTimer");
     private final World world;
     private final Pac pac;
@@ -70,12 +62,25 @@ public class GameLevel {
     private SimulationStepEventLog eventLog;
     private byte bonusReachedIndex; // -1=no bonus, 0=first, 1=second
 
-    public GameLevel(Data levelData, World world) {
-        checkNotNull(levelData);
+    public GameLevel(int no, boolean demoLevel, byte[] data, World world) {
+        checkNotNull(data);
         checkNotNull(world);
 
         this.world = world;
-        this.data = levelData;
+        this.levelNumber = no;
+        this.demoLevel = demoLevel;
+        this.pacSpeedPercentage = data[0]; // Relative Pac-Man speed (percentage of base speed).
+        this.ghostSpeedPercentage = data[1]; // Relative ghost speed when hunting or scattering.
+        this.ghostSpeedTunnelPercentage = data[2]; // Relative ghost speed inside tunnel.
+        this.elroy1DotsLeft = data[3];//  Number of pellets left when Blinky becomes "Cruise Elroy" grade 1.
+        this.elroy1SpeedPercentage = data[4]; // Relative speed of Blinky being "Cruise Elroy" grade 1.
+        this.elroy2DotsLeft = data[5]; // Number of pellets left when Blinky becomes "Cruise Elroy" grade 2.
+        this.elroy2SpeedPercentage = data[6]; //Relative speed of Blinky being "Cruise Elroy" grade 2.
+        this.pacSpeedPoweredPercentage = data[7]; // Relative speed of Pac-Man in power mode.
+        this.ghostSpeedFrightenedPercentage = data[8]; // Relative speed of frightened ghost.
+        this.pacPowerSeconds = data[9]; // Number of seconds Pac-Man gets power.
+        this.numFlashes = data[10]; // Number of maze flashes at end of this level.
+        this.intermissionNumber = data[11]; // Number (1,2,3) of intermission scene played after this level (0=no intermission).
 
         eventLog = new SimulationStepEventLog();
         bonusReachedIndex = -1;
@@ -112,12 +117,8 @@ public class GameLevel {
             default -> throw new IllegalGameVariantException(game());
         }
 
-        bonusSymbols = List.of(game().nextBonusSymbol(levelNumber()), game().nextBonusSymbol(levelNumber()));
-        Logger.trace("Game level {} created.", levelData.levelNumber());
-    }
-
-    public Data data() {
-        return data;
+        bonusSymbols = List.of(game().nextBonusSymbol(levelNumber), game().nextBonusSymbol(levelNumber));
+        Logger.trace("Game level {} created.", levelNumber);
     }
 
     public GameModel game() {
@@ -129,14 +130,7 @@ public class GameLevel {
     }
 
     public boolean isDemoLevel() {
-        return data.demoLevel();
-    }
-
-    /**
-     * @return level number, starting with 1.
-     */
-    public int levelNumber() {
-        return data.levelNumber();
+        return demoLevel;
     }
 
     public World world() {
@@ -218,7 +212,7 @@ public class GameLevel {
             throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + index);
         }
         huntingPhaseIndex = (byte) index;
-        var durations = game().huntingDurations(levelNumber());
+        var durations = game().huntingDurations(levelNumber);
         var ticks = durations[index] == -1 ? TickTimer.INDEFINITE : durations[index];
         huntingTimer.reset(ticks);
         huntingTimer.start();
@@ -263,7 +257,7 @@ public class GameLevel {
     }
 
     private byte frightenedGhostRelSpeed(Ghost ghost) {
-        return world.isTunnel(ghost.tile()) ? data.ghostSpeedTunnelPercentage() : data.ghostSpeedFrightenedPercentage();
+        return world.isTunnel(ghost.tile()) ? ghostSpeedTunnelPercentage : ghostSpeedFrightenedPercentage;
     }
 
     public Direction pseudoRandomDirection() {
@@ -322,22 +316,22 @@ public class GameLevel {
      */
     public byte huntingSpeedPercentage(Ghost ghost) {
         if (world.isTunnel(ghost.tile())) {
-            return data.ghostSpeedTunnelPercentage();
+            return ghostSpeedTunnelPercentage;
         }
         if (ghost.id() == RED_GHOST && cruiseElroyState == 1) {
-            return data.elroy1SpeedPercentage();
+            return elroy1SpeedPercentage;
         }
         if (ghost.id() == RED_GHOST && cruiseElroyState == 2) {
-            return data.elroy2SpeedPercentage();
+            return elroy2SpeedPercentage;
         }
-        return data.ghostSpeedPercentage();
+        return ghostSpeedPercentage;
     }
 
     /* --- Here comes the main logic of the game. --- */
 
     private void scorePoints(int points) {
         if (!isDemoLevel()) {
-            game().scorePoints(levelNumber(), points);
+            game().scorePoints(levelNumber, points);
         }
     }
 
@@ -358,9 +352,9 @@ public class GameLevel {
             }
             updateDotCount();
             world.removeFood(pacTile);
-            if (world.uneatenFoodCount() == data.elroy1DotsLeft()) {
+            if (world.uneatenFoodCount() == elroy1DotsLeft) {
                 setCruiseElroyState(1);
-            } else if (world.uneatenFoodCount() == data.elroy2DotsLeft()) {
+            } else if (world.uneatenFoodCount() == elroy2DotsLeft) {
                 setCruiseElroyState(2);
             }
             if (game().isBonusReached(this)) {
@@ -375,9 +369,9 @@ public class GameLevel {
     }
 
     private void updatePacPower() {
-        if (eventLog.energizerFound && data.pacPowerSeconds() > 0) {
+        if (eventLog.energizerFound && pacPowerSeconds > 0) {
             stopHuntingPhase();
-            pac.powerTimer().restartSeconds(data.pacPowerSeconds());
+            pac.powerTimer().restartSeconds(pacPowerSeconds);
             ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
             eventLog.pacGetsPower = true;
@@ -465,7 +459,7 @@ public class GameLevel {
     }
 
     public void doLevelTestStep(TickTimer timer, int lastTestedLevel) {
-        if (levelNumber() <= lastTestedLevel) {
+        if (levelNumber <= lastTestedLevel) {
             if (timer.atSecond(0.5)) {
                 letsGetReadyToRumble(true);
             } else if (timer.atSecond(1.5)) {
@@ -482,14 +476,14 @@ public class GameLevel {
             } else if (timer.atSecond(8.5)) {
                 pac.hide();
                 ghosts().forEach(Ghost::hide);
-                world.mazeFlashing().restart(2 * data.numFlashes());
+                world.mazeFlashing().restart(2 * numFlashes);
             } else if (timer.atSecond(12.0)) {
                 timer.restartIndefinitely();
                 pac.freeze();
                 ghosts().forEach(Ghost::hide);
                 bonus().ifPresent(Bonus::setInactive);
                 world.mazeFlashing().reset();
-                game().createAndStartLevel(levelNumber() + 1);
+                game().createAndStartLevel(levelNumber + 1);
             }
             world.energizerBlinking().tick();
             world.mazeFlashing().tick();
@@ -506,7 +500,7 @@ public class GameLevel {
             if (totalNumGhostsKilled == 16) {
                 int points = GameModel.POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
                 scorePoints(points);
-                Logger.info("Scored {} points for killing all ghosts at level {}", points, levelNumber());
+                Logger.info("Scored {} points for killing all ghosts at level {}", points, levelNumber);
             }
         }
     }
@@ -646,7 +640,7 @@ public class GameLevel {
         pacStarvingLimitTicks = 0;
         globalDotCounter = 0;
         globalDotCounterEnabled = false;
-        pacStarvingLimitTicks = levelNumber() < 5 ? 240 : 180; // 4 sec : 3 sec
+        pacStarvingLimitTicks = levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec
     }
 
     private static byte privateDotLimit(int levelNumber, byte ghostID) {
@@ -690,9 +684,9 @@ public class GameLevel {
             return Optional.empty();
         }
         // check private dot counter first (if enabled)
-        if (!globalDotCounterEnabled && dotCounters[candidate.id()] >= privateDotLimit(levelNumber(), candidate.id())) {
+        if (!globalDotCounterEnabled && dotCounters[candidate.id()] >= privateDotLimit(levelNumber, candidate.id())) {
             return Optional.of(new GhostUnlockInfo(candidate,
-                "Private dot counter at limit (%d)", privateDotLimit(levelNumber(), candidate.id())));
+                "Private dot counter at limit (%d)", privateDotLimit(levelNumber, candidate.id())));
         }
         // check global dot counter
         if (globalDotLimits[candidate.id()] != UNLIMITED && globalDotCounter >= globalDotLimits[candidate.id()]) {

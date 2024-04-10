@@ -49,7 +49,7 @@ public class PacManGameTest {
         assertTrue(game.level().isPresent());
 
         var level = game.level().get();
-        assertEquals(1, level.levelNumber());
+        assertEquals(1, level.levelNumber);
         assertEquals(0, level.totalNumGhostsKilled());
         assertEquals(0, level.pac().victims().size());
         assertEquals(0, level.cruiseElroyState());

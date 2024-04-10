@@ -122,8 +122,8 @@ public class GameLevel3D extends Group {
     private void createWorld3D() {
         switch (context.game()) {
             case GameVariants.MS_PACMAN -> {
-                int mapNumber  = ArcadeWorld.mapNumberMsPacMan(level.levelNumber());
-                int mazeNumber = ArcadeWorld.mazeNumberMsPacMan(level.levelNumber());
+                int mapNumber  = ArcadeWorld.mapNumberMsPacMan(level.levelNumber);
+                int mazeNumber = ArcadeWorld.mazeNumberMsPacMan(level.levelNumber);
                 floorPlan = readFloorPlanFromFile(GameVariants.MS_PACMAN, mapNumber);
                 wallBuilder = createWallBuilder(
                     context.theme().color("mspacman.maze.wallBaseColor",  mazeNumber - 1),
@@ -415,7 +415,7 @@ public class GameLevel3D extends Group {
             context.theme(),
             ghost,
             level.pac(),
-            level.data().numFlashes(),
+            level.numFlashes,
             GHOST_SIZE);
     }
 
@@ -482,10 +482,10 @@ public class GameLevel3D extends Group {
     }
 
     public Transition createLevelCompleteAnimation() {
-        if (level.data().numFlashes() == 0) {
+        if (level.numFlashes == 0) {
             return pauseSeconds(1.0);
         }
-        var animation = new SinusCurveAnimation(level.data().numFlashes());
+        var animation = new SinusCurveAnimation(level.numFlashes);
         animation.setOnFinished(e -> wallHeightPy.bind(PY_3D_WALL_HEIGHT));
         animation.setAmplitude(wallHeightPy.get());
         animation.elongationPy.set(wallHeightPy.get());

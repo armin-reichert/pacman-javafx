@@ -171,7 +171,7 @@ public enum GameState implements FsmState<GameModel> {
                 level.bonus().ifPresent(Bonus::setInactive);
                 level.world().mazeFlashing().reset();
                 level.stopHuntingPhase();
-                Logger.trace("Game level {} ({}) ended.", level.levelNumber(), game);
+                Logger.trace("Game level {} ({}) ended.", level.levelNumber, game);
             });
         }
 
@@ -181,7 +181,7 @@ public enum GameState implements FsmState<GameModel> {
                 if (timer.hasExpired()) {
                     if (level.isDemoLevel()) { // just in case demo level is completed: back to intro scene
                         gameController().changeState(INTRO);
-                    } else if (level.data().intermissionNumber() > 0) {
+                    } else if (level.intermissionNumber > 0) {
                         gameController().changeState(INTERMISSION);
                     } else {
                         gameController().changeState(CHANGING_TO_NEXT_LEVEL);
@@ -191,7 +191,7 @@ public enum GameState implements FsmState<GameModel> {
                     level.pac().resetAnimation();
                     var flashing = level.world().mazeFlashing();
                     if (timer.atSecond(1)) {
-                        flashing.restart(2 * level.data().numFlashes());
+                        flashing.restart(2 * level.numFlashes);
                     } else {
                         flashing.tick();
                     }
@@ -205,7 +205,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartSeconds(1);
-            game.level().ifPresent(level -> game.createAndStartLevel(level.levelNumber() + 1));
+            game.level().ifPresent(level -> game.createAndStartLevel(level.levelNumber + 1));
         }
 
         @Override

@@ -62,30 +62,30 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtGhostSpeed(GameLevel level) {
-        return fmtSpeed(level.data().ghostSpeedPercentage());
+        return fmtSpeed(level.ghostSpeedPercentage);
     }
 
     private String fmtGhostSpeedFrightened(GameLevel level) {
-        return fmtSpeed(level.data().ghostSpeedFrightenedPercentage());
+        return fmtSpeed(level.ghostSpeedFrightenedPercentage);
     }
 
     private String fmtGhostSpeedTunnel(GameLevel level) {
-        return fmtSpeed(level.data().ghostSpeedTunnelPercentage());
+        return fmtSpeed(level.ghostSpeedTunnelPercentage);
     }
 
     private String fmtPacSpeed(GameLevel level) {
-        return fmtSpeed(level.data().pacSpeedPercentage());
+        return fmtSpeed(level.pacSpeedPercentage);
     }
 
     private String fmtPacSpeedPowered(GameLevel level) {
-        return fmtSpeed(level.data().pacSpeedPoweredPercentage());
+        return fmtSpeed(level.pacSpeedPoweredPercentage);
     }
 
     private String fmtPacPowerSeconds(GameLevel level) {
-        return "%d sec".formatted(level.data().pacPowerSeconds());
+        return "%d sec".formatted(level.pacPowerSeconds);
     }
 
     private String fmtNumFlashes(GameLevel level) {
-        return "%d".formatted(level.data().numFlashes());
+        return "%d".formatted(level.numFlashes);
     }
 }
