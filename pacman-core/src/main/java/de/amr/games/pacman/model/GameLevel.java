@@ -66,21 +66,21 @@ public class GameLevel {
         checkNotNull(data);
         checkNotNull(world);
 
-        this.world = world;
         this.levelNumber = no;
         this.demoLevel = demoLevel;
-        this.pacSpeedPercentage = data[0]; // Relative Pac-Man speed (percentage of base speed).
-        this.ghostSpeedPercentage = data[1]; // Relative ghost speed when hunting or scattering.
-        this.ghostSpeedTunnelPercentage = data[2]; // Relative ghost speed inside tunnel.
-        this.elroy1DotsLeft = data[3];//  Number of pellets left when Blinky becomes "Cruise Elroy" grade 1.
-        this.elroy1SpeedPercentage = data[4]; // Relative speed of Blinky being "Cruise Elroy" grade 1.
-        this.elroy2DotsLeft = data[5]; // Number of pellets left when Blinky becomes "Cruise Elroy" grade 2.
-        this.elroy2SpeedPercentage = data[6]; //Relative speed of Blinky being "Cruise Elroy" grade 2.
-        this.pacSpeedPoweredPercentage = data[7]; // Relative speed of Pac-Man in power mode.
-        this.ghostSpeedFrightenedPercentage = data[8]; // Relative speed of frightened ghost.
-        this.pacPowerSeconds = data[9]; // Number of seconds Pac-Man gets power.
-        this.numFlashes = data[10]; // Number of maze flashes at end of this level.
-        this.intermissionNumber = data[11]; // Number (1,2,3) of intermission scene played after this level (0=no intermission).
+        this.pacSpeedPercentage = data[0];
+        this.ghostSpeedPercentage = data[1];
+        this.ghostSpeedTunnelPercentage = data[2];
+        this.elroy1DotsLeft = data[3];
+        this.elroy1SpeedPercentage = data[4];
+        this.elroy2DotsLeft = data[5];
+        this.elroy2SpeedPercentage = data[6];
+        this.pacSpeedPoweredPercentage = data[7];
+        this.ghostSpeedFrightenedPercentage = data[8];
+        this.pacPowerSeconds = data[9];
+        this.numFlashes = data[10];
+        this.intermissionNumber = data[11];
+        this.world = world;
 
         eventLog = new SimulationStepEventLog();
         bonusReachedIndex = -1;
