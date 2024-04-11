@@ -435,12 +435,15 @@ public class GameLevel {
 
     public GameState doHuntingStep() {
         eventLog = new SimulationStepEventLog();
+        world.energizerBlinking().tick();
         pac.update(this);
         updateGhosts();
         updateFood();
         updatePacPower();
         updateBonus();
         updateHuntingTimer();
+        eventLog.report();
+
         // what next?
         if (world.uneatenFoodCount() == 0) {
             return GameState.LEVEL_COMPLETE;
