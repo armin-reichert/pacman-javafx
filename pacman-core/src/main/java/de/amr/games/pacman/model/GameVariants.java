@@ -423,6 +423,8 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
     public void reset() {
         level = null;
         lives = initialLives;
+        score.reset();
+        levelCounter.clear();
         Logger.info("Game model ({}) reset", this);
     }
 

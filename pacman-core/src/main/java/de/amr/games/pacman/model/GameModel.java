@@ -221,6 +221,10 @@ public interface GameModel {
      */
     Score highScore();
 
+    default void loadHighScore() {
+        highScore().loadFromFile(highScoreFile());
+    }
+
     /**
      * Scores given amount of points
      * @param levelNumber current level number

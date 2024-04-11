@@ -19,10 +19,8 @@ import de.amr.games.pacman.model.actors.Pac;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
 /**
- * Game states of the Pac-Man/Ms. Pac-Man game.
+ * Game states of the Pac-Man game variants.
  * <p>
  * Rule of thumb: Specify what should happen when, not how exactly.
  * </p>
@@ -37,7 +35,7 @@ public enum GameState implements FsmState<GameModel> {
             timer.restartIndefinitely();
             game.levelCounter().clear();
             game.score().reset();
-            game.highScore().loadFromFile(game.highScoreFile());
+            game.loadHighScore();
         }
 
         @Override
@@ -70,30 +68,19 @@ public enum GameState implements FsmState<GameModel> {
     },
 
     READY {
-
-        static final int TICK_NEW_GAME_CREATE_LEVEL  = 1;
-        static final int TICK_NEW_GAME_SHOW_GUYS     = 120;
-        static final int TICK_NEW_GAME_START_PLAYING = 260;
-
-        static final int TICK_DEMO_LEVEL_CREATE_LEVEL = 1;
+        static final int TICK_NEW_GAME_CREATE_LEVEL    = 1;
+        static final int TICK_NEW_GAME_SHOW_GUYS       = 120;
+        static final int TICK_NEW_GAME_START_PLAYING   = 260;
+        static final int TICK_DEMO_LEVEL_CREATE_LEVEL  = 1;
         static final int TICK_DEMO_LEVEL_START_PLAYING = 120;
-
-        static final int TICK_RESUME_GAME = 90;
+        static final int TICK_RESUME_GAME              = 90;
 
         @Override
         public void onEnter(GameModel game) {
-            if (game.isPlaying()) {
-                // resume running game
+            if (game.isPlaying()) { // resume running game
                 game.level().ifPresent(level -> level.letsGetReadyToRumble(true));
             }
-            else if (gameController().hasCredit()) {
-                // prepare new game
-                game.reset();
-                game.score().reset();
-                game.levelCounter().clear();
-            }
             else {
-                // prepare demo level
                 game.reset();
             }
         }
