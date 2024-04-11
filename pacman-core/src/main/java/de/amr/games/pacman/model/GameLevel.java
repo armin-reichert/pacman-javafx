@@ -208,11 +208,6 @@ public class GameLevel {
             (float) huntingTimer.duration() / GameModel.FPS, huntingTimer);
     }
 
-    public void stopHuntingPhase() {
-        huntingTimer.stop();
-        Logger.info("Hunting timer stopped");
-    }
-
     /**
      * @return number of current phase <code>(0-7)
      */
@@ -221,7 +216,8 @@ public class GameLevel {
     }
 
     public void letPacDie() {
-        stopHuntingPhase();
+        huntingTimer.stop();
+        Logger.info("Hunting timer stopped");
         resetGlobalDotCounterAndSetEnabled(true);
         enableCruiseElroyState(false);
         pac.die();
@@ -357,7 +353,8 @@ public class GameLevel {
 
     private void updatePacPower() {
         if (eventLog.energizerFound && pacPowerSeconds > 0) {
-            stopHuntingPhase();
+            huntingTimer.stop();
+            Logger.info("Hunting timer stopped");
             pac.powerTimer().restartSeconds(pacPowerSeconds);
             ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
@@ -453,7 +450,8 @@ public class GameLevel {
         pac.freeze();
         ghosts().forEach(Ghost::hide);
         bonus().ifPresent(Bonus::setInactive);
-        stopHuntingPhase();
+        huntingTimer.stop();
+        Logger.info("Hunting timer stopped");
         Logger.trace("Game level {} ({}) completed.", levelNumber, game());
     }
 

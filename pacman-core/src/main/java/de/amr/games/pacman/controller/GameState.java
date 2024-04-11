@@ -177,8 +177,6 @@ public enum GameState implements FsmState<GameModel> {
                         gameController().changeState(CHANGING_TO_NEXT_LEVEL);
                     }
                 } else {
-                    level.pac().stopAnimation();
-                    level.pac().resetAnimation();
                     level.pac().update(level);
                     if (timer.atSecond(1)) {
                         level.world().mazeFlashing().restart(2 * level.numFlashes);

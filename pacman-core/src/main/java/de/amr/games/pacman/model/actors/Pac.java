@@ -178,8 +178,9 @@ public class Pac extends Creature {
     public void freeze() {
         setSpeed(0);
         setRestingTicks(Pac.REST_INDEFINITE);
-        selectAnimation(Pac.ANIM_MUNCHING);
         stopAnimation();
+        selectAnimation(Pac.ANIM_MUNCHING);
+        resetAnimation();
     }
 
     public void die() {
