@@ -422,6 +422,7 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
     @Override
     public void reset() {
         level = null;
+        playing = false;
         lives = initialLives;
         score.reset();
         levelCounter.clear();
