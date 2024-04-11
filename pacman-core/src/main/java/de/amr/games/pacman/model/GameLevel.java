@@ -19,7 +19,6 @@ import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -447,6 +446,15 @@ public class GameLevel {
             return GameState.GHOST_DYING;
         }
         return GameState.HUNTING;
+    }
+
+    public void onCompleted() {
+        world.mazeFlashing().reset();
+        pac.freeze();
+        ghosts().forEach(Ghost::hide);
+        bonus().ifPresent(Bonus::setInactive);
+        stopHuntingPhase();
+        Logger.trace("Game level {} ({}) completed.", levelNumber, game());
     }
 
     public void doLevelTestStep(TickTimer timer, int lastTestedLevel) {

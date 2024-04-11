@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -162,15 +161,8 @@ public enum GameState implements FsmState<GameModel> {
     LEVEL_COMPLETE {
         @Override
         public void onEnter(GameModel game) {
-            game.level().ifPresent(level -> {
-                timer.restartSeconds(4);
-                level.pac().freeze();
-                level.ghosts().forEach(Ghost::hide);
-                level.bonus().ifPresent(Bonus::setInactive);
-                level.world().mazeFlashing().reset();
-                level.stopHuntingPhase();
-                Logger.trace("Game level {} ({}) ended.", level.levelNumber, game);
-            });
+            timer.restartSeconds(4);
+            game.level().ifPresent(GameLevel::onCompleted);
         }
 
         @Override
@@ -187,13 +179,12 @@ public enum GameState implements FsmState<GameModel> {
                 } else {
                     level.pac().stopAnimation();
                     level.pac().resetAnimation();
-                    var flashing = level.world().mazeFlashing();
-                    if (timer.atSecond(1)) {
-                        flashing.restart(2 * level.numFlashes);
-                    } else {
-                        flashing.tick();
-                    }
                     level.pac().update(level);
+                    if (timer.atSecond(1)) {
+                        level.world().mazeFlashing().restart(2 * level.numFlashes);
+                    } else {
+                        level.world().mazeFlashing().tick();
+                    }
                 }
             });
         }
