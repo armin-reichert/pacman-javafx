@@ -94,12 +94,12 @@ public class InfoBoxGameControl extends InfoBox {
             sceneContext.gameState() == GameState.INTERMISSION_TEST || sceneContext.gameState() != GameState.INTRO);
         buttonsIntermissionTest[INTERMISSION_TEST_QUIT].setDisable(sceneContext.gameState() != GameState.INTERMISSION_TEST);
         sceneContext.game().level().ifPresent(level -> spinnerLevelNumber.getValueFactory().setValue(level.levelNumber));
-        if (!sceneContext.game().isPlaying() || sceneContext.gameState() == GameState.CHANGING_TO_NEXT_LEVEL) {
+        if (!sceneContext.game().isPlaying() || sceneContext.gameState() == GameState.LEVEL_TRANSITION) {
             spinnerLevelNumber.setDisable(true);
         } else {
             spinnerLevelNumber.setDisable(sceneContext.gameState() != GameState.READY
                 && sceneContext.gameState() != GameState.HUNTING
-                && sceneContext.gameState() != GameState.CHANGING_TO_NEXT_LEVEL);
+                && sceneContext.gameState() != GameState.LEVEL_TRANSITION);
         }
         spinnerCredit.getValueFactory().setValue(sceneContext.gameController().credit());
     }

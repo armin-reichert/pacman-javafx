@@ -709,7 +709,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void enterLevel(int newLevelNumber) {
-        if (gameState() == GameState.CHANGING_TO_NEXT_LEVEL) {
+        if (gameState() == GameState.LEVEL_TRANSITION) {
             return;
         }
         gameLevel().ifPresent(level -> {
@@ -718,7 +718,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
                 for (int n = level.levelNumber; n < newLevelNumber - 1; ++n) {
                     game().createAndStartLevel(level.levelNumber + 1);
                 }
-                gameController().changeState(GameState.CHANGING_TO_NEXT_LEVEL);
+                gameController().changeState(GameState.LEVEL_TRANSITION);
             }
         });
     }

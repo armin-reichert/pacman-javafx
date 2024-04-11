@@ -309,7 +309,7 @@ public class PlayScene3D implements GameScene {
                 });
             }
 
-            case CHANGING_TO_NEXT_LEVEL -> {
+            case LEVEL_TRANSITION -> {
                 context.gameLevel().ifPresent(level -> {
                     assertLevel3DExists();
                     context.gameState().timer().restartSeconds(3);

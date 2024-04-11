@@ -174,21 +174,18 @@ public enum GameState implements FsmState<GameModel> {
                     } else if (level.intermissionNumber > 0) {
                         gameController().changeState(INTERMISSION);
                     } else {
-                        gameController().changeState(CHANGING_TO_NEXT_LEVEL);
+                        gameController().changeState(LEVEL_TRANSITION);
                     }
+                } else if (timer.atSecond(1)) {
+                    level.world().mazeFlashing().restart(2 * level.numFlashes);
                 } else {
-                    //level.pac().update(level);
-                    if (timer.atSecond(1)) {
-                        level.world().mazeFlashing().restart(2 * level.numFlashes);
-                    } else {
-                        level.world().mazeFlashing().tick();
-                    }
+                    level.world().mazeFlashing().tick();
                 }
             });
         }
     },
 
-    CHANGING_TO_NEXT_LEVEL {
+    LEVEL_TRANSITION {
         @Override
         public void onEnter(GameModel game) {
             timer.restartSeconds(1);
@@ -316,7 +313,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 gameController().changeState(
-                    gameController().hasCredit() && game.isPlaying() ? CHANGING_TO_NEXT_LEVEL : INTRO);
+                    gameController().hasCredit() && game.isPlaying() ? LEVEL_TRANSITION : INTRO);
             }
         }
     },
