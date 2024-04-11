@@ -105,18 +105,6 @@ public class GameLevel {
             ghost.setSpeedInsideHouse(GameModel.PPS_GHOST_INHOUSE / (float) GameModel.FPS);
         });
 
-        //TODO avoid switch over game variant
-        switch (game()) {
-            case GameVariants.MS_PACMAN -> {}
-            case GameVariants.PACMAN -> {
-                var forbiddenMovesAtTile = new HashMap<Vector2i, List<Direction>>();
-                var up = List.of(UP);
-                ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbiddenMovesAtTile.put(tile, up));
-                ghosts().forEach(ghost -> ghost.setForbiddenMoves(forbiddenMovesAtTile));
-            }
-            default -> throw new IllegalGameVariantException(game());
-        }
-
         bonusSymbols = List.of(game().nextBonusSymbol(levelNumber), game().nextBonusSymbol(levelNumber));
         Logger.trace("Game level {} created.", levelNumber);
     }
@@ -250,7 +238,7 @@ public class GameLevel {
             case CYAN_GHOST -> pac.tilesAheadWithOverflowBug(2).scaled(2).minus(ghosts[RED_GHOST].tile());
             // Clyde/Sue: attacks directly but retreats if Pac is near
             case ORANGE_GHOST -> ghosts[ORANGE_GHOST].tile().euclideanDistance(pac.tile()) < 8
-                ? world.ghostScatterTarget(ORANGE_GHOST)
+                ? ArcadeWorld.SCATTER_TILE_SW
                 : pac.tile();
             default -> throw new IllegalGhostIDException(ghostID);
         };
@@ -640,7 +628,6 @@ public class GameLevel {
     private void initGhostHouseControl() {
         globalDotLimits = new byte[] {UNLIMITED, 7, 17, UNLIMITED};
         dotCounters = new int[] {0, 0, 0, 0};
-        pacStarvingLimitTicks = 0;
         globalDotCounter = 0;
         globalDotCounterEnabled = false;
         pacStarvingLimitTicks = levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec

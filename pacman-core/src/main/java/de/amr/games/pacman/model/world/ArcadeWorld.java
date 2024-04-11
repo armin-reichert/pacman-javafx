@@ -221,6 +221,10 @@ public interface ArcadeWorld {
         }
     };
 
+    Vector2i SCATTER_TILE_NE = v2i(25,  0); // near right-upper corner
+    Vector2i SCATTER_TILE_NW = v2i( 2,  0); // near left-upper corner
+    Vector2i SCATTER_TILE_SE = v2i(27, 34); // near right-lower corner
+    Vector2i SCATTER_TILE_SW = v2i( 0, 34); // near left-lower corner
     Vector2f BONUS_POSITION = halfTileRightOf(13, 20);
     Vector2f PAC_POSITION   = halfTileRightOf(13, 26);
 
@@ -254,14 +258,7 @@ public interface ArcadeWorld {
                 String.format("Arcade map must have %d columns and %d rows but has %d columns and %d rows",
                     TILES_X, TILES_Y, world.numCols(), world.numRows()));
         }
-
-        world.setScatterTarget(RED_GHOST,    v2i(25,  0)); // near right-upper corner
-        world.setScatterTarget(PINK_GHOST,   v2i( 2,  0)); // near left-upper corner
-        world.setScatterTarget(CYAN_GHOST,   v2i(27, 34)); // near right-lower corner
-        world.setScatterTarget(ORANGE_GHOST, v2i( 0, 34)); // near left-lower corner
-
         world.setHouse(HOUSE);
-
         return world;
     }
 
