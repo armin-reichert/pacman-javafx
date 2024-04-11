@@ -77,10 +77,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            if (game.isPlaying()) { // resume running game
-                game.level().ifPresent(level -> level.letsGetReadyToRumble(true));
-            }
-            else {
+            if (!game.isPlaying()) {
                 game.reset();
             }
         }
@@ -88,7 +85,9 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (game.isPlaying()) { // resume running game
-                if (timer.tick() == TICK_RESUME_GAME) {
+                if (timer.tick() == 1) {
+                    game.level().ifPresent(level -> level.letsGetReadyToRumble(true));
+                } else if (timer.tick() == TICK_RESUME_GAME) {
                     game.level().ifPresent(level -> {
                         level.pac().show();
                         level.ghosts().forEach(Ghost::show);
