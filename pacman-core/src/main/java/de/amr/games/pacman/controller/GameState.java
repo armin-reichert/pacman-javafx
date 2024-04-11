@@ -15,6 +15,7 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
+import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -221,17 +222,26 @@ public enum GameState implements FsmState<GameModel> {
         static final int TICK_HIDE_GHOSTS = 60;
         static final int TICK_START_PAC_ANIMATION = 90;
         static final int TICK_HIDE_PAC = 180;
-        static final int TICK_PAC_IS_DEAD = 240;
 
         @Override
         public void onEnter(GameModel game) {
-            timer.restartSeconds(4);
+            timer.restartIndefinitely();
             game.level().ifPresent(GameLevel::letPacDie);
         }
 
         @Override
         public void onUpdate(GameModel game) {
+            Logger.debug(timer.tick());
             game.level().ifPresent(level -> {
+                if (timer.hasExpired()) {
+                    game.loseLife();
+                    if (!gameController().hasCredit()) { // end of demo level
+                        gameController().changeState(INTRO);
+                    } else {
+                        gameController().changeState(game.lives() == 0 ? GAME_OVER : READY);
+                    }
+                    return;
+                }
                 switch ((int) timer.tick()) {
                     case TICK_HIDE_GHOSTS -> {
                         level.ghosts().forEach(Ghost::hide);
@@ -243,14 +253,6 @@ public enum GameState implements FsmState<GameModel> {
                         game.publishGameEvent(GameEventType.PAC_DYING);
                     }
                     case TICK_HIDE_PAC -> level.pac().hide();
-                    case TICK_PAC_IS_DEAD -> {
-                        game.loseLife();
-                        if (!gameController().hasCredit()) { // end of demo level
-                            gameController().changeState(INTRO);
-                        } else {
-                            gameController().changeState(game.lives() == 0 ? GAME_OVER : READY);
-                        }
-                    }
                     default -> {
                         level.world().energizerBlinking().tick();
                         level.pac().update(level);
