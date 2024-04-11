@@ -73,7 +73,7 @@ public enum GameState implements FsmState<GameModel> {
         static final int TICK_NEW_GAME_START_PLAYING   = 260;
         static final int TICK_DEMO_LEVEL_CREATE_LEVEL  = 1;
         static final int TICK_DEMO_LEVEL_START_PLAYING = 120;
-        static final int TICK_RESUME_GAME              = 90;
+        static final int TICK_RESUME_GAME              = 100;
 
         @Override
         public void onEnter(GameModel game) {
@@ -265,7 +265,7 @@ public enum GameState implements FsmState<GameModel> {
 
     GAME_OVER {
 
-        static final int TICKS_STATE_DURATION = 75;
+        static final int TICKS_STATE_DURATION = 90; // not sure
 
         @Override
         public void onEnter(GameModel game) {
