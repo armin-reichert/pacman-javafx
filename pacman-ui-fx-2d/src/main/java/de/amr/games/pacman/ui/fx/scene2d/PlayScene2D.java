@@ -94,10 +94,11 @@ public class PlayScene2D extends GameScene2D {
             drawPac(level.pac());
             level.ghosts().toList().reversed().forEach(this::drawGhost);
             if (!isCreditVisible()) {
-                // check this
-                drawLivesCounter(level.pac().isVisible() || context.gameState() == GameState.GHOST_DYING
-                    ? context.game().lives() - 1
-                    : context.game().lives());
+                int numLivesDisplayed = context.game().lives() - 1;
+                if (context.gameState() == GameState.READY && !level.pac().isVisible()) {
+                    numLivesDisplayed += 1;
+                }
+                drawLivesCounter(numLivesDisplayed);
             }
             drawLevelCounter();
         });

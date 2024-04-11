@@ -225,6 +225,7 @@ public enum GameState implements FsmState<GameModel> {
         static final int TICK_HIDE_GHOSTS = 60;
         static final int TICK_START_PAC_ANIMATION = 90;
         static final int TICK_HIDE_PAC = 180;
+        static final int TICK_PAC_IS_DEAD = 240;
 
         @Override
         public void onEnter(GameModel game) {
@@ -235,23 +236,28 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             game.level().ifPresent(level -> {
-                level.world().energizerBlinking().tick();
-                level.pac().update(level);
-                if (timer.tick() == TICK_HIDE_GHOSTS) {
-                    level.ghosts().forEach(Ghost::hide);
-                    level.pac().selectAnimation(Pac.ANIM_DYING);
-                    level.pac().resetAnimation();
-                } else if (timer.tick() == TICK_START_PAC_ANIMATION) {
-                    level.pac().startAnimation();
-                    game.publishGameEvent(GameEventType.PAC_DIED);
-                } else if (timer.tick() == TICK_HIDE_PAC) {
-                    level.pac().hide();
-                    game.loseLife();
-                } else if (timer.hasExpired()) {
-                    if (!gameController().hasCredit()) { // end of demo level
-                        gameController().changeState(INTRO);
-                    } else {
-                        gameController().changeState(game.lives() == 0 ? GAME_OVER : READY);
+                switch ((int) timer.tick()) {
+                    case TICK_HIDE_GHOSTS -> {
+                        level.ghosts().forEach(Ghost::hide);
+                        level.pac().selectAnimation(Pac.ANIM_DYING);
+                        level.pac().resetAnimation();
+                    }
+                    case TICK_START_PAC_ANIMATION -> {
+                        level.pac().startAnimation();
+                        game.publishGameEvent(GameEventType.PAC_DYING);
+                    }
+                    case TICK_HIDE_PAC -> level.pac().hide();
+                    case TICK_PAC_IS_DEAD -> {
+                        game.loseLife();
+                        if (!gameController().hasCredit()) { // end of demo level
+                            gameController().changeState(INTRO);
+                        } else {
+                            gameController().changeState(game.lives() == 0 ? GAME_OVER : READY);
+                        }
+                    }
+                    default -> {
+                        level.world().energizerBlinking().tick();
+                        level.pac().update(level);
                     }
                 }
             });

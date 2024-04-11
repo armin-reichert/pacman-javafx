@@ -17,7 +17,7 @@ public enum GameEventType {
     INTERMISSION_STARTED,
     LEVEL_CREATED,
     LEVEL_STARTED,
-    PAC_DIED,
+    PAC_DYING,
     PAC_FOUND_FOOD,
     PAC_GETS_POWER,
     PAC_LOST_POWER,

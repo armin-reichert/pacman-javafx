@@ -36,7 +36,7 @@ public interface GameEventListener {
             case HUNTING_PHASE_STARTED -> onHuntingPhaseStarted(event);
             case LEVEL_CREATED -> onLevelCreated(event);
             case LEVEL_STARTED -> onLevelStarted(event);
-            case PAC_DIED -> onPacDied(event);
+            case PAC_DYING -> onPacDied(event);
             case PAC_FOUND_FOOD -> onPacFoundFood(event);
             case PAC_GETS_POWER -> onPacGetsPower(event);
             case PAC_LOST_POWER -> onPacLostPower(event);
