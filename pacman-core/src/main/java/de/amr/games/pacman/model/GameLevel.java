@@ -61,6 +61,15 @@ public class GameLevel {
     private SimulationStepEventLog eventLog;
     private byte bonusReachedIndex; // -1=no bonus, 0=first, 1=second
 
+    // Ghost house access-control
+    private static final byte UNLIMITED = -1;
+    private byte[]  globalDotLimits;
+    private byte[]  privateDotLimits;
+    private int[]   dotCounters;
+    private int     pacStarvingLimit;
+    private int     globalDotCounter;
+    private boolean globalDotCounterEnabled;
+
     public GameLevel(int no, boolean demoLevel, byte[] data, World world) {
         checkNotNull(data);
         checkNotNull(world);
@@ -83,7 +92,7 @@ public class GameLevel {
 
         eventLog = new SimulationStepEventLog();
         bonusReachedIndex = -1;
-        initGhostHouseControl();
+        initGhostHouseAccessControl();
 
         pac = new Pac(game().pacName());
         pac.reset();
@@ -539,16 +548,6 @@ public class GameLevel {
         }
     }
 
-    // Ghost house access control
-
-    private static final byte UNLIMITED = -1;
-
-    private byte[]  globalDotLimits;
-    private int[] dotCounters;
-    private int pacStarvingLimit;
-    private int globalDotCounter;
-    private boolean globalDotCounterEnabled;
-
     /**
      * From the Pac-Man dossier:
      * <p>
@@ -631,19 +630,19 @@ public class GameLevel {
      * </p>
      * </pre>
      */
-    private void initGhostHouseControl() {
+    private void initGhostHouseAccessControl() {
         globalDotLimits = new byte[] {UNLIMITED, 7, 17, UNLIMITED};
+        privateDotLimits = new byte[] {0, 0, 0, 0};
+        if (levelNumber == 1) {
+            privateDotLimits[CYAN_GHOST] = 30;
+            privateDotLimits[ORANGE_GHOST] = 60;
+        } else if (levelNumber == 2) {
+            privateDotLimits[ORANGE_GHOST] = 50;
+        }
         dotCounters = new int[] {0, 0, 0, 0};
         globalDotCounter = 0;
         globalDotCounterEnabled = false;
         pacStarvingLimit = levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec
-    }
-
-    private static byte privateDotLimit(int levelNumber, byte ghostID) {
-        if (levelNumber == 1 && ghostID == CYAN_GHOST)   return 30;
-        if (levelNumber == 1 && ghostID == ORANGE_GHOST) return 60;
-        if (levelNumber == 2 && ghostID == ORANGE_GHOST) return 50;
-        return 0;
     }
 
     private void resetGlobalDotCounterAndSetEnabled(boolean enabled) {
@@ -680,9 +679,8 @@ public class GameLevel {
             return Optional.of(new GhostUnlockInfo(prisoner, "Gets unlocked immediately"));
         }
         // check private dot counter first (if enabled)
-        if (!globalDotCounterEnabled && dotCounters[id] >= privateDotLimit(levelNumber, id)) {
-            return Optional.of(new GhostUnlockInfo(prisoner,"Private dot counter at limit (%d)",
-                privateDotLimit(levelNumber, id)));
+        if (!globalDotCounterEnabled && dotCounters[id] >= privateDotLimits[id]) {
+            return Optional.of(new GhostUnlockInfo(prisoner,"Private dot counter at limit (%d)", privateDotLimits[id]));
         }
         // check global dot counter
         if (globalDotLimits[id] != UNLIMITED && globalDotCounter >= globalDotLimits[id]) {
