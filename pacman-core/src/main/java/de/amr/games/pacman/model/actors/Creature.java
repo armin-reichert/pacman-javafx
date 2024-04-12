@@ -178,8 +178,7 @@ public abstract class Creature extends Entity {
      */
     public void reverseAsSoonAsPossible() {
         gotReverseCommand = true;
-        newTileEntered = false;
-        Logger.trace("{} (moveDir={}, wishDir={}) got command to reverse direction", name(), moveDir, wishDir);
+        Logger.info("{} (moveDir={}, wishDir={}) got 'reverse direction' command", name(), moveDir, wishDir);
     }
 
     /**
