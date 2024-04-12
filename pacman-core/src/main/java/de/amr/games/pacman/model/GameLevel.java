@@ -670,14 +670,13 @@ public class GameLevel {
     }
 
     private Optional<GhostUnlockInfo> unlockGhost() {
-        if (ghost(RED_GHOST).inState(LOCKED)) {
-            return Optional.of(new GhostUnlockInfo(ghost(RED_GHOST), "Gets unlocked immediately"));
-        }
-        Ghost candidate = Stream.of(PINK_GHOST, CYAN_GHOST, ORANGE_GHOST).map(this::ghost)
-            .filter(ghost -> ghost.inState(LOCKED))
-            .findFirst().orElse(null);
+        // Important: ghosts are returned in order RED, PINK, CYAN, ORANGE
+        Ghost candidate = ghosts(LOCKED).findFirst().orElse(null);
         if (candidate == null) {
             return Optional.empty();
+        }
+        if (candidate.id() == RED_GHOST) {
+            return Optional.of(new GhostUnlockInfo(ghost(RED_GHOST), "Gets unlocked immediately"));
         }
         // check private dot counter first (if enabled)
         if (!globalDotCounterEnabled && dotCounters[candidate.id()] >= privateDotLimit(levelNumber, candidate.id())) {
