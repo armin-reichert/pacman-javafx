@@ -325,6 +325,8 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
             var level = new GameLevel(1, true, RAW_LEVEL_DATA[0], createPacManWorld());
             addForbiddenMoves(level);
             setLevel(level);
+            levelCounter.clear();
+            addSymbolToLevelCounter(level.bonusSymbol(0));
             level.pac().setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
             level.pac().setUseAutopilot(true);
             Logger.info("Demo level created ({})", this);
@@ -425,7 +427,6 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
         playing = false;
         lives = initialLives;
         score.reset();
-        levelCounter.clear();
         Logger.info("Game model ({}) reset", this);
     }
 

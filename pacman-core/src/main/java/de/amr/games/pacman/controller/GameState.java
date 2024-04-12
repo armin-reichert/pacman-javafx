@@ -34,6 +34,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
+            game.levelCounter().clear();
         }
 
         @Override
@@ -67,10 +68,10 @@ public enum GameState implements FsmState<GameModel> {
     READY {
         static final int TICK_NEW_GAME_CREATE_LEVEL    = 1;
         static final int TICK_NEW_GAME_SHOW_GUYS       = 120;
-        static final int TICK_NEW_GAME_START_PLAYING   = 260;
+        static final int TICK_NEW_GAME_START_PLAYING   = 240;
         static final int TICK_DEMO_LEVEL_CREATE_LEVEL  = 1;
         static final int TICK_DEMO_LEVEL_START_PLAYING = 120;
-        static final int TICK_RESUME_GAME              = 100;
+        static final int TICK_RESUME_GAME              = 120;
 
         @Override
         public void onEnter(GameModel game) {
@@ -225,7 +226,8 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onEnter(GameModel game) {
-            timer.restartSeconds(4);
+            timer.reset(220);
+            timer.start();
             game.level().ifPresent(GameLevel::letPacDie);
         }
 

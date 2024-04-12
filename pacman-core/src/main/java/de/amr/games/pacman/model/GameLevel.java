@@ -545,7 +545,7 @@ public class GameLevel {
 
     private byte[]  globalDotLimits;
     private int[] dotCounters;
-    private int     pacStarvingLimitTicks;
+    private int pacStarvingLimit;
     private int globalDotCounter;
     private boolean globalDotCounterEnabled;
 
@@ -636,7 +636,7 @@ public class GameLevel {
         dotCounters = new int[] {0, 0, 0, 0};
         globalDotCounter = 0;
         globalDotCounterEnabled = false;
-        pacStarvingLimitTicks = levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec
+        pacStarvingLimit = levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec
     }
 
     private static byte privateDotLimit(int levelNumber, byte ghostID) {
@@ -670,29 +670,29 @@ public class GameLevel {
     }
 
     private Optional<GhostUnlockInfo> unlockGhost() {
-        // Important: ghosts are returned in order RED, PINK, CYAN, ORANGE
-        Ghost candidate = ghosts(LOCKED).findFirst().orElse(null);
-        if (candidate == null) {
+        // Important: Ghosts must be returned in order RED, PINK, CYAN, ORANGE
+        Ghost prisoner = ghosts(LOCKED).findFirst().orElse(null);
+        if (prisoner == null) {
             return Optional.empty();
         }
-        if (candidate.id() == RED_GHOST) {
-            return Optional.of(new GhostUnlockInfo(ghost(RED_GHOST), "Gets unlocked immediately"));
+        byte id = prisoner.id();
+        if (id == RED_GHOST) {
+            return Optional.of(new GhostUnlockInfo(prisoner, "Gets unlocked immediately"));
         }
         // check private dot counter first (if enabled)
-        if (!globalDotCounterEnabled && dotCounters[candidate.id()] >= privateDotLimit(levelNumber, candidate.id())) {
-            return Optional.of(new GhostUnlockInfo(candidate,
-                "Private dot counter at limit (%d)", privateDotLimit(levelNumber, candidate.id())));
+        if (!globalDotCounterEnabled && dotCounters[id] >= privateDotLimit(levelNumber, id)) {
+            return Optional.of(new GhostUnlockInfo(prisoner,"Private dot counter at limit (%d)",
+                privateDotLimit(levelNumber, id)));
         }
         // check global dot counter
-        if (globalDotLimits[candidate.id()] != UNLIMITED && globalDotCounter >= globalDotLimits[candidate.id()]) {
-            return Optional.of(new GhostUnlockInfo(candidate,
-                "Global dot counter at limit (%d)", globalDotLimits[candidate.id()]));
+        if (globalDotLimits[id] != UNLIMITED && globalDotCounter >= globalDotLimits[id]) {
+            return Optional.of(new GhostUnlockInfo(prisoner,"Global dot limit (%d) reached", globalDotLimits[id]));
         }
         // check Pac-Man starving time
-        if (pac.starvingTicks() >= pacStarvingLimitTicks) {
+        if (pac.starvingTicks() >= pacStarvingLimit) {
             pac.endStarving();
-            return Optional.of(new GhostUnlockInfo(candidate,
-                "%s reached starving limit (%d ticks)", pac.name(), pacStarvingLimitTicks));
+            return Optional.of(new GhostUnlockInfo(prisoner,"%s reached starving limit (%d ticks)",
+                pac.name(), pacStarvingLimit));
         }
         return Optional.empty();
     }
