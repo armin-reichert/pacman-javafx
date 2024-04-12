@@ -403,21 +403,19 @@ public class GameLevel {
     }
 
     private void updateGhosts() {
-        Optional.ofNullable(unlockGhost()).ifPresent(info -> {
-            var ghost = info.ghost();
-            eventLog().unlockedGhost = ghost;
-            eventLog().unlockGhostReason = info.reason();
-            if (ghost.insideHouse(world.house())) {
-                ghost.setState(LEAVING_HOUSE);
+        Ghost unlockedGhost = unlockGhost();
+        if (unlockedGhost != null) {
+            if (unlockedGhost.insideHouse(world.house())) {
+                unlockedGhost.setState(LEAVING_HOUSE);
             } else {
-                ghost.setMoveAndWishDir(LEFT);
-                ghost.setState(HUNTING_PAC);
+                unlockedGhost.setMoveAndWishDir(LEFT);
+                unlockedGhost.setState(HUNTING_PAC);
             }
-            if (ghost.id() == ORANGE_GHOST && cruiseElroyState < 0) {
+            if (unlockedGhost.id() == ORANGE_GHOST && cruiseElroyState < 0) {
                 enableCruiseElroyState(true);
-                Logger.trace("Cruise elroy mode re-enabled because {} exits house", ghost.name());
+                Logger.trace("Cruise elroy mode re-enabled because {} exits house", unlockedGhost.name());
             }
-        });
+        }
         ghosts().forEach(ghost -> ghost.update(this));
     }
 
@@ -661,7 +659,7 @@ public class GameLevel {
         }
     }
 
-    private GhostUnlockInfo unlockGhost() {
+    private Ghost unlockGhost() {
         // Important: Ghosts must be returned in order RED, PINK, CYAN, ORANGE
         Ghost prisoner = ghosts(LOCKED).findFirst().orElse(null);
         if (prisoner == null) {
@@ -669,20 +667,28 @@ public class GameLevel {
         }
         byte id = prisoner.id();
         if (id == RED_GHOST) {
-            return new GhostUnlockInfo(prisoner, "Gets unlocked immediately");
+            eventLog().unlockedGhost = prisoner;
+            eventLog().unlockGhostReason = "Red ghost is unlocked immediately";
+            return prisoner;
         }
         // check private dot counter first (if enabled)
         if (!globalDotCounterEnabled && dotCounters[id] >= privateDotLimits[id]) {
-            return new GhostUnlockInfo(prisoner,"Private dot counter at limit (%d)", privateDotLimits[id]);
+            eventLog().unlockedGhost = prisoner;
+            eventLog().unlockGhostReason = String.format("Private dot counter at limit (%d)", privateDotLimits[id]);
+            return prisoner;
         }
         // check global dot counter
         if (globalDotLimits[id] != UNLIMITED && globalDotCounter >= globalDotLimits[id]) {
-            return new GhostUnlockInfo(prisoner,"Global dot limit (%d) reached", globalDotLimits[id]);
+            eventLog().unlockedGhost = prisoner;
+            eventLog().unlockGhostReason = String.format("Global dot limit (%d) reached", globalDotLimits[id]);
+            return prisoner;
         }
         // check Pac-Man starving time
         if (pac.starvingTicks() >= pacStarvingLimit) {
             pac.endStarving();
-            return new GhostUnlockInfo(prisoner,"%s reached starving limit (%d ticks)", pac.name(), pacStarvingLimit);
+            eventLog().unlockedGhost = prisoner;
+            eventLog().unlockGhostReason = String.format("%s reached starving limit (%d ticks)", pac.name(), pacStarvingLimit);
+            return prisoner;
         }
         return null;
     }
