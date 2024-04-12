@@ -408,9 +408,10 @@ public class GameLevel {
     }
 
     private void updateGhosts() {
-        unlockGhost().ifPresent(unlocked -> {
-            var ghost = unlocked.ghost();
-            Logger.info("{} unlocked: {}", ghost.name(), unlocked.reason());
+        Optional.ofNullable(unlockGhost()).ifPresent(info -> {
+            var ghost = info.ghost();
+            eventLog.unlockedGhost = ghost;
+            eventLog.unlockGhostReason = info.reason();
             if (ghost.insideHouse(world.house())) {
                 ghost.setState(LEAVING_HOUSE);
             } else {
@@ -421,7 +422,6 @@ public class GameLevel {
                 enableCruiseElroyState(true);
                 Logger.trace("Cruise elroy mode re-enabled because {} exits house", ghost.name());
             }
-            eventLog.unlockedGhost = ghost;
         });
         ghosts().forEach(ghost -> ghost.update(this));
     }
@@ -668,30 +668,29 @@ public class GameLevel {
         }
     }
 
-    private Optional<GhostUnlockInfo> unlockGhost() {
+    private GhostUnlockInfo unlockGhost() {
         // Important: Ghosts must be returned in order RED, PINK, CYAN, ORANGE
         Ghost prisoner = ghosts(LOCKED).findFirst().orElse(null);
         if (prisoner == null) {
-            return Optional.empty();
+            return null;
         }
         byte id = prisoner.id();
         if (id == RED_GHOST) {
-            return Optional.of(new GhostUnlockInfo(prisoner, "Gets unlocked immediately"));
+            return new GhostUnlockInfo(prisoner, "Gets unlocked immediately");
         }
         // check private dot counter first (if enabled)
         if (!globalDotCounterEnabled && dotCounters[id] >= privateDotLimits[id]) {
-            return Optional.of(new GhostUnlockInfo(prisoner,"Private dot counter at limit (%d)", privateDotLimits[id]));
+            return new GhostUnlockInfo(prisoner,"Private dot counter at limit (%d)", privateDotLimits[id]);
         }
         // check global dot counter
         if (globalDotLimits[id] != UNLIMITED && globalDotCounter >= globalDotLimits[id]) {
-            return Optional.of(new GhostUnlockInfo(prisoner,"Global dot limit (%d) reached", globalDotLimits[id]));
+            return new GhostUnlockInfo(prisoner,"Global dot limit (%d) reached", globalDotLimits[id]);
         }
         // check Pac-Man starving time
         if (pac.starvingTicks() >= pacStarvingLimit) {
             pac.endStarving();
-            return Optional.of(new GhostUnlockInfo(prisoner,"%s reached starving limit (%d ticks)",
-                pac.name(), pacStarvingLimit));
+            return new GhostUnlockInfo(prisoner,"%s reached starving limit (%d ticks)", pac.name(), pacStarvingLimit);
         }
-        return Optional.empty();
+        return null;
     }
 }
