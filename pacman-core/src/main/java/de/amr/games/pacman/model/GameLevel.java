@@ -58,7 +58,6 @@ public class GameLevel {
     private byte huntingPhaseIndex;
     private byte totalNumGhostsKilled;
     private byte cruiseElroyState;
-    private SimulationStepEventLog eventLog;
     private byte bonusReachedIndex; // -1=no bonus, 0=first, 1=second
 
     // Ghost house access-control
@@ -90,7 +89,6 @@ public class GameLevel {
         this.intermissionNumber = data[11];
         this.world = world;
 
-        eventLog = new SimulationStepEventLog();
         bonusReachedIndex = -1;
         initGhostHouseAccessControl();
 
@@ -119,6 +117,10 @@ public class GameLevel {
 
     public GameModel game() {
         return GameController.it().game();
+    }
+
+    public SimulationStepEventLog eventLog() {
+        return GameController.it().eventLog();
     }
 
     public TickTimer huntingTimer() {
@@ -157,13 +159,6 @@ public class GameLevel {
         }
         // when no states are given, return *all* ghosts (ghost.is() would return *no* ghosts!)
         return Stream.of(ghosts);
-    }
-
-    /**
-     * @return information about what happened during the current (hunting) frame
-     */
-    public SimulationStepEventLog eventLog() {
-        return eventLog;
     }
 
     /**
@@ -330,10 +325,10 @@ public class GameLevel {
     private void updateFood() {
         final Vector2i pacTile = pac.tile();
         if (world.hasFoodAt(pacTile)) {
-            eventLog.foodFoundTile = pacTile;
+            eventLog().foodFoundTile = pacTile;
             pac.endStarving();
             if (world.isEnergizerTile(pacTile)) {
-                eventLog.energizerFound = true;
+                eventLog().energizerFound = true;
                 pac.setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
                 pac.victims().clear();
                 scorePoints(GameModel.POINTS_ENERGIZER);
@@ -351,7 +346,7 @@ public class GameLevel {
             }
             if (game().isBonusReached(this)) {
                 bonusReachedIndex += 1;
-                eventLog.bonusIndex = bonusReachedIndex;
+                eventLog().bonusIndex = bonusReachedIndex;
                 onBonusReached(bonusReachedIndex);
             }
             game().publishGameEvent(GameEventType.PAC_FOUND_FOOD, pacTile);
@@ -361,16 +356,16 @@ public class GameLevel {
     }
 
     private void updatePacPower() {
-        if (eventLog.energizerFound && pacPowerSeconds > 0) {
+        if (eventLog().energizerFound && pacPowerSeconds > 0) {
             huntingTimer.stop();
             Logger.info("Hunting timer stopped");
             pac.powerTimer().restartSeconds(pacPowerSeconds);
             ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
             ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
-            eventLog.pacGetsPower = true;
+            eventLog().pacGetsPower = true;
             game().publishGameEvent(GameEventType.PAC_GETS_POWER);
         } else if (pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS) {
-            eventLog.pacStartsLosingPower = true;
+            eventLog().pacStartsLosingPower = true;
             game().publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (pac.powerTimer().hasExpired()) {
             pac.powerTimer().stop();
@@ -378,7 +373,7 @@ public class GameLevel {
             huntingTimer.start();
             Logger.info("Hunting timer started");
             ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
-            eventLog.pacLostPower = true;
+            eventLog().pacLostPower = true;
             game().publishGameEvent(GameEventType.PAC_LOST_POWER);
         }
     }
@@ -391,7 +386,7 @@ public class GameLevel {
             bonus.setEaten(GameModel.BONUS_POINTS_SHOWN_TICKS);
             scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-            eventLog.bonusEaten = true;
+            eventLog().bonusEaten = true;
             game().publishGameEvent(GameEventType.BONUS_EATEN);
         } else {
             bonus.update(this);
@@ -410,8 +405,8 @@ public class GameLevel {
     private void updateGhosts() {
         Optional.ofNullable(unlockGhost()).ifPresent(info -> {
             var ghost = info.ghost();
-            eventLog.unlockedGhost = ghost;
-            eventLog.unlockGhostReason = info.reason();
+            eventLog().unlockedGhost = ghost;
+            eventLog().unlockGhostReason = info.reason();
             if (ghost.insideHouse(world.house())) {
                 ghost.setState(LEAVING_HOUSE);
             } else {
@@ -427,7 +422,6 @@ public class GameLevel {
     }
 
     public GameState doHuntingStep() {
-        eventLog = new SimulationStepEventLog();
         world.energizerBlinking().tick();
         pac.update(this);
         updateGhosts();
@@ -435,7 +429,6 @@ public class GameLevel {
         updatePacPower();
         updateBonus();
         updateHuntingTimer();
-        eventLog.report();
 
         // what next?
         if (world.uneatenFoodCount() == 0) {
@@ -443,7 +436,7 @@ public class GameLevel {
         }
         var killers = ghosts(HUNTING_PAC).filter(pac::sameTile).toList();
         if (!killers.isEmpty() && !GameController.it().isPacImmune()) {
-            eventLog.pacDied = true;
+            eventLog().pacDied = true;
             return GameState.PACMAN_DYING;
         }
         var prey = ghosts(FRIGHTENED).filter(pac::sameTile).toList();
@@ -518,7 +511,7 @@ public class GameLevel {
         scorePoints(points);
         ghost.eaten(killedSoFar);
         pac.victims().add(ghost);
-        eventLog.killedGhosts.add(ghost);
+        eventLog().killedGhosts.add(ghost);
         totalNumGhostsKilled += 1;
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }

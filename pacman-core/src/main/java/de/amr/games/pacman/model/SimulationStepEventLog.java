@@ -6,7 +6,6 @@ package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Ghost;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ public class SimulationStepEventLog {
     public String   unlockGhostReason = null;
     public final List<Ghost> killedGhosts = new ArrayList<>(4);
 
-    public void report() {
+    public List<String> createMessageList() {
         List<String> messages = new ArrayList<>();
         if (energizerFound) {
             messages.add("Energizer found at " + foodFoundTile);
@@ -58,11 +57,6 @@ public class SimulationStepEventLog {
         if (!killedGhosts.isEmpty()) {
             messages.add("Ghosts killed: " + killedGhosts.stream().map(Ghost::name).toList());
         }
-        if (!messages.isEmpty()) {
-            Logger.info("During last step:");
-            for (var msg : messages) {
-                Logger.info("- " + msg);
-            }
-        }
+        return messages;
     }
 }

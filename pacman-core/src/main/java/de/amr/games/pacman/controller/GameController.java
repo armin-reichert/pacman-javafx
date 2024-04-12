@@ -8,6 +8,8 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.Fsm;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.SimulationStepEventLog;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -45,7 +47,7 @@ public class GameController extends Fsm<GameState, GameModel> {
     private GameModel game;
     private boolean pacImmune = false;
     private int credit = 0;
-
+    private SimulationStepEventLog eventLog;
     private GameController(GameModel variant) {
         super(GameState.values());
         selectGame(variant);
@@ -65,6 +67,23 @@ public class GameController extends Fsm<GameState, GameModel> {
 
     public GameModel game() {
         return game;
+    }
+
+    @Override
+    public void update() {
+        eventLog = new SimulationStepEventLog();
+        super.update();
+        var messageList = eventLog.createMessageList();
+        if (!messageList.isEmpty()) {
+            Logger.info("During last step:");
+            for (var msg : messageList) {
+                Logger.info("- " + msg);
+            }
+        }
+    }
+
+    public SimulationStepEventLog eventLog() {
+        return eventLog;
     }
 
     /**
