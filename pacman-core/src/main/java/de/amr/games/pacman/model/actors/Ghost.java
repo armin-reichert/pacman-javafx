@@ -228,6 +228,7 @@ public class Ghost extends Creature {
             case LOCKED, HUNTING_PAC -> selectAnimation(ANIM_GHOST_NORMAL);
             case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(ANIM_GHOST_EYES);
             case FRIGHTENED -> selectAnimation(ANIM_GHOST_FRIGHTENED);
+            case EATEN -> {}
         }
     }
 
