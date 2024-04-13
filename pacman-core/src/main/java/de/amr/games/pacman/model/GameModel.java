@@ -156,12 +156,6 @@ public interface GameModel {
     void reset();
 
     /**
-     * Sets the current game level.
-     * @param level game level
-     */
-    void setLevel(GameLevel level);
-
-    /**
      * @return current game level if present
      */
     Optional<GameLevel> level();
