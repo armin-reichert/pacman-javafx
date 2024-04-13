@@ -8,7 +8,6 @@ import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
-import static de.amr.games.pacman.model.GameModel.*;
 
 /**
  * The worlds from the original Arcade games.
@@ -252,28 +251,23 @@ public interface ArcadeWorld {
     }
 
     static World createArcadeWorld(byte[][] map) {
-        var world = new World(map);
+        var house = new House();
+        house.setTopLeftTile(v2i(10, 15));
+        house.setSize(v2i(8, 5));
+        house.setDoor(new Door(v2i(13, 15), v2i(14, 15)));
+        var world = new World(map, house);
         if (world.numCols() != TILES_X || world.numRows() != TILES_Y) {
             throw new IllegalArgumentException(
                 String.format("Arcade map must have %d columns and %d rows but has %d columns and %d rows",
                     TILES_X, TILES_Y, world.numCols(), world.numRows()));
         }
-        world.setHouse(HOUSE);
         return world;
     }
 
-    static House createHouse() {
-        var house = new House();
-        house.setTopLeftTile(v2i(10, 15));
-        house.setSize(v2i(8, 5));
-        house.setDoor(new Door(v2i(13, 15), v2i(14, 15)));
-        return house;
-    }
-
-    House HOUSE = createHouse();
-    Vector2f HOUSE_LEFT_SEAT   = halfTileRightOf(11, 17);
-    Vector2f HOUSE_MIDDLE_SEAT = halfTileRightOf(13, 17);
-    Vector2f HOUSE_RIGHT_SEAT  = halfTileRightOf(15, 17);
+    Vector2f HOUSE_ENTRY_POSITION = halfTileRightOf(13, 14);
+    Vector2f HOUSE_LEFT_SEAT      = halfTileRightOf(11, 17);
+    Vector2f HOUSE_MIDDLE_SEAT    = halfTileRightOf(13, 17);
+    Vector2f HOUSE_RIGHT_SEAT     = halfTileRightOf(15, 17);
 
     /**
      * In Ms. Pac-Man, there are 4 maps used by the 6 mazes. Up to level 13, the mazes are:

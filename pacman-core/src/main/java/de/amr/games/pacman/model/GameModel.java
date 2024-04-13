@@ -41,7 +41,7 @@ public interface GameModel {
     };
 
     Vector2f[] GHOST_POSITIONS_ON_START = {
-        ArcadeWorld.HOUSE.door().entryPosition(),
+        ArcadeWorld.HOUSE_ENTRY_POSITION,
         ArcadeWorld.HOUSE_MIDDLE_SEAT,
         ArcadeWorld.HOUSE_LEFT_SEAT,
         ArcadeWorld.HOUSE_RIGHT_SEAT
