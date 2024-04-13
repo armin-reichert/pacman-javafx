@@ -303,8 +303,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                gameController().changeState(
-                    gameController().hasCredit() && game.isPlaying() ? LEVEL_TRANSITION : INTRO);
+                gameController().changeState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
             }
         }
     },
