@@ -31,7 +31,7 @@ public class WorldTest {
         assertThrows(NullPointerException.class, () -> world.isTunnel(null));
         assertThrows(NullPointerException.class, () -> world.isFoodTile(null));
         assertThrows(NullPointerException.class, () -> world.isEnergizerTile(null));
-        assertThrows(NullPointerException.class, () -> world.removeFood(null));
+        assertThrows(NullPointerException.class, () -> world.eatFoodAt(null));
         assertThrows(NullPointerException.class, () -> world.hasFoodAt(null));
         assertThrows(NullPointerException.class, () -> world.hasEatenFoodAt(null));
     }

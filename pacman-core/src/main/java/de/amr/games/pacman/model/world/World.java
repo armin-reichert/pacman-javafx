@@ -60,17 +60,18 @@ public class World {
     private final House house;
 
     private final BitSet eaten;
-    private int uneatenFoodCount;
     private final int totalFoodCount;
+    private int uneatenFoodCount;
 
     /**
      * @param tileMapData byte-array of tile map data
+     * @param house ghost house
      */
     public World(byte[][] tileMapData, House house) {
         tileMap = validateTileMapData(tileMapData);
         checkNotNull(house);
-
         this.house = house;
+
         // build portals
         var portalList = new ArrayList<Portal>();
         int lastColumn = numCols() - 1;
@@ -88,6 +89,11 @@ public class World {
 
         eaten = new BitSet(numCols() * numRows());
         totalFoodCount = (int) tiles().filter(this::isFoodTile).count();
+        resetFood();
+    }
+
+    public void resetFood() {
+        eaten.clear();
         uneatenFoodCount = totalFoodCount;
     }
 
@@ -201,7 +207,7 @@ public class World {
         return totalFoodCount - uneatenFoodCount;
     }
 
-    public void removeFood(Vector2i tile) {
+    public void eatFoodAt(Vector2i tile) {
         if (hasFoodAt(tile)) {
             eaten.set(index(tile));
             --uneatenFoodCount;

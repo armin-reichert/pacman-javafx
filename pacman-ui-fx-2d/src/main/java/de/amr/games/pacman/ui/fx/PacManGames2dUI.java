@@ -741,7 +741,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public void cheatEatAllPellets() {
         if (game().isPlaying() && gameState() == GameState.HUNTING) {
             gameLevel().ifPresent(level -> {
-                level.world().tiles().filter(not(level.world()::isEnergizerTile)).forEach(level.world()::removeFood);
+                level.world().tiles().filter(not(level.world()::isEnergizerTile)).forEach(level.world()::eatFoodAt);
                 game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
             });
         }
@@ -763,7 +763,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (game().isPlaying() && gameState() == GameState.HUNTING) {
             gameLevel().ifPresent(level -> {
                 stopAllSounds();
-                level.world().tiles().forEach(level.world()::removeFood);
+                level.world().tiles().forEach(level.world()::eatFoodAt);
                 gameController().changeState(GameState.LEVEL_COMPLETE);
             });
         }

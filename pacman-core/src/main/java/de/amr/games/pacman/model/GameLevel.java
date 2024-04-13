@@ -348,7 +348,7 @@ public class GameLevel {
                 scorePoints(GameModel.POINTS_PELLET);
             }
             updateDotCount();
-            world.removeFood(pacTile);
+            world.eatFoodAt(pacTile);
             if (world.uneatenFoodCount() == elroy1DotsLeft) {
                 setCruiseElroyState(1);
             } else if (world.uneatenFoodCount() == elroy2DotsLeft) {

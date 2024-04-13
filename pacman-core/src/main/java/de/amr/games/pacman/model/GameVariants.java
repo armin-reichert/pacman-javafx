@@ -35,7 +35,6 @@ import static de.amr.games.pacman.model.world.ArcadeWorld.*;
 public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
 
     MS_PACMAN {
-
         final String PAC_NAME = "Ms. Pac-Man";
         final String[] GHOST_NAMES = { "Blinky", "Pinky", "Inky", "Sue" };
         final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50}; // * 100
@@ -234,16 +233,17 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
         }
     },
 
+    /**
+     * All about the Pac-Man Arcade game (1980)  can be found in:
+     * <a href="https://pacman.holenet.info">Jamey Pittman: The Pac-Man Dossier</a>.
+     */
     PACMAN {
-
         final String PAC_NAME = "Pac-Man";
         final String[] GHOST_NAMES = { "Blinky", "Pinky", "Inky", "Clyde" };
         final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {7 /* default */, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
         final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
         final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-pacman.xml");
-
-        // Hunting duration (in ticks) of chase and scatter phases. See Pac-Man dossier.
-        final int[][] HUNTING_DURATIONS = {
+        final int[][] HUNTING_DURATIONS = { // Hunting duration (in ticks) of chase and scatter phases.
             {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS,   20 * FPS, 5 * FPS, -1}, // Level 1
             {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS, 1033 * FPS,       1, -1}, // Levels 2-4
             {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS,       1, -1}, // Levels 5+
