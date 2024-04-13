@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.world;
 
-import de.amr.games.pacman.lib.Pulse;
 import de.amr.games.pacman.lib.Vector2i;
 
 import java.util.ArrayList;
@@ -58,8 +57,6 @@ public class World {
     private final byte[][] tileMap;
     private final List<Vector2i> energizerTiles;
     private final List<Portal> portals;
-    private final Pulse energizerBlinking;
-    private final Pulse mazeFlashing;
     private final House house;
 
     private final BitSet eaten;
@@ -92,22 +89,10 @@ public class World {
         eaten = new BitSet(numCols() * numRows());
         totalFoodCount = (int) tiles().filter(this::isFoodTile).count();
         uneatenFoodCount = totalFoodCount;
-
-        // Animations
-        energizerBlinking = new Pulse(10, true);
-        mazeFlashing = new Pulse(10, false);
     }
 
     public House house() {
         return house;
-    }
-
-    public Pulse energizerBlinking() {
-        return energizerBlinking;
-    }
-
-    public Pulse mazeFlashing() {
-        return mazeFlashing;
     }
 
     /**

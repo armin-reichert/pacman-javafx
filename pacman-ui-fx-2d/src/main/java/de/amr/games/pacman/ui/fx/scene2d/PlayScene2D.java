@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -77,8 +78,8 @@ public class PlayScene2D extends GameScene2D {
     protected void drawSceneContent() {
         context.gameLevel().ifPresent(level -> {
             switch (context.game()) {
-                case GameVariants.MS_PACMAN -> drawMsPacManMaze(level.world(), ArcadeWorld.mazeNumberMsPacMan(level.levelNumber));
-                case GameVariants.PACMAN -> drawPacManMaze(level.world());
+                case GameVariants.MS_PACMAN -> drawMsPacManMaze(level, ArcadeWorld.mazeNumberMsPacMan(level.levelNumber));
+                case GameVariants.PACMAN -> drawPacManMaze(level);
                 default -> throw new IllegalGameVariantException(context.game());
             }
             if (level.isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
@@ -104,29 +105,29 @@ public class PlayScene2D extends GameScene2D {
         });
     }
 
-    private void drawPacManMaze(World world) {
+    private void drawPacManMaze(GameLevel level) {
         PacManGameSpriteSheet sheet = context.spriteSheet();
         double x = 0, y = t(3);
-        if (world.mazeFlashing().isRunning()) {
-            if (world.mazeFlashing().on()) {
+        if (level.mazeFlashing().isRunning()) {
+            if (level.mazeFlashing().on()) {
                 drawImage(sheet.getFlashingMazeImage(), x, y);
             } else {
                 drawSprite(sheet.getEmptyMazeSprite(), x, y);
             }
         } else {
             drawSprite(sheet.getFullMazeSprite(), x, y);
-            world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
-            if (world.energizerBlinking().off()) {
-                world.energizerTiles().forEach(tile -> hideTileContent(world, tile));
+            level.world().tiles().filter(level.world()::hasEatenFoodAt).forEach(tile -> hideTileContent(level.world(), tile));
+            if (level.energizerBlinking().off()) {
+                level.world().energizerTiles().forEach(tile -> hideTileContent(level.world(), tile));
             }
         }
     }
 
-    private void drawMsPacManMaze(World world, int mazeNumber) {
+    private void drawMsPacManMaze(GameLevel level, int mazeNumber) {
         MsPacManGameSpriteSheet sheet = context.spriteSheet();
         double x = 0, y = t(3);
-        if (world.mazeFlashing().isRunning()) {
-            if (world.mazeFlashing().on()) {
+        if (level.mazeFlashing().isRunning()) {
+            if (level.mazeFlashing().on()) {
                 var flashingMazeSprite = sheet.highlightedMaze(mazeNumber);
                 drawSprite(sheet.getFlashingMazesImage(), flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
             } else {
@@ -134,9 +135,9 @@ public class PlayScene2D extends GameScene2D {
             }
         } else {
             drawSprite(sheet.filledMaze(mazeNumber), x, y);
-            world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
-            if (world.energizerBlinking().off()) {
-                world.energizerTiles().forEach(tile -> hideTileContent(world, tile));
+            level.world().tiles().filter(level.world()::hasEatenFoodAt).forEach(tile -> hideTileContent(level.world(), tile));
+            if (level.energizerBlinking().off()) {
+                level.world().energizerTiles().forEach(tile -> hideTileContent(level.world(), tile));
             }
         }
     }

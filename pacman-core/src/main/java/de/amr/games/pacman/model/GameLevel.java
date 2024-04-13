@@ -7,10 +7,7 @@ package de.amr.games.pacman.model;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Globals;
-import de.amr.games.pacman.lib.TickTimer;
-import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -51,6 +48,8 @@ public class GameLevel {
 
     private final TickTimer huntingTimer = new TickTimer("HuntingTimer");
     private final World world;
+    private final Pulse energizerBlinking;
+    private final Pulse mazeFlashing;
     private final Pac pac;
     private final Ghost[] ghosts;
     private final List<Byte> bonusSymbols;
@@ -87,7 +86,10 @@ public class GameLevel {
         this.pacPowerSeconds = data[9];
         this.numFlashes = data[10];
         this.intermissionNumber = data[11];
+
         this.world = world;
+        this.energizerBlinking = new Pulse(10, true);
+        this.mazeFlashing = new Pulse(10, false);
 
         bonusReachedIndex = -1;
         initGhostHouseAccessControl();
@@ -133,6 +135,14 @@ public class GameLevel {
 
     public World world() {
         return world;
+    }
+
+    public Pulse energizerBlinking() {
+        return energizerBlinking;
+    }
+
+    public Pulse mazeFlashing() {
+        return mazeFlashing;
     }
 
     public Pac pac() {
@@ -293,8 +303,8 @@ public class GameLevel {
             ghost.setState(LOCKED);
             ghost.resetAnimation();
         });
-        world.mazeFlashing().reset();
-        world.energizerBlinking().reset();
+        mazeFlashing.reset();
+        energizerBlinking.reset();
     }
 
     /**
@@ -420,7 +430,7 @@ public class GameLevel {
     }
 
     public GameState doHuntingStep() {
-        world.energizerBlinking().tick();
+        energizerBlinking.tick();
         pac.update(this);
         updateGhosts();
         updateFood();
@@ -446,7 +456,7 @@ public class GameLevel {
     }
 
     public void onCompleted() {
-        world.mazeFlashing().reset();
+        mazeFlashing.reset();
         pac.freeze();
         ghosts().forEach(Ghost::hide);
         bonus().ifPresent(Bonus::setInactive);
@@ -473,17 +483,17 @@ public class GameLevel {
             } else if (timer.atSecond(8.5)) {
                 pac.hide();
                 ghosts().forEach(Ghost::hide);
-                world.mazeFlashing().restart(2 * numFlashes);
+                mazeFlashing().restart(2 * numFlashes);
             } else if (timer.atSecond(12.0)) {
                 timer.restartIndefinitely();
                 pac.freeze();
                 ghosts().forEach(Ghost::hide);
                 bonus().ifPresent(Bonus::setInactive);
-                world.mazeFlashing().reset();
+                mazeFlashing().reset();
                 game().createAndStartLevel(levelNumber + 1);
             }
-            world.energizerBlinking().tick();
-            world.mazeFlashing().tick();
+            energizerBlinking().tick();
+            mazeFlashing().tick();
             ghosts().forEach(ghost -> ghost.update(this));
             bonus().ifPresent(bonus -> bonus.update(this));
         } else {
