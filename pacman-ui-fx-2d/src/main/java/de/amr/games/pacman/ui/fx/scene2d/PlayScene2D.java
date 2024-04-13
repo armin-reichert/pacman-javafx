@@ -20,7 +20,7 @@ import javafx.scene.text.FontWeight;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.ENTERING_HOUSE;
-import static de.amr.games.pacman.model.actors.GhostState.RETURNING_TO_HOUSE;
+import static de.amr.games.pacman.model.actors.GhostState.RETURNING_HOME;
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
 
 /**
@@ -183,7 +183,7 @@ public class PlayScene2D extends GameScene2D {
             if (level.pac().starvingTicks() > 8) { // TODO not sure
                 context.stopAudioClip("audio.pacman_munch");
             }
-            if (!level.pac().isDead() && level.ghosts(RETURNING_TO_HOUSE, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
+            if (!level.pac().isDead() && level.ghosts(RETURNING_HOME, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
                 context.ensureAudioLoop("audio.ghost_returning");
             } else {
                 context.stopAudioClip("audio.ghost_returning");

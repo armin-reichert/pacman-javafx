@@ -166,7 +166,7 @@ public class Ghost3D extends Group {
         return switch (ghost.state()) {
             case LOCKED, LEAVING_HOUSE -> pac.powerTimer().isRunning()? frightenedOrFlashingLook() : Look.NORMAL;
             case FRIGHTENED -> frightenedOrFlashingLook();
-            case ENTERING_HOUSE, RETURNING_TO_HOUSE -> Look.EYES;
+            case ENTERING_HOUSE, RETURNING_HOME -> Look.EYES;
             case EATEN -> Look.NUMBER;
             default -> Look.NORMAL;
         };

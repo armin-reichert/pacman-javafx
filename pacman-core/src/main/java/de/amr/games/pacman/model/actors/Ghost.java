@@ -74,6 +74,7 @@ public class Ghost extends Creature {
     public String toString() {
         return "Ghost{" +
             "id=" + id +
+            ", name=" + name +
             ", state=" + state +
             '}';
     }
@@ -125,9 +126,6 @@ public class Ghost extends Creature {
         huntingBehavior = function;
     }
 
-    /**
-     * @param function function specifying the behavior when frightened
-     */
     public void setFrightenedBehavior(Consumer<Ghost> function) {
         checkNotNull(function);
         frightenedBehavior = function;
@@ -136,6 +134,7 @@ public class Ghost extends Creature {
     @Override
     public boolean canAccessTile(Vector2i tile, World world) {
         checkTileNotNull(tile);
+        checkNotNull(world);
 
         // hunting ghosts cannot move up at certain tiles in Pac-Man game
         if (state == HUNTING_PAC) {
@@ -224,11 +223,11 @@ public class Ghost extends Creature {
             Logger.trace("{} is already in state {}", name, state);
         }
         this.state = state;
+        // onEntry action:
         switch (state) {
             case LOCKED, HUNTING_PAC -> selectAnimation(ANIM_GHOST_NORMAL);
-            case ENTERING_HOUSE, RETURNING_TO_HOUSE -> selectAnimation(ANIM_GHOST_EYES);
+            case ENTERING_HOUSE, RETURNING_HOME -> selectAnimation(ANIM_GHOST_EYES);
             case FRIGHTENED -> selectAnimation(ANIM_GHOST_FRIGHTENED);
-            default -> {}
         }
     }
 
@@ -245,7 +244,7 @@ public class Ghost extends Creature {
             case HUNTING_PAC        -> updateStateHuntingPac(level);
             case FRIGHTENED         -> updateStateFrightened(level.pac());
             case EATEN              -> updateStateEaten();
-            case RETURNING_TO_HOUSE -> updateStateReturningToHouse(level.world());
+            case RETURNING_HOME -> updateStateReturningToHouse(level.world());
             case ENTERING_HOUSE     -> updateStateEnteringHouse();
         }
     }

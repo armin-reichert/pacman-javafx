@@ -201,7 +201,7 @@ public enum GameState implements FsmState<GameModel> {
                 if (timer.hasExpired()) {
                     gameController().resumePreviousState();
                 } else {
-                    level.ghosts(GhostState.EATEN, GhostState.RETURNING_TO_HOUSE, GhostState.ENTERING_HOUSE)
+                    level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                         .forEach(ghost -> ghost.update(level));
                     level.world().energizerBlinking().tick();
                 }
@@ -212,7 +212,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onExit(GameModel game) {
             game.level().ifPresent(level -> {
                 level.pac().show();
-                level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_TO_HOUSE));
+                level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
                 level.ghosts().forEach(Ghost::startAnimation);
             });
         }
