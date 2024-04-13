@@ -180,7 +180,8 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
         @Override
         public void createAndStartLevel(int levelNumber) {
             checkLevelNumber(levelNumber);
-            level = new GameLevel(levelNumber, false, RAW_LEVEL_DATA[levelDataIndex(levelNumber)],
+            int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
+            level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex],
                 createMsPacManWorld(mapNumberMsPacMan(levelNumber)));
             score.setLevelNumber(levelNumber);
             if (levelNumber == 1) {
@@ -203,7 +204,7 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
 
         @Override
         public void createAndStartDemoLevel() {
-            level = new GameLevel(1, true, RAW_LEVEL_DATA[0], createMsPacManWorld(1));
+            level = new GameLevel(1, true, LEVEL_DATA[0], createMsPacManWorld(1));
             level.pac().setAutopilot(new RuleBasedPacSteering(level));
             level.pac().setUseAutopilot(true);
             Logger.info("Demo level created ({})", this);
@@ -302,7 +303,8 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
         @Override
         public void createAndStartLevel(int levelNumber) {
             checkLevelNumber(levelNumber);
-            level = new GameLevel(levelNumber, false, RAW_LEVEL_DATA[levelDataIndex(levelNumber)], createPacManWorld());
+            int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
+            level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex], createPacManWorld());
             addForbiddenMoves(level);
             score.setLevelNumber(levelNumber);
             if (levelNumber == 1) {
@@ -321,7 +323,7 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
 
         @Override
         public void createAndStartDemoLevel() {
-            level = new GameLevel(1, true, RAW_LEVEL_DATA[0], createPacManWorld());
+            level = new GameLevel(1, true, LEVEL_DATA[0], createPacManWorld());
             addForbiddenMoves(level);
             levelCounter.clear();
             addSymbolToLevelCounter(level.bonusSymbol(0));
@@ -355,35 +357,6 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
     };
 
     // Common to all variants
-
-    final byte[][] RAW_LEVEL_DATA = {
-        /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0},
-        /* 2*/ { 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5, 1},
-        /* 3*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5, 0},
-        /* 4*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5, 0},
-        /* 5*/ {100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5, 2},
-        /* 6*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5, 0},
-        /* 7*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5, 0},
-        /* 8*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5, 0},
-        /* 9*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3, 3},
-        /*10*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5, 0},
-        /*11*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5, 0},
-        /*12*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3, 0},
-        /*13*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3, 3},
-        /*14*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5, 0},
-        /*15*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0},
-        /*16*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0},
-        /*17*/ {100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0, 3},
-        /*18*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0},
-        /*19*/ {100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0},
-        /*20*/ {100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0},
-        /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0},
-    };
-
-    int levelDataIndex(int levelNumber) {
-        return Math.min(levelNumber - 1, RAW_LEVEL_DATA.length - 1);
-    }
-
     final List<Byte> levelCounter = new LinkedList<>();
     final Score score = new Score();
     final Score highScore = new Score();
