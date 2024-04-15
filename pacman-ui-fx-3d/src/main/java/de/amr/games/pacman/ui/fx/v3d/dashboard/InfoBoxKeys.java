@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx.util.Theme;
+import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
 
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PY_3D_PERSPECTIVE;
 
@@ -34,9 +35,9 @@ public class InfoBoxKeys extends InfoBox {
             .available(() -> sceneContext.game().isPlaying());
         addInfo("Alt+X", "Kill Hunting Ghosts")
             .available(() -> sceneContext.game().isPlaying());
-        addInfo("Alt+LEFT", () -> PY_3D_PERSPECTIVE.get().prev().name())
+        addInfo("Alt+LEFT", () -> Perspective.pred(PY_3D_PERSPECTIVE.get()).name())
             .available(this::isCurrentGameScene3D);
-        addInfo("Alt+RIGHT", () -> PY_3D_PERSPECTIVE.get().next().name())
+        addInfo("Alt+RIGHT", () -> Perspective.succ(PY_3D_PERSPECTIVE.get()).name())
             .available(this::isCurrentGameScene3D);
         addInfo("Alt+3", "3D Play Scene On/Off");
         addInfo("P", "Pause On/Off");

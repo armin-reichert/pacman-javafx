@@ -283,13 +283,15 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     @Override
     public void selectNextPerspective() {
-        PY_3D_PERSPECTIVE.set(PY_3D_PERSPECTIVE.get().next());
+        var next = Perspective.succ(PY_3D_PERSPECTIVE.get());
+        PY_3D_PERSPECTIVE.set(next);
         showFlashMessage(tt("camera_perspective", tt(PY_3D_PERSPECTIVE.get().name())));
     }
 
     @Override
     public void selectPrevPerspective() {
-        PY_3D_PERSPECTIVE.set(PY_3D_PERSPECTIVE.get().prev());
+        var prev = Perspective.pred(PY_3D_PERSPECTIVE.get());
+        PY_3D_PERSPECTIVE.set(prev);
         showFlashMessage(tt("camera_perspective", tt(PY_3D_PERSPECTIVE.get().name())));
     }
 
