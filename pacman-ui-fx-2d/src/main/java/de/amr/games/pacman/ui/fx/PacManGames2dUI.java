@@ -686,7 +686,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void switchGameVariant() {
-        gameController().selectGame(((GameVariants)game()).next());
+        gameController().selectGame(game() == GameVariants.PACMAN ? GameVariants.MS_PACMAN : GameVariants.PACMAN);
         gameController().restart(GameState.BOOT);
         showStartPage();
     }

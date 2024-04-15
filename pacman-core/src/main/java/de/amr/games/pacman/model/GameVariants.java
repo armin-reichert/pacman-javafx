@@ -32,7 +32,7 @@ import static de.amr.games.pacman.model.world.ArcadeWorld.*;
  *
  * @author Armin Reichert
  */
-public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
+public enum GameVariants implements GameModel {
 
     MS_PACMAN {
         final String PAC_NAME = "Ms. Pac-Man";
@@ -366,7 +366,7 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
     short initialLives = 3;
     short lives;
 
-    protected Vector2i ghostScatterTarget(byte ghostID) {
+    Vector2i ghostScatterTarget(byte ghostID) {
         return switch (ghostID) {
             case RED_GHOST -> SCATTER_TILE_NE;
             case PINK_GHOST -> SCATTER_TILE_NW;
@@ -374,12 +374,6 @@ public enum GameVariants implements GameModel, EnumMethodMixin<GameVariants> {
             case ORANGE_GHOST -> SCATTER_TILE_SW;
             default -> throw new IllegalGhostIDException(ghostID);
         };
-    }
-
-    // Why does the default implementation return NULL as soon as the enum classes have methods?
-    @Override
-    public GameVariants[] enumValues() {
-        return new GameVariants[] {GameVariants.MS_PACMAN, GameVariants.PACMAN};
     }
 
     @Override
