@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.TickTimer.State;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A finite-state machine.
@@ -18,14 +19,15 @@ import java.util.ArrayList;
  * State transitions are defined dynamically via the {@link #changeState} method calls. Each state change triggers an
  * event.
  *
+ * @author Armin Reichert
+ *
  * @param <S> "State". Enumeration type providing the states of this FSM.
  * @param <C> "Context". Type of the data provided to the state lifecycle methods {@link FsmState#onEnter},
  *            {@link FsmState#onUpdate} and {@link FsmState#onExit}
- * @author Armin Reichert
  */
 public abstract class Fsm<S extends FsmState<C>, C> {
 
-    protected final ArrayList<FsmStateChangeListener<S>> stateChangeListeners = new ArrayList<>(5);
+    protected final List<FsmStateChangeListener<S>> stateChangeListeners = new ArrayList<>(5);
     protected final S[] states;
     protected S currentState;
     protected S prevState;
@@ -57,7 +59,7 @@ public abstract class Fsm<S extends FsmState<C>, C> {
     }
 
     /**
-     * @return the previous state (may be null)
+     * @return the previous state (can be null)
      */
     public S prevState() {
         return prevState;
@@ -68,7 +70,7 @@ public abstract class Fsm<S extends FsmState<C>, C> {
      *
      * @param listener a state change listener
      */
-    public synchronized void addStateChangeListener(FsmStateChangeListener<S> listener) {
+    public void addStateChangeListener(FsmStateChangeListener<S> listener) {
         stateChangeListeners.add(listener);
     }
 
@@ -77,7 +79,7 @@ public abstract class Fsm<S extends FsmState<C>, C> {
      *
      * @param listener a state change listener
      */
-    public synchronized void removeStateChangeListener(FsmStateChangeListener<S> listener) {
+    public void removeStateChangeListener(FsmStateChangeListener<S> listener) {
         stateChangeListeners.remove(listener);
     }
 
@@ -91,14 +93,14 @@ public abstract class Fsm<S extends FsmState<C>, C> {
     }
 
     /**
-     * Sets the state machine to the given state. All timers are reset. The state's entry hook method is executed but the
-     * current state's exit method isn't.
+     * Sets the state machine to the given state. All timers are reset.
+     * The state's entry hook method is executed but the current state's exit method isn't.
      *
      * @param state the state to enter
      */
     public void restart(S state) {
         resetTimers();
-        clearState();
+        currentState = null;
         changeState(state);
     }
 
@@ -135,10 +137,6 @@ public abstract class Fsm<S extends FsmState<C>, C> {
         currentState.onEnter(context);
         Logger.trace("After Enter state {} timer={}", currentState, currentState.timer());
         stateChangeListeners.forEach(listener -> listener.onStateChange(prevState, currentState));
-    }
-
-    public void clearState() {
-        currentState = null;
     }
 
     /**
