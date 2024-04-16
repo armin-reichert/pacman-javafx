@@ -86,7 +86,7 @@ public enum GameState implements FsmState<GameModel> {
             if (game.isPlaying()) { // resume running game
                 if (timer.tick() == 1) {
                     game.level().ifPresent(level -> {
-                        game.letsGetReadyToRumble(level);
+                        game.letsGetReadyToRumble();
                         level.pac().show();
                         level.ghosts().forEach(Ghost::show);
                     });

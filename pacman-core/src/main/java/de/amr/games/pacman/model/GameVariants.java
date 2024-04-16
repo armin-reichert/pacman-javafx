@@ -61,7 +61,7 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        public boolean isBonusReached(GameLevel level) {
+        public boolean isBonusReached() {
             return level.world().eatenFoodCount() == 64 || level.world().eatenFoodCount() == 176;
         }
 
@@ -218,7 +218,7 @@ public enum GameVariants implements GameModel {
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
             // At this point, the animations of Pac-Man and the ghosts must have been created!
-            letsGetReadyToRumble(level);
+            letsGetReadyToRumble();
             if (demoLevel) {
                 level.pac().show();
                 level.ghosts().forEach(Ghost::show);
@@ -276,7 +276,7 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        public boolean isBonusReached(GameLevel level) {
+        public boolean isBonusReached() {
             return level.world().eatenFoodCount() == 70 || level.world().eatenFoodCount() == 170;
         }
 
@@ -360,7 +360,7 @@ public enum GameVariants implements GameModel {
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
             // At this point, the animations of Pac-Man and the ghosts must have been created!
-            letsGetReadyToRumble(level);
+            letsGetReadyToRumble();
             if (demoLevel) {
                 level.pac().show();
                 level.ghosts().forEach(Ghost::show);
@@ -438,7 +438,7 @@ public enum GameVariants implements GameModel {
     }
 
     @Override
-    public void letsGetReadyToRumble(GameLevel level) {
+    public void letsGetReadyToRumble() {
         level.pac().reset();
         level.pac().setPosition(ArcadeWorld.PAC_POSITION);
         level.pac().setMoveAndWishDir(Direction.LEFT);

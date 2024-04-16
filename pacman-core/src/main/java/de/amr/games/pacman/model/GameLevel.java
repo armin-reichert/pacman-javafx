@@ -318,7 +318,7 @@ public class GameLevel {
             } else if (world.uneatenFoodCount() == elroy2DotsLeft()) {
                 setCruiseElroyState(2);
             }
-            if (game().isBonusReached(this)) {
+            if (game().isBonusReached()) {
                 bonusReachedIndex += 1;
                 eventLog().bonusIndex = bonusReachedIndex;
                 onBonusReached(bonusReachedIndex);
@@ -443,7 +443,7 @@ public class GameLevel {
                 bonus().ifPresent(bonus -> bonus.update(this));
             }
             if (timer.atSecond(1.0)) {
-                game().letsGetReadyToRumble(this);
+                game().letsGetReadyToRumble();
                 pac.show();
                 ghosts().forEach(Ghost::show);
             } else if (timer.atSecond(2)) {

@@ -112,10 +112,9 @@ public interface GameModel {
     String ghostName(byte id);
 
     /**
-     * @param level game level
      * @return {@code true} if bonus score is reached for this level
      */
-    boolean isBonusReached(GameLevel level);
+    boolean isBonusReached();
 
     /**
      * @param levelNumber game level number
@@ -165,10 +164,8 @@ public interface GameModel {
     /**
      * Pac-Man and the ghosts are placed at their initial positions and locked. The bonus, Pac-Man power timer and
      * energizer pulse are reset too.
-     *
-     * @param level the game level
      */
-    void letsGetReadyToRumble(GameLevel level);
+    void letsGetReadyToRumble();
 
     /**
      * @param playing Sets playing state for current game

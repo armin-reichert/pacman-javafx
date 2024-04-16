@@ -258,7 +258,7 @@ public class PlayScene3D implements GameScene {
                 });
             }
 
-            case PACMAN_DYING -> {
+            case PACMAN_DYING ->
                 context.gameLevel().ifPresent(level -> {
                     assertLevel3DExists();
                     context.stopAllSounds();
@@ -269,7 +269,6 @@ public class PlayScene3D implements GameScene {
                     };
                     lockGameStateAndPlayAfterSeconds(1.0, animation);
                 });
-            }
 
             case GAME_OVER -> {
                 assertLevel3DExists();
@@ -309,7 +308,7 @@ public class PlayScene3D implements GameScene {
                 });
             }
 
-            case LEVEL_TRANSITION -> {
+            case LEVEL_TRANSITION ->
                 context.gameLevel().ifPresent(level -> {
                     assertLevel3DExists();
                     context.gameState().timer().restartSeconds(3);
@@ -317,12 +316,11 @@ public class PlayScene3D implements GameScene {
                     level3D.pac3D().init(level.world());
                     currentCamController().reset(fxSubScene.getCamera());
                 });
-            }
 
             case LEVEL_TEST ->
                 context.gameLevel().ifPresent(level -> {
                     PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
-                    context.game().letsGetReadyToRumble(level);
+                    context.game().letsGetReadyToRumble();
                     level.pac().show();
                     level.ghosts().forEach(Ghost::show);
                     replaceGameLevel3D(level);
