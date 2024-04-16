@@ -391,6 +391,58 @@ public enum GameVariants implements GameModel {
 
     // --- Common to all variants --------------------------------------------------------------------------------------
 
+    final byte[][] LEVEL_DATA = {
+        /* 1*/ { 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0},
+        /* 2*/ { 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5, 1},
+        /* 3*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5, 0},
+        /* 4*/ { 90, 85, 45,  40,  90, 20,  95,  95, 55, 3, 5, 0},
+        /* 5*/ {100, 95, 50,  40, 100, 20, 105, 100, 60, 2, 5, 2},
+        /* 6*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 5, 5, 0},
+        /* 7*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5, 0},
+        /* 8*/ {100, 95, 50,  50, 100, 25, 105, 100, 60, 2, 5, 0},
+        /* 9*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 1, 3, 3},
+        /*10*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 5, 5, 0},
+        /*11*/ {100, 95, 50,  60, 100, 30, 105, 100, 60, 2, 5, 0},
+        /*12*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3, 0},
+        /*13*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 1, 3, 3},
+        /*14*/ {100, 95, 50,  80, 100, 40, 105, 100, 60, 3, 5, 0},
+        /*15*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0},
+        /*16*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0},
+        /*17*/ {100, 95, 50, 100, 100, 50, 105,   0,  0, 0, 0, 3},
+        /*18*/ {100, 95, 50, 100, 100, 50, 105, 100, 60, 1, 3, 0},
+        /*19*/ {100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0},
+        /*20*/ {100, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0},
+        /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0},
+    };
+
+    final Direction[] GHOST_DIRECTIONS_ON_START = {
+        Direction.LEFT,
+        Direction.DOWN,
+        Direction.UP,
+        Direction.UP
+    };
+
+    final Vector2f[] GHOST_POSITIONS_ON_START = {
+        ArcadeWorld.HOUSE_ENTRY_POSITION,
+        ArcadeWorld.HOUSE_MIDDLE_SEAT,
+        ArcadeWorld.HOUSE_LEFT_SEAT,
+        ArcadeWorld.HOUSE_RIGHT_SEAT
+    };
+
+    final Vector2f[] GHOST_REVIVAL_POSITIONS = {
+        ArcadeWorld.HOUSE_MIDDLE_SEAT,
+        ArcadeWorld.HOUSE_MIDDLE_SEAT,
+        ArcadeWorld.HOUSE_LEFT_SEAT,
+        ArcadeWorld.HOUSE_RIGHT_SEAT
+    };
+
+    final short POINTS_PELLET = 10;
+    final short POINTS_ENERGIZER = 50;
+    final short POINTS_ALL_GHOSTS_KILLED_IN_LEVEL = 12_000;
+    final short EXTRA_LIFE_SCORE = 10_000;
+    final byte LEVEL_COUNTER_MAX_SYMBOLS = 7;
+
+
     final List<Byte> bonusSymbols = new ArrayList<>();
     final List<Byte> levelCounter = new LinkedList<>();
     final Score score = new Score();
@@ -883,12 +935,12 @@ public enum GameVariants implements GameModel {
                 eventLog().energizerFound = true;
                 pac.setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
                 pac.victims().clear();
-                scorePoints(GameModel.POINTS_ENERGIZER);
+                scorePoints(POINTS_ENERGIZER);
                 handleEnergizerEaten();
-                Logger.info("Scored {} points for eating energizer", GameModel.POINTS_ENERGIZER);
+                Logger.info("Scored {} points for eating energizer", POINTS_ENERGIZER);
             } else {
                 pac.setRestingTicks(GameModel.RESTING_TICKS_PELLET);
-                scorePoints(GameModel.POINTS_PELLET);
+                scorePoints(POINTS_PELLET);
             }
             updateDotCount();
             world.eatFoodAt(pacTile);
@@ -1010,7 +1062,7 @@ public enum GameVariants implements GameModel {
         if (!prey.isEmpty()) {
             prey.forEach(this::killGhost);
             if (numGhostsKilledInLevel == 16) {
-                int points = GameModel.POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
+                int points = POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
                 scorePoints(points);
                 Logger.info("Scored {} points for killing all ghosts at level {}", points, level.levelNumber());
             }
