@@ -217,15 +217,14 @@ public enum GameVariants implements GameModel {
             return BONUS_VALUE_FACTORS[symbol] * 100;
         }
 
-        @Override
-        public Optional<Bonus> createNextBonus(World world, Bonus existingBonus, int bonusIndex, byte symbol) {
-            if (existingBonus != null && existingBonus.state() != Bonus.STATE_INACTIVE) {
+        public void createNextBonus(int bonusIndex, byte symbol) {
+            if (bonus != null && bonus.state() != Bonus.STATE_INACTIVE) {
                 Logger.info("Previous bonus is still active, skip this one");
-                return Optional.empty();
+                return;
             }
-            var bonus = createMovingBonus(world, symbol, RND.nextBoolean());
+            bonus = createMovingBonus(world, symbol, RND.nextBoolean());
             bonus.setEdible(TickTimer.INDEFINITE);
-            return Optional.of(bonus);
+            publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
         }
 
         /**
@@ -386,12 +385,11 @@ public enum GameVariants implements GameModel {
             return BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber < 13 ? levelNumber : 0];
         }
 
-        @Override
-        public Optional<Bonus> createNextBonus(World world, Bonus existingBonus, int bonusIndex, byte symbol) {
-            var bonus = new StaticBonus(symbol, bonusValue(symbol));
+        void createNextBonus(int bonusIndex, byte symbol) {
+            bonus = new StaticBonus(symbol, bonusValue(symbol));
             bonus.entity().setPosition(ArcadeWorld.BONUS_POSITION);
             bonus.setEdible(randomInt(9 * FPS, 10 * FPS));
-            return Optional.of(bonus);
+            publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
         }
 
         @Override
@@ -833,13 +831,13 @@ public enum GameVariants implements GameModel {
                 blinking.setStartPhase(Pulse.ON);
                 blinking.restart();
             } else if (timer.atSecond(2.5)) {
-                onBonusReached(0);
+                createNextBonus(0, bonusSymbol(0));
             } else if (timer.atSecond(3.5)) {
                 bonus().ifPresent(bonus -> bonus.setEaten(120));
                 publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer.atSecond(4.5)) {
                 bonus().ifPresent(Bonus::setInactive); // needed?
-                onBonusReached(1);
+                createNextBonus(1, bonusSymbol(1));
             } else if (timer.atSecond(6.5)) {
                 bonus().ifPresent(bonus -> bonus.setEaten(60));
                 publishGameEvent(GameEventType.BONUS_EATEN);
@@ -878,16 +876,7 @@ public enum GameVariants implements GameModel {
         return bonusSymbols.get(index);
     }
 
-    @Override
-    public void onBonusReached(int index) {
-        if (index < 0 || index > 1) {
-            throw new IllegalArgumentException("Bonus index must be 0 or 1");
-        }
-        bonus = createNextBonus(world, bonus, index, bonusSymbol(index)).orElse(null);
-        if (bonus != null) {
-            publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
-        }
-    }
+    abstract void createNextBonus(int index, byte symbol);
 
     private void scorePoints(int points) {
         if (!level.demoLevel()) {
@@ -921,7 +910,7 @@ public enum GameVariants implements GameModel {
             if (isBonusReached()) {
                 bonusReachedIndex += 1;
                 eventLog().bonusIndex = bonusReachedIndex;
-                onBonusReached(bonusReachedIndex);
+                createNextBonus(bonusReachedIndex, bonusSymbol(bonusReachedIndex));
             }
             publishGameEvent(GameEventType.PAC_FOUND_FOOD, pacTile);
         } else {

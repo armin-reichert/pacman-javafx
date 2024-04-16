@@ -129,15 +129,6 @@ public interface GameModel {
     int bonusValue(byte symbol);
 
     /**
-     * @param world game world
-     * @param bonus current bonus
-     * @param bonusIndex next bonus index in current level (0 or 1)
-     * @param symbol next bonus symbol
-     * @return optional bonus to appear next
-     */
-    Optional<Bonus> createNextBonus(World world, Bonus bonus, int bonusIndex, byte symbol);
-
-    /**
      * @return File where high score is saved
      */
     File highScoreFile();
@@ -162,13 +153,6 @@ public interface GameModel {
     void letsGetReadyToRumble();
 
     void onPacDying();
-
-    /**
-     * Called on bonus achievement (public access for unit tests and level test).
-     *
-     * @param index bonus index (0 or 1).
-     */
-    void onBonusReached(int index);
 
     Optional<Bonus> bonus();
 
