@@ -181,6 +181,24 @@ public enum GameVariants implements GameModel {
             int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
             level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex],
                 createMsPacManWorld(mapNumberMsPacMan(levelNumber)));
+
+            level.pac().reset();
+            level.pac().setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+            level.pac().setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
+            level.pac().setAutopilot(new RuleBasedPacSteering(level));
+
+            level.ghosts().forEach(ghost -> {
+                ghost.reset();
+                ghost.setHouse(level.world().house());
+                ghost.setFrightenedBehavior(refugee ->
+                    roam(refugee, level.world(), level.frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
+                ghost.setHuntingBehavior(this::huntingBehaviour);
+                ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
+                ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+                ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
+                ghost.setSpeedInsideHouse(PPS_GHOST_INHOUSE / (float) FPS);
+            });
+
             score.setLevelNumber(levelNumber);
             if (levelNumber == 1) {
                 levelCounter.clear();
@@ -190,7 +208,6 @@ public enum GameVariants implements GameModel {
                 // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
                 addSymbolToLevelCounter(level.bonusSymbol(0));
             }
-            level.pac().setAutopilot(new RuleBasedPacSteering(level));
             Logger.info("Level {} created ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
@@ -203,8 +220,25 @@ public enum GameVariants implements GameModel {
         @Override
         public void createAndStartDemoLevel() {
             level = new GameLevel(1, true, LEVEL_DATA[0], createMsPacManWorld(1));
+
+            level.pac().reset();
+            level.pac().setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+            level.pac().setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
             level.pac().setAutopilot(new RuleBasedPacSteering(level));
             level.pac().setUseAutopilot(true);
+
+            level.ghosts().forEach(ghost -> {
+                ghost.reset();
+                ghost.setHouse(level.world().house());
+                ghost.setFrightenedBehavior(refugee ->
+                    roam(refugee, level.world(), level.frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
+                ghost.setHuntingBehavior(this::huntingBehaviour);
+                ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
+                ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+                ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
+                ghost.setSpeedInsideHouse(PPS_GHOST_INHOUSE / (float) FPS);
+            });
+
             Logger.info("Demo level created ({})", this);
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
