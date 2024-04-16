@@ -41,7 +41,8 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        context.gameLevel().ifPresent(level -> level.pac().setUseAutopilot(level.isDemoLevel() || PY_USE_AUTOPILOT.get()));
+        context.gameLevel().ifPresent(level ->
+            context.game().pac().setUseAutopilot(level.isDemoLevel() || PY_USE_AUTOPILOT.get()));
         updateSound();
     }
 
@@ -93,11 +94,11 @@ public class PlayScene2D extends GameScene2D {
                 }
             }
             context.game().bonus().ifPresent(this::drawBonus);
-            drawPac(level.pac());
-            level.ghosts().toList().reversed().forEach(this::drawGhost);
+            drawPac(context.game().pac());
+            context.game().ghosts().toList().reversed().forEach(this::drawGhost);
             if (!isCreditVisible()) {
                 int numLivesDisplayed = context.game().lives() - 1;
-                if (context.gameState() == GameState.READY && !level.pac().isVisible()) {
+                if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
                     numLivesDisplayed += 1;
                 }
                 drawLivesCounter(numLivesDisplayed);
@@ -182,10 +183,10 @@ public class PlayScene2D extends GameScene2D {
             if (level.isDemoLevel()) {
                 return;
             }
-            if (level.pac().starvingTicks() > 8) { // TODO not sure
+            if (context.game().pac().starvingTicks() > 8) { // TODO not sure
                 context.stopAudioClip("audio.pacman_munch");
             }
-            if (!level.pac().isDead() && level.ghosts(RETURNING_HOME, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
+            if (!context.game().pac().isDead() && context.game().ghosts(RETURNING_HOME, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
                 context.ensureAudioLoop("audio.ghost_returning");
             } else {
                 context.stopAudioClip("audio.ghost_returning");

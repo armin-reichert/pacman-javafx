@@ -124,10 +124,10 @@ public class PlayScene3D implements GameScene {
     public void update() {
         context.gameLevel().ifPresent(level -> {
             if (level3D != null) {
-                level3D.update(level.world());
+                level3D.update();
                 currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
             }
-            level.pac().setUseAutopilot(level.isDemoLevel() || PY_USE_AUTOPILOT.get());
+            context.game().pac().setUseAutopilot(level.isDemoLevel() || PY_USE_AUTOPILOT.get());
             updateSound(level);
         });
         scores3D.setScores(
@@ -174,8 +174,14 @@ public class PlayScene3D implements GameScene {
         return camControllerMap.getOrDefault(perspectivePy.get(), camControllerMap.get(Perspective.TOTAL));
     }
 
-    private void replaceGameLevel3D(GameLevel level) {
-        level3D = new GameLevel3D(level, context);
+    private void replaceGameLevel3D() {
+        if (context.gameLevel().isEmpty()) {
+            Logger.error("Cannot replace 3D level, no game level exists");
+            return;
+        }
+        GameLevel level = context.gameLevel().get();
+
+        level3D = new GameLevel3D(context);
         // replace initial placeholder or previous 3D level
         subSceneRoot.getChildren().set(CHILD_INDEX_LEVEL_3D, level3D);
 
@@ -217,7 +223,7 @@ public class PlayScene3D implements GameScene {
     public void onSceneVariantSwitch() {
         context.gameLevel().ifPresent(level -> {
             if (level3D == null) {
-                replaceGameLevel3D(level);
+                replaceGameLevel3D();
             }
             level3D.allEatables().forEach(
                 eatable3D -> eatable3D.root().setVisible(!level.world().hasEatenFoodAt(eatable3D.tile())));
@@ -290,7 +296,7 @@ public class PlayScene3D implements GameScene {
                         default -> throw new IllegalGameVariantException(context.game());
                     };
                     level.eventLog().killedGhosts.forEach(ghost -> {
-                        int index = level.pac().victims().indexOf(ghost);
+                        int index = context.game().pac().victims().indexOf(ghost);
                         var numberImage = context.spriteSheet().subImage(sprites[index]);
                         level3D.ghosts3D().get(ghost.id()).setNumberImage(numberImage);
                     });
@@ -312,7 +318,7 @@ public class PlayScene3D implements GameScene {
                 context.gameLevel().ifPresent(level -> {
                     assertLevel3DExists();
                     context.gameState().timer().restartSeconds(3);
-                    replaceGameLevel3D(level);
+                    replaceGameLevel3D();
                     level3D.pac3D().init(level.world());
                     currentCamController().reset(fxSubScene.getCamera());
                 });
@@ -321,9 +327,9 @@ public class PlayScene3D implements GameScene {
                 context.gameLevel().ifPresent(level -> {
                     PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
                     context.game().letsGetReadyToRumble();
-                    level.pac().show();
-                    level.ghosts().forEach(Ghost::show);
-                    replaceGameLevel3D(level);
+                    context.game().pac().show();
+                    context.game().ghosts().forEach(Ghost::show);
+                    replaceGameLevel3D();
                     level3D.pac3D().init(level.world());
                     level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level.world()));
                     showLevelMessage(level);
@@ -355,7 +361,7 @@ public class PlayScene3D implements GameScene {
     public void onLevelCreated(GameEvent event) {
         event.game.level().ifPresent(level -> {
             if (level.levelNumber == 1 || context.gameState() == GameState.LEVEL_TEST) {
-                replaceGameLevel3D(level);
+                replaceGameLevel3D();
             }
         });
     }
@@ -428,7 +434,7 @@ public class PlayScene3D implements GameScene {
             pauseSeconds(1),
             level3D.createLevelCompleteAnimation(),
             doAfterSeconds(1.0, () -> {
-                level.pac().hide();
+                context.game().pac().hide();
                 level3D.livesCounter3D().lightOnPy.set(false);
                 if (noIntermission) {
                     context.playAudioClip("audio.level_complete");
@@ -460,10 +466,10 @@ public class PlayScene3D implements GameScene {
         if (level.isDemoLevel()) {
             return;
         }
-        if (level.pac().starvingTicks() > 8) { // TODO not sure how this is done in Arcade game
+        if (context.game().pac().starvingTicks() > 8) { // TODO not sure how this is done in Arcade game
             context.stopAudioClip("audio.pacman_munch");
         }
-        if (!level.pac().isDead() && level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
+        if (!context.game().pac().isDead() && context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
             .anyMatch(Ghost::isVisible)) {
             context.ensureAudioLoop("audio.ghost_returning");
         } else {

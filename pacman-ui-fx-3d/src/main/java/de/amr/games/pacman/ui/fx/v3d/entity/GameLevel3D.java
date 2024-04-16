@@ -71,7 +71,6 @@ public class GameLevel3D extends Group {
 
     public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
 
-    private final GameLevel level;
     private final GameSceneContext context;
     private       FloorPlan floorPlan;
     private       WallBuilder wallBuilder;
@@ -87,14 +86,12 @@ public class GameLevel3D extends Group {
     private       LivesCounter3D livesCounter3D;
     private       Bonus3D bonus3D;
 
-    public GameLevel3D(GameLevel level, GameSceneContext context) {
-        checkLevelNotNull(level);
+    public GameLevel3D(GameSceneContext context) {
         checkNotNull(context);
-        this.level = level;
         this.context = context;
 
-        pac3D = createPac3D(level.pac());
-        ghosts3D = level.ghosts().map(this::createGhost3D).toList();
+        pac3D = createPac3D(context.game().pac());
+        ghosts3D = context.game().ghosts().map(this::createGhost3D).toList();
         createWorld3D();
         createLivesCounter3D();
         createLevelCounter3D();
@@ -120,6 +117,11 @@ public class GameLevel3D extends Group {
     }
 
     private void createWorld3D() {
+        if (context.gameLevel().isEmpty()) {
+            Logger.error("Cannot create 3D world, no game level exists");
+            return;
+        }
+        GameLevel level = context.gameLevel().get();
         switch (context.game()) {
             case GameVariants.MS_PACMAN -> {
                 int mapNumber  = ArcadeWorld.mapNumberMsPacMan(level.levelNumber);
@@ -197,6 +199,11 @@ public class GameLevel3D extends Group {
     }
 
     public void createLevelCounter3D() {
+        if (context.gameLevel().isEmpty()) {
+            Logger.error("Cannot create 3D level counter, no game level exists");
+            return;
+        }
+        GameLevel level = context.gameLevel().get();
         double spacing = 2 * TS;
         // this is the *right* edge of the level counter:
         levelCounterGroup.setTranslateX(level.world().numCols() * TS - spacing);
@@ -348,6 +355,11 @@ public class GameLevel3D extends Group {
     }
 
     private void addWall(Group wallsGroup, WallData wd) {
+        if (context.gameLevel().isEmpty()) {
+            Logger.error("Cannot add wall, no game level exists");
+            return;
+        }
+        GameLevel level = context.gameLevel().get();
         boolean partOfHouse = level.world().house().contains(floorPlan.tileOfCell(wd.x, wd.y));
         if (!partOfHouse) {
             wallsGroup.getChildren().add(wallBuilder.createMazeWall(wd, PY_3D_WALL_THICKNESS, wallHeightPy));
@@ -367,18 +379,24 @@ public class GameLevel3D extends Group {
         return wd.x > xMin && wd.y > yMin && wd.x <= xMax && wd.y <= yMax;
     }
 
-    public void update(World world) {
+    public void update() {
+        if (context.gameLevel().isEmpty()) {
+            Logger.error("Cannot update 3D world, no game level exists");
+            return;
+        }
+        GameLevel level = context.gameLevel().get();
+
         GameState gameState = GameController.it().state();
         boolean hasCredit = GameController.it().hasCredit();
 
         pac3D.update(level.world());
-        ghosts3D().forEach(ghost3D -> ghost3D.update(world));
+        ghosts3D().forEach(ghost3D -> ghost3D.update(level.world()));
         if (bonus3D != null) {
             bonus3D.update(level.world());
         }
         updateHouseState(level.world().house());
         // reconsider this:
-        boolean hideOne = level.pac().isVisible() || gameState == GameState.GHOST_DYING;
+        boolean hideOne = context.game().pac().isVisible() || gameState == GameState.GHOST_DYING;
         livesCounter3D.update(hideOne ? level.game().lives() - 1 : level.game().lives());
         livesCounter3D.setVisible(hasCredit);
     }
@@ -392,7 +410,7 @@ public class GameLevel3D extends Group {
         if (bonus3D != null) {
             worldGroup.getChildren().remove(bonus3D);
         }
-        switch (level.game()) {
+        switch (context.game()) {
             case GameVariants.PACMAN -> {
                 var ss = context.<PacManGameSpriteSheet>spriteSheet();
                 bonus3D = new Bonus3D(bonus,
@@ -403,23 +421,33 @@ public class GameLevel3D extends Group {
                 bonus3D = new Bonus3D(bonus,
                     ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));
             }
-            default -> throw new IllegalGameVariantException(level.game());
+            default -> throw new IllegalGameVariantException(context.game());
         }
         bonus3D.showEdible();
         worldGroup.getChildren().add(bonus3D);
     }
 
     private Ghost3D createGhost3D(Ghost ghost) {
+        if (context.gameLevel().isEmpty()) {
+            Logger.error("Cannot create 3D ghost, no game level exists");
+            throw new IllegalStateException();
+        }
+        GameLevel level = context.gameLevel().get();
         return new Ghost3D(
             context.theme().get("model3D.ghost"),
             context.theme(),
             ghost,
-            level.pac(),
+            context.game().pac(),
             level.numFlashes(),
             GHOST_SIZE);
     }
 
     private void createFood3D(Color foodColor) {
+        if (context.gameLevel().isEmpty()) {
+            Logger.error("Cannot create 3D food, no game level exists");
+            return;
+        }
+        GameLevel level = context.gameLevel().get();
         var world = level.world();
         var foodMaterial = coloredMaterial(foodColor);
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
@@ -482,6 +510,11 @@ public class GameLevel3D extends Group {
     }
 
     public Transition createLevelCompleteAnimation() {
+        if (context.gameLevel().isEmpty()) {
+            Logger.error("Cannot create 3D level complete animation, no game level exists");
+            throw new IllegalStateException();
+        }
+        GameLevel level = context.gameLevel().get();
         if (level.numFlashes() == 0) {
             return pauseSeconds(1.0);
         }
@@ -495,9 +528,14 @@ public class GameLevel3D extends Group {
     }
 
     private void updateHouseState(House house) {
-        boolean houseUsed = level.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+        if (context.gameLevel().isEmpty()) {
+            Logger.error("Cannot update 3D house state, no game level exists");
+            throw new IllegalStateException();
+        }
+        GameLevel level = context.gameLevel().get();
+        boolean houseUsed = context.game().ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
-        boolean houseOpen = level.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+        boolean houseOpen = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .filter(ghost -> ghost.position().euclideanDistance(house.door().entryPosition()) <= 1.5 * TS)
             .anyMatch(Ghost::isVisible);
         setHouseLightOn(houseUsed);

@@ -509,19 +509,19 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         e.game.level().ifPresent(level -> {
             switch (e.game) {
                 case GameVariants.MS_PACMAN -> {
-                    level.pac().setAnimations(new MsPacManGamePacAnimations(level.pac(), spriteSheet()));
-                    level.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, spriteSheet())));
+                    e.game.pac().setAnimations(new MsPacManGamePacAnimations(e.game.pac(), spriteSheet()));
+                    e.game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, spriteSheet())));
                     Logger.info("Created Ms. Pac-Man game creature animations for level #{}", level.levelNumber);
                 }
                 case GameVariants.PACMAN -> {
-                    level.pac().setAnimations(new PacManGamePacAnimations(level.pac(), spriteSheet()));
-                    level.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, spriteSheet())));
+                    e.game.pac().setAnimations(new PacManGamePacAnimations(e.game.pac(), spriteSheet()));
+                    e.game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, spriteSheet())));
                     Logger.info("Created Pac-Man game creature animations for level #{}", level.levelNumber);
                 }
                 default -> throw new IllegalGameVariantException(e.game);
             }
             if (!level.isDemoLevel()) {
-                level.pac().setManualSteering(new KeyboardPacSteering());
+                e.game.pac().setManualSteering(new KeyboardPacSteering());
             }
         });
     }
@@ -751,8 +751,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public void cheatKillAllEatableGhosts() {
         if (game().isPlaying() && gameState() == GameState.HUNTING) {
             gameLevel().ifPresent(level -> {
-                level.pac().victims().clear();
-                game().killGhosts(level.ghosts(FRIGHTENED, HUNTING_PAC).toList());
+                game().pac().victims().clear();
+                game().killGhosts(game().ghosts(FRIGHTENED, HUNTING_PAC).toList());
                 gameController().changeState(GameState.GHOST_DYING);
             });
         }

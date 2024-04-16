@@ -86,8 +86,8 @@ public enum GameState implements FsmState<GameModel> {
                 if (timer.tick() == 1) {
                     game.level().ifPresent(level -> {
                         game.letsGetReadyToRumble();
-                        level.pac().show();
-                        level.ghosts().forEach(Ghost::show);
+                        game.pac().show();
+                        game.ghosts().forEach(Ghost::show);
                     });
                 } else if (timer.tick() == TICK_RESUME_GAME) {
                     game.level().ifPresent(level -> {
@@ -100,8 +100,8 @@ public enum GameState implements FsmState<GameModel> {
                 switch ((int) timer.tick()) {
                     case TICK_NEW_GAME_CREATE_LEVEL -> game.createAndStartLevel(1, false);
                     case TICK_NEW_GAME_SHOW_GUYS -> game.level().ifPresent(level -> {
-                        level.pac().show();
-                        level.ghosts().forEach(Ghost::show);
+                        game.pac().show();
+                        game.ghosts().forEach(Ghost::show);
                     });
                     case TICK_NEW_GAME_START_PLAYING -> game.level().ifPresent(level -> {
                         game.setPlaying(true);
@@ -126,8 +126,8 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             game.level().ifPresent(level -> {
-                level.pac().startAnimation();
-                level.ghosts().forEach(Ghost::startAnimation);
+                game.pac().startAnimation();
+                game.ghosts().forEach(Ghost::startAnimation);
                 level.blinking().setStartPhase(Pulse.ON);
                 level.blinking().restart();
                 game.publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
@@ -195,8 +195,8 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             game.level().ifPresent(level -> {
                 timer.restartSeconds(1);
-                level.pac().hide();
-                level.ghosts().forEach(Ghost::stopAnimation);
+                game.pac().hide();
+                game.ghosts().forEach(Ghost::stopAnimation);
                 game.publishGameEvent(GameEventType.GHOST_EATEN);
             });
         }
@@ -207,8 +207,8 @@ public enum GameState implements FsmState<GameModel> {
                 if (timer.hasExpired()) {
                     gameController().resumePreviousState();
                 } else {
-                    level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
-                        .forEach(ghost -> ghost.update(level));
+                    game.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
+                        .forEach(ghost -> ghost.update(game));
                     level.blinking().tick();
                 }
             });
@@ -217,9 +217,9 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onExit(GameModel game) {
             game.level().ifPresent(level -> {
-                level.pac().show();
-                level.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
-                level.ghosts().forEach(Ghost::startAnimation);
+                game.pac().show();
+                game.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
+                game.ghosts().forEach(Ghost::startAnimation);
             });
         }
     },
@@ -252,18 +252,18 @@ public enum GameState implements FsmState<GameModel> {
                 }
                 switch ((int) timer.tick()) {
                     case TICK_HIDE_GHOSTS -> {
-                        level.ghosts().forEach(Ghost::hide);
-                        level.pac().selectAnimation(Pac.ANIM_DYING);
-                        level.pac().resetAnimation();
+                        game.ghosts().forEach(Ghost::hide);
+                        game.pac().selectAnimation(Pac.ANIM_DYING);
+                        game.pac().resetAnimation();
                     }
                     case TICK_START_PAC_ANIMATION -> {
-                        level.pac().startAnimation();
+                        game.pac().startAnimation();
                         game.publishGameEvent(GameEventType.PAC_DYING);
                     }
-                    case TICK_HIDE_PAC -> level.pac().hide();
+                    case TICK_HIDE_PAC -> game.pac().hide();
                     default -> {
                         level.blinking().tick();
-                        level.pac().update(level);
+                        game.pac().update(level);
                     }
                 }
             });

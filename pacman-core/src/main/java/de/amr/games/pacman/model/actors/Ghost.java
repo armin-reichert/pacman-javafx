@@ -235,17 +235,17 @@ public class Ghost extends Creature {
     /**
      * Executes a single simulation step for this ghost in the current game level.
      *
-     * @param level game level
+     * @param game game variant
      */
-    public void update(GameLevel level) {
-        checkLevelNotNull(level);
+    public void update(GameModel game) {
+        checkNotNull(game);
         switch (state) {
-            case LOCKED             -> updateStateLocked(level.pac());
-            case LEAVING_HOUSE      -> updateStateLeavingHouse(level.pac());
-            case HUNTING_PAC        -> updateStateHuntingPac(level);
-            case FRIGHTENED         -> updateStateFrightened(level.pac());
+            case LOCKED             -> updateStateLocked(game);
+            case LEAVING_HOUSE      -> updateStateLeavingHouse(game);
+            case HUNTING_PAC        -> updateStateHuntingPac(game);
+            case FRIGHTENED         -> updateStateFrightened(game);
             case EATEN              -> updateStateEaten();
-            case RETURNING_HOME -> updateStateReturningToHouse(level.world());
+            case RETURNING_HOME     -> updateStateReturningToHouse(game);
             case ENTERING_HOUSE     -> updateStateEnteringHouse();
         }
     }
@@ -261,7 +261,7 @@ public class Ghost extends Creature {
      * In locked state, ghosts inside the house are bouncing up and down. They become blue when Pac-Man gets power
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
-    private void updateStateLocked(Pac pac) {
+    private void updateStateLocked(GameModel game) {
         if (insideHouse(house)) {
             float minY = revivalPosition.y() - 4, maxY = revivalPosition.y() + 4;
             setSpeed(speedInsideHouse);
@@ -275,8 +275,8 @@ public class Ghost extends Creature {
         } else {
             setSpeed(0);
         }
-        if (pac.powerTimer().isRunning() && !pac.victims().contains(this)) {
-            updateFrightenedAnimation(pac);
+        if (game.pac().powerTimer().isRunning() && !game.pac().victims().contains(this)) {
+            updateFrightenedAnimation(game.pac());
         } else {
             selectAnimation(ANIM_GHOST_NORMAL);
         }
@@ -291,14 +291,14 @@ public class Ghost extends Creature {
      * <p>
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
-    private void updateStateLeavingHouse(Pac pac) {
+    private void updateStateLeavingHouse(GameModel game) {
         Vector2f houseEntryPosition = house.door().entryPosition();
         if (posY() <= houseEntryPosition.y()) {
             // has raised and is outside house
             setPosition(houseEntryPosition);
             setMoveAndWishDir(LEFT);
             newTileEntered = false; // force moving left until new tile is entered
-            if (pac.powerTimer().isRunning() && !pac.victims().contains(this)) {
+            if (game.pac().powerTimer().isRunning() && !game.pac().victims().contains(this)) {
                 setState(FRIGHTENED);
             } else {
                 setState(HUNTING_PAC);
@@ -318,8 +318,8 @@ public class Ghost extends Creature {
         }
         setSpeed(speedInsideHouse);
         move();
-        if (pac.powerTimer().isRunning() && !pac.victims().contains(this)) {
-            updateFrightenedAnimation(pac);
+        if (game.pac().powerTimer().isRunning() && !game.pac().victims().contains(this)) {
+            updateFrightenedAnimation(game.pac());
         } else {
             selectAnimation(ANIM_GHOST_NORMAL);
         }
@@ -334,8 +334,12 @@ public class Ghost extends Creature {
      * is an "infinite" chasing phase.
      * <p>
      */
-    private void updateStateHuntingPac(GameLevel level) {
-        huntingBehavior.accept(this, level);
+    private void updateStateHuntingPac(GameModel game) {
+        if (game.level().isEmpty()) {
+            Logger.error("No game level");
+            throw new IllegalStateException();
+        }
+        huntingBehavior.accept(this, game.level().get());
     }
 
     // --- FRIGHTENED ---
@@ -352,9 +356,9 @@ public class Ghost extends Creature {
      *
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
-    private void updateStateFrightened(Pac pac) {
+    private void updateStateFrightened(GameModel game) {
         frightenedBehavior.accept(this);
-        updateFrightenedAnimation(pac);
+        updateFrightenedAnimation(game.pac());
     }
 
     private void updateFrightenedAnimation(Pac pac) {
@@ -380,17 +384,19 @@ public class Ghost extends Creature {
      * After the short time being displayed by his value, the eaten ghost is displayed by his eyes only and returns
      * to the ghost house to be revived. Hallelujah!
      */
-    private void updateStateReturningToHouse(World world) {
+    private void updateStateReturningToHouse(GameModel game) {
         Vector2f houseEntry = house.door().entryPosition();
         if (position().almostEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
             setPosition(houseEntry);
             setMoveAndWishDir(DOWN);
             setState(ENTERING_HOUSE);
         } else {
-            setSpeed(speedReturningToHouse);
-            setTargetTile(house.door().leftWing());
-            navigateTowardsTarget(this, world);
-            tryMoving(this, world);
+            game.level().ifPresent(level -> {
+                setSpeed(speedReturningToHouse);
+                setTargetTile(house.door().leftWing());
+                navigateTowardsTarget(this, level.world());
+                tryMoving(this, level.world());
+            });
         }
     }
 

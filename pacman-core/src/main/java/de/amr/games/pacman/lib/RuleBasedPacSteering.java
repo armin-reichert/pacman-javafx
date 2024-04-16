@@ -86,7 +86,7 @@ public class RuleBasedPacSteering implements Steering {
     private CollectedData collectData(GameModel game) {
         var data = new CollectedData();
         game.level().ifPresent(level -> {
-            var pac = level.pac();
+            var pac = game.pac();
             Ghost hunterAhead = findHuntingGhostAhead(level); // Where is Hunter?
             if (hunterAhead != null) {
                 data.hunterAhead = hunterAhead;
@@ -97,7 +97,7 @@ public class RuleBasedPacSteering implements Steering {
                 data.hunterBehind = hunterBehind;
                 data.hunterBehindDistance = pac.tile().manhattanDistance(hunterBehind.tile());
             }
-            data.frightenedGhosts = level.ghosts(GhostState.FRIGHTENED)
+            data.frightenedGhosts = game.ghosts(GhostState.FRIGHTENED)
                 .filter(ghost -> ghost.tile().manhattanDistance(pac.tile()) <= CollectedData.MAX_GHOST_CHASE_DIST)
                 .collect(Collectors.toList());
             data.frightenedGhostsDistance = data.frightenedGhosts.stream()
@@ -112,7 +112,7 @@ public class RuleBasedPacSteering implements Steering {
             return;
         }
         GameLevel level = game.level().get();
-        var pac = level.pac();
+        var pac = game.pac();
         if (data.hunterAhead != null) {
             Direction escapeDir;
             if (data.hunterBehind != null) {
@@ -141,7 +141,7 @@ public class RuleBasedPacSteering implements Steering {
             Logger.trace("Active bonus detected, get it!");
             game.bonus().ifPresent(bonus -> pac.setTargetTile(tileAt(bonus.entity().position())));
         } else {
-            pac.setTargetTile(findTileFarthestFromGhosts(level, findNearestFoodTiles(level)));
+            pac.setTargetTile(findTileFarthestFromGhosts(findNearestFoodTiles(level)));
         }
         pac.targetTile().ifPresent(target -> {
             CreatureMovement.navigateTowardsTarget(pac, level.world());
@@ -160,7 +160,7 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private Ghost findHuntingGhostAhead(GameLevel level) {
-        var pac = level.pac();
+        var pac = game.pac();
         Vector2i pacManTile = pac.tile();
         boolean energizerFound = false;
         for (int i = 1; i <= CollectedData.MAX_GHOST_AHEAD_DETECTION_DIST; ++i) {
@@ -173,7 +173,7 @@ public class RuleBasedPacSteering implements Steering {
             }
             var aheadLeft = ahead.plus(pac.moveDir().nextAntiClockwise().vector());
             var aheadRight = ahead.plus(pac.moveDir().nextClockwise().vector());
-            Iterable<Ghost> huntingGhosts = level.ghosts(GhostState.HUNTING_PAC)::iterator;
+            Iterable<Ghost> huntingGhosts = game.ghosts(GhostState.HUNTING_PAC)::iterator;
             for (var ghost : huntingGhosts) {
                 if (ghost.tile().equals(ahead) || ghost.tile().equals(aheadLeft) || ghost.tile().equals(aheadRight)) {
                     if (energizerFound) {
@@ -188,14 +188,14 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private Ghost findHuntingGhostBehind(GameLevel level) {
-        var pac = level.pac();
+        var pac = game.pac();
         var pacManTile = pac.tile();
         for (int i = 1; i <= CollectedData.MAX_GHOST_BEHIND_DETECTION_DIST; ++i) {
             var behind = pacManTile.plus(pac.moveDir().opposite().vector().scaled(i));
             if (!pac.canAccessTile(behind, level.world())) {
                 break;
             }
-            Iterable<Ghost> huntingGhosts = level.ghosts(GhostState.HUNTING_PAC)::iterator;
+            Iterable<Ghost> huntingGhosts = game.ghosts(GhostState.HUNTING_PAC)::iterator;
             for (Ghost ghost : huntingGhosts) {
                 if (ghost.tile().equals(behind)) {
                     return ghost;
@@ -206,7 +206,7 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private Direction findEscapeDirectionExcluding(GameLevel level, Collection<Direction> forbidden) {
-        var pac = level.pac();
+        var pac = game.pac();
         Vector2i pacManTile = pac.tile();
         List<Direction> escapes = new ArrayList<>(4);
         for (Direction dir : Direction.shuffled()) {
@@ -229,7 +229,7 @@ public class RuleBasedPacSteering implements Steering {
 
     private List<Vector2i> findNearestFoodTiles(GameLevel level) {
         long time = System.nanoTime();
-        var pac = level.pac();
+        var pac = game.pac();
         List<Vector2i> foodTiles = new ArrayList<>();
         Vector2i pacManTile = pac.tile();
         float minDist = Float.MAX_VALUE;
@@ -257,16 +257,16 @@ public class RuleBasedPacSteering implements Steering {
         Logger.trace("Nearest food tiles from Pac-Man location {}: (time {} millis)", pacManTile, time / 1_000_000f);
         for (Vector2i t : foodTiles) {
             Logger.trace("\t{} ({} tiles away from Pac-Man, {} tiles away from ghosts)", t, t.manhattanDistance(pacManTile),
-                minDistanceFromGhosts(level));
+                minDistanceFromGhosts());
         }
         return foodTiles;
     }
 
-    private Vector2i findTileFarthestFromGhosts(GameLevel level, List<Vector2i> tiles) {
+    private Vector2i findTileFarthestFromGhosts(List<Vector2i> tiles) {
         Vector2i farthestTile = null;
         float maxDist = -1;
         for (Vector2i tile : tiles) {
-            float dist = minDistanceFromGhosts(level);
+            float dist = minDistanceFromGhosts();
             if (dist > maxDist) {
                 maxDist = dist;
                 farthestTile = tile;
@@ -275,9 +275,9 @@ public class RuleBasedPacSteering implements Steering {
         return farthestTile;
     }
 
-    private float minDistanceFromGhosts(GameLevel level) {
-        return (float) level.ghosts().map(Ghost::tile)
-            .mapToDouble(level.pac().tile()::manhattanDistance)
+    private float minDistanceFromGhosts() {
+        return (float) game.ghosts().map(Ghost::tile)
+            .mapToDouble(game.pac().tile()::manhattanDistance)
             .min().orElse(Float.MAX_VALUE);
     }
 }

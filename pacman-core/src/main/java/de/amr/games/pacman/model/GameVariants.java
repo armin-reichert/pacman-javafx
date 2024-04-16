@@ -18,6 +18,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
@@ -35,8 +36,6 @@ import static de.amr.games.pacman.model.world.ArcadeWorld.*;
 public enum GameVariants implements GameModel {
 
     MS_PACMAN {
-        final String PAC_NAME = "Ms. Pac-Man";
-        final String[] GHOST_NAMES = { "Blinky", "Pinky", "Inky", "Sue" };
         final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50}; // * 100
         final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
 
@@ -50,17 +49,6 @@ public enum GameVariants implements GameModel {
             {7 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 1-4
             {5 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 5+
         };
-
-        @Override
-        public String pacName() {
-            return PAC_NAME;
-        }
-
-        @Override
-        public String ghostName(byte id) {
-            checkGhostID(id);
-            return GHOST_NAMES[id];
-        }
 
         @Override
         public boolean isBonusReached() {
@@ -190,13 +178,21 @@ public enum GameVariants implements GameModel {
             }
             initGhostHouseAccessControl();
 
-            level.pac().reset();
-            level.pac().setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-            level.pac().setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
-            level.pac().setAutopilot(new RuleBasedPacSteering(this));
-            level.pac().setUseAutopilot(demoLevel);
+            pac = new Pac("Ms. Pac-Man");
+            ghosts = new Ghost[] {
+                new Ghost(RED_GHOST,    "Blinky"),
+                new Ghost(PINK_GHOST,   "Pinky"),
+                new Ghost(CYAN_GHOST,   "Inky"),
+                new Ghost(ORANGE_GHOST, "Sue")
+            };
 
-            level.ghosts().forEach(ghost -> {
+            pac().reset();
+            pac().setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+            pac().setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
+            pac().setAutopilot(new RuleBasedPacSteering(this));
+            pac().setUseAutopilot(demoLevel);
+
+            ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(level.world().house());
                 ghost.setFrightenedBehavior(refugee ->
@@ -230,11 +226,11 @@ public enum GameVariants implements GameModel {
             // At this point, the animations of Pac-Man and the ghosts must have been created!
             letsGetReadyToRumble();
             if (demoLevel) {
-                level.pac().show();
-                level.ghosts().forEach(Ghost::show);
+                pac().show();
+                ghosts().forEach(Ghost::show);
             } else {
-                level.pac().hide();
-                level.ghosts().forEach(Ghost::hide);
+                pac().hide();
+                ghosts().forEach(Ghost::hide);
             }
             Logger.info("Level {} started ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_STARTED);
@@ -251,7 +247,7 @@ public enum GameVariants implements GameModel {
         public void huntingBehaviour(Ghost ghost, GameLevel level) {
             if (scatterPhase().isPresent() && scatterPhase().get() == 0
                 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-                roam(ghost, level.world(), huntingSpeedPercentage(ghost), pseudoRandomDirection());
+                roam(ghost, level.world(), huntingSpeedPercentage(ghost, level), pseudoRandomDirection());
             } else {
                 PACMAN.huntingBehaviour(ghost, level);
             }
@@ -263,8 +259,6 @@ public enum GameVariants implements GameModel {
      * <a href="https://pacman.holenet.info">Jamey Pittman: The Pac-Man Dossier</a>.
      */
     PACMAN {
-        final String PAC_NAME = "Pac-Man";
-        final String[] GHOST_NAMES = { "Blinky", "Pinky", "Inky", "Clyde" };
         final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {7 /* default */, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
         final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
         final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-pacman.xml");
@@ -273,17 +267,6 @@ public enum GameVariants implements GameModel {
             {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS, 1033 * FPS,       1, -1}, // Levels 2-4
             {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS,       1, -1}, // Levels 5+
         };
-
-        @Override
-        public String pacName() {
-            return PAC_NAME;
-        }
-
-        @Override
-        public String ghostName(byte id) {
-            checkGhostID(id);
-            return GHOST_NAMES[id];
-        }
 
         @Override
         public boolean isBonusReached() {
@@ -334,21 +317,28 @@ public enum GameVariants implements GameModel {
                 int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
                 level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex], createPacManWorld());
             }
-            addForbiddenMoves(level);
             initGhostHouseAccessControl();
 
-            level.pac().reset();
-            level.pac().setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-            level.pac().setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
+            pac = new Pac("Pac-Man");
+            ghosts = new Ghost[] {
+                new Ghost(RED_GHOST,    "Blinky"),
+                new Ghost(PINK_GHOST,   "Pinky"),
+                new Ghost(CYAN_GHOST,   "Inky"),
+                new Ghost(ORANGE_GHOST, "Clyde")
+            };
+
+            pac().reset();
+            pac().setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+            pac().setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
             if (demoLevel) {
-                level.pac().setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
-                level.pac().setUseAutopilot(true);
+                pac().setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
+                pac().setUseAutopilot(true);
             } else {
-                level.pac().setAutopilot(new RuleBasedPacSteering(this));
-                level.pac().setUseAutopilot(false);
+                pac().setAutopilot(new RuleBasedPacSteering(this));
+                pac().setUseAutopilot(false);
             }
 
-            level.ghosts().forEach(ghost -> {
+            ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(level.world().house());
                 ghost.setFrightenedBehavior(refugee ->
@@ -359,6 +349,7 @@ public enum GameVariants implements GameModel {
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
                 ghost.setSpeedInsideHouse(PPS_GHOST_INHOUSE / (float) FPS);
             });
+            addForbiddenMoves();
 
             huntingPhaseIndex = 0;
             huntingTimer.resetIndefinitely();
@@ -379,26 +370,26 @@ public enum GameVariants implements GameModel {
             // At this point, the animations of Pac-Man and the ghosts must have been created!
             letsGetReadyToRumble();
             if (demoLevel) {
-                level.pac().show();
-                level.ghosts().forEach(Ghost::show);
+                pac().show();
+                ghosts().forEach(Ghost::show);
             } else {
-                level.pac().hide();
-                level.ghosts().forEach(Ghost::hide);
+                pac().hide();
+                ghosts().forEach(Ghost::hide);
             }
             Logger.info("Level {} started ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_STARTED);
         }
 
-        private void addForbiddenMoves(GameLevel level) {
+        private void addForbiddenMoves() {
             var forbidden = new HashMap<Vector2i, List<Direction>>();
             var up = List.of(UP);
             ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbidden.put(tile, up));
-            level.ghosts().forEach(ghost -> ghost.setForbiddenMoves(forbidden));
+            ghosts().forEach(ghost -> ghost.setForbiddenMoves(forbidden));
         }
 
         @Override
         public void huntingBehaviour(Ghost ghost, GameLevel level) {
-            byte relSpeed = huntingSpeedPercentage(ghost);
+            byte relSpeed = huntingSpeedPercentage(ghost, level);
             if (chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0) {
                 followTarget(ghost, level.world(), chasingTarget(ghost.id()), relSpeed);
             } else {
@@ -409,6 +400,8 @@ public enum GameVariants implements GameModel {
 
     // --- Common to all variants --------------------------------------------------------------------------------------
 
+    Pac pac;
+    Ghost[] ghosts;
     final List<Byte> levelCounter = new LinkedList<>();
     final Score score = new Score();
     final Score highScore = new Score();
@@ -434,6 +427,26 @@ public enum GameVariants implements GameModel {
     int     pacStarvingLimit;
     int     globalDotCounter;
     boolean globalDotCounterEnabled;
+
+    @Override
+    public Pac pac() {
+        return pac;
+    }
+
+    @Override
+    public Ghost ghost(byte id) {
+        checkGhostID(id);
+        return ghosts[id];
+    }
+
+    @Override
+    public Stream<Ghost> ghosts(GhostState... states) {
+        if (states.length > 0) {
+            return Stream.of(ghosts).filter(ghost -> ghost.inState(states));
+        }
+        // when no states are given, return *all* ghosts (ghost.is() would return *no* ghosts!)
+        return Stream.of(ghosts);
+    }
 
     @Override
     public TickTimer huntingTimer() {
@@ -538,15 +551,15 @@ public enum GameVariants implements GameModel {
     Vector2i chasingTarget(byte ghostID) {
         return switch (ghostID) {
             // Blinky: attacks Pac-Man directly
-            case RED_GHOST -> level.pac().tile();
+            case RED_GHOST -> pac().tile();
             // Pinky: ambushes Pac-Man
-            case PINK_GHOST -> level.pac().tilesAheadWithOverflowBug(4);
+            case PINK_GHOST -> pac().tilesAheadWithOverflowBug(4);
             // Inky: attacks from opposite side as Blinky
-            case CYAN_GHOST -> level.pac().tilesAheadWithOverflowBug(2).scaled(2).minus(level.ghost(RED_GHOST).tile());
+            case CYAN_GHOST -> pac().tilesAheadWithOverflowBug(2).scaled(2).minus(ghost(RED_GHOST).tile());
             // Clyde/Sue: attacks directly but retreats if Pac is near
-            case ORANGE_GHOST -> level.ghost(ORANGE_GHOST).tile().euclideanDistance(level.pac().tile()) < 8
+            case ORANGE_GHOST -> ghost(ORANGE_GHOST).tile().euclideanDistance(pac().tile()) < 8
                 ? ArcadeWorld.SCATTER_TILE_SW
-                : level.pac().tile();
+                : pac().tile();
             default -> throw new IllegalGhostIDException(ghostID);
         };
     }
@@ -561,7 +574,7 @@ public enum GameVariants implements GameModel {
      * @param ghost a ghost
      * @return relative speed of ghost in percent of the base speed
      */
-    public byte huntingSpeedPercentage(Ghost ghost) {
+    public byte huntingSpeedPercentage(Ghost ghost, GameLevel level) {
         if (level.world().isTunnel(ghost.tile())) {
             return level.ghostSpeedTunnelPercentage();
         }
@@ -680,15 +693,15 @@ public enum GameVariants implements GameModel {
     @Override
     public void updateDotCount() {
         if (globalDotCounterEnabled) {
-            if (level.ghost(ORANGE_GHOST).inState(LOCKED) && globalDotCounter == 32) {
-                Logger.trace("{} inside house when global counter reached 32", level.ghost(ORANGE_GHOST).name());
+            if (ghost(ORANGE_GHOST).inState(LOCKED) && globalDotCounter == 32) {
+                Logger.trace("{} inside house when global counter reached 32", ghost(ORANGE_GHOST).name());
                 resetGlobalDotCounterAndSetEnabled(false);
             } else {
                 globalDotCounter++;
                 Logger.trace("Global dot counter = {}", globalDotCounter);
             }
         } else {
-            level.ghosts(LOCKED).filter(ghost -> ghost.insideHouse(level.world().house())).findFirst().ifPresent(ghost -> {
+            ghosts(LOCKED).filter(ghost -> ghost.insideHouse(level.world().house())).findFirst().ifPresent(ghost -> {
                 dotCounters[ghost.id()]++;
                 Logger.trace("{} dot counter = {}", ghost.name(), dotCounters[ghost.id()]);
             });
@@ -698,7 +711,7 @@ public enum GameVariants implements GameModel {
     @Override
     public Ghost unlockGhost() {
         // Important: Ghosts must be returned in order RED, PINK, CYAN, ORANGE
-        Ghost prisoner = level.ghosts(LOCKED).findFirst().orElse(null);
+        Ghost prisoner = ghosts(LOCKED).findFirst().orElse(null);
         if (prisoner == null) {
             return null;
         }
@@ -721,11 +734,11 @@ public enum GameVariants implements GameModel {
             return prisoner;
         }
         // check Pac-Man starving time
-        if (level.pac().starvingTicks() >= pacStarvingLimit) {
-            level.pac().endStarving();
+        if (pac().starvingTicks() >= pacStarvingLimit) {
+            pac().endStarving();
             eventLog().unlockedGhost = prisoner;
             eventLog().unlockGhostReason = String.format("%s reached starving limit (%d ticks)",
-                level.pac().name(), pacStarvingLimit);
+                pac().name(), pacStarvingLimit);
             return prisoner;
         }
         return null;
@@ -754,12 +767,12 @@ public enum GameVariants implements GameModel {
 
     @Override
     public void letsGetReadyToRumble() {
-        level.pac().reset();
-        level.pac().setPosition(ArcadeWorld.PAC_POSITION);
-        level.pac().setMoveAndWishDir(Direction.LEFT);
-        level.pac().selectAnimation(Pac.ANIM_MUNCHING);
-        level.pac().resetAnimation();
-        level.ghosts().forEach(ghost -> {
+        pac().reset();
+        pac().setPosition(ArcadeWorld.PAC_POSITION);
+        pac().setMoveAndWishDir(Direction.LEFT);
+        pac().selectAnimation(Pac.ANIM_MUNCHING);
+        pac().resetAnimation();
+        ghosts().forEach(ghost -> {
             ghost.reset();
             ghost.setPosition(GHOST_POSITIONS_ON_START[ghost.id()]);
             ghost.setMoveAndWishDir(GHOST_DIRECTIONS_ON_START[ghost.id()]);
@@ -777,15 +790,15 @@ public enum GameVariants implements GameModel {
         Logger.info("Hunting timer stopped");
         resetGlobalDotCounterAndSetEnabled(true);
         enableCruiseElroyState(false);
-        level.pac().die();
+        pac().die();
     }
 
     @Override
     public void onLevelCompleted() {
         level.blinking().setStartPhase(Pulse.OFF);
         level.blinking().reset();
-        level.pac().freeze();
-        level.ghosts().forEach(Ghost::hide);
+        pac().freeze();
+        ghosts().forEach(Ghost::hide);
         bonus().ifPresent(Bonus::setInactive);
         huntingTimer().stop();
         Logger.info("Hunting timer stopped");
@@ -797,13 +810,13 @@ public enum GameVariants implements GameModel {
         if (level.levelNumber <= lastTestedLevel) {
             if (timer.tick() > 2 * FPS) {
                 level.blinking().tick();
-                level.ghosts().forEach(ghost -> ghost.update(level));
+                ghosts().forEach(ghost -> ghost.update(this));
                 bonus().ifPresent(bonus -> bonus.update(level));
             }
             if (timer.atSecond(1.0)) {
-                level.game().letsGetReadyToRumble();
-                level.pac().show();
-                level.ghosts().forEach(Ghost::show);
+                letsGetReadyToRumble();
+                pac().show();
+                ghosts().forEach(Ghost::show);
             } else if (timer.atSecond(2)) {
                 level.blinking().setStartPhase(Pulse.ON);
                 level.blinking().restart();
@@ -819,8 +832,8 @@ public enum GameVariants implements GameModel {
                 bonus().ifPresent(bonus -> bonus.setEaten(60));
                 publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer.atSecond(8.5)) {
-                level.pac().hide();
-                level.ghosts().forEach(Ghost::hide);
+                pac().hide();
+                ghosts().forEach(Ghost::hide);
                 level.blinking().stop();
                 level.blinking().setStartPhase(Pulse.ON);
                 level.blinking().reset();
@@ -830,8 +843,8 @@ public enum GameVariants implements GameModel {
                 level.blinking().restart(2 * level.numFlashes());
             } else if (timer.atSecond(12.0)) {
                 timer.restartIndefinitely();
-                level.pac().freeze();
-                level.ghosts().forEach(Ghost::hide);
+                pac().freeze();
+                ghosts().forEach(Ghost::hide);
                 bonus().ifPresent(Bonus::setInactive);
                 GameController.it().state().setProperty("mazeFlashing", false);
                 level.blinking().reset();
@@ -872,19 +885,19 @@ public enum GameVariants implements GameModel {
     }
 
     private void updateFood() {
-        final Vector2i pacTile = level.pac().tile();
+        final Vector2i pacTile = pac().tile();
         if (level.world().hasFoodAt(pacTile)) {
             eventLog().foodFoundTile = pacTile;
-            level.pac().endStarving();
+            pac().endStarving();
             if (level.world().isEnergizerTile(pacTile)) {
                 eventLog().energizerFound = true;
-                level.pac().setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
-                level.pac().victims().clear();
+                pac().setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
+                pac().victims().clear();
                 scorePoints(GameModel.POINTS_ENERGIZER);
                 handleEnergizerEaten();
                 Logger.info("Scored {} points for eating energizer", GameModel.POINTS_ENERGIZER);
             } else {
-                level.pac().setRestingTicks(GameModel.RESTING_TICKS_PELLET);
+                pac().setRestingTicks(GameModel.RESTING_TICKS_PELLET);
                 scorePoints(GameModel.POINTS_PELLET);
             }
             updateDotCount();
@@ -901,21 +914,21 @@ public enum GameVariants implements GameModel {
             }
             publishGameEvent(GameEventType.PAC_FOUND_FOOD, pacTile);
         } else {
-            level.pac().starve();
+            pac().starve();
         }
     }
 
     private void updatePac() {
-        level.pac().update(level);
-        if (level.pac().powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS) {
+        pac().update(level);
+        if (pac().powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS) {
             eventLog().pacStartsLosingPower = true;
             publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
-        } else if (level.pac().powerTimer().hasExpired()) {
-            level.pac().powerTimer().stop();
-            level.pac().powerTimer().resetIndefinitely();
+        } else if (pac().powerTimer().hasExpired()) {
+            pac().powerTimer().stop();
+            pac().powerTimer().resetIndefinitely();
             huntingTimer().start();
             Logger.info("Hunting timer started");
-            level.ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
+            ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
             eventLog().pacLostPower = true;
             publishGameEvent(GameEventType.PAC_LOST_POWER);
         }
@@ -926,10 +939,10 @@ public enum GameVariants implements GameModel {
             eventLog().pacGetsPower = true;
             huntingTimer().stop();
             Logger.info("Hunting timer stopped");
-            level.pac().powerTimer().restartSeconds(level.pacPowerSeconds());
+            pac().powerTimer().restartSeconds(level.pacPowerSeconds());
             // TODO do already frightened ghosts reverse too?
-            level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            level.ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
+            ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
+            ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
             publishGameEvent(GameEventType.PAC_GETS_POWER);
         }
     }
@@ -938,7 +951,7 @@ public enum GameVariants implements GameModel {
         if (bonus == null) {
             return;
         }
-        if (bonus.state() == Bonus.STATE_EDIBLE && level.pac().sameTile(bonus.entity())) {
+        if (bonus.state() == Bonus.STATE_EDIBLE && pac().sameTile(bonus.entity())) {
             bonus.setEaten(GameModel.BONUS_POINTS_SHOWN_TICKS);
             scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
@@ -951,7 +964,7 @@ public enum GameVariants implements GameModel {
 
     private void updateHuntingTimer( ) {
         if (huntingTimer().hasExpired()) {
-            level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
+            ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
             startHuntingPhase(huntingPhaseIndex + 1);
         } else {
             huntingTimer().advance();
@@ -972,7 +985,7 @@ public enum GameVariants implements GameModel {
                 Logger.trace("Cruise elroy mode re-enabled because {} exits house", unlockedGhost.name());
             }
         }
-        level.ghosts().forEach(ghost -> ghost.update(level));
+        ghosts().forEach(ghost -> ghost.update(this));
     }
 
     @Override
@@ -988,12 +1001,12 @@ public enum GameVariants implements GameModel {
         if (level.world().uneatenFoodCount() == 0) {
             return GameState.LEVEL_COMPLETE;
         }
-        var killers = level.ghosts(HUNTING_PAC).filter(level.pac()::sameTile).toList();
+        var killers = ghosts(HUNTING_PAC).filter(pac()::sameTile).toList();
         if (!killers.isEmpty() && !GameController.it().isPacImmune()) {
             eventLog().pacDied = true;
             return GameState.PACMAN_DYING;
         }
-        var prey = level.ghosts(FRIGHTENED).filter(level.pac()::sameTile).toList();
+        var prey = ghosts(FRIGHTENED).filter(pac()::sameTile).toList();
         if (!prey.isEmpty()) {
             killGhosts(prey);
             return GameState.GHOST_DYING;
@@ -1016,11 +1029,11 @@ public enum GameVariants implements GameModel {
 
     private void killGhost(Ghost ghost) {
         byte[] multiple = { 2, 4, 8, 16 };
-        int killedSoFar = level.pac().victims().size();
+        int killedSoFar = pac().victims().size();
         int points = 100 * multiple[killedSoFar];
         scorePoints(points);
         ghost.eaten(killedSoFar);
-        level.pac().victims().add(ghost);
+        pac().victims().add(ghost);
         eventLog().killedGhosts.add(ghost);
         numGhostsKilledInLevel += 1;
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());

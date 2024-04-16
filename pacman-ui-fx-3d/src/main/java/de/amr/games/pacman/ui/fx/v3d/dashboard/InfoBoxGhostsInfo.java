@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -49,12 +48,11 @@ public class InfoBoxGhostsInfo extends InfoBox {
         return () -> {
             var game = sceneContext.game();
             var level = game.level().orElse(null);
-            return level != null ? fnGhostInfo.apply(game, level.ghost(ghostID)) : InfoText.NO_INFO;
+            return level != null ? fnGhostInfo.apply(game, game.ghost(ghostID)) : InfoText.NO_INFO;
         };
     }
 
     private String ghostNameAndState(GameModel game, Ghost ghost) {
-        var level = game.level().orElse(null);
         String name = ghost.name();
         if (ghost.id() == GameModel.RED_GHOST && game.cruiseElroyState() > 0) {
             name = "Elroy" + game.cruiseElroyState();

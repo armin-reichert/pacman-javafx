@@ -11,12 +11,15 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Common interface of all game variants.
@@ -98,16 +101,21 @@ public interface GameModel {
 
     byte LEVEL_COUNTER_MAX_SYMBOLS = 7;
 
-    /**
-     * @return Readable name (Pac-Man, Ms. Pac-Man)
-     */
-    String pacName();
+    Pac pac();
+
 
     /**
-     * @param id ghost ID
-     * @return Readable ghost name (Blinky, Pinky, Inky, Clyde/Sue)
+     * @param id ghost ID, one of {@link GameModel#RED_GHOST}, {@link GameModel#PINK_GHOST},
+     *           {@value GameModel#CYAN_GHOST}, {@link GameModel#ORANGE_GHOST}
+     * @return the ghost with the given ID
      */
-    String ghostName(byte id);
+    Ghost ghost(byte id);
+
+    /**
+     * @param states states specifying which ghosts are returned
+     * @return all ghosts which are in any of the given states or all ghosts, if no states are specified
+     */
+    public Stream<Ghost> ghosts(GhostState... states);
 
     /**
      * @return {@code true} if bonus score is reached for this level
@@ -267,7 +275,6 @@ public interface GameModel {
     /**
      * Defines the hunting behaviour of the given ghost in the given level.
      * @param ghost a ghost
-     * @param level game level
      */
     void huntingBehaviour(Ghost ghost, GameLevel level);
 
