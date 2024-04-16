@@ -8,10 +8,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
-import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.model.actors.StaticBonus;
+import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
@@ -402,25 +399,6 @@ public enum GameVariants implements GameModel {
     short initialLives = 3;
     short lives;
 
-    @Override
-    public void letsGetReadyToRumble(GameLevel level, boolean visible) {
-        level.pac().reset();
-        level.pac().setPosition(ArcadeWorld.PAC_POSITION);
-        level.pac().setMoveAndWishDir(Direction.LEFT);
-        level.pac().setVisible(visible);
-        level.pac().resetAnimation();
-        level.ghosts().forEach(ghost -> {
-            ghost.reset();
-            ghost.setPosition(GHOST_POSITIONS_ON_START[ghost.id()]);
-            ghost.setMoveAndWishDir(GHOST_DIRECTIONS_ON_START[ghost.id()]);
-            ghost.setVisible(visible);
-            ghost.setState(LOCKED);
-            ghost.resetAnimation();
-        });
-        level.blinking().setStartPhase(Pulse.ON);
-        level.blinking().reset();
-    }
-
     Direction pseudoRandomDirection() {
         float rnd = Globals.randomFloat(0, 100);
         if (rnd < 16.3) return UP;
@@ -456,6 +434,27 @@ public enum GameVariants implements GameModel {
         lives = initialLives;
         score.reset();
         Logger.info("Game model ({}) reset", this);
+    }
+
+    @Override
+    public void letsGetReadyToRumble(GameLevel level, boolean visible) {
+        level.pac().reset();
+        level.pac().setPosition(ArcadeWorld.PAC_POSITION);
+        level.pac().setMoveAndWishDir(Direction.LEFT);
+        level.pac().setVisible(visible);
+        level.pac().selectAnimation(Pac.ANIM_MUNCHING);
+        level.pac().resetAnimation();
+        level.ghosts().forEach(ghost -> {
+            ghost.reset();
+            ghost.setPosition(GHOST_POSITIONS_ON_START[ghost.id()]);
+            ghost.setMoveAndWishDir(GHOST_DIRECTIONS_ON_START[ghost.id()]);
+            ghost.setVisible(visible);
+            ghost.setState(LOCKED);
+            ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
+            ghost.resetAnimation();
+        });
+        level.blinking().setStartPhase(Pulse.ON); // Energizers are visible when ON
+        level.blinking().reset();
     }
 
     @Override
