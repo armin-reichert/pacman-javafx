@@ -85,7 +85,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             if (game.isPlaying()) { // resume running game
                 if (timer.tick() == 1) {
-                    game.level().ifPresent(level -> level.letsGetReadyToRumble(true));
+                    game.level().ifPresent(level -> game.letsGetReadyToRumble(level,true));
                 } else if (timer.tick() == TICK_RESUME_GAME) {
                     game.level().ifPresent(level -> {
                         level.pac().show();

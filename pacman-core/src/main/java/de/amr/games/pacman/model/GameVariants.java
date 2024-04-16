@@ -25,6 +25,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
 import static de.amr.games.pacman.model.actors.CreatureMovement.followTarget;
 import static de.amr.games.pacman.model.actors.CreatureMovement.roam;
+import static de.amr.games.pacman.model.actors.GhostState.LOCKED;
 import static de.amr.games.pacman.model.world.ArcadeWorld.*;
 
 /**
@@ -197,7 +198,7 @@ public enum GameVariants implements GameModel {
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
             // At this point, the animations of Pac-Man and the ghosts must have been created!
-            level.letsGetReadyToRumble(false);
+            letsGetReadyToRumble(level, false);
             Logger.info("Level {} started ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_STARTED);
         }
@@ -211,7 +212,7 @@ public enum GameVariants implements GameModel {
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
             // At this point, the animations of Pac-Man and the ghosts have been created!
-            level.letsGetReadyToRumble(true);
+            letsGetReadyToRumble(level,true);
             Logger.info("Demo Level started ({})", this);
             publishGameEvent(GameEventType.LEVEL_STARTED);
         }
@@ -333,7 +334,7 @@ public enum GameVariants implements GameModel {
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
             // At this point, the animations of Pac-Man and the ghosts must have been created!
-            level.letsGetReadyToRumble(false);
+            letsGetReadyToRumble(level,false);
             Logger.info("Level {} started ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_STARTED);
         }
@@ -367,10 +368,11 @@ public enum GameVariants implements GameModel {
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
             // At this point, the animations of Pac-Man and the ghosts have been created!
-            level.letsGetReadyToRumble(true);
+            letsGetReadyToRumble(level,true);
             Logger.info("Demo Level started ({})", this);
             publishGameEvent(GameEventType.LEVEL_STARTED);
         }
+
 
         private void addForbiddenMoves(GameLevel level) {
             var forbidden = new HashMap<Vector2i, List<Direction>>();
@@ -399,6 +401,25 @@ public enum GameVariants implements GameModel {
     boolean playing;
     short initialLives = 3;
     short lives;
+
+    @Override
+    public void letsGetReadyToRumble(GameLevel level, boolean visible) {
+        level.pac().reset();
+        level.pac().setPosition(ArcadeWorld.PAC_POSITION);
+        level.pac().setMoveAndWishDir(Direction.LEFT);
+        level.pac().setVisible(visible);
+        level.pac().resetAnimation();
+        level.ghosts().forEach(ghost -> {
+            ghost.reset();
+            ghost.setPosition(GHOST_POSITIONS_ON_START[ghost.id()]);
+            ghost.setMoveAndWishDir(GHOST_DIRECTIONS_ON_START[ghost.id()]);
+            ghost.setVisible(visible);
+            ghost.setState(LOCKED);
+            ghost.resetAnimation();
+        });
+        level.blinking().setStartPhase(Pulse.ON);
+        level.blinking().reset();
+    }
 
     Direction pseudoRandomDirection() {
         float rnd = Globals.randomFloat(0, 100);

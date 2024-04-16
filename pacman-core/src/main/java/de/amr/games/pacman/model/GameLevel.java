@@ -270,30 +270,6 @@ public class GameLevel {
     }
 
     /**
-     * Pac-Man and the ghosts are placed at their initial positions and locked. The bonus, Pac-Man power timer and
-     * energizer pulse are reset too.
-     *
-     * @param visible if the guys are visible
-     */
-    public void letsGetReadyToRumble(boolean visible) {
-        pac.reset();
-        pac.setPosition(ArcadeWorld.PAC_POSITION);
-        pac.setMoveAndWishDir(Direction.LEFT);
-        pac.setVisible(visible);
-        pac.resetAnimation();
-        ghosts().forEach(ghost -> {
-            ghost.reset();
-            ghost.setPosition(GHOST_POSITIONS_ON_START[ghost.id()]);
-            ghost.setMoveAndWishDir(GHOST_DIRECTIONS_ON_START[ghost.id()]);
-            ghost.setVisible(visible);
-            ghost.setState(LOCKED);
-            ghost.resetAnimation();
-        });
-        blinking.setStartPhase(Pulse.ON);
-        blinking.reset();
-    }
-
-    /**
      * @param ghost a ghost
      * @return relative speed of ghost in percent of the base speed
      */
@@ -466,7 +442,7 @@ public class GameLevel {
                 bonus().ifPresent(bonus -> bonus.update(this));
             }
             if (timer.atSecond(1.0)) {
-                letsGetReadyToRumble(true);
+                game().letsGetReadyToRumble(this, true);
             } else if (timer.atSecond(2)) {
                 blinking.setStartPhase(Pulse.ON);
                 blinking.restart();

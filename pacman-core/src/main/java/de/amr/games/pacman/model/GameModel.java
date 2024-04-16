@@ -157,6 +157,14 @@ public interface GameModel {
     void createAndStartLevel(int levelNumber);
 
     /**
+     * Pac-Man and the ghosts are placed at their initial positions and locked. The bonus, Pac-Man power timer and
+     * energizer pulse are reset too.
+     *
+     * @param guysVisible if the guys are visible
+     */
+    void letsGetReadyToRumble(GameLevel level, boolean guysVisible);
+
+    /**
      * Creates and starts the demo game level ("attract mode"). Behavior of the ghosts is different from the original
      * Arcade game because they do not follow a predetermined path but change their direction randomly when frightened.
      * In Pac-Man variant, Pac-Man at least follows the same path as in the Arcade game, but in Ms. Pac-Man game, she

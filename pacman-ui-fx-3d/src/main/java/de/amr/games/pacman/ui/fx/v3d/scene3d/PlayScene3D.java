@@ -322,7 +322,7 @@ public class PlayScene3D implements GameScene {
             case LEVEL_TEST ->
                 context.gameLevel().ifPresent(level -> {
                     PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
-                    level.letsGetReadyToRumble(true);
+                    context.game().letsGetReadyToRumble(level,true);
                     replaceGameLevel3D(level);
                     level3D.pac3D().init(level.world());
                     level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level.world()));
