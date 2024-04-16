@@ -48,7 +48,6 @@ public class House {
         return door;
     }
 
-
     public Vector2f center() {
         return minTile.toFloatVec().scaled(TS).plus(size.toFloatVec().scaled(HTS));
     }

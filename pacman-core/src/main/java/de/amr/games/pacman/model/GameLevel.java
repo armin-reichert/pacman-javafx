@@ -365,7 +365,8 @@ public class GameLevel {
         }
     }
 
-    private void updatePacPower() {
+    private void updatePac() {
+        pac.update(this);
         if (eventLog().energizerFound && pacPowerSeconds > 0) {
             huntingTimer.stop();
             Logger.info("Hunting timer stopped");
@@ -430,13 +431,12 @@ public class GameLevel {
     }
 
     public GameState doHuntingStep() {
-        energizerBlinking.tick();
-        pac.update(this);
-        updateGhosts();
         updateFood();
-        updatePacPower();
+        updateGhosts();
+        updatePac();
         updateBonus();
         updateHuntingTimer();
+        energizerBlinking.tick();
 
         // what next?
         if (world.uneatenFoodCount() == 0) {
