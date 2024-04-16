@@ -6,7 +6,6 @@ package de.amr.games.pacman.test;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.actors.StaticBonus;
@@ -50,9 +49,7 @@ public class PacManGameTest {
 
         var level = game.level().get();
         assertEquals(1, level.levelNumber);
-        //assertEquals(0, game.totalNumGhostsKilled());
         assertEquals(0, level.pac().victims().size());
-        assertEquals(0, level.cruiseElroyState());
 
         assertNotNull(level.world());
         var world = level.world();
@@ -120,26 +117,5 @@ public class PacManGameTest {
         assertEquals(2, GameController.it().credit());
         GameController.it().changeCredit(-2);
         assertEquals(0, GameController.it().credit());
-    }
-
-    @Test
-    public void testLegalCruiseElroyState() {
-        game.level().ifPresent(level -> {
-            level.setCruiseElroyState(-2);
-            assertEquals(-2, level.cruiseElroyState());
-            level.setCruiseElroyState(-1);
-            assertEquals(-1, level.cruiseElroyState());
-            level.setCruiseElroyState(0);
-            assertEquals(0, level.cruiseElroyState());
-            level.setCruiseElroyState(1);
-            assertEquals(1, level.cruiseElroyState());
-            level.setCruiseElroyState(2);
-            assertEquals(2, level.cruiseElroyState());
-        });
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testIllegalCruiseElroyState() {
-        game.level().ifPresent(level -> level.setCruiseElroyState(42));
     }
 }

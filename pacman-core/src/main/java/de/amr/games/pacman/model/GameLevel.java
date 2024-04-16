@@ -33,7 +33,6 @@ public class GameLevel {
     private final Pulse blinking;
     private final Pac pac;
     private final Ghost[] ghosts;
-    private byte cruiseElroyState;
 
     public GameLevel(int levelNumber, boolean demoLevel, byte[] data, World world) {
         checkLevelNumber(levelNumber);
@@ -136,32 +135,6 @@ public class GameLevel {
         return Stream.of(ghosts);
     }
 
-    /**
-     * @return Blinky's "cruise elroy" state. Values: <code>0, 1, 2, -1, -2</code>. (0=off, negative=disabled).
-     */
-    public byte cruiseElroyState() {
-        return cruiseElroyState;
-    }
-
-    /**
-     * @param cruiseElroyState Values: <code>0, 1, 2, -1, -2</code>. (0=off, negative=disabled).
-     */
-    public void setCruiseElroyState(int cruiseElroyState) {
-        if (cruiseElroyState < -2 || cruiseElroyState > 2) {
-            throw new IllegalArgumentException(
-                "Cruise Elroy state must be one of -2, -1, 0, 1, 2, but is " + cruiseElroyState);
-        }
-        this.cruiseElroyState = (byte) cruiseElroyState;
-        Logger.trace("Cruise Elroy state set to {}", cruiseElroyState);
-    }
-
-    public void enableCruiseElroyState(boolean enabled) {
-        if (enabled && cruiseElroyState < 0 || !enabled && cruiseElroyState > 0) {
-            cruiseElroyState = (byte) (-cruiseElroyState);
-            Logger.trace("Cruise Elroy state set to {}", cruiseElroyState);
-        }
-    }
-
     public Vector2i chasingTarget(byte ghostID) {
         return switch (ghostID) {
             // Blinky: attacks Pac-Man directly
@@ -181,22 +154,4 @@ public class GameLevel {
     public byte frightenedGhostRelSpeed(Ghost ghost) {
         return world.isTunnel(ghost.tile()) ? ghostSpeedTunnelPercentage() : ghostSpeedFrightenedPercentage();
     }
-
-    /**
-     * @param ghost a ghost
-     * @return relative speed of ghost in percent of the base speed
-     */
-    public byte huntingSpeedPercentage(Ghost ghost) {
-        if (world.isTunnel(ghost.tile())) {
-            return ghostSpeedTunnelPercentage();
-        }
-        if (ghost.id() == RED_GHOST && cruiseElroyState == 1) {
-            return elroy1SpeedPercentage();
-        }
-        if (ghost.id() == RED_GHOST && cruiseElroyState == 2) {
-            return elroy2SpeedPercentage();
-        }
-        return ghostSpeedPercentage();
-    }
-
 }

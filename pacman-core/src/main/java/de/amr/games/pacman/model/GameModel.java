@@ -199,8 +199,12 @@ public interface GameModel {
 
     void doLevelTestStep(TickTimer timer, int lastTestedLevel);
 
-    // TODO remove from interface
     Ghost unlockGhost();
+
+    /**
+     * @return Blinky's "cruise elroy" state. Values: <code>0, 1, 2, -1, -2</code>. (0=off, negative=disabled).
+     */
+    byte cruiseElroyState();
 
     /**
      * @param playing Sets playing state for current game
