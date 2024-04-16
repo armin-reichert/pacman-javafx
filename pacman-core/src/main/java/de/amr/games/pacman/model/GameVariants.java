@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
@@ -652,6 +653,55 @@ public enum GameVariants implements GameModel {
         Logger.trace("Game level {} ({}) completed.", level.levelNumber, this);
     }
 
+    @Override
+    public void doLevelTestStep(TickTimer timer, int lastTestedLevel) {
+        if (level.levelNumber <= lastTestedLevel) {
+            if (timer.tick() > 2 * FPS) {
+                level.blinking().tick();
+                level.ghosts().forEach(ghost -> ghost.update(level));
+                level.bonus().ifPresent(bonus -> bonus.update(level));
+            }
+            if (timer.atSecond(1.0)) {
+                level.game().letsGetReadyToRumble();
+                level.pac().show();
+                level.ghosts().forEach(Ghost::show);
+            } else if (timer.atSecond(2)) {
+                level.blinking().setStartPhase(Pulse.ON);
+                level.blinking().restart();
+            } else if (timer.atSecond(2.5)) {
+                level.onBonusReached(0);
+            } else if (timer.atSecond(3.5)) {
+                level.bonus().ifPresent(bonus -> bonus.setEaten(120));
+                level.game().publishGameEvent(GameEventType.BONUS_EATEN);
+            } else if (timer.atSecond(4.5)) {
+                level.bonus().ifPresent(Bonus::setInactive); // needed?
+                level.onBonusReached(1);
+            } else if (timer.atSecond(6.5)) {
+                level.bonus().ifPresent(bonus -> bonus.setEaten(60));
+                publishGameEvent(GameEventType.BONUS_EATEN);
+            } else if (timer.atSecond(8.5)) {
+                level.pac().hide();
+                level.ghosts().forEach(Ghost::hide);
+                level.blinking().stop();
+                level.blinking().setStartPhase(Pulse.ON);
+                level.blinking().reset();
+            } else if (timer.atSecond(9.5)) {
+                GameController.it().state().setProperty("mazeFlashing", true);
+                level.blinking().setStartPhase(Pulse.OFF);
+                level.blinking().restart(2 * level.numFlashes());
+            } else if (timer.atSecond(12.0)) {
+                timer.restartIndefinitely();
+                level.pac().freeze();
+                level.ghosts().forEach(Ghost::hide);
+                level.bonus().ifPresent(Bonus::setInactive);
+                GameController.it().state().setProperty("mazeFlashing", false);
+                level.blinking().reset();
+                createAndStartLevel(level.levelNumber + 1, false);
+            }
+        } else {
+            GameController.it().restart(GameState.BOOT);
+        }
+    }
 
 
     @Override

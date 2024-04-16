@@ -7,10 +7,7 @@ package de.amr.games.pacman.model;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Score;
-import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.ArcadeWorld;
@@ -173,6 +170,8 @@ public interface GameModel {
 
     // TODO remove from interface
     void updateDotCount();
+
+    void doLevelTestStep(TickTimer timer, int lastTestedLevel);
 
     // TODO remove from interface
     Ghost unlockGhost();

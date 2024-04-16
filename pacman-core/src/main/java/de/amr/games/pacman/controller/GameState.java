@@ -333,7 +333,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            game.level().ifPresent(level -> level.doLevelTestStep(timer, lastTestedLevel));
+            game.doLevelTestStep(timer, lastTestedLevel);
         }
 
         @Override

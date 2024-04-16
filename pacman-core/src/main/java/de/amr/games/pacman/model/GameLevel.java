@@ -407,54 +407,6 @@ public class GameLevel {
         return GameState.HUNTING;
     }
 
-    public void doLevelTestStep(TickTimer timer, int lastTestedLevel) {
-        if (levelNumber <= lastTestedLevel) {
-            if (timer.tick() > 2 * FPS) {
-                blinking.tick();
-                ghosts().forEach(ghost -> ghost.update(this));
-                bonus().ifPresent(bonus -> bonus.update(this));
-            }
-            if (timer.atSecond(1.0)) {
-                game().letsGetReadyToRumble();
-                pac.show();
-                ghosts().forEach(Ghost::show);
-            } else if (timer.atSecond(2)) {
-                blinking.setStartPhase(Pulse.ON);
-                blinking.restart();
-            } else if (timer.atSecond(2.5)) {
-                onBonusReached(0);
-            } else if (timer.atSecond(3.5)) {
-                bonus().ifPresent(bonus -> bonus.setEaten(120));
-                game().publishGameEvent(GameEventType.BONUS_EATEN);
-            } else if (timer.atSecond(4.5)) {
-                bonus().ifPresent(Bonus::setInactive); // needed?
-                onBonusReached(1);
-            } else if (timer.atSecond(6.5)) {
-                bonus().ifPresent(bonus -> bonus.setEaten(60));
-                game().publishGameEvent(GameEventType.BONUS_EATEN);
-            } else if (timer.atSecond(8.5)) {
-                pac.hide();
-                ghosts().forEach(Ghost::hide);
-                blinking.stop();
-                blinking.setStartPhase(Pulse.ON);
-                blinking.reset();
-            } else if (timer.atSecond(9.5)) {
-                GameController.it().state().setProperty("mazeFlashing", true);
-                blinking.setStartPhase(Pulse.OFF);
-                blinking.restart(2 * numFlashes());
-            } else if (timer.atSecond(12.0)) {
-                timer.restartIndefinitely();
-                pac.freeze();
-                ghosts().forEach(Ghost::hide);
-                bonus().ifPresent(Bonus::setInactive);
-                GameController.it().state().setProperty("mazeFlashing", false);
-                blinking.reset();
-                game().createAndStartLevel(levelNumber + 1, false);
-            }
-        } else {
-            GameController.it().restart(GameState.BOOT);
-        }
-    }
 
     public void killGhosts(List<Ghost> prey) {
         if (!prey.isEmpty()) {
