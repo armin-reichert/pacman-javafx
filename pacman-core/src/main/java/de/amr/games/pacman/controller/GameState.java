@@ -235,7 +235,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             timer.reset(220);
             timer.start();
-            game.level().ifPresent(GameLevel::letPacDie);
+            game.onPacDying();
         }
 
         @Override

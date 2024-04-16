@@ -167,6 +167,14 @@ public interface GameModel {
      */
     void letsGetReadyToRumble();
 
+    void onPacDying();
+
+    // TODO remove from interface
+    void updateDotCount();
+
+    // TODO remove from interface
+    Ghost unlockGhost();
+
     /**
      * @param playing Sets playing state for current game
      */
