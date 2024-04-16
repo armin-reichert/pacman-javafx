@@ -109,7 +109,7 @@ public class PlayScene2D extends GameScene2D {
         PacManGameSpriteSheet sheet = context.spriteSheet();
         double x = 0, y = t(3);
         if (level.mazeFlashing().isRunning()) {
-            if (level.mazeFlashing().on()) {
+            if (level.mazeFlashing().isOn()) {
                 drawImage(sheet.getFlashingMazeImage(), x, y);
             } else {
                 drawSprite(sheet.getEmptyMazeSprite(), x, y);
@@ -117,7 +117,7 @@ public class PlayScene2D extends GameScene2D {
         } else {
             drawSprite(sheet.getFullMazeSprite(), x, y);
             level.world().tiles().filter(level.world()::hasEatenFoodAt).forEach(tile -> hideTileContent(level.world(), tile));
-            if (level.energizerBlinking().off()) {
+            if (level.energizerBlinking().isOff()) {
                 level.world().energizerTiles().forEach(tile -> hideTileContent(level.world(), tile));
             }
         }
@@ -127,7 +127,7 @@ public class PlayScene2D extends GameScene2D {
         MsPacManGameSpriteSheet sheet = context.spriteSheet();
         double x = 0, y = t(3);
         if (level.mazeFlashing().isRunning()) {
-            if (level.mazeFlashing().on()) {
+            if (level.mazeFlashing().isOn()) {
                 var flashingMazeSprite = sheet.highlightedMaze(mazeNumber);
                 drawSprite(sheet.getFlashingMazesImage(), flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
             } else {
@@ -136,7 +136,7 @@ public class PlayScene2D extends GameScene2D {
         } else {
             drawSprite(sheet.filledMaze(mazeNumber), x, y);
             level.world().tiles().filter(level.world()::hasEatenFoodAt).forEach(tile -> hideTileContent(level.world(), tile));
-            if (level.energizerBlinking().off()) {
+            if (level.energizerBlinking().isOff()) {
                 level.world().energizerTiles().forEach(tile -> hideTileContent(level.world(), tile));
             }
         }

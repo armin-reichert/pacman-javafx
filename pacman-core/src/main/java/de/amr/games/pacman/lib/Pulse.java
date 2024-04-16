@@ -9,30 +9,30 @@ package de.amr.games.pacman.lib;
  */
 public class Pulse {
 
-    private final boolean startValue;
-    private final int ticksPerFrame;
-    public int numFramesTotal;
-    private boolean value;
-    private int t;
-    private int frames;
-    private boolean stopped;
+    private final int ticksPerPhase;
+    private boolean startPhase;
+    private int numPhases;
+    private boolean phase;
+    private int tick;
+    private int numPhasesCompleted;
+    private boolean running;
 
-    public Pulse(int numCycles, int ticksPerFrame, boolean startValue) {
-        this.numFramesTotal = numCycles;
-        this.startValue = startValue;
-        this.ticksPerFrame = ticksPerFrame;
+    public Pulse(int numPhases, int ticksPerPhase, boolean startPhase) {
+        this.numPhases = numPhases;
+        this.ticksPerPhase = ticksPerPhase;
+        this.startPhase = startPhase;
         reset();
     }
 
-    public Pulse(int ticksPerFrame, boolean startValue) {
-        this(Integer.MAX_VALUE, ticksPerFrame, startValue);
+    public Pulse(int ticksPerPhase, boolean startPhase) {
+        this(Integer.MAX_VALUE, ticksPerPhase, startPhase);
     }
 
     public void reset() {
-        t = 0;
-        frames = 0;
-        value = startValue;
-        stopped = true;
+        tick = 0;
+        numPhasesCompleted = 0;
+        phase = startPhase;
+        running = false;
     }
 
     public void restart() {
@@ -40,45 +40,45 @@ public class Pulse {
         start();
     }
 
-    public void restart(int numCycles) {
-        this.numFramesTotal = numCycles;
+    public void restart(int numPhases) {
+        this.numPhases = numPhases;
         reset();
         start();
     }
 
     public void tick() {
-        if (stopped || frames == numFramesTotal) {
+        if (!running || numPhasesCompleted == numPhases) {
             return;
         }
-        ++t;
-        if (t == ticksPerFrame) {
-            value = !value;
-            frames++;
-            t = 0;
+        ++tick;
+        if (tick == ticksPerPhase) {
+            numPhasesCompleted++;
+            phase = !phase;
+            tick = 0;
         }
     }
 
-    public boolean on() {
-        return value;
+    public void setStartPhase(boolean startPhase) {
+        this.startPhase = startPhase;
     }
 
-    public boolean off() {
-        return !value;
+    public boolean isOn() {
+        return phase;
+    }
+
+    public boolean isOff() {
+        return !phase;
     }
 
     public void start() {
-        stopped = false;
-    }
-
-    public boolean isStopped() {
-        return stopped;
-    }
-
-    public boolean isRunning() {
-        return !stopped;
+        running = true;
     }
 
     public void stop() {
-        stopped = true;
+        running = false;
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 }
