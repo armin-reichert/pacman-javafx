@@ -641,6 +641,20 @@ public enum GameVariants implements GameModel {
     }
 
     @Override
+    public void onLevelCompleted() {
+        level.blinking().setStartPhase(Pulse.OFF);
+        level.blinking().reset();
+        level.pac().freeze();
+        level.ghosts().forEach(Ghost::hide);
+        level.bonus().ifPresent(Bonus::setInactive);
+        level.huntingTimer().stop();
+        Logger.info("Hunting timer stopped");
+        Logger.trace("Game level {} ({}) completed.", level.levelNumber, this);
+    }
+
+
+
+    @Override
     public Optional<GameLevel> level() {
         return Optional.ofNullable(level);
     }

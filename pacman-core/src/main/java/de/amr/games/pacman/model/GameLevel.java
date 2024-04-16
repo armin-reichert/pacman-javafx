@@ -407,17 +407,6 @@ public class GameLevel {
         return GameState.HUNTING;
     }
 
-    public void onCompleted() {
-        blinking.setStartPhase(Pulse.OFF);
-        blinking.reset();
-        pac.freeze();
-        ghosts().forEach(Ghost::hide);
-        bonus().ifPresent(Bonus::setInactive);
-        huntingTimer.stop();
-        Logger.info("Hunting timer stopped");
-        Logger.trace("Game level {} ({}) completed.", levelNumber, game());
-    }
-
     public void doLevelTestStep(TickTimer timer, int lastTestedLevel) {
         if (levelNumber <= lastTestedLevel) {
             if (timer.tick() > 2 * FPS) {

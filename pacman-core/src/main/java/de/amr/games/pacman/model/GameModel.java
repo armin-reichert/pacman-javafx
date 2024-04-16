@@ -169,6 +169,8 @@ public interface GameModel {
 
     void onPacDying();
 
+    void onLevelCompleted();
+
     // TODO remove from interface
     void updateDotCount();
 

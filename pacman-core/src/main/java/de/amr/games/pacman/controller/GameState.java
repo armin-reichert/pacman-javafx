@@ -150,7 +150,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartSeconds(4);
-            game.level().ifPresent(GameLevel::onCompleted);
+            game.onLevelCompleted();
         }
 
         @Override
