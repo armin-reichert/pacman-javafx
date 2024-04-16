@@ -414,6 +414,7 @@ public enum GameVariants implements GameModel {
     short initialLives = 3;
     short lives;
 
+    final Pulse blinking = new Pulse(10, false);;
     final TickTimer huntingTimer = new TickTimer("HuntingTimer");
     byte huntingPhaseIndex;
     byte numGhostsKilledInLevel;
@@ -454,6 +455,11 @@ public enum GameVariants implements GameModel {
     @Override
     public TickTimer huntingTimer() {
         return huntingTimer;
+    }
+
+    @Override
+    public Pulse blinking() {
+        return blinking;
     }
 
     /**
@@ -783,8 +789,8 @@ public enum GameVariants implements GameModel {
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
         });
-        level.blinking().setStartPhase(Pulse.ON); // Energizers are visible when ON
-        level.blinking().reset();
+        blinking.setStartPhase(Pulse.ON); // Energizers are visible when ON
+        blinking.reset();
     }
 
     @Override
@@ -798,8 +804,8 @@ public enum GameVariants implements GameModel {
 
     @Override
     public void onLevelCompleted() {
-        level.blinking().setStartPhase(Pulse.OFF);
-        level.blinking().reset();
+        blinking.setStartPhase(Pulse.OFF);
+        blinking.reset();
         pac().freeze();
         ghosts().forEach(Ghost::hide);
         bonus().ifPresent(Bonus::setInactive);
@@ -812,7 +818,7 @@ public enum GameVariants implements GameModel {
     public void doLevelTestStep(TickTimer timer, int lastTestedLevel) {
         if (level.levelNumber <= lastTestedLevel) {
             if (timer.tick() > 2 * FPS) {
-                level.blinking().tick();
+                blinking.tick();
                 ghosts().forEach(ghost -> ghost.update(this));
                 bonus().ifPresent(bonus -> bonus.update(this));
             }
@@ -821,8 +827,8 @@ public enum GameVariants implements GameModel {
                 pac().show();
                 ghosts().forEach(Ghost::show);
             } else if (timer.atSecond(2)) {
-                level.blinking().setStartPhase(Pulse.ON);
-                level.blinking().restart();
+                blinking.setStartPhase(Pulse.ON);
+                blinking.restart();
             } else if (timer.atSecond(2.5)) {
                 onBonusReached(0);
             } else if (timer.atSecond(3.5)) {
@@ -837,20 +843,20 @@ public enum GameVariants implements GameModel {
             } else if (timer.atSecond(8.5)) {
                 pac().hide();
                 ghosts().forEach(Ghost::hide);
-                level.blinking().stop();
-                level.blinking().setStartPhase(Pulse.ON);
-                level.blinking().reset();
+                blinking.stop();
+                blinking.setStartPhase(Pulse.ON);
+                blinking.reset();
             } else if (timer.atSecond(9.5)) {
                 GameController.it().state().setProperty("mazeFlashing", true);
-                level.blinking().setStartPhase(Pulse.OFF);
-                level.blinking().restart(2 * level.numFlashes());
+                blinking.setStartPhase(Pulse.OFF);
+                blinking.restart(2 * level.numFlashes());
             } else if (timer.atSecond(12.0)) {
                 timer.restartIndefinitely();
                 pac().freeze();
                 ghosts().forEach(Ghost::hide);
                 bonus().ifPresent(Bonus::setInactive);
                 GameController.it().state().setProperty("mazeFlashing", false);
-                level.blinking().reset();
+                blinking.reset();
                 createAndStartLevel(level.levelNumber + 1, false);
             }
         } else {
@@ -998,7 +1004,7 @@ public enum GameVariants implements GameModel {
         updatePac();
         updateBonus();
         updateHuntingTimer();
-        level.blinking().tick();
+        blinking.tick();
 
         // what next?
         if (world.uneatenFoodCount() == 0) {

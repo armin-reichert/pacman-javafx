@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.IllegalGameVariantException;
@@ -112,13 +111,12 @@ public class PlayScene2D extends GameScene2D {
         if (game.level().isEmpty()) {
             throw new IllegalStateException("Cannot draw maze, no level exists");
         }
-        GameLevel level = game.level().get();
         World world = game.world();
         checkNotNull(world);
         PacManGameSpriteSheet sheet = context.spriteSheet();
         double x = 0, y = t(3);
-        if (flashing && level.blinking().isRunning()) {
-            if (level.blinking().isOn()) {
+        if (flashing && game.blinking().isRunning()) {
+            if (game.blinking().isOn()) {
                 drawImage(sheet.getFlashingMazeImage(), x, y);
             } else {
                 drawSprite(sheet.getEmptyMazeSprite(), x, y);
@@ -126,7 +124,7 @@ public class PlayScene2D extends GameScene2D {
         } else {
             drawSprite(sheet.getFullMazeSprite(), x, y);
             world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
-            if (level.blinking().isOff()) {
+            if (game.blinking().isOff()) {
                 world.energizerTiles().forEach(tile -> hideTileContent(world, tile));
             }
         }
@@ -136,13 +134,12 @@ public class PlayScene2D extends GameScene2D {
         if (game.level().isEmpty()) {
             throw new IllegalStateException("Cannot draw maze, no level exists");
         }
-        GameLevel level = game.level().get();
         World world = game.world();
         checkNotNull(world);
         MsPacManGameSpriteSheet sheet = context.spriteSheet();
         double x = 0, y = t(3);
-        if (flashing && level.blinking().isRunning()) {
-            if (level.blinking().isOn()) {
+        if (flashing && game.blinking().isRunning()) {
+            if (game.blinking().isOn()) {
                 var flashingMazeSprite = sheet.highlightedMaze(mazeNumber);
                 drawSprite(sheet.getFlashingMazesImage(), flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
             } else {
@@ -151,7 +148,7 @@ public class PlayScene2D extends GameScene2D {
         } else {
             drawSprite(sheet.filledMaze(mazeNumber), x, y);
             world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
-            if (level.blinking().isOff()) {
+            if (game.blinking().isOff()) {
                 world.energizerTiles().forEach(tile -> hideTileContent(world, tile));
             }
         }

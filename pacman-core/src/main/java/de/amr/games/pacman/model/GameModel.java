@@ -236,6 +236,8 @@ public interface GameModel {
 
     World world();
 
+    Pulse blinking();
+
     /**
      * @return Number of lives at game start
      */

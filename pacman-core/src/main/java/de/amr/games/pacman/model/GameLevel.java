@@ -4,9 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.lib.Pulse;
-import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.checkLevelNumber;
@@ -22,9 +19,7 @@ public class GameLevel {
      */
     public final int levelNumber;
     public final boolean demoLevel;
-
     private final byte[] data;
-    private final Pulse blinking;
 
     public GameLevel(int levelNumber, boolean demoLevel, byte[] data) {
         checkLevelNumber(levelNumber);
@@ -32,7 +27,6 @@ public class GameLevel {
         this.levelNumber = levelNumber;
         this.demoLevel = demoLevel;
         this.data = data;
-        blinking = new Pulse(10, false);
         Logger.trace("Game level {} created.", this.levelNumber);
     }
 
@@ -122,9 +116,5 @@ public class GameLevel {
 
     public boolean isDemoLevel() {
         return demoLevel;
-    }
-
-    public Pulse blinking() {
-        return blinking;
     }
 }

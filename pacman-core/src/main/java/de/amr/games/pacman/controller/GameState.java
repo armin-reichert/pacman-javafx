@@ -128,8 +128,8 @@ public enum GameState implements FsmState<GameModel> {
             game.level().ifPresent(level -> {
                 game.pac().startAnimation();
                 game.ghosts().forEach(Ghost::startAnimation);
-                level.blinking().setStartPhase(Pulse.ON);
-                level.blinking().restart();
+                game.blinking().setStartPhase(Pulse.ON);
+                game.blinking().restart();
                 game.publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
             });
         }
@@ -166,10 +166,10 @@ public enum GameState implements FsmState<GameModel> {
                     }
                 } else if (timer.atSecond(1)) {
                     setProperty("mazeFlashing", true);
-                    level.blinking().setStartPhase(Pulse.OFF);
-                    level.blinking().restart(2 * level.numFlashes());
+                    game.blinking().setStartPhase(Pulse.OFF);
+                    game.blinking().restart(2 * level.numFlashes());
                 } else {
-                    level.blinking().tick();
+                    game.blinking().tick();
                 }
             });
         }
@@ -209,7 +209,7 @@ public enum GameState implements FsmState<GameModel> {
                 } else {
                     game.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                         .forEach(ghost -> ghost.update(game));
-                    level.blinking().tick();
+                    game.blinking().tick();
                 }
             });
         }
@@ -262,7 +262,7 @@ public enum GameState implements FsmState<GameModel> {
                     }
                     case TICK_HIDE_PAC -> game.pac().hide();
                     default -> {
-                        level.blinking().tick();
+                        game.blinking().tick();
                         game.pac().update(game);
                     }
                 }
