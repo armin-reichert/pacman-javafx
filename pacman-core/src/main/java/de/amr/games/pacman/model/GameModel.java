@@ -123,12 +123,6 @@ public interface GameModel {
     boolean isBonusReached();
 
     /**
-     * @param levelNumber game level number
-     * @return next bonus symbol for this level
-     */
-    byte nextBonusSymbol(int levelNumber);
-
-    /**
      * @param symbol bonus symbol
      * @return points earned when eating this bonus
      */

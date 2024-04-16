@@ -195,8 +195,7 @@ public enum GameVariants implements GameModel {
          * </tr>
          * </table>
          */
-        @Override
-        public byte nextBonusSymbol(int levelNumber) {
+        private byte nextBonusSymbol(int levelNumber) {
             checkLevelNumber(levelNumber);
             if (levelNumber <= 7) {
                 return (byte) (levelNumber - 1);
@@ -380,8 +379,7 @@ public enum GameVariants implements GameModel {
         }
 
         // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
-        @Override
-        public byte nextBonusSymbol(int levelNumber) {
+        private byte nextBonusSymbol(int levelNumber) {
             return BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber < 13 ? levelNumber : 0];
         }
 
