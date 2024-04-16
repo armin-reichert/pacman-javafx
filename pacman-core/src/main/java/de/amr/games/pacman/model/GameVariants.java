@@ -49,6 +49,105 @@ public enum GameVariants implements GameModel {
             {7 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 1-4
             {5 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 5+
         };
+        @Override
+        public int[] huntingDurations(int levelNumber) {
+            return HUNTING_DURATIONS[levelNumber <= 4 ? 0 : 1];
+        }
+
+        @Override
+        public File highScoreFile() {
+            return HIGH_SCORE_FILE;
+        }
+
+        @Override
+        public void createAndStartLevel(int levelNumber, boolean demoLevel) {
+            checkLevelNumber(levelNumber);
+
+            if (demoLevel) {
+                world = createMsPacManWorld(1);
+                level = new GameLevel(1, true, LEVEL_DATA[0]);
+            } else {
+                int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
+                world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
+                level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex]);
+            }
+            initGhostHouseAccessControl();
+
+            pac = new Pac("Ms. Pac-Man");
+            ghosts = new Ghost[] {
+                new Ghost(RED_GHOST,    "Blinky"),
+                new Ghost(PINK_GHOST,   "Pinky"),
+                new Ghost(CYAN_GHOST,   "Inky"),
+                new Ghost(ORANGE_GHOST, "Sue")
+            };
+
+            pac.reset();
+            pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+            pac.setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
+            pac.setAutopilot(new RuleBasedPacSteering(this));
+            pac.setUseAutopilot(demoLevel);
+
+            ghosts().forEach(ghost -> {
+                ghost.reset();
+                ghost.setHouse(world.house());
+                ghost.setFrightenedBehavior(refugee ->
+                    roam(refugee, world, frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
+                ghost.setHuntingBehavior(this::huntingBehaviour);
+                ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
+                ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+                ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
+                ghost.setSpeedInsideHouse(PPS_GHOST_INHOUSE / (float) FPS);
+            });
+
+            huntingPhaseIndex = 0;
+            huntingTimer.resetIndefinitely();
+            bonusReachedIndex = -1;
+            bonusSymbols = List.of(nextBonusSymbol(levelNumber), nextBonusSymbol(levelNumber));
+            bonus = null;
+            numGhostsKilledInLevel = 0;
+
+            score.setLevelNumber(levelNumber);
+            if (levelNumber == 1) {
+                levelCounter.clear();
+            }
+            if (levelNumber <= 7) {
+                // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
+                // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
+                addSymbolToLevelCounter(bonusSymbol(0));
+            }
+            Logger.info("Level {} created ({})", levelNumber, this);
+            publishGameEvent(GameEventType.LEVEL_CREATED);
+
+            // At this point, the animations of Pac-Man and the ghosts must have been created!
+            letsGetReadyToRumble();
+            if (demoLevel) {
+                pac.show();
+                ghosts().forEach(Ghost::show);
+            } else {
+                pac.hide();
+                ghosts().forEach(Ghost::hide);
+            }
+            Logger.info("Level {} started ({})", levelNumber, this);
+            publishGameEvent(GameEventType.LEVEL_STARTED);
+        }
+
+        /**
+         * <p>
+         * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* hunting/scatter phase. Some say,
+         * the original intention had been to randomize the scatter target of *all* ghosts in Ms. Pac-Man
+         * but because of a bug, only the scatter target of Blinky and Pinky would have been affected. Who knows?
+         * </p>
+         */
+        @Override
+        public void huntingBehaviour(Ghost ghost, GameLevel level) {
+            if (scatterPhase().isPresent() && scatterPhase().get() == 0
+                && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
+                roam(ghost, world, huntingSpeedPercentage(ghost, level), pseudoRandomDirection());
+            } else {
+                PACMAN.huntingBehaviour(ghost, level);
+            }
+        }
+
 
         @Override
         public boolean isBonusReached() {
@@ -155,104 +254,7 @@ public enum GameVariants implements GameModel {
             return movingBonus;
         }
 
-        @Override
-        public int[] huntingDurations(int levelNumber) {
-            return HUNTING_DURATIONS[levelNumber <= 4 ? 0 : 1];
-        }
 
-        @Override
-        public File highScoreFile() {
-            return HIGH_SCORE_FILE;
-        }
-
-        @Override
-        public void createAndStartLevel(int levelNumber, boolean demoLevel) {
-            checkLevelNumber(levelNumber);
-
-            if (demoLevel) {
-                world = createMsPacManWorld(1);
-                level = new GameLevel(1, true, LEVEL_DATA[0]);
-            } else {
-                int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
-                world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
-                level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex]);
-            }
-            initGhostHouseAccessControl();
-
-            pac = new Pac("Ms. Pac-Man");
-            ghosts = new Ghost[] {
-                new Ghost(RED_GHOST,    "Blinky"),
-                new Ghost(PINK_GHOST,   "Pinky"),
-                new Ghost(CYAN_GHOST,   "Inky"),
-                new Ghost(ORANGE_GHOST, "Sue")
-            };
-
-            pac.reset();
-            pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-            pac.setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
-            pac.setAutopilot(new RuleBasedPacSteering(this));
-            pac.setUseAutopilot(demoLevel);
-
-            ghosts().forEach(ghost -> {
-                ghost.reset();
-                ghost.setHouse(world.house());
-                ghost.setFrightenedBehavior(refugee ->
-                    roam(refugee, world, frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
-                ghost.setHuntingBehavior(this::huntingBehaviour);
-                ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
-                ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-                ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
-                ghost.setSpeedInsideHouse(PPS_GHOST_INHOUSE / (float) FPS);
-            });
-
-            huntingPhaseIndex = 0;
-            huntingTimer.resetIndefinitely();
-            bonusReachedIndex = -1;
-            bonusSymbols = List.of(nextBonusSymbol(levelNumber), nextBonusSymbol(levelNumber));
-            bonus = null;
-            numGhostsKilledInLevel = 0;
-
-            score.setLevelNumber(levelNumber);
-            if (levelNumber == 1) {
-                levelCounter.clear();
-            }
-            if (levelNumber <= 7) {
-                // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
-                // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
-                addSymbolToLevelCounter(bonusSymbol(0));
-            }
-            Logger.info("Level {} created ({})", levelNumber, this);
-            publishGameEvent(GameEventType.LEVEL_CREATED);
-
-            // At this point, the animations of Pac-Man and the ghosts must have been created!
-            letsGetReadyToRumble();
-            if (demoLevel) {
-                pac.show();
-                ghosts().forEach(Ghost::show);
-            } else {
-                pac.hide();
-                ghosts().forEach(Ghost::hide);
-            }
-            Logger.info("Level {} started ({})", levelNumber, this);
-            publishGameEvent(GameEventType.LEVEL_STARTED);
-        }
-
-        /**
-         * <p>
-         * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* hunting/scatter phase. Some say,
-         * the original intention had been to randomize the scatter target of *all* ghosts in Ms. Pac-Man
-         * but because of a bug, only the scatter target of Blinky and Pinky would have been affected. Who knows?
-         * </p>
-         */
-        @Override
-        public void huntingBehaviour(Ghost ghost, GameLevel level) {
-            if (scatterPhase().isPresent() && scatterPhase().get() == 0
-                && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-                roam(ghost, world, huntingSpeedPercentage(ghost, level), pseudoRandomDirection());
-            } else {
-                PACMAN.huntingBehaviour(ghost, level);
-            }
-        }
     },
 
     /**
@@ -268,30 +270,6 @@ public enum GameVariants implements GameModel {
             {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS, 1033 * FPS,       1, -1}, // Levels 2-4
             {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS,       1, -1}, // Levels 5+
         };
-
-        @Override
-        public boolean isBonusReached() {
-            return world.eatenFoodCount() == 70 || world.eatenFoodCount() == 170;
-        }
-
-        // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
-        @Override
-        public byte nextBonusSymbol(int levelNumber) {
-            return BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber < 13 ? levelNumber : 0];
-        }
-
-        @Override
-        public Optional<Bonus> createNextBonus(World world, Bonus existingBonus, int bonusIndex, byte symbol) {
-            var bonus = new StaticBonus(symbol, bonusValue(symbol));
-            bonus.entity().setPosition(ArcadeWorld.BONUS_POSITION);
-            bonus.setEdible(randomInt(9 * FPS, 10 * FPS));
-            return Optional.of(bonus);
-        }
-
-        @Override
-        public int bonusValue(byte symbol) {
-            return BONUS_VALUE_FACTORS[symbol] * 100;
-        }
 
         @Override
         public int[] huntingDurations(int levelNumber) {
@@ -398,6 +376,31 @@ public enum GameVariants implements GameModel {
                 followTarget(ghost, world, ghostScatterTarget(ghost.id()), relSpeed);
             }
         }
+
+        @Override
+        public boolean isBonusReached() {
+            return world.eatenFoodCount() == 70 || world.eatenFoodCount() == 170;
+        }
+
+        // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
+        @Override
+        public byte nextBonusSymbol(int levelNumber) {
+            return BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber < 13 ? levelNumber : 0];
+        }
+
+        @Override
+        public Optional<Bonus> createNextBonus(World world, Bonus existingBonus, int bonusIndex, byte symbol) {
+            var bonus = new StaticBonus(symbol, bonusValue(symbol));
+            bonus.entity().setPosition(ArcadeWorld.BONUS_POSITION);
+            bonus.setEdible(randomInt(9 * FPS, 10 * FPS));
+            return Optional.of(bonus);
+        }
+
+        @Override
+        public int bonusValue(byte symbol) {
+            return BONUS_VALUE_FACTORS[symbol] * 100;
+        }
+
     };
 
     // --- Common to all variants --------------------------------------------------------------------------------------
