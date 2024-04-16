@@ -200,7 +200,7 @@ public enum GameVariants implements GameModel {
                 ghost.reset();
                 ghost.setHouse(level.world().house());
                 ghost.setFrightenedBehavior(refugee ->
-                    roam(refugee, level.world(), level.frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
+                    roam(refugee, level.world(), frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
                 ghost.setHuntingBehavior(this::huntingBehaviour);
                 ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
@@ -352,7 +352,7 @@ public enum GameVariants implements GameModel {
                 ghost.reset();
                 ghost.setHouse(level.world().house());
                 ghost.setFrightenedBehavior(refugee ->
-                    roam(refugee, level.world(), level.frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
+                    roam(refugee, level.world(), frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
                 ghost.setHuntingBehavior(this::huntingBehaviour);
                 ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
@@ -400,7 +400,7 @@ public enum GameVariants implements GameModel {
         public void huntingBehaviour(Ghost ghost, GameLevel level) {
             byte relSpeed = huntingSpeedPercentage(ghost);
             if (chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0) {
-                followTarget(ghost, level.world(), level.chasingTarget(ghost.id()), relSpeed);
+                followTarget(ghost, level.world(), chasingTarget(ghost.id()), relSpeed);
             } else {
                 followTarget(ghost, level.world(), ghostScatterTarget(ghost.id()), relSpeed);
             }
@@ -533,6 +533,27 @@ public enum GameVariants implements GameModel {
             case ORANGE_GHOST -> SCATTER_TILE_SW;
             default -> throw new IllegalGhostIDException(ghostID);
         };
+    }
+
+    Vector2i chasingTarget(byte ghostID) {
+        return switch (ghostID) {
+            // Blinky: attacks Pac-Man directly
+            case RED_GHOST -> level.pac().tile();
+            // Pinky: ambushes Pac-Man
+            case PINK_GHOST -> level.pac().tilesAheadWithOverflowBug(4);
+            // Inky: attacks from opposite side as Blinky
+            case CYAN_GHOST -> level.pac().tilesAheadWithOverflowBug(2).scaled(2).minus(level.ghost(RED_GHOST).tile());
+            // Clyde/Sue: attacks directly but retreats if Pac is near
+            case ORANGE_GHOST -> level.ghost(ORANGE_GHOST).tile().euclideanDistance(level.pac().tile()) < 8
+                ? ArcadeWorld.SCATTER_TILE_SW
+                : level.pac().tile();
+            default -> throw new IllegalGhostIDException(ghostID);
+        };
+    }
+
+    public byte frightenedGhostRelSpeed(Ghost ghost) {
+        return level.world().isTunnel(ghost.tile())
+            ? level.ghostSpeedTunnelPercentage() : level.ghostSpeedFrightenedPercentage();
     }
 
 

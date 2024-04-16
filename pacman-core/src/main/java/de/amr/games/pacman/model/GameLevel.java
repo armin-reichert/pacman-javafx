@@ -6,11 +6,9 @@ package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.Pulse;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
@@ -133,25 +131,5 @@ public class GameLevel {
         }
         // when no states are given, return *all* ghosts (ghost.is() would return *no* ghosts!)
         return Stream.of(ghosts);
-    }
-
-    public Vector2i chasingTarget(byte ghostID) {
-        return switch (ghostID) {
-            // Blinky: attacks Pac-Man directly
-            case RED_GHOST -> pac.tile();
-            // Pinky: ambushes Pac-Man
-            case PINK_GHOST -> pac.tilesAheadWithOverflowBug(4);
-            // Inky: attacks from opposite side as Blinky
-            case CYAN_GHOST -> pac.tilesAheadWithOverflowBug(2).scaled(2).minus(ghosts[RED_GHOST].tile());
-            // Clyde/Sue: attacks directly but retreats if Pac is near
-            case ORANGE_GHOST -> ghosts[ORANGE_GHOST].tile().euclideanDistance(pac.tile()) < 8
-                ? ArcadeWorld.SCATTER_TILE_SW
-                : pac.tile();
-            default -> throw new IllegalGhostIDException(ghostID);
-        };
-    }
-
-    public byte frightenedGhostRelSpeed(Ghost ghost) {
-        return world.isTunnel(ghost.tile()) ? ghostSpeedTunnelPercentage() : ghostSpeedFrightenedPercentage();
     }
 }
