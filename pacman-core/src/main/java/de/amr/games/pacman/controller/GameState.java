@@ -146,12 +146,12 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            Globals.checkLevelNotNull(game.gameLevel());
+            Globals.checkLevelNotNull(game.level());
             if (timer.hasExpired()) {
                 setProperty("mazeFlashing", false);
-                if (game.gameLevel().demoLevel()) { // just in case demo level is completed: back to intro scene
+                if (game.level().demoLevel()) { // just in case demo level is completed: back to intro scene
                     gameController().changeState(INTRO);
-                } else if (game.gameLevel().intermissionNumber() > 0) {
+                } else if (game.level().intermissionNumber() > 0) {
                     gameController().changeState(INTERMISSION);
                 } else {
                     gameController().changeState(LEVEL_TRANSITION);
@@ -159,7 +159,7 @@ public enum GameState implements FsmState<GameModel> {
             } else if (timer.atSecond(1)) {
                 setProperty("mazeFlashing", true);
                 game.blinking().setStartPhase(Pulse.OFF);
-                game.blinking().restart(2 * game.gameLevel().numFlashes());
+                game.blinking().restart(2 * game.level().numFlashes());
             } else {
                 game.blinking().tick();
             }
@@ -170,7 +170,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartSeconds(1);
-            game.createAndStartLevel(game.gameLevel().levelNumber() + 1, false);
+            game.createAndStartLevel(game.level().levelNumber() + 1, false);
         }
 
         @Override

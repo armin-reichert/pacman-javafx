@@ -352,7 +352,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             case BOOT -> config.get("boot");
             case CREDIT -> config.get("credit");
             case INTRO -> config.get("intro");
-            case INTERMISSION -> config.get("cut" + game().gameLevel().intermissionNumber());
+            case INTERMISSION -> config.get("cut" + game().level().intermissionNumber());
             case INTERMISSION_TEST -> config.get("cut" + gameState().<Integer>getProperty("intermissionTestNumber"));
             default -> config.get("play");
         };
@@ -444,7 +444,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void onBonusEaten(GameEvent event) {
-        if (!game().gameLevel().demoLevel()) {
+        if (!game().level().demoLevel()) {
             playAudioClip("audio.bonus_eaten");
         }
     }
@@ -456,21 +456,21 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void onExtraLifeWon(GameEvent event) {
-        if (!game().gameLevel().demoLevel()) {
+        if (!game().level().demoLevel()) {
             playAudioClip("audio.extra_life");
         }
     }
 
     @Override
     public void onGhostEaten(GameEvent event) {
-        if (!game().gameLevel().demoLevel()) {
+        if (!game().level().demoLevel()) {
             playAudioClip("audio.ghost_eaten");
         }
     }
 
     @Override
     public void onHuntingPhaseStarted(GameEvent event) {
-        if (!game().gameLevel().demoLevel()) {
+        if (!game().level().demoLevel()) {
             game().scatterPhase().ifPresent(this::ensureSirenStarted);
         }
     }
@@ -481,7 +481,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (GameController.it().state() == GameState.INTERMISSION_TEST) {
             intermissionNumber = GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber");
         } else {
-            intermissionNumber = event.game.gameLevel().intermissionNumber();
+            intermissionNumber = event.game.level().intermissionNumber();
         }
         if (intermissionNumber != 0) {
             switch (game()) {
@@ -503,37 +503,37 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             case GameVariants.MS_PACMAN -> {
                 e.game.pac().setAnimations(new MsPacManGamePacAnimations(e.game.pac(), spriteSheet()));
                 e.game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, spriteSheet())));
-                Logger.info("Created Ms. Pac-Man game creature animations for level #{}", e.game.gameLevel().levelNumber());
+                Logger.info("Created Ms. Pac-Man game creature animations for level #{}", e.game.level().levelNumber());
             }
             case GameVariants.PACMAN -> {
                 e.game.pac().setAnimations(new PacManGamePacAnimations(e.game.pac(), spriteSheet()));
                 e.game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, spriteSheet())));
-                Logger.info("Created Pac-Man game creature animations for level #{}", e.game.gameLevel().levelNumber());
+                Logger.info("Created Pac-Man game creature animations for level #{}", e.game.level().levelNumber());
             }
             default -> throw new IllegalGameVariantException(e.game);
         }
-        if (!e.game.gameLevel().demoLevel()) {
+        if (!e.game.level().demoLevel()) {
             e.game.pac().setManualSteering(new KeyboardPacSteering());
         }
     }
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        if (!game().gameLevel().demoLevel() && game().gameLevel().levelNumber() == 1) {
+        if (!game().level().demoLevel() && game().level().levelNumber() == 1) {
             playAudioClip("audio.game_ready");
         }
     }
 
     @Override
     public void onPacDied(GameEvent event) {
-        if (game().gameLevel().demoLevel()) {
+        if (game().level().demoLevel()) {
             playAudioClip("audio.pacman_death");
         }
     }
 
     @Override
     public void onPacFoundFood(GameEvent event) {
-        if (!game().gameLevel().demoLevel()) {
+        if (!game().level().demoLevel()) {
             //TODO (fixme) this does not sound 100% as in the original game
             ensureAudioLoop("audio.pacman_munch", AudioClip.INDEFINITE);
         }
@@ -541,7 +541,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void onPacGetsPower(GameEvent event) {
-        if (!game().gameLevel().demoLevel()) {
+        if (!game().level().demoLevel()) {
             stopSirens();
             var clip = audioClip("audio.pacman_power");
             clip.stop();
@@ -552,7 +552,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void onPacLostPower(GameEvent event) {
-        if (!game().gameLevel().demoLevel()) {
+        if (!game().level().demoLevel()) {
             stopAudioClip("audio.pacman_power");
             ensureSirenStarted(game().huntingPhaseIndex() / 2);
         }
@@ -698,10 +698,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (gameState() == GameState.LEVEL_TRANSITION) {
             return;
         }
-        if (newLevelNumber > game().gameLevel().levelNumber()) {
+        if (newLevelNumber > game().level().levelNumber()) {
             stopAllSounds();
-            for (int n = game().gameLevel().levelNumber(); n < newLevelNumber - 1; ++n) {
-                game().createAndStartLevel(game().gameLevel().levelNumber() + 1, false);
+            for (int n = game().level().levelNumber(); n < newLevelNumber - 1; ++n) {
+                game().createAndStartLevel(game().level().levelNumber() + 1, false);
             }
             gameController().changeState(GameState.LEVEL_TRANSITION);
         }

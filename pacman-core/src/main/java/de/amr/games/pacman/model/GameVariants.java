@@ -49,7 +49,7 @@ public enum GameVariants implements GameModel {
             {7 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 1-4
             {5 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 5+
         };
-        @Override
+
         public int[] huntingDurations(int levelNumber) {
             return HUNTING_DURATIONS[levelNumber <= 4 ? 0 : 1];
         }
@@ -271,7 +271,6 @@ public enum GameVariants implements GameModel {
             {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS,       1, -1}, // Levels 5+
         };
 
-        @Override
         public int[] huntingDurations(int levelNumber) {
             checkLevelNumber(levelNumber);
             return switch (levelNumber) {
@@ -487,6 +486,8 @@ public enum GameVariants implements GameModel {
             (float) huntingTimer.duration() / GameModel.FPS, huntingTimer);
     }
 
+    abstract int[] huntingDurations(int levelNumber);
+
     @Override
     public byte huntingPhaseIndex() {
         return huntingPhaseIndex;
@@ -586,7 +587,7 @@ public enum GameVariants implements GameModel {
      * @param ghost a ghost
      * @return relative speed of ghost in percent of the base speed
      */
-    public byte huntingSpeedPercentage(Ghost ghost, GameLevel level) {
+    byte huntingSpeedPercentage(Ghost ghost, GameLevel level) {
         if (world.isTunnel(ghost.tile())) {
             return level.ghostSpeedTunnelPercentage();
         }
@@ -702,8 +703,7 @@ public enum GameVariants implements GameModel {
         Logger.trace("Global dot counter set to 0 and {}", enabled ? "enabled" : "disabled");
     }
 
-    @Override
-    public void updateDotCount() {
+    void updateDotCount() {
         if (globalDotCounterEnabled) {
             if (ghost(ORANGE_GHOST).inState(LOCKED) && globalDotCounter == 32) {
                 Logger.trace("{} inside house when global counter reached 32", ghost(ORANGE_GHOST).name());
@@ -720,8 +720,7 @@ public enum GameVariants implements GameModel {
         }
     }
 
-    @Override
-    public Ghost unlockGhost() {
+    Ghost unlockGhost() {
         // Important: Ghosts must be returned in order RED, PINK, CYAN, ORANGE
         Ghost prisoner = ghosts(LOCKED).findFirst().orElse(null);
         if (prisoner == null) {
@@ -1052,7 +1051,7 @@ public enum GameVariants implements GameModel {
     }
 
     @Override
-    public GameLevel gameLevel() {
+    public GameLevel level() {
         return level;
     }
 

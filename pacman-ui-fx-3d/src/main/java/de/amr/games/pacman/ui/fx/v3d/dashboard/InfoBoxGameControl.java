@@ -71,8 +71,8 @@ public class InfoBoxGameControl extends InfoBox {
         buttonsLevelActions[GAME_LEVEL_QUIT].setOnAction(e -> actionHandler().restartIntro());
         buttonsLevelActions[GAME_LEVEL_NEXT].setOnAction(e -> sceneContext.actionHandler().cheatEnterNextLevel());
         spinnerLevelNumber.valueProperty().addListener((py, ov, nv) -> actionHandler().enterLevel(nv));
-        spinnerLevelNumber.getValueFactory().setValue(sceneContext.game().gameLevel() != null
-            ? sceneContext.game().gameLevel().levelNumber() : 1);
+        spinnerLevelNumber.getValueFactory().setValue(sceneContext.game().level() != null
+            ? sceneContext.game().level().levelNumber() : 1);
         spinnerCredit.valueProperty().addListener((py, ov, nv) -> sceneContext.gameController().setCredit(nv));
         spinnerCredit.getValueFactory().setValue(sceneContext.gameController().credit());
         cbAutopilot.setOnAction(e -> actionHandler().toggleAutopilot());
@@ -89,13 +89,13 @@ public class InfoBoxGameControl extends InfoBox {
         cbAutopilot.setSelected(PY_USE_AUTOPILOT.get());
         cbImmunity.setSelected(sceneContext.gameController().isPacImmune());
         buttonsLevelActions[GAME_LEVEL_START].setDisable(!canStartLevel());
-        buttonsLevelActions[GAME_LEVEL_QUIT].setDisable(sceneContext.game().gameLevel() == null);
+        buttonsLevelActions[GAME_LEVEL_QUIT].setDisable(sceneContext.game().level() == null);
         buttonsLevelActions[GAME_LEVEL_NEXT].setDisable(!canEnterNextLevel());
         buttonsIntermissionTest[INTERMISSION_TEST_START].setDisable(
             sceneContext.gameState() == GameState.INTERMISSION_TEST || sceneContext.gameState() != GameState.INTRO);
         buttonsIntermissionTest[INTERMISSION_TEST_QUIT].setDisable(sceneContext.gameState() != GameState.INTERMISSION_TEST);
-        if (sceneContext.game().gameLevel() != null) {
-            spinnerLevelNumber.getValueFactory().setValue(sceneContext.game().gameLevel().levelNumber());
+        if (sceneContext.game().level() != null) {
+            spinnerLevelNumber.getValueFactory().setValue(sceneContext.game().level().levelNumber());
         }
         if (!sceneContext.game().isPlaying() || sceneContext.gameState() == GameState.LEVEL_TRANSITION) {
             spinnerLevelNumber.setDisable(true);

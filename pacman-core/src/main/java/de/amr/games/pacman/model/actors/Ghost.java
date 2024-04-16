@@ -335,7 +335,7 @@ public class Ghost extends Creature {
      * <p>
      */
     private void updateStateHuntingPac(GameModel game) {
-        huntingBehavior.accept(this, game.gameLevel());
+        huntingBehavior.accept(this, game.level());
     }
 
     // --- FRIGHTENED ---

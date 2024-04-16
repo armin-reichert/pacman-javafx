@@ -100,7 +100,7 @@ public abstract class InfoBox {
     }
 
     protected Supplier<String> ifLevelExists(Function<GameModel, String> infoSupplier) {
-        return () -> sceneContext.game().gameLevel() == null
+        return () -> sceneContext.game().level() == null
             ? InfoText.NO_INFO
             : infoSupplier.apply(sceneContext.game());
     }

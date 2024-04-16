@@ -144,12 +144,6 @@ public interface GameModel {
     Optional<Bonus> createNextBonus(World world, Bonus bonus, int bonusIndex, byte symbol);
 
     /**
-     * @param levelNumber game level number
-     * @return ticks per hunting phase (scatter1, chasing1, ..., scatter4, chasing4)
-     */
-    int[] huntingDurations(int levelNumber);
-
-    /**
      * @return File where high score is saved
      */
     File highScoreFile();
@@ -188,9 +182,6 @@ public interface GameModel {
 
     void onLevelCompleted();
 
-    // TODO remove from interface
-    void updateDotCount();
-
     GameState doHuntingStep();
 
     TickTimer huntingTimer();
@@ -206,8 +197,6 @@ public interface GameModel {
     String currentHuntingPhaseName();
 
     void doLevelTestStep(TickTimer timer, int lastTestedLevel);
-
-    Ghost unlockGhost();
 
     /**
      * @return Blinky's "cruise elroy" state. Values: <code>0, 1, 2, -1, -2</code>. (0=off, negative=disabled).
@@ -229,7 +218,7 @@ public interface GameModel {
      */
     void reset();
 
-    GameLevel gameLevel();
+    GameLevel level();
 
     World world();
 

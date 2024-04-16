@@ -41,7 +41,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        context.game().pac().setUseAutopilot(context.game().gameLevel().demoLevel() || PY_USE_AUTOPILOT.get());
+        context.game().pac().setUseAutopilot(context.game().level().demoLevel() || PY_USE_AUTOPILOT.get());
         updateSound();
     }
 
@@ -79,17 +79,17 @@ public class PlayScene2D extends GameScene2D {
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         switch (context.game()) {
             case GameVariants.MS_PACMAN ->
-                drawMsPacManMaze(context.game(), ArcadeWorld.mazeNumberMsPacMan(context.game().gameLevel().levelNumber()), flashing);
+                drawMsPacManMaze(context.game(), ArcadeWorld.mazeNumberMsPacMan(context.game().level().levelNumber()), flashing);
             case GameVariants.PACMAN -> drawPacManMaze(context.game(), flashing);
             default -> throw new IllegalGameVariantException(context.game());
         }
-        if (context.game().gameLevel().demoLevel() || context.gameState() == GameState.GAME_OVER) {
+        if (context.game().level().demoLevel() || context.gameState() == GameState.GAME_OVER) {
             // text "GAME OVER" is also drawn in demo mode
             drawText("GAME  OVER", Color.RED, sceneFont(8), t(9), t(21));
         } else {
             switch (context.gameState()) {
                 case READY      -> drawText("READY!", Color.YELLOW, sceneFont(8), t(11), t(21));
-                case LEVEL_TEST -> drawText("TEST    L" + context.game().gameLevel().levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(21));
+                case LEVEL_TEST -> drawText("TEST    L" + context.game().level().levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(21));
             }
         }
         context.game().bonus().ifPresent(this::drawBonus);
@@ -173,13 +173,13 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onSceneVariantSwitch() {
-        if (!context.game().gameLevel().demoLevel() && context.gameState() == GameState.HUNTING) {
+        if (!context.game().level().demoLevel() && context.gameState() == GameState.HUNTING) {
             context.ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
         }
     }
 
     private void updateSound() {
-        if (context.game().gameLevel().demoLevel()) {
+        if (context.game().level().demoLevel()) {
             return;
         }
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure

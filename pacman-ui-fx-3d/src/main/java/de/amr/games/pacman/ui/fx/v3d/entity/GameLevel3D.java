@@ -120,8 +120,8 @@ public class GameLevel3D extends Group {
         World world = context.game().world();
         switch (context.game()) {
             case GameVariants.MS_PACMAN -> {
-                int mapNumber  = ArcadeWorld.mapNumberMsPacMan(context.game().gameLevel().levelNumber());
-                int mazeNumber = ArcadeWorld.mazeNumberMsPacMan(context.game().gameLevel().levelNumber());
+                int mapNumber  = ArcadeWorld.mapNumberMsPacMan(context.game().level().levelNumber());
+                int mazeNumber = ArcadeWorld.mazeNumberMsPacMan(context.game().level().levelNumber());
                 floorPlan = readFloorPlanFromFile(GameVariants.MS_PACMAN, mapNumber);
                 wallBuilder = createWallBuilder(
                     context.theme().color("mspacman.maze.wallBaseColor",  mazeNumber - 1),
@@ -416,7 +416,7 @@ public class GameLevel3D extends Group {
             context.theme(),
             ghost,
             context.game().pac(),
-            context.game().gameLevel().numFlashes(),
+            context.game().level().numFlashes(),
             GHOST_SIZE);
     }
 
@@ -483,10 +483,10 @@ public class GameLevel3D extends Group {
     }
 
     public Transition createLevelCompleteAnimation() {
-        if (context.game().gameLevel().numFlashes() == 0) {
+        if (context.game().level().numFlashes() == 0) {
             return pauseSeconds(1.0);
         }
-        var animation = new SinusCurveAnimation(context.game().gameLevel().numFlashes());
+        var animation = new SinusCurveAnimation(context.game().level().numFlashes());
         animation.setOnFinished(e -> wallHeightPy.bind(PY_3D_WALL_HEIGHT));
         animation.setAmplitude(wallHeightPy.get());
         animation.elongationPy.set(wallHeightPy.get());
