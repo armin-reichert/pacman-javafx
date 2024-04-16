@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.scene3d;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
@@ -12,6 +13,7 @@ import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
@@ -180,13 +182,15 @@ public class PlayScene3D implements GameScene {
             return;
         }
         GameLevel level = context.gameLevel().get();
+        World world = context.game().world();
+        checkNotNull(world);
 
         level3D = new GameLevel3D(context);
         // replace initial placeholder or previous 3D level
         subSceneRoot.getChildren().set(CHILD_INDEX_LEVEL_3D, level3D);
 
-        level3D.setTranslateX(-level.world().numCols() * HTS);
-        level3D.setTranslateY(-level.world().numRows() * HTS);
+        level3D.setTranslateX(-world.numCols() * HTS);
+        level3D.setTranslateY(-world.numRows() * HTS);
 
         scores3D.setTranslateX(level3D.getTranslateX() + TS);
         scores3D.setTranslateY(level3D.getTranslateY() -3.5 * TS);
@@ -222,11 +226,12 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onSceneVariantSwitch() {
         context.gameLevel().ifPresent(level -> {
+            World world = context.game().world();
             if (level3D == null) {
                 replaceGameLevel3D();
             }
             level3D.allEatables().forEach(
-                eatable3D -> eatable3D.root().setVisible(!level.world().hasEatenFoodAt(eatable3D.tile())));
+                eatable3D -> eatable3D.root().setVisible(!world.hasEatenFoodAt(eatable3D.tile())));
             if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
                 level3D.startEnergizerAnimation();
             }
@@ -244,8 +249,8 @@ public class PlayScene3D implements GameScene {
                 context.stopAllSounds();
                 if (level3D != null) {
                     context.gameLevel().ifPresent(level -> {
-                        level3D.pac3D().init(level.world());
-                        level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level.world()));
+                        level3D.pac3D().init(context.game().world());
+                        level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context.game().world()));
                         level3D.stopEnergizerAnimation();
                         level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                         level3D.livesCounter3D().stopAnimation();
@@ -257,8 +262,8 @@ public class PlayScene3D implements GameScene {
             case HUNTING -> {
                 assertLevel3DExists();
                 context.gameLevel().ifPresent(level -> {
-                    level3D.pac3D().init(level.world());
-                    level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level.world()));
+                    level3D.pac3D().init(context.game().world());
+                    level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context.game().world()));
                     level3D.livesCounter3D().startAnimation();
                     level3D.startEnergizerAnimation();
                 });
@@ -270,7 +275,7 @@ public class PlayScene3D implements GameScene {
                     context.stopAllSounds();
                     var animation = switch (context.game()) {
                         case GameVariants.MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
-                        case GameVariants.PACMAN -> level3D.pac3D().createPacManDyingAnimation(level.world());
+                        case GameVariants.PACMAN -> level3D.pac3D().createPacManDyingAnimation(context.game().world());
                         default -> throw new IllegalGameVariantException(context.game());
                     };
                     lockGameStateAndPlayAfterSeconds(1.0, animation);
@@ -295,7 +300,7 @@ public class PlayScene3D implements GameScene {
                         case GameVariants.PACMAN    -> context.<PacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
                         default -> throw new IllegalGameVariantException(context.game());
                     };
-                    level.eventLog().killedGhosts.forEach(ghost -> {
+                    GameController.it().eventLog().killedGhosts.forEach(ghost -> {
                         int index = context.game().pac().victims().indexOf(ghost);
                         var numberImage = context.spriteSheet().subImage(sprites[index]);
                         level3D.ghosts3D().get(ghost.id()).setNumberImage(numberImage);
@@ -319,7 +324,7 @@ public class PlayScene3D implements GameScene {
                     assertLevel3DExists();
                     context.gameState().timer().restartSeconds(3);
                     replaceGameLevel3D();
-                    level3D.pac3D().init(level.world());
+                    level3D.pac3D().init(context.game().world());
                     currentCamController().reset(fxSubScene.getCamera());
                 });
 
@@ -330,8 +335,8 @@ public class PlayScene3D implements GameScene {
                     context.game().pac().show();
                     context.game().ghosts().forEach(Ghost::show);
                     replaceGameLevel3D();
-                    level3D.pac3D().init(level.world());
-                    level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(level.world()));
+                    level3D.pac3D().init(context.game().world());
+                    level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context.game().world()));
                     showLevelMessage(level);
                 });
 
@@ -380,20 +385,19 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onPacFoundFood(GameEvent event) {
         assertLevel3DExists();
-        context.gameLevel().ifPresent(level -> {
-            // When cheat "eat all pellets" has been used, no tile is present in the event.
-            // In that case, ensure that the 3D pellets are in sync with the model.
-            if (event.tile().isEmpty()) {
-                level.world().tiles()
-                    .filter(level.world()::hasEatenFoodAt)
-                    .map(level3D::eatableAt)
-                    .flatMap(Optional::stream)
-                    .forEach(Eatable3D::onEaten);
-            } else {
-                Vector2i tile = event.tile().get();
-                level3D.eatableAt(tile).ifPresent(level3D::eat);
-            }
-        });
+        World world = context.game().world();
+        // When cheat "eat all pellets" has been used, no tile is present in the event.
+        // In that case, ensure that the 3D pellets are in sync with the model.
+        if (event.tile().isEmpty()) {
+            world.tiles()
+                .filter(world::hasEatenFoodAt)
+                .map(level3D::eatableAt)
+                .flatMap(Optional::stream)
+                .forEach(Eatable3D::onEaten);
+        } else {
+            Vector2i tile = event.tile().get();
+            level3D.eatableAt(tile).ifPresent(level3D::eat);
+        }
     }
 
     @Override
@@ -415,11 +419,13 @@ public class PlayScene3D implements GameScene {
     }
 
     private void showLevelMessage(GameLevel level) {
+        World world = context.game().world();
+        checkNotNull(world);
         if (context.gameState() == GameState.LEVEL_TEST) {
             level3D.showMessage("TEST LEVEL " + level.levelNumber, 5,
-                level.world().numCols() * HTS, (level.world().numRows() - 2) * TS);
+                world.numCols() * HTS, (world.numRows() - 2) * TS);
         } else if (!level.isDemoLevel()) {
-            var house = level.world().house();
+            var house = world.house();
             double x = TS * (house.topLeftTile().x() + 0.5 * house.size().x());
             double y = TS * (house.topLeftTile().y() +       house.size().y());
             double seconds = context.game().isPlaying() ? 0.5 : 2.5;

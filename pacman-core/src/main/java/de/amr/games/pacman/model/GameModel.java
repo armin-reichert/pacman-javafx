@@ -234,6 +234,8 @@ public interface GameModel {
      */
     Optional<GameLevel> level();
 
+    World world();
+
     /**
      * @return Number of lives at game start
      */

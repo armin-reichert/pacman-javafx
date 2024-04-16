@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Steering;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
 
 import java.util.ArrayList;
@@ -140,20 +141,24 @@ public class Pac extends Creature {
         selectAnimation(ANIM_MUNCHING);
     }
 
-    public void update(GameLevel level) {
+    public void update(GameModel game) {
         if (dead || restingTicks == REST_INDEFINITE) {
             return;
         }
+        if (game.level().isEmpty()) {
+            throw new IllegalStateException("Cannot update Pac-Man, no level exists");
+        }
+        GameLevel level = game.level().get();
         if (restingTicks == 0) {
             setPercentageSpeed(powerTimer.isRunning()
                 ? level.pacSpeedPoweredPercentage()
                 : level.pacSpeedPercentage());
             if (useAutopilot) {
-                autopilot.steer(this, level.world());
+                autopilot.steer(this, game.world());
             } else {
-                manualSteering.steer(this, level.world());
+                manualSteering.steer(this, game.world());
             }
-            tryMoving(this, level.world());
+            tryMoving(this, game.world());
             if (moveResult.moved) {
                 startAnimation();
             } else {

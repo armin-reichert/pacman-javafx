@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.actors;
 
-import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 
 /**
  * @author Armin Reichert
@@ -47,9 +47,9 @@ public interface Bonus {
     /**
      * Updates the bonus state.
      *
-     * @param level current game level
+     * @param game current game variant
      */
-    void update(GameLevel level);
+    void update(GameModel game);
 
     /**
      * Changes the bonus state to STATE_INACTIVE.

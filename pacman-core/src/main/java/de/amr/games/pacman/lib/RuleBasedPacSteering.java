@@ -129,7 +129,7 @@ public class RuleBasedPacSteering implements Steering {
         }
 
         // when not escaping ghost, keep move direction at least until next intersection
-        if (pac.moveResult.moved && !level.world().isIntersection(pac.tile()))
+        if (pac.moveResult.moved && !game.world().isIntersection(pac.tile()))
             return;
 
         if (!data.frightenedGhosts.isEmpty() && pac.powerTimer().remaining() >= GameModel.FPS) {
@@ -144,7 +144,7 @@ public class RuleBasedPacSteering implements Steering {
             pac.setTargetTile(findTileFarthestFromGhosts(findNearestFoodTiles(level)));
         }
         pac.targetTile().ifPresent(target -> {
-            CreatureMovement.navigateTowardsTarget(pac, level.world());
+            CreatureMovement.navigateTowardsTarget(pac, game.world());
             Logger.trace("Navigated towards {}, moveDir={} wishDir={}", pac.targetTile(), pac.moveDir(), pac.wishDir());
         });
     }
@@ -165,10 +165,10 @@ public class RuleBasedPacSteering implements Steering {
         boolean energizerFound = false;
         for (int i = 1; i <= CollectedData.MAX_GHOST_AHEAD_DETECTION_DIST; ++i) {
             Vector2i ahead = pacManTile.plus(pac.moveDir().vector().scaled(i));
-            if (!pac.canAccessTile(ahead, level.world())) {
+            if (!pac.canAccessTile(ahead, game.world())) {
                 break;
             }
-            if (level.world().isEnergizerTile(ahead) && !level.world().hasEatenFoodAt(ahead)) {
+            if (game.world().isEnergizerTile(ahead) && !game.world().hasEatenFoodAt(ahead)) {
                 energizerFound = true;
             }
             var aheadLeft = ahead.plus(pac.moveDir().nextAntiClockwise().vector());
@@ -192,7 +192,7 @@ public class RuleBasedPacSteering implements Steering {
         var pacManTile = pac.tile();
         for (int i = 1; i <= CollectedData.MAX_GHOST_BEHIND_DETECTION_DIST; ++i) {
             var behind = pacManTile.plus(pac.moveDir().opposite().vector().scaled(i));
-            if (!pac.canAccessTile(behind, level.world())) {
+            if (!pac.canAccessTile(behind, game.world())) {
                 break;
             }
             Iterable<Ghost> huntingGhosts = game.ghosts(GhostState.HUNTING_PAC)::iterator;
@@ -214,13 +214,13 @@ public class RuleBasedPacSteering implements Steering {
                 continue;
             }
             Vector2i neighbor = pacManTile.plus(dir.vector());
-            if (pac.canAccessTile(neighbor, level.world())) {
+            if (pac.canAccessTile(neighbor, game.world())) {
                 escapes.add(dir);
             }
         }
         for (Direction escape : escapes) {
             Vector2i escapeTile = pacManTile.plus(escape.vector());
-            if (level.world().isTunnel(escapeTile)) {
+            if (game.world().isTunnel(escapeTile)) {
                 return escape;
             }
         }
@@ -233,14 +233,14 @@ public class RuleBasedPacSteering implements Steering {
         List<Vector2i> foodTiles = new ArrayList<>();
         Vector2i pacManTile = pac.tile();
         float minDist = Float.MAX_VALUE;
-        for (int x = 0; x < level.world().numCols(); ++x) {
-            for (int y = 0; y < level.world().numRows(); ++y) {
+        for (int x = 0; x < game.world().numCols(); ++x) {
+            for (int y = 0; y < game.world().numRows(); ++y) {
                 Vector2i tile = new Vector2i(x, y);
-                if (!level.world().isFoodTile(tile) || level.world().hasEatenFoodAt(tile)) {
+                if (!game.world().isFoodTile(tile) || game.world().hasEatenFoodAt(tile)) {
                     continue;
                 }
-                if (level.world().isEnergizerTile(tile) && pac.powerTimer().remaining() > 2 * 60
-                    && level.world().uneatenFoodCount() > 1) {
+                if (game.world().isEnergizerTile(tile) && pac.powerTimer().remaining() > 2 * 60
+                    && game.world().uneatenFoodCount() > 1) {
                     continue;
                 }
                 float dist = pacManTile.manhattanDistance(tile);

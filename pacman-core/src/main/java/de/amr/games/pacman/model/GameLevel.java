@@ -24,16 +24,13 @@ public class GameLevel {
     public final boolean demoLevel;
 
     private final byte[] data;
-    private final World world;
     private final Pulse blinking;
 
-    public GameLevel(int levelNumber, boolean demoLevel, byte[] data, World world) {
+    public GameLevel(int levelNumber, boolean demoLevel, byte[] data) {
         checkLevelNumber(levelNumber);
         checkNotNull(data);
-        checkNotNull(world);
         this.levelNumber = levelNumber;
         this.demoLevel = demoLevel;
-        this.world = world;
         this.data = data;
         blinking = new Pulse(10, false);
         Logger.trace("Game level {} created.", this.levelNumber);
@@ -123,24 +120,11 @@ public class GameLevel {
         return data[11];
     }
 
-    public GameModel game() {
-        return GameController.it().game();
-    }
-
-    public SimulationStepEventLog eventLog() {
-        return GameController.it().eventLog();
-    }
-
     public boolean isDemoLevel() {
         return demoLevel;
-    }
-
-    public World world() {
-        return world;
     }
 
     public Pulse blinking() {
         return blinking;
     }
-
 }

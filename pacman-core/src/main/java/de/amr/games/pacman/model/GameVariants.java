@@ -52,7 +52,7 @@ public enum GameVariants implements GameModel {
 
         @Override
         public boolean isBonusReached() {
-            return level.world().eatenFoodCount() == 64 || level.world().eatenFoodCount() == 176;
+            return world.eatenFoodCount() == 64 || world.eatenFoodCount() == 176;
         }
 
         /**
@@ -170,11 +170,12 @@ public enum GameVariants implements GameModel {
             checkLevelNumber(levelNumber);
 
             if (demoLevel) {
-                level = new GameLevel(1, true, LEVEL_DATA[0], createMsPacManWorld(1));
+                world = createMsPacManWorld(1);
+                level = new GameLevel(1, true, LEVEL_DATA[0]);
             } else {
                 int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
-                level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex],
-                    createMsPacManWorld(mapNumberMsPacMan(levelNumber)));
+                world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
+                level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex]);
             }
             initGhostHouseAccessControl();
 
@@ -194,9 +195,9 @@ public enum GameVariants implements GameModel {
 
             ghosts().forEach(ghost -> {
                 ghost.reset();
-                ghost.setHouse(level.world().house());
+                ghost.setHouse(world.house());
                 ghost.setFrightenedBehavior(refugee ->
-                    roam(refugee, level.world(), frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
+                    roam(refugee, world, frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
                 ghost.setHuntingBehavior(this::huntingBehaviour);
                 ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
@@ -247,7 +248,7 @@ public enum GameVariants implements GameModel {
         public void huntingBehaviour(Ghost ghost, GameLevel level) {
             if (scatterPhase().isPresent() && scatterPhase().get() == 0
                 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-                roam(ghost, level.world(), huntingSpeedPercentage(ghost, level), pseudoRandomDirection());
+                roam(ghost, world, huntingSpeedPercentage(ghost, level), pseudoRandomDirection());
             } else {
                 PACMAN.huntingBehaviour(ghost, level);
             }
@@ -270,7 +271,7 @@ public enum GameVariants implements GameModel {
 
         @Override
         public boolean isBonusReached() {
-            return level.world().eatenFoodCount() == 70 || level.world().eatenFoodCount() == 170;
+            return world.eatenFoodCount() == 70 || world.eatenFoodCount() == 170;
         }
 
         // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
@@ -311,11 +312,12 @@ public enum GameVariants implements GameModel {
         public void createAndStartLevel(int levelNumber, boolean demoLevel) {
             checkLevelNumber(levelNumber);
 
+            world = createPacManWorld();
             if (demoLevel) {
-                level = new GameLevel(1, true, LEVEL_DATA[0], createPacManWorld());
+                level = new GameLevel(1, true, LEVEL_DATA[0]);
             } else {
                 int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
-                level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex], createPacManWorld());
+                level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex]);
             }
             initGhostHouseAccessControl();
 
@@ -340,9 +342,9 @@ public enum GameVariants implements GameModel {
 
             ghosts().forEach(ghost -> {
                 ghost.reset();
-                ghost.setHouse(level.world().house());
+                ghost.setHouse(world.house());
                 ghost.setFrightenedBehavior(refugee ->
-                    roam(refugee, level.world(), frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
+                    roam(refugee, world, frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
                 ghost.setHuntingBehavior(this::huntingBehaviour);
                 ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
@@ -391,9 +393,9 @@ public enum GameVariants implements GameModel {
         public void huntingBehaviour(Ghost ghost, GameLevel level) {
             byte relSpeed = huntingSpeedPercentage(ghost, level);
             if (chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0) {
-                followTarget(ghost, level.world(), chasingTarget(ghost.id()), relSpeed);
+                followTarget(ghost, world, chasingTarget(ghost.id()), relSpeed);
             } else {
-                followTarget(ghost, level.world(), ghostScatterTarget(ghost.id()), relSpeed);
+                followTarget(ghost, world, ghostScatterTarget(ghost.id()), relSpeed);
             }
         }
     };
@@ -407,6 +409,7 @@ public enum GameVariants implements GameModel {
     final Score highScore = new Score();
 
     GameLevel level;
+    World world;
     boolean playing;
     short initialLives = 3;
     short lives;
@@ -565,7 +568,7 @@ public enum GameVariants implements GameModel {
     }
 
     public byte frightenedGhostRelSpeed(Ghost ghost) {
-        return level.world().isTunnel(ghost.tile())
+        return world.isTunnel(ghost.tile())
             ? level.ghostSpeedTunnelPercentage() : level.ghostSpeedFrightenedPercentage();
     }
 
@@ -575,7 +578,7 @@ public enum GameVariants implements GameModel {
      * @return relative speed of ghost in percent of the base speed
      */
     public byte huntingSpeedPercentage(Ghost ghost, GameLevel level) {
-        if (level.world().isTunnel(ghost.tile())) {
+        if (world.isTunnel(ghost.tile())) {
             return level.ghostSpeedTunnelPercentage();
         }
         if (ghost.id() == RED_GHOST && cruiseElroyState == 1) {
@@ -701,7 +704,7 @@ public enum GameVariants implements GameModel {
                 Logger.trace("Global dot counter = {}", globalDotCounter);
             }
         } else {
-            ghosts(LOCKED).filter(ghost -> ghost.insideHouse(level.world().house())).findFirst().ifPresent(ghost -> {
+            ghosts(LOCKED).filter(ghost -> ghost.insideHouse(world.house())).findFirst().ifPresent(ghost -> {
                 dotCounters[ghost.id()]++;
                 Logger.trace("{} dot counter = {}", ghost.name(), dotCounters[ghost.id()]);
             });
@@ -811,7 +814,7 @@ public enum GameVariants implements GameModel {
             if (timer.tick() > 2 * FPS) {
                 level.blinking().tick();
                 ghosts().forEach(ghost -> ghost.update(this));
-                bonus().ifPresent(bonus -> bonus.update(level));
+                bonus().ifPresent(bonus -> bonus.update(this));
             }
             if (timer.atSecond(1.0)) {
                 letsGetReadyToRumble();
@@ -824,7 +827,7 @@ public enum GameVariants implements GameModel {
                 onBonusReached(0);
             } else if (timer.atSecond(3.5)) {
                 bonus().ifPresent(bonus -> bonus.setEaten(120));
-                level.game().publishGameEvent(GameEventType.BONUS_EATEN);
+                publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer.atSecond(4.5)) {
                 bonus().ifPresent(Bonus::setInactive); // needed?
                 onBonusReached(1);
@@ -871,7 +874,7 @@ public enum GameVariants implements GameModel {
         if (index < 0 || index > 1) {
             throw new IllegalArgumentException("Bonus index must be 0 or 1");
         }
-        bonus = createNextBonus(level.world(), bonus, index, bonusSymbol(index)).orElse(null);
+        bonus = createNextBonus(world, bonus, index, bonusSymbol(index)).orElse(null);
         if (bonus != null) {
             publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
         }
@@ -886,10 +889,10 @@ public enum GameVariants implements GameModel {
 
     private void updateFood() {
         final Vector2i pacTile = pac().tile();
-        if (level.world().hasFoodAt(pacTile)) {
+        if (world.hasFoodAt(pacTile)) {
             eventLog().foodFoundTile = pacTile;
             pac().endStarving();
-            if (level.world().isEnergizerTile(pacTile)) {
+            if (world.isEnergizerTile(pacTile)) {
                 eventLog().energizerFound = true;
                 pac().setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
                 pac().victims().clear();
@@ -901,10 +904,10 @@ public enum GameVariants implements GameModel {
                 scorePoints(GameModel.POINTS_PELLET);
             }
             updateDotCount();
-            level.world().eatFoodAt(pacTile);
-            if (level.world().uneatenFoodCount() == level.elroy1DotsLeft()) {
+            world.eatFoodAt(pacTile);
+            if (world.uneatenFoodCount() == level.elroy1DotsLeft()) {
                 setCruiseElroyState(1);
-            } else if (level.world().uneatenFoodCount() == level.elroy2DotsLeft()) {
+            } else if (world.uneatenFoodCount() == level.elroy2DotsLeft()) {
                 setCruiseElroyState(2);
             }
             if (isBonusReached()) {
@@ -919,7 +922,7 @@ public enum GameVariants implements GameModel {
     }
 
     private void updatePac() {
-        pac().update(level);
+        pac().update(this);
         if (pac().powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS) {
             eventLog().pacStartsLosingPower = true;
             publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
@@ -958,7 +961,7 @@ public enum GameVariants implements GameModel {
             eventLog().bonusEaten = true;
             publishGameEvent(GameEventType.BONUS_EATEN);
         } else {
-            bonus.update(level);
+            bonus.update(this);
         }
     }
 
@@ -974,7 +977,7 @@ public enum GameVariants implements GameModel {
     private void updateGhosts() {
         Ghost unlockedGhost = unlockGhost();
         if (unlockedGhost != null) {
-            if (unlockedGhost.insideHouse(level.world().house())) {
+            if (unlockedGhost.insideHouse(world.house())) {
                 unlockedGhost.setState(LEAVING_HOUSE);
             } else {
                 unlockedGhost.setMoveAndWishDir(LEFT);
@@ -998,7 +1001,7 @@ public enum GameVariants implements GameModel {
         level.blinking().tick();
 
         // what next?
-        if (level.world().uneatenFoodCount() == 0) {
+        if (world.uneatenFoodCount() == 0) {
             return GameState.LEVEL_COMPLETE;
         }
         var killers = ghosts(HUNTING_PAC).filter(pac()::sameTile).toList();
@@ -1042,6 +1045,11 @@ public enum GameVariants implements GameModel {
     @Override
     public Optional<GameLevel> level() {
         return Optional.ofNullable(level);
+    }
+
+    @Override
+    public World world() {
+        return world;
     }
 
     @Override

@@ -7,6 +7,7 @@ package de.amr.games.pacman.model.actors;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
@@ -115,15 +116,19 @@ public class MovingBonus extends Creature implements Bonus {
         Logger.trace("Bonus edible: {}", this);
     }
 
-    private void updateStateEdible(GameLevel level) {
-        steering.steer(this, level.world());
+    private void updateStateEdible(GameModel game) {
+        if (game.level().isEmpty()) {
+            throw new IllegalStateException("Cannot update MovingBonus, no level exists");
+        }
+        GameLevel level = game.level().get();
+        steering.steer(this, game.world());
         if (steering.isComplete()) {
             Logger.trace("Moving bonus reached target: {}", this);
             setInactive();
-            level.game().publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
+            game.publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
         } else {
-            navigateTowardsTarget(this, level.world());
-            tryMoving(this, level.world());
+            navigateTowardsTarget(this, game.world());
+            tryMoving(this, game.world());
             animation.tick();
         }
     }
@@ -136,22 +141,22 @@ public class MovingBonus extends Creature implements Bonus {
         Logger.trace("Bonus eaten: {}", this);
     }
 
-    private void updateStateEaten(GameLevel level) {
+    private void updateStateEaten(GameModel game) {
         if (countdown == 0) {
             Logger.trace("Bonus expired: {}", this);
             setInactive();
-            level.game().publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
+            game.publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
         } else if (countdown != TickTimer.INDEFINITE) {
             --countdown;
         }
     }
 
     @Override
-    public void update(GameLevel level) {
+    public void update(GameModel game) {
         switch (state) {
             case STATE_INACTIVE -> {}
-            case STATE_EDIBLE   -> updateStateEdible(level);
-            case STATE_EATEN    -> updateStateEaten(level);
+            case STATE_EDIBLE   -> updateStateEdible(game);
+            case STATE_EATEN    -> updateStateEaten(game);
             default             -> throw new IllegalStateException("Unknown bonus state: " + state);
         }
     }

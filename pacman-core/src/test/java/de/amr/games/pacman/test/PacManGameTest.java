@@ -49,15 +49,15 @@ public class PacManGameTest {
 
         var level = game.level().get();
         assertEquals(1, level.levelNumber);
-        assertEquals(0, level.pac().victims().size());
+        assertEquals(0, game.pac().victims().size());
 
-        assertNotNull(level.world());
-        var world = level.world();
+        var world = game.world();
+        assertNotNull(world);
         assertEquals(ArcadeWorld.TILES_X, world.numCols());
         assertEquals(ArcadeWorld.TILES_Y, world.numRows());
 
         for (var id: List.of(RED_GHOST, PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)) {
-            var ghost = level.ghost(id);
+            var ghost = game.ghost(id);
             assertEquals(0f, ghost.velocity().length(), 0);
             assertEquals(GHOST_POSITIONS_ON_START[ghost.id()], ghost.position());
             assertEquals(GHOST_DIRECTIONS_ON_START[ghost.id()], ghost.moveDir());
@@ -68,7 +68,7 @@ public class PacManGameTest {
     @Test
     public void testPacCreatedAndInitialized() {
         game.level().ifPresent(level -> {
-            var pac = level.pac();
+            var pac = game.pac();
             assertEquals(0, pac.starvingTicks());
         });
     }
@@ -76,7 +76,7 @@ public class PacManGameTest {
     @Test
     public void testPacStarving() {
         game.level().ifPresent(level -> {
-            var pac = level.pac();
+            var pac = game.pac();
             pac.starve();
             assertEquals(1, pac.starvingTicks());
             pac.starve();
@@ -87,7 +87,7 @@ public class PacManGameTest {
     @Test
     public void testDeadPacHasZeroSpeed() {
         game.level().ifPresent(level -> {
-            var pac = level.pac();
+            var pac = game.pac();
             pac.setSpeed(42);
             assertEquals(42.0, pac.velocity().length(), Vector2f.EPSILON);
             pac.die();

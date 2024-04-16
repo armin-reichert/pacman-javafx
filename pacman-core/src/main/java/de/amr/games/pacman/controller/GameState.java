@@ -263,7 +263,7 @@ public enum GameState implements FsmState<GameModel> {
                     case TICK_HIDE_PAC -> game.pac().hide();
                     default -> {
                         level.blinking().tick();
-                        game.pac().update(level);
+                        game.pac().update(game);
                     }
                 }
             });

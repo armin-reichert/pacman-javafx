@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.world.ArcadeWorld;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.page.GamePage;
 import de.amr.games.pacman.ui.fx.page.Page;
 import de.amr.games.pacman.ui.fx.page.StartPage;
@@ -740,10 +741,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     @Override
     public void cheatEatAllPellets() {
         if (game().isPlaying() && gameState() == GameState.HUNTING) {
-            gameLevel().ifPresent(level -> {
-                level.world().tiles().filter(not(level.world()::isEnergizerTile)).forEach(level.world()::eatFoodAt);
-                game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
-            });
+            World world = game().world();
+            world.tiles().filter(not(world::isEnergizerTile)).forEach(world::eatFoodAt);
+            game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
         }
     }
 
@@ -761,11 +761,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     @Override
     public void cheatEnterNextLevel() {
         if (game().isPlaying() && gameState() == GameState.HUNTING) {
-            gameLevel().ifPresent(level -> {
-                stopAllSounds();
-                level.world().tiles().forEach(level.world()::eatFoodAt);
-                gameController().changeState(GameState.LEVEL_COMPLETE);
-            });
+            World world = game().world();
+            stopAllSounds();
+            world.tiles().forEach(world::eatFoodAt);
+            gameController().changeState(GameState.LEVEL_COMPLETE);
         }
     }
 

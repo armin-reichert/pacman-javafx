@@ -394,8 +394,8 @@ public class Ghost extends Creature {
             game.level().ifPresent(level -> {
                 setSpeed(speedReturningToHouse);
                 setTargetTile(house.door().leftWing());
-                navigateTowardsTarget(this, level.world());
-                tryMoving(this, level.world());
+                navigateTowardsTarget(this, game.world());
+                tryMoving(this, game.world());
             });
         }
     }

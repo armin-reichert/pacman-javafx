@@ -6,7 +6,7 @@ package de.amr.games.pacman.model.actors;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.TickTimer;
-import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 import org.tinylog.Logger;
 
 
@@ -89,13 +89,13 @@ public class StaticBonus extends Entity implements Bonus {
     }
 
     @Override
-    public void update(GameLevel level) {
+    public void update(GameModel game) {
         switch (state) {
             case STATE_INACTIVE -> {}
             case STATE_EDIBLE, STATE_EATEN -> {
                 if (countdown == 0) {
                     setInactive();
-                    level.game().publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
+                    game.publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
                 } else if (countdown != TickTimer.INDEFINITE) {
                     --countdown;
                 }

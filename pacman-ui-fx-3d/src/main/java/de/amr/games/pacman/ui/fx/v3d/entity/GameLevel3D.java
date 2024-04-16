@@ -31,6 +31,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
@@ -122,6 +123,8 @@ public class GameLevel3D extends Group {
             return;
         }
         GameLevel level = context.gameLevel().get();
+        World world = context.game().world();
+
         switch (context.game()) {
             case GameVariants.MS_PACMAN -> {
                 int mapNumber  = ArcadeWorld.mapNumberMsPacMan(level.levelNumber);
@@ -144,7 +147,7 @@ public class GameLevel3D extends Group {
             default -> throw new IllegalGameVariantException(context.game());
         }
 
-        House house = level.world().house();
+        House house = world.house();
         Vector2f houseCenter = house.topLeftTile().toFloatVec().scaled(TS).plus(house.size().toFloatVec().scaled(HTS));
         houseLight.setColor(Color.GHOSTWHITE);
         houseLight.setMaxRange(3 * TS);
@@ -158,7 +161,7 @@ public class GameLevel3D extends Group {
             floorTextures.put(key, context.theme().get(key));
         }
 
-        var floor3D = new Floor3D(level.world().numCols() * TS - 1, level.world().numRows() * TS - 1, 0.4, floorTextures);
+        var floor3D = new Floor3D(world.numCols() * TS - 1, world.numRows() * TS - 1, 0.4, floorTextures);
         floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
         floor3D.colorPy.bind(PY_3D_FLOOR_COLOR);
         floor3D.texturePy.bind(PY_3D_FLOOR_TEXTURE);
@@ -204,9 +207,11 @@ public class GameLevel3D extends Group {
             return;
         }
         GameLevel level = context.gameLevel().get();
+        World world = context.game().world();
+
         double spacing = 2 * TS;
         // this is the *right* edge of the level counter:
-        levelCounterGroup.setTranslateX(level.world().numCols() * TS - spacing);
+        levelCounterGroup.setTranslateX(world.numCols() * TS - spacing);
         levelCounterGroup.setTranslateY(spacing);
         levelCounterGroup.setTranslateZ(-6);
         levelCounterGroup.getChildren().clear();
@@ -360,10 +365,12 @@ public class GameLevel3D extends Group {
             return;
         }
         GameLevel level = context.gameLevel().get();
-        boolean partOfHouse = level.world().house().contains(floorPlan.tileOfCell(wd.x, wd.y));
+        World world = context.game().world();
+
+        boolean partOfHouse = world.house().contains(floorPlan.tileOfCell(wd.x, wd.y));
         if (!partOfHouse) {
             wallsGroup.getChildren().add(wallBuilder.createMazeWall(wd, PY_3D_WALL_THICKNESS, wallHeightPy));
-        } else if (!isWallInsideHouse(wd, level.world().house())) {
+        } else if (!isWallInsideHouse(wd, world.house())) {
             // only outer house wall gets built
             wallsGroup.getChildren().add(wallBuilder.createHouseWall(wd));
         }
@@ -384,20 +391,20 @@ public class GameLevel3D extends Group {
             Logger.error("Cannot update 3D world, no game level exists");
             return;
         }
-        GameLevel level = context.gameLevel().get();
+        World world = context.game().world();
 
         GameState gameState = GameController.it().state();
         boolean hasCredit = GameController.it().hasCredit();
 
-        pac3D.update(level.world());
-        ghosts3D().forEach(ghost3D -> ghost3D.update(level.world()));
+        pac3D.update(world);
+        ghosts3D().forEach(ghost3D -> ghost3D.update(world));
         if (bonus3D != null) {
-            bonus3D.update(level.world());
+            bonus3D.update(world);
         }
-        updateHouseState(level.world().house());
+        updateHouseState(world.house());
         // reconsider this:
         boolean hideOne = context.game().pac().isVisible() || gameState == GameState.GHOST_DYING;
-        livesCounter3D.update(hideOne ? level.game().lives() - 1 : level.game().lives());
+        livesCounter3D.update(hideOne ? context.game().lives() - 1 : context.game().lives());
         livesCounter3D.setVisible(hasCredit);
     }
 
@@ -447,9 +454,8 @@ public class GameLevel3D extends Group {
             Logger.error("Cannot create 3D food, no game level exists");
             return;
         }
-        GameLevel level = context.gameLevel().get();
-        var world = level.world();
-        var foodMaterial = coloredMaterial(foodColor);
+        World world = context.game().world();
+        Material foodMaterial = coloredMaterial(foodColor);
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             if (world.isEnergizerTile(tile)) {
                 var energizer3D = new Energizer3D(3.5);
@@ -532,7 +538,6 @@ public class GameLevel3D extends Group {
             Logger.error("Cannot update 3D house state, no game level exists");
             throw new IllegalStateException();
         }
-        GameLevel level = context.gameLevel().get();
         boolean houseUsed = context.game().ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .anyMatch(Ghost::isVisible);
         boolean houseOpen = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
