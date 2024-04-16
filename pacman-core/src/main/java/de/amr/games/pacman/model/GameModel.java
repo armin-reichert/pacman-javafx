@@ -166,9 +166,9 @@ public interface GameModel {
      * Pac-Man and the ghosts are placed at their initial positions and locked. The bonus, Pac-Man power timer and
      * energizer pulse are reset too.
      *
-     * @param guysVisible if the guys are visible
+     * @param level the game level
      */
-    void letsGetReadyToRumble(GameLevel level, boolean guysVisible);
+    void letsGetReadyToRumble(GameLevel level);
 
     /**
      * @param playing Sets playing state for current game

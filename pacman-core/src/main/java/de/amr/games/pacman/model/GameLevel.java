@@ -443,7 +443,9 @@ public class GameLevel {
                 bonus().ifPresent(bonus -> bonus.update(this));
             }
             if (timer.atSecond(1.0)) {
-                game().letsGetReadyToRumble(this, true);
+                game().letsGetReadyToRumble(this);
+                pac.show();
+                ghosts().forEach(Ghost::show);
             } else if (timer.atSecond(2)) {
                 blinking.setStartPhase(Pulse.ON);
                 blinking.restart();

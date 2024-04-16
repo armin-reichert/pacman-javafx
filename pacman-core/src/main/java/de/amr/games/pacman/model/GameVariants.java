@@ -218,7 +218,14 @@ public enum GameVariants implements GameModel {
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
             // At this point, the animations of Pac-Man and the ghosts must have been created!
-            letsGetReadyToRumble(level, demoLevel);
+            letsGetReadyToRumble(level);
+            if (demoLevel) {
+                level.pac().show();
+                level.ghosts().forEach(Ghost::show);
+            } else {
+                level.pac().hide();
+                level.ghosts().forEach(Ghost::hide);
+            }
             Logger.info("Level {} started ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_STARTED);
         }
@@ -353,7 +360,14 @@ public enum GameVariants implements GameModel {
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
             // At this point, the animations of Pac-Man and the ghosts must have been created!
-            letsGetReadyToRumble(level, demoLevel);
+            letsGetReadyToRumble(level);
+            if (demoLevel) {
+                level.pac().show();
+                level.ghosts().forEach(Ghost::show);
+            } else {
+                level.pac().hide();
+                level.ghosts().forEach(Ghost::hide);
+            }
             Logger.info("Level {} started ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_STARTED);
         }
@@ -424,18 +438,16 @@ public enum GameVariants implements GameModel {
     }
 
     @Override
-    public void letsGetReadyToRumble(GameLevel level, boolean visible) {
+    public void letsGetReadyToRumble(GameLevel level) {
         level.pac().reset();
         level.pac().setPosition(ArcadeWorld.PAC_POSITION);
         level.pac().setMoveAndWishDir(Direction.LEFT);
-        level.pac().setVisible(visible);
         level.pac().selectAnimation(Pac.ANIM_MUNCHING);
         level.pac().resetAnimation();
         level.ghosts().forEach(ghost -> {
             ghost.reset();
             ghost.setPosition(GHOST_POSITIONS_ON_START[ghost.id()]);
             ghost.setMoveAndWishDir(GHOST_DIRECTIONS_ON_START[ghost.id()]);
-            ghost.setVisible(visible);
             ghost.setState(LOCKED);
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
