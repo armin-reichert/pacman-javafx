@@ -114,7 +114,7 @@ public enum GameVariants implements GameModel {
             if (levelNumber <= 7) {
                 // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
                 // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
-                levelCounter.add(bonusSymbol(0));
+                levelCounter.add(bonusSymbols.getFirst());
                 if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
                     levelCounter.removeFirst();
                 }
@@ -340,7 +340,7 @@ public enum GameVariants implements GameModel {
             if (levelNumber == 1) {
                 levelCounter.clear();
             }
-            levelCounter.add(bonusSymbol(0));
+            levelCounter.add(bonusSymbols.getFirst());
             if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
                 levelCounter.removeFirst();
             }
@@ -824,14 +824,14 @@ public enum GameVariants implements GameModel {
                 blinking.restart();
             } else if (timer.atSecond(2.5)) {
                 bonusReachedIndex += 1;
-                createNextBonus(bonusSymbol(bonusReachedIndex));
+                createNextBonus(bonusSymbols.get(bonusReachedIndex));
             } else if (timer.atSecond(3.5)) {
                 bonus().ifPresent(bonus -> bonus.setEaten(120));
                 publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer.atSecond(4.5)) {
                 bonus().ifPresent(Bonus::setInactive); // needed?
                 bonusReachedIndex += 1;
-                createNextBonus(bonusSymbol(bonusReachedIndex));
+                createNextBonus(bonusSymbols.get(bonusReachedIndex));
             } else if (timer.atSecond(6.5)) {
                 bonus().ifPresent(bonus -> bonus.setEaten(60));
                 publishGameEvent(GameEventType.BONUS_EATEN);
@@ -864,10 +864,6 @@ public enum GameVariants implements GameModel {
     @Override
     public Optional<Bonus> bonus() {
         return Optional.ofNullable(bonus);
-    }
-
-    byte bonusSymbol(int index) {
-        return bonusSymbols.get(index);
     }
 
     abstract void createNextBonus(byte symbol);
@@ -904,7 +900,7 @@ public enum GameVariants implements GameModel {
             if (isBonusReached()) {
                 bonusReachedIndex += 1;
                 eventLog().bonusIndex = bonusReachedIndex;
-                createNextBonus(bonusSymbol(bonusReachedIndex));
+                createNextBonus(bonusSymbols.get(bonusReachedIndex));
             }
             publishGameEvent(GameEventType.PAC_FOUND_FOOD, pacTile);
         } else {
