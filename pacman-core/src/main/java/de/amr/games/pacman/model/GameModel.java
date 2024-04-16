@@ -176,6 +176,18 @@ public interface GameModel {
 
     GameState doHuntingStep();
 
+    TickTimer huntingTimer();
+
+    void startHuntingPhase(int index);
+
+    byte huntingPhaseIndex();
+
+    Optional<Integer> scatterPhase();
+
+    Optional<Integer> chasingPhase();
+
+    String currentHuntingPhaseName();
+
     void doLevelTestStep(TickTimer timer, int lastTestedLevel);
 
     // TODO remove from interface

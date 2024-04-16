@@ -45,22 +45,24 @@ public class InfoBoxGhostsInfo extends InfoBox {
         addInfo("Tile", ifLevelExists(this::ghostTile, ghostID));
     }
 
-    private Supplier<String> ifLevelExists(BiFunction<GameLevel, Ghost, String> fnGhostInfo, byte ghostID) {
+    private Supplier<String> ifLevelExists(BiFunction<GameModel, Ghost, String> fnGhostInfo, byte ghostID) {
         return () -> {
-            var level = sceneContext.game().level().orElse(null);
-            return level != null ? fnGhostInfo.apply(level, level.ghost(ghostID)) : InfoText.NO_INFO;
+            var game = sceneContext.game();
+            var level = game.level().orElse(null);
+            return level != null ? fnGhostInfo.apply(game, level.ghost(ghostID)) : InfoText.NO_INFO;
         };
     }
 
-    private String ghostNameAndState(GameLevel level, Ghost ghost) {
+    private String ghostNameAndState(GameModel game, Ghost ghost) {
+        var level = game.level().orElse(null);
         String name = ghost.name();
         if (ghost.id() == GameModel.RED_GHOST && level.cruiseElroyState() > 0) {
             name = "Elroy" + level.cruiseElroyState();
         }
-        return String.format("%s (%s)", name, ghostState(level, ghost));
+        return String.format("%s (%s)", name, ghostState(game, ghost));
     }
 
-    private String ghostAnimation(GameLevel level, Ghost ghost) {
+    private String ghostAnimation(GameModel game, Ghost ghost) {
         if (ghost.animations().isEmpty()) {
             return InfoText.NO_INFO;
         }
@@ -68,19 +70,19 @@ public class InfoBoxGhostsInfo extends InfoBox {
         return sa.currentAnimationName() != null ? sa.currentAnimationName() : InfoText.NO_INFO;
     }
 
-    private String ghostTile(GameLevel level, Ghost ghost) {
+    private String ghostTile(GameModel game, Ghost ghost) {
         return "%s Offset %s".formatted(ghost.tile(), ghost.offset());
     }
 
-    private String ghostState(GameLevel level, Ghost ghost) {
+    private String ghostState(GameModel game, Ghost ghost) {
         var stateText = ghost.state() != null ? ghost.state().name() : "undefined";
         if (ghost.state() == GhostState.HUNTING_PAC) {
-            stateText = level.currentHuntingPhaseName();
+            stateText = game.currentHuntingPhaseName();
         }
         return stateText;
     }
 
-    private String ghostMovement(GameLevel level, Ghost ghost) {
+    private String ghostMovement(GameModel game, Ghost ghost) {
         var speed = ghost.velocity().length();
         return "%.2f px/s %s (%s)".formatted(speed, ghost.moveDir(), ghost.wishDir());
     }

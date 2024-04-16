@@ -225,7 +225,7 @@ public class PlayScene3D implements GameScene {
                 level3D.startEnergizerAnimation();
             }
             if (!level.isDemoLevel() && context.gameState() == GameState.HUNTING) {
-                context.ensureSirenStarted(level.huntingPhaseIndex() / 2);
+                context.ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
             }
         });
     }

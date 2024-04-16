@@ -5,10 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Pulse;
-import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -22,10 +20,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
-import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
  * @author Armin Reichert
@@ -37,14 +33,12 @@ public class GameLevel {
     public final boolean demoLevel;
 
     private final byte[] data;
-    private final TickTimer huntingTimer = new TickTimer("HuntingTimer");
     private final World world;
     private final Pulse blinking;
     private final Pac pac;
     private final Ghost[] ghosts;
     private final List<Byte> bonusSymbols;
     private Bonus bonus;
-    public byte huntingPhaseIndex;
     public byte totalNumGhostsKilled;
     private byte cruiseElroyState;
     public byte bonusReachedIndex; // -1=no bonus, 0=first, 1=second
@@ -112,10 +106,6 @@ public class GameLevel {
 
     public SimulationStepEventLog eventLog() {
         return GameController.it().eventLog();
-    }
-
-    public TickTimer huntingTimer() {
-        return huntingTimer;
     }
 
     public boolean isDemoLevel() {
@@ -186,33 +176,6 @@ public class GameLevel {
         return totalNumGhostsKilled;
     }
 
-    /**
-     * Hunting happens in different phases. Phases 0, 2, 4, 6 are scattering phases where the ghosts target for their
-     * respective corners and circle around the walls in their corner, phases 1, 3, 5, 7 are chasing phases where the
-     * ghosts attack Pac-Man.
-     *
-     * @param index hunting phase index (0..7)
-     */
-    public void startHuntingPhase(int index) {
-        if (index < 0 || index > 7) {
-            throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + index);
-        }
-        huntingPhaseIndex = (byte) index;
-        var durations = game().huntingDurations(levelNumber);
-        var ticks = durations[index] == -1 ? TickTimer.INDEFINITE : durations[index];
-        huntingTimer.reset(ticks);
-        huntingTimer.start();
-        Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
-            index, currentHuntingPhaseName(), huntingTimer.duration(),
-            (float) huntingTimer.duration() / GameModel.FPS, huntingTimer);
-    }
-
-    /**
-     * @return number of current phase <code>(0-7)
-     */
-    public int huntingPhaseIndex() {
-        return huntingPhaseIndex;
-    }
 
     public Vector2i chasingTarget(byte ghostID) {
         return switch (ghostID) {
@@ -232,24 +195,6 @@ public class GameLevel {
 
     public byte frightenedGhostRelSpeed(Ghost ghost) {
         return world.isTunnel(ghost.tile()) ? ghostSpeedTunnelPercentage() : ghostSpeedFrightenedPercentage();
-    }
-
-    /**
-     * @return (optional) index of current scattering phase <code>(0-3)</code>
-     */
-    public Optional<Integer> scatterPhase() {
-        return isEven(huntingPhaseIndex) ? Optional.of(huntingPhaseIndex / 2) : Optional.empty();
-    }
-
-    /**
-     * @return (optional) index of current chasing phase <code>(0-3)</code>
-     */
-    public Optional<Integer> chasingPhase() {
-        return isOdd(huntingPhaseIndex) ? Optional.of(huntingPhaseIndex / 2) : Optional.empty();
-    }
-
-    public String currentHuntingPhaseName() {
-        return isEven(huntingPhaseIndex) ? "Scattering" : "Chasing";
     }
 
     /**

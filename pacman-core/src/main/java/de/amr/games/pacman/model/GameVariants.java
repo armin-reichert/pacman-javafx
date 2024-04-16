@@ -190,6 +190,9 @@ public enum GameVariants implements GameModel {
             }
             initGhostHouseAccessControl();
 
+            huntingPhaseIndex = 0;
+            huntingTimer.resetIndefinitely();
+
             level.pac().reset();
             level.pac().setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
             level.pac().setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
@@ -242,7 +245,7 @@ public enum GameVariants implements GameModel {
          */
         @Override
         public void huntingBehaviour(Ghost ghost, GameLevel level) {
-            if (level.scatterPhase().isPresent() && level.scatterPhase().get() == 0
+            if (scatterPhase().isPresent() && scatterPhase().get() == 0
                 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
                 roam(ghost, level.world(), level.huntingSpeedPercentage(ghost), pseudoRandomDirection());
             } else {
@@ -385,7 +388,7 @@ public enum GameVariants implements GameModel {
         @Override
         public void huntingBehaviour(Ghost ghost, GameLevel level) {
             byte relSpeed = level.huntingSpeedPercentage(ghost);
-            if (level.chasingPhase().isPresent() || ghost.id() == RED_GHOST && level.cruiseElroyState() > 0) {
+            if (chasingPhase().isPresent() || ghost.id() == RED_GHOST && level.cruiseElroyState() > 0) {
                 followTarget(ghost, level.world(), level.chasingTarget(ghost.id()), relSpeed);
             } else {
                 followTarget(ghost, level.world(), ghostScatterTarget(ghost.id()), relSpeed);
@@ -404,6 +407,9 @@ public enum GameVariants implements GameModel {
     short initialLives = 3;
     short lives;
 
+    final TickTimer huntingTimer = new TickTimer("HuntingTimer");
+    byte huntingPhaseIndex;
+
     // Ghost house access-control
     static final byte UNLIMITED = -1;
     byte[]  globalDotLimits;
@@ -412,6 +418,59 @@ public enum GameVariants implements GameModel {
     int     pacStarvingLimit;
     int     globalDotCounter;
     boolean globalDotCounterEnabled;
+
+    @Override
+    public TickTimer huntingTimer() {
+        return huntingTimer;
+    }
+
+    /**
+     * Hunting happens in different phases. Phases 0, 2, 4, 6 are scattering phases where the ghosts target for their
+     * respective corners and circle around the walls in their corner, phases 1, 3, 5, 7 are chasing phases where the
+     * ghosts attack Pac-Man.
+     *
+     * @param index hunting phase index (0..7)
+     */
+    @Override
+    public void startHuntingPhase(int index) {
+        if (index < 0 || index > 7) {
+            throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + index);
+        }
+        huntingPhaseIndex = (byte) index;
+        var durations = huntingDurations(level.levelNumber);
+        var ticks = durations[index] == -1 ? TickTimer.INDEFINITE : durations[index];
+        huntingTimer.reset(ticks);
+        huntingTimer.start();
+        Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
+            index, currentHuntingPhaseName(), huntingTimer.duration(),
+            (float) huntingTimer.duration() / GameModel.FPS, huntingTimer);
+    }
+
+    @Override
+    public byte huntingPhaseIndex() {
+        return huntingPhaseIndex;
+    }
+
+    /**
+     * @return (optional) index of current scattering phase <code>(0-3)</code>
+     */
+    @Override
+    public Optional<Integer> scatterPhase() {
+        return isEven(huntingPhaseIndex) ? Optional.of(huntingPhaseIndex / 2) : Optional.empty();
+    }
+
+    /**
+     * @return (optional) index of current chasing phase <code>(0-3)</code>
+     */
+    @Override
+    public Optional<Integer> chasingPhase() {
+        return isOdd(huntingPhaseIndex) ? Optional.of(huntingPhaseIndex / 2) : Optional.empty();
+    }
+
+    @Override
+    public String currentHuntingPhaseName() {
+        return isEven(huntingPhaseIndex) ? "Scattering" : "Chasing";
+    }
 
     SimulationStepEventLog eventLog() {
         return GameController.it().eventLog();
@@ -634,7 +693,7 @@ public enum GameVariants implements GameModel {
 
     @Override
     public void onPacDying() {
-        level.huntingTimer().stop();
+        huntingTimer().stop();
         Logger.info("Hunting timer stopped");
         resetGlobalDotCounterAndSetEnabled(true);
         level.enableCruiseElroyState(false);
@@ -648,7 +707,7 @@ public enum GameVariants implements GameModel {
         level.pac().freeze();
         level.ghosts().forEach(Ghost::hide);
         level.bonus().ifPresent(Bonus::setInactive);
-        level.huntingTimer().stop();
+        huntingTimer().stop();
         Logger.info("Hunting timer stopped");
         Logger.trace("Game level {} ({}) completed.", level.levelNumber, this);
     }
@@ -751,7 +810,7 @@ public enum GameVariants implements GameModel {
         } else if (level.pac().powerTimer().hasExpired()) {
             level.pac().powerTimer().stop();
             level.pac().powerTimer().resetIndefinitely();
-            level.huntingTimer().start();
+            huntingTimer().start();
             Logger.info("Hunting timer started");
             level.ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
             eventLog().pacLostPower = true;
@@ -762,7 +821,7 @@ public enum GameVariants implements GameModel {
     private void handleEnergizerEaten() {
         if (level.pacPowerSeconds() > 0) {
             eventLog().pacGetsPower = true;
-            level.huntingTimer().stop();
+            huntingTimer().stop();
             Logger.info("Hunting timer stopped");
             level.pac().powerTimer().restartSeconds(level.pacPowerSeconds());
             // TODO do already frightened ghosts reverse too?
@@ -789,11 +848,11 @@ public enum GameVariants implements GameModel {
     }
 
     private void updateHuntingTimer( ) {
-        if (level.huntingTimer().hasExpired()) {
+        if (huntingTimer().hasExpired()) {
             level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
-            level.startHuntingPhase(level.huntingPhaseIndex + 1);
+            startHuntingPhase(huntingPhaseIndex + 1);
         } else {
-            level.huntingTimer().advance();
+            huntingTimer().advance();
         }
     }
 

@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.util.Theme;
 
 import static de.amr.games.pacman.lib.TickTimer.ticksToString;
@@ -40,52 +41,52 @@ public class InfoBoxGameInfo extends InfoBox {
         addInfo("Maze flashings", ifLevelExists(this::fmtNumFlashes));
     }
 
-    private String fmtHuntingPhase(GameLevel level) {
-        var huntingTimer = level.huntingTimer();
-        return "%s #%d%s".formatted(level.currentHuntingPhaseName(),
-            level.scatterPhase().isPresent() ? level.scatterPhase().get() : level.chasingPhase().orElse(42),
+    private String fmtHuntingPhase(GameModel game) {
+        var huntingTimer = game.huntingTimer();
+        return "%s #%d%s".formatted(game.currentHuntingPhaseName(),
+            game.scatterPhase().isPresent() ? game.scatterPhase().get() : game.chasingPhase().orElse(42),
             huntingTimer.isStopped() ? " STOPPED" : "");
     }
 
-    private String fmtHuntingTicksRunning(GameLevel level) {
-        return "Running:   %d".formatted(level.huntingTimer().tick());
+    private String fmtHuntingTicksRunning(GameModel game) {
+        return "Running:   %d".formatted(game.huntingTimer().tick());
     }
 
-    private String fmtHuntingTicksRemaining(GameLevel level) {
-        return "Remaining: %s".formatted(ticksToString(level.huntingTimer().remaining()));
+    private String fmtHuntingTicksRemaining(GameModel game) {
+        return "Remaining: %s".formatted(ticksToString(game.huntingTimer().remaining()));
     }
 
-    private String fmtPelletCount(GameLevel level) {
-        var world = level.world();
+    private String fmtPelletCount(GameModel game) {
+        var world = game.level().get().world(); //TODO
         return String.format("%d of %d (%d energizers)", world.uneatenFoodCount(),
             world.totalFoodCount(), world.energizerTiles().count());
     }
 
-    private String fmtGhostSpeed(GameLevel level) {
-        return fmtSpeed(level.ghostSpeedPercentage());
+    private String fmtGhostSpeed(GameModel game) {
+        return fmtSpeed(game.level().get().ghostSpeedPercentage());
     }
 
-    private String fmtGhostSpeedFrightened(GameLevel level) {
-        return fmtSpeed(level.ghostSpeedFrightenedPercentage());
+    private String fmtGhostSpeedFrightened(GameModel game) {
+        return fmtSpeed(game.level().get().ghostSpeedFrightenedPercentage());
     }
 
-    private String fmtGhostSpeedTunnel(GameLevel level) {
-        return fmtSpeed(level.ghostSpeedTunnelPercentage());
+    private String fmtGhostSpeedTunnel(GameModel game) {
+        return fmtSpeed(game.level().get().ghostSpeedTunnelPercentage());
     }
 
-    private String fmtPacSpeed(GameLevel level) {
-        return fmtSpeed(level.pacSpeedPercentage());
+    private String fmtPacSpeed(GameModel game) {
+        return fmtSpeed(game.level().get().pacSpeedPercentage());
     }
 
-    private String fmtPacSpeedPowered(GameLevel level) {
-        return fmtSpeed(level.pacSpeedPoweredPercentage());
+    private String fmtPacSpeedPowered(GameModel game) {
+        return fmtSpeed(game.level().get().pacSpeedPoweredPercentage());
     }
 
-    private String fmtPacPowerSeconds(GameLevel level) {
-        return "%d sec".formatted(level.pacPowerSeconds());
+    private String fmtPacPowerSeconds(GameModel game) {
+        return "%d sec".formatted(game.level().get().pacPowerSeconds());
     }
 
-    private String fmtNumFlashes(GameLevel level) {
-        return "%d".formatted(level.numFlashes());
+    private String fmtNumFlashes(GameModel game) {
+        return "%d".formatted(game.level().get().numFlashes());
     }
 }

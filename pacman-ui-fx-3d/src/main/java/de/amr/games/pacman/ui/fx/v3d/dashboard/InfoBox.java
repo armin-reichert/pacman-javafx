@@ -100,10 +100,10 @@ public abstract class InfoBox {
             && sceneContext.currentGameScene().get() instanceof PlayScene3D;
     }
 
-    protected Supplier<String> ifLevelExists(Function<GameLevel, String> infoSupplier) {
+    protected Supplier<String> ifLevelExists(Function<GameModel, String> infoSupplier) {
         return () -> sceneContext.gameLevel().isEmpty()
             ? InfoText.NO_INFO
-            : infoSupplier.apply(sceneContext.gameLevel().get());
+            : infoSupplier.apply(sceneContext.game());
     }
 
     private void addRow(String labelText, Node child) {

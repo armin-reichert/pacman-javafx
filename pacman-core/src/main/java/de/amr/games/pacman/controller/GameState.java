@@ -92,7 +92,7 @@ public enum GameState implements FsmState<GameModel> {
                     });
                 } else if (timer.tick() == TICK_RESUME_GAME) {
                     game.level().ifPresent(level -> {
-                        level.startHuntingPhase(0);
+                        game.startHuntingPhase(0);
                         gameController().changeState(GameState.HUNTING);
                     });
                 }
@@ -106,7 +106,7 @@ public enum GameState implements FsmState<GameModel> {
                     });
                     case TICK_NEW_GAME_START_PLAYING -> game.level().ifPresent(level -> {
                         game.setPlaying(true);
-                        level.startHuntingPhase(0);
+                        game.startHuntingPhase(0);
                         gameController().changeState(GameState.HUNTING);
                     });
                 }
@@ -115,7 +115,7 @@ public enum GameState implements FsmState<GameModel> {
                 switch ((int) timer.tick()) {
                     case TICK_DEMO_LEVEL_CREATE_LEVEL -> game.createAndStartLevel(1, true);
                     case TICK_DEMO_LEVEL_START_PLAYING -> game.level().ifPresent(level -> {
-                        level.startHuntingPhase(0);
+                        game.startHuntingPhase(0);
                         gameController().changeState(GameState.HUNTING);
                     });
                 }

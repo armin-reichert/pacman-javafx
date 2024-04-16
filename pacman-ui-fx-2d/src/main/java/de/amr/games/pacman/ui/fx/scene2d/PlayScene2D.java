@@ -172,7 +172,7 @@ public class PlayScene2D extends GameScene2D {
     public void onSceneVariantSwitch() {
         context.gameLevel().ifPresent(level -> {
             if (!level.isDemoLevel() && context.gameState() == GameState.HUNTING) {
-                context.ensureSirenStarted(level.huntingPhaseIndex() / 2);
+                context.ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
             }
         });
     }

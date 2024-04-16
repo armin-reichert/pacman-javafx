@@ -475,7 +475,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public void onHuntingPhaseStarted(GameEvent event) {
         var level = event.game.level().orElse(null);
         if (level != null && !level.isDemoLevel()) {
-            level.scatterPhase().ifPresent(this::ensureSirenStarted);
+            game().scatterPhase().ifPresent(this::ensureSirenStarted);
         }
     }
 
@@ -568,7 +568,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         var level = event.game.level().orElse(null);
         if (level != null && !level.isDemoLevel()) {
             stopAudioClip("audio.pacman_power");
-            ensureSirenStarted(level.huntingPhaseIndex() / 2);
+            ensureSirenStarted(game().huntingPhaseIndex() / 2);
         }
     }
 
