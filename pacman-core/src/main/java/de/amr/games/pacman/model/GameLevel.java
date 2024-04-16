@@ -12,101 +12,64 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public record GameLevel(int levelNumber, boolean demoLevel, byte[] data) {
-
-    public GameLevel(int levelNumber, boolean demoLevel, byte[] data) {
-        checkLevelNumber(levelNumber);
-        checkNotNull(data);
-        if (data.length != 12) {
-            throw new IllegalArgumentException("Level data must contain 12 bytes");
-        }
-        this.levelNumber = levelNumber;
-        this.demoLevel = demoLevel;
-        this.data = data;
-        Logger.trace("Game level {} created.", this.levelNumber);
-    }
-
-    /**
+public record GameLevel(
+    int levelNumber,
+    boolean demoLevel,
+    /*
      * Relative Pac-Man speed (percentage of base speed)
      */
-    public byte pacSpeedPercentage() {
-        return data[0];
-    }
-
-    /**
+    byte pacSpeedPercentage,
+    /*
      * Relative ghost speed when hunting or scattering
      */
-    public byte ghostSpeedPercentage() {
-        return data[1];
-    }
-
-    /**
+    byte ghostSpeedPercentage,
+    /*
      * Relative ghost speed inside tunnel
      */
-    public byte ghostSpeedTunnelPercentage() {
-        return data[2];
-    }
-
-    /**
+    byte ghostSpeedTunnelPercentage,
+    /*
      * Number of pellets left when Blinky becomes "Cruise Elroy" grade 1
      */
-    public byte elroy1DotsLeft() {
-        return data[3];
-    }
-
-    /**
+    byte elroy1DotsLeft,
+    /*
      * Relative speed of Blinky being "Cruise Elroy" grade 1
      */
-    public byte elroy1SpeedPercentage() {
-        return data[4];
-    }
-
-    /**
+    byte elroy1SpeedPercentage,
+    /*
      * Number of pellets left when Blinky becomes "Cruise Elroy" grade 2
      */
-    public byte elroy2DotsLeft() {
-        return data[5];
-    }
-
-    /**
+    byte elroy2DotsLeft,
+    /*
      * Relative speed of Blinky being "Cruise Elroy" grade 2
      */
-    public byte elroy2SpeedPercentage() {
-        return data[6];
-    }
-
-    /**
+    byte elroy2SpeedPercentage,
+    /*
      * Relative speed of Pac-Man in power mode
      */
-    public byte pacSpeedPoweredPercentage() {
-        return data[7];
-    }
-
-    /**
+    byte pacSpeedPoweredPercentage,
+    /*
      * Relative speed of frightened ghost
      */
-    public byte ghostSpeedFrightenedPercentage() {
-        return data[8];
-    }
-
-    /**
+    byte ghostSpeedFrightenedPercentage,
+    /*
      * Number of seconds Pac-Man gets power
      */
-    public byte pacPowerSeconds() {
-        return data[9];
-    }
-
-    /**
+    byte pacPowerSeconds,
+    /*
      * Number of maze flashes at end of this level
      */
-    public byte numFlashes() {
-        return data[10];
-    }
-
-    /**
+    byte numFlashes,
+    /*
      * Number (1,2,3) of intermission scene played after this level (0=no intermission)
      */
-    public byte intermissionNumber() {
-        return data[11];
+    byte intermissionNumber)
+{
+    public GameLevel {
+        checkLevelNumber(levelNumber);
+    }
+
+    public GameLevel(int levelNumber, boolean demoLevel, byte[] data) {
+        this(levelNumber, demoLevel, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8],
+            data[9], data[10], data[11]);
     }
 }
