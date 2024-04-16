@@ -442,6 +442,17 @@ public enum GameVariants implements GameModel {
     final short EXTRA_LIFE_SCORE = 10_000;
     final byte LEVEL_COUNTER_MAX_SYMBOLS = 7;
 
+    final short PAC_POWER_FADING_TICKS = 2 * FPS; // unsure
+    final short BONUS_POINTS_SHOWN_TICKS = 2 * FPS; // unsure
+
+    // after eating, Pac-Man must rest a bit
+    final byte RESTING_TICKS_PELLET = 1;
+    final byte RESTING_TICKS_ENERGIZER = 3;
+
+    /** Base speed of creatures in pixels per second. */
+    final short PPS_AT_100_PERCENT = 75;
+    final short PPS_GHOST_INHOUSE = 30; // correct?
+    final short PPS_GHOST_RETURNING_HOME = 120; // correct?
 
     final List<Byte> bonusSymbols = new ArrayList<>();
     final List<Byte> levelCounter = new LinkedList<>();
@@ -933,13 +944,13 @@ public enum GameVariants implements GameModel {
             pac.endStarving();
             if (world.isEnergizerTile(pacTile)) {
                 eventLog().energizerFound = true;
-                pac.setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
+                pac.setRestingTicks(RESTING_TICKS_ENERGIZER);
                 pac.victims().clear();
                 scorePoints(POINTS_ENERGIZER);
                 handleEnergizerEaten();
                 Logger.info("Scored {} points for eating energizer", POINTS_ENERGIZER);
             } else {
-                pac.setRestingTicks(GameModel.RESTING_TICKS_PELLET);
+                pac.setRestingTicks(RESTING_TICKS_PELLET);
                 scorePoints(POINTS_PELLET);
             }
             updateDotCount();
@@ -962,7 +973,7 @@ public enum GameVariants implements GameModel {
 
     private void updatePac() {
         pac.update(this);
-        if (pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS) {
+        if (pac.powerTimer().remaining() == PAC_POWER_FADING_TICKS) {
             eventLog().pacStartsLosingPower = true;
             publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (pac.powerTimer().hasExpired()) {
@@ -994,7 +1005,7 @@ public enum GameVariants implements GameModel {
             return;
         }
         if (bonus.state() == Bonus.STATE_EDIBLE && pac.sameTile(bonus.entity())) {
-            bonus.setEaten(GameModel.BONUS_POINTS_SHOWN_TICKS);
+            bonus.setEaten(BONUS_POINTS_SHOWN_TICKS);
             scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
             eventLog().bonusEaten = true;

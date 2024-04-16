@@ -37,20 +37,10 @@ public interface GameModel {
     /** Game loop frequency, ticks per second. */
     short FPS = 60;
 
-    short PAC_POWER_FADING_TICKS = 2 * FPS; // unsure
-    short BONUS_POINTS_SHOWN_TICKS = 2 * FPS; // unsure
-
-    // after eating, Pac-Man must rest a bit
-    byte RESTING_TICKS_PELLET = 1;
-    byte RESTING_TICKS_ENERGIZER = 3;
-
-    /** Base speed of creatures in pixels per second. */
-    short PPS_AT_100_PERCENT = 75;
-    short PPS_GHOST_INHOUSE = 30; // correct?
-    short PPS_GHOST_RETURNING_HOME = 120; // correct?
-
+    /**
+     * @return Pac-Man or Ms. Pac-Man
+     */
     Pac pac();
-
 
     /**
      * @param id ghost ID, one of {@link GameModel#RED_GHOST}, {@link GameModel#PINK_GHOST},
