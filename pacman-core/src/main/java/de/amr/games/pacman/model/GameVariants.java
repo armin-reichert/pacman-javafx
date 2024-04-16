@@ -36,8 +36,6 @@ import static de.amr.games.pacman.model.world.ArcadeWorld.*;
 public enum GameVariants implements GameModel {
 
     MS_PACMAN {
-        final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50}; // * 100
-        final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
 
         /**
          * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
@@ -53,6 +51,8 @@ public enum GameVariants implements GameModel {
         int[] huntingDurations(int levelNumber) {
             return HUNTING_DURATIONS[levelNumber <= 4 ? 0 : 1];
         }
+
+        final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
 
         @Override
         public void loadHighScore() {
@@ -231,6 +231,8 @@ public enum GameVariants implements GameModel {
             publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
         }
 
+        final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
+
         /**
          * The moving bonus enters the world at a random portal, walks to the house entry, takes a tour around the
          * house and finally leaves the world through a random portal on the opposite side of the world.
@@ -266,9 +268,7 @@ public enum GameVariants implements GameModel {
      * <a href="https://pacman.holenet.info">Jamey Pittman: The Pac-Man Dossier</a>.
      */
     PACMAN {
-        final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {7 /* default */, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
-        final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50}; // * 100
-        final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-pacman.xml");
+
         final int[][] HUNTING_DURATIONS = { // Hunting duration (in ticks) of chase and scatter phases.
             {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS,   20 * FPS, 5 * FPS, -1}, // Level 1
             {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS, 1033 * FPS,       1, -1}, // Levels 2-4
@@ -283,6 +283,8 @@ public enum GameVariants implements GameModel {
                 default      -> HUNTING_DURATIONS[2];
             };
         }
+
+        final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-pacman.xml");
 
         @Override
         public void loadHighScore() {
@@ -393,10 +395,14 @@ public enum GameVariants implements GameModel {
             return world.eatenFoodCount() == 70 || world.eatenFoodCount() == 170;
         }
 
+        final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {-1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
+
         // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
-        private byte nextBonusSymbol(int levelNumber) {
-            return BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber < 13 ? levelNumber : 0];
+        byte nextBonusSymbol(int levelNumber) {
+            return levelNumber > 12 ? 7 : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
         }
+
+        final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
 
         void createNextBonus(byte symbol) {
             bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
