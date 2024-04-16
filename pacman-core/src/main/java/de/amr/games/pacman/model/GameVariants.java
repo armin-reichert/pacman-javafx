@@ -105,7 +105,7 @@ public enum GameVariants implements GameModel {
                 ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
-                ghost.setSpeedInsideHouse(PPS_GHOST_INHOUSE / (float) FPS);
+                ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE / (float) FPS);
             });
 
             huntingPhaseIndex = 0;
@@ -342,7 +342,7 @@ public enum GameVariants implements GameModel {
                 ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
-                ghost.setSpeedInsideHouse(PPS_GHOST_INHOUSE / (float) FPS);
+                ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE / (float) FPS);
                 ghost.setForbiddenMoves(forbidden);
             });
 
@@ -468,7 +468,7 @@ public enum GameVariants implements GameModel {
     final byte RESTING_TICKS_ENERGIZER = 3;
 
     /** Base speed of creatures in pixels per second. */
-    final short PPS_GHOST_INHOUSE = 30; // correct?
+    final short PPS_GHOST_INSIDE_HOUSE = 30; // correct?
     final short PPS_GHOST_RETURNING_HOME = 120; // correct?
 
     final List<Byte> bonusSymbols = new ArrayList<>();
