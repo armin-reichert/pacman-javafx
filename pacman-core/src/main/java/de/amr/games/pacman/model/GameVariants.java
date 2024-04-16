@@ -24,7 +24,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
 import static de.amr.games.pacman.model.actors.CreatureMovement.followTarget;
 import static de.amr.games.pacman.model.actors.CreatureMovement.roam;
-import static de.amr.games.pacman.model.actors.GhostState.LOCKED;
+import static de.amr.games.pacman.model.actors.GhostState.*;
 import static de.amr.games.pacman.model.world.ArcadeWorld.*;
 
 /**
@@ -702,6 +702,169 @@ public enum GameVariants implements GameModel {
             GameController.it().restart(GameState.BOOT);
         }
     }
+
+    private void scorePoints(int points) {
+        if (!level.isDemoLevel()) {
+            scorePoints(level.levelNumber, points);
+        }
+    }
+
+    private void updateFood() {
+        final Vector2i pacTile = level.pac().tile();
+        if (level.world().hasFoodAt(pacTile)) {
+            eventLog().foodFoundTile = pacTile;
+            level.pac().endStarving();
+            if (level.world().isEnergizerTile(pacTile)) {
+                eventLog().energizerFound = true;
+                level.pac().setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
+                level.pac().victims().clear();
+                scorePoints(GameModel.POINTS_ENERGIZER);
+                handleEnergizerEaten();
+                Logger.info("Scored {} points for eating energizer", GameModel.POINTS_ENERGIZER);
+            } else {
+                level.pac().setRestingTicks(GameModel.RESTING_TICKS_PELLET);
+                scorePoints(GameModel.POINTS_PELLET);
+            }
+            updateDotCount();
+            level.world().eatFoodAt(pacTile);
+            if (level.world().uneatenFoodCount() == level.elroy1DotsLeft()) {
+                level.setCruiseElroyState(1);
+            } else if (level.world().uneatenFoodCount() == level.elroy2DotsLeft()) {
+                level.setCruiseElroyState(2);
+            }
+            if (isBonusReached()) {
+                level.bonusReachedIndex += 1;
+                eventLog().bonusIndex = level.bonusReachedIndex;
+                level.onBonusReached(level.bonusReachedIndex);
+            }
+            publishGameEvent(GameEventType.PAC_FOUND_FOOD, pacTile);
+        } else {
+            level.pac().starve();
+        }
+    }
+
+    private void updatePac() {
+        level.pac().update(level);
+        if (level.pac().powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS) {
+            eventLog().pacStartsLosingPower = true;
+            publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
+        } else if (level.pac().powerTimer().hasExpired()) {
+            level.pac().powerTimer().stop();
+            level.pac().powerTimer().resetIndefinitely();
+            level.huntingTimer().start();
+            Logger.info("Hunting timer started");
+            level.ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
+            eventLog().pacLostPower = true;
+            publishGameEvent(GameEventType.PAC_LOST_POWER);
+        }
+    }
+
+    private void handleEnergizerEaten() {
+        if (level.pacPowerSeconds() > 0) {
+            eventLog().pacGetsPower = true;
+            level.huntingTimer().stop();
+            Logger.info("Hunting timer stopped");
+            level.pac().powerTimer().restartSeconds(level.pacPowerSeconds());
+            // TODO do already frightened ghosts reverse too?
+            level.ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
+            level.ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
+            publishGameEvent(GameEventType.PAC_GETS_POWER);
+        }
+    }
+
+    private void updateBonus() {
+        if (level.bonus().isEmpty()) {
+            return;
+        }
+        Bonus bonus = level.bonus().get();
+        if (bonus.state() == Bonus.STATE_EDIBLE && level.pac().sameTile(bonus.entity())) {
+            bonus.setEaten(GameModel.BONUS_POINTS_SHOWN_TICKS);
+            scorePoints(bonus.points());
+            Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
+            eventLog().bonusEaten = true;
+            publishGameEvent(GameEventType.BONUS_EATEN);
+        } else {
+            bonus.update(level);
+        }
+    }
+
+    private void updateHuntingTimer( ) {
+        if (level.huntingTimer().hasExpired()) {
+            level.ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
+            level.startHuntingPhase(level.huntingPhaseIndex + 1);
+        } else {
+            level.huntingTimer().advance();
+        }
+    }
+
+    private void updateGhosts() {
+        Ghost unlockedGhost = unlockGhost();
+        if (unlockedGhost != null) {
+            if (unlockedGhost.insideHouse(level.world().house())) {
+                unlockedGhost.setState(LEAVING_HOUSE);
+            } else {
+                unlockedGhost.setMoveAndWishDir(LEFT);
+                unlockedGhost.setState(HUNTING_PAC);
+            }
+            if (unlockedGhost.id() == ORANGE_GHOST && level.cruiseElroyState() < 0) {
+                level.enableCruiseElroyState(true);
+                Logger.trace("Cruise elroy mode re-enabled because {} exits house", unlockedGhost.name());
+            }
+        }
+        level.ghosts().forEach(ghost -> ghost.update(level));
+    }
+
+    @Override
+    public GameState doHuntingStep() {
+        updateFood();
+        updateGhosts();
+        updatePac();
+        updateBonus();
+        updateHuntingTimer();
+        level.blinking().tick();
+
+        // what next?
+        if (level.world().uneatenFoodCount() == 0) {
+            return GameState.LEVEL_COMPLETE;
+        }
+        var killers = level.ghosts(HUNTING_PAC).filter(level.pac()::sameTile).toList();
+        if (!killers.isEmpty() && !GameController.it().isPacImmune()) {
+            eventLog().pacDied = true;
+            return GameState.PACMAN_DYING;
+        }
+        var prey = level.ghosts(FRIGHTENED).filter(level.pac()::sameTile).toList();
+        if (!prey.isEmpty()) {
+            killGhosts(prey);
+            return GameState.GHOST_DYING;
+        }
+        return GameState.HUNTING;
+    }
+
+
+    @Override
+    public void killGhosts(List<Ghost> prey) {
+        if (!prey.isEmpty()) {
+            prey.forEach(this::killGhost);
+            if (level.totalNumGhostsKilled == 16) {
+                int points = GameModel.POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
+                scorePoints(points);
+                Logger.info("Scored {} points for killing all ghosts at level {}", points, level.levelNumber);
+            }
+        }
+    }
+
+    private void killGhost(Ghost ghost) {
+        byte[] multiple = { 2, 4, 8, 16 };
+        int killedSoFar = level.pac().victims().size();
+        int points = 100 * multiple[killedSoFar];
+        scorePoints(points);
+        ghost.eaten(killedSoFar);
+        level.pac().victims().add(ghost);
+        eventLog().killedGhosts.add(ghost);
+        level.totalNumGhostsKilled += 1;
+        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
+    }
+
 
 
     @Override

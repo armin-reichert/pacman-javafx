@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
@@ -166,10 +167,14 @@ public interface GameModel {
 
     void onPacDying();
 
+    void killGhosts(List<Ghost> prey);
+
     void onLevelCompleted();
 
     // TODO remove from interface
     void updateDotCount();
+
+    GameState doHuntingStep();
 
     void doLevelTestStep(TickTimer timer, int lastTestedLevel);
 

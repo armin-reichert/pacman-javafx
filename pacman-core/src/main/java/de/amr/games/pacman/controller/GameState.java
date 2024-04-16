@@ -138,7 +138,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             game.level().ifPresent(level -> {
-                GameState nextState = level.doHuntingStep();
+                GameState nextState = game.doHuntingStep();
                 if (nextState != GameState.HUNTING) {
                     gameController().changeState(nextState);
                 }

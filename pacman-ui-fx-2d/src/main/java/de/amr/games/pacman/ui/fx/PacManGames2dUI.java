@@ -752,7 +752,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (game().isPlaying() && gameState() == GameState.HUNTING) {
             gameLevel().ifPresent(level -> {
                 level.pac().victims().clear();
-                level.killGhosts(level.ghosts(FRIGHTENED, HUNTING_PAC).toList());
+                game().killGhosts(level.ghosts(FRIGHTENED, HUNTING_PAC).toList());
                 gameController().changeState(GameState.GHOST_DYING);
             });
         }
