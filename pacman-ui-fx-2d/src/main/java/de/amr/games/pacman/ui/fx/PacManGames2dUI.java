@@ -352,7 +352,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             case BOOT -> config.get("boot");
             case CREDIT -> config.get("credit");
             case INTRO -> config.get("intro");
-            case INTERMISSION -> config.get("cut" + gameLevel().map(level -> level.intermissionNumber).orElse((byte) 1));
+            case INTERMISSION -> config.get("cut" + gameLevel().map(level -> level.intermissionNumber()).orElse((byte) 1));
             case INTERMISSION_TEST -> config.get("cut" + gameState().<Integer>getProperty("intermissionTestNumber"));
             default -> config.get("play");
         };
@@ -487,7 +487,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         } else {
             GameLevel level = event.game.level().orElse(null);
             if (level != null) {
-                intermissionNumber = level.intermissionNumber;
+                intermissionNumber = level.intermissionNumber();
             }
         }
         if (intermissionNumber != 0) {

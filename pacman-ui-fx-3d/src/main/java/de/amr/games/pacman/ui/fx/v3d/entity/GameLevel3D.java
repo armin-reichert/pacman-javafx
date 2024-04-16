@@ -415,7 +415,7 @@ public class GameLevel3D extends Group {
             context.theme(),
             ghost,
             level.pac(),
-            level.numFlashes,
+            level.numFlashes(),
             GHOST_SIZE);
     }
 
@@ -482,10 +482,10 @@ public class GameLevel3D extends Group {
     }
 
     public Transition createLevelCompleteAnimation() {
-        if (level.numFlashes == 0) {
+        if (level.numFlashes() == 0) {
             return pauseSeconds(1.0);
         }
-        var animation = new SinusCurveAnimation(level.numFlashes);
+        var animation = new SinusCurveAnimation(level.numFlashes());
         animation.setOnFinished(e -> wallHeightPy.bind(PY_3D_WALL_HEIGHT));
         animation.setAmplitude(wallHeightPy.get());
         animation.elongationPy.set(wallHeightPy.get());

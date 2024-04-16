@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.ArcadeWorld;
-import de.amr.games.pacman.model.world.World;
 import org.junit.Test;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -137,7 +136,7 @@ public class WorldTest {
     @Test
     public void testIllegalMapData() {
         byte[][] map = {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}};
-        assertThrows(IllegalArgumentException.class, () -> new World(map));
+        assertThrows(IllegalArgumentException.class, () -> ArcadeWorld.createArcadeWorld(map));
     }
 
     @Test
