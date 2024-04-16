@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
@@ -101,7 +100,7 @@ public abstract class InfoBox {
     }
 
     protected Supplier<String> ifLevelExists(Function<GameModel, String> infoSupplier) {
-        return () -> sceneContext.gameLevel().isEmpty()
+        return () -> sceneContext.game().gameLevel() == null
             ? InfoText.NO_INFO
             : infoSupplier.apply(sceneContext.game());
     }
@@ -175,7 +174,7 @@ public abstract class InfoBox {
 
     protected Slider addSlider(String labelText, double min, double max, double initialValue) {
         Slider slider = new Slider(min, max, initialValue);
-        slider.setMinWidth((int) theme.get("infobox.min_col_width"));
+        slider.setMinWidth((Integer) theme.get("infobox.min_col_width"));
         slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (e.getClickCount() == 2) {
                 slider.setValue(initialValue);

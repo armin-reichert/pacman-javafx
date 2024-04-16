@@ -335,11 +335,7 @@ public class Ghost extends Creature {
      * <p>
      */
     private void updateStateHuntingPac(GameModel game) {
-        if (game.level().isEmpty()) {
-            Logger.error("No game level");
-            throw new IllegalStateException();
-        }
-        huntingBehavior.accept(this, game.level().get());
+        huntingBehavior.accept(this, game.gameLevel());
     }
 
     // --- FRIGHTENED ---
@@ -391,12 +387,10 @@ public class Ghost extends Creature {
             setMoveAndWishDir(DOWN);
             setState(ENTERING_HOUSE);
         } else {
-            game.level().ifPresent(level -> {
-                setSpeed(speedReturningToHouse);
-                setTargetTile(house.door().leftWing());
-                navigateTowardsTarget(this, game.world());
-                tryMoving(this, game.world());
-            });
+            setSpeed(speedReturningToHouse);
+            setTargetTile(house.door().leftWing());
+            navigateTowardsTarget(this, game.world());
+            tryMoving(this, game.world());
         }
     }
 

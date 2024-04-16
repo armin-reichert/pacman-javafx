@@ -6,7 +6,6 @@ package de.amr.games.pacman.model.actors;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
@@ -117,10 +116,6 @@ public class MovingBonus extends Creature implements Bonus {
     }
 
     private void updateStateEdible(GameModel game) {
-        if (game.level().isEmpty()) {
-            throw new IllegalStateException("Cannot update MovingBonus, no level exists");
-        }
-        GameLevel level = game.level().get();
         steering.steer(this, game.world());
         if (steering.isComplete()) {
             Logger.trace("Moving bonus reached target: {}", this);

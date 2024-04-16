@@ -229,10 +229,7 @@ public interface GameModel {
      */
     void reset();
 
-    /**
-     * @return current game level if present
-     */
-    Optional<GameLevel> level();
+    GameLevel gameLevel();
 
     World world();
 

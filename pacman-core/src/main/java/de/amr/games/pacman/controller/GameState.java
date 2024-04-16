@@ -6,6 +6,7 @@ package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.FsmState;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Pulse;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.GameModel;
@@ -15,7 +16,6 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -84,39 +84,35 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             if (game.isPlaying()) { // resume running game
                 if (timer.tick() == 1) {
-                    game.level().ifPresent(level -> {
-                        game.letsGetReadyToRumble();
-                        game.pac().show();
-                        game.ghosts().forEach(Ghost::show);
-                    });
+                    game.letsGetReadyToRumble();
+                    game.pac().show();
+                    game.ghosts().forEach(Ghost::show);
                 } else if (timer.tick() == TICK_RESUME_GAME) {
-                    game.level().ifPresent(level -> {
-                        game.startHuntingPhase(0);
-                        gameController().changeState(GameState.HUNTING);
-                    });
+                    game.startHuntingPhase(0);
+                    gameController().changeState(GameState.HUNTING);
                 }
             }
             else if (gameController().hasCredit()) { // start new game
                 switch ((int) timer.tick()) {
                     case TICK_NEW_GAME_CREATE_LEVEL -> game.createAndStartLevel(1, false);
-                    case TICK_NEW_GAME_SHOW_GUYS -> game.level().ifPresent(level -> {
+                    case TICK_NEW_GAME_SHOW_GUYS -> {
                         game.pac().show();
                         game.ghosts().forEach(Ghost::show);
-                    });
-                    case TICK_NEW_GAME_START_PLAYING -> game.level().ifPresent(level -> {
+                    }
+                    case TICK_NEW_GAME_START_PLAYING -> {
                         game.setPlaying(true);
                         game.startHuntingPhase(0);
                         gameController().changeState(GameState.HUNTING);
-                    });
+                    }
                 }
             }
             else { // start demo level
                 switch ((int) timer.tick()) {
                     case TICK_DEMO_LEVEL_CREATE_LEVEL -> game.createAndStartLevel(1, true);
-                    case TICK_DEMO_LEVEL_START_PLAYING -> game.level().ifPresent(level -> {
+                    case TICK_DEMO_LEVEL_START_PLAYING -> {
                         game.startHuntingPhase(0);
                         gameController().changeState(GameState.HUNTING);
-                    });
+                    }
                 }
             }
         }
@@ -125,23 +121,19 @@ public enum GameState implements FsmState<GameModel> {
     HUNTING {
         @Override
         public void onEnter(GameModel game) {
-            game.level().ifPresent(level -> {
-                game.pac().startAnimation();
-                game.ghosts().forEach(Ghost::startAnimation);
-                game.blinking().setStartPhase(Pulse.ON);
-                game.blinking().restart();
-                game.publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
-            });
+            game.pac().startAnimation();
+            game.ghosts().forEach(Ghost::startAnimation);
+            game.blinking().setStartPhase(Pulse.ON);
+            game.blinking().restart();
+            game.publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
         }
 
         @Override
         public void onUpdate(GameModel game) {
-            game.level().ifPresent(level -> {
-                GameState nextState = game.doHuntingStep();
-                if (nextState != GameState.HUNTING) {
-                    gameController().changeState(nextState);
-                }
-            });
+            GameState nextState = game.doHuntingStep();
+            if (nextState != GameState.HUNTING) {
+                gameController().changeState(nextState);
+            }
         }
     },
 
@@ -154,24 +146,23 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            game.level().ifPresent(level -> {
-                if (timer.hasExpired()) {
-                    setProperty("mazeFlashing", false);
-                    if (level.demoLevel()) { // just in case demo level is completed: back to intro scene
-                        gameController().changeState(INTRO);
-                    } else if (level.intermissionNumber() > 0) {
-                        gameController().changeState(INTERMISSION);
-                    } else {
-                        gameController().changeState(LEVEL_TRANSITION);
-                    }
-                } else if (timer.atSecond(1)) {
-                    setProperty("mazeFlashing", true);
-                    game.blinking().setStartPhase(Pulse.OFF);
-                    game.blinking().restart(2 * level.numFlashes());
+            Globals.checkLevelNotNull(game.gameLevel());
+            if (timer.hasExpired()) {
+                setProperty("mazeFlashing", false);
+                if (game.gameLevel().demoLevel()) { // just in case demo level is completed: back to intro scene
+                    gameController().changeState(INTRO);
+                } else if (game.gameLevel().intermissionNumber() > 0) {
+                    gameController().changeState(INTERMISSION);
                 } else {
-                    game.blinking().tick();
+                    gameController().changeState(LEVEL_TRANSITION);
                 }
-            });
+            } else if (timer.atSecond(1)) {
+                setProperty("mazeFlashing", true);
+                game.blinking().setStartPhase(Pulse.OFF);
+                game.blinking().restart(2 * game.gameLevel().numFlashes());
+            } else {
+                game.blinking().tick();
+            }
         }
     },
 
@@ -179,7 +170,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartSeconds(1);
-            game.level().ifPresent(level -> game.createAndStartLevel(level.levelNumber() + 1, false));
+            game.createAndStartLevel(game.gameLevel().levelNumber() + 1, false);
         }
 
         @Override
@@ -193,34 +184,28 @@ public enum GameState implements FsmState<GameModel> {
     GHOST_DYING {
         @Override
         public void onEnter(GameModel game) {
-            game.level().ifPresent(level -> {
-                timer.restartSeconds(1);
-                game.pac().hide();
-                game.ghosts().forEach(Ghost::stopAnimation);
-                game.publishGameEvent(GameEventType.GHOST_EATEN);
-            });
+            timer.restartSeconds(1);
+            game.pac().hide();
+            game.ghosts().forEach(Ghost::stopAnimation);
+            game.publishGameEvent(GameEventType.GHOST_EATEN);
         }
 
         @Override
         public void onUpdate(GameModel game) {
-            game.level().ifPresent(level -> {
-                if (timer.hasExpired()) {
-                    gameController().resumePreviousState();
-                } else {
-                    game.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
-                        .forEach(ghost -> ghost.update(game));
-                    game.blinking().tick();
-                }
-            });
+            if (timer.hasExpired()) {
+                gameController().resumePreviousState();
+            } else {
+                game.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
+                    .forEach(ghost -> ghost.update(game));
+                game.blinking().tick();
+            }
         }
 
         @Override
         public void onExit(GameModel game) {
-            game.level().ifPresent(level -> {
-                game.pac().show();
-                game.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
-                game.ghosts().forEach(Ghost::startAnimation);
-            });
+            game.pac().show();
+            game.ghosts(GhostState.EATEN).forEach(ghost -> ghost.setState(GhostState.RETURNING_HOME));
+            game.ghosts().forEach(Ghost::startAnimation);
         }
     },
 
@@ -239,34 +224,31 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            Logger.debug(timer.tick());
-            game.level().ifPresent(level -> {
-                if (timer.hasExpired()) {
-                    game.loseLife();
-                    if (!gameController().hasCredit()) { // end of demo level
-                        gameController().changeState(INTRO);
-                    } else {
-                        gameController().changeState(game.lives() == 0 ? GAME_OVER : READY);
-                    }
-                    return;
+            if (timer.hasExpired()) {
+                game.loseLife();
+                if (!gameController().hasCredit()) { // end of demo level
+                    gameController().changeState(INTRO);
+                } else {
+                    gameController().changeState(game.lives() == 0 ? GAME_OVER : READY);
                 }
-                switch ((int) timer.tick()) {
-                    case TICK_HIDE_GHOSTS -> {
-                        game.ghosts().forEach(Ghost::hide);
-                        game.pac().selectAnimation(Pac.ANIM_DYING);
-                        game.pac().resetAnimation();
-                    }
-                    case TICK_START_PAC_ANIMATION -> {
-                        game.pac().startAnimation();
-                        game.publishGameEvent(GameEventType.PAC_DYING);
-                    }
-                    case TICK_HIDE_PAC -> game.pac().hide();
-                    default -> {
-                        game.blinking().tick();
-                        game.pac().update(game);
-                    }
+                return;
+            }
+            switch ((int) timer.tick()) {
+                case TICK_HIDE_GHOSTS -> {
+                    game.ghosts().forEach(Ghost::hide);
+                    game.pac().selectAnimation(Pac.ANIM_DYING);
+                    game.pac().resetAnimation();
                 }
-            });
+                case TICK_START_PAC_ANIMATION -> {
+                    game.pac().startAnimation();
+                    game.publishGameEvent(GameEventType.PAC_DYING);
+                }
+                case TICK_HIDE_PAC -> game.pac().hide();
+                default -> {
+                    game.blinking().tick();
+                    game.pac().update(game);
+                }
+            }
         }
 
         @Override

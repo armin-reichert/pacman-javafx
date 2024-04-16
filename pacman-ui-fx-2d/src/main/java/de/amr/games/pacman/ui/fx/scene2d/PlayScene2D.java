@@ -41,8 +41,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        context.gameLevel().ifPresent(level ->
-            context.game().pac().setUseAutopilot(level.demoLevel() || PY_USE_AUTOPILOT.get()));
+        context.game().pac().setUseAutopilot(context.game().gameLevel().demoLevel() || PY_USE_AUTOPILOT.get());
         updateSound();
     }
 
@@ -77,40 +76,36 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        context.gameLevel().ifPresent(level -> {
-            boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
-            switch (context.game()) {
-                case GameVariants.MS_PACMAN -> drawMsPacManMaze(context.game(), ArcadeWorld.mazeNumberMsPacMan(level.levelNumber()), flashing);
-                case GameVariants.PACMAN -> drawPacManMaze(context.game(), flashing);
-                default -> throw new IllegalGameVariantException(context.game());
+        boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
+        switch (context.game()) {
+            case GameVariants.MS_PACMAN ->
+                drawMsPacManMaze(context.game(), ArcadeWorld.mazeNumberMsPacMan(context.game().gameLevel().levelNumber()), flashing);
+            case GameVariants.PACMAN -> drawPacManMaze(context.game(), flashing);
+            default -> throw new IllegalGameVariantException(context.game());
+        }
+        if (context.game().gameLevel().demoLevel() || context.gameState() == GameState.GAME_OVER) {
+            // text "GAME OVER" is also drawn in demo mode
+            drawText("GAME  OVER", Color.RED, sceneFont(8), t(9), t(21));
+        } else {
+            switch (context.gameState()) {
+                case READY      -> drawText("READY!", Color.YELLOW, sceneFont(8), t(11), t(21));
+                case LEVEL_TEST -> drawText("TEST    L" + context.game().gameLevel().levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(21));
             }
-            if (level.demoLevel() || context.gameState() == GameState.GAME_OVER) {
-                // text "GAME OVER" is also drawn in demo mode
-                drawText("GAME  OVER", Color.RED, sceneFont(8), t(9), t(21));
-            } else {
-                switch (context.gameState()) {
-                    case READY      -> drawText("READY!", Color.YELLOW, sceneFont(8), t(11), t(21));
-                    case LEVEL_TEST -> drawText("TEST    L" + level.levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(21));
-                }
+        }
+        context.game().bonus().ifPresent(this::drawBonus);
+        drawPac(context.game().pac());
+        context.game().ghosts().toList().reversed().forEach(this::drawGhost);
+        if (!isCreditVisible()) {
+            int numLivesDisplayed = context.game().lives() - 1;
+            if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
+                numLivesDisplayed += 1;
             }
-            context.game().bonus().ifPresent(this::drawBonus);
-            drawPac(context.game().pac());
-            context.game().ghosts().toList().reversed().forEach(this::drawGhost);
-            if (!isCreditVisible()) {
-                int numLivesDisplayed = context.game().lives() - 1;
-                if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
-                    numLivesDisplayed += 1;
-                }
-                drawLivesCounter(numLivesDisplayed);
-            }
-            drawLevelCounter();
-        });
+            drawLivesCounter(numLivesDisplayed);
+        }
+        drawLevelCounter();
     }
 
     private void drawPacManMaze(GameModel game, boolean flashing) {
-        if (game.level().isEmpty()) {
-            throw new IllegalStateException("Cannot draw maze, no level exists");
-        }
         World world = game.world();
         checkNotNull(world);
         PacManGameSpriteSheet sheet = context.spriteSheet();
@@ -131,9 +126,6 @@ public class PlayScene2D extends GameScene2D {
     }
 
     private void drawMsPacManMaze(GameModel game, int mazeNumber, boolean flashing) {
-        if (game.level().isEmpty()) {
-            throw new IllegalStateException("Cannot draw maze, no level exists");
-        }
         World world = game.world();
         checkNotNull(world);
         MsPacManGameSpriteSheet sheet = context.spriteSheet();
@@ -166,13 +158,13 @@ public class PlayScene2D extends GameScene2D {
     protected void drawSceneInfo() {
         drawTileGrid(ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
         if (context.game() == GameVariants.PACMAN) {
-            context.gameLevel().ifPresent(level -> ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> {
+            ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> {
                 // "No Trespassing" symbol
                 g.setFill(Color.RED);
                 g.fillOval(s(t(tile.x())), s(t(tile.y() - 1)), s(TS), s(TS));
                 g.setFill(Color.WHITE);
                 g.fillRect(s(t(tile.x()) + 1), s(t(tile.y()) - HTS - 1), s(TS - 2), s(2));
-            }));
+            });
         }
         g.setFill(Color.YELLOW);
         g.setFont(Font.font("Sans", FontWeight.BOLD, 24));
@@ -181,26 +173,22 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onSceneVariantSwitch() {
-        context.gameLevel().ifPresent(level -> {
-            if (!level.demoLevel() && context.gameState() == GameState.HUNTING) {
-                context.ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
-            }
-        });
+        if (!context.game().gameLevel().demoLevel() && context.gameState() == GameState.HUNTING) {
+            context.ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
+        }
     }
 
     private void updateSound() {
-        context.gameLevel().ifPresent(level -> {
-            if (level.demoLevel()) {
-                return;
-            }
-            if (context.game().pac().starvingTicks() > 8) { // TODO not sure
-                context.stopAudioClip("audio.pacman_munch");
-            }
-            if (!context.game().pac().isDead() && context.game().ghosts(RETURNING_HOME, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
-                context.ensureAudioLoop("audio.ghost_returning");
-            } else {
-                context.stopAudioClip("audio.ghost_returning");
-            }
-        });
+        if (context.game().gameLevel().demoLevel()) {
+            return;
+        }
+        if (context.game().pac().starvingTicks() > 8) { // TODO not sure
+            context.stopAudioClip("audio.pacman_munch");
+        }
+        if (!context.game().pac().isDead() && context.game().ghosts(RETURNING_HOME, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
+            context.ensureAudioLoop("audio.ghost_returning");
+        } else {
+            context.stopAudioClip("audio.ghost_returning");
+        }
     }
 }

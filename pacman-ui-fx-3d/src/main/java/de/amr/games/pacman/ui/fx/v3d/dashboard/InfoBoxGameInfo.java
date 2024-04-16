@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.util.Theme;
 
@@ -63,30 +62,30 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtGhostSpeed(GameModel game) {
-        return fmtSpeed(game.level().get().ghostSpeedPercentage());
+        return fmtSpeed(game.gameLevel().ghostSpeedPercentage());
     }
 
     private String fmtGhostSpeedFrightened(GameModel game) {
-        return fmtSpeed(game.level().get().ghostSpeedFrightenedPercentage());
+        return fmtSpeed(game.gameLevel().ghostSpeedFrightenedPercentage());
     }
 
     private String fmtGhostSpeedTunnel(GameModel game) {
-        return fmtSpeed(game.level().get().ghostSpeedTunnelPercentage());
+        return fmtSpeed(game.gameLevel().ghostSpeedTunnelPercentage());
     }
 
     private String fmtPacSpeed(GameModel game) {
-        return fmtSpeed(game.level().get().pacSpeedPercentage());
+        return fmtSpeed(game.gameLevel().pacSpeedPercentage());
     }
 
     private String fmtPacSpeedPowered(GameModel game) {
-        return fmtSpeed(game.level().get().pacSpeedPoweredPercentage());
+        return fmtSpeed(game.gameLevel().pacSpeedPoweredPercentage());
     }
 
     private String fmtPacPowerSeconds(GameModel game) {
-        return "%d sec".formatted(game.level().get().pacPowerSeconds());
+        return "%d sec".formatted(game.gameLevel().pacPowerSeconds());
     }
 
     private String fmtNumFlashes(GameModel game) {
-        return "%d".formatted(game.level().get().numFlashes());
+        return "%d".formatted(game.gameLevel().numFlashes());
     }
 }

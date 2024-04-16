@@ -145,14 +145,10 @@ public class Pac extends Creature {
         if (dead || restingTicks == REST_INDEFINITE) {
             return;
         }
-        if (game.level().isEmpty()) {
-            throw new IllegalStateException("Cannot update Pac-Man, no level exists");
-        }
-        GameLevel level = game.level().get();
         if (restingTicks == 0) {
             setPercentageSpeed(powerTimer.isRunning()
-                ? level.pacSpeedPoweredPercentage()
-                : level.pacSpeedPercentage());
+                ? game.gameLevel().pacSpeedPoweredPercentage()
+                : game.gameLevel().pacSpeedPercentage());
             if (useAutopilot) {
                 autopilot.steer(this, game.world());
             } else {

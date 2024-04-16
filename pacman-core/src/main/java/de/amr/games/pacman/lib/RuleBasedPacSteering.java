@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib;
 
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.world.World;
@@ -85,41 +84,35 @@ public class RuleBasedPacSteering implements Steering {
 
     private CollectedData collectData(GameModel game) {
         var data = new CollectedData();
-        game.level().ifPresent(level -> {
-            var pac = game.pac();
-            Ghost hunterAhead = findHuntingGhostAhead(level); // Where is Hunter?
-            if (hunterAhead != null) {
-                data.hunterAhead = hunterAhead;
-                data.hunterAheadDistance = pac.tile().manhattanDistance(hunterAhead.tile());
-            }
-            Ghost hunterBehind = findHuntingGhostBehind(level);
-            if (hunterBehind != null) {
-                data.hunterBehind = hunterBehind;
-                data.hunterBehindDistance = pac.tile().manhattanDistance(hunterBehind.tile());
-            }
-            data.frightenedGhosts = game.ghosts(GhostState.FRIGHTENED)
-                .filter(ghost -> ghost.tile().manhattanDistance(pac.tile()) <= CollectedData.MAX_GHOST_CHASE_DIST)
-                .collect(Collectors.toList());
-            data.frightenedGhostsDistance = data.frightenedGhosts.stream()
-                .map(ghost -> ghost.tile().manhattanDistance(pac.tile())).collect(Collectors.toList());
+        var pac = game.pac();
+        Ghost hunterAhead = findHuntingGhostAhead(); // Where is Hunter?
+        if (hunterAhead != null) {
+            data.hunterAhead = hunterAhead;
+            data.hunterAheadDistance = pac.tile().manhattanDistance(hunterAhead.tile());
+        }
+        Ghost hunterBehind = findHuntingGhostBehind();
+        if (hunterBehind != null) {
+            data.hunterBehind = hunterBehind;
+            data.hunterBehindDistance = pac.tile().manhattanDistance(hunterBehind.tile());
+        }
+        data.frightenedGhosts = game.ghosts(GhostState.FRIGHTENED)
+            .filter(ghost -> ghost.tile().manhattanDistance(pac.tile()) <= CollectedData.MAX_GHOST_CHASE_DIST)
+            .collect(Collectors.toList());
+        data.frightenedGhostsDistance = data.frightenedGhosts.stream()
+            .map(ghost -> ghost.tile().manhattanDistance(pac.tile())).collect(Collectors.toList());
 
-        });
         return data;
     }
 
     private void takeAction(GameModel game, CollectedData data) {
-        if (game.level().isEmpty()) {
-            return;
-        }
-        GameLevel level = game.level().get();
         var pac = game.pac();
         if (data.hunterAhead != null) {
             Direction escapeDir;
             if (data.hunterBehind != null) {
-                escapeDir = findEscapeDirectionExcluding(level, EnumSet.of(pac.moveDir(), pac.moveDir().opposite()));
+                escapeDir = findEscapeDirectionExcluding(EnumSet.of(pac.moveDir(), pac.moveDir().opposite()));
                 Logger.trace("Detected ghost {} behind, escape direction is {}", data.hunterAhead.name(), escapeDir);
             } else {
-                escapeDir = findEscapeDirectionExcluding(level, EnumSet.of(pac.moveDir()));
+                escapeDir = findEscapeDirectionExcluding(EnumSet.of(pac.moveDir()));
                 Logger.trace("Detected ghost {} ahead, escape direction is {}", data.hunterAhead.name(), escapeDir);
             }
             if (escapeDir != null) {
@@ -141,7 +134,7 @@ public class RuleBasedPacSteering implements Steering {
             Logger.trace("Active bonus detected, get it!");
             game.bonus().ifPresent(bonus -> pac.setTargetTile(tileAt(bonus.entity().position())));
         } else {
-            pac.setTargetTile(findTileFarthestFromGhosts(findNearestFoodTiles(level)));
+            pac.setTargetTile(findTileFarthestFromGhosts(findNearestFoodTiles()));
         }
         pac.targetTile().ifPresent(target -> {
             CreatureMovement.navigateTowardsTarget(pac, game.world());
@@ -159,7 +152,7 @@ public class RuleBasedPacSteering implements Steering {
         return false;
     }
 
-    private Ghost findHuntingGhostAhead(GameLevel level) {
+    private Ghost findHuntingGhostAhead() {
         var pac = game.pac();
         Vector2i pacManTile = pac.tile();
         boolean energizerFound = false;
@@ -187,7 +180,7 @@ public class RuleBasedPacSteering implements Steering {
         return null;
     }
 
-    private Ghost findHuntingGhostBehind(GameLevel level) {
+    private Ghost findHuntingGhostBehind() {
         var pac = game.pac();
         var pacManTile = pac.tile();
         for (int i = 1; i <= CollectedData.MAX_GHOST_BEHIND_DETECTION_DIST; ++i) {
@@ -205,7 +198,7 @@ public class RuleBasedPacSteering implements Steering {
         return null;
     }
 
-    private Direction findEscapeDirectionExcluding(GameLevel level, Collection<Direction> forbidden) {
+    private Direction findEscapeDirectionExcluding(Collection<Direction> forbidden) {
         var pac = game.pac();
         Vector2i pacManTile = pac.tile();
         List<Direction> escapes = new ArrayList<>(4);
@@ -227,7 +220,7 @@ public class RuleBasedPacSteering implements Steering {
         return escapes.isEmpty() ? null : escapes.getFirst();
     }
 
-    private List<Vector2i> findNearestFoodTiles(GameLevel level) {
+    private List<Vector2i> findNearestFoodTiles() {
         long time = System.nanoTime();
         var pac = game.pac();
         List<Vector2i> foodTiles = new ArrayList<>();

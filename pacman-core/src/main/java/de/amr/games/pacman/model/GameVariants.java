@@ -1049,8 +1049,8 @@ public enum GameVariants implements GameModel {
     }
 
     @Override
-    public Optional<GameLevel> level() {
-        return Optional.ofNullable(level);
+    public GameLevel gameLevel() {
+        return level;
     }
 
     @Override
