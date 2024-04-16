@@ -9,6 +9,9 @@ package de.amr.games.pacman.lib;
  */
 public class Pulse {
 
+    public static final boolean ON = true;
+    public static final boolean OFF = false;
+
     private final int ticksPerPhase;
     private boolean startPhase;
     private int numPhases;

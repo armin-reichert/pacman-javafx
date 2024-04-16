@@ -6,6 +6,7 @@ package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.FsmState;
+import de.amr.games.pacman.lib.Pulse;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
@@ -126,7 +127,8 @@ public enum GameState implements FsmState<GameModel> {
             game.level().ifPresent(level -> {
                 level.pac().startAnimation();
                 level.ghosts().forEach(Ghost::startAnimation);
-                level.energizerBlinking().restart();
+                level.blinking().setStartPhase(Pulse.ON);
+                level.blinking().restart();
                 game.publishGameEvent(GameEventType.HUNTING_PHASE_STARTED);
             });
         }
@@ -153,6 +155,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             game.level().ifPresent(level -> {
                 if (timer.hasExpired()) {
+                    setProperty("mazeFlashing", false);
                     if (level.isDemoLevel()) { // just in case demo level is completed: back to intro scene
                         gameController().changeState(INTRO);
                     } else if (level.intermissionNumber() > 0) {
@@ -161,9 +164,11 @@ public enum GameState implements FsmState<GameModel> {
                         gameController().changeState(LEVEL_TRANSITION);
                     }
                 } else if (timer.atSecond(1)) {
-                    level.mazeFlashing().restart(2 * level.numFlashes());
+                    setProperty("mazeFlashing", true);
+                    level.blinking().setStartPhase(Pulse.OFF);
+                    level.blinking().restart(2 * level.numFlashes());
                 } else {
-                    level.mazeFlashing().tick();
+                    level.blinking().tick();
                 }
             });
         }
@@ -203,7 +208,7 @@ public enum GameState implements FsmState<GameModel> {
                 } else {
                     level.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
                         .forEach(ghost -> ghost.update(level));
-                    level.energizerBlinking().tick();
+                    level.blinking().tick();
                 }
             });
         }
@@ -256,7 +261,7 @@ public enum GameState implements FsmState<GameModel> {
                     }
                     case TICK_HIDE_PAC -> level.pac().hide();
                     default -> {
-                        level.energizerBlinking().tick();
+                        level.blinking().tick();
                         level.pac().update(level);
                     }
                 }

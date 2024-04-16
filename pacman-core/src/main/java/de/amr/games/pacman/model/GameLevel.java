@@ -37,8 +37,7 @@ public class GameLevel {
     private final byte[] data;
     private final TickTimer huntingTimer = new TickTimer("HuntingTimer");
     private final World world;
-    private final Pulse energizerBlinking;
-    private final Pulse mazeFlashing;
+    private final Pulse blinking;
     private final Pac pac;
     private final Ghost[] ghosts;
     private final List<Byte> bonusSymbols;
@@ -65,11 +64,9 @@ public class GameLevel {
         this.levelNumber = levelNumber;
         this.demoLevel   = demoLevel;
         this.world = world;
-
         this.data = data;
 
-        this.energizerBlinking = new Pulse(10, true);
-        this.mazeFlashing      = new Pulse(10, false);
+        this.blinking = new Pulse(10, false);
 
         bonusReachedIndex = -1;
         initGhostHouseAccessControl();
@@ -156,12 +153,8 @@ public class GameLevel {
         return world;
     }
 
-    public Pulse energizerBlinking() {
-        return energizerBlinking;
-    }
-
-    public Pulse mazeFlashing() {
-        return mazeFlashing;
+    public Pulse blinking() {
+        return blinking;
     }
 
     public Pac pac() {
@@ -322,8 +315,8 @@ public class GameLevel {
             ghost.setState(LOCKED);
             ghost.resetAnimation();
         });
-        mazeFlashing.reset();
-        energizerBlinking.reset();
+        blinking.setStartPhase(Pulse.ON);
+        blinking.reset();
     }
 
     /**
@@ -461,7 +454,7 @@ public class GameLevel {
         updatePac();
         updateBonus();
         updateHuntingTimer();
-        energizerBlinking.tick();
+        blinking.tick();
 
         // what next?
         if (world.uneatenFoodCount() == 0) {
@@ -481,7 +474,8 @@ public class GameLevel {
     }
 
     public void onCompleted() {
-        mazeFlashing.reset();
+        blinking.setStartPhase(Pulse.OFF);
+        blinking.reset();
         pac.freeze();
         ghosts().forEach(Ghost::hide);
         bonus().ifPresent(Bonus::setInactive);
@@ -492,9 +486,17 @@ public class GameLevel {
 
     public void doLevelTestStep(TickTimer timer, int lastTestedLevel) {
         if (levelNumber <= lastTestedLevel) {
-            if (timer.atSecond(0.5)) {
+            if (timer.tick() > 2 * FPS) {
+                blinking.tick();
+                ghosts().forEach(ghost -> ghost.update(this));
+                bonus().ifPresent(bonus -> bonus.update(this));
+            }
+            if (timer.atSecond(1.0)) {
                 letsGetReadyToRumble(true);
-            } else if (timer.atSecond(1.5)) {
+            } else if (timer.atSecond(2)) {
+                blinking.setStartPhase(Pulse.ON);
+                blinking.restart();
+            } else if (timer.atSecond(2.5)) {
                 onBonusReached(0);
             } else if (timer.atSecond(3.5)) {
                 bonus().ifPresent(bonus -> bonus.setEaten(120));
@@ -508,19 +510,22 @@ public class GameLevel {
             } else if (timer.atSecond(8.5)) {
                 pac.hide();
                 ghosts().forEach(Ghost::hide);
-                mazeFlashing().restart(2 * numFlashes());
+                blinking.stop();
+                blinking.setStartPhase(Pulse.ON);
+                blinking.reset();
+            } else if (timer.atSecond(9.5)) {
+                GameController.it().state().setProperty("mazeFlashing", true);
+                blinking.setStartPhase(Pulse.OFF);
+                blinking.restart(2 * numFlashes());
             } else if (timer.atSecond(12.0)) {
                 timer.restartIndefinitely();
                 pac.freeze();
                 ghosts().forEach(Ghost::hide);
                 bonus().ifPresent(Bonus::setInactive);
-                mazeFlashing().reset();
+                GameController.it().state().setProperty("mazeFlashing", false);
+                blinking.reset();
                 game().createAndStartLevel(levelNumber + 1);
             }
-            energizerBlinking().tick();
-            mazeFlashing().tick();
-            ghosts().forEach(ghost -> ghost.update(this));
-            bonus().ifPresent(bonus -> bonus.update(this));
         } else {
             GameController.it().restart(GameState.BOOT);
         }
