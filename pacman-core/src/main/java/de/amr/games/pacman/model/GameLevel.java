@@ -68,28 +68,30 @@ public class GameLevel {
     private int     globalDotCounter;
     private boolean globalDotCounterEnabled;
 
-    public GameLevel(int no, boolean demoLevel, byte[] data, World world) {
+    public GameLevel(int levelNumber, boolean demoLevel, byte[] data, World world) {
+        checkLevelNumber(levelNumber);
         checkNotNull(data);
         checkNotNull(world);
 
-        this.levelNumber = no;
-        this.demoLevel = demoLevel;
-        this.pacSpeedPercentage = data[0];
-        this.ghostSpeedPercentage = data[1];
-        this.ghostSpeedTunnelPercentage = data[2];
-        this.elroy1DotsLeft = data[3];
-        this.elroy1SpeedPercentage = data[4];
-        this.elroy2DotsLeft = data[5];
-        this.elroy2SpeedPercentage = data[6];
-        this.pacSpeedPoweredPercentage = data[7];
-        this.ghostSpeedFrightenedPercentage = data[8];
-        this.pacPowerSeconds = data[9];
-        this.numFlashes = data[10];
-        this.intermissionNumber = data[11];
-
+        this.levelNumber = levelNumber;
+        this.demoLevel   = demoLevel;
         this.world = world;
+
+        this.pacSpeedPercentage             = data[0];
+        this.ghostSpeedPercentage           = data[1];
+        this.ghostSpeedTunnelPercentage     = data[2];
+        this.elroy1DotsLeft                 = data[3];
+        this.elroy1SpeedPercentage          = data[4];
+        this.elroy2DotsLeft                 = data[5];
+        this.elroy2SpeedPercentage          = data[6];
+        this.pacSpeedPoweredPercentage      = data[7];
+        this.ghostSpeedFrightenedPercentage = data[8];
+        this.pacPowerSeconds                = data[9];
+        this.numFlashes                     = data[10];
+        this.intermissionNumber             = data[11];
+
         this.energizerBlinking = new Pulse(10, true);
-        this.mazeFlashing = new Pulse(10, false);
+        this.mazeFlashing      = new Pulse(10, false);
 
         bonusReachedIndex = -1;
         initGhostHouseAccessControl();
@@ -99,9 +101,12 @@ public class GameLevel {
         pac.setBaseSpeed(GameModel.PPS_AT_100_PERCENT / (float) GameModel.FPS);
         pac.setPowerFadingTicks(GameModel.PAC_POWER_FADING_TICKS); // not sure about duration
 
-        ghosts = Stream.of(RED_GHOST, PINK_GHOST, CYAN_GHOST, ORANGE_GHOST)
-            .map(id -> new Ghost(id, game().ghostName(id))).toArray(Ghost[]::new);
-
+        ghosts = new Ghost[] {
+            new Ghost(RED_GHOST,    game().ghostName(RED_GHOST)),
+            new Ghost(PINK_GHOST,   game().ghostName(PINK_GHOST)),
+            new Ghost(CYAN_GHOST,   game().ghostName(CYAN_GHOST)),
+            new Ghost(ORANGE_GHOST, game().ghostName(ORANGE_GHOST))
+        };
         ghosts().forEach(ghost -> {
             ghost.reset();
             ghost.setHouse(world.house());
@@ -113,8 +118,8 @@ public class GameLevel {
             ghost.setSpeedInsideHouse(GameModel.PPS_GHOST_INHOUSE / (float) GameModel.FPS);
         });
 
-        bonusSymbols = List.of(game().nextBonusSymbol(levelNumber), game().nextBonusSymbol(levelNumber));
-        Logger.trace("Game level {} created.", levelNumber);
+        bonusSymbols = List.of(game().nextBonusSymbol(this.levelNumber), game().nextBonusSymbol(this.levelNumber));
+        Logger.trace("Game level {} created.", this.levelNumber);
     }
 
     public GameModel game() {
