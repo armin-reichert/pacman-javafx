@@ -342,6 +342,7 @@ public class GameLevel {
                 pac.setRestingTicks(GameModel.RESTING_TICKS_ENERGIZER);
                 pac.victims().clear();
                 scorePoints(GameModel.POINTS_ENERGIZER);
+                handleEnergizerEaten();
                 Logger.info("Scored {} points for eating energizer", GameModel.POINTS_ENERGIZER);
             } else {
                 pac.setRestingTicks(GameModel.RESTING_TICKS_PELLET);
@@ -367,15 +368,7 @@ public class GameLevel {
 
     private void updatePac() {
         pac.update(this);
-        if (eventLog().energizerFound && pacPowerSeconds > 0) {
-            huntingTimer.stop();
-            Logger.info("Hunting timer stopped");
-            pac.powerTimer().restartSeconds(pacPowerSeconds);
-            ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
-            eventLog().pacGetsPower = true;
-            game().publishGameEvent(GameEventType.PAC_GETS_POWER);
-        } else if (pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS) {
+        if (pac.powerTimer().remaining() == GameModel.PAC_POWER_FADING_TICKS) {
             eventLog().pacStartsLosingPower = true;
             game().publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (pac.powerTimer().hasExpired()) {
@@ -386,6 +379,19 @@ public class GameLevel {
             ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
             eventLog().pacLostPower = true;
             game().publishGameEvent(GameEventType.PAC_LOST_POWER);
+        }
+    }
+
+    private void handleEnergizerEaten() {
+        if (pacPowerSeconds > 0) {
+            eventLog().pacGetsPower = true;
+            huntingTimer.stop();
+            Logger.info("Hunting timer stopped");
+            pac.powerTimer().restartSeconds(pacPowerSeconds);
+            // TODO do already frightened ghosts reverse too?
+            ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
+            ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
+            game().publishGameEvent(GameEventType.PAC_GETS_POWER);
         }
     }
 
