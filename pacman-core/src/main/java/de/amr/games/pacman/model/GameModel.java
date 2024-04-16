@@ -118,17 +118,6 @@ public interface GameModel {
     Stream<Ghost> ghosts(GhostState... states);
 
     /**
-     * @return {@code true} if bonus score is reached for this level
-     */
-    boolean isBonusReached();
-
-    /**
-     * @param symbol bonus symbol
-     * @return points earned when eating this bonus
-     */
-    int bonusValue(byte symbol);
-
-    /**
      * @return File where high score is saved
      */
     File highScoreFile();
