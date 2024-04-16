@@ -8,15 +8,16 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.*;
+import de.amr.games.pacman.lib.Pulse;
+import de.amr.games.pacman.lib.Score;
+import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 
-import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -37,6 +38,8 @@ public interface GameModel {
     /** Game loop frequency, ticks per second. */
     short FPS = 60;
 
+    short PPS_AT_100_PERCENT = 75;
+
     /**
      * @return Pac-Man or Ms. Pac-Man
      */
@@ -54,11 +57,6 @@ public interface GameModel {
      * @return all ghosts which are in any of the given states or all ghosts, if no states are specified
      */
     Stream<Ghost> ghosts(GhostState... states);
-
-    /**
-     * @return File where high score is saved
-     */
-    File highScoreFile();
 
     /**
      * Creates and initializes new game level with the given number.
@@ -171,9 +169,7 @@ public interface GameModel {
      */
     Score highScore();
 
-    default void loadHighScore() {
-        highScore().loadFromFile(highScoreFile());
-    }
+    void loadHighScore();
 
     /**
      * Scores given amount of points

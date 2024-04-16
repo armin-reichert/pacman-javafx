@@ -55,8 +55,17 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        public File highScoreFile() {
-            return HIGH_SCORE_FILE;
+        public void loadHighScore() {
+            highScore().loadFromFile(HIGH_SCORE_FILE);
+        }
+
+        @Override
+        public void updateHighScore() {
+            var oldHighScore = new Score();
+            oldHighScore.loadFromFile(HIGH_SCORE_FILE);
+            if (highScore.points() > oldHighScore.points()) {
+                highScore.saveToFile(HIGH_SCORE_FILE, String.format("%s High Score", name()));
+            }
         }
 
         @Override
@@ -276,8 +285,17 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        public File highScoreFile() {
-            return HIGH_SCORE_FILE;
+        public void loadHighScore() {
+            highScore().loadFromFile(HIGH_SCORE_FILE);
+        }
+
+        @Override
+        public void updateHighScore() {
+            var oldHighScore = new Score();
+            oldHighScore.loadFromFile(HIGH_SCORE_FILE);
+            if (highScore.points() > oldHighScore.points()) {
+                highScore.saveToFile(HIGH_SCORE_FILE, String.format("%s High Score", name()));
+            }
         }
 
         @Override
@@ -450,7 +468,6 @@ public enum GameVariants implements GameModel {
     final byte RESTING_TICKS_ENERGIZER = 3;
 
     /** Base speed of creatures in pixels per second. */
-    final short PPS_AT_100_PERCENT = 75;
     final short PPS_GHOST_INHOUSE = 30; // correct?
     final short PPS_GHOST_RETURNING_HOME = 120; // correct?
 
@@ -1159,15 +1176,6 @@ public enum GameVariants implements GameModel {
     @Override
     public Score highScore() {
         return highScore;
-    }
-
-    @Override
-    public void updateHighScore() {
-        var oldHighScore = new Score();
-        oldHighScore.loadFromFile(highScoreFile());
-        if (highScore.points() > oldHighScore.points()) {
-            highScore.saveToFile(highScoreFile(), String.format("%s High Score", name()));
-        }
     }
 
     // Game Event Support

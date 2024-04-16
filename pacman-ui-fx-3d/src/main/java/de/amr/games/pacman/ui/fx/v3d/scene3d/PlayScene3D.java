@@ -124,6 +124,10 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void update() {
+        if (context.game().level() == null) {
+            Logger.info("Cannot update 3D play scene, no game level exists");
+            return;
+        }
         if (level3D != null) {
             level3D.update();
             currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
@@ -395,6 +399,10 @@ public class PlayScene3D implements GameScene {
     }
 
     private void showLevelMessage() {
+        if (context.game().level() == null) {
+            Logger.info("Cannot show level message, level is NULL");
+            return;
+        }
         World world = context.game().world();
         checkNotNull(world);
         if (context.gameState() == GameState.LEVEL_TEST) {
