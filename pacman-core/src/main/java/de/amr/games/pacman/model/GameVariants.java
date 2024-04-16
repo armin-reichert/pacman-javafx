@@ -50,7 +50,7 @@ public enum GameVariants implements GameModel {
             {5 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 5+
         };
 
-        public int[] huntingDurations(int levelNumber) {
+        int[] huntingDurations(int levelNumber) {
             return HUNTING_DURATIONS[levelNumber <= 4 ? 0 : 1];
         }
 
@@ -114,7 +114,10 @@ public enum GameVariants implements GameModel {
             if (levelNumber <= 7) {
                 // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
                 // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
-                addSymbolToLevelCounter(bonusSymbol(0));
+                levelCounter.add(bonusSymbol(0));
+                if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
+                    levelCounter.removeFirst();
+                }
             }
             Logger.info("Level {} created ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_CREATED);
@@ -139,8 +142,7 @@ public enum GameVariants implements GameModel {
          * but because of a bug, only the scatter target of Blinky and Pinky would have been affected. Who knows?
          * </p>
          */
-        @Override
-        public void huntingBehaviour(Ghost ghost, GameLevel level) {
+        void huntingBehaviour(Ghost ghost, GameLevel level) {
             if (scatterPhase().isPresent() && scatterPhase().get() == 0
                 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
                 roam(ghost, world, huntingSpeedPercentage(ghost, level), pseudoRandomDirection());
@@ -254,7 +256,6 @@ public enum GameVariants implements GameModel {
             return movingBonus;
         }
 
-
     },
 
     /**
@@ -345,7 +346,10 @@ public enum GameVariants implements GameModel {
             if (levelNumber == 1) {
                 levelCounter.clear();
             }
-            addSymbolToLevelCounter(bonusSymbol(0));
+            levelCounter.add(bonusSymbol(0));
+            if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
+                levelCounter.removeFirst();
+            }
 
             Logger.info("Level {} created ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_CREATED);
@@ -363,8 +367,7 @@ public enum GameVariants implements GameModel {
             publishGameEvent(GameEventType.LEVEL_STARTED);
         }
 
-        @Override
-        public void huntingBehaviour(Ghost ghost, GameLevel level) {
+        void huntingBehaviour(Ghost ghost, GameLevel level) {
             byte relSpeed = huntingSpeedPercentage(ghost, level);
             if (chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0) {
                 followTarget(ghost, world, chasingTarget(ghost.id()), relSpeed);
@@ -519,7 +522,7 @@ public enum GameVariants implements GameModel {
     /**
      * @param cruiseElroyState Values: <code>0, 1, 2, -1, -2</code>. (0=off, negative=disabled).
      */
-    public void setCruiseElroyState(int cruiseElroyState) {
+    void setCruiseElroyState(int cruiseElroyState) {
         if (cruiseElroyState < -2 || cruiseElroyState > 2) {
             throw new IllegalArgumentException(
                 "Cruise Elroy state must be one of -2, -1, 0, 1, 2, but is " + cruiseElroyState);
@@ -528,13 +531,12 @@ public enum GameVariants implements GameModel {
         Logger.trace("Cruise Elroy state set to {}", cruiseElroyState);
     }
 
-    public void enableCruiseElroyState(boolean enabled) {
+    void enableCruiseElroyState(boolean enabled) {
         if (enabled && cruiseElroyState < 0 || !enabled && cruiseElroyState > 0) {
             cruiseElroyState = (byte) (-cruiseElroyState);
             Logger.trace("Cruise Elroy state set to {}", cruiseElroyState);
         }
     }
-
 
     SimulationStepEventLog eventLog() {
         return GameController.it().eventLog();
@@ -574,11 +576,10 @@ public enum GameVariants implements GameModel {
         };
     }
 
-    public byte frightenedGhostRelSpeed(Ghost ghost) {
+    byte frightenedGhostRelSpeed(Ghost ghost) {
         return world.isTunnel(ghost.tile())
             ? level.ghostSpeedTunnelPercentage() : level.ghostSpeedFrightenedPercentage();
     }
-
 
     /**
      * @param ghost a ghost
@@ -597,6 +598,8 @@ public enum GameVariants implements GameModel {
         }
         return level.ghostSpeedPercentage();
     }
+
+    abstract void huntingBehaviour(Ghost ghost, GameLevel level);
 
     /**
      * From the Pac-Man dossier:
@@ -871,7 +874,7 @@ public enum GameVariants implements GameModel {
         return Optional.ofNullable(bonus);
     }
 
-    public byte bonusSymbol(int index) {
+    byte bonusSymbol(int index) {
         return bonusSymbols.get(index);
     }
 
@@ -885,7 +888,6 @@ public enum GameVariants implements GameModel {
             publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
         }
     }
-
 
     private void scorePoints(int points) {
         if (!level.demoLevel()) {
@@ -1089,14 +1091,6 @@ public enum GameVariants implements GameModel {
     @Override
     public List<Byte> levelCounter() {
         return levelCounter;
-    }
-
-    @Override
-    public void addSymbolToLevelCounter(byte symbol) {
-        levelCounter.add(symbol);
-        if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
-            levelCounter.removeFirst();
-        }
     }
 
     @Override

@@ -115,7 +115,7 @@ public interface GameModel {
      * @param states states specifying which ghosts are returned
      * @return all ghosts which are in any of the given states or all ghosts, if no states are specified
      */
-    public Stream<Ghost> ghosts(GhostState... states);
+    Stream<Ghost> ghosts(GhostState... states);
 
     /**
      * @return {@code true} if bonus score is reached for this level
@@ -249,18 +249,6 @@ public interface GameModel {
      * @return List of symbols representing levels completed so far.
      */
     List<Byte> levelCounter();
-
-    /**
-     * Adds symbol to level counter list.
-     * @param symbol bonus symbol
-     */
-    void addSymbolToLevelCounter(byte symbol);
-
-    /**
-     * Defines the hunting behaviour of the given ghost in the given level.
-     * @param ghost a ghost
-     */
-    void huntingBehaviour(Ghost ghost, GameLevel level);
 
     /**
      * @return the score of the current game
