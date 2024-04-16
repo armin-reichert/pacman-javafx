@@ -5,10 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Pulse;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
@@ -16,8 +14,6 @@ import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -37,11 +33,7 @@ public class GameLevel {
     private final Pulse blinking;
     private final Pac pac;
     private final Ghost[] ghosts;
-    private final List<Byte> bonusSymbols;
-    private Bonus bonus;
-    public byte totalNumGhostsKilled;
     private byte cruiseElroyState;
-    public byte bonusReachedIndex; // -1=no bonus, 0=first, 1=second
 
     public GameLevel(int levelNumber, boolean demoLevel, byte[] data, World world) {
         checkLevelNumber(levelNumber);
@@ -52,8 +44,6 @@ public class GameLevel {
         this.world = world;
         this.data = data;
         blinking = new Pulse(10, false);
-        bonusSymbols = List.of(game().nextBonusSymbol(levelNumber), game().nextBonusSymbol(levelNumber));
-        bonusReachedIndex = -1;
         pac = new Pac(game().pacName());
         ghosts = new Ghost[] {
             new Ghost(RED_GHOST,    game().ghostName(RED_GHOST)),
@@ -172,11 +162,6 @@ public class GameLevel {
         }
     }
 
-    public int totalNumGhostsKilled() {
-        return totalNumGhostsKilled;
-    }
-
-
     public Vector2i chasingTarget(byte ghostID) {
         return switch (ghostID) {
             // Blinky: attacks Pac-Man directly
@@ -214,31 +199,4 @@ public class GameLevel {
         return ghostSpeedPercentage();
     }
 
-    /* --- Here comes the main logic of the game. --- */
-
-
-    // Bonus Management
-
-    public Optional<Bonus> bonus() {
-        return Optional.ofNullable(bonus);
-    }
-
-    public byte bonusSymbol(int index) {
-        return bonusSymbols.get(index);
-    }
-
-    /**
-     * Called on bonus achievement (public access for unit tests and level test).
-     *
-     * @param index bonus index (0 or 1).
-     */
-    public void onBonusReached(int index) {
-        if (index < 0 || index > 1) {
-            throw new IllegalArgumentException("Bonus index must be 0 or 1");
-        }
-        bonus = game().createNextBonus(world, bonus, index, bonusSymbol(index)).orElse(null);
-        if (bonus != null) {
-            game().publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
-        }
-    }
 }

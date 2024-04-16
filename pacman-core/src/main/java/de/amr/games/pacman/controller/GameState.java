@@ -8,7 +8,6 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.FsmState;
 import de.amr.games.pacman.lib.Pulse;
 import de.amr.games.pacman.lib.TickTimer;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.IllegalGameVariantException;
@@ -271,8 +270,8 @@ public enum GameState implements FsmState<GameModel> {
         }
 
         @Override
-        public void onExit(GameModel context) {
-            context.level().flatMap(GameLevel::bonus).ifPresent(Bonus::setInactive);
+        public void onExit(GameModel game) {
+            game.bonus().ifPresent(Bonus::setInactive);
         }
     },
 

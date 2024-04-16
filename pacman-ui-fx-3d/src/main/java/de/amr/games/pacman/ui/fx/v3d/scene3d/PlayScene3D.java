@@ -336,7 +336,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onBonusActivated(GameEvent event) {
         assertLevel3DExists();
-        context.gameLevel().flatMap(GameLevel::bonus).ifPresent(level3D::replaceBonus3D);
+        context.game().bonus().ifPresent(level3D::replaceBonus3D);
     }
 
     @Override

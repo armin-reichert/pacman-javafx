@@ -190,13 +190,10 @@ public enum GameVariants implements GameModel {
             }
             initGhostHouseAccessControl();
 
-            huntingPhaseIndex = 0;
-            huntingTimer.resetIndefinitely();
-
             level.pac().reset();
             level.pac().setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
             level.pac().setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
-            level.pac().setAutopilot(new RuleBasedPacSteering(level));
+            level.pac().setAutopilot(new RuleBasedPacSteering(this));
             level.pac().setUseAutopilot(demoLevel);
 
             level.ghosts().forEach(ghost -> {
@@ -211,6 +208,13 @@ public enum GameVariants implements GameModel {
                 ghost.setSpeedInsideHouse(PPS_GHOST_INHOUSE / (float) FPS);
             });
 
+            huntingPhaseIndex = 0;
+            huntingTimer.resetIndefinitely();
+            bonusReachedIndex = -1;
+            bonusSymbols = List.of(nextBonusSymbol(levelNumber), nextBonusSymbol(levelNumber));
+            bonus = null;
+            numGhostsKilledInLevel = 0;
+
             score.setLevelNumber(levelNumber);
             if (levelNumber == 1) {
                 levelCounter.clear();
@@ -218,7 +222,7 @@ public enum GameVariants implements GameModel {
             if (levelNumber <= 7) {
                 // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
                 // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
-                addSymbolToLevelCounter(level.bonusSymbol(0));
+                addSymbolToLevelCounter(bonusSymbol(0));
             }
             Logger.info("Level {} created ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_CREATED);
@@ -340,7 +344,7 @@ public enum GameVariants implements GameModel {
                 level.pac().setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
                 level.pac().setUseAutopilot(true);
             } else {
-                level.pac().setAutopilot(new RuleBasedPacSteering(level));
+                level.pac().setAutopilot(new RuleBasedPacSteering(this));
                 level.pac().setUseAutopilot(false);
             }
 
@@ -356,11 +360,18 @@ public enum GameVariants implements GameModel {
                 ghost.setSpeedInsideHouse(PPS_GHOST_INHOUSE / (float) FPS);
             });
 
+            huntingPhaseIndex = 0;
+            huntingTimer.resetIndefinitely();
+            bonusReachedIndex = -1;
+            bonusSymbols = List.of(nextBonusSymbol(levelNumber), nextBonusSymbol(levelNumber));
+            bonus = null;
+            numGhostsKilledInLevel = 0;
+
             score.setLevelNumber(levelNumber);
             if (levelNumber == 1) {
                 levelCounter.clear();
             }
-            addSymbolToLevelCounter(level.bonusSymbol(0));
+            addSymbolToLevelCounter(bonusSymbol(0));
 
             Logger.info("Level {} created ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_CREATED);
@@ -409,6 +420,10 @@ public enum GameVariants implements GameModel {
 
     final TickTimer huntingTimer = new TickTimer("HuntingTimer");
     byte huntingPhaseIndex;
+    byte numGhostsKilledInLevel;
+    byte bonusReachedIndex; // -1=no bonus, 0=first, 1=second
+    List<Byte> bonusSymbols;
+    Bonus bonus;
 
     // Ghost house access-control
     static final byte UNLIMITED = -1;
@@ -706,7 +721,7 @@ public enum GameVariants implements GameModel {
         level.blinking().reset();
         level.pac().freeze();
         level.ghosts().forEach(Ghost::hide);
-        level.bonus().ifPresent(Bonus::setInactive);
+        bonus().ifPresent(Bonus::setInactive);
         huntingTimer().stop();
         Logger.info("Hunting timer stopped");
         Logger.trace("Game level {} ({}) completed.", level.levelNumber, this);
@@ -718,7 +733,7 @@ public enum GameVariants implements GameModel {
             if (timer.tick() > 2 * FPS) {
                 level.blinking().tick();
                 level.ghosts().forEach(ghost -> ghost.update(level));
-                level.bonus().ifPresent(bonus -> bonus.update(level));
+                bonus().ifPresent(bonus -> bonus.update(level));
             }
             if (timer.atSecond(1.0)) {
                 level.game().letsGetReadyToRumble();
@@ -728,15 +743,15 @@ public enum GameVariants implements GameModel {
                 level.blinking().setStartPhase(Pulse.ON);
                 level.blinking().restart();
             } else if (timer.atSecond(2.5)) {
-                level.onBonusReached(0);
+                onBonusReached(0);
             } else if (timer.atSecond(3.5)) {
-                level.bonus().ifPresent(bonus -> bonus.setEaten(120));
+                bonus().ifPresent(bonus -> bonus.setEaten(120));
                 level.game().publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer.atSecond(4.5)) {
-                level.bonus().ifPresent(Bonus::setInactive); // needed?
-                level.onBonusReached(1);
+                bonus().ifPresent(Bonus::setInactive); // needed?
+                onBonusReached(1);
             } else if (timer.atSecond(6.5)) {
-                level.bonus().ifPresent(bonus -> bonus.setEaten(60));
+                bonus().ifPresent(bonus -> bonus.setEaten(60));
                 publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer.atSecond(8.5)) {
                 level.pac().hide();
@@ -752,7 +767,7 @@ public enum GameVariants implements GameModel {
                 timer.restartIndefinitely();
                 level.pac().freeze();
                 level.ghosts().forEach(Ghost::hide);
-                level.bonus().ifPresent(Bonus::setInactive);
+                bonus().ifPresent(Bonus::setInactive);
                 GameController.it().state().setProperty("mazeFlashing", false);
                 level.blinking().reset();
                 createAndStartLevel(level.levelNumber + 1, false);
@@ -761,6 +776,29 @@ public enum GameVariants implements GameModel {
             GameController.it().restart(GameState.BOOT);
         }
     }
+
+    // Bonus Management
+
+    @Override
+    public Optional<Bonus> bonus() {
+        return Optional.ofNullable(bonus);
+    }
+
+    public byte bonusSymbol(int index) {
+        return bonusSymbols.get(index);
+    }
+
+    @Override
+    public void onBonusReached(int index) {
+        if (index < 0 || index > 1) {
+            throw new IllegalArgumentException("Bonus index must be 0 or 1");
+        }
+        bonus = createNextBonus(level.world(), bonus, index, bonusSymbol(index)).orElse(null);
+        if (bonus != null) {
+            publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
+        }
+    }
+
 
     private void scorePoints(int points) {
         if (!level.isDemoLevel()) {
@@ -792,9 +830,9 @@ public enum GameVariants implements GameModel {
                 level.setCruiseElroyState(2);
             }
             if (isBonusReached()) {
-                level.bonusReachedIndex += 1;
-                eventLog().bonusIndex = level.bonusReachedIndex;
-                level.onBonusReached(level.bonusReachedIndex);
+                bonusReachedIndex += 1;
+                eventLog().bonusIndex = bonusReachedIndex;
+                onBonusReached(bonusReachedIndex);
             }
             publishGameEvent(GameEventType.PAC_FOUND_FOOD, pacTile);
         } else {
@@ -832,10 +870,9 @@ public enum GameVariants implements GameModel {
     }
 
     private void updateBonus() {
-        if (level.bonus().isEmpty()) {
+        if (bonus == null) {
             return;
         }
-        Bonus bonus = level.bonus().get();
         if (bonus.state() == Bonus.STATE_EDIBLE && level.pac().sameTile(bonus.entity())) {
             bonus.setEaten(GameModel.BONUS_POINTS_SHOWN_TICKS);
             scorePoints(bonus.points());
@@ -904,7 +941,7 @@ public enum GameVariants implements GameModel {
     public void killGhosts(List<Ghost> prey) {
         if (!prey.isEmpty()) {
             prey.forEach(this::killGhost);
-            if (level.totalNumGhostsKilled == 16) {
+            if (numGhostsKilledInLevel == 16) {
                 int points = GameModel.POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
                 scorePoints(points);
                 Logger.info("Scored {} points for killing all ghosts at level {}", points, level.levelNumber);
@@ -920,11 +957,9 @@ public enum GameVariants implements GameModel {
         ghost.eaten(killedSoFar);
         level.pac().victims().add(ghost);
         eventLog().killedGhosts.add(ghost);
-        level.totalNumGhostsKilled += 1;
+        numGhostsKilledInLevel += 1;
         Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
     }
-
-
 
     @Override
     public Optional<GameLevel> level() {

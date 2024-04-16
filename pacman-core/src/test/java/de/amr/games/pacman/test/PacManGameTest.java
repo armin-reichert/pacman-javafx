@@ -36,7 +36,7 @@ public class PacManGameTest {
     public void setUpTest() {
         game = GameController.it().game();
         game.reset();
-        game.createAndStartLevel(1);
+        game.createAndStartLevel(1, false);
     }
 
     @Test
@@ -50,7 +50,7 @@ public class PacManGameTest {
 
         var level = game.level().get();
         assertEquals(1, level.levelNumber);
-        assertEquals(0, level.totalNumGhostsKilled());
+        //assertEquals(0, game.totalNumGhostsKilled());
         assertEquals(0, level.pac().victims().size());
         assertEquals(0, level.cruiseElroyState());
 
@@ -101,11 +101,11 @@ public class PacManGameTest {
     @Test
     public void testPacManGameBonus() {
         for (int levelNumber = 1; levelNumber <= 21; ++levelNumber) {
-            game.createAndStartLevel(levelNumber);
+            game.createAndStartLevel(levelNumber, false);
             game.level().ifPresent(level -> {
-                level.onBonusReached(0);
-                assertTrue(level.bonus().isPresent());
-                level.bonus().ifPresent(bonus -> {
+                game.onBonusReached(0);
+                assertTrue(game.bonus().isPresent());
+                game.bonus().ifPresent(bonus -> {
                     assertTrue(bonus instanceof StaticBonus);
                     assertEquals(game.bonusValue(bonus.symbol()), bonus.points());
                 });

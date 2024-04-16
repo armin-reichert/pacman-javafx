@@ -92,7 +92,7 @@ public class PlayScene2D extends GameScene2D {
                     case LEVEL_TEST -> drawText("TEST    L" + level.levelNumber, Color.YELLOW, sceneFont(8), t(8.5), t(21));
                 }
             }
-            level.bonus().ifPresent(this::drawBonus);
+            context.game().bonus().ifPresent(this::drawBonus);
             drawPac(level.pac());
             level.ghosts().toList().reversed().forEach(this::drawGhost);
             if (!isCreditVisible()) {

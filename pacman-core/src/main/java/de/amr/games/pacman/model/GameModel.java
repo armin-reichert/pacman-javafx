@@ -167,6 +167,15 @@ public interface GameModel {
 
     void onPacDying();
 
+    /**
+     * Called on bonus achievement (public access for unit tests and level test).
+     *
+     * @param index bonus index (0 or 1).
+     */
+    void onBonusReached(int index);
+
+    Optional<Bonus> bonus();
+
     void killGhosts(List<Ghost> prey);
 
     void onLevelCompleted();

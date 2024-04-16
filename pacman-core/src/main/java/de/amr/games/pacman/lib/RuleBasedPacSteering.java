@@ -65,10 +65,10 @@ public class RuleBasedPacSteering implements Steering {
     }
 
 
-    private final GameLevel level;
+    private final GameModel game;
 
-    public RuleBasedPacSteering(GameLevel level) {
-        this.level = level;
+    public RuleBasedPacSteering(GameModel game) {
+        this.game = game;
     }
 
     @Override
@@ -76,35 +76,42 @@ public class RuleBasedPacSteering implements Steering {
         if (creature.moveResult.moved && !creature.isNewTileEntered()) {
             return;
         }
-        var data = collectData(level);
+        var data = collectData(game);
         if (data.hunterAhead != null || data.hunterBehind != null || !data.frightenedGhosts.isEmpty()) {
             Logger.trace("\n{}", data);
         }
-        takeAction(level, data);
+        takeAction(game, data);
     }
 
-    private CollectedData collectData(GameLevel level) {
-        var pac = level.pac();
+    private CollectedData collectData(GameModel game) {
         var data = new CollectedData();
-        Ghost hunterAhead = findHuntingGhostAhead(level); // Where is Hunter?
-        if (hunterAhead != null) {
-            data.hunterAhead = hunterAhead;
-            data.hunterAheadDistance = pac.tile().manhattanDistance(hunterAhead.tile());
-        }
-        Ghost hunterBehind = findHuntingGhostBehind(level);
-        if (hunterBehind != null) {
-            data.hunterBehind = hunterBehind;
-            data.hunterBehindDistance = pac.tile().manhattanDistance(hunterBehind.tile());
-        }
-        data.frightenedGhosts = level.ghosts(GhostState.FRIGHTENED)
-            .filter(ghost -> ghost.tile().manhattanDistance(pac.tile()) <= CollectedData.MAX_GHOST_CHASE_DIST)
-            .collect(Collectors.toList());
-        data.frightenedGhostsDistance = data.frightenedGhosts.stream()
-            .map(ghost -> ghost.tile().manhattanDistance(pac.tile())).collect(Collectors.toList());
+        game.level().ifPresent(level -> {
+            var pac = level.pac();
+            Ghost hunterAhead = findHuntingGhostAhead(level); // Where is Hunter?
+            if (hunterAhead != null) {
+                data.hunterAhead = hunterAhead;
+                data.hunterAheadDistance = pac.tile().manhattanDistance(hunterAhead.tile());
+            }
+            Ghost hunterBehind = findHuntingGhostBehind(level);
+            if (hunterBehind != null) {
+                data.hunterBehind = hunterBehind;
+                data.hunterBehindDistance = pac.tile().manhattanDistance(hunterBehind.tile());
+            }
+            data.frightenedGhosts = level.ghosts(GhostState.FRIGHTENED)
+                .filter(ghost -> ghost.tile().manhattanDistance(pac.tile()) <= CollectedData.MAX_GHOST_CHASE_DIST)
+                .collect(Collectors.toList());
+            data.frightenedGhostsDistance = data.frightenedGhosts.stream()
+                .map(ghost -> ghost.tile().manhattanDistance(pac.tile())).collect(Collectors.toList());
+
+        });
         return data;
     }
 
-    private void takeAction(GameLevel level, CollectedData data) {
+    private void takeAction(GameModel game, CollectedData data) {
+        if (game.level().isEmpty()) {
+            return;
+        }
+        GameLevel level = game.level().get();
         var pac = level.pac();
         if (data.hunterAhead != null) {
             Direction escapeDir;
@@ -130,9 +137,9 @@ public class RuleBasedPacSteering implements Steering {
             Logger.trace("Detected frightened ghost {} {} tiles away", prey.name(),
                 prey.tile().manhattanDistance(pac.tile()));
             pac.setTargetTile(prey.tile());
-        } else if (isEdibleBonusNearPac(level, pac)) {
+        } else if (isEdibleBonusNearPac(game, pac)) {
             Logger.trace("Active bonus detected, get it!");
-            level.bonus().ifPresent(bonus -> pac.setTargetTile(tileAt(bonus.entity().position())));
+            game.bonus().ifPresent(bonus -> pac.setTargetTile(tileAt(bonus.entity().position())));
         } else {
             pac.setTargetTile(findTileFarthestFromGhosts(level, findNearestFoodTiles(level)));
         }
@@ -142,10 +149,9 @@ public class RuleBasedPacSteering implements Steering {
         });
     }
 
-    private boolean isEdibleBonusNearPac(GameLevel level, Pac pac) {
-        var optBonus = level.bonus();
-        if (optBonus.isPresent()) {
-            var bonus = optBonus.get();
+    private boolean isEdibleBonusNearPac(GameModel game, Pac pac) {
+        if (game.bonus().isPresent()) {
+            var bonus = game.bonus().get();
             var tile = tileAt(bonus.entity().position());
             return bonus.state() == Bonus.STATE_EDIBLE
                 && tile.manhattanDistance(pac.tile()) <= CollectedData.MAX_BONUS_HARVEST_DIST;
