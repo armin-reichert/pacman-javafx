@@ -176,16 +176,22 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        public void createAndStartLevel(int levelNumber) {
+        public void createAndStartLevel(int levelNumber, boolean demoLevel) {
             checkLevelNumber(levelNumber);
-            int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
-            level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex],
-                createMsPacManWorld(mapNumberMsPacMan(levelNumber)));
+
+            if (demoLevel) {
+                level = new GameLevel(1, true, LEVEL_DATA[0], createMsPacManWorld(1));
+            } else {
+                int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
+                level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex],
+                    createMsPacManWorld(mapNumberMsPacMan(levelNumber)));
+            }
 
             level.pac().reset();
             level.pac().setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
             level.pac().setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
             level.pac().setAutopilot(new RuleBasedPacSteering(level));
+            level.pac().setUseAutopilot(demoLevel);
 
             level.ghosts().forEach(ghost -> {
                 ghost.reset();
@@ -212,39 +218,8 @@ public enum GameVariants implements GameModel {
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
             // At this point, the animations of Pac-Man and the ghosts must have been created!
-            letsGetReadyToRumble(level, false);
+            letsGetReadyToRumble(level, demoLevel);
             Logger.info("Level {} started ({})", levelNumber, this);
-            publishGameEvent(GameEventType.LEVEL_STARTED);
-        }
-
-        @Override
-        public void createAndStartDemoLevel() {
-            level = new GameLevel(1, true, LEVEL_DATA[0], createMsPacManWorld(1));
-
-            level.pac().reset();
-            level.pac().setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-            level.pac().setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
-            level.pac().setAutopilot(new RuleBasedPacSteering(level));
-            level.pac().setUseAutopilot(true);
-
-            level.ghosts().forEach(ghost -> {
-                ghost.reset();
-                ghost.setHouse(level.world().house());
-                ghost.setFrightenedBehavior(refugee ->
-                    roam(refugee, level.world(), level.frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
-                ghost.setHuntingBehavior(this::huntingBehaviour);
-                ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
-                ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-                ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
-                ghost.setSpeedInsideHouse(PPS_GHOST_INHOUSE / (float) FPS);
-            });
-
-            Logger.info("Demo level created ({})", this);
-            publishGameEvent(GameEventType.LEVEL_CREATED);
-
-            // At this point, the animations of Pac-Man and the ghosts have been created!
-            letsGetReadyToRumble(level,true);
-            Logger.info("Demo Level started ({})", this);
             publishGameEvent(GameEventType.LEVEL_STARTED);
         }
 
@@ -333,16 +308,28 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        public void createAndStartLevel(int levelNumber) {
+        public void createAndStartLevel(int levelNumber, boolean demoLevel) {
             checkLevelNumber(levelNumber);
-            int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
-            level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex], createPacManWorld());
+
+            if (demoLevel) {
+                level = new GameLevel(1, true, LEVEL_DATA[0], createPacManWorld());
+            } else {
+                int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
+                level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex], createPacManWorld());
+            }
+
             addForbiddenMoves(level);
 
             level.pac().reset();
             level.pac().setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
             level.pac().setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
-            level.pac().setAutopilot(new RuleBasedPacSteering(level));
+            if (demoLevel) {
+                level.pac().setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
+                level.pac().setUseAutopilot(true);
+            } else {
+                level.pac().setAutopilot(new RuleBasedPacSteering(level));
+                level.pac().setUseAutopilot(false);
+            }
 
             level.ghosts().forEach(ghost -> {
                 ghost.reset();
@@ -361,49 +348,15 @@ public enum GameVariants implements GameModel {
                 levelCounter.clear();
             }
             addSymbolToLevelCounter(level.bonusSymbol(0));
+
             Logger.info("Level {} created ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
             // At this point, the animations of Pac-Man and the ghosts must have been created!
-            letsGetReadyToRumble(level,false);
+            letsGetReadyToRumble(level, demoLevel);
             Logger.info("Level {} started ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_STARTED);
         }
-
-        @Override
-        public void createAndStartDemoLevel() {
-            level = new GameLevel(1, true, LEVEL_DATA[0], createPacManWorld());
-            addForbiddenMoves(level);
-            levelCounter.clear();
-            addSymbolToLevelCounter(level.bonusSymbol(0));
-
-            level.pac().reset();
-            level.pac().setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-            level.pac().setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
-            level.pac().setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
-            level.pac().setUseAutopilot(true);
-
-            level.ghosts().forEach(ghost -> {
-                ghost.reset();
-                ghost.setHouse(level.world().house());
-                ghost.setFrightenedBehavior(refugee ->
-                    roam(refugee, level.world(), level.frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
-                ghost.setHuntingBehavior(this::huntingBehaviour);
-                ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
-                ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-                ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
-                ghost.setSpeedInsideHouse(PPS_GHOST_INHOUSE / (float) FPS);
-            });
-
-            Logger.info("Demo level created ({})", this);
-            publishGameEvent(GameEventType.LEVEL_CREATED);
-
-            // At this point, the animations of Pac-Man and the ghosts have been created!
-            letsGetReadyToRumble(level,true);
-            Logger.info("Demo Level started ({})", this);
-            publishGameEvent(GameEventType.LEVEL_STARTED);
-        }
-
 
         private void addForbiddenMoves(GameLevel level) {
             var forbidden = new HashMap<Vector2i, List<Direction>>();

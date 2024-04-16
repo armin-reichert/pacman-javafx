@@ -151,10 +151,16 @@ public interface GameModel {
 
     /**
      * Creates and initializes new game level with the given number.
+     * <p>
+     * If {@code demoLevel=true}, creates and starts the demo game level ("attract mode"). Behavior of the ghosts is different from the original
+     * Arcade game because they do not follow a predetermined path but change their direction randomly when frightened.
+     * In Pac-Man variant, Pac-Man at least follows the same path as in the Arcade game, but in Ms. Pac-Man game, she
+     * does not behave as in the Arcade game but hunts the ghosts using some goal-driven algorithm.
      *
      * @param levelNumber level number (starting at 1)
+     * @param demoLevel if demo level is created and started
      */
-    void createAndStartLevel(int levelNumber);
+    void createAndStartLevel(int levelNumber, boolean demoLevel);
 
     /**
      * Pac-Man and the ghosts are placed at their initial positions and locked. The bonus, Pac-Man power timer and
@@ -163,14 +169,6 @@ public interface GameModel {
      * @param guysVisible if the guys are visible
      */
     void letsGetReadyToRumble(GameLevel level, boolean guysVisible);
-
-    /**
-     * Creates and starts the demo game level ("attract mode"). Behavior of the ghosts is different from the original
-     * Arcade game because they do not follow a predetermined path but change their direction randomly when frightened.
-     * In Pac-Man variant, Pac-Man at least follows the same path as in the Arcade game, but in Ms. Pac-Man game, she
-     * does not behave as in the Arcade game but hunts the ghosts using some goal-driven algorithm.
-     */
-    void createAndStartDemoLevel();
 
     /**
      * @param playing Sets playing state for current game

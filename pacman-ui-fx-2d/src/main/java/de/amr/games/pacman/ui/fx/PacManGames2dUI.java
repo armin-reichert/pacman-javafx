@@ -716,7 +716,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             if (newLevelNumber > level.levelNumber) {
                 stopAllSounds();
                 for (int n = level.levelNumber; n < newLevelNumber - 1; ++n) {
-                    game().createAndStartLevel(level.levelNumber + 1);
+                    game().createAndStartLevel(level.levelNumber + 1, false);
                 }
                 gameController().changeState(GameState.LEVEL_TRANSITION);
             }

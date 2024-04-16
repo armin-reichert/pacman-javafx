@@ -97,7 +97,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             else if (gameController().hasCredit()) { // start new game
                 switch ((int) timer.tick()) {
-                    case TICK_NEW_GAME_CREATE_LEVEL -> game.createAndStartLevel(1);
+                    case TICK_NEW_GAME_CREATE_LEVEL -> game.createAndStartLevel(1, false);
                     case TICK_NEW_GAME_SHOW_GUYS -> game.level().ifPresent(level -> {
                         level.pac().show();
                         level.ghosts().forEach(Ghost::show);
@@ -111,7 +111,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             else { // start demo level
                 switch ((int) timer.tick()) {
-                    case TICK_DEMO_LEVEL_CREATE_LEVEL -> game.createAndStartDemoLevel();
+                    case TICK_DEMO_LEVEL_CREATE_LEVEL -> game.createAndStartLevel(1, true);
                     case TICK_DEMO_LEVEL_START_PLAYING -> game.level().ifPresent(level -> {
                         level.startHuntingPhase(0);
                         gameController().changeState(GameState.HUNTING);
@@ -178,7 +178,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartSeconds(1);
-            game.level().ifPresent(level -> game.createAndStartLevel(level.levelNumber + 1));
+            game.level().ifPresent(level -> game.createAndStartLevel(level.levelNumber + 1, false));
         }
 
         @Override
@@ -326,7 +326,7 @@ public enum GameState implements FsmState<GameModel> {
             };
             timer.restartIndefinitely();
             game.reset();
-            game.createAndStartLevel(1);
+            game.createAndStartLevel(1, false);
         }
 
         @Override

@@ -7,7 +7,9 @@ package de.amr.games.pacman.model;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.*;
+import de.amr.games.pacman.lib.Pulse;
+import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -20,10 +22,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Direction.*;
+import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
-import static de.amr.games.pacman.model.actors.CreatureMovement.roam;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
@@ -474,7 +475,7 @@ public class GameLevel {
                 bonus().ifPresent(Bonus::setInactive);
                 GameController.it().state().setProperty("mazeFlashing", false);
                 blinking.reset();
-                game().createAndStartLevel(levelNumber + 1);
+                game().createAndStartLevel(levelNumber + 1, false);
             }
         } else {
             GameController.it().restart(GameState.BOOT);
