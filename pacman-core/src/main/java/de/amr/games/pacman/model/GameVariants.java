@@ -20,7 +20,7 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.*;
 
-import static de.amr.games.pacman.lib.Direction.UP;
+import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
 import static de.amr.games.pacman.model.actors.CreatureMovement.followTarget;
@@ -227,7 +227,7 @@ public enum GameVariants implements GameModel {
         public void huntingBehaviour(Ghost ghost, GameLevel level) {
             if (level.scatterPhase().isPresent() && level.scatterPhase().get() == 0
                 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-                roam(ghost, level.world(), level.huntingSpeedPercentage(ghost), level.pseudoRandomDirection());
+                roam(ghost, level.world(), level.huntingSpeedPercentage(ghost), pseudoRandomDirection());
             } else {
                 PACMAN.huntingBehaviour(ghost, level);
             }
@@ -306,12 +306,29 @@ public enum GameVariants implements GameModel {
             int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
             level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex], createPacManWorld());
             addForbiddenMoves(level);
+
+            level.pac().reset();
+            level.pac().setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+            level.pac().setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
+            level.pac().setAutopilot(new RuleBasedPacSteering(level));
+
+            level.ghosts().forEach(ghost -> {
+                ghost.reset();
+                ghost.setHouse(level.world().house());
+                ghost.setFrightenedBehavior(refugee ->
+                    roam(refugee, level.world(), level.frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
+                ghost.setHuntingBehavior(this::huntingBehaviour);
+                ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
+                ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+                ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
+                ghost.setSpeedInsideHouse(PPS_GHOST_INHOUSE / (float) FPS);
+            });
+
             score.setLevelNumber(levelNumber);
             if (levelNumber == 1) {
                 levelCounter.clear();
             }
             addSymbolToLevelCounter(level.bonusSymbol(0));
-            level.pac().setAutopilot(new RuleBasedPacSteering(level));
             Logger.info("Level {} created ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
@@ -327,8 +344,25 @@ public enum GameVariants implements GameModel {
             addForbiddenMoves(level);
             levelCounter.clear();
             addSymbolToLevelCounter(level.bonusSymbol(0));
+
+            level.pac().reset();
+            level.pac().setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+            level.pac().setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
             level.pac().setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
             level.pac().setUseAutopilot(true);
+
+            level.ghosts().forEach(ghost -> {
+                ghost.reset();
+                ghost.setHouse(level.world().house());
+                ghost.setFrightenedBehavior(refugee ->
+                    roam(refugee, level.world(), level.frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
+                ghost.setHuntingBehavior(this::huntingBehaviour);
+                ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
+                ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+                ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
+                ghost.setSpeedInsideHouse(PPS_GHOST_INHOUSE / (float) FPS);
+            });
+
             Logger.info("Demo level created ({})", this);
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
@@ -365,6 +399,14 @@ public enum GameVariants implements GameModel {
     boolean playing;
     short initialLives = 3;
     short lives;
+
+    Direction pseudoRandomDirection() {
+        float rnd = Globals.randomFloat(0, 100);
+        if (rnd < 16.3) return UP;
+        if (rnd < 16.3 + 25.2) return RIGHT;
+        if (rnd < 16.3 + 25.2 + 28.5) return DOWN;
+        return LEFT;
+    }
 
     Vector2i ghostScatterTarget(byte ghostID) {
         return switch (ghostID) {

@@ -31,7 +31,8 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public class GameLevel {
 
-    public final int levelNumber; // Level number; starts at 1.
+    /** Level number; starts at 1. */
+    public final int levelNumber;
     public final boolean demoLevel;
 
     private final byte[] data;
@@ -60,40 +61,21 @@ public class GameLevel {
         checkLevelNumber(levelNumber);
         checkNotNull(data);
         checkNotNull(world);
-
         this.levelNumber = levelNumber;
         this.demoLevel   = demoLevel;
         this.world = world;
         this.data = data;
-
-        this.blinking = new Pulse(10, false);
-
+        blinking = new Pulse(10, false);
+        bonusSymbols = List.of(game().nextBonusSymbol(levelNumber), game().nextBonusSymbol(levelNumber));
         bonusReachedIndex = -1;
         initGhostHouseAccessControl();
-
         pac = new Pac(game().pacName());
-        pac.reset();
-        pac.setBaseSpeed(GameModel.PPS_AT_100_PERCENT / (float) GameModel.FPS);
-        pac.setPowerFadingTicks(GameModel.PAC_POWER_FADING_TICKS); // not sure about duration
-
         ghosts = new Ghost[] {
             new Ghost(RED_GHOST,    game().ghostName(RED_GHOST)),
             new Ghost(PINK_GHOST,   game().ghostName(PINK_GHOST)),
             new Ghost(CYAN_GHOST,   game().ghostName(CYAN_GHOST)),
             new Ghost(ORANGE_GHOST, game().ghostName(ORANGE_GHOST))
         };
-        ghosts().forEach(ghost -> {
-            ghost.reset();
-            ghost.setHouse(world.house());
-            ghost.setFrightenedBehavior(g -> roam(g, world, frightenedGhostRelSpeed(g), pseudoRandomDirection()));
-            ghost.setHuntingBehavior(game()::huntingBehaviour);
-            ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
-            ghost.setBaseSpeed(GameModel.PPS_AT_100_PERCENT / (float) GameModel.FPS);
-            ghost.setSpeedReturningHome(GameModel.PPS_GHOST_RETURNING_HOME / (float) GameModel.FPS);
-            ghost.setSpeedInsideHouse(GameModel.PPS_GHOST_INHOUSE / (float) GameModel.FPS);
-        });
-
-        bonusSymbols = List.of(game().nextBonusSymbol(this.levelNumber), game().nextBonusSymbol(this.levelNumber));
         Logger.trace("Game level {} created.", this.levelNumber);
     }
 
@@ -106,7 +88,7 @@ public class GameLevel {
     /** Relative ghost speed inside tunnel */
     public final byte ghostSpeedTunnelPercentage() { return data[2]; }
 
-    /**  Number of pellets left when Blinky becomes "Cruise Elroy" grade 1 */
+    /** Number of pellets left when Blinky becomes "Cruise Elroy" grade 1 */
     public final byte elroy1DotsLeft() { return data[3]; }
 
     /** Relative speed of Blinky being "Cruise Elroy" grade 1 */
@@ -115,7 +97,7 @@ public class GameLevel {
     /** Number of pellets left when Blinky becomes "Cruise Elroy" grade 2 */
     public final byte elroy2DotsLeft() { return data[5]; }
 
-    /**Relative speed of Blinky being "Cruise Elroy" grade 2 */
+    /** Relative speed of Blinky being "Cruise Elroy" grade 2 */
     public final byte elroy2SpeedPercentage() { return data[6]; }
 
     /** Relative speed of Pac-Man in power mode */
@@ -265,16 +247,8 @@ public class GameLevel {
         };
     }
 
-    private byte frightenedGhostRelSpeed(Ghost ghost) {
+    public byte frightenedGhostRelSpeed(Ghost ghost) {
         return world.isTunnel(ghost.tile()) ? ghostSpeedTunnelPercentage() : ghostSpeedFrightenedPercentage();
-    }
-
-    public Direction pseudoRandomDirection() {
-        float rnd = Globals.randomFloat(0, 100);
-        if (rnd < 16.3) return UP;
-        if (rnd < 16.3 + 25.2) return RIGHT;
-        if (rnd < 16.3 + 25.2 + 28.5) return DOWN;
-        return LEFT;
     }
 
     /**
