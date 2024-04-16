@@ -102,7 +102,8 @@ public enum GameVariants implements GameModel {
             huntingPhaseIndex = 0;
             huntingTimer.resetIndefinitely();
             bonusReachedIndex = -1;
-            bonusSymbols = List.of(nextBonusSymbol(levelNumber), nextBonusSymbol(levelNumber));
+            bonusSymbols.clear();
+            bonusSymbols.addAll(List.of(nextBonusSymbol(levelNumber), nextBonusSymbol(levelNumber)));
             bonus = null;
             numGhostsKilledInLevel = 0;
 
@@ -317,6 +318,9 @@ public enum GameVariants implements GameModel {
                 pac.setUseAutopilot(false);
             }
 
+            var forbidden = new HashMap<Vector2i, List<Direction>>();
+            var up = List.of(UP);
+            ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbidden.put(tile, up));
             ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(world.house());
@@ -327,13 +331,14 @@ public enum GameVariants implements GameModel {
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
                 ghost.setSpeedInsideHouse(PPS_GHOST_INHOUSE / (float) FPS);
+                ghost.setForbiddenMoves(forbidden);
             });
-            addForbiddenMoves();
 
             huntingPhaseIndex = 0;
             huntingTimer.resetIndefinitely();
             bonusReachedIndex = -1;
-            bonusSymbols = List.of(nextBonusSymbol(levelNumber), nextBonusSymbol(levelNumber));
+            bonusSymbols.clear();
+            bonusSymbols.addAll(List.of(nextBonusSymbol(levelNumber), nextBonusSymbol(levelNumber)));
             bonus = null;
             numGhostsKilledInLevel = 0;
 
@@ -357,13 +362,6 @@ public enum GameVariants implements GameModel {
             }
             Logger.info("Level {} started ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_STARTED);
-        }
-
-        private void addForbiddenMoves() {
-            var forbidden = new HashMap<Vector2i, List<Direction>>();
-            var up = List.of(UP);
-            ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbidden.put(tile, up));
-            ghosts().forEach(ghost -> ghost.setForbiddenMoves(forbidden));
         }
 
         @Override
@@ -404,14 +402,17 @@ public enum GameVariants implements GameModel {
 
     // --- Common to all variants --------------------------------------------------------------------------------------
 
-    Pac pac;
-    Ghost[] ghosts;
+    final List<Byte> bonusSymbols = new ArrayList<>();
     final List<Byte> levelCounter = new LinkedList<>();
     final Score score = new Score();
     final Score highScore = new Score();
 
-    GameLevel level;
+    Pac pac;
+    Ghost[] ghosts;
+    Bonus bonus;
     World world;
+    GameLevel level;
+
     boolean playing;
     short initialLives = 3;
     short lives;
@@ -421,8 +422,6 @@ public enum GameVariants implements GameModel {
     byte huntingPhaseIndex;
     byte numGhostsKilledInLevel;
     byte bonusReachedIndex; // -1=no bonus, 0=first, 1=second
-    List<Byte> bonusSymbols;
-    Bonus bonus;
     byte cruiseElroyState;
 
     // Ghost house access-control
@@ -585,6 +584,7 @@ public enum GameVariants implements GameModel {
 
     /**
      * @param ghost a ghost
+     * @param level game level
      * @return relative speed of ghost in percent of the base speed
      */
     byte huntingSpeedPercentage(Ghost ghost, GameLevel level) {
