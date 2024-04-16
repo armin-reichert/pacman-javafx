@@ -414,7 +414,7 @@ public enum GameVariants implements GameModel {
     short initialLives = 3;
     short lives;
 
-    final Pulse blinking = new Pulse(10, false);;
+    final Pulse blinking = new Pulse(10, false);
     final TickTimer huntingTimer = new TickTimer("HuntingTimer");
     byte huntingPhaseIndex;
     byte numGhostsKilledInLevel;
@@ -475,7 +475,7 @@ public enum GameVariants implements GameModel {
             throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + index);
         }
         huntingPhaseIndex = (byte) index;
-        var durations = huntingDurations(level.levelNumber);
+        var durations = huntingDurations(level.levelNumber());
         var ticks = durations[index] == -1 ? TickTimer.INDEFINITE : durations[index];
         huntingTimer.reset(ticks);
         huntingTimer.start();
@@ -681,16 +681,16 @@ public enum GameVariants implements GameModel {
     void initGhostHouseAccessControl() {
         globalDotLimits = new byte[] {UNLIMITED, 7, 17, UNLIMITED};
         privateDotLimits = new byte[] {0, 0, 0, 0};
-        if (level.levelNumber == 1) {
+        if (level.levelNumber() == 1) {
             privateDotLimits[CYAN_GHOST] = 30;
             privateDotLimits[ORANGE_GHOST] = 60;
-        } else if (level.levelNumber == 2) {
+        } else if (level.levelNumber() == 2) {
             privateDotLimits[ORANGE_GHOST] = 50;
         }
         dotCounters = new int[] {0, 0, 0, 0};
         globalDotCounter = 0;
         globalDotCounterEnabled = false;
-        pacStarvingLimit = level.levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec
+        pacStarvingLimit = level.levelNumber() < 5 ? 240 : 180; // 4 sec : 3 sec
     }
 
     void resetGlobalDotCounterAndSetEnabled(boolean enabled) {
@@ -811,12 +811,12 @@ public enum GameVariants implements GameModel {
         bonus().ifPresent(Bonus::setInactive);
         huntingTimer().stop();
         Logger.info("Hunting timer stopped");
-        Logger.trace("Game level {} ({}) completed.", level.levelNumber, this);
+        Logger.trace("Game level {} ({}) completed.", level.levelNumber(), this);
     }
 
     @Override
     public void doLevelTestStep(TickTimer timer, int lastTestedLevel) {
-        if (level.levelNumber <= lastTestedLevel) {
+        if (level.levelNumber() <= lastTestedLevel) {
             if (timer.tick() > 2 * FPS) {
                 blinking.tick();
                 ghosts().forEach(ghost -> ghost.update(this));
@@ -857,7 +857,7 @@ public enum GameVariants implements GameModel {
                 bonus().ifPresent(Bonus::setInactive);
                 GameController.it().state().setProperty("mazeFlashing", false);
                 blinking.reset();
-                createAndStartLevel(level.levelNumber + 1, false);
+                createAndStartLevel(level.levelNumber() + 1, false);
             }
         } else {
             GameController.it().restart(GameState.BOOT);
@@ -888,8 +888,8 @@ public enum GameVariants implements GameModel {
 
 
     private void scorePoints(int points) {
-        if (!level.isDemoLevel()) {
-            scorePoints(level.levelNumber, points);
+        if (!level.demoLevel()) {
+            scorePoints(level.levelNumber(), points);
         }
     }
 
@@ -1031,7 +1031,7 @@ public enum GameVariants implements GameModel {
             if (numGhostsKilledInLevel == 16) {
                 int points = GameModel.POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
                 scorePoints(points);
-                Logger.info("Scored {} points for killing all ghosts at level {}", points, level.levelNumber);
+                Logger.info("Scored {} points for killing all ghosts at level {}", points, level.levelNumber());
             }
         }
     }

@@ -42,7 +42,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void update() {
         context.gameLevel().ifPresent(level ->
-            context.game().pac().setUseAutopilot(level.isDemoLevel() || PY_USE_AUTOPILOT.get()));
+            context.game().pac().setUseAutopilot(level.demoLevel() || PY_USE_AUTOPILOT.get()));
         updateSound();
     }
 
@@ -80,17 +80,17 @@ public class PlayScene2D extends GameScene2D {
         context.gameLevel().ifPresent(level -> {
             boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
             switch (context.game()) {
-                case GameVariants.MS_PACMAN -> drawMsPacManMaze(context.game(), ArcadeWorld.mazeNumberMsPacMan(level.levelNumber), flashing);
+                case GameVariants.MS_PACMAN -> drawMsPacManMaze(context.game(), ArcadeWorld.mazeNumberMsPacMan(level.levelNumber()), flashing);
                 case GameVariants.PACMAN -> drawPacManMaze(context.game(), flashing);
                 default -> throw new IllegalGameVariantException(context.game());
             }
-            if (level.isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
+            if (level.demoLevel() || context.gameState() == GameState.GAME_OVER) {
                 // text "GAME OVER" is also drawn in demo mode
                 drawText("GAME  OVER", Color.RED, sceneFont(8), t(9), t(21));
             } else {
                 switch (context.gameState()) {
                     case READY      -> drawText("READY!", Color.YELLOW, sceneFont(8), t(11), t(21));
-                    case LEVEL_TEST -> drawText("TEST    L" + level.levelNumber, Color.YELLOW, sceneFont(8), t(8.5), t(21));
+                    case LEVEL_TEST -> drawText("TEST    L" + level.levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(21));
                 }
             }
             context.game().bonus().ifPresent(this::drawBonus);
@@ -182,7 +182,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onSceneVariantSwitch() {
         context.gameLevel().ifPresent(level -> {
-            if (!level.isDemoLevel() && context.gameState() == GameState.HUNTING) {
+            if (!level.demoLevel() && context.gameState() == GameState.HUNTING) {
                 context.ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
             }
         });
@@ -190,7 +190,7 @@ public class PlayScene2D extends GameScene2D {
 
     private void updateSound() {
         context.gameLevel().ifPresent(level -> {
-            if (level.isDemoLevel()) {
+            if (level.demoLevel()) {
                 return;
             }
             if (context.game().pac().starvingTicks() > 8) { // TODO not sure

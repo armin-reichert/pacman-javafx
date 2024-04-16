@@ -291,7 +291,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
             case CREDIT -> addInfoForCreditScene(helpInfo);
             case READY, HUNTING, PACMAN_DYING, GHOST_DYING -> {
                 if (sceneContext.gameLevel().isPresent()) {
-                    if (sceneContext.gameLevel().get().isDemoLevel()) {
+                    if (sceneContext.gameLevel().get().demoLevel()) {
                         addInfoForDemoLevel(helpInfo);
                     } else {
                         addInfoForPlayScene(helpInfo);

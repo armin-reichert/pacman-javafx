@@ -129,7 +129,7 @@ public class PlayScene3D implements GameScene {
                 level3D.update();
                 currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
             }
-            context.game().pac().setUseAutopilot(level.isDemoLevel() || PY_USE_AUTOPILOT.get());
+            context.game().pac().setUseAutopilot(level.demoLevel() || PY_USE_AUTOPILOT.get());
             updateSound(level);
         });
         scores3D.setScores(
@@ -200,7 +200,7 @@ public class PlayScene3D implements GameScene {
             List<String> names = context.theme().getArray("texture.names");
             PY_3D_FLOOR_TEXTURE.set(names.get(randomInt(0, names.size())));
         }
-        Logger.info("3D game level {} created.", level.levelNumber);
+        Logger.info("3D game level {} created.", level.levelNumber());
     }
 
     @Override
@@ -235,7 +235,7 @@ public class PlayScene3D implements GameScene {
             if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
                 level3D.startEnergizerAnimation();
             }
-            if (!level.isDemoLevel() && context.gameState() == GameState.HUNTING) {
+            if (!level.demoLevel() && context.gameState() == GameState.HUNTING) {
                 context.ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
             }
         });
@@ -365,7 +365,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onLevelCreated(GameEvent event) {
         event.game.level().ifPresent(level -> {
-            if (level.levelNumber == 1 || context.gameState() == GameState.LEVEL_TEST) {
+            if (level.levelNumber() == 1 || context.gameState() == GameState.LEVEL_TEST) {
                 replaceGameLevel3D();
             }
         });
@@ -375,7 +375,7 @@ public class PlayScene3D implements GameScene {
     public void onLevelStarted(GameEvent event) {
         assertLevel3DExists();
         context.gameLevel().ifPresent(level -> {
-            if (level.levelNumber == 1 || context.gameState() == GameState.LEVEL_TEST) {
+            if (level.levelNumber() == 1 || context.gameState() == GameState.LEVEL_TEST) {
                 showLevelMessage(level);
             }
             level3D.createLevelCounter3D();
@@ -422,9 +422,9 @@ public class PlayScene3D implements GameScene {
         World world = context.game().world();
         checkNotNull(world);
         if (context.gameState() == GameState.LEVEL_TEST) {
-            level3D.showMessage("TEST LEVEL " + level.levelNumber, 5,
+            level3D.showMessage("TEST LEVEL " + level.levelNumber(), 5,
                 world.numCols() * HTS, (world.numRows() - 2) * TS);
-        } else if (!level.isDemoLevel()) {
+        } else if (!level.demoLevel()) {
             var house = world.house();
             double x = TS * (house.topLeftTile().x() + 0.5 * house.size().x());
             double y = TS * (house.topLeftTile().y() +       house.size().y());
@@ -435,7 +435,7 @@ public class PlayScene3D implements GameScene {
 
     private void playLevelCompleteAnimation(GameLevel level) {
         boolean noIntermission = level.intermissionNumber() == 0;
-        context.actionHandler().showFlashMessageSeconds(2, pickLevelCompleteMessage(level.levelNumber));
+        context.actionHandler().showFlashMessageSeconds(2, pickLevelCompleteMessage(level.levelNumber()));
         var animation = new SequentialTransition(
             pauseSeconds(1),
             level3D.createLevelCompleteAnimation(),
@@ -469,7 +469,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void updateSound(GameLevel level) {
-        if (level.isDemoLevel()) {
+        if (level.demoLevel()) {
             return;
         }
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure how this is done in Arcade game

@@ -71,7 +71,8 @@ public class InfoBoxGameControl extends InfoBox {
         buttonsLevelActions[GAME_LEVEL_QUIT].setOnAction(e -> actionHandler().restartIntro());
         buttonsLevelActions[GAME_LEVEL_NEXT].setOnAction(e -> sceneContext.actionHandler().cheatEnterNextLevel());
         spinnerLevelNumber.valueProperty().addListener((py, ov, nv) -> actionHandler().enterLevel(nv));
-        spinnerLevelNumber.getValueFactory().setValue(sceneContext.gameLevel().isPresent() ? sceneContext.gameLevel().get().levelNumber : 1);
+        spinnerLevelNumber.getValueFactory().setValue(sceneContext.gameLevel().isPresent()
+            ? sceneContext.gameLevel().get().levelNumber() : 1);
         spinnerCredit.valueProperty().addListener((py, ov, nv) -> sceneContext.gameController().setCredit(nv));
         spinnerCredit.getValueFactory().setValue(sceneContext.gameController().credit());
         cbAutopilot.setOnAction(e -> actionHandler().toggleAutopilot());
@@ -93,7 +94,8 @@ public class InfoBoxGameControl extends InfoBox {
         buttonsIntermissionTest[INTERMISSION_TEST_START].setDisable(
             sceneContext.gameState() == GameState.INTERMISSION_TEST || sceneContext.gameState() != GameState.INTRO);
         buttonsIntermissionTest[INTERMISSION_TEST_QUIT].setDisable(sceneContext.gameState() != GameState.INTERMISSION_TEST);
-        sceneContext.game().level().ifPresent(level -> spinnerLevelNumber.getValueFactory().setValue(level.levelNumber));
+        sceneContext.game().level().ifPresent(level ->
+            spinnerLevelNumber.getValueFactory().setValue(level.levelNumber()));
         if (!sceneContext.game().isPlaying() || sceneContext.gameState() == GameState.LEVEL_TRANSITION) {
             spinnerLevelNumber.setDisable(true);
         } else {
