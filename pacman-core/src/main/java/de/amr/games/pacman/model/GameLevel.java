@@ -4,10 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import org.tinylog.Logger;
-
 import static de.amr.games.pacman.lib.Globals.checkLevelNumber;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * @author Armin Reichert
