@@ -129,9 +129,13 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            GameState nextState = game.doHuntingStep();
-            if (nextState != GameState.HUNTING) {
-                gameController().changeState(nextState);
+            game.doHuntingStep();
+            if (game.isLevelComplete()) {
+                gameController().changeState(LEVEL_COMPLETE);
+            } else if (game.isPacManKilled()) {
+                gameController().changeState(PACMAN_DYING);
+            } else if (game.areGhostsKilled()) {
+                gameController().changeState(GHOST_DYING);
             }
         }
     },

@@ -41,8 +41,10 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        context.game().pac().setUseAutopilot(context.game().level().demoLevel() || PY_USE_AUTOPILOT.get());
-        updateSound();
+        if (context.game().level() != null) {
+            context.game().pac().setUseAutopilot(context.game().level().demoLevel() || PY_USE_AUTOPILOT.get());
+            updateSound();
+        }
     }
 
     @Override
@@ -76,6 +78,9 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
+        if (context.game().level() == null) {
+            return;
+        }
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         switch (context.game()) {
             case GameVariants.MS_PACMAN ->
@@ -107,7 +112,9 @@ public class PlayScene2D extends GameScene2D {
 
     private void drawPacManMaze(GameModel game, boolean flashing) {
         World world = game.world();
-        checkNotNull(world);
+        if (world == null) {
+            return;
+        }
         PacManGameSpriteSheet sheet = context.spriteSheet();
         double x = 0, y = t(3);
         if (flashing && game.blinking().isRunning()) {
@@ -127,7 +134,9 @@ public class PlayScene2D extends GameScene2D {
 
     private void drawMsPacManMaze(GameModel game, int mazeNumber, boolean flashing) {
         World world = game.world();
-        checkNotNull(world);
+        if (world == null) {
+            return;
+        }
         MsPacManGameSpriteSheet sheet = context.spriteSheet();
         double x = 0, y = t(3);
         if (flashing && game.blinking().isRunning()) {

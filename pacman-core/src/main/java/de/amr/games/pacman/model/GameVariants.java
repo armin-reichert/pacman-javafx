@@ -856,35 +856,37 @@ public enum GameVariants implements GameModel {
     // Main logic
 
     @Override
-    public GameState doHuntingStep() {
+    public boolean isLevelComplete() {
+        return world.uneatenFoodCount() == 0;
+    }
+
+    @Override
+    public boolean isPacManKilled() {
+        var killers = ghosts(HUNTING_PAC).filter(pac::sameTile).toList();
+        if (!killers.isEmpty() && !GameController.it().isPacImmune()) {
+            eventLog().pacDied = true;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean areGhostsKilled() {
+        return !eventLog().killedGhosts.isEmpty();
+    }
+
+    @Override
+    public void doHuntingStep() {
         checkFoodEaten();
         updateGhosts();
         updatePac();
         updateBonus();
         updateHuntingTimer();
         blinking.tick();
-
-        // level complete?
-        if (world.uneatenFoodCount() == 0) {
-            return GameState.LEVEL_COMPLETE;
-        }
-
-        // Pac killed?
-        var killers = ghosts(HUNTING_PAC).filter(pac::sameTile).toList();
-        if (!killers.isEmpty() && !GameController.it().isPacImmune()) {
-            eventLog().pacDied = true;
-            return GameState.PACMAN_DYING;
-        }
-
-        // Ghost(s) killed?
         var prey = ghosts(FRIGHTENED).filter(pac::sameTile).toList();
         if (!prey.isEmpty()) {
             killGhosts(prey);
-            return GameState.GHOST_DYING;
         }
-
-        // Continue hunt
-        return GameState.HUNTING;
     }
 
     void checkFoodEaten() {

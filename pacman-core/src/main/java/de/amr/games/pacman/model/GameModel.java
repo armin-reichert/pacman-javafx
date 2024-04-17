@@ -85,7 +85,13 @@ public interface GameModel {
 
     void onLevelCompleted();
 
-    GameState doHuntingStep();
+    void doHuntingStep();
+
+    boolean isLevelComplete();
+
+    boolean isPacManKilled();
+
+    boolean areGhostsKilled();
 
     TickTimer huntingTimer();
 
