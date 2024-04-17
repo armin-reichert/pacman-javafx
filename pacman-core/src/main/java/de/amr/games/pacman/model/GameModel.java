@@ -99,7 +99,7 @@ public interface GameModel {
 
     String currentHuntingPhaseName();
 
-    void doLevelTestStep(TickTimer timer, int lastTestedLevel);
+    void doLevelTestStep(GameState testState);
 
     /**
      * @return Blinky's "cruise elroy" state. Values: <code>0, 1, 2, -1, -2</code>. (0=off, negative=disabled).

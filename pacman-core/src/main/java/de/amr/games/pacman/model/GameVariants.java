@@ -832,8 +832,6 @@ public enum GameVariants implements GameModel {
         return null;
     }
 
-
-
     @Override
     public void setPlaying(boolean playing) {
         this.playing = playing;
@@ -894,54 +892,54 @@ public enum GameVariants implements GameModel {
     }
 
     @Override
-    public void doLevelTestStep(TickTimer timer, int lastTestedLevel) {
-        if (level.levelNumber() <= lastTestedLevel) {
-            if (timer.tick() > 2 * FPS) {
-                blinking.tick();
-                ghosts().forEach(ghost -> ghost.update(this));
-                bonus().ifPresent(bonus -> bonus.update(this));
-            }
-            if (timer.atSecond(1.0)) {
-                letsGetReadyToRumble();
-                pac.show();
-                ghosts().forEach(Ghost::show);
-            } else if (timer.atSecond(2)) {
-                blinking.setStartPhase(Pulse.ON);
-                blinking.restart();
-            } else if (timer.atSecond(2.5)) {
-                bonusReachedIndex += 1;
-                createNextBonus(bonusSymbols.get(bonusReachedIndex));
-            } else if (timer.atSecond(3.5)) {
-                bonus().ifPresent(bonus -> bonus.setEaten(120));
-                publishGameEvent(GameEventType.BONUS_EATEN);
-            } else if (timer.atSecond(4.5)) {
-                bonus().ifPresent(Bonus::setInactive); // needed?
-                bonusReachedIndex += 1;
-                createNextBonus(bonusSymbols.get(bonusReachedIndex));
-            } else if (timer.atSecond(6.5)) {
-                bonus().ifPresent(bonus -> bonus.setEaten(60));
-                publishGameEvent(GameEventType.BONUS_EATEN);
-            } else if (timer.atSecond(8.5)) {
-                pac.hide();
-                ghosts().forEach(Ghost::hide);
-                blinking.stop();
-                blinking.setStartPhase(Pulse.ON);
-                blinking.reset();
-            } else if (timer.atSecond(9.5)) {
-                GameController.it().state().setProperty("mazeFlashing", true);
-                blinking.setStartPhase(Pulse.OFF);
-                blinking.restart(2 * level.numFlashes());
-            } else if (timer.atSecond(12.0)) {
-                timer.restartIndefinitely();
-                pac.freeze();
-                ghosts().forEach(Ghost::hide);
-                bonus().ifPresent(Bonus::setInactive);
-                GameController.it().state().setProperty("mazeFlashing", false);
-                blinking.reset();
-                createAndStartLevel(level.levelNumber() + 1, false);
-            }
-        } else {
+    public void doLevelTestStep(GameState testState) {
+        if (level.levelNumber() > 20) {
             GameController.it().restart(GameState.BOOT);
+            return;
+        }
+        if (testState.timer().tick() > 2 * FPS) {
+            blinking.tick();
+            ghosts().forEach(ghost -> ghost.update(this));
+            bonus().ifPresent(bonus -> bonus.update(this));
+        }
+        if (testState.timer().atSecond(1.0)) {
+            letsGetReadyToRumble();
+            pac.show();
+            ghosts().forEach(Ghost::show);
+        } else if (testState.timer().atSecond(2)) {
+            blinking.setStartPhase(Pulse.ON);
+            blinking.restart();
+        } else if (testState.timer().atSecond(2.5)) {
+            bonusReachedIndex += 1;
+            createNextBonus(bonusSymbols.get(bonusReachedIndex));
+        } else if (testState.timer().atSecond(3.5)) {
+            bonus().ifPresent(bonus -> bonus.setEaten(120));
+            publishGameEvent(GameEventType.BONUS_EATEN);
+        } else if (testState.timer().atSecond(4.5)) {
+            bonus().ifPresent(Bonus::setInactive); // needed?
+            bonusReachedIndex += 1;
+            createNextBonus(bonusSymbols.get(bonusReachedIndex));
+        } else if (testState.timer().atSecond(6.5)) {
+            bonus().ifPresent(bonus -> bonus.setEaten(60));
+            publishGameEvent(GameEventType.BONUS_EATEN);
+        } else if (testState.timer().atSecond(8.5)) {
+            pac.hide();
+            ghosts().forEach(Ghost::hide);
+            blinking.stop();
+            blinking.setStartPhase(Pulse.ON);
+            blinking.reset();
+        } else if (testState.timer().atSecond(9.5)) {
+            testState.setProperty("mazeFlashing", true);
+            blinking.setStartPhase(Pulse.OFF);
+            blinking.restart(2 * level.numFlashes());
+        } else if (testState.timer().atSecond(12.0)) {
+            testState.timer().restartIndefinitely();
+            pac.freeze();
+            ghosts().forEach(Ghost::hide);
+            bonus().ifPresent(Bonus::setInactive);
+            testState.setProperty("mazeFlashing", false);
+            blinking.reset();
+            createAndStartLevel(level.levelNumber() + 1, false);
         }
     }
 

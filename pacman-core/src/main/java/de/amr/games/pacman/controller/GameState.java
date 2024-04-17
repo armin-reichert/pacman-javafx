@@ -298,16 +298,9 @@ public enum GameState implements FsmState<GameModel> {
     },
 
     LEVEL_TEST {
-        private int lastTestedLevel;
 
         @Override
         public void onEnter(GameModel game) {
-            lastTestedLevel = switch (game) {
-                case GameVariants.MS_PACMAN -> 18;
-                case GameVariants.PACMAN -> 20;
-                default -> throw new IllegalGameVariantException(game);
-
-            };
             timer.restartIndefinitely();
             game.reset();
             game.createAndStartLevel(1, false);
@@ -315,7 +308,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            game.doLevelTestStep(timer, lastTestedLevel);
+            game.doLevelTestStep(this);
         }
 
         @Override
