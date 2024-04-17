@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui.fx;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui.fx.util.GameClock;
+import de.amr.games.pacman.ui.fx.util.GameClockFX;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.beans.property.ObjectProperty;
@@ -34,7 +34,7 @@ public interface GameSceneContext {
         return null;
     }
 
-    GameClock gameClock();
+    GameClockFX gameClock();
 
     ActionHandler actionHandler();
 

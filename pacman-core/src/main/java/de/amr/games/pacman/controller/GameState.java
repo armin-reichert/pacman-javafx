@@ -10,8 +10,6 @@ import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Pulse;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariants;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -302,6 +300,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
+            gameController().clock().setTargetFrameRate(2 * GameModel.FPS);
             game.reset();
             game.createAndStartLevel(1, false);
         }
@@ -314,6 +313,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onExit(GameModel game) {
             game.levelCounter().clear();
+            gameController().clock().setTargetFrameRate(GameModel.FPS);
         }
     },
 

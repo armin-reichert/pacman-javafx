@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.util;
 
+import de.amr.games.pacman.controller.GameClock;
 import de.amr.games.pacman.model.GameModel;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
@@ -21,7 +22,7 @@ import org.tinylog.Logger;
  *
  * @author Armin Reichert
  */
-public class GameClock {
+public class GameClockFX implements GameClock {
 
     public final IntegerProperty targetFrameRatePy = new SimpleIntegerProperty(this, "targetFrameRate", GameModel.FPS) {
         @Override
@@ -40,7 +41,7 @@ public class GameClock {
     private long countTicksStartTime;
     private long ticks;
 
-    public GameClock() {
+    public GameClockFX() {
         createTimeline(targetFrameRatePy.get());
     }
 
@@ -67,6 +68,11 @@ public class GameClock {
         if (running) {
             start();
         }
+    }
+
+    @Override
+    public void setTargetFrameRate(int fps) {
+        targetFrameRatePy.set(fps);
     }
 
     public void start() {

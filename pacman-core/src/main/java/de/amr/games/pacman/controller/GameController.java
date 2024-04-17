@@ -44,10 +44,12 @@ public class GameController extends Fsm<GameState, GameModel> {
         return IT;
     }
 
+    private GameClock clock;
     private GameModel game;
     private boolean pacImmune = false;
     private int credit = 0;
     private SimulationStepEventLog eventLog;
+
     private GameController(GameModel variant) {
         super(GameState.values());
         selectGame(variant);
@@ -80,6 +82,14 @@ public class GameController extends Fsm<GameState, GameModel> {
                 Logger.info("- " + msg);
             }
         }
+    }
+
+    public void setClock(GameClock clock) {
+        this.clock = clock;
+    }
+
+    public GameClock clock() {
+        return clock;
     }
 
     public SimulationStepEventLog eventLog() {

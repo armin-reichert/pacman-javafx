@@ -206,7 +206,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         Logger.info("2D theme loaded");
     }
 
-    protected final GameClock clock;
+    protected final GameClockFX clock;
     protected final Map<GameVariants, Map<String, GameScene>> gameScenesByVariant = new EnumMap<>(GameVariants.class);
     protected final Stage stage;
     protected final Scene mainScene;
@@ -228,13 +228,14 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
         Keyboard.handleKeyEventsFor(mainScene);
 
-        clock = new GameClock();
+        clock = new GameClockFX();
         clock.pausedPy.addListener((py, ov, nv) -> updateStage());
         clock.setOnTick(() -> {
             gameController().update();
             currentGameScene().ifPresent(GameScene::update);
         });
         clock.setOnRender(gamePage::render);
+        gameController().setClock(clock);
 
         gameScenesByVariant.put(GameVariants.MS_PACMAN, new HashMap<>(Map.of(
             "boot",   new BootScene(),
@@ -388,7 +389,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     @Override
-    public GameClock gameClock() {
+    public GameClockFX gameClock() {
         return clock;
     }
 
@@ -609,6 +610,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (game().isPlaying()) {
             gameController().changeCredit(-1);
         }
+        clock.targetFrameRatePy.set(GameModel.FPS);
         gameController().restart(INTRO);
     }
 
@@ -617,6 +619,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         stopAllSounds();
         currentGameScene().ifPresent(GameScene::end);
         playVoice("voice.explain", 0);
+        clock.targetFrameRatePy.set(GameModel.FPS);
         gameController().restart(GameState.BOOT);
     }
 
