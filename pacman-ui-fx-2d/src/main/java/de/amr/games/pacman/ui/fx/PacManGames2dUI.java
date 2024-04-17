@@ -527,7 +527,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void onPacDied(GameEvent event) {
-        if (game().level().demoLevel()) {
+        if (!game().level().demoLevel()) {
             playAudioClip("audio.pacman_death");
         }
     }
