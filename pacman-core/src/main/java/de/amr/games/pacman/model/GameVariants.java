@@ -569,17 +569,11 @@ public enum GameVariants implements GameModel {
         return huntingPhaseIndex;
     }
 
-    /**
-     * @return (optional) index of current scattering phase <code>(0-3)</code>
-     */
     @Override
     public Optional<Integer> scatterPhase() {
         return isEven(huntingPhaseIndex) ? Optional.of(huntingPhaseIndex / 2) : Optional.empty();
     }
 
-    /**
-     * @return (optional) index of current chasing phase <code>(0-3)</code>
-     */
     @Override
     public Optional<Integer> chasingPhase() {
         return isOdd(huntingPhaseIndex) ? Optional.of(huntingPhaseIndex / 2) : Optional.empty();
@@ -676,6 +670,361 @@ public enum GameVariants implements GameModel {
     }
 
     abstract void huntingBehaviour(Ghost ghost, GameLevel level);
+
+    @Override
+    public GameLevel level() {
+        return level;
+    }
+
+    @Override
+    public World world() {
+        return world;
+    }
+
+    @Override
+    public short initialLives() {
+        return initialLives;
+    }
+
+    @Override
+    public void setInitialLives(int lives) {
+        initialLives = (short) lives;
+    }
+
+    @Override
+    public int lives() {
+        return lives;
+    }
+
+    @Override
+    public void addLives(int lives) {
+        this.lives += (short) lives;
+    }
+
+    @Override
+    public void loseLife() {
+        if (lives == 0) {
+            throw new IllegalArgumentException("No life left to loose :-(");
+        }
+        --lives;
+    }
+
+    @Override
+    public List<Byte> levelCounter() {
+        return levelCounter;
+    }
+
+    @Override
+    public Score score() {
+        return score;
+    }
+
+    @Override
+    public void scorePoints(int levelNumber, int points) {
+        int oldScore = score.points();
+        int newScore = oldScore + points;
+        score.setPoints(newScore);
+        if (newScore > highScore.points()) {
+            highScore.setPoints(newScore);
+            highScore.setLevelNumber(levelNumber);
+            highScore.setDate(LocalDate.now());
+        }
+        if (oldScore < EXTRA_LIFE_SCORE && newScore >= EXTRA_LIFE_SCORE) {
+            addLives(1);
+            publishGameEvent(GameEventType.EXTRA_LIFE_WON);
+        }
+    }
+
+    @Override
+    public Score highScore() {
+        return highScore;
+    }
+
+    @Override
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return playing;
+    }
+
+    @Override
+    public void reset() {
+        level = null;
+        playing = false;
+        lives = initialLives;
+        score.reset();
+        Logger.info("Game model ({}) reset", this);
+    }
+
+    @Override
+    public void letsGetReadyToRumble() {
+        pac.reset();
+        pac.setPosition(ArcadeWorld.PAC_POSITION);
+        pac.setMoveAndWishDir(Direction.LEFT);
+        pac.selectAnimation(Pac.ANIM_MUNCHING);
+        pac.resetAnimation();
+        ghosts().forEach(ghost -> {
+            ghost.reset();
+            ghost.setPosition(GHOST_POSITIONS_ON_START[ghost.id()]);
+            ghost.setMoveAndWishDir(GHOST_DIRECTIONS_ON_START[ghost.id()]);
+            ghost.setState(LOCKED);
+            ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
+            ghost.resetAnimation();
+        });
+        blinking.setStartPhase(Pulse.ON); // Energizers are visible when ON
+        blinking.reset();
+    }
+
+    @Override
+    public void onPacDying() {
+        huntingTimer().stop();
+        Logger.info("Hunting timer stopped");
+        resetGlobalDotCounterAndSetEnabled(true);
+        enableCruiseElroyState(false);
+        pac.die();
+    }
+
+    @Override
+    public void onLevelCompleted() {
+        blinking.setStartPhase(Pulse.OFF);
+        blinking.reset();
+        pac.freeze();
+        ghosts().forEach(Ghost::hide);
+        bonus().ifPresent(Bonus::setInactive);
+        huntingTimer().stop();
+        Logger.info("Hunting timer stopped");
+        Logger.trace("Game level {} ({}) completed.", level.levelNumber(), this);
+    }
+
+    @Override
+    public void doLevelTestStep(GameState testState) {
+        if (level.levelNumber() > 20) {
+            GameController.it().restart(GameState.BOOT);
+            return;
+        }
+        if (testState.timer().tick() > 2 * FPS) {
+            blinking.tick();
+            ghosts().forEach(ghost -> ghost.update(this));
+            bonus().ifPresent(bonus -> bonus.update(this));
+        }
+        if (testState.timer().atSecond(1.0)) {
+            letsGetReadyToRumble();
+            pac.show();
+            ghosts().forEach(Ghost::show);
+        } else if (testState.timer().atSecond(2)) {
+            blinking.setStartPhase(Pulse.ON);
+            blinking.restart();
+        } else if (testState.timer().atSecond(2.5)) {
+            bonusReachedIndex += 1;
+            createNextBonus(bonusSymbols.get(bonusReachedIndex));
+        } else if (testState.timer().atSecond(3.5)) {
+            bonus().ifPresent(bonus -> bonus.setEaten(120));
+            publishGameEvent(GameEventType.BONUS_EATEN);
+        } else if (testState.timer().atSecond(4.5)) {
+            bonus().ifPresent(Bonus::setInactive); // needed?
+            bonusReachedIndex += 1;
+            createNextBonus(bonusSymbols.get(bonusReachedIndex));
+        } else if (testState.timer().atSecond(6.5)) {
+            bonus().ifPresent(bonus -> bonus.setEaten(60));
+            publishGameEvent(GameEventType.BONUS_EATEN);
+        } else if (testState.timer().atSecond(8.5)) {
+            pac.hide();
+            ghosts().forEach(Ghost::hide);
+            blinking.stop();
+            blinking.setStartPhase(Pulse.ON);
+            blinking.reset();
+        } else if (testState.timer().atSecond(9.5)) {
+            testState.setProperty("mazeFlashing", true);
+            blinking.setStartPhase(Pulse.OFF);
+            blinking.restart(2 * level.numFlashes());
+        } else if (testState.timer().atSecond(12.0)) {
+            testState.timer().restartIndefinitely();
+            pac.freeze();
+            ghosts().forEach(Ghost::hide);
+            bonus().ifPresent(Bonus::setInactive);
+            testState.setProperty("mazeFlashing", false);
+            blinking.reset();
+            createAndStartLevel(level.levelNumber() + 1, false);
+        }
+    }
+
+    // Bonus Management
+
+    @Override
+    public Optional<Bonus> bonus() {
+        return Optional.ofNullable(bonus);
+    }
+
+    abstract void createNextBonus(byte symbol);
+
+    // Main logic
+
+    @Override
+    public GameState doHuntingStep() {
+        checkFoodEaten();
+        updateGhosts();
+        updatePac();
+        updateBonus();
+        updateHuntingTimer();
+        blinking.tick();
+
+        // level complete?
+        if (world.uneatenFoodCount() == 0) {
+            return GameState.LEVEL_COMPLETE;
+        }
+
+        // Pac killed?
+        var killers = ghosts(HUNTING_PAC).filter(pac::sameTile).toList();
+        if (!killers.isEmpty() && !GameController.it().isPacImmune()) {
+            eventLog().pacDied = true;
+            return GameState.PACMAN_DYING;
+        }
+
+        // Ghost(s) killed?
+        var prey = ghosts(FRIGHTENED).filter(pac::sameTile).toList();
+        if (!prey.isEmpty()) {
+            killGhosts(prey);
+            return GameState.GHOST_DYING;
+        }
+
+        // Continue hunt
+        return GameState.HUNTING;
+    }
+
+    void checkFoodEaten() {
+        final Vector2i pacTile = pac.tile();
+        if (world.hasFoodAt(pacTile)) {
+            eventLog().foodFoundTile = pacTile;
+            pac.endStarving();
+            if (world.isEnergizerTile(pacTile)) {
+                eventLog().energizerFound = true;
+                pac.setRestingTicks(RESTING_TICKS_ENERGIZER);
+                pac.victims().clear();
+                scorePoints(POINTS_ENERGIZER);
+                Logger.info("Scored {} points for eating energizer", POINTS_ENERGIZER);
+                if (level.pacPowerSeconds() > 0) {
+                    eventLog().pacGetsPower = true;
+                    huntingTimer().stop();
+                    Logger.info("Hunting timer stopped");
+                    pac.powerTimer().restartSeconds(level.pacPowerSeconds());
+                    // TODO do already frightened ghosts reverse too?
+                    ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
+                    ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
+                    publishGameEvent(GameEventType.PAC_GETS_POWER);
+                }
+            } else {
+                pac.setRestingTicks(RESTING_TICKS_PELLET);
+                scorePoints(POINTS_PELLET);
+            }
+            updateDotCount();
+            world.eatFoodAt(pacTile);
+            if (world.uneatenFoodCount() == level.elroy1DotsLeft()) {
+                setCruiseElroyState(1);
+            } else if (world.uneatenFoodCount() == level.elroy2DotsLeft()) {
+                setCruiseElroyState(2);
+            }
+            if (isBonusReached()) {
+                bonusReachedIndex += 1;
+                eventLog().bonusIndex = bonusReachedIndex;
+                createNextBonus(bonusSymbols.get(bonusReachedIndex));
+            }
+            publishGameEvent(GameEventType.PAC_FOUND_FOOD, pacTile);
+        } else {
+            pac.starve();
+        }
+    }
+
+    void updatePac() {
+        pac.update(this);
+        if (pac.powerTimer().remaining() == PAC_POWER_FADING_TICKS) {
+            eventLog().pacStartsLosingPower = true;
+            publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
+        } else if (pac.powerTimer().hasExpired()) {
+            pac.powerTimer().stop();
+            pac.powerTimer().resetIndefinitely();
+            huntingTimer().start();
+            Logger.info("Hunting timer started");
+            ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
+            eventLog().pacLostPower = true;
+            publishGameEvent(GameEventType.PAC_LOST_POWER);
+        }
+    }
+
+    void updateBonus() {
+        if (bonus == null) {
+            return;
+        }
+        if (bonus.state() == Bonus.STATE_EDIBLE && pac.sameTile(bonus.entity())) {
+            bonus.setEaten(BONUS_POINTS_SHOWN_TICKS);
+            scorePoints(bonus.points());
+            Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
+            eventLog().bonusEaten = true;
+            publishGameEvent(GameEventType.BONUS_EATEN);
+        } else {
+            bonus.update(this);
+        }
+    }
+
+    void updateHuntingTimer( ) {
+        if (huntingTimer().hasExpired()) {
+            ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
+            startHuntingPhase(huntingPhaseIndex + 1);
+        } else {
+            huntingTimer().advance();
+        }
+    }
+
+    void updateGhosts() {
+        Ghost unlockedGhost = unlockGhost();
+        if (unlockedGhost != null) {
+            if (unlockedGhost.insideHouse(world.house())) {
+                unlockedGhost.setState(LEAVING_HOUSE);
+            } else {
+                unlockedGhost.setMoveAndWishDir(LEFT);
+                unlockedGhost.setState(HUNTING_PAC);
+            }
+            if (unlockedGhost.id() == ORANGE_GHOST && cruiseElroyState() < 0) {
+                enableCruiseElroyState(true);
+                Logger.trace("Cruise elroy mode re-enabled because {} exits house", unlockedGhost.name());
+            }
+        }
+        ghosts().forEach(ghost -> ghost.update(this));
+    }
+
+    void scorePoints(int points) {
+        if (!level.demoLevel()) {
+            scorePoints(level.levelNumber(), points);
+        }
+    }
+
+    @Override
+    public void killGhosts(List<Ghost> prey) {
+        if (!prey.isEmpty()) {
+            prey.forEach(this::killGhost);
+            if (numGhostsKilledInLevel == 16) {
+                int points = POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
+                scorePoints(points);
+                Logger.info("Scored {} points for killing all ghosts at level {}", points, level.levelNumber());
+            }
+        }
+    }
+
+    void killGhost(Ghost ghost) {
+        byte[] multiple = { 2, 4, 8, 16 };
+        int killedSoFar = pac.victims().size();
+        int points = 100 * multiple[killedSoFar];
+        scorePoints(points);
+        ghost.eaten(killedSoFar);
+        pac.victims().add(ghost);
+        eventLog().killedGhosts.add(ghost);
+        numGhostsKilledInLevel += 1;
+        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
+    }
+
+    // Ghost house access
 
     /**
      * From the Pac-Man dossier:
@@ -830,356 +1179,6 @@ public enum GameVariants implements GameModel {
             return prisoner;
         }
         return null;
-    }
-
-    @Override
-    public void setPlaying(boolean playing) {
-        this.playing = playing;
-    }
-
-    @Override
-    public boolean isPlaying() {
-        return playing;
-    }
-
-    @Override
-    public void reset() {
-        level = null;
-        playing = false;
-        lives = initialLives;
-        score.reset();
-        Logger.info("Game model ({}) reset", this);
-    }
-
-    @Override
-    public void letsGetReadyToRumble() {
-        pac.reset();
-        pac.setPosition(ArcadeWorld.PAC_POSITION);
-        pac.setMoveAndWishDir(Direction.LEFT);
-        pac.selectAnimation(Pac.ANIM_MUNCHING);
-        pac.resetAnimation();
-        ghosts().forEach(ghost -> {
-            ghost.reset();
-            ghost.setPosition(GHOST_POSITIONS_ON_START[ghost.id()]);
-            ghost.setMoveAndWishDir(GHOST_DIRECTIONS_ON_START[ghost.id()]);
-            ghost.setState(LOCKED);
-            ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
-            ghost.resetAnimation();
-        });
-        blinking.setStartPhase(Pulse.ON); // Energizers are visible when ON
-        blinking.reset();
-    }
-
-    @Override
-    public void onPacDying() {
-        huntingTimer().stop();
-        Logger.info("Hunting timer stopped");
-        resetGlobalDotCounterAndSetEnabled(true);
-        enableCruiseElroyState(false);
-        pac.die();
-    }
-
-    @Override
-    public void onLevelCompleted() {
-        blinking.setStartPhase(Pulse.OFF);
-        blinking.reset();
-        pac.freeze();
-        ghosts().forEach(Ghost::hide);
-        bonus().ifPresent(Bonus::setInactive);
-        huntingTimer().stop();
-        Logger.info("Hunting timer stopped");
-        Logger.trace("Game level {} ({}) completed.", level.levelNumber(), this);
-    }
-
-    @Override
-    public void doLevelTestStep(GameState testState) {
-        if (level.levelNumber() > 20) {
-            GameController.it().restart(GameState.BOOT);
-            return;
-        }
-        if (testState.timer().tick() > 2 * FPS) {
-            blinking.tick();
-            ghosts().forEach(ghost -> ghost.update(this));
-            bonus().ifPresent(bonus -> bonus.update(this));
-        }
-        if (testState.timer().atSecond(1.0)) {
-            letsGetReadyToRumble();
-            pac.show();
-            ghosts().forEach(Ghost::show);
-        } else if (testState.timer().atSecond(2)) {
-            blinking.setStartPhase(Pulse.ON);
-            blinking.restart();
-        } else if (testState.timer().atSecond(2.5)) {
-            bonusReachedIndex += 1;
-            createNextBonus(bonusSymbols.get(bonusReachedIndex));
-        } else if (testState.timer().atSecond(3.5)) {
-            bonus().ifPresent(bonus -> bonus.setEaten(120));
-            publishGameEvent(GameEventType.BONUS_EATEN);
-        } else if (testState.timer().atSecond(4.5)) {
-            bonus().ifPresent(Bonus::setInactive); // needed?
-            bonusReachedIndex += 1;
-            createNextBonus(bonusSymbols.get(bonusReachedIndex));
-        } else if (testState.timer().atSecond(6.5)) {
-            bonus().ifPresent(bonus -> bonus.setEaten(60));
-            publishGameEvent(GameEventType.BONUS_EATEN);
-        } else if (testState.timer().atSecond(8.5)) {
-            pac.hide();
-            ghosts().forEach(Ghost::hide);
-            blinking.stop();
-            blinking.setStartPhase(Pulse.ON);
-            blinking.reset();
-        } else if (testState.timer().atSecond(9.5)) {
-            testState.setProperty("mazeFlashing", true);
-            blinking.setStartPhase(Pulse.OFF);
-            blinking.restart(2 * level.numFlashes());
-        } else if (testState.timer().atSecond(12.0)) {
-            testState.timer().restartIndefinitely();
-            pac.freeze();
-            ghosts().forEach(Ghost::hide);
-            bonus().ifPresent(Bonus::setInactive);
-            testState.setProperty("mazeFlashing", false);
-            blinking.reset();
-            createAndStartLevel(level.levelNumber() + 1, false);
-        }
-    }
-
-    // Bonus Management
-
-    @Override
-    public Optional<Bonus> bonus() {
-        return Optional.ofNullable(bonus);
-    }
-
-    abstract void createNextBonus(byte symbol);
-
-    private void scorePoints(int points) {
-        if (!level.demoLevel()) {
-            scorePoints(level.levelNumber(), points);
-        }
-    }
-
-    private void updateFood() {
-        final Vector2i pacTile = pac.tile();
-        if (world.hasFoodAt(pacTile)) {
-            eventLog().foodFoundTile = pacTile;
-            pac.endStarving();
-            if (world.isEnergizerTile(pacTile)) {
-                eventLog().energizerFound = true;
-                pac.setRestingTicks(RESTING_TICKS_ENERGIZER);
-                pac.victims().clear();
-                scorePoints(POINTS_ENERGIZER);
-                handleEnergizerEaten();
-                Logger.info("Scored {} points for eating energizer", POINTS_ENERGIZER);
-            } else {
-                pac.setRestingTicks(RESTING_TICKS_PELLET);
-                scorePoints(POINTS_PELLET);
-            }
-            updateDotCount();
-            world.eatFoodAt(pacTile);
-            if (world.uneatenFoodCount() == level.elroy1DotsLeft()) {
-                setCruiseElroyState(1);
-            } else if (world.uneatenFoodCount() == level.elroy2DotsLeft()) {
-                setCruiseElroyState(2);
-            }
-            if (isBonusReached()) {
-                bonusReachedIndex += 1;
-                eventLog().bonusIndex = bonusReachedIndex;
-                createNextBonus(bonusSymbols.get(bonusReachedIndex));
-            }
-            publishGameEvent(GameEventType.PAC_FOUND_FOOD, pacTile);
-        } else {
-            pac.starve();
-        }
-    }
-
-    private void updatePac() {
-        pac.update(this);
-        if (pac.powerTimer().remaining() == PAC_POWER_FADING_TICKS) {
-            eventLog().pacStartsLosingPower = true;
-            publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
-        } else if (pac.powerTimer().hasExpired()) {
-            pac.powerTimer().stop();
-            pac.powerTimer().resetIndefinitely();
-            huntingTimer().start();
-            Logger.info("Hunting timer started");
-            ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
-            eventLog().pacLostPower = true;
-            publishGameEvent(GameEventType.PAC_LOST_POWER);
-        }
-    }
-
-    private void handleEnergizerEaten() {
-        if (level.pacPowerSeconds() > 0) {
-            eventLog().pacGetsPower = true;
-            huntingTimer().stop();
-            Logger.info("Hunting timer stopped");
-            pac.powerTimer().restartSeconds(level.pacPowerSeconds());
-            // TODO do already frightened ghosts reverse too?
-            ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
-            ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
-            publishGameEvent(GameEventType.PAC_GETS_POWER);
-        }
-    }
-
-    private void updateBonus() {
-        if (bonus == null) {
-            return;
-        }
-        if (bonus.state() == Bonus.STATE_EDIBLE && pac.sameTile(bonus.entity())) {
-            bonus.setEaten(BONUS_POINTS_SHOWN_TICKS);
-            scorePoints(bonus.points());
-            Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-            eventLog().bonusEaten = true;
-            publishGameEvent(GameEventType.BONUS_EATEN);
-        } else {
-            bonus.update(this);
-        }
-    }
-
-    private void updateHuntingTimer( ) {
-        if (huntingTimer().hasExpired()) {
-            ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
-            startHuntingPhase(huntingPhaseIndex + 1);
-        } else {
-            huntingTimer().advance();
-        }
-    }
-
-    private void updateGhosts() {
-        Ghost unlockedGhost = unlockGhost();
-        if (unlockedGhost != null) {
-            if (unlockedGhost.insideHouse(world.house())) {
-                unlockedGhost.setState(LEAVING_HOUSE);
-            } else {
-                unlockedGhost.setMoveAndWishDir(LEFT);
-                unlockedGhost.setState(HUNTING_PAC);
-            }
-            if (unlockedGhost.id() == ORANGE_GHOST && cruiseElroyState() < 0) {
-                enableCruiseElroyState(true);
-                Logger.trace("Cruise elroy mode re-enabled because {} exits house", unlockedGhost.name());
-            }
-        }
-        ghosts().forEach(ghost -> ghost.update(this));
-    }
-
-    @Override
-    public GameState doHuntingStep() {
-        updateFood();
-        updateGhosts();
-        updatePac();
-        updateBonus();
-        updateHuntingTimer();
-        blinking.tick();
-
-        // what next?
-        if (world.uneatenFoodCount() == 0) {
-            return GameState.LEVEL_COMPLETE;
-        }
-        var killers = ghosts(HUNTING_PAC).filter(pac::sameTile).toList();
-        if (!killers.isEmpty() && !GameController.it().isPacImmune()) {
-            eventLog().pacDied = true;
-            return GameState.PACMAN_DYING;
-        }
-        var prey = ghosts(FRIGHTENED).filter(pac::sameTile).toList();
-        if (!prey.isEmpty()) {
-            killGhosts(prey);
-            return GameState.GHOST_DYING;
-        }
-        return GameState.HUNTING;
-    }
-
-
-    @Override
-    public void killGhosts(List<Ghost> prey) {
-        if (!prey.isEmpty()) {
-            prey.forEach(this::killGhost);
-            if (numGhostsKilledInLevel == 16) {
-                int points = POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
-                scorePoints(points);
-                Logger.info("Scored {} points for killing all ghosts at level {}", points, level.levelNumber());
-            }
-        }
-    }
-
-    private void killGhost(Ghost ghost) {
-        byte[] multiple = { 2, 4, 8, 16 };
-        int killedSoFar = pac.victims().size();
-        int points = 100 * multiple[killedSoFar];
-        scorePoints(points);
-        ghost.eaten(killedSoFar);
-        pac.victims().add(ghost);
-        eventLog().killedGhosts.add(ghost);
-        numGhostsKilledInLevel += 1;
-        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
-    }
-
-    @Override
-    public GameLevel level() {
-        return level;
-    }
-
-    @Override
-    public World world() {
-        return world;
-    }
-
-    @Override
-    public short initialLives() {
-        return initialLives;
-    }
-
-    @Override
-    public void setInitialLives(int lives) {
-        initialLives = (short) lives;
-    }
-
-    @Override
-    public int lives() {
-        return lives;
-    }
-
-    @Override
-    public void addLives(int lives) {
-        this.lives += (short) lives;
-    }
-
-    @Override
-    public void loseLife() {
-        if (lives == 0) {
-            throw new IllegalArgumentException("No life left to loose :-(");
-        }
-        --lives;
-    }
-
-    @Override
-    public List<Byte> levelCounter() {
-        return levelCounter;
-    }
-
-    @Override
-    public Score score() {
-        return score;
-    }
-
-    @Override
-    public void scorePoints(int levelNumber, int points) {
-        int oldScore = score.points();
-        int newScore = oldScore + points;
-        score.setPoints(newScore);
-        if (newScore > highScore.points()) {
-            highScore.setPoints(newScore);
-            highScore.setLevelNumber(levelNumber);
-            highScore.setDate(LocalDate.now());
-        }
-        if (oldScore < EXTRA_LIFE_SCORE && newScore >= EXTRA_LIFE_SCORE) {
-            addLives(1);
-            publishGameEvent(GameEventType.EXTRA_LIFE_WON);
-        }
-    }
-
-    @Override
-    public Score highScore() {
-        return highScore;
     }
 
     // Game Event Support

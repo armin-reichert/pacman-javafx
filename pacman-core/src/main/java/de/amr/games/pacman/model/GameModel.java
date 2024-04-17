@@ -93,8 +93,14 @@ public interface GameModel {
 
     byte huntingPhaseIndex();
 
+    /**
+     * @return (optional) index of current scattering phase <code>(0-3)</code>
+     */
     Optional<Integer> scatterPhase();
 
+    /**
+     * @return (optional) index of current chasing phase <code>(0-3)</code>
+     */
     Optional<Integer> chasingPhase();
 
     String currentHuntingPhaseName();
