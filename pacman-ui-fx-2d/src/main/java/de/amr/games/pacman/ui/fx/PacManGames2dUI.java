@@ -230,11 +230,11 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
         clock = new GameClockFX();
         clock.pausedPy.addListener((py, ov, nv) -> updateStage());
-        clock.setOnTick(() -> {
+        clock.setPauseableCallback(() -> {
             gameController().update();
             currentGameScene().ifPresent(GameScene::update);
         });
-        clock.setOnRender(gamePage::render);
+        clock.setContinousCallback(gamePage::render);
         gameController().setClock(clock);
 
         gameScenesByVariant.put(GameVariants.MS_PACMAN, new HashMap<>(Map.of(
@@ -651,9 +651,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public void doSimulationSteps(int numSteps) {
         if (clock.isPaused()) {
             if (numSteps == 1) {
-                clock.executeSingleStep(true);
+                clock.makeStep(true);
             } else {
-                clock.executeSteps(numSteps, true);
+                clock.makeSteps(numSteps, true);
             }
         }
     }

@@ -67,7 +67,7 @@ public class InfoBoxGeneral extends InfoBox {
         sliderTargetFPS.setShowTickMarks(false);
 
         addInfo("", () -> String.format("Target %dHz Actual %dHz",
-            sceneContext.gameClock().targetFrameRatePy.get(), sceneContext.gameClock().getFPS()));
+            sceneContext.gameClock().targetFrameRatePy.get(), sceneContext.gameClock().getActualFrameRate()));
         addInfo("Total Updates", () -> sceneContext.gameClock().getUpdateCount());
 
         cbUsePlayScene3D = addCheckBox("3D Play Scene");
@@ -79,7 +79,7 @@ public class InfoBoxGeneral extends InfoBox {
     public void init(GameSceneContext sceneContext) {
         super.init(sceneContext);
         buttonsSimulation[0].setOnAction(e -> actionHandler().togglePaused());
-        buttonsSimulation[1].setOnAction(e -> sceneContext.gameClock().executeSteps(PacManGames3dUI.PY_SIMULATION_STEPS.get(), true));
+        buttonsSimulation[1].setOnAction(e -> sceneContext.gameClock().makeSteps(PacManGames3dUI.PY_SIMULATION_STEPS.get(), true));
         sliderTargetFPS.valueProperty().addListener(
             (py, ov, nv) -> sceneContext.gameClock().targetFrameRatePy.set(nv.intValue()));
         cbUsePlayScene3D.setOnAction(e -> actionHandler().toggle2D3D());

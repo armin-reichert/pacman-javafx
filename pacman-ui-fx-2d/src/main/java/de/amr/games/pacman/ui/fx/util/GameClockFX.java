@@ -27,14 +27,16 @@ public class GameClockFX implements GameClock {
     public final IntegerProperty targetFrameRatePy = new SimpleIntegerProperty(this, "targetFrameRate", GameModel.FPS) {
         @Override
         protected void invalidated() {
-            updateClock();
+            handleTargetFrameRateChanged();
         }
     };
+
     public final BooleanProperty pausedPy = new SimpleBooleanProperty(this, "paused", false);
+
     public final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(this, "timeMeasured", false);
 
-    private Runnable onTick   = () -> {};
-    private Runnable onRender = () -> {};
+    private Runnable pauseableCallback = () -> {};
+    private Runnable continousCallback = () -> {};
     private Timeline timeline;
     private long updateCount;
     private long ticksPerSec;
@@ -45,21 +47,21 @@ public class GameClockFX implements GameClock {
         createTimeline(targetFrameRatePy.get());
     }
 
-    public void setOnTick(Runnable onTick) {
-        this.onTick = onTick;
+    public void setPauseableCallback(Runnable callback) {
+        this.pauseableCallback = callback;
     }
 
-    public void setOnRender(Runnable onRender) {
-        this.onRender = onRender;
+    public void setContinousCallback(Runnable callback) {
+        this.continousCallback = callback;
     }
 
     private void createTimeline(int targetFPS) {
-        var tick = new KeyFrame(Duration.seconds(1.0 / targetFPS), e -> executeSingleStep(!isPaused()));
+        var tick = new KeyFrame(Duration.seconds(1.0 / targetFPS), e -> makeStep(!isPaused()));
         timeline = new Timeline(targetFPS, tick);
         timeline.setCycleCount(Animation.INDEFINITE);
     }
 
-    private void updateClock() {
+    private void handleTargetFrameRateChanged() {
         boolean running = timeline.getStatus() == Status.RUNNING;
         if (running) {
             timeline.stop();
@@ -75,59 +77,60 @@ public class GameClockFX implements GameClock {
         targetFrameRatePy.set(fps);
     }
 
+    @Override
     public void start() {
         timeline.play();
     }
 
+    @Override
     public void stop() {
         timeline.stop();
     }
 
+    @Override
     public boolean isRunning() {
         return timeline.getStatus() == Status.RUNNING;
     }
 
+    @Override
     public boolean isPaused() {
         return pausedPy.get();
+    }
+
+    @Override
+    public int getActualFrameRate() {
+        return (int) ticksPerSec;
     }
 
     public long getUpdateCount() {
         return updateCount;
     }
 
-    public long getFPS() {
-        return ticksPerSec;
-    }
-
-    public void setTimeMeasured(boolean measured) {
-        timeMeasuredPy.set(measured);
-    }
-
-    public void executeSteps(int n, boolean updateEnabled) {
+    public void makeSteps(int n, boolean pauseableCallbackEnabled) {
         for (int i = 0; i < n; ++i) {
-            executeSingleStep(updateEnabled);
+            makeStep(pauseableCallbackEnabled);
         }
     }
 
-    public void executeSingleStep(boolean updateEnabled) {
-        long tickTime = System.nanoTime();
-        if (updateEnabled) {
-            runPhase(onTick, "Update phase: {} milliseconds");
+    public void makeStep(boolean pauseableCallbackEnabled) {
+        long executionTime = System.nanoTime();
+        if (pauseableCallbackEnabled) {
+            execute(pauseableCallback, "Pausable phase: {} milliseconds");
             updateCount++;
         }
-        runPhase(onRender, "Render phase: {} milliseconds");
+        execute(continousCallback, "Continous phase: {} milliseconds");
         ++ticks;
-        computeFrameRate(tickTime);
+        computeFrameRate(executionTime);
     }
 
-    private void runPhase(Runnable phase, String logMessage) {
+    private void execute(Runnable callback, String callbackMsg) {
         if (timeMeasuredPy.get()) {
-            double startNanos = System.nanoTime();
-            phase.run();
-            double durationNanos = System.nanoTime() - startNanos;
-            Logger.info(logMessage, durationNanos / 1e6);
+            double start = System.nanoTime();
+            callback.run();
+            double duration = System.nanoTime() - start;
+            Logger.info(callbackMsg, duration / 1e6);
         } else {
-            phase.run();
+            callback.run();
         }
     }
 
