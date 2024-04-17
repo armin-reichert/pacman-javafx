@@ -10,7 +10,13 @@ import static de.amr.games.pacman.lib.Globals.checkLevelNumber;
  * @author Armin Reichert
  */
 public record GameLevel(
-    int levelNumber,
+    /*
+     * Level number, starting with 1.
+     */
+    int number,
+    /*
+     * Demo level used in attract mode, no sound.
+     */
     boolean demoLevel,
     /*
      * Relative Pac-Man speed (percentage of base speed)
@@ -62,7 +68,7 @@ public record GameLevel(
     byte intermissionNumber)
 {
     public GameLevel {
-        checkLevelNumber(levelNumber);
+        checkLevelNumber(number);
     }
 
     public GameLevel(int levelNumber, boolean demoLevel, byte[] data) {

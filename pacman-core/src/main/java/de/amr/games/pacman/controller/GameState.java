@@ -173,7 +173,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartSeconds(1);
-            game.createAndStartLevel(game.level().levelNumber() + 1, false);
+            game.createAndStartLevel(game.level().number() + 1, false);
         }
 
         @Override

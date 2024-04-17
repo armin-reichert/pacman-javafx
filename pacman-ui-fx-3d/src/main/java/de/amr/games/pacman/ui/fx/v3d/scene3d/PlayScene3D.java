@@ -197,7 +197,7 @@ public class PlayScene3D implements GameScene {
             List<String> names = context.theme().getArray("texture.names");
             PY_3D_FLOOR_TEXTURE.set(names.get(randomInt(0, names.size())));
         }
-        Logger.info("3D game level {} created.", context.game().level().levelNumber());
+        Logger.info("3D game level {} created.", context.game().level().number());
     }
 
     @Override
@@ -348,7 +348,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onLevelCreated(GameEvent event) {
-        if (context.game().level().levelNumber() == 1 || context.gameState() == GameState.LEVEL_TEST) {
+        if (context.game().level().number() == 1 || context.gameState() == GameState.LEVEL_TEST) {
             replaceGameLevel3D();
         }
     }
@@ -356,7 +356,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onLevelStarted(GameEvent event) {
         assertLevel3DExists();
-        if (context.game().level().levelNumber() == 1 || context.gameState() == GameState.LEVEL_TEST) {
+        if (context.game().level().number() == 1 || context.gameState() == GameState.LEVEL_TEST) {
             showLevelMessage();
         }
         level3D.createLevelCounter3D();
@@ -406,7 +406,7 @@ public class PlayScene3D implements GameScene {
         World world = context.game().world();
         checkNotNull(world);
         if (context.gameState() == GameState.LEVEL_TEST) {
-            level3D.showMessage("TEST LEVEL " + context.game().level().levelNumber(), 5,
+            level3D.showMessage("TEST LEVEL " + context.game().level().number(), 5,
                 world.numCols() * HTS, (world.numRows() - 2) * TS);
         } else if (!context.game().level().demoLevel()) {
             var house = world.house();
@@ -419,7 +419,7 @@ public class PlayScene3D implements GameScene {
 
     private void playLevelCompleteAnimation(GameLevel level) {
         boolean noIntermission = level.intermissionNumber() == 0;
-        context.actionHandler().showFlashMessageSeconds(2, pickLevelCompleteMessage(level.levelNumber()));
+        context.actionHandler().showFlashMessageSeconds(2, pickLevelCompleteMessage(level.number()));
         var animation = new SequentialTransition(
             pauseSeconds(1),
             level3D.createLevelCompleteAnimation(),

@@ -120,8 +120,8 @@ public class GameLevel3D extends Group {
         World world = context.game().world();
         switch (context.game()) {
             case GameVariants.MS_PACMAN -> {
-                int mapNumber  = ArcadeWorld.mapNumberMsPacMan(context.game().level().levelNumber());
-                int mazeNumber = ArcadeWorld.mazeNumberMsPacMan(context.game().level().levelNumber());
+                int mapNumber  = ArcadeWorld.mapNumberMsPacMan(context.game().level().number());
+                int mazeNumber = ArcadeWorld.mazeNumberMsPacMan(context.game().level().number());
                 floorPlan = readFloorPlanFromFile(GameVariants.MS_PACMAN, mapNumber);
                 wallBuilder = createWallBuilder(
                     context.theme().color("mspacman.maze.wallBaseColor",  mazeNumber - 1),

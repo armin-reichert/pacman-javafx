@@ -435,12 +435,7 @@ public enum GameVariants implements GameModel {
         /*21*/ { 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0},
     };
 
-    final Direction[] GHOST_DIRECTIONS_ON_START = {
-        Direction.LEFT,
-        Direction.DOWN,
-        Direction.UP,
-        Direction.UP
-    };
+    final Direction[] GHOST_DIRECTIONS_ON_START = {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP};
 
     final Vector2f[] GHOST_POSITIONS_ON_START = {
         ArcadeWorld.HOUSE_ENTRY_POSITION,
@@ -547,7 +542,7 @@ public enum GameVariants implements GameModel {
             throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + index);
         }
         huntingPhaseIndex = (byte) index;
-        var durations = huntingDurations(level.levelNumber());
+        var durations = huntingDurations(level.number());
         var ticks = durations[index] == -1 ? TickTimer.INDEFINITE : durations[index];
         huntingTimer.reset(ticks);
         huntingTimer.start();
@@ -618,9 +613,9 @@ public enum GameVariants implements GameModel {
 
     Vector2i ghostScatterTarget(byte ghostID) {
         return switch (ghostID) {
-            case RED_GHOST -> SCATTER_TILE_NE;
-            case PINK_GHOST -> SCATTER_TILE_NW;
-            case CYAN_GHOST -> SCATTER_TILE_SE;
+            case RED_GHOST    -> SCATTER_TILE_NE;
+            case PINK_GHOST   -> SCATTER_TILE_NW;
+            case CYAN_GHOST   -> SCATTER_TILE_SE;
             case ORANGE_GHOST -> SCATTER_TILE_SW;
             default -> throw new IllegalGhostIDException(ghostID);
         };
@@ -787,12 +782,12 @@ public enum GameVariants implements GameModel {
         bonus().ifPresent(Bonus::setInactive);
         huntingTimer().stop();
         Logger.info("Hunting timer stopped");
-        Logger.trace("Game level {} ({}) completed.", level.levelNumber(), this);
+        Logger.trace("Game level {} completed.", level.number());
     }
 
     @Override
     public void doLevelTestStep(GameState testState) {
-        if (level.levelNumber() > 20) {
+        if (level.number() > 20) {
             GameController.it().restart(GameState.BOOT);
             return;
         }
@@ -838,7 +833,7 @@ public enum GameVariants implements GameModel {
             bonus().ifPresent(Bonus::setInactive);
             testState.setProperty("mazeFlashing", false);
             blinking.reset();
-            createAndStartLevel(level.levelNumber() + 1, false);
+            createAndStartLevel(level.number() + 1, false);
         }
     }
 
@@ -989,7 +984,7 @@ public enum GameVariants implements GameModel {
 
     void scorePoints(int points) {
         if (!level.demoLevel()) {
-            scorePoints(level.levelNumber(), points);
+            scorePoints(level.number(), points);
         }
     }
 
@@ -1000,7 +995,7 @@ public enum GameVariants implements GameModel {
             if (numGhostsKilledInLevel == 16) {
                 int points = POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
                 scorePoints(points);
-                Logger.info("Scored {} points for killing all ghosts at level {}", points, level.levelNumber());
+                Logger.info("Scored {} points for killing all ghosts at level {}", points, level.number());
             }
         }
     }
@@ -1104,16 +1099,16 @@ public enum GameVariants implements GameModel {
     void initGhostHouseAccessControl() {
         globalDotLimits = new byte[] {UNLIMITED, 7, 17, UNLIMITED};
         privateDotLimits = new byte[] {0, 0, 0, 0};
-        if (level.levelNumber() == 1) {
+        if (level.number() == 1) {
             privateDotLimits[CYAN_GHOST] = 30;
             privateDotLimits[ORANGE_GHOST] = 60;
-        } else if (level.levelNumber() == 2) {
+        } else if (level.number() == 2) {
             privateDotLimits[ORANGE_GHOST] = 50;
         }
         dotCounters = new int[] {0, 0, 0, 0};
         globalDotCounter = 0;
         globalDotCounterEnabled = false;
-        pacStarvingLimit = level.levelNumber() < 5 ? 240 : 180; // 4 sec : 3 sec
+        pacStarvingLimit = level.number() < 5 ? 240 : 180; // 4 sec : 3 sec
     }
 
     void resetGlobalDotCounterAndSetEnabled(boolean enabled) {
