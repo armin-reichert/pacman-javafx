@@ -83,19 +83,18 @@ public enum GameVariants implements GameModel {
             initGhostHouseAccessControl();
 
             pac = new Pac("Ms. Pac-Man");
-            ghosts = new Ghost[] {
-                new Ghost(RED_GHOST,    "Blinky"),
-                new Ghost(PINK_GHOST,   "Pinky"),
-                new Ghost(CYAN_GHOST,   "Inky"),
-                new Ghost(ORANGE_GHOST, "Sue")
-            };
-
             pac.reset();
             pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
             pac.setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(demoLevel);
 
+            ghosts = new Ghost[] {
+                new Ghost(RED_GHOST,    "Blinky"),
+                new Ghost(PINK_GHOST,   "Pinky"),
+                new Ghost(CYAN_GHOST,   "Inky"),
+                new Ghost(ORANGE_GHOST, "Sue")
+            };
             ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(world.house());
@@ -206,7 +205,7 @@ public enum GameVariants implements GameModel {
          * </tr>
          * </table>
          */
-        private byte nextBonusSymbol(int levelNumber) {
+        byte nextBonusSymbol(int levelNumber) {
             checkLevelNumber(levelNumber);
             if (levelNumber <= 7) {
                 return (byte) (levelNumber - 1);
@@ -221,7 +220,7 @@ public enum GameVariants implements GameModel {
             else              return 6; // 4/32
         }
 
-        public void createNextBonus(byte symbol) {
+        void createNextBonus(byte symbol) {
             if (bonus != null && bonus.state() != Bonus.STATE_INACTIVE) {
                 Logger.info("Previous bonus is still active, skip this one");
                 return;
@@ -275,7 +274,7 @@ public enum GameVariants implements GameModel {
             {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS,       1, -1}, // Levels 5+
         };
 
-        public int[] huntingDurations(int levelNumber) {
+        int[] huntingDurations(int levelNumber) {
             checkLevelNumber(levelNumber);
             return switch (levelNumber) {
                 case 1       -> HUNTING_DURATIONS[0];
@@ -304,23 +303,16 @@ public enum GameVariants implements GameModel {
         public void createAndStartLevel(int levelNumber, boolean demoLevel) {
             checkLevelNumber(levelNumber);
 
-            world = createPacManWorld();
             if (demoLevel) {
                 level = new GameLevel(1, true, LEVEL_DATA[0]);
             } else {
                 int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
                 level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex]);
             }
+            world = createPacManWorld();
             initGhostHouseAccessControl();
 
             pac = new Pac("Pac-Man");
-            ghosts = new Ghost[] {
-                new Ghost(RED_GHOST,    "Blinky"),
-                new Ghost(PINK_GHOST,   "Pinky"),
-                new Ghost(CYAN_GHOST,   "Inky"),
-                new Ghost(ORANGE_GHOST, "Clyde")
-            };
-
             pac.reset();
             pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
             pac.setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
@@ -332,6 +324,12 @@ public enum GameVariants implements GameModel {
                 pac.setUseAutopilot(false);
             }
 
+            ghosts = new Ghost[] {
+                new Ghost(RED_GHOST,    "Blinky"),
+                new Ghost(PINK_GHOST,   "Pinky"),
+                new Ghost(CYAN_GHOST,   "Inky"),
+                new Ghost(ORANGE_GHOST, "Clyde")
+            };
             var forbidden = new HashMap<Vector2i, List<Direction>>();
             var up = List.of(UP);
             ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbidden.put(tile, up));
@@ -651,11 +649,6 @@ public enum GameVariants implements GameModel {
             ? level.ghostSpeedTunnelPercentage() : level.ghostSpeedFrightenedPercentage();
     }
 
-    /**
-     * @param ghost a ghost
-     * @param level game level
-     * @return relative speed of ghost in percent of the base speed
-     */
     byte huntingSpeedPercentage(Ghost ghost, GameLevel level) {
         if (world.isTunnel(ghost.tile())) {
             return level.ghostSpeedTunnelPercentage();
@@ -820,14 +813,14 @@ public enum GameVariants implements GameModel {
         } else if (testState.timer().atSecond(2.5)) {
             bonusReachedIndex += 1;
             createNextBonus(bonusSymbols.get(bonusReachedIndex));
-        } else if (testState.timer().atSecond(3.5)) {
-            bonus().ifPresent(bonus -> bonus.setEaten(120));
-            publishGameEvent(GameEventType.BONUS_EATEN);
         } else if (testState.timer().atSecond(4.5)) {
+            bonus().ifPresent(bonus -> bonus.setEaten(60));
+            publishGameEvent(GameEventType.BONUS_EATEN);
+        } else if (testState.timer().atSecond(6.5)) {
             bonus().ifPresent(Bonus::setInactive); // needed?
             bonusReachedIndex += 1;
             createNextBonus(bonusSymbols.get(bonusReachedIndex));
-        } else if (testState.timer().atSecond(6.5)) {
+        } else if (testState.timer().atSecond(7.5)) {
             bonus().ifPresent(bonus -> bonus.setEaten(60));
             publishGameEvent(GameEventType.BONUS_EATEN);
         } else if (testState.timer().atSecond(8.5)) {
