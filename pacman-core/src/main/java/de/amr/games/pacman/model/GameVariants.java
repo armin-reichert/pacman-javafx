@@ -116,18 +116,19 @@ public enum GameVariants implements GameModel {
             numGhostsKilledInLevel = 0;
 
             score.setLevelNumber(levelNumber);
+
+            // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
+            // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
             if (levelNumber == 1) {
                 levelCounter.clear();
             }
             if (levelNumber <= 7) {
-                // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
-                // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
                 levelCounter.add(bonusSymbols.getFirst());
                 if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
                     levelCounter.removeFirst();
                 }
             }
-            Logger.info("Level {} created ({})", levelNumber, this);
+            Logger.info("Level {} created", levelNumber);
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
             // At this point, the animations of Pac-Man and the ghosts must have been created!
@@ -139,7 +140,7 @@ public enum GameVariants implements GameModel {
                 pac.hide();
                 ghosts().forEach(Ghost::hide);
             }
-            Logger.info("Level {} started ({})", levelNumber, this);
+            Logger.info("Level {} started", levelNumber);
             publishGameEvent(GameEventType.LEVEL_STARTED);
         }
 
@@ -158,7 +159,6 @@ public enum GameVariants implements GameModel {
                 PACMAN.huntingBehaviour(ghost, level);
             }
         }
-
 
         @Override
         boolean isBonusReached() {
@@ -259,7 +259,6 @@ public enum GameVariants implements GameModel {
             Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
             return movingBonus;
         }
-
     },
 
     /**
@@ -408,7 +407,6 @@ public enum GameVariants implements GameModel {
             bonus.setEdible(randomInt(9 * FPS, 10 * FPS));
             publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
         }
-
     };
 
     // --- Common to all variants --------------------------------------------------------------------------------------
