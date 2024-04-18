@@ -48,8 +48,8 @@ public enum GameVariants implements GameModel {
             {5 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 5+
         };
 
-        int[] huntingDurations() {
-            return HUNTING_DURATIONS[levelNumber <= 4 ? 0 : 1];
+        long huntingDuration(int phaseIndex) {
+            return HUNTING_DURATIONS[levelNumber <= 4 ? 0 : 1][phaseIndex];
         }
 
         final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
@@ -275,12 +275,13 @@ public enum GameVariants implements GameModel {
             {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS,       1, -1}, // Levels 5+
         };
 
-        int[] huntingDurations() {
-            return switch (levelNumber) {
-                case 1       -> HUNTING_DURATIONS[0];
-                case 2, 3, 4 -> HUNTING_DURATIONS[1];
-                default      -> HUNTING_DURATIONS[2];
+        long huntingDuration(int phaseIndex) {
+            int duration = switch (levelNumber) {
+                case 1       -> HUNTING_DURATIONS[0][phaseIndex];
+                case 2, 3, 4 -> HUNTING_DURATIONS[1][phaseIndex];
+                default      -> HUNTING_DURATIONS[2][phaseIndex];
             };
+            return duration != -1 ? duration : TickTimer.INDEFINITE;
         }
 
         final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-pacman.xml");
@@ -537,24 +538,22 @@ public enum GameVariants implements GameModel {
      * respective corners and circle around the walls in their corner, phases 1, 3, 5, 7 are chasing phases where the
      * ghosts attack Pac-Man.
      *
-     * @param index hunting phase index (0..7)
+     * @param phaseIndex hunting phase index (0..7)
      */
     @Override
-    public void startHuntingPhase(int index) {
-        if (index < 0 || index > 7) {
-            throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + index);
+    public void startHuntingPhase(int phaseIndex) {
+        if (phaseIndex < 0 || phaseIndex > 7) {
+            throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + phaseIndex);
         }
-        huntingPhaseIndex = index;
-        var durations = huntingDurations();
-        var ticks = durations[index] == -1 ? TickTimer.INDEFINITE : durations[index];
-        huntingTimer.reset(ticks);
+        huntingPhaseIndex = phaseIndex;
+        huntingTimer.reset(huntingDuration(phaseIndex));
         huntingTimer.start();
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
-            index, currentHuntingPhaseName(), huntingTimer.duration(),
+            phaseIndex, currentHuntingPhaseName(), huntingTimer.duration(),
             (float) huntingTimer.duration() / GameModel.FPS, huntingTimer);
     }
 
-    abstract int[] huntingDurations();
+    abstract long huntingDuration(int phaseIndex);
 
     abstract boolean isBonusReached();
 
