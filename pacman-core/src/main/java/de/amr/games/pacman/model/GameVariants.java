@@ -94,8 +94,8 @@ public enum GameVariants implements GameModel {
             ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(world.house());
-                ghost.setFrightenedBehavior(refugee ->
-                    roam(refugee, world, frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
+                ghost.setFrightenedBehavior(
+                    refugee -> roam(refugee, world, frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
                 ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
@@ -125,6 +125,7 @@ public enum GameVariants implements GameModel {
                     levelCounter.removeFirst();
                 }
             }
+
             Logger.info("Level {} created", levelNumber);
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
@@ -137,6 +138,7 @@ public enum GameVariants implements GameModel {
                 pac.hide();
                 ghosts().forEach(Ghost::hide);
             }
+
             Logger.info("Level {} started", levelNumber);
             publishGameEvent(GameEventType.LEVEL_STARTED);
         }
@@ -152,11 +154,10 @@ public enum GameVariants implements GameModel {
                 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
                 roam(ghost, world, huntingSpeedPercentage(ghost), pseudoRandomDirection());
             } else {
-                byte relSpeed = huntingSpeedPercentage(ghost);
                 if (chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0) {
-                    followTarget(ghost, world, chasingTarget(ghost.id()), relSpeed);
+                    followTarget(ghost, world, chasingTarget(ghost.id()), huntingSpeedPercentage(ghost));
                 } else {
-                    followTarget(ghost, world, ghostScatterTarget(ghost.id()), relSpeed);
+                    followTarget(ghost, world, ghostScatterTarget(ghost.id()), huntingSpeedPercentage(ghost));
                 }
             }
         }
@@ -226,8 +227,7 @@ public enum GameVariants implements GameModel {
                 Logger.info("Previous bonus is still active, skip this one");
                 return;
             }
-            byte symbol = bonusSymbols.get(nextBonusIndex);
-            createMovingBonus(symbol, RND.nextBoolean());
+            createMovingBonus(bonusSymbols.get(nextBonusIndex), RND.nextBoolean());
             publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
         }
 
