@@ -15,8 +15,6 @@ import static de.amr.games.pacman.lib.Globals.lerp;
  */
 public class CamDrone implements CameraController {
 
-    private double speed = 0.01;
-
     @Override
     public String toString() {
         return "Drone";
@@ -36,6 +34,7 @@ public class CamDrone implements CameraController {
     @Override
     public void update(Camera cam, Pac3D pac3D) {
         var position = pac3D.position();
+        double speed = 0.01;
         cam.setTranslateX(lerp(cam.getTranslateX(), position.getX() - 100, speed));
         cam.setTranslateY(lerp(cam.getTranslateY(), position.getY() - 150, speed));
     }
