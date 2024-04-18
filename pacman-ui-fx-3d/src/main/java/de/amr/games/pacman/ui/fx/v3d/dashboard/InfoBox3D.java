@@ -6,12 +6,11 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Theme;
+import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
+import de.amr.games.pacman.ui.fx.v3d.scene3d.CamTotal;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.shape.DrawMode;
 
 import java.util.ArrayList;
@@ -42,6 +41,11 @@ public class InfoBox3D extends InfoBox {
     private final CheckBox cbAxesVisible;
     private final CheckBox cbWireframeMode;
 
+    private final Spinner<Integer> spinnerCamRotate;
+    private final Spinner<Integer> spinnerCamX;
+    private final Spinner<Integer> spinnerCamY;
+    private final Spinner<Integer> spinnerCamZ;
+
     public InfoBox3D(Theme theme, String title) {
         super(theme, title);
 
@@ -51,6 +55,16 @@ public class InfoBox3D extends InfoBox {
         cbFloorTextureRandom = addCheckBox("Random Floor Texture", () -> toggle(PY_3D_FLOOR_TEXTURE_RND));
         comboPerspectives = addComboBox("Perspective", Perspective.values());
         addInfo("Camera", this::currentSceneCameraInfo).available(this::isCurrentGameScene3D);
+
+        spinnerCamRotate = addSpinner("Cam Rotate X", -180, 180, 0);
+        spinnerCamRotate.valueProperty().addListener((py, ov, nv) -> CamTotal.PY_ROTATE.setValue(nv));
+        spinnerCamX = addSpinner("Cam Translate X", -1000, 1000, 0);
+        spinnerCamX.valueProperty().addListener((py, ov, nv) -> CamTotal.PY_X.setValue(nv));
+        spinnerCamY = addSpinner("Cam Translate Y", -1000, 1000, 0);
+        spinnerCamY.valueProperty().addListener((py, ov, nv) -> CamTotal.PY_Y.setValue(nv));
+        spinnerCamZ = addSpinner("Cam Translate Z", -1000, 1000, 0);
+        spinnerCamZ.valueProperty().addListener((py, ov, nv) -> CamTotal.PY_Z.setValue(nv));
+
         sliderPiPSceneHeight = addSlider("PiP Size", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
         sliderPiPOpacity = addSlider("PiP Opacity", 0.0, 1.0, PY_PIP_OPACITY.get());
         sliderWallHeight = addSlider("Wall Height", 1, 9, PY_3D_WALL_HEIGHT.get());
@@ -90,6 +104,11 @@ public class InfoBox3D extends InfoBox {
         cbPacLighted.setOnAction(e -> toggle(PY_3D_PAC_LIGHT_ENABLED));
         cbAxesVisible.setOnAction(e -> toggle(PY_3D_AXES_VISIBLE));
         cbWireframeMode.setOnAction(e -> actionHandler().toggleDrawMode());
+
+        spinnerCamRotate.getValueFactory().setValue(CamTotal.PY_ROTATE.getValue());
+        spinnerCamX.getValueFactory().setValue(CamTotal.PY_X.getValue());
+        spinnerCamY.getValueFactory().setValue(CamTotal.PY_Y.getValue());
+        spinnerCamZ.getValueFactory().setValue(CamTotal.PY_Z.getValue());
     }
 
     @Override
@@ -103,6 +122,11 @@ public class InfoBox3D extends InfoBox {
         cbPacLighted.setSelected(PY_3D_PAC_LIGHT_ENABLED.get());
         cbAxesVisible.setSelected(PY_3D_AXES_VISIBLE.get());
         cbWireframeMode.setSelected(PY_3D_DRAW_MODE.get() == DrawMode.LINE);
+
+        spinnerCamRotate.setDisable(PY_3D_PERSPECTIVE.get() != Perspective.TOTAL);
+        spinnerCamX.setDisable(PY_3D_PERSPECTIVE.get() != Perspective.TOTAL);
+        spinnerCamY.setDisable(PY_3D_PERSPECTIVE.get() != Perspective.TOTAL);
+        spinnerCamZ.setDisable(PY_3D_PERSPECTIVE.get() != Perspective.TOTAL);
     }
 
     private String currentSceneCameraInfo() {
