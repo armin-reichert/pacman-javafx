@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.CamTotal;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
@@ -56,14 +55,15 @@ public class InfoBox3D extends InfoBox {
         comboPerspectives = addComboBox("Perspective", Perspective.values());
         addInfo("Camera", this::currentSceneCameraInfo).available(this::isCurrentGameScene3D);
 
+        CamTotal camTotal = (CamTotal) CAMS.get(Perspective.TOTAL);
         spinnerCamRotate = addSpinner("Cam Rotate X", -180, 180, 0);
-        spinnerCamRotate.valueProperty().addListener((py, ov, nv) -> CamTotal.PY_ROTATE.setValue(nv));
+        spinnerCamRotate.valueProperty().addListener((py, ov, nv) -> camTotal.PY_ROTATE.setValue(nv));
         spinnerCamX = addSpinner("Cam Translate X", -1000, 1000, 0);
-        spinnerCamX.valueProperty().addListener((py, ov, nv) -> CamTotal.PY_X.setValue(nv));
+        spinnerCamX.valueProperty().addListener((py, ov, nv) -> camTotal.PY_X.setValue(nv));
         spinnerCamY = addSpinner("Cam Translate Y", -1000, 1000, 0);
-        spinnerCamY.valueProperty().addListener((py, ov, nv) -> CamTotal.PY_Y.setValue(nv));
+        spinnerCamY.valueProperty().addListener((py, ov, nv) -> camTotal.PY_Y.setValue(nv));
         spinnerCamZ = addSpinner("Cam Translate Z", -1000, 1000, 0);
-        spinnerCamZ.valueProperty().addListener((py, ov, nv) -> CamTotal.PY_Z.setValue(nv));
+        spinnerCamZ.valueProperty().addListener((py, ov, nv) -> camTotal.PY_Z.setValue(nv));
 
         sliderPiPSceneHeight = addSlider("PiP Size", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
         sliderPiPOpacity = addSlider("PiP Opacity", 0.0, 1.0, PY_PIP_OPACITY.get());
@@ -105,10 +105,11 @@ public class InfoBox3D extends InfoBox {
         cbAxesVisible.setOnAction(e -> toggle(PY_3D_AXES_VISIBLE));
         cbWireframeMode.setOnAction(e -> actionHandler().toggleDrawMode());
 
-        spinnerCamRotate.getValueFactory().setValue(CamTotal.PY_ROTATE.getValue());
-        spinnerCamX.getValueFactory().setValue(CamTotal.PY_X.getValue());
-        spinnerCamY.getValueFactory().setValue(CamTotal.PY_Y.getValue());
-        spinnerCamZ.getValueFactory().setValue(CamTotal.PY_Z.getValue());
+        CamTotal camTotal = (CamTotal) CAMS.get(Perspective.TOTAL);
+        spinnerCamRotate.getValueFactory().setValue(camTotal.PY_ROTATE.getValue());
+        spinnerCamX.getValueFactory().setValue(camTotal.PY_X.getValue());
+        spinnerCamY.getValueFactory().setValue(camTotal.PY_Y.getValue());
+        spinnerCamZ.getValueFactory().setValue(camTotal.PY_Z.getValue());
     }
 
     @Override

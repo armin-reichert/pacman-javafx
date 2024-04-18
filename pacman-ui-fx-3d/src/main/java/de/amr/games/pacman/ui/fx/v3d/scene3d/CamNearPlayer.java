@@ -15,8 +15,6 @@ import static de.amr.games.pacman.lib.Globals.lerp;
  */
 public class CamNearPlayer implements CameraController {
 
-    private double speed = 0.02;
-
     @Override
     public String toString() {
         return "Near Player";
@@ -34,6 +32,7 @@ public class CamNearPlayer implements CameraController {
     @Override
     public void update(Camera cam, Pac3D pac3D) {
         var position = pac3D.position();
+        double speed = 0.02;
         cam.setTranslateX(lerp(cam.getTranslateX(), position.getX() - 110, speed));
         cam.setTranslateY(lerp(cam.getTranslateY(), position.getY(), speed));
     }

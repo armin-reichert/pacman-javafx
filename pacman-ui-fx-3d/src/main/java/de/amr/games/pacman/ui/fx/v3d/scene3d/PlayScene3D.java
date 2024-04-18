@@ -36,7 +36,6 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -62,13 +61,6 @@ public class PlayScene3D implements GameScene {
             currentCamController().reset(fxSubScene.getCamera());
         }
     };
-
-    private final Map<Perspective, CameraController> camControllerMap = Map.of(
-        Perspective.DRONE,            new CamDrone(),
-        Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer(),
-        Perspective.NEAR_PLAYER,      new CamNearPlayer(),
-        Perspective.TOTAL,            new CamTotal()
-    );
 
     private final Group subSceneRoot = new Group();
     private final SubScene fxSubScene;
@@ -175,7 +167,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private CameraController currentCamController() {
-        return camControllerMap.getOrDefault(perspectivePy.get(), camControllerMap.get(Perspective.TOTAL));
+        return CAMS.getOrDefault(perspectivePy.get(), CAMS.get(Perspective.TOTAL));
     }
 
     private void replaceGameLevel3D() {

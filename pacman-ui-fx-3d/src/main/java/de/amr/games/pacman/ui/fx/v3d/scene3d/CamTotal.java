@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.scene3d;
 
+import de.amr.games.pacman.ui.fx.v3d.entity.Pac3D;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Camera;
@@ -14,20 +15,25 @@ import javafx.scene.transform.Rotate;
  */
 public class CamTotal implements CameraController {
 
-    public static final IntegerProperty PY_ROTATE = new SimpleIntegerProperty(66);
-    public static final IntegerProperty PY_X = new SimpleIntegerProperty(0);
-    public static final IntegerProperty PY_Y = new SimpleIntegerProperty(330);
-    public static final IntegerProperty PY_Z = new SimpleIntegerProperty(-140);
+    public final IntegerProperty PY_ROTATE = new SimpleIntegerProperty(66);
+    public final IntegerProperty PY_X = new SimpleIntegerProperty(0);
+    public final IntegerProperty PY_Y = new SimpleIntegerProperty(330);
+    public final IntegerProperty PY_Z = new SimpleIntegerProperty(-140);
 
     @Override
     public void reset(Camera cam) {
         cam.setNearClip(0.1);
         cam.setFarClip(10000.0);
         cam.setRotationAxis(Rotate.X_AXIS);
-        cam.rotateProperty().bind(PY_ROTATE);
-        cam.translateXProperty().bind(PY_X);
-        cam.translateYProperty().bind(PY_Y);
-        cam.translateZProperty().bind(PY_Z);
+    }
+
+    @Override
+    public void update(Camera cam, Pac3D pac3D) {
+        // cam properties cannot be bound and be set at the same time
+        cam.rotateProperty().set(PY_ROTATE.get());
+        cam.translateXProperty().set(PY_X.get());
+        cam.translateYProperty().set(PY_Y.get());
+        cam.translateZProperty().set(PY_Z.get());
     }
 
     @Override

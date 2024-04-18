@@ -14,9 +14,9 @@ import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
-import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
-import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
+import de.amr.games.pacman.ui.fx.v3d.scene3d.*;
 import javafx.beans.property.*;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -30,7 +30,9 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -87,6 +89,14 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static final Picker<String> PICKER_GAME_OVER               = Picker.fromBundle(MSG_BUNDLE, "game.over");
 
     public static final String NO_TEXTURE                             = "No Texture";
+
+    public static final Map<Perspective, CameraController> CAMS      = new EnumMap<>(Perspective.class);
+    static {
+        CAMS.put(Perspective.DRONE,            new CamDrone());
+        CAMS.put(Perspective.TOTAL,            new CamTotal());
+        CAMS.put(Perspective.FOLLOWING_PLAYER, new CamFollowingPlayer());
+        CAMS.put(Perspective.NEAR_PLAYER,      new CamNearPlayer());
+    }
 
     private static void addAssets3D() {
         Theme theme = PacManGames2dUI.THEME;

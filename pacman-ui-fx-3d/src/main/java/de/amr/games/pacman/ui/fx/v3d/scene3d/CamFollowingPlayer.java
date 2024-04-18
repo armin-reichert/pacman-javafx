@@ -15,9 +15,6 @@ import static de.amr.games.pacman.lib.Globals.lerp;
  */
 public class CamFollowingPlayer implements CameraController {
 
-    private double speedX = 0.005;
-    private double speedY = 0.030;
-
     @Override
     public String toString() {
         return "Following Player";
@@ -35,7 +32,9 @@ public class CamFollowingPlayer implements CameraController {
     @Override
     public void update(Camera cam, Pac3D pac3D) {
         var position = pac3D.position();
+        double speedX = 0.005;
         cam.setTranslateX(lerp(cam.getTranslateX(), position.getX() - 100, speedX));
+        double speedY = 0.030;
         cam.setTranslateY(lerp(cam.getTranslateY(), position.getY() + 100, speedY));
     }
 }
