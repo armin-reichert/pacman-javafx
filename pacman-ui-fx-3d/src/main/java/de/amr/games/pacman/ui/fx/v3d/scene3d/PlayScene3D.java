@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.scene3d;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
@@ -277,7 +276,7 @@ public class PlayScene3D implements GameScene {
                     case GameVariants.PACMAN    -> context.<PacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
                     default -> throw new IllegalGameVariantException(context.game());
                 };
-                GameController.it().eventLog().killedGhosts.forEach(ghost -> {
+                context.gameController().eventLog().killedGhosts.forEach(ghost -> {
                     int index = context.game().pac().victims().indexOf(ghost);
                     var numberImage = context.spriteSheet().subImage(sprites[index]);
                     level3D.ghosts3D().get(ghost.id()).setNumberImage(numberImage);
