@@ -71,11 +71,12 @@ public enum GameVariants implements GameModel {
         @Override
         public void createAndStartLevel(int levelNumber, boolean demoLevel) {
             checkLevelNumber(levelNumber);
+            this.levelNumber = levelNumber;
             this.demoLevel = demoLevel;
 
             int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
             world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
-            level = new GameLevel(levelNumber, LEVEL_DATA[rowIndex]);
+            level = new GameLevel(LEVEL_DATA[rowIndex]);
 
             initGhostHouseAccessControl();
 
@@ -303,10 +304,11 @@ public enum GameVariants implements GameModel {
         @Override
         public void createAndStartLevel(int levelNumber, boolean demoLevel) {
             checkLevelNumber(levelNumber);
+            this.levelNumber = levelNumber;
             this.demoLevel = demoLevel;
 
             int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
-            level = new GameLevel(levelNumber, LEVEL_DATA[rowIndex]);
+            level = new GameLevel(LEVEL_DATA[rowIndex]);
             world = createPacManWorld();
             initGhostHouseAccessControl();
 
@@ -480,6 +482,7 @@ public enum GameVariants implements GameModel {
     World world;
     GameLevel level;
 
+    int levelNumber;
     boolean demoLevel;
     boolean playing;
     short initialLives = 3;
@@ -544,7 +547,7 @@ public enum GameVariants implements GameModel {
             throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + index);
         }
         huntingPhaseIndex = (byte) index;
-        var durations = huntingDurations(level.number());
+        var durations = huntingDurations(levelNumber);
         var ticks = durations[index] == -1 ? TickTimer.INDEFINITE : durations[index];
         huntingTimer.reset(ticks);
         huntingTimer.start();
@@ -575,6 +578,11 @@ public enum GameVariants implements GameModel {
     @Override
     public String currentHuntingPhaseName() {
         return isEven(huntingPhaseIndex) ? "Scattering" : "Chasing";
+    }
+
+    @Override
+    public int levelNumber() {
+        return levelNumber;
     }
 
     @Override
@@ -743,6 +751,7 @@ public enum GameVariants implements GameModel {
 
     @Override
     public void reset() {
+        levelNumber = 0;
         level = null;
         playing = false;
         lives = initialLives;
@@ -787,12 +796,12 @@ public enum GameVariants implements GameModel {
         bonus().ifPresent(Bonus::setInactive);
         huntingTimer().stop();
         Logger.info("Hunting timer stopped");
-        Logger.trace("Game level {} completed.", level.number());
+        Logger.trace("Game level {} completed.", levelNumber);
     }
 
     @Override
     public void doLevelTestStep(GameState testState) {
-        if (level.number() > 20) {
+        if (levelNumber > 20) {
             GameController.it().restart(GameState.BOOT);
             return;
         }
@@ -838,7 +847,7 @@ public enum GameVariants implements GameModel {
             bonus().ifPresent(Bonus::setInactive);
             testState.setProperty("mazeFlashing", false);
             blinking.reset();
-            createAndStartLevel(level.number() + 1, false);
+            createAndStartLevel(levelNumber + 1, false);
         }
     }
 
@@ -989,7 +998,7 @@ public enum GameVariants implements GameModel {
 
     void scorePoints(int points) {
         if (!demoLevel) {
-            scorePoints(level.number(), points);
+            scorePoints(levelNumber, points);
         }
     }
 
@@ -1000,7 +1009,7 @@ public enum GameVariants implements GameModel {
             if (numGhostsKilledInLevel == 16) {
                 int points = POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
                 scorePoints(points);
-                Logger.info("Scored {} points for killing all ghosts at level {}", points, level.number());
+                Logger.info("Scored {} points for killing all ghosts at level {}", points, levelNumber);
             }
         }
     }
@@ -1104,16 +1113,16 @@ public enum GameVariants implements GameModel {
     void initGhostHouseAccessControl() {
         globalDotLimits = new byte[] {UNLIMITED, 7, 17, UNLIMITED};
         privateDotLimits = new byte[] {0, 0, 0, 0};
-        if (level.number() == 1) {
+        if (levelNumber == 1) {
             privateDotLimits[CYAN_GHOST] = 30;
             privateDotLimits[ORANGE_GHOST] = 60;
-        } else if (level.number() == 2) {
+        } else if (levelNumber == 2) {
             privateDotLimits[ORANGE_GHOST] = 50;
         }
         dotCounters = new int[] {0, 0, 0, 0};
         globalDotCounter = 0;
         globalDotCounterEnabled = false;
-        pacStarvingLimit = level.number() < 5 ? 240 : 180; // 4 sec : 3 sec
+        pacStarvingLimit = levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec
     }
 
     void resetGlobalDotCounterAndSetEnabled(boolean enabled) {

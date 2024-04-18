@@ -84,7 +84,7 @@ public class PlayScene2D extends GameScene2D {
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         switch (context.game()) {
             case GameVariants.MS_PACMAN ->
-                drawMsPacManMaze(context.game(), ArcadeWorld.mazeNumberMsPacMan(context.game().level().number()), flashing);
+                drawMsPacManMaze(context.game(), ArcadeWorld.mazeNumberMsPacMan(context.game().levelNumber()), flashing);
             case GameVariants.PACMAN -> drawPacManMaze(context.game(), flashing);
             default -> throw new IllegalGameVariantException(context.game());
         }
@@ -94,7 +94,7 @@ public class PlayScene2D extends GameScene2D {
         } else {
             switch (context.gameState()) {
                 case READY      -> drawText("READY!", Color.YELLOW, sceneFont(8), t(11), t(21));
-                case LEVEL_TEST -> drawText("TEST    L" + context.game().level().number(), Color.YELLOW, sceneFont(8), t(8.5), t(21));
+                case LEVEL_TEST -> drawText("TEST    L" + context.game().levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(21));
             }
         }
         context.game().bonus().ifPresent(this::drawBonus);

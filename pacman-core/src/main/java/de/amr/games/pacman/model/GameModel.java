@@ -71,6 +71,8 @@ public interface GameModel {
      */
     void createAndStartLevel(int levelNumber, boolean demoLevel);
 
+    int levelNumber();
+
     boolean isDemoLevel();
 
     /**

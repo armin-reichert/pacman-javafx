@@ -504,12 +504,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             case GameVariants.MS_PACMAN -> {
                 e.game.pac().setAnimations(new MsPacManGamePacAnimations(e.game.pac(), spriteSheet()));
                 e.game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, spriteSheet())));
-                Logger.info("Created Ms. Pac-Man game creature animations for level #{}", e.game.level().number());
+                Logger.info("Created Ms. Pac-Man game creature animations for level #{}", e.game.levelNumber());
             }
             case GameVariants.PACMAN -> {
                 e.game.pac().setAnimations(new PacManGamePacAnimations(e.game.pac(), spriteSheet()));
                 e.game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, spriteSheet())));
-                Logger.info("Created Pac-Man game creature animations for level #{}", e.game.level().number());
+                Logger.info("Created Pac-Man game creature animations for level #{}", e.game.levelNumber());
             }
             default -> throw new IllegalGameVariantException(e.game);
         }
@@ -520,7 +520,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        if (!game().isDemoLevel() && game().level().number() == 1) {
+        if (!game().isDemoLevel() && game().levelNumber() == 1) {
             playAudioClip("audio.game_ready");
         }
     }
@@ -701,10 +701,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (gameState() == GameState.LEVEL_TRANSITION) {
             return;
         }
-        if (newLevelNumber > game().level().number()) {
+        if (newLevelNumber > game().levelNumber()) {
             stopAllSounds();
-            for (int n = game().level().number(); n < newLevelNumber - 1; ++n) {
-                game().createAndStartLevel(game().level().number() + 1, false);
+            for (int n = game().levelNumber(); n < newLevelNumber - 1; ++n) {
+                game().createAndStartLevel(game().levelNumber() + 1, false);
             }
             gameController().changeState(GameState.LEVEL_TRANSITION);
         }
