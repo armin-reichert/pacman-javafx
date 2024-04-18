@@ -15,10 +15,6 @@ public record GameLevel(
      */
     int number,
     /*
-     * Demo level used in attract mode, no sound.
-     */
-    boolean demoLevel,
-    /*
      * Relative Pac-Man speed (percentage of base speed)
      */
     byte pacSpeedPercentage,
@@ -71,8 +67,8 @@ public record GameLevel(
         checkLevelNumber(number);
     }
 
-    public GameLevel(int levelNumber, boolean demoLevel, byte[] data) {
-        this(levelNumber, demoLevel, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8],
+    public GameLevel(int levelNumber, byte[] data) {
+        this(levelNumber, data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8],
             data[9], data[10], data[11]);
     }
 }

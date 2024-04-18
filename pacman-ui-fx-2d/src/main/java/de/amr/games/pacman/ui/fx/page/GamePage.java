@@ -290,7 +290,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
             case INTRO -> addInfoForIntroScene(helpInfo);
             case CREDIT -> addInfoForCreditScene(helpInfo);
             case READY, HUNTING, PACMAN_DYING, GHOST_DYING -> {
-                if (sceneContext.game().level().demoLevel()) {
+                if (sceneContext.game().isDemoLevel()) {
                     addInfoForDemoLevel(helpInfo);
                 } else {
                     addInfoForPlayScene(helpInfo);

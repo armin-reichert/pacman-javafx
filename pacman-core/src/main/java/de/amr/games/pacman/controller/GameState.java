@@ -152,7 +152,7 @@ public enum GameState implements FsmState<GameModel> {
             Globals.checkLevelNotNull(game.level());
             if (timer.hasExpired()) {
                 setProperty("mazeFlashing", false);
-                if (game.level().demoLevel()) { // just in case demo level is completed: back to intro scene
+                if (game.isDemoLevel()) { // just in case demo level is completed: back to intro scene
                     gameController().changeState(INTRO);
                 } else if (game.level().intermissionNumber() > 0) {
                     gameController().changeState(INTERMISSION);

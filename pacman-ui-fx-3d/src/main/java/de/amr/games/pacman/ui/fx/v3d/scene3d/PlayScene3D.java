@@ -132,8 +132,8 @@ public class PlayScene3D implements GameScene {
             level3D.update();
             currentCamController().update(fxSubScene.getCamera(), level3D.pac3D());
         }
-        context.game().pac().setUseAutopilot(context.game().level().demoLevel() || PY_USE_AUTOPILOT.get());
-        updateSound(context.game().level());
+        context.game().pac().setUseAutopilot(context.game().isDemoLevel() || PY_USE_AUTOPILOT.get());
+        updateSound();
         scores3D.setScores(
             context.game().score().points(), context.game().score().levelNumber(),
             context.game().highScore().points(), context.game().highScore().levelNumber());
@@ -231,7 +231,7 @@ public class PlayScene3D implements GameScene {
         if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
             level3D.startEnergizerAnimation();
         }
-        if (!context.game().level().demoLevel() && context.gameState() == GameState.HUNTING) {
+        if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
             context.ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
         }
     }
@@ -408,7 +408,7 @@ public class PlayScene3D implements GameScene {
         if (context.gameState() == GameState.LEVEL_TEST) {
             level3D.showMessage("TEST LEVEL " + context.game().level().number(), 5,
                 world.numCols() * HTS, (world.numRows() - 2) * TS);
-        } else if (!context.game().level().demoLevel()) {
+        } else if (!context.game().isDemoLevel()) {
             var house = world.house();
             double x = TS * (house.topLeftTile().x() + 0.5 * house.size().x());
             double y = TS * (house.topLeftTile().y() +       house.size().y());
@@ -452,8 +452,8 @@ public class PlayScene3D implements GameScene {
         );
     }
 
-    private void updateSound(GameLevel level) {
-        if (level.demoLevel()) {
+    private void updateSound() {
+        if (context.game().isDemoLevel()) {
             return;
         }
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure how this is done in Arcade game

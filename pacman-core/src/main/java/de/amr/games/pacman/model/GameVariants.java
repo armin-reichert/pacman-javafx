@@ -71,10 +71,11 @@ public enum GameVariants implements GameModel {
         @Override
         public void createAndStartLevel(int levelNumber, boolean demoLevel) {
             checkLevelNumber(levelNumber);
+            this.demoLevel = demoLevel;
 
             int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
             world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
-            level = new GameLevel(levelNumber, demoLevel, LEVEL_DATA[rowIndex]);
+            level = new GameLevel(levelNumber, LEVEL_DATA[rowIndex]);
 
             initGhostHouseAccessControl();
 
@@ -302,13 +303,10 @@ public enum GameVariants implements GameModel {
         @Override
         public void createAndStartLevel(int levelNumber, boolean demoLevel) {
             checkLevelNumber(levelNumber);
+            this.demoLevel = demoLevel;
 
-            if (demoLevel) {
-                level = new GameLevel(1, true, LEVEL_DATA[0]);
-            } else {
-                int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
-                level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex]);
-            }
+            int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
+            level = new GameLevel(levelNumber, LEVEL_DATA[rowIndex]);
             world = createPacManWorld();
             initGhostHouseAccessControl();
 
@@ -482,6 +480,7 @@ public enum GameVariants implements GameModel {
     World world;
     GameLevel level;
 
+    boolean demoLevel;
     boolean playing;
     short initialLives = 3;
     short lives;
@@ -576,6 +575,11 @@ public enum GameVariants implements GameModel {
     @Override
     public String currentHuntingPhaseName() {
         return isEven(huntingPhaseIndex) ? "Scattering" : "Chasing";
+    }
+
+    @Override
+    public boolean isDemoLevel() {
+        return demoLevel;
     }
 
     @Override
@@ -984,7 +988,7 @@ public enum GameVariants implements GameModel {
     }
 
     void scorePoints(int points) {
-        if (!level.demoLevel()) {
+        if (!demoLevel) {
             scorePoints(level.number(), points);
         }
     }

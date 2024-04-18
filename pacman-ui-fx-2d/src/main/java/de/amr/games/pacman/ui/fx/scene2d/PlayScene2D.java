@@ -42,7 +42,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void update() {
         if (context.game().level() != null) {
-            context.game().pac().setUseAutopilot(context.game().level().demoLevel() || PY_USE_AUTOPILOT.get());
+            context.game().pac().setUseAutopilot(context.game().isDemoLevel() || PY_USE_AUTOPILOT.get());
             updateSound();
         }
     }
@@ -88,7 +88,7 @@ public class PlayScene2D extends GameScene2D {
             case GameVariants.PACMAN -> drawPacManMaze(context.game(), flashing);
             default -> throw new IllegalGameVariantException(context.game());
         }
-        if (context.game().level().demoLevel() || context.gameState() == GameState.GAME_OVER) {
+        if (context.game().isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
             // text "GAME OVER" is also drawn in demo mode
             drawText("GAME  OVER", Color.RED, sceneFont(8), t(9), t(21));
         } else {
@@ -182,13 +182,13 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onSceneVariantSwitch() {
-        if (!context.game().level().demoLevel() && context.gameState() == GameState.HUNTING) {
+        if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
             context.ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
         }
     }
 
     private void updateSound() {
-        if (context.game().level().demoLevel()) {
+        if (context.game().isDemoLevel()) {
             return;
         }
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure
