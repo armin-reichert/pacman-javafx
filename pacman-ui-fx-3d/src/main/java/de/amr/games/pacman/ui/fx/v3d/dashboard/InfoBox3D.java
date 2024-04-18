@@ -55,7 +55,7 @@ public class InfoBox3D extends InfoBox {
         comboPerspectives = addComboBox("Perspective", Perspective.values());
         addInfo("Camera", this::currentSceneCameraInfo).available(this::isCurrentGameScene3D);
 
-        CamTotal camTotal = (CamTotal) CAMS.get(Perspective.TOTAL);
+        CamTotal camTotal = (CamTotal) Perspective.TOTAL.getCamController();
         spinnerCamRotate = addSpinner("Cam Rotate X", -180, 180, 0);
         spinnerCamRotate.valueProperty().addListener((py, ov, nv) -> camTotal.PY_ROTATE.setValue(nv));
         spinnerCamX = addSpinner("Cam Translate X", -1000, 1000, 0);
@@ -105,7 +105,7 @@ public class InfoBox3D extends InfoBox {
         cbAxesVisible.setOnAction(e -> toggle(PY_3D_AXES_VISIBLE));
         cbWireframeMode.setOnAction(e -> actionHandler().toggleDrawMode());
 
-        CamTotal camTotal = (CamTotal) CAMS.get(Perspective.TOTAL);
+        CamTotal camTotal = (CamTotal) Perspective.TOTAL.getCamController();
         spinnerCamRotate.getValueFactory().setValue(camTotal.PY_ROTATE.getValue());
         spinnerCamX.getValueFactory().setValue(camTotal.PY_X.getValue());
         spinnerCamY.getValueFactory().setValue(camTotal.PY_Y.getValue());
