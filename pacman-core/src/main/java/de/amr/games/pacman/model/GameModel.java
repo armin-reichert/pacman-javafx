@@ -103,7 +103,7 @@ public interface GameModel {
 
     void startHuntingPhase(int index);
 
-    byte huntingPhaseIndex();
+    int huntingPhaseIndex();
 
     /**
      * @return (optional) index of current scattering phase <code>(0-3)</code>
@@ -191,10 +191,9 @@ public interface GameModel {
 
     /**
      * Scores given amount of points
-     * @param levelNumber current level number
      * @param points points to score
      */
-    void scorePoints(int levelNumber, int points);
+    void scorePoints(int points);
 
     /**
      * Updates the high score.

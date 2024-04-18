@@ -48,7 +48,7 @@ public enum GameVariants implements GameModel {
             {5 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 5+
         };
 
-        int[] huntingDurations(int levelNumber) {
+        int[] huntingDurations() {
             return HUNTING_DURATIONS[levelNumber <= 4 ? 0 : 1];
         }
 
@@ -275,8 +275,7 @@ public enum GameVariants implements GameModel {
             {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS,       1, -1}, // Levels 5+
         };
 
-        int[] huntingDurations(int levelNumber) {
-            checkLevelNumber(levelNumber);
+        int[] huntingDurations() {
             return switch (levelNumber) {
                 case 1       -> HUNTING_DURATIONS[0];
                 case 2, 3, 4 -> HUNTING_DURATIONS[1];
@@ -489,7 +488,7 @@ public enum GameVariants implements GameModel {
 
     final Pulse blinking = new Pulse(10, false);
     final TickTimer huntingTimer = new TickTimer("HuntingTimer");
-    byte huntingPhaseIndex;
+    int huntingPhaseIndex;
     byte numGhostsKilledInLevel;
     byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
     byte cruiseElroyState;
@@ -545,8 +544,8 @@ public enum GameVariants implements GameModel {
         if (index < 0 || index > 7) {
             throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + index);
         }
-        huntingPhaseIndex = (byte) index;
-        var durations = huntingDurations(levelNumber);
+        huntingPhaseIndex = index;
+        var durations = huntingDurations();
         var ticks = durations[index] == -1 ? TickTimer.INDEFINITE : durations[index];
         huntingTimer.reset(ticks);
         huntingTimer.start();
@@ -555,12 +554,12 @@ public enum GameVariants implements GameModel {
             (float) huntingTimer.duration() / GameModel.FPS, huntingTimer);
     }
 
-    abstract int[] huntingDurations(int levelNumber);
+    abstract int[] huntingDurations();
 
     abstract boolean isBonusReached();
 
     @Override
-    public byte huntingPhaseIndex() {
+    public int huntingPhaseIndex() {
         return huntingPhaseIndex;
     }
 
@@ -718,7 +717,10 @@ public enum GameVariants implements GameModel {
     }
 
     @Override
-    public void scorePoints(int levelNumber, int points) {
+    public void scorePoints(int points) {
+        if (demoLevel) {
+            return;
+        }
         int oldScore = score.points();
         int newScore = oldScore + points;
         score.setPoints(newScore);
@@ -993,12 +995,6 @@ public enum GameVariants implements GameModel {
             }
         }
         ghosts().forEach(ghost -> ghost.update(this));
-    }
-
-    void scorePoints(int points) {
-        if (!demoLevel) {
-            scorePoints(levelNumber, points);
-        }
     }
 
     @Override
