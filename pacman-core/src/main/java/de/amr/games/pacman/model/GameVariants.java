@@ -74,9 +74,9 @@ public enum GameVariants implements GameModel {
             this.levelNumber = levelNumber;
             this.demoLevel = demoLevel;
 
-            int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
+            int rowIndex = Math.min(levelNumber - 1, LEVELS.length - 1);
             world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
-            level = LEVEL_DATA[rowIndex];
+            level = LEVELS[rowIndex];
 
             initGhostHouseAccessControl();
 
@@ -110,8 +110,8 @@ public enum GameVariants implements GameModel {
 
             nextBonusIndex = -1;
             bonusSymbols.clear();
-            bonusSymbols.add(nextBonusSymbol(levelNumber));
-            bonusSymbols.add(nextBonusSymbol(levelNumber));
+            bonusSymbols.add(nextBonusSymbol());
+            bonusSymbols.add(nextBonusSymbol());
             bonus = null;
 
             score.setLevelNumber(levelNumber);
@@ -209,8 +209,7 @@ public enum GameVariants implements GameModel {
          * </tr>
          * </table>
          */
-        byte nextBonusSymbol(int levelNumber) {
-            checkLevelNumber(levelNumber);
+        byte nextBonusSymbol() {
             if (levelNumber <= 7) {
                 return (byte) (levelNumber - 1);
             }
@@ -307,8 +306,8 @@ public enum GameVariants implements GameModel {
             this.levelNumber = levelNumber;
             this.demoLevel = demoLevel;
 
-            int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
-            level = LEVEL_DATA[rowIndex];
+            int rowIndex = Math.min(levelNumber - 1, LEVELS.length - 1);
+            level = LEVELS[rowIndex];
             world = createPacManWorld();
             initGhostHouseAccessControl();
 
@@ -350,8 +349,8 @@ public enum GameVariants implements GameModel {
             numGhostsKilledInLevel = 0;
             nextBonusIndex = -1;
             bonusSymbols.clear();
-            bonusSymbols.add(nextBonusSymbol(levelNumber));
-            bonusSymbols.add(nextBonusSymbol(levelNumber));
+            bonusSymbols.add(nextBonusSymbol());
+            bonusSymbols.add(nextBonusSymbol());
             bonus = null;
 
             score.setLevelNumber(levelNumber);
@@ -397,7 +396,7 @@ public enum GameVariants implements GameModel {
         final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {-1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
 
         // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
-        byte nextBonusSymbol(int levelNumber) {
+        byte nextBonusSymbol() {
             return levelNumber > 12 ? 7 : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
         }
 
@@ -414,7 +413,7 @@ public enum GameVariants implements GameModel {
 
     // --- Common to all variants --------------------------------------------------------------------------------------
 
-    final GameLevel[] LEVEL_DATA = {
+    final GameLevel[] LEVELS = {
         /* 1*/ new GameLevel( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0),
         /* 2*/ new GameLevel( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5, 1),
         /* 3*/ new GameLevel( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5, 0),
