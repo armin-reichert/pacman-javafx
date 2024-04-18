@@ -87,6 +87,8 @@ public interface GameModel {
 
     void doHuntingStep();
 
+    void huntingBehaviour(Ghost ghost);
+
     boolean isLevelComplete();
 
     boolean isPacManKilled();

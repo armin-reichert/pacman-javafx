@@ -56,7 +56,7 @@ public enum GameVariants implements GameModel {
 
         @Override
         public void loadHighScore() {
-            highScore().loadFromFile(HIGH_SCORE_FILE);
+            highScore.loadFromFile(HIGH_SCORE_FILE);
         }
 
         @Override
@@ -72,14 +72,10 @@ public enum GameVariants implements GameModel {
         public void createAndStartLevel(int levelNumber, boolean demoLevel) {
             checkLevelNumber(levelNumber);
 
-            if (demoLevel) {
-                world = createMsPacManWorld(1);
-                level = new GameLevel(1, true, LEVEL_DATA[0]);
-            } else {
-                int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
-                world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
-                level = new GameLevel(levelNumber, false, LEVEL_DATA[rowIndex]);
-            }
+            int rowIndex = Math.min(levelNumber - 1, LEVEL_DATA.length - 1);
+            world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
+            level = new GameLevel(levelNumber, demoLevel, LEVEL_DATA[rowIndex]);
+
             initGhostHouseAccessControl();
 
             pac = new Pac("Ms. Pac-Man");
@@ -100,7 +96,6 @@ public enum GameVariants implements GameModel {
                 ghost.setHouse(world.house());
                 ghost.setFrightenedBehavior(refugee ->
                     roam(refugee, world, frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
-                ghost.setHuntingBehavior(this::huntingBehaviour);
                 ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
@@ -109,11 +104,13 @@ public enum GameVariants implements GameModel {
 
             huntingPhaseIndex = 0;
             huntingTimer.resetIndefinitely();
+            numGhostsKilledInLevel = 0;
+
             nextBonusIndex = -1;
             bonusSymbols.clear();
-            bonusSymbols.addAll(List.of(nextBonusSymbol(levelNumber), nextBonusSymbol(levelNumber)));
+            bonusSymbols.add(nextBonusSymbol(levelNumber));
+            bonusSymbols.add(nextBonusSymbol(levelNumber));
             bonus = null;
-            numGhostsKilledInLevel = 0;
 
             score.setLevelNumber(levelNumber);
 
@@ -145,18 +142,22 @@ public enum GameVariants implements GameModel {
         }
 
         /**
-         * <p>
-         * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* hunting/scatter phase. Some say,
-         * the original intention had been to randomize the scatter target of *all* ghosts in Ms. Pac-Man
-         * but because of a bug, only the scatter target of Blinky and Pinky would have been affected. Who knows?
-         * </p>
+         * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
+         * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
+         * only the scatter target of Blinky and Pinky would have been affected. Who knows?
          */
-        void huntingBehaviour(Ghost ghost, GameLevel level) {
+        @Override
+        public void huntingBehaviour(Ghost ghost) {
             if (scatterPhase().isPresent() && scatterPhase().get() == 0
                 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-                roam(ghost, world, huntingSpeedPercentage(ghost, level), pseudoRandomDirection());
+                roam(ghost, world, huntingSpeedPercentage(ghost), pseudoRandomDirection());
             } else {
-                PACMAN.huntingBehaviour(ghost, level);
+                byte relSpeed = huntingSpeedPercentage(ghost);
+                if (chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0) {
+                    followTarget(ghost, world, chasingTarget(ghost.id()), relSpeed);
+                } else {
+                    followTarget(ghost, world, ghostScatterTarget(ghost.id()), relSpeed);
+                }
             }
         }
 
@@ -226,8 +227,7 @@ public enum GameVariants implements GameModel {
                 return;
             }
             byte symbol = bonusSymbols.get(nextBonusIndex);
-            bonus = createMovingBonus(world, symbol, RND.nextBoolean());
-            bonus.setEdible(TickTimer.INDEFINITE);
+            createMovingBonus(symbol, RND.nextBoolean());
             publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
         }
 
@@ -239,9 +239,9 @@ public enum GameVariants implements GameModel {
          * <p>
          * TODO: This is not the exact behavior as in the original Arcade game.
          **/
-        private Bonus createMovingBonus(World world, byte symbol, boolean leftToRight) {
+        void createMovingBonus(byte symbol, boolean leftToRight) {
             var houseEntry = tileAt(world.house().door().entryPosition());
-            var houseEntryOpposite= houseEntry.plus(0, world.house().size().y() + 1);
+            var houseEntryOpposite = houseEntry.plus(0, world.house().size().y() + 1);
             var entryPortal = world.portals().get(RND.nextInt(world.portals().size()));
             var exitPortal  = world.portals().get(RND.nextInt(world.portals().size()));
 
@@ -253,12 +253,12 @@ public enum GameVariants implements GameModel {
                 np(leftToRight ? exitPortal.rightTunnelEnd().plus(1, 0) : exitPortal.leftTunnelEnd().minus(1, 0))
             );
 
-            var movingBonus = new MovingBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
-            movingBonus.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-            // pass copy of list because route gets modified
-            movingBonus.setRoute(new ArrayList<>(route), leftToRight);
+            bonus = new MovingBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+            ((MovingBonus) bonus).setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+            // pass *copy* of list because route gets modified when moving!
+            ((MovingBonus) bonus).setRoute(new ArrayList<>(route), leftToRight);
+            bonus.setEdible(TickTimer.INDEFINITE);
             Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
-            return movingBonus;
         }
     },
 
@@ -338,7 +338,6 @@ public enum GameVariants implements GameModel {
                 ghost.setHouse(world.house());
                 ghost.setFrightenedBehavior(refugee ->
                     roam(refugee, world, frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
-                ghost.setHuntingBehavior(this::huntingBehaviour);
                 ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
@@ -348,11 +347,12 @@ public enum GameVariants implements GameModel {
 
             huntingPhaseIndex = 0;
             huntingTimer.resetIndefinitely();
+            numGhostsKilledInLevel = 0;
             nextBonusIndex = -1;
             bonusSymbols.clear();
-            bonusSymbols.addAll(List.of(nextBonusSymbol(levelNumber), nextBonusSymbol(levelNumber)));
+            bonusSymbols.add(nextBonusSymbol(levelNumber));
+            bonusSymbols.add(nextBonusSymbol(levelNumber));
             bonus = null;
-            numGhostsKilledInLevel = 0;
 
             score.setLevelNumber(levelNumber);
             if (levelNumber == 1) {
@@ -379,8 +379,9 @@ public enum GameVariants implements GameModel {
             publishGameEvent(GameEventType.LEVEL_STARTED);
         }
 
-        void huntingBehaviour(Ghost ghost, GameLevel level) {
-            byte relSpeed = huntingSpeedPercentage(ghost, level);
+        @Override
+        public void huntingBehaviour(Ghost ghost) {
+            byte relSpeed = huntingSpeedPercentage(ghost);
             if (chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0) {
                 followTarget(ghost, world, chasingTarget(ghost.id()), relSpeed);
             } else {
@@ -644,7 +645,7 @@ public enum GameVariants implements GameModel {
             ? level.ghostSpeedTunnelPercentage() : level.ghostSpeedFrightenedPercentage();
     }
 
-    byte huntingSpeedPercentage(Ghost ghost, GameLevel level) {
+    byte huntingSpeedPercentage(Ghost ghost) {
         if (world.isTunnel(ghost.tile())) {
             return level.ghostSpeedTunnelPercentage();
         }
@@ -656,8 +657,6 @@ public enum GameVariants implements GameModel {
         }
         return level.ghostSpeedPercentage();
     }
-
-    abstract void huntingBehaviour(Ghost ghost, GameLevel level);
 
     @Override
     public GameLevel level() {

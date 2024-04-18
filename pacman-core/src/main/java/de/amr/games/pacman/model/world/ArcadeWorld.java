@@ -243,11 +243,11 @@ public interface ArcadeWorld {
         return createArcadeWorld(PACMAN_MAP);
     }
 
-    static World createMsPacManWorld(int number) {
-        if (number >= 1 && number <= 4) {
-            return createArcadeWorld(MS_PACMAN_MAPS[number - 1]);
+    static World createMsPacManWorld(int mapNumber) {
+        if (mapNumber >= 1 && mapNumber <= 4) {
+            return createArcadeWorld(MS_PACMAN_MAPS[mapNumber - 1]);
         }
-        throw new IllegalArgumentException("Ms. Pac-Man world number must be 1..4 but is " + number);
+        throw new IllegalArgumentException("Ms. Pac-Man world map number must be 1..4 but is " + mapNumber);
     }
 
     static World createArcadeWorld(byte[][] map) {

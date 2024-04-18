@@ -46,7 +46,6 @@ public class Ghost extends Creature {
     private final byte id;
     private final String name;
     private GhostState state;
-    private BiConsumer<Ghost, GameLevel> huntingBehavior;
     private Consumer<Ghost> frightenedBehavior;
     private House house;
     private Vector2f revivalPosition;
@@ -119,11 +118,6 @@ public class Ghost extends Creature {
 
     public void setForbiddenMoves(Map<Vector2i, List<Direction>> moves) {
         forbiddenMoves = moves;
-    }
-
-    public void setHuntingBehavior(BiConsumer<Ghost, GameLevel> function) {
-        checkNotNull(function);
-        huntingBehavior = function;
     }
 
     public void setFrightenedBehavior(Consumer<Ghost> function) {
@@ -335,7 +329,7 @@ public class Ghost extends Creature {
      * <p>
      */
     private void updateStateHuntingPac(GameModel game) {
-        huntingBehavior.accept(this, game.level());
+        game.huntingBehaviour(this);
     }
 
     // --- FRIGHTENED ---
