@@ -379,8 +379,11 @@ public class GameLevel3D extends Group {
         }
         updateHouseState(world.house());
         // reconsider this:
-        boolean hideOne = context.game().pac().isVisible() || gameState == GameState.GHOST_DYING;
-        livesCounter3D.update(hideOne ? context.game().lives() - 1 : context.game().lives());
+        int numLivesDisplayed = context.game().lives() - 1;
+        if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
+            numLivesDisplayed += 1;
+        }
+        livesCounter3D.update(numLivesDisplayed);
         livesCounter3D.setVisible(hasCredit);
     }
 
