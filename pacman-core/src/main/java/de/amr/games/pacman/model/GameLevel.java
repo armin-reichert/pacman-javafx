@@ -4,9 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import static de.amr.games.pacman.lib.Globals.checkLevelNumber;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
 /**
  * @author Armin Reichert
  */
@@ -60,8 +57,8 @@ public record GameLevel(
      */
     byte intermissionNumber)
 {
-    public GameLevel(byte[] data) {
-        this(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8],
-            data[9], data[10], data[11]);
+    public GameLevel(int... data) {
+        this((byte) data[0], (byte) data[1], (byte) data[2], (byte) data[3], (byte) data[4], (byte) data[5],
+            (byte) data[6], (byte) data[7], (byte) data[8], (byte) data[9], (byte) data[10], (byte) data[11]);
     }
 }
