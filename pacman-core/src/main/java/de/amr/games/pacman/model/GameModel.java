@@ -18,6 +18,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -187,17 +188,18 @@ public interface GameModel {
      */
     Score highScore();
 
-    void loadHighScore();
-
     /**
      * Scores given amount of points
      * @param points points to score
      */
     void scorePoints(int points);
 
-    /**
-     * Updates the high score.
-     */
+    File highScoreFile();
+
+    default void loadHighScore() {
+        highScore().loadFromFile(highScoreFile());
+    }
+
     void updateHighScore();
 
     /**

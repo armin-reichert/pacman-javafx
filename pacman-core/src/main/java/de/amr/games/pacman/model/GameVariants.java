@@ -55,17 +55,8 @@ public enum GameVariants implements GameModel {
         final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
 
         @Override
-        public void loadHighScore() {
-            highScore.loadFromFile(HIGH_SCORE_FILE);
-        }
-
-        @Override
-        public void updateHighScore() {
-            var oldHighScore = new Score();
-            oldHighScore.loadFromFile(HIGH_SCORE_FILE);
-            if (highScore.points() > oldHighScore.points()) {
-                highScore.saveToFile(HIGH_SCORE_FILE, String.format("%s High Score", name()));
-            }
+        public File highScoreFile() {
+            return HIGH_SCORE_FILE;
         }
 
         @Override
@@ -287,17 +278,8 @@ public enum GameVariants implements GameModel {
         final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-pacman.xml");
 
         @Override
-        public void loadHighScore() {
-            highScore().loadFromFile(HIGH_SCORE_FILE);
-        }
-
-        @Override
-        public void updateHighScore() {
-            var oldHighScore = new Score();
-            oldHighScore.loadFromFile(HIGH_SCORE_FILE);
-            if (highScore.points() > oldHighScore.points()) {
-                highScore.saveToFile(HIGH_SCORE_FILE, String.format("%s High Score", name()));
-            }
+        public File highScoreFile() {
+            return HIGH_SCORE_FILE;
         }
 
         @Override
@@ -737,6 +719,15 @@ public enum GameVariants implements GameModel {
     @Override
     public Score highScore() {
         return highScore;
+    }
+
+    @Override
+    public void updateHighScore() {
+        var oldHighScore = new Score();
+        oldHighScore.loadFromFile(highScoreFile());
+        if (highScore.points() > oldHighScore.points()) {
+            highScore.saveToFile(highScoreFile(), String.format("%s High Score", name()));
+        }
     }
 
     @Override
