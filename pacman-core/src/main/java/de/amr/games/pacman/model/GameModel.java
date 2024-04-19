@@ -39,6 +39,7 @@ public interface GameModel {
     /** Game loop frequency, ticks per second. */
     short FPS = 60;
 
+    /** Movement speed in pixel/sec. */
     short PPS_AT_100_PERCENT = 75;
 
     /**
@@ -72,8 +73,14 @@ public interface GameModel {
      */
     void createAndStartLevel(int levelNumber, boolean demoLevel);
 
+    /**
+     * @return Current level number (starting at 1, 0 means no level yet)
+     */
     int levelNumber();
 
+    /**
+     * @return if the current level is the demo level (attract mode)
+     */
     boolean isDemoLevel();
 
     /**
@@ -82,21 +89,19 @@ public interface GameModel {
      */
     void letsGetReadyToRumble();
 
-    void onPacDying();
-
-    Optional<Bonus> bonus();
-
-    void killGhosts(List<Ghost> prey);
+    boolean isLevelComplete();
 
     void onLevelCompleted();
+
+    boolean isPacManKilled();
+
+    void onPacDying();
+
+    void killGhosts(List<Ghost> prey);
 
     void doHuntingStep();
 
     void huntingBehaviour(Ghost ghost);
-
-    boolean isLevelComplete();
-
-    boolean isPacManKilled();
 
     boolean areGhostsKilled();
 
@@ -163,14 +168,10 @@ public interface GameModel {
     int lives();
 
     /**
-     * Adds given number of lives.
      * @param lives number of lives
      */
     void addLives(int lives);
 
-    /**
-     * Removes one life.
-     */
     void loseLife();
 
     /**
@@ -189,7 +190,6 @@ public interface GameModel {
     Score highScore();
 
     /**
-     * Scores given amount of points
      * @param points points to score
      */
     void scorePoints(int points);
@@ -201,6 +201,8 @@ public interface GameModel {
     }
 
     void updateHighScore();
+
+    Optional<Bonus> bonus();
 
     /**
      * Adds a game event listener (for example a user interface) to this game
@@ -217,6 +219,7 @@ public interface GameModel {
     /**
      * Published a game event of the given type which is related to the given tile
      * @param type game event type
+     * @param tile tile associated with event
      */
     void publishGameEvent(GameEventType type, Vector2i tile);
 

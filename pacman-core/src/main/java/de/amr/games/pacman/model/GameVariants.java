@@ -65,9 +65,8 @@ public enum GameVariants implements GameModel {
             this.levelNumber = levelNumber;
             this.demoLevel = demoLevel;
 
-            int rowIndex = Math.min(levelNumber - 1, LEVELS.length - 1);
             world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
-            level = LEVELS[rowIndex];
+            level = LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
 
             initGhostHouseAccessControl();
 
@@ -87,8 +86,7 @@ public enum GameVariants implements GameModel {
             ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(world.house());
-                ghost.setFrightenedBehavior(
-                    refugee -> roam(refugee, world, frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
+                ghost.setFrightenedBehavior(this::frightenedGhostBehaviour);
                 ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
@@ -317,8 +315,7 @@ public enum GameVariants implements GameModel {
             ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(world.house());
-                ghost.setFrightenedBehavior(refugee ->
-                    roam(refugee, world, frightenedGhostRelSpeed(refugee), pseudoRandomDirection()));
+                ghost.setFrightenedBehavior(this::frightenedGhostBehaviour);
                 ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
@@ -603,6 +600,10 @@ public enum GameVariants implements GameModel {
         if (rnd < 16.3 + 25.2) return RIGHT;
         if (rnd < 16.3 + 25.2 + 28.5) return DOWN;
         return LEFT;
+    }
+
+    void frightenedGhostBehaviour(Ghost ghost) {
+        roam(ghost, world, frightenedGhostRelSpeed(ghost), pseudoRandomDirection());
     }
 
     Vector2i ghostScatterTarget(byte ghostID) {
