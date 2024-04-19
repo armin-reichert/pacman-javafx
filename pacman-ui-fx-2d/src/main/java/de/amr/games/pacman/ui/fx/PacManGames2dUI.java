@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
@@ -480,8 +479,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void onIntermissionStarted(GameEvent event) {
-        int intermissionNumber; // 0=undefined
-        if (GameController.it().state() == GameState.INTERMISSION_TEST) {
+        int intermissionNumber; // 0=no intermission
+        if (gameState() == GameState.INTERMISSION_TEST) {
             intermissionNumber = GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber");
         } else {
             intermissionNumber = event.game.level().intermissionNumber();
