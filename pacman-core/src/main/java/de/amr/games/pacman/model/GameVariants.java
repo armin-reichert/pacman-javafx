@@ -95,6 +95,7 @@ public enum GameVariants implements GameModel {
             huntingPhaseIndex = 0;
             huntingTimer.resetIndefinitely();
             numGhostsKilledInLevel = 0;
+            cruiseElroyState = 0;
 
             nextBonusIndex = -1;
             bonusSymbols.clear();
@@ -324,6 +325,8 @@ public enum GameVariants implements GameModel {
             huntingPhaseIndex = 0;
             huntingTimer.resetIndefinitely();
             numGhostsKilledInLevel = 0;
+            cruiseElroyState = 0;
+
             nextBonusIndex = -1;
             bonusSymbols.clear();
             bonusSymbols.add(nextBonusSymbol());
