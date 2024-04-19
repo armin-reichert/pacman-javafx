@@ -310,7 +310,9 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
                 gameScene.onSceneVariantSwitch();
             }
             gameController().update();
-            showFlashMessage(tt(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+            if (!game().isPlaying()) {
+                showFlashMessage(tt(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+            }
         });
     }
 
