@@ -42,6 +42,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
+import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
@@ -609,6 +610,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         currentGameScene().ifPresent(GameScene::end);
         if (game().isPlaying()) {
             gameController().changeCredit(-1);
+        }
+        if (gameState() == LEVEL_TEST) {
+            gameState().onExit(game()); //TODO exit other states too?
         }
         clock.targetFrameRatePy.set(GameModel.FPS);
         gameController().restart(INTRO);

@@ -66,7 +66,6 @@ public enum GameVariants implements GameModel {
             this.demoLevel = demoLevel;
 
             world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
-            level = LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
 
             initGhostHouseAccessControl();
 
@@ -286,8 +285,6 @@ public enum GameVariants implements GameModel {
             this.levelNumber = levelNumber;
             this.demoLevel = demoLevel;
 
-            int rowIndex = Math.min(levelNumber - 1, LEVELS.length - 1);
-            level = LEVELS[rowIndex];
             world = createPacManWorld();
             initGhostHouseAccessControl();
 
@@ -458,7 +455,6 @@ public enum GameVariants implements GameModel {
     Ghost[] ghosts;
     Bonus bonus;
     World world;
-    GameLevel level;
 
     int levelNumber;
     boolean demoLevel;
@@ -634,25 +630,25 @@ public enum GameVariants implements GameModel {
 
     byte frightenedGhostRelSpeed(Ghost ghost) {
         return world.isTunnel(ghost.tile())
-            ? level.ghostSpeedTunnelPercentage() : level.ghostSpeedFrightenedPercentage();
+            ? level().ghostSpeedTunnelPercentage() : level().ghostSpeedFrightenedPercentage();
     }
 
     byte huntingSpeedPercentage(Ghost ghost) {
         if (world.isTunnel(ghost.tile())) {
-            return level.ghostSpeedTunnelPercentage();
+            return level().ghostSpeedTunnelPercentage();
         }
         if (ghost.id() == RED_GHOST && cruiseElroyState == 1) {
-            return level.elroy1SpeedPercentage();
+            return level().elroy1SpeedPercentage();
         }
         if (ghost.id() == RED_GHOST && cruiseElroyState == 2) {
-            return level.elroy2SpeedPercentage();
+            return level().elroy2SpeedPercentage();
         }
-        return level.ghostSpeedPercentage();
+        return level().ghostSpeedPercentage();
     }
 
     @Override
     public GameLevel level() {
-        return level;
+        return levelNumber != 0 ? LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)] : null;
     }
 
     @Override
@@ -744,7 +740,6 @@ public enum GameVariants implements GameModel {
     @Override
     public void reset() {
         levelNumber = 0;
-        level = null;
         playing = false;
         lives = initialLives;
         score.reset();
@@ -831,7 +826,7 @@ public enum GameVariants implements GameModel {
         } else if (testState.timer().atSecond(9.5)) {
             testState.setProperty("mazeFlashing", true);
             blinking.setStartPhase(Pulse.OFF);
-            blinking.restart(2 * level.numFlashes());
+            blinking.restart(2 * level().numFlashes());
         } else if (testState.timer().atSecond(12.0)) {
             testState.timer().restartIndefinitely();
             pac.freeze();
@@ -899,11 +894,11 @@ public enum GameVariants implements GameModel {
                 pac.victims().clear();
                 scorePoints(POINTS_ENERGIZER);
                 Logger.info("Scored {} points for eating energizer", POINTS_ENERGIZER);
-                if (level.pacPowerSeconds() > 0) {
+                if (level().pacPowerSeconds() > 0) {
                     eventLog().pacGetsPower = true;
                     huntingTimer().stop();
                     Logger.info("Hunting timer stopped");
-                    pac.powerTimer().restartSeconds(level.pacPowerSeconds());
+                    pac.powerTimer().restartSeconds(level().pacPowerSeconds());
                     // TODO do already frightened ghosts reverse too?
                     ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
                     ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
@@ -915,9 +910,9 @@ public enum GameVariants implements GameModel {
             }
             updateDotCount();
             world.eatFoodAt(pacTile);
-            if (world.uneatenFoodCount() == level.elroy1DotsLeft()) {
+            if (world.uneatenFoodCount() == level().elroy1DotsLeft()) {
                 setCruiseElroyState(1);
-            } else if (world.uneatenFoodCount() == level.elroy2DotsLeft()) {
+            } else if (world.uneatenFoodCount() == level().elroy2DotsLeft()) {
                 setCruiseElroyState(2);
             }
             if (isBonusReached()) {
