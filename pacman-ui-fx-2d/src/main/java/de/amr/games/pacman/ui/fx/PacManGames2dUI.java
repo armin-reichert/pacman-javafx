@@ -243,18 +243,18 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             "intro",  new MsPacManIntroScene(),
             "credit", new MsPacManCreditScene(),
             "play",   new PlayScene2D(),
-            "cut1",   new MsPacManCutscene1(),
-            "cut2",   new MsPacManCutscene2(),
-            "cut3",   new MsPacManCutscene3()
+            "cut1",   new MsPacManCutScene1(),
+            "cut2",   new MsPacManCutScene2(),
+            "cut3",   new MsPacManCutScene3()
         )));
         gameScenesByVariant.put(GameVariants.PACMAN, new HashMap<>(Map.of(
             "boot",   new BootScene(),
             "intro",  new PacManIntroScene(),
             "credit", new PacManCreditScene(),
             "play",   new PlayScene2D(),
-            "cut1",   new PacManCutscene1(),
-            "cut2",   new PacManCutscene2(),
-            "cut3",   new PacManCutscene3()
+            "cut1",   new PacManCutScene1(),
+            "cut2",   new PacManCutScene2(),
+            "cut3",   new PacManCutScene3()
         )));
         for (Map<String, GameScene> gameSceneMap : gameScenesByVariant.values()) {
             for (var gameScene : gameSceneMap.values()) {

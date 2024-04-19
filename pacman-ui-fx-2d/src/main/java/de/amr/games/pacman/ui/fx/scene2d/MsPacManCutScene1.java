@@ -22,7 +22,7 @@ import static de.amr.games.pacman.lib.Globals.t;
  *
  * @author Armin Reichert
  */
-public class MsPacManCutscene1 extends GameScene2D {
+public class MsPacManCutScene1 extends GameScene2D {
 
     private MsPacManIntermission1 intermission;
     private ClapperboardAnimation clapAnimation;

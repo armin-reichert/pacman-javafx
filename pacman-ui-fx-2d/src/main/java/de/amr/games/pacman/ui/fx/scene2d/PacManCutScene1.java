@@ -22,7 +22,7 @@ import static de.amr.games.pacman.lib.Globals.t;
 /**
  * @author Armin Reichert
  */
-public class PacManCutscene1 extends GameScene2D {
+public class PacManCutScene1 extends GameScene2D {
 
     private int initialDelay;
     private int frame;

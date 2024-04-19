@@ -14,24 +14,21 @@ import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGamePacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
-import de.amr.games.pacman.ui.fx.util.SpriteAnimation;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
  * @author Armin Reichert
  */
-public class PacManCutscene2 extends GameScene2D {
+public class PacManCutScene3 extends GameScene2D {
 
     private int initialDelay;
     private int frame;
     private Pac pac;
     private Ghost blinky;
-    private SpriteAnimation blinkyNormal;
-    private SpriteAnimation blinkyStretching;
-    private SpriteAnimation blinkyDamaged;
 
     @Override
     public boolean isCreditVisible() {
@@ -46,14 +43,20 @@ public class PacManCutscene2 extends GameScene2D {
         var ss = context.<PacManGameSpriteSheet>spriteSheet();
         pac = new Pac("Pac-Man");
         pac.setAnimations(new PacManGamePacAnimations(pac, ss));
+        pac.selectAnimation(Pac.ANIM_MUNCHING);
+        pac.startAnimation();
+        pac.centerOverTile(v2i(29, 20));
+        pac.setMoveDir(Direction.LEFT);
+        pac.setSpeed(1.25f);
+        pac.show();
         blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
-        var blinkyAnimations = new PacManGameGhostAnimations(blinky, ss);
-        blinkyNormal = blinkyAnimations.animation(Ghost.ANIM_GHOST_NORMAL);
-        blinkyStretching = blinkyAnimations.animation(Ghost.ANIM_BLINKY_STRETCHED);
-        blinkyDamaged = blinkyAnimations.animation(Ghost.ANIM_BLINKY_DAMAGED);
-        blinky.setAnimations(blinkyAnimations);
-        blinky.setSpeed(0);
-        blinky.hide();
+        blinky.setAnimations(new PacManGameGhostAnimations(blinky, ss));
+        blinky.selectAnimation(Ghost.ANIM_BLINKY_PATCHED);
+        blinky.startAnimation();
+        blinky.centerOverTile(v2i(35, 20));
+        blinky.setMoveAndWishDir(Direction.LEFT);
+        blinky.setSpeed(1.25f);
+        blinky.show();
     }
 
     @Override
@@ -65,57 +68,28 @@ public class PacManCutscene2 extends GameScene2D {
             }
             return;
         }
-
         if (context.gameState().timer().hasExpired()) {
             return;
         }
-
         switch (++frame) {
-            case 1 -> blinkyStretching.setFrameIndex(0); // Show nail
-            case 25 -> {
-                pac.placeAtTile(28, 20, 0, 0);
-                pac.setMoveDir(Direction.LEFT);
-                pac.setSpeed(1.15f);
-                pac.selectAnimation(Pac.ANIM_MUNCHING);
-                pac.startAnimation();
-                pac.show();
-            }
-            case 111 -> {
-                blinky.placeAtTile(28, 20, -3, 0);
-                blinky.setMoveAndWishDir(Direction.LEFT);
-                blinky.setSpeed(1.25f);
-                blinky.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
+            case 400 -> {
+                blinky.centerOverTile(v2i(-1, 20));
+                blinky.setMoveAndWishDir(Direction.RIGHT);
+                blinky.selectAnimation(Ghost.ANIM_BLINKY_NAKED);
                 blinky.startAnimation();
-                blinky.show();
             }
-            case 194 -> {
-                blinky.setSpeed(0.09f);
-                blinkyNormal.setFrameTicks(32);
-            }
-            case 198, 226, 248 -> blinkyStretching.nextFrame(); // Stretched S-M-L
-            case 328 -> {
-                blinky.setSpeed(0);
-                blinkyStretching.nextFrame(); // Rapture
-            }
-            case 329 -> blinky.selectAnimation(Ghost.ANIM_BLINKY_DAMAGED); // Eyes up
-            case 389 -> blinkyDamaged.nextFrame(); // Eyes right-down
-            case 508 -> {
-                blinky.setVisible(false);
-                context.gameState().timer().expire();
-            }
+            case 700 -> context.gameState().timer().expire();
             default -> {
             }
         }
-
-        blinky.move();
         pac.move();
+        blinky.move();
     }
 
     @Override
     public void drawSceneContent() {
-        drawSprite(blinkyStretching.currentSprite(), t(14), t(19) + 3);
-        drawGhost(blinky);
         drawPac(pac);
+        drawGhost(blinky);
         drawLevelCounter();
     }
 
