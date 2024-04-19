@@ -121,6 +121,7 @@ public enum GameVariants implements GameModel {
 
             // At this point, the animations of Pac-Man and the ghosts must have been created!
             letsGetReadyToRumble();
+
             if (demoLevel) {
                 pac.show();
                 ghosts().forEach(Ghost::show);
@@ -429,22 +430,17 @@ public enum GameVariants implements GameModel {
         ArcadeWorld.HOUSE_RIGHT_SEAT
     };
 
-    final short POINTS_PELLET = 10;
-    final short POINTS_ENERGIZER = 50;
-    final short POINTS_ALL_GHOSTS_KILLED_IN_LEVEL = 12_000;
+    final byte  POINTS_PELLET = 10;
+    final byte  POINTS_ENERGIZER = 50;
+    final short POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
     final short EXTRA_LIFE_SCORE = 10_000;
-    final byte LEVEL_COUNTER_MAX_SYMBOLS = 7;
-
+    final byte  LEVEL_COUNTER_MAX_SYMBOLS = 7;
     final short PAC_POWER_FADING_TICKS = 2 * FPS; // unsure
     final short BONUS_POINTS_SHOWN_TICKS = 2 * FPS; // unsure
-
-    // after eating, Pac-Man must rest a bit
-    final byte RESTING_TICKS_PELLET = 1;
-    final byte RESTING_TICKS_ENERGIZER = 3;
-
-    /** Base speed of creatures in pixels per second. */
-    final short PPS_GHOST_INSIDE_HOUSE = 30; // correct?
-    final short PPS_GHOST_RETURNING_HOME = 120; // correct?
+    final byte  RESTING_TICKS_PELLET = 1;
+    final byte  RESTING_TICKS_ENERGIZER = 3;
+    final byte  PPS_GHOST_INSIDE_HOUSE = 30; // correct?
+    final byte  PPS_GHOST_RETURNING_HOME = 120; // correct?
 
     final List<Byte> bonusSymbols = new ArrayList<>();
     final List<Byte> levelCounter = new LinkedList<>();
@@ -459,8 +455,8 @@ public enum GameVariants implements GameModel {
     int levelNumber;
     boolean demoLevel;
     boolean playing;
-    short initialLives = 3;
-    short lives;
+    byte initialLives = 3;
+    byte lives;
 
     final Pulse blinking = new Pulse(10, false);
     final TickTimer huntingTimer = new TickTimer("HuntingTimer");
@@ -491,11 +487,7 @@ public enum GameVariants implements GameModel {
 
     @Override
     public Stream<Ghost> ghosts(GhostState... states) {
-        if (states.length > 0) {
-            return Stream.of(ghosts).filter(ghost -> ghost.inState(states));
-        }
-        // when no states are given, return *all* ghosts (ghost.is() would return *no* ghosts!)
-        return Stream.of(ghosts);
+        return states.length == 0 ? Stream.of(ghosts) : Stream.of(ghosts).filter(ghost -> ghost.inState(states));
     }
 
     @Override
@@ -591,10 +583,10 @@ public enum GameVariants implements GameModel {
     }
 
     Direction pseudoRandomDirection() {
-        float rnd = Globals.randomFloat(0, 100);
-        if (rnd < 16.3) return UP;
-        if (rnd < 16.3 + 25.2) return RIGHT;
-        if (rnd < 16.3 + 25.2 + 28.5) return DOWN;
+        int rnd = Globals.randomInt(0, 1000);
+        if (rnd < 163)             return UP;
+        if (rnd < 163 + 252)       return RIGHT;
+        if (rnd < 163 + 252 + 285) return DOWN;
         return LEFT;
     }
 
@@ -657,13 +649,13 @@ public enum GameVariants implements GameModel {
     }
 
     @Override
-    public short initialLives() {
+    public int initialLives() {
         return initialLives;
     }
 
     @Override
     public void setInitialLives(int lives) {
-        initialLives = (short) lives;
+        initialLives = (byte) lives;
     }
 
     @Override
@@ -673,7 +665,7 @@ public enum GameVariants implements GameModel {
 
     @Override
     public void addLives(int lives) {
-        this.lives += (short) lives;
+        this.lives += (byte) lives;
     }
 
     @Override
@@ -988,7 +980,7 @@ public enum GameVariants implements GameModel {
         if (!prey.isEmpty()) {
             prey.forEach(this::killGhost);
             if (numGhostsKilledInLevel == 16) {
-                int points = POINTS_ALL_GHOSTS_KILLED_IN_LEVEL;
+                int points = POINTS_ALL_GHOSTS_IN_LEVEL;
                 scorePoints(points);
                 Logger.info("Scored {} points for killing all ghosts at level {}", points, levelNumber);
             }

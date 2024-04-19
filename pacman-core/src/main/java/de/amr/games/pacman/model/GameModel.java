@@ -155,7 +155,7 @@ public interface GameModel {
     /**
      * @return Number of lives at game start
      */
-    short initialLives();
+    int initialLives();
 
     /**
      * Sets number of lives at game start.
