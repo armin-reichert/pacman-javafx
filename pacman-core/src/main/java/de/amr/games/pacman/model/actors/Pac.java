@@ -230,7 +230,7 @@ public class Pac extends Creature {
         ++starvingTicks;
     }
 
-    public void endStarving() {
+    public void onStarvingEnd() {
         starvingTicks = 0;
     }
 

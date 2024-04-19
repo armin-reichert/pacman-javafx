@@ -67,7 +67,7 @@ public enum GameVariants implements GameModel {
 
             world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
 
-            initGhostHouseAccessControl();
+            initGhostHouseAccess();
 
             pac = new Pac("Ms. Pac-Man");
             pac.reset();
@@ -288,7 +288,7 @@ public enum GameVariants implements GameModel {
             this.demoLevel = demoLevel;
 
             world = createPacManWorld();
-            initGhostHouseAccessControl();
+            initGhostHouseAccess();
 
             pac = new Pac("Pac-Man");
             pac.reset();
@@ -468,14 +468,17 @@ public enum GameVariants implements GameModel {
     byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
     byte cruiseElroyState;
 
-    // Ghost house access-control
-    static final byte UNLIMITED = -1;
-    byte[]  globalDotLimits;
-    byte[]  privateDotLimits;
-    int[]   dotCounters;
-    int     pacStarvingLimit;
-    int     globalDotCounter;
-    boolean globalDotCounterEnabled;
+    /** Ghost house access control */
+    static class HouseAccessData {
+        static final byte NO_DOT_LIMIT = -1;
+        byte[] globalDotLimits;
+        byte[] privateDotLimits;
+        int[] dotCounters;
+        int pacStarvingLimit;
+        int globalDotCounter;
+        boolean globalDotCounterEnabled;
+    }
+    final HouseAccessData houseAccess = new HouseAccessData();
 
     @Override
     public Pac pac() {
@@ -882,7 +885,7 @@ public enum GameVariants implements GameModel {
         final Vector2i pacTile = pac.tile();
         if (world.hasFoodAt(pacTile)) {
             eventLog().foodFoundTile = pacTile;
-            pac.endStarving();
+            pac.onStarvingEnd();
             if (world.isEnergizerTile(pacTile)) {
                 eventLog().energizerFound = true;
                 pac.setRestingTicks(RESTING_TICKS_ENERGIZER);
@@ -962,17 +965,23 @@ public enum GameVariants implements GameModel {
     }
 
     void updateGhosts() {
-        Ghost unlockedGhost = unlockGhost();
-        if (unlockedGhost != null) {
-            if (unlockedGhost.insideHouse(world.house())) {
-                unlockedGhost.setState(LEAVING_HOUSE);
-            } else {
-                unlockedGhost.setMoveAndWishDir(LEFT);
-                unlockedGhost.setState(HUNTING_PAC);
-            }
-            if (unlockedGhost.id() == ORANGE_GHOST && cruiseElroyState() < 0) {
-                enableCruiseElroyState(true);
-                Logger.trace("Cruise elroy mode re-enabled because {} exits house", unlockedGhost.name());
+        // Important: Ghosts must be in order RED, PINK, CYAN, ORANGE!
+        Ghost prisoner = ghosts(LOCKED).findFirst().orElse(null);
+        if (prisoner != null) {
+            String releaseInfo = checkReleaseOf(prisoner);
+            if (releaseInfo != null) {
+                eventLog().releasedGhost = prisoner;
+                eventLog().ghostReleaseInfo = releaseInfo;
+                if (prisoner.insideHouse(world.house())) {
+                    prisoner.setState(LEAVING_HOUSE);
+                } else {
+                    prisoner.setMoveAndWishDir(LEFT);
+                    prisoner.setState(HUNTING_PAC);
+                }
+                if (prisoner.id() == ORANGE_GHOST && cruiseElroyState() < 0) {
+                    enableCruiseElroyState(true);
+                    Logger.trace("Cruise elroy mode re-enabled because {} exits house", prisoner.name());
+                }
             }
         }
         ghosts().forEach(ghost -> ghost.update(this));
@@ -1086,77 +1095,63 @@ public enum GameVariants implements GameModel {
      * </p>
      * </pre>
      */
-    void initGhostHouseAccessControl() {
-        globalDotLimits = new byte[] {UNLIMITED, 7, 17, UNLIMITED};
-        privateDotLimits = new byte[] {0, 0, 0, 0};
+    void initGhostHouseAccess() {
+        houseAccess.globalDotLimits = new byte[] {HouseAccessData.NO_DOT_LIMIT, 7, 17, HouseAccessData.NO_DOT_LIMIT};
+        houseAccess.privateDotLimits = new byte[] {0, 0, 0, 0};
         if (levelNumber == 1) {
-            privateDotLimits[CYAN_GHOST] = 30;
-            privateDotLimits[ORANGE_GHOST] = 60;
+            houseAccess.privateDotLimits[CYAN_GHOST] = 30;
+            houseAccess.privateDotLimits[ORANGE_GHOST] = 60;
         } else if (levelNumber == 2) {
-            privateDotLimits[ORANGE_GHOST] = 50;
+            houseAccess.privateDotLimits[ORANGE_GHOST] = 50;
         }
-        dotCounters = new int[] {0, 0, 0, 0};
-        globalDotCounter = 0;
-        globalDotCounterEnabled = false;
-        pacStarvingLimit = levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec
+        houseAccess.dotCounters = new int[] {0, 0, 0, 0};
+        houseAccess.globalDotCounter = 0;
+        houseAccess.globalDotCounterEnabled = false;
+        houseAccess.pacStarvingLimit = levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec
+    }
+
+    String checkReleaseOf(Ghost prisoner) {
+        byte id = prisoner.id();
+        if (id == RED_GHOST) {
+            return "Red ghost gets released unconditionally";
+        }
+        // check private dot counter first (if enabled)
+        if (!houseAccess.globalDotCounterEnabled && houseAccess.dotCounters[id] >= houseAccess.privateDotLimits[id]) {
+            return String.format("Private dot counter reached limit (%d)", houseAccess.privateDotLimits[id]);
+        }
+        // check global dot counter
+        if (houseAccess.globalDotLimits[id] != HouseAccessData.NO_DOT_LIMIT && houseAccess.globalDotCounter >= houseAccess.globalDotLimits[id]) {
+            return String.format("Global dot counter reached limit (%d)", houseAccess.globalDotLimits[id]);
+        }
+        // check Pac-Man starving time
+        if (pac.starvingTicks() >= houseAccess.pacStarvingLimit) {
+            pac.onStarvingEnd();
+            return String.format("%s reached starving limit (%d ticks)", pac.name(), houseAccess.pacStarvingLimit);
+        }
+        return null;
     }
 
     void resetGlobalDotCounterAndSetEnabled(boolean enabled) {
-        globalDotCounter = 0;
-        globalDotCounterEnabled = enabled;
+        houseAccess.globalDotCounter = 0;
+        houseAccess.globalDotCounterEnabled = enabled;
         Logger.trace("Global dot counter set to 0 and {}", enabled ? "enabled" : "disabled");
     }
 
     void updateDotCount() {
-        if (globalDotCounterEnabled) {
-            if (ghost(ORANGE_GHOST).inState(LOCKED) && globalDotCounter == 32) {
+        if (houseAccess.globalDotCounterEnabled) {
+            if (ghost(ORANGE_GHOST).inState(LOCKED) && houseAccess.globalDotCounter == 32) {
                 Logger.trace("{} inside house when global counter reached 32", ghost(ORANGE_GHOST).name());
                 resetGlobalDotCounterAndSetEnabled(false);
             } else {
-                globalDotCounter++;
-                Logger.trace("Global dot counter = {}", globalDotCounter);
+                houseAccess.globalDotCounter++;
+                Logger.trace("Global dot counter = {}", houseAccess.globalDotCounter);
             }
         } else {
             ghosts(LOCKED).filter(ghost -> ghost.insideHouse(world.house())).findFirst().ifPresent(ghost -> {
-                dotCounters[ghost.id()]++;
-                Logger.trace("{} dot counter = {}", ghost.name(), dotCounters[ghost.id()]);
+                houseAccess.dotCounters[ghost.id()]++;
+                Logger.trace("{} dot counter = {}", ghost.name(), houseAccess.dotCounters[ghost.id()]);
             });
         }
-    }
-
-    Ghost unlockGhost() {
-        // Important: Ghosts must be returned in order RED, PINK, CYAN, ORANGE
-        Ghost prisoner = ghosts(LOCKED).findFirst().orElse(null);
-        if (prisoner == null) {
-            return null;
-        }
-        byte id = prisoner.id();
-        if (id == RED_GHOST) {
-            eventLog().unlockedGhost = prisoner;
-            eventLog().unlockGhostReason = "Red ghost is unlocked immediately";
-            return prisoner;
-        }
-        // check private dot counter first (if enabled)
-        if (!globalDotCounterEnabled && dotCounters[id] >= privateDotLimits[id]) {
-            eventLog().unlockedGhost = prisoner;
-            eventLog().unlockGhostReason = String.format("Private dot counter at limit (%d)", privateDotLimits[id]);
-            return prisoner;
-        }
-        // check global dot counter
-        if (globalDotLimits[id] != UNLIMITED && globalDotCounter >= globalDotLimits[id]) {
-            eventLog().unlockedGhost = prisoner;
-            eventLog().unlockGhostReason = String.format("Global dot limit (%d) reached", globalDotLimits[id]);
-            return prisoner;
-        }
-        // check Pac-Man starving time
-        if (pac.starvingTicks() >= pacStarvingLimit) {
-            pac.endStarving();
-            eventLog().unlockedGhost = prisoner;
-            eventLog().unlockGhostReason = String.format("%s reached starving limit (%d ticks)",
-                pac.name(), pacStarvingLimit);
-            return prisoner;
-        }
-        return null;
     }
 
     // Game Event Support

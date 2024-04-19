@@ -24,8 +24,8 @@ public class SimulationStepEventLog {
     public boolean  pacStartsLosingPower = false;
     public boolean  pacLostPower = false;
     public boolean  pacDied = false;
-    public Ghost    unlockedGhost = null;
-    public String   unlockGhostReason = null;
+    public Ghost releasedGhost = null;
+    public String ghostReleaseInfo = null;
     public final List<Ghost> killedGhosts = new ArrayList<>(4);
 
     public List<String> createMessageList() {
@@ -51,8 +51,8 @@ public class SimulationStepEventLog {
         if (pacDied) {
             messages.add("Pac died");
         }
-        if (unlockedGhost != null) {
-            messages.add("Unlocked " + unlockedGhost.name() + ": " + unlockGhostReason);
+        if (releasedGhost != null) {
+            messages.add("Unlocked " + releasedGhost.name() + ": " + ghostReleaseInfo);
         }
         if (!killedGhosts.isEmpty()) {
             messages.add("Ghosts killed: " + killedGhosts.stream().map(Ghost::name).toList());
