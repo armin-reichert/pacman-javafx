@@ -93,8 +93,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final BooleanProperty PY_USE_AUTOPILOT   = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
 
-    private static void loadAssets2D(Theme theme) {
+    private static void loadAssets2D() {
         ResourceManager rm = () -> PacManGames2dUI.class;
+        var theme = THEME_2D;
 
         //
         // Common to both games
@@ -201,9 +202,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         theme.set("pacman.audio.sweep",               rm.loadAudioClip("sound/common/sweep.mp3"));
     }
 
-    protected static final Theme THEME = new Theme();
+    protected static final Theme THEME_2D = new Theme();
     static {
-        loadAssets2D(THEME);
+        loadAssets2D();
         Logger.info("2D theme loaded");
     }
 
@@ -345,7 +346,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             titleKey += ".paused";
         }
         stage.setTitle(tt(titleKey));
-        stage.getIcons().setAll(THEME.image(variantKey + ".icon"));
+        stage.getIcons().setAll(THEME_2D.image(variantKey + ".icon"));
     }
 
     protected GameScene sceneMatchingCurrentGameState() {
@@ -416,14 +417,14 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public Theme theme() {
-        return THEME;
+        return THEME_2D;
     }
 
     @Override
     public <S extends SpriteSheet> S spriteSheet() {
         return switch (game()) {
-            case GameVariants.MS_PACMAN -> THEME.get("mspacman.spritesheet");
-            case GameVariants.PACMAN -> THEME.get("pacman.spritesheet");
+            case GameVariants.MS_PACMAN -> THEME_2D.get("mspacman.spritesheet");
+            case GameVariants.PACMAN -> THEME_2D.get("pacman.spritesheet");
             default -> throw new IllegalGameVariantException(game());
         };
     }

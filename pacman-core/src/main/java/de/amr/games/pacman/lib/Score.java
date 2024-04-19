@@ -25,8 +25,6 @@ public class Score {
             setPoints(Integer.parseInt(p.getProperty("points")));
             setLevelNumber(Integer.parseInt(p.getProperty("level")));
             setDate(LocalDate.parse(p.getProperty("date"), DateTimeFormatter.ISO_LOCAL_DATE));
-            Logger.info("Score loaded from file '{}'. Points: {} Level: {}",
-                file, points(), levelNumber());
         } catch (Exception x) {
             Logger.error("Score could not be loaded from file '{}'. Error: {}", file, x.getMessage());
         }

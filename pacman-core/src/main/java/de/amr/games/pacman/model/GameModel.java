@@ -17,6 +17,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
+import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.List;
@@ -198,6 +199,8 @@ public interface GameModel {
 
     default void loadHighScore() {
         highScore().loadFromFile(highScoreFile());
+        Logger.info("Highscore loaded. File: '{}', {} points, level {}",
+            highScoreFile(), highScore().points(), highScore().levelNumber());
     }
 
     void updateHighScore();

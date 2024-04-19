@@ -89,7 +89,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static final String NO_TEXTURE                             = "No Texture";
 
     private static void addAssets3D() {
-        Theme theme = PacManGames2dUI.THEME;
+        Theme theme = PacManGames2dUI.THEME_2D;
         ResourceManager rm = () -> PacManGames3dUI.class;
 
         theme.set("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
