@@ -226,6 +226,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         super(stage, settings);
         for (var gameVariant : GameVariants.values()) {
             var playScene3D = new PlayScene3D();
+            playScene3D.setContext(this);
             playScene3D.setParentScene(mainScene);
             gameScenesByVariant.get(gameVariant).put("play3D", playScene3D);
         }

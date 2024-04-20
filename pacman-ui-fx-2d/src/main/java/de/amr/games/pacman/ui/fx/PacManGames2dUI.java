@@ -258,6 +258,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         )));
         for (Map<String, GameScene> gameSceneMap : gameScenesByVariant.values()) {
             for (var gameScene : gameSceneMap.values()) {
+                gameScene.setContext(this);
                 if (gameScene instanceof GameScene2D gameScene2D) {
                     gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
                 }
@@ -374,7 +375,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
                     stopVoice();
                 }
             }
-            nextGameScene.setContext(this);
             nextGameScene.init();
             gameScenePy.set(nextGameScene);
             Logger.trace("Game scene changed to {}", gameScenePy.get());
