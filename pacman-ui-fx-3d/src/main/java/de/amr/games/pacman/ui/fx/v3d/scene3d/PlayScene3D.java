@@ -124,7 +124,7 @@ public class PlayScene3D implements GameScene {
         }
         if (level3D != null) {
             level3D.update();
-            perspectivePy.get().update(fxSubScene.getCamera(), level3D.pac3D());
+            perspective().update(fxSubScene.getCamera(), context.game().pac());
         }
         context.game().pac().setUseAutopilot(context.game().isDemoLevel() || PY_USE_AUTOPILOT.get());
         updateSound();
@@ -166,6 +166,10 @@ public class PlayScene3D implements GameScene {
 
     public Camera camera() {
         return fxSubScene.getCamera();
+    }
+
+    public Perspective perspective() {
+        return perspectivePy.get();
     }
 
     private void replaceGameLevel3D() {
@@ -304,7 +308,7 @@ public class PlayScene3D implements GameScene {
                 context.gameState().timer().restartSeconds(3);
                 replaceGameLevel3D();
                 level3D.pac3D().init(context.game().world());
-                perspectivePy.get().init(fxSubScene.getCamera());
+                perspective().init(fxSubScene.getCamera());
             }
 
             case LEVEL_TEST -> {

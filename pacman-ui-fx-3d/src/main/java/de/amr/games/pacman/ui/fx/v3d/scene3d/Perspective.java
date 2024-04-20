@@ -4,8 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.scene3d;
 
-import de.amr.games.pacman.ui.fx.v3d.entity.Pac3D;
-import javafx.beans.property.*;
+import de.amr.games.pacman.model.actors.Entity;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Camera;
 import javafx.scene.transform.Rotate;
 
@@ -35,11 +36,11 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void update(Camera cam, Pac3D pac3D) {
-            var position = pac3D.position();
+        public void update(Camera cam, Entity spottedEntity) {
+            var position = spottedEntity.position();
             double speed = 0.01;
-            cam.setTranslateX(lerp(cam.getTranslateX(), position.getX() - 100, speed));
-            cam.setTranslateY(lerp(cam.getTranslateY(), position.getY() - 150, speed));
+            cam.setTranslateX(lerp(cam.getTranslateX(), position.x() - 100, speed));
+            cam.setTranslateY(lerp(cam.getTranslateY(), position.y() - 150, speed));
         }
     },
 
@@ -80,11 +81,11 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void update(Camera cam, Pac3D pac3D) {
+        public void update(Camera cam, Entity spottedEntity) {
             double speedX = 0.005;
             double speedY = 0.030;
-            cam.setTranslateX(lerp(cam.getTranslateX(), pac3D.position().getX() - 100, speedX));
-            cam.setTranslateY(lerp(cam.getTranslateY(), pac3D.position().getY() + 100, speedY));
+            cam.setTranslateX(lerp(cam.getTranslateX(), spottedEntity.position().x() - 100, speedX));
+            cam.setTranslateY(lerp(cam.getTranslateY(), spottedEntity.position().y() + 100, speedY));
         }
     },
 
@@ -103,10 +104,10 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void update(Camera cam, Pac3D pac3D) {
+        public void update(Camera cam, Entity spottedEntity) {
             double speed = 0.02;
-            cam.setTranslateX(lerp(cam.getTranslateX(), pac3D.position().getX() - 110, speed));
-            cam.setTranslateY(lerp(cam.getTranslateY(), pac3D.position().getY(), speed));
+            cam.setTranslateX(lerp(cam.getTranslateX(), spottedEntity.position().x() - 110, speed));
+            cam.setTranslateY(lerp(cam.getTranslateY(), spottedEntity.position().y(), speed));
         }
     };
 

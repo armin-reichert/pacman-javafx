@@ -4,12 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.scene3d;
 
+import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.ui.fx.v3d.entity.Pac3D;
 import javafx.beans.property.IntegerProperty;
 import javafx.scene.Camera;
 
 /**
- * Cameras for the 3D play scene.
+ * Camera controller interfaces for the 3D play scene.
  *
  * @author Armin Reichert
  */
@@ -18,7 +19,7 @@ public interface CameraController {
     default void init(Camera cam) {
     }
 
-    default void update(Camera cam, Pac3D pac3D) {
+    default void update(Camera cam, Entity spottedEntity) {
     }
 
     IntegerProperty rotatePy();
