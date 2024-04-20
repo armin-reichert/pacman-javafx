@@ -89,28 +89,6 @@ public interface CreatureMovement {
         tryMoving(creature, world);
     }
 
-
-    /**
-     * Lets a creature randomly roam through the world.
-     *
-     * @param creature a creature (ghost, moving bonus)
-     * @param world the world/maze
-     * @param relSpeed the relative speed (in percentage of base speed)
-     * @param dir the intended direction. If this direction cannot be taken, try the other directions in clockwise order
-     */
-    static void roam(Creature creature, World world, byte relSpeed, Direction dir) {
-        Vector2i currentTile = creature.tile();
-        if (!world.belongsToPortal(currentTile) && (creature.newTileEntered || !creature.moveResult.moved)) {
-            while (dir == creature.moveDir().opposite()
-                || !creature.canAccessTile(currentTile.plus(dir.vector()), world)) {
-                dir = dir.nextClockwise();
-            }
-            creature.setWishDir(dir);
-        }
-        creature.setPercentageSpeed(relSpeed);
-        tryMoving(creature, world);
-    }
-
     /**
      * Tries moving through the game world.
      * <p>

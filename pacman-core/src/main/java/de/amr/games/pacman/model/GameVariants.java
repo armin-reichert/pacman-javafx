@@ -24,7 +24,7 @@ import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
 import static de.amr.games.pacman.model.actors.CreatureMovement.followTarget;
-import static de.amr.games.pacman.model.actors.CreatureMovement.roam;
+import static de.amr.games.pacman.model.actors.CreatureMovement.tryMoving;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 import static de.amr.games.pacman.model.world.ArcadeWorld.*;
 
@@ -139,15 +139,15 @@ public enum GameVariants implements GameModel {
          */
         @Override
         public void huntingBehaviour(Ghost ghost) {
-            if (scatterPhase().isPresent() && scatterPhase().get() == 0
-                && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-                roam(ghost, world, huntingSpeedPercentage(ghost), pseudoRandomDirection());
+            boolean roaming = scatterPhase().isPresent() && scatterPhase().get() == 0
+                && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST);
+            boolean chasing = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0;
+            if (roaming) {
+                roam(ghost, world, huntingSpeedPercentage(ghost));
+            } else if (chasing) {
+                followTarget(ghost, world, chasingTarget(ghost.id()), huntingSpeedPercentage(ghost));
             } else {
-                if (chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0) {
-                    followTarget(ghost, world, chasingTarget(ghost.id()), huntingSpeedPercentage(ghost));
-                } else {
-                    followTarget(ghost, world, ghostScatterTarget(ghost.id()), huntingSpeedPercentage(ghost));
-                }
+                followTarget(ghost, world, ghostScatterTarget(ghost.id()), huntingSpeedPercentage(ghost));
             }
         }
 
@@ -581,6 +581,27 @@ public enum GameVariants implements GameModel {
         return GameController.it().eventLog();
     }
 
+    /**
+     * Lets a creature randomly roam through the world.
+     *
+     * @param creature a creature (ghost, moving bonus)
+     * @param world the world/maze
+     * @param relSpeed the relative speed (in percentage of base speed)
+     */
+    void roam(Creature creature, World world, byte relSpeed) {
+        Vector2i currentTile = creature.tile();
+        if (!world.belongsToPortal(currentTile) && (creature.isNewTileEntered() || !creature.moveResult.moved)) {
+            Direction dir = pseudoRandomDirection();
+            while (dir == creature.moveDir().opposite()
+                || !creature.canAccessTile(currentTile.plus(dir.vector()), world)) {
+                dir = dir.nextClockwise();
+            }
+            creature.setWishDir(dir);
+        }
+        creature.setPercentageSpeed(relSpeed);
+        tryMoving(creature, world);
+    }
+
     Direction pseudoRandomDirection() {
         int rnd = Globals.randomInt(0, 1000);
         if (rnd < 163)             return UP;
@@ -590,7 +611,7 @@ public enum GameVariants implements GameModel {
     }
 
     void frightenedGhostBehaviour(Ghost ghost) {
-        roam(ghost, world, frightenedGhostRelSpeed(ghost), pseudoRandomDirection());
+        roam(ghost, world, frightenedGhostRelSpeed(ghost));
     }
 
     Vector2i ghostScatterTarget(byte ghostID) {
