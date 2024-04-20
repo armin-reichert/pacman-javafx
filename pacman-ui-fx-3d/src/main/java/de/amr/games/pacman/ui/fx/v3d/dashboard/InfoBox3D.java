@@ -57,11 +57,11 @@ public class InfoBox3D extends InfoBox {
         spinnerCamRotate = addSpinner("Cam Rotate X", -180, 180, 0);
         spinnerCamRotate.valueProperty().addListener((py, ov, nv) -> Perspective.TOTAL.rotatePy().setValue(nv));
         spinnerCamX = addSpinner("Cam Translate X", -1000, 1000, 0);
-        spinnerCamX.valueProperty().addListener((py, ov, nv) -> Perspective.TOTAL.translateXPy().setValue(nv));
+        spinnerCamX.valueProperty().addListener((py, ov, nv) -> Perspective.TOTAL.translatePy().get().setX(nv));
         spinnerCamY = addSpinner("Cam Translate Y", -1000, 1000, 0);
-        spinnerCamY.valueProperty().addListener((py, ov, nv) -> Perspective.TOTAL.translateYPy().setValue(nv));
+        spinnerCamY.valueProperty().addListener((py, ov, nv) -> Perspective.TOTAL.translatePy().get().setY(nv));
         spinnerCamZ = addSpinner("Cam Translate Z", -1000, 1000, 0);
-        spinnerCamZ.valueProperty().addListener((py, ov, nv) -> Perspective.TOTAL.translateZPy().setValue(nv));
+        spinnerCamZ.valueProperty().addListener((py, ov, nv) -> Perspective.TOTAL.translatePy().get().setZ(nv));
 
         sliderPiPSceneHeight = addSlider("PiP Size", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
         sliderPiPOpacity = addSlider("PiP Opacity", 0.0, 1.0, PY_PIP_OPACITY.get());
@@ -104,9 +104,9 @@ public class InfoBox3D extends InfoBox {
         cbWireframeMode.setOnAction(e -> actionHandler().toggleDrawMode());
 
         spinnerCamRotate.getValueFactory().setValue(Perspective.TOTAL.rotatePy().getValue());
-        spinnerCamX.getValueFactory().setValue(Perspective.TOTAL.translateXPy().getValue());
-        spinnerCamY.getValueFactory().setValue(Perspective.TOTAL.translateYPy().getValue());
-        spinnerCamZ.getValueFactory().setValue(Perspective.TOTAL.translateZPy().getValue());
+        spinnerCamX.getValueFactory().setValue((int) Perspective.TOTAL.translatePy().get().getX());
+        spinnerCamY.getValueFactory().setValue((int) Perspective.TOTAL.translatePy().get().getY());
+        spinnerCamZ.getValueFactory().setValue((int) Perspective.TOTAL.translatePy().get().getZ());
     }
 
     @Override

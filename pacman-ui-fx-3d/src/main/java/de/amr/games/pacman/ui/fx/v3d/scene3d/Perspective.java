@@ -6,9 +6,12 @@ package de.amr.games.pacman.ui.fx.v3d.scene3d;
 
 import de.amr.games.pacman.ui.fx.v3d.entity.Pac3D;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Camera;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 
 import static de.amr.games.pacman.lib.Globals.lerp;
 
@@ -53,18 +56,18 @@ public enum Perspective implements CameraController {
             cam.setFarClip(10000.0);
             cam.setRotationAxis(Rotate.X_AXIS);
             rotatePy().set(66);
-            translateXPy().set(0);
-            translateYPy().set(330);
-            translateZPy().set(-140);
+            translatePy().get().setX(0);
+            translatePy().get().setY(330);
+            translatePy().get().setZ(-140);
         }
 
         @Override
         public void update(Camera cam, Pac3D pac3D) {
             // cam properties cannot be bound and be set at the same time
             cam.rotateProperty().set(rotatePy().get());
-            cam.translateXProperty().set(translateXPy().get());
-            cam.translateYProperty().set(translateYPy().get());
-            cam.translateZProperty().set(translateZPy().get());
+            cam.translateXProperty().set(translatePy().get().getX());
+            cam.translateYProperty().set(translatePy().get().getY());
+            cam.translateZProperty().set(translatePy().get().getZ());
         }
 
         @Override
@@ -123,9 +126,7 @@ public enum Perspective implements CameraController {
     };
 
     final IntegerProperty PY_ROTATE = new SimpleIntegerProperty(66);
-    final IntegerProperty PY_X = new SimpleIntegerProperty(0);
-    final IntegerProperty PY_Y = new SimpleIntegerProperty(330);
-    final IntegerProperty PY_Z = new SimpleIntegerProperty(-140);
+    final ObjectProperty<Translate> PY_TRANSLATE = new SimpleObjectProperty<>(this, "translate", new Translate());
 
     @Override
     public IntegerProperty rotatePy() {
@@ -133,18 +134,8 @@ public enum Perspective implements CameraController {
     }
 
     @Override
-    public IntegerProperty translateXPy() {
-        return PY_X;
-    }
-
-    @Override
-    public IntegerProperty translateYPy() {
-        return PY_Y;
-    }
-
-    @Override
-    public IntegerProperty translateZPy() {
-        return PY_Z;
+    public ObjectProperty<Translate> translatePy() {
+        return PY_TRANSLATE;
     }
 
     public static Perspective succ(Perspective p) {

@@ -6,7 +6,9 @@ package de.amr.games.pacman.ui.fx.v3d.scene3d;
 
 import de.amr.games.pacman.ui.fx.v3d.entity.Pac3D;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.Camera;
+import javafx.scene.transform.Translate;
 
 /**
  * Cameras for the 3D play scene.
@@ -22,10 +24,5 @@ public interface CameraController {
     }
 
     IntegerProperty rotatePy();
-
-    IntegerProperty translateXPy();
-
-    IntegerProperty translateYPy();
-
-    IntegerProperty translateZPy();
+    ObjectProperty<Translate> translatePy();
 }
