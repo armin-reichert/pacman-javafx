@@ -158,41 +158,25 @@ public enum GameVariants implements GameModel {
          * <p>Got this information from
          * <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>:
          * </p>
-         * <p><em>
+         * <p style="font-style:italic">
          * The exact fruit mechanics are as follows: After 64 dots are consumed, the game spawns the first fruit of the level.
          * After 176 dots are consumed, the game attempts to spawn the second fruit of the level. If the first fruit is still
          * present in the level when (or eaten very shortly before) the 176th dot is consumed, the second fruit will not
-         * spawn.</em></p>
-         *
-         * <p><b>Dying while a fruit is on screen causes it to immediately disappear and never return.
-         * (TODO: what does never mean here? For the rest of the game?)</b></p>
-         *
-         * <p><em>
+         * spawn. Dying while a fruit is on screen causes it to immediately disappear and never return.
+         * (TODO: what does never mean here? For the rest of the game?).
          * The type of fruit is determined by the level count - levels 1-7 will always have two cherries, two strawberries,
          * etc. until two bananas on level 7. On level 8 and beyond, the fruit type is randomly selected using the weights in
          * the following table:
-         * </em></p>
          *
          * <table>
-         * <tr>
-         *   <th>Cherry</th>
-         *   <th>Strawberry</th>
-         *   <th>Peach</th>
-         *   <th>Pretzel</th>
-         *   <th>Apple</th>
-         *   <th>Pear</th>
-         *   <th>Banana</th>
+         * <tr align="left">
+         *   <th>Cherry</th><th>Strawberry</th><th>Peach</th><th>Pretzel</th><th>Apple</th><th>Pear&nbsp;</th><th>Banana</th>
          * </tr>
          * <tr align="right">
-         *   <td>5/32</td>
-         *   <td>5/32</td>
-         *   <td>5/32</td>
-         *   <td>5/32</td>
-         *   <td>4/32</td>
-         *   <td>4/32</td>
-         *   <td>4/32</td>
+         *     <td>5/32</td><td>5/32</td><td>5/32</td><td>5/32</td><td>4/32</td><td>4/32</td><td>4/32</td>
          * </tr>
          * </table>
+         * </p>
          */
         byte nextBonusSymbol() {
             if (levelNumber <= 7) {
@@ -223,14 +207,13 @@ public enum GameVariants implements GameModel {
          * The moving bonus enters the world at a random portal, walks to the house entry, takes a tour around the
          * house and finally leaves the world through a random portal on the opposite side of the world.
          * <p>
-         * TODO: This is not the exact behavior as in the original Arcade game.
+         * Note: This is not the exact behavior from the original Arcade game.
          **/
         void createMovingBonus(byte symbol, boolean leftToRight) {
             var houseEntry = tileAt(world.house().door().entryPosition());
             var houseEntryOpposite = houseEntry.plus(0, world.house().size().y() + 1);
             var entryPortal = world.portals().get(RND.nextInt(world.portals().size()));
             var exitPortal  = world.portals().get(RND.nextInt(world.portals().size()));
-
             var route = List.of(
                 np(leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd()),
                 np(houseEntry),
@@ -239,10 +222,11 @@ public enum GameVariants implements GameModel {
                 np(leftToRight ? exitPortal.rightTunnelEnd().plus(1, 0) : exitPortal.leftTunnelEnd().minus(1, 0))
             );
 
-            bonus = new MovingBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
-            ((MovingBonus) bonus).setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+            var movingBonus = new MovingBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+            movingBonus.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
             // pass *copy* of list because route gets modified when moving!
-            ((MovingBonus) bonus).setRoute(new ArrayList<>(route), leftToRight);
+            movingBonus.setRoute(new ArrayList<>(route), leftToRight);
+            bonus = movingBonus;
             bonus.setEdible(TickTimer.INDEFINITE);
             Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
         }
