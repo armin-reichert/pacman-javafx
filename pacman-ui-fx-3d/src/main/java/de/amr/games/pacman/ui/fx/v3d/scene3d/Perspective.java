@@ -26,8 +26,7 @@ public enum Perspective implements CameraController {
 
         @Override
         public void reset(Camera cam) {
-            cam.setNearClip(0.1);
-            cam.setFarClip(10000.0);
+            unbind(cam);
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(0);
             cam.setTranslateX(0);
@@ -45,14 +44,17 @@ public enum Perspective implements CameraController {
     },
 
     TOTAL {
-
         private boolean initialized;
 
         @Override
+        public String toString() {
+            return "Total";
+        }
+
+        @Override
         public void reset(Camera cam) {
-            cam.setNearClip(0.1);
-            cam.setFarClip(10000.0);
             cam.setRotationAxis(Rotate.X_AXIS);
+            bind(cam);
             if (!initialized) {
                 rotatePy().set(66);
                 translateXPy().set(0);
@@ -60,20 +62,6 @@ public enum Perspective implements CameraController {
                 translateZPy().set(-140);
                 initialized = true;
             }
-        }
-
-        @Override
-        public void update(Camera cam, Pac3D pac3D) {
-            // cam properties cannot be bound and be set at the same time
-            cam.rotateProperty().set(rotatePy().get());
-            cam.translateXProperty().set(translateXPy().get());
-            cam.translateYProperty().set(translateYPy().get());
-            cam.translateZProperty().set(translateZPy().get());
-        }
-
-        @Override
-        public String toString() {
-            return "Total";
         }
     },
 
@@ -85,8 +73,7 @@ public enum Perspective implements CameraController {
 
         @Override
         public void reset(Camera cam) {
-            cam.setNearClip(0.1);
-            cam.setFarClip(10000.0);
+            unbind(cam);
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(60);
             cam.setTranslateZ(-160);
@@ -94,11 +81,10 @@ public enum Perspective implements CameraController {
 
         @Override
         public void update(Camera cam, Pac3D pac3D) {
-            var position = pac3D.position();
             double speedX = 0.005;
-            cam.setTranslateX(lerp(cam.getTranslateX(), position.getX() - 100, speedX));
             double speedY = 0.030;
-            cam.setTranslateY(lerp(cam.getTranslateY(), position.getY() + 100, speedY));
+            cam.setTranslateX(lerp(cam.getTranslateX(), pac3D.position().getX() - 100, speedX));
+            cam.setTranslateY(lerp(cam.getTranslateY(), pac3D.position().getY() + 100, speedY));
         }
     },
 
@@ -110,8 +96,7 @@ public enum Perspective implements CameraController {
 
         @Override
         public void reset(Camera cam) {
-            cam.setNearClip(0.1);
-            cam.setFarClip(10000.0);
+            unbind(cam);
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(80);
             cam.setTranslateZ(-40);
@@ -119,17 +104,30 @@ public enum Perspective implements CameraController {
 
         @Override
         public void update(Camera cam, Pac3D pac3D) {
-            var position = pac3D.position();
             double speed = 0.02;
-            cam.setTranslateX(lerp(cam.getTranslateX(), position.getX() - 110, speed));
-            cam.setTranslateY(lerp(cam.getTranslateY(), position.getY(), speed));
+            cam.setTranslateX(lerp(cam.getTranslateX(), pac3D.position().getX() - 110, speed));
+            cam.setTranslateY(lerp(cam.getTranslateY(), pac3D.position().getY(), speed));
         }
     };
 
-    final IntegerProperty rotatePy = new SimpleIntegerProperty();
+    final IntegerProperty rotatePy     = new SimpleIntegerProperty(this, "rotate");
     final IntegerProperty translateXPy = new SimpleIntegerProperty(this, "translateX");
     final IntegerProperty translateYPy = new SimpleIntegerProperty(this, "translateY");
     final IntegerProperty translateZPy = new SimpleIntegerProperty(this, "translateZ");
+
+    protected void bind(Camera cam) {
+        cam.rotateProperty().bind(rotatePy);
+        cam.translateXProperty().bind(translateXPy);
+        cam.translateYProperty().bind(translateYPy);
+        cam.translateZProperty().bind(translateZPy);
+    }
+
+    protected void unbind(Camera cam) {
+        cam.rotateProperty().unbind();
+        cam.translateXProperty().unbind();
+        cam.translateYProperty().unbind();
+        cam.translateZProperty().unbind();
+    }
 
     @Override
     public IntegerProperty rotatePy() {
@@ -151,12 +149,12 @@ public enum Perspective implements CameraController {
         return translateZPy;
     }
 
-    public static Perspective succ(Perspective p) {
+    public static Perspective next(Perspective p) {
         int n = Perspective.values().length;
         return Perspective.values()[p.ordinal() < n - 1 ? p.ordinal() + 1 : 0];
     }
 
-    public static Perspective pred(Perspective p) {
+    public static Perspective previous(Perspective p) {
         int n = Perspective.values().length;
         return Perspective.values()[p.ordinal() > 0 ? p.ordinal() - 1 : n - 1];
     }

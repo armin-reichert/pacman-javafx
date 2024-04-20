@@ -72,9 +72,12 @@ public class PlayScene3D implements GameScene {
     public PlayScene3D() {
         // initial scene size is irrelevant, gets bound to parent scene later
         fxSubScene = new SubScene(subSceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
-        var camera = new PerspectiveCamera(true);
-        fxSubScene.setCamera(camera);
         fxSubScene.setFill(null); // transparent
+
+        var camera = new PerspectiveCamera(true);
+        camera.setNearClip(0.1);
+        camera.setFarClip(10000.0);
+        fxSubScene.setCamera(camera);
 
         var ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
