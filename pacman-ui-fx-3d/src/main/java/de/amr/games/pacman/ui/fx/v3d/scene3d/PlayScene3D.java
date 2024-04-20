@@ -57,7 +57,7 @@ public class PlayScene3D implements GameScene {
     public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
         @Override
         protected void invalidated() {
-            get().reset(fxSubScene.getCamera());
+            get().init(fxSubScene.getCamera());
         }
     };
 
@@ -304,7 +304,7 @@ public class PlayScene3D implements GameScene {
                 context.gameState().timer().restartSeconds(3);
                 replaceGameLevel3D();
                 level3D.pac3D().init(context.game().world());
-                perspectivePy.get().reset(fxSubScene.getCamera());
+                perspectivePy.get().init(fxSubScene.getCamera());
             }
 
             case LEVEL_TEST -> {

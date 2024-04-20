@@ -15,7 +15,7 @@ import javafx.scene.Camera;
  */
 public interface CameraController {
 
-    default void reset(Camera cam) {
+    default void init(Camera cam) {
     }
 
     default void update(Camera cam, Pac3D pac3D) {

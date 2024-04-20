@@ -25,7 +25,7 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void reset(Camera cam) {
+        public void init(Camera cam) {
             unbind(cam);
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(0);
@@ -52,7 +52,7 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void reset(Camera cam) {
+        public void init(Camera cam) {
             cam.setRotationAxis(Rotate.X_AXIS);
             bind(cam);
             if (!initialized) {
@@ -72,7 +72,7 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void reset(Camera cam) {
+        public void init(Camera cam) {
             unbind(cam);
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(60);
@@ -95,7 +95,7 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void reset(Camera cam) {
+        public void init(Camera cam) {
             unbind(cam);
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(80);
