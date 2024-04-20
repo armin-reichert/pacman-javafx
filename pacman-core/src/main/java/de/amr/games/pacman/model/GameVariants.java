@@ -139,15 +139,13 @@ public enum GameVariants implements GameModel {
          */
         @Override
         public void huntingBehaviour(Ghost ghost) {
-            boolean roaming = scatterPhase().isPresent() && scatterPhase().get() == 0
-                && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST);
-            boolean chasing = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0;
-            if (roaming) {
+            if (scatterPhase().isPresent() && scatterPhase().get() == 0
+                && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
                 roam(ghost, world, huntingSpeedPercentage(ghost));
-            } else if (chasing) {
-                followTarget(ghost, world, chasingTarget(ghost.id()), huntingSpeedPercentage(ghost));
             } else {
-                followTarget(ghost, world, ghostScatterTarget(ghost.id()), huntingSpeedPercentage(ghost));
+                Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0
+                    ? chasingTarget(ghost.id()) : scatterTarget(ghost.id());
+                followTarget(ghost, world, targetTile, huntingSpeedPercentage(ghost));
             }
         }
 
@@ -353,12 +351,9 @@ public enum GameVariants implements GameModel {
 
         @Override
         public void huntingBehaviour(Ghost ghost) {
-            byte relSpeed = huntingSpeedPercentage(ghost);
-            if (chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0) {
-                followTarget(ghost, world, chasingTarget(ghost.id()), relSpeed);
-            } else {
-                followTarget(ghost, world, ghostScatterTarget(ghost.id()), relSpeed);
-            }
+            Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0
+                ? chasingTarget(ghost.id()) : scatterTarget(ghost.id());
+             followTarget(ghost, world, targetTile, huntingSpeedPercentage(ghost));
         }
 
         @Override
@@ -614,7 +609,7 @@ public enum GameVariants implements GameModel {
         roam(ghost, world, frightenedGhostRelSpeed(ghost));
     }
 
-    Vector2i ghostScatterTarget(byte ghostID) {
+    Vector2i scatterTarget(byte ghostID) {
         return switch (ghostID) {
             case RED_GHOST    -> SCATTER_TILE_NE;
             case PINK_GHOST   -> SCATTER_TILE_NW;
