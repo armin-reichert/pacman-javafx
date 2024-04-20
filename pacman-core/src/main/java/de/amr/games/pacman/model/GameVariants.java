@@ -51,11 +51,9 @@ public enum GameVariants implements GameModel {
             return ticks != -1 ? ticks : TickTimer.INDEFINITE;
         }
 
-        final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
-
         @Override
-        public File highScoreFile() {
-            return HIGH_SCORE_FILE;
+        public String highScoreFileName() {
+            return "highscore-ms_pacman.xml";
         }
 
         @Override
@@ -271,11 +269,9 @@ public enum GameVariants implements GameModel {
             return ticks != -1 ? ticks : TickTimer.INDEFINITE;
         }
 
-        final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-pacman.xml");
-
         @Override
-        public File highScoreFile() {
-            return HIGH_SCORE_FILE;
+        public String highScoreFileName() {
+            return "highscore-pacman.xml";
         }
 
         @Override
@@ -713,12 +709,20 @@ public enum GameVariants implements GameModel {
         return highScore;
     }
 
+    public void loadHighScore() {
+        File file = new File(System.getProperty("user.home"), highScoreFileName());
+        highScore().loadFromFile(file);
+        Logger.info("Highscore loaded. File: '{}', {} points, level {}",
+            file, highScore().points(), highScore().levelNumber());
+    }
+
     @Override
     public void updateHighScore() {
+        File file = new File(System.getProperty("user.home"), highScoreFileName());
         var oldHighScore = new Score();
-        oldHighScore.loadFromFile(highScoreFile());
+        oldHighScore.loadFromFile(file);
         if (highScore.points() > oldHighScore.points()) {
-            highScore.saveToFile(highScoreFile(), String.format("%s High Score", name()));
+            highScore.saveToFile(file, String.format("%s High Score", name()));
         }
     }
 
