@@ -43,14 +43,12 @@ public enum GameVariants implements GameModel {
          * @see <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>
          * @see <a href="https://github.com/armin-reichert/pacman-basic/blob/main/doc/mspacman-details-reddit-user-damselindis.md">GitHub</a>
          */
-        final int[][] HUNTING_DURATIONS = {
-            {7 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 1-4
-            {5 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1}, // Levels 5+
-        };
+        final int[] HUNTING_TICKS_1_TO_4 = {7 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1};
+        final int[] HUNTING_TICKS_5_PLUS = {5 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1};
 
-        long huntingDuration(int phaseIndex) {
-            long duration = HUNTING_DURATIONS[levelNumber <= 4 ? 0 : 1][phaseIndex];
-            return duration != -1 ? duration : TickTimer.INDEFINITE;
+        long huntingTicks(int phaseIndex) {
+            long ticks = levelNumber < 5 ? HUNTING_TICKS_1_TO_4[phaseIndex] : HUNTING_TICKS_5_PLUS[phaseIndex];
+            return ticks != -1 ? ticks : TickTimer.INDEFINITE;
         }
 
         final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
@@ -260,19 +258,17 @@ public enum GameVariants implements GameModel {
      */
     PACMAN {
 
-        final int[][] HUNTING_DURATIONS = { // Hunting duration (in ticks) of chase and scatter phases.
-            {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS,   20 * FPS, 5 * FPS, -1}, // Level 1
-            {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS, 1033 * FPS,       1, -1}, // Levels 2-4
-            {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS,       1, -1}, // Levels 5+
-        };
+        final int[] HUNTING_TICKS_1 =      {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS,   20 * FPS, 5 * FPS, -1};
+        final int[] HUNTING_TICKS_2_TO_4 = {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS, 1033 * FPS, 1,       -1};
+        final int[] HUNTING_TICKS_5_PLUS = {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS, 1,       -1};
 
-        long huntingDuration(int phaseIndex) {
-            long duration = switch (levelNumber) {
-                case 1       -> HUNTING_DURATIONS[0][phaseIndex];
-                case 2, 3, 4 -> HUNTING_DURATIONS[1][phaseIndex];
-                default      -> HUNTING_DURATIONS[2][phaseIndex];
+        long huntingTicks(int phaseIndex) {
+            long ticks = switch (levelNumber) {
+                case 1       -> HUNTING_TICKS_1[phaseIndex];
+                case 2, 3, 4 -> HUNTING_TICKS_2_TO_4[phaseIndex];
+                default      -> HUNTING_TICKS_5_PLUS[phaseIndex];
             };
-            return duration != -1 ? duration : TickTimer.INDEFINITE;
+            return ticks != -1 ? ticks : TickTimer.INDEFINITE;
         }
 
         final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-pacman.xml");
@@ -520,14 +516,14 @@ public enum GameVariants implements GameModel {
             throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + phaseIndex);
         }
         huntingPhaseIndex = phaseIndex;
-        huntingTimer.reset(huntingDuration(phaseIndex));
+        huntingTimer.reset(huntingTicks(phaseIndex));
         huntingTimer.start();
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
             phaseIndex, currentHuntingPhaseName(), huntingTimer.duration(),
             (float) huntingTimer.duration() / GameModel.FPS, huntingTimer);
     }
 
-    abstract long huntingDuration(int phaseIndex);
+    abstract long huntingTicks(int phaseIndex);
 
     abstract boolean isBonusReached();
 
