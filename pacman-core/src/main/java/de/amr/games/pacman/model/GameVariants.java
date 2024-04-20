@@ -49,7 +49,8 @@ public enum GameVariants implements GameModel {
         };
 
         long huntingDuration(int phaseIndex) {
-            return HUNTING_DURATIONS[levelNumber <= 4 ? 0 : 1][phaseIndex];
+            long duration = HUNTING_DURATIONS[levelNumber <= 4 ? 0 : 1][phaseIndex];
+            return duration != -1 ? duration : TickTimer.INDEFINITE;
         }
 
         final File HIGH_SCORE_FILE = new File(System.getProperty("user.home"), "highscore-ms_pacman.xml");
@@ -266,7 +267,7 @@ public enum GameVariants implements GameModel {
         };
 
         long huntingDuration(int phaseIndex) {
-            int duration = switch (levelNumber) {
+            long duration = switch (levelNumber) {
                 case 1       -> HUNTING_DURATIONS[0][phaseIndex];
                 case 2, 3, 4 -> HUNTING_DURATIONS[1][phaseIndex];
                 default      -> HUNTING_DURATIONS[2][phaseIndex];
