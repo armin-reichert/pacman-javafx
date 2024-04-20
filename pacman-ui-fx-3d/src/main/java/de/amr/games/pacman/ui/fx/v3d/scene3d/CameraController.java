@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.scene3d;
 
 import de.amr.games.pacman.ui.fx.v3d.entity.Pac3D;
+import javafx.beans.property.IntegerProperty;
 import javafx.scene.Camera;
 
 /**
@@ -19,4 +20,12 @@ public interface CameraController {
 
     default void update(Camera cam, Pac3D pac3D) {
     }
+
+    IntegerProperty rotatePy();
+
+    IntegerProperty translateXPy();
+
+    IntegerProperty translateYPy();
+
+    IntegerProperty translateZPy();
 }

@@ -57,7 +57,7 @@ public class PlayScene3D implements GameScene {
     public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
         @Override
         protected void invalidated() {
-            get().getCamController().reset(fxSubScene.getCamera());
+            get().reset(fxSubScene.getCamera());
         }
     };
 
@@ -121,7 +121,7 @@ public class PlayScene3D implements GameScene {
         }
         if (level3D != null) {
             level3D.update();
-            perspectivePy.get().getCamController().update(fxSubScene.getCamera(), level3D.pac3D());
+            perspectivePy.get().update(fxSubScene.getCamera(), level3D.pac3D());
         }
         context.game().pac().setUseAutopilot(context.game().isDemoLevel() || PY_USE_AUTOPILOT.get());
         updateSound();
@@ -301,7 +301,7 @@ public class PlayScene3D implements GameScene {
                 context.gameState().timer().restartSeconds(3);
                 replaceGameLevel3D();
                 level3D.pac3D().init(context.game().world());
-                perspectivePy.get().getCamController().reset(fxSubScene.getCamera());
+                perspectivePy.get().reset(fxSubScene.getCamera());
             }
 
             case LEVEL_TEST -> {
