@@ -112,13 +112,7 @@ public enum GameState implements FsmState<GameModel> {
             else { // start demo level
                 switch ((int) timer.tick()) {
                     case TICK_DEMO_LEVEL_CREATE_LEVEL -> {
-                        if (game == GameVariants.MS_PACMAN) {
-                            // these levels all have different mazes
-                            int[] levelNumbers = {1, 3, 6, 10, 14, 18};
-                            game.createAndStartLevel(levelNumbers[randomInt(0, levelNumbers.length)], true);
-                        } else {
-                            game.createAndStartLevel(1, true);
-                        }
+                        game.createAndStartLevel(1, true);
                     }
                     case TICK_DEMO_LEVEL_START_PLAYING -> {
                         game.startHuntingPhase(0);

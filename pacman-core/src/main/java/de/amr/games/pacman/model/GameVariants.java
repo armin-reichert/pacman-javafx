@@ -64,12 +64,17 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        public void createAndStartLevel(int levelNumber, boolean demoLevel) {
-            checkLevelNumber(levelNumber);
-            this.levelNumber = levelNumber;
-            this.demoLevel = demoLevel;
+        public void createAndStartLevel(int number, boolean demoLevel) {
             if (demoLevel) {
+                int[] levelNumbers = {1, 3, 6, 10, 14, 18}; // these level numbers cover all available mazes
+                levelNumber = levelNumbers[randomInt(0, levelNumbers.length)];
+                Logger.info("Demo level maze number: {}", ArcadeWorld.mazeNumberMsPacMan(this.levelNumber));
+                this.demoLevel = true;
                 demoLevelStartTime = System.currentTimeMillis();
+            } else {
+                checkLevelNumber(levelNumber);
+                levelNumber = number;
+                this.demoLevel = false;
             }
 
             world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
@@ -121,7 +126,9 @@ public enum GameVariants implements GameModel {
                 addSymbolToLevelCounter(bonusSymbols.getFirst());
             }
 
-            Logger.info("Level {} created", levelNumber);
+            if (!demoLevel) {
+                Logger.info("Level {} created", levelNumber);
+            }
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
             // At this point, the animations of Pac-Man and the ghosts must have been created!
@@ -135,7 +142,9 @@ public enum GameVariants implements GameModel {
                 ghosts().forEach(Ghost::hide);
             }
 
-            Logger.info("Level {} started", levelNumber);
+            if (!demoLevel) {
+                Logger.info("Level {} started", levelNumber);
+            }
             publishGameEvent(GameEventType.LEVEL_STARTED);
         }
 
