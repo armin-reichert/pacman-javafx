@@ -67,8 +67,8 @@ public class InfoBoxGeneral extends InfoBox {
         sliderTargetFPS.setShowTickMarks(false);
 
         addInfo("", () -> String.format("Target %dHz Actual %dHz",
-            sceneContext.gameClock().targetFrameRatePy.get(), sceneContext.gameClock().getActualFrameRate()));
-        addInfo("Total Updates", () -> sceneContext.gameClock().getUpdateCount());
+            context.gameClock().targetFrameRatePy.get(), context.gameClock().getActualFrameRate()));
+        addInfo("Total Updates", () -> context.gameClock().getUpdateCount());
 
         cbUsePlayScene3D = addCheckBox("3D Play Scene");
         cbDebugUI = addCheckBox("Show Debug Info");
@@ -90,14 +90,14 @@ public class InfoBoxGeneral extends InfoBox {
     @Override
     public void update() {
         super.update();
-        boolean paused = sceneContext.gameClock().pausedPy.get();
+        boolean paused = context.gameClock().pausedPy.get();
         buttonsSimulation[0].setGraphic(paused ? iconPlay : iconStop);
         buttonsSimulation[0].setTooltip(paused ? tooltipPlay : tooltipStop);
         buttonsSimulation[1].setDisable(!paused);
         spinnerSimulationSteps.getValueFactory().setValue(PacManGames3dUI.PY_SIMULATION_STEPS.get());
-        sliderTargetFPS.setValue(sceneContext.gameClock().targetFrameRatePy.get());
+        sliderTargetFPS.setValue(context.gameClock().targetFrameRatePy.get());
         cbUsePlayScene3D.setSelected(PacManGames3dUI.PY_3D_ENABLED.get());
-        cbTimeMeasured.setSelected(sceneContext.gameClock().timeMeasuredPy.get());
+        cbTimeMeasured.setSelected(context.gameClock().timeMeasuredPy.get());
         cbDebugUI.setSelected(PY_SHOW_DEBUG_INFO.get());
     }
 }

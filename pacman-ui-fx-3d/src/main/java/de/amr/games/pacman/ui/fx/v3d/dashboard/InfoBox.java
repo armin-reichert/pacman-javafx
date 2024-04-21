@@ -48,7 +48,7 @@ public abstract class InfoBox {
 
     private int row;
 
-    protected GameSceneContext sceneContext;
+    protected GameSceneContext context;
 
     protected InfoBox(Theme theme, String title) {
         this(theme, title,
@@ -76,7 +76,7 @@ public abstract class InfoBox {
     }
 
     public void init(GameSceneContext sceneContext) {
-        this.sceneContext = sceneContext;
+        this.context = sceneContext;
         if (!(sceneContext.actionHandler() instanceof ActionHandler3D)) {
             throw new IllegalArgumentException("Action handler in scene context must be the 3D version");
         }
@@ -91,18 +91,18 @@ public abstract class InfoBox {
     }
 
     protected ActionHandler3D actionHandler() {
-        return (ActionHandler3D) sceneContext.actionHandler();
+        return (ActionHandler3D) context.actionHandler();
     }
 
     protected boolean isCurrentGameScene3D() {
-        return sceneContext.currentGameScene().isPresent()
-            && sceneContext.currentGameScene().get() instanceof PlayScene3D;
+        return context.currentGameScene().isPresent()
+            && context.currentGameScene().get() instanceof PlayScene3D;
     }
 
     protected Supplier<String> ifLevelExists(Function<GameModel, String> infoSupplier) {
-        return () -> sceneContext.game().level() == null
+        return () -> context.game().level() == null
             ? InfoText.NO_INFO
-            : infoSupplier.apply(sceneContext.game());
+            : infoSupplier.apply(context.game());
     }
 
     private void addRow(String labelText, Node child) {

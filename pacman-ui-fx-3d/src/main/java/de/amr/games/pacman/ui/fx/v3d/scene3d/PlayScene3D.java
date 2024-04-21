@@ -57,7 +57,7 @@ public class PlayScene3D implements GameScene {
     public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
         @Override
         protected void invalidated() {
-            get().init(fxSubScene.getCamera());
+            perspectivePy.get().init(fxSubScene.getCamera());
         }
     };
 

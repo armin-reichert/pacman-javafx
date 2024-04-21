@@ -83,37 +83,37 @@ public class InfoBoxGameControl extends InfoBox {
     public void update() {
         super.update();
 
-        comboGameVariant.setValue(sceneContext.game());
-        comboGameVariant.setDisable(sceneContext.gameState() != GameState.INTRO);
-        comboInitialLives.setValue((int) sceneContext.game().initialLives());
+        comboGameVariant.setValue(context.game());
+        comboGameVariant.setDisable(context.gameState() != GameState.INTRO);
+        comboInitialLives.setValue((int) context.game().initialLives());
         cbAutopilot.setSelected(PY_USE_AUTOPILOT.get());
-        cbImmunity.setSelected(sceneContext.gameController().isPacImmune());
+        cbImmunity.setSelected(context.gameController().isPacImmune());
         buttonsLevelActions[GAME_LEVEL_START].setDisable(!canStartLevel());
-        buttonsLevelActions[GAME_LEVEL_QUIT].setDisable(sceneContext.game().level() == null);
+        buttonsLevelActions[GAME_LEVEL_QUIT].setDisable(context.game().level() == null);
         buttonsLevelActions[GAME_LEVEL_NEXT].setDisable(!canEnterNextLevel());
         buttonsIntermissionTest[INTERMISSION_TEST_START].setDisable(
-            sceneContext.gameState() == GameState.INTERMISSION_TEST || sceneContext.gameState() != GameState.INTRO);
-        buttonsIntermissionTest[INTERMISSION_TEST_QUIT].setDisable(sceneContext.gameState() != GameState.INTERMISSION_TEST);
-        if (sceneContext.game().level() != null) {
-            spinnerLevelNumber.getValueFactory().setValue(sceneContext.game().levelNumber());
+            context.gameState() == GameState.INTERMISSION_TEST || context.gameState() != GameState.INTRO);
+        buttonsIntermissionTest[INTERMISSION_TEST_QUIT].setDisable(context.gameState() != GameState.INTERMISSION_TEST);
+        if (context.game().level() != null) {
+            spinnerLevelNumber.getValueFactory().setValue(context.game().levelNumber());
         }
-        if (!sceneContext.game().isPlaying() || sceneContext.gameState() == GameState.LEVEL_TRANSITION) {
+        if (!context.game().isPlaying() || context.gameState() == GameState.LEVEL_TRANSITION) {
             spinnerLevelNumber.setDisable(true);
         } else {
-            spinnerLevelNumber.setDisable(sceneContext.gameState() != GameState.READY
-                && sceneContext.gameState() != GameState.HUNTING
-                && sceneContext.gameState() != GameState.LEVEL_TRANSITION);
+            spinnerLevelNumber.setDisable(context.gameState() != GameState.READY
+                && context.gameState() != GameState.HUNTING
+                && context.gameState() != GameState.LEVEL_TRANSITION);
         }
-        spinnerCredit.getValueFactory().setValue(sceneContext.gameController().credit());
+        spinnerCredit.getValueFactory().setValue(context.gameController().credit());
     }
 
     private boolean canStartLevel() {
-        return sceneContext.gameController().hasCredit()
-            && Globals.oneOf(sceneContext.gameState(), GameState.INTRO, GameState.CREDIT);
+        return context.gameController().hasCredit()
+            && Globals.oneOf(context.gameState(), GameState.INTRO, GameState.CREDIT);
     }
 
     private boolean canEnterNextLevel() {
-        return sceneContext.game().isPlaying()
-            && Globals.oneOf(sceneContext.gameState(), GameState.HUNTING);
+        return context.game().isPlaying()
+            && Globals.oneOf(context.gameState(), GameState.HUNTING);
     }
 }

@@ -45,8 +45,8 @@ public class InfoBoxGhostsInfo extends InfoBox {
     }
 
     private Supplier<String> ifLevelExists(BiFunction<GameModel, Ghost, String> fnGhostInfo, byte ghostID) {
-        return () -> sceneContext.game().level() != null
-            ? fnGhostInfo.apply(sceneContext.game(), sceneContext.game().ghost(ghostID))
+        return () -> context.game().level() != null
+            ? fnGhostInfo.apply(context.game(), context.game().ghost(ghostID))
             : InfoText.NO_INFO;
     }
 

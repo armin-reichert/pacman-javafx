@@ -5,12 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.scene3d;
 
 import de.amr.games.pacman.model.actors.Entity;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Camera;
 import javafx.scene.transform.Rotate;
 
 import static de.amr.games.pacman.lib.Globals.lerp;
+import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 
 /**
  * Play scene perspectives.
@@ -27,7 +26,6 @@ public enum Perspective implements CameraController {
 
         @Override
         public void init(Camera cam) {
-            unbind(cam);
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(0);
             cam.setTranslateX(0);
@@ -45,7 +43,6 @@ public enum Perspective implements CameraController {
     },
 
     TOTAL {
-        private boolean initialized;
 
         @Override
         public String toString() {
@@ -55,14 +52,10 @@ public enum Perspective implements CameraController {
         @Override
         public void init(Camera cam) {
             cam.setRotationAxis(Rotate.X_AXIS);
-            bind(cam);
-            if (!initialized) {
-                rotatePy().set(66);
-                translateXPy().set(0);
-                translateYPy().set(330);
-                translateZPy().set(-140);
-                initialized = true;
-            }
+            cam.setRotate(TOTAL_ROTATE);
+            cam.setTranslateX(TOTAL_TRANSLATE_X);
+            cam.setTranslateY(TOTAL_TRANSLATE_Y);
+            cam.setTranslateZ(TOTAL_TRANSLATE_Z);
         }
     },
 
@@ -74,7 +67,6 @@ public enum Perspective implements CameraController {
 
         @Override
         public void init(Camera cam) {
-            unbind(cam);
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(60);
             cam.setTranslateZ(-160);
@@ -97,7 +89,6 @@ public enum Perspective implements CameraController {
 
         @Override
         public void init(Camera cam) {
-            unbind(cam);
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(80);
             cam.setTranslateZ(-40);
@@ -110,45 +101,6 @@ public enum Perspective implements CameraController {
             cam.setTranslateY(lerp(cam.getTranslateY(), spottedEntity.position().y(), speed));
         }
     };
-
-    final IntegerProperty rotatePy     = new SimpleIntegerProperty(this, "rotate");
-    final IntegerProperty translateXPy = new SimpleIntegerProperty(this, "translateX");
-    final IntegerProperty translateYPy = new SimpleIntegerProperty(this, "translateY");
-    final IntegerProperty translateZPy = new SimpleIntegerProperty(this, "translateZ");
-
-    protected void bind(Camera cam) {
-        cam.rotateProperty().bind(rotatePy);
-        cam.translateXProperty().bind(translateXPy);
-        cam.translateYProperty().bind(translateYPy);
-        cam.translateZProperty().bind(translateZPy);
-    }
-
-    protected void unbind(Camera cam) {
-        cam.rotateProperty().unbind();
-        cam.translateXProperty().unbind();
-        cam.translateYProperty().unbind();
-        cam.translateZProperty().unbind();
-    }
-
-    @Override
-    public IntegerProperty rotatePy() {
-        return rotatePy;
-    }
-
-    @Override
-    public IntegerProperty translateXPy() {
-        return translateXPy;
-    }
-
-    @Override
-    public IntegerProperty translateYPy() {
-        return translateYPy;
-    }
-
-    @Override
-    public IntegerProperty translateZPy() {
-        return translateZPy;
-    }
 
     public static Perspective next(Perspective p) {
         int n = Perspective.values().length;

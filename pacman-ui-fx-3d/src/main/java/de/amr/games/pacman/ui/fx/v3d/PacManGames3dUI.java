@@ -27,6 +27,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
+import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -221,6 +222,11 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         addAssets3D();
         Logger.info("3D assets added to 2D theme.");
     }
+
+    public static int TOTAL_ROTATE = 66;
+    public static int TOTAL_TRANSLATE_X = 0;
+    public static int TOTAL_TRANSLATE_Y = 330;
+    public static int TOTAL_TRANSLATE_Z = -140;
 
     public PacManGames3dUI(Stage stage, Settings settings) {
         super(stage, settings);

@@ -19,12 +19,12 @@ public class InfoBoxGameInfo extends InfoBox {
     public InfoBoxGameInfo(Theme theme, String title) {
         super(theme, title);
 
-        addInfo("Game Scene", () -> sceneContext.currentGameScene().isPresent()
-            ? sceneContext.currentGameScene().get().getClass().getSimpleName() : "n/a");
-        addInfo("Game State", () -> "%s".formatted(sceneContext.gameState()));
-        addInfo("", () -> "Running:   %s%s".formatted(sceneContext.gameState().timer().tick(),
-            sceneContext.gameState().timer().isStopped() ? " (STOPPED)" : ""));
-        addInfo("", () -> "Remaining: %s".formatted(ticksToString(sceneContext.gameState().timer().remaining())));
+        addInfo("Game Scene", () -> context.currentGameScene().isPresent()
+            ? context.currentGameScene().get().getClass().getSimpleName() : "n/a");
+        addInfo("Game State", () -> "%s".formatted(context.gameState()));
+        addInfo("", () -> "Running:   %s%s".formatted(context.gameState().timer().tick(),
+            context.gameState().timer().isStopped() ? " (STOPPED)" : ""));
+        addInfo("", () -> "Remaining: %s".formatted(ticksToString(context.gameState().timer().remaining())));
 
         addInfo("Hunting Phase", ifLevelExists(this::fmtHuntingPhase));
         addInfo("", ifLevelExists(this::fmtHuntingTicksRunning));

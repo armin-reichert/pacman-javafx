@@ -8,6 +8,8 @@ import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
+import javafx.beans.value.ObservableValue;
+import javafx.scene.Camera;
 import javafx.scene.control.*;
 import javafx.scene.shape.DrawMode;
 
@@ -52,16 +54,19 @@ public class InfoBox3D extends InfoBox {
         comboFloorTexture = addComboBox("Floor Texture", floorTextureComboBoxEntries());
         cbFloorTextureRandom = addCheckBox("Random Floor Texture", () -> toggle(PY_3D_FLOOR_TEXTURE_RND));
         comboPerspectives = addComboBox("Perspective", Perspective.values());
+
         addInfo("Camera", this::currentSceneCameraInfo).available(this::isCurrentGameScene3D);
 
-        spinnerCamRotate = addSpinner("Cam Rotate X", -180, 180, 0);
-        spinnerCamRotate.valueProperty().addListener((py, ov, nv) -> PY_3D_PERSPECTIVE.get().rotatePy().setValue(nv));
-        spinnerCamX = addSpinner("Cam Translate X", -1000, 1000, 0);
-        spinnerCamX.valueProperty().addListener((py, ov, nv) -> PY_3D_PERSPECTIVE.get().translateXPy().set(nv));
-        spinnerCamY = addSpinner("Cam Translate Y", -1000, 1000, 0);
-        spinnerCamY.valueProperty().addListener((py, ov, nv) -> PY_3D_PERSPECTIVE.get().translateYPy().set(nv));
-        spinnerCamZ = addSpinner("Cam Translate Z", -1000, 1000, 0);
-        spinnerCamZ.valueProperty().addListener((py, ov, nv) -> PY_3D_PERSPECTIVE.get().translateZPy().set(nv));
+        // Editors for perspective TOTAL:
+        spinnerCamRotate = addSpinner("- Rotate X", -180, 180, TOTAL_ROTATE);
+        spinnerCamX      = addSpinner("- Translate X", -1000, 1000, TOTAL_TRANSLATE_X);
+        spinnerCamY      = addSpinner("- Translate Y", -1000, 1000, TOTAL_TRANSLATE_Y);
+        spinnerCamZ      = addSpinner("- Translate Z", -1000, 1000, TOTAL_TRANSLATE_Z);
+
+        spinnerCamRotate.valueProperty().addListener(this::updatePlayScene3DCamera);
+        spinnerCamX.valueProperty().addListener(this::updatePlayScene3DCamera);
+        spinnerCamY.valueProperty().addListener(this::updatePlayScene3DCamera);
+        spinnerCamZ.valueProperty().addListener(this::updatePlayScene3DCamera);
 
         sliderPiPSceneHeight = addSlider("PiP Size", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
         sliderPiPOpacity = addSlider("PiP Opacity", 0.0, 1.0, PY_PIP_OPACITY.get());
@@ -80,8 +85,8 @@ public class InfoBox3D extends InfoBox {
     }
 
     @Override
-    public void init(GameSceneContext sceneContext) {
-        super.init(sceneContext);
+    public void init(GameSceneContext context) {
+        super.init(context);
 
         comboPerspectives.setValue(PY_3D_PERSPECTIVE.get());
         sliderPiPSceneHeight.setValue(PY_PIP_HEIGHT.get());
@@ -121,19 +126,30 @@ public class InfoBox3D extends InfoBox {
         spinnerCamX.setDisable(perspective != Perspective.TOTAL);
         spinnerCamY.setDisable(perspective != Perspective.TOTAL);
         spinnerCamZ.setDisable(perspective != Perspective.TOTAL);
+    }
 
-        spinnerCamRotate.getValueFactory().setValue(perspective.rotatePy().getValue());
-        spinnerCamX.getValueFactory().setValue(perspective.translateXPy().get());
-        spinnerCamY.getValueFactory().setValue(perspective.translateYPy().get());
-        spinnerCamZ.getValueFactory().setValue(perspective.translateZPy().get());
+    private void updatePlayScene3DCamera(ObservableValue<? extends Integer> py, int oldValue, int newValue) {
+        context.currentGameScene().ifPresent(gameScene -> {
+            if (gameScene instanceof PlayScene3D playScene3D) {
+                Camera cam = playScene3D.camera();
+                TOTAL_ROTATE = spinnerCamRotate.getValue();
+                cam.setRotate(TOTAL_ROTATE);
+                TOTAL_TRANSLATE_X = spinnerCamX.getValue();
+                cam.setTranslateX(TOTAL_TRANSLATE_X);
+                TOTAL_TRANSLATE_Y = spinnerCamY.getValue();
+                cam.setTranslateY(TOTAL_TRANSLATE_Y);
+                TOTAL_TRANSLATE_Z = spinnerCamZ.getValue();
+                cam.setTranslateZ(TOTAL_TRANSLATE_Z);
+            }
+        });
     }
 
     private String currentSceneCameraInfo() {
-        if (sceneContext.currentGameScene().isPresent()
-            && sceneContext.currentGameScene().get() instanceof PlayScene3D playScene3D) {
-            var camera = playScene3D.camera();
-            return String.format("x=%.0f y=%.0f z=%.0f rot=%.0f",
-                camera.getTranslateX(), camera.getTranslateY(), camera.getTranslateZ(), camera.getRotate());
+        if (context.currentGameScene().isPresent()
+            && context.currentGameScene().get() instanceof PlayScene3D playScene3D) {
+            var cam = playScene3D.camera();
+            return String.format("rot=%.0f x=%.0f y=%.0f z=%.0f",
+                cam.getRotate(), cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ());
         }
         return "n/a";
     }

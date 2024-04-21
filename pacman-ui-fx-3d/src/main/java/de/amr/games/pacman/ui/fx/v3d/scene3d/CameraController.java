@@ -10,7 +10,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.scene.Camera;
 
 /**
- * Camera controller interfaces for the 3D play scene.
+ * Camera controller interface for the 3D play scene.
  *
  * @author Armin Reichert
  */
@@ -21,9 +21,4 @@ public interface CameraController {
 
     default void update(Camera cam, Entity spottedEntity) {
     }
-
-    IntegerProperty rotatePy();
-    IntegerProperty translateXPy();
-    IntegerProperty translateYPy();
-    IntegerProperty translateZPy();
 }
