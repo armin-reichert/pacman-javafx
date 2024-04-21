@@ -141,10 +141,10 @@ public enum GameVariants implements GameModel {
         public void huntingBehaviour(Ghost ghost) {
             if (scatterPhase().isPresent() && scatterPhase().get() == 0
                 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-                roam(ghost, world, huntingSpeedPercentage(ghost));
+                roam(ghost, huntingSpeedPercentage(ghost));
             } else {
-                Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0
-                    ? chasingTarget(ghost.id()) : scatterTarget(ghost.id());
+                Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState > 0
+                    ? chasingTarget(ghost) : scatterTarget(ghost);
                 followTarget(ghost, world, targetTile, huntingSpeedPercentage(ghost));
             }
         }
@@ -336,7 +336,7 @@ public enum GameVariants implements GameModel {
         @Override
         public void huntingBehaviour(Ghost ghost) {
             Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0
-                ? chasingTarget(ghost.id()) : scatterTarget(ghost.id());
+                ? chasingTarget(ghost) : scatterTarget(ghost);
              followTarget(ghost, world, targetTile, huntingSpeedPercentage(ghost));
         }
 
@@ -564,10 +564,9 @@ public enum GameVariants implements GameModel {
      * Lets a creature randomly roam through the world.
      *
      * @param creature a creature (ghost, moving bonus)
-     * @param world the world/maze
      * @param relSpeed the relative speed (in percentage of base speed)
      */
-    void roam(Creature creature, World world, byte relSpeed) {
+    void roam(Creature creature, byte relSpeed) {
         Vector2i currentTile = creature.tile();
         if (!world.belongsToPortal(currentTile) && (creature.isNewTileEntered() || !creature.moveResult.moved)) {
             Direction dir = pseudoRandomDirection();
@@ -590,21 +589,21 @@ public enum GameVariants implements GameModel {
     }
 
     void frightenedGhostBehaviour(Ghost ghost) {
-        roam(ghost, world, frightenedGhostRelSpeed(ghost));
+        roam(ghost, frightenedGhostRelSpeed(ghost));
     }
 
-    Vector2i scatterTarget(byte ghostID) {
-        return switch (ghostID) {
+    Vector2i scatterTarget(Ghost ghost) {
+        return switch (ghost.id()) {
             case RED_GHOST    -> SCATTER_TILE_NE;
             case PINK_GHOST   -> SCATTER_TILE_NW;
             case CYAN_GHOST   -> SCATTER_TILE_SE;
             case ORANGE_GHOST -> SCATTER_TILE_SW;
-            default -> throw new IllegalGhostIDException(ghostID);
+            default -> throw new IllegalGhostIDException(ghost.id());
         };
     }
 
-    Vector2i chasingTarget(byte ghostID) {
-        return switch (ghostID) {
+    Vector2i chasingTarget(Ghost ghost) {
+        return switch (ghost.id()) {
             // Blinky: attacks Pac-Man directly
             case RED_GHOST -> pac.tile();
             // Pinky: ambushes Pac-Man
@@ -615,7 +614,7 @@ public enum GameVariants implements GameModel {
             case ORANGE_GHOST -> ghost(ORANGE_GHOST).tile().euclideanDistance(pac.tile()) < 8
                 ? ArcadeWorld.SCATTER_TILE_SW
                 : pac.tile();
-            default -> throw new IllegalGhostIDException(ghostID);
+            default -> throw new IllegalGhostIDException(ghost.id());
         };
     }
 
