@@ -214,17 +214,15 @@ public enum GameVariants implements GameModel {
             var houseEntryOpposite = houseEntry.plus(0, world.house().size().y() + 1);
             var entryPortal = world.portals().get(RND.nextInt(world.portals().size()));
             var exitPortal  = world.portals().get(RND.nextInt(world.portals().size()));
-            var route = List.of(
+            var route = Arrays.asList(
                 np(leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd()),
                 np(houseEntry),
                 np(houseEntryOpposite),
                 np(houseEntry),
                 np(leftToRight ? exitPortal.rightTunnelEnd().plus(1, 0) : exitPortal.leftTunnelEnd().minus(1, 0))
             );
-
             var movingBonus = new MovingBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
             movingBonus.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-            // pass *copy* of list because route gets modified when moving!
             movingBonus.setRoute(new ArrayList<>(route), leftToRight);
             bonus = movingBonus;
             bonus.setEdible(TickTimer.INDEFINITE);
