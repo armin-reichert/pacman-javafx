@@ -22,7 +22,6 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.NavPoint.np;
 import static de.amr.games.pacman.model.actors.CreatureMovement.followTarget;
 import static de.amr.games.pacman.model.actors.CreatureMovement.tryMoving;
 import static de.amr.games.pacman.model.actors.GhostState.*;
@@ -214,16 +213,16 @@ public enum GameVariants implements GameModel {
             var houseEntryOpposite = houseEntry.plus(0, world.house().size().y() + 1);
             var entryPortal = world.portals().get(RND.nextInt(world.portals().size()));
             var exitPortal  = world.portals().get(RND.nextInt(world.portals().size()));
-            var route = Arrays.asList(
-                np(leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd()),
-                np(houseEntry),
-                np(houseEntryOpposite),
-                np(houseEntry),
-                np(leftToRight ? exitPortal.rightTunnelEnd().plus(1, 0) : exitPortal.leftTunnelEnd().minus(1, 0))
-            );
+            var route = Stream.of(
+                leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd(),
+                houseEntry,
+                houseEntryOpposite,
+                houseEntry,
+                leftToRight ? exitPortal.rightTunnelEnd().plus(1, 0) : exitPortal.leftTunnelEnd().minus(1, 0)
+            ).map(NavPoint::np).toList();
             var movingBonus = new MovingBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
             movingBonus.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-            movingBonus.setRoute(new ArrayList<>(route), leftToRight);
+            movingBonus.setRoute(route, leftToRight);
             bonus = movingBonus;
             bonus.setEdible(TickTimer.INDEFINITE);
             Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");

@@ -10,6 +10,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -158,10 +159,11 @@ public class MovingBonus extends Creature implements Bonus {
 
     public void setRoute(List<NavPoint> route, boolean leftToRight) {
         checkNotNull(route);
-        centerOverTile(route.getFirst().tile());
+        var routeCopy = new ArrayList<>(route);
+        centerOverTile(routeCopy.getFirst().tile());
         setMoveAndWishDir(leftToRight ? Direction.RIGHT : Direction.LEFT);
-        route.removeFirst();
-        steering = new RouteBasedSteering(route);
+        routeCopy.removeFirst();
+        steering = new RouteBasedSteering(routeCopy);
     }
 
     public float elongationY() {
