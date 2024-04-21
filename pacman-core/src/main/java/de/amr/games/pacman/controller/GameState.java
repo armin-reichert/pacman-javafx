@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Pulse;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -17,6 +18,8 @@ import de.amr.games.pacman.model.actors.Pac;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static de.amr.games.pacman.lib.Globals.randomInt;
 
 /**
  * Game states of the Pac-Man game variants.
@@ -107,7 +110,15 @@ public enum GameState implements FsmState<GameModel> {
             }
             else { // start demo level
                 switch ((int) timer.tick()) {
-                    case TICK_DEMO_LEVEL_CREATE_LEVEL -> game.createAndStartLevel(5, true);
+                    case TICK_DEMO_LEVEL_CREATE_LEVEL -> {
+                        if (game == GameVariants.MS_PACMAN) {
+                            // these levels all have different mazes
+                            int[] levelNumbers = {1, 3, 6, 10, 14, 18};
+                            game.createAndStartLevel(levelNumbers[randomInt(0, levelNumbers.length)], true);
+                        } else {
+                            game.createAndStartLevel(1, true);
+                        }
+                    }
                     case TICK_DEMO_LEVEL_START_PLAYING -> {
                         game.startHuntingPhase(0);
                         gameController().changeState(GameState.HUNTING);
