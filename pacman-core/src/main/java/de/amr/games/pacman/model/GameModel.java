@@ -41,6 +41,8 @@ public interface GameModel {
     /** Movement speed in pixel/sec. */
     short PPS_AT_100_PERCENT = 75;
 
+    byte DEMO_LEVEL_MIN_DURATION_SEC = 20;
+
     /**
      * @return Pac-Man or Ms. Pac-Man
      */
@@ -81,6 +83,8 @@ public interface GameModel {
      * @return if the current level is the demo level (attract mode)
      */
     boolean isDemoLevel();
+
+    long demoLevelStartTime();
 
     /**
      * Pac-Man and the ghosts are placed at their initial positions and locked. The bonus, Pac-Man power timer and

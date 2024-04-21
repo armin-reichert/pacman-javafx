@@ -68,6 +68,9 @@ public enum GameVariants implements GameModel {
             checkLevelNumber(levelNumber);
             this.levelNumber = levelNumber;
             this.demoLevel = demoLevel;
+            if (demoLevel) {
+                demoLevelStartTime = System.currentTimeMillis();
+            }
 
             world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
 
@@ -268,6 +271,9 @@ public enum GameVariants implements GameModel {
             checkLevelNumber(levelNumber);
             this.levelNumber = levelNumber;
             this.demoLevel = demoLevel;
+            if (demoLevel) {
+                demoLevelStartTime = System.currentTimeMillis();
+            }
 
             world = createPacManWorld();
             initGhostHouseAccess();
@@ -445,6 +451,7 @@ public enum GameVariants implements GameModel {
 
     int levelNumber; // 1=first level
     boolean demoLevel;
+    long demoLevelStartTime;
     boolean playing;
     byte initialLives;
     byte lives;
@@ -548,6 +555,11 @@ public enum GameVariants implements GameModel {
     @Override
     public boolean isDemoLevel() {
         return demoLevel;
+    }
+
+    @Override
+    public long demoLevelStartTime() {
+        return demoLevelStartTime;
     }
 
     @Override
