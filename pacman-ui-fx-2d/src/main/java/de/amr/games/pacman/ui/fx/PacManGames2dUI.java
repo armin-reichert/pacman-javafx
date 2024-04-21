@@ -649,6 +649,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (clock.isPaused()) {
             theme().audioClips().forEach(AudioClip::stop);
         }
+        Logger.info("Game variant ({}) {}", game(), clock.isPaused() ? "paused" : "resumed");
     }
 
     @Override

@@ -17,7 +17,10 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.*;
@@ -409,28 +412,12 @@ public enum GameVariants implements GameModel {
     final byte  PPS_GHOST_INSIDE_HOUSE = 30; // correct?
     final byte  PPS_GHOST_RETURNING_HOME = 120; // correct?
 
-    final List<Byte> bonusSymbols = new ArrayList<>();
-    final List<Byte> levelCounter = new LinkedList<>();
+    final Pulse blinking = new Pulse(10, false);
+    final List<Byte> bonusSymbols = new ArrayList<>(2);
+    final List<Byte> levelCounter = new ArrayList<>();
+    final TickTimer huntingTimer = new TickTimer("HuntingTimer");
     final Score score = new Score();
     final Score highScore = new Score();
-
-    Pac pac;
-    Ghost[] ghosts;
-    Bonus bonus;
-    World world;
-
-    int levelNumber;
-    boolean demoLevel;
-    boolean playing;
-    byte initialLives = 3;
-    byte lives;
-
-    final Pulse blinking = new Pulse(10, false);
-    final TickTimer huntingTimer = new TickTimer("HuntingTimer");
-    int huntingPhaseIndex;
-    byte numGhostsKilledInLevel;
-    byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
-    byte cruiseElroyState;
 
     /** Ghost house access control */
     static class HouseAccessData {
@@ -443,6 +430,38 @@ public enum GameVariants implements GameModel {
         boolean globalDotCounterEnabled;
     }
     final HouseAccessData houseAccess = new HouseAccessData();
+
+    int levelNumber; // 1=first level
+    boolean demoLevel;
+    boolean playing;
+    byte initialLives;
+    byte lives;
+
+    int huntingPhaseIndex;
+    byte cruiseElroyState;
+    byte numGhostsKilledInLevel;
+    byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
+
+    Pac pac;
+    Ghost[] ghosts;
+    Bonus bonus;
+    World world;
+
+    GameVariants() {
+        initialLives = 3;
+        reset();
+    }
+
+    @Override
+    public void reset() {
+        levelNumber = 0;
+        demoLevel = false;
+        playing = false;
+        lives = initialLives;
+        nextBonusIndex = -1;
+        score.reset();
+        Logger.info("Game variant ({}) reset", name());
+    }
 
     @Override
     public Pac pac() {
@@ -732,15 +751,6 @@ public enum GameVariants implements GameModel {
     @Override
     public boolean isPlaying() {
         return playing;
-    }
-
-    @Override
-    public void reset() {
-        levelNumber = 0;
-        playing = false;
-        lives = initialLives;
-        score.reset();
-        Logger.info("Game model ({}) reset", this);
     }
 
     @Override
