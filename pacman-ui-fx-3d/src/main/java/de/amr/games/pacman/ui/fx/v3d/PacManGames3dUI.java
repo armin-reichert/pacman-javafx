@@ -27,7 +27,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
-import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
