@@ -266,7 +266,7 @@ public class PlayScene3D implements GameScene {
                     case GameVariants.PACMAN -> level3D.pac3D().createPacManDyingAnimation(context.game().world());
                     default -> throw new IllegalGameVariantException(context.game());
                 };
-                lockGameStateAndPlayAfterSeconds(1.0, animation);
+                lockGameStateAndPlayAfterOnSecond(animation);
             }
 
             case GAME_OVER -> {
@@ -346,7 +346,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onLevelCreated(GameEvent event) {
-        if (context.game().levelNumber() == 1 || context.gameState() == GameState.LEVEL_TEST) {
+        if (context.game().isDemoLevel() || context.game().levelNumber() == 1 || context.gameState() == GameState.LEVEL_TEST) {
             replaceGameLevel3D();
         }
     }
@@ -431,7 +431,7 @@ public class PlayScene3D implements GameScene {
             noIntermission ? createLevelChangeAnimation() : pauseSeconds(0),
             doNow(() -> level3D.livesCounter3D().lightOnPy.set(true))
         );
-        lockGameStateAndPlayAfterSeconds(1.0, animation);
+        lockGameStateAndPlayAfterOnSecond(animation);
     }
 
     private String pickLevelCompleteMessage(int levelNumber) {
@@ -465,9 +465,9 @@ public class PlayScene3D implements GameScene {
         }
     }
 
-    private void lockGameStateAndPlayAfterSeconds(double seconds, Animation animation) {
+    private void lockGameStateAndPlayAfterOnSecond(Animation animation) {
         context.gameState().timer().resetIndefinitely();
-        animation.setDelay(Duration.seconds(seconds));
+        animation.setDelay(Duration.seconds(1.0));
         animation.setOnFinished(e -> context.gameState().timer().expire());
         animation.play();
     }

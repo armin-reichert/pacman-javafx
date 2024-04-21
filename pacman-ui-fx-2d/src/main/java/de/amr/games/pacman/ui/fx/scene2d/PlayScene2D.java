@@ -107,7 +107,9 @@ public class PlayScene2D extends GameScene2D {
             }
             drawLivesCounter(numLivesDisplayed);
         }
-        drawLevelCounter();
+        if (!context.game().isDemoLevel()) {
+            drawLevelCounter();
+        }
     }
 
     private void drawPacManMaze(GameModel game, boolean flashing) {

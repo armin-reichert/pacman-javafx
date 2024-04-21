@@ -114,7 +114,7 @@ public enum GameVariants implements GameModel {
             if (levelNumber == 1) {
                 levelCounter.clear();
             }
-            if (levelNumber <= 7) {
+            if (!demoLevel && levelNumber <= 7) {
                 addSymbolToLevelCounter(bonusSymbols.getFirst());
             }
 
@@ -320,7 +320,9 @@ public enum GameVariants implements GameModel {
             if (levelNumber == 1) {
                 levelCounter.clear();
             }
-            addSymbolToLevelCounter(bonusSymbols.getFirst());
+            if (!demoLevel) {
+                addSymbolToLevelCounter(bonusSymbols.getFirst());
+            }
 
             Logger.info("Level {} created ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_CREATED);

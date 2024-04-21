@@ -107,7 +107,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             else { // start demo level
                 switch ((int) timer.tick()) {
-                    case TICK_DEMO_LEVEL_CREATE_LEVEL -> game.createAndStartLevel(1, true);
+                    case TICK_DEMO_LEVEL_CREATE_LEVEL -> game.createAndStartLevel(5, true);
                     case TICK_DEMO_LEVEL_START_PLAYING -> {
                         game.startHuntingPhase(0);
                         gameController().changeState(GameState.HUNTING);
