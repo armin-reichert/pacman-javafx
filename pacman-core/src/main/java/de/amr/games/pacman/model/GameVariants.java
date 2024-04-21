@@ -107,10 +107,7 @@ public enum GameVariants implements GameModel {
                 levelCounter.clear();
             }
             if (levelNumber <= 7) {
-                levelCounter.add(bonusSymbols.getFirst());
-                if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
-                    levelCounter.removeFirst();
-                }
+                addSymbolToLevelCounter(bonusSymbols.getFirst());
             }
 
             Logger.info("Level {} created", levelNumber);
@@ -306,13 +303,11 @@ public enum GameVariants implements GameModel {
             bonus = null;
 
             score.setLevelNumber(levelNumber);
+
             if (levelNumber == 1) {
                 levelCounter.clear();
             }
-            levelCounter.add(bonusSymbols.getFirst());
-            if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
-                levelCounter.removeFirst();
-            }
+            addSymbolToLevelCounter(bonusSymbols.getFirst());
 
             Logger.info("Level {} created ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_CREATED);
@@ -550,6 +545,13 @@ public enum GameVariants implements GameModel {
         if (enabled && cruiseElroyState < 0 || !enabled && cruiseElroyState > 0) {
             cruiseElroyState = (byte) (-cruiseElroyState);
             Logger.trace("Cruise Elroy state set to {}", cruiseElroyState);
+        }
+    }
+
+    void addSymbolToLevelCounter(byte symbol) {
+        levelCounter.add(symbol);
+        if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
+            levelCounter.removeFirst();
         }
     }
 
