@@ -64,21 +64,19 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        public void createAndStartLevel(int number, boolean demoLevel) {
+        public void createAndStartLevel(int number, boolean demo) {
+            demoLevel = demo;
             if (demoLevel) {
-                int[] levelNumbers = {1, 3, 6, 10, 14, 18}; // these level numbers cover all available mazes
+                int[] levelNumbers = {1, 3, 6, 10, 14, 18}; // these numbers cover all 6 available mazes
                 levelNumber = levelNumbers[randomInt(0, levelNumbers.length)];
-                Logger.info("Demo level maze number: {}", ArcadeWorld.mazeNumberMsPacMan(this.levelNumber));
-                this.demoLevel = true;
                 demoLevelStartTime = System.currentTimeMillis();
+                Logger.info("Demo Level maze number: {}", ArcadeWorld.mazeNumberMsPacMan(levelNumber));
             } else {
-                checkLevelNumber(levelNumber);
+                checkLevelNumber(number);
                 levelNumber = number;
-                this.demoLevel = false;
             }
 
             world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
-
             initGhostHouseAccess();
 
             pac = new Pac("Ms. Pac-Man");
@@ -126,25 +124,20 @@ public enum GameVariants implements GameModel {
                 addSymbolToLevelCounter(bonusSymbols.getFirst());
             }
 
-            if (!demoLevel) {
-                Logger.info("Level {} created", levelNumber);
-            }
+            Logger.info("{}Level {} created", demoLevel ? "Demo " : "", levelNumber);
             publishGameEvent(GameEventType.LEVEL_CREATED);
 
-            // At this point, the animations of Pac-Man and the ghosts must have been created!
+            // At this point, the animations of Pac-Man and the ghosts must exist!
             letsGetReadyToRumble();
-
             if (demoLevel) {
                 pac.show();
                 ghosts().forEach(Ghost::show);
-            } else {
+            } else { // in normal level, guys appear after some number of seconds
                 pac.hide();
                 ghosts().forEach(Ghost::hide);
             }
 
-            if (!demoLevel) {
-                Logger.info("Level {} started", levelNumber);
-            }
+            Logger.info("{}Level {} started", demoLevel ? "Demo " : "", levelNumber);
             publishGameEvent(GameEventType.LEVEL_STARTED);
         }
 
