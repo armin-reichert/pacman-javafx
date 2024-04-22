@@ -200,42 +200,46 @@ public enum GameVariants implements GameModel {
             else              return 6; // 4/32
         }
 
+        final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
+
+        /**
+         * Bonus symbol enters the world at a random portal, walks to the house entry, takes a tour around the
+         * house and finally leaves the world through a random portal on the opposite side of the world.
+         * <p>
+         * Note: This is not the exact behavior from the original Arcade game.
+         **/
         void createNextBonus() {
             if (bonus != null && bonus.state() != Bonus.STATE_INACTIVE) {
                 Logger.info("Previous bonus is still active, skip this one");
                 return;
             }
             nextBonusIndex += 1;
-            createMovingBonus(bonusSymbols.get(nextBonusIndex), RND.nextBoolean());
+            byte symbol = bonusSymbols.get(nextBonusIndex);
+
+            var movingBonus = new MovingBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+            boolean leftToRight = RND.nextBoolean();
+            List<NavPoint> route = createBonusRoute(leftToRight);
+            movingBonus.setRoute(route, leftToRight);
+            movingBonus.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+            Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
+
+            bonus = movingBonus;
+            bonus.setEdible(TickTimer.INDEFINITE);
             publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
         }
 
-        final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
-
-        /**
-         * The moving bonus enters the world at a random portal, walks to the house entry, takes a tour around the
-         * house and finally leaves the world through a random portal on the opposite side of the world.
-         * <p>
-         * Note: This is not the exact behavior from the original Arcade game.
-         **/
-        void createMovingBonus(byte symbol, boolean leftToRight) {
+        List<NavPoint> createBonusRoute(boolean leftToRight) {
             var houseEntry = tileAt(world.house().door().entryPosition());
             var houseEntryOpposite = houseEntry.plus(0, world.house().size().y() + 1);
             var entryPortal = world.portals().get(RND.nextInt(world.portals().size()));
             var exitPortal  = world.portals().get(RND.nextInt(world.portals().size()));
-            var route = Stream.of(
+            return Stream.of(
                 leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd(),
                 houseEntry,
                 houseEntryOpposite,
                 houseEntry,
                 leftToRight ? exitPortal.rightTunnelEnd().plus(1, 0) : exitPortal.leftTunnelEnd().minus(1, 0)
             ).map(NavPoint::np).toList();
-            var movingBonus = new MovingBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
-            movingBonus.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-            movingBonus.setRoute(route, leftToRight);
-            bonus = movingBonus;
-            bonus.setEdible(TickTimer.INDEFINITE);
-            Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
         }
     },
 
