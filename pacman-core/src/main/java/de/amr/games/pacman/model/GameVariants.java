@@ -64,7 +64,7 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        public void createAndStartLevel(int number, boolean demo) {
+        public void createLevel(int number, boolean demo) {
             demoLevel = demo;
             if (demoLevel) {
                 int[] levelNumbers = {1, 3, 6, 10, 14, 18}; // these numbers cover all 6 available mazes
@@ -126,19 +126,6 @@ public enum GameVariants implements GameModel {
 
             Logger.info("{}Level {} created", demoLevel ? "Demo " : "", levelNumber);
             publishGameEvent(GameEventType.LEVEL_CREATED);
-
-            // At this point, the animations of Pac-Man and the ghosts must exist!
-            letsGetReadyToRumble();
-            if (demoLevel) {
-                pac.show();
-                ghosts().forEach(Ghost::show);
-            } else { // in normal level, guys appear after some number of seconds
-                pac.hide();
-                ghosts().forEach(Ghost::hide);
-            }
-
-            Logger.info("{}Level {} started", demoLevel ? "Demo " : "", levelNumber);
-            publishGameEvent(GameEventType.LEVEL_STARTED);
         }
 
         /**
@@ -273,7 +260,7 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        public void createAndStartLevel(int levelNumber, boolean demoLevel) {
+        public void createLevel(int levelNumber, boolean demoLevel) {
             checkLevelNumber(levelNumber);
             this.levelNumber = levelNumber;
             this.demoLevel = demoLevel;
@@ -338,18 +325,6 @@ public enum GameVariants implements GameModel {
 
             Logger.info("Level {} created ({})", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_CREATED);
-
-            // At this point, the animations of Pac-Man and the ghosts must have been created!
-            letsGetReadyToRumble();
-            if (demoLevel) {
-                pac.show();
-                ghosts().forEach(Ghost::show);
-            } else {
-                pac.hide();
-                ghosts().forEach(Ghost::hide);
-            }
-            Logger.info("Level {} started ({})", levelNumber, this);
-            publishGameEvent(GameEventType.LEVEL_STARTED);
         }
 
         @Override
@@ -591,6 +566,24 @@ public enum GameVariants implements GameModel {
             cruiseElroyState = (byte) (-cruiseElroyState);
             Logger.trace("Cruise Elroy state set to {}", cruiseElroyState);
         }
+    }
+
+    /**
+     * At this point, the animations of Pac-Man and the ghosts must have been created!
+     */
+    @Override
+    public void startLevel() {
+        letsGetReadyToRumble();
+        if (demoLevel) {
+            pac.show();
+            ghosts().forEach(Ghost::show);
+        } else {
+            pac.hide();
+            ghosts().forEach(Ghost::hide);
+        }
+        Logger.info("{}Level {} started ({})", demoLevel ? "Demo " : "", levelNumber, this);
+
+        publishGameEvent(GameEventType.LEVEL_STARTED);
     }
 
     void addSymbolToLevelCounter(byte symbol) {
@@ -865,7 +858,8 @@ public enum GameVariants implements GameModel {
             bonus().ifPresent(Bonus::setInactive);
             testState.setProperty("mazeFlashing", false);
             blinking.reset();
-            createAndStartLevel(levelNumber + 1, false);
+            createLevel(levelNumber + 1, false);
+            startLevel();
         }
     }
 

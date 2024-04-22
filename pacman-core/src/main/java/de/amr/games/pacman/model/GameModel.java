@@ -72,7 +72,9 @@ public interface GameModel {
      * @param levelNumber level number (starting at 1)
      * @param demoLevel if demo level is created and started
      */
-    void createAndStartLevel(int levelNumber, boolean demoLevel);
+    void createLevel(int levelNumber, boolean demoLevel);
+
+    void startLevel();
 
     /**
      * @return Current level number (starting at 1, 0 means no level yet)

@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Pulse;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -19,8 +18,6 @@ import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static de.amr.games.pacman.lib.Globals.randomInt;
 
 /**
  * Game states of the Pac-Man game variants.
@@ -97,7 +94,10 @@ public enum GameState implements FsmState<GameModel> {
             }
             else if (gameController().hasCredit()) { // start new game
                 switch ((int) timer.tick()) {
-                    case TICK_NEW_GAME_CREATE_LEVEL -> game.createAndStartLevel(1, false);
+                    case TICK_NEW_GAME_CREATE_LEVEL -> {
+                        game.createLevel(1, false);
+                        game.startLevel();
+                    }
                     case TICK_NEW_GAME_SHOW_GUYS -> {
                         game.pac().show();
                         game.ghosts().forEach(Ghost::show);
@@ -112,7 +112,8 @@ public enum GameState implements FsmState<GameModel> {
             else { // start demo level
                 switch ((int) timer.tick()) {
                     case TICK_DEMO_LEVEL_CREATE_LEVEL -> {
-                        game.createAndStartLevel(1, true);
+                        game.createLevel(1, true);
+                        game.startLevel();
                     }
                     case TICK_DEMO_LEVEL_START_PLAYING -> {
                         game.startHuntingPhase(0);
@@ -187,7 +188,8 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartSeconds(1);
-            game.createAndStartLevel(game.levelNumber() + 1, false);
+            game.createLevel(game.levelNumber() + 1, false);
+            game.startLevel();
         }
 
         @Override
@@ -320,7 +322,8 @@ public enum GameState implements FsmState<GameModel> {
             timer.restartIndefinitely();
             gameController().clock().setTargetFrameRate(2 * GameModel.FPS);
             game.reset();
-            game.createAndStartLevel(1, false);
+            game.createLevel(1, false);
+            game.startLevel();
         }
 
         @Override
