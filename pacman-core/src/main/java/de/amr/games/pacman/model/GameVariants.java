@@ -260,10 +260,10 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        public void createLevel(int levelNumber, boolean demoLevel) {
-            checkLevelNumber(levelNumber);
-            this.levelNumber = levelNumber;
-            this.demoLevel = demoLevel;
+        public void createLevel(int number, boolean demo) {
+            checkLevelNumber(number);
+            this.levelNumber = number;
+            this.demoLevel = demo;
             if (demoLevel) {
                 demoLevelStartTime = System.currentTimeMillis();
             }
