@@ -109,8 +109,8 @@ public enum GameVariants implements GameModel {
 
             nextBonusIndex = -1;
             bonusSymbols.clear();
-            bonusSymbols.add(nextBonusSymbol());
-            bonusSymbols.add(nextBonusSymbol());
+            bonusSymbols.add(computeBonusSymbol());
+            bonusSymbols.add(computeBonusSymbol());
             bonus = null;
 
             score.setLevelNumber(levelNumber);
@@ -148,8 +148,7 @@ public enum GameVariants implements GameModel {
          */
         @Override
         public void huntingBehaviour(Ghost ghost) {
-            if (scatterPhase().isPresent() && scatterPhase().get() == 0
-                && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
+            if (huntingPhaseIndex == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
                 roam(ghost, huntingSpeedPercentage(ghost));
             } else {
                 Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState > 0
@@ -187,7 +186,7 @@ public enum GameVariants implements GameModel {
          * </table>
          * </p>
          */
-        byte nextBonusSymbol() {
+        byte computeBonusSymbol() {
             if (levelNumber <= 7) {
                 return (byte) (levelNumber - 1);
             }
@@ -206,6 +205,7 @@ public enum GameVariants implements GameModel {
                 Logger.info("Previous bonus is still active, skip this one");
                 return;
             }
+            nextBonusIndex += 1;
             createMovingBonus(bonusSymbols.get(nextBonusIndex), RND.nextBoolean());
             publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
         }
@@ -319,8 +319,8 @@ public enum GameVariants implements GameModel {
 
             nextBonusIndex = -1;
             bonusSymbols.clear();
-            bonusSymbols.add(nextBonusSymbol());
-            bonusSymbols.add(nextBonusSymbol());
+            bonusSymbols.add(computeBonusSymbol());
+            bonusSymbols.add(computeBonusSymbol());
             bonus = null;
 
             score.setLevelNumber(levelNumber);
@@ -363,13 +363,14 @@ public enum GameVariants implements GameModel {
         final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {-1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
 
         // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
-        byte nextBonusSymbol() {
+        byte computeBonusSymbol() {
             return levelNumber > 12 ? 7 : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
         }
 
         final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
 
         void createNextBonus() {
+            nextBonusIndex += 1;
             byte symbol = bonusSymbols.get(nextBonusIndex);
             bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
             bonus.entity().setPosition(ArcadeWorld.BONUS_POSITION);
@@ -833,14 +834,12 @@ public enum GameVariants implements GameModel {
             blinking.setStartPhase(Pulse.ON);
             blinking.restart();
         } else if (testState.timer().atSecond(2.5)) {
-            nextBonusIndex += 1;
             createNextBonus();
         } else if (testState.timer().atSecond(4.5)) {
             bonus().ifPresent(bonus -> bonus.setEaten(60));
             publishGameEvent(GameEventType.BONUS_EATEN);
         } else if (testState.timer().atSecond(6.5)) {
             bonus().ifPresent(Bonus::setInactive); // needed?
-            nextBonusIndex += 1;
             createNextBonus();
         } else if (testState.timer().atSecond(7.5)) {
             bonus().ifPresent(bonus -> bonus.setEaten(60));
@@ -944,9 +943,8 @@ public enum GameVariants implements GameModel {
                 setCruiseElroyState(2);
             }
             if (isBonusReached()) {
-                nextBonusIndex += 1;
-                eventLog().bonusIndex = nextBonusIndex;
                 createNextBonus();
+                eventLog().bonusIndex = nextBonusIndex;
             }
             publishGameEvent(GameEventType.PAC_FOUND_FOOD, pacTile);
         } else {
