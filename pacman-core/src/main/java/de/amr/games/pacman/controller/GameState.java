@@ -75,13 +75,6 @@ public enum GameState implements FsmState<GameModel> {
         static final int TICK_RESUME_GAME              = 120;
 
         @Override
-        public void onEnter(GameModel game) {
-            if (!game.isPlaying()) {
-                game.reset();
-            }
-        }
-
-        @Override
         public void onUpdate(GameModel game) {
             if (game.isPlaying()) { // resume running game
                 if (timer.tick() == 1) {
