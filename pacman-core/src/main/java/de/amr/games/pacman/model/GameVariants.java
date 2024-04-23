@@ -998,8 +998,8 @@ public enum GameVariants implements GameModel {
                     prisoner.setState(HUNTING_PAC);
                 }
                 if (prisoner.id() == ORANGE_GHOST && cruiseElroyState() < 0) {
+                    Logger.trace("Re-enable cruise elroy mode because {} exits house:", prisoner.name());
                     setCruiseElroyEnabled(true);
-                    Logger.trace("Cruise elroy mode re-enabled because {} exits house", prisoner.name());
                 }
             }
         }
@@ -1018,16 +1018,17 @@ public enum GameVariants implements GameModel {
         }
     }
 
-    void killGhost(Ghost ghost) {
-        byte[] multiple = { 2, 4, 8, 16 };
+    void killGhost(Ghost victim) {
         int killedSoFar = pac.victims().size();
-        int points = 100 * multiple[killedSoFar];
+        short[] values = { 200, 400, 800, 1600 };
+        int points = values[killedSoFar];
         scorePoints(points);
-        ghost.eaten(killedSoFar);
-        pac.victims().add(ghost);
-        eventLog().killedGhosts.add(ghost);
+        victim.eaten(killedSoFar);
+        pac.victims().add(victim);
+        eventLog().killedGhosts.add(victim);
         numGhostsKilledInLevel += 1;
-        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
+        Logger.info("Scored {} points for killing {} at tile {} (#{} killed in level)",
+            points, victim.name(), victim.tile(), numGhostsKilledInLevel);
     }
 
     // Ghost house access
