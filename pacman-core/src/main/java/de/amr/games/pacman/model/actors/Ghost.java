@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.actors;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
@@ -122,6 +123,35 @@ public class Ghost extends Creature {
         checkNotNull(function);
         frightenedBehavior = function;
     }
+
+    /**
+     * Lets the ghost randomly roam through the world.
+     *
+     * @param world the world
+     * @param speedPct the relative speed (in percentage of base speed)
+     */
+    public void roam(World world, byte speedPct) {
+        Vector2i currentTile = tile();
+        if (!world.belongsToPortal(currentTile) && (isNewTileEntered() || !moveResult.moved)) {
+            Direction dir = pseudoRandomDirection();
+            while (dir == moveDir().opposite()
+                || !canAccessTile(currentTile.plus(dir.vector()), world)) {
+                dir = dir.nextClockwise();
+            }
+            setWishDir(dir);
+        }
+        setSpeedPct(speedPct);
+        tryMoving(this, world);
+    }
+
+    private Direction pseudoRandomDirection() {
+        int rnd = Globals.randomInt(0, 1000);
+        if (rnd < 163)             return UP;
+        if (rnd < 163 + 252)       return RIGHT;
+        if (rnd < 163 + 252 + 285) return DOWN;
+        return LEFT;
+    }
+
 
     @Override
     public boolean canAccessTile(Vector2i tile, World world) {

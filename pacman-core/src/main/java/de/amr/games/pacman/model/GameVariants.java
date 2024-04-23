@@ -17,13 +17,16 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Direction.*;
+import static de.amr.games.pacman.lib.Direction.LEFT;
+import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.CreatureMovement.followTarget;
-import static de.amr.games.pacman.model.actors.CreatureMovement.tryMoving;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 import static de.amr.games.pacman.model.world.ArcadeWorld.*;
 
@@ -92,7 +95,7 @@ public enum GameVariants implements GameModel {
             ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(world.house());
-                ghost.setFrightenedBehavior(g -> roam(g, frightenedGhostSpeedPct(g)));
+                ghost.setFrightenedBehavior(g -> g.roam(world, frightenedGhostSpeedPct(g)));
                 ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
@@ -133,7 +136,7 @@ public enum GameVariants implements GameModel {
         @Override
         public void huntingBehaviour(Ghost ghost) {
             if (huntingPhaseIndex == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-                roam(ghost, huntingSpeedPct(ghost));
+                ghost.roam(world, huntingSpeedPct(ghost));
             } else {
                 Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroy > 0
                     ? chasingTarget(ghost) : scatterTarget(ghost);
@@ -292,7 +295,7 @@ public enum GameVariants implements GameModel {
             ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(world.house());
-                ghost.setFrightenedBehavior(g -> roam(g, frightenedGhostSpeedPct(g)));
+                ghost.setFrightenedBehavior(g -> g.roam(world, frightenedGhostSpeedPct(g)));
                 ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
@@ -596,34 +599,6 @@ public enum GameVariants implements GameModel {
 
     SimulationStepEventLog eventLog() {
         return GameController.it().eventLog();
-    }
-
-    /**
-     * Lets a creature randomly roam through the world.
-     *
-     * @param creature a creature (ghost, moving bonus)
-     * @param speedPct the relative speed (in percentage of base speed)
-     */
-    void roam(Creature creature, byte speedPct) {
-        Vector2i currentTile = creature.tile();
-        if (!world.belongsToPortal(currentTile) && (creature.isNewTileEntered() || !creature.moveResult.moved)) {
-            Direction dir = pseudoRandomDirection();
-            while (dir == creature.moveDir().opposite()
-                || !creature.canAccessTile(currentTile.plus(dir.vector()), world)) {
-                dir = dir.nextClockwise();
-            }
-            creature.setWishDir(dir);
-        }
-        creature.setSpeedPct(speedPct);
-        tryMoving(creature, world);
-    }
-
-    Direction pseudoRandomDirection() {
-        int rnd = Globals.randomInt(0, 1000);
-        if (rnd < 163)             return UP;
-        if (rnd < 163 + 252)       return RIGHT;
-        if (rnd < 163 + 252 + 285) return DOWN;
-        return LEFT;
     }
 
     Vector2i scatterTarget(Ghost ghost) {
