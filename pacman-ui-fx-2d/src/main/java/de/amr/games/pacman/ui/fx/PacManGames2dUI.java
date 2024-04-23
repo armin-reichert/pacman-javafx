@@ -336,7 +336,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         reboot();
         setPage(gamePage);
         clock.start();
-        Logger.info("Clock started, speed={} Hz", clock.targetFrameRatePy.get());
+        Logger.info("Clock started, speed={} Hz", clock.getTargetFrameRate());
     }
 
     protected void updateStage() {
@@ -355,7 +355,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             case BOOT -> config.get("boot");
             case CREDIT -> config.get("credit");
             case INTRO -> config.get("intro");
-            case INTERMISSION -> config.get("cut" + game().level().get().intermissionNumber());
+            case INTERMISSION -> config.get("cut" + game().level().orElseThrow().intermissionNumber());
             case INTERMISSION_TEST -> config.get("cut" + gameState().<Integer>getProperty("intermissionTestNumber"));
             default -> config.get("play");
         };
@@ -483,7 +483,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (gameState() == GameState.INTERMISSION_TEST) {
             intermissionNumber = GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber");
         } else {
-            intermissionNumber = event.game.level().get().intermissionNumber();
+            intermissionNumber = event.game.level().orElseThrow().intermissionNumber();
         }
         if (intermissionNumber != 0) {
             switch (game()) {
@@ -614,7 +614,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (gameState() == LEVEL_TEST) {
             gameState().onExit(game()); //TODO exit other states too?
         }
-        clock.targetFrameRatePy.set(GameModel.FPS);
+        clock.setTargetFrameRate(GameModel.FPS);
         gameController().restart(INTRO);
     }
 
@@ -623,7 +623,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         stopAllSounds();
         currentGameScene().ifPresent(GameScene::end);
         playVoice("voice.explain", 0);
-        clock.targetFrameRatePy.set(GameModel.FPS);
+        clock.setTargetFrameRate(GameModel.FPS);
         gameController().restart(GameState.BOOT);
     }
 
@@ -665,17 +665,17 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void changeSimulationSpeed(int delta) {
-        int newRate = clock.targetFrameRatePy.get() + delta;
+        int newRate = clock.getTargetFrameRate() + delta;
         if (newRate > 0) {
-            clock.targetFrameRatePy.set(newRate);
+            clock.setTargetFrameRate(newRate);
             showFlashMessageSeconds(0.75, newRate + "Hz");
         }
     }
 
     @Override
     public void resetSimulationSpeed() {
-        clock.targetFrameRatePy.set(GameModel.FPS);
-        showFlashMessageSeconds(0.75, clock.targetFrameRatePy.get() + "Hz");
+        clock.setTargetFrameRate(GameModel.FPS);
+        showFlashMessageSeconds(0.75, clock.getTargetFrameRate() + "Hz");
     }
 
     @Override

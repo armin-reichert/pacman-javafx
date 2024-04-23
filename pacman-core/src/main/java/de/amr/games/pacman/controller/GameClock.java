@@ -11,6 +11,8 @@ public interface GameClock {
 
     int getActualFrameRate();
 
+    int getTargetFrameRate();
+
     void setTargetFrameRate(int fps);
 
     void start();

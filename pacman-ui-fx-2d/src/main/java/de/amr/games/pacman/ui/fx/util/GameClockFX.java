@@ -24,7 +24,7 @@ import org.tinylog.Logger;
  */
 public class GameClockFX implements GameClock {
 
-    public final IntegerProperty targetFrameRatePy = new SimpleIntegerProperty(this, "targetFrameRate", GameModel.FPS) {
+    private final IntegerProperty targetFrameRatePy = new SimpleIntegerProperty(this, "targetFrameRate", GameModel.FPS) {
         @Override
         protected void invalidated() {
             handleTargetFrameRateChanged();
@@ -70,6 +70,11 @@ public class GameClockFX implements GameClock {
         if (running) {
             start();
         }
+    }
+
+    @Override
+    public int getTargetFrameRate() {
+        return targetFrameRatePy.get();
     }
 
     @Override
