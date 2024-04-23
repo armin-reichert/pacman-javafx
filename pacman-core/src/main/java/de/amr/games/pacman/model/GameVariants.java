@@ -105,7 +105,7 @@ public enum GameVariants implements GameModel {
             huntingPhaseIndex = 0;
             huntingTimer.resetIndefinitely();
             numGhostsKilledInLevel = 0;
-            cruiseElroyState = 0;
+            cruiseElroy = 0;
 
             nextBonusIndex = -1;
             bonusSymbols.clear();
@@ -138,7 +138,7 @@ public enum GameVariants implements GameModel {
             if (huntingPhaseIndex == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
                 roam(ghost, huntingSpeedPercentage(ghost));
             } else {
-                Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState > 0
+                Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroy > 0
                     ? chasingTarget(ghost) : scatterTarget(ghost);
                 followTarget(ghost, world, targetTile, huntingSpeedPercentage(ghost));
             }
@@ -306,7 +306,7 @@ public enum GameVariants implements GameModel {
             huntingPhaseIndex = 0;
             huntingTimer.resetIndefinitely();
             numGhostsKilledInLevel = 0;
-            cruiseElroyState = 0;
+            cruiseElroy = 0;
 
             nextBonusIndex = -1;
             bonusSymbols.clear();
@@ -439,7 +439,7 @@ public enum GameVariants implements GameModel {
     byte lives;
 
     int huntingPhaseIndex;
-    byte cruiseElroyState;
+    byte cruiseElroy;
     byte numGhostsKilledInLevel;
     byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
 
@@ -551,25 +551,20 @@ public enum GameVariants implements GameModel {
 
     @Override
     public byte cruiseElroyState() {
-        return cruiseElroyState;
+        return cruiseElroy;
     }
 
     /**
-     * @param cruiseElroyState Values: <code>0, 1, 2, -1, -2</code>. (0=off, negative=disabled).
+     * @param value Values: <code>0, 1, 2, -1, -2</code>. (0=off, negative=disabled).
      */
-    void setCruiseElroyState(int cruiseElroyState) {
-        if (cruiseElroyState < -2 || cruiseElroyState > 2) {
-            throw new IllegalArgumentException(
-                "Cruise Elroy state must be one of -2, -1, 0, 1, 2, but is " + cruiseElroyState);
-        }
-        this.cruiseElroyState = (byte) cruiseElroyState;
-        Logger.trace("Cruise Elroy state set to {}", cruiseElroyState);
+    void setCruiseElroy(int value) {
+        cruiseElroy = (byte) value;
+        Logger.trace("Cruise Elroy state set to {}", cruiseElroy);
     }
 
-    void enableCruiseElroyState(boolean enabled) {
-        if (enabled && cruiseElroyState < 0 || !enabled && cruiseElroyState > 0) {
-            cruiseElroyState = (byte) (-cruiseElroyState);
-            Logger.trace("Cruise Elroy state set to {}", cruiseElroyState);
+    void setCruiseElroyEnabled(boolean enabled) {
+        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
+            setCruiseElroy(-cruiseElroy);
         }
     }
 
@@ -667,10 +662,10 @@ public enum GameVariants implements GameModel {
         if (world.isTunnel(ghost.tile())) {
             return levelInternal().ghostSpeedTunnelPercentage();
         }
-        if (ghost.id() == RED_GHOST && cruiseElroyState == 1) {
+        if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
             return levelInternal().elroy1SpeedPercentage();
         }
-        if (ghost.id() == RED_GHOST && cruiseElroyState == 2) {
+        if (ghost.id() == RED_GHOST && cruiseElroy == 2) {
             return levelInternal().elroy2SpeedPercentage();
         }
         return levelInternal().ghostSpeedPercentage();
@@ -794,7 +789,7 @@ public enum GameVariants implements GameModel {
         huntingTimer().stop();
         Logger.info("Hunting timer stopped");
         resetGlobalDotCounterAndSetEnabled(true);
-        enableCruiseElroyState(false);
+        setCruiseElroyEnabled(false);
         pac.die();
     }
 
@@ -934,9 +929,9 @@ public enum GameVariants implements GameModel {
             updateDotCount();
             world.eatFoodAt(pacTile);
             if (world.uneatenFoodCount() == levelInternal().elroy1DotsLeft()) {
-                setCruiseElroyState(1);
+                setCruiseElroy(1);
             } else if (world.uneatenFoodCount() == levelInternal().elroy2DotsLeft()) {
-                setCruiseElroyState(2);
+                setCruiseElroy(2);
             }
             if (isBonusReached()) {
                 createNextBonus();
@@ -1003,7 +998,7 @@ public enum GameVariants implements GameModel {
                     prisoner.setState(HUNTING_PAC);
                 }
                 if (prisoner.id() == ORANGE_GHOST && cruiseElroyState() < 0) {
-                    enableCruiseElroyState(true);
+                    setCruiseElroyEnabled(true);
                     Logger.trace("Cruise elroy mode re-enabled because {} exits house", prisoner.name());
                 }
             }
