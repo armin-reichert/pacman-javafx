@@ -83,7 +83,7 @@ public interface CreatureMovement {
      * @param relSpeed the relative speed (in percentage of base speed)
      */
     static void followTarget(Creature creature, World world, Vector2i targetTile, byte relSpeed) {
-        creature.setPercentageSpeed(relSpeed);
+        creature.setSpeedPct(relSpeed);
         creature.setTargetTile(targetTile);
         navigateTowardsTarget(creature, world);
         tryMoving(creature, world);

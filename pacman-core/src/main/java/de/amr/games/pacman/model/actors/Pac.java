@@ -150,7 +150,7 @@ public class Pac extends Creature {
             return;
         }
         if (restingTicks == 0) {
-            setPercentageSpeed(powerTimer.isRunning()
+            setSpeedPct(powerTimer.isRunning()
                 ? level.pacSpeedPoweredPercentage()
                 : level.pacSpeedPercentage());
             if (useAutopilot) {

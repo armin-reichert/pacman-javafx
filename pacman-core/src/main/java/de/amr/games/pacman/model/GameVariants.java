@@ -95,7 +95,7 @@ public enum GameVariants implements GameModel {
             ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(world.house());
-                ghost.setFrightenedBehavior(this::frightenedGhostBehaviour);
+                ghost.setFrightenedBehavior(g -> roam(g, frightenedGhostSpeedPct(g)));
                 ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
@@ -136,11 +136,11 @@ public enum GameVariants implements GameModel {
         @Override
         public void huntingBehaviour(Ghost ghost) {
             if (huntingPhaseIndex == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-                roam(ghost, huntingSpeedPercentage(ghost));
+                roam(ghost, huntingSpeedPct(ghost));
             } else {
                 Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroy > 0
                     ? chasingTarget(ghost) : scatterTarget(ghost);
-                followTarget(ghost, world, targetTile, huntingSpeedPercentage(ghost));
+                followTarget(ghost, world, targetTile, huntingSpeedPct(ghost));
             }
         }
 
@@ -295,7 +295,7 @@ public enum GameVariants implements GameModel {
             ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(world.house());
-                ghost.setFrightenedBehavior(this::frightenedGhostBehaviour);
+                ghost.setFrightenedBehavior(g -> roam(g, frightenedGhostSpeedPct(g)));
                 ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
@@ -331,7 +331,7 @@ public enum GameVariants implements GameModel {
         public void huntingBehaviour(Ghost ghost) {
             Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0
                 ? chasingTarget(ghost) : scatterTarget(ghost);
-             followTarget(ghost, world, targetTile, huntingSpeedPercentage(ghost));
+             followTarget(ghost, world, targetTile, huntingSpeedPct(ghost));
         }
 
         @Override
@@ -601,9 +601,9 @@ public enum GameVariants implements GameModel {
      * Lets a creature randomly roam through the world.
      *
      * @param creature a creature (ghost, moving bonus)
-     * @param relSpeed the relative speed (in percentage of base speed)
+     * @param speedPct the relative speed (in percentage of base speed)
      */
-    void roam(Creature creature, byte relSpeed) {
+    void roam(Creature creature, byte speedPct) {
         Vector2i currentTile = creature.tile();
         if (!world.belongsToPortal(currentTile) && (creature.isNewTileEntered() || !creature.moveResult.moved)) {
             Direction dir = pseudoRandomDirection();
@@ -613,7 +613,7 @@ public enum GameVariants implements GameModel {
             }
             creature.setWishDir(dir);
         }
-        creature.setPercentageSpeed(relSpeed);
+        creature.setSpeedPct(speedPct);
         tryMoving(creature, world);
     }
 
@@ -623,10 +623,6 @@ public enum GameVariants implements GameModel {
         if (rnd < 163 + 252)       return RIGHT;
         if (rnd < 163 + 252 + 285) return DOWN;
         return LEFT;
-    }
-
-    void frightenedGhostBehaviour(Ghost ghost) {
-        roam(ghost, frightenedGhostSpeedPercentage(ghost));
     }
 
     Vector2i scatterTarget(Ghost ghost) {
@@ -653,22 +649,22 @@ public enum GameVariants implements GameModel {
         };
     }
 
-    byte frightenedGhostSpeedPercentage(Ghost ghost) {
+    byte frightenedGhostSpeedPct(Ghost ghost) {
         return world.isTunnel(ghost.tile())
-            ? levelInternal().ghostSpeedTunnelPercentage() : levelInternal().ghostSpeedFrightenedPercentage();
+            ? levelInternal().ghostSpeedTunnelPct() : levelInternal().ghostSpeedFrightenedPct();
     }
 
-    byte huntingSpeedPercentage(Ghost ghost) {
+    byte huntingSpeedPct(Ghost ghost) {
         if (world.isTunnel(ghost.tile())) {
-            return levelInternal().ghostSpeedTunnelPercentage();
+            return levelInternal().ghostSpeedTunnelPct();
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
-            return levelInternal().elroy1SpeedPercentage();
+            return levelInternal().elroy1SpeedPct();
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 2) {
-            return levelInternal().elroy2SpeedPercentage();
+            return levelInternal().elroy2SpeedPct();
         }
-        return levelInternal().ghostSpeedPercentage();
+        return levelInternal().ghostSpeedPct();
     }
 
     @Override

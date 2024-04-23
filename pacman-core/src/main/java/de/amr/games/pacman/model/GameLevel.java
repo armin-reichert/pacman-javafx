@@ -15,11 +15,11 @@ public record GameLevel(
     /*
      * Relative ghost speed when hunting or scattering
      */
-    byte ghostSpeedPercentage,
+    byte ghostSpeedPct,
     /*
      * Relative ghost speed inside tunnel
      */
-    byte ghostSpeedTunnelPercentage,
+    byte ghostSpeedTunnelPct,
     /*
      * Number of pellets left when Blinky becomes "Cruise Elroy" grade 1
      */
@@ -27,7 +27,7 @@ public record GameLevel(
     /*
      * Relative speed of Blinky being "Cruise Elroy" grade 1
      */
-    byte elroy1SpeedPercentage,
+    byte elroy1SpeedPct,
     /*
      * Number of pellets left when Blinky becomes "Cruise Elroy" grade 2
      */
@@ -35,7 +35,7 @@ public record GameLevel(
     /*
      * Relative speed of Blinky being "Cruise Elroy" grade 2
      */
-    byte elroy2SpeedPercentage,
+    byte elroy2SpeedPct,
     /*
      * Relative speed of Pac-Man in power mode
      */
@@ -43,7 +43,7 @@ public record GameLevel(
     /*
      * Relative speed of frightened ghost
      */
-    byte ghostSpeedFrightenedPercentage,
+    byte ghostSpeedFrightenedPct,
     /*
      * Number of seconds Pac-Man gets power
      */

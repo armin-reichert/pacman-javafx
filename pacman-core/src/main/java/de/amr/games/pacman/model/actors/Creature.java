@@ -186,7 +186,7 @@ public abstract class Creature extends Entity {
      *
      * @param percentage percentage of base speed
      */
-    public void setPercentageSpeed(byte percentage) {
+    public void setSpeedPct(byte percentage) {
         if (percentage < 0) {
             throw new IllegalArgumentException("Negative speed percentage: " + percentage);
         }
