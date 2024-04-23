@@ -905,7 +905,7 @@ public enum GameVariants implements GameModel {
                 pac.setRestingTicks(RESTING_TICKS_PELLET);
                 scorePoints(POINTS_PELLET);
             }
-            gateKeeper.updateDotCount(this);
+            gateKeeper.update(this);
             world.eatFoodAt(pacTile);
             if (world.uneatenFoodCount() == levelInternal().elroy1DotsLeft()) {
                 setCruiseElroy(1);

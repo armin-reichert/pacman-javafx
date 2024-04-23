@@ -9,6 +9,7 @@ import org.tinylog.Logger;
 
 import java.util.Arrays;
 
+import static de.amr.games.pacman.model.GameModel.*;
 import static de.amr.games.pacman.model.actors.GhostState.LOCKED;
 
 /**
@@ -97,50 +98,46 @@ import static de.amr.games.pacman.model.actors.GhostState.LOCKED;
  */
 public class GateKeeper {
     static final byte NO_LIMIT = -1;
+    static final byte[] GLOBAL_LIMITS = new byte[] {NO_LIMIT, 7, 17, NO_LIMIT};
 
-    final byte[] limits = new byte[]{NO_LIMIT, 7, 17, NO_LIMIT};
     final byte[] limitsByGhost = new byte[4];
-    final int[] countersByGhost = new int[4];
-    int counter;
-    boolean counterEnabled;
-    int pacStarvingLimit;
+    int          pacStarvingLimit;
+
+    final int[]  countersByGhost = new int[4];
+    int          globalCounter;
+    boolean      globalCounterEnabled;
 
     void init(int levelNumber) {
-        switch (levelNumber) {
-            case 1 -> {
-                limitsByGhost[GameModel.RED_GHOST] = 0;
-                limitsByGhost[GameModel.PINK_GHOST] = 0;
-                limitsByGhost[GameModel.CYAN_GHOST] = 30;
-                limitsByGhost[GameModel.ORANGE_GHOST] = 60;
-            }
-            case 2 -> {
-                limitsByGhost[GameModel.RED_GHOST] = 0;
-                limitsByGhost[GameModel.PINK_GHOST] = 0;
-                limitsByGhost[GameModel.CYAN_GHOST] = 0;
-                limitsByGhost[GameModel.ORANGE_GHOST] = 50;
-            }
-            default -> Arrays.fill(limitsByGhost, (byte) 0);
+        Arrays.fill(limitsByGhost, (byte) 0);
+        if (levelNumber == 1) {
+            limitsByGhost[CYAN_GHOST]   = 30;
+            limitsByGhost[ORANGE_GHOST] = 60;
+        } else if (levelNumber == 2) {
+            limitsByGhost[ORANGE_GHOST] = 50;
         }
-        Arrays.fill(countersByGhost, 0);
-        counter = 0;
-        counterEnabled = false;
         pacStarvingLimit = levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec
+        Arrays.fill(countersByGhost, 0);
+        globalCounter = 0;
+        globalCounterEnabled = false;
     }
 
+    /**
+     * @param game the game model
+     * @param prisoner the ghost to possibly get released
+     * @return description why ghost has been released or {@code null} if ghost is not released
+     */
     String checkReleaseOf(GameModel game, Ghost prisoner) {
         byte id = prisoner.id();
-        if (id == GameModel.RED_GHOST) {
+        if (id == RED_GHOST) {
             return "Red ghost gets released unconditionally";
         }
         // check individual dot counter first (if enabled)
-        if (!counterEnabled && countersByGhost[id] >= limitsByGhost[id]) {
-            return String.format("%s's individual dot counter reached limit (%d)",
-                prisoner.name(), limitsByGhost[id]);
+        if (!globalCounterEnabled && countersByGhost[id] >= limitsByGhost[id]) {
+            return String.format("%s's individual dot counter reached limit (%d)", prisoner.name(), limitsByGhost[id]);
         }
         // check global dot counter
-        if (counterEnabled
-            && limits[id] != GateKeeper.NO_LIMIT && counter >= limits[id]) {
-            return String.format("Global dot counter reached limit (%d)", limits[id]);
+        if (globalCounterEnabled && GLOBAL_LIMITS[id] != NO_LIMIT && globalCounter >= GLOBAL_LIMITS[id]) {
+            return String.format("Global dot counter reached limit (%d)", GLOBAL_LIMITS[id]);
         }
         // check Pac-Man starving time
         if (game.pac().starvingTicks() >= pacStarvingLimit) {
@@ -151,19 +148,19 @@ public class GateKeeper {
     }
 
     void resetCounterAndSetEnabled(boolean enabled) {
-        counter = 0;
-        counterEnabled = enabled;
-        Logger.trace("Global dot counter set to 0 and {}", enabled ? "enabled" : "disabled");
+        globalCounter = 0;
+        globalCounterEnabled = enabled;
+        Logger.info("Global dot counter set to 0 and {}", enabled ? "enabled" : "disabled");
     }
 
-    void updateDotCount(GameModel game) {
-        if (counterEnabled) {
-            if (game.ghost(GameModel.ORANGE_GHOST).inState(LOCKED) && counter == 32) {
-                Logger.trace("{} inside house when global counter reached 32", game.ghost(GameModel.ORANGE_GHOST).name());
+    void update(GameModel game) {
+        if (globalCounterEnabled) {
+            if (game.ghost(ORANGE_GHOST).inState(LOCKED) && globalCounter == 32) {
+                Logger.info("{} inside house when global counter reached 32", game.ghost(ORANGE_GHOST).name());
                 resetCounterAndSetEnabled(false);
             } else {
-                counter++;
-                Logger.trace("Global dot counter = {}", counter);
+                globalCounter++;
+                Logger.trace("Global dot counter = {}", globalCounter);
             }
         } else {
             game.ghosts(LOCKED).filter(ghost -> ghost.insideHouse(game.world().house())).findFirst().ifPresent(ghost -> {
