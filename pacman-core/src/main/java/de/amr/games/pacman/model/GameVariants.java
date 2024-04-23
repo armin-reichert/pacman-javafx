@@ -420,16 +420,16 @@ public enum GameVariants implements GameModel {
     final Score highScore = new Score();
 
     /** Ghost house access control */
-    static class HouseAccess {
-        static final byte NO_DOT_LIMIT = -1;
-        byte[] globalDotLimits;
-        byte[] dotLimitsByGhost;
+    static class GateKeeper {
+        static final byte NO_LIMIT = -1;
+        byte[] limits;
+        byte[] limitsByGhost;
         int[] countersByGhost;
         int pacStarvingLimit;
-        int globalCounter;
-        boolean globalCounterEnabled;
+        int counter;
+        boolean counterEnabled;
     }
-    final HouseAccess gateKeeper = new HouseAccess();
+    final GateKeeper gateKeeper = new GateKeeper();
 
     int levelNumber; // 1=first level
     boolean demoLevel;
@@ -788,7 +788,7 @@ public enum GameVariants implements GameModel {
     public void onPacDying() {
         huntingTimer().stop();
         Logger.info("Hunting timer stopped");
-        resetGlobalDotCounterAndSetEnabled(true);
+        resetCounterAndSetEnabled(true);
         setCruiseElroyEnabled(false);
         pac.die();
     }
@@ -1116,15 +1116,15 @@ public enum GameVariants implements GameModel {
      * </pre>
      */
     void initGhostHouseAccess() {
-        gateKeeper.globalDotLimits = new byte[] {HouseAccess.NO_DOT_LIMIT, 7, 17, HouseAccess.NO_DOT_LIMIT};
-        gateKeeper.dotLimitsByGhost = switch (levelNumber) {
+        gateKeeper.limits = new byte[] {GateKeeper.NO_LIMIT, 7, 17, GateKeeper.NO_LIMIT};
+        gateKeeper.limitsByGhost = switch (levelNumber) {
             case 1  -> new byte[] {0, 0, 30, 60};
             case 2  -> new byte[] {0, 0,  0, 50};
             default -> new byte[] {0, 0,  0,  0};
         };
         gateKeeper.countersByGhost = new int[] {0, 0, 0, 0};
-        gateKeeper.globalCounter = 0;
-        gateKeeper.globalCounterEnabled = false;
+        gateKeeper.counter = 0;
+        gateKeeper.counterEnabled = false;
         gateKeeper.pacStarvingLimit = levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec
     }
 
@@ -1134,12 +1134,14 @@ public enum GameVariants implements GameModel {
             return "Red ghost gets released unconditionally";
         }
         // check individual dot counter first (if enabled)
-        if (!gateKeeper.globalCounterEnabled && gateKeeper.countersByGhost[id] >= gateKeeper.dotLimitsByGhost[id]) {
-            return String.format("%s's individual dot counter reached limit (%d)", prisoner.name(), gateKeeper.dotLimitsByGhost[id]);
+        if (!gateKeeper.counterEnabled && gateKeeper.countersByGhost[id] >= gateKeeper.limitsByGhost[id]) {
+            return String.format("%s's individual dot counter reached limit (%d)",
+                prisoner.name(), gateKeeper.limitsByGhost[id]);
         }
         // check global dot counter
-        if (gateKeeper.globalDotLimits[id] != HouseAccess.NO_DOT_LIMIT && gateKeeper.globalCounter >= gateKeeper.globalDotLimits[id]) {
-            return String.format("Global dot counter reached limit (%d)", gateKeeper.globalDotLimits[id]);
+        if (gateKeeper.counterEnabled
+            && gateKeeper.limits[id] != GateKeeper.NO_LIMIT && gateKeeper.counter >= gateKeeper.limits[id]) {
+            return String.format("Global dot counter reached limit (%d)", gateKeeper.limits[id]);
         }
         // check Pac-Man starving time
         if (pac.starvingTicks() >= gateKeeper.pacStarvingLimit) {
@@ -1149,20 +1151,20 @@ public enum GameVariants implements GameModel {
         return null;
     }
 
-    void resetGlobalDotCounterAndSetEnabled(boolean enabled) {
-        gateKeeper.globalCounter = 0;
-        gateKeeper.globalCounterEnabled = enabled;
+    void resetCounterAndSetEnabled(boolean enabled) {
+        gateKeeper.counter = 0;
+        gateKeeper.counterEnabled = enabled;
         Logger.trace("Global dot counter set to 0 and {}", enabled ? "enabled" : "disabled");
     }
 
     void updateDotCount() {
-        if (gateKeeper.globalCounterEnabled) {
-            if (ghost(ORANGE_GHOST).inState(LOCKED) && gateKeeper.globalCounter == 32) {
+        if (gateKeeper.counterEnabled) {
+            if (ghost(ORANGE_GHOST).inState(LOCKED) && gateKeeper.counter == 32) {
                 Logger.trace("{} inside house when global counter reached 32", ghost(ORANGE_GHOST).name());
-                resetGlobalDotCounterAndSetEnabled(false);
+                resetCounterAndSetEnabled(false);
             } else {
-                gateKeeper.globalCounter++;
-                Logger.trace("Global dot counter = {}", gateKeeper.globalCounter);
+                gateKeeper.counter++;
+                Logger.trace("Global dot counter = {}", gateKeeper.counter);
             }
         } else {
             ghosts(LOCKED).filter(ghost -> ghost.insideHouse(world.house())).findFirst().ifPresent(ghost -> {
