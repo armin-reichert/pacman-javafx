@@ -485,24 +485,17 @@ public enum GameVariants implements GameModel {
         return blinking;
     }
 
-    /**
-     * Hunting happens in different phases. Phases 0, 2, 4, 6 are scattering phases where the ghosts target for their
-     * respective corners and circle around the walls in their corner, phases 1, 3, 5, 7 are chasing phases where the
-     * ghosts attack Pac-Man.
-     *
-     * @param phaseIndex hunting phase index (0..7)
-     */
     @Override
     public void startHuntingPhase(int phaseIndex) {
         if (phaseIndex < 0 || phaseIndex > 7) {
             throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + phaseIndex);
         }
         huntingPhaseIndex = phaseIndex;
-        huntingTimer.reset(huntingTicks(phaseIndex));
+        huntingTimer.reset(huntingTicks(huntingPhaseIndex));
         huntingTimer.start();
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
-            phaseIndex, currentHuntingPhaseName(), huntingTimer.duration(),
-            (float) huntingTimer.duration() / GameModel.FPS, huntingTimer);
+            huntingPhaseIndex, currentHuntingPhaseName(),
+            huntingTimer.duration(), (float) huntingTimer.duration() / GameModel.FPS, huntingTimer);
     }
 
     abstract long huntingTicks(int phaseIndex);
@@ -532,6 +525,18 @@ public enum GameVariants implements GameModel {
     @Override
     public int levelNumber() {
         return levelNumber;
+    }
+
+    @Override
+    public Optional<GameLevel> level() {
+        if (levelNumber == 0) {
+            return Optional.empty();
+        }
+        return Optional.of(levelInternal());
+    }
+
+    GameLevel levelInternal() {
+        return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
     }
 
     @Override
@@ -626,7 +631,7 @@ public enum GameVariants implements GameModel {
     }
 
     void frightenedGhostBehaviour(Ghost ghost) {
-        roam(ghost, frightenedGhostRelSpeed(ghost));
+        roam(ghost, frightenedGhostSpeedPercentage(ghost));
     }
 
     Vector2i scatterTarget(Ghost ghost) {
@@ -648,34 +653,27 @@ public enum GameVariants implements GameModel {
             // Inky: attacks from opposite side as Blinky
             case CYAN_GHOST -> pac.tilesAheadWithOverflowBug(2).scaled(2).minus(ghost(RED_GHOST).tile());
             // Clyde/Sue: attacks directly but retreats if Pac is near
-            case ORANGE_GHOST -> ghost(ORANGE_GHOST).tile().euclideanDistance(pac.tile()) < 8
-                ? ArcadeWorld.SCATTER_TILE_SW
-                : pac.tile();
+            case ORANGE_GHOST -> ghost.tile().euclideanDistance(pac.tile()) < 8 ? scatterTarget(ghost) : pac.tile();
             default -> throw new IllegalGhostIDException(ghost.id());
         };
     }
 
-    byte frightenedGhostRelSpeed(Ghost ghost) {
+    byte frightenedGhostSpeedPercentage(Ghost ghost) {
         return world.isTunnel(ghost.tile())
-            ? level().ghostSpeedTunnelPercentage() : level().ghostSpeedFrightenedPercentage();
+            ? levelInternal().ghostSpeedTunnelPercentage() : levelInternal().ghostSpeedFrightenedPercentage();
     }
 
     byte huntingSpeedPercentage(Ghost ghost) {
         if (world.isTunnel(ghost.tile())) {
-            return level().ghostSpeedTunnelPercentage();
+            return levelInternal().ghostSpeedTunnelPercentage();
         }
         if (ghost.id() == RED_GHOST && cruiseElroyState == 1) {
-            return level().elroy1SpeedPercentage();
+            return levelInternal().elroy1SpeedPercentage();
         }
         if (ghost.id() == RED_GHOST && cruiseElroyState == 2) {
-            return level().elroy2SpeedPercentage();
+            return levelInternal().elroy2SpeedPercentage();
         }
-        return level().ghostSpeedPercentage();
-    }
-
-    @Override
-    public GameLevel level() {
-        return levelNumber != 0 ? LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)] : null;
+        return levelInternal().ghostSpeedPercentage();
     }
 
     @Override
@@ -850,7 +848,7 @@ public enum GameVariants implements GameModel {
         } else if (testState.timer().atSecond(9.5)) {
             testState.setProperty("mazeFlashing", true);
             blinking.setStartPhase(Pulse.OFF);
-            blinking.restart(2 * level().numFlashes());
+            blinking.restart(2 * levelInternal().numFlashes());
         } else if (testState.timer().atSecond(12.0)) {
             testState.timer().restartIndefinitely();
             pac.freeze();
@@ -919,11 +917,11 @@ public enum GameVariants implements GameModel {
                 pac.victims().clear();
                 scorePoints(POINTS_ENERGIZER);
                 Logger.info("Scored {} points for eating energizer", POINTS_ENERGIZER);
-                if (level().pacPowerSeconds() > 0) {
+                if (levelInternal().pacPowerSeconds() > 0) {
                     eventLog().pacGetsPower = true;
                     huntingTimer().stop();
                     Logger.info("Hunting timer stopped");
-                    pac.powerTimer().restartSeconds(level().pacPowerSeconds());
+                    pac.powerTimer().restartSeconds(levelInternal().pacPowerSeconds());
                     // TODO do already frightened ghosts reverse too?
                     ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
                     ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
@@ -935,9 +933,9 @@ public enum GameVariants implements GameModel {
             }
             updateDotCount();
             world.eatFoodAt(pacTile);
-            if (world.uneatenFoodCount() == level().elroy1DotsLeft()) {
+            if (world.uneatenFoodCount() == levelInternal().elroy1DotsLeft()) {
                 setCruiseElroyState(1);
-            } else if (world.uneatenFoodCount() == level().elroy2DotsLeft()) {
+            } else if (world.uneatenFoodCount() == levelInternal().elroy2DotsLeft()) {
                 setCruiseElroyState(2);
             }
             if (isBonusReached()) {

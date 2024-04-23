@@ -71,7 +71,7 @@ public class InfoBoxGameControl extends InfoBox {
         buttonsLevelActions[GAME_LEVEL_QUIT].setOnAction(e -> actionHandler().restartIntro());
         buttonsLevelActions[GAME_LEVEL_NEXT].setOnAction(e -> context.actionHandler().cheatEnterNextLevel());
         spinnerLevelNumber.valueProperty().addListener((py, ov, nv) -> actionHandler().enterLevel(nv));
-        spinnerLevelNumber.getValueFactory().setValue(context.game().level() != null
+        spinnerLevelNumber.getValueFactory().setValue(context.game().level().isPresent()
             ? context.game().levelNumber() : 1);
         spinnerCredit.valueProperty().addListener((py, ov, nv) -> context.gameController().setCredit(nv));
         spinnerCredit.getValueFactory().setValue(context.gameController().credit());
@@ -85,16 +85,16 @@ public class InfoBoxGameControl extends InfoBox {
 
         comboGameVariant.setValue(context.game());
         comboGameVariant.setDisable(context.gameState() != GameState.INTRO);
-        comboInitialLives.setValue((int) context.game().initialLives());
+        comboInitialLives.setValue(context.game().initialLives());
         cbAutopilot.setSelected(PY_USE_AUTOPILOT.get());
         cbImmunity.setSelected(context.gameController().isPacImmune());
         buttonsLevelActions[GAME_LEVEL_START].setDisable(!canStartLevel());
-        buttonsLevelActions[GAME_LEVEL_QUIT].setDisable(context.game().level() == null);
+        buttonsLevelActions[GAME_LEVEL_QUIT].setDisable(context.game().level().isEmpty());
         buttonsLevelActions[GAME_LEVEL_NEXT].setDisable(!canEnterNextLevel());
         buttonsIntermissionTest[INTERMISSION_TEST_START].setDisable(
             context.gameState() == GameState.INTERMISSION_TEST || context.gameState() != GameState.INTRO);
         buttonsIntermissionTest[INTERMISSION_TEST_QUIT].setDisable(context.gameState() != GameState.INTERMISSION_TEST);
-        if (context.game().level() != null) {
+        if (context.game().level().isPresent()) {
             spinnerLevelNumber.getValueFactory().setValue(context.game().levelNumber());
         }
         if (!context.game().isPlaying() || context.gameState() == GameState.LEVEL_TRANSITION) {

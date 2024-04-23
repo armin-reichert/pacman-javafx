@@ -7,6 +7,7 @@ package de.amr.games.pacman.model.actors;
 import de.amr.games.pacman.lib.Steering;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
 
@@ -141,13 +142,17 @@ public class Pac extends Creature {
     }
 
     public void update(GameModel game) {
+        if (game.level().isEmpty()) {
+            return;
+        }
+        GameLevel level = game.level().get();
         if (dead || restingTicks == REST_INDEFINITE) {
             return;
         }
         if (restingTicks == 0) {
             setPercentageSpeed(powerTimer.isRunning()
-                ? game.level().pacSpeedPoweredPercentage()
-                : game.level().pacSpeedPercentage());
+                ? level.pacSpeedPoweredPercentage()
+                : level.pacSpeedPercentage());
             if (useAutopilot) {
                 autopilot.steer(this, game.world());
             } else {

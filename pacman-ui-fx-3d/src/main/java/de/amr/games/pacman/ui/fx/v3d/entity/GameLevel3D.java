@@ -369,7 +369,6 @@ public class GameLevel3D extends Group {
 
     public void update() {
         World world = context.game().world();
-        GameState gameState = GameController.it().state();
         boolean hasCredit = GameController.it().hasCredit();
 
         pac3D.update(world);
@@ -419,7 +418,7 @@ public class GameLevel3D extends Group {
             context.theme(),
             ghost,
             context.game().pac(),
-            context.game().level().numFlashes(),
+            context.game().level().orElseThrow().numFlashes(),
             GHOST_SIZE);
     }
 
@@ -485,11 +484,11 @@ public class GameLevel3D extends Group {
         return rotation;
     }
 
-    public Transition createLevelCompleteAnimation() {
-        if (context.game().level().numFlashes() == 0) {
+    public Transition createLevelCompleteAnimation(int numFlashes) {
+        if (numFlashes == 0) {
             return pauseSeconds(1.0);
         }
-        var animation = new SinusCurveAnimation(context.game().level().numFlashes());
+        var animation = new SinusCurveAnimation(numFlashes);
         animation.setOnFinished(e -> wallHeightPy.bind(PY_3D_WALL_HEIGHT));
         animation.setAmplitude(wallHeightPy.get());
         animation.elongationPy.set(wallHeightPy.get());

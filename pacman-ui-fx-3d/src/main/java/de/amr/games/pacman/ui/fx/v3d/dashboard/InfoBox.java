@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
@@ -99,10 +100,10 @@ public abstract class InfoBox {
             && context.currentGameScene().get() instanceof PlayScene3D;
     }
 
-    protected Supplier<String> ifLevelExists(Function<GameModel, String> infoSupplier) {
-        return () -> context.game().level() == null
+    protected Supplier<String> ifLevelExists(Function<GameLevel, String> infoSupplier) {
+        return () -> context.game().level().isEmpty()
             ? InfoText.NO_INFO
-            : infoSupplier.apply(context.game());
+            : infoSupplier.apply(context.game().level().get());
     }
 
     private void addRow(String labelText, Node child) {

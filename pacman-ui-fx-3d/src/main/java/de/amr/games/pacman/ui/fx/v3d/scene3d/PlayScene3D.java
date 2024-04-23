@@ -118,7 +118,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void update() {
-        if (context.game().level() == null) {
+        if (context.game().level().isEmpty()) {
             Logger.info("Cannot update 3D play scene, no game level exists");
             return;
         }
@@ -300,7 +300,7 @@ public class PlayScene3D implements GameScene {
                 // if cheat has been used to complete level, 3D food might still exist:
                 level3D.allEatables().forEach(level3D::eat);
                 level3D.livesCounter3D().stopAnimation();
-                playLevelCompleteAnimation(context.game().level());
+                playLevelCompleteAnimation(context.game().level().orElseThrow());
             }
 
             case LEVEL_TRANSITION -> {
@@ -397,7 +397,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void showLevelMessage() {
-        if (context.game().level() == null) {
+        if (context.game().level().isEmpty()) {
             Logger.info("Cannot show level message, level is NULL");
             return;
         }
@@ -420,7 +420,7 @@ public class PlayScene3D implements GameScene {
         context.actionHandler().showFlashMessageSeconds(2, pickLevelCompleteMessage(context.game().levelNumber()));
         var animation = new SequentialTransition(
             pauseSeconds(1),
-            level3D.createLevelCompleteAnimation(),
+            level3D.createLevelCompleteAnimation(context.game().level().orElseThrow().numFlashes()),
             doAfterSeconds(1.0, () -> {
                 context.game().pac().hide();
                 level3D.livesCounter3D().lightOnPy.set(false);

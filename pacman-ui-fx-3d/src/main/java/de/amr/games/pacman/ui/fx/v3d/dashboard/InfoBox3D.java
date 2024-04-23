@@ -151,7 +151,7 @@ public class InfoBox3D extends InfoBox {
             return String.format("rot=%.0f x=%.0f y=%.0f z=%.0f",
                 cam.getRotate(), cam.getTranslateX(), cam.getTranslateY(), cam.getTranslateZ());
         }
-        return "n/a";
+        return InfoText.NO_INFO;
     }
 
     private Object[] floorTextureComboBoxEntries() {

@@ -81,6 +81,8 @@ public interface GameModel {
      */
     int levelNumber();
 
+    Optional<GameLevel> level();
+
     /**
      * @return if the current level is the demo level (attract mode)
      */
@@ -112,7 +114,14 @@ public interface GameModel {
 
     TickTimer huntingTimer();
 
-    void startHuntingPhase(int index);
+    /**
+     * Hunting happens in different phases. Phases 0, 2, 4, 6 are scattering phases where the ghosts target for their
+     * respective corners and circle around the walls in their corner, phases 1, 3, 5, 7 are chasing phases where the
+     * ghosts attack Pac-Man.
+     *
+     * @param phaseIndex hunting phase index (0..7)
+     */
+    void startHuntingPhase(int phaseIndex);
 
     int huntingPhaseIndex();
 
@@ -149,8 +158,6 @@ public interface GameModel {
      * Resets the game and deletes the current level. Credit, immunity and scores remain unchanged.
      */
     void reset();
-
-    GameLevel level();
 
     World world();
 

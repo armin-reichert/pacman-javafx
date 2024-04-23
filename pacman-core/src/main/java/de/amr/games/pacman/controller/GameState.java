@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.FsmState;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Pulse;
 import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -164,12 +165,12 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            Globals.checkLevelNotNull(game.level());
+            GameLevel level = game.level().orElse(null);
             if (timer.hasExpired()) {
                 setProperty("mazeFlashing", false);
                 if (game.isDemoLevel()) { // just in case demo level is completed: back to intro scene
                     gameController().changeState(INTRO);
-                } else if (game.level().intermissionNumber() > 0) {
+                } else if (level.intermissionNumber() > 0) {
                     gameController().changeState(INTERMISSION);
                 } else {
                     gameController().changeState(LEVEL_TRANSITION);
@@ -177,7 +178,7 @@ public enum GameState implements FsmState<GameModel> {
             } else if (timer.atSecond(1)) {
                 setProperty("mazeFlashing", true);
                 game.blinking().setStartPhase(Pulse.OFF);
-                game.blinking().restart(2 * game.level().numFlashes());
+                game.blinking().restart(2 * level.numFlashes());
             } else {
                 game.blinking().tick();
             }

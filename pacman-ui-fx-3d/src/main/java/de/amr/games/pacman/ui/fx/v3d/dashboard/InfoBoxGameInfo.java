@@ -4,7 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Theme;
 
 import static de.amr.games.pacman.lib.TickTimer.ticksToString;
@@ -20,17 +21,17 @@ public class InfoBoxGameInfo extends InfoBox {
         super(theme, title);
 
         addInfo("Game Scene", () -> context.currentGameScene().isPresent()
-            ? context.currentGameScene().get().getClass().getSimpleName() : "n/a");
+            ? context.currentGameScene().get().getClass().getSimpleName() : InfoText.NO_INFO);
         addInfo("Game State", () -> "%s".formatted(context.gameState()));
         addInfo("", () -> "Running:   %s%s".formatted(context.gameState().timer().tick(),
             context.gameState().timer().isStopped() ? " (STOPPED)" : ""));
         addInfo("", () -> "Remaining: %s".formatted(ticksToString(context.gameState().timer().remaining())));
 
-        addInfo("Hunting Phase", ifLevelExists(this::fmtHuntingPhase));
-        addInfo("", ifLevelExists(this::fmtHuntingTicksRunning));
-        addInfo("", ifLevelExists(this::fmtHuntingTicksRemaining));
+        addInfo("Hunting Phase", this::fmtHuntingPhase);
+        addInfo("", this::fmtHuntingTicksRunning);
+        addInfo("", this::fmtHuntingTicksRemaining);
 
-        addInfo("Pellets", ifLevelExists(this::fmtPelletCount));
+        addInfo("Pellets", this::fmtPelletCount);
         addInfo("Ghost speed", ifLevelExists(this::fmtGhostSpeed));
         addInfo("- frightened", ifLevelExists(this::fmtGhostSpeedFrightened));
         addInfo("- in tunnel", ifLevelExists(this::fmtGhostSpeedTunnel));
@@ -40,52 +41,66 @@ public class InfoBoxGameInfo extends InfoBox {
         addInfo("Maze flashings", ifLevelExists(this::fmtNumFlashes));
     }
 
-    private String fmtHuntingPhase(GameModel game) {
-        var huntingTimer = game.huntingTimer();
-        return "%s #%d%s".formatted(game.currentHuntingPhaseName(),
-            game.scatterPhase().isPresent() ? game.scatterPhase().get() : game.chasingPhase().orElse(42),
-            huntingTimer.isStopped() ? " STOPPED" : "");
+    private String fmtHuntingPhase() {
+        if (context.game().level().isPresent()) {
+            var huntingTimer = context.game().huntingTimer();
+            return "%s #%d%s".formatted(context.game().currentHuntingPhaseName(),
+                context.game().scatterPhase().isPresent()
+                    ? context.game().scatterPhase().get()
+                    : context.game().chasingPhase().orElse(42),
+                huntingTimer.isStopped() ? " STOPPED" : "");
+        }
+        return InfoText.NO_INFO;
     }
 
-    private String fmtHuntingTicksRunning(GameModel game) {
-        return "Running:   %d".formatted(game.huntingTimer().tick());
+    private String fmtHuntingTicksRunning() {
+        if (context.game().level().isPresent()) {
+            return "Running:   %d".formatted(context.game().huntingTimer().tick());
+        }
+        return InfoText.NO_INFO;
     }
 
-    private String fmtHuntingTicksRemaining(GameModel game) {
-        return "Remaining: %s".formatted(ticksToString(game.huntingTimer().remaining()));
+    private String fmtHuntingTicksRemaining() {
+        if (context.game().level().isPresent()) {
+            return "Remaining: %s".formatted(ticksToString(context.game().huntingTimer().remaining()));
+        }
+        return InfoText.NO_INFO;
     }
 
-    private String fmtPelletCount(GameModel game) {
-        var world = game.world();
-        return String.format("%d of %d (%d energizers)", world.uneatenFoodCount(),
-            world.totalFoodCount(), world.energizerTiles().count());
+    private String fmtPelletCount() {
+        if (context.game().level().isPresent()) {
+            World world = context.game().world();
+            return String.format("%d of %d (%d energizers)", world.uneatenFoodCount(),
+                world.totalFoodCount(), world.energizerTiles().count());
+        }
+        return InfoText.NO_INFO;
     }
 
-    private String fmtGhostSpeed(GameModel game) {
-        return fmtSpeed(game.level().ghostSpeedPercentage());
+    private String fmtGhostSpeed(GameLevel level) {
+        return fmtSpeed(level.ghostSpeedPercentage());
     }
 
-    private String fmtGhostSpeedFrightened(GameModel game) {
-        return fmtSpeed(game.level().ghostSpeedFrightenedPercentage());
+    private String fmtGhostSpeedFrightened(GameLevel level) {
+        return fmtSpeed(level.ghostSpeedFrightenedPercentage());
     }
 
-    private String fmtGhostSpeedTunnel(GameModel game) {
-        return fmtSpeed(game.level().ghostSpeedTunnelPercentage());
+    private String fmtGhostSpeedTunnel(GameLevel level) {
+        return fmtSpeed(level.ghostSpeedTunnelPercentage());
     }
 
-    private String fmtPacSpeed(GameModel game) {
-        return fmtSpeed(game.level().pacSpeedPercentage());
+    private String fmtPacSpeed(GameLevel level) {
+        return fmtSpeed(level.pacSpeedPercentage());
     }
 
-    private String fmtPacSpeedPowered(GameModel game) {
-        return fmtSpeed(game.level().pacSpeedPoweredPercentage());
+    private String fmtPacSpeedPowered(GameLevel level) {
+        return fmtSpeed(level.pacSpeedPoweredPercentage());
     }
 
-    private String fmtPacPowerSeconds(GameModel game) {
-        return "%d sec".formatted(game.level().pacPowerSeconds());
+    private String fmtPacPowerSeconds(GameLevel level) {
+        return "%d sec".formatted(level.pacPowerSeconds());
     }
 
-    private String fmtNumFlashes(GameModel game) {
-        return "%d".formatted(game.level().numFlashes());
+    private String fmtNumFlashes(GameLevel level) {
+        return "%d".formatted(level.numFlashes());
     }
 }

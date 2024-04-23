@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
 
@@ -24,21 +23,14 @@ public class InfoBoxKeys extends InfoBox {
         addInfo("F2", "Picture-in-Picture");
         addInfo("F3", "Reboot");
         addInfo("Alt+A", "Autopilot On/Off");
-        addInfo("Alt+C", "Play Cut-Scenes")
-            .available(() -> context.gameState() == GameState.INTRO);
-        addInfo("Alt+E", "Eat All Simple Pellets")
-            .available(() -> context.game().isPlaying());
+        addInfo("Alt+C", "Play Cut-Scenes");
+        addInfo("Alt+E", "Eat All Simple Pellets");
         addInfo("Alt+I", "Player Immunity On/Off");
-        addInfo("Alt+L", "Add 3 Player Lives")
-            .available(() -> context.game().isPlaying());
-        addInfo("Alt+N", "Next Level")
-            .available(() -> context.game().isPlaying());
-        addInfo("Alt+X", "Kill Hunting Ghosts")
-            .available(() -> context.game().isPlaying());
-        addInfo("Alt+LEFT", () -> Perspective.previous(PY_3D_PERSPECTIVE.get()).name())
-            .available(this::isCurrentGameScene3D);
-        addInfo("Alt+RIGHT", () -> Perspective.next(PY_3D_PERSPECTIVE.get()).name())
-            .available(this::isCurrentGameScene3D);
+        addInfo("Alt+L", "Add 3 Player Lives");
+        addInfo("Alt+N", "Next Level");
+        addInfo("Alt+X", "Kill Hunting Ghosts");
+        addInfo("Alt+LEFT", () -> Perspective.previous(PY_3D_PERSPECTIVE.get()).name());
+        addInfo("Alt+RIGHT", () -> Perspective.next(PY_3D_PERSPECTIVE.get()).name());
         addInfo("Alt+3", "3D Play Scene On/Off");
         addInfo("P", "Pause On/Off");
         addInfo("Shift+P, SPACE", "Single Step");

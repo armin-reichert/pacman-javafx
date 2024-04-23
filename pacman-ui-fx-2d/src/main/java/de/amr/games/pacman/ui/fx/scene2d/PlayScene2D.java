@@ -41,10 +41,10 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void update() {
-        if (context.game().level() != null) {
+        context.game().level().ifPresent(level -> {
             context.game().pac().setUseAutopilot(context.game().isDemoLevel() || PY_USE_AUTOPILOT.get());
             updateSound();
-        }
+        });
     }
 
     @Override
@@ -78,7 +78,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        if (context.game().level() == null) {
+        if (context.game().level().isEmpty()) {
             return;
         }
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
