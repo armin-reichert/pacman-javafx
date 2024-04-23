@@ -568,22 +568,37 @@ public enum GameVariants implements GameModel {
         }
     }
 
-    /**
-     * At this point, the animations of Pac-Man and the ghosts must have been created!
-     */
     @Override
     public void startLevel() {
         letsGetReadyToRumble();
-        if (demoLevel) {
-            pac.show();
-            ghosts().forEach(Ghost::show);
-        } else {
-            pac.hide();
-            ghosts().forEach(Ghost::hide);
-        }
+        makeGuysVisible(demoLevel);
         Logger.info("{}Level {} started ({})", demoLevel ? "Demo " : "", levelNumber, this);
-
         publishGameEvent(GameEventType.LEVEL_STARTED);
+    }
+
+    @Override
+    public void letsGetReadyToRumble() {
+        pac.reset();
+        pac.setPosition(ArcadeWorld.PAC_POSITION);
+        pac.setMoveAndWishDir(Direction.LEFT);
+        pac.selectAnimation(Pac.ANIM_MUNCHING);
+        pac.resetAnimation();
+        ghosts().forEach(ghost -> {
+            ghost.reset();
+            ghost.setPosition(GHOST_POSITIONS_ON_START[ghost.id()]);
+            ghost.setMoveAndWishDir(GHOST_DIRECTIONS_ON_START[ghost.id()]);
+            ghost.setState(LOCKED);
+            ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
+            ghost.resetAnimation();
+        });
+        blinking.setStartPhase(Pulse.ON); // Energizers are visible when ON
+        blinking.reset();
+    }
+
+    @Override
+    public void makeGuysVisible(boolean visible) {
+        pac.setVisible(visible);
+        ghosts().forEach(ghost -> ghost.setVisible(visible));
     }
 
     void addSymbolToLevelCounter(byte symbol) {
@@ -759,25 +774,6 @@ public enum GameVariants implements GameModel {
     @Override
     public boolean isPlaying() {
         return playing;
-    }
-
-    @Override
-    public void letsGetReadyToRumble() {
-        pac.reset();
-        pac.setPosition(ArcadeWorld.PAC_POSITION);
-        pac.setMoveAndWishDir(Direction.LEFT);
-        pac.selectAnimation(Pac.ANIM_MUNCHING);
-        pac.resetAnimation();
-        ghosts().forEach(ghost -> {
-            ghost.reset();
-            ghost.setPosition(GHOST_POSITIONS_ON_START[ghost.id()]);
-            ghost.setMoveAndWishDir(GHOST_DIRECTIONS_ON_START[ghost.id()]);
-            ghost.setState(LOCKED);
-            ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
-            ghost.resetAnimation();
-        });
-        blinking.setStartPhase(Pulse.ON); // Energizers are visible when ON
-        blinking.reset();
     }
 
     @Override

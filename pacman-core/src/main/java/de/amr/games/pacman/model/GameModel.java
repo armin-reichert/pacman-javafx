@@ -74,6 +74,9 @@ public interface GameModel {
      */
     void createLevel(int levelNumber, boolean demoLevel);
 
+    /**
+     * At this point, the animations of Pac-Man and the ghosts must have been created!
+     */
     void startLevel();
 
     /**
@@ -95,6 +98,8 @@ public interface GameModel {
      * energizer pulse are reset too.
      */
     void letsGetReadyToRumble();
+
+    void makeGuysVisible(boolean visible);
 
     boolean isLevelComplete();
 

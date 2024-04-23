@@ -86,8 +86,7 @@ public enum GameState implements FsmState<GameModel> {
             if (game.isPlaying()) { // resume running game
                 if (timer.tick() == 1) {
                     game.letsGetReadyToRumble();
-                    game.pac().show();
-                    game.ghosts().forEach(Ghost::show);
+                    game.makeGuysVisible(true);
                 } else if (timer.tick() == TICK_RESUME_GAME) {
                     game.startHuntingPhase(0);
                     gameController().changeState(GameState.HUNTING);
@@ -100,8 +99,7 @@ public enum GameState implements FsmState<GameModel> {
                         game.startLevel();
                     }
                     case TICK_NEW_GAME_SHOW_GUYS -> {
-                        game.pac().show();
-                        game.ghosts().forEach(Ghost::show);
+                        game.makeGuysVisible(true);
                     }
                     case TICK_NEW_GAME_START_PLAYING -> {
                         game.setPlaying(true);
