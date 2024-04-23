@@ -6,10 +6,8 @@ package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.FsmState;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Pulse;
 import de.amr.games.pacman.lib.TickTimer;
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -86,31 +84,27 @@ public enum GameState implements FsmState<GameModel> {
                 }
             }
             else if (gameController().hasCredit()) { // start new game
-                switch ((int) timer.tick()) {
-                    case TICK_NEW_GAME_CREATE_LEVEL -> {
-                        game.createLevel(1, false);
-                        game.startLevel();
-                    }
-                    case TICK_NEW_GAME_SHOW_GUYS -> {
-                        game.makeGuysVisible(true);
-                    }
-                    case TICK_NEW_GAME_START_PLAYING -> {
-                        game.setPlaying(true);
-                        game.startHuntingPhase(0);
-                        gameController().changeState(GameState.HUNTING);
-                    }
+                if (timer.tick() == TICK_NEW_GAME_CREATE_LEVEL) {
+                    game.createLevel(1, false);
+                    game.startLevel();
+                }
+                else if (timer.tick() == TICK_NEW_GAME_SHOW_GUYS) {
+                    game.makeGuysVisible(true);
+                }
+                else if (timer.tick() == TICK_NEW_GAME_START_PLAYING) {
+                    game.setPlaying(true);
+                    game.startHuntingPhase(0);
+                    gameController().changeState(GameState.HUNTING);
                 }
             }
             else { // start demo level
-                switch ((int) timer.tick()) {
-                    case TICK_DEMO_LEVEL_CREATE_LEVEL -> {
-                        game.createLevel(1, true);
-                        game.startLevel();
-                    }
-                    case TICK_DEMO_LEVEL_START_PLAYING -> {
-                        game.startHuntingPhase(0);
-                        gameController().changeState(GameState.HUNTING);
-                    }
+                if (timer.tick() == TICK_DEMO_LEVEL_CREATE_LEVEL) {
+                    game.createLevel(1, true);
+                    game.startLevel();
+                }
+                else if (timer.tick() == TICK_DEMO_LEVEL_START_PLAYING) {
+                    game.startHuntingPhase(0);
+                    gameController().changeState(GameState.HUNTING);
                 }
             }
         }
@@ -156,12 +150,11 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            GameLevel level = game.level().orElse(null);
             if (timer.hasExpired()) {
                 setProperty("mazeFlashing", false);
                 if (game.isDemoLevel()) { // just in case demo level is completed: back to intro scene
                     gameController().changeState(INTRO);
-                } else if (level.intermissionNumber() > 0) {
+                } else if (game.level().orElseThrow().intermissionNumber() > 0) {
                     gameController().changeState(INTERMISSION);
                 } else {
                     gameController().changeState(LEVEL_TRANSITION);
@@ -169,7 +162,7 @@ public enum GameState implements FsmState<GameModel> {
             } else if (timer.atSecond(1)) {
                 setProperty("mazeFlashing", true);
                 game.blinking().setStartPhase(Pulse.OFF);
-                game.blinking().restart(2 * level.numFlashes());
+                game.blinking().restart(2 * game.level().orElseThrow().numFlashes());
             } else {
                 game.blinking().tick();
             }
@@ -242,23 +235,22 @@ public enum GameState implements FsmState<GameModel> {
                 } else {
                     gameController().changeState(game.lives() == 0 ? GAME_OVER : READY);
                 }
-                return;
             }
-            switch ((int) timer.tick()) {
-                case TICK_HIDE_GHOSTS -> {
-                    game.ghosts().forEach(Ghost::hide);
-                    game.pac().selectAnimation(Pac.ANIM_DYING);
-                    game.pac().resetAnimation();
-                }
-                case TICK_START_PAC_ANIMATION -> {
-                    game.pac().startAnimation();
-                    game.publishGameEvent(GameEventType.PAC_DYING);
-                }
-                case TICK_HIDE_PAC -> game.pac().hide();
-                default -> {
-                    game.blinking().tick();
-                    game.pac().update(game);
-                }
+            else if (timer.tick() == TICK_HIDE_GHOSTS) {
+                game.ghosts().forEach(Ghost::hide);
+                game.pac().selectAnimation(Pac.ANIM_DYING);
+                game.pac().resetAnimation();
+            }
+            else if (timer.tick() == TICK_START_PAC_ANIMATION) {
+                game.pac().startAnimation();
+                game.publishGameEvent(GameEventType.PAC_DYING);
+            }
+            else if (timer.tick() == TICK_HIDE_PAC) {
+                game.pac().hide();
+            }
+            else {
+                game.blinking().tick();
+                game.pac().update(game);
             }
         }
 
