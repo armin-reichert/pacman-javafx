@@ -67,7 +67,7 @@ public class InfoBoxGeneral extends InfoBox {
         sliderTargetFPS.setShowTickMarks(false);
 
         addInfo("", () -> String.format("Target %dHz Actual %dHz",
-            context.gameClock().targetFrameRatePy.get(), context.gameClock().getActualFrameRate()));
+            context.gameClock().getTargetFrameRate(), context.gameClock().getActualFrameRate()));
         addInfo("Total Updates", () -> context.gameClock().getUpdateCount());
 
         cbUsePlayScene3D = addCheckBox("3D Play Scene");
@@ -81,7 +81,7 @@ public class InfoBoxGeneral extends InfoBox {
         buttonsSimulation[0].setOnAction(e -> actionHandler().togglePaused());
         buttonsSimulation[1].setOnAction(e -> sceneContext.gameClock().makeSteps(PacManGames3dUI.PY_SIMULATION_STEPS.get(), true));
         sliderTargetFPS.valueProperty().addListener(
-            (py, ov, nv) -> sceneContext.gameClock().targetFrameRatePy.set(nv.intValue()));
+            (py, ov, nv) -> sceneContext.gameClock().setTargetFrameRate(nv.intValue()));
         cbUsePlayScene3D.setOnAction(e -> actionHandler().toggle2D3D());
         cbDebugUI.setOnAction(e -> Ufx.toggle(PY_SHOW_DEBUG_INFO));
         cbTimeMeasured.setOnAction(e -> Ufx.toggle(sceneContext.gameClock().timeMeasuredPy));
@@ -95,7 +95,7 @@ public class InfoBoxGeneral extends InfoBox {
         buttonsSimulation[0].setTooltip(paused ? tooltipPlay : tooltipStop);
         buttonsSimulation[1].setDisable(!paused);
         spinnerSimulationSteps.getValueFactory().setValue(PacManGames3dUI.PY_SIMULATION_STEPS.get());
-        sliderTargetFPS.setValue(context.gameClock().targetFrameRatePy.get());
+        sliderTargetFPS.setValue(context.gameClock().getTargetFrameRate());
         cbUsePlayScene3D.setSelected(PacManGames3dUI.PY_3D_ENABLED.get());
         cbTimeMeasured.setSelected(context.gameClock().timeMeasuredPy.get());
         cbDebugUI.setSelected(PY_SHOW_DEBUG_INFO.get());
