@@ -712,6 +712,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
                 game().createLevel(game().levelNumber() + 1, false);
             }
             game().startLevel();
+            game().makeGuysVisible(true);
             gameController().changeState(GameState.LEVEL_TRANSITION);
         }
     }

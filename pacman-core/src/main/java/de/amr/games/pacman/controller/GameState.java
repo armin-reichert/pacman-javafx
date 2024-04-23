@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.FsmState;
 import de.amr.games.pacman.lib.Pulse;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -61,16 +62,18 @@ public enum GameState implements FsmState<GameModel> {
 
     CREDIT {
         @Override
-        public void onUpdate(GameModel game) {}
+        public void onUpdate(GameModel game) {
+            // wait for user interaction
+        }
     },
 
     READY {
-        static final int TICK_NEW_GAME_CREATE_LEVEL    = 1;
-        static final int TICK_NEW_GAME_SHOW_GUYS       = 120;
-        static final int TICK_NEW_GAME_START_PLAYING   = 240;
-        static final int TICK_DEMO_LEVEL_CREATE_LEVEL  = 1;
-        static final int TICK_DEMO_LEVEL_START_PLAYING = 120;
-        static final int TICK_RESUME_GAME              = 120;
+        static final short TICK_NEW_GAME_CREATE_LEVEL    = 1;
+        static final short TICK_NEW_GAME_SHOW_GUYS       = 120;
+        static final short TICK_NEW_GAME_START_PLAYING   = 240;
+        static final short TICK_DEMO_LEVEL_CREATE_LEVEL  = 1;
+        static final short TICK_DEMO_LEVEL_START_PLAYING = 120;
+        static final short TICK_RESUME_GAME              = 120;
 
         @Override
         public void onUpdate(GameModel game) {
@@ -101,6 +104,7 @@ public enum GameState implements FsmState<GameModel> {
                 if (timer.tick() == TICK_DEMO_LEVEL_CREATE_LEVEL) {
                     game.createLevel(1, true);
                     game.startLevel();
+                    game.makeGuysVisible(true);
                 }
                 else if (timer.tick() == TICK_DEMO_LEVEL_START_PLAYING) {
                     game.startHuntingPhase(0);
@@ -126,7 +130,7 @@ public enum GameState implements FsmState<GameModel> {
             if (game.isLevelComplete()) {
                 gameController().changeState(LEVEL_COMPLETE);
             } else if (game.isPacManKilled()) {
-                if (game.isDemoLevel()) {
+                if (game == GameVariants.MS_PACMAN && game.isDemoLevel()) {
                     long runningTime = System.currentTimeMillis() - game.demoLevelStartTime();
                     Logger.info("Pac-Man killed, demo level running for {} seconds", runningTime / 1000);
                     if (runningTime >= GameModel.DEMO_LEVEL_MIN_DURATION_SEC * 1000) {
@@ -175,6 +179,7 @@ public enum GameState implements FsmState<GameModel> {
             timer.restartSeconds(1);
             game.createLevel(game.levelNumber() + 1, false);
             game.startLevel();
+            game.makeGuysVisible(true);
         }
 
         @Override
@@ -229,10 +234,10 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                game.loseLife();
                 if (game.isDemoLevel()) {
                     gameController().changeState(INTRO);
                 } else {
+                    game.loseLife();
                     gameController().changeState(game.lives() == 0 ? GAME_OVER : READY);
                 }
             }
@@ -308,6 +313,7 @@ public enum GameState implements FsmState<GameModel> {
             game.reset();
             game.createLevel(1, false);
             game.startLevel();
+            game.makeGuysVisible(true);
         }
 
         @Override

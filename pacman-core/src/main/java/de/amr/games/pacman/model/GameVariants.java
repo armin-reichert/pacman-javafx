@@ -571,7 +571,6 @@ public enum GameVariants implements GameModel {
     @Override
     public void startLevel() {
         letsGetReadyToRumble();
-        makeGuysVisible(demoLevel);
         Logger.info("{}Level {} started ({})", demoLevel ? "Demo " : "", levelNumber, this);
         publishGameEvent(GameEventType.LEVEL_STARTED);
     }
@@ -845,6 +844,7 @@ public enum GameVariants implements GameModel {
             blinking.reset();
             createLevel(levelNumber + 1, false);
             startLevel();
+            makeGuysVisible(true);
         }
     }
 
