@@ -521,10 +521,10 @@ public enum GameVariants implements GameModel {
         if (levelNumber == 0) {
             return Optional.empty();
         }
-        return Optional.of(levelInternal());
+        return Optional.of(levelData(levelNumber));
     }
 
-    GameLevel levelInternal() {
+    GameLevel levelData(int levelNumber) {
         return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
     }
 
@@ -626,20 +626,20 @@ public enum GameVariants implements GameModel {
 
     byte frightenedGhostSpeedPct(Ghost ghost) {
         return world.isTunnel(ghost.tile())
-            ? levelInternal().ghostSpeedTunnelPct() : levelInternal().ghostSpeedFrightenedPct();
+            ? levelData(levelNumber).ghostSpeedTunnelPct() : levelData(levelNumber).ghostSpeedFrightenedPct();
     }
 
     byte huntingSpeedPct(Ghost ghost) {
         if (world.isTunnel(ghost.tile())) {
-            return levelInternal().ghostSpeedTunnelPct();
+            return levelData(levelNumber).ghostSpeedTunnelPct();
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 1) {
-            return levelInternal().elroy1SpeedPct();
+            return levelData(levelNumber).elroy1SpeedPct();
         }
         if (ghost.id() == RED_GHOST && cruiseElroy == 2) {
-            return levelInternal().elroy2SpeedPct();
+            return levelData(levelNumber).elroy2SpeedPct();
         }
-        return levelInternal().ghostSpeedPct();
+        return levelData(levelNumber).ghostSpeedPct();
     }
 
     @Override
@@ -795,7 +795,7 @@ public enum GameVariants implements GameModel {
         } else if (testState.timer().atSecond(9.5)) {
             testState.setProperty("mazeFlashing", true);
             blinking.setStartPhase(Pulse.OFF);
-            blinking.restart(2 * levelInternal().numFlashes());
+            blinking.restart(2 * levelData(levelNumber).numFlashes());
         } else if (testState.timer().atSecond(12.0)) {
             testState.timer().restartIndefinitely();
             pac.freeze();
@@ -865,11 +865,11 @@ public enum GameVariants implements GameModel {
                 pac.victims().clear();
                 scorePoints(POINTS_ENERGIZER);
                 Logger.info("Scored {} points for eating energizer", POINTS_ENERGIZER);
-                if (levelInternal().pacPowerSeconds() > 0) {
+                if (levelData(levelNumber).pacPowerSeconds() > 0) {
                     eventLog().pacGetsPower = true;
                     huntingTimer().stop();
                     Logger.info("Hunting timer stopped");
-                    pac.powerTimer().restartSeconds(levelInternal().pacPowerSeconds());
+                    pac.powerTimer().restartSeconds(levelData(levelNumber).pacPowerSeconds());
                     // TODO do already frightened ghosts reverse too?
                     ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
                     ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
@@ -881,9 +881,9 @@ public enum GameVariants implements GameModel {
             }
             gateKeeper.update(this);
             world.eatFoodAt(pacTile);
-            if (world.uneatenFoodCount() == levelInternal().elroy1DotsLeft()) {
+            if (world.uneatenFoodCount() == levelData(levelNumber).elroy1DotsLeft()) {
                 setCruiseElroy(1);
-            } else if (world.uneatenFoodCount() == levelInternal().elroy2DotsLeft()) {
+            } else if (world.uneatenFoodCount() == levelData(levelNumber).elroy2DotsLeft()) {
                 setCruiseElroy(2);
             }
             if (isBonusReached()) {
