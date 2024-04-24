@@ -95,7 +95,7 @@ public enum GameVariants implements GameModel {
             ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(world.house());
-                ghost.setFrightenedBehavior(g -> g.roam(world, frightenedGhostSpeedPct(g)));
+                ghost.setFrightenedBehavior(coward -> coward.roam(world, frightenedGhostSpeedPct(coward)));
                 ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
@@ -295,7 +295,7 @@ public enum GameVariants implements GameModel {
             ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(world.house());
-                ghost.setFrightenedBehavior(g -> g.roam(world, frightenedGhostSpeedPct(g)));
+                ghost.setFrightenedBehavior(coward -> coward.roam(world, frightenedGhostSpeedPct(coward)));
                 ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
