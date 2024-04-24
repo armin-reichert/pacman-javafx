@@ -53,6 +53,7 @@ public enum GameVariants implements GameModel {
         final int[] HUNTING_TICKS_1_TO_4 = {7 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1};
         final int[] HUNTING_TICKS_5_PLUS = {5 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1};
 
+        @Override
         long huntingTicks(int levelNumber, int phaseIndex) {
             long ticks = levelNumber < 5 ? HUNTING_TICKS_1_TO_4[phaseIndex] : HUNTING_TICKS_5_PLUS[phaseIndex];
             return ticks != -1 ? ticks : TickTimer.INDEFINITE;
@@ -195,6 +196,7 @@ public enum GameVariants implements GameModel {
          * <p>
          * Note: This is not the exact behavior from the original Arcade game.
          **/
+        @Override
         void createNextBonus() {
             if (bonus != null && bonus.state() != Bonus.STATE_INACTIVE) {
                 Logger.info("Previous bonus is still active, skip this one");
@@ -245,6 +247,7 @@ public enum GameVariants implements GameModel {
         final int[] HUNTING_TICKS_2_TO_4 = {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS, 1033 * FPS, 1,       -1};
         final int[] HUNTING_TICKS_5_PLUS = {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS, 1,       -1};
 
+        @Override
         long huntingTicks(int levelNumber, int phaseIndex) {
             long ticks = switch (levelNumber) {
                 case 1       -> HUNTING_TICKS_1[phaseIndex];
@@ -348,6 +351,7 @@ public enum GameVariants implements GameModel {
 
         final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
 
+        @Override
         void createNextBonus() {
             nextBonusIndex += 1;
             byte symbol = bonusSymbols.get(nextBonusIndex);
@@ -461,6 +465,7 @@ public enum GameVariants implements GameModel {
 
     @Override
     public Stream<Ghost> ghosts(GhostState... states) {
+        checkNotNull(states);
         return states.length == 0 ? Stream.of(ghosts) : Stream.of(ghosts).filter(ghost -> ghost.inState(states));
     }
 
