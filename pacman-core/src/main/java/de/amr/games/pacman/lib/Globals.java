@@ -97,10 +97,11 @@ public class Globals {
         }
     }
 
-    public static void checkLevelNumber(int number) {
+    public static int checkLevelNumber(int number) {
         if (number < 1) {
             throw new IllegalLevelNumberException(number);
         }
+        return number;
     }
 
     public static void checkTileNotNull(Vector2i tile) {

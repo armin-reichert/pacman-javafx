@@ -64,21 +64,18 @@ public enum GameVariants implements GameModel {
             return "highscore-ms_pacman.xml";
         }
 
-
         @Override
         void buildLevel(int levelNumber, boolean demoLevel) {
             this.demoLevel = demoLevel;
             if (demoLevel) {
                 int[] levelNumbers = {1, 3, 6, 10, 14, 18}; // these numbers cover all 6 available mazes
-                levelNumber = levelNumbers[randomInt(0, levelNumbers.length)];
-                demoLevelStartTime = System.currentTimeMillis();
+                this.levelNumber = levelNumbers[randomInt(0, levelNumbers.length)];
                 Logger.info("Demo Level maze number: {}", ArcadeWorld.mazeNumberMsPacMan(levelNumber));
             } else {
-                checkLevelNumber(levelNumber);
-                this.levelNumber = levelNumber;
+                this.levelNumber = checkLevelNumber(levelNumber);
             }
 
-            world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
+            world = createMsPacManWorld(mapNumberMsPacMan(this.levelNumber));
             bonusSymbols.add(computeBonusSymbol());
             bonusSymbols.add(computeBonusSymbol());
 
@@ -107,10 +104,10 @@ public enum GameVariants implements GameModel {
 
             // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
             // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
-            if (levelNumber == 1) {
+            if (this.levelNumber == 1) {
                 levelCounter.clear();
             }
-            if (!demoLevel && levelNumber <= 7) {
+            if (!demoLevel && this.levelNumber <= 7) {
                 addSymbolToLevelCounter(bonusSymbols.getFirst());
             }
         }
@@ -250,12 +247,9 @@ public enum GameVariants implements GameModel {
 
         @Override
         void buildLevel(int levelNumber, boolean demoLevel) {
-            checkLevelNumber(levelNumber);
-            this.levelNumber = levelNumber;
+
+            this.levelNumber = checkLevelNumber(levelNumber);
             this.demoLevel = demoLevel;
-            if (demoLevel) {
-                demoLevelStartTime = System.currentTimeMillis();
-            }
 
             world = createPacManWorld();
             bonusSymbols.add(computeBonusSymbol());
@@ -399,7 +393,7 @@ public enum GameVariants implements GameModel {
 
     int levelNumber; // 1=first level
     boolean demoLevel;
-    long demoLevelStartTime;
+    long levelStartTime;
     boolean playing;
     byte initialLives;
     byte lives;
@@ -502,7 +496,7 @@ public enum GameVariants implements GameModel {
 
     @Override
     public long demoLevelStartTime() {
-        return demoLevelStartTime;
+        return levelStartTime;
     }
 
     @Override
@@ -519,6 +513,7 @@ public enum GameVariants implements GameModel {
     @Override
     public void startLevel() {
         letsGetReadyToRumble();
+        levelStartTime = System.currentTimeMillis();
         Logger.info("{}Level {} started ({})", demoLevel ? "Demo " : "", levelNumber, this);
         publishGameEvent(GameEventType.LEVEL_STARTED);
     }
@@ -535,7 +530,7 @@ public enum GameVariants implements GameModel {
     void clearLevel() {
         levelNumber = 0;
         demoLevel = false;
-        demoLevelStartTime = 0;
+        levelStartTime = 0;
         huntingPhaseIndex = 0;
         huntingTimer.resetIndefinitely();
         numGhostsKilledInLevel = 0;
