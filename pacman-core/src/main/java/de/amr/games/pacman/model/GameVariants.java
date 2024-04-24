@@ -842,7 +842,7 @@ public enum GameVariants implements GameModel {
         checkForFood();
         updateGhosts();
         updatePac();
-        updateBonus();
+        if (bonus != null) updateBonus();
         updateHuntingTimer();
         blinking.tick();
         var prey = ghosts(FRIGHTENED).filter(pac::sameTile).toList();
@@ -910,10 +910,6 @@ public enum GameVariants implements GameModel {
     }
 
     void updateBonus() {
-        if (bonus == null) {
-            Logger.error("Cannot update bonus: no bonus exists");
-            return;
-        }
         if (bonus.state() == Bonus.STATE_EDIBLE && pac.sameTile(bonus.entity())) {
             bonus.setEaten(BONUS_POINTS_SHOWN_TICKS);
             scorePoints(bonus.points());
