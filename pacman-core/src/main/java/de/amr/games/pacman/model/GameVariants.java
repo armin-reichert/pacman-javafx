@@ -64,21 +64,23 @@ public enum GameVariants implements GameModel {
             return "highscore-ms_pacman.xml";
         }
 
+
         @Override
-        public void createLevel(int number, boolean demo) {
-            demoLevel = demo;
+        void buildLevel(int levelNumber, boolean demoLevel) {
+            this.demoLevel = demoLevel;
             if (demoLevel) {
                 int[] levelNumbers = {1, 3, 6, 10, 14, 18}; // these numbers cover all 6 available mazes
                 levelNumber = levelNumbers[randomInt(0, levelNumbers.length)];
                 demoLevelStartTime = System.currentTimeMillis();
                 Logger.info("Demo Level maze number: {}", ArcadeWorld.mazeNumberMsPacMan(levelNumber));
             } else {
-                checkLevelNumber(number);
-                levelNumber = number;
+                checkLevelNumber(levelNumber);
+                this.levelNumber = levelNumber;
             }
 
             world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
-            gateKeeper.init(levelNumber);
+            bonusSymbols.add(computeBonusSymbol());
+            bonusSymbols.add(computeBonusSymbol());
 
             pac = new Pac("Ms. Pac-Man");
             pac.reset();
@@ -103,19 +105,6 @@ public enum GameVariants implements GameModel {
                 ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE / (float) FPS);
             });
 
-            huntingPhaseIndex = 0;
-            huntingTimer.resetIndefinitely();
-            numGhostsKilledInLevel = 0;
-            cruiseElroy = 0;
-
-            nextBonusIndex = -1;
-            bonusSymbols.clear();
-            bonusSymbols.add(computeBonusSymbol());
-            bonusSymbols.add(computeBonusSymbol());
-            bonus = null;
-
-            score.setLevelNumber(levelNumber);
-
             // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
             // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
             if (levelNumber == 1) {
@@ -124,9 +113,6 @@ public enum GameVariants implements GameModel {
             if (!demoLevel && levelNumber <= 7) {
                 addSymbolToLevelCounter(bonusSymbols.getFirst());
             }
-
-            Logger.info("{}Level {} created", demoLevel ? "Demo " : "", levelNumber);
-            publishGameEvent(GameEventType.LEVEL_CREATED);
         }
 
         /**
@@ -263,16 +249,17 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        public void createLevel(int number, boolean demo) {
-            checkLevelNumber(number);
-            this.levelNumber = number;
-            this.demoLevel = demo;
+        void buildLevel(int levelNumber, boolean demoLevel) {
+            checkLevelNumber(levelNumber);
+            this.levelNumber = levelNumber;
+            this.demoLevel = demoLevel;
             if (demoLevel) {
                 demoLevelStartTime = System.currentTimeMillis();
             }
 
             world = createPacManWorld();
-            gateKeeper.init(levelNumber);
+            bonusSymbols.add(computeBonusSymbol());
+            bonusSymbols.add(computeBonusSymbol());
 
             pac = new Pac("Pac-Man");
             pac.reset();
@@ -292,9 +279,6 @@ public enum GameVariants implements GameModel {
                 new Ghost(CYAN_GHOST,   "Inky"),
                 new Ghost(ORANGE_GHOST, "Clyde")
             };
-            var forbidden = new HashMap<Vector2i, List<Direction>>();
-            var up = List.of(UP);
-            ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbidden.put(tile, up));
             ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(world.house());
@@ -303,21 +287,12 @@ public enum GameVariants implements GameModel {
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
                 ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE / (float) FPS);
-                ghost.setForbiddenMoves(forbidden);
             });
 
-            huntingPhaseIndex = 0;
-            huntingTimer.resetIndefinitely();
-            numGhostsKilledInLevel = 0;
-            cruiseElroy = 0;
-
-            nextBonusIndex = -1;
-            bonusSymbols.clear();
-            bonusSymbols.add(computeBonusSymbol());
-            bonusSymbols.add(computeBonusSymbol());
-            bonus = null;
-
-            score.setLevelNumber(levelNumber);
+            var forbidden = new HashMap<Vector2i, List<Direction>>();
+            var up = List.of(UP);
+            ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbidden.put(tile, up));
+            ghosts().forEach(ghost -> ghost.setForbiddenMoves(forbidden));
 
             if (levelNumber == 1) {
                 levelCounter.clear();
@@ -325,9 +300,6 @@ public enum GameVariants implements GameModel {
             if (!demoLevel) {
                 addSymbolToLevelCounter(bonusSymbols.getFirst());
             }
-
-            Logger.info("Level {} created ({})", levelNumber, this);
-            publishGameEvent(GameEventType.LEVEL_CREATED);
         }
 
         @Override
@@ -443,16 +415,6 @@ public enum GameVariants implements GameModel {
     World world;
 
     @Override
-    public void reset() {
-        levelNumber = 0;
-        demoLevel = false;
-        playing = false;
-        lives = initialLives;
-        nextBonusIndex = -1;
-        score.reset();
-    }
-
-    @Override
     public Pac pac() {
         return pac;
     }
@@ -560,6 +522,45 @@ public enum GameVariants implements GameModel {
         Logger.info("{}Level {} started ({})", demoLevel ? "Demo " : "", levelNumber, this);
         publishGameEvent(GameEventType.LEVEL_STARTED);
     }
+
+    @Override
+    public void reset() {
+        playing = false;
+        lives = initialLives;
+        clearLevel();
+        levelCounter.clear();
+        score.reset();
+    }
+
+    void clearLevel() {
+        levelNumber = 0;
+        demoLevel = false;
+        demoLevelStartTime = 0;
+        huntingPhaseIndex = 0;
+        huntingTimer.resetIndefinitely();
+        numGhostsKilledInLevel = 0;
+        cruiseElroy = 0;
+        bonus = null;
+        nextBonusIndex = -1;
+        bonusSymbols.clear();
+        pac = null;
+        ghosts = null;
+        bonus = null;
+        world = null;
+        blinking.reset();
+    }
+
+    @Override
+    public void createLevel(int levelNumber, boolean demoLevel) {
+        clearLevel();
+        buildLevel(levelNumber, demoLevel);
+        score.setLevelNumber(levelNumber);
+        gateKeeper.init(levelNumber);
+        Logger.info("{}Level {} created", demoLevel ? "Demo " : "", levelNumber);
+        publishGameEvent(GameEventType.LEVEL_CREATED);
+    }
+
+    abstract void buildLevel(int levelNumber, boolean demoLevel);
 
     @Override
     public void letsGetReadyToRumble() {
