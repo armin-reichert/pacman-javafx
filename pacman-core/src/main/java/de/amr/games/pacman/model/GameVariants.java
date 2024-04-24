@@ -491,6 +491,10 @@ public enum GameVariants implements GameModel {
 
     abstract boolean isBonusReached();
 
+    GameLevel levelData(int levelNumber) {
+        return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
+    }
+
     @Override
     public int huntingPhaseIndex() {
         return huntingPhaseIndex;
@@ -524,10 +528,6 @@ public enum GameVariants implements GameModel {
         return Optional.of(levelData(levelNumber));
     }
 
-    GameLevel levelData(int levelNumber) {
-        return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
-    }
-
     @Override
     public boolean isDemoLevel() {
         return demoLevel;
@@ -543,17 +543,9 @@ public enum GameVariants implements GameModel {
         return cruiseElroy;
     }
 
-    /**
-     * @param value Values: <code>0, 1, 2, -1, -2</code>. (0=off, negative=disabled).
-     */
-    void setCruiseElroy(int value) {
-        cruiseElroy = (byte) value;
-        Logger.trace("Cruise Elroy state set to {}", cruiseElroy);
-    }
-
     void setCruiseElroyEnabled(boolean enabled) {
         if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
-            setCruiseElroy(-cruiseElroy);
+            cruiseElroy = (byte) -cruiseElroy;
         }
     }
 
@@ -882,9 +874,9 @@ public enum GameVariants implements GameModel {
             gateKeeper.update(this);
             world.eatFoodAt(pacTile);
             if (world.uneatenFoodCount() == levelData(levelNumber).elroy1DotsLeft()) {
-                setCruiseElroy(1);
+                cruiseElroy = 1;
             } else if (world.uneatenFoodCount() == levelData(levelNumber).elroy2DotsLeft()) {
-                setCruiseElroy(2);
+                cruiseElroy = 2;
             }
             if (isBonusReached()) {
                 createNextBonus();
