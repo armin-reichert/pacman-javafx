@@ -446,7 +446,6 @@ public enum GameVariants implements GameModel {
         lives = initialLives;
         nextBonusIndex = -1;
         score.reset();
-        Logger.info("Game variant ({}) reset", name());
     }
 
     @Override

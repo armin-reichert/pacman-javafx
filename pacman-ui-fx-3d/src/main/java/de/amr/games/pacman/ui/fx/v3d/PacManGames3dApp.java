@@ -21,18 +21,23 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.PY_3D_NIGHT_MODE;
  */
 public class PacManGames3dApp extends Application {
 
-    private final Settings settings = new Settings();
+    private Settings settings;
     private PacManGames3dUI ui;
 
     @Override
     public void init() {
+        Logger.info("Java version is {}", Runtime.version());
+        Logger.info("JavaFX version is {}", System.getProperty("javafx.runtime.version"));
+        for (var variant: GameVariants.values()) {
+            Logger.info("Game variant {} initialized", variant);
+        }
+        settings = new Settings();
         if (getParameters() != null) {
             settings.merge(getParameters().getNamed());
         }
+        Logger.info("Game settings: {}, locale: {}", settings, Locale.getDefault());
         GameController.it().selectGame(settings.variant);
-        Logger.info("Game initialized: {}, locale: {}", settings, Locale.getDefault());
-        Logger.info("Java version is {}", Runtime.version());
-        Logger.info("JavaFX version is {}", System.getProperty("javafx.runtime.version"));
+        Logger.info("Game controller initialized. Selected game: {}", GameController.it().game());
     }
 
     @Override
