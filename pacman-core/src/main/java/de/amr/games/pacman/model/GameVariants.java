@@ -839,7 +839,7 @@ public enum GameVariants implements GameModel {
 
     @Override
     public void doHuntingStep() {
-        checkFoodEaten();
+        checkForFood();
         updateGhosts();
         updatePac();
         updateBonus();
@@ -851,7 +851,7 @@ public enum GameVariants implements GameModel {
         }
     }
 
-    void checkFoodEaten() {
+    void checkForFood() {
         final Vector2i pacTile = pac.tile();
         if (world.hasFoodAt(pacTile)) {
             eventLog().foodFoundTile = pacTile;
@@ -876,7 +876,7 @@ public enum GameVariants implements GameModel {
                 pac.setRestingTicks(RESTING_TICKS_PELLET);
                 scorePoints(POINTS_PELLET);
             }
-            gateKeeper.update(this);
+            gateKeeper.onPelletOrEnergizerEaten(this);
             world.eatFoodAt(pacTile);
             if (world.uneatenFoodCount() == levelData(levelNumber).elroy1DotsLeft()) {
                 cruiseElroy = 1;
@@ -911,6 +911,7 @@ public enum GameVariants implements GameModel {
 
     void updateBonus() {
         if (bonus == null) {
+            Logger.error("Cannot update bonus: no bonus exists");
             return;
         }
         if (bonus.state() == Bonus.STATE_EDIBLE && pac.sameTile(bonus.entity())) {
@@ -925,11 +926,11 @@ public enum GameVariants implements GameModel {
     }
 
     void updateHuntingTimer( ) {
-        if (huntingTimer().hasExpired()) {
+        if (huntingTimer.hasExpired()) {
             ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
             startHuntingPhase(huntingPhaseIndex + 1);
         } else {
-            huntingTimer().advance();
+            huntingTimer.advance();
         }
     }
 
@@ -968,10 +969,11 @@ public enum GameVariants implements GameModel {
         }
     }
 
+    final short[] KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
+
     void killGhost(Ghost victim) {
         int killedSoFar = pac.victims().size();
-        short[] values = { 200, 400, 800, 1600 };
-        int points = values[killedSoFar];
+        int points = KILLED_GHOST_VALUES[killedSoFar];
         scorePoints(points);
         victim.eaten(killedSoFar);
         pac.victims().add(victim);

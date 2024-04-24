@@ -153,7 +153,7 @@ public class GateKeeper {
         Logger.info("Global dot counter set to 0 and {}", enabled ? "enabled" : "disabled");
     }
 
-    void update(GameModel game) {
+    void onPelletOrEnergizerEaten(GameModel game) {
         if (globalCounterEnabled) {
             if (game.ghost(ORANGE_GHOST).inState(LOCKED) && globalCounter == 32) {
                 Logger.info("{} inside house when global counter reached 32", game.ghost(ORANGE_GHOST).name());
