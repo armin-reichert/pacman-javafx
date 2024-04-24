@@ -104,8 +104,8 @@ public interface CreatureMovement {
         if (!creature.moveResult.teleported) {
             if (creature.gotReverseCommand && creature.canReverse()) {
                 creature.setWishDir(creature.moveDir().opposite());
+                Logger.info("{}: turned around at tile {}", creature.name(), creature.tile());
                 creature.gotReverseCommand = false;
-                Logger.info("{}: [turned around]", creature.name());
             }
             tryMoving(creature, world, creature.wishDir());
             if (creature.moveResult.moved) {
