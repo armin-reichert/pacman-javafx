@@ -23,10 +23,10 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void init() {
-        Logger.info("Java version is {}", Runtime.version());
-        Logger.info("JavaFX version is {}", System.getProperty("javafx.runtime.version"));
+        Logger.info("Java version:   {}", Runtime.version());
+        Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         for (var variant: GameVariants.values()) {
-            Logger.info("Game variant {} initialized", variant);
+            Logger.info("Game variant {} initialized.", variant);
         }
         settings = new Settings();
         if (getParameters() != null) {
@@ -44,12 +44,12 @@ public class PacManGames3dApp extends Application {
             game.addGameEventListener(ui);
         }
         ui.showStartPage();
-        Logger.info("UI created. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
+        Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }
 
     @Override
     public void stop() {
         ui.gameClock().stop();
-        Logger.info("Game stopped.");
+        Logger.info("Application stopped.");
     }
 }
