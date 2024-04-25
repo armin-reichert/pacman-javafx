@@ -227,8 +227,8 @@ public class PlayScene3D implements GameScene {
         }
         context.game().pac().show();
         context.game().ghosts().forEach(Ghost::show);
-        level3D.pac3D().init(world);
-        level3D.pac3D().update(world);
+        level3D.pac3D().init(context.game());
+        level3D.pac3D().update(context.game());
         if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
             context.ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
         }
@@ -241,8 +241,8 @@ public class PlayScene3D implements GameScene {
             case READY -> {
                 context.stopAllSounds();
                 if (level3D != null) {
-                    level3D.pac3D().init(context.game().world());
-                    level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context.game().world()));
+                    level3D.pac3D().init(context.game());
+                    level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context.game()));
                     level3D.stopEnergizerAnimation();
                     level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                     level3D.livesCounter3D().stopAnimation();
@@ -252,8 +252,8 @@ public class PlayScene3D implements GameScene {
 
             case HUNTING -> {
                 assertLevel3DExists();
-                level3D.pac3D().init(context.game().world());
-                level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context.game().world()));
+                level3D.pac3D().init(context.game());
+                level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context.game()));
                 level3D.livesCounter3D().startAnimation();
                 level3D.startEnergizerAnimation();
             }
@@ -263,7 +263,7 @@ public class PlayScene3D implements GameScene {
                 context.stopAllSounds();
                 var animation = switch (context.game()) {
                     case GameVariants.MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
-                    case GameVariants.PACMAN -> level3D.pac3D().createPacManDyingAnimation(context.game().world());
+                    case GameVariants.PACMAN -> level3D.pac3D().createPacManDyingAnimation(context.game());
                     default -> throw new IllegalGameVariantException(context.game());
                 };
                 lockGameStateAndPlayAfterOnSecond(animation);
@@ -307,15 +307,15 @@ public class PlayScene3D implements GameScene {
                 assertLevel3DExists();
                 context.gameState().timer().restartSeconds(3);
                 replaceGameLevel3D();
-                level3D.pac3D().init(context.game().world());
+                level3D.pac3D().init(context.game());
                 perspective().init(fxSubScene.getCamera());
             }
 
             case LEVEL_TEST -> {
                 PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
                 replaceGameLevel3D();
-                level3D.pac3D().init(context.game().world());
-                level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context.game().world()));
+                level3D.pac3D().init(context.game());
+                level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context.game()));
                 showLevelMessage();
             }
 

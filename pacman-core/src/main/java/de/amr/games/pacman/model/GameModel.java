@@ -119,6 +119,12 @@ public interface GameModel {
 
     TickTimer huntingTimer();
 
+    TickTimer powerTimer();
+
+    boolean isPowerFading();
+
+    boolean isPowerFadingStarting();
+
     /**
      * Hunting happens in different phases. Phases 0, 2, 4, 6 are scattering phases where the ghosts target for their
      * respective corners and circle around the walls in their corner, phases 1, 3, 5, 7 are chasing phases where the

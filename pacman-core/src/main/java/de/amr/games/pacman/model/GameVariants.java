@@ -77,7 +77,6 @@ public enum GameVariants implements GameModel {
             pac = new Pac("Ms. Pac-Man");
             pac.reset();
             pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-            pac.setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(demoLevel);
 
@@ -248,7 +247,6 @@ public enum GameVariants implements GameModel {
             pac = new Pac("Pac-Man");
             pac.reset();
             pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-            pac.setPowerFadingTicks(PAC_POWER_FADING_TICKS); // not sure about duration
             if (demoLevel) {
                 pac.setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
                 pac.setUseAutopilot(true);
@@ -376,6 +374,7 @@ public enum GameVariants implements GameModel {
     final List<Byte> bonusSymbols = new ArrayList<>(2);
     final List<Byte> levelCounter = new ArrayList<>();
     final TickTimer huntingTimer = new TickTimer("HuntingTimer");
+    final TickTimer powerTimer = new TickTimer("PacPower");
     final Score score = new Score();
     final Score highScore = new Score();
 
@@ -423,6 +422,11 @@ public enum GameVariants implements GameModel {
     @Override
     public TickTimer huntingTimer() {
         return huntingTimer;
+    }
+
+    @Override
+    public TickTimer powerTimer() {
+        return powerTimer;
     }
 
     @Override
@@ -728,6 +732,8 @@ public enum GameVariants implements GameModel {
     public void onPacDying() {
         huntingTimer().stop();
         Logger.info("Hunting timer stopped");
+        powerTimer.stop();
+        Logger.info("Power timer stopped");
         gateKeeper.resetCounterAndSetEnabled(true);
         setCruiseElroyEnabled(false);
         pac.die();
@@ -742,6 +748,8 @@ public enum GameVariants implements GameModel {
         bonus().ifPresent(Bonus::setInactive);
         huntingTimer().stop();
         Logger.info("Hunting timer stopped");
+        powerTimer.reset(0);
+        Logger.info("Power timer reset to zero");
         Logger.trace("Game level {} completed.", levelNumber);
     }
 
@@ -857,7 +865,9 @@ public enum GameVariants implements GameModel {
                     eventLog().pacGetsPower = true;
                     huntingTimer().stop();
                     Logger.info("Hunting timer stopped");
-                    pac.powerTimer().restartSeconds(levelData(levelNumber).pacPowerSeconds());
+                    int seconds = levelData(levelNumber).pacPowerSeconds();
+                    powerTimer.restartSeconds(seconds);
+                    Logger.info("Power timer restarted to {} seconds", seconds);
                     // TODO do already frightened ghosts reverse too?
                     ghosts(HUNTING_PAC).forEach(ghost -> ghost.setState(FRIGHTENED));
                     ghosts(FRIGHTENED).forEach(Ghost::reverseAsSoonAsPossible);
@@ -886,12 +896,14 @@ public enum GameVariants implements GameModel {
 
     void updatePac() {
         pac.update(this);
-        if (pac.powerTimer().remaining() == PAC_POWER_FADING_TICKS) {
+        powerTimer.advance();
+        if (powerTimer.remaining() == PAC_POWER_FADING_TICKS) {
             eventLog().pacStartsLosingPower = true;
             publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
-        } else if (pac.powerTimer().hasExpired()) {
-            pac.powerTimer().stop();
-            pac.powerTimer().resetIndefinitely();
+        } else if (powerTimer.hasExpired()) {
+            powerTimer.stop();
+            powerTimer.reset(0);
+            Logger.info("Power timer stopped and reset to zero");
             pac.victims().clear();
             huntingTimer().start();
             Logger.info("Hunting timer started");
@@ -899,6 +911,17 @@ public enum GameVariants implements GameModel {
             eventLog().pacLostPower = true;
             publishGameEvent(GameEventType.PAC_LOST_POWER);
         }
+    }
+
+    @Override
+    public boolean isPowerFading() {
+        return powerTimer.isRunning() && powerTimer.remaining() <= PAC_POWER_FADING_TICKS;
+    }
+
+    @Override
+    public boolean isPowerFadingStarting() {
+        return powerTimer.isRunning() && powerTimer.remaining() == PAC_POWER_FADING_TICKS
+            || powerTimer.duration() < PAC_POWER_FADING_TICKS && powerTimer.tick() == 1;
     }
 
     void updateBonus() {

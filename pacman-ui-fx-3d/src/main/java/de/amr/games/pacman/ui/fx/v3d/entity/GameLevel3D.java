@@ -368,17 +368,18 @@ public class GameLevel3D extends Group {
     }
 
     public void update() {
-        World world = context.game().world();
+        GameModel game = context.game();
+        World world = game.world();
         boolean hasCredit = GameController.it().hasCredit();
 
-        pac3D.update(world);
-        ghosts3D().forEach(ghost3D -> ghost3D.update(world));
+        pac3D.update(game);
+        ghosts3D().forEach(ghost3D -> ghost3D.update(game));
         if (bonus3D != null) {
             bonus3D.update(world);
         }
         updateHouseState(world.house());
         // reconsider this:
-        int numLivesDisplayed = context.game().lives() - 1;
+        int numLivesDisplayed = game.lives() - 1;
         if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
             numLivesDisplayed += 1;
         }
@@ -417,7 +418,6 @@ public class GameLevel3D extends Group {
             context.theme().get("model3D.ghost"),
             context.theme(),
             ghost,
-            context.game().pac(),
             context.game().level().orElseThrow().numFlashes(),
             GHOST_SIZE);
     }

@@ -305,8 +305,8 @@ public class Ghost extends Creature {
         } else {
             setSpeed(0);
         }
-        if (game.pac().powerTimer().isRunning() && !game.pac().victims().contains(this)) {
-            updateFrightenedAnimation(game.pac());
+        if (game.powerTimer().isRunning() && !game.pac().victims().contains(this)) {
+            updateFrightenedAnimation(game);
         } else {
             selectAnimation(ANIM_GHOST_NORMAL);
         }
@@ -328,7 +328,7 @@ public class Ghost extends Creature {
             setPosition(houseEntryPosition);
             setMoveAndWishDir(LEFT);
             newTileEntered = false; // force moving left until new tile is entered
-            if (game.pac().powerTimer().isRunning() && !game.pac().victims().contains(this)) {
+            if (game.powerTimer().isRunning() && !game.pac().victims().contains(this)) {
                 setState(FRIGHTENED);
             } else {
                 setState(HUNTING_PAC);
@@ -348,8 +348,8 @@ public class Ghost extends Creature {
         }
         setSpeed(speedInsideHouse);
         move();
-        if (game.pac().powerTimer().isRunning() && !game.pac().victims().contains(this)) {
-            updateFrightenedAnimation(game.pac());
+        if (game.powerTimer().isRunning() && !game.pac().victims().contains(this)) {
+            updateFrightenedAnimation(game);
         } else {
             selectAnimation(ANIM_GHOST_NORMAL);
         }
@@ -384,13 +384,13 @@ public class Ghost extends Creature {
      */
     private void updateStateFrightened(GameModel game) {
         frightenedBehavior.accept(this);
-        updateFrightenedAnimation(game.pac());
+        updateFrightenedAnimation(game);
     }
 
-    private void updateFrightenedAnimation(Pac pac) {
-        if (pac.isPowerFadingStarting()) {
+    private void updateFrightenedAnimation(GameModel game) {
+        if (game.isPowerFadingStarting()) {
             selectAnimation(ANIM_GHOST_FLASHING);
-        } else if (!pac.isPowerFading()) {
+        } else if (!game.isPowerFading()) {
             selectAnimation(ANIM_GHOST_FRIGHTENED);
         }
     }

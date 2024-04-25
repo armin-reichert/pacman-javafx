@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.actors;
 
 import de.amr.games.pacman.lib.Steering;
-import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
@@ -40,18 +39,15 @@ public class Pac extends Creature {
     public static final byte REST_INDEFINITE = -1;
 
     private final String name;
-    private final TickTimer powerTimer = new TickTimer("PacPower");
     private boolean dead;
     private byte restingTicks;
     private long starvingTicks;
-    private int powerFadingTicks;
 
     private Steering manualSteering;
     private Steering autopilot;
     private boolean useAutopilot;
 
     private final List<Ghost> victims = new ArrayList<>();
-
     private Animations animations;
 
     public Pac(String name) {
@@ -146,7 +142,6 @@ public class Pac extends Creature {
         restingTicks = 0;
         starvingTicks = 0;
         corneringSpeedUp = 1.5f; // no real cornering implementation but better than nothing
-        powerTimer.reset(0);
         if (animations != null) {
             animations.select(ANIM_MUNCHING, 0);
         }
@@ -166,7 +161,7 @@ public class Pac extends Creature {
             } else {
                 manualSteering.steer(this, game.world());
             }
-            setSpeedPct(powerTimer.isRunning() ? level.pacSpeedPoweredPercentage() : level.pacSpeedPercentage());
+            setSpeedPct(game.powerTimer().isRunning() ? level.pacSpeedPoweredPercentage() : level.pacSpeedPercentage());
             tryMoving(this, game.world());
             if (moveResult.moved) {
                 startAnimation();
@@ -176,7 +171,6 @@ public class Pac extends Creature {
         } else {
             --restingTicks;
         }
-        powerTimer.advance();
     }
 
     public List<Ghost> victims() {
@@ -195,7 +189,6 @@ public class Pac extends Creature {
     }
 
     public void die() {
-        powerTimer.stop(); // necessary?
         setSpeed(0);
         stopAnimation();
         dead = true;
@@ -203,23 +196,6 @@ public class Pac extends Creature {
 
     public boolean isDead() {
         return dead;
-    }
-
-    public void setPowerFadingTicks(int ticks) {
-        powerFadingTicks = ticks;
-    }
-
-    public boolean isPowerFading() {
-        return powerTimer.isRunning() && powerTimer.remaining() <= powerFadingTicks;
-    }
-
-    public boolean isPowerFadingStarting() {
-        return powerTimer.isRunning() && powerTimer.remaining() == powerFadingTicks
-            || powerTimer().duration() < powerFadingTicks && powerTimer().tick() == 1;
-    }
-
-    public TickTimer powerTimer() {
-        return powerTimer;
     }
 
     public void setRestingTicks(byte ticks) {

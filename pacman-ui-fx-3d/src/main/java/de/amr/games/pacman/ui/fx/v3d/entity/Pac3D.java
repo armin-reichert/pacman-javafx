@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -186,10 +187,6 @@ public class Pac3D extends Group {
         return pac;
     }
 
-    public Rotate orientation() {
-        return orientation;
-    }
-
     public Translate position() {
         return position;
     }
@@ -202,27 +199,27 @@ public class Pac3D extends Group {
         this.walkingAnimation = walkingAnimation;
     }
 
-    public void init(World world) {
+    public void init(GameModel game) {
         setScaleX(1.0);
         setScaleY(1.0);
         setScaleZ(1.0);
-        update(world);
+        update(game);
     }
 
-    public void update(World world) {
+    public void update(GameModel game) {
         Vector2f center = pac.center();
         position.setX(center.x());
         position.setY(center.y());
         position.setZ(-5.0);
         orientation.setAxis(Rotate.Z_AXIS);
         orientation.setAngle(angle(pac.moveDir()));
-        setVisible(pac.isVisible() && !outsideWorld(world));
+        setVisible(pac.isVisible() && !outsideWorld(game.world()));
         if (pac.isStandingStill()) {
             walkingAnimation.stop();
         } else {
             walkingAnimation.play();
         }
-        updateLight();
+        updateLight(game);
     }
 
     public void setLight(PointLight light) {
@@ -238,16 +235,16 @@ public class Pac3D extends Group {
         return light;
     }
 
-    private void updateLight() {
+    private void updateLight(GameModel game) {
         if (light == null) {
             return;
         }
         double radius = 0;
-        if (pac.powerTimer().duration() > 0) {
-            double t = (double) pac.powerTimer().remaining() / pac.powerTimer().duration();
+        if (game.powerTimer().duration() > 0) {
+            double t = (double) game.powerTimer().remaining() / game.powerTimer().duration();
             radius = t * 6 * TS;
         }
-        boolean hasPower = pac.powerTimer().isRunning();
+        boolean hasPower = game.powerTimer().isRunning();
         light.setMaxRange(hasPower ? 2 * TS + radius : 0);
         light.setLightOn(lightedPy.get() && pac.isVisible() && hasPower);
     }
@@ -271,7 +268,7 @@ public class Pac3D extends Group {
         );
     }
 
-    public Animation createPacManDyingAnimation(World world) {
+    public Animation createPacManDyingAnimation(GameModel game) {
         Duration duration = Duration.seconds(1.0);
         short numSpins = 6;
 
@@ -293,7 +290,7 @@ public class Pac3D extends Group {
 
         //TODO does not yet work as I want to
         return new SequentialTransition(
-            doNow(() -> init(world)),
+            doNow(() -> init(game)),
             pauseSeconds(0.5),
             new ParallelTransition(spinning, shrinking, falling),
             doAfterSeconds(1.0, () -> {

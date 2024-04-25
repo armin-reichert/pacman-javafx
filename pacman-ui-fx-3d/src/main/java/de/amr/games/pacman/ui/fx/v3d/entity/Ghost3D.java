@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
@@ -53,7 +54,6 @@ public class Ghost3D extends Group {
 
     private final Ghost ghost;
     private final int numFlashes;
-    private final Pac pac;
     private final Group coloredGhostGroup;
     private final ColoredGhost3D coloredGhost3D;
     private final Box numberQuad;
@@ -63,15 +63,13 @@ public class Ghost3D extends Group {
     private final RotateTransition numberRotation;
     private Look currentLook;
 
-    public Ghost3D(Model3D model3D, Theme theme, Ghost ghost, Pac pac, int numFlashes, double size) {
+    public Ghost3D(Model3D model3D, Theme theme, Ghost ghost, int numFlashes, double size) {
         requireNonNull(model3D);
         requireNonNull(theme);
         requireNonNull(ghost);
-        requireNonNull(pac);
 
         this.ghost = ghost;
         this.numFlashes = numFlashes;
-        this.pac = pac;
 
         coloredGhost3D = new ColoredGhost3D(model3D, theme, ghost.id(), size);
         coloredGhost3D.dressShape().drawModeProperty().bind(drawModePy);
@@ -116,17 +114,17 @@ public class Ghost3D extends Group {
         numberQuad.setMaterial(material);
     }
 
-    public void init(World world) {
+    public void init(GameModel game) {
         brakeAnimation.stop();
         dressAnimation.stop();
         numberRotation.stop();
-        updateTransform(world);
-        updateLook();
+        updateTransform(game.world());
+        updateLook(game);
     }
 
-    public void update(World world) {
-        updateTransform(world);
-        updateLook();
+    public void update(GameModel game) {
+        updateTransform(game.world());
+        updateLook(game);
         updateAnimations();
     }
 
@@ -155,17 +153,17 @@ public class Ghost3D extends Group {
         }
     }
 
-    private void updateLook() {
-        var newLook = computeLook();
+    private void updateLook(GameModel game) {
+        var newLook = computeLook(game);
         if (currentLook != newLook) {
             setLook(newLook);
         }
     }
 
-    private Look computeLook() {
+    private Look computeLook(GameModel game) {
         return switch (ghost.state()) {
-            case LOCKED, LEAVING_HOUSE -> pac.powerTimer().isRunning()? frightenedOrFlashingLook() : Look.NORMAL;
-            case FRIGHTENED -> frightenedOrFlashingLook();
+            case LOCKED, LEAVING_HOUSE -> game.powerTimer().isRunning()? frightenedOrFlashingLook(game) : Look.NORMAL;
+            case FRIGHTENED -> frightenedOrFlashingLook(game);
             case ENTERING_HOUSE, RETURNING_HOME -> Look.EYES;
             case EATEN -> Look.NUMBER;
             default -> Look.NORMAL;
@@ -194,7 +192,7 @@ public class Ghost3D extends Group {
         }
     }
 
-    private Look frightenedOrFlashingLook() {
-        return pac.isPowerFading() ? Look.FLASHING : Look.FRIGHTENED;
+    private Look frightenedOrFlashingLook(GameModel game) {
+        return game.isPowerFading() ? Look.FLASHING : Look.FRIGHTENED;
     }
 }
