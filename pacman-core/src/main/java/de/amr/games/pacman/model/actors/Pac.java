@@ -27,26 +27,20 @@ public class Pac extends Creature {
 
     public static final String ANIM_MUNCHING = "munching";
     public static final String ANIM_DYING = "dying";
-    /**
-     * In Pac-Man cutscene, big Pac-Man appears.
-     */
+    /** In Pac-Man cutscene, a big Pac-Man appears. */
     public static final String ANIM_BIG_PACMAN = "big_pacman";
-    /**
-     * In Ms. Pac-Man cutscenes, also Ms. PacMan's husband appears.
-     */
+    /** In Ms. Pac-Man cutscenes, also Ms. PacMan's husband appears. */
     public static final String ANIM_HUSBAND_MUNCHING = "husband_munching";
 
-    public static final byte REST_INDEFINITE = -1;
+    public static final byte REST_INDEFINITELY = -1;
 
     private final String name;
     private boolean dead;
     private byte restingTicks;
     private long starvingTicks;
-
     private Steering manualSteering;
     private Steering autopilot;
     private boolean useAutopilot;
-
     private final List<Ghost> victims = new ArrayList<>();
     private Animations animations;
 
@@ -152,7 +146,7 @@ public class Pac extends Creature {
             return;
         }
         GameLevel level = game.level().get();
-        if (dead || restingTicks == REST_INDEFINITE) {
+        if (dead || restingTicks == REST_INDEFINITELY) {
             return;
         }
         if (restingTicks == 0) {
@@ -182,7 +176,7 @@ public class Pac extends Creature {
      */
     public void freeze() {
         setSpeed(0);
-        setRestingTicks(Pac.REST_INDEFINITE);
+        setRestingTicks(Pac.REST_INDEFINITELY);
         stopAnimation();
         selectAnimation(Pac.ANIM_MUNCHING);
         resetAnimation();
@@ -199,7 +193,7 @@ public class Pac extends Creature {
     }
 
     public void setRestingTicks(byte ticks) {
-        if (ticks == REST_INDEFINITE || ticks >= 0) {
+        if (ticks == REST_INDEFINITELY || ticks >= 0) {
             restingTicks = ticks;
         } else {
             throw new IllegalArgumentException("Resting time cannot be negative, but is: " + ticks);
@@ -226,7 +220,7 @@ public class Pac extends Creature {
      * or if he is resting for an indefinite time.
      */
     public boolean isStandingStill() {
-        return velocity().length() == 0 || !moveResult.moved || restingTicks == REST_INDEFINITE;
+        return velocity().length() == 0 || !moveResult.moved || restingTicks == REST_INDEFINITELY;
     }
 
     public void setManualSteering(Steering steering) {

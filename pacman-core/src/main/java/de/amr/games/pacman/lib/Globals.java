@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib;
 
-import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.IllegalGhostIDException;
 import de.amr.games.pacman.model.IllegalLevelNumberException;
@@ -32,7 +31,6 @@ public class Globals {
     public static final Random RND = new Random();
 
     private static final String MSG_GAME_NULL = "Game model must not be null";
-    private static final String MSG_LEVEL_NULL = "Game level must not be null";
     private static final String MSG_TILE_NULL = "Tile must not be null";
     private static final String MSG_DIR_NULL = "Direction must not be null";
 
@@ -71,30 +69,27 @@ public class Globals {
         return v2f(TS * tileX + HTS, TS * tileY);
     }
 
-    public static Vector2f centerOfTile(int tileX, int tileY) {
-        return v2f(TS * tileX + HTS, TS * tileY + HTS);
-    }
-
     public static double t(double tiles) {
         return tiles * TS;
     }
 
-    public static void checkNotNull(Object value) {
-        Objects.requireNonNull(value, "");
+    public static <T> T checkNotNull(T value) {
+        return Objects.requireNonNull(value, "");
     }
 
-    public static void checkNotNull(Object value, String message) {
-        Objects.requireNonNull(value, message);
+    public static <T> T checkNotNull(T value, String message) {
+        return Objects.requireNonNull(value, message);
     }
 
-    public static void checkGameNotNull(GameModel game) {
-        checkNotNull(game, MSG_GAME_NULL);
+    public static GameModel checkGameNotNull(GameModel game) {
+        return checkNotNull(game, MSG_GAME_NULL);
     }
 
-    public static void checkGhostID(byte id) {
+    public static byte checkGhostID(byte id) {
         if (id < 0 || id > 3) {
             throw new IllegalGhostIDException(id);
         }
+        return id;
     }
 
     public static int checkLevelNumber(int number) {
@@ -104,16 +99,12 @@ public class Globals {
         return number;
     }
 
-    public static void checkTileNotNull(Vector2i tile) {
-        checkNotNull(tile, MSG_TILE_NULL);
+    public static Vector2i checkTileNotNull(Vector2i tile) {
+        return checkNotNull(tile, MSG_TILE_NULL);
     }
 
-    public static void checkLevelNotNull(GameLevel level) {
-        checkNotNull(level, MSG_LEVEL_NULL);
-    }
-
-    public static void checkDirectionNotNull(Direction dir) {
-        checkNotNull(dir, MSG_DIR_NULL);
+    public static Direction checkDirectionNotNull(Direction dir) {
+        return checkNotNull(dir, MSG_DIR_NULL);
     }
 
     public static double requirePositive(double value, String messageFormat) {
