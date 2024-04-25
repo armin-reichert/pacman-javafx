@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,24 +94,32 @@ public class Pac extends Creature {
     public void selectAnimation(String name, int index) {
         if (animations != null) {
             animations.select(name, index);
+        } else {
+            Logger.warn("Trying to select animation '{}' (index: {}) before animations have been created!", name, index);
         }
     }
 
     public void startAnimation() {
         if (animations != null) {
             animations.startSelected();
+        } else {
+            Logger.warn("Trying to start animation before animations have been created!");
         }
     }
 
     public void stopAnimation() {
         if (animations != null) {
             animations.stopSelected();
+        } else {
+            Logger.warn("Trying to stop animation before animations have been created!");
         }
     }
 
     public void resetAnimation() {
         if (animations != null) {
             animations.resetSelected();
+        } else {
+            Logger.warn("Trying to reset animation before animations have been created!");
         }
     }
 
@@ -136,9 +145,11 @@ public class Pac extends Creature {
         dead = false;
         restingTicks = 0;
         starvingTicks = 0;
-        corneringSpeedUp = 1.5f; // TODO experimental
+        corneringSpeedUp = 1.5f; // no real cornering implementation but better than nothing
         powerTimer.reset(0);
-        selectAnimation(ANIM_MUNCHING);
+        if (animations != null) {
+            animations.select(ANIM_MUNCHING, 0);
+        }
     }
 
     public void update(GameModel game) {
@@ -150,14 +161,12 @@ public class Pac extends Creature {
             return;
         }
         if (restingTicks == 0) {
-            setSpeedPct(powerTimer.isRunning()
-                ? level.pacSpeedPoweredPercentage()
-                : level.pacSpeedPercentage());
             if (useAutopilot) {
                 autopilot.steer(this, game.world());
             } else {
                 manualSteering.steer(this, game.world());
             }
+            setSpeedPct(powerTimer.isRunning() ? level.pacSpeedPoweredPercentage() : level.pacSpeedPercentage());
             tryMoving(this, game.world());
             if (moveResult.moved) {
                 startAnimation();
@@ -168,9 +177,6 @@ public class Pac extends Creature {
             --restingTicks;
         }
         powerTimer.advance();
-        if (powerTimer.hasExpired()) {
-            victims.clear();
-        }
     }
 
     public List<Ghost> victims() {

@@ -191,24 +191,32 @@ public class Ghost extends Creature {
     public void selectAnimation(String name, int index) {
         if (animations != null) {
             animations.select(name, index);
+        } else {
+            Logger.warn("Trying to select animation '{}' (index: {}) before animations have been created!", name, index);
         }
     }
 
     public void startAnimation() {
         if (animations != null) {
             animations.startSelected();
+        } else {
+            Logger.warn("Trying to start animation before animations have been created!");
         }
     }
 
     public void stopAnimation() {
         if (animations != null) {
             animations.stopSelected();
+        } else {
+            Logger.warn("Trying to stop animation before animations have been created!");
         }
     }
 
     public void resetAnimation() {
         if (animations != null) {
             animations.resetSelected();
+        } else {
+            Logger.warn("Trying to reset animation before animations have been created!");
         }
     }
 

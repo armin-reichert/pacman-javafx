@@ -63,9 +63,9 @@ public enum GameVariants implements GameModel {
         void buildLevel(int levelNumber, boolean demoLevel) {
             this.demoLevel = demoLevel;
             if (demoLevel) {
-                int[] levelNumbers = {1, 3, 6, 10, 14, 18}; // these numbers cover all 6 available mazes
+                byte[] levelNumbers = {1, 3, 6, 10, 14, 18}; // these numbers cover all 6 available mazes
                 this.levelNumber = levelNumbers[randomInt(0, levelNumbers.length)];
-                Logger.info("Demo Level maze number: {}", ArcadeWorld.mazeNumberMsPacMan(levelNumber));
+                Logger.info("Demo Level maze number: {}", mazeNumberMsPacMan(levelNumber));
             } else {
                 this.levelNumber = checkLevelNumber(levelNumber);
             }
@@ -216,7 +216,7 @@ public enum GameVariants implements GameModel {
      */
     PACMAN {
 
-        final int[] HUNTING_TICKS_1 =      {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS,   20 * FPS, 5 * FPS, -1};
+        final int[] HUNTING_TICKS_1      = {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS,   20 * FPS, 5 * FPS, -1};
         final int[] HUNTING_TICKS_2_TO_4 = {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS, 1033 * FPS, 1,       -1};
         final int[] HUNTING_TICKS_5_PLUS = {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS, 1,       -1};
 
@@ -892,6 +892,7 @@ public enum GameVariants implements GameModel {
         } else if (pac.powerTimer().hasExpired()) {
             pac.powerTimer().stop();
             pac.powerTimer().resetIndefinitely();
+            pac.victims().clear();
             huntingTimer().start();
             Logger.info("Hunting timer started");
             ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));

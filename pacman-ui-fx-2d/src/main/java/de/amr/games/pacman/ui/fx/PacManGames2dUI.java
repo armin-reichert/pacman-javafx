@@ -501,21 +501,22 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     @Override
     public void onLevelCreated(GameEvent e) {
         // Found no better point in time to create and assign the sprite animations to the guys
-        switch (e.game) {
+        GameModel game = e.game;
+        switch (game) {
             case GameVariants.MS_PACMAN -> {
-                e.game.pac().setAnimations(new MsPacManGamePacAnimations(e.game.pac(), spriteSheet()));
-                e.game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, spriteSheet())));
-                Logger.info("Created Ms. Pac-Man game creature animations for level #{}", e.game.levelNumber());
+                game.pac().setAnimations(new MsPacManGamePacAnimations(game.pac(), spriteSheet()));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, spriteSheet())));
+                Logger.info("Created Ms. Pac-Man game creature animations for level #{}", game.levelNumber());
             }
             case GameVariants.PACMAN -> {
-                e.game.pac().setAnimations(new PacManGamePacAnimations(e.game.pac(), spriteSheet()));
-                e.game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, spriteSheet())));
-                Logger.info("Created Pac-Man game creature animations for level #{}", e.game.levelNumber());
+                game.pac().setAnimations(new PacManGamePacAnimations(game.pac(), spriteSheet()));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, spriteSheet())));
+                Logger.info("Created Pac-Man game creature animations for level #{}", game.levelNumber());
             }
-            default -> throw new IllegalGameVariantException(e.game);
+            default -> throw new IllegalGameVariantException(game);
         }
-        if (!e.game.isDemoLevel()) {
-            e.game.pac().setManualSteering(new KeyboardPacSteering());
+        if (!game.isDemoLevel()) {
+            game.pac().setManualSteering(new KeyboardPacSteering());
         }
     }
 
