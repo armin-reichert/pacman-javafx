@@ -39,11 +39,6 @@ public enum GameVariants implements GameModel {
 
     MS_PACMAN {
 
-        {
-            initialLives = 3;
-            reset();
-        }
-
         /**
          * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
          *
@@ -220,11 +215,6 @@ public enum GameVariants implements GameModel {
      * <a href="https://pacman.holenet.info">Jamey Pittman: The Pac-Man Dossier</a>.
      */
     PACMAN {
-
-        {
-            initialLives = 3;
-            reset();
-        }
 
         final int[] HUNTING_TICKS_1 =      {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS,   20 * FPS, 5 * FPS, -1};
         final int[] HUNTING_TICKS_2_TO_4 = {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS, 1033 * FPS, 1,       -1};
@@ -407,6 +397,11 @@ public enum GameVariants implements GameModel {
     Ghost[] ghosts;
     Bonus bonus;
     World world;
+
+    GameVariants() {
+        initialLives = 3;
+        reset();
+    }
 
     @Override
     public Pac pac() {
