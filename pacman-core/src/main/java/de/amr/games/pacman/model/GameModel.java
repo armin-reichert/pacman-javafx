@@ -109,7 +109,7 @@ public interface GameModel {
 
     void onPacDying();
 
-    void killGhosts(List<Ghost> prey);
+    void killGhost(Ghost prey);
 
     void doHuntingStep();
 

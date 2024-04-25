@@ -745,7 +745,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public void cheatKillAllEatableGhosts() {
         if (game().isPlaying() && gameState() == GameState.HUNTING) {
             game().pac().victims().clear();
-            game().killGhosts(game().ghosts(FRIGHTENED, HUNTING_PAC).toList());
+            game().ghosts(FRIGHTENED, HUNTING_PAC).forEach(game()::killGhost);
             gameController().changeState(GameState.GHOST_DYING);
         }
     }

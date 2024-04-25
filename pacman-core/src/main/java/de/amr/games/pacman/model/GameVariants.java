@@ -848,10 +848,7 @@ public enum GameVariants implements GameModel {
         if (bonus != null) updateBonus();
         updatePacPower();
         updateHuntingTimer();
-        var prey = ghosts(FRIGHTENED).filter(pac::sameTile).toList();
-        if (!prey.isEmpty()) {
-            killGhosts(prey);
-        }
+        ghosts(FRIGHTENED).filter(pac::sameTile).forEach(this::killGhost);
     }
 
     void checkForFood() {
@@ -971,30 +968,23 @@ public enum GameVariants implements GameModel {
         ghosts().forEach(ghost -> ghost.update(this));
     }
 
-    @Override
-    public void killGhosts(List<Ghost> prey) {
-        if (!prey.isEmpty()) {
-            prey.forEach(this::killGhost);
-            if (numGhostsKilledInLevel == 16) {
-                int points = POINTS_ALL_GHOSTS_IN_LEVEL;
-                scorePoints(points);
-                Logger.info("Scored {} points for killing all ghosts at level {}", points, levelNumber);
-            }
-        }
-    }
-
     final short[] KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
 
-    void killGhost(Ghost victim) {
+    @Override
+    public void killGhost(Ghost ghost) {
+        eventLog().killedGhosts.add(ghost);
         int killedSoFar = pac.victims().size();
         int points = KILLED_GHOST_VALUES[killedSoFar];
+        ghost.eaten(killedSoFar);
         scorePoints(points);
-        victim.eaten(killedSoFar);
-        pac.victims().add(victim);
-        eventLog().killedGhosts.add(victim);
+        Logger.info("Scored {} points for killing {} at tile {}", points, ghost.name(), ghost.tile());
         numGhostsKilledInLevel += 1;
-        Logger.info("Scored {} points for killing {} at tile {} (#{} killed in level)",
-            points, victim.name(), victim.tile(), numGhostsKilledInLevel);
+        if (numGhostsKilledInLevel == 16) {
+            int extraPoints = POINTS_ALL_GHOSTS_IN_LEVEL;
+            scorePoints(extraPoints);
+            Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, levelNumber);
+        }
+        pac.victims().add(ghost);
     }
 
     // Game Event Support
