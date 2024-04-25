@@ -374,7 +374,7 @@ public enum GameVariants implements GameModel {
     final List<Byte> bonusSymbols = new ArrayList<>(2);
     final List<Byte> levelCounter = new ArrayList<>();
     final TickTimer huntingTimer = new TickTimer("HuntingTimer");
-    final TickTimer powerTimer = new TickTimer("PacPower");
+    final TickTimer powerTimer = new TickTimer("PacPowerTimer");
     final Score score = new Score();
     final Score highScore = new Score();
 
@@ -733,7 +733,8 @@ public enum GameVariants implements GameModel {
         huntingTimer().stop();
         Logger.info("Hunting timer stopped");
         powerTimer.stop();
-        Logger.info("Power timer stopped");
+        powerTimer.reset(0);
+        Logger.info("Power timer stopped and set to zero");
         gateKeeper.resetCounterAndSetEnabled(true);
         setCruiseElroyEnabled(false);
         pac.die();
@@ -748,8 +749,9 @@ public enum GameVariants implements GameModel {
         bonus().ifPresent(Bonus::setInactive);
         huntingTimer().stop();
         Logger.info("Hunting timer stopped");
+        powerTimer.stop();
         powerTimer.reset(0);
-        Logger.info("Power timer reset to zero");
+        Logger.info("Power timer stopped and reset to zero");
         Logger.trace("Game level {} completed.", levelNumber);
     }
 
