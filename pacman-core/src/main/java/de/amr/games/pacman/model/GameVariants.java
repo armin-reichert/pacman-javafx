@@ -541,6 +541,7 @@ public enum GameVariants implements GameModel {
         ghosts = null;
         bonus = null;
         world = null;
+        blinking.stop();
         blinking.reset();
     }
 
@@ -840,12 +841,13 @@ public enum GameVariants implements GameModel {
 
     @Override
     public void doHuntingStep() {
+        blinking.tick();
         checkForFood();
         updateGhosts();
-        updatePac();
+        pac.update(this);
         if (bonus != null) updateBonus();
+        updatePacPower();
         updateHuntingTimer();
-        blinking.tick();
         var prey = ghosts(FRIGHTENED).filter(pac::sameTile).toList();
         if (!prey.isEmpty()) {
             killGhosts(prey);
@@ -896,8 +898,7 @@ public enum GameVariants implements GameModel {
         }
     }
 
-    void updatePac() {
-        pac.update(this);
+    void updatePacPower() {
         powerTimer.advance();
         if (powerTimer.remaining() == PAC_POWER_FADING_TICKS) {
             eventLog().pacStartsLosingPower = true;
