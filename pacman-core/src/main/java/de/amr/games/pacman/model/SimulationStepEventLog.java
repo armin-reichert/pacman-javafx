@@ -23,7 +23,7 @@ public class SimulationStepEventLog {
     public boolean  pacGetsPower = false;
     public boolean  pacStartsLosingPower = false;
     public boolean  pacLostPower = false;
-    public boolean  pacDied = false;
+    public boolean pacKilled = false;
     public Ghost releasedGhost = null;
     public String ghostReleaseInfo = null;
     public final List<Ghost> killedGhosts = new ArrayList<>(4);
@@ -48,7 +48,7 @@ public class SimulationStepEventLog {
         if (pacLostPower) {
             messages.add("Pac lost power");
         }
-        if (pacDied) {
+        if (pacKilled) {
             messages.add("Pac died");
         }
         if (releasedGhost != null) {

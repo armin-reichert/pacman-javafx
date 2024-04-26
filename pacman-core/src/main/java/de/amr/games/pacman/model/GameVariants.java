@@ -796,12 +796,11 @@ public enum GameVariants implements GameModel {
 
     @Override
     public boolean isPacManKilled() {
-        var killers = ghosts(HUNTING_PAC).filter(pac::sameTile).toList();
-        if (!killers.isEmpty() && !GameController.it().isPacImmune()) {
-            eventLog().pacDied = true;
-            return true;
+        if (GameController.it().isPacImmune()) {
+            return false;
         }
-        return false;
+        eventLog().pacKilled = ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
+        return eventLog().pacKilled;
     }
 
     @Override
