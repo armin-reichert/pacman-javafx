@@ -344,13 +344,6 @@ public enum GameVariants implements GameModel {
 
     final Direction[] GHOST_DIRECTIONS_ON_START = {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP};
 
-    final Vector2f[] GHOST_POSITIONS_ON_START = {
-        ArcadeWorld.HOUSE_ENTRY_POSITION,
-        ArcadeWorld.HOUSE_MIDDLE_SEAT,
-        ArcadeWorld.HOUSE_LEFT_SEAT,
-        ArcadeWorld.HOUSE_RIGHT_SEAT
-    };
-
     final Vector2f[] GHOST_REVIVAL_POSITIONS = {
         ArcadeWorld.HOUSE_MIDDLE_SEAT,
         ArcadeWorld.HOUSE_MIDDLE_SEAT,
@@ -566,7 +559,7 @@ public enum GameVariants implements GameModel {
         pac.resetAnimation();
         ghosts().forEach(ghost -> {
             ghost.reset();
-            ghost.setPosition(GHOST_POSITIONS_ON_START[ghost.id()]);
+            ghost.setPosition(world.getGhostPosition(ghost.id()));
             ghost.setMoveAndWishDir(GHOST_DIRECTIONS_ON_START[ghost.id()]);
             ghost.setState(LOCKED);
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);

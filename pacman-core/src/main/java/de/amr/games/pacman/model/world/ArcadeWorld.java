@@ -224,6 +224,19 @@ public interface ArcadeWorld {
     Vector2i SCATTER_TILE_NW = v2i( 2,  0); // near left-upper corner
     Vector2i SCATTER_TILE_SE = v2i(27, 34); // near right-lower corner
     Vector2i SCATTER_TILE_SW = v2i( 0, 34); // near left-lower corner
+
+    Vector2f HOUSE_ENTRY_POSITION = halfTileRightOf(13, 14);
+    Vector2f HOUSE_LEFT_SEAT      = halfTileRightOf(11, 17);
+    Vector2f HOUSE_MIDDLE_SEAT    = halfTileRightOf(13, 17);
+    Vector2f HOUSE_RIGHT_SEAT     = halfTileRightOf(15, 17);
+
+    Vector2f[] GHOST_POSITIONS_ON_START = {
+        HOUSE_ENTRY_POSITION,
+        HOUSE_MIDDLE_SEAT,
+        HOUSE_LEFT_SEAT,
+        HOUSE_RIGHT_SEAT
+    };
+
     Vector2f BONUS_POSITION = halfTileRightOf(13, 20);
     Vector2f PAC_POSITION   = halfTileRightOf(13, 26);
 
@@ -261,13 +274,9 @@ public interface ArcadeWorld {
                 String.format("Arcade map must have %d columns and %d rows but has %d columns and %d rows",
                     TILES_X, TILES_Y, world.numCols(), world.numRows()));
         }
+        world.setGhostPositions(GHOST_POSITIONS_ON_START);
         return world;
     }
-
-    Vector2f HOUSE_ENTRY_POSITION = halfTileRightOf(13, 14);
-    Vector2f HOUSE_LEFT_SEAT      = halfTileRightOf(11, 17);
-    Vector2f HOUSE_MIDDLE_SEAT    = halfTileRightOf(13, 17);
-    Vector2f HOUSE_RIGHT_SEAT     = halfTileRightOf(15, 17);
 
     /**
      * In Ms. Pac-Man, there are 4 maps used by the 6 mazes. Up to level 13, the mazes are:

@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.world;
 
+import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 
 import java.util.ArrayList;
@@ -63,6 +65,8 @@ public class World {
     private final int totalFoodCount;
     private int uneatenFoodCount;
 
+    private Vector2f[] ghostPositions;
+
     /**
      * @param tileMapData byte-array of tile map data
      * @param house ghost house
@@ -90,6 +94,15 @@ public class World {
         eaten = new BitSet(numCols() * numRows());
         totalFoodCount = (int) tiles().filter(this::isFoodTile).count();
         resetFood();
+    }
+
+    public void setGhostPositions(Vector2f[] ghostPositions) {
+        this.ghostPositions = ghostPositions;
+    }
+
+    public Vector2f getGhostPosition(byte ghostID) {
+        checkGhostID(ghostID);
+        return ghostPositions[ghostID];
     }
 
     public void resetFood() {
