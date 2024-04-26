@@ -221,7 +221,6 @@ public interface ArcadeWorld {
     };
 
     Vector2f BONUS_POSITION = halfTileRightOf(13, 20);
-    Vector2f PAC_POSITION   = halfTileRightOf(13, 26);
 
     NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
         np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
@@ -257,6 +256,7 @@ public interface ArcadeWorld {
                 String.format("Arcade map must have %d columns and %d rows but has %d columns and %d rows",
                     TILES_X, TILES_Y, world.numCols(), world.numRows()));
         }
+        world.setPacPosition(halfTileRightOf(13, 26));
         world.setGhostPositions(new Vector2f[] {
             halfTileRightOf(13, 14), // red ghost
             halfTileRightOf(13, 17), // pink ghost

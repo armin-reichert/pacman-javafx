@@ -552,7 +552,7 @@ public enum GameVariants implements GameModel {
     @Override
     public void letsGetReadyToRumble() {
         pac.reset();
-        pac.setPosition(ArcadeWorld.PAC_POSITION);
+        pac.setPosition(world.pacPosition());
         pac.setMoveAndWishDir(Direction.LEFT);
         pac.selectAnimation(Pac.ANIM_MUNCHING);
         pac.resetAnimation();

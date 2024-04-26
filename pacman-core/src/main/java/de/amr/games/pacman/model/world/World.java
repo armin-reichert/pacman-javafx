@@ -64,6 +64,7 @@ public class World {
     private final int totalFoodCount;
     private int uneatenFoodCount;
 
+    private Vector2f pacPosition;
     private Vector2f[] ghostPositions;
     private Vector2i[] ghostScatterTiles;
 
@@ -94,6 +95,14 @@ public class World {
         eaten = new BitSet(numCols() * numRows());
         totalFoodCount = (int) tiles().filter(this::isFoodTile).count();
         resetFood();
+    }
+
+    public void setPacPosition(Vector2f pacPosition) {
+        this.pacPosition = pacPosition;
+    }
+
+    public Vector2f pacPosition() {
+        return pacPosition;
     }
 
     public void setGhostPositions(Vector2f[] ghostPositions) {
