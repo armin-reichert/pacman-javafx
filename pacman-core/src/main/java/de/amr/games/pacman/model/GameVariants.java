@@ -73,7 +73,6 @@ public enum GameVariants implements GameModel {
             bonusSymbols.add(computeBonusSymbol());
 
             pac = new Pac("Ms. Pac-Man");
-            pac.reset();
             pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(demoLevel);
@@ -85,7 +84,6 @@ public enum GameVariants implements GameModel {
                 new Ghost(ORANGE_GHOST, "Sue")
             };
             ghosts().forEach(ghost -> {
-                ghost.reset();
                 ghost.setHouse(world.house());
                 ghost.setFrightenedBehavior(coward -> coward.roam(world, frightenedGhostSpeedPct(coward)));
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
@@ -242,7 +240,6 @@ public enum GameVariants implements GameModel {
             bonusSymbols.add(computeBonusSymbol());
 
             pac = new Pac("Pac-Man");
-            pac.reset();
             pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
             if (demoLevel) {
                 pac.setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
@@ -259,7 +256,6 @@ public enum GameVariants implements GameModel {
                 new Ghost(ORANGE_GHOST, "Clyde")
             };
             ghosts().forEach(ghost -> {
-                ghost.reset();
                 ghost.setHouse(world.house());
                 ghost.setForbiddenPassages(world.forbiddenPassages());
                 ghost.setFrightenedBehavior(coward -> coward.roam(world, frightenedGhostSpeedPct(coward)));
