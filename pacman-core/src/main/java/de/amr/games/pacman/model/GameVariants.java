@@ -181,32 +181,28 @@ public enum GameVariants implements GameModel {
                 return;
             }
             nextBonusIndex += 1;
-            byte symbol = bonusSymbols.get(nextBonusIndex);
 
-            var movingBonus = new MovingBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
             boolean leftToRight = RND.nextBoolean();
-            List<NavPoint> route = createBonusRoute(leftToRight);
-            movingBonus.setRoute(route, leftToRight);
-            movingBonus.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-            Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
-
-            bonus = movingBonus;
-            bonus.setEdible(TickTimer.INDEFINITE);
-            publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
-        }
-
-        List<NavPoint> createBonusRoute(boolean leftToRight) {
             var houseEntry = tileAt(world.house().door().entryPosition());
             var houseEntryOpposite = houseEntry.plus(0, world.house().size().y() + 1);
             var entryPortal = world.portals().get(RND.nextInt(world.portals().size()));
             var exitPortal  = world.portals().get(RND.nextInt(world.portals().size()));
-            return Stream.of(
+            List<NavPoint> route = Stream.of(
                 leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd(),
                 houseEntry,
                 houseEntryOpposite,
                 houseEntry,
                 leftToRight ? exitPortal.rightTunnelEnd().plus(1, 0) : exitPortal.leftTunnelEnd().minus(1, 0)
             ).map(NavPoint::np).toList();
+
+            byte symbol = bonusSymbols.get(nextBonusIndex);
+            var movingBonus = new MovingBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+            movingBonus.setRoute(route, leftToRight);
+            movingBonus.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+            Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
+            bonus = movingBonus;
+            bonus.setEdible(TickTimer.INDEFINITE);
+            publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
         }
     },
 
