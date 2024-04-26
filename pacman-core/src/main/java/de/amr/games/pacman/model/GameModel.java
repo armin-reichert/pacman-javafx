@@ -91,8 +91,6 @@ public interface GameModel {
      */
     boolean isDemoLevel();
 
-    long levelStartTime();
-
     /**
      * Pac-Man and the ghosts are placed at their initial positions and locked. The bonus, Pac-Man power timer and
      * energizer pulse are reset too.

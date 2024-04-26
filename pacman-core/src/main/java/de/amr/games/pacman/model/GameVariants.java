@@ -485,11 +485,6 @@ public enum GameVariants implements GameModel {
     }
 
     @Override
-    public long levelStartTime() {
-        return levelStartTime;
-    }
-
-    @Override
     public byte cruiseElroyState() {
         return cruiseElroy;
     }
