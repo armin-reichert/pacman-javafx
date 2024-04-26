@@ -522,9 +522,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        if (!game().isDemoLevel() && game().levelNumber() == 1) {
-            playAudioClip("audio.game_ready");
+        if (gameState() == LEVEL_TEST || game().isDemoLevel() || game().levelNumber() > 1) {
+            return;
         }
+        playAudioClip("audio.game_ready");
     }
 
     @Override
