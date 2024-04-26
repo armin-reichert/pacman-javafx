@@ -338,8 +338,6 @@ public enum GameVariants implements GameModel {
         /*21*/ new GameLevel( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0)
     };
 
-    final Direction[] GHOST_DIRECTIONS_ON_START = {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP};
-
     final byte  POINTS_PELLET = 10;
     final byte  POINTS_ENERGIZER = 50;
     final short POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
@@ -549,7 +547,7 @@ public enum GameVariants implements GameModel {
         ghosts().forEach(ghost -> {
             ghost.reset();
             ghost.setPosition(world.ghostPosition(ghost.id()));
-            ghost.setMoveAndWishDir(GHOST_DIRECTIONS_ON_START[ghost.id()]);
+            ghost.setMoveAndWishDir(world.ghostDirection(ghost.id()));
             ghost.setState(LOCKED);
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();

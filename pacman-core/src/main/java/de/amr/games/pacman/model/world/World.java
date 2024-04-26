@@ -64,6 +64,7 @@ public class World {
 
     private Vector2f pacPosition;
     private Vector2f[] ghostPositions;
+    private Direction[] ghostDirections;
     private Vector2i[] ghostScatterTiles;
     private Vector2f bonusPosition;
 
@@ -113,6 +114,15 @@ public class World {
     public Vector2f ghostPosition(byte ghostID) {
         checkGhostID(ghostID);
         return ghostPositions[ghostID];
+    }
+
+    public void setGhostDirections(Direction[] ghostDirections) {
+        this.ghostDirections = ghostDirections;
+    }
+
+    public Direction ghostDirection(byte ghostID) {
+        checkGhostID(ghostID);
+        return ghostDirections[ghostID];
     }
 
     public void setGhostScatterTiles(Vector2i[] ghostScatterTiles) {

@@ -268,6 +268,7 @@ public interface ArcadeWorld {
             halfTileRightOf(11, 17), // cyan ghost
             halfTileRightOf(15, 17)  // orange ghost
         });
+        world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
         world.setGhostScatterTiles(new Vector2i[] {
             v2i(25,  0), // near right-upper corner
             v2i( 2,  0), // near left-upper corner
