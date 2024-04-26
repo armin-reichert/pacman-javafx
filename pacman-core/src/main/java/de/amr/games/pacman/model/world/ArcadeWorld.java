@@ -220,23 +220,6 @@ public interface ArcadeWorld {
         }
     };
 
-    Vector2i SCATTER_TILE_NE = v2i(25,  0); // near right-upper corner
-    Vector2i SCATTER_TILE_NW = v2i( 2,  0); // near left-upper corner
-    Vector2i SCATTER_TILE_SE = v2i(27, 34); // near right-lower corner
-    Vector2i SCATTER_TILE_SW = v2i( 0, 34); // near left-lower corner
-
-    Vector2f HOUSE_ENTRY_POSITION = halfTileRightOf(13, 14);
-    Vector2f HOUSE_LEFT_SEAT      = halfTileRightOf(11, 17);
-    Vector2f HOUSE_MIDDLE_SEAT    = halfTileRightOf(13, 17);
-    Vector2f HOUSE_RIGHT_SEAT     = halfTileRightOf(15, 17);
-
-    Vector2f[] GHOST_POSITIONS_ON_START = {
-        HOUSE_ENTRY_POSITION,
-        HOUSE_MIDDLE_SEAT,
-        HOUSE_LEFT_SEAT,
-        HOUSE_RIGHT_SEAT
-    };
-
     Vector2f BONUS_POSITION = halfTileRightOf(13, 20);
     Vector2f PAC_POSITION   = halfTileRightOf(13, 26);
 
@@ -274,7 +257,19 @@ public interface ArcadeWorld {
                 String.format("Arcade map must have %d columns and %d rows but has %d columns and %d rows",
                     TILES_X, TILES_Y, world.numCols(), world.numRows()));
         }
-        world.setGhostPositions(GHOST_POSITIONS_ON_START);
+        world.setGhostPositions(new Vector2f[] {
+            halfTileRightOf(13, 14), // red ghost
+            halfTileRightOf(13, 17), // pink ghost
+            halfTileRightOf(11, 17), // cyan ghost
+            halfTileRightOf(15, 17)  // orange ghost
+        });
+        world.setGhostScatterTiles(new Vector2i[] {
+            v2i(25,  0), // near right-upper corner
+            v2i( 2,  0), // near left-upper corner
+            v2i(27, 34), // near right-lower corner
+            v2i( 0, 34)  // near left-lower corner
+        });
+
         return world;
     }
 

@@ -90,11 +90,14 @@ public enum GameVariants implements GameModel {
                 ghost.reset();
                 ghost.setHouse(world.house());
                 ghost.setFrightenedBehavior(coward -> coward.roam(world, frightenedGhostSpeedPct(coward)));
-                ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
                 ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE / (float) FPS);
             });
+            ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST));
+            ghosts[PINK_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST));
+            ghosts[CYAN_GHOST].setRevivalPosition(world.ghostPosition(CYAN_GHOST));
+            ghosts[ORANGE_GHOST].setRevivalPosition(world.ghostPosition(ORANGE_GHOST));
 
             // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
             // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
@@ -265,11 +268,14 @@ public enum GameVariants implements GameModel {
                 ghost.reset();
                 ghost.setHouse(world.house());
                 ghost.setFrightenedBehavior(coward -> coward.roam(world, frightenedGhostSpeedPct(coward)));
-                ghost.setRevivalPosition(GHOST_REVIVAL_POSITIONS[ghost.id()]);
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
                 ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE / (float) FPS);
             });
+            ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST));
+            ghosts[PINK_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST));
+            ghosts[CYAN_GHOST].setRevivalPosition(world.ghostPosition(CYAN_GHOST));
+            ghosts[ORANGE_GHOST].setRevivalPosition(world.ghostPosition(ORANGE_GHOST));
 
             var forbidden = new HashMap<Vector2i, List<Direction>>();
             var up = List.of(UP);
@@ -343,13 +349,6 @@ public enum GameVariants implements GameModel {
     };
 
     final Direction[] GHOST_DIRECTIONS_ON_START = {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP};
-
-    final Vector2f[] GHOST_REVIVAL_POSITIONS = {
-        ArcadeWorld.HOUSE_MIDDLE_SEAT,
-        ArcadeWorld.HOUSE_MIDDLE_SEAT,
-        ArcadeWorld.HOUSE_LEFT_SEAT,
-        ArcadeWorld.HOUSE_RIGHT_SEAT
-    };
 
     final byte  POINTS_PELLET = 10;
     final byte  POINTS_ENERGIZER = 50;
@@ -559,7 +558,7 @@ public enum GameVariants implements GameModel {
         pac.resetAnimation();
         ghosts().forEach(ghost -> {
             ghost.reset();
-            ghost.setPosition(world.getGhostPosition(ghost.id()));
+            ghost.setPosition(world.ghostPosition(ghost.id()));
             ghost.setMoveAndWishDir(GHOST_DIRECTIONS_ON_START[ghost.id()]);
             ghost.setState(LOCKED);
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
@@ -587,13 +586,7 @@ public enum GameVariants implements GameModel {
     }
 
     Vector2i scatterTarget(Ghost ghost) {
-        return switch (ghost.id()) {
-            case RED_GHOST    -> SCATTER_TILE_NE;
-            case PINK_GHOST   -> SCATTER_TILE_NW;
-            case CYAN_GHOST   -> SCATTER_TILE_SE;
-            case ORANGE_GHOST -> SCATTER_TILE_SW;
-            default -> throw new IllegalGhostIDException(ghost.id());
-        };
+        return world.ghostScatterTile(ghost.id());
     }
 
     Vector2i chasingTarget(Ghost ghost) {
