@@ -25,7 +25,7 @@ import java.util.List;
  * @param <C> "Context". Type of the data provided to the state lifecycle methods {@link FsmState#onEnter},
  *            {@link FsmState#onUpdate} and {@link FsmState#onExit}
  */
-public abstract class Fsm<S extends FsmState<C>, C> {
+public abstract class FiniteStateMachine<S extends FsmState<C>, C> {
 
     protected final List<FsmStateChangeListener<S>> stateChangeListeners = new ArrayList<>(5);
     protected final S[] states;
@@ -33,7 +33,7 @@ public abstract class Fsm<S extends FsmState<C>, C> {
     protected S prevState;
     protected String name = getClass().getSimpleName();
 
-    protected Fsm(S[] states) {
+    protected FiniteStateMachine(S[] states) {
         this.states = states;
     }
 

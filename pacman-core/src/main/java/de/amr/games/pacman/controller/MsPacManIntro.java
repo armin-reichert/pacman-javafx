@@ -22,7 +22,7 @@ import static de.amr.games.pacman.lib.Globals.*;
  *
  * @author Armin Reichert
  */
-public class MsPacManIntro extends Fsm<MsPacManIntro.State, MsPacManIntro> {
+public class MsPacManIntro extends FiniteStateMachine<MsPacManIntro.State, MsPacManIntro> {
 
     public float speed = 1.1f;
     public int stopY = TS * 11 + 1;

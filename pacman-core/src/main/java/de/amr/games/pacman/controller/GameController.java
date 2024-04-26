@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.lib.Fsm;
+import de.amr.games.pacman.lib.FiniteStateMachine;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.SimulationStepEventLog;
@@ -31,43 +31,38 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  * behavior</a>
  * @see <a href="http://superpacman.com/mspacman/">Ms. Pac-Man</a>
  */
-public class GameController extends Fsm<GameState, GameModel> {
+public class GameController extends FiniteStateMachine<GameState, GameModel> {
+
+    private static final GameController SINGLE_INSTANCE = new GameController();
+    public static GameController it() {
+        return SINGLE_INSTANCE;
+    }
 
     public static final byte MAX_CREDIT = 99;
-
-    private static final GameController IT = new GameController(GameVariants.PACMAN);
-
-    /**
-     * @return the game controller singleton
-     */
-    public static GameController it() {
-        return IT;
-    }
 
     private GameClock clock;
     private GameModel game;
     private boolean pacImmune = false;
     private int credit = 0;
-    private SimulationStepEventLog eventLog;
+    private SimulationStepEventLog eventLog = new SimulationStepEventLog();
 
-    private GameController(GameModel variant) {
+    private GameController() {
         super(GameState.values());
-        selectGame(variant);
-        // map FSM state change events to game events
+        selectGame(GameVariants.PACMAN);
+        // map state change events to events of the selected game
         addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
     }
 
+    public GameModel game() {
+        return game;
+    }
+
     public void selectGame(GameModel variant) {
-        checkNotNull(variant);
-        game = variant;
+        game = checkNotNull(variant);
     }
 
     @Override
     public GameModel context() {
-        return game;
-    }
-
-    public GameModel game() {
         return game;
     }
 
@@ -77,7 +72,7 @@ public class GameController extends Fsm<GameState, GameModel> {
         super.update();
         var messageList = eventLog.createMessageList();
         if (!messageList.isEmpty()) {
-            Logger.info("During last step:");
+            Logger.info("During last simulation step:");
             for (var msg : messageList) {
                 Logger.info("- " + msg);
             }

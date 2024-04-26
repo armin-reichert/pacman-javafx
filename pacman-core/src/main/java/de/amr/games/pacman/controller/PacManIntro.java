@@ -25,7 +25,7 @@ import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
  *
  * @author Armin Reichert
  */
-public class PacManIntro extends Fsm<PacManIntro.State, PacManIntro> {
+public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManIntro> {
 
     public static class GhostInfo {
         public Ghost ghost;
