@@ -220,9 +220,9 @@ public enum GameVariants implements GameModel {
      */
     PACMAN {
 
-        final int[] HUNTING_TICKS_1      = {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS,   20 * FPS, 5 * FPS, -1};
-        final int[] HUNTING_TICKS_2_TO_4 = {7 * FPS, 20 * FPS, 7 * FPS, 20 * FPS, 5 * FPS, 1033 * FPS, 1,       -1};
-        final int[] HUNTING_TICKS_5_PLUS = {5 * FPS, 20 * FPS, 5 * FPS, 20 * FPS, 5 * FPS, 1037 * FPS, 1,       -1};
+        final int[] HUNTING_TICKS_1      = {7*FPS, 20*FPS, 7*FPS, 20*FPS, 5*FPS,   20*FPS, 5*FPS, -1};
+        final int[] HUNTING_TICKS_2_TO_4 = {7*FPS, 20*FPS, 7*FPS, 20*FPS, 5*FPS, 1033*FPS, 1,     -1};
+        final int[] HUNTING_TICKS_5_PLUS = {5*FPS, 20*FPS, 5*FPS, 20*FPS, 5*FPS, 1037*FPS, 1,     -1};
 
         @Override
         long huntingTicks(int levelNumber, int phaseIndex) {
@@ -360,6 +360,7 @@ public enum GameVariants implements GameModel {
     final byte  RESTING_TICKS_ENERGIZER = 3;
     final byte  PPS_GHOST_INSIDE_HOUSE = 30; // correct?
     final byte  PPS_GHOST_RETURNING_HOME = 120; // correct?
+    final short[] KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
 
     final Pulse blinking = new Pulse(10, false);
     final List<Byte> bonusSymbols = new ArrayList<>(2);
@@ -391,6 +392,41 @@ public enum GameVariants implements GameModel {
     GameVariants() {
         initialLives = 3;
         reset();
+    }
+
+    abstract void buildLevel(int levelNumber, boolean demoLevel);
+
+    abstract long huntingTicks(int levelNumber, int phaseIndex);
+
+    abstract boolean isBonusReached();
+
+    GameLevel levelData(int levelNumber) {
+        return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
+    }
+
+    void clearLevel() {
+        levelNumber = 0;
+        demoLevel = false;
+        levelStartTime = 0;
+        huntingPhaseIndex = 0;
+        huntingTimer.resetIndefinitely();
+        numGhostsKilledInLevel = 0;
+        cruiseElroy = 0;
+        bonus = null;
+        nextBonusIndex = -1;
+        bonusSymbols.clear();
+        pac = null;
+        ghosts = null;
+        bonus = null;
+        world = null;
+        blinking.stop();
+        blinking.reset();
+    }
+
+    void setCruiseElroyEnabled(boolean enabled) {
+        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
+            cruiseElroy = (byte) -cruiseElroy;
+        }
     }
 
     @Override
@@ -437,15 +473,6 @@ public enum GameVariants implements GameModel {
             huntingPhaseIndex, currentHuntingPhaseName(),
             huntingTimer.duration(), (float) huntingTimer.duration() / GameModel.FPS, huntingTimer);
     }
-
-    abstract long huntingTicks(int levelNumber, int phaseIndex);
-
-    abstract boolean isBonusReached();
-
-    GameLevel levelData(int levelNumber) {
-        return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
-    }
-
     @Override
     public int huntingPhaseIndex() {
         return huntingPhaseIndex;
@@ -489,12 +516,6 @@ public enum GameVariants implements GameModel {
         return cruiseElroy;
     }
 
-    void setCruiseElroyEnabled(boolean enabled) {
-        if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
-            cruiseElroy = (byte) -cruiseElroy;
-        }
-    }
-
     @Override
     public void startLevel() {
         letsGetReadyToRumble();
@@ -512,25 +533,6 @@ public enum GameVariants implements GameModel {
         score.reset();
     }
 
-    void clearLevel() {
-        levelNumber = 0;
-        demoLevel = false;
-        levelStartTime = 0;
-        huntingPhaseIndex = 0;
-        huntingTimer.resetIndefinitely();
-        numGhostsKilledInLevel = 0;
-        cruiseElroy = 0;
-        bonus = null;
-        nextBonusIndex = -1;
-        bonusSymbols.clear();
-        pac = null;
-        ghosts = null;
-        bonus = null;
-        world = null;
-        blinking.stop();
-        blinking.reset();
-    }
-
     @Override
     public void createLevel(int levelNumber, boolean demoLevel) {
         clearLevel();
@@ -540,8 +542,6 @@ public enum GameVariants implements GameModel {
         Logger.info("{}Level {} created", demoLevel ? "Demo " : "", levelNumber);
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
-
-    abstract void buildLevel(int levelNumber, boolean demoLevel);
 
     @Override
     public void letsGetReadyToRumble() {
@@ -737,67 +737,11 @@ public enum GameVariants implements GameModel {
     }
 
     @Override
-    public void doLevelTestStep(GameState testState) {
-        if (levelNumber > 20) {
-            GameController.it().restart(GameState.BOOT);
-            return;
-        }
-        if (testState.timer().tick() > 2 * FPS) {
-            blinking.tick();
-            ghosts().forEach(ghost -> ghost.update(this));
-            bonus().ifPresent(bonus -> bonus.update(this));
-        }
-        if (testState.timer().atSecond(1.0)) {
-            letsGetReadyToRumble();
-            pac.show();
-            ghosts().forEach(Ghost::show);
-        } else if (testState.timer().atSecond(2)) {
-            blinking.setStartPhase(Pulse.ON);
-            blinking.restart();
-        } else if (testState.timer().atSecond(2.5)) {
-            createNextBonus();
-        } else if (testState.timer().atSecond(4.5)) {
-            bonus().ifPresent(bonus -> bonus.setEaten(60));
-            publishGameEvent(GameEventType.BONUS_EATEN);
-        } else if (testState.timer().atSecond(6.5)) {
-            bonus().ifPresent(Bonus::setInactive); // needed?
-            createNextBonus();
-        } else if (testState.timer().atSecond(7.5)) {
-            bonus().ifPresent(bonus -> bonus.setEaten(60));
-            publishGameEvent(GameEventType.BONUS_EATEN);
-        } else if (testState.timer().atSecond(8.5)) {
-            pac.hide();
-            ghosts().forEach(Ghost::hide);
-            blinking.stop();
-            blinking.setStartPhase(Pulse.ON);
-            blinking.reset();
-        } else if (testState.timer().atSecond(9.5)) {
-            testState.setProperty("mazeFlashing", true);
-            blinking.setStartPhase(Pulse.OFF);
-            blinking.restart(2 * levelData(levelNumber).numFlashes());
-        } else if (testState.timer().atSecond(12.0)) {
-            testState.timer().restartIndefinitely();
-            pac.freeze();
-            ghosts().forEach(Ghost::hide);
-            bonus().ifPresent(Bonus::setInactive);
-            testState.setProperty("mazeFlashing", false);
-            blinking.reset();
-            createLevel(levelNumber + 1, false);
-            startLevel();
-            makeGuysVisible(true);
-        }
-    }
-
-    // Bonus Management
-
-    @Override
     public Optional<Bonus> bonus() {
         return Optional.ofNullable(bonus);
     }
 
     abstract void createNextBonus();
-
-    // Main logic
 
     @Override
     public boolean isLevelComplete() {
@@ -947,8 +891,6 @@ public enum GameVariants implements GameModel {
         ghosts().forEach(ghost -> ghost.update(this));
     }
 
-    final short[] KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
-
     @Override
     public void killGhost(Ghost ghost) {
         eventLog().killedGhosts.add(ghost);
@@ -964,6 +906,60 @@ public enum GameVariants implements GameModel {
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, levelNumber);
         }
         pac.victims().add(ghost);
+    }
+
+    // Level test
+
+    @Override
+    public void doLevelTestStep(GameState testState) {
+        if (levelNumber > 20) {
+            GameController.it().restart(GameState.BOOT);
+            return;
+        }
+        if (testState.timer().tick() > 2 * FPS) {
+            blinking.tick();
+            ghosts().forEach(ghost -> ghost.update(this));
+            bonus().ifPresent(bonus -> bonus.update(this));
+        }
+        if (testState.timer().atSecond(1.0)) {
+            letsGetReadyToRumble();
+            pac.show();
+            ghosts().forEach(Ghost::show);
+        } else if (testState.timer().atSecond(2)) {
+            blinking.setStartPhase(Pulse.ON);
+            blinking.restart();
+        } else if (testState.timer().atSecond(2.5)) {
+            createNextBonus();
+        } else if (testState.timer().atSecond(4.5)) {
+            bonus().ifPresent(bonus -> bonus.setEaten(60));
+            publishGameEvent(GameEventType.BONUS_EATEN);
+        } else if (testState.timer().atSecond(6.5)) {
+            bonus().ifPresent(Bonus::setInactive); // needed?
+            createNextBonus();
+        } else if (testState.timer().atSecond(7.5)) {
+            bonus().ifPresent(bonus -> bonus.setEaten(60));
+            publishGameEvent(GameEventType.BONUS_EATEN);
+        } else if (testState.timer().atSecond(8.5)) {
+            pac.hide();
+            ghosts().forEach(Ghost::hide);
+            blinking.stop();
+            blinking.setStartPhase(Pulse.ON);
+            blinking.reset();
+        } else if (testState.timer().atSecond(9.5)) {
+            testState.setProperty("mazeFlashing", true);
+            blinking.setStartPhase(Pulse.OFF);
+            blinking.restart(2 * levelData(levelNumber).numFlashes());
+        } else if (testState.timer().atSecond(12.0)) {
+            testState.timer().restartIndefinitely();
+            pac.freeze();
+            ghosts().forEach(Ghost::hide);
+            bonus().ifPresent(Bonus::setInactive);
+            testState.setProperty("mazeFlashing", false);
+            blinking.reset();
+            createLevel(levelNumber + 1, false);
+            startLevel();
+            makeGuysVisible(true);
+        }
     }
 
     // Game Event Support
