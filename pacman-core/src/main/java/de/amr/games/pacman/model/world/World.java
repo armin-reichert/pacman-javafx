@@ -4,13 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.world;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -68,6 +66,8 @@ public class World {
     private Vector2f[] ghostPositions;
     private Vector2i[] ghostScatterTiles;
 
+    private Map<Vector2i, List<Direction>> forbiddenPassages = Map.of();
+
     /**
      * @param tileMapData byte-array of tile map data
      * @param house ghost house
@@ -121,6 +121,14 @@ public class World {
     public Vector2i ghostScatterTile(byte ghostID) {
         checkGhostID(ghostID);
         return ghostScatterTiles[ghostID];
+    }
+
+    public void setForbiddenPassages(Map<Vector2i, List<Direction>> forbiddenPassages) {
+        this.forbiddenPassages = forbiddenPassages;
+    }
+
+    public Map<Vector2i, List<Direction>> forbiddenPassages() {
+        return forbiddenPassages;
     }
 
     public void resetFood() {

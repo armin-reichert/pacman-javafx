@@ -1,11 +1,16 @@
 package de.amr.games.pacman.model.world;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
 
@@ -57,10 +62,6 @@ public interface ArcadeWorld {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
     };
-
-    List<Vector2i> PACMAN_RED_ZONE = List.of(
-        v2i(12, 14), v2i(15, 14),
-        v2i(12, 26), v2i(15, 26));
 
     byte[][][] MS_PACMAN_MAPS = {
         {
@@ -235,7 +236,12 @@ public interface ArcadeWorld {
     };
 
     static World createPacManWorld() {
-        return createArcadeWorld(PACMAN_MAP);
+        World world = createArcadeWorld(PACMAN_MAP);
+        List<Direction> up = List.of(UP);
+        Map<Vector2i, List<Direction>> fp = new HashMap<>();
+        Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> fp.put(tile, up));
+        world.setForbiddenPassages(fp);
+        return world;
     }
 
     static World createMsPacManWorld(int mapNumber) {
@@ -269,7 +275,6 @@ public interface ArcadeWorld {
             v2i(27, 34), // near right-lower corner
             v2i( 0, 34)  // near left-lower corner
         });
-
         return world;
     }
 

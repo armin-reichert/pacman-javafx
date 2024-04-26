@@ -169,8 +169,8 @@ public class PlayScene2D extends GameScene2D {
     protected void drawSceneInfo() {
         drawTileGrid(ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
         if (context.game() == GameVariants.PACMAN) {
-            ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> {
-                // "No Trespassing" symbol
+            context.game().world().forbiddenPassages().forEach((tile, directions) -> {
+                // TODO indicate direction
                 g.setFill(Color.RED);
                 g.fillOval(s(t(tile.x())), s(t(tile.y() - 1)), s(TS), s(TS));
                 g.setFill(Color.WHITE);

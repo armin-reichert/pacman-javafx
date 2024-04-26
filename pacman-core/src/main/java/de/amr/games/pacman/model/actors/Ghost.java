@@ -115,7 +115,7 @@ public class Ghost extends Creature {
         speedInsideHouse = pixelsPerTick;
     }
 
-    public void setForbiddenMoves(Map<Vector2i, List<Direction>> moves) {
+    public void setForbiddenPassages(Map<Vector2i, List<Direction>> moves) {
         forbiddenMoves = moves;
     }
 

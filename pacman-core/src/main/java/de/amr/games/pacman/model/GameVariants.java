@@ -18,13 +18,11 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.LEFT;
-import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.CreatureMovement.followTarget;
 import static de.amr.games.pacman.model.actors.GhostState.*;
@@ -267,6 +265,7 @@ public enum GameVariants implements GameModel {
             ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(world.house());
+                ghost.setForbiddenPassages(world.forbiddenPassages());
                 ghost.setFrightenedBehavior(coward -> coward.roam(world, frightenedGhostSpeedPct(coward)));
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
@@ -276,11 +275,6 @@ public enum GameVariants implements GameModel {
             ghosts[PINK_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST));
             ghosts[CYAN_GHOST].setRevivalPosition(world.ghostPosition(CYAN_GHOST));
             ghosts[ORANGE_GHOST].setRevivalPosition(world.ghostPosition(ORANGE_GHOST));
-
-            var forbidden = new HashMap<Vector2i, List<Direction>>();
-            var up = List.of(UP);
-            ArcadeWorld.PACMAN_RED_ZONE.forEach(tile -> forbidden.put(tile, up));
-            ghosts().forEach(ghost -> ghost.setForbiddenMoves(forbidden));
 
             if (levelNumber == 1) {
                 levelCounter.clear();
