@@ -91,7 +91,7 @@ public interface GameModel {
      */
     boolean isDemoLevel();
 
-    long demoLevelStartTime();
+    long levelStartTime();
 
     /**
      * Pac-Man and the ghosts are placed at their initial positions and locked. The bonus, Pac-Man power timer and
@@ -106,6 +106,8 @@ public interface GameModel {
     void onLevelCompleted();
 
     boolean isPacManKilled();
+
+    boolean isPacManKillingIgnored();
 
     void onPacDying();
 

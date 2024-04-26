@@ -122,6 +122,16 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
+        public boolean isPacManKillingIgnored() {
+            float levelRunningSeconds = (System.currentTimeMillis() - levelStartTime) / 1000f;
+            if (demoLevel && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
+                Logger.info("Pac-Man killing ignored, demo level running for {} seconds", levelRunningSeconds);
+                return true;
+            }
+            return false;
+        }
+
+        @Override
         boolean isBonusReached() {
             return world.eatenFoodCount() == 64 || world.eatenFoodCount() == 176;
         }
@@ -281,6 +291,11 @@ public enum GameVariants implements GameModel {
             Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0
                 ? chasingTarget(ghost) : scatterTarget(ghost);
              followTarget(ghost, world, targetTile, huntingSpeedPct(ghost));
+        }
+
+        @Override
+        public boolean isPacManKillingIgnored() {
+            return false;
         }
 
         @Override
@@ -470,7 +485,7 @@ public enum GameVariants implements GameModel {
     }
 
     @Override
-    public long demoLevelStartTime() {
+    public long levelStartTime() {
         return levelStartTime;
     }
 

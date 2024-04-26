@@ -9,12 +9,10 @@ import de.amr.games.pacman.lib.FsmState;
 import de.amr.games.pacman.lib.Pulse;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -129,16 +127,8 @@ public enum GameState implements FsmState<GameModel> {
             game.doHuntingStep();
             if (game.isLevelComplete()) {
                 gameController().changeState(LEVEL_COMPLETE);
-            } else if (game.isPacManKilled()) {
-                if (game == GameVariants.MS_PACMAN && game.isDemoLevel()) {
-                    long runningTime = System.currentTimeMillis() - game.demoLevelStartTime();
-                    Logger.info("Pac-Man killed, demo level running for {} seconds", runningTime / 1000);
-                    if (runningTime >= GameModel.DEMO_LEVEL_MIN_DURATION_SEC * 1000) {
-                        gameController().changeState(PACMAN_DYING);
-                    }
-                } else {
-                    gameController().changeState(PACMAN_DYING);
-                }
+            } else if (game.isPacManKilled() && !game.isPacManKillingIgnored()) {
+                gameController().changeState(PACMAN_DYING);
             } else if (game.areGhostsKilled()) {
                 gameController().changeState(GHOST_DYING);
             }
