@@ -221,8 +221,6 @@ public interface ArcadeWorld {
         }
     };
 
-    Vector2f BONUS_POSITION = halfTileRightOf(13, 20);
-
     NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
         np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
         np(18, 23), np(18, 20), np(18, 17), np(15, 14), np(12, 14), np(9, 17),
@@ -241,6 +239,7 @@ public interface ArcadeWorld {
         Map<Vector2i, List<Direction>> fp = new HashMap<>();
         Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> fp.put(tile, up));
         world.setForbiddenPassages(fp);
+        world.setBonusPosition(halfTileRightOf(13, 20));
         return world;
     }
 

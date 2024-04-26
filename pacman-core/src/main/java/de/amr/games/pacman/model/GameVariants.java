@@ -310,7 +310,7 @@ public enum GameVariants implements GameModel {
             nextBonusIndex += 1;
             byte symbol = bonusSymbols.get(nextBonusIndex);
             bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
-            bonus.entity().setPosition(ArcadeWorld.BONUS_POSITION);
+            bonus.entity().setPosition(world.bonusPosition());
             bonus.setEdible(randomInt(9 * FPS, 10 * FPS));
             publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
         }

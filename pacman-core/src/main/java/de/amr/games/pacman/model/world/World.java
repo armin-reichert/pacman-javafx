@@ -65,6 +65,7 @@ public class World {
     private Vector2f pacPosition;
     private Vector2f[] ghostPositions;
     private Vector2i[] ghostScatterTiles;
+    private Vector2f bonusPosition;
 
     private Map<Vector2i, List<Direction>> forbiddenPassages = Map.of();
 
@@ -129,6 +130,14 @@ public class World {
 
     public Map<Vector2i, List<Direction>> forbiddenPassages() {
         return forbiddenPassages;
+    }
+
+    public void setBonusPosition(Vector2f bonusPosition) {
+        this.bonusPosition = bonusPosition;
+    }
+
+    public Vector2f bonusPosition() {
+        return bonusPosition;
     }
 
     public void resetFood() {
