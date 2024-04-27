@@ -168,7 +168,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void drawSceneInfo() {
         drawTileGrid(ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
-        if (context.game() == GameVariants.PACMAN) {
+        if (context.game() == GameVariants.PACMAN && context.game().world() != null) {
             context.game().world().forbiddenPassages().forEach((tile, directions) -> {
                 // TODO indicate direction
                 g.setFill(Color.RED);
