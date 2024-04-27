@@ -39,7 +39,7 @@ public interface GameModel {
     short FPS = 60;
 
     /** Movement speed in pixel/sec. */
-    float PPS_AT_100_PERCENT = 73.75f;
+    float PPS_AT_100_PERCENT = 73.7f;
 
     byte DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
