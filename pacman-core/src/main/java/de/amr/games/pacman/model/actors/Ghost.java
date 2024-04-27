@@ -68,14 +68,6 @@ public class Ghost extends Creature {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "Ghost{" +
-            "id=" + id +
-            ", name=" + name +
-            ", state=" + state +
-            '}';
-    }
 
     public byte id() {
         return id;
@@ -448,5 +440,17 @@ public class Ghost extends Creature {
             setMoveAndWishDir(UP);
             setState(LOCKED);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Ghost{" +
+            "name='" + name + '\'' +
+            ", state=" + state +
+            ", newTileEntered=" + newTileEntered +
+            ", gotReverseCommand=" + gotReverseCommand +
+            ", posX=" + posX +
+            ", posY=" + posY +
+            '}';
     }
 }

@@ -35,8 +35,7 @@ public abstract class Creature extends Entity {
     protected boolean canTeleport;
     protected float corneringSpeedUp;
 
-    public Creature() {
-    }
+
 
     public void reset() {
         super.reset();
@@ -178,7 +177,7 @@ public abstract class Creature extends Entity {
      */
     public void reverseAsSoonAsPossible() {
         gotReverseCommand = true;
-        Logger.info("{} (tile={}, moveDir={}, wishDir={}) got 'reverse' command", name(), tile(), moveDir, wishDir);
+        Logger.info("Reverse! {}", this);
     }
 
     /**
@@ -207,5 +206,17 @@ public abstract class Creature extends Entity {
 
     public boolean isNewTileEntered() {
         return newTileEntered;
+    }
+
+    @Override
+    public String toString() {
+        return "Creature{" +
+            "posX=" + posX +
+            ", posY=" + posY +
+            ", moveDir=" + moveDir +
+            ", wishDir=" + wishDir +
+            ", newTileEntered=" + newTileEntered +
+            ", gotReverseCommand=" + gotReverseCommand +
+            '}';
     }
 }

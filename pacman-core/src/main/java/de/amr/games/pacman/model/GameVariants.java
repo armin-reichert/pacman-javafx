@@ -766,7 +766,8 @@ public enum GameVariants implements GameModel {
     public void doHuntingStep() {
         blinking.tick();
         checkForFood();
-        updateGhosts();
+        unlockGhosts();
+        ghosts().forEach(ghost -> ghost.update(this));
         pac.update(this);
         if (bonus != null) updateBonus();
         updatePacPower();
@@ -860,35 +861,34 @@ public enum GameVariants implements GameModel {
     }
 
     void updateHuntingTimer( ) {
+        huntingTimer.advance();
         if (huntingTimer.hasExpired()) {
-            ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
+            Logger.info("Hunting timer expired, tick={}", huntingTimer.tick());
             startHuntingPhase(huntingPhaseIndex + 1);
-        } else {
-            huntingTimer.advance();
+            ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
         }
     }
 
-    void updateGhosts() {
-        // Important: Ghosts must be in order RED, PINK, CYAN, ORANGE!
+    void unlockGhosts() {
+        if (ghost(RED_GHOST).inState(LOCKED)) {
+            ghost(RED_GHOST).setMoveAndWishDir(LEFT);
+            ghost(RED_GHOST).setState(HUNTING_PAC);
+        }
+        // Ghosts in order PINK, CYAN, ORANGE!
         Ghost prisoner = ghosts(LOCKED).findFirst().orElse(null);
         if (prisoner != null) {
             String releaseInfo = gateKeeper.checkReleaseOf(this, prisoner);
             if (releaseInfo != null) {
                 eventLog().releasedGhost = prisoner;
                 eventLog().ghostReleaseInfo = releaseInfo;
-                if (prisoner.insideHouse(world.house())) {
-                    prisoner.setState(LEAVING_HOUSE);
-                } else {
-                    prisoner.setMoveAndWishDir(LEFT);
-                    prisoner.setState(HUNTING_PAC);
-                }
+                prisoner.setMoveAndWishDir(Direction.UP); // TODO experimental
+                prisoner.setState(LEAVING_HOUSE);
                 if (prisoner.id() == ORANGE_GHOST && cruiseElroyState() < 0) {
                     Logger.trace("Re-enable cruise elroy mode because {} exits house:", prisoner.name());
                     setCruiseElroyEnabled(true);
                 }
             }
         }
-        ghosts().forEach(ghost -> ghost.update(this));
     }
 
     @Override
