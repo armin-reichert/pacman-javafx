@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.model.actors.CreatureMovement.tryMoving;
 
 /**
  * Pac-Man / Ms. Pac-Man.
@@ -156,7 +155,7 @@ public class Pac extends Creature {
                 manualSteering.steer(this, game.world());
             }
             setSpeedPct(game.powerTimer().isRunning() ? level.pacSpeedPoweredPercentage() : level.pacSpeedPercentage());
-            tryMoving(this, game.world());
+            tryMoving(game.world());
             if (moveResult.moved) {
                 startAnimation();
             } else {

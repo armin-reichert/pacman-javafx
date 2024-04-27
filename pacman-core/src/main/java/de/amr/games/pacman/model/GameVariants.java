@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.actors.CreatureMovement.followTarget;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 import static de.amr.games.pacman.model.world.ArcadeWorld.*;
 
@@ -117,7 +116,7 @@ public enum GameVariants implements GameModel {
             } else {
                 Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroy > 0
                     ? chasingTarget(ghost) : scatterTarget(ghost);
-                followTarget(ghost, world, targetTile, huntingSpeedPct(ghost));
+                ghost.followTarget(world, targetTile, huntingSpeedPct(ghost));
             }
         }
 
@@ -290,7 +289,7 @@ public enum GameVariants implements GameModel {
         public void huntingBehaviour(Ghost ghost) {
             Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0
                 ? chasingTarget(ghost) : scatterTarget(ghost);
-             followTarget(ghost, world, targetTile, huntingSpeedPct(ghost));
+             ghost.followTarget(world, targetTile, huntingSpeedPct(ghost));
         }
 
         @Override

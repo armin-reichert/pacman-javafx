@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.model.actors.CreatureMovement.navigateTowardsTarget;
-import static de.amr.games.pacman.model.actors.CreatureMovement.tryMoving;
 
 /**
  * A bonus that tumbles through the world, starting at some portal, making one round around the ghost house and leaving
@@ -123,8 +121,8 @@ public class MovingBonus extends Creature implements Bonus {
             setInactive();
             game.publishGameEvent(GameEventType.BONUS_EXPIRED, tile());
         } else {
-            navigateTowardsTarget(this, game.world());
-            tryMoving(this, game.world());
+            navigateTowardsTarget(game.world());
+            tryMoving(game.world());
             animation.tick();
         }
     }

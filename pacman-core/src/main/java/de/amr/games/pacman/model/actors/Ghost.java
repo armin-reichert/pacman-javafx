@@ -21,8 +21,6 @@ import java.util.function.Consumer;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.actors.CreatureMovement.navigateTowardsTarget;
-import static de.amr.games.pacman.model.actors.CreatureMovement.tryMoving;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
@@ -133,7 +131,7 @@ public class Ghost extends Creature {
             setWishDir(dir);
         }
         setSpeedPct(speedPct);
-        tryMoving(this, world);
+        tryMoving(world);
     }
 
     private Direction pseudoRandomDirection() {
@@ -411,8 +409,8 @@ public class Ghost extends Creature {
         } else {
             setSpeed(speedReturningToHouse);
             setTargetTile(house.door().leftWing());
-            navigateTowardsTarget(this, game.world());
-            tryMoving(this, game.world());
+            navigateTowardsTarget(game.world());
+            tryMoving(game.world());
         }
     }
 
