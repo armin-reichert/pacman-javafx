@@ -67,7 +67,7 @@ public class InfoBoxGhostsInfo extends InfoBox {
     }
 
     private String ghostTile(GameModel game, Ghost ghost) {
-        return "%s Offset %s".formatted(ghost.tile(), ghost.offset());
+        return "%s +%s%s".formatted(ghost.tile(), ghost.offset(), ghost.isNewTileEntered() ? " NEW" : "");
     }
 
     private String ghostState(GameModel game, Ghost ghost) {
@@ -80,6 +80,7 @@ public class InfoBoxGhostsInfo extends InfoBox {
 
     private String ghostMovement(GameModel game, Ghost ghost) {
         var speed = ghost.velocity().length();
-        return "%.2f px/s %s (%s)".formatted(speed, ghost.moveDir(), ghost.wishDir());
+        var reverse = ghost.gotReverseCommand() ? "REVERSE!" : "";
+        return "%.2fpx/s %s (%s)%s".formatted(speed, ghost.moveDir(), ghost.wishDir(), reverse);
     }
 }

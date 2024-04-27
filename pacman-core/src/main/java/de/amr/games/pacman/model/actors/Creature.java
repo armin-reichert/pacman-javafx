@@ -180,6 +180,10 @@ public abstract class Creature extends Entity {
         Logger.info("Reverse! {}", this);
     }
 
+    public boolean gotReverseCommand() {
+        return gotReverseCommand;
+    }
+
     /**
      * Sets the speed in percent of the base speed (1.25 pixels/second).
      *
