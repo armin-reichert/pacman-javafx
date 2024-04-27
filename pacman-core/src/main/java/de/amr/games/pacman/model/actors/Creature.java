@@ -24,28 +24,45 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public abstract class Creature extends Entity {
 
-    public final MoveResult moveResult = new MoveResult();
+    /** Order in which directions are selected when navigation decision is met. */
+    Direction[] DIRECTION_PRIORITY = {UP, LEFT, DOWN, RIGHT};
 
-    private Direction moveDir;
-    private Direction wishDir;
-    private Vector2i targetTile;
-    private float baseSpeed;
+    protected final MoveResult lastMove = new MoveResult();
+
+    protected Direction moveDir;
+    protected Direction wishDir;
+    protected Vector2i targetTile;
+    protected float baseSpeed;
 
     protected boolean newTileEntered;
     protected boolean gotReverseCommand;
     protected boolean canTeleport;
     protected float corneringSpeedUp;
 
-
+    @Override
+    public String toString() {
+        return "Creature{" +
+            "posX=" + posX +
+            ", posY=" + posY +
+            ", moveDir=" + moveDir +
+            ", wishDir=" + wishDir +
+            ", newTileEntered=" + newTileEntered +
+            ", gotReverseCommand=" + gotReverseCommand +
+            '}';
+    }
 
     public void reset() {
         super.reset();
-        moveResult.clear();
+        lastMove.clear();
         setMoveAndWishDir(RIGHT); // updates velocity vector!
         targetTile = null;
         newTileEntered = true;
         gotReverseCommand = false;
         canTeleport = true;
+    }
+
+    public MoveResult lastMove() {
+        return lastMove;
     }
 
     /**
@@ -213,21 +230,6 @@ public abstract class Creature extends Entity {
         return newTileEntered;
     }
 
-    @Override
-    public String toString() {
-        return "Creature{" +
-            "posX=" + posX +
-            ", posY=" + posY +
-            ", moveDir=" + moveDir +
-            ", wishDir=" + wishDir +
-            ", newTileEntered=" + newTileEntered +
-            ", gotReverseCommand=" + gotReverseCommand +
-            '}';
-    }
-
-    /** Order in which directions are selected when navigation decision is met. */
-    Direction[] DIRECTION_PRIORITY = {UP, LEFT, DOWN, RIGHT};
-
     /**
      * Implements the rules by which a creature (ghost) decides how to reach its current target tile.
      *
@@ -266,7 +268,7 @@ public abstract class Creature extends Entity {
         if (targetTile().isEmpty()) {
             return;
         }
-        if (!newTileEntered && moveResult.moved) {
+        if (!newTileEntered && lastMove.moved) {
             return; // we don't need no navigation, dim dit diddit diddit...
         }
         if (world.belongsToPortal(tile())) {
@@ -280,10 +282,10 @@ public abstract class Creature extends Entity {
      *
      * @param world the world/maze
      * @param targetTile the target tile e.g. Pac-Man's current tile
-     * @param relSpeed the relative speed (in percentage of base speed)
+     * @param speedPct the relative speed (in percentage of base speed)
      */
-    public void followTarget(World world, Vector2i targetTile, byte relSpeed) {
-        setSpeedPct(relSpeed);
+    public void followTarget(World world, Vector2i targetTile, byte speedPct) {
+        setSpeedPct(speedPct);
         setTargetTile(targetTile);
         navigateTowardsTarget(world);
         tryMoving(world);
@@ -298,23 +300,23 @@ public abstract class Creature extends Entity {
      * @param world the world/maze
      */
     public void tryMoving(World world) {
-        moveResult.clear();
+        lastMove.clear();
         tryTeleport(world.portals());
-        if (!moveResult.teleported) {
+        if (!lastMove.teleported) {
             if (gotReverseCommand && canReverse()) {
                 setWishDir(moveDir().opposite());
                 Logger.info("{}: turned around at tile {}", name(), tile());
                 gotReverseCommand = false;
             }
             tryMoving(world, wishDir());
-            if (moveResult.moved) {
+            if (lastMove.moved) {
                 setMoveDir(wishDir());
             } else {
                 tryMoving(world, moveDir());
             }
         }
-        if (moveResult.teleported || moveResult.moved) {
-            Logger.trace("{}: {} {} {}", name(), moveResult, moveResult.summary(), this);
+        if (lastMove.teleported || lastMove.moved) {
+            Logger.trace("{}: {} {} {}", name(), lastMove, lastMove.summary(), this);
         }
     }
 
@@ -327,7 +329,7 @@ public abstract class Creature extends Entity {
         if (canTeleport) {
             for (var portal : portals) {
                 tryTeleport(portal);
-                if (moveResult.teleported) {
+                if (lastMove.teleported) {
                     return;
                 }
             }
@@ -345,13 +347,13 @@ public abstract class Creature extends Entity {
         var oldY = posY;
         if (tile.y() == portal.leftTunnelEnd().y() && posX < portal.leftTunnelEnd().x() - portal.depth() * TS) {
             centerOverTile(portal.rightTunnelEnd());
-            moveResult.teleported = true;
-            moveResult.addMessage(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
+            lastMove.teleported = true;
+            lastMove.addMessage(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
                 name(), oldX, oldY, posX, posY));
         } else if (tile.equals(portal.rightTunnelEnd().plus(portal.depth(), 0))) {
             centerOverTile(portal.leftTunnelEnd().minus(portal.depth(), 0));
-            moveResult.teleported = true;
-            moveResult.addMessage(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
+            lastMove.teleported = true;
+            lastMove.addMessage(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
                 name(), oldX, oldY, posX, posY));
         }
     }
@@ -374,17 +376,18 @@ public abstract class Creature extends Entity {
             if (!isTurn) {
                 centerOverTile(tile()); // adjust over tile (would move forward against wall)
             }
-            moveResult.addMessage(String.format("Cannot move %s into tile %s", dir, touchedTile));
+            lastMove.addMessage(String.format("Cannot move %s into tile %s", dir, touchedTile));
             return;
         }
 
         if (isTurn) {
             float offset = dir.isHorizontal() ? offset().y() : offset().x();
-            boolean atTurnPosition = Math.abs(offset) <= 1; // TODO <= pixel-speed?
+            float speed = velocity().length();
+            boolean atTurnPosition = Math.abs(offset) <= 0.5*speed; // TODO <= pixel-speed?
             if (atTurnPosition) {
                 centerOverTile(tile()); // adjust over tile (starts moving around corner)
             } else {
-                moveResult.addMessage(String.format("Wants to take corner towards %s but not at turn position", dir));
+                lastMove.addMessage(String.format("Wants to take corner towards %s but not at turn position", dir));
                 return;
             }
         }
@@ -402,20 +405,20 @@ public abstract class Creature extends Entity {
         Vector2i currentTile = tile();
 
         newTileEntered = !tileBeforeMove.equals(currentTile);
-        moveResult.moved = true;
-        moveResult.tunnelEntered = world.isTunnel(currentTile)
+        lastMove.moved = true;
+        lastMove.tunnelEntered = world.isTunnel(currentTile)
             && !world.isTunnel(tileBeforeMove)
             && !world.belongsToPortal(tileBeforeMove);
-        moveResult.tunnelLeft = !world.isTunnel(currentTile)
+        lastMove.tunnelLeft = !world.isTunnel(currentTile)
             && world.isTunnel(tileBeforeMove)
             && !world.belongsToPortal(currentTile);
 
-        moveResult.addMessage(String.format("%5s (%.2f pixels)", dir, newVelocity.length()));
+        lastMove.addMessage(String.format("%5s (%.2f pixels)", dir, newVelocity.length()));
 
-        if (moveResult.tunnelEntered) {
+        if (lastMove.tunnelEntered) {
             Logger.trace("{} entered tunnel", name());
         }
-        if (moveResult.tunnelLeft) {
+        if (lastMove.tunnelLeft) {
             Logger.trace("{} left tunnel", name());
         }
     }

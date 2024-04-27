@@ -72,7 +72,7 @@ public class RuleBasedPacSteering implements Steering {
 
     @Override
     public void steer(Creature creature, World world) {
-        if (creature.moveResult.moved && !creature.isNewTileEntered()) {
+        if (creature.lastMove().moved && !creature.isNewTileEntered()) {
             return;
         }
         var data = collectData(game);
@@ -122,7 +122,7 @@ public class RuleBasedPacSteering implements Steering {
         }
 
         // when not escaping ghost, keep move direction at least until next intersection
-        if (pac.moveResult.moved && !game.world().isIntersection(pac.tile()))
+        if (pac.lastMove().moved && !game.world().isIntersection(pac.tile()))
             return;
 
         if (!data.frightenedGhosts.isEmpty() && game.powerTimer().remaining() >= GameModel.FPS) {

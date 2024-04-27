@@ -122,7 +122,7 @@ public class Ghost extends Creature {
      */
     public void roam(World world, byte speedPct) {
         Vector2i currentTile = tile();
-        if (!world.belongsToPortal(currentTile) && (isNewTileEntered() || !moveResult.moved)) {
+        if (!world.belongsToPortal(currentTile) && (isNewTileEntered() || !lastMove.moved)) {
             Direction dir = pseudoRandomDirection();
             while (dir == moveDir().opposite()
                 || !canAccessTile(currentTile.plus(dir.vector()), world)) {
@@ -141,7 +141,6 @@ public class Ghost extends Creature {
         if (rnd < 163 + 252 + 285) return DOWN;
         return LEFT;
     }
-
 
     @Override
     public boolean canAccessTile(Vector2i tile, World world) {

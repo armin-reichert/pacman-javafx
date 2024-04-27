@@ -143,7 +143,7 @@ public class Ghost3D extends Group {
             dressAnimation.stop();
         } else {
             numberRotation.stop();
-            if (ghost.moveResult.tunnelEntered) {
+            if (ghost.lastMove().tunnelEntered) {
                 brakeAnimation.playFromStart();
             }
             if (dressAnimation.getStatus() != Status.RUNNING) {

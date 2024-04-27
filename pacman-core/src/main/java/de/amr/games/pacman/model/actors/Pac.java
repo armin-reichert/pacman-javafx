@@ -156,7 +156,7 @@ public class Pac extends Creature {
             }
             setSpeedPct(game.powerTimer().isRunning() ? level.pacSpeedPoweredPercentage() : level.pacSpeedPercentage());
             tryMoving(game.world());
-            if (moveResult.moved) {
+            if (lastMove.moved) {
                 startAnimation();
             } else {
                 stopAnimation();
@@ -219,7 +219,7 @@ public class Pac extends Creature {
      * or if he is resting for an indefinite time.
      */
     public boolean isStandingStill() {
-        return velocity().length() == 0 || !moveResult.moved || restingTicks == REST_INDEFINITELY;
+        return velocity().length() == 0 || !lastMove.moved || restingTicks == REST_INDEFINITELY;
     }
 
     public void setManualSteering(Steering steering) {

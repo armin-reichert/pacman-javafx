@@ -642,7 +642,8 @@ public enum GameVariants implements GameModel {
     @Override
     public void loseLife() {
         if (lives == 0) {
-            throw new IllegalArgumentException("No life left to loose :-(");
+            Logger.error("No life left to loose :-(");
+            return;
         }
         --lives;
     }
