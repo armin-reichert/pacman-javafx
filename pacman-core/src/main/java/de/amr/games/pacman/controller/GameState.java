@@ -226,10 +226,10 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
+                game.loseLife();
                 if (game.isDemoLevel()) {
                     gameController().changeState(INTRO);
                 } else {
-                    game.loseLife();
                     gameController().changeState(game.lives() == 0 ? GAME_OVER : READY);
                 }
             }
