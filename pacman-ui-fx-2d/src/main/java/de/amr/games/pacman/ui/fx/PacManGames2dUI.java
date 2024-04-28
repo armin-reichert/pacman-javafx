@@ -667,7 +667,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void changeSimulationSpeed(int delta) {
-        int newRate = clock.getTargetFrameRate() + delta;
+        double newRate = clock.getTargetFrameRate() + delta;
         if (newRate > 0) {
             clock.setTargetFrameRate(newRate);
             showFlashMessageSeconds(0.75, newRate + "Hz");

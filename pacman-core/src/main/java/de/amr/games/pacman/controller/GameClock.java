@@ -9,11 +9,11 @@ package de.amr.games.pacman.controller;
  */
 public interface GameClock {
 
-    int getActualFrameRate();
+    double getActualFrameRate();
 
-    int getTargetFrameRate();
+    double getTargetFrameRate();
 
-    void setTargetFrameRate(int fps);
+    void setTargetFrameRate(double fps);
 
     void start();
 

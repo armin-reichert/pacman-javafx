@@ -42,8 +42,8 @@ public enum GameVariants implements GameModel {
          * @see <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>
          * @see <a href="https://github.com/armin-reichert/pacman-basic/blob/main/doc/mspacman-details-reddit-user-damselindis.md">GitHub</a>
          */
-        final int[] HUNTING_TICKS_1_TO_4 = {7 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1};
-        final int[] HUNTING_TICKS_5_PLUS = {5 * FPS, 20 * FPS, 1, 1037 * FPS, 1, 1037 * FPS, 1, -1};
+        final int[] HUNTING_TICKS_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
+        final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
 
         @Override
         long huntingTicks(int levelNumber, int phaseIndex) {
@@ -219,9 +219,9 @@ public enum GameVariants implements GameModel {
      */
     PACMAN {
 
-        final int[] HUNTING_TICKS_1      = {7*FPS, 20*FPS, 7*FPS, 20*FPS, 5*FPS,   20*FPS, 5*FPS, -1};
-        final int[] HUNTING_TICKS_2_TO_4 = {7*FPS, 20*FPS, 7*FPS, 20*FPS, 5*FPS, 1033*FPS, 1,     -1};
-        final int[] HUNTING_TICKS_5_PLUS = {5*FPS, 20*FPS, 5*FPS, 20*FPS, 5*FPS, 1037*FPS, 1,     -1};
+        final int[] HUNTING_TICKS_1      = {420, 1200, 420, 1200, 300, 1200, 300, -1};
+        final int[] HUNTING_TICKS_2_TO_4 = {420, 1200, 420, 1200, 300, 61980, 1,  -1};
+        final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 300, 1200, 300, 62262, 1,  -1};
 
         @Override
         long huntingTicks(int levelNumber, int phaseIndex) {
@@ -317,7 +317,7 @@ public enum GameVariants implements GameModel {
             byte symbol = bonusSymbols.get(nextBonusIndex);
             bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
             bonus.entity().setPosition(world.bonusPosition());
-            bonus.setEdible(randomInt(9 * FPS, 10 * FPS));
+            bonus.setEdible(randomInt(540, 600));
             publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
         }
     };
@@ -353,8 +353,8 @@ public enum GameVariants implements GameModel {
     final short POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
     final short EXTRA_LIFE_SCORE = 10_000;
     final byte  LEVEL_COUNTER_MAX_SYMBOLS = 7;
-    final short PAC_POWER_FADING_TICKS = 2 * FPS; // unsure
-    final short BONUS_POINTS_SHOWN_TICKS = 2 * FPS; // unsure
+    final byte PAC_POWER_FADING_TICKS = 120; // unsure
+    final byte BONUS_POINTS_SHOWN_TICKS = 120; // unsure
     final byte  RESTING_TICKS_PELLET = 1;
     final byte  RESTING_TICKS_ENERGIZER = 3;
     final byte  PPS_GHOST_INSIDE_HOUSE = 30; // correct?

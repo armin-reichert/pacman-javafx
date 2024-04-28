@@ -39,7 +39,7 @@ public class MsPacManCutScene2 extends GameScene2D {
         intermission.pacMan.setAnimations(new MsPacManGamePacAnimations(intermission.pacMan, ss));
         clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
         clapAnimation.start();
-        intermission.changeState(MsPacManIntermission2.STATE_FLAP, 2 * GameModel.FPS);
+        intermission.changeState(MsPacManIntermission2.STATE_FLAP, 120);
     }
 
     @Override

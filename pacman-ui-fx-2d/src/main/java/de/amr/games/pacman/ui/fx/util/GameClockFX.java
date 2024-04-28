@@ -10,10 +10,7 @@ import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -24,7 +21,7 @@ import org.tinylog.Logger;
  */
 public class GameClockFX implements GameClock {
 
-    private final IntegerProperty targetFrameRatePy = new SimpleIntegerProperty(this, "targetFrameRate", GameModel.FPS) {
+    private final DoubleProperty targetFrameRatePy = new SimpleDoubleProperty(this, "targetFrameRate", GameModel.FPS) {
         @Override
         protected void invalidated() {
             handleTargetFrameRateChanged();
@@ -55,7 +52,7 @@ public class GameClockFX implements GameClock {
         this.continousCallback = callback;
     }
 
-    private void createTimeline(int targetFPS) {
+    private void createTimeline(double targetFPS) {
         var tick = new KeyFrame(Duration.seconds(1.0 / targetFPS), e -> makeStep(!isPaused()));
         timeline = new Timeline(targetFPS, tick);
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -73,12 +70,12 @@ public class GameClockFX implements GameClock {
     }
 
     @Override
-    public int getTargetFrameRate() {
+    public double getTargetFrameRate() {
         return targetFrameRatePy.get();
     }
 
     @Override
-    public void setTargetFrameRate(int fps) {
+    public void setTargetFrameRate(double fps) {
         targetFrameRatePy.set(fps);
     }
 
@@ -103,8 +100,8 @@ public class GameClockFX implements GameClock {
     }
 
     @Override
-    public int getActualFrameRate() {
-        return (int) ticksPerSec;
+    public double getActualFrameRate() {
+        return ticksPerSec;
     }
 
     public long getUpdateCount() {

@@ -44,7 +44,7 @@ public class MsPacManCutScene1 extends GameScene2D {
         intermission.pinky.setAnimations(new MsPacManGameGhostAnimations(intermission.pinky, ss));
         clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapAnimation.start();
-        intermission.changeState(MsPacManIntermission1.STATE_FLAP, 2 * GameModel.FPS);
+        intermission.changeState(MsPacManIntermission1.STATE_FLAP, 120);
     }
 
     @Override
