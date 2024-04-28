@@ -67,6 +67,7 @@ public enum GameState implements FsmState<GameModel> {
 
     READY {
         static final short TICK_CREATE_LEVEL             = 1;
+        static final short TICK_START_LEVEL              = 2;
         static final short TICK_NEW_GAME_SHOW_GUYS       = 120;
         static final short TICK_NEW_GAME_START_PLAYING   = 240;
         static final short TICK_DEMO_LEVEL_START_PLAYING = 120;
@@ -86,6 +87,8 @@ public enum GameState implements FsmState<GameModel> {
             else if (gameController().hasCredit()) { // start new game
                 if (timer.tick() == TICK_CREATE_LEVEL) {
                     game.createLevel(1, false);
+                }
+                else if (timer.tick() == TICK_START_LEVEL) {
                     game.startLevel();
                 }
                 else if (timer.tick() == TICK_NEW_GAME_SHOW_GUYS) {

@@ -19,8 +19,7 @@ public class House {
     private Door door;
 
     public void setTopLeftTile(Vector2i minTile) {
-        checkTileNotNull(minTile);
-        this.minTile = minTile;
+        this.minTile = checkTileNotNull(minTile);
     }
 
     public void setSize(Vector2i size) {

@@ -18,6 +18,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -68,8 +69,8 @@ public enum GameVariants implements GameModel {
             }
 
             world = createMsPacManWorld(mapNumberMsPacMan(this.levelNumber));
-            bonusSymbols.add(computeBonusSymbol());
-            bonusSymbols.add(computeBonusSymbol());
+            bonusSymbols[0] = computeBonusSymbol();
+            bonusSymbols[1] = computeBonusSymbol();
 
             pac = new Pac("Ms. Pac-Man");
             pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
@@ -89,19 +90,26 @@ public enum GameVariants implements GameModel {
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
                 ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE / (float) FPS);
             });
-            ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST));
-            ghosts[PINK_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST));
-            ghosts[CYAN_GHOST].setRevivalPosition(world.ghostPosition(CYAN_GHOST));
+            ghosts[RED_GHOST   ].setRevivalPosition(world.ghostPosition(PINK_GHOST));
+            ghosts[PINK_GHOST  ].setRevivalPosition(world.ghostPosition(PINK_GHOST));
+            ghosts[CYAN_GHOST  ].setRevivalPosition(world.ghostPosition(CYAN_GHOST));
             ghosts[ORANGE_GHOST].setRevivalPosition(world.ghostPosition(ORANGE_GHOST));
+        }
 
+        @Override
+        public void startLevel() {
             // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
             // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
             if (this.levelNumber == 1) {
                 levelCounter.clear();
             }
             if (!demoLevel && this.levelNumber <= 7) {
-                addSymbolToLevelCounter(bonusSymbols.getFirst());
+                addSymbolToLevelCounter(bonusSymbols[0]);
             }
+            letsGetReadyToRumble();
+            levelStartTime = System.currentTimeMillis();
+            Logger.info("{}Level {} started ({})", demoLevel ? "Demo " : "", levelNumber, this);
+            publishGameEvent(GameEventType.LEVEL_STARTED);
         }
 
         /**
@@ -202,7 +210,7 @@ public enum GameVariants implements GameModel {
                 leftToRight ? exitPortal.rightTunnelEnd().plus(1, 0) : exitPortal.leftTunnelEnd().minus(1, 0)
             ).map(NavPoint::np).toList();
 
-            byte symbol = bonusSymbols.get(nextBonusIndex);
+            byte symbol = bonusSymbols[nextBonusIndex];
             var movingBonus = new MovingBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
             movingBonus.setRoute(route, leftToRight);
             movingBonus.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
@@ -245,8 +253,8 @@ public enum GameVariants implements GameModel {
             this.demoLevel = demoLevel;
 
             world = createPacManWorld();
-            bonusSymbols.add(computeBonusSymbol());
-            bonusSymbols.add(computeBonusSymbol());
+            bonusSymbols[0] = computeBonusSymbol();
+            bonusSymbols[1] = computeBonusSymbol();
 
             pac = new Pac("Pac-Man");
             pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
@@ -276,14 +284,20 @@ public enum GameVariants implements GameModel {
             ghosts[PINK_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST));
             ghosts[CYAN_GHOST].setRevivalPosition(world.ghostPosition(CYAN_GHOST));
             ghosts[ORANGE_GHOST].setRevivalPosition(world.ghostPosition(ORANGE_GHOST));
+        }
 
-            if (levelNumber == 1) {
+        @Override
+        public void startLevel() {
+            if (this.levelNumber == 1) {
                 levelCounter.clear();
             }
-            if (!demoLevel) {
-                addSymbolToLevelCounter(bonusSymbols.getFirst());
-            }
+            addSymbolToLevelCounter(bonusSymbols[0]);
+            letsGetReadyToRumble();
+            levelStartTime = System.currentTimeMillis();
+            Logger.info("{}Level {} started ({})", demoLevel ? "Demo " : "", levelNumber, this);
+            publishGameEvent(GameEventType.LEVEL_STARTED);
         }
+
 
         @Override
         public void huntingBehaviour(Ghost ghost) {
@@ -314,7 +328,7 @@ public enum GameVariants implements GameModel {
         @Override
         void createNextBonus() {
             nextBonusIndex += 1;
-            byte symbol = bonusSymbols.get(nextBonusIndex);
+            byte symbol = bonusSymbols[nextBonusIndex];
             bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
             bonus.entity().setPosition(world.bonusPosition());
             bonus.setEdible(randomInt(540, 600));
@@ -362,7 +376,7 @@ public enum GameVariants implements GameModel {
     final short[] KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
 
     final Pulse blinking = new Pulse(10, false);
-    final List<Byte> bonusSymbols = new ArrayList<>(2);
+    final byte[] bonusSymbols = new byte[2];
     final List<Byte> levelCounter = new ArrayList<>();
     final TickTimer huntingTimer = new TickTimer("HuntingTimer");
     final TickTimer powerTimer = new TickTimer("PacPowerTimer");
@@ -413,10 +427,9 @@ public enum GameVariants implements GameModel {
         cruiseElroy = 0;
         bonus = null;
         nextBonusIndex = -1;
-        bonusSymbols.clear();
+        Arrays.fill(bonusSymbols, (byte)-1);
         pac = null;
         ghosts = null;
-        bonus = null;
         world = null;
         blinking.stop();
         blinking.reset();
@@ -515,20 +528,13 @@ public enum GameVariants implements GameModel {
         return cruiseElroy;
     }
 
-    @Override
-    public void startLevel() {
-        letsGetReadyToRumble();
-        levelStartTime = System.currentTimeMillis();
-        Logger.info("{}Level {} started ({})", demoLevel ? "Demo " : "", levelNumber, this);
-        publishGameEvent(GameEventType.LEVEL_STARTED);
-    }
 
     @Override
     public void reset() {
         playing = false;
         lives = initialLives;
         clearLevel();
-        levelCounter.clear();
+        //levelCounter.clear();
         score.reset();
     }
 

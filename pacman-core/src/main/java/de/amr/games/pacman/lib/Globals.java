@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.IllegalLevelNumberException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
-import java.util.stream.Stream;
 
 /**
  * @author Armin Reichert
@@ -184,10 +183,6 @@ public class Globals {
         return n % 2 != 0;
     }
 
-    public static float percent(int value) {
-        return value / 100f;
-    }
-
     /**
      * @param value1 value1
      * @param value2 value2
@@ -245,13 +240,13 @@ public class Globals {
 
     @SafeVarargs
     public static <T> boolean oneOf(T value, T... alternatives) {
-        switch (alternatives.length) {
-            case 0:
-                return false;
-            case 1:
-                return value.equals(alternatives[0]);
-            default:
-                return Stream.of(alternatives).anyMatch(value::equals);
+        if (value == null) {
+            return false;
         }
+        return switch (alternatives.length) {
+            case 0 -> false;
+            case 1 -> value.equals(alternatives[0]);
+            default -> Arrays.asList(alternatives).contains(value);
+        };
     }
 }
