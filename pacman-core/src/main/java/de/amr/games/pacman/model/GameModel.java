@@ -30,10 +30,7 @@ import java.util.stream.Stream;
 public interface GameModel {
 
     // Ghost IDs
-    byte RED_GHOST    = 0;
-    byte PINK_GHOST   = 1;
-    byte CYAN_GHOST   = 2;
-    byte ORANGE_GHOST = 3;
+    byte RED_GHOST = 0, PINK_GHOST = 1, CYAN_GHOST = 2, ORANGE_GHOST = 3;
 
     /** Game loop frequency, ticks per second. */
     double FPS = 60.06;
