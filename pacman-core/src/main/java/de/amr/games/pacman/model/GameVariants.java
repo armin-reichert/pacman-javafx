@@ -870,9 +870,15 @@ public enum GameVariants implements GameModel {
     }
 
     void unlockGhosts() {
-        if (ghost(RED_GHOST).inState(LOCKED)) {
-            ghost(RED_GHOST).setMoveAndWishDir(LEFT);
-            ghost(RED_GHOST).setState(HUNTING_PAC);
+        Ghost blinky = ghost(RED_GHOST);
+        if (blinky.inState(LOCKED)) {
+            if (blinky.insideHouse(world.house())) {
+                blinky.setMoveAndWishDir(Direction.UP);
+                blinky.setState(LEAVING_HOUSE);
+            } else {
+                blinky.setMoveAndWishDir(LEFT);
+                blinky.setState(HUNTING_PAC);
+            }
         }
         // Ghosts in order PINK, CYAN, ORANGE!
         Ghost prisoner = ghosts(LOCKED).findFirst().orElse(null);
@@ -881,7 +887,7 @@ public enum GameVariants implements GameModel {
             if (releaseInfo != null) {
                 eventLog().releasedGhost = prisoner;
                 eventLog().ghostReleaseInfo = releaseInfo;
-                prisoner.setMoveAndWishDir(Direction.UP); // TODO experimental
+                prisoner.setMoveAndWishDir(Direction.UP);
                 prisoner.setState(LEAVING_HOUSE);
                 if (prisoner.id() == ORANGE_GHOST && cruiseElroyState() < 0) {
                     Logger.trace("Re-enable cruise elroy mode because {} exits house:", prisoner.name());

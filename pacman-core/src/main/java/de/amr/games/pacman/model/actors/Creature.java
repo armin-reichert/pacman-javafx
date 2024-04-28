@@ -383,7 +383,7 @@ public abstract class Creature extends Entity {
         if (isTurn) {
             float offset = dir.isHorizontal() ? offset().y() : offset().x();
             float speed = velocity().length();
-            boolean atTurnPosition = Math.abs(offset) <= 0.5*speed; // TODO <= pixel-speed?
+            boolean atTurnPosition = Math.abs(offset) <= 0.5 * speed;
             if (atTurnPosition) {
                 centerOverTile(tile()); // adjust over tile (starts moving around corner)
             } else {
