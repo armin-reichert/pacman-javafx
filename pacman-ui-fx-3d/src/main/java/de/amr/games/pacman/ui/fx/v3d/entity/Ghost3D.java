@@ -160,6 +160,9 @@ public class Ghost3D extends Group {
     }
 
     private Look computeLook(GameModel game) {
+        if (ghost.state() == null) {
+            return Look.NORMAL;
+        }
         return switch (ghost.state()) {
             case LOCKED, LEAVING_HOUSE -> game.powerTimer().isRunning()? frightenedOrFlashingLook(game) : Look.NORMAL;
             case FRIGHTENED -> frightenedOrFlashingLook(game);

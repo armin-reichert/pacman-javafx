@@ -66,7 +66,7 @@ public class InfoBoxGeneral extends InfoBox {
         sliderTargetFPS.setShowTickLabels(false);
         sliderTargetFPS.setShowTickMarks(false);
 
-        addInfo("", () -> String.format("Target %dHz Actual %dHz",
+        addInfo("", () -> String.format("Target %.2fHz Actual %.2fHz",
             context.gameClock().getTargetFrameRate(), context.gameClock().getActualFrameRate()));
         addInfo("Total Updates", () -> context.gameClock().getUpdateCount());
 
