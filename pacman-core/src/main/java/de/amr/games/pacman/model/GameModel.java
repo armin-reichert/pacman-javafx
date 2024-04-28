@@ -33,10 +33,10 @@ public interface GameModel {
     byte RED_GHOST = 0, PINK_GHOST = 1, CYAN_GHOST = 2, ORANGE_GHOST = 3;
 
     /** Game loop frequency, ticks per second. */
-    double FPS = 60.06;
+    double FPS = 60;
 
     /** Movement speed in pixel/sec. */
-    float PPS_AT_100_PERCENT = 74f; //TODO this should be 75 but that doesn't work yet
+    float PPS_AT_100_PERCENT = 73.9f; //TODO this should be 75 but that doesn't work yet
 
     byte DEMO_LEVEL_MIN_DURATION_SEC = 20;
 

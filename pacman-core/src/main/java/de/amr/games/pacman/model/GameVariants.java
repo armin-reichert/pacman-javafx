@@ -229,9 +229,9 @@ public enum GameVariants implements GameModel {
      */
     PACMAN {
 
-        final int[] HUNTING_TICKS_1      = {420, 1200, 420, 1200, 300, 1200, 300, -1};
-        final int[] HUNTING_TICKS_2_TO_4 = {420, 1200, 420, 1200, 300, 61980, 1,  -1};
-        final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 300, 1200, 300, 62262, 1,  -1};
+        final int[] HUNTING_TICKS_1      = {420, 1200, 420, 1200, 300,  1200, 300, -1};
+        final int[] HUNTING_TICKS_2_TO_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
+        final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 300, 1200, 300, 62262,   1, -1};
 
         @Override
         long huntingTicks(int levelNumber, int phaseIndex) {
