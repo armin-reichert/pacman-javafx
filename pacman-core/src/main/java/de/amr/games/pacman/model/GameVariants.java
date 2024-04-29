@@ -929,6 +929,7 @@ public enum GameVariants implements GameModel {
     @Override
     public void doLevelTestStep(GameState testState) {
         if (levelNumber > 20) {
+            GameController.it().clock().setTargetFrameRate(FPS);
             GameController.it().restart(GameState.BOOT);
             return;
         }
