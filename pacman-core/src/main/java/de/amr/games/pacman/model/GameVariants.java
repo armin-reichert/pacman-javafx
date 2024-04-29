@@ -72,22 +72,22 @@ public enum GameVariants implements GameModel {
             bonusSymbols[0] = computeBonusSymbol();
             bonusSymbols[1] = computeBonusSymbol();
 
-            pac = new Pac("Ms. Pac-Man");
+            pac = new Pac("Ms. Pac-Man", world);
             pac.reset();
             pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(demoLevel);
 
             ghosts = new Ghost[] {
-                new Ghost(RED_GHOST,    "Blinky"),
-                new Ghost(PINK_GHOST,   "Pinky"),
-                new Ghost(CYAN_GHOST,   "Inky"),
-                new Ghost(ORANGE_GHOST, "Sue")
+                new Ghost(RED_GHOST,    "Blinky", world),
+                new Ghost(PINK_GHOST,   "Pinky", world),
+                new Ghost(CYAN_GHOST,   "Inky", world),
+                new Ghost(ORANGE_GHOST, "Sue", world)
             };
             ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(world.house());
-                ghost.setFrightenedBehavior(coward -> coward.roam(world, frightenedGhostSpeedPct(coward)));
+                ghost.setFrightenedBehavior(coward -> coward.roam(frightenedGhostSpeedPct(coward)));
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
                 ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE / (float) FPS);
@@ -122,11 +122,11 @@ public enum GameVariants implements GameModel {
         @Override
         public void huntingBehaviour(Ghost ghost) {
             if (huntingPhaseIndex == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-                ghost.roam(world, huntingSpeedPct(ghost));
+                ghost.roam(huntingSpeedPct(ghost));
             } else {
                 Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroy > 0
                     ? chasingTarget(ghost) : scatterTarget(ghost);
-                ghost.followTarget(world, targetTile, huntingSpeedPct(ghost));
+                ghost.followTarget(targetTile, huntingSpeedPct(ghost));
             }
         }
 
@@ -213,7 +213,7 @@ public enum GameVariants implements GameModel {
             ).map(NavPoint::np).toList();
 
             byte symbol = bonusSymbols[nextBonusIndex];
-            var movingBonus = new MovingBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
+            var movingBonus = new MovingBonus(world, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
             movingBonus.setRoute(route, leftToRight);
             movingBonus.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
             Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
@@ -258,7 +258,7 @@ public enum GameVariants implements GameModel {
             bonusSymbols[0] = computeBonusSymbol();
             bonusSymbols[1] = computeBonusSymbol();
 
-            pac = new Pac("Pac-Man");
+            pac = new Pac("Pac-Man", world);
             pac.reset();
             pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
             if (demoLevel) {
@@ -270,16 +270,16 @@ public enum GameVariants implements GameModel {
             }
 
             ghosts = new Ghost[] {
-                new Ghost(RED_GHOST,    "Blinky"),
-                new Ghost(PINK_GHOST,   "Pinky"),
-                new Ghost(CYAN_GHOST,   "Inky"),
-                new Ghost(ORANGE_GHOST, "Clyde")
+                new Ghost(RED_GHOST,    "Blinky", world),
+                new Ghost(PINK_GHOST,   "Pinky", world),
+                new Ghost(CYAN_GHOST,   "Inky", world),
+                new Ghost(ORANGE_GHOST, "Clyde", world)
             };
             ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(world.house());
                 ghost.setForbiddenPassages(world.forbiddenPassages());
-                ghost.setFrightenedBehavior(coward -> coward.roam(world, frightenedGhostSpeedPct(coward)));
+                ghost.setFrightenedBehavior(coward -> coward.roam(frightenedGhostSpeedPct(coward)));
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
                 ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE / (float) FPS);
@@ -307,7 +307,7 @@ public enum GameVariants implements GameModel {
         public void huntingBehaviour(Ghost ghost) {
             Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0
                 ? chasingTarget(ghost) : scatterTarget(ghost);
-             ghost.followTarget(world, targetTile, huntingSpeedPct(ghost));
+             ghost.followTarget(targetTile, huntingSpeedPct(ghost));
         }
 
         @Override

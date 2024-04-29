@@ -27,6 +27,7 @@ public abstract class Creature extends Entity {
     /** Order in which directions are selected when navigation decision is met. */
     Direction[] DIRECTION_PRIORITY = {UP, LEFT, DOWN, RIGHT};
 
+    protected final World world;
     protected final MoveResult lastMove = new MoveResult();
 
     protected Direction moveDir;
@@ -38,6 +39,14 @@ public abstract class Creature extends Entity {
     protected boolean gotReverseCommand;
     protected boolean canTeleport;
     protected float corneringSpeedUp;
+
+    protected Creature() {
+        this(null); // for example in intermission scenes, there is no world
+    }
+
+    protected Creature(World world) {
+        this.world = world;
+    }
 
     @Override
     public String toString() {
@@ -86,7 +95,7 @@ public abstract class Creature extends Entity {
      * @param tile some tile inside or outside the world
      * @return if this creature can access the given tile
      */
-    public abstract boolean canAccessTile(Vector2i tile, World world);
+    public abstract boolean canAccessTile(Vector2i tile);
 
     /**
      * Sets the tile this creature tries to reach (can be an unreachable tile or <code>null</code>).
@@ -233,10 +242,9 @@ public abstract class Creature extends Entity {
     /**
      * Implements the rules by which a creature (ghost) decides how to reach its current target tile.
      *
-     * @param world the world/maze
      * @return optional direction the creature takes to reach its current target tile
      */
-    public Optional<Direction> computeTargetDirection(World world) {
+    public Optional<Direction> computeTargetDirection() {
         if (targetTile().isEmpty()) {
             return Optional.empty();
         }
@@ -248,7 +256,7 @@ public abstract class Creature extends Entity {
                 continue; // reversing the move direction is not allowed
             }
             final var neighborTile = currentTile.plus(dir.vector());
-            if (canAccessTile(neighborTile, world)) {
+            if (canAccessTile(neighborTile)) {
                 final float distance = neighborTile.euclideanDistance(targetTile().get());
                 if (distance < minDistance) {
                     minDistance = distance;
@@ -261,10 +269,8 @@ public abstract class Creature extends Entity {
 
     /**
      * Sets the new wish direction for reaching the target tile.
-     *
-     * @param world the world/maze
      */
-    public void navigateTowardsTarget(World world) {
+    public void navigateTowardsTarget() {
         if (targetTile().isEmpty()) {
             return;
         }
@@ -274,21 +280,20 @@ public abstract class Creature extends Entity {
         if (world.belongsToPortal(tile())) {
             return; // inside portal, no navigation happens
         }
-        computeTargetDirection(world).ifPresent(this::setWishDir);
+        computeTargetDirection().ifPresent(this::setWishDir);
     }
 
     /**
      * Lets a creature follow the given target tile.
      *
-     * @param world the world/maze
      * @param targetTile the target tile e.g. Pac-Man's current tile
      * @param speedPct the relative speed (in percentage of base speed)
      */
-    public void followTarget(World world, Vector2i targetTile, byte speedPct) {
+    public void followTarget(Vector2i targetTile, byte speedPct) {
         setSpeedPct(speedPct);
         setTargetTile(targetTile);
-        navigateTowardsTarget(world);
-        tryMoving(world);
+        navigateTowardsTarget();
+        tryMoving();
     }
 
     /**
@@ -296,10 +301,8 @@ public abstract class Creature extends Entity {
      * <p>
      * First checks if the creature can teleport, then if the creature can move to its wish direction. If this is not
      * possible, it keeps moving to its current move direction.
-     *
-     * @param world the world/maze
      */
-    public void tryMoving(World world) {
+    public void tryMoving() {
         lastMove.clear();
         tryTeleport(world.portals());
         if (!lastMove.teleported) {
@@ -308,11 +311,11 @@ public abstract class Creature extends Entity {
                 Logger.info("{}: turned around at tile {}", name(), tile());
                 gotReverseCommand = false;
             }
-            tryMoving(world, wishDir());
+            tryMoving(wishDir());
             if (lastMove.moved) {
                 setMoveDir(wishDir());
             } else {
-                tryMoving(world, moveDir());
+                tryMoving(moveDir());
             }
         }
         if (lastMove.teleported || lastMove.moved) {
@@ -361,10 +364,9 @@ public abstract class Creature extends Entity {
     /**
      * Tries to move a creature towards the given directory. Handles collisions with walls and moving around corners.
      *
-     * @param world the world/maze
      * @param dir the direction to move
      */
-    public void tryMoving(World world, Direction dir) {
+    public void tryMoving(Direction dir) {
         final Vector2i tileBeforeMove = tile();
         final Vector2f dirVector = dir.vector().toFloatVec();
         final Vector2f newVelocity = dirVector.scaled(velocity().length());
@@ -372,7 +374,7 @@ public abstract class Creature extends Entity {
         final Vector2i touchedTile = tileAt(touchPosition);
         final boolean isTurn = !dir.sameOrientation(moveDir());
 
-        if (!canAccessTile(touchedTile, world)) {
+        if (!canAccessTile(touchedTile)) {
             if (!isTurn) {
                 centerOverTile(tile()); // adjust over tile (would move forward against wall)
             }

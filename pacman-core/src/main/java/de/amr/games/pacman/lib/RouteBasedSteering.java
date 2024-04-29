@@ -41,12 +41,12 @@ public class RouteBasedSteering implements Steering {
 
     @Override
     public void steer(Creature creature, World world) {
-        creature.navigateTowardsTarget(world);
+        creature.navigateTowardsTarget();
         if (targetIndex == route.size()) {
             complete = true;
         } else if (creature.targetTile().isEmpty()) {
             creature.setTargetTile(currentTarget().tile());
-            creature.navigateTowardsTarget(world);
+            creature.navigateTowardsTarget();
             Logger.trace("New target tile for {}={}s", creature.name(), creature.targetTile().get());
         } else if (creature.tile().equals(currentTarget().tile())) {
             nextTarget(creature, world);
@@ -62,7 +62,7 @@ public class RouteBasedSteering implements Steering {
         ++targetIndex;
         if (targetIndex < route.size()) {
             creature.setTargetTile(currentTarget().tile());
-            creature.navigateTowardsTarget(world);
+            creature.navigateTowardsTarget();
         }
     }
 

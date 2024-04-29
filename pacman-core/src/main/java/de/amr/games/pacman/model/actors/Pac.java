@@ -44,6 +44,11 @@ public class Pac extends Creature {
     private Animations animations;
 
     public Pac(String name) {
+        this(name, null);
+    }
+
+    public Pac(String name, World world) {
+        super(world);
         checkNotNull(name);
         this.name = name;
     }
@@ -118,7 +123,7 @@ public class Pac extends Creature {
     }
 
     @Override
-    public boolean canAccessTile(Vector2i tile, World world) {
+    public boolean canAccessTile(Vector2i tile) {
         if (world.house().contains(tile)) {
             return false;
         }
@@ -155,7 +160,7 @@ public class Pac extends Creature {
                 manualSteering.steer(this, game.world());
             }
             setSpeedPct(game.powerTimer().isRunning() ? level.pacSpeedPoweredPercentage() : level.pacSpeedPercentage());
-            tryMoving(game.world());
+            tryMoving();
             if (lastMove.moved) {
                 startAnimation();
             } else {

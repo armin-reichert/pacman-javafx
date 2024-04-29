@@ -51,6 +51,10 @@ public class Ghost extends Creature {
     private Animations animations;
     private Map<Vector2i, List<Direction>> forbiddenMoves = Collections.emptyMap();
 
+    public Ghost(byte id, String name) {
+        this(id, name, null);
+    }
+
     /**
      * @param id  The ghost ID. One of
      * {@link GameModel#RED_GHOST},
@@ -59,7 +63,8 @@ public class Ghost extends Creature {
      * {@link GameModel#ORANGE_GHOST}.
      * @param name the ghost's readable name, e.g. "Pinky"
      */
-    public Ghost(byte id, String name) {
+    public Ghost(byte id, String name, World world) {
+        super(world);
         checkGhostID(id);
         checkNotNull(name);
         this.id = id;
@@ -117,21 +122,20 @@ public class Ghost extends Creature {
     /**
      * Lets the ghost randomly roam through the world.
      *
-     * @param world the world
      * @param speedPct the relative speed (in percentage of base speed)
      */
-    public void roam(World world, byte speedPct) {
+    public void roam(byte speedPct) {
         Vector2i currentTile = tile();
         if (!world.belongsToPortal(currentTile) && (isNewTileEntered() || !lastMove.moved)) {
             Direction dir = pseudoRandomDirection();
             while (dir == moveDir().opposite()
-                || !canAccessTile(currentTile.plus(dir.vector()), world)) {
+                || !canAccessTile(currentTile.plus(dir.vector()))) {
                 dir = dir.nextClockwise();
             }
             setWishDir(dir);
         }
         setSpeedPct(speedPct);
-        tryMoving(world);
+        tryMoving();
     }
 
     private Direction pseudoRandomDirection() {
@@ -143,7 +147,7 @@ public class Ghost extends Creature {
     }
 
     @Override
-    public boolean canAccessTile(Vector2i tile, World world) {
+    public boolean canAccessTile(Vector2i tile) {
         checkTileNotNull(tile);
         checkNotNull(world);
 
@@ -408,8 +412,8 @@ public class Ghost extends Creature {
         } else {
             setSpeed(speedReturningToHouse);
             setTargetTile(house.door().leftWing());
-            navigateTowardsTarget(game.world());
-            tryMoving(game.world());
+            navigateTowardsTarget();
+            tryMoving();
         }
     }
 

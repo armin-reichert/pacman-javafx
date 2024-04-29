@@ -137,7 +137,7 @@ public class RuleBasedPacSteering implements Steering {
             pac.setTargetTile(findTileFarthestFromGhosts(findNearestFoodTiles()));
         }
         pac.targetTile().ifPresent(target -> {
-            pac.navigateTowardsTarget(game.world());
+            pac.navigateTowardsTarget();
             Logger.trace("Navigated towards {}, moveDir={} wishDir={}", pac.targetTile(), pac.moveDir(), pac.wishDir());
         });
     }
@@ -158,7 +158,7 @@ public class RuleBasedPacSteering implements Steering {
         boolean energizerFound = false;
         for (int i = 1; i <= CollectedData.MAX_GHOST_AHEAD_DETECTION_DIST; ++i) {
             Vector2i ahead = pacManTile.plus(pac.moveDir().vector().scaled(i));
-            if (!pac.canAccessTile(ahead, game.world())) {
+            if (!pac.canAccessTile(ahead)) {
                 break;
             }
             if (game.world().isEnergizerTile(ahead) && !game.world().hasEatenFoodAt(ahead)) {
@@ -185,7 +185,7 @@ public class RuleBasedPacSteering implements Steering {
         var pacManTile = pac.tile();
         for (int i = 1; i <= CollectedData.MAX_GHOST_BEHIND_DETECTION_DIST; ++i) {
             var behind = pacManTile.plus(pac.moveDir().opposite().vector().scaled(i));
-            if (!pac.canAccessTile(behind, game.world())) {
+            if (!pac.canAccessTile(behind)) {
                 break;
             }
             Iterable<Ghost> huntingGhosts = game.ghosts(GhostState.HUNTING_PAC)::iterator;
@@ -207,7 +207,7 @@ public class RuleBasedPacSteering implements Steering {
                 continue;
             }
             Vector2i neighbor = pacManTile.plus(dir.vector());
-            if (pac.canAccessTile(neighbor, game.world())) {
+            if (pac.canAccessTile(neighbor)) {
                 escapes.add(dir);
             }
         }
