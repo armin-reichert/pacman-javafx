@@ -40,10 +40,6 @@ public abstract class Creature extends Entity {
     protected boolean canTeleport;
     protected float corneringSpeedUp;
 
-    protected Creature() {
-        this(null); // for example in intermission scenes, there is no world
-    }
-
     protected Creature(World world) {
         this.world = world;
     }
