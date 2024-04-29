@@ -273,9 +273,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     protected Scene createMainScene() {
-        double screenHeight = Screen.getPrimary().getBounds().getHeight();
-        double height = Math.min(screenHeight * 0.8, 800);
-        double width = height * 4.0 / 3.0;
+        double height = 0.95 * Screen.getPrimary().getVisualBounds().getHeight();
+        double width = height * 1.1;
         var scene = new Scene(new Region(), width, height, Color.BLACK);
         scene.widthProperty().addListener((py, ov, nv) -> currentPage.setSize(scene.getWidth(), scene.getHeight()));
         scene.heightProperty().addListener((py, ov, nv) -> currentPage.setSize(scene.getWidth(), scene.getHeight()));
