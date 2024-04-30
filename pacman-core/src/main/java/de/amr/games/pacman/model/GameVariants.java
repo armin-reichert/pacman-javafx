@@ -60,7 +60,7 @@ public enum GameVariants implements GameModel {
         @Override
         void buildRegularLevel(int levelNumber) {
             this.levelNumber = checkLevelNumber(levelNumber);
-            world = createMsPacManWorld(mapNumberMsPacMan(this.levelNumber));
+            world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
             bonusSymbols[0] = computeBonusSymbol();
             bonusSymbols[1] = computeBonusSymbol();
             createGuys();
@@ -71,9 +71,9 @@ public enum GameVariants implements GameModel {
         @Override
         void buildDemoLevel() {
             byte[] levelNumbers = {1, 3, 6, 10, 14, 18}; // these numbers cover all 6 available mazes
-            this.levelNumber = levelNumbers[randomInt(0, levelNumbers.length)];
-            Logger.info("Demo Level maze number: {}", mazeNumberMsPacMan(levelNumber));
-            world = createMsPacManWorld(mapNumberMsPacMan(this.levelNumber));
+            levelNumber = levelNumbers[randomInt(0, levelNumbers.length)];
+            Logger.info("Demo Level uses maze #{}", mazeNumberMsPacMan(levelNumber));
+            world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
             bonusSymbols[0] = computeBonusSymbol();
             bonusSymbols[1] = computeBonusSymbol();
             createGuys();
@@ -84,7 +84,7 @@ public enum GameVariants implements GameModel {
         void createGuys() {
             pac = new Pac("Ms. Pac-Man", world);
             pac.reset();
-            pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+            pac.setBaseSpeed(PPS_AT_100_PERCENT / FPS);
 
             ghosts = new Ghost[] {
                 new Ghost(RED_GHOST,   "Blinky", world),
@@ -96,9 +96,9 @@ public enum GameVariants implements GameModel {
                 ghost.reset();
                 ghost.setHouse(world.house());
                 ghost.setFrightenedBehavior(coward -> coward.roam(frightenedGhostSpeedPct(coward)));
-                ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-                ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
-                ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE / (float) FPS);
+                ghost.setBaseSpeed(PPS_AT_100_PERCENT / FPS);
+                ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / FPS);
+                ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE / FPS);
             });
             ghosts[RED_GHOST   ].setRevivalPosition(world.ghostPosition(PINK_GHOST));
             ghosts[PINK_GHOST  ].setRevivalPosition(world.ghostPosition(PINK_GHOST));
@@ -223,7 +223,7 @@ public enum GameVariants implements GameModel {
             byte symbol = bonusSymbols[nextBonusIndex];
             var movingBonus = new MovingBonus(world, symbol, BONUS_VALUE_FACTORS[symbol] * 100);
             movingBonus.setRoute(route, leftToRight);
-            movingBonus.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+            movingBonus.setBaseSpeed(PPS_AT_100_PERCENT / FPS);
             Logger.info("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");
             bonus = movingBonus;
             bonus.setEdible(TickTimer.INDEFINITE);
@@ -277,7 +277,7 @@ public enum GameVariants implements GameModel {
         void createGuys() {
             pac = new Pac("Pac-Man", world);
             pac.reset();
-            pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
+            pac.setBaseSpeed(PPS_AT_100_PERCENT / FPS);
 
             ghosts = new Ghost[] {
                 new Ghost(RED_GHOST,   "Blinky", world),
@@ -290,9 +290,9 @@ public enum GameVariants implements GameModel {
                 ghost.setHouse(world.house());
                 ghost.setForbiddenPassages(world.forbiddenPassages());
                 ghost.setFrightenedBehavior(coward -> coward.roam(frightenedGhostSpeedPct(coward)));
-                ghost.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-                ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / (float) FPS);
-                ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE / (float) FPS);
+                ghost.setBaseSpeed(PPS_AT_100_PERCENT / FPS);
+                ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME / FPS);
+                ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE / FPS);
             });
             ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST));
             ghosts[PINK_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST));
