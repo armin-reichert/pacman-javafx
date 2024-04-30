@@ -14,6 +14,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * @author Armin Reichert
@@ -90,7 +91,7 @@ public class World {
             }
         }
         portalList.trimToSize();
-        portals = Collections.unmodifiableList(portalList);
+        portals = unmodifiableList(portalList);
 
         energizerTiles = tiles().filter(this::isEnergizerTile).collect(Collectors.toList());
 
@@ -205,6 +206,9 @@ public class World {
         return tileMap.length;
     }
 
+    /**
+     * @return Unmodifiable list of portals
+     */
     public List<Portal> portals() {
         return portals;
     }
