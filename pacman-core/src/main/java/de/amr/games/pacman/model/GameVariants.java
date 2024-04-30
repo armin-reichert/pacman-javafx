@@ -269,7 +269,11 @@ public enum GameVariants implements GameModel {
 
         @Override
         void buildDemoLevel() {
-            buildRegularLevel(1);
+            levelNumber = 1;
+            world = createPacManWorld();
+            bonusSymbols[0] = computeBonusSymbol();
+            bonusSymbols[1] = computeBonusSymbol();
+            createGuys();
             pac.setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
             pac.setUseAutopilot(true);
         }
