@@ -94,7 +94,6 @@ public enum GameVariants implements GameModel {
             };
             ghosts().forEach(ghost -> {
                 ghost.reset();
-                ghost.setHouse(world.house());
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * SEC_PER_TICK);
                 ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * SEC_PER_TICK);
@@ -290,8 +289,6 @@ public enum GameVariants implements GameModel {
             };
             ghosts().forEach(ghost -> {
                 ghost.reset();
-                ghost.setHouse(world.house());
-                ghost.setForbiddenPassages(world.forbiddenPassages());
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * SEC_PER_TICK);
                 ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * SEC_PER_TICK);

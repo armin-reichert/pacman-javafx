@@ -14,9 +14,6 @@ import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Direction.*;
@@ -43,12 +40,10 @@ public class Ghost extends Creature {
     private final byte id;
     private final String name;
     private GhostState state;
-    private House house;
     private Vector2f revivalPosition;
     private float speedReturningToHouse;
     private float speedInsideHouse;
     private Animations animations;
-    private Map<Vector2i, List<Direction>> forbiddenMoves = Collections.emptyMap();
 
     public Ghost(byte id, String name) {
         this(id, name, null);
@@ -70,7 +65,6 @@ public class Ghost extends Creature {
         this.name = name;
     }
 
-
     public byte id() {
         return id;
     }
@@ -85,11 +79,6 @@ public class Ghost extends Creature {
 
     public Optional<Animations> animations() {
         return Optional.ofNullable(animations);
-    }
-
-    public void setHouse(House house) {
-        checkNotNull(house);
-        this.house = house;
     }
 
     public boolean insideHouse(House house) {
@@ -107,10 +96,6 @@ public class Ghost extends Creature {
 
     public void setSpeedInsideHouse(float pixelsPerTick) {
         speedInsideHouse = pixelsPerTick;
-    }
-
-    public void setForbiddenPassages(Map<Vector2i, List<Direction>> moves) {
-        forbiddenMoves = moves;
     }
 
     /**
@@ -158,8 +143,8 @@ public class Ghost extends Creature {
         // hunting ghosts cannot move up at certain tiles in Pac-Man game
         if (state == HUNTING_PAC) {
             var currentTile = tile();
-            if (forbiddenMoves.containsKey(currentTile)) {
-                for (Direction dir : forbiddenMoves.get(currentTile)) {
+            if (world.forbiddenPassages().containsKey(currentTile)) {
+                for (Direction dir : world.forbiddenPassages().get(currentTile)) {
                     if (currentTile.plus(dir.vector()).equals(tile)) {
                         Logger.trace("Hunting {} cannot move {} at {}", name, dir, currentTile);
                         return false;
@@ -167,7 +152,7 @@ public class Ghost extends Creature {
                 }
             }
         }
-        if (house.door().occupies(tile)) {
+        if (world.house().door().occupies(tile)) {
             return inState(ENTERING_HOUSE, LEAVING_HOUSE);
         }
         if (world.insideBounds(tile)) {
@@ -289,7 +274,7 @@ public class Ghost extends Creature {
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
     private void updateStateLocked(GameModel game) {
-        if (insideHouse(house)) {
+        if (insideHouse(world.house())) {
             float minY = revivalPosition.y() - 4, maxY = revivalPosition.y() + 4;
             setSpeed(speedInsideHouse);
             move();
@@ -319,7 +304,7 @@ public class Ghost extends Creature {
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
     private void updateStateLeavingHouse(GameModel game) {
-        Vector2f houseEntryPosition = house.door().entryPosition();
+        Vector2f houseEntryPosition = world.house().door().entryPosition();
         if (posY() <= houseEntryPosition.y()) {
             // has raised and is outside house
             setPosition(houseEntryPosition);
@@ -334,7 +319,7 @@ public class Ghost extends Creature {
         }
         // move inside house
         float centerX = center().x();
-        float houseCenterX = house.center().x();
+        float houseCenterX = world.house().center().x();
         if (differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
             // align horizontally and raise
             setPosX(houseCenterX - HTS);
@@ -410,14 +395,14 @@ public class Ghost extends Creature {
      * to the ghost house to be revived. Hallelujah!
      */
     private void updateStateReturningToHouse() {
-        Vector2f houseEntry = house.door().entryPosition();
+        Vector2f houseEntry = world.house().door().entryPosition();
         if (position().almostEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
             setPosition(houseEntry);
             setMoveAndWishDir(DOWN);
             setState(ENTERING_HOUSE);
         } else {
             setSpeed(speedReturningToHouse);
-            setTargetTile(house.door().leftWing());
+            setTargetTile(world.house().door().leftWing());
             navigateTowardsTarget();
             tryMoving();
         }
@@ -430,7 +415,7 @@ public class Ghost extends Creature {
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
     private void updateStateEnteringHouse() {
-        Vector2f houseCenter = house.center();
+        Vector2f houseCenter = world.house().center();
         if (posY >= houseCenter.y()) {
             // reached ground
             setPosY(houseCenter.y());
