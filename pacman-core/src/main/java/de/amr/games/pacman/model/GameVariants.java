@@ -115,6 +115,7 @@ public enum GameVariants implements GameModel {
                 addSymbolToLevelCounter(bonusSymbols[0]);
             }
             letsGetReadyToRumble();
+            gateKeeper.init(levelNumber);
             levelStartTime = System.currentTimeMillis();
             Logger.info("{}Level {} started ({})", demoLevel ? "Demo " : "", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_STARTED);
@@ -306,6 +307,7 @@ public enum GameVariants implements GameModel {
             }
             addSymbolToLevelCounter(bonusSymbols[0]);
             letsGetReadyToRumble();
+            gateKeeper.init(levelNumber);
             levelStartTime = System.currentTimeMillis();
             Logger.info("{}Level {} started ({})", demoLevel ? "Demo " : "", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_STARTED);
@@ -556,7 +558,6 @@ public enum GameVariants implements GameModel {
         this.demoLevel = false;
         buildRegularLevel(levelNumber);
         score.setLevelNumber(levelNumber);
-        gateKeeper.init(levelNumber);
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
 
@@ -565,7 +566,6 @@ public enum GameVariants implements GameModel {
         clearLevel();
         this.demoLevel = true;
         buildDemoLevel();
-        gateKeeper.init(levelNumber);
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
 
