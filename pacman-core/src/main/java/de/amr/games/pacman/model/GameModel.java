@@ -35,6 +35,9 @@ public interface GameModel {
     /** Game loop frequency, ticks per second. */
     float FPS = 60;
 
+    /** Duration of one tick (in seconds). */
+    float SEC_PER_TICK = 1f / FPS;
+
     /** Movement speed in pixel/sec. */
     float PPS_AT_100_PERCENT = 73.9f; //TODO this should be 75 but that doesn't work yet
 
