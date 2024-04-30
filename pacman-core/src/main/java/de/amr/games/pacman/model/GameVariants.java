@@ -95,7 +95,6 @@ public enum GameVariants implements GameModel {
             ghosts().forEach(ghost -> {
                 ghost.reset();
                 ghost.setHouse(world.house());
-                ghost.setFrightenedBehavior(coward -> coward.roam(frightenedGhostSpeedPct(coward)));
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * SEC_PER_TICK);
                 ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * SEC_PER_TICK);
@@ -293,7 +292,6 @@ public enum GameVariants implements GameModel {
                 ghost.reset();
                 ghost.setHouse(world.house());
                 ghost.setForbiddenPassages(world.forbiddenPassages());
-                ghost.setFrightenedBehavior(coward -> coward.roam(frightenedGhostSpeedPct(coward)));
                 ghost.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
                 ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * SEC_PER_TICK);
                 ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * SEC_PER_TICK);
@@ -547,7 +545,6 @@ public enum GameVariants implements GameModel {
         return cruiseElroy;
     }
 
-
     @Override
     public void reset() {
         playing = false;
@@ -627,11 +624,6 @@ public enum GameVariants implements GameModel {
             case ORANGE_GHOST -> ghost.tile().euclideanDistance(pac.tile()) < 8 ? scatterTarget(ghost) : pac.tile();
             default -> throw new IllegalGhostIDException(ghost.id());
         };
-    }
-
-    byte frightenedGhostSpeedPct(Ghost ghost) {
-        GameLevel level = level(levelNumber);
-        return world.isTunnel(ghost.tile()) ? level.ghostSpeedTunnelPct() : level.ghostSpeedFrightenedPct();
     }
 
     byte huntingSpeedPct(Ghost ghost) {

@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
@@ -17,7 +18,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
@@ -43,7 +43,6 @@ public class Ghost extends Creature {
     private final byte id;
     private final String name;
     private GhostState state;
-    private Consumer<Ghost> frightenedBehavior;
     private House house;
     private Vector2f revivalPosition;
     private float speedReturningToHouse;
@@ -114,9 +113,14 @@ public class Ghost extends Creature {
         forbiddenMoves = moves;
     }
 
-    public void setFrightenedBehavior(Consumer<Ghost> function) {
-        checkNotNull(function);
-        frightenedBehavior = function;
+    /**
+     * Ig frightened, the ghost roams through the maze with frightened speed, except in tunnels,
+     * where he moves even slower.
+     *
+     * @param level game level
+     */
+    private void roamFrightened(GameLevel level) {
+        roam(world.isTunnel(tile()) ? level.ghostSpeedTunnelPct() : level.ghostSpeedFrightenedPct());
     }
 
     /**
@@ -268,7 +272,7 @@ public class Ghost extends Creature {
             case HUNTING_PAC        -> updateStateHuntingPac(game);
             case FRIGHTENED         -> updateStateFrightened(game);
             case EATEN              -> updateStateEaten();
-            case RETURNING_HOME     -> updateStateReturningToHouse(game);
+            case RETURNING_HOME     -> updateStateReturningToHouse();
             case ENTERING_HOUSE     -> updateStateEnteringHouse();
         }
     }
@@ -376,8 +380,10 @@ public class Ghost extends Creature {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void updateStateFrightened(GameModel game) {
-        frightenedBehavior.accept(this);
-        updateFrightenedAnimation(game);
+        game.level().ifPresent(level -> {
+            roamFrightened(level);
+            updateFrightenedAnimation(game);
+        });
     }
 
     private void updateFrightenedAnimation(GameModel game) {
@@ -403,7 +409,7 @@ public class Ghost extends Creature {
      * After the short time being displayed by his value, the eaten ghost is displayed by his eyes only and returns
      * to the ghost house to be revived. Hallelujah!
      */
-    private void updateStateReturningToHouse(GameModel game) {
+    private void updateStateReturningToHouse() {
         Vector2f houseEntry = house.door().entryPosition();
         if (position().almostEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
             setPosition(houseEntry);
