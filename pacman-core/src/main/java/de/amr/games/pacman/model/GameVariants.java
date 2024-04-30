@@ -63,7 +63,7 @@ public enum GameVariants implements GameModel {
             world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
             bonusSymbols[0] = computeBonusSymbol();
             bonusSymbols[1] = computeBonusSymbol();
-            createGuys();
+            createGuys(world);
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(false);
         }
@@ -76,12 +76,12 @@ public enum GameVariants implements GameModel {
             world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
             bonusSymbols[0] = computeBonusSymbol();
             bonusSymbols[1] = computeBonusSymbol();
-            createGuys();
+            createGuys(world);
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(true);
         }
 
-        void createGuys() {
+        void createGuys(World world) {
             pac = new Pac("Ms. Pac-Man", world);
             pac.reset();
             pac.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
@@ -262,7 +262,7 @@ public enum GameVariants implements GameModel {
             world = createPacManWorld();
             bonusSymbols[0] = computeBonusSymbol();
             bonusSymbols[1] = computeBonusSymbol();
-            createGuys();
+            createGuys(world);
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(false);
         }
@@ -273,12 +273,12 @@ public enum GameVariants implements GameModel {
             world = createPacManWorld();
             bonusSymbols[0] = computeBonusSymbol();
             bonusSymbols[1] = computeBonusSymbol();
-            createGuys();
+            createGuys(world);
             pac.setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
             pac.setUseAutopilot(true);
         }
 
-        void createGuys() {
+        void createGuys(World world) {
             pac = new Pac("Pac-Man", world);
             pac.reset();
             pac.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
