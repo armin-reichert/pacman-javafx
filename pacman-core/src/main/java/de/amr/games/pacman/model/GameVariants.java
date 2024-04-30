@@ -58,31 +58,39 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        void buildLevel(int levelNumber, boolean demoLevel) {
-            this.demoLevel = demoLevel;
-            if (demoLevel) {
-                byte[] levelNumbers = {1, 3, 6, 10, 14, 18}; // these numbers cover all 6 available mazes
-                this.levelNumber = levelNumbers[randomInt(0, levelNumbers.length)];
-                Logger.info("Demo Level maze number: {}", mazeNumberMsPacMan(levelNumber));
-            } else {
-                this.levelNumber = checkLevelNumber(levelNumber);
-            }
-
+        void createRegularLevel(int levelNumber) {
+            this.levelNumber = checkLevelNumber(levelNumber);
             world = createMsPacManWorld(mapNumberMsPacMan(this.levelNumber));
             bonusSymbols[0] = computeBonusSymbol();
             bonusSymbols[1] = computeBonusSymbol();
+            createGuys();
+            pac.setAutopilot(new RuleBasedPacSteering(this));
+            pac.setUseAutopilot(false);
+        }
 
+        @Override
+        void createDemoLevel() {
+            byte[] levelNumbers = {1, 3, 6, 10, 14, 18}; // these numbers cover all 6 available mazes
+            this.levelNumber = levelNumbers[randomInt(0, levelNumbers.length)];
+            Logger.info("Demo Level maze number: {}", mazeNumberMsPacMan(levelNumber));
+            world = createMsPacManWorld(mapNumberMsPacMan(this.levelNumber));
+            bonusSymbols[0] = computeBonusSymbol();
+            bonusSymbols[1] = computeBonusSymbol();
+            createGuys();
+            pac.setAutopilot(new RuleBasedPacSteering(this));
+            pac.setUseAutopilot(true);
+        }
+
+        void createGuys() {
             pac = new Pac("Ms. Pac-Man", world);
             pac.reset();
             pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-            pac.setAutopilot(new RuleBasedPacSteering(this));
-            pac.setUseAutopilot(demoLevel);
 
             ghosts = new Ghost[] {
-                new Ghost(RED_GHOST,    "Blinky", world),
-                new Ghost(PINK_GHOST,   "Pinky", world),
-                new Ghost(CYAN_GHOST,   "Inky", world),
-                new Ghost(ORANGE_GHOST, "Sue", world)
+                new Ghost(RED_GHOST,   "Blinky", world),
+                new Ghost(PINK_GHOST,  "Pinky",  world),
+                new Ghost(CYAN_GHOST,  "Inky",   world),
+                new Ghost(ORANGE_GHOST,"Sue",    world)
             };
             ghosts().forEach(ghost -> {
                 ghost.reset();
@@ -249,31 +257,33 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        void buildLevel(int levelNumber, boolean demoLevel) {
-
+        void createRegularLevel(int levelNumber) {
             this.levelNumber = checkLevelNumber(levelNumber);
-            this.demoLevel = demoLevel;
-
             world = createPacManWorld();
             bonusSymbols[0] = computeBonusSymbol();
             bonusSymbols[1] = computeBonusSymbol();
+            createGuys();
+            pac.setAutopilot(new RuleBasedPacSteering(this));
+            pac.setUseAutopilot(false);
+        }
 
+        @Override
+        void createDemoLevel() {
+            createRegularLevel(1);
+            pac.setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
+            pac.setUseAutopilot(true);
+        }
+
+        void createGuys() {
             pac = new Pac("Pac-Man", world);
             pac.reset();
             pac.setBaseSpeed(PPS_AT_100_PERCENT / (float) FPS);
-            if (demoLevel) {
-                pac.setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
-                pac.setUseAutopilot(true);
-            } else {
-                pac.setAutopilot(new RuleBasedPacSteering(this));
-                pac.setUseAutopilot(false);
-            }
 
             ghosts = new Ghost[] {
-                new Ghost(RED_GHOST,    "Blinky", world),
-                new Ghost(PINK_GHOST,   "Pinky", world),
-                new Ghost(CYAN_GHOST,   "Inky", world),
-                new Ghost(ORANGE_GHOST, "Clyde", world)
+                new Ghost(RED_GHOST,   "Blinky", world),
+                new Ghost(PINK_GHOST,  "Pinky",  world),
+                new Ghost(CYAN_GHOST,  "Inky",   world),
+                new Ghost(ORANGE_GHOST,"Clyde",  world)
             };
             ghosts().forEach(ghost -> {
                 ghost.reset();
@@ -411,7 +421,9 @@ public enum GameVariants implements GameModel {
         reset();
     }
 
-    abstract void buildLevel(int levelNumber, boolean demoLevel);
+    abstract void createRegularLevel(int levelNumber);
+
+    abstract void createDemoLevel();
 
     abstract long huntingTicks(int levelNumber, int phaseIndex);
 
@@ -423,7 +435,6 @@ public enum GameVariants implements GameModel {
 
     void clearLevel() {
         levelNumber = 0;
-        demoLevel = false;
         levelStartTime = 0;
         huntingPhaseIndex = 0;
         huntingTimer.resetIndefinitely();
@@ -538,17 +549,20 @@ public enum GameVariants implements GameModel {
         playing = false;
         lives = initialLives;
         clearLevel();
-        //levelCounter.clear();
         score.reset();
     }
 
     @Override
     public void createLevel(int levelNumber, boolean demoLevel) {
         clearLevel();
-        buildLevel(levelNumber, demoLevel);
+        this.demoLevel = demoLevel;
+        if (demoLevel) {
+            createDemoLevel();
+        } else {
+            createRegularLevel(levelNumber);
+        }
         score.setLevelNumber(levelNumber);
         gateKeeper.init(levelNumber);
-        Logger.info("{}Level {} created", demoLevel ? "Demo " : "", levelNumber);
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
 
