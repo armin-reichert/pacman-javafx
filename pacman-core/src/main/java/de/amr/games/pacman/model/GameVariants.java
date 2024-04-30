@@ -58,7 +58,7 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        void createRegularLevel(int levelNumber) {
+        void buildRegularLevel(int levelNumber) {
             this.levelNumber = checkLevelNumber(levelNumber);
             world = createMsPacManWorld(mapNumberMsPacMan(this.levelNumber));
             bonusSymbols[0] = computeBonusSymbol();
@@ -69,7 +69,7 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        void createDemoLevel() {
+        void buildDemoLevel() {
             byte[] levelNumbers = {1, 3, 6, 10, 14, 18}; // these numbers cover all 6 available mazes
             this.levelNumber = levelNumbers[randomInt(0, levelNumbers.length)];
             Logger.info("Demo Level maze number: {}", mazeNumberMsPacMan(levelNumber));
@@ -257,7 +257,7 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        void createRegularLevel(int levelNumber) {
+        void buildRegularLevel(int levelNumber) {
             this.levelNumber = checkLevelNumber(levelNumber);
             world = createPacManWorld();
             bonusSymbols[0] = computeBonusSymbol();
@@ -268,8 +268,8 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        void createDemoLevel() {
-            createRegularLevel(1);
+        void buildDemoLevel() {
+            buildRegularLevel(1);
             pac.setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
             pac.setUseAutopilot(true);
         }
@@ -421,9 +421,9 @@ public enum GameVariants implements GameModel {
         reset();
     }
 
-    abstract void createRegularLevel(int levelNumber);
+    abstract void buildRegularLevel(int levelNumber);
 
-    abstract void createDemoLevel();
+    abstract void buildDemoLevel();
 
     abstract long huntingTicks(int levelNumber, int phaseIndex);
 
@@ -553,15 +553,20 @@ public enum GameVariants implements GameModel {
     }
 
     @Override
-    public void createLevel(int levelNumber, boolean demoLevel) {
+    public void createLevel(int levelNumber) {
         clearLevel();
-        this.demoLevel = demoLevel;
-        if (demoLevel) {
-            createDemoLevel();
-        } else {
-            createRegularLevel(levelNumber);
-        }
+        this.demoLevel = false;
+        buildRegularLevel(levelNumber);
         score.setLevelNumber(levelNumber);
+        gateKeeper.init(levelNumber);
+        publishGameEvent(GameEventType.LEVEL_CREATED);
+    }
+
+    @Override
+    public void createDemoLevel() {
+        clearLevel();
+        this.demoLevel = true;
+        buildDemoLevel();
         gateKeeper.init(levelNumber);
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
@@ -988,7 +993,7 @@ public enum GameVariants implements GameModel {
             bonus().ifPresent(Bonus::setInactive);
             testState.setProperty("mazeFlashing", false);
             blinking.reset();
-            createLevel(levelNumber + 1, false);
+            createLevel(levelNumber + 1);
             startLevel();
             makeGuysVisible(true);
         }

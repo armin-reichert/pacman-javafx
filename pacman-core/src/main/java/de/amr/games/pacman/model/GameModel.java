@@ -68,9 +68,13 @@ public interface GameModel {
      * does not behave as in the Arcade game but hunts the ghosts using some goal-driven algorithm.
      *
      * @param levelNumber level number (starting at 1)
-     * @param demoLevel if this is a demo level (in which case the level number may be ignored)
      */
-    void createLevel(int levelNumber, boolean demoLevel);
+    void createLevel(int levelNumber);
+
+    /**
+     * Creates and initializes a demo level.
+     */
+    void createDemoLevel();
 
     /**
      * At this point, the animations of Pac-Man and the ghosts must have been created!
