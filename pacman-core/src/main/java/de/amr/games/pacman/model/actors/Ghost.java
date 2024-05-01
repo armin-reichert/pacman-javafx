@@ -353,14 +353,16 @@ public class Ghost extends Creature {
     // --- HUNTING_PAC ---
 
     /**
-     * In each game level there are 4 alternating (scattering vs. chasing) hunting phases of different duration. The first
+     * In each game level there are 8 alternating (scattering vs. chasing) hunting phases of different duration. The first
      * hunting phase is always a "scatter" phase where the ghosts retreat to their maze corners. After some time they
-     * start chasing Pac-Man according to their character ("Shadow", "Speedy", "Bashful", "Pokey"). The 4th hunting phase
+     * start chasing Pac-Man according to their character ("Shadow", "Speedy", "Bashful", "Pokey"). The last hunting phase
      * is an "infinite" chasing phase.
      * <p>
      */
     private void updateStateHuntingPac(GameModel game) {
-        game.huntingBehaviour(this);
+        // The hunting behaviour is defined by the specific game variant. For example, in Ms. Pac-Man,
+        // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
+        game.letGhostHunting(this);
     }
 
     // --- FRIGHTENED ---

@@ -118,7 +118,7 @@ public interface GameModel {
 
     void doHuntingStep();
 
-    void huntingBehaviour(Ghost ghost);
+    void letGhostHunting(Ghost ghost);
 
     boolean areGhostsKilled();
 

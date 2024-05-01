@@ -127,13 +127,14 @@ public enum GameVariants implements GameModel {
          * only the scatter target of Blinky and Pinky would have been affected. Who knows?
          */
         @Override
-        public void huntingBehaviour(Ghost ghost) {
+        public void letGhostHunting(Ghost ghost) {
+            byte speed = huntingSpeedPct(ghost);
             if (huntingPhaseIndex == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-                ghost.roam(huntingSpeedPct(ghost));
+                ghost.roam(speed);
             } else {
-                Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroy > 0
-                    ? chasingTarget(ghost) : scatterTarget(ghost);
-                ghost.followTarget(targetTile, huntingSpeedPct(ghost));
+                // even phase: scattering, odd phase: chasing
+                boolean chasing = isOdd(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
+                ghost.followTarget(chasing ? chasingTarget(ghost) : scatterTarget(ghost), speed);
             }
         }
 
@@ -314,7 +315,7 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        public void huntingBehaviour(Ghost ghost) {
+        public void letGhostHunting(Ghost ghost) {
             Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0
                 ? chasingTarget(ghost) : scatterTarget(ghost);
              ghost.followTarget(targetTile, huntingSpeedPct(ghost));
