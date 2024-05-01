@@ -60,10 +60,7 @@ public enum GameVariants implements GameModel {
         @Override
         void buildRegularLevel(int levelNumber) {
             this.levelNumber = checkLevelNumber(levelNumber);
-            world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
-            bonusSymbols[0] = computeBonusSymbol();
-            bonusSymbols[1] = computeBonusSymbol();
-            createGuys(world);
+            populateLevel(createMsPacManWorld(mapNumberMsPacMan(levelNumber)));
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(false);
         }
@@ -73,15 +70,16 @@ public enum GameVariants implements GameModel {
             byte[] levelNumbers = {1, 3, 6, 10, 14, 18}; // these numbers cover all 6 available mazes
             levelNumber = levelNumbers[randomInt(0, levelNumbers.length)];
             Logger.info("Demo Level uses maze #{}", mazeNumberMsPacMan(levelNumber));
-            world = createMsPacManWorld(mapNumberMsPacMan(levelNumber));
-            bonusSymbols[0] = computeBonusSymbol();
-            bonusSymbols[1] = computeBonusSymbol();
-            createGuys(world);
+            populateLevel(createMsPacManWorld(mapNumberMsPacMan(levelNumber)));
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(true);
         }
 
-        void createGuys(World world) {
+        void populateLevel(World world) {
+            this.world = world;
+            bonusSymbols[0] = computeBonusSymbol();
+            bonusSymbols[1] = computeBonusSymbol();
+
             pac = new Pac("Ms. Pac-Man", world);
             pac.reset();
             pac.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
