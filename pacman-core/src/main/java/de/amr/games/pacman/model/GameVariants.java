@@ -17,10 +17,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.LEFT;
@@ -69,8 +66,8 @@ public enum GameVariants implements GameModel {
         void buildDemoLevel() {
             byte[] levelNumbers = {1, 3, 6, 10, 14, 18}; // these numbers cover all 6 available mazes
             levelNumber = levelNumbers[randomInt(0, levelNumbers.length)];
-            Logger.info("Demo Level uses maze #{}", mazeNumberMsPacMan(levelNumber));
-            populateLevel(createMsPacManWorld(mapNumberMsPacMan(levelNumber)));
+            int mapNumber = mapNumberMsPacMan(levelNumber);
+            populateLevel(createMsPacManWorld(mapNumber));
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(true);
         }
