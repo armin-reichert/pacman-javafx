@@ -313,7 +313,6 @@ public enum GameVariants implements GameModel {
             publishGameEvent(GameEventType.LEVEL_STARTED);
         }
 
-
         @Override
         public void huntingBehaviour(Ghost ghost) {
             Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0

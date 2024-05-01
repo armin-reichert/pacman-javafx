@@ -703,22 +703,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     @Override
-    public void enterLevel(int newLevelNumber) {
-        if (gameState() == GameState.LEVEL_TRANSITION) {
-            return;
-        }
-        if (newLevelNumber > game().levelNumber()) {
-            stopAllSounds();
-            for (int n = game().levelNumber(); n < newLevelNumber - 1; ++n) {
-                game().createLevel(game().levelNumber() + 1);
-            }
-            game().startLevel();
-            game().makeGuysVisible(true);
-            gameController().changeState(GameState.LEVEL_TRANSITION);
-        }
-    }
-
-    @Override
     public void startLevelTestMode() {
         if (gameState() == GameState.INTRO) {
             gameController().restart(GameState.LEVEL_TEST);

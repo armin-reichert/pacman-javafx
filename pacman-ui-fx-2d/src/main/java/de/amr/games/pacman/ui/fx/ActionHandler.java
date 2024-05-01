@@ -25,8 +25,6 @@ public interface ActionHandler {
 
     void toggleAutopilot();
 
-    void enterLevel(int newLevelNumber);
-
     void startLevelTestMode();
 
     void toggleImmunity();
