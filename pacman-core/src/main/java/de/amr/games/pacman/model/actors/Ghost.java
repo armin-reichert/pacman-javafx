@@ -65,6 +65,19 @@ public class Ghost extends Creature {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "Ghost{" +
+            "name='" + name + '\'' +
+            ", state=" + state +
+            ". tile=" + tile() +
+            ", newTileEntered=" + newTileEntered +
+            ", gotReverseCommand=" + gotReverseCommand +
+            ", posX=" + posX +
+            ", posY=" + posY +
+            '}';
+    }
+
     public byte id() {
         return id;
     }
@@ -415,34 +428,21 @@ public class Ghost extends Creature {
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
     private void updateStateEnteringHouse() {
-        Vector2f houseCenter = world.house().center();
-        if (posY >= houseCenter.y()) {
-            // reached ground
-            setPosY(houseCenter.y());
-            if (revivalPosition.x() < posX) {
-                setMoveAndWishDir(LEFT);
-            } else if (revivalPosition.x() > posX) {
-                setMoveAndWishDir(RIGHT);
-            }
-        }
-        setSpeed(speedReturningToHouse);
-        move();
-        if (posY >= revivalPosition.y() && differsAtMost(0.5 * speedReturningToHouse, posX, revivalPosition.x())) {
+        float speed = speedReturningToHouse; // correct?
+        if (position().almostEquals(revivalPosition, speed / 2, speed / 2)) {
             setPosition(revivalPosition);
             setMoveAndWishDir(UP);
             setState(LOCKED);
+            return;
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Ghost{" +
-            "name='" + name + '\'' +
-            ", state=" + state +
-            ", newTileEntered=" + newTileEntered +
-            ", gotReverseCommand=" + gotReverseCommand +
-            ", posX=" + posX +
-            ", posY=" + posY +
-            '}';
+        if (posY < revivalPosition.y()) {
+            setMoveAndWishDir(DOWN);
+        } else if (posX > revivalPosition.x()) {
+            setMoveAndWishDir(LEFT);
+        } else if (posX < revivalPosition.x()) {
+            setMoveAndWishDir(RIGHT);
+        }
+        setSpeed(speed);
+        move();
     }
 }
