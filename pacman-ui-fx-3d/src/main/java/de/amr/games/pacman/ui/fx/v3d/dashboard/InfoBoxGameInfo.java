@@ -26,17 +26,19 @@ public class InfoBoxGameInfo extends InfoBox {
         addInfo("", () -> "Running:   %s%s".formatted(context.gameState().timer().tick(),
             context.gameState().timer().isStopped() ? " (STOPPED)" : ""));
         addInfo("", () -> "Remaining: %s".formatted(ticksToString(context.gameState().timer().remaining())));
+        addInfo("Game Level", () -> context.game().level().isPresent()
+            ? context.game().levelNumber() : InfoText.NO_INFO);
 
         addInfo("Hunting Phase", this::fmtHuntingPhase);
         addInfo("", this::fmtHuntingTicksRunning);
         addInfo("", this::fmtHuntingTicksRemaining);
 
+        addInfo("Pac-Man speed", ifLevelExists(this::fmtPacSpeed));
+        addInfo("- empowered", ifLevelExists(this::fmtPacSpeedPowered));
         addInfo("Pellets", this::fmtPelletCount);
         addInfo("Ghost speed", ifLevelExists(this::fmtGhostSpeed));
         addInfo("- frightened", ifLevelExists(this::fmtGhostSpeedFrightened));
         addInfo("- in tunnel", ifLevelExists(this::fmtGhostSpeedTunnel));
-        addInfo("Pac-Man speed", ifLevelExists(this::fmtPacSpeed));
-        addInfo("- empowered", ifLevelExists(this::fmtPacSpeedPowered));
         addInfo("Frightened time", ifLevelExists(this::fmtPacPowerSeconds));
         addInfo("Maze flashings", ifLevelExists(this::fmtNumFlashes));
     }
