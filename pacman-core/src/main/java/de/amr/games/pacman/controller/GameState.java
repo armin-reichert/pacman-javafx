@@ -240,7 +240,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             else if (timer.tick() == TICK_START_PAC_ANIMATION) {
                 game.pac().startAnimation();
-                game.publishGameEvent(GameEventType.PAC_DYING);
+                game.publishGameEvent(GameEventType.PAC_DYING, game.pac().tile());
             }
             else if (timer.tick() == TICK_HIDE_PAC) {
                 game.pac().hide();

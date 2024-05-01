@@ -1014,7 +1014,7 @@ public enum GameVariants implements GameModel {
 
     @Override
     public void publishGameEvent(GameEvent event) {
-        Logger.trace("Publish game event: {}", event);
+        Logger.info("Game event: {}", event);
         gameEventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
     }
 }
