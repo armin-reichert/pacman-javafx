@@ -377,45 +377,44 @@ public enum GameVariants implements GameModel {
         /*21*/ new GameLevel( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0)
     };
 
-    final byte  POINTS_PELLET = 10;
-    final byte  POINTS_ENERGIZER = 50;
-    final short POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
-    final short EXTRA_LIFE_SCORE = 10_000;
-    final byte  LEVEL_COUNTER_MAX_SYMBOLS = 7;
-    final byte PAC_POWER_FADING_TICKS = 120; // unsure
-    final byte BONUS_POINTS_SHOWN_TICKS = 120; // unsure
-    final byte  RESTING_TICKS_PELLET = 1;
-    final byte  RESTING_TICKS_ENERGIZER = 3;
-    final byte  PPS_GHOST_INSIDE_HOUSE = 30; // correct?
-    final byte  PPS_GHOST_RETURNING_HOME = 120; // correct?
-    final short[] KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
+    final byte       POINTS_PELLET = 10;
+    final byte       POINTS_ENERGIZER = 50;
+    final short      POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
+    final short      EXTRA_LIFE_SCORE = 10_000;
+    final byte       LEVEL_COUNTER_MAX_SYMBOLS = 7;
+    final byte       PAC_POWER_FADING_TICKS = 120; // unsure
+    final byte       BONUS_POINTS_SHOWN_TICKS = 120; // unsure
+    final byte       RESTING_TICKS_PELLET = 1;
+    final byte       RESTING_TICKS_ENERGIZER = 3;
+    final byte       PPS_GHOST_INSIDE_HOUSE = 30; // correct?
+    final byte       PPS_GHOST_RETURNING_HOME = 120; // correct?
+    final short[]    KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
 
-    final Pulse blinking = new Pulse(10, false);
-    final byte[] bonusSymbols = new byte[2];
+    final Pulse      blinking = new Pulse(10, false);
+    final byte[]     bonusSymbols = new byte[2];
     final List<Byte> levelCounter = new ArrayList<>();
-    final TickTimer huntingTimer = new TickTimer("HuntingTimer");
-    final TickTimer powerTimer = new TickTimer("PacPowerTimer");
-    final Score score = new Score();
-    final Score highScore = new Score();
-
+    final TickTimer  huntingTimer = new TickTimer("HuntingTimer");
+    final TickTimer  powerTimer = new TickTimer("PacPowerTimer");
+    final Score      score = new Score();
+    final Score      highScore = new Score();
     final GateKeeper gateKeeper = new GateKeeper();
 
-    int levelNumber; // 1=first level
-    boolean demoLevel;
-    long levelStartTime;
-    boolean playing;
-    byte initialLives;
-    byte lives;
+    int              levelNumber; // 1=first level
+    boolean          demoLevel;
+    long             levelStartTime;
+    boolean          playing;
+    byte             initialLives;
+    byte             lives;
 
-    int huntingPhaseIndex;
-    byte cruiseElroy;
-    byte numGhostsKilledInLevel;
-    byte nextBonusIndex; // -1=no bonus, 0=first, 1=second
+    int              huntingPhaseIndex;
+    byte             cruiseElroy;
+    byte             numGhostsKilledInLevel;
+    byte             nextBonusIndex; // -1=no bonus, 0=first, 1=second
 
-    Pac pac;
-    Ghost[] ghosts;
-    Bonus bonus;
-    World world;
+    Pac              pac;
+    Ghost[]          ghosts;
+    Bonus            bonus;
+    World            world;
 
     GameVariants() {
         initialLives = 3;
