@@ -103,14 +103,14 @@ public enum GameVariants implements GameModel {
         public void startLevel() {
             // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
             // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
-            if (this.levelNumber == 1) {
+            if (levelNumber == 1) {
                 levelCounter.clear();
             }
-            if (!demoLevel && this.levelNumber <= 7) {
+            if (!demoLevel && levelNumber <= 7) {
                 addSymbolToLevelCounter(bonusSymbols[0]);
             }
-            letsGetReadyToRumble();
             gateKeeper.init(levelNumber);
+            letsGetReadyToRumble();
             levelStartTime = System.currentTimeMillis();
             Logger.info("{}Level {} started ({})", demoLevel ? "Demo " : "", levelNumber, this);
             publishGameEvent(GameEventType.LEVEL_STARTED);
@@ -552,6 +552,7 @@ public enum GameVariants implements GameModel {
         this.demoLevel = false;
         buildRegularLevel(levelNumber);
         score.setLevelNumber(levelNumber);
+        Logger.info("Level {} created", levelNumber);
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
 
@@ -560,6 +561,7 @@ public enum GameVariants implements GameModel {
         clearLevel();
         this.demoLevel = true;
         buildDemoLevel();
+        Logger.info("Demo Level created");
         publishGameEvent(GameEventType.LEVEL_CREATED);
     }
 
@@ -1008,7 +1010,7 @@ public enum GameVariants implements GameModel {
 
     @Override
     public void publishGameEvent(GameEvent event) {
-        Logger.info("Game event: {}", event);
+        Logger.trace("Game event: {}", event);
         gameEventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
     }
 }
