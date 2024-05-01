@@ -17,7 +17,10 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.LEFT;
@@ -298,7 +301,7 @@ public enum GameVariants implements GameModel {
 
         @Override
         public void startLevel() {
-            if (this.levelNumber == 1) {
+            if (levelNumber == 1) {
                 levelCounter.clear();
             }
             addSymbolToLevelCounter(bonusSymbols[0]);
@@ -549,7 +552,7 @@ public enum GameVariants implements GameModel {
     @Override
     public void createLevel(int levelNumber) {
         clearLevel();
-        this.demoLevel = false;
+        demoLevel = false;
         buildRegularLevel(levelNumber);
         score.setLevelNumber(levelNumber);
         Logger.info("Level {} created", levelNumber);
@@ -559,7 +562,7 @@ public enum GameVariants implements GameModel {
     @Override
     public void createDemoLevel() {
         clearLevel();
-        this.demoLevel = true;
+        demoLevel = true;
         buildDemoLevel();
         Logger.info("Demo Level created");
         publishGameEvent(GameEventType.LEVEL_CREATED);
@@ -654,8 +657,8 @@ public enum GameVariants implements GameModel {
     }
 
     @Override
-    public void addLives(int lives) {
-        this.lives += (byte) lives;
+    public void addLives(int deltaLives) {
+        lives += (byte) deltaLives;
     }
 
     @Override

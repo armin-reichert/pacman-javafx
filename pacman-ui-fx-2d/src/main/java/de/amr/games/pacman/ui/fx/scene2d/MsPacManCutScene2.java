@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.MsPacManIntermission2;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.rendering2d.ClapperboardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
