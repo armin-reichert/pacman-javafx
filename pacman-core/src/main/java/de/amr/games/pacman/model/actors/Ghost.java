@@ -362,7 +362,7 @@ public class Ghost extends Creature {
     private void updateStateHuntingPac(GameModel game) {
         // The hunting behaviour is defined by the specific game variant. For example, in Ms. Pac-Man,
         // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
-        game.letGhostHunting(this);
+        game.letGhostHunt(this);
     }
 
     // --- FRIGHTENED ---

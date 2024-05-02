@@ -125,7 +125,7 @@ public enum GameVariants implements GameModel {
          * only the scatter target of Blinky and Pinky would have been affected. Who knows?
          */
         @Override
-        public void letGhostHunting(Ghost ghost) {
+        public void letGhostHunt(Ghost ghost) {
             byte speed = huntingSpeedPct(ghost);
             if (huntingPhaseIndex == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
                 ghost.roam(speed);
@@ -313,7 +313,7 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        public void letGhostHunting(Ghost ghost) {
+        public void letGhostHunt(Ghost ghost) {
             Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0
                 ? chasingTarget(ghost) : scatterTarget(ghost);
              ghost.followTarget(targetTile, huntingSpeedPct(ghost));
