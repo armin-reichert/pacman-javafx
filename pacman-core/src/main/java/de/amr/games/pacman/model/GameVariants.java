@@ -251,7 +251,9 @@ public enum GameVariants implements GameModel {
             if (levelNumber == 1) {
                 levelCounter.clear();
             }
-            addSymbolToLevelCounter(bonusSymbols[0]);
+            if (!demoLevel) {
+                addSymbolToLevelCounter(bonusSymbols[0]);
+            }
             letsGetReadyToRumble();
             gateKeeper.init(levelNumber);
             levelStartTime = System.currentTimeMillis();
