@@ -121,6 +121,8 @@ public interface GameModel {
 
     void killGhost(Ghost prey);
 
+    List<Ghost> victims();
+
     void doHuntingStep();
 
     void letGhostHunt(Ghost ghost);

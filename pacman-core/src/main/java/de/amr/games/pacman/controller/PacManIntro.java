@@ -10,6 +10,8 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
@@ -147,7 +149,7 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
                 intro.ghostKilledTime = timer.tick();
                 intro.pacMan.setMoveDir(Direction.RIGHT);
                 intro.pacMan.setSpeed(intro.chaseSpeed);
-                intro.pacMan.victims().clear();
+                intro.victims.clear();
             }
 
             @Override
@@ -162,7 +164,7 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
                     .filter(ghost -> ghost.inState(FRIGHTENED) && ghost.sameTile(intro.pacMan))
                     .findFirst()
                     .ifPresent(victim -> {
-                        intro.pacMan.victims().add(victim);
+                        intro.victims.add(victim);
                         intro.ghostKilledTime = timer.tick();
                         intro.pacMan.hide();
                         intro.pacMan.setSpeed(0);
@@ -171,7 +173,7 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
                             ghost.stopAnimation();
                         });
                         victim.setState(EATEN);
-                        victim.selectAnimation(Ghost.ANIM_GHOST_NUMBER, intro.pacMan.victims().size() - 1);
+                        victim.selectAnimation(Ghost.ANIM_GHOST_NUMBER, intro.victims.size() - 1);
                     });
 
                 // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on
@@ -237,6 +239,7 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
     public boolean titleVisible = false;
     public int ghostIndex;
     public long ghostKilledTime;
+    public final List<Ghost> victims = new ArrayList<>();
 
     public Ghost ghost(int id) {
         return ghostInfo[id].ghost;

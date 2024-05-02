@@ -300,7 +300,7 @@ public class Ghost extends Creature {
         } else {
             setSpeed(0);
         }
-        if (game.powerTimer().isRunning() && !game.pac().victims().contains(this)) {
+        if (game.powerTimer().isRunning() && !game.victims().contains(this)) {
             updateFrightenedAnimation(game);
         } else {
             selectAnimation(ANIM_GHOST_NORMAL);
@@ -323,7 +323,7 @@ public class Ghost extends Creature {
             setPosition(houseEntryPosition);
             setMoveAndWishDir(LEFT);
             newTileEntered = false; // force moving left until new tile is entered
-            if (game.powerTimer().isRunning() && !game.pac().victims().contains(this)) {
+            if (game.powerTimer().isRunning() && !game.victims().contains(this)) {
                 setState(FRIGHTENED);
             } else {
                 setState(HUNTING_PAC);
@@ -343,7 +343,7 @@ public class Ghost extends Creature {
         }
         setSpeed(speedInsideHouse);
         move();
-        if (game.powerTimer().isRunning() && !game.pac().victims().contains(this)) {
+        if (game.powerTimer().isRunning() && !game.victims().contains(this)) {
             updateFrightenedAnimation(game);
         } else {
             selectAnimation(ANIM_GHOST_NORMAL);

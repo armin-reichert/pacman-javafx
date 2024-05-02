@@ -11,8 +11,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -40,7 +38,6 @@ public class Pac extends Creature {
     private Steering manualSteering;
     private Steering autopilot;
     private boolean useAutopilot;
-    private final List<Ghost> victims = new ArrayList<>();
     private Animations animations;
 
     public Pac(String name) {
@@ -169,10 +166,6 @@ public class Pac extends Creature {
         } else {
             --restingTicks;
         }
-    }
-
-    public List<Ghost> victims() {
-        return victims;
     }
 
     /**

@@ -288,7 +288,7 @@ public class PlayScene3D implements GameScene {
                     default -> throw new IllegalGameVariantException(context.game());
                 };
                 context.game().eventLog().killedGhosts.forEach(ghost -> {
-                    int index = context.game().pac().victims().indexOf(ghost);
+                    int index = context.game().victims().indexOf(ghost);
                     var numberImage = context.spriteSheet().subImage(sprites[index]);
                     level3D.ghosts3D().get(ghost.id()).setNumberImage(numberImage);
                 });

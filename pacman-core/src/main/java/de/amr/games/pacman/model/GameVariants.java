@@ -392,6 +392,7 @@ public enum GameVariants implements GameModel {
     final List<Byte> levelCounter = new ArrayList<>();
     final TickTimer  huntingTimer = new TickTimer("HuntingTimer");
     final TickTimer  powerTimer = new TickTimer("PacPowerTimer");
+    final List<Ghost> victims = new ArrayList<>();
     final Score      score = new Score();
     final Score      highScore = new Score();
     final GateKeeper gateKeeper = new GateKeeper();
@@ -479,6 +480,11 @@ public enum GameVariants implements GameModel {
     @Override
     public TickTimer powerTimer() {
         return powerTimer;
+    }
+
+    @Override
+    public List<Ghost> victims() {
+        return victims;
     }
 
     @Override
@@ -806,7 +812,7 @@ public enum GameVariants implements GameModel {
             if (world.isEnergizerTile(pacTile)) {
                 eventLog.energizerFound = true;
                 pac.setRestingTicks(RESTING_TICKS_ENERGIZER);
-                pac.victims().clear();
+                victims.clear();
                 scorePoints(POINTS_ENERGIZER);
                 Logger.info("Scored {} points for eating energizer", POINTS_ENERGIZER);
                 if (level(levelNumber).pacPowerSeconds() > 0) {
@@ -851,7 +857,7 @@ public enum GameVariants implements GameModel {
             powerTimer.stop();
             powerTimer.reset(0);
             Logger.info("Power timer stopped and reset to zero");
-            pac.victims().clear();
+            victims.clear();
             huntingTimer().start();
             Logger.info("Hunting timer started");
             ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
@@ -923,7 +929,7 @@ public enum GameVariants implements GameModel {
     @Override
     public void killGhost(Ghost ghost) {
         eventLog.killedGhosts.add(ghost);
-        int killedSoFar = pac.victims().size();
+        int killedSoFar = victims.size();
         int points = KILLED_GHOST_VALUES[killedSoFar];
         ghost.eaten(killedSoFar);
         scorePoints(points);
@@ -934,7 +940,7 @@ public enum GameVariants implements GameModel {
             scorePoints(extraPoints);
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, levelNumber);
         }
-        pac.victims().add(ghost);
+        victims.add(ghost);
     }
 
     // Game Event Support
