@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
@@ -414,6 +413,8 @@ public enum GameVariants implements GameModel {
     Bonus            bonus;
     World            world;
 
+    SimulationStepEventLog eventLog;
+
     GameVariants() {
         reset();
     }
@@ -599,8 +600,14 @@ public enum GameVariants implements GameModel {
         }
     }
 
-    SimulationStepEventLog eventLog() {
-        return GameController.it().eventLog();
+    @Override
+    public SimulationStepEventLog eventLog() {
+        return eventLog;
+    }
+
+    @Override
+    public void clearEventLog() {
+        eventLog = new SimulationStepEventLog();
     }
 
     Vector2i scatterTarget(Ghost ghost) {

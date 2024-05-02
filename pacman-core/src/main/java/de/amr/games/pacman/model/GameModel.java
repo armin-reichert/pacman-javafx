@@ -42,6 +42,10 @@ public interface GameModel {
 
     byte DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
+    SimulationStepEventLog eventLog();
+
+    void clearEventLog();
+
     /**
      * @return Pac-Man or Ms. Pac-Man
      */

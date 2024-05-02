@@ -8,7 +8,6 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.FiniteStateMachine;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariants;
-import de.amr.games.pacman.model.SimulationStepEventLog;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -44,7 +43,6 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     private GameModel game;
     private boolean pacImmune = false;
     private int credit = 0;
-    private SimulationStepEventLog eventLog = new SimulationStepEventLog();
 
     private GameController() {
         super(GameState.values());
@@ -68,9 +66,9 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     @Override
     public void update() {
-        eventLog = new SimulationStepEventLog();
+        game.clearEventLog();
         super.update();
-        var messageList = eventLog.createMessageList();
+        var messageList = game.eventLog().createMessageList();
         if (!messageList.isEmpty()) {
             Logger.info("During last simulation step:");
             for (var msg : messageList) {
@@ -85,10 +83,6 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     public GameClock clock() {
         return clock;
-    }
-
-    public SimulationStepEventLog eventLog() {
-        return eventLog;
     }
 
     /**
