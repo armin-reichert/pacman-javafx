@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
@@ -79,6 +78,8 @@ public interface GameModel {
      */
     void createDemoLevel();
 
+    void createNextBonus();
+
     /**
      * At this point, the animations of Pac-Man and the ghosts must have been created!
      */
@@ -152,8 +153,6 @@ public interface GameModel {
     Optional<Integer> chasingPhase();
 
     String currentHuntingPhaseName();
-
-    void doLevelTestStep(GameState testState);
 
     /**
      * @return Blinky's "cruise elroy" state. Values: <code>0, 1, 2, -1, -2</code>. (0=off, negative=disabled).

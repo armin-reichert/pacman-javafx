@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
@@ -102,10 +101,11 @@ public enum GameVariants implements GameModel {
             ghosts[ORANGE_GHOST].setRevivalPosition(world.ghostPosition(ORANGE_GHOST));
         }
 
+        /** In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
+         * (also inside a level) whenever a bonus score is reached. At least that's what I was told.
+         */
         @Override
         public void startLevel() {
-            // In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
-            // (also inside a level) whenever a bonus score is reached. At least that's what I was told.
             if (levelNumber == 1) {
                 levelCounter.clear();
             }
@@ -198,7 +198,7 @@ public enum GameVariants implements GameModel {
          * Note: This is not the exact behavior from the original Arcade game.
          **/
         @Override
-        void createNextBonus() {
+        public void createNextBonus() {
             if (bonus != null && bonus.state() != Bonus.STATE_INACTIVE) {
                 Logger.info("Previous bonus is still active, skip this one");
                 return;
@@ -339,7 +339,7 @@ public enum GameVariants implements GameModel {
         final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
 
         @Override
-        void createNextBonus() {
+        public void createNextBonus() {
             nextBonusIndex += 1;
             byte symbol = bonusSymbols[nextBonusIndex];
             bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
@@ -763,8 +763,6 @@ public enum GameVariants implements GameModel {
         return Optional.ofNullable(bonus);
     }
 
-    abstract void createNextBonus();
-
     @Override
     public boolean isLevelComplete() {
         return world.uneatenFoodCount() == 0;
@@ -934,61 +932,6 @@ public enum GameVariants implements GameModel {
             Logger.info("Scored {} points for killing all ghosts in level {}", extraPoints, levelNumber);
         }
         pac.victims().add(ghost);
-    }
-
-    // Level test
-
-    @Override
-    public void doLevelTestStep(GameState testState) {
-        if (levelNumber > 20) {
-            GameController.it().clock().setTargetFrameRate(FPS);
-            GameController.it().restart(GameState.BOOT);
-            return;
-        }
-        if (testState.timer().tick() > 2 * FPS) {
-            blinking.tick();
-            ghosts().forEach(ghost -> ghost.update(this));
-            bonus().ifPresent(bonus -> bonus.update(this));
-        }
-        if (testState.timer().atSecond(1.0)) {
-            letsGetReadyToRumble();
-            pac.show();
-            ghosts().forEach(Ghost::show);
-        } else if (testState.timer().atSecond(2)) {
-            blinking.setStartPhase(Pulse.ON);
-            blinking.restart();
-        } else if (testState.timer().atSecond(2.5)) {
-            createNextBonus();
-        } else if (testState.timer().atSecond(4.5)) {
-            bonus().ifPresent(bonus -> bonus.setEaten(60));
-            publishGameEvent(GameEventType.BONUS_EATEN);
-        } else if (testState.timer().atSecond(6.5)) {
-            bonus().ifPresent(Bonus::setInactive); // needed?
-            createNextBonus();
-        } else if (testState.timer().atSecond(7.5)) {
-            bonus().ifPresent(bonus -> bonus.setEaten(60));
-            publishGameEvent(GameEventType.BONUS_EATEN);
-        } else if (testState.timer().atSecond(8.5)) {
-            pac.hide();
-            ghosts().forEach(Ghost::hide);
-            blinking.stop();
-            blinking.setStartPhase(Pulse.ON);
-            blinking.reset();
-        } else if (testState.timer().atSecond(9.5)) {
-            testState.setProperty("mazeFlashing", true);
-            blinking.setStartPhase(Pulse.OFF);
-            blinking.restart(2 * level(levelNumber).numFlashes());
-        } else if (testState.timer().atSecond(12.0)) {
-            testState.timer().restartIndefinitely();
-            pac.freeze();
-            ghosts().forEach(Ghost::hide);
-            bonus().ifPresent(Bonus::setInactive);
-            testState.setProperty("mazeFlashing", false);
-            blinking.reset();
-            createLevel(levelNumber + 1);
-            startLevel();
-            makeGuysVisible(true);
-        }
     }
 
     // Game Event Support

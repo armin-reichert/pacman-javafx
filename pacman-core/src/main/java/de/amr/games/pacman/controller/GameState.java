@@ -310,7 +310,58 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            game.doLevelTestStep(this);
+            if (game.level().isEmpty()) {
+                return;
+            }
+            if (game.levelNumber() > 20) {
+                gameController().clock().setTargetFrameRate(GameModel.FPS);
+                gameController().restart(GameState.BOOT);
+                return;
+            }
+            if (timer().tick() > 2 * GameModel.FPS) {
+                game.blinking().tick();
+                game.ghosts().forEach(ghost -> ghost.update(game));
+                game.bonus().ifPresent(bonus -> bonus.update(game));
+            }
+            if (timer().atSecond(1.0)) {
+                game.letsGetReadyToRumble();
+                game.pac().show();
+                game.ghosts().forEach(Ghost::show);
+            } else if (timer().atSecond(2)) {
+                game.blinking().setStartPhase(Pulse.ON);
+                game.blinking().restart();
+            } else if (timer().atSecond(2.5)) {
+                game.createNextBonus();
+            } else if (timer().atSecond(4.5)) {
+                game.bonus().ifPresent(bonus -> bonus.setEaten(60));
+                game.publishGameEvent(GameEventType.BONUS_EATEN);
+            } else if (timer().atSecond(6.5)) {
+                game.bonus().ifPresent(Bonus::setInactive); // needed?
+                game.createNextBonus();
+            } else if (timer().atSecond(7.5)) {
+                game.bonus().ifPresent(bonus -> bonus.setEaten(60));
+                game.publishGameEvent(GameEventType.BONUS_EATEN);
+            } else if (timer().atSecond(8.5)) {
+                game.pac().hide();
+                game.ghosts().forEach(Ghost::hide);
+                game.blinking().stop();
+                game.blinking().setStartPhase(Pulse.ON);
+                game.blinking().reset();
+            } else if (timer().atSecond(9.5)) {
+                setProperty("mazeFlashing", true);
+                game.blinking().setStartPhase(Pulse.OFF);
+                game.blinking().restart(2 * game.level().get().numFlashes());
+            } else if (timer().atSecond(12.0)) {
+                timer().restartIndefinitely();
+                game.pac().freeze();
+                game.ghosts().forEach(Ghost::hide);
+                game.bonus().ifPresent(Bonus::setInactive);
+                setProperty("mazeFlashing", false);
+                game.blinking().reset();
+                game.createLevel(game.levelNumber() + 1);
+                game.startLevel();
+                game.makeGuysVisible(true);
+            }
         }
 
         @Override
