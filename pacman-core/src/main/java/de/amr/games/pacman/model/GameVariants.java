@@ -76,23 +76,23 @@ public enum GameVariants implements GameModel {
             ghosts[ORANGE_GHOST].setName("Sue");
         }
 
+
         /** In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told.
          */
         @Override
-        public void startLevel() {
+        void updateLevelCounter() {
             if (levelNumber == 1) {
                 levelCounter.clear();
             }
-            if (!demoLevel && levelNumber <= 7) {
-                addSymbolToLevelCounter(bonusSymbols[0]);
+            if (!demoLevel && levelNumber < 8) {
+                levelCounter.add(bonusSymbols[0]);
+                if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
+                    levelCounter.removeFirst();
+                }
             }
-            gateKeeper.init(levelNumber);
-            letsGetReadyToRumble();
-            levelStartTime = System.currentTimeMillis();
-            Logger.info("{}Level {} started ({})", demoLevel ? "Demo " : "", levelNumber, this);
-            publishGameEvent(GameEventType.LEVEL_STARTED);
         }
+
 
         /**
          * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
@@ -247,25 +247,24 @@ public enum GameVariants implements GameModel {
         }
 
         @Override
-        public void startLevel() {
+        void updateLevelCounter() {
             if (levelNumber == 1) {
                 levelCounter.clear();
             }
             if (!demoLevel) {
-                addSymbolToLevelCounter(bonusSymbols[0]);
+                levelCounter.add(bonusSymbols[0]);
+                if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
+                    levelCounter.removeFirst();
+                }
             }
-            letsGetReadyToRumble();
-            gateKeeper.init(levelNumber);
-            levelStartTime = System.currentTimeMillis();
-            Logger.info("{}Level {} started ({})", demoLevel ? "Demo " : "", levelNumber, this);
-            publishGameEvent(GameEventType.LEVEL_STARTED);
         }
 
         @Override
         public void letGhostHunt(Ghost ghost) {
-            Vector2i targetTile = chasingPhase().isPresent() || ghost.id() == RED_GHOST && cruiseElroyState() > 0
-                ? chasingTarget(ghost) : scatterTarget(ghost);
-             ghost.followTarget(targetTile, huntingSpeedPct(ghost));
+            byte speed = huntingSpeedPct(ghost);
+            // even phase: scattering, odd phase: chasing
+            boolean chasing = isOdd(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
+            ghost.followTarget(chasing ? chasingTarget(ghost) : scatterTarget(ghost), speed);
         }
 
         @Override
@@ -381,6 +380,8 @@ public enum GameVariants implements GameModel {
     abstract long huntingTicks(int levelNumber, int phaseIndex);
 
     abstract boolean isBonusReached();
+
+    abstract void updateLevelCounter();
 
     GameLevel level(int levelNumber) {
         return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
@@ -563,6 +564,17 @@ public enum GameVariants implements GameModel {
     }
 
     @Override
+    public void startLevel() {
+        updateLevelCounter();
+        letsGetReadyToRumble();
+        gateKeeper.init(levelNumber);
+        levelStartTime = System.currentTimeMillis();
+        Logger.info("{}Level {} started ({})", demoLevel ? "Demo " : "", levelNumber, this);
+        publishGameEvent(GameEventType.LEVEL_STARTED);
+    }
+
+
+    @Override
     public void letsGetReadyToRumble() {
         pac.reset();
         pac.setPosition(world.pacPosition());
@@ -585,13 +597,6 @@ public enum GameVariants implements GameModel {
     public void makeGuysVisible(boolean visible) {
         pac.setVisible(visible);
         ghosts().forEach(ghost -> ghost.setVisible(visible));
-    }
-
-    void addSymbolToLevelCounter(byte symbol) {
-        levelCounter.add(symbol);
-        if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
-            levelCounter.removeFirst();
-        }
     }
 
     @Override

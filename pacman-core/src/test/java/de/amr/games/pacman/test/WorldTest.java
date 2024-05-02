@@ -48,7 +48,7 @@ public class WorldTest {
         pos = v2f(0.0f, 8.0f);
         assertEquals(v2i(0, 1), tileAt(pos));
 
-        var guy = new Ghost(GameModel.RED_GHOST, "Guy");
+        var guy = new Ghost(GameModel.RED_GHOST);
 
         guy.setPosition(3.99f, 0);
         assertEquals(v2i(0, 0), guy.tile());
