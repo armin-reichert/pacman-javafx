@@ -776,13 +776,13 @@ public enum GameVariants implements GameModel {
 
     @Override
     public boolean isPacManKilled() {
-        eventLog().pacKilled = ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
-        return eventLog().pacKilled;
+        eventLog.pacKilled = ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
+        return eventLog.pacKilled;
     }
 
     @Override
     public boolean areGhostsKilled() {
-        return !eventLog().killedGhosts.isEmpty();
+        return !eventLog.killedGhosts.isEmpty();
     }
 
     @Override
@@ -801,16 +801,16 @@ public enum GameVariants implements GameModel {
     void checkForFood() {
         final Vector2i pacTile = pac.tile();
         if (world.hasFoodAt(pacTile)) {
-            eventLog().foodFoundTile = pacTile;
+            eventLog.foodFoundTile = pacTile;
             pac.onStarvingEnd();
             if (world.isEnergizerTile(pacTile)) {
-                eventLog().energizerFound = true;
+                eventLog.energizerFound = true;
                 pac.setRestingTicks(RESTING_TICKS_ENERGIZER);
                 pac.victims().clear();
                 scorePoints(POINTS_ENERGIZER);
                 Logger.info("Scored {} points for eating energizer", POINTS_ENERGIZER);
                 if (level(levelNumber).pacPowerSeconds() > 0) {
-                    eventLog().pacGetsPower = true;
+                    eventLog.pacGetsPower = true;
                     huntingTimer().stop();
                     Logger.info("Hunting timer stopped");
                     int seconds = level(levelNumber).pacPowerSeconds();
@@ -834,7 +834,7 @@ public enum GameVariants implements GameModel {
             }
             if (isBonusReached()) {
                 createNextBonus();
-                eventLog().bonusIndex = nextBonusIndex;
+                eventLog.bonusIndex = nextBonusIndex;
             }
             publishGameEvent(GameEventType.PAC_FOUND_FOOD, pacTile);
         } else {
@@ -845,7 +845,7 @@ public enum GameVariants implements GameModel {
     void updatePacPower() {
         powerTimer.advance();
         if (powerTimer.remaining() == PAC_POWER_FADING_TICKS) {
-            eventLog().pacStartsLosingPower = true;
+            eventLog.pacStartsLosingPower = true;
             publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
         } else if (powerTimer.hasExpired()) {
             powerTimer.stop();
@@ -855,7 +855,7 @@ public enum GameVariants implements GameModel {
             huntingTimer().start();
             Logger.info("Hunting timer started");
             ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
-            eventLog().pacLostPower = true;
+            eventLog.pacLostPower = true;
             publishGameEvent(GameEventType.PAC_LOST_POWER);
         }
     }
@@ -876,7 +876,7 @@ public enum GameVariants implements GameModel {
             bonus.setEaten(BONUS_POINTS_SHOWN_TICKS);
             scorePoints(bonus.points());
             Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
-            eventLog().bonusEaten = true;
+            eventLog.bonusEaten = true;
             publishGameEvent(GameEventType.BONUS_EATEN);
         } else {
             bonus.update(this);
@@ -908,8 +908,8 @@ public enum GameVariants implements GameModel {
         if (prisoner != null) {
             String releaseInfo = gateKeeper.checkReleaseOf(this, prisoner);
             if (releaseInfo != null) {
-                eventLog().releasedGhost = prisoner;
-                eventLog().ghostReleaseInfo = releaseInfo;
+                eventLog.releasedGhost = prisoner;
+                eventLog.ghostReleaseInfo = releaseInfo;
                 prisoner.setMoveAndWishDir(Direction.UP);
                 prisoner.setState(LEAVING_HOUSE);
                 if (prisoner.id() == ORANGE_GHOST && cruiseElroyState() < 0) {
@@ -922,7 +922,7 @@ public enum GameVariants implements GameModel {
 
     @Override
     public void killGhost(Ghost ghost) {
-        eventLog().killedGhosts.add(ghost);
+        eventLog.killedGhosts.add(ghost);
         int killedSoFar = pac.victims().size();
         int points = KILLED_GHOST_VALUES[killedSoFar];
         ghost.eaten(killedSoFar);
