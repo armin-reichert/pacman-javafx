@@ -196,7 +196,7 @@ public class PlayScene2D extends GameScene2D {
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure
             context.stopAudioClip("audio.pacman_munch");
         }
-        if (!context.game().pac().isDead() && context.game().ghosts(RETURNING_HOME, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
+        if (context.game().pac().isAlive() && context.game().ghosts(RETURNING_HOME, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
             context.ensureAudioLoop("audio.ghost_returning");
         } else {
             context.stopAudioClip("audio.ghost_returning");

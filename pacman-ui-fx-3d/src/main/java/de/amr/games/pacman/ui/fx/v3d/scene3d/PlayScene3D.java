@@ -454,7 +454,7 @@ public class PlayScene3D implements GameScene {
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure how this is done in Arcade game
             context.stopAudioClip("audio.pacman_munch");
         }
-        if (!context.game().pac().isDead() && context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
+        if (context.game().pac().isAlive() && context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
             .anyMatch(Ghost::isVisible)) {
             context.ensureAudioLoop("audio.ghost_returning");
         } else {

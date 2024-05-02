@@ -185,8 +185,8 @@ public class Pac extends Creature {
         dead = true;
     }
 
-    public boolean isDead() {
-        return dead;
+    public boolean isAlive() {
+        return !dead;
     }
 
     public void setRestingTicks(byte ticks) {
