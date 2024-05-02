@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.lib.*;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
@@ -14,6 +13,7 @@ import org.tinylog.Logger;
 import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.model.GameModel.*;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -24,24 +24,19 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class MsPacManIntro extends FiniteStateMachine<MsPacManIntro.State, MsPacManIntro> {
 
-    public float speed = 1.1f;
-    public int stopY = TS * 11 + 1;
-    public int stopX = TS * 6 - 4;
-    public int stopMsPacX = TS * 15 + 2;
+    public final float speed = 1.1f;
+    public final int stopY = TS * 11 + 1;
+    public final int stopX = TS * 6 - 4;
+    public final int stopMsPacX = TS * 15 + 2;
+    public final Vector2i titlePosition = v2i(TS * 10, TS * 8);
+    public final TickTimer marqueeTimer = new TickTimer("marquee-timer");
+    public final int numBulbs = 96;
+    public final int bulbOnDistance = 16;
     public int ticksUntilLifting = 0;
-    public Vector2i titlePosition = v2i(TS * 10, TS * 8);
-    public TickTimer marqueeTimer = new TickTimer("marquee-timer");
-    public int numBulbs = 96;
-    public int bulbOnDistance = 16;
     public int ghostIndex = 0;
 
-    public Pac msPacMan = new Pac();
-    public Ghost[] ghosts = {
-        new Ghost(GameModel.RED_GHOST),
-        new Ghost(GameModel.PINK_GHOST),
-        new Ghost(GameModel.CYAN_GHOST),
-        new Ghost(GameModel.ORANGE_GHOST)
-    };
+    public final Pac msPacMan;
+    public final Ghost[] ghosts;
 
     /**
      * In the Arcade game, 6 of the 96 bulbs are switched-on every frame, shifting every tick. The bulbs in the leftmost
@@ -174,6 +169,17 @@ public class MsPacManIntro extends FiniteStateMachine<MsPacManIntro.State, MsPac
 
     public MsPacManIntro() {
         super(State.values());
+        msPacMan = new Pac();
+        ghosts = new Ghost[] {
+            new Ghost(RED_GHOST),
+            new Ghost(PINK_GHOST),
+            new Ghost(CYAN_GHOST),
+            new Ghost(ORANGE_GHOST)
+        };
+        ghosts[RED_GHOST].setName("Blinky");
+        ghosts[PINK_GHOST].setName("Pinky");
+        ghosts[CYAN_GHOST].setName("Inky");
+        ghosts[ORANGE_GHOST].setName("Sue");
     }
 
     @Override

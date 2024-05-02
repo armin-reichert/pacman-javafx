@@ -33,7 +33,11 @@ import static de.amr.games.pacman.model.world.ArcadeWorld.*;
  */
 public enum GameVariants implements GameModel {
 
-    MS_PACMAN {
+    MS_PACMAN() {
+
+        {
+            highScoreFileName = "highscore-ms_pacman.xml";
+        }
 
         /**
          * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
@@ -48,11 +52,6 @@ public enum GameVariants implements GameModel {
         long huntingTicks(int levelNumber, int phaseIndex) {
             long ticks = levelNumber < 5 ? HUNTING_TICKS_1_TO_4[phaseIndex] : HUNTING_TICKS_5_PLUS[phaseIndex];
             return ticks != -1 ? ticks : TickTimer.INDEFINITE;
-        }
-
-        @Override
-        public String highScoreFileName() {
-            return "highscore-ms_pacman.xml";
         }
 
         @Override
@@ -212,6 +211,10 @@ public enum GameVariants implements GameModel {
      */
     PACMAN {
 
+        {
+            highScoreFileName = "highscore-pacman.xml";
+        }
+
         final int[] HUNTING_TICKS_1      = {420, 1200, 420, 1200, 300,  1200, 300, -1};
         final int[] HUNTING_TICKS_2_TO_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
         final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 300, 1200, 300, 62262,   1, -1};
@@ -224,11 +227,6 @@ public enum GameVariants implements GameModel {
                 default      -> HUNTING_TICKS_5_PLUS[phaseIndex];
             };
             return ticks != -1 ? ticks : TickTimer.INDEFINITE;
-        }
-
-        @Override
-        public String highScoreFileName() {
-            return "highscore-pacman.xml";
         }
 
         @Override
@@ -348,6 +346,7 @@ public enum GameVariants implements GameModel {
     final Score      highScore = new Score();
     final GateKeeper gateKeeper = new GateKeeper();
 
+    String           highScoreFileName;
     int              levelNumber; // 1=first level
     boolean          demoLevel;
     long             levelStartTime;
@@ -701,6 +700,11 @@ public enum GameVariants implements GameModel {
     @Override
     public Score highScore() {
         return highScore;
+    }
+
+    @Override
+    public String highScoreFileName() {
+        return highScoreFileName;
     }
 
     public void loadHighScore() {
