@@ -34,9 +34,9 @@ public class InfoBoxKeys extends InfoBox {
         addInfo("Alt+3", "3D Play Scene On/Off");
         addInfo("P", "Pause On/Off");
         addInfo("Shift+P, SPACE", "Single Step");
-        addInfo("Q", "Quit, Return to Intro Scene");
+        addInfo("Q", "Return to Intro");
         addInfo("V", "Switch Game Variant");
-        addInfo("1", "Start Playing (Credit Required)");
+        addInfo("1", "Start Playing (Credit?)");
         addInfo("5", "Add Credit");
     }
 }

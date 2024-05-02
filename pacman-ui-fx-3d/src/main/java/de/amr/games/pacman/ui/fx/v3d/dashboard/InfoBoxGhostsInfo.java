@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
+import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -67,7 +69,12 @@ public class InfoBoxGhostsInfo extends InfoBox {
     }
 
     private String ghostTile(GameModel game, Ghost ghost) {
-        return "%s +%s%s".formatted(ghost.tile(), ghost.offset(), ghost.isNewTileEntered() ? " NEW" : "");
+        Vector2i tile = ghost.tile();
+        Vector2f offset = ghost.offset();
+        return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
+            tile.x(), tile.y(),
+            offset.x(), offset.y(),
+            ghost.isNewTileEntered() ? " NEW" : "");
     }
 
     private String ghostState(GameModel game, Ghost ghost) {
@@ -80,7 +87,7 @@ public class InfoBoxGhostsInfo extends InfoBox {
 
     private String ghostMovement(GameModel game, Ghost ghost) {
         var speed = ghost.velocity().length();
-        var reverse = ghost.gotReverseCommand() ? "REVERSE!" : "";
+        var reverse = ghost.gotReverseCommand() ? "REV!" : "";
         return "%.2fpx/s %s (%s)%s".formatted(speed, ghost.moveDir(), ghost.wishDir(), reverse);
     }
 }

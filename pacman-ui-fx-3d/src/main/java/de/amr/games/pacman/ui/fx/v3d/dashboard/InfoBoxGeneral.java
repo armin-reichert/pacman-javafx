@@ -66,8 +66,10 @@ public class InfoBoxGeneral extends InfoBox {
         sliderTargetFPS.setShowTickLabels(false);
         sliderTargetFPS.setShowTickMarks(false);
 
-        addInfo("", () -> String.format("Target %.2fHz Actual %.2fHz",
-            context.gameClock().getTargetFrameRate(), context.gameClock().getActualFrameRate()));
+        addInfo("", () -> String.format("FPS: %.1f (Tgt: %.1f)",
+            context.gameClock().getActualFrameRate(),
+            context.gameClock().getTargetFrameRate()
+        ));
         addInfo("Total Updates", () -> context.gameClock().getUpdateCount());
 
         cbUsePlayScene3D = addCheckBox("3D Play Scene");
