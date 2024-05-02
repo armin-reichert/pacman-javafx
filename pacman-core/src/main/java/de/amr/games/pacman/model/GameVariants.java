@@ -59,8 +59,10 @@ public enum GameVariants implements GameModel {
         void buildRegularLevel(int levelNumber) {
             this.levelNumber = checkLevelNumber(levelNumber);
             populateLevel(createMsPacManWorld(mapNumberMsPacMan(levelNumber)));
+            pac.setName("Ms. Pac-Man");
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(false);
+            ghosts[ORANGE_GHOST].setName("Sue");
         }
 
         @Override
@@ -69,35 +71,10 @@ public enum GameVariants implements GameModel {
             levelNumber = levelNumbers[randomInt(0, levelNumbers.length)];
             int mapNumber = mapNumberMsPacMan(levelNumber);
             populateLevel(createMsPacManWorld(mapNumber));
+            pac.setName("Ms. Pac-Man");
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(true);
-        }
-
-        void populateLevel(World world) {
-            this.world = world;
-            bonusSymbols[0] = computeBonusSymbol();
-            bonusSymbols[1] = computeBonusSymbol();
-
-            pac = new Pac("Ms. Pac-Man", world);
-            pac.reset();
-            pac.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
-
-            ghosts = new Ghost[] {
-                new Ghost(RED_GHOST,   "Blinky", world),
-                new Ghost(PINK_GHOST,  "Pinky",  world),
-                new Ghost(CYAN_GHOST,  "Inky",   world),
-                new Ghost(ORANGE_GHOST,"Sue",    world)
-            };
-            ghosts().forEach(ghost -> {
-                ghost.reset();
-                ghost.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
-                ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * SEC_PER_TICK);
-                ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * SEC_PER_TICK);
-            });
-            ghosts[RED_GHOST   ].setRevivalPosition(world.ghostPosition(PINK_GHOST));
-            ghosts[PINK_GHOST  ].setRevivalPosition(world.ghostPosition(PINK_GHOST));
-            ghosts[CYAN_GHOST  ].setRevivalPosition(world.ghostPosition(CYAN_GHOST));
-            ghosts[ORANGE_GHOST].setRevivalPosition(world.ghostPosition(ORANGE_GHOST));
+            ghosts[ORANGE_GHOST].setName("Sue");
         }
 
         /** In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
@@ -174,6 +151,7 @@ public enum GameVariants implements GameModel {
          * </table>
          * </p>
          */
+        @Override
         byte computeBonusSymbol() {
             if (levelNumber <= 7) {
                 return (byte) (levelNumber - 1);
@@ -256,10 +234,8 @@ public enum GameVariants implements GameModel {
         @Override
         void buildRegularLevel(int levelNumber) {
             this.levelNumber = checkLevelNumber(levelNumber);
-            world = createPacManWorld();
-            bonusSymbols[0] = computeBonusSymbol();
-            bonusSymbols[1] = computeBonusSymbol();
-            createGuys(world);
+            populateLevel(createPacManWorld());
+            pac.setName("Pac-Man");
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(false);
         }
@@ -267,35 +243,9 @@ public enum GameVariants implements GameModel {
         @Override
         void buildDemoLevel() {
             levelNumber = 1;
-            world = createPacManWorld();
-            bonusSymbols[0] = computeBonusSymbol();
-            bonusSymbols[1] = computeBonusSymbol();
-            createGuys(world);
+            populateLevel(createPacManWorld());
             pac.setAutopilot(new RouteBasedSteering(List.of(ArcadeWorld.PACMAN_DEMO_LEVEL_ROUTE)));
             pac.setUseAutopilot(true);
-        }
-
-        void createGuys(World world) {
-            pac = new Pac("Pac-Man", world);
-            pac.reset();
-            pac.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
-
-            ghosts = new Ghost[] {
-                new Ghost(RED_GHOST,   "Blinky", world),
-                new Ghost(PINK_GHOST,  "Pinky",  world),
-                new Ghost(CYAN_GHOST,  "Inky",   world),
-                new Ghost(ORANGE_GHOST,"Clyde",  world)
-            };
-            ghosts().forEach(ghost -> {
-                ghost.reset();
-                ghost.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
-                ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * SEC_PER_TICK);
-                ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * SEC_PER_TICK);
-            });
-            ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST));
-            ghosts[PINK_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST));
-            ghosts[CYAN_GHOST].setRevivalPosition(world.ghostPosition(CYAN_GHOST));
-            ghosts[ORANGE_GHOST].setRevivalPosition(world.ghostPosition(ORANGE_GHOST));
         }
 
         @Override
@@ -331,6 +281,7 @@ public enum GameVariants implements GameModel {
         final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {-1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
 
         // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
+        @Override
         byte computeBonusSymbol() {
             return levelNumber > 12 ? 7 : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
         }
@@ -424,6 +375,8 @@ public enum GameVariants implements GameModel {
 
     abstract void buildDemoLevel();
 
+    abstract byte computeBonusSymbol();
+
     abstract long huntingTicks(int levelNumber, int phaseIndex);
 
     abstract boolean isBonusReached();
@@ -447,6 +400,40 @@ public enum GameVariants implements GameModel {
         world = null;
         blinking.stop();
         blinking.reset();
+    }
+
+    void populateLevel(World world) {
+        this.world = world;
+        bonusSymbols[0] = computeBonusSymbol();
+        bonusSymbols[1] = computeBonusSymbol();
+
+        pac = new Pac(world);
+        pac.setName("Pac-Man");
+        pac.reset();
+        pac.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
+
+        ghosts = new Ghost[] {
+            new Ghost(RED_GHOST,    world),
+            new Ghost(PINK_GHOST,   world),
+            new Ghost(CYAN_GHOST,   world),
+            new Ghost(ORANGE_GHOST, world)
+        };
+        ghosts[RED_GHOST]   .setName("Blinky");
+        ghosts[PINK_GHOST]  .setName("Pinky");
+        ghosts[CYAN_GHOST]  .setName("Inky");
+        ghosts[ORANGE_GHOST].setName("Clyde");
+
+        ghosts[RED_GHOST]   .setRevivalPosition(world.ghostPosition(PINK_GHOST));
+        ghosts[PINK_GHOST]  .setRevivalPosition(world.ghostPosition(PINK_GHOST));
+        ghosts[CYAN_GHOST]  .setRevivalPosition(world.ghostPosition(CYAN_GHOST));
+        ghosts[ORANGE_GHOST].setRevivalPosition(world.ghostPosition(ORANGE_GHOST));
+
+        ghosts().forEach(ghost -> {
+            ghost.reset();
+            ghost.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
+            ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * SEC_PER_TICK);
+            ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * SEC_PER_TICK);
+        });
     }
 
     void setCruiseElroyEnabled(boolean enabled) {

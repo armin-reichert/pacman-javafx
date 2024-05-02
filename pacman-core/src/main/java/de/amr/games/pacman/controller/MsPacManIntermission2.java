@@ -42,8 +42,8 @@ public class MsPacManIntermission2 {
     }
 
     public MsPacManIntermission2() {
-        pacMan = new Pac("Pac-Man");
-        msPac = new Pac("Ms. Pac-Man");
+        pacMan = new Pac();
+        msPac  = new Pac();
     }
 
     public void tick() {

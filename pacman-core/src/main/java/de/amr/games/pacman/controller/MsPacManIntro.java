@@ -35,12 +35,12 @@ public class MsPacManIntro extends FiniteStateMachine<MsPacManIntro.State, MsPac
     public int bulbOnDistance = 16;
     public int ghostIndex = 0;
 
-    public Pac msPacMan = new Pac("Ms. Pac-Man");
+    public Pac msPacMan = new Pac();
     public Ghost[] ghosts = {
-        new Ghost(GameModel.RED_GHOST, "Blinky"),
-        new Ghost(GameModel.PINK_GHOST, "Pinky"),
-        new Ghost(GameModel.CYAN_GHOST, "Inky"),
-        new Ghost(GameModel.ORANGE_GHOST, "Sue")
+        new Ghost(GameModel.RED_GHOST),
+        new Ghost(GameModel.PINK_GHOST),
+        new Ghost(GameModel.CYAN_GHOST),
+        new Ghost(GameModel.ORANGE_GHOST)
     };
 
     /**

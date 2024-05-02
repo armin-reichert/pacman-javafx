@@ -41,7 +41,7 @@ public class PacManCutScene3 extends GameScene2D {
         initialDelay = 120;
         setScoreVisible(true);
         var ss = context.<PacManGameSpriteSheet>spriteSheet();
-        pac = new Pac("Pac-Man");
+        pac = new Pac();
         pac.setAnimations(new PacManGamePacAnimations(pac, ss));
         pac.selectAnimation(Pac.ANIM_MUNCHING);
         pac.startAnimation();
@@ -49,7 +49,7 @@ public class PacManCutScene3 extends GameScene2D {
         pac.setMoveDir(Direction.LEFT);
         pac.setSpeed(1.25f);
         pac.show();
-        blinky = new Ghost(GameModel.RED_GHOST, "Blinky");
+        blinky = new Ghost(GameModel.RED_GHOST);
         blinky.setAnimations(new PacManGameGhostAnimations(blinky, ss));
         blinky.selectAnimation(Ghost.ANIM_BLINKY_PATCHED);
         blinky.startAnimation();

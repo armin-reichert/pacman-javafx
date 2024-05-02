@@ -38,15 +38,15 @@ public class Ghost extends Creature {
     public static final String ANIM_BLINKY_NAKED     = "naked";
 
     private final byte id;
-    private final String name;
+    private String name;
     private GhostState state;
     private Vector2f revivalPosition;
     private float speedReturningToHouse;
     private float speedInsideHouse;
     private Animations animations;
 
-    public Ghost(byte id, String name) {
-        this(id, name, null);
+    public Ghost(byte id) {
+        this(id, null);
     }
 
     /**
@@ -55,14 +55,11 @@ public class Ghost extends Creature {
      * {@link GameModel#PINK_GHOST},
      * {@link GameModel#CYAN_GHOST},
      * {@link GameModel#ORANGE_GHOST}.
-     * @param name the ghost's readable name, e.g. "Pinky"
      */
-    public Ghost(byte id, String name, World world) {
+    public Ghost(byte id, World world) {
         super(world);
         checkGhostID(id);
-        checkNotNull(name);
         this.id = id;
-        this.name = name;
     }
 
     @Override
@@ -80,6 +77,10 @@ public class Ghost extends Creature {
 
     public byte id() {
         return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String name() {

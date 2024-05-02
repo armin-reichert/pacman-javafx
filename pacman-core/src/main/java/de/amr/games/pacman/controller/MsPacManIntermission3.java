@@ -50,10 +50,10 @@ public class MsPacManIntermission3 {
     }
 
     public MsPacManIntermission3() {
-        pacMan = new Pac("Pac-Man");
-        msPacMan = new Pac("Ms. Pac-Man");
-        stork = new Entity();
-        bag = new Entity();
+        pacMan   = new Pac();
+        msPacMan = new Pac();
+        stork    = new Entity();
+        bag      = new Entity();
     }
 
     public void tick() {

@@ -36,8 +36,9 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
         public boolean nicknameVisible;
         public boolean characterVisible;
 
-        public GhostInfo(byte id, String nickname, String character) {
-            ghost = new Ghost(id, nickname);
+        public GhostInfo(byte id, String name, String character) {
+            ghost = new Ghost(id);
+            ghost.setName(name);
             this.character = character;
         }
     }
@@ -228,7 +229,7 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
     public float ghostFrightenedSpeed = 0.6f;
     public int leftTileX = 4;
     public Pulse blinking = new Pulse(10, true);
-    public Pac pacMan = new Pac("Pac-Man");
+    public Pac pacMan = new Pac();
     public GhostInfo[] ghostInfo = {
         new GhostInfo(GameModel.RED_GHOST, "BLINKY", "SHADOW"),
         new GhostInfo(GameModel.PINK_GHOST, "PINKY", "SPEEDY"),

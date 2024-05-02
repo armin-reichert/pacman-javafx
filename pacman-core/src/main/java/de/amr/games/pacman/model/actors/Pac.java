@@ -13,8 +13,6 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
 /**
  * Pac-Man / Ms. Pac-Man.
  *
@@ -31,7 +29,7 @@ public class Pac extends Creature {
 
     public static final byte REST_INDEFINITELY = -1;
 
-    private final String name;
+    private String name;
     private boolean dead;
     private byte restingTicks;
     private long starvingTicks;
@@ -40,13 +38,15 @@ public class Pac extends Creature {
     private boolean useAutopilot;
     private Animations animations;
 
-    public Pac(String name) {
-        this(name, null);
+    public Pac() {
+        this(null);
     }
 
-    public Pac(String name, World world) {
+    public Pac(World world) {
         super(world);
-        checkNotNull(name);
+    }
+
+    public void setName(String name) {
         this.name = name;
     }
 
