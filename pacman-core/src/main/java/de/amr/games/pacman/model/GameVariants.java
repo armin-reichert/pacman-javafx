@@ -736,7 +736,7 @@ public enum GameVariants implements GameModel {
 
     @Override
     public void onPacDying() {
-        huntingTimer().stop();
+        huntingTimer.stop();
         Logger.info("Hunting timer stopped");
         powerTimer.stop();
         powerTimer.reset(0);
@@ -753,7 +753,7 @@ public enum GameVariants implements GameModel {
         pac.freeze();
         ghosts().forEach(Ghost::hide);
         bonus().ifPresent(Bonus::setInactive);
-        huntingTimer().stop();
+        huntingTimer.stop();
         Logger.info("Hunting timer stopped");
         powerTimer.stop();
         powerTimer.reset(0);
@@ -808,7 +808,7 @@ public enum GameVariants implements GameModel {
                 Logger.info("Scored {} points for eating energizer", POINTS_ENERGIZER);
                 if (level(levelNumber).pacPowerSeconds() > 0) {
                     eventLog.pacGetsPower = true;
-                    huntingTimer().stop();
+                    huntingTimer.stop();
                     Logger.info("Hunting timer stopped");
                     int seconds = level(levelNumber).pacPowerSeconds();
                     powerTimer.restartSeconds(seconds);
@@ -849,7 +849,7 @@ public enum GameVariants implements GameModel {
             powerTimer.reset(0);
             Logger.info("Power timer stopped and reset to zero");
             victims.clear();
-            huntingTimer().start();
+            huntingTimer.start();
             Logger.info("Hunting timer started");
             ghosts(FRIGHTENED).forEach(ghost -> ghost.setState(HUNTING_PAC));
             eventLog.pacLostPower = true;
