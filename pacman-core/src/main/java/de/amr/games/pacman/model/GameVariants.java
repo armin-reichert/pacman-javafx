@@ -401,7 +401,7 @@ public enum GameVariants implements GameModel {
     boolean          demoLevel;
     long             levelStartTime;
     boolean          playing;
-    byte             initialLives;
+    byte             initialLives = 3;
     byte             lives;
 
     int              huntingPhaseIndex;
@@ -415,7 +415,6 @@ public enum GameVariants implements GameModel {
     World            world;
 
     GameVariants() {
-        initialLives = 3;
         reset();
     }
 
