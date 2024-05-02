@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.lib.*;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
@@ -68,7 +69,7 @@ public class MsPacManIntro extends FiniteStateMachine<MsPacManIntro.State, MsPac
                 intro.msPacMan.setMoveDir(Direction.LEFT);
                 intro.msPacMan.setSpeed(intro.speed);
                 intro.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
-                intro.msPacMan.startAnimation();
+                intro.msPacMan.animations().ifPresent(Animations::startSelected);
                 for (var ghost : intro.ghosts) {
                     ghost.setPosition(TS * 33.5f, TS * 20);
                     ghost.setMoveAndWishDir(Direction.LEFT);
@@ -136,7 +137,7 @@ public class MsPacManIntro extends FiniteStateMachine<MsPacManIntro.State, MsPac
                 intro.msPacMan.move();
                 if (intro.msPacMan.posX() <= intro.stopMsPacX) {
                     intro.msPacMan.setSpeed(0);
-                    intro.msPacMan.resetAnimation();
+                    intro.msPacMan.animations().ifPresent(Animations::resetSelected);
                     intro.changeState(State.READY_TO_PLAY);
                 }
             }

@@ -8,6 +8,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.ArcadeWorld;
@@ -44,7 +45,7 @@ public class PacManCutScene3 extends GameScene2D {
         pac = new Pac();
         pac.setAnimations(new PacManGamePacAnimations(pac, ss));
         pac.selectAnimation(Pac.ANIM_MUNCHING);
-        pac.startAnimation();
+        pac.animations().ifPresent(Animations::startSelected);
         pac.centerOverTile(v2i(29, 20));
         pac.setMoveDir(Direction.LEFT);
         pac.setSpeed(1.25f);

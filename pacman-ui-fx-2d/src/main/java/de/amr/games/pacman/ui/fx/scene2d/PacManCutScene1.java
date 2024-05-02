@@ -8,6 +8,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.ArcadeWorld;
@@ -67,7 +68,7 @@ public class PacManCutScene1 extends GameScene2D {
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.25f);
                 pac.selectAnimation(Pac.ANIM_MUNCHING);
-                pac.startAnimation();
+                pac.animations().ifPresent(Animations::startSelected);
                 pac.show();
 
                 blinky.placeAtTile(32, 20, 0, 0);
@@ -88,7 +89,7 @@ public class PacManCutScene1 extends GameScene2D {
                 pac.placeAtTile(-3, 18, 0, 6.5f);
                 pac.setMoveDir(Direction.RIGHT);
                 pac.selectAnimation(Pac.ANIM_BIG_PACMAN);
-                pac.startAnimation();
+                pac.animations().ifPresent(Animations::startSelected);
             }
             case 632 -> context.gameState().timer().expire();
             default -> {

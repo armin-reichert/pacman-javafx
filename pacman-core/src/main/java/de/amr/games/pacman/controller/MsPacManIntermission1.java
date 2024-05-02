@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
@@ -100,7 +101,7 @@ public class MsPacManIntermission1 {
         pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
         pacMan.setSpeed(SPEED_PAC_CHASING);
         pacMan.selectAnimation(Pac.ANIM_HUSBAND_MUNCHING);
-        pacMan.startAnimation();
+        pacMan.animations().ifPresent(Animations::startSelected);
         pacMan.show();
 
         inky.setMoveAndWishDir(Direction.RIGHT);
@@ -114,7 +115,7 @@ public class MsPacManIntermission1 {
         msPac.setPosition(TS * 30, LOWER_LANE_Y);
         msPac.setSpeed(SPEED_PAC_CHASING);
         msPac.selectAnimation(Pac.ANIM_MUNCHING);
-        msPac.startAnimation();
+        msPac.animations().ifPresent(Animations::startSelected);
         msPac.show();
 
         pinky.setMoveAndWishDir(Direction.LEFT);
@@ -194,13 +195,13 @@ public class MsPacManIntermission1 {
     private void enterStateInHeaven() {
         pacMan.setSpeed(0);
         pacMan.setMoveDir(Direction.LEFT);
-        pacMan.stopAnimation();
-        pacMan.resetAnimation();
+        pacMan.animations().ifPresent(Animations::stopSelected);
+        pacMan.animations().ifPresent(Animations::resetSelected);
 
         msPac.setSpeed(0);
         msPac.setMoveDir(Direction.RIGHT);
-        msPac.stopAnimation();
-        msPac.resetAnimation();
+        msPac.animations().ifPresent(Animations::stopSelected);
+        msPac.animations().ifPresent(Animations::resetSelected);
 
         inky.setSpeed(0);
         inky.hide();

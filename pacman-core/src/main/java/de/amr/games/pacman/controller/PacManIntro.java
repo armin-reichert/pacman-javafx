@@ -6,6 +6,7 @@ package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
@@ -104,7 +105,7 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
                 intro.pacMan.setSpeed(intro.chaseSpeed);
                 intro.pacMan.show();
                 intro.pacMan.selectAnimation(Pac.ANIM_MUNCHING);
-                intro.pacMan.startAnimation();
+                intro.pacMan.animations().ifPresent(Animations::startSelected);
                 intro.ghosts().forEach(ghost -> {
                     ghost.setState(GhostState.HUNTING_PAC);
                     ghost.setPosition(intro.pacMan.position().plus(16 * (ghost.id() + 1), 0));

@@ -8,6 +8,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -71,10 +72,10 @@ public class MsPacManIntermission2 {
     private void enterStateChasing() {
         pacMan.setMoveDir(Direction.RIGHT);
         pacMan.selectAnimation(Pac.ANIM_HUSBAND_MUNCHING);
-        pacMan.startAnimation();
+        pacMan.animations().ifPresent(Animations::startSelected);
         msPac.setMoveDir(Direction.RIGHT);
         msPac.selectAnimation(Pac.ANIM_MUNCHING);
-        msPac.startAnimation();
+        msPac.animations().ifPresent(Animations::startSelected);
 
         changeState(STATE_CHASING, TickTimer.INDEFINITE);
     }

@@ -90,30 +90,6 @@ public class Pac extends Creature {
         }
     }
 
-    public void startAnimation() {
-        if (animations != null) {
-            animations.startSelected();
-        } else {
-            Logger.warn("Trying to start animation before animations have been created!");
-        }
-    }
-
-    public void stopAnimation() {
-        if (animations != null) {
-            animations.stopSelected();
-        } else {
-            Logger.warn("Trying to stop animation before animations have been created!");
-        }
-    }
-
-    public void resetAnimation() {
-        if (animations != null) {
-            animations.resetSelected();
-        } else {
-            Logger.warn("Trying to reset animation before animations have been created!");
-        }
-    }
-
     @Override
     public boolean canReverse() {
         return newTileEntered;
@@ -159,9 +135,9 @@ public class Pac extends Creature {
             setSpeedPct(game.powerTimer().isRunning() ? level.pacSpeedPoweredPercentage() : level.pacSpeedPercentage());
             tryMoving();
             if (lastMove.moved) {
-                startAnimation();
+                animations.startSelected();
             } else {
-                stopAnimation();
+                animations.stopSelected();
             }
         } else {
             --restingTicks;
@@ -174,14 +150,14 @@ public class Pac extends Creature {
     public void freeze() {
         setSpeed(0);
         setRestingTicks(Pac.REST_INDEFINITELY);
-        stopAnimation();
+        animations.stopSelected();
         selectAnimation(Pac.ANIM_MUNCHING);
-        resetAnimation();
+        animations.resetSelected();
     }
 
     public void die() {
         setSpeed(0);
-        stopAnimation();
+        animations.stopSelected();
         dead = true;
     }
 

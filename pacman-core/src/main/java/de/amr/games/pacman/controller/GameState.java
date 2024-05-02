@@ -9,10 +9,7 @@ import de.amr.games.pacman.lib.FsmState;
 import de.amr.games.pacman.lib.Pulse;
 import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.model.actors.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -117,7 +114,7 @@ public enum GameState implements FsmState<GameModel> {
     HUNTING {
         @Override
         public void onEnter(GameModel game) {
-            game.pac().startAnimation();
+            game.pac().animations().ifPresent(Animations::startSelected);
             game.ghosts().forEach(Ghost::startAnimation);
             game.blinking().setStartPhase(Pulse.ON);
             game.blinking().restart();
@@ -236,10 +233,10 @@ public enum GameState implements FsmState<GameModel> {
             else if (timer.tick() == TICK_HIDE_GHOSTS) {
                 game.ghosts().forEach(Ghost::hide);
                 game.pac().selectAnimation(Pac.ANIM_DYING);
-                game.pac().resetAnimation();
+                game.pac().animations().ifPresent(Animations::resetSelected);
             }
             else if (timer.tick() == TICK_START_PAC_ANIMATION) {
-                game.pac().startAnimation();
+                game.pac().animations().ifPresent(Animations::startSelected);
                 game.publishGameEvent(GameEventType.PAC_DYING, game.pac().tile());
             }
             else if (timer.tick() == TICK_HIDE_PAC) {

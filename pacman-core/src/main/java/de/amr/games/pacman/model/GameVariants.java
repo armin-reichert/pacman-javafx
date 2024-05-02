@@ -566,7 +566,7 @@ public enum GameVariants implements GameModel {
         pac.setPosition(world.pacPosition());
         pac.setMoveAndWishDir(Direction.LEFT);
         pac.selectAnimation(Pac.ANIM_MUNCHING);
-        pac.resetAnimation();
+        pac.animations().ifPresent(Animations::resetSelected);
         ghosts().forEach(ghost -> {
             ghost.reset();
             ghost.setPosition(world.ghostPosition(ghost.id()));
