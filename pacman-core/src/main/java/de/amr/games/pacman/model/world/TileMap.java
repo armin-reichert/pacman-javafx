@@ -17,6 +17,18 @@ import static de.amr.games.pacman.lib.Globals.v2i;
  */
 public class TileMap {
 
+    public static byte[][] createBytesFromLines(String... lines) {
+        byte[][] bytes = new byte[lines.length][lines[0].length()];
+        int row = 0;
+        for (String line : lines) {
+            for (int col = 0; col < lines[0].length(); ++col) {
+                bytes[row][col] = Byte.parseByte(String.valueOf(line.charAt(col)));
+            }
+            ++row;
+        }
+        return bytes;
+    }
+
     private final byte[][] data;
 
     public TileMap(byte[][] data, byte lastTileValue) {

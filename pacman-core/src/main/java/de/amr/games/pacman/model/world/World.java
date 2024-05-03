@@ -174,7 +174,7 @@ public class World {
     }
 
     public boolean isBlocked(Vector2i tile) {
-        return !tileMap.hasContentAt(tile, Tiles.EMPTY);
+        return !(tileMap.hasContentAt(tile, Tiles.EMPTY) || tileMap.hasContentAt(tile, Tiles.TUNNEL));
     }
 
     public boolean isTunnel(Vector2i tile) {
