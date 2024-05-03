@@ -2,10 +2,10 @@ package de.amr.games.pacman.model.world;
 
 public interface Tiles {
 
-    public static final byte SPACE = 0;
-    public static final byte WALL = 1;
-    public static final byte TUNNEL = 2;
+    byte SPACE = 0;
+    byte WALL = 1;
+    byte TUNNEL = 2;
 
-    public static final byte PELLET = 3;
-    public static final byte ENERGIZER = 4;
+    byte PELLET = 3;
+    byte ENERGIZER = 4;
 }
