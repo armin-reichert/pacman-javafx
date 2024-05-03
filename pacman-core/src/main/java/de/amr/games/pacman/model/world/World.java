@@ -24,12 +24,6 @@ import static java.util.Collections.unmodifiableList;
  */
 public class World {
 
-    public static final byte T_SPACE = 0;
-    public static final byte T_WALL = 1;
-    public static final byte T_TUNNEL = 2;
-    public static final byte T_PELLET = 3;
-    public static final byte T_ENERGIZER = 4;
-
     private static byte[][] validateTileMapData(byte[][] data) {
         if (data == null) {
             throw new IllegalArgumentException("Map data missing");
@@ -49,7 +43,7 @@ public class World {
         for (int row = 0; row < data.length; ++row) {
             for (int col = 0; col < data[row].length; ++col) {
                 byte d = data[row][col];
-                if (d < T_SPACE || d > T_ENERGIZER) {
+                if (d < Tiles.SPACE || d > Tiles.ENERGIZER) {
                     throw new IllegalArgumentException(String.format("Map data at row=%d, col=%d are illegal: %d", row, col, d));
                 }
             }
@@ -89,7 +83,7 @@ public class World {
         for (int row = 0; row < numRows(); ++row) {
             var leftBorderTile = v2i(0, row);
             var rightBorderTile = v2i(lastColumn, row);
-            if (tileMap[row][0] == T_TUNNEL && tileMap[row][lastColumn] == T_TUNNEL) {
+            if (tileMap[row][0] == Tiles.TUNNEL && tileMap[row][lastColumn] == Tiles.TUNNEL) {
                 portalList.add(new Portal(leftBorderTile, rightBorderTile, 2));
             }
         }
@@ -222,28 +216,28 @@ public class World {
     }
 
     private byte content(Vector2i tile) {
-        return insideBounds(tile) ? tileMap[tile.y()][tile.x()] : T_SPACE;
+        return insideBounds(tile) ? tileMap[tile.y()][tile.x()] : Tiles.SPACE;
     }
 
     public boolean isWall(Vector2i tile) {
         checkTileNotNull(tile);
-        return content(tile) == T_WALL;
+        return content(tile) == Tiles.WALL;
     }
 
     public boolean isTunnel(Vector2i tile) {
         checkTileNotNull(tile);
-        return content(tile) == T_TUNNEL;
+        return content(tile) == Tiles.TUNNEL;
     }
 
     public boolean isFoodTile(Vector2i tile) {
         checkTileNotNull(tile);
         byte data = content(tile);
-        return data == T_PELLET || data == T_ENERGIZER;
+        return data == Tiles.PELLET || data == Tiles.ENERGIZER;
     }
 
     public boolean isEnergizerTile(Vector2i tile) {
         checkTileNotNull(tile);
-        return content(tile) == T_ENERGIZER;
+        return content(tile) == Tiles.ENERGIZER;
     }
 
     public boolean isIntersection(Vector2i tile) {
@@ -283,7 +277,7 @@ public class World {
         checkTileNotNull(tile);
         if (insideBounds(tile)) {
             byte data = tileMap[tile.y()][tile.x()];
-            return (data == T_PELLET || data == T_ENERGIZER) && !eaten.get(index(tile));
+            return (data == Tiles.PELLET || data == Tiles.ENERGIZER) && !eaten.get(index(tile));
         }
         return false;
     }
