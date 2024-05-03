@@ -75,7 +75,7 @@ public interface GameModel {
      *
      * @param levelNumber level number (starting at 1)
      */
-    void createLevel(int levelNumber);
+    void createRegularLevel(int levelNumber);
 
     /**
      * Creates and initializes a demo level.
@@ -226,8 +226,6 @@ public interface GameModel {
      * @param points points to score
      */
     void scorePoints(int points);
-
-    String highScoreFileName();
 
     void loadHighScore();
 

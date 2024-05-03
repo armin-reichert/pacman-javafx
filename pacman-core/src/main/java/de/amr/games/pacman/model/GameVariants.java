@@ -71,14 +71,12 @@ public enum GameVariants implements GameModel {
         void buildDemoLevel() {
             byte[] levelNumbers = {1, 3, 6, 10, 14, 18}; // these numbers cover all 6 available mazes
             levelNumber = levelNumbers[randomInt(0, levelNumbers.length)];
-            int mapNumber = mapNumberMsPacMan(levelNumber);
-            populateLevel(createMsPacManWorld(mapNumber));
+            populateLevel(createMsPacManWorld(mapNumberMsPacMan(levelNumber)));
             pac.setName("Ms. Pac-Man");
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(true);
             ghosts[ORANGE_GHOST].setName("Sue");
         }
-
 
         /** In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told.
@@ -546,7 +544,7 @@ public enum GameVariants implements GameModel {
     }
 
     @Override
-    public void createLevel(int levelNumber) {
+    public void createRegularLevel(int levelNumber) {
         clearLevel();
         demoLevel = false;
         buildRegularLevel(levelNumber);
@@ -567,13 +565,12 @@ public enum GameVariants implements GameModel {
     @Override
     public void startLevel() {
         updateLevelCounter();
-        letsGetReadyToRumble();
         gateKeeper.init(levelNumber);
+        letsGetReadyToRumble();
         levelStartTime = System.currentTimeMillis();
-        Logger.info("{}Level {} started ({})", demoLevel ? "Demo " : "", levelNumber, this);
+        Logger.info("{} started ({})", demoLevel ? "Demo Level" : "Level " + levelNumber, this);
         publishGameEvent(GameEventType.LEVEL_STARTED);
     }
-
 
     @Override
     public void letsGetReadyToRumble() {
@@ -670,7 +667,7 @@ public enum GameVariants implements GameModel {
     @Override
     public void loseLife() {
         if (lives == 0) {
-            Logger.error("No life left to loose :-(");
+            Logger.error("No life left to lose :-(");
             return;
         }
         --lives;
@@ -710,13 +707,8 @@ public enum GameVariants implements GameModel {
         return highScore;
     }
 
-    @Override
-    public String highScoreFileName() {
-        return highScoreFileName;
-    }
-
     public void loadHighScore() {
-        File file = new File(System.getProperty("user.home"), highScoreFileName());
+        File file = new File(System.getProperty("user.home"), highScoreFileName);
         highScore().loadFromFile(file);
         Logger.info("Highscore loaded. File: '{}', {} points, level {}",
             file, highScore().points(), highScore().levelNumber());
@@ -724,7 +716,7 @@ public enum GameVariants implements GameModel {
 
     @Override
     public void updateHighScore() {
-        File file = new File(System.getProperty("user.home"), highScoreFileName());
+        File file = new File(System.getProperty("user.home"), highScoreFileName);
         var oldHighScore = new Score();
         oldHighScore.loadFromFile(file);
         if (highScore.points() > oldHighScore.points()) {
