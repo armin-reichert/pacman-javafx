@@ -70,6 +70,14 @@ public class World {
         resetFood();
     }
 
+    public int numCols() {
+        return tileMap.numCols();
+    }
+
+    public int numRows() {
+        return tileMap.numRows();
+    }
+
     public Stream<Vector2i> tiles() {
         return tileMap.tiles();
     }
