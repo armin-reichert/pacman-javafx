@@ -49,6 +49,8 @@ public enum GameVariants implements GameModel {
         {
             initialLives = 3;
             highScoreFileName = "highscore-ms_pacman.xml";
+            reset();
+            Logger.info("Game variant {} initialized.", this);
         }
 
         @Override
@@ -220,6 +222,8 @@ public enum GameVariants implements GameModel {
         {
             initialLives = 3;
             highScoreFileName = "highscore-pacman.xml";
+            reset();
+            Logger.info("Game variant {} initialized.", this);
         }
 
         @Override
@@ -299,7 +303,7 @@ public enum GameVariants implements GameModel {
 
     // --- Common to all variants --------------------------------------------------------------------------------------
 
-    final GameLevel[] LEVELS = {
+    static final GameLevel[] LEVELS = {
         /* 1*/ new GameLevel( 80, 75, 40,  20,  80, 10,  85,  90, 50, 6, 5, 0),
         /* 2*/ new GameLevel( 90, 85, 45,  30,  90, 15,  95,  95, 55, 5, 5, 1),
         /* 3*/ new GameLevel( 90, 85, 45,  40,  90, 20,  95,  95, 55, 4, 5, 0),
@@ -323,52 +327,52 @@ public enum GameVariants implements GameModel {
         /*21*/ new GameLevel( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0)
     };
 
-    final byte        POINTS_PELLET = 10;
-    final byte        POINTS_ENERGIZER = 50;
-    final short       POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
-    final short       EXTRA_LIFE_SCORE = 10_000;
-    final byte        LEVEL_COUNTER_MAX_SYMBOLS = 7;
-    final byte        PAC_POWER_FADING_TICKS = 120; // unsure
-    final byte        BONUS_POINTS_SHOWN_TICKS = 120; // unsure
-    final byte        RESTING_TICKS_PELLET = 1;
-    final byte        RESTING_TICKS_ENERGIZER = 3;
-    final byte        PPS_GHOST_INSIDE_HOUSE = 30; // correct?
-    final byte        PPS_GHOST_RETURNING_HOME = 120; // correct?
-    final short[]     KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
+    static GameLevel level(int levelNumber) {
+        return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
+    }
 
-    final Pulse       blinking = new Pulse(10, Pulse.OFF);
-    final byte[]      bonusSymbols = new byte[2];
-    final List<Byte>  levelCounter = new ArrayList<>();
-    final TickTimer   huntingTimer = new TickTimer("HuntingTimer");
-    final TickTimer   powerTimer = new TickTimer("PacPowerTimer");
-    final List<Ghost> victims = new ArrayList<>();
-    final Score       score = new Score();
-    final Score       highScore = new Score();
-    final GateKeeper  gateKeeper = new GateKeeper();
+    static final byte    POINTS_PELLET = 10;
+    static final byte    POINTS_ENERGIZER = 50;
+    static final short   POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
+    static final short   EXTRA_LIFE_SCORE = 10_000;
+    static final byte    LEVEL_COUNTER_MAX_SYMBOLS = 7;
+    static final byte    PAC_POWER_FADING_TICKS = 120; // unsure
+    static final byte    BONUS_POINTS_SHOWN_TICKS = 120; // unsure
+    static final byte    RESTING_TICKS_PELLET = 1;
+    static final byte    RESTING_TICKS_ENERGIZER = 3;
+    static final byte    PPS_GHOST_INSIDE_HOUSE = 30; // correct?
+    static final byte    PPS_GHOST_RETURNING_HOME = 120; // correct?
+    static final short[] KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
 
-    String            highScoreFileName;
-    int               levelNumber; // 1=first level
-    boolean           demoLevel;
-    long              levelStartTime;
-    boolean           playing;
-    byte              initialLives;
-    byte              lives;
+    final Pulse          blinking = new Pulse(10, Pulse.OFF);
+    final byte[]         bonusSymbols = new byte[2];
+    final List<Byte>     levelCounter = new ArrayList<>();
+    final TickTimer      huntingTimer = new TickTimer("HuntingTimer");
+    final TickTimer      powerTimer = new TickTimer("PacPowerTimer");
+    final List<Ghost>    victims = new ArrayList<>();
+    final Score          score = new Score();
+    final Score          highScore = new Score();
+    final GateKeeper     gateKeeper = new GateKeeper();
 
-    byte              huntingPhaseIndex;
-    byte              cruiseElroy;
-    byte              numGhostsKilledInLevel;
-    byte              nextBonusIndex; // -1=no bonus, 0=first, 1=second
+    String               highScoreFileName;
+    int                  levelNumber; // 1=first level
+    boolean              demoLevel;
+    long                 levelStartTime;
+    boolean              playing;
+    byte                 initialLives;
+    byte                 lives;
 
-    Pac               pac;
-    Ghost[]           ghosts;
-    Bonus             bonus;
-    World             world;
+    byte                 huntingPhaseIndex;
+    byte                 cruiseElroy;
+    byte                 numGhostsKilledInLevel;
+    byte                 nextBonusIndex; // -1=no bonus, 0=first, 1=second
+
+    Pac                  pac;
+    Ghost[]              ghosts;
+    Bonus                bonus;
+    World                world;
 
     SimulationStepEventLog eventLog;
-
-    GameVariants() {
-        reset();
-    }
 
     abstract void buildRegularLevel(int levelNumber);
 
@@ -381,10 +385,6 @@ public enum GameVariants implements GameModel {
     abstract boolean isBonusReached();
 
     abstract void updateLevelCounter();
-
-    GameLevel level(int levelNumber) {
-        return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
-    }
 
     void clearLevel() {
         levelNumber = 0;

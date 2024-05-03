@@ -24,8 +24,9 @@ public class PacManGames2dApp extends Application {
     public void init() {
         Logger.info("Java version:   {}", Runtime.version());
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
-        for (var variant: GameVariants.values()) {
-            Logger.info("Game variant {} initialized.", variant);
+        for (var variant : GameVariants.values()) {
+            // initialized by loading class
+            Logger.trace("Initialize game variant {}", variant);
         }
         settings = new Settings();
         if (getParameters() != null) {
