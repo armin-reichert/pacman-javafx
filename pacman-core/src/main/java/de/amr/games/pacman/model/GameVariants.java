@@ -773,7 +773,6 @@ public enum GameVariants implements GameModel {
 
     @Override
     public boolean isPacManKilled() {
-        eventLog.pacKilled = ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
         return eventLog.pacKilled;
     }
 
@@ -793,6 +792,7 @@ public enum GameVariants implements GameModel {
         updatePacPower();
         updateHuntingTimer();
         ghosts(FRIGHTENED).filter(pac::sameTile).forEach(this::killGhost);
+        eventLog.pacKilled = ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
     }
 
     void checkForFood() {
