@@ -96,7 +96,6 @@ public enum GameVariants implements GameModel {
             }
         }
 
-
         /**
          * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
          * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,

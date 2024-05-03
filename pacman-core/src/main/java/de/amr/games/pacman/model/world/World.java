@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.Vector2i;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -21,35 +20,9 @@ import static java.util.Collections.unmodifiableList;
  */
 public class World {
 
-    private static byte[][] validateTileMapData(byte[][] data, Set<Byte> allowedTiles) {
-        if (data == null) {
-            throw new IllegalArgumentException("Map data missing");
-        }
-        if (data.length == 0) {
-            throw new IllegalArgumentException("Map data empty");
-        }
-        var firstRow = data[0];
-        if (firstRow.length == 0) {
-            throw new IllegalArgumentException("Map data empty");
-        }
-        for (var row : data) {
-            if (row.length != firstRow.length) {
-                throw new IllegalArgumentException("Map has differently sized rows");
-            }
-        }
-        for (int row = 0; row < data.length; ++row) {
-            for (int col = 0; col < data[row].length; ++col) {
-                byte d = data[row][col];
-                if (!allowedTiles.contains(d)) {
-                    throw new IllegalArgumentException(String.format("Map data at row=%d, col=%d are illegal: %d", row, col, d));
-                }
-            }
-        }
-        return data;
-    }
 
-    private final byte[][] tileMap;
-    private final byte[][] foodMap;
+    private final TileMap tileMap;
+    private final TileMap foodMap;
     private final List<Vector2i> energizerTiles;
     private final List<Portal> portals;
     private final House house;
@@ -72,29 +45,48 @@ public class World {
      * @param house ghost house
      */
     public World(byte[][] tileMapData, byte[][] foodMapData, House house) {
-        tileMap = validateTileMapData(tileMapData, Set.of(Tiles.EMPTY, Tiles.TUNNEL, Tiles.WALL));
-        foodMap = validateTileMapData(foodMapData, Set.of(Tiles.EMPTY, Tiles.PELLET, Tiles.ENERGIZER));
+        tileMap = new TileMap(tileMapData, Set.of(Tiles.EMPTY, Tiles.TUNNEL, Tiles.WALL));
+        foodMap = new TileMap(foodMapData, Set.of(Tiles.EMPTY, Tiles.PELLET, Tiles.ENERGIZER));
 
         checkNotNull(house);
         this.house = house;
 
         // build portals
         var portalList = new ArrayList<Portal>();
-        int lastColumn = numCols() - 1;
-        for (int row = 0; row < numRows(); ++row) {
+        int lastColumn = tileMap.numCols() - 1;
+        for (int row = 0; row < tileMap.numRows(); ++row) {
             var leftBorderTile = v2i(0, row);
             var rightBorderTile = v2i(lastColumn, row);
-            if (tileMap[row][0] == Tiles.TUNNEL && tileMap[row][lastColumn] == Tiles.TUNNEL) {
+            if (tileMap.content(row, 0) == Tiles.TUNNEL && tileMap.content(row, lastColumn) == Tiles.TUNNEL) {
                 portalList.add(new Portal(leftBorderTile, rightBorderTile, 2));
             }
         }
         portalList.trimToSize();
         portals = unmodifiableList(portalList);
 
-        energizerTiles = tiles().filter(this::isEnergizerTile).collect(Collectors.toList());
-        eaten = new BitSet(numCols() * numRows());
-        totalFoodCount = (int) tiles().filter(this::isFoodTile).count();
+        energizerTiles = foodMap.tiles().filter(this::isEnergizerTile).collect(Collectors.toList());
+        eaten = new BitSet(foodMap.numCols() * foodMap.numRows());
+        totalFoodCount = (int) foodMap.tiles().filter(this::isFoodTile).count();
         resetFood();
+    }
+
+    public Stream<Vector2i> tiles() {
+        return tileMap.tiles();
+    }
+
+    /**
+     * @param tile a tile
+     * @return if this tile is located inside the world bounds
+     */
+    public boolean insideBounds(Vector2i tile) {
+        return 0 <= tile.x() && tile.x() < tileMap.numCols() && 0 <= tile.y() && tile.y() < tileMap.numRows();
+    }
+
+    /**
+     * @return if this position is located inside the world bounds
+     */
+    public boolean insideBounds(double x, double y) {
+        return 0 <= x && x < tileMap.numCols() * TS && 0 <= y && y < tileMap.numRows() * TS;
     }
 
     public void setPacPosition(Vector2f pacPosition) {
@@ -155,47 +147,8 @@ public class World {
     /**
      * @return tiles in order top-to-bottom, left-to-right
      */
-    public Stream<Vector2i> tiles() {
-        return IntStream.range(0, numCols() * numRows()).mapToObj(this::tile);
-    }
-
     public Stream<Vector2i> energizerTiles() {
         return energizerTiles.stream();
-    }
-
-    /**
-     * @param index tile index in order top-to-bottom, left-to-right
-     * @return tile with given index
-     */
-    public Vector2i tile(int index) {
-        return v2i(index % numCols(), index / numCols());
-    }
-
-    /**
-     * @param tile a tile
-     * @return if this tile is located inside the world bounds
-     */
-    public boolean insideBounds(Vector2i tile) {
-        return 0 <= tile.x() && tile.x() < numCols() && 0 <= tile.y() && tile.y() < numRows();
-    }
-
-    /**
-     * @return if this position is located inside the world bounds
-     */
-    public boolean insideBounds(double x, double y) {
-        return 0 <= x && x < numCols() * TS && 0 <= y && y < numRows() * TS;
-    }
-
-    private int index(Vector2i tile) {
-        return numCols() * tile.y() + tile.x();
-    }
-
-    public int numCols() {
-        return tileMap[0].length;
-    }
-
-    public int numRows() {
-        return tileMap.length;
     }
 
     /**
@@ -210,23 +163,19 @@ public class World {
         return portals.stream().anyMatch(portal -> portal.contains(tile));
     }
 
-    private byte content(byte[][] map, Vector2i tile) {
-        return insideBounds(tile) ? map[tile.y()][tile.x()] : Tiles.EMPTY;
-    }
-
     public boolean isWall(Vector2i tile) {
         checkTileNotNull(tile);
-        return content(tileMap, tile) == Tiles.WALL;
+        return tileMap.content(tile) == Tiles.WALL;
     }
 
     public boolean isTunnel(Vector2i tile) {
         checkTileNotNull(tile);
-        return content(tileMap, tile) == Tiles.TUNNEL;
+        return tileMap.content(tile) == Tiles.TUNNEL;
     }
 
     public boolean isIntersection(Vector2i tile) {
         checkTileNotNull(tile);
-        if (tile.x() <= 0 || tile.x() >= numCols() - 1) {
+        if (tile.x() <= 0 || tile.x() >= tileMap.numCols() - 1) {
             return false; // exclude portal entries and tiles outside the map
         }
         if (house.contains(tile)) {
@@ -236,7 +185,6 @@ public class World {
         long numDoorNeighbors = tile.neighbors().filter(house.door()::occupies).count();
         return numWallNeighbors + numDoorNeighbors < 2;
     }
-
 
     // Food
 
@@ -259,33 +207,33 @@ public class World {
 
     public void eatFoodAt(Vector2i tile) {
         if (hasFoodAt(tile)) {
-            eaten.set(index(tile));
+            eaten.set(foodMap.index(tile));
             --uneatenFoodCount;
         }
     }
 
     public boolean isFoodTile(Vector2i tile) {
         checkTileNotNull(tile);
-        byte data = content(foodMap, tile);
+        byte data = foodMap.content(tile);
         return data == Tiles.PELLET || data == Tiles.ENERGIZER;
     }
 
     public boolean isEnergizerTile(Vector2i tile) {
         checkTileNotNull(tile);
-        return content(foodMap, tile) == Tiles.ENERGIZER;
+        return foodMap.content(tile) == Tiles.ENERGIZER;
     }
 
     public boolean hasFoodAt(Vector2i tile) {
         checkTileNotNull(tile);
         if (insideBounds(tile)) {
-            byte data = foodMap[tile.y()][tile.x()];
-            return (data == Tiles.PELLET || data == Tiles.ENERGIZER) && !eaten.get(index(tile));
+            byte data = foodMap.content(tile);
+            return (data == Tiles.PELLET || data == Tiles.ENERGIZER) && !eaten.get(foodMap.index(tile));
         }
         return false;
     }
 
     public boolean hasEatenFoodAt(Vector2i tile) {
         checkTileNotNull(tile);
-        return insideBounds(tile) && eaten.get(index(tile));
+        return insideBounds(tile) && eaten.get(foodMap.index(tile));
     }
 }
