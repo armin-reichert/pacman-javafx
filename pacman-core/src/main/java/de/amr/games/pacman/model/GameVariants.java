@@ -33,11 +33,7 @@ import static de.amr.games.pacman.model.world.ArcadeWorld.*;
  */
 public enum GameVariants implements GameModel {
 
-    MS_PACMAN() {
-
-        {
-            highScoreFileName = "highscore-ms_pacman.xml";
-        }
+    MS_PACMAN {
 
         /**
          * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
@@ -47,6 +43,13 @@ public enum GameVariants implements GameModel {
          */
         final int[] HUNTING_TICKS_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
         final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
+
+        final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
+
+        {
+            initialLives = 3;
+            highScoreFileName = "highscore-ms_pacman.xml";
+        }
 
         @Override
         long huntingTicks(int levelNumber, int phaseIndex) {
@@ -165,8 +168,6 @@ public enum GameVariants implements GameModel {
             else              return 6; // 4/32
         }
 
-        final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
-
         /**
          * Bonus symbol enters the world at a random portal, walks to the house entry, takes a tour around the
          * house and finally leaves the world through a random portal on the opposite side of the world.
@@ -211,13 +212,17 @@ public enum GameVariants implements GameModel {
      */
     PACMAN {
 
-        {
-            highScoreFileName = "highscore-pacman.xml";
-        }
-
         final int[] HUNTING_TICKS_1      = {420, 1200, 420, 1200, 300,  1200, 300, -1};
         final int[] HUNTING_TICKS_2_TO_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
         final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 300, 1200, 300, 62262,   1, -1};
+
+        final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {-1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
+        final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
+
+        {
+            initialLives = 3;
+            highScoreFileName = "highscore-pacman.xml";
+        }
 
         @Override
         long huntingTicks(int levelNumber, int phaseIndex) {
@@ -277,15 +282,11 @@ public enum GameVariants implements GameModel {
             return world.eatenFoodCount() == 70 || world.eatenFoodCount() == 170;
         }
 
-        final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {-1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
-
         // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
         @Override
         byte computeBonusSymbol() {
             return levelNumber > 12 ? 7 : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
         }
-
-        final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
 
         @Override
         public void createNextBonus() {
@@ -337,33 +338,33 @@ public enum GameVariants implements GameModel {
     final byte       PPS_GHOST_RETURNING_HOME = 120; // correct?
     final short[]    KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
 
-    final Pulse      blinking = new Pulse(10, false);
-    final byte[]     bonusSymbols = new byte[2];
-    final List<Byte> levelCounter = new ArrayList<>();
-    final TickTimer  huntingTimer = new TickTimer("HuntingTimer");
-    final TickTimer  powerTimer = new TickTimer("PacPowerTimer");
+    final Pulse       blinking = new Pulse(10, false);
+    final byte[]      bonusSymbols = new byte[2];
+    final List<Byte>  levelCounter = new ArrayList<>();
+    final TickTimer   huntingTimer = new TickTimer("HuntingTimer");
+    final TickTimer   powerTimer = new TickTimer("PacPowerTimer");
     final List<Ghost> victims = new ArrayList<>();
-    final Score      score = new Score();
-    final Score      highScore = new Score();
-    final GateKeeper gateKeeper = new GateKeeper();
+    final Score       score = new Score();
+    final Score       highScore = new Score();
+    final GateKeeper  gateKeeper = new GateKeeper();
 
-    String           highScoreFileName;
-    int              levelNumber; // 1=first level
-    boolean          demoLevel;
-    long             levelStartTime;
-    boolean          playing;
-    byte             initialLives = 3;
-    byte             lives;
+    String            highScoreFileName;
+    int               levelNumber; // 1=first level
+    boolean           demoLevel;
+    long              levelStartTime;
+    boolean           playing;
+    byte              initialLives;
+    byte              lives;
 
-    int              huntingPhaseIndex;
-    byte             cruiseElroy;
-    byte             numGhostsKilledInLevel;
-    byte             nextBonusIndex; // -1=no bonus, 0=first, 1=second
+    int               huntingPhaseIndex;
+    byte              cruiseElroy;
+    byte              numGhostsKilledInLevel;
+    byte              nextBonusIndex; // -1=no bonus, 0=first, 1=second
 
-    Pac              pac;
-    Ghost[]          ghosts;
-    Bonus            bonus;
-    World            world;
+    Pac               pac;
+    Ghost[]           ghosts;
+    Bonus             bonus;
+    World             world;
 
     SimulationStepEventLog eventLog;
 
