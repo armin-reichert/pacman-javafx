@@ -231,10 +231,24 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         clock = new GameClockFX();
         clock.pausedPy.addListener((py, ov, nv) -> updateStage());
         clock.setPauseableCallback(() -> {
-            gameController().update();
-            currentGameScene().ifPresent(GameScene::update);
+            try {
+                gameController().update();
+                currentGameScene().ifPresent(GameScene::update);
+            } catch (Exception x) {
+                Logger.error("Error during game update");
+                Logger.error(x);
+                clock.stop();
+            }
         });
-        clock.setContinousCallback(gamePage::render);
+        clock.setContinousCallback(() -> {
+            try {
+                gamePage.render();
+            } catch (Exception x) {
+                Logger.error("Error during game rendering");
+                Logger.error(x);
+                clock.stop();
+            }
+        });
         gameController().setClock(clock);
 
         gameScenesByVariant.put(GameVariants.MS_PACMAN, new HashMap<>(Map.of(

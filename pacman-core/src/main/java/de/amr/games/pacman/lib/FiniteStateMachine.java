@@ -156,12 +156,7 @@ public abstract class FiniteStateMachine<S extends FsmState<C>, C> {
      * Runs the {@link FsmState#onUpdate} hook method (if defined) of the current state and advances the state timer.
      */
     public void update() {
-        try {
-            currentState.onUpdate(context());
-        } catch (Exception x) {
-            Logger.trace("Error updating state {}, timer={}", currentState, currentState.timer());
-            Logger.error(x);
-        }
+        currentState.onUpdate(context());
         if (currentState.timer().state() == State.READY) {
             currentState.timer().start();
         } else {
