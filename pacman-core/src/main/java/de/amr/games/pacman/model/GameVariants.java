@@ -323,20 +323,20 @@ public enum GameVariants implements GameModel {
         /*21*/ new GameLevel( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0)
     };
 
-    final byte       POINTS_PELLET = 10;
-    final byte       POINTS_ENERGIZER = 50;
-    final short      POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
-    final short      EXTRA_LIFE_SCORE = 10_000;
-    final byte       LEVEL_COUNTER_MAX_SYMBOLS = 7;
-    final byte       PAC_POWER_FADING_TICKS = 120; // unsure
-    final byte       BONUS_POINTS_SHOWN_TICKS = 120; // unsure
-    final byte       RESTING_TICKS_PELLET = 1;
-    final byte       RESTING_TICKS_ENERGIZER = 3;
-    final byte       PPS_GHOST_INSIDE_HOUSE = 30; // correct?
-    final byte       PPS_GHOST_RETURNING_HOME = 120; // correct?
-    final short[]    KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
+    final byte        POINTS_PELLET = 10;
+    final byte        POINTS_ENERGIZER = 50;
+    final short       POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
+    final short       EXTRA_LIFE_SCORE = 10_000;
+    final byte        LEVEL_COUNTER_MAX_SYMBOLS = 7;
+    final byte        PAC_POWER_FADING_TICKS = 120; // unsure
+    final byte        BONUS_POINTS_SHOWN_TICKS = 120; // unsure
+    final byte        RESTING_TICKS_PELLET = 1;
+    final byte        RESTING_TICKS_ENERGIZER = 3;
+    final byte        PPS_GHOST_INSIDE_HOUSE = 30; // correct?
+    final byte        PPS_GHOST_RETURNING_HOME = 120; // correct?
+    final short[]     KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
 
-    final Pulse       blinking = new Pulse(10, false);
+    final Pulse       blinking = new Pulse(10, Pulse.OFF);
     final byte[]      bonusSymbols = new byte[2];
     final List<Byte>  levelCounter = new ArrayList<>();
     final TickTimer   huntingTimer = new TickTimer("HuntingTimer");
@@ -354,7 +354,7 @@ public enum GameVariants implements GameModel {
     byte              initialLives;
     byte              lives;
 
-    int               huntingPhaseIndex;
+    byte              huntingPhaseIndex;
     byte              cruiseElroy;
     byte              numGhostsKilledInLevel;
     byte              nextBonusIndex; // -1=no bonus, 0=first, 1=second
@@ -485,7 +485,7 @@ public enum GameVariants implements GameModel {
         if (phaseIndex < 0 || phaseIndex > 7) {
             throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + phaseIndex);
         }
-        huntingPhaseIndex = phaseIndex;
+        huntingPhaseIndex = (byte) phaseIndex;
         huntingTimer.reset(huntingTicks(levelNumber, huntingPhaseIndex));
         huntingTimer.start();
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
@@ -709,9 +709,9 @@ public enum GameVariants implements GameModel {
 
     public void loadHighScore() {
         File file = new File(System.getProperty("user.home"), highScoreFileName);
-        highScore().loadFromFile(file);
+        highScore.loadFromFile(file);
         Logger.info("Highscore loaded. File: '{}', {} points, level {}",
-            file, highScore().points(), highScore().levelNumber());
+            file, highScore.points(), highScore.levelNumber());
     }
 
     @Override
