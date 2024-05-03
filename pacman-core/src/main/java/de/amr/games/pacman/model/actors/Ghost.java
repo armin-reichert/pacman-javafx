@@ -170,7 +170,7 @@ public class Ghost extends Creature {
             return inState(ENTERING_HOUSE, LEAVING_HOUSE);
         }
         if (world.insideBounds(tile)) {
-            return !world.isWall(tile);
+            return !world.isBlocked(tile);
         }
         return world.belongsToPortal(tile);
     }

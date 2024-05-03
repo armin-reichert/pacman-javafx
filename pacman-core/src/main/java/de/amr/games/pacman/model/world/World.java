@@ -173,8 +173,8 @@ public class World {
         return portals.stream().anyMatch(portal -> portal.contains(tile));
     }
 
-    public boolean isWall(Vector2i tile) {
-        return tileMap.hasContentAt(tile, Tiles.WALL);
+    public boolean isBlocked(Vector2i tile) {
+        return !tileMap.hasContentAt(tile, Tiles.EMPTY);
     }
 
     public boolean isTunnel(Vector2i tile) {
@@ -189,7 +189,7 @@ public class World {
         if (house.contains(tile)) {
             return false;
         }
-        long numWallNeighbors = tile.neighbors().filter(this::isWall).count();
+        long numWallNeighbors = tile.neighbors().filter(this::isBlocked).count();
         long numDoorNeighbors = tile.neighbors().filter(house.door()::occupies).count();
         return numWallNeighbors + numDoorNeighbors < 2;
     }

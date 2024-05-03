@@ -101,7 +101,7 @@ public class Pac extends Creature {
             return false;
         }
         if (world.insideBounds(tile)) {
-            return !world.isWall(tile);
+            return !world.isBlocked(tile);
         }
         return world.belongsToPortal(tile);
     }
