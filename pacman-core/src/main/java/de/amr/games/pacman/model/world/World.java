@@ -8,7 +8,10 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,7 +22,6 @@ import static java.util.Collections.unmodifiableList;
  * @author Armin Reichert
  */
 public class World {
-
 
     private final TileMap tileMap;
     private final TileMap foodMap;
@@ -45,8 +47,8 @@ public class World {
      * @param house ghost house
      */
     public World(byte[][] tileMapData, byte[][] foodMapData, House house) {
-        tileMap = new TileMap(tileMapData, Set.of(Tiles.EMPTY, Tiles.TUNNEL, Tiles.WALL));
-        foodMap = new TileMap(foodMapData, Set.of(Tiles.EMPTY, Tiles.PELLET, Tiles.ENERGIZER));
+        tileMap = new TileMap(tileMapData, Tiles.TERRAIN_END);
+        foodMap = new TileMap(foodMapData, Tiles.FOOD_END);
 
         checkNotNull(house);
         this.house = house;
@@ -172,13 +174,11 @@ public class World {
     }
 
     public boolean isWall(Vector2i tile) {
-        checkTileNotNull(tile);
-        return tileMap.content(tile) == Tiles.WALL;
+        return tileMap.hasContentAt(tile, Tiles.WALL);
     }
 
     public boolean isTunnel(Vector2i tile) {
-        checkTileNotNull(tile);
-        return tileMap.content(tile) == Tiles.TUNNEL;
+        return tileMap.hasContentAt(tile, Tiles.TUNNEL);
     }
 
     public boolean isIntersection(Vector2i tile) {

@@ -6,10 +6,10 @@ package de.amr.games.pacman.model.world;
 
 import de.amr.games.pacman.lib.Vector2i;
 
-import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Globals.checkTileNotNull;
 import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
@@ -19,7 +19,7 @@ public class TileMap {
 
     private final byte[][] data;
 
-    public TileMap(byte[][] data, Set<Byte> allowedTiles) {
+    public TileMap(byte[][] data, byte lastTileValue) {
         if (data == null) {
             throw new IllegalArgumentException("Map data missing");
         }
@@ -38,12 +38,17 @@ public class TileMap {
         for (int row = 0; row < data.length; ++row) {
             for (int col = 0; col < data[row].length; ++col) {
                 byte d = data[row][col];
-                if (!allowedTiles.contains(d)) {
+                if (d < 0 || d > lastTileValue) {
                     throw new IllegalArgumentException(String.format("Map data at row=%d, col=%d are illegal: %d", row, col, d));
                 }
             }
         }
         this.data = data;
+    }
+
+    public boolean hasContentAt(Vector2i tile, byte tileContent) {
+        checkTileNotNull(tile);
+        return content(tile) == tileContent;
     }
 
     public byte content(Vector2i tile) {
