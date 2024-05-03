@@ -8,10 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -24,7 +21,7 @@ import static java.util.Collections.unmodifiableList;
  */
 public class World {
 
-    private static byte[][] validateTileMapData(byte[][] data) {
+    private static byte[][] validateTileMapData(byte[][] data, Set<Byte> allowedTiles) {
         if (data == null) {
             throw new IllegalArgumentException("Map data missing");
         }
@@ -43,7 +40,7 @@ public class World {
         for (int row = 0; row < data.length; ++row) {
             for (int col = 0; col < data[row].length; ++col) {
                 byte d = data[row][col];
-                if (d < Tiles.SPACE || d > Tiles.ENERGIZER) {
+                if (!allowedTiles.contains(d)) {
                     throw new IllegalArgumentException(String.format("Map data at row=%d, col=%d are illegal: %d", row, col, d));
                 }
             }
@@ -52,6 +49,7 @@ public class World {
     }
 
     private final byte[][] tileMap;
+    private final byte[][] foodMap;
     private final List<Vector2i> energizerTiles;
     private final List<Portal> portals;
     private final House house;
@@ -70,10 +68,13 @@ public class World {
 
     /**
      * @param tileMapData byte-array of tile map data
+     * @param foodMapData byte-array of food map data
      * @param house ghost house
      */
-    public World(byte[][] tileMapData, House house) {
-        tileMap = validateTileMapData(tileMapData);
+    public World(byte[][] tileMapData, byte[][] foodMapData, House house) {
+        tileMap = validateTileMapData(tileMapData, Set.of(Tiles.EMPTY, Tiles.TUNNEL, Tiles.WALL));
+        foodMap = validateTileMapData(foodMapData, Set.of(Tiles.EMPTY, Tiles.PELLET, Tiles.ENERGIZER));
+
         checkNotNull(house);
         this.house = house;
 
@@ -91,7 +92,6 @@ public class World {
         portals = unmodifiableList(portalList);
 
         energizerTiles = tiles().filter(this::isEnergizerTile).collect(Collectors.toList());
-
         eaten = new BitSet(numCols() * numRows());
         totalFoodCount = (int) tiles().filter(this::isFoodTile).count();
         resetFood();
@@ -146,11 +146,6 @@ public class World {
 
     public Vector2f bonusPosition() {
         return bonusPosition;
-    }
-
-    public void resetFood() {
-        eaten.clear();
-        uneatenFoodCount = totalFoodCount;
     }
 
     public House house() {
@@ -215,29 +210,18 @@ public class World {
         return portals.stream().anyMatch(portal -> portal.contains(tile));
     }
 
-    private byte content(Vector2i tile) {
-        return insideBounds(tile) ? tileMap[tile.y()][tile.x()] : Tiles.SPACE;
+    private byte content(byte[][] map, Vector2i tile) {
+        return insideBounds(tile) ? map[tile.y()][tile.x()] : Tiles.EMPTY;
     }
 
     public boolean isWall(Vector2i tile) {
         checkTileNotNull(tile);
-        return content(tile) == Tiles.WALL;
+        return content(tileMap, tile) == Tiles.WALL;
     }
 
     public boolean isTunnel(Vector2i tile) {
         checkTileNotNull(tile);
-        return content(tile) == Tiles.TUNNEL;
-    }
-
-    public boolean isFoodTile(Vector2i tile) {
-        checkTileNotNull(tile);
-        byte data = content(tile);
-        return data == Tiles.PELLET || data == Tiles.ENERGIZER;
-    }
-
-    public boolean isEnergizerTile(Vector2i tile) {
-        checkTileNotNull(tile);
-        return content(tile) == Tiles.ENERGIZER;
+        return content(tileMap, tile) == Tiles.TUNNEL;
     }
 
     public boolean isIntersection(Vector2i tile) {
@@ -253,6 +237,13 @@ public class World {
         return numWallNeighbors + numDoorNeighbors < 2;
     }
 
+
+    // Food
+
+    public void resetFood() {
+        eaten.clear();
+        uneatenFoodCount = totalFoodCount;
+    }
 
     public int totalFoodCount() {
         return totalFoodCount;
@@ -273,10 +264,21 @@ public class World {
         }
     }
 
+    public boolean isFoodTile(Vector2i tile) {
+        checkTileNotNull(tile);
+        byte data = content(foodMap, tile);
+        return data == Tiles.PELLET || data == Tiles.ENERGIZER;
+    }
+
+    public boolean isEnergizerTile(Vector2i tile) {
+        checkTileNotNull(tile);
+        return content(foodMap, tile) == Tiles.ENERGIZER;
+    }
+
     public boolean hasFoodAt(Vector2i tile) {
         checkTileNotNull(tile);
         if (insideBounds(tile)) {
-            byte data = tileMap[tile.y()][tile.x()];
+            byte data = foodMap[tile.y()][tile.x()];
             return (data == Tiles.PELLET || data == Tiles.ENERGIZER) && !eaten.get(index(tile));
         }
         return false;
