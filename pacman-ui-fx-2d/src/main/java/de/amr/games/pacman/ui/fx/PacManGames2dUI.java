@@ -11,7 +11,6 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.IllegalGameVariantException;
-import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.page.GamePage;
 import de.amr.games.pacman.ui.fx.page.Page;
@@ -86,8 +85,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final KeyCodeCombination KEY_BOOT                 = just(KeyCode.F3);
     public static final KeyCodeCombination KEY_FULLSCREEN           = just(KeyCode.F11);
 
-    public static final int CANVAS_WIDTH_UNSCALED = ArcadeWorld.TILES_X * TS; // 28*8 = 224
-    public static final int CANVAS_HEIGHT_UNSCALED = ArcadeWorld.TILES_Y * TS; // 36*8 = 288
+    public static final int CANVAS_WIDTH_UNSCALED = GameModel.TILES_X * TS; // 28*8 = 224
+    public static final int CANVAS_HEIGHT_UNSCALED = GameModel.TILES_Y * TS; // 36*8 = 288
 
     public static final BooleanProperty PY_USE_AUTOPILOT   = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);

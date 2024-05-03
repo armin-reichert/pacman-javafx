@@ -10,7 +10,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.world.ArcadeWorld;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
@@ -83,8 +82,8 @@ public class PlayScene2D extends GameScene2D {
         }
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         switch (context.game()) {
-            case GameVariants.MS_PACMAN ->
-                drawMsPacManMaze(context.game(), ArcadeWorld.mazeNumberMsPacMan(context.game().levelNumber()), flashing);
+            case GameVariants.MS_PACMAN -> drawMsPacManMaze(context.game(),
+                context.game().mazeNumber(context.game().levelNumber()), flashing);
             case GameVariants.PACMAN -> drawPacManMaze(context.game(), flashing);
             default -> throw new IllegalGameVariantException(context.game());
         }
@@ -167,7 +166,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneInfo() {
-        drawTileGrid(ArcadeWorld.TILES_X, ArcadeWorld.TILES_Y);
+        drawTileGrid(GameModel.TILES_X, GameModel.TILES_Y);
         if (context.game() == GameVariants.PACMAN && context.game().world() != null) {
             context.game().world().forbiddenPassages().forEach((tile, directions) -> {
                 // TODO indicate direction

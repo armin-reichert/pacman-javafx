@@ -1,6 +1,6 @@
 package de.amr.games.pacman.lib;
 
-import de.amr.games.pacman.model.world.ArcadeWorld;
+import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
@@ -23,9 +23,9 @@ public class FloorPlanGenerator {
             Logger.error("Could not create output directory {}", DIR);
             return;
         }
-        storeFloorPlan(ArcadeWorld.createPacManWorld(), 1, 4, PACMAN_PATTERN);
+        storeFloorPlan(GameVariants.PACMAN.createWorld(1), 1, 4, PACMAN_PATTERN);
         for (int mapNumber = 1; mapNumber <= 4; ++mapNumber) {
-            storeFloorPlan(ArcadeWorld.createMsPacManWorld(mapNumber), mapNumber, 4, MS_PACMAN_PATTERN);
+            storeFloorPlan(GameVariants.MS_PACMAN.createWorld(mapNumber), mapNumber, 4, MS_PACMAN_PATTERN);
         }
     }
 

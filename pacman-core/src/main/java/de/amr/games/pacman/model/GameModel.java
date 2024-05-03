@@ -28,6 +28,9 @@ import java.util.stream.Stream;
  */
 public interface GameModel {
 
+    byte TILES_X = 28;
+    byte TILES_Y = 36;
+
     // Ghost IDs
     byte RED_GHOST = 0, PINK_GHOST = 1, CYAN_GHOST = 2, ORANGE_GHOST = 3;
 
@@ -63,6 +66,12 @@ public interface GameModel {
      * @return all ghosts which are in any of the given states or all ghosts, if no states are specified
      */
     Stream<Ghost> ghosts(GhostState... states);
+
+    World createWorld(int mapNumber);
+
+    int mapNumber(int levelNumber);
+
+    int mazeNumber(int levelNumber);
 
     /**
      * Creates and initializes new game level with the given number.

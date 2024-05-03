@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
-import de.amr.games.pacman.model.world.ArcadeWorld;
+import de.amr.games.pacman.model.GameModel;
 import javafx.geometry.Rectangle2D;
 
 import static de.amr.games.pacman.lib.Globals.RND;
@@ -60,8 +60,8 @@ public class BootScene extends GameScene2D {
         clearCanvas();
         g.setFill(context.theme().color("palette.pale"));
         g.setFont(sceneFont(8));
-        for (int row = 0; row < ArcadeWorld.TILES_Y; ++row) {
-            for (int col = 0; col < ArcadeWorld.TILES_X; ++col) {
+        for (int row = 0; row < GameModel.TILES_Y; ++row) {
+            for (int col = 0; col < GameModel.TILES_X; ++col) {
                 var hexCode = Integer.toHexString(RND.nextInt(16));
                 g.fillText(hexCode, s(t(col)), s(t(row + 1)));
             }
@@ -70,12 +70,12 @@ public class BootScene extends GameScene2D {
 
     private void paintRandomSprites() {
         clearCanvas();
-        for (int row = 0; row < ArcadeWorld.TILES_Y / 2; ++row) {
+        for (int row = 0; row < GameModel.TILES_Y / 2; ++row) {
             if (RND.nextInt(100) > 33) {
                 var region1 = randomSpriteSheetTile();
                 var region2 = randomSpriteSheetTile();
-                var splitX = ArcadeWorld.TILES_X / 8 + RND.nextInt(ArcadeWorld.TILES_X / 4);
-                for (int col = 0; col < ArcadeWorld.TILES_X / 2; ++col) {
+                var splitX = GameModel.TILES_X / 8 + RND.nextInt(GameModel.TILES_X / 4);
+                for (int col = 0; col < GameModel.TILES_X / 2; ++col) {
                     var region = col < splitX ? region1 : region2;
                     drawSprite(region, region.getWidth() * col, region.getHeight() * row);
                 }
@@ -93,8 +93,8 @@ public class BootScene extends GameScene2D {
 
     private void paintGrid(double width, double height, int raster) {
         clearCanvas();
-        var numRows = ArcadeWorld.TILES_Y / 2;
-        var numCols = ArcadeWorld.TILES_X / 2;
+        var numRows = GameModel.TILES_Y / 2;
+        var numCols = GameModel.TILES_X / 2;
         g.setStroke(context.theme().color("palette.pale"));
         g.setLineWidth(s(2.0));
         for (int row = 0; row <= numRows; ++row) {
