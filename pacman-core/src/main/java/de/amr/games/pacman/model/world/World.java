@@ -47,8 +47,8 @@ public class World {
      * @param house ghost house
      */
     public World(byte[][] tileMapData, byte[][] foodMapData, House house) {
-        tileMap = new TileMap(tileMapData, Tiles.TERRAIN_END);
-        foodMap = new TileMap(foodMapData, Tiles.FOOD_END);
+        tileMap = new TileMap(tileMapData, Tiles.TERRAIN_END_MARKER);
+        foodMap = new TileMap(foodMapData, Tiles.FOOD_END_MARKER);
 
         checkNotNull(house);
         this.house = house;
@@ -178,7 +178,7 @@ public class World {
     }
 
     public boolean isBlocked(Vector2i tile) {
-        return !(tileMap.hasContentAt(tile, Tiles.EMPTY) || tileMap.hasContentAt(tile, Tiles.TUNNEL));
+        return Tiles.isBlockedTile(tileMap.content(tile));
     }
 
     public boolean isTunnel(Vector2i tile) {
