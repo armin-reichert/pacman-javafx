@@ -11,6 +11,7 @@ public class TileMapRenderer {
     private static final int TS = 8;
     private double scaling = 1.0;
     private Color wallColor;
+    private double lineWidth = 1;
 
     public void setScaling(double scaling) {
         this.scaling = scaling;
@@ -33,14 +34,14 @@ public class TileMapRenderer {
             case Tiles.WALL_H -> drawWallH(g, row, col, wallColor);
             case Tiles.WALL_V -> drawWallV(g, row, col, wallColor);
             case Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE -> drawCorner(g, row, col, tile, wallColor);
-            default -> drawPlaceholder(g, row, col);
+            default -> {}
         }
     }
 
     public void drawWallH(GraphicsContext g, int row, int col, Color color) {
         double size = scaling * TS;
         g.setStroke(color);
-        g.setLineWidth(2);
+        g.setLineWidth(lineWidth);
         double x = col * size;
         double y = row * size + 0.5 * size;
         g.strokeLine(x, y, x + size, y);
@@ -49,7 +50,7 @@ public class TileMapRenderer {
     public void drawWallV(GraphicsContext g, int row, int col, Color color) {
         double size = scaling * TS;
         g.setStroke(color);
-        g.setLineWidth(2);
+        g.setLineWidth(lineWidth);
         double x = col * size + 0.5 * size;
         double y = row * size;
         g.strokeLine(x, y, x, y + size);
@@ -84,14 +85,8 @@ public class TileMapRenderer {
             default -> {}
         };
         g.setStroke(color);
-        g.setLineWidth(2);
+        g.setLineWidth(lineWidth);
         g.strokeArc(x, y, size, size, startAngle, 90, ArcType.OPEN);
-    }
-
-    public void drawPlaceholder(GraphicsContext g, int row, int col) {
-        g.setStroke(Color.GRAY);
-        g.setLineWidth(0.5);
-        //g.strokeRect(scaling * col * tileSize, scaling * row * tileSize, scaling * tileSize, scaling * tileSize);
     }
 
     public void drawPellet(GraphicsContext g, int row, int col, Color color) {
@@ -107,7 +102,9 @@ public class TileMapRenderer {
         double x = col * size;
         double y = row * size;
         g.setFill(color);
-        g.fillOval(x, y, size, size);
+        //g.fillOval(x, y, size, size);
+        g.fillRect(x + 2 * scaling, y, 4 * scaling, 8 * scaling);
+        g.fillRect(x, y + 2 * scaling, 8 * scaling, 4 * scaling);
+        g.fillRect(x + scaling, y + scaling, 6 * scaling, 6 * scaling);
     }
-
 }

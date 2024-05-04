@@ -90,7 +90,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     public static final BooleanProperty PY_USE_AUTOPILOT   = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_USE_SPRITE_SHEET_FOR_MAZE = new SimpleBooleanProperty(true);
+    public static final BooleanProperty PY_USE_SPRITE_SHEET_FOR_MAZE = new SimpleBooleanProperty(false);
 
     private static void loadAssets2D() {
         ResourceManager rm = () -> PacManGames2dUI.class;
