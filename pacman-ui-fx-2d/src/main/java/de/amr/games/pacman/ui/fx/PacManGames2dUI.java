@@ -90,6 +90,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     public static final BooleanProperty PY_USE_AUTOPILOT   = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_USE_SPRITE_SHEET_FOR_MAZE = new SimpleBooleanProperty(true);
 
     private static void loadAssets2D() {
         ResourceManager rm = () -> PacManGames2dUI.class;
@@ -179,6 +180,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
                     );
 
         theme.set("pacman.icon",                      rm.loadImage("graphics/icons/pacman.png"));
+        theme.set("pacman.maze.wallColor",            Color.rgb(33, 33, 255));
         theme.set("pacman.maze.foodColor",            Color.rgb(254, 189, 180));
 
         theme.set("pacman.audio.bonus_eaten",         rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));

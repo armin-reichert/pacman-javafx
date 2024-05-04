@@ -84,6 +84,10 @@ public class World {
         return tileMap.tiles();
     }
 
+    public TileMap tileMap() {
+        return tileMap;
+    }
+
     /**
      * @param tile a tile
      * @return if this tile is located inside the world bounds
