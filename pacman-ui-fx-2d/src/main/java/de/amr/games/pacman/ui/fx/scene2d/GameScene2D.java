@@ -234,20 +234,24 @@ public abstract class GameScene2D implements GameScene {
                     g.setFont(Font.font("Monospaced", s(6)));
                     var text = animations.currentAnimationName() + " " + animations.currentAnimation().frameIndex();
                     g.fillText(text, s(pac.posX() - 4), s(pac.posY() - 4));
-                    // indicate wish direction
-                    if (pac.wishDir() != null) {
-                        float r = 2;
-                        var pacCenter = pac.center();
-                        var indicatorCenter = pac.center().plus(pac.wishDir().vector().toFloatVec().scaled(1.5f * TS));
-                        var indicatorTopLeft = indicatorCenter.minus(r, r);
-                        g.setStroke(Color.WHITE);
-                        g.strokeLine(s(pacCenter.x()), s(pacCenter.y()), s(indicatorCenter.x()), s(indicatorCenter.y()));
-                        g.setFill(Color.GREEN);
-                        g.fillOval(s(indicatorTopLeft.x()), s(indicatorTopLeft.y()), s(2 * r), s(2 * r));
-                    }
+                    drawWishDir(pac);
                 }
             }
         });
+    }
+
+    private void drawWishDir(Creature guy) {
+        if (guy.wishDir() != null) {
+            float r = 2;
+            var pacCenter = guy.center();
+            var indicatorCenter = guy.center().plus(guy.wishDir().vector().toFloatVec().scaled(1.5f * TS));
+            var indicatorTopLeft = indicatorCenter.minus(r, r);
+            g.setStroke(Color.WHITE);
+            g.strokeLine(s(pacCenter.x()), s(pacCenter.y()), s(indicatorCenter.x()), s(indicatorCenter.y()));
+            g.setFill(guy.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
+            g.fillOval(s(indicatorTopLeft.x()), s(indicatorTopLeft.y()), s(2 * r), s(2 * r));
+        }
+
     }
 
     protected void drawGhost(Ghost ghost) {
@@ -262,6 +266,7 @@ public abstract class GameScene2D implements GameScene {
                     g.setFont(Font.font("Monospaced", s(6)));
                     var text = animations.currentAnimationName() + " " + animations.currentAnimation().frameIndex();
                     g.fillText(text, s(ghost.posX() - 4), s(ghost.posY() - 4));
+                    drawWishDir(ghost);
                 }
             }
         });
