@@ -16,18 +16,13 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.PickResult;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class MapEditor extends Application  {
@@ -148,7 +143,8 @@ public class MapEditor extends Application  {
             for (int row = 0; row < tileMap.numRows(); ++row) {
                 writer.write("{");
                 for (int col = 0; col < tileMap.numCols(); ++col) {
-                    writer.write(String.valueOf(tileMap.content(row, col)));
+                    String valueTxt = String.valueOf(tileMap.content(row, col));
+                    writer.write(String.format("%2s", valueTxt));
                     if (col < tileMap.numCols() - 1) {
                         writer.write(",");
                     }
