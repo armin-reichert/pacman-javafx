@@ -98,45 +98,28 @@ public class TileMapRenderer {
 
     public void drawDCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
         double x = tile.x() * s[8], y = tile.y() * s[8];
-        double ix = x, iy = y; // inner arc
-        double ox = x, oy = y; // outer arc
-        double startAngle = 0;
+        double s10 = 10 * scaling;
+        g.setStroke(wallColor);
+        g.setLineWidth(s(1));
         switch (cornerType) {
             case Tiles.DCORNER_NW -> {
-                startAngle = 90;
-                ix = x + s[5];
-                iy = y + s[5];
-                ox = x + s[3];
-                oy = y + s[3];
+                g.strokeArc(x + s[5], y + s[5], s[6], s[6], 90, 90, ArcType.OPEN);
+                g.strokeArc(x + s[3], y + s[3], s10, s10, 90, 90, ArcType.OPEN);
             }
             case Tiles.DCORNER_NE -> {
-                startAngle = 0;
-                ix = x - s[3];
-                iy = y + s[5];
-                ox = x - s[5];
-                oy = y + s[3];
+                g.strokeArc(x - s[3], y + s[5], s[6], s[6], 0, 90, ArcType.OPEN);
+                g.strokeArc(x - s[5], y + s[3], s10, s10, 0, 90, ArcType.OPEN);
             }
             case Tiles.DCORNER_SE -> {
-                startAngle = 270;
-                ix = x - s[3];
-                iy = y - s[3];
-                ox = x - s[5];
-                oy = y - s[5];
+                g.strokeArc(x - s[3], y - s[3], s[6], s[6], 270, 90, ArcType.OPEN);
+                g.strokeArc(x - s[5], y - s[5], s10, s10, 270, 90, ArcType.OPEN);
             }
             case Tiles.DCORNER_SW -> {
-                startAngle = 180;
-                ix = x + s[5];
-                iy = y - s[3];
-                ox = x + s[3];
-                oy = y - s[5];
+                g.strokeArc(x + s[5], y - s[3], s[6], s[6], 180, 90, ArcType.OPEN);
+                g.strokeArc(x + s[3], y - s[5], s10, s10, 180, 90, ArcType.OPEN);
             }
             default -> {}
         }
-        g.setStroke(wallColor);
-        g.setLineWidth(s(1));
-        double s10 = 10 * scaling;
-        g.strokeArc(ix, iy, s[6], s[6], startAngle, 90, ArcType.OPEN);
-        g.strokeArc(ox, oy, s10, s10, startAngle, 90, ArcType.OPEN);
     }
 
     public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
