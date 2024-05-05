@@ -1,6 +1,7 @@
 package de.amr.games.pacman.ui.fx.util;
 
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.Tiles;
 import de.amr.games.pacman.model.world.World;
@@ -11,9 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -57,11 +56,13 @@ public class MapEditor extends Application  {
         stage.setTitle("Map Editor");
         GameClockFX clock = new GameClockFX();
         clock.setContinousCallback(this::drawCanvas);
+        setWorld(GameVariants.PACMAN.createWorld(1), Color.rgb(33, 33, 255));
+
         stage.show();
         clock.start();
     }
 
-    public void setWorld(World world, Color wallColor) {
+    void setWorld(World world, Color wallColor) {
         tileMap = world.tileMap();
         foodMap = world.foodMap();
         renderer.setWallColor(wallColor);
@@ -109,14 +110,48 @@ public class MapEditor extends Application  {
 
     void createMenus() {
         menuBar = new MenuBar();
+
         var fileMenu = new Menu("File");
+        menuBar.getMenus().add(fileMenu);
+
+        // File menu
         var saveItem = new MenuItem("Save");
         saveItem.setOnAction(e -> saveMap());
         fileMenu.getItems().add(saveItem);
         var quitItem = new MenuItem("Quit");
         quitItem.setOnAction(e -> stage.close());
         fileMenu.getItems().add(quitItem);
-        menuBar.getMenus().add(fileMenu);
+
+        var worldMenu = new Menu("World");
+        menuBar.getMenus().add(worldMenu);
+
+        // World menu
+        ToggleGroup exclusion = new ToggleGroup();
+
+        var pacManWorldItem = new RadioMenuItem("Pac-Man");
+        worldMenu.getItems().add(pacManWorldItem);
+        pacManWorldItem.setToggleGroup(exclusion);
+        pacManWorldItem.setSelected(true);
+
+        var msPacManWorldItem1 = new RadioMenuItem("Ms. Pac-Man Map 1");
+        worldMenu.getItems().add(msPacManWorldItem1);
+        msPacManWorldItem1.setToggleGroup(exclusion);
+        msPacManWorldItem1.setOnAction(e -> setWorld(GameVariants.MS_PACMAN.createWorld(1), Color.RED));
+
+        var msPacManWorldItem2 = new RadioMenuItem("Ms. Pac-Man Map 2");
+        worldMenu.getItems().add(msPacManWorldItem2);
+        msPacManWorldItem2.setToggleGroup(exclusion);
+        msPacManWorldItem2.setOnAction(e -> setWorld(GameVariants.MS_PACMAN.createWorld(2), Color.rgb(71, 183, 255)));
+
+        var msPacManWorldItem3 = new RadioMenuItem("Ms. Pac-Man Map 3");
+        worldMenu.getItems().add(msPacManWorldItem3);
+        msPacManWorldItem3.setToggleGroup(exclusion);
+        msPacManWorldItem3.setOnAction(e -> setWorld(GameVariants.MS_PACMAN.createWorld(3), Color.rgb(222, 151, 81)));
+
+        var msPacManWorldItem4 = new RadioMenuItem("Ms. Pac-Man Map 4");
+        worldMenu.getItems().add(msPacManWorldItem4);
+        msPacManWorldItem4.setToggleGroup(exclusion);
+        msPacManWorldItem4.setOnAction(e -> setWorld(GameVariants.MS_PACMAN.createWorld(4), Color.rgb(33, 33, 255)));
     }
 
     void drawCanvas() {
@@ -124,15 +159,15 @@ public class MapEditor extends Application  {
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        g.setStroke(Color.GRAY);
-        g.setLineWidth(0.5);
-        double s8 = 8 * scaling();
         renderer.setScaling(scaling());
         if (tileMap != null) {
             renderer.drawMap(g, tileMap);
         }
         for (int row = 0; row < numMapRows(); ++row) {
             for (int col = 0; col < numMapCols(); ++col) {
+                g.setStroke(Color.GRAY);
+                g.setLineWidth(0.5);
+                double s8 = 8 * scaling();
                 g.strokeRect(col * s8, row * s8, s8, s8);
             }
         }
