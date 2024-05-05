@@ -44,17 +44,15 @@ public class TileMapRenderer {
         map.tiles().forEach(tile -> drawTile(g, tile, map.content(tile)));
     }
 
-    public void drawTile(GraphicsContext g, Vector2i tile, byte tileContent) {
+    public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
         int row = tile.y(), col = tile.x();
-        switch (tileContent) {
+        switch (content) {
             case Tiles.WALL_H -> drawWallH(g, row, col);
             case Tiles.WALL_V -> drawWallV(g, row, col);
             case Tiles.DWALL_H -> drawDWallH(g, row, col);
             case Tiles.DWALL_V -> drawDWallV(g, row, col);
-            case Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE
-                -> drawCorner(g, row, col, tileContent);
-            case Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE
-                -> drawDCorner(g, row, col, tileContent);
+            case Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE -> drawCorner(g, row, col, content);
+            case Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE -> drawDCorner(g, row, col, content);
             case Tiles.DOOR -> drawDoor(g, row, col, Color.PINK);
             default -> {}
         }
