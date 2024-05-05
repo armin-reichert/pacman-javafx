@@ -45,10 +45,10 @@ public class MapEditor extends Application  {
     @Override
     public void init() throws Exception {
         renderer = new TileMapRenderer();
-        //tileMap = GameVariants.PACMAN.createWorld(1).tileMap();
-        //renderer.setWallColor(Color.rgb(33, 33, 255));
-        tileMap = GameVariants.MS_PACMAN.createWorld(4).tileMap();
+        tileMap = GameVariants.PACMAN.createWorld(1).tileMap();
         renderer.setWallColor(Color.rgb(33, 33, 255));
+        //tileMap = GameVariants.MS_PACMAN.createWorld(4).tileMap();
+        //renderer.setWallColor(Color.rgb(33, 33, 255));
     }
 
     @Override

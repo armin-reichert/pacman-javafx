@@ -2,32 +2,25 @@ package de.amr.games.pacman.model.world;
 
 public interface Tiles {
 
-    byte A = 10;
-    byte B = 11;
-    byte C = 12;
-    byte D = 13;
-    byte E = 14;
-    byte F = 15;
-
     byte EMPTY = 0;
 
     // Terrain
-    byte WALL_H    = 1;
-    byte WALL_V    = 2;
-    byte CORNER_NW = 3;
-    byte CORNER_NE = 4;
-    byte CORNER_SE = 5;
-    byte CORNER_SW = 6;
-    byte TUNNEL    = 7;
-    byte DWALL_H   = 8;
-    byte DWALL_V   = 9;
-    byte DCORNER_NW = A;
-    byte DCORNER_NE = B;
-    byte DCORNER_SE = C;
-    byte DCORNER_SW = D;
-    byte DOOR       = E;
+    byte WALL_H     = 1;
+    byte WALL_V     = 2;
+    byte CORNER_NW  = 3;
+    byte CORNER_NE  = 4;
+    byte CORNER_SE  = 5;
+    byte CORNER_SW  = 6;
+    byte TUNNEL     = 7;
+    byte DWALL_H    = 8;
+    byte DWALL_V    = 9;
+    byte DCORNER_NW = 10;
+    byte DCORNER_NE = 11;
+    byte DCORNER_SE = 12;
+    byte DCORNER_SW = 13;
+    byte DOOR       = 14;
 
-    byte TERRAIN_END_MARKER = F;
+    byte TERRAIN_END_MARKER = 15;
 
     static boolean isBlockedTile(byte tile) {
         return tile == WALL_H || tile == WALL_V
