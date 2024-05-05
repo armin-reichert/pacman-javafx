@@ -30,7 +30,8 @@ public class MapEditor extends Application  {
 
     @Override
     public void init() throws Exception {
-        tileMap = GameVariants.PACMAN.createWorld(1).tileMap();
+//        tileMap = GameVariants.PACMAN.createWorld(1).tileMap();
+        tileMap = GameVariants.MS_PACMAN.createWorld(4).tileMap();
         renderer = new TileMapRenderer();
         renderer.setWallColor(Color.rgb(33, 33, 255));
     }
@@ -53,9 +54,7 @@ public class MapEditor extends Application  {
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> scene.getHeight() / tileMap.numRows() * tileMap.numCols(), scene.heightProperty()
         ));
-        canvas.setOnMouseClicked(e -> {
-            onMouseClicked(e.getPickResult());
-        });
+        canvas.setOnMouseClicked(e -> onMouseClicked(e.getPickResult()));
         return scene;
     }
 
@@ -78,9 +77,8 @@ public class MapEditor extends Application  {
         renderer.drawMap(g, tileMap);
         g.setStroke(Color.GRAY);
         g.setLineWidth(0.5);
-        tileMap.tiles().forEach(tile -> {
-            g.strokeRect(tile.x() * 8 * scaling, tile.y() * 8 * scaling, 8*scaling, 8*scaling);
-        });
+        double s8 = 8 * scaling;
+        tileMap.tiles().forEach(tile -> g.strokeRect(tile.x() * s8, tile.y() * s8, s8, s8));
     }
 
     void onMouseClicked(PickResult pr) {
