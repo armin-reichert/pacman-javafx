@@ -1,18 +1,15 @@
 package de.amr.games.pacman.ui.fx.util;
 
-import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.world.TileMap;
-import de.amr.games.pacman.model.world.Tiles;
 import de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
-import javafx.scene.layout.Border;
+import javafx.scene.input.PickResult;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -55,6 +52,9 @@ public class MapEditor extends Application  {
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> scene.getHeight() / tileMap.numRows() * tileMap.numCols(), scene.heightProperty()
         ));
+        canvas.setOnMouseClicked(e -> {
+            onMouseClicked(e.getPickResult());
+        });
         return scene;
     }
 
@@ -80,5 +80,13 @@ public class MapEditor extends Application  {
         tileMap.tiles().forEach(tile -> {
             g.strokeRect(tile.x() * 8 * scaling, tile.y() * 8 * scaling, 8*scaling, 8*scaling);
         });
+    }
+
+    void onMouseClicked(PickResult pr) {
+        Logger.info("Mouse click {}", pr);
+        var point = pr.getIntersectedPoint();
+        double factor = 8 * scaling();
+        Vector2i tile = new Vector2i((int) (point.getX() / factor), (int) (point.getY() / factor));
+        Logger.info("Tile clicked: {}", tile);
     }
 }
