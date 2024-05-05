@@ -3,6 +3,7 @@ package de.amr.games.pacman.ui.fx.util;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.world.TileMap;
+import de.amr.games.pacman.model.world.Tiles;
 import de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -88,5 +89,8 @@ public class MapEditor extends Application  {
         double factor = 8 * scaling();
         Vector2i tile = new Vector2i((int) (point.getX() / factor), (int) (point.getY() / factor));
         Logger.info("Tile clicked: {}", tile);
+        byte content = tileMap.content(tile);
+        byte newContent = content < Tiles.TERRAIN_END_MARKER - 1 ? (byte)(content + 1) : 0;
+        tileMap.setContent(tile.y(), tile.x(), newContent);
     }
 }

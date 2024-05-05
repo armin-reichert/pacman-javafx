@@ -71,6 +71,12 @@ public class TileMap {
         return 0 <= row && row < numRows() && 0 <= col && col < numCols() ? data[row][col] : Tiles.EMPTY;
     }
 
+    public void setContent(int row, int col, byte value) {
+        if (0 <= row && row < numRows() && 0 <= col && col < numCols()) {
+            data[row][col] = value;
+        }
+    }
+
     public Stream<Vector2i> tiles() {
         return IntStream.range(0, numCols() * numRows()).mapToObj(this::tile);
     }
