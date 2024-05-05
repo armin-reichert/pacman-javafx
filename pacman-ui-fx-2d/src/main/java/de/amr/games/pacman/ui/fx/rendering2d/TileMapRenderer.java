@@ -19,7 +19,6 @@ public class TileMapRenderer {
     private double scaling = 1.0;
     private final double[] s = new double[9];
     private Color wallColor;
-    private Color wallInnerColor;
 
     private double s(double times) {
         return scaling * times;
@@ -27,17 +26,14 @@ public class TileMapRenderer {
 
     public void setScaling(double scaling) {
         this.scaling = scaling;
-        for (int i = 1; i <= 8; ++i) {
-            s[i] = i * scaling;
+        // cache some values
+        for (int i = 0; i <= 8; ++i) {
+            s[i] = s(i);
         }
     }
 
     public void setWallColor(Color wallColor) {
         this.wallColor = wallColor;
-    }
-
-    public void setWallInnerColor(Color wallInnerColor) {
-        this.wallInnerColor = wallInnerColor;
     }
 
     public void drawMap(GraphicsContext g, TileMap map) {
@@ -61,27 +57,31 @@ public class TileMapRenderer {
     public void drawWallH(GraphicsContext g, int row, int col) {
         double x = col * s[8], y = row * s[8];
         g.setFill(wallColor);
-        g.fillRect(x, y + s(3.5), s[8], s(1));
+        // add 1 pixel to avoid gaps
+        g.fillRect(x, y + s(3.5), s[8] + 1, s(1));
     }
 
     public void drawDWallH(GraphicsContext g, int row, int col) {
         double x = col * s[8], y = row * s[8];
         g.setFill(wallColor);
-        g.fillRect(x, y + s(2.5), s[8], s(1));
-        g.fillRect(x, y + s(4.5), s[8], s(1));
+        // add 1 pixel to avoid gaps
+        g.fillRect(x, y + s(2.5), s[8] + 1, s(1));
+        g.fillRect(x, y + s(4.5), s[8] + 1, s(1));
     }
 
     public void drawWallV(GraphicsContext g, int row, int col) {
         double x = col * s[8], y = row * s[8];
         g.setFill(wallColor);
-        g.fillRect(x + s(3.5), y, s(1), s[8]);
+        // add 1 pixel to avoid gaps
+        g.fillRect(x + s(3.5), y, s(1), s[8] + 1);
     }
 
     public void drawDWallV(GraphicsContext g, int row, int col) {
         double x = col * s[8], y = row * s[8];
         g.setFill(wallColor);
-        g.fillRect(x + s(2.5), y, s(1), s[8]);
-        g.fillRect(x + s(4.5), y, s(1), s[8]);
+        // add 1 pixel to avoid gaps
+        g.fillRect(x + s(2.5), y, s(1), s[8] + 1);
+        g.fillRect(x + s(4.5), y, s(1), s[8] + 1);
     }
 
     public void drawCorner(GraphicsContext g, int row, int col, byte cornerType) {
@@ -110,7 +110,7 @@ public class TileMapRenderer {
                 ay = y - s[4];
             }
             default -> {}
-        };
+        }
         g.setStroke(wallColor);
         g.setLineWidth(s(1));
         g.strokeArc(ax, ay, s(8), s(8), startAngle, 90, ArcType.OPEN);
@@ -151,7 +151,7 @@ public class TileMapRenderer {
                 oy = y - s[5];
             }
             default -> {}
-        };
+        }
         g.setStroke(wallColor);
         g.setLineWidth(s(1));
         double s10 = 10 * scaling;
