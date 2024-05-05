@@ -47,8 +47,8 @@ public class MapEditor extends Application  {
         renderer = new TileMapRenderer();
         //tileMap = GameVariants.PACMAN.createWorld(1).tileMap();
         //renderer.setWallColor(Color.rgb(33, 33, 255));
-        tileMap = GameVariants.MS_PACMAN.createWorld(1).tileMap();
-        renderer.setWallColor(Color.rgb(255, 0, 0));
+        tileMap = GameVariants.MS_PACMAN.createWorld(4).tileMap();
+        renderer.setWallColor(Color.rgb(33, 33, 255));
     }
 
     @Override
