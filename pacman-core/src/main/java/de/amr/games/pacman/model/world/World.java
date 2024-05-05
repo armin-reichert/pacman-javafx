@@ -88,6 +88,10 @@ public class World {
         return tileMap;
     }
 
+    public TileMap foodMap() {
+        return foodMap;
+    }
+
     /**
      * @param tile a tile
      * @return if this tile is located inside the world bounds

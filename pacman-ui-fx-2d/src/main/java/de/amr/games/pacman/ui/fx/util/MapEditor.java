@@ -1,9 +1,9 @@
 package de.amr.games.pacman.ui.fx.util;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.Tiles;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
@@ -31,12 +31,14 @@ public class MapEditor extends Application  {
         launch();
     }
 
+
     Stage stage;
     Scene scene;
     BorderPane contentPane;
     BorderPane canvasContainer;
     Canvas canvas;
     TileMap tileMap;
+    TileMap foodMap;
     TileMapRenderer renderer;
     MenuBar menuBar;
 
@@ -45,10 +47,6 @@ public class MapEditor extends Application  {
     @Override
     public void init() throws Exception {
         renderer = new TileMapRenderer();
-        tileMap = GameVariants.PACMAN.createWorld(1).tileMap();
-        renderer.setWallColor(Color.rgb(33, 33, 255));
-        //tileMap = GameVariants.MS_PACMAN.createWorld(4).tileMap();
-        //renderer.setWallColor(Color.rgb(33, 33, 255));
     }
 
     @Override
@@ -58,9 +56,23 @@ public class MapEditor extends Application  {
         stage.setScene(createScene());
         stage.setTitle("Map Editor");
         GameClockFX clock = new GameClockFX();
-        clock.setContinousCallback(() -> drawCanvas(scaling()));
+        clock.setContinousCallback(this::drawCanvas);
         stage.show();
         clock.start();
+    }
+
+    public void setWorld(World world, Color wallColor) {
+        tileMap = world.tileMap();
+        foodMap = world.foodMap();
+        renderer.setWallColor(wallColor);
+    }
+
+    int numMapCols() {
+        return tileMap != null ? tileMap.numCols() : 28;
+    }
+
+    int numMapRows() {
+        return tileMap != null ? tileMap.numRows() : 36;
     }
 
     Scene createScene() {
@@ -70,13 +82,13 @@ public class MapEditor extends Application  {
         canvas.heightProperty().bind(scene.heightProperty().multiply(0.95));
         canvas.widthProperty().bind(
             Bindings.createDoubleBinding(
-                () -> canvas.getHeight() * tileMap.numCols() / tileMap.numRows(),
+                () -> canvas.getHeight() * numMapCols() / numMapRows(),
                 canvas.heightProperty()));
         return scene;
     }
 
     double scaling() {
-        return canvas.getHeight() / (tileMap.numRows() * 8);
+        return canvas.getHeight() / (numMapRows() * 8);
     }
 
     Parent createSceneContent() {
@@ -88,7 +100,7 @@ public class MapEditor extends Application  {
         contentPane.setTop(menuBar);
         canvas.heightProperty().bind(canvasContainer.heightProperty());
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> canvasContainer.getHeight() / tileMap.numRows() * tileMap.numCols(), canvasContainer.heightProperty()
+            () -> canvasContainer.getHeight() / numMapRows() * numMapCols(), canvasContainer.heightProperty()
         ));
         canvas.setOnMouseClicked(this::onMouseClicked);
 
@@ -107,20 +119,30 @@ public class MapEditor extends Application  {
         menuBar.getMenus().add(fileMenu);
     }
 
-    void drawCanvas(double scaling) {
+    void drawCanvas() {
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        renderer.setScaling(scaling);
-        renderer.drawMap(g, tileMap);
+
         g.setStroke(Color.GRAY);
         g.setLineWidth(0.5);
-        double s8 = 8 * scaling;
-        tileMap.tiles().forEach(tile -> g.strokeRect(tile.x() * s8, tile.y() * s8, s8, s8));
+        double s8 = 8 * scaling();
+        renderer.setScaling(scaling());
+        if (tileMap != null) {
+            renderer.drawMap(g, tileMap);
+        }
+        for (int row = 0; row < numMapRows(); ++row) {
+            for (int col = 0; col < numMapCols(); ++col) {
+                g.strokeRect(col * s8, row * s8, s8, s8);
+            }
+        }
     }
 
     void onMouseClicked(MouseEvent e) {
         Logger.info("Mouse click {}", e);
+        if (tileMap == null) {
+            return;
+        }
         double factor = 8 * scaling();
         Vector2i tile = new Vector2i((int) (e.getX() / factor), (int) (e.getY() / factor));
         if (e.getButton() == MouseButton.SECONDARY) {
@@ -138,6 +160,10 @@ public class MapEditor extends Application  {
     }
 
     void saveMap() {
+        if (tileMap == null) {
+            Logger.info("No map loaded");
+            return;
+        }
         File file = new File("saved_map.txt");
         try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
             for (int row = 0; row < tileMap.numRows(); ++row) {
