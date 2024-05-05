@@ -84,35 +84,16 @@ public class TileMapRenderer {
     }
 
     public void drawCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
-        double startAngle = 0;
         double x = tile.x() * s[8], y = tile.y() * s[8];
-        double ax = x, ay = y;
-        switch (cornerType) {
-            case Tiles.CORNER_NW -> {
-                startAngle = 90;
-                ax = x + s[4];
-                ay = y + s[4];
-            }
-            case Tiles.CORNER_NE -> {
-                startAngle = 0;
-                ax = x - s[4];
-                ay = y + s[4];
-            }
-            case Tiles.CORNER_SE -> {
-                startAngle = 270;
-                ax = x - s[4];
-                ay = y - s[4];
-            }
-            case Tiles.CORNER_SW -> {
-                startAngle = 180;
-                ax = x + s[4];
-                ay = y - s[4];
-            }
-            default -> {}
-        }
         g.setStroke(wallColor);
         g.setLineWidth(s(1));
-        g.strokeArc(ax, ay, s(8), s(8), startAngle, 90, ArcType.OPEN);
+        switch (cornerType) {
+            case Tiles.CORNER_NW -> g.strokeArc(x + s[4], y + s[4], s(8), s(8), 90, 90,  ArcType.OPEN);
+            case Tiles.CORNER_NE -> g.strokeArc(x - s[4], y + s[4], s(8), s(8), 0, 90,   ArcType.OPEN);
+            case Tiles.CORNER_SE -> g.strokeArc(x - s[4], y - s[4], s(8), s(8), 270, 90, ArcType.OPEN);
+            case Tiles.CORNER_SW -> g.strokeArc(x + s[4], y - s[4], s(8), s(8), 180, 90, ArcType.OPEN);
+            default -> {}
+        }
     }
 
     public void drawDCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
