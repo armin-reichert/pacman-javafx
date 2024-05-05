@@ -31,7 +31,7 @@ import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
  */
 public class PlayScene2D extends GameScene2D {
 
-    private TileMapRenderer renderer = new TileMapRenderer();
+    private final TileMapRenderer renderer = new TileMapRenderer();
 
     @Override
     public boolean isCreditVisible() {
@@ -89,7 +89,13 @@ public class PlayScene2D extends GameScene2D {
         switch (context.game()) {
             case GameVariants.MS_PACMAN -> drawMsPacManMaze(context.game(),
                 context.game().mazeNumber(context.game().levelNumber()), flashing);
-            case GameVariants.PACMAN -> drawPacManMaze(context.game(), flashing);
+            case GameVariants.PACMAN -> {
+                if (flashing && context.game().blinking().isRunning()) {
+                    drawPacManMazeFlashing();
+                } else {
+                    drawPacManMazeNormal();
+                }
+            }
             default -> throw new IllegalGameVariantException(context.game());
         }
         if (context.game().isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
@@ -116,46 +122,43 @@ public class PlayScene2D extends GameScene2D {
         }
     }
 
-    private void drawPacManMaze(GameModel game, boolean flashing) {
-        World world = game.world();
-        if (world == null) {
-            return;
-        }
-        PacManGameSpriteSheet sheet = context.spriteSheet();
-        double x = 0, y = t(3);
-        if (flashing && game.blinking().isRunning()) {
-            if (PY_USE_SPRITE_SHEET_FOR_MAZE.get()) {
-                if (game.blinking().isOn()) {
-                    drawImage(sheet.getFlashingMazeImage(), x, y);
-                } else {
-                    drawSprite(sheet.getEmptyMazeSprite(), x, y);
-                }
+    private void drawPacManMazeFlashing() {
+        if (PY_USE_SPRITE_SHEET_FOR_MAZE.get()) {
+            PacManGameSpriteSheet sheet = context.spriteSheet();
+            if (context.game().blinking().isOn()) {
+                drawImage(sheet.getFlashingMazeImage(), 0, t(3));
             } else {
-                renderer.setScaling(scalingPy.get());
-                if (game.blinking().isOn()) {
-                    renderer.setWallColor(Color.WHITE);
-                } else {
-                    renderer.setWallColor(context.theme().color("pacman.maze.wallColor"));
-                }
-                renderer.drawMap(g, world.tileMap());
+                drawSprite(sheet.getEmptyMazeSprite(), 0, t(3));
             }
         } else {
-            if (PY_USE_SPRITE_SHEET_FOR_MAZE.get()) {
-                drawSprite(sheet.getFullMazeSprite(), x, y);
-                world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
-                if (game.blinking().isOff()) {
-                    world.energizerTiles().forEach(tile -> hideTileContent(world, tile));
-                }
+            renderer.setScaling(scalingPy.get());
+            if (context.game().blinking().isOn()) {
+                renderer.setWallColor(Color.WHITE);
             } else {
-                renderer.setScaling(scalingPy.get());
                 renderer.setWallColor(context.theme().color("pacman.maze.wallColor"));
-                renderer.drawMap(g, world.tileMap());
-                world.tiles().filter(world::hasFoodAt).filter(Predicate.not(world::isEnergizerTile)).forEach(
-                    tile -> renderer.drawPellet(g, tile.y(), tile.x(), context.theme().color("pacman.maze.foodColor")));
-                if (game.blinking().isOn()) {
-                    world.tiles().filter(world::hasFoodAt).filter(world::isEnergizerTile).forEach(
-                        tile -> renderer.drawEnergizer(g, tile.y(), tile.x(), context.theme().color("pacman.maze.foodColor")));
-                }
+            }
+            renderer.drawMap(g, context.game().world().tileMap());
+        }
+    }
+
+    private void drawPacManMazeNormal() {
+        World world = context.game().world();
+        if (PY_USE_SPRITE_SHEET_FOR_MAZE.get()) {
+            PacManGameSpriteSheet sheet = context.spriteSheet();
+            drawSprite(sheet.getFullMazeSprite(), 0, t(3));
+            world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
+            if (context.game().blinking().isOff()) {
+                world.energizerTiles().forEach(tile -> hideTileContent(world, tile));
+            }
+        } else {
+            renderer.setScaling(scalingPy.get());
+            renderer.setWallColor(context.theme().color("pacman.maze.wallColor"));
+            renderer.drawMap(g, world.tileMap());
+            world.tiles().filter(world::hasFoodAt).filter(Predicate.not(world::isEnergizerTile)).forEach(
+                tile -> renderer.drawPellet(g, tile.y(), tile.x(), context.theme().color("pacman.maze.foodColor")));
+            if (context.game().blinking().isOn()) {
+                world.tiles().filter(world::hasFoodAt).filter(world::isEnergizerTile).forEach(
+                    tile -> renderer.drawEnergizer(g, tile.y(), tile.x(), context.theme().color("pacman.maze.foodColor")));
             }
         }
     }
