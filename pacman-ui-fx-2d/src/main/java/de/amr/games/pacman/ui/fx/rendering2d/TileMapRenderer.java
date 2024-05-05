@@ -16,16 +16,16 @@ import javafx.scene.shape.ArcType;
  */
 public class TileMapRenderer {
 
-    private double scaling = 1.0;
-    private final double[] s = new double[9];
+    private float scaling = 1.0f;
+    private final float[] s = new float[9];
     private Color wallColor;
 
-    private double s(double times) {
+    private float s(float times) {
         return scaling * times;
     }
 
     public void setScaling(double scaling) {
-        this.scaling = scaling;
+        this.scaling = (float) scaling;
         // cache some values
         for (int i = 0; i <= 8; ++i) {
             s[i] = s(i);
@@ -41,52 +41,51 @@ public class TileMapRenderer {
     }
 
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
-        int row = tile.y(), col = tile.x();
         switch (content) {
-            case Tiles.WALL_H -> drawWallH(g, row, col);
-            case Tiles.WALL_V -> drawWallV(g, row, col);
-            case Tiles.DWALL_H -> drawDWallH(g, row, col);
-            case Tiles.DWALL_V -> drawDWallV(g, row, col);
-            case Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE -> drawCorner(g, row, col, content);
-            case Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE -> drawDCorner(g, row, col, content);
-            case Tiles.DOOR -> drawDoor(g, row, col, Color.PINK);
+            case Tiles.WALL_H -> drawWallH(g, tile);
+            case Tiles.WALL_V -> drawWallV(g, tile);
+            case Tiles.DWALL_H -> drawDWallH(g, tile);
+            case Tiles.DWALL_V -> drawDWallV(g, tile);
+            case Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE -> drawCorner(g, tile, content);
+            case Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE -> drawDCorner(g, tile, content);
+            case Tiles.DOOR -> drawDoor(g, tile, Color.PINK);
             default -> {}
         }
     }
 
-    public void drawWallH(GraphicsContext g, int row, int col) {
-        double x = col * s[8], y = row * s[8];
+    public void drawWallH(GraphicsContext g, Vector2i tile) {
+        double x = tile.x() * s[8], y = tile.y() * s[8];
         g.setFill(wallColor);
         // add 1 pixel to avoid gaps
-        g.fillRect(x, y + s(3.5), s[8] + 1, s(1));
+        g.fillRect(x, y + s(3.5f), s[8] + 1, s(1));
     }
 
-    public void drawDWallH(GraphicsContext g, int row, int col) {
-        double x = col * s[8], y = row * s[8];
+    public void drawDWallH(GraphicsContext g, Vector2i tile) {
+        double x = tile.x() * s[8], y = tile.y() * s[8];
         g.setFill(wallColor);
         // add 1 pixel to avoid gaps
-        g.fillRect(x, y + s(2.5), s[8] + 1, s(1));
-        g.fillRect(x, y + s(4.5), s[8] + 1, s(1));
+        g.fillRect(x, y + s(2.5f), s[8] + 1, s(1));
+        g.fillRect(x, y + s(4.5f), s[8] + 1, s(1));
     }
 
-    public void drawWallV(GraphicsContext g, int row, int col) {
-        double x = col * s[8], y = row * s[8];
+    public void drawWallV(GraphicsContext g, Vector2i tile) {
+        double x = tile.x() * s[8], y = tile.y() * s[8];
         g.setFill(wallColor);
         // add 1 pixel to avoid gaps
-        g.fillRect(x + s(3.5), y, s(1), s[8] + 1);
+        g.fillRect(x + s(3.5f), y, s(1), s[8] + 1);
     }
 
-    public void drawDWallV(GraphicsContext g, int row, int col) {
-        double x = col * s[8], y = row * s[8];
+    public void drawDWallV(GraphicsContext g, Vector2i tile) {
+        double x = tile.x() * s[8], y = tile.y() * s[8];
         g.setFill(wallColor);
         // add 1 pixel to avoid gaps
-        g.fillRect(x + s(2.5), y, s(1), s[8] + 1);
-        g.fillRect(x + s(4.5), y, s(1), s[8] + 1);
+        g.fillRect(x + s(2.5f), y, s(1), s[8] + 1);
+        g.fillRect(x + s(4.5f), y, s(1), s[8] + 1);
     }
 
-    public void drawCorner(GraphicsContext g, int row, int col, byte cornerType) {
+    public void drawCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
         double startAngle = 0;
-        double x = col * s[8],  y = row * s[8];
+        double x = tile.x() * s[8], y = tile.y() * s[8];
         double ax = x, ay = y;
         switch (cornerType) {
             case Tiles.CORNER_NW -> {
@@ -116,8 +115,8 @@ public class TileMapRenderer {
         g.strokeArc(ax, ay, s(8), s(8), startAngle, 90, ArcType.OPEN);
     }
 
-    public void drawDCorner(GraphicsContext g, int row, int col, byte cornerType) {
-        double x = col * s[8],  y = row * s[8];
+    public void drawDCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
+        double x = tile.x() * s[8], y = tile.y() * s[8];
         double ix = x, iy = y; // inner arc
         double ox = x, oy = y; // outer arc
         double startAngle = 0;
@@ -159,20 +158,20 @@ public class TileMapRenderer {
         g.strokeArc(ox, oy, s10, s10, startAngle, 90, ArcType.OPEN);
     }
 
-    public void drawDoor(GraphicsContext g, int row, int col, Color color) {
-        double x = col * s(8), y = row * s(8);
+    public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
+        double x = tile.x() * s[8], y = tile.y() * s[8];
         g.setFill(color);
-        g.fillRect(x, y + s(3.5), s(8), s(1));
+        g.fillRect(x, y + s(3.5f), s(8), s(1));
     }
 
-    public void drawPellet(GraphicsContext g, int row, int col, Color color) {
-        double x = col * s[8], y = row * s[8];
+    public void drawPellet(GraphicsContext g, Vector2i tile, Color color) {
+        double x = tile.x() * s[8], y = tile.y() * s[8];
         g.setFill(color);
         g.fillRect(x + s[3], y + s[3], s[2], s[2]);
     }
 
-    public void drawEnergizer(GraphicsContext g, int row, int col, Color color) {
-        double x = col * s[8], y = row * s[8];
+    public void drawEnergizer(GraphicsContext g, Vector2i tile, Color color) {
+        double x = tile.x() * s[8], y = tile.y() * s[8];
         g.setFill(color);
         //g.fillOval(x, y, size, size);
         g.fillRect(x + s[2], y, s[4], s[8]);
