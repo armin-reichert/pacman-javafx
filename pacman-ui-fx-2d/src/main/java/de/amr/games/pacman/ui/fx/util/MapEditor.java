@@ -43,6 +43,12 @@ public class MapEditor extends Application  {
 
     byte lastSelectedValue;
 
+    World pacManWorld = GameVariants.PACMAN.createWorld(1);
+    World msPacManWorld1 = GameVariants.MS_PACMAN.createWorld(1);
+    World msPacManWorld2 = GameVariants.MS_PACMAN.createWorld(2);
+    World msPacManWorld3 = GameVariants.MS_PACMAN.createWorld(3);
+    World msPacManWorld4 = GameVariants.MS_PACMAN.createWorld(4);
+
     @Override
     public void init() throws Exception {
         renderer = new TileMapRenderer();
@@ -51,20 +57,20 @@ public class MapEditor extends Application  {
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
-        Logger.info("Start map editor");
         stage.setScene(createScene());
         stage.setTitle("Map Editor");
         GameClockFX clock = new GameClockFX();
-        clock.setContinousCallback(this::drawCanvas);
-        setWorld(GameVariants.PACMAN.createWorld(1), Color.rgb(33, 33, 255));
+        clock.setContinousCallback(this::draw);
+
+        loadMaps(pacManWorld.tileMap(), pacManWorld.foodMap(), Color.rgb(33, 33, 255));
 
         stage.show();
         clock.start();
     }
 
-    void setWorld(World world, Color wallColor) {
-        tileMap = world.tileMap();
-        foodMap = world.foodMap();
+    void loadMaps(TileMap tileMap, TileMap foodMap, Color wallColor) {
+        this.tileMap = tileMap;
+        this.foodMap = foodMap;
         renderer.setWallColor(wallColor);
     }
 
@@ -132,29 +138,30 @@ public class MapEditor extends Application  {
         worldMenu.getItems().add(pacManWorldItem);
         pacManWorldItem.setToggleGroup(exclusion);
         pacManWorldItem.setSelected(true);
+        pacManWorldItem.setOnAction(e -> loadMaps(pacManWorld.tileMap(), pacManWorld.foodMap(), Color.rgb(33, 33, 255)));
 
         var msPacManWorldItem1 = new RadioMenuItem("Ms. Pac-Man Map 1");
         worldMenu.getItems().add(msPacManWorldItem1);
         msPacManWorldItem1.setToggleGroup(exclusion);
-        msPacManWorldItem1.setOnAction(e -> setWorld(GameVariants.MS_PACMAN.createWorld(1), Color.RED));
+        msPacManWorldItem1.setOnAction(e -> loadMaps(msPacManWorld1.tileMap(), msPacManWorld1.foodMap(), Color.RED));
 
         var msPacManWorldItem2 = new RadioMenuItem("Ms. Pac-Man Map 2");
         worldMenu.getItems().add(msPacManWorldItem2);
         msPacManWorldItem2.setToggleGroup(exclusion);
-        msPacManWorldItem2.setOnAction(e -> setWorld(GameVariants.MS_PACMAN.createWorld(2), Color.rgb(71, 183, 255)));
+        msPacManWorldItem2.setOnAction(e -> loadMaps(msPacManWorld2.tileMap(), msPacManWorld2.foodMap(), Color.rgb(71, 183, 255)));
 
         var msPacManWorldItem3 = new RadioMenuItem("Ms. Pac-Man Map 3");
         worldMenu.getItems().add(msPacManWorldItem3);
         msPacManWorldItem3.setToggleGroup(exclusion);
-        msPacManWorldItem3.setOnAction(e -> setWorld(GameVariants.MS_PACMAN.createWorld(3), Color.rgb(222, 151, 81)));
+        msPacManWorldItem3.setOnAction(e -> loadMaps(msPacManWorld3.tileMap(), msPacManWorld3.foodMap(), Color.rgb(222, 151, 81)));
 
         var msPacManWorldItem4 = new RadioMenuItem("Ms. Pac-Man Map 4");
         worldMenu.getItems().add(msPacManWorldItem4);
         msPacManWorldItem4.setToggleGroup(exclusion);
-        msPacManWorldItem4.setOnAction(e -> setWorld(GameVariants.MS_PACMAN.createWorld(4), Color.rgb(33, 33, 255)));
+        msPacManWorldItem4.setOnAction(e -> loadMaps(msPacManWorld4.tileMap(), msPacManWorld4.foodMap(), Color.rgb(33, 33, 255)));
     }
 
-    void drawCanvas() {
+    void draw() {
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
