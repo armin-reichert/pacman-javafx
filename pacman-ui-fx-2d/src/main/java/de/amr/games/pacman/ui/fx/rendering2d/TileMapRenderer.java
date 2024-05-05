@@ -57,41 +57,41 @@ public class TileMapRenderer {
         double x = tile.x() * s[8], y = tile.y() * s[8];
         g.setFill(wallColor);
         // add 1 pixel to avoid gaps
-        g.fillRect(x, y + s(3.5f), s[8] + 1, s(1));
+        g.fillRect(x, y + s(3.5f), s[8] + 1, s[1]);
     }
 
     public void drawDWallH(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * s[8], y = tile.y() * s[8];
         g.setFill(wallColor);
         // add 1 pixel to avoid gaps
-        g.fillRect(x, y + s(2.5f), s[8] + 1, s(1));
-        g.fillRect(x, y + s(4.5f), s[8] + 1, s(1));
+        g.fillRect(x, y + s(2.5f), s[8] + 1, s[1]);
+        g.fillRect(x, y + s(4.5f), s[8] + 1, s[1]);
     }
 
     public void drawWallV(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * s[8], y = tile.y() * s[8];
         g.setFill(wallColor);
         // add 1 pixel to avoid gaps
-        g.fillRect(x + s(3.5f), y, s(1), s[8] + 1);
+        g.fillRect(x + s(3.5f), y, s[1], s[8] + 1);
     }
 
     public void drawDWallV(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * s[8], y = tile.y() * s[8];
         g.setFill(wallColor);
         // add 1 pixel to avoid gaps
-        g.fillRect(x + s(2.5f), y, s(1), s[8] + 1);
-        g.fillRect(x + s(4.5f), y, s(1), s[8] + 1);
+        g.fillRect(x + s(2.5f), y, s[1], s[8] + 1);
+        g.fillRect(x + s(4.5f), y, s[1], s[8] + 1);
     }
 
     public void drawCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
         double x = tile.x() * s[8], y = tile.y() * s[8];
         g.setStroke(wallColor);
-        g.setLineWidth(s(1));
+        g.setLineWidth(s[1]);
         switch (cornerType) {
-            case Tiles.CORNER_NW -> g.strokeArc(x + s[4], y + s[4], s(8), s(8), 90, 90,  ArcType.OPEN);
-            case Tiles.CORNER_NE -> g.strokeArc(x - s[4], y + s[4], s(8), s(8), 0, 90,   ArcType.OPEN);
-            case Tiles.CORNER_SE -> g.strokeArc(x - s[4], y - s[4], s(8), s(8), 270, 90, ArcType.OPEN);
-            case Tiles.CORNER_SW -> g.strokeArc(x + s[4], y - s[4], s(8), s(8), 180, 90, ArcType.OPEN);
+            case Tiles.CORNER_NW -> g.strokeArc(x + s[4], y + s[4], s[8], s[8], 90, 90,  ArcType.OPEN);
+            case Tiles.CORNER_NE -> g.strokeArc(x - s[4], y + s[4], s[8], s[8], 0, 90,   ArcType.OPEN);
+            case Tiles.CORNER_SE -> g.strokeArc(x - s[4], y - s[4], s[8], s[8], 270, 90, ArcType.OPEN);
+            case Tiles.CORNER_SW -> g.strokeArc(x + s[4], y - s[4], s[8], s[8], 180, 90, ArcType.OPEN);
             default -> {}
         }
     }
@@ -100,7 +100,7 @@ public class TileMapRenderer {
         double x = tile.x() * s[8], y = tile.y() * s[8];
         double s10 = 10 * scaling;
         g.setStroke(wallColor);
-        g.setLineWidth(s(1));
+        g.setLineWidth(s[1]);
         switch (cornerType) {
             case Tiles.DCORNER_NW -> {
                 g.strokeArc(x + s[5], y + s[5], s[6], s[6], 90, 90, ArcType.OPEN);
@@ -125,7 +125,7 @@ public class TileMapRenderer {
     public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
         double x = tile.x() * s[8], y = tile.y() * s[8];
         g.setFill(color);
-        g.fillRect(x, y + s(3.5f), s(8), s(1));
+        g.fillRect(x, y + s(3.5f), s[8], s[1]);
     }
 
     public void drawPellet(GraphicsContext g, Vector2i tile, Color color) {
