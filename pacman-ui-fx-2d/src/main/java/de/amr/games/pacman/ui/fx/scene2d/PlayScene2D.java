@@ -156,10 +156,11 @@ public class PlayScene2D extends GameScene2D {
             renderer.drawMap(g, world.tileMap());
             world.tiles().filter(world::hasFoodAt).filter(Predicate.not(world::isEnergizerTile)).forEach(
                 tile -> renderer.drawPellet(g, tile, context.theme().color("pacman.maze.foodColor")));
-            if (context.game().blinking().isOn()) {
-                world.tiles().filter(world::hasFoodAt).filter(world::isEnergizerTile).forEach(
-                    tile -> renderer.drawEnergizer(g, tile, context.theme().color("pacman.maze.foodColor")));
-            }
+            world.energizerTiles().forEach(tile -> {
+                if (world.hasFoodAt(tile) && context.game().blinking().isOn()) {
+                    renderer.drawEnergizer(g, tile, context.theme().color("pacman.maze.foodColor"));
+                }
+            });
         }
     }
 
