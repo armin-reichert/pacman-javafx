@@ -137,6 +137,42 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         //
         // Ms. Pac-Man game
         //
+        theme.addAllToArray("mspacman.maze.foodColor", new Color[] {
+            Color.rgb(222, 222, 255),
+            Color.rgb(255, 255, 0),
+            Color.rgb(255, 0, 0),
+            Color.rgb(222, 222, 255),
+            Color.rgb(0, 255, 255),
+            Color.rgb(222, 222, 255)
+        });
+
+        theme.addAllToArray("mspacman.maze.wallBaseColor", new Color[] {
+            Color.rgb(255, 0, 0),
+            Color.rgb(222, 222, 255),
+            Color.rgb(222, 222, 255),
+            Color.rgb(255, 183, 81),
+            Color.rgb(255, 255, 0),
+            Color.rgb(255, 0, 0)
+        });
+
+        theme.addAllToArray("mspacman.maze.wallTopColor", new Color[] {
+            Color.rgb(255, 0, 0),
+            Color.rgb(222, 222, 255),
+            Color.rgb(222, 222, 255),
+            Color.rgb(255, 183, 81),
+            Color.rgb(255, 255, 0),
+            Color.rgb(255, 0, 0)
+        });
+
+        theme.addAllToArray("mspacman.maze.wallMiddleColor", new Color[] {
+            Color.rgb(255, 183, 174),
+            Color.rgb(71, 183, 255),
+            Color.rgb(222, 151, 81),
+            Color.rgb(33, 33, 255),
+            Color.rgb(255, 183, 255),
+            Color.rgb(222, 183, 174)
+        });
+
         theme.set("mspacman.startpage.image",         rm.loadImage("graphics/mspacman/mspacman_flyer.png"));
         theme.set("mspacman.helpButton.icon",         rm.loadImage("graphics/icons/help-red-64.png"));
 

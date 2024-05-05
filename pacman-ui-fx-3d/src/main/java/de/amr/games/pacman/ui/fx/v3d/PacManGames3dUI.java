@@ -145,42 +145,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("ghost.color.flashing.eyeballs",   theme.color("palette.rose"));
         theme.set("ghost.color.flashing.pupils",     theme.color("palette.red"));
 
-        theme.addAllToArray("mspacman.maze.foodColor", new Color[] {
-            Color.rgb(222, 222, 255),
-            Color.rgb(255, 255, 0),
-            Color.rgb(255, 0, 0),
-            Color.rgb(222, 222, 255),
-            Color.rgb(0, 255, 255),
-            Color.rgb(222, 222, 255)
-        });
-
-        theme.addAllToArray("mspacman.maze.wallBaseColor", new Color[] {
-            Color.rgb(255, 0, 0),
-            Color.rgb(222, 222, 255),
-            Color.rgb(222, 222, 255),
-            Color.rgb(255, 183, 81),
-            Color.rgb(255, 255, 0),
-            Color.rgb(255, 0, 0)
-        });
-
-        theme.addAllToArray("mspacman.maze.wallTopColor", new Color[] {
-            Color.rgb(255, 0, 0),
-            Color.rgb(222, 222, 255),
-            Color.rgb(222, 222, 255),
-            Color.rgb(255, 183, 81),
-            Color.rgb(255, 255, 0),
-            Color.rgb(255, 0, 0)
-        });
-
-        theme.addAllToArray("mspacman.maze.wallMiddleColor", new Color[] {
-            Color.rgb(255, 183, 174),
-            Color.rgb(71, 183, 255),
-            Color.rgb(222, 151, 81),
-            Color.rgb(33, 33, 255),
-            Color.rgb(255, 183, 255),
-            Color.rgb(222, 183, 174)
-        });
-
         theme.set("mspacman.color.head",           Color.rgb(255, 255, 0));
         theme.set("mspacman.color.palate",         Color.rgb(191, 79, 61));
         theme.set("mspacman.color.eyes",           Color.rgb(33, 33, 33));

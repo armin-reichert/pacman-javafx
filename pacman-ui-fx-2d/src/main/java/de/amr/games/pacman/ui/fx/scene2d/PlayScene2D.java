@@ -169,9 +169,9 @@ public class PlayScene2D extends GameScene2D {
         if (world == null) {
             return;
         }
-        MsPacManGameSpriteSheet sheet = context.spriteSheet();
         double x = 0, y = t(3);
         if (flashing && game.blinking().isRunning()) {
+            MsPacManGameSpriteSheet sheet = context.spriteSheet();
             if (game.blinking().isOn()) {
                 var flashingMazeSprite = sheet.highlightedMaze(mazeNumber);
                 drawSprite(sheet.getFlashingMazesImage(), flashingMazeSprite, x - 3 /* don't tell your mommy */, y);
@@ -179,6 +179,11 @@ public class PlayScene2D extends GameScene2D {
                 drawSprite(sheet.source(), sheet.emptyMaze(mazeNumber), x, y);
             }
         } else {
+            //renderer.setScaling(scalingPy.get());
+            //renderer.setWallColor(context.theme().color("mspacman.maze.wallBaseColor", mazeNumber-1));
+            //renderer.drawMap(g, world.tileMap());
+
+            MsPacManGameSpriteSheet sheet = context.spriteSheet();
             drawSprite(sheet.filledMaze(mazeNumber), x, y);
             world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
             if (game.blinking().isOff()) {
