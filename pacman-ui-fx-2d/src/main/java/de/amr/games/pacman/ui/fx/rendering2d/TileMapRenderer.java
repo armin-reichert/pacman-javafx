@@ -18,7 +18,9 @@ public class TileMapRenderer {
 
     private float scaling = 1.0f;
     private final float[] s = new float[9];
-    private Color wallColor;
+    private Color wallColor = Color.GREEN;
+    private Color pelletColor = Color.PINK;
+    private Color energizerColor = Color.YELLOW;
 
     private float s(float times) {
         return scaling * times;
@@ -34,6 +36,14 @@ public class TileMapRenderer {
 
     public void setWallColor(Color wallColor) {
         this.wallColor = wallColor;
+    }
+
+    public void setPelletColor(Color pelletColor) {
+        this.pelletColor = pelletColor;
+    }
+
+    public void setEnergizerColor(Color energizerColor) {
+        this.energizerColor = energizerColor;
     }
 
     public void drawMap(GraphicsContext g, TileMap map) {
@@ -128,15 +138,15 @@ public class TileMapRenderer {
         g.fillRect(x, y + s(3.5f), s[8], s[1]);
     }
 
-    public void drawPellet(GraphicsContext g, Vector2i tile, Color color) {
+    public void drawPellet(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * s[8], y = tile.y() * s[8];
-        g.setFill(color);
+        g.setFill(pelletColor);
         g.fillRect(x + s[3], y + s[3], s[2], s[2]);
     }
 
-    public void drawEnergizer(GraphicsContext g, Vector2i tile, Color color) {
+    public void drawEnergizer(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * s[8], y = tile.y() * s[8];
-        g.setFill(color);
+        g.setFill(energizerColor);
         //g.fillOval(x, y, size, size);
         g.fillRect(x + s[2], y, s[4], s[8]);
         g.fillRect(x, y + s[2], s[8], s[4]);

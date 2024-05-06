@@ -25,6 +25,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.ENTERING_HOUSE;
 import static de.amr.games.pacman.model.actors.GhostState.RETURNING_HOME;
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
+import static java.util.function.Predicate.not;
 
 /**
  * @author Armin Reichert
@@ -153,14 +154,18 @@ public class PlayScene2D extends GameScene2D {
         } else {
             renderer.setScaling(scalingPy.get());
             renderer.setWallColor(context.theme().color("pacman.maze.wallColor"));
+            renderer.setPelletColor(context.theme().color("pacman.maze.foodColor"));
+            renderer.setEnergizerColor(context.theme().color("pacman.maze.foodColor"));
             renderer.drawMap(g, world.tileMap());
-            world.tiles().filter(world::hasFoodAt).filter(Predicate.not(world::isEnergizerTile)).forEach(
-                tile -> renderer.drawPellet(g, tile, context.theme().color("pacman.maze.foodColor")));
-            world.energizerTiles().forEach(tile -> {
-                if (world.hasFoodAt(tile) && context.game().blinking().isOn()) {
-                    renderer.drawEnergizer(g, tile, context.theme().color("pacman.maze.foodColor"));
-                }
-            });
+            world.tiles()
+                .filter(world::hasFoodAt)
+                .filter(not(world::isEnergizerTile))
+                .forEach(tile -> renderer.drawPellet(g, tile));
+            if (context.game().blinking().isOn()) {
+                world.energizerTiles()
+                    .filter(world::hasFoodAt)
+                    .forEach(tile -> renderer.drawEnergizer(g, tile));
+            }
         }
     }
 

@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2021-2024 Armin Reichert (MIT License) See file LICENSE in repository root directory for details.
  */
-module de.amr.games.pacman {
+open module de.amr.games.pacman {
 
+    // module is defined as "open" to give access to non-class resources (map data) via class loader
     requires org.tinylog.api;
 
     exports de.amr.games.pacman.controller;
