@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -24,7 +23,7 @@ import static java.util.Collections.unmodifiableList;
  */
 public class World {
 
-    private final TileMap tileMap;
+    private final TileMap terrainMap;
     private final TileMap foodMap;
     private final List<Vector2i> energizerTiles;
     private final List<Portal> portals;
@@ -43,50 +42,48 @@ public class World {
     private Map<Vector2i, List<Direction>> forbiddenPassages = Map.of();
 
     /**
-     * @param tileMapData byte-array of tile map data
-     * @param foodMapData byte-array of food map data
+     * @param terrainMap terrain map
+     * @param foodMap food map
      * @param house ghost house
      */
-    public World(byte[][] tileMapData, byte[][] foodMapData, House house) {
-        tileMap = new TileMap(tileMapData, Tiles.TERRAIN_TILES_END);
-        foodMap = new TileMap(foodMapData, Tiles.FOOD_TILES_END);
-
-        checkNotNull(house);
-        this.house = house;
+    public World(TileMap terrainMap, TileMap foodMap, House house) {
+        this.terrainMap = checkNotNull(terrainMap);
+        this.foodMap = checkNotNull(foodMap);
+        this.house   = checkNotNull(house);
 
         // build portals
         var portalList = new ArrayList<Portal>();
-        int lastColumn = tileMap.numCols() - 1;
-        for (int row = 0; row < tileMap.numRows(); ++row) {
+        int lastColumn = terrainMap.numCols() - 1;
+        for (int row = 0; row < terrainMap.numRows(); ++row) {
             var leftBorderTile = v2i(0, row);
             var rightBorderTile = v2i(lastColumn, row);
-            if (tileMap.content(row, 0) == Tiles.TUNNEL && tileMap.content(row, lastColumn) == Tiles.TUNNEL) {
+            if (terrainMap.content(row, 0) == Tiles.TUNNEL && terrainMap.content(row, lastColumn) == Tiles.TUNNEL) {
                 portalList.add(new Portal(leftBorderTile, rightBorderTile, 2));
             }
         }
         portalList.trimToSize();
         portals = unmodifiableList(portalList);
 
-        energizerTiles = foodMap.tiles().filter(this::isEnergizerTile).collect(Collectors.toList());
+        energizerTiles = foodMap.tiles().filter(this::isEnergizerTile).toList();
         eaten = new BitSet(foodMap.numCols() * foodMap.numRows());
         totalFoodCount = (int) foodMap.tiles().filter(this::isFoodTile).count();
-        resetFood();
+        uneatenFoodCount = totalFoodCount;
     }
 
     public int numCols() {
-        return tileMap.numCols();
+        return terrainMap.numCols();
     }
 
     public int numRows() {
-        return tileMap.numRows();
+        return terrainMap.numRows();
     }
 
     public Stream<Vector2i> tiles() {
-        return tileMap.tiles();
+        return terrainMap.tiles();
     }
 
     public TileMap tileMap() {
-        return tileMap;
+        return terrainMap;
     }
 
     public TileMap foodMap() {
@@ -98,26 +95,26 @@ public class World {
      * @return if this tile is located inside the world bounds
      */
     public boolean insideBounds(Vector2i tile) {
-        return 0 <= tile.x() && tile.x() < tileMap.numCols() && 0 <= tile.y() && tile.y() < tileMap.numRows();
+        return 0 <= tile.x() && tile.x() < terrainMap.numCols() && 0 <= tile.y() && tile.y() < terrainMap.numRows();
     }
 
     /**
      * @return if this position is located inside the world bounds
      */
     public boolean insideBounds(double x, double y) {
-        return 0 <= x && x < tileMap.numCols() * TS && 0 <= y && y < tileMap.numRows() * TS;
+        return 0 <= x && x < terrainMap.numCols() * TS && 0 <= y && y < terrainMap.numRows() * TS;
     }
 
-    public void setPacPosition(Vector2f pacPosition) {
-        this.pacPosition = pacPosition;
+    public void setPacPosition(Vector2f tile) {
+        pacPosition = tile;
     }
 
     public Vector2f pacPosition() {
         return pacPosition;
     }
 
-    public void setGhostPositions(Vector2f[] ghostPositions) {
-        this.ghostPositions = ghostPositions;
+    public void setGhostPositions(Vector2f[] tiles) {
+        ghostPositions = tiles;
     }
 
     public Vector2f ghostPosition(byte ghostID) {
@@ -125,8 +122,8 @@ public class World {
         return ghostPositions[ghostID];
     }
 
-    public void setGhostDirections(Direction[] ghostDirections) {
-        this.ghostDirections = ghostDirections;
+    public void setGhostDirections(Direction[] dirs) {
+        ghostDirections = dirs;
     }
 
     public Direction ghostDirection(byte ghostID) {
@@ -134,8 +131,8 @@ public class World {
         return ghostDirections[ghostID];
     }
 
-    public void setGhostScatterTiles(Vector2i[] ghostScatterTiles) {
-        this.ghostScatterTiles = ghostScatterTiles;
+    public void setGhostScatterTiles(Vector2i[] tiles) {
+        ghostScatterTiles = tiles;
     }
 
     public Vector2i ghostScatterTile(byte ghostID) {
@@ -151,8 +148,8 @@ public class World {
         return forbiddenPassages;
     }
 
-    public void setBonusPosition(Vector2f bonusPosition) {
-        this.bonusPosition = bonusPosition;
+    public void setBonusPosition(Vector2f position) {
+        bonusPosition = position;
     }
 
     public Vector2f bonusPosition() {
@@ -183,7 +180,7 @@ public class World {
     }
 
     public boolean isBlockedTile(Vector2i tile) {
-        byte content = tileMap.content(tile);
+        byte content = terrainMap.content(tile);
         return content == WALL_H || content == WALL_V
             || content == DWALL_H || content == DWALL_V
             || content == CORNER_NE || content == CORNER_NW || content == CORNER_SE || content == CORNER_SW
@@ -191,12 +188,12 @@ public class World {
     }
 
     public boolean isTunnel(Vector2i tile) {
-        return tileMap.hasContentAt(tile, Tiles.TUNNEL);
+        return terrainMap.hasContentAt(tile, Tiles.TUNNEL);
     }
 
     public boolean isIntersection(Vector2i tile) {
         checkTileNotNull(tile);
-        if (tile.x() <= 0 || tile.x() >= tileMap.numCols() - 1) {
+        if (tile.x() <= 0 || tile.x() >= terrainMap.numCols() - 1) {
             return false; // exclude portal entries and tiles outside the map
         }
         if (house.contains(tile)) {
@@ -208,11 +205,6 @@ public class World {
     }
 
     // Food
-
-    public void resetFood() {
-        eaten.clear();
-        uneatenFoodCount = totalFoodCount;
-    }
 
     public int totalFoodCount() {
         return totalFoodCount;

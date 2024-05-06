@@ -491,7 +491,7 @@ public enum GameVariants implements GameModel {
         validateArcadeMapSize(foodMap);
         var house = createArcadeHouse();
         house.setTopLeftTile(v2i(10, 15));
-        var world = new World(terrainMap.getData(), foodMap.getData(), house);
+        var world = new World(terrainMap, foodMap, house);
         world.setPacPosition(halfTileRightOf(13, 26));
         world.setGhostPositions(new Vector2f[] {
             halfTileRightOf(13, 14), // red ghost
