@@ -33,43 +33,35 @@ public enum GameVariants implements GameModel {
     MS_PACMAN {
 
         static final TileMap MS_PACMAN_MAP_1 = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_1_terrain.txt"),
-            Tiles.TERRAIN_END_MARKER
+            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_1_terrain.txt"), Tiles.TERRAIN_END_MARKER
         );
 
         static final TileMap MS_PACMAN_FOOD_MAP_1 = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_1_food.txt"),
-            Tiles.FOOD_END_MARKER
+            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_1_food.txt"), Tiles.FOOD_END_MARKER
         );
 
         static final TileMap MS_PACMAN_MAP_2 = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_2_terrain.txt"),
-            Tiles.TERRAIN_END_MARKER
+            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_2_terrain.txt"), Tiles.TERRAIN_END_MARKER
         );
 
         static final TileMap MS_PACMAN_FOOD_MAP_2 = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_2_food.txt"),
-            Tiles.FOOD_END_MARKER
+            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_2_food.txt"), Tiles.FOOD_END_MARKER
         );
 
         static final TileMap MS_PACMAN_MAP_3 = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_3_terrain.txt"),
-            Tiles.TERRAIN_END_MARKER
+            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_3_terrain.txt"), Tiles.TERRAIN_END_MARKER
         );
 
         static final TileMap MS_PACMAN_FOOD_MAP_3 = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_3_food.txt"),
-            Tiles.FOOD_END_MARKER
+            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_3_food.txt"), Tiles.FOOD_END_MARKER
         );
 
         static final TileMap MS_PACMAN_MAP_4 = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_4_terrain.txt"),
-            Tiles.TERRAIN_END_MARKER
+            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_4_terrain.txt"), Tiles.TERRAIN_END_MARKER
         );
 
         static final TileMap MS_PACMAN_FOOD_MAP_4 = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_4_food.txt"),
-            Tiles.FOOD_END_MARKER
+            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_4_food.txt"), Tiles.FOOD_END_MARKER
         );
 
         /**
@@ -291,8 +283,7 @@ public enum GameVariants implements GameModel {
     PACMAN {
 
         static final TileMap PACMAN_MAP = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/pacman_terrain.txt"),
-            Tiles.TERRAIN_END_MARKER
+            GameVariants.class.getResource("/de/amr/games/pacman/maps/pacman_terrain.txt"), Tiles.TERRAIN_END_MARKER
         );
 
         static final TileMap PACMAN_FOOD_MAP = TileMap.fromURL(
