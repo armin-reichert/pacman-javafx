@@ -32,37 +32,14 @@ public enum GameVariants implements GameModel {
 
     MS_PACMAN {
 
-        static final TileMap MS_PACMAN_MAP_1 = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_1_terrain.txt"), Tiles.TERRAIN_END_MARKER
-        );
-
-        static final TileMap MS_PACMAN_FOOD_MAP_1 = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_1_food.txt"), Tiles.FOOD_END_MARKER
-        );
-
-        static final TileMap MS_PACMAN_MAP_2 = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_2_terrain.txt"), Tiles.TERRAIN_END_MARKER
-        );
-
-        static final TileMap MS_PACMAN_FOOD_MAP_2 = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_2_food.txt"), Tiles.FOOD_END_MARKER
-        );
-
-        static final TileMap MS_PACMAN_MAP_3 = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_3_terrain.txt"), Tiles.TERRAIN_END_MARKER
-        );
-
-        static final TileMap MS_PACMAN_FOOD_MAP_3 = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_3_food.txt"), Tiles.FOOD_END_MARKER
-        );
-
-        static final TileMap MS_PACMAN_MAP_4 = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_4_terrain.txt"), Tiles.TERRAIN_END_MARKER
-        );
-
-        static final TileMap MS_PACMAN_FOOD_MAP_4 = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/mspacman_4_food.txt"), Tiles.FOOD_END_MARKER
-        );
+        static final String MS_PACMAN_MAP_1 = "/de/amr/games/pacman/maps/mspacman_1_terrain.txt";
+        static final String MS_PACMAN_FOOD_MAP_1 = "/de/amr/games/pacman/maps/mspacman_1_food.txt";
+        static final String MS_PACMAN_MAP_2 = "/de/amr/games/pacman/maps/mspacman_2_terrain.txt";
+        static final String MS_PACMAN_FOOD_MAP_2 = "/de/amr/games/pacman/maps/mspacman_2_food.txt";
+        static final String MS_PACMAN_MAP_3 = "/de/amr/games/pacman/maps/mspacman_3_terrain.txt";
+        static final String MS_PACMAN_FOOD_MAP_3 = "/de/amr/games/pacman/maps/mspacman_3_food.txt";
+        static final String MS_PACMAN_MAP_4 = "/de/amr/games/pacman/maps/mspacman_4_terrain.txt";
+        static final String MS_PACMAN_FOOD_MAP_4 = "/de/amr/games/pacman/maps/mspacman_4_food.txt";
 
         /**
          * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
@@ -282,14 +259,8 @@ public enum GameVariants implements GameModel {
      */
     PACMAN {
 
-        static final TileMap PACMAN_MAP = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/pacman_terrain.txt"), Tiles.TERRAIN_END_MARKER
-        );
-
-        static final TileMap PACMAN_FOOD_MAP = TileMap.fromURL(
-            GameVariants.class.getResource("/de/amr/games/pacman/maps/pacman_food.txt"),
-            Tiles.FOOD_END_MARKER
-        );
+        static final String PACMAN_MAP = "/de/amr/games/pacman/maps/pacman_terrain.txt";
+        static final String PACMAN_FOOD_MAP = "/de/amr/games/pacman/maps/pacman_food.txt";
 
         static final NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
             np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
@@ -498,11 +469,13 @@ public enum GameVariants implements GameModel {
 
     abstract void updateLevelCounter();
 
-    static World createArcadeWorld(TileMap terrainMap, TileMap foodMap) {
+    static World createArcadeWorld(String terrainMapURL, String foodMapURL) {
         var house = new House();
         house.setTopLeftTile(v2i(10, 15));
         house.setSize(v2i(8, 5));
         house.setDoor(new Door(v2i(13, 15), v2i(14, 15)));
+        var terrainMap = TileMap.fromURL(GameVariants.class.getResource(terrainMapURL), Tiles.TERRAIN_END_MARKER);
+        var foodMap = TileMap.fromURL(GameVariants.class.getResource(foodMapURL), Tiles.FOOD_END_MARKER);
         var world = new World(terrainMap.getData(), foodMap.getData(), house);
         if (world.numCols() != TILES_X || world.numRows() != TILES_Y) {
             throw new IllegalArgumentException(
