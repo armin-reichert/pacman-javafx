@@ -130,4 +130,8 @@ public class TileMap {
     public int numRows() {
         return data.length;
     }
+
+    public void clear() {
+        tiles().forEach(tile -> setContent(tile, Tiles.EMPTY));
+    }
 }

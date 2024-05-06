@@ -216,6 +216,11 @@ public class TileMapEditor extends Application  {
     }
 
     Menu createMapsMenu() {
+        var clearMapItem = new MenuItem("Clear Map");
+        clearMapItem.setOnAction(e -> clearMap());
+
+        Menu loadPredefinedMapMenu = new Menu("Predefined Maps");
+
         var pacManWorldItem = new RadioMenuItem("Pac-Man");
         pacManWorldItem.setOnAction(e -> {
             setWorld(pacManWorld);
@@ -256,13 +261,16 @@ public class TileMapEditor extends Application  {
             foodMapRenderer.setPelletColor(Color.rgb(222, 222, 255));
         });
 
+        loadPredefinedMapMenu.getItems().addAll(pacManWorldItem, msPacManWorldItem1, msPacManWorldItem2,
+            msPacManWorldItem3, msPacManWorldItem4);
+
         ToggleGroup tg = new ToggleGroup();
         Stream.of(pacManWorldItem, msPacManWorldItem1, msPacManWorldItem2, msPacManWorldItem3, msPacManWorldItem4)
             .forEach(item -> item.setToggleGroup(tg));
         pacManWorldItem.setSelected(true);
 
         var menu = new Menu("Map");
-        menu.getItems().addAll(pacManWorldItem, msPacManWorldItem1, msPacManWorldItem2, msPacManWorldItem3, msPacManWorldItem4);
+        menu.getItems().addAll(clearMapItem, loadPredefinedMapMenu);
 
         return menu;
     }
@@ -398,6 +406,14 @@ public class TileMapEditor extends Application  {
             Logger.info("File '{}' saved.", file.getPath());
         } catch (Exception x) {
             Logger.error(x);
+        }
+    }
+
+    void clearMap() {
+        if (terrainEditedPy.get()) {
+            terrainMap.clear();
+        } else {
+            foodMap.clear();
         }
     }
 }
