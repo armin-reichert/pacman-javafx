@@ -49,13 +49,16 @@ public class TileMapEditor extends Application  {
     VBox infoPane;
     Label infoLabel;
 
-    TileMapRenderer renderer;
+    TileMapRenderer terrainMapRenderer;
+    TileMapRenderer foodMapRenderer;
 
-    TileMap tileMap;
+    TileMap terrainMap;
     TileMap foodMap;
 
     byte lastSelectedValue;
     Vector2i hoveredTile;
+    boolean showTerrain = true;
+    boolean showFood = true;
 
     World pacManWorld    = GameVariants.PACMAN.createWorld(1);
     World msPacManWorld1 = GameVariants.MS_PACMAN.createWorld(1);
@@ -66,12 +69,15 @@ public class TileMapEditor extends Application  {
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
-        load(pacManWorld);
+        setWorld(pacManWorld);
 
-        renderer = new TileMapRenderer();
-        renderer.setWallColor(Color.rgb(33, 33, 255));
-        renderer.setEnergizerColor(Color.rgb(254, 189, 180));
-        renderer.setPelletColor(Color.rgb(254, 189, 180));
+        terrainMapRenderer = new TileMapRenderer();
+        terrainMapRenderer.setWallColor(Color.rgb(33, 33, 255));
+
+        foodMapRenderer = new TileMapRenderer();
+        foodMapRenderer.setRenderTerrain(false);
+        foodMapRenderer.setEnergizerColor(Color.rgb(254, 189, 180));
+        foodMapRenderer.setPelletColor(Color.rgb(254, 189, 180));
 
         scene = new Scene(createSceneContent(), 800, 600);
         scene.setFill(Color.BLACK);
@@ -87,6 +93,33 @@ public class TileMapEditor extends Application  {
         GameClockFX clock = new GameClockFX();
         clock.setContinousCallback(this::draw);
         clock.start();
+    }
+
+    void draw() {
+        GraphicsContext g = canvas.getGraphicsContext2D();
+        g.setFill(Color.BLACK);
+        g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        if (terrainMap != null && showTerrain) {
+            terrainMapRenderer.setScaling(scaling());
+            terrainMapRenderer.drawMap(g, terrainMap);
+        }
+        if (foodMap != null && showFood) {
+            foodMapRenderer.setScaling(scaling());
+            foodMapRenderer.drawMap(g, foodMap);
+        }
+        for (int row = 0; row < numMapRows(); ++row) {
+            for (int col = 0; col < numMapCols(); ++col) {
+                if (hoveredTile != null && hoveredTile.x() == col && hoveredTile.y() == row) {
+                    g.setStroke(Color.YELLOW);
+                    g.setLineWidth(1);
+                } else {
+                    g.setStroke(Color.GRAY);
+                    g.setLineWidth(0.5);
+                }
+                double s8 = 8 * scaling();
+                g.strokeRect(col * s8, row * s8, s8, s8);
+            }
+        }
     }
 
     Parent createSceneContent() {
@@ -132,42 +165,42 @@ public class TileMapEditor extends Application  {
     Menu createWorldMenu() {
         var pacManWorldItem = new RadioMenuItem("Pac-Man");
         pacManWorldItem.setOnAction(e -> {
-            load(pacManWorld);
-            renderer.setWallColor(Color.rgb(33, 33, 255));
-            renderer.setEnergizerColor(Color.rgb(254, 189, 180));
-            renderer.setPelletColor(Color.rgb(254, 189, 180));
+            setWorld(pacManWorld);
+            terrainMapRenderer.setWallColor(Color.rgb(33, 33, 255));
+            foodMapRenderer.setEnergizerColor(Color.rgb(254, 189, 180));
+            foodMapRenderer.setPelletColor(Color.rgb(254, 189, 180));
         });
 
         var msPacManWorldItem1 = new RadioMenuItem("Ms. Pac-Man Map 1");
         msPacManWorldItem1.setOnAction(e -> {
-            load(msPacManWorld1);
-            renderer.setWallColor(Color.rgb(255, 183, 174));
-            renderer.setEnergizerColor(Color.rgb(222, 222, 255));
-            renderer.setPelletColor(Color.rgb(222, 222, 255));
+            setWorld(msPacManWorld1);
+            terrainMapRenderer.setWallColor(Color.rgb(255, 183, 174));
+            foodMapRenderer.setEnergizerColor(Color.rgb(222, 222, 255));
+            foodMapRenderer.setPelletColor(Color.rgb(222, 222, 255));
         });
 
         var msPacManWorldItem2 = new RadioMenuItem("Ms. Pac-Man Map 2");
         msPacManWorldItem2.setOnAction(e -> {
-            load(msPacManWorld2);
-            renderer.setWallColor(Color.rgb(71, 183, 255));
-            renderer.setEnergizerColor(Color.rgb(255, 255, 0));
-            renderer.setPelletColor(Color.rgb(255, 255, 0));
+            setWorld(msPacManWorld2);
+            terrainMapRenderer.setWallColor(Color.rgb(71, 183, 255));
+            foodMapRenderer.setEnergizerColor(Color.rgb(255, 255, 0));
+            foodMapRenderer.setPelletColor(Color.rgb(255, 255, 0));
         });
 
         var msPacManWorldItem3 = new RadioMenuItem("Ms. Pac-Man Map 3");
         msPacManWorldItem3.setOnAction(e -> {
-            load(msPacManWorld3);
-            renderer.setWallColor(Color.rgb(222, 151, 81));
-            renderer.setEnergizerColor(Color.rgb(255, 0, 0));
-            renderer.setPelletColor(Color.rgb(255, 0, 0));
+            setWorld(msPacManWorld3);
+            terrainMapRenderer.setWallColor(Color.rgb(222, 151, 81));
+            foodMapRenderer.setEnergizerColor(Color.rgb(255, 0, 0));
+            foodMapRenderer.setPelletColor(Color.rgb(255, 0, 0));
         });
 
         var msPacManWorldItem4 = new RadioMenuItem("Ms. Pac-Man Map 4");
         msPacManWorldItem4.setOnAction(e -> {
-            load(msPacManWorld4);
-            renderer.setWallColor(Color.rgb(33, 33, 255));
-            renderer.setEnergizerColor(Color.rgb(222, 222, 255));
-            renderer.setPelletColor(Color.rgb(222, 222, 255));
+            setWorld(msPacManWorld4);
+            terrainMapRenderer.setWallColor(Color.rgb(33, 33, 255));
+            foodMapRenderer.setEnergizerColor(Color.rgb(222, 222, 255));
+            foodMapRenderer.setPelletColor(Color.rgb(222, 222, 255));
         });
 
         ToggleGroup tg = new ToggleGroup();
@@ -186,44 +219,21 @@ public class TileMapEditor extends Application  {
             Logger.info("Map loaded. {} rows, {} cols", map.numRows(), map.numCols());
     }
 
-    void load(World world) {
-        tileMap = world.tileMap();
+    void setWorld(World world) {
+        terrainMap = world.tileMap();
         foodMap = world.foodMap();
     }
 
     int numMapCols() {
-        return tileMap != null ? tileMap.numCols() : 28;
+        return terrainMap != null ? terrainMap.numCols() : 28;
     }
 
     int numMapRows() {
-        return tileMap != null ? tileMap.numRows() : 36;
+        return terrainMap != null ? terrainMap.numRows() : 36;
     }
 
     double scaling() {
         return canvas.getHeight() / (numMapRows() * 8);
-    }
-
-    void draw() {
-        GraphicsContext g = canvas.getGraphicsContext2D();
-        g.setFill(Color.BLACK);
-        g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        if (tileMap != null) {
-            renderer.setScaling(scaling());
-            renderer.drawMap(g, tileMap);
-        }
-        for (int row = 0; row < numMapRows(); ++row) {
-            for (int col = 0; col < numMapCols(); ++col) {
-                if (hoveredTile != null && hoveredTile.x() == col && hoveredTile.y() == row) {
-                    g.setStroke(Color.YELLOW);
-                    g.setLineWidth(1);
-                } else {
-                    g.setStroke(Color.GRAY);
-                    g.setLineWidth(0.5);
-                }
-                double s8 = 8 * scaling();
-                g.strokeRect(col * s8, row * s8, s8, s8);
-            }
-        }
     }
 
     int viewToTile(double viewLength) {
@@ -231,22 +241,22 @@ public class TileMapEditor extends Application  {
     }
 
     void onMouseClickedOnCanvas(MouseEvent e) {
-        if (tileMap == null) {
+        if (terrainMap == null) {
             return;
         }
         var tile = new Vector2i(viewToTile(e.getX()), viewToTile(e.getY()));
         if (e.getButton() == MouseButton.SECONDARY) {
-            tileMap.setContent(tile, Tiles.EMPTY);
+            terrainMap.setContent(tile, Tiles.EMPTY);
             updateHoveredTileInfo();
         }
         else if (e.isShiftDown()) {
-            tileMap.setContent(tile, lastSelectedValue);
+            terrainMap.setContent(tile, lastSelectedValue);
             updateHoveredTileInfo();
         }
         else {
-            byte content = tileMap.content(tile);
+            byte content = terrainMap.content(tile);
             byte newValue = content < Tiles.TERRAIN_TILES_END - 1 ? (byte) (content + 1) : 0;
-            tileMap.setContent(tile, newValue);
+            terrainMap.setContent(tile, newValue);
             lastSelectedValue = newValue;
             updateHoveredTileInfo();
         }
@@ -259,23 +269,23 @@ public class TileMapEditor extends Application  {
 
     void updateHoveredTileInfo() {
         var text = String.format("Tile: x=%2d y=%2d value=%d",
-            hoveredTile.x(), hoveredTile.y(), tileMap.content(hoveredTile));
+            hoveredTile.x(), hoveredTile.y(), terrainMap.content(hoveredTile));
         infoLabel.setText(text);
     }
 
     void saveMap() {
-        if (tileMap == null) {
+        if (terrainMap == null) {
             Logger.info("No map loaded");
             return;
         }
         File file = new File("saved_map.txt");
         try (FileWriter fw = new FileWriter(file, StandardCharsets.UTF_8)) {
-            for (int row = 0; row < tileMap.numRows(); ++row) {
+            for (int row = 0; row < terrainMap.numRows(); ++row) {
                 fw.write("{");
-                for (int col = 0; col < tileMap.numCols(); ++col) {
-                    String valueTxt = String.valueOf(tileMap.content(row, col));
+                for (int col = 0; col < terrainMap.numCols(); ++col) {
+                    String valueTxt = String.valueOf(terrainMap.content(row, col));
                     fw.write(String.format("%2s", valueTxt));
-                    if (col < tileMap.numCols() - 1) {
+                    if (col < terrainMap.numCols() - 1) {
                         fw.write(",");
                     }
                 }

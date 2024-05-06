@@ -22,6 +22,8 @@ public class TileMapRenderer {
     private Color pelletColor = Color.PINK;
     private Color energizerColor = Color.YELLOW;
 
+    private boolean renderTerrain = true;
+
     private float s(float times) {
         return scaling * times;
     }
@@ -32,6 +34,10 @@ public class TileMapRenderer {
         for (int i = 0; i <= 8; ++i) {
             s[i] = s(i);
         }
+    }
+
+    public void setRenderTerrain(boolean renderTerrain) {
+        this.renderTerrain = renderTerrain;
     }
 
     public void setWallColor(Color wallColor) {
@@ -51,15 +57,26 @@ public class TileMapRenderer {
     }
 
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
-        switch (content) {
-            case Tiles.WALL_H -> drawWallH(g, tile);
-            case Tiles.WALL_V -> drawWallV(g, tile);
-            case Tiles.DWALL_H -> drawDWallH(g, tile);
-            case Tiles.DWALL_V -> drawDWallV(g, tile);
-            case Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE -> drawCorner(g, tile, content);
-            case Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE -> drawDCorner(g, tile, content);
-            case Tiles.DOOR -> drawDoor(g, tile, Color.PINK);
-            default -> {}
+        if (renderTerrain) {
+            switch (content) {
+                case Tiles.WALL_H -> drawWallH(g, tile);
+                case Tiles.WALL_V -> drawWallV(g, tile);
+                case Tiles.DWALL_H -> drawDWallH(g, tile);
+                case Tiles.DWALL_V -> drawDWallV(g, tile);
+                case Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE -> drawCorner(g, tile, content);
+                case Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE ->
+                    drawDCorner(g, tile, content);
+                case Tiles.DOOR -> drawDoor(g, tile, Color.PINK);
+                default -> {
+                }
+            }
+        } else { // render food
+            switch (content) {
+                case Tiles.PELLET -> drawPellet(g, tile);
+                case Tiles.ENERGIZER -> drawEnergizer(g, tile);
+                default -> {
+                }
+            }
         }
     }
 
