@@ -16,6 +16,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -33,15 +34,20 @@ public class MapEditor extends Application  {
 
     Stage stage;
     Scene scene;
+    MenuBar menuBar;
     BorderPane contentPane;
     BorderPane canvasContainer;
     Canvas canvas;
-    MenuBar menuBar;
+    VBox infoPane;
+    Label infoLabel;
+
     TileMapRenderer renderer;
 
     TileMap tileMap;
     TileMap foodMap;
+
     byte lastSelectedValue;
+    Vector2i hoveredTile;
 
     World pacManWorld    = GameVariants.PACMAN.createWorld(1);
     World msPacManWorld1 = GameVariants.MS_PACMAN.createWorld(1);
@@ -53,52 +59,36 @@ public class MapEditor extends Application  {
     public void start(Stage stage) throws Exception {
         this.stage = stage;
         renderer = new TileMapRenderer();
-
         load(pacManWorld, Color.rgb(33, 33, 255));
 
-        GameClockFX clock = new GameClockFX();
-        clock.setContinousCallback(this::draw);
-
-        stage.setScene(createScene());
-        stage.setTitle("Map Editor");
-        stage.show();
-        clock.start();
-    }
-
-    void load(World world, Color wallColor) {
-        tileMap = world.tileMap();
-        foodMap = world.foodMap();
-        renderer.setWallColor(wallColor);
-    }
-
-    int numMapCols() {
-        return tileMap != null ? tileMap.numCols() : 28;
-    }
-
-    int numMapRows() {
-        return tileMap != null ? tileMap.numRows() : 36;
-    }
-
-    Scene createScene() {
         scene = new Scene(createSceneContent(), 800, 600);
         scene.setFill(Color.BLACK);
 
         canvas.heightProperty().bind(scene.heightProperty().multiply(0.95));
-        canvas.widthProperty().bind(
-            Bindings.createDoubleBinding(
-                () -> canvas.getHeight() * numMapCols() / numMapRows(),
-                canvas.heightProperty()));
-        return scene;
-    }
+        canvas.widthProperty().bind(Bindings.createDoubleBinding(
+            () -> canvas.getHeight() * numMapCols() / numMapRows(), canvas.heightProperty()));
 
-    double scaling() {
-        return canvas.getHeight() / (numMapRows() * 8);
+        stage.setScene(scene);
+        stage.setTitle("Map Editor");
+        stage.show();
+
+        GameClockFX clock = new GameClockFX();
+        clock.setContinousCallback(this::draw);
+        clock.start();
     }
 
     Parent createSceneContent() {
         canvas = new Canvas();
         canvasContainer = new BorderPane(canvas);
-        contentPane = new BorderPane(canvasContainer);
+
+        infoLabel = new Label();
+        infoPane = new VBox(infoLabel);
+        infoPane.setMinWidth(200);
+        infoPane.setMaxWidth(200);
+
+        contentPane = new BorderPane();
+        contentPane.setCenter(canvasContainer);
+        contentPane.setRight(infoPane);
 
         menuBar = new MenuBar();
         menuBar.getMenus().addAll(createFileMenu(), createWorldMenu());
@@ -108,7 +98,8 @@ public class MapEditor extends Application  {
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> canvasContainer.getHeight() / numMapRows() * numMapCols(), canvasContainer.heightProperty()
         ));
-        canvas.setOnMouseClicked(this::onMouseClicked);
+        canvas.setOnMouseClicked(this::onMouseClickedOnCanvas);
+        canvas.setOnMouseMoved(this::onMouseMovedOverCanvas);
 
         return contentPane;
     }
@@ -153,6 +144,24 @@ public class MapEditor extends Application  {
         return menu;
     }
 
+    void load(World world, Color wallColor) {
+        tileMap = world.tileMap();
+        foodMap = world.foodMap();
+        renderer.setWallColor(wallColor);
+    }
+
+    int numMapCols() {
+        return tileMap != null ? tileMap.numCols() : 28;
+    }
+
+    int numMapRows() {
+        return tileMap != null ? tileMap.numRows() : 36;
+    }
+
+    double scaling() {
+        return canvas.getHeight() / (numMapRows() * 8);
+    }
+
     void draw() {
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFill(Color.BLACK);
@@ -163,8 +172,13 @@ public class MapEditor extends Application  {
         }
         for (int row = 0; row < numMapRows(); ++row) {
             for (int col = 0; col < numMapCols(); ++col) {
-                g.setStroke(Color.GRAY);
-                g.setLineWidth(0.5);
+                if (hoveredTile != null && hoveredTile.x() == col && hoveredTile.y() == row) {
+                    g.setStroke(Color.YELLOW);
+                    g.setLineWidth(1);
+                } else {
+                    g.setStroke(Color.GRAY);
+                    g.setLineWidth(0.5);
+                }
                 double s8 = 8 * scaling();
                 g.strokeRect(col * s8, row * s8, s8, s8);
             }
@@ -175,23 +189,37 @@ public class MapEditor extends Application  {
         return (int) (viewLength / (8 * scaling()));
     }
 
-    void onMouseClicked(MouseEvent e) {
+    void onMouseClickedOnCanvas(MouseEvent e) {
         if (tileMap == null) {
             return;
         }
         var tile = new Vector2i(viewToTile(e.getX()), viewToTile(e.getY()));
         if (e.getButton() == MouseButton.SECONDARY) {
             tileMap.setContent(tile, Tiles.EMPTY);
+            updateHoveredTileInfo();
         }
         else if (e.isShiftDown()) {
             tileMap.setContent(tile, lastSelectedValue);
+            updateHoveredTileInfo();
         }
         else {
             byte content = tileMap.content(tile);
             byte newValue = content < Tiles.TERRAIN_END_MARKER - 1 ? (byte) (content + 1) : 0;
             tileMap.setContent(tile, newValue);
             lastSelectedValue = newValue;
+            updateHoveredTileInfo();
         }
+    }
+
+    void onMouseMovedOverCanvas(MouseEvent e) {
+        hoveredTile = new Vector2i(viewToTile(e.getX()), viewToTile(e.getY()));
+        updateHoveredTileInfo();
+    }
+
+    void updateHoveredTileInfo() {
+        var text = String.format("Tile: x=%2d y=%2d value=%d",
+            hoveredTile.x(), hoveredTile.y(), tileMap.content(hoveredTile));
+        infoLabel.setText(text);
     }
 
     void saveMap() {
