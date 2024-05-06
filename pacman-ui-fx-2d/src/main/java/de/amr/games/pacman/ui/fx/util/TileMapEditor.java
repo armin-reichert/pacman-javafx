@@ -25,11 +25,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
@@ -53,6 +55,7 @@ public class TileMapEditor extends Application  {
     CheckBox cbTerrainVisible;
     CheckBox cbFoodVisible;
     CheckBox cbTerrainEdited;
+    FileChooser openDialog;
 
     TileMapRenderer terrainMapRenderer;
     TileMapRenderer foodMapRenderer;
@@ -166,7 +169,7 @@ public class TileMapEditor extends Application  {
         contentPane.setRight(infoPane);
 
         menuBar = new MenuBar();
-        menuBar.getMenus().addAll(createFileMenu(), createWorldMenu());
+        menuBar.getMenus().addAll(createFileMenu(), createMapsMenu());
 
         contentPane.setTop(menuBar);
         canvas.heightProperty().bind(canvasContainer.heightProperty());
@@ -180,19 +183,39 @@ public class TileMapEditor extends Application  {
     }
 
     Menu createFileMenu() {
-        var saveItem = new MenuItem("Save");
-        saveItem.setOnAction(e -> saveMaps());
+        openDialog = new FileChooser();
+        openDialog.setInitialDirectory(new File(System.getProperty("user.dir")));
+
+        var loadTerrainMapItem = new MenuItem("Load Terrain Map...");
+        loadTerrainMapItem.setOnAction(e -> loadTerrainMap());
+
+        var loadFoodMapItem = new MenuItem("Load Food Map...");
+        loadFoodMapItem.setOnAction(e -> loadFoodMap());
+
+        var saveTerrainMapItem = new MenuItem("Save Terrain Map...");
+        saveTerrainMapItem.setOnAction(e -> {
+            if (terrainMap != null) {
+                saveTerrainMap();
+            }
+        });
+
+        var saveFoodMapItem = new MenuItem("Save Food Map...");
+        saveFoodMapItem.setOnAction(e -> {
+            if (foodMap != null) {
+                saveFoodMap();
+            }
+        });
 
         var quitItem = new MenuItem("Quit");
         quitItem.setOnAction(e -> stage.close());
 
         var menu = new Menu("File");
-        menu.getItems().addAll(saveItem, quitItem);
+        menu.getItems().addAll(loadTerrainMapItem, loadFoodMapItem, saveTerrainMapItem, saveFoodMapItem, quitItem);
 
         return menu;
     }
 
-    Menu createWorldMenu() {
+    Menu createMapsMenu() {
         var pacManWorldItem = new RadioMenuItem("Pac-Man");
         pacManWorldItem.setOnAction(e -> {
             setWorld(pacManWorld);
@@ -238,7 +261,7 @@ public class TileMapEditor extends Application  {
             .forEach(item -> item.setToggleGroup(tg));
         pacManWorldItem.setSelected(true);
 
-        var menu = new Menu("World");
+        var menu = new Menu("Map");
         menu.getItems().addAll(pacManWorldItem, msPacManWorldItem1, msPacManWorldItem2, msPacManWorldItem3, msPacManWorldItem4);
 
         return menu;
@@ -326,17 +349,41 @@ public class TileMapEditor extends Application  {
         infoLabel.setText(editedTileText);
     }
 
-    void saveMaps() {
-        if (terrainMap != null) {
-            saveMap(terrainMap, "saved_terrain_map.txt");
-        }
-        if (foodMap != null) {
-            saveMap(foodMap, "saved_food_map.txt");
+    void loadTerrainMap() {
+        File file = openDialog.showOpenDialog(stage);
+        if (file != null) {
+            try {
+                terrainMap = TileMap.fromURL(file.toURI().toURL(), Tiles.TERRAIN_TILES_END);
+            } catch (MalformedURLException x) {
+                Logger.error("Could not load map.");
+                Logger.error(x);
+            }
         }
     }
 
-    void saveMap(TileMap map, String fileName) {
-        File file = new File(fileName);
+    void loadFoodMap() {
+        File file = openDialog.showOpenDialog(stage);
+        if (file != null) {
+            try {
+                foodMap = TileMap.fromURL(file.toURI().toURL(), Tiles.FOOD_TILES_END);
+            } catch (MalformedURLException x) {
+                Logger.error("Could not load map.");
+                Logger.error(x);
+            }
+        }
+    }
+
+    void saveTerrainMap() {
+        File file = openDialog.showSaveDialog(stage);
+        saveMap(terrainMap, file);
+    }
+
+    void saveFoodMap() {
+        File file = openDialog.showSaveDialog(stage);
+        saveMap(foodMap, file);
+    }
+
+    void saveMap(TileMap map, File file) {
         try (FileWriter w = new FileWriter(file, StandardCharsets.UTF_8)) {
             for (int row = 0; row < map.numRows(); ++row) {
                 for (int col = 0; col < map.numCols(); ++col) {
@@ -348,7 +395,7 @@ public class TileMapEditor extends Application  {
                 }
                 w.write("\n");
             }
-            Logger.info("Map {} saved successfully", fileName);
+            Logger.info("File '{}' saved.", file.getPath());
         } catch (Exception x) {
             Logger.error(x);
         }
