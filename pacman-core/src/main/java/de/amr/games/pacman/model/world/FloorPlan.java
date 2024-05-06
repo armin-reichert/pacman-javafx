@@ -237,7 +237,7 @@ public class FloorPlan {
         for (int y = 0; y < sizeY; ++y) {
             for (int x = 0; x < sizeX; ++x) {
                 Vector2i tile = v2i(x / resolution, y / resolution);
-                cells[y][x] = world.isBlocked(tile) ? CORNER : EMPTY; // use CORNER as synonym for any kind of wall
+                cells[y][x] = world.isBlockedTile(tile) ? CORNER : EMPTY; // use CORNER as synonym for any kind of wall
             }
         }
     }
@@ -248,12 +248,12 @@ public class FloorPlan {
                 int i = (y % resolution) * resolution + (x % resolution);
                 Vector2i tile = v2i(x / resolution, y / resolution);
                 Vector2i n = northOf(tile, i), e = eastOf(tile, i), s = southOf(tile, i), w = westOf(tile, i);
-                if (world.isBlocked(n) && world.isBlocked(e) && world.isBlocked(s) && world.isBlocked(w)) {
+                if (world.isBlockedTile(n) && world.isBlockedTile(e) && world.isBlockedTile(s) && world.isBlockedTile(w)) {
                     Vector2i se = southOf(e, i), sw = southOf(w, i), ne = northOf(e, i), nw = northOf(w, i);
-                    if (!(  world.isBlocked(se) && !world.isBlocked(nw)
-                        || !world.isBlocked(se) &&  world.isBlocked(nw)
-                        ||  world.isBlocked(sw) && !world.isBlocked(ne)
-                        || !world.isBlocked(sw) &&  world.isBlocked(ne)) ) {
+                    if (!(  world.isBlockedTile(se) && !world.isBlockedTile(nw)
+                        || !world.isBlockedTile(se) &&  world.isBlockedTile(nw)
+                        ||  world.isBlockedTile(sw) && !world.isBlockedTile(ne)
+                        || !world.isBlockedTile(sw) &&  world.isBlockedTile(ne)) ) {
                         cells[y][x] = EMPTY;
                     }
                 }

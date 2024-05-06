@@ -485,9 +485,9 @@ public enum GameVariants implements GameModel {
     }
 
     World createArcadeWorld(String terrainMapURL, String foodMapURL) {
-        var terrainMap = TileMap.fromURL(getClass().getResource(terrainMapURL), Tiles.TERRAIN_END_MARKER);
+        var terrainMap = TileMap.fromURL(getClass().getResource(terrainMapURL), Tiles.TERRAIN_TILES_END);
         validateArcadeMapSize(terrainMap);
-        var foodMap = TileMap.fromURL(getClass().getResource(foodMapURL), Tiles.FOOD_END_MARKER);
+        var foodMap = TileMap.fromURL(getClass().getResource(foodMapURL), Tiles.FOOD_TILES_END);
         validateArcadeMapSize(foodMap);
         var house = createArcadeHouse();
         house.setTopLeftTile(v2i(10, 15));

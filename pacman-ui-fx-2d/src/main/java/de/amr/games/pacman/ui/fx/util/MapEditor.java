@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.ui.fx.util;
 
 import de.amr.games.pacman.lib.Vector2i;
@@ -27,6 +31,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
+/**
+ * @author Armin Reichert
+ */
 public class MapEditor extends Application  {
 
     public static void main(String[] args) {
@@ -151,7 +158,7 @@ public class MapEditor extends Application  {
     }
 
     void loadTerrainMapFromURL(URL url) {
-        TileMap map = TileMap.fromURL(url, Tiles.TERRAIN_END_MARKER);
+        TileMap map = TileMap.fromURL(url, Tiles.TERRAIN_TILES_END);
         if (map != null) {
             Logger.info("Map loaded. {} rows, {} cols", map.numRows(), map.numCols());
         } else {
@@ -218,7 +225,7 @@ public class MapEditor extends Application  {
         }
         else {
             byte content = tileMap.content(tile);
-            byte newValue = content < Tiles.TERRAIN_END_MARKER - 1 ? (byte) (content + 1) : 0;
+            byte newValue = content < Tiles.TERRAIN_TILES_END - 1 ? (byte) (content + 1) : 0;
             tileMap.setContent(tile, newValue);
             lastSelectedValue = newValue;
             updateHoveredTileInfo();

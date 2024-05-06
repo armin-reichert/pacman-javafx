@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.model.world.Tiles.*;
 import static java.util.Collections.unmodifiableList;
 
 /**
@@ -47,8 +48,8 @@ public class World {
      * @param house ghost house
      */
     public World(byte[][] tileMapData, byte[][] foodMapData, House house) {
-        tileMap = new TileMap(tileMapData, Tiles.TERRAIN_END_MARKER);
-        foodMap = new TileMap(foodMapData, Tiles.FOOD_END_MARKER);
+        tileMap = new TileMap(tileMapData, Tiles.TERRAIN_TILES_END);
+        foodMap = new TileMap(foodMapData, Tiles.FOOD_TILES_END);
 
         checkNotNull(house);
         this.house = house;
@@ -181,8 +182,12 @@ public class World {
         return portals.stream().anyMatch(portal -> portal.contains(tile));
     }
 
-    public boolean isBlocked(Vector2i tile) {
-        return Tiles.isBlockedTile(tileMap.content(tile));
+    public boolean isBlockedTile(Vector2i tile) {
+        byte content = tileMap.content(tile);
+        return content == WALL_H || content == WALL_V
+            || content == DWALL_H || content == DWALL_V
+            || content == CORNER_NE || content == CORNER_NW || content == CORNER_SE || content == CORNER_SW
+            || content == DCORNER_NE || content == DCORNER_NW || content == DCORNER_SE || content == DCORNER_SW;
     }
 
     public boolean isTunnel(Vector2i tile) {
@@ -197,7 +202,7 @@ public class World {
         if (house.contains(tile)) {
             return false;
         }
-        long numWallNeighbors = tile.neighbors().filter(this::isBlocked).count();
+        long numWallNeighbors = tile.neighbors().filter(this::isBlockedTile).count();
         long numDoorNeighbors = tile.neighbors().filter(house.door()::occupies).count();
         return numWallNeighbors + numDoorNeighbors < 2;
     }

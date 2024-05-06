@@ -1,10 +1,17 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.model.world;
 
+/**
+ * @author Armin Reichert
+ */
 public interface Tiles {
 
     byte EMPTY = 0;
 
-    // Terrain
+    // Terrain tiles
     byte WALL_H     = 1;
     byte WALL_V     = 2;
     byte CORNER_NW  = 3;
@@ -20,17 +27,11 @@ public interface Tiles {
     byte DCORNER_SW = 13;
     byte DOOR       = 14;
 
-    byte TERRAIN_END_MARKER = 15;
+    byte TERRAIN_TILES_END = 15;
 
-    static boolean isBlockedTile(byte tile) {
-        return tile == WALL_H || tile == WALL_V
-            || tile == DWALL_H || tile == DWALL_V
-            || tile == CORNER_NE || tile == CORNER_NW || tile == CORNER_SE || tile == CORNER_SW
-            || tile == DCORNER_NE || tile == DCORNER_NW || tile == DCORNER_SE || tile == DCORNER_SW;
-    }
-
-    // Food
+    // Food tiles
     byte PELLET = 1;
     byte ENERGIZER = 2;
-    byte FOOD_END_MARKER = 3;
+
+    byte FOOD_TILES_END = 3;
 }
