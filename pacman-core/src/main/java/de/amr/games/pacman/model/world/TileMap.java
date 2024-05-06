@@ -77,6 +77,10 @@ public class TileMap {
         }
     }
 
+    public void setContent(Vector2i tile, byte value) {
+        setContent(tile.y(), tile.x(), value);
+    }
+
     public Stream<Vector2i> tiles() {
         return IntStream.range(0, numCols() * numRows()).mapToObj(this::tile);
     }

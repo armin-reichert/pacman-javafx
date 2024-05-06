@@ -23,6 +23,7 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.stream.Stream;
 
 public class MapEditor extends Application  {
 
@@ -53,7 +54,7 @@ public class MapEditor extends Application  {
         this.stage = stage;
         renderer = new TileMapRenderer();
 
-        loadMaps(pacManWorld.tileMap(), pacManWorld.foodMap(), Color.rgb(33, 33, 255));
+        load(pacManWorld, Color.rgb(33, 33, 255));
 
         GameClockFX clock = new GameClockFX();
         clock.setContinousCallback(this::draw);
@@ -64,9 +65,9 @@ public class MapEditor extends Application  {
         clock.start();
     }
 
-    void loadMaps(TileMap tileMap, TileMap foodMap, Color wallColor) {
-        this.tileMap = tileMap;
-        this.foodMap = foodMap;
+    void load(World world, Color wallColor) {
+        tileMap = world.tileMap();
+        foodMap = world.foodMap();
         renderer.setWallColor(wallColor);
     }
 
@@ -98,7 +99,9 @@ public class MapEditor extends Application  {
         canvas = new Canvas();
         canvasContainer = new BorderPane(canvas);
         contentPane = new BorderPane(canvasContainer);
-        createMenus();
+
+        menuBar = new MenuBar();
+        menuBar.getMenus().addAll(createFileMenu(), createWorldMenu());
 
         contentPane.setTop(menuBar);
         canvas.heightProperty().bind(canvasContainer.heightProperty());
@@ -110,60 +113,52 @@ public class MapEditor extends Application  {
         return contentPane;
     }
 
-    void createMenus() {
-        menuBar = new MenuBar();
-
-        var fileMenu = new Menu("File");
-        menuBar.getMenus().add(fileMenu);
-
-        // File menu
+    Menu createFileMenu() {
         var saveItem = new MenuItem("Save");
         saveItem.setOnAction(e -> saveMap());
-        fileMenu.getItems().add(saveItem);
+
         var quitItem = new MenuItem("Quit");
         quitItem.setOnAction(e -> stage.close());
-        fileMenu.getItems().add(quitItem);
 
-        var worldMenu = new Menu("World");
-        menuBar.getMenus().add(worldMenu);
+        var menu = new Menu("File");
+        menu.getItems().addAll(saveItem, quitItem);
 
-        // World menu
-        ToggleGroup exclusion = new ToggleGroup();
+        return menu;
+    }
 
+    Menu createWorldMenu() {
         var pacManWorldItem = new RadioMenuItem("Pac-Man");
-        worldMenu.getItems().add(pacManWorldItem);
-        pacManWorldItem.setToggleGroup(exclusion);
-        pacManWorldItem.setSelected(true);
-        pacManWorldItem.setOnAction(e -> loadMaps(pacManWorld.tileMap(), pacManWorld.foodMap(), Color.rgb(33, 33, 255)));
+        pacManWorldItem.setOnAction(e -> load(pacManWorld, Color.rgb(33, 33, 255)));
 
         var msPacManWorldItem1 = new RadioMenuItem("Ms. Pac-Man Map 1");
-        worldMenu.getItems().add(msPacManWorldItem1);
-        msPacManWorldItem1.setToggleGroup(exclusion);
-        msPacManWorldItem1.setOnAction(e -> loadMaps(msPacManWorld1.tileMap(), msPacManWorld1.foodMap(), Color.RED));
+        msPacManWorldItem1.setOnAction(e -> load(msPacManWorld1, Color.RED));
 
         var msPacManWorldItem2 = new RadioMenuItem("Ms. Pac-Man Map 2");
-        worldMenu.getItems().add(msPacManWorldItem2);
-        msPacManWorldItem2.setToggleGroup(exclusion);
-        msPacManWorldItem2.setOnAction(e -> loadMaps(msPacManWorld2.tileMap(), msPacManWorld2.foodMap(), Color.rgb(71, 183, 255)));
+        msPacManWorldItem2.setOnAction(e -> load(msPacManWorld2, Color.rgb(71, 183, 255)));
 
         var msPacManWorldItem3 = new RadioMenuItem("Ms. Pac-Man Map 3");
-        worldMenu.getItems().add(msPacManWorldItem3);
-        msPacManWorldItem3.setToggleGroup(exclusion);
-        msPacManWorldItem3.setOnAction(e -> loadMaps(msPacManWorld3.tileMap(), msPacManWorld3.foodMap(), Color.rgb(222, 151, 81)));
+        msPacManWorldItem3.setOnAction(e -> load(msPacManWorld3, Color.rgb(222, 151, 81)));
 
         var msPacManWorldItem4 = new RadioMenuItem("Ms. Pac-Man Map 4");
-        worldMenu.getItems().add(msPacManWorldItem4);
-        msPacManWorldItem4.setToggleGroup(exclusion);
-        msPacManWorldItem4.setOnAction(e -> loadMaps(msPacManWorld4.tileMap(), msPacManWorld4.foodMap(), Color.rgb(33, 33, 255)));
+        msPacManWorldItem4.setOnAction(e -> load(msPacManWorld4, Color.rgb(33, 33, 255)));
+
+        ToggleGroup tg = new ToggleGroup();
+        Stream.of(pacManWorldItem, msPacManWorldItem1, msPacManWorldItem2, msPacManWorldItem3, msPacManWorldItem4)
+            .forEach(item -> item.setToggleGroup(tg));
+        pacManWorldItem.setSelected(true);
+
+        var menu = new Menu("World");
+        menu.getItems().addAll(pacManWorldItem, msPacManWorldItem1, msPacManWorldItem2, msPacManWorldItem3, msPacManWorldItem4);
+
+        return menu;
     }
 
     void draw() {
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-        renderer.setScaling(scaling());
         if (tileMap != null) {
+            renderer.setScaling(scaling());
             renderer.drawMap(g, tileMap);
         }
         for (int row = 0; row < numMapRows(); ++row) {
@@ -176,23 +171,25 @@ public class MapEditor extends Application  {
         }
     }
 
+    int viewToTile(double viewLength) {
+        return (int) (viewLength / (8 * scaling()));
+    }
+
     void onMouseClicked(MouseEvent e) {
-        Logger.info("Mouse click {}", e);
         if (tileMap == null) {
             return;
         }
-        double factor = 8 * scaling();
-        Vector2i tile = new Vector2i((int) (e.getX() / factor), (int) (e.getY() / factor));
+        var tile = new Vector2i(viewToTile(e.getX()), viewToTile(e.getY()));
         if (e.getButton() == MouseButton.SECONDARY) {
-            tileMap.setContent(tile.y(), tile.x(), Tiles.EMPTY);
+            tileMap.setContent(tile, Tiles.EMPTY);
         }
         else if (e.isShiftDown()) {
-            tileMap.setContent(tile.y(), tile.x(), lastSelectedValue);
+            tileMap.setContent(tile, lastSelectedValue);
         }
         else {
             byte content = tileMap.content(tile);
             byte newValue = content < Tiles.TERRAIN_END_MARKER - 1 ? (byte) (content + 1) : 0;
-            tileMap.setContent(tile.y(), tile.x(), newValue);
+            tileMap.setContent(tile, newValue);
             lastSelectedValue = newValue;
         }
     }
