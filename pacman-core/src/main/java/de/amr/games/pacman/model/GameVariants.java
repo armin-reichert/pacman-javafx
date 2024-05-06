@@ -32,14 +32,14 @@ public enum GameVariants implements GameModel {
 
     MS_PACMAN {
 
-        static final String MS_PACMAN_MAP_1 = "/de/amr/games/pacman/maps/mspacman_1_terrain.txt";
-        static final String MS_PACMAN_FOOD_MAP_1 = "/de/amr/games/pacman/maps/mspacman_1_food.txt";
-        static final String MS_PACMAN_MAP_2 = "/de/amr/games/pacman/maps/mspacman_2_terrain.txt";
-        static final String MS_PACMAN_FOOD_MAP_2 = "/de/amr/games/pacman/maps/mspacman_2_food.txt";
-        static final String MS_PACMAN_MAP_3 = "/de/amr/games/pacman/maps/mspacman_3_terrain.txt";
-        static final String MS_PACMAN_FOOD_MAP_3 = "/de/amr/games/pacman/maps/mspacman_3_food.txt";
-        static final String MS_PACMAN_MAP_4 = "/de/amr/games/pacman/maps/mspacman_4_terrain.txt";
-        static final String MS_PACMAN_FOOD_MAP_4 = "/de/amr/games/pacman/maps/mspacman_4_food.txt";
+        static final String MS_PACMAN_TERRAIN_MAP_1 = "/maps/mspacman_1_terrain.txt";
+        static final String MS_PACMAN_FOOD_MAP_1    = "/maps/mspacman_1_food.txt";
+        static final String MS_PACMAN_TERRAIN_MAP_2 = "/maps/mspacman_2_terrain.txt";
+        static final String MS_PACMAN_FOOD_MAP_2    = "/maps/mspacman_2_food.txt";
+        static final String MS_PACMAN_TERRAIN_MAP_3 = "/maps/mspacman_3_terrain.txt";
+        static final String MS_PACMAN_FOOD_MAP_3    = "/maps/mspacman_3_food.txt";
+        static final String MS_PACMAN_TERRAIN_MAP_4 = "/maps/mspacman_4_terrain.txt";
+        static final String MS_PACMAN_FOOD_MAP_4    = "/maps/mspacman_4_food.txt";
 
         /**
          * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
@@ -62,11 +62,11 @@ public enum GameVariants implements GameModel {
         @Override
         public World createWorld(int mapNumber) {
             return switch (mapNumber) {
-                case 1 -> createArcadeWorld(MS_PACMAN_MAP_1, MS_PACMAN_FOOD_MAP_1);
-                case 2 -> createArcadeWorld(MS_PACMAN_MAP_2, MS_PACMAN_FOOD_MAP_2);
-                case 3 -> createArcadeWorld(MS_PACMAN_MAP_3, MS_PACMAN_FOOD_MAP_3);
-                case 4 -> createArcadeWorld(MS_PACMAN_MAP_4, MS_PACMAN_FOOD_MAP_4);
-                default -> throw new IllegalArgumentException("Ms. Pac-Man world map number must be 1..4 but is " + mapNumber);
+                case 1 -> createArcadeWorld(MS_PACMAN_TERRAIN_MAP_1, MS_PACMAN_FOOD_MAP_1);
+                case 2 -> createArcadeWorld(MS_PACMAN_TERRAIN_MAP_2, MS_PACMAN_FOOD_MAP_2);
+                case 3 -> createArcadeWorld(MS_PACMAN_TERRAIN_MAP_3, MS_PACMAN_FOOD_MAP_3);
+                case 4 -> createArcadeWorld(MS_PACMAN_TERRAIN_MAP_4, MS_PACMAN_FOOD_MAP_4);
+                default -> throw new IllegalArgumentException("Ms. Pac-Man map number must be in 1-4, is: " + mapNumber);
             };
         }
         /**
@@ -259,8 +259,8 @@ public enum GameVariants implements GameModel {
      */
     PACMAN {
 
-        static final String PACMAN_MAP = "/de/amr/games/pacman/maps/pacman_terrain.txt";
-        static final String PACMAN_FOOD_MAP = "/de/amr/games/pacman/maps/pacman_food.txt";
+        static final String PACMAN_TERRAIN_MAP = "/maps/pacman_terrain.txt";
+        static final String PACMAN_FOOD_MAP    = "/maps/pacman_food.txt";
 
         static final NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
             np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
@@ -290,7 +290,7 @@ public enum GameVariants implements GameModel {
 
         @Override
         public  World createWorld(int mapNumber) {
-            World world = createArcadeWorld(PACMAN_MAP, PACMAN_FOOD_MAP);
+            World world = createArcadeWorld(PACMAN_TERRAIN_MAP, PACMAN_FOOD_MAP);
             List<Direction> up = List.of(UP);
             Map<Vector2i, List<Direction>> fp = new HashMap<>();
             Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> fp.put(tile, up));
