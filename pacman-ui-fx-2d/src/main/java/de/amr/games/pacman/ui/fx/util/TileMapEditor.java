@@ -12,6 +12,8 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -48,6 +50,9 @@ public class TileMapEditor extends Application  {
     Canvas canvas;
     VBox infoPane;
     Label infoLabel;
+    CheckBox cbTerrainVisible;
+    CheckBox cbFoodVisible;
+    CheckBox cbTerrainEdited;
 
     TileMapRenderer terrainMapRenderer;
     TileMapRenderer foodMapRenderer;
@@ -58,9 +63,9 @@ public class TileMapEditor extends Application  {
     byte lastSelectedTerrainValue;
     byte lastSelectedFoodValue;
     Vector2i hoveredTile;
-    boolean showTerrain = true;
-    boolean showFood = true;
-    boolean editTerrain = true;
+    BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
+    BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
+    BooleanProperty terrainEditedPy = new SimpleBooleanProperty(true);
 
     World pacManWorld    = GameVariants.PACMAN.createWorld(1);
     World msPacManWorld1 = GameVariants.MS_PACMAN.createWorld(1);
@@ -85,11 +90,11 @@ public class TileMapEditor extends Application  {
         scene.setFill(Color.BLACK);
         scene.setOnKeyReleased(e -> {
             if (e.getCode() == KeyCode.T) {
-                editTerrain = true;
+                terrainEditedPy.set(true);
                 updateInfo();
             }
             else if (e.getCode() == KeyCode.F) {
-                editTerrain = false;
+                terrainEditedPy.set(false);
                 updateInfo();
             }
         });
@@ -111,11 +116,11 @@ public class TileMapEditor extends Application  {
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        if (terrainMap != null && showTerrain) {
+        if (terrainMap != null && terrainVisiblePy.get()) {
             terrainMapRenderer.setScaling(scaling());
             terrainMapRenderer.drawMap(g, terrainMap);
         }
-        if (foodMap != null && showFood) {
+        if (foodMap != null && foodVisiblePy.get()) {
             foodMapRenderer.setScaling(scaling());
             foodMapRenderer.drawMap(g, foodMap);
         }
@@ -139,9 +144,22 @@ public class TileMapEditor extends Application  {
         canvasContainer = new BorderPane(canvas);
 
         infoLabel = new Label();
-        infoPane = new VBox(infoLabel);
+
+        cbTerrainVisible = new CheckBox("Show Terrain");
+        cbTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
+
+        cbFoodVisible = new CheckBox("Show Food");
+        cbFoodVisible.selectedProperty().bindBidirectional(foodVisiblePy);
+
+        cbTerrainEdited = new CheckBox("Edit Terrain");
+        cbTerrainEdited.selectedProperty().bindBidirectional(terrainEditedPy);
+        cbTerrainEdited.setOnAction(e -> updateInfo());
+
+        infoPane = new VBox();
         infoPane.setMinWidth(200);
         infoPane.setMaxWidth(200);
+
+        infoPane.getChildren().addAll(infoLabel, cbTerrainVisible, cbFoodVisible, cbTerrainEdited);
 
         contentPane = new BorderPane();
         contentPane.setCenter(canvasContainer);
@@ -251,7 +269,7 @@ public class TileMapEditor extends Application  {
         if (terrainMap == null) {
             return;
         }
-        if (editTerrain) {
+        if (terrainEditedPy.get()) {
             editTerrainTile(e);
         } else {
             editFoodTile(e);
@@ -302,10 +320,10 @@ public class TileMapEditor extends Application  {
     }
 
     void updateInfo() {
-        var editModeText = editTerrain ? "Terrain is edited" : "Food is edited";
         var editedTileText = String.format("Tile: x=%2d y=%2d value=%d",
             hoveredTile.x(), hoveredTile.y(), terrainMap.content(hoveredTile));
-        infoLabel.setText(editModeText + "\n" + editedTileText);
+
+        infoLabel.setText(editedTileText);
     }
 
     void saveMaps() {
