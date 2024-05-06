@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 /**
  * @author Armin Reichert
  */
-public class MapEditor extends Application  {
+public class TileMapEditor extends Application  {
 
     public static void main(String[] args) {
         launch();
