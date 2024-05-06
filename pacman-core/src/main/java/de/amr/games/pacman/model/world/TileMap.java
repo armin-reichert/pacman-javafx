@@ -5,16 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.world;
 
 import de.amr.games.pacman.lib.Vector2i;
-import org.tinylog.Logger;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -51,7 +47,7 @@ public class TileMap {
             var bytes = bytesFromText(r.lines().toList());
             return new TileMap(bytes, valueLimit);
         } catch (Exception x) {
-            return null;
+            throw new IllegalArgumentException("Cannot create tile map from URL " + url);
         }
     }
 
