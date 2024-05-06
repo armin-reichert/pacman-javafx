@@ -5,7 +5,16 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.world;
 
 import de.amr.games.pacman.lib.Vector2i;
+import org.tinylog.Logger;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -17,16 +26,33 @@ import static de.amr.games.pacman.lib.Globals.v2i;
  */
 public class TileMap {
 
-    public static byte[][] createBytesFromLines(String... lines) {
-        byte[][] bytes = new byte[lines.length][lines[0].length()];
+    public static byte[][] bytesFromText(List<String> lines) {
+        int numRows = lines.size();
+        String[] values = lines.getFirst().split(",");
+        int numCols = values.length;
+        byte[][] bytes = new byte[numRows][numCols];
         int row = 0;
         for (String line : lines) {
-            for (int col = 0; col < lines[0].length(); ++col) {
-                bytes[row][col] = Byte.parseByte(String.valueOf(line.charAt(col)));
+            values = line.split(",");
+            if (values.length != numCols) {
+                throw new IllegalArgumentException("Inconsistent map data");
+            }
+            for (int col = 0; col < values.length; ++col) {
+                bytes[row][col] = Byte.parseByte(values[col].trim());
             }
             ++row;
         }
         return bytes;
+    }
+
+    public static TileMap fromURL(URL url, byte valueLimit) {
+        try (BufferedReader r = new BufferedReader(
+            new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+            var bytes = bytesFromText(r.lines().toList());
+            return new TileMap(bytes, valueLimit);
+        } catch (Exception x) {
+            return null;
+        }
     }
 
     private final byte[][] data;
@@ -56,6 +82,10 @@ public class TileMap {
             }
         }
         this.data = data;
+    }
+
+    public byte[][] getData() {
+        return data;
     }
 
     public boolean hasContentAt(Vector2i tile, byte tileContent) {

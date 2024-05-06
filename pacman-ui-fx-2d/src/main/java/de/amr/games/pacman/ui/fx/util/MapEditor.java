@@ -23,6 +23,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
@@ -54,6 +55,12 @@ public class MapEditor extends Application  {
     World msPacManWorld2 = GameVariants.MS_PACMAN.createWorld(2);
     World msPacManWorld3 = GameVariants.MS_PACMAN.createWorld(3);
     World msPacManWorld4 = GameVariants.MS_PACMAN.createWorld(4);
+
+
+    @Override
+    public void init() throws Exception {
+        loadTerrainMapFromURL(TileMap.class.getResource("/de/amr/games/pacman/maps/pacman_terrain.txt"));
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -144,6 +151,14 @@ public class MapEditor extends Application  {
         return menu;
     }
 
+    void loadTerrainMapFromURL(URL url) {
+        TileMap map = TileMap.fromURL(url, Tiles.TERRAIN_END_MARKER);
+        if (map != null) {
+            Logger.info("Map loaded. {} rows, {} cols", map.numRows(), map.numCols());
+        } else {
+            Logger.error("Could not load map from URL {}", url);
+        }
+    }
     void load(World world, Color wallColor) {
         tileMap = world.tileMap();
         foodMap = world.foodMap();
