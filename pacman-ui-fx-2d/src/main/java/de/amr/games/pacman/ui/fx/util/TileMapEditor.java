@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -27,7 +28,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
@@ -55,10 +55,12 @@ public class TileMapEditor extends Application  {
     TileMap terrainMap;
     TileMap foodMap;
 
-    byte lastSelectedValue;
+    byte lastSelectedTerrainValue;
+    byte lastSelectedFoodValue;
     Vector2i hoveredTile;
     boolean showTerrain = true;
     boolean showFood = true;
+    boolean editTerrain = true;
 
     World pacManWorld    = GameVariants.PACMAN.createWorld(1);
     World msPacManWorld1 = GameVariants.MS_PACMAN.createWorld(1);
@@ -81,6 +83,16 @@ public class TileMapEditor extends Application  {
 
         scene = new Scene(createSceneContent(), 800, 600);
         scene.setFill(Color.BLACK);
+        scene.setOnKeyReleased(e -> {
+            if (e.getCode() == KeyCode.T) {
+                editTerrain = true;
+                updateInfo();
+            }
+            else if (e.getCode() == KeyCode.F) {
+                editTerrain = false;
+                updateInfo();
+            }
+        });
 
         canvas.heightProperty().bind(scene.heightProperty().multiply(0.95));
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
@@ -151,7 +163,7 @@ public class TileMapEditor extends Application  {
 
     Menu createFileMenu() {
         var saveItem = new MenuItem("Save");
-        saveItem.setOnAction(e -> saveMap());
+        saveItem.setOnAction(e -> saveMaps());
 
         var quitItem = new MenuItem("Quit");
         quitItem.setOnAction(e -> stage.close());
@@ -214,11 +226,6 @@ public class TileMapEditor extends Application  {
         return menu;
     }
 
-    void loadTerrainMapFromURL(URL url) {
-        TileMap map = TileMap.fromURL(url, Tiles.TERRAIN_TILES_END);
-            Logger.info("Map loaded. {} rows, {} cols", map.numRows(), map.numCols());
-    }
-
     void setWorld(World world) {
         terrainMap = world.tileMap();
         foodMap = world.foodMap();
@@ -244,54 +251,86 @@ public class TileMapEditor extends Application  {
         if (terrainMap == null) {
             return;
         }
+        if (editTerrain) {
+            editTerrainTile(e);
+        } else {
+            editFoodTile(e);
+        }
+    }
+
+    void editTerrainTile(MouseEvent e) {
         var tile = new Vector2i(viewToTile(e.getX()), viewToTile(e.getY()));
         if (e.getButton() == MouseButton.SECONDARY) {
             terrainMap.setContent(tile, Tiles.EMPTY);
-            updateHoveredTileInfo();
+            updateInfo();
         }
         else if (e.isShiftDown()) {
-            terrainMap.setContent(tile, lastSelectedValue);
-            updateHoveredTileInfo();
+            terrainMap.setContent(tile, lastSelectedTerrainValue);
+            updateInfo();
         }
         else {
             byte content = terrainMap.content(tile);
             byte newValue = content < Tiles.TERRAIN_TILES_END - 1 ? (byte) (content + 1) : 0;
             terrainMap.setContent(tile, newValue);
-            lastSelectedValue = newValue;
-            updateHoveredTileInfo();
+            lastSelectedTerrainValue = newValue;
+            updateInfo();
+        }
+    }
+
+    void editFoodTile(MouseEvent e) {
+        var tile = new Vector2i(viewToTile(e.getX()), viewToTile(e.getY()));
+        if (e.getButton() == MouseButton.SECONDARY) {
+            foodMap.setContent(tile, Tiles.EMPTY);
+            updateInfo();
+        }
+        else if (e.isShiftDown()) {
+            foodMap.setContent(tile, lastSelectedFoodValue);
+            updateInfo();
+        }
+        else {
+            byte content = foodMap.content(tile);
+            byte newValue = content < Tiles.FOOD_TILES_END - 1 ? (byte) (content + 1) : 0;
+            foodMap.setContent(tile, newValue);
+            lastSelectedFoodValue = newValue;
+            updateInfo();
         }
     }
 
     void onMouseMovedOverCanvas(MouseEvent e) {
         hoveredTile = new Vector2i(viewToTile(e.getX()), viewToTile(e.getY()));
-        updateHoveredTileInfo();
+        updateInfo();
     }
 
-    void updateHoveredTileInfo() {
-        var text = String.format("Tile: x=%2d y=%2d value=%d",
+    void updateInfo() {
+        var editModeText = editTerrain ? "Terrain is edited" : "Food is edited";
+        var editedTileText = String.format("Tile: x=%2d y=%2d value=%d",
             hoveredTile.x(), hoveredTile.y(), terrainMap.content(hoveredTile));
-        infoLabel.setText(text);
+        infoLabel.setText(editModeText + "\n" + editedTileText);
     }
 
-    void saveMap() {
-        if (terrainMap == null) {
-            Logger.info("No map loaded");
-            return;
+    void saveMaps() {
+        if (terrainMap != null) {
+            saveMap(terrainMap, "saved_terrain_map.txt");
         }
-        File file = new File("saved_map.txt");
-        try (FileWriter fw = new FileWriter(file, StandardCharsets.UTF_8)) {
-            for (int row = 0; row < terrainMap.numRows(); ++row) {
-                fw.write("{");
-                for (int col = 0; col < terrainMap.numCols(); ++col) {
-                    String valueTxt = String.valueOf(terrainMap.content(row, col));
-                    fw.write(String.format("%2s", valueTxt));
-                    if (col < terrainMap.numCols() - 1) {
-                        fw.write(",");
+        if (foodMap != null) {
+            saveMap(foodMap, "saved_food_map.txt");
+        }
+    }
+
+    void saveMap(TileMap map, String fileName) {
+        File file = new File(fileName);
+        try (FileWriter w = new FileWriter(file, StandardCharsets.UTF_8)) {
+            for (int row = 0; row < map.numRows(); ++row) {
+                for (int col = 0; col < map.numCols(); ++col) {
+                    String valueTxt = String.valueOf(map.content(row, col));
+                    w.write(String.format("%2s", valueTxt));
+                    if (col < map.numCols() - 1) {
+                        w.write(",");
                     }
                 }
-                fw.write("},\n");
+                w.write("\n");
             }
-            Logger.info("Map saved successfully");
+            Logger.info("Map {} saved successfully", fileName);
         } catch (Exception x) {
             Logger.error(x);
         }
