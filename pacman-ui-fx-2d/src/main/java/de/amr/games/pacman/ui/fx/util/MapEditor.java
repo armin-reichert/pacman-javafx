@@ -30,40 +30,36 @@ public class MapEditor extends Application  {
         launch();
     }
 
-
     Stage stage;
     Scene scene;
     BorderPane contentPane;
     BorderPane canvasContainer;
     Canvas canvas;
+    MenuBar menuBar;
+    TileMapRenderer renderer;
+
     TileMap tileMap;
     TileMap foodMap;
-    TileMapRenderer renderer;
-    MenuBar menuBar;
-
     byte lastSelectedValue;
 
-    World pacManWorld = GameVariants.PACMAN.createWorld(1);
+    World pacManWorld    = GameVariants.PACMAN.createWorld(1);
     World msPacManWorld1 = GameVariants.MS_PACMAN.createWorld(1);
     World msPacManWorld2 = GameVariants.MS_PACMAN.createWorld(2);
     World msPacManWorld3 = GameVariants.MS_PACMAN.createWorld(3);
     World msPacManWorld4 = GameVariants.MS_PACMAN.createWorld(4);
 
     @Override
-    public void init() throws Exception {
-        renderer = new TileMapRenderer();
-    }
-
-    @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
-        stage.setScene(createScene());
-        stage.setTitle("Map Editor");
-        GameClockFX clock = new GameClockFX();
-        clock.setContinousCallback(this::draw);
+        renderer = new TileMapRenderer();
 
         loadMaps(pacManWorld.tileMap(), pacManWorld.foodMap(), Color.rgb(33, 33, 255));
 
+        GameClockFX clock = new GameClockFX();
+        clock.setContinousCallback(this::draw);
+
+        stage.setScene(createScene());
+        stage.setTitle("Map Editor");
         stage.show();
         clock.start();
     }
@@ -207,17 +203,17 @@ public class MapEditor extends Application  {
             return;
         }
         File file = new File("saved_map.txt");
-        try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
+        try (FileWriter fw = new FileWriter(file, StandardCharsets.UTF_8)) {
             for (int row = 0; row < tileMap.numRows(); ++row) {
-                writer.write("{");
+                fw.write("{");
                 for (int col = 0; col < tileMap.numCols(); ++col) {
                     String valueTxt = String.valueOf(tileMap.content(row, col));
-                    writer.write(String.format("%2s", valueTxt));
+                    fw.write(String.format("%2s", valueTxt));
                     if (col < tileMap.numCols() - 1) {
-                        writer.write(",");
+                        fw.write(",");
                     }
                 }
-                writer.write("},\n");
+                fw.write("},\n");
             }
             Logger.info("Map saved successfully");
         } catch (Exception x) {
