@@ -56,7 +56,6 @@ public class MapEditor extends Application  {
     World msPacManWorld3 = GameVariants.MS_PACMAN.createWorld(3);
     World msPacManWorld4 = GameVariants.MS_PACMAN.createWorld(4);
 
-
     @Override
     public void init() throws Exception {
         loadTerrainMapFromURL(TileMap.class.getResource("/de/amr/games/pacman/maps/pacman_terrain.txt"));

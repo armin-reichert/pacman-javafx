@@ -135,7 +135,7 @@ public abstract class GameScene2D implements GameScene {
      * Draws additional scene info, e.g. tile structure or debug info.
      */
     protected void drawSceneInfo() {
-        drawTileGrid(GameModel.TILES_X, GameModel.TILES_Y);
+        drawTileGrid(GameModel.ARCADE_MAP_TILES_X, GameModel.ARCADE_MAP_TILES_Y);
     }
 
     public void clearCanvas() {
@@ -157,8 +157,8 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected void drawLevelCounter() {
-        double x = t(GameModel.TILES_X - 4);
-        double y = t(GameModel.TILES_Y - 2);
+        double x = t(GameModel.ARCADE_MAP_TILES_X - 4);
+        double y = t(GameModel.ARCADE_MAP_TILES_Y - 2);
         for (byte symbol : context.game().levelCounter()) {
             var sprite = switch (context.game()) {
                 case GameVariants.MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
@@ -180,7 +180,7 @@ public abstract class GameScene2D implements GameScene {
             default -> throw new IllegalGameVariantException(context.game());
         };
         var x = TS * 2;
-        var y = TS * (GameModel.TILES_Y - 2);
+        var y = TS * (GameModel.ARCADE_MAP_TILES_Y - 2);
         int maxLives = 5;
         for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
             drawSprite(sprite, x + TS * (2 * i), y);

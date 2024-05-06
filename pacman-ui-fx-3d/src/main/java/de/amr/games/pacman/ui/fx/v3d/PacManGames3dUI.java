@@ -56,10 +56,10 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(
         "de.amr.games.pacman.ui.fx.v3d.texts.messages", PacManGames3dUI.class.getModule());
 
-    public static final float PIP_MIN_HEIGHT = 0.75f * GameModel.TILES_Y * TS;
-    public static final float PIP_MAX_HEIGHT = 2.00f * GameModel.TILES_Y * TS;
+    public static final float PIP_MIN_HEIGHT = 0.75f * GameModel.ARCADE_MAP_TILES_Y * TS;
+    public static final float PIP_MAX_HEIGHT = 2.00f * GameModel.ARCADE_MAP_TILES_Y * TS;
 
-    public static final DoubleProperty  PY_PIP_HEIGHT                 = new SimpleDoubleProperty(GameModel.TILES_Y * TS);
+    public static final DoubleProperty  PY_PIP_HEIGHT                 = new SimpleDoubleProperty(GameModel.ARCADE_MAP_TILES_Y * TS);
     public static final DoubleProperty  PY_PIP_OPACITY                = new SimpleDoubleProperty(0.66);
     public static final BooleanProperty PY_PIP_ON                     = new SimpleBooleanProperty(false);
     public static final IntegerProperty PY_SIMULATION_STEPS           = new SimpleIntegerProperty(1);

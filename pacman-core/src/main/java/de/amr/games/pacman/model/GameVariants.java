@@ -469,19 +469,29 @@ public enum GameVariants implements GameModel {
 
     abstract void updateLevelCounter();
 
-    static World createArcadeWorld(String terrainMapURL, String foodMapURL) {
+    House createArcadeHouse() {
         var house = new House();
-        house.setTopLeftTile(v2i(10, 15));
         house.setSize(v2i(8, 5));
         house.setDoor(new Door(v2i(13, 15), v2i(14, 15)));
-        var terrainMap = TileMap.fromURL(GameVariants.class.getResource(terrainMapURL), Tiles.TERRAIN_END_MARKER);
-        var foodMap = TileMap.fromURL(GameVariants.class.getResource(foodMapURL), Tiles.FOOD_END_MARKER);
-        var world = new World(terrainMap.getData(), foodMap.getData(), house);
-        if (world.numCols() != TILES_X || world.numRows() != TILES_Y) {
+        return house;
+    }
+
+    void validateArcadeMapSize(TileMap map) {
+        if (map.numCols() != ARCADE_MAP_TILES_X || map.numRows() != ARCADE_MAP_TILES_Y) {
             throw new IllegalArgumentException(
                 String.format("Arcade map must have %d columns and %d rows but has %d columns and %d rows",
-                    TILES_X, TILES_Y, world.numCols(), world.numRows()));
+                    ARCADE_MAP_TILES_X, ARCADE_MAP_TILES_Y, map.numCols(), map.numRows()));
         }
+    }
+
+    World createArcadeWorld(String terrainMapURL, String foodMapURL) {
+        var terrainMap = TileMap.fromURL(getClass().getResource(terrainMapURL), Tiles.TERRAIN_END_MARKER);
+        validateArcadeMapSize(terrainMap);
+        var foodMap = TileMap.fromURL(getClass().getResource(foodMapURL), Tiles.FOOD_END_MARKER);
+        validateArcadeMapSize(foodMap);
+        var house = createArcadeHouse();
+        house.setTopLeftTile(v2i(10, 15));
+        var world = new World(terrainMap.getData(), foodMap.getData(), house);
         world.setPacPosition(halfTileRightOf(13, 26));
         world.setGhostPositions(new Vector2f[] {
             halfTileRightOf(13, 14), // red ghost

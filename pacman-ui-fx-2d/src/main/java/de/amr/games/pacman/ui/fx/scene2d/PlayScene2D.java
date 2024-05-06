@@ -19,8 +19,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import java.util.function.Predicate;
-
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.ENTERING_HOUSE;
 import static de.amr.games.pacman.model.actors.GhostState.RETURNING_HOME;
@@ -207,7 +205,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneInfo() {
-        drawTileGrid(GameModel.TILES_X, GameModel.TILES_Y);
+        drawTileGrid(GameModel.ARCADE_MAP_TILES_X, GameModel.ARCADE_MAP_TILES_Y);
         if (context.game() == GameVariants.PACMAN && context.game().world() != null) {
             context.game().world().forbiddenPassages().forEach((tile, directions) -> {
                 // TODO indicate direction

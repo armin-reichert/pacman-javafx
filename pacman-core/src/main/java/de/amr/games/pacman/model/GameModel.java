@@ -28,8 +28,8 @@ import java.util.stream.Stream;
  */
 public interface GameModel {
 
-    byte TILES_X = 28;
-    byte TILES_Y = 36;
+    byte ARCADE_MAP_TILES_X = 28;
+    byte ARCADE_MAP_TILES_Y = 36;
 
     // Ghost IDs
     byte RED_GHOST = 0, PINK_GHOST = 1, CYAN_GHOST = 2, ORANGE_GHOST = 3;
