@@ -64,15 +64,14 @@ public class TileMapEditor extends Application  {
     World msPacManWorld4 = GameVariants.MS_PACMAN.createWorld(4);
 
     @Override
-    public void init() throws Exception {
-        loadTerrainMapFromURL(TileMap.class.getResource("/de/amr/games/pacman/maps/pacman_terrain.txt"));
-    }
-
-    @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
+        load(pacManWorld);
+
         renderer = new TileMapRenderer();
-        load(pacManWorld, Color.rgb(33, 33, 255));
+        renderer.setWallColor(Color.rgb(33, 33, 255));
+        renderer.setEnergizerColor(Color.rgb(254, 189, 180));
+        renderer.setPelletColor(Color.rgb(254, 189, 180));
 
         scene = new Scene(createSceneContent(), 800, 600);
         scene.setFill(Color.BLACK);
@@ -132,19 +131,44 @@ public class TileMapEditor extends Application  {
 
     Menu createWorldMenu() {
         var pacManWorldItem = new RadioMenuItem("Pac-Man");
-        pacManWorldItem.setOnAction(e -> load(pacManWorld, Color.rgb(33, 33, 255)));
+        pacManWorldItem.setOnAction(e -> {
+            load(pacManWorld);
+            renderer.setWallColor(Color.rgb(33, 33, 255));
+            renderer.setEnergizerColor(Color.rgb(254, 189, 180));
+            renderer.setPelletColor(Color.rgb(254, 189, 180));
+        });
 
         var msPacManWorldItem1 = new RadioMenuItem("Ms. Pac-Man Map 1");
-        msPacManWorldItem1.setOnAction(e -> load(msPacManWorld1, Color.RED));
+        msPacManWorldItem1.setOnAction(e -> {
+            load(msPacManWorld1);
+            renderer.setWallColor(Color.rgb(255, 183, 174));
+            renderer.setEnergizerColor(Color.rgb(222, 222, 255));
+            renderer.setPelletColor(Color.rgb(222, 222, 255));
+        });
 
         var msPacManWorldItem2 = new RadioMenuItem("Ms. Pac-Man Map 2");
-        msPacManWorldItem2.setOnAction(e -> load(msPacManWorld2, Color.rgb(71, 183, 255)));
+        msPacManWorldItem2.setOnAction(e -> {
+            load(msPacManWorld2);
+            renderer.setWallColor(Color.rgb(71, 183, 255));
+            renderer.setEnergizerColor(Color.rgb(255, 255, 0));
+            renderer.setPelletColor(Color.rgb(255, 255, 0));
+        });
 
         var msPacManWorldItem3 = new RadioMenuItem("Ms. Pac-Man Map 3");
-        msPacManWorldItem3.setOnAction(e -> load(msPacManWorld3, Color.rgb(222, 151, 81)));
+        msPacManWorldItem3.setOnAction(e -> {
+            load(msPacManWorld3);
+            renderer.setWallColor(Color.rgb(222, 151, 81));
+            renderer.setEnergizerColor(Color.rgb(255, 0, 0));
+            renderer.setPelletColor(Color.rgb(255, 0, 0));
+        });
 
         var msPacManWorldItem4 = new RadioMenuItem("Ms. Pac-Man Map 4");
-        msPacManWorldItem4.setOnAction(e -> load(msPacManWorld4, Color.rgb(33, 33, 255)));
+        msPacManWorldItem4.setOnAction(e -> {
+            load(msPacManWorld4);
+            renderer.setWallColor(Color.rgb(33, 33, 255));
+            renderer.setEnergizerColor(Color.rgb(222, 222, 255));
+            renderer.setPelletColor(Color.rgb(222, 222, 255));
+        });
 
         ToggleGroup tg = new ToggleGroup();
         Stream.of(pacManWorldItem, msPacManWorldItem1, msPacManWorldItem2, msPacManWorldItem3, msPacManWorldItem4)
@@ -159,16 +183,12 @@ public class TileMapEditor extends Application  {
 
     void loadTerrainMapFromURL(URL url) {
         TileMap map = TileMap.fromURL(url, Tiles.TERRAIN_TILES_END);
-        if (map != null) {
             Logger.info("Map loaded. {} rows, {} cols", map.numRows(), map.numCols());
-        } else {
-            Logger.error("Could not load map from URL {}", url);
-        }
     }
-    void load(World world, Color wallColor) {
+
+    void load(World world) {
         tileMap = world.tileMap();
         foodMap = world.foodMap();
-        renderer.setWallColor(wallColor);
     }
 
     int numMapCols() {
