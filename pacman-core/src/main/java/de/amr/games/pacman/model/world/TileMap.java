@@ -5,13 +5,17 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.world;
 
 import de.amr.games.pacman.lib.Vector2i;
+import org.tinylog.Logger;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -23,38 +27,65 @@ import static de.amr.games.pacman.lib.Globals.v2i;
  */
 public class TileMap {
 
-    static byte[][] parse(List<String> lines) {
-        int numRows = lines.size();
-        String[] values = lines.getFirst().split(",");
-        int numCols = values.length;
-        byte[][] bytes = new byte[numRows][numCols];
+    static void parse(TileMap tileMap, List<String> lines, byte valueLimit) {
+        int numRows = 0, numCols = -1;
+        for (String line : lines) {
+            if (!line.startsWith("#")) {
+                numRows += 1;
+                if (numCols == -1) {
+                    String[] values = line.split(",");
+                    numCols = values.length;
+                }
+            }
+        }
+        var data = new byte[numRows][numCols];
         int row = 0;
         for (String line : lines) {
-            values = line.split(",");
+            if (line.startsWith("#")) {
+                String rest = line.substring(1);
+                var assignment = rest.split("=");
+                if (assignment.length == 2) {
+                    var lhs = assignment[0].trim();
+                    var rhs = assignment[1].trim();
+                    tileMap.properties.put(lhs, rhs);
+                }
+                continue;
+            }
+            String[] values = line.split(",");
             if (values.length != numCols) {
                 throw new IllegalArgumentException("Inconsistent map data");
             }
             for (int col = 0; col < values.length; ++col) {
-                bytes[row][col] = Byte.parseByte(values[col].trim());
+                byte value = Byte.parseByte(values[col].trim());
+                if (value >= valueLimit) {
+                    Logger.error("Invalid tile map value {} at row {}, col {}", value, row, col);
+                } else {
+                    data[row][col] = value;
+                }
             }
             ++row;
         }
-        return bytes;
+        tileMap.setData(data, valueLimit);
     }
 
     public static TileMap fromURL(URL url, byte valueLimit) {
         try (BufferedReader r = new BufferedReader(
             new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
-            var bytes = parse(r.lines().toList());
-            return new TileMap(bytes, valueLimit);
+            var tileMap = new TileMap();
+            parse(tileMap, r.lines().toList(), valueLimit);
+            return tileMap;
         } catch (Exception x) {
             throw new IllegalArgumentException("Cannot create tile map from URL " + url);
         }
     }
 
-    private final byte[][] data;
+    private final Map<String, String> properties = new HashMap<>();
+    private byte[][] data;
 
-    public TileMap(byte[][] data, byte lastTileValue) {
+    private TileMap() {
+    }
+
+    private void setData(byte[][] data, byte lastTileValue) {
         if (data == null) {
             throw new IllegalArgumentException("Map data missing");
         }
@@ -86,6 +117,10 @@ public class TileMap {
         for (int row = 0; row < other.numRows(); ++row) {
             data[row] = Arrays.copyOf(other.data[row], other.numCols());
         }
+    }
+
+    public String getProperty(String key) {
+        return properties.get(key);
     }
 
     public byte[][] getData() {

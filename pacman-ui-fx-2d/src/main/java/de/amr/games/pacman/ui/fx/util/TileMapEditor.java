@@ -373,12 +373,27 @@ public class TileMapEditor extends Application  {
             File terrainMapFile = new File(basePath + ".terrain");
             try {
                 terrainMap = TileMap.fromURL(terrainMapFile.toURI().toURL(), Tiles.TERRAIN_TILES_END);
+                if (terrainMap.getProperty("wall_color") != null) {
+                    terrainMapRenderer.setWallColor(rgbToColor(terrainMap.getProperty("wall_color")));
+                }
                 lastUsedDir = terrainMapFile.getParentFile();
             } catch (MalformedURLException x) {
                 Logger.error("Could not load terrain map from file {}", terrainMapFile);
                 Logger.error(x);
             }
         }
+    }
+
+    Color rgbToColor(String rgb) {
+        if (rgb.startsWith("rgb(") && rgb.endsWith(")")) {
+            rgb = rgb.substring(4, rgb.length()-1);
+            var colors = rgb.split(",");
+            if (colors.length == 3) {
+                var color = Color.rgb(Integer.parseInt(colors[0]), Integer.parseInt(colors[1]), Integer.parseInt(colors[2]));
+                return color;
+            }
+        }
+        return Color.WHITE;
     }
 
     void saveMaps() {
