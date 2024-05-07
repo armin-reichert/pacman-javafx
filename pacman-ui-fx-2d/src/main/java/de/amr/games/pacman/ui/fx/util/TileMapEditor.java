@@ -92,7 +92,13 @@ public class TileMapEditor extends Application  {
     public void start(Stage stage) throws Exception {
         this.stage = stage;
 
-        terrainMapRenderer = new TerrainMapRenderer();
+        terrainMapRenderer = new TerrainMapRenderer() {
+            @Override
+            public void drawTunnel(GraphicsContext g, Vector2i tile) {
+                g.setFill(Color.GRAY);
+                g.fillRect(tile.x() * s(8), tile.y() * s(8), s(8), s(8));
+            }
+        };
         terrainMapRenderer.setWallColor(Color.rgb(33, 33, 255));
 
         foodMapRenderer = new FoodMapRenderer();
