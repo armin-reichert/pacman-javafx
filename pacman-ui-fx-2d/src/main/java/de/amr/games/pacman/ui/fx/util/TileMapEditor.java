@@ -98,8 +98,6 @@ public class TileMapEditor extends Application  {
         terrainMapRenderer.setWallColor(Color.GREEN);
 
         foodMapRenderer = new FoodMapRenderer();
-        foodMapRenderer.setEnergizerColor(Color.rgb(254, 189, 180));
-        foodMapRenderer.setPelletColor(Color.rgb(254, 189, 180));
 
         // set initial maps
         copyMapsFromWorld(pacManWorld);
@@ -231,29 +229,19 @@ public class TileMapEditor extends Application  {
         Menu loadPredefinedMapMenu = new Menu("Load Predefined Map");
 
         var pacManWorldItem = new MenuItem("Pac-Man");
-        pacManWorldItem.setOnAction(e -> {
-            copyMapsFromWorld(pacManWorld);
-        });
+        pacManWorldItem.setOnAction(e -> copyMapsFromWorld(pacManWorld));
 
         var msPacManWorldItem1 = new MenuItem("Ms. Pac-Man 1");
-        msPacManWorldItem1.setOnAction(e -> {
-            copyMapsFromWorld(msPacManWorld1);
-        });
+        msPacManWorldItem1.setOnAction(e -> copyMapsFromWorld(msPacManWorld1));
 
         var msPacManWorldItem2 = new MenuItem("Ms. Pac-Man 2");
-        msPacManWorldItem2.setOnAction(e -> {
-            copyMapsFromWorld(msPacManWorld2);
-        });
+        msPacManWorldItem2.setOnAction(e -> copyMapsFromWorld(msPacManWorld2));
 
         var msPacManWorldItem3 = new MenuItem("Ms. Pac-Man 3");
-        msPacManWorldItem3.setOnAction(e -> {
-            copyMapsFromWorld(msPacManWorld3);
-        });
+        msPacManWorldItem3.setOnAction(e -> copyMapsFromWorld(msPacManWorld3));
 
         var msPacManWorldItem4 = new MenuItem("Ms. Pac-Man 4");
-        msPacManWorldItem4.setOnAction(e -> {
-            copyMapsFromWorld(msPacManWorld4);
-        });
+        msPacManWorldItem4.setOnAction(e -> copyMapsFromWorld(msPacManWorld4));
 
         loadPredefinedMapMenu.getItems().addAll(pacManWorldItem, msPacManWorldItem1, msPacManWorldItem2,
             msPacManWorldItem3, msPacManWorldItem4);
@@ -484,7 +472,6 @@ public class TileMapEditor extends Application  {
         void pickTile(MouseEvent e) {
             int row = (int) e.getY() / gridSize;
             int col = (int) e.getX() / gridSize;
-            Logger.info("Tile row={} col={}", row, col);
             byte b = (byte) (row * numCols + col);
             if (terrainEditedPy.get()) {
                 selectedTerrainValue = b < Tiles.TERRAIN_TILES_END ? b : Tiles.EMPTY;
