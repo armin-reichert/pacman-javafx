@@ -26,6 +26,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
+        g.save();
         switch (content) {
             case Tiles.WALL_H -> drawWallH(g, tile);
             case Tiles.WALL_V -> drawWallV(g, tile);
@@ -37,6 +38,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
             case Tiles.DOOR -> drawDoor(g, tile, Color.PINK);
             default -> {}
         }
+        g.restore();
     }
 
     public void drawWallH(GraphicsContext g, Vector2i tile) {

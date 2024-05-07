@@ -348,10 +348,8 @@ public class TileMapEditor extends Application  {
     }
 
     void updateInfo() {
-        var editedTileText = String.format("Tile: x=%2d y=%2d value=%d",
-            hoveredTile.x(), hoveredTile.y(), terrainMap.content(hoveredTile));
-
-        infoLabel.setText(editedTileText);
+        var text = hoveredTile != null ? String.format("Tile: x=%2d y=%2d", hoveredTile.x(), hoveredTile.y()) : "";
+        infoLabel.setText(text);
     }
 
     void loadTerrainMap() {
@@ -440,10 +438,10 @@ public class TileMapEditor extends Application  {
                 g.strokeLine(col * gridSize, 0, col * gridSize, getHeight());
             }
             TileMapRenderer renderer = terrainEditedPy.get() ? terrainMapRenderer : foodMapRenderer;
-            renderer.setScaling(1);
+            renderer.setScaling(1f * gridSize / 8);
             for (int i = 0; i < numRows * numCols; ++i) {
                 int row = i / numCols, col = i % numCols;
-                renderer.drawTile(g, new Vector2i(col * gridSize, row * gridSize), (byte) i);
+                renderer.drawTile(g, new Vector2i(col, row), (byte) i);
             }
         }
     }

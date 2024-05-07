@@ -30,12 +30,14 @@ public class FoodMapRenderer implements TileMapRenderer {
     }
 
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
+        g.save();
         switch (content) {
             case Tiles.PELLET -> drawPellet(g, tile);
             case Tiles.ENERGIZER -> drawEnergizer(g, tile);
             default -> {
             }
         }
+        g.restore();
     }
 
     public void drawPellet(GraphicsContext g, Vector2i tile) {
