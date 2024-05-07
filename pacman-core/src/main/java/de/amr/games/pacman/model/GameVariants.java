@@ -32,15 +32,6 @@ public enum GameVariants implements GameModel {
 
     MS_PACMAN {
 
-        static final String MS_PACMAN_TERRAIN_MAP_1 = "/maps/mspacman_1.terrain";
-        static final String MS_PACMAN_FOOD_MAP_1    = "/maps/mspacman_1.food";
-        static final String MS_PACMAN_TERRAIN_MAP_2 = "/maps/mspacman_2.terrain";
-        static final String MS_PACMAN_FOOD_MAP_2    = "/maps/mspacman_2.food";
-        static final String MS_PACMAN_TERRAIN_MAP_3 = "/maps/mspacman_3.terrain";
-        static final String MS_PACMAN_FOOD_MAP_3    = "/maps/mspacman_3.food";
-        static final String MS_PACMAN_TERRAIN_MAP_4 = "/maps/mspacman_4.terrain";
-        static final String MS_PACMAN_FOOD_MAP_4    = "/maps/mspacman_4.food";
-
         /**
          * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
          *
@@ -62,13 +53,14 @@ public enum GameVariants implements GameModel {
         @Override
         public World createWorld(int mapNumber) {
             return switch (mapNumber) {
-                case 1 -> createArcadeWorld(MS_PACMAN_TERRAIN_MAP_1, MS_PACMAN_FOOD_MAP_1);
-                case 2 -> createArcadeWorld(MS_PACMAN_TERRAIN_MAP_2, MS_PACMAN_FOOD_MAP_2);
-                case 3 -> createArcadeWorld(MS_PACMAN_TERRAIN_MAP_3, MS_PACMAN_FOOD_MAP_3);
-                case 4 -> createArcadeWorld(MS_PACMAN_TERRAIN_MAP_4, MS_PACMAN_FOOD_MAP_4);
+                case 1 -> createArcadeWorld("/maps/mspacman_1.terrain", "/maps/mspacman_1.food");
+                case 2 -> createArcadeWorld("/maps/mspacman_2.terrain", "/maps/mspacman_2.food");
+                case 3 -> createArcadeWorld("/maps/mspacman_3.terrain", "/maps/mspacman_3.food");
+                case 4 -> createArcadeWorld("/maps/mspacman_4.terrain", "/maps/mspacman_4.food");
                 default -> throw new IllegalArgumentException("Ms. Pac-Man map number must be in 1-4, is: " + mapNumber);
             };
         }
+
         /**
          * In Ms. Pac-Man, there are 4 maps used by the 6 mazes. Up to level 13, the mazes are:
          * <ul>
@@ -259,9 +251,6 @@ public enum GameVariants implements GameModel {
      */
     PACMAN {
 
-        static final String PACMAN_TERRAIN_MAP = "/maps/pacman.terrain";
-        static final String PACMAN_FOOD_MAP    = "/maps/pacman.food";
-
         static final NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
             np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
             np(18, 23), np(18, 20), np(18, 17), np(15, 14), np(12, 14), np(9, 17),
@@ -290,7 +279,7 @@ public enum GameVariants implements GameModel {
 
         @Override
         public  World createWorld(int mapNumber) {
-            World world = createArcadeWorld(PACMAN_TERRAIN_MAP, PACMAN_FOOD_MAP);
+            World world = createArcadeWorld("/maps/pacman.terrain", "/maps/pacman.food");
             List<Direction> up = List.of(UP);
             Map<Vector2i, List<Direction>> fp = new HashMap<>();
             Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> fp.put(tile, up));
