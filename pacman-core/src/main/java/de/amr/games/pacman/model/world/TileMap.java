@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -22,7 +23,7 @@ import static de.amr.games.pacman.lib.Globals.v2i;
  */
 public class TileMap {
 
-    public static byte[][] bytesFromText(List<String> lines) {
+    static byte[][] parse(List<String> lines) {
         int numRows = lines.size();
         String[] values = lines.getFirst().split(",");
         int numCols = values.length;
@@ -44,7 +45,7 @@ public class TileMap {
     public static TileMap fromURL(URL url, byte valueLimit) {
         try (BufferedReader r = new BufferedReader(
             new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
-            var bytes = bytesFromText(r.lines().toList());
+            var bytes = parse(r.lines().toList());
             return new TileMap(bytes, valueLimit);
         } catch (Exception x) {
             throw new IllegalArgumentException("Cannot create tile map from URL " + url);
@@ -78,6 +79,13 @@ public class TileMap {
             }
         }
         this.data = data;
+    }
+
+    public TileMap(TileMap other) {
+        data = new byte[other.numRows()][];
+        for (int row = 0; row < other.numRows(); ++row) {
+            data[row] = Arrays.copyOf(other.data[row], other.numCols());
+        }
     }
 
     public byte[][] getData() {

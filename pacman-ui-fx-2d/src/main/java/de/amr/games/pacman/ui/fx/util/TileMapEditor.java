@@ -79,7 +79,7 @@ public class TileMapEditor extends Application  {
     @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
-        setWorld(pacManWorld);
+        copyMapsFromWorld(pacManWorld);
 
         terrainMapRenderer = new TileMapRenderer();
         terrainMapRenderer.setWallColor(Color.rgb(33, 33, 255));
@@ -216,46 +216,46 @@ public class TileMapEditor extends Application  {
     }
 
     Menu createMapsMenu() {
-        var clearMapItem = new MenuItem("Clear Map");
+        var clearMapItem = new MenuItem("Clear");
         clearMapItem.setOnAction(e -> clearMap());
 
-        Menu loadPredefinedMapMenu = new Menu("Predefined Maps");
+        Menu loadPredefinedMapMenu = new Menu("Load Predefined Map");
 
-        var pacManWorldItem = new RadioMenuItem("Pac-Man");
+        var pacManWorldItem = new MenuItem("Pac-Man");
         pacManWorldItem.setOnAction(e -> {
-            setWorld(pacManWorld);
+            copyMapsFromWorld(pacManWorld);
             terrainMapRenderer.setWallColor(Color.rgb(33, 33, 255));
             foodMapRenderer.setEnergizerColor(Color.rgb(254, 189, 180));
             foodMapRenderer.setPelletColor(Color.rgb(254, 189, 180));
         });
 
-        var msPacManWorldItem1 = new RadioMenuItem("Ms. Pac-Man Map 1");
+        var msPacManWorldItem1 = new MenuItem("Ms. Pac-Man 1");
         msPacManWorldItem1.setOnAction(e -> {
-            setWorld(msPacManWorld1);
+            copyMapsFromWorld(msPacManWorld1);
             terrainMapRenderer.setWallColor(Color.rgb(255, 183, 174));
             foodMapRenderer.setEnergizerColor(Color.rgb(222, 222, 255));
             foodMapRenderer.setPelletColor(Color.rgb(222, 222, 255));
         });
 
-        var msPacManWorldItem2 = new RadioMenuItem("Ms. Pac-Man Map 2");
+        var msPacManWorldItem2 = new MenuItem("Ms. Pac-Man 2");
         msPacManWorldItem2.setOnAction(e -> {
-            setWorld(msPacManWorld2);
+            copyMapsFromWorld(msPacManWorld2);
             terrainMapRenderer.setWallColor(Color.rgb(71, 183, 255));
             foodMapRenderer.setEnergizerColor(Color.rgb(255, 255, 0));
             foodMapRenderer.setPelletColor(Color.rgb(255, 255, 0));
         });
 
-        var msPacManWorldItem3 = new RadioMenuItem("Ms. Pac-Man Map 3");
+        var msPacManWorldItem3 = new MenuItem("Ms. Pac-Man 3");
         msPacManWorldItem3.setOnAction(e -> {
-            setWorld(msPacManWorld3);
+            copyMapsFromWorld(msPacManWorld3);
             terrainMapRenderer.setWallColor(Color.rgb(222, 151, 81));
             foodMapRenderer.setEnergizerColor(Color.rgb(255, 0, 0));
             foodMapRenderer.setPelletColor(Color.rgb(255, 0, 0));
         });
 
-        var msPacManWorldItem4 = new RadioMenuItem("Ms. Pac-Man Map 4");
+        var msPacManWorldItem4 = new MenuItem("Ms. Pac-Man 4");
         msPacManWorldItem4.setOnAction(e -> {
-            setWorld(msPacManWorld4);
+            copyMapsFromWorld(msPacManWorld4);
             terrainMapRenderer.setWallColor(Color.rgb(33, 33, 255));
             foodMapRenderer.setEnergizerColor(Color.rgb(222, 222, 255));
             foodMapRenderer.setPelletColor(Color.rgb(222, 222, 255));
@@ -264,20 +264,15 @@ public class TileMapEditor extends Application  {
         loadPredefinedMapMenu.getItems().addAll(pacManWorldItem, msPacManWorldItem1, msPacManWorldItem2,
             msPacManWorldItem3, msPacManWorldItem4);
 
-        ToggleGroup tg = new ToggleGroup();
-        Stream.of(pacManWorldItem, msPacManWorldItem1, msPacManWorldItem2, msPacManWorldItem3, msPacManWorldItem4)
-            .forEach(item -> item.setToggleGroup(tg));
-        pacManWorldItem.setSelected(true);
-
         var menu = new Menu("Map");
         menu.getItems().addAll(clearMapItem, loadPredefinedMapMenu);
 
         return menu;
     }
 
-    void setWorld(World world) {
-        terrainMap = world.tileMap();
-        foodMap = world.foodMap();
+    void copyMapsFromWorld(World world) {
+        terrainMap = new TileMap(world.tileMap());
+        foodMap    = new TileMap(world.foodMap());
     }
 
     int numMapCols() {
