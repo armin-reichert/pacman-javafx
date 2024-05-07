@@ -43,6 +43,14 @@ public class TileMapEditor extends Application  {
         launch();
     }
 
+    static final byte[][] GHOST_HOUSE_SHAPE = {
+        {10, 8, 8,14,14, 8, 8,11},
+        { 9, 0, 0, 0, 0, 0, 0, 9},
+        { 9, 0, 0, 0, 0, 0, 0, 9},
+        { 9, 0, 0, 0, 0, 0, 0, 9},
+        {13, 8, 8, 8, 8, 8, 8,12}
+    };
+
     Stage stage;
     Scene scene;
     MenuBar menuBar;
@@ -217,6 +225,9 @@ public class TileMapEditor extends Application  {
         var clearMapItem = new MenuItem("Clear");
         clearMapItem.setOnAction(e -> clearMap());
 
+        var addHouseItem = new MenuItem("Add House");
+        addHouseItem.setOnAction(e -> addTerrainShape(15, 10, GHOST_HOUSE_SHAPE));
+
         Menu loadPredefinedMapMenu = new Menu("Load Predefined Map");
 
         var pacManWorldItem = new MenuItem("Pac-Man");
@@ -263,7 +274,7 @@ public class TileMapEditor extends Application  {
             msPacManWorldItem3, msPacManWorldItem4);
 
         var menu = new Menu("Map");
-        menu.getItems().addAll(clearMapItem, loadPredefinedMapMenu);
+        menu.getItems().addAll(clearMapItem, addHouseItem, loadPredefinedMapMenu);
 
         return menu;
     }
@@ -407,6 +418,14 @@ public class TileMapEditor extends Application  {
             terrainMap.clear();
         } else {
             foodMap.clear();
+        }
+    }
+
+    void addTerrainShape(int row, int col, byte[][] shape) {
+        for (int r = 0; r < shape.length; ++r) {
+            for (int c = 0; c < shape[0].length; ++c) {
+                terrainMap.setContent(row + r, col + c, shape[r][c]);
+            }
         }
     }
 
