@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.util;
 
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.world.TileMap;
@@ -84,11 +85,6 @@ public class TileMapEditor extends Application  {
     World msPacManWorld4 = GameVariants.MS_PACMAN.createWorld(4);
 
     @Override
-    public void init() throws Exception {
-        copyMapsFromWorld(pacManWorld);
-    }
-
-    @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
 
@@ -99,11 +95,14 @@ public class TileMapEditor extends Application  {
                 g.fillRect(tile.x() * s(8), tile.y() * s(8), s(8), s(8));
             }
         };
-        terrainMapRenderer.setWallColor(Color.rgb(33, 33, 255));
+        terrainMapRenderer.setWallColor(Color.GREEN);
 
         foodMapRenderer = new FoodMapRenderer();
         foodMapRenderer.setEnergizerColor(Color.rgb(254, 189, 180));
         foodMapRenderer.setPelletColor(Color.rgb(254, 189, 180));
+
+        // set initial maps
+        copyMapsFromWorld(pacManWorld);
 
         scene = new Scene(createSceneContent(), 750, 800);
         scene.setFill(Color.BLACK);
@@ -233,41 +232,26 @@ public class TileMapEditor extends Application  {
         var pacManWorldItem = new MenuItem("Pac-Man");
         pacManWorldItem.setOnAction(e -> {
             copyMapsFromWorld(pacManWorld);
-            terrainMapRenderer.setWallColor(Color.rgb(33, 33, 255));
-            foodMapRenderer.setEnergizerColor(Color.rgb(254, 189, 180));
-            foodMapRenderer.setPelletColor(Color.rgb(254, 189, 180));
         });
 
         var msPacManWorldItem1 = new MenuItem("Ms. Pac-Man 1");
         msPacManWorldItem1.setOnAction(e -> {
             copyMapsFromWorld(msPacManWorld1);
-            terrainMapRenderer.setWallColor(Color.rgb(255, 183, 174));
-            foodMapRenderer.setEnergizerColor(Color.rgb(222, 222, 255));
-            foodMapRenderer.setPelletColor(Color.rgb(222, 222, 255));
         });
 
         var msPacManWorldItem2 = new MenuItem("Ms. Pac-Man 2");
         msPacManWorldItem2.setOnAction(e -> {
             copyMapsFromWorld(msPacManWorld2);
-            terrainMapRenderer.setWallColor(Color.rgb(71, 183, 255));
-            foodMapRenderer.setEnergizerColor(Color.rgb(255, 255, 0));
-            foodMapRenderer.setPelletColor(Color.rgb(255, 255, 0));
         });
 
         var msPacManWorldItem3 = new MenuItem("Ms. Pac-Man 3");
         msPacManWorldItem3.setOnAction(e -> {
             copyMapsFromWorld(msPacManWorld3);
-            terrainMapRenderer.setWallColor(Color.rgb(222, 151, 81));
-            foodMapRenderer.setEnergizerColor(Color.rgb(255, 0, 0));
-            foodMapRenderer.setPelletColor(Color.rgb(255, 0, 0));
         });
 
         var msPacManWorldItem4 = new MenuItem("Ms. Pac-Man 4");
         msPacManWorldItem4.setOnAction(e -> {
             copyMapsFromWorld(msPacManWorld4);
-            terrainMapRenderer.setWallColor(Color.rgb(33, 33, 255));
-            foodMapRenderer.setEnergizerColor(Color.rgb(222, 222, 255));
-            foodMapRenderer.setPelletColor(Color.rgb(222, 222, 255));
         });
 
         loadPredefinedMapMenu.getItems().addAll(pacManWorldItem, msPacManWorldItem1, msPacManWorldItem2,
@@ -281,7 +265,9 @@ public class TileMapEditor extends Application  {
 
     void copyMapsFromWorld(World world) {
         terrainMap = new TileMap(world.tileMap());
+        setTerrainColorsFromMap();
         foodMap    = new TileMap(world.foodMap());
+        setFoodColorsFromMap();
     }
 
     double scaling() {
@@ -373,9 +359,7 @@ public class TileMapEditor extends Application  {
             File terrainMapFile = new File(basePath + ".terrain");
             try {
                 terrainMap = TileMap.fromURL(terrainMapFile.toURI().toURL(), Tiles.TERRAIN_TILES_END);
-                if (terrainMap.getProperty("wall_color") != null) {
-                    terrainMapRenderer.setWallColor(rgbToColor(terrainMap.getProperty("wall_color")));
-                }
+                setTerrainColorsFromMap();
                 lastUsedDir = terrainMapFile.getParentFile();
             } catch (MalformedURLException x) {
                 Logger.error("Could not load terrain map from file {}", terrainMapFile);
@@ -384,13 +368,35 @@ public class TileMapEditor extends Application  {
         }
     }
 
+    void setTerrainColorsFromMap() {
+        if (terrainMap.getProperty("wall_color") != null) {
+            terrainMapRenderer.setWallColor(rgbToColor(terrainMap.getProperty("wall_color")));
+        }
+    }
+
+    void setFoodColorsFromMap() {
+        if (foodMap.getProperty("food_color") != null) {
+            Color foodColor = rgbToColor(foodMap.getProperty("food_color")) ;
+            foodMapRenderer.setEnergizerColor(foodColor);
+            foodMapRenderer.setPelletColor(foodColor);
+        }
+    }
+
     Color rgbToColor(String rgb) {
         if (rgb.startsWith("rgb(") && rgb.endsWith(")")) {
             rgb = rgb.substring(4, rgb.length()-1);
             var colors = rgb.split(",");
             if (colors.length == 3) {
-                var color = Color.rgb(Integer.parseInt(colors[0]), Integer.parseInt(colors[1]), Integer.parseInt(colors[2]));
-                return color;
+                try {
+                    int r = Globals.clamp(Integer.parseInt(colors[0].trim()), 0, 255);
+                    int g = Globals.clamp(Integer.parseInt(colors[1].trim()), 0, 255);
+                    int b = Globals.clamp(Integer.parseInt(colors[2].trim()), 0, 255);
+                    return Color.rgb(r,g,b);
+                }
+                catch (Exception x) {
+                    Logger.error(x);
+                    return Color.WHITE;
+                }
             }
         }
         return Color.WHITE;

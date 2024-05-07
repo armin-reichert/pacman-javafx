@@ -117,6 +117,7 @@ public class TileMap {
         for (int row = 0; row < other.numRows(); ++row) {
             data[row] = Arrays.copyOf(other.data[row], other.numCols());
         }
+        properties.putAll(other.properties);
     }
 
     public String getProperty(String key) {
