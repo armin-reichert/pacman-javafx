@@ -61,8 +61,8 @@ public class TileMapEditor extends Application  {
     TileMap terrainMap;
     TileMap foodMap;
 
-    byte lastSelectedTerrainValue;
-    byte lastSelectedFoodValue;
+    byte selectedTerrainValue;
+    byte selectedFoodValue;
     Vector2i hoveredTile;
     BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
     BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
@@ -156,7 +156,7 @@ public class TileMapEditor extends Application  {
         cbTerrainEdited.selectedProperty().bindBidirectional(terrainEditedPy);
         cbTerrainEdited.setOnAction(e -> updateInfo());
 
-        palette = new Palette(32, 8, 2);
+        palette = new Palette(32, 4, 4);
 
         GridPane rightPane = new GridPane();
         rightPane.setPrefWidth(200);
@@ -310,15 +310,14 @@ public class TileMapEditor extends Application  {
             terrainMap.setContent(tile, Tiles.EMPTY);
             updateInfo();
         }
-        else if (e.isShiftDown()) {
-            terrainMap.setContent(tile, lastSelectedTerrainValue);
+        else if (e.isShiftDown()) { // cycle through all tile values
+            byte content = terrainMap.content(tile);
+            byte nextValue = content < Tiles.TERRAIN_TILES_END - 1 ? (byte) (content + 1) : 0;
+            terrainMap.setContent(tile, nextValue);
             updateInfo();
         }
         else {
-            byte content = terrainMap.content(tile);
-            byte newValue = content < Tiles.TERRAIN_TILES_END - 1 ? (byte) (content + 1) : 0;
-            terrainMap.setContent(tile, newValue);
-            lastSelectedTerrainValue = newValue;
+            terrainMap.setContent(tile, selectedTerrainValue);
             updateInfo();
         }
     }
@@ -329,15 +328,14 @@ public class TileMapEditor extends Application  {
             foodMap.setContent(tile, Tiles.EMPTY);
             updateInfo();
         }
-        else if (e.isShiftDown()) {
-            foodMap.setContent(tile, lastSelectedFoodValue);
-            updateInfo();
-        }
-        else {
+        else if (e.isShiftDown()) { // cycle through all tile values
             byte content = foodMap.content(tile);
             byte newValue = content < Tiles.FOOD_TILES_END - 1 ? (byte) (content + 1) : 0;
             foodMap.setContent(tile, newValue);
-            lastSelectedFoodValue = newValue;
+            updateInfo();
+        }
+        else {
+            foodMap.setContent(tile, selectedFoodValue);
             updateInfo();
         }
     }
@@ -425,6 +423,21 @@ public class TileMapEditor extends Application  {
             this.numCols = numCols;
             setWidth(numCols * gridSize);
             setHeight(numRows * gridSize);
+            setOnMouseClicked(this::pickTile);
+        }
+
+        void pickTile(MouseEvent e) {
+            int row = (int) e.getY() / gridSize;
+            int col = (int) e.getX() / gridSize;
+            Logger.info("Tile row={} col={}", row, col);
+            byte b = (byte) (row * numCols + col);
+            if (terrainEditedPy.get()) {
+                selectedTerrainValue = b < Tiles.TERRAIN_TILES_END ? b : Tiles.EMPTY;
+                Logger.info("Selected terrain value: {}", selectedTerrainValue);
+            } else {
+                selectedFoodValue = b < Tiles.FOOD_TILES_END ? b : Tiles.EMPTY;
+                Logger.info("Selected food value: {}", selectedFoodValue);
+            }
         }
 
         void draw() {
@@ -442,6 +455,18 @@ public class TileMapEditor extends Application  {
             for (int i = 0; i < numRows * numCols; ++i) {
                 int row = i / numCols, col = i % numCols;
                 renderer.drawTile(g, new Vector2i(col, row), (byte) i);
+            }
+            // mark selected entry
+            g.setStroke(Color.YELLOW);
+            g.setLineWidth(1);
+            if (terrainEditedPy.get()) {
+                int row = selectedTerrainValue / numCols;
+                int col = selectedTerrainValue % numCols;
+                g.strokeRect(col * gridSize, row * gridSize, gridSize, gridSize);
+            } else {
+                int row = selectedFoodValue / numCols;
+                int col = selectedFoodValue % numCols;
+                g.strokeRect(col * gridSize, row * gridSize, gridSize, gridSize);
             }
         }
     }
