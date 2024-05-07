@@ -343,6 +343,13 @@ public class TileMapEditor extends Application  {
     void onMouseMovedOverCanvas(MouseEvent e) {
         hoveredTile = new Vector2i(viewToTile(e.getX()), viewToTile(e.getY()));
         updateInfo();
+        if (e.isShiftDown()) {
+            if (terrainEditedPy.get()) {
+                terrainMap.setContent(hoveredTile, selectedTerrainValue);
+            } else {
+                foodMap.setContent(hoveredTile, selectedFoodValue);
+            }
+        }
     }
 
     void updateInfo() {
