@@ -7,7 +7,17 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 
-public class TerrainMapRenderer extends TileMapRenderer {
+public class TerrainMapRenderer implements TileMapRenderer {
+
+    private float scaling;
+
+    public void setScaling(double scaling) {
+        this.scaling = (float) scaling;
+    }
+
+    private float s(float times) {
+        return scaling * times;
+    }
 
     private Color wallColor = Color.GREEN;
 

@@ -6,7 +6,17 @@ import de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class FoodMapRenderer extends TileMapRenderer {
+public class FoodMapRenderer implements TileMapRenderer {
+
+    private float scaling;
+
+    public void setScaling(double scaling) {
+        this.scaling = (float) scaling;
+    }
+
+    private float s(float times) {
+        return scaling * times;
+    }
 
     private Color pelletColor = Color.PINK;
     private Color energizerColor = Color.YELLOW;

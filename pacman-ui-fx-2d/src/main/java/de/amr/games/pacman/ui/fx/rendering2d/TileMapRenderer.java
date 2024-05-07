@@ -14,22 +14,13 @@ import javafx.scene.shape.ArcType;
 /**
  * @author Armin Reichert
  */
-public abstract class TileMapRenderer {
+public interface TileMapRenderer {
 
-    protected float scaling = 1.0f;
+    void setScaling(double scaling);
 
-    public void setScaling(double scaling) {
-        this.scaling = (float) scaling;
-    }
-
-    protected float s(float times) {
-        return scaling * times;
-    }
-
-    public void drawMap(GraphicsContext g, TileMap map) {
+    default void drawMap(GraphicsContext g, TileMap map) {
         map.tiles().forEach(tile -> drawTile(g, tile, map.content(tile)));
     }
 
-    public abstract void drawTile(GraphicsContext g, Vector2i tile, byte content);
-
+    void drawTile(GraphicsContext g, Vector2i tile, byte content);
 }
