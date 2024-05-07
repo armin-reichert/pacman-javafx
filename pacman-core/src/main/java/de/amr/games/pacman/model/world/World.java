@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.world;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 
@@ -94,10 +93,6 @@ public class World {
     public boolean insideBounds(Vector2i tile) {
         checkTileNotNull(tile);
         return terrainMap.insideBounds(tile.y(), tile.x());
-    }
-
-    public boolean insideBounds(int row, int col) {
-        return terrainMap.insideBounds(row, col);
     }
 
     public boolean containsPoint(double x, double y) {
