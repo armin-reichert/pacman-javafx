@@ -431,8 +431,8 @@ public enum GameVariants implements GameModel {
     boolean              demoLevel;
     long                 levelStartTime;
     boolean              playing;
-    byte                 initialLives;
-    byte                 lives;
+    int                  initialLives;
+    int                  lives;
 
     byte                 huntingPhaseIndex;
     byte                 cruiseElroy;
@@ -763,7 +763,7 @@ public enum GameVariants implements GameModel {
 
     @Override
     public void setInitialLives(int lives) {
-        initialLives = (byte) lives;
+        initialLives = lives;
     }
 
     @Override
@@ -773,7 +773,7 @@ public enum GameVariants implements GameModel {
 
     @Override
     public void addLives(int deltaLives) {
-        lives += (byte) deltaLives;
+        lives += deltaLives;
     }
 
     @Override

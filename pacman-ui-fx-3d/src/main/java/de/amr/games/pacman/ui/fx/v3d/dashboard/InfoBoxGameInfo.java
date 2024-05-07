@@ -28,6 +28,7 @@ public class InfoBoxGameInfo extends InfoBox {
         addInfo("", () -> "Remaining: %s".formatted(ticksToString(context.gameState().timer().remaining())));
         addInfo("Game Level", () -> context.game().level().isPresent()
             ? context.game().levelNumber() : InfoText.NO_INFO);
+        addInfo("Lives", () -> context.game().level().isPresent() ? context.game().lives() : InfoText.NO_INFO);
 
         addInfo("Hunting Phase", this::fmtHuntingPhase);
         addInfo("", this::fmtHuntingTicksRunning);
