@@ -153,6 +153,8 @@ public class TileMap {
     }
 
     public void clear() {
-        tiles().forEach(tile -> setContent(tile, Tiles.EMPTY));
+        for (byte[] row : data) {
+            Arrays.fill(row, Tiles.EMPTY);
+        }
     }
 }
