@@ -200,23 +200,17 @@ public class TileMapEditor extends Application  {
         openDialog = new FileChooser();
         openDialog.setInitialDirectory(lastUsedDir);
 
-        var loadTerrainMapItem = new MenuItem("Load Terrain Map...");
-        loadTerrainMapItem.setOnAction(e -> loadTerrainMap());
+        var loadMapsItem = new MenuItem("Load Maps...");
+        loadMapsItem.setOnAction(e -> loadMaps());
 
-        var loadFoodMapItem = new MenuItem("Load Food Map...");
-        loadFoodMapItem.setOnAction(e -> loadFoodMap());
-
-        var saveTerrainMapItem = new MenuItem("Save Terrain Map...");
-        saveTerrainMapItem.setOnAction(e -> saveTerrainMap());
-
-        var saveFoodMapItem = new MenuItem("Save Food Map...");
-        saveFoodMapItem.setOnAction(e -> saveFoodMap());
+        var saveMapsItem = new MenuItem("Save Maps...");
+        saveMapsItem.setOnAction(e -> saveMaps());
 
         var quitItem = new MenuItem("Quit");
         quitItem.setOnAction(e -> stage.close());
 
         var menu = new Menu("File");
-        menu.getItems().addAll(loadTerrainMapItem, loadFoodMapItem, saveTerrainMapItem, saveFoodMapItem, quitItem);
+        menu.getItems().addAll(loadMapsItem, saveMapsItem, quitItem);
 
         return menu;
     }
@@ -353,46 +347,53 @@ public class TileMapEditor extends Application  {
         infoLabel.setText(text);
     }
 
-    void loadTerrainMap() {
+    void loadMaps() {
         openDialog.setInitialDirectory(lastUsedDir);
         File file = openDialog.showOpenDialog(stage);
-        if (file != null) {
-            lastUsedDir = file.getParentFile();
+        if (file == null) {
+            return;
+        }
+        if (file.getName().endsWith(".terrain") || file.getName().endsWith(".food")) {
+            int lastDot = file.getPath().lastIndexOf('.');
+            String basePath = file.getPath().substring(0, lastDot);
+            File foodMapFile = new File(basePath + ".food");
             try {
-                terrainMap = TileMap.fromURL(file.toURI().toURL(), Tiles.TERRAIN_TILES_END);
+                foodMap = TileMap.fromURL(foodMapFile.toURI().toURL(), Tiles.FOOD_TILES_END);
+                lastUsedDir = foodMapFile.getParentFile();
             } catch (MalformedURLException x) {
-                Logger.error("Could not load map.");
+                Logger.error("Could not load food map from file {}", foodMapFile);
+                Logger.error(x);
+            }
+            File terrainMapFile = new File(basePath + ".terrain");
+            try {
+                terrainMap = TileMap.fromURL(terrainMapFile.toURI().toURL(), Tiles.TERRAIN_TILES_END);
+                lastUsedDir = terrainMapFile.getParentFile();
+            } catch (MalformedURLException x) {
+                Logger.error("Could not load terrain map from file {}", terrainMapFile);
                 Logger.error(x);
             }
         }
     }
 
-    void loadFoodMap() {
+    void saveMaps() {
         openDialog.setInitialDirectory(lastUsedDir);
-        File file = openDialog.showOpenDialog(stage);
-        if (file != null) {
-            lastUsedDir = file.getParentFile();
-            try {
-                foodMap = TileMap.fromURL(file.toURI().toURL(), Tiles.FOOD_TILES_END);
-            } catch (MalformedURLException x) {
-                Logger.error("Could not load map.");
-                Logger.error(x);
-            }
+        File file = openDialog.showSaveDialog(stage);
+        if (file == null) {
+            return;
         }
-    }
+        if (file.getName().endsWith(".terrain") || file.getName().endsWith(".food")) {
+            int lastDot = file.getPath().lastIndexOf('.');
+            String basePath = file.getPath().substring(0, lastDot);
+            File foodMapFile = new File(basePath + ".food");
+            saveMap(foodMap, foodMapFile);
+            File terrainMapFile = new File(basePath + ".terrain");
+            saveMap(terrainMap, terrainMapFile);
 
-    void saveTerrainMap() {
-        openDialog.setInitialDirectory(lastUsedDir);
-        File file = openDialog.showSaveDialog(stage);
+        } else {
+            Logger.error("No map file selected for saving");
+        }
         lastUsedDir = file.getParentFile();
-        saveMap(terrainMap, file);
-    }
 
-    void saveFoodMap() {
-        openDialog.setInitialDirectory(lastUsedDir);
-        File file = openDialog.showSaveDialog(stage);
-        lastUsedDir = file.getParentFile();
-        saveMap(foodMap, file);
     }
 
     void saveMap(TileMap map, File file) {
