@@ -91,7 +91,7 @@ public class PlayScene2D extends GameScene2D {
         }
         switch (game) {
             case GameVariants.MS_PACMAN -> drawMsPacManMaze();
-            case GameVariants.PACMAN    -> drawPacManMaze();
+            case GameVariants.PACMAN    -> drawPacManMaze(PY_USE_SPRITE_SHEET_FOR_MAZE.get());
             default -> throw new IllegalGameVariantException(game);
         }
         drawLevelMessage();
@@ -121,17 +121,17 @@ public class PlayScene2D extends GameScene2D {
         }
     }
 
-    private void drawPacManMaze() {
+    private void drawPacManMaze(boolean useSpriteSheet) {
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         if (flashing) {
-            drawPacManMazeFlashing();
+            drawPacManMazeFlashing(useSpriteSheet);
         } else {
-            drawPacManMazeNormal();
+            drawPacManMazeNormal(useSpriteSheet);
         }
     }
 
-    private void drawPacManMazeFlashing() {
-        if (PY_USE_SPRITE_SHEET_FOR_MAZE.get()) {
+    private void drawPacManMazeFlashing(boolean useSpriteSheet) {
+        if (useSpriteSheet) {
             PacManGameSpriteSheet sheet = context.spriteSheet();
             if (context.game().blinking().isOn()) {
                 drawImage(sheet.getFlashingMazeImage(), 0, t(3));
@@ -149,8 +149,8 @@ public class PlayScene2D extends GameScene2D {
         }
     }
 
-    private void drawPacManMazeNormal() {
-        if (PY_USE_SPRITE_SHEET_FOR_MAZE.get()) {
+    private void drawPacManMazeNormal(boolean useSpriteSheet) {
+        if (useSpriteSheet) {
             PacManGameSpriteSheet sheet = context.spriteSheet();
             drawSprite(sheet.getFullMazeSprite(), 0, t(3));
         } else {
@@ -158,13 +158,13 @@ public class PlayScene2D extends GameScene2D {
             terrainMapRenderer.setWallColor(context.theme().color("pacman.maze.wallColor"));
             terrainMapRenderer.drawMap(g, context.game().world().tileMap());
         }
-        drawFood(context.theme().color("pacman.maze.foodColor"));
+        drawFood(useSpriteSheet, context.theme().color("pacman.maze.foodColor"));
     }
 
-    private void drawFood(Color foodColor) {
+    private void drawFood(boolean useSpriteSheet, Color foodColor) {
         var game = context.game();
         var world = game.world();
-        if (PY_USE_SPRITE_SHEET_FOR_MAZE.get()) {
+        if (useSpriteSheet) {
             world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
             if (game.blinking().isOff()) {
                 world.energizerTiles().forEach(tile -> hideTileContent(world, tile));
