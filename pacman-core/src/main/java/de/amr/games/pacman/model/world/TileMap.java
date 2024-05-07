@@ -105,6 +105,14 @@ public class TileMap {
         return data;
     }
 
+    public boolean insideBounds(int row, int col) {
+        return 0 <= row && row < numRows() && 0 <= col && col < numCols();
+    }
+
+    public boolean hasContentAt(int row, int col, byte tileContent) {
+        return content(row, col) == tileContent;
+    }
+
     public boolean hasContentAt(Vector2i tile, byte tileContent) {
         checkTileNotNull(tile);
         return content(tile) == tileContent;
@@ -115,13 +123,17 @@ public class TileMap {
     }
 
     public byte content(int row, int col) {
-        return 0 <= row && row < numRows() && 0 <= col && col < numCols() ? data[row][col] : Tiles.EMPTY;
+        if (insideBounds(row, col)) {
+            return data[row][col];
+        }
+        throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
     }
 
     public void setContent(int row, int col, byte value) {
-        if (0 <= row && row < numRows() && 0 <= col && col < numCols()) {
+        if (insideBounds(row, col)) {
             data[row][col] = value;
         }
+        throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
     }
 
     public void setContent(Vector2i tile, byte value) {

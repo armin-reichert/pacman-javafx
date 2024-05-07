@@ -449,7 +449,7 @@ public class GameLevel3D extends Group {
         var squirting = new Squirting() {
             @Override
             protected boolean reachedFinalPosition(Drop drop) {
-                return drop.getTranslateZ() >= -1 && world.insideBounds(drop.getTranslateX(), drop.getTranslateY());
+                return drop.getTranslateZ() >= -1 && world.containsPoint(drop.getTranslateX(), drop.getTranslateY());
             }
         };
         squirting.setOrigin(energizer3D.root());

@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.world;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 
@@ -90,19 +91,17 @@ public class World {
         return foodMap;
     }
 
-    /**
-     * @param tile a tile
-     * @return if this tile is located inside the world bounds
-     */
     public boolean insideBounds(Vector2i tile) {
-        return 0 <= tile.x() && tile.x() < terrainMap.numCols() && 0 <= tile.y() && tile.y() < terrainMap.numRows();
+        checkTileNotNull(tile);
+        return terrainMap.insideBounds(tile.y(), tile.x());
     }
 
-    /**
-     * @return if this position is located inside the world bounds
-     */
-    public boolean insideBounds(double x, double y) {
-        return 0 <= x && x < terrainMap.numCols() * TS && 0 <= y && y < terrainMap.numRows() * TS;
+    public boolean insideBounds(int row, int col) {
+        return terrainMap.insideBounds(row, col);
+    }
+
+    public boolean containsPoint(double x, double y) {
+        return 0 <= x && x <= numCols() * TS && 0 <= y && y <= numRows() * TS;
     }
 
     public void setPacPosition(Vector2f tile) {
@@ -180,15 +179,25 @@ public class World {
     }
 
     public boolean isBlockedTile(Vector2i tile) {
-        byte content = terrainMap.content(tile);
-        return content == WALL_H || content == WALL_V
-            || content == DWALL_H || content == DWALL_V
-            || content == CORNER_NE || content == CORNER_NW || content == CORNER_SE || content == CORNER_SW
-            || content == DCORNER_NE || content == DCORNER_NW || content == DCORNER_SE || content == DCORNER_SW;
+        checkTileNotNull(tile);
+        int row = tile.y(), col = tile.x();
+        if (terrainMap.insideBounds(row, col)) {
+            byte content = terrainMap.content(tile);
+            return content == WALL_H || content == WALL_V
+                || content == DWALL_H || content == DWALL_V
+                || content == CORNER_NE || content == CORNER_NW || content == CORNER_SE || content == CORNER_SW
+                || content == DCORNER_NE || content == DCORNER_NW || content == DCORNER_SE || content == DCORNER_SW;
+        }
+        return false; // or true?
     }
 
     public boolean isTunnel(Vector2i tile) {
-        return terrainMap.hasContentAt(tile, Tiles.TUNNEL);
+        checkTileNotNull(tile);
+        int row = tile.y(), col = tile.x();
+        if (terrainMap.insideBounds(row, col)) {
+            return terrainMap.hasContentAt(row, col, Tiles.TUNNEL);
+        }
+        return false;
     }
 
     public boolean isIntersection(Vector2i tile) {
