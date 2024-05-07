@@ -15,7 +15,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         this.scaling = (float) scaling;
     }
 
-    private float s(float times) {
+    public float s(float times) {
         return scaling * times;
     }
 
@@ -36,9 +36,14 @@ public class TerrainMapRenderer implements TileMapRenderer {
             case Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE ->
                 drawDCorner(g, tile, content);
             case Tiles.DOOR -> drawDoor(g, tile, Color.PINK);
+            case Tiles.TUNNEL -> drawTunnel(g, tile);
             default -> {}
         }
         g.restore();
+    }
+
+    public void drawTunnel(GraphicsContext g, Vector2i tile) {
+        // overridden by design-time renderer
     }
 
     public void drawWallH(GraphicsContext g, Vector2i tile) {
