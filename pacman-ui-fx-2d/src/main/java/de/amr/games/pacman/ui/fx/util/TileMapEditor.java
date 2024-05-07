@@ -75,9 +75,13 @@ public class TileMapEditor extends Application  {
     World msPacManWorld4 = GameVariants.MS_PACMAN.createWorld(4);
 
     @Override
+    public void init() throws Exception {
+        copyMapsFromWorld(pacManWorld);
+    }
+
+    @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
-        copyMapsFromWorld(pacManWorld);
 
         terrainMapRenderer = new TerrainMapRenderer();
         terrainMapRenderer.setWallColor(Color.rgb(33, 33, 255));
@@ -294,13 +298,22 @@ public class TileMapEditor extends Application  {
     }
 
     void onMouseClickedOnCanvas(MouseEvent e) {
-        if (terrainMap == null) {
-            return;
-        }
         if (terrainEditedPy.get()) {
             editTerrainTile(e);
         } else {
             editFoodTile(e);
+        }
+    }
+
+    void onMouseMovedOverCanvas(MouseEvent e) {
+        hoveredTile = new Vector2i(viewToTile(e.getX()), viewToTile(e.getY()));
+        updateInfo();
+        if (e.isShiftDown()) {
+            if (terrainEditedPy.get()) {
+                terrainMap.setContent(hoveredTile, selectedTerrainValue);
+            } else {
+                foodMap.setContent(hoveredTile, selectedFoodValue);
+            }
         }
     }
 
@@ -337,18 +350,6 @@ public class TileMapEditor extends Application  {
         else {
             foodMap.setContent(tile, selectedFoodValue);
             updateInfo();
-        }
-    }
-
-    void onMouseMovedOverCanvas(MouseEvent e) {
-        hoveredTile = new Vector2i(viewToTile(e.getX()), viewToTile(e.getY()));
-        updateInfo();
-        if (e.isShiftDown()) {
-            if (terrainEditedPy.get()) {
-                terrainMap.setContent(hoveredTile, selectedTerrainValue);
-            } else {
-                foodMap.setContent(hoveredTile, selectedFoodValue);
-            }
         }
     }
 
