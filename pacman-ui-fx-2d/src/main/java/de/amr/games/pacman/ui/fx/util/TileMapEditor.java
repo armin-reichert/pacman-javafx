@@ -104,7 +104,7 @@ public class TileMapEditor extends Application  {
         // set initial maps
         copyMapsFromWorld(pacManWorld);
 
-        scene = new Scene(createSceneContent(), 750, 800);
+        scene = new Scene(createSceneContent(), 850, 800);
         scene.setFill(Color.BLACK);
         scene.setOnKeyReleased(e -> {
             if (e.getCode() == KeyCode.T) {
@@ -116,6 +116,7 @@ public class TileMapEditor extends Application  {
                 updateInfo();
             }
         });
+        updateInfo();
 
         canvas.heightProperty().bind(scene.heightProperty().multiply(0.95));
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
@@ -181,7 +182,7 @@ public class TileMapEditor extends Application  {
         menuBar.getMenus().addAll(createFileMenu(), createMapsMenu());
 
         GridPane controlsContainer = new GridPane();
-        controlsContainer.setPrefWidth(200);
+        controlsContainer.setPrefWidth(350);
         controlsContainer.add(infoLabel,        0, 0);
         controlsContainer.add(cbTerrainVisible, 0, 1);
         controlsContainer.add(cbFoodVisible,    0, 2);
@@ -335,7 +336,13 @@ public class TileMapEditor extends Application  {
     }
 
     void updateInfo() {
-        var text = hoveredTile != null ? String.format("Tile: x=%2d y=%2d", hoveredTile.x(), hoveredTile.y()) : "";
+        var text = "Tile: ";
+        text += hoveredTile != null ? String.format("x=%2d y=%2d", hoveredTile.x(), hoveredTile.y()) : "";
+        text += "\n\n";
+        text += terrainMap.getCommentSection();
+        text += "\n";
+        text += foodMap.getCommentSection();
+        text += "\n\n";
         infoLabel.setText(text);
     }
 
@@ -425,6 +432,7 @@ public class TileMapEditor extends Application  {
 
     void saveMap(TileMap map, File file) {
         try (FileWriter w = new FileWriter(file, StandardCharsets.UTF_8)) {
+            w.write(map.getCommentSection());
             for (int row = 0; row < map.numRows(); ++row) {
                 for (int col = 0; col < map.numCols(); ++col) {
                     String valueTxt = String.valueOf(map.content(row, col));

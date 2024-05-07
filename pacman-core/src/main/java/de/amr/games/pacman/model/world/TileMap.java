@@ -29,8 +29,11 @@ public class TileMap {
 
     static void parse(TileMap tileMap, List<String> lines, byte valueLimit) {
         int numRows = 0, numCols = -1;
+        StringBuilder commentSection = new StringBuilder();
         for (String line : lines) {
-            if (!line.startsWith("#")) {
+            if (line.startsWith("#")) {
+                commentSection.append(line).append("\n");
+            } else {
                 numRows += 1;
                 if (numCols == -1) {
                     String[] values = line.split(",");
@@ -38,6 +41,7 @@ public class TileMap {
                 }
             }
         }
+        tileMap.commentSection = commentSection.toString();
         var data = new byte[numRows][numCols];
         int row = 0;
         for (String line : lines) {
@@ -79,6 +83,7 @@ public class TileMap {
         }
     }
 
+    private String commentSection = "";
     private final Map<String, String> properties = new HashMap<>();
     private byte[][] data;
 
@@ -118,6 +123,11 @@ public class TileMap {
             data[row] = Arrays.copyOf(other.data[row], other.numCols());
         }
         properties.putAll(other.properties);
+        commentSection = other.commentSection;
+    }
+
+    public String getCommentSection() {
+        return commentSection;
     }
 
     public String getProperty(String key) {
