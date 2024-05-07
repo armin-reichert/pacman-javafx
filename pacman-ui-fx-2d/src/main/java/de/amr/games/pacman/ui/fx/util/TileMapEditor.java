@@ -14,6 +14,7 @@ import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -45,8 +46,6 @@ public class TileMapEditor extends Application  {
     Stage stage;
     Scene scene;
     MenuBar menuBar;
-    BorderPane contentPane;
-    BorderPane canvasContainer;
     Canvas canvas;
     Label infoLabel;
     CheckBox cbTerrainVisible;
@@ -105,7 +104,7 @@ public class TileMapEditor extends Application  {
 
         canvas.heightProperty().bind(scene.heightProperty().multiply(0.95));
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> canvas.getHeight() * numMapCols() / numMapRows(), canvas.heightProperty()));
+            () -> canvas.getHeight() * terrainMap.numCols() / terrainMap.numRows(), canvas.heightProperty()));
 
         stage.setScene(scene);
         stage.setTitle("Map Editor");
@@ -120,16 +119,16 @@ public class TileMapEditor extends Application  {
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        if (terrainMap != null && terrainVisiblePy.get()) {
+        if (terrainVisiblePy.get()) {
             terrainMapRenderer.setScaling(scaling());
             terrainMapRenderer.drawMap(g, terrainMap);
         }
-        if (foodMap != null && foodVisiblePy.get()) {
+        if (foodVisiblePy.get()) {
             foodMapRenderer.setScaling(scaling());
             foodMapRenderer.drawMap(g, foodMap);
         }
-        for (int row = 0; row < numMapRows(); ++row) {
-            for (int col = 0; col < numMapCols(); ++col) {
+        for (int row = 0; row < terrainMap.numRows(); ++row) {
+            for (int col = 0; col < terrainMap.numCols(); ++col) {
                 if (hoveredTile != null && hoveredTile.x() == col && hoveredTile.y() == row) {
                     g.setStroke(Color.YELLOW);
                     g.setLineWidth(1);
@@ -146,7 +145,8 @@ public class TileMapEditor extends Application  {
 
     Parent createSceneContent() {
         canvas = new Canvas();
-        canvasContainer = new BorderPane(canvas);
+        canvas.setOnMouseClicked(this::onMouseClickedOnCanvas);
+        canvas.setOnMouseMoved(this::onMouseMovedOverCanvas);
 
         infoLabel = new Label();
 
@@ -162,28 +162,26 @@ public class TileMapEditor extends Application  {
 
         palette = new Palette(32, 4, 4);
 
-        GridPane rightPane = new GridPane();
-        rightPane.setPrefWidth(200);
-        rightPane.add(infoLabel,        0, 0);
-        rightPane.add(cbTerrainVisible, 0, 1);
-        rightPane.add(cbFoodVisible,    0, 2);
-        rightPane.add(cbTerrainEdited,  0, 3);
-        rightPane.add(palette,          0, 4);
-
-        contentPane = new BorderPane();
-        contentPane.setCenter(canvasContainer);
-        contentPane.setRight(rightPane);
-
         menuBar = new MenuBar();
         menuBar.getMenus().addAll(createFileMenu(), createMapsMenu());
 
+        GridPane controlsContainer = new GridPane();
+        controlsContainer.setPrefWidth(200);
+        controlsContainer.add(infoLabel,        0, 0);
+        controlsContainer.add(cbTerrainVisible, 0, 1);
+        controlsContainer.add(cbFoodVisible,    0, 2);
+        controlsContainer.add(cbTerrainEdited,  0, 3);
+        controlsContainer.add(palette,          0, 4);
+
+        var contentPane = new BorderPane();
         contentPane.setTop(menuBar);
-        canvas.heightProperty().bind(canvasContainer.heightProperty());
-        canvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> canvasContainer.getHeight() / numMapRows() * numMapCols(), canvasContainer.heightProperty()
-        ));
-        canvas.setOnMouseClicked(this::onMouseClickedOnCanvas);
-        canvas.setOnMouseMoved(this::onMouseMovedOverCanvas);
+
+        var hbox = new HBox();
+        hbox.setPadding(new Insets(5));
+        hbox.setSpacing(20);
+        contentPane.setLeft(hbox);
+
+        hbox.getChildren().addAll(canvas, controlsContainer);
 
         return contentPane;
     }
@@ -281,16 +279,8 @@ public class TileMapEditor extends Application  {
         foodMap    = new TileMap(world.foodMap());
     }
 
-    int numMapCols() {
-        return terrainMap != null ? terrainMap.numCols() : 28;
-    }
-
-    int numMapRows() {
-        return terrainMap != null ? terrainMap.numRows() : 36;
-    }
-
     double scaling() {
-        return canvas.getHeight() / (numMapRows() * 8);
+        return canvas.getHeight() / (terrainMap.numRows() * 8);
     }
 
     int viewToTile(double viewLength) {
