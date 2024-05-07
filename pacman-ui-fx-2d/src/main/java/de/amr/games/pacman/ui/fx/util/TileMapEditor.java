@@ -63,6 +63,8 @@ public class TileMapEditor extends Application  {
     byte selectedTerrainValue;
     byte selectedFoodValue;
     Vector2i hoveredTile;
+    File lastUsedDir = new File(System.getProperty("user.dir"));
+
     BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
     BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
     BooleanProperty terrainEditedPy = new SimpleBooleanProperty(true);
@@ -188,7 +190,7 @@ public class TileMapEditor extends Application  {
 
     Menu createFileMenu() {
         openDialog = new FileChooser();
-        openDialog.setInitialDirectory(new File(System.getProperty("user.dir")));
+        openDialog.setInitialDirectory(lastUsedDir);
 
         var loadTerrainMapItem = new MenuItem("Load Terrain Map...");
         loadTerrainMapItem.setOnAction(e -> loadTerrainMap());
@@ -197,18 +199,10 @@ public class TileMapEditor extends Application  {
         loadFoodMapItem.setOnAction(e -> loadFoodMap());
 
         var saveTerrainMapItem = new MenuItem("Save Terrain Map...");
-        saveTerrainMapItem.setOnAction(e -> {
-            if (terrainMap != null) {
-                saveTerrainMap();
-            }
-        });
+        saveTerrainMapItem.setOnAction(e -> saveTerrainMap());
 
         var saveFoodMapItem = new MenuItem("Save Food Map...");
-        saveFoodMapItem.setOnAction(e -> {
-            if (foodMap != null) {
-                saveFoodMap();
-            }
-        });
+        saveFoodMapItem.setOnAction(e -> saveFoodMap());
 
         var quitItem = new MenuItem("Quit");
         quitItem.setOnAction(e -> stage.close());
@@ -349,8 +343,10 @@ public class TileMapEditor extends Application  {
     }
 
     void loadTerrainMap() {
+        openDialog.setInitialDirectory(lastUsedDir);
         File file = openDialog.showOpenDialog(stage);
         if (file != null) {
+            lastUsedDir = file.getParentFile();
             try {
                 terrainMap = TileMap.fromURL(file.toURI().toURL(), Tiles.TERRAIN_TILES_END);
             } catch (MalformedURLException x) {
@@ -361,8 +357,10 @@ public class TileMapEditor extends Application  {
     }
 
     void loadFoodMap() {
+        openDialog.setInitialDirectory(lastUsedDir);
         File file = openDialog.showOpenDialog(stage);
         if (file != null) {
+            lastUsedDir = file.getParentFile();
             try {
                 foodMap = TileMap.fromURL(file.toURI().toURL(), Tiles.FOOD_TILES_END);
             } catch (MalformedURLException x) {
@@ -373,12 +371,16 @@ public class TileMapEditor extends Application  {
     }
 
     void saveTerrainMap() {
+        openDialog.setInitialDirectory(lastUsedDir);
         File file = openDialog.showSaveDialog(stage);
+        lastUsedDir = file.getParentFile();
         saveMap(terrainMap, file);
     }
 
     void saveFoodMap() {
+        openDialog.setInitialDirectory(lastUsedDir);
         File file = openDialog.showSaveDialog(stage);
+        lastUsedDir = file.getParentFile();
         saveMap(foodMap, file);
     }
 
