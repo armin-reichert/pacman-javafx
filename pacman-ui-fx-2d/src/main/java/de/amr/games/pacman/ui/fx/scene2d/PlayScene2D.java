@@ -13,8 +13,9 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
-import de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer;
+import de.amr.games.pacman.ui.fx.util.FoodMapRenderer;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
+import de.amr.games.pacman.ui.fx.util.TerrainMapRenderer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -30,7 +31,8 @@ import static java.util.function.Predicate.not;
  */
 public class PlayScene2D extends GameScene2D {
 
-    private final TileMapRenderer renderer = new TileMapRenderer();
+    private final TerrainMapRenderer terrainMapRenderer = new TerrainMapRenderer();
+    private final FoodMapRenderer foodMapRenderer = new FoodMapRenderer();
 
     @Override
     public boolean isCreditVisible() {
@@ -130,13 +132,13 @@ public class PlayScene2D extends GameScene2D {
                 drawSprite(sheet.getEmptyMazeSprite(), 0, t(3));
             }
         } else {
-            renderer.setScaling(scalingPy.get());
+            terrainMapRenderer.setScaling(scalingPy.get());
             if (context.game().blinking().isOn()) {
-                renderer.setWallColor(Color.WHITE);
+                terrainMapRenderer.setWallColor(Color.WHITE);
             } else {
-                renderer.setWallColor(context.theme().color("pacman.maze.wallColor"));
+                terrainMapRenderer.setWallColor(context.theme().color("pacman.maze.wallColor"));
             }
-            renderer.drawMap(g, context.game().world().tileMap());
+            terrainMapRenderer.drawMap(g, context.game().world().tileMap());
         }
     }
 
@@ -150,19 +152,21 @@ public class PlayScene2D extends GameScene2D {
                 world.energizerTiles().forEach(tile -> hideTileContent(world, tile));
             }
         } else {
-            renderer.setScaling(scalingPy.get());
-            renderer.setWallColor(context.theme().color("pacman.maze.wallColor"));
-            renderer.setPelletColor(context.theme().color("pacman.maze.foodColor"));
-            renderer.setEnergizerColor(context.theme().color("pacman.maze.foodColor"));
-            renderer.drawMap(g, world.tileMap());
+            terrainMapRenderer.setScaling(scalingPy.get());
+            terrainMapRenderer.setWallColor(context.theme().color("pacman.maze.wallColor"));
+            terrainMapRenderer.drawMap(g, world.tileMap());
+
+            foodMapRenderer.setScaling(scalingPy.get());
+            foodMapRenderer.setPelletColor(context.theme().color("pacman.maze.foodColor"));
+            foodMapRenderer.setEnergizerColor(context.theme().color("pacman.maze.foodColor"));
             world.tiles()
                 .filter(world::hasFoodAt)
                 .filter(not(world::isEnergizerTile))
-                .forEach(tile -> renderer.drawPellet(g, tile));
+                .forEach(tile -> foodMapRenderer.drawPellet(g, tile));
             if (context.game().blinking().isOn()) {
                 world.energizerTiles()
                     .filter(world::hasFoodAt)
-                    .forEach(tile -> renderer.drawEnergizer(g, tile));
+                    .forEach(tile -> foodMapRenderer.drawEnergizer(g, tile));
             }
         }
     }

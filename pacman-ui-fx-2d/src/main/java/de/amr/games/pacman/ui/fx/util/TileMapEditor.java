@@ -22,8 +22,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -33,7 +32,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
-import java.util.stream.Stream;
 
 /**
  * @author Armin Reichert
@@ -50,15 +48,15 @@ public class TileMapEditor extends Application  {
     BorderPane contentPane;
     BorderPane canvasContainer;
     Canvas canvas;
-    VBox infoPane;
     Label infoLabel;
     CheckBox cbTerrainVisible;
     CheckBox cbFoodVisible;
     CheckBox cbTerrainEdited;
     FileChooser openDialog;
+    Palette palette;
 
-    TileMapRenderer terrainMapRenderer;
-    TileMapRenderer foodMapRenderer;
+    TerrainMapRenderer terrainMapRenderer;
+    FoodMapRenderer foodMapRenderer;
 
     TileMap terrainMap;
     TileMap foodMap;
@@ -81,11 +79,10 @@ public class TileMapEditor extends Application  {
         this.stage = stage;
         copyMapsFromWorld(pacManWorld);
 
-        terrainMapRenderer = new TileMapRenderer();
+        terrainMapRenderer = new TerrainMapRenderer();
         terrainMapRenderer.setWallColor(Color.rgb(33, 33, 255));
 
-        foodMapRenderer = new TileMapRenderer();
-        foodMapRenderer.setRenderTerrain(false);
+        foodMapRenderer = new FoodMapRenderer();
         foodMapRenderer.setEnergizerColor(Color.rgb(254, 189, 180));
         foodMapRenderer.setPelletColor(Color.rgb(254, 189, 180));
 
@@ -140,6 +137,7 @@ public class TileMapEditor extends Application  {
                 g.strokeRect(col * s8, row * s8, s8, s8);
             }
         }
+        palette.draw();
     }
 
     Parent createSceneContent() {
@@ -158,15 +156,19 @@ public class TileMapEditor extends Application  {
         cbTerrainEdited.selectedProperty().bindBidirectional(terrainEditedPy);
         cbTerrainEdited.setOnAction(e -> updateInfo());
 
-        infoPane = new VBox();
-        infoPane.setMinWidth(200);
-        infoPane.setMaxWidth(200);
+        palette = new Palette(32, 8, 2);
 
-        infoPane.getChildren().addAll(infoLabel, cbTerrainVisible, cbFoodVisible, cbTerrainEdited);
+        GridPane rightPane = new GridPane();
+        rightPane.setPrefWidth(200);
+        rightPane.add(infoLabel,        0, 0);
+        rightPane.add(cbTerrainVisible, 0, 1);
+        rightPane.add(cbFoodVisible,    0, 2);
+        rightPane.add(cbTerrainEdited,  0, 3);
+        rightPane.add(palette,          0, 4);
 
         contentPane = new BorderPane();
         contentPane.setCenter(canvasContainer);
-        contentPane.setRight(infoPane);
+        contentPane.setRight(rightPane);
 
         menuBar = new MenuBar();
         menuBar.getMenus().addAll(createFileMenu(), createMapsMenu());
@@ -409,6 +411,40 @@ public class TileMapEditor extends Application  {
             terrainMap.clear();
         } else {
             foodMap.clear();
+        }
+    }
+
+    class Palette extends Canvas {
+
+        int numRows;
+        int numCols;
+        int gridSize;
+        GraphicsContext g = getGraphicsContext2D();
+
+        Palette(int gridSize, int numRows, int numCols) {
+            this.gridSize = gridSize;
+            this.numRows = numRows;
+            this.numCols = numCols;
+            setWidth(numCols * gridSize);
+            setHeight(numRows * gridSize);
+        }
+
+        void draw() {
+            g.setFill(Color.BLACK);
+            g.fillRect(0, 0, getWidth(), getHeight());
+            g.setStroke(Color.GRAY);
+            for (int row = 1; row < numRows; ++row) {
+                g.strokeLine(0, row * gridSize, getWidth(), row * gridSize);
+            }
+            for (int col = 1; col < numCols; ++col) {
+                g.strokeLine(col * gridSize, 0, col * gridSize, getHeight());
+            }
+            TileMapRenderer renderer = terrainEditedPy.get() ? terrainMapRenderer : foodMapRenderer;
+            renderer.setScaling(1);
+            for (int i = 0; i < numRows * numCols; ++i) {
+                int row = i / numCols, col = i % numCols;
+                renderer.drawTile(g, new Vector2i(col * gridSize, row * gridSize), (byte) i);
+            }
         }
     }
 }
