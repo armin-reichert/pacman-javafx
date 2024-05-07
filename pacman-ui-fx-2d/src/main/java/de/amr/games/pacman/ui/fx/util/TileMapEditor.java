@@ -105,7 +105,7 @@ public class TileMapEditor extends Application  {
         foodMapRenderer.setEnergizerColor(Color.rgb(254, 189, 180));
         foodMapRenderer.setPelletColor(Color.rgb(254, 189, 180));
 
-        scene = new Scene(createSceneContent(), 800, 600);
+        scene = new Scene(createSceneContent(), 750, 800);
         scene.setFill(Color.BLACK);
         scene.setOnKeyReleased(e -> {
             if (e.getCode() == KeyCode.T) {
