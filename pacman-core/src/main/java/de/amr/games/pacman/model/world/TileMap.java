@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -26,12 +27,25 @@ import static de.amr.games.pacman.lib.Globals.v2i;
  */
 public class TileMap {
 
-    static void parse(TileMap tileMap, List<String> lines, byte valueLimit) {
+    public static TileMap fromURL(URL url, byte valueLimit) {
+        try (BufferedReader r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+            return new TileMap(r.lines().toList(), valueLimit);
+        } catch (IOException x) {
+            Logger.error(x);
+            throw new IllegalArgumentException("Cannot create tile map from URL " + url);
+        }
+    }
+
+    private final byte[][] data;
+    private final String commentSection;
+    private final Map<String, String> properties = new HashMap<>();
+
+    private TileMap(List<String> lines, byte valueLimit) {
         int numRows = 0, numCols = -1;
-        StringBuilder commentSection = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         for (String line : lines) {
             if (line.startsWith("#")) {
-                commentSection.append(line).append("\n");
+                sb.append(line).append("\n");
             } else {
                 numRows += 1;
                 if (numCols == -1) {
@@ -40,8 +54,8 @@ public class TileMap {
                 }
             }
         }
-        tileMap.commentSection = commentSection.toString();
-        var data = new byte[numRows][numCols];
+        commentSection = sb.toString();
+        this.data = new byte[numRows][numCols];
         int row = 0;
         for (String line : lines) {
             if (line.startsWith("#")) {
@@ -50,7 +64,7 @@ public class TileMap {
                 if (assignment.length == 2) {
                     var lhs = assignment[0].trim();
                     var rhs = assignment[1].trim();
-                    tileMap.properties.put(lhs, rhs);
+                    properties.put(lhs, rhs);
                 }
                 continue;
             }
@@ -68,52 +82,6 @@ public class TileMap {
             }
             ++row;
         }
-        tileMap.setData(data, valueLimit);
-    }
-
-    public static TileMap fromURL(URL url, byte valueLimit) {
-        try (BufferedReader r = new BufferedReader(
-            new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
-            var tileMap = new TileMap();
-            parse(tileMap, r.lines().toList(), valueLimit);
-            return tileMap;
-        } catch (Exception x) {
-            throw new IllegalArgumentException("Cannot create tile map from URL " + url);
-        }
-    }
-
-    private String commentSection = "";
-    private final Map<String, String> properties = new HashMap<>();
-    private byte[][] data;
-
-    private TileMap() {
-    }
-
-    private void setData(byte[][] data, byte lastTileValue) {
-        if (data == null) {
-            throw new IllegalArgumentException("Map data missing");
-        }
-        if (data.length == 0) {
-            throw new IllegalArgumentException("Map data empty");
-        }
-        var firstRow = data[0];
-        if (firstRow.length == 0) {
-            throw new IllegalArgumentException("Map data empty");
-        }
-        for (var row : data) {
-            if (row.length != firstRow.length) {
-                throw new IllegalArgumentException("Map has differently sized rows");
-            }
-        }
-        for (int row = 0; row < data.length; ++row) {
-            for (int col = 0; col < data[row].length; ++col) {
-                byte d = data[row][col];
-                if (d < 0 || d > lastTileValue) {
-                    throw new IllegalArgumentException(String.format("Map data at row=%d, col=%d are illegal: %d", row, col, d));
-                }
-            }
-        }
-        this.data = data;
     }
 
     public TileMap(TileMap other) {
