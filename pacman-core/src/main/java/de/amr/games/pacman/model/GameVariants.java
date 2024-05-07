@@ -32,14 +32,14 @@ public enum GameVariants implements GameModel {
 
     MS_PACMAN {
 
-        static final String MS_PACMAN_TERRAIN_MAP_1 = "/maps/mspacman_1_terrain.txt";
-        static final String MS_PACMAN_FOOD_MAP_1    = "/maps/mspacman_1_food.txt";
-        static final String MS_PACMAN_TERRAIN_MAP_2 = "/maps/mspacman_2_terrain.txt";
-        static final String MS_PACMAN_FOOD_MAP_2    = "/maps/mspacman_2_food.txt";
-        static final String MS_PACMAN_TERRAIN_MAP_3 = "/maps/mspacman_3_terrain.txt";
-        static final String MS_PACMAN_FOOD_MAP_3    = "/maps/mspacman_3_food.txt";
-        static final String MS_PACMAN_TERRAIN_MAP_4 = "/maps/mspacman_4_terrain.txt";
-        static final String MS_PACMAN_FOOD_MAP_4    = "/maps/mspacman_4_food.txt";
+        static final String MS_PACMAN_TERRAIN_MAP_1 = "/maps/mspacman_1.terrain";
+        static final String MS_PACMAN_FOOD_MAP_1    = "/maps/mspacman_1.food";
+        static final String MS_PACMAN_TERRAIN_MAP_2 = "/maps/mspacman_2.terrain";
+        static final String MS_PACMAN_FOOD_MAP_2    = "/maps/mspacman_2.food";
+        static final String MS_PACMAN_TERRAIN_MAP_3 = "/maps/mspacman_3.terrain";
+        static final String MS_PACMAN_FOOD_MAP_3    = "/maps/mspacman_3.food";
+        static final String MS_PACMAN_TERRAIN_MAP_4 = "/maps/mspacman_4.terrain";
+        static final String MS_PACMAN_FOOD_MAP_4    = "/maps/mspacman_4.food";
 
         /**
          * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
@@ -259,8 +259,8 @@ public enum GameVariants implements GameModel {
      */
     PACMAN {
 
-        static final String PACMAN_TERRAIN_MAP = "/maps/pacman_terrain.txt";
-        static final String PACMAN_FOOD_MAP    = "/maps/pacman_food.txt";
+        static final String PACMAN_TERRAIN_MAP = "/maps/pacman.terrain";
+        static final String PACMAN_FOOD_MAP    = "/maps/pacman.food";
 
         static final NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
             np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
