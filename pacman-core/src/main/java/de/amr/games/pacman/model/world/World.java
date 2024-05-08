@@ -57,7 +57,7 @@ public class World {
         for (int row = 0; row < terrainMap.numRows(); ++row) {
             var leftBorderTile = v2i(0, row);
             var rightBorderTile = v2i(lastColumn, row);
-            if (terrainMap.content(row, 0) == Tiles.TUNNEL && terrainMap.content(row, lastColumn) == Tiles.TUNNEL) {
+            if (terrainMap.get(row, 0) == Tiles.TUNNEL && terrainMap.get(row, lastColumn) == Tiles.TUNNEL) {
                 portalList.add(new Portal(leftBorderTile, rightBorderTile, 2));
             }
         }
@@ -186,7 +186,7 @@ public class World {
     }
 
     public boolean isBlockedTile(Vector2i tile) {
-        return insideBounds(tile) && isTerrainBlocked(terrainMap.content(tile));
+        return insideBounds(tile) && isTerrainBlocked(terrainMap.get(tile));
     }
 
     private boolean isTerrainBlocked(byte content) {
@@ -200,7 +200,7 @@ public class World {
         if (!insideBounds(tile)) {
             return false;
         }
-        return terrainMap.content(tile) == Tiles.TUNNEL;
+        return terrainMap.get(tile) == Tiles.TUNNEL;
     }
 
     public boolean isIntersection(Vector2i tile) {
@@ -241,21 +241,21 @@ public class World {
         if (!insideBounds(tile)) {
             return false;
         }
-        return foodMap.content(tile) != Tiles.EMPTY;
+        return foodMap.get(tile) != Tiles.EMPTY;
     }
 
     public boolean isEnergizerTile(Vector2i tile) {
         if (!insideBounds(tile)) {
             return false;
         }
-        return foodMap.content(tile) == Tiles.ENERGIZER;
+        return foodMap.get(tile) == Tiles.ENERGIZER;
     }
 
     public boolean hasFoodAt(Vector2i tile) {
         if (!insideBounds(tile)) {
             return false;
         }
-        return foodMap.content(tile) != EMPTY && !eaten.get(foodMap.index(tile));
+        return foodMap.get(tile) != EMPTY && !eaten.get(foodMap.index(tile));
     }
 
     public boolean hasEatenFoodAt(Vector2i tile) {

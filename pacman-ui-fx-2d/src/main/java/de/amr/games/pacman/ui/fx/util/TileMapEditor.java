@@ -284,9 +284,9 @@ public class TileMapEditor extends Application  {
         updateInfo();
         if (e.isShiftDown()) {
             if (terrainEditedPy.get()) {
-                terrainMap.setContent(hoveredTile, selectedTerrainValue);
+                terrainMap.set(hoveredTile, selectedTerrainValue);
             } else {
-                foodMap.setContent(hoveredTile, selectedFoodValue);
+                foodMap.set(hoveredTile, selectedFoodValue);
             }
         }
     }
@@ -294,17 +294,17 @@ public class TileMapEditor extends Application  {
     void editTerrainTile(MouseEvent e) {
         var tile = new Vector2i(viewToTile(e.getX()), viewToTile(e.getY()));
         if (e.getButton() == MouseButton.SECONDARY) {
-            terrainMap.setContent(tile, Tiles.EMPTY);
+            terrainMap.set(tile, Tiles.EMPTY);
             updateInfo();
         }
         else if (e.isShiftDown()) { // cycle through all tile values
-            byte content = terrainMap.content(tile);
+            byte content = terrainMap.get(tile);
             byte nextValue = content < Tiles.TERRAIN_TILES_END - 1 ? (byte) (content + 1) : 0;
-            terrainMap.setContent(tile, nextValue);
+            terrainMap.set(tile, nextValue);
             updateInfo();
         }
         else {
-            terrainMap.setContent(tile, selectedTerrainValue);
+            terrainMap.set(tile, selectedTerrainValue);
             updateInfo();
         }
     }
@@ -312,17 +312,17 @@ public class TileMapEditor extends Application  {
     void editFoodTile(MouseEvent e) {
         var tile = new Vector2i(viewToTile(e.getX()), viewToTile(e.getY()));
         if (e.getButton() == MouseButton.SECONDARY) {
-            foodMap.setContent(tile, Tiles.EMPTY);
+            foodMap.set(tile, Tiles.EMPTY);
             updateInfo();
         }
         else if (e.isShiftDown()) { // cycle through all tile values
-            byte content = foodMap.content(tile);
+            byte content = foodMap.get(tile);
             byte newValue = content < Tiles.FOOD_TILES_END - 1 ? (byte) (content + 1) : 0;
-            foodMap.setContent(tile, newValue);
+            foodMap.set(tile, newValue);
             updateInfo();
         }
         else {
-            foodMap.setContent(tile, selectedFoodValue);
+            foodMap.set(tile, selectedFoodValue);
             updateInfo();
         }
     }
@@ -428,7 +428,7 @@ public class TileMapEditor extends Application  {
             w.write(map.getCommentSection());
             for (int row = 0; row < map.numRows(); ++row) {
                 for (int col = 0; col < map.numCols(); ++col) {
-                    String valueTxt = String.valueOf(map.content(row, col));
+                    String valueTxt = String.valueOf(map.get(row, col));
                     w.write(String.format("%2s", valueTxt));
                     if (col < map.numCols() - 1) {
                         w.write(",");
@@ -453,7 +453,7 @@ public class TileMapEditor extends Application  {
     void addTerrainShape(int row, int col, byte[][] shape) {
         for (int r = 0; r < shape.length; ++r) {
             for (int c = 0; c < shape[0].length; ++c) {
-                terrainMap.setContent(row + r, col + c, shape[r][c]);
+                terrainMap.set(row + r, col + c, shape[r][c]);
             }
         }
     }

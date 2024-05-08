@@ -92,44 +92,9 @@ public class TileMap {
         commentSection = other.commentSection;
     }
 
-    public String getCommentSection() {
-        return commentSection;
-    }
-
-    public String getProperty(String key) {
-        return properties.get(key);
-    }
-
-    public byte[][] getData() {
-        return data;
-    }
-
-    public boolean insideBounds(int row, int col) {
-        return 0 <= row && row < numRows() && 0 <= col && col < numCols();
-    }
-
-    public byte content(Vector2i tile) {
-        return content(tile.y(), tile.x());
-    }
-
-    public byte content(int row, int col) {
-        if (insideBounds(row, col)) {
-            return data[row][col];
-        }
-        throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
-    }
-
-    public void setContent(int row, int col, byte value) {
-        if (insideBounds(row, col)) {
-            data[row][col] = value;
-        }
-        throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
-    }
-
-    public void setContent(Vector2i tile, byte value) {
-        setContent(tile.y(), tile.x(), value);
-    }
-
+    /**
+     * @return stream of all tiles of this map row-by-row
+     */
     public Stream<Vector2i> tiles() {
         return IntStream.range(0, numCols() * numRows()).mapToObj(this::tile);
     }
@@ -142,6 +107,10 @@ public class TileMap {
         return v2i(index % numCols(), index / numCols());
     }
 
+    /**
+     * @param tile tile inside map bounds
+     * @return index in row-by-row order
+     */
     public int index(Vector2i tile) {
         return numCols() * tile.y() + tile.x();
     }
@@ -154,6 +123,71 @@ public class TileMap {
         return data.length;
     }
 
+    public boolean insideBounds(int row, int col) {
+        return 0 <= row && row < numRows() && 0 <= col && col < numCols();
+    }
+
+    public String getCommentSection() {
+        return commentSection;
+    }
+
+    public String getProperty(String key) {
+        return properties.get(key);
+    }
+
+    public byte[][] getData() {
+        return data;
+    }
+
+    /**
+     * @param row row inside map bounds
+     * @param col column inside map bounds
+     * @return map data at position
+     * @throws IllegalArgumentException if tile outside map bounds
+     */
+    public byte get(int row, int col) {
+        if (insideBounds(row, col)) {
+            return data[row][col];
+        }
+        throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
+    }
+
+    /**
+     * @param tile tile inside map bounds
+     * @return map data at tile position
+     * @throws IllegalArgumentException if tile outside map bounds
+     */
+    public byte get(Vector2i tile) {
+        return get(tile.y(), tile.x());
+    }
+
+    /**
+     * Sets map data at position inside map bounds
+     * @param row row inside map bounds
+     * @param col column inside map bounds
+     * @param value map value
+     * @throws IllegalArgumentException if tile outside map bounds
+     */
+    public void set(int row, int col, byte value) {
+        if (!insideBounds(row, col)) {
+            throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
+        }
+        data[row][col] = value;
+    }
+
+    /**
+     * Sets map data at position inside map bounds
+     * @param tile tile inside map bounds
+     * @param value map value
+     * @throws IllegalArgumentException if tile outside map bounds
+     */
+    public void set(Vector2i tile, byte value) {
+        set(tile.y(), tile.x(), value);
+    }
+
+    /**
+     * Sets all map data to {@link Tiles#EMPTY}
+     */
     public void clear() {
         for (byte[] row : data) {
             Arrays.fill(row, Tiles.EMPTY);

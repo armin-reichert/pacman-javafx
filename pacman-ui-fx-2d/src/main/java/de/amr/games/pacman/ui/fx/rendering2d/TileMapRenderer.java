@@ -16,7 +16,7 @@ public interface TileMapRenderer {
     void setScaling(double scaling);
 
     default void drawMap(GraphicsContext g, TileMap map) {
-        map.tiles().forEach(tile -> drawTile(g, tile, map.content(tile)));
+        map.tiles().forEach(tile -> drawTile(g, tile, map.get(tile)));
     }
 
     void drawTile(GraphicsContext g, Vector2i tile, byte content);
