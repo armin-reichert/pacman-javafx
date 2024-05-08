@@ -223,6 +223,9 @@ public class World {
     }
 
     public void eatFoodAt(Vector2i tile) {
+        if (!insideBounds(checkTileNotNull(tile))) {
+            return; // raise error?
+        }
         if (hasFoodAt(tile)) {
             eaten.set(foodMap.index(tile));
             --uneatenFoodCount;
@@ -230,27 +233,30 @@ public class World {
     }
 
     public boolean isFoodTile(Vector2i tile) {
-        checkTileNotNull(tile);
-        byte data = foodMap.content(tile);
-        return data == Tiles.PELLET || data == Tiles.ENERGIZER;
+        if (!insideBounds(checkTileNotNull(tile))) {
+            return false;
+        }
+        return foodMap.content(tile) != Tiles.EMPTY;
     }
 
     public boolean isEnergizerTile(Vector2i tile) {
-        checkTileNotNull(tile);
+        if (!insideBounds(checkTileNotNull(tile))) {
+            return false;
+        }
         return foodMap.content(tile) == Tiles.ENERGIZER;
     }
 
     public boolean hasFoodAt(Vector2i tile) {
-        checkTileNotNull(tile);
-        if (insideBounds(tile)) {
-            byte data = foodMap.content(tile);
-            return (data == Tiles.PELLET || data == Tiles.ENERGIZER) && !eaten.get(foodMap.index(tile));
+        if (!insideBounds(checkTileNotNull(tile))) {
+            return false;
         }
-        return false;
+        return foodMap.content(tile) != EMPTY && !eaten.get(foodMap.index(tile));
     }
 
     public boolean hasEatenFoodAt(Vector2i tile) {
-        checkTileNotNull(tile);
-        return insideBounds(tile) && eaten.get(foodMap.index(tile));
+        if (!insideBounds(checkTileNotNull(tile))) {
+            return false;
+        }
+        return eaten.get(foodMap.index(tile));
     }
 }
