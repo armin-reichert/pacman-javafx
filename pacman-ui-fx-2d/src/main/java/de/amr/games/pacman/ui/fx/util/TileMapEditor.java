@@ -24,9 +24,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
@@ -64,7 +62,8 @@ public class TileMapEditor extends Application  {
     CheckBox cbFoodVisible;
     CheckBox cbTerrainEdited;
     FileChooser openDialog;
-    Palette palette;
+    Palette terrainPalette;
+    Palette foodPalette;
 
     TerrainMapRenderer terrainMapRenderer;
     FoodMapRenderer foodMapRenderer;
@@ -72,14 +71,19 @@ public class TileMapEditor extends Application  {
     TileMap terrainMap;
     TileMap foodMap;
 
-    byte selectedTerrainValue;
-    byte selectedFoodValue;
     Vector2i hoveredTile;
     File lastUsedDir = new File(System.getProperty("user.dir"));
 
     BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
     BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
-    BooleanProperty terrainEditedPy = new SimpleBooleanProperty(true);
+    BooleanProperty terrainEditedPy = new SimpleBooleanProperty(true) {
+        @Override
+        protected void invalidated() {
+            boolean terrainEdited = get();
+            terrainPalette.setVisible(terrainEdited);
+            foodPalette.setVisible(!terrainEdited);
+        }
+    };
 
     World pacManWorld    = GameVariants.PACMAN.createWorld(1);
     World msPacManWorld1 = GameVariants.MS_PACMAN.createWorld(1);
@@ -158,7 +162,11 @@ public class TileMapEditor extends Application  {
                 g.strokeRect(col * s8, row * s8, s8, s8);
             }
         }
-        palette.draw();
+        if (terrainEditedPy.get()) {
+            terrainPalette.draw();
+        } else {
+            foodPalette.draw();
+        }
     }
 
     Parent createSceneContent() {
@@ -178,10 +186,23 @@ public class TileMapEditor extends Application  {
         cbTerrainEdited.selectedProperty().bindBidirectional(terrainEditedPy);
         cbTerrainEdited.setOnAction(e -> updateInfo());
 
-        palette = new Palette(32, 4, 4);
+        terrainPalette = new Palette(32, 4, 4, terrainMapRenderer, Tiles.TERRAIN_TILES_END);
+        terrainPalette.setValuesAtIndex(
+            Tiles.EMPTY, Tiles.TUNNEL, Tiles.EMPTY, Tiles.EMPTY,
+            Tiles.WALL_H, Tiles.WALL_V, Tiles.DWALL_H, Tiles.DWALL_V,
+            Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE,
+            Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE
+        );
+
+        foodPalette = new Palette(32, 1, 4, foodMapRenderer, Tiles.FOOD_TILES_END);
+        foodPalette.setValuesAtIndex(
+            Tiles.EMPTY, Tiles.PELLET, Tiles.ENERGIZER, Tiles.EMPTY
+        );
+        StackPane paletteContainer = new StackPane(foodPalette, terrainPalette);
 
         menuBar = new MenuBar();
         menuBar.getMenus().addAll(createFileMenu(), createMapsMenu());
+
 
         GridPane controlsContainer = new GridPane();
         controlsContainer.setPrefWidth(350);
@@ -189,7 +210,7 @@ public class TileMapEditor extends Application  {
         controlsContainer.add(cbTerrainVisible, 0, 1);
         controlsContainer.add(cbFoodVisible,    0, 2);
         controlsContainer.add(cbTerrainEdited,  0, 3);
-        controlsContainer.add(palette,          0, 4);
+        controlsContainer.add(paletteContainer,   0, 4);
 
         var contentPane = new BorderPane();
         contentPane.setTop(menuBar);
@@ -284,9 +305,9 @@ public class TileMapEditor extends Application  {
         updateInfo();
         if (e.isShiftDown()) {
             if (terrainEditedPy.get()) {
-                terrainMap.set(hoveredTile, selectedTerrainValue);
+                terrainMap.set(hoveredTile, terrainPalette.selectedValue);
             } else {
-                foodMap.set(hoveredTile, selectedFoodValue);
+                foodMap.set(hoveredTile, foodPalette.selectedValue);
             }
         }
     }
@@ -304,7 +325,7 @@ public class TileMapEditor extends Application  {
             updateInfo();
         }
         else {
-            terrainMap.set(tile, selectedTerrainValue);
+            terrainMap.set(tile, terrainPalette.selectedValue);
             updateInfo();
         }
     }
@@ -322,7 +343,7 @@ public class TileMapEditor extends Application  {
             updateInfo();
         }
         else {
-            foodMap.set(tile, selectedFoodValue);
+            foodMap.set(tile, foodPalette.selectedValue);
             updateInfo();
         }
     }
@@ -458,63 +479,67 @@ public class TileMapEditor extends Application  {
         }
     }
 
-    class Palette extends Canvas {
+    static class Palette extends Canvas {
 
         int numRows;
         int numCols;
         int gridSize;
+        byte[] valueAtIndex;
         GraphicsContext g = getGraphicsContext2D();
+        TileMapRenderer renderer;
+        byte selectedValue;
 
-        Palette(int gridSize, int numRows, int numCols) {
+        Palette(int gridSize, int numRows, int numCols, TileMapRenderer renderer, byte valueEnd) {
             this.gridSize = gridSize;
             this.numRows = numRows;
             this.numCols = numCols;
+            this.valueAtIndex = new byte[numRows*numCols];
+            this.renderer = renderer;
+            for (int i = 0; i < valueAtIndex.length; ++i) {
+                valueAtIndex[i] = i < valueEnd ? (byte) i : Tiles.EMPTY;
+            }
             setWidth(numCols * gridSize);
             setHeight(numRows * gridSize);
-            setOnMouseClicked(this::pickTile);
+            setOnMouseClicked(e -> selectedValue = pickValue(e));
         }
 
-        void pickTile(MouseEvent e) {
+        void setValuesAtIndex(byte... values) {
+            for (int i = 0; i < values.length; ++i) {
+                if (i < valueAtIndex.length) {
+                    valueAtIndex[i] = values[i];
+                }
+            }
+        }
+
+        byte pickValue(MouseEvent e) {
             int row = (int) e.getY() / gridSize;
             int col = (int) e.getX() / gridSize;
-            byte b = (byte) (row * numCols + col);
-            if (terrainEditedPy.get()) {
-                selectedTerrainValue = b < Tiles.TERRAIN_TILES_END ? b : Tiles.EMPTY;
-                Logger.info("Selected terrain value: {}", selectedTerrainValue);
-            } else {
-                selectedFoodValue = b < Tiles.FOOD_TILES_END ? b : Tiles.EMPTY;
-                Logger.info("Selected food value: {}", selectedFoodValue);
-            }
+            return valueAtIndex[row * numCols + col];
         }
 
         void draw() {
             g.setFill(Color.BLACK);
             g.fillRect(0, 0, getWidth(), getHeight());
-            g.setStroke(Color.GRAY);
+            renderer.setScaling(1f * gridSize / 8);
+            for (int i = 0; i < numRows * numCols; ++i) {
+                int row = i / numCols, col = i % numCols;
+                renderer.drawTile(g, new Vector2i(col, row), valueAtIndex[i]);
+            }
+            // Grid lines
+            g.setStroke(Color.LIGHTGRAY);
+            g.setLineWidth(0.75);
             for (int row = 1; row < numRows; ++row) {
                 g.strokeLine(0, row * gridSize, getWidth(), row * gridSize);
             }
             for (int col = 1; col < numCols; ++col) {
                 g.strokeLine(col * gridSize, 0, col * gridSize, getHeight());
             }
-            TileMapRenderer renderer = terrainEditedPy.get() ? terrainMapRenderer : foodMapRenderer;
-            renderer.setScaling(1f * gridSize / 8);
-            for (int i = 0; i < numRows * numCols; ++i) {
-                int row = i / numCols, col = i % numCols;
-                renderer.drawTile(g, new Vector2i(col, row), (byte) i);
-            }
-            // mark selected entry
+            // mark selected value
             g.setStroke(Color.YELLOW);
             g.setLineWidth(1);
-            if (terrainEditedPy.get()) {
-                int row = selectedTerrainValue / numCols;
-                int col = selectedTerrainValue % numCols;
-                g.strokeRect(col * gridSize, row * gridSize, gridSize, gridSize);
-            } else {
-                int row = selectedFoodValue / numCols;
-                int col = selectedFoodValue % numCols;
-                g.strokeRect(col * gridSize, row * gridSize, gridSize, gridSize);
-            }
+            int row = selectedValue / numCols;
+            int col = selectedValue % numCols;
+            g.strokeRect(col * gridSize, row * gridSize, gridSize, gridSize);
         }
     }
 }
