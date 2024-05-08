@@ -72,6 +72,7 @@ public class TileMapEditor extends Application  {
 
     Vector2i hoveredTile;
     File lastUsedDir = new File(System.getProperty("user.dir"));
+    File terrainMapFile;
 
     BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
     BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
@@ -234,7 +235,7 @@ public class TileMapEditor extends Application  {
         openDialog.setInitialDirectory(lastUsedDir);
 
         var loadMapsItem = new MenuItem("Load Map...");
-        loadMapsItem.setOnAction(e -> loadMaps());
+        loadMapsItem.setOnAction(e -> openMapFiles());
 
         var saveMapsItem = new MenuItem("Save Map...");
         saveMapsItem.setOnAction(e -> saveMaps());
@@ -258,19 +259,19 @@ public class TileMapEditor extends Application  {
         Menu loadPredefinedMapMenu = new Menu("Load Predefined Map");
 
         var pacManWorldItem = new MenuItem("Pac-Man");
-        pacManWorldItem.setOnAction(e -> copyMapsFromWorld(pacManWorld));
+        pacManWorldItem.setOnAction(e -> loadPredefinedMapsFromWorld(pacManWorld));
 
         var msPacManWorldItem1 = new MenuItem("Ms. Pac-Man 1");
-        msPacManWorldItem1.setOnAction(e -> copyMapsFromWorld(msPacManWorld1));
+        msPacManWorldItem1.setOnAction(e -> loadPredefinedMapsFromWorld(msPacManWorld1));
 
         var msPacManWorldItem2 = new MenuItem("Ms. Pac-Man 2");
-        msPacManWorldItem2.setOnAction(e -> copyMapsFromWorld(msPacManWorld2));
+        msPacManWorldItem2.setOnAction(e -> loadPredefinedMapsFromWorld(msPacManWorld2));
 
         var msPacManWorldItem3 = new MenuItem("Ms. Pac-Man 3");
-        msPacManWorldItem3.setOnAction(e -> copyMapsFromWorld(msPacManWorld3));
+        msPacManWorldItem3.setOnAction(e -> loadPredefinedMapsFromWorld(msPacManWorld3));
 
         var msPacManWorldItem4 = new MenuItem("Ms. Pac-Man 4");
-        msPacManWorldItem4.setOnAction(e -> copyMapsFromWorld(msPacManWorld4));
+        msPacManWorldItem4.setOnAction(e -> loadPredefinedMapsFromWorld(msPacManWorld4));
 
         loadPredefinedMapMenu.getItems().addAll(pacManWorldItem, msPacManWorldItem1, msPacManWorldItem2,
             msPacManWorldItem3, msPacManWorldItem4);
@@ -281,11 +282,17 @@ public class TileMapEditor extends Application  {
         return menu;
     }
 
+    void loadPredefinedMapsFromWorld(World world) {
+        copyMapsFromWorld(world);
+        updateInfo();
+    }
+
     void copyMapsFromWorld(World world) {
         terrainMap = new TileMap(world.tileMap());
         setTerrainColorsFromMap();
         foodMap    = new TileMap(world.foodMap());
         setFoodColorsFromMap();
+        terrainMapFile = null;
     }
 
     double scaling() {
@@ -361,9 +368,15 @@ public class TileMapEditor extends Application  {
         text += foodMap.getCommentSection();
         text += "\n\n";
         infoLabel.setText(text);
+
+        if (terrainMapFile != null) {
+            stage.setTitle("Map Editor: " + terrainMapFile.getPath());
+        } else {
+            stage.setTitle("Map Editor");
+        }
     }
 
-    void loadMaps() {
+    void openMapFiles() {
         openDialog.setInitialDirectory(lastUsedDir);
         File file = openDialog.showOpenDialog(stage);
         if (file == null) {
@@ -380,7 +393,7 @@ public class TileMapEditor extends Application  {
                 Logger.error("Could not load food map from file {}", foodMapFile);
                 Logger.error(x);
             }
-            File terrainMapFile = new File(basePath + ".terrain");
+            terrainMapFile = new File(basePath + ".terrain");
             try {
                 terrainMap = TileMap.fromURL(terrainMapFile.toURI().toURL(), Tiles.TERRAIN_TILES_END);
                 setTerrainColorsFromMap();
