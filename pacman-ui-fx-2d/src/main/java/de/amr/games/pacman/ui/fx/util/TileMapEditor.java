@@ -114,7 +114,7 @@ public class TileMapEditor extends Application  {
         copyMapsFromWorld(pacManWorld);
 
         double height = Math.max(0.85 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
-        scene = new Scene(createSceneContent(), 850, height);
+        scene = new Scene(createSceneContent(), 900, height);
         scene.setFill(Color.BLACK);
         scene.setOnKeyReleased(e -> {
             if (e.getCode() == KeyCode.T) {
