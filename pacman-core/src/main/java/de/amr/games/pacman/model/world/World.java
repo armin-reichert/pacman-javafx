@@ -207,10 +207,7 @@ public class World {
 
     public boolean isIntersection(Vector2i tile) {
         checkTileNotNull(tile);
-        if (tile.x() <= 0 || tile.x() >= terrainMap.numCols() - 1) {
-            return false; // exclude portal entries and tiles outside the map
-        }
-        if (house.contains(tile)) {
+        if (!insideBounds(tile) || house.contains(tile)) {
             return false;
         }
         long numWallNeighbors = tile.neighbors().filter(this::isBlockedTile).count();
