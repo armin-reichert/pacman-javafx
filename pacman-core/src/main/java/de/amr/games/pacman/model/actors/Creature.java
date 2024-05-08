@@ -109,6 +109,10 @@ public abstract class Creature extends Entity {
         return Optional.ofNullable(targetTile);
     }
 
+    public World world() {
+        return world;
+    }
+
     /**
      * Places this creature at the given tile coordinate with the given tile offsets. Updates the
      * <code>newTileEntered</code> state.

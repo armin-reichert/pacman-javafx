@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.animation.Turn;
 import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
@@ -97,7 +96,7 @@ public class Ghost3D extends Group {
         brakeAnimation.setCycleCount(2);
 
         dressAnimation = new RotateTransition(Duration.seconds(0.3), coloredGhost3D.getDressGroup());
-        // TODO I expected this should be the z-axis but... (maybe my expectations are wrong)
+        // TODO I expected this should be the z-axis but... (transforms messed-up?)
         dressAnimation.setAxis(Rotate.Y_AXIS);
         dressAnimation.setFromAngle(-15);
         dressAnimation.setToAngle(15);
@@ -117,24 +116,24 @@ public class Ghost3D extends Group {
         brakeAnimation.stop();
         dressAnimation.stop();
         numberRotation.stop();
-        updateTransform(game.world());
+        updateTransform();
         updateLook(game);
     }
 
     public void update(GameModel game) {
-        updateTransform(game.world());
+        updateTransform();
         updateLook(game);
         updateAnimations();
     }
 
-    private void updateTransform(World world) {
+    private void updateTransform() {
         Vector2f position = ghost.center();
         setTranslateX(position.x());
         setTranslateY(position.y());
         setTranslateZ(-5);
         // TODO: make transition to new wish dir if changed
         orientation.setAngle(Turn.angle(ghost.wishDir()));
-        boolean outside = position.x() < HTS || position.x() > world.numCols() * TS - HTS;
+        boolean outside = position.x() < HTS || position.x() > ghost.world().numCols() * TS - HTS;
         setVisible(ghost.isVisible() && !outside);
     }
 
