@@ -41,7 +41,9 @@ public class FloorPlan {
 
     public static FloorPlan read(URL url) {
         try {
-            return read(url.openStream());
+            var floorPlan = read(url.openStream());
+            Logger.info("Floorplan successfully read from URL {}", url);
+            return floorPlan;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

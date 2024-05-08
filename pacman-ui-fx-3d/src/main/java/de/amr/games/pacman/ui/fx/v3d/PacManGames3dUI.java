@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.v3d;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.world.FloorPlan;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
@@ -92,6 +93,13 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     private static void addAssets3D() {
         Theme theme = PacManGames2dUI.THEME_2D;
         ResourceManager rm = () -> PacManGames3dUI.class;
+
+        // floor plans of Arcade maps (precomputed)
+        theme.set("model3D.floorPlan.pacman",     FloorPlan.read(rm.url("floorplans/fp-pacman-map-1-res-4.txt")));
+        theme.set("model3D.floorPlan.mspacman.1", FloorPlan.read(rm.url("floorplans/fp-mspacman-map-1-res-4.txt")));
+        theme.set("model3D.floorPlan.mspacman.2", FloorPlan.read(rm.url("floorplans/fp-mspacman-map-2-res-4.txt")));
+        theme.set("model3D.floorPlan.mspacman.3", FloorPlan.read(rm.url("floorplans/fp-mspacman-map-3-res-4.txt")));
+        theme.set("model3D.floorPlan.mspacman.4", FloorPlan.read(rm.url("floorplans/fp-mspacman-map-4-res-4.txt")));
 
         theme.set("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
         theme.set("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
