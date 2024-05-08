@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.checkTileNotNull;
 import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
@@ -107,15 +106,6 @@ public class TileMap {
 
     public boolean insideBounds(int row, int col) {
         return 0 <= row && row < numRows() && 0 <= col && col < numCols();
-    }
-
-    public boolean hasContentAt(int row, int col, byte tileContent) {
-        return content(row, col) == tileContent;
-    }
-
-    public boolean hasContentAt(Vector2i tile, byte tileContent) {
-        checkTileNotNull(tile);
-        return content(tile) == tileContent;
     }
 
     public byte content(Vector2i tile) {

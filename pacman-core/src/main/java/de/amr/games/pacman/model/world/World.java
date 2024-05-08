@@ -186,7 +186,7 @@ public class World {
     }
 
     public boolean isBlockedTile(Vector2i tile) {
-        return insideBounds(checkTileNotNull(tile)) && isTerrainBlocked(terrainMap.content(tile));
+        return insideBounds(tile) && isTerrainBlocked(terrainMap.content(tile));
     }
 
     private boolean isTerrainBlocked(byte content) {
@@ -197,12 +197,10 @@ public class World {
     }
 
     public boolean isTunnel(Vector2i tile) {
-        checkTileNotNull(tile);
-        int row = tile.y(), col = tile.x();
-        if (terrainMap.insideBounds(row, col)) {
-            return terrainMap.hasContentAt(row, col, Tiles.TUNNEL);
+        if (!insideBounds(tile)) {
+            return false;
         }
-        return false;
+        return terrainMap.content(tile) == Tiles.TUNNEL;
     }
 
     public boolean isIntersection(Vector2i tile) {
@@ -230,7 +228,7 @@ public class World {
     }
 
     public void eatFoodAt(Vector2i tile) {
-        if (!insideBounds(checkTileNotNull(tile))) {
+        if (!insideBounds(tile)) {
             return; // raise error?
         }
         if (hasFoodAt(tile)) {
@@ -240,28 +238,28 @@ public class World {
     }
 
     public boolean isFoodTile(Vector2i tile) {
-        if (!insideBounds(checkTileNotNull(tile))) {
+        if (!insideBounds(tile)) {
             return false;
         }
         return foodMap.content(tile) != Tiles.EMPTY;
     }
 
     public boolean isEnergizerTile(Vector2i tile) {
-        if (!insideBounds(checkTileNotNull(tile))) {
+        if (!insideBounds(tile)) {
             return false;
         }
         return foodMap.content(tile) == Tiles.ENERGIZER;
     }
 
     public boolean hasFoodAt(Vector2i tile) {
-        if (!insideBounds(checkTileNotNull(tile))) {
+        if (!insideBounds(tile)) {
             return false;
         }
         return foodMap.content(tile) != EMPTY && !eaten.get(foodMap.index(tile));
     }
 
     public boolean hasEatenFoodAt(Vector2i tile) {
-        if (!insideBounds(checkTileNotNull(tile))) {
+        if (!insideBounds(tile)) {
             return false;
         }
         return eaten.get(foodMap.index(tile));
