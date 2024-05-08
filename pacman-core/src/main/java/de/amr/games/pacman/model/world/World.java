@@ -28,12 +28,12 @@ public class World {
     private final TileMap foodMap;
     private final List<Vector2i> energizerTiles;
     private final List<Portal> portals;
-    private final House house;
 
     private final BitSet eaten;
     private final int totalFoodCount;
     private int uneatenFoodCount;
 
+    private House house;
     private List<NavPoint> demoLevelRoute = List.of();
     private Vector2f pacPosition;
     private Vector2f[] ghostPositions;
@@ -46,12 +46,10 @@ public class World {
     /**
      * @param terrainMap terrain map
      * @param foodMap food map
-     * @param house ghost house
      */
-    public World(TileMap terrainMap, TileMap foodMap, House house) {
+    public World(TileMap terrainMap, TileMap foodMap) {
         this.terrainMap = checkNotNull(terrainMap);
         this.foodMap = checkNotNull(foodMap);
-        this.house   = checkNotNull(house);
 
         // build portals
         var portalList = new ArrayList<Portal>();
@@ -70,6 +68,14 @@ public class World {
         eaten = new BitSet(foodMap.numCols() * foodMap.numRows());
         totalFoodCount = (int) foodMap.tiles().filter(this::isFoodTile).count();
         uneatenFoodCount = totalFoodCount;
+    }
+
+    public void setHouse(House house) {
+        this.house = house;
+    }
+
+    public House house() {
+        return house;
     }
 
     public int numCols() {
@@ -158,10 +164,6 @@ public class World {
 
     public Vector2f bonusPosition() {
         return bonusPosition;
-    }
-
-    public House house() {
-        return house;
     }
 
     /**
