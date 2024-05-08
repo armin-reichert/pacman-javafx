@@ -251,7 +251,7 @@ public enum GameVariants implements GameModel {
      */
     PACMAN {
 
-        static final NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
+        static final NavPoint[] ARCADE_MAP_DEMO_LEVEL_ROUTE = {
             np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
             np(18, 23), np(18, 20), np(18, 17), np(15, 14), np(12, 14), np(9, 17),
             np(6, 17), np(6, 11), np(6, 8), np(6, 4), np(1, 8), np(6, 8),
@@ -280,6 +280,7 @@ public enum GameVariants implements GameModel {
         @Override
         public  World createWorld(int mapNumber) {
             World world = createArcadeWorld("/maps/pacman.terrain", "/maps/pacman.food");
+            world.setDemoLevelRoute(List.of(ARCADE_MAP_DEMO_LEVEL_ROUTE));
             List<Direction> up = List.of(UP);
             Map<Vector2i, List<Direction>> fp = new HashMap<>();
             Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> fp.put(tile, up));
@@ -321,7 +322,9 @@ public enum GameVariants implements GameModel {
         void buildDemoLevel() {
             levelNumber = 1;
             populateLevel(createWorld(1));
-            pac.setAutopilot(new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE)));
+            pac.setAutopilot(world.getDemoLevelRoute().isEmpty()
+                ? new RuleBasedPacSteering(this)
+                : new RouteBasedSteering(world.getDemoLevelRoute()));
             pac.setUseAutopilot(true);
         }
 

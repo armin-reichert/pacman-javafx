@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.world;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 
@@ -33,6 +34,7 @@ public class World {
     private final int totalFoodCount;
     private int uneatenFoodCount;
 
+    private List<NavPoint> demoLevelRoute = List.of();
     private Vector2f pacPosition;
     private Vector2f[] ghostPositions;
     private Direction[] ghostDirections;
@@ -97,6 +99,14 @@ public class World {
 
     public boolean containsPoint(double x, double y) {
         return 0 <= x && x <= numCols() * TS && 0 <= y && y <= numRows() * TS;
+    }
+
+    public void setDemoLevelRoute(List<NavPoint> demoLevelRoute) {
+        this.demoLevelRoute = checkNotNull(demoLevelRoute);
+    }
+
+    public List<NavPoint> getDemoLevelRoute() {
+        return demoLevelRoute;
     }
 
     public void setPacPosition(Vector2f tile) {
