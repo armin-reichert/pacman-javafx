@@ -26,6 +26,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -84,6 +85,7 @@ public class TileMapEditor extends Application  {
                 paletteContainer.getChildren().setAll(foodPalette);
             }
             foodPalette.setVisible(!terrainEdited);
+            updateInfo();
         }
     };
 
@@ -111,17 +113,15 @@ public class TileMapEditor extends Application  {
         // set initial maps
         copyMapsFromWorld(pacManWorld);
 
-        double height = Math.max(0.8 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
+        double height = Math.max(0.85 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
         scene = new Scene(createSceneContent(), 850, height);
         scene.setFill(Color.BLACK);
         scene.setOnKeyReleased(e -> {
             if (e.getCode() == KeyCode.T) {
                 terrainEditedPy.set(true);
-                updateInfo();
             }
             else if (e.getCode() == KeyCode.F) {
                 terrainEditedPy.set(false);
-                updateInfo();
             }
         });
         updateInfo();
@@ -206,14 +206,15 @@ public class TileMapEditor extends Application  {
         menuBar = new MenuBar();
         menuBar.getMenus().addAll(createFileMenu(), createMapsMenu());
 
-
         GridPane controlsContainer = new GridPane();
         controlsContainer.setPrefWidth(350);
-        controlsContainer.add(infoLabel,          0, 0);
-        controlsContainer.add(cbTerrainVisible,   0, 1);
-        controlsContainer.add(cbFoodVisible,      0, 2);
-        controlsContainer.add(cbTerrainEdited,    0, 3);
-        controlsContainer.add(paletteContainer,   0, 4);
+        int row = 0;
+        controlsContainer.add(cbTerrainVisible,   0, row++);
+        controlsContainer.add(cbFoodVisible,      0, row++);
+        controlsContainer.add(new Text(),         0, row++);
+        controlsContainer.add(cbTerrainEdited,    0, row++);
+        controlsContainer.add(paletteContainer,   0, row++);
+        controlsContainer.add(infoLabel,          0, row++);
 
         var contentPane = new BorderPane();
         contentPane.setTop(menuBar);
