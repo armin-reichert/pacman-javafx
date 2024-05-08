@@ -122,7 +122,8 @@ public class GameLevel3D extends Group {
                 createFood3D(context.theme().color("mspacman.maze.foodColor", mazeNumber - 1));
             }
             case GameVariants.PACMAN -> {
-                floorPlan = context.theme().get("model3D.floorPlan.pacman");
+                //floorPlan = context.theme().get("model3D.floorPlan.pacman");
+                floorPlan = new FloorPlan(world, world.numCols() * TS, world.numRows() * TS, 4);
                 wallBuilder = createWallBuilder(
                     context.theme().color("pacman.maze.wallBaseColor"),
                     context.theme().color("pacman.maze.wallMiddleColor"),

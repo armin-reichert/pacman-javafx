@@ -279,13 +279,19 @@ public enum GameVariants implements GameModel {
 
         @Override
         public  World createWorld(int mapNumber) {
+            World world = createOriginalArcadeWorld();
+            //World world = createArcadeWorld("/maps/masonic_3.terrain", "/maps/masonic_3.food");
+            world.setBonusPosition(halfTileRightOf(13, 20));
+            return world;
+        }
+
+        World createOriginalArcadeWorld() {
             World world = createArcadeWorld("/maps/pacman.terrain", "/maps/pacman.food");
             world.setDemoLevelRoute(List.of(ARCADE_MAP_DEMO_LEVEL_ROUTE));
             List<Direction> up = List.of(UP);
             Map<Vector2i, List<Direction>> fp = new HashMap<>();
             Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> fp.put(tile, up));
             world.setForbiddenPassages(fp);
-            world.setBonusPosition(halfTileRightOf(13, 20));
             return world;
         }
 
