@@ -492,6 +492,8 @@ public class TileMapEditor extends Application  {
         GraphicsContext g = getGraphicsContext2D();
         TileMapRenderer renderer;
         byte selectedValue;
+        int selectedValueRow;
+        int selectedValueCol;
 
         Palette(int gridSize, int numRows, int numCols, TileMapRenderer renderer, byte valueEnd) {
             this.gridSize = gridSize;
@@ -502,6 +504,9 @@ public class TileMapEditor extends Application  {
             for (int i = 0; i < valueAtIndex.length; ++i) {
                 valueAtIndex[i] = i < valueEnd ? (byte) i : Tiles.EMPTY;
             }
+            selectedValue = 0;
+            selectedValueRow = -1;
+            selectedValueCol = -1;
             setWidth(numCols * gridSize);
             setHeight(numRows * gridSize);
             setOnMouseClicked(e -> selectedValue = pickValue(e));
@@ -516,9 +521,9 @@ public class TileMapEditor extends Application  {
         }
 
         byte pickValue(MouseEvent e) {
-            int row = (int) e.getY() / gridSize;
-            int col = (int) e.getX() / gridSize;
-            return valueAtIndex[row * numCols + col];
+            selectedValueRow = (int) e.getY() / gridSize;
+            selectedValueCol = (int) e.getX() / gridSize;
+            return valueAtIndex[selectedValueRow * numCols + selectedValueCol];
         }
 
         void draw() {
@@ -538,12 +543,12 @@ public class TileMapEditor extends Application  {
             for (int col = 1; col < numCols; ++col) {
                 g.strokeLine(col * gridSize, 0, col * gridSize, getHeight());
             }
-            // mark selected value
+            // mark selected cell
             g.setStroke(Color.YELLOW);
             g.setLineWidth(1);
-            int row = selectedValue / numCols;
-            int col = selectedValue % numCols;
-            g.strokeRect(col * gridSize, row * gridSize, gridSize, gridSize);
-        }
+            if (selectedValueRow != -1 && selectedValueCol != -1) {
+                g.strokeRect(selectedValueCol * gridSize, selectedValueRow * gridSize, gridSize, gridSize);
+            }
+            }
     }
 }
