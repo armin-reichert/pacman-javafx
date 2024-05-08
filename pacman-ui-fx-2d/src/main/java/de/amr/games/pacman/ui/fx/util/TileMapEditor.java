@@ -58,6 +58,8 @@ public class TileMapEditor extends Application  {
     Scene scene;
     MenuBar menuBar;
     Canvas canvas;
+    TextArea terrainMapCommentEditor;
+    TextArea foodMapCommentEditor;
     Label infoLabel;
     FileChooser openDialog;
     Palette terrainPalette;
@@ -115,7 +117,7 @@ public class TileMapEditor extends Application  {
         copyMapsFromWorld(pacManWorld);
 
         double height = Math.max(0.85 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
-        scene = new Scene(createSceneContent(), 900, height);
+        scene = new Scene(createSceneContent(), 950, height);
         scene.setFill(Color.BLACK);
         scene.setOnKeyReleased(e -> {
             if (e.getCode() == KeyCode.T) {
@@ -179,6 +181,12 @@ public class TileMapEditor extends Application  {
 
         infoLabel = new Label();
 
+        terrainMapCommentEditor = new TextArea();
+        terrainMapCommentEditor.setPrefSize(220, 150);
+
+        foodMapCommentEditor = new TextArea();
+        foodMapCommentEditor.setPrefSize(220, 100);
+
         var cbTerrainVisible = new CheckBox("Show Terrain");
         cbTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
 
@@ -210,12 +218,17 @@ public class TileMapEditor extends Application  {
         GridPane controlsContainer = new GridPane();
         controlsContainer.setPrefWidth(350);
         int row = 0;
-        controlsContainer.add(cbTerrainVisible,   0, row++);
-        controlsContainer.add(cbFoodVisible,      0, row++);
-        controlsContainer.add(new Text(),         0, row++);
-        controlsContainer.add(cbTerrainEdited,    0, row++);
-        controlsContainer.add(paletteContainer,   0, row++);
-        controlsContainer.add(infoLabel,          0, row++);
+        controlsContainer.add(cbTerrainVisible,         0, row++);
+        controlsContainer.add(cbFoodVisible,            0, row++);
+        controlsContainer.add(new Label(),              0, row++);
+        controlsContainer.add(new Text("Terrain Map"),  0, row++);
+        controlsContainer.add(terrainMapCommentEditor,  0, row++);
+        controlsContainer.add(new Text("Food Map"),     0, row++);
+        controlsContainer.add(foodMapCommentEditor,     0, row++);
+        controlsContainer.add(new Label(),              0, row++);
+        controlsContainer.add(cbTerrainEdited,          0, row++);
+        controlsContainer.add(paletteContainer,         0, row++);
+        controlsContainer.add(infoLabel,                0, row++);
 
         var contentPane = new BorderPane();
         contentPane.setTop(menuBar);
@@ -360,13 +373,10 @@ public class TileMapEditor extends Application  {
     }
 
     void updateInfo() {
+        terrainMapCommentEditor.setText(terrainMap.getCommentSection());
+        foodMapCommentEditor.setText(foodMap.getCommentSection());
         var text = "Tile: ";
         text += hoveredTile != null ? String.format("x=%2d y=%2d", hoveredTile.x(), hoveredTile.y()) : "";
-        text += "\n\n";
-        text += terrainMap.getCommentSection();
-        text += "\n";
-        text += foodMap.getCommentSection();
-        text += "\n\n";
         infoLabel.setText(text);
 
         if (terrainMapFile != null) {
@@ -562,6 +572,6 @@ public class TileMapEditor extends Application  {
             if (selectedValueRow != -1 && selectedValueCol != -1) {
                 g.strokeRect(selectedValueCol * gridSize, selectedValueRow * gridSize, gridSize, gridSize);
             }
-            }
+        }
     }
 }
