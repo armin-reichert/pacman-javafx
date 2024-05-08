@@ -29,6 +29,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -104,7 +105,8 @@ public class TileMapEditor extends Application  {
         // set initial maps
         copyMapsFromWorld(pacManWorld);
 
-        scene = new Scene(createSceneContent(), 850, 800);
+        double height = Math.max(0.8 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
+        scene = new Scene(createSceneContent(), 850, height);
         scene.setFill(Color.BLACK);
         scene.setOnKeyReleased(e -> {
             if (e.getCode() == KeyCode.T) {
@@ -363,6 +365,7 @@ public class TileMapEditor extends Application  {
                 Logger.error(x);
             }
         }
+        updateInfo();
     }
 
     void setTerrainColorsFromMap() {
