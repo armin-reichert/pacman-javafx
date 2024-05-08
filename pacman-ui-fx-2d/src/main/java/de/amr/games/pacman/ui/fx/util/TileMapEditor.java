@@ -113,9 +113,6 @@ public class TileMapEditor extends Application  {
 
         foodMapRenderer = new FoodMapRenderer();
 
-        // set initial maps
-        copyMapsFromWorld(pacManWorld);
-
         double height = Math.max(0.85 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
         scene = new Scene(createSceneContent(), 950, height);
         scene.setFill(Color.BLACK);
@@ -127,6 +124,10 @@ public class TileMapEditor extends Application  {
                 terrainEditedPy.set(false);
             }
         });
+
+        // load initial maps
+        loadMapsFromWorld(pacManWorld);
+
         updateInfo();
 
         canvas.heightProperty().bind(scene.heightProperty().multiply(0.95));
@@ -272,19 +273,19 @@ public class TileMapEditor extends Application  {
         Menu loadPredefinedMapMenu = new Menu("Load Predefined Map");
 
         var pacManWorldItem = new MenuItem("Pac-Man");
-        pacManWorldItem.setOnAction(e -> loadPredefinedMapsFromWorld(pacManWorld));
+        pacManWorldItem.setOnAction(e -> loadMapsFromWorld(pacManWorld));
 
         var msPacManWorldItem1 = new MenuItem("Ms. Pac-Man 1");
-        msPacManWorldItem1.setOnAction(e -> loadPredefinedMapsFromWorld(msPacManWorld1));
+        msPacManWorldItem1.setOnAction(e -> loadMapsFromWorld(msPacManWorld1));
 
         var msPacManWorldItem2 = new MenuItem("Ms. Pac-Man 2");
-        msPacManWorldItem2.setOnAction(e -> loadPredefinedMapsFromWorld(msPacManWorld2));
+        msPacManWorldItem2.setOnAction(e -> loadMapsFromWorld(msPacManWorld2));
 
         var msPacManWorldItem3 = new MenuItem("Ms. Pac-Man 3");
-        msPacManWorldItem3.setOnAction(e -> loadPredefinedMapsFromWorld(msPacManWorld3));
+        msPacManWorldItem3.setOnAction(e -> loadMapsFromWorld(msPacManWorld3));
 
         var msPacManWorldItem4 = new MenuItem("Ms. Pac-Man 4");
-        msPacManWorldItem4.setOnAction(e -> loadPredefinedMapsFromWorld(msPacManWorld4));
+        msPacManWorldItem4.setOnAction(e -> loadMapsFromWorld(msPacManWorld4));
 
         loadPredefinedMapMenu.getItems().addAll(pacManWorldItem, msPacManWorldItem1, msPacManWorldItem2,
             msPacManWorldItem3, msPacManWorldItem4);
@@ -295,13 +296,15 @@ public class TileMapEditor extends Application  {
         return menu;
     }
 
-    void loadPredefinedMapsFromWorld(World world) {
+    void loadMapsFromWorld(World world) {
         copyMapsFromWorld(world);
+        foodMapCommentEditor.setText(world.foodMap().getCommentSection());
+        terrainMapCommentEditor.setText(world.terrainMap().getCommentSection());
         updateInfo();
     }
 
     void copyMapsFromWorld(World world) {
-        terrainMap = new TileMap(world.tileMap());
+        terrainMap = new TileMap(world.terrainMap());
         setTerrainColorsFromMap();
         foodMap    = new TileMap(world.foodMap());
         setFoodColorsFromMap();
@@ -373,8 +376,6 @@ public class TileMapEditor extends Application  {
     }
 
     void updateInfo() {
-        terrainMapCommentEditor.setText(terrainMap.getCommentSection());
-        foodMapCommentEditor.setText(foodMap.getCommentSection());
         var text = "Tile: ";
         text += hoveredTile != null ? String.format("x=%2d y=%2d", hoveredTile.x(), hoveredTile.y()) : "";
         infoLabel.setText(text);
@@ -398,6 +399,7 @@ public class TileMapEditor extends Application  {
             File foodMapFile = new File(basePath + ".food");
             try {
                 foodMap = TileMap.fromURL(foodMapFile.toURI().toURL(), Tiles.FOOD_TILES_END);
+                foodMapCommentEditor.setText(foodMap.getCommentSection());
                 lastUsedDir = foodMapFile.getParentFile();
             } catch (MalformedURLException x) {
                 Logger.error("Could not load food map from file {}", foodMapFile);
@@ -407,6 +409,7 @@ public class TileMapEditor extends Application  {
             try {
                 terrainMap = TileMap.fromURL(terrainMapFile.toURI().toURL(), Tiles.TERRAIN_TILES_END);
                 setTerrainColorsFromMap();
+                terrainMapCommentEditor.setText(terrainMap.getCommentSection());
                 lastUsedDir = terrainMapFile.getParentFile();
             } catch (MalformedURLException x) {
                 Logger.error("Could not load terrain map from file {}", terrainMapFile);
@@ -460,9 +463,9 @@ public class TileMapEditor extends Application  {
             int lastDot = file.getPath().lastIndexOf('.');
             String basePath = file.getPath().substring(0, lastDot);
             File foodMapFile = new File(basePath + ".food");
-            saveMap(foodMap, foodMapFile);
+            saveMap(foodMap, foodMapFile, foodMapCommentEditor.getText());
             File terrainMapFile = new File(basePath + ".terrain");
-            saveMap(terrainMap, terrainMapFile);
+            saveMap(terrainMap, terrainMapFile, terrainMapCommentEditor.getText());
 
         } else {
             Logger.error("No map file selected for saving");
@@ -471,9 +474,9 @@ public class TileMapEditor extends Application  {
 
     }
 
-    void saveMap(TileMap map, File file) {
+    void saveMap(TileMap map, File file, String comments) {
         try (FileWriter w = new FileWriter(file, StandardCharsets.UTF_8)) {
-            w.write(map.getCommentSection());
+            w.write(comments);
             for (int row = 0; row < map.numRows(); ++row) {
                 for (int col = 0; col < map.numCols(); ++col) {
                     String valueTxt = String.valueOf(map.get(row, col));

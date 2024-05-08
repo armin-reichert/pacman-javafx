@@ -90,7 +90,7 @@ public class World {
         return terrainMap.tiles();
     }
 
-    public TileMap tileMap() {
+    public TileMap terrainMap() {
         return terrainMap;
     }
 

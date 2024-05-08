@@ -145,7 +145,7 @@ public class PlayScene2D extends GameScene2D {
             } else {
                 terrainMapRenderer.setWallColor(context.theme().color("pacman.maze.wallColor"));
             }
-            terrainMapRenderer.drawMap(g, context.game().world().tileMap());
+            terrainMapRenderer.drawMap(g, context.game().world().terrainMap());
         }
     }
 
@@ -156,7 +156,7 @@ public class PlayScene2D extends GameScene2D {
         } else {
             terrainMapRenderer.setScaling(getScaling());
             terrainMapRenderer.setWallColor(context.theme().color("pacman.maze.wallColor"));
-            terrainMapRenderer.drawMap(g, context.game().world().tileMap());
+            terrainMapRenderer.drawMap(g, context.game().world().terrainMap());
         }
         drawFood(useSpriteSheet, context.theme().color("pacman.maze.foodColor"));
     }
