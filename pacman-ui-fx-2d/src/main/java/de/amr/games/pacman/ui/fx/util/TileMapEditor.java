@@ -58,12 +58,10 @@ public class TileMapEditor extends Application  {
     MenuBar menuBar;
     Canvas canvas;
     Label infoLabel;
-    CheckBox cbTerrainVisible;
-    CheckBox cbFoodVisible;
-    CheckBox cbTerrainEdited;
     FileChooser openDialog;
     Palette terrainPalette;
     Palette foodPalette;
+    VBox paletteContainer = new VBox();
 
     TerrainMapRenderer terrainMapRenderer;
     FoodMapRenderer foodMapRenderer;
@@ -80,7 +78,11 @@ public class TileMapEditor extends Application  {
         @Override
         protected void invalidated() {
             boolean terrainEdited = get();
-            terrainPalette.setVisible(terrainEdited);
+            if (terrainEdited) {
+                paletteContainer.getChildren().setAll(terrainPalette);
+            } else {
+                paletteContainer.getChildren().setAll(foodPalette);
+            }
             foodPalette.setVisible(!terrainEdited);
         }
     };
@@ -176,13 +178,13 @@ public class TileMapEditor extends Application  {
 
         infoLabel = new Label();
 
-        cbTerrainVisible = new CheckBox("Show Terrain");
+        var cbTerrainVisible = new CheckBox("Show Terrain");
         cbTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
 
-        cbFoodVisible = new CheckBox("Show Food");
+        var cbFoodVisible = new CheckBox("Show Food");
         cbFoodVisible.selectedProperty().bindBidirectional(foodVisiblePy);
 
-        cbTerrainEdited = new CheckBox("Edit Terrain");
+        var cbTerrainEdited = new CheckBox("Edit Terrain");
         cbTerrainEdited.selectedProperty().bindBidirectional(terrainEditedPy);
         cbTerrainEdited.setOnAction(e -> updateInfo());
 
@@ -198,7 +200,8 @@ public class TileMapEditor extends Application  {
         foodPalette.setValuesAtIndex(
             Tiles.EMPTY, Tiles.PELLET, Tiles.ENERGIZER, Tiles.EMPTY
         );
-        StackPane paletteContainer = new StackPane(foodPalette, terrainPalette);
+
+        paletteContainer = new VBox(terrainEditedPy.get() ? terrainPalette : foodPalette);
 
         menuBar = new MenuBar();
         menuBar.getMenus().addAll(createFileMenu(), createMapsMenu());
@@ -206,10 +209,10 @@ public class TileMapEditor extends Application  {
 
         GridPane controlsContainer = new GridPane();
         controlsContainer.setPrefWidth(350);
-        controlsContainer.add(infoLabel,        0, 0);
-        controlsContainer.add(cbTerrainVisible, 0, 1);
-        controlsContainer.add(cbFoodVisible,    0, 2);
-        controlsContainer.add(cbTerrainEdited,  0, 3);
+        controlsContainer.add(infoLabel,          0, 0);
+        controlsContainer.add(cbTerrainVisible,   0, 1);
+        controlsContainer.add(cbFoodVisible,      0, 2);
+        controlsContainer.add(cbTerrainEdited,    0, 3);
         controlsContainer.add(paletteContainer,   0, 4);
 
         var contentPane = new BorderPane();
@@ -229,10 +232,10 @@ public class TileMapEditor extends Application  {
         openDialog = new FileChooser();
         openDialog.setInitialDirectory(lastUsedDir);
 
-        var loadMapsItem = new MenuItem("Load Maps...");
+        var loadMapsItem = new MenuItem("Load Map...");
         loadMapsItem.setOnAction(e -> loadMaps());
 
-        var saveMapsItem = new MenuItem("Save Maps...");
+        var saveMapsItem = new MenuItem("Save Map...");
         saveMapsItem.setOnAction(e -> saveMaps());
 
         var quitItem = new MenuItem("Quit");
