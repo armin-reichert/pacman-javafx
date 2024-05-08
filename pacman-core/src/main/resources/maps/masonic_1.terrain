@@ -1,6 +1,7 @@
-# Masonic #1 terrain map
-# wall_color=rgb(53,156,156)
-# add your stuff here
+#Masonic #1 terrain map
+#wall_color=rgb(113,206,234)
+#wall_fill_color=rgb(53,156,156)
+#add your stuff here
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
