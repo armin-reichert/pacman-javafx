@@ -184,16 +184,14 @@ public class World {
     }
 
     public boolean isBlockedTile(Vector2i tile) {
-        checkTileNotNull(tile);
-        int row = tile.y(), col = tile.x();
-        if (terrainMap.insideBounds(row, col)) {
-            byte content = terrainMap.content(tile);
-            return content == WALL_H || content == WALL_V
-                || content == DWALL_H || content == DWALL_V
-                || content == CORNER_NE || content == CORNER_NW || content == CORNER_SE || content == CORNER_SW
-                || content == DCORNER_NE || content == DCORNER_NW || content == DCORNER_SE || content == DCORNER_SW;
-        }
-        return false; // or true?
+        return insideBounds(checkTileNotNull(tile)) && isTerrainBlocked(terrainMap.content(tile));
+    }
+
+    private boolean isTerrainBlocked(byte content) {
+        return content == WALL_H  || content == WALL_V
+            || content == DWALL_H || content == DWALL_V
+            || content == CORNER_NE  || content == CORNER_NW  || content == CORNER_SE  || content == CORNER_SW
+            || content == DCORNER_NE || content == DCORNER_NW || content == DCORNER_SE || content == DCORNER_SW;
     }
 
     public boolean isTunnel(Vector2i tile) {
@@ -210,9 +208,9 @@ public class World {
         if (!insideBounds(tile) || house.contains(tile)) {
             return false;
         }
-        long numWallNeighbors = tile.neighbors().filter(this::isBlockedTile).count();
-        long numDoorNeighbors = tile.neighbors().filter(house.door()::occupies).count();
-        return numWallNeighbors + numDoorNeighbors < 2;
+        long numBlockedNeighbors = tile.neighbors().filter(this::insideBounds).filter(this::isBlockedTile).count();
+        long numDoorNeighbors = tile.neighbors().filter(this::insideBounds).filter(house.door()::occupies).count();
+        return numBlockedNeighbors + numDoorNeighbors < 2;
     }
 
     // Food
