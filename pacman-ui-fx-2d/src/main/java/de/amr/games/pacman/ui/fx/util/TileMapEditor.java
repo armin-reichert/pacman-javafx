@@ -298,8 +298,8 @@ public class TileMapEditor extends Application  {
 
     void loadMapsFromWorld(World world) {
         copyMapsFromWorld(world);
-        foodMapCommentEditor.setText(world.foodMap().getCommentSection());
-        terrainMapCommentEditor.setText(world.terrainMap().getCommentSection());
+        readMapComment(foodMap, foodMapCommentEditor);
+        readMapComment(terrainMap, terrainMapCommentEditor);
         updateInfo();
     }
 
@@ -309,6 +309,16 @@ public class TileMapEditor extends Application  {
         foodMap    = new TileMap(world.foodMap());
         setFoodColorsFromMap();
         terrainMapFile = null;
+    }
+
+    void readMapComment(TileMap map, TextArea editor) {
+        StringBuilder sb = new StringBuilder();
+        for (var line : map.getCommentSection().split("\n")) {
+            if (line.startsWith("#")) {
+                sb.append(line.substring(1).trim()).append("\n");
+            }
+        }
+        editor.setText(sb.toString());
     }
 
     double scaling() {
@@ -399,7 +409,7 @@ public class TileMapEditor extends Application  {
             File foodMapFile = new File(basePath + ".food");
             try {
                 foodMap = TileMap.fromURL(foodMapFile.toURI().toURL(), Tiles.FOOD_TILES_END);
-                foodMapCommentEditor.setText(foodMap.getCommentSection());
+                readMapComment(foodMap, foodMapCommentEditor);
                 lastUsedDir = foodMapFile.getParentFile();
             } catch (MalformedURLException x) {
                 Logger.error("Could not load food map from file {}", foodMapFile);
@@ -409,7 +419,7 @@ public class TileMapEditor extends Application  {
             try {
                 terrainMap = TileMap.fromURL(terrainMapFile.toURI().toURL(), Tiles.TERRAIN_TILES_END);
                 setTerrainColorsFromMap();
-                terrainMapCommentEditor.setText(terrainMap.getCommentSection());
+                readMapComment(terrainMap, terrainMapCommentEditor);
                 lastUsedDir = terrainMapFile.getParentFile();
             } catch (MalformedURLException x) {
                 Logger.error("Could not load terrain map from file {}", terrainMapFile);
@@ -475,8 +485,12 @@ public class TileMapEditor extends Application  {
     }
 
     void saveMap(TileMap map, File file, String comments) {
+        StringBuilder sb = new StringBuilder();
+        for (var line : comments.split("\n")) {
+            sb.append("#").append(line).append("\n");
+        }
         try (FileWriter w = new FileWriter(file, StandardCharsets.UTF_8)) {
-            w.write(comments);
+            w.write(sb.toString());
             for (int row = 0; row < map.numRows(); ++row) {
                 for (int col = 0; col < map.numCols(); ++col) {
                     String valueTxt = String.valueOf(map.get(row, col));
