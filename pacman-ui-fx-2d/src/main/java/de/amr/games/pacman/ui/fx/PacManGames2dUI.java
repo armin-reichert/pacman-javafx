@@ -88,6 +88,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final int CANVAS_WIDTH_UNSCALED = GameModel.ARCADE_MAP_TILES_X * TS; // 28*8 = 224
     public static final int CANVAS_HEIGHT_UNSCALED = GameModel.ARCADE_MAP_TILES_Y * TS; // 36*8 = 288
 
+    public static final BooleanProperty PY_USE_RANDOM_MAPS = new SimpleBooleanProperty(false) {
+        @Override
+        protected void invalidated() {
+            boolean random = get();
+            GameVariants.PACMAN.setUseRandomMaps(random);
+        }
+    };
     public static final BooleanProperty PY_USE_AUTOPILOT   = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_USE_SPRITE_SHEET_FOR_MAZE = new SimpleBooleanProperty(false);

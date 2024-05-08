@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
+import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -39,6 +40,7 @@ public class InfoBoxGameControl extends InfoBox {
     private final Button[] buttonsIntermissionTest;
     private final CheckBox cbAutopilot;
     private final CheckBox cbImmunity;
+    private final CheckBox cbUseRandomMaps;
 
     public InfoBoxGameControl(Theme theme, String title) {
         super(theme, title);
@@ -50,6 +52,7 @@ public class InfoBoxGameControl extends InfoBox {
         buttonsIntermissionTest = addButtonList("Cut Scenes Test", "Start", "Quit");
         cbAutopilot = addCheckBox("Autopilot");
         cbImmunity = addCheckBox("Pac-Man Immune");
+        cbUseRandomMaps = addCheckBox("Use Map Variations");
     }
 
     @Override
@@ -72,6 +75,7 @@ public class InfoBoxGameControl extends InfoBox {
         spinnerCredit.getValueFactory().setValue(context.gameController().credit());
         cbAutopilot.setOnAction(e -> actionHandler().toggleAutopilot());
         cbImmunity.setOnAction(e -> actionHandler().toggleImmunity());
+        cbUseRandomMaps.setOnAction(e -> PacManGames2dUI.PY_USE_RANDOM_MAPS.set(cbUseRandomMaps.isSelected()));
     }
 
     @Override
@@ -83,6 +87,7 @@ public class InfoBoxGameControl extends InfoBox {
         comboInitialLives.setValue(context.game().initialLives());
         cbAutopilot.setSelected(PY_USE_AUTOPILOT.get());
         cbImmunity.setSelected(context.gameController().isPacImmune());
+        cbUseRandomMaps.setSelected(PacManGames2dUI.PY_USE_RANDOM_MAPS.get());
         buttonsLevelActions[GAME_LEVEL_START].setDisable(!canStartLevel());
         buttonsLevelActions[GAME_LEVEL_QUIT].setDisable(context.game().level().isEmpty());
         buttonsLevelActions[GAME_LEVEL_NEXT].setDisable(!canEnterNextLevel());

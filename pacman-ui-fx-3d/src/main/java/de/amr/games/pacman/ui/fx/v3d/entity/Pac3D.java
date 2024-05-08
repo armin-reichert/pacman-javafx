@@ -213,7 +213,7 @@ public class Pac3D extends Group {
         position.setZ(-5.0);
         orientation.setAxis(Rotate.Z_AXIS);
         orientation.setAngle(angle(pac.moveDir()));
-        setVisible(pac.isVisible() && !outsideWorld(game.world()));
+        setVisible(pac.isVisible() && !outsideWorld(pac.world()));
         if (pac.isStandingStill()) {
             walkingAnimation.stop();
         } else {

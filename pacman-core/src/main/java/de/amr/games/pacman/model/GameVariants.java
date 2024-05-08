@@ -279,8 +279,14 @@ public enum GameVariants implements GameModel {
 
         @Override
         public  World createWorld(int mapNumber) {
-            World world = createOriginalArcadeWorld();
-            //World world = createArcadeWorld("/maps/masonic_3.terrain", "/maps/masonic_3.food");
+            World world;
+            if (mapNumber == 1) {
+                world = createOriginalArcadeWorld();
+            } else {
+                var terrainMapName = "/maps/masonic_" + (mapNumber - 1) + ".terrain";
+                world = createArcadeWorld(terrainMapName, "/maps/masonic_" + (mapNumber - 1) + ".food");
+                Logger.info("Created world using terrain map '{}'", terrainMapName);
+            }
             world.setBonusPosition(halfTileRightOf(13, 20));
             return world;
         }
@@ -297,7 +303,10 @@ public enum GameVariants implements GameModel {
 
         @Override
         public int mapNumber(int levelNumber) {
-            return 1;
+            if (levelNumber == 1 || !useRandomMaps) {
+                return 1; // original Arcade map
+            }
+            return Globals.randomInt(2, 7);
         }
 
         @Override
@@ -318,7 +327,7 @@ public enum GameVariants implements GameModel {
         @Override
         void buildRegularLevel(int levelNumber) {
             this.levelNumber = checkLevelNumber(levelNumber);
-            populateLevel(createWorld(1));
+            populateLevel(createWorld(mapNumber(levelNumber)));
             pac.setName("Pac-Man");
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(false);
@@ -327,7 +336,7 @@ public enum GameVariants implements GameModel {
         @Override
         void buildDemoLevel() {
             levelNumber = 1;
-            populateLevel(createWorld(1));
+            populateLevel(createWorld(mapNumber(1)));
             pac.setAutopilot(world.getDemoLevelRoute().isEmpty()
                 ? new RuleBasedPacSteering(this)
                 : new RouteBasedSteering(world.getDemoLevelRoute()));
@@ -435,6 +444,7 @@ public enum GameVariants implements GameModel {
     final Score          highScore = new Score();
     final GateKeeper     gateKeeper = new GateKeeper();
 
+    boolean              useRandomMaps;
     String               highScoreFileName;
     int                  levelNumber; // 1=first level
     boolean              demoLevel;
@@ -650,6 +660,11 @@ public enum GameVariants implements GameModel {
     @Override
     public boolean isDemoLevel() {
         return demoLevel;
+    }
+
+    @Override
+    public void setUseRandomMaps(boolean random) {
+        this.useRandomMaps = random;
     }
 
     @Override

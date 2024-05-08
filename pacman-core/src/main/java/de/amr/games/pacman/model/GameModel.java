@@ -69,6 +69,8 @@ public interface GameModel {
 
     World createWorld(int mapNumber);
 
+    void setUseRandomMaps(boolean value);
+
     int mapNumber(int levelNumber);
 
     int mazeNumber(int levelNumber);
