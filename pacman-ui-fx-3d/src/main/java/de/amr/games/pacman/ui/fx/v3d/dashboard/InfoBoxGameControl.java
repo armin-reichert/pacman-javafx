@@ -75,7 +75,7 @@ public class InfoBoxGameControl extends InfoBox {
         spinnerCredit.getValueFactory().setValue(context.gameController().credit());
         cbAutopilot.setOnAction(e -> actionHandler().toggleAutopilot());
         cbImmunity.setOnAction(e -> actionHandler().toggleImmunity());
-        cbUseRandomMaps.setOnAction(e -> PacManGames2dUI.PY_USE_RANDOM_MAPS.set(cbUseRandomMaps.isSelected()));
+        cbUseRandomMaps.setOnAction(e -> PacManGames2dUI.PY_USE_ALTERNATE_MAPS.set(cbUseRandomMaps.isSelected()));
     }
 
     @Override
@@ -87,7 +87,7 @@ public class InfoBoxGameControl extends InfoBox {
         comboInitialLives.setValue(context.game().initialLives());
         cbAutopilot.setSelected(PY_USE_AUTOPILOT.get());
         cbImmunity.setSelected(context.gameController().isPacImmune());
-        cbUseRandomMaps.setSelected(PacManGames2dUI.PY_USE_RANDOM_MAPS.get());
+        cbUseRandomMaps.setSelected(PacManGames2dUI.PY_USE_ALTERNATE_MAPS.get());
         buttonsLevelActions[GAME_LEVEL_START].setDisable(!canStartLevel());
         buttonsLevelActions[GAME_LEVEL_QUIT].setDisable(context.game().level().isEmpty());
         buttonsLevelActions[GAME_LEVEL_NEXT].setDisable(!canEnterNextLevel());

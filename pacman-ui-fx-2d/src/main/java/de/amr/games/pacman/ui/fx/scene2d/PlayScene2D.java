@@ -91,7 +91,7 @@ public class PlayScene2D extends GameScene2D {
         }
         switch (game) {
             case GameVariants.MS_PACMAN -> drawMsPacManMaze();
-            case GameVariants.PACMAN    -> drawPacManMaze(PY_USE_SPRITE_SHEET_FOR_MAZE.get());
+            case GameVariants.PACMAN    -> drawPacManMaze(!PY_USE_ALTERNATE_MAPS.get());
             default -> throw new IllegalGameVariantException(game);
         }
         drawLevelMessage();
