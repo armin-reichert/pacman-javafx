@@ -161,11 +161,14 @@ public class PlayScene2D extends GameScene2D {
             }
         } else {
             terrainMapRenderer.setScaling(getScaling());
-            terrainMapRenderer.setWallColor(context.theme().color("pacman.maze.wallColor"));
+            Color wallColor = world.terrainMap().getProperties().containsKey("wall_color")
+                ? Color.web(world.terrainMap().getProperty("wall_color"))
+                : context.theme().color("pacman.maze.wallColor");
+            terrainMapRenderer.setWallColor(wallColor);
             terrainMapRenderer.drawMap(g, context.game().world().terrainMap());
             foodMapRenderer.setScaling(getScaling());
             Color foodColor = world.foodMap().getProperties().containsKey("food_color")
-                ? Color.web(context.game().world().foodMap().getProperty("food_color"))
+                ? Color.web(world.foodMap().getProperty("food_color"))
                 : context.theme().color("pacman.maze.foodColor");
             foodMapRenderer.setPelletColor(foodColor);
             foodMapRenderer.setEnergizerColor(foodColor);
