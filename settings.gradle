@@ -1,3 +1,6 @@
-rootProject.name = 'pacman-javafx'
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+}
 
+rootProject.name = 'pacman-javafx'
 include 'pacman-core', 'pacman-ui-fx-2d', 'pacman-ui-fx-3d'
