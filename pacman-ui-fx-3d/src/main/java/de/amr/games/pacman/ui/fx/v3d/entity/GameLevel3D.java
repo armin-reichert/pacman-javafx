@@ -124,10 +124,14 @@ public class GameLevel3D extends Group {
             case GameVariants.PACMAN -> {
                 //floorPlan = context.theme().get("model3D.floorPlan.pacman");
                 floorPlan = new FloorPlan(world, world.numCols() * TS, world.numRows() * TS, 4);
-                wallBuilder = createWallBuilder(
-                    context.theme().color("pacman.maze.wallBaseColor"),
-                    context.theme().color("pacman.maze.wallMiddleColor"),
-                    context.theme().color("pacman.maze.wallTopColor"));
+                Color baseColor = world.terrainMap().getProperties().containsKey("wall_color")
+                    ? Color.web(world.terrainMap().getProperty("wall_color"))
+                    : context.theme().color("pacman.maze.wallBaseColor");
+                Color topColor = world.terrainMap().getProperties().containsKey("wall_fill_color")
+                    ? Color.web(world.terrainMap().getProperty("wall_fill_color"))
+                    : context.theme().color("pacman.maze.wallTopColor");
+                Color middleColor = baseColor;
+                wallBuilder = createWallBuilder(baseColor, middleColor, topColor);
                 createFood3D(context.theme().color("pacman.maze.foodColor"));
             }
             default -> throw new IllegalGameVariantException(context.game());
