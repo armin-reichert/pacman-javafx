@@ -439,6 +439,7 @@ public class TileMapEditor extends Application  {
             File foodMapFile = new File(basePath + ".food");
             try {
                 foodMap = TileMap.fromURL(foodMapFile.toURI().toURL(), Tiles.FOOD_TILES_END);
+                setFoodColorsFromMap();
                 foodMapPropertiesEditor.setText(foodMap.getPropertiesAsText());
                 lastUsedDir = foodMapFile.getParentFile();
             } catch (MalformedURLException x) {
