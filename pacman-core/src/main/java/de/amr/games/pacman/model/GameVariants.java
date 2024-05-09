@@ -305,7 +305,7 @@ public enum GameVariants implements GameModel {
             if (levelNumber == 1 || !useRandomMaps) {
                 return 1; // original Arcade map
             }
-            return Globals.randomInt(2, 7);
+            return Globals.randomInt(2, 8);
         }
 
         @Override
