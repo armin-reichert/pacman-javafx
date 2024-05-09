@@ -469,20 +469,15 @@ public class TileMapEditor extends Application  {
         if (file == null) {
             return;
         }
+        lastUsedDir = file.getParentFile();
         if (file.getName().endsWith(".terrain") || file.getName().endsWith(".food")) {
             int lastDot = file.getPath().lastIndexOf('.');
             String basePath = file.getPath().substring(0, lastDot);
-            File foodMapFile = new File(basePath + ".food");
             foodMap.setComments(foodMapCommentEditor.getText());
-            saveMap(foodMap, foodMapFile);
-            File terrainMapFile = new File(basePath + ".terrain");
+            saveMap(foodMap, new File(basePath + ".food"));
             terrainMap.setComments(terrainMapCommentEditor.getText());
-            saveMap(terrainMap, terrainMapFile);
-
-        } else {
-            Logger.error("No map file selected for saving");
+            saveMap(terrainMap, new File(basePath + ".terrain"));
         }
-        lastUsedDir = file.getParentFile();
     }
 
     void saveMap(TileMap map, File file) {
