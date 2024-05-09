@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.world.Tiles;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -92,11 +93,31 @@ public class TileMapEditor extends Application  {
     };
     BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
 
-    World pacManWorld    = GameVariants.PACMAN.createWorld(1);
-    World msPacManWorld1 = GameVariants.MS_PACMAN.createWorld(1);
-    World msPacManWorld2 = GameVariants.MS_PACMAN.createWorld(2);
-    World msPacManWorld3 = GameVariants.MS_PACMAN.createWorld(3);
-    World msPacManWorld4 = GameVariants.MS_PACMAN.createWorld(4);
+    World pacManWorld;
+    World msPacManWorld1;
+    World msPacManWorld2;
+    World msPacManWorld3;
+    World msPacManWorld4;
+
+    private void loadPredefinedMaps() {
+        pacManWorld    = GameVariants.PACMAN.createWorld(1);
+        msPacManWorld1 = GameVariants.MS_PACMAN.createWorld(1);
+        msPacManWorld2 = GameVariants.MS_PACMAN.createWorld(2);
+        msPacManWorld3 = GameVariants.MS_PACMAN.createWorld(3);
+        msPacManWorld4 = GameVariants.MS_PACMAN.createWorld(4);
+    }
+
+    @Override
+    public void init() throws Exception {
+        try {
+            loadPredefinedMaps();
+            terrainMap = new TileMap(numRows(), numCols());
+            foodMap = new TileMap(numRows(), numCols());
+        } catch (Exception x) {
+            x.printStackTrace(System.err);
+            Platform.exit();
+        }
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -110,7 +131,6 @@ public class TileMapEditor extends Application  {
             }
         };
         terrainMapRenderer.setWallColor(Color.GREEN);
-
         foodMapRenderer = new FoodMapRenderer();
 
         double height = Math.max(0.85 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
@@ -125,14 +145,9 @@ public class TileMapEditor extends Application  {
             }
         });
 
-        // load initial maps
-        loadMapsFromWorld(pacManWorld);
-
-        updateInfo();
-
         canvas.heightProperty().bind(scene.heightProperty().multiply(0.95));
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> canvas.getHeight() * terrainMap.numCols() / terrainMap.numRows(), canvas.heightProperty()));
+            () -> canvas.getHeight() * numCols() / numRows(), canvas.heightProperty()));
 
         stage.setScene(scene);
         stage.setTitle("Map Editor");
@@ -144,21 +159,29 @@ public class TileMapEditor extends Application  {
         clock.start();
     }
 
+    int numRows() {
+        return terrainMap != null ? terrainMap.numRows() : 36;
+    }
+
+    int numCols() {
+        return terrainMap != null ? terrainMap.numCols() : 28;
+    }
+
     void draw() {
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        if (terrainVisiblePy.get()) {
+        if (terrainMap != null && terrainVisiblePy.get()) {
             terrainMapRenderer.setScaling(scaling());
             terrainMapRenderer.drawMap(g, terrainMap);
         }
-        if (foodVisiblePy.get()) {
+        if (foodMap != null && foodVisiblePy.get()) {
             foodMapRenderer.setScaling(scaling());
             foodMapRenderer.drawMap(g, foodMap);
         }
         if (gridVisiblePy.get()) {
-            for (int row = 0; row < terrainMap.numRows(); ++row) {
-                for (int col = 0; col < terrainMap.numCols(); ++col) {
+            for (int row = 0; row < numRows(); ++row) {
+                for (int col = 0; col < numCols(); ++col) {
                     if (hoveredTile != null && hoveredTile.x() == col && hoveredTile.y() == row) {
                         g.setStroke(Color.YELLOW);
                         g.setLineWidth(1);
@@ -271,55 +294,62 @@ public class TileMapEditor extends Application  {
     }
 
     Menu createMapsMenu() {
-        var clearMapItem = new MenuItem("Clear");
-        clearMapItem.setOnAction(e -> clearMap());
+        var clearTerrainMapItem = new MenuItem("Clear Terrain");
+        clearTerrainMapItem.setOnAction(e -> {
+            if (terrainMap != null) {
+                terrainMap.clear();
+            }
+        });
+
+        var clearFoodMapItem = new MenuItem("Clear Food");
+        clearFoodMapItem.setOnAction(e -> {
+            if (foodMap != null) {
+                foodMap.clear();
+            }
+        });
 
         var addHouseItem = new MenuItem("Add House");
         addHouseItem.setOnAction(e -> addTerrainShape(15, 10, GHOST_HOUSE_SHAPE));
 
-        Menu loadPredefinedMapMenu = new Menu("Load Predefined Map");
+        Menu loadPredefinedMapMenu = new Menu("Load Predefined");
 
         var pacManWorldItem = new MenuItem("Pac-Man");
-        pacManWorldItem.setOnAction(e -> loadMapsFromWorld(pacManWorld));
+        pacManWorldItem.setOnAction(e -> loadWorld(pacManWorld));
 
         var msPacManWorldItem1 = new MenuItem("Ms. Pac-Man 1");
-        msPacManWorldItem1.setOnAction(e -> loadMapsFromWorld(msPacManWorld1));
+        msPacManWorldItem1.setOnAction(e -> loadWorld(msPacManWorld1));
 
         var msPacManWorldItem2 = new MenuItem("Ms. Pac-Man 2");
-        msPacManWorldItem2.setOnAction(e -> loadMapsFromWorld(msPacManWorld2));
+        msPacManWorldItem2.setOnAction(e -> loadWorld(msPacManWorld2));
 
         var msPacManWorldItem3 = new MenuItem("Ms. Pac-Man 3");
-        msPacManWorldItem3.setOnAction(e -> loadMapsFromWorld(msPacManWorld3));
+        msPacManWorldItem3.setOnAction(e -> loadWorld(msPacManWorld3));
 
         var msPacManWorldItem4 = new MenuItem("Ms. Pac-Man 4");
-        msPacManWorldItem4.setOnAction(e -> loadMapsFromWorld(msPacManWorld4));
+        msPacManWorldItem4.setOnAction(e -> loadWorld(msPacManWorld4));
 
         loadPredefinedMapMenu.getItems().addAll(pacManWorldItem, msPacManWorldItem1, msPacManWorldItem2,
             msPacManWorldItem3, msPacManWorldItem4);
 
         var menu = new Menu("Map");
-        menu.getItems().addAll(clearMapItem, addHouseItem, loadPredefinedMapMenu);
+        menu.getItems().addAll(clearTerrainMapItem, clearFoodMapItem, addHouseItem, loadPredefinedMapMenu);
 
         return menu;
     }
 
-    void loadMapsFromWorld(World world) {
-        copyMapsFromWorld(world);
-        foodMapPropertiesEditor.setText(foodMap.getPropertiesAsText());
-        terrainMapPropertiesEditor.setText(terrainMap.getPropertiesAsText());
-        updateInfo();
-    }
-
-    void copyMapsFromWorld(World world) {
+    void loadWorld(World world) {
         terrainMap = new TileMap(world.terrainMap());
         setTerrainColorsFromMap();
         foodMap    = new TileMap(world.foodMap());
         setFoodColorsFromMap();
         terrainMapFile = null;
+        foodMapPropertiesEditor.setText(foodMap.getPropertiesAsText());
+        terrainMapPropertiesEditor.setText(terrainMap.getPropertiesAsText());
+        updateInfo();
     }
 
     double scaling() {
-        return canvas.getHeight() / (terrainMap.numRows() * 8);
+        return canvas.getHeight() / (numRows() * 8);
     }
 
     int viewToTile(double viewLength) {
@@ -480,15 +510,11 @@ public class TileMapEditor extends Application  {
         }
     }
 
-    void clearMap() {
-        if (terrainEditedPy.get()) {
-            terrainMap.clear();
-        } else {
-            foodMap.clear();
-        }
-    }
 
     void addTerrainShape(int row, int col, byte[][] shape) {
+        if (terrainMap == null) {
+            return;
+        }
         for (int r = 0; r < shape.length; ++r) {
             for (int c = 0; c < shape[0].length; ++c) {
                 terrainMap.set(row + r, col + c, shape[r][c]);

@@ -33,61 +33,61 @@ public class TileMap {
     }
 
     private final Properties properties = new Properties();
-    private byte[][] data;
+    private final byte[][] data;
 
     public static TileMap parse(List<String> lines, byte valueLimit) {
-        var tileMap = new TileMap();
 
-        String header = "";
-        int numRows = 0, numCols = 0;
-        boolean dataSectionStarted = false;
-        for (String line : lines) {
+        // First pass: read property section and determine data section size
+        int numDataRows = 0, numDataCols = -1;
+        int dataSectionStart = -1;
+        StringBuilder propertySection = new StringBuilder();
+        for (int lineIndex = 0; lineIndex < lines.size(); ++lineIndex) {
+            String line = lines.get(lineIndex);
             if (line.startsWith("!data")) {
-                dataSectionStarted = true;
-                continue;
+                dataSectionStart = lineIndex + 1;
             }
-            if (dataSectionStarted) {
-                numRows++;
-                if (numRows == 1) {
-                    numCols = line.split(",").length;
-                }
+            else if (dataSectionStart == -1) {
+                propertySection.append(line).append("\n");
             } else {
-                header += line + "\n";
+                numDataRows++;
+                String[] columns = line.split(",");
+                if (numDataCols == -1) {
+                    numDataCols = columns.length;
+                } else if (numDataCols != columns.length) {
+                    Logger.error("Tile map is inconsistent, row={}", lineIndex);
+                    throw new IllegalArgumentException("Inconsistent tile map");
+                }
             }
         }
-
-        if (numRows == 0) {
+        if (numDataRows == 0) {
             throw new IllegalArgumentException("No data section found");
         }
 
-        tileMap.setPropertiesFromText(header);
+        // Second pass: read data
+        var tileMap = new TileMap(new byte[numDataRows][numDataCols]);
+        tileMap.setPropertiesFromText(propertySection.toString());
+        // keep size up-to-date
+        tileMap.properties.setProperty("num_rows", String.valueOf(numDataRows));
+        tileMap.properties.setProperty("num_cols", String.valueOf(numDataCols));
 
-        tileMap.properties.setProperty("num_rows", String.valueOf(numRows));
-        tileMap.properties.setProperty("num_cols", String.valueOf(numCols));
-        tileMap.data = new byte[numRows][numCols];
-        int row = 0;
-        dataSectionStarted = false;
-        for (String line : lines) {
-            if (line.startsWith("!data")) {
-                dataSectionStarted = true;
-                continue;
-            }
-            if (!dataSectionStarted) {
-                continue;
-            }
-            String[] values = line.split(",");
-            if (values.length != numCols) {
-                throw new IllegalArgumentException("Inconsistent map data");
-            }
-            for (int col = 0; col < values.length; ++col) {
-                byte value = Byte.parseByte(values[col].trim());
-                if (value >= valueLimit) {
-                    Logger.error("Invalid tile map value {} at row {}, col {}", value, row, col);
-                } else {
-                    tileMap.data[row][col] = value;
+        for (int lineIndex = dataSectionStart; lineIndex < lines.size(); ++lineIndex) {
+            String line = lines.get(lineIndex);
+            String[] columns = line.split(",");
+            for (int col = 0; col < columns.length; ++col) {
+                String entry = columns[col].trim();
+                try {
+                    byte value = Byte.parseByte(entry);
+                    if (value >= valueLimit) {
+                        Logger.error("Invalid tile map value {} at row {}, col {}", value, lineIndex, col);
+                        throw new IllegalArgumentException("Inconsistent tile map");
+                    } else {
+                        tileMap.data[lineIndex - dataSectionStart][col] = value;
+                    }
+                } catch (NumberFormatException x) {
+                    Logger.error("Invalid tile map entry {} at row {}, col {}", entry, lineIndex, col);
+                    throw new IllegalArgumentException("Inconsistent tile map");
                 }
             }
-            ++row;
         }
         return tileMap;
     }
@@ -100,7 +100,14 @@ public class TileMap {
         properties.putAll(other.properties);
     }
 
-    private TileMap() {
+    public TileMap(int numRows, int numCols) {
+        data = new byte[numRows][numCols];
+        properties.setProperty("num_rows", String.valueOf(numRows));
+        properties.setProperty("num_cols", String.valueOf(numCols));
+    }
+
+    private TileMap(byte[][] data) {
+        this.data = data;
     }
 
     /**
