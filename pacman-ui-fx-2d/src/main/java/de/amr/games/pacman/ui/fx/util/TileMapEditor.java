@@ -171,6 +171,7 @@ public class TileMapEditor extends Application  {
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawGrid(g);
         if (terrainMap != null && terrainVisiblePy.get()) {
             terrainMapRenderer.setScaling(scaling());
             terrainMapRenderer.drawMap(g, terrainMap);
@@ -179,6 +180,14 @@ public class TileMapEditor extends Application  {
             foodMapRenderer.setScaling(scaling());
             foodMapRenderer.drawMap(g, foodMap);
         }
+        if (terrainEditedPy.get()) {
+            terrainPalette.draw();
+        } else {
+            foodPalette.draw();
+        }
+    }
+
+    void drawGrid(GraphicsContext g) {
         if (gridVisiblePy.get()) {
             for (int row = 0; row < numRows(); ++row) {
                 for (int col = 0; col < numCols(); ++col) {
@@ -193,11 +202,6 @@ public class TileMapEditor extends Application  {
                     g.strokeRect(col * s8, row * s8, s8, s8);
                 }
             }
-        }
-        if (terrainEditedPy.get()) {
-            terrainPalette.draw();
-        } else {
-            foodPalette.draw();
         }
     }
 
