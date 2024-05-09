@@ -10,8 +10,9 @@ import org.tinylog.Logger;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -61,6 +62,8 @@ public class TileMap {
 
         tileMap.setPropertiesFromText(header);
 
+        tileMap.properties.setProperty("num_rows", String.valueOf(numRows));
+        tileMap.properties.setProperty("num_cols", String.valueOf(numCols));
         tileMap.data = new byte[numRows][numCols];
         int row = 0;
         dataSectionStarted = false;
