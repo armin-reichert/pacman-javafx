@@ -52,13 +52,12 @@ public enum GameVariants implements GameModel {
 
         @Override
         public World createWorld(int mapNumber) {
-            return switch (mapNumber) {
-                case 1 -> createArcadeWorld("/maps/mspacman_1.terrain", "/maps/mspacman_1.food");
-                case 2 -> createArcadeWorld("/maps/mspacman_2.terrain", "/maps/mspacman_2.food");
-                case 3 -> createArcadeWorld("/maps/mspacman_3.terrain", "/maps/mspacman_3.food");
-                case 4 -> createArcadeWorld("/maps/mspacman_4.terrain", "/maps/mspacman_4.food");
-                default -> throw new IllegalArgumentException("Ms. Pac-Man map number must be in 1-4, is: " + mapNumber);
-            };
+            if (1 <= mapNumber && mapNumber <= 4) {
+                return createArcadeWorld(
+                    String.format("/maps/mspacman/mspacman_%d.terrain", mapNumber),
+                    String.format("/maps/mspacman/mspacman_%d.food", mapNumber));
+            }
+            throw new IllegalArgumentException("Ms. Pac-Man map number must be in 1-4, is: " + mapNumber);
         }
 
         /**
@@ -283,9 +282,9 @@ public enum GameVariants implements GameModel {
             if (mapNumber == 1) {
                 world = createOriginalArcadeWorld();
             } else {
-                var terrainMapName = "/maps/masonic_" + (mapNumber - 1) + ".terrain";
-                world = createArcadeWorld(terrainMapName, "/maps/masonic_" + (mapNumber - 1) + ".food");
-                Logger.info("Created world using terrain map '{}'", terrainMapName);
+                var path = "/maps/masonic/masonic_" + (mapNumber - 1);
+                world = createArcadeWorld(path + ".terrain", path + ".food");
+                Logger.info("Created world from maps '{}'", path + ".(terrain|food)");
             }
             world.setBonusPosition(halfTileRightOf(13, 20));
             return world;
