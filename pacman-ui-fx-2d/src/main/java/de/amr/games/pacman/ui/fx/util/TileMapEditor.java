@@ -397,12 +397,15 @@ public class TileMapEditor extends Application  {
     void openMapFiles() {
         openDialog.setInitialDirectory(lastUsedDir);
         File file = openDialog.showOpenDialog(stage);
-        if (file == null) {
-            return;
+        if (file != null) {
+            loadMapFiles(file);
         }
-        if (file.getName().endsWith(".terrain") || file.getName().endsWith(".food")) {
-            int lastDot = file.getPath().lastIndexOf('.');
-            String basePath = file.getPath().substring(0, lastDot);
+    }
+
+    void loadMapFiles(File anyMapFile) {
+        if (anyMapFile.getName().endsWith(".terrain") || anyMapFile.getName().endsWith(".food")) {
+            int lastDot = anyMapFile.getPath().lastIndexOf('.');
+            String basePath = anyMapFile.getPath().substring(0, lastDot);
             File foodMapFile = new File(basePath + ".food");
             try {
                 foodMap = TileMap.fromURL(foodMapFile.toURI().toURL(), Tiles.FOOD_TILES_END);
@@ -463,6 +466,8 @@ public class TileMapEditor extends Application  {
             saveMap(foodMap, new File(basePath + ".food"));
             terrainMap.setPropertiesFromText(terrainMapPropertiesEditor.getText());
             saveMap(terrainMap, new File(basePath + ".terrain"));
+            // reload changes if any
+            loadMapFiles(new File(basePath + ".terrain"));
         }
     }
 
