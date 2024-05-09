@@ -90,6 +90,7 @@ public class TileMapEditor extends Application  {
             updateInfo();
         }
     };
+    BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
 
     World pacManWorld    = GameVariants.PACMAN.createWorld(1);
     World msPacManWorld1 = GameVariants.MS_PACMAN.createWorld(1);
@@ -138,6 +139,7 @@ public class TileMapEditor extends Application  {
         stage.show();
 
         GameClockFX clock = new GameClockFX();
+        clock.setTargetFrameRate(30);
         clock.setContinousCallback(this::draw);
         clock.start();
     }
@@ -154,17 +156,19 @@ public class TileMapEditor extends Application  {
             foodMapRenderer.setScaling(scaling());
             foodMapRenderer.drawMap(g, foodMap);
         }
-        for (int row = 0; row < terrainMap.numRows(); ++row) {
-            for (int col = 0; col < terrainMap.numCols(); ++col) {
-                if (hoveredTile != null && hoveredTile.x() == col && hoveredTile.y() == row) {
-                    g.setStroke(Color.YELLOW);
-                    g.setLineWidth(1);
-                } else {
-                    g.setStroke(Color.GRAY);
-                    g.setLineWidth(0.5);
+        if (gridVisiblePy.get()) {
+            for (int row = 0; row < terrainMap.numRows(); ++row) {
+                for (int col = 0; col < terrainMap.numCols(); ++col) {
+                    if (hoveredTile != null && hoveredTile.x() == col && hoveredTile.y() == row) {
+                        g.setStroke(Color.YELLOW);
+                        g.setLineWidth(1);
+                    } else {
+                        g.setStroke(Color.GRAY);
+                        g.setLineWidth(0.5);
+                    }
+                    double s8 = 8 * scaling();
+                    g.strokeRect(col * s8, row * s8, s8, s8);
                 }
-                double s8 = 8 * scaling();
-                g.strokeRect(col * s8, row * s8, s8, s8);
             }
         }
         if (terrainEditedPy.get()) {
@@ -193,6 +197,9 @@ public class TileMapEditor extends Application  {
         var cbFoodVisible = new CheckBox("Show Food");
         cbFoodVisible.selectedProperty().bindBidirectional(foodVisiblePy);
 
+        var cbGridVisible = new CheckBox("Show Grid");
+        cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
+
         var cbTerrainEdited = new CheckBox("Edit Terrain");
         cbTerrainEdited.selectedProperty().bindBidirectional(terrainEditedPy);
         cbTerrainEdited.setOnAction(e -> updateInfo());
@@ -220,6 +227,7 @@ public class TileMapEditor extends Application  {
         int row = 0;
         controlsContainer.add(cbTerrainVisible,         0, row++);
         controlsContainer.add(cbFoodVisible,            0, row++);
+        controlsContainer.add(cbGridVisible,            0, row++);
         controlsContainer.add(new Label(),              0, row++);
         controlsContainer.add(new Text("Terrain Map"),  0, row++);
         controlsContainer.add(terrainMapPropertiesEditor,  0, row++);
