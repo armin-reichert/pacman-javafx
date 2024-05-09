@@ -143,7 +143,10 @@ public class PlayScene2D extends GameScene2D {
             if (context.game().blinking().isOn()) {
                 terrainMapRenderer.setWallColor(Color.WHITE);
             } else {
-                terrainMapRenderer.setWallColor(context.theme().color("pacman.maze.wallColor"));
+                Color wallColor = context.game().world().terrainMap().getProperties().containsKey("wall_color")
+                    ? Color.web(context.game().world().terrainMap().getProperty("wall_color"))
+                    : context.theme().color("pacman.maze.wallColor");
+                terrainMapRenderer.setWallColor(wallColor);
             }
             terrainMapRenderer.drawMap(g, context.game().world().terrainMap());
         }
