@@ -313,7 +313,7 @@ public class TileMapEditor extends Application  {
 
     void readMapComment(TileMap map, TextArea editor) {
         StringBuilder sb = new StringBuilder();
-        for (var line : map.getCommentSection().split("\n")) {
+        for (var line : map.getComments().split("\n")) {
             if (line.startsWith("#")) {
                 sb.append(line.substring(1).trim()).append("\n");
             }
@@ -473,35 +473,22 @@ public class TileMapEditor extends Application  {
             int lastDot = file.getPath().lastIndexOf('.');
             String basePath = file.getPath().substring(0, lastDot);
             File foodMapFile = new File(basePath + ".food");
-            saveMap(foodMap, foodMapFile, foodMapCommentEditor.getText());
+            foodMap.setComments(foodMapCommentEditor.getText());
+            saveMap(foodMap, foodMapFile);
             File terrainMapFile = new File(basePath + ".terrain");
-            saveMap(terrainMap, terrainMapFile, terrainMapCommentEditor.getText());
+            terrainMap.setComments(terrainMapCommentEditor.getText());
+            saveMap(terrainMap, terrainMapFile);
 
         } else {
             Logger.error("No map file selected for saving");
         }
         lastUsedDir = file.getParentFile();
-
     }
 
-    void saveMap(TileMap map, File file, String comments) {
-        StringBuilder sb = new StringBuilder();
-        for (var line : comments.split("\n")) {
-            sb.append("#").append(line).append("\n");
-        }
+    void saveMap(TileMap map, File file) {
         try (FileWriter w = new FileWriter(file, StandardCharsets.UTF_8)) {
-            w.write(sb.toString());
-            for (int row = 0; row < map.numRows(); ++row) {
-                for (int col = 0; col < map.numCols(); ++col) {
-                    String valueTxt = String.valueOf(map.get(row, col));
-                    w.write(String.format("%2s", valueTxt));
-                    if (col < map.numCols() - 1) {
-                        w.write(",");
-                    }
-                }
-                w.write("\n");
-            }
-            Logger.info("File '{}' saved.", file.getPath());
+            map.write(w);
+            Logger.info("Tile map saved to file '{}'.", file);
         } catch (Exception x) {
             Logger.error(x);
         }

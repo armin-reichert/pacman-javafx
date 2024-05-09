@@ -7,9 +7,7 @@ package de.amr.games.pacman.model.world;
 import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -36,8 +34,8 @@ public class TileMap {
     }
 
     private final byte[][] data;
-    private final String commentSection;
-    private final Map<String, String> properties = new HashMap<>();
+    private final Map<String, Object> properties = new HashMap<>();
+    private String comments;
 
     private TileMap(List<String> lines, byte valueLimit) {
         int numRows = 0, numCols = -1;
@@ -53,7 +51,7 @@ public class TileMap {
                 }
             }
         }
-        commentSection = sb.toString();
+        comments = sb.toString();
         this.data = new byte[numRows][numCols];
         int row = 0;
         for (String line : lines) {
@@ -89,7 +87,7 @@ public class TileMap {
             data[row] = Arrays.copyOf(other.data[row], other.numCols());
         }
         properties.putAll(other.properties);
-        commentSection = other.commentSection;
+        comments = other.comments;
     }
 
     /**
@@ -127,12 +125,17 @@ public class TileMap {
         return 0 <= row && row < numRows() && 0 <= col && col < numCols();
     }
 
-    public String getCommentSection() {
-        return commentSection;
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
-    public String getProperty(String key) {
-        return properties.get(key);
+    public String getComments() {
+        return comments;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getProperty(String key) {
+        return (T) properties.get(key);
     }
 
     public byte[][] getData() {
@@ -191,6 +194,29 @@ public class TileMap {
     public void clear() {
         for (byte[] row : data) {
             Arrays.fill(row, Tiles.EMPTY);
+        }
+    }
+
+    public void write(Writer w) {
+        try {
+            StringBuilder sb = new StringBuilder();
+            for (var line : comments.split("\n")) {
+                sb.append("#").append(line).append("\n");
+            }
+            w.write(sb.toString());
+            for (int row = 0; row < numRows(); ++row) {
+                for (int col = 0; col < numCols(); ++col) {
+                    String valueTxt = String.valueOf(get(row, col));
+                    w.write(String.format("%2s", valueTxt));
+                    if (col < numCols() - 1) {
+                        w.write(",");
+                    }
+                }
+                w.write("\n");
+            }
+        } catch (IOException x) {
+            Logger.error("Could not save tile map");
+            Logger.error(x);
         }
     }
 }
