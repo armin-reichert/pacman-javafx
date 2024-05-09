@@ -58,8 +58,8 @@ public class TileMapEditor extends Application  {
     Scene scene;
     MenuBar menuBar;
     Canvas canvas;
-    TextArea terrainMapCommentEditor;
-    TextArea foodMapCommentEditor;
+    TextArea terrainMapPropertiesEditor;
+    TextArea foodMapPropertiesEditor;
     Label infoLabel;
     FileChooser openDialog;
     Palette terrainPalette;
@@ -182,11 +182,11 @@ public class TileMapEditor extends Application  {
 
         infoLabel = new Label();
 
-        terrainMapCommentEditor = new TextArea();
-        terrainMapCommentEditor.setPrefSize(220, 150);
+        terrainMapPropertiesEditor = new TextArea();
+        terrainMapPropertiesEditor.setPrefSize(220, 150);
 
-        foodMapCommentEditor = new TextArea();
-        foodMapCommentEditor.setPrefSize(220, 100);
+        foodMapPropertiesEditor = new TextArea();
+        foodMapPropertiesEditor.setPrefSize(220, 100);
 
         var cbTerrainVisible = new CheckBox("Show Terrain");
         cbTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
@@ -223,9 +223,9 @@ public class TileMapEditor extends Application  {
         controlsContainer.add(cbFoodVisible,            0, row++);
         controlsContainer.add(new Label(),              0, row++);
         controlsContainer.add(new Text("Terrain Map"),  0, row++);
-        controlsContainer.add(terrainMapCommentEditor,  0, row++);
+        controlsContainer.add(terrainMapPropertiesEditor,  0, row++);
         controlsContainer.add(new Text("Food Map"),     0, row++);
-        controlsContainer.add(foodMapCommentEditor,     0, row++);
+        controlsContainer.add(foodMapPropertiesEditor,     0, row++);
         controlsContainer.add(new Label(),              0, row++);
         controlsContainer.add(cbTerrainEdited,          0, row++);
         controlsContainer.add(paletteContainer,         0, row++);
@@ -298,8 +298,8 @@ public class TileMapEditor extends Application  {
 
     void loadMapsFromWorld(World world) {
         copyMapsFromWorld(world);
-        readMapComment(foodMap, foodMapCommentEditor);
-        readMapComment(terrainMap, terrainMapCommentEditor);
+        foodMapPropertiesEditor.setText(foodMap.getPropertiesAsText());
+        terrainMapPropertiesEditor.setText(terrainMap.getPropertiesAsText());
         updateInfo();
     }
 
@@ -309,16 +309,6 @@ public class TileMapEditor extends Application  {
         foodMap    = new TileMap(world.foodMap());
         setFoodColorsFromMap();
         terrainMapFile = null;
-    }
-
-    void readMapComment(TileMap map, TextArea editor) {
-        StringBuilder sb = new StringBuilder();
-        for (var line : map.getComments().split("\n")) {
-            if (line.startsWith("#")) {
-                sb.append(line.substring(1).trim()).append("\n");
-            }
-        }
-        editor.setText(sb.toString());
     }
 
     double scaling() {
@@ -409,7 +399,7 @@ public class TileMapEditor extends Application  {
             File foodMapFile = new File(basePath + ".food");
             try {
                 foodMap = TileMap.fromURL(foodMapFile.toURI().toURL(), Tiles.FOOD_TILES_END);
-                readMapComment(foodMap, foodMapCommentEditor);
+                foodMapPropertiesEditor.setText(foodMap.getPropertiesAsText());
                 lastUsedDir = foodMapFile.getParentFile();
             } catch (MalformedURLException x) {
                 Logger.error("Could not load food map from file {}", foodMapFile);
@@ -419,7 +409,7 @@ public class TileMapEditor extends Application  {
             try {
                 terrainMap = TileMap.fromURL(terrainMapFile.toURI().toURL(), Tiles.TERRAIN_TILES_END);
                 setTerrainColorsFromMap();
-                readMapComment(terrainMap, terrainMapCommentEditor);
+                terrainMapPropertiesEditor.setText(terrainMap.getPropertiesAsText());
                 lastUsedDir = terrainMapFile.getParentFile();
             } catch (MalformedURLException x) {
                 Logger.error("Could not load terrain map from file {}", terrainMapFile);
@@ -473,9 +463,9 @@ public class TileMapEditor extends Application  {
         if (file.getName().endsWith(".terrain") || file.getName().endsWith(".food")) {
             int lastDot = file.getPath().lastIndexOf('.');
             String basePath = file.getPath().substring(0, lastDot);
-            foodMap.setComments(foodMapCommentEditor.getText());
+            foodMap.setPropertiesFromText(foodMapPropertiesEditor.getText());
             saveMap(foodMap, new File(basePath + ".food"));
-            terrainMap.setComments(terrainMapCommentEditor.getText());
+            terrainMap.setPropertiesFromText(terrainMapPropertiesEditor.getText());
             saveMap(terrainMap, new File(basePath + ".terrain"));
         }
     }

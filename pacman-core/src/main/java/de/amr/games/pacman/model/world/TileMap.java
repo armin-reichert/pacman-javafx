@@ -10,10 +10,8 @@ import org.tinylog.Logger;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -26,43 +24,46 @@ public class TileMap {
 
     public static TileMap fromURL(URL url, byte valueLimit) {
         try (BufferedReader r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
-            return new TileMap(r.lines().toList(), valueLimit);
+            return parse(r.lines().toList(), valueLimit);
         } catch (IOException x) {
             Logger.error(x);
             throw new IllegalArgumentException("Cannot create tile map from URL " + url);
         }
     }
 
-    private final byte[][] data;
-    private final Map<String, Object> properties = new HashMap<>();
-    private String comments;
+    private final Properties properties = new Properties();
+    private byte[][] data;
 
-    private TileMap(List<String> lines, byte valueLimit) {
-        int numRows = 0, numCols = -1;
-        StringBuilder sb = new StringBuilder();
+    public static TileMap parse(List<String> lines, byte valueLimit) {
+        var tileMap = new TileMap();
+
+        int numRows = 0, numCols = 0;
+        boolean dataSectionStarted = false;
         for (String line : lines) {
-            if (line.startsWith("#")) {
-                sb.append(line).append("\n");
-            } else {
-                numRows += 1;
-                if (numCols == -1) {
-                    String[] values = line.split(",");
-                    numCols = values.length;
+            if (line.startsWith("!data")) {
+                dataSectionStarted = true;
+                continue;
+            }
+            if (dataSectionStarted) {
+                numRows++;
+                if (numRows == 1) {
+                    numCols = line.split(",").length;
                 }
             }
         }
-        comments = sb.toString();
-        this.data = new byte[numRows][numCols];
+        if (numRows == 0) {
+            throw new IllegalArgumentException("No data section found");
+        }
+
+        tileMap.data = new byte[numRows][numCols];
         int row = 0;
+        dataSectionStarted = false;
         for (String line : lines) {
-            if (line.startsWith("#")) {
-                String rest = line.substring(1);
-                var assignment = rest.split("=");
-                if (assignment.length == 2) {
-                    var lhs = assignment[0].trim();
-                    var rhs = assignment[1].trim();
-                    properties.put(lhs, rhs);
-                }
+            if (line.startsWith("!data")) {
+                dataSectionStarted = true;
+                continue;
+            }
+            if (!dataSectionStarted) {
                 continue;
             }
             String[] values = line.split(",");
@@ -74,11 +75,15 @@ public class TileMap {
                 if (value >= valueLimit) {
                     Logger.error("Invalid tile map value {} at row {}, col {}", value, row, col);
                 } else {
-                    data[row][col] = value;
+                    tileMap.data[row][col] = value;
                 }
             }
             ++row;
         }
+
+        tileMap.properties.put("Parsed", LocalDateTime.now().toString());
+        tileMap.properties.put("Edited by", "Armin");
+        return tileMap;
     }
 
     public TileMap(TileMap other) {
@@ -87,7 +92,9 @@ public class TileMap {
             data[row] = Arrays.copyOf(other.data[row], other.numCols());
         }
         properties.putAll(other.properties);
-        comments = other.comments;
+    }
+
+    private TileMap() {
     }
 
     /**
@@ -125,17 +132,33 @@ public class TileMap {
         return 0 <= row && row < numRows() && 0 <= col && col < numCols();
     }
 
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
     @SuppressWarnings("unchecked")
     public <T> T getProperty(String key) {
         return (T) properties.get(key);
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public String getPropertiesAsText() {
+        StringWriter w = new StringWriter();
+        try {
+            properties.store(w, "");
+            return w.toString();
+        } catch (IOException x) {
+            return "";
+        }
+    }
+
+    public void setPropertiesFromText(String text) {
+        StringReader r = new StringReader(text);
+        try {
+            properties.load(r);
+        } catch (IOException x) {
+            Logger.error("Could not read properties from text {}", text);
+            Logger.error(x);
+        }
     }
 
     public byte[][] getData() {
@@ -199,24 +222,29 @@ public class TileMap {
 
     public void write(Writer w) {
         try {
-            StringBuilder sb = new StringBuilder();
-            for (var line : comments.split("\n")) {
-                sb.append("#").append(line).append("\n");
-            }
-            w.write(sb.toString());
-            for (int row = 0; row < numRows(); ++row) {
-                for (int col = 0; col < numCols(); ++col) {
-                    String valueTxt = String.valueOf(get(row, col));
-                    w.write(String.format("%2s", valueTxt));
-                    if (col < numCols() - 1) {
-                        w.write(",");
-                    }
-                }
-                w.write("\n");
-            }
+            writeProperties(w);
+            writeData(w);
         } catch (IOException x) {
             Logger.error("Could not save tile map");
             Logger.error(x);
+        }
+    }
+
+    private void writeProperties(Writer w) throws IOException {
+        properties.store(w, "");
+    }
+
+    private void writeData(Writer w) throws IOException {
+        w.write("!data\r\n");
+        for (int row = 0; row < numRows(); ++row) {
+            for (int col = 0; col < numCols(); ++col) {
+                String valueTxt = String.valueOf(get(row, col));
+                w.write(String.format("%2s", valueTxt));
+                if (col < numCols() - 1) {
+                    w.write(",");
+                }
+            }
+            w.write("\r\n");
         }
     }
 }
