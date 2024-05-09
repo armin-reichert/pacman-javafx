@@ -1,8 +1,7 @@
-#Masonic #2 terrain map
-#num_cols=28
-#num_rows=36
-#wall_color=rgb(255,255,255)
-#wall_fill_color=rgb(194,184,83)
+#
+#Thu May 09 11:25:43 CEST 2024
+wall_color=rgb(255,255,255)
+wall_fill_color=rgb(194,184,83)
 !data
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0

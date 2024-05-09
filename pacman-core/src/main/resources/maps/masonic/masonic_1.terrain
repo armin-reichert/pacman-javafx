@@ -1,7 +1,7 @@
-#Masonic #1 terrain map
-#wall_color=rgb(113,206,234)
-#wall_fill_color=rgb(53,156,156)
-#add your stuff here
+#
+#Thu May 09 11:25:00 CEST 2024
+wall_color=rgb(113,206,234)
+wall_fill_color=rgb(53,156,156)
 !data
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
