@@ -150,27 +150,23 @@ public class PlayScene2D extends GameScene2D {
     }
 
     private void drawPacManMazeNormal(boolean useSpriteSheet) {
-        if (useSpriteSheet) {
-            PacManGameSpriteSheet sheet = context.spriteSheet();
-            drawSprite(sheet.getFullMazeSprite(), 0, t(3));
-        } else {
-            terrainMapRenderer.setScaling(getScaling());
-            terrainMapRenderer.setWallColor(context.theme().color("pacman.maze.wallColor"));
-            terrainMapRenderer.drawMap(g, context.game().world().terrainMap());
-        }
-        drawFood(useSpriteSheet, context.theme().color("pacman.maze.foodColor"));
-    }
-
-    private void drawFood(boolean useSpriteSheet, Color foodColor) {
         var game = context.game();
         var world = game.world();
         if (useSpriteSheet) {
+            PacManGameSpriteSheet sheet = context.spriteSheet();
+            drawSprite(sheet.getFullMazeSprite(), 0, t(3));
             world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
             if (game.blinking().isOff()) {
                 world.energizerTiles().forEach(tile -> hideTileContent(world, tile));
             }
         } else {
+            terrainMapRenderer.setScaling(getScaling());
+            terrainMapRenderer.setWallColor(context.theme().color("pacman.maze.wallColor"));
+            terrainMapRenderer.drawMap(g, context.game().world().terrainMap());
             foodMapRenderer.setScaling(getScaling());
+            Color foodColor = world.foodMap().getProperties().containsKey("food_color")
+                ? Color.web(context.game().world().foodMap().getProperty("food_color"))
+                : context.theme().color("pacman.maze.foodColor");
             foodMapRenderer.setPelletColor(foodColor);
             foodMapRenderer.setEnergizerColor(foodColor);
             world.tiles()
