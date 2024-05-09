@@ -37,6 +37,7 @@ public class TileMap {
     public static TileMap parse(List<String> lines, byte valueLimit) {
         var tileMap = new TileMap();
 
+        String header = "";
         int numRows = 0, numCols = 0;
         boolean dataSectionStarted = false;
         for (String line : lines) {
@@ -49,11 +50,16 @@ public class TileMap {
                 if (numRows == 1) {
                     numCols = line.split(",").length;
                 }
+            } else {
+                header += line + "\n";
             }
         }
+
         if (numRows == 0) {
             throw new IllegalArgumentException("No data section found");
         }
+
+        tileMap.setPropertiesFromText(header);
 
         tileMap.data = new byte[numRows][numCols];
         int row = 0;
@@ -80,9 +86,6 @@ public class TileMap {
             }
             ++row;
         }
-
-        tileMap.properties.put("Parsed", LocalDateTime.now().toString());
-        tileMap.properties.put("Edited by", "Armin");
         return tileMap;
     }
 

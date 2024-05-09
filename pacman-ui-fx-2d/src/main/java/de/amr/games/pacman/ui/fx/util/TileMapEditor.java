@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.util;
 
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameVariants;
 import de.amr.games.pacman.model.world.TileMap;
@@ -421,37 +420,26 @@ public class TileMapEditor extends Application  {
 
     void setTerrainColorsFromMap() {
         if (terrainMap.getProperty("wall_color") != null) {
-            terrainMapRenderer.setWallColor(rgbToColor(terrainMap.getProperty("wall_color")));
+            terrainMapRenderer.setWallColor(parseColor(terrainMap.getProperty("wall_color")));
         }
     }
 
     void setFoodColorsFromMap() {
         if (foodMap.getProperty("food_color") != null) {
-            Color foodColor = rgbToColor(foodMap.getProperty("food_color")) ;
+            Color foodColor = parseColor(foodMap.getProperty("food_color")) ;
             foodMapRenderer.setEnergizerColor(foodColor);
             foodMapRenderer.setPelletColor(foodColor);
         }
     }
 
-    Color rgbToColor(String rgb) {
-        if (rgb.startsWith("rgb(") && rgb.endsWith(")")) {
-            rgb = rgb.substring(4, rgb.length()-1);
-            var colors = rgb.split(",");
-            if (colors.length == 3) {
-                try {
-                    int r = Globals.clamp(Integer.parseInt(colors[0].trim()), 0, 255);
-                    int g = Globals.clamp(Integer.parseInt(colors[1].trim()), 0, 255);
-                    int b = Globals.clamp(Integer.parseInt(colors[2].trim()), 0, 255);
-                    return Color.rgb(r,g,b);
-                }
-                catch (Exception x) {
-                    Logger.error(x);
-                    return Color.WHITE;
-                }
-            }
+    Color parseColor(String colorSpec) {
+        try {
+            return Color.web(colorSpec);
+        } catch (Exception x) {
+            Logger.error("Could not parse color from spec '{}'", colorSpec);
+            return Color.WHITE;
         }
-        return Color.WHITE;
-    }
+     }
 
     void saveMaps() {
         openDialog.setInitialDirectory(lastUsedDir);

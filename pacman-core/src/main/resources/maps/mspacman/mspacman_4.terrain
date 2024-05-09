@@ -1,6 +1,7 @@
-# Ms. Pac-Man Arcade game map #4
-# wall_color=rgb(255,183,81)
-# wall_fill_color=rgb(33,33,255)
+#
+#Thu May 09 10:26:56 CEST 2024
+wall_color=rgb(255,183,81)
+wall_fill_color=rgb(33,33,255)
 !data
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
