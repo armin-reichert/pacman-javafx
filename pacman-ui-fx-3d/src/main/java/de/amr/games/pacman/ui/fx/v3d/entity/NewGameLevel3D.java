@@ -51,8 +51,8 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class NewGameLevel3D extends Group {
 
-    private static final float PAC_SIZE   = 14.0f;
-    private static final float GHOST_SIZE = 14.0f;
+    private static final float PAC_SIZE   = 12.0f;
+    private static final float GHOST_SIZE = 11.0f;
 
     public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
 
@@ -204,7 +204,8 @@ public class NewGameLevel3D extends Group {
     }
 
     private Node createWallH(Vector2i tile) {
-        var node = new Box(8, 1, wallHeightPy.get());
+        double w = 8.5;
+        var node = new Box(w, 1, wallHeightPy.get());
         node.depthProperty().bind(wallHeightPy);
         node.drawModeProperty().bind(PY_3D_DRAW_MODE);
         node.setTranslateX(tile.x() * 8 + 4);
@@ -214,7 +215,8 @@ public class NewGameLevel3D extends Group {
     }
 
     private Node createWallV(Vector2i tile) {
-        var node = new Box(1, 8, wallHeightPy.get());
+        double h = 8.5;
+        var node = new Box(1, h, wallHeightPy.get());
         node.depthProperty().bind(wallHeightPy);
         node.drawModeProperty().bind(PY_3D_DRAW_MODE);
         node.setTranslateX(tile.x() * 8 + 4);
@@ -225,17 +227,22 @@ public class NewGameLevel3D extends Group {
 
     private Node createCorner(Vector2i tile, double rotate) {
         Group node = new Group();
-        var hbox = new Box(4.5, 1, wallHeightPy.get());
+        var center = new Box(1, 1, wallHeightPy.get());
+        center.setTranslateX(4);
+        center.setTranslateY(4);
+        center.depthProperty().bind(wallHeightPy);
+        center.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        var hbox = new Box(4, 1, wallHeightPy.get());
         hbox.depthProperty().bind(wallHeightPy);
         hbox.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        hbox.setTranslateX(5.5);
+        hbox.setTranslateX(6);
         hbox.setTranslateY(4);
-        var vbox = new Box(1, 4.5, wallHeightPy.get());
+        var vbox = new Box(1, 4, wallHeightPy.get());
         vbox.depthProperty().bind(wallHeightPy);
         vbox.drawModeProperty().bind(PY_3D_DRAW_MODE);
         vbox.setTranslateX(4);
-        vbox.setTranslateY(5.5);
-        node.getChildren().addAll(hbox, vbox);
+        vbox.setTranslateY(6);
+        node.getChildren().addAll(center, hbox, vbox);
         node.setTranslateX(tile.x() * 8);
         node.setTranslateY(tile.y() * 8);
         node.translateZProperty().bind(wallHeightPy.multiply(-0.5));
