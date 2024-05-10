@@ -221,7 +221,7 @@ public class TileMapEditor extends Application  {
         cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
 
         terrainPalette = new Palette(32, 4, 4, terrainMapRenderer, Tiles.TERRAIN_TILES_END);
-        terrainPalette.setValuesAtIndex(
+        terrainPalette.setValues(
             Tiles.EMPTY, Tiles.TUNNEL, Tiles.EMPTY, Tiles.EMPTY,
             Tiles.WALL_H, Tiles.WALL_V, Tiles.DWALL_H, Tiles.DWALL_V,
             Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE,
@@ -229,7 +229,7 @@ public class TileMapEditor extends Application  {
         );
 
         foodPalette = new Palette(32, 4, 4, foodMapRenderer, Tiles.FOOD_TILES_END);
-        foodPalette.setValuesAtIndex(
+        foodPalette.setValues(
             Tiles.EMPTY, Tiles.PELLET, Tiles.ENERGIZER, Tiles.EMPTY
         );
 
@@ -544,7 +544,7 @@ public class TileMapEditor extends Application  {
             setOnMouseClicked(e -> selectedValue = pickValue(e));
         }
 
-        void setValuesAtIndex(byte... values) {
+        void setValues(byte... values) {
             for (int i = 0; i < values.length; ++i) {
                 if (i < valueAtIndex.length) {
                     valueAtIndex[i] = values[i];
