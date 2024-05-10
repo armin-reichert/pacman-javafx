@@ -1,8 +1,8 @@
 #
-#Thu May 09 12:24:40 CEST 2024
+#Fri May 10 18:20:15 CEST 2024
 num_cols=28
 num_rows=36
-wall_color=rgb(142,114,129)
+wall_color=rgb(236,188,216)
 wall_fill_color=rgb(134,102,156)
 !data
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
