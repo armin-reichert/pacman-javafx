@@ -19,10 +19,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
-import de.amr.games.pacman.ui.fx.v3d.entity.Bonus3D;
-import de.amr.games.pacman.ui.fx.v3d.entity.Eatable3D;
-import de.amr.games.pacman.ui.fx.v3d.entity.GameLevel3D;
-import de.amr.games.pacman.ui.fx.v3d.entity.Scores3D;
+import de.amr.games.pacman.ui.fx.v3d.entity.*;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
@@ -65,7 +62,7 @@ public class PlayScene3D implements GameScene {
     private final SubScene fxSubScene;
     private final Scores3D scores3D;
 
-    private GameLevel3D level3D;
+    private NewGameLevel3D level3D;
     private GameSceneContext context;
     private boolean scoreVisible;
 
@@ -176,7 +173,7 @@ public class PlayScene3D implements GameScene {
         World world = context.game().world();
         checkNotNull(world);
 
-        level3D = new GameLevel3D(context);
+        level3D = new NewGameLevel3D(context);
         // replace initial placeholder or previous 3D level
         subSceneRoot.getChildren().set(CHILD_INDEX_LEVEL_3D, level3D);
 
