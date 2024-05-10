@@ -56,6 +56,7 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class NewGameLevel3D extends Group {
 
+    private static final double WALL_TOP_THICKNESS = 0.1;
     private static final float PAC_SIZE   = 12.0f;
     private static final float GHOST_SIZE = 11.0f;
 
@@ -253,12 +254,11 @@ public class NewGameLevel3D extends Group {
         base.setTranslateY(tile.y() * 8 + 4);
         base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
 
-        var top = new Box(w, 1, 0.1);
+        var top = new Box(w, 1, WALL_TOP_THICKNESS);
         top.materialProperty().bind(strokeMaterialPy);
-        //top.drawModeProperty().bind(PY_3D_DRAW_MODE);
         top.translateXProperty().bind(base.translateXProperty());
         top.translateYProperty().bind(base.translateYProperty());
-        top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(0.1));
+        top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(WALL_TOP_THICKNESS));
 
         return new Group(base, top);
     }
@@ -274,18 +274,16 @@ public class NewGameLevel3D extends Group {
         base.setTranslateY(tile.y() * 8 + 4);
         base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
 
-        var top = new Box(1, h, 0.1);
+        var top = new Box(1, h, WALL_TOP_THICKNESS);
         top.materialProperty().bind(strokeMaterialPy);
-        //top.drawModeProperty().bind(PY_3D_DRAW_MODE);
         top.translateXProperty().bind(base.translateXProperty());
         top.translateYProperty().bind(base.translateYProperty());
-        top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(0.1));
+        top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(WALL_TOP_THICKNESS));
 
         return new Group(base, top);
     }
 
     private Node createCorner(Vector2i tile, int rotate) {
-        double topThickness = 0.1;
         Group node = new Group();
 
         // center
@@ -298,11 +296,11 @@ public class NewGameLevel3D extends Group {
             base.depthProperty().bind(wallHeightPy);
             base.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
-            var top = new Box(1, 1, topThickness);
+            var top = new Box(1, 1, WALL_TOP_THICKNESS);
             top.materialProperty().bind(strokeMaterialPy);
             top.translateXProperty().bind(base.translateXProperty());
             top.translateYProperty().bind(base.translateYProperty());
-            top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(topThickness));
+            top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(WALL_TOP_THICKNESS));
 
             node.getChildren().addAll(base, top);
         }
@@ -317,11 +315,11 @@ public class NewGameLevel3D extends Group {
             base.setTranslateY(4);
             base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
 
-            var top = new Box(4, 1, topThickness);
+            var top = new Box(4, 1, WALL_TOP_THICKNESS);
             top.materialProperty().bind(strokeMaterialPy);
             top.translateXProperty().bind(base.translateXProperty());
             top.translateYProperty().bind(base.translateYProperty());
-            top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(topThickness));
+            top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(WALL_TOP_THICKNESS));
 
             node.getChildren().addAll(base, top);
         }
@@ -336,11 +334,11 @@ public class NewGameLevel3D extends Group {
             base.setTranslateY(6);
             base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
 
-            var top = new Box(1, 4, topThickness);
+            var top = new Box(1, 4, WALL_TOP_THICKNESS);
             top.materialProperty().bind(strokeMaterialPy);
             top.translateXProperty().bind(base.translateXProperty());
             top.translateYProperty().bind(base.translateYProperty());
-            top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(topThickness));
+            top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(WALL_TOP_THICKNESS));
 
             node.getChildren().addAll(base, top);
         }
