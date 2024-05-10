@@ -28,7 +28,7 @@ public class TileMap {
             return parse(r.lines().toList(), valueLimit);
         } catch (IOException x) {
             Logger.error(x);
-            throw new IllegalArgumentException("Cannot create tile map from URL " + url);
+            return null;
         }
     }
 
@@ -55,12 +55,11 @@ public class TileMap {
                     numDataCols = columns.length;
                 } else if (numDataCols != columns.length) {
                     Logger.error("Tile map is inconsistent, row={}", lineIndex);
-                    throw new IllegalArgumentException("Inconsistent tile map");
                 }
             }
         }
         if (numDataRows == 0) {
-            throw new IllegalArgumentException("No data section found");
+            Logger.error("No data section found");
         }
 
         // Second pass: read data
@@ -72,20 +71,20 @@ public class TileMap {
 
         for (int lineIndex = dataSectionStart; lineIndex < lines.size(); ++lineIndex) {
             String line = lines.get(lineIndex);
+            int row = lineIndex -dataSectionStart;
             String[] columns = line.split(",");
             for (int col = 0; col < columns.length; ++col) {
                 String entry = columns[col].trim();
                 try {
                     byte value = Byte.parseByte(entry);
                     if (value >= valueLimit) {
-                        Logger.error("Invalid tile map value {} at row {}, col {}", value, lineIndex, col);
-                        throw new IllegalArgumentException("Inconsistent tile map");
+                        tileMap.data[row][col] = Tiles.EMPTY;
+                        Logger.error("Invalid tile map value {} at row {}, col {}", value, row, col);
                     } else {
-                        tileMap.data[lineIndex - dataSectionStart][col] = value;
+                        tileMap.data[row][col] = value;
                     }
                 } catch (NumberFormatException x) {
-                    Logger.error("Invalid tile map entry {} at row {}, col {}", entry, lineIndex, col);
-                    throw new IllegalArgumentException("Inconsistent tile map");
+                    Logger.error("Invalid tile map entry {} at row {}, col {}", entry, row, col);
                 }
             }
         }
