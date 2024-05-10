@@ -60,6 +60,7 @@ public class Ghost3D extends Group {
     private final RotateTransition dressAnimation;
     private final RotateTransition numberRotation;
     private Look currentLook;
+    private final double size;
 
     public Ghost3D(Model3D model3D, Theme theme, Ghost ghost, int numFlashes, double size) {
         requireNonNull(model3D);
@@ -68,6 +69,7 @@ public class Ghost3D extends Group {
 
         this.ghost = ghost;
         this.numFlashes = numFlashes;
+        this.size = size;
 
         coloredGhost3D = new ColoredGhost3D(model3D, theme, ghost.id(), size);
         coloredGhost3D.dressShape().drawModeProperty().bind(drawModePy);
@@ -130,7 +132,7 @@ public class Ghost3D extends Group {
         Vector2f position = ghost.center();
         setTranslateX(position.x());
         setTranslateY(position.y());
-        setTranslateZ(-5);
+        setTranslateZ(-0.5 * size);
         // TODO: make transition to new wish dir if changed
         orientation.setAngle(Turn.angle(ghost.wishDir()));
         boolean outside = position.x() < HTS || position.x() > ghost.world().numCols() * TS - HTS;

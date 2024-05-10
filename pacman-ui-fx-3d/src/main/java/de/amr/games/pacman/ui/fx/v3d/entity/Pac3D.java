@@ -63,7 +63,7 @@ public class Pac3D extends Group {
             theme.color("pacman.color.head"),
             theme.color("pacman.color.eyes"),
             theme.color("pacman.color.palate"));
-        var pac3D = new Pac3D(pacMan, new Group(body));
+        var pac3D = new Pac3D(size, pacMan, new Group(body));
         if (pacMan != null) {
             pac3D.setWalkingAnimation(new HeadBanging(pacMan, pac3D));
             pac3D.setLight(new PointLight(theme.color("pacman.color.head").desaturate()));
@@ -88,7 +88,7 @@ public class Pac3D extends Group {
             theme.color("mspacman.color.hairbow"),
             theme.color("mspacman.color.hairbow.pearls"),
             theme.color("mspacman.color.boobs"));
-        var pac3D = new Pac3D(msPacMan, new Group(body, femaleParts));
+        var pac3D = new Pac3D(size, msPacMan, new Group(body, femaleParts));
         if (msPacMan != null) {
             pac3D.setWalkingAnimation(new HipSwaying(msPacMan, pac3D));
             pac3D.setLight(new PointLight(theme.color("mspacman.color.head").desaturate()));
@@ -170,8 +170,10 @@ public class Pac3D extends Group {
     private final Group shapeGroup;
     private WalkingAnimation walkingAnimation;
     private PointLight light;
+    private double size;
 
-    private Pac3D(Pac pac, Group shapeGroup) {
+    private Pac3D(double size, Pac pac, Group shapeGroup) {
+        this.size = size;
         this.pac = pac;
         this.shapeGroup = shapeGroup;
         shapeGroup.getTransforms().setAll(position, orientation);
@@ -210,7 +212,7 @@ public class Pac3D extends Group {
         Vector2f center = pac.center();
         position.setX(center.x());
         position.setY(center.y());
-        position.setZ(-5.0);
+        position.setZ(-0.5 * size);
         orientation.setAxis(Rotate.Z_AXIS);
         orientation.setAngle(angle(pac.moveDir()));
         setVisible(pac.isVisible() && !outsideWorld(pac.world()));

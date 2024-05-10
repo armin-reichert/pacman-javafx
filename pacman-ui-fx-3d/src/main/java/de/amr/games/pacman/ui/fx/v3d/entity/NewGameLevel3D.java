@@ -51,8 +51,8 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class NewGameLevel3D extends Group {
 
-    private static final float PAC_SIZE   = 9.0f;
-    private static final float GHOST_SIZE = 9.0f;
+    private static final float PAC_SIZE   = 14.0f;
+    private static final float GHOST_SIZE = 14.0f;
 
     public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
 
@@ -101,6 +101,7 @@ public class NewGameLevel3D extends Group {
 
     private void createWorld3D() {
         World world = context.game().world();
+        var obstaclesGroup = new Group();
         switch (context.game()) {
             case GameVariants.MS_PACMAN -> {
                 int mapNumber  = context.game().mapNumber(context.game().levelNumber());
@@ -115,7 +116,7 @@ public class NewGameLevel3D extends Group {
                     ? Color.web(world.terrainMap().getProperty("wall_fill_color"))
                     : context.theme().color("pacman.maze.wallTopColor");
                 createFood3D(context.theme().color("pacman.maze.foodColor"));
-                createObstacles(wallStrokeColor, wallFillColor);
+                createObstacles(obstaclesGroup, wallStrokeColor, wallFillColor);
             }
             default -> throw new IllegalGameVariantException(context.game());
         }
@@ -141,42 +142,121 @@ public class NewGameLevel3D extends Group {
         floor3D.getTransforms().add(new Translate(0.5 * floor3D.getWidth(), 0.5 * floor3D.getHeight(), 0.5 * floor3D.getDepth()));
 
         addDoor3D(house.door());
-
-        var wallsGroup = new Group();
-
-        worldGroup.getChildren().addAll(houseLight, floor3D, wallsGroup);
+        worldGroup.getChildren().addAll(houseLight, floor3D, obstaclesGroup);
     }
 
-    private void createObstacles(Color wallStrokeColor, Color wallFillColor) {
+    private void createObstacles(Group root, Color wallStrokeColor, Color wallFillColor) {
         TileMap terrainMap = context.game().world().terrainMap();
-        terrainMap.tiles().filter(tile -> terrainMap.get(tile) == Tiles.CORNER_NW).forEach(tile -> {
-            List<Vector2i> obstacle = createObstacle(terrainMap, tile);
-            Logger.info("Found obstacle: {}", obstacle);
-        });
+        terrainMap.tiles()
+            .filter(tile -> terrainMap.get(tile) == Tiles.CORNER_NW || terrainMap.get(tile) == Tiles.DCORNER_NW)
+            .forEach(tile -> {
+                List<Vector2i> obstacleTiles = collectObstacleTiles(terrainMap, tile);
+                Logger.info("Found obstacle: {}", obstacleTiles);
+                addObstacle(root, terrainMap, obstacleTiles);
+            });
     }
 
-    private List<Vector2i> createObstacle(TileMap terrainMap, Vector2i leftUpperCorner) {
+    private List<Vector2i> collectObstacleTiles(TileMap terrainMap, Vector2i leftUpperCorner) {
         Logger.info("Start building obstacle at right-upper corner {}", leftUpperCorner);
         List<Vector2i> obstacle = new ArrayList<>();
-        List<Vector2i> q = new ArrayList<>();
+        List<Vector2i> stack = new ArrayList<>();
         Set<Vector2i> visited = new HashSet<>();
         Vector2i current = leftUpperCorner;
-        q.add(current);
+        stack.add(current);
         visited.add(current);
-        while (!q.isEmpty()) {
-            current = q.removeLast();
+        List<Direction> counterClockwise = List.of(Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT);
+        while (!stack.isEmpty()) {
+            current = stack.removeLast();
             obstacle.add(current);
-            // we know each obstacle tile has exactly two non-empty neighbors and one of them has already been visited
-            for (var dir : List.of(Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT)) {
+            for (var dir : counterClockwise) {
                 Vector2i neighbor = current.plus(dir.vector());
                 if (terrainMap.insideBounds(neighbor.y(), neighbor.x())
                     && terrainMap.get(neighbor) != Tiles.EMPTY && !visited.contains(neighbor)) {
-                    q.add(neighbor);
+                    stack.add(neighbor);
                     visited.add(neighbor);
                 }
             }
         }
         return obstacle;
+    }
+
+    private void addObstacle(Group parent, TileMap terrainMap, List<Vector2i> obstacleTiles) {
+        for (var tile: obstacleTiles) {
+            Node node = switch (terrainMap.get(tile)) {
+                case Tiles.CORNER_NW -> createCornerNW(tile);
+                case Tiles.CORNER_NE -> createCornerNE(tile);
+                case Tiles.CORNER_SE -> createCornerSE(tile);
+                case Tiles.CORNER_SW -> createCornerSW(tile);
+                case Tiles.WALL_H -> createWallH(tile);
+                case Tiles.WALL_V -> createWallV(tile);
+                case Tiles.DCORNER_NW -> createCornerNW(tile);
+                case Tiles.DCORNER_NE -> createCornerNE(tile);
+                case Tiles.DCORNER_SE -> createCornerSE(tile);
+                case Tiles.DCORNER_SW -> createCornerSW(tile);
+                case Tiles.DWALL_H -> createWallH(tile);
+                case Tiles.DWALL_V -> createWallV(tile);
+                default -> null;
+            };
+            if (node != null) {
+                parent.getChildren().add(node);
+            }
+        }
+    }
+
+    private Node createWallH(Vector2i tile) {
+        var node = new Box(8, 1, wallHeightPy.get());
+        node.depthProperty().bind(wallHeightPy);
+        node.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        node.setTranslateX(tile.x() * 8 + 4);
+        node.setTranslateY(tile.y() * 8 + 4);
+        node.translateZProperty().bind(wallHeightPy.multiply(-0.5));
+        return node;
+    }
+
+    private Node createWallV(Vector2i tile) {
+        var node = new Box(1, 8, wallHeightPy.get());
+        node.depthProperty().bind(wallHeightPy);
+        node.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        node.setTranslateX(tile.x() * 8 + 4);
+        node.setTranslateY(tile.y() * 8 + 4);
+        node.translateZProperty().bind(wallHeightPy.multiply(-0.5));
+        return node;
+    }
+
+    private Node createCorner(Vector2i tile, double rotate) {
+        Group node = new Group();
+        var hbox = new Box(4.5, 1, wallHeightPy.get());
+        hbox.depthProperty().bind(wallHeightPy);
+        hbox.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        hbox.setTranslateX(5.5);
+        hbox.setTranslateY(4);
+        var vbox = new Box(1, 4.5, wallHeightPy.get());
+        vbox.depthProperty().bind(wallHeightPy);
+        vbox.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        vbox.setTranslateX(4);
+        vbox.setTranslateY(5.5);
+        node.getChildren().addAll(hbox, vbox);
+        node.setTranslateX(tile.x() * 8);
+        node.setTranslateY(tile.y() * 8);
+        node.translateZProperty().bind(wallHeightPy.multiply(-0.5));
+        node.getTransforms().add(new Rotate(rotate, 4, 4, 0.5 * wallHeightPy.doubleValue(), Rotate.Z_AXIS));
+        return node;
+    }
+
+    private Node createCornerNW(Vector2i tile) {
+        return createCorner(tile, 0);
+    }
+
+    private Node createCornerNE(Vector2i tile) {
+        return createCorner(tile, 90);
+    }
+
+    private Node createCornerSE(Vector2i tile) {
+        return createCorner(tile, 180);
+    }
+
+    private Node createCornerSW(Vector2i tile) {
+        return createCorner(tile, 270);
     }
 
     private void createLivesCounter3D() {
