@@ -64,7 +64,6 @@ public class TileMapEditor extends Application  {
     FileChooser openDialog;
     Palette terrainPalette;
     Palette foodPalette;
-    VBox paletteContainer = new VBox();
 
     TerrainMapRenderer terrainMapRenderer;
     FoodMapRenderer foodMapRenderer;
@@ -78,19 +77,7 @@ public class TileMapEditor extends Application  {
 
     BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
     BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
-    BooleanProperty terrainEditedPy = new SimpleBooleanProperty(true) {
-        @Override
-        protected void invalidated() {
-            boolean terrainEdited = get();
-            if (terrainEdited) {
-                paletteContainer.getChildren().setAll(terrainPalette);
-            } else {
-                paletteContainer.getChildren().setAll(foodPalette);
-            }
-            foodPalette.setVisible(!terrainEdited);
-            updateInfo();
-        }
-    };
+    BooleanProperty terrainEditedPy = new SimpleBooleanProperty(true);
     BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
 
     World pacManWorld;
@@ -154,8 +141,11 @@ public class TileMapEditor extends Application  {
         stage.show();
 
         GameClockFX clock = new GameClockFX();
-        clock.setTargetFrameRate(30);
-        clock.setContinousCallback(this::draw);
+        clock.setTargetFrameRate(20);
+        clock.setContinousCallback(() -> {
+            updateInfo();
+            draw();
+        });
         clock.start();
     }
 
@@ -208,11 +198,12 @@ public class TileMapEditor extends Application  {
     }
 
     Parent createSceneContent() {
+        menuBar = new MenuBar();
+        menuBar.getMenus().addAll(createFileMenu(), createMapsMenu());
+
         canvas = new Canvas();
         canvas.setOnMouseClicked(this::onMouseClickedOnCanvas);
         canvas.setOnMouseMoved(this::onMouseMovedOverCanvas);
-
-        infoLabel = new Label();
 
         terrainMapPropertiesEditor = new TextArea();
         terrainMapPropertiesEditor.setPrefSize(220, 150);
@@ -220,18 +211,14 @@ public class TileMapEditor extends Application  {
         foodMapPropertiesEditor = new TextArea();
         foodMapPropertiesEditor.setPrefSize(220, 150);
 
-        var cbTerrainVisible = new CheckBox("Show Terrain");
+        var cbTerrainVisible = new CheckBox("Terrain");
         cbTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
 
-        var cbFoodVisible = new CheckBox("Show Food");
+        var cbFoodVisible = new CheckBox("Food");
         cbFoodVisible.selectedProperty().bindBidirectional(foodVisiblePy);
 
-        var cbGridVisible = new CheckBox("Show Grid");
+        var cbGridVisible = new CheckBox("Grid");
         cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
-
-        var cbTerrainEdited = new CheckBox("Edit Terrain");
-        cbTerrainEdited.selectedProperty().bindBidirectional(terrainEditedPy);
-        cbTerrainEdited.setOnAction(e -> updateInfo());
 
         terrainPalette = new Palette(32, 4, 4, terrainMapRenderer, Tiles.TERRAIN_TILES_END);
         terrainPalette.setValuesAtIndex(
@@ -241,30 +228,30 @@ public class TileMapEditor extends Application  {
             Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE
         );
 
-        foodPalette = new Palette(32, 1, 4, foodMapRenderer, Tiles.FOOD_TILES_END);
+        foodPalette = new Palette(32, 4, 4, foodMapRenderer, Tiles.FOOD_TILES_END);
         foodPalette.setValuesAtIndex(
             Tiles.EMPTY, Tiles.PELLET, Tiles.ENERGIZER, Tiles.EMPTY
         );
 
-        paletteContainer = new VBox(terrainEditedPy.get() ? terrainPalette : foodPalette);
+        TabPane tabPane = new TabPane();
+        var terrainPaletteTab = new Tab("Terrain", terrainPalette);
+        terrainPaletteTab.setClosable(false);
+        terrainPaletteTab.setOnSelectionChanged(e -> terrainEditedPy.set(terrainPaletteTab.isSelected()));
+        var foodPaletteTab = new Tab("Food", foodPalette);
+        foodPaletteTab.setClosable(false);
+        foodPaletteTab.setOnSelectionChanged(e -> terrainEditedPy.set(!foodPaletteTab.isSelected()));
+        tabPane.getTabs().addAll(terrainPaletteTab, foodPaletteTab);
 
-        menuBar = new MenuBar();
-        menuBar.getMenus().addAll(createFileMenu(), createMapsMenu());
+        infoLabel = new Label();
 
-        VBox controlsContainer = new VBox();
-        controlsContainer.setPrefWidth(350);
-        controlsContainer.getChildren().add(cbTerrainVisible);
-        controlsContainer.getChildren().add(cbFoodVisible);
-        controlsContainer.getChildren().add(cbGridVisible);
-        controlsContainer.getChildren().add(new Label());
-        controlsContainer.getChildren().add(new Text("Terrain Map"));
-        controlsContainer.getChildren().add(terrainMapPropertiesEditor);
-        controlsContainer.getChildren().add(new Text("Food Map"));
-        controlsContainer.getChildren().add(foodMapPropertiesEditor);
-        controlsContainer.getChildren().add(new Label());
-        controlsContainer.getChildren().add(cbTerrainEdited);
-        controlsContainer.getChildren().add(paletteContainer);
-        controlsContainer.getChildren().add(infoLabel);
+        VBox controlsBox = new VBox();
+        controlsBox.setSpacing(10);
+        controlsBox.setPrefWidth(350);
+        controlsBox.getChildren().add(new HBox(20, new Label("Show"), cbTerrainVisible, cbFoodVisible, cbGridVisible));
+        controlsBox.getChildren().add(infoLabel);
+        controlsBox.getChildren().add(tabPane);
+        controlsBox.getChildren().add(new VBox(new Text("Terrain Map"), terrainMapPropertiesEditor));
+        controlsBox.getChildren().add(new VBox(new Text("Food Map"), foodMapPropertiesEditor));
 
         var contentPane = new BorderPane();
         contentPane.setTop(menuBar);
@@ -274,7 +261,7 @@ public class TileMapEditor extends Application  {
         hbox.setSpacing(20);
         contentPane.setLeft(hbox);
 
-        hbox.getChildren().addAll(canvas, controlsContainer);
+        hbox.getChildren().addAll(canvas, controlsBox);
 
         return contentPane;
     }
@@ -419,7 +406,7 @@ public class TileMapEditor extends Application  {
 
     void updateInfo() {
         var text = "Tile: ";
-        text += hoveredTile != null ? String.format("x=%2d y=%2d", hoveredTile.x(), hoveredTile.y()) : "";
+        text += hoveredTile != null ? String.format("x=%2d y=%2d", hoveredTile.x(), hoveredTile.y()) : "n/a";
         infoLabel.setText(text);
 
         if (terrainMapFile != null) {
