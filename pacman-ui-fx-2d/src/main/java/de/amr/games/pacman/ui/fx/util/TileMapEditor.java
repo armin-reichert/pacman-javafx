@@ -180,6 +180,12 @@ public class TileMapEditor extends Application  {
             foodMapRenderer.setScaling(scaling());
             foodMapRenderer.drawMap(g, foodMap);
         }
+        if (hoveredTile != null) {
+            g.setStroke(Color.YELLOW);
+            g.setLineWidth(1);
+            double s8 = 8 * scaling();
+            g.strokeRect(hoveredTile.x() * s8, hoveredTile.y() * s8, s8, s8);
+        }
         if (terrainEditedPy.get()) {
             terrainPalette.draw();
         } else {
@@ -189,18 +195,14 @@ public class TileMapEditor extends Application  {
 
     void drawGrid(GraphicsContext g) {
         if (gridVisiblePy.get()) {
-            for (int row = 0; row < numRows(); ++row) {
-                for (int col = 0; col < numCols(); ++col) {
-                    if (hoveredTile != null && hoveredTile.x() == col && hoveredTile.y() == row) {
-                        g.setStroke(Color.YELLOW);
-                        g.setLineWidth(1);
-                    } else {
-                        g.setStroke(Color.GRAY);
-                        g.setLineWidth(0.5);
-                    }
-                    double s8 = 8 * scaling();
-                    g.strokeRect(col * s8, row * s8, s8, s8);
-                }
+            g.setStroke(Color.LIGHTGRAY);
+            g.setLineWidth(0.25);
+            double gridSize = 8 * scaling();
+            for (int row = 1; row < numRows(); ++row) {
+                g.strokeLine(0, row * gridSize, canvas.getWidth(), row * gridSize);
+            }
+            for (int col = 1; col < numCols(); ++col) {
+                g.strokeLine(col * gridSize, 0, col * gridSize, canvas.getHeight());
             }
         }
     }
@@ -216,7 +218,7 @@ public class TileMapEditor extends Application  {
         terrainMapPropertiesEditor.setPrefSize(220, 150);
 
         foodMapPropertiesEditor = new TextArea();
-        foodMapPropertiesEditor.setPrefSize(220, 100);
+        foodMapPropertiesEditor.setPrefSize(220, 150);
 
         var cbTerrainVisible = new CheckBox("Show Terrain");
         cbTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
@@ -249,21 +251,20 @@ public class TileMapEditor extends Application  {
         menuBar = new MenuBar();
         menuBar.getMenus().addAll(createFileMenu(), createMapsMenu());
 
-        GridPane controlsContainer = new GridPane();
+        VBox controlsContainer = new VBox();
         controlsContainer.setPrefWidth(350);
-        int row = 0;
-        controlsContainer.add(cbTerrainVisible,         0, row++);
-        controlsContainer.add(cbFoodVisible,            0, row++);
-        controlsContainer.add(cbGridVisible,            0, row++);
-        controlsContainer.add(new Label(),              0, row++);
-        controlsContainer.add(new Text("Terrain Map"),  0, row++);
-        controlsContainer.add(terrainMapPropertiesEditor,  0, row++);
-        controlsContainer.add(new Text("Food Map"),     0, row++);
-        controlsContainer.add(foodMapPropertiesEditor,     0, row++);
-        controlsContainer.add(new Label(),              0, row++);
-        controlsContainer.add(cbTerrainEdited,          0, row++);
-        controlsContainer.add(paletteContainer,         0, row++);
-        controlsContainer.add(infoLabel,                0, row++);
+        controlsContainer.getChildren().add(cbTerrainVisible);
+        controlsContainer.getChildren().add(cbFoodVisible);
+        controlsContainer.getChildren().add(cbGridVisible);
+        controlsContainer.getChildren().add(new Label());
+        controlsContainer.getChildren().add(new Text("Terrain Map"));
+        controlsContainer.getChildren().add(terrainMapPropertiesEditor);
+        controlsContainer.getChildren().add(new Text("Food Map"));
+        controlsContainer.getChildren().add(foodMapPropertiesEditor);
+        controlsContainer.getChildren().add(new Label());
+        controlsContainer.getChildren().add(cbTerrainEdited);
+        controlsContainer.getChildren().add(paletteContainer);
+        controlsContainer.getChildren().add(infoLabel);
 
         var contentPane = new BorderPane();
         contentPane.setTop(menuBar);
