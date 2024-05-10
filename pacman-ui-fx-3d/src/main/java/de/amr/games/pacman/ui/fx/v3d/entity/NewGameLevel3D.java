@@ -20,6 +20,7 @@ import de.amr.games.pacman.model.world.*;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
 import javafx.animation.*;
@@ -146,13 +147,15 @@ public class NewGameLevel3D extends Group {
     }
 
     private void createObstacles(Group root, Color wallStrokeColor, Color wallFillColor) {
+        PhongMaterial strokeMaterial = ResourceManager.coloredMaterial(wallStrokeColor);
+        PhongMaterial fillMaterial = ResourceManager.coloredMaterial(wallFillColor);
         TileMap terrainMap = context.game().world().terrainMap();
         terrainMap.tiles()
             .filter(tile -> terrainMap.get(tile) == Tiles.CORNER_NW || terrainMap.get(tile) == Tiles.DCORNER_NW)
             .forEach(tile -> {
                 List<Vector2i> obstacleTiles = collectObstacleTiles(terrainMap, tile);
                 Logger.info("Found obstacle: {}", obstacleTiles);
-                addObstacle(root, terrainMap, obstacleTiles);
+                addObstacle(root, terrainMap, obstacleTiles, strokeMaterial, fillMaterial);
             });
     }
 
@@ -180,21 +183,22 @@ public class NewGameLevel3D extends Group {
         return obstacle;
     }
 
-    private void addObstacle(Group parent, TileMap terrainMap, List<Vector2i> obstacleTiles) {
+    private void addObstacle(Group parent, TileMap terrainMap, List<Vector2i> obstacleTiles,
+                             PhongMaterial strokeMaterial, PhongMaterial fillMaterial) {
         for (var tile: obstacleTiles) {
             Node node = switch (terrainMap.get(tile)) {
-                case Tiles.CORNER_NW -> createCornerNW(tile);
-                case Tiles.CORNER_NE -> createCornerNE(tile);
-                case Tiles.CORNER_SE -> createCornerSE(tile);
-                case Tiles.CORNER_SW -> createCornerSW(tile);
-                case Tiles.WALL_H -> createWallH(tile);
-                case Tiles.WALL_V -> createWallV(tile);
-                case Tiles.DCORNER_NW -> createCornerNW(tile);
-                case Tiles.DCORNER_NE -> createCornerNE(tile);
-                case Tiles.DCORNER_SE -> createCornerSE(tile);
-                case Tiles.DCORNER_SW -> createCornerSW(tile);
-                case Tiles.DWALL_H -> createWallH(tile);
-                case Tiles.DWALL_V -> createWallV(tile);
+                case Tiles.CORNER_NW -> createCorner(tile, 0, strokeMaterial, fillMaterial);
+                case Tiles.CORNER_NE -> createCorner(tile, 90, strokeMaterial, fillMaterial);
+                case Tiles.CORNER_SE -> createCorner(tile, 180, strokeMaterial, fillMaterial);
+                case Tiles.CORNER_SW -> createCorner(tile, 270, strokeMaterial, fillMaterial);
+                case Tiles.WALL_H -> createWallH(tile, strokeMaterial, fillMaterial);
+                case Tiles.WALL_V -> createWallV(tile, strokeMaterial, fillMaterial);
+                case Tiles.DCORNER_NW -> createCorner(tile, 0, strokeMaterial, fillMaterial);
+                case Tiles.DCORNER_NE -> createCorner(tile, 90, strokeMaterial, fillMaterial);
+                case Tiles.DCORNER_SE -> createCorner(tile, 180, strokeMaterial, fillMaterial);
+                case Tiles.DCORNER_SW -> createCorner(tile, 270, strokeMaterial, fillMaterial);
+                case Tiles.DWALL_H -> createWallH(tile, strokeMaterial, fillMaterial);
+                case Tiles.DWALL_V -> createWallV(tile, strokeMaterial, fillMaterial);
                 default -> null;
             };
             if (node != null) {
@@ -203,9 +207,10 @@ public class NewGameLevel3D extends Group {
         }
     }
 
-    private Node createWallH(Vector2i tile) {
+    private Node createWallH(Vector2i tile, PhongMaterial strokeMaterial, PhongMaterial fillMaterial) {
         double w = 8.5;
         var node = new Box(w, 1, wallHeightPy.get());
+        node.setMaterial(fillMaterial);
         node.depthProperty().bind(wallHeightPy);
         node.drawModeProperty().bind(PY_3D_DRAW_MODE);
         node.setTranslateX(tile.x() * 8 + 4);
@@ -214,9 +219,10 @@ public class NewGameLevel3D extends Group {
         return node;
     }
 
-    private Node createWallV(Vector2i tile) {
+    private Node createWallV(Vector2i tile, PhongMaterial strokeMaterial, PhongMaterial fillMaterial) {
         double h = 8.5;
         var node = new Box(1, h, wallHeightPy.get());
+        node.setMaterial(fillMaterial);
         node.depthProperty().bind(wallHeightPy);
         node.drawModeProperty().bind(PY_3D_DRAW_MODE);
         node.setTranslateX(tile.x() * 8 + 4);
@@ -225,19 +231,22 @@ public class NewGameLevel3D extends Group {
         return node;
     }
 
-    private Node createCorner(Vector2i tile, double rotate) {
+    private Node createCorner(Vector2i tile, double rotate, PhongMaterial strokeMaterial, PhongMaterial fillMaterial) {
         Group node = new Group();
         var center = new Box(1, 1, wallHeightPy.get());
+        center.setMaterial(fillMaterial);
         center.setTranslateX(4);
         center.setTranslateY(4);
         center.depthProperty().bind(wallHeightPy);
         center.drawModeProperty().bind(PY_3D_DRAW_MODE);
         var hbox = new Box(4, 1, wallHeightPy.get());
+        hbox.setMaterial(fillMaterial);
         hbox.depthProperty().bind(wallHeightPy);
         hbox.drawModeProperty().bind(PY_3D_DRAW_MODE);
         hbox.setTranslateX(6);
         hbox.setTranslateY(4);
         var vbox = new Box(1, 4, wallHeightPy.get());
+        vbox.setMaterial(fillMaterial);
         vbox.depthProperty().bind(wallHeightPy);
         vbox.drawModeProperty().bind(PY_3D_DRAW_MODE);
         vbox.setTranslateX(4);
@@ -249,23 +258,6 @@ public class NewGameLevel3D extends Group {
         node.getTransforms().add(new Rotate(rotate, 4, 4, 0.5 * wallHeightPy.doubleValue(), Rotate.Z_AXIS));
         return node;
     }
-
-    private Node createCornerNW(Vector2i tile) {
-        return createCorner(tile, 0);
-    }
-
-    private Node createCornerNE(Vector2i tile) {
-        return createCorner(tile, 90);
-    }
-
-    private Node createCornerSE(Vector2i tile) {
-        return createCorner(tile, 180);
-    }
-
-    private Node createCornerSW(Vector2i tile) {
-        return createCorner(tile, 270);
-    }
-
     private void createLivesCounter3D() {
         var theme = context.theme();
         livesCounter3D = new LivesCounter3D(
