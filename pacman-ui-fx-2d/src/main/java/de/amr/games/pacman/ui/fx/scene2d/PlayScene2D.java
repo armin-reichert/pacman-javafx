@@ -97,7 +97,11 @@ public class PlayScene2D extends GameScene2D {
         drawLevelMessage();
         game.bonus().ifPresent(this::drawBonus);
         drawPac(game.pac());
-        game.ghosts().toList().reversed().forEach(this::drawGhost);
+        if (game.powerTimer().isRunning()) {
+            game.ghosts().forEach(this::drawGhost);
+        } else {
+            game.ghosts().toList().reversed().forEach(this::drawGhost);
+        }
         if (!isCreditVisible()) {
             int numLivesDisplayed = game.lives() - 1;
             if (context.gameState() == GameState.READY && !game.pac().isVisible()) {
