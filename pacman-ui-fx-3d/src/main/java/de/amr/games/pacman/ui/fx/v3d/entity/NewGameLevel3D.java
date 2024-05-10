@@ -73,6 +73,7 @@ public class NewGameLevel3D extends Group {
     private final GameSceneContext context;
 
     private final Group worldGroup = new Group();
+    private final Group wallsGroup = new Group();
     private final Group doorGroup = new Group();
     private final Group foodGroup = new Group();
     private final Group levelCounterGroup = new Group();
@@ -135,7 +136,7 @@ public class NewGameLevel3D extends Group {
                     ? Color.web(world.foodMap().getProperty("food_color"))
                     : context.theme().color("mspacman.maze.foodColor", mazeNumber - 1);
                 createFood3D(foodColor);
-                createObstacles(worldGroup);
+                createObstacles(wallsGroup);
             }
             case GameVariants.PACMAN -> {
                 strokeColor = world.terrainMap().getProperties().containsKey("wall_color")
@@ -150,7 +151,7 @@ public class NewGameLevel3D extends Group {
                     ? Color.web(world.foodMap().getProperty("food_color"))
                     : context.theme().color("pacman.maze.foodColor");
                 createFood3D(foodColor);
-                createObstacles(worldGroup);
+                createObstacles(wallsGroup);
             }
             default -> throw new IllegalGameVariantException(context.game());
         }
@@ -176,7 +177,7 @@ public class NewGameLevel3D extends Group {
         floor3D.getTransforms().add(new Translate(0.5 * floor3D.getWidth(), 0.5 * floor3D.getHeight(), 0.5 * floor3D.getDepth()));
 
         addDoor3D(house.door());
-        worldGroup.getChildren().addAll(houseLight, floor3D);
+        worldGroup.getChildren().addAll(houseLight, floor3D, wallsGroup);
     }
 
     private static Color darker(Color color) {
@@ -244,7 +245,7 @@ public class NewGameLevel3D extends Group {
     private Node createWallH(Vector2i tile) {
         double w = 8.5;
         var node = new Box(w, 1, wallHeightPy.get());
-        node.materialProperty().bind(strokeMaterialPy);
+        node.materialProperty().bind(fillMaterialPy);
         node.depthProperty().bind(wallHeightPy);
         node.drawModeProperty().bind(PY_3D_DRAW_MODE);
         node.setTranslateX(tile.x() * 8 + 4);
@@ -256,7 +257,7 @@ public class NewGameLevel3D extends Group {
     private Node createWallV(Vector2i tile) {
         double h = 8.5;
         var node = new Box(1, h, wallHeightPy.get());
-        node.materialProperty().bind(strokeMaterialPy);
+        node.materialProperty().bind(fillMaterialPy);
         node.depthProperty().bind(wallHeightPy);
         node.drawModeProperty().bind(PY_3D_DRAW_MODE);
         node.setTranslateX(tile.x() * 8 + 4);
@@ -273,7 +274,7 @@ public class NewGameLevel3D extends Group {
 //        ground.setTranslateZ(-0.2);
 
         var center = new Box(1, 1, wallHeightPy.get());
-        center.materialProperty().bind(strokeMaterialPy);
+        center.materialProperty().bind(fillMaterialPy);
         center.setTranslateX(4);
         center.setTranslateY(4);
         center.translateZProperty().bind(wallHeightPy.multiply(-0.5));
@@ -281,7 +282,7 @@ public class NewGameLevel3D extends Group {
         center.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         var hbox = new Box(4, 1, wallHeightPy.get());
-        hbox.materialProperty().bind(strokeMaterialPy);
+        hbox.materialProperty().bind(fillMaterialPy);
         hbox.depthProperty().bind(wallHeightPy);
         hbox.drawModeProperty().bind(PY_3D_DRAW_MODE);
         hbox.setTranslateX(6);
@@ -289,7 +290,7 @@ public class NewGameLevel3D extends Group {
         hbox.translateZProperty().bind(wallHeightPy.multiply(-0.5));
 
         var vbox = new Box(1, 4, wallHeightPy.get());
-        vbox.materialProperty().bind(strokeMaterialPy);
+        vbox.materialProperty().bind(fillMaterialPy);
         vbox.depthProperty().bind(wallHeightPy);
         vbox.drawModeProperty().bind(PY_3D_DRAW_MODE);
         vbox.setTranslateX(4);
