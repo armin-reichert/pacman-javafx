@@ -187,6 +187,7 @@ public class NewGameLevel3D extends Group {
     }
 
     private void createObstacles(Group root) {
+        //root.getChildren().add(createWallBetween(v2i(0, 10), v2i(27, 10)));
         TileMap terrainMap = context.game().world().terrainMap();
         terrainMap.tiles()
             .filter(tile -> terrainMap.get(tile) == Tiles.CORNER_NW || terrainMap.get(tile) == Tiles.DCORNER_NW)
@@ -199,26 +200,26 @@ public class NewGameLevel3D extends Group {
 
     private List<Vector2i> collectObstacleTiles(TileMap terrainMap, Vector2i leftUpperCorner) {
         Logger.info("Start building obstacle at right-upper corner {}", leftUpperCorner);
-        List<Vector2i> obstacle = new ArrayList<>();
+        List<Vector2i> tiles = new ArrayList<>();
         List<Vector2i> stack = new ArrayList<>();
         Set<Vector2i> visited = new HashSet<>();
-        Vector2i current = leftUpperCorner;
-        stack.add(current);
-        visited.add(current);
+        Vector2i currentTile = leftUpperCorner;
+        stack.add(currentTile);
+        visited.add(currentTile);
         List<Direction> counterClockwise = List.of(Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT);
         while (!stack.isEmpty()) {
-            current = stack.removeLast();
-            obstacle.add(current);
+            currentTile = stack.removeLast();
+            tiles.add(currentTile);
             for (var dir : counterClockwise) {
-                Vector2i neighbor = current.plus(dir.vector());
-                if (terrainMap.insideBounds(neighbor.y(), neighbor.x())
-                    && terrainMap.get(neighbor) != Tiles.EMPTY && !visited.contains(neighbor)) {
-                    stack.add(neighbor);
-                    visited.add(neighbor);
+                Vector2i neighborTile = currentTile.plus(dir.vector());
+                if (terrainMap.insideBounds(neighborTile.y(), neighborTile.x())
+                    && terrainMap.get(neighborTile) != Tiles.EMPTY && !visited.contains(neighborTile)) {
+                    stack.add(neighborTile);
+                    visited.add(neighborTile);
                 }
             }
         }
-        return obstacle;
+        return tiles;
     }
 
     private void addObstacle(Group parent, TileMap terrainMap, List<Vector2i> obstacleTiles) {
@@ -241,6 +242,65 @@ public class NewGameLevel3D extends Group {
             if (node != null) {
                 parent.getChildren().add(node);
             }
+        }
+    }
+
+    private boolean isWall(byte tileValue) {
+        return tileValue == Tiles.WALL_H || tileValue == Tiles.WALL_V || tileValue == Tiles.DWALL_H || tileValue == Tiles.DWALL_V;
+    }
+
+    private Node createWallBetween(Vector2i beginTile, Vector2i endTile) {
+        if (beginTile.y() == endTile.y()) {
+            if (beginTile.x() > endTile.x()) {
+                var tmp = beginTile;
+                beginTile = endTile;
+                endTile = tmp;
+            }
+            // horizontal
+            Logger.info("Hor. Wall between {} and {}", beginTile, endTile);
+            double w = (Math.abs(beginTile.x() - endTile.x())) * 8;
+            double middle = 0.5 * (beginTile.x() + endTile.x());
+            var base = new Box(w, 1, wallHeightPy.get());
+            base.materialProperty().bind(fillMaterialPy);
+            base.depthProperty().bind(wallHeightPy);
+            base.drawModeProperty().bind(PY_3D_DRAW_MODE);
+            base.setTranslateX(middle * 8 + 4);
+            base.setTranslateY(beginTile.y() * 8 + 4);
+            base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
+
+            var top = new Box(w, 1, WALL_TOP_THICKNESS);
+            top.materialProperty().bind(strokeMaterialPy);
+            top.translateXProperty().bind(base.translateXProperty());
+            top.translateYProperty().bind(base.translateYProperty());
+            top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(WALL_TOP_THICKNESS));
+
+            return new Group(base, top);
+        } else {
+            // vertical
+            if (beginTile.y() > endTile.y()) {
+                var tmp = beginTile;
+                beginTile = endTile;
+                endTile = tmp;
+            }
+            Logger.info("Vert. Wall between {} and {}", beginTile, endTile);
+            double h = (Math.abs(beginTile.y() - endTile.y())) * 8;
+            double middle = 0.5 * (beginTile.y() + endTile.y());
+
+            var base = new Box(1, h, wallHeightPy.get());
+            base.materialProperty().bind(fillMaterialPy);
+            base.depthProperty().bind(wallHeightPy);
+            base.drawModeProperty().bind(PY_3D_DRAW_MODE);
+            base.setTranslateX(beginTile.x() * 8 + 4);
+            base.setTranslateY(middle * 8 + 4);
+            base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
+
+            var top = new Box(1, h, WALL_TOP_THICKNESS);
+            top.materialProperty().bind(strokeMaterialPy);
+            top.translateXProperty().bind(base.translateXProperty());
+            top.translateYProperty().bind(base.translateYProperty());
+            top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(WALL_TOP_THICKNESS));
+
+            return new Group(base, top);
         }
     }
 
