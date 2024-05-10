@@ -25,7 +25,9 @@ import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
@@ -43,6 +45,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
+import static de.amr.games.pacman.ui.fx.util.ResourceManager.opaqueColor;
 import static de.amr.games.pacman.ui.fx.util.Ufx.doAfterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
@@ -56,6 +59,16 @@ public class NewGameLevel3D extends Group {
     private static final float GHOST_SIZE = 11.0f;
 
     public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
+    public final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity", 0.5) {
+        @Override
+        protected void invalidated() {
+            Color color = opaqueColor(darker(fillColor), get());
+            fillMaterialPy.get().setDiffuseColor(color);
+            fillMaterialPy.get().setSpecularColor(color.brighter());
+        }
+    };
+    private final ObjectProperty<PhongMaterial> strokeMaterialPy = new SimpleObjectProperty<>(new PhongMaterial());
+    private final ObjectProperty<PhongMaterial> fillMaterialPy = new SimpleObjectProperty<>(new PhongMaterial());
 
     private final GameSceneContext context;
 
@@ -66,9 +79,12 @@ public class NewGameLevel3D extends Group {
     private final PointLight houseLight = new PointLight();
     private final Pac3D pac3D;
     private final List<Ghost3D> ghosts3D;
+
     private       Message3D message3D;
     private       LivesCounter3D livesCounter3D;
     private       Bonus3D bonus3D;
+    private       Color strokeColor = Color.WHITE;
+    private       Color fillColor = Color.BLUE;
 
     public NewGameLevel3D(GameSceneContext context) {
         checkNotNull(context);
@@ -90,6 +106,7 @@ public class NewGameLevel3D extends Group {
         ghosts3D.forEach(ghost3D -> ghost3D.drawModePy.bind(PY_3D_DRAW_MODE));
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         wallHeightPy.bind(PY_3D_WALL_HEIGHT);
+        wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
 
     private Pac3D createPac3D(Pac pac) {
@@ -110,14 +127,17 @@ public class NewGameLevel3D extends Group {
                 createFood3D(context.theme().color("mspacman.maze.foodColor", mazeNumber - 1));
             }
             case GameVariants.PACMAN -> {
-                Color wallStrokeColor = world.terrainMap().getProperties().containsKey("wall_color")
+                strokeColor = world.terrainMap().getProperties().containsKey("wall_color")
                     ? Color.web(world.terrainMap().getProperty("wall_color"))
                     : context.theme().color("pacman.maze.wallBaseColor");
-                Color wallFillColor = world.terrainMap().getProperties().containsKey("wall_fill_color")
+                fillColor = world.terrainMap().getProperties().containsKey("wall_fill_color")
                     ? Color.web(world.terrainMap().getProperty("wall_fill_color"))
                     : context.theme().color("pacman.maze.wallTopColor");
+                strokeMaterialPy.set(ResourceManager.coloredMaterial(strokeColor));
+                fillMaterialPy.set(coloredMaterial(opaqueColor(darker(fillColor), wallOpacityPy.get())));
+
                 createFood3D(context.theme().color("pacman.maze.foodColor"));
-                createObstacles(obstaclesGroup, wallStrokeColor, wallFillColor);
+                createObstacles(obstaclesGroup);
             }
             default -> throw new IllegalGameVariantException(context.game());
         }
@@ -146,16 +166,18 @@ public class NewGameLevel3D extends Group {
         worldGroup.getChildren().addAll(houseLight, floor3D, obstaclesGroup);
     }
 
-    private void createObstacles(Group root, Color wallStrokeColor, Color wallFillColor) {
-        PhongMaterial strokeMaterial = ResourceManager.coloredMaterial(wallStrokeColor);
-        PhongMaterial fillMaterial = ResourceManager.coloredMaterial(wallFillColor);
+    private static Color darker(Color color) {
+        return color.deriveColor(0, 1.0, 0.85, 1.0);
+    }
+
+    private void createObstacles(Group root) {
         TileMap terrainMap = context.game().world().terrainMap();
         terrainMap.tiles()
             .filter(tile -> terrainMap.get(tile) == Tiles.CORNER_NW || terrainMap.get(tile) == Tiles.DCORNER_NW)
             .forEach(tile -> {
                 List<Vector2i> obstacleTiles = collectObstacleTiles(terrainMap, tile);
                 Logger.info("Found obstacle: {}", obstacleTiles);
-                addObstacle(root, terrainMap, obstacleTiles, strokeMaterial, fillMaterial);
+                addObstacle(root, terrainMap, obstacleTiles);
             });
     }
 
@@ -183,22 +205,21 @@ public class NewGameLevel3D extends Group {
         return obstacle;
     }
 
-    private void addObstacle(Group parent, TileMap terrainMap, List<Vector2i> obstacleTiles,
-                             PhongMaterial strokeMaterial, PhongMaterial fillMaterial) {
+    private void addObstacle(Group parent, TileMap terrainMap, List<Vector2i> obstacleTiles) {
         for (var tile: obstacleTiles) {
             Node node = switch (terrainMap.get(tile)) {
-                case Tiles.CORNER_NW -> createCorner(tile, 0, strokeMaterial, fillMaterial);
-                case Tiles.CORNER_NE -> createCorner(tile, 90, strokeMaterial, fillMaterial);
-                case Tiles.CORNER_SE -> createCorner(tile, 180, strokeMaterial, fillMaterial);
-                case Tiles.CORNER_SW -> createCorner(tile, 270, strokeMaterial, fillMaterial);
-                case Tiles.WALL_H -> createWallH(tile, strokeMaterial, fillMaterial);
-                case Tiles.WALL_V -> createWallV(tile, strokeMaterial, fillMaterial);
-                case Tiles.DCORNER_NW -> createCorner(tile, 0, strokeMaterial, fillMaterial);
-                case Tiles.DCORNER_NE -> createCorner(tile, 90, strokeMaterial, fillMaterial);
-                case Tiles.DCORNER_SE -> createCorner(tile, 180, strokeMaterial, fillMaterial);
-                case Tiles.DCORNER_SW -> createCorner(tile, 270, strokeMaterial, fillMaterial);
-                case Tiles.DWALL_H -> createWallH(tile, strokeMaterial, fillMaterial);
-                case Tiles.DWALL_V -> createWallV(tile, strokeMaterial, fillMaterial);
+                case Tiles.CORNER_NW -> createCorner(tile, 0);
+                case Tiles.CORNER_NE -> createCorner(tile, 90);
+                case Tiles.CORNER_SE -> createCorner(tile, 180);
+                case Tiles.CORNER_SW -> createCorner(tile, 270);
+                case Tiles.WALL_H -> createWallH(tile);
+                case Tiles.WALL_V -> createWallV(tile);
+                case Tiles.DCORNER_NW -> createCorner(tile, 0);
+                case Tiles.DCORNER_NE -> createCorner(tile, 90);
+                case Tiles.DCORNER_SE -> createCorner(tile, 180);
+                case Tiles.DCORNER_SW -> createCorner(tile, 270);
+                case Tiles.DWALL_H -> createWallH(tile);
+                case Tiles.DWALL_V -> createWallV(tile);
                 default -> null;
             };
             if (node != null) {
@@ -207,10 +228,10 @@ public class NewGameLevel3D extends Group {
         }
     }
 
-    private Node createWallH(Vector2i tile, PhongMaterial strokeMaterial, PhongMaterial fillMaterial) {
+    private Node createWallH(Vector2i tile) {
         double w = 8.5;
         var node = new Box(w, 1, wallHeightPy.get());
-        node.setMaterial(fillMaterial);
+        node.materialProperty().bind(fillMaterialPy);
         node.depthProperty().bind(wallHeightPy);
         node.drawModeProperty().bind(PY_3D_DRAW_MODE);
         node.setTranslateX(tile.x() * 8 + 4);
@@ -219,10 +240,10 @@ public class NewGameLevel3D extends Group {
         return node;
     }
 
-    private Node createWallV(Vector2i tile, PhongMaterial strokeMaterial, PhongMaterial fillMaterial) {
+    private Node createWallV(Vector2i tile) {
         double h = 8.5;
         var node = new Box(1, h, wallHeightPy.get());
-        node.setMaterial(fillMaterial);
+        node.materialProperty().bind(fillMaterialPy);
         node.depthProperty().bind(wallHeightPy);
         node.drawModeProperty().bind(PY_3D_DRAW_MODE);
         node.setTranslateX(tile.x() * 8 + 4);
@@ -231,22 +252,22 @@ public class NewGameLevel3D extends Group {
         return node;
     }
 
-    private Node createCorner(Vector2i tile, double rotate, PhongMaterial strokeMaterial, PhongMaterial fillMaterial) {
+    private Node createCorner(Vector2i tile, double rotate) {
         Group node = new Group();
         var center = new Box(1, 1, wallHeightPy.get());
-        center.setMaterial(fillMaterial);
+        center.materialProperty().bind(fillMaterialPy);
         center.setTranslateX(4);
         center.setTranslateY(4);
         center.depthProperty().bind(wallHeightPy);
         center.drawModeProperty().bind(PY_3D_DRAW_MODE);
         var hbox = new Box(4, 1, wallHeightPy.get());
-        hbox.setMaterial(fillMaterial);
+        hbox.materialProperty().bind(fillMaterialPy);
         hbox.depthProperty().bind(wallHeightPy);
         hbox.drawModeProperty().bind(PY_3D_DRAW_MODE);
         hbox.setTranslateX(6);
         hbox.setTranslateY(4);
         var vbox = new Box(1, 4, wallHeightPy.get());
-        vbox.setMaterial(fillMaterial);
+        vbox.materialProperty().bind(fillMaterialPy);
         vbox.depthProperty().bind(wallHeightPy);
         vbox.drawModeProperty().bind(PY_3D_DRAW_MODE);
         vbox.setTranslateX(4);
