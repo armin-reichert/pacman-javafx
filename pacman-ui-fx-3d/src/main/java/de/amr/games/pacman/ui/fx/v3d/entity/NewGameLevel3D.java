@@ -24,6 +24,7 @@ import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
 import javafx.animation.*;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -244,64 +245,110 @@ public class NewGameLevel3D extends Group {
 
     private Node createWallH(Vector2i tile) {
         double w = 8.5;
-        var node = new Box(w, 1, wallHeightPy.get());
-        node.materialProperty().bind(fillMaterialPy);
-        node.depthProperty().bind(wallHeightPy);
-        node.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        node.setTranslateX(tile.x() * 8 + 4);
-        node.setTranslateY(tile.y() * 8 + 4);
-        node.translateZProperty().bind(wallHeightPy.multiply(-0.5));
-        return node;
+        var base = new Box(w, 1, wallHeightPy.get());
+        base.materialProperty().bind(fillMaterialPy);
+        base.depthProperty().bind(wallHeightPy);
+        base.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        base.setTranslateX(tile.x() * 8 + 4);
+        base.setTranslateY(tile.y() * 8 + 4);
+        base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
+
+        var top = new Box(w, 1, 0.1);
+        top.materialProperty().bind(strokeMaterialPy);
+        //top.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        top.translateXProperty().bind(base.translateXProperty());
+        top.translateYProperty().bind(base.translateYProperty());
+        top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(0.1));
+
+        return new Group(base, top);
     }
 
     private Node createWallV(Vector2i tile) {
         double h = 8.5;
-        var node = new Box(1, h, wallHeightPy.get());
-        node.materialProperty().bind(fillMaterialPy);
-        node.depthProperty().bind(wallHeightPy);
-        node.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        node.setTranslateX(tile.x() * 8 + 4);
-        node.setTranslateY(tile.y() * 8 + 4);
-        node.translateZProperty().bind(wallHeightPy.multiply(-0.5));
-        return node;
+
+        var base = new Box(1, h, wallHeightPy.get());
+        base.materialProperty().bind(fillMaterialPy);
+        base.depthProperty().bind(wallHeightPy);
+        base.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        base.setTranslateX(tile.x() * 8 + 4);
+        base.setTranslateY(tile.y() * 8 + 4);
+        base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
+
+        var top = new Box(1, h, 0.1);
+        top.materialProperty().bind(strokeMaterialPy);
+        //top.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        top.translateXProperty().bind(base.translateXProperty());
+        top.translateYProperty().bind(base.translateYProperty());
+        top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(0.1));
+
+        return new Group(base, top);
     }
 
     private Node createCorner(Vector2i tile, int rotate) {
-//        Box ground = new Box(4, 4, 0.2);
-//        ground.setMaterial(fillMaterialPy.get());
-//        ground.setTranslateX(6);
-//        ground.setTranslateY(6);
-//        ground.setTranslateZ(-0.2);
-
-        var center = new Box(1, 1, wallHeightPy.get());
-        center.materialProperty().bind(fillMaterialPy);
-        center.setTranslateX(4);
-        center.setTranslateY(4);
-        center.translateZProperty().bind(wallHeightPy.multiply(-0.5));
-        center.depthProperty().bind(wallHeightPy);
-        center.drawModeProperty().bind(PY_3D_DRAW_MODE);
-
-        var hbox = new Box(4, 1, wallHeightPy.get());
-        hbox.materialProperty().bind(fillMaterialPy);
-        hbox.depthProperty().bind(wallHeightPy);
-        hbox.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        hbox.setTranslateX(6);
-        hbox.setTranslateY(4);
-        hbox.translateZProperty().bind(wallHeightPy.multiply(-0.5));
-
-        var vbox = new Box(1, 4, wallHeightPy.get());
-        vbox.materialProperty().bind(fillMaterialPy);
-        vbox.depthProperty().bind(wallHeightPy);
-        vbox.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        vbox.setTranslateX(4);
-        vbox.setTranslateY(6);
-        vbox.translateZProperty().bind(wallHeightPy.multiply(-0.5));
-
+        double topThickness = 0.1;
         Group node = new Group();
+
+        // center
+        {
+            var base = new Box(1, 1, wallHeightPy.get());
+            base.materialProperty().bind(fillMaterialPy);
+            base.setTranslateX(4);
+            base.setTranslateY(4);
+            base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
+            base.depthProperty().bind(wallHeightPy);
+            base.drawModeProperty().bind(PY_3D_DRAW_MODE);
+
+            var top = new Box(1, 1, topThickness);
+            top.materialProperty().bind(strokeMaterialPy);
+            top.translateXProperty().bind(base.translateXProperty());
+            top.translateYProperty().bind(base.translateYProperty());
+            top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(topThickness));
+
+            node.getChildren().addAll(base, top);
+        }
+
+        // hbox
+        {
+            var base = new Box(4, 1, wallHeightPy.get());
+            base.materialProperty().bind(fillMaterialPy);
+            base.depthProperty().bind(wallHeightPy);
+            base.drawModeProperty().bind(PY_3D_DRAW_MODE);
+            base.setTranslateX(6);
+            base.setTranslateY(4);
+            base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
+
+            var top = new Box(4, 1, topThickness);
+            top.materialProperty().bind(strokeMaterialPy);
+            top.translateXProperty().bind(base.translateXProperty());
+            top.translateYProperty().bind(base.translateYProperty());
+            top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(topThickness));
+
+            node.getChildren().addAll(base, top);
+        }
+
+        // vbox
+        {
+            var base = new Box(1, 4, wallHeightPy.get());
+            base.materialProperty().bind(fillMaterialPy);
+            base.depthProperty().bind(wallHeightPy);
+            base.drawModeProperty().bind(PY_3D_DRAW_MODE);
+            base.setTranslateX(4);
+            base.setTranslateY(6);
+            base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
+
+            var top = new Box(1, 4, topThickness);
+            top.materialProperty().bind(strokeMaterialPy);
+            top.translateXProperty().bind(base.translateXProperty());
+            top.translateYProperty().bind(base.translateYProperty());
+            top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(topThickness));
+
+            node.getChildren().addAll(base, top);
+        }
+
         node.setTranslateX(tile.x() * 8);
         node.setTranslateY(tile.y() * 8);
         node.getTransforms().add(new Rotate(rotate, 4, 4, 0.5 * wallHeightPy.doubleValue(), Rotate.Z_AXIS));
-        node.getChildren().addAll(center, hbox, vbox);
+
         return node;
     }
 
