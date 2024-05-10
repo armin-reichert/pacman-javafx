@@ -88,7 +88,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final int CANVAS_WIDTH_UNSCALED = GameModel.ARCADE_MAP_TILES_X * TS; // 28*8 = 224
     public static final int CANVAS_HEIGHT_UNSCALED = GameModel.ARCADE_MAP_TILES_Y * TS; // 36*8 = 288
 
-    public static final BooleanProperty PY_USE_ALTERNATE_MAPS = new SimpleBooleanProperty(false) {
+    public static final BooleanProperty PY_USE_ALTERNATE_MAPS = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
             boolean random = get();
