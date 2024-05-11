@@ -56,8 +56,8 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 public class GameLevel3D extends Group {
 
     private static final double WALL_TOP_THICKNESS = 0.1;
-    private static final float PAC_SIZE   = 12.0f;
-    private static final float GHOST_SIZE = 11.0f;
+    private static final float PAC_SIZE   = 14.0f;
+    private static final float GHOST_SIZE = 13.0f;
 
     public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
     public final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity",1.0) {
