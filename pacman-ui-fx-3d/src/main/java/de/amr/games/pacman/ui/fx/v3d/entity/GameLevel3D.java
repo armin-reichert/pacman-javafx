@@ -287,7 +287,7 @@ public class GameLevel3D extends Group {
                 startTilesLeft.add(new Vector2i(0, row - 1));
                 startTilesLeft.add(new Vector2i(0, row + 1));
             }
-            else if (terrainMap.get(row, terrainMap.numCols() - 1) == Tiles.TUNNEL) {
+            if (terrainMap.get(row, terrainMap.numCols() - 1) == Tiles.TUNNEL) {
                 startTilesRight.add(new Vector2i(terrainMap.numCols() - 1, row - 1));
                 startTilesRight.add(new Vector2i(terrainMap.numCols() - 1, row + 1));
             }
