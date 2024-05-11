@@ -15,8 +15,6 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.geometry.Insets;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -24,7 +22,10 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -54,8 +55,12 @@ public class TileMapEditor extends Application  {
         {13, 8, 8, 8, 8, 8, 8,12}
     };
 
+    static final int DEFAULT_NUM_COLS = 28;
+    static final int DEFAULT_NUM_ROWS = 36;
+
     Stage stage;
     Scene scene;
+    Pane sceneContent;
     MenuBar menuBar;
     Canvas canvas;
     TextArea terrainMapPropertiesEditor;
@@ -98,8 +103,8 @@ public class TileMapEditor extends Application  {
     public void init() throws Exception {
         try {
             loadPredefinedMaps();
-            terrainMap = new TileMap(numRows(), numCols());
-            foodMap = new TileMap(numRows(), numCols());
+            terrainMap = new TileMap(DEFAULT_NUM_ROWS, DEFAULT_NUM_COLS);
+            foodMap = new TileMap(DEFAULT_NUM_ROWS, DEFAULT_NUM_COLS);
         } catch (Exception x) {
             x.printStackTrace(System.err);
             Platform.exit();
@@ -120,8 +125,10 @@ public class TileMapEditor extends Application  {
         terrainMapRenderer.setWallColor(Color.GREEN);
         foodMapRenderer = new FoodMapRenderer();
 
-        double height = Math.max(0.85 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
-        scene = new Scene(createSceneContent(), 950, height);
+        double height = Math.max(0.8 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
+        sceneContent = createSceneContent();
+
+        scene = new Scene(sceneContent, 1050, height);
         scene.setFill(Color.BLACK);
         scene.setOnKeyReleased(e -> {
             if (e.getCode() == KeyCode.T) {
@@ -132,9 +139,9 @@ public class TileMapEditor extends Application  {
             }
         });
 
-        canvas.heightProperty().bind(scene.heightProperty().multiply(0.95));
+        canvas.heightProperty().bind(sceneContent.heightProperty().multiply(0.95));
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> canvas.getHeight() * numCols() / numRows(), canvas.heightProperty()));
+            () -> canvas.getHeight() * terrainMap.numCols()/ terrainMap.numRows(), canvas.heightProperty()));
 
         stage.setScene(scene);
         stage.setTitle("Map Editor");
@@ -147,14 +154,6 @@ public class TileMapEditor extends Application  {
             draw();
         });
         clock.start();
-    }
-
-    int numRows() {
-        return terrainMap != null ? terrainMap.numRows() : 36;
-    }
-
-    int numCols() {
-        return terrainMap != null ? terrainMap.numCols() : 28;
     }
 
     void draw() {
@@ -188,16 +187,16 @@ public class TileMapEditor extends Application  {
             g.setStroke(Color.LIGHTGRAY);
             g.setLineWidth(0.25);
             double gridSize = 8 * scaling();
-            for (int row = 1; row < numRows(); ++row) {
+            for (int row = 1; row < terrainMap.numRows(); ++row) {
                 g.strokeLine(0, row * gridSize, canvas.getWidth(), row * gridSize);
             }
-            for (int col = 1; col < numCols(); ++col) {
+            for (int col = 1; col < terrainMap.numCols(); ++col) {
                 g.strokeLine(col * gridSize, 0, col * gridSize, canvas.getHeight());
             }
         }
     }
 
-    Parent createSceneContent() {
+    Pane createSceneContent() {
         menuBar = new MenuBar();
         menuBar.getMenus().addAll(createFileMenu(), createMapsMenu());
 
@@ -244,24 +243,23 @@ public class TileMapEditor extends Application  {
 
         infoLabel = new Label();
 
-        VBox controlsBox = new VBox();
-        controlsBox.setSpacing(10);
-        controlsBox.setPrefWidth(350);
-        controlsBox.getChildren().add(new HBox(20, new Label("Show"), cbTerrainVisible, cbFoodVisible, cbGridVisible));
-        controlsBox.getChildren().add(infoLabel);
-        controlsBox.getChildren().add(tabPane);
-        controlsBox.getChildren().add(new VBox(new Text("Terrain Map"), terrainMapPropertiesEditor));
-        controlsBox.getChildren().add(new VBox(new Text("Food Map"), foodMapPropertiesEditor));
+        VBox controlsPane = new VBox();
+        controlsPane.setSpacing(10);
+        controlsPane.setPrefWidth(350);
+        controlsPane.getChildren().add(new HBox(20, new Label("Show"), cbTerrainVisible, cbFoodVisible, cbGridVisible));
+        controlsPane.getChildren().add(infoLabel);
+        controlsPane.getChildren().add(tabPane);
+        controlsPane.getChildren().add(new VBox(new Text("Terrain Map"), terrainMapPropertiesEditor));
+        controlsPane.getChildren().add(new VBox(new Text("Food Map"), foodMapPropertiesEditor));
 
         var contentPane = new BorderPane();
+
         contentPane.setTop(menuBar);
-
-        var hbox = new HBox();
-        hbox.setPadding(new Insets(5));
-        hbox.setSpacing(20);
-        contentPane.setLeft(hbox);
-
-        hbox.getChildren().addAll(canvas, controlsBox);
+        var scroll = new ScrollPane(canvas);
+        scroll.setFitToHeight(true);
+        scroll.setFitToWidth(true);
+        contentPane.setCenter(scroll);
+        contentPane.setRight(controlsPane);
 
         return contentPane;
     }
@@ -269,6 +267,9 @@ public class TileMapEditor extends Application  {
     Menu createFileMenu() {
         openDialog = new FileChooser();
         openDialog.setInitialDirectory(lastUsedDir);
+
+        var newMapsItem = new MenuItem("New...");
+        newMapsItem.setOnAction(e -> createNewMap());
 
         var loadMapsItem = new MenuItem("Load Map...");
         loadMapsItem.setOnAction(e -> openMapFiles());
@@ -280,7 +281,7 @@ public class TileMapEditor extends Application  {
         quitItem.setOnAction(e -> stage.close());
 
         var menu = new Menu("File");
-        menu.getItems().addAll(loadMapsItem, saveMapsItem, quitItem);
+        menu.getItems().addAll(newMapsItem, loadMapsItem, saveMapsItem, quitItem);
 
         return menu;
     }
@@ -341,7 +342,7 @@ public class TileMapEditor extends Application  {
     }
 
     double scaling() {
-        return canvas.getHeight() / (numRows() * 8);
+        return canvas.getHeight() / (terrainMap.numRows() * 8);
     }
 
     int viewToTile(double viewLength) {
@@ -414,6 +415,24 @@ public class TileMapEditor extends Application  {
         } else {
             stage.setTitle("Map Editor");
         }
+    }
+
+    void createNewMap() {
+        TextInputDialog dialog = new TextInputDialog("28x36");
+        dialog.setTitle("Map Size");
+        dialog.setHeaderText("Enter Map Size (cols x rows)");
+        dialog.setContentText("Map Size:");
+        dialog.showAndWait().ifPresent(text -> {
+            String[] tuple = text.split("x");
+            try {
+                int numCols = Integer.parseInt(tuple[0].trim());
+                int numRows = Integer.parseInt(tuple[1].trim());
+                terrainMap = new TileMap(numRows, numCols);
+                foodMap = new TileMap(numCols, numRows);
+            } catch (Exception x) {
+                Logger.error(x);
+            }
+        });
     }
 
     void openMapFiles() {
