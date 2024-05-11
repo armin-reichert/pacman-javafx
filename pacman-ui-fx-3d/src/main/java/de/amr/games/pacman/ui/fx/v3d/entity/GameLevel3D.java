@@ -233,13 +233,13 @@ public class GameLevel3D extends Group {
             .map(DoorWing3D.class::cast);
     }
 
-    private static Direction targetDir(Direction dir, byte tileValue) {
+    private static Direction exitDir(Direction entryDir, byte tileValue) {
         return switch (tileValue) {
-            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> dir == Direction.LEFT  ? Direction.DOWN : Direction.RIGHT;
-            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> dir == Direction.RIGHT ? Direction.DOWN : Direction.LEFT;
-            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> dir == Direction.DOWN  ? Direction.LEFT : Direction.UP;
-            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> dir == Direction.DOWN  ? Direction.RIGHT : Direction.UP;
-            default -> dir;
+            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> entryDir == Direction.LEFT  ? Direction.DOWN  : Direction.RIGHT;
+            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> entryDir == Direction.RIGHT ? Direction.DOWN  : Direction.LEFT;
+            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> entryDir == Direction.DOWN  ? Direction.LEFT  : Direction.UP;
+            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> entryDir == Direction.DOWN  ? Direction.RIGHT : Direction.UP;
+            default -> entryDir;
         };
     }
 
@@ -261,7 +261,7 @@ public class GameLevel3D extends Group {
                 path.add(startTile); // close path
                 break;
             }
-            moveDir = targetDir(moveDir, terrainMap.get(current));
+            moveDir = exitDir(moveDir, terrainMap.get(current));
         }
         return path;
     }
@@ -288,7 +288,7 @@ public class GameLevel3D extends Group {
             }
         }
         startTilesLeft.stream().filter(tile -> !explored.contains(tile))
-            .map(tile -> buildMazeWallPath(terrainMap, explored, tile, targetDir(Direction.RIGHT, terrainMap.get(tile))))
+            .map(tile -> buildMazeWallPath(terrainMap, explored, tile, exitDir(Direction.RIGHT, terrainMap.get(tile))))
             .forEach(pathList::add);
 
         // Loose ends starting at right maze border (over and under tunnel)
@@ -300,7 +300,7 @@ public class GameLevel3D extends Group {
             }
         }
         startTilesRight.stream().filter(tile -> !explored.contains(tile))
-            .map(tile -> buildMazeWallPath(terrainMap, explored, tile, targetDir(Direction.LEFT, terrainMap.get(tile))))
+            .map(tile -> buildMazeWallPath(terrainMap, explored, tile, exitDir(Direction.LEFT, terrainMap.get(tile))))
             .forEach(pathList::add);
 
         for (var path: pathList) {
