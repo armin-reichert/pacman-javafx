@@ -74,8 +74,8 @@ public enum Perspective implements CameraController {
 
         @Override
         public void update(Camera cam, Entity spottedEntity) {
-            double speedX = 0.005;
-            double speedY = 0.030;
+            double speedX = 0.03;
+            double speedY = 0.06;
             cam.setTranslateX(lerp(cam.getTranslateX(), spottedEntity.position().x() - 100, speedX));
             cam.setTranslateY(lerp(cam.getTranslateY(), spottedEntity.position().y() + 100, speedY));
         }
