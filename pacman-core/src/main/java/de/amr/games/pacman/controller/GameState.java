@@ -83,6 +83,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             else if (gameController().hasCredit()) { // start new game
                 if (timer.tick() == TICK_CREATE_LEVEL) {
+                    game.reset();
                     game.createRegularLevel(1);
                 }
                 else if (timer.tick() == TICK_START_LEVEL) {
