@@ -223,6 +223,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
         theme.set("pacman.icon",                      rm.loadImage("graphics/icons/pacman.png"));
         theme.set("pacman.maze.wallColor",            Color.rgb(33, 33, 255));
+        theme.set("pacman.maze.wallFillColor",        Color.rgb(33, 33, 255));
         theme.set("pacman.maze.foodColor",            Color.rgb(254, 189, 180));
 
         theme.set("pacman.audio.bonus_eaten",         rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));

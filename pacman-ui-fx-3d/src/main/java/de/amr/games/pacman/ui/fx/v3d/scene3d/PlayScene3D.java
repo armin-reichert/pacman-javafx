@@ -62,7 +62,7 @@ public class PlayScene3D implements GameScene {
     private final SubScene fxSubScene;
     private final Scores3D scores3D;
 
-    private NewGameLevel3D level3D;
+    private GameLevel3D level3D;
     private GameSceneContext context;
     private boolean scoreVisible;
 
@@ -173,7 +173,7 @@ public class PlayScene3D implements GameScene {
         World world = context.game().world();
         checkNotNull(world);
 
-        level3D = new NewGameLevel3D(context);
+        level3D = new GameLevel3D(context);
         // replace initial placeholder or previous 3D level
         subSceneRoot.getChildren().set(CHILD_INDEX_LEVEL_3D, level3D);
 

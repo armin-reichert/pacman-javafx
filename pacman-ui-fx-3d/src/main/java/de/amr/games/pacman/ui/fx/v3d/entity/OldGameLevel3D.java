@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
@@ -16,18 +15,18 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.world.*;
+import de.amr.games.pacman.model.world.Door;
+import de.amr.games.pacman.model.world.FloorPlan;
+import de.amr.games.pacman.model.world.House;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
@@ -40,12 +39,13 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.opaqueColor;
 import static de.amr.games.pacman.ui.fx.util.Ufx.doAfterSeconds;
 import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
@@ -53,44 +53,30 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 /**
  * @author Armin Reichert
  */
-public class NewGameLevel3D extends Group {
+public class OldGameLevel3D extends Group {
 
-    private static final double WALL_TOP_THICKNESS = 0.1;
-    private static final float PAC_SIZE   = 12.0f;
-    private static final float GHOST_SIZE = 11.0f;
+    private static final byte  FLOOR_PLAN_RESOLUTION = 4;
+    private static final float PAC_SIZE   = 9.0f;
+    private static final float GHOST_SIZE = 9.0f;
 
     public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
-    public final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity", 0.5) {
-        @Override
-        protected void invalidated() {
-            Color color = ResourceManager.opaqueColor(fillColor, get());
-            mazeWallFillMaterialPy.get().setDiffuseColor(color);
-            mazeWallFillMaterialPy.get().setSpecularColor(color.brighter());
-        }
-    };
-    private final DoubleProperty houseHeightPy = new SimpleDoubleProperty(this, "houseHeight", 12.0);
-    private final ObjectProperty<PhongMaterial> houseFillMaterialPy = new SimpleObjectProperty<>(new PhongMaterial());
-
-    private final ObjectProperty<PhongMaterial> mazeWallStrokeMaterialPy = new SimpleObjectProperty<>(new PhongMaterial());
-    private final ObjectProperty<PhongMaterial> mazeWallFillMaterialPy = new SimpleObjectProperty<>(new PhongMaterial());
 
     private final GameSceneContext context;
+    private       FloorPlan floorPlan;
+    private       WallBuilder wallBuilder;
 
     private final Group worldGroup = new Group();
-    private final Group wallsGroup = new Group();
     private final Group doorGroup = new Group();
     private final Group foodGroup = new Group();
     private final Group levelCounterGroup = new Group();
     private final PointLight houseLight = new PointLight();
     private final Pac3D pac3D;
     private final List<Ghost3D> ghosts3D;
-
     private       Message3D message3D;
     private       LivesCounter3D livesCounter3D;
     private       Bonus3D bonus3D;
-    private       Color fillColor = Color.BLUE;
 
-    public NewGameLevel3D(GameSceneContext context) {
+    public OldGameLevel3D(GameSceneContext context) {
         checkNotNull(context);
         this.context = context;
 
@@ -110,7 +96,6 @@ public class NewGameLevel3D extends Group {
         ghosts3D.forEach(ghost3D -> ghost3D.drawModePy.bind(PY_3D_DRAW_MODE));
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         wallHeightPy.bind(PY_3D_WALL_HEIGHT);
-        wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
 
     private Pac3D createPac3D(Pac pac) {
@@ -127,40 +112,36 @@ public class NewGameLevel3D extends Group {
             case GameVariants.MS_PACMAN -> {
                 int mapNumber  = context.game().mapNumber(context.game().levelNumber());
                 int mazeNumber = context.game().mazeNumber(context.game().levelNumber());
-                Color strokeColor = mapNumber == mazeNumber && world.terrainMap().getProperties().containsKey("wall_color")
-                    ? Color.web(world.terrainMap().getProperty("wall_color"))
-                    : context.theme().color("pacman.maze.wallBaseColor");
-                mazeWallStrokeMaterialPy.set(ResourceManager.coloredMaterial(strokeColor));
-                fillColor = mapNumber == mazeNumber && world.terrainMap().getProperties().containsKey("wall_fill_color")
-                    ? Color.web(world.terrainMap().getProperty("wall_fill_color"))
-                    : context.theme().color("pacman.maze.wallTopColor");
-                mazeWallFillMaterialPy.set(coloredMaterial(opaqueColor(darker(fillColor), wallOpacityPy.get())));
-                Color foodColor = mapNumber == mazeNumber && world.foodMap().getProperties().containsKey("food_color")
-                    ? Color.web(world.foodMap().getProperty("food_color"))
-                    : context.theme().color("mspacman.maze.foodColor", mazeNumber - 1);
-                houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, 0.25)));
-
-                createFood3D(foodColor);
-                addPathWalls(wallsGroup);
+                floorPlan = context.theme().get("model3D.floorPlan.mspacman." + mapNumber);
+                wallBuilder = createWallBuilder(
+                    context.theme().color("mspacman.maze.wallBaseColor",  mazeNumber - 1),
+                    context.theme().color("mspacman.maze.wallMiddleColor",mazeNumber - 1),
+                    context.theme().color("mspacman.maze.wallTopColor",   mazeNumber - 1));
+                createFood3D(context.theme().color("mspacman.maze.foodColor", mazeNumber - 1));
             }
             case GameVariants.PACMAN -> {
-                Color strokeColor = world.terrainMap().getProperties().containsKey("wall_color")
+                //floorPlan = context.theme().get("model3D.floorPlan.pacman");
+                floorPlan = new FloorPlan(world, world.numCols() * TS, world.numRows() * TS, 4);
+                Color baseColor = world.terrainMap().getProperties().containsKey("wall_color")
                     ? Color.web(world.terrainMap().getProperty("wall_color"))
                     : context.theme().color("pacman.maze.wallBaseColor");
-                mazeWallStrokeMaterialPy.set(ResourceManager.coloredMaterial(strokeColor));
-                fillColor = world.terrainMap().getProperties().containsKey("wall_fill_color")
+                Color topColor = world.terrainMap().getProperties().containsKey("wall_fill_color")
                     ? Color.web(world.terrainMap().getProperty("wall_fill_color"))
                     : context.theme().color("pacman.maze.wallTopColor");
-                mazeWallFillMaterialPy.set(coloredMaterial(opaqueColor(darker(fillColor), wallOpacityPy.get())));
-                Color foodColor = world.foodMap().getProperties().containsKey("food_color")
-                    ? Color.web(world.foodMap().getProperty("food_color"))
-                    : context.theme().color("pacman.maze.foodColor");
-                houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, 0.25)));
-                createFood3D(foodColor);
-                addPathWalls(wallsGroup);
+                Color middleColor = baseColor;
+                wallBuilder = createWallBuilder(baseColor, middleColor, topColor);
+                createFood3D(context.theme().color("pacman.maze.foodColor"));
             }
             default -> throw new IllegalGameVariantException(context.game());
         }
+
+        House house = world.house();
+        Vector2f houseCenter = house.topLeftTile().toFloatVec().scaled(TS).plus(house.size().toFloatVec().scaled(HTS));
+        houseLight.setColor(Color.GHOSTWHITE);
+        houseLight.setMaxRange(3 * TS);
+        houseLight.setTranslateX(houseCenter.x());
+        houseLight.setTranslateY(houseCenter.y());
+        houseLight.setTranslateZ(-TS);
 
         var floorTextures = new HashMap<String, PhongMaterial>();
         for (var textureName : context.theme().getArray("texture.names")) {
@@ -174,194 +155,15 @@ public class NewGameLevel3D extends Group {
         floor3D.texturePy.bind(PY_3D_FLOOR_TEXTURE);
         floor3D.getTransforms().add(new Translate(0.5 * floor3D.getWidth(), 0.5 * floor3D.getHeight(), 0.5 * floor3D.getDepth()));
 
-        addGhostHouse(world.house());
-        worldGroup.getChildren().addAll(houseLight, floor3D, wallsGroup);
-    }
-
-    private void addHouseWall(int x1, int y1, int x2, int y2) {
-        wallsGroup.getChildren().add(createWall(v2i(x1,y1), v2i(x2,y2), houseHeightPy, houseFillMaterialPy));
-    }
-
-    private void addGhostHouse(House house) {
-        addHouseWall(10,15, 12,15);
-        addHouseWall(10,15, 10,19);
-        addHouseWall(10,19, 17,19);
-        addHouseWall(17,19, 17,15);
-        addHouseWall(17,15, 15,15);
         addDoor3D(house.door());
 
-        Vector2f houseCenter = house.topLeftTile().toFloatVec().scaled(TS).plus(house.size().toFloatVec().scaled(HTS));
-        houseLight.setColor(Color.GHOSTWHITE);
-        houseLight.setMaxRange(3 * TS);
-        houseLight.setTranslateX(houseCenter.x());
-        houseLight.setTranslateY(houseCenter.y());
-        houseLight.setTranslateZ(-TS);
-    }
+        var wallsGroup = new Group();
+        addCorners(wallsGroup);
+        addHorizontalWalls(wallsGroup);
+        addVerticalWalls(wallsGroup);
 
-    private static Color darker(Color color) {
-        return color.deriveColor(0, 1.0, 0.85, 1.0);
-    }
-
-    private static Direction targetDirection(Direction dir, byte tileValue) {
-        return switch (tileValue) {
-            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> dir == Direction.LEFT  ? Direction.DOWN : Direction.RIGHT;
-            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> dir == Direction.RIGHT ? Direction.DOWN : Direction.LEFT;
-            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> dir == Direction.DOWN  ? Direction.LEFT : Direction.UP;
-            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> dir == Direction.DOWN  ? Direction.RIGHT : Direction.UP;
-            default -> dir;
-        };
-    }
-
-    private void addPath(
-        TileMap terrainMap,
-        List<List<Vector2i>> pathList,
-        Set<Vector2i> explored,
-        Vector2i startTile, Direction startDirection)
-    {
-        Logger.info("Build path starting at {} moving {}", startTile, startDirection);
-        List<Vector2i> path = new ArrayList<>();
-        Vector2i current = startTile;
-        Direction moveDir = startDirection;
-        while (true) {
-            path.add(current);
-            explored.add(current);
-            current = current.plus(moveDir.vector());
-            if (!terrainMap.insideBounds(current)) {
-                break;
-            }
-            if (explored.contains(current)) {
-                path.add(startTile); // close path
-                break;
-            }
-            moveDir = targetDirection(moveDir, terrainMap.get(current));
-        }
-        pathList.add(path);
-    }
-
-    private void addPathWalls(Group root) {
-        TileMap terrainMap = context.game().world().terrainMap();
-        Set<Vector2i> explored = new HashSet<>();
-        List<List<Vector2i>> pathList = new ArrayList<>();
-
-        // Obstacles inside maze
-        terrainMap.tiles()
-            .filter(tile -> tile.x() > 0)
-            .filter(tile -> !explored.contains(tile))
-            .filter(tile -> terrainMap.get(tile) == Tiles.CORNER_NW)
-            .forEach(tile -> addPath(terrainMap, pathList, explored, tile, Direction.RIGHT));
-
-        // Loose ends left maze border
-        List<Vector2i> startTilesLeftBorder = new ArrayList<>();
-        for (int row = 0; row < terrainMap.numRows(); ++row) {
-            if (terrainMap.get(row, 0) == Tiles.TUNNEL) {
-                startTilesLeftBorder.add(new Vector2i(0, row - 1));
-                startTilesLeftBorder.add(new Vector2i(0, row + 1));
-            }
-        }
-        startTilesLeftBorder.stream()
-            .filter(tile -> !explored.contains(tile))
-            .forEach(tile -> addPath(terrainMap, pathList, explored, tile,
-                targetDirection(Direction.RIGHT, terrainMap.get(tile))));
-
-        // Loose ends right maze border
-        List<Vector2i> startTilesRightBorder = new ArrayList<>();
-        for (int row = 0; row < terrainMap.numRows(); ++row) {
-            if (terrainMap.get(row, terrainMap.numCols() - 1) == Tiles.TUNNEL) {
-                startTilesRightBorder.add(new Vector2i(terrainMap.numCols() - 1, row - 1));
-                startTilesRightBorder.add(new Vector2i(terrainMap.numCols() - 1, row + 1));
-            }
-        }
-        startTilesRightBorder.stream()
-            .filter(tile -> !explored.contains(tile))
-            .forEach(tile -> addPath(terrainMap, pathList, explored, tile,
-                targetDirection(Direction.LEFT, terrainMap.get(tile))));
-
-        for (var path: pathList) {
-            Logger.info("Build path: {}", path);
-            buildWallsAlongPath(root, terrainMap, path);
-        }
-    }
-
-    private void buildWallsAlongPath(Group parent, TileMap terrainMap, List<Vector2i> path) {
-        int from = 0;
-        int to = from;
-        while (true) {
-            if (to == path.size()) {
-                parent.getChildren().add(createWall(path.get(from), path.get(to-1)));
-                break;
-            }
-            if (!isWall(terrainMap.get(path.get(to)))) {
-                parent.getChildren().add(createWall(path.get(from), path.get(to)));
-                from = to;
-            }
-            ++to;
-        }
-    }
-
-    private boolean isWall(byte tileValue) {
-        return tileValue == Tiles.WALL_H || tileValue == Tiles.WALL_V || tileValue == Tiles.DWALL_H || tileValue == Tiles.DWALL_V;
-    }
-
-    private Node createWall(Vector2i first, Vector2i second) {
-        return createWall(first, second, wallHeightPy, mazeWallFillMaterialPy);
-    }
-
-    private Node createWall(Vector2i first, Vector2i second, DoubleProperty heightPy, ObjectProperty<PhongMaterial> fillMaterialPy) {
-        if (first.y() == second.y()) {
-            // horizontal
-            Logger.info("Hor. Wall from {} to {}", first, second);
-            if (first.x() > second.x()) {
-                var tmp = first;
-                first = second;
-                second = tmp;
-            }
-            double w = (second.x() - first.x()) * 8;
-            double m = (first.x() + second.x()) * 4;
-
-            var base = new Box(w, 1, heightPy.get());
-            base.materialProperty().bind(fillMaterialPy);
-            base.depthProperty().bind(heightPy);
-            base.drawModeProperty().bind(PY_3D_DRAW_MODE);
-            base.setTranslateX(m + 4);
-            base.setTranslateY(first.y() * 8 + 4);
-            base.translateZProperty().bind(heightPy.multiply(-0.5));
-
-            var top = new Box(w, 1, WALL_TOP_THICKNESS);
-            top.materialProperty().bind(mazeWallStrokeMaterialPy);
-            top.translateXProperty().bind(base.translateXProperty());
-            top.translateYProperty().bind(base.translateYProperty());
-            top.translateZProperty().bind(heightPy.multiply(-1).subtract(WALL_TOP_THICKNESS));
-
-            return new Group(base, top);
-        }
-        else if (first.x() == second.x()){
-            // vertical
-            Logger.info("Vert. Wall from {} to {}", first, second);
-            if (first.y() > second.y()) {
-                var tmp = first;
-                first = second;
-                second = tmp;
-            }
-            double h = (second.y() - first.y()) * 8;
-            double m = (first.y() + second.y()) * 4;
-
-            var base = new Box(1, h, heightPy.get());
-            base.materialProperty().bind(fillMaterialPy);
-            base.depthProperty().bind(heightPy);
-            base.drawModeProperty().bind(PY_3D_DRAW_MODE);
-            base.setTranslateX(first.x() * 8 + 4);
-            base.setTranslateY(m + 4);
-            base.translateZProperty().bind(heightPy.multiply(-0.5));
-
-            var top = new Box(1, h, WALL_TOP_THICKNESS);
-            top.materialProperty().bind(mazeWallStrokeMaterialPy);
-            top.translateXProperty().bind(base.translateXProperty());
-            top.translateYProperty().bind(base.translateYProperty());
-            top.translateZProperty().bind(heightPy.multiply(-1).subtract(WALL_TOP_THICKNESS));
-
-            return new Group(base, top);
-        }
-        throw new IllegalArgumentException(String.format("Cannot build wall between tiles %s and %s", first, second));
+        worldGroup.getChildren().addAll(houseLight, floor3D, wallsGroup);
+        Logger.info("3D world created (resolution={}, wall height={})", floorPlan.resolution(), wallHeightPy.get());
     }
 
     private void createLivesCounter3D() {
@@ -450,7 +252,16 @@ public class NewGameLevel3D extends Group {
         new SequentialTransition(moveOutAnimation, moveInAnimation).play();
     }
 
-    // TODO
+    private WallBuilder createWallBuilder(Color wallBaseColor, Color wallMiddleColor, Color wallTopColor) {
+        var wallBuilder = new WallBuilder((float) TS / FLOOR_PLAN_RESOLUTION);
+        wallBuilder.setWallBaseColor(wallBaseColor);
+        wallBuilder.setWallMiddleColor(wallMiddleColor);
+        wallBuilder.setWallTopColor(wallTopColor);
+        wallBuilder.wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+        wallBuilder.drawModePy.bind(PY_3D_DRAW_MODE);
+        return wallBuilder;
+    }
+
     private void addDoor3D(Door door) {
         Color color = switch (context.game()) {
             case GameVariants.MS_PACMAN -> context.theme().color("mspacman.maze.doorColor");
@@ -462,6 +273,93 @@ public class NewGameLevel3D extends Group {
             doorWing3D.drawModePy.bind(PY_3D_DRAW_MODE);
             doorGroup.getChildren().add(doorWing3D);
         }
+    }
+
+    private void addHorizontalWalls(Group wallsGroup) {
+        var wd = new WallData();
+        wd.type = FloorPlan.HWALL;
+        wd.numBricksY = 1;
+        for (short y = 0; y < floorPlan.sizeY(); ++y) {
+            wd.x = -1;
+            wd.y = y;
+            wd.numBricksX = 0;
+            for (short x = 0; x < floorPlan.sizeX(); ++x) {
+                if (floorPlan.cell(x, y) == FloorPlan.HWALL) {
+                    if (wd.numBricksX == 0) {
+                        wd.x = x;
+                    }
+                    wd.numBricksX++;
+                } else if (wd.numBricksX > 0) {
+                    addWall(wallsGroup, wd);
+                    wd.numBricksX = 0;
+                }
+            }
+            if (wd.numBricksX > 0 && y == floorPlan.sizeY() - 1) {
+                addWall(wallsGroup, wd);
+            }
+        }
+    }
+
+    private void addVerticalWalls(Group wallsGroup) {
+        var wd = new WallData();
+        wd.type = FloorPlan.VWALL;
+        wd.numBricksX = 1;
+        for (short x = 0; x < floorPlan.sizeX(); ++x) {
+            wd.x = x;
+            wd.y = -1;
+            wd.numBricksY = 0;
+            for (short y = 0; y < floorPlan.sizeY(); ++y) {
+                if (floorPlan.cell(x, y) == FloorPlan.VWALL) {
+                    if (wd.numBricksY == 0) {
+                        wd.y = y;
+                    }
+                    wd.numBricksY++;
+                } else if (wd.numBricksY > 0) {
+                    addWall(wallsGroup, wd);
+                    wd.numBricksY = 0;
+                }
+            }
+            if (wd.numBricksY > 0 && x == floorPlan.sizeX() - 1) {
+                addWall(wallsGroup, wd);
+            }
+        }
+    }
+
+    private void addCorners(Group wallsGroup) {
+        var wd = new WallData();
+        wd.type = FloorPlan.CORNER;
+        wd.numBricksX = 1;
+        wd.numBricksY = 1;
+        for (short x = 0; x < floorPlan.sizeX(); ++x) {
+            for (short y = 0; y < floorPlan.sizeY(); ++y) {
+                if (floorPlan.cell(x, y) == FloorPlan.CORNER) {
+                    wd.x = x;
+                    wd.y = y;
+                    addWall(wallsGroup, wd);
+                }
+            }
+        }
+    }
+
+    private void addWall(Group wallsGroup, WallData wd) {
+        World world = context.game().world();
+        boolean partOfHouse = world.house().contains(floorPlan.tileOfCell(wd.x, wd.y));
+        if (!partOfHouse) {
+            wallsGroup.getChildren().add(wallBuilder.createMazeWall(wd, PY_3D_WALL_THICKNESS, wallHeightPy));
+        } else if (!isWallInsideHouse(wd, world.house())) {
+            // only outer house wall gets built
+            wallsGroup.getChildren().add(wallBuilder.createHouseWall(wd));
+        }
+    }
+
+    private boolean isWallInsideHouse(WallData wd, House house) {
+        int res = floorPlan.resolution();
+        Vector2i bottomRightTile = house.topLeftTile().plus(house.size());
+        double xMin = house.topLeftTile().x() * res;
+        double yMin = house.topLeftTile().y() * res;
+        double xMax = (bottomRightTile.x() - 1) * res;
+        double yMax = (bottomRightTile.y() - 1) * res;
+        return wd.x > xMin && wd.y > yMin && wd.x <= xMax && wd.y <= yMax;
     }
 
     public void update() {
