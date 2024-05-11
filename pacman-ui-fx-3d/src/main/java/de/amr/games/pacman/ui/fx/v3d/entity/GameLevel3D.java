@@ -233,7 +233,7 @@ public class GameLevel3D extends Group {
             .map(DoorWing3D.class::cast);
     }
 
-    private static Direction targetDirection(Direction dir, byte tileValue) {
+    private static Direction targetDir(Direction dir, byte tileValue) {
         return switch (tileValue) {
             case Tiles.CORNER_NW, Tiles.DCORNER_NW -> dir == Direction.LEFT  ? Direction.DOWN : Direction.RIGHT;
             case Tiles.CORNER_NE, Tiles.DCORNER_NE -> dir == Direction.RIGHT ? Direction.DOWN : Direction.LEFT;
@@ -243,11 +243,8 @@ public class GameLevel3D extends Group {
         };
     }
 
-    private void addMazeWallPath(
-        TileMap terrainMap,
-        List<List<Vector2i>> pathList,
-        Set<Vector2i> explored,
-        Vector2i startTile, Direction startDirection)
+    private List<Vector2i> buildMazeWallPath(
+        TileMap terrainMap, Set<Vector2i> explored, Vector2i startTile, Direction startDirection)
     {
         Logger.trace("Build path starting at {} moving {}", startTile, startDirection);
         List<Vector2i> path = new ArrayList<>();
@@ -264,9 +261,9 @@ public class GameLevel3D extends Group {
                 path.add(startTile); // close path
                 break;
             }
-            moveDir = targetDirection(moveDir, terrainMap.get(current));
+            moveDir = targetDir(moveDir, terrainMap.get(current));
         }
-        pathList.add(path);
+        return path;
     }
 
     private void buildMaze3D(Group root) {
@@ -276,36 +273,35 @@ public class GameLevel3D extends Group {
 
         // Obstacles inside maze
         terrainMap.tiles()
-            .filter(tile -> tile.x() > 0)
-            .filter(tile -> !explored.contains(tile))
+            .filter(tile -> tile.x() > 0 && tile.x() < terrainMap.numCols() - 1)
             .filter(tile -> terrainMap.get(tile) == Tiles.CORNER_NW)
-            .forEach(tile -> addMazeWallPath(terrainMap, pathList, explored, tile, Direction.RIGHT));
+            .filter(tile -> !explored.contains(tile))
+            .map(tile -> buildMazeWallPath(terrainMap, explored, tile, Direction.RIGHT))
+            .forEach(pathList::add);
 
-        // Loose ends left maze border
-        List<Vector2i> pathStartTilesLeftBorder = new ArrayList<>();
+        // Loose ends starting at left maze border (over and under tunnel)
+        List<Vector2i> startTilesLeft = new ArrayList<>();
         for (int row = 0; row < terrainMap.numRows(); ++row) {
             if (terrainMap.get(row, 0) == Tiles.TUNNEL) {
-                pathStartTilesLeftBorder.add(new Vector2i(0, row - 1));
-                pathStartTilesLeftBorder.add(new Vector2i(0, row + 1));
+                startTilesLeft.add(new Vector2i(0, row - 1));
+                startTilesLeft.add(new Vector2i(0, row + 1));
             }
         }
-        pathStartTilesLeftBorder.stream()
-            .filter(tile -> !explored.contains(tile))
-            .forEach(tile -> addMazeWallPath(terrainMap, pathList, explored, tile,
-                targetDirection(Direction.RIGHT, terrainMap.get(tile))));
+        startTilesLeft.stream().filter(tile -> !explored.contains(tile))
+            .map(tile -> buildMazeWallPath(terrainMap, explored, tile, targetDir(Direction.RIGHT, terrainMap.get(tile))))
+            .forEach(pathList::add);
 
-        // Loose ends right maze border
-        List<Vector2i> pathStartTilesRightBorder = new ArrayList<>();
+        // Loose ends starting at right maze border (over and under tunnel)
+        List<Vector2i> startTilesRight = new ArrayList<>();
         for (int row = 0; row < terrainMap.numRows(); ++row) {
             if (terrainMap.get(row, terrainMap.numCols() - 1) == Tiles.TUNNEL) {
-                pathStartTilesRightBorder.add(new Vector2i(terrainMap.numCols() - 1, row - 1));
-                pathStartTilesRightBorder.add(new Vector2i(terrainMap.numCols() - 1, row + 1));
+                startTilesRight.add(new Vector2i(terrainMap.numCols() - 1, row - 1));
+                startTilesRight.add(new Vector2i(terrainMap.numCols() - 1, row + 1));
             }
         }
-        pathStartTilesRightBorder.stream()
-            .filter(tile -> !explored.contains(tile))
-            .forEach(tile -> addMazeWallPath(terrainMap, pathList, explored, tile,
-                targetDirection(Direction.LEFT, terrainMap.get(tile))));
+        startTilesRight.stream().filter(tile -> !explored.contains(tile))
+            .map(tile -> buildMazeWallPath(terrainMap, explored, tile, targetDir(Direction.LEFT, terrainMap.get(tile))))
+            .forEach(pathList::add);
 
         for (var path: pathList) {
             Logger.trace("Build path: {}", path);
