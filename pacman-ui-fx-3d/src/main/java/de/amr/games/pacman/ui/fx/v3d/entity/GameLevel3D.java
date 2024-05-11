@@ -203,7 +203,7 @@ public class GameLevel3D extends Group {
     }
 
     private void addHouseWall(int x1, int y1, int x2, int y2) {
-        wallsGroup.getChildren().add(createWall(v2i(x1,y1), v2i(x2,y2), houseHeightPy, houseFillMaterialPy));
+        wallsGroup.getChildren().add(createWall(v2i(x1, y1), v2i(x2, y2), houseHeightPy, houseFillMaterialPy));
     }
 
     private void addGhostHouse(House house, Color doorColor) {
@@ -214,7 +214,7 @@ public class GameLevel3D extends Group {
         addHouseWall(17,15, 15,15);
 
         for (var wing : List.of(house.door().leftWing(), house.door().rightWing())) {
-            var doorWing3D = new DoorWing3D(wing, doorColor);
+            var doorWing3D = new DoorWing3D(wing, doorColor, PY_3D_FLOOR_COLOR.get());
             doorWing3D.drawModePy.bind(PY_3D_DRAW_MODE);
             worldGroup.getChildren().add(doorWing3D);
         }
@@ -226,7 +226,6 @@ public class GameLevel3D extends Group {
         houseLight.setTranslateY(houseCenter.y());
         houseLight.setTranslateZ(-TS);
     }
-
 
     private Stream<DoorWing3D> doorWings3D() {
         return worldGroup.getChildren().stream()

@@ -5,6 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI;
 import de.amr.games.pacman.ui.fx.v3d.animation.ColorChangeTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
@@ -29,16 +31,20 @@ public class DoorWing3D extends Group {
 
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
-    private final Transition traversalAnimation;
+    private final PhongMaterial barMaterial = new PhongMaterial();
+    private final Color doorColor;
+    private Transition animation;
 
-    public DoorWing3D(Vector2i tile, Color color) {
+    public DoorWing3D(Vector2i tile, Color doorColor, Color floorColor) {
         checkTileNotNull(tile);
-        checkNotNull(color);
+        checkNotNull(doorColor);
 
+        this.doorColor = doorColor;
         setTranslateX(tile.x() * TS);
         setTranslateY(tile.y() * TS);
 
-        PhongMaterial barMaterial = new PhongMaterial(color);
+        barMaterial.setDiffuseColor(doorColor);
+        barMaterial.setSpecularColor(doorColor.brighter());
 
         for (int i = 0; i < 2; ++i) {
             var verticalBar = new Cylinder(1, 8);
@@ -60,18 +66,25 @@ public class DoorWing3D extends Group {
         horizontalBar.setRotationAxis(Rotate.Z_AXIS);
         horizontalBar.setRotate(90);
         getChildren().add(horizontalBar);
-
-        var fadeOut = new ColorChangeTransition(Duration.seconds(0.5),
-            color, Color.rgb(0,0,0), barMaterial.diffuseColorProperty()
-        );
-        var fadeIn = new ColorChangeTransition(Duration.seconds(2),
-            Color.rgb(0,0,0), color, barMaterial.diffuseColorProperty()
-        );
-        fadeIn.setDelay(Duration.seconds(0.2));
-        traversalAnimation = new SequentialTransition(fadeOut, fadeIn);
     }
 
-    public Transition traversalAnimation() {
-        return traversalAnimation;
+    public Color getDoorColor() {
+        return doorColor;
+    }
+
+    public Transition traversalAnimation()
+    {
+        if (animation == null) {
+            Color color = ResourceManager.opaqueColor(PacManGames3dUI.PY_3D_FLOOR_COLOR.get(), 0.5);
+            var fadeOut = new ColorChangeTransition(Duration.seconds(0.5),
+                doorColor, color, barMaterial.diffuseColorProperty()
+            );
+            var fadeIn = new ColorChangeTransition(Duration.seconds(0.5),
+                color, doorColor, barMaterial.diffuseColorProperty()
+            );
+            fadeIn.setDelay(Duration.seconds(0.2));
+            animation = new SequentialTransition(fadeOut, fadeIn);
+        }
+        return animation;
     }
 }
