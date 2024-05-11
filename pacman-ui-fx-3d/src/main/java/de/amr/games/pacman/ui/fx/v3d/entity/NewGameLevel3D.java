@@ -199,23 +199,22 @@ public class NewGameLevel3D extends Group {
     }
 
     private List<Vector2i> collectObstacleTiles(TileMap terrainMap, Vector2i leftUpperCorner) {
-        Logger.info("Start building obstacle at right-upper corner {}", leftUpperCorner);
-        List<Vector2i> tiles = new ArrayList<>();
-        List<Vector2i> stack = new ArrayList<>();
-        Set<Vector2i> visited = new HashSet<>();
-        Vector2i currentTile = leftUpperCorner;
-        stack.add(currentTile);
-        visited.add(currentTile);
+        Logger.info("Collect obstacle tiles starting at left-upper corner {}", leftUpperCorner);
         List<Direction> counterClockwise = List.of(Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT);
+        List<Vector2i> tiles = new ArrayList<>();
+        Deque<Vector2i> stack = new ArrayDeque<>();
+        Set<Vector2i> explored = new HashSet<>();
+        Vector2i current = leftUpperCorner;
+        stack.add(current);
+        explored.add(current);
         while (!stack.isEmpty()) {
-            currentTile = stack.removeLast();
-            tiles.add(currentTile);
+            current = stack.pop();
+            tiles.add(current);
             for (var dir : counterClockwise) {
-                Vector2i neighborTile = currentTile.plus(dir.vector());
-                if (terrainMap.insideBounds(neighborTile.y(), neighborTile.x())
-                    && terrainMap.get(neighborTile) != Tiles.EMPTY && !visited.contains(neighborTile)) {
-                    stack.add(neighborTile);
-                    visited.add(neighborTile);
+                Vector2i neighbor = current.plus(dir.vector());
+                if (terrainMap.insideBounds(neighbor) && terrainMap.get(neighbor) != Tiles.EMPTY && !explored.contains(neighbor)) {
+                    stack.push(neighbor);
+                    explored.add(neighbor);
                 }
             }
         }

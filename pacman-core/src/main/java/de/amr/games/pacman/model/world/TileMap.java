@@ -16,7 +16,7 @@ import java.util.Properties;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.v2i;
+import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * @author Armin Reichert
@@ -142,6 +142,11 @@ public class TileMap {
 
     public boolean insideBounds(int row, int col) {
         return 0 <= row && row < numRows() && 0 <= col && col < numCols();
+    }
+
+    public boolean insideBounds(Vector2i tile) {
+        checkTileNotNull(tile);
+        return insideBounds(tile.y(), tile.x());
     }
 
     @SuppressWarnings("unchecked")
