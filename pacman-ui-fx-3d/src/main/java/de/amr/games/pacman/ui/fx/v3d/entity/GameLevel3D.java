@@ -275,27 +275,27 @@ public class GameLevel3D extends Group {
             .forEach(tile -> addMazeWallPath(terrainMap, pathList, explored, tile, Direction.RIGHT));
 
         // Loose ends left maze border
-        List<Vector2i> startTilesLeftBorder = new ArrayList<>();
+        List<Vector2i> pathStartTilesLeftBorder = new ArrayList<>();
         for (int row = 0; row < terrainMap.numRows(); ++row) {
             if (terrainMap.get(row, 0) == Tiles.TUNNEL) {
-                startTilesLeftBorder.add(new Vector2i(0, row - 1));
-                startTilesLeftBorder.add(new Vector2i(0, row + 1));
+                pathStartTilesLeftBorder.add(new Vector2i(0, row - 1));
+                pathStartTilesLeftBorder.add(new Vector2i(0, row + 1));
             }
         }
-        startTilesLeftBorder.stream()
+        pathStartTilesLeftBorder.stream()
             .filter(tile -> !explored.contains(tile))
             .forEach(tile -> addMazeWallPath(terrainMap, pathList, explored, tile,
                 targetDirection(Direction.RIGHT, terrainMap.get(tile))));
 
         // Loose ends right maze border
-        List<Vector2i> startTilesRightBorder = new ArrayList<>();
+        List<Vector2i> pathStartTilesRightBorder = new ArrayList<>();
         for (int row = 0; row < terrainMap.numRows(); ++row) {
             if (terrainMap.get(row, terrainMap.numCols() - 1) == Tiles.TUNNEL) {
-                startTilesRightBorder.add(new Vector2i(terrainMap.numCols() - 1, row - 1));
-                startTilesRightBorder.add(new Vector2i(terrainMap.numCols() - 1, row + 1));
+                pathStartTilesRightBorder.add(new Vector2i(terrainMap.numCols() - 1, row - 1));
+                pathStartTilesRightBorder.add(new Vector2i(terrainMap.numCols() - 1, row + 1));
             }
         }
-        startTilesRightBorder.stream()
+        pathStartTilesRightBorder.stream()
             .filter(tile -> !explored.contains(tile))
             .forEach(tile -> addMazeWallPath(terrainMap, pathList, explored, tile,
                 targetDirection(Direction.LEFT, terrainMap.get(tile))));
