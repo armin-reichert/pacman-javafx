@@ -62,11 +62,11 @@ public class DoorWing3D extends Group {
         horizontalBar.setRotate(90);
         getChildren().add(horizontalBar);
 
-        var fadeOut = new ColorChangeTransition(Duration.seconds(0.2),
-            color, Color.TRANSPARENT, barMaterial.diffuseColorProperty()
+        var fadeOut = new ColorChangeTransition(Duration.seconds(0.5),
+            color, Color.rgb(0,0,0), barMaterial.diffuseColorProperty()
         );
-        var fadeIn = new ColorChangeTransition(Duration.seconds(0.6),
-            Color.TRANSPARENT, color, barMaterial.diffuseColorProperty()
+        var fadeIn = new ColorChangeTransition(Duration.seconds(2),
+            Color.rgb(0,0,0), color, barMaterial.diffuseColorProperty()
         );
         fadeIn.setDelay(Duration.seconds(0.2));
         traversalAnimation = new SequentialTransition(fadeOut, fadeIn);

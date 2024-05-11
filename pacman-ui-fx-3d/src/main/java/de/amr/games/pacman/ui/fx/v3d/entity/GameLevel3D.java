@@ -100,9 +100,10 @@ public class GameLevel3D extends Group {
         createLevelCounter3D();
         createMessage3D();
 
+        // Walls must be added after the guys! Otherwise, transparency is not working correctly.
         getChildren().addAll(ghosts3D);
-        // Walls must be added *last*! Otherwise, transparency is not working correctly.
-        getChildren().addAll(pac3D, pac3D.light(), message3D, levelCounterGroup, livesCounter3D, foodGroup, worldGroup);
+        getChildren().addAll(pac3D, pac3D.light());
+        getChildren().addAll(message3D, levelCounterGroup, livesCounter3D, foodGroup, worldGroup);
 
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
         pac3D.drawModePy.bind(PY_3D_DRAW_MODE);
@@ -211,10 +212,11 @@ public class GameLevel3D extends Group {
         addHouseWall(10,19, 17,19);
         addHouseWall(17,19, 17,15);
         addHouseWall(17,15, 15,15);
+
         for (var wing : List.of(house.door().leftWing(), house.door().rightWing())) {
             var doorWing3D = new DoorWing3D(wing, doorColor);
             doorWing3D.drawModePy.bind(PY_3D_DRAW_MODE);
-            wallsGroup.getChildren().add(doorWing3D);
+            worldGroup.getChildren().add(doorWing3D);
         }
 
         Vector2f houseCenter = house.topLeftTile().toFloatVec().scaled(TS).plus(house.size().toFloatVec().scaled(HTS));
@@ -223,6 +225,13 @@ public class GameLevel3D extends Group {
         houseLight.setTranslateX(houseCenter.x());
         houseLight.setTranslateY(houseCenter.y());
         houseLight.setTranslateZ(-TS);
+    }
+
+
+    private Stream<DoorWing3D> doorWings3D() {
+        return worldGroup.getChildren().stream()
+            .filter(node -> node instanceof DoorWing3D)
+            .map(DoorWing3D.class::cast);
     }
 
     private static Direction targetDirection(Direction dir, byte tileValue) {
@@ -591,17 +600,11 @@ public class GameLevel3D extends Group {
             .anyMatch(Ghost::isVisible);
         setHouseLightOn(houseUsed);
         if (houseOpen) {
-            doorWings3D().map(DoorWing3D::traversalAnimation).forEach(Transition::play);
+            doorWings3D().map(DoorWing3D::traversalAnimation)
+                //.peek(Logger::info)
+                .forEach(Transition::play);
         }
     }
-
-    private Stream<DoorWing3D> doorWings3D() {
-        return wallsGroup.getChildren().stream()
-            .map(Node::getUserData)
-            .filter(DoorWing3D.class::isInstance)
-            .map(DoorWing3D.class::cast);
-    }
-
     public Pac3D pac3D() {
         return pac3D;
     }
