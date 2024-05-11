@@ -347,7 +347,7 @@ public class GameLevel3D extends Group {
                 first = second;
                 second = tmp;
             }
-            double w = (second.x() - first.x()) * 8;
+            double w = (second.x() - first.x()) * 8 + 1;
             double m = (first.x() + second.x()) * 4;
 
             var base = new Box(w, 1, heightPy.get());
