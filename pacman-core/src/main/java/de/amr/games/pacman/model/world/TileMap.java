@@ -23,6 +23,11 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class TileMap {
 
+    /**
+     * @param url URL of tile map file
+     * @param valueLimit upper bound (exclusive) of allowed tile values
+     * @return tile map loaded from given URL or {@code NULL}
+     */
     public static TileMap fromURL(URL url, byte valueLimit) {
         try (BufferedReader r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
             return parse(r.lines().toList(), valueLimit);

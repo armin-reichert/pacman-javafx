@@ -493,8 +493,15 @@ public enum GameVariants implements GameModel {
 
     World createArcadeWorld(String terrainMapURL, String foodMapURL) {
         var terrainMap = TileMap.fromURL(getClass().getResource(terrainMapURL), Tiles.TERRAIN_TILES_END);
+        if (terrainMap == null) {
+            throw new IllegalArgumentException(String.format("Terrain map could not be loaded from URL %s", terrainMapURL));
+        }
         validateArcadeMapSize(terrainMap);
+
         var foodMap = TileMap.fromURL(getClass().getResource(foodMapURL), Tiles.FOOD_TILES_END);
+        if (foodMap == null) {
+            throw new IllegalArgumentException(String.format("Food map could not be loaded from URL %s", foodMapURL));
+        }
         validateArcadeMapSize(foodMap);
 
         var world = new World(terrainMap, foodMap);
