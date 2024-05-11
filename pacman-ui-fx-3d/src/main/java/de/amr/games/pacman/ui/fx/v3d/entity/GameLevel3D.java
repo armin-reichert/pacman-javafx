@@ -133,7 +133,7 @@ public class GameLevel3D extends Group {
             : context.theme().color("mspacman.maze.wallMiddleColor", mazeNumber - 1);
         mazeWallFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, wallOpacityPy.get())));
         houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, 0.25)));
-        buildMaze3D(wallsGroup);
+        buildMaze3D();
 
         Color foodColor = mapNumber == mazeNumber && world.foodMap().getProperties().containsKey("food_color")
             ? Color.web(world.foodMap().getProperty("food_color"))
@@ -152,7 +152,7 @@ public class GameLevel3D extends Group {
             : context.theme().color("pacman.maze.wallTopColor");
         mazeWallFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, wallOpacityPy.get())));
         houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, 0.25)));
-        buildMaze3D(wallsGroup);
+        buildMaze3D();
 
         Color foodColor = world.foodMap().getProperties().containsKey("food_color")
             ? Color.web(world.foodMap().getProperty("food_color"))
@@ -266,10 +266,10 @@ public class GameLevel3D extends Group {
         return path;
     }
 
-    private void buildMaze3D(Group root) {
+    private void buildMaze3D() {
         TileMap terrainMap = context.game().world().terrainMap();
-        Set<Vector2i> explored = new HashSet<>();
-        List<List<Vector2i>> pathList = new ArrayList<>();
+        var explored = new HashSet<Vector2i>();
+        var pathList = new ArrayList<List<Vector2i>>();
 
         // Obstacles inside maze
         terrainMap.tiles()
@@ -279,33 +279,29 @@ public class GameLevel3D extends Group {
             .map(tile -> buildMazeWallPath(terrainMap, explored, tile, Direction.RIGHT))
             .forEach(pathList::add);
 
-        // Loose ends starting at left maze border (over and under tunnel)
-        List<Vector2i> startTilesLeft = new ArrayList<>();
+        // Paths starting at left and right maze border (over and under tunnel end)
+        var startTilesLeft = new ArrayList<Vector2i>();
+        var startTilesRight = new ArrayList<Vector2i>();
         for (int row = 0; row < terrainMap.numRows(); ++row) {
             if (terrainMap.get(row, 0) == Tiles.TUNNEL) {
                 startTilesLeft.add(new Vector2i(0, row - 1));
                 startTilesLeft.add(new Vector2i(0, row + 1));
+            }
+            else if (terrainMap.get(row, terrainMap.numCols() - 1) == Tiles.TUNNEL) {
+                startTilesRight.add(new Vector2i(terrainMap.numCols() - 1, row - 1));
+                startTilesRight.add(new Vector2i(terrainMap.numCols() - 1, row + 1));
             }
         }
         startTilesLeft.stream().filter(tile -> !explored.contains(tile))
             .map(tile -> buildMazeWallPath(terrainMap, explored, tile, exitDir(Direction.RIGHT, terrainMap.get(tile))))
             .forEach(pathList::add);
 
-        // Loose ends starting at right maze border (over and under tunnel)
-        List<Vector2i> startTilesRight = new ArrayList<>();
-        for (int row = 0; row < terrainMap.numRows(); ++row) {
-            if (terrainMap.get(row, terrainMap.numCols() - 1) == Tiles.TUNNEL) {
-                startTilesRight.add(new Vector2i(terrainMap.numCols() - 1, row - 1));
-                startTilesRight.add(new Vector2i(terrainMap.numCols() - 1, row + 1));
-            }
-        }
         startTilesRight.stream().filter(tile -> !explored.contains(tile))
             .map(tile -> buildMazeWallPath(terrainMap, explored, tile, exitDir(Direction.LEFT, terrainMap.get(tile))))
             .forEach(pathList::add);
 
         for (var path: pathList) {
-            Logger.trace("Build path: {}", path);
-            buildWallsAlongPath(root, terrainMap, path);
+            buildWallsAlongPath(wallsGroup, terrainMap, path);
         }
     }
 
