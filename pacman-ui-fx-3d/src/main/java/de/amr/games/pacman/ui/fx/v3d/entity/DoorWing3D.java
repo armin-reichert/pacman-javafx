@@ -36,7 +36,7 @@ public class DoorWing3D extends Group {
         checkNotNull(color);
 
         setTranslateX(tile.x() * TS);
-        setTranslateY(tile.y() * TS - 3);
+        setTranslateY(tile.y() * TS);
         setUserData(this);
 
         PhongMaterial barMaterial = new PhongMaterial(color);
@@ -53,7 +53,7 @@ public class DoorWing3D extends Group {
             getChildren().add(verticalBar);
         }
 
-        var horizontalBar = new Cylinder(0.5, 9);
+        var horizontalBar = new Cylinder(0.5, 14);
         horizontalBar.setMaterial(barMaterial);
         horizontalBar.setTranslateX(4);
         horizontalBar.setTranslateY(4);
