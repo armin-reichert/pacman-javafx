@@ -250,7 +250,7 @@ public class GameLevel3D extends Group {
         Set<Vector2i> explored,
         Vector2i startTile, Direction startDirection)
     {
-        Logger.info("Build path starting at {} moving {}", startTile, startDirection);
+        Logger.trace("Build path starting at {} moving {}", startTile, startDirection);
         List<Vector2i> path = new ArrayList<>();
         Vector2i current = startTile;
         Direction moveDir = startDirection;
@@ -309,7 +309,7 @@ public class GameLevel3D extends Group {
                 targetDirection(Direction.LEFT, terrainMap.get(tile))));
 
         for (var path: pathList) {
-            Logger.info("Build path: {}", path);
+            Logger.trace("Build path: {}", path);
             buildWallsAlongPath(root, terrainMap, path);
         }
     }
@@ -341,7 +341,7 @@ public class GameLevel3D extends Group {
     private Node createWall(Vector2i first, Vector2i second, DoubleProperty heightPy, ObjectProperty<PhongMaterial> fillMaterialPy) {
         if (first.y() == second.y()) {
             // horizontal
-            Logger.info("Hor. Wall from {} to {}", first, second);
+            Logger.trace("Hor. Wall from {} to {}", first, second);
             if (first.x() > second.x()) {
                 var tmp = first;
                 first = second;
@@ -368,7 +368,7 @@ public class GameLevel3D extends Group {
         }
         else if (first.x() == second.x()){
             // vertical
-            Logger.info("Vert. Wall from {} to {}", first, second);
+            Logger.trace("Vert. Wall from {} to {}", first, second);
             if (first.y() > second.y()) {
                 var tmp = first;
                 first = second;
@@ -600,9 +600,7 @@ public class GameLevel3D extends Group {
             .anyMatch(Ghost::isVisible);
         setHouseLightOn(houseUsed);
         if (houseOpen) {
-            doorWings3D().map(DoorWing3D::traversalAnimation)
-                //.peek(Logger::info)
-                .forEach(Transition::play);
+            doorWings3D().map(DoorWing3D::traversalAnimation).forEach(Transition::play);
         }
     }
     public Pac3D pac3D() {
