@@ -77,8 +77,8 @@ public class Theme {
         return (T) valuesByName.get(name);
     }
 
-    public Color color(String name, int i) {
-        var array = arraysByName.get(name);
+    public Color color(String arrayName, int i) {
+        var array = arraysByName.get(arrayName);
         return (Color) array.get(i);
     }
 

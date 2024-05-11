@@ -121,44 +121,69 @@ public class GameLevel3D extends Group {
         };
     }
 
-    private void createWorld3D() {
-        World world = context.game().world();
-        switch (context.game()) {
-            case GameVariants.MS_PACMAN -> {
-                int mapNumber  = context.game().mapNumber(context.game().levelNumber());
-                int mazeNumber = context.game().mazeNumber(context.game().levelNumber());
-                Color strokeColor = mapNumber == mazeNumber && world.terrainMap().getProperties().containsKey("wall_color")
-                    ? Color.web(world.terrainMap().getProperty("wall_color"))
-                    : context.theme().color("pacman.maze.wallBaseColor");
-                mazeWallStrokeMaterialPy.set(ResourceManager.coloredMaterial(strokeColor));
-                fillColor = mapNumber == mazeNumber && world.terrainMap().getProperties().containsKey("wall_fill_color")
-                    ? Color.web(world.terrainMap().getProperty("wall_fill_color"))
-                    : context.theme().color("pacman.maze.wallTopColor");
-                mazeWallFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, wallOpacityPy.get())));
-                Color foodColor = mapNumber == mazeNumber && world.foodMap().getProperties().containsKey("food_color")
-                    ? Color.web(world.foodMap().getProperty("food_color"))
-                    : context.theme().color("mspacman.maze.foodColor", mazeNumber - 1);
-                houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, 0.25)));
+    private void createMsPacManMaze3D(World world, int levelNumber) {
+        int mapNumber  = context.game().mapNumber(levelNumber);
+        int mazeNumber = context.game().mazeNumber(levelNumber);
+        Color strokeColor = mapNumber == mazeNumber && world.terrainMap().getProperties().containsKey("wall_color")
+            ? Color.web(world.terrainMap().getProperty("wall_color"))
+            : context.theme().color("mspacman.maze.wallTopColor", mazeNumber - 1);
+        mazeWallStrokeMaterialPy.set(ResourceManager.coloredMaterial(strokeColor));
+        fillColor = mapNumber == mazeNumber && world.terrainMap().getProperties().containsKey("wall_fill_color")
+            ? Color.web(world.terrainMap().getProperty("wall_fill_color"))
+            : context.theme().color("mspacman.maze.wallMiddleColor", mazeNumber - 1);
+        mazeWallFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, wallOpacityPy.get())));
+        houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, 0.25)));
+        buildMaze3D(wallsGroup);
 
-                createFood3D(foodColor);
-                addPathWalls(wallsGroup);
+        Color foodColor = mapNumber == mazeNumber && world.foodMap().getProperties().containsKey("food_color")
+            ? Color.web(world.foodMap().getProperty("food_color"))
+            : context.theme().color("mspacman.maze.foodColor", mazeNumber - 1);
+        createFood3D(world, foodColor);
+        addGhostHouse(world.house(), context.theme().color("mspacman.maze.doorColor"));
+    }
+
+    private void createPacManMaze3D(World world) {
+        Color strokeColor = world.terrainMap().getProperties().containsKey("wall_color")
+            ? Color.web(world.terrainMap().getProperty("wall_color"))
+            : context.theme().color("pacman.maze.wallBaseColor");
+        mazeWallStrokeMaterialPy.set(ResourceManager.coloredMaterial(strokeColor));
+        fillColor = world.terrainMap().getProperties().containsKey("wall_fill_color")
+            ? Color.web(world.terrainMap().getProperty("wall_fill_color"))
+            : context.theme().color("pacman.maze.wallTopColor");
+        mazeWallFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, wallOpacityPy.get())));
+        houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, 0.25)));
+        buildMaze3D(wallsGroup);
+
+        Color foodColor = world.foodMap().getProperties().containsKey("food_color")
+            ? Color.web(world.foodMap().getProperty("food_color"))
+            : context.theme().color("pacman.maze.foodColor");
+        createFood3D(world, foodColor);
+        addGhostHouse(world.house(), context.theme().color("pacman.maze.doorColor"));
+    }
+
+    private void createFood3D(World world, Color foodColor) {
+        Material foodMaterial = coloredMaterial(foodColor);
+        world.tiles().filter(world::hasFoodAt).forEach(tile -> {
+            if (world.isEnergizerTile(tile)) {
+                var energizer3D = new Energizer3D(3.5);
+                energizer3D.root().setMaterial(foodMaterial);
+                energizer3D.placeAtTile(tile);
+                foodGroup.getChildren().add(energizer3D.root());
+                addEnergizerAnimation(world, energizer3D, foodColor);
+
+            } else {
+                var pellet3D = new Pellet3D(context.theme().get("model3D.pellet"), 1.0);
+                pellet3D.root().setMaterial(foodMaterial);
+                pellet3D.placeAtTile(tile);
+                foodGroup.getChildren().add(pellet3D.root());
             }
-            case GameVariants.PACMAN -> {
-                Color strokeColor = world.terrainMap().getProperties().containsKey("wall_color")
-                    ? Color.web(world.terrainMap().getProperty("wall_color"))
-                    : context.theme().color("pacman.maze.wallBaseColor");
-                mazeWallStrokeMaterialPy.set(ResourceManager.coloredMaterial(strokeColor));
-                fillColor = world.terrainMap().getProperties().containsKey("wall_fill_color")
-                    ? Color.web(world.terrainMap().getProperty("wall_fill_color"))
-                    : context.theme().color("pacman.maze.wallTopColor");
-                mazeWallFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, wallOpacityPy.get())));
-                Color foodColor = world.foodMap().getProperties().containsKey("food_color")
-                    ? Color.web(world.foodMap().getProperty("food_color"))
-                    : context.theme().color("pacman.maze.foodColor");
-                houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, 0.25)));
-                createFood3D(foodColor);
-                addPathWalls(wallsGroup);
-            }
+        });
+    }
+
+    private void createWorld3D() {
+        switch (context.game()) {
+            case GameVariants.MS_PACMAN -> createMsPacManMaze3D(context.game().world(), context.game().levelNumber());
+            case GameVariants.PACMAN    -> createPacManMaze3D(context.game().world());
             default -> throw new IllegalGameVariantException(context.game());
         }
 
@@ -168,13 +193,12 @@ public class GameLevel3D extends Group {
             floorTextures.put(key, context.theme().get(key));
         }
 
-        var floor3D = new Floor3D(world.numCols() * TS - 1, world.numRows() * TS - 1, 0.4, floorTextures);
+        var floor3D = new Floor3D(context.game().world().numCols() * TS - 1, context.game().world().numRows() * TS - 1, 0.4, floorTextures);
         floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
         floor3D.colorPy.bind(PY_3D_FLOOR_COLOR);
         floor3D.texturePy.bind(PY_3D_FLOOR_TEXTURE);
         floor3D.getTransforms().add(new Translate(0.5 * floor3D.getWidth(), 0.5 * floor3D.getHeight(), 0.5 * floor3D.getDepth()));
 
-        addGhostHouse(world.house());
         worldGroup.getChildren().addAll(houseLight, floor3D, wallsGroup);
     }
 
@@ -182,13 +206,17 @@ public class GameLevel3D extends Group {
         wallsGroup.getChildren().add(createWall(v2i(x1,y1), v2i(x2,y2), houseHeightPy, houseFillMaterialPy));
     }
 
-    private void addGhostHouse(House house) {
+    private void addGhostHouse(House house, Color doorColor) {
         addHouseWall(10,15, 12,15);
         addHouseWall(10,15, 10,19);
         addHouseWall(10,19, 17,19);
         addHouseWall(17,19, 17,15);
         addHouseWall(17,15, 15,15);
-        addDoor3D(house.door());
+        for (var wing : List.of(house.door().leftWing(), house.door().rightWing())) {
+            var doorWing3D = new DoorWing3D(wing, doorColor);
+            doorWing3D.drawModePy.bind(PY_3D_DRAW_MODE);
+            doorGroup.getChildren().add(doorWing3D);
+        }
 
         Vector2f houseCenter = house.topLeftTile().toFloatVec().scaled(TS).plus(house.size().toFloatVec().scaled(HTS));
         houseLight.setColor(Color.GHOSTWHITE);
@@ -196,10 +224,6 @@ public class GameLevel3D extends Group {
         houseLight.setTranslateX(houseCenter.x());
         houseLight.setTranslateY(houseCenter.y());
         houseLight.setTranslateZ(-TS);
-    }
-
-    private static Color darker(Color color) {
-        return color.deriveColor(0, 1.0, 0.85, 1.0);
     }
 
     private static Direction targetDirection(Direction dir, byte tileValue) {
@@ -212,7 +236,7 @@ public class GameLevel3D extends Group {
         };
     }
 
-    private void addPath(
+    private void addMazeWallPath(
         TileMap terrainMap,
         List<List<Vector2i>> pathList,
         Set<Vector2i> explored,
@@ -238,7 +262,7 @@ public class GameLevel3D extends Group {
         pathList.add(path);
     }
 
-    private void addPathWalls(Group root) {
+    private void buildMaze3D(Group root) {
         TileMap terrainMap = context.game().world().terrainMap();
         Set<Vector2i> explored = new HashSet<>();
         List<List<Vector2i>> pathList = new ArrayList<>();
@@ -248,7 +272,7 @@ public class GameLevel3D extends Group {
             .filter(tile -> tile.x() > 0)
             .filter(tile -> !explored.contains(tile))
             .filter(tile -> terrainMap.get(tile) == Tiles.CORNER_NW)
-            .forEach(tile -> addPath(terrainMap, pathList, explored, tile, Direction.RIGHT));
+            .forEach(tile -> addMazeWallPath(terrainMap, pathList, explored, tile, Direction.RIGHT));
 
         // Loose ends left maze border
         List<Vector2i> startTilesLeftBorder = new ArrayList<>();
@@ -260,7 +284,7 @@ public class GameLevel3D extends Group {
         }
         startTilesLeftBorder.stream()
             .filter(tile -> !explored.contains(tile))
-            .forEach(tile -> addPath(terrainMap, pathList, explored, tile,
+            .forEach(tile -> addMazeWallPath(terrainMap, pathList, explored, tile,
                 targetDirection(Direction.RIGHT, terrainMap.get(tile))));
 
         // Loose ends right maze border
@@ -273,7 +297,7 @@ public class GameLevel3D extends Group {
         }
         startTilesRightBorder.stream()
             .filter(tile -> !explored.contains(tile))
-            .forEach(tile -> addPath(terrainMap, pathList, explored, tile,
+            .forEach(tile -> addMazeWallPath(terrainMap, pathList, explored, tile,
                 targetDirection(Direction.LEFT, terrainMap.get(tile))));
 
         for (var path: pathList) {
@@ -450,20 +474,6 @@ public class GameLevel3D extends Group {
         new SequentialTransition(moveOutAnimation, moveInAnimation).play();
     }
 
-    // TODO
-    private void addDoor3D(Door door) {
-        Color color = switch (context.game()) {
-            case GameVariants.MS_PACMAN -> context.theme().color("mspacman.maze.doorColor");
-            case GameVariants.PACMAN -> context.theme().color("pacman.maze.doorColor");
-            default -> throw new IllegalGameVariantException(context.game());
-        };
-        for (var wing : List.of(door.leftWing(), door.rightWing())) {
-            var doorWing3D = new DoorWing3D(wing, color);
-            doorWing3D.drawModePy.bind(PY_3D_DRAW_MODE);
-            doorGroup.getChildren().add(doorWing3D);
-        }
-    }
-
     public void update() {
         GameModel game = context.game();
         World world = game.world();
@@ -517,26 +527,6 @@ public class GameLevel3D extends Group {
             ghost,
             context.game().level().orElseThrow().numFlashes(),
             GHOST_SIZE);
-    }
-
-    private void createFood3D(Color foodColor) {
-        World world = context.game().world();
-        Material foodMaterial = coloredMaterial(foodColor);
-        world.tiles().filter(world::hasFoodAt).forEach(tile -> {
-            if (world.isEnergizerTile(tile)) {
-                var energizer3D = new Energizer3D(3.5);
-                energizer3D.root().setMaterial(foodMaterial);
-                energizer3D.placeAtTile(tile);
-                foodGroup.getChildren().add(energizer3D.root());
-                addEnergizerAnimation(world, energizer3D, foodColor);
-
-            } else {
-                var pellet3D = new Pellet3D(context.theme().get("model3D.pellet"), 1.0);
-                pellet3D.root().setMaterial(foodMaterial);
-                pellet3D.placeAtTile(tile);
-                foodGroup.getChildren().add(pellet3D.root());
-            }
-        });
     }
 
     private void addEnergizerAnimation(World world, Energizer3D energizer3D, Color foodColor) {
