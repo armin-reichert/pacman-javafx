@@ -60,7 +60,7 @@ public class GameLevel3D extends Group {
     private static final float GHOST_SIZE = 11.0f;
 
     public final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
-    public final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity", 0.5) {
+    public final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity",1.0) {
         @Override
         protected void invalidated() {
             Color color = ResourceManager.opaqueColor(fillColor, get());

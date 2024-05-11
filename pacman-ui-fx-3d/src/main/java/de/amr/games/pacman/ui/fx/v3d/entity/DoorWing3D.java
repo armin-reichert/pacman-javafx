@@ -37,7 +37,6 @@ public class DoorWing3D extends Group {
 
         setTranslateX(tile.x() * TS);
         setTranslateY(tile.y() * TS);
-        setUserData(this);
 
         PhongMaterial barMaterial = new PhongMaterial(color);
 

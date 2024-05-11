@@ -60,7 +60,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static final float PIP_MAX_HEIGHT = 2.00f * GameModel.ARCADE_MAP_TILES_Y * TS;
 
     public static final DoubleProperty  PY_PIP_HEIGHT                 = new SimpleDoubleProperty(GameModel.ARCADE_MAP_TILES_Y * TS);
-    public static final DoubleProperty  PY_PIP_OPACITY                = new SimpleDoubleProperty(0.66);
+    public static final DoubleProperty  PY_PIP_OPACITY                = new SimpleDoubleProperty(1.0);
     public static final BooleanProperty PY_PIP_ON                     = new SimpleBooleanProperty(false);
     public static final IntegerProperty PY_SIMULATION_STEPS           = new SimpleIntegerProperty(1);
     public static final BooleanProperty PY_3D_AXES_VISIBLE            = new SimpleBooleanProperty(false);
@@ -76,7 +76,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE = new SimpleObjectProperty<>(Perspective.NEAR_PLAYER);
     public static final DoubleProperty  PY_3D_WALL_HEIGHT             = new SimpleDoubleProperty(3.5);
     public static final DoubleProperty  PY_3D_WALL_OPACITY            = new SimpleDoubleProperty(0.9);
-    public static final DoubleProperty  PY_3D_WALL_THICKNESS          = new SimpleDoubleProperty(1.0);
 
     public static final KeyCodeCombination[] KEYS_TOGGLE_DASHBOARD    = {just(KeyCode.F1), alt(KeyCode.B)};
     public static final KeyCodeCombination KEY_TOGGLE_PIP_VIEW        = just(KeyCode.F2);
