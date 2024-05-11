@@ -78,7 +78,6 @@ public class GameLevel3D extends Group {
 
     private final Group worldGroup = new Group();
     private final Group wallsGroup = new Group();
-    private final Group doorGroup = new Group();
     private final Group foodGroup = new Group();
     private final Group levelCounterGroup = new Group();
     private final PointLight houseLight = new PointLight();
@@ -103,7 +102,7 @@ public class GameLevel3D extends Group {
 
         getChildren().addAll(ghosts3D);
         // Walls must be added *last*! Otherwise, transparency is not working correctly.
-        getChildren().addAll(pac3D, pac3D.light(), message3D, levelCounterGroup, livesCounter3D, foodGroup, doorGroup, worldGroup);
+        getChildren().addAll(pac3D, pac3D.light(), message3D, levelCounterGroup, livesCounter3D, foodGroup, worldGroup);
 
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
         pac3D.drawModePy.bind(PY_3D_DRAW_MODE);
@@ -215,7 +214,7 @@ public class GameLevel3D extends Group {
         for (var wing : List.of(house.door().leftWing(), house.door().rightWing())) {
             var doorWing3D = new DoorWing3D(wing, doorColor);
             doorWing3D.drawModePy.bind(PY_3D_DRAW_MODE);
-            doorGroup.getChildren().add(doorWing3D);
+            wallsGroup.getChildren().add(doorWing3D);
         }
 
         Vector2f houseCenter = house.topLeftTile().toFloatVec().scaled(TS).plus(house.size().toFloatVec().scaled(HTS));
@@ -592,11 +591,15 @@ public class GameLevel3D extends Group {
             .anyMatch(Ghost::isVisible);
         setHouseLightOn(houseUsed);
         if (houseOpen) {
-            for (var node : doorGroup.getChildren()) {
-                DoorWing3D wing3D = (DoorWing3D) node.getUserData();
-                wing3D.traversalAnimation().play();
-            }
+            doorWings3D().map(DoorWing3D::traversalAnimation).forEach(Transition::play);
         }
+    }
+
+    private Stream<DoorWing3D> doorWings3D() {
+        return wallsGroup.getChildren().stream()
+            .map(Node::getUserData)
+            .filter(DoorWing3D.class::isInstance)
+            .map(DoorWing3D.class::cast);
     }
 
     public Pac3D pac3D() {
