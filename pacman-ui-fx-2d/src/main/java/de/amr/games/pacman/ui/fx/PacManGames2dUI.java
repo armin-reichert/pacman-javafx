@@ -417,6 +417,11 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             gameScenePy.set(nextGameScene);
             Logger.trace("Game scene changed to {}", gameScenePy.get());
         }
+        if (nextGameScene == sceneConfig().get("intro")) {
+            gamePage.showSignature();
+        } else {
+            gamePage.hideSignature();
+        }
         updateStage();
     }
 

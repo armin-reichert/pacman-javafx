@@ -86,11 +86,6 @@ public class GamePage extends CanvasLayoutPane implements Page {
     }
 
     public void onGameSceneChanged(GameScene newGameScene) {
-        if (newGameScene == context.sceneConfig().get("intro")) {
-            signatureAnimation.play();
-        } else {
-            signatureAnimation.stop();
-        }
         updateHelpButton();
         rescale(getScaling(), true);
         if (newGameScene instanceof GameScene2D scene2D) {
@@ -173,6 +168,15 @@ public class GamePage extends CanvasLayoutPane implements Page {
     }
 
     // Signature stuff
+
+    public void showSignature() {
+        signatureAnimation.playFromStart();
+    }
+
+    public void hideSignature() {
+        signatureAnimation.stop();
+        signature.setOpacity(0);
+    }
 
     private void createSignature() {
         var remake = new Text("Remake (2022) by ");
