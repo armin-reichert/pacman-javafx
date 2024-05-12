@@ -13,7 +13,6 @@ import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.*;
 import javafx.animation.FadeTransition;
-import javafx.animation.Interpolator;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
@@ -266,20 +265,17 @@ public class GamePage extends CanvasLayoutPane implements Page {
             var pane = super.createPane(backgroundColor, font);
             var grid = (GridPane) pane.getChildren().getFirst(); // TODO improve
             // add default entries:
-            int nextFreeIndex = grid.getRowCount();
             if (PY_USE_AUTOPILOT.get()) {
                 var autoPilotEntry = text(context.tt("help.autopilot_on"), Color.ORANGE);
                 autoPilotEntry.setFont(font);
                 GridPane.setColumnSpan(autoPilotEntry, 2);
-                grid.add(autoPilotEntry, 0, nextFreeIndex);
-                nextFreeIndex += 1;
+                grid.add(autoPilotEntry, 0, grid.getRowCount());
             }
             if (context.gameController().isPacImmune()) {
                 var immunityEntry = text(context.tt("help.immunity_on"), Color.ORANGE);
                 immunityEntry.setFont(font);
                 GridPane.setColumnSpan(immunityEntry, 2);
-                grid.add(immunityEntry, 0, nextFreeIndex);
-                nextFreeIndex += 1;
+                grid.add(immunityEntry, 0, grid.getRowCount() + 1);
             }
             return pane;
         }
