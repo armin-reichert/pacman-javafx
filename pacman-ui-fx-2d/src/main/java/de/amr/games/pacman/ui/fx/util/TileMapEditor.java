@@ -28,14 +28,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 
@@ -123,7 +123,7 @@ public class TileMapEditor extends Application  {
                 g.fillRect(tile.x() * s(8), tile.y() * s(8), s(8), s(8));
             }
         };
-        terrainMapRenderer.setWallColor(Color.GREEN);
+        terrainMapRenderer.setWallStrokeColor(Color.GREEN);
         foodMapRenderer = new FoodMapRenderer();
 
         double height = Math.max(0.8 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
@@ -152,9 +152,29 @@ public class TileMapEditor extends Application  {
         clock.setTargetFrameRate(20);
         clock.setContinousCallback(() -> {
             updateInfo();
-            draw();
+            try {
+                draw();
+            } catch (Exception x) {
+                drawBlueScreen(x);
+            }
         });
         clock.start();
+    }
+
+    // TODO use own canvas or Text control
+    void drawBlueScreen(Exception drawException) {
+        GraphicsContext g = canvas.getGraphicsContext2D();
+        g.setFill(Color.BLUE);
+        g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        g.setStroke(Color.WHITE);
+        g.setFont(Font.font("Monospace", 12));
+        try {
+            var trace = new StringWriter();
+            drawException.printStackTrace(new PrintWriter(trace));
+            g.strokeText(trace.toString(), 0, 20);
+        } catch (Exception e) {
+            Logger.error(e);
+        }
     }
 
     void draw() {
@@ -164,6 +184,8 @@ public class TileMapEditor extends Application  {
         drawGrid(g);
         if (terrainMap != null && terrainVisiblePy.get()) {
             terrainMapRenderer.setScaling(scaling());
+            terrainMapRenderer.setWallStrokeColor(Color.web(terrainMap.getProperty("wall_stroke_color")));
+            terrainMapRenderer.setWallFillColor(Color.web(terrainMap.getProperty("wall_fill_color")));
             terrainMapRenderer.drawMap(g, terrainMap);
         }
         if (foodMap != null && foodVisiblePy.get()) {
@@ -474,7 +496,7 @@ public class TileMapEditor extends Application  {
 
     void setTerrainColorsFromMap() {
         if (terrainMap.getProperty("wall_color") != null) {
-            terrainMapRenderer.setWallColor(parseColor(terrainMap.getProperty("wall_color")));
+            terrainMapRenderer.setWallStrokeColor(parseColor(terrainMap.getProperty("wall_color")));
         }
     }
 

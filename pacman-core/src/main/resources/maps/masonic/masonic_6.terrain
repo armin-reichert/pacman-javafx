@@ -2,7 +2,7 @@
 #Sat May 11 11:09:10 CEST 2024
 num_cols=28
 num_rows=36
-wall_color=rgb(255,98,197)
+wall_stroke_color=rgb(255,98,197)
 wall_fill_color=rgb(197,89,148)
 !data
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0

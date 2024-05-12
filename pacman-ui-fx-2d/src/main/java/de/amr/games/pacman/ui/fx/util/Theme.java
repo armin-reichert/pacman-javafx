@@ -77,6 +77,11 @@ public class Theme {
         return (T) valuesByName.get(name);
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> T get(String name, int i, int j) {
+        return (T) valuesByName.get(String.format("%s.%d.%d", name, i, j));
+    }
+
     public Color color(String arrayName, int i) {
         var array = arraysByName.get(arrayName);
         return (Color) array.get(i);

@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.ui.fx.util;
 
 import de.amr.games.pacman.lib.Vector2i;
@@ -19,10 +23,23 @@ public class TerrainMapRenderer implements TileMapRenderer {
         return scaling * times;
     }
 
-    private Color wallColor = Color.GREEN;
+    private Color wallFillColor = Color.BLACK;
+    private Color wallStrokeColor = Color.GREEN;
 
-    public void setWallColor(Color wallColor) {
-        this.wallColor = wallColor;
+    public void setWallStrokeColor(Color color) {
+        wallStrokeColor = color;
+    }
+
+    public void setWallFillColor(Color wallFillColor) {
+        this.wallFillColor = wallFillColor;
+    }
+
+    public Color getWallFillColor() {
+        return wallFillColor;
+    }
+
+    public Color getWallStrokeColor() {
+        return wallStrokeColor;
     }
 
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
@@ -48,14 +65,14 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     public void drawWallH(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * s(8), y = tile.y() * s(8);
-        g.setFill(wallColor);
+        g.setFill(wallStrokeColor);
         // add 1 pixel to avoid gaps
         g.fillRect(x, y + s(3.5f), s(8) + 1, s(1));
     }
 
     public void drawDWallH(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * s(8), y = tile.y() * s(8);
-        g.setFill(wallColor);
+        g.setFill(wallStrokeColor);
         // add 1 pixel to avoid gaps
         g.fillRect(x, y + s(2.5f), s(8) + 1, s(1));
         g.fillRect(x, y + s(4.5f), s(8) + 1, s(1));
@@ -63,14 +80,14 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     public void drawWallV(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * s(8), y = tile.y() * s(8);
-        g.setFill(wallColor);
+        g.setFill(wallStrokeColor);
         // add 1 pixel to avoid gaps
         g.fillRect(x + s(3.5f), y, s(1), s(8) + 1);
     }
 
     public void drawDWallV(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * s(8), y = tile.y() * s(8);
-        g.setFill(wallColor);
+        g.setFill(wallStrokeColor);
         // add 1 pixel to avoid gaps
         g.fillRect(x + s(2.5f), y, s(1), s(8) + 1);
         g.fillRect(x + s(4.5f), y, s(1), s(8) + 1);
@@ -78,7 +95,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     public void drawCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
         double x = tile.x() * s(8), y = tile.y() * s(8);
-        g.setStroke(wallColor);
+        g.setStroke(wallStrokeColor);
         g.setLineWidth(s(1));
         switch (cornerType) {
             case Tiles.CORNER_NW -> g.strokeArc(x + s(4), y + s(4), s(8), s(8), 90, 90,  ArcType.OPEN);
@@ -92,7 +109,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
     public void drawDCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
         double x = tile.x() * s(8), y = tile.y() * s(8);
         double s10 = 10 * scaling;
-        g.setStroke(wallColor);
+        g.setStroke(wallStrokeColor);
         g.setLineWidth(s(1));
         switch (cornerType) {
             case Tiles.DCORNER_NW -> {
