@@ -59,6 +59,10 @@ public class TileMapEditor extends Application  {
     static final int DEFAULT_NUM_COLS = 28;
     static final int DEFAULT_NUM_ROWS = 36;
 
+    static final Color DEFAULT_WALL_STROKE_COLOR = Color.GREEN;
+    static final Color DEFAULT_WALL_FILL_COLOR = Color.MAROON;
+    static final Color DEFAULT_FOOD_COLOR = Color.MAGENTA;
+
     Stage stage;
     Scene scene;
     Pane sceneContent;
@@ -123,8 +127,12 @@ public class TileMapEditor extends Application  {
                 g.fillRect(tile.x() * s(8), tile.y() * s(8), s(8), s(8));
             }
         };
-        terrainMapRenderer.setWallStrokeColor(Color.GREEN);
+        terrainMapRenderer.setWallStrokeColor(DEFAULT_WALL_STROKE_COLOR);
+        terrainMapRenderer.setWallFillColor(DEFAULT_WALL_FILL_COLOR);
+
         foodMapRenderer = new FoodMapRenderer();
+        foodMapRenderer.setPelletColor(DEFAULT_FOOD_COLOR);
+        foodMapRenderer.setEnergizerColor(DEFAULT_FOOD_COLOR);
 
         double height = Math.max(0.8 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
         sceneContent = createSceneContent();
@@ -169,6 +177,7 @@ public class TileMapEditor extends Application  {
         g.setStroke(Color.WHITE);
         g.setFont(Font.font("Monospace", 12));
         try {
+            Logger.error(drawException);
             var trace = new StringWriter();
             drawException.printStackTrace(new PrintWriter(trace));
             g.strokeText(trace.toString(), 0, 20);
@@ -184,12 +193,27 @@ public class TileMapEditor extends Application  {
         drawGrid(g);
         if (terrainMap != null && terrainVisiblePy.get()) {
             terrainMapRenderer.setScaling(scaling());
-            terrainMapRenderer.setWallStrokeColor(Color.web(terrainMap.getProperty("wall_stroke_color")));
-            terrainMapRenderer.setWallFillColor(Color.web(terrainMap.getProperty("wall_fill_color")));
+            if (terrainMap.getProperty("wall_stroke_color") != null) {
+                terrainMapRenderer.setWallStrokeColor(Color.web(terrainMap.getProperty("wall_stroke_color")));
+            } else {
+                terrainMapRenderer.setWallStrokeColor(DEFAULT_WALL_STROKE_COLOR);
+            }
+            if (terrainMap.getProperty("wall_fill_color") != null) {
+                terrainMapRenderer.setWallFillColor(Color.web(terrainMap.getProperty("wall_fill_color")));
+            } else {
+                terrainMapRenderer.setWallFillColor(DEFAULT_WALL_FILL_COLOR);
+            }
             terrainMapRenderer.drawMap(g, terrainMap);
         }
         if (foodMap != null && foodVisiblePy.get()) {
             foodMapRenderer.setScaling(scaling());
+            if (foodMap.getProperty("food_color") != null) {
+                foodMapRenderer.setPelletColor(Color.web(foodMap.getProperty("food_color")));
+                foodMapRenderer.setEnergizerColor(Color.web(foodMap.getProperty("food_color")));
+            } else {
+                foodMapRenderer.setPelletColor(DEFAULT_FOOD_COLOR);
+                foodMapRenderer.setEnergizerColor(DEFAULT_FOOD_COLOR);
+            }
             foodMapRenderer.drawMap(g, foodMap);
         }
         if (hoveredTile != null) {
