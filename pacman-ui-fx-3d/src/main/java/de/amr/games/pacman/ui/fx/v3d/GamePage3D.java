@@ -68,7 +68,7 @@ public class GamePage3D extends GamePage {
 
     private void initPip() {
         final double ASPECT_RATIO = (double) CANVAS_WIDTH_UNSCALED / CANVAS_HEIGHT_UNSCALED;
-        pip.setContext(sceneContext);
+        pip.setContext(context);
         pipCanvas.heightProperty().bind(pipHeightPy);
         pipCanvas.widthProperty().bind(Bindings.createDoubleBinding(() -> pipHeightPy.get() * ASPECT_RATIO, pipHeightPy));
         pipCanvas.opacityProperty().bind(PY_PIP_OPACITY);
@@ -102,14 +102,14 @@ public class GamePage3D extends GamePage {
                 getLayersContainer().setBackground(ResourceManager.coloredBackground(Color.BLACK));
             } else {
                 var wallpaperKey = PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
-                getLayersContainer().setBackground(sceneContext.theme().background(wallpaperKey));
+                getLayersContainer().setBackground(context.theme().background(wallpaperKey));
             }
         }
     }
 
     private boolean isCurrentGameScene3D() {
-        return sceneContext.currentGameScene().isPresent()
-            && sceneContext.currentGameScene().get() instanceof PlayScene3D;
+        return context.currentGameScene().isPresent()
+            && context.currentGameScene().get() instanceof PlayScene3D;
     }
 
     @Override
@@ -128,7 +128,7 @@ public class GamePage3D extends GamePage {
 
     @Override
     protected void handleKeyboardInput() {
-        var actionHandler = (ActionHandler3D) sceneContext.actionHandler();
+        var actionHandler = (ActionHandler3D) context.actionHandler();
         if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
             actionHandler.toggle2D3D();
         } else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {

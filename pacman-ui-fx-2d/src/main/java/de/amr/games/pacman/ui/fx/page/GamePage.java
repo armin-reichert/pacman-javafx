@@ -13,6 +13,7 @@ import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.*;
 import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
@@ -38,16 +39,17 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.border;
  */
 public class GamePage extends CanvasLayoutPane implements Page {
 
-    protected final GameSceneContext sceneContext;
+    protected final GameSceneContext context;
     protected final FlashMessageView flashMessageLayer = new FlashMessageView();
     protected final Pane popupLayer = new Pane();
     protected final FadingPane helpInfoPopUp = new FadingPane();
     private BorderPane helpButton;
+
     private TextFlow signature;
     private Transition signatureAnimation;
 
     public GamePage(GameSceneContext sceneContext, double width, double height) {
-        this.sceneContext = sceneContext;
+        this.context = sceneContext;
 
         createHelpButton();
         createSignature();
@@ -77,7 +79,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
     protected void rescale(double newScaling, boolean always) {
         super.rescale(newScaling, always);
         resizeRegion(popupLayer, canvasContainer.getWidth(), canvasContainer.getHeight());
-        sceneContext.currentGameScene().ifPresent(gameScene -> {
+        context.currentGameScene().ifPresent(gameScene -> {
             if (gameScene instanceof GameScene2D gameScene2D) {
                 gameScene2D.setScaling(getScaling());
             }
@@ -85,11 +87,10 @@ public class GamePage extends CanvasLayoutPane implements Page {
     }
 
     public void onGameSceneChanged(GameScene newGameScene) {
-        if (newGameScene == sceneContext.sceneConfig().get("intro")) {
+        if (newGameScene == context.sceneConfig().get("intro")) {
             signatureAnimation.play();
         } else {
             signatureAnimation.stop();
-            signature.setOpacity(0);
         }
         updateHelpButton();
         rescale(getScaling(), true);
@@ -102,15 +103,15 @@ public class GamePage extends CanvasLayoutPane implements Page {
     private void createDebugInfoBindings() {
         layersContainer.borderProperty().bind(Bindings.createObjectBinding(
             () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? border(Color.RED, 3) : null,
-            PY_SHOW_DEBUG_INFO, sceneContext.gameSceneProperty()
+            PY_SHOW_DEBUG_INFO, context.gameSceneProperty()
         ));
         canvasLayer.borderProperty().bind(Bindings.createObjectBinding(
             () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? border(Color.YELLOW, 3) : null,
-            PY_SHOW_DEBUG_INFO, sceneContext.gameSceneProperty()
+            PY_SHOW_DEBUG_INFO, context.gameSceneProperty()
         ));
         popupLayer.borderProperty().bind(Bindings.createObjectBinding(
             () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? border(Color.GREENYELLOW, 3) : null,
-            PY_SHOW_DEBUG_INFO, sceneContext.gameSceneProperty()
+            PY_SHOW_DEBUG_INFO, context.gameSceneProperty()
         ));
         popupLayer.mouseTransparentProperty().bind(PY_SHOW_DEBUG_INFO);
     }
@@ -124,7 +125,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
     }
 
     public void render() {
-        sceneContext.currentGameScene().ifPresent(gameScene -> {
+        context.currentGameScene().ifPresent(gameScene -> {
             if (gameScene instanceof GameScene2D gameScene2D) {
                 gameScene2D.draw();
             }
@@ -134,77 +135,77 @@ public class GamePage extends CanvasLayoutPane implements Page {
     }
 
     protected void handleKeyboardInput() {
-        var actionHandler = sceneContext.actionHandler();
+        var handler = context.actionHandler();
         if (Keyboard.pressed(KEY_AUTOPILOT)) {
-            actionHandler.toggleAutopilot();
+            handler.toggleAutopilot();
         } else if (Keyboard.pressed(KEY_BOOT)) {
-            if (sceneContext.gameState() != GameState.BOOT) {
-                actionHandler.reboot();
+            if (context.gameState() != GameState.BOOT) {
+                handler.reboot();
             }
         } else if (Keyboard.pressed(KEY_DEBUG_INFO)) {
             Ufx.toggle(PY_SHOW_DEBUG_INFO);
         } else if (Keyboard.pressed(KEY_FULLSCREEN)) {
-            actionHandler.setFullScreen(true);
+            handler.setFullScreen(true);
         } else if (Keyboard.pressed(KEY_IMMUNITY)) {
-            actionHandler.toggleImmunity();
+            handler.toggleImmunity();
         } else if (Keyboard.pressed(KEY_SHOW_HELP)) {
             showHelpInfoPopUp();
         } else if (Keyboard.pressed(KEY_PAUSE)) {
-            actionHandler.togglePaused();
+            handler.togglePaused();
         } else if (Keyboard.pressed(KEYS_SINGLE_STEP)) {
-            actionHandler.doSimulationSteps(1);
+            handler.doSimulationSteps(1);
         } else if (Keyboard.pressed(KEY_TEN_STEPS)) {
-            actionHandler.doSimulationSteps(10);
+            handler.doSimulationSteps(10);
         } else if (Keyboard.pressed(KEY_SIMULATION_FASTER)) {
-            actionHandler.changeSimulationSpeed(5);
+            handler.changeSimulationSpeed(5);
         } else if (Keyboard.pressed(KEY_SIMULATION_SLOWER)) {
-            actionHandler.changeSimulationSpeed(-5);
+            handler.changeSimulationSpeed(-5);
         } else if (Keyboard.pressed(KEY_SIMULATION_NORMAL)) {
-            actionHandler.resetSimulationSpeed();
+            handler.resetSimulationSpeed();
         } else if (Keyboard.pressed(KEY_QUIT)) {
-            if (sceneContext.gameState() != GameState.BOOT && sceneContext.gameState() != GameState.INTRO) {
-                actionHandler.restartIntro();
+            if (context.gameState() != GameState.BOOT && context.gameState() != GameState.INTRO) {
+                handler.restartIntro();
             }
         } else if (Keyboard.pressed(KEY_TEST_LEVELS)) {
-            actionHandler.startLevelTestMode();
+            handler.startLevelTestMode();
         } else {
-            sceneContext.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
+            context.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
         }
     }
 
     // Signature stuff
 
     private void createSignature() {
-        var remake = new Text("Remake (2023) by ");
-        remake.setFill(Color.WHEAT);
+        var remake = new Text("Remake (2022) by ");
+        remake.setFill(Color.grayRgb(200));
         remake.fontProperty().bind(Bindings.createObjectBinding(
-            () -> Font.font("Helvetica", Math.floor(10 * getScaling())), scalingPy));
+            () -> context.theme().font("font.monospaced", Math.floor(9 * getScaling())), scalingPy));
 
         var author = new Text("Armin Reichert");
-        author.setFill(Color.WHEAT);
+        author.setFill(Color.grayRgb(200));
         author.fontProperty().bind(Bindings.createObjectBinding(
-            () -> sceneContext.theme().font("font.handwriting", Math.floor(11 * getScaling())), scalingPy));
+            () -> context.theme().font("font.monospaced", Math.floor(9 * getScaling())), scalingPy));
 
         signature = new TextFlow(remake, author);
+        signature.setOpacity(0);
 
         signature.translateXProperty().bind(Bindings.createDoubleBinding(
-            () -> (canvasContainer.getWidth() - signature.getWidth()) * 0.5, canvasContainer.widthProperty()
+            () -> 0.5 * (canvasContainer.getWidth() - signature.getWidth()), canvasContainer.widthProperty()
         ));
 
         signature.translateYProperty().bind(Bindings.createDoubleBinding(
-            () -> switch (sceneContext.game()) {
-                case GameVariant.MS_PACMAN -> 40 * getScaling(); // TODO fixme
-                case GameVariant.PACMAN -> 28 * getScaling(); // TODO fixme
-                default -> throw new IllegalGameVariantException(sceneContext.game());
+            () -> switch (context.game().variant()) {
+                case GameVariant.MS_PACMAN -> 45 * getScaling();
+                case GameVariant.PACMAN    -> 30 * getScaling();
             }, scalingPy
         ));
 
-        var fadeIn = new FadeTransition(Duration.seconds(5), signature);
+        var fadeIn = new FadeTransition(Duration.seconds(2), signature);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
-        fadeIn.setDelay(Duration.seconds(3));
+        fadeIn.setDelay(Duration.seconds(2));
 
-        var fadeOut = new FadeTransition(Duration.seconds(1), signature);
+        var fadeOut = new FadeTransition(Duration.seconds(3), signature);
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
 
@@ -224,10 +225,10 @@ public class GamePage extends CanvasLayoutPane implements Page {
 
     protected void updateHelpButton() {
         ImageView imageView = (ImageView) helpButton.getCenter();
-        var image = sceneContext.theme().image(switch (sceneContext.game()) {
+        var image = context.theme().image(switch (context.game()) {
             case GameVariant.MS_PACMAN -> "mspacman.helpButton.icon";
             case GameVariant.PACMAN -> "pacman.helpButton.icon";
-            default -> throw new IllegalGameVariantException(sceneContext.game());
+            default -> throw new IllegalGameVariantException(context.game());
         });
         double size = Math.ceil(12 * getScaling());
         imageView.setImage(image);
@@ -240,11 +241,11 @@ public class GamePage extends CanvasLayoutPane implements Page {
     }
 
     protected boolean isHelpButtonVisible() {
-        if (sceneContext.currentGameScene().isEmpty() || !isCurrentGameScene2D()) {
+        if (context.currentGameScene().isEmpty() || !isCurrentGameScene2D()) {
             return false;
         }
-        var gameScene = sceneContext.currentGameScene().get();
-        return gameScene != sceneContext.sceneConfig().get("boot");
+        var gameScene = context.currentGameScene().get();
+        return gameScene != context.sceneConfig().get("boot");
     }
 
     private void handle(KeyEvent e) {
@@ -255,7 +256,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
 
         public void addLocalizedEntry(String lhsKey, String keyboardKey) {
             addRow(
-                label(sceneContext.tt(lhsKey), Color.gray(0.9)),
+                label(context.tt(lhsKey), Color.gray(0.9)),
                 text("[" + keyboardKey + "]", Color.YELLOW)
             );
         }
@@ -267,14 +268,14 @@ public class GamePage extends CanvasLayoutPane implements Page {
             // add default entries:
             int nextFreeIndex = grid.getRowCount();
             if (PY_USE_AUTOPILOT.get()) {
-                var autoPilotEntry = text(sceneContext.tt("help.autopilot_on"), Color.ORANGE);
+                var autoPilotEntry = text(context.tt("help.autopilot_on"), Color.ORANGE);
                 autoPilotEntry.setFont(font);
                 GridPane.setColumnSpan(autoPilotEntry, 2);
                 grid.add(autoPilotEntry, 0, nextFreeIndex);
                 nextFreeIndex += 1;
             }
-            if (sceneContext.gameController().isPacImmune()) {
-                var immunityEntry = text(sceneContext.tt("help.immunity_on"), Color.ORANGE);
+            if (context.gameController().isPacImmune()) {
+                var immunityEntry = text(context.tt("help.immunity_on"), Color.ORANGE);
                 immunityEntry.setFont(font);
                 GridPane.setColumnSpan(immunityEntry, 2);
                 grid.add(immunityEntry, 0, nextFreeIndex);
@@ -286,11 +287,11 @@ public class GamePage extends CanvasLayoutPane implements Page {
 
     private HelpInfo currentHelpInfo() {
         HelpInfo helpInfo = new HelpInfo();
-        switch (sceneContext.gameState()) {
+        switch (context.gameState()) {
             case INTRO -> addInfoForIntroScene(helpInfo);
             case CREDIT -> addInfoForCreditScene(helpInfo);
             case READY, HUNTING, PACMAN_DYING, GHOST_DYING -> {
-                if (sceneContext.game().isDemoLevel()) {
+                if (context.game().isDemoLevel()) {
                     addInfoForDemoLevel(helpInfo);
                 } else {
                     addInfoForPlayScene(helpInfo);
@@ -302,10 +303,10 @@ public class GamePage extends CanvasLayoutPane implements Page {
     }
 
     private void showHelpInfoPopUp() {
-        var bgColor = sceneContext.game() == GameVariant.MS_PACMAN
+        var bgColor = context.game() == GameVariant.MS_PACMAN
             ? Color.rgb(255, 0, 0, 0.8)
             : Color.rgb(33, 33, 255, 0.8);
-        var font = sceneContext.theme().font("font.monospaced", Math.max(6, 14 * getScaling()));
+        var font = context.theme().font("font.monospaced", Math.max(6, 14 * getScaling()));
         var pane = currentHelpInfo().createPane(bgColor, font);
         helpInfoPopUp.setTranslateX(10 * getScaling());
         helpInfoPopUp.setTranslateY(30 * getScaling());
@@ -314,11 +315,11 @@ public class GamePage extends CanvasLayoutPane implements Page {
     }
 
     private void addInfoForIntroScene(HelpInfo info) {
-        if (sceneContext.gameController().hasCredit()) {
+        if (context.gameController().hasCredit()) {
             info.addLocalizedEntry("help.start_game", "1");
         }
         info.addLocalizedEntry("help.add_credit", "5");
-        info.addLocalizedEntry(sceneContext.game() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
+        info.addLocalizedEntry(context.game() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
     }
 
     private void addInfoForQuittingScene(HelpInfo info) {
@@ -326,7 +327,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
     }
 
     private void addInfoForCreditScene(HelpInfo info) {
-        if (sceneContext.gameController().hasCredit()) {
+        if (context.gameController().hasCredit()) {
             info.addLocalizedEntry("help.start_game", "1");
         }
         info.addLocalizedEntry("help.add_credit", "5");
@@ -334,10 +335,10 @@ public class GamePage extends CanvasLayoutPane implements Page {
     }
 
     private void addInfoForPlayScene(HelpInfo info) {
-        info.addLocalizedEntry("help.move_left", sceneContext.tt("help.cursor_left"));
-        info.addLocalizedEntry("help.move_right", sceneContext.tt("help.cursor_right"));
-        info.addLocalizedEntry("help.move_up", sceneContext.tt("help.cursor_up"));
-        info.addLocalizedEntry("help.move_down", sceneContext.tt("help.cursor_down"));
+        info.addLocalizedEntry("help.move_left", context.tt("help.cursor_left"));
+        info.addLocalizedEntry("help.move_right", context.tt("help.cursor_right"));
+        info.addLocalizedEntry("help.move_up", context.tt("help.cursor_up"));
+        info.addLocalizedEntry("help.move_down", context.tt("help.cursor_down"));
         info.addLocalizedEntry("help.show_intro", "Q");
     }
 
