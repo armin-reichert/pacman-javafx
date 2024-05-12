@@ -21,6 +21,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 /**
  * @author Armin Reichert
  */
+@SuppressWarnings("unchecked")
 public class TileMap {
 
     /**
@@ -159,6 +160,14 @@ public class TileMap {
         return (T) properties.get(key);
     }
 
+    public <T> T getPropertyOrDefault(String key, T defaultValue) {
+        return hasProperty(key) ?  (T) properties.get(key) : defaultValue;
+    }
+
+    public boolean hasProperty(String name) {
+        return properties.containsKey(name);
+    }
+
     public Properties getProperties() {
         return properties;
     }
@@ -169,6 +178,7 @@ public class TileMap {
             properties.store(w, "");
             return w.toString();
         } catch (IOException x) {
+            Logger.error(x);
             return "";
         }
     }

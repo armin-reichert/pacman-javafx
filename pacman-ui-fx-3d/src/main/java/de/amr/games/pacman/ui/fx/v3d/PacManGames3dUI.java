@@ -151,8 +151,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("mspacman.color.hairbow",        Color.rgb(255, 0, 0));
         theme.set("mspacman.color.hairbow.pearls", Color.rgb(33, 33, 255));
 
-        theme.set("mspacman.maze.doorColor",       Color.rgb(255, 183, 255));
-
         theme.set("pacman.color.head",             Color.rgb(255, 255, 0));
         theme.set("pacman.color.palate",           Color.rgb(191, 79, 61));
         theme.set("pacman.color.eyes",             Color.rgb(33, 33, 33));

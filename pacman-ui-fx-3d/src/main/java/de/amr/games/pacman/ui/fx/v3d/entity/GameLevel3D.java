@@ -16,7 +16,10 @@ import de.amr.games.pacman.model.MapMaze;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.world.*;
+import de.amr.games.pacman.model.world.House;
+import de.amr.games.pacman.model.world.TileMap;
+import de.amr.games.pacman.model.world.Tiles;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
@@ -44,6 +47,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer.getTileMapColor;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.opaqueColor;
 import static de.amr.games.pacman.ui.fx.util.Ufx.doAfterSeconds;
@@ -119,38 +123,39 @@ public class GameLevel3D extends Group {
         };
     }
 
-    private void createMsPacManMaze3D(World world, int levelNumber) {
-        MapMaze mm = context.game().mapMaze(levelNumber);
+    private void createMsPacManMaze3D(int levelNumber) {
+        var game = context.game();
+        var world = game.world();
+        MapMaze mm = game.mapMaze(levelNumber);
 
         //TODO store these in terrain maps
         Color strokeColor = context.theme().get("mspacman.wallStrokeColor", mm.mapNumber(), mm.mazeNumber());
-        fillColor = context.theme().get("mspacman.wallFillColor", mm.mapNumber(), mm.mazeNumber());
-        Color doorColor = Color.web(context.game().world().terrainMap().getProperty("door_color"));
+        fillColor         = context.theme().get("mspacman.wallFillColor",   mm.mapNumber(), mm.mazeNumber());
+        Color foodColor   = context.theme().get("mspacman.foodColor",       mm.mapNumber(), mm.mazeNumber());
 
         mazeWallStrokeMaterialPy.set(coloredMaterial(strokeColor));
         mazeWallFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, wallOpacityPy.get())));
-        houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, 0.25)));
+        houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, 0.4)));
         buildMaze3D();
-        addGhostHouse(world.house(), context.theme().color("mspacman.maze.doorColor"));
 
-        Color foodColor = context.theme().get("mspacman.foodColor", mm.mapNumber(), mm.mazeNumber());
+        addGhostHouse(world.house(), getTileMapColor(world.terrainMap(), "door_color", Color.rgb(254,184,174)));
+
         createFood3D(world, foodColor);
-
     }
 
-    private void createPacManMaze3D(World world) {
-        var strokeColor = Color.web(world.terrainMap().getProperty("wall_stroke_color"));
-        fillColor = Color.web(world.terrainMap().getProperty("wall_fill_color"));
-        var doorColor = Color.web(world.terrainMap().getProperty("door_color"));
+    private void createPacManMaze3D() {
+        var world = context.game().world();
+
+        var strokeColor = getTileMapColor(world.terrainMap(), "wall_stroke_color", Color.rgb(33, 33, 255));
+        fillColor       = getTileMapColor(world.terrainMap(), "wall_fill_color", Color.rgb(0,0,0));
 
         mazeWallStrokeMaterialPy.set(coloredMaterial(strokeColor));
         mazeWallFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, wallOpacityPy.get())));
-        houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, 0.25)));
+        houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, 0.4)));
         buildMaze3D();
-        addGhostHouse(world.house(), doorColor);
 
-        Color foodColor = Color.web(world.foodMap().getProperty("food_color"));
-        createFood3D(world, foodColor);
+        addGhostHouse(world.house(), getTileMapColor(world.terrainMap(), "door_color", Color.PINK));
+        createFood3D(world, getTileMapColor(world.foodMap(), "food_color", Color.PINK));
     }
 
     private void createFood3D(World world, Color foodColor) {
@@ -173,10 +178,11 @@ public class GameLevel3D extends Group {
     }
 
     private void createWorld3D() {
-        switch (context.game()) {
-            case GameVariant.MS_PACMAN -> createMsPacManMaze3D(context.game().world(), context.game().levelNumber());
-            case GameVariant.PACMAN    -> createPacManMaze3D(context.game().world());
-            default -> throw new IllegalGameVariantException(context.game());
+        var game = context.game();
+        switch (game) {
+            case GameVariant.MS_PACMAN -> createMsPacManMaze3D(game.levelNumber());
+            case GameVariant.PACMAN    -> createPacManMaze3D();
+            default -> throw new IllegalGameVariantException(game);
         }
 
         var floorTextures = new HashMap<String, PhongMaterial>();
@@ -185,7 +191,7 @@ public class GameLevel3D extends Group {
             floorTextures.put(key, context.theme().get(key));
         }
 
-        var floor3D = new Floor3D(context.game().world().numCols() * TS - 1, context.game().world().numRows() * TS - 1, 0.4, floorTextures);
+        var floor3D = new Floor3D(game.world().numCols() * TS - 1, game.world().numRows() * TS - 1, 0.4, floorTextures);
         floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
         floor3D.colorPy.bind(PY_3D_FLOOR_COLOR);
         floor3D.texturePy.bind(PY_3D_FLOOR_TEXTURE);
