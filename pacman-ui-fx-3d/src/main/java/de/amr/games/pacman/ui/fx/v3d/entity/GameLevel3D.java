@@ -122,19 +122,20 @@ public class GameLevel3D extends Group {
     private void createMsPacManMaze3D(World world, int levelNumber) {
         MapMaze mm = context.game().mapMaze(levelNumber);
 
+        //TODO store these in terrain maps
         Color strokeColor = context.theme().get("mspacman.wallStrokeColor", mm.mapNumber(), mm.mazeNumber());
         fillColor = context.theme().get("mspacman.wallFillColor", mm.mapNumber(), mm.mazeNumber());
+        Color doorColor = Color.web(context.game().world().terrainMap().getProperty("door_color"));
 
         mazeWallStrokeMaterialPy.set(coloredMaterial(strokeColor));
         mazeWallFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, wallOpacityPy.get())));
         houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, 0.25)));
         buildMaze3D();
-
-        Color foodColor = mm.mapNumber() == mm.mazeNumber() && world.foodMap().getProperties().containsKey("food_color")
-            ? Color.web(world.foodMap().getProperty("food_color"))
-            : context.theme().color("mspacman.maze.foodColor", mm.mazeNumber() - 1);
-        createFood3D(world, foodColor);
         addGhostHouse(world.house(), context.theme().color("mspacman.maze.doorColor"));
+
+        Color foodColor = context.theme().get("mspacman.foodColor", mm.mapNumber(), mm.mazeNumber());
+        createFood3D(world, foodColor);
+
     }
 
     private void createPacManMaze3D(World world) {

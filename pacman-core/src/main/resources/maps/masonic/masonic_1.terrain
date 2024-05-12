@@ -2,6 +2,7 @@
 #Thu May 09 12:24:22 CEST 2024
 num_cols=28
 num_rows=36
+door_color=rgb(252,181,255)
 wall_stroke_color=rgb(113,206,234)
 wall_fill_color=rgb(53,156,156)
 !data
