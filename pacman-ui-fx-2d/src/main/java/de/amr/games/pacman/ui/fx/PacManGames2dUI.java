@@ -117,11 +117,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
         theme.set("canvas.background",                theme.color("palette.black"));
 
-        theme.set("ghost.0.color",                    theme.color("palette.red"));
-        theme.set("ghost.1.color",                    theme.color("palette.pink"));
-        theme.set("ghost.2.color",                    theme.color("palette.cyan"));
-        theme.set("ghost.3.color",                    theme.color("palette.orange"));
-
         theme.set("startpage.button.bgColor",         Color.rgb(0, 155, 252, 0.8));
         theme.set("startpage.button.color",           Color.WHITE);
         theme.set("startpage.button.font",            rm.loadFont("fonts/emulogic.ttf", 30));

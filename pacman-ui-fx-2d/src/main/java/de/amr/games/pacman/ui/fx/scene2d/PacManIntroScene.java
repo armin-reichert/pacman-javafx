@@ -99,6 +99,12 @@ public class PacManIntroScene extends GameScene2D {
         if (intro.titleVisible) {
             drawText("CHARACTER / NICKNAME", context.theme().color("palette.pale"), font, t(tx + 3), t(6));
         }
+        Color[] ghostColors = {
+            context.theme().color("palette.red"),
+            context.theme().color("palette.pink"),
+            context.theme().color("palette.cyan"),
+            context.theme().color("palette.orange"),
+        };
         for (int id = 0; id < 4; ++id) {
             var ghostInfo = intro.ghostInfo[id];
             if (!ghostInfo.pictureVisible) {
@@ -108,13 +114,11 @@ public class PacManIntroScene extends GameScene2D {
             drawSpriteCenteredOverBox(ss.ghostFacingRight(id), t(tx) + 4, t(ty));
             if (ghostInfo.characterVisible) {
                 var text = "-" + ghostInfo.character;
-                var color = context.theme().color("ghost." + id + ".color");
-                drawText(text, color, font, t(tx + 3), t(ty + 1));
+                drawText(text, ghostColors[id], font, t(tx + 3), t(ty + 1));
             }
             if (ghostInfo.nicknameVisible) {
                 var text = QUOTE + ghostInfo.ghost.name() + QUOTE;
-                var color = context.theme().color("ghost." + id + ".color");
-                drawText(text, color, font, t(tx + 14), t(ty + 1));
+                drawText(text, ghostColors[id], font, t(tx + 14), t(ty + 1));
             }
         }
     }
