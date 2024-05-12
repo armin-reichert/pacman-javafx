@@ -16,7 +16,8 @@ import java.util.Properties;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.checkTileNotNull;
+import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
  * @author Armin Reichert

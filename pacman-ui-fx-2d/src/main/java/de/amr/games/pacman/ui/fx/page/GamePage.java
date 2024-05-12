@@ -12,9 +12,6 @@ import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.*;
-import javafx.animation.FadeTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Cursor;
 import javafx.scene.image.ImageView;
@@ -24,8 +21,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -42,16 +37,29 @@ public class GamePage extends CanvasLayoutPane implements Page {
     protected final FlashMessageView flashMessageLayer = new FlashMessageView();
     protected final Pane popupLayer = new Pane();
     protected final FadingPane helpInfoPopUp = new FadingPane();
+    protected final Signature signature;
+
     private BorderPane helpButton;
 
-    private TextFlow signature;
-    private Transition signatureAnimation;
+    public GamePage(GameSceneContext context, double width, double height) {
+        this.context = context;
 
-    public GamePage(GameSceneContext sceneContext, double width, double height) {
-        this.context = sceneContext;
+        signature = new Signature(context);
+        signature.remakeText().fontProperty().bind(Bindings.createObjectBinding(
+            () -> context.theme().font("font.monospaced", Math.floor(9 * getScaling())), scalingPy));
+        signature.authorText().fontProperty().bind(Bindings.createObjectBinding(
+            () -> context.theme().font("font.monospaced", Math.floor(9 * getScaling())), scalingPy));
+        signature.translateXProperty().bind(Bindings.createDoubleBinding(
+            () -> 0.5 * (canvasContainer.getWidth() - signature.getWidth()), canvasContainer.widthProperty()
+        ));
+        signature.translateYProperty().bind(Bindings.createDoubleBinding(
+            () -> switch (context.game().variant()) {
+                case GameVariant.MS_PACMAN -> 45 * getScaling();
+                case GameVariant.PACMAN    -> 30 * getScaling();
+            }, scalingPy
+        ));
 
         createHelpButton();
-        createSignature();
         createDebugInfoBindings();
 
         popupLayer.getChildren().addAll(helpButton, signature, helpInfoPopUp);
@@ -68,6 +76,14 @@ public class GamePage extends CanvasLayoutPane implements Page {
         });
 
         setSize(width, height);
+    }
+
+    public void showSignature() {
+        signature.show();
+    }
+
+    public void hideSignature() {
+        signature.hide();
     }
 
     @Override
@@ -165,54 +181,6 @@ public class GamePage extends CanvasLayoutPane implements Page {
         } else {
             context.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
         }
-    }
-
-    // Signature stuff
-
-    public void showSignature() {
-        signatureAnimation.playFromStart();
-    }
-
-    public void hideSignature() {
-        signatureAnimation.stop();
-        signature.setOpacity(0);
-    }
-
-    private void createSignature() {
-        var remake = new Text("Remake (2022) by ");
-        remake.setFill(Color.grayRgb(200));
-        remake.fontProperty().bind(Bindings.createObjectBinding(
-            () -> context.theme().font("font.monospaced", Math.floor(9 * getScaling())), scalingPy));
-
-        var author = new Text("Armin Reichert");
-        author.setFill(Color.grayRgb(200));
-        author.fontProperty().bind(Bindings.createObjectBinding(
-            () -> context.theme().font("font.monospaced", Math.floor(9 * getScaling())), scalingPy));
-
-        signature = new TextFlow(remake, author);
-        signature.setOpacity(0);
-
-        signature.translateXProperty().bind(Bindings.createDoubleBinding(
-            () -> 0.5 * (canvasContainer.getWidth() - signature.getWidth()), canvasContainer.widthProperty()
-        ));
-
-        signature.translateYProperty().bind(Bindings.createDoubleBinding(
-            () -> switch (context.game().variant()) {
-                case GameVariant.MS_PACMAN -> 45 * getScaling();
-                case GameVariant.PACMAN    -> 30 * getScaling();
-            }, scalingPy
-        ));
-
-        var fadeIn = new FadeTransition(Duration.seconds(2), signature);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-        fadeIn.setDelay(Duration.seconds(2));
-
-        var fadeOut = new FadeTransition(Duration.seconds(3), signature);
-        fadeOut.setFromValue(1);
-        fadeOut.setToValue(0);
-
-        signatureAnimation = new SequentialTransition(fadeIn, fadeOut);
     }
 
     // Help Info stuff
