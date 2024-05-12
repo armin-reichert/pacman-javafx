@@ -52,12 +52,6 @@ public class GamePage extends CanvasLayoutPane implements Page {
         signature.translateXProperty().bind(Bindings.createDoubleBinding(
             () -> 0.5 * (canvasContainer.getWidth() - signature.getWidth()), canvasContainer.widthProperty()
         ));
-        signature.translateYProperty().bind(Bindings.createDoubleBinding(
-            () -> switch (context.game().variant()) {
-                case GameVariant.MS_PACMAN -> 45 * getScaling();
-                case GameVariant.PACMAN    -> 30 * getScaling();
-            }, scalingPy
-        ));
 
         createHelpButton();
         createDebugInfoBindings();
@@ -79,6 +73,12 @@ public class GamePage extends CanvasLayoutPane implements Page {
     }
 
     public void showSignature() {
+        switch (context.game().variant()) {
+            case MS_PACMAN -> signature.translateYProperty().bind(
+                Bindings.createDoubleBinding(() -> 45 * getScaling(), scalingPy));
+            case PACMAN -> signature.translateYProperty().bind(
+                Bindings.createDoubleBinding(() -> 30 * getScaling(), scalingPy));
+        }
         signature.show();
     }
 
