@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d;
 
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
@@ -193,7 +193,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     public PacManGames3dUI(Stage stage, Settings settings) {
         super(stage, settings);
-        for (var gameVariant : GameVariants.values()) {
+        for (var gameVariant : GameVariant.values()) {
             var playScene3D = new PlayScene3D();
             playScene3D.setContext(this);
             playScene3D.setParentScene(mainScene);
@@ -205,7 +205,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         PY_3D_NIGHT_MODE.set(hour >= 20 || hour <= 5);
 
         //TODO testing
-        GameVariants.PACMAN.setUseRandomMaps(true);
+        GameVariant.PACMAN.setUseRandomMaps(true);
     }
 
     @Override
@@ -240,7 +240,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     @Override
     protected void updateStage() {
-        var variantKey = game() == GameVariants.MS_PACMAN ? "mspacman" : "pacman";
+        var variantKey = game() == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
         var titleKey = "app.title." + variantKey + (gameClock().isPaused() ? ".paused" : "");
         var dimension = tt(PY_3D_ENABLED.get() ? "threeD" : "twoD");
         stage.setTitle(tt(titleKey, dimension));

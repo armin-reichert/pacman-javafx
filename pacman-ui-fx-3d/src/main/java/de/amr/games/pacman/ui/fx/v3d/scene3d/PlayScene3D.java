@@ -8,7 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -259,8 +259,8 @@ public class PlayScene3D implements GameScene {
                 assertLevel3DExists();
                 context.stopAllSounds();
                 var animation = switch (context.game()) {
-                    case GameVariants.MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
-                    case GameVariants.PACMAN -> level3D.pac3D().createPacManDyingAnimation(context.game());
+                    case GameVariant.MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
+                    case GameVariant.PACMAN -> level3D.pac3D().createPacManDyingAnimation(context.game());
                     default -> throw new IllegalGameVariantException(context.game());
                 };
                 lockGameStateAndPlayAfterOnSecond(animation);
@@ -280,8 +280,8 @@ public class PlayScene3D implements GameScene {
             case GHOST_DYING -> {
                 assertLevel3DExists();
                 Rectangle2D[] sprites = switch (context.game()) {
-                    case GameVariants.MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
-                    case GameVariants.PACMAN    -> context.<PacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
+                    case GameVariant.MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
+                    case GameVariant.PACMAN    -> context.<PacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
                     default -> throw new IllegalGameVariantException(context.game());
                 };
                 context.game().eventLog().killedGhosts.forEach(ghost -> {

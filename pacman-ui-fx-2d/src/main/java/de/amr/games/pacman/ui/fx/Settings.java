@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui.fx;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.GameVariant;
 import javafx.scene.input.KeyCode;
 
 import java.util.Collections;
@@ -48,7 +48,7 @@ public class Settings {
 
     public Settings(Map<String, String> map) {
         fullScreen = false;
-        variant = GameVariants.PACMAN;
+        variant = GameVariant.PACMAN;
         zoom = 2;
         keyMap = keyMap("cursor");
         merge(map);
@@ -59,7 +59,7 @@ public class Settings {
             fullScreen = Boolean.parseBoolean(map.get("fullScreen"));
         }
         if (map.containsKey("variant")) {
-            variant = GameVariants.valueOf(map.get("variant"));
+            variant = GameVariant.valueOf(map.get("variant"));
         }
         if (map.containsKey("zoom")) {
             zoom = Float.parseFloat(map.get("zoom"));

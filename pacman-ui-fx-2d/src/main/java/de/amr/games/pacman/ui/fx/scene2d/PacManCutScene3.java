@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
@@ -64,7 +64,7 @@ public class PacManCutScene3 extends GameScene2D {
         if (initialDelay > 0) {
             --initialDelay;
             if (initialDelay == 0) {
-                GameVariants.PACMAN.publishGameEvent(GameEventType.INTERMISSION_STARTED);
+                GameVariant.PACMAN.publishGameEvent(GameEventType.INTERMISSION_STARTED);
             }
             return;
         }

@@ -45,6 +45,8 @@ public interface GameModel {
 
     byte DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
+    GameVariant variant();
+
     SimulationStepEventLog eventLog();
 
     void clearEventLog();

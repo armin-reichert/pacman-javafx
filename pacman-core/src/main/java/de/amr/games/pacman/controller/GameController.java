@@ -7,7 +7,7 @@ package de.amr.games.pacman.controller;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.FiniteStateMachine;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.GameVariant;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -16,7 +16,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  * Controller (in the sense of MVC) for both (Pac-Man, Ms. Pac-Man) game variants.
  * <p>
  * A finite-state machine with states defined in {@link GameState}. The game data are stored in the model of the
- * selected game, see {@link GameVariants}. Scene selection is not controlled by this class but left to the specific user
+ * selected game, see {@link GameVariant}. Scene selection is not controlled by this class but left to the specific user
  * interface implementations.
  * <p>
  * <li>Exact level data for Ms. Pac-Man still not available. Any hints appreciated!
@@ -46,7 +46,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     private GameController() {
         super(GameState.values());
-        selectGame(GameVariants.PACMAN);
+        selectGame(GameVariant.PACMAN);
         // map state change events to events of the selected game
         addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
     }

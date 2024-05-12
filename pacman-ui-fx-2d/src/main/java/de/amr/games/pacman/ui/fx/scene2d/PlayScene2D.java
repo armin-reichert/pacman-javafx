@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
@@ -90,8 +90,8 @@ public class PlayScene2D extends GameScene2D {
             return;
         }
         switch (game) {
-            case GameVariants.MS_PACMAN -> drawMsPacManMaze();
-            case GameVariants.PACMAN    -> drawPacManMaze(!PY_USE_ALTERNATE_MAPS.get());
+            case GameVariant.MS_PACMAN -> drawMsPacManMaze();
+            case GameVariant.PACMAN    -> drawPacManMaze(!PY_USE_ALTERNATE_MAPS.get());
             default -> throw new IllegalGameVariantException(game);
         }
         drawLevelMessage();
@@ -225,7 +225,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void drawSceneInfo() {
         drawTileGrid(GameModel.ARCADE_MAP_TILES_X, GameModel.ARCADE_MAP_TILES_Y);
-        if (context.game() == GameVariants.PACMAN && context.game().world() != null) {
+        if (context.game() == GameVariant.PACMAN && context.game().world() != null) {
             context.game().world().forbiddenPassages().forEach((tile, directions) -> {
                 // TODO indicate direction
                 g.setFill(Color.RED);

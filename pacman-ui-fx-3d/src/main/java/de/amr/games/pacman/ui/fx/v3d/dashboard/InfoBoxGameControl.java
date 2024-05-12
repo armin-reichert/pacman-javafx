@@ -8,7 +8,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -46,7 +46,7 @@ public class InfoBoxGameControl extends InfoBox {
         super(theme, title);
 
         spinnerCredit = addSpinner("Credit", 0, GameController.MAX_CREDIT, 0);
-        comboGameVariant = addComboBox("Variant", GameVariants.values());
+        comboGameVariant = addComboBox("Variant", GameVariant.values());
         comboInitialLives = addComboBox("Initial Lives", new Integer[]{3, 5});
         buttonsLevelActions = addButtonList("Game Level", "Start", "Quit", "Next");
         buttonsIntermissionTest = addButtonList("Cut Scenes Test", "Start", "Quit");

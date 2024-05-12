@@ -28,7 +28,7 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  *
  * @author Armin Reichert
  */
-public enum GameVariants implements GameModel {
+public enum GameVariant implements GameModel {
 
     MS_PACMAN {
 
@@ -130,7 +130,7 @@ public enum GameVariants implements GameModel {
             if (!demoLevel && levelNumber < 8) {
                 levelCounter.add(bonusSymbols[0]);
                 if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
-                    levelCounter.removeFirst();
+                    levelCounter.remove(0);
                 }
             }
         }
@@ -350,7 +350,7 @@ public enum GameVariants implements GameModel {
             if (!demoLevel) {
                 levelCounter.add(bonusSymbols[0]);
                 if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
-                    levelCounter.removeFirst();
+                    levelCounter.remove(0);
                 }
             }
         }
@@ -463,6 +463,11 @@ public enum GameVariants implements GameModel {
     World                world;
 
     SimulationStepEventLog eventLog;
+
+    @Override
+    public GameVariant variant() {
+        return this;
+    }
 
     abstract void buildRegularLevel(int levelNumber);
 

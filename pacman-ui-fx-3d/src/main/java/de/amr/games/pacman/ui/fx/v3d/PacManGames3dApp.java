@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.v3d;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.Settings;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -25,7 +25,7 @@ public class PacManGames3dApp extends Application {
     public void init() {
         Logger.info("Java version:   {}", Runtime.version());
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
-        for (var variant : GameVariants.values()) {
+        for (var variant : GameVariant.values()) {
             // initialized by loading class
             Logger.trace("Initialize game variant {}", variant);
         }
@@ -41,7 +41,7 @@ public class PacManGames3dApp extends Application {
     @Override
     public void start(Stage stage) {
         ui = new PacManGames3dUI(stage, settings);
-        for (var game : GameVariants.values()) {
+        for (var game : GameVariant.values()) {
             game.addGameEventListener(ui);
         }
         ui.showStartPage();

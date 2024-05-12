@@ -10,12 +10,11 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.*;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
@@ -90,10 +89,9 @@ public class GameLevel3D extends Group {
     private       Color fillColor = Color.BLUE;
 
     public GameLevel3D(GameSceneContext context) {
-        checkNotNull(context);
-        this.context = context;
+        this.context = checkNotNull(context);
 
-        pac3D = createPac3D(context.game().pac());
+        pac3D = createPac3D();
         ghosts3D = context.game().ghosts().map(this::createGhost3D).toList();
         createWorld3D();
         createLivesCounter3D();
@@ -113,11 +111,10 @@ public class GameLevel3D extends Group {
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
 
-    private Pac3D createPac3D(Pac pac) {
-        return switch (context.game()) {
-            case GameVariants.MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), pac, PAC_SIZE);
-            case GameVariants.PACMAN -> Pac3D.createPacMan3D(context.theme(), pac, PAC_SIZE);
-            default -> throw new IllegalGameVariantException(context.game());
+    private Pac3D createPac3D() {
+        return switch (context.game().variant()) {
+            case GameVariant.MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), context.game().pac(), PAC_SIZE);
+            case GameVariant.PACMAN -> Pac3D.createPacMan3D(context.theme(), context.game().pac(), PAC_SIZE);
         };
     }
 
@@ -182,8 +179,8 @@ public class GameLevel3D extends Group {
 
     private void createWorld3D() {
         switch (context.game()) {
-            case GameVariants.MS_PACMAN -> createMsPacManMaze3D(context.game().world(), context.game().levelNumber());
-            case GameVariants.PACMAN    -> createPacManMaze3D(context.game().world());
+            case GameVariant.MS_PACMAN -> createMsPacManMaze3D(context.game().world(), context.game().levelNumber());
+            case GameVariant.PACMAN    -> createPacManMaze3D(context.game().world());
             default -> throw new IllegalGameVariantException(context.game());
         }
 
@@ -402,8 +399,8 @@ public class GameLevel3D extends Group {
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         for (int i = 0; i < livesCounter3D.maxLives(); ++i) {
             var pac3D = switch (context.game()) {
-                case GameVariants.MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), null, theme.get("livescounter.pac.size"));
-                case GameVariants.PACMAN -> Pac3D.createPacMan3D(context.theme(), null,  theme.get("livescounter.pac.size"));
+                case GameVariant.MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), null, theme.get("livescounter.pac.size"));
+                case GameVariant.PACMAN -> Pac3D.createPacMan3D(context.theme(), null,  theme.get("livescounter.pac.size"));
                 default -> throw new IllegalGameVariantException(context.game());
             };
             livesCounter3D.addItem(pac3D, true);
@@ -427,8 +424,8 @@ public class GameLevel3D extends Group {
 
             var material = new PhongMaterial(Color.WHITE);
             var sprite = switch (context.game()) {
-                case GameVariants.MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
-                case GameVariants.PACMAN -> context.<PacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
+                case GameVariant.MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
+                case GameVariant.PACMAN -> context.<PacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
                 default -> throw new IllegalGameVariantException(context.game());
             };
             material.setDiffuseMap(context.spriteSheet().subImage(sprite));
@@ -503,12 +500,12 @@ public class GameLevel3D extends Group {
             worldGroup.getChildren().remove(bonus3D);
         }
         switch (context.game()) {
-            case GameVariants.PACMAN -> {
+            case GameVariant.PACMAN -> {
                 var ss = context.<PacManGameSpriteSheet>spriteSheet();
                 bonus3D = new Bonus3D(bonus,
                     ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));
             }
-            case GameVariants.MS_PACMAN -> {
+            case GameVariant.MS_PACMAN -> {
                 var ss = context.<MsPacManGameSpriteSheet>spriteSheet();
                 bonus3D = new Bonus3D(bonus,
                     ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));

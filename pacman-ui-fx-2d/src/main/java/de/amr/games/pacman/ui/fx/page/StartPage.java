@@ -1,7 +1,7 @@
 package de.amr.games.pacman.ui.fx.page;
 
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariants;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -70,8 +70,8 @@ public class StartPage implements Page {
     public void setGameVariant(GameModel gameVariant) {
         checkNotNull(gameVariant);
         content.setBackground(switch (gameVariant) {
-            case GameVariants.MS_PACMAN -> backgroundMsPacManGame;
-            case GameVariants.PACMAN -> backgroundPacManGame;
+            case GameVariant.MS_PACMAN -> backgroundMsPacManGame;
+            case GameVariant.PACMAN -> backgroundPacManGame;
             default -> throw new IllegalGameVariantException(gameVariant);
         });
     }
