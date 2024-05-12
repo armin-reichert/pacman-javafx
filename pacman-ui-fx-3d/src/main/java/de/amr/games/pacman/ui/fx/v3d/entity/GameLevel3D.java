@@ -12,6 +12,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
+import de.amr.games.pacman.model.MapMaze;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -119,22 +120,21 @@ public class GameLevel3D extends Group {
     }
 
     private void createMsPacManMaze3D(World world, int levelNumber) {
-        int mapNumber  = context.game().mapNumber(levelNumber);
-        int mazeNumber = context.game().mazeNumber(levelNumber);
-        Color strokeColor = mapNumber == mazeNumber && world.terrainMap().getProperties().containsKey("wall_color")
+        MapMaze mm = context.game().mapMaze(levelNumber);
+        Color strokeColor = mm.mapNumber() == mm.mazeNumber() && world.terrainMap().getProperties().containsKey("wall_color")
             ? Color.web(world.terrainMap().getProperty("wall_color"))
-            : context.theme().color("mspacman.maze.wallTopColor", mazeNumber - 1);
+            : context.theme().color("mspacman.maze.wallTopColor", mm.mazeNumber() - 1);
         mazeWallStrokeMaterialPy.set(ResourceManager.coloredMaterial(strokeColor));
-        fillColor = mapNumber == mazeNumber && world.terrainMap().getProperties().containsKey("wall_fill_color")
+        fillColor = mm.mapNumber() == mm.mazeNumber() && world.terrainMap().getProperties().containsKey("wall_fill_color")
             ? Color.web(world.terrainMap().getProperty("wall_fill_color"))
-            : context.theme().color("mspacman.maze.wallMiddleColor", mazeNumber - 1);
+            : context.theme().color("mspacman.maze.wallMiddleColor", mm.mazeNumber() - 1);
         mazeWallFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, wallOpacityPy.get())));
         houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, 0.25)));
         buildMaze3D();
 
-        Color foodColor = mapNumber == mazeNumber && world.foodMap().getProperties().containsKey("food_color")
+        Color foodColor = mm.mapNumber() == mm.mazeNumber() && world.foodMap().getProperties().containsKey("food_color")
             ? Color.web(world.foodMap().getProperty("food_color"))
-            : context.theme().color("mspacman.maze.foodColor", mazeNumber - 1);
+            : context.theme().color("mspacman.maze.foodColor", mm.mazeNumber() - 1);
         createFood3D(world, foodColor);
         addGhostHouse(world.house(), context.theme().color("mspacman.maze.doorColor"));
     }

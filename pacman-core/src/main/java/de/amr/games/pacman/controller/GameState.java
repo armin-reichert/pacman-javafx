@@ -311,7 +311,7 @@ public enum GameState implements FsmState<GameModel> {
             if (game.level().isEmpty()) {
                 return;
             }
-            if (game.levelNumber() > 20) {
+            if (game.levelNumber() == 25) {
                 gameController().clock().setTargetFrameRate(GameModel.FPS);
                 gameController().restart(GameState.BOOT);
                 return;

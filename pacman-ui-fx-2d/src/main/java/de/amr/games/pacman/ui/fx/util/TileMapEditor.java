@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.util;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.MapMaze;
 import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.Tiles;
 import de.amr.games.pacman.model.world.World;
@@ -92,11 +93,11 @@ public class TileMapEditor extends Application  {
     World msPacManWorld4;
 
     private void loadPredefinedMaps() {
-        pacManWorld    = GameVariant.PACMAN.createWorld(1);
-        msPacManWorld1 = GameVariant.MS_PACMAN.createWorld(1);
-        msPacManWorld2 = GameVariant.MS_PACMAN.createWorld(2);
-        msPacManWorld3 = GameVariant.MS_PACMAN.createWorld(3);
-        msPacManWorld4 = GameVariant.MS_PACMAN.createWorld(4);
+        pacManWorld    = GameVariant.PACMAN.createWorld(new MapMaze(1, 1));
+        msPacManWorld1 = GameVariant.MS_PACMAN.createWorld(new MapMaze(1, 1));
+        msPacManWorld2 = GameVariant.MS_PACMAN.createWorld(new MapMaze(2, 2));
+        msPacManWorld3 = GameVariant.MS_PACMAN.createWorld(new MapMaze(3, 3));
+        msPacManWorld4 = GameVariant.MS_PACMAN.createWorld(new MapMaze(4, 4));
     }
 
     @Override
@@ -521,7 +522,6 @@ public class TileMapEditor extends Application  {
             Logger.error(x);
         }
     }
-
 
     void addTerrainShape(int row, int col, byte[][] shape) {
         if (terrainMap == null) {

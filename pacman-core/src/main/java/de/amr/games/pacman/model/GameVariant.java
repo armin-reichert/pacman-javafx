@@ -51,45 +51,44 @@ public enum GameVariant implements GameModel {
         }
 
         @Override
-        public World createWorld(int mapNumber) {
-            if (1 <= mapNumber && mapNumber <= 4) {
+        public World createWorld(MapMaze mm) {
+            if (1 <= mm.mapNumber() && mm.mapNumber() <= 4) {
                 return createArcadeWorld(
-                    String.format("/maps/mspacman/mspacman_%d.terrain", mapNumber),
-                    String.format("/maps/mspacman/mspacman_%d.food", mapNumber));
+                    String.format("/maps/mspacman/mspacman_%d.terrain", mm.mapNumber()),
+                    String.format("/maps/mspacman/mspacman_%d.food", mm.mapNumber()));
             }
-            throw new IllegalArgumentException("Ms. Pac-Man map number must be in 1-4, is: " + mapNumber);
+            throw new IllegalArgumentException("Ms. Pac-Man map number must be in 1-4, is: " + mm.mapNumber());
         }
 
         /**
-         * In Ms. Pac-Man, there are 4 maps used by the 6 mazes. Up to level 13, the mazes are:
+         * <p>In Ms. Pac-Man, there are 4 maps and 6 mazes. Let (num_map, num_maze) denote the combination
+         * map #num_map and maze #num_maze.
+         * </p>
          * <ul>
-         * <li>Maze #1: pink maze, white dots (level 1-2)
-         * <li>Maze #2: light blue maze, yellow dots (level 3-5)
-         * <li>Maze #3: orange maze, red dots (level 6-9)
-         * <li>Maze #4: dark blue maze, white dots (level 10-13)
+         * <li>Levels 1-2: (1, 1): pink maze, white dots
+         * <li>Levels 3-5: (2, 2)): light blue maze, yellow dots
+         * <li>Levels 6-9: (3, 3): orange maze, red dots
+         * <li>Levels 10-13: (4, 4): blue maze, white dots
          * </ul>
-         * From level 14 on, the maze alternates every 4th level between maze #5 and maze #6.
+         * For level 14 and later, (map, maze) alternates every 4th level between (3, 5) and (4, 6):
          * <ul>
-         * <li>Maze #5: pink maze, cyan dots (same map as maze #3)
-         * <li>Maze #6: orange maze, white dots (same map as maze #4)
+         * <li>(3, 5): pink maze, cyan dots
+         * <li>(4, 6): orange maze, white dots
          * </ul>
          * <p>
          */
-        public int mazeNumber(int levelNumber) {
+        @Override
+        public MapMaze mapMaze(int levelNumber) {
             checkLevelNumber(levelNumber);
             return switch (levelNumber) {
-                case 1, 2 -> 1;
-                case 3, 4, 5 -> 2;
-                case 6, 7, 8, 9 -> 3;
-                case 10, 11, 12, 13 -> 4;
-                default -> (levelNumber - 14) % 8 < 4 ? 5 : 6;  // alternate between maze #5 and #6 every 4th level
+                case 1, 2 -> new MapMaze(1, 1);
+                case 3, 4, 5 -> new MapMaze(2, 2);
+                case 6, 7, 8, 9 -> new MapMaze(3, 3);
+                case 10, 11, 12, 13 -> new MapMaze(4, 4);
+                default -> (levelNumber - 14) % 8 < 4
+                    ? new MapMaze(3, 5)
+                    : new MapMaze(4, 6);
             };
-        }
-
-        public int mapNumber(int levelNumber) {
-            checkLevelNumber(levelNumber);
-            // from level 14, alternate between map #3 and #4 every 4th level
-            return levelNumber <= 13 ? mazeNumber(levelNumber) : mazeNumber(levelNumber) - 2;
         }
 
         @Override
@@ -101,7 +100,8 @@ public enum GameVariant implements GameModel {
         @Override
         void buildRegularLevel(int levelNumber) {
             this.levelNumber = checkLevelNumber(levelNumber);
-            populateLevel(createWorld(mapNumber(levelNumber)));
+            MapMaze numMapMaze = mapMaze(levelNumber);
+            populateLevel(createWorld(numMapMaze));
             pac.setName("Ms. Pac-Man");
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(false);
@@ -112,7 +112,7 @@ public enum GameVariant implements GameModel {
         void buildDemoLevel() {
             byte[] levelNumbers = {1, 3, 6, 10, 14, 18}; // these numbers cover all 6 available mazes
             levelNumber = levelNumbers[randomInt(0, levelNumbers.length)];
-            populateLevel(createWorld(mapNumber(levelNumber)));
+            populateLevel(createWorld(mapMaze(levelNumber)));
             pac.setName("Ms. Pac-Man");
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(true);
@@ -277,12 +277,12 @@ public enum GameVariant implements GameModel {
         }
 
         @Override
-        public  World createWorld(int mapNumber) {
+        public  World createWorld(MapMaze mm) {
             World world;
-            if (mapNumber == 1) {
+            if (mm.mapNumber() == 1) {
                 world = createOriginalArcadeWorld();
             } else {
-                var path = "/maps/masonic/masonic_" + (mapNumber - 1);
+                var path = "/maps/masonic/masonic_" + (mm.mapNumber() - 1);
                 world = createArcadeWorld(path + ".terrain", path + ".food");
                 Logger.info("Created world from maps '{}'", path + ".(terrain|food)");
             }
@@ -301,16 +301,11 @@ public enum GameVariant implements GameModel {
         }
 
         @Override
-        public int mapNumber(int levelNumber) {
+        public MapMaze mapMaze(int levelNumber) {
             if (levelNumber == 1 || !useRandomMaps) {
-                return 1; // original Arcade map
+                return new MapMaze(1, 1); // original Arcade map
             }
-            return Globals.randomInt(2, 9);
-        }
-
-        @Override
-        public int mazeNumber(int levelNumber) {
-            return 1;
+            return new MapMaze(Globals.randomInt(2, 9), 1);
         }
 
         @Override
@@ -326,7 +321,7 @@ public enum GameVariant implements GameModel {
         @Override
         void buildRegularLevel(int levelNumber) {
             this.levelNumber = checkLevelNumber(levelNumber);
-            populateLevel(createWorld(mapNumber(levelNumber)));
+            populateLevel(createWorld(mapMaze(levelNumber)));
             pac.setName("Pac-Man");
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(false);
@@ -335,7 +330,8 @@ public enum GameVariant implements GameModel {
         @Override
         void buildDemoLevel() {
             levelNumber = 1;
-            populateLevel(createWorld(mapNumber(1)));
+            populateLevel(createWorld(mapMaze(levelNumber)));
+            pac.setName("Pac-Man");
             pac.setAutopilot(world.getDemoLevelRoute().isEmpty()
                 ? new RuleBasedPacSteering(this)
                 : new RouteBasedSteering(world.getDemoLevelRoute()));

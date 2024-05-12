@@ -69,13 +69,11 @@ public interface GameModel {
      */
     Stream<Ghost> ghosts(GhostState... states);
 
-    World createWorld(int mapNumber);
+    World createWorld(MapMaze mapMaze);
+
+    MapMaze mapMaze(int levelNumber);
 
     void setUseRandomMaps(boolean value);
-
-    int mapNumber(int levelNumber);
-
-    int mazeNumber(int levelNumber);
 
     /**
      * Creates and initializes new game level with the given number.

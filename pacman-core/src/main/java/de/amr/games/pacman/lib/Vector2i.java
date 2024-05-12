@@ -24,6 +24,19 @@ public final class Vector2i {
         this.y = y;
     }
 
+    /**
+     * Access component by index
+     * @param i index (0 or 1)
+     * @return first component if i == 0,  second component if i == 1
+     */
+    public int $(int i) {
+        return switch (i) {
+            case 0 -> x;
+            case 1 -> y;
+            default -> throw new IllegalArgumentException(String.format("Illegal index %d, only 0 or 1 are allowed", i));
+        };
+    }
+
     public int x() {
         return x;
     }
