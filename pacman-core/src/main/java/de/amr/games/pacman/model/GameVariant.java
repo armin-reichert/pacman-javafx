@@ -100,8 +100,8 @@ public enum GameVariant implements GameModel {
         @Override
         void buildRegularLevel(int levelNumber) {
             this.levelNumber = checkLevelNumber(levelNumber);
-            MapMaze numMapMaze = mapMaze(levelNumber);
-            populateLevel(createWorld(numMapMaze));
+            MapMaze mm = mapMaze(levelNumber);
+            populateLevel(createWorld(mm));
             pac.setName("Ms. Pac-Man");
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(false);
@@ -110,9 +110,11 @@ public enum GameVariant implements GameModel {
 
         @Override
         void buildDemoLevel() {
-            byte[] levelNumbers = {1, 3, 6, 10, 14, 18}; // these numbers cover all 6 available mazes
-            levelNumber = levelNumbers[randomInt(0, levelNumbers.length)];
-            populateLevel(createWorld(mapMaze(levelNumber)));
+            MapMaze[] combinations = {
+                new MapMaze(1, 1), new MapMaze(2, 2), new MapMaze(3, 3), new MapMaze(4, 4), new MapMaze(3, 5), new MapMaze(4, 6),
+            };
+            levelNumber = 1;
+            populateLevel(createWorld(combinations[randomInt(0, combinations.length)]));
             pac.setName("Ms. Pac-Man");
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(true);
@@ -130,7 +132,7 @@ public enum GameVariant implements GameModel {
             if (!demoLevel && levelNumber < 8) {
                 levelCounter.add(bonusSymbols[0]);
                 if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
-                    levelCounter.remove(0);
+                    levelCounter.removeFirst();
                 }
             }
         }
@@ -346,7 +348,7 @@ public enum GameVariant implements GameModel {
             if (!demoLevel) {
                 levelCounter.add(bonusSymbols[0]);
                 if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
-                    levelCounter.remove(0);
+                    levelCounter.removeFirst();
                 }
             }
         }
@@ -494,15 +496,9 @@ public enum GameVariant implements GameModel {
 
     World createArcadeWorld(String terrainMapURL, String foodMapURL) {
         var terrainMap = TileMap.fromURL(getClass().getResource(terrainMapURL), Tiles.TERRAIN_TILES_END);
-        if (terrainMap == null) {
-            throw new IllegalArgumentException(String.format("Terrain map could not be loaded from URL %s", terrainMapURL));
-        }
         validateArcadeMapSize(terrainMap);
 
         var foodMap = TileMap.fromURL(getClass().getResource(foodMapURL), Tiles.FOOD_TILES_END);
-        if (foodMap == null) {
-            throw new IllegalArgumentException(String.format("Food map could not be loaded from URL %s", foodMapURL));
-        }
         validateArcadeMapSize(foodMap);
 
         var world = new World(terrainMap, foodMap);
