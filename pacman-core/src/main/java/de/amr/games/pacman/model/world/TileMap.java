@@ -32,8 +32,7 @@ public class TileMap {
         try (BufferedReader r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
             return parse(r.lines().toList(), valueLimit);
         } catch (IOException x) {
-            Logger.error(x);
-            return null;
+            throw new IllegalArgumentException("Cannot load tile map from URL" + url);
         }
     }
 
@@ -96,12 +95,13 @@ public class TileMap {
         return tileMap;
     }
 
-    public TileMap(TileMap other) {
-        data = new byte[other.numRows()][];
+    public static TileMap copy(TileMap other) {
+        var copy = new TileMap(other.numRows(), other.numCols());
         for (int row = 0; row < other.numRows(); ++row) {
-            data[row] = Arrays.copyOf(other.data[row], other.numCols());
+            copy.data[row] = Arrays.copyOf(other.data[row], other.numCols());
         }
-        properties.putAll(other.properties);
+        copy.properties.putAll(other.properties);
+        return copy;
     }
 
     public TileMap(int numRows, int numCols) {

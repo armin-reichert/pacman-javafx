@@ -9,7 +9,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MapMaze;
 import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.Tiles;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -35,7 +34,10 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 
@@ -46,6 +48,9 @@ public class TileMapEditor extends Application  {
 
     public static void main(String[] args) {
         launch();
+    }
+
+    record Maps(TileMap terrainMap, TileMap foodMap) {
     }
 
     static final byte[][] GHOST_HOUSE_SHAPE = {
@@ -78,8 +83,7 @@ public class TileMapEditor extends Application  {
     TerrainMapRenderer terrainMapRenderer;
     FoodMapRenderer foodMapRenderer;
 
-    TileMap terrainMap;
-    TileMap foodMap;
+    Maps maps;
 
     Vector2i hoveredTile;
     File lastUsedDir = new File(System.getProperty("user.dir"));
@@ -90,26 +94,39 @@ public class TileMapEditor extends Application  {
     BooleanProperty terrainEditedPy = new SimpleBooleanProperty(true);
     BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
 
-    World pacManWorld;
-    World msPacManWorld1;
-    World msPacManWorld2;
-    World msPacManWorld3;
-    World msPacManWorld4;
+    Maps mapsPacMan;
+    Maps mapsMsPacMan1;
+    Maps mapsMsPacMan2;
+    Maps mapsMsPacMan3;
+    Maps mapsMsPacMan4;
+    Maps mapsMsPacMan5;
+    Maps mapsMsPacMan6;
 
     private void loadPredefinedMaps() {
-        pacManWorld    = GameVariant.PACMAN.createWorld(new MapMaze(1, 1));
-        msPacManWorld1 = GameVariant.MS_PACMAN.createWorld(new MapMaze(1, 1));
-        msPacManWorld2 = GameVariant.MS_PACMAN.createWorld(new MapMaze(2, 2));
-        msPacManWorld3 = GameVariant.MS_PACMAN.createWorld(new MapMaze(3, 3));
-        msPacManWorld4 = GameVariant.MS_PACMAN.createWorld(new MapMaze(4, 4));
+        var pacMan    = GameVariant.PACMAN.createWorld(new MapMaze(1, 1));
+        var msPacMan1 = GameVariant.MS_PACMAN.createWorld(new MapMaze(1, 1));
+        var msPacMan2 = GameVariant.MS_PACMAN.createWorld(new MapMaze(2, 2));
+        var msPacMan3 = GameVariant.MS_PACMAN.createWorld(new MapMaze(3, 3));
+        var msPacMan4 = GameVariant.MS_PACMAN.createWorld(new MapMaze(4, 4));
+        var msPacMan5 = GameVariant.MS_PACMAN.createWorld(new MapMaze(3, 5));
+        var msPacMan6 = GameVariant.MS_PACMAN.createWorld(new MapMaze(4, 6));
+
+        mapsPacMan = new Maps(pacMan.terrainMap(), pacMan.foodMap());
+        mapsMsPacMan1 = new Maps(msPacMan1.terrainMap(), msPacMan1.foodMap());
+        mapsMsPacMan2 = new Maps(msPacMan2.terrainMap(), msPacMan2.foodMap());
+        mapsMsPacMan3 = new Maps(msPacMan3.terrainMap(), msPacMan3.foodMap());
+        mapsMsPacMan4 = new Maps(msPacMan4.terrainMap(), msPacMan4.foodMap());
+        mapsMsPacMan5 = new Maps(msPacMan5.terrainMap(), msPacMan5.foodMap());
+        mapsMsPacMan6 = new Maps(msPacMan6.terrainMap(), msPacMan6.foodMap());
     }
 
     @Override
     public void init() throws Exception {
         try {
             loadPredefinedMaps();
-            terrainMap = new TileMap(DEFAULT_NUM_ROWS, DEFAULT_NUM_COLS);
-            foodMap = new TileMap(DEFAULT_NUM_ROWS, DEFAULT_NUM_COLS);
+            maps = new Maps(
+                new TileMap(DEFAULT_NUM_ROWS, DEFAULT_NUM_COLS),
+                new TileMap(DEFAULT_NUM_ROWS, DEFAULT_NUM_COLS));
         } catch (Exception x) {
             x.printStackTrace(System.err);
             Platform.exit();
@@ -150,7 +167,7 @@ public class TileMapEditor extends Application  {
 
         canvas.heightProperty().bind(sceneContent.heightProperty().multiply(0.95));
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> canvas.getHeight() * terrainMap.numCols()/ terrainMap.numRows(), canvas.heightProperty()));
+            () -> canvas.getHeight() * maps.terrainMap().numCols()/ maps.terrainMap().numRows(), canvas.heightProperty()));
 
         stage.setScene(scene);
         stage.setTitle("Map Editor");
@@ -182,6 +199,7 @@ public class TileMapEditor extends Application  {
             drawException.printStackTrace(new PrintWriter(trace));
             g.strokeText(trace.toString(), 0, 20);
         } catch (Exception e) {
+            e.printStackTrace(System.err);
             Logger.error(e);
         }
     }
@@ -191,30 +209,13 @@ public class TileMapEditor extends Application  {
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         drawGrid(g);
-        if (terrainMap != null && terrainVisiblePy.get()) {
+        if (maps.terrainMap() != null && terrainVisiblePy.get()) {
             terrainMapRenderer.setScaling(scaling());
-            if (terrainMap.getProperty("wall_stroke_color") != null) {
-                terrainMapRenderer.setWallStrokeColor(Color.web(terrainMap.getProperty("wall_stroke_color")));
-            } else {
-                terrainMapRenderer.setWallStrokeColor(DEFAULT_WALL_STROKE_COLOR);
-            }
-            if (terrainMap.getProperty("wall_fill_color") != null) {
-                terrainMapRenderer.setWallFillColor(Color.web(terrainMap.getProperty("wall_fill_color")));
-            } else {
-                terrainMapRenderer.setWallFillColor(DEFAULT_WALL_FILL_COLOR);
-            }
-            terrainMapRenderer.drawMap(g, terrainMap);
+            terrainMapRenderer.drawMap(g, maps.terrainMap());
         }
-        if (foodMap != null && foodVisiblePy.get()) {
+        if (maps.foodMap() != null && foodVisiblePy.get()) {
             foodMapRenderer.setScaling(scaling());
-            if (foodMap.getProperty("food_color") != null) {
-                foodMapRenderer.setPelletColor(Color.web(foodMap.getProperty("food_color")));
-                foodMapRenderer.setEnergizerColor(Color.web(foodMap.getProperty("food_color")));
-            } else {
-                foodMapRenderer.setPelletColor(DEFAULT_FOOD_COLOR);
-                foodMapRenderer.setEnergizerColor(DEFAULT_FOOD_COLOR);
-            }
-            foodMapRenderer.drawMap(g, foodMap);
+            foodMapRenderer.drawMap(g, maps.foodMap());
         }
         if (hoveredTile != null) {
             g.setStroke(Color.YELLOW);
@@ -234,10 +235,10 @@ public class TileMapEditor extends Application  {
             g.setStroke(Color.LIGHTGRAY);
             g.setLineWidth(0.25);
             double gridSize = 8 * scaling();
-            for (int row = 1; row < terrainMap.numRows(); ++row) {
+            for (int row = 1; row < maps.terrainMap().numRows(); ++row) {
                 g.strokeLine(0, row * gridSize, canvas.getWidth(), row * gridSize);
             }
-            for (int col = 1; col < terrainMap.numCols(); ++col) {
+            for (int col = 1; col < maps.terrainMap().numCols(); ++col) {
                 g.strokeLine(col * gridSize, 0, col * gridSize, canvas.getHeight());
             }
         }
@@ -336,15 +337,15 @@ public class TileMapEditor extends Application  {
     Menu createMapsMenu() {
         var clearTerrainMapItem = new MenuItem("Clear Terrain");
         clearTerrainMapItem.setOnAction(e -> {
-            if (terrainMap != null) {
-                terrainMap.clear();
+            if (maps.terrainMap() != null) {
+                maps.terrainMap().clear();
             }
         });
 
         var clearFoodMapItem = new MenuItem("Clear Food");
         clearFoodMapItem.setOnAction(e -> {
-            if (foodMap != null) {
-                foodMap.clear();
+            if (maps.foodMap() != null) {
+                maps.foodMap().clear();
             }
         });
 
@@ -354,22 +355,28 @@ public class TileMapEditor extends Application  {
         Menu loadPredefinedMapMenu = new Menu("Load Predefined");
 
         var pacManWorldItem = new MenuItem("Pac-Man");
-        pacManWorldItem.setOnAction(e -> loadWorld(pacManWorld));
+        pacManWorldItem.setOnAction(e -> loadPredefined(mapsPacMan));
 
-        var msPacManWorldItem1 = new MenuItem("Ms. Pac-Man 1");
-        msPacManWorldItem1.setOnAction(e -> loadWorld(msPacManWorld1));
+        var msPacManItem1 = new MenuItem("Ms. Pac-Man 1");
+        msPacManItem1.setOnAction(e -> loadPredefined(mapsMsPacMan1));
 
-        var msPacManWorldItem2 = new MenuItem("Ms. Pac-Man 2");
-        msPacManWorldItem2.setOnAction(e -> loadWorld(msPacManWorld2));
+        var msPacManItem2 = new MenuItem("Ms. Pac-Man 2");
+        msPacManItem2.setOnAction(e -> loadPredefined(mapsMsPacMan2));
 
-        var msPacManWorldItem3 = new MenuItem("Ms. Pac-Man 3");
-        msPacManWorldItem3.setOnAction(e -> loadWorld(msPacManWorld3));
+        var msPacManItem3 = new MenuItem("Ms. Pac-Man 3");
+        msPacManItem3.setOnAction(e -> loadPredefined(mapsMsPacMan3));
 
-        var msPacManWorldItem4 = new MenuItem("Ms. Pac-Man 4");
-        msPacManWorldItem4.setOnAction(e -> loadWorld(msPacManWorld4));
+        var msPacManItem4 = new MenuItem("Ms. Pac-Man 4");
+        msPacManItem4.setOnAction(e -> loadPredefined(mapsMsPacMan4));
 
-        loadPredefinedMapMenu.getItems().addAll(pacManWorldItem, msPacManWorldItem1, msPacManWorldItem2,
-            msPacManWorldItem3, msPacManWorldItem4);
+        var msPacManItem5 = new MenuItem("Ms. Pac-Man 5");
+        msPacManItem5.setOnAction(e -> loadPredefined(mapsMsPacMan5));
+
+        var msPacManItem6 = new MenuItem("Ms. Pac-Man 6");
+        msPacManItem6.setOnAction(e -> loadPredefined(mapsMsPacMan6));
+
+        loadPredefinedMapMenu.getItems().addAll(pacManWorldItem, msPacManItem1, msPacManItem2,
+            msPacManItem3, msPacManItem4, msPacManItem5, msPacManItem6);
 
         var menu = new Menu("Map");
         menu.getItems().addAll(clearTerrainMapItem, clearFoodMapItem, addHouseItem, loadPredefinedMapMenu);
@@ -377,19 +384,45 @@ public class TileMapEditor extends Application  {
         return menu;
     }
 
-    void loadWorld(World world) {
-        terrainMap = new TileMap(world.terrainMap());
-        setTerrainColorsFromMap();
-        foodMap    = new TileMap(world.foodMap());
-        setFoodColorsFromMap();
+    void loadPredefined(Maps maps) {
+        this.maps = new Maps(TileMap.copy(maps.terrainMap()), TileMap.copy(maps.foodMap()));
         terrainMapFile = null;
-        foodMapPropertiesEditor.setText(foodMap.getPropertiesAsText());
-        terrainMapPropertiesEditor.setText(terrainMap.getPropertiesAsText());
+        setTerrainColorsFromMap(maps.terrainMap());
+        setFoodColorsFromMap(maps.foodMap());
+        //TODO this is ugly:
+        if (maps == mapsMsPacMan5) {
+            terrainMapRenderer.setWallStrokeColor(Color.web(maps.terrainMap().getProperty("wall_stroke_color.5")));
+            terrainMapRenderer.setWallFillColor(Color.web(maps.terrainMap().getProperty("wall_fill_color.5")));
+            foodMapRenderer.setPelletColor(Color.web(maps.foodMap.getProperty("food_color.5")));
+        } else if (maps == mapsMsPacMan6) {
+            terrainMapRenderer.setWallStrokeColor(Color.web(maps.terrainMap().getProperty("wall_stroke_color.6")));
+            terrainMapRenderer.setWallFillColor(Color.web(maps.terrainMap().getProperty("wall_fill_color.6")));
+            foodMapRenderer.setPelletColor(Color.web(maps.foodMap.getProperty("food_color.6")));
+        }
+        foodMapPropertiesEditor.setText(maps.foodMap().getPropertiesAsText());
+        terrainMapPropertiesEditor.setText(maps.terrainMap().getPropertiesAsText());
         updateInfo();
     }
 
+    void setTerrainColorsFromMap(TileMap terrainMap) {
+        if (terrainMap.getProperty("wall_stroke_color") != null) {
+            terrainMapRenderer.setWallStrokeColor(Color.web(terrainMap.getProperty("wall_stroke_color")));
+        }
+        if (terrainMap.getProperty("wall_fill_color") != null) {
+            terrainMapRenderer.setWallFillColor(Color.web(terrainMap.getProperty("wall_fill_color")));
+        }
+    }
+
+    void setFoodColorsFromMap(TileMap foodMap) {
+        if (foodMap.getProperty("food_color") != null) {
+            Color foodColor = Color.web(foodMap.getProperty("food_color")) ;
+            foodMapRenderer.setEnergizerColor(foodColor);
+            foodMapRenderer.setPelletColor(foodColor);
+        }
+    }
+
     double scaling() {
-        return canvas.getHeight() / (terrainMap.numRows() * 8);
+        return canvas.getHeight() / (maps.terrainMap().numRows() * 8);
     }
 
     int viewToTile(double viewLength) {
@@ -409,9 +442,9 @@ public class TileMapEditor extends Application  {
         updateInfo();
         if (e.isShiftDown()) {
             if (terrainEditedPy.get()) {
-                terrainMap.set(hoveredTile, terrainPalette.selectedValue);
+                maps.terrainMap().set(hoveredTile, terrainPalette.selectedValue);
             } else {
-                foodMap.set(hoveredTile, foodPalette.selectedValue);
+                maps.foodMap().set(hoveredTile, foodPalette.selectedValue);
             }
         }
     }
@@ -419,17 +452,17 @@ public class TileMapEditor extends Application  {
     void editTerrainTile(MouseEvent e) {
         var tile = new Vector2i(viewToTile(e.getX()), viewToTile(e.getY()));
         if (e.getButton() == MouseButton.SECONDARY) {
-            terrainMap.set(tile, Tiles.EMPTY);
+            maps.terrainMap().set(tile, Tiles.EMPTY);
             updateInfo();
         }
         else if (e.isShiftDown()) { // cycle through all tile values
-            byte content = terrainMap.get(tile);
+            byte content = maps.terrainMap().get(tile);
             byte nextValue = content < Tiles.TERRAIN_TILES_END - 1 ? (byte) (content + 1) : 0;
-            terrainMap.set(tile, nextValue);
+            maps.terrainMap().set(tile, nextValue);
             updateInfo();
         }
         else {
-            terrainMap.set(tile, terrainPalette.selectedValue);
+            maps.terrainMap().set(tile, terrainPalette.selectedValue);
             updateInfo();
         }
     }
@@ -437,17 +470,17 @@ public class TileMapEditor extends Application  {
     void editFoodTile(MouseEvent e) {
         var tile = new Vector2i(viewToTile(e.getX()), viewToTile(e.getY()));
         if (e.getButton() == MouseButton.SECONDARY) {
-            foodMap.set(tile, Tiles.EMPTY);
+            maps.foodMap().set(tile, Tiles.EMPTY);
             updateInfo();
         }
         else if (e.isShiftDown()) { // cycle through all tile values
-            byte content = foodMap.get(tile);
+            byte content = maps.foodMap().get(tile);
             byte newValue = content < Tiles.FOOD_TILES_END - 1 ? (byte) (content + 1) : 0;
-            foodMap.set(tile, newValue);
+            maps.foodMap().set(tile, newValue);
             updateInfo();
         }
         else {
-            foodMap.set(tile, foodPalette.selectedValue);
+            maps.foodMap().set(tile, foodPalette.selectedValue);
             updateInfo();
         }
     }
@@ -474,8 +507,7 @@ public class TileMapEditor extends Application  {
             try {
                 int numCols = Integer.parseInt(tuple[0].trim());
                 int numRows = Integer.parseInt(tuple[1].trim());
-                terrainMap = new TileMap(numRows, numCols);
-                foodMap = new TileMap(numCols, numRows);
+                maps = new Maps(new TileMap(numRows, numCols), new TileMap(numCols, numRows));
             } catch (Exception x) {
                 Logger.error(x);
             }
@@ -495,51 +527,31 @@ public class TileMapEditor extends Application  {
             int lastDot = anyMapFile.getPath().lastIndexOf('.');
             String basePath = anyMapFile.getPath().substring(0, lastDot);
             File foodMapFile = new File(basePath + ".food");
+            TileMap foodMap = null;
+            TileMap terrainMap = null;
             try {
                 foodMap = TileMap.fromURL(foodMapFile.toURI().toURL(), Tiles.FOOD_TILES_END);
-                setFoodColorsFromMap();
+                setFoodColorsFromMap(foodMap);
                 foodMapPropertiesEditor.setText(foodMap.getPropertiesAsText());
                 lastUsedDir = foodMapFile.getParentFile();
-            } catch (MalformedURLException x) {
+            } catch (Exception x) {
                 Logger.error("Could not load food map from file {}", foodMapFile);
                 Logger.error(x);
             }
             terrainMapFile = new File(basePath + ".terrain");
             try {
                 terrainMap = TileMap.fromURL(terrainMapFile.toURI().toURL(), Tiles.TERRAIN_TILES_END);
-                setTerrainColorsFromMap();
-                terrainMapPropertiesEditor.setText(terrainMap.getPropertiesAsText());
+                setTerrainColorsFromMap(terrainMap);
+                terrainMapPropertiesEditor.setText(maps.terrainMap().getPropertiesAsText());
                 lastUsedDir = terrainMapFile.getParentFile();
             } catch (MalformedURLException x) {
                 Logger.error("Could not load terrain map from file {}", terrainMapFile);
                 Logger.error(x);
             }
+            maps = new Maps(terrainMap, foodMap);
         }
         updateInfo();
     }
-
-    void setTerrainColorsFromMap() {
-        if (terrainMap.getProperty("wall_color") != null) {
-            terrainMapRenderer.setWallStrokeColor(parseColor(terrainMap.getProperty("wall_color")));
-        }
-    }
-
-    void setFoodColorsFromMap() {
-        if (foodMap.getProperty("food_color") != null) {
-            Color foodColor = parseColor(foodMap.getProperty("food_color")) ;
-            foodMapRenderer.setEnergizerColor(foodColor);
-            foodMapRenderer.setPelletColor(foodColor);
-        }
-    }
-
-    Color parseColor(String colorSpec) {
-        try {
-            return Color.web(colorSpec);
-        } catch (Exception x) {
-            Logger.error("Could not parse color from spec '{}'", colorSpec);
-            return Color.WHITE;
-        }
-     }
 
     void saveMaps() {
         openDialog.setInitialDirectory(lastUsedDir);
@@ -551,10 +563,10 @@ public class TileMapEditor extends Application  {
         if (file.getName().endsWith(".terrain") || file.getName().endsWith(".food")) {
             int lastDot = file.getPath().lastIndexOf('.');
             String basePath = file.getPath().substring(0, lastDot);
-            foodMap.setPropertiesFromText(foodMapPropertiesEditor.getText());
-            saveMap(foodMap, new File(basePath + ".food"));
-            terrainMap.setPropertiesFromText(terrainMapPropertiesEditor.getText());
-            saveMap(terrainMap, new File(basePath + ".terrain"));
+            maps.foodMap().setPropertiesFromText(foodMapPropertiesEditor.getText());
+            saveMap(maps.foodMap(), new File(basePath + ".food"));
+            maps.terrainMap().setPropertiesFromText(terrainMapPropertiesEditor.getText());
+            saveMap(maps.terrainMap(), new File(basePath + ".terrain"));
             // reload changes if any
             loadMapFiles(new File(basePath + ".terrain"));
         }
@@ -570,12 +582,12 @@ public class TileMapEditor extends Application  {
     }
 
     void addTerrainShape(int row, int col, byte[][] shape) {
-        if (terrainMap == null) {
+        if (maps.terrainMap() == null) {
             return;
         }
         for (int r = 0; r < shape.length; ++r) {
             for (int c = 0; c < shape[0].length; ++c) {
-                terrainMap.set(row + r, col + c, shape[r][c]);
+                maps.terrainMap().set(row + r, col + c, shape[r][c]);
             }
         }
     }
