@@ -10,6 +10,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGamePacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
+import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.t;
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
@@ -147,7 +148,7 @@ public class PacManIntroScene extends GameScene2D {
         var font6 = sceneFont(6);
         int tx = intro.leftTileX + 6;
         int ty = 25;
-        g.setFill(context.theme().color("pacman.maze.foodColor"));
+        g.setFill(Color.rgb(254, 189, 180));
         g.fillRect(s(t(tx) + 4), s(t(ty - 1) + 4), s(2), s(2));
         if (intro.blinking.isOn()) {
             drawSprite(context.<PacManGameSpriteSheet>spriteSheet().getEnergizerSprite(), t(tx), t(ty + 1));
