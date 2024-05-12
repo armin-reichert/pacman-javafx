@@ -46,6 +46,7 @@ import org.tinylog.Logger;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer.getTileMapColor;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
@@ -119,7 +120,7 @@ public class GameLevel3D extends Group {
     private Pac3D createPac3D() {
         return switch (context.game().variant()) {
             case GameVariant.MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), context.game().pac(), PAC_SIZE);
-            case GameVariant.PACMAN -> Pac3D.createPacMan3D(context.theme(), context.game().pac(), PAC_SIZE);
+            case GameVariant.PACMAN    -> Pac3D.createPacMan3D(context.theme(), context.game().pac(), PAC_SIZE);
         };
     }
 
@@ -179,10 +180,9 @@ public class GameLevel3D extends Group {
 
     private void createWorld3D() {
         var game = context.game();
-        switch (game) {
+        switch (game.variant()) {
             case GameVariant.MS_PACMAN -> createMsPacManMaze3D(game.levelNumber());
             case GameVariant.PACMAN    -> createPacManMaze3D();
-            default -> throw new IllegalGameVariantException(game);
         }
 
         var floorTextures = new HashMap<String, PhongMaterial>();
@@ -231,13 +231,13 @@ public class GameLevel3D extends Group {
             .map(DoorWing3D.class::cast);
     }
 
-    private static Direction exitDir(Direction entryDir, byte tileValue) {
+    private static Direction newMoveDir(Direction moveDir, byte tileValue) {
         return switch (tileValue) {
-            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> entryDir == Direction.LEFT  ? Direction.DOWN  : Direction.RIGHT;
-            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> entryDir == Direction.RIGHT ? Direction.DOWN  : Direction.LEFT;
-            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> entryDir == Direction.DOWN  ? Direction.LEFT  : Direction.UP;
-            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> entryDir == Direction.DOWN  ? Direction.RIGHT : Direction.UP;
-            default -> entryDir;
+            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> moveDir == LEFT  ? DOWN  : RIGHT;
+            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> moveDir == RIGHT ? DOWN  : LEFT;
+            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> moveDir == DOWN  ? LEFT  : UP;
+            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> moveDir == DOWN  ? RIGHT : UP;
+            default -> moveDir;
         };
     }
 
@@ -259,7 +259,7 @@ public class GameLevel3D extends Group {
                 path.add(startTile); // close path
                 break;
             }
-            moveDir = exitDir(moveDir, terrainMap.get(current));
+            moveDir = newMoveDir(moveDir, terrainMap.get(current));
         }
         return path;
     }
@@ -274,7 +274,7 @@ public class GameLevel3D extends Group {
             .filter(tile -> tile.x() > 0 && tile.x() < terrainMap.numCols() - 1)
             .filter(tile -> terrainMap.get(tile) == Tiles.CORNER_NW)
             .filter(tile -> !explored.contains(tile))
-            .map(tile -> buildMazeWallPath(terrainMap, explored, tile, Direction.RIGHT))
+            .map(tile -> buildMazeWallPath(terrainMap, explored, tile, RIGHT))
             .forEach(pathList::add);
 
         // Paths starting at left and right maze border (over and under tunnel end)
@@ -291,11 +291,11 @@ public class GameLevel3D extends Group {
             }
         }
         startTilesLeft.stream().filter(tile -> !explored.contains(tile))
-            .map(tile -> buildMazeWallPath(terrainMap, explored, tile, exitDir(Direction.RIGHT, terrainMap.get(tile))))
+            .map(tile -> buildMazeWallPath(terrainMap, explored, tile, newMoveDir(RIGHT, terrainMap.get(tile))))
             .forEach(pathList::add);
 
         startTilesRight.stream().filter(tile -> !explored.contains(tile))
-            .map(tile -> buildMazeWallPath(terrainMap, explored, tile, exitDir(Direction.LEFT, terrainMap.get(tile))))
+            .map(tile -> buildMazeWallPath(terrainMap, explored, tile, newMoveDir(LEFT, terrainMap.get(tile))))
             .forEach(pathList::add);
 
         for (var path: pathList) {
