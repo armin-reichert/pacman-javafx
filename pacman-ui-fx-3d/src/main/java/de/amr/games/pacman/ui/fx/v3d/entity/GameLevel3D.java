@@ -119,8 +119,8 @@ public class GameLevel3D extends Group {
 
     private Pac3D createPac3D() {
         return switch (context.game().variant()) {
-            case GameVariant.MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), context.game().pac(), PAC_SIZE);
-            case GameVariant.PACMAN    -> Pac3D.createPacMan3D(context.theme(), context.game().pac(), PAC_SIZE);
+            case MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), context.game().pac(), PAC_SIZE);
+            case PACMAN    -> Pac3D.createPacMan3D(context.theme(), context.game().pac(), PAC_SIZE);
         };
     }
 
@@ -137,7 +137,7 @@ public class GameLevel3D extends Group {
         mazeWallStrokeMaterialPy.set(coloredMaterial(strokeColor));
         mazeWallFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, wallOpacityPy.get())));
         houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, 0.4)));
-        buildMaze3D();
+        buildMaze3D(wallsGroup);
 
         addGhostHouse(world.house(), getTileMapColor(world.terrainMap(), "door_color", Color.rgb(254,184,174)));
 
@@ -153,7 +153,7 @@ public class GameLevel3D extends Group {
         mazeWallStrokeMaterialPy.set(coloredMaterial(strokeColor));
         mazeWallFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, wallOpacityPy.get())));
         houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, 0.4)));
-        buildMaze3D();
+        buildMaze3D(wallsGroup);
 
         addGhostHouse(world.house(), getTileMapColor(world.terrainMap(), "door_color", Color.PINK));
         createFood3D(world, getTileMapColor(world.foodMap(), "food_color", Color.PINK));
@@ -181,8 +181,8 @@ public class GameLevel3D extends Group {
     private void createWorld3D() {
         var game = context.game();
         switch (game.variant()) {
-            case GameVariant.MS_PACMAN -> createMsPacManMaze3D(game.levelNumber());
-            case GameVariant.PACMAN    -> createPacManMaze3D();
+            case MS_PACMAN -> createMsPacManMaze3D(game.levelNumber());
+            case PACMAN    -> createPacManMaze3D();
         }
 
         var floorTextures = new HashMap<String, PhongMaterial>();
@@ -241,7 +241,7 @@ public class GameLevel3D extends Group {
         };
     }
 
-    private List<Vector2i> buildMazeWallPath(
+    private static List<Vector2i> buildTerrainMapPath(
         TileMap terrainMap, Set<Vector2i> explored, Vector2i startTile, Direction startDirection)
     {
         Logger.trace("Build path starting at {} moving {}", startTile, startDirection);
@@ -251,56 +251,55 @@ public class GameLevel3D extends Group {
         while (true) {
             path.add(current);
             explored.add(current);
-            current = current.plus(moveDir.vector());
-            if (!terrainMap.insideBounds(current)) {
+            var next = current.plus(moveDir.vector());
+            if (!terrainMap.insideBounds(next)) {
                 break;
             }
-            if (explored.contains(current)) {
-                path.add(startTile); // close path
+            if (explored.contains(next)) {
+                path.add(next);
                 break;
             }
-            moveDir = newMoveDir(moveDir, terrainMap.get(current));
+            moveDir = newMoveDir(moveDir, terrainMap.get(next));
+            current = next;
         }
         return path;
     }
 
-    private void buildMaze3D() {
+    private void buildMaze3D(Group parent) {
         TileMap terrainMap = context.game().world().terrainMap();
         var explored = new HashSet<Vector2i>();
-        var pathList = new ArrayList<List<Vector2i>>();
 
         // Obstacles inside maze
         terrainMap.tiles()
-            .filter(tile -> tile.x() > 0 && tile.x() < terrainMap.numCols() - 1)
             .filter(tile -> terrainMap.get(tile) == Tiles.CORNER_NW)
-            .filter(tile -> !explored.contains(tile))
-            .map(tile -> buildMazeWallPath(terrainMap, explored, tile, RIGHT))
-            .forEach(pathList::add);
+            .filter(corner -> corner.x() > 0 && corner.x() < terrainMap.numCols() - 1)
+            .filter(corner -> corner.y() > 0 && corner.y() < terrainMap.numRows() - 1)
+            .map(corner -> buildTerrainMapPath(terrainMap, explored, corner, RIGHT))
+            .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
 
-        // Paths starting at left and right maze border (over and under tunnel end)
-        var startTilesLeft = new ArrayList<Vector2i>();
-        var startTilesRight = new ArrayList<Vector2i>();
+        // Paths starting at left and right maze border (over and under tunnel ends)
+        var handlesLeft = new ArrayList<Vector2i>();
+        var handlesRight = new ArrayList<Vector2i>();
         for (int row = 0; row < terrainMap.numRows(); ++row) {
             if (terrainMap.get(row, 0) == Tiles.TUNNEL) {
-                startTilesLeft.add(new Vector2i(0, row - 1));
-                startTilesLeft.add(new Vector2i(0, row + 1));
+                handlesLeft.add(new Vector2i(0, row - 1));
+                handlesLeft.add(new Vector2i(0, row + 1));
             }
             if (terrainMap.get(row, terrainMap.numCols() - 1) == Tiles.TUNNEL) {
-                startTilesRight.add(new Vector2i(terrainMap.numCols() - 1, row - 1));
-                startTilesRight.add(new Vector2i(terrainMap.numCols() - 1, row + 1));
+                handlesRight.add(new Vector2i(terrainMap.numCols() - 1, row - 1));
+                handlesRight.add(new Vector2i(terrainMap.numCols() - 1, row + 1));
             }
         }
-        startTilesLeft.stream().filter(tile -> !explored.contains(tile))
-            .map(tile -> buildMazeWallPath(terrainMap, explored, tile, newMoveDir(RIGHT, terrainMap.get(tile))))
-            .forEach(pathList::add);
 
-        startTilesRight.stream().filter(tile -> !explored.contains(tile))
-            .map(tile -> buildMazeWallPath(terrainMap, explored, tile, newMoveDir(LEFT, terrainMap.get(tile))))
-            .forEach(pathList::add);
+        handlesLeft.stream()
+            .filter(handle -> !explored.contains(handle))
+            .map(handle -> buildTerrainMapPath(terrainMap, explored, handle, newMoveDir(RIGHT, terrainMap.get(handle))))
+            .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
 
-        for (var path: pathList) {
-            buildWallsAlongPath(wallsGroup, terrainMap, path);
-        }
+        handlesRight.stream()
+            .filter(handle -> !explored.contains(handle))
+            .map(handle -> buildTerrainMapPath(terrainMap, explored, handle, newMoveDir(LEFT, terrainMap.get(handle))))
+            .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
     }
 
     private void buildWallsAlongPath(Group parent, TileMap terrainMap, List<Vector2i> path) {
@@ -319,7 +318,7 @@ public class GameLevel3D extends Group {
         }
     }
 
-    private boolean isWall(byte tileValue) {
+    private static boolean isWall(byte tileValue) {
         return tileValue == Tiles.WALL_H || tileValue == Tiles.WALL_V || tileValue == Tiles.DWALL_H || tileValue == Tiles.DWALL_V;
     }
 
@@ -388,21 +387,20 @@ public class GameLevel3D extends Group {
     private void createLivesCounter3D() {
         var theme = context.theme();
         livesCounter3D = new LivesCounter3D(
-            theme.get  ("livescounter.entries"),
-            theme.color("livescounter.pillar.color"),
-            theme.get  ("livescounter.pillar.height"),
-            theme.color("livescounter.plate.color"),
-            theme.get  ("livescounter.plate.thickness"),
-            theme.get  ("livescounter.plate.radius"),
-            theme.color("livescounter.light.color"));
+            theme.get("livescounter.entries"),
+            theme.get("livescounter.pillar.color"),
+            theme.get("livescounter.pillar.height"),
+            theme.get("livescounter.plate.color"),
+            theme.get("livescounter.plate.thickness"),
+            theme.get("livescounter.plate.radius"),
+            theme.get("livescounter.light.color"));
         livesCounter3D.setTranslateX(2 * TS);
         livesCounter3D.setTranslateY(2 * TS);
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         for (int i = 0; i < livesCounter3D.maxLives(); ++i) {
-            var pac3D = switch (context.game()) {
-                case GameVariant.MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), null, theme.get("livescounter.pac.size"));
-                case GameVariant.PACMAN -> Pac3D.createPacMan3D(context.theme(), null,  theme.get("livescounter.pac.size"));
-                default -> throw new IllegalGameVariantException(context.game());
+            var pac3D = switch (context.game().variant()) {
+                case MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), null, theme.get("livescounter.pac.size"));
+                case PACMAN    -> Pac3D.createPacMan3D(context.theme(), null,  theme.get("livescounter.pac.size"));
             };
             livesCounter3D.addItem(pac3D, true);
         }
@@ -424,10 +422,9 @@ public class GameLevel3D extends Group {
             levelCounterGroup.getChildren().add(cube);
 
             var material = new PhongMaterial(Color.WHITE);
-            var sprite = switch (context.game()) {
-                case GameVariant.MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
-                case GameVariant.PACMAN -> context.<PacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
-                default -> throw new IllegalGameVariantException(context.game());
+            var sprite = switch (context.game().variant()) {
+                case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
+                case PACMAN    -> context.<PacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
             };
             material.setDiffuseMap(context.spriteSheet().subImage(sprite));
             cube.setMaterial(material);
@@ -473,15 +470,14 @@ public class GameLevel3D extends Group {
 
     public void update() {
         GameModel game = context.game();
-        World world = game.world();
         boolean hasCredit = GameController.it().hasCredit();
 
         pac3D.update(game);
         ghosts3D().forEach(ghost3D -> ghost3D.update(game));
         if (bonus3D != null) {
-            bonus3D.update(world);
+            bonus3D.update(game.world());
         }
-        updateHouseState(world.house());
+        updateHouseState(game.world().house());
         // reconsider this:
         int numLivesDisplayed = game.lives() - 1;
         if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
