@@ -56,6 +56,7 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class GameLevel3D extends Group {
 
+    private static final double WALL_THICKNESS = 0.75;
     private static final double WALL_TOP_THICKNESS = 0.1;
     private static final float PAC_SIZE   = 14.0f;
     private static final float GHOST_SIZE = 13.0f;
@@ -221,10 +222,6 @@ public class GameLevel3D extends Group {
         });
     }
 
-    private void addHouseWall(Group parent, int x1, int y1, int x2, int y2) {
-        parent.getChildren().add(createWall(v2i(x1, y1), v2i(x2, y2), houseHeightPy, houseFillMaterialPy));
-    }
-
     private void addGhostHouse(Group parent) {
         addHouseWall(parent, 10,15, 12,15);
         addHouseWall(parent, 10,15, 10,19);
@@ -248,6 +245,10 @@ public class GameLevel3D extends Group {
         houseLight.setTranslateY(centerY);
         houseLight.setTranslateZ(-TS);
         parent.getChildren().add(houseLight);
+    }
+
+    private void addHouseWall(Group parent, int x1, int y1, int x2, int y2) {
+        parent.getChildren().add(createWall(v2i(x1, y1), v2i(x2, y2), houseHeightPy, houseFillMaterialPy));
     }
 
     private Stream<DoorWing3D> doorWings3D() {
@@ -360,10 +361,10 @@ public class GameLevel3D extends Group {
                 first = second;
                 second = tmp;
             }
-            double w = (second.x() - first.x()) * 8 + 1;
+            double w = (second.x() - first.x()) * 8 + WALL_THICKNESS;
             double m = (first.x() + second.x()) * 4;
 
-            var base = new Box(w, 1, heightPy.get());
+            var base = new Box(w, WALL_THICKNESS, heightPy.get());
             base.materialProperty().bind(fillMaterialPy);
             base.depthProperty().bind(heightPy);
             base.drawModeProperty().bind(PY_3D_DRAW_MODE);
@@ -371,7 +372,7 @@ public class GameLevel3D extends Group {
             base.setTranslateY(first.y() * 8 + 4);
             base.translateZProperty().bind(heightPy.multiply(-0.5));
 
-            var top = new Box(w, 1, WALL_TOP_THICKNESS);
+            var top = new Box(w, WALL_THICKNESS, WALL_TOP_THICKNESS);
             top.materialProperty().bind(mazeWallStrokeMaterialPy);
             top.translateXProperty().bind(base.translateXProperty());
             top.translateYProperty().bind(base.translateYProperty());
@@ -390,7 +391,7 @@ public class GameLevel3D extends Group {
             double h = (second.y() - first.y()) * 8;
             double m = (first.y() + second.y()) * 4;
 
-            var base = new Box(1, h, heightPy.get());
+            var base = new Box(WALL_THICKNESS, h, heightPy.get());
             base.materialProperty().bind(fillMaterialPy);
             base.depthProperty().bind(heightPy);
             base.drawModeProperty().bind(PY_3D_DRAW_MODE);
@@ -398,7 +399,7 @@ public class GameLevel3D extends Group {
             base.setTranslateY(m + 4);
             base.translateZProperty().bind(heightPy.multiply(-0.5));
 
-            var top = new Box(1, h, WALL_TOP_THICKNESS);
+            var top = new Box(WALL_THICKNESS, h, WALL_TOP_THICKNESS);
             top.materialProperty().bind(mazeWallStrokeMaterialPy);
             top.translateXProperty().bind(base.translateXProperty());
             top.translateYProperty().bind(base.translateYProperty());

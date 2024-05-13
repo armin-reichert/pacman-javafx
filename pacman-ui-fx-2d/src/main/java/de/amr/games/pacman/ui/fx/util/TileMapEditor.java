@@ -376,6 +376,7 @@ public class TileMapEditor extends Application  {
             loadPredefined(mcMsPacMan5);
             terrainMapRenderer.setWallStrokeColor(Color.web(mapCollection.terrainMap().getProperty("wall_stroke_color.5")));
             terrainMapRenderer.setWallFillColor(Color.web(mapCollection.terrainMap().getProperty("wall_fill_color.5")));
+            foodMapRenderer.setEnergizerColor(Color.web(mapCollection.foodMap.getProperty("food_color.5")));
             foodMapRenderer.setPelletColor(Color.web(mapCollection.foodMap.getProperty("food_color.5")));
         });
 
@@ -384,6 +385,7 @@ public class TileMapEditor extends Application  {
             loadPredefined(mcMsPacMan6);
             terrainMapRenderer.setWallStrokeColor(Color.web(mapCollection.terrainMap().getProperty("wall_stroke_color.6")));
             terrainMapRenderer.setWallFillColor(Color.web(mapCollection.terrainMap().getProperty("wall_fill_color.6")));
+            foodMapRenderer.setEnergizerColor(Color.web(mapCollection.foodMap.getProperty("food_color.6")));
             foodMapRenderer.setPelletColor(Color.web(mapCollection.foodMap.getProperty("food_color.6")));
         });
 
