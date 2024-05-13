@@ -26,6 +26,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
+import de.amr.games.pacman.ui.fx.v3d.model.Model3D;
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -88,6 +89,7 @@ public class GameLevel3D extends Group {
     private final PointLight houseLight = new PointLight();
     private final Pac3D pac3D;
     private final List<Ghost3D> ghosts3D;
+    private final Model3D pelletModel3D;
 
     private       Message3D message3D;
     private       LivesCounter3D livesCounter3D;
@@ -97,6 +99,7 @@ public class GameLevel3D extends Group {
     public GameLevel3D(GameSceneContext context) {
         this.context = checkNotNull(context);
 
+        pelletModel3D = context.theme().get("model3D.pellet");
         pac3D = createPac3D();
         ghosts3D = context.game().ghosts().map(this::createGhost3D).toList();
         createWorld3D();
@@ -141,7 +144,7 @@ public class GameLevel3D extends Group {
 
         addGhostHouse(world.house(), getTileMapColor(world.terrainMap(), "door_color", Color.rgb(254,184,174)));
 
-        createFood3D(world, foodColor);
+        createFood3D(world, foodColor, pelletModel3D);
     }
 
     private void createPacManMaze3D() {
@@ -156,10 +159,10 @@ public class GameLevel3D extends Group {
         buildMaze3D(wallsGroup);
 
         addGhostHouse(world.house(), getTileMapColor(world.terrainMap(), "door_color", Color.PINK));
-        createFood3D(world, getTileMapColor(world.foodMap(), "food_color", Color.PINK));
+        createFood3D(world, getTileMapColor(world.foodMap(), "food_color", Color.PINK), pelletModel3D);
     }
 
-    private void createFood3D(World world, Color foodColor) {
+    private void createFood3D(World world, Color foodColor, Model3D pelletModel3D) {
         Material foodMaterial = coloredMaterial(foodColor);
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             if (world.isEnergizerTile(tile)) {
@@ -170,7 +173,7 @@ public class GameLevel3D extends Group {
                 addEnergizerAnimation(world, energizer3D, foodColor);
 
             } else {
-                var pellet3D = new Pellet3D(context.theme().get("model3D.pellet"), 1.0);
+                var pellet3D = new Pellet3D(pelletModel3D, 1.0);
                 pellet3D.root().setMaterial(foodMaterial);
                 pellet3D.placeAtTile(tile);
                 foodGroup.getChildren().add(pellet3D.root());
@@ -496,18 +499,17 @@ public class GameLevel3D extends Group {
         if (bonus3D != null) {
             worldGroup.getChildren().remove(bonus3D);
         }
-        switch (context.game()) {
-            case GameVariant.PACMAN -> {
+        switch (context.game().variant()) {
+            case PACMAN -> {
                 var ss = context.<PacManGameSpriteSheet>spriteSheet();
                 bonus3D = new Bonus3D(bonus,
                     ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));
             }
-            case GameVariant.MS_PACMAN -> {
+            case MS_PACMAN -> {
                 var ss = context.<MsPacManGameSpriteSheet>spriteSheet();
                 bonus3D = new Bonus3D(bonus,
                     ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));
             }
-            default -> throw new IllegalGameVariantException(context.game());
         }
         bonus3D.showEdible();
         worldGroup.getChildren().add(bonus3D);
