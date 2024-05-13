@@ -62,6 +62,25 @@ public class GameLevel3D extends Group {
     private static final float PAC_SIZE   = 14.0f;
     private static final float GHOST_SIZE = 13.0f;
 
+
+    public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture", NO_TEXTURE) {
+        @Override
+        protected void invalidated() {
+            var material = floorTextures.getOrDefault("texture." + floorTexturePy.get(), coloredMaterial(floorColorPy.get()));
+            floor.setMaterial(material);
+        }
+    };
+
+    public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK) {
+        @Override
+        protected void invalidated() {
+            var material = floorTextures.getOrDefault("texture." + floorTexturePy.get(), coloredMaterial(floorColorPy.get()));
+            floor.setMaterial(material);
+        }
+    };
+
+    private final Map<String, PhongMaterial> floorTextures = new HashMap<>();
+
     private final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
     private final DoubleProperty houseHeightPy = new SimpleDoubleProperty(this, "houseHeight", 12.0);
 
@@ -103,26 +122,48 @@ public class GameLevel3D extends Group {
     private final Pac3D pac3D;
     private final List<Ghost3D> ghosts3D;
     private final Model3D pelletModel3D;
-
-    private       Message3D message3D;
-    private       LivesCounter3D livesCounter3D;
-    private       Bonus3D bonus3D;
+    private final Box floor = new Box();
+    private Message3D message3D;
+    private LivesCounter3D livesCounter3D;
+    private Bonus3D bonus3D;
 
     public GameLevel3D(GameSceneContext context) {
         this.context = checkNotNull(context);
 
+        List<String> textureNames = context.theme().getArray("texture.names");
+        for (String textureName : textureNames) {
+            String key = "texture." + textureName;
+            floorTextures.put(key, context.theme().get(key));
+        }
+        floor.setWidth(context.game().world().numCols() * TS - 1);
+        floor.setHeight(context.game().world().numRows() * TS - 1);
+        floor.setDepth(0.4);
+        floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
+        floor.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        floorColorPy.bind(PY_3D_FLOOR_COLOR);
+        floorTexturePy.bind(PY_3D_FLOOR_TEXTURE);
+
         pelletModel3D = context.theme().get("model3D.pellet");
-        pac3D = createPac3D();
+        switch (context.game().variant()) {
+            case MS_PACMAN -> createMsPacManMaze3D(context.game().levelNumber());
+            case PACMAN    -> createPacManMaze3D();
+        }
+
+        pac3D = switch (context.game().variant()) {
+            case MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), context.game().pac(), PAC_SIZE);
+            case PACMAN    -> Pac3D.createPacMan3D(context.theme(), context.game().pac(), PAC_SIZE);
+        };
         ghosts3D = context.game().ghosts().map(this::createGhost3D).toList();
-        createWorld3D();
+
         createLivesCounter3D();
         createLevelCounter3D();
         createMessage3D();
 
+        worldGroup.getChildren().addAll(houseLight, floor, wallsGroup);
+
         // Walls must be added after the guys! Otherwise, transparency is not working correctly.
         getChildren().addAll(ghosts3D);
-        getChildren().addAll(pac3D, pac3D.light());
-        getChildren().addAll(message3D, levelCounterGroup, livesCounter3D, foodGroup, worldGroup);
+        getChildren().addAll(pac3D, pac3D.light(), message3D, levelCounterGroup, livesCounter3D, foodGroup, worldGroup);
 
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
         pac3D.drawModePy.bind(PY_3D_DRAW_MODE);
@@ -130,13 +171,6 @@ public class GameLevel3D extends Group {
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         wallHeightPy.bind(PY_3D_WALL_HEIGHT);
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
-    }
-
-    private Pac3D createPac3D() {
-        return switch (context.game().variant()) {
-            case MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), context.game().pac(), PAC_SIZE);
-            case PACMAN    -> Pac3D.createPacMan3D(context.theme(), context.game().pac(), PAC_SIZE);
-        };
     }
 
     private void createMsPacManMaze3D(int levelNumber) {
@@ -185,28 +219,6 @@ public class GameLevel3D extends Group {
                 foodGroup.getChildren().add(pellet3D.root());
             }
         });
-    }
-
-    private void createWorld3D() {
-        var game = context.game();
-        switch (game.variant()) {
-            case MS_PACMAN -> createMsPacManMaze3D(game.levelNumber());
-            case PACMAN    -> createPacManMaze3D();
-        }
-
-        var floorTextures = new HashMap<String, PhongMaterial>();
-        for (var textureName : context.theme().getArray("texture.names")) {
-            String key = "texture." + textureName;
-            floorTextures.put(key, context.theme().get(key));
-        }
-
-        var floor3D = new Floor3D(game.world().numCols() * TS - 1, game.world().numRows() * TS - 1, 0.4, floorTextures);
-        floor3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        floor3D.colorPy.bind(PY_3D_FLOOR_COLOR);
-        floor3D.texturePy.bind(PY_3D_FLOOR_TEXTURE);
-        floor3D.getTransforms().add(new Translate(0.5 * floor3D.getWidth(), 0.5 * floor3D.getHeight(), 0.5 * floor3D.getDepth()));
-
-        worldGroup.getChildren().addAll(houseLight, floor3D, wallsGroup);
     }
 
     private void addHouseWall(int x1, int y1, int x2, int y2) {
