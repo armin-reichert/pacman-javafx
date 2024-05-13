@@ -196,21 +196,21 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void handleKeyboardInput() {
-        var actionHandler = (ActionHandler3D) context.actionHandler();
+        var handler = (ActionHandler3D) context.actionHandler();
         if (Keyboard.pressed(KEYS_ADD_CREDIT) && !context.gameController().hasCredit()) {
-            actionHandler.addCredit();
+            handler.addCredit();
         } else if (Keyboard.pressed(KEY_PREV_PERSPECTIVE)) {
-            actionHandler.selectPrevPerspective();
+            handler.selectPrevPerspective();
         } else if (Keyboard.pressed(KEY_NEXT_PERSPECTIVE)) {
-            actionHandler.selectNextPerspective();
+            handler.selectNextPerspective();
         } else if (Keyboard.pressed(KEY_CHEAT_EAT_ALL)) {
-            actionHandler.cheatEatAllPellets();
+            handler.cheatEatAllPellets();
         } else if (Keyboard.pressed(KEY_CHEAT_ADD_LIVES)) {
-            actionHandler.cheatAddLives();
+            handler.cheatAddLives();
         } else if (Keyboard.pressed(KEY_CHEAT_NEXT_LEVEL)) {
-            actionHandler.cheatEnterNextLevel();
+            handler.cheatEnterNextLevel();
         } else if (Keyboard.pressed(KEY_CHEAT_KILL_GHOSTS)) {
-            actionHandler.cheatKillAllEatableGhosts();
+            handler.cheatKillAllEatableGhosts();
         }
     }
 
@@ -261,10 +261,9 @@ public class PlayScene3D implements GameScene {
             case PACMAN_DYING -> {
                 assertLevel3DExists();
                 context.stopAllSounds();
-                var animation = switch (context.game()) {
-                    case GameVariant.MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
-                    case GameVariant.PACMAN -> level3D.pac3D().createPacManDyingAnimation(context.game());
-                    default -> throw new IllegalGameVariantException(context.game());
+                var animation = switch (context.game().variant()) {
+                    case MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
+                    case PACMAN    -> level3D.pac3D().createPacManDyingAnimation(context.game());
                 };
                 lockGameStateAndPlayAfterOnSecond(animation);
             }
@@ -282,10 +281,9 @@ public class PlayScene3D implements GameScene {
 
             case GHOST_DYING -> {
                 assertLevel3DExists();
-                Rectangle2D[] sprites = switch (context.game()) {
-                    case GameVariant.MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
-                    case GameVariant.PACMAN    -> context.<PacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
-                    default -> throw new IllegalGameVariantException(context.game());
+                Rectangle2D[] sprites = switch (context.game().variant()) {
+                    case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
+                    case PACMAN    -> context.<PacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
                 };
                 context.game().eventLog().killedGhosts.forEach(ghost -> {
                     int index = context.game().victims().indexOf(ghost);
