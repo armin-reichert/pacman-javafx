@@ -140,8 +140,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void setContext(GameSceneContext context) {
-        checkNotNull(context);
-        this.context = context;
+        this.context = checkNotNull(context);
     }
 
     @Override
@@ -173,8 +172,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void replaceGameLevel3D() {
-        World world = context.game().world();
-        checkNotNull(world);
+        World world = checkNotNull(context.game().world());
 
         level3D = new GameLevel3D(context);
         // replace initial placeholder or previous 3D level
