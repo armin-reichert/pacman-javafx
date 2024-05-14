@@ -20,7 +20,6 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
 import javafx.animation.*;
@@ -56,66 +55,85 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class GameLevel3D extends Group {
 
-    static final double WALL_THICKNESS = 0.75;
-    static final double WALL_TOP_THICKNESS = 0.1;
-    static final float PAC_SIZE   = 14.0f;
-    static final float GHOST_SIZE = 13.0f;
-    static final double ENERGIZER_RADIUS = 3.5;
-    static final double PELLET_RADIUS = 1.0;
+    static final float WALL_HEIGHT           = 2.0f;
+    static final float WALL_THICKNESS        = 0.75f;
+    static final float WALL_STROKE_THICKNESS = 0.1f;
+    static final float HOUSE_HEIGHT          = 12.0f;
+    static final float HOUSE_OPACITY         = 0.4f;
+    static final float PAC_SIZE              = 14.0f;
+    static final float GHOST_SIZE            = 13.0f;
+    static final float ENERGIZER_RADIUS      = 3.5f;
+    static final float PELLET_RADIUS         = 1.0f;
 
-    public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture", NO_TEXTURE) {
+    private final Map<String, PhongMaterial> floorTextures = new HashMap<>();
+
+    public final ObjectProperty<String> floorTextureNamePy = new SimpleObjectProperty<>(this, "floorTextureName") {
         @Override
         protected void invalidated() {
-            var material = floorTextures.getOrDefault("texture." + floorTexturePy.get(), coloredMaterial(floorColorPy.get()));
-            floor.setMaterial(material);
+            Color floorColor = floorColorPy.get();
+            String textureName = get();
+            if (NO_TEXTURE.equals(textureName)) {
+                floor.setMaterial(coloredMaterial(floorColor));
+            } else {
+                floor.setMaterial(floorTextures.getOrDefault("texture." + textureName, coloredMaterial(floorColor)));
+            }
         }
     };
 
     public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK) {
         @Override
         protected void invalidated() {
-            var material = floorTextures.getOrDefault("texture." + floorTexturePy.get(), coloredMaterial(floorColorPy.get()));
-            floor.setMaterial(material);
+            Color floorColor = get();
+            String textureName = floorTextureNamePy.get();
+            floor.setMaterial(floorTextures.getOrDefault("texture." + textureName, coloredMaterial(floorColor)));
         }
     };
 
-    private final Map<String, PhongMaterial> floorTextures = new HashMap<>();
+    private final DoubleProperty wallHeightPy  = new SimpleDoubleProperty(this, "wallHeight", WALL_HEIGHT);
 
-    private final DoubleProperty wallHeightPy = new SimpleDoubleProperty(this, "wallHeight", 2.0);
-    private final DoubleProperty houseHeightPy = new SimpleDoubleProperty(this, "houseHeight", 12.0);
+    private final DoubleProperty houseHeightPy = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
 
-    private final ObjectProperty<PhongMaterial> houseFillMaterialPy = new SimpleObjectProperty<>();
-    private final ObjectProperty<PhongMaterial> mazeWallStrokeMaterialPy = new SimpleObjectProperty<>();
-    private final ObjectProperty<PhongMaterial> mazeWallFillMaterialPy = new SimpleObjectProperty<>();
-    private final ObjectProperty<PhongMaterial> mazeFoodMaterialPy = new SimpleObjectProperty<>();
+    private final ObjectProperty<PhongMaterial> houseFillMaterialPy = new SimpleObjectProperty<>(this, "houseFillMaterial");
+
+    private final ObjectProperty<PhongMaterial> wallStrokeMaterialPy = new SimpleObjectProperty<>(this, "wallStrokeMaterial");
+
+    private final ObjectProperty<PhongMaterial> wallFillMaterialPy = new SimpleObjectProperty<>(this, "wallFillMaterial");
+
+    private final ObjectProperty<PhongMaterial> foodMaterialPy = new SimpleObjectProperty<>(this, "foodMaterial");
 
     public final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity",1.0) {
         @Override
         protected void invalidated() {
-            Color color = ResourceManager.opaqueColor(wallFillColorPy.get(), get());
-            mazeWallFillMaterialPy.get().setDiffuseColor(color);
-            mazeWallFillMaterialPy.get().setSpecularColor(color.brighter());
+            double opacity = get();
+            Color fillColor = wallFillColorPy.get();
+            Color color = opaqueColor(fillColor, opacity);
+            PhongMaterial fillMaterial = wallFillMaterialPy.get();
+            fillMaterial.setDiffuseColor(color);
+            fillMaterial.setSpecularColor(color.brighter());
         }
     };
 
     private final ObjectProperty<Color> wallStrokeColorPy = new SimpleObjectProperty<>(Color.WHITE) {
         @Override
         protected void invalidated() {
-            mazeWallStrokeMaterialPy.set(coloredMaterial(get()));        }
+            Color strokeColor = get();
+            wallStrokeMaterialPy.set(coloredMaterial(strokeColor));        }
     };
 
     private final ObjectProperty<Color> wallFillColorPy = new SimpleObjectProperty<>(Color.GREEN) {
         @Override
         protected void invalidated() {
-            mazeWallFillMaterialPy.set(coloredMaterial(opaqueColor(wallFillColorPy.get(), wallOpacityPy.get())));
-            houseFillMaterialPy.set(coloredMaterial(opaqueColor(wallFillColorPy.get(), 0.4)));
+            Color fillColor = get();
+            double opacity = wallOpacityPy.get();
+            wallFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, opacity)));
+            houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, HOUSE_OPACITY)));
         }
     };
 
     private final ObjectProperty<Color> foodColorPy = new SimpleObjectProperty<>(Color.PINK) {
         @Override
         protected void invalidated() {
-            mazeFoodMaterialPy.set(coloredMaterial(get()));
+            foodMaterialPy.set(coloredMaterial(get()));
         }
     };
 
@@ -148,7 +166,7 @@ public class GameLevel3D extends Group {
         floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
         floor.drawModeProperty().bind(PY_3D_DRAW_MODE);
         floorColorPy.bind(PY_3D_FLOOR_COLOR);
-        floorTexturePy.bind(PY_3D_FLOOR_TEXTURE);
+        floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
 
         switch (context.game().variant()) {
             case MS_PACMAN -> createMsPacManMaze3D(context.game().levelNumber());
@@ -208,13 +226,13 @@ public class GameLevel3D extends Group {
                 var energizer3D = new Energizer3D(ENERGIZER_RADIUS);
                 addEnergizerAnimation(world, energizer3D);
                 energizers3D.add(energizer3D);
-                energizer3D.root().materialProperty().bind(mazeFoodMaterialPy);
+                energizer3D.root().materialProperty().bind(foodMaterialPy);
                 energizer3D.placeAtTile(tile);
                 parent.getChildren().add(energizer3D.root());
             } else {
                 var pellet3D = new Pellet3D(context.theme().get("model3D.pellet"), PELLET_RADIUS);
                 pellets3D.add(pellet3D);
-                pellet3D.root().materialProperty().bind(mazeFoodMaterialPy);
+                pellet3D.root().materialProperty().bind(foodMaterialPy);
                 pellet3D.placeAtTile(tile);
                 parent.getChildren().add(pellet3D.root());
             }
@@ -332,23 +350,21 @@ public class GameLevel3D extends Group {
         int to = from;
         while (true) {
             if (to == path.size()) {
-                parent.getChildren().add(createWall(path.get(from), path.get(to-1)));
+                var wall = createWall(path.get(from), path.get(to - 1), wallHeightPy, wallFillMaterialPy);
+                parent.getChildren().add(wall);
                 break;
             }
-            if (!isWall(terrainMap.get(path.get(to)))) {
-                parent.getChildren().add(createWall(path.get(from), path.get(to)));
+            if (!isStraightWall(terrainMap.get(path.get(to)))) {
+                var wall = createWall(path.get(from), path.get(to), wallHeightPy, wallFillMaterialPy);
+                parent.getChildren().add(wall);
                 from = to;
             }
             ++to;
         }
     }
 
-    private static boolean isWall(byte tileValue) {
+    private static boolean isStraightWall(byte tileValue) {
         return tileValue == Tiles.WALL_H || tileValue == Tiles.WALL_V || tileValue == Tiles.DWALL_H || tileValue == Tiles.DWALL_V;
-    }
-
-    private Node createWall(Vector2i first, Vector2i second) {
-        return createWall(first, second, wallHeightPy, mazeWallFillMaterialPy);
     }
 
     private Node createWall(Vector2i first, Vector2i second, DoubleProperty heightPy, ObjectProperty<PhongMaterial> fillMaterialPy) {
@@ -371,11 +387,11 @@ public class GameLevel3D extends Group {
             base.setTranslateY(first.y() * 8 + 4);
             base.translateZProperty().bind(heightPy.multiply(-0.5));
 
-            var top = new Box(w, WALL_THICKNESS, WALL_TOP_THICKNESS);
-            top.materialProperty().bind(mazeWallStrokeMaterialPy);
+            var top = new Box(w, WALL_THICKNESS, WALL_STROKE_THICKNESS);
+            top.materialProperty().bind(wallStrokeMaterialPy);
             top.translateXProperty().bind(base.translateXProperty());
             top.translateYProperty().bind(base.translateYProperty());
-            top.translateZProperty().bind(heightPy.multiply(-1).subtract(WALL_TOP_THICKNESS));
+            top.translateZProperty().bind(heightPy.multiply(-1).subtract(WALL_STROKE_THICKNESS));
 
             return new Group(base, top);
         }
@@ -398,11 +414,11 @@ public class GameLevel3D extends Group {
             base.setTranslateY(m + 4);
             base.translateZProperty().bind(heightPy.multiply(-0.5));
 
-            var top = new Box(WALL_THICKNESS, h, WALL_TOP_THICKNESS);
-            top.materialProperty().bind(mazeWallStrokeMaterialPy);
+            var top = new Box(WALL_THICKNESS, h, WALL_STROKE_THICKNESS);
+            top.materialProperty().bind(wallStrokeMaterialPy);
             top.translateXProperty().bind(base.translateXProperty());
             top.translateYProperty().bind(base.translateYProperty());
-            top.translateZProperty().bind(heightPy.multiply(-1).subtract(WALL_TOP_THICKNESS));
+            top.translateZProperty().bind(heightPy.multiply(-1).subtract(WALL_STROKE_THICKNESS));
 
             return new Group(base, top);
         }
