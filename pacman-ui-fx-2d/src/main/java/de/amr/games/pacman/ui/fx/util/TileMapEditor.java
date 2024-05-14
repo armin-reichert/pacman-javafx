@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui.fx.util;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.MapMaze;
 import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.Tiles;
 import de.amr.games.pacman.model.world.WorldMap;
@@ -101,13 +100,13 @@ public class TileMapEditor extends Application  {
     WorldMap mcMsPacMan6;
 
     private void loadPredefinedMaps() {
-        var pacMan    = GameVariant.PACMAN.createWorld(new MapMaze(1, 1));
-        var msPacMan1 = GameVariant.MS_PACMAN.createWorld(new MapMaze(1, 1));
-        var msPacMan2 = GameVariant.MS_PACMAN.createWorld(new MapMaze(2, 2));
-        var msPacMan3 = GameVariant.MS_PACMAN.createWorld(new MapMaze(3, 3));
-        var msPacMan4 = GameVariant.MS_PACMAN.createWorld(new MapMaze(4, 4));
-        var msPacMan5 = GameVariant.MS_PACMAN.createWorld(new MapMaze(3, 5));
-        var msPacMan6 = GameVariant.MS_PACMAN.createWorld(new MapMaze(4, 6));
+        var pacMan    = GameVariant.PACMAN.createWorld(1);
+        var msPacMan1 = GameVariant.MS_PACMAN.createWorld(1);
+        var msPacMan2 = GameVariant.MS_PACMAN.createWorld(2);
+        var msPacMan3 = GameVariant.MS_PACMAN.createWorld(3);
+        var msPacMan4 = GameVariant.MS_PACMAN.createWorld(4);
+        var msPacMan5 = GameVariant.MS_PACMAN.createWorld(5);
+        var msPacMan6 = GameVariant.MS_PACMAN.createWorld(6);
 
         mcPacMan    = WorldMap.copy(pacMan.map());
         mcMsPacMan1 = WorldMap.copy(msPacMan1.map());
@@ -370,19 +369,11 @@ public class TileMapEditor extends Application  {
         var msPacManItem5 = new MenuItem("Ms. Pac-Man 5");
         msPacManItem5.setOnAction(e -> {
             loadPredefined(mcMsPacMan5);
-            terrainMapRenderer.setWallStrokeColor(Color.web(map.terrainMap().getProperty("wall_stroke_color.5")));
-            terrainMapRenderer.setWallFillColor(Color.web(map.terrainMap().getProperty("wall_fill_color.5")));
-            foodMapRenderer.setEnergizerColor(Color.web(map.foodMap().getProperty("food_color.5")));
-            foodMapRenderer.setPelletColor(Color.web(map.foodMap().getProperty("food_color.5")));
         });
 
         var msPacManItem6 = new MenuItem("Ms. Pac-Man 6");
         msPacManItem6.setOnAction(e -> {
             loadPredefined(mcMsPacMan6);
-            terrainMapRenderer.setWallStrokeColor(Color.web(map.terrainMap().getProperty("wall_stroke_color.6")));
-            terrainMapRenderer.setWallFillColor(Color.web(map.terrainMap().getProperty("wall_fill_color.6")));
-            foodMapRenderer.setEnergizerColor(Color.web(map.foodMap().getProperty("food_color.6")));
-            foodMapRenderer.setPelletColor(Color.web(map.foodMap().getProperty("food_color.6")));
         });
 
         loadPredefinedMapMenu.getItems().addAll(pacManWorldItem, msPacManItem1, msPacManItem2,

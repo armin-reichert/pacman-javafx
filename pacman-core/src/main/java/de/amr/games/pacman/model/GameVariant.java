@@ -53,17 +53,17 @@ public enum GameVariant implements GameModel {
         }
 
         @Override
-        public World createWorld(MapMaze mm) {
-            if (1 <= mm.mapNumber() && mm.mapNumber() <= 4) {
+        public World createWorld(int mapNumber) {
+            if (1 <= mapNumber && mapNumber <= 6) {
                 try {
-                    String path = String.format("/maps/mspacman/mspacman_%d.world", mm.mapNumber());
+                    String path = String.format("/maps/mspacman/mspacman_%d.world", mapNumber);
                     URL url = getClass().getResource(path);
                     return createArcadeWorld(url);
                 } catch (Exception x) {
-                    throw new IllegalArgumentException("Ms. Pac-Man world map creation failed for map-maze combination " + mm);
+                    throw new IllegalArgumentException("Ms. Pac-Man world map creation failed for map number " + mapNumber);
                 }
             }
-            throw new IllegalArgumentException("Ms. Pac-Man map number must be in 1-4, is: " + mm.mapNumber());
+            throw new IllegalArgumentException("Ms. Pac-Man map number must be in 1-6, is: " + mapNumber);
         }
 
         /**
@@ -84,16 +84,14 @@ public enum GameVariant implements GameModel {
          * <p>
          */
         @Override
-        public MapMaze mapMaze(int levelNumber) {
+        public int mapNumber(int levelNumber) {
             checkLevelNumber(levelNumber);
             return switch (levelNumber) {
-                case 1, 2 -> new MapMaze(1, 1);
-                case 3, 4, 5 -> new MapMaze(2, 2);
-                case 6, 7, 8, 9 -> new MapMaze(3, 3);
-                case 10, 11, 12, 13 -> new MapMaze(4, 4);
-                default -> (levelNumber - 14) % 8 < 4
-                    ? new MapMaze(3, 5)
-                    : new MapMaze(4, 6);
+                case 1, 2 -> 1;
+                case 3, 4, 5 -> 2;
+                case 6, 7, 8, 9 -> 3;
+                case 10, 11, 12, 13 -> 4;
+                default -> (levelNumber - 14) % 8 < 4 ? 5 : 6;
             };
         }
 
@@ -106,8 +104,8 @@ public enum GameVariant implements GameModel {
         @Override
         void buildRegularLevel(int levelNumber) {
             this.levelNumber = checkLevelNumber(levelNumber);
-            MapMaze mm = mapMaze(levelNumber);
-            populateLevel(createWorld(mm));
+            int mapNumber = mapNumber(levelNumber);
+            populateLevel(createWorld(mapNumber));
             pac.setName("Ms. Pac-Man");
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(false);
@@ -116,11 +114,8 @@ public enum GameVariant implements GameModel {
 
         @Override
         void buildDemoLevel() {
-            MapMaze[] combinations = {
-                new MapMaze(1, 1), new MapMaze(2, 2), new MapMaze(3, 3), new MapMaze(4, 4), new MapMaze(3, 5), new MapMaze(4, 6),
-            };
             levelNumber = 1;
-            populateLevel(createWorld(combinations[randomInt(0, combinations.length)]));
+            populateLevel(createWorld(randomInt(0, 7)));
             pac.setName("Ms. Pac-Man");
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(true);
@@ -285,12 +280,12 @@ public enum GameVariant implements GameModel {
         }
 
         @Override
-        public  World createWorld(MapMaze mm) {
+        public  World createWorld(int mapNumber) {
             World world;
-            if (mm.mapNumber() == 1) {
+            if (mapNumber == 1) {
                 world = createOriginalArcadeWorld();
             } else { // use one of Sean William's maps
-                var path = String.format("/maps/masonic/masonic_%d.world", mm.mapNumber() - 1);
+                var path = String.format("/maps/masonic/masonic_%d.world", mapNumber - 1);
                 try {
                     URL url = getClass().getResource(path);
                     world = createArcadeWorld(url);
@@ -321,11 +316,11 @@ public enum GameVariant implements GameModel {
         }
 
         @Override
-        public MapMaze mapMaze(int levelNumber) {
+        public int mapNumber(int levelNumber) {
             if (levelNumber == 1 || !useRandomMaps) {
-                return new MapMaze(1, 1); // original Arcade map
+                return 1; // original Arcade map
             }
-            return new MapMaze(Globals.randomInt(2, 9), 1);
+            return randomInt(2, 9); //TODO check this
         }
 
         @Override
@@ -341,7 +336,7 @@ public enum GameVariant implements GameModel {
         @Override
         void buildRegularLevel(int levelNumber) {
             this.levelNumber = checkLevelNumber(levelNumber);
-            populateLevel(createWorld(mapMaze(levelNumber)));
+            populateLevel(createWorld(mapNumber(levelNumber)));
             pac.setName("Pac-Man");
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(false);
@@ -350,7 +345,7 @@ public enum GameVariant implements GameModel {
         @Override
         void buildDemoLevel() {
             levelNumber = 1;
-            populateLevel(createWorld(mapMaze(levelNumber)));
+            populateLevel(createWorld(mapNumber(levelNumber)));
             pac.setName("Pac-Man");
             pac.setAutopilot(world.getDemoLevelRoute().isEmpty()
                 ? new RuleBasedPacSteering(this)

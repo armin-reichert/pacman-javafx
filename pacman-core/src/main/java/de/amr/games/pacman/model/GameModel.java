@@ -69,15 +69,15 @@ public interface GameModel {
      */
     Stream<Ghost> ghosts(GhostState... states);
 
-    World createWorld(MapMaze mapMaze);
+    World createWorld(int mapNumber);
 
     /**
      * Map-maze combination used in given level.
      *
      * @param levelNumber level number, starting with 1
-     * @return map-maze combination
+     * @return map number for this level
      */
-    MapMaze mapMaze(int levelNumber);
+    int mapNumber(int levelNumber);
 
     void setUseRandomMaps(boolean value);
 
