@@ -168,7 +168,7 @@ public class GameLevel3D extends Group {
 
         var mazeGroup = new Group();
         switch (context.game().variant()) {
-            case MS_PACMAN -> addMsPacManMaze3D(mazeGroup, context.game().mapMaze(context.game().levelNumber()));
+            case MS_PACMAN -> addMsPacManMaze3D(mazeGroup, context.game().mapNumber(context.game().levelNumber()));
             case PACMAN    -> addPacManMaze3D(mazeGroup);
         }
         worldGroup.getChildren().addAll(floor, mazeGroup);
@@ -196,11 +196,11 @@ public class GameLevel3D extends Group {
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
 
-    private void addMsPacManMaze3D(Group parent, MapMaze mm) {
+    private void addMsPacManMaze3D(Group parent, int mapNumber) {
         //TODO store these in terrain maps?
-        wallStrokeColorPy.set(context.theme().get("mspacman.wallStrokeColor", mm.mapNumber(), mm.mazeNumber()));
-        wallFillColorPy.set(context.theme().get("mspacman.wallFillColor",   mm.mapNumber(), mm.mazeNumber()));
-        foodColorPy.set(context.theme().get("mspacman.foodColor", mm.mapNumber(), mm.mazeNumber()));
+        wallStrokeColorPy.set(context.theme().get("mspacman.wallStrokeColor." + mapNumber));
+        wallFillColorPy.set(context.theme().get("mspacman.wallFillColor." + mapNumber));
+        foodColorPy.set(context.theme().get("mspacman.foodColor." + mapNumber));
         addMazeWalls(parent);
         addGhostHouse(parent);
         addFood3D(parent);
@@ -306,7 +306,7 @@ public class GameLevel3D extends Group {
     }
 
     private void addMazeWalls(Group parent) {
-        TileMap terrainMap = context.game().world().map().terrainMap();;
+        TileMap terrainMap = context.game().world().map().terrainMap();
         var explored = new HashSet<Vector2i>();
 
         // Obstacles inside maze
