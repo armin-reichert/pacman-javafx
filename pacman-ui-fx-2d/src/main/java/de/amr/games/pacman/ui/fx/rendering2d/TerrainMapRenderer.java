@@ -176,17 +176,21 @@ public class TerrainMapRenderer implements TileMapRenderer {
     private void drawPath(GraphicsContext g, TileMap map, List<Vector2i> path) {
         double s4 = s(4), s8 = s(8);
         g.setFill(wallFillColor);
+        g.setStroke(wallStrokeColor);
+        g.setLineWidth(s(0.75f));
         g.beginPath();
-        for (int i = 0; i < path.size(); ++i) {
-            if (i < path.size() - 1) {
-                var current = path.get(i);
-                var next = path.get(i+1);
-                switch (map.get(current)) {
-                    case Tiles.WALL_H, Tiles.WALL_V -> g.lineTo(next.x() * s8, next.y() * s8);
-                }
+        g.moveTo(path.getFirst().x() * s8 + s4, path.getFirst().y() * s8 + s4);
+        for (int i = 1; i < path.size(); ++i) {
+            var next = path.get(i);
+            var centerX = next.x() * s8 + s4;
+            var centerY = next.y() * s8 + s4;
+            switch (map.get(next)) {
+                default -> g.lineTo(centerX, centerY);
             }
         }
+        g.closePath();
         g.fill();
+        g.stroke();
     }
 
     private static List<Vector2i> buildPath(
