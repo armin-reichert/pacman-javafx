@@ -55,6 +55,7 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class GameLevel3D extends Group {
 
+    static final float FLOOR_THICKNESS       = 0.4f;
     static final float WALL_HEIGHT           = 2.0f;
     static final float WALL_THICKNESS        = 0.75f;
     static final float WALL_STROKE_THICKNESS = 0.1f;
@@ -140,9 +141,8 @@ public class GameLevel3D extends Group {
     private final GameSceneContext context;
 
     private final Group worldGroup = new Group();
-    private final Group mazeGroup = new Group();
     private final Group levelCounterGroup = new Group();
-    private final Box floor = new Box();
+    private final Box floor;
     private final PointLight houseLight = new PointLight();
     private final Pac3D pac3D;
     private final List<Ghost3D> ghosts3D;
@@ -160,18 +160,19 @@ public class GameLevel3D extends Group {
             String key = "texture." + textureName;
             floorTextures.put(key, context.theme().get(key));
         }
-        floor.setWidth(context.game().world().numCols() * TS - 1);
-        floor.setHeight(context.game().world().numRows() * TS - 1);
-        floor.setDepth(0.4);
+        floor = new Box(context.game().world().numCols() * TS - 1, context.game().world().numRows() * TS - 1, FLOOR_THICKNESS);
+        // place floor such that surface is at z=0
         floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
         floor.drawModeProperty().bind(PY_3D_DRAW_MODE);
         floorColorPy.bind(PY_3D_FLOOR_COLOR);
         floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
 
+        var mazeGroup = new Group();
         switch (context.game().variant()) {
-            case MS_PACMAN -> createMsPacManMaze3D(mazeGroup, context.game().mapMaze(context.game().levelNumber()));
+            case MS_PACMAN -> addMsPacManMaze3D(mazeGroup, context.game().mapMaze(context.game().levelNumber()));
             case PACMAN    -> addPacManMaze3D(mazeGroup);
         }
+        worldGroup.getChildren().addAll(floor, mazeGroup);
 
         pac3D = switch (context.game().variant()) {
             case MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), context.game().pac(), PAC_SIZE);
@@ -183,11 +184,10 @@ public class GameLevel3D extends Group {
         createLevelCounter3D();
         createMessage3D();
 
-        worldGroup.getChildren().addAll(floor, mazeGroup);
-
-        // Walls must be added after the guys! Otherwise, transparency is not working correctly.
         getChildren().addAll(ghosts3D);
-        getChildren().addAll(pac3D, pac3D.light(), message3D, levelCounterGroup, livesCounter3D, worldGroup);
+        getChildren().addAll(pac3D, pac3D.light());
+        // Walls must be added after the guys! Otherwise, transparency is not working correctly.
+        getChildren().addAll(message3D, levelCounterGroup, livesCounter3D, worldGroup);
 
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
         pac3D.drawModePy.bind(PY_3D_DRAW_MODE);
@@ -197,7 +197,7 @@ public class GameLevel3D extends Group {
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
 
-    private void createMsPacManMaze3D(Group parent, MapMaze mm) {
+    private void addMsPacManMaze3D(Group parent, MapMaze mm) {
         //TODO store these in terrain maps?
         wallStrokeColorPy.set(context.theme().get("mspacman.wallStrokeColor", mm.mapNumber(), mm.mazeNumber()));
         wallFillColorPy.set(context.theme().get("mspacman.wallFillColor",   mm.mapNumber(), mm.mazeNumber()));
