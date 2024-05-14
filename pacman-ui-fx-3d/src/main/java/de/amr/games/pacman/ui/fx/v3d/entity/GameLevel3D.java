@@ -56,11 +56,12 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  */
 public class GameLevel3D extends Group {
 
-    private static final double WALL_THICKNESS = 0.75;
-    private static final double WALL_TOP_THICKNESS = 0.1;
-    private static final float PAC_SIZE   = 14.0f;
-    private static final float GHOST_SIZE = 13.0f;
-
+    static final double WALL_THICKNESS = 0.75;
+    static final double WALL_TOP_THICKNESS = 0.1;
+    static final float PAC_SIZE   = 14.0f;
+    static final float GHOST_SIZE = 13.0f;
+    static final double ENERGIZER_RADIUS = 3.5;
+    static final double PELLET_RADIUS = 1.0;
 
     public final ObjectProperty<String> floorTexturePy = new SimpleObjectProperty<>(this, "floorTexture", NO_TEXTURE) {
         @Override
@@ -181,43 +182,40 @@ public class GameLevel3D extends Group {
         var game = context.game();
         var world = game.world();
         MapMaze mm = game.mapMaze(levelNumber);
-
         //TODO store these in terrain maps
         wallStrokeColorPy.set(context.theme().get("mspacman.wallStrokeColor", mm.mapNumber(), mm.mazeNumber()));
         wallFillColorPy.set(context.theme().get("mspacman.wallFillColor",   mm.mapNumber(), mm.mazeNumber()));
         foodColorPy.set(context.theme().get("mspacman.foodColor", mm.mapNumber(), mm.mazeNumber()));
-
         buildWalls(mazeGroup);
         addGhostHouse(mazeGroup);
-        createFood3D(world);
+        createFood3D(foodGroup);
     }
 
     private void createPacManMaze3D() {
         var world = context.game().world();
-
         wallStrokeColorPy.set(getTileMapColor(world.terrainMap(), "wall_stroke_color", Color.rgb(33, 33, 255)));
         wallFillColorPy.set(getTileMapColor(world.terrainMap(), "wall_fill_color", Color.rgb(0,0,0)));
         foodColorPy.set(getTileMapColor(world.foodMap(), "food_color", Color.PINK));
-
         buildWalls(mazeGroup);
         addGhostHouse(mazeGroup);
-        createFood3D(world);
+        createFood3D(foodGroup);
     }
 
-    private void createFood3D(World world) {
+    private void createFood3D(Group parent) {
+        var world = context.game().world();
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             if (world.isEnergizerTile(tile)) {
-                var energizer3D = new Energizer3D(3.5);
+                var energizer3D = new Energizer3D(ENERGIZER_RADIUS);
                 energizer3D.root().materialProperty().bind(mazeFoodMaterialPy);
                 energizer3D.placeAtTile(tile);
-                foodGroup.getChildren().add(energizer3D.root());
+                parent.getChildren().add(energizer3D.root());
                 addEnergizerAnimation(world, energizer3D);
 
             } else {
-                var pellet3D = new Pellet3D(context.theme().get("model3D.pellet"), 1.0);
+                var pellet3D = new Pellet3D(context.theme().get("model3D.pellet"), PELLET_RADIUS);
                 pellet3D.root().materialProperty().bind(mazeFoodMaterialPy);
                 pellet3D.placeAtTile(tile);
-                foodGroup.getChildren().add(pellet3D.root());
+                parent.getChildren().add(pellet3D.root());
             }
         });
     }
