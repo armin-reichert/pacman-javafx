@@ -216,8 +216,8 @@ public class PlayScene3D implements GameScene {
         if (level3D == null) {
             replaceGameLevel3D();
         }
-        level3D.food3D().forEach(
-            eatable3D -> eatable3D.root().setVisible(!world.hasEatenFoodAt(eatable3D.tile())));
+        level3D.pellets3D().forEach(pellet3D -> pellet3D.root().setVisible(!world.hasEatenFoodAt(pellet3D.tile())));
+        level3D.energizers3D().forEach(energizer3D -> energizer3D.root().setVisible(!world.hasEatenFoodAt(energizer3D.tile())));
         if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
             level3D.startEnergizerAnimation();
         }
@@ -292,7 +292,8 @@ public class PlayScene3D implements GameScene {
                 assertLevel3DExists();
                 context.stopAllSounds();
                 // if cheat has been used to complete level, 3D food might still exist:
-                level3D.food3D().forEach(level3D::eat);
+                level3D.pellets3D().forEach(level3D::eat);
+                level3D.energizers3D().forEach(level3D::eat);
                 level3D.livesCounter3D().stopAnimation();
                 playLevelCompleteAnimation(context.game().level().orElseThrow());
             }
@@ -360,12 +361,13 @@ public class PlayScene3D implements GameScene {
         if (event.tile().isEmpty()) {
             world.tiles()
                 .filter(world::hasEatenFoodAt)
-                .map(level3D::food3D)
+                .map(level3D::pellet3D)
                 .flatMap(Optional::stream)
                 .forEach(Eatable3D::onEaten);
         } else {
             Vector2i tile = event.tile().get();
-            level3D.food3D(tile).ifPresent(level3D::eat);
+            level3D.energizer3D(tile).ifPresent(level3D::eat);
+            level3D.pellet3D(tile).ifPresent(level3D::eat);
         }
     }
 

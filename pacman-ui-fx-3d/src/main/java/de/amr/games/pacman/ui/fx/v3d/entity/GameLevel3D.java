@@ -128,7 +128,8 @@ public class GameLevel3D extends Group {
     private final PointLight houseLight = new PointLight();
     private final Pac3D pac3D;
     private final List<Ghost3D> ghosts3D;
-    private final Set<Eatable3D> food3D = new HashSet<>();
+    private final Set<Pellet3D> pellets3D = new HashSet<>();
+    private final Set<Energizer3D> energizers3D = new HashSet<>();
     private LivesCounter3D livesCounter3D;
     private Bonus3D bonus3D;
     private Message3D message3D;
@@ -206,13 +207,13 @@ public class GameLevel3D extends Group {
             if (world.isEnergizerTile(tile)) {
                 var energizer3D = new Energizer3D(ENERGIZER_RADIUS);
                 addEnergizerAnimation(world, energizer3D);
-                food3D.add(energizer3D);
+                energizers3D.add(energizer3D);
                 energizer3D.root().materialProperty().bind(mazeFoodMaterialPy);
                 energizer3D.placeAtTile(tile);
                 parent.getChildren().add(energizer3D.root());
             } else {
                 var pellet3D = new Pellet3D(context.theme().get("model3D.pellet"), PELLET_RADIUS);
-                food3D.add(pellet3D);
+                pellets3D.add(pellet3D);
                 pellet3D.root().materialProperty().bind(mazeFoodMaterialPy);
                 pellet3D.placeAtTile(tile);
                 parent.getChildren().add(pellet3D.root());
@@ -627,24 +628,29 @@ public class GameLevel3D extends Group {
         return livesCounter3D;
     }
 
-    public Stream<Eatable3D> food3D() {
-        return food3D.stream();
+    public Stream<Pellet3D> pellets3D() {
+        return pellets3D.stream();
     }
 
     public Stream<Energizer3D> energizers3D() {
-        return food3D().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
+        return energizers3D.stream();
     }
 
     public void startEnergizerAnimation() {
-        energizers3D().forEach(Energizer3D::startPumping);
+        energizers3D.forEach(Energizer3D::startPumping);
     }
 
     public void stopEnergizerAnimation() {
-        energizers3D().forEach(Energizer3D::stopPumping);
+        energizers3D.forEach(Energizer3D::stopPumping);
     }
 
-    public Optional<Eatable3D> food3D(Vector2i tile) {
+    public Optional<Energizer3D> energizer3D(Vector2i tile) {
         checkTileNotNull(tile);
-        return food3D().filter(eatable -> eatable.tile().equals(tile)).findFirst();
+        return energizers3D().filter(e3D -> e3D.tile().equals(tile)).findFirst();
+    }
+
+    public Optional<Pellet3D> pellet3D(Vector2i tile) {
+        checkTileNotNull(tile);
+        return pellets3D().filter(p3D -> p3D.tile().equals(tile)).findFirst();
     }
 }
