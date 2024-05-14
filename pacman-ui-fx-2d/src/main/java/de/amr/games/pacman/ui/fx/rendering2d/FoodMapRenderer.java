@@ -1,8 +1,7 @@
-package de.amr.games.pacman.ui.fx.util;
+package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.world.Tiles;
-import de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 

@@ -9,9 +9,10 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.Tiles;
 import de.amr.games.pacman.model.world.WorldMap;
+import de.amr.games.pacman.ui.fx.rendering2d.FoodMapRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.TerrainMapRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -35,8 +36,8 @@ import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
+import java.util.stream.IntStream;
 
 import static de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer.getTileMapColor;
 
@@ -90,43 +91,17 @@ public class TileMapEditor extends Application  {
     BooleanProperty terrainEditedPy = new SimpleBooleanProperty(true);
     BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
 
-    WorldMap mcPacMan;
-    WorldMap mcMsPacMan1;
-    WorldMap mcMsPacMan2;
-    WorldMap mcMsPacMan3;
-    WorldMap mcMsPacMan4;
-    WorldMap mcMsPacMan5;
-    WorldMap mcMsPacMan6;
-
-    private void loadPredefinedMaps() {
-        var pacMan    = GameVariant.PACMAN.createWorld(1);
-        var msPacMan1 = GameVariant.MS_PACMAN.createWorld(1);
-        var msPacMan2 = GameVariant.MS_PACMAN.createWorld(2);
-        var msPacMan3 = GameVariant.MS_PACMAN.createWorld(3);
-        var msPacMan4 = GameVariant.MS_PACMAN.createWorld(4);
-        var msPacMan5 = GameVariant.MS_PACMAN.createWorld(5);
-        var msPacMan6 = GameVariant.MS_PACMAN.createWorld(6);
-
-        mcPacMan    = WorldMap.copy(pacMan.map());
-        mcMsPacMan1 = WorldMap.copy(msPacMan1.map());
-        mcMsPacMan2 = WorldMap.copy(msPacMan2.map());
-        mcMsPacMan3 = WorldMap.copy(msPacMan3.map());
-        mcMsPacMan4 = WorldMap.copy(msPacMan4.map());
-        mcMsPacMan5 = WorldMap.copy(msPacMan5.map());
-        mcMsPacMan6 = WorldMap.copy(msPacMan6.map());
-    }
+    WorldMap[] arcadeMaps = new WorldMap[7];
 
     @Override
     public void init() throws Exception {
-        try {
-            loadPredefinedMaps();
-            map = new WorldMap(
-                new TileMap(DEFAULT_NUM_ROWS, DEFAULT_NUM_COLS),
-                new TileMap(DEFAULT_NUM_ROWS, DEFAULT_NUM_COLS));
-        } catch (Exception x) {
-            x.printStackTrace(System.err);
-            Platform.exit();
+        arcadeMaps[0] = WorldMap.copy(GameVariant.PACMAN.createWorld(1).map());
+        for (int i = 1; i <= 6; ++i) {
+            arcadeMaps[i] = WorldMap.copy(GameVariant.MS_PACMAN.createWorld(i).map());
         }
+        map = new WorldMap(
+            new TileMap(DEFAULT_NUM_ROWS, DEFAULT_NUM_COLS),
+            new TileMap(DEFAULT_NUM_ROWS, DEFAULT_NUM_COLS));
     }
 
     @Override
@@ -348,34 +323,20 @@ public class TileMapEditor extends Application  {
         var addHouseItem = new MenuItem("Add House");
         addHouseItem.setOnAction(e -> addShape(GHOST_HOUSE_SHAPE, 15, 10));
 
-        Menu loadPredefinedMapMenu = new Menu("Load Predefined");
+        Menu arcadeMapsMenu = new Menu("Load Arcade Map");
 
-        var pacManWorldItem = new MenuItem("Pac-Man");
-        pacManWorldItem.setOnAction(e -> loadPredefined(mcPacMan));
+        var pacManMapItem = new MenuItem("Pac-Man");
+        pacManMapItem.setOnAction(e -> loadPredefined(arcadeMaps[0]));
+        arcadeMapsMenu.getItems().add(pacManMapItem);
 
-        var msPacManItem1 = new MenuItem("Ms. Pac-Man 1");
-        msPacManItem1.setOnAction(e -> loadPredefined(mcMsPacMan1));
-
-        var msPacManItem2 = new MenuItem("Ms. Pac-Man 2");
-        msPacManItem2.setOnAction(e -> loadPredefined(mcMsPacMan2));
-
-        var msPacManItem3 = new MenuItem("Ms. Pac-Man 3");
-        msPacManItem3.setOnAction(e -> loadPredefined(mcMsPacMan3));
-
-        var msPacManItem4 = new MenuItem("Ms. Pac-Man 4");
-        msPacManItem4.setOnAction(e -> loadPredefined(mcMsPacMan4));
-
-        var msPacManItem5 = new MenuItem("Ms. Pac-Man 5");
-        msPacManItem5.setOnAction(e -> loadPredefined(mcMsPacMan5));
-
-        var msPacManItem6 = new MenuItem("Ms. Pac-Man 6");
-        msPacManItem6.setOnAction(e -> loadPredefined(mcMsPacMan6));
-
-        loadPredefinedMapMenu.getItems().addAll(pacManWorldItem, msPacManItem1, msPacManItem2,
-            msPacManItem3, msPacManItem4, msPacManItem5, msPacManItem6);
+        IntStream.range(1, 7).forEach(i -> {
+            var item = new MenuItem("Ms. Pac-Man " + i);
+            item.setOnAction(e -> loadPredefined(arcadeMaps[i]));
+            arcadeMapsMenu.getItems().add(item);
+        });
 
         var menu = new Menu("Map");
-        menu.getItems().addAll(clearTerrainMapItem, clearFoodMapItem, addHouseItem, loadPredefinedMapMenu);
+        menu.getItems().addAll(clearTerrainMapItem, clearFoodMapItem, addHouseItem, arcadeMapsMenu);
 
         return menu;
     }
