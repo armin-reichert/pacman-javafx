@@ -79,9 +79,6 @@ public class TileMap {
         // Second pass: read data
         var tileMap = new TileMap(new byte[numDataRows][numDataCols]);
         tileMap.setPropertiesFromText(propertySection.toString());
-        // keep size up-to-date
-        tileMap.properties.setProperty("num_rows", String.valueOf(numDataRows));
-        tileMap.properties.setProperty("num_cols", String.valueOf(numDataCols));
 
         for (int lineIndex = dataSectionStart; lineIndex < lines.size(); ++lineIndex) {
             String line = lines.get(lineIndex);
@@ -116,8 +113,6 @@ public class TileMap {
 
     public TileMap(int numRows, int numCols) {
         data = new byte[numRows][numCols];
-        properties.setProperty("num_rows", String.valueOf(numRows));
-        properties.setProperty("num_cols", String.valueOf(numCols));
     }
 
     private TileMap(byte[][] data) {
@@ -196,6 +191,7 @@ public class TileMap {
         StringReader r = new StringReader(text);
         try {
             properties.load(r);
+            Logger.info("Properties have been loaded from text: '{}'", text);
         } catch (IOException x) {
             Logger.error("Could not read properties from text {}", text);
             Logger.error(x);
