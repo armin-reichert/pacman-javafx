@@ -1,11 +1,9 @@
 !terrain
 #
-#Sun May 12 08:10:32 CEST 2024
+#Tue May 14 13:53:31 CEST 2024
 author=Armin Reichert
 description=Original Arcade map for Pac-Man game
 door_color=rgb(252,181,255)
-num_cols=28
-num_rows=36
 wall_fill_color=rgb(0,0,0)
 wall_stroke_color=rgb(33,33,255)
 !data
@@ -47,10 +45,8 @@ wall_stroke_color=rgb(33,33,255)
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 !food
 #
-#Sun May 12 08:10:32 CEST 2024
+#Tue May 14 13:53:31 CEST 2024
 food_color=rgb(254,189,180)
-num_cols=28
-num_rows=36
 !data
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0

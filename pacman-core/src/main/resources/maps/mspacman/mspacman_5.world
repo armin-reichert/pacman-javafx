@@ -2,8 +2,6 @@
 #
 #Tue May 14 09:53:04 CEST 2024
 door_color=rgb(252,181,255)
-num_cols=28
-num_rows=36
 wall_fill_color=rgb(255,183,255)
 wall_stroke_color=rgb(255,255,0)
 !data
@@ -47,8 +45,6 @@ wall_stroke_color=rgb(255,255,0)
 #
 #Tue May 14 09:53:04 CEST 2024
 food_color=rgb(0,255,255)
-num_cols=28
-num_rows=36
 !data
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
