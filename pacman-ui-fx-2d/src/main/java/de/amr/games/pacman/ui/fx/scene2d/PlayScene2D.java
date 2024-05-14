@@ -145,7 +145,7 @@ public class PlayScene2D extends GameScene2D {
                 drawSprite(sheet.getEmptyMazeSprite(), 0, t(3));
             }
         } else {
-            var terrainMap = game.world().terrainMap();
+            var terrainMap = game.world().map().terrainMap();
             terrainMapRenderer.setScaling(scalingPy.get());
             terrainMapRenderer.setWallStrokeColor(game.blinking().isOn() ?
                 Color.WHITE : Color.web(terrainMap.getProperty("wall_stroke_color")));
@@ -165,13 +165,13 @@ public class PlayScene2D extends GameScene2D {
                 world.energizerTiles().forEach(tile -> hideTileContent(world, tile));
             }
         } else {
-            var terrainMap = world.terrainMap();
+            var terrainMap = world.map().terrainMap();
             terrainMapRenderer.setScaling(getScaling());
             terrainMapRenderer.setWallStrokeColor(Color.web(terrainMap.getProperty("wall_stroke_color")));
             terrainMapRenderer.setWallFillColor(Color.web(terrainMap.getProperty("wall_fill_color")));
             terrainMapRenderer.drawMap(g, terrainMap);
 
-            var foodColor = Color.web(world.foodMap().getProperty("food_color"));
+            var foodColor = Color.web(world.map().foodMap().getProperty("food_color"));
             foodMapRenderer.setScaling(getScaling());
             foodMapRenderer.setPelletColor(foodColor);
             foodMapRenderer.setEnergizerColor(foodColor);

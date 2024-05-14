@@ -1,10 +1,14 @@
 #
-#Thu May 09 19:45:22 CEST 2024
+#Tue May 14 09:55:36 CEST 2024
+door_color=rgb(252,181,255)
 num_cols=28
 num_rows=36
-door_color=rgb(252,181,255)
-wall_stroke_color=rgb(98,142,216)
-wall_fill_color=rgb(80,54,217)
+wall_fill_color=rgb(255,183,174)
+wall_fill_color.5=rgb(255,183,255)
+wall_fill_color.6=rgb(222,183,174)
+wall_stroke_color=rgb(255,0,0)
+wall_stroke_color.5=rgb(255,255,0)
+wall_stroke_color.6=rgb(255,0,0)
 !data
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0

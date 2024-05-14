@@ -209,9 +209,9 @@ public class GameLevel3D extends Group {
 
     private void addPacManMaze3D(Group parent) {
         var world = context.game().world();
-        wallStrokeColorPy.set(getTileMapColor(world.terrainMap(), "wall_stroke_color", Color.rgb(33, 33, 255)));
-        wallFillColorPy.set(getTileMapColor(world.terrainMap(), "wall_fill_color", Color.rgb(0,0,0)));
-        foodColorPy.set(getTileMapColor(world.foodMap(), "food_color", Color.PINK));
+        wallStrokeColorPy.set(getTileMapColor(world.map().terrainMap(), "wall_stroke_color", Color.rgb(33, 33, 255)));
+        wallFillColorPy.set(getTileMapColor(world.map().terrainMap(), "wall_fill_color", Color.rgb(0,0,0)));
+        foodColorPy.set(getTileMapColor(world.map().terrainMap(), "food_color", Color.PINK));
         addMazeWalls(parent);
         addGhostHouse(parent);
         addFood3D(parent);
@@ -245,7 +245,7 @@ public class GameLevel3D extends Group {
         addHouseWall(parent, 17,15, 15,15);
 
         House house = context.game().world().house();
-        Color doorColor   = getTileMapColor(context.game().world().terrainMap(), "door_color", Color.rgb(254,184,174));
+        Color doorColor = getTileMapColor(context.game().world().map().terrainMap(), "door_color", Color.rgb(254,184,174));
         for (Vector2i wingTile : List.of(house.door().leftWing(), house.door().rightWing())) {
             var doorWing3D = new DoorWing3D(wingTile, doorColor, PY_3D_FLOOR_COLOR.get());
             doorWing3D.drawModePy.bind(PY_3D_DRAW_MODE);
@@ -307,7 +307,7 @@ public class GameLevel3D extends Group {
     }
 
     private void addMazeWalls(Group parent) {
-        TileMap terrainMap = context.game().world().terrainMap();
+        TileMap terrainMap = context.game().world().map().terrainMap();;
         var explored = new HashSet<Vector2i>();
 
         // Obstacles inside maze

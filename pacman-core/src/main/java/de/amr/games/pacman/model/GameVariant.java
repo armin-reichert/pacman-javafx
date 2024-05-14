@@ -13,6 +13,8 @@ import de.amr.games.pacman.model.world.*;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Stream;
@@ -53,9 +55,13 @@ public enum GameVariant implements GameModel {
         @Override
         public World createWorld(MapMaze mm) {
             if (1 <= mm.mapNumber() && mm.mapNumber() <= 4) {
-                return createArcadeWorld(
-                    String.format("/maps/mspacman/mspacman_%d.terrain", mm.mapNumber()),
-                    String.format("/maps/mspacman/mspacman_%d.food", mm.mapNumber()));
+                try {
+                    String path = String.format("/maps/mspacman/mspacman_%d.world", mm.mapNumber());
+                    URL url = getClass().getResource(path);
+                    return createArcadeWorld(url);
+                } catch (Exception x) {
+                    throw new IllegalArgumentException("Ms. Pac-Man world map creation failed for map-maze combination " + mm);
+                }
             }
             throw new IllegalArgumentException("Ms. Pac-Man map number must be in 1-4, is: " + mm.mapNumber());
         }
@@ -283,23 +289,35 @@ public enum GameVariant implements GameModel {
             World world;
             if (mm.mapNumber() == 1) {
                 world = createOriginalArcadeWorld();
-            } else {
-                var path = "/maps/masonic/masonic_" + (mm.mapNumber() - 1);
-                world = createArcadeWorld(path + ".terrain", path + ".food");
-                Logger.info("Created world from maps '{}'", path + ".(terrain|food)");
+            } else { // use one of Sean William's maps
+                var path = String.format("/maps/masonic/masonic_%d.world", mm.mapNumber() - 1);
+                try {
+                    URL url = getClass().getResource(path);
+                    world = createArcadeWorld(url);
+                    Logger.info("Created world from map '{}'", path + ".world");
+                } catch (Exception x) {
+                    throw new IllegalArgumentException(String.format("Could not create world map from path '%s'", path));
+                }
             }
             world.setBonusPosition(halfTileRightOf(13, 20));
             return world;
         }
 
         World createOriginalArcadeWorld() {
-            World world = createArcadeWorld("/maps/pacman.terrain", "/maps/pacman.food");
-            world.setDemoLevelRoute(List.of(ARCADE_MAP_DEMO_LEVEL_ROUTE));
-            List<Direction> up = List.of(UP);
-            Map<Vector2i, List<Direction>> fp = new HashMap<>();
-            Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> fp.put(tile, up));
-            world.setForbiddenPassages(fp);
-            return world;
+            var path = "/maps/pacman.world";
+            try {
+                URL url = getClass().getResource(path);
+                World world = createArcadeWorld(url);
+                world.setDemoLevelRoute(List.of(ARCADE_MAP_DEMO_LEVEL_ROUTE));
+                List<Direction> up = List.of(UP);
+                Map<Vector2i, List<Direction>> fp = new HashMap<>();
+                Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26))
+                    .forEach(tile -> fp.put(tile, up));
+                world.setForbiddenPassages(fp);
+                return world;
+            } catch (Exception x) {
+                throw new IllegalArgumentException(String.format("Could not create Arcade world from map at path '%s'", path));
+            }
         }
 
         @Override
@@ -494,14 +512,12 @@ public enum GameVariant implements GameModel {
         }
     }
 
-    World createArcadeWorld(String terrainMapURL, String foodMapURL) {
-        var terrainMap = TileMap.fromURL(getClass().getResource(terrainMapURL), Tiles.TERRAIN_TILES_END);
-        validateArcadeMapSize(terrainMap);
+    World createArcadeWorld(URL worldMapURL) throws IOException {
+        var worldMap = new WorldMap(worldMapURL);
+        validateArcadeMapSize(worldMap.terrainMap());
+        validateArcadeMapSize(worldMap.foodMap());
 
-        var foodMap = TileMap.fromURL(getClass().getResource(foodMapURL), Tiles.FOOD_TILES_END);
-        validateArcadeMapSize(foodMap);
-
-        var world = new World(terrainMap, foodMap);
+        var world = new World(worldMap);
         world.setHouse(createArcadeHouse());
         world.house().setTopLeftTile(v2i(10, 15));
         world.setPacPosition(halfTileRightOf(13, 26));

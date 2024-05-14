@@ -24,8 +24,7 @@ import static java.util.Collections.unmodifiableList;
  */
 public class World {
 
-    private final TileMap terrainMap;
-    private final TileMap foodMap;
+    private final WorldMap map;
     private final List<Vector2i> energizerTiles;
     private final List<Portal> portals;
 
@@ -44,29 +43,27 @@ public class World {
     private Map<Vector2i, List<Direction>> forbiddenPassages = Map.of();
 
     /**
-     * @param terrainMap terrain map
-     * @param foodMap food map
+     * @param worldMap terrain+food map
      */
-    public World(TileMap terrainMap, TileMap foodMap) {
-        this.terrainMap = checkNotNull(terrainMap);
-        this.foodMap = checkNotNull(foodMap);
+    public World(WorldMap worldMap) {
+        this.map = checkNotNull(worldMap);
 
         // build portals
         var portalList = new ArrayList<Portal>();
-        int lastColumn = terrainMap.numCols() - 1;
-        for (int row = 0; row < terrainMap.numRows(); ++row) {
+        int lastColumn = numCols() - 1;
+        for (int row = 0; row < numRows(); ++row) {
             var leftBorderTile = v2i(0, row);
             var rightBorderTile = v2i(lastColumn, row);
-            if (terrainMap.get(row, 0) == Tiles.TUNNEL && terrainMap.get(row, lastColumn) == Tiles.TUNNEL) {
+            if (worldMap.terrain(row, 0) == Tiles.TUNNEL && worldMap.terrain(row, lastColumn) == Tiles.TUNNEL) {
                 portalList.add(new Portal(leftBorderTile, rightBorderTile, 2));
             }
         }
         portalList.trimToSize();
         portals = unmodifiableList(portalList);
 
-        energizerTiles = foodMap.tiles().filter(this::isEnergizerTile).toList();
-        eaten = new BitSet(foodMap.numCols() * foodMap.numRows());
-        totalFoodCount = (int) foodMap.tiles().filter(this::isFoodTile).count();
+        energizerTiles = tiles().filter(this::isEnergizerTile).toList();
+        eaten = new BitSet(numCols() * numRows());
+        totalFoodCount = (int) tiles().filter(this::isFoodTile).count();
         uneatenFoodCount = totalFoodCount;
     }
 
@@ -79,28 +76,24 @@ public class World {
     }
 
     public int numCols() {
-        return terrainMap.numCols();
+        return map.numCols();
     }
 
     public int numRows() {
-        return terrainMap.numRows();
+        return map.numRows();
     }
 
     public Stream<Vector2i> tiles() {
-        return terrainMap.tiles();
+        return map.tiles();
     }
 
-    public TileMap terrainMap() {
-        return terrainMap;
-    }
-
-    public TileMap foodMap() {
-        return foodMap;
+    public WorldMap map() {
+        return map;
     }
 
     public boolean insideBounds(Vector2i tile) {
         checkTileNotNull(tile);
-        return terrainMap.insideBounds(tile.y(), tile.x());
+        return map.terrainMap().insideBounds(tile.y(), tile.x());
     }
 
     public boolean containsPoint(double x, double y) {
@@ -186,7 +179,7 @@ public class World {
     }
 
     public boolean isBlockedTile(Vector2i tile) {
-        return insideBounds(tile) && isTerrainBlocked(terrainMap.get(tile));
+        return insideBounds(tile) && isTerrainBlocked(map.terrain(tile));
     }
 
     private boolean isTerrainBlocked(byte content) {
@@ -200,7 +193,7 @@ public class World {
         if (!insideBounds(tile)) {
             return false;
         }
-        return terrainMap.get(tile) == Tiles.TUNNEL;
+        return map.terrain(tile) == Tiles.TUNNEL;
     }
 
     public boolean isIntersection(Vector2i tile) {
@@ -232,7 +225,7 @@ public class World {
             return; // raise error?
         }
         if (hasFoodAt(tile)) {
-            eaten.set(foodMap.index(tile));
+            eaten.set(map.foodMap().index(tile));
             --uneatenFoodCount;
         }
     }
@@ -241,27 +234,27 @@ public class World {
         if (!insideBounds(tile)) {
             return false;
         }
-        return foodMap.get(tile) != Tiles.EMPTY;
+        return map.food(tile) != Tiles.EMPTY;
     }
 
     public boolean isEnergizerTile(Vector2i tile) {
         if (!insideBounds(tile)) {
             return false;
         }
-        return foodMap.get(tile) == Tiles.ENERGIZER;
+        return map.food(tile) == Tiles.ENERGIZER;
     }
 
     public boolean hasFoodAt(Vector2i tile) {
         if (!insideBounds(tile)) {
             return false;
         }
-        return foodMap.get(tile) != EMPTY && !eaten.get(foodMap.index(tile));
+        return map.food(tile) != EMPTY && !eaten.get(map.foodMap().index(tile));
     }
 
     public boolean hasEatenFoodAt(Vector2i tile) {
         if (!insideBounds(tile)) {
             return false;
         }
-        return eaten.get(foodMap.index(tile));
+        return eaten.get(map.foodMap().index(tile));
     }
 }

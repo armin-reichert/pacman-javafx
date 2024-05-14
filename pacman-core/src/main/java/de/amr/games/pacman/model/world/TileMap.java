@@ -28,14 +28,23 @@ public class TileMap {
     /**
      * @param url URL of tile map file
      * @param valueLimit upper bound (exclusive) of allowed tile values
-     * @return tile map loaded from given URL or {@code NULL}
+     * @return tile map loaded from given URL
      */
-    public static TileMap fromURL(URL url, byte valueLimit) {
-        try (BufferedReader r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
-            return parse(r.lines().toList(), valueLimit);
+    public static TileMap load(URL url, byte valueLimit) {
+        try (var r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+            return load(r, valueLimit);
         } catch (IOException x) {
             throw new IllegalArgumentException("Cannot load tile map from URL" + url);
         }
+    }
+
+    /**
+     * @param br buffered reader of UTF8-encoded characters
+     * @param valueLimit upper bound (exclusive) of allowed tile values
+     * @return tile map loaded from given URL or {@code NULL}
+     */
+    public static TileMap load(BufferedReader br, byte valueLimit) {
+        return parse(br.lines().toList(), valueLimit);
     }
 
     private final Properties properties = new Properties();
@@ -250,6 +259,15 @@ public class TileMap {
     public void clear() {
         for (byte[] row : data) {
             Arrays.fill(row, Tiles.EMPTY);
+        }
+    }
+
+    public void save(File file) {
+        try (FileWriter w = new FileWriter(file, StandardCharsets.UTF_8)) {
+            write(w);
+            Logger.info("Tile map saved to file '{}'.", file);
+        } catch (Exception x) {
+            Logger.error(x);
         }
     }
 
