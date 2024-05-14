@@ -141,7 +141,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         // wall and food colors for different map-maze combinations
         theme.set("mspacman.wallStrokeColor.1",   Color.rgb(255, 0, 0));
         theme.set("mspacman.wallFillColor.1",     Color.rgb(255, 183, 174));
-        theme.set("mspacman.foodColor.1",         Color.rgb(255, 255, 0));
+        theme.set("mspacman.foodColor.1",         Color.rgb(222, 222, 255));
 
         theme.set("mspacman.wallStrokeColor.2",   Color.rgb(222, 222, 255));
         theme.set("mspacman.wallFillColor.2",     Color.rgb(71, 183, 255));

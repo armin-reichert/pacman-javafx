@@ -99,11 +99,11 @@ public class WorldMap {
 
     public void save(File file) {
         try (FileWriter w = new FileWriter(file, StandardCharsets.UTF_8)) {
-            PrintWriter pw = new PrintWriter(w);
-            pw.println("!terrain");
-            terrainMap.write(pw);
-            pw.println("!food");
-            foodMap.write(pw);
+            w.write("!terrain\r\n");
+            terrainMap.write(w);
+            w.write("!food\r\n");
+            foodMap.write(w);
+            w.close();
             Logger.info("World map saved to file '{}'.", file);
         } catch (Exception x) {
             Logger.error(x);

@@ -22,7 +22,6 @@ import static de.amr.games.pacman.lib.Globals.v2i;
 /**
  * @author Armin Reichert
  */
-@SuppressWarnings("unchecked")
 public class TileMap {
 
     /**
@@ -265,27 +264,15 @@ public class TileMap {
     public void save(File file) {
         try (FileWriter w = new FileWriter(file, StandardCharsets.UTF_8)) {
             write(w);
+            w.close();
             Logger.info("Tile map saved to file '{}'.", file);
         } catch (Exception x) {
             Logger.error(x);
         }
     }
 
-    public void write(Writer w) {
-        try {
-            writeProperties(w);
-            writeData(w);
-        } catch (IOException x) {
-            Logger.error("Could not save tile map");
-            Logger.error(x);
-        }
-    }
-
-    private void writeProperties(Writer w) throws IOException {
+    public void write(Writer w) throws IOException {
         properties.store(w, "");
-    }
-
-    private void writeData(Writer w) throws IOException {
         w.write("!data\r\n");
         for (int row = 0; row < numRows(); ++row) {
             for (int col = 0; col < numCols(); ++col) {
