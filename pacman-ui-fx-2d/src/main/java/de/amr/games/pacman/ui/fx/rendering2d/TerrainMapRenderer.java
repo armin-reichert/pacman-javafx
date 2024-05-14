@@ -4,11 +4,23 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.Tiles;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
+import org.tinylog.Logger;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static de.amr.games.pacman.lib.Direction.*;
+import static de.amr.games.pacman.lib.Direction.UP;
 
 public class TerrainMapRenderer implements TileMapRenderer {
 
@@ -136,4 +148,78 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.setFill(color);
         g.fillRect(x, y + s(3.5f), s(8), s(1));
     }
+
+    private boolean isDouble(byte tileContent) {
+        return tileContent == Tiles.DWALL_H || tileContent == Tiles.DWALL_V
+            || tileContent == Tiles.DCORNER_NE || tileContent == Tiles.DCORNER_SE || tileContent == Tiles.DCORNER_NW || tileContent == Tiles.DCORNER_SW;
+    }
+
+    public void _drawMap(GraphicsContext g, TileMap map) {
+        map.tiles()
+            .filter(tile -> isDouble(map.get(tile)) || map.get(tile) == Tiles.DOOR)
+            .forEach(tile -> drawTile(g, tile, map.get(tile)));
+        drawPathsInsideMap(g, map);
+    }
+
+    private void drawPathsInsideMap(GraphicsContext g, TileMap map) {
+        var explored = new HashSet<Vector2i>();
+
+        // Obstacles inside maze
+        map.tiles()
+            .filter(tile -> map.get(tile) == Tiles.CORNER_NW)
+            .filter(corner -> corner.x() > 0 && corner.x() < map.numCols() - 1)
+            .filter(corner -> corner.y() > 0 && corner.y() < map.numRows() - 1)
+            .map(corner -> buildPath(map, explored, corner, RIGHT))
+            .forEach(path -> drawPath(g, map, path));
+    }
+
+    private void drawPath(GraphicsContext g, TileMap map, List<Vector2i> path) {
+        double s4 = s(4), s8 = s(8);
+        g.setFill(wallFillColor);
+        g.beginPath();
+        for (int i = 0; i < path.size(); ++i) {
+            if (i < path.size() - 1) {
+                var current = path.get(i);
+                var next = path.get(i+1);
+                switch (map.get(current)) {
+                    case Tiles.WALL_H, Tiles.WALL_V -> g.lineTo(next.x() * s8, next.y() * s8);
+                }
+            }
+        }
+        g.fill();
+    }
+
+    private static List<Vector2i> buildPath(
+        TileMap terrainMap, Set<Vector2i> explored, Vector2i startTile, Direction startDirection)
+    {
+        List<Vector2i> path = new ArrayList<>();
+        Vector2i current = startTile;
+        Direction moveDir = startDirection;
+        while (true) {
+            path.add(current);
+            explored.add(current);
+            var next = current.plus(moveDir.vector());
+            if (!terrainMap.insideBounds(next)) {
+                break;
+            }
+            if (explored.contains(next)) {
+                path.add(next);
+                break;
+            }
+            moveDir = newMoveDir(moveDir, terrainMap.get(next));
+            current = next;
+        }
+        return path;
+    }
+
+    private static Direction newMoveDir(Direction moveDir, byte tileValue) {
+        return switch (tileValue) {
+            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> moveDir == LEFT  ? DOWN  : RIGHT;
+            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> moveDir == RIGHT ? DOWN  : LEFT;
+            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> moveDir == DOWN  ? LEFT  : UP;
+            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> moveDir == DOWN  ? RIGHT : UP;
+            default -> moveDir;
+        };
+    }
+
 }
