@@ -169,8 +169,8 @@ public class GameLevel3D extends Group {
         floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
 
         switch (context.game().variant()) {
-            case MS_PACMAN -> createMsPacManMaze3D(context.game().levelNumber());
-            case PACMAN    -> addPacManMaze3D();
+            case MS_PACMAN -> createMsPacManMaze3D(mazeGroup, context.game().mapMaze(context.game().levelNumber()));
+            case PACMAN    -> addPacManMaze3D(mazeGroup);
         }
 
         pac3D = switch (context.game().variant()) {
@@ -197,26 +197,24 @@ public class GameLevel3D extends Group {
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
 
-    private void createMsPacManMaze3D(int levelNumber) {
-        var game = context.game();
-        MapMaze mm = game.mapMaze(levelNumber);
-        //TODO store these in terrain maps
+    private void createMsPacManMaze3D(Group parent, MapMaze mm) {
+        //TODO store these in terrain maps?
         wallStrokeColorPy.set(context.theme().get("mspacman.wallStrokeColor", mm.mapNumber(), mm.mazeNumber()));
         wallFillColorPy.set(context.theme().get("mspacman.wallFillColor",   mm.mapNumber(), mm.mazeNumber()));
         foodColorPy.set(context.theme().get("mspacman.foodColor", mm.mapNumber(), mm.mazeNumber()));
-        addMazeWalls(mazeGroup);
-        addGhostHouse(mazeGroup);
-        addFood3D(mazeGroup);
+        addMazeWalls(parent);
+        addGhostHouse(parent);
+        addFood3D(parent);
     }
 
-    private void addPacManMaze3D() {
+    private void addPacManMaze3D(Group parent) {
         var world = context.game().world();
         wallStrokeColorPy.set(getTileMapColor(world.terrainMap(), "wall_stroke_color", Color.rgb(33, 33, 255)));
         wallFillColorPy.set(getTileMapColor(world.terrainMap(), "wall_fill_color", Color.rgb(0,0,0)));
         foodColorPy.set(getTileMapColor(world.foodMap(), "food_color", Color.PINK));
-        addMazeWalls(mazeGroup);
-        addGhostHouse(mazeGroup);
-        addFood3D(mazeGroup);
+        addMazeWalls(parent);
+        addGhostHouse(parent);
+        addFood3D(parent);
     }
 
     private void addFood3D(Group parent) {
@@ -528,10 +526,6 @@ public class GameLevel3D extends Group {
         livesCounter3D.setVisible(hasCredit);
     }
 
-    public void setHouseLightOn(boolean state) {
-        houseLight.setLightOn(state);
-    }
-
     public void replaceBonus3D(Bonus bonus) {
         checkNotNull(bonus);
         if (bonus3D != null) {
@@ -623,11 +617,12 @@ public class GameLevel3D extends Group {
         boolean houseOpen = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .filter(ghost -> ghost.position().euclideanDistance(house.door().entryPosition()) <= 1.5 * TS)
             .anyMatch(Ghost::isVisible);
-        setHouseLightOn(houseUsed);
+        houseLight.setLightOn(houseUsed);
         if (houseOpen) {
             doorWings3D().map(DoorWing3D::traversalAnimation).forEach(Transition::play);
         }
     }
+
     public Pac3D pac3D() {
         return pac3D;
     }

@@ -71,6 +71,12 @@ public interface GameModel {
 
     World createWorld(MapMaze mapMaze);
 
+    /**
+     * Map-maze combination used in given level.
+     *
+     * @param levelNumber level number, starting with 1
+     * @return map-maze combination
+     */
     MapMaze mapMaze(int levelNumber);
 
     void setUseRandomMaps(boolean value);
