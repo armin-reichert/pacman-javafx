@@ -123,15 +123,15 @@ public class GameLevel3D extends Group {
 
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
-    private final Group foodGroup = new Group();
     private final Group levelCounterGroup = new Group();
+    private final Box floor = new Box();
     private final PointLight houseLight = new PointLight();
     private final Pac3D pac3D;
     private final List<Ghost3D> ghosts3D;
-    private final Box floor = new Box();
-    private Message3D message3D;
+    private final Set<Eatable3D> food3D = new HashSet<>();
     private LivesCounter3D livesCounter3D;
     private Bonus3D bonus3D;
+    private Message3D message3D;
 
     public GameLevel3D(GameSceneContext context) {
         this.context = checkNotNull(context);
@@ -151,7 +151,7 @@ public class GameLevel3D extends Group {
 
         switch (context.game().variant()) {
             case MS_PACMAN -> createMsPacManMaze3D(context.game().levelNumber());
-            case PACMAN    -> createPacManMaze3D();
+            case PACMAN    -> addPacManMaze3D();
         }
 
         pac3D = switch (context.game().variant()) {
@@ -168,7 +168,7 @@ public class GameLevel3D extends Group {
 
         // Walls must be added after the guys! Otherwise, transparency is not working correctly.
         getChildren().addAll(ghosts3D);
-        getChildren().addAll(pac3D, pac3D.light(), message3D, levelCounterGroup, livesCounter3D, foodGroup, worldGroup);
+        getChildren().addAll(pac3D, pac3D.light(), message3D, levelCounterGroup, livesCounter3D, worldGroup);
 
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
         pac3D.drawModePy.bind(PY_3D_DRAW_MODE);
@@ -180,39 +180,39 @@ public class GameLevel3D extends Group {
 
     private void createMsPacManMaze3D(int levelNumber) {
         var game = context.game();
-        var world = game.world();
         MapMaze mm = game.mapMaze(levelNumber);
         //TODO store these in terrain maps
         wallStrokeColorPy.set(context.theme().get("mspacman.wallStrokeColor", mm.mapNumber(), mm.mazeNumber()));
         wallFillColorPy.set(context.theme().get("mspacman.wallFillColor",   mm.mapNumber(), mm.mazeNumber()));
         foodColorPy.set(context.theme().get("mspacman.foodColor", mm.mapNumber(), mm.mazeNumber()));
-        buildWalls(mazeGroup);
+        addMazeWalls(mazeGroup);
         addGhostHouse(mazeGroup);
-        createFood3D(foodGroup);
+        addFood3D(mazeGroup);
     }
 
-    private void createPacManMaze3D() {
+    private void addPacManMaze3D() {
         var world = context.game().world();
         wallStrokeColorPy.set(getTileMapColor(world.terrainMap(), "wall_stroke_color", Color.rgb(33, 33, 255)));
         wallFillColorPy.set(getTileMapColor(world.terrainMap(), "wall_fill_color", Color.rgb(0,0,0)));
         foodColorPy.set(getTileMapColor(world.foodMap(), "food_color", Color.PINK));
-        buildWalls(mazeGroup);
+        addMazeWalls(mazeGroup);
         addGhostHouse(mazeGroup);
-        createFood3D(foodGroup);
+        addFood3D(mazeGroup);
     }
 
-    private void createFood3D(Group parent) {
+    private void addFood3D(Group parent) {
         var world = context.game().world();
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             if (world.isEnergizerTile(tile)) {
                 var energizer3D = new Energizer3D(ENERGIZER_RADIUS);
+                addEnergizerAnimation(world, energizer3D);
+                food3D.add(energizer3D);
                 energizer3D.root().materialProperty().bind(mazeFoodMaterialPy);
                 energizer3D.placeAtTile(tile);
                 parent.getChildren().add(energizer3D.root());
-                addEnergizerAnimation(world, energizer3D);
-
             } else {
                 var pellet3D = new Pellet3D(context.theme().get("model3D.pellet"), PELLET_RADIUS);
+                food3D.add(pellet3D);
                 pellet3D.root().materialProperty().bind(mazeFoodMaterialPy);
                 pellet3D.placeAtTile(tile);
                 parent.getChildren().add(pellet3D.root());
@@ -289,7 +289,7 @@ public class GameLevel3D extends Group {
         return path;
     }
 
-    private void buildWalls(Group parent) {
+    private void addMazeWalls(Group parent) {
         TileMap terrainMap = context.game().world().terrainMap();
         var explored = new HashSet<Vector2i>();
 
@@ -627,12 +627,12 @@ public class GameLevel3D extends Group {
         return livesCounter3D;
     }
 
-    public Stream<Eatable3D> allEatables() {
-        return foodGroup.getChildren().stream().map(Node::getUserData).map(Eatable3D.class::cast);
+    public Stream<Eatable3D> food3D() {
+        return food3D.stream();
     }
 
     public Stream<Energizer3D> energizers3D() {
-        return allEatables().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
+        return food3D().filter(Energizer3D.class::isInstance).map(Energizer3D.class::cast);
     }
 
     public void startEnergizerAnimation() {
@@ -643,8 +643,8 @@ public class GameLevel3D extends Group {
         energizers3D().forEach(Energizer3D::stopPumping);
     }
 
-    public Optional<Eatable3D> eatableAt(Vector2i tile) {
+    public Optional<Eatable3D> food3D(Vector2i tile) {
         checkTileNotNull(tile);
-        return allEatables().filter(eatable -> eatable.tile().equals(tile)).findFirst();
+        return food3D().filter(eatable -> eatable.tile().equals(tile)).findFirst();
     }
 }

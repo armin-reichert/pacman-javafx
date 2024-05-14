@@ -8,8 +8,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.World;
@@ -218,7 +216,7 @@ public class PlayScene3D implements GameScene {
         if (level3D == null) {
             replaceGameLevel3D();
         }
-        level3D.allEatables().forEach(
+        level3D.food3D().forEach(
             eatable3D -> eatable3D.root().setVisible(!world.hasEatenFoodAt(eatable3D.tile())));
         if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
             level3D.startEnergizerAnimation();
@@ -294,7 +292,7 @@ public class PlayScene3D implements GameScene {
                 assertLevel3DExists();
                 context.stopAllSounds();
                 // if cheat has been used to complete level, 3D food might still exist:
-                level3D.allEatables().forEach(level3D::eat);
+                level3D.food3D().forEach(level3D::eat);
                 level3D.livesCounter3D().stopAnimation();
                 playLevelCompleteAnimation(context.game().level().orElseThrow());
             }
@@ -362,12 +360,12 @@ public class PlayScene3D implements GameScene {
         if (event.tile().isEmpty()) {
             world.tiles()
                 .filter(world::hasEatenFoodAt)
-                .map(level3D::eatableAt)
+                .map(level3D::food3D)
                 .flatMap(Optional::stream)
                 .forEach(Eatable3D::onEaten);
         } else {
             Vector2i tile = event.tile().get();
-            level3D.eatableAt(tile).ifPresent(level3D::eat);
+            level3D.food3D(tile).ifPresent(level3D::eat);
         }
     }
 
@@ -450,8 +448,8 @@ public class PlayScene3D implements GameScene {
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure how this is done in Arcade game
             context.stopAudioClip("audio.pacman_munch");
         }
-        if (context.game().pac().isAlive() && context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
-            .anyMatch(Ghost::isVisible)) {
+        if (context.game().pac().isAlive()
+            && context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
             context.ensureAudioLoop("audio.ghost_returning");
         } else {
             context.stopAudioClip("audio.ghost_returning");
