@@ -203,7 +203,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
             path.add(current);
             explored.add(current);
             var next = current.plus(moveDir.vector());
-            if (!terrainMap.insideBounds(next)) {
+            if (terrainMap.outOfBounds(next)) {
                 break;
             }
             if (explored.contains(next)) {

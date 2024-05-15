@@ -93,7 +93,7 @@ public class World {
 
     public boolean insideBounds(Vector2i tile) {
         checkTileNotNull(tile);
-        return map.terrain().insideBounds(tile.y(), tile.x());
+        return !map.terrain().outOfBounds(tile.y(), tile.x());
     }
 
     public boolean containsPoint(double x, double y) {

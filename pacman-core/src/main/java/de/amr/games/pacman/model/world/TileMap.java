@@ -30,39 +30,39 @@ public class TileMap {
     private final byte[][] data;
 
     public static TileMap parse(List<String> lines, byte valueLimit) {
-
         // First pass: read property section and determine data section size
         int numDataRows = 0, numDataCols = -1;
-        int dataSectionStart = -1;
+        int dataSectionStartIndex = -1;
         StringBuilder propertySection = new StringBuilder();
         for (int lineIndex = 0; lineIndex < lines.size(); ++lineIndex) {
             String line = lines.get(lineIndex);
-            if (line.startsWith(DATA_SECTION_START)) {
-                dataSectionStart = lineIndex + 1;
+            if (DATA_SECTION_START.equals(line)) {
+                dataSectionStartIndex = lineIndex + 1;
             }
-            else if (dataSectionStart == -1) {
+            else if (dataSectionStartIndex == -1) {
                 propertySection.append(line).append("\n");
             } else {
                 numDataRows++;
                 String[] columns = line.split(",");
                 if (numDataCols == -1) {
                     numDataCols = columns.length;
-                } else if (numDataCols != columns.length) {
-                    Logger.error("Tile map is inconsistent, row={}", lineIndex);
+                } else if (columns.length != numDataCols) {
+                    Logger.error("Inconsistent tile map data: {} columns in line {}, expected {}",
+                        columns.length, lineIndex, numDataCols);
                 }
             }
         }
         if (numDataRows == 0) {
-            Logger.error("No data section found");
+            Logger.error("Inconsistent tile map data: No data");
         }
 
-        // Second pass: read data
+        // Second pass: read data and build new tile map
         var tileMap = new TileMap(new byte[numDataRows][numDataCols]);
         tileMap.setPropertiesFromText(propertySection.toString());
 
-        for (int lineIndex = dataSectionStart; lineIndex < lines.size(); ++lineIndex) {
+        for (int lineIndex = dataSectionStartIndex; lineIndex < lines.size(); ++lineIndex) {
             String line = lines.get(lineIndex);
-            int row = lineIndex -dataSectionStart;
+            int row = lineIndex -dataSectionStartIndex;
             String[] columns = line.split(",");
             for (int col = 0; col < columns.length; ++col) {
                 String entry = columns[col].trim();
@@ -130,6 +130,10 @@ public class TileMap {
         return data.length;
     }
 
+    public boolean outOfBounds(Vector2i tile) {
+        return outOfBounds(tile.y(), tile.x());
+    }
+
     public boolean outOfBounds(int row, int col) {
         return row < 0 || row >= numRows() || col < 0 || col >= numCols();
     }
@@ -158,7 +162,8 @@ public class TileMap {
         StringReader r = new StringReader(text);
         try {
             properties.load(r);
-            Logger.info("Properties have been loaded from text: '{}'", text);
+            Logger.info("Properties loaded from text:");
+            properties.list(System.out);
         } catch (IOException x) {
             Logger.error("Could not read properties from text {}", text);
             Logger.error(x);
