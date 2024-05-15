@@ -509,8 +509,8 @@ public enum GameVariant implements GameModel {
 
     World createArcadeWorld(URL worldMapURL) throws IOException {
         var worldMap = new WorldMap(worldMapURL);
-        validateArcadeMapSize(worldMap.terrainMap());
-        validateArcadeMapSize(worldMap.foodMap());
+        validateArcadeMapSize(worldMap.terrain());
+        validateArcadeMapSize(worldMap.food());
 
         var world = new World(worldMap);
         world.setHouse(createArcadeHouse());

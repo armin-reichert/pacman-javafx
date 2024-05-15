@@ -93,7 +93,7 @@ public class World {
 
     public boolean insideBounds(Vector2i tile) {
         checkTileNotNull(tile);
-        return map.terrainMap().insideBounds(tile.y(), tile.x());
+        return map.terrain().insideBounds(tile.y(), tile.x());
     }
 
     public boolean containsPoint(double x, double y) {
@@ -225,7 +225,7 @@ public class World {
             return; // raise error?
         }
         if (hasFoodAt(tile)) {
-            eaten.set(map.foodMap().index(tile));
+            eaten.set(map.food().index(tile));
             --uneatenFoodCount;
         }
     }
@@ -248,13 +248,13 @@ public class World {
         if (!insideBounds(tile)) {
             return false;
         }
-        return map.food(tile) != EMPTY && !eaten.get(map.foodMap().index(tile));
+        return map.food(tile) != EMPTY && !eaten.get(map.food().index(tile));
     }
 
     public boolean hasEatenFoodAt(Vector2i tile) {
         if (!insideBounds(tile)) {
             return false;
         }
-        return eaten.get(map.foodMap().index(tile));
+        return eaten.get(map.food().index(tile));
     }
 }

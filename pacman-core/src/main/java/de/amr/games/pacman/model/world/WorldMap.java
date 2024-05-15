@@ -7,103 +7,98 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 
 public class WorldMap {
 
-    public static void main(String[] args) throws IOException {
-        URL url = WorldMap.class.getResource("/maps/pacman.world");
-        if (url != null) {
-            var worldMap = new WorldMap(url);
-            System.err.println(worldMap.terrainMap().numRows());
-            System.err.println(worldMap.foodMap().numRows());
-        }
+    static final String TERRAIN_SECTION_START = "!terrain";
+    static final String FOOD_SECTION_START    = "!food";
+
+    private TileMap terrain;
+    private TileMap food;
+
+    public static WorldMap copyOf(WorldMap other) {
+        return new WorldMap(TileMap.copyOf(other.terrain), TileMap.copyOf(other.food));
     }
 
-    private final TileMap terrainMap;
-    private final TileMap foodMap;
-
-    public static WorldMap copy(WorldMap other) {
-        return new WorldMap(TileMap.copy(other.terrainMap), TileMap.copy(other.foodMap));
-    }
-
-    public WorldMap(TileMap terrainMap, TileMap foodMap) {
-        this.terrainMap = terrainMap;
-        this.foodMap = foodMap;
+    public WorldMap(TileMap terrain, TileMap food) {
+        this.terrain = terrain;
+        this.food = food;
     }
 
     public WorldMap(URL url) throws IOException {
-        this(new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8)));
-        Logger.info("World map read successfully, url={}", url);
+        var r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
+        parse(r.lines());
     }
 
-    public WorldMap(BufferedReader br) {
-        List<String> lines = br.lines().toList();
-        List<String> terrainMapLines = new ArrayList<>();
-        List<String> foodMapLines = new ArrayList<>();
-        boolean readTerrain = false, readFood = false;
-        for (var line : lines) {
-            if ("!terrain".equals(line)) {
-                readTerrain = true;
-            } else if ("!food".equals(line)) {
-                readFood = true;
-                readTerrain = false;
-            } else if (readTerrain) {
-                terrainMapLines.add(line);
-            } else if (readFood) {
-                foodMapLines.add(line);
+    public WorldMap(Stream<String> lines) {
+        parse(lines);
+    }
+
+    private void parse(Stream<String> lines) {
+        var terrainSection = new ArrayList<String>();
+        var foodSection = new ArrayList<String>();
+        boolean inTerrainSection = false, inFoodSection = false;
+        for (var line : lines.toList()) {
+            if (TERRAIN_SECTION_START.equals(line)) {
+                inTerrainSection = true;
+            } else if (FOOD_SECTION_START.equals(line)) {
+                inTerrainSection = false;
+                inFoodSection = true;
+            } else if (inTerrainSection) {
+                terrainSection.add(line);
+            } else if (inFoodSection) {
+                foodSection.add(line);
             } else {
-                Logger.info("Skip line: '{}'", line);
+                Logger.error("Line skipped: '{}'", line);
             }
         }
-        terrainMap = TileMap.parse(terrainMapLines, Tiles.TERRAIN_TILES_END);
-        foodMap = TileMap.parse(foodMapLines, Tiles.FOOD_TILES_END);
+        terrain = TileMap.parse(terrainSection, Tiles.TERRAIN_TILES_END);
+        food = TileMap.parse(foodSection, Tiles.FOOD_TILES_END);
     }
 
     public int numRows() {
-        return terrainMap.numRows();
+        return terrain.numRows();
     }
 
     public int numCols() {
-        return terrainMap.numCols();
+        return terrain.numCols();
     }
 
     public Stream<Vector2i> tiles() {
-        return terrainMap.tiles();
+        return terrain.tiles();
     }
 
-    public TileMap terrainMap() {
-        return terrainMap;
-    }
-
-    public TileMap foodMap() {
-        return foodMap;
+    public TileMap terrain() {
+        return terrain;
     }
 
     public byte terrain(Vector2i tile) {
-        return terrainMap.get(tile);
+        return terrain.get(tile);
     }
 
     public byte terrain(int row, int col) {
-        return terrainMap.get(row, col);
+        return terrain.get(row, col);
+    }
+
+    public TileMap food() {
+        return food;
     }
 
     public byte food(Vector2i tile) {
-        return foodMap.get(tile);
+        return food.get(tile);
     }
 
     public byte food(int row, int col) {
-        return foodMap.get(row, col);
+        return food.get(row, col);
     }
 
     public void save(File file) {
         try (FileWriter w = new FileWriter(file, StandardCharsets.UTF_8)) {
             w.write("!terrain\r\n");
-            terrainMap.write(w);
+            terrain.write(w);
             w.write("!food\r\n");
-            foodMap.write(w);
-            w.close();
+            food.write(w);
             Logger.info("World map saved to file '{}'.", file);
         } catch (Exception x) {
             Logger.error(x);

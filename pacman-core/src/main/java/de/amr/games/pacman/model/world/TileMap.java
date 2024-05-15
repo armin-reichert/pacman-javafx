@@ -24,27 +24,7 @@ import static de.amr.games.pacman.lib.Globals.v2i;
  */
 public class TileMap {
 
-    /**
-     * @param url URL of tile map file
-     * @param valueLimit upper bound (exclusive) of allowed tile values
-     * @return tile map loaded from given URL
-     */
-    public static TileMap load(URL url, byte valueLimit) {
-        try (var r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
-            return load(r, valueLimit);
-        } catch (IOException x) {
-            throw new IllegalArgumentException("Cannot load tile map from URL" + url);
-        }
-    }
-
-    /**
-     * @param br buffered reader of UTF8-encoded characters
-     * @param valueLimit upper bound (exclusive) of allowed tile values
-     * @return tile map loaded from given URL or {@code NULL}
-     */
-    public static TileMap load(BufferedReader br, byte valueLimit) {
-        return parse(br.lines().toList(), valueLimit);
-    }
+    static final String DATA_SECTION_START = "!data";
 
     private final Properties properties = new Properties();
     private final byte[][] data;
@@ -57,7 +37,7 @@ public class TileMap {
         StringBuilder propertySection = new StringBuilder();
         for (int lineIndex = 0; lineIndex < lines.size(); ++lineIndex) {
             String line = lines.get(lineIndex);
-            if (line.startsWith("!data")) {
+            if (line.startsWith(DATA_SECTION_START)) {
                 dataSectionStart = lineIndex + 1;
             }
             else if (dataSectionStart == -1) {
@@ -102,7 +82,7 @@ public class TileMap {
         return tileMap;
     }
 
-    public static TileMap copy(TileMap other) {
+    public static TileMap copyOf(TileMap other) {
         var copy = new TileMap(other.numRows(), other.numCols());
         for (int row = 0; row < other.numRows(); ++row) {
             copy.data[row] = Arrays.copyOf(other.data[row], other.numCols());
@@ -164,6 +144,7 @@ public class TileMap {
         return (T) properties.get(key);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getPropertyOrDefault(String key, T defaultValue) {
         return hasProperty(key) ?  (T) properties.get(key) : defaultValue;
     }
@@ -257,23 +238,13 @@ public class TileMap {
         }
     }
 
-    public void save(File file) {
-        try (FileWriter w = new FileWriter(file, StandardCharsets.UTF_8)) {
-            write(w);
-            w.close();
-            Logger.info("Tile map saved to file '{}'.", file);
-        } catch (Exception x) {
-            Logger.error(x);
-        }
-    }
-
     public void write(Writer w) throws IOException {
         properties.store(w, "");
-        w.write("!data\r\n");
+        w.write(DATA_SECTION_START);
+        w.write("\r\n");
         for (int row = 0; row < numRows(); ++row) {
             for (int col = 0; col < numCols(); ++col) {
-                String valueTxt = String.valueOf(get(row, col));
-                w.write(String.format("%2s", valueTxt));
+                w.write(String.format("%2d", data[row][col]));
                 if (col < numCols() - 1) {
                     w.write(",");
                 }
