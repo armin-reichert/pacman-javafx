@@ -90,8 +90,14 @@ public class PlayScene2D extends GameScene2D {
             return;
         }
         switch (game) {
-            case GameVariant.MS_PACMAN -> drawMsPacManMaze();
-            case GameVariant.PACMAN    -> drawPacManMaze(!PY_USE_ALTERNATE_MAPS.get());
+            case GameVariant.MS_PACMAN -> drawMsPacManMazeUsingSpriteSheet();
+            case GameVariant.PACMAN    -> {
+                if (PY_USE_ALTERNATE_MAPS.get()) {
+                    drawPacManMazeUsingMap();
+                } else {
+                    drawPacManMazeUsingSpriteSheet();
+                }
+            }
             default -> throw new IllegalGameVariantException(game);
         }
         drawLevelMessage();
@@ -125,65 +131,61 @@ public class PlayScene2D extends GameScene2D {
         }
     }
 
-    private void drawPacManMaze(boolean useSpriteSheet) {
+    private void drawPacManMazeUsingSpriteSheet() {
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         if (flashing) {
-            drawPacManMazeFlashing(useSpriteSheet);
-        } else {
-            drawPacManMazeNormal(useSpriteSheet);
-        }
-    }
-
-    private void drawPacManMazeFlashing(boolean useSpriteSheet) {
-        var game = context.game();
-        if (useSpriteSheet) {
             PacManGameSpriteSheet sheet = context.spriteSheet();
-            if (game.blinking().isOn()) {
+            if (context.game().blinking().isOn()) {
                 drawImage(sheet.getFlashingMazeImage(), 0, t(3));
             } else {
                 drawSprite(sheet.getEmptyMazeSprite(), 0, t(3));
             }
         } else {
-            var terrainMap = game.world().map().terrain();
-            terrainMapRenderer.setScaling(scalingPy.get());
-            terrainMapRenderer.setWallStrokeColor(game.blinking().isOn() ?
-                Color.WHITE : Color.web(terrainMap.getProperty("wall_stroke_color")));
-            terrainMapRenderer.setWallFillColor(game.blinking().isOn() ?
-                Color.BLACK : Color.web(terrainMap.getProperty("wall_fill_color")));
-            terrainMapRenderer.drawMap(g, terrainMap);
-        }
-    }
-
-    private void drawPacManMazeNormal(boolean useSpriteSheet) {
-        var game = context.game();
-        var world = game.world();
-        if (useSpriteSheet) {
-            PacManGameSpriteSheet sheet = context.spriteSheet();
-            drawSprite(sheet.getFullMazeSprite(), 0, t(3));
+            var world = context.game().world();
+            PacManGameSpriteSheet pss = context.spriteSheet();
+            drawSprite(pss.getFullMazeSprite(), 0, t(3));
             world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
-            if (game.blinking().isOff()) {
+            if (context.game().blinking().isOff()) {
                 world.energizerTiles().forEach(tile -> hideTileContent(world, tile));
             }
-        } else {
-            var terrainMap = world.map().terrain();
-            terrainMapRenderer.setScaling(getScaling());
-            terrainMapRenderer.setWallStrokeColor(Color.web(terrainMap.getProperty("wall_stroke_color")));
-            terrainMapRenderer.setWallFillColor(Color.web(terrainMap.getProperty("wall_fill_color")));
-            terrainMapRenderer.drawMap(g, terrainMap);
-
-            var foodColor = Color.web(world.map().food().getProperty("food_color"));
-            foodMapRenderer.setScaling(getScaling());
-            foodMapRenderer.setPelletColor(foodColor);
-            foodMapRenderer.setEnergizerColor(foodColor);
-            world.tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerTile)).forEach(tile -> foodMapRenderer.drawPellet(g, tile));
-            if (game.blinking().isOn()) {
-                world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodMapRenderer.drawEnergizer(g, tile));
-            }
         }
     }
 
-    //TODO as soon as tile map renderer can render filled arcs, also provide non-spritesheet rendering option here
-    private void drawMsPacManMaze() {
+
+    private void drawPacManMazeUsingMap() {
+        boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
+        if (flashing) {
+            var terrainMap = context.game().world().map().terrain();
+            terrainMapRenderer.setScaling(scalingPy.get());
+            terrainMapRenderer.setWallStrokeColor(context.game().blinking().isOn() ?
+                Color.WHITE : Color.web(terrainMap.getProperty("wall_stroke_color")));
+            terrainMapRenderer.setWallFillColor(context.game().blinking().isOn() ?
+                Color.BLACK : Color.web(terrainMap.getProperty("wall_fill_color")));
+            terrainMapRenderer.drawMap(g, terrainMap);
+        } else {
+            drawMazeUsingMap();
+        }
+    }
+
+    private void drawMazeUsingMap() {
+        var game = context.game();
+        var world = game.world();
+        var terrainMap = world.map().terrain();
+        terrainMapRenderer.setScaling(getScaling());
+        terrainMapRenderer.setWallStrokeColor(Color.web(terrainMap.getProperty("wall_stroke_color")));
+        terrainMapRenderer.setWallFillColor(Color.web(terrainMap.getProperty("wall_fill_color")));
+        terrainMapRenderer.drawMap(g, terrainMap);
+        var foodColor = Color.web(world.map().food().getProperty("food_color"));
+        foodMapRenderer.setScaling(getScaling());
+        foodMapRenderer.setPelletColor(foodColor);
+        foodMapRenderer.setEnergizerColor(foodColor);
+        world.tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerTile)).forEach(tile -> foodMapRenderer.drawPellet(g, tile));
+        if (game.blinking().isOn()) {
+            world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodMapRenderer.drawEnergizer(g, tile));
+        }
+    }
+
+    private void drawMsPacManMazeUsingSpriteSheet() {
         var game = context.game();
         var world = game.world();
         int mapNumber = game.mapNumber(game.levelNumber());
