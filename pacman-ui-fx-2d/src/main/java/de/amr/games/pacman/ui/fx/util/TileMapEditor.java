@@ -112,7 +112,7 @@ public class TileMapEditor extends Application  {
             @Override
             public void drawTunnel(GraphicsContext g, Vector2i tile) {
                 g.setFill(Color.GRAY);
-                g.fillRect(tile.x() * s(8), tile.y() * s(8), s(8), s(8));
+                g.fillRect(tile.x() * tilePx(), tile.y() * tilePx(), tilePx(), tilePx());
             }
         };
         terrainMapRenderer.setWallStrokeColor(DEFAULT_WALL_STROKE_COLOR);
@@ -156,7 +156,7 @@ public class TileMapEditor extends Application  {
         });
         clock.start();
 
-        loadMap(arcadeMaps[0]);
+        loadMap(arcadeMaps[3]);
     }
 
     Pane createSceneContent() {
@@ -254,22 +254,14 @@ public class TileMapEditor extends Application  {
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         drawGrid(g);
         if (terrainVisiblePy.get()) {
-            terrainMapRenderer.setScaling(pixelsPerTile() / 8);
+            terrainMapRenderer.setScaling(tilePx() / 8);
             terrainMapRenderer.drawMap(g, map.terrain());
         }
         if (foodVisiblePy.get()) {
-            foodMapRenderer.setScaling(pixelsPerTile() / 8);
+            foodMapRenderer.setScaling(tilePx() / 8);
             foodMapRenderer.drawMap(g, map.food());
         }
-
-        //TODO as long as terrain renderer cannot render filled arcs, show fill+stroke color in first row
-        g.setFill(getTileMapColor(map.terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
-        g.setStroke(getTileMapColor(map.terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
-        g.setLineWidth(2);
-        double t1 = pixelsPerTile(), t2 = 2*t1, t4 = 4*t1;
-        g.fillRoundRect(t4, 0, t4, t2, t1, t1);
-        g.strokeRoundRect(t4, 0, t4, t2, t1, t1);
-
+        double t1 = tilePx();
         if (hoveredTile != null) {
             g.setStroke(Color.YELLOW);
             g.setLineWidth(1);
@@ -286,7 +278,7 @@ public class TileMapEditor extends Application  {
         if (gridVisiblePy.get()) {
             g.setStroke(Color.LIGHTGRAY);
             g.setLineWidth(0.25);
-            double gridSize = pixelsPerTile();
+            double gridSize = tilePx();
             for (int row = 1; row < map.terrain().numRows(); ++row) {
                 g.strokeLine(0, row * gridSize, canvas.getWidth(), row * gridSize);
             }
@@ -372,20 +364,16 @@ public class TileMapEditor extends Application  {
     /**
      * @return pixels used by one tile at current window zoom
      */
-    double pixelsPerTile() {
+    double tilePx() {
         return canvas.getHeight() / map.numRows();
     }
 
-    double pixelsPerTiles(int n) {
-        return n * pixelsPerTile();
-    }
-
     /**
-     * @param pixels
+     * @param pixels number of pixels
      * @return number of full tiles spanned by pixels
      */
     int fullTiles(double pixels) {
-        return (int) (pixels / pixelsPerTile());
+        return (int) (pixels / tilePx());
     }
 
     void onMouseClickedOnCanvas(MouseEvent e) {
