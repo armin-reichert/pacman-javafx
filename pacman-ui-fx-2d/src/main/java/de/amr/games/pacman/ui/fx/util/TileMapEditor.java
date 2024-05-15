@@ -189,13 +189,13 @@ public class TileMapEditor extends Application  {
             foodMapRenderer.drawMap(g, map.food());
         }
 
-        double s8 = 8 * scaling();
+        double s = scaling(), s8 = 8 * s;
         //TODO as long as terrain renderer cannot render filled arcs, show fill+stroke color in first row
         g.setFill(getTileMapColor(map.terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
         g.setStroke(getTileMapColor(map.terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
-        g.setLineWidth(scaling());
-        g.fillRect(0, 0, map.numCols() * s8, s8);
-        g.strokeRect(0, 0, map.numCols() * s8, s8);
+        g.setLineWidth(2);
+        g.fillRoundRect(s, 0, 4 * s8, 2*s8, s8, s8);
+        g.strokeRoundRect(s, 0, 4 * s8, 2*s8, s8, s8);
 
         if (hoveredTile != null) {
             g.setStroke(Color.YELLOW);
