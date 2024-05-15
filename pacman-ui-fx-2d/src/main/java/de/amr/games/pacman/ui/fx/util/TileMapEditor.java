@@ -326,12 +326,12 @@ public class TileMapEditor extends Application  {
         Menu arcadeMapsMenu = new Menu("Load Arcade Map");
 
         var pacManMapItem = new MenuItem("Pac-Man");
-        pacManMapItem.setOnAction(e -> loadPredefined(arcadeMaps[0]));
+        pacManMapItem.setOnAction(e -> loadMap(arcadeMaps[0]));
         arcadeMapsMenu.getItems().add(pacManMapItem);
 
         IntStream.range(1, 7).forEach(i -> {
             var item = new MenuItem("Ms. Pac-Man " + i);
-            item.setOnAction(e -> loadPredefined(arcadeMaps[i]));
+            item.setOnAction(e -> loadMap(arcadeMaps[i]));
             arcadeMapsMenu.getItems().add(item);
         });
 
@@ -351,25 +351,17 @@ public class TileMapEditor extends Application  {
         }
     }
 
-    void loadPredefined(WorldMap predefinedMaps) {
+    void loadMap(WorldMap other) {
         currentMapFile = null;
-        map = new WorldMap(TileMap.copyOf(predefinedMaps.terrain()), TileMap.copyOf(predefinedMaps.food()));
-        setTerrainColorsFromMap(map.terrain());
-        terrainMapPropertiesEditor.setText(map.terrain().getPropertiesAsText());
-        setFoodColorsFromMap(map.food());
+        map = WorldMap.copyOf(other);
         foodMapPropertiesEditor.setText(map.food().getPropertiesAsText());
-        updateInfo();
-    }
-
-    void setTerrainColorsFromMap(TileMap terrainMap) {
-        terrainMapRenderer.setWallStrokeColor(getTileMapColor(terrainMap, "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
-        terrainMapRenderer.setWallFillColor(getTileMapColor(terrainMap, "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
-    }
-
-    void setFoodColorsFromMap(TileMap foodMap) {
-        Color foodColor = getTileMapColor(foodMap, "food_color", DEFAULT_FOOD_COLOR);
+        terrainMapPropertiesEditor.setText(map.terrain().getPropertiesAsText());
+        terrainMapRenderer.setWallStrokeColor(getTileMapColor(map.terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
+        terrainMapRenderer.setWallFillColor(getTileMapColor(map.terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
+        Color foodColor = getTileMapColor(map.food(), "food_color", DEFAULT_FOOD_COLOR);
         foodMapRenderer.setEnergizerColor(foodColor);
         foodMapRenderer.setPelletColor(foodColor);
+        updateInfo();
     }
 
     double scaling() {
@@ -479,11 +471,7 @@ public class TileMapEditor extends Application  {
         if (file.getName().endsWith(".world")) {
             try {
                 var r = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
-                map = new WorldMap(r.lines());
-                setTerrainColorsFromMap(map.terrain());
-                setFoodColorsFromMap(map.food());
-                terrainMapPropertiesEditor.setText(map.terrain().getPropertiesAsText());
-                foodMapPropertiesEditor.setText(map.food().getPropertiesAsText());
+                loadMap(new WorldMap(r.lines()));
                 lastUsedDir = file.getParentFile();
                 currentMapFile = file;
                 Logger.info("Map read from file {}", file);
