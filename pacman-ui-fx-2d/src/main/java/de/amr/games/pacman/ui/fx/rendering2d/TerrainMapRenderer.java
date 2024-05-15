@@ -10,7 +10,6 @@ import de.amr.games.pacman.model.world.Tiles;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,7 +34,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         return scaling * times;
     }
 
-    private double strokeWidth = 2.0;
+    private final double strokeWidth = 2.5;
     private Color wallFillColor = Color.BLACK;
     private Color wallStrokeColor = Color.GREEN;
 
@@ -45,14 +44,6 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     public void setWallFillColor(Color wallFillColor) {
         this.wallFillColor = wallFillColor;
-    }
-
-    public Color getWallFillColor() {
-        return wallFillColor;
-    }
-
-    public Color getWallStrokeColor() {
-        return wallStrokeColor;
     }
 
     public void drawMap(GraphicsContext g, TileMap map) {
@@ -65,9 +56,6 @@ public class TerrainMapRenderer implements TileMapRenderer {
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
         g.save();
         switch (content) {
-            case Tiles.DWALL_H -> drawDWallH(g, tile);
-            case Tiles.DWALL_V -> drawDWallV(g, tile);
-            case Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE -> drawDCorner(g, tile, content);
             case Tiles.DOOR -> drawDoor(g, tile, Color.PINK);
             case Tiles.TUNNEL -> drawTunnel(g, tile);
             default -> {}
@@ -79,59 +67,12 @@ public class TerrainMapRenderer implements TileMapRenderer {
         // overridden by design-time renderer
     }
 
-    public void drawDWallH(GraphicsContext g, Vector2i tile) {
-        double x = tile.x() * s(TILE_SIZE), y = tile.y() * s(TILE_SIZE);
-        g.setFill(wallStrokeColor);
-        // add 1 pixel to avoid gaps
-        g.fillRect(x, y + s(2.5f), s(TILE_SIZE) + 1, s(1));
-        g.fillRect(x, y + s(4.5f), s(TILE_SIZE) + 1, s(1));
-    }
-
-    public void drawDWallV(GraphicsContext g, Vector2i tile) {
-        double x = tile.x() * s(TILE_SIZE), y = tile.y() * s(TILE_SIZE);
-        g.setFill(wallStrokeColor);
-        // add 1 pixel to avoid gaps
-        g.fillRect(x + s(2.5f), y, s(1), s(TILE_SIZE) + 1);
-        g.fillRect(x + s(4.5f), y, s(1), s(TILE_SIZE) + 1);
-    }
-
-    public void drawDCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
-        double x = tile.x() * s(TILE_SIZE), y = tile.y() * s(TILE_SIZE);
-        double s10 = 10 * scaling;
-        g.setStroke(wallStrokeColor);
-        g.setLineWidth(s(1));
-        switch (cornerType) {
-            case Tiles.DCORNER_NW -> {
-                g.strokeArc(x + s(5), y + s(5), s(6), s(6), 90, 90, ArcType.OPEN);
-                g.strokeArc(x + s(3), y + s(3), s10, s10, 90, 90, ArcType.OPEN);
-            }
-            case Tiles.DCORNER_NE -> {
-                g.strokeArc(x - s(3), y + s(5), s(6), s(6), 0, 90, ArcType.OPEN);
-                g.strokeArc(x - s(5), y + s(3), s10, s10, 0, 90, ArcType.OPEN);
-            }
-            case Tiles.DCORNER_SE -> {
-                g.strokeArc(x - s(3), y - s(3), s(6), s(6), 270, 90, ArcType.OPEN);
-                g.strokeArc(x - s(5), y - s(5), s10, s10, 270, 90, ArcType.OPEN);
-            }
-            case Tiles.DCORNER_SW -> {
-                g.strokeArc(x + s(5), y - s(3), s(6), s(6), 180, 90, ArcType.OPEN);
-                g.strokeArc(x + s(3), y - s(5), s10, s10, 180, 90, ArcType.OPEN);
-            }
-            default -> {}
-        }
-    }
-
     public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
         double x = tile.x() * s(TILE_SIZE), y = tile.y() * s(TILE_SIZE);
         g.setFill(Color.BLACK);
         g.fillRect(x, y + s(1), s(TILE_SIZE), s(6));
         g.setFill(color);
         g.fillRect(x - 1, y + s(3.0f), s(TILE_SIZE) + 2, s(2));
-    }
-
-    private boolean isDouble(byte tileContent) {
-        return tileContent == Tiles.DWALL_H || tileContent == Tiles.DWALL_V
-            || tileContent == Tiles.DCORNER_NE || tileContent == Tiles.DCORNER_SE || tileContent == Tiles.DCORNER_NW || tileContent == Tiles.DCORNER_SW;
     }
 
     private void drawPathsInsideMap(GraphicsContext g, TileMap map) {
@@ -207,61 +148,30 @@ public class TerrainMapRenderer implements TileMapRenderer {
             Vector2i prevTile = i == 0 ? null : path.get(i - 1);
 
             switch (map.get(tile)) {
-                case Tiles.WALL_H -> g.lineTo(x + r, y);
-                case Tiles.WALL_V -> g.lineTo(x, y + r);
-                case Tiles.CORNER_NW -> {
+                case Tiles.WALL_H, Tiles.DWALL_H -> g.lineTo(x + r, y);
+                case Tiles.WALL_V, Tiles.DWALL_V -> g.lineTo(x, y + r);
+                case Tiles.CORNER_NW, Tiles.DCORNER_NW -> {
                     if (prevTile == null || prevTile.x() > tile.x()) {
                         g.arc(x + r, y + r, r, r, 90, 90);
                     } else {
                         g.arc(x + r, y + r, r, r, 180, -90);
                     }
                 }
-                case Tiles.CORNER_SW -> {
+                case Tiles.CORNER_SW, Tiles.DCORNER_SW -> {
                     if (prevTile == null || prevTile.y() < tile.y()) {
                         g.arc(x + r, y - r, r, r, 180, 90);
                     } else {
                         g.arc(x + r, y - r, r, r, 270, -90);
                     }
                 }
-                case Tiles.CORNER_NE -> {
+                case Tiles.CORNER_NE, Tiles.DCORNER_NE -> {
                     if (prevTile == null || prevTile.y() > tile.y()) {
                         g.arc(x - r, y + r, r, r, 0, 90);
                     } else {
                         g.arc(x - r, y + r, r, r, 90, -90);
                     }
                 }
-                case Tiles.CORNER_SE -> {
-                    if (prevTile == null || prevTile.y() < tile.y()) {
-                        g.arc(x - r, y - r, r, r, 0, -90);
-                    } else {
-                        g.arc(x - r, y - r, r, r, 270, 90);
-                    }
-                }
-
-                case Tiles.DWALL_H -> g.lineTo(x + r, y);
-                case Tiles.DWALL_V -> g.lineTo(x, y + r);
-                case Tiles.DCORNER_NW -> {
-                    if (prevTile == null || prevTile.x() > tile.x()) {
-                        g.arc(x + r, y + r, r, r, 90, 90);
-                    } else {
-                        g.arc(x + r, y + r, r, r, 180, -90);
-                    }
-                }
-                case Tiles.DCORNER_SW -> {
-                    if (prevTile == null || prevTile.y() < tile.y()) {
-                        g.arc(x + r, y - r, r, r, 180, 90);
-                    } else {
-                        g.arc(x + r, y - r, r, r, 270, -90);
-                    }
-                }
-                case Tiles.DCORNER_NE -> {
-                    if (prevTile == null || prevTile.y() > tile.y()) {
-                        g.arc(x - r, y + r, r, r, 0, 90);
-                    } else {
-                        g.arc(x - r, y + r, r, r, 90, -90);
-                    }
-                }
-                case Tiles.DCORNER_SE -> {
+                case Tiles.CORNER_SE, Tiles.DCORNER_SE -> {
                     if (prevTile == null || prevTile.y() < tile.y()) {
                         g.arc(x - r, y - r, r, r, 0, -90);
                     } else {

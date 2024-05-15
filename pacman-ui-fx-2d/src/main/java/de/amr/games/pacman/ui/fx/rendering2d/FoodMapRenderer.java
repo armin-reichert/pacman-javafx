@@ -1,6 +1,7 @@
 package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.Tiles;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -28,13 +29,17 @@ public class FoodMapRenderer implements TileMapRenderer {
         this.pelletColor = pelletColor;
     }
 
+    @Override
+    public void drawMap(GraphicsContext g, TileMap map) {
+        map.tiles().forEach(tile -> drawTile(g, tile, map.get(tile)));
+    }
+
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
         g.save();
         switch (content) {
             case Tiles.PELLET -> drawPellet(g, tile);
             case Tiles.ENERGIZER -> drawEnergizer(g, tile);
-            default -> {
-            }
+            default -> {}
         }
         g.restore();
     }

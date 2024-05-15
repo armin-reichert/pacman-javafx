@@ -92,10 +92,10 @@ public class PlayScene2D extends GameScene2D {
         switch (game) {
             case GameVariant.MS_PACMAN -> drawMsPacManMazeUsingSpriteSheet();
             case GameVariant.PACMAN    -> {
-                if (PY_USE_ALTERNATE_MAPS.get()) {
-                    drawPacManMazeUsingMap();
-                } else {
+                if (context.game().mapNumber(context.game().levelNumber()) == 1 && !PY_USE_ALTERNATE_MAPS.get()) {
                     drawPacManMazeUsingSpriteSheet();
+                } else {
+                    drawPacManMazeUsingMap();
                 }
             }
             default -> throw new IllegalGameVariantException(game);
