@@ -181,26 +181,26 @@ public class TileMapEditor extends Application  {
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         drawGrid(g);
         if (terrainVisiblePy.get()) {
-            terrainMapRenderer.setScaling(scaling());
+            terrainMapRenderer.setScaling(pixelsPerTile() / 8);
             terrainMapRenderer.drawMap(g, map.terrain());
         }
         if (foodVisiblePy.get()) {
-            foodMapRenderer.setScaling(scaling());
+            foodMapRenderer.setScaling(pixelsPerTile() / 8);
             foodMapRenderer.drawMap(g, map.food());
         }
 
-        double s = scaling(), s8 = 8 * s;
         //TODO as long as terrain renderer cannot render filled arcs, show fill+stroke color in first row
         g.setFill(getTileMapColor(map.terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
         g.setStroke(getTileMapColor(map.terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
         g.setLineWidth(2);
-        g.fillRoundRect(s, 0, 4 * s8, 2*s8, s8, s8);
-        g.strokeRoundRect(s, 0, 4 * s8, 2*s8, s8, s8);
+        double t1 = pixelsPerTile(), t2 = 2*t1, t4 = 4*t1;
+        g.fillRoundRect(t4, 0, t4, t2, t1, t1);
+        g.strokeRoundRect(t4, 0, t4, t2, t1, t1);
 
         if (hoveredTile != null) {
             g.setStroke(Color.YELLOW);
             g.setLineWidth(1);
-            g.strokeRect(hoveredTile.x() * s8, hoveredTile.y() * s8, s8, s8);
+            g.strokeRect(hoveredTile.x() * t1, hoveredTile.y() * t1, t1, t1);
         }
         if (terrainEditedPy.get()) {
             terrainPalette.draw();
@@ -213,7 +213,7 @@ public class TileMapEditor extends Application  {
         if (gridVisiblePy.get()) {
             g.setStroke(Color.LIGHTGRAY);
             g.setLineWidth(0.25);
-            double gridSize = 8 * scaling();
+            double gridSize = pixelsPerTile();
             for (int row = 1; row < map.terrain().numRows(); ++row) {
                 g.strokeLine(0, row * gridSize, canvas.getWidth(), row * gridSize);
             }
@@ -232,10 +232,10 @@ public class TileMapEditor extends Application  {
         canvas.setOnMouseMoved(this::onMouseMovedOverCanvas);
 
         terrainMapPropertiesEditor = new TextArea();
-        terrainMapPropertiesEditor.setPrefSize(220, 200);
+        terrainMapPropertiesEditor.setPrefSize(220, 150);
 
         foodMapPropertiesEditor = new TextArea();
-        foodMapPropertiesEditor.setPrefSize(220, 200);
+        foodMapPropertiesEditor.setPrefSize(220, 150);
 
         var cbTerrainVisible = new CheckBox("Terrain");
         cbTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
@@ -364,12 +364,23 @@ public class TileMapEditor extends Application  {
         updateInfo();
     }
 
-    double scaling() {
-        return canvas.getHeight() / (map.terrain().numRows() * 8);
+    /**
+     * @return pixels used by one tile at current window zoom
+     */
+    double pixelsPerTile() {
+        return canvas.getHeight() / map.numRows();
     }
 
-    int viewToTile(double viewLength) {
-        return (int) (viewLength / (8 * scaling()));
+    double pixelsPerTiles(int n) {
+        return n * pixelsPerTile();
+    }
+
+    /**
+     * @param pixels
+     * @return number of full tiles spanned by pixels
+     */
+    int fullTiles(double pixels) {
+        return (int) (pixels / pixelsPerTile());
     }
 
     void onMouseClickedOnCanvas(MouseEvent e) {
@@ -381,7 +392,7 @@ public class TileMapEditor extends Application  {
     }
 
     void onMouseMovedOverCanvas(MouseEvent e) {
-        hoveredTile = new Vector2i(viewToTile(e.getX()), viewToTile(e.getY()));
+        hoveredTile = new Vector2i(fullTiles(e.getX()), fullTiles(e.getY()));
         updateInfo();
         if (e.isShiftDown()) {
             if (terrainEditedPy.get()) {
@@ -393,7 +404,7 @@ public class TileMapEditor extends Application  {
     }
 
     void editTerrainTile(MouseEvent e) {
-        var tile = new Vector2i(viewToTile(e.getX()), viewToTile(e.getY()));
+        var tile = new Vector2i(fullTiles(e.getX()), fullTiles(e.getY()));
         if (e.getButton() == MouseButton.SECONDARY) {
             map.terrain().set(tile, Tiles.EMPTY);
             updateInfo();
@@ -411,7 +422,7 @@ public class TileMapEditor extends Application  {
     }
 
     void editFoodTile(MouseEvent e) {
-        var tile = new Vector2i(viewToTile(e.getX()), viewToTile(e.getY()));
+        var tile = new Vector2i(fullTiles(e.getX()), fullTiles(e.getY()));
         if (e.getButton() == MouseButton.SECONDARY) {
             map.food().set(tile, Tiles.EMPTY);
             updateInfo();
@@ -548,7 +559,7 @@ public class TileMapEditor extends Application  {
         void draw() {
             g.setFill(Color.BLACK);
             g.fillRect(0, 0, getWidth(), getHeight());
-            renderer.setScaling(1f * gridSize / 8);
+            this.renderer.setScaling((float) gridSize / 8f);
             for (int i = 0; i < numRows * numCols; ++i) {
                 int row = i / numCols, col = i % numCols;
                 renderer.drawTile(g, new Vector2i(col, row), valueAtIndex[i]);
