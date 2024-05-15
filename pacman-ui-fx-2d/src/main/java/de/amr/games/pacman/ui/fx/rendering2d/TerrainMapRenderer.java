@@ -5,9 +5,11 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.Tiles;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
@@ -166,51 +168,77 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
         // Obstacles inside maze
         map.tiles()
-            .filter(tile -> map.get(tile) == Tiles.CORNER_NE)
+            .filter(tile -> map.get(tile) == Tiles.CORNER_NW)
             .filter(corner -> corner.x() > 0 && corner.x() < map.numCols() - 1)
             .filter(corner -> corner.y() > 0 && corner.y() < map.numRows() - 1)
-            .map(corner -> buildPath(map, explored, corner, LEFT))
+            .map(corner -> buildPath(map, explored, corner, DOWN))
             .forEach(path -> drawPath(g, map, path));
     }
 
+    private Point2D center(Vector2i tile) {
+        return new Point2D(tile.x() * s(8) + s(4), tile.y() * s(8) + s(4));
+    }
     private void drawPath(GraphicsContext g, TileMap map, List<Vector2i> path) {
-        g.setLineWidth(1);
+        double tpx = s(8);
+        double r = tpx / 2;
+
+        Point2D p = center(path.getFirst());
+        double x = p.getX();
+        double y = p.getY();
+
         g.setFill(wallFillColor);
         g.setStroke(wallStrokeColor);
-        double tilePx = s(8);
-        double x = path.getFirst().x() * tilePx + 0.5 * tilePx;
-        double y = path.getFirst().y() * tilePx + 0.5 * tilePx;
+        g.setLineWidth(2);
+
         g.beginPath();
-        double rx = tilePx, ry = 0.5 * tilePx;
-        boolean clockwise = false;
-        for (var tile : path) {
+        g.moveTo(x+r, y);
+        for (int i = 0; i < path.size(); ++i) {
+            Vector2i tile = path.get(i);
+            p = center(tile);
+            x = p.getX();
+            y = p.getY();
+            Point2D pred = i > 0 ? center(path.get(i-1)) : null;
             switch (map.get(tile)) {
                 case Tiles.WALL_H -> {
-                    x = clockwise ? x + tilePx : x - tilePx;
-                    g.lineTo(x, y - ry);
+                    g.lineTo(x + r, y);
                 }
                 case Tiles.WALL_V -> {
-                    y = clockwise ? y - tilePx : y + tilePx;
-                    g.lineTo(x - rx, y);
-                }
-                case Tiles.CORNER_NE -> {
-                    g.arc(x, y, rx, ry, 0, 90);
+                    g.lineTo(x, y + r);
                 }
                 case Tiles.CORNER_NW -> {
-                    g.arc(x, y, rx, ry, 90, 90);
-                }
-                case Tiles.CORNER_SE -> {
-                    g.arc(x, y, rx, ry, 270, 90);
+                    if (pred == null || pred.getX() > x) {
+                        g.arc(x + r, y + r, r, r, 90, 90);
+                    } else {
+                        g.arc(x + r, y + r, r, r, 180, -90);
+                    }
                 }
                 case Tiles.CORNER_SW -> {
-                    g.arc(x, y, rx, ry, 180, 90);
+                    if (pred == null || pred.getY() < y) {
+                        g.arc(x + r, y - r, r, r, 180, 90);
+                    } else {
+                        g.arc(x + r, y - r, r, r, 270, -90);
+                    }
+                }
+                case Tiles.CORNER_NE -> {
+                    if (pred == null || pred.getY() > y) {
+                        g.arc(x - r, y + r, r, r, 0, 90);
+                    } else {
+                        g.arc(x - r, y + r, r, r, 90, -90);
+                    }
+                }
+                case Tiles.CORNER_SE -> {
+                    if (pred == null || pred.getY() < y) {
+                        g.arc(x - r, y - r, r, r, 0, -90);
+                    } else {
+                        g.arc(x - r, y - r, r, r, 270, 90);
+                    }
                 }
                 default -> {
-
+                    g.strokeOval(x, y, 4, 4);
                 }
             }
         }
-        // g.closePath();
+        //g.closePath();
         //g.fill();
         g.stroke();
     }

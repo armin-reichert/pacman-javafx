@@ -155,6 +155,8 @@ public class TileMapEditor extends Application  {
             }
         });
         clock.start();
+
+        loadMap(arcadeMaps[0]);
     }
 
     Pane createSceneContent() {
