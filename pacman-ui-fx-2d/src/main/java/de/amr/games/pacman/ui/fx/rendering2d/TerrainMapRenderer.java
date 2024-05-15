@@ -154,7 +154,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
             || tileContent == Tiles.DCORNER_NE || tileContent == Tiles.DCORNER_SE || tileContent == Tiles.DCORNER_NW || tileContent == Tiles.DCORNER_SW;
     }
 
-    public void _drawMap(GraphicsContext g, TileMap map) {
+    public void drawMap(GraphicsContext g, TileMap map) {
         map.tiles()
             .filter(tile -> isDouble(map.get(tile)) || map.get(tile) == Tiles.DOOR)
             .forEach(tile -> drawTile(g, tile, map.get(tile)));
@@ -166,30 +166,52 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
         // Obstacles inside maze
         map.tiles()
-            .filter(tile -> map.get(tile) == Tiles.CORNER_NW)
+            .filter(tile -> map.get(tile) == Tiles.CORNER_NE)
             .filter(corner -> corner.x() > 0 && corner.x() < map.numCols() - 1)
             .filter(corner -> corner.y() > 0 && corner.y() < map.numRows() - 1)
-            .map(corner -> buildPath(map, explored, corner, RIGHT))
+            .map(corner -> buildPath(map, explored, corner, LEFT))
             .forEach(path -> drawPath(g, map, path));
     }
 
     private void drawPath(GraphicsContext g, TileMap map, List<Vector2i> path) {
-        double s4 = s(4), s8 = s(8);
+        g.setLineWidth(1);
         g.setFill(wallFillColor);
         g.setStroke(wallStrokeColor);
-        g.setLineWidth(s(0.75f));
+        double tilePx = s(8);
+        double x = path.getFirst().x() * tilePx + 0.5 * tilePx;
+        double y = path.getFirst().y() * tilePx + 0.5 * tilePx;
         g.beginPath();
-        g.moveTo(path.getFirst().x() * s8 + s4, path.getFirst().y() * s8 + s4);
-        for (int i = 1; i < path.size(); ++i) {
-            var next = path.get(i);
-            var centerX = next.x() * s8 + s4;
-            var centerY = next.y() * s8 + s4;
-            switch (map.get(next)) {
-                default -> g.lineTo(centerX, centerY);
+        double rx = tilePx, ry = 0.5 * tilePx;
+        boolean clockwise = false;
+        for (var tile : path) {
+            switch (map.get(tile)) {
+                case Tiles.WALL_H -> {
+                    x = clockwise ? x + tilePx : x - tilePx;
+                    g.lineTo(x, y - ry);
+                }
+                case Tiles.WALL_V -> {
+                    y = clockwise ? y - tilePx : y + tilePx;
+                    g.lineTo(x - rx, y);
+                }
+                case Tiles.CORNER_NE -> {
+                    g.arc(x, y, rx, ry, 0, 90);
+                }
+                case Tiles.CORNER_NW -> {
+                    g.arc(x, y, rx, ry, 90, 90);
+                }
+                case Tiles.CORNER_SE -> {
+                    g.arc(x, y, rx, ry, 270, 90);
+                }
+                case Tiles.CORNER_SW -> {
+                    g.arc(x, y, rx, ry, 180, 90);
+                }
+                default -> {
+
+                }
             }
         }
-        g.closePath();
-        g.fill();
+        // g.closePath();
+        //g.fill();
         g.stroke();
     }
 

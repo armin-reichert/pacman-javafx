@@ -9,18 +9,24 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
 public class RenderingTest extends Application {
 
+    Canvas canvas;
+
     @Override
     public void start(Stage stage) throws Exception {
-        stage.setScene(new Scene(createContent(), 800, 600));
+        Scene scene = new Scene(createContent(), 800, 400);
+        canvas.widthProperty().bind(scene.widthProperty());
+        canvas.heightProperty().bind(scene.heightProperty());
+        stage.setScene(scene);
         stage.show();
     }
 
     Parent createContent() {
-        var canvas = new Canvas(800, 600);
+        canvas = new Canvas(800, 400);
         var g = canvas.getGraphicsContext2D();
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -29,35 +35,40 @@ public class RenderingTest extends Application {
     }
 
     void draw(GraphicsContext g) {
-        double TS = 50;
-        double r = TS / 2.0;
-
-        g.setStroke(Color.RED);
         g.setLineWidth(3);
         g.setFill(Color.YELLOW);
+        g.setStroke(Color.RED);
+        double rx=40,  ry = 25;
 
-        g.moveTo(200, 200);
         g.beginPath();
-        g.lineTo(250, 200);
-        corner(g, 250, 200, Tiles.CORNER_NE);
-        corner(g, 250, 200, Tiles.CORNER_NE);
-        g.moveTo(250, 200);
-        g.lineTo(200, 200);
-        corner(g, 200, 200, Tiles.CORNER_SW);
-        corner(g, 200, 200, Tiles.CORNER_NW);
-        //g.closePath();
+
+        drawCross(g, 200, 200);
+
+        // corner SE
+        g.arc(200, 200, rx, ry, 270, 90);
+        // corner NE
+        g.arc(200, 200, rx, ry, 0, 90);
+        // hline to left
+        g.lineTo(150, 200-ry);
+
+        drawCross(g, 150, 200);
+
+        // corner nw
+        g.arc(150, 200, rx, ry, 90, 90);
+        // corner sw
+        g.arc(150, 200, rx, ry, 180, 90);
+
+        g.closePath();
+        g.fill();
         g.stroke();
-        //g.fill();
     }
 
-    void corner(GraphicsContext g, double tx, double ty, byte type) {
-        double TS = 50;
-        double r = 25; // TS/2
-        switch (type) {
-            case Tiles.CORNER_SE -> g.arc(tx + TS, ty + TS, r, r, -90, 90); // x,y = tile.x, tile.y
-            case Tiles.CORNER_NE -> g.arc(tx, ty + TS, r, r, 0, 90);   // x,y = tile.x, tile.y + TS
-            case Tiles.CORNER_NW -> g.arc(tx + TS, ty + TS, r, r, 90, 90);  // x, y = tile.x + TS, tile.y + TS
-            case Tiles.CORNER_SW -> g.arc(tx + TS, ty + TS, r, r, 180, 90); // x, y = tile.x + TS, tile.y + TS
-        }
+    void drawCross(GraphicsContext g, double x, double y) {
+        g.save();
+        g.setStroke(Color.GRAY);
+        g.setLineWidth(1);
+        g.strokeLine(x-5,y-5,x+5,y+5);
+        g.strokeLine(x-5,y+5,x+5,y-5);
+        g.restore();
     }
 }
