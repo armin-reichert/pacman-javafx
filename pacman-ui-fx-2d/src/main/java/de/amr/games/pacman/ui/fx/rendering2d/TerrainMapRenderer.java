@@ -24,7 +24,6 @@ import static de.amr.games.pacman.lib.Direction.*;
 public class TerrainMapRenderer implements TileMapRenderer {
 
     static final int TILE_SIZE = 8;
-    static double STROKE_WIDTH = 2.0;
 
     private float scaling;
 
@@ -36,6 +35,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         return scaling * times;
     }
 
+    private double strokeWidth = 2.0;
     private Color wallFillColor = Color.BLACK;
     private Color wallStrokeColor = Color.GREEN;
 
@@ -56,12 +56,10 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     public void drawMap(GraphicsContext g, TileMap map) {
-//        map.tiles()
-//            .filter(tile -> isDouble(map.get(tile)) || map.get(tile) == Tiles.DOOR)
-//            .forEach(tile -> drawTile(g, tile, map.get(tile)));
-
         drawOutlinePaths(g, map);
         drawPathsInsideMap(g, map);
+        Color doorColor = TileMapRenderer.getTileMapColor(map, "door_color", Color.PINK);
+        map.tiles().filter(tile -> map.get(tile) == Tiles.DOOR).forEach(tile -> drawDoor(g, tile, doorColor));
     }
 
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
@@ -125,8 +123,10 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
         double x = tile.x() * s(TILE_SIZE), y = tile.y() * s(TILE_SIZE);
+        g.setFill(Color.BLACK);
+        g.fillRect(x, y + s(1), s(TILE_SIZE), s(6));
         g.setFill(color);
-        g.fillRect(x, y + s(3.5f), s(TILE_SIZE), s(1));
+        g.fillRect(x - 1, y + s(3.0f), s(TILE_SIZE) + 2, s(2));
     }
 
     private boolean isDouble(byte tileContent) {
@@ -140,7 +140,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
             .filter(tile -> !explored.contains(tile))
             .filter(tile -> map.get(tile) == Tiles.CORNER_NW)
             .map(corner -> map.buildPath(explored, corner, DOWN))
-            .forEach(path -> drawPath(g, map, path, true, true, STROKE_WIDTH, wallStrokeColor));
+            .forEach(path -> drawPath(g, map, path, true, true, strokeWidth, wallStrokeColor));
     }
 
     private void drawOutlinePaths(GraphicsContext g, TileMap map) {
@@ -164,16 +164,26 @@ public class TerrainMapRenderer implements TileMapRenderer {
             .filter(handle -> !explored.contains(handle))
             .map(handle -> map.buildPath(explored, handle, map.newMoveDir(RIGHT, map.get(handle))))
             .forEach(path -> {
-                drawPath(g, map, path, false, false, 4*STROKE_WIDTH, wallStrokeColor);
-                drawPath(g, map, path, false, false, STROKE_WIDTH, wallFillColor);
+                drawPath(g, map, path, false, false, 6 * strokeWidth, wallStrokeColor);
+                drawPath(g, map, path, false, false, 3 * strokeWidth, wallFillColor);
             });
 
         handlesRight.stream()
             .filter(handle -> !explored.contains(handle))
             .map(handle -> map.buildPath(explored, handle, map.newMoveDir(LEFT, map.get(handle))))
             .forEach(path -> {
-                drawPath(g, map, path, false, false, 4*STROKE_WIDTH, wallStrokeColor);
-                drawPath(g, map, path, false, false, STROKE_WIDTH, wallFillColor);
+                drawPath(g, map, path, false, false, 6 * strokeWidth, wallStrokeColor);
+                drawPath(g, map, path, false, false, 3 * strokeWidth, wallFillColor);
+            });
+
+        // ghost house
+        map.tiles()
+            .filter(tile -> !explored.contains(tile))
+            .filter(tile -> map.get(tile) == Tiles.DCORNER_NW)
+            .map(corner -> map.buildPath(explored, corner, DOWN))
+            .forEach(path -> {
+                drawPath(g, map, path, false, false, 6 * strokeWidth, wallStrokeColor);
+                drawPath(g, map, path, false, false, 3 * strokeWidth, wallFillColor);
             });
     }
 
