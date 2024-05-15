@@ -4,25 +4,19 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.Tiles;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static de.amr.games.pacman.lib.Direction.*;
-import static de.amr.games.pacman.lib.Direction.UP;
 
 /**
  * @author Armin Reichert
@@ -62,11 +56,11 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     public void drawMap(GraphicsContext g, TileMap map) {
-        // outline currently still drawn tile by tile
-        map.tiles()
-            .filter(tile -> isDouble(map.get(tile)) || map.get(tile) == Tiles.DOOR)
-            .forEach(tile -> drawTile(g, tile, map.get(tile)));
+//        map.tiles()
+//            .filter(tile -> isDouble(map.get(tile)) || map.get(tile) == Tiles.DOOR)
+//            .forEach(tile -> drawTile(g, tile, map.get(tile)));
 
+        drawOutlinePaths(g, map);
         drawPathsInsideMap(g, map);
     }
 
@@ -145,16 +139,46 @@ public class TerrainMapRenderer implements TileMapRenderer {
         map.tiles()
             .filter(tile -> !explored.contains(tile))
             .filter(tile -> map.get(tile) == Tiles.CORNER_NW)
-            .map(corner -> buildPath(map, explored, corner, DOWN))
-            .forEach(path -> drawPath(g, map, path));
+            .map(corner -> map.buildPath(explored, corner, DOWN))
+            .forEach(path -> drawPath(g, map, path, true, true));
+    }
+
+    private void drawOutlinePaths(GraphicsContext g, TileMap map) {
+        var explored = new HashSet<Vector2i>();
+
+        // Paths starting at left and right maze border (over and under tunnel ends)
+        var handlesLeft = new ArrayList<Vector2i>();
+        var handlesRight = new ArrayList<Vector2i>();
+        for (int row = 0; row < map.numRows(); ++row) {
+            if (map.get(row, 0) == Tiles.TUNNEL) {
+                handlesLeft.add(new Vector2i(0, row - 1));
+                handlesLeft.add(new Vector2i(0, row + 1));
+            }
+            if (map.get(row, map.numCols() - 1) == Tiles.TUNNEL) {
+                handlesRight.add(new Vector2i(map.numCols() - 1, row - 1));
+                handlesRight.add(new Vector2i(map.numCols() - 1, row + 1));
+            }
+        }
+
+        handlesLeft.stream()
+            .filter(handle -> !explored.contains(handle))
+            .map(handle -> map.buildPath(explored, handle, map.newMoveDir(RIGHT, map.get(handle))))
+            .forEach(path -> drawPath(g, map, path, false, false));
+
+        handlesRight.stream()
+            .filter(handle -> !explored.contains(handle))
+            .map(handle -> map.buildPath(explored, handle, map.newMoveDir(LEFT, map.get(handle))))
+            .forEach(path -> drawPath(g, map, path, false, false));
     }
 
     private Point2D center(Vector2i tile) {
         return new Point2D(tile.x() * s(TILE_SIZE) + s(4), tile.y() * s(TILE_SIZE) + s(4));
     }
 
-    private void drawPath(GraphicsContext g, TileMap map, List<Vector2i> path) {
-        path.add(path.getFirst()); // close the path
+    private void drawPath(GraphicsContext g, TileMap map, List<Vector2i> path, boolean fill, boolean close) {
+        if (close) {
+            path.add(path.getFirst()); // close the path
+        }
         double r = s(TILE_SIZE / 2f);
         g.setFill(wallFillColor);
         g.setStroke(wallStrokeColor);
@@ -197,45 +221,48 @@ public class TerrainMapRenderer implements TileMapRenderer {
                         g.arc(x - r, y - r, r, r, 270, 90);
                     }
                 }
+
+                case Tiles.DWALL_H -> g.lineTo(x + r, y);
+                case Tiles.DWALL_V -> g.lineTo(x, y + r);
+                case Tiles.DCORNER_NW -> {
+                    if (prevTile == null || prevTile.x() > tile.x()) {
+                        g.arc(x + r, y + r, r, r, 90, 90);
+                    } else {
+                        g.arc(x + r, y + r, r, r, 180, -90);
+                    }
+                }
+                case Tiles.DCORNER_SW -> {
+                    if (prevTile == null || prevTile.y() < tile.y()) {
+                        g.arc(x + r, y - r, r, r, 180, 90);
+                    } else {
+                        g.arc(x + r, y - r, r, r, 270, -90);
+                    }
+                }
+                case Tiles.DCORNER_NE -> {
+                    if (prevTile == null || prevTile.y() > tile.y()) {
+                        g.arc(x - r, y + r, r, r, 0, 90);
+                    } else {
+                        g.arc(x - r, y + r, r, r, 90, -90);
+                    }
+                }
+                case Tiles.DCORNER_SE -> {
+                    if (prevTile == null || prevTile.y() < tile.y()) {
+                        g.arc(x - r, y - r, r, r, 0, -90);
+                    } else {
+                        g.arc(x - r, y - r, r, r, 270, 90);
+                    }
+                }
                 default -> {}
             }
         }
-        g.closePath();
-        g.fill();
+        if (close) {
+            g.closePath();
+        }
+        if (fill) {
+            g.fill();
+        }
         g.stroke();
     }
 
-    private static List<Vector2i> buildPath(
-        TileMap terrainMap, Set<Vector2i> explored, Vector2i startTile, Direction startDirection)
-    {
-        List<Vector2i> path = new ArrayList<>();
-        Vector2i current = startTile;
-        Direction moveDir = startDirection;
-        while (true) {
-            path.add(current);
-            explored.add(current);
-            var next = current.plus(moveDir.vector());
-            if (terrainMap.outOfBounds(next)) {
-                break;
-            }
-            if (explored.contains(next)) {
-                path.add(next);
-                break;
-            }
-            moveDir = newMoveDir(moveDir, terrainMap.get(next));
-            current = next;
-        }
-        return path;
-    }
-
-    private static Direction newMoveDir(Direction moveDir, byte tileValue) {
-        return switch (tileValue) {
-            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> moveDir == LEFT  ? DOWN  : RIGHT;
-            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> moveDir == RIGHT ? DOWN  : LEFT;
-            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> moveDir == DOWN  ? LEFT  : UP;
-            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> moveDir == DOWN  ? RIGHT : UP;
-            default -> moveDir;
-        };
-    }
 
 }

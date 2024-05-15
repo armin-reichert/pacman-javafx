@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.world;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
@@ -11,12 +12,12 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Direction.*;
+import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
@@ -243,4 +244,40 @@ public class TileMap {
             w.write("\r\n");
         }
     }
+
+    // Paths
+
+    public List<Vector2i> buildPath(
+        Set<Vector2i> explored, Vector2i startTile, Direction startDirection)
+    {
+        List<Vector2i> path = new ArrayList<>();
+        Vector2i current = startTile;
+        Direction moveDir = startDirection;
+        while (true) {
+            path.add(current);
+            explored.add(current);
+            var next = current.plus(moveDir.vector());
+            if (outOfBounds(next)) {
+                break;
+            }
+            if (explored.contains(next)) {
+                path.add(next);
+                break;
+            }
+            moveDir = newMoveDir(moveDir, get(next));
+            current = next;
+        }
+        return path;
+    }
+
+    public Direction newMoveDir(Direction moveDir, byte tileValue) {
+        return switch (tileValue) {
+            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> moveDir == LEFT  ? DOWN  : RIGHT;
+            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> moveDir == RIGHT ? DOWN  : LEFT;
+            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> moveDir == DOWN  ? LEFT  : UP;
+            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> moveDir == DOWN  ? RIGHT : UP;
+            default -> moveDir;
+        };
+    }
+
 }

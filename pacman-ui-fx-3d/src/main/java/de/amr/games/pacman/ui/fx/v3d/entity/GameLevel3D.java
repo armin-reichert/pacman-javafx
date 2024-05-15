@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui.fx.v3d.entity;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -40,7 +39,8 @@ import org.tinylog.Logger;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Direction.*;
+import static de.amr.games.pacman.lib.Direction.LEFT;
+import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer.getTileMapColor;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
@@ -271,40 +271,6 @@ public class GameLevel3D extends Group {
             .map(DoorWing3D.class::cast);
     }
 
-    private static Direction newMoveDir(Direction moveDir, byte tileValue) {
-        return switch (tileValue) {
-            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> moveDir == LEFT  ? DOWN  : RIGHT;
-            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> moveDir == RIGHT ? DOWN  : LEFT;
-            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> moveDir == DOWN  ? LEFT  : UP;
-            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> moveDir == DOWN  ? RIGHT : UP;
-            default -> moveDir;
-        };
-    }
-
-    private static List<Vector2i> buildTerrainMapPath(
-        TileMap terrainMap, Set<Vector2i> explored, Vector2i startTile, Direction startDirection)
-    {
-        Logger.trace("Build path starting at {} moving {}", startTile, startDirection);
-        List<Vector2i> path = new ArrayList<>();
-        Vector2i current = startTile;
-        Direction moveDir = startDirection;
-        while (true) {
-            path.add(current);
-            explored.add(current);
-            var next = current.plus(moveDir.vector());
-            if (terrainMap.outOfBounds(next)) {
-                break;
-            }
-            if (explored.contains(next)) {
-                path.add(next);
-                break;
-            }
-            moveDir = newMoveDir(moveDir, terrainMap.get(next));
-            current = next;
-        }
-        return path;
-    }
-
     private void addMazeWalls(Group parent) {
         TileMap terrainMap = context.game().world().map().terrain();
         var explored = new HashSet<Vector2i>();
@@ -314,7 +280,7 @@ public class GameLevel3D extends Group {
             .filter(tile -> terrainMap.get(tile) == Tiles.CORNER_NW)
             .filter(corner -> corner.x() > 0 && corner.x() < terrainMap.numCols() - 1)
             .filter(corner -> corner.y() > 0 && corner.y() < terrainMap.numRows() - 1)
-            .map(corner -> buildTerrainMapPath(terrainMap, explored, corner, RIGHT))
+            .map(corner -> terrainMap.buildPath(explored, corner, RIGHT))
             .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
 
         // Paths starting at left and right maze border (over and under tunnel ends)
@@ -333,12 +299,12 @@ public class GameLevel3D extends Group {
 
         handlesLeft.stream()
             .filter(handle -> !explored.contains(handle))
-            .map(handle -> buildTerrainMapPath(terrainMap, explored, handle, newMoveDir(RIGHT, terrainMap.get(handle))))
+            .map(handle -> terrainMap.buildPath(explored, handle, terrainMap.newMoveDir(RIGHT, terrainMap.get(handle))))
             .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
 
         handlesRight.stream()
             .filter(handle -> !explored.contains(handle))
-            .map(handle -> buildTerrainMapPath(terrainMap, explored, handle, newMoveDir(LEFT, terrainMap.get(handle))))
+            .map(handle -> terrainMap.buildPath(explored, handle, terrainMap.newMoveDir(LEFT, terrainMap.get(handle))))
             .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
     }
 
