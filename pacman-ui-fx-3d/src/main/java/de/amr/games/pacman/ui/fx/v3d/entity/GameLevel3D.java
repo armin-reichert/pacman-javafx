@@ -18,6 +18,7 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
 import javafx.animation.*;
@@ -217,6 +218,8 @@ public class GameLevel3D extends Group {
     }
 
     private void addFood3D(Group parent) {
+        Color color = TileMapRenderer.getTileMapColor(context.game().world().map().food(), "food_color", Color.WHITE);
+        foodColorPy.set(color);
         var world = context.game().world();
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             if (world.isEnergizerTile(tile)) {
