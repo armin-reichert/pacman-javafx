@@ -179,6 +179,8 @@ public class TerrainMapRenderer implements TileMapRenderer {
         return new Point2D(tile.x() * s(8) + s(4), tile.y() * s(8) + s(4));
     }
     private void drawPath(GraphicsContext g, TileMap map, List<Vector2i> path) {
+        path.add(path.getFirst());
+
         double tpx = s(8);
         double r = tpx / 2;
 
@@ -191,7 +193,6 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.setLineWidth(2);
 
         g.beginPath();
-        g.moveTo(x+r, y);
         for (int i = 0; i < path.size(); ++i) {
             Vector2i tile = path.get(i);
             p = center(tile);
@@ -238,8 +239,8 @@ public class TerrainMapRenderer implements TileMapRenderer {
                 }
             }
         }
-        //g.closePath();
-        //g.fill();
+        g.closePath();
+        g.fill();
         g.stroke();
     }
 
