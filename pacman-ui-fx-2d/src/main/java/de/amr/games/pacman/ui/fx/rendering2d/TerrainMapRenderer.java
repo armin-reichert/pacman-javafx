@@ -168,6 +168,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
         // Obstacles inside maze
         map.tiles()
+            .filter(tile -> !explored.contains(tile))
             .filter(tile -> map.get(tile) == Tiles.CORNER_NW)
             .filter(corner -> corner.x() > 0 && corner.x() < map.numCols() - 1)
             .filter(corner -> corner.y() > 0 && corner.y() < map.numRows() - 1)
@@ -185,8 +186,6 @@ public class TerrainMapRenderer implements TileMapRenderer {
         double r = tpx / 2;
 
         Point2D p = center(path.getFirst());
-        double x = p.getX();
-        double y = p.getY();
 
         g.setFill(wallFillColor);
         g.setStroke(wallStrokeColor);
@@ -196,39 +195,35 @@ public class TerrainMapRenderer implements TileMapRenderer {
         for (int i = 0; i < path.size(); ++i) {
             Vector2i tile = path.get(i);
             p = center(tile);
-            x = p.getX();
-            y = p.getY();
-            Point2D pred = i > 0 ? center(path.get(i-1)) : null;
+            double x = p.getX(), y = p.getY();
+            Vector2i prevTile = i == 0 ? null : path.get(i - 1);
+
             switch (map.get(tile)) {
-                case Tiles.WALL_H -> {
-                    g.lineTo(x + r, y);
-                }
-                case Tiles.WALL_V -> {
-                    g.lineTo(x, y + r);
-                }
+                case Tiles.WALL_H -> g.lineTo(x + r, y);
+                case Tiles.WALL_V -> g.lineTo(x, y + r);
                 case Tiles.CORNER_NW -> {
-                    if (pred == null || pred.getX() > x) {
+                    if (prevTile == null || prevTile.x() > tile.x()) {
                         g.arc(x + r, y + r, r, r, 90, 90);
                     } else {
                         g.arc(x + r, y + r, r, r, 180, -90);
                     }
                 }
                 case Tiles.CORNER_SW -> {
-                    if (pred == null || pred.getY() < y) {
+                    if (prevTile == null || prevTile.y() < tile.y()) {
                         g.arc(x + r, y - r, r, r, 180, 90);
                     } else {
                         g.arc(x + r, y - r, r, r, 270, -90);
                     }
                 }
                 case Tiles.CORNER_NE -> {
-                    if (pred == null || pred.getY() > y) {
+                    if (prevTile == null || prevTile.y() > tile.y()) {
                         g.arc(x - r, y + r, r, r, 0, 90);
                     } else {
                         g.arc(x - r, y + r, r, r, 90, -90);
                     }
                 }
                 case Tiles.CORNER_SE -> {
-                    if (pred == null || pred.getY() < y) {
+                    if (prevTile == null || prevTile.y() < tile.y()) {
                         g.arc(x - r, y - r, r, r, 0, -90);
                     } else {
                         g.arc(x - r, y - r, r, r, 270, 90);
