@@ -147,9 +147,9 @@ public class PlayScene2D extends GameScene2D {
             var terrainMap = game.world().map().terrain();
             terrainMapRenderer.setScaling(scalingPy.get());
             terrainMapRenderer.setWallStrokeColor(game.blinking().isOn() ?
-                Color.BLACK : Color.web(terrainMap.getProperty("wall_stroke_color")));
+                Color.WHITE : Color.web(terrainMap.getProperty("wall_stroke_color")));
             terrainMapRenderer.setWallFillColor(game.blinking().isOn() ?
-                Color.WHITE : Color.web(terrainMap.getProperty("wall_fill_color")));
+                Color.BLACK : Color.web(terrainMap.getProperty("wall_fill_color")));
             terrainMapRenderer.drawMap(g, terrainMap);
         }
     }
