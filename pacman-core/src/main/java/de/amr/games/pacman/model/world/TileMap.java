@@ -7,16 +7,16 @@ package de.amr.games.pacman.model.world;
 import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
-import java.io.*;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.checkTileNotNull;
 import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
@@ -130,13 +130,8 @@ public class TileMap {
         return data.length;
     }
 
-    public boolean insideBounds(int row, int col) {
-        return 0 <= row && row < numRows() && 0 <= col && col < numCols();
-    }
-
-    public boolean insideBounds(Vector2i tile) {
-        checkTileNotNull(tile);
-        return insideBounds(tile.y(), tile.x());
+    public boolean outOfBounds(int row, int col) {
+        return row < 0 || row >= numRows() || col < 0 || col >= numCols();
     }
 
     @SuppressWarnings("unchecked")
@@ -144,17 +139,8 @@ public class TileMap {
         return (T) properties.get(key);
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T getPropertyOrDefault(String key, T defaultValue) {
-        return hasProperty(key) ?  (T) properties.get(key) : defaultValue;
-    }
-
     public boolean hasProperty(String name) {
         return properties.containsKey(name);
-    }
-
-    public Properties getProperties() {
-        return properties;
     }
 
     public String getPropertiesAsText() {
@@ -190,10 +176,10 @@ public class TileMap {
      * @throws IllegalArgumentException if tile outside map bounds
      */
     public byte get(int row, int col) {
-        if (insideBounds(row, col)) {
-            return data[row][col];
+        if (outOfBounds(row, col)) {
+            throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
         }
-        throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
+        return data[row][col];
     }
 
     /**
@@ -213,7 +199,7 @@ public class TileMap {
      * @throws IllegalArgumentException if tile outside map bounds
      */
     public void set(int row, int col, byte value) {
-        if (!insideBounds(row, col)) {
+        if (outOfBounds(row, col)) {
             throw new IllegalArgumentException(String.format("Illegal map coordinate row=%d col=%d", row, col));
         }
         data[row][col] = value;
