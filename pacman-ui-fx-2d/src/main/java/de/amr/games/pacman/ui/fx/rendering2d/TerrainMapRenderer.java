@@ -140,7 +140,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
             .filter(tile -> !explored.contains(tile))
             .filter(tile -> map.get(tile) == Tiles.CORNER_NW)
             .map(corner -> map.buildPath(explored, corner, DOWN))
-            .forEach(path -> drawPath(g, map, path, true, true));
+            .forEach(path -> drawPath(g, map, path, true, true, STROKE_WIDTH, wallStrokeColor));
     }
 
     private void drawOutlinePaths(GraphicsContext g, TileMap map) {
@@ -163,26 +163,32 @@ public class TerrainMapRenderer implements TileMapRenderer {
         handlesLeft.stream()
             .filter(handle -> !explored.contains(handle))
             .map(handle -> map.buildPath(explored, handle, map.newMoveDir(RIGHT, map.get(handle))))
-            .forEach(path -> drawPath(g, map, path, false, false));
+            .forEach(path -> {
+                drawPath(g, map, path, false, false, 4*STROKE_WIDTH, wallStrokeColor);
+                drawPath(g, map, path, false, false, STROKE_WIDTH, wallFillColor);
+            });
 
         handlesRight.stream()
             .filter(handle -> !explored.contains(handle))
             .map(handle -> map.buildPath(explored, handle, map.newMoveDir(LEFT, map.get(handle))))
-            .forEach(path -> drawPath(g, map, path, false, false));
+            .forEach(path -> {
+                drawPath(g, map, path, false, false, 4*STROKE_WIDTH, wallStrokeColor);
+                drawPath(g, map, path, false, false, STROKE_WIDTH, wallFillColor);
+            });
     }
 
     private Point2D center(Vector2i tile) {
         return new Point2D(tile.x() * s(TILE_SIZE) + s(4), tile.y() * s(TILE_SIZE) + s(4));
     }
 
-    private void drawPath(GraphicsContext g, TileMap map, List<Vector2i> path, boolean fill, boolean close) {
+    private void drawPath(GraphicsContext g, TileMap map, List<Vector2i> path, boolean fill, boolean close, double strokeWidth, Color strokeColor) {
         if (close) {
             path.add(path.getFirst()); // close the path
         }
         double r = s(TILE_SIZE / 2f);
         g.setFill(wallFillColor);
-        g.setStroke(wallStrokeColor);
-        g.setLineWidth(STROKE_WIDTH);
+        g.setStroke(strokeColor);
+        g.setLineWidth(strokeWidth);
         g.beginPath();
         for (int i = 0; i < path.size(); ++i) {
             Vector2i tile = path.get(i);
