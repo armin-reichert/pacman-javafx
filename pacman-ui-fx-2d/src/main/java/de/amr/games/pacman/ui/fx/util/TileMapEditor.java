@@ -125,7 +125,7 @@ public class TileMapEditor extends Application  {
         double height = Math.max(0.8 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
         sceneContent = createSceneContent();
 
-        scene = new Scene(sceneContent, 1050, height);
+        scene = new Scene(sceneContent, height * 1.2, height);
         scene.setFill(Color.BLACK);
         scene.setOnKeyReleased(e -> {
             if (e.getCode() == KeyCode.T) {
@@ -156,6 +156,77 @@ public class TileMapEditor extends Application  {
         });
         clock.start();
     }
+
+    Pane createSceneContent() {
+        menuBar = new MenuBar();
+        menuBar.getMenus().addAll(createFileMenu(), createMapsMenu());
+
+        canvas = new Canvas();
+        canvas.setOnMouseClicked(this::onMouseClickedOnCanvas);
+        canvas.setOnMouseMoved(this::onMouseMovedOverCanvas);
+
+        terrainMapPropertiesEditor = new TextArea();
+        terrainMapPropertiesEditor.setPrefSize(150, 150);
+
+        foodMapPropertiesEditor = new TextArea();
+        foodMapPropertiesEditor.setPrefSize(150, 150);
+
+        var cbTerrainVisible = new CheckBox("Terrain");
+        cbTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
+
+        var cbFoodVisible = new CheckBox("Food");
+        cbFoodVisible.selectedProperty().bindBidirectional(foodVisiblePy);
+
+        var cbGridVisible = new CheckBox("Grid");
+        cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
+
+        terrainPalette = new Palette(32, 4, 4, terrainMapRenderer, Tiles.TERRAIN_TILES_END);
+        terrainPalette.setValues(
+            Tiles.EMPTY, Tiles.TUNNEL, Tiles.EMPTY, Tiles.EMPTY,
+            Tiles.WALL_H, Tiles.WALL_V, Tiles.DWALL_H, Tiles.DWALL_V,
+            Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE,
+            Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE
+        );
+
+        foodPalette = new Palette(32, 4, 4, foodMapRenderer, Tiles.FOOD_TILES_END);
+        foodPalette.setValues(
+            Tiles.EMPTY, Tiles.PELLET, Tiles.ENERGIZER, Tiles.EMPTY
+        );
+
+        TabPane tabPane = new TabPane();
+        var terrainPaletteTab = new Tab("Terrain", terrainPalette);
+        terrainPaletteTab.setClosable(false);
+        terrainPaletteTab.setOnSelectionChanged(e -> terrainEditedPy.set(terrainPaletteTab.isSelected()));
+        var foodPaletteTab = new Tab("Food", foodPalette);
+        foodPaletteTab.setClosable(false);
+        foodPaletteTab.setOnSelectionChanged(e -> terrainEditedPy.set(!foodPaletteTab.isSelected()));
+        tabPane.getTabs().addAll(terrainPaletteTab, foodPaletteTab);
+
+        infoLabel = new Label();
+
+        VBox controlsPane = new VBox();
+        controlsPane.setSpacing(10);
+        controlsPane.getChildren().add(new HBox(20, new Label("Show"), cbTerrainVisible, cbFoodVisible, cbGridVisible));
+        controlsPane.getChildren().add(infoLabel);
+        controlsPane.getChildren().add(tabPane);
+        controlsPane.getChildren().add(new VBox(new Text("Terrain Map"), terrainMapPropertiesEditor));
+        controlsPane.getChildren().add(new VBox(new Text("Food Map"), foodMapPropertiesEditor));
+
+        var contentPane = new BorderPane();
+
+        contentPane.setTop(menuBar);
+
+        var scroll = new ScrollPane(canvas);
+        scroll.setFitToHeight(true);
+
+        var hbox = new HBox(scroll, controlsPane);
+        hbox.setSpacing(10);
+        contentPane.setCenter(hbox);
+
+        return contentPane;
+    }
+
+
 
     // TODO use own canvas or Text control
     void drawBlueScreen(Exception drawException) {
@@ -221,74 +292,6 @@ public class TileMapEditor extends Application  {
                 g.strokeLine(col * gridSize, 0, col * gridSize, canvas.getHeight());
             }
         }
-    }
-
-    Pane createSceneContent() {
-        menuBar = new MenuBar();
-        menuBar.getMenus().addAll(createFileMenu(), createMapsMenu());
-
-        canvas = new Canvas();
-        canvas.setOnMouseClicked(this::onMouseClickedOnCanvas);
-        canvas.setOnMouseMoved(this::onMouseMovedOverCanvas);
-
-        terrainMapPropertiesEditor = new TextArea();
-        terrainMapPropertiesEditor.setPrefSize(220, 150);
-
-        foodMapPropertiesEditor = new TextArea();
-        foodMapPropertiesEditor.setPrefSize(220, 150);
-
-        var cbTerrainVisible = new CheckBox("Terrain");
-        cbTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
-
-        var cbFoodVisible = new CheckBox("Food");
-        cbFoodVisible.selectedProperty().bindBidirectional(foodVisiblePy);
-
-        var cbGridVisible = new CheckBox("Grid");
-        cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
-
-        terrainPalette = new Palette(32, 4, 4, terrainMapRenderer, Tiles.TERRAIN_TILES_END);
-        terrainPalette.setValues(
-            Tiles.EMPTY, Tiles.TUNNEL, Tiles.EMPTY, Tiles.EMPTY,
-            Tiles.WALL_H, Tiles.WALL_V, Tiles.DWALL_H, Tiles.DWALL_V,
-            Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE,
-            Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE
-        );
-
-        foodPalette = new Palette(32, 4, 4, foodMapRenderer, Tiles.FOOD_TILES_END);
-        foodPalette.setValues(
-            Tiles.EMPTY, Tiles.PELLET, Tiles.ENERGIZER, Tiles.EMPTY
-        );
-
-        TabPane tabPane = new TabPane();
-        var terrainPaletteTab = new Tab("Terrain", terrainPalette);
-        terrainPaletteTab.setClosable(false);
-        terrainPaletteTab.setOnSelectionChanged(e -> terrainEditedPy.set(terrainPaletteTab.isSelected()));
-        var foodPaletteTab = new Tab("Food", foodPalette);
-        foodPaletteTab.setClosable(false);
-        foodPaletteTab.setOnSelectionChanged(e -> terrainEditedPy.set(!foodPaletteTab.isSelected()));
-        tabPane.getTabs().addAll(terrainPaletteTab, foodPaletteTab);
-
-        infoLabel = new Label();
-
-        VBox controlsPane = new VBox();
-        controlsPane.setSpacing(10);
-        controlsPane.setPrefWidth(350);
-        controlsPane.getChildren().add(new HBox(20, new Label("Show"), cbTerrainVisible, cbFoodVisible, cbGridVisible));
-        controlsPane.getChildren().add(infoLabel);
-        controlsPane.getChildren().add(tabPane);
-        controlsPane.getChildren().add(new VBox(new Text("Terrain Map"), terrainMapPropertiesEditor));
-        controlsPane.getChildren().add(new VBox(new Text("Food Map"), foodMapPropertiesEditor));
-
-        var contentPane = new BorderPane();
-
-        contentPane.setTop(menuBar);
-        var scroll = new ScrollPane(canvas);
-        scroll.setFitToHeight(true);
-        scroll.setFitToWidth(true);
-        contentPane.setCenter(scroll);
-        contentPane.setRight(controlsPane);
-
-        return contentPane;
     }
 
     Menu createFileMenu() {
