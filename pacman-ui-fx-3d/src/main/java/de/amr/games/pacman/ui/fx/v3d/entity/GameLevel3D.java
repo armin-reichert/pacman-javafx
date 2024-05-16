@@ -153,6 +153,7 @@ public class GameLevel3D extends Group {
     public GameLevel3D(GameSceneContext context) {
         this.context = checkNotNull(context);
 
+        // Floor
         List<String> textureNames = context.theme().getArray("texture.names");
         for (String textureName : textureNames) {
             String key = "texture." + textureName;
@@ -165,13 +166,18 @@ public class GameLevel3D extends Group {
         floorColorPy.bind(PY_3D_FLOOR_COLOR);
         floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
 
-        addMaze3D(mazeGroup);
-
-        worldGroup.getChildren().addAll(floor, mazeGroup);
+        // Maze
+        var terrain = context.game().world().map().terrain();
+        wallStrokeColorPy.set(getTileMapColor(terrain, "wall_stroke_color", Color.rgb(33, 33, 255)));
+        wallFillColorPy.set(getTileMapColor(terrain, "wall_fill_color", Color.rgb(0,0,0)));
+        foodColorPy.set(getTileMapColor(terrain, "food_color", Color.PINK));
+        addMazeWalls(mazeGroup);
+        addArcadeGhostHouse(mazeGroup);
+        addFood3D(mazeGroup);
 
         pac3D = switch (context.game().variant()) {
-            case MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), context.game().pac(), PAC_SIZE);
-            case PACMAN    -> Pac3D.createPacMan3D(context.theme(), context.game().pac(), PAC_SIZE);
+            case MS_PACMAN -> Pac3D.createFemalePac3D(context.theme(), context.game().pac(), PAC_SIZE);
+            case PACMAN    -> Pac3D.createMalePac3D(context.theme(), context.game().pac(), PAC_SIZE);
         };
         ghosts3D = context.game().ghosts().map(this::createGhost3D).toList();
 
@@ -179,9 +185,10 @@ public class GameLevel3D extends Group {
         createLevelCounter3D();
         createMessage3D();
 
+        worldGroup.getChildren().addAll(floor, mazeGroup);
         getChildren().addAll(ghosts3D);
         getChildren().addAll(pac3D, pac3D.light());
-        // Walls must be added after the guys! Otherwise, transparency is not working correctly.
+        // Walls group must come after the guys! Otherwise, transparency is not working correctly.
         getChildren().addAll(message3D, levelCounterGroup, livesCounter3D, worldGroup);
 
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
@@ -190,16 +197,6 @@ public class GameLevel3D extends Group {
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         wallHeightPy.bind(PY_3D_WALL_HEIGHT);
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
-    }
-
-    private void addMaze3D(Group parent) {
-        var terrain = context.game().world().map().terrain();
-        wallStrokeColorPy.set(getTileMapColor(terrain, "wall_stroke_color", Color.rgb(33, 33, 255)));
-        wallFillColorPy.set(getTileMapColor(terrain, "wall_fill_color", Color.rgb(0,0,0)));
-        foodColorPy.set(getTileMapColor(terrain, "food_color", Color.PINK));
-        addMazeWalls(parent);
-        addArcadeGhostHouse(parent);
-        addFood3D(parent);
     }
 
     private void addArcadeGhostHouse(Group parent) {
@@ -232,9 +229,9 @@ public class GameLevel3D extends Group {
     }
 
     private void addFood3D(Group parent) {
-        Color color = TileMapRenderer.getTileMapColor(context.game().world().map().food(), "food_color", Color.WHITE);
-        foodColorPy.set(color);
         var world = context.game().world();
+        Color color = TileMapRenderer.getTileMapColor(world.map().food(), "food_color", Color.WHITE);
+        foodColorPy.set(color);
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             if (world.isEnergizerTile(tile)) {
                 var energizer3D = new Energizer3D(ENERGIZER_RADIUS);
@@ -391,8 +388,8 @@ public class GameLevel3D extends Group {
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         for (int i = 0; i < livesCounter3D.maxLives(); ++i) {
             var pac3D = switch (context.game().variant()) {
-                case MS_PACMAN -> Pac3D.createMsPacMan3D(context.theme(), null, theme.get("livescounter.pac.size"));
-                case PACMAN    -> Pac3D.createPacMan3D(context.theme(), null,  theme.get("livescounter.pac.size"));
+                case MS_PACMAN -> Pac3D.createFemalePac3D(context.theme(), null, theme.get("livescounter.pac.size"));
+                case PACMAN    -> Pac3D.createMalePac3D(context.theme(), null,  theme.get("livescounter.pac.size"));
             };
             livesCounter3D.addItem(pac3D, true);
         }
@@ -578,10 +575,6 @@ public class GameLevel3D extends Group {
         if (houseOpen) {
             doorWings3D().map(DoorWing3D::traversalAnimation).forEach(Transition::play);
         }
-    }
-
-    public Group mazeGroup() {
-        return mazeGroup;
     }
 
     public Pac3D pac3D() {

@@ -57,7 +57,7 @@ public class Pac3D extends Group {
      * @param size diameter of Pac-Man
      * @return 3D Pac-Man instance
      */
-    public static Pac3D createPacMan3D(Theme theme, Pac pacMan, double size) {
+    public static Pac3D createMalePac3D(Theme theme, Pac pacMan, double size) {
         checkNotNull(theme);
         var body = createPacShape(theme.get("model3D.pacman"), size,
             theme.color("pacman.color.head"),
@@ -78,7 +78,7 @@ public class Pac3D extends Group {
      * @param size diameter of Pac-Man
      * @return 3D Ms. Pac-Man instance
      */
-    public static Pac3D createMsPacMan3D(Theme theme, Pac msPacMan, double size) {
+    public static Pac3D createFemalePac3D(Theme theme, Pac msPacMan, double size) {
         checkNotNull(theme);
         var body = createPacShape(theme.get("model3D.pacman"), size,
             theme.color("mspacman.color.head"),
