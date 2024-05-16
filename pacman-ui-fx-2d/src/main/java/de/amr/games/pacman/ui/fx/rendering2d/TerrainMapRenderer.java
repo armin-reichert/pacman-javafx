@@ -132,7 +132,8 @@ public class TerrainMapRenderer implements TileMapRenderer {
         return new Point2D(tile.x() * s(TILE_SIZE) + s(4), tile.y() * s(TILE_SIZE) + s(4));
     }
 
-    private void drawPath(GraphicsContext g, TileMap map, List<Vector2i> path, boolean fill, boolean close, double strokeWidth, Color strokeColor) {
+    private void drawPath(GraphicsContext g, TileMap map, List<Vector2i> path,
+                          boolean fill, boolean close, double strokeWidth, Color strokeColor) {
         if (close) {
             path.add(path.getFirst()); // close the path
         }
@@ -146,7 +147,6 @@ public class TerrainMapRenderer implements TileMapRenderer {
             Point2D p = center(tile);
             double x = p.getX(), y = p.getY();
             Vector2i prevTile = i == 0 ? null : path.get(i - 1);
-
             switch (map.get(tile)) {
                 case Tiles.WALL_H, Tiles.DWALL_H -> g.lineTo(x + r, y);
                 case Tiles.WALL_V, Tiles.DWALL_V -> g.lineTo(x, y + r);
@@ -189,6 +189,4 @@ public class TerrainMapRenderer implements TileMapRenderer {
         }
         g.stroke();
     }
-
-
 }
