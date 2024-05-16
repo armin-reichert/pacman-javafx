@@ -100,6 +100,14 @@ public class TileMap {
         this.data = data;
     }
 
+    public void validateSize(int numRows, int numCols) {
+        if (numCols() != numCols || numRows() != numRows) {
+            throw new IllegalArgumentException(
+                String.format("Map must have %d rows and %d columns but has %d rows and %d columns",
+                    numRows, numCols, numRows(), numCols()));
+        }
+    }
+
     /**
      * @return stream of all tiles of this map row-by-row
      */

@@ -499,18 +499,10 @@ public enum GameVariant implements GameModel {
         return house;
     }
 
-    void validateArcadeMapSize(TileMap map) {
-        if (map.numCols() != ARCADE_MAP_TILES_X || map.numRows() != ARCADE_MAP_TILES_Y) {
-            throw new IllegalArgumentException(
-                String.format("Arcade map must have %d columns and %d rows but has %d columns and %d rows",
-                    ARCADE_MAP_TILES_X, ARCADE_MAP_TILES_Y, map.numCols(), map.numRows()));
-        }
-    }
-
     World createArcadeWorld(URL worldMapURL) throws IOException {
         var worldMap = new WorldMap(worldMapURL);
-        validateArcadeMapSize(worldMap.terrain());
-        validateArcadeMapSize(worldMap.food());
+        worldMap.terrain().validateSize(ARCADE_MAP_TILES_Y, ARCADE_MAP_TILES_X);
+        worldMap.food().validateSize(ARCADE_MAP_TILES_Y, ARCADE_MAP_TILES_X);
 
         var world = new World(worldMap);
         world.setHouse(createArcadeHouse());
