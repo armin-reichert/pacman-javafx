@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.World;
@@ -116,24 +117,34 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void update() {
-        if (context.game().level().isEmpty()) {
-            Logger.info("Cannot update 3D play scene, no game level exists");
+        var game = context.game();
+        if (game.level().isEmpty()) {
+            Logger.debug("Cannot update 3D play scene, no game level exists");
             return;
         }
         if (level3D != null) {
-            level3D.update();
-            perspective().update(fxSubScene.getCamera(), context.game().pac());
+            level3D.pac3D().update(game);
+            level3D.ghosts3D().forEach(ghost3D -> ghost3D.update(game));
+            level3D.bonus3D().ifPresent(bonus -> bonus.update(game.world()));
+            level3D.updateHouseState();
+            // reconsider this:
+            int numLivesDisplayed = game.lives() - 1;
+            if (context.gameState() == GameState.READY && !game.pac().isVisible()) {
+                numLivesDisplayed += 1;
+            }
+            level3D.livesCounter3D().update(numLivesDisplayed);
+            perspective().update(fxSubScene.getCamera(), game.pac());
         }
-        context.game().pac().setUseAutopilot(context.game().isDemoLevel() || PY_USE_AUTOPILOT.get());
-        updateSound();
+        game.pac().setUseAutopilot(game.isDemoLevel() || PY_USE_AUTOPILOT.get());
         scores3D.setScores(
-            context.game().score().points(), context.game().score().levelNumber(),
-            context.game().highScore().points(), context.game().highScore().levelNumber());
+            game.score().points(), game.score().levelNumber(),
+            game.highScore().points(), game.highScore().levelNumber());
         if (context.gameController().hasCredit()) {
             scores3D.showScore();
         } else {
             scores3D.showText(Color.RED, "GAME OVER!");
         }
+        updateSound();
     }
 
     @Override
@@ -178,6 +189,8 @@ public class PlayScene3D implements GameScene {
 
         level3D.setTranslateX(-world.numCols() * HTS);
         level3D.setTranslateY(-world.numRows() * HTS);
+
+        level3D.livesCounter3D().setVisible(context.gameController().hasCredit());
 
         scores3D.setTranslateX(level3D.getTranslateX() + TS);
         scores3D.setTranslateY(level3D.getTranslateY() -3.5 * TS);
