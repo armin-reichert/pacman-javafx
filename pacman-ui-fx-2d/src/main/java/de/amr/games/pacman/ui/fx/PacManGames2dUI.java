@@ -138,31 +138,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         // Ms. Pac-Man game
         //
 
-        // wall and food colors for different map-maze combinations
-        theme.set("mspacman.wallStrokeColor.1",   Color.rgb(255, 0, 0));
-        theme.set("mspacman.wallFillColor.1",     Color.rgb(255, 183, 174));
-        theme.set("mspacman.foodColor.1",         Color.rgb(222, 222, 255));
-
-        theme.set("mspacman.wallStrokeColor.2",   Color.rgb(222, 222, 255));
-        theme.set("mspacman.wallFillColor.2",     Color.rgb(71, 183, 255));
-        theme.set("mspacman.foodColor.2",         Color.rgb(255, 255, 0));
-
-        theme.set("mspacman.wallStrokeColor.3",   Color.rgb(222, 222, 255));
-        theme.set("mspacman.wallFillColor.3",     Color.rgb(222, 151, 81));
-        theme.set("mspacman.foodColor.3",         Color.rgb(255, 0, 0));
-
-        theme.set("mspacman.wallStrokeColor.4",   Color.rgb(255, 183, 81));
-        theme.set("mspacman.wallFillColor.4",     Color.rgb(33, 33, 255));
-        theme.set("mspacman.foodColor.4",         Color.rgb(222, 222, 255));
-
-        theme.set("mspacman.wallStrokeColor.5",   Color.rgb(255, 255, 0));
-        theme.set("mspacman.wallFillColor.5",     Color.rgb(255, 183, 255));
-        theme.set("mspacman.foodColor.5",         Color.rgb(0, 255, 255));
-
-        theme.set("mspacman.wallStrokeColor.6",   Color.rgb(255, 0, 0));
-        theme.set("mspacman.wallFillColor.6",     Color.rgb(222, 183, 174));
-        theme.set("mspacman.foodColor.6",         Color.rgb(222, 222, 255));
-
         theme.set("mspacman.startpage.image",         rm.loadImage("graphics/mspacman/mspacman_flyer.png"));
         theme.set("mspacman.helpButton.icon",         rm.loadImage("graphics/icons/help-red-64.png"));
 
@@ -197,6 +172,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         //
         // Pac-Man game
         //
+
         theme.set("pacman.startpage.image",           rm.loadImage("graphics/pacman/pacman_flyer.png"));
         theme.set("pacman.helpButton.icon",           rm.loadImage("graphics/icons/help-blue-64.png"));
 
