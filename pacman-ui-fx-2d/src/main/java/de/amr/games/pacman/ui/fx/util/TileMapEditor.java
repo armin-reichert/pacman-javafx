@@ -108,6 +108,15 @@ public class TileMapEditor extends Application  {
     public void start(Stage stage) throws Exception {
         this.stage = stage;
 
+        double height = Math.max(0.8 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
+        sceneContent = createSceneContent();
+        scene = new Scene(sceneContent, height * 1.2, height);
+        scene.setFill(Color.BLACK);
+
+        canvas.heightProperty().bind(sceneContent.heightProperty().multiply(0.95));
+        canvas.widthProperty().bind(Bindings.createDoubleBinding(
+            () -> canvas.getHeight() * map.numCols() / map.numRows(), canvas.heightProperty()));
+
         terrainMapRenderer = new TerrainMapRenderer() {
             @Override
             public void drawTunnel(GraphicsContext g, Vector2i tile) {
@@ -122,26 +131,11 @@ public class TileMapEditor extends Application  {
         foodMapRenderer.setPelletColor(DEFAULT_FOOD_COLOR);
         foodMapRenderer.setEnergizerColor(DEFAULT_FOOD_COLOR);
 
-        double height = Math.max(0.8 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
-        sceneContent = createSceneContent();
+        terrainPalette.setRenderer(terrainMapRenderer);
+        foodPalette.setRenderer(foodMapRenderer);
 
-        scene = new Scene(sceneContent, height * 1.2, height);
-        scene.setFill(Color.BLACK);
-        scene.setOnKeyReleased(e -> {
-            if (e.getCode() == KeyCode.T) {
-                terrainEditedPy.set(true);
-            }
-            else if (e.getCode() == KeyCode.F) {
-                terrainEditedPy.set(false);
-            }
-        });
-
-        canvas.heightProperty().bind(sceneContent.heightProperty().multiply(0.95));
-        canvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> canvas.getHeight() * map.numCols()/ map.numRows(), canvas.heightProperty()));
-
-        stage.setScene(scene);
         stage.setTitle("Map Editor");
+        stage.setScene(scene);
         stage.show();
 
         GameClockFX clock = new GameClockFX();
@@ -182,7 +176,7 @@ public class TileMapEditor extends Application  {
         var cbGridVisible = new CheckBox("Grid");
         cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
 
-        terrainPalette = new Palette(32, 4, 4, terrainMapRenderer, Tiles.TERRAIN_TILES_END);
+        terrainPalette = new Palette(32, 4, 4, Tiles.TERRAIN_TILES_END);
         terrainPalette.setValues(
             Tiles.EMPTY, Tiles.TUNNEL, Tiles.EMPTY, Tiles.EMPTY,
             Tiles.WALL_H, Tiles.WALL_V, Tiles.DWALL_H, Tiles.DWALL_V,
@@ -190,7 +184,7 @@ public class TileMapEditor extends Application  {
             Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE
         );
 
-        foodPalette = new Palette(32, 4, 4, foodMapRenderer, Tiles.FOOD_TILES_END);
+        foodPalette = new Palette(32, 4, 4, Tiles.FOOD_TILES_END);
         foodPalette.setValues(
             Tiles.EMPTY, Tiles.PELLET, Tiles.ENERGIZER, Tiles.EMPTY
         );
@@ -349,8 +343,8 @@ public class TileMapEditor extends Application  {
     }
 
     void loadMap(WorldMap other) {
-        currentMapFile = null;
         map = WorldMap.copyOf(other);
+        currentMapFile = null;
         foodMapPropertiesEditor.setText(map.food().getPropertiesAsText());
         terrainMapPropertiesEditor.setText(map.terrain().getPropertiesAsText());
         terrainMapRenderer.setWallStrokeColor(getTileMapColor(map.terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
@@ -518,12 +512,11 @@ public class TileMapEditor extends Application  {
         int selectedValueRow;
         int selectedValueCol;
 
-        Palette(int gridSize, int numRows, int numCols, TileMapRenderer renderer, byte valueEnd) {
+        Palette(int gridSize, int numRows, int numCols, byte valueEnd) {
             this.gridSize = gridSize;
             this.numRows = numRows;
             this.numCols = numCols;
             this.valueAtIndex = new byte[numRows*numCols];
-            this.renderer = renderer;
             for (int i = 0; i < valueAtIndex.length; ++i) {
                 valueAtIndex[i] = i < valueEnd ? (byte) i : Tiles.EMPTY;
             }
@@ -533,6 +526,10 @@ public class TileMapEditor extends Application  {
             setWidth(numCols * gridSize);
             setHeight(numRows * gridSize);
             setOnMouseClicked(e -> selectedValue = pickValue(e));
+        }
+
+        public void setRenderer(TileMapRenderer renderer) {
+            this.renderer = renderer;
         }
 
         void setValues(byte... values) {
@@ -552,10 +549,12 @@ public class TileMapEditor extends Application  {
         void draw() {
             g.setFill(Color.BLACK);
             g.fillRect(0, 0, getWidth(), getHeight());
-            this.renderer.setScaling((float) gridSize / 8f);
-            for (int i = 0; i < numRows * numCols; ++i) {
-                int row = i / numCols, col = i % numCols;
-                renderer.drawTile(g, new Vector2i(col, row), valueAtIndex[i]);
+            if (renderer != null) {
+                renderer.setScaling((float) gridSize / 8f);
+                for (int i = 0; i < numRows * numCols; ++i) {
+                    int row = i / numCols, col = i % numCols;
+                    renderer.drawTile(g, new Vector2i(col, row), valueAtIndex[i]);
+                }
             }
             // Grid lines
             g.setStroke(Color.LIGHTGRAY);

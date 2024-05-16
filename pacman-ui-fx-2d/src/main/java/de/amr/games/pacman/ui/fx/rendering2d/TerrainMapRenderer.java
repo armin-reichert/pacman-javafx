@@ -34,7 +34,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         return scaling * times;
     }
 
-    private final double strokeWidth = 2.5;
+    private final double strokeWidth = 2;
     private Color wallFillColor = Color.BLACK;
     private Color wallStrokeColor = Color.GREEN;
 
@@ -72,7 +72,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.setFill(Color.BLACK);
         g.fillRect(x, y + s(1), s(TILE_SIZE), s(6));
         g.setFill(color);
-        g.fillRect(x - 1, y + s(3.0f), s(TILE_SIZE) + 2, s(2));
+        g.fillRect(x - 1, y + s(3), s(TILE_SIZE) + 2, s(2));
     }
 
     private void drawPathsInsideMap(GraphicsContext g, TileMap map) {
@@ -105,16 +105,16 @@ public class TerrainMapRenderer implements TileMapRenderer {
             .filter(handle -> !explored.contains(handle))
             .map(handle -> map.buildPath(explored, handle, map.newMoveDir(RIGHT, map.get(handle))))
             .forEach(path -> {
-                drawPath(g, map, path, false, false, 6 * strokeWidth, wallStrokeColor);
-                drawPath(g, map, path, false, false, 3 * strokeWidth, wallFillColor);
+                drawPath(g, map, path, false, false, 4 * strokeWidth, wallStrokeColor);
+                drawPath(g, map, path, false, false, 2 * strokeWidth, wallFillColor);
             });
 
         handlesRight.stream()
             .filter(handle -> !explored.contains(handle))
             .map(handle -> map.buildPath(explored, handle, map.newMoveDir(LEFT, map.get(handle))))
             .forEach(path -> {
-                drawPath(g, map, path, false, false, 6 * strokeWidth, wallStrokeColor);
-                drawPath(g, map, path, false, false, 3 * strokeWidth, wallFillColor);
+                drawPath(g, map, path, false, false, 4 * strokeWidth, wallStrokeColor);
+                drawPath(g, map, path, false, false, 2 * strokeWidth, wallFillColor);
             });
 
         // ghost house
@@ -123,8 +123,8 @@ public class TerrainMapRenderer implements TileMapRenderer {
             .filter(tile -> map.get(tile) == Tiles.DCORNER_NW)
             .map(corner -> map.buildPath(explored, corner, DOWN))
             .forEach(path -> {
-                drawPath(g, map, path, false, false, 6 * strokeWidth, wallStrokeColor);
-                drawPath(g, map, path, false, false, 3 * strokeWidth, wallFillColor);
+                drawPath(g, map, path, false, false, 4 * strokeWidth, wallStrokeColor);
+                drawPath(g, map, path, false, false, 2 * strokeWidth, wallFillColor);
             });
     }
 
