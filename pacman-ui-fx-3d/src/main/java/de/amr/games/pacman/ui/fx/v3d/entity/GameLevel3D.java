@@ -529,7 +529,28 @@ public class GameLevel3D extends Group {
         rotation.setFromAngle(0);
         rotation.setToAngle(360);
         rotation.setInterpolator(Interpolator.LINEAR);
-        return rotation;
+
+        final double wallHeightBeforeAnimation = wallHeightPy.get();
+        var fadeTransition = new Transition() {
+            {
+                setCycleDuration(Duration.seconds(1.5));
+                setInterpolator(Interpolator.EASE_BOTH);
+            }
+
+            @Override
+            protected void interpolate(double t) {
+                if (t == 0) {
+                    wallHeightPy.unbind();
+                }
+                wallHeightPy.set((1-t) * wallHeightBeforeAnimation);
+            }
+        };
+        fadeTransition.setOnFinished(e -> {
+            mazeGroup.setVisible(false);
+            wallHeightPy.bind(PY_3D_WALL_HEIGHT);
+        });
+
+        return new SequentialTransition(rotation, fadeTransition);
     }
 
     public Transition createMazeFlashingAnimation(int numFlashes) {
