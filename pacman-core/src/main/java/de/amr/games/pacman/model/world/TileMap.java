@@ -171,8 +171,6 @@ public class TileMap {
         StringReader r = new StringReader(text);
         try {
             properties.load(r);
-            Logger.info("Properties loaded from text:");
-            properties.list(System.out);
         } catch (IOException x) {
             Logger.error("Could not read properties from text {}", text);
             Logger.error(x);
