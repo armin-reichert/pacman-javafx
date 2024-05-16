@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.World;
@@ -274,7 +273,7 @@ public class PlayScene3D implements GameScene {
                     case MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
                     case PACMAN    -> level3D.pac3D().createPacManDyingAnimation(context.game());
                 };
-                lockGameStateAndPlayAfterOnSecond(animation);
+                lockGameStateAndPlayAfterOneSecond(animation);
             }
 
             case GAME_OVER -> {
@@ -423,36 +422,37 @@ public class PlayScene3D implements GameScene {
 
     private void playLevelCompleteAnimation(GameLevel level) {
         boolean noIntermission = level.intermissionNumber() == 0;
-        context.actionHandler().showFlashMessageSeconds(2, pickLevelCompleteMessage(context.game().levelNumber()));
-        var animation = new SequentialTransition(
-            pauseSeconds(1),
-            level3D.createLevelCompleteAnimation(context.game().level().orElseThrow().numFlashes()),
-            doAfterSeconds(1.0, () -> {
+        int numFlashes = context.game().level().orElseThrow().numFlashes();
+        var mazeFlashing = level3D.createMazeFlashingAnimation(numFlashes);
+        lockGameStateAndPlayAfterOneSecond(new SequentialTransition(
+            doNow(() -> {
                 context.game().pac().hide();
-                level3D.livesCounter3D().lightOnPy.set(false);
-                if (noIntermission) {
+                mazeFlashing.play();
+            }),
+            pauseSeconds(3),
+            createLevelChangeAnimation(noIntermission)
+        ));
+    }
+
+    private String pickLevelCompleteMessage() {
+        return PICKER_LEVEL_COMPLETE.next() + "\n\n" + context.tt("level_complete", context.game().levelNumber());
+    }
+
+    private Transition createLevelChangeAnimation(boolean playSound) {
+        var selectedPerspective = perspective();
+        return new SequentialTransition(
+            doNow(() -> {
+                PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
+                if (playSound) {
                     context.playAudioClip("audio.level_complete");
                 }
             }),
-            noIntermission ? createLevelChangeAnimation() : pauseSeconds(0),
-            doNow(() -> level3D.livesCounter3D().lightOnPy.set(true))
-        );
-        lockGameStateAndPlayAfterOnSecond(animation);
-    }
-
-    private String pickLevelCompleteMessage(int levelNumber) {
-        return PICKER_LEVEL_COMPLETE.next() + "\n\n" + context.tt("level_complete", levelNumber);
-    }
-
-    private Transition createLevelChangeAnimation() {
-        return new SequentialTransition(
-            doNow(() -> {
-                perspectivePy.unbind();
-                perspectivePy.set(Perspective.TOTAL);
-            }),
             level3D.createLevelRotateAnimation(),
-            doAfterSeconds(0.5, () -> context.playAudioClip("audio.sweep")),
-            doAfterSeconds(0.5, () -> perspectivePy.bind(PY_3D_PERSPECTIVE))
+            doAfterSeconds(0.5, () -> {
+                context.playAudioClip("audio.sweep");
+                context.actionHandler().showFlashMessageSeconds(2, pickLevelCompleteMessage());
+            }),
+            doAfterSeconds(1, () -> PY_3D_PERSPECTIVE.set(selectedPerspective))
         );
     }
 
@@ -471,7 +471,7 @@ public class PlayScene3D implements GameScene {
         }
     }
 
-    private void lockGameStateAndPlayAfterOnSecond(Animation animation) {
+    private void lockGameStateAndPlayAfterOneSecond(Animation animation) {
         context.gameState().timer().resetIndefinitely();
         animation.setDelay(Duration.seconds(1.0));
         animation.setOnFinished(e -> context.gameState().timer().expire());

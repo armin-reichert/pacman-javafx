@@ -137,6 +137,7 @@ public class GameLevel3D extends Group {
 
     final GameSceneContext context;
     final Group worldGroup = new Group();
+    final Group mazeGroup = new Group();
     final Group levelCounterGroup = new Group();
     final Box floor;
     final PointLight houseLight = new PointLight();
@@ -164,8 +165,8 @@ public class GameLevel3D extends Group {
         floorColorPy.bind(PY_3D_FLOOR_COLOR);
         floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
 
-        var mazeGroup = new Group();
         addMaze3D(mazeGroup);
+
         worldGroup.getChildren().addAll(floor, mazeGroup);
 
         pac3D = switch (context.game().variant()) {
@@ -531,7 +532,7 @@ public class GameLevel3D extends Group {
         return rotation;
     }
 
-    public Transition createLevelCompleteAnimation(int numFlashes) {
+    public Transition createMazeFlashingAnimation(int numFlashes) {
         if (numFlashes == 0) {
             return pauseSeconds(1.0);
         }
@@ -556,6 +557,10 @@ public class GameLevel3D extends Group {
         if (houseOpen) {
             doorWings3D().map(DoorWing3D::traversalAnimation).forEach(Transition::play);
         }
+    }
+
+    public Group mazeGroup() {
+        return mazeGroup;
     }
 
     public Pac3D pac3D() {
