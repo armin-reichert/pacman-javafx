@@ -46,8 +46,8 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     public void drawMap(GraphicsContext g, TileMap map) {
-        drawOutlinePaths(g, map);
-        drawPathsInsideMap(g, map);
+        drawTripleStrokePaths(g, map);
+        drawSingleStrokePaths(g, map);
         Color doorColor = TileMapRenderer.getTileMapColor(map, "door_color", Color.PINK);
         map.tiles().filter(tile -> map.get(tile) == Tiles.DOOR).forEach(tile -> drawDoor(g, tile, doorColor));
     }
@@ -74,16 +74,24 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.fillRect(x - 1, y + s(3), s(TILE_SIZE) + 2, s(2));
     }
 
-    private void drawPathsInsideMap(GraphicsContext g, TileMap map) {
+    private void drawSingleStrokePaths(GraphicsContext g, TileMap map) {
         var explored = new HashSet<Vector2i>();
         map.tiles()
             .filter(tile -> !explored.contains(tile))
             .filter(tile -> map.get(tile) == Tiles.CORNER_NW)
             .map(corner -> map.buildPath(explored, corner, DOWN))
-            .forEach(path -> drawPath(g, map, path, true, true, 1*scaling, wallStrokeColor));
+            .forEach(path -> drawPath(g, map, path, true, true, 1*scaling, wallStrokeColor, wallFillColor));
     }
 
-    private void drawOutlinePaths(GraphicsContext g, TileMap map) {
+    /*
+     * Draws a path with an inside stroke of wall fill color and two outside strokes of wall stroke color.
+     */
+    private void drawTripleStrokePath(GraphicsContext g, TileMap map, List<Vector2i> path) {
+        drawPath(g, map, path, false, false, 3*scaling, wallStrokeColor, null);
+        drawPath(g, map, path, false, false, 1*scaling, wallFillColor, null);
+    }
+
+    private void drawTripleStrokePaths(GraphicsContext g, TileMap map) {
         var explored = new HashSet<Vector2i>();
 
         // Paths starting at left and right maze border (over and under tunnel ends)
@@ -103,28 +111,19 @@ public class TerrainMapRenderer implements TileMapRenderer {
         handlesLeft.stream()
             .filter(handle -> !explored.contains(handle))
             .map(handle -> map.buildPath(explored, handle, map.newMoveDir(RIGHT, map.get(handle))))
-            .forEach(path -> {
-                drawPath(g, map, path, false, false, 3*scaling, wallStrokeColor);
-                drawPath(g, map, path, false, false, 1*scaling, wallFillColor);
-            });
+            .forEach(path -> drawTripleStrokePath(g, map, path));
 
         handlesRight.stream()
             .filter(handle -> !explored.contains(handle))
             .map(handle -> map.buildPath(explored, handle, map.newMoveDir(LEFT, map.get(handle))))
-            .forEach(path -> {
-                drawPath(g, map, path, false, false, 3*scaling, wallStrokeColor);
-                drawPath(g, map, path, false, false, 1*scaling, wallFillColor);
-            });
+            .forEach(path -> drawTripleStrokePath(g, map, path));
 
         // ghost house
         map.tiles()
             .filter(tile -> !explored.contains(tile))
             .filter(tile -> map.get(tile) == Tiles.DCORNER_NW)
             .map(corner -> map.buildPath(explored, corner, DOWN))
-            .forEach(path -> {
-                drawPath(g, map, path, false, false, 3*scaling, wallStrokeColor);
-                drawPath(g, map, path, false, false, 1*scaling, wallFillColor);
-            });
+            .forEach(path -> drawTripleStrokePath(g, map, path));
     }
 
     private Point2D center(Vector2i tile) {
@@ -132,14 +131,11 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     private void drawPath(GraphicsContext g, TileMap map, List<Vector2i> path,
-                          boolean fill, boolean close, double lineWidth, Color strokeColor) {
+                          boolean fill, boolean close, double lineWidth, Color outlineColor, Color fillColor) {
         if (close) {
             path.add(path.getFirst()); // close the path
         }
         double r = s(TILE_SIZE / 2f);
-        g.setFill(wallFillColor);
-        g.setStroke(strokeColor);
-        g.setLineWidth(lineWidth);
         g.beginPath();
         for (int i = 0; i < path.size(); ++i) {
             Vector2i tile = path.get(i);
@@ -183,6 +179,9 @@ public class TerrainMapRenderer implements TileMapRenderer {
         if (close) {
             g.closePath();
         }
+        g.setFill(fillColor);
+        g.setStroke(outlineColor);
+        g.setLineWidth(lineWidth);
         if (fill) {
             g.fill();
         }
