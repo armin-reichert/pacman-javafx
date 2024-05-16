@@ -81,6 +81,7 @@ public class TileMapEditor extends Application  {
     FoodMapRenderer foodMapRenderer;
 
     WorldMap map;
+    WorldMap[] arcadeMaps = new WorldMap[7];
 
     Vector2i hoveredTile;
     File lastUsedDir = new File(System.getProperty("user.dir"));
@@ -90,8 +91,7 @@ public class TileMapEditor extends Application  {
     BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
     BooleanProperty terrainEditedPy = new SimpleBooleanProperty(true);
     BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
-
-    WorldMap[] arcadeMaps = new WorldMap[7];
+    BooleanProperty runtimePreviewPy = new SimpleBooleanProperty(false);
 
     @Override
     public void init() throws Exception {
@@ -170,6 +170,9 @@ public class TileMapEditor extends Application  {
         var cbGridVisible = new CheckBox("Grid");
         cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
 
+        var cbRuntimePreview = new CheckBox("Runtime View");
+        cbRuntimePreview.selectedProperty().bindBidirectional(runtimePreviewPy);
+
         terrainPalette = new Palette(32, 4, 4, Tiles.TERRAIN_TILES_END);
         terrainPalette.setValues(
             Tiles.EMPTY, Tiles.TUNNEL, Tiles.EMPTY, Tiles.EMPTY,
@@ -196,6 +199,7 @@ public class TileMapEditor extends Application  {
 
         VBox controlsPane = new VBox();
         controlsPane.setSpacing(10);
+        controlsPane.getChildren().add(cbRuntimePreview);
         controlsPane.getChildren().add(new HBox(20, new Label("Show"), cbTerrainVisible, cbFoodVisible, cbGridVisible));
         controlsPane.getChildren().add(infoLabel);
         controlsPane.getChildren().add(tabPane);
@@ -244,6 +248,7 @@ public class TileMapEditor extends Application  {
         if (terrainVisiblePy.get()) {
             terrainMapRenderer.setScaling(tilePx() / 8);
             terrainMapRenderer.drawMap(g, map.terrain());
+            terrainMapRenderer.runtimePreview = runtimePreviewPy.get();
         }
         if (foodVisiblePy.get()) {
             foodMapRenderer.setScaling(tilePx() / 8);
@@ -263,7 +268,7 @@ public class TileMapEditor extends Application  {
     }
 
     void drawGrid(GraphicsContext g) {
-        if (gridVisiblePy.get()) {
+        if (gridVisiblePy.get() && !runtimePreviewPy.get()) {
             g.setStroke(Color.LIGHTGRAY);
             g.setLineWidth(0.25);
             double gridSize = tilePx();
