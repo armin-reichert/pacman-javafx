@@ -34,7 +34,6 @@ public class TerrainMapRenderer implements TileMapRenderer {
         return scaling * times;
     }
 
-    private final double strokeWidth = 2;
     private Color wallFillColor = Color.BLACK;
     private Color wallStrokeColor = Color.GREEN;
 
@@ -81,7 +80,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
             .filter(tile -> !explored.contains(tile))
             .filter(tile -> map.get(tile) == Tiles.CORNER_NW)
             .map(corner -> map.buildPath(explored, corner, DOWN))
-            .forEach(path -> drawPath(g, map, path, true, true, strokeWidth, wallStrokeColor));
+            .forEach(path -> drawPath(g, map, path, true, true, 1*scaling, wallStrokeColor));
     }
 
     private void drawOutlinePaths(GraphicsContext g, TileMap map) {
@@ -105,16 +104,16 @@ public class TerrainMapRenderer implements TileMapRenderer {
             .filter(handle -> !explored.contains(handle))
             .map(handle -> map.buildPath(explored, handle, map.newMoveDir(RIGHT, map.get(handle))))
             .forEach(path -> {
-                drawPath(g, map, path, false, false, 4 * strokeWidth, wallStrokeColor);
-                drawPath(g, map, path, false, false, 2 * strokeWidth, wallFillColor);
+                drawPath(g, map, path, false, false, 3*scaling, wallStrokeColor);
+                drawPath(g, map, path, false, false, 1*scaling, wallFillColor);
             });
 
         handlesRight.stream()
             .filter(handle -> !explored.contains(handle))
             .map(handle -> map.buildPath(explored, handle, map.newMoveDir(LEFT, map.get(handle))))
             .forEach(path -> {
-                drawPath(g, map, path, false, false, 4 * strokeWidth, wallStrokeColor);
-                drawPath(g, map, path, false, false, 2 * strokeWidth, wallFillColor);
+                drawPath(g, map, path, false, false, 3*scaling, wallStrokeColor);
+                drawPath(g, map, path, false, false, 1*scaling, wallFillColor);
             });
 
         // ghost house
@@ -123,8 +122,8 @@ public class TerrainMapRenderer implements TileMapRenderer {
             .filter(tile -> map.get(tile) == Tiles.DCORNER_NW)
             .map(corner -> map.buildPath(explored, corner, DOWN))
             .forEach(path -> {
-                drawPath(g, map, path, false, false, 4 * strokeWidth, wallStrokeColor);
-                drawPath(g, map, path, false, false, 2 * strokeWidth, wallFillColor);
+                drawPath(g, map, path, false, false, 3*scaling, wallStrokeColor);
+                drawPath(g, map, path, false, false, 1*scaling, wallFillColor);
             });
     }
 
@@ -133,14 +132,14 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     private void drawPath(GraphicsContext g, TileMap map, List<Vector2i> path,
-                          boolean fill, boolean close, double strokeWidth, Color strokeColor) {
+                          boolean fill, boolean close, double lineWidth, Color strokeColor) {
         if (close) {
             path.add(path.getFirst()); // close the path
         }
         double r = s(TILE_SIZE / 2f);
         g.setFill(wallFillColor);
         g.setStroke(strokeColor);
-        g.setLineWidth(strokeWidth);
+        g.setLineWidth(lineWidth);
         g.beginPath();
         for (int i = 0; i < path.size(); ++i) {
             Vector2i tile = path.get(i);
