@@ -253,25 +253,22 @@ public class TileMap {
 
     // Paths
 
-    public List<Vector2i> buildPath(
-        Set<Vector2i> explored, Vector2i startTile, Direction startDirection)
-    {
-        List<Vector2i> path = new ArrayList<>();
-        Vector2i current = startTile;
-        Direction moveDir = startDirection;
+    public List<Vector2i> buildPath(Set<Vector2i> explored, Vector2i startTile, Direction startDir) {
+        var path = new ArrayList<Vector2i>();
+        var tile = startTile;
+        var dir = startDir;
         while (true) {
-            path.add(current);
-            explored.add(current);
-            var next = current.plus(moveDir.vector());
-            if (outOfBounds(next)) {
+            path.add(tile);
+            explored.add(tile);
+            tile = tile.plus(dir.vector());
+            if (outOfBounds(tile)) {
                 break;
             }
-            if (explored.contains(next)) {
-                path.add(next);
+            if (explored.contains(tile)) {
+                path.add(tile); // close path
                 break;
             }
-            moveDir = newMoveDir(moveDir, get(next));
-            current = next;
+            dir = newMoveDir(dir, get(tile));
         }
         return path;
     }
@@ -285,5 +282,4 @@ public class TileMap {
             default -> moveDir;
         };
     }
-
 }
