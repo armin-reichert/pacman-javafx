@@ -77,7 +77,7 @@ public class TileMapEditor extends Application  {
     Palette terrainPalette;
     Palette foodPalette;
 
-    TerrainMapRenderer terrainMapRenderer;
+    TileMapEditorTerrainRenderer terrainMapRenderer;
     FoodMapRenderer foodMapRenderer;
 
     WorldMap map;
@@ -117,13 +117,7 @@ public class TileMapEditor extends Application  {
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> canvas.getHeight() * map.numCols() / map.numRows(), canvas.heightProperty()));
 
-        terrainMapRenderer = new TerrainMapRenderer() {
-            @Override
-            public void drawTunnel(GraphicsContext g, Vector2i tile) {
-                g.setFill(Color.GRAY);
-                g.fillRect(tile.x() * tilePx(), tile.y() * tilePx(), tilePx(), tilePx());
-            }
-        };
+        terrainMapRenderer = new TileMapEditorTerrainRenderer();
         terrainMapRenderer.setWallStrokeColor(DEFAULT_WALL_STROKE_COLOR);
         terrainMapRenderer.setWallFillColor(DEFAULT_WALL_FILL_COLOR);
 
