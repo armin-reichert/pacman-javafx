@@ -52,20 +52,19 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
-        g.save();
-        switch (content) {
-            case Tiles.DOOR -> drawDoor(g, tile, Color.PINK);
-            default -> {}
+        if (content == Tiles.DOOR) {
+            drawDoor(g, tile, Color.PINK);
         }
-        g.restore();
     }
 
     public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
+        g.save();
         double x = tile.x() * s(TILE_SIZE), y = tile.y() * s(TILE_SIZE);
         g.setFill(Color.BLACK);
         g.fillRect(x, y + s(1), s(TILE_SIZE), s(6));
         g.setFill(color);
         g.fillRect(x - 1, y + s(3), s(TILE_SIZE) + 2, s(2));
+        g.restore();
     }
 
     public void drawSingleStrokePaths(GraphicsContext g, TileMap map) {

@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.ui.fx.util;
 
 import de.amr.games.pacman.lib.Vector2i;
@@ -9,6 +13,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 
+/**
+ * @author Armin Reichert
+ */
 public class TileMapEditorTerrainRenderer  extends TerrainMapRenderer {
 
     boolean runtimePreview;
