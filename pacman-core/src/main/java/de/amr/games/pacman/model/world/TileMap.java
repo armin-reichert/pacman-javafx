@@ -9,15 +9,14 @@ import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.*;
-import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
@@ -236,18 +235,17 @@ public class TileMap {
         }
     }
 
-    public void write(Writer w) throws IOException {
+    public void print(PrintWriter w) throws IOException {
         properties.store(w, "");
-        w.write(DATA_SECTION_START);
-        w.write("\r\n");
+        w.println(DATA_SECTION_START);
         for (int row = 0; row < numRows(); ++row) {
             for (int col = 0; col < numCols(); ++col) {
-                w.write(String.format("%2d", data[row][col]));
+                w.printf("%2d", data[row][col]);
                 if (col < numCols() - 1) {
-                    w.write(",");
+                    w.print(",");
                 }
             }
-            w.write("\r\n");
+            w.println();
         }
     }
 

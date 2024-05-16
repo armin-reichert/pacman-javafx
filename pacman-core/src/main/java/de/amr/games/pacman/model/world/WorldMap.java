@@ -64,6 +64,18 @@ public class WorldMap {
         food = TileMap.parse(foodSection, Tiles.FOOD_TILES_END);
     }
 
+    public void save(File file) {
+        try (PrintWriter w = new PrintWriter(file, StandardCharsets.UTF_8)) {
+            w.println("!terrain");
+            terrain.print(w);
+            w.println("!food");
+            food.print(w);
+            Logger.info("World map saved to file '{}'.", file);
+        } catch (Exception x) {
+            Logger.error(x);
+        }
+    }
+
     public int numRows() {
         return terrain.numRows();
     }
@@ -100,15 +112,4 @@ public class WorldMap {
         return food.get(row, col);
     }
 
-    public void save(File file) {
-        try (FileWriter w = new FileWriter(file, StandardCharsets.UTF_8)) {
-            w.write("!terrain\r\n");
-            terrain.write(w);
-            w.write("!food\r\n");
-            food.write(w);
-            Logger.info("World map saved to file '{}'.", file);
-        } catch (Exception x) {
-            Logger.error(x);
-        }
-    }
 }
