@@ -135,13 +135,25 @@ public class TerrainMapRenderer implements TileMapRenderer {
             Point2D p = center(tile);
             double x = p.getX(), y = p.getY();
 
-            //TODO how to avoid these?
-            if (i == 0 && tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
-                g.moveTo(0, y);
-                g.lineTo(r, y);
-            }
-            if (i == path.size() - 1 && tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
-                g.lineTo(0, y);
+            //TODO avoid these special cases
+            if (i == 0 && tile.x() == 0) {
+                // path starts at left maze border
+                if (map.get(tile) == Tiles.DWALL_H) {
+                    // start at left maze border, not at tile center
+                    g.moveTo(0, y);
+                    g.lineTo(r, y);
+                } else if (map.get(tile) == Tiles.DCORNER_NE) {
+                    // invent predecessor such that path continues clockwise/down
+                    prevTile = new Vector2i(tile.x(), tile.y() - 1);
+                } else if (map.get(tile) == Tiles.DCORNER_SE) {
+                    // invent predecessor such that path continues clockwise/down
+                    prevTile = new Vector2i(tile.x(), tile.y() + 1);
+                }
+            } else if (i == path.size() - 1 && tile.x() == 0) {
+                if (map.get(tile) == Tiles.DWALL_H) {
+                    // end at left maze border, not at tile center
+                    g.lineTo(0, y);
+                }
             }
 
             switch (map.get(tile)) {
