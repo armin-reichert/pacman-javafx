@@ -131,45 +131,42 @@ public class TerrainMapRenderer implements TileMapRenderer {
         List<Vector2i> path = tileMapPath.toTileList();
 
         double r = s(4);
-
         g.beginPath();
 
-        Vector2i prevTile = null;
         //TODO avoid these special cases
         Vector2i first = path.getFirst();
-        if (first.x() == 0) {
-            // path starts at left maze border
-            switch (map.get(first)) {
-                case Tiles.DWALL_H -> {
-                    // start at left maze border, not at tile center
-                    double y = center(first).getY();
-                    g.moveTo(0, y);
-                    g.lineTo(r, y);
-                }
-                case Tiles.DCORNER_NE -> {
-                    prevTile = first.plus(UP.vector());
-                }
-                case Tiles.DCORNER_SE -> {
-                    prevTile = first.plus(DOWN.vector());
-                }
-            }
+        if (first.x() == 0 && map.get(first) == Tiles.DWALL_H) {
+            // start at left maze border, not at tile center
+            double y = center(first).getY();
+            g.moveTo(0, y);
+            g.lineTo(r, y);
         }
 
-        for (int i = 0; i < path.size(); ++i) {
+        Point2D center = center(first);
+        double x = center.getX(), y = center.getY();
+        switch (map.get(first)) {
+            case Tiles.WALL_H, Tiles.DWALL_H       -> g.lineTo(x + r, y);
+            case Tiles.WALL_V, Tiles.DWALL_V       -> g.lineTo(x, y + r);
+            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> g.arc(x+r, y+r, r, r,  90, 90);
+            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> g.arc(x+r, y-r, r, r, 180, 90);
+            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(x-r, y+r, r, r, first.x() != 0 ? 0:90, first.x() != 0? 90:-90);
+            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(x-r, y-r, r, r, 270, 90);
+            default -> {}
+        }
+        for (int i = 1; i < path.size(); ++i) {
             Vector2i tile = path.get(i);
-            if (i > 0) {
-                prevTile = path.get(i-1);
-            }
-            Point2D p = center(tile);
-            double x = p.getX(), y = p.getY();
-
+            Vector2i prev = path.get(i-1);
+            center = center(tile);
+            x = center.getX();
+            y = center.getY();
+            boolean left = prev.x() > tile.x(), right = prev.x() < tile.x(), up = prev.y() > tile.y(), down = prev.y() < tile.y();
             switch (map.get(tile)) {
                 case Tiles.WALL_H, Tiles.DWALL_H       -> g.lineTo(x + r, y);
                 case Tiles.WALL_V, Tiles.DWALL_V       -> g.lineTo(x, y + r);
-                case Tiles.CORNER_NW, Tiles.DCORNER_NW -> arc(g, x+r, y+r, r,  90, 180, prevTile == null || prevTile.x() > tile.x());
-                case Tiles.CORNER_SW, Tiles.DCORNER_SW -> arc(g, x+r, y-r, r, 180, 270, prevTile == null || prevTile.y() < tile.y());
-                case Tiles.CORNER_NE, Tiles.DCORNER_NE -> arc(g, x-r, y+r, r,   0,  90, prevTile == null || prevTile.y() > tile.y());
-                case Tiles.CORNER_SE, Tiles.DCORNER_SE -> arc(g, x-r, y-r, r, 270,   0, prevTile == null || prevTile.x() < tile.x());
+                case Tiles.CORNER_NW, Tiles.DCORNER_NW -> g.arc(x+r, y+r, r, r, left? 90:180,  left?90:-90);
+                case Tiles.CORNER_SW, Tiles.DCORNER_SW -> g.arc(x+r, y-r, r, r, down? 180:270, down?90:-90);
+                case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(x-r, y+r, r, r, up? 0:90,    up?90:-90);
+                case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(x-r, y-r, r, r, right? 270:0,   right?90:-90);
                 default -> {}
             }
         }
@@ -178,7 +175,6 @@ public class TerrainMapRenderer implements TileMapRenderer {
             g.lineTo(0, center(path.getLast()).getY());
         }
 
-
         if (fill) {
             g.setFill(fillColor);
             g.fill();
@@ -186,9 +182,5 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.setStroke(outlineColor);
         g.setLineWidth(lineWidth);
         g.stroke();
-    }
-
-    private void arc(GraphicsContext g, double x, double y, double r, int degreesCCW, int degreesCW, boolean ccw) {
-        g.arc(x, y, r, r, ccw ? degreesCCW : degreesCW, ccw ? 90 : -90);
     }
 }
