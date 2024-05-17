@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.world.TileMap;
+import de.amr.games.pacman.model.world.TileMapPath;
 import de.amr.games.pacman.model.world.Tiles;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -72,7 +73,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         map.tiles()
             .filter(tile -> !explored.contains(tile))
             .filter(tile -> map.get(tile) == Tiles.CORNER_NW)
-            .map(corner -> map.buildPath(explored, corner, LEFT))
+            .map(corner -> TileMapPath.buildPath(map, explored, corner, LEFT))
             .forEach(path -> drawPath(g, map, path, true, 1*scaling, wallStrokeColor, wallFillColor));
     }
 
@@ -103,19 +104,19 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
         handlesLeft.stream()
             .filter(handle -> !explored.contains(handle))
-            .map(handle -> map.buildPath(explored, handle, RIGHT))
+            .map(handle -> TileMapPath.buildPath(map, explored, handle, RIGHT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
 
         handlesRight.stream()
             .filter(handle -> !explored.contains(handle))
-            .map(handle -> map.buildPath(explored, handle, LEFT))
+            .map(handle -> TileMapPath.buildPath(map, explored, handle, LEFT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
 
         // ghost house
         map.tiles()
             .filter(tile -> !explored.contains(tile))
             .filter(tile -> map.get(tile) == Tiles.DCORNER_NW)
-            .map(corner -> map.buildPath(explored, corner, LEFT))
+            .map(corner -> TileMapPath.buildPath(map, explored, corner, LEFT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
     }
 

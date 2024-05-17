@@ -8,10 +8,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.world.House;
-import de.amr.games.pacman.model.world.TileMap;
-import de.amr.games.pacman.model.world.Tiles;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.world.*;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
@@ -265,7 +262,7 @@ public class GameLevel3D extends Group {
             .filter(tile -> terrainMap.get(tile) == Tiles.CORNER_NW)
             .filter(corner -> corner.x() > 0 && corner.x() < terrainMap.numCols() - 1)
             .filter(corner -> corner.y() > 0 && corner.y() < terrainMap.numRows() - 1)
-            .map(corner -> terrainMap.buildPath(explored, corner, LEFT))
+            .map(corner -> TileMapPath.buildPath(terrainMap, explored, corner, LEFT))
             .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
 
         // Paths starting at left and right maze border (over and under tunnel ends)
@@ -284,12 +281,12 @@ public class GameLevel3D extends Group {
 
         handlesLeft.stream()
             .filter(handle -> !explored.contains(handle))
-            .map(handle -> terrainMap.buildPath(explored, handle, RIGHT))
+            .map(handle -> TileMapPath.buildPath(terrainMap, explored, handle, RIGHT))
             .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
 
         handlesRight.stream()
             .filter(handle -> !explored.contains(handle))
-            .map(handle -> terrainMap.buildPath(explored, handle, LEFT))
+            .map(handle -> TileMapPath.buildPath(terrainMap, explored, handle, LEFT))
             .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
     }
 

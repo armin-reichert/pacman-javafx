@@ -248,36 +248,4 @@ public class TileMap {
             w.println();
         }
     }
-
-    // Paths
-
-    public List<Vector2i> buildPath(Set<Vector2i> explored, Vector2i startTile, Direction startDir) {
-        var path = new ArrayList<Vector2i>();
-        var tile = startTile;
-        var dir = newMoveDir(startDir, get(startTile));
-        while (true) {
-            path.add(tile);
-            explored.add(tile);
-            tile = tile.plus(dir.vector());
-            if (outOfBounds(tile)) {
-                break;
-            }
-            if (explored.contains(tile)) {
-                path.add(tile); // close path
-                break;
-            }
-            dir = newMoveDir(dir, get(tile));
-        }
-        return path;
-    }
-
-    public Direction newMoveDir(Direction moveDir, byte tileValue) {
-        return switch (tileValue) {
-            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> moveDir == LEFT  ? DOWN  : RIGHT;
-            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> moveDir == RIGHT ? DOWN  : LEFT;
-            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> moveDir == DOWN  ? LEFT  : UP;
-            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> moveDir == DOWN  ? RIGHT : UP;
-            default -> moveDir;
-        };
-    }
 }
