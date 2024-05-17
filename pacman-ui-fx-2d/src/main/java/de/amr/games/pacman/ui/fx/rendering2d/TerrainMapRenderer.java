@@ -162,10 +162,10 @@ public class TerrainMapRenderer implements TileMapRenderer {
             switch (map.get(tile)) {
                 case Tiles.WALL_H, Tiles.DWALL_H       -> g.lineTo(x + r, y);
                 case Tiles.WALL_V, Tiles.DWALL_V       -> g.lineTo(x, y + r);
-                case Tiles.CORNER_NW, Tiles.DCORNER_NW -> arcNW(g, x+r, y+r, r, prevTile == null || prevTile.x() > tile.x());
-                case Tiles.CORNER_SW, Tiles.DCORNER_SW -> arcSW(g, x+r, y-r, r, prevTile == null || prevTile.y() < tile.y());
-                case Tiles.CORNER_NE, Tiles.DCORNER_NE -> arcNE(g, x-r, y+r, r, prevTile == null || prevTile.y() > tile.y());
-                case Tiles.CORNER_SE, Tiles.DCORNER_SE -> arcSE(g, x-r, y-r, r, prevTile == null || prevTile.x() < tile.x());
+                case Tiles.CORNER_NW, Tiles.DCORNER_NW -> arc(g, x+r, y+r, r,  90, 180, prevTile == null || prevTile.x() > tile.x());
+                case Tiles.CORNER_SW, Tiles.DCORNER_SW -> arc(g, x+r, y-r, r, 180, 270, prevTile == null || prevTile.y() < tile.y());
+                case Tiles.CORNER_NE, Tiles.DCORNER_NE -> arc(g, x-r, y+r, r,   0,  90, prevTile == null || prevTile.y() > tile.y());
+                case Tiles.CORNER_SE, Tiles.DCORNER_SE -> arc(g, x-r, y-r, r, 270,   0, prevTile == null || prevTile.x() < tile.x());
                 default -> {}
             }
         }
@@ -178,36 +178,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.stroke();
     }
 
-    private void arcNW(GraphicsContext g, double x, double y, double r,  boolean counterClock) {
-        if (counterClock) {
-            g.arc(x, y, r, r, 90, 90);
-        } else {
-            g.arc(x, y, r, r, 180, -90);
-        }
-    }
-
-    private void arcSW(GraphicsContext g, double x, double y, double r,  boolean counterClock) {
-        if (counterClock) {
-            g.arc(x, y, r, r, 180, 90);
-        } else {
-            g.arc(x, y, r, r, 270, -90);
-        }
-
-    }
-
-    private void arcNE(GraphicsContext g, double x, double y, double r,  boolean counterClock) {
-        if (counterClock) {
-            g.arc(x, y, r, r, 0, 90);
-        } else {
-            g.arc(x, y, r, r, 90, -90);
-        }
-    }
-
-    private void arcSE(GraphicsContext g, double x, double y, double r,  boolean counterClock) {
-        if (counterClock) {
-            g.arc(x, y, r, r, 270, 90);
-        } else {
-            g.arc(x, y, r, r, 0, -90);
-        }
+    private void arc(GraphicsContext g, double x, double y, double r, int degreesCCW, int degreesCW, boolean ccw) {
+        g.arc(x, y, r, r, ccw ? degreesCCW : degreesCW, ccw ? 90 : -90);
     }
 }
