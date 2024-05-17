@@ -15,6 +15,8 @@ import org.tinylog.Logger;
  */
 public interface TileMapRenderer {
 
+    int TILE_SIZE = 8;
+
     static Color getTileMapColor(TileMap tileMap, String key, Color defaultColor) {
         if (tileMap.hasProperty(key)) {
             try {

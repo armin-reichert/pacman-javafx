@@ -16,7 +16,7 @@ import javafx.scene.shape.ArcType;
 /**
  * @author Armin Reichert
  */
-public class TileMapEditorTerrainRenderer  extends TerrainMapRenderer {
+public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
 
     boolean runtimePreview;
 
@@ -49,76 +49,94 @@ public class TileMapEditorTerrainRenderer  extends TerrainMapRenderer {
     }
 
     public void drawTunnel(GraphicsContext g, Vector2i tile) {
+        g.save();
+        g.scale(scaling, scaling);
         g.setFill(Color.GRAY);
-        g.fillRect(tile.x() * s(8), tile.y() * s(8), s(8), s(8));
+        g.fillRect(tile.x() * 8, tile.y() * 8, 8, 8);
+        g.restore();
     }
 
     public void drawWallH(GraphicsContext g, Vector2i tile) {
-        double x = tile.x() * s(8), y = tile.y() * s(8);
+        g.save();
+        g.scale(scaling, scaling);
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(wallStrokeColor);
-        // add 1 pixel to avoid gaps
-        g.fillRect(x, y + s(3.5f), s(8) + 1, s(1));
+        g.fillRect(x, y + 3.5f, 8, 1);
+        g.restore();
     }
 
     public void drawDWallH(GraphicsContext g, Vector2i tile) {
-        double x = tile.x() * s(8), y = tile.y() * s(8);
+        g.save();
+        g.scale(scaling, scaling);
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(wallStrokeColor);
         // add 1 pixel to avoid gaps
-        g.fillRect(x, y + s(2.5f), s(8) + 1, s(1));
-        g.fillRect(x, y + s(4.5f), s(8) + 1, s(1));
+        g.fillRect(x, y + 2.5f, 8, 1);
+        g.fillRect(x, y + 4.5f, 8, 1);
+        g.restore();
     }
 
     public void drawWallV(GraphicsContext g, Vector2i tile) {
-        double x = tile.x() * s(8), y = tile.y() * s(8);
+        g.save();
+        g.scale(scaling, scaling);
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(wallStrokeColor);
         // add 1 pixel to avoid gaps
-        g.fillRect(x + s(3.5f), y, s(1), s(8) + 1);
+        g.fillRect(x + 3.5f, y, 1, 8);
+        g.restore();
     }
 
     public void drawDWallV(GraphicsContext g, Vector2i tile) {
-        double x = tile.x() * s(8), y = tile.y() * s(8);
+        g.save();
+        g.scale(scaling, scaling);
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(wallStrokeColor);
-        // add 1 pixel to avoid gaps
-        g.fillRect(x + s(2.5f), y, s(1), s(8) + 1);
-        g.fillRect(x + s(4.5f), y, s(1), s(8) + 1);
+        g.fillRect(x + 2.5f, y, 1, 8);
+        g.fillRect(x + 4.5f, y, 1, 8);
+        g.restore();
     }
 
     public void drawCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
-        double x = tile.x() * s(8), y = tile.y() * s(8);
+        g.save();
+        g.scale(scaling, scaling);
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setStroke(wallStrokeColor);
-        g.setLineWidth(s(1));
+        g.setLineWidth(1);
         switch (cornerType) {
-            case Tiles.CORNER_NW -> g.strokeArc(x + s(4), y + s(4), s(8), s(8), 90, 90,  ArcType.OPEN);
-            case Tiles.CORNER_NE -> g.strokeArc(x - s(4), y + s(4), s(8), s(8), 0, 90,   ArcType.OPEN);
-            case Tiles.CORNER_SE -> g.strokeArc(x - s(4), y - s(4), s(8), s(8), 270, 90, ArcType.OPEN);
-            case Tiles.CORNER_SW -> g.strokeArc(x + s(4), y - s(4), s(8), s(8), 180, 90, ArcType.OPEN);
+            case Tiles.CORNER_NW -> g.strokeArc(x + 4, y + 4, 8, 8, 90, 90,  ArcType.OPEN);
+            case Tiles.CORNER_NE -> g.strokeArc(x - 4, y + 4, 8, 8, 0, 90,   ArcType.OPEN);
+            case Tiles.CORNER_SE -> g.strokeArc(x - 4, y - 4, 8, 8, 270, 90, ArcType.OPEN);
+            case Tiles.CORNER_SW -> g.strokeArc(x + 4, y - 4, 8, 8, 180, 90, ArcType.OPEN);
             default -> {}
         }
+        g.restore();
     }
 
     public void drawDCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
-        double x = tile.x() * s(8), y = tile.y() * s(8);
-        double s10 = 10 * scaling;
+        g.save();
+        g.scale(scaling, scaling);
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setStroke(wallStrokeColor);
-        g.setLineWidth(s(1));
+        g.setLineWidth(1);
         switch (cornerType) {
             case Tiles.DCORNER_NW -> {
-                g.strokeArc(x + s(5), y + s(5), s(6), s(6), 90, 90, ArcType.OPEN);
-                g.strokeArc(x + s(3), y + s(3), s10, s10, 90, 90, ArcType.OPEN);
+                g.strokeArc(x + 5, y + 5, 6, 6, 90, 90, ArcType.OPEN);
+                g.strokeArc(x + 3, y + 3, 10, 10, 90, 90, ArcType.OPEN);
             }
             case Tiles.DCORNER_NE -> {
-                g.strokeArc(x - s(3), y + s(5), s(6), s(6), 0, 90, ArcType.OPEN);
-                g.strokeArc(x - s(5), y + s(3), s10, s10, 0, 90, ArcType.OPEN);
+                g.strokeArc(x - 3, y + 5, 6, 6, 0, 90, ArcType.OPEN);
+                g.strokeArc(x - 5, y + 3, 10, 10, 0, 90, ArcType.OPEN);
             }
             case Tiles.DCORNER_SE -> {
-                g.strokeArc(x - s(3), y - s(3), s(6), s(6), 270, 90, ArcType.OPEN);
-                g.strokeArc(x - s(5), y - s(5), s10, s10, 270, 90, ArcType.OPEN);
+                g.strokeArc(x - 3, y - 3, 6, 6, 270, 90, ArcType.OPEN);
+                g.strokeArc(x - 5, y - 5, 10, 10, 270, 90, ArcType.OPEN);
             }
             case Tiles.DCORNER_SW -> {
-                g.strokeArc(x + s(5), y - s(3), s(6), s(6), 180, 90, ArcType.OPEN);
-                g.strokeArc(x + s(3), y - s(5), s10, s10, 180, 90, ArcType.OPEN);
+                g.strokeArc(x + 5, y - 3, 6, 6, 180, 90, ArcType.OPEN);
+                g.strokeArc(x + 3, y - 5, 10, 10, 180, 90, ArcType.OPEN);
             }
             default -> {}
         }
+        g.restore();
     }
 }

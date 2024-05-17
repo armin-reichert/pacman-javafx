@@ -14,10 +14,6 @@ public class FoodMapRenderer implements TileMapRenderer {
         this.scaling = (float) scaling;
     }
 
-    private float s(float times) {
-        return scaling * times;
-    }
-
     private Color pelletColor = Color.PINK;
     private Color energizerColor = Color.YELLOW;
 
@@ -35,27 +31,30 @@ public class FoodMapRenderer implements TileMapRenderer {
     }
 
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
-        g.save();
         switch (content) {
             case Tiles.PELLET -> drawPellet(g, tile);
             case Tiles.ENERGIZER -> drawEnergizer(g, tile);
             default -> {}
         }
-        g.restore();
     }
 
     public void drawPellet(GraphicsContext g, Vector2i tile) {
-        double x = tile.x() * s(8), y = tile.y() * s(8);
+        g.save();
+        g.scale(scaling, scaling);
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(pelletColor);
-        g.fillRect(x + s(3), y + s(3), s(2), s(2));
+        g.fillRect(x + 3, y + 3, 2, 2);
+        g.restore();
     }
 
     public void drawEnergizer(GraphicsContext g, Vector2i tile) {
-        double x = tile.x() * s(8), y = tile.y() * s(8);
+        g.save();
+        g.scale(scaling, scaling);
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(energizerColor);
-        //g.fillOval(x, y, size, size);
-        g.fillRect(x + s(2), y, s(4), s(8));
-        g.fillRect(x, y + s(2), s(8), s(4));
-        g.fillRect(x + s(1), y + s(1), s(6), s(6));
+        g.fillRect(x + 2, y, 0.5 * TILE_SIZE, TILE_SIZE);
+        g.fillRect(x, y + 2, TILE_SIZE, 0.5 * TILE_SIZE);
+        g.fillRect(x + 1, y + 1, TILE_SIZE - 2, TILE_SIZE - 2);
+        g.restore();
     }
 }

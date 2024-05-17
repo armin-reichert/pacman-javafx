@@ -24,18 +24,12 @@ import static de.amr.games.pacman.lib.Direction.RIGHT;
  */
 public class TerrainMapRenderer implements TileMapRenderer {
 
-    public static final int TILE_SIZE = 8;
-
     protected float scaling;
     protected Color wallFillColor = Color.BLACK;
     protected Color wallStrokeColor = Color.GREEN;
 
     public void setScaling(double scaling) {
         this.scaling = (float) scaling;
-    }
-
-    public float s(float times) {
-        return scaling * times;
     }
 
     public void setWallStrokeColor(Color color) {
@@ -160,14 +154,17 @@ public class TerrainMapRenderer implements TileMapRenderer {
             Vector2i prev = tile;
             tile = tile.plus(dir.vector());
             c = center(tile);
-            boolean left = prev.x() > tile.x(), right = prev.x() < tile.x(), up = prev.y() > tile.y(), down = prev.y() < tile.y();
+            boolean left = prev.x() > tile.x();
+            boolean right = prev.x() < tile.x();
+            boolean up = prev.y() > tile.y();
+            boolean down = prev.y() < tile.y();
             switch (map.get(tile)) {
                 case Tiles.WALL_H, Tiles.DWALL_H       -> g.lineTo(c.x() + r, c.y());
                 case Tiles.WALL_V, Tiles.DWALL_V       -> g.lineTo(c.x(), c.y() + r);
-                case Tiles.CORNER_NW, Tiles.DCORNER_NW -> g.arc(c.x()+r, c.y()+r, r, r, left?  90:180,  left?  90:-90);
-                case Tiles.CORNER_SW, Tiles.DCORNER_SW -> g.arc(c.x()+r, c.y()-r, r, r, down?  180:270, down?  90:-90);
-                case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(c.x()-r, c.y()+r, r, r, up?    0:90,    up?    90:-90);
-                case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(c.x()-r, c.y()-r, r, r, right? 270:0,   right? 90:-90);
+                case Tiles.CORNER_NW, Tiles.DCORNER_NW -> g.arc(c.x() + r, c.y() + r, r, r, left?  90:180,  left?  90:-90);
+                case Tiles.CORNER_SW, Tiles.DCORNER_SW -> g.arc(c.x() + r, c.y() - r, r, r, down?  180:270, down?  90:-90);
+                case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(c.x() - r, c.y() + r, r, r, up?    0:90,    up?    90:-90);
+                case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(c.x() - r, c.y() - r, r, r, right? 270:0,   right? 90:-90);
                 default -> {}
             }
         }
