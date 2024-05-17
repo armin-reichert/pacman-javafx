@@ -128,13 +128,17 @@ Cheats:
 
 ## How it looks
 
-### 3D Play Scene
+### 2D Play Scenes
+
+![Pac-Man Play Scene](doc/pacman-playscene-2d.png)
+
+### 3D Play Scenes
 
 ![Pac-Man Play Scene](doc/pacman-playscene.png)
 
 ![Ms. Pac-Man Play Scene](doc/mspacman-maze.png)
 
-### The tile map editor
+### Tile map editor
 
 ![Map Editor](doc/map-editor.png)
 
