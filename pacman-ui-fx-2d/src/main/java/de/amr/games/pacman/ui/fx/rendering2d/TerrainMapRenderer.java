@@ -61,11 +61,12 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
         g.save();
-        double x = tile.x() * s(TILE_SIZE), y = tile.y() * s(TILE_SIZE);
+        g.scale(scaling, scaling);
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(Color.BLACK);
-        g.fillRect(x, y + s(1), s(TILE_SIZE), s(6));
+        g.fillRect(x, y + 1, TILE_SIZE, 6);
         g.setFill(color);
-        g.fillRect(x - 1, y + s(3), s(TILE_SIZE) + 2, s(2));
+        g.fillRect(x - 1, y + 3, TILE_SIZE + 2, 2);
         g.restore();
     }
 
@@ -75,15 +76,15 @@ public class TerrainMapRenderer implements TileMapRenderer {
             .filter(tile -> !explored.contains(tile))
             .filter(tile -> map.get(tile) == Tiles.CORNER_NW)
             .map(corner -> TileMapPath.buildPath(map, explored, corner, LEFT))
-            .forEach(path -> drawPath(g, map, path, true, 1*scaling, wallStrokeColor, wallFillColor));
+            .forEach(path -> drawPath(g, map, path, true, 1, wallStrokeColor, wallFillColor));
     }
 
     /*
      * Draws a path with an inside stroke of wall fill color and two outside strokes of wall stroke color.
      */
     public void drawTripleStrokePath(GraphicsContext g, TileMap map, TileMapPath path) {
-        drawPath(g, map, path, false,  3*scaling, wallStrokeColor, null);
-        drawPath(g, map, path, false,  1*scaling, wallFillColor, null);
+        drawPath(g, map, path, false,  3, wallStrokeColor, null);
+        drawPath(g, map, path, false,  1, wallFillColor, null);
     }
 
     public void drawTripleStrokePaths(GraphicsContext g, TileMap map) {
@@ -122,7 +123,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     public Vector2f center(Vector2i tile) {
-        return new Vector2f(tile.x() * s(TILE_SIZE) + s(4), tile.y() * s(TILE_SIZE) + s(4));
+        return new Vector2f(tile.x() * TILE_SIZE + 4, tile.y() * TILE_SIZE + 4);
     }
 
     public void drawPath(
@@ -130,7 +131,10 @@ public class TerrainMapRenderer implements TileMapRenderer {
         TileMap map, TileMapPath tileMapPath,
         boolean fill, double lineWidth, Color outlineColor, Color fillColor) {
 
-        double r = s(4);
+        g.save();
+        g.scale(scaling, scaling);
+
+        double r = 4;
         g.beginPath();
 
         //TODO: avoid these special cases
@@ -179,5 +183,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.setStroke(outlineColor);
         g.setLineWidth(lineWidth);
         g.stroke();
+
+        g.restore();
     }
 }
