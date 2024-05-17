@@ -132,3 +132,8 @@ Cheats:
 ### 3D Play Scene
 
 ![Play Scene](doc/pacman-maze.png)
+
+### The tile map editor
+
+![Map Editor](doc/map-editor.png)
+
