@@ -264,7 +264,7 @@ public class GameLevel3D extends Group {
             .filter(corner -> corner.x() > 0 && corner.x() < terrainMap.numCols() - 1)
             .filter(corner -> corner.y() > 0 && corner.y() < terrainMap.numRows() - 1)
             .map(corner -> TileMapPath.buildPath(terrainMap, explored, corner, LEFT))
-            .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
+            .forEach(path -> buildWallsAlongPath(parent, path));
 
         // Paths starting at left and right maze border (over and under tunnel ends)
         var handlesLeft = new ArrayList<Vector2i>();
@@ -283,15 +283,15 @@ public class GameLevel3D extends Group {
         handlesLeft.stream()
             .filter(handle -> !explored.contains(handle))
             .map(handle -> TileMapPath.buildPath(terrainMap, explored, handle, RIGHT))
-            .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
+            .forEach(path -> buildWallsAlongPath(parent, path));
 
         handlesRight.stream()
             .filter(handle -> !explored.contains(handle))
             .map(handle -> TileMapPath.buildPath(terrainMap, explored, handle, LEFT))
-            .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
+            .forEach(path -> buildWallsAlongPath(parent, path));
     }
 
-    private void buildWallsAlongPath(Group parent, TileMap terrainMap, TileMapPath tileMapPath) {
+    private void buildWallsAlongPath(Group parent,TileMapPath tileMapPath) {
         Vector2i wallStart = tileMapPath.startTile;
         Vector2i wallEnd = wallStart;
         Direction prevDir = null;
@@ -310,10 +310,6 @@ public class GameLevel3D extends Group {
             }
             prevDir = dir;
         }
-    }
-
-    private static boolean isStraightWall(byte tileValue) {
-        return tileValue == Tiles.WALL_H || tileValue == Tiles.WALL_V || tileValue == Tiles.DWALL_H || tileValue == Tiles.DWALL_V;
     }
 
     private Node createWall(Vector2i first, Vector2i second, DoubleProperty heightPy, ObjectProperty<PhongMaterial> fillMaterialPy) {
