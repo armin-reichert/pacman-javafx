@@ -146,8 +146,53 @@ public class TileMapEditor extends Application  {
     }
 
     Pane createSceneContent() {
+
+        var menuFile = new Menu("File");
+
+        var miNewMap = new MenuItem("New...");
+        miNewMap.setOnAction(e -> createNewMap());
+
+        var miLoadMap = new MenuItem("Load Map...");
+        miLoadMap.setOnAction(e -> openMapFile());
+
+        var miSaveMap = new MenuItem("Save Map...");
+        miSaveMap.setOnAction(e -> saveMap());
+
+        var miQuit = new MenuItem("Quit");
+        miQuit.setOnAction(e -> stage.close());
+
+        menuFile.getItems().addAll(miNewMap, miLoadMap, miSaveMap, miQuit);
+
+        var menuMap = new Menu("Map");
+
+        var miClearTerrain = new MenuItem("Clear Terrain");
+        miClearTerrain.setOnAction(e -> map.terrain().clear());
+
+        var miClearFood = new MenuItem("Clear Food");
+        miClearFood.setOnAction(e -> map.food().clear());
+
+        var miAddHouse = new MenuItem("Add House");
+        miAddHouse.setOnAction(e -> addShape(GHOST_HOUSE_SHAPE, 15, 10));
+
+        Menu menuLoadArcadeMap = new Menu("Load Arcade Map");
+
+        var miLoadPacManMap = new MenuItem("Pac-Man");
+        miLoadPacManMap.setOnAction(e -> loadMap(arcadeMaps[0]));
+        menuLoadArcadeMap.getItems().add(miLoadPacManMap);
+
+        IntStream.range(1, 7).forEach(i -> {
+            var miLoadMsPacManMap = new MenuItem("Ms. Pac-Man " + i);
+            miLoadMsPacManMap.setOnAction(e -> loadMap(arcadeMaps[i]));
+            menuLoadArcadeMap.getItems().add(miLoadMsPacManMap);
+        });
+
+        menuMap.getItems().addAll(miClearTerrain, miClearFood, miAddHouse, menuLoadArcadeMap);
+
         menuBar = new MenuBar();
-        menuBar.getMenus().addAll(createFileMenu(), createMapsMenu());
+        menuBar.getMenus().addAll(menuFile, menuMap);
+
+        openDialog = new FileChooser();
+        openDialog.setInitialDirectory(lastUsedDir);
 
         canvas = new Canvas();
         canvas.setOnMouseClicked(this::onMouseClickedOnCanvas);
@@ -218,8 +263,6 @@ public class TileMapEditor extends Application  {
         return contentPane;
     }
 
-
-
     // TODO use own canvas or Text control
     void drawBlueScreen(Exception drawException) {
         GraphicsContext g = canvas.getGraphicsContext2D();
@@ -277,56 +320,6 @@ public class TileMapEditor extends Application  {
                 g.strokeLine(col * gridSize, 0, col * gridSize, canvas.getHeight());
             }
         }
-    }
-
-    Menu createFileMenu() {
-        openDialog = new FileChooser();
-        openDialog.setInitialDirectory(lastUsedDir);
-
-        var newMapsItem = new MenuItem("New...");
-        newMapsItem.setOnAction(e -> createNewMap());
-
-        var loadMapsItem = new MenuItem("Load Map...");
-        loadMapsItem.setOnAction(e -> openMapFile());
-
-        var saveMapsItem = new MenuItem("Save Map...");
-        saveMapsItem.setOnAction(e -> saveMap());
-
-        var quitItem = new MenuItem("Quit");
-        quitItem.setOnAction(e -> stage.close());
-
-        var menu = new Menu("File");
-        menu.getItems().addAll(newMapsItem, loadMapsItem, saveMapsItem, quitItem);
-
-        return menu;
-    }
-
-    Menu createMapsMenu() {
-        var clearTerrainMapItem = new MenuItem("Clear Terrain");
-        clearTerrainMapItem.setOnAction(e -> map.terrain().clear());
-
-        var clearFoodMapItem = new MenuItem("Clear Food");
-        clearFoodMapItem.setOnAction(e -> map.food().clear());
-
-        var addHouseItem = new MenuItem("Add House");
-        addHouseItem.setOnAction(e -> addShape(GHOST_HOUSE_SHAPE, 15, 10));
-
-        Menu arcadeMapsMenu = new Menu("Load Arcade Map");
-
-        var pacManMapItem = new MenuItem("Pac-Man");
-        pacManMapItem.setOnAction(e -> loadMap(arcadeMaps[0]));
-        arcadeMapsMenu.getItems().add(pacManMapItem);
-
-        IntStream.range(1, 7).forEach(i -> {
-            var item = new MenuItem("Ms. Pac-Man " + i);
-            item.setOnAction(e -> loadMap(arcadeMaps[i]));
-            arcadeMapsMenu.getItems().add(item);
-        });
-
-        var menu = new Menu("Map");
-        menu.getItems().addAll(clearTerrainMapItem, clearFoodMapItem, addHouseItem, arcadeMapsMenu);
-
-        return menu;
     }
 
     void addShape(byte[][] shape, int topLeftRow, int topLeftCol) {
