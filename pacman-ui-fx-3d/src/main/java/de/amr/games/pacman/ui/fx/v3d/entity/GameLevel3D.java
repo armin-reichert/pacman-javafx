@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -291,23 +292,23 @@ public class GameLevel3D extends Group {
     }
 
     private void buildWallsAlongPath(Group parent, TileMap terrainMap, TileMapPath tileMapPath) {
-        //TODO
-        List<Vector2i> path = tileMapPath.toTileList();
-
-        int from = 0;
-        int to = from;
-        while (true) {
-            if (to == path.size()) {
-                var wall = createWall(path.get(from), path.get(to - 1), wallHeightPy, wallFillMaterialPy);
+        Vector2i wallStart = tileMapPath.startTile;
+        Vector2i wallEnd = wallStart;
+        Direction prevDir = null;
+        for (int i = 0; i < tileMapPath.directions.size(); ++i) {
+            var dir = tileMapPath.directions.get(i);
+            if (prevDir != dir) {
+                var wall = createWall(wallStart, wallEnd, wallHeightPy, wallFillMaterialPy);
+                parent.getChildren().add(wall);
+                wallStart = wallEnd;
+            }
+            wallEnd = wallEnd.plus(dir.vector());
+            if (i == tileMapPath.directions.size() - 1) {
+                var wall = createWall(wallStart, wallEnd, wallHeightPy, wallFillMaterialPy);
                 parent.getChildren().add(wall);
                 break;
             }
-            if (!isStraightWall(terrainMap.get(path.get(to)))) {
-                var wall = createWall(path.get(from), path.get(to), wallHeightPy, wallFillMaterialPy);
-                parent.getChildren().add(wall);
-                from = to;
-            }
-            ++to;
+            prevDir = dir;
         }
     }
 
