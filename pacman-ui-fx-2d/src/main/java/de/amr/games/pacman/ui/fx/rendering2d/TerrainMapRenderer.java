@@ -72,7 +72,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         map.tiles()
             .filter(tile -> !explored.contains(tile))
             .filter(tile -> map.get(tile) == Tiles.CORNER_NW)
-            .map(corner -> map.buildPath(explored, corner, DOWN))
+            .map(corner -> map.buildPath(explored, corner, LEFT))
             .forEach(path -> drawPath(g, map, path, true, 1*scaling, wallStrokeColor, wallFillColor));
     }
 
@@ -103,19 +103,19 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
         handlesLeft.stream()
             .filter(handle -> !explored.contains(handle))
-            .map(handle -> map.buildPath(explored, handle, map.newMoveDir(RIGHT, map.get(handle))))
+            .map(handle -> map.buildPath(explored, handle, RIGHT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
 
         handlesRight.stream()
             .filter(handle -> !explored.contains(handle))
-            .map(handle -> map.buildPath(explored, handle, map.newMoveDir(LEFT, map.get(handle))))
+            .map(handle -> map.buildPath(explored, handle, LEFT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
 
         // ghost house
         map.tiles()
             .filter(tile -> !explored.contains(tile))
             .filter(tile -> map.get(tile) == Tiles.DCORNER_NW)
-            .map(corner -> map.buildPath(explored, corner, DOWN))
+            .map(corner -> map.buildPath(explored, corner, LEFT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
     }
 

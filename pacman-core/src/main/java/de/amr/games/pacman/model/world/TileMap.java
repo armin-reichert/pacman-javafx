@@ -254,7 +254,7 @@ public class TileMap {
     public List<Vector2i> buildPath(Set<Vector2i> explored, Vector2i startTile, Direction startDir) {
         var path = new ArrayList<Vector2i>();
         var tile = startTile;
-        var dir = startDir;
+        var dir = newMoveDir(startDir, get(startTile));
         while (true) {
             path.add(tile);
             explored.add(tile);

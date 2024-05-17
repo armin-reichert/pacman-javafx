@@ -265,7 +265,7 @@ public class GameLevel3D extends Group {
             .filter(tile -> terrainMap.get(tile) == Tiles.CORNER_NW)
             .filter(corner -> corner.x() > 0 && corner.x() < terrainMap.numCols() - 1)
             .filter(corner -> corner.y() > 0 && corner.y() < terrainMap.numRows() - 1)
-            .map(corner -> terrainMap.buildPath(explored, corner, RIGHT))
+            .map(corner -> terrainMap.buildPath(explored, corner, LEFT))
             .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
 
         // Paths starting at left and right maze border (over and under tunnel ends)
@@ -284,12 +284,12 @@ public class GameLevel3D extends Group {
 
         handlesLeft.stream()
             .filter(handle -> !explored.contains(handle))
-            .map(handle -> terrainMap.buildPath(explored, handle, terrainMap.newMoveDir(RIGHT, terrainMap.get(handle))))
+            .map(handle -> terrainMap.buildPath(explored, handle, RIGHT))
             .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
 
         handlesRight.stream()
             .filter(handle -> !explored.contains(handle))
-            .map(handle -> terrainMap.buildPath(explored, handle, terrainMap.newMoveDir(LEFT, terrainMap.get(handle))))
+            .map(handle -> terrainMap.buildPath(explored, handle, LEFT))
             .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
     }
 
