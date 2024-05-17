@@ -26,26 +26,51 @@ public class TileMapPath {
     }
 
     public static List<Vector2i> buildPath(TileMap map, Set<Vector2i> explored, Vector2i startTile, Direction startDir) {
-        var path = new ArrayList<Vector2i>();
+        var path = _buildPath(map, explored, startTile, startDir);
+        return path.toTileList();
+    }
+
+    public static TileMapPath _buildPath(TileMap map, Set<Vector2i> explored, Vector2i startTile, Direction startDir) {
+        checkNotNull(map);
+        checkNotNull(explored);
+        checkNotNull(startTile);
+        checkNotNull(startDir);
+        if (map.outOfBounds(startTile)) {
+            throw new IllegalArgumentException("Start tile must be inside map");
+        }
+
+        var path = new TileMapPath(startTile);
+        explored.add(startTile);
         var tile = startTile;
-        var dir = newMoveDir(startDir, map.get(startTile));
+        var dir = startDir;
         while (true) {
-            path.add(tile);
-            explored.add(tile);
+            dir = newMoveDir(dir, map.get(tile));
             tile = tile.plus(dir.vector());
             if (map.outOfBounds(tile)) {
                 break;
             }
             if (explored.contains(tile)) {
-                path.add(tile); // close path
+                path.add(dir);
                 break;
             }
-            dir = newMoveDir(dir, map.get(tile));
+            path.add(dir);
+            explored.add(tile);
         }
         return path;
     }
 
-    public static Direction newMoveDir(Direction moveDir, byte tileValue) {
+    public List<Vector2i> toTileList() {
+        List<Vector2i> tileList = new ArrayList<>();
+        tileList.add(startTile);
+        Vector2i tile = startTile;
+        for (var dir : directions) {
+            tile = tile.plus(dir.vector());
+            tileList.add(tile);
+        }
+        return tileList;
+    }
+
+    static Direction newMoveDir(Direction moveDir, byte tileValue) {
         return switch (tileValue) {
             case Tiles.CORNER_NW, Tiles.DCORNER_NW -> moveDir == LEFT  ? DOWN  : RIGHT;
             case Tiles.CORNER_NE, Tiles.DCORNER_NE -> moveDir == RIGHT ? DOWN  : LEFT;
