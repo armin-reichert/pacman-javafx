@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.TileMapPath;
 import de.amr.games.pacman.model.world.Tiles;
-import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -16,7 +16,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Direction.*;
+import static de.amr.games.pacman.lib.Direction.LEFT;
+import static de.amr.games.pacman.lib.Direction.RIGHT;
 
 /**
  * @author Armin Reichert
@@ -120,8 +121,8 @@ public class TerrainMapRenderer implements TileMapRenderer {
             .forEach(path -> drawTripleStrokePath(g, map, path));
     }
 
-    public Point2D center(Vector2i tile) {
-        return new Point2D(tile.x() * s(TILE_SIZE) + s(4), tile.y() * s(TILE_SIZE) + s(4));
+    public Vector2f center(Vector2i tile) {
+        return new Vector2f(tile.x() * s(TILE_SIZE) + s(4), tile.y() * s(TILE_SIZE) + s(4));
     }
 
     public void drawPath(GraphicsContext g, TileMap map, TileMapPath tileMapPath,
@@ -137,42 +138,39 @@ public class TerrainMapRenderer implements TileMapRenderer {
         Vector2i first = path.getFirst();
         if (first.x() == 0 && map.get(first) == Tiles.DWALL_H) {
             // start at left maze border, not at tile center
-            double y = center(first).getY();
+            double y = center(first).y();
             g.moveTo(0, y);
             g.lineTo(r, y);
         }
 
-        Point2D center = center(first);
-        double x = center.getX(), y = center.getY();
+        Vector2f c = center(first);
         switch (map.get(first)) {
-            case Tiles.WALL_H, Tiles.DWALL_H       -> g.lineTo(x + r, y);
-            case Tiles.WALL_V, Tiles.DWALL_V       -> g.lineTo(x, y + r);
-            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> g.arc(x+r, y+r, r, r,  90, 90);
-            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> g.arc(x+r, y-r, r, r, 180, 90);
-            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(x-r, y+r, r, r, first.x() != 0 ? 0:90, first.x() != 0? 90:-90);
-            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(x-r, y-r, r, r, 270, 90);
+            case Tiles.WALL_H, Tiles.DWALL_H       -> g.lineTo(c.x()+r, c.y());
+            case Tiles.WALL_V, Tiles.DWALL_V       -> g.lineTo(c.x(), c.y()+r);
+            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> g.arc(c.x()+r, c.y()+r, r, r,  90, 90);
+            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> g.arc(c.x()+r, c.y()-r, r, r, 180, 90);
+            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(c.x()-r, c.y()+r, r, r, first.x() != 0 ? 0:90, first.x() != 0? 90:-90);
+            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(c.x()-r, c.y()-r, r, r, 270, 90);
             default -> {}
         }
         for (int i = 1; i < path.size(); ++i) {
             Vector2i tile = path.get(i);
             Vector2i prev = path.get(i-1);
-            center = center(tile);
-            x = center.getX();
-            y = center.getY();
+            c = center(tile);
             boolean left = prev.x() > tile.x(), right = prev.x() < tile.x(), up = prev.y() > tile.y(), down = prev.y() < tile.y();
             switch (map.get(tile)) {
-                case Tiles.WALL_H, Tiles.DWALL_H       -> g.lineTo(x + r, y);
-                case Tiles.WALL_V, Tiles.DWALL_V       -> g.lineTo(x, y + r);
-                case Tiles.CORNER_NW, Tiles.DCORNER_NW -> g.arc(x+r, y+r, r, r, left? 90:180,  left?90:-90);
-                case Tiles.CORNER_SW, Tiles.DCORNER_SW -> g.arc(x+r, y-r, r, r, down? 180:270, down?90:-90);
-                case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(x-r, y+r, r, r, up? 0:90,    up?90:-90);
-                case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(x-r, y-r, r, r, right? 270:0,   right?90:-90);
+                case Tiles.WALL_H, Tiles.DWALL_H       -> g.lineTo(c.x() + r, c.y());
+                case Tiles.WALL_V, Tiles.DWALL_V       -> g.lineTo(c.x(), c.y() + r);
+                case Tiles.CORNER_NW, Tiles.DCORNER_NW -> g.arc(c.x()+r, c.y()+r, r, r, left?  90:180,  left?  90:-90);
+                case Tiles.CORNER_SW, Tiles.DCORNER_SW -> g.arc(c.x()+r, c.y()-r, r, r, down?  180:270, down?  90:-90);
+                case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(c.x()-r, c.y()+r, r, r, up?    0:90,    up?    90:-90);
+                case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(c.x()-r, c.y()-r, r, r, right? 270:0,   right? 90:-90);
                 default -> {}
             }
         }
 
         if (path.getLast().x() == 0 && map.get(path.getLast()) == Tiles.DWALL_H) {
-            g.lineTo(0, center(path.getLast()).getY());
+            g.lineTo(0, center(path.getLast()).y());
         }
 
         if (fill) {
