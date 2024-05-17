@@ -73,15 +73,15 @@ public class TerrainMapRenderer implements TileMapRenderer {
             .filter(tile -> !explored.contains(tile))
             .filter(tile -> map.get(tile) == Tiles.CORNER_NW)
             .map(corner -> map.buildPath(explored, corner, DOWN))
-            .forEach(path -> drawPath(g, map, path, true, true, 1*scaling, wallStrokeColor, wallFillColor));
+            .forEach(path -> drawPath(g, map, path, true, 1*scaling, wallStrokeColor, wallFillColor));
     }
 
     /*
      * Draws a path with an inside stroke of wall fill color and two outside strokes of wall stroke color.
      */
     public void drawTripleStrokePath(GraphicsContext g, TileMap map, List<Vector2i> path) {
-        drawPath(g, map, path, false, false, 3*scaling, wallStrokeColor, null);
-        drawPath(g, map, path, false, false, 1*scaling, wallFillColor, null);
+        drawPath(g, map, path, false,  3*scaling, wallStrokeColor, null);
+        drawPath(g, map, path, false,  1*scaling, wallFillColor, null);
     }
 
     public void drawTripleStrokePaths(GraphicsContext g, TileMap map) {
@@ -124,11 +124,9 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     public void drawPath(GraphicsContext g, TileMap map, List<Vector2i> path,
-                          boolean fill, boolean close, double lineWidth, Color outlineColor, Color fillColor) {
-        if (close) {
-            path.add(path.getFirst()); // close the path
-        }
-        double r = s(TILE_SIZE / 2f);
+                          boolean fill, double lineWidth, Color outlineColor, Color fillColor) {
+        double r = s(4);
+
         g.beginPath();
         for (int i = 0; i < path.size(); ++i) {
             Vector2i tile = path.get(i), prevTile = (i == 0) ? null : path.get(i - 1);
@@ -189,9 +187,6 @@ public class TerrainMapRenderer implements TileMapRenderer {
                 }
                 default -> {}
             }
-        }
-        if (close) {
-            g.closePath();
         }
         g.setFill(fillColor);
         g.setStroke(outlineColor);
