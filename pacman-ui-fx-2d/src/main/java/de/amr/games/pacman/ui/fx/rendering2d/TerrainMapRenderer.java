@@ -188,12 +188,12 @@ public class TerrainMapRenderer implements TileMapRenderer {
                 default -> {}
             }
         }
-        g.setFill(fillColor);
-        g.setStroke(outlineColor);
-        g.setLineWidth(lineWidth);
         if (fill) {
+            g.setFill(fillColor);
             g.fill();
         }
+        g.setStroke(outlineColor);
+        g.setLineWidth(lineWidth);
         g.stroke();
     }
 }
