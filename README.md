@@ -132,6 +132,8 @@ Cheats:
 
 ![Pac-Man Play Scene](doc/pacman-playscene-2d.png)
 
+![Ms. Pac-Man Play Scene](doc/mspacman-playscene-2d.png)
+
 ### 3D Play Scenes
 
 ![Pac-Man Play Scene](doc/pacman-playscene.png)
