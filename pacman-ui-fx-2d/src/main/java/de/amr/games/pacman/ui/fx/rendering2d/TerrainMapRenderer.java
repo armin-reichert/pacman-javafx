@@ -16,8 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Direction.LEFT;
-import static de.amr.games.pacman.lib.Direction.RIGHT;
+import static de.amr.games.pacman.lib.Direction.*;
 
 /**
  * @author Armin Reichert
@@ -134,31 +133,36 @@ public class TerrainMapRenderer implements TileMapRenderer {
         double r = s(4);
 
         g.beginPath();
+
+        Vector2i prevTile = null;
+        //TODO avoid these special cases
+        Vector2i first = path.getFirst();
+        if (first.x() == 0) {
+            // path starts at left maze border
+            switch (map.get(first)) {
+                case Tiles.DWALL_H -> {
+                    // start at left maze border, not at tile center
+                    double y = center(first).getY();
+                    g.moveTo(0, y);
+                    g.lineTo(r, y);
+                }
+                case Tiles.DCORNER_NE -> {
+                    prevTile = first.plus(UP.vector());
+                }
+                case Tiles.DCORNER_SE -> {
+                    prevTile = first.plus(DOWN.vector());
+                }
+            }
+        }
+
         for (int i = 0; i < path.size(); ++i) {
-            Vector2i tile = path.get(i), prevTile = (i == 0) ? null : path.get(i - 1);
+            Vector2i tile = path.get(i);
+            if (i > 0) {
+                prevTile = path.get(i-1);
+            }
             Point2D p = center(tile);
             double x = p.getX(), y = p.getY();
 
-            //TODO avoid these special cases
-            if (i == 0 && tile.x() == 0) {
-                // path starts at left maze border
-                if (map.get(tile) == Tiles.DWALL_H) {
-                    // start at left maze border, not at tile center
-                    g.moveTo(0, y);
-                    g.lineTo(r, y);
-                } else if (map.get(tile) == Tiles.DCORNER_NE) {
-                    // invent predecessor such that path continues clockwise/down
-                    prevTile = new Vector2i(tile.x(), tile.y() - 1);
-                } else if (map.get(tile) == Tiles.DCORNER_SE) {
-                    // invent predecessor such that path continues clockwise/down
-                    prevTile = new Vector2i(tile.x(), tile.y() + 1);
-                }
-            } else if (i == path.size() - 1 && tile.x() == 0) {
-                if (map.get(tile) == Tiles.DWALL_H) {
-                    // end at left maze border, not at tile center
-                    g.lineTo(0, y);
-                }
-            }
             switch (map.get(tile)) {
                 case Tiles.WALL_H, Tiles.DWALL_H       -> g.lineTo(x + r, y);
                 case Tiles.WALL_V, Tiles.DWALL_V       -> g.lineTo(x, y + r);
@@ -169,6 +173,12 @@ public class TerrainMapRenderer implements TileMapRenderer {
                 default -> {}
             }
         }
+
+        if (path.getLast().x() == 0 && map.get(path.getLast()) == Tiles.DWALL_H) {
+            g.lineTo(0, center(path.getLast()).getY());
+        }
+
+
         if (fill) {
             g.setFill(fillColor);
             g.fill();
