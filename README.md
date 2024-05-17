@@ -132,11 +132,15 @@ Cheats:
 
 ![Pac-Man Play Scene](doc/pacman-playscene-2d.png)
 
+![Pac-Man Play Scene New](doc/pacman-newmaze-sample.png)
+
 ![Ms. Pac-Man Play Scene](doc/mspacman-playscene-2d.png)
 
 ### 3D Play Scenes
 
 ![Pac-Man Play Scene](doc/pacman-playscene.png)
+
+![Pac-Man Play Scene New](doc/pacman-newmaze-sample-3d.png)
 
 ![Ms. Pac-Man Play Scene](doc/mspacman-maze.png)
 
