@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.rendering2d;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.world.TileMap;
@@ -125,37 +126,36 @@ public class TerrainMapRenderer implements TileMapRenderer {
         return new Vector2f(tile.x() * s(TILE_SIZE) + s(4), tile.y() * s(TILE_SIZE) + s(4));
     }
 
-    public void drawPath(GraphicsContext g, TileMap map, TileMapPath tileMapPath,
-                          boolean fill, double lineWidth, Color outlineColor, Color fillColor) {
-
-        //TODO use new path data structure
-        List<Vector2i> path = tileMapPath.toTileList();
+    public void drawPath(
+        GraphicsContext g,
+        TileMap map, TileMapPath tileMapPath,
+        boolean fill, double lineWidth, Color outlineColor, Color fillColor) {
 
         double r = s(4);
         g.beginPath();
 
-        //TODO avoid these special cases
-        Vector2i first = path.getFirst();
-        if (first.x() == 0 && map.get(first) == Tiles.DWALL_H) {
+        //TODO: avoid these special cases
+        Vector2i tile = tileMapPath.startTile;
+        if (tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
             // start at left maze border, not at tile center
-            double y = center(first).y();
+            double y = center(tile).y();
             g.moveTo(0, y);
             g.lineTo(r, y);
         }
 
-        Vector2f c = center(first);
-        switch (map.get(first)) {
+        Vector2f c = center(tile);
+        switch (map.get(tile)) {
             case Tiles.WALL_H, Tiles.DWALL_H       -> g.lineTo(c.x()+r, c.y());
             case Tiles.WALL_V, Tiles.DWALL_V       -> g.lineTo(c.x(), c.y()+r);
             case Tiles.CORNER_NW, Tiles.DCORNER_NW -> g.arc(c.x()+r, c.y()+r, r, r,  90, 90);
             case Tiles.CORNER_SW, Tiles.DCORNER_SW -> g.arc(c.x()+r, c.y()-r, r, r, 180, 90);
-            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(c.x()-r, c.y()+r, r, r, first.x() != 0 ? 0:90, first.x() != 0? 90:-90);
+            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(c.x()-r, c.y()+r, r, r, tile.x() != 0 ? 0:90, tile.x() != 0? 90:-90);
             case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(c.x()-r, c.y()-r, r, r, 270, 90);
             default -> {}
         }
-        for (int i = 1; i < path.size(); ++i) {
-            Vector2i tile = path.get(i);
-            Vector2i prev = path.get(i-1);
+        for (Direction dir : tileMapPath.directions) {
+            Vector2i prev = tile;
+            tile = tile.plus(dir.vector());
             c = center(tile);
             boolean left = prev.x() > tile.x(), right = prev.x() < tile.x(), up = prev.y() > tile.y(), down = prev.y() < tile.y();
             switch (map.get(tile)) {
@@ -169,8 +169,8 @@ public class TerrainMapRenderer implements TileMapRenderer {
             }
         }
 
-        if (path.getLast().x() == 0 && map.get(path.getLast()) == Tiles.DWALL_H) {
-            g.lineTo(0, center(path.getLast()).y());
+        if (tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
+            g.lineTo(0, center(tile).y());
         }
 
         if (fill) {
