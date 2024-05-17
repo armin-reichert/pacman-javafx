@@ -15,7 +15,6 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
