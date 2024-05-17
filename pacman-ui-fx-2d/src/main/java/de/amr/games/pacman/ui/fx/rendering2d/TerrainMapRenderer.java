@@ -16,7 +16,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Direction.*;
+import static de.amr.games.pacman.lib.Direction.LEFT;
+import static de.amr.games.pacman.lib.Direction.RIGHT;
 
 /**
  * @author Armin Reichert
@@ -73,14 +74,14 @@ public class TerrainMapRenderer implements TileMapRenderer {
         map.tiles()
             .filter(tile -> !explored.contains(tile))
             .filter(tile -> map.get(tile) == Tiles.CORNER_NW)
-            .map(corner -> TileMapPath.buildPath(map, explored, corner, LEFT))
+            .map(corner -> TileMapPath._buildPath(map, explored, corner, LEFT))
             .forEach(path -> drawPath(g, map, path, true, 1*scaling, wallStrokeColor, wallFillColor));
     }
 
     /*
      * Draws a path with an inside stroke of wall fill color and two outside strokes of wall stroke color.
      */
-    public void drawTripleStrokePath(GraphicsContext g, TileMap map, List<Vector2i> path) {
+    public void drawTripleStrokePath(GraphicsContext g, TileMap map, TileMapPath path) {
         drawPath(g, map, path, false,  3*scaling, wallStrokeColor, null);
         drawPath(g, map, path, false,  1*scaling, wallFillColor, null);
     }
@@ -104,19 +105,19 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
         handlesLeft.stream()
             .filter(handle -> !explored.contains(handle))
-            .map(handle -> TileMapPath.buildPath(map, explored, handle, RIGHT))
+            .map(handle -> TileMapPath._buildPath(map, explored, handle, RIGHT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
 
         handlesRight.stream()
             .filter(handle -> !explored.contains(handle))
-            .map(handle -> TileMapPath.buildPath(map, explored, handle, LEFT))
+            .map(handle -> TileMapPath._buildPath(map, explored, handle, LEFT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
 
         // ghost house
         map.tiles()
             .filter(tile -> !explored.contains(tile))
             .filter(tile -> map.get(tile) == Tiles.DCORNER_NW)
-            .map(corner -> TileMapPath.buildPath(map, explored, corner, LEFT))
+            .map(corner -> TileMapPath._buildPath(map, explored, corner, LEFT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
     }
 
@@ -124,8 +125,12 @@ public class TerrainMapRenderer implements TileMapRenderer {
         return new Point2D(tile.x() * s(TILE_SIZE) + s(4), tile.y() * s(TILE_SIZE) + s(4));
     }
 
-    public void drawPath(GraphicsContext g, TileMap map, List<Vector2i> path,
+    public void drawPath(GraphicsContext g, TileMap map, TileMapPath tileMapPath,
                           boolean fill, double lineWidth, Color outlineColor, Color fillColor) {
+
+        //TODO
+        List<Vector2i> path = tileMapPath.toTileList();
+
         double r = s(4);
 
         g.beginPath();

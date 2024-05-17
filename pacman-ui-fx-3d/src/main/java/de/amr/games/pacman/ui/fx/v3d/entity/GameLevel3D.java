@@ -262,7 +262,7 @@ public class GameLevel3D extends Group {
             .filter(tile -> terrainMap.get(tile) == Tiles.CORNER_NW)
             .filter(corner -> corner.x() > 0 && corner.x() < terrainMap.numCols() - 1)
             .filter(corner -> corner.y() > 0 && corner.y() < terrainMap.numRows() - 1)
-            .map(corner -> TileMapPath.buildPath(terrainMap, explored, corner, LEFT))
+            .map(corner -> TileMapPath._buildPath(terrainMap, explored, corner, LEFT))
             .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
 
         // Paths starting at left and right maze border (over and under tunnel ends)
@@ -281,16 +281,19 @@ public class GameLevel3D extends Group {
 
         handlesLeft.stream()
             .filter(handle -> !explored.contains(handle))
-            .map(handle -> TileMapPath.buildPath(terrainMap, explored, handle, RIGHT))
+            .map(handle -> TileMapPath._buildPath(terrainMap, explored, handle, RIGHT))
             .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
 
         handlesRight.stream()
             .filter(handle -> !explored.contains(handle))
-            .map(handle -> TileMapPath.buildPath(terrainMap, explored, handle, LEFT))
+            .map(handle -> TileMapPath._buildPath(terrainMap, explored, handle, LEFT))
             .forEach(path -> buildWallsAlongPath(parent, terrainMap, path));
     }
 
-    private void buildWallsAlongPath(Group parent, TileMap terrainMap, List<Vector2i> path) {
+    private void buildWallsAlongPath(Group parent, TileMap terrainMap, TileMapPath tileMapPath) {
+        //TODO
+        List<Vector2i> path = tileMapPath.toTileList();
+
         int from = 0;
         int to = from;
         while (true) {
@@ -524,8 +527,12 @@ public class GameLevel3D extends Group {
         rotation.setToAngle(360);
         rotation.setInterpolator(Interpolator.LINEAR);
 
+        return new SequentialTransition(rotation, createMazeDisappearAnimation());
+    }
+
+    private Transition createMazeDisappearAnimation() {
         final double wallHeightBeforeAnimation = wallHeightPy.get();
-        var fadeTransition = new Transition() {
+        var animation = new Transition() {
             {
                 setCycleDuration(Duration.seconds(1.5));
                 setInterpolator(Interpolator.EASE_BOTH);
@@ -539,12 +546,11 @@ public class GameLevel3D extends Group {
                 wallHeightPy.set((1-t) * wallHeightBeforeAnimation);
             }
         };
-        fadeTransition.setOnFinished(e -> {
+        animation.setOnFinished(e -> {
             mazeGroup.setVisible(false);
             wallHeightPy.bind(PY_3D_WALL_HEIGHT);
         });
-
-        return new SequentialTransition(rotation, fadeTransition);
+        return animation;
     }
 
     public Transition createMazeFlashingAnimation(int numFlashes) {
