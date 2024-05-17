@@ -14,7 +14,6 @@ This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler
 
 <div float="left">
     <a href="https://magentacloud.de/s/qYDg6BKK7G6TxpB"><img src="doc/pacman-maze.png" style="width:500px"></a>
-    <a href="https://www.youtube.com/watch?v=XeVjXU59buw"><img src="doc/pacman-playscene.png" style="width:500px"></a>
 </div>
 
 ## About this project
@@ -131,7 +130,9 @@ Cheats:
 
 ### 3D Play Scene
 
-![Play Scene](doc/pacman-maze.png)
+![Pac-Man Play Scene](doc/pacman-playscene.png)
+
+![Ms. Pac-Man Play Scene](doc/mspacman-maze.png)
 
 ### The tile map editor
 
