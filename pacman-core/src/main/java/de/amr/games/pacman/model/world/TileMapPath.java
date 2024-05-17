@@ -8,14 +8,12 @@ import java.util.List;
 import java.util.Set;
 
 import static de.amr.games.pacman.lib.Direction.*;
-import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 public class TileMapPath {
 
     public final Vector2i startTile;
     public final List<Direction> directions = new ArrayList<>();
-    public boolean closed = false;
 
     public TileMapPath(Vector2i startTile) {
         this.startTile = checkNotNull(startTile);
@@ -25,12 +23,7 @@ public class TileMapPath {
         directions.add(checkNotNull(dir));
     }
 
-    public static List<Vector2i> buildPath(TileMap map, Set<Vector2i> explored, Vector2i startTile, Direction startDir) {
-        var path = _buildPath(map, explored, startTile, startDir);
-        return path.toTileList();
-    }
-
-    public static TileMapPath _buildPath(TileMap map, Set<Vector2i> explored, Vector2i startTile, Direction startDir) {
+    public static TileMapPath buildPath(TileMap map, Set<Vector2i> explored, Vector2i startTile, Direction startDir) {
         checkNotNull(map);
         checkNotNull(explored);
         checkNotNull(startTile);
