@@ -726,7 +726,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public void startLevelTestMode() {
         if (gameState() == GameState.INTRO) {
             gameController().restart(GameState.LEVEL_TEST);
-            showFlashMessage("Level TEST MODE");
+            showFlashMessageSeconds(3, "Level TEST MODE");
         }
     }
 
