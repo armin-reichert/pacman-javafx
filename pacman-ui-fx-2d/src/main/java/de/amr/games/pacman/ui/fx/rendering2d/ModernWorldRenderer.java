@@ -51,5 +51,4 @@ public class ModernWorldRenderer {
             world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(g, tile));
         }
     }
-
 }

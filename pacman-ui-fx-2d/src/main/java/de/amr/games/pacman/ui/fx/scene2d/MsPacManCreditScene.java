@@ -41,14 +41,14 @@ public class MsPacManCreditScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        var ss = context.<MsPacManGameSpriteSheet>spriteSheet();
+        MsPacManGameSpriteSheet ss = context.spriteSheet();
         var font6 = sceneFont(6); // TODO looks bad
         var font8 = sceneFont(8);
         var color = context.theme().color("palette.orange");
         drawText("PUSH START BUTTON", color, font8, t(6), t(16));
         drawText("1 PLAYER ONLY", color, font8, t(8), t(18));
         drawText("ADDITIONAL    AT 10000", color, font8, t(2), t(25));
-        drawSprite(ss.livesCounterSprite(), t(13), t(23) + 1);
+        classicWorldRenderer.drawSprite(g, ss.source(), ss.livesCounterSprite(), t(13), t(23) + 1);
         drawText("PTS", color, font6, t(25), t(25));
         drawMsPacManCopyright(t(6), t(28));
         drawLevelCounter();

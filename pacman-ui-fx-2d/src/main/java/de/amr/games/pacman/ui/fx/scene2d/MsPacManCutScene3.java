@@ -60,8 +60,9 @@ public class MsPacManCutScene3 extends GameScene2D {
         drawMsPacManClapperBoard(clapAnimation, t(3), t(10));
         drawPac(intermission.msPacMan);
         drawPac(intermission.pacMan);
-        drawEntitySprite(intermission.stork, storkAnimation.currentSprite());
-        drawEntitySprite(intermission.bag, intermission.bagOpen ? ss.juniorPacSprite() : ss.blueBagSprite());
+        classicWorldRenderer.drawEntitySprite(g, ss, intermission.stork, storkAnimation.currentSprite());
+        classicWorldRenderer.drawEntitySprite(g, ss, intermission.bag,
+            intermission.bagOpen ? ss.juniorPacSprite() : ss.blueBagSprite());
         drawLevelCounter();
     }
 }

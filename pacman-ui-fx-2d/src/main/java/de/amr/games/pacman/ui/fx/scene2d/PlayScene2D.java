@@ -8,8 +8,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.ui.fx.rendering2d.ClassicWorldRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.ModernWorldRenderer;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -25,9 +23,6 @@ import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
  */
 public class PlayScene2D extends GameScene2D {
 
-    private final ModernWorldRenderer modernWorldRenderer = new ModernWorldRenderer(scalingPy);
-    private final ClassicWorldRenderer classicWorldRenderer = new ClassicWorldRenderer(scalingPy);
-
     @Override
     public boolean isCreditVisible() {
         return !context.gameController().hasCredit() || context.gameState() == GameState.GAME_OVER;
@@ -36,10 +31,6 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void init() {
         setScoreVisible(true);
-        switch (context.game().variant()) {
-            case MS_PACMAN -> classicWorldRenderer.setMsPacManSpriteSheet(context.spriteSheet());
-            case PACMAN -> classicWorldRenderer.setPacManSpriteSheet(context.spriteSheet());
-        }
     }
 
     @Override
@@ -134,7 +125,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void drawSceneInfo() {
         var game = context.game();
-        drawTileGrid(GameModel.ARCADE_MAP_TILES_X, GameModel.ARCADE_MAP_TILES_Y);
+        drawTileGrid();
         if (game == GameVariant.PACMAN && game.world() != null) {
             game.world().forbiddenPassages().forEach((tile, directions) -> {
                 // TODO indicate direction

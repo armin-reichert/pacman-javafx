@@ -7,19 +7,15 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
-import de.amr.games.pacman.ui.fx.rendering2d.ClapperboardAnimation;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.*;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimations;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -44,6 +40,10 @@ public abstract class GameScene2D implements GameScene {
 
     protected GameSceneContext context;
     protected GraphicsContext g;
+
+    protected final ModernWorldRenderer modernWorldRenderer = new ModernWorldRenderer(scalingPy);
+    protected final ClassicWorldRenderer classicWorldRenderer = new ClassicWorldRenderer(scalingPy);
+
 
     public abstract boolean isCreditVisible();
 
@@ -116,6 +116,10 @@ public abstract class GameScene2D implements GameScene {
                 getClass().getSimpleName());
             return;
         }
+        switch (context.game().variant()) {
+            case MS_PACMAN -> classicWorldRenderer.setMsPacManSpriteSheet(context.spriteSheet());
+            case PACMAN -> classicWorldRenderer.setPacManSpriteSheet(context.spriteSheet());
+        }
         if (isScoreVisible()) {
             drawScore(context.game().score(), "SCORE", t(1), t(1));
             drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1));
@@ -139,7 +143,7 @@ public abstract class GameScene2D implements GameScene {
      * Draws additional scene info, e.g. tile structure or debug info.
      */
     protected void drawSceneInfo() {
-        drawTileGrid(GameModel.ARCADE_MAP_TILES_X, GameModel.ARCADE_MAP_TILES_Y);
+        drawTileGrid();
     }
 
     public void clearCanvas() {
@@ -163,14 +167,21 @@ public abstract class GameScene2D implements GameScene {
     protected void drawLevelCounter() {
         double x = t(GameModel.ARCADE_MAP_TILES_X - 4);
         double y = t(GameModel.ARCADE_MAP_TILES_Y - 2);
-        for (byte symbol : context.game().levelCounter()) {
-            var sprite = switch (context.game()) {
-                case GameVariant.MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
-                case GameVariant.PACMAN -> context.<PacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
-                default -> throw new IllegalGameVariantException(context.game());
-            };
-            drawSprite(sprite, x, y);
-            x -= TS * 2;
+        switch (context.game().variant()) {
+            case MS_PACMAN -> {
+                MsPacManGameSpriteSheet ss = context.spriteSheet();
+                for (byte symbol : context.game().levelCounter()) {
+                    classicWorldRenderer.drawSpriteScaled(g, ss.source(), ss.bonusSymbolSprite(symbol), x, y);
+                    x -= TS * 2;
+                }
+            }
+            case PACMAN -> {
+                PacManGameSpriteSheet ss = context.spriteSheet();
+                for (byte symbol : context.game().levelCounter()) {
+                    classicWorldRenderer.drawSpriteScaled(g, ss.source(), ss.bonusSymbolSprite(symbol), x, y);
+                    x -= TS * 2;
+                }
+            }
         }
     }
 
@@ -178,16 +189,20 @@ public abstract class GameScene2D implements GameScene {
         if (numLivesDisplayed == 0) {
             return;
         }
-        var sprite = switch (context.game()) {
-            case GameVariant.MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().livesCounterSprite();
-            case GameVariant.PACMAN -> context.<PacManGameSpriteSheet>spriteSheet().livesCounterSprite();
-            default -> throw new IllegalGameVariantException(context.game());
-        };
         var x = TS * 2;
         var y = TS * (GameModel.ARCADE_MAP_TILES_Y - 2);
         int maxLives = 5;
         for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-            drawSprite(sprite, x + TS * (2 * i), y);
+            switch (context.game().variant()) {
+                case MS_PACMAN -> {
+                    MsPacManGameSpriteSheet ss = context.spriteSheet();
+                    classicWorldRenderer.drawSpriteScaled(g, ss.source(), ss.livesCounterSprite(), x + TS * (2 * i), y);
+                }
+                case PACMAN -> {
+                    PacManGameSpriteSheet ss = context.spriteSheet();
+                    classicWorldRenderer.drawSpriteScaled(g, ss.source(), ss.livesCounterSprite(), x + TS * (2 * i), y);
+                }
+            }
         }
         // text indicating that more lives are available than displayed
         int excessLives = numLivesDisplayed - maxLives;
@@ -198,31 +213,29 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected void drawBonus(Bonus bonus) {
-        switch (context.game()) {
+        switch (context.game().variant()) {
             case GameVariant.MS_PACMAN -> {
-                var ss = context.<MsPacManGameSpriteSheet>spriteSheet();
+                MsPacManGameSpriteSheet ss = context.spriteSheet();
                 if (bonus instanceof MovingBonus movingBonus) {
                     //TODO reconsider this way of implementing the jumping bonus
                     g.save();
                     g.translate(0, movingBonus.elongationY());
                     if (bonus.state() == Bonus.STATE_EDIBLE) {
-                        drawEntitySprite(bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
+                        classicWorldRenderer.drawEntitySprite(g, ss, bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
                     } else if (bonus.state() == Bonus.STATE_EATEN) {
-                        drawEntitySprite(bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
+                        classicWorldRenderer.drawEntitySprite(g, ss, bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
                     }
                     g.restore();
                 }
             }
             case GameVariant.PACMAN -> {
-                var ss = context.<PacManGameSpriteSheet>spriteSheet();
+                PacManGameSpriteSheet ss = context.spriteSheet();
                 if (bonus.state() == Bonus.STATE_EDIBLE) {
-                    drawEntitySprite(bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
+                    classicWorldRenderer.drawEntitySprite(g, ss, bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
                 } else if (bonus.state() == Bonus.STATE_EATEN) {
-                    drawEntitySprite(bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
+                    classicWorldRenderer.drawEntitySprite(g, ss, bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
                 }
             }
-            default -> throw new IllegalGameVariantException(context.game());
-
         }
     }
 
@@ -232,7 +245,7 @@ public abstract class GameScene2D implements GameScene {
         }
         pac.animations().ifPresent(pa -> {
             if (pa instanceof SpriteAnimations animations) {
-                drawEntitySprite(pac, animations.currentSprite());
+                classicWorldRenderer.drawEntitySprite(g, context.spriteSheet(), pac, animations.currentSprite());
                 if (infoVisiblePy.get()) {
                     g.setFill(Color.WHITE);
                     g.setFont(Font.font("Monospaced", s(6)));
@@ -264,7 +277,7 @@ public abstract class GameScene2D implements GameScene {
         }
         ghost.animations().ifPresent(ga -> {
             if (ga instanceof SpriteAnimations animations) {
-                drawEntitySprite(ghost, animations.currentSprite());
+                classicWorldRenderer.drawEntitySprite(g, context.spriteSheet(), ghost, animations.currentSprite());
                 if (infoVisiblePy.get()) {
                     g.setFill(Color.WHITE);
                     g.setFont(Font.font("Monospaced", s(6)));
@@ -276,79 +289,6 @@ public abstract class GameScene2D implements GameScene {
         });
     }
 
-    /**
-     * Draws the given image scaled into this scene.
-     * @param image image
-     * @param x unscaled x
-     * @param y unscaled y
-     * @param width unscaled width
-     * @param height unscaled height
-     */
-    protected void drawImage(Image image, double x, double y, double width, double height) {
-        g.drawImage(image, s(x), s(y), s(width), s(height));
-    }
-
-    /**
-     * Draws the given image scaled into this scene.
-     * @param image image
-     * @param x unscaled x
-     * @param y unscaled y
-     */
-    protected void drawImage(Image image, double x, double y) {
-        drawImage(image, x, y, image.getWidth(), image.getHeight());
-    }
-
-    /**
-     * Draws a sprite using the current scene scaling.
-     *
-     * @param source sprite sheet source
-     * @param sprite sprite sheet region ("sprite")
-     * @param x      UNSCALED x position
-     * @param y      UNSCALED y position
-     */
-    protected void drawSprite(Image source, Rectangle2D sprite, double x, double y) {
-        if (sprite != null) {
-            g.drawImage(source,
-                sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
-                s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
-        }
-    }
-
-    /**
-     * Draws a sprite centered over a one "square tile" large box (bounding box of creature). The position specifies the
-     * left-upper corner of the bounding box. Note that the sprites for Pac-Man and the ghosts are 16 pixels wide but the
-     * bounding box is only 8 pixels (one square tile) wide.
-     *
-     * @param sprite sprite sheet region (can be null)
-     * @param x      x coordinate of left-upper corner of bounding box
-     * @param y      y coordinate of left-upper corner of bounding box
-     */
-    protected void drawSpriteCenteredOverBox(Rectangle2D sprite, double x, double y) {
-        drawSprite(sprite, x + HTS - 0.5 * sprite.getWidth(), y + HTS - 0.5 * sprite.getHeight());
-    }
-
-    /**
-     * Draws a sprite at the given position (upper left corner).
-     *
-     * @param sprite sprite sheet region ("sprite")
-     * @param x      x coordinate of upper left corner
-     * @param y      y coordinate of upper left corner
-     */
-    protected void drawSprite(Rectangle2D sprite, double x, double y) {
-        drawSprite(context.spriteSheet().source(), sprite, x, y);
-    }
-
-    /**
-     * Draws the sprite over the bounding box of the given entity (if visible).
-     *
-     * @param entity an entity like Pac-Man or a ghost
-     * @param sprite the sprite
-     */
-    protected void drawEntitySprite(Entity entity, Rectangle2D sprite) {
-        if (entity.isVisible()) {
-            drawSpriteCenteredOverBox(sprite, entity.posX(), entity.posY());
-        }
-    }
 
     protected void drawCredit(int credit, double x, double y) {
         drawText(String.format("CREDIT %2d", credit), context.theme().color("palette.pale"), sceneFont(8), x, y);
@@ -360,7 +300,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected void drawMsPacManCopyright(double x, double y) {
         Image logo = context.theme().get("mspacman.logo.midway");
-        drawImage(logo, x, y + 2, TS * 4 - 2, TS * 4);
+        classicWorldRenderer.drawImage(g, logo, x, y + 2, TS * 4 - 2, TS * 4);
         g.setFill(context.theme().color("palette.red"));
         g.setFont(sceneFont(8));
         g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2));
@@ -369,10 +309,10 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected void drawMsPacManClapperBoard(ClapperboardAnimation animation, double x, double y) {
-        var ss = context.<MsPacManGameSpriteSheet>spriteSheet();
+        MsPacManGameSpriteSheet ss = context.spriteSheet();
         var sprite = animation.currentSprite(ss.clapperboardSprites());
         if (sprite != null) {
-            drawSpriteCenteredOverBox(sprite, x, y);
+            classicWorldRenderer.drawSpriteCenteredOverBox(g, ss, sprite, x, y);
             g.setFont(sceneFont(8));
             g.setFill(context.theme().color("palette.pale").darker());
             var numberX = s(x + sprite.getWidth() - 25);
@@ -390,14 +330,14 @@ public abstract class GameScene2D implements GameScene {
         g.fillText(text, s(x), s(y));
     }
 
-    protected void drawTileGrid(int tilesX, int tilesY) {
+    protected void drawTileGrid() {
         g.setStroke(context.theme().color("palette.pale"));
         g.setLineWidth(0.2);
-        for (int row = 0; row <= tilesY; ++row) {
-            g.strokeLine(0, s(TS * (row)), s(tilesX * TS), s(TS * (row)));
+        for (int row = 0; row <= context.game().world().numRows(); ++row) {
+            g.strokeLine(0, s(TS * (row)), s(context.game().world().numCols() * TS), s(TS * (row)));
         }
-        for (int col = 0; col <= tilesY; ++col) {
-            g.strokeLine(s(TS * (col)), 0, s(TS * (col)), s(tilesY * TS));
+        for (int col = 0; col <= context.game().world().numCols(); ++col) {
+            g.strokeLine(s(TS * (col)), 0, s(TS * (col)), s(context.game().world().numRows() * TS));
         }
     }
 }
