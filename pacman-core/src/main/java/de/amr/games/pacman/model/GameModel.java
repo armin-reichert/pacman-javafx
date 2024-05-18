@@ -71,14 +71,6 @@ public interface GameModel {
 
     World createWorld(int mapNumber);
 
-    /**
-     * Map-maze combination used in given level.
-     *
-     * @param levelNumber level number, starting with 1
-     * @return map number for this level
-     */
-    int mapNumber(int levelNumber);
-
     void setUseRandomMaps(boolean value);
 
     /**
@@ -110,6 +102,9 @@ public interface GameModel {
      * @return Current level number (starting at 1, 0 means no level yet)
      */
     int levelNumber();
+
+    //TODO get rid of map numbers, use ID to identify
+    int mapNumber();
 
     Optional<GameLevel> level();
 

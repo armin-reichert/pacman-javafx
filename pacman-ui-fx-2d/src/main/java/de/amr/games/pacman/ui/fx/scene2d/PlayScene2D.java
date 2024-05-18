@@ -92,7 +92,7 @@ public class PlayScene2D extends GameScene2D {
         switch (game) {
             case GameVariant.MS_PACMAN -> drawMsPacManMazeUsingSpriteSheet();
             case GameVariant.PACMAN    -> {
-                if (context.game().mapNumber(context.game().levelNumber()) == 1 && !PY_USE_ALTERNATE_MAPS.get()) {
+                if (context.game().mapNumber() == 1 && !PY_USE_ALTERNATE_MAPS.get()) {
                     drawPacManMazeUsingSpriteSheet();
                 } else {
                     drawPacManMazeUsingMap();
@@ -151,7 +151,6 @@ public class PlayScene2D extends GameScene2D {
         }
     }
 
-
     private void drawPacManMazeUsingMap() {
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         if (flashing) {
@@ -187,19 +186,18 @@ public class PlayScene2D extends GameScene2D {
     private void drawMsPacManMazeUsingSpriteSheet() {
         var game = context.game();
         var world = game.world();
-        int mapNumber = game.mapNumber(game.levelNumber());
         double x = 0, y = t(3);
         MsPacManGameSpriteSheet sheet = context.spriteSheet();
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         if (flashing) {
             if (game.blinking().isOn()) {
-                var emptyMazeBright = sheet.highlightedMaze(mapNumber);
+                var emptyMazeBright = sheet.highlightedMaze(game.mapNumber());
                 drawSprite(sheet.getFlashingMazesImage(), emptyMazeBright, x - 3 /* don't tell your mommy */, y);
             } else {
-                drawSprite(sheet.source(), sheet.emptyMaze(mapNumber), x, y);
+                drawSprite(sheet.source(), sheet.emptyMaze(game.mapNumber()), x, y);
             }
         } else {
-            drawSprite(sheet.filledMaze(mapNumber), x, y);
+            drawSprite(sheet.filledMaze(game.mapNumber()), x, y);
             world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
             if (game.blinking().isOff()) {
                 world.energizerTiles().forEach(tile -> hideTileContent(world, tile));

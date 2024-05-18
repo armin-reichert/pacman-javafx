@@ -87,8 +87,7 @@ public enum GameVariant implements GameModel {
          * </ul>
          * <p>
          */
-        @Override
-        public int mapNumber(int levelNumber) {
+        int mapNumberByLevelNumber(int levelNumber) {
             checkLevelNumber(levelNumber);
             return switch (levelNumber) {
                 case 1, 2 -> 1;
@@ -108,7 +107,7 @@ public enum GameVariant implements GameModel {
         @Override
         void buildRegularLevel(int levelNumber) {
             this.levelNumber = checkLevelNumber(levelNumber);
-            int mapNumber = mapNumber(levelNumber);
+            this.mapNumber = mapNumberByLevelNumber(levelNumber);
             populateLevel(createWorld(mapNumber));
             pac.setName("Ms. Pac-Man");
             pac.setAutopilot(new RuleBasedPacSteering(this));
@@ -119,7 +118,8 @@ public enum GameVariant implements GameModel {
         @Override
         void buildDemoLevel() {
             levelNumber = 1;
-            populateLevel(createWorld(randomInt(1, 7)));
+            mapNumber = randomInt(1, 7);
+            populateLevel(createWorld(mapNumber));
             pac.setName("Ms. Pac-Man");
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(true);
@@ -320,14 +320,6 @@ public enum GameVariant implements GameModel {
         }
 
         @Override
-        public int mapNumber(int levelNumber) {
-            if (levelNumber == 1 || !useRandomMaps) {
-                return 1; // original Arcade map
-            }
-            return randomInt(2, 9); //TODO check this
-        }
-
-        @Override
         long huntingTicks(int levelNumber, int phaseIndex) {
             long ticks = switch (levelNumber) {
                 case 1       -> HUNTING_TICKS_1[phaseIndex];
@@ -340,7 +332,11 @@ public enum GameVariant implements GameModel {
         @Override
         void buildRegularLevel(int levelNumber) {
             this.levelNumber = checkLevelNumber(levelNumber);
-            populateLevel(createWorld(mapNumber(levelNumber)));
+            mapNumber = 1;
+            if (levelNumber > 1 && useRandomMaps) {
+                mapNumber = randomInt(2, 9);
+            }
+            populateLevel(createWorld(mapNumber));
             pac.setName("Pac-Man");
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(false);
@@ -349,7 +345,8 @@ public enum GameVariant implements GameModel {
         @Override
         void buildDemoLevel() {
             levelNumber = 1;
-            populateLevel(createWorld(mapNumber(levelNumber)));
+            mapNumber = 1;
+            populateLevel(createWorld(mapNumber));
             pac.setName("Pac-Man");
             pac.setAutopilot(world.getDemoLevelRoute().isEmpty()
                 ? new RuleBasedPacSteering(this)
@@ -461,6 +458,7 @@ public enum GameVariant implements GameModel {
     boolean              useRandomMaps;
     String               highScoreFileName;
     int                  levelNumber; // 1=first level
+    int                  mapNumber;
     boolean              demoLevel;
     long                 levelStartTime;
     boolean              playing;
@@ -659,6 +657,11 @@ public enum GameVariant implements GameModel {
     @Override
     public int levelNumber() {
         return levelNumber;
+    }
+
+    @Override
+    public int mapNumber() {
+        return mapNumber;
     }
 
     @Override
