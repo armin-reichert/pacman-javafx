@@ -11,8 +11,15 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.rendering2d.*;
+import de.amr.games.pacman.ui.fx.rendering2d.FoodMapRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.rendering2d.TerrainMapRenderer;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
+import javafx.beans.property.DoubleProperty;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -29,8 +36,89 @@ import static java.util.function.Predicate.not;
  */
 public class PlayScene2D extends GameScene2D {
 
-    private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
-    private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
+    static class TileMapWorldRenderer {
+
+        private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
+        private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
+
+        private void draw(GraphicsContext g, World world, boolean flashing, boolean blinkingOn) {
+            if (flashing) {
+                drawTerrain(g, world, blinkingOn);
+            } else {
+                drawTerrain(g, world, false);
+                drawFood(g, world, blinkingOn);
+            }
+        }
+
+        public void drawTerrain(GraphicsContext g, World world, boolean hiLighted) {
+            var terrainMap = world.map().terrain();
+            terrainRenderer.setWallStrokeColor(hiLighted ? Color.WHITE : getColorFromMap(terrainMap, "wall_stroke_color", Color.WHITE));
+            terrainRenderer.setWallFillColor(hiLighted ? Color.BLACK : getColorFromMap(terrainMap, "wall_fill_color", Color. GREEN));
+            terrainRenderer.setDoorColor(hiLighted ? Color.BLACK : getColorFromMap(terrainMap, "door_color", Color.YELLOW));
+            terrainRenderer.drawMap(g, terrainMap);
+        }
+
+        public void drawFood(GraphicsContext g, World world, boolean energizersOn) {
+            var foodColor = getColorFromMap(world.map().food(), "food_color", Color.ORANGE);
+            foodRenderer.setPelletColor(foodColor);
+            foodRenderer.setEnergizerColor(foodColor);
+            world.tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerTile)).forEach(tile -> foodRenderer.drawPellet(g, tile));
+            if (energizersOn) {
+                world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(g, tile));
+            }
+        }
+
+        public void bindScaling(DoubleProperty scalingPy) {
+            terrainRenderer.scalingPy.bind(scalingPy);
+            foodRenderer.scalingPy.bind(scalingPy);
+        }
+    }
+
+    static class PacManWorldSpriteSheetRenderer {
+
+        private PacManGameSpriteSheet spriteSheet;
+
+        public void setSpriteSheet(PacManGameSpriteSheet spriteSheet) {
+            this.spriteSheet = spriteSheet;
+        }
+
+        public void draw(GraphicsContext g, World world, boolean flashing, boolean blinkingOn) {
+            if (flashing) {
+                if (blinkingOn) {
+                    g.drawImage(spriteSheet.getFlashingMazeImage(), 0, t(3));
+                    g.restore();
+                } else {
+                    drawSprite(g, spriteSheet.getEmptyMazeSprite(), 0, t(3));
+                }
+            } else {
+                drawSprite(g, spriteSheet.getFullMazeSprite(), 0, t(3));
+                world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(g, world, tile));
+                if (blinkingOn) {
+                    world.energizerTiles().forEach(tile -> hideTileContent(g, world, tile));
+                }
+            }
+        }
+
+        protected void drawSprite(GraphicsContext g, Rectangle2D sprite, double x, double y) {
+            if (sprite != null) {
+                g.drawImage(spriteSheet.source(),
+                    sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
+                    x, y, sprite.getWidth(), sprite.getHeight());
+            }
+        }
+
+        private void hideTileContent(GraphicsContext g, World world, Vector2i tile) {
+            g.setFill(Color.BLACK);
+            double r = world.isEnergizerTile(tile) ? 4.5 : 2;
+            double cx = t(tile.x()) + HTS;
+            double cy = t(tile.y()) + HTS;
+            g.fillRect(s(cx - r), s(cy - r), s(2 * r), s(2 * r));
+        }
+
+    }
+
+    private final TileMapWorldRenderer worldRenderer = new TileMapWorldRenderer();
+    private final PacManWorldSpriteSheetRenderer pacManWorldSSRenderer = new PacManWorldSpriteSheetRenderer();
 
     @Override
     public boolean isCreditVisible() {
@@ -40,8 +128,8 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void init() {
         setScoreVisible(true);
-        terrainRenderer.scalingPy.bind(scalingPy);
-        foodRenderer.scalingPy.bind(scalingPy);
+        worldRenderer.bindScaling(scalingPy);
+        pacManWorldSSRenderer.setSpriteSheet(context.spriteSheet());
     }
 
     @Override
@@ -89,13 +177,15 @@ public class PlayScene2D extends GameScene2D {
         if (game.level().isEmpty()) {
             return;
         }
+        boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
+        boolean blinkingOn = context.game().blinking().isOn();
         switch (game) {
             case GameVariant.MS_PACMAN -> drawMsPacManMazeUsingSpriteSheet();
-            case GameVariant.PACMAN    -> {
+            case GameVariant.PACMAN -> {
                 if (context.game().mapNumber() == 1 && !PY_USE_ALTERNATE_MAPS.get()) {
-                    drawPacManMazeUsingSpriteSheet();
+                    pacManWorldSSRenderer.draw(g, context.game().world(), flashing, blinkingOn);
                 } else {
-                    drawPacManMazeUsingMap();
+                    worldRenderer.draw(g, context.game().world(), flashing, blinkingOn);
                 }
             }
             default -> throw new IllegalGameVariantException(game);
@@ -131,58 +221,6 @@ public class PlayScene2D extends GameScene2D {
         }
     }
 
-    private void drawPacManMazeUsingSpriteSheet() {
-        boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
-        if (flashing) {
-            PacManGameSpriteSheet sheet = context.spriteSheet();
-            if (context.game().blinking().isOn()) {
-                drawImage(sheet.getFlashingMazeImage(), 0, t(3));
-            } else {
-                drawSprite(sheet.getEmptyMazeSprite(), 0, t(3));
-            }
-        } else {
-            var world = context.game().world();
-            PacManGameSpriteSheet pss = context.spriteSheet();
-            drawSprite(pss.getFullMazeSprite(), 0, t(3));
-            world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
-            if (context.game().blinking().isOff()) {
-                world.energizerTiles().forEach(tile -> hideTileContent(world, tile));
-            }
-        }
-    }
-
-    private void drawPacManMazeUsingMap() {
-        boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
-        if (flashing) {
-            var terrainMap = context.game().world().map().terrain();
-            boolean hiLighted = context.game().blinking().isOn();
-            terrainRenderer.setWallStrokeColor(hiLighted ? Color.WHITE : getColorFromMap(terrainMap, "wall_stroke_color", Color.WHITE));
-            terrainRenderer.setWallFillColor(hiLighted ? Color.BLACK : getColorFromMap(terrainMap, "wall_fill_color", Color. GREEN));
-            terrainRenderer.setDoorColor(Color.BLACK);
-            terrainRenderer.drawMap(g, terrainMap);
-        } else {
-            drawMazeUsingMap();
-        }
-    }
-
-    private void drawMazeUsingMap() {
-        var game = context.game();
-        var world = game.world();
-        var terrainMap = world.map().terrain();
-        terrainRenderer.setWallStrokeColor(getColorFromMap(terrainMap, "wall_stroke_color", Color.WHITE));
-        terrainRenderer.setWallFillColor(getColorFromMap(terrainMap, "wall_fill_color", Color.GREEN));
-        terrainRenderer.setDoorColor(getColorFromMap(terrainMap, "door_color", Color.YELLOW));
-        terrainRenderer.drawMap(g, terrainMap);
-
-        var foodColor = getColorFromMap(world.map().food(), "food_color", Color.ORANGE);
-        foodRenderer.setPelletColor(foodColor);
-        foodRenderer.setEnergizerColor(foodColor);
-        world.tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerTile)).forEach(tile -> foodRenderer.drawPellet(g, tile));
-        if (game.blinking().isOn()) {
-            world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(g, tile));
-        }
-    }
-
     private void drawMsPacManMazeUsingSpriteSheet() {
         var game = context.game();
         var world = game.world();
@@ -205,13 +243,6 @@ public class PlayScene2D extends GameScene2D {
         }
     }
 
-    private void hideTileContent(World world, Vector2i tile) {
-        g.setFill(context.theme().color("canvas.background"));
-        double r = world.isEnergizerTile(tile) ? 4.5 : 2;
-        double cx = t(tile.x()) + HTS;
-        double cy = t(tile.y()) + HTS;
-        g.fillRect(s(cx - r), s(cy - r), s(2 * r), s(2 * r));
-    }
 
     @Override
     protected void drawSceneInfo() {
