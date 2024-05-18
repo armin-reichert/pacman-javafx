@@ -256,7 +256,7 @@ public class GameLevel3D extends Group {
 
     private void addMazeWalls(Group parent) {
         TileMap terrainMap = context.game().world().map().terrain();
-        var explored = new HashSet<Vector2i>();
+        var explored = new BitSet();
 
         // Obstacles inside maze
         terrainMap.tiles()
@@ -281,12 +281,12 @@ public class GameLevel3D extends Group {
         }
 
         handlesLeft.stream()
-            .filter(handle -> !explored.contains(handle))
+            .filter(handle -> !explored.get(terrainMap.index(handle)))
             .map(handle -> TileMapPath.buildPath(terrainMap, explored, handle, RIGHT))
             .forEach(path -> buildWallsAlongPath(parent, path));
 
         handlesRight.stream()
-            .filter(handle -> !explored.contains(handle))
+            .filter(handle -> !explored.get(terrainMap.index(handle)))
             .map(handle -> TileMapPath.buildPath(terrainMap, explored, handle, LEFT))
             .forEach(path -> buildWallsAlongPath(parent, path));
     }

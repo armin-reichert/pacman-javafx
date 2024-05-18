@@ -4,8 +4,8 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
-import java.util.Set;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -23,7 +23,7 @@ public class TileMapPath {
         directions.add(checkNotNull(dir));
     }
 
-    public static TileMapPath buildPath(TileMap map, Set<Vector2i> explored, Vector2i startTile, Direction startDir) {
+    public static TileMapPath buildPath(TileMap map, BitSet explored, Vector2i startTile, Direction startDir) {
         checkNotNull(map);
         checkNotNull(explored);
         checkNotNull(startTile);
@@ -33,7 +33,7 @@ public class TileMapPath {
         }
 
         var path = new TileMapPath(startTile);
-        explored.add(startTile);
+        explored.set(map.index(startTile));
         var tile = startTile;
         var dir = startDir;
         while (true) {
@@ -42,12 +42,12 @@ public class TileMapPath {
             if (map.outOfBounds(tile)) {
                 break;
             }
-            if (explored.contains(tile)) {
+            if (explored.get(map.index(tile))) {
                 path.add(dir);
                 break;
             }
             path.add(dir);
-            explored.add(tile);
+            explored.set(map.index(tile));
         }
         return path;
     }

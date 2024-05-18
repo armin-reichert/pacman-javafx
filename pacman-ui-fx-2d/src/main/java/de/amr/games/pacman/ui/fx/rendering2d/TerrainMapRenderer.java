@@ -14,11 +14,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
-import static de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer.*;
+import static de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer.getTileMapColor;
 
 /**
  * @author Armin Reichert
@@ -66,9 +66,9 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     public void drawSingleStrokePaths(GraphicsContext g, TileMap map) {
-        var explored = new HashSet<Vector2i>();
+        var explored = new BitSet();
         map.tiles()
-            .filter(tile -> !explored.contains(tile))
+            .filter(tile -> !explored.get(map.index(tile)))
             .filter(tile -> map.get(tile) == Tiles.CORNER_NW)
             .map(corner -> TileMapPath.buildPath(map, explored, corner, LEFT))
             .forEach(path -> drawPath(g, map, path, true, 1, wallStrokeColor, wallFillColor));
@@ -83,7 +83,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     public void drawTripleStrokePaths(GraphicsContext g, TileMap map) {
-        var explored = new HashSet<Vector2i>();
+        var explored = new BitSet();
 
         // Paths starting at left and right maze border (over and under tunnel ends)
         var handlesLeft = new ArrayList<Vector2i>();
@@ -100,18 +100,18 @@ public class TerrainMapRenderer implements TileMapRenderer {
         }
 
         handlesLeft.stream()
-            .filter(handle -> !explored.contains(handle))
+            .filter(handle -> !explored.get(map.index(handle)))
             .map(handle -> TileMapPath.buildPath(map, explored, handle, RIGHT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
 
         handlesRight.stream()
-            .filter(handle -> !explored.contains(handle))
+            .filter(handle -> !explored.get(map.index(handle)))
             .map(handle -> TileMapPath.buildPath(map, explored, handle, LEFT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
 
         // ghost house
         map.tiles()
-            .filter(tile -> !explored.contains(tile))
+            .filter(tile -> !explored.get(map.index(tile)))
             .filter(tile -> map.get(tile) == Tiles.DCORNER_NW)
             .map(corner -> TileMapPath.buildPath(map, explored, corner, LEFT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
