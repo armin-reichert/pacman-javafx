@@ -21,6 +21,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.ENTERING_HOUSE;
 import static de.amr.games.pacman.model.actors.GhostState.RETURNING_HOME;
 import static de.amr.games.pacman.ui.fx.PacManGames2dUI.*;
+import static de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer.getColorFromMap;
 import static java.util.function.Predicate.not;
 
 /**
@@ -28,8 +29,8 @@ import static java.util.function.Predicate.not;
  */
 public class PlayScene2D extends GameScene2D {
 
-    private final TerrainMapRenderer terrainMapRenderer = new TerrainMapRenderer();
-    private final FoodMapRenderer foodMapRenderer = new FoodMapRenderer();
+    private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
+    private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
 
     @Override
     public boolean isCreditVisible() {
@@ -39,6 +40,8 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void init() {
         setScoreVisible(true);
+        terrainRenderer.scalingPy.bind(scalingPy);
+        foodRenderer.scalingPy.bind(scalingPy);
     }
 
     @Override
@@ -153,13 +156,11 @@ public class PlayScene2D extends GameScene2D {
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         if (flashing) {
             var terrainMap = context.game().world().map().terrain();
-            terrainMapRenderer.setScaling(scalingPy.get());
-            terrainMapRenderer.setWallStrokeColor(context.game().blinking().isOn() ?
-                Color.WHITE : TileMapRenderer.getColor(terrainMap, "wall_stroke_color", Color.RED));
-            terrainMapRenderer.setWallFillColor(context.game().blinking().isOn() ?
-                Color.BLACK : TileMapRenderer.getColor(terrainMap, "wall_fill_color", Color. PINK));
-            terrainMapRenderer.setDoorColor(TileMapRenderer.getColor(terrainMap, "door_color", Color.PINK));
-            terrainMapRenderer.drawMap(g, terrainMap);
+            boolean hiLighted = context.game().blinking().isOn();
+            terrainRenderer.setWallStrokeColor(hiLighted ? Color.WHITE : getColorFromMap(terrainMap, "wall_stroke_color", Color.WHITE));
+            terrainRenderer.setWallFillColor(hiLighted ? Color.BLACK : getColorFromMap(terrainMap, "wall_fill_color", Color. GREEN));
+            terrainRenderer.setDoorColor(Color.BLACK);
+            terrainRenderer.drawMap(g, terrainMap);
         } else {
             drawMazeUsingMap();
         }
@@ -169,17 +170,17 @@ public class PlayScene2D extends GameScene2D {
         var game = context.game();
         var world = game.world();
         var terrainMap = world.map().terrain();
-        terrainMapRenderer.setScaling(getScaling());
-        terrainMapRenderer.setWallStrokeColor(Color.web(terrainMap.getProperty("wall_stroke_color")));
-        terrainMapRenderer.setWallFillColor(Color.web(terrainMap.getProperty("wall_fill_color")));
-        terrainMapRenderer.drawMap(g, terrainMap);
-        var foodColor = Color.web(world.map().food().getProperty("food_color"));
-        foodMapRenderer.setScaling(getScaling());
-        foodMapRenderer.setPelletColor(foodColor);
-        foodMapRenderer.setEnergizerColor(foodColor);
-        world.tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerTile)).forEach(tile -> foodMapRenderer.drawPellet(g, tile));
+        terrainRenderer.setWallStrokeColor(getColorFromMap(terrainMap, "wall_stroke_color", Color.WHITE));
+        terrainRenderer.setWallFillColor(getColorFromMap(terrainMap, "wall_fill_color", Color.GREEN));
+        terrainRenderer.setDoorColor(getColorFromMap(terrainMap, "door_color", Color.YELLOW));
+        terrainRenderer.drawMap(g, terrainMap);
+
+        var foodColor = getColorFromMap(world.map().food(), "food_color", Color.ORANGE);
+        foodRenderer.setPelletColor(foodColor);
+        foodRenderer.setEnergizerColor(foodColor);
+        world.tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerTile)).forEach(tile -> foodRenderer.drawPellet(g, tile));
         if (game.blinking().isOn()) {
-            world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodMapRenderer.drawEnergizer(g, tile));
+            world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(g, tile));
         }
     }
 

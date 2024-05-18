@@ -3,15 +3,21 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.Tiles;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class FoodMapRenderer implements TileMapRenderer {
 
-    private float scaling;
+    public FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1f);
 
     public void setScaling(double scaling) {
-        this.scaling = (float) scaling;
+        scalingPy.set((float) scaling);
+    }
+
+    public float scaling() {
+        return scalingPy.get();
     }
 
     private Color pelletColor = Color.PINK;
@@ -40,7 +46,7 @@ public class FoodMapRenderer implements TileMapRenderer {
 
     public void drawPellet(GraphicsContext g, Vector2i tile) {
         g.save();
-        g.scale(scaling, scaling);
+        g.scale(scaling(), scaling());
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(pelletColor);
         g.fillRect(x + 3, y + 3, 2, 2);
@@ -49,7 +55,7 @@ public class FoodMapRenderer implements TileMapRenderer {
 
     public void drawEnergizer(GraphicsContext g, Vector2i tile) {
         g.save();
-        g.scale(scaling, scaling);
+        g.scale(scaling(), scaling());
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(energizerColor);
         g.fillRect(x + 2, y, 0.5 * TILE_SIZE, TILE_SIZE);

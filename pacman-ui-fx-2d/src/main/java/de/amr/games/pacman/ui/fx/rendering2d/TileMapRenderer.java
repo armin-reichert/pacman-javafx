@@ -17,7 +17,7 @@ public interface TileMapRenderer {
 
     int TILE_SIZE = 8;
 
-    static Color getColor(TileMap map, String key, Color defaultColor) {
+    static Color getColorFromMap(TileMap map, String key, Color defaultColor) {
         if (map.hasProperty(key)) {
             String colorSpec = map.getProperty(key);
             try {

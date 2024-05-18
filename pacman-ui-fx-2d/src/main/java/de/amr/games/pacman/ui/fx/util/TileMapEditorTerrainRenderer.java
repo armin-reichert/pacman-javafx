@@ -24,7 +24,7 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
         if (runtimePreview) {
             drawTripleStrokePaths(g, map);
             drawSingleStrokePaths(g, map);
-            Color doorColor = TileMapRenderer.getColor(map, "door_color", Color.PINK);
+            Color doorColor = TileMapRenderer.getColorFromMap(map, "door_color", Color.PINK);
             map.tiles(Tiles.DOOR).forEach(tile -> drawDoor(g, tile, doorColor));
         } else {
           map.tiles().forEach(tile -> drawTile(g, tile, map.get(tile)));
@@ -50,7 +50,7 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
 
     public void drawTunnel(GraphicsContext g, Vector2i tile) {
         g.save();
-        g.scale(scaling, scaling);
+        g.scale(scaling(), scaling());
         g.setFill(Color.GRAY);
         g.fillRect(tile.x() * 8, tile.y() * 8, 8, 8);
         g.restore();
@@ -58,7 +58,7 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
 
     public void drawWallH(GraphicsContext g, Vector2i tile) {
         g.save();
-        g.scale(scaling, scaling);
+        g.scale(scaling(), scaling());
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(wallStrokeColor);
         g.fillRect(x, y + 3.5f, 8, 1);
@@ -67,7 +67,7 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
 
     public void drawDWallH(GraphicsContext g, Vector2i tile) {
         g.save();
-        g.scale(scaling, scaling);
+        g.scale(scaling(), scaling());
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(wallStrokeColor);
         // add 1 pixel to avoid gaps
@@ -78,7 +78,7 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
 
     public void drawWallV(GraphicsContext g, Vector2i tile) {
         g.save();
-        g.scale(scaling, scaling);
+        g.scale(scaling(), scaling());
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(wallStrokeColor);
         // add 1 pixel to avoid gaps
@@ -88,7 +88,7 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
 
     public void drawDWallV(GraphicsContext g, Vector2i tile) {
         g.save();
-        g.scale(scaling, scaling);
+        g.scale(scaling(), scaling());
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(wallStrokeColor);
         g.fillRect(x + 2.5f, y, 1, 8);
@@ -98,7 +98,7 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
 
     public void drawCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
         g.save();
-        g.scale(scaling, scaling);
+        g.scale(scaling(), scaling());
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setStroke(wallStrokeColor);
         g.setLineWidth(1);
@@ -114,7 +114,7 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
 
     public void drawDCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
         g.save();
-        g.scale(scaling, scaling);
+        g.scale(scaling(), scaling());
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setStroke(wallStrokeColor);
         g.setLineWidth(1);

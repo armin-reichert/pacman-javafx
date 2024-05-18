@@ -10,6 +10,8 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.TileMapPath;
 import de.amr.games.pacman.model.world.Tiles;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -24,14 +26,18 @@ import static de.amr.games.pacman.lib.Direction.RIGHT;
  */
 public class TerrainMapRenderer implements TileMapRenderer {
 
-    protected float scaling;
+    public FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1f);
 
     protected Color wallFillColor = Color.BLACK;
     protected Color wallStrokeColor = Color.GREEN;
     protected Color doorColor = Color.PINK;
 
     public void setScaling(double scaling) {
-        this.scaling = (float) scaling;
+        scalingPy.set((float) scaling);
+    }
+
+    public float scaling() {
+        return scalingPy.get();
     }
 
     public void setWallStrokeColor(Color color) {
@@ -61,7 +67,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
     public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.save();
-        g.scale(scaling, scaling);
+        g.scale(scaling(), scaling());
         g.setFill(Color.BLACK);
         g.fillRect(x, y, TILE_SIZE, 6);
         g.setFill(color);
@@ -129,7 +135,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         boolean fill, double lineWidth, Color outlineColor, Color fillColor) {
 
         g.save();
-        g.scale(scaling, scaling);
+        g.scale(scaling(), scaling());
 
         double r = 4;
         g.beginPath();
