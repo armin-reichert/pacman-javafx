@@ -55,13 +55,11 @@ public class TerrainMapRenderer implements TileMapRenderer {
     public void drawMap(GraphicsContext g, TileMap map) {
         drawTripleStrokePaths(g, map);
         drawSingleStrokePaths(g, map);
-        map.tiles(Tiles.DOOR).forEach(tile -> drawDoor(g, tile, doorColor));
+        map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, door, doorColor));
     }
 
+    @Override
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
-        if (content == Tiles.DOOR) {
-            drawDoor(g, tile, doorColor);
-        }
     }
 
     public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
@@ -71,7 +69,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.setFill(Color.BLACK);
         g.fillRect(x, y, TILE_SIZE, 6);
         g.setFill(color);
-        g.fillRect(x-1, y+3, TILE_SIZE+2, 2);
+        g.fillRect(x, y + 3, TILE_SIZE, 2);
         g.restore();
     }
 
@@ -80,15 +78,15 @@ public class TerrainMapRenderer implements TileMapRenderer {
         map.tiles(Tiles.CORNER_NW)
             .filter(corner -> !explored.get(map.index(corner)))
             .map(corner -> TileMapPath.build(map, explored, corner, LEFT))
-            .forEach(path -> drawPath(g, map, path, true, 1, wallStrokeColor, wallFillColor));
+            .forEach(path -> drawPath(g, map, path, true, 0.5, wallStrokeColor, wallFillColor));
     }
 
     /*
      * Draws a path with an inside stroke of wall fill color and two outside strokes of wall stroke color.
      */
     public void drawTripleStrokePath(GraphicsContext g, TileMap map, TileMapPath path) {
-        drawPath(g, map, path, false,  3, wallStrokeColor, null);
-        drawPath(g, map, path, false,  1, wallFillColor, null);
+        drawPath(g, map, path, false,  3,   wallStrokeColor, null);
+        drawPath(g, map, path, false,  2, wallFillColor, null);
     }
 
     public void drawTripleStrokePaths(GraphicsContext g, TileMap map) {
@@ -119,7 +117,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
             .forEach(path -> drawTripleStrokePath(g, map, path));
 
         // ghost house
-        map.tiles(Tiles.DCORNER_NW)
+        map.tiles(Tiles.DOOR)
             .filter(corner -> !explored.get(map.index(corner)))
             .map(corner -> TileMapPath.build(map, explored, corner, LEFT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
@@ -129,15 +127,12 @@ public class TerrainMapRenderer implements TileMapRenderer {
         return new Vector2f(tile.x() * TILE_SIZE + TILE_SIZE / 2f, tile.y() * TILE_SIZE + TILE_SIZE / 2f);
     }
 
-    public void drawPath(
-        GraphicsContext g,
-        TileMap map, TileMapPath tileMapPath,
+    public void drawPath(GraphicsContext g, TileMap map, TileMapPath tileMapPath,
         boolean fill, double lineWidth, Color outlineColor, Color fillColor) {
 
+        double r = 0.45 * TILE_SIZE;
         g.save();
         g.scale(scaling(), scaling());
-
-        double r = 4;
         g.beginPath();
 
         //TODO: avoid these special cases
@@ -151,35 +146,37 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
         Vector2f c = center(tile);
         switch (map.get(tile)) {
-            case Tiles.WALL_H, Tiles.DWALL_H       -> g.lineTo(c.x()+r, c.y());
-            case Tiles.WALL_V, Tiles.DWALL_V       -> g.lineTo(c.x(), c.y()+r);
-            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> g.arc(c.x()+r, c.y()+r, r, r,  90, 90);
-            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> g.arc(c.x()+r, c.y()-r, r, r, 180, 90);
-            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(c.x()-r, c.y()+r, r, r, tile.x() != 0 ? 0:90, tile.x() != 0? 90:-90);
-            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(c.x()-r, c.y()-r, r, r, 270, 90);
+            case Tiles.WALL_H, Tiles.DWALL_H       -> g.lineTo(c.x() + r, c.y());
+            case Tiles.WALL_V, Tiles.DWALL_V       -> g.lineTo(c.x(), c.y() + r);
+            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> g.arc(c.x() + r, c.y() + r, r, r,  90, 90);
+            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> g.arc(c.x() + r, c.y() - r, r, r, 180, 90);
+            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(c.x() - r, c.y() + r, r, r, tile.x() != 0 ? 0:90, tile.x() != 0? 90:-90);
+            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(c.x() - r, c.y() - r, r, r, 270, 90);
             default -> {}
         }
         for (Direction dir : tileMapPath.directions) {
             Vector2i prev = tile;
             tile = tile.plus(dir.vector());
             c = center(tile);
-            boolean left = prev.x() > tile.x();
+            boolean left  = prev.x() > tile.x();
             boolean right = prev.x() < tile.x();
-            boolean up = prev.y() > tile.y();
-            boolean down = prev.y() < tile.y();
+            boolean up    = prev.y() > tile.y();
+            boolean down  = prev.y() < tile.y();
             switch (map.get(tile)) {
-                case Tiles.WALL_H, Tiles.DWALL_H       -> g.lineTo(c.x() + r, c.y());
-                case Tiles.WALL_V, Tiles.DWALL_V       -> g.lineTo(c.x(), c.y() + r);
-                case Tiles.CORNER_NW, Tiles.DCORNER_NW -> g.arc(c.x() + r, c.y() + r, r, r, left?  90:180,  left?  90:-90);
+                case Tiles.WALL_H,    Tiles.DWALL_H    -> g.lineTo(c.x() + r, c.y());
+                case Tiles.WALL_V,    Tiles.DWALL_V    -> g.lineTo(c.x(), c.y() + r);
+                case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(c.x() - r, c.y() + r, r, r, up?      0: 90, up?    90:-90);
+                case Tiles.CORNER_NW, Tiles.DCORNER_NW -> g.arc(c.x() + r, c.y() + r, r, r, left?   90:180, left?  90:-90);
                 case Tiles.CORNER_SW, Tiles.DCORNER_SW -> g.arc(c.x() + r, c.y() - r, r, r, down?  180:270, down?  90:-90);
-                case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(c.x() - r, c.y() + r, r, r, up?    0:90,    up?    90:-90);
-                case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(c.x() - r, c.y() - r, r, r, right? 270:0,   right? 90:-90);
+                case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(c.x() - r, c.y() - r, r, r, right? 270:  0, right? 90:-90);
                 default -> {}
             }
         }
-
         if (tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
-            g.lineTo(0, center(tile).y());
+            g.lineTo(0, c.y());
+        }
+        if (map.get(tile) == Tiles.DOOR) {
+            g.lineTo(tile.x() * TILE_SIZE, c.y());
         }
 
         if (fill) {
