@@ -44,7 +44,7 @@ public class MsPacManIntroScene extends GameScene2D {
             ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, ss));
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
         }
-        intro.changeState(MsPacManIntro.State.START);
+        intro.changeState(State.START);
     }
 
     @Override
@@ -76,7 +76,13 @@ public class MsPacManIntroScene extends GameScene2D {
         drawText("\"MS PAC-MAN\"", context.theme().color("palette.orange"), font8, tx, ty);
         if (intro.state() == State.GHOSTS_MARCHING_IN) {
             var ghost = intro.ghosts[intro.ghostIndex];
-            var color = theme.color(String.format("ghost.%d.color", ghost.id()));
+            var color = switch (ghost.id()) {
+                case GameModel.RED_GHOST -> theme.color("palette.red");
+                case GameModel.PINK_GHOST -> theme.color("palette.pink");
+                case GameModel.CYAN_GHOST -> theme.color("palette.cyan");
+                case GameModel.ORANGE_GHOST -> theme.color("palette.orange");
+                default -> throw new IllegalStateException("Unexpected value: " + ghost.id());
+            };
             if (ghost.id() == GameModel.RED_GHOST) {
                 drawText("WITH", context.theme().color("palette.pale"), font8, tx, y0 + t(3));
             }
