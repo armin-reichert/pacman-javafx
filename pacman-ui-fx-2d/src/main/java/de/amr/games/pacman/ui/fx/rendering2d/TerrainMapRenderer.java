@@ -45,7 +45,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         drawTripleStrokePaths(g, map);
         drawSingleStrokePaths(g, map);
         Color doorColor = getTileMapColor(map, "door_color", Color.PINK);
-        map.tiles().filter(tile -> map.get(tile) == Tiles.DOOR).forEach(tile -> drawDoor(g, tile, doorColor));
+        map.tiles(Tiles.DOOR).forEach(tile -> drawDoor(g, tile, doorColor));
     }
 
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
@@ -67,10 +67,9 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     public void drawSingleStrokePaths(GraphicsContext g, TileMap map) {
         var explored = new BitSet();
-        map.tiles()
-            .filter(tile -> !explored.get(map.index(tile)))
-            .filter(tile -> map.get(tile) == Tiles.CORNER_NW)
-            .map(corner -> TileMapPath.buildPath(map, explored, corner, LEFT))
+        map.tiles(Tiles.CORNER_NW)
+            .filter(corner -> !explored.get(map.index(corner)))
+            .map(corner -> TileMapPath.build(map, explored, corner, LEFT))
             .forEach(path -> drawPath(g, map, path, true, 1, wallStrokeColor, wallFillColor));
     }
 
@@ -101,24 +100,23 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
         handlesLeft.stream()
             .filter(handle -> !explored.get(map.index(handle)))
-            .map(handle -> TileMapPath.buildPath(map, explored, handle, RIGHT))
+            .map(handle -> TileMapPath.build(map, explored, handle, RIGHT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
 
         handlesRight.stream()
             .filter(handle -> !explored.get(map.index(handle)))
-            .map(handle -> TileMapPath.buildPath(map, explored, handle, LEFT))
+            .map(handle -> TileMapPath.build(map, explored, handle, LEFT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
 
         // ghost house
-        map.tiles()
-            .filter(tile -> !explored.get(map.index(tile)))
-            .filter(tile -> map.get(tile) == Tiles.DCORNER_NW)
-            .map(corner -> TileMapPath.buildPath(map, explored, corner, LEFT))
+        map.tiles(Tiles.DCORNER_NW)
+            .filter(corner -> !explored.get(map.index(corner)))
+            .map(corner -> TileMapPath.build(map, explored, corner, LEFT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
     }
 
     public Vector2f center(Vector2i tile) {
-        return new Vector2f(tile.x() * TILE_SIZE + 4, tile.y() * TILE_SIZE + 4);
+        return new Vector2f(tile.x() * TILE_SIZE + TILE_SIZE / 2f, tile.y() * TILE_SIZE + TILE_SIZE / 2f);
     }
 
     public void drawPath(

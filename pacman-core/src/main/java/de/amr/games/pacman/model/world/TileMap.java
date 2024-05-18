@@ -108,7 +108,7 @@ public class TileMap {
     }
 
     /**
-     * @return stream of all tiles of this map row-by-row
+     * @return stream of all tiles of this map (row-by-row)
      */
     public Stream<Vector2i> tiles() {
         return IntStream.range(0, numCols() * numRows()).mapToObj(this::tile);
@@ -120,6 +120,13 @@ public class TileMap {
      */
     public Vector2i tile(int index) {
         return v2i(index % numCols(), index / numCols());
+    }
+
+    /**
+     * @return stream of all tiles of this map with given content (row-by-row)
+     */
+    public Stream<Vector2i> tiles(byte content) {
+        return tiles().filter(tile -> get(tile) == content);
     }
 
     /**

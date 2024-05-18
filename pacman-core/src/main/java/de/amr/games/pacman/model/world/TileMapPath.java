@@ -23,7 +23,7 @@ public class TileMapPath {
         directions.add(checkNotNull(dir));
     }
 
-    public static TileMapPath buildPath(TileMap map, BitSet explored, Vector2i startTile, Direction startDir) {
+    public static TileMapPath build(TileMap map, BitSet explored, Vector2i startTile, Direction startDir) {
         checkNotNull(map);
         checkNotNull(explored);
         checkNotNull(startTile);
