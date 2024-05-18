@@ -452,12 +452,13 @@ public class PlayScene3D implements GameScene {
                     context.playAudioClip("audio.level_complete");
                 }
             }),
+            pauseSeconds(1),
             level3D.createLevelRotateAnimation(),
-            doAfterSeconds(0.5, () -> {
+            doAfterSeconds(1.5, () -> {
                 context.playAudioClip("audio.sweep");
                 context.actionHandler().showFlashMessageSeconds(2, pickLevelCompleteMessage());
             }),
-            doAfterSeconds(1, () -> PY_3D_PERSPECTIVE.set(selectedPerspective))
+            doAfterSeconds(2, () -> PY_3D_PERSPECTIVE.set(selectedPerspective))
         );
     }
 
