@@ -6,6 +6,8 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGamePacAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
@@ -130,6 +132,10 @@ public class PacManIntroScene extends GameScene2D {
         }
     }
 
+    private void drawGhost(Ghost ghost) {
+        classicRenderer.drawGhost(g, GameVariant.PACMAN, ghost);
+    }
+
     private void drawGuys(int shakingAmount) {
         if (shakingAmount == 0) {
             intro.ghosts().forEach(this::drawGhost);
@@ -143,7 +149,7 @@ public class PacManIntroScene extends GameScene2D {
             drawGhost(intro.ghost(2));
             g.restore();
         }
-        drawPac(intro.pacMan);
+        classicRenderer.drawPac(g, GameVariant.PACMAN, intro.pacMan);
     }
 
     private void drawPoints() {

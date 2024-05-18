@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.controller.MsPacManIntro;
 import de.amr.games.pacman.controller.MsPacManIntro.State;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
@@ -94,9 +95,9 @@ public class MsPacManIntroScene extends GameScene2D {
             classicRenderer.drawText(g, "MS PAC-MAN", context.theme().color("palette.yellow"), font8, tx, y0 + t(6));
         }
         for (var ghost : intro.ghosts) {
-            drawGhost(ghost);
+            classicRenderer.drawGhost(g, GameVariant.MS_PACMAN, ghost);
         }
-        drawPac(intro.msPacMan);
+        classicRenderer.drawPac(g, GameVariant.MS_PACMAN, intro.msPacMan);
         drawMsPacManCopyright(t(6), t(28));
         drawLevelCounter();
     }

@@ -7,10 +7,9 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.actors.Bonus;
-import de.amr.games.pacman.model.actors.Entity;
-import de.amr.games.pacman.model.actors.MovingBonus;
+import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui.fx.util.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -124,6 +123,72 @@ public class ClassicWorldRenderer {
         }
     }
 
+    public void drawPac(GraphicsContext g, GameVariant variant, Pac pac) {
+        if (!pac.isVisible()) {
+            return;
+        }
+        pac.animations().ifPresent(pa -> {
+            if (pa instanceof SpriteAnimations animations) {
+                switch (variant) {
+                    case MS_PACMAN -> drawEntitySprite(g, ssMsPacMan, pac, animations.currentSprite());
+                    case    PACMAN -> drawEntitySprite(g, ssPacMan, pac, animations.currentSprite());
+                }
+            }
+        });
+    }
+
+    public void drawPacInfo(GraphicsContext g, GameVariant variant, Pac pac) {
+        g.setFill(Color.WHITE);
+        g.setFont(Font.font("Monospaced", s(6)));
+        pac.animations().ifPresent(animations -> {
+            //TODO this crashes, why?
+//            if (animations instanceof SpriteAnimations sa) {
+//                var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
+//                g.fillText(text, s(pac.posX() - 4), s(pac.posY() - 4));
+//            }
+        });
+        drawWishDir(g, pac);
+    }
+
+    public void drawGhost(GraphicsContext g, GameVariant variant, Ghost ghost) {
+        if (!ghost.isVisible()) {
+            return;
+        }
+        ghost.animations().ifPresent(ga -> {
+            if (ga instanceof SpriteAnimations animations) {
+                switch (variant) {
+                    case MS_PACMAN -> drawEntitySprite(g, ssMsPacMan, ghost, animations.currentSprite());
+                    case    PACMAN -> drawEntitySprite(g, ssPacMan, ghost, animations.currentSprite());
+                }
+            }
+        });
+    }
+
+    public void drawGhostInfo(GraphicsContext g, Ghost ghost) {
+        g.setFill(Color.WHITE);
+        g.setFont(Font.font("Monospaced", s(6)));
+        ghost.animations().ifPresent(animations -> {
+            //TODO check why this crashes
+//            if (animations instanceof SpriteAnimations sa) {
+//                var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
+//                g.fillText(text, s(ghost.posX() - 4), s(ghost.posY() - 4));
+//            }
+        });
+        drawWishDir(g, ghost);
+    }
+
+    private void drawWishDir(GraphicsContext g, Creature guy) {
+        if (guy.wishDir() != null) {
+            float r = 2;
+            var pacCenter = guy.center();
+            var indicatorCenter = guy.center().plus(guy.wishDir().vector().toFloatVec().scaled(1.5f * TS));
+            var indicatorTopLeft = indicatorCenter.minus(r, r);
+            g.setStroke(Color.WHITE);
+            g.strokeLine(s(pacCenter.x()), s(pacCenter.y()), s(indicatorCenter.x()), s(indicatorCenter.y()));
+            g.setFill(guy.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
+            g.fillOval(s(indicatorTopLeft.x()), s(indicatorTopLeft.y()), s(2 * r), s(2 * r));
+        }
+    }
 
     public void drawBonus(GraphicsContext g, GameVariant variant, Bonus bonus) {
         switch (variant) {

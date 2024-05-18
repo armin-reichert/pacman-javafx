@@ -6,11 +6,9 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.rendering2d.*;
-import de.amr.games.pacman.ui.fx.util.SpriteAnimations;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -177,55 +175,6 @@ public abstract class GameScene2D implements GameScene {
             }
         }
     }
-    protected void drawPac(Pac pac) {
-        if (!pac.isVisible()) {
-            return;
-        }
-        pac.animations().ifPresent(pa -> {
-            if (pa instanceof SpriteAnimations animations) {
-                classicRenderer.drawEntitySprite(g, context.spriteSheet(), pac, animations.currentSprite());
-                if (infoVisiblePy.get()) {
-                    g.setFill(Color.WHITE);
-                    g.setFont(Font.font("Monospaced", s(6)));
-                    var text = animations.currentAnimationName() + " " + animations.currentAnimation().frameIndex();
-                    g.fillText(text, s(pac.posX() - 4), s(pac.posY() - 4));
-                    drawWishDir(pac);
-                }
-            }
-        });
-    }
-
-    private void drawWishDir(Creature guy) {
-        if (guy.wishDir() != null) {
-            float r = 2;
-            var pacCenter = guy.center();
-            var indicatorCenter = guy.center().plus(guy.wishDir().vector().toFloatVec().scaled(1.5f * TS));
-            var indicatorTopLeft = indicatorCenter.minus(r, r);
-            g.setStroke(Color.WHITE);
-            g.strokeLine(s(pacCenter.x()), s(pacCenter.y()), s(indicatorCenter.x()), s(indicatorCenter.y()));
-            g.setFill(guy.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
-            g.fillOval(s(indicatorTopLeft.x()), s(indicatorTopLeft.y()), s(2 * r), s(2 * r));
-        }
-
-    }
-
-    protected void drawGhost(Ghost ghost) {
-        if (!ghost.isVisible()) {
-            return;
-        }
-        ghost.animations().ifPresent(ga -> {
-            if (ga instanceof SpriteAnimations animations) {
-                classicRenderer.drawEntitySprite(g, context.spriteSheet(), ghost, animations.currentSprite());
-                if (infoVisiblePy.get()) {
-                    g.setFill(Color.WHITE);
-                    g.setFont(Font.font("Monospaced", s(6)));
-                    var text = animations.currentAnimationName() + " " + animations.currentAnimation().frameIndex();
-                    g.fillText(text, s(ghost.posX() - 4), s(ghost.posY() - 4));
-                    drawWishDir(ghost);
-                }
-            }
-        });
-    }
 
     protected void drawCredit(int credit, double x, double y) {
         classicRenderer.drawText(g, String.format("CREDIT %2d", credit), context.theme().color("palette.pale"), sceneFont(8), x, y);
@@ -264,11 +213,11 @@ public abstract class GameScene2D implements GameScene {
     protected void drawTileGrid() {
         g.setStroke(context.theme().color("palette.pale"));
         g.setLineWidth(0.2);
-        for (int row = 0; row <= context.game().world().numRows(); ++row) {
-            g.strokeLine(0, s(TS * (row)), s(context.game().world().numCols() * TS), s(TS * (row)));
+        for (int row = 0; row <= 36; ++row) {
+            g.strokeLine(0, s(TS * (row)), s(28 * TS), s(TS * (row)));
         }
-        for (int col = 0; col <= context.game().world().numCols(); ++col) {
-            g.strokeLine(s(TS * (col)), 0, s(TS * (col)), s(context.game().world().numRows() * TS));
+        for (int col = 0; col <= 28; ++col) {
+            g.strokeLine(s(TS * (col)), 0, s(TS * (col)), s(36 * TS));
         }
     }
 }
