@@ -141,10 +141,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         theme.set("mspacman.startpage.image",         rm.loadImage("graphics/mspacman/mspacman_flyer.png"));
         theme.set("mspacman.helpButton.icon",         rm.loadImage("graphics/icons/help-red-64.png"));
 
-        theme.set("mspacman.spritesheet", new MsPacManGameSpriteSheet(
-            rm.loadImage("graphics/mspacman/mspacman_spritesheet.png"),
-                rm.loadImage("graphics/mspacman/mazes_flashing.png")
-                    ));
+        theme.set("mspacman.spritesheet.image",       rm.loadImage("graphics/mspacman/mspacman_spritesheet.png"));
+        theme.set("mspacman.spritesheet.image.mazes", rm.loadImage("graphics/mspacman/mazes_flashing.png"));
 
         theme.set("mspacman.icon",                    rm.loadImage("graphics/icons/mspacman.png"));
         theme.set("mspacman.logo.midway",             rm.loadImage("graphics/mspacman/midway_logo.png"));
@@ -176,10 +174,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         theme.set("pacman.startpage.image",           rm.loadImage("graphics/pacman/pacman_flyer.png"));
         theme.set("pacman.helpButton.icon",           rm.loadImage("graphics/icons/help-blue-64.png"));
 
-        theme.set("pacman.spritesheet", new PacManGameSpriteSheet(
-            rm.loadImage("graphics/pacman/pacman_spritesheet.png"),
-                rm.loadImage("graphics/pacman/maze_flashing.png"))
-                    );
+        theme.set("pacman.spritesheet.image",         rm.loadImage("graphics/pacman/pacman_spritesheet.png"));
+        theme.set("pacman.spritesheet.image.mazes",   rm.loadImage("graphics/pacman/maze_flashing.png"));
 
         theme.set("pacman.icon",                      rm.loadImage("graphics/icons/pacman.png"));
 
@@ -207,6 +203,14 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         loadAssets2D();
         Logger.info("2D theme loaded");
     }
+
+    public static final MsPacManGameSpriteSheet SS_MS_PACMAN = new MsPacManGameSpriteSheet(
+        THEME_2D.get("mspacman.spritesheet.image"),
+        THEME_2D.get("mspacman.spritesheet.image.mazes"));
+
+    public static final PacManGameSpriteSheet SS_PACMAN = new PacManGameSpriteSheet(
+        THEME_2D.get("pacman.spritesheet.image"),
+        THEME_2D.get("pacman.spritesheet.image.mazes"));
 
     protected final GameClockFX clock;
     protected final Map<GameVariant, Map<String, GameScene>> gameScenesByVariant = new EnumMap<>(GameVariant.class);
@@ -438,15 +442,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         return THEME_2D;
     }
 
-    @Override
-    public <S extends SpriteSheet> S spriteSheet() {
-        return switch (game()) {
-            case GameVariant.MS_PACMAN -> THEME_2D.get("mspacman.spritesheet");
-            case GameVariant.PACMAN -> THEME_2D.get("pacman.spritesheet");
-            default -> throw new IllegalGameVariantException(game());
-        };
-    }
-
     // GameEventListener interface implementation
 
     @Override
@@ -523,13 +518,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         GameModel game = e.game;
         switch (game) {
             case GameVariant.MS_PACMAN -> {
-                game.pac().setAnimations(new MsPacManGamePacAnimations(game.pac(), spriteSheet()));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, spriteSheet())));
+                game.pac().setAnimations(new MsPacManGamePacAnimations(game.pac(), SS_MS_PACMAN));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, SS_MS_PACMAN)));
                 Logger.info("Created Ms. Pac-Man game creature animations for level #{}", game.levelNumber());
             }
             case GameVariant.PACMAN -> {
-                game.pac().setAnimations(new PacManGamePacAnimations(game.pac(), spriteSheet()));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, spriteSheet())));
+                game.pac().setAnimations(new PacManGamePacAnimations(game.pac(), SS_PACMAN));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, SS_PACMAN)));
                 Logger.info("Created Pac-Man game creature animations for level #{}", game.levelNumber());
             }
             default -> throw new IllegalGameVariantException(game);

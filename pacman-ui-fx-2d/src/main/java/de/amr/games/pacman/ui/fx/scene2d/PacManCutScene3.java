@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGamePacAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -40,7 +39,7 @@ public class PacManCutScene3 extends GameScene2D {
         frame = -1;
         initialDelay = 120;
         setScoreVisible(true);
-        var ss = context.<PacManGameSpriteSheet>spriteSheet();
+        var ss = classicRenderer.getPacManSpriteSheet();
         pac = new Pac();
         pac.setAnimations(new PacManGamePacAnimations(pac, ss));
         pac.selectAnimation(Pac.ANIM_MUNCHING);

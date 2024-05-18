@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.MsPacManIntermission2;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.rendering2d.ClapperboardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGamePacAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 
 import static de.amr.games.pacman.lib.Globals.t;
 
@@ -32,7 +31,7 @@ public class MsPacManCutScene2 extends GameScene2D {
 
     @Override
     public void init() {
-        var ss = context.<MsPacManGameSpriteSheet>spriteSheet();
+        var ss = classicRenderer.getMsPacManSpriteSheet();
         setScoreVisible(true);
         intermission = new MsPacManIntermission2();
         intermission.msPac.setAnimations(new MsPacManGamePacAnimations(intermission.msPac, ss));

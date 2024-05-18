@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGamePacAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 
 import static de.amr.games.pacman.lib.Globals.t;
@@ -36,9 +35,9 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void init() {
+        var ss = classicRenderer.getMsPacManSpriteSheet();
         setScoreVisible(true);
         intro = new MsPacManIntro();
-        var ss = context.<MsPacManGameSpriteSheet>spriteSheet();
         intro.msPacMan.setAnimations(new MsPacManGamePacAnimations(intro.msPacMan, ss));
         intro.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
         for (var ghost : intro.ghosts) {

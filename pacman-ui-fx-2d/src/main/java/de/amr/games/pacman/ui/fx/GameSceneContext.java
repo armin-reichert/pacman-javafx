@@ -56,8 +56,6 @@ public interface GameSceneContext {
      */
     String tt(String key, Object... args);
 
-    <S extends SpriteSheet> S spriteSheet();
-
     default GameController gameController() {
         return GameController.it();
     }

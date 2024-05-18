@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
+import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.rendering2d.ClassicWorldRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.ModernWorldRenderer;
 import javafx.beans.property.BooleanProperty;
@@ -38,6 +39,11 @@ public abstract class GameScene2D implements GameScene {
     protected GraphicsContext g;
     protected final ModernWorldRenderer modernRenderer = new ModernWorldRenderer(scalingPy);
     protected final ClassicWorldRenderer classicRenderer = new ClassicWorldRenderer(scalingPy);
+
+    protected GameScene2D() {
+        classicRenderer.setMsPacManSpriteSheet(PacManGames2dUI.SS_MS_PACMAN);
+        classicRenderer.setPacManSpriteSheet(PacManGames2dUI.SS_PACMAN);
+    }
 
     public abstract boolean isCreditVisible();
 
@@ -100,10 +106,6 @@ public abstract class GameScene2D implements GameScene {
         if (context == null) {
             Logger.error("Cannot render game scene {}, no scene context has been assigned", getClass().getSimpleName());
             return;
-        }
-        switch (context.game().variant()) {
-            case MS_PACMAN -> classicRenderer.setMsPacManSpriteSheet(context.spriteSheet());
-            case PACMAN -> classicRenderer.setPacManSpriteSheet(context.spriteSheet());
         }
         if (isScoreVisible()) {
             drawScore(context.game().score(), "SCORE", t(1), t(1));

@@ -13,6 +13,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
+import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
@@ -289,13 +290,17 @@ public class PlayScene3D implements GameScene {
 
             case GHOST_DYING -> {
                 assertLevel3DExists();
+
                 Rectangle2D[] sprites = switch (context.game().variant()) {
-                    case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
-                    case PACMAN    -> context.<PacManGameSpriteSheet>spriteSheet().ghostNumberSprites();
+                    case MS_PACMAN -> SS_MS_PACMAN.ghostNumberSprites();
+                    case PACMAN    -> SS_PACMAN.ghostNumberSprites();
                 };
                 context.game().eventLog().killedGhosts.forEach(ghost -> {
                     int index = context.game().victims().indexOf(ghost);
-                    var numberImage = context.spriteSheet().subImage(sprites[index]);
+                    var numberImage = switch (context.game().variant()) {
+                        case MS_PACMAN -> SS_MS_PACMAN.subImage(sprites[index]);
+                        case PACMAN -> SS_PACMAN.subImage(sprites[index]);
+                    };
                     level3D.ghosts3D().get(ghost.id()).setNumberImage(numberImage);
                 });
             }

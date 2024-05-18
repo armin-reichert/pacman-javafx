@@ -38,6 +38,14 @@ public class ClassicWorldRenderer {
         this.scalingPy.bind(scalingPy);
     }
 
+    public MsPacManGameSpriteSheet getMsPacManSpriteSheet() {
+        return ssMsPacMan;
+    }
+
+    public PacManGameSpriteSheet getPacManSpriteSheet() {
+        return ssPacMan;
+    }
+
     public double s(double value) {
         return scalingPy.doubleValue() * value;
     }

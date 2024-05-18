@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 
 import static de.amr.games.pacman.lib.Globals.t;
@@ -42,7 +41,7 @@ public class MsPacManCreditScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        MsPacManGameSpriteSheet ss = context.spriteSheet();
+        var ss = classicRenderer.getMsPacManSpriteSheet();
         var font6 = sceneFont(6); // TODO looks bad
         var font8 = sceneFont(8);
         var color = context.theme().color("palette.orange");

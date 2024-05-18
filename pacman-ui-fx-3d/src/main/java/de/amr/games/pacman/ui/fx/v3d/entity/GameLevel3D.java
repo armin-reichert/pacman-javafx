@@ -11,8 +11,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.*;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer;
 import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
@@ -402,11 +401,16 @@ public class GameLevel3D extends Group {
             levelCounterGroup.getChildren().add(cube);
 
             var material = new PhongMaterial(Color.WHITE);
-            var sprite = switch (context.game().variant()) {
-                case MS_PACMAN -> context.<MsPacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
-                case PACMAN    -> context.<PacManGameSpriteSheet>spriteSheet().bonusSymbolSprite(symbol);
-            };
-            material.setDiffuseMap(context.spriteSheet().subImage(sprite));
+            switch (context.game().variant()) {
+                case MS_PACMAN -> {
+                    var ss = PacManGames2dUI.SS_MS_PACMAN;
+                    material.setDiffuseMap(ss.subImage(ss.bonusSymbolSprite(symbol)));
+                }
+                case PACMAN -> {
+                    var ss = PacManGames2dUI.SS_PACMAN;
+                    material.setDiffuseMap(ss.subImage(ss.bonusSymbolSprite(symbol)));
+                }
+            }
             cube.setMaterial(material);
 
             var spinning = new RotateTransition(Duration.seconds(6), cube);
@@ -454,13 +458,13 @@ public class GameLevel3D extends Group {
             worldGroup.getChildren().remove(bonus3D);
         }
         switch (context.game().variant()) {
-            case PACMAN -> {
-                var ss = context.<PacManGameSpriteSheet>spriteSheet();
+            case MS_PACMAN -> {
+                var ss = PacManGames2dUI.SS_MS_PACMAN;
                 bonus3D = new Bonus3D(bonus,
                     ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));
             }
-            case MS_PACMAN -> {
-                var ss = context.<MsPacManGameSpriteSheet>spriteSheet();
+            case PACMAN -> {
+                var ss = PacManGames2dUI.SS_PACMAN;
                 bonus3D = new Bonus3D(bonus,
                     ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));
             }

@@ -10,7 +10,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui.fx.rendering2d.PacManGamePacAnimations;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import javafx.scene.paint.Color;
 
@@ -40,7 +39,7 @@ public class PacManIntroScene extends GameScene2D {
     public void init() {
         setScoreVisible(true);
         intro = new PacManIntro();
-        var ss = context.<PacManGameSpriteSheet>spriteSheet();
+        var ss = classicRenderer.getPacManSpriteSheet();
         intro.pacMan.setAnimations(new PacManGamePacAnimations(intro.pacMan, ss));
         intro.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, ss)));
         intro.blinking.reset();
@@ -94,7 +93,7 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     private void drawGallery() {
-        PacManGameSpriteSheet ss = context.spriteSheet();
+        var ss = classicRenderer.getPacManSpriteSheet();
         var font = sceneFont(8);
 
         int tx = intro.leftTileX;
@@ -126,7 +125,7 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     private void drawBlinkingEnergizer() {
-        PacManGameSpriteSheet ss = context.spriteSheet();
+        var ss = classicRenderer.getPacManSpriteSheet();
         if (intro.blinking.isOn()) {
             classicRenderer.drawSpriteScaled(g, ss.source(), ss.getEnergizerSprite(), t(intro.leftTileX),t(20));
         }
@@ -153,6 +152,7 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     private void drawPoints() {
+        var ss = classicRenderer.getPacManSpriteSheet();
         var color = context.theme().color("palette.pale");
         var font8 = sceneFont(8);
         var font6 = sceneFont(6);
@@ -160,7 +160,6 @@ public class PacManIntroScene extends GameScene2D {
         int ty = 25;
         g.setFill(Color.rgb(254, 189, 180));
         g.fillRect(s(t(tx) + 4), s(t(ty - 1) + 4), s(2), s(2));
-        PacManGameSpriteSheet ss = context.spriteSheet();
         if (intro.blinking.isOn()) {
             classicRenderer.drawSpriteScaled(g, ss.source(), ss.getEnergizerSprite(), t(tx), t(ty + 1));
         }
