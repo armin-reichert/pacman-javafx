@@ -5,6 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
@@ -14,9 +16,11 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
  * @author Armin Reichert
@@ -24,8 +28,8 @@ import static de.amr.games.pacman.lib.Globals.t;
 public class ClassicWorldRenderer {
 
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
-    private PacManGameSpriteSheet spriteSheetPacMan;
-    private MsPacManGameSpriteSheet spriteSheetMsPacMan;
+    private PacManGameSpriteSheet ssPacMan;
+    private MsPacManGameSpriteSheet ssMsPacMan;
 
     public ClassicWorldRenderer(DoubleProperty scalingPy) {
         this.scalingPy.bind(scalingPy);
@@ -36,11 +40,11 @@ public class ClassicWorldRenderer {
     }
 
     public void setPacManSpriteSheet(PacManGameSpriteSheet spriteSheet) {
-        spriteSheetPacMan = spriteSheet;
+        ssPacMan = spriteSheet;
     }
 
     public void setMsPacManSpriteSheet(MsPacManGameSpriteSheet spriteSheet) {
-        spriteSheetMsPacMan = spriteSheet;
+        ssMsPacMan = spriteSheet;
     }
 
     public void drawPacManWorld(GraphicsContext g, World world, boolean flashing, boolean blinkingOn) {
@@ -48,15 +52,15 @@ public class ClassicWorldRenderer {
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());
             if (blinkingOn) {
-                g.drawImage(spriteSheetPacMan.getFlashingMazeImage(), 0, t(3));
+                g.drawImage(ssPacMan.getFlashingMazeImage(), 0, t(3));
             } else {
-                drawSprite(g, spriteSheetPacMan.source(), spriteSheetPacMan.getEmptyMazeSprite(), 0, t(3));
+                drawSprite(g, ssPacMan.source(), ssPacMan.getEmptyMazeSprite(), 0, t(3));
             }
             g.restore();
         } else {
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());
-            drawSprite(g, spriteSheetPacMan.source(), spriteSheetPacMan.getFullMazeSprite(), 0, t(3));
+            drawSprite(g, ssPacMan.source(), ssPacMan.getFullMazeSprite(), 0, t(3));
             g.restore();
             world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideFoodTileContent(g, world, tile));
             if (!blinkingOn) {
@@ -65,22 +69,52 @@ public class ClassicWorldRenderer {
         }
     }
 
+    public void hideFoodTileContent(GraphicsContext g, World world, Vector2i tile) {
+        double r = world.isEnergizerTile(tile) ? 4.5 : 2;
+        double cx = t(tile.x()) + HTS;
+        double cy = t(tile.y()) + HTS;
+        double s = scalingPy.get();
+        g.setFill(Color.BLACK);
+        g.fillRect(s * (cx - r), s * (cy - r), s * (2 * r), s * (2 * r));
+    }
+
+    public void drawLivesCounter(GraphicsContext g, GameVariant variant, int numLivesDisplayed) {
+        if (numLivesDisplayed == 0) {
+            return;
+        }
+        int maxLives = 5;
+        var x = TS * 2;
+        var y = TS * (GameModel.ARCADE_MAP_TILES_Y - 2);
+        for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
+            switch (variant) {
+                case MS_PACMAN -> drawSpriteScaled(g, ssMsPacMan.source(), ssMsPacMan.livesCounterSprite(), x + TS * (2 * i), y);
+                case PACMAN -> drawSpriteScaled(g, ssPacMan.source(), ssPacMan.livesCounterSprite(), x + TS * (2 * i), y);
+            }
+        }
+        // text indicating that more lives are available than displayed
+        int excessLives = numLivesDisplayed - maxLives;
+        if (excessLives > 0) {
+            drawText(g, "+" + excessLives, Color.YELLOW, Font.font("Serif", FontWeight.BOLD, s(8)), x + TS * 10, y + TS);
+        }
+    }
+
+
     public void drawMsPacManWorld(GraphicsContext g, World world, int mapNumber, boolean flashing, boolean blinkingOn) {
         double x = 0, y = t(3);
         if (flashing) {
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());
             if (blinkingOn) {
-                var emptyMazeBright = spriteSheetMsPacMan.highlightedMaze(mapNumber);
-                drawSprite(g, spriteSheetMsPacMan.getFlashingMazesImage(), emptyMazeBright, x - 3, y);
+                var emptyMazeBright = ssMsPacMan.highlightedMaze(mapNumber);
+                drawSprite(g, ssMsPacMan.getFlashingMazesImage(), emptyMazeBright, x - 3, y);
             } else {
-                drawSprite(g, spriteSheetMsPacMan.source(), spriteSheetMsPacMan.emptyMaze(mapNumber), x, y);
+                drawSprite(g, ssMsPacMan.source(), ssMsPacMan.emptyMaze(mapNumber), x, y);
             }
             g.restore();
         } else {
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());
-            drawSprite(g, spriteSheetMsPacMan.source(), spriteSheetMsPacMan.filledMaze(mapNumber), x, y);
+            drawSprite(g, ssMsPacMan.source(), ssMsPacMan.filledMaze(mapNumber), x, y);
             g.restore();
             world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideFoodTileContent(g, world, tile));
             if (!blinkingOn) {
@@ -140,10 +174,11 @@ public class ClassicWorldRenderer {
 
     /**
      * Draws the given image scaled into this scene.
-     * @param image image
-     * @param x unscaled x
-     * @param y unscaled y
-     * @param width unscaled width
+     *
+     * @param image  image
+     * @param x      unscaled x
+     * @param y      unscaled y
+     * @param width  unscaled width
      * @param height unscaled height
      */
     public void drawImage(GraphicsContext g, Image image, double x, double y, double width, double height) {
@@ -152,20 +187,18 @@ public class ClassicWorldRenderer {
 
     /**
      * Draws the given image scaled into this scene.
+     *
      * @param image image
-     * @param x unscaled x
-     * @param y unscaled y
+     * @param x     unscaled x
+     * @param y     unscaled y
      */
     public void drawImage(GraphicsContext g, Image image, double x, double y) {
         drawImage(g, image, x, y, image.getWidth(), image.getHeight());
     }
 
-    public void hideFoodTileContent(GraphicsContext g, World world, Vector2i tile) {
-        double r = world.isEnergizerTile(tile) ? 4.5 : 2;
-        double cx = t(tile.x()) + HTS;
-        double cy = t(tile.y()) + HTS;
-        double s = scalingPy.get();
-        g.setFill(Color.BLACK);
-        g.fillRect(s * (cx - r), s * (cy - r), s * (2 * r), s * (2 * r));
+    public void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
+        g.setFont(font);
+        g.setFill(color);
+        g.fillText(text, s(x), s(y));
     }
 }

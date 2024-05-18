@@ -110,6 +110,6 @@ public class PacManCutScene1 extends GameScene2D {
     protected void drawSceneInfo() {
         drawTileGrid();
         var text = initialDelay > 0 ? String.format("Wait %d", initialDelay) : String.format("Frame %d", frame);
-        drawText(text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
+        classicRenderer.drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
     }
 }

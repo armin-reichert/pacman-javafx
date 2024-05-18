@@ -59,7 +59,7 @@ public class MsPacManCutScene1 extends GameScene2D {
         drawPac(intermission.pacMan);
         drawGhost(intermission.inky);
         drawGhost(intermission.pinky);
-        classicWorldRenderer.drawEntitySprite(g, ss, intermission.heart, ss.heartSprite());
+        classicRenderer.drawEntitySprite(g, ss, intermission.heart, ss.heartSprite());
         drawLevelCounter();
     }
 }

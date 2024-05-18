@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
@@ -82,12 +81,12 @@ public class PlayScene2D extends GameScene2D {
         boolean blinkingOn = game.blinking().isOn();
         switch (game.variant()) {
             case GameVariant.MS_PACMAN ->
-                classicWorldRenderer.drawMsPacManWorld(g, game.world(), game.mapNumber(), flashing, blinkingOn);
+                classicRenderer.drawMsPacManWorld(g, game.world(), game.mapNumber(), flashing, blinkingOn);
             case GameVariant.PACMAN -> {
                 if (game.mapNumber() == 1 && !PY_USE_ALTERNATE_MAPS.get()) {
-                    classicWorldRenderer.drawPacManWorld(g, game.world(), flashing, blinkingOn);
+                    classicRenderer.drawPacManWorld(g, game.world(), flashing, blinkingOn);
                 } else {
-                    modernWorldRenderer.draw(g, game.world(), flashing, blinkingOn);
+                    modernRenderer.draw(g, game.world(), flashing, blinkingOn);
                 }
             }
         }
@@ -104,7 +103,7 @@ public class PlayScene2D extends GameScene2D {
             if (context.gameState() == GameState.READY && !game.pac().isVisible()) {
                 numLivesDisplayed += 1;
             }
-            drawLivesCounter(numLivesDisplayed);
+            classicRenderer.drawLivesCounter(g, context.game().variant(), numLivesDisplayed);
         }
         drawLevelCounter();
     }
@@ -113,11 +112,11 @@ public class PlayScene2D extends GameScene2D {
         var game = context.game();
         if (game.isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
             // "GAME OVER" is drawn in demo mode and when game is over
-            drawText("GAME  OVER", Color.RED, sceneFont(8), t(9), t(21));
+            classicRenderer.drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(9), t(21));
         } else {
             switch (context.gameState()) {
-                case READY      -> drawText("READY!", Color.YELLOW, sceneFont(8), t(11), t(21));
-                case LEVEL_TEST -> drawText("TEST    L" + game.levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(21));
+                case READY      -> classicRenderer.drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(11), t(21));
+                case LEVEL_TEST -> classicRenderer.drawText(g, "TEST    L" + game.levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(21));
             }
         }
     }

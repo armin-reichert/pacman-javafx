@@ -22,7 +22,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -41,8 +40,8 @@ public abstract class GameScene2D implements GameScene {
     protected GameSceneContext context;
     protected GraphicsContext g;
 
-    protected final ModernWorldRenderer modernWorldRenderer = new ModernWorldRenderer(scalingPy);
-    protected final ClassicWorldRenderer classicWorldRenderer = new ClassicWorldRenderer(scalingPy);
+    protected final ModernWorldRenderer modernRenderer = new ModernWorldRenderer(scalingPy);
+    protected final ClassicWorldRenderer classicRenderer = new ClassicWorldRenderer(scalingPy);
 
 
     public abstract boolean isCreditVisible();
@@ -61,10 +60,6 @@ public abstract class GameScene2D implements GameScene {
     public void setCanvas(Canvas canvas) {
         checkNotNull(canvas);
         g = canvas.getGraphicsContext2D();
-    }
-
-    public double getScaling() {
-        return scalingPy.get();
     }
 
     public void setScaling(double scaling) {
@@ -117,8 +112,8 @@ public abstract class GameScene2D implements GameScene {
             return;
         }
         switch (context.game().variant()) {
-            case MS_PACMAN -> classicWorldRenderer.setMsPacManSpriteSheet(context.spriteSheet());
-            case PACMAN -> classicWorldRenderer.setPacManSpriteSheet(context.spriteSheet());
+            case MS_PACMAN -> classicRenderer.setMsPacManSpriteSheet(context.spriteSheet());
+            case PACMAN -> classicRenderer.setPacManSpriteSheet(context.spriteSheet());
         }
         if (isScoreVisible()) {
             drawScore(context.game().score(), "SCORE", t(1), t(1));
@@ -155,12 +150,11 @@ public abstract class GameScene2D implements GameScene {
     protected void drawScore(Score score, String title, double x, double y) {
         var pointsText = String.format("%02d", score.points());
         var font = sceneFont(TS);
-        drawText(title, context.theme().color("palette.pale"), font, x, y);
-        drawText(String.format("%7s", pointsText), context.theme().color("palette.pale"),
-            font, x, y + TS + 1);
+        var color = context.theme().color("palette.pale");
+        classicRenderer.drawText(g, title, color, font, x, y);
+        classicRenderer.drawText(g, String.format("%7s", pointsText), color, font, x, y + TS + 1);
         if (score.points() != 0) {
-            drawText("L" + score.levelNumber(), context.theme().color("palette.pale"),
-                font, x + t(8), y + TS + 1);
+            classicRenderer.drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
         }
     }
 
@@ -171,44 +165,17 @@ public abstract class GameScene2D implements GameScene {
             case MS_PACMAN -> {
                 MsPacManGameSpriteSheet ss = context.spriteSheet();
                 for (byte symbol : context.game().levelCounter()) {
-                    classicWorldRenderer.drawSpriteScaled(g, ss.source(), ss.bonusSymbolSprite(symbol), x, y);
+                    classicRenderer.drawSpriteScaled(g, ss.source(), ss.bonusSymbolSprite(symbol), x, y);
                     x -= TS * 2;
                 }
             }
             case PACMAN -> {
                 PacManGameSpriteSheet ss = context.spriteSheet();
                 for (byte symbol : context.game().levelCounter()) {
-                    classicWorldRenderer.drawSpriteScaled(g, ss.source(), ss.bonusSymbolSprite(symbol), x, y);
+                    classicRenderer.drawSpriteScaled(g, ss.source(), ss.bonusSymbolSprite(symbol), x, y);
                     x -= TS * 2;
                 }
             }
-        }
-    }
-
-    protected void drawLivesCounter(int numLivesDisplayed) {
-        if (numLivesDisplayed == 0) {
-            return;
-        }
-        var x = TS * 2;
-        var y = TS * (GameModel.ARCADE_MAP_TILES_Y - 2);
-        int maxLives = 5;
-        for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-            switch (context.game().variant()) {
-                case MS_PACMAN -> {
-                    MsPacManGameSpriteSheet ss = context.spriteSheet();
-                    classicWorldRenderer.drawSpriteScaled(g, ss.source(), ss.livesCounterSprite(), x + TS * (2 * i), y);
-                }
-                case PACMAN -> {
-                    PacManGameSpriteSheet ss = context.spriteSheet();
-                    classicWorldRenderer.drawSpriteScaled(g, ss.source(), ss.livesCounterSprite(), x + TS * (2 * i), y);
-                }
-            }
-        }
-        // text indicating that more lives are available than displayed
-        int excessLives = numLivesDisplayed - maxLives;
-        if (excessLives > 0) {
-            drawText("+" + excessLives, context.theme().color("palette.yellow"),
-                Font.font("Serif", FontWeight.BOLD, s(8)), x + TS * 10, y + TS);
         }
     }
 
@@ -221,9 +188,9 @@ public abstract class GameScene2D implements GameScene {
                     g.save();
                     g.translate(0, movingBonus.elongationY());
                     if (bonus.state() == Bonus.STATE_EDIBLE) {
-                        classicWorldRenderer.drawEntitySprite(g, ss, bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
+                        classicRenderer.drawEntitySprite(g, ss, bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
                     } else if (bonus.state() == Bonus.STATE_EATEN) {
-                        classicWorldRenderer.drawEntitySprite(g, ss, bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
+                        classicRenderer.drawEntitySprite(g, ss, bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
                     }
                     g.restore();
                 }
@@ -231,9 +198,9 @@ public abstract class GameScene2D implements GameScene {
             case GameVariant.PACMAN -> {
                 PacManGameSpriteSheet ss = context.spriteSheet();
                 if (bonus.state() == Bonus.STATE_EDIBLE) {
-                    classicWorldRenderer.drawEntitySprite(g, ss, bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
+                    classicRenderer.drawEntitySprite(g, ss, bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
                 } else if (bonus.state() == Bonus.STATE_EATEN) {
-                    classicWorldRenderer.drawEntitySprite(g, ss, bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
+                    classicRenderer.drawEntitySprite(g, ss, bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
                 }
             }
         }
@@ -245,7 +212,7 @@ public abstract class GameScene2D implements GameScene {
         }
         pac.animations().ifPresent(pa -> {
             if (pa instanceof SpriteAnimations animations) {
-                classicWorldRenderer.drawEntitySprite(g, context.spriteSheet(), pac, animations.currentSprite());
+                classicRenderer.drawEntitySprite(g, context.spriteSheet(), pac, animations.currentSprite());
                 if (infoVisiblePy.get()) {
                     g.setFill(Color.WHITE);
                     g.setFont(Font.font("Monospaced", s(6)));
@@ -277,7 +244,7 @@ public abstract class GameScene2D implements GameScene {
         }
         ghost.animations().ifPresent(ga -> {
             if (ga instanceof SpriteAnimations animations) {
-                classicWorldRenderer.drawEntitySprite(g, context.spriteSheet(), ghost, animations.currentSprite());
+                classicRenderer.drawEntitySprite(g, context.spriteSheet(), ghost, animations.currentSprite());
                 if (infoVisiblePy.get()) {
                     g.setFill(Color.WHITE);
                     g.setFont(Font.font("Monospaced", s(6)));
@@ -289,18 +256,17 @@ public abstract class GameScene2D implements GameScene {
         });
     }
 
-
     protected void drawCredit(int credit, double x, double y) {
-        drawText(String.format("CREDIT %2d", credit), context.theme().color("palette.pale"), sceneFont(8), x, y);
+        classicRenderer.drawText(g, String.format("CREDIT %2d", credit), context.theme().color("palette.pale"), sceneFont(8), x, y);
     }
 
     protected void drawMidwayCopyright(double x, double y) {
-        drawText("© 1980 MIDWAY MFG.CO.", context.theme().color("palette.pink"), sceneFont(8), x, y);
+        classicRenderer.drawText(g, "© 1980 MIDWAY MFG.CO.", context.theme().color("palette.pink"), sceneFont(8), x, y);
     }
 
     protected void drawMsPacManCopyright(double x, double y) {
         Image logo = context.theme().get("mspacman.logo.midway");
-        classicWorldRenderer.drawImage(g, logo, x, y + 2, TS * 4 - 2, TS * 4);
+        classicRenderer.drawImage(g, logo, x, y + 2, TS * 4 - 2, TS * 4);
         g.setFill(context.theme().color("palette.red"));
         g.setFont(sceneFont(8));
         g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2));
@@ -312,7 +278,7 @@ public abstract class GameScene2D implements GameScene {
         MsPacManGameSpriteSheet ss = context.spriteSheet();
         var sprite = animation.currentSprite(ss.clapperboardSprites());
         if (sprite != null) {
-            classicWorldRenderer.drawSpriteCenteredOverBox(g, ss, sprite, x, y);
+            classicRenderer.drawSpriteCenteredOverBox(g, ss, sprite, x, y);
             g.setFont(sceneFont(8));
             g.setFill(context.theme().color("palette.pale").darker());
             var numberX = s(x + sprite.getWidth() - 25);
@@ -322,12 +288,6 @@ public abstract class GameScene2D implements GameScene {
             var textX = s(x + sprite.getWidth());
             g.fillText(animation.text(), textX, numberY);
         }
-    }
-
-    protected void drawText(String text, Color color, Font font, double x, double y) {
-        g.setFont(font);
-        g.setFill(color);
-        g.fillText(text, s(x), s(y));
     }
 
     protected void drawTileGrid() {

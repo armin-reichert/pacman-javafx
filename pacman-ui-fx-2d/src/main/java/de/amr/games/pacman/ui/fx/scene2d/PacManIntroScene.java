@@ -97,7 +97,7 @@ public class PacManIntroScene extends GameScene2D {
 
         int tx = intro.leftTileX;
         if (intro.titleVisible) {
-            drawText("CHARACTER / NICKNAME", context.theme().color("palette.pale"), font, t(tx + 3), t(6));
+            classicRenderer.drawText(g, "CHARACTER / NICKNAME", context.theme().color("palette.pale"), font, t(tx + 3), t(6));
         }
         Color[] ghostColors = {
             context.theme().color("palette.red"),
@@ -111,14 +111,14 @@ public class PacManIntroScene extends GameScene2D {
                 continue;
             }
             int ty = 7 + 3 * id;
-            classicWorldRenderer.drawSpriteCenteredOverBox(g, ss, ss.ghostFacingRight(id), t(tx) + 4, t(ty));
+            classicRenderer.drawSpriteCenteredOverBox(g, ss, ss.ghostFacingRight(id), t(tx) + 4, t(ty));
             if (ghostInfo.characterVisible) {
                 var text = "-" + ghostInfo.character;
-                drawText(text, ghostColors[id], font, t(tx + 3), t(ty + 1));
+                classicRenderer.drawText(g, text, ghostColors[id], font, t(tx + 3), t(ty + 1));
             }
             if (ghostInfo.nicknameVisible) {
                 var text = QUOTE + ghostInfo.ghost.name() + QUOTE;
-                drawText(text, ghostColors[id], font, t(tx + 14), t(ty + 1));
+                classicRenderer.drawText(g, text, ghostColors[id], font, t(tx + 14), t(ty + 1));
             }
         }
     }
@@ -126,7 +126,7 @@ public class PacManIntroScene extends GameScene2D {
     private void drawBlinkingEnergizer() {
         PacManGameSpriteSheet ss = context.spriteSheet();
         if (intro.blinking.isOn()) {
-            classicWorldRenderer.drawSpriteScaled(g, ss.source(), ss.getEnergizerSprite(), t(intro.leftTileX),t(20));
+            classicRenderer.drawSpriteScaled(g, ss.source(), ss.getEnergizerSprite(), t(intro.leftTileX),t(20));
         }
     }
 
@@ -156,11 +156,11 @@ public class PacManIntroScene extends GameScene2D {
         g.fillRect(s(t(tx) + 4), s(t(ty - 1) + 4), s(2), s(2));
         PacManGameSpriteSheet ss = context.spriteSheet();
         if (intro.blinking.isOn()) {
-            classicWorldRenderer.drawSpriteScaled(g, ss.source(), ss.getEnergizerSprite(), t(tx), t(ty + 1));
+            classicRenderer.drawSpriteScaled(g, ss.source(), ss.getEnergizerSprite(), t(tx), t(ty + 1));
         }
-        drawText("10",  color, font8, t(tx + 2), t(ty));
-        drawText("PTS", color, font6, t(tx + 5), t(ty));
-        drawText("50",  color, font8, t(tx + 2), t(ty + 2));
-        drawText("PTS", color, font6, t(tx + 5), t(ty + 2));
+        classicRenderer.drawText(g, "10",  color, font8, t(tx + 2), t(ty));
+        classicRenderer.drawText(g, "PTS", color, font6, t(tx + 5), t(ty));
+        classicRenderer.drawText(g, "50",  color, font8, t(tx + 2), t(ty + 2));
+        classicRenderer.drawText(g, "PTS", color, font6, t(tx + 5), t(ty + 2));
     }
 }

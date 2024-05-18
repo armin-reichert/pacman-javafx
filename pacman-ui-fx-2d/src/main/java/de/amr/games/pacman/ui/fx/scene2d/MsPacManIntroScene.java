@@ -73,7 +73,7 @@ public class MsPacManIntroScene extends GameScene2D {
         var ty = intro.titlePosition.y();
         var y0 = intro.stopY;
         drawMarquee();
-        drawText("\"MS PAC-MAN\"", context.theme().color("palette.orange"), font8, tx, ty);
+        classicRenderer.drawText(g, "\"MS PAC-MAN\"", context.theme().color("palette.orange"), font8, tx, ty);
         if (intro.state() == State.GHOSTS_MARCHING_IN) {
             var ghost = intro.ghosts[intro.ghostIndex];
             var color = switch (ghost.id()) {
@@ -84,14 +84,14 @@ public class MsPacManIntroScene extends GameScene2D {
                 default -> throw new IllegalStateException("Unexpected value: " + ghost.id());
             };
             if (ghost.id() == GameModel.RED_GHOST) {
-                drawText("WITH", context.theme().color("palette.pale"), font8, tx, y0 + t(3));
+                classicRenderer.drawText(g, "WITH", context.theme().color("palette.pale"), font8, tx, y0 + t(3));
             }
             var text = ghost.name().toUpperCase();
             var dx = text.length() < 4 ? t(1) : 0;
-            drawText(text, color, font8, tx + t(3) + dx, y0 + t(6));
+            classicRenderer.drawText(g, text, color, font8, tx + t(3) + dx, y0 + t(6));
         } else if (intro.state() == State.MS_PACMAN_MARCHING_IN || intro.state() == State.READY_TO_PLAY) {
-            drawText("STARRING", context.theme().color("palette.pale"), font8, tx, y0 + t(3));
-            drawText("MS PAC-MAN", context.theme().color("palette.yellow"), font8, tx, y0 + t(6));
+            classicRenderer.drawText(g, "STARRING", context.theme().color("palette.pale"), font8, tx, y0 + t(3));
+            classicRenderer.drawText(g, "MS PAC-MAN", context.theme().color("palette.yellow"), font8, tx, y0 + t(6));
         }
         for (var ghost : intro.ghosts) {
             drawGhost(ghost);
