@@ -38,7 +38,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer.getTileMapColor;
+import static de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer.getColor;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.opaqueColor;
 import static de.amr.games.pacman.ui.fx.util.Ufx.doAfterSeconds;
@@ -166,9 +166,9 @@ public class GameLevel3D extends Group {
 
         // Maze
         var terrain = context.game().world().map().terrain();
-        wallStrokeColorPy.set(getTileMapColor(terrain, "wall_stroke_color", Color.rgb(33, 33, 255)));
-        wallFillColorPy.set(getTileMapColor(terrain, "wall_fill_color", Color.rgb(0,0,0)));
-        foodColorPy.set(getTileMapColor(terrain, "food_color", Color.PINK));
+        wallStrokeColorPy.set(getColor(terrain, "wall_stroke_color", Color.rgb(33, 33, 255)));
+        wallFillColorPy.set(getColor(terrain, "wall_fill_color", Color.rgb(0,0,0)));
+        foodColorPy.set(getColor(terrain, "food_color", Color.PINK));
         addMazeWalls(mazeGroup);
         addArcadeGhostHouse(mazeGroup);
         addFood3D(mazeGroup);
@@ -205,7 +205,7 @@ public class GameLevel3D extends Group {
         addHouseWall(parent, 17,15, 15,15);
 
         House house = context.game().world().house();
-        Color doorColor = getTileMapColor(context.game().world().map().terrain(), "door_color", Color.rgb(254,184,174));
+        Color doorColor = getColor(context.game().world().map().terrain(), "door_color", Color.rgb(254,184,174));
         for (Vector2i wingTile : List.of(house.door().leftWing(), house.door().rightWing())) {
             var doorWing3D = new DoorWing3D(wingTile, doorColor, PY_3D_FLOOR_COLOR.get());
             doorWing3D.drawModePy.bind(PY_3D_DRAW_MODE);
@@ -228,7 +228,7 @@ public class GameLevel3D extends Group {
 
     private void addFood3D(Group parent) {
         var world = context.game().world();
-        Color color = TileMapRenderer.getTileMapColor(world.map().food(), "food_color", Color.WHITE);
+        Color color = TileMapRenderer.getColor(world.map().food(), "food_color", Color.WHITE);
         foodColorPy.set(color);
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             if (world.isEnergizerTile(tile)) {

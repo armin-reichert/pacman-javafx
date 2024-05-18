@@ -37,7 +37,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.IntStream;
 
-import static de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer.getTileMapColor;
+import static de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer.getColor;
 
 /**
  * @author Armin Reichert
@@ -61,6 +61,7 @@ public class TileMapEditor extends Application  {
 
     static final Color DEFAULT_WALL_STROKE_COLOR = Color.GREEN;
     static final Color DEFAULT_WALL_FILL_COLOR = Color.MAROON;
+    static final Color DEFAULT_DOOR_COLOR = Color.YELLOW;
     static final Color DEFAULT_FOOD_COLOR = Color.MAGENTA;
 
     Stage stage;
@@ -337,9 +338,10 @@ public class TileMapEditor extends Application  {
         currentMapFile = null;
         foodMapPropertiesEditor.setText(map.food().getPropertiesAsText());
         terrainMapPropertiesEditor.setText(map.terrain().getPropertiesAsText());
-        terrainMapRenderer.setWallStrokeColor(getTileMapColor(map.terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
-        terrainMapRenderer.setWallFillColor(getTileMapColor(map.terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
-        Color foodColor = getTileMapColor(map.food(), "food_color", DEFAULT_FOOD_COLOR);
+        terrainMapRenderer.setWallStrokeColor(getColor(map.terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
+        terrainMapRenderer.setWallFillColor(getColor(map.terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
+        terrainMapRenderer.setDoorColor(getColor(map.terrain(), "door_color", DEFAULT_DOOR_COLOR));
+        Color foodColor = getColor(map.food(), "food_color", DEFAULT_FOOD_COLOR);
         foodMapRenderer.setEnergizerColor(foodColor);
         foodMapRenderer.setPelletColor(foodColor);
         updateInfo();

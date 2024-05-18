@@ -1,8 +1,6 @@
 !terrain
 #
 #Tue May 14 13:53:31 CEST 2024
-author=Armin Reichert
-description=Original Arcade map for Pac-Man game
 door_color=rgb(252,181,255)
 wall_fill_color=rgb(0,0,0)
 wall_stroke_color=rgb(33,33,255)

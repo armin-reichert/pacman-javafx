@@ -11,10 +11,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.rendering2d.FoodMapRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
-import de.amr.games.pacman.ui.fx.rendering2d.TerrainMapRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.*;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -158,9 +155,10 @@ public class PlayScene2D extends GameScene2D {
             var terrainMap = context.game().world().map().terrain();
             terrainMapRenderer.setScaling(scalingPy.get());
             terrainMapRenderer.setWallStrokeColor(context.game().blinking().isOn() ?
-                Color.WHITE : Color.web(terrainMap.getProperty("wall_stroke_color")));
+                Color.WHITE : TileMapRenderer.getColor(terrainMap, "wall_stroke_color", Color.RED));
             terrainMapRenderer.setWallFillColor(context.game().blinking().isOn() ?
-                Color.BLACK : Color.web(terrainMap.getProperty("wall_fill_color")));
+                Color.BLACK : TileMapRenderer.getColor(terrainMap, "wall_fill_color", Color. PINK));
+            terrainMapRenderer.setDoorColor(TileMapRenderer.getColor(terrainMap, "door_color", Color.PINK));
             terrainMapRenderer.drawMap(g, terrainMap);
         } else {
             drawMazeUsingMap();

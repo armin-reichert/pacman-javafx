@@ -24,7 +24,7 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
         if (runtimePreview) {
             drawTripleStrokePaths(g, map);
             drawSingleStrokePaths(g, map);
-            Color doorColor = TileMapRenderer.getTileMapColor(map, "door_color", Color.PINK);
+            Color doorColor = TileMapRenderer.getColor(map, "door_color", Color.PINK);
             map.tiles(Tiles.DOOR).forEach(tile -> drawDoor(g, tile, doorColor));
         } else {
           map.tiles().forEach(tile -> drawTile(g, tile, map.get(tile)));

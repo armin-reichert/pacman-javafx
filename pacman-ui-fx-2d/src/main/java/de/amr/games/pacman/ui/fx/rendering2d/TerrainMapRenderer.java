@@ -18,7 +18,6 @@ import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
-import static de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer.getTileMapColor;
 
 /**
  * @author Armin Reichert
@@ -26,8 +25,10 @@ import static de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer.getTileMapCo
 public class TerrainMapRenderer implements TileMapRenderer {
 
     protected float scaling;
+
     protected Color wallFillColor = Color.BLACK;
     protected Color wallStrokeColor = Color.GREEN;
+    protected Color doorColor = Color.PINK;
 
     public void setScaling(double scaling) {
         this.scaling = (float) scaling;
@@ -41,16 +42,19 @@ public class TerrainMapRenderer implements TileMapRenderer {
         this.wallFillColor = wallFillColor;
     }
 
+    public void setDoorColor(Color doorColor) {
+        this.doorColor = doorColor;
+    }
+
     public void drawMap(GraphicsContext g, TileMap map) {
         drawTripleStrokePaths(g, map);
         drawSingleStrokePaths(g, map);
-        Color doorColor = getTileMapColor(map, "door_color", Color.PINK);
         map.tiles(Tiles.DOOR).forEach(tile -> drawDoor(g, tile, doorColor));
     }
 
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
         if (content == Tiles.DOOR) {
-            drawDoor(g, tile, Color.PINK);
+            drawDoor(g, tile, doorColor);
         }
     }
 

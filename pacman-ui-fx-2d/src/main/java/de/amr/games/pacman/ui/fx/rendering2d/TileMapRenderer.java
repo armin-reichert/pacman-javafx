@@ -17,12 +17,13 @@ public interface TileMapRenderer {
 
     int TILE_SIZE = 8;
 
-    static Color getTileMapColor(TileMap tileMap, String key, Color defaultColor) {
-        if (tileMap.hasProperty(key)) {
+    static Color getColor(TileMap map, String key, Color defaultColor) {
+        if (map.hasProperty(key)) {
+            String colorSpec = map.getProperty(key);
             try {
-                return Color.web(tileMap.getProperty(key));
+                return Color.web(colorSpec);
             } catch (Exception x) {
-                Logger.error("Could not create color from property value '{}'", tileMap.getProperty(key));
+                Logger.error("Could not create color from value '{}'", colorSpec);
                 return defaultColor;
             }
         }
