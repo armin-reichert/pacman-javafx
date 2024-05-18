@@ -18,6 +18,7 @@ import java.util.HashSet;
 
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Direction.RIGHT;
+import static de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer.*;
 
 /**
  * @author Armin Reichert
@@ -43,7 +44,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
     public void drawMap(GraphicsContext g, TileMap map) {
         drawTripleStrokePaths(g, map);
         drawSingleStrokePaths(g, map);
-        Color doorColor = TileMapRenderer.getTileMapColor(map, "door_color", Color.PINK);
+        Color doorColor = getTileMapColor(map, "door_color", Color.PINK);
         map.tiles().filter(tile -> map.get(tile) == Tiles.DOOR).forEach(tile -> drawDoor(g, tile, doorColor));
     }
 
@@ -54,13 +55,13 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.save();
         g.scale(scaling, scaling);
-        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(Color.BLACK);
-        g.fillRect(x, y + 1, TILE_SIZE, 6);
+        g.fillRect(x, y, TILE_SIZE, 6);
         g.setFill(color);
-        g.fillRect(x - 1, y + 3, TILE_SIZE + 2, 2);
+        g.fillRect(x-1, y+3, TILE_SIZE+2, 2);
         g.restore();
     }
 
