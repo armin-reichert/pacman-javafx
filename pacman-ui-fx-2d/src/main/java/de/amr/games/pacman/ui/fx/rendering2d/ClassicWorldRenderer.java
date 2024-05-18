@@ -154,30 +154,24 @@ public class ClassicWorldRenderer {
     }
 
     public void drawPac(GraphicsContext g, GameVariant variant, Pac pac) {
-        if (!pac.isVisible()) {
-            return;
-        }
-        pac.animations().ifPresent(pa -> {
-            if (pa instanceof SpriteAnimations animations) {
-                switch (variant) {
-                    case MS_PACMAN -> drawEntitySprite(g, ssMsPacMan, pac, animations.currentSprite());
-                    case    PACMAN -> drawEntitySprite(g, ssPacMan, pac, animations.currentSprite());
-                }
+        if (pac.isVisible() && pac.animations().isPresent() && pac.animations().get() instanceof SpriteAnimations sa) {
+            switch (variant) {
+                case MS_PACMAN -> drawEntitySprite(g, ssMsPacMan, pac, sa.currentSprite());
+                case    PACMAN -> drawEntitySprite(g, ssPacMan, pac, sa.currentSprite());
             }
-        });
+        }
     }
 
     public void drawPacInfo(GraphicsContext g, Pac pac) {
-        g.setFill(Color.WHITE);
-        g.setFont(Font.font("Monospaced", s(6)));
-        pac.animations().ifPresent(animations -> {
-            //TODO this crashes, why?
-//            if (animations instanceof SpriteAnimations sa) {
-//                var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
-//                g.fillText(text, s(pac.posX() - 4), s(pac.posY() - 4));
-//            }
-        });
-        drawWishDir(g, pac);
+        if (pac.animations().isPresent() && pac.animations().get() instanceof SpriteAnimations sa) {
+            if (sa.currentAnimationName() != null) {
+                var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
+                g.setFill(Color.WHITE);
+                g.setFont(Font.font("Monospaced", s(6)));
+                g.fillText(text, s(pac.posX() - 4), s(pac.posY() - 4));
+            }
+            drawWishDir(g, pac);
+        }
     }
 
     public void drawGhost(GraphicsContext g, GameVariant variant, Ghost ghost) {
@@ -195,15 +189,14 @@ public class ClassicWorldRenderer {
     }
 
     public void drawGhostInfo(GraphicsContext g, Ghost ghost) {
-        g.setFill(Color.WHITE);
-        g.setFont(Font.font("Monospaced", s(6)));
-        ghost.animations().ifPresent(animations -> {
-            //TODO check why this crashes
-//            if (animations instanceof SpriteAnimations sa) {
-//                var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
-//                g.fillText(text, s(ghost.posX() - 4), s(ghost.posY() - 4));
-//            }
-        });
+        if (ghost.animations().isPresent() && ghost.animations().get() instanceof SpriteAnimations sa) {
+            if (sa.currentAnimationName() != null) {
+                var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
+                g.setFill(Color.WHITE);
+                g.setFont(Font.font("Monospaced", s(6)));
+                g.fillText(text, s(ghost.posX() - 4), s(ghost.posY() - 4));
+            }
+        }
         drawWishDir(g, ghost);
     }
 

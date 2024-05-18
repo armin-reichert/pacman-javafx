@@ -5,10 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.lib.Score;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
-import de.amr.games.pacman.ui.fx.rendering2d.*;
+import de.amr.games.pacman.ui.fx.rendering2d.ClassicWorldRenderer;
+import de.amr.games.pacman.ui.fx.rendering2d.ModernWorldRenderer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -30,13 +30,12 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public abstract class GameScene2D implements GameScene {
 
-    public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
+    public final BooleanProperty infoVisiblePy  = new SimpleBooleanProperty(this, "infoVisible", false);
     public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible", false);
-    public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
+    public final DoubleProperty scalingPy       = new SimpleDoubleProperty(this, "scaling", 1.0);
 
     protected GameSceneContext context;
     protected GraphicsContext g;
-
     protected final ModernWorldRenderer modernRenderer = new ModernWorldRenderer(scalingPy);
     protected final ClassicWorldRenderer classicRenderer = new ClassicWorldRenderer(scalingPy);
 
@@ -109,10 +108,10 @@ public abstract class GameScene2D implements GameScene {
         if (isScoreVisible()) {
             drawScore(context.game().score(), "SCORE", t(1), t(1));
             drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1));
-
         }
         if (isCreditVisible()) {
-            drawCredit(context.gameController().credit(), t(2), t(36) - 1);
+            classicRenderer.drawText(g, String.format("CREDIT %2d", context.gameController().credit()),
+                context.theme().color("palette.pale"), sceneFont(8), t(2), t(36) - 1);
         }
         drawSceneContent();
         if (infoVisiblePy.get()) {
@@ -147,10 +146,6 @@ public abstract class GameScene2D implements GameScene {
         if (score.points() != 0) {
             classicRenderer.drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
         }
-    }
-
-    protected void drawCredit(int credit, double x, double y) {
-        classicRenderer.drawText(g, String.format("CREDIT %2d", credit), context.theme().color("palette.pale"), sceneFont(8), x, y);
     }
 
     protected void drawMidwayCopyright(double x, double y) {

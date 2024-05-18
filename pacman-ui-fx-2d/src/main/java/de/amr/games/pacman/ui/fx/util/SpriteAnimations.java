@@ -21,7 +21,7 @@ public abstract class SpriteAnimations implements Animations {
 
     @Override
     public SpriteAnimation currentAnimation() {
-        return animation(currentAnimationName);
+        return currentAnimationName != null ? animation(currentAnimationName) : null;
     }
 
     public abstract Rectangle2D currentSprite();
