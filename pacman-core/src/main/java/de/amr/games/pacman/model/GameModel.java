@@ -132,8 +132,6 @@ public interface GameModel {
 
     boolean isPacManKilled();
 
-    boolean isPacManKillingIgnored();
-
     void onPacDying();
 
     void killGhost(Ghost prey);

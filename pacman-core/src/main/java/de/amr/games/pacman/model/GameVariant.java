@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
@@ -159,7 +160,7 @@ public enum GameVariant implements GameModel {
         }
 
         @Override
-        public boolean isPacManKillingIgnored() {
+        public boolean isPacManKillingIgnoredInDemoLevel() {
             float levelRunningSeconds = (System.currentTimeMillis() - levelStartTime) / 1000f;
             if (demoLevel && levelRunningSeconds < DEMO_LEVEL_MIN_DURATION_SEC) {
                 Logger.info("Pac-Man killing ignored, demo level running for {} seconds", levelRunningSeconds);
@@ -378,7 +379,7 @@ public enum GameVariant implements GameModel {
         }
 
         @Override
-        public boolean isPacManKillingIgnored() {
+        public boolean isPacManKillingIgnoredInDemoLevel() {
             return false;
         }
 
@@ -490,6 +491,8 @@ public enum GameVariant implements GameModel {
     abstract byte computeBonusSymbol();
 
     abstract long huntingTicks(int levelNumber, int phaseIndex);
+
+    abstract boolean isPacManKillingIgnoredInDemoLevel();
 
     abstract boolean isBonusReached();
 
@@ -938,7 +941,16 @@ public enum GameVariant implements GameModel {
         updatePacPower();
         updateHuntingTimer();
         ghosts(FRIGHTENED).filter(pac::sameTile).forEach(this::killGhost);
-        eventLog.pacKilled = ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
+        eventLog.pacKilled = checkPacKilled();
+    }
+
+    boolean checkPacKilled() {
+        boolean pacMeetsKiller = ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
+        if (demoLevel) {
+            return pacMeetsKiller && !isPacManKillingIgnoredInDemoLevel();
+        } else {
+            return pacMeetsKiller && !GameController.it().isPacImmune();
+        }
     }
 
     void checkForFood() {

@@ -127,7 +127,7 @@ public enum GameState implements FsmState<GameModel> {
             game.doHuntingStep();
             if (game.isLevelComplete()) {
                 gameController().changeState(LEVEL_COMPLETE);
-            } else if (game.isPacManKilled() && !game.isPacManKillingIgnored() && !gameController().isPacImmune()) {
+            } else if (game.isPacManKilled()) {
                 gameController().changeState(PACMAN_DYING);
             } else if (game.areGhostsKilled()) {
                 gameController().changeState(GHOST_DYING);
