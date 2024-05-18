@@ -7,7 +7,9 @@ package de.amr.games.pacman.ui.fx.rendering2d;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Entity;
+import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import javafx.beans.property.DoubleProperty;
@@ -20,7 +22,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
  * @author Armin Reichert
@@ -123,6 +124,32 @@ public class ClassicWorldRenderer {
         }
     }
 
+
+    public void drawBonus(GraphicsContext g, GameVariant variant, Bonus bonus) {
+        switch (variant) {
+            case MS_PACMAN -> {
+                if (bonus instanceof MovingBonus movingBonus) {
+                    //TODO reconsider this way of implementing the jumping bonus
+                    g.save();
+                    g.translate(0, movingBonus.elongationY());
+                    if (bonus.state() == Bonus.STATE_EDIBLE) {
+                        drawEntitySprite(g, ssMsPacMan, bonus.entity(), ssMsPacMan.bonusSymbolSprite(bonus.symbol()));
+                    } else if (bonus.state() == Bonus.STATE_EATEN) {
+                        drawEntitySprite(g, ssMsPacMan, bonus.entity(), ssMsPacMan.bonusValueSprite(bonus.symbol()));
+                    }
+                    g.restore();
+                }
+            }
+            case PACMAN -> {
+                if (bonus.state() == Bonus.STATE_EDIBLE) {
+                    drawEntitySprite(g, ssPacMan, bonus.entity(), ssPacMan.bonusSymbolSprite(bonus.symbol()));
+                } else if (bonus.state() == Bonus.STATE_EATEN) {
+                    drawEntitySprite(g, ssPacMan, bonus.entity(), ssPacMan.bonusValueSprite(bonus.symbol()));
+                }
+            }
+        }
+    }
+
     public void drawSprite(GraphicsContext g, Image sourceImage, Rectangle2D sprite, double x, double y) {
         if (sprite != null) {
             g.drawImage(sourceImage,
@@ -181,19 +208,8 @@ public class ClassicWorldRenderer {
      * @param width  unscaled width
      * @param height unscaled height
      */
-    public void drawImage(GraphicsContext g, Image image, double x, double y, double width, double height) {
+    public void drawImageScaled(GraphicsContext g, Image image, double x, double y, double width, double height) {
         g.drawImage(image, s(x), s(y), s(width), s(height));
-    }
-
-    /**
-     * Draws the given image scaled into this scene.
-     *
-     * @param image image
-     * @param x     unscaled x
-     * @param y     unscaled y
-     */
-    public void drawImage(GraphicsContext g, Image image, double x, double y) {
-        drawImage(g, image, x, y, image.getWidth(), image.getHeight());
     }
 
     public void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {

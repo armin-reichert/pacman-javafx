@@ -91,7 +91,7 @@ public class PlayScene2D extends GameScene2D {
             }
         }
         drawLevelMessage();
-        game.bonus().ifPresent(this::drawBonus);
+        game.bonus().ifPresent(bonus -> classicRenderer.drawBonus(g, context.game().variant(), bonus));
         drawPac(game.pac());
         if (game.powerTimer().isRunning()) {
             game.ghosts().forEach(this::drawGhost);

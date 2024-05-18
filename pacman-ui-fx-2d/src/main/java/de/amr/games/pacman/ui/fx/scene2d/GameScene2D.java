@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
@@ -178,34 +177,6 @@ public abstract class GameScene2D implements GameScene {
             }
         }
     }
-
-    protected void drawBonus(Bonus bonus) {
-        switch (context.game().variant()) {
-            case GameVariant.MS_PACMAN -> {
-                MsPacManGameSpriteSheet ss = context.spriteSheet();
-                if (bonus instanceof MovingBonus movingBonus) {
-                    //TODO reconsider this way of implementing the jumping bonus
-                    g.save();
-                    g.translate(0, movingBonus.elongationY());
-                    if (bonus.state() == Bonus.STATE_EDIBLE) {
-                        classicRenderer.drawEntitySprite(g, ss, bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
-                    } else if (bonus.state() == Bonus.STATE_EATEN) {
-                        classicRenderer.drawEntitySprite(g, ss, bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
-                    }
-                    g.restore();
-                }
-            }
-            case GameVariant.PACMAN -> {
-                PacManGameSpriteSheet ss = context.spriteSheet();
-                if (bonus.state() == Bonus.STATE_EDIBLE) {
-                    classicRenderer.drawEntitySprite(g, ss, bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
-                } else if (bonus.state() == Bonus.STATE_EATEN) {
-                    classicRenderer.drawEntitySprite(g, ss, bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
-                }
-            }
-        }
-    }
-
     protected void drawPac(Pac pac) {
         if (!pac.isVisible()) {
             return;
@@ -266,7 +237,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected void drawMsPacManCopyright(double x, double y) {
         Image logo = context.theme().get("mspacman.logo.midway");
-        classicRenderer.drawImage(g, logo, x, y + 2, TS * 4 - 2, TS * 4);
+        classicRenderer.drawImageScaled(g, logo, x, y + 2, TS * 4 - 2, TS * 4);
         g.setFill(context.theme().color("palette.red"));
         g.setFont(sceneFont(8));
         g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2));
