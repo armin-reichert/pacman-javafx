@@ -64,6 +64,6 @@ public class MsPacManCutScene3 extends GameScene2D {
         classicRenderer.drawEntitySprite(g, ss, intermission.stork, storkAnimation.currentSprite());
         classicRenderer.drawEntitySprite(g, ss, intermission.bag,
             intermission.bagOpen ? ss.juniorPacSprite() : ss.blueBagSprite());
-        drawLevelCounter();
+        classicRenderer.drawLevelCounter(g, GameVariant.MS_PACMAN, context.game().levelCounter());
     }
 }

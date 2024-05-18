@@ -53,6 +53,6 @@ public class MsPacManCutScene2 extends GameScene2D {
         drawMsPacManClapperBoard(clapAnimation, t(3), t(10));
         classicRenderer.drawPac(g, GameVariant.MS_PACMAN, intermission.msPac);
         classicRenderer.drawPac(g, GameVariant.MS_PACMAN, intermission.pacMan);
-        drawLevelCounter();
+        classicRenderer.drawLevelCounter(g, GameVariant.MS_PACMAN, context.game().levelCounter());
     }
 }

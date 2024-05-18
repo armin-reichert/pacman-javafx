@@ -99,7 +99,7 @@ public class MsPacManIntroScene extends GameScene2D {
         }
         classicRenderer.drawPac(g, GameVariant.MS_PACMAN, intro.msPacMan);
         drawMsPacManCopyright(t(6), t(28));
-        drawLevelCounter();
+        classicRenderer.drawLevelCounter(g, GameVariant.MS_PACMAN, context.game().levelCounter());
     }
 
     private void drawMarquee() {

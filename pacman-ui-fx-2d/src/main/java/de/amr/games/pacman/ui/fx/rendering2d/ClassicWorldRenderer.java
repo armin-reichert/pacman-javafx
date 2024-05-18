@@ -20,6 +20,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.util.List;
+
 import static de.amr.games.pacman.lib.Globals.*;
 
 /**
@@ -123,6 +125,18 @@ public class ClassicWorldRenderer {
         }
     }
 
+    public void drawLevelCounter(GraphicsContext g, GameVariant variant, List<Byte> symbols) {
+        double x = t(GameModel.ARCADE_MAP_TILES_X - 4); // TODO
+        double y = t(GameModel.ARCADE_MAP_TILES_Y - 2); // TODO
+        for (byte symbol : symbols) {
+            switch (variant) {
+                case MS_PACMAN -> drawSpriteScaled(g, ssMsPacMan.source(), ssMsPacMan.bonusSymbolSprite(symbol), x, y);
+                case PACMAN    -> drawSpriteScaled(g, ssPacMan.source(), ssPacMan.bonusSymbolSprite(symbol), x, y);
+            }
+            x -= TS * 2;
+        }
+    }
+
     public void drawPac(GraphicsContext g, GameVariant variant, Pac pac) {
         if (!pac.isVisible()) {
             return;
@@ -137,7 +151,7 @@ public class ClassicWorldRenderer {
         });
     }
 
-    public void drawPacInfo(GraphicsContext g, GameVariant variant, Pac pac) {
+    public void drawPacInfo(GraphicsContext g, Pac pac) {
         g.setFill(Color.WHITE);
         g.setFont(Font.font("Monospaced", s(6)));
         pac.animations().ifPresent(animations -> {

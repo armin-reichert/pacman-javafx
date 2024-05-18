@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 
 import static de.amr.games.pacman.lib.Globals.t;
@@ -47,6 +48,6 @@ public class PacManCreditScene extends GameScene2D {
         classicRenderer.drawText(g, "BONUS PAC-MAN FOR 10000", context.theme().color("palette.rose"), font8, t(1), t(25));
         classicRenderer.drawText(g, "PTS", context.theme().color("palette.rose"), font6, t(25), t(25));
         drawMidwayCopyright(t(4), t(29));
-        drawLevelCounter();
+        classicRenderer.drawLevelCounter(g, GameVariant.PACMAN, context.game().levelCounter());
     }
 }

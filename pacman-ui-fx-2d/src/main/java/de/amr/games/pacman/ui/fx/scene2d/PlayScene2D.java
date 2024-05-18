@@ -94,7 +94,7 @@ public class PlayScene2D extends GameScene2D {
         game.bonus().ifPresent(bonus -> classicRenderer.drawBonus(g, context.game().variant(), bonus));
         classicRenderer.drawPac(g, context.game().variant(), game.pac());
         if (infoVisiblePy.get()) {
-            classicRenderer.drawPacInfo(g, context.game().variant(), game.pac());
+            classicRenderer.drawPacInfo(g, game.pac());
         }
         if (game.powerTimer().isRunning()) {
             game.ghosts().forEach(ghost -> {
@@ -118,7 +118,7 @@ public class PlayScene2D extends GameScene2D {
             }
             classicRenderer.drawLivesCounter(g, context.game().variant(), numLivesDisplayed);
         }
-        drawLevelCounter();
+        classicRenderer.drawLevelCounter(g, context.game().variant(), context.game().levelCounter());
     }
 
     private void drawLevelMessage() {

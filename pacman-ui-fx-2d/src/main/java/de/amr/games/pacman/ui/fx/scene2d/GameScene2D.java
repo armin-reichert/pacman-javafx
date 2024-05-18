@@ -40,7 +40,6 @@ public abstract class GameScene2D implements GameScene {
     protected final ModernWorldRenderer modernRenderer = new ModernWorldRenderer(scalingPy);
     protected final ClassicWorldRenderer classicRenderer = new ClassicWorldRenderer(scalingPy);
 
-
     public abstract boolean isCreditVisible();
 
     @Override
@@ -95,17 +94,12 @@ public abstract class GameScene2D implements GameScene {
 
     public void draw() {
         if (g == null) {
-            Logger.error("Cannot render game scene {}, no canvas has been assigned",
-                getClass().getSimpleName());
-            return;
-        }
-        if (!g.getCanvas().isVisible()) {
+            Logger.error("Cannot render game scene {}, no canvas has been assigned", getClass().getSimpleName());
             return;
         }
         clearCanvas();
         if (context == null) {
-            Logger.error("Cannot render game scene {}, no scene context has been assigned",
-                getClass().getSimpleName());
+            Logger.error("Cannot render game scene {}, no scene context has been assigned", getClass().getSimpleName());
             return;
         }
         switch (context.game().variant()) {
@@ -152,27 +146,6 @@ public abstract class GameScene2D implements GameScene {
         classicRenderer.drawText(g, String.format("%7s", pointsText), color, font, x, y + TS + 1);
         if (score.points() != 0) {
             classicRenderer.drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
-        }
-    }
-
-    protected void drawLevelCounter() {
-        double x = t(GameModel.ARCADE_MAP_TILES_X - 4);
-        double y = t(GameModel.ARCADE_MAP_TILES_Y - 2);
-        switch (context.game().variant()) {
-            case MS_PACMAN -> {
-                MsPacManGameSpriteSheet ss = context.spriteSheet();
-                for (byte symbol : context.game().levelCounter()) {
-                    classicRenderer.drawSpriteScaled(g, ss.source(), ss.bonusSymbolSprite(symbol), x, y);
-                    x -= TS * 2;
-                }
-            }
-            case PACMAN -> {
-                PacManGameSpriteSheet ss = context.spriteSheet();
-                for (byte symbol : context.game().levelCounter()) {
-                    classicRenderer.drawSpriteScaled(g, ss.source(), ss.bonusSymbolSprite(symbol), x, y);
-                    x -= TS * 2;
-                }
-            }
         }
     }
 
