@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.rendering2d.FoodMapRenderer;
@@ -17,6 +16,7 @@ import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.rendering2d.TerrainMapRenderer;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -36,7 +36,12 @@ import static java.util.function.Predicate.not;
  */
 public class PlayScene2D extends GameScene2D {
 
-    static class TileMapWorldRenderer {
+    static class ModernWorldRenderer {
+
+        public ModernWorldRenderer(DoubleProperty scalingPy) {
+            terrainRenderer.scalingPy.bind(scalingPy);
+            foodRenderer.scalingPy.bind(scalingPy);
+        }
 
         private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
         private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
@@ -68,57 +73,91 @@ public class PlayScene2D extends GameScene2D {
             }
         }
 
-        public void bindScaling(DoubleProperty scalingPy) {
-            terrainRenderer.scalingPy.bind(scalingPy);
-            foodRenderer.scalingPy.bind(scalingPy);
-        }
     }
 
-    static class PacManWorldSpriteSheetRenderer {
+    static class ClassicWorldRenderer {
 
-        private PacManGameSpriteSheet spriteSheet;
+        private final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
+        private PacManGameSpriteSheet spriteSheetPacMan;
+        private MsPacManGameSpriteSheet spriteSheetMsPacMan;
 
-        public void setSpriteSheet(PacManGameSpriteSheet spriteSheet) {
-            this.spriteSheet = spriteSheet;
+        public ClassicWorldRenderer(DoubleProperty scalingPy) {
+            this.scalingPy.bind(scalingPy);
         }
 
-        public void draw(GraphicsContext g, World world, boolean flashing, boolean blinkingOn) {
+        public void setPacManSpriteSheet(PacManGameSpriteSheet spriteSheet) {
+            spriteSheetPacMan = spriteSheet;
+        }
+        public void setMsPacManSpriteSheet(MsPacManGameSpriteSheet spriteSheet) {
+            spriteSheetMsPacMan = spriteSheet;
+        }
+
+        public void drawPacManWorld(GraphicsContext g, World world, boolean flashing, boolean blinkingOn) {
             if (flashing) {
+                g.save();
+                g.scale(scalingPy.get(), scalingPy.get());
                 if (blinkingOn) {
-                    g.drawImage(spriteSheet.getFlashingMazeImage(), 0, t(3));
-                    g.restore();
+                    g.drawImage(spriteSheetPacMan.getFlashingMazeImage(), 0, t(3));
                 } else {
-                    drawSprite(g, spriteSheet.getEmptyMazeSprite(), 0, t(3));
+                    drawSprite(g, spriteSheetPacMan.source(), spriteSheetPacMan.getEmptyMazeSprite(), 0, t(3));
                 }
+                g.restore();
             } else {
-                drawSprite(g, spriteSheet.getFullMazeSprite(), 0, t(3));
-                world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(g, world, tile));
-                if (blinkingOn) {
-                    world.energizerTiles().forEach(tile -> hideTileContent(g, world, tile));
+                g.save();
+                g.scale(scalingPy.get(), scalingPy.get());
+                drawSprite(g, spriteSheetPacMan.source(), spriteSheetPacMan.getFullMazeSprite(), 0, t(3));
+                g.restore();
+                world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideFoodTileContent(g, world, tile));
+                if (!blinkingOn) {
+                    world.energizerTiles().forEach(tile -> hideFoodTileContent(g, world, tile));
                 }
             }
         }
 
-        protected void drawSprite(GraphicsContext g, Rectangle2D sprite, double x, double y) {
+        public void drawMsPacManWorld(GraphicsContext g, World world, int mapNumber, boolean flashing, boolean blinkingOn) {
+            double x = 0, y = t(3);
+            if (flashing) {
+                g.save();
+                g.scale(scalingPy.get(), scalingPy.get());
+                if (blinkingOn) {
+                    var emptyMazeBright = spriteSheetMsPacMan.highlightedMaze(mapNumber);
+                    drawSprite(g, spriteSheetMsPacMan.getFlashingMazesImage(), emptyMazeBright, x - 3, y);
+                } else {
+                    drawSprite(g, spriteSheetMsPacMan.source(), spriteSheetMsPacMan.emptyMaze(mapNumber), x, y);
+                }
+                g.restore();
+            } else {
+                g.save();
+                g.scale(scalingPy.get(), scalingPy.get());
+                drawSprite(g, spriteSheetMsPacMan.source(), spriteSheetMsPacMan.filledMaze(mapNumber), x, y);
+                g.restore();
+                world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideFoodTileContent(g, world, tile));
+                if (!blinkingOn) {
+                    world.energizerTiles().forEach(tile -> hideFoodTileContent(g, world, tile));
+                }
+            }
+        }
+
+        protected void drawSprite(GraphicsContext g, Image sourceImage, Rectangle2D sprite, double x, double y) {
             if (sprite != null) {
-                g.drawImage(spriteSheet.source(),
+                g.drawImage(sourceImage,
                     sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
                     x, y, sprite.getWidth(), sprite.getHeight());
             }
         }
 
-        private void hideTileContent(GraphicsContext g, World world, Vector2i tile) {
-            g.setFill(Color.BLACK);
+        private void hideFoodTileContent(GraphicsContext g, World world, Vector2i tile) {
             double r = world.isEnergizerTile(tile) ? 4.5 : 2;
             double cx = t(tile.x()) + HTS;
             double cy = t(tile.y()) + HTS;
-            g.fillRect(s(cx - r), s(cy - r), s(2 * r), s(2 * r));
+            double s = scalingPy.get();
+            g.setFill(Color.BLACK);
+            g.fillRect(s*(cx - r), s*(cy - r), s*(2 * r), s*(2 * r));
         }
-
     }
 
-    private final TileMapWorldRenderer worldRenderer = new TileMapWorldRenderer();
-    private final PacManWorldSpriteSheetRenderer pacManWorldSSRenderer = new PacManWorldSpriteSheetRenderer();
+    private final ModernWorldRenderer modernWorldRenderer = new ModernWorldRenderer(scalingPy);
+    private final ClassicWorldRenderer classicWorldRenderer = new ClassicWorldRenderer(scalingPy);
 
     @Override
     public boolean isCreditVisible() {
@@ -128,8 +167,10 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void init() {
         setScoreVisible(true);
-        worldRenderer.bindScaling(scalingPy);
-        pacManWorldSSRenderer.setSpriteSheet(context.spriteSheet());
+        switch (context.game().variant()) {
+            case MS_PACMAN -> classicWorldRenderer.setMsPacManSpriteSheet(context.spriteSheet());
+            case PACMAN -> classicWorldRenderer.setPacManSpriteSheet(context.spriteSheet());
+        }
     }
 
     @Override
@@ -178,17 +219,17 @@ public class PlayScene2D extends GameScene2D {
             return;
         }
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
-        boolean blinkingOn = context.game().blinking().isOn();
-        switch (game) {
-            case GameVariant.MS_PACMAN -> drawMsPacManMazeUsingSpriteSheet();
+        boolean blinkingOn = game.blinking().isOn();
+        switch (game.variant()) {
+            case GameVariant.MS_PACMAN ->
+                classicWorldRenderer.drawMsPacManWorld(g, game.world(), game.mapNumber(), flashing, blinkingOn);
             case GameVariant.PACMAN -> {
-                if (context.game().mapNumber() == 1 && !PY_USE_ALTERNATE_MAPS.get()) {
-                    pacManWorldSSRenderer.draw(g, context.game().world(), flashing, blinkingOn);
+                if (game.mapNumber() == 1 && !PY_USE_ALTERNATE_MAPS.get()) {
+                    classicWorldRenderer.drawPacManWorld(g, game.world(), flashing, blinkingOn);
                 } else {
-                    worldRenderer.draw(g, context.game().world(), flashing, blinkingOn);
+                    modernWorldRenderer.draw(g, game.world(), flashing, blinkingOn);
                 }
             }
-            default -> throw new IllegalGameVariantException(game);
         }
         drawLevelMessage();
         game.bonus().ifPresent(this::drawBonus);
@@ -221,34 +262,12 @@ public class PlayScene2D extends GameScene2D {
         }
     }
 
-    private void drawMsPacManMazeUsingSpriteSheet() {
-        var game = context.game();
-        var world = game.world();
-        double x = 0, y = t(3);
-        MsPacManGameSpriteSheet sheet = context.spriteSheet();
-        boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
-        if (flashing) {
-            if (game.blinking().isOn()) {
-                var emptyMazeBright = sheet.highlightedMaze(game.mapNumber());
-                drawSprite(sheet.getFlashingMazesImage(), emptyMazeBright, x - 3 /* don't tell your mommy */, y);
-            } else {
-                drawSprite(sheet.source(), sheet.emptyMaze(game.mapNumber()), x, y);
-            }
-        } else {
-            drawSprite(sheet.filledMaze(game.mapNumber()), x, y);
-            world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideTileContent(world, tile));
-            if (game.blinking().isOff()) {
-                world.energizerTiles().forEach(tile -> hideTileContent(world, tile));
-            }
-        }
-    }
-
-
     @Override
     protected void drawSceneInfo() {
+        var game = context.game();
         drawTileGrid(GameModel.ARCADE_MAP_TILES_X, GameModel.ARCADE_MAP_TILES_Y);
-        if (context.game() == GameVariant.PACMAN && context.game().world() != null) {
-            context.game().world().forbiddenPassages().forEach((tile, directions) -> {
+        if (game == GameVariant.PACMAN && game.world() != null) {
+            game.world().forbiddenPassages().forEach((tile, directions) -> {
                 // TODO indicate direction
                 g.setFill(Color.RED);
                 g.fillOval(s(t(tile.x())), s(t(tile.y() - 1)), s(TS), s(TS));
