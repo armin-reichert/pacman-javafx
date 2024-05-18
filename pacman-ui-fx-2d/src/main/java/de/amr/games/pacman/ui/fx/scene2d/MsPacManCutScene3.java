@@ -58,7 +58,7 @@ public class MsPacManCutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        drawMsPacManClapperBoard(clapAnimation, t(3), t(10));
+        classicRenderer.drawClapperBoard(g, context.theme(), clapAnimation, t(3), t(10));
         classicRenderer.drawPac(g, GameVariant.MS_PACMAN, intermission.msPacMan);
         classicRenderer.drawPac(g, GameVariant.MS_PACMAN, intermission.pacMan);
         classicRenderer.drawEntitySprite(g, ss, intermission.stork, storkAnimation.currentSprite());

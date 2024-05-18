@@ -167,22 +167,6 @@ public abstract class GameScene2D implements GameScene {
         g.fillText("1980/1981", s(x + TS * 8), s(y + TS * 4));
     }
 
-    protected void drawMsPacManClapperBoard(ClapperboardAnimation animation, double x, double y) {
-        MsPacManGameSpriteSheet ss = context.spriteSheet();
-        var sprite = animation.currentSprite(ss.clapperboardSprites());
-        if (sprite != null) {
-            classicRenderer.drawSpriteCenteredOverBox(g, ss, sprite, x, y);
-            g.setFont(sceneFont(8));
-            g.setFill(context.theme().color("palette.pale").darker());
-            var numberX = s(x + sprite.getWidth() - 25);
-            var numberY = s(y + 18);
-            g.setFill(context.theme().color("palette.pale"));
-            g.fillText(animation.number(), numberX, numberY);
-            var textX = s(x + sprite.getWidth());
-            g.fillText(animation.text(), textX, numberY);
-        }
-    }
-
     protected void drawTileGrid() {
         g.setStroke(context.theme().color("palette.pale"));
         g.setLineWidth(0.2);

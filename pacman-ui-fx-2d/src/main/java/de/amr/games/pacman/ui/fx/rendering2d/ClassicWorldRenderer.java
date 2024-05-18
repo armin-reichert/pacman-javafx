@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
+import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Rectangle2D;
@@ -100,7 +101,6 @@ public class ClassicWorldRenderer {
         }
     }
 
-
     public void drawMsPacManWorld(GraphicsContext g, World world, int mapNumber, boolean flashing, boolean blinkingOn) {
         double x = 0, y = t(3);
         if (flashing) {
@@ -124,6 +124,22 @@ public class ClassicWorldRenderer {
             }
         }
     }
+
+    public void drawClapperBoard(GraphicsContext g, Theme theme, ClapperboardAnimation animation, double x, double y) {
+        var sprite = animation.currentSprite(ssMsPacMan.clapperboardSprites());
+        if (sprite != null) {
+            drawSpriteCenteredOverBox(g, ssMsPacMan, sprite, x, y);
+            g.setFont(theme.font("font.arcade", s(8)));
+            g.setFill(theme.color("palette.pale").darker());
+            var numberX = s(x + sprite.getWidth() - 25);
+            var numberY = s(y + 18);
+            g.setFill(theme.color("palette.pale"));
+            g.fillText(animation.number(), numberX, numberY);
+            var textX = s(x + sprite.getWidth());
+            g.fillText(animation.text(), textX, numberY);
+        }
+    }
+
 
     public void drawLevelCounter(GraphicsContext g, GameVariant variant, List<Byte> symbols) {
         double x = t(GameModel.ARCADE_MAP_TILES_X - 4); // TODO
