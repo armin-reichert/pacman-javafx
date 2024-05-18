@@ -118,18 +118,18 @@ public class Globals {
     }
 
     /**
-     * @param a left interval bound
-     * @param b right interval bound
+     * @param lowerBound left interval bound
+     * @param upperBoundExclusive right interval bound
      * @return Random integer number from right-open interval <code>[a; b[</code>. Interval bounds are rearranged to
      * guarantee <code>a<=b</code>
      */
-    public static int randomInt(int a, int b) {
-        if (a > b) {
-            var tmp = a;
-            a = b;
-            b = tmp;
+    public static int randomInt(int lowerBound, int upperBoundExclusive) {
+        if (lowerBound > upperBoundExclusive) {
+            var tmp = lowerBound;
+            lowerBound = upperBoundExclusive;
+            upperBoundExclusive = tmp;
         }
-        return a + RND.nextInt(b - a);
+        return lowerBound + RND.nextInt(upperBoundExclusive - lowerBound);
     }
 
     /**

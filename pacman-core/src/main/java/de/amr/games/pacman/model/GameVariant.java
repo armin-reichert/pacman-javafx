@@ -119,7 +119,7 @@ public enum GameVariant implements GameModel {
         @Override
         void buildDemoLevel() {
             levelNumber = 1;
-            populateLevel(createWorld(randomInt(0, 7)));
+            populateLevel(createWorld(randomInt(1, 7)));
             pac.setName("Ms. Pac-Man");
             pac.setAutopilot(new RuleBasedPacSteering(this));
             pac.setUseAutopilot(true);
