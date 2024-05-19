@@ -490,6 +490,11 @@ public enum GameVariant implements GameModel {
         }
 
         @Override
+        public int intermissionNumberAfterLevel(int levelNumber) {
+            return 0;
+        }
+
+        @Override
         void updateLevelCounter() {
             if (levelNumber == 1) {
                 levelCounter.clear();
@@ -811,6 +816,11 @@ public enum GameVariant implements GameModel {
     @Override
     public boolean isDemoLevel() {
         return demoLevel;
+    }
+
+    @Override
+    public int intermissionNumberAfterLevel(int levelNumber) {
+        return level(levelNumber).intermissionNumber();
     }
 
     @Override

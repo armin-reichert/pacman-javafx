@@ -406,7 +406,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void playLevelCompleteAnimation(GameLevel level) {
-        boolean noIntermission = level.intermissionNumber() == 0;
+        boolean noIntermission = context.game().intermissionNumberAfterLevel(context.game().levelNumber()) == 0;
         int numFlashes = context.game().level().orElseThrow().numFlashes();
         var mazeFlashing = level3D.createMazeFlashingAnimation(numFlashes);
         lockGameStateAndPlayAfterOneSecond(new SequentialTransition(

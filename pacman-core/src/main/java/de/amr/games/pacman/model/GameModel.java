@@ -89,6 +89,8 @@ public interface GameModel {
      */
     void createDemoLevel();
 
+    int intermissionNumberAfterLevel(int levelNumber);
+
     void createNextBonus();
 
     /**
