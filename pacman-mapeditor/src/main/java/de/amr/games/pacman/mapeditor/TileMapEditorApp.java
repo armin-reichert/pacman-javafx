@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui.fx;
+package de.amr.games.pacman.mapeditor;
 
 import de.amr.games.pacman.ui.fx.util.TileMapEditor;
 import javafx.application.Application;
@@ -17,10 +17,6 @@ import javafx.stage.Stage;
  * @author Armin Reichert
  */
 public class TileMapEditorApp extends Application  {
-
-    public static void main(String[] args) {
-        launch();
-    }
 
     @Override
     public void start(Stage stage) throws Exception {
