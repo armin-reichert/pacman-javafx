@@ -9,7 +9,6 @@ import de.amr.games.pacman.ui.fx.util.Order;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
-import org.w3c.dom.css.Rect;
 
 import java.util.stream.IntStream;
 
@@ -138,11 +137,15 @@ public class PacManGameSpriteSheet implements SpriteSheet {
     private final Rectangle2D[] pacDyingSprites = new Rectangle2D[11];
     {
         // TODO why do I get drawing artifacts if size is exactly 16?
-        double size = 15.5;
+        double m = 1;
+        double size = raster() - 2*m;
         for (int i = 0; i < pacDyingSprites.length; ++i) {
-            // TODO ensure last image is completely visible. What a mess!
-            int y = i == 10 ? 1 : 0;
-            pacDyingSprites[i] = rect(504 + i * 16, y, size - 0.5, size - 0.5);
+            if (i < pacDyingSprites.length - 1) {
+                pacDyingSprites[i] = rect(504 + i * raster() + m, 0 + m, size, size);
+            } else {
+                // TODO ensure last image is completely visible. What a mess!
+                pacDyingSprites[i] = rect(504 + i * raster(), 0, raster(), raster());
+            }
         }
     }
 
