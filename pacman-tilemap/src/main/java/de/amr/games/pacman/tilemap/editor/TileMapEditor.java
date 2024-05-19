@@ -31,6 +31,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -232,7 +233,9 @@ public class TileMapEditor  {
         var cbGridVisible = new CheckBox("Grid");
         cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
 
-        var cbRuntimePreview = new CheckBox("Runtime View");
+        var cbRuntimePreview = new CheckBox("Runtime Preview");
+        Font font = cbRuntimePreview.getFont();
+        cbRuntimePreview.setFont(Font.font(font.getFamily(), FontWeight.BOLD, 1.5*font.getSize()));
         cbRuntimePreview.selectedProperty().bindBidirectional(runtimePreviewPy);
 
         terrainPalette = new Palette(32, 4, 4, Tiles.TERRAIN_TILES_END);
