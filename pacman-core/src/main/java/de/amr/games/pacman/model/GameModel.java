@@ -82,12 +82,12 @@ public interface GameModel {
      *
      * @param levelNumber level number (starting at 1)
      */
-    void createRegularLevel(int levelNumber) throws GameException;
+    void createRegularLevel(int levelNumber);
 
     /**
      * Creates and initializes a demo level.
      */
-    void createDemoLevel() throws GameException;
+    void createDemoLevel();
 
     void createNextBonus();
 

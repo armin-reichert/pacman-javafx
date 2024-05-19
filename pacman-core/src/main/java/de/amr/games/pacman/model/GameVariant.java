@@ -57,7 +57,7 @@ public enum GameVariant implements GameModel {
         }
 
         @Override
-        public World createWorld(int mapNumber) throws GameException {
+        public World createWorld(int mapNumber) {
             if (mapNumber < 1 || mapNumber > 6) {
                 throw new IllegalArgumentException("Ms. Pac-Man map number must be in 1-6, is: " + mapNumber);
             }
@@ -104,7 +104,7 @@ public enum GameVariant implements GameModel {
         }
 
         @Override
-        void buildRegularLevel(int levelNumber) throws GameException {
+        void buildRegularLevel(int levelNumber) {
             this.levelNumber = checkLevelNumber(levelNumber);
             this.mapNumber = mapNumberByLevelNumber(levelNumber);
             populateLevel(createWorld(mapNumber));
@@ -115,7 +115,7 @@ public enum GameVariant implements GameModel {
         }
 
         @Override
-        void buildDemoLevel() throws GameException {
+        void buildDemoLevel() {
             levelNumber = 1;
             mapNumber = randomInt(1, 7);
             populateLevel(createWorld(mapNumber));
@@ -617,9 +617,9 @@ public enum GameVariant implements GameModel {
         return this;
     }
 
-    abstract void buildRegularLevel(int levelNumber) throws GameException;
+    abstract void buildRegularLevel(int levelNumber);
 
-    abstract void buildDemoLevel() throws GameException;
+    abstract void buildDemoLevel();
 
     abstract byte computeBonusSymbol();
 
@@ -827,7 +827,7 @@ public enum GameVariant implements GameModel {
     }
 
     @Override
-    public void createRegularLevel(int levelNumber) throws GameException {
+    public void createRegularLevel(int levelNumber) {
         clearLevel();
         demoLevel = false;
         buildRegularLevel(levelNumber);
@@ -837,7 +837,7 @@ public enum GameVariant implements GameModel {
     }
 
     @Override
-    public void createDemoLevel() throws GameException {
+    public void createDemoLevel() {
         clearLevel();
         demoLevel = true;
         buildDemoLevel();

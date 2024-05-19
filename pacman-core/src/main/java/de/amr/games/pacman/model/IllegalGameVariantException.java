@@ -7,9 +7,9 @@ package de.amr.games.pacman.model;
 /**
  * @author Armin Reichert
  */
-public class IllegalGameVariantException extends IllegalArgumentException {
+public class IllegalGameVariantException extends GameException {
 
     public IllegalGameVariantException(GameModel variant) {
-        super(String.format("Illegal game variant value '%s'", variant));
+        super(String.format("Illegal game variant value '%s'", variant), null);
     }
 }
