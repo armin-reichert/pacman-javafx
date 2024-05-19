@@ -94,11 +94,6 @@ public class GamePage extends CanvasLayoutPane implements Page {
     protected void rescale(double newScaling, boolean always) {
         super.rescale(newScaling, always);
         resizeRegion(popupLayer, canvasContainer.getWidth(), canvasContainer.getHeight());
-        context.currentGameScene().ifPresent(gameScene -> {
-            if (gameScene instanceof GameScene2D gameScene2D) {
-                gameScene2D.setScaling(getScaling());
-            }
-        });
     }
 
     public void onGameSceneChanged(GameScene newGameScene) {

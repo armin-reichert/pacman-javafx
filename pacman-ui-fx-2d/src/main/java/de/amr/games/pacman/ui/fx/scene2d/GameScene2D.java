@@ -63,13 +63,6 @@ public abstract class GameScene2D implements GameScene {
         g = canvas.getGraphicsContext2D();
     }
 
-    public void setScaling(double scaling) {
-        if (scaling <= 0) {
-            throw new IllegalArgumentException("Scaling value must be positive but is " + scaling);
-        }
-        scalingPy.set(scaling);
-    }
-
     @Override
     public boolean isScoreVisible() {
         return scoreVisiblePy.get();

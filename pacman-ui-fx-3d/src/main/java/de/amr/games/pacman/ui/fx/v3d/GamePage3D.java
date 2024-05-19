@@ -32,12 +32,7 @@ public class GamePage3D extends GamePage {
     private final Dashboard dashboard;
     private final GamePageContextMenu contextMenu;
 
-    private final DoubleProperty pipHeightPy = new SimpleDoubleProperty(this, "pipHeight", PIP_MIN_HEIGHT) {
-        @Override
-        protected void invalidated() {
-              pip.setScaling(get() / CANVAS_HEIGHT_UNSCALED);
-        }
-    };
+    private final DoubleProperty pipHeightPy = new SimpleDoubleProperty(this, "pipHeight", PIP_MIN_HEIGHT);
 
     private final Canvas pipCanvas = new Canvas();
     private final PlayScene2D pip = new PlayScene2D();
@@ -73,7 +68,7 @@ public class GamePage3D extends GamePage {
         pipCanvas.widthProperty().bind(Bindings.createDoubleBinding(() -> pipHeightPy.get() * ASPECT_RATIO, pipHeightPy));
         pipCanvas.opacityProperty().bind(PY_PIP_OPACITY);
         pip.setCanvas(pipCanvas);
-        pip.setScaling(pipHeightPy.get() / CANVAS_HEIGHT_UNSCALED);
+        pip.scalingPy.bind(Bindings.createDoubleBinding(() -> pipHeightPy.get() / CANVAS_HEIGHT_UNSCALED, pipHeightPy));
         pip.setScoreVisible(true);
     }
 
