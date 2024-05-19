@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.world.Tiles;
 import de.amr.games.pacman.model.world.WorldMap;
 import de.amr.games.pacman.ui.fx.rendering2d.FoodMapRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer;
-import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -42,11 +41,7 @@ import static de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer.getColorFrom
 /**
  * @author Armin Reichert
  */
-public class TileMapEditor extends Application  {
-
-    public static void main(String[] args) {
-        launch();
-    }
+public class TileMapEditor  {
 
     static final byte[][] GHOST_HOUSE_SHAPE = {
         {10, 8, 8,14,14, 8, 8,11},
@@ -92,8 +87,7 @@ public class TileMapEditor extends Application  {
     BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
     BooleanProperty runtimePreviewPy = new SimpleBooleanProperty(false);
 
-    @Override
-    public void init() throws Exception {
+    public TileMapEditor() {
         arcadeMaps[0] = WorldMap.copyOf(GameVariant.PACMAN.createWorld(1).map());
         for (int i = 1; i <= 6; ++i) {
             arcadeMaps[i] = WorldMap.copyOf(GameVariant.MS_PACMAN.createWorld(i).map());
@@ -103,8 +97,7 @@ public class TileMapEditor extends Application  {
             new TileMap(DEFAULT_NUM_ROWS, DEFAULT_NUM_COLS));
     }
 
-    @Override
-    public void start(Stage stage) throws Exception {
+    public void embed(Stage stage) throws Exception {
         this.stage = stage;
 
         double height = Math.max(0.8 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
@@ -127,10 +120,6 @@ public class TileMapEditor extends Application  {
         terrainPalette.setRenderer(terrainMapRenderer);
         foodPalette.setRenderer(foodMapRenderer);
 
-        stage.setTitle("Map Editor");
-        stage.setScene(scene);
-        stage.show();
-
         GameClockFX clock = new GameClockFX();
         clock.setTargetFrameRate(20);
         clock.setContinousCallback(() -> {
@@ -144,6 +133,10 @@ public class TileMapEditor extends Application  {
         clock.start();
 
         loadMap(arcadeMaps[3]);
+    }
+
+    public Scene getScene() {
+        return scene;
     }
 
     Pane createSceneContent() {
