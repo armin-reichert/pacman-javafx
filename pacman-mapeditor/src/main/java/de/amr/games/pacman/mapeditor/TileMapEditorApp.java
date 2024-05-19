@@ -21,7 +21,6 @@ public class TileMapEditorApp extends Application  {
     @Override
     public void start(Stage stage) throws Exception {
         var editor = new TileMapEditor(stage);
-        editor.setOwnerWindow(stage);
 
         var layout = new BorderPane();
         layout.setCenter(editor.getUi());

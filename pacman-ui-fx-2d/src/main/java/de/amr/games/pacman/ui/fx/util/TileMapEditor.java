@@ -94,6 +94,7 @@ public class TileMapEditor  {
     BooleanProperty runtimePreviewPy = new SimpleBooleanProperty(false);
 
     public TileMapEditor(Stage stage) {
+        ownerWindow = stage;
         arcadeMaps[0] = WorldMap.copyOf(GameVariant.PACMAN.createWorld(1).map());
         for (int i = 1; i <= 6; ++i) {
             arcadeMaps[i] = WorldMap.copyOf(GameVariant.MS_PACMAN.createWorld(i).map());
@@ -140,10 +141,6 @@ public class TileMapEditor  {
 
     public void startClock() {
         clock.start();
-    }
-
-    public void setOwnerWindow(Window ownerWindow) {
-        this.ownerWindow = ownerWindow;
     }
 
     public Pane getUi() {

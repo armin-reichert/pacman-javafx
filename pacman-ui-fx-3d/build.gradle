@@ -54,7 +54,7 @@ jlink {
     jpackage {
         // not sure if these are properly passed to jpackage call
         installerOptions = [
-                '--description', 'JavaFX 3D',
+                '--description', 'Pac-Man JavaFX 3D',
                 '--copyright', '2021-2024',
                 '--vendor', 'Armin Reichert'
         ]
