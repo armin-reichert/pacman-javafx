@@ -130,8 +130,15 @@ public class TileMapEditor  {
         });
     }
 
-    public void start() {
-        loadMap(arcadeMaps[3]);
+    public WorldMap getPacManMap() {
+        return arcadeMaps[0];
+    }
+
+    public WorldMap getMsPacManMap(int n) {
+        return 1 <= n && n <= 6 ? arcadeMaps[n] : arcadeMaps[1];
+    }
+
+    public void startClock() {
         clock.start();
     }
 
@@ -153,6 +160,10 @@ public class TileMapEditor  {
 
     public Menu getMenuMap() {
         return menuMap;
+    }
+
+    public void setRuntimePreview(boolean state) {
+        runtimePreviewPy.set(state);
     }
 
     public MenuBar createMenus() {
@@ -336,7 +347,7 @@ public class TileMapEditor  {
         }
     }
 
-    void loadMap(WorldMap other) {
+    public void loadMap(WorldMap other) {
         map = WorldMap.copyOf(other);
         currentMapFile = null;
         foodMapPropertiesEditor.setText(map.food().getPropertiesAsText());
