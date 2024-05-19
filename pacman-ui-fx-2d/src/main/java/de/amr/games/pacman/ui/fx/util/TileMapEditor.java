@@ -13,8 +13,9 @@ import de.amr.games.pacman.ui.fx.rendering2d.FoodMapRenderer;
 import de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.Scene;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -28,8 +29,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.tinylog.Logger;
 
 import java.io.*;
@@ -59,10 +60,14 @@ public class TileMapEditor  {
     static final Color DEFAULT_DOOR_COLOR = Color.YELLOW;
     static final Color DEFAULT_FOOD_COLOR = Color.MAGENTA;
 
-    Stage stage;
-    Scene scene;
-    Pane sceneContent;
+    public ObjectProperty<String> titlePy = new SimpleObjectProperty<>(this, "title", "Map Editor");
+
+    Window ownerWindow;
+
+    Pane ui;
     MenuBar menuBar;
+    Menu menuFile;
+    Menu menuMap;
     Canvas canvas;
     TextArea terrainMapPropertiesEditor;
     TextArea foodMapPropertiesEditor;
@@ -70,6 +75,7 @@ public class TileMapEditor  {
     FileChooser openDialog;
     Palette terrainPalette;
     Palette foodPalette;
+    GameClockFX clock;
 
     TileMapEditorTerrainRenderer terrainMapRenderer;
     FoodMapRenderer foodMapRenderer;
@@ -87,25 +93,17 @@ public class TileMapEditor  {
     BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
     BooleanProperty runtimePreviewPy = new SimpleBooleanProperty(false);
 
-    public TileMapEditor() {
+    public TileMapEditor(Stage stage) {
         arcadeMaps[0] = WorldMap.copyOf(GameVariant.PACMAN.createWorld(1).map());
         for (int i = 1; i <= 6; ++i) {
             arcadeMaps[i] = WorldMap.copyOf(GameVariant.MS_PACMAN.createWorld(i).map());
         }
-        map = new WorldMap(
-            new TileMap(DEFAULT_NUM_ROWS, DEFAULT_NUM_COLS),
-            new TileMap(DEFAULT_NUM_ROWS, DEFAULT_NUM_COLS));
-    }
+        map = arcadeMaps[0];
 
-    public void embed(Stage stage) throws Exception {
-        this.stage = stage;
+        ui = createUI();
+        menuBar = createMenus();
 
-        double height = Math.max(0.8 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
-        sceneContent = createSceneContent();
-        scene = new Scene(sceneContent, height * 1.2, height);
-        scene.setFill(Color.BLACK);
-
-        canvas.heightProperty().bind(sceneContent.heightProperty().multiply(0.95));
+        canvas.heightProperty().bind(ui.heightProperty().multiply(0.95));
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> canvas.getHeight() * map.numCols() / map.numRows(), canvas.heightProperty()));
 
@@ -120,7 +118,7 @@ public class TileMapEditor  {
         terrainPalette.setRenderer(terrainMapRenderer);
         foodPalette.setRenderer(foodMapRenderer);
 
-        GameClockFX clock = new GameClockFX();
+        clock = new GameClockFX();
         clock.setTargetFrameRate(20);
         clock.setContinousCallback(() -> {
             updateInfo();
@@ -130,18 +128,35 @@ public class TileMapEditor  {
                 drawBlueScreen(x);
             }
         });
-        clock.start();
+    }
 
+    public void start() {
         loadMap(arcadeMaps[3]);
+        clock.start();
     }
 
-    public Scene getScene() {
-        return scene;
+    public void setOwnerWindow(Window ownerWindow) {
+        this.ownerWindow = ownerWindow;
     }
 
-    Pane createSceneContent() {
+    public Pane getUi() {
+        return ui;
+    }
 
-        var menuFile = new Menu("File");
+    public MenuBar getMenuBar() {
+        return menuBar;
+    }
+
+    public Menu getMenuFile() {
+        return menuFile;
+    }
+
+    public Menu getMenuMap() {
+        return menuMap;
+    }
+
+    public MenuBar createMenus() {
+        menuFile = new Menu("File");
 
         var miNewMap = new MenuItem("New...");
         miNewMap.setOnAction(e -> createNewMap());
@@ -152,12 +167,9 @@ public class TileMapEditor  {
         var miSaveMap = new MenuItem("Save Map...");
         miSaveMap.setOnAction(e -> saveMap());
 
-        var miQuit = new MenuItem("Quit");
-        miQuit.setOnAction(e -> stage.close());
+        menuFile.getItems().addAll(miNewMap, miLoadMap, miSaveMap);
 
-        menuFile.getItems().addAll(miNewMap, miLoadMap, miSaveMap, miQuit);
-
-        var menuMap = new Menu("Map");
+        menuMap = new Menu("Map");
 
         var miClearTerrain = new MenuItem("Clear Terrain");
         miClearTerrain.setOnAction(e -> map.terrain().clear());
@@ -184,7 +196,10 @@ public class TileMapEditor  {
 
         menuBar = new MenuBar();
         menuBar.getMenus().addAll(menuFile, menuMap);
+        return menuBar;
+    }
 
+    private Pane createUI() {
         openDialog = new FileChooser();
         openDialog.setInitialDirectory(lastUsedDir);
 
@@ -243,18 +258,13 @@ public class TileMapEditor  {
         controlsPane.getChildren().add(new VBox(new Text("Terrain Map"), terrainMapPropertiesEditor));
         controlsPane.getChildren().add(new VBox(new Text("Food Map"), foodMapPropertiesEditor));
 
-        var contentPane = new BorderPane();
-
-        contentPane.setTop(menuBar);
-
         var scroll = new ScrollPane(canvas);
         scroll.setFitToHeight(true);
 
         var hbox = new HBox(scroll, controlsPane);
         hbox.setSpacing(10);
-        contentPane.setCenter(hbox);
 
-        return contentPane;
+        return new BorderPane(hbox);
     }
 
     // TODO use own canvas or Text control
@@ -417,9 +427,9 @@ public class TileMapEditor  {
         infoLabel.setText(text);
 
         if (currentMapFile != null) {
-            stage.setTitle("Map Editor: " + currentMapFile.getPath());
+            titlePy.set("Map Editor: " + currentMapFile.getPath());
         } else {
-            stage.setTitle("Map Editor");
+            titlePy.set("Map Editor");
         }
     }
 
@@ -443,7 +453,7 @@ public class TileMapEditor  {
     void openMapFile() {
         openDialog.setInitialDirectory(lastUsedDir);
         openDialog.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Word Map Files", ".world"));
-        File file = openDialog.showOpenDialog(stage);
+        File file = openDialog.showOpenDialog(ownerWindow);
         if (file != null) {
             readMapFile(file);
             updateInfo();
@@ -470,7 +480,7 @@ public class TileMapEditor  {
     void saveMap() {
         openDialog.setInitialDirectory(lastUsedDir);
         openDialog.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("World Map Files", ".world"));
-        File file = openDialog.showSaveDialog(stage);
+        File file = openDialog.showSaveDialog(ownerWindow);
         if (file != null) {
             lastUsedDir = file.getParentFile();
             if (file.getName().endsWith(".world")) {
