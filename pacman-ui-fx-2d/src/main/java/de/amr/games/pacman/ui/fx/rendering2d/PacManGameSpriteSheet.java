@@ -9,6 +9,7 @@ import de.amr.games.pacman.ui.fx.util.Order;
 import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
+import org.w3c.dom.css.Rect;
 
 import java.util.stream.IntStream;
 
@@ -79,7 +80,6 @@ public class PacManGameSpriteSheet implements SpriteSheet {
     }
 
     private final Rectangle2D[] bonusValueSprites = new Rectangle2D[8];
-
     {
         for (byte symbol = 0; symbol < 8; ++symbol) {
             bonusValueSprites[symbol] = switch (symbol) {
@@ -101,7 +101,6 @@ public class PacManGameSpriteSheet implements SpriteSheet {
     }
 
     private final Rectangle2D[] ghostFacingRightSprites = new Rectangle2D[4];
-
     {
         for (byte id = 0; id < 4; ++id) {
             int rx = 2 * DIR_ORDER.index(Direction.RIGHT);
@@ -121,14 +120,13 @@ public class PacManGameSpriteSheet implements SpriteSheet {
     }
 
     private final Rectangle2D[][] pacMunchingSprites = new Rectangle2D[4][];
-
     {
-        double m = 0.5; // margin
+        double m = 1; // margin
         double size = 16 - 2 * m;
         for (byte d = 0; d < 4; ++d) {
-            var wide = rect(OFF_X + 0 + m, d * 16 + m, size, size);
+            var wide   = rect(OFF_X +  0 + m, d * 16 + m, size, size);
             var middle = rect(OFF_X + 16 + m, d * 16 + m, size, size);
-            var closed = rect(OFF_X + 32 + m, 0 + m, size, size);
+            var closed = rect(OFF_X + 32 + m, 0      + m, size, size);
             pacMunchingSprites[d] = array(closed, closed, middle, middle, wide, wide, middle, middle);
         }
     }
@@ -138,7 +136,6 @@ public class PacManGameSpriteSheet implements SpriteSheet {
     }
 
     private final Rectangle2D[] pacDyingSprites = new Rectangle2D[11];
-
     {
         // TODO why do I get drawing artifacts if size is exactly 16?
         double size = 15.5;
@@ -154,7 +151,6 @@ public class PacManGameSpriteSheet implements SpriteSheet {
     }
 
     private final Rectangle2D[][][] ghostNormalSprites = new Rectangle2D[4][4][];
-
     {
         for (byte id = 0; id < 4; ++id) {
             for (byte d = 0; d < 4; ++d) {
@@ -182,7 +178,6 @@ public class PacManGameSpriteSheet implements SpriteSheet {
     }
 
     private final Rectangle2D[][] ghostEyesSprites = new Rectangle2D[4][];
-
     {
         for (byte d = 0; d < 4; ++d) {
             ghostEyesSprites[d] = array(rect(OFF_X + r(8 + d), r(5), r(1), r(1)));
@@ -204,29 +199,45 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         return bigPacManSprites;
     }
 
-    private final Rectangle2D[] blinkyDamagedSprites = array(
-        rect(OFF_X + r(8), r(7), r(1), r(1)),
-        rect(OFF_X + r(9), r(7), r(1), r(1)));
+    private final Rectangle2D[] blinkyDamagedSprites = new Rectangle2D[2];
+    private final Rectangle2D[] blinkyStretchedSprites = new Rectangle2D[5];
+    private final Rectangle2D[] blinkyPatchedSprites = new Rectangle2D[2];
+    private final Rectangle2D[] blinkyNakedSprites = new Rectangle2D[2];
+
+    {
+        double m = 0; // margin
+        double size = raster() - 2 * m;
+        for (int i = 0; i < 5; ++i) {
+            blinkyStretchedSprites[i] = rect(OFF_X + r(8 + i) + m, r(6) + m, size, size);
+        }
+
+        m = 1;
+        size = raster() - 2 * m;
+        blinkyDamagedSprites[0] = rect(OFF_X + r(8) + m, r(7) + m, size, size);
+        blinkyDamagedSprites[1] = rect(OFF_X + r(9) + m, r(7) + m, size, size);
+
+        m = 1;
+        size = raster() - 2 * m;
+        blinkyPatchedSprites[0] = rect(OFF_X + r(10) + m, r(7) + m, size, size);
+        blinkyPatchedSprites[1] = rect(OFF_X + r(11) + m, r(7) + m, size, size);
+
+        m = 0;
+        size = raster() - 2 * m;
+        blinkyNakedSprites[0] = rect(OFF_X + r(8)  + m, r(8) + m, 2*size, size);
+        blinkyNakedSprites[1] = rect(OFF_X + r(10) + m, r(8) + m, 2*size, size);
+}
 
     public Rectangle2D[] blinkyDamagedSprites() {
         return blinkyDamagedSprites;
     }
 
-    private final Rectangle2D[] blinkyStretchedSprites = tilesRightOf(OFF_X, 8, 6, 5);
-
     public Rectangle2D[] blinkyStretchedSprites() {
         return blinkyStretchedSprites;
     }
 
-    private final Rectangle2D[] blinkyPatchedSprites = tilesRightOf(OFF_X, 10, 7, 2);
-
     public Rectangle2D[] blinkyPatchedSprites() {
         return blinkyPatchedSprites;
     }
-
-    private final Rectangle2D[] blinkyNakedSprites = array(
-        rect(OFF_X + r(8), r(8), r(2), r(1)),
-        rect(OFF_X + r(10), r(8), r(2), r(1)));
 
     public Rectangle2D[] blinkyNakedSprites() {
         return blinkyNakedSprites;

@@ -7,6 +7,7 @@ open module de.amr.games.pacman.ui.fx { // module is open to allow access to (no
     requires javafx.media;
     requires org.tinylog.api;
     requires de.amr.games.pacman;
+    requires jdk.xml.dom;
 
     exports de.amr.games.pacman.ui.fx;
     exports de.amr.games.pacman.ui.fx.util;

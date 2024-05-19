@@ -17,6 +17,10 @@ public interface SpriteSheet {
 
     int raster();
 
+    /**
+     * @param n number of raster tiles
+     * @return pixels spanned by raster cells
+     */
     default double r(double n) {
         return n * raster();
     }
