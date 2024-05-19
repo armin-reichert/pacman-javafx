@@ -13,9 +13,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
-import de.amr.games.pacman.ui.fx.PacManGames2dUI;
-import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameSpriteSheet;
-import de.amr.games.pacman.ui.fx.rendering2d.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.v3d.ActionHandler3D;
 import de.amr.games.pacman.ui.fx.v3d.entity.Bonus3D;
@@ -263,7 +260,6 @@ public class PlayScene3D implements GameScene {
             }
 
             case HUNTING -> {
-                assertLevel3DExists();
                 level3D.pac3D().init(context.game());
                 level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context.game()));
                 level3D.livesCounter3D().startAnimation();
@@ -271,7 +267,6 @@ public class PlayScene3D implements GameScene {
             }
 
             case PACMAN_DYING -> {
-                assertLevel3DExists();
                 context.stopAllSounds();
                 var animation = switch (context.game().variant()) {
                     case MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
@@ -281,7 +276,6 @@ public class PlayScene3D implements GameScene {
             }
 
             case GAME_OVER -> {
-                assertLevel3DExists();
                 context.stopAllSounds();
                 context.gameState().timer().restartSeconds(3);
                 level3D.stopEnergizerAnimation();
@@ -292,8 +286,6 @@ public class PlayScene3D implements GameScene {
             }
 
             case GHOST_DYING -> {
-                assertLevel3DExists();
-
                 Rectangle2D[] sprites = switch (context.game().variant()) {
                     case MS_PACMAN -> SS_MS_PACMAN.ghostNumberSprites();
                     case PACMAN    -> SS_PACMAN.ghostNumberSprites();
@@ -309,7 +301,6 @@ public class PlayScene3D implements GameScene {
             }
 
             case LEVEL_COMPLETE -> {
-                assertLevel3DExists();
                 context.stopAllSounds();
                 // if cheat has been used to complete level, 3D food might still exist:
                 level3D.pellets3D().forEach(level3D::eat);
@@ -319,7 +310,6 @@ public class PlayScene3D implements GameScene {
             }
 
             case LEVEL_TRANSITION -> {
-                assertLevel3DExists();
                 context.gameState().timer().restartSeconds(3);
                 replaceGameLevel3D();
                 level3D.pac3D().init(context.game());
@@ -327,8 +317,8 @@ public class PlayScene3D implements GameScene {
             }
 
             case LEVEL_TEST -> {
+                ensureLevel3DExists();
                 PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
-                replaceGameLevel3D();
                 level3D.pac3D().init(context.game());
                 level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context.game()));
                 showLevelMessage();
@@ -340,24 +330,22 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onBonusActivated(GameEvent event) {
-        assertLevel3DExists();
         context.game().bonus().ifPresent(level3D::replaceBonus3D);
     }
 
     @Override
     public void onBonusEaten(GameEvent event) {
-        assertLevel3DExists();
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
     }
 
     @Override
     public void onBonusExpired(GameEvent event) {
-        assertLevel3DExists();
         level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
     }
 
     @Override
     public void onLevelCreated(GameEvent event) {
+        //TODO check this
         if (context.game().isDemoLevel() || context.game().levelNumber() == 1 || context.gameState() == GameState.LEVEL_TEST) {
             replaceGameLevel3D();
         }
@@ -365,7 +353,6 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        assertLevel3DExists();
         if (context.game().levelNumber() == 1 || context.gameState() == GameState.LEVEL_TEST) {
             showLevelMessage();
         }
@@ -374,7 +361,6 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onPacFoundFood(GameEvent event) {
-        assertLevel3DExists();
         World world = context.game().world();
         // When cheat "eat all pellets" has been used, no tile is present in the event.
         // In that case, ensure that the 3D pellets are in sync with the model.
@@ -393,27 +379,21 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onPacGetsPower(GameEvent event) {
-        assertLevel3DExists();
         level3D.pac3D().walkingAnimation().setPowerWalking(true);
     }
 
     @Override
     public void onPacLostPower(GameEvent event) {
-        assertLevel3DExists();
         level3D.pac3D().walkingAnimation().setPowerWalking(false);
     }
 
-    private void assertLevel3DExists() {
+    private void ensureLevel3DExists() {
         if (level3D == null) {
-            throw new IllegalStateException("No 3D level exists!");
+            replaceGameLevel3D();
         }
     }
 
     private void showLevelMessage() {
-        if (context.game().level().isEmpty()) {
-            Logger.info("Cannot show level message, level is NULL");
-            return;
-        }
         World world = context.game().world();
         checkNotNull(world);
         if (context.gameState() == GameState.LEVEL_TEST) {
