@@ -112,6 +112,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void end() {
         perspectivePy.unbind();
+        level3D=null;
         Logger.info("3D play scene ended. {}", this);
     }
 
@@ -134,6 +135,8 @@ public class PlayScene3D implements GameScene {
             }
             level3D.livesCounter3D().update(numLivesDisplayed);
             perspective().update(fxSubScene.getCamera(), game.pac());
+        } else {
+            replaceGameLevel3D();
         }
         game.pac().setUseAutopilot(game.isDemoLevel() || PY_USE_AUTOPILOT.get());
         scores3D.setScores(
