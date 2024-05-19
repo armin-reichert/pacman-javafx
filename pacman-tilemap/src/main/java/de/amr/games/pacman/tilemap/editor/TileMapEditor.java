@@ -2,15 +2,19 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui.fx.util;
+package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.Tiles;
 import de.amr.games.pacman.model.world.WorldMap;
-import de.amr.games.pacman.ui.fx.rendering2d.FoodMapRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer;
+import de.amr.games.pacman.tilemap.FoodMapRenderer;
+import de.amr.games.pacman.tilemap.TileMapEditorTerrainRenderer;
+import de.amr.games.pacman.tilemap.TileMapRenderer;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -31,13 +35,14 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.IntStream;
 
-import static de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer.getColorFromMap;
+import static de.amr.games.pacman.tilemap.TileMapRenderer.getColorFromMap;
 
 /**
  * @author Armin Reichert
@@ -75,7 +80,7 @@ public class TileMapEditor  {
     FileChooser openDialog;
     Palette terrainPalette;
     Palette foodPalette;
-    GameClockFX clock;
+    Timeline clock;
 
     TileMapEditorTerrainRenderer terrainMapRenderer;
     FoodMapRenderer foodMapRenderer;
@@ -119,16 +124,17 @@ public class TileMapEditor  {
         terrainPalette.setRenderer(terrainMapRenderer);
         foodPalette.setRenderer(foodMapRenderer);
 
-        clock = new GameClockFX();
-        clock.setTargetFrameRate(20);
-        clock.setContinousCallback(() -> {
+        int fps = 30;
+        clock = new Timeline(30, new KeyFrame(Duration.millis(1000.0/fps),e -> {
             updateInfo();
             try {
                 draw();
             } catch (Exception x) {
                 drawBlueScreen(x);
             }
-        });
+        }));
+        clock.setCycleCount(Animation.INDEFINITE);
+        clock.play();
     }
 
     public WorldMap getPacManMap() {
@@ -137,10 +143,6 @@ public class TileMapEditor  {
 
     public WorldMap getMsPacManMap(int n) {
         return 1 <= n && n <= 6 ? arcadeMaps[n] : arcadeMaps[1];
-    }
-
-    public void startClock() {
-        clock.start();
     }
 
     public Pane getUi() {

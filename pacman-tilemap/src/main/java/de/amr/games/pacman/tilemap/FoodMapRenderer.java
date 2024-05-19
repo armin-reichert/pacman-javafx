@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui.fx.rendering2d;
+package de.amr.games.pacman.tilemap;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.world.TileMap;

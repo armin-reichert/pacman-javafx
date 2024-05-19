@@ -13,8 +13,6 @@ import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.BorderPane;

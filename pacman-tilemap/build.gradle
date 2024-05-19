@@ -12,13 +12,12 @@ ext.os = org.gradle.internal.os.OperatingSystem.current()
 println "Operating System: name='${os.name}' version='${os.version}' arch='${arch}'"
 
 application {
-    mainModule = 'de.amr.games.pacman.mapeditor'
-    mainClass = 'de.amr.games.pacman.mapeditor.Main'
+    mainModule = 'de.amr.games.pacman.tilemap'
+    mainClass = 'de.amr.games.pacman.tilemap.editor.Main'
 }
 
 dependencies {
     implementation project(':pacman-core')
-    implementation project(':pacman-ui-fx-2d')
     implementation 'org.tinylog:tinylog-api:2.7.0'
     implementation 'org.tinylog:tinylog-impl:2.7.0'
 }

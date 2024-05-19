@@ -4,7 +4,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.util.GameClockFX;
-import de.amr.games.pacman.ui.fx.util.SpriteSheet;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.media.AudioClip;

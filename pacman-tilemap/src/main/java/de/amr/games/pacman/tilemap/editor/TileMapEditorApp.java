@@ -2,9 +2,8 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.mapeditor;
+package de.amr.games.pacman.tilemap.editor;
 
-import de.amr.games.pacman.ui.fx.util.TileMapEditor;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
@@ -40,6 +39,5 @@ public class TileMapEditorApp extends Application  {
 
         editor.loadMap(editor.getMsPacManMap(4));
         editor.setRuntimePreview(true);
-        editor.startClock();
     }
 }

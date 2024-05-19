@@ -2,13 +2,11 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui.fx.util;
+package de.amr.games.pacman.tilemap;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.Tiles;
-import de.amr.games.pacman.ui.fx.rendering2d.TerrainMapRenderer;
-import de.amr.games.pacman.ui.fx.rendering2d.TileMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -18,7 +16,7 @@ import javafx.scene.shape.ArcType;
  */
 public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
 
-    boolean runtimePreview;
+    public boolean runtimePreview;
 
     public void drawMap(GraphicsContext g, TileMap map) {
         if (runtimePreview) {

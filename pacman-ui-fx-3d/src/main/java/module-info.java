@@ -11,6 +11,7 @@ open module de.amr.games.pacman.ui.fx.v3d {
     requires javafx.media;
     requires org.tinylog.api;
     requires de.amr.games.pacman;
+    requires de.amr.games.pacman.tilemap;
     requires de.amr.games.pacman.ui.fx;
 
     exports de.amr.games.pacman.ui.fx.v3d;

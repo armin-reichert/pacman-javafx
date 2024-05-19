@@ -1,4 +1,4 @@
-package de.amr.games.pacman.mapeditor;
+package de.amr.games.pacman.tilemap.editor;
 
 import javafx.application.Application;
 
