@@ -73,20 +73,34 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.restore();
     }
 
+    private double lineWidth(GraphicsContext g) {
+        double h = g.getCanvas().getHeight();
+        //TODO make linear
+        if (h < 36*8*1.5) {
+            return 1.5;
+        }
+        if (h < 36*8*2.5) {
+            return 1;
+        }
+        return 0.75;
+    }
+
     public void drawSingleStrokePaths(GraphicsContext g, TileMap map) {
         var explored = new BitSet();
+        double lineWidth = lineWidth(g);
         map.tiles(Tiles.CORNER_NW)
             .filter(corner -> !explored.get(map.index(corner)))
             .map(corner -> TileMapPath.build(map, explored, corner, LEFT))
-            .forEach(path -> drawPath(g, map, path, true, 0.5, wallStrokeColor, wallFillColor));
+            .forEach(path -> drawPath(g, map, path, true, lineWidth, wallStrokeColor, wallFillColor));
     }
 
     /*
      * Draws a path with an inside stroke of wall fill color and two outside strokes of wall stroke color.
      */
     public void drawTripleStrokePath(GraphicsContext g, TileMap map, TileMapPath path) {
-        drawPath(g, map, path, false,  3,   wallStrokeColor, null);
-        drawPath(g, map, path, false,  2, wallFillColor, null);
+        double lineWidth = lineWidth(g);
+        drawPath(g, map, path, false,  3*lineWidth, wallStrokeColor, null);
+        drawPath(g, map, path, false,  lineWidth, wallFillColor, null);
     }
 
     public void drawTripleStrokePaths(GraphicsContext g, TileMap map) {
