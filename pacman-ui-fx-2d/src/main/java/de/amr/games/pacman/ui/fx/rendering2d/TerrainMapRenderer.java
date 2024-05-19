@@ -54,8 +54,8 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     public void drawMap(GraphicsContext g, TileMap map) {
         drawTripleStrokePaths(g, map);
-        drawSingleStrokePaths(g, map);
         map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, door, doorColor));
+        drawSingleStrokePaths(g, map);
     }
 
     @Override
@@ -116,8 +116,8 @@ public class TerrainMapRenderer implements TileMapRenderer {
             .map(handle -> TileMapPath.build(map, explored, handle, LEFT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
 
-        // ghost house
-        map.tiles(Tiles.DOOR)
+        // ghost house, doors are included as walls!
+        map.tiles(Tiles.DCORNER_NW)
             .filter(corner -> !explored.get(map.index(corner)))
             .map(corner -> TileMapPath.build(map, explored, corner, LEFT))
             .forEach(path -> drawTripleStrokePath(g, map, path));
