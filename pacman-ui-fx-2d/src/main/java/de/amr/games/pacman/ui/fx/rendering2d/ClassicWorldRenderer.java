@@ -99,7 +99,7 @@ public class ClassicWorldRenderer {
         for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
             switch (variant) {
                 case MS_PACMAN -> drawSpriteScaled(g, ssMsPacMan.source(), ssMsPacMan.livesCounterSprite(), x + TS * (2 * i), y);
-                case PACMAN -> drawSpriteScaled(g, ssPacMan.source(), ssPacMan.livesCounterSprite(), x + TS * (2 * i), y);
+                case PACMAN, PACMAN_PLUS -> drawSpriteScaled(g, ssPacMan.source(), ssPacMan.livesCounterSprite(), x + TS * (2 * i), y);
             }
         }
         // text indicating that more lives are available than displayed
@@ -155,7 +155,7 @@ public class ClassicWorldRenderer {
         for (byte symbol : symbols) {
             switch (variant) {
                 case MS_PACMAN -> drawSpriteScaled(g, ssMsPacMan.source(), ssMsPacMan.bonusSymbolSprite(symbol), x, y);
-                case PACMAN    -> drawSpriteScaled(g, ssPacMan.source(), ssPacMan.bonusSymbolSprite(symbol), x, y);
+                case PACMAN, PACMAN_PLUS    -> drawSpriteScaled(g, ssPacMan.source(), ssPacMan.bonusSymbolSprite(symbol), x, y);
             }
             x -= TS * 2;
         }
@@ -165,7 +165,7 @@ public class ClassicWorldRenderer {
         if (pac.isVisible() && pac.animations().isPresent() && pac.animations().get() instanceof SpriteAnimations sa) {
             switch (variant) {
                 case MS_PACMAN -> drawEntitySprite(g, ssMsPacMan, pac, sa.currentSprite());
-                case    PACMAN -> drawEntitySprite(g, ssPacMan, pac, sa.currentSprite());
+                case PACMAN, PACMAN_PLUS -> drawEntitySprite(g, ssPacMan, pac, sa.currentSprite());
             }
         }
     }
@@ -190,7 +190,7 @@ public class ClassicWorldRenderer {
             if (ga instanceof SpriteAnimations animations) {
                 switch (variant) {
                     case MS_PACMAN -> drawEntitySprite(g, ssMsPacMan, ghost, animations.currentSprite());
-                    case    PACMAN -> drawEntitySprite(g, ssPacMan, ghost, animations.currentSprite());
+                    case PACMAN, PACMAN_PLUS -> drawEntitySprite(g, ssPacMan, ghost, animations.currentSprite());
                 }
             }
         });
@@ -236,7 +236,7 @@ public class ClassicWorldRenderer {
                     g.restore();
                 }
             }
-            case PACMAN -> {
+            case PACMAN, PACMAN_PLUS -> {
                 if (bonus.state() == Bonus.STATE_EDIBLE) {
                     drawEntitySprite(g, ssPacMan, bonus.entity(), ssPacMan.bonusSymbolSprite(bonus.symbol()));
                 } else if (bonus.state() == Bonus.STATE_EATEN) {

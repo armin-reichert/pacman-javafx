@@ -10,7 +10,6 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui.fx.page.GamePage;
 import de.amr.games.pacman.ui.fx.page.Page;
@@ -91,12 +90,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final int CANVAS_WIDTH_UNSCALED = GameModel.ARCADE_MAP_TILES_X * TS; // 28*8 = 224
     public static final int CANVAS_HEIGHT_UNSCALED = GameModel.ARCADE_MAP_TILES_Y * TS; // 36*8 = 288
 
-    public static final BooleanProperty PY_USE_ALTERNATE_MAPS = new SimpleBooleanProperty(false) {
-        @Override
-        protected void invalidated() {
-            GameVariant.PACMAN.setUseRandomMaps(get());
-        }
-    };
     public static final BooleanProperty PY_USE_AUTOPILOT   = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
 
@@ -199,6 +192,11 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         theme.set("pacman.audio.siren.3",             rm.loadAudioClip("sound/pacman/siren_3.mp3"));
         theme.set("pacman.audio.siren.4",             rm.loadAudioClip("sound/pacman/siren_4.mp3"));
         theme.set("pacman.audio.sweep",               rm.loadAudioClip("sound/common/sweep.mp3"));
+
+        //
+        // Pac-Man PLUS
+        //
+        theme.set("pacman_plus.startpage.image",      rm.loadImage("graphics/pacman_plus/moeppi.jpg"));
     }
 
     protected static final Theme THEME_2D = new Theme();
@@ -278,6 +276,15 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             "cut2",   new PacManCutScene2(),
             "cut3",   new PacManCutScene3()
         )));
+        gameScenesByVariant.put(GameVariant.PACMAN_PLUS, new HashMap<>(Map.of(
+            "boot",   new BootScene(),
+            "intro",  new PacManIntroScene(),
+            "credit", new PacManCreditScene(),
+            "play",   new PlayScene2D(),
+            "cut1",   new PacManCutScene1(),
+            "cut2",   new PacManCutScene2(),
+            "cut3",   new PacManCutScene3()
+        )));
         for (Map<String, GameScene> gameSceneMap : gameScenesByVariant.values()) {
             for (var gameScene : gameSceneMap.values()) {
                 gameScene.setContext(this);
@@ -349,7 +356,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             clock.stop();
             Logger.info("Clock stopped.");
         }
-        startPage.setGameVariant(game());
+        startPage.setGameVariant(game().variant());
         setPage(startPage);
     }
 
@@ -504,14 +511,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             intermissionNumber = event.game.level().orElseThrow().intermissionNumber();
         }
         if (intermissionNumber != 0) {
-            switch (game()) {
-                case GameVariant.MS_PACMAN -> playAudioClip("audio.intermission." + intermissionNumber);
-                case GameVariant.PACMAN -> {
+            switch (game().variant()) {
+                case MS_PACMAN -> playAudioClip("audio.intermission." + intermissionNumber);
+                case PACMAN, PACMAN_PLUS -> {
                     var clip = audioClip("audio.intermission");
                     clip.setCycleCount(intermissionNumber == 1 || intermissionNumber == 3 ? 2 : 1);
                     clip.play();
                 }
-                default -> throw new IllegalGameVariantException(game());
             }
         }
     }
@@ -520,18 +526,17 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public void onLevelCreated(GameEvent e) {
         // Found no better point in time to create and assign the sprite animations to the guys
         GameModel game = e.game;
-        switch (game) {
-            case GameVariant.MS_PACMAN -> {
+        switch (game.variant()) {
+            case MS_PACMAN -> {
                 game.pac().setAnimations(new MsPacManGamePacAnimations(game.pac(), SS_MS_PACMAN));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, SS_MS_PACMAN)));
                 Logger.info("Created Ms. Pac-Man game creature animations for level #{}", game.levelNumber());
             }
-            case GameVariant.PACMAN -> {
+            case PACMAN, PACMAN_PLUS -> {
                 game.pac().setAnimations(new PacManGamePacAnimations(game.pac(), SS_PACMAN));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, SS_PACMAN)));
                 Logger.info("Created Pac-Man game creature animations for level #{}", game.levelNumber());
             }
-            default -> throw new IllegalGameVariantException(game);
         }
         if (!game.isDemoLevel()) {
             game.pac().setManualSteering(new KeyboardPacSteering());
@@ -700,7 +705,11 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void switchGameVariant() {
-        gameController().selectGame(game() == GameVariant.PACMAN ? GameVariant.MS_PACMAN : GameVariant.PACMAN);
+        GameVariant[] allVariants = GameVariant.values();
+        GameVariant currentVariant = gameController().game().variant();
+        GameVariant nextVariant = currentVariant.ordinal() < allVariants.length - 1
+            ? allVariants[currentVariant.ordinal() + 1] : allVariants[0];
+        gameController().selectGame(nextVariant);
         gameController().restart(GameState.BOOT);
         showStartPage();
     }
@@ -768,10 +777,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     @Override
     public AudioClip audioClip(String key) {
         checkNotNull(key);
-        return switch (game()) {
-            case GameVariant.MS_PACMAN -> theme().audioClip("mspacman." + key);
-            case GameVariant.PACMAN    -> theme().audioClip("pacman." + key);
-            default -> throw new IllegalGameVariantException(game());
+        return switch (game().variant()) {
+            case MS_PACMAN -> theme().audioClip("mspacman." + key);
+            case PACMAN, PACMAN_PLUS -> theme().audioClip("pacman." + key);
         };
     }
 

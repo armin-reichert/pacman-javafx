@@ -173,7 +173,7 @@ public class GameLevel3D extends Group {
 
         pac3D = switch (context.game().variant()) {
             case MS_PACMAN -> Pac3D.createFemalePac3D(context.theme(), context.game().pac(), PAC_SIZE);
-            case PACMAN    -> Pac3D.createMalePac3D(context.theme(), context.game().pac(), PAC_SIZE);
+            case PACMAN, PACMAN_PLUS -> Pac3D.createMalePac3D(context.theme(), context.game().pac(), PAC_SIZE);
         };
         ghosts3D = context.game().ghosts().map(this::createGhost3D).toList();
 
@@ -378,7 +378,7 @@ public class GameLevel3D extends Group {
         for (int i = 0; i < livesCounter3D.maxLives(); ++i) {
             var pac3D = switch (context.game().variant()) {
                 case MS_PACMAN -> Pac3D.createFemalePac3D(context.theme(), null, theme.get("livescounter.pac.size"));
-                case PACMAN    -> Pac3D.createMalePac3D(context.theme(), null,  theme.get("livescounter.pac.size"));
+                case PACMAN, PACMAN_PLUS    -> Pac3D.createMalePac3D(context.theme(), null,  theme.get("livescounter.pac.size"));
             };
             livesCounter3D.addItem(pac3D, true);
         }
@@ -405,7 +405,7 @@ public class GameLevel3D extends Group {
                     var ss = PacManGames2dUI.SS_MS_PACMAN;
                     material.setDiffuseMap(ss.subImage(ss.bonusSymbolSprite(symbol)));
                 }
-                case PACMAN -> {
+                case PACMAN, PACMAN_PLUS -> {
                     var ss = PacManGames2dUI.SS_PACMAN;
                     material.setDiffuseMap(ss.subImage(ss.bonusSymbolSprite(symbol)));
                 }
@@ -462,7 +462,7 @@ public class GameLevel3D extends Group {
                 bonus3D = new Bonus3D(bonus,
                     ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));
             }
-            case PACMAN -> {
+            case PACMAN, PACMAN_PLUS -> {
                 var ss = PacManGames2dUI.SS_PACMAN;
                 bonus3D = new Bonus3D(bonus,
                     ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));

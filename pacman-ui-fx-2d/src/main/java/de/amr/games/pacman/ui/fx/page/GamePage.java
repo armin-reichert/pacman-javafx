@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui.fx.page;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
@@ -76,7 +75,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
         switch (context.game().variant()) {
             case MS_PACMAN -> signature.translateYProperty().bind(
                 Bindings.createDoubleBinding(() -> 45 * getScaling(), scalingPy));
-            case PACMAN -> signature.translateYProperty().bind(
+            case PACMAN, PACMAN_PLUS -> signature.translateYProperty().bind(
                 Bindings.createDoubleBinding(() -> 30 * getScaling(), scalingPy));
         }
         signature.show();
@@ -191,10 +190,9 @@ public class GamePage extends CanvasLayoutPane implements Page {
 
     protected void updateHelpButton() {
         ImageView imageView = (ImageView) helpButton.getCenter();
-        var image = context.theme().image(switch (context.game()) {
-            case GameVariant.MS_PACMAN -> "mspacman.helpButton.icon";
-            case GameVariant.PACMAN -> "pacman.helpButton.icon";
-            default -> throw new IllegalGameVariantException(context.game());
+        var image = context.theme().image(switch (context.game().variant()) {
+            case MS_PACMAN -> "mspacman.helpButton.icon";
+            case PACMAN, PACMAN_PLUS -> "pacman.helpButton.icon";
         });
         double size = Math.ceil(12 * getScaling());
         imageView.setImage(image);

@@ -1,8 +1,6 @@
 package de.amr.games.pacman.ui.fx.page;
 
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.IllegalGameVariantException;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.event.EventHandler;
@@ -28,8 +26,6 @@ public class StartPage implements Page {
 
     private final StackPane root = new StackPane();
     private final BorderPane content = new BorderPane();
-    private final Background backgroundPacManGame;
-    private final Background backgroundMsPacManGame;
     private final Theme theme;
     private final Node playButton;
 
@@ -48,8 +44,6 @@ public class StartPage implements Page {
     public StartPage(Theme theme) {
         checkNotNull(theme);
         this.theme = theme;
-        backgroundMsPacManGame = createBackground(theme.image("mspacman.startpage.image"));
-        backgroundPacManGame = createBackground(theme.image("pacman.startpage.image"));
         playButton = createPlayButton();
         content.setBottom(playButton);
         BorderPane.setAlignment(playButton, Pos.CENTER);
@@ -67,12 +61,12 @@ public class StartPage implements Page {
         return root;
     }
 
-    public void setGameVariant(GameModel gameVariant) {
+    public void setGameVariant(GameVariant gameVariant) {
         checkNotNull(gameVariant);
         content.setBackground(switch (gameVariant) {
-            case GameVariant.MS_PACMAN -> backgroundMsPacManGame;
-            case GameVariant.PACMAN -> backgroundPacManGame;
-            default -> throw new IllegalGameVariantException(gameVariant);
+            case MS_PACMAN   -> createBackground(theme.image("mspacman.startpage.image"));
+            case PACMAN      -> createBackground(theme.image("pacman.startpage.image"));
+            case PACMAN_PLUS -> createBackground(theme.image("pacman_plus.startpage.image"));
         });
     }
 

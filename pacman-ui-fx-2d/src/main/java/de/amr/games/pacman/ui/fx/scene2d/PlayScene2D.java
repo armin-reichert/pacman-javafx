@@ -80,15 +80,12 @@ public class PlayScene2D extends GameScene2D {
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         boolean blinkingOn = game.blinking().isOn();
         switch (game.variant()) {
-            case GameVariant.MS_PACMAN ->
+            case MS_PACMAN ->
                 classicRenderer.drawMsPacManWorld(g, game.world(), game.mapNumber(), flashing, blinkingOn);
-            case GameVariant.PACMAN -> {
-                if (game.mapNumber() == 1 && !PY_USE_ALTERNATE_MAPS.get()) {
-                    classicRenderer.drawPacManWorld(g, game.world(), flashing, blinkingOn);
-                } else {
-                    modernRenderer.draw(g, game.world(), flashing, blinkingOn);
-                }
-            }
+            case PACMAN ->
+                classicRenderer.drawPacManWorld(g, game.world(), flashing, blinkingOn);
+            case PACMAN_PLUS ->
+                modernRenderer.draw(g, game.world(), flashing, blinkingOn);
         }
         drawLevelMessage();
         game.bonus().ifPresent(bonus -> classicRenderer.drawBonus(g, context.game().variant(), bonus));

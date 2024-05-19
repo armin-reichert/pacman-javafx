@@ -71,8 +71,6 @@ public interface GameModel {
 
     World createWorld(int mapNumber);
 
-    void setUseRandomMaps(boolean value);
-
     /**
      * Creates and initializes new game level with the given number.
      * <p>
