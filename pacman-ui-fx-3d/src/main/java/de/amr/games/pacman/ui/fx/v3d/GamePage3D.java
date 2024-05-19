@@ -32,8 +32,6 @@ public class GamePage3D extends GamePage {
     private final Dashboard dashboard;
     private final GamePageContextMenu contextMenu;
 
-    private final DoubleProperty pipHeightPy = new SimpleDoubleProperty(this, "pipHeight", PIP_MIN_HEIGHT);
-
     private final Canvas pipCanvas = new Canvas();
     private final PlayScene2D pip = new PlayScene2D();
 
@@ -52,7 +50,6 @@ public class GamePage3D extends GamePage {
         canvasLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
 
         // data binding
-        pipHeightPy.bind(PY_PIP_HEIGHT);
         PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateBackground3D());
         PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground3D());
         PY_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
@@ -62,13 +59,13 @@ public class GamePage3D extends GamePage {
     }
 
     private void initPip() {
-        final double ASPECT_RATIO = (double) CANVAS_WIDTH_UNSCALED / CANVAS_HEIGHT_UNSCALED;
+        final double ASPECT_RATIO = 0.777;
         pip.setContext(context);
-        pipCanvas.heightProperty().bind(pipHeightPy);
-        pipCanvas.widthProperty().bind(Bindings.createDoubleBinding(() -> pipHeightPy.get() * ASPECT_RATIO, pipHeightPy));
+        pipCanvas.heightProperty().bind(PY_PIP_HEIGHT);
+        pipCanvas.widthProperty().bind(Bindings.createDoubleBinding(() -> pipCanvas.getHeight() * ASPECT_RATIO, PY_PIP_HEIGHT));
         pipCanvas.opacityProperty().bind(PY_PIP_OPACITY);
+        pip.scalingPy.bind(Bindings.createDoubleBinding(() -> pipCanvas.getHeight() / CANVAS_HEIGHT_UNSCALED, PY_PIP_HEIGHT));
         pip.setCanvas(pipCanvas);
-        pip.scalingPy.bind(Bindings.createDoubleBinding(() -> pipHeightPy.get() / CANVAS_HEIGHT_UNSCALED, pipHeightPy));
         pip.setScoreVisible(true);
     }
 
