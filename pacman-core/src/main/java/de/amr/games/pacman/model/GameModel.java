@@ -69,7 +69,7 @@ public interface GameModel {
      */
     Stream<Ghost> ghosts(GhostState... states);
 
-    World createWorld(int mapNumber);
+    World createWorld(int mapNumber) throws GameException;
 
     /**
      * Creates and initializes new game level with the given number.
@@ -82,12 +82,12 @@ public interface GameModel {
      *
      * @param levelNumber level number (starting at 1)
      */
-    void createRegularLevel(int levelNumber);
+    void createRegularLevel(int levelNumber) throws GameException;
 
     /**
      * Creates and initializes a demo level.
      */
-    void createDemoLevel();
+    void createDemoLevel() throws GameException;
 
     void createNextBonus();
 

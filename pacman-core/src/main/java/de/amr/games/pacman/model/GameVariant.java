@@ -57,17 +57,16 @@ public enum GameVariant implements GameModel {
         }
 
         @Override
-        public World createWorld(int mapNumber) {
-            if (1 <= mapNumber && mapNumber <= 6) {
-                try {
-                    String path = String.format("/maps/mspacman/mspacman_%d.world", mapNumber);
-                    URL url = getClass().getResource(path);
-                    return createArcadeWorld(url);
-                } catch (Exception x) {
-                    throw new IllegalArgumentException("Ms. Pac-Man world map creation failed for map number " + mapNumber);
-                }
+        public World createWorld(int mapNumber) throws GameException {
+            if (mapNumber < 1 || mapNumber > 6) {
+                throw new IllegalArgumentException("Ms. Pac-Man map number must be in 1-6, is: " + mapNumber);
             }
-            throw new IllegalArgumentException("Ms. Pac-Man map number must be in 1-6, is: " + mapNumber);
+            try {
+                String path = String.format("/maps/mspacman/mspacman_%d.world", mapNumber);
+                return createArcadeWorld(getClass().getResource(path));
+            } catch (IOException e) {
+                throw new GameException("Could not create world map", e);
+            }
         }
 
         /**
@@ -105,7 +104,7 @@ public enum GameVariant implements GameModel {
         }
 
         @Override
-        void buildRegularLevel(int levelNumber) {
+        void buildRegularLevel(int levelNumber) throws GameException {
             this.levelNumber = checkLevelNumber(levelNumber);
             this.mapNumber = mapNumberByLevelNumber(levelNumber);
             populateLevel(createWorld(mapNumber));
@@ -116,7 +115,7 @@ public enum GameVariant implements GameModel {
         }
 
         @Override
-        void buildDemoLevel() {
+        void buildDemoLevel() throws GameException {
             levelNumber = 1;
             mapNumber = randomInt(1, 7);
             populateLevel(createWorld(mapNumber));
@@ -618,9 +617,9 @@ public enum GameVariant implements GameModel {
         return this;
     }
 
-    abstract void buildRegularLevel(int levelNumber);
+    abstract void buildRegularLevel(int levelNumber) throws GameException;
 
-    abstract void buildDemoLevel();
+    abstract void buildDemoLevel() throws GameException;
 
     abstract byte computeBonusSymbol();
 
@@ -640,6 +639,7 @@ public enum GameVariant implements GameModel {
     }
 
     World createArcadeWorld(URL worldMapURL) throws IOException {
+        checkNotNull(worldMapURL);
         var worldMap = new WorldMap(worldMapURL);
         worldMap.terrain().validateSize(ARCADE_MAP_TILES_Y, ARCADE_MAP_TILES_X);
         worldMap.food().validateSize(ARCADE_MAP_TILES_Y, ARCADE_MAP_TILES_X);
@@ -827,7 +827,7 @@ public enum GameVariant implements GameModel {
     }
 
     @Override
-    public void createRegularLevel(int levelNumber) {
+    public void createRegularLevel(int levelNumber) throws GameException {
         clearLevel();
         demoLevel = false;
         buildRegularLevel(levelNumber);
@@ -837,7 +837,7 @@ public enum GameVariant implements GameModel {
     }
 
     @Override
-    public void createDemoLevel() {
+    public void createDemoLevel() throws GameException {
         clearLevel();
         demoLevel = true;
         buildDemoLevel();

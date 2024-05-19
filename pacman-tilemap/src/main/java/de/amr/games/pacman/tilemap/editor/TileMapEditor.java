@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.model.GameException;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.Tiles;
@@ -99,7 +100,7 @@ public class TileMapEditor  {
     BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
     BooleanProperty runtimePreviewPy = new SimpleBooleanProperty(false);
 
-    public TileMapEditor(Stage stage) {
+    public TileMapEditor(Stage stage) throws GameException  {
         ownerWindow = stage;
         arcadeMaps[0] = WorldMap.copyOf(GameVariant.PACMAN.createWorld(1).map());
         for (int i = 1; i <= 6; ++i) {

@@ -8,8 +8,10 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.FsmState;
 import de.amr.games.pacman.lib.Pulse;
 import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.model.GameException;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.*;
+import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +86,11 @@ public enum GameState implements FsmState<GameModel> {
             else if (gameController().hasCredit()) { // start new game
                 if (timer.tick() == TICK_CREATE_LEVEL) {
                     game.reset();
-                    game.createRegularLevel(1);
+                    try {
+                        game.createRegularLevel(1);
+                    } catch (GameException x) {
+                        Logger.error(x);
+                    }
                 }
                 else if (timer.tick() == TICK_START_LEVEL) {
                     game.startLevel();
@@ -100,9 +106,13 @@ public enum GameState implements FsmState<GameModel> {
             }
             else { // start demo level
                 if (timer.tick() == TICK_CREATE_LEVEL) {
-                    game.createDemoLevel();
-                    game.startLevel();
-                    game.makeGuysVisible(true);
+                    try {
+                        game.createDemoLevel();
+                        game.startLevel();
+                        game.makeGuysVisible(true);
+                    } catch (GameException x) {
+                        Logger.error(x);
+                    }
                 }
                 else if (timer.tick() == TICK_DEMO_LEVEL_START_PLAYING) {
                     game.startHuntingPhase(0);
@@ -167,9 +177,13 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartSeconds(1);
-            game.createRegularLevel(game.levelNumber() + 1);
-            game.startLevel();
-            game.makeGuysVisible(true);
+            try {
+                game.createRegularLevel(game.levelNumber() + 1);
+                game.startLevel();
+                game.makeGuysVisible(true);
+            } catch (GameException x) {
+                Logger.error(x);
+            }
         }
 
         @Override
@@ -301,9 +315,13 @@ public enum GameState implements FsmState<GameModel> {
             timer.restartIndefinitely();
             gameController().clock().setTargetFrameRate(2 * GameModel.FPS);
             game.reset();
-            game.createRegularLevel(1);
-            game.startLevel();
-            game.makeGuysVisible(true);
+            try {
+                game.createRegularLevel(1);
+                game.startLevel();
+                game.makeGuysVisible(true);
+            } catch (GameException x) {
+                Logger.error(x);
+            }
         }
 
         @Override
@@ -356,9 +374,13 @@ public enum GameState implements FsmState<GameModel> {
                 game.bonus().ifPresent(Bonus::setInactive);
                 setProperty("mazeFlashing", false);
                 game.blinking().reset();
-                game.createRegularLevel(game.levelNumber() + 1);
-                game.startLevel();
-                game.makeGuysVisible(true);
+                try {
+                    game.createRegularLevel(game.levelNumber() + 1);
+                    game.startLevel();
+                    game.makeGuysVisible(true);
+                } catch (GameException x) {
+                    Logger.error(x);
+                }
             }
         }
 
