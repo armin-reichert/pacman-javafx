@@ -4,7 +4,6 @@
 module de.amr.games.pacman.tilemap {
     requires javafx.graphics;
     requires javafx.controls;
-    requires javafx.media;
     requires org.tinylog.api;
     requires de.amr.games.pacman;
 
