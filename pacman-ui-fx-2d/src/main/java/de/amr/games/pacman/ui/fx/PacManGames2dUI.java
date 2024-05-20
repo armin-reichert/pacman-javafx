@@ -269,6 +269,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         });
         gameController().setClock(clock);
 
+        Logger.info("Creating 2D game scenes for variant " + GameVariant.MS_PACMAN);
         gameScenesForVariant.put(GameVariant.MS_PACMAN, new HashMap<>(Map.of(
             "boot",   new BootScene(),
             "intro",  new MsPacManIntroScene(),
@@ -278,6 +279,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             "cut2",   new MsPacManCutScene2(),
             "cut3",   new MsPacManCutScene3()
         )));
+
+        Logger.info("Creating 2D game scenes for variant " + GameVariant.PACMAN);
         gameScenesForVariant.put(GameVariant.PACMAN, new HashMap<>(Map.of(
             "boot",   new BootScene(),
             "intro",  new PacManIntroScene(),
@@ -287,6 +290,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             "cut2",   new PacManCutScene2(),
             "cut3",   new PacManCutScene3()
         )));
+
+        Logger.info("Creating 2D game scenes for variant " + GameVariant.PACMAN_PLUS);
         gameScenesForVariant.put(GameVariant.PACMAN_PLUS, new HashMap<>(Map.of(
             "boot",   new BootScene(),
             "intro",  new PacManIntroScene(),

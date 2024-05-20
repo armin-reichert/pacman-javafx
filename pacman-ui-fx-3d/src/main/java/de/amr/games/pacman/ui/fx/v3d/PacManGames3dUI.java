@@ -185,11 +185,12 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     public PacManGames3dUI(Stage stage, Settings settings) {
         super(stage, settings);
-        for (var gameVariant : GameVariant.values()) {
+        for (var variant : GameVariant.values()) {
             var playScene3D = new PlayScene3D();
             playScene3D.setContext(this);
             playScene3D.setParentScene(mainScene);
-            gameScenesForVariant.get(gameVariant).put("play3D", playScene3D);
+            gameScenesForVariant.get(variant).put("play3D", playScene3D);
+            Logger.info("Added 3D play scene for variant " + variant);
         }
         PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
         PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());

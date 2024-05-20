@@ -88,14 +88,11 @@ public class PlayScene3D implements GameScene {
 
         // first child is placeholder for game level 3D
         subSceneRoot.getChildren().addAll(new Group(), scores3D,  coordSystem, ambientLight);
-
-        Logger.info("3D play scene created. {}", this);
     }
 
     public void setParentScene(Scene parentScene) {
         fxSubScene.widthProperty().bind(parentScene.widthProperty());
         fxSubScene.heightProperty().bind(parentScene.heightProperty());
-        Logger.info("3D play scene embedded. {}", this);
     }
 
     @Override
