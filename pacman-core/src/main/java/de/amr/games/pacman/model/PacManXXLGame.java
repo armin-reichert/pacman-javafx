@@ -82,6 +82,7 @@ public class PacManXXLGame extends PacManGame{
         Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26))
             .forEach(tile -> fp.put(tile, up));
         world.setForbiddenPassages(fp);
+        world.setBonusPosition(halfTileRightOf(13, 20));
         return world;
     }
 
@@ -103,6 +104,7 @@ public class PacManXXLGame extends PacManGame{
             v2i(27, 34), // near right-lower corner
             v2i( 0, 34)  // near left-lower corner
         });
+        world.setBonusPosition(halfTileRightOf(13, 20));
         return world;
     }
 

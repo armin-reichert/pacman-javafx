@@ -140,6 +140,7 @@ public class PacManGame extends AbstractPacManGame{
             Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26))
                 .forEach(tile -> fp.put(tile, up));
             world.setForbiddenPassages(fp);
+            world.setBonusPosition(halfTileRightOf(13, 20));
             return world;
         } catch (Exception x) {
             throw new GameException("Could not create Pac-Man world", x);
