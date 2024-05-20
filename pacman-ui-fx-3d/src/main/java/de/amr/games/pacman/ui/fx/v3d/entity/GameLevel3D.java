@@ -39,8 +39,8 @@ import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.opaqueColor;
-import static de.amr.games.pacman.ui.fx.util.Ufx.doAfterSeconds;
-import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSeconds;
+import static de.amr.games.pacman.ui.fx.util.Ufx.doAfterSec;
+import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSec;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 
 /**
@@ -505,7 +505,7 @@ public class GameLevel3D extends Group {
         }
         // Delay hiding of pellet for some milliseconds because in case the player approaches the pellet from the right,
         // the pellet disappears too early (collision by tile equality is too coarse).
-        var hiding = doAfterSeconds(0.05, () -> eatable3D.root().setVisible(false));
+        var hiding = doAfterSec(0.05, () -> eatable3D.root().setVisible(false));
         var energizerExplosion = eatable3D.getEatenAnimation().orElse(null);
         if (energizerExplosion != null && PY_3D_ENERGIZER_EXPLODES.get()) {
             new SequentialTransition(hiding, energizerExplosion).play();
@@ -514,21 +514,20 @@ public class GameLevel3D extends Group {
         }
     }
 
-    public Transition createLevelRotateAnimation() {
-        var rotation = new RotateTransition(Duration.seconds(1.5), this);
+    public Transition createLevelRotateAnimation(double seconds) {
+        var rotation = new RotateTransition(Duration.seconds(seconds), this);
         rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
         rotation.setFromAngle(0);
         rotation.setToAngle(360);
         rotation.setInterpolator(Interpolator.LINEAR);
-
-        return new SequentialTransition(rotation, createMazeDisappearAnimation());
+        return rotation;
     }
 
-    private Transition createMazeDisappearAnimation() {
+    public Transition createMazeDisappearAnimation(double seconds) {
         final double wallHeightBeforeAnimation = wallHeightPy.get();
         var animation = new Transition() {
             {
-                setCycleDuration(Duration.seconds(1.5));
+                setCycleDuration(Duration.seconds(seconds));
                 setInterpolator(Interpolator.EASE_BOTH);
             }
 
@@ -549,7 +548,7 @@ public class GameLevel3D extends Group {
 
     public Transition createMazeFlashingAnimation(int numFlashes) {
         if (numFlashes == 0) {
-            return pauseSeconds(1.0);
+            return pauseSec(1.0);
         }
         var animation = new SinusCurveAnimation(numFlashes);
         animation.setOnFinished(e -> wallHeightPy.bind(PY_3D_WALL_HEIGHT));

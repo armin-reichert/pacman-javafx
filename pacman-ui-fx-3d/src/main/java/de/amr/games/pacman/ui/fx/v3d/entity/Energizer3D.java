@@ -18,7 +18,7 @@ import javafx.util.Duration;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui.fx.util.Ufx.doAfterSeconds;
+import static de.amr.games.pacman.ui.fx.util.Ufx.doAfterSec;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -92,7 +92,7 @@ public class Energizer3D extends Sphere implements Eatable3D {
     public void onEaten() {
         pumping.stop();
         // TODO check this
-        var hideAfterDelay = doAfterSeconds(0.05, () -> setVisible(false));
+        var hideAfterDelay = doAfterSec(0.05, () -> setVisible(false));
         if (eatenAnimation != null) {
             new SequentialTransition(hideAfterDelay, eatenAnimation).play();
         } else {

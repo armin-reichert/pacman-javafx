@@ -44,7 +44,7 @@ public class Ufx {
      * @param seconds number of seconds
      * @return pause transition
      */
-    public static PauseTransition pauseSeconds(double seconds) {
+    public static PauseTransition pauseSec(double seconds) {
         return new PauseTransition(Duration.seconds(seconds));
     }
 
@@ -58,14 +58,14 @@ public class Ufx {
      * @param action       code to run
      * @return pause transition
      */
-    public static Transition doAfterSeconds(double delaySeconds, Runnable action) {
+    public static Transition doAfterSec(double delaySeconds, Runnable action) {
         checkNotNull(action);
         var pause = new PauseTransition(Duration.seconds(delaySeconds));
         pause.setOnFinished(e -> action.run());
         return pause;
     }
 
-    public static Transition doNow(Runnable action) {
+    public static Transition now(Runnable action) {
         checkNotNull(action);
         var wrapper = new Transition() {
             @Override

@@ -15,7 +15,7 @@ import javafx.scene.transform.Scale;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui.fx.util.Ufx.doAfterSeconds;
+import static de.amr.games.pacman.ui.fx.util.Ufx.doAfterSec;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -69,7 +69,7 @@ public class Pellet3D implements Eatable3D {
 
     @Override
     public void onEaten() {
-        doAfterSeconds(0.05, () -> shape.setVisible(false)).play();
+        doAfterSec(0.05, () -> shape.setVisible(false)).play();
     }
 
     @Override

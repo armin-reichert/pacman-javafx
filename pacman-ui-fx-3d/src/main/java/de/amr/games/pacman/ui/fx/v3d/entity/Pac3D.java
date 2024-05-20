@@ -266,7 +266,7 @@ public class Pac3D extends Group {
         spin.setDelay(Duration.seconds(0.5));
         return new SequentialTransition(
             spin,
-            pauseSeconds(2)
+            pauseSec(2)
         );
     }
 
@@ -292,10 +292,10 @@ public class Pac3D extends Group {
 
         //TODO does not yet work as I want to
         return new SequentialTransition(
-            doNow(() -> init(game)),
-            pauseSeconds(0.5),
+            now(() -> init(game)),
+            pauseSec(0.5),
             new ParallelTransition(spinning, shrinking, falling),
-            doAfterSeconds(1.0, () -> {
+            doAfterSec(1.0, () -> {
                 setVisible(false);
                 setTranslateZ(0);
             })
