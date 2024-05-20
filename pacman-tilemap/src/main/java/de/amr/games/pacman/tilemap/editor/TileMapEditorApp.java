@@ -37,7 +37,7 @@ public class TileMapEditorApp extends Application  {
         stage.titleProperty().bind(editor.titlePy);
         stage.show();
 
-        editor.loadMap(editor.getMsPacManMap(4));
+        editor.loadMap(editor.getMsPacManMap(1));
         editor.setRuntimePreview(true);
     }
 }

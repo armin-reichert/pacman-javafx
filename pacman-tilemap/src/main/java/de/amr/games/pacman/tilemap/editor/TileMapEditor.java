@@ -89,6 +89,7 @@ public class TileMapEditor  {
 
     WorldMap map;
     WorldMap[] arcadeMaps = new WorldMap[7];
+    WorldMap[] masonicMaps = new WorldMap[8];
 
     Vector2i hoveredTile;
     File lastUsedDir = new File(System.getProperty("user.dir"));
@@ -101,13 +102,17 @@ public class TileMapEditor  {
     BooleanProperty runtimePreviewPy = new SimpleBooleanProperty(false);
 
     public TileMapEditor(Stage stage) throws GameException  {
-        ownerWindow = stage;
         arcadeMaps[0] = WorldMap.copyOf(GameVariant.PACMAN.createWorld(1).map());
         for (int i = 1; i <= 6; ++i) {
             arcadeMaps[i] = WorldMap.copyOf(GameVariant.MS_PACMAN.createWorld(i).map());
         }
+        for (int i = 0; i < 8; ++i) {
+            // Note: Pac-Man PLUS map in first world is Pac-Man Arcade map
+            masonicMaps[i] = WorldMap.copyOf(GameVariant.PACMAN_PLUS.createWorld(i+1).map());
+        }
         map = arcadeMaps[0];
 
+        ownerWindow = stage;
         ui = createUI();
         menuBar = createMenus();
 
@@ -143,8 +148,12 @@ public class TileMapEditor  {
         return arcadeMaps[0];
     }
 
-    public WorldMap getMsPacManMap(int n) {
-        return 1 <= n && n <= 6 ? arcadeMaps[n] : arcadeMaps[1];
+    public WorldMap getMsPacManMap(int mapNumber) {
+        return 1 <= mapNumber && mapNumber <= 6 ? arcadeMaps[mapNumber] : arcadeMaps[1];
+    }
+
+    public WorldMap getMasonicMap(int mapNumber) {
+        return 1 <= mapNumber && mapNumber <= 8 ? masonicMaps[mapNumber-1] : masonicMaps[0];
     }
 
     public Pane getUi() {
@@ -192,19 +201,29 @@ public class TileMapEditor  {
         var miAddHouse = new MenuItem("Add House");
         miAddHouse.setOnAction(e -> addShape(GHOST_HOUSE_SHAPE, 15, 10));
 
-        Menu menuLoadArcadeMap = new Menu("Load Arcade Map");
+        Menu subMenuLoadMap = new Menu("Load Map");
 
         var miLoadPacManMap = new MenuItem("Pac-Man");
         miLoadPacManMap.setOnAction(e -> loadMap(arcadeMaps[0]));
-        menuLoadArcadeMap.getItems().add(miLoadPacManMap);
+        subMenuLoadMap.getItems().add(miLoadPacManMap);
 
-        IntStream.range(1, 7).forEach(i -> {
-            var miLoadMsPacManMap = new MenuItem("Ms. Pac-Man " + i);
-            miLoadMsPacManMap.setOnAction(e -> loadMap(arcadeMaps[i]));
-            menuLoadArcadeMap.getItems().add(miLoadMsPacManMap);
+        subMenuLoadMap.getItems().add(new SeparatorMenuItem());
+
+        IntStream.rangeClosed(1, 6).forEach(i -> {
+            var mi = new MenuItem("Ms. Pac-Man " + i);
+            mi.setOnAction(e -> loadMap(arcadeMaps[i]));
+            subMenuLoadMap.getItems().add(mi);
         });
 
-        menuMap.getItems().addAll(miClearTerrain, miClearFood, miAddHouse, menuLoadArcadeMap);
+        subMenuLoadMap.getItems().add(new SeparatorMenuItem());
+
+        IntStream.rangeClosed(1, 8).forEach(i -> {
+            var mi = new MenuItem("Pac-Man PLUS " + i);
+            mi.setOnAction(e -> loadMap(masonicMaps[i]));
+            subMenuLoadMap.getItems().add(mi);
+        });
+
+        menuMap.getItems().addAll(miClearTerrain, miClearFood, miAddHouse, subMenuLoadMap);
 
         menuBar = new MenuBar();
         menuBar.getMenus().addAll(menuFile, menuMap);
