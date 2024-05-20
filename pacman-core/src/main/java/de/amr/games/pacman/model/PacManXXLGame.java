@@ -4,10 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.RuleBasedPacSteering;
-import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.model.world.WorldMap;
 import org.tinylog.Logger;
@@ -66,6 +63,21 @@ public class PacManXXLGame extends PacManGame{
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
+    }
+
+    @Override
+    void buildDemoLevel() {
+        levelNumber = 1;
+        if (customMaps.isEmpty()) {
+            setWorldAndCreatePopulation(createPacManWorld());
+        } else {
+            setWorldAndCreatePopulation(createModernWorld(customMaps.getFirst()));
+        }
+        pac.setName("Pac-Man");
+        pac.setAutopilot(world.getDemoLevelRoute().isEmpty()
+            ? new RuleBasedPacSteering(this)
+            : new RouteBasedSteering(world.getDemoLevelRoute()));
+        pac.setUseAutopilot(true);
     }
 
     @Override
