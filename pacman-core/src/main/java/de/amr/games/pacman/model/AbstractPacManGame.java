@@ -17,7 +17,6 @@ import de.amr.games.pacman.model.world.WorldMap;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -142,7 +141,9 @@ public abstract class AbstractPacManGame implements GameModel {
             if (url == null) {
                 throw new GameException("Could not access URL for path=" + path, null);
             }
-            return new WorldMap(url);
+            var map = new WorldMap(url);
+            Logger.info("Map loaded from URL {}", url);
+            return map;
         } catch (Exception x) {
             throw new GameException("Could not load world map", x);
         }
@@ -165,8 +166,9 @@ public abstract class AbstractPacManGame implements GameModel {
         blinking.reset();
     }
 
-    void populateLevel(World world) {
+    void setWorldAndCreatePopulation(World world) {
         this.world = world;
+
         bonusSymbols[0] = computeBonusSymbol();
         bonusSymbols[1] = computeBonusSymbol();
 

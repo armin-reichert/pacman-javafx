@@ -76,7 +76,7 @@ public class MsPacManGame extends AbstractPacManGame{
      * </ul>
      * <p>
      */
-    WorldMap worldMapByLevelNumber(int levelNumber) {
+    WorldMap mapByLevelNumber(int levelNumber) {
         checkLevelNumber(levelNumber);
         switch (levelNumber) {
             case 1, 2 -> {
@@ -123,8 +123,7 @@ public class MsPacManGame extends AbstractPacManGame{
     @Override
     void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
-        var map = worldMapByLevelNumber(levelNumber);
-        populateLevel(createMsPacManWorld(map));
+        setWorldAndCreatePopulation(createMsPacManWorld(mapByLevelNumber(levelNumber)));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -134,8 +133,8 @@ public class MsPacManGame extends AbstractPacManGame{
     @Override
     void buildDemoLevel() {
         levelNumber = 1;
-        var worldMap = loadMap(String.format("/maps/mspacman/mspacman_%d.world", randomInt(1, 7)));
-        populateLevel(createMsPacManWorld(worldMap));
+        var map = loadMap(String.format("/maps/mspacman/mspacman_%d.world", randomInt(1, 7)));
+        setWorldAndCreatePopulation(createMsPacManWorld(map));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);

@@ -9,10 +9,8 @@ import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.model.world.WorldMap;
 import org.tinylog.Logger;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +83,7 @@ public class PacManGame extends AbstractPacManGame{
     @Override
     void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
-        populateLevel(createPacManWorld());
+        setWorldAndCreatePopulation(createPacManWorld());
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -94,12 +92,39 @@ public class PacManGame extends AbstractPacManGame{
     @Override
     void buildDemoLevel() {
         levelNumber = 1;
-        populateLevel(createWorld(loadMap("/maps/pacman.world")));
+        setWorldAndCreatePopulation(createPacManWorld());
         pac.setName("Pac-Man");
         pac.setAutopilot(world.getDemoLevelRoute().isEmpty()
             ? new RuleBasedPacSteering(this)
             : new RouteBasedSteering(world.getDemoLevelRoute()));
         pac.setUseAutopilot(true);
+    }
+
+    World createPacManWorld() {
+        var world = new World(loadMap("/maps/pacman.world"));
+        world.setHouse(createArcadeHouse());
+        world.house().setTopLeftTile(v2i(10, 15));
+        world.setPacPosition(halfTileRightOf(13, 26));
+        world.setGhostPositions(new Vector2f[] {
+            halfTileRightOf(13, 14), // red ghost
+            halfTileRightOf(13, 17), // pink ghost
+            halfTileRightOf(11, 17), // cyan ghost
+            halfTileRightOf(15, 17)  // orange ghost
+        });
+        world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
+        world.setGhostScatterTiles(new Vector2i[] {
+            v2i(25,  0), // near right-upper corner
+            v2i( 2,  0), // near left-upper corner
+            v2i(27, 34), // near right-lower corner
+            v2i( 0, 34)  // near left-lower corner
+        });
+        world.setDemoLevelRoute(List.of(PACMAN_ARCADE_MAP_DEMO_LEVEL_ROUTE));
+        List<Direction> up = List.of(UP);
+        Map<Vector2i, List<Direction>> fp = new HashMap<>();
+        Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> fp.put(tile, up));
+        world.setForbiddenPassages(fp);
+        world.setBonusPosition(halfTileRightOf(13, 20));
+        return world;
     }
 
     @Override
@@ -112,38 +137,6 @@ public class PacManGame extends AbstractPacManGame{
             if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
                 levelCounter.removeFirst();
             }
-        }
-    }
-
-    World createPacManWorld() {
-        try {
-            var world = new World(loadMap("/maps/pacman.world"));
-            world.setHouse(createArcadeHouse());
-            world.house().setTopLeftTile(v2i(10, 15));
-            world.setPacPosition(halfTileRightOf(13, 26));
-            world.setGhostPositions(new Vector2f[] {
-                halfTileRightOf(13, 14), // red ghost
-                halfTileRightOf(13, 17), // pink ghost
-                halfTileRightOf(11, 17), // cyan ghost
-                halfTileRightOf(15, 17)  // orange ghost
-            });
-            world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
-            world.setGhostScatterTiles(new Vector2i[] {
-                v2i(25,  0), // near right-upper corner
-                v2i( 2,  0), // near left-upper corner
-                v2i(27, 34), // near right-lower corner
-                v2i( 0, 34)  // near left-lower corner
-            });
-            world.setDemoLevelRoute(List.of(PACMAN_ARCADE_MAP_DEMO_LEVEL_ROUTE));
-            List<Direction> up = List.of(UP);
-            Map<Vector2i, List<Direction>> fp = new HashMap<>();
-            Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26))
-                .forEach(tile -> fp.put(tile, up));
-            world.setForbiddenPassages(fp);
-            world.setBonusPosition(halfTileRightOf(13, 20));
-            return world;
-        } catch (Exception x) {
-            throw new GameException("Could not create Pac-Man world", x);
         }
     }
 
