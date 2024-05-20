@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
+import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.scene2d.GameScene2D;
 import de.amr.games.pacman.ui.fx.util.*;
 import javafx.beans.binding.Bindings;
@@ -190,10 +191,11 @@ public class GamePage extends CanvasLayoutPane implements Page {
 
     protected void updateHelpButton() {
         ImageView imageView = (ImageView) helpButton.getCenter();
-        var image = context.theme().image(switch (context.game().variant()) {
-            case MS_PACMAN -> "mspacman.helpButton.icon";
-            case PACMAN, PACMAN_PLUS -> "pacman.helpButton.icon";
-        });
+        String vk = PacManGames2dUI.variantKey(context.game().variant());
+        if (context.game().variant() == GameVariant.PACMAN_PLUS) {
+            vk = variantKey(GameVariant.PACMAN);
+        }
+        var image = context.theme().image(vk + ".helpButton.icon");
         double size = Math.ceil(12 * getScaling());
         imageView.setImage(image);
         imageView.setFitHeight(size);

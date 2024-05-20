@@ -81,17 +81,17 @@ public class Pac3D extends Group {
     public static Pac3D createFemalePac3D(Theme theme, Pac msPacMan, double size) {
         checkNotNull(theme);
         var body = createPacShape(theme.get("model3D.pacman"), size,
-            theme.color("mspacman.color.head"),
-            theme.color("mspacman.color.eyes"),
-            theme.color("mspacman.color.palate"));
+            theme.color("ms_pacman.color.head"),
+            theme.color("ms_pacman.color.eyes"),
+            theme.color("ms_pacman.color.palate"));
         var femaleParts = createFemaleParts(size,
-            theme.color("mspacman.color.hairbow"),
-            theme.color("mspacman.color.hairbow.pearls"),
-            theme.color("mspacman.color.boobs"));
+            theme.color("ms_pacman.color.hairbow"),
+            theme.color("ms_pacman.color.hairbow.pearls"),
+            theme.color("ms_pacman.color.boobs"));
         var pac3D = new Pac3D(size, msPacMan, new Group(body, femaleParts));
         if (msPacMan != null) {
             pac3D.setWalkingAnimation(new HipSwaying(msPacMan, pac3D));
-            pac3D.setLight(new PointLight(theme.color("mspacman.color.head").desaturate()));
+            pac3D.setLight(new PointLight(theme.color("ms_pacman.color.head").desaturate()));
         }
         return pac3D;
     }

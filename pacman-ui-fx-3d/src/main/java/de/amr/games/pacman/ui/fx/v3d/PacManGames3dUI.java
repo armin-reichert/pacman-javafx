@@ -144,12 +144,12 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("ghost.color.flashing.eyeballs",   theme.color("palette.rose"));
         theme.set("ghost.color.flashing.pupils",     theme.color("palette.red"));
 
-        theme.set("mspacman.color.head",           Color.rgb(255, 255, 0));
-        theme.set("mspacman.color.palate",         Color.rgb(191, 79, 61));
-        theme.set("mspacman.color.eyes",           Color.rgb(33, 33, 33));
-        theme.set("mspacman.color.boobs",          Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
-        theme.set("mspacman.color.hairbow",        Color.rgb(255, 0, 0));
-        theme.set("mspacman.color.hairbow.pearls", Color.rgb(33, 33, 255));
+        theme.set("ms_pacman.color.head",           Color.rgb(255, 255, 0));
+        theme.set("ms_pacman.color.palate",         Color.rgb(191, 79, 61));
+        theme.set("ms_pacman.color.eyes",           Color.rgb(33, 33, 33));
+        theme.set("ms_pacman.color.boobs",          Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
+        theme.set("ms_pacman.color.hairbow",        Color.rgb(255, 0, 0));
+        theme.set("ms_pacman.color.hairbow.pearls", Color.rgb(33, 33, 255));
 
         theme.set("pacman.color.head",             Color.rgb(255, 255, 0));
         theme.set("pacman.color.palate",           Color.rgb(191, 79, 61));
@@ -189,7 +189,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             var playScene3D = new PlayScene3D();
             playScene3D.setContext(this);
             playScene3D.setParentScene(mainScene);
-            gameScenesByVariant.get(gameVariant).put("play3D", playScene3D);
+            gameScenesForVariant.get(gameVariant).put("play3D", playScene3D);
         }
         PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
         PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
@@ -229,11 +229,12 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     @Override
     protected void updateStage() {
-        var variantKey = game() == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
-        var titleKey = "app.title." + variantKey + (gameClock().isPaused() ? ".paused" : "");
+        var vk = variantKey(game().variant());
+        var pk = gameClock().isPaused() ? ".paused" : "";
+        var tk = "app.title." + vk + pk;
         var dimension = tt(PY_3D_ENABLED.get() ? "threeD" : "twoD");
-        stage.setTitle(tt(titleKey, dimension));
-        stage.getIcons().setAll(theme().image(variantKey + ".icon"));
+        stage.setTitle(tt(tk, dimension));
+        stage.getIcons().setAll(theme().image(vk + ".icon"));
     }
 
     @Override

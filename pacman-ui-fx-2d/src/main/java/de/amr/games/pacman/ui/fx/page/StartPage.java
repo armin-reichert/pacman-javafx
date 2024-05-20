@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui.fx.PacManGames2dUI.variantKey;
 import static javafx.scene.layout.BackgroundSize.AUTO;
 
 /**
@@ -61,13 +62,9 @@ public class StartPage implements Page {
         return root;
     }
 
-    public void setGameVariant(GameVariant gameVariant) {
-        checkNotNull(gameVariant);
-        content.setBackground(switch (gameVariant) {
-            case MS_PACMAN   -> createBackground(theme.image("mspacman.startpage.image"));
-            case PACMAN      -> createBackground(theme.image("pacman.startpage.image"));
-            case PACMAN_PLUS -> createBackground(theme.image("pacman_plus.startpage.image"));
-        });
+    public void setGameVariant(GameVariant variant) {
+        String vk = variantKey(variant);
+        content.setBackground(createBackground(theme.image(vk + ".startpage.image")));
     }
 
     public void setPlayButtonAction(Runnable action) {

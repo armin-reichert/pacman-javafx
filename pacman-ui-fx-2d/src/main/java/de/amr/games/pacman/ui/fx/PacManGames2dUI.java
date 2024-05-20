@@ -134,34 +134,34 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         // Ms. Pac-Man game
         //
 
-        theme.set("mspacman.startpage.image",         rm.loadImage("graphics/mspacman/mspacman_flyer.png"));
-        theme.set("mspacman.helpButton.icon",         rm.loadImage("graphics/icons/help-red-64.png"));
+        theme.set("ms_pacman.startpage.image",         rm.loadImage("graphics/mspacman/mspacman_flyer.png"));
+        theme.set("ms_pacman.helpButton.icon",         rm.loadImage("graphics/icons/help-red-64.png"));
 
-        theme.set("mspacman.spritesheet.image",       rm.loadImage("graphics/mspacman/mspacman_spritesheet.png"));
-        theme.set("mspacman.spritesheet.image.mazes", rm.loadImage("graphics/mspacman/mazes_flashing.png"));
+        theme.set("ms_pacman.spritesheet.image",       rm.loadImage("graphics/mspacman/mspacman_spritesheet.png"));
+        theme.set("ms_pacman.spritesheet.image.mazes", rm.loadImage("graphics/mspacman/mazes_flashing.png"));
 
-        theme.set("mspacman.icon",                    rm.loadImage("graphics/icons/mspacman.png"));
-        theme.set("mspacman.logo.midway",             rm.loadImage("graphics/mspacman/midway_logo.png"));
+        theme.set("ms_pacman.icon",                    rm.loadImage("graphics/icons/mspacman.png"));
+        theme.set("ms_pacman.logo.midway",             rm.loadImage("graphics/mspacman/midway_logo.png"));
 
-        theme.set("mspacman.audio.bonus_eaten",       rm.loadAudioClip("sound/mspacman/Fruit.mp3"));
-        theme.set("mspacman.audio.credit",            rm.loadAudioClip("sound/mspacman/Credit.mp3"));
-        theme.set("mspacman.audio.extra_life",        rm.loadAudioClip("sound/mspacman/ExtraLife.mp3"));
-        theme.set("mspacman.audio.game_ready",        rm.loadAudioClip("sound/mspacman/Start.mp3"));
-        theme.set("mspacman.audio.game_over",         rm.loadAudioClip("sound/common/game-over.mp3"));
-        theme.set("mspacman.audio.ghost_eaten",       rm.loadAudioClip("sound/mspacman/Ghost.mp3"));
-        theme.set("mspacman.audio.ghost_returning",   rm.loadAudioClip("sound/mspacman/GhostEyes.mp3"));
-        theme.set("mspacman.audio.intermission.1",    rm.loadAudioClip("sound/mspacman/Act1TheyMeet.mp3"));
-        theme.set("mspacman.audio.intermission.2",    rm.loadAudioClip("sound/mspacman/Act2TheChase.mp3"));
-        theme.set("mspacman.audio.intermission.3",    rm.loadAudioClip("sound/mspacman/Act3Junior.mp3"));
-        theme.set("mspacman.audio.level_complete",    rm.loadAudioClip("sound/common/level-complete.mp3"));
-        theme.set("mspacman.audio.pacman_death",      rm.loadAudioClip("sound/mspacman/Died.mp3"));
-        theme.set("mspacman.audio.pacman_munch",      rm.loadAudioClip("sound/mspacman/Pill.wav"));
-        theme.set("mspacman.audio.pacman_power",      rm.loadAudioClip("sound/mspacman/ScaredGhost.mp3"));
-        theme.set("mspacman.audio.siren.1",           rm.loadAudioClip("sound/mspacman/GhostNoise1.wav"));
-        theme.set("mspacman.audio.siren.2",           rm.loadAudioClip("sound/mspacman/GhostNoise1.wav"));// TODO
-        theme.set("mspacman.audio.siren.3",           rm.loadAudioClip("sound/mspacman/GhostNoise1.wav"));// TODO
-        theme.set("mspacman.audio.siren.4",           rm.loadAudioClip("sound/mspacman/GhostNoise1.wav"));// TODO
-        theme.set("mspacman.audio.sweep",             rm.loadAudioClip("sound/common/sweep.mp3"));
+        theme.set("ms_pacman.audio.bonus_eaten",       rm.loadAudioClip("sound/mspacman/Fruit.mp3"));
+        theme.set("ms_pacman.audio.credit",            rm.loadAudioClip("sound/mspacman/Credit.mp3"));
+        theme.set("ms_pacman.audio.extra_life",        rm.loadAudioClip("sound/mspacman/ExtraLife.mp3"));
+        theme.set("ms_pacman.audio.game_ready",        rm.loadAudioClip("sound/mspacman/Start.mp3"));
+        theme.set("ms_pacman.audio.game_over",         rm.loadAudioClip("sound/common/game-over.mp3"));
+        theme.set("ms_pacman.audio.ghost_eaten",       rm.loadAudioClip("sound/mspacman/Ghost.mp3"));
+        theme.set("ms_pacman.audio.ghost_returning",   rm.loadAudioClip("sound/mspacman/GhostEyes.mp3"));
+        theme.set("ms_pacman.audio.intermission.1",    rm.loadAudioClip("sound/mspacman/Act1TheyMeet.mp3"));
+        theme.set("ms_pacman.audio.intermission.2",    rm.loadAudioClip("sound/mspacman/Act2TheChase.mp3"));
+        theme.set("ms_pacman.audio.intermission.3",    rm.loadAudioClip("sound/mspacman/Act3Junior.mp3"));
+        theme.set("ms_pacman.audio.level_complete",    rm.loadAudioClip("sound/common/level-complete.mp3"));
+        theme.set("ms_pacman.audio.pacman_death",      rm.loadAudioClip("sound/mspacman/Died.mp3"));
+        theme.set("ms_pacman.audio.pacman_munch",      rm.loadAudioClip("sound/mspacman/Pill.wav"));
+        theme.set("ms_pacman.audio.pacman_power",      rm.loadAudioClip("sound/mspacman/ScaredGhost.mp3"));
+        theme.set("ms_pacman.audio.siren.1",           rm.loadAudioClip("sound/mspacman/GhostNoise1.wav"));
+        theme.set("ms_pacman.audio.siren.2",           rm.loadAudioClip("sound/mspacman/GhostNoise1.wav"));// TODO
+        theme.set("ms_pacman.audio.siren.3",           rm.loadAudioClip("sound/mspacman/GhostNoise1.wav"));// TODO
+        theme.set("ms_pacman.audio.siren.4",           rm.loadAudioClip("sound/mspacman/GhostNoise1.wav"));// TODO
+        theme.set("ms_pacman.audio.sweep",             rm.loadAudioClip("sound/common/sweep.mp3"));
 
         //
         // Pac-Man game
@@ -196,6 +196,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         //
         // Pac-Man PLUS
         //
+        theme.set("pacman_plus.icon",                 rm.loadImage("graphics/icons/pacman.png"));
+        theme.set("pacman_plus.startpage.image",      rm.loadImage("graphics/pacman/pacman_flyer.png"));
+        theme.set("pacman_plus.helpButton.icon",      rm.loadImage("graphics/icons/help-blue-64.png"));
         theme.set("pacman_plus.startpage.image",      rm.loadImage("graphics/pacman_plus/moeppi.jpg"));
     }
 
@@ -206,15 +209,23 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     public static final MsPacManGameSpriteSheet SS_MS_PACMAN = new MsPacManGameSpriteSheet(
-        THEME_2D.get("mspacman.spritesheet.image"),
-        THEME_2D.get("mspacman.spritesheet.image.mazes"));
+        THEME_2D.get("ms_pacman.spritesheet.image"),
+        THEME_2D.get("ms_pacman.spritesheet.image.mazes"));
 
     public static final PacManGameSpriteSheet SS_PACMAN = new PacManGameSpriteSheet(
         THEME_2D.get("pacman.spritesheet.image"),
         THEME_2D.get("pacman.spritesheet.image.mazes"));
 
+    public static String variantKey(GameVariant variant) {
+        return switch (variant) {
+            case MS_PACMAN -> "ms_pacman";
+            case PACMAN -> "pacman";
+            case PACMAN_PLUS -> "pacman_plus";
+        };
+    }
+
     protected final GameClockFX clock;
-    protected final Map<GameVariant, Map<String, GameScene>> gameScenesByVariant = new EnumMap<>(GameVariant.class);
+    protected final Map<GameVariant, Map<String, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
     protected final Stage stage;
     protected final Scene mainScene;
     protected final StartPage startPage;
@@ -258,7 +269,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         });
         gameController().setClock(clock);
 
-        gameScenesByVariant.put(GameVariant.MS_PACMAN, new HashMap<>(Map.of(
+        gameScenesForVariant.put(GameVariant.MS_PACMAN, new HashMap<>(Map.of(
             "boot",   new BootScene(),
             "intro",  new MsPacManIntroScene(),
             "credit", new MsPacManCreditScene(),
@@ -267,7 +278,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             "cut2",   new MsPacManCutScene2(),
             "cut3",   new MsPacManCutScene3()
         )));
-        gameScenesByVariant.put(GameVariant.PACMAN, new HashMap<>(Map.of(
+        gameScenesForVariant.put(GameVariant.PACMAN, new HashMap<>(Map.of(
             "boot",   new BootScene(),
             "intro",  new PacManIntroScene(),
             "credit", new PacManCreditScene(),
@@ -276,7 +287,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             "cut2",   new PacManCutScene2(),
             "cut3",   new PacManCutScene3()
         )));
-        gameScenesByVariant.put(GameVariant.PACMAN_PLUS, new HashMap<>(Map.of(
+        gameScenesForVariant.put(GameVariant.PACMAN_PLUS, new HashMap<>(Map.of(
             "boot",   new BootScene(),
             "intro",  new PacManIntroScene(),
             "credit", new PacManCreditScene(),
@@ -285,7 +296,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             "cut2",   new PacManCutScene2(),
             "cut3",   new PacManCutScene3()
         )));
-        for (Map<String, GameScene> gameSceneMap : gameScenesByVariant.values()) {
+        for (Map<String, GameScene> gameSceneMap : gameScenesForVariant.values()) {
             for (var gameScene : gameSceneMap.values()) {
                 gameScene.setContext(this);
                 if (gameScene instanceof GameScene2D gameScene2D) {
@@ -369,13 +380,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     protected void updateStage() {
-        String variantKey = game() == GameVariant.MS_PACMAN ? "mspacman" : "pacman";
-        String titleKey = "app.title." + variantKey;
+        String vk = variantKey(game().variant());
+        String titleKey = "app.title." + vk;
         if (clock.isPaused()) {
             titleKey += ".paused";
         }
         stage.setTitle(tt(titleKey));
-        stage.getIcons().setAll(THEME_2D.image(variantKey + ".icon"));
+        stage.getIcons().setAll(THEME_2D.image(vk + ".icon"));
     }
 
     protected GameScene sceneMatchingCurrentGameState() {
@@ -445,7 +456,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public Map<String, GameScene> sceneConfig() {
-        return gameScenesByVariant.get((GameVariant) game());
+        return gameScenesForVariant.get((GameVariant) game());
     }
 
     @Override
@@ -777,10 +788,11 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     @Override
     public AudioClip audioClip(String key) {
         checkNotNull(key);
-        return switch (game().variant()) {
-            case MS_PACMAN -> theme().audioClip("mspacman." + key);
-            case PACMAN, PACMAN_PLUS -> theme().audioClip("pacman." + key);
-        };
+        String vk = variantKey(game().variant());
+        if (game().variant() == GameVariant.PACMAN_PLUS) {
+            vk = variantKey(GameVariant.PACMAN);
+        }
+        return theme().audioClip(vk + "." + key);
     }
 
     @Override

@@ -413,7 +413,7 @@ public enum GameVariant implements GameModel {
 
         {
             initialLives = 3;
-            highScoreFileName = "highscore-pacman.xml";
+            highScoreFileName = "highscore-pacman_plus.xml";
             reset();
             Logger.info("Game variant {} initialized.", this);
         }

@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.lib.Score;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
@@ -23,6 +24,7 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui.fx.PacManGames2dUI.variantKey;
 
 /**
  * Base class of all 2D scenes.
@@ -148,7 +150,8 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected void drawMsPacManCopyright(double x, double y) {
-        Image logo = context.theme().get("mspacman.logo.midway");
+        String vk = variantKey(GameVariant.MS_PACMAN);
+        Image logo = context.theme().get(vk + ".logo.midway");
         classicRenderer.drawImageScaled(g, logo, x, y + 2, TS * 4 - 2, TS * 4);
         g.setFill(context.theme().color("palette.red"));
         g.setFont(sceneFont(8));
