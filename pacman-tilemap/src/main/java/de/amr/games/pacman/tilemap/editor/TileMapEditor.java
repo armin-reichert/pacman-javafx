@@ -487,7 +487,7 @@ public class TileMapEditor  {
             try {
                 int numCols = Integer.parseInt(tuple[0].trim());
                 int numRows = Integer.parseInt(tuple[1].trim());
-                map = new WorldMap(new TileMap(numRows, numCols), new TileMap(numCols, numRows));
+                map = new WorldMap(new TileMap(numRows, numCols), new TileMap(numRows, numCols));
             } catch (Exception x) {
                 Logger.error(x);
             }
