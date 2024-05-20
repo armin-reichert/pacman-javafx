@@ -256,22 +256,9 @@ public enum GameVariant implements GameModel {
      */
     PACMAN {
 
-        static final NavPoint[] ARCADE_MAP_DEMO_LEVEL_ROUTE = {
-            np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
-            np(18, 23), np(18, 20), np(18, 17), np(15, 14), np(12, 14), np(9, 17),
-            np(6, 17), np(6, 11), np(6, 8), np(6, 4), np(1, 8), np(6, 8),
-            np(9, 8), np(12, 8), np(6, 4), np(6, 8), np(6, 11), np(1, 8),
-            np(6, 8), np(9, 8), np(12, 14), np(9, 17), np(6, 17), np(0, 17),
-            np(21, 17), np(21, 23), np(21, 26), np(24, 29), /* avoid moving up: */ np(26, 29),
-            np(15, 32), np(12, 32), np(3, 29), np(6, 23), np(9, 23), np(12, 26),
-            np(15, 26), np(18, 23), np(21, 23), np(24, 29), /* avoid moving up: */ np(26, 29),
-            np(15, 32), np(12, 32), np(3, 29), np(6, 23)
-        };
-
         final int[] HUNTING_TICKS_1 = {420, 1200, 420, 1200, 300, 1200, 300, -1};
         final int[] HUNTING_TICKS_2_TO_4 = {420, 1200, 420, 1200, 300, 61980, 1, -1};
         final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 300, 1200, 300, 62262, 1, -1};
-
         final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {-1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
         final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
 
@@ -294,7 +281,7 @@ public enum GameVariant implements GameModel {
             try {
                 URL url = getClass().getResource(path);
                 World world = createArcadeWorld(url);
-                world.setDemoLevelRoute(List.of(ARCADE_MAP_DEMO_LEVEL_ROUTE));
+                world.setDemoLevelRoute(List.of(PACMAN_ARCADE_MAP_DEMO_LEVEL_ROUTE));
                 List<Direction> up = List.of(UP);
                 Map<Vector2i, List<Direction>> fp = new HashMap<>();
                 Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26))
@@ -392,22 +379,9 @@ public enum GameVariant implements GameModel {
      */
     PACMAN_PLUS {
 
-        static final NavPoint[] ARCADE_MAP_DEMO_LEVEL_ROUTE = {
-            np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
-            np(18, 23), np(18, 20), np(18, 17), np(15, 14), np(12, 14), np(9, 17),
-            np(6, 17), np(6, 11), np(6, 8), np(6, 4), np(1, 8), np(6, 8),
-            np(9, 8), np(12, 8), np(6, 4), np(6, 8), np(6, 11), np(1, 8),
-            np(6, 8), np(9, 8), np(12, 14), np(9, 17), np(6, 17), np(0, 17),
-            np(21, 17), np(21, 23), np(21, 26), np(24, 29), /* avoid moving up: */ np(26, 29),
-            np(15, 32), np(12, 32), np(3, 29), np(6, 23), np(9, 23), np(12, 26),
-            np(15, 26), np(18, 23), np(21, 23), np(24, 29), /* avoid moving up: */ np(26, 29),
-            np(15, 32), np(12, 32), np(3, 29), np(6, 23)
-        };
-
-        final int[] HUNTING_TICKS_1      = {420, 1200, 420, 1200, 300,  1200, 300, -1};
-        final int[] HUNTING_TICKS_2_TO_4 = {420, 1200, 420, 1200, 300, 61980,   1, -1};
-        final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 300, 1200, 300, 62262,   1, -1};
-
+        final int[] HUNTING_TICKS_1 = {420, 1200, 420, 1200, 300, 1200, 300, -1};
+        final int[] HUNTING_TICKS_2_TO_4 = {420, 1200, 420, 1200, 300, 61980, 1, -1};
+        final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 300, 1200, 300, 62262, 1, -1};
         final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {-1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
         final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
 
@@ -442,7 +416,7 @@ public enum GameVariant implements GameModel {
             try {
                 URL url = getClass().getResource(path);
                 World world = createArcadeWorld(url);
-                world.setDemoLevelRoute(List.of(ARCADE_MAP_DEMO_LEVEL_ROUTE));
+                world.setDemoLevelRoute(List.of(PACMAN_ARCADE_MAP_DEMO_LEVEL_ROUTE));
                 List<Direction> up = List.of(UP);
                 Map<Vector2i, List<Direction>> fp = new HashMap<>();
                 Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26))
@@ -572,6 +546,18 @@ public enum GameVariant implements GameModel {
     static GameLevel level(int levelNumber) {
         return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
     }
+
+    static final NavPoint[] PACMAN_ARCADE_MAP_DEMO_LEVEL_ROUTE = {
+        np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
+        np(18, 23), np(18, 20), np(18, 17), np(15, 14), np(12, 14), np(9, 17),
+        np(6, 17), np(6, 11), np(6, 8), np(6, 4), np(1, 8), np(6, 8),
+        np(9, 8), np(12, 8), np(6, 4), np(6, 8), np(6, 11), np(1, 8),
+        np(6, 8), np(9, 8), np(12, 14), np(9, 17), np(6, 17), np(0, 17),
+        np(21, 17), np(21, 23), np(21, 26), np(24, 29), /* avoid moving up: */ np(26, 29),
+        np(15, 32), np(12, 32), np(3, 29), np(6, 23), np(9, 23), np(12, 26),
+        np(15, 26), np(18, 23), np(21, 23), np(24, 29), /* avoid moving up: */ np(26, 29),
+        np(15, 32), np(12, 32), np(3, 29), np(6, 23)
+    };
 
     static final byte    POINTS_PELLET = 10;
     static final byte    POINTS_ENERGIZER = 50;
