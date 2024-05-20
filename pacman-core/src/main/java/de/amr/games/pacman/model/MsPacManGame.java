@@ -21,7 +21,23 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.Globals.RND;
 
+/**
+ * Ms. Pac-Man game variant.
+ *
+ * <p>There are however some differences to the original.
+ * <ul>
+ *     <li>Attract mode is just a random hunting for at least 20 seconds.</li>
+ *     <li>Timing of hunting phases unclear, just took all the information I had</li>
+ *     <li>Bonus does not follow original "fruit paths" but randomly selects a portal to
+ *     enter the maze, turns around the house and leaves the maze at a random portal on the other side</li>
+ * </ul>
+ * </p>
+ *
+ * @author Armin Reichert
+ */
 public class MsPacManGame extends AbstractPacManGame{
+
+    byte DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
     /**
      * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.

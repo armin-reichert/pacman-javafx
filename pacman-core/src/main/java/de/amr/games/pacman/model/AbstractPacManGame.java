@@ -20,16 +20,21 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.LEFT;
-import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.lib.NavPoint.np;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
+/**
+ * Common part of all game variants.
+ *
+ * @author Armin Reichert
+ */
 public abstract class AbstractPacManGame implements GameModel {
 
     static final GameLevel[] LEVELS = {
@@ -58,35 +63,6 @@ public abstract class AbstractPacManGame implements GameModel {
 
     static GameLevel level(int levelNumber) {
         return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
-    }
-
-    static final NavPoint[] PACMAN_ARCADE_MAP_DEMO_LEVEL_ROUTE = {
-        np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
-        np(18, 23), np(18, 20), np(18, 17), np(15, 14), np(12, 14), np(9, 17),
-        np(6, 17), np(6, 11), np(6, 8), np(6, 4), np(1, 8), np(6, 8),
-        np(9, 8), np(12, 8), np(6, 4), np(6, 8), np(6, 11), np(1, 8),
-        np(6, 8), np(9, 8), np(12, 14), np(9, 17), np(6, 17), np(0, 17),
-        np(21, 17), np(21, 23), np(21, 26), np(24, 29), /* avoid moving up: */ np(26, 29),
-        np(15, 32), np(12, 32), np(3, 29), np(6, 23), np(9, 23), np(12, 26),
-        np(15, 26), np(18, 23), np(21, 23), np(24, 29), /* avoid moving up: */ np(26, 29),
-        np(15, 32), np(12, 32), np(3, 29), np(6, 23)
-    };
-
-    World createPacManWorld() {
-        var path = "/maps/pacman.world";
-        try {
-            URL url = getClass().getResource(path);
-            World world = createArcadeWorld(url);
-            world.setDemoLevelRoute(List.of(PACMAN_ARCADE_MAP_DEMO_LEVEL_ROUTE));
-            List<Direction> up = List.of(UP);
-            Map<Vector2i, List<Direction>> fp = new HashMap<>();
-            Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26))
-                .forEach(tile -> fp.put(tile, up));
-            world.setForbiddenPassages(fp);
-            return world;
-        } catch (Exception x) {
-            throw new IllegalArgumentException(String.format("Could not create Pac-Man world from map at path '%s'", path));
-        }
     }
 
     static final byte    POINTS_PELLET = 10;

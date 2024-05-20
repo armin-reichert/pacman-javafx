@@ -43,8 +43,6 @@ public interface GameModel {
     /** Movement speed in pixel/sec. */
     float PPS_AT_100_PERCENT = 73.9f; //TODO this should be 75 but that doesn't work yet
 
-    byte DEMO_LEVEL_MIN_DURATION_SEC = 20;
-
     GameVariant variant();
 
     SimulationStepEventLog eventLog();
