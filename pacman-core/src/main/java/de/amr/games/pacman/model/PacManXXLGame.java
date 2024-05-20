@@ -14,6 +14,10 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.Globals.v2i;
@@ -23,12 +27,19 @@ import static de.amr.games.pacman.lib.Globals.v2i;
  */
 public class PacManXXLGame extends PacManGame{
 
+    private final List<WorldMap> customMaps = new ArrayList<>();
+
     public PacManXXLGame() {
         initialLives = 3;
         highScoreFileName = "highscore-pacman_xxl.xml";
         reset();
         Logger.info("Game variant {} initialized.", this);
-        loadCustomMaps();
+        try {
+            loadCustomMaps();
+        } catch (IOException x) {
+            Logger.error("Loading custom maps failed");
+            Logger.error(x);
+        }
     }
 
     @Override
@@ -85,7 +96,7 @@ public class PacManXXLGame extends PacManGame{
         return world;
     }
 
-    void loadCustomMaps() {
+    void loadCustomMaps() throws IOException {
         var dir = new File(System.getProperty("user.home"), ".pacmanfx/maps");
         if (dir.isDirectory()) {
             var filterWorldFiles = new FilenameFilter() {
@@ -97,8 +108,10 @@ public class PacManXXLGame extends PacManGame{
             Logger.info("Searching for custom map files in folder " + dir);
             var mapFiles = dir.listFiles(filterWorldFiles);
             if (mapFiles != null) {
-                for (var map : mapFiles) {
-                    Logger.info("Found map file: " + map);
+                for (var mapFile : mapFiles) {
+                    Logger.info("Found map file: " + mapFile);
+                    URL url = mapFile.toURI().toURL();
+                    customMaps.add(new WorldMap(url));
                 }
             }
         }
