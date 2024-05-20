@@ -6,9 +6,11 @@ package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.FiniteStateMachine;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.*;
 import org.tinylog.Logger;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -46,6 +48,9 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     private GameController() {
         super(GameState.values());
+        GameVariant.MS_PACMAN.setGame(new MsPacManGame());
+        GameVariant.PACMAN.setGame(new PacManGame());
+        GameVariant.PACMAN_PLUS.setGame(new PacManPlusGame());
         selectGame(GameVariant.PACMAN);
         // map state change events to events of the selected game
         addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
@@ -55,8 +60,13 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         return game;
     }
 
-    public void selectGame(GameModel variant) {
-        game = checkNotNull(variant);
+    public GameModel game(GameVariant variant) {
+        checkNotNull(variant);
+        return variant.game();
+    }
+
+    public void selectGame(GameVariant variant) {
+        game = game(variant);
     }
 
     @Override

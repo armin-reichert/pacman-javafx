@@ -63,7 +63,7 @@ public class PacManCutScene3 extends GameScene2D {
         if (initialDelay > 0) {
             --initialDelay;
             if (initialDelay == 0) {
-                GameVariant.PACMAN.publishGameEvent(GameEventType.INTERMISSION_STARTED);
+                GameVariant.PACMAN.game().publishGameEvent(GameEventType.INTERMISSION_STARTED);
             }
             return;
         }

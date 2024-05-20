@@ -41,8 +41,8 @@ public class PacManGames3dApp extends Application {
     @Override
     public void start(Stage stage) {
         ui = new PacManGames3dUI(stage, settings);
-        for (var game : GameVariant.values()) {
-            game.addGameEventListener(ui);
+        for (var variant : GameVariant.values()) {
+            variant.game().addGameEventListener(ui);
         }
         ui.showStartPage();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());

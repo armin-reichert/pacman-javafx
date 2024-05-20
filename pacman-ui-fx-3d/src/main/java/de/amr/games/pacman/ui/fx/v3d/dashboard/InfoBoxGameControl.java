@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Globals;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -33,7 +32,7 @@ public class InfoBoxGameControl extends InfoBox {
     private static final int INTERMISSION_TEST_QUIT = 1;
 
     private final Spinner<Integer> spinnerCredit;
-    private final ComboBox<GameModel> comboGameVariant;
+    private final ComboBox<GameVariant> comboGameVariant;
     private final ComboBox<Integer> comboInitialLives;
     private final Button[] buttonsLevelActions;
     private final Button[] buttonsIntermissionTest;
@@ -57,7 +56,7 @@ public class InfoBoxGameControl extends InfoBox {
         super.init(context);
         comboGameVariant.setOnAction(e -> {
             var selectedVariant = comboGameVariant.getValue();
-            if (selectedVariant != context.game()) {
+            if (selectedVariant != context.game().variant()) {
                 context.gameController().selectGame(selectedVariant);
                 context.gameController().restart(GameState.BOOT);
             }
@@ -78,7 +77,7 @@ public class InfoBoxGameControl extends InfoBox {
     public void update() {
         super.update();
 
-        comboGameVariant.setValue(context.game());
+        comboGameVariant.setValue(context.game().variant());
         comboGameVariant.setDisable(context.gameState() != GameState.INTRO);
         comboInitialLives.setValue(context.game().initialLives());
         cbAutopilot.setSelected(PY_USE_AUTOPILOT.get());

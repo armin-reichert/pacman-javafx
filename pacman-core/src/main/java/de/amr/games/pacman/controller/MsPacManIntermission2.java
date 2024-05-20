@@ -64,7 +64,7 @@ public class MsPacManIntermission2 {
 
     private void updateStateFlap() {
         if (stateTimer.hasExpired()) {
-            GameVariant.MS_PACMAN.publishGameEvent(GameEventType.INTERMISSION_STARTED);
+            GameVariant.MS_PACMAN.game().publishGameEvent(GameEventType.INTERMISSION_STARTED);
             enterStateChasing();
         }
     }

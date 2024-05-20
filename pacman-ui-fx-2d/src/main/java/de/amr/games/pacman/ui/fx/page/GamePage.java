@@ -266,7 +266,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
     }
 
     private void showHelpInfoPopUp() {
-        var bgColor = context.game() == GameVariant.MS_PACMAN
+        var bgColor = context.game().variant() == GameVariant.MS_PACMAN
             ? Color.rgb(255, 0, 0, 0.8)
             : Color.rgb(33, 33, 255, 0.8);
         var font = context.theme().font("font.monospaced", Math.max(6, 14 * getScaling()));
@@ -282,7 +282,8 @@ public class GamePage extends CanvasLayoutPane implements Page {
             info.addLocalizedEntry("help.start_game", "1");
         }
         info.addLocalizedEntry("help.add_credit", "5");
-        info.addLocalizedEntry(context.game() == GameVariant.MS_PACMAN ? "help.pacman" : "help.ms_pacman", "V");
+        info.addLocalizedEntry(context.game().variant() == GameVariant.MS_PACMAN
+            ? "help.pacman" : "help.ms_pacman", "V");
     }
 
     private void addInfoForQuittingScene(HelpInfo info) {

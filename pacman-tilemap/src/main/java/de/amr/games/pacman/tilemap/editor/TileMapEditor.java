@@ -102,13 +102,13 @@ public class TileMapEditor  {
     BooleanProperty runtimePreviewPy = new SimpleBooleanProperty(false);
 
     public TileMapEditor(Stage stage) throws GameException  {
-        arcadeMaps[0] = WorldMap.copyOf(GameVariant.PACMAN.createWorld(1).map());
+        arcadeMaps[0] = WorldMap.copyOf(GameVariant.PACMAN.game().createWorld(1).map());
         for (int i = 1; i <= 6; ++i) {
-            arcadeMaps[i] = WorldMap.copyOf(GameVariant.MS_PACMAN.createWorld(i).map());
+            arcadeMaps[i] = WorldMap.copyOf(GameVariant.MS_PACMAN.game().createWorld(i).map());
         }
         for (int i = 0; i < 8; ++i) {
             // Note: Pac-Man PLUS map in first world is Pac-Man Arcade map
-            masonicMaps[i] = WorldMap.copyOf(GameVariant.PACMAN_PLUS.createWorld(i+1).map());
+            masonicMaps[i] = WorldMap.copyOf(GameVariant.PACMAN_PLUS.game().createWorld(i+1).map());
         }
         map = arcadeMaps[0];
 

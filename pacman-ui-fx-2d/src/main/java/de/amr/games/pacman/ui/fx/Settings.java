@@ -38,7 +38,7 @@ public class Settings {
     }
 
     public boolean fullScreen;
-    public GameModel variant;
+    public GameVariant variant;
     public float zoom;
     public Map<Direction, KeyCode> keyMap;
 

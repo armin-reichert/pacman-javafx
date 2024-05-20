@@ -456,7 +456,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public Map<String, GameScene> sceneConfig() {
-        return gameScenesForVariant.get((GameVariant) game());
+        return gameScenesForVariant.get(game().variant());
     }
 
     @Override

@@ -90,7 +90,7 @@ public class MsPacManIntermission1 {
 
     private void updateStateFlap() {
         if (stateTimer.atSecond(1)) {
-            GameVariant.MS_PACMAN.publishGameEvent(GameEventType.INTERMISSION_STARTED);
+            GameVariant.MS_PACMAN.game().publishGameEvent(GameEventType.INTERMISSION_STARTED);
         } else if (stateTimer.hasExpired()) {
             enterStateChasedByGhosts();
         }

@@ -135,7 +135,7 @@ public class PlayScene2D extends GameScene2D {
     protected void drawSceneInfo() {
         var game = context.game();
         drawTileGrid();
-        if (game == GameVariant.PACMAN && game.world() != null) {
+        if (game.variant() == GameVariant.PACMAN && game.world() != null) {
             game.world().forbiddenPassages().forEach((tile, directions) -> {
                 // TODO indicate direction
                 g.setFill(Color.RED);
