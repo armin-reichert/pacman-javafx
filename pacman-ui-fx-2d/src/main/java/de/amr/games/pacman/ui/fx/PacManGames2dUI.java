@@ -194,12 +194,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         theme.set("pacman.audio.sweep",               rm.loadAudioClip("sound/common/sweep.mp3"));
 
         //
-        // Pac-Man PLUS
+        // Pac-Man XXL
         //
-        theme.set("pacman_plus.icon",                 rm.loadImage("graphics/icons/pacman.png"));
-        theme.set("pacman_plus.startpage.image",      rm.loadImage("graphics/pacman/pacman_flyer.png"));
-        theme.set("pacman_plus.helpButton.icon",      rm.loadImage("graphics/icons/help-blue-64.png"));
-        theme.set("pacman_plus.startpage.image",      rm.loadImage("graphics/pacman_plus/moeppi.jpg"));
+        theme.set("pacman_xxl.icon",                 rm.loadImage("graphics/icons/pacman.png"));
+        theme.set("pacman_xxl.startpage.image",      rm.loadImage("graphics/pacman/pacman_flyer.png"));
+        theme.set("pacman_xxl.helpButton.icon",      rm.loadImage("graphics/icons/help-blue-64.png"));
+        theme.set("pacman_xxl.startpage.image",      rm.loadImage("graphics/pacman_xxl/pacman_xxl_3d.png"));
     }
 
     protected static final Theme THEME_2D = new Theme();
@@ -220,7 +220,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         return switch (variant) {
             case MS_PACMAN -> "ms_pacman";
             case PACMAN -> "pacman";
-            case PACMAN_PLUS -> "pacman_plus";
+            case PACMAN_XXL -> "pacman_xxl";
         };
     }
 
@@ -291,8 +291,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             "cut3",   new PacManCutScene3()
         )));
 
-        Logger.info("Creating 2D game scenes for variant " + GameVariant.PACMAN_PLUS);
-        gameScenesForVariant.put(GameVariant.PACMAN_PLUS, new HashMap<>(Map.of(
+        Logger.info("Creating 2D game scenes for variant " + GameVariant.PACMAN_XXL);
+        gameScenesForVariant.put(GameVariant.PACMAN_XXL, new HashMap<>(Map.of(
             "boot",   new BootScene(),
             "intro",  new PacManIntroScene(),
             "credit", new PacManCreditScene(),
@@ -529,7 +529,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (intermissionNumber != 0) {
             switch (game().variant()) {
                 case MS_PACMAN -> playAudioClip("audio.intermission." + intermissionNumber);
-                case PACMAN, PACMAN_PLUS -> {
+                case PACMAN, PACMAN_XXL -> {
                     var clip = audioClip("audio.intermission");
                     clip.setCycleCount(intermissionNumber == 1 || intermissionNumber == 3 ? 2 : 1);
                     clip.play();
@@ -548,7 +548,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, SS_MS_PACMAN)));
                 Logger.info("Created Ms. Pac-Man game creature animations for level #{}", game.levelNumber());
             }
-            case PACMAN, PACMAN_PLUS -> {
+            case PACMAN, PACMAN_XXL -> {
                 game.pac().setAnimations(new PacManGamePacAnimations(game.pac(), SS_PACMAN));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, SS_PACMAN)));
                 Logger.info("Created Pac-Man game creature animations for level #{}", game.levelNumber());
@@ -794,7 +794,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public AudioClip audioClip(String key) {
         checkNotNull(key);
         String vk = variantKey(game().variant());
-        if (game().variant() == GameVariant.PACMAN_PLUS) {
+        if (game().variant() == GameVariant.PACMAN_XXL) {
             vk = variantKey(GameVariant.PACMAN);
         }
         return theme().audioClip(vk + "." + key);

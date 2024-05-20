@@ -265,7 +265,7 @@ public class PlayScene3D implements GameScene {
                 context.stopAllSounds();
                 var animation = switch (context.game().variant()) {
                     case MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
-                    case PACMAN, PACMAN_PLUS    -> level3D.pac3D().createPacManDyingAnimation(context.game());
+                    case PACMAN, PACMAN_XXL -> level3D.pac3D().createPacManDyingAnimation(context.game());
                 };
                 lockGameStateAndPlayAfterOneSecond(animation);
             }
@@ -283,13 +283,13 @@ public class PlayScene3D implements GameScene {
             case GHOST_DYING -> {
                 Rectangle2D[] sprites = switch (context.game().variant()) {
                     case MS_PACMAN -> SS_MS_PACMAN.ghostNumberSprites();
-                    case PACMAN, PACMAN_PLUS    -> SS_PACMAN.ghostNumberSprites();
+                    case PACMAN, PACMAN_XXL -> SS_PACMAN.ghostNumberSprites();
                 };
                 context.game().eventLog().killedGhosts.forEach(ghost -> {
                     int index = context.game().victims().indexOf(ghost);
                     var numberImage = switch (context.game().variant()) {
                         case MS_PACMAN -> SS_MS_PACMAN.subImage(sprites[index]);
-                        case PACMAN, PACMAN_PLUS -> SS_PACMAN.subImage(sprites[index]);
+                        case PACMAN, PACMAN_XXL -> SS_PACMAN.subImage(sprites[index]);
                     };
                     level3D.ghosts3D().get(ghost.id()).setNumberImage(numberImage);
                 });

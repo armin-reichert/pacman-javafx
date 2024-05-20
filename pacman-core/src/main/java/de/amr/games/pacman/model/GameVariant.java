@@ -12,7 +12,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  * @author Armin Reichert
  */
 public enum GameVariant {
-    MS_PACMAN, PACMAN, PACMAN_PLUS;
+    MS_PACMAN, PACMAN, PACMAN_XXL;
 
     private GameModel game;
 

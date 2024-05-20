@@ -108,7 +108,7 @@ public class TileMapEditor  {
         }
         for (int i = 0; i < 8; ++i) {
             // Note: Pac-Man PLUS map in first world is Pac-Man Arcade map
-            masonicMaps[i] = WorldMap.copyOf(GameVariant.PACMAN_PLUS.game().createWorld(i+1).map());
+            masonicMaps[i] = WorldMap.copyOf(GameVariant.PACMAN_XXL.game().createWorld(i+1).map());
         }
         map = arcadeMaps[0];
 

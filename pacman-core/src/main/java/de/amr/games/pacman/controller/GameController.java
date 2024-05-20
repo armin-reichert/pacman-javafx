@@ -9,9 +9,6 @@ import de.amr.games.pacman.lib.FiniteStateMachine;
 import de.amr.games.pacman.model.*;
 import org.tinylog.Logger;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
@@ -50,7 +47,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         super(GameState.values());
         GameVariant.MS_PACMAN.setGame(new MsPacManGame());
         GameVariant.PACMAN.setGame(new PacManGame());
-        GameVariant.PACMAN_PLUS.setGame(new PacManPlusGame());
+        GameVariant.PACMAN_XXL.setGame(new PacManXXLGame());
         selectGame(GameVariant.PACMAN);
         // map state change events to events of the selected game
         addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));

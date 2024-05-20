@@ -76,7 +76,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
         switch (context.game().variant()) {
             case MS_PACMAN -> signature.translateYProperty().bind(
                 Bindings.createDoubleBinding(() -> 45 * getScaling(), scalingPy));
-            case PACMAN, PACMAN_PLUS -> signature.translateYProperty().bind(
+            case PACMAN, PACMAN_XXL -> signature.translateYProperty().bind(
                 Bindings.createDoubleBinding(() -> 30 * getScaling(), scalingPy));
         }
         signature.show();
@@ -192,7 +192,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
     protected void updateHelpButton() {
         ImageView imageView = (ImageView) helpButton.getCenter();
         String vk = PacManGames2dUI.variantKey(context.game().variant());
-        if (context.game().variant() == GameVariant.PACMAN_PLUS) {
+        if (context.game().variant() == GameVariant.PACMAN_XXL) {
             vk = variantKey(GameVariant.PACMAN);
         }
         var image = context.theme().image(vk + ".helpButton.icon");

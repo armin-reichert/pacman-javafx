@@ -15,18 +15,18 @@ import static de.amr.games.pacman.lib.Globals.*;
 /**
  * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only Sean Williams!).
  */
-public class PacManPlusGame extends PacManGame{
+public class PacManXXLGame extends PacManGame{
 
-    public PacManPlusGame() {
+    public PacManXXLGame() {
         initialLives = 3;
-        highScoreFileName = "highscore-pacman_plus.xml";
+        highScoreFileName = "highscore-pacman_xxl.xml";
         reset();
         Logger.info("Game variant {} initialized.", this);
     }
 
     @Override
     public GameVariant variant() {
-        return GameVariant.PACMAN_PLUS;
+        return GameVariant.PACMAN_XXL;
     }
 
     @Override

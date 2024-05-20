@@ -71,7 +71,7 @@ public class BootScene extends GameScene2D {
     private SpriteSheet getSpriteSheet() {
         return switch (context.game().variant()) {
             case MS_PACMAN -> PacManGames2dUI.SS_MS_PACMAN;
-            case PACMAN, PACMAN_PLUS -> PacManGames2dUI.SS_PACMAN;
+            case PACMAN, PACMAN_XXL -> PacManGames2dUI.SS_PACMAN;
         };
     }
 

@@ -84,7 +84,7 @@ public class PlayScene2D extends GameScene2D {
                 classicRenderer.drawMsPacManWorld(g, game.world(), game.mapNumber(), flashing, blinkingOn);
             case PACMAN ->
                 classicRenderer.drawPacManWorld(g, game.world(), flashing, blinkingOn);
-            case PACMAN_PLUS ->
+            case PACMAN_XXL ->
                 modernRenderer.draw(g, game.world(), flashing, blinkingOn);
         }
         drawLevelMessage();
