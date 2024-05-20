@@ -5,21 +5,18 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.NavPoint;
-import de.amr.games.pacman.lib.RuleBasedPacSteering;
-import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.world.WorldMap;
 import org.tinylog.Logger;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.Globals.RND;
 
 /**
  * Ms. Pac-Man game variant.
@@ -62,19 +59,6 @@ public class MsPacManGame extends AbstractPacManGame{
         return GameVariant.MS_PACMAN;
     }
 
-    @Override
-    public World createWorld(int mapNumber) {
-        if (mapNumber < 1 || mapNumber > 6) {
-            throw new IllegalArgumentException("Ms. Pac-Man map number must be in 1-6, is: " + mapNumber);
-        }
-        try {
-            String path = String.format("/maps/mspacman/mspacman_%d.world", mapNumber);
-            return createArcadeWorld(getClass().getResource(path));
-        } catch (IOException e) {
-            throw new GameException("Could not create world map", e);
-        }
-    }
-
     /**
      * <p>In Ms. Pac-Man, there are 4 maps and 6 mazes. Let (num_map, num_maze) denote the combination
      * map #num_map and maze #num_maze.
@@ -92,15 +76,42 @@ public class MsPacManGame extends AbstractPacManGame{
      * </ul>
      * <p>
      */
-    int mapNumberByLevelNumber(int levelNumber) {
+    WorldMap worldMapByLevelNumber(int levelNumber) {
         checkLevelNumber(levelNumber);
-        return switch (levelNumber) {
-            case 1, 2 -> 1;
-            case 3, 4, 5 -> 2;
-            case 6, 7, 8, 9 -> 3;
-            case 10, 11, 12, 13 -> 4;
-            default -> (levelNumber - 14) % 8 < 4 ? 5 : 6;
-        };
+        switch (levelNumber) {
+            case 1, 2 -> {
+                mapNumber = 1;
+                return loadMap("/maps/mspacman/mspacman_1.world");
+            }
+            case 3, 4, 5 -> {
+                mapNumber = 2;
+                return loadMap("/maps/mspacman/mspacman_2.world");
+            }
+            case 6, 7, 8, 9 -> {
+                mapNumber = 3;
+                return loadMap("/maps/mspacman/mspacman_3.world");
+            }
+            case 10, 11, 12, 13 -> {
+                mapNumber = 4;
+                return loadMap("/maps/mspacman/mspacman_4.world");
+            }
+            default -> {
+                if ((levelNumber - 14) % 8 < 4) {
+                    mapNumber = 5;
+                    return loadMap("/maps/mspacman/mspacman_5.world");
+                } else {
+                    mapNumber = 6;
+                    return loadMap("/maps/mspacman/mspacman_6.world");
+                }
+            }
+        }
+    }
+
+    // sprite sheet renderer needs this
+    private int mapNumber;
+
+    public int mapNumber() {
+        return mapNumber;
     }
 
     @Override
@@ -112,8 +123,8 @@ public class MsPacManGame extends AbstractPacManGame{
     @Override
     void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
-        this.mapNumber = mapNumberByLevelNumber(levelNumber);
-        populateLevel(createWorld(mapNumber));
+        var map = worldMapByLevelNumber(levelNumber);
+        populateLevel(createMsPacManWorld(map));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -123,12 +134,33 @@ public class MsPacManGame extends AbstractPacManGame{
     @Override
     void buildDemoLevel() {
         levelNumber = 1;
-        mapNumber = randomInt(1, 7);
-        populateLevel(createWorld(mapNumber));
+        var worldMap = loadMap(String.format("/maps/mspacman/mspacman_%d.world", randomInt(1, 7)));
+        populateLevel(createMsPacManWorld(worldMap));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
         ghosts[ORANGE_GHOST].setName("Sue");
+    }
+
+    World createMsPacManWorld(WorldMap map) {
+        var world = new World(map);
+        world.setHouse(createArcadeHouse());
+        world.house().setTopLeftTile(v2i(10, 15));
+        world.setPacPosition(halfTileRightOf(13, 26));
+        world.setGhostPositions(new Vector2f[] {
+            halfTileRightOf(13, 14), // red ghost
+            halfTileRightOf(13, 17), // pink ghost
+            halfTileRightOf(11, 17), // cyan ghost
+            halfTileRightOf(15, 17)  // orange ghost
+        });
+        world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
+        world.setGhostScatterTiles(new Vector2i[] {
+            v2i(25,  0), // near right-upper corner
+            v2i( 2,  0), // near left-upper corner
+            v2i(27, 34), // near right-lower corner
+            v2i( 0, 34)  // near left-lower corner
+        });
+        return world;
     }
 
     /** In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly

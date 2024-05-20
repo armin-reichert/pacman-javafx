@@ -16,6 +16,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.world.WorldMap;
 
 import java.util.List;
 import java.util.Optional;
@@ -67,7 +68,7 @@ public interface GameModel {
      */
     Stream<Ghost> ghosts(GhostState... states);
 
-    World createWorld(int mapNumber) throws GameException;
+    World createWorld(WorldMap worldMap);
 
     /**
      * Creates and initializes new game level with the given number.
@@ -100,9 +101,6 @@ public interface GameModel {
      * @return Current level number (starting at 1, 0 means no level yet)
      */
     int levelNumber();
-
-    //TODO get rid of map numbers, use ID to identify
-    int mapNumber();
 
     Optional<GameLevel> level();
 

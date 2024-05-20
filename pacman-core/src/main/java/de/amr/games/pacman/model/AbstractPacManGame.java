@@ -90,7 +90,6 @@ public abstract class AbstractPacManGame implements GameModel {
 
     String               highScoreFileName;
     int                  levelNumber; // 1=first level
-    int                  mapNumber;
     boolean              demoLevel;
     long                 levelStartTime;
     boolean              playing;
@@ -130,30 +129,23 @@ public abstract class AbstractPacManGame implements GameModel {
         return house;
     }
 
-    World createArcadeWorld(URL worldMapURL) throws IOException {
-        checkNotNull(worldMapURL);
-        var worldMap = new WorldMap(worldMapURL);
-        worldMap.terrain().validateSize(ARCADE_MAP_TILES_Y, ARCADE_MAP_TILES_X);
-        worldMap.food().validateSize(ARCADE_MAP_TILES_Y, ARCADE_MAP_TILES_X);
-
-        var world = new World(worldMap);
-        world.setHouse(createArcadeHouse());
-        world.house().setTopLeftTile(v2i(10, 15));
-        world.setPacPosition(halfTileRightOf(13, 26));
-        world.setGhostPositions(new Vector2f[] {
-            halfTileRightOf(13, 14), // red ghost
-            halfTileRightOf(13, 17), // pink ghost
-            halfTileRightOf(11, 17), // cyan ghost
-            halfTileRightOf(15, 17)  // orange ghost
-        });
-        world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
-        world.setGhostScatterTiles(new Vector2i[] {
-            v2i(25,  0), // near right-upper corner
-            v2i( 2,  0), // near left-upper corner
-            v2i(27, 34), // near right-lower corner
-            v2i( 0, 34)  // near left-lower corner
-        });
+    @Override
+    public World createWorld(WorldMap worldMap) {
+        World world = new World(worldMap);
+        world.setBonusPosition(halfTileRightOf(13, 20));
         return world;
+    }
+
+    WorldMap loadMap(String path) {
+        try {
+            URL url = getClass().getResource(path);
+            if (url == null) {
+                throw new GameException("Could not access URL for path=" + path, null);
+            }
+            return new WorldMap(url);
+        } catch (Exception x) {
+            throw new GameException("Could not load world map", x);
+        }
     }
 
     void clearLevel() {
@@ -285,11 +277,6 @@ public abstract class AbstractPacManGame implements GameModel {
     @Override
     public int levelNumber() {
         return levelNumber;
-    }
-
-    @Override
-    public int mapNumber() {
-        return mapNumber;
     }
 
     @Override

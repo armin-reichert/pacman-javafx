@@ -102,13 +102,12 @@ public class TileMapEditor  {
     BooleanProperty runtimePreviewPy = new SimpleBooleanProperty(false);
 
     public TileMapEditor(Stage stage) throws GameException  {
-        arcadeMaps[0] = WorldMap.copyOf(GameVariant.PACMAN.game().createWorld(1).map());
+        arcadeMaps[0] = loadMap("/maps/pacman.world", GameVariant.PACMAN.getClass());
         for (int i = 1; i <= 6; ++i) {
-            arcadeMaps[i] = WorldMap.copyOf(GameVariant.MS_PACMAN.game().createWorld(i).map());
+            arcadeMaps[i] = loadMap("/maps/mspacman/mspacman_" + i + ".world", GameVariant.MS_PACMAN.getClass());
         }
-        for (int i = 0; i < 8; ++i) {
-            // Note: Pac-Man PLUS map in first world is Pac-Man Arcade map
-            masonicMaps[i] = WorldMap.copyOf(GameVariant.PACMAN_XXL.game().createWorld(i+1).map());
+        for (int i = 1; i <= 8; ++i) {
+            masonicMaps[i-1] = loadMap("/maps/masonic/masonic_" + i + ".world", GameVariant.PACMAN_XXL.getClass());
         }
         map = arcadeMaps[0];
 
@@ -142,6 +141,18 @@ public class TileMapEditor  {
         }));
         clock.setCycleCount(Animation.INDEFINITE);
         clock.play();
+    }
+
+    private WorldMap loadMap(String path, Class<?> loadingClass) {
+        try {
+            var url = loadingClass.getResource(path);
+            if (url != null) {
+                return new WorldMap(url);
+            }
+        } catch (Exception x) {
+            Logger.error(x);
+        }
+        return null;
     }
 
     public WorldMap getPacManMap() {
@@ -218,8 +229,8 @@ public class TileMapEditor  {
         subMenuLoadMap.getItems().add(new SeparatorMenuItem());
 
         IntStream.rangeClosed(1, 8).forEach(i -> {
-            var mi = new MenuItem("Pac-Man PLUS " + i);
-            mi.setOnAction(e -> loadMap(masonicMaps[i]));
+            var mi = new MenuItem("Pac-Man XXL " + i);
+            mi.setOnAction(e -> loadMap(masonicMaps[i-1]));
             subMenuLoadMap.getItems().add(mi);
         });
 

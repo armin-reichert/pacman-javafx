@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.MsPacManGame;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import javafx.scene.paint.Color;
@@ -81,7 +82,7 @@ public class PlayScene2D extends GameScene2D {
         boolean blinkingOn = game.blinking().isOn();
         switch (game.variant()) {
             case MS_PACMAN ->
-                classicRenderer.drawMsPacManWorld(g, game.world(), game.mapNumber(), flashing, blinkingOn);
+                classicRenderer.drawMsPacManWorld(g, game.world(), ((MsPacManGame)game).mapNumber(), flashing, blinkingOn);
             case PACMAN ->
                 classicRenderer.drawPacManWorld(g, game.world(), flashing, blinkingOn);
             case PACMAN_XXL ->
