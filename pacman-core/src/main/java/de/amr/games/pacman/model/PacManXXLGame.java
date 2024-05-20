@@ -51,9 +51,13 @@ public class PacManXXLGame extends PacManGame{
     @Override
     void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
-        mapNumber = 1;
-        if (levelNumber > 1) {
-            mapNumber = randomInt(2, 9);
+        if (levelNumber == 1) {
+            mapNumber = 1; // Pac-Man map
+        } else if (levelNumber <= 9) {
+            mapNumber = levelNumber; // Masonic map 1-8
+        }
+        else {
+            mapNumber = randomInt(2, 9); // random Masonic map
         }
         populateLevel(createWorld(mapNumber));
         pac.setName("Pac-Man");
