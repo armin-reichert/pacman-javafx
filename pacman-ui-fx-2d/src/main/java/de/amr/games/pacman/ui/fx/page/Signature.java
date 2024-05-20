@@ -16,7 +16,7 @@ import javafx.util.Duration;
 public class Signature extends TextFlow {
 
     private final Transition signatureAnimation;
-    private final Text remakeText = new Text("Remake (2022) by ");
+    private final Text remakeText = new Text("Remake (2021-2024) by ");
     private final Text authorText = new Text("Armin Reichert");
 
     Signature(GameSceneContext context) {
