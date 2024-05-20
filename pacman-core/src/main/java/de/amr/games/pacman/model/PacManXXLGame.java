@@ -38,11 +38,13 @@ public class PacManXXLGame extends PacManGame{
         switch (levelNumber) {
             case 1 -> setWorldAndCreatePopulation(createPacManWorld());
             case 2, 3, 4, 5, 6, 7, 8, 9 -> {
-                var map = loadMap(String.format("/maps/masonic/masonic_%d.world", levelNumber - 1));
+                var path = String.format("/maps/masonic/masonic_%d.world", levelNumber - 1);
+                var map = loadMap(getClass().getResource(path));
                 setWorldAndCreatePopulation(createModernWorld(map));
             }
             default -> {
-                var map = loadMap(String.format("/maps/masonic/masonic_%d.world", randomInt(2, 9)));
+                var path = String.format("/maps/masonic/masonic_%d.world", randomInt(2, 9));
+                var map = loadMap(getClass().getResource(path));
                 setWorldAndCreatePopulation(createModernWorld(map));
             }
         }

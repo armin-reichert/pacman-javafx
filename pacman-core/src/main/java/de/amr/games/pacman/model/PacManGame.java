@@ -101,7 +101,7 @@ public class PacManGame extends AbstractPacManGame{
     }
 
     World createPacManWorld() {
-        var world = new World(loadMap("/maps/pacman.world"));
+        var world = new World(loadMap(getClass().getResource("/maps/pacman.world")));
         world.setHouse(createArcadeHouse());
         world.house().setTopLeftTile(v2i(10, 15));
         world.setPacPosition(halfTileRightOf(13, 26));
