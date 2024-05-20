@@ -12,6 +12,9 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.model.world.WorldMap;
 import org.tinylog.Logger;
 
+import java.io.File;
+import java.io.FilenameFilter;
+
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.Globals.v2i;
 
@@ -25,6 +28,7 @@ public class PacManXXLGame extends PacManGame{
         highScoreFileName = "highscore-pacman_xxl.xml";
         reset();
         Logger.info("Game variant {} initialized.", this);
+        loadCustomMaps();
     }
 
     @Override
@@ -79,5 +83,24 @@ public class PacManXXLGame extends PacManGame{
         });
         world.setBonusPosition(halfTileRightOf(13, 20));
         return world;
+    }
+
+    void loadCustomMaps() {
+        var dir = new File(System.getProperty("user.home"), ".pacmanfx/maps");
+        if (dir.isDirectory()) {
+            var filterWorldFiles = new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".world");
+                }
+            };
+            Logger.info("Searching for custom map files in folder " + dir);
+            var mapFiles = dir.listFiles(filterWorldFiles);
+            if (mapFiles != null) {
+                for (var map : mapFiles) {
+                    Logger.info("Found map file: " + map);
+                }
+            }
+        }
     }
 }
