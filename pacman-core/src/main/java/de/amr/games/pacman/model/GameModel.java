@@ -16,14 +16,13 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.model.world.WorldMap;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
- * Common interface of all game variants.
+ * Common interface of all game models.
  *
  * @author Armin Reichert
  */
@@ -67,8 +66,6 @@ public interface GameModel {
      * @return all ghosts which are in any of the given states or all ghosts, if no states are specified
      */
     Stream<Ghost> ghosts(GhostState... states);
-
-    World createWorld(WorldMap worldMap);
 
     /**
      * Creates and initializes new game level with the given number.

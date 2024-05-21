@@ -78,33 +78,14 @@ public class MsPacManGame extends AbstractPacManGame{
      */
     WorldMap mapByLevelNumber(int levelNumber) {
         checkLevelNumber(levelNumber);
-        switch (levelNumber) {
-            case 1, 2 -> {
-                mapNumber = 1;
-                return loadMap(getClass().getResource("/maps/mspacman/mspacman_1.world"));
-            }
-            case 3, 4, 5 -> {
-                mapNumber = 2;
-                return loadMap(getClass().getResource("/maps/mspacman/mspacman_2.world"));
-            }
-            case 6, 7, 8, 9 -> {
-                mapNumber = 3;
-                return loadMap(getClass().getResource("/maps/mspacman/mspacman_3.world"));
-            }
-            case 10, 11, 12, 13 -> {
-                mapNumber = 4;
-                return loadMap(getClass().getResource("/maps/mspacman/mspacman_4.world"));
-            }
-            default -> {
-                if ((levelNumber - 14) % 8 < 4) {
-                    mapNumber = 5;
-                    return loadMap(getClass().getResource("/maps/mspacman/mspacman_5.world"));
-                } else {
-                    mapNumber = 6;
-                    return loadMap(getClass().getResource("/maps/mspacman/mspacman_6.world"));
-                }
-            }
-        }
+        int mapNumber = switch (levelNumber) {
+            case 1, 2 -> 1;
+            case 3, 4, 5 -> 2;
+            case 6, 7, 8, 9 -> 3;
+            case 10, 11, 12, 13 -> 4;
+            default -> (levelNumber - 14) % 8 < 4 ? 5 : 6;
+        };
+        return loadMap("/maps/mspacman/mspacman_" + mapNumber + ".world");
     }
 
     // sprite sheet renderer needs this
@@ -134,7 +115,7 @@ public class MsPacManGame extends AbstractPacManGame{
     void buildDemoLevel() {
         levelNumber = 1;
         var mapPath = String.format("/maps/mspacman/mspacman_%d.world", randomInt(1, 7));
-        var map = loadMap(getClass().getResource(mapPath));
+        var map = loadMap(mapPath);
         setWorldAndCreatePopulation(createMsPacManWorld(map));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));

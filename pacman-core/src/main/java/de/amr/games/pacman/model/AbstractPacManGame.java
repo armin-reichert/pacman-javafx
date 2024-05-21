@@ -17,6 +17,7 @@ import de.amr.games.pacman.model.world.WorldMap;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -128,23 +129,6 @@ public abstract class AbstractPacManGame implements GameModel {
         return house;
     }
 
-    @Override
-    public World createWorld(WorldMap worldMap) {
-        World world = new World(worldMap);
-        world.setBonusPosition(halfTileRightOf(13, 20));
-        return world;
-    }
-
-    WorldMap loadMap(URL url) {
-        try {
-            var map = new WorldMap(url);
-            Logger.info("Map loaded from URL {}", url);
-            return map;
-        } catch (Exception x) {
-            throw new GameException("Could not load world map", x);
-        }
-    }
-
     void clearLevel() {
         levelNumber = 0;
         levelStartTime = 0;
@@ -160,6 +144,21 @@ public abstract class AbstractPacManGame implements GameModel {
         world = null;
         blinking.stop();
         blinking.reset();
+    }
+
+    WorldMap loadMap(String path) {
+        URL mapURL = getClass().getResource(path);
+        if (mapURL != null) {
+            try {
+                return new WorldMap(mapURL);
+            }
+            catch (IOException x) {
+                Logger.error("Error loading world map from URL '{}'", mapURL);
+                return null;
+            }
+        }
+        Logger.error("Error loading web map from resource path '{}'", path);
+        return null;
     }
 
     void setWorldAndCreatePopulation(World world) {
@@ -184,7 +183,7 @@ public abstract class AbstractPacManGame implements GameModel {
         ghosts[CYAN_GHOST]  .setName("Inky");
         ghosts[ORANGE_GHOST].setName("Clyde");
 
-        ghosts[RED_GHOST]   .setRevivalPosition(world.ghostPosition(PINK_GHOST));
+        ghosts[RED_GHOST]   .setRevivalPosition(world.ghostPosition(PINK_GHOST)); // !
         ghosts[PINK_GHOST]  .setRevivalPosition(world.ghostPosition(PINK_GHOST));
         ghosts[CYAN_GHOST]  .setRevivalPosition(world.ghostPosition(CYAN_GHOST));
         ghosts[ORANGE_GHOST].setRevivalPosition(world.ghostPosition(ORANGE_GHOST));

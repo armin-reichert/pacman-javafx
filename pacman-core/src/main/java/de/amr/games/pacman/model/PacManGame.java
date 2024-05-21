@@ -18,7 +18,6 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.Globals.randomInt;
 import static de.amr.games.pacman.lib.NavPoint.np;
 
 /**
@@ -101,7 +100,7 @@ public class PacManGame extends AbstractPacManGame{
     }
 
     World createPacManWorld() {
-        var world = new World(loadMap(getClass().getResource("/maps/pacman.world")));
+        var world = new World(loadMap("/maps/pacman.world"));
         world.setHouse(createArcadeHouse());
         world.house().setTopLeftTile(v2i(10, 15));
         world.setPacPosition(halfTileRightOf(13, 26));
