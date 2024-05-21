@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.Tiles;
 import de.amr.games.pacman.model.world.WorldMap;
 import de.amr.games.pacman.tilemap.FoodMapRenderer;
-import de.amr.games.pacman.tilemap.TileMapEditorTerrainRenderer;
 import de.amr.games.pacman.tilemap.TileMapRenderer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -269,7 +268,7 @@ public class TileMapEditor  {
         cbRuntimePreview.setFont(Font.font(font.getFamily(), FontWeight.BOLD, 1.5*font.getSize()));
         cbRuntimePreview.selectedProperty().bindBidirectional(runtimePreviewPy);
 
-        terrainPalette = new Palette(32, 5, 4, Tiles.TERRAIN_TILES_END);
+        terrainPalette = new Palette(32, 6, 4, Tiles.TERRAIN_TILES_END);
         terrainPalette.setValues(
             Tiles.EMPTY, Tiles.TUNNEL, Tiles.PAC_HOME, Tiles.EMPTY,
             Tiles.SCATTER_TARGET_RED, Tiles.SCATTER_TARGET_PINK, Tiles.SCATTER_TARGET_CYAN, Tiles.SCATTER_TARGET_ORANGE,

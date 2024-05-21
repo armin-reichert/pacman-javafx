@@ -2,11 +2,12 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.tilemap;
+package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.world.TileMap;
 import de.amr.games.pacman.model.world.Tiles;
+import de.amr.games.pacman.tilemap.TerrainMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -68,10 +69,11 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
     }
 
     public void drawPacHome(GraphicsContext g, Vector2i tile) {
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.save();
         g.scale(scaling(), scaling());
         g.setFill(Color.YELLOW);
-        g.fillRect(tile.x() * 8, tile.y() * 8, 8, 8);
+        g.fillOval(x, y, TILE_SIZE, TILE_SIZE);
         g.restore();
     }
 

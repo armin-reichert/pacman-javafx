@@ -26,7 +26,7 @@ public class PacManGames3dApp extends Application {
         Logger.info("Java version:   {}", Runtime.version());
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         for (var variant : GameVariant.values()) {
-            // initialized by loading class
+            // initialized by loading enum class
             Logger.trace("Initialize game variant {}", variant);
         }
         settings = new Settings();
@@ -34,7 +34,7 @@ public class PacManGames3dApp extends Application {
             settings.merge(getParameters().getNamed());
         }
         Logger.info("Game settings: {}, locale: {}", settings, Locale.getDefault());
-        GameController.it().selectGame(settings.variant);
+        GameController.it().selectGame(GameVariant.PACMAN_XXL);
         Logger.info("Game controller initialized. Selected game: {}", GameController.it().game());
     }
 
