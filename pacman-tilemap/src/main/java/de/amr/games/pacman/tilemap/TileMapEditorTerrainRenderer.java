@@ -51,10 +51,15 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
     }
 
     public void drawScatterTarget(GraphicsContext g, Vector2i tile, Color color) {
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.save();
         g.scale(scaling(), scaling());
         g.setFill(color);
-        g.fillRect(tile.x() * 8, tile.y() * 8, 8, 8);
+        g.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+        g.setStroke(Color.WHITE);
+        g.strokeOval(x + 2, y + 2, TILE_SIZE - 4, TILE_SIZE - 4);
+        g.strokeLine(x + 0.5 * TILE_SIZE, y, x + 0.5 * TILE_SIZE, y + TILE_SIZE);
+        g.strokeLine(x, y + 0.5 * TILE_SIZE, x + TILE_SIZE, y + 0.5 * TILE_SIZE);
         g.restore();
     }
 
