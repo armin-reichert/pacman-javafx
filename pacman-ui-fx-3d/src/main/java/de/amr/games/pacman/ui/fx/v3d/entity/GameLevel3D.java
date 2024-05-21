@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.world.*;
 import de.amr.games.pacman.tilemap.TileMapRenderer;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
-import de.amr.games.pacman.ui.fx.v3d.animation.SinusWaveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
@@ -524,27 +523,32 @@ public class GameLevel3D extends Group {
         return rotation;
     }
 
-    public Transition createMazeDisappearAnimation(double seconds) {
-        final double wallHeightBeforeAnimation = wallHeightPy.get();
-        var animation = new Transition() {
+    public Animation createMazeDisappearAnimation(double seconds) {
+        return new Transition() {
+
+            private final DoubleProperty valuePy = new SimpleDoubleProperty();
+
             {
+                setRate(-1); // value goes 1 -> 0
                 setCycleDuration(Duration.seconds(seconds));
                 setInterpolator(Interpolator.EASE_BOTH);
+                setOnFinished(e -> {
+                    mazeGroup.setVisible(false);
+                    wallHeightPy.bind(PY_3D_WALL_HEIGHT);
+                });
+            }
+
+            @Override
+            public void play() {
+                wallHeightPy.bind(valuePy.multiply(wallHeightPy.get()));
+                super.play();
             }
 
             @Override
             protected void interpolate(double t) {
-                if (t == 0) {
-                    wallHeightPy.unbind();
-                }
-                wallHeightPy.set((1-t) * wallHeightBeforeAnimation);
+                valuePy.set(t);
             }
         };
-        animation.setOnFinished(e -> {
-            mazeGroup.setVisible(false);
-            wallHeightPy.bind(PY_3D_WALL_HEIGHT);
-        });
-        return animation;
     }
 
     public Animation createMazeFlashingAnimation(int numFlashes) {
