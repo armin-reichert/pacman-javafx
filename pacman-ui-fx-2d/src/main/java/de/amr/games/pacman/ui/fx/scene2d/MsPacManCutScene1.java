@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.MsPacManIntermission1;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.rendering2d.ClapperboardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGameGhostAnimations;
@@ -60,6 +61,8 @@ public class MsPacManCutScene1 extends GameScene2D {
         classicRenderer.drawGhost(g, GameVariant.MS_PACMAN, intermission.inky);
         classicRenderer.drawGhost(g, GameVariant.MS_PACMAN, intermission.pinky);
         classicRenderer.drawEntitySprite(g, ss, intermission.heart, ss.heartSprite());
-        classicRenderer.drawLevelCounter(g, GameVariant.MS_PACMAN, context.game().levelCounter());
+        double x = t(24);
+        double y = t(34);
+        classicRenderer.drawLevelCounter(g, GameVariant.MS_PACMAN, context.game().levelCounter(), x, y);
     }
 }

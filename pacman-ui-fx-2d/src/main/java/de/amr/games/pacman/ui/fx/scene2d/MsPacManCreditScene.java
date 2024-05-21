@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.scene2d;
 
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 
@@ -51,6 +52,8 @@ public class MsPacManCreditScene extends GameScene2D {
         classicRenderer.drawSpriteScaled(g, ss.source(), ss.livesCounterSprite(), t(13), t(23) + 1);
         classicRenderer.drawText(g, "PTS", color, font6, t(25), t(25));
         drawMsPacManCopyright(t(6), t(28));
-        classicRenderer.drawLevelCounter(g, GameVariant.MS_PACMAN, context.game().levelCounter());
+        double x = t(24);
+        double y = t(34);
+        classicRenderer.drawLevelCounter(g, GameVariant.MS_PACMAN, context.game().levelCounter(), x, y);
     }
 }

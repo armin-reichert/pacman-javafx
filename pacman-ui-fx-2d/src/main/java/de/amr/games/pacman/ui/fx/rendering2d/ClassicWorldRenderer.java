@@ -149,9 +149,7 @@ public class ClassicWorldRenderer {
     }
 
 
-    public void drawLevelCounter(GraphicsContext g, GameVariant variant, List<Byte> symbols) {
-        double x = t(GameModel.ARCADE_MAP_TILES_X - 4); // TODO
-        double y = t(GameModel.ARCADE_MAP_TILES_Y - 2); // TODO
+    public void drawLevelCounter(GraphicsContext g, GameVariant variant, List<Byte> symbols, double x, double y) {
         for (byte symbol : symbols) {
             switch (variant) {
                 case MS_PACMAN -> drawSpriteScaled(g, ssMsPacMan.source(), ssMsPacMan.bonusSymbolSprite(symbol), x, y);

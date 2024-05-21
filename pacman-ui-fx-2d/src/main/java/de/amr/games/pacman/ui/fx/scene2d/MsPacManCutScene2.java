@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.MsPacManIntermission2;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.rendering2d.ClapperboardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGamePacAnimations;
@@ -52,6 +53,8 @@ public class MsPacManCutScene2 extends GameScene2D {
         classicRenderer.drawClapperBoard(g, context.theme(), clapAnimation, t(3), t(10));
         classicRenderer.drawPac(g, GameVariant.MS_PACMAN, intermission.msPac);
         classicRenderer.drawPac(g, GameVariant.MS_PACMAN, intermission.pacMan);
-        classicRenderer.drawLevelCounter(g, GameVariant.MS_PACMAN, context.game().levelCounter());
+        double x = t(24);
+        double y = t(34);
+        classicRenderer.drawLevelCounter(g, GameVariant.MS_PACMAN, context.game().levelCounter(), x, y);
     }
 }
