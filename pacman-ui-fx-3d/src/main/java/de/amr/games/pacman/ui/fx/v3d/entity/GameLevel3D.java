@@ -13,7 +13,7 @@ import de.amr.games.pacman.model.world.*;
 import de.amr.games.pacman.tilemap.TileMapRenderer;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
-import de.amr.games.pacman.ui.fx.v3d.animation.SinusCurveAnimation;
+import de.amr.games.pacman.ui.fx.v3d.animation.SinusWaveAnimation;
 import de.amr.games.pacman.ui.fx.v3d.animation.Squirting;
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
@@ -42,6 +42,7 @@ import static de.amr.games.pacman.ui.fx.util.ResourceManager.opaqueColor;
 import static de.amr.games.pacman.ui.fx.util.Ufx.doAfterSec;
 import static de.amr.games.pacman.ui.fx.util.Ufx.pauseSec;
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
+import static java.lang.Math.PI;
 
 /**
  * @author Armin Reichert
@@ -546,17 +547,32 @@ public class GameLevel3D extends Group {
         return animation;
     }
 
-    public Transition createMazeFlashingAnimation(int numFlashes) {
+    public Animation createMazeFlashingAnimation(int numFlashes) {
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }
-        var animation = new SinusCurveAnimation(numFlashes);
-        animation.setOnFinished(e -> wallHeightPy.bind(PY_3D_WALL_HEIGHT));
-        animation.setAmplitude(wallHeightPy.get());
-        animation.elongationPy.set(wallHeightPy.get());
-        // this should in fact be done on animation start:
-        wallHeightPy.bind(animation.elongationPy);
-        return animation;
+        return new Transition() {
+            private final DoubleProperty elongationPy = new SimpleDoubleProperty();
+            {
+                setCycleDuration(Duration.seconds(0.33));
+                setCycleCount(numFlashes);
+                setOnFinished(e -> wallHeightPy.bind(PY_3D_WALL_HEIGHT));
+                setInterpolator(Interpolator.LINEAR);
+            }
+
+            @Override
+            public void play() {
+                wallHeightPy.bind(elongationPy.multiply(wallHeightPy.get()));
+                super.play();
+            }
+
+            @Override
+            protected void interpolate(double t) {
+                // t = [0, 1] is mapped to the interval [pi/2, 3*pi/2]. The value of the sin-function in that interval
+                // starts at 1, goes to 0 and back to 1
+                elongationPy.set(0.5 * (1 + Math.sin(PI * (2*t + 0.5))));
+            }
+        };
     }
 
     public void updateHouseState() {
