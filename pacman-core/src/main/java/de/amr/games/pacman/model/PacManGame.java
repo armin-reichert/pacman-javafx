@@ -100,10 +100,10 @@ public class PacManGame extends AbstractPacManGame{
     }
 
     World createPacManWorld() {
-        var world = new World(loadMap("/maps/pacman.world"));
+        var map = loadMap("/maps/pacman.world");
+        var world = new World(map);
         world.setHouse(createArcadeHouse());
         world.house().setTopLeftTile(v2i(10, 15));
-        world.setPacPosition(halfTileRightOf(13, 26));
         world.setGhostPositions(new Vector2f[] {
             halfTileRightOf(13, 14), // red ghost
             halfTileRightOf(13, 17), // pink ghost
@@ -111,12 +111,6 @@ public class PacManGame extends AbstractPacManGame{
             halfTileRightOf(15, 17)  // orange ghost
         });
         world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
-        world.setGhostScatterTiles(new Vector2i[] {
-            v2i(25,  0), // near right-upper corner
-            v2i( 2,  0), // near left-upper corner
-            v2i(27, 34), // near right-lower corner
-            v2i( 0, 34)  // near left-lower corner
-        });
         world.setDemoLevelRoute(List.of(PACMAN_ARCADE_MAP_DEMO_LEVEL_ROUTE));
         List<Direction> up = List.of(UP);
         Map<Vector2i, List<Direction>> fp = new HashMap<>();

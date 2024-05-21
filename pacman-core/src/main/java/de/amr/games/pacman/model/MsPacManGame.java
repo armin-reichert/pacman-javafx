@@ -76,16 +76,14 @@ public class MsPacManGame extends AbstractPacManGame{
      * </ul>
      * <p>
      */
-    WorldMap mapByLevelNumber(int levelNumber) {
-        checkLevelNumber(levelNumber);
-        int mapNumber = switch (levelNumber) {
+    int mapNumberByLevelNumber(int levelNumber) {
+        return switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
             case 6, 7, 8, 9 -> 3;
             case 10, 11, 12, 13 -> 4;
             default -> (levelNumber - 14) % 8 < 4 ? 5 : 6;
         };
-        return loadMap("/maps/mspacman/mspacman_" + mapNumber + ".world");
     }
 
     // sprite sheet renderer needs this
@@ -104,7 +102,8 @@ public class MsPacManGame extends AbstractPacManGame{
     @Override
     void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
-        setWorldAndCreatePopulation(createMsPacManWorld(mapByLevelNumber(levelNumber)));
+        this.mapNumber = mapNumberByLevelNumber(levelNumber);
+        setWorldAndCreatePopulation(createMsPacManWorld(loadMap("/maps/mspacman/mspacman_" + mapNumber + ".world")));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -127,7 +126,6 @@ public class MsPacManGame extends AbstractPacManGame{
         var world = new World(map);
         world.setHouse(createArcadeHouse());
         world.house().setTopLeftTile(v2i(10, 15));
-        world.setPacPosition(halfTileRightOf(13, 26));
         world.setGhostPositions(new Vector2f[] {
             halfTileRightOf(13, 14), // red ghost
             halfTileRightOf(13, 17), // pink ghost
@@ -135,12 +133,6 @@ public class MsPacManGame extends AbstractPacManGame{
             halfTileRightOf(15, 17)  // orange ghost
         });
         world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
-        world.setGhostScatterTiles(new Vector2i[] {
-            v2i(25,  0), // near right-upper corner
-            v2i( 2,  0), // near left-upper corner
-            v2i(27, 34), // near right-lower corner
-            v2i( 0, 34)  // near left-lower corner
-        });
         return world;
     }
 

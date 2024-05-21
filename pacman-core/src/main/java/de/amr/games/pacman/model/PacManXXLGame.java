@@ -82,19 +82,6 @@ public class PacManXXLGame extends PacManGame{
         var world = new World(map);
         world.setHouse(createArcadeHouse());
         world.house().setTopLeftTile(v2i(10, 15));
-        var pacHomeTiles = map.terrain().tiles(Tiles.PAC_HOME).toList();
-        if (pacHomeTiles.isEmpty()) {
-            Logger.error("No Pac home tile found in map");
-        } else {
-            if (pacHomeTiles.size() != 2 || !pacHomeTiles.getFirst().equals(pacHomeTiles.getLast().minus(1, 0))) {
-                Logger.error("Pac home must consist of two tiles side-by-side");
-            } else {
-                var pacHome = pacHomeTiles.getFirst().toFloatVec().scaled(TS).plus(0.5f, 0);
-                world.setPacPosition(pacHome);
-                Logger.info("Pac home position found in map: {}", pacHome);
-            }
-        }
-        world.setPacPosition(halfTileRightOf(13, 26));
         world.setGhostPositions(new Vector2f[] {
             halfTileRightOf(13, 14), // red ghost
             halfTileRightOf(13, 17), // pink ghost
@@ -102,15 +89,10 @@ public class PacManXXLGame extends PacManGame{
             halfTileRightOf(15, 17)  // orange ghost
         });
         world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
-        world.setGhostScatterTiles(new Vector2i[] {
-            v2i(25,  0), // near right-upper corner
-            v2i( 2,  0), // near left-upper corner
-            v2i(27, 34), // near right-lower corner
-            v2i( 0, 34)  // near left-lower corner
-        });
         world.setBonusPosition(halfTileRightOf(13, 20));
         return world;
     }
+
 
     void loadCustomMaps() throws IOException {
         var dir = new File(System.getProperty("user.home"), ".pacmanfx/maps");

@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -48,7 +49,10 @@ public class World {
     public World(WorldMap worldMap) {
         this.map = checkNotNull(worldMap);
 
-        // build portals
+        setScatterTiles(map);
+        setPacPosition(map);
+
+        // find and build portals
         var portalList = new ArrayList<Portal>();
         int lastColumn = numCols() - 1;
         for (int row = 0; row < numRows(); ++row) {
@@ -65,6 +69,30 @@ public class World {
         eaten = new BitSet(numCols() * numRows());
         totalFoodCount = (int) tiles().filter(this::isFoodTile).count();
         uneatenFoodCount = totalFoodCount;
+    }
+
+    private void setPacPosition(WorldMap map) {
+        var pacHomeTiles = map.terrain().tiles(Tiles.PAC_HOME).toList();
+        if (pacHomeTiles.isEmpty()) {
+            Logger.error("No Pac home tile found in map");
+        } else {
+            if (pacHomeTiles.size() != 2 || !pacHomeTiles.getFirst().equals(pacHomeTiles.getLast().minus(1, 0))) {
+                Logger.error("Pac home must consist of two tiles side-by-side");
+            } else {
+                var pacHome = pacHomeTiles.getFirst().toFloatVec().scaled(TS).plus(0.5f, 0);
+                setPacPosition(pacHome);
+                Logger.info("Pac home position found in map: {}", pacHome);
+            }
+        }
+    }
+
+    private void setScatterTiles(WorldMap map) {
+        Vector2i[] tiles = new Vector2i[4];
+        tiles[0] = map.terrain().tiles(Tiles.SCATTER_TARGET_RED).findFirst().orElse(null);
+        tiles[1] = map.terrain().tiles(Tiles.SCATTER_TARGET_PINK).findFirst().orElse(null);
+        tiles[2] = map.terrain().tiles(Tiles.SCATTER_TARGET_CYAN).findFirst().orElse(null);
+        tiles[3] = map.terrain().tiles(Tiles.SCATTER_TARGET_ORANGE).findFirst().orElse(null);
+        setGhostScatterTiles(tiles);
     }
 
     public void setHouse(House house) {

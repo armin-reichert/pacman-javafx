@@ -10,10 +10,7 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.actors.*;
-import de.amr.games.pacman.model.world.Door;
-import de.amr.games.pacman.model.world.House;
-import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.model.world.WorldMap;
+import de.amr.games.pacman.model.world.*;
 import org.tinylog.Logger;
 
 import java.io.File;
