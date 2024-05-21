@@ -86,8 +86,13 @@ public class PacManXXLGame extends PacManGame{
         if (pacHomeTiles.isEmpty()) {
             Logger.error("No Pac home tile found in map");
         } else {
-            var pacPosition = pacHomeTiles.getFirst().toFloatVec().scaled(TS).plus(0.5f, 0);
-            world.setPacPosition(pacPosition);
+            if (pacHomeTiles.size() != 2 || !pacHomeTiles.getFirst().equals(pacHomeTiles.getLast().minus(1, 0))) {
+                Logger.error("Pac home must consist of two tiles side-by-side");
+            } else {
+                var pacHome = pacHomeTiles.getFirst().toFloatVec().scaled(TS).plus(0.5f, 0);
+                world.setPacPosition(pacHome);
+                Logger.info("Pac home position found in map: {}", pacHome);
+            }
         }
         world.setPacPosition(halfTileRightOf(13, 26));
         world.setGhostPositions(new Vector2f[] {
