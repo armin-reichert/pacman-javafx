@@ -420,9 +420,9 @@ public class PlayScene3D implements GameScene {
                 ? doAfterSec(1.5, () -> {
                     context.playAudioClip("audio.sweep");
                     context.actionHandler().showFlashMessageSeconds(1, pickLevelCompleteMessage());
-                    })
+                    PY_3D_PERSPECTIVE.set(selectedPerspective);
+                })
                 : pauseSec(0)
-            , now(() -> PY_3D_PERSPECTIVE.set(selectedPerspective))
         ));
     }
 
