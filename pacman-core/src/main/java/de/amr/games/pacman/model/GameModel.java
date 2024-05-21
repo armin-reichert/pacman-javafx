@@ -81,7 +81,7 @@ public interface GameModel {
      *
      * @param levelNumber level number (starting at 1)
      */
-    void createRegularLevel(int levelNumber);
+    void createLevel(int levelNumber);
 
     /**
      * Creates and initializes a demo level.
