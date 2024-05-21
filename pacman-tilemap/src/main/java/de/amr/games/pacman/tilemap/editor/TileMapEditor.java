@@ -269,9 +269,10 @@ public class TileMapEditor  {
         cbRuntimePreview.setFont(Font.font(font.getFamily(), FontWeight.BOLD, 1.5*font.getSize()));
         cbRuntimePreview.selectedProperty().bindBidirectional(runtimePreviewPy);
 
-        terrainPalette = new Palette(32, 4, 4, Tiles.TERRAIN_TILES_END);
+        terrainPalette = new Palette(32, 5, 4, Tiles.TERRAIN_TILES_END);
         terrainPalette.setValues(
             Tiles.EMPTY, Tiles.TUNNEL, Tiles.PAC_HOME, Tiles.EMPTY,
+            Tiles.SCATTER_TARGET_RED, Tiles.SCATTER_TARGET_PINK, Tiles.SCATTER_TARGET_CYAN, Tiles.SCATTER_TARGET_ORANGE,
             Tiles.WALL_H, Tiles.WALL_V, Tiles.DWALL_H, Tiles.DWALL_V,
             Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE,
             Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE

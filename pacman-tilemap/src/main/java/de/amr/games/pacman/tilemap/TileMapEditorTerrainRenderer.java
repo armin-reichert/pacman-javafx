@@ -41,8 +41,20 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
             case Tiles.DOOR -> drawDoor(g, tile, Color.PINK);
             case Tiles.TUNNEL -> drawTunnel(g, tile);
             case Tiles.PAC_HOME -> drawPacHome(g, tile);
+            case Tiles.SCATTER_TARGET_RED -> drawScatterTarget(g, tile, Color.RED);
+            case Tiles.SCATTER_TARGET_PINK -> drawScatterTarget(g, tile, Color.PINK);
+            case Tiles.SCATTER_TARGET_CYAN -> drawScatterTarget(g, tile, Color.CYAN);
+            case Tiles.SCATTER_TARGET_ORANGE -> drawScatterTarget(g, tile, Color.ORANGE);
             default -> {}
         }
+        g.restore();
+    }
+
+    public void drawScatterTarget(GraphicsContext g, Vector2i tile, Color color) {
+        g.save();
+        g.scale(scaling(), scaling());
+        g.setFill(color);
+        g.fillRect(tile.x() * 8, tile.y() * 8, 8, 8);
         g.restore();
     }
 

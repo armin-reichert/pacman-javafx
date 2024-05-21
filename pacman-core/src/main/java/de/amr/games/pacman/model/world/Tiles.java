@@ -28,8 +28,12 @@ public interface Tiles {
     byte DOOR       = 14;
 
     byte PAC_HOME = 15;
+    byte SCATTER_TARGET_RED = 16;
+    byte SCATTER_TARGET_PINK = 17;
+    byte SCATTER_TARGET_CYAN = 18;
+    byte SCATTER_TARGET_ORANGE = 19;
 
-    byte TERRAIN_TILES_END = 16;
+    byte TERRAIN_TILES_END = 20;
 
     // Food tiles
     byte PELLET = 1;
