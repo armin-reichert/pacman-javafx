@@ -27,7 +27,9 @@ public interface Tiles {
     byte DCORNER_SW = 13;
     byte DOOR       = 14;
 
-    byte TERRAIN_TILES_END = 15;
+    byte PAC_HOME = 15;
+
+    byte TERRAIN_TILES_END = 16;
 
     // Food tiles
     byte PELLET = 1;

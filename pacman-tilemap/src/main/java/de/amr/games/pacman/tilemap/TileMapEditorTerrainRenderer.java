@@ -40,8 +40,17 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
                 drawDCorner(g, tile, content);
             case Tiles.DOOR -> drawDoor(g, tile, Color.PINK);
             case Tiles.TUNNEL -> drawTunnel(g, tile);
+            case Tiles.PAC_HOME -> drawPacHome(g, tile);
             default -> {}
         }
+        g.restore();
+    }
+
+    public void drawPacHome(GraphicsContext g, Vector2i tile) {
+        g.save();
+        g.scale(scaling(), scaling());
+        g.setFill(Color.YELLOW);
+        g.fillRect(tile.x() * 8, tile.y() * 8, 8, 8);
         g.restore();
     }
 

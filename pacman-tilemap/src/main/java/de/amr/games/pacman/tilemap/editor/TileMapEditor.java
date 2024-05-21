@@ -271,7 +271,7 @@ public class TileMapEditor  {
 
         terrainPalette = new Palette(32, 4, 4, Tiles.TERRAIN_TILES_END);
         terrainPalette.setValues(
-            Tiles.EMPTY, Tiles.TUNNEL, Tiles.EMPTY, Tiles.EMPTY,
+            Tiles.EMPTY, Tiles.TUNNEL, Tiles.PAC_HOME, Tiles.EMPTY,
             Tiles.WALL_H, Tiles.WALL_V, Tiles.DWALL_H, Tiles.DWALL_V,
             Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE,
             Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE

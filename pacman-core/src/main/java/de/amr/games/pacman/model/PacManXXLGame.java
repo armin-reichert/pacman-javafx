@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.lib.*;
+import de.amr.games.pacman.model.world.Tiles;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.model.world.WorldMap;
 import org.tinylog.Logger;
@@ -81,6 +82,13 @@ public class PacManXXLGame extends PacManGame{
         var world = new World(map);
         world.setHouse(createArcadeHouse());
         world.house().setTopLeftTile(v2i(10, 15));
+        var pacHomeTiles = map.terrain().tiles(Tiles.PAC_HOME).toList();
+        if (pacHomeTiles.isEmpty()) {
+            Logger.error("No Pac home tile found in map");
+        } else {
+            var pacPosition = pacHomeTiles.getFirst().toFloatVec().scaled(TS).plus(0.5f, 0);
+            world.setPacPosition(pacPosition);
+        }
         world.setPacPosition(halfTileRightOf(13, 26));
         world.setGhostPositions(new Vector2f[] {
             halfTileRightOf(13, 14), // red ghost
