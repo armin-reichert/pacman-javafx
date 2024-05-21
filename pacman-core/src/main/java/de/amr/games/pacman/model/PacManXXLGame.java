@@ -48,7 +48,13 @@ public class PacManXXLGame extends PacManGame{
     void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
         switch (levelNumber) {
-            case 1 -> setWorldAndCreatePopulation(createPacManWorld());
+            case 1 -> {
+                if (customMaps.isEmpty()) {
+                    setWorldAndCreatePopulation(createPacManWorld());
+                } else {
+                    setWorldAndCreatePopulation(createModernWorld(customMaps.getFirst()));
+                }
+            }
             case 2, 3, 4, 5, 6, 7, 8, 9 -> {
                 var path = String.format("/maps/masonic/masonic_%d.world", levelNumber - 1);
                 var map = loadMap(path);
@@ -63,21 +69,6 @@ public class PacManXXLGame extends PacManGame{
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
-    }
-
-    @Override
-    void buildDemoLevel() {
-        levelNumber = 1;
-        if (customMaps.isEmpty()) {
-            setWorldAndCreatePopulation(createPacManWorld());
-        } else {
-            setWorldAndCreatePopulation(createModernWorld(customMaps.getFirst()));
-        }
-        pac.setName("Pac-Man");
-        pac.setAutopilot(world.getDemoLevelRoute().isEmpty()
-            ? new RuleBasedPacSteering(this)
-            : new RouteBasedSteering(world.getDemoLevelRoute()));
-        pac.setUseAutopilot(true);
     }
 
     @Override

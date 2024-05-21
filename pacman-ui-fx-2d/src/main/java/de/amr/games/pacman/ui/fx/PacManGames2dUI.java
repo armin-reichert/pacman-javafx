@@ -197,9 +197,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         // Pac-Man XXL
         //
         theme.set("pacman_xxl.icon",                 rm.loadImage("graphics/icons/pacman.png"));
-        theme.set("pacman_xxl.startpage.image",      rm.loadImage("graphics/pacman/pacman_flyer.png"));
         theme.set("pacman_xxl.helpButton.icon",      rm.loadImage("graphics/icons/help-blue-64.png"));
-        theme.set("pacman_xxl.startpage.image",      rm.loadImage("graphics/pacman_xxl/pacman_xxl_3d.png"));
+        theme.set("pacman_xxl.startpage.image",      rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
     }
 
     protected static final Theme THEME_2D = new Theme();

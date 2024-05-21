@@ -102,6 +102,10 @@ public class GamePage extends CanvasLayoutPane implements Page {
         if (newGameScene instanceof GameScene2D scene2D) {
             scene2D.setCanvas(getCanvas());
             scene2D.clearCanvas();
+            if (context.game().world() != null) {
+                setUnscaledCanvasHeight(context.game().world().map().numRows() * TS);
+                setUnscaledCanvasWidth(context.game().world().map().numCols() * TS);
+            }
         }
     }
 
