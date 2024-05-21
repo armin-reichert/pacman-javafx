@@ -41,6 +41,10 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
             case Tiles.DOOR -> drawDoor(g, tile, Color.PINK);
             case Tiles.TUNNEL -> drawTunnel(g, tile);
             case Tiles.PAC_HOME -> drawPacHome(g, tile);
+            case Tiles.HOME_RED_GHOST -> drawGhostHome(g, tile, Color.RED);
+            case Tiles.HOME_PINK_GHOST -> drawGhostHome(g, tile, Color.PINK);
+            case Tiles.HOME_CYAN_GHOST -> drawGhostHome(g, tile, Color.CYAN);
+            case Tiles.HOME_ORANGE_GHOST -> drawGhostHome(g, tile, Color.ORANGE);
             case Tiles.SCATTER_TARGET_RED -> drawScatterTarget(g, tile, Color.RED);
             case Tiles.SCATTER_TARGET_PINK -> drawScatterTarget(g, tile, Color.PINK);
             case Tiles.SCATTER_TARGET_CYAN -> drawScatterTarget(g, tile, Color.CYAN);
@@ -68,6 +72,15 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
         g.scale(scaling(), scaling());
         g.setFill(Color.YELLOW);
         g.fillRect(tile.x() * 8, tile.y() * 8, 8, 8);
+        g.restore();
+    }
+
+    public void drawGhostHome(GraphicsContext g, Vector2i tile, Color color) {
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
+        g.save();
+        g.scale(scaling(), scaling());
+        g.setFill(color);
+        g.fillOval(x, y, TILE_SIZE, TILE_SIZE);
         g.restore();
     }
 

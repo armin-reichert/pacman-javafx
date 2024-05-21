@@ -273,6 +273,7 @@ public class TileMapEditor  {
         terrainPalette.setValues(
             Tiles.EMPTY, Tiles.TUNNEL, Tiles.PAC_HOME, Tiles.EMPTY,
             Tiles.SCATTER_TARGET_RED, Tiles.SCATTER_TARGET_PINK, Tiles.SCATTER_TARGET_CYAN, Tiles.SCATTER_TARGET_ORANGE,
+            Tiles.HOME_RED_GHOST, Tiles.HOME_PINK_GHOST, Tiles.HOME_CYAN_GHOST, Tiles.HOME_ORANGE_GHOST,
             Tiles.WALL_H, Tiles.WALL_V, Tiles.DWALL_H, Tiles.DWALL_V,
             Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE,
             Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE

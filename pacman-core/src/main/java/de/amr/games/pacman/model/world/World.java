@@ -86,6 +86,10 @@ public class World {
         }
     }
 
+    private void setGhostPositions(WorldMap map) {
+
+    }
+
     private void setScatterTiles(WorldMap map) {
         Vector2i[] tiles = new Vector2i[4];
         tiles[0] = map.terrain().tiles(Tiles.SCATTER_TARGET_RED).findFirst().orElse(null);
