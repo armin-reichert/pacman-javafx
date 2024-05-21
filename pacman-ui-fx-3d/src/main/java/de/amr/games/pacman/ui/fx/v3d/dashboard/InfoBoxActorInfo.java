@@ -7,8 +7,10 @@ package de.amr.games.pacman.ui.fx.v3d.dashboard;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui.fx.util.SpriteAnimations;
 import de.amr.games.pacman.ui.fx.util.Theme;
 
@@ -18,10 +20,27 @@ import java.util.function.Supplier;
 /**
  * @author Armin Reichert
  */
-public class InfoBoxGhostsInfo extends InfoBox {
+public class InfoBoxActorInfo extends InfoBox {
 
-    public InfoBoxGhostsInfo(Theme theme, String title) {
+    private Supplier<String> pacInfoIfPresent(BiFunction<GameModel, Pac, String> fnPacInfo) {
+        return () -> context.game().level().isPresent()
+            ? fnPacInfo.apply(context.game(), context.game().pac())
+            : InfoText.NO_INFO;
+    }
+
+    private Supplier<String> ghostInfoIfPresent(
+        BiFunction<GameModel, Ghost, String> fnGhostInfo, // (game, ghost) -> info text about this ghost
+        byte ghostID)
+    {
+        return () -> context.game().level().isPresent()
+            ? fnGhostInfo.apply(context.game(), context.game().ghost(ghostID))
+            : InfoText.NO_INFO;
+    }
+
+    public InfoBoxActorInfo(Theme theme, String title) {
         super(theme, title);
+        addPacInfo();
+        addEmptyLine();
         addGhostInfo(GameModel.RED_GHOST);
         addEmptyLine();
         addGhostInfo(GameModel.PINK_GHOST);
@@ -29,6 +48,30 @@ public class InfoBoxGhostsInfo extends InfoBox {
         addGhostInfo(GameModel.CYAN_GHOST);
         addEmptyLine();
         addGhostInfo(GameModel.ORANGE_GHOST);
+    }
+
+    private void addPacInfo() {
+        addInfo("Pac Name", pacInfoIfPresent((game, pac) -> pac.name()));
+        addInfo("Movement", pacInfoIfPresent(this::movementInfo));
+        addInfo("Tile",     pacInfoIfPresent(this::locationInfo));
+    }
+
+    private String locationInfo(GameModel game, Creature guy) {
+        Vector2i tile = guy.tile();
+        Vector2f offset = guy.offset();
+        return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
+            tile.x(), tile.y(),
+            offset.x(), offset.y(),
+            guy.isNewTileEntered() ? " NEW" : "");
+    }
+
+    private String movementInfo(GameModel game, Creature guy) {
+        var speed = guy.velocity().length();
+        var blocked = !guy.lastMove().moved;
+        var reverseText = guy.gotReverseCommand() ? "REV!" : "";
+        return blocked
+            ? "BLOCKED!"
+            : "%.2fpx/s %s (%s)%s".formatted(speed, guy.moveDir(), guy.wishDir(), reverseText);
     }
 
     private void addGhostInfo(byte ghostID) {
@@ -39,17 +82,10 @@ public class InfoBoxGhostsInfo extends InfoBox {
             case GameModel.ORANGE_GHOST -> "Orange";
             default -> "";
         };
-        addInfo(color + " Ghost", ifLevelExists(this::ghostNameAndState, ghostID));
-        //addInfo("Killed Index", ifLevelExists(this::ghostKilledIndex, ghostID));
-        addInfo("Animation", ifLevelExists(this::ghostAnimation, ghostID));
-        addInfo("Movement", ifLevelExists(this::ghostMovement, ghostID));
-        addInfo("Tile", ifLevelExists(this::ghostTile, ghostID));
-    }
-
-    private Supplier<String> ifLevelExists(BiFunction<GameModel, Ghost, String> fnGhostInfo, byte ghostID) {
-        return () -> context.game().level().isPresent()
-            ? fnGhostInfo.apply(context.game(), context.game().ghost(ghostID))
-            : InfoText.NO_INFO;
+        addInfo(color + " Ghost", ghostInfoIfPresent(this::ghostNameAndState, ghostID));
+        addInfo("Animation",      ghostInfoIfPresent(this::ghostAnimation, ghostID));
+        addInfo("Movement",       ghostInfoIfPresent(this::movementInfo, ghostID));
+        addInfo("Tile",           ghostInfoIfPresent(this::locationInfo, ghostID));
     }
 
     private String ghostNameAndState(GameModel game, Ghost ghost) {
@@ -68,26 +104,11 @@ public class InfoBoxGhostsInfo extends InfoBox {
         return sa.currentAnimationName() != null ? sa.currentAnimationName() : InfoText.NO_INFO;
     }
 
-    private String ghostTile(GameModel game, Ghost ghost) {
-        Vector2i tile = ghost.tile();
-        Vector2f offset = ghost.offset();
-        return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
-            tile.x(), tile.y(),
-            offset.x(), offset.y(),
-            ghost.isNewTileEntered() ? " NEW" : "");
-    }
-
     private String ghostState(GameModel game, Ghost ghost) {
         var stateText = ghost.state() != null ? ghost.state().name() : "undefined";
         if (ghost.state() == GhostState.HUNTING_PAC) {
             stateText = game.currentHuntingPhaseName();
         }
         return stateText;
-    }
-
-    private String ghostMovement(GameModel game, Ghost ghost) {
-        var speed = ghost.velocity().length();
-        var reverse = ghost.gotReverseCommand() ? "REV!" : "";
-        return "%.2fpx/s %s (%s)%s".formatted(speed, ghost.moveDir(), ghost.wishDir(), reverse);
     }
 }
