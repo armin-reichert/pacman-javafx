@@ -84,9 +84,7 @@ public class PacManIntroScene extends GameScene2D {
             default -> {
             }
         }
-        double x = t(24);
-        double y = t(34);
-        classicRenderer.drawLevelCounter(g, GameVariant.PACMAN, context.game().levelCounter(), x, y);
+        drawLevelCounter(g);
     }
 
     // TODO inspect in MAME what's really going on here

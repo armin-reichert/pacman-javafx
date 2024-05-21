@@ -52,8 +52,6 @@ public class MsPacManCreditScene extends GameScene2D {
         classicRenderer.drawSpriteScaled(g, ss.source(), ss.livesCounterSprite(), t(13), t(23) + 1);
         classicRenderer.drawText(g, "PTS", color, font6, t(25), t(25));
         drawMsPacManCopyright(t(6), t(28));
-        double x = t(24);
-        double y = t(34);
-        classicRenderer.drawLevelCounter(g, GameVariant.MS_PACMAN, context.game().levelCounter(), x, y);
+        drawLevelCounter(g);
     }
 }

@@ -145,6 +145,16 @@ public abstract class GameScene2D implements GameScene {
         }
     }
 
+    protected void drawLevelCounter(GraphicsContext g) {
+        double x = t(24);
+        double y = t(34);
+        if (context.game().world() != null) {
+            x = t(context.game().world().numCols() - 4);
+            y = t(context.game().world().numRows() - 2);
+        }
+        classicRenderer.drawLevelCounter(g, context.game().variant(), context.game().levelCounter(), x, y);
+    }
+
     protected void drawMidwayCopyright(double x, double y) {
         classicRenderer.drawText(g, "© 1980 MIDWAY MFG.CO.", context.theme().color("palette.pink"), sceneFont(8), x, y);
     }

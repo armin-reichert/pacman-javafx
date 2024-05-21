@@ -61,8 +61,6 @@ public class MsPacManCutScene1 extends GameScene2D {
         classicRenderer.drawGhost(g, GameVariant.MS_PACMAN, intermission.inky);
         classicRenderer.drawGhost(g, GameVariant.MS_PACMAN, intermission.pinky);
         classicRenderer.drawEntitySprite(g, ss, intermission.heart, ss.heartSprite());
-        double x = t(24);
-        double y = t(34);
-        classicRenderer.drawLevelCounter(g, GameVariant.MS_PACMAN, context.game().levelCounter(), x, y);
+        drawLevelCounter(g);
     }
 }

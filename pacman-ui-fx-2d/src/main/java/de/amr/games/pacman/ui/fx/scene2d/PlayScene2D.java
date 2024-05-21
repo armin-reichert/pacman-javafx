@@ -116,9 +116,7 @@ public class PlayScene2D extends GameScene2D {
             }
             classicRenderer.drawLivesCounter(g, context.game().variant(), numLivesDisplayed);
         }
-        double x = t(24);
-        double y = t(34);
-        classicRenderer.drawLevelCounter(g, context.game().variant(), context.game().levelCounter(), x, y);
+        drawLevelCounter(g);
     }
 
     private void drawLevelMessage() {

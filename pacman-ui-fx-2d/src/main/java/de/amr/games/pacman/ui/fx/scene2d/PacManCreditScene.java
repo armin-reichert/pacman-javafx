@@ -49,8 +49,6 @@ public class PacManCreditScene extends GameScene2D {
         classicRenderer.drawText(g, "BONUS PAC-MAN FOR 10000", context.theme().color("palette.rose"), font8, t(1), t(25));
         classicRenderer.drawText(g, "PTS", context.theme().color("palette.rose"), font6, t(25), t(25));
         drawMidwayCopyright(t(4), t(29));
-        double x = t(24);
-        double y = t(34);
-        classicRenderer.drawLevelCounter(g, GameVariant.PACMAN, context.game().levelCounter(), x, y);
+        drawLevelCounter(g);
     }
 }
