@@ -57,10 +57,12 @@ public class World {
     }
 
     private void setPacPosition(WorldMap map) {
-        var pacHomeTiles = map.terrain().tiles(PAC_HOME).toList();
+        List<Vector2i> pacHomeTiles = map.terrain().tiles(PAC_HOME).toList();
         if (pacHomeTiles.isEmpty()) {
             Logger.error("No Pac home tile found in map");
+            setPacPosition(new Vector2f(13*TS + HTS, 26*TS));
         } else {
+            //TODO simplify
             if (pacHomeTiles.size() != 2 || !pacHomeTiles.getFirst().equals(pacHomeTiles.getLast().minus(1, 0))) {
                 Logger.error("Pac home must consist of two tiles side-by-side");
             } else {
@@ -72,39 +74,57 @@ public class World {
     }
 
     private void setGhostPositions(WorldMap map) {
-        Vector2i[] tiles = new Vector2i[4];
-        tiles[0] = map.terrain().tiles(HOME_RED_GHOST).findFirst().orElse(null);
-        tiles[1] = map.terrain().tiles(HOME_PINK_GHOST).findFirst().orElse(null);
-        tiles[2] = map.terrain().tiles(HOME_CYAN_GHOST).findFirst().orElse(null);
-        tiles[3] = map.terrain().tiles(HOME_ORANGE_GHOST).findFirst().orElse(null);
-        for (int id = 0; id < 4; ++id) {
-            if (tiles[id] == null) {
-                Logger.error("Ghost position for ghost ID {} not set in map", id);
-                tiles[id] =  Vector2i.ZERO;
-            }
+        Optional<Vector2i> homeTileRed = map.terrain().tiles(HOME_RED_GHOST).findFirst();
+        if (homeTileRed.isEmpty()) {
+            Logger.error("No home tile set for red ghost");
         }
-        Vector2f[] positions = Stream.of(tiles).map(tile -> tile.toFloatVec().scaled(TS).plus(0.5f, 0)).toArray(Vector2f[]::new);
+        Optional<Vector2i> homeTilePink = map.terrain().tiles(HOME_PINK_GHOST).findFirst();
+        if (homeTilePink.isEmpty()) {
+            Logger.error("No home tile set for pink ghost");
+        }
+        Optional<Vector2i> homeTileCyan = map.terrain().tiles(HOME_CYAN_GHOST).findFirst();
+        if (homeTileCyan.isEmpty()) {
+            Logger.error("No home tile set for cyan ghost");
+        }
+        Optional<Vector2i> homeTileOrange = map.terrain().tiles(HOME_ORANGE_GHOST).findFirst();
+        if (homeTileOrange.isEmpty()) {
+            Logger.error("No home tile set for orange ghost");
+        }
+        Vector2i[] tiles = new Vector2i[4];
+        tiles[GameModel.RED_GHOST] = homeTileRed.orElse(new Vector2i(13, 14));
+        tiles[GameModel.PINK_GHOST] = homeTilePink.orElse(new Vector2i(13, 17));
+        tiles[GameModel.CYAN_GHOST] = homeTileCyan.orElse(new Vector2i(11, 14));
+        tiles[GameModel.ORANGE_GHOST] = homeTileOrange.orElse(new Vector2i(15, 17));
+        // each position is half tile right of home tile
+        Vector2f[] positions = Stream.of(tiles)
+            .map(Vector2i::toFloatVec)
+            .map(tile -> tile.scaled(TS).plus(0.5f, 0))
+            .toArray(Vector2f[]::new);
         setGhostPositions(positions);
     }
 
     private void setScatterTiles(WorldMap map) {
-        Vector2i[] tiles = new Vector2i[4];
-        tiles[0] = map.terrain().tiles(SCATTER_TARGET_RED).findFirst().orElse(null);
-        tiles[1] = map.terrain().tiles(SCATTER_TARGET_PINK).findFirst().orElse(null);
-        tiles[2] = map.terrain().tiles(SCATTER_TARGET_CYAN).findFirst().orElse(null);
-        tiles[3] = map.terrain().tiles(SCATTER_TARGET_ORANGE).findFirst().orElse(null);
-        for (int id = 0; id < 4; ++id) {
-            if (tiles[id] == null) {
-                Logger.error("Scatter tile for ghost ID {} not set in map", id);
-                tiles[id] = switch (id) {
-                    case GameModel.RED_GHOST -> new Vector2i(0, numCols() - 3);
-                    case GameModel.PINK_GHOST -> new Vector2i(0, 3);
-                    case GameModel.CYAN_GHOST -> new Vector2i(numRows()-1, numCols()-1);
-                    case GameModel.ORANGE_GHOST -> new Vector2i(numRows()-1, 0);
-                    default -> Vector2i.ZERO;
-                };
-            }
+        Optional<Vector2i> scatterTileRed = map.terrain().tiles(SCATTER_TARGET_RED).findFirst();
+        if (scatterTileRed.isEmpty()) {
+            Logger.error("No scatter target set for red ghost");
         }
+        Optional<Vector2i> scatterTilePink = map.terrain().tiles(SCATTER_TARGET_PINK).findFirst();
+        if (scatterTilePink.isEmpty()) {
+            Logger.error("No scatter target set for pink ghost");
+        }
+        Optional<Vector2i> scatterTileCyan = map.terrain().tiles(SCATTER_TARGET_CYAN).findFirst();
+        if (scatterTileCyan.isEmpty()) {
+            Logger.error("No scatter target set for cyan ghost");
+        }
+        Optional<Vector2i> scatterTileOrange = map.terrain().tiles(SCATTER_TARGET_ORANGE).findFirst();
+        if (scatterTileOrange.isEmpty()) {
+            Logger.error("No scatter target set for orange ghost");
+        }
+        Vector2i[] tiles = new Vector2i[4];
+        tiles[GameModel.RED_GHOST] = scatterTileRed.orElse(new Vector2i(0, numCols() - 3));
+        tiles[GameModel.PINK_GHOST] = scatterTilePink.orElse(new Vector2i(0, 3));
+        tiles[GameModel.CYAN_GHOST] = scatterTileCyan.orElse(new Vector2i(numRows()-1, numCols()-1));
+        tiles[GameModel.ORANGE_GHOST] = scatterTileOrange.orElse(new Vector2i(numRows()-1, 0));
         setGhostScatterTiles(tiles);
     }
 
