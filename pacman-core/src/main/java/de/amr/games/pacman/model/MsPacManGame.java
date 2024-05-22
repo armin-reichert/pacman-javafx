@@ -47,10 +47,11 @@ public class MsPacManGame extends AbstractPacManGame{
 
     final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
-    public MsPacManGame() {
+    @Override
+    public void init() {
         initialLives = 3;
         highScoreFileName = "highscore-ms_pacman.xml";
-        Logger.info("Game variant {} initialized.", this);
+        Logger.info("Game variant {} initialized.", variant());
     }
 
     @Override

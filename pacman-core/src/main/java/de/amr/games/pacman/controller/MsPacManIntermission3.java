@@ -75,7 +75,7 @@ public class MsPacManIntermission3 {
 
     private void updateStateFlap() {
         if (stateTimer.atSecond(1)) {
-            GameVariant.MS_PACMAN.game().publishGameEvent(GameEventType.INTERMISSION_STARTED);
+            GameController.it().game(GameVariant.MS_PACMAN).publishGameEvent(GameEventType.INTERMISSION_STARTED);
         } else if (stateTimer.atSecond(3)) {
             enterStateDeliverJunior();
         }

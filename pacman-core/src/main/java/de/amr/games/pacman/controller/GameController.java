@@ -9,10 +9,7 @@ import de.amr.games.pacman.lib.FiniteStateMachine;
 import de.amr.games.pacman.model.*;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -43,6 +40,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     public static final byte MAX_CREDIT = 99;
 
+    private final Map<GameVariant, GameModel> gameModels = new EnumMap<>(GameVariant.class);
     private final List<GameVariant> supportedGameVariants = new ArrayList<>();
     private GameClock clock;
     private GameModel game;
@@ -51,9 +49,9 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     private GameController() {
         super(GameState.values());
-        GameVariant.MS_PACMAN.setGame(new MsPacManGame());
-        GameVariant.PACMAN.setGame(new PacManGame());
-        GameVariant.PACMAN_XXL.setGame(new PacManXXLGame());
+        gameModels.put(GameVariant.MS_PACMAN, new MsPacManGame());
+        gameModels.put(GameVariant.PACMAN, new PacManGame());
+        gameModels.put(GameVariant.PACMAN_XXL, new PacManXXLGame());
         selectGame(GameVariant.PACMAN);
         createCustomMapDir();
         // map state change events to events of the selected game
@@ -63,6 +61,9 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     public void setSupportedGameVariants(GameVariant[] variants) {
         checkNotNull(variants);
         supportedGameVariants.addAll(List.of(variants));
+        for (GameVariant variant : supportedGameVariants) {
+            gameModels.get(variant).init();
+        }
     }
 
     public List<GameVariant> supportedGameVariants() {
@@ -88,7 +89,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     public GameModel game(GameVariant variant) {
         checkNotNull(variant);
-        return variant.game();
+        return gameModels.get(variant);
     }
 
     public void selectGame(GameVariant variant) {

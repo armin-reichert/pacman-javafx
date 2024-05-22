@@ -21,7 +21,7 @@ public class PacManGames2dApp extends Application {
     public void init() {
         GameController.it().setSupportedGameVariants(new GameVariant[] { GameVariant.PACMAN, GameVariant.MS_PACMAN});
         GameController.it().selectGame(GameVariant.PACMAN);
-        Logger.info("Game controller initialized. Selected game: {}", GameController.it().game());
+        Logger.info("Game controller initialized. Selected game: {}", GameController.it().game().variant());
         Logger.info("Java version:   {}", Runtime.version());
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
     }
@@ -30,7 +30,7 @@ public class PacManGames2dApp extends Application {
     public void start(Stage stage) {
         ui = new PacManGames2dUI(stage);
         for (var variant : GameController.it().supportedGameVariants()) {
-            variant.game().addGameEventListener(ui);
+             GameController.it().game(variant).addGameEventListener(ui);
         }
         ui.showStartPage();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());

@@ -46,6 +46,8 @@ public interface GameModel {
     /** Movement speed in pixel/sec. */
     float PPS_AT_100_PERCENT = 73.9f; //TODO this should be 75 but that doesn't work yet
 
+    void init();
+
     GameVariant variant();
 
     SimulationStepEventLog eventLog();

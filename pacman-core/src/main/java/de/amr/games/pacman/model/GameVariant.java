@@ -13,14 +13,4 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public enum GameVariant {
     MS_PACMAN, PACMAN, PACMAN_XXL;
-
-    private GameModel game;
-
-    public void setGame(GameModel game) {
-        this.game = checkNotNull(game);
-    }
-
-    public GameModel game() {
-        return game;
-    }
 }

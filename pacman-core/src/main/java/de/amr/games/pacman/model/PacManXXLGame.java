@@ -24,10 +24,11 @@ public class PacManXXLGame extends PacManGame {
 
     private final List<WorldMap> customMaps = new ArrayList<>();
 
-    public PacManXXLGame() {
+    @Override
+    public void init() {
         initialLives = 3;
         highScoreFileName = "highscore-pacman_xxl.xml";
-        Logger.info("Game variant {} initialized.", this);
+        Logger.info("Game variant {} initialized.", variant());
     }
 
     @Override
