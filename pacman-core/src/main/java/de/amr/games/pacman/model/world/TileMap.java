@@ -26,7 +26,7 @@ public class TileMap {
 
     static final String DATA_SECTION_START = "!data";
 
-    private final Properties properties = new Properties();
+    private Properties properties = new Properties();
     private final byte[][] data;
 
     public static TileMap parse(List<String> lines, byte valueLimit) {
@@ -160,6 +160,14 @@ public class TileMap {
 
     public boolean hasProperty(String name) {
         return properties.containsKey(name);
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 
     public String getPropertiesAsText() {

@@ -20,6 +20,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -58,9 +59,6 @@ public class TileMapEditor  {
         {13, 8, 8, 8, 8, 8, 8,12}
     };
 
-    static final int DEFAULT_NUM_COLS = 28;
-    static final int DEFAULT_NUM_ROWS = 36;
-
     static final Color DEFAULT_WALL_STROKE_COLOR = Color.GREEN;
     static final Color DEFAULT_WALL_FILL_COLOR = Color.MAROON;
     static final Color DEFAULT_DOOR_COLOR = Color.YELLOW;
@@ -75,8 +73,8 @@ public class TileMapEditor  {
     Menu menuFile;
     Menu menuMap;
     Canvas canvas;
-    TextArea terrainMapPropertiesEditor;
-    TextArea foodMapPropertiesEditor;
+    PropertyEditor terrainMapPropertiesEditor;
+    PropertyEditor foodMapPropertiesEditor;
     Label infoLabel;
     FileChooser openDialog;
     Palette terrainPalette;
@@ -135,6 +133,7 @@ public class TileMapEditor  {
             try {
                 draw();
             } catch (Exception x) {
+                x.printStackTrace(System.err);
                 drawBlueScreen(x);
             }
         }));
@@ -248,11 +247,8 @@ public class TileMapEditor  {
         canvas.setOnMouseClicked(this::onMouseClickedOnCanvas);
         canvas.setOnMouseMoved(this::onMouseMovedOverCanvas);
 
-        terrainMapPropertiesEditor = new TextArea();
-        terrainMapPropertiesEditor.setPrefSize(150, 150);
-
-        foodMapPropertiesEditor = new TextArea();
-        foodMapPropertiesEditor.setPrefSize(150, 150);
+        terrainMapPropertiesEditor = new PropertyEditor("Terrain");
+        foodMapPropertiesEditor = new PropertyEditor("Food");
 
         var cbTerrainVisible = new CheckBox("Terrain");
         cbTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
@@ -295,13 +291,17 @@ public class TileMapEditor  {
         infoLabel = new Label();
 
         VBox controlsPane = new VBox();
+        controlsPane.setMinWidth(250);
         controlsPane.setSpacing(10);
         controlsPane.getChildren().add(cbRuntimePreview);
         controlsPane.getChildren().add(new HBox(20, new Label("Show"), cbTerrainVisible, cbFoodVisible, cbGridVisible));
         controlsPane.getChildren().add(infoLabel);
         controlsPane.getChildren().add(tabPane);
-        controlsPane.getChildren().add(new VBox(new Text("Terrain Map"), terrainMapPropertiesEditor));
-        controlsPane.getChildren().add(new VBox(new Text("Food Map"), foodMapPropertiesEditor));
+        controlsPane.getChildren().add(terrainMapPropertiesEditor);
+        controlsPane.getChildren().add(foodMapPropertiesEditor);
+
+        terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
+        foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
         var scroll = new ScrollPane(canvas);
         scroll.setFitToHeight(true);
@@ -335,13 +335,20 @@ public class TileMapEditor  {
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         drawGrid(g);
+
         if (terrainVisiblePy.get()) {
             terrainMapRenderer.setScaling(tilePx() / 8);
+            terrainMapRenderer.setWallStrokeColor(getColorFromMap(map.terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
+            terrainMapRenderer.setWallFillColor(getColorFromMap(map.terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
+            terrainMapRenderer.setDoorColor(getColorFromMap(map.terrain(), "door_color", DEFAULT_DOOR_COLOR));
             terrainMapRenderer.drawMap(g, map.terrain());
             terrainMapRenderer.runtimePreview = runtimePreviewPy.get();
         }
         if (foodVisiblePy.get()) {
             foodMapRenderer.setScaling(tilePx() / 8);
+            Color foodColor = getColorFromMap(map.food(), "food_color", DEFAULT_FOOD_COLOR);
+            foodMapRenderer.setEnergizerColor(foodColor);
+            foodMapRenderer.setPelletColor(foodColor);
             foodMapRenderer.drawMap(g, map.food());
         }
         double t1 = tilePx();
@@ -384,14 +391,8 @@ public class TileMapEditor  {
     public void loadMap(WorldMap other) {
         map = WorldMap.copyOf(other);
         currentMapFile = null;
-        foodMapPropertiesEditor.setText(map.food().getPropertiesAsText());
-        terrainMapPropertiesEditor.setText(map.terrain().getPropertiesAsText());
-        terrainMapRenderer.setWallStrokeColor(getColorFromMap(map.terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
-        terrainMapRenderer.setWallFillColor(getColorFromMap(map.terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
-        terrainMapRenderer.setDoorColor(getColorFromMap(map.terrain(), "door_color", DEFAULT_DOOR_COLOR));
-        Color foodColor = getColorFromMap(map.food(), "food_color", DEFAULT_FOOD_COLOR);
-        foodMapRenderer.setEnergizerColor(foodColor);
-        foodMapRenderer.setPelletColor(foodColor);
+        foodMapPropertiesEditor.setEditedProperties(map.food().getProperties());
+        terrainMapPropertiesEditor.setEditedProperties(map.terrain().getProperties());
         updateInfo();
     }
 
@@ -529,8 +530,8 @@ public class TileMapEditor  {
         if (file != null) {
             lastUsedDir = file.getParentFile();
             if (file.getName().endsWith(".world")) {
-                map.food().setPropertiesFromText(foodMapPropertiesEditor.getText());
-                map.terrain().setPropertiesFromText(terrainMapPropertiesEditor.getText());
+                map.food().setProperties(foodMapPropertiesEditor.getEditedProperties());
+                map.terrain().setProperties(terrainMapPropertiesEditor.getEditedProperties());
                 map.save(file);
                 readMapFile(file);
                 updateInfo();
