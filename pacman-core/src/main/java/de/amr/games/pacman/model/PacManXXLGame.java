@@ -4,26 +4,23 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import de.amr.games.pacman.lib.*;
-import de.amr.games.pacman.model.world.Tiles;
+import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.RuleBasedPacSteering;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.model.world.WorldMap;
 import org.tinylog.Logger;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
  * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only Sean Williams!).
  */
-public class PacManXXLGame extends PacManGame{
+public class PacManXXLGame extends PacManGame {
 
     private final List<WorldMap> customMaps = new ArrayList<>();
 
@@ -53,18 +50,17 @@ public class PacManXXLGame extends PacManGame{
                 if (customMaps.isEmpty()) {
                     setWorldAndCreatePopulation(createPacManWorld());
                 } else {
+                    // entry point for testing custom maps
                     setWorldAndCreatePopulation(createModernWorld(customMaps.getFirst()));
                 }
             }
             case 2, 3, 4, 5, 6, 7, 8, 9 -> {
                 var path = String.format("/maps/masonic/masonic_%d.world", levelNumber - 1);
-                var map = loadMap(path);
-                setWorldAndCreatePopulation(createModernWorld(map));
+                setWorldAndCreatePopulation(createModernWorld(loadMap(path)));
             }
             default -> {
-                var path = String.format("/maps/masonic/masonic_%d.world", randomInt(2, 9));
-                var map = loadMap(path);
-                setWorldAndCreatePopulation(createModernWorld(map));
+                var path = String.format("/maps/masonic/masonic_%d.world", randomInt(1, 9));
+                setWorldAndCreatePopulation(createModernWorld(loadMap(path)));
             }
         }
         pac.setName("Pac-Man");
@@ -77,27 +73,19 @@ public class PacManXXLGame extends PacManGame{
         return 0;
     }
 
-    // uses Masonic map, no special tiles where hunting ghosts cannot pass
     World createModernWorld(WorldMap map) {
         var world = new World(map);
-        world.setHouse(createArcadeHouse());
-        world.house().setTopLeftTile(v2i(10, 15));
-        world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
-        world.setBonusPosition(halfTileRightOf(13, 20));
+        world.addHouse(createArcadeHouse(), v2i(10, 15)); //TODO create house from map?
+        world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP}); // TODO
+        world.setBonusPosition(halfTileRightOf(13, 20)); // TODO get position from map?
         return world;
     }
 
     void loadCustomMaps() throws IOException {
-        var dir = new File(System.getProperty("user.home"), ".pacmanfx/maps");
-        if (dir.isDirectory()) {
-            var filterWorldFiles = new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return name.endsWith(".world");
-                }
-            };
-            Logger.info("Searching for custom map files in folder " + dir);
-            var mapFiles = dir.listFiles(filterWorldFiles);
+        var mapDir = CUSTOM_MAP_DIR;
+        if (mapDir.isDirectory()) {
+            Logger.info("Searching for custom map files in folder " + mapDir);
+            var mapFiles = mapDir.listFiles((dir, name) -> name.endsWith(".world"));
             if (mapFiles != null) {
                 for (var mapFile : mapFiles) {
                     Logger.info("Found map file: " + mapFile);

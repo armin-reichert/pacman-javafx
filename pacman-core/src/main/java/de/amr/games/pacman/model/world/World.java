@@ -121,7 +121,7 @@ public class World {
     }
 
     private void setPortals(WorldMap map) {
-        portals = new ArrayList<Portal>();
+        portals = new ArrayList<>();
         int lastColumn = numCols() - 1;
         for (int row = 0; row < numRows(); ++row) {
             var leftBorderTile = v2i(0, row);
@@ -132,8 +132,9 @@ public class World {
         }
     }
 
-    public void setHouse(House house) {
-        this.house = house;
+    public void addHouse(House house, Vector2i houseTopLeftTile) {
+        this.house = checkNotNull(house);
+        house.setTopLeftTile(houseTopLeftTile);
     }
 
     public House house() {

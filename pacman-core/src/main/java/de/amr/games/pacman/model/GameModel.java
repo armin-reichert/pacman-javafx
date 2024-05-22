@@ -17,6 +17,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -27,6 +28,8 @@ import java.util.stream.Stream;
  * @author Armin Reichert
  */
 public interface GameModel {
+
+    File CUSTOM_MAP_DIR = new File(System.getProperty("user.home"), ".pacmanfx/maps");
 
     byte ARCADE_MAP_TILES_X = 28;
     byte ARCADE_MAP_TILES_Y = 36;

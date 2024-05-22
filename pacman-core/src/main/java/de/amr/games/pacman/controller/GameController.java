@@ -9,8 +9,6 @@ import de.amr.games.pacman.lib.FiniteStateMachine;
 import de.amr.games.pacman.model.*;
 import org.tinylog.Logger;
 
-import java.io.File;
-
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
@@ -51,21 +49,17 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         GameVariant.PACMAN.setGame(new PacManGame());
         GameVariant.PACMAN_XXL.setGame(new PacManXXLGame());
         selectGame(GameVariant.PACMAN);
-        createUserDir();
+        createCustomMapDir();
         // map state change events to events of the selected game
         addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
     }
 
-    private void createUserDir() {
-        var dir = new File(System.getProperty("user.home"), ".pacmanfx");
-        boolean created = dir.mkdir();
+    private void createCustomMapDir() {
+        boolean created = GameModel.CUSTOM_MAP_DIR.mkdirs();
         if (created) {
-            Logger.info("User directory created: " + dir);
-        }
-        var mapsDir = new File(dir, "maps");
-        created = mapsDir.mkdir();
-        if (created) {
-            Logger.info("User maps directory created: " + mapsDir);
+            Logger.info("User maps directory created: " + GameModel.CUSTOM_MAP_DIR);
+        } else {
+            Logger.error("User map dir {} could not be created", GameModel.CUSTOM_MAP_DIR);
         }
     }
 
