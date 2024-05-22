@@ -25,11 +25,11 @@ import static de.amr.games.pacman.lib.NavPoint.np;
  *
  * <p>There are however some differences to the original.
  *     <ul>
- *         <li>Attract mode not identical to Arcade version</li>
+ *         <li>Attract mode (demo level) not identical to Arcade version</li>
  *         <li>Only single player can play</li>
  *         <li>Pac-Man steering more comfortable because next direction can be selected before intersection is reached</li>
- *         <li>Cornering is different</li>
- *         <li>Accuracy about 90% (estimated) so patterns can probably not be used</li>
+ *         <li>Cornering behavior is different</li>
+ *         <li>Accuracy only about 90% (estimated) so patterns can not be used</li>
  *     </ul>
  * </p>
  *
@@ -39,7 +39,7 @@ import static de.amr.games.pacman.lib.NavPoint.np;
  */
 public class PacManGame extends AbstractPacManGame{
 
-    static final NavPoint[] PACMAN_ARCADE_MAP_DEMO_LEVEL_ROUTE = {
+    static final NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
         np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
         np(18, 23), np(18, 20), np(18, 17), np(15, 14), np(12, 14), np(9, 17),
         np(6, 17), np(6, 11), np(6, 8), np(6, 4), np(1, 8), np(6, 8),
@@ -90,12 +90,10 @@ public class PacManGame extends AbstractPacManGame{
 
     @Override
     void buildDemoLevel() {
-        levelNumber = 1;
+        levelNumber = 1; // determines speed etc
         setWorldAndCreatePopulation(createPacManWorld());
         pac.setName("Pac-Man");
-        pac.setAutopilot(world.getDemoLevelRoute().isEmpty()
-            ? new RuleBasedPacSteering(this)
-            : new RouteBasedSteering(world.getDemoLevelRoute()));
+        pac.setAutopilot(new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE)));
         pac.setUseAutopilot(true);
     }
 
@@ -105,7 +103,6 @@ public class PacManGame extends AbstractPacManGame{
         var world = new World(map);
         world.addHouse(createArcadeHouse(), v2i(10, 15));
         world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
-        world.setDemoLevelRoute(List.of(PACMAN_ARCADE_MAP_DEMO_LEVEL_ROUTE));
         List<Direction> up = List.of(UP);
         Map<Vector2i, List<Direction>> fp = new HashMap<>();
         Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> fp.put(tile, up));
