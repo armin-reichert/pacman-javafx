@@ -144,19 +144,22 @@ public class Pac3D extends Group {
         pearlRight.getTransforms().addAll(new Translate(2, -0.5, -pacSize * 0.58));
         pearlRight.setMaterial(pearlMaterial);
 
-        var beautySpot = new Sphere(0.25);
+        var beautySpot = new Sphere(0.5);
         beautySpot.setMaterial(coloredMaterial(Color.rgb(100, 100, 100)));
-        beautySpot.getTransforms().addAll(new Translate(-1.8, -3.7, -1));
+        beautySpot.getTransforms().addAll(new Translate(-2.5, -4.5, 4.5));
 
         var silicone = coloredMaterial(boobsColor);
 
-        var boobLeft = new Sphere(1.5);
+        double bx = -0.2 * pacSize; // forward
+        double by = 1.6; // or - 1.6 // sidewards
+        double bz = 0.4 * pacSize; // up/down
+        var boobLeft = new Sphere(1.8);
         boobLeft.setMaterial(silicone);
-        boobLeft.getTransforms().addAll(new Translate(-1.5, -1.2, pacSize * 0.35));
+        boobLeft.getTransforms().addAll(new Translate(bx, -by, bz));
 
-        var boobRight = new Sphere(1.5);
+        var boobRight = new Sphere(1.8);
         boobRight.setMaterial(silicone);
-        boobRight.getTransforms().addAll(new Translate(-1.5, 1.2, pacSize * 0.35));
+        boobRight.getTransforms().addAll(new Translate(bx, by, bz));
 
         return new Group(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
     }
