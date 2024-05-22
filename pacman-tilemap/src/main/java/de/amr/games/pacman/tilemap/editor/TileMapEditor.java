@@ -291,7 +291,7 @@ public class TileMapEditor  {
         infoLabel = new Label();
 
         VBox controlsPane = new VBox();
-        controlsPane.setMinWidth(250);
+        controlsPane.setMinWidth(300);
         controlsPane.setSpacing(10);
         controlsPane.getChildren().add(cbRuntimePreview);
         controlsPane.getChildren().add(new HBox(20, new Label("Show"), cbTerrainVisible, cbFoodVisible, cbGridVisible));

@@ -1,13 +1,13 @@
 package de.amr.games.pacman.tilemap.editor;
 
-import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import org.tinylog.Logger;
 
 import java.util.Properties;
 
@@ -22,7 +22,17 @@ public class PropertyEditor extends BorderPane {
         this.title = title;
         var lblTitle = new Label(title);
         lblTitle.setFont(Font.font("Sans", FontWeight.BOLD, 14));
-        setTop(lblTitle);
+
+        var btnAddEntry = new Button("+");
+        btnAddEntry.setStyle("-fx-padding: 0 2 0 2");
+        btnAddEntry.setOnAction(e -> {
+            editedProperties.put("New Property", "");
+            updateUI();
+        });
+        var header = new HBox(lblTitle, btnAddEntry);
+        header.setSpacing(5);
+
+        setTop(header);
         setCenter(grid);
     }
 
@@ -32,20 +42,28 @@ public class PropertyEditor extends BorderPane {
 
     public void setEditedProperties(Properties editedProperties) {
         this.editedProperties = editedProperties;
+        updateUI();
+    }
+
+    public void updateUI() {
         grid.getChildren().clear();
+        grid.setHgap(2);
+        grid.setVgap(1);
         int row = 0;
         for (var entry : editedProperties.entrySet()) {
-            Label lblPropertyName = new Label(String.valueOf(entry.getKey()));
-            lblPropertyName.setPadding(new Insets(0,5,0,0));
-            lblPropertyName.setMinWidth(nameColumnMinWidth);
-            TextField editor = new TextField(String.valueOf(entry.getValue()));
-            editor.setOnAction(e -> {
-                editedProperties.put(entry.getKey(), editor.getText());
-            });
-            grid.add(lblPropertyName, 0, row);
-            grid.add(editor, 1, row);
+            TextField nameEditor = new TextField(String.valueOf(entry.getKey()));
+            TextField valueEditor = new TextField(String.valueOf(entry.getValue()));
+            grid.add(nameEditor, 0, row);
+            grid.add(valueEditor, 1, row);
+            nameEditor.setMinWidth(nameColumnMinWidth);
+            nameEditor.setOnAction(e -> editedProperties.put(nameEditor.getText(), valueEditor.getText()));
+            valueEditor.setOnAction(e -> editedProperties.put(nameEditor.getText(), valueEditor.getText()));
             ++row;
         }
+    }
+
+    private void commit(String name, String value) {
+
     }
 
 }
