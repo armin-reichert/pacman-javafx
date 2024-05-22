@@ -328,7 +328,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     protected StartPage createStartPage() {
-        var startPage = new StartPage(theme());
+        var startPage = new StartPage(theme(), this);
         startPage.setPlayButtonAction(this::showGamePage);
         startPage.setOnKeyPressed(keyEvent -> {
             if (Keyboard.matches(keyEvent, KEYS_SHOW_GAME_PAGE)) {
