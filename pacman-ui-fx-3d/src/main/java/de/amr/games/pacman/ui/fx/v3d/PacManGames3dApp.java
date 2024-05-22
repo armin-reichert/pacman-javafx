@@ -22,9 +22,7 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void init() {
-        GameController.it().setSupportedGameVariants(new GameVariant[] {
-            GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL
-        });
+        GameController.it().setSupportedGameVariants(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
         GameController.it().selectGame(GameVariant.PACMAN_XXL);
         Logger.info("Game controller initialized. Selected game: {}", GameController.it().game().variant());
         Logger.info("Java version:   {}", Runtime.version());

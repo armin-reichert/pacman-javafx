@@ -40,7 +40,12 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     public static final byte MAX_CREDIT = 99;
 
-    private final Map<GameVariant, GameModel> gameModels = new EnumMap<>(GameVariant.class);
+    private final Map<GameVariant, GameModel> gameModels = new EnumMap<>(Map.of(
+        GameVariant.MS_PACMAN,  new MsPacManGame(),
+        GameVariant.PACMAN,     new PacManGame(),
+        GameVariant.PACMAN_XXL, new PacManXXLGame()
+    ));
+
     private final List<GameVariant> supportedGameVariants = new ArrayList<>();
     private GameClock clock;
     private GameModel game;
@@ -49,21 +54,18 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     private GameController() {
         super(GameState.values());
-        gameModels.put(GameVariant.MS_PACMAN, new MsPacManGame());
-        gameModels.put(GameVariant.PACMAN, new PacManGame());
-        gameModels.put(GameVariant.PACMAN_XXL, new PacManXXLGame());
-        selectGame(GameVariant.PACMAN);
+        game = gameModels.get(GameVariant.PACMAN);
+        for (var model : gameModels.values()) {
+            model.init();
+        }
         createCustomMapDir();
         // map state change events to events of the selected game
         addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
     }
 
-    public void setSupportedGameVariants(GameVariant[] variants) {
+    public void setSupportedGameVariants(GameVariant...variants) {
         checkNotNull(variants);
         supportedGameVariants.addAll(List.of(variants));
-        for (GameVariant variant : supportedGameVariants) {
-            gameModels.get(variant).init();
-        }
     }
 
     public List<GameVariant> supportedGameVariants() {
