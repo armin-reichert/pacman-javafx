@@ -102,8 +102,7 @@ public class PacManGame extends AbstractPacManGame{
     World createPacManWorld() {
         var map = loadMap("/maps/pacman.world");
         var world = new World(map);
-        world.setHouse(createArcadeHouse());
-        world.house().setTopLeftTile(v2i(10, 15));
+        world.addHouse(createArcadeHouse(), v2i(10, 15));
         world.setGhostPositions(new Vector2f[] {
             halfTileRightOf(13, 14), // red ghost
             halfTileRightOf(13, 17), // pink ghost

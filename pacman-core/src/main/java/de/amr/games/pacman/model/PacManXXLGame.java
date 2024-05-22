@@ -88,10 +88,12 @@ public class PacManXXLGame extends PacManGame {
             var mapFiles = mapDir.listFiles((dir, name) -> name.endsWith(".world"));
             if (mapFiles != null) {
                 for (var mapFile : mapFiles) {
-                    Logger.info("Found map file: " + mapFile);
                     URL url = mapFile.toURI().toURL();
                     customMaps.add(new WorldMap(url));
+                    Logger.info("Found custom map file: " + mapFile);
                 }
+            } else {
+                Logger.error("Could not access custom map folder {}", mapDir);
             }
         }
     }

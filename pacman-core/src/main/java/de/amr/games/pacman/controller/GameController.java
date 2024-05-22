@@ -55,11 +55,15 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     }
 
     private void createCustomMapDir() {
-        boolean created = GameModel.CUSTOM_MAP_DIR.mkdirs();
+        var dir = GameModel.CUSTOM_MAP_DIR;
+        if (dir.exists() && dir.isDirectory()) {
+            return;
+        }
+        boolean created = dir.mkdirs();
         if (created) {
-            Logger.info("User maps directory created: " + GameModel.CUSTOM_MAP_DIR);
+            Logger.info("User maps directory created: {}", dir);
         } else {
-            Logger.error("User map dir {} could not be created", GameModel.CUSTOM_MAP_DIR);
+            Logger.error("User map dir {} could not be created", dir);
         }
     }
 
