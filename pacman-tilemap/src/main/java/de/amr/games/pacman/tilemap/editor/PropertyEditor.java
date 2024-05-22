@@ -9,17 +9,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.util.HashSet;
 import java.util.Properties;
 
 public class PropertyEditor extends BorderPane {
 
-    private Properties editedProperties;
-    private GridPane grid = new GridPane();
     private int nameColumnMinWidth = 100;
-    private String title;
+
+    private Properties editedProperties;
+    private final GridPane grid = new GridPane();
+    private int numRows;
 
     public PropertyEditor(String title) {
-        this.title = title;
         var lblTitle = new Label(title);
         lblTitle.setFont(Font.font("Sans", FontWeight.BOLD, 14));
 
@@ -27,7 +28,7 @@ public class PropertyEditor extends BorderPane {
         btnAddEntry.setStyle("-fx-padding: 0 2 0 2");
         btnAddEntry.setOnAction(e -> {
             editedProperties.put("New Property", "");
-            updateUI();
+            updateTable();
         });
         var header = new HBox(lblTitle, btnAddEntry);
         header.setSpacing(5);
@@ -42,10 +43,10 @@ public class PropertyEditor extends BorderPane {
 
     public void setEditedProperties(Properties editedProperties) {
         this.editedProperties = editedProperties;
-        updateUI();
+        updateTable();
     }
 
-    public void updateUI() {
+    public void updateTable() {
         grid.getChildren().clear();
         grid.setHgap(2);
         grid.setVgap(1);
@@ -53,17 +54,31 @@ public class PropertyEditor extends BorderPane {
         for (var entry : editedProperties.entrySet()) {
             TextField nameEditor = new TextField(String.valueOf(entry.getKey()));
             TextField valueEditor = new TextField(String.valueOf(entry.getValue()));
+            nameEditor.setMinWidth(nameColumnMinWidth);
+            nameEditor.setOnAction(e -> saveEditedEntry(nameEditor, valueEditor));
+            valueEditor.setOnAction(e -> saveEditedEntry(nameEditor, valueEditor));
             grid.add(nameEditor, 0, row);
             grid.add(valueEditor, 1, row);
-            nameEditor.setMinWidth(nameColumnMinWidth);
-            nameEditor.setOnAction(e -> editedProperties.put(nameEditor.getText(), valueEditor.getText()));
-            valueEditor.setOnAction(e -> editedProperties.put(nameEditor.getText(), valueEditor.getText()));
             ++row;
         }
+        numRows = row;
     }
 
-    private void commit(String name, String value) {
-
+    private void saveEditedEntry(TextField nameEditor, TextField valueEditor) {
+        if (!nameEditor.getText().trim().isBlank()) {
+            editedProperties.put(nameEditor.getText().trim(), valueEditor.getText());
+        }
+        var names = new HashSet<>();
+        for (int row = 0; row < numRows; ++row) {
+            TextField ne = (TextField) grid.getChildren().get(2*row);
+            names.add(ne.getText());
+        }
+        for (var key : editedProperties.keySet()) {
+            if (!names.contains(key)) {
+                editedProperties.remove(key);
+            }
+        }
+        updateTable();
+        editedProperties.list(System.out);
     }
-
 }
