@@ -33,7 +33,9 @@ public interface ActionHandler {
 
     void startGame();
 
-    void switchGameVariant();
+    void selectNextGameVariant();
+
+    void selectPrevGameVariant();
 
     void startCutscenesTest();
 

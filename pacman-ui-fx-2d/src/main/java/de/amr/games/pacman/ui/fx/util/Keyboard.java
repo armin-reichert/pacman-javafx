@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.util;
 
+import de.amr.games.pacman.lib.Globals;
 import javafx.event.EventTarget;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -12,6 +13,8 @@ import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
 
 import java.util.*;
+
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * @author Armin Reichert
@@ -75,6 +78,18 @@ public class Keyboard {
             Logger.trace("Matching key combination: " + match.get());
             return true;
         }
+        return false;
+    }
+
+    public static boolean matches(KeyEvent event, KeyCodeCombination... combinations) {
+        checkNotNull(combinations);
+        if (combinations.length > 1) {
+            return Arrays.stream(combinations).anyMatch(combination -> combination.match(event));
+        }
+        if (combinations.length == 1) {
+            return combinations[0].match(event);
+        }
+        Logger.error("No key combinations specified");
         return false;
     }
 

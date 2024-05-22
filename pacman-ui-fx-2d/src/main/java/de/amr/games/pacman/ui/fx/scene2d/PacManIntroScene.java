@@ -57,8 +57,10 @@ public class PacManIntroScene extends GameScene2D {
             context.actionHandler().addCredit();
         } else if (Keyboard.pressed(KEYS_START_GAME)) {
             context.actionHandler().startGame();
-        } else if (Keyboard.pressed(KEY_SELECT_VARIANT)) {
-            context.actionHandler().switchGameVariant();
+        } else if (Keyboard.pressed(KEYS_SELECT_NEXT_VARIANT)) {
+            context.actionHandler().selectNextGameVariant();
+        } else if (Keyboard.pressed(KEY_SELECT_PREV_VARIANT)) {
+            context.actionHandler().selectPrevGameVariant();
         } else if (Keyboard.pressed(KEY_PLAY_CUTSCENES)) {
             context.actionHandler().startCutscenesTest();
         }

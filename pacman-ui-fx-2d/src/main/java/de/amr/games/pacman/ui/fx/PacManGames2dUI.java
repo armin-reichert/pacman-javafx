@@ -64,7 +64,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final KeyCodeCombination KEY_SHOW_HELP            = just(KeyCode.H);
     public static final KeyCodeCombination KEY_PAUSE                = just(KeyCode.P);
     public static final KeyCodeCombination KEY_QUIT                 = just(KeyCode.Q);
-    public static final KeyCodeCombination KEY_SELECT_VARIANT       = just(KeyCode.V);
+    public static final KeyCodeCombination[] KEYS_SELECT_NEXT_VARIANT  = {just(KeyCode.V), just(KeyCode.RIGHT)};
+    public static final KeyCodeCombination KEY_SELECT_PREV_VARIANT  = just(KeyCode.LEFT);
 
     public static final KeyCodeCombination KEY_AUTOPILOT            = alt(KeyCode.A);
     public static final KeyCodeCombination KEY_PLAY_CUTSCENES       = alt(KeyCode.C);
@@ -329,12 +330,14 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     protected StartPage createStartPage() {
         var startPage = new StartPage(theme());
         startPage.setPlayButtonAction(this::showGamePage);
-        startPage.setOnKeyPressed(e -> {
-            if (Arrays.stream(KEYS_SHOW_GAME_PAGE).anyMatch(combination -> combination.match(e))) {
+        startPage.setOnKeyPressed(keyEvent -> {
+            if (Keyboard.matches(keyEvent, KEYS_SHOW_GAME_PAGE)) {
                 showGamePage();
-            } else if (KEY_SELECT_VARIANT.match(e)) {
-                switchGameVariant();
-            } else if (KEY_FULLSCREEN.match(e)) {
+            } else if (Keyboard.matches(keyEvent, KEYS_SELECT_NEXT_VARIANT)) {
+                selectNextGameVariant();
+            } else if (Keyboard.matches(keyEvent, KEY_SELECT_PREV_VARIANT)) {
+                selectPrevGameVariant();
+            } else if (Keyboard.matches(keyEvent, KEY_FULLSCREEN)) {
                 stage.setFullScreen(true);
             }
         });
@@ -719,12 +722,23 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     @Override
-    public void switchGameVariant() {
-        GameVariant[] allVariants = GameVariant.values();
-        GameVariant currentVariant = gameController().game().variant();
-        GameVariant nextVariant = currentVariant.ordinal() < allVariants.length - 1
-            ? allVariants[currentVariant.ordinal() + 1] : allVariants[0];
-        gameController().selectGame(nextVariant);
+    public void selectNextGameVariant() {
+        GameVariant[] all = GameVariant.values();
+        var current = game().variant();
+        var next = current.ordinal() < all.length - 1 ? all[current.ordinal() + 1] : all[0];
+        selectGameVariant(next);
+    }
+
+    @Override
+    public void selectPrevGameVariant() {
+        GameVariant[] all = GameVariant.values();
+        var current = game().variant();
+        var prev = current.ordinal() > 0 ? all[current.ordinal() - 1] : all[all.length - 1];
+        selectGameVariant(prev);
+    }
+
+    private void selectGameVariant(GameVariant variant) {
+        gameController().selectGame(variant);
         gameController().restart(GameState.BOOT);
         showStartPage();
     }

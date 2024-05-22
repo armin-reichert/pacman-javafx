@@ -58,8 +58,10 @@ public class MsPacManIntroScene extends GameScene2D {
             context.actionHandler().addCredit();
         } else if (Keyboard.pressed(PacManGames2dUI.KEYS_START_GAME)) {
             context.actionHandler().startGame();
-        } else if (Keyboard.pressed(PacManGames2dUI.KEY_SELECT_VARIANT)) {
-            context.actionHandler().switchGameVariant();
+        } else if (Keyboard.pressed(PacManGames2dUI.KEYS_SELECT_NEXT_VARIANT)) {
+            context.actionHandler().selectNextGameVariant();
+        } else if (Keyboard.pressed(PacManGames2dUI.KEY_SELECT_PREV_VARIANT)) {
+            context.actionHandler().selectPrevGameVariant();
         } else if (Keyboard.pressed(PacManGames2dUI.KEY_PLAY_CUTSCENES)) {
             context.actionHandler().startCutscenesTest();
         }
