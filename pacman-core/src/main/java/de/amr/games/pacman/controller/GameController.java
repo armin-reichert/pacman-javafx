@@ -9,6 +9,11 @@ import de.amr.games.pacman.lib.FiniteStateMachine;
 import de.amr.games.pacman.model.*;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
@@ -38,6 +43,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     public static final byte MAX_CREDIT = 99;
 
+    private final List<GameVariant> supportedGameVariants = new ArrayList<>();
     private GameClock clock;
     private GameModel game;
     private boolean pacImmune = false;
@@ -52,6 +58,15 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         createCustomMapDir();
         // map state change events to events of the selected game
         addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
+    }
+
+    public void setSupportedGameVariants(GameVariant[] variants) {
+        checkNotNull(variants);
+        supportedGameVariants.addAll(List.of(variants));
+    }
+
+    public List<GameVariant> supportedGameVariants() {
+        return Collections.unmodifiableList(supportedGameVariants);
     }
 
     private void createCustomMapDir() {

@@ -18,30 +18,23 @@ import java.util.Locale;
  */
 public class PacManGames3dApp extends Application {
 
-    private Settings settings;
     private PacManGames3dUI ui;
 
     @Override
     public void init() {
-        Logger.info("Java version:   {}", Runtime.version());
-        Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
-        for (var variant : GameVariant.values()) {
-            // initialized by loading enum class
-            Logger.trace("Initialize game variant {}", variant);
-        }
-        settings = new Settings();
-        if (getParameters() != null) {
-            settings.merge(getParameters().getNamed());
-        }
-        Logger.info("Game settings: {}, locale: {}", settings, Locale.getDefault());
+        GameController.it().setSupportedGameVariants(new GameVariant[] {
+            GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL
+        });
         GameController.it().selectGame(GameVariant.PACMAN_XXL);
         Logger.info("Game controller initialized. Selected game: {}", GameController.it().game());
+        Logger.info("Java version:   {}", Runtime.version());
+        Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
     }
 
     @Override
     public void start(Stage stage) {
-        ui = new PacManGames3dUI(stage, settings);
-        for (var variant : GameVariant.values()) {
+        ui = new PacManGames3dUI(stage);
+        for (var variant : GameController.it().supportedGameVariants()) {
             variant.game().addGameEventListener(ui);
         }
         ui.showStartPage();

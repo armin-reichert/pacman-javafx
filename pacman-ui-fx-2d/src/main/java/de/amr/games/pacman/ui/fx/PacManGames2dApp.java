@@ -10,37 +10,26 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.util.Locale;
-
 /**
  * @author Armin Reichert
  */
 public class PacManGames2dApp extends Application {
 
-    private Settings settings;
     private PacManGames2dUI ui;
 
     @Override
     public void init() {
+        GameController.it().setSupportedGameVariants(new GameVariant[] { GameVariant.PACMAN, GameVariant.MS_PACMAN});
+        GameController.it().selectGame(GameVariant.PACMAN);
+        Logger.info("Game controller initialized. Selected game: {}", GameController.it().game());
         Logger.info("Java version:   {}", Runtime.version());
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
-        for (var variant : GameVariant.values()) {
-            // initialized by loading class
-            Logger.trace("Initialize game variant {}", variant);
-        }
-        settings = new Settings();
-        if (getParameters() != null) {
-            settings.merge(getParameters().getNamed());
-        }
-        Logger.info("Game settings: {}, locale: {}", settings, Locale.getDefault());
-        GameController.it().selectGame(settings.variant);
-        Logger.info("Game controller initialized. Selected game: {}", GameController.it().game());
     }
 
     @Override
     public void start(Stage stage) {
-        ui = new PacManGames2dUI(stage, settings);
-        for (var variant : GameVariant.values()) {
+        ui = new PacManGames2dUI(stage);
+        for (var variant : GameController.it().supportedGameVariants()) {
             variant.game().addGameEventListener(ui);
         }
         ui.showStartPage();

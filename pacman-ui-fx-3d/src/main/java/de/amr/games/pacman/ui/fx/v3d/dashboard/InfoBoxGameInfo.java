@@ -71,7 +71,7 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtPelletCount() {
-        if (context.game().level().isPresent()) {
+        if (context.game().world() != null) {
             World world = context.game().world();
             return String.format("%d of %d (%d energizers)", world.uneatenFoodCount(),
                 world.totalFoodCount(), world.energizerTiles().count());

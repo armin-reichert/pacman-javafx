@@ -1,7 +1,9 @@
 package de.amr.games.pacman.ui.fx.page;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.ActionHandler;
+import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import javafx.event.EventHandler;
@@ -12,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
@@ -33,8 +36,6 @@ public class StartPage implements Page {
     private final BorderPane layout = new BorderPane();
     private final Theme theme;
     private final Node btnPlay;
-    private final Button btnNextVariant;
-    private final Button btnPrevVariant;
 
     private static Background createBackground(Image image) {
         var backgroundImage = new BackgroundImage(image,
@@ -48,25 +49,25 @@ public class StartPage implements Page {
         return new Background(backgroundImage);
     }
 
+    private Button createCarouselButton(Direction dir, Runnable action) {
+        double dimmed = 0.25;
+        Button button = new Button();
+        button.setStyle("-fx-text-fill: rgb(0,155,252); -fx-background-color: transparent; -fx-padding: 5");
+        button.setFont(Font.font("Sans", FontWeight.BOLD, 80));
+        button.setText(dir == Direction.LEFT ? "\u2b98" : "\u2b9a");
+        button.setOpacity(dimmed);
+        button.setOnMouseEntered(e -> button.setOpacity(1.0));
+        button.setOnMouseExited(e -> button.setOpacity(dimmed));
+        button.setOnAction(e -> action.run());
+        return button;
+    }
+
     public StartPage(Theme theme, ActionHandler actionHandler) {
         checkNotNull(theme);
         this.theme = theme;
 
-        //TODO use icons
-        btnNextVariant = new Button(">");
-        btnNextVariant.setFont(Font.font("Sans", FontWeight.BLACK, 20));
-        btnNextVariant.setOpacity(0.3);
-        btnNextVariant.setOnAction(e -> actionHandler.selectNextGameVariant());
-        btnNextVariant.setOnMouseEntered(e -> btnNextVariant.setOpacity(1.0));
-        btnNextVariant.setOnMouseExited(e -> btnNextVariant.setOpacity(0.3));
-
-        btnPrevVariant = new Button("<");
-        btnPrevVariant.setFont(Font.font("Sans", FontWeight.BLACK, 20));
-        btnPrevVariant.setOpacity(0.3);
-        btnPrevVariant.setOnAction(e -> actionHandler.selectPrevGameVariant());
-        btnPrevVariant.setOnMouseEntered(e -> btnPrevVariant.setOpacity(1.0));
-        btnPrevVariant.setOnMouseExited(e -> btnPrevVariant.setOpacity(0.3));
-
+        var btnNextVariant = createCarouselButton(Direction.RIGHT, actionHandler::selectNextGameVariant);
+        var btnPrevVariant = createCarouselButton(Direction.LEFT, actionHandler::selectPrevGameVariant);
         btnPlay = createPlayButton();
 
         VBox left = new VBox(btnPrevVariant);

@@ -88,7 +88,7 @@ public class World {
         // each position is half tile right of home tile
         Vector2f[] positions = Stream.of(tiles)
             .map(Vector2i::toFloatVec)
-            .map(tile -> tile.scaled(TS).plus(0.5f, 0))
+            .map(tile -> tile.scaled(TS).plus(HTS, 0))
             .toArray(Vector2f[]::new);
         setGhostPositions(positions);
     }

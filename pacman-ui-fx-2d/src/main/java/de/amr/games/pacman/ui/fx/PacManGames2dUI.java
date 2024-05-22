@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
@@ -235,9 +236,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     private AudioClip voiceClip;
     private final Animation voiceClipExecution = new PauseTransition();
 
-    public PacManGames2dUI(Stage stage, Settings settings) {
+    public PacManGames2dUI(Stage stage) {
         checkNotNull(stage);
-        checkNotNull(settings);
 
         this.stage = stage;
         mainScene = createMainScene();
@@ -311,7 +311,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             }
         }
 
-        stage.setFullScreen(settings.fullScreen);
         stage.setMinWidth(CANVAS_WIDTH_UNSCALED);
         stage.setMinHeight(CANVAS_HEIGHT_UNSCALED);
         stage.centerOnScreen();
@@ -723,17 +722,17 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void selectNextGameVariant() {
-        GameVariant[] all = GameVariant.values();
-        var current = game().variant();
-        var next = current.ordinal() < all.length - 1 ? all[current.ordinal() + 1] : all[0];
+        var all = GameController.it().supportedGameVariants();
+        var current = all.indexOf(game().variant());
+        var next = current < all.size() - 1 ? all.get(current + 1) : all.getFirst();
         selectGameVariant(next);
     }
 
     @Override
     public void selectPrevGameVariant() {
-        GameVariant[] all = GameVariant.values();
-        var current = game().variant();
-        var prev = current.ordinal() > 0 ? all[current.ordinal() - 1] : all[all.length - 1];
+        var all = GameController.it().supportedGameVariants();
+        var current = all.indexOf(game().variant());
+        var prev = current > 0 ? all.get(current - 1) : all.getLast();
         selectGameVariant(prev);
     }
 

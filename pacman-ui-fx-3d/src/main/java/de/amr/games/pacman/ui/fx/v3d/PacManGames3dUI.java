@@ -183,8 +183,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static int TOTAL_TRANSLATE_Y = 330;
     public static int TOTAL_TRANSLATE_Z = -140;
 
-    public PacManGames3dUI(Stage stage, Settings settings) {
-        super(stage, settings);
+    public PacManGames3dUI(Stage stage) {
+        super(stage);
         for (var variant : GameVariant.values()) {
             var playScene3D = new PlayScene3D();
             playScene3D.setContext(this);
