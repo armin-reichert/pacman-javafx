@@ -27,19 +27,24 @@ public class PacManXXLGame extends PacManGame {
     public PacManXXLGame() {
         initialLives = 3;
         highScoreFileName = "highscore-pacman_xxl.xml";
-        reset();
         Logger.info("Game variant {} initialized.", this);
-        try {
-            loadCustomMaps();
-        } catch (IOException x) {
-            Logger.error("Loading custom maps failed");
-            Logger.error(x);
-        }
     }
 
     @Override
     public GameVariant variant() {
         return GameVariant.PACMAN_XXL;
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        try {
+            loadCustomMaps();
+            Logger.info("{} custom maps loaded", customMaps.size());
+        } catch (IOException x) {
+            Logger.error("Loading custom maps failed");
+            Logger.error(x);
+        }
     }
 
     @Override
@@ -82,6 +87,7 @@ public class PacManXXLGame extends PacManGame {
     }
 
     void loadCustomMaps() throws IOException {
+        customMaps.clear();
         var mapDir = CUSTOM_MAP_DIR;
         if (mapDir.isDirectory()) {
             Logger.info("Searching for custom map files in folder " + mapDir);

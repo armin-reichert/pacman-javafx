@@ -81,9 +81,9 @@ public class World {
             Logger.error("No home tile set for orange ghost");
         }
         Vector2i[] tiles = new Vector2i[4];
-        tiles[GameModel.RED_GHOST] = homeTileRed.orElse(new Vector2i(13, 14));
-        tiles[GameModel.PINK_GHOST] = homeTilePink.orElse(new Vector2i(13, 17));
-        tiles[GameModel.CYAN_GHOST] = homeTileCyan.orElse(new Vector2i(11, 17));
+        tiles[GameModel.RED_GHOST]    = homeTileRed.orElse(new Vector2i(13, 14));
+        tiles[GameModel.PINK_GHOST]   = homeTilePink.orElse(new Vector2i(13, 17));
+        tiles[GameModel.CYAN_GHOST]   = homeTileCyan.orElse(new Vector2i(11, 17));
         tiles[GameModel.ORANGE_GHOST] = homeTileOrange.orElse(new Vector2i(15, 17));
         // each position is half tile right of home tile
         Vector2f[] positions = Stream.of(tiles)
