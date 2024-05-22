@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Properties;
 
@@ -51,7 +52,8 @@ public class PropertyEditor extends BorderPane {
         grid.setHgap(2);
         grid.setVgap(1);
         int row = 0;
-        for (var entry : editedProperties.entrySet()) {
+        var sortedEntries = editedProperties.entrySet().stream().sorted(Comparator.comparing(Object::toString)).toList();
+        for (var entry : sortedEntries) {
             TextField nameEditor = new TextField(String.valueOf(entry.getKey()));
             TextField valueEditor = new TextField(String.valueOf(entry.getValue()));
             nameEditor.setMinWidth(nameColumnMinWidth);
