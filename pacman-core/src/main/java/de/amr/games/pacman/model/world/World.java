@@ -57,20 +57,12 @@ public class World {
     }
 
     private void setPacPosition(WorldMap map) {
-        List<Vector2i> pacHomeTiles = map.terrain().tiles(PAC_HOME).toList();
-        if (pacHomeTiles.isEmpty()) {
+        Optional<Vector2i> pacHomeTile = map.terrain().tiles(PAC_HOME).findFirst();
+        if (pacHomeTile.isEmpty()) {
             Logger.error("No Pac home tile found in map");
-            setPacPosition(new Vector2f(13*TS + HTS, 26*TS));
-        } else {
-            //TODO simplify
-            if (pacHomeTiles.size() != 2 || !pacHomeTiles.getFirst().equals(pacHomeTiles.getLast().minus(1, 0))) {
-                Logger.error("Pac home must consist of two tiles side-by-side");
-            } else {
-                var pacHome = pacHomeTiles.getFirst().toFloatVec().scaled(TS).plus(0.5f, 0);
-                setPacPosition(pacHome);
-                Logger.info("Pac home position found in map: {}", pacHome);
-            }
         }
+        Vector2f position = pacHomeTile.orElse(new Vector2i(13, 26)).toFloatVec().scaled(TS).plus(HTS, 0);
+        setPacPosition(position);
     }
 
     private void setGhostPositions(WorldMap map) {
