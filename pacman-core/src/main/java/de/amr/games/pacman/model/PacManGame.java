@@ -99,16 +99,11 @@ public class PacManGame extends AbstractPacManGame{
         pac.setUseAutopilot(true);
     }
 
+    //TODO: store some of this info in map?
     World createPacManWorld() {
         var map = loadMap("/maps/pacman.world");
         var world = new World(map);
         world.addHouse(createArcadeHouse(), v2i(10, 15));
-        world.setGhostPositions(new Vector2f[] {
-            halfTileRightOf(13, 14), // red ghost
-            halfTileRightOf(13, 17), // pink ghost
-            halfTileRightOf(11, 17), // cyan ghost
-            halfTileRightOf(15, 17)  // orange ghost
-        });
         world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
         world.setDemoLevelRoute(List.of(PACMAN_ARCADE_MAP_DEMO_LEVEL_ROUTE));
         List<Direction> up = List.of(UP);

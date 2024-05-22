@@ -125,12 +125,6 @@ public class MsPacManGame extends AbstractPacManGame{
     World createMsPacManWorld(WorldMap map) {
         var world = new World(map);
         world.addHouse(createArcadeHouse(), v2i(10, 15));
-        world.setGhostPositions(new Vector2f[] {
-            halfTileRightOf(13, 14), // red ghost
-            halfTileRightOf(13, 17), // pink ghost
-            halfTileRightOf(11, 17), // cyan ghost
-            halfTileRightOf(15, 17)  // orange ghost
-        });
         world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
         return world;
     }
