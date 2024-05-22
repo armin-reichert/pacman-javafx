@@ -37,7 +37,7 @@ import static de.amr.games.pacman.lib.NavPoint.np;
  *
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
-public class PacManGame extends AbstractPacManGame{
+public class PacManGame extends AbstractPacManGame {
 
     static final NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
         np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
@@ -60,7 +60,6 @@ public class PacManGame extends AbstractPacManGame{
     public PacManGame() {
         initialLives = 3;
         highScoreFileName = "highscore-pacman.xml";
-        reset();
         Logger.info("Game variant {} initialized.", this);
     }
 

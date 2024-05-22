@@ -147,7 +147,8 @@ public abstract class AbstractPacManGame implements GameModel {
         URL mapURL = getClass().getResource(path);
         if (mapURL != null) {
             try {
-                return new WorldMap(mapURL);
+                var map = new WorldMap(mapURL);
+                Logger.info("Map loaded from URL {}", mapURL);
             }
             catch (IOException x) {
                 Logger.error("Error loading world map from URL '{}'", mapURL);

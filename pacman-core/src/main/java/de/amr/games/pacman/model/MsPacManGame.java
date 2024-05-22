@@ -50,7 +50,6 @@ public class MsPacManGame extends AbstractPacManGame{
     public MsPacManGame() {
         initialLives = 3;
         highScoreFileName = "highscore-ms_pacman.xml";
-        reset();
         Logger.info("Game variant {} initialized.", this);
     }
 

@@ -270,7 +270,7 @@ public class TileMapEditor  {
 
         terrainPalette = new Palette(32, 6, 4, Tiles.TERRAIN_TILES_END);
         terrainPalette.setValues(
-            Tiles.EMPTY, Tiles.TUNNEL, Tiles.PAC_HOME, Tiles.EMPTY,
+            Tiles.EMPTY, Tiles.TUNNEL, Tiles.PAC_HOME, Tiles.DOOR,
             Tiles.SCATTER_TARGET_RED, Tiles.SCATTER_TARGET_PINK, Tiles.SCATTER_TARGET_CYAN, Tiles.SCATTER_TARGET_ORANGE,
             Tiles.HOME_RED_GHOST, Tiles.HOME_PINK_GHOST, Tiles.HOME_CYAN_GHOST, Tiles.HOME_ORANGE_GHOST,
             Tiles.WALL_H, Tiles.WALL_V, Tiles.DWALL_H, Tiles.DWALL_V,
