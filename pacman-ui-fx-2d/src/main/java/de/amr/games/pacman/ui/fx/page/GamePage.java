@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.page;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameVariant;
@@ -172,8 +173,18 @@ public class GamePage extends CanvasLayoutPane implements Page {
         } else if (Keyboard.pressed(KEY_SIMULATION_NORMAL)) {
             handler.resetSimulationSpeed();
         } else if (Keyboard.pressed(KEY_QUIT)) {
-            if (context.gameState() != GameState.BOOT && context.gameState() != GameState.INTRO) {
-                handler.restartIntro();
+            //TODO move into single method of action handler
+            var gameController = GameController.it();
+            var gameState = gameController.state();
+            switch (gameState) {
+                case BOOT -> {}
+                case INTRO -> {
+                    handler.reboot();
+                    handler.showStartPage();
+                }
+                default -> {
+                    handler.restartIntro();
+                }
             }
         } else if (Keyboard.pressed(KEY_TEST_LEVELS)) {
             handler.startLevelTestMode();

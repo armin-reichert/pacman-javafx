@@ -368,6 +368,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         stage.show();
     }
 
+    @Override
     public void showStartPage() {
         if (clock.isRunning()) {
             clock.stop();

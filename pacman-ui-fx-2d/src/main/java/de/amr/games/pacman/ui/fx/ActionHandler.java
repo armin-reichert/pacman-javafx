@@ -11,6 +11,8 @@ public interface ActionHandler {
 
     void setFullScreen(boolean on);
 
+    void showStartPage();
+
     void restartIntro();
 
     void reboot();
