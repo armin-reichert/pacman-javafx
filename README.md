@@ -90,6 +90,7 @@ In the 2D or 3D subproject folder, call `..\mvnw javafx:run`.
 Start screen:
 - <kbd>V</kbd>, <kbd>LEFT</kbd> Select next game variant
 - <kbd>RIGHT</kbd> Select previous game variant
+- <kbd>ENTER</kbd> or <kbd>SPACE</kbd> Start game 
 
 Intro screen:
 - <kbd>5</kbd> Adds one credit ("inserts coin")
