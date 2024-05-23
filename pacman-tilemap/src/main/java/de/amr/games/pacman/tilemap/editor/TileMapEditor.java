@@ -32,7 +32,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -339,12 +338,8 @@ public class TileMapEditor  {
         return menuBar;
     }
 
-    public Menu getMenuFile() {
+    public Menu menuFile() {
         return menuFile;
-    }
-
-    public Menu getMenuMap() {
-        return menuMap;
     }
 
     public MenuBar createMenus() {
@@ -646,8 +641,8 @@ public class TileMapEditor  {
         if (file != null) {
             lastUsedDir = file.getParentFile();
             if (file.getName().endsWith(".world")) {
-                map.food().setProperties(foodMapPropertiesEditor.getEditedProperties());
-                map.terrain().setProperties(terrainMapPropertiesEditor.getEditedProperties());
+                map.food().replaceProperties(foodMapPropertiesEditor.getEditedProperties());
+                map.terrain().replaceProperties(terrainMapPropertiesEditor.getEditedProperties());
                 map.save(file);
                 readMapFile(file);
                 updateInfo();

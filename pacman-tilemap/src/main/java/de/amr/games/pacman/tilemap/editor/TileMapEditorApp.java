@@ -27,7 +27,7 @@ public class TileMapEditorApp extends Application  {
 
         var miQuit = new MenuItem("Quit");
         miQuit.setOnAction(e -> stage.close());
-        editor.getMenuFile().getItems().add(miQuit);
+        editor.menuFile().getItems().add(miQuit);
 
         double height = Math.max(0.8 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
         var scene = new Scene(layout, height * 1.2, height);

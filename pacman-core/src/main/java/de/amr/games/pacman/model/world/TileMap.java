@@ -11,7 +11,6 @@ import org.tinylog.Logger;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
@@ -27,11 +26,10 @@ public class TileMap {
 
     static final String DATA_SECTION_START = "!data";
 
-    private Properties properties = new Properties();
+    private final Properties properties = new Properties();
     private final byte[][] data;
-
-    private List<TileMapPath> wallPaths = new ArrayList<>();
-    private List<TileMapPath> dwallPaths = new ArrayList<>();
+    private final List<TileMapPath> wallPaths = new ArrayList<>();
+    private final List<TileMapPath> dwallPaths = new ArrayList<>();
 
     public static TileMap parse(List<String> lines, byte valueLimit) {
         // First pass: read property section and determine data section size
@@ -62,7 +60,7 @@ public class TileMap {
 
         // Second pass: read data and build new tile map
         var tileMap = new TileMap(new byte[numDataRows][numDataCols]);
-        tileMap.setPropertiesFromText(propertySection.toString());
+        tileMap.loadPropertiesFromText(propertySection.toString());
 
         for (int lineIndex = dataSectionStartIndex; lineIndex < lines.size(); ++lineIndex) {
             String line = lines.get(lineIndex);
@@ -224,22 +222,13 @@ public class TileMap {
         return properties;
     }
 
-    public void setProperties(Properties properties) {
-        this.properties = properties;
+    public void replaceProperties(Properties properties)
+    {
+        this.properties.clear();
+        this.properties.putAll(properties);
     }
 
-    public String getPropertiesAsText() {
-        StringWriter w = new StringWriter();
-        try {
-            properties.store(w, "");
-            return w.toString();
-        } catch (IOException x) {
-            Logger.error(x);
-            return "";
-        }
-    }
-
-    public void setPropertiesFromText(String text) {
+    public void loadPropertiesFromText(String text) {
         StringReader r = new StringReader(text);
         try {
             properties.load(r);
