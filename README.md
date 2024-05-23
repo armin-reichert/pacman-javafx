@@ -88,7 +88,8 @@ In the 2D or 3D subproject folder, call `..\mvnw javafx:run`.
 ## How to use the application
 
 Start screen:
-- <kbd>V</kbd> Switches between Pac-Man and Ms. Pac-Man
+- <kbd>V</kbd>, <kbd>LEFT</kbd> Select next game variant
+- <kbd>RIGHT</kbd> Select previous game variant
 
 Intro screen:
 - <kbd>5</kbd> Adds one credit ("inserts coin")
