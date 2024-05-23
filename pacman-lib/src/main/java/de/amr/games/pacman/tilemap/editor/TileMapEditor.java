@@ -99,12 +99,12 @@ public class TileMapEditor  {
 
     //TODO resources must be loaded differently
     public TileMapEditor(Stage stage) {
-        arcadeMaps[0] = loadMap("/maps/pacman.world", getClass());
+        arcadeMaps[0] = loadMap("/samplemaps/pacman.world", getClass());
         for (int i = 1; i <= 6; ++i) {
-            arcadeMaps[i] = loadMap("/maps/mspacman/mspacman_" + i + ".world", getClass());
+            arcadeMaps[i] = loadMap("/samplemaps/mspacman/mspacman_" + i + ".world", getClass());
         }
         for (int i = 1; i <= 8; ++i) {
-            masonicMaps[i-1] = loadMap("/maps/masonic/masonic_" + i + ".world", getClass());
+            masonicMaps[i-1] = loadMap("/samplemaps/masonic/masonic_" + i + ".world", getClass());
         }
         setMap(arcadeMaps[0]);
 
