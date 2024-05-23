@@ -114,17 +114,15 @@ public class TileMap {
             .map(corner -> TileMapPath.build(this, explored, corner, LEFT))
             .forEach(wallPaths::add);
 
-        // Paths starting at left and right maze border (over and under tunnel ends)
+        // Paths starting at left and right maze border leading inside maze
         var handlesLeft = new ArrayList<Vector2i>();
         var handlesRight = new ArrayList<Vector2i>();
         for (int row = 0; row < numRows(); ++row) {
-            if (get(row, 0) == Tiles.TUNNEL) {
-                handlesLeft.add(new Vector2i(0, row - 1));
-                handlesLeft.add(new Vector2i(0, row + 1));
+            if (get(row, 0) == Tiles.DWALL_H) {
+                handlesLeft.add(new Vector2i(0, row));
             }
-            if (get(row, numCols() - 1) == Tiles.TUNNEL) {
-                handlesRight.add(new Vector2i(numCols() - 1, row - 1));
-                handlesRight.add(new Vector2i(numCols() - 1, row + 1));
+            if (get(row, numCols() - 1) == Tiles.DWALL_H) {
+                handlesRight.add(new Vector2i(numCols() - 1, row));
             }
         }
 
