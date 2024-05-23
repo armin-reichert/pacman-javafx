@@ -99,7 +99,7 @@ public class RuleBasedPacSteering implements Steering {
             .filter(ghost -> ghost.tile().manhattanDistance(pac.tile()) <= CollectedData.MAX_GHOST_CHASE_DIST)
             .collect(Collectors.toList());
         data.frightenedGhostsDistance = data.frightenedGhosts.stream()
-            .map(ghost -> ghost.tile().manhattanDistance(pac.tile())).collect(Collectors.toList());
+            .map(ghost -> (float)ghost.tile().manhattanDistance(pac.tile())).collect(Collectors.toList());
 
         return data;
     }
