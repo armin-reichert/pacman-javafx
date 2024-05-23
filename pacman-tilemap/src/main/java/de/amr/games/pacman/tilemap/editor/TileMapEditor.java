@@ -4,12 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemap.editor;
 
-import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameException;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.lib.TileMap;
 import de.amr.games.pacman.lib.Tiles;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.WorldMap;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tilemap.FoodMapRenderer;
 import de.amr.games.pacman.tilemap.TileMapRenderer;
 import javafx.animation.Animation;
@@ -174,7 +173,7 @@ public class TileMapEditor  {
     BooleanProperty terrainEditedPy = new SimpleBooleanProperty(true);
     BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
 
-    public TileMapEditor(Stage stage) throws GameException  {
+    public TileMapEditor(Stage stage) {
         arcadeMaps[0] = loadMap("/maps/pacman.world", GameVariant.PACMAN.getClass());
         for (int i = 1; i <= 6; ++i) {
             arcadeMaps[i] = loadMap("/maps/mspacman/mspacman_" + i + ".world", GameVariant.MS_PACMAN.getClass());
