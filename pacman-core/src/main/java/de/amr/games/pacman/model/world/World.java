@@ -58,39 +58,41 @@ public class World {
     private void setPacPosition() {
         Optional<Vector2i> pacHomeTile = worldMap.terrain().tiles(PAC_HOME).findFirst();
         if (pacHomeTile.isEmpty()) {
-            Logger.error("No Pac home tile found in map");
+            Logger.warn("No Pac home tile found in map, using default");
         }
         pacPosition = pacHomeTile.orElse(new Vector2i(13, 26)).toFloatVec().scaled(TS).plus(HTS, 0);
     }
 
     private void setGhostPositions() {
+        ghostPositions = new Vector2f[4];
+
         Optional<Vector2i> homeTileRed = worldMap.terrain().tiles(HOME_RED_GHOST).findFirst();
         if (homeTileRed.isEmpty()) {
-            Logger.error("No home tile set for red ghost");
+            Logger.warn("No home tile set for red ghost, using default");
         }
+        ghostPositions[GameModel.RED_GHOST] = positionHalfTileRightOf(homeTileRed.orElse(new Vector2i(13, 14)));
+
         Optional<Vector2i> homeTilePink = worldMap.terrain().tiles(HOME_PINK_GHOST).findFirst();
         if (homeTilePink.isEmpty()) {
-            Logger.error("No home tile set for pink ghost");
+            Logger.warn("No home tile set for pink ghost, using default");
         }
+        ghostPositions[GameModel.PINK_GHOST] = positionHalfTileRightOf(homeTilePink.orElse(new Vector2i(13, 17)));
+
         Optional<Vector2i> homeTileCyan = worldMap.terrain().tiles(HOME_CYAN_GHOST).findFirst();
         if (homeTileCyan.isEmpty()) {
-            Logger.error("No home tile set for cyan ghost");
+            Logger.error("No home tile set for cyan ghost, using default");
         }
+        ghostPositions[GameModel.CYAN_GHOST] = positionHalfTileRightOf(homeTileCyan.orElse(new Vector2i(11, 17)));
+
         Optional<Vector2i> homeTileOrange = worldMap.terrain().tiles(HOME_ORANGE_GHOST).findFirst();
         if (homeTileOrange.isEmpty()) {
-            Logger.error("No home tile set for orange ghost");
+            Logger.error("No home tile set for orange ghost, using default");
         }
-        Vector2i[] tiles = new Vector2i[4];
-        tiles[GameModel.RED_GHOST]    = homeTileRed.orElse(new Vector2i(13, 14));
-        tiles[GameModel.PINK_GHOST]   = homeTilePink.orElse(new Vector2i(13, 17));
-        tiles[GameModel.CYAN_GHOST]   = homeTileCyan.orElse(new Vector2i(11, 17));
-        tiles[GameModel.ORANGE_GHOST] = homeTileOrange.orElse(new Vector2i(15, 17));
+        ghostPositions[GameModel.ORANGE_GHOST] = positionHalfTileRightOf(homeTileOrange.orElse(new Vector2i(15, 17)));
+    }
 
-        // each position is half tile right of home tile
-        ghostPositions = new Vector2f[4];
-        for (int i = 0; i < 4; ++i) {
-            ghostPositions[i] = tiles[i].scaled(TS).plus(HTS, 0).toFloatVec();
-        }
+    private Vector2f positionHalfTileRightOf(Vector2i tile) {
+        return tile.scaled(TS).plus(HTS, 0).toFloatVec();
     }
 
     private void setScatterTiles() {
