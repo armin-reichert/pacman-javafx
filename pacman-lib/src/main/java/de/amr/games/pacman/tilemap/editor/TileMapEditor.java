@@ -49,37 +49,35 @@ public class TileMapEditor  {
 
     static class Palette extends Canvas {
 
-        int numRows;
-        int numCols;
-        int gridSize;
-        byte[] valueAtIndex;
-        GraphicsContext g = getGraphicsContext2D();
-        TileMapRenderer renderer;
+        final int gridSize;
+        final int numRows;
+        final int numCols;
+        final TileMapRenderer renderer;
+        final byte[] valueAtIndex;
+        final GraphicsContext g;
         byte selectedValue;
         int selectedValueRow;
         int selectedValueCol;
 
-        Palette(int gridSize, int numRows, int numCols, byte valueEnd) {
+        public Palette(int gridSize, int numRows, int numCols, byte valueEnd, TileMapRenderer renderer) {
             this.gridSize = gridSize;
             this.numRows = numRows;
             this.numCols = numCols;
-            this.valueAtIndex = new byte[numRows*numCols];
+            this.renderer = renderer;
+            valueAtIndex = new byte[numRows*numCols];
             for (int i = 0; i < valueAtIndex.length; ++i) {
                 valueAtIndex[i] = i < valueEnd ? (byte) i : Tiles.EMPTY;
             }
+            g = getGraphicsContext2D();
             selectedValue = 0;
             selectedValueRow = -1;
             selectedValueCol = -1;
             setWidth(numCols * gridSize);
             setHeight(numRows * gridSize);
-            setOnMouseClicked(e -> selectedValue = pickValue(e));
+            setOnMouseClicked(this::pickValue);
         }
 
-        public void setRenderer(TileMapRenderer renderer) {
-            this.renderer = renderer;
-        }
-
-        void setValues(byte... values) {
+        public void setValues(byte... values) {
             for (int i = 0; i < values.length; ++i) {
                 if (i < valueAtIndex.length) {
                     valueAtIndex[i] = values[i];
@@ -87,13 +85,13 @@ public class TileMapEditor  {
             }
         }
 
-        byte pickValue(MouseEvent e) {
+        private void pickValue(MouseEvent e) {
             selectedValueRow = (int) e.getY() / gridSize;
             selectedValueCol = (int) e.getX() / gridSize;
-            return valueAtIndex[selectedValueRow * numCols + selectedValueCol];
+            selectedValue = valueAtIndex[selectedValueRow * numCols + selectedValueCol];
         }
 
-        void draw() {
+        public void draw() {
             g.setFill(Color.BLACK);
             g.fillRect(0, 0, getWidth(), getHeight());
             if (renderer != null) {
@@ -183,6 +181,14 @@ public class TileMapEditor  {
         }
         setMap(arcadeMaps[0]);
 
+        terrainMapRenderer = new TileMapEditorTerrainRenderer();
+        terrainMapRenderer.setWallStrokeColor(DEFAULT_WALL_STROKE_COLOR);
+        terrainMapRenderer.setWallFillColor(DEFAULT_WALL_FILL_COLOR);
+
+        foodMapRenderer = new FoodMapRenderer();
+        foodMapRenderer.setPelletColor(DEFAULT_FOOD_COLOR);
+        foodMapRenderer.setEnergizerColor(DEFAULT_FOOD_COLOR);
+
         ownerWindow = stage;
 
         createLayout();
@@ -194,17 +200,6 @@ public class TileMapEditor  {
 
         previewCanvas.widthProperty().bind(editCanvas.widthProperty());
         previewCanvas.heightProperty().bind(editCanvas.heightProperty());
-
-        terrainMapRenderer = new TileMapEditorTerrainRenderer();
-        terrainMapRenderer.setWallStrokeColor(DEFAULT_WALL_STROKE_COLOR);
-        terrainMapRenderer.setWallFillColor(DEFAULT_WALL_FILL_COLOR);
-
-        foodMapRenderer = new FoodMapRenderer();
-        foodMapRenderer.setPelletColor(DEFAULT_FOOD_COLOR);
-        foodMapRenderer.setEnergizerColor(DEFAULT_FOOD_COLOR);
-
-        terrainPalette.setRenderer(terrainMapRenderer);
-        foodPalette.setRenderer(foodMapRenderer);
 
         int fps = 30;
         clock = new Timeline(30, new KeyFrame(Duration.millis(1000.0/fps),e -> {
@@ -242,7 +237,7 @@ public class TileMapEditor  {
         var cbGridVisible = new CheckBox("Grid");
         cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
 
-        terrainPalette = new Palette(32, 6, 4, Tiles.TERRAIN_TILES_END);
+        terrainPalette = new Palette(32, 6, 4, Tiles.TERRAIN_TILES_END, terrainMapRenderer);
         terrainPalette.setValues(
             Tiles.EMPTY, Tiles.TUNNEL, Tiles.PAC_HOME, Tiles.DOOR,
             Tiles.SCATTER_TARGET_RED, Tiles.SCATTER_TARGET_PINK, Tiles.SCATTER_TARGET_CYAN, Tiles.SCATTER_TARGET_ORANGE,
@@ -252,7 +247,7 @@ public class TileMapEditor  {
             Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE
         );
 
-        foodPalette = new Palette(32, 4, 4, Tiles.FOOD_TILES_END);
+        foodPalette = new Palette(32, 4, 4, Tiles.FOOD_TILES_END, foodMapRenderer);
         foodPalette.setValues(
             Tiles.EMPTY, Tiles.PELLET, Tiles.ENERGIZER, Tiles.EMPTY
         );
