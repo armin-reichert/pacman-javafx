@@ -80,13 +80,13 @@ public class World {
 
         Optional<Vector2i> homeTileCyan = worldMap.terrain().tiles(HOME_CYAN_GHOST).findFirst();
         if (homeTileCyan.isEmpty()) {
-            Logger.error("No home tile set for cyan ghost, using default");
+            Logger.warn("No home tile set for cyan ghost, using default");
         }
         ghostPositions[GameModel.CYAN_GHOST] = positionHalfTileRightOf(homeTileCyan.orElse(new Vector2i(11, 17)));
 
         Optional<Vector2i> homeTileOrange = worldMap.terrain().tiles(HOME_ORANGE_GHOST).findFirst();
         if (homeTileOrange.isEmpty()) {
-            Logger.error("No home tile set for orange ghost, using default");
+            Logger.warn("No home tile set for orange ghost, using default");
         }
         ghostPositions[GameModel.ORANGE_GHOST] = positionHalfTileRightOf(homeTileOrange.orElse(new Vector2i(15, 17)));
     }
@@ -96,28 +96,31 @@ public class World {
     }
 
     private void setScatterTiles() {
+        ghostScatterTiles = new Vector2i[4];
+
         Optional<Vector2i> scatterTileRed = worldMap.terrain().tiles(SCATTER_TARGET_RED).findFirst();
         if (scatterTileRed.isEmpty()) {
-            Logger.error("No scatter target set for red ghost");
+            Logger.warn("No scatter target set for red ghost, using default");
         }
+        ghostScatterTiles[GameModel.RED_GHOST] = scatterTileRed.orElse(new Vector2i(0, numCols() - 3));
+
         Optional<Vector2i> scatterTilePink = worldMap.terrain().tiles(SCATTER_TARGET_PINK).findFirst();
         if (scatterTilePink.isEmpty()) {
-            Logger.error("No scatter target set for pink ghost");
+            Logger.warn("No scatter target set for pink ghost, using default");
         }
+        ghostScatterTiles[GameModel.PINK_GHOST] = scatterTilePink.orElse(new Vector2i(0, 3));
+
         Optional<Vector2i> scatterTileCyan = worldMap.terrain().tiles(SCATTER_TARGET_CYAN).findFirst();
         if (scatterTileCyan.isEmpty()) {
-            Logger.error("No scatter target set for cyan ghost");
+            Logger.warn("No scatter target set for cyan ghost, using default");
         }
+        ghostScatterTiles[GameModel.CYAN_GHOST] = scatterTileCyan.orElse(new Vector2i(numRows()-1, numCols()-1));
+
         Optional<Vector2i> scatterTileOrange = worldMap.terrain().tiles(SCATTER_TARGET_ORANGE).findFirst();
         if (scatterTileOrange.isEmpty()) {
-            Logger.error("No scatter target set for orange ghost");
+            Logger.warn("No scatter target set for orange ghost, using default");
         }
-        Vector2i[] tiles = new Vector2i[4];
-        tiles[GameModel.RED_GHOST] = scatterTileRed.orElse(new Vector2i(0, numCols() - 3));
-        tiles[GameModel.PINK_GHOST] = scatterTilePink.orElse(new Vector2i(0, 3));
-        tiles[GameModel.CYAN_GHOST] = scatterTileCyan.orElse(new Vector2i(numRows()-1, numCols()-1));
-        tiles[GameModel.ORANGE_GHOST] = scatterTileOrange.orElse(new Vector2i(numRows()-1, 0));
-        setGhostScatterTiles(tiles);
+        ghostScatterTiles[GameModel.ORANGE_GHOST] = scatterTileOrange.orElse(new Vector2i(numRows()-1, 0));
     }
 
     private void setPortals() {
