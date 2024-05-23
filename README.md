@@ -2,7 +2,7 @@
 
 ## ℹ️ Online version available
 
-Both games (2D) can now also be played online:
+An older release of Pac-Man and Ms. Pac-Man (2D) can be played online:
 
 - [GitHub](https://armin-reichert.github.io/webfx-pacman/)
 - [WebFX Demo Pac-Man](https://pacman.webfx.dev/)
