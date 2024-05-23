@@ -37,7 +37,7 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
             case Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE -> drawCorner(g, tile, content);
             case Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE ->
                 drawDCorner(g, tile, content);
-            case Tiles.DOOR -> drawDoor(g, tile, Color.PINK);
+            case Tiles.DOOR -> drawDoor(g, tile, doorColor);
             case Tiles.TUNNEL -> drawTunnel(g, tile);
             case Tiles.PAC_HOME -> drawPacHome(g, tile);
             case Tiles.HOME_RED_GHOST -> drawGhostHome(g, tile, Color.RED);
