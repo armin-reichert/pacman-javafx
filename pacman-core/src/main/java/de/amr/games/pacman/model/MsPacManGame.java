@@ -113,7 +113,8 @@ public class MsPacManGame extends AbstractPacManGame{
     @Override
     void buildDemoLevel() {
         levelNumber = 1;
-        var mapPath = String.format("/maps/mspacman/mspacman_%d.world", randomInt(1, 7));
+        mapNumber = randomInt(1, 7);
+        var mapPath = String.format("/maps/mspacman/mspacman_%d.world", mapNumber);
         var map = loadMap(mapPath);
         setWorldAndCreatePopulation(createMsPacManWorld(map));
         pac.setName("Ms. Pac-Man");
