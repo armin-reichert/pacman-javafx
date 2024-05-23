@@ -50,7 +50,6 @@ import static de.amr.games.pacman.tilemap.TileMapRenderer.getColorFromMap;
  */
 public class TileMapEditor  {
 
-
     static class Palette extends Canvas {
 
         int numRows;
@@ -146,7 +145,8 @@ public class TileMapEditor  {
     MenuBar menuBar;
     Menu menuFile;
     Menu menuMap;
-    Canvas canvas;
+    Canvas editCanvas;
+    Canvas previewCanvas;
     PropertyEditor terrainMapPropertiesEditor;
     PropertyEditor foodMapPropertiesEditor;
     Label infoLabel;
@@ -171,7 +171,6 @@ public class TileMapEditor  {
     BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
     BooleanProperty terrainEditedPy = new SimpleBooleanProperty(true);
     BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
-    BooleanProperty runtimePreviewPy = new SimpleBooleanProperty(false);
 
     public TileMapEditor(Stage stage) throws GameException  {
         arcadeMaps[0] = loadMap("/maps/pacman.world", GameVariant.PACMAN.getClass());
@@ -187,9 +186,12 @@ public class TileMapEditor  {
         ui = createUI();
         menuBar = createMenus();
 
-        canvas.heightProperty().bind(ui.heightProperty().multiply(0.95));
-        canvas.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> canvas.getHeight() * map.numCols() / map.numRows(), canvas.heightProperty()));
+        editCanvas.heightProperty().bind(ui.heightProperty().multiply(0.95));
+        editCanvas.widthProperty().bind(Bindings.createDoubleBinding(
+            () -> editCanvas.getHeight() * map.numCols() / map.numRows(), editCanvas.heightProperty()));
+
+        previewCanvas.widthProperty().bind(editCanvas.widthProperty());
+        previewCanvas.heightProperty().bind(editCanvas.heightProperty());
 
         terrainMapRenderer = new TileMapEditorTerrainRenderer();
         terrainMapRenderer.setWallStrokeColor(DEFAULT_WALL_STROKE_COLOR);
@@ -214,6 +216,78 @@ public class TileMapEditor  {
         }));
         clock.setCycleCount(Animation.INDEFINITE);
         clock.play();
+    }
+
+    private Pane createUI() {
+        openDialog = new FileChooser();
+        openDialog.setInitialDirectory(lastUsedDir);
+
+        editCanvas = new Canvas();
+        editCanvas.setOnMouseClicked(this::onMouseClickedOnCanvas);
+        editCanvas.setOnMouseMoved(this::onMouseMovedOverCanvas);
+
+        previewCanvas = new Canvas();
+
+        terrainMapPropertiesEditor = new PropertyEditor("Terrain");
+        foodMapPropertiesEditor = new PropertyEditor("Food");
+
+        var cbTerrainVisible = new CheckBox("Terrain");
+        cbTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
+
+        var cbFoodVisible = new CheckBox("Food");
+        cbFoodVisible.selectedProperty().bindBidirectional(foodVisiblePy);
+
+        var cbGridVisible = new CheckBox("Grid");
+        cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
+
+        terrainPalette = new Palette(32, 6, 4, Tiles.TERRAIN_TILES_END);
+        terrainPalette.setValues(
+            Tiles.EMPTY, Tiles.TUNNEL, Tiles.PAC_HOME, Tiles.DOOR,
+            Tiles.SCATTER_TARGET_RED, Tiles.SCATTER_TARGET_PINK, Tiles.SCATTER_TARGET_CYAN, Tiles.SCATTER_TARGET_ORANGE,
+            Tiles.HOME_RED_GHOST, Tiles.HOME_PINK_GHOST, Tiles.HOME_CYAN_GHOST, Tiles.HOME_ORANGE_GHOST,
+            Tiles.WALL_H, Tiles.WALL_V, Tiles.DWALL_H, Tiles.DWALL_V,
+            Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE,
+            Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE
+        );
+
+        foodPalette = new Palette(32, 4, 4, Tiles.FOOD_TILES_END);
+        foodPalette.setValues(
+            Tiles.EMPTY, Tiles.PELLET, Tiles.ENERGIZER, Tiles.EMPTY
+        );
+
+        TabPane tabPane = new TabPane();
+        var terrainPaletteTab = new Tab("Terrain", terrainPalette);
+        terrainPaletteTab.setClosable(false);
+        terrainPaletteTab.setOnSelectionChanged(e -> terrainEditedPy.set(terrainPaletteTab.isSelected()));
+        var foodPaletteTab = new Tab("Food", foodPalette);
+        foodPaletteTab.setClosable(false);
+        foodPaletteTab.setOnSelectionChanged(e -> terrainEditedPy.set(!foodPaletteTab.isSelected()));
+        tabPane.getTabs().addAll(terrainPaletteTab, foodPaletteTab);
+
+        infoLabel = new Label();
+
+        VBox controlsPane = new VBox();
+        controlsPane.setMinWidth(300);
+        controlsPane.setSpacing(10);
+        controlsPane.getChildren().add(new HBox(20, new Label("Show"), cbTerrainVisible, cbFoodVisible, cbGridVisible));
+        controlsPane.getChildren().add(infoLabel);
+        controlsPane.getChildren().add(tabPane);
+        controlsPane.getChildren().add(terrainMapPropertiesEditor);
+        controlsPane.getChildren().add(foodMapPropertiesEditor);
+
+        terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
+        foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
+
+        var editCanvasScrollPane = new ScrollPane(editCanvas);
+        editCanvasScrollPane.setFitToHeight(true);
+
+        var previewCanvasScrollPane = new ScrollPane(previewCanvas);
+        previewCanvasScrollPane.setFitToHeight(true);
+
+        var hbox = new HBox(editCanvasScrollPane, controlsPane, previewCanvasScrollPane);
+        hbox.setSpacing(10);
+
+        return new BorderPane(hbox);
     }
 
     private void updatePaths() {
@@ -273,10 +347,6 @@ public class TileMapEditor  {
         return menuMap;
     }
 
-    public void setRuntimePreview(boolean state) {
-        runtimePreviewPy.set(state);
-    }
-
     public MenuBar createMenus() {
         menuFile = new Menu("File");
 
@@ -331,84 +401,11 @@ public class TileMapEditor  {
         return menuBar;
     }
 
-    private Pane createUI() {
-        openDialog = new FileChooser();
-        openDialog.setInitialDirectory(lastUsedDir);
-
-        canvas = new Canvas();
-        canvas.setOnMouseClicked(this::onMouseClickedOnCanvas);
-        canvas.setOnMouseMoved(this::onMouseMovedOverCanvas);
-
-        terrainMapPropertiesEditor = new PropertyEditor("Terrain");
-        foodMapPropertiesEditor = new PropertyEditor("Food");
-
-        var cbTerrainVisible = new CheckBox("Terrain");
-        cbTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
-
-        var cbFoodVisible = new CheckBox("Food");
-        cbFoodVisible.selectedProperty().bindBidirectional(foodVisiblePy);
-
-        var cbGridVisible = new CheckBox("Grid");
-        cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
-
-        var cbRuntimePreview = new CheckBox("Runtime Preview");
-        Font font = cbRuntimePreview.getFont();
-        cbRuntimePreview.setFont(Font.font(font.getFamily(), FontWeight.BOLD, 1.5*font.getSize()));
-        cbRuntimePreview.selectedProperty().bindBidirectional(runtimePreviewPy);
-
-        terrainPalette = new Palette(32, 6, 4, Tiles.TERRAIN_TILES_END);
-        terrainPalette.setValues(
-            Tiles.EMPTY, Tiles.TUNNEL, Tiles.PAC_HOME, Tiles.DOOR,
-            Tiles.SCATTER_TARGET_RED, Tiles.SCATTER_TARGET_PINK, Tiles.SCATTER_TARGET_CYAN, Tiles.SCATTER_TARGET_ORANGE,
-            Tiles.HOME_RED_GHOST, Tiles.HOME_PINK_GHOST, Tiles.HOME_CYAN_GHOST, Tiles.HOME_ORANGE_GHOST,
-            Tiles.WALL_H, Tiles.WALL_V, Tiles.DWALL_H, Tiles.DWALL_V,
-            Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE,
-            Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE
-        );
-
-        foodPalette = new Palette(32, 4, 4, Tiles.FOOD_TILES_END);
-        foodPalette.setValues(
-            Tiles.EMPTY, Tiles.PELLET, Tiles.ENERGIZER, Tiles.EMPTY
-        );
-
-        TabPane tabPane = new TabPane();
-        var terrainPaletteTab = new Tab("Terrain", terrainPalette);
-        terrainPaletteTab.setClosable(false);
-        terrainPaletteTab.setOnSelectionChanged(e -> terrainEditedPy.set(terrainPaletteTab.isSelected()));
-        var foodPaletteTab = new Tab("Food", foodPalette);
-        foodPaletteTab.setClosable(false);
-        foodPaletteTab.setOnSelectionChanged(e -> terrainEditedPy.set(!foodPaletteTab.isSelected()));
-        tabPane.getTabs().addAll(terrainPaletteTab, foodPaletteTab);
-
-        infoLabel = new Label();
-
-        VBox controlsPane = new VBox();
-        controlsPane.setMinWidth(300);
-        controlsPane.setSpacing(10);
-        controlsPane.getChildren().add(cbRuntimePreview);
-        controlsPane.getChildren().add(new HBox(20, new Label("Show"), cbTerrainVisible, cbFoodVisible, cbGridVisible));
-        controlsPane.getChildren().add(infoLabel);
-        controlsPane.getChildren().add(tabPane);
-        controlsPane.getChildren().add(terrainMapPropertiesEditor);
-        controlsPane.getChildren().add(foodMapPropertiesEditor);
-
-        terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
-        foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
-
-        var scroll = new ScrollPane(canvas);
-        scroll.setFitToHeight(true);
-
-        var hbox = new HBox(scroll, controlsPane);
-        hbox.setSpacing(10);
-
-        return new BorderPane(hbox);
-    }
-
     // TODO use own canvas or Text control
     void drawBlueScreen(Exception drawException) {
-        GraphicsContext g = canvas.getGraphicsContext2D();
+        GraphicsContext g = editCanvas.getGraphicsContext2D();
         g.setFill(Color.BLUE);
-        g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        g.fillRect(0, 0, editCanvas.getWidth(), editCanvas.getHeight());
         g.setStroke(Color.WHITE);
         g.setFont(Font.font("Monospace", 12));
         try {
@@ -422,20 +419,19 @@ public class TileMapEditor  {
         }
     }
 
-    void draw() {
-        GraphicsContext g = canvas.getGraphicsContext2D();
+    void drawEditCanvas() {
+        GraphicsContext g = editCanvas.getGraphicsContext2D();
         g.setFill(Color.BLACK);
-        g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        g.fillRect(0, 0, editCanvas.getWidth(), editCanvas.getHeight());
         drawGrid(g);
-
         if (terrainVisiblePy.get()) {
             updatePaths();
             terrainMapRenderer.setScaling(tilePx() / 8);
             terrainMapRenderer.setWallStrokeColor(getColorFromMap(map.terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
             terrainMapRenderer.setWallFillColor(getColorFromMap(map.terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
             terrainMapRenderer.setDoorColor(getColorFromMap(map.terrain(), "door_color", DEFAULT_DOOR_COLOR));
+            terrainMapRenderer.runtimePreview = false;
             terrainMapRenderer.drawMap(g, map.terrain());
-            terrainMapRenderer.runtimePreview = runtimePreviewPy.get();
         }
         if (foodVisiblePy.get()) {
             foodMapRenderer.setScaling(tilePx() / 8);
@@ -450,6 +446,33 @@ public class TileMapEditor  {
             g.setLineWidth(1);
             g.strokeRect(hoveredTile.x() * t1, hoveredTile.y() * t1, t1, t1);
         }
+    }
+
+    void drawPreviewCanvas() {
+        GraphicsContext g = previewCanvas.getGraphicsContext2D();
+        g.setFill(Color.BLACK);
+        g.fillRect(0, 0, previewCanvas.getWidth(), previewCanvas.getHeight());
+        if (terrainVisiblePy.get()) {
+            updatePaths();
+            terrainMapRenderer.setScaling(tilePx() / 8);
+            terrainMapRenderer.setWallStrokeColor(getColorFromMap(map.terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
+            terrainMapRenderer.setWallFillColor(getColorFromMap(map.terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
+            terrainMapRenderer.setDoorColor(getColorFromMap(map.terrain(), "door_color", DEFAULT_DOOR_COLOR));
+            terrainMapRenderer.runtimePreview = true;
+            terrainMapRenderer.drawMap(g, map.terrain());
+        }
+        if (foodVisiblePy.get()) {
+            foodMapRenderer.setScaling(tilePx() / 8);
+            Color foodColor = getColorFromMap(map.food(), "food_color", DEFAULT_FOOD_COLOR);
+            foodMapRenderer.setEnergizerColor(foodColor);
+            foodMapRenderer.setPelletColor(foodColor);
+            foodMapRenderer.drawMap(g, map.food());
+        }
+    }
+
+    void draw() {
+        drawEditCanvas();
+        drawPreviewCanvas();
         if (terrainEditedPy.get()) {
             terrainPalette.draw();
         } else {
@@ -458,15 +481,15 @@ public class TileMapEditor  {
     }
 
     void drawGrid(GraphicsContext g) {
-        if (gridVisiblePy.get() && !runtimePreviewPy.get()) {
+        if (gridVisiblePy.get()) {
             g.setStroke(Color.LIGHTGRAY);
             g.setLineWidth(0.25);
             double gridSize = tilePx();
             for (int row = 1; row < map.terrain().numRows(); ++row) {
-                g.strokeLine(0, row * gridSize, canvas.getWidth(), row * gridSize);
+                g.strokeLine(0, row * gridSize, editCanvas.getWidth(), row * gridSize);
             }
             for (int col = 1; col < map.terrain().numCols(); ++col) {
-                g.strokeLine(col * gridSize, 0, col * gridSize, canvas.getHeight());
+                g.strokeLine(col * gridSize, 0, col * gridSize, editCanvas.getHeight());
             }
         }
     }
@@ -492,7 +515,7 @@ public class TileMapEditor  {
      * @return pixels used by one tile at current window zoom
      */
     double tilePx() {
-        return canvas.getHeight() / map.numRows();
+        return editCanvas.getHeight() / map.numRows();
     }
 
     /**

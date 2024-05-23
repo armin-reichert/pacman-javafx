@@ -38,6 +38,5 @@ public class TileMapEditorApp extends Application  {
         stage.show();
 
         editor.loadMap(editor.getMsPacManMap(1));
-        editor.setRuntimePreview(true);
     }
 }

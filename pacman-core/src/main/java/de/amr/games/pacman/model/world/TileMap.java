@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.world;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
@@ -16,8 +17,7 @@ import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Direction.LEFT;
-import static de.amr.games.pacman.lib.Direction.RIGHT;
+import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
@@ -116,23 +116,37 @@ public class TileMap {
             .forEach(wallPaths::add);
 
         // Paths starting at left and right maze border leading inside maze
-        var handlesLeft = new ArrayList<Vector2i>();
-        var handlesRight = new ArrayList<Vector2i>();
+        var handlesLeft = new HashMap<Vector2i, Direction>();
+        var handlesRight = new HashMap<Vector2i, Direction>();
         for (int row = 0; row < numRows(); ++row) {
             if (get(row, 0) == Tiles.DWALL_H) {
-                handlesLeft.add(new Vector2i(0, row));
+                handlesLeft.put(new Vector2i(0, row), RIGHT);
+            }
+            if (get(row, 0) == Tiles.DCORNER_SE) {
+                handlesLeft.put(new Vector2i(0, row), UP);
+            }
+            if (get(row, 0) == Tiles.DCORNER_NE) {
+                handlesLeft.put(new Vector2i(0, row), DOWN);
             }
             if (get(row, numCols() - 1) == Tiles.DWALL_H) {
-                handlesRight.add(new Vector2i(numCols() - 1, row));
+                handlesRight.put(new Vector2i(numCols() - 1, row), LEFT);
+            }
+            if (get(row, numCols() - 1) == Tiles.DCORNER_SW) {
+                handlesLeft.put(new Vector2i(0, row), UP);
+            }
+            if (get(row, numCols() - 1) == Tiles.DCORNER_NW) {
+                handlesLeft.put(new Vector2i(0, row), DOWN);
             }
         }
 
-        handlesLeft.stream().filter(isUnexplored)
-            .map(handle -> TileMapPath.build(this, explored, handle, RIGHT))
+        handlesLeft.entrySet().stream()
+            .filter(entry -> isUnexplored.test(entry.getKey()))
+            .map(entry -> TileMapPath.build(this, explored, entry.getKey(), entry.getValue()))
             .forEach(dwallPaths::add);
 
-        handlesRight.stream().filter(isUnexplored)
-            .map(handle -> TileMapPath.build(this, explored, handle, LEFT))
+        handlesRight.entrySet().stream()
+            .filter(entry -> isUnexplored.test(entry.getKey()))
+            .map(entry -> TileMapPath.build(this, explored, entry.getKey(), entry.getValue()))
             .forEach(dwallPaths::add);
 
         // find ghost house, doors are included as walls!
