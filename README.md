@@ -2,7 +2,7 @@
 
 ## ℹ️ Online version available
 
-Both games (2D) can now also be played online:
+An older release of Pac-Man and Ms. Pac-Man (2D) can be played online:
 
 - [GitHub](https://armin-reichert.github.io/webfx-pacman/)
 - [WebFX Demo Pac-Man](https://pacman.webfx.dev/)
@@ -88,7 +88,9 @@ In the 2D or 3D subproject folder, call `..\mvnw javafx:run`.
 ## How to use the application
 
 Start screen:
-- <kbd>V</kbd> Switches between Pac-Man and Ms. Pac-Man
+- <kbd>V</kbd>, <kbd>LEFT</kbd> Select next game variant
+- <kbd>RIGHT</kbd> Select previous game variant
+- <kbd>ENTER</kbd> or <kbd>SPACE</kbd> Start game 
 
 Intro screen:
 - <kbd>5</kbd> Adds one credit ("inserts coin")
