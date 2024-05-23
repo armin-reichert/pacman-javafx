@@ -21,9 +21,7 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
 
     public void drawMap(GraphicsContext g, TileMap map) {
         if (runtimePreview) {
-            drawTripleStrokePaths(g, map);
-            map.tiles(Tiles.DOOR).forEach(tile -> drawDoor(g, tile, doorColor));
-            drawSingleStrokePaths(g, map);
+            super.drawMap(g, map);
         } else {
           map.tiles().forEach(tile -> drawTile(g, tile, map.get(tile)));
         }

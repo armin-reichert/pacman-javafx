@@ -33,7 +33,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -145,7 +144,9 @@ public class TileMapEditor  {
         try {
             var url = loadingClass.getResource(path);
             if (url != null) {
-                return new WorldMap(url);
+                var worldMap = new WorldMap(url);
+                worldMap.terrain().computePaths();
+                return worldMap;
             }
         } catch (Exception x) {
             Logger.error(x);
@@ -337,6 +338,7 @@ public class TileMapEditor  {
         drawGrid(g);
 
         if (terrainVisiblePy.get()) {
+            map.terrain().computePaths(); //TODO recompute paths only when needed
             terrainMapRenderer.setScaling(tilePx() / 8);
             terrainMapRenderer.setWallStrokeColor(getColorFromMap(map.terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
             terrainMapRenderer.setWallFillColor(getColorFromMap(map.terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
@@ -390,6 +392,7 @@ public class TileMapEditor  {
 
     public void loadMap(WorldMap other) {
         map = WorldMap.copyOf(other);
+        map.terrain().computePaths();
         currentMapFile = null;
         foodMapPropertiesEditor.setEditedProperties(map.food().getProperties());
         terrainMapPropertiesEditor.setEditedProperties(map.terrain().getProperties());
@@ -447,6 +450,7 @@ public class TileMapEditor  {
             map.terrain().set(tile, terrainPalette.selectedValue);
             updateInfo();
         }
+        map.terrain().computePaths(); // ensure paths are up-to-date
     }
 
     void editFoodTile(MouseEvent e) {

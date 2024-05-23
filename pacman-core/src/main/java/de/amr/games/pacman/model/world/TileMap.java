@@ -11,12 +11,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Direction.LEFT;
+import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
@@ -28,6 +28,9 @@ public class TileMap {
 
     private Properties properties = new Properties();
     private final byte[][] data;
+
+    private List<TileMapPath> wallPaths = new ArrayList<>();
+    private List<TileMapPath> dwallPaths = new ArrayList<>();
 
     public static TileMap parse(List<String> lines, byte valueLimit) {
         // First pass: read property section and determine data section size
@@ -99,12 +102,57 @@ public class TileMap {
         this.data = data;
     }
 
-    public void validateSize(int numRows, int numCols) {
-        if (numCols() != numCols || numRows() != numRows) {
-            throw new IllegalArgumentException(
-                String.format("Map must have %d rows and %d columns but has %d rows and %d columns",
-                    numRows, numCols, numRows(), numCols()));
+    public void computePaths() {
+        Logger.debug("Compute paths for {}", this);
+        wallPaths.clear();
+        dwallPaths.clear();
+
+        var explored = new BitSet();
+
+        tiles(Tiles.CORNER_NW)
+            .filter(corner -> !explored.get(index(corner)))
+            .map(corner -> TileMapPath.build(this, explored, corner, LEFT))
+            .forEach(wallPaths::add);
+
+        // Paths starting at left and right maze border (over and under tunnel ends)
+        var handlesLeft = new ArrayList<Vector2i>();
+        var handlesRight = new ArrayList<Vector2i>();
+        for (int row = 0; row < numRows(); ++row) {
+            if (get(row, 0) == Tiles.TUNNEL) {
+                handlesLeft.add(new Vector2i(0, row - 1));
+                handlesLeft.add(new Vector2i(0, row + 1));
+            }
+            if (get(row, numCols() - 1) == Tiles.TUNNEL) {
+                handlesRight.add(new Vector2i(numCols() - 1, row - 1));
+                handlesRight.add(new Vector2i(numCols() - 1, row + 1));
+            }
         }
+
+        handlesLeft.stream()
+            .filter(handle -> !explored.get(index(handle)))
+            .map(handle -> TileMapPath.build(this, explored, handle, RIGHT))
+            .forEach(dwallPaths::add);
+
+        handlesRight.stream()
+            .filter(handle -> !explored.get(index(handle)))
+            .map(handle -> TileMapPath.build(this, explored, handle, LEFT))
+            .forEach(dwallPaths::add);
+
+        // ghost house, doors are included as walls!
+        tiles(Tiles.DCORNER_NW)
+            .filter(corner -> !explored.get(index(corner)))
+            .map(corner -> TileMapPath.build(this, explored, corner, LEFT))
+            .forEach(dwallPaths::add);
+
+        Logger.debug("Paths computed, {} single wall paths, {} double wall paths", wallPaths.size(), dwallPaths.size());
+    }
+
+    public Stream<TileMapPath> wallPaths() {
+        return wallPaths.stream();
+    }
+
+    public Stream<TileMapPath> dwallPaths() {
+        return dwallPaths.stream();
     }
 
     /**

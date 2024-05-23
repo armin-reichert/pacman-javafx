@@ -15,12 +15,6 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-
-import static de.amr.games.pacman.lib.Direction.LEFT;
-import static de.amr.games.pacman.lib.Direction.RIGHT;
-
 /**
  * @author Armin Reichert
  */
@@ -53,9 +47,13 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     public void drawMap(GraphicsContext g, TileMap map) {
-        drawTripleStrokePaths(g, map);
+        double lineWidth = lineWidth(g);
+        map.dwallPaths().forEach(path -> {
+            drawPath(g, map, path, false,  3*lineWidth, wallStrokeColor, null);
+            drawPath(g, map, path, false,  lineWidth, wallFillColor, null);
+        });
+        map.wallPaths().forEach(path -> drawPath(g, map, path, true, lineWidth, wallStrokeColor, wallFillColor));
         map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, door, doorColor));
-        drawSingleStrokePaths(g, map);
     }
 
     @Override
@@ -83,58 +81,6 @@ public class TerrainMapRenderer implements TileMapRenderer {
             return 1;
         }
         return 0.75;
-    }
-
-    public void drawSingleStrokePaths(GraphicsContext g, TileMap map) {
-        var explored = new BitSet();
-        double lineWidth = lineWidth(g);
-        map.tiles(Tiles.CORNER_NW)
-            .filter(corner -> !explored.get(map.index(corner)))
-            .map(corner -> TileMapPath.build(map, explored, corner, LEFT))
-            .forEach(path -> drawPath(g, map, path, true, lineWidth, wallStrokeColor, wallFillColor));
-    }
-
-    /*
-     * Draws a path with an inside stroke of wall fill color and two outside strokes of wall stroke color.
-     */
-    public void drawTripleStrokePath(GraphicsContext g, TileMap map, TileMapPath path) {
-        double lineWidth = lineWidth(g);
-        drawPath(g, map, path, false,  3*lineWidth, wallStrokeColor, null);
-        drawPath(g, map, path, false,  lineWidth, wallFillColor, null);
-    }
-
-    public void drawTripleStrokePaths(GraphicsContext g, TileMap map) {
-        var explored = new BitSet();
-
-        // Paths starting at left and right maze border (over and under tunnel ends)
-        var handlesLeft = new ArrayList<Vector2i>();
-        var handlesRight = new ArrayList<Vector2i>();
-        for (int row = 0; row < map.numRows(); ++row) {
-            if (map.get(row, 0) == Tiles.TUNNEL) {
-                handlesLeft.add(new Vector2i(0, row - 1));
-                handlesLeft.add(new Vector2i(0, row + 1));
-            }
-            if (map.get(row, map.numCols() - 1) == Tiles.TUNNEL) {
-                handlesRight.add(new Vector2i(map.numCols() - 1, row - 1));
-                handlesRight.add(new Vector2i(map.numCols() - 1, row + 1));
-            }
-        }
-
-        handlesLeft.stream()
-            .filter(handle -> !explored.get(map.index(handle)))
-            .map(handle -> TileMapPath.build(map, explored, handle, RIGHT))
-            .forEach(path -> drawTripleStrokePath(g, map, path));
-
-        handlesRight.stream()
-            .filter(handle -> !explored.get(map.index(handle)))
-            .map(handle -> TileMapPath.build(map, explored, handle, LEFT))
-            .forEach(path -> drawTripleStrokePath(g, map, path));
-
-        // ghost house, doors are included as walls!
-        map.tiles(Tiles.DCORNER_NW)
-            .filter(corner -> !explored.get(map.index(corner)))
-            .map(corner -> TileMapPath.build(map, explored, corner, LEFT))
-            .forEach(path -> drawTripleStrokePath(g, map, path));
     }
 
     public Vector2f center(Vector2i tile) {

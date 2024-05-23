@@ -22,7 +22,7 @@ import static java.util.Collections.unmodifiableList;
  */
 public class World {
 
-    private final WorldMap map;
+    private final WorldMap worldMap;
 
     private final BitSet eaten;
     private final int totalFoodCount;
@@ -43,40 +43,40 @@ public class World {
      * @param worldMap terrain+food map
      */
     public World(WorldMap worldMap) {
-        this.map = checkNotNull(worldMap);
-        setScatterTiles(map);
-        setPacPosition(map);
-        setGhostPositions(map);
-        setPortals(map);
+        this.worldMap = checkNotNull(worldMap);
+        setScatterTiles();
+        setPacPosition();
+        setGhostPositions();
+        setPortals();
+        worldMap.terrain().computePaths();
         energizerTiles = tiles().filter(this::isEnergizerTile).toList();
         eaten = new BitSet(numCols() * numRows());
         totalFoodCount = (int) tiles().filter(this::isFoodTile).count();
         uneatenFoodCount = totalFoodCount;
     }
 
-    private void setPacPosition(WorldMap map) {
-        Optional<Vector2i> pacHomeTile = map.terrain().tiles(PAC_HOME).findFirst();
+    private void setPacPosition() {
+        Optional<Vector2i> pacHomeTile = worldMap.terrain().tiles(PAC_HOME).findFirst();
         if (pacHomeTile.isEmpty()) {
             Logger.error("No Pac home tile found in map");
         }
-        Vector2f position = pacHomeTile.orElse(new Vector2i(13, 26)).toFloatVec().scaled(TS).plus(HTS, 0);
-        setPacPosition(position);
+        pacPosition = pacHomeTile.orElse(new Vector2i(13, 26)).toFloatVec().scaled(TS).plus(HTS, 0);
     }
 
-    private void setGhostPositions(WorldMap map) {
-        Optional<Vector2i> homeTileRed = map.terrain().tiles(HOME_RED_GHOST).findFirst();
+    private void setGhostPositions() {
+        Optional<Vector2i> homeTileRed = worldMap.terrain().tiles(HOME_RED_GHOST).findFirst();
         if (homeTileRed.isEmpty()) {
             Logger.error("No home tile set for red ghost");
         }
-        Optional<Vector2i> homeTilePink = map.terrain().tiles(HOME_PINK_GHOST).findFirst();
+        Optional<Vector2i> homeTilePink = worldMap.terrain().tiles(HOME_PINK_GHOST).findFirst();
         if (homeTilePink.isEmpty()) {
             Logger.error("No home tile set for pink ghost");
         }
-        Optional<Vector2i> homeTileCyan = map.terrain().tiles(HOME_CYAN_GHOST).findFirst();
+        Optional<Vector2i> homeTileCyan = worldMap.terrain().tiles(HOME_CYAN_GHOST).findFirst();
         if (homeTileCyan.isEmpty()) {
             Logger.error("No home tile set for cyan ghost");
         }
-        Optional<Vector2i> homeTileOrange = map.terrain().tiles(HOME_ORANGE_GHOST).findFirst();
+        Optional<Vector2i> homeTileOrange = worldMap.terrain().tiles(HOME_ORANGE_GHOST).findFirst();
         if (homeTileOrange.isEmpty()) {
             Logger.error("No home tile set for orange ghost");
         }
@@ -85,28 +85,28 @@ public class World {
         tiles[GameModel.PINK_GHOST]   = homeTilePink.orElse(new Vector2i(13, 17));
         tiles[GameModel.CYAN_GHOST]   = homeTileCyan.orElse(new Vector2i(11, 17));
         tiles[GameModel.ORANGE_GHOST] = homeTileOrange.orElse(new Vector2i(15, 17));
+
         // each position is half tile right of home tile
-        Vector2f[] positions = Stream.of(tiles)
-            .map(Vector2i::toFloatVec)
-            .map(tile -> tile.scaled(TS).plus(HTS, 0))
-            .toArray(Vector2f[]::new);
-        setGhostPositions(positions);
+        ghostPositions = new Vector2f[4];
+        for (int i = 0; i < 4; ++i) {
+            ghostPositions[i] = tiles[i].scaled(TS).plus(HTS, 0).toFloatVec();
+        }
     }
 
-    private void setScatterTiles(WorldMap map) {
-        Optional<Vector2i> scatterTileRed = map.terrain().tiles(SCATTER_TARGET_RED).findFirst();
+    private void setScatterTiles() {
+        Optional<Vector2i> scatterTileRed = worldMap.terrain().tiles(SCATTER_TARGET_RED).findFirst();
         if (scatterTileRed.isEmpty()) {
             Logger.error("No scatter target set for red ghost");
         }
-        Optional<Vector2i> scatterTilePink = map.terrain().tiles(SCATTER_TARGET_PINK).findFirst();
+        Optional<Vector2i> scatterTilePink = worldMap.terrain().tiles(SCATTER_TARGET_PINK).findFirst();
         if (scatterTilePink.isEmpty()) {
             Logger.error("No scatter target set for pink ghost");
         }
-        Optional<Vector2i> scatterTileCyan = map.terrain().tiles(SCATTER_TARGET_CYAN).findFirst();
+        Optional<Vector2i> scatterTileCyan = worldMap.terrain().tiles(SCATTER_TARGET_CYAN).findFirst();
         if (scatterTileCyan.isEmpty()) {
             Logger.error("No scatter target set for cyan ghost");
         }
-        Optional<Vector2i> scatterTileOrange = map.terrain().tiles(SCATTER_TARGET_ORANGE).findFirst();
+        Optional<Vector2i> scatterTileOrange = worldMap.terrain().tiles(SCATTER_TARGET_ORANGE).findFirst();
         if (scatterTileOrange.isEmpty()) {
             Logger.error("No scatter target set for orange ghost");
         }
@@ -118,13 +118,13 @@ public class World {
         setGhostScatterTiles(tiles);
     }
 
-    private void setPortals(WorldMap map) {
+    private void setPortals() {
         portals = new ArrayList<>();
         int lastColumn = numCols() - 1;
         for (int row = 0; row < numRows(); ++row) {
             var leftBorderTile = v2i(0, row);
             var rightBorderTile = v2i(lastColumn, row);
-            if (map.terrain(row, 0) == TUNNEL && map.terrain(row, lastColumn) == TUNNEL) {
+            if (worldMap.terrain(row, 0) == TUNNEL && worldMap.terrain(row, lastColumn) == TUNNEL) {
                 portals.add(new Portal(leftBorderTile, rightBorderTile, 2));
             }
         }
@@ -140,24 +140,24 @@ public class World {
     }
 
     public int numCols() {
-        return map.numCols();
+        return worldMap.numCols();
     }
 
     public int numRows() {
-        return map.numRows();
+        return worldMap.numRows();
     }
 
     public Stream<Vector2i> tiles() {
-        return map.tiles();
+        return worldMap.tiles();
     }
 
     public WorldMap map() {
-        return map;
+        return worldMap;
     }
 
     public boolean insideBounds(Vector2i tile) {
         checkTileNotNull(tile);
-        return !map.terrain().outOfBounds(tile.y(), tile.x());
+        return !worldMap.terrain().outOfBounds(tile.y(), tile.x());
     }
 
     public boolean containsPoint(double x, double y) {
@@ -235,10 +235,10 @@ public class World {
     }
 
     public boolean isBlockedTile(Vector2i tile) {
-        return insideBounds(tile) && isTerrainBlocked(map.terrain(tile));
+        return insideBounds(tile) && isBlockedTerrain(worldMap.terrain(tile));
     }
 
-    private boolean isTerrainBlocked(byte content) {
+    private boolean isBlockedTerrain(byte content) {
         return content == WALL_H  || content == WALL_V
             || content == DWALL_H || content == DWALL_V
             || content == CORNER_NE  || content == CORNER_NW  || content == CORNER_SE  || content == CORNER_SW
@@ -249,7 +249,7 @@ public class World {
         if (!insideBounds(tile)) {
             return false;
         }
-        return map.terrain(tile) == TUNNEL;
+        return worldMap.terrain(tile) == TUNNEL;
     }
 
     public boolean isIntersection(Vector2i tile) {
@@ -281,7 +281,7 @@ public class World {
             return; // raise error?
         }
         if (hasFoodAt(tile)) {
-            eaten.set(map.food().index(tile));
+            eaten.set(worldMap.food().index(tile));
             --uneatenFoodCount;
         }
     }
@@ -290,27 +290,27 @@ public class World {
         if (!insideBounds(tile)) {
             return false;
         }
-        return map.food(tile) != EMPTY;
+        return worldMap.food(tile) != EMPTY;
     }
 
     public boolean isEnergizerTile(Vector2i tile) {
         if (!insideBounds(tile)) {
             return false;
         }
-        return map.food(tile) == ENERGIZER;
+        return worldMap.food(tile) == ENERGIZER;
     }
 
     public boolean hasFoodAt(Vector2i tile) {
         if (!insideBounds(tile)) {
             return false;
         }
-        return map.food(tile) != EMPTY && !eaten.get(map.food().index(tile));
+        return worldMap.food(tile) != EMPTY && !eaten.get(worldMap.food().index(tile));
     }
 
     public boolean hasEatenFoodAt(Vector2i tile) {
         if (!insideBounds(tile)) {
             return false;
         }
-        return eaten.get(map.food().index(tile));
+        return eaten.get(worldMap.food().index(tile));
     }
 }
