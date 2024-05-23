@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -108,9 +109,9 @@ public class TileMap {
         dwallPaths.clear();
 
         var explored = new BitSet();
+        Predicate<Vector2i> isUnexplored = tile -> !explored.get(index(tile));
 
-        tiles(Tiles.CORNER_NW)
-            .filter(corner -> !explored.get(index(corner)))
+        tiles(Tiles.CORNER_NW).filter(isUnexplored)
             .map(corner -> TileMapPath.build(this, explored, corner, LEFT))
             .forEach(wallPaths::add);
 
@@ -126,19 +127,16 @@ public class TileMap {
             }
         }
 
-        handlesLeft.stream()
-            .filter(handle -> !explored.get(index(handle)))
+        handlesLeft.stream().filter(isUnexplored)
             .map(handle -> TileMapPath.build(this, explored, handle, RIGHT))
             .forEach(dwallPaths::add);
 
-        handlesRight.stream()
-            .filter(handle -> !explored.get(index(handle)))
+        handlesRight.stream().filter(isUnexplored)
             .map(handle -> TileMapPath.build(this, explored, handle, LEFT))
             .forEach(dwallPaths::add);
 
-        // ghost house, doors are included as walls!
-        tiles(Tiles.DCORNER_NW)
-            .filter(corner -> !explored.get(index(corner)))
+        // find ghost house, doors are included as walls!
+        tiles(Tiles.DCORNER_NW).filter(isUnexplored)
             .map(corner -> TileMapPath.build(this, explored, corner, LEFT))
             .forEach(dwallPaths::add);
 
