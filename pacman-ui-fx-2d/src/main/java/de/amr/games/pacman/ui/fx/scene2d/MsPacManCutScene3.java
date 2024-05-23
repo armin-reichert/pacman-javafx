@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui.fx.scene2d;
 
 import de.amr.games.pacman.controller.MsPacManIntermission3;
 import de.amr.games.pacman.lib.TickTimer;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui.fx.rendering2d.ClapperboardAnimation;
 import de.amr.games.pacman.ui.fx.rendering2d.MsPacManGamePacAnimations;

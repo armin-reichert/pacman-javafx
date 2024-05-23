@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.tilemap.editor;
+package de.amr.games.pacman.ui.fx.tilemap.editor;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

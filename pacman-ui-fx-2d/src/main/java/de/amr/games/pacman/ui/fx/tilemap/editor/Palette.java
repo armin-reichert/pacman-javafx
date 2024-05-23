@@ -2,11 +2,11 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.tilemap.editor;
+package de.amr.games.pacman.ui.fx.tilemap.editor;
 
 import de.amr.games.pacman.lib.Tiles;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.tilemap.TileMapRenderer;
+import de.amr.games.pacman.ui.fx.tilemap.TileMapRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;

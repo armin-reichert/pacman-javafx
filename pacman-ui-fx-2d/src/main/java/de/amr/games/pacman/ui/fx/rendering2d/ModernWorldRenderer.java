@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui.fx.rendering2d;
 
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.tilemap.FoodMapRenderer;
-import de.amr.games.pacman.tilemap.TerrainMapRenderer;
-import de.amr.games.pacman.tilemap.TileMapRenderer;
+import de.amr.games.pacman.ui.fx.tilemap.FoodMapRenderer;
+import de.amr.games.pacman.ui.fx.tilemap.TerrainMapRenderer;
+import de.amr.games.pacman.ui.fx.tilemap.TileMapRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;

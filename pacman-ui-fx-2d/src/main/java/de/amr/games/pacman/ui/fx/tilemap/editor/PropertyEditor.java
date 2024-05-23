@@ -1,4 +1,4 @@
-package de.amr.games.pacman.tilemap.editor;
+package de.amr.games.pacman.ui.fx.tilemap.editor;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.steering.RuleBasedPacSteering;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.lib.WorldMap;
+import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
 import java.io.IOException;

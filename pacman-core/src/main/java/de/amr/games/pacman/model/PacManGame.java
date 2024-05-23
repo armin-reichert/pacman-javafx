@@ -5,7 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.*;
+import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.NavPoint;
+import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.model.world.World;

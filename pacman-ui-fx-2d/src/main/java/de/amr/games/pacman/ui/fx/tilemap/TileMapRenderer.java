@@ -2,10 +2,10 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.tilemap;
+package de.amr.games.pacman.ui.fx.tilemap;
 
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.TileMap;
+import de.amr.games.pacman.lib.Vector2i;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;

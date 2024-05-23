@@ -6,12 +6,9 @@ package de.amr.games.pacman.ui.fx.v3d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.fx.Settings;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
-
-import java.util.Locale;
 
 /**
  * @author Armin Reichert

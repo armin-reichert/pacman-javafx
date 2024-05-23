@@ -2,14 +2,9 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.tilemap;
+package de.amr.games.pacman.ui.fx.tilemap;
 
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.TileMap;
-import de.amr.games.pacman.lib.TileMapPath;
-import de.amr.games.pacman.lib.Tiles;
+import de.amr.games.pacman.lib.*;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;

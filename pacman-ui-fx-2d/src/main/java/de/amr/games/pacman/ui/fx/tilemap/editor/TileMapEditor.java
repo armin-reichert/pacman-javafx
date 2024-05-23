@@ -2,13 +2,13 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.tilemap.editor;
+package de.amr.games.pacman.ui.fx.tilemap.editor;
 
 import de.amr.games.pacman.lib.TileMap;
 import de.amr.games.pacman.lib.Tiles;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.WorldMap;
-import de.amr.games.pacman.tilemap.FoodMapRenderer;
+import de.amr.games.pacman.ui.fx.tilemap.FoodMapRenderer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -39,7 +39,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.IntStream;
 
-import static de.amr.games.pacman.tilemap.TileMapRenderer.getColorFromMap;
+import static de.amr.games.pacman.ui.fx.tilemap.TileMapRenderer.getColorFromMap;
 
 /**
  * @author Armin Reichert
@@ -99,12 +99,12 @@ public class TileMapEditor  {
 
     //TODO resources must be loaded differently
     public TileMapEditor(Stage stage) {
-        arcadeMaps[0] = loadMap("/samplemaps/pacman.world", getClass());
+        arcadeMaps[0] = loadMap("maps/pacman.world", getClass());
         for (int i = 1; i <= 6; ++i) {
-            arcadeMaps[i] = loadMap("/samplemaps/mspacman/mspacman_" + i + ".world", getClass());
+            arcadeMaps[i] = loadMap("maps/mspacman/mspacman_" + i + ".world", getClass());
         }
         for (int i = 1; i <= 8; ++i) {
-            masonicMaps[i-1] = loadMap("/samplemaps/masonic/masonic_" + i + ".world", getClass());
+            masonicMaps[i-1] = loadMap("maps/masonic/masonic_" + i + ".world", getClass());
         }
         setMap(arcadeMaps[0]);
 

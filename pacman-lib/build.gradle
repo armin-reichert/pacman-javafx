@@ -11,19 +11,9 @@ ext.arch = System.getProperty("os.arch")
 ext.os = org.gradle.internal.os.OperatingSystem.current()
 println "Operating System: name='${os.name}' version='${os.version}' arch='${arch}'"
 
-application {
-    mainModule = 'de.amr.games.pacman.tilemap'
-    mainClass = 'de.amr.games.pacman.tilemap.editor.Main'
-}
-
 dependencies {
     implementation 'org.tinylog:tinylog-api:2.7.0'
     implementation 'org.tinylog:tinylog-impl:2.7.0'
-}
-
-javafx {
-    version = '21.0.2'
-    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls']
 }
 
 repositories {

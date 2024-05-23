@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.actors;
 
-import de.amr.games.pacman.steering.Steering;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.steering.Steering;
 import org.tinylog.Logger;
 
 import java.util.Optional;

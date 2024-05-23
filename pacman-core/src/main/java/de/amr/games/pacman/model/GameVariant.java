@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
 /**
  * Game models/variants that can be played.
  *
