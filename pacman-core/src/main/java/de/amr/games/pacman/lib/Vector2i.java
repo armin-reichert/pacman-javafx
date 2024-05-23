@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib;
 
-import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -12,20 +11,13 @@ import java.util.stream.Stream;
  *
  * @author Armin Reichert
  */
-public final class Vector2i {
+public record Vector2i(int x, int y) {
 
     public static final Vector2i ZERO = new Vector2i(0, 0);
 
-    private final int x;
-    private final int y;
-
-    public Vector2i(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
     /**
      * Access component by index
+     *
      * @param i index (0 or 1)
      * @return first component if i == 0,  second component if i == 1
      */
@@ -35,14 +27,6 @@ public final class Vector2i {
             case 1 -> y;
             default -> throw new IllegalArgumentException(String.format("Illegal index %d, only 0 or 1 are allowed", i));
         };
-    }
-
-    public int x() {
-        return x;
-    }
-
-    public int y() {
-        return y;
     }
 
     public Vector2i scaled(int s) {
@@ -65,11 +49,11 @@ public final class Vector2i {
         return new Vector2i(x - dx, y - dy);
     }
 
-    public float euclideanDistance(Vector2i v) {
-        return (float) Math.hypot(x - v.x, y - v.y);
+    public double euclideanDistance(Vector2i v) {
+        return Math.hypot(x - v.x, y - v.y);
     }
 
-    public float manhattanDistance(Vector2i v) {
+    public int manhattanDistance(Vector2i v) {
         return Math.abs(x - v.x) + Math.abs(y - v.y);
     }
 
@@ -84,22 +68,5 @@ public final class Vector2i {
 
     public Vector2f toFloatVec() {
         return new Vector2f(x, y);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Vector2i other = (Vector2i) obj;
-        return x == other.x && y == other.y;
     }
 }

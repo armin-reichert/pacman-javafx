@@ -248,16 +248,16 @@ public abstract class Creature extends Entity {
         if (targetTile().isEmpty()) {
             return Optional.empty();
         }
-        final var currentTile = tile();
+        final Vector2i currentTile = tile();
         Direction targetDir = null;
-        float minDistance = Float.MAX_VALUE;
+        double minDistance = Double.MAX_VALUE;
         for (var dir : DIRECTION_PRIORITY) {
             if (dir == moveDir().opposite()) {
                 continue; // reversing the move direction is not allowed
             }
             final var neighborTile = currentTile.plus(dir.vector());
             if (canAccessTile(neighborTile)) {
-                final float distance = neighborTile.euclideanDistance(targetTile().get());
+                double distance = neighborTile.euclideanDistance(targetTile().get());
                 if (distance < minDistance) {
                     minDistance = distance;
                     targetDir = dir;
