@@ -50,6 +50,81 @@ import static de.amr.games.pacman.tilemap.TileMapRenderer.getColorFromMap;
  */
 public class TileMapEditor  {
 
+
+    static class Palette extends Canvas {
+
+        int numRows;
+        int numCols;
+        int gridSize;
+        byte[] valueAtIndex;
+        GraphicsContext g = getGraphicsContext2D();
+        TileMapRenderer renderer;
+        byte selectedValue;
+        int selectedValueRow;
+        int selectedValueCol;
+
+        Palette(int gridSize, int numRows, int numCols, byte valueEnd) {
+            this.gridSize = gridSize;
+            this.numRows = numRows;
+            this.numCols = numCols;
+            this.valueAtIndex = new byte[numRows*numCols];
+            for (int i = 0; i < valueAtIndex.length; ++i) {
+                valueAtIndex[i] = i < valueEnd ? (byte) i : Tiles.EMPTY;
+            }
+            selectedValue = 0;
+            selectedValueRow = -1;
+            selectedValueCol = -1;
+            setWidth(numCols * gridSize);
+            setHeight(numRows * gridSize);
+            setOnMouseClicked(e -> selectedValue = pickValue(e));
+        }
+
+        public void setRenderer(TileMapRenderer renderer) {
+            this.renderer = renderer;
+        }
+
+        void setValues(byte... values) {
+            for (int i = 0; i < values.length; ++i) {
+                if (i < valueAtIndex.length) {
+                    valueAtIndex[i] = values[i];
+                }
+            }
+        }
+
+        byte pickValue(MouseEvent e) {
+            selectedValueRow = (int) e.getY() / gridSize;
+            selectedValueCol = (int) e.getX() / gridSize;
+            return valueAtIndex[selectedValueRow * numCols + selectedValueCol];
+        }
+
+        void draw() {
+            g.setFill(Color.BLACK);
+            g.fillRect(0, 0, getWidth(), getHeight());
+            if (renderer != null) {
+                renderer.setScaling((float) gridSize / 8f);
+                for (int i = 0; i < numRows * numCols; ++i) {
+                    int row = i / numCols, col = i % numCols;
+                    renderer.drawTile(g, new Vector2i(col, row), valueAtIndex[i]);
+                }
+            }
+            // Grid lines
+            g.setStroke(Color.LIGHTGRAY);
+            g.setLineWidth(0.75);
+            for (int row = 1; row < numRows; ++row) {
+                g.strokeLine(0, row * gridSize, getWidth(), row * gridSize);
+            }
+            for (int col = 1; col < numCols; ++col) {
+                g.strokeLine(col * gridSize, 0, col * gridSize, getHeight());
+            }
+            // mark selected cell
+            g.setStroke(Color.YELLOW);
+            g.setLineWidth(1);
+            if (selectedValueRow != -1 && selectedValueCol != -1) {
+                g.strokeRect(selectedValueCol * gridSize, selectedValueRow * gridSize, gridSize, gridSize);
+            }
+        }
+    }
+
     static final byte[][] GHOST_HOUSE_SHAPE = {
         {10, 8, 8,14,14, 8, 8,11},
         { 9, 0, 0, 0, 0, 0, 0, 9},
@@ -81,6 +156,7 @@ public class TileMapEditor  {
     Timeline clock;
 
     TileMapEditorTerrainRenderer terrainMapRenderer;
+    boolean pathsUpToDate;
     FoodMapRenderer foodMapRenderer;
 
     WorldMap map;
@@ -105,7 +181,7 @@ public class TileMapEditor  {
         for (int i = 1; i <= 8; ++i) {
             masonicMaps[i-1] = loadMap("/maps/masonic/masonic_" + i + ".world", GameVariant.PACMAN_XXL.getClass());
         }
-        map = arcadeMaps[0];
+        setMap(arcadeMaps[0]);
 
         ownerWindow = stage;
         ui = createUI();
@@ -140,13 +216,28 @@ public class TileMapEditor  {
         clock.play();
     }
 
-    private WorldMap loadMap(String path, Class<?> loadingClass) {
+    private void updatePaths() {
+        if (!pathsUpToDate) {
+            map.terrain().computePaths();
+            pathsUpToDate = true;
+        }
+    }
+
+    private void invalidatePaths() {
+        pathsUpToDate = false;
+    }
+
+    private void setMap(WorldMap other) {
+        map = other;
+        invalidatePaths();
+        updatePaths();
+    }
+
+    private static WorldMap loadMap(String path, Class<?> loadingClass) {
         try {
             var url = loadingClass.getResource(path);
             if (url != null) {
-                var worldMap = new WorldMap(url);
-                worldMap.terrain().computePaths();
-                return worldMap;
+                return new WorldMap(url);
             }
         } catch (Exception x) {
             Logger.error(x);
@@ -338,7 +429,7 @@ public class TileMapEditor  {
         drawGrid(g);
 
         if (terrainVisiblePy.get()) {
-            map.terrain().computePaths(); //TODO recompute paths only when needed
+            updatePaths();
             terrainMapRenderer.setScaling(tilePx() / 8);
             terrainMapRenderer.setWallStrokeColor(getColorFromMap(map.terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
             terrainMapRenderer.setWallFillColor(getColorFromMap(map.terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
@@ -381,18 +472,16 @@ public class TileMapEditor  {
     }
 
     void addShape(byte[][] shape, int topLeftRow, int topLeftCol) {
-        if (map.terrain() != null) {
-            for (int row = 0; row < shape.length; ++row) {
-                for (int col = 0; col < shape[0].length; ++col) {
-                    map.terrain().set(topLeftRow + row, topLeftCol+ col, shape[row][col]);
-                }
+        for (int row = 0; row < shape.length; ++row) {
+            for (int col = 0; col < shape[0].length; ++col) {
+                map.terrain().set(topLeftRow + row, topLeftCol+ col, shape[row][col]);
             }
         }
+        invalidatePaths();
     }
 
     public void loadMap(WorldMap other) {
-        map = WorldMap.copyOf(other);
-        map.terrain().computePaths();
+        setMap(WorldMap.copyOf(other));
         currentMapFile = null;
         foodMapPropertiesEditor.setEditedProperties(map.food().getProperties());
         terrainMapPropertiesEditor.setEditedProperties(map.terrain().getProperties());
@@ -450,7 +539,7 @@ public class TileMapEditor  {
             map.terrain().set(tile, terrainPalette.selectedValue);
             updateInfo();
         }
-        map.terrain().computePaths(); // ensure paths are up-to-date
+        invalidatePaths();
     }
 
     void editFoodTile(MouseEvent e) {
@@ -493,7 +582,7 @@ public class TileMapEditor  {
             try {
                 int numCols = Integer.parseInt(tuple[0].trim());
                 int numRows = Integer.parseInt(tuple[1].trim());
-                map = new WorldMap(new TileMap(numRows, numCols), new TileMap(numRows, numCols));
+                setMap(new WorldMap(new TileMap(numRows, numCols), new TileMap(numRows, numCols)));
             } catch (Exception x) {
                 Logger.error(x);
             }
@@ -541,80 +630,6 @@ public class TileMapEditor  {
                 updateInfo();
             } else {
                 Logger.error("No .world file selected"); //TODO
-            }
-        }
-    }
-
-    static class Palette extends Canvas {
-
-        int numRows;
-        int numCols;
-        int gridSize;
-        byte[] valueAtIndex;
-        GraphicsContext g = getGraphicsContext2D();
-        TileMapRenderer renderer;
-        byte selectedValue;
-        int selectedValueRow;
-        int selectedValueCol;
-
-        Palette(int gridSize, int numRows, int numCols, byte valueEnd) {
-            this.gridSize = gridSize;
-            this.numRows = numRows;
-            this.numCols = numCols;
-            this.valueAtIndex = new byte[numRows*numCols];
-            for (int i = 0; i < valueAtIndex.length; ++i) {
-                valueAtIndex[i] = i < valueEnd ? (byte) i : Tiles.EMPTY;
-            }
-            selectedValue = 0;
-            selectedValueRow = -1;
-            selectedValueCol = -1;
-            setWidth(numCols * gridSize);
-            setHeight(numRows * gridSize);
-            setOnMouseClicked(e -> selectedValue = pickValue(e));
-        }
-
-        public void setRenderer(TileMapRenderer renderer) {
-            this.renderer = renderer;
-        }
-
-        void setValues(byte... values) {
-            for (int i = 0; i < values.length; ++i) {
-                if (i < valueAtIndex.length) {
-                    valueAtIndex[i] = values[i];
-                }
-            }
-        }
-
-        byte pickValue(MouseEvent e) {
-            selectedValueRow = (int) e.getY() / gridSize;
-            selectedValueCol = (int) e.getX() / gridSize;
-            return valueAtIndex[selectedValueRow * numCols + selectedValueCol];
-        }
-
-        void draw() {
-            g.setFill(Color.BLACK);
-            g.fillRect(0, 0, getWidth(), getHeight());
-            if (renderer != null) {
-                renderer.setScaling((float) gridSize / 8f);
-                for (int i = 0; i < numRows * numCols; ++i) {
-                    int row = i / numCols, col = i % numCols;
-                    renderer.drawTile(g, new Vector2i(col, row), valueAtIndex[i]);
-                }
-            }
-            // Grid lines
-            g.setStroke(Color.LIGHTGRAY);
-            g.setLineWidth(0.75);
-            for (int row = 1; row < numRows; ++row) {
-                g.strokeLine(0, row * gridSize, getWidth(), row * gridSize);
-            }
-            for (int col = 1; col < numCols; ++col) {
-                g.strokeLine(col * gridSize, 0, col * gridSize, getHeight());
-            }
-            // mark selected cell
-            g.setStroke(Color.YELLOW);
-            g.setLineWidth(1);
-            if (selectedValueRow != -1 && selectedValueCol != -1) {
-                g.strokeRect(selectedValueCol * gridSize, selectedValueRow * gridSize, gridSize, gridSize);
             }
         }
     }
