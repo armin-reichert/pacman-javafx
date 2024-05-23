@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tilemap.editor;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.world.TileMap;
-import de.amr.games.pacman.model.world.Tiles;
+import de.amr.games.pacman.lib.TileMap;
+import de.amr.games.pacman.lib.Tiles;
 import de.amr.games.pacman.tilemap.TerrainMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;

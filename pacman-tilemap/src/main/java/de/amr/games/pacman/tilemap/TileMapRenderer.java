@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.tilemap;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.world.TileMap;
+import de.amr.games.pacman.lib.TileMap;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;

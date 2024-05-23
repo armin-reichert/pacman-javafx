@@ -10,7 +10,7 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.model.world.WorldMap;
+import de.amr.games.pacman.lib.WorldMap;
 import org.tinylog.Logger;
 
 import java.util.List;

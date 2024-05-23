@@ -7,6 +7,7 @@ package de.amr.games.pacman.model.world;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.WorldMap;
 import de.amr.games.pacman.model.GameModel;
 import org.tinylog.Logger;
 
@@ -14,7 +15,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.world.Tiles.*;
+import static de.amr.games.pacman.lib.Tiles.*;
 import static java.util.Collections.unmodifiableList;
 
 /**

@@ -7,7 +7,7 @@ package de.amr.games.pacman.model;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.RuleBasedPacSteering;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.model.world.WorldMap;
+import de.amr.games.pacman.lib.WorldMap;
 import org.tinylog.Logger;
 
 import java.io.IOException;

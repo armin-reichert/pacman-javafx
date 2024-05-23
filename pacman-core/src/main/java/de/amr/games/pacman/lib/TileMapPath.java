@@ -1,7 +1,4 @@
-package de.amr.games.pacman.model.world;
-
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Vector2i;
+package de.amr.games.pacman.lib;
 
 import java.util.ArrayList;
 import java.util.BitSet;

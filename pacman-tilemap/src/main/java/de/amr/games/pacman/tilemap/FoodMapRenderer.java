@@ -1,8 +1,8 @@
 package de.amr.games.pacman.tilemap;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.world.TileMap;
-import de.amr.games.pacman.model.world.Tiles;
+import de.amr.games.pacman.lib.TileMap;
+import de.amr.games.pacman.lib.Tiles;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;
