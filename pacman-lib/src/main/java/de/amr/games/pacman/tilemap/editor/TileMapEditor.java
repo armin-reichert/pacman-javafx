@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.TileMap;
 import de.amr.games.pacman.lib.Tiles;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.WorldMap;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.tilemap.FoodMapRenderer;
 import de.amr.games.pacman.tilemap.TileMapRenderer;
 import javafx.animation.Animation;
@@ -173,13 +172,14 @@ public class TileMapEditor  {
     BooleanProperty terrainEditedPy = new SimpleBooleanProperty(true);
     BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
 
+    //TODO resources must be loaded differently
     public TileMapEditor(Stage stage) {
-        arcadeMaps[0] = loadMap("/maps/pacman.world", GameVariant.PACMAN.getClass());
+        arcadeMaps[0] = loadMap("/maps/pacman.world", getClass());
         for (int i = 1; i <= 6; ++i) {
-            arcadeMaps[i] = loadMap("/maps/mspacman/mspacman_" + i + ".world", GameVariant.MS_PACMAN.getClass());
+            arcadeMaps[i] = loadMap("/maps/mspacman/mspacman_" + i + ".world", getClass());
         }
         for (int i = 1; i <= 8; ++i) {
-            masonicMaps[i-1] = loadMap("/maps/masonic/masonic_" + i + ".world", GameVariant.PACMAN_XXL.getClass());
+            masonicMaps[i-1] = loadMap("/maps/masonic/masonic_" + i + ".world", getClass());
         }
         setMap(arcadeMaps[0]);
 

@@ -7,10 +7,7 @@ package de.amr.games.pacman.model;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Pulse;
-import de.amr.games.pacman.lib.Score;
-import de.amr.games.pacman.lib.TickTimer;
-import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -28,6 +25,24 @@ import java.util.stream.Stream;
  * @author Armin Reichert
  */
 public interface GameModel {
+
+    static GameModel checkGameNotNull(GameModel game) {
+        return Globals.checkNotNull(game, "Game model must not be null");
+    }
+
+    static byte checkGhostID(byte id) {
+        if (id < 0 || id > 3) {
+            throw new IllegalGhostIDException(id);
+        }
+        return id;
+    }
+
+    static int checkLevelNumber(int number) {
+        if (number < 1) {
+            throw new IllegalLevelNumberException(number);
+        }
+        return number;
+    }
 
     File CUSTOM_MAP_DIR = new File(System.getProperty("user.home"), ".pacmanfx/maps");
 

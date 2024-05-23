@@ -5,11 +5,12 @@ open module de.amr.games.pacman {
 
     // module is defined as "open" to give access to non-class resources (map data) via class loader
     requires org.tinylog.api;
+    requires de.amr.games.pacman.tilemap;
 
     exports de.amr.games.pacman.controller;
     exports de.amr.games.pacman.event;
-    exports de.amr.games.pacman.lib;
     exports de.amr.games.pacman.model;
     exports de.amr.games.pacman.model.actors;
     exports de.amr.games.pacman.model.world;
+    exports de.amr.games.pacman.steering;
 }

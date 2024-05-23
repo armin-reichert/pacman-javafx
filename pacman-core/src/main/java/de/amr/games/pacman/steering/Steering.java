@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.lib;
+package de.amr.games.pacman.steering;
 
 import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.world.World;

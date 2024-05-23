@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.Tiles.*;
+import static de.amr.games.pacman.model.GameModel.checkGhostID;
 import static java.util.Collections.unmodifiableList;
 
 /**

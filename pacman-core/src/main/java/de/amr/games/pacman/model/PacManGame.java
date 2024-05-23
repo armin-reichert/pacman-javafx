@@ -9,6 +9,8 @@ import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.steering.RouteBasedSteering;
+import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -19,6 +21,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
+import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
 
 /**
  * Classic Arcade Pac-Man.

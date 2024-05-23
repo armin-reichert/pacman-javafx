@@ -17,8 +17,8 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 
-import static de.amr.games.pacman.lib.Globals.checkGhostID;
 import static de.amr.games.pacman.lib.Globals.requirePositive;
+import static de.amr.games.pacman.model.GameModel.checkGhostID;
 import static de.amr.games.pacman.ui.fx.util.Ufx.createColorBoundMaterial;
 import static java.util.Objects.requireNonNull;
 

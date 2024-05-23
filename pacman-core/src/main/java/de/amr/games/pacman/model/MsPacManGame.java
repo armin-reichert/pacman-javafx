@@ -11,12 +11,14 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.lib.WorldMap;
+import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
 import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
 
 /**
  * Ms. Pac-Man game variant.

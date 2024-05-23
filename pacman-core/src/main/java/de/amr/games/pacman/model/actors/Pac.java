@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model.actors;
 
-import de.amr.games.pacman.lib.Steering;
+import de.amr.games.pacman.steering.Steering;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;

@@ -8,6 +8,7 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.steering.RouteBasedSteering;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;

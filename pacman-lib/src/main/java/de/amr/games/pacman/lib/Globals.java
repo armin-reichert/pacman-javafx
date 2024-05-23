@@ -4,10 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib;
 
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.IllegalGhostIDException;
-import de.amr.games.pacman.model.IllegalLevelNumberException;
-
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
@@ -29,7 +25,6 @@ public class Globals {
 
     public static final Random RND = new Random();
 
-    private static final String MSG_GAME_NULL = "Game model must not be null";
     private static final String MSG_TILE_NULL = "Tile must not be null";
     private static final String MSG_DIR_NULL = "Direction must not be null";
 
@@ -80,23 +75,6 @@ public class Globals {
         return Objects.requireNonNull(value, message);
     }
 
-    public static GameModel checkGameNotNull(GameModel game) {
-        return checkNotNull(game, MSG_GAME_NULL);
-    }
-
-    public static byte checkGhostID(byte id) {
-        if (id < 0 || id > 3) {
-            throw new IllegalGhostIDException(id);
-        }
-        return id;
-    }
-
-    public static int checkLevelNumber(int number) {
-        if (number < 1) {
-            throw new IllegalLevelNumberException(number);
-        }
-        return number;
-    }
 
     public static Vector2i checkTileNotNull(Vector2i tile) {
         return checkNotNull(tile, MSG_TILE_NULL);

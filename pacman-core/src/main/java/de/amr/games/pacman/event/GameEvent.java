@@ -9,8 +9,8 @@ import de.amr.games.pacman.model.GameModel;
 
 import java.util.Optional;
 
-import static de.amr.games.pacman.lib.Globals.checkGameNotNull;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.model.GameModel.checkGameNotNull;
 
 /**
  * @author Armin Reichert

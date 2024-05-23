@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.LEFT;
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.model.GameModel.checkGhostID;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
 /**
