@@ -140,10 +140,12 @@ public class TileMapEditor  {
 
     Window ownerWindow;
 
-    Pane ui;
     MenuBar menuBar;
     Menu menuFile;
-    Menu menuMap;
+    Menu menuEdit;
+    Menu menuLoadMap;
+
+    Pane layout;
     Canvas editCanvas;
     Canvas previewCanvas;
     PropertyEditor terrainMapPropertiesEditor;
@@ -152,6 +154,7 @@ public class TileMapEditor  {
     FileChooser openDialog;
     Palette terrainPalette;
     Palette foodPalette;
+
     Timeline clock;
 
     TileMapEditorTerrainRenderer terrainMapRenderer;
@@ -182,10 +185,11 @@ public class TileMapEditor  {
         setMap(arcadeMaps[0]);
 
         ownerWindow = stage;
-        ui = createUI();
-        menuBar = createMenus();
 
-        editCanvas.heightProperty().bind(ui.heightProperty().multiply(0.95));
+        createLayout();
+        createMenus();
+
+        editCanvas.heightProperty().bind(layout.heightProperty().multiply(0.95));
         editCanvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> editCanvas.getHeight() * map.numCols() / map.numRows(), editCanvas.heightProperty()));
 
@@ -217,7 +221,7 @@ public class TileMapEditor  {
         clock.play();
     }
 
-    private Pane createUI() {
+    private void createLayout() {
         openDialog = new FileChooser();
         openDialog.setInitialDirectory(lastUsedDir);
 
@@ -286,7 +290,67 @@ public class TileMapEditor  {
         var hbox = new HBox(editCanvasScrollPane, controlsPane, previewCanvasScrollPane);
         hbox.setSpacing(10);
 
-        return new BorderPane(hbox);
+        layout = new BorderPane(hbox);
+    }
+
+    private void createMenus() {
+        createFileMenu();
+        createActionsMenu();
+        createLoadMapMenu();
+        menuBar = new MenuBar();
+        menuBar.getMenus().addAll(menuFile, menuEdit, menuLoadMap);
+    }
+
+    private void createFileMenu() {
+        var miNewMap = new MenuItem("New...");
+        miNewMap.setOnAction(e -> createNewMap());
+
+        var miOpenMapFile = new MenuItem("Open...");
+        miOpenMapFile.setOnAction(e -> openMapFile());
+
+        var miSaveMapFileAs = new MenuItem("Save As...");
+        miSaveMapFileAs.setOnAction(e -> saveMapFileAs());
+
+        menuFile = new Menu("File");
+        menuFile.getItems().addAll(miNewMap, miOpenMapFile, miSaveMapFileAs);
+    }
+
+    private void createActionsMenu() {
+        var miClearTerrain = new MenuItem("Clear Terrain");
+        miClearTerrain.setOnAction(e -> map.terrain().clear());
+
+        var miClearFood = new MenuItem("Clear Food");
+        miClearFood.setOnAction(e -> map.food().clear());
+
+        var miAddHouse = new MenuItem("Add House");
+        miAddHouse.setOnAction(e -> addShape(GHOST_HOUSE_SHAPE, 15, 10));
+
+        menuEdit = new Menu("Edit");
+        menuEdit.getItems().addAll(miClearTerrain, miClearFood, miAddHouse);
+    }
+
+    private void createLoadMapMenu() {
+        menuLoadMap = new Menu("Load Map");
+
+        var miLoadPacManMap = new MenuItem("Pac-Man");
+        miLoadPacManMap.setOnAction(e -> loadMap(arcadeMaps[0]));
+        menuLoadMap.getItems().add(miLoadPacManMap);
+
+        menuLoadMap.getItems().add(new SeparatorMenuItem());
+
+        IntStream.rangeClosed(1, 6).forEach(i -> {
+            var mi = new MenuItem("Ms. Pac-Man " + i);
+            mi.setOnAction(e -> loadMap(arcadeMaps[i]));
+            menuLoadMap.getItems().add(mi);
+        });
+
+        menuLoadMap.getItems().add(new SeparatorMenuItem());
+
+        IntStream.rangeClosed(1, 8).forEach(i -> {
+            var mi = new MenuItem("Pac-Man XXL " + i);
+            mi.setOnAction(e -> loadMap(masonicMaps[i-1]));
+            menuLoadMap.getItems().add(mi);
+        });
     }
 
     private void updatePaths() {
@@ -330,8 +394,8 @@ public class TileMapEditor  {
         return 1 <= mapNumber && mapNumber <= 8 ? masonicMaps[mapNumber-1] : masonicMaps[0];
     }
 
-    public Pane getUi() {
-        return ui;
+    public Pane getLayout() {
+        return layout;
     }
 
     public MenuBar getMenuBar() {
@@ -342,59 +406,6 @@ public class TileMapEditor  {
         return menuFile;
     }
 
-    public MenuBar createMenus() {
-        menuFile = new Menu("File");
-
-        var miNewMap = new MenuItem("New...");
-        miNewMap.setOnAction(e -> createNewMap());
-
-        var miLoadMap = new MenuItem("Load Map...");
-        miLoadMap.setOnAction(e -> openMapFile());
-
-        var miSaveMap = new MenuItem("Save Map...");
-        miSaveMap.setOnAction(e -> saveMap());
-
-        menuFile.getItems().addAll(miNewMap, miLoadMap, miSaveMap);
-
-        menuMap = new Menu("Map");
-
-        var miClearTerrain = new MenuItem("Clear Terrain");
-        miClearTerrain.setOnAction(e -> map.terrain().clear());
-
-        var miClearFood = new MenuItem("Clear Food");
-        miClearFood.setOnAction(e -> map.food().clear());
-
-        var miAddHouse = new MenuItem("Add House");
-        miAddHouse.setOnAction(e -> addShape(GHOST_HOUSE_SHAPE, 15, 10));
-
-        Menu subMenuLoadMap = new Menu("Load Map");
-
-        var miLoadPacManMap = new MenuItem("Pac-Man");
-        miLoadPacManMap.setOnAction(e -> loadMap(arcadeMaps[0]));
-        subMenuLoadMap.getItems().add(miLoadPacManMap);
-
-        subMenuLoadMap.getItems().add(new SeparatorMenuItem());
-
-        IntStream.rangeClosed(1, 6).forEach(i -> {
-            var mi = new MenuItem("Ms. Pac-Man " + i);
-            mi.setOnAction(e -> loadMap(arcadeMaps[i]));
-            subMenuLoadMap.getItems().add(mi);
-        });
-
-        subMenuLoadMap.getItems().add(new SeparatorMenuItem());
-
-        IntStream.rangeClosed(1, 8).forEach(i -> {
-            var mi = new MenuItem("Pac-Man XXL " + i);
-            mi.setOnAction(e -> loadMap(masonicMaps[i-1]));
-            subMenuLoadMap.getItems().add(mi);
-        });
-
-        menuMap.getItems().addAll(miClearTerrain, miClearFood, miAddHouse, subMenuLoadMap);
-
-        menuBar = new MenuBar();
-        menuBar.getMenus().addAll(menuFile, menuMap);
-        return menuBar;
-    }
 
     // TODO use own canvas or Text control
     void drawBlueScreen(Exception drawException) {
@@ -634,7 +645,7 @@ public class TileMapEditor  {
         updateInfo();
     }
 
-    void saveMap() {
+    void saveMapFileAs() {
         openDialog.setInitialDirectory(lastUsedDir);
         openDialog.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("World Map Files", ".world"));
         File file = openDialog.showSaveDialog(ownerWindow);

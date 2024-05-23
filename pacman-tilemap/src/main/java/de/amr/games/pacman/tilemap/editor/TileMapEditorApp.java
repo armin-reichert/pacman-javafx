@@ -22,7 +22,7 @@ public class TileMapEditorApp extends Application  {
         var editor = new TileMapEditor(stage);
 
         var layout = new BorderPane();
-        layout.setCenter(editor.getUi());
+        layout.setCenter(editor.getLayout());
         layout.setTop(editor.getMenuBar());
 
         var miQuit = new MenuItem("Quit");
