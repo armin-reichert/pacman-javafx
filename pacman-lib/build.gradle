@@ -1,7 +1,5 @@
 plugins {
     id 'java'
-    id 'org.openjfx.javafxplugin' version '0.1.0'
-    id 'org.beryx.jlink' version '3.0.1' //  adds also 'application' plugin
 }
 
 group 'de.amr.games.pacman'
@@ -28,28 +26,4 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
-}
-
-jlink {
-    imageZip = project.file("${layout.buildDirectory}/distributions/app-${javafx.platform.classifier}.zip")
-    options = ['--strip-debug', '--no-header-files', '--no-man-pages']
-    launcher {
-        name = 'pacman-javafx-mapeditor'
-    }
-    jpackage {
-        // not sure if these are properly passed to jpackage call
-        installerOptions = [
-                '--description', 'Pac-Man Map Editor',
-                '--copyright', '2021-2024',
-                '--vendor', 'Armin Reichert'
-        ]
-        if (os.isWindows()) {
-            installerType = 'exe'
-            installerOptions.addAll(['--win-dir-chooser', '--win-menu', '--win-menu-group', 'Pac-Man FX', '--win-shortcut'])
-        }
-    }
-}
-
-jlinkZip {
-    group = 'distribution'
 }
