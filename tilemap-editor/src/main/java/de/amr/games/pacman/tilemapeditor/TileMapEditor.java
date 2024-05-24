@@ -47,9 +47,10 @@ import java.util.stream.IntStream;
 public class TileMapEditor  {
 
     static final byte[][] GHOST_HOUSE_SHAPE = {
+        { 0, 0, 0,20, 0, 0, 0, 0},
         {10, 8, 8,14,14, 8, 8,11},
         { 9, 0, 0, 0, 0, 0, 0, 9},
-        { 9, 0, 0, 0, 0, 0, 0, 9},
+        { 9,22, 0,21, 0,23, 0, 9},
         { 9, 0, 0, 0, 0, 0, 0, 9},
         {13, 8, 8, 8, 8, 8, 8,12}
     };
@@ -237,6 +238,9 @@ public class TileMapEditor  {
     }
 
     private void createActionsMenu() {
+        var miAddBorder = new MenuItem("Add Border");
+        miAddBorder.setOnAction(e -> addBorder(map.terrain(), 3, 2));
+
         var miClearTerrain = new MenuItem("Clear Terrain");
         miClearTerrain.setOnAction(e -> map.terrain().clear());
 
@@ -244,10 +248,10 @@ public class TileMapEditor  {
         miClearFood.setOnAction(e -> map.food().clear());
 
         var miAddHouse = new MenuItem("Add House");
-        miAddHouse.setOnAction(e -> addShape(GHOST_HOUSE_SHAPE, 15, 10));
+        miAddHouse.setOnAction(e -> addHouse());
 
         menuEdit = new Menu("Edit");
-        menuEdit.getItems().addAll(miClearTerrain, miClearFood, miAddHouse);
+        menuEdit.getItems().addAll(miAddBorder, miAddHouse, miClearTerrain, miClearFood);
     }
 
     private void createLoadMapMenu() {
@@ -297,7 +301,6 @@ public class TileMapEditor  {
         return null;
     }
 
-
     void addShape(byte[][] shape, int topLeftRow, int topLeftCol) {
         for (int row = 0; row < shape.length; ++row) {
             for (int col = 0; col < shape[0].length; ++col) {
@@ -305,6 +308,26 @@ public class TileMapEditor  {
             }
         }
         invalidatePaths();
+    }
+
+    private void addHouse() {
+        addShape(GHOST_HOUSE_SHAPE, 14, 10);
+        map.terrain().set(26, 13, Tiles.PAC_HOME);
+    }
+
+    private void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
+        for (int row = emptyRowsTop; row < terrain.numRows() - emptyRowsBottom; ++row) {
+            terrain.set(row, 0, Tiles.DWALL_V);
+            terrain.set(row, terrain.numCols() - 1, Tiles.DWALL_V);
+        }
+        for (int col = 1; col < terrain.numCols() - 1; ++col) {
+            terrain.set(emptyRowsTop, col, Tiles.DWALL_H);
+            terrain.set(terrain.numRows() - 1 - emptyRowsBottom, col, Tiles.DWALL_H);
+        }
+        terrain.set(emptyRowsTop, 0, Tiles.DCORNER_NW);
+        terrain.set(emptyRowsTop, terrain.numCols() - 1, Tiles.DCORNER_NE);
+        terrain.set(terrain.numRows() - 1 - emptyRowsBottom, 0, Tiles.DCORNER_SW);
+        terrain.set(terrain.numRows() - 1 - emptyRowsBottom, terrain.numCols() - 1, Tiles.DCORNER_SE);
     }
 
     private void setMap(WorldMap other) {

@@ -19,7 +19,6 @@ import java.util.Properties;
 public class PropertyEditor extends BorderPane {
 
     public static Color parseColor(String colorText) {
-        Logger.info("parseColor {}", colorText);
         try {
             return Color.web(colorText);
         } catch (Exception x) {
