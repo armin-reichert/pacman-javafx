@@ -49,12 +49,9 @@ jlink {
         name = 'pacman-javafx-2d'
     }
     jpackage {
-        // not sure if these are properly passed to jpackage call
-        installerOptions = [
-                '--description', 'Pac-Man JavaFX',
-                '--copyright', '2021-2024',
-                '--vendor', 'Armin Reichert'
-        ]
+        appVersion = '1.0'
+        description = 'Pac-Man JavaFX (2D version)'
+        vendor = 'Armin Reichert'
         if (os.isWindows()) {
             icon = 'pacman.ico'
             installerType = 'exe'
