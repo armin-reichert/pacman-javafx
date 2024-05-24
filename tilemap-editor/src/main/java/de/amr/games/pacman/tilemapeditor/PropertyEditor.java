@@ -1,13 +1,16 @@
 package de.amr.games.pacman.tilemapeditor;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import org.tinylog.Logger;
 
 import java.util.Comparator;
 import java.util.HashSet;
@@ -55,20 +58,47 @@ public class PropertyEditor extends BorderPane {
         var sortedEntries = editedProperties.entrySet().stream().sorted(Comparator.comparing(Object::toString)).toList();
         for (var entry : sortedEntries) {
             TextField nameEditor = new TextField(String.valueOf(entry.getKey()));
-            TextField valueEditor = new TextField(String.valueOf(entry.getValue()));
             nameEditor.setMinWidth(nameColumnMinWidth);
-            nameEditor.setOnAction(e -> saveEditedEntry(nameEditor, valueEditor));
-            valueEditor.setOnAction(e -> saveEditedEntry(nameEditor, valueEditor));
             grid.add(nameEditor, 0, row);
-            grid.add(valueEditor, 1, row);
+            if (entry.getKey().toString().endsWith("_color")) {
+                var colorPicker = new ColorPicker();
+                colorPicker.setValue(parseColor(String.valueOf(entry.getValue())));
+                colorPicker.setOnAction(e -> {
+                    saveEditedEntry(nameEditor, formatColor(colorPicker.getValue()));
+                });
+                nameEditor.setOnAction(e -> saveEditedEntry(nameEditor, formatColor(colorPicker.getValue())));
+                grid.add(colorPicker, 1, row);
+            } else {
+                var inputField = new TextField();
+                inputField.setText(String.valueOf(entry.getValue()));
+                inputField.setOnAction(e -> saveEditedEntry(nameEditor, inputField.getText()));
+                nameEditor.setOnAction(e -> saveEditedEntry(nameEditor, inputField.getText()));
+                grid.add(inputField, 1, row);
+            }
             ++row;
         }
         numRows = row;
     }
 
-    private void saveEditedEntry(TextField nameEditor, TextField valueEditor) {
-        if (!nameEditor.getText().trim().isBlank()) {
-            editedProperties.put(nameEditor.getText().trim(), valueEditor.getText());
+    private Color parseColor(String colorText) {
+        Logger.info("parseColor {}", colorText);
+        try {
+            return Color.web(colorText);
+        } catch (Exception x) {
+            Logger.error(x);
+            return Color.WHITE;
+        }
+    }
+
+    private String formatColor(Color color) {
+        return String.format("rgb(%d,%d,%d)", (int)(color.getRed()*255), (int)(color.getGreen()*255), (int)(color.getBlue()*255));
+    }
+
+    private void saveEditedEntry(TextField nameEditor, Object value) {
+        String entryKey = nameEditor.getText().trim();
+        Logger.info("Save entry {}: {}", entryKey, value);
+        if (!entryKey.isBlank()) {
+            editedProperties.put(entryKey, value);
         }
         var names = new HashSet<>();
         for (int row = 0; row < numRows; ++row) {

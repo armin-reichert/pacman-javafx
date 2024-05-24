@@ -17,72 +17,72 @@ import javafx.scene.paint.Color;
  */
 public class Palette extends Canvas {
 
-    final int gridSize;
+    final int cellSize;
     final int numRows;
     final int numCols;
     final TileMapRenderer renderer;
-    final byte[] valueAtIndex;
+    final byte[] cellValues;
     final GraphicsContext g;
     byte selectedValue;
     int selectedValueRow;
     int selectedValueCol;
 
-    public Palette(int gridSize, int numRows, int numCols, byte valueEnd, TileMapRenderer renderer) {
-        this.gridSize = gridSize;
+    public Palette(int cellSize, int numRows, int numCols, byte valueEnd, TileMapRenderer renderer) {
+        this.cellSize = cellSize;
         this.numRows = numRows;
         this.numCols = numCols;
         this.renderer = renderer;
-        valueAtIndex = new byte[numRows * numCols];
-        for (int i = 0; i < valueAtIndex.length; ++i) {
-            valueAtIndex[i] = i < valueEnd ? (byte) i : Tiles.EMPTY;
+        cellValues = new byte[numRows * numCols];
+        for (int i = 0; i < cellValues.length; ++i) {
+            cellValues[i] = i < valueEnd ? (byte) i : Tiles.EMPTY;
         }
         g = getGraphicsContext2D();
         selectedValue = 0;
         selectedValueRow = -1;
         selectedValueCol = -1;
-        setWidth(numCols * gridSize);
-        setHeight(numRows * gridSize);
+        setWidth(numCols * cellSize);
+        setHeight(numRows * cellSize);
         setOnMouseClicked(this::pickValue);
     }
 
     public void setValues(byte... values) {
         for (int i = 0; i < values.length; ++i) {
-            if (i < valueAtIndex.length) {
-                valueAtIndex[i] = values[i];
+            if (i < cellValues.length) {
+                cellValues[i] = values[i];
             }
         }
     }
 
     private void pickValue(MouseEvent e) {
-        selectedValueRow = (int) e.getY() / gridSize;
-        selectedValueCol = (int) e.getX() / gridSize;
-        selectedValue = valueAtIndex[selectedValueRow * numCols + selectedValueCol];
+        selectedValueRow = (int) e.getY() / cellSize;
+        selectedValueCol = (int) e.getX() / cellSize;
+        selectedValue = cellValues[selectedValueRow * numCols + selectedValueCol];
     }
 
     public void draw() {
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
         if (renderer != null) {
-            renderer.setScaling((float) gridSize / 8f);
+            renderer.setScaling(cellSize / 8.0);
             for (int i = 0; i < numRows * numCols; ++i) {
                 int row = i / numCols, col = i % numCols;
-                renderer.drawTile(g, new Vector2i(col, row), valueAtIndex[i]);
+                renderer.drawTile(g, new Vector2i(col, row), cellValues[i]);
             }
         }
         // Grid lines
         g.setStroke(Color.LIGHTGRAY);
         g.setLineWidth(0.75);
         for (int row = 1; row < numRows; ++row) {
-            g.strokeLine(0, row * gridSize, getWidth(), row * gridSize);
+            g.strokeLine(0, row * cellSize, getWidth(), row * cellSize);
         }
         for (int col = 1; col < numCols; ++col) {
-            g.strokeLine(col * gridSize, 0, col * gridSize, getHeight());
+            g.strokeLine(col * cellSize, 0, col * cellSize, getHeight());
         }
         // mark selected cell
         g.setStroke(Color.YELLOW);
         g.setLineWidth(1);
         if (selectedValueRow != -1 && selectedValueCol != -1) {
-            g.strokeRect(selectedValueCol * gridSize, selectedValueRow * gridSize, gridSize, gridSize);
+            g.strokeRect(selectedValueCol * cellSize, selectedValueRow * cellSize, cellSize, cellSize);
         }
     }
 }

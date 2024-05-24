@@ -572,8 +572,6 @@ public class TileMapEditor  {
         if (file != null) {
             lastUsedDir = file.getParentFile();
             if (file.getName().endsWith(".world")) {
-                map.food().replaceProperties(foodMapPropertiesEditor.getEditedProperties());
-                map.terrain().replaceProperties(terrainMapPropertiesEditor.getEditedProperties());
                 map.save(file);
                 readMapFile(file);
                 updateInfo();

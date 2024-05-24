@@ -220,12 +220,6 @@ public class TileMap {
         return properties;
     }
 
-    public void replaceProperties(Properties properties)
-    {
-        this.properties.clear();
-        this.properties.putAll(properties);
-    }
-
     public void loadPropertiesFromText(String text) {
         StringReader r = new StringReader(text);
         try {
