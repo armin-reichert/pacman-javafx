@@ -39,6 +39,8 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 /**
@@ -86,8 +88,8 @@ public class TileMapEditor  {
     FoodMapRenderer foodMapRenderer;
 
     WorldMap map;
-    WorldMap[] arcadeMaps = new WorldMap[7];
-    WorldMap[] masonicMaps = new WorldMap[8];
+
+    private final Map<String, WorldMap> predefinedMaps = new HashMap<>();
 
     Vector2i hoveredTile;
     File lastUsedDir = new File(System.getProperty("user.dir"));
@@ -113,21 +115,16 @@ public class TileMapEditor  {
         createLayout();
         createMenus();
 
-        arcadeMaps[0] = loadMap("maps/pacman.world", getClass());
-        for (int i = 1; i <= 6; ++i) {
-            arcadeMaps[i] = loadMap("maps/mspacman/mspacman_" + i + ".world", getClass());
-        }
-        for (int i = 1; i <= 8; ++i) {
-            masonicMaps[i-1] = loadMap("maps/masonic/masonic_" + i + ".world", getClass());
-        }
-        setMap(arcadeMaps[0]);
+        map = createNewMap(36, 28);
 
+        // Note: this must be done after having loaded the initial map!
         editCanvas.heightProperty().bind(layout.heightProperty().multiply(0.95));
         editCanvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> editCanvas.getHeight() * map.numCols() / map.numRows(), editCanvas.heightProperty()));
 
         previewCanvas.widthProperty().bind(editCanvas.widthProperty());
         previewCanvas.heightProperty().bind(editCanvas.heightProperty());
+
 
         int fps = 30;
         clock = new Timeline(30, new KeyFrame(Duration.millis(1000.0/fps),e -> {
@@ -225,7 +222,7 @@ public class TileMapEditor  {
 
     private void createFileMenu() {
         var miNewMap = new MenuItem("New...");
-        miNewMap.setOnAction(e -> createNewMap());
+        miNewMap.setOnAction(e -> showCreateNewMapDialog());
 
         var miOpenMapFile = new MenuItem("Open...");
         miOpenMapFile.setOnAction(e -> openMapFile());
@@ -254,28 +251,19 @@ public class TileMapEditor  {
         menuEdit.getItems().addAll(miAddBorder, miAddHouse, miClearTerrain, miClearFood);
     }
 
+    public void addPredefinedMap(String description, WorldMap map) {
+        predefinedMaps.put(description, map);
+        var miLoadMap = new MenuItem(description);
+        miLoadMap.setOnAction(e -> loadMap(map));
+        menuLoadMap.getItems().add(miLoadMap);
+    }
+
+    public WorldMap getPredefinedMap(String description) {
+        return predefinedMaps.get(description);
+    }
+
     private void createLoadMapMenu() {
         menuLoadMap = new Menu("Load Map");
-
-        var miLoadPacManMap = new MenuItem("Pac-Man");
-        miLoadPacManMap.setOnAction(e -> loadMap(arcadeMaps[0]));
-        menuLoadMap.getItems().add(miLoadPacManMap);
-
-        menuLoadMap.getItems().add(new SeparatorMenuItem());
-
-        IntStream.rangeClosed(1, 6).forEach(i -> {
-            var mi = new MenuItem("Ms. Pac-Man " + i);
-            mi.setOnAction(e -> loadMap(arcadeMaps[i]));
-            menuLoadMap.getItems().add(mi);
-        });
-
-        menuLoadMap.getItems().add(new SeparatorMenuItem());
-
-        IntStream.rangeClosed(1, 8).forEach(i -> {
-            var mi = new MenuItem("Pac-Man XXL " + i);
-            mi.setOnAction(e -> loadMap(masonicMaps[i-1]));
-            menuLoadMap.getItems().add(mi);
-        });
     }
 
     private void updatePaths() {
@@ -287,18 +275,6 @@ public class TileMapEditor  {
 
     private void invalidatePaths() {
         pathsUpToDate = false;
-    }
-
-    private static WorldMap loadMap(String path, Class<?> loadingClass) {
-        try {
-            var url = loadingClass.getResource(path);
-            if (url != null) {
-                return new WorldMap(url);
-            }
-        } catch (Exception x) {
-            Logger.error(x);
-        }
-        return null;
     }
 
     void addShape(byte[][] shape, int topLeftRow, int topLeftCol) {
@@ -352,7 +328,7 @@ public class TileMapEditor  {
         updateInfo();
     }
 
-    void createNewMap() {
+    void showCreateNewMapDialog() {
         TextInputDialog dialog = new TextInputDialog("28x36");
         dialog.setTitle("Map Size");
         dialog.setHeaderText("Enter Map Size (cols x rows)");
@@ -362,16 +338,21 @@ public class TileMapEditor  {
             try {
                 int numCols = Integer.parseInt(tuple[0].trim());
                 int numRows = Integer.parseInt(tuple[1].trim());
-                var newMap = new WorldMap(new TileMap(numRows, numCols), new TileMap(numRows, numCols));
-                newMap.terrain().setProperty("wall_stroke_color", PropertyEditor.formatColor(DEFAULT_WALL_STROKE_COLOR));
-                newMap.terrain().setProperty("wall_fill_color",   PropertyEditor.formatColor(DEFAULT_WALL_FILL_COLOR));
-                newMap.terrain().setProperty("door_color",        PropertyEditor.formatColor(DEFAULT_DOOR_COLOR));
-                newMap.food().setProperty("food_color",           PropertyEditor.formatColor(DEFAULT_FOOD_COLOR));
+                var newMap = createNewMap(numRows, numCols);
                 setMap(newMap);
             } catch (Exception x) {
                 Logger.error(x);
             }
         });
+    }
+
+    private WorldMap createNewMap(int numRows, int numCols) {
+        var map = new WorldMap(new TileMap(numRows, numCols), new TileMap(numRows, numCols));
+        map.terrain().setProperty("wall_stroke_color", PropertyEditor.formatColor(DEFAULT_WALL_STROKE_COLOR));
+        map.terrain().setProperty("wall_fill_color",   PropertyEditor.formatColor(DEFAULT_WALL_FILL_COLOR));
+        map.terrain().setProperty("door_color",        PropertyEditor.formatColor(DEFAULT_DOOR_COLOR));
+        map.food().setProperty("food_color",           PropertyEditor.formatColor(DEFAULT_FOOD_COLOR));
+        return map;
     }
 
     void openMapFile() {
@@ -414,19 +395,6 @@ public class TileMapEditor  {
                 Logger.error("No .world file selected"); //TODO
             }
         }
-    }
-
-
-    public WorldMap getPacManMap() {
-        return arcadeMaps[0];
-    }
-
-    public WorldMap getMsPacManMap(int mapNumber) {
-        return 1 <= mapNumber && mapNumber <= 6 ? arcadeMaps[mapNumber] : arcadeMaps[1];
-    }
-
-    public WorldMap getMasonicMap(int mapNumber) {
-        return 1 <= mapNumber && mapNumber <= 8 ? masonicMaps[mapNumber-1] : masonicMaps[0];
     }
 
     public Pane getLayout() {

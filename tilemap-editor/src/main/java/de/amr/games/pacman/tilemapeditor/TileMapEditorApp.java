@@ -4,13 +4,18 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.tilemapeditor;
 
+import de.amr.games.pacman.lib.WorldMap;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.tinylog.Logger;
+
+import java.util.stream.IntStream;
 
 /**
  * @author Armin Reichert
@@ -18,7 +23,7 @@ import javafx.stage.Stage;
 public class TileMapEditorApp extends Application  {
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         var editor = new TileMapEditor(stage);
 
         var layout = new BorderPane();
@@ -29,6 +34,16 @@ public class TileMapEditorApp extends Application  {
         miQuit.setOnAction(e -> stage.close());
         editor.menuFile().getItems().add(miQuit);
 
+        editor.addPredefinedMap("Pac-Man", loadMap("maps/pacman.world", getClass()));
+        editor.menuLoadMap.getItems().add(new SeparatorMenuItem());
+        IntStream.rangeClosed(1, 6).forEach(i -> {
+            editor.addPredefinedMap("Ms. Pac-Man " + i, loadMap("maps/mspacman/mspacman_" + i + ".world", getClass()));
+        });
+        editor.menuLoadMap.getItems().add(new SeparatorMenuItem());
+        IntStream.rangeClosed(1, 8).forEach(i -> {
+            editor.addPredefinedMap("Pac-Man XXL " + i, loadMap("maps/masonic/masonic_" + i + ".world", getClass()));
+        });
+
         double height = Math.max(0.66 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
         double width = 2 * height;
         var scene = new Scene(layout, width, height);
@@ -38,6 +53,20 @@ public class TileMapEditorApp extends Application  {
         stage.titleProperty().bind(editor.titlePy);
         stage.show();
 
-        editor.loadMap(editor.getMsPacManMap(1));
+        editor.loadMap(editor.getPredefinedMap("Pac-Man XXL 4"));
     }
+
+    private WorldMap loadMap(String path, Class<?> loadingClass) {
+        try {
+            var url = loadingClass.getResource(path);
+            if (url != null) {
+                return new WorldMap(url);
+            }
+        } catch (Exception x) {
+            Logger.error(x);
+        }
+        return null;
+    }
+
+
 }
