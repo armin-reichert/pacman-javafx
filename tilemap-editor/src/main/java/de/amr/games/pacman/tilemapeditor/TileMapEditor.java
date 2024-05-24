@@ -313,6 +313,7 @@ public class TileMapEditor  {
     private void addHouse() {
         addShape(GHOST_HOUSE_SHAPE, 14, 10);
         map.terrain().set(26, 13, Tiles.PAC_HOME);
+        invalidatePaths();
     }
 
     private void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
@@ -328,6 +329,7 @@ public class TileMapEditor  {
         terrain.set(emptyRowsTop, terrain.numCols() - 1, Tiles.DCORNER_NE);
         terrain.set(terrain.numRows() - 1 - emptyRowsBottom, 0, Tiles.DCORNER_SW);
         terrain.set(terrain.numRows() - 1 - emptyRowsBottom, terrain.numCols() - 1, Tiles.DCORNER_SE);
+        invalidatePaths();
     }
 
     private void setMap(WorldMap other) {

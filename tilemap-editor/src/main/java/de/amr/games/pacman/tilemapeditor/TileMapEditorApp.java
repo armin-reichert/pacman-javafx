@@ -29,8 +29,9 @@ public class TileMapEditorApp extends Application  {
         miQuit.setOnAction(e -> stage.close());
         editor.menuFile().getItems().add(miQuit);
 
-        double height = Math.max(0.8 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
-        var scene = new Scene(layout, height * 1.2, height);
+        double height = Math.max(0.66 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
+        double width = 2 * height;
+        var scene = new Scene(layout, width, height);
         scene.setFill(Color.BLACK);
 
         stage.setScene(scene);
