@@ -1,71 +1,72 @@
 plugins {
-  id 'java'
-  id 'application'
-  id 'org.openjfx.javafxplugin' version '0.1.0'
-  id 'org.beryx.jlink' version '3.0.1'
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+    id 'org.beryx.jlink' version '3.0.1'
 }
 
 group 'de.amr.games.pacman'
 version '1.0'
 
 import org.gradle.internal.os.OperatingSystem
+
 OperatingSystem os = OperatingSystem.current()
 ext.arch = System.getProperty("os.arch")
 println "Operating System: name='${os.name}' version='${os.version}' arch='${arch}'"
 
 dependencies {
-  implementation project(':pacman-lib')
-  implementation project(':pacman-core')
-  implementation project(':pacman-ui-fx-2d')
-  implementation 'org.tinylog:tinylog-api:2.7.0'
-  implementation 'org.tinylog:tinylog-impl:2.7.0'
+    implementation project(':pacman-lib')
+    implementation project(':pacman-core')
+    implementation project(':pacman-ui-fx-2d')
+    implementation 'org.tinylog:tinylog-api:2.7.0'
+    implementation 'org.tinylog:tinylog-impl:2.7.0'
 }
 
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
 
 java {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(21)
-  }
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
-  options.encoding = 'UTF-8'
+    options.encoding = 'UTF-8'
 }
 
 application {
-  mainModule = 'de.amr.games.pacman.tilemapeditor'
-  mainClass = 'de.amr.games.pacman.tilemapeditor.Main'
+    mainModule = 'de.amr.games.pacman.tilemapeditor'
+    mainClass = 'de.amr.games.pacman.tilemapeditor.Main'
 }
 
 javafx {
-  version = '21.0.2'
-  modules = ['javafx.base', 'javafx.graphics', 'javafx.controls']
+    version = '21.0.2'
+    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls']
 }
 
 jlink {
-imageZip = project.file("${layout.buildDirectory}/distributions/app-${javafx.platform.classifier}.zip")
-options = ['--strip-debug', '--compress', 'zip-9', '--no-header-files', '--no-man-pages']
-  launcher {
-    name = 'tilemap-editor'
-  }
-  jpackage {
-    appVersion = '1.0'
-    description = 'Pac-Man JavaFX Tile Map Editor'
-    vendor = 'Armin Reichert'
-    if (os.isWindows()) {
-      //icon = 'pacman.ico'
-      installerType = 'exe'
-      installerOptions.addAll(['--win-dir-chooser', '--win-menu', '--win-menu-group', 'Pac-Man FX', '--win-shortcut'])
-    } else if (os.isLinux()) {
-      // doesn't create working installer
-      installerType = 'deb'
+    imageZip = project.file("${layout.buildDirectory}/distributions/app-${javafx.platform.classifier}.zip")
+    options = ['--strip-debug', '--compress', 'zip-6', '--no-header-files', '--no-man-pages']
+    launcher {
+        name = 'tilemap-editor'
     }
-  }
+    jpackage {
+        appVersion = '1.0'
+        description = 'Pac-Man JavaFX Tile Map Editor'
+        vendor = 'Armin Reichert'
+        if (os.isWindows()) {
+            //icon = 'pacman.ico'
+            installerType = 'exe'
+            installerOptions.addAll(['--win-dir-chooser', '--win-menu', '--win-menu-group', 'Pac-Man FX', '--win-shortcut'])
+        } else if (os.isLinux()) {
+            // doesn't create working installer
+            installerType = 'deb'
+        }
+    }
 }
 
 jlinkZip {
-  group = 'distribution'
+    group = 'distribution'
 }
