@@ -41,7 +41,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 /**
  * @author Armin Reichert
@@ -252,6 +251,9 @@ public class TileMapEditor  {
     }
 
     public void addPredefinedMap(String description, WorldMap map) {
+        if (map == null) {
+            Logger.error("Cannot add map '{}', map is NULL", description);
+        }
         predefinedMaps.put(description, map);
         var miLoadMap = new MenuItem(description);
         miLoadMap.setOnAction(e -> loadMap(map));

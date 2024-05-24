@@ -34,18 +34,18 @@ public class TileMapEditorApp extends Application  {
         miQuit.setOnAction(e -> stage.close());
         editor.menuFile().getItems().add(miQuit);
 
-        editor.addPredefinedMap("Pac-Man", loadMap("maps/pacman.world", getClass()));
+        editor.addPredefinedMap("Pac-Man", loadMap("maps/pacman.world"));
         editor.menuLoadMap.getItems().add(new SeparatorMenuItem());
         IntStream.rangeClosed(1, 6).forEach(i -> {
-            editor.addPredefinedMap("Ms. Pac-Man " + i, loadMap("maps/mspacman/mspacman_" + i + ".world", getClass()));
+            editor.addPredefinedMap("Ms. Pac-Man " + i, loadMap("maps/mspacman/mspacman_" + i + ".world"));
         });
         editor.menuLoadMap.getItems().add(new SeparatorMenuItem());
         IntStream.rangeClosed(1, 8).forEach(i -> {
-            editor.addPredefinedMap("Pac-Man XXL " + i, loadMap("maps/masonic/masonic_" + i + ".world", getClass()));
+            editor.addPredefinedMap("Pac-Man XXL " + i, loadMap("maps/masonic/masonic_" + i + ".world"));
         });
 
-        double height = Math.max(0.66 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
-        double width = 2 * height;
+        double height = Math.max(0.7 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
+        double width = 1.9 * height;
         var scene = new Scene(layout, width, height);
         scene.setFill(Color.BLACK);
 
@@ -56,9 +56,9 @@ public class TileMapEditorApp extends Application  {
         editor.loadMap(editor.getPredefinedMap("Pac-Man XXL 4"));
     }
 
-    private WorldMap loadMap(String path, Class<?> loadingClass) {
+    private WorldMap loadMap(String path) {
         try {
-            var url = loadingClass.getResource(path);
+            var url = getClass().getResource(path);
             if (url != null) {
                 return new WorldMap(url);
             }
@@ -67,6 +67,4 @@ public class TileMapEditorApp extends Application  {
         }
         return null;
     }
-
-
 }
