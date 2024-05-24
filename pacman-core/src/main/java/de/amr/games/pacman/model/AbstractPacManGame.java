@@ -88,7 +88,7 @@ public abstract class AbstractPacManGame implements GameModel {
     final Score          highScore = new Score();
     final GateKeeper     gateKeeper = new GateKeeper();
 
-    String               highScoreFileName;
+    File                 highScoreFile;
     int                  levelNumber; // 1=first level
     boolean              demoLevel;
     long                 levelStartTime;
@@ -474,19 +474,17 @@ public abstract class AbstractPacManGame implements GameModel {
     }
 
     public void loadHighScore() {
-        File file = new File(System.getProperty("user.home"), highScoreFileName);
-        highScore.read(file);
+        highScore.read(highScoreFile);
         Logger.info("Highscore loaded. File: '{}', {} points, level {}",
-            file, highScore.points(), highScore.levelNumber());
+            highScoreFile, highScore.points(), highScore.levelNumber());
     }
 
     @Override
     public void updateHighScore() {
-        File file = new File(System.getProperty("user.home"), highScoreFileName);
         var oldHighScore = new Score();
-        oldHighScore.read(file);
+        oldHighScore.read(highScoreFile);
         if (highScore.points() > oldHighScore.points()) {
-            highScore.save(file, String.format("%s High Score", variant().name()));
+            highScore.save(highScoreFile, String.format("%s High Score", variant().name()));
         }
     }
 

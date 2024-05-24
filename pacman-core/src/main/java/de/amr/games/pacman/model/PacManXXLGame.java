@@ -10,6 +10,7 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class PacManXXLGame extends PacManGame {
     @Override
     public void init() {
         initialLives = 3;
-        highScoreFileName = "highscore-pacman_xxl.xml";
+        highScoreFile = new File(System.getProperty("user.home"),"highscore-pacman_xxl.xml");
         Logger.info("Game variant {} initialized.", variant());
     }
 

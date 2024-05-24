@@ -16,6 +16,7 @@ import de.amr.games.pacman.steering.RouteBasedSteering;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,7 @@ public class PacManGame extends AbstractPacManGame {
     @Override
     public void init() {
         initialLives = 3;
-        highScoreFileName = "highscore-pacman.xml";
+        highScoreFile = new File(System.getProperty("user.home"),"highscore-pacman.xml");
         Logger.info("Game variant {} initialized.", variant());
     }
 
