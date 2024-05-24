@@ -54,7 +54,7 @@ jlink {
     }
     jpackage {
         appVersion = '1.0'
-        description = 'Pac-Man JavaFX (§D version)'
+        description = 'Pac-Man JavaFX (3D version)'
         vendor = 'Armin Reichert' // seems to appear nowhere
         installerOptions = [
         ]
