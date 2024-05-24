@@ -27,6 +27,7 @@
     </properties>
 
     <modules>
+        <module>pacman-lib</module>
         <module>pacman-core</module>
         <module>pacman-ui-fx-2d</module>
         <module>pacman-ui-fx-3d</module>
