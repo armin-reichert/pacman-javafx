@@ -5,8 +5,9 @@ plugins {
 group 'de.amr.games.pacman'
 version '1.0'
 
+import org.gradle.internal.os.OperatingSystem
+OperatingSystem os = OperatingSystem.current()
 ext.arch = System.getProperty("os.arch")
-ext.os = org.gradle.internal.os.OperatingSystem.current()
 println "Operating System: name='${os.name}' version='${os.version}' arch='${arch}'"
 
 dependencies {
