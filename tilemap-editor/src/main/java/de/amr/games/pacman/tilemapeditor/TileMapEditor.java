@@ -329,6 +329,11 @@ public class TileMapEditor  {
         terrain.set(emptyRowsTop, terrain.numCols() - 1, Tiles.DCORNER_NE);
         terrain.set(terrain.numRows() - 1 - emptyRowsBottom, 0, Tiles.DCORNER_SW);
         terrain.set(terrain.numRows() - 1 - emptyRowsBottom, terrain.numCols() - 1, Tiles.DCORNER_SE);
+
+        terrain.set(0, 2, Tiles.SCATTER_TARGET_PINK);
+        terrain.set(0, terrain.numCols() - 3, Tiles.SCATTER_TARGET_RED);
+        terrain.set(terrain.numRows() - emptyRowsBottom, 0, Tiles.SCATTER_TARGET_ORANGE);
+        terrain.set(terrain.numRows() - emptyRowsBottom, terrain.numCols() - 1, Tiles.SCATTER_TARGET_CYAN);
         invalidatePaths();
     }
 
@@ -436,9 +441,23 @@ public class TileMapEditor  {
         return menuFile;
     }
 
+    /**
+     * @return pixels used by one tile at current window zoom
+     */
+    private double tilePx() {
+        return editCanvas.getHeight() / map.numRows();
+    }
+
+    /**
+     * @param pixels number of pixels
+     * @return number of full tiles spanned by pixels
+     */
+    private int fullTiles(double pixels) {
+        return (int) (pixels / tilePx());
+    }
 
     // TODO use own canvas or Text control
-    void drawBlueScreen(Exception drawException) {
+    private void drawBlueScreen(Exception drawException) {
         GraphicsContext g = editCanvas.getGraphicsContext2D();
         g.setFill(Color.BLUE);
         g.fillRect(0, 0, editCanvas.getWidth(), editCanvas.getHeight());
@@ -455,7 +474,7 @@ public class TileMapEditor  {
         }
     }
 
-    void drawEditCanvas() {
+    private void drawEditCanvas() {
         GraphicsContext g = editCanvas.getGraphicsContext2D();
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, editCanvas.getWidth(), editCanvas.getHeight());
@@ -466,7 +485,7 @@ public class TileMapEditor  {
             terrainMapRenderer.setWallStrokeColor(TileMapRenderer.getColorFromMap(map.terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
             terrainMapRenderer.setWallFillColor(TileMapRenderer.getColorFromMap(map.terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
             terrainMapRenderer.setDoorColor(TileMapRenderer.getColorFromMap(map.terrain(), "door_color", DEFAULT_DOOR_COLOR));
-            terrainMapRenderer.runtimePreview = false;
+            terrainMapRenderer.setRuntimeMode(false);
             terrainMapRenderer.drawMap(g, map.terrain());
         }
         if (foodVisiblePy.get()) {
@@ -484,7 +503,7 @@ public class TileMapEditor  {
         }
     }
 
-    void drawPreviewCanvas() {
+    private void drawPreviewCanvas() {
         GraphicsContext g = previewCanvas.getGraphicsContext2D();
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, previewCanvas.getWidth(), previewCanvas.getHeight());
@@ -494,7 +513,7 @@ public class TileMapEditor  {
             terrainMapRenderer.setWallStrokeColor(TileMapRenderer.getColorFromMap(map.terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
             terrainMapRenderer.setWallFillColor(TileMapRenderer.getColorFromMap(map.terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
             terrainMapRenderer.setDoorColor(TileMapRenderer.getColorFromMap(map.terrain(), "door_color", DEFAULT_DOOR_COLOR));
-            terrainMapRenderer.runtimePreview = true;
+            terrainMapRenderer.setRuntimeMode(true);
             terrainMapRenderer.drawMap(g, map.terrain());
         }
         if (foodVisiblePy.get()) {
@@ -506,7 +525,7 @@ public class TileMapEditor  {
         }
     }
 
-    void draw() {
+    private void draw() {
         drawEditCanvas();
         drawPreviewCanvas();
         if (terrainEditedPy.get()) {
@@ -516,7 +535,7 @@ public class TileMapEditor  {
         }
     }
 
-    void drawGrid(GraphicsContext g) {
+    private void drawGrid(GraphicsContext g) {
         if (gridVisiblePy.get()) {
             g.setStroke(Color.LIGHTGRAY);
             g.setLineWidth(0.25);
@@ -529,32 +548,22 @@ public class TileMapEditor  {
             }
         }
     }
-    /**
-     * @return pixels used by one tile at current window zoom
-     */
-    double tilePx() {
-        return editCanvas.getHeight() / map.numRows();
+
+    private Vector2i tileAtMousePosition(double mouseX, double mouseY) {
+        return new Vector2i(fullTiles(mouseX), fullTiles(mouseY));
     }
 
-    /**
-     * @param pixels number of pixels
-     * @return number of full tiles spanned by pixels
-     */
-    int fullTiles(double pixels) {
-        return (int) (pixels / tilePx());
-    }
-
-    void onMouseClickedOnCanvas(MouseEvent e) {
+    private void onMouseClickedOnCanvas(MouseEvent e) {
         if (terrainEditedPy.get()) {
-            editTerrainTile(e);
+            onTerrainTileClicked(e);
         } else {
-            editFoodTile(e);
+            onFoodTileClicked(e);
         }
+        invalidatePaths();
     }
 
-    void onMouseMovedOverCanvas(MouseEvent e) {
-        hoveredTile = new Vector2i(fullTiles(e.getX()), fullTiles(e.getY()));
-        updateInfo();
+    private void onMouseMovedOverCanvas(MouseEvent e) {
+        hoveredTile = tileAtMousePosition(e.getX(), e.getY());
         if (e.isShiftDown()) {
             if (terrainEditedPy.get()) {
                 map.terrain().set(hoveredTile, terrainPalette.selectedValue);
@@ -562,55 +571,51 @@ public class TileMapEditor  {
                 map.food().set(hoveredTile, foodPalette.selectedValue);
             }
         }
+        invalidatePaths();
+        updateInfo();
     }
 
-    void editTerrainTile(MouseEvent e) {
-        var tile = new Vector2i(fullTiles(e.getX()), fullTiles(e.getY()));
+    private void onTerrainTileClicked(MouseEvent e) {
+        var tile = tileAtMousePosition(e.getX(), e.getY());
         if (e.getButton() == MouseButton.SECONDARY) {
             map.terrain().set(tile, Tiles.EMPTY);
-            updateInfo();
         }
         else if (e.isShiftDown()) { // cycle through all tile values
             byte content = map.terrain().get(tile);
             byte nextValue = content < Tiles.TERRAIN_TILES_END - 1 ? (byte) (content + 1) : 0;
             map.terrain().set(tile, nextValue);
-            updateInfo();
         }
         else {
             map.terrain().set(tile, terrainPalette.selectedValue);
-            updateInfo();
         }
         invalidatePaths();
+        updateInfo();
     }
 
-    void editFoodTile(MouseEvent e) {
-        var tile = new Vector2i(fullTiles(e.getX()), fullTiles(e.getY()));
+    private void onFoodTileClicked(MouseEvent e) {
+        var tile = tileAtMousePosition(e.getX(), e.getY());
         if (e.getButton() == MouseButton.SECONDARY) {
             map.food().set(tile, Tiles.EMPTY);
-            updateInfo();
         }
         else if (e.isShiftDown()) { // cycle through all tile values
             byte content = map.food().get(tile);
             byte newValue = content < Tiles.FOOD_TILES_END - 1 ? (byte) (content + 1) : 0;
             map.food().set(tile, newValue);
-            updateInfo();
         }
         else {
             map.food().set(tile, foodPalette.selectedValue);
-            updateInfo();
         }
+        updateInfo();
     }
 
-    void updateInfo() {
+    private void updateInfo() {
         var text = "Tile: ";
         text += hoveredTile != null ? String.format("x=%2d y=%2d", hoveredTile.x(), hoveredTile.y()) : "n/a";
         infoLabel.setText(text);
-
         if (currentMapFile != null) {
             titlePy.set("Map Editor: " + currentMapFile.getPath());
         } else {
             titlePy.set("Map Editor");
         }
     }
-
 }

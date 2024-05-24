@@ -18,10 +18,14 @@ import javafx.scene.shape.ArcType;
  */
 public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
 
-    public boolean runtimePreview;
+    private boolean runtimeMode;
+
+    public void setRuntimeMode(boolean state) {
+        this.runtimeMode = state;
+    }
 
     public void drawMap(GraphicsContext g, TileMap map) {
-        if (runtimePreview) {
+        if (runtimeMode) {
             super.drawMap(g, map);
         } else {
           map.tiles().forEach(tile -> drawTile(g, tile, map.get(tile)));
