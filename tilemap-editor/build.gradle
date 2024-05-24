@@ -17,7 +17,7 @@ println "Operating System: name='${os.name}' version='${os.version}' arch='${arc
 dependencies {
     implementation project(':pacman-lib')
     implementation project(':pacman-core')
-    implementation project(':pacman-ui-fx-2d')
+    implementation project(':pacman-ui-fx-2d') //TODO should not depend on complete project
     implementation 'org.tinylog:tinylog-api:2.7.0'
     implementation 'org.tinylog:tinylog-impl:2.7.0'
 }
