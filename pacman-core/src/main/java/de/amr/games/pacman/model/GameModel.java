@@ -44,7 +44,8 @@ public interface GameModel {
         return number;
     }
 
-    File CUSTOM_MAP_DIR = new File(System.getProperty("user.home"), ".pacmanfx/maps");
+    File GAME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
+    File CUSTOM_MAP_DIR = new File(GAME_DIR, "maps");
 
     byte ARCADE_MAP_TILES_X = 28;
     byte ARCADE_MAP_TILES_Y = 36;

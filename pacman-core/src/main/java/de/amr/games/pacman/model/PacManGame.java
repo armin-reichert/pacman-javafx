@@ -67,7 +67,7 @@ public class PacManGame extends AbstractPacManGame {
     @Override
     public void init() {
         initialLives = 3;
-        highScoreFile = new File(System.getProperty("user.home"),"highscore-pacman.xml");
+        highScoreFile = new File(GAME_DIR,"highscore-pacman.xml");
         Logger.info("Game variant {} initialized.", variant());
     }
 

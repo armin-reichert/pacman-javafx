@@ -29,7 +29,7 @@ public class PacManXXLGame extends PacManGame {
     @Override
     public void init() {
         initialLives = 3;
-        highScoreFile = new File(System.getProperty("user.home"),"highscore-pacman_xxl.xml");
+        highScoreFile = new File(GAME_DIR,"highscore-pacman_xxl.xml");
         Logger.info("Game variant {} initialized.", variant());
     }
 

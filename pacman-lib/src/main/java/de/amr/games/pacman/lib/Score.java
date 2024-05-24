@@ -62,13 +62,16 @@ public class Score {
             setLevelNumber(Integer.parseInt(p.getProperty("level")));
             setDate(LocalDate.parse(p.getProperty("date"), DateTimeFormatter.ISO_LOCAL_DATE));
         } catch (Exception x) {
-            Logger.error(x);
-            Logger.error("Score could not be loaded from file '{}'.", file);
+            Logger.warn("Score could not be loaded from file '{}'.", file);
         }
     }
 
     public void save(File file, String description) {
         var p = new Properties();
+        boolean created = file.getParentFile().mkdirs();
+        if (created) {
+            Logger.info("Folder {} has been created", file.getParentFile());
+        }
         try (var out = new BufferedOutputStream(new FileOutputStream(file))) {
             p.setProperty("points", String.valueOf(points()));
             p.setProperty("level",  String.valueOf(levelNumber()));
@@ -78,7 +81,6 @@ public class Score {
             Logger.info("Saved '{}' to file '{}'. Points: {} Level: {}",
                 description, file, points(), levelNumber());
         } catch (Exception x) {
-            Logger.error(x);
             Logger.error("Score could not be saved to file '{}'.", file);
         }
     }
