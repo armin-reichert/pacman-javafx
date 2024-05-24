@@ -54,7 +54,7 @@ public class Score {
         return date;
     }
 
-    public void openScoreFile(File file) {
+    public void read(File file) {
         var p = new Properties();
         try (var in = new BufferedInputStream(new FileInputStream(file))) {
             p.loadFromXML(in);
@@ -67,7 +67,7 @@ public class Score {
         }
     }
 
-    public void saveScoreFile(File file, String description) {
+    public void save(File file, String description) {
         var p = new Properties();
         try (var out = new BufferedOutputStream(new FileOutputStream(file))) {
             p.setProperty("points", String.valueOf(points()));
