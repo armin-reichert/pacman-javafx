@@ -13,7 +13,6 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import org.tinylog.Logger;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +83,7 @@ public class Model3D {
                 }
             }
             Logger.trace(contentAsText(url));
-        } catch (IOException e) {
+        } catch (Exception e) {
             Logger.error(e);
         }
     }

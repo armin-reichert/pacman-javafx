@@ -38,18 +38,20 @@ import javafx.scene.paint.PhongMaterial;
 import org.tinylog.Logger;
 
 import java.io.*;
+import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
 
 /**
  * Reader for OBJ file MTL material files.
  */
 public class MtlReader {
 
-    private String baseUrl;
-    private Map<String, Material> materials = new HashMap<>();
+    private final String baseUrl;
+    private final Map<String, Material> materials = new HashMap<>();
     private PhongMaterial material = new PhongMaterial();
     private boolean modified = false;
 
@@ -57,13 +59,13 @@ public class MtlReader {
         baseUrl = parentUrl.substring(0, parentUrl.lastIndexOf('/') + 1);
         String fileUrl = baseUrl + filename;
         try {
-            URL mtlUrl = new URL(fileUrl);
+            URL mtlUrl = new URI(fileUrl).toURL();
             Logger.trace("Reading material from URL {}", mtlUrl);
             read(mtlUrl.openStream());
         } catch (FileNotFoundException ex) {
             Logger.trace("No material file found for obj. [{}]", fileUrl);
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } catch (Exception x) {
+            Logger.error(x);
         }
     }
 
@@ -78,6 +80,7 @@ public class MtlReader {
         while ((line = br.readLine()) != null) {
             try {
                 if (line.isEmpty() || line.startsWith("#")) {
+                    Logger.trace("Skipped line {}", line);
                     // comments and empty lines are ignored
                 } else if (line.startsWith("newmtl ")) {
                     addMaterial(name);
@@ -110,7 +113,7 @@ public class MtlReader {
                     Logger.trace("Material file line ignored for name {}: {}", name, line);
                 }
             } catch (Exception x) {
-                x.printStackTrace();
+                Logger.error(x);
                 Logger.error("Failed to parse line: {}", line);
             }
         }

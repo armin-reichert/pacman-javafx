@@ -45,8 +45,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
+
 
 /**
  * Stripped-down version of Oracle's OBJ importer from the 3DViewer sample project.
@@ -99,21 +103,21 @@ public class ObjImporter {
     }
 
     private String objFileUrl;
-    private Map<String, TriangleMesh> meshes = new HashMap<>();
-    private List<Map<String, Material>> materialLibrary = new ArrayList<>();
-    private ObservableFloatArray vertexes = FXCollections.observableFloatArray();
-    private ObservableFloatArray uvs = FXCollections.observableFloatArray();
-    private IntegerArrayList faces = new IntegerArrayList();
-    private IntegerArrayList smoothingGroups = new IntegerArrayList();
-    private ObservableFloatArray normals = FXCollections.observableFloatArray();
-    private IntegerArrayList faceNormals = new IntegerArrayList();
+    private final Map<String, TriangleMesh> meshes = new HashMap<>();
+    private final List<Map<String, Material>> materialLibrary = new ArrayList<>();
+    private final ObservableFloatArray vertexes = FXCollections.observableFloatArray();
+    private final ObservableFloatArray uvs = FXCollections.observableFloatArray();
+    private final IntegerArrayList faces = new IntegerArrayList();
+    private final IntegerArrayList smoothingGroups = new IntegerArrayList();
+    private final ObservableFloatArray normals = FXCollections.observableFloatArray();
+    private final IntegerArrayList faceNormals = new IntegerArrayList();
     private int facesStart = 0;
     private int facesNormalStart = 0;
     private int smoothingGroupsStart = 0;
 
-    public ObjImporter(String objFileUrl) throws IOException {
+    public ObjImporter(String objFileUrl) throws IOException, URISyntaxException {
         this.objFileUrl = objFileUrl;
-        parse(new URL(objFileUrl).openStream());
+        parse(new URI(objFileUrl).toURL().openStream());
     }
 
     public ObjImporter(InputStream inputStream) throws IOException {

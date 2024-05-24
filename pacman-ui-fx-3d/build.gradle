@@ -38,6 +38,9 @@ repositories {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+    configure(options) {
+        options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
+    }
 }
 
 java {
