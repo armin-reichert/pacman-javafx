@@ -30,6 +30,7 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
 
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
         g.save();
+        g.scale(scaling(), scaling());
         switch (content) {
             case Tiles.WALL_H -> drawWallH(g, tile);
             case Tiles.WALL_V -> drawWallV(g, tile);
@@ -56,86 +57,60 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
 
     public void drawScatterTarget(GraphicsContext g, Vector2i tile, Color color) {
         double x = tile.x() * TileMapRenderer.TILE_SIZE, y = tile.y() * TileMapRenderer.TILE_SIZE;
-        g.save();
-        g.scale(scaling(), scaling());
         g.setFill(color);
         g.fillRect(x, y, TileMapRenderer.TILE_SIZE, TileMapRenderer.TILE_SIZE);
         g.setStroke(Color.WHITE);
         g.strokeOval(x + 2, y + 2, TileMapRenderer.TILE_SIZE - 4, TileMapRenderer.TILE_SIZE - 4);
         g.strokeLine(x + 0.5 * TileMapRenderer.TILE_SIZE, y, x + 0.5 * TileMapRenderer.TILE_SIZE, y + TileMapRenderer.TILE_SIZE);
         g.strokeLine(x, y + 0.5 * TileMapRenderer.TILE_SIZE, x + TileMapRenderer.TILE_SIZE, y + 0.5 * TileMapRenderer.TILE_SIZE);
-        g.restore();
     }
 
     public void drawPacHome(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TileMapRenderer.TILE_SIZE, y = tile.y() * TileMapRenderer.TILE_SIZE;
-        g.save();
-        g.scale(scaling(), scaling());
         g.setFill(Color.YELLOW);
         g.fillOval(x, y, TileMapRenderer.TILE_SIZE, TileMapRenderer.TILE_SIZE);
-        g.restore();
     }
 
     public void drawGhostHome(GraphicsContext g, Vector2i tile, Color color) {
         double x = tile.x() * TileMapRenderer.TILE_SIZE, y = tile.y() * TileMapRenderer.TILE_SIZE;
-        g.save();
-        g.scale(scaling(), scaling());
         g.setFill(color);
         g.fillOval(x, y, TileMapRenderer.TILE_SIZE, TileMapRenderer.TILE_SIZE);
-        g.restore();
     }
 
     public void drawTunnel(GraphicsContext g, Vector2i tile) {
-        g.save();
-        g.scale(scaling(), scaling());
         g.setFill(Color.GRAY);
         g.fillRect(tile.x() * 8, tile.y() * 8, 8, 8);
-        g.restore();
     }
 
     public void drawWallH(GraphicsContext g, Vector2i tile) {
-        g.save();
-        g.scale(scaling(), scaling());
         double x = tile.x() * TileMapRenderer.TILE_SIZE, y = tile.y() * TileMapRenderer.TILE_SIZE;
         g.setFill(wallStrokeColor);
         g.fillRect(x, y + 3.5f, 8, 1);
-        g.restore();
     }
 
     public void drawDWallH(GraphicsContext g, Vector2i tile) {
-        g.save();
-        g.scale(scaling(), scaling());
         double x = tile.x() * TileMapRenderer.TILE_SIZE, y = tile.y() * TileMapRenderer.TILE_SIZE;
         g.setFill(wallStrokeColor);
         // add 1 pixel to avoid gaps
         g.fillRect(x, y + 2.5f, 8, 1);
         g.fillRect(x, y + 4.5f, 8, 1);
-        g.restore();
     }
 
     public void drawWallV(GraphicsContext g, Vector2i tile) {
-        g.save();
-        g.scale(scaling(), scaling());
         double x = tile.x() * TileMapRenderer.TILE_SIZE, y = tile.y() * TileMapRenderer.TILE_SIZE;
         g.setFill(wallStrokeColor);
         // add 1 pixel to avoid gaps
         g.fillRect(x + 3.5f, y, 1, 8);
-        g.restore();
     }
 
     public void drawDWallV(GraphicsContext g, Vector2i tile) {
-        g.save();
-        g.scale(scaling(), scaling());
         double x = tile.x() * TileMapRenderer.TILE_SIZE, y = tile.y() * TileMapRenderer.TILE_SIZE;
         g.setFill(wallStrokeColor);
         g.fillRect(x + 2.5f, y, 1, 8);
         g.fillRect(x + 4.5f, y, 1, 8);
-        g.restore();
     }
 
     public void drawCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
-        g.save();
-        g.scale(scaling(), scaling());
         double x = tile.x() * TileMapRenderer.TILE_SIZE, y = tile.y() * TileMapRenderer.TILE_SIZE;
         g.setStroke(wallStrokeColor);
         g.setLineWidth(1);
@@ -146,12 +121,9 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
             case Tiles.CORNER_SW -> g.strokeArc(x + 4, y - 4, 8, 8, 180, 90, ArcType.OPEN);
             default -> {}
         }
-        g.restore();
     }
 
     public void drawDCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
-        g.save();
-        g.scale(scaling(), scaling());
         double x = tile.x() * TileMapRenderer.TILE_SIZE, y = tile.y() * TileMapRenderer.TILE_SIZE;
         g.setStroke(wallStrokeColor);
         g.setLineWidth(1);
@@ -174,6 +146,5 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
             }
             default -> {}
         }
-        g.restore();
     }
 }

@@ -31,7 +31,7 @@ public class PropertyEditor extends BorderPane {
         var btnAddEntry = new Button("+");
         btnAddEntry.setStyle("-fx-padding: 0 2 0 2");
         btnAddEntry.setOnAction(e -> {
-            editedProperties.put("New Property", "");
+            editedProperties.put("aaa_new_property", "first_value");
             updateTable();
         });
         var header = new HBox(lblTitle, btnAddEntry);
@@ -41,16 +41,12 @@ public class PropertyEditor extends BorderPane {
         setCenter(grid);
     }
 
-    public Properties getEditedProperties() {
-        return editedProperties;
-    }
-
-    public void setEditedProperties(Properties editedProperties) {
+    public void edit(Properties editedProperties) {
         this.editedProperties = editedProperties;
         updateTable();
     }
 
-    public void updateTable() {
+    private void updateTable() {
         grid.getChildren().clear();
         grid.setHgap(2);
         grid.setVgap(1);

@@ -164,7 +164,7 @@ public class TileMapEditor  {
         var cbGridVisible = new CheckBox("Grid");
         cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
 
-        terrainPalette = new Palette(32, 6, 4, Tiles.TERRAIN_TILES_END, terrainMapRenderer);
+        terrainPalette = new Palette(32, 3, 8, Tiles.TERRAIN_TILES_END, terrainMapRenderer);
         terrainPalette.setValues(
             Tiles.EMPTY, Tiles.TUNNEL, Tiles.PAC_HOME, Tiles.DOOR,
             Tiles.SCATTER_TARGET_RED, Tiles.SCATTER_TARGET_PINK, Tiles.SCATTER_TARGET_CYAN, Tiles.SCATTER_TARGET_ORANGE,
@@ -174,7 +174,7 @@ public class TileMapEditor  {
             Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE
         );
 
-        foodPalette = new Palette(32, 4, 4, Tiles.FOOD_TILES_END, foodMapRenderer);
+        foodPalette = new Palette(32, 1, 4, Tiles.FOOD_TILES_END, foodMapRenderer);
         foodPalette.setValues(
             Tiles.EMPTY, Tiles.PELLET, Tiles.ENERGIZER, Tiles.EMPTY
         );
@@ -191,7 +191,7 @@ public class TileMapEditor  {
         infoLabel = new Label();
 
         VBox controlsPane = new VBox();
-        controlsPane.setMinWidth(300);
+        controlsPane.setMinWidth(200);
         controlsPane.setSpacing(10);
         controlsPane.getChildren().add(new HBox(20, new Label("Show"), cbTerrainVisible, cbFoodVisible, cbGridVisible));
         controlsPane.getChildren().add(infoLabel);
@@ -433,8 +433,8 @@ public class TileMapEditor  {
     public void loadMap(WorldMap other) {
         setMap(WorldMap.copyOf(other));
         currentMapFile = null;
-        foodMapPropertiesEditor.setEditedProperties(map.food().getProperties());
-        terrainMapPropertiesEditor.setEditedProperties(map.terrain().getProperties());
+        foodMapPropertiesEditor.edit(map.food().getProperties());
+        terrainMapPropertiesEditor.edit(map.terrain().getProperties());
         updateInfo();
     }
 

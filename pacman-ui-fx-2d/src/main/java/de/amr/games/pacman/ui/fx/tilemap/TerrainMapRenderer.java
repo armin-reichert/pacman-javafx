@@ -45,12 +45,15 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     public void drawMap(GraphicsContext g, TileMap map) {
         double lineWidth = lineWidth(g);
+        g.save();
+        g.scale(scaling(), scaling());
         map.dwallPaths().forEach(path -> {
             drawPath(g, map, path, false,  3*lineWidth, wallStrokeColor, null);
             drawPath(g, map, path, false,  lineWidth, wallFillColor, null);
         });
         map.wallPaths().forEach(path -> drawPath(g, map, path, true, lineWidth, wallStrokeColor, wallFillColor));
         map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, door, doorColor));
+        g.restore();
     }
 
     @Override
@@ -59,13 +62,10 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
-        g.save();
-        g.scale(scaling(), scaling());
         g.setFill(Color.BLACK);
         g.fillRect(x, y, TILE_SIZE, 6);
         g.setFill(color);
         g.fillRect(x, y + 3, TILE_SIZE, 2);
-        g.restore();
     }
 
     private double lineWidth(GraphicsContext g) {
@@ -88,8 +88,6 @@ public class TerrainMapRenderer implements TileMapRenderer {
         boolean fill, double lineWidth, Color outlineColor, Color fillColor) {
 
         double r = 0.45 * TILE_SIZE;
-        g.save();
-        g.scale(scaling(), scaling());
         g.beginPath();
 
         //TODO: avoid these special cases
@@ -143,7 +141,5 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.setStroke(outlineColor);
         g.setLineWidth(lineWidth);
         g.stroke();
-
-        g.restore();
     }
 }
