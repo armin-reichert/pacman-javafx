@@ -35,8 +35,9 @@ import javafx.stage.Window;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.stream.IntStream;
 
 import static de.amr.games.pacman.ui.fx.tilemap.TileMapRenderer.getColorFromMap;
@@ -552,8 +553,7 @@ public class TileMapEditor  {
     void readMapFile(File file) {
         if (file.getName().endsWith(".world")) {
             try {
-                var r = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
-                loadMap(new WorldMap(r.lines()));
+                loadMap(new WorldMap(file));
                 lastUsedDir = file.getParentFile();
                 currentMapFile = file;
                 Logger.info("Map read from file {}", file);

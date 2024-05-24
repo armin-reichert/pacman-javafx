@@ -37,8 +37,9 @@ public class WorldMap {
         parse(r.lines());
     }
 
-    public WorldMap(Stream<String> lines) {
-        parse(lines);
+    public WorldMap(File file) throws IOException {
+        var r = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
+        parse(r.lines());
     }
 
     private void parse(Stream<String> lines) {
