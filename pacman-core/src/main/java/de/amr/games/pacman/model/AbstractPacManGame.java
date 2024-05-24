@@ -475,7 +475,7 @@ public abstract class AbstractPacManGame implements GameModel {
 
     public void loadHighScore() {
         File file = new File(System.getProperty("user.home"), highScoreFileName);
-        highScore.loadFromFile(file);
+        highScore.openScoreFile(file);
         Logger.info("Highscore loaded. File: '{}', {} points, level {}",
             file, highScore.points(), highScore.levelNumber());
     }
@@ -484,9 +484,9 @@ public abstract class AbstractPacManGame implements GameModel {
     public void updateHighScore() {
         File file = new File(System.getProperty("user.home"), highScoreFileName);
         var oldHighScore = new Score();
-        oldHighScore.loadFromFile(file);
+        oldHighScore.openScoreFile(file);
         if (highScore.points() > oldHighScore.points()) {
-            highScore.saveToFile(file, String.format("%s High Score", variant().name()));
+            highScore.saveScoreFile(file, String.format("%s High Score", variant().name()));
         }
     }
 
