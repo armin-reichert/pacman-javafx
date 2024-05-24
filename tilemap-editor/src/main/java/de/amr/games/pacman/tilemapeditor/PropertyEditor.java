@@ -18,6 +18,20 @@ import java.util.Properties;
 
 public class PropertyEditor extends BorderPane {
 
+    public static Color parseColor(String colorText) {
+        Logger.info("parseColor {}", colorText);
+        try {
+            return Color.web(colorText);
+        } catch (Exception x) {
+            Logger.error(x);
+            return Color.WHITE;
+        }
+    }
+
+    public static String formatColor(Color color) {
+        return String.format("rgb(%d,%d,%d)", (int)(color.getRed()*255), (int)(color.getGreen()*255), (int)(color.getBlue()*255));
+    }
+
     private int nameColumnMinWidth = 100;
 
     private Properties editedProperties;
@@ -74,20 +88,6 @@ public class PropertyEditor extends BorderPane {
             ++row;
         }
         numRows = row;
-    }
-
-    private Color parseColor(String colorText) {
-        Logger.info("parseColor {}", colorText);
-        try {
-            return Color.web(colorText);
-        } catch (Exception x) {
-            Logger.error(x);
-            return Color.WHITE;
-        }
-    }
-
-    private String formatColor(Color color) {
-        return String.format("rgb(%d,%d,%d)", (int)(color.getRed()*255), (int)(color.getGreen()*255), (int)(color.getBlue()*255));
     }
 
     private void saveEditedEntry(TextField nameEditor, Object value) {

@@ -99,15 +99,6 @@ public class TileMapEditor  {
 
     //TODO resources must be loaded differently
     public TileMapEditor(Stage stage) {
-        arcadeMaps[0] = loadMap("maps/pacman.world", getClass());
-        for (int i = 1; i <= 6; ++i) {
-            arcadeMaps[i] = loadMap("maps/mspacman/mspacman_" + i + ".world", getClass());
-        }
-        for (int i = 1; i <= 8; ++i) {
-            masonicMaps[i-1] = loadMap("maps/masonic/masonic_" + i + ".world", getClass());
-        }
-        setMap(arcadeMaps[0]);
-
         terrainMapRenderer = new TileMapEditorTerrainRenderer();
         terrainMapRenderer.setWallStrokeColor(DEFAULT_WALL_STROKE_COLOR);
         terrainMapRenderer.setWallFillColor(DEFAULT_WALL_FILL_COLOR);
@@ -120,6 +111,15 @@ public class TileMapEditor  {
 
         createLayout();
         createMenus();
+
+        arcadeMaps[0] = loadMap("maps/pacman.world", getClass());
+        for (int i = 1; i <= 6; ++i) {
+            arcadeMaps[i] = loadMap("maps/mspacman/mspacman_" + i + ".world", getClass());
+        }
+        for (int i = 1; i <= 8; ++i) {
+            masonicMaps[i-1] = loadMap("maps/masonic/masonic_" + i + ".world", getClass());
+        }
+        setMap(arcadeMaps[0]);
 
         editCanvas.heightProperty().bind(layout.heightProperty().multiply(0.95));
         editCanvas.widthProperty().bind(Bindings.createDoubleBinding(
@@ -285,12 +285,6 @@ public class TileMapEditor  {
         pathsUpToDate = false;
     }
 
-    private void setMap(WorldMap other) {
-        map = other;
-        invalidatePaths();
-        updatePaths();
-    }
-
     private static WorldMap loadMap(String path, Class<?> loadingClass) {
         try {
             var url = loadingClass.getResource(path);
@@ -302,6 +296,96 @@ public class TileMapEditor  {
         }
         return null;
     }
+
+
+    void addShape(byte[][] shape, int topLeftRow, int topLeftCol) {
+        for (int row = 0; row < shape.length; ++row) {
+            for (int col = 0; col < shape[0].length; ++col) {
+                map.terrain().set(topLeftRow + row, topLeftCol+ col, shape[row][col]);
+            }
+        }
+        invalidatePaths();
+    }
+
+    private void setMap(WorldMap other) {
+        map = other;
+        foodMapPropertiesEditor.edit(map.food().getProperties());
+        terrainMapPropertiesEditor.edit(map.terrain().getProperties());
+        invalidatePaths();
+        updatePaths();
+    }
+
+
+    public void loadMap(WorldMap other) {
+        setMap(WorldMap.copyOf(other));
+        currentMapFile = null;
+        updateInfo();
+    }
+
+    void createNewMap() {
+        TextInputDialog dialog = new TextInputDialog("28x36");
+        dialog.setTitle("Map Size");
+        dialog.setHeaderText("Enter Map Size (cols x rows)");
+        dialog.setContentText("Map Size:");
+        dialog.showAndWait().ifPresent(text -> {
+            String[] tuple = text.split("x");
+            try {
+                int numCols = Integer.parseInt(tuple[0].trim());
+                int numRows = Integer.parseInt(tuple[1].trim());
+                var newMap = new WorldMap(new TileMap(numRows, numCols), new TileMap(numRows, numCols));
+                newMap.terrain().setProperty("wall_stroke_color", PropertyEditor.formatColor(DEFAULT_WALL_STROKE_COLOR));
+                newMap.terrain().setProperty("wall_fill_color",   PropertyEditor.formatColor(DEFAULT_WALL_FILL_COLOR));
+                newMap.terrain().setProperty("door_color",        PropertyEditor.formatColor(DEFAULT_DOOR_COLOR));
+                newMap.food().setProperty("food_color",           PropertyEditor.formatColor(DEFAULT_FOOD_COLOR));
+                setMap(newMap);
+            } catch (Exception x) {
+                Logger.error(x);
+            }
+        });
+    }
+
+    void openMapFile() {
+        openDialog.setInitialDirectory(lastUsedDir);
+        openDialog.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Word Map Files", ".world"));
+        File file = openDialog.showOpenDialog(ownerWindow);
+        if (file != null) {
+            readMapFile(file);
+            updateInfo();
+        }
+    }
+
+    void readMapFile(File file) {
+        if (file.getName().endsWith(".world")) {
+            try {
+                loadMap(new WorldMap(file));
+                lastUsedDir = file.getParentFile();
+                currentMapFile = file;
+                Logger.info("Map read from file {}", file);
+            }
+            catch (Exception x) {
+                Logger.error("Could not load world map from file {}", file);
+                Logger.error(x);
+            }
+        }
+        updateInfo();
+    }
+
+    void saveMapFileAs() {
+        openDialog.setInitialDirectory(lastUsedDir);
+        openDialog.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("World Map Files", ".world"));
+        File file = openDialog.showSaveDialog(ownerWindow);
+        if (file != null) {
+            lastUsedDir = file.getParentFile();
+            if (file.getName().endsWith(".world")) {
+                map.save(file);
+                readMapFile(file);
+                updateInfo();
+            } else {
+                Logger.error("No .world file selected"); //TODO
+            }
+        }
+    }
+
 
     public WorldMap getPacManMap() {
         return arcadeMaps[0];
@@ -420,24 +504,6 @@ public class TileMapEditor  {
             }
         }
     }
-
-    void addShape(byte[][] shape, int topLeftRow, int topLeftCol) {
-        for (int row = 0; row < shape.length; ++row) {
-            for (int col = 0; col < shape[0].length; ++col) {
-                map.terrain().set(topLeftRow + row, topLeftCol+ col, shape[row][col]);
-            }
-        }
-        invalidatePaths();
-    }
-
-    public void loadMap(WorldMap other) {
-        setMap(WorldMap.copyOf(other));
-        currentMapFile = null;
-        foodMapPropertiesEditor.edit(map.food().getProperties());
-        terrainMapPropertiesEditor.edit(map.terrain().getProperties());
-        updateInfo();
-    }
-
     /**
      * @return pixels used by one tile at current window zoom
      */
@@ -522,62 +588,4 @@ public class TileMapEditor  {
         }
     }
 
-    void createNewMap() {
-        TextInputDialog dialog = new TextInputDialog("28x36");
-        dialog.setTitle("Map Size");
-        dialog.setHeaderText("Enter Map Size (cols x rows)");
-        dialog.setContentText("Map Size:");
-        dialog.showAndWait().ifPresent(text -> {
-            String[] tuple = text.split("x");
-            try {
-                int numCols = Integer.parseInt(tuple[0].trim());
-                int numRows = Integer.parseInt(tuple[1].trim());
-                setMap(new WorldMap(new TileMap(numRows, numCols), new TileMap(numRows, numCols)));
-            } catch (Exception x) {
-                Logger.error(x);
-            }
-        });
-    }
-
-    void openMapFile() {
-        openDialog.setInitialDirectory(lastUsedDir);
-        openDialog.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Word Map Files", ".world"));
-        File file = openDialog.showOpenDialog(ownerWindow);
-        if (file != null) {
-            readMapFile(file);
-            updateInfo();
-        }
-    }
-
-    void readMapFile(File file) {
-        if (file.getName().endsWith(".world")) {
-            try {
-                loadMap(new WorldMap(file));
-                lastUsedDir = file.getParentFile();
-                currentMapFile = file;
-                Logger.info("Map read from file {}", file);
-            }
-            catch (Exception x) {
-                Logger.error("Could not load world map from file {}", file);
-                Logger.error(x);
-            }
-        }
-        updateInfo();
-    }
-
-    void saveMapFileAs() {
-        openDialog.setInitialDirectory(lastUsedDir);
-        openDialog.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("World Map Files", ".world"));
-        File file = openDialog.showSaveDialog(ownerWindow);
-        if (file != null) {
-            lastUsedDir = file.getParentFile();
-            if (file.getName().endsWith(".world")) {
-                map.save(file);
-                readMapFile(file);
-                updateInfo();
-            } else {
-                Logger.error("No .world file selected"); //TODO
-            }
-        }
-    }
 }

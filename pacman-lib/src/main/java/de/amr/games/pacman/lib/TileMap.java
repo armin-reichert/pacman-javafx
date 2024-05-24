@@ -207,6 +207,10 @@ public class TileMap {
         return row < 0 || row >= numRows() || col < 0 || col >= numCols();
     }
 
+    public void setProperty(String name, String value) {
+        properties.put(name, value);
+    }
+
     @SuppressWarnings("unchecked")
     public <T> T getProperty(String key) {
         return (T) properties.get(key);
