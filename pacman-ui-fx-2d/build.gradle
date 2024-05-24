@@ -7,8 +7,9 @@ plugins {
 group 'de.amr.games.pacman'
 version '1.0'
 
+import org.gradle.internal.os.OperatingSystem
+OperatingSystem os = OperatingSystem.current()
 ext.arch = System.getProperty("os.arch")
-ext.os = org.gradle.internal.os.OperatingSystem.current()
 println "Operating System: name='${os.name}' version='${os.version}' arch='${arch}'"
 
 application {
@@ -17,8 +18,8 @@ application {
 }
 
 dependencies {
-    implementation project(':pacman-core')
     implementation project(':pacman-lib')
+    implementation project(':pacman-core')
     implementation 'org.tinylog:tinylog-api:2.7.0'
     implementation 'org.tinylog:tinylog-impl:2.7.0'
 }

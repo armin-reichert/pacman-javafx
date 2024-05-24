@@ -5,6 +5,11 @@ plugins {
 group 'de.amr.games.pacman'
 version '1.0'
 
+import org.gradle.internal.os.OperatingSystem
+OperatingSystem os = OperatingSystem.current()
+ext.arch = System.getProperty("os.arch")
+println "Operating System: name='${os.name}' version='${os.version}' arch='${arch}'"
+
 dependencies {
     implementation project(':pacman-lib')
     implementation 'org.tinylog:tinylog-api:2.7.0'
