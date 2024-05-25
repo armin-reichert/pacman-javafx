@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d;
 
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.tilemapeditor.TileMapEditor;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
@@ -19,6 +19,7 @@ import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
 import javafx.beans.property.*;
 import javafx.scene.Scene;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
@@ -42,6 +43,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui.fx.util.Keyboard.alt;
 import static de.amr.games.pacman.ui.fx.util.Keyboard.just;
 import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
+import static java.util.stream.IntStream.rangeClosed;
 
 /**
  * User interface for Pac-Man and Ms. Pac-Man games.
@@ -225,6 +227,15 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
                 }
             }
         });
+        // preload maps
+        var pacManGame = (PacManGame) GameController.it().game(GameVariant.PACMAN);
+        editor.addPredefinedMap("Pac-Man", pacManGame.loadMap("/de/amr/games/pacman/maps/pacman.world"));
+        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
+        var msPacManGame = (MsPacManGame) GameController.it().game(GameVariant.MS_PACMAN);
+        rangeClosed(1, 6).forEach(i -> editor.addPredefinedMap(
+            "Ms. Pac-Man " + i,
+            msPacManGame.loadMap("/de/amr/games/pacman/maps/mspacman/mspacman_" + i + ".world"))
+        );
     }
 
     @Override

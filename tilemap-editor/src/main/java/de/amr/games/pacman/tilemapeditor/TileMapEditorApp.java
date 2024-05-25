@@ -15,8 +15,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.util.stream.IntStream;
-
 import static java.util.stream.IntStream.rangeClosed;
 
 /**
@@ -36,16 +34,16 @@ public class TileMapEditorApp extends Application  {
         miQuit.setOnAction(e -> stage.close());
         editor.menuFile().getItems().add(miQuit);
 
-        editor.addPredefinedMap("Pac-Man", loadMap("maps/pacman.world"));
+        editor.addPredefinedMap("Pac-Man", loadMap("/de/amr/games/pacman/tilemapeditor/maps/pacman.world"));
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
         rangeClosed(1, 6).forEach(i -> editor.addPredefinedMap(
             "Ms. Pac-Man " + i,
-            loadMap("maps/mspacman/mspacman_" + i + ".world"))
+            loadMap("/de/amr/games/pacman/tilemapeditor/maps/mspacman/mspacman_" + i + ".world"))
         );
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
         rangeClosed(1, 8).forEach(i -> editor.addPredefinedMap(
                 "Pac-Man XXL " + i,
-                loadMap("maps/masonic/masonic_" + i + ".world"))
+                loadMap("/de/amr/games/pacman/tilemapeditor/maps/masonic/masonic_" + i + ".world"))
         );
 
         double height = Math.max(0.7 * Screen.getPrimary().getVisualBounds().getHeight(), 600);

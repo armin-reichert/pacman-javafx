@@ -146,7 +146,7 @@ public abstract class AbstractPacManGame implements GameModel {
         blinking.reset();
     }
 
-    WorldMap loadMap(String path) {
+    public WorldMap loadMap(String path) {
         URL mapURL = getClass().getResource(path);
         if (mapURL != null) {
             try {

@@ -108,7 +108,7 @@ public class MsPacManGame extends AbstractPacManGame{
     void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
         this.mapNumber = mapNumberByLevelNumber(levelNumber);
-        setWorldAndCreatePopulation(createMsPacManWorld(loadMap("/maps/mspacman/mspacman_" + mapNumber + ".world")));
+        setWorldAndCreatePopulation(createMsPacManWorld(loadMap("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world")));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -119,7 +119,7 @@ public class MsPacManGame extends AbstractPacManGame{
     void buildDemoLevel() {
         levelNumber = 1;
         mapNumber = randomInt(1, 7);
-        var mapPath = String.format("/maps/mspacman/mspacman_%d.world", mapNumber);
+        var mapPath = String.format("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world", mapNumber);
         var map = loadMap(mapPath);
         setWorldAndCreatePopulation(createMsPacManWorld(map));
         pac.setName("Ms. Pac-Man");

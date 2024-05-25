@@ -106,7 +106,7 @@ public class PacManGame extends AbstractPacManGame {
 
     //TODO: store some of this info in map?
     World createPacManWorld() {
-        var map = loadMap("/maps/pacman.world");
+        var map = loadMap("/de/amr/games/pacman/maps/pacman.world");
         var world = new World(map);
         world.addHouse(createArcadeHouse(), v2i(10, 15));
         world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});

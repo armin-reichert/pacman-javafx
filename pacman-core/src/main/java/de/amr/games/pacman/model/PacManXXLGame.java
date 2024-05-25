@@ -63,11 +63,11 @@ public class PacManXXLGame extends PacManGame {
                 }
             }
             case 2, 3, 4, 5, 6, 7, 8, 9 -> {
-                var path = String.format("/maps/masonic/masonic_%d.world", levelNumber - 1);
+                var path = String.format("/de/amr/games/pacman/maps/masonic/masonic_%d.world", levelNumber - 1);
                 setWorldAndCreatePopulation(createModernWorld(loadMap(path)));
             }
             default -> {
-                var path = String.format("/maps/masonic/masonic_%d.world", randomInt(1, 9));
+                var path = String.format("/de/amr/games/pacman/maps/masonic/masonic_%d.world", randomInt(1, 9));
                 setWorldAndCreatePopulation(createModernWorld(loadMap(path)));
             }
         }
