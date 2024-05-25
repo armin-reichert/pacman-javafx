@@ -90,6 +90,7 @@ public class GameClockFX implements GameClock {
     @Override
     public void stop() {
         timeline.stop();
+        Logger.info("Clock stopped");
     }
 
     @Override

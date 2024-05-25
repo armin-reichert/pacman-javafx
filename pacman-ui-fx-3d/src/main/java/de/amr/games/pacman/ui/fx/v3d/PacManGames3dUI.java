@@ -219,6 +219,10 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         stage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             if (KEY_SWITCH_EDITOR.match(e)) {
                 if (currentPage != editorPage) {
+                    currentGameScene().ifPresent(gameScene -> {
+                       gameScene.end();
+                       gameClock().stop();
+                    });
                     setPage(editorPage);
                     editor.start();
                 } else {
