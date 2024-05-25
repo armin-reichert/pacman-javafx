@@ -1,15 +1,11 @@
 package de.amr.games.pacman.ui.fx.v3d;
 
 import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -29,7 +25,6 @@ public class GamePageContextMenu extends ContextMenu {
     private static final Color TITLE_ITEM_COLOR = Color.CORNFLOWERBLUE;
     private static final Font TITLE_ITEM_FONT = Font.font("Dialog", FontWeight.BLACK, 14);
 
-    private final GameSceneContext sceneContext;
     private CheckMenuItem autopilotItem;
     private CheckMenuItem immunityItem;
     private CheckMenuItem pipItem;
@@ -37,25 +32,23 @@ public class GamePageContextMenu extends ContextMenu {
 
     public GamePageContextMenu(GameSceneContext sceneContext) {
         checkNotNull(sceneContext);
-        this.sceneContext = sceneContext;
-    }
-
-    public void rebuild(GameScene gameScene) {
+        if (sceneContext.currentGameScene().isEmpty()) {
+            return;
+        }
         var actionHandler = (ActionHandler3D) sceneContext.actionHandler();
         getItems().clear();
         getItems().add(createTitleItem(sceneContext.tt("scene_display")));
-        if (gameScene instanceof PlayScene2D) {
+        if (sceneContext.currentGameScene().get() instanceof PlayScene2D) {
             var item = new MenuItem(sceneContext.tt("use_3D_scene"));
             item.setOnAction(e -> actionHandler.toggle2D3D());
             getItems().add(item);
-        } else if (gameScene instanceof PlayScene3D) {
+        } else if (sceneContext.currentGameScene().get() instanceof PlayScene3D) {
             var item = new MenuItem(sceneContext.tt("use_2D_scene"));
             item.setOnAction(e -> actionHandler.toggle2D3D());
             getItems().add(item);
             pipItem = new CheckMenuItem(sceneContext.tt("pip"));
             pipItem.setOnAction(e -> actionHandler.togglePipVisible());
             getItems().add(pipItem);
-
             getItems().add(createTitleItem(sceneContext.tt("select_perspective")));
             perspectivesToggleGroup = new ToggleGroup();
             for (var p : Perspective.values()) {

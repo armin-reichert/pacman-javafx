@@ -20,6 +20,7 @@ import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
 import javafx.beans.property.*;
 import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.*;
@@ -217,9 +218,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     private void enterMapEditor() {
         gameClock().stop();
-        currentGameScene().ifPresent(gameScene -> {
-            gameScene.end();
-        });
+        currentGameScene().ifPresent(GameScene::end);
         setPage(editorPage);
         if (game().world() != null) {
             editor.setMap(game().world().map());
@@ -292,12 +291,11 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     private void onMouseClicked(MouseEvent e) {
         if (currentPage instanceof GamePage3D gamePage3D) {
-            gamePage3D.contextMenu().hide();
+            gamePage3D.currentContextMenu().ifPresent(ContextMenu::hide);
             if (e.getButton() == MouseButton.SECONDARY) {
                 currentGameScene().ifPresent(gameScene -> {
                     if (gameScene == sceneConfig().get("play") || gameScene == sceneConfig().get("play3D")) {
-                        gamePage3D.contextMenu().rebuild(gameScene);
-                        gamePage3D.contextMenu().show(mainScene.getRoot(), e.getScreenX(), e.getScreenY());
+                        gamePage3D.showContextMenu(mainScene.getRoot(), e.getScreenX(), e.getScreenY());
                     }
                 });
             }
@@ -316,7 +314,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     @Override
     protected void updateStage() {
         if (currentPage == editorPage) {
-            //stage.setTitle(editor.titlePy.get());
+            stage.setTitle(editor.titlePy.get());
         } else {
             var vk = variantKey(game().variant());
             var pk = gameClock().isPaused() ? ".paused" : "";

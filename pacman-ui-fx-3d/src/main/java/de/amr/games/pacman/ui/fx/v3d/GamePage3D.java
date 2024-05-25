@@ -13,13 +13,17 @@ import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
 import javafx.beans.binding.Bindings;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
+
+import java.util.Optional;
 
 import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
 
@@ -30,16 +34,15 @@ public class GamePage3D extends GamePage {
 
     private final BorderPane dashboardLayer;
     private final Dashboard dashboard;
-    private final GamePageContextMenu contextMenu;
 
     private final Canvas pipCanvas = new Canvas();
     private final PlayScene2D pip = new PlayScene2D();
+    private GamePageContextMenu contextMenu;
 
     public GamePage3D(GameSceneContext sceneContext, double width, double height) {
         super(sceneContext, width, height);
 
         dashboard = new Dashboard(sceneContext);
-        contextMenu = new GamePageContextMenu(sceneContext);
         initPip();
 
         dashboardLayer = new BorderPane();
@@ -58,8 +61,19 @@ public class GamePage3D extends GamePage {
         updateTopLayer();
     }
 
-    public GamePageContextMenu contextMenu() {
-        return contextMenu;
+    public Optional<GamePageContextMenu> currentContextMenu() {
+        return Optional.ofNullable(contextMenu);
+    }
+
+    public void showContextMenu(Node node, double x, double y) {
+        contextMenu = new GamePageContextMenu(context);
+        contextMenu.show(node, x, y);
+    }
+
+    public void hideContextMenu() {
+        if (contextMenu != null) {
+            contextMenu.hide();
+        }
     }
 
     private void initPip() {
@@ -82,7 +96,7 @@ public class GamePage3D extends GamePage {
             getLayersContainer().getChildren().set(0, canvasLayer);
             super.onGameSceneChanged(newGameScene);
         }
-        contextMenu.hide();
+        hideContextMenu();
         updateTopLayer();
         updateBackground3D();
     }
@@ -116,7 +130,9 @@ public class GamePage3D extends GamePage {
     @Override
     public void render() {
         super.render();
-        contextMenu.updateState();
+        if (contextMenu != null) {
+            contextMenu.updateState();
+        }
         dashboard.update();
         pip.canvas().setVisible(PY_PIP_ON.get() && isCurrentGameScene3D());
         pip.draw();
