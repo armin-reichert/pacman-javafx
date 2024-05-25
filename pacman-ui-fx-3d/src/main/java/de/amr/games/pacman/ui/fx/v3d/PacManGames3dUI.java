@@ -213,16 +213,29 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         PY_3D_NIGHT_MODE.set(hour >= 20 || hour <= 5);
 
         mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClicked);
+        mainScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            if (KEY_SWITCH_EDITOR.match(e)) {
+                if (game().variant() == GameVariant.PACMAN_XXL && currentPage != editorPage) {
+                    enterMapEditor();
+                } else {
+                    quitMapEditor();
+                }
+            }
+        });
         embedMapEditor();
     }
 
     private void enterMapEditor() {
+        Logger.info("Entering map editor");
         gameClock().stop();
         currentGameScene().ifPresent(GameScene::end);
+        Logger.info("Set page to editor page");
         setPage(editorPage);
+        Logger.info("Set editor map");
         if (game().world() != null) {
             editor.setMap(game().world().map());
         }
+        Logger.info("Start editor clock");
         editor.start();
     }
 
@@ -242,15 +255,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         editorLayout.setCenter(editor.getLayout());
         editorLayout.setTop(editor.getMenuBar());
         editorPage = () -> editorLayout; // fancy, isn't it?
-        stage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            if (KEY_SWITCH_EDITOR.match(e)) {
-                if (game().variant() == GameVariant.PACMAN_XXL && currentPage != editorPage) {
-                    enterMapEditor();
-                } else {
-                    quitMapEditor();
-                }
-            }
-        });
         // preload maps
         var pacManGame = (PacManGame) GameController.it().game(GameVariant.PACMAN);
         editor.addPredefinedMap("Pac-Man", pacManGame.loadMap("/de/amr/games/pacman/maps/pacman.world"));
