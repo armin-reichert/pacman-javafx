@@ -1,7 +1,7 @@
 package de.amr.games.pacman.ui.fx.v3d;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
+import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
@@ -25,11 +25,6 @@ public class GamePageContextMenu extends ContextMenu {
     private static final Color TITLE_ITEM_COLOR = Color.CORNFLOWERBLUE;
     private static final Font TITLE_ITEM_FONT = Font.font("Dialog", FontWeight.BLACK, 14);
 
-    private CheckMenuItem autopilotItem;
-    private CheckMenuItem immunityItem;
-    private CheckMenuItem pipItem;
-    private ToggleGroup perspectivesToggleGroup;
-
     public GamePageContextMenu(GameSceneContext sceneContext) {
         checkNotNull(sceneContext);
         if (sceneContext.currentGameScene().isEmpty()) {
@@ -46,31 +41,38 @@ public class GamePageContextMenu extends ContextMenu {
             var item = new MenuItem(sceneContext.tt("use_2D_scene"));
             item.setOnAction(e -> actionHandler.toggle2D3D());
             getItems().add(item);
-            pipItem = new CheckMenuItem(sceneContext.tt("pip"));
-            pipItem.setOnAction(e -> actionHandler.togglePipVisible());
+            var pipItem = new CheckMenuItem(sceneContext.tt("pip"));
+            pipItem.selectedProperty().bindBidirectional(PY_PIP_ON);
             getItems().add(pipItem);
             getItems().add(createTitleItem(sceneContext.tt("select_perspective")));
-            perspectivesToggleGroup = new ToggleGroup();
-            for (var p : Perspective.values()) {
-                var rmi = new RadioMenuItem(sceneContext.tt(p.name()));
-                rmi.setUserData(p);
-                rmi.setToggleGroup(perspectivesToggleGroup);
+            var toggleGroup = new ToggleGroup();
+            for (var perspective : Perspective.values()) {
+                var rmi = new RadioMenuItem(sceneContext.tt(perspective.name()));
+                rmi.setSelected(perspective.equals(PY_3D_PERSPECTIVE.get()));
+                rmi.setUserData(perspective);
+                rmi.setToggleGroup(toggleGroup);
                 getItems().add(rmi);
             }
-            perspectivesToggleGroup.selectedToggleProperty().addListener((py, ov, nv) -> {
+            toggleGroup.selectedToggleProperty().addListener((py, ov, nv) -> {
                 if (nv != null) {
                     // Note: These are the user data of the radio menu item!
                     PY_3D_PERSPECTIVE.set((Perspective) nv.getUserData());
                 }
             });
+            PY_3D_PERSPECTIVE.addListener((py, ov, nv) -> {
+                for (var radioMenuItem : toggleGroup.getToggles()) {
+                    boolean selected = radioMenuItem.getUserData().equals(PY_3D_PERSPECTIVE.get());
+                    radioMenuItem.setSelected(selected);
+                }
+            });
         }
 
         getItems().add(createTitleItem(sceneContext.tt("pacman")));
-        autopilotItem = new CheckMenuItem(sceneContext.tt("autopilot"));
-        autopilotItem.setOnAction(e -> actionHandler.toggleAutopilot());
+        var autopilotItem = new CheckMenuItem(sceneContext.tt("autopilot"));
+        autopilotItem.selectedProperty().bindBidirectional(PY_USE_AUTOPILOT);
         getItems().add(autopilotItem);
-        immunityItem = new CheckMenuItem(sceneContext.tt("immunity"));
-        immunityItem.setOnAction(e -> actionHandler.toggleImmunity());
+        var immunityItem = new CheckMenuItem(sceneContext.tt("immunity"));
+        immunityItem.selectedProperty().bindBidirectional(PacManGames2dUI.PY_IMMUNITY);
         getItems().add(immunityItem);
     }
 
@@ -79,22 +81,5 @@ public class GamePageContextMenu extends ContextMenu {
         text.setFont(TITLE_ITEM_FONT);
         text.setFill(TITLE_ITEM_COLOR);
         return new CustomMenuItem(text);
-    }
-
-    public void updateState() {
-        if (perspectivesToggleGroup != null) {
-            for (var toggle : perspectivesToggleGroup.getToggles()) {
-                toggle.setSelected(PY_3D_PERSPECTIVE.get().equals(toggle.getUserData()));
-            }
-        }
-        if (pipItem != null) {
-            pipItem.setSelected(PY_PIP_ON.get());
-        }
-        if (autopilotItem != null) {
-            autopilotItem.setSelected(PY_USE_AUTOPILOT.get());
-        }
-        if (immunityItem != null) {
-            immunityItem.setSelected(GameController.it().isPacImmune());
-        }
     }
 }

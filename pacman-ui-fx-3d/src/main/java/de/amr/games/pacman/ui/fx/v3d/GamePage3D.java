@@ -14,11 +14,7 @@ import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -130,9 +126,6 @@ public class GamePage3D extends GamePage {
     @Override
     public void render() {
         super.render();
-        if (contextMenu != null) {
-            contextMenu.updateState();
-        }
         dashboard.update();
         pip.canvas().setVisible(PY_PIP_ON.get() && isCurrentGameScene3D());
         pip.draw();

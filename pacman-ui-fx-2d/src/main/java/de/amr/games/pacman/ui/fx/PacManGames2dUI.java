@@ -92,6 +92,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final int CANVAS_WIDTH_UNSCALED = GameModel.ARCADE_MAP_TILES_X * TS; // 28*8 = 224
     public static final int CANVAS_HEIGHT_UNSCALED = GameModel.ARCADE_MAP_TILES_Y * TS; // 36*8 = 288
 
+    public static final BooleanProperty PY_IMMUNITY = new SimpleBooleanProperty(false) {
+        @Override
+        protected void invalidated() {
+            GameController.it().setPacImmune(get());
+        }
+    };
     public static final BooleanProperty PY_USE_AUTOPILOT   = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
 
@@ -635,6 +641,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
                 Logger.error("Cannot start playing when in game state {}", gameState());
             }
         }
+        PY_IMMUNITY.set(GameController.it().isPacImmune());
     }
 
     @Override
@@ -753,10 +760,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void toggleImmunity() {
-        gameController().setPacImmune(!gameController().isPacImmune());
-        boolean immune = gameController().isPacImmune();
-        showFlashMessage(tt(immune ? "player_immunity_on" : "player_immunity_off"));
-        playVoice(immune ? "voice.immunity.on" : "voice.immunity.off", 0);
+        toggle(PY_IMMUNITY);
+        showFlashMessage(tt(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
+        playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
     }
 
     @Override
