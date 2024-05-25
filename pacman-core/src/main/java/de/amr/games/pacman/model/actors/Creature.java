@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.world.Portal;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
-import java.util.List;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Direction.*;
@@ -307,7 +306,7 @@ public abstract class Creature extends Entity {
             }
         }
         if (lastMove.teleported || lastMove.moved) {
-            Logger.trace("{}: {} {} {}", name(), lastMove, lastMove.summary(), this);
+            Logger.trace("{}: {} {} {}", name(), lastMove, String.join(", ", lastMove.infos), this);
         }
     }
 
@@ -330,12 +329,12 @@ public abstract class Creature extends Entity {
         if (currentTile.y() == portal.leftTunnelEnd().y() && posX < portal.leftTunnelEnd().x() - portal.depth() * TS) {
             centerOverTile(portal.rightTunnelEnd());
             lastMove.teleported = true;
-            lastMove.addMessage(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
+            lastMove.addInfo(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
                 name(), oldX, oldY, posX, posY));
         } else if (currentTile.equals(portal.rightTunnelEnd().plus(portal.depth(), 0))) {
             centerOverTile(portal.leftTunnelEnd().minus(portal.depth(), 0));
             lastMove.teleported = true;
-            lastMove.addMessage(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
+            lastMove.addInfo(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
                 name(), oldX, oldY, posX, posY));
         }
     }
@@ -357,7 +356,7 @@ public abstract class Creature extends Entity {
             if (!isTurn) {
                 centerOverTile(tile()); // adjust over tile (would move forward against wall)
             }
-            lastMove.addMessage(String.format("Cannot move %s into tile %s", dir, touchedTile));
+            lastMove.addInfo(String.format("Cannot move %s into tile %s", dir, touchedTile));
             return;
         }
 
@@ -368,7 +367,7 @@ public abstract class Creature extends Entity {
             if (atTurnPosition) {
                 centerOverTile(tile()); // adjust over tile (starts moving around corner)
             } else {
-                lastMove.addMessage(String.format("Wants to take corner towards %s but not at turn position", dir));
+                lastMove.addInfo(String.format("Wants to take corner towards %s but not at turn position", dir));
                 return;
             }
         }
@@ -394,7 +393,7 @@ public abstract class Creature extends Entity {
             && world.isTunnel(tileBeforeMove)
             && !world.belongsToPortal(currentTile);
 
-        lastMove.addMessage(String.format("%5s (%.2f pixels)", dir, newVelocity.length()));
+        lastMove.addInfo(String.format("%5s (%.2f pixels)", dir, newVelocity.length()));
 
         if (lastMove.tunnelEntered) {
             Logger.trace("{} entered tunnel", name());
