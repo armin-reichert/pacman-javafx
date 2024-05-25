@@ -13,7 +13,7 @@ ext.arch = System.getProperty("os.arch")
 println "Operating System: name='${os.name}' version='${os.version}' arch='${arch}'"
 
 application {
-    mainModule = 'de.amr.games.pacman.ui.fx'
+    mainModule = 'mod.pacman_ui_fx_2d'
     mainClass = 'de.amr.games.pacman.ui.fx.Main'
 }
 

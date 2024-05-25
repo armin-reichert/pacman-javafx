@@ -65,43 +65,40 @@ public class TileMapEditor  {
     static final Color DEFAULT_DOOR_COLOR = Color.YELLOW;
     static final Color DEFAULT_FOOD_COLOR = Color.MAGENTA;
 
-    public ObjectProperty<String> titlePy = new SimpleObjectProperty<>(this, "title", "Map Editor");
+    public final ObjectProperty<String> titlePy = new SimpleObjectProperty<>(this, "title", "Map Editor");
+    public final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
+    public final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
+    public final BooleanProperty terrainEditedPy = new SimpleBooleanProperty(true);
+    public final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
 
-    Window ownerWindow;
+    private final Window ownerWindow;
 
-    MenuBar menuBar;
-    Menu menuFile;
-    Menu menuEdit;
-    Menu menuLoadMap;
+    private MenuBar menuBar;
+    private Menu menuFile;
+    private Menu menuEdit;
+    private Menu menuLoadMap;
 
-    Pane layout;
-    Canvas editCanvas;
-    Canvas previewCanvas;
-    PropertyEditor terrainMapPropertiesEditor;
-    PropertyEditor foodMapPropertiesEditor;
-    Label infoLabel;
-    FileChooser openDialog;
-    Palette terrainPalette;
-    Palette foodPalette;
+    private Pane layout;
+    private Canvas editCanvas;
+    private Canvas previewCanvas;
+    private Label infoLabel;
+    private FileChooser openDialog;
 
-    Timeline clock;
+    private Palette terrainPalette;
+    private PropertyEditor terrainMapPropertiesEditor;
+    private final TileMapEditorTerrainRenderer terrainMapRenderer;
+    private boolean pathsUpToDate;
 
-    TileMapEditorTerrainRenderer terrainMapRenderer;
-    boolean pathsUpToDate;
-    FoodMapRenderer foodMapRenderer;
+    private Palette foodPalette;
+    private PropertyEditor foodMapPropertiesEditor;
+    private final FoodMapRenderer foodMapRenderer;
 
-    WorldMap map;
-
+    private WorldMap map;
     private final Map<String, WorldMap> predefinedMaps = new HashMap<>();
 
-    Vector2i hoveredTile;
-    File lastUsedDir = new File(System.getProperty("user.dir"));
-    File currentMapFile;
-
-    BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
-    BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
-    BooleanProperty terrainEditedPy = new SimpleBooleanProperty(true);
-    BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
+    private Vector2i hoveredTile;
+    private File lastUsedDir = new File(System.getProperty("user.dir"));
+    private File currentMapFile;
 
     //TODO resources must be loaded differently
     public TileMapEditor(Stage stage) {
@@ -128,9 +125,8 @@ public class TileMapEditor  {
         previewCanvas.widthProperty().bind(editCanvas.widthProperty());
         previewCanvas.heightProperty().bind(editCanvas.heightProperty());
 
-
         int fps = 30;
-        clock = new Timeline(30, new KeyFrame(Duration.millis(1000.0/fps),e -> {
+        Timeline clock = new Timeline(30, new KeyFrame(Duration.millis(1000.0 / fps), e -> {
             updateInfo();
             try {
                 draw();
@@ -238,7 +234,7 @@ public class TileMapEditor  {
     private void createMenus() {
         createFileMenu();
         createActionsMenu();
-        createLoadMapMenu();
+        menuLoadMap = new Menu("Load Map");
         menuBar = new MenuBar();
         menuBar.getMenus().addAll(menuFile, menuEdit, menuLoadMap);
     }
@@ -288,10 +284,6 @@ public class TileMapEditor  {
         return predefinedMaps.get(description);
     }
 
-    private void createLoadMapMenu() {
-        menuLoadMap = new Menu("Load Map");
-    }
-
     private void updatePaths() {
         if (!pathsUpToDate) {
             map.terrain().computePaths();
@@ -303,7 +295,7 @@ public class TileMapEditor  {
         pathsUpToDate = false;
     }
 
-    void addShape(byte[][] shape, int topLeftRow, int topLeftCol) {
+    private void addShape(byte[][] shape, int topLeftRow, int topLeftCol) {
         for (int row = 0; row < shape.length; ++row) {
             for (int col = 0; col < shape[0].length; ++col) {
                 map.terrain().set(topLeftRow + row, topLeftCol+ col, shape[row][col]);
@@ -354,7 +346,7 @@ public class TileMapEditor  {
         updateInfo();
     }
 
-    void showCreateNewMapDialog() {
+    private void showCreateNewMapDialog() {
         TextInputDialog dialog = new TextInputDialog("28x36");
         dialog.setTitle("Map Size");
         dialog.setHeaderText("Enter Map Size (cols x rows)");
@@ -381,7 +373,7 @@ public class TileMapEditor  {
         return map;
     }
 
-    void openMapFile() {
+    private void openMapFile() {
         openDialog.setInitialDirectory(lastUsedDir);
         openDialog.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Word Map Files", ".world"));
         File file = openDialog.showOpenDialog(ownerWindow);
@@ -391,7 +383,7 @@ public class TileMapEditor  {
         }
     }
 
-    void readMapFile(File file) {
+    private void readMapFile(File file) {
         if (file.getName().endsWith(".world")) {
             try {
                 loadMap(new WorldMap(file));
@@ -407,7 +399,7 @@ public class TileMapEditor  {
         updateInfo();
     }
 
-    void saveMapFileAs() {
+    private void saveMapFileAs() {
         openDialog.setInitialDirectory(lastUsedDir);
         openDialog.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("World Map Files", ".world"));
         File file = openDialog.showSaveDialog(ownerWindow);
@@ -433,6 +425,10 @@ public class TileMapEditor  {
 
     public Menu menuFile() {
         return menuFile;
+    }
+
+    public Menu menuLoadMap() {
+        return menuLoadMap;
     }
 
     /**

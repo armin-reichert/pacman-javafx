@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2021-2024 Armin Reichert (MIT License) See file LICENSE in repository root directory for details.
  */
-open module de.amr.games.pacman.ui.fx { // module is open to allow access to (non-class) resources
+open module mod.pacman_ui_fx_2d {
+    // module is open to allow access to (non-class) resources
 
     requires org.tinylog.api;
-    requires de.amr.games.pacman;
-    requires de.amr.games.pacman.lib;
+    requires mod.pacman_core;
+    requires mod.pacman_lib;
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;

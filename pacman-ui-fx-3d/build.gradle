@@ -13,7 +13,7 @@ ext.arch = System.getProperty("os.arch")
 println "Operating System: name='${os.name}' version='${os.version}' arch='${arch}'"
 
 application {
-    mainModule = 'de.amr.games.pacman.ui.fx.v3d'
+    mainModule = 'mod.pacman_ui_fx_3d'
     mainClass = 'de.amr.games.pacman.ui.fx.v3d.Main'
     if (os.isLinux()) {
         applicationDefaultJvmArgs = ['-Dprism.forceGPU=true']

@@ -14,6 +14,11 @@ OperatingSystem os = OperatingSystem.current()
 ext.arch = System.getProperty("os.arch")
 println "Operating System: name='${os.name}' version='${os.version}' arch='${arch}'"
 
+application {
+    mainModule = 'mod.tilemapeditor'
+    mainClass = 'de.amr.games.pacman.tilemapeditor.Main'
+}
+
 dependencies {
     implementation project(':pacman-lib')
     implementation project(':pacman-core')
@@ -34,11 +39,6 @@ java {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-}
-
-application {
-    mainModule = 'de.amr.games.pacman.tilemapeditor'
-    mainClass = 'de.amr.games.pacman.tilemapeditor.Main'
 }
 
 javafx {
