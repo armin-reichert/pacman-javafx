@@ -344,7 +344,7 @@ public class TileMapEditor  {
         invalidatePaths();
     }
 
-    private void setMap(WorldMap other) {
+    public void setMap(WorldMap other) {
         map = other;
         foodMapPropertiesEditor.edit(map.food().getProperties());
         terrainMapPropertiesEditor.edit(map.terrain().getProperties());
