@@ -47,6 +47,10 @@ import java.util.Map;
  */
 public class TileMapEditor  {
 
+    static Palette.EditorTool tool(byte value, String description) {
+        return new Palette.EditorTool(value, description);
+    }
+
     static final byte[][] GHOST_HOUSE_SHAPE = {
         { 0, 0, 0,20, 0, 0, 0, 0},
         {10, 8, 8,14,14, 8, 8,11},
@@ -161,19 +165,39 @@ public class TileMapEditor  {
         var cbGridVisible = new CheckBox("Grid");
         cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
 
-        terrainPalette = new Palette(32, 3, 8, Tiles.TERRAIN_TILES_END, terrainMapRenderer);
-        terrainPalette.setValues(
-            Tiles.EMPTY, Tiles.TUNNEL, Tiles.PAC_HOME, Tiles.DOOR,
-            Tiles.SCATTER_TARGET_RED, Tiles.SCATTER_TARGET_PINK, Tiles.SCATTER_TARGET_CYAN, Tiles.SCATTER_TARGET_ORANGE,
-            Tiles.HOME_RED_GHOST, Tiles.HOME_PINK_GHOST, Tiles.HOME_CYAN_GHOST, Tiles.HOME_ORANGE_GHOST,
-            Tiles.WALL_H, Tiles.WALL_V, Tiles.DWALL_H, Tiles.DWALL_V,
-            Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE,
-            Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE
+        terrainPalette = new Palette(32, 3, 8, terrainMapRenderer);
+        terrainPalette.setTools(
+            tool(Tiles.PAC_HOME, "Pac-Man"),
+            tool(Tiles.EMPTY, "Empty Space"),
+            tool(Tiles.TUNNEL, "Tunnel"),
+            tool(Tiles.DOOR, "Door"),
+            tool(Tiles.WALL_H, ""),
+            tool(Tiles.WALL_V, ""),
+            tool(Tiles.DWALL_H, ""),
+            tool(Tiles.DWALL_V, ""),
+            tool(Tiles.CORNER_NW, ""),
+            tool(Tiles.CORNER_NE, ""),
+            tool(Tiles.CORNER_SW, ""),
+            tool(Tiles.CORNER_SE, ""),
+            tool(Tiles.DCORNER_NW, ""),
+            tool(Tiles.DCORNER_NE, ""),
+            tool(Tiles.DCORNER_SW, ""),
+            tool(Tiles.DCORNER_SE, ""),
+            tool(Tiles.SCATTER_TARGET_RED, "Red Ghost Scatter"),
+            tool(Tiles.SCATTER_TARGET_PINK, "Pink Ghost Scatter"),
+            tool(Tiles.SCATTER_TARGET_CYAN, "Cyan Ghost Scatter"),
+            tool(Tiles.SCATTER_TARGET_ORANGE, "Orange Ghost Scatter"),
+            tool(Tiles.HOME_RED_GHOST, "Red Ghost"),
+            tool(Tiles.HOME_PINK_GHOST, "Pink Ghost"),
+            tool(Tiles.HOME_CYAN_GHOST, "Cyan Ghost"),
+            tool(Tiles.HOME_ORANGE_GHOST, "Orange Ghost")
         );
 
-        foodPalette = new Palette(32, 1, 4, Tiles.FOOD_TILES_END, foodMapRenderer);
-        foodPalette.setValues(
-            Tiles.EMPTY, Tiles.PELLET, Tiles.ENERGIZER, Tiles.EMPTY
+        foodPalette = new Palette(32, 1, 4, foodMapRenderer);
+        foodPalette.setTools(
+            tool(Tiles.EMPTY, "No Food"),
+            tool(Tiles.PELLET, "Pellet"),
+            tool(Tiles.ENERGIZER, "Energizer")
         );
 
         TabPane tabPane = new TabPane();

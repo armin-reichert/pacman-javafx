@@ -9,33 +9,37 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.ui.fx.tilemap.TileMapRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.util.Duration;
+import org.tinylog.Logger;
 
 /**
  * @author Armin Reichert
  */
 public class Palette extends Canvas {
 
+    public record EditorTool(byte value, String description) {}
+
     final int cellSize;
     final int numRows;
     final int numCols;
     final TileMapRenderer renderer;
-    final byte[] cellValues;
+    final EditorTool[] editorTools;
     final GraphicsContext g;
     byte selectedValue;
     int selectedValueRow;
     int selectedValueCol;
+    Tooltip tooltip;
 
-    public Palette(int cellSize, int numRows, int numCols, byte valueEnd, TileMapRenderer renderer) {
+    public Palette(int cellSize, int numRows, int numCols, TileMapRenderer renderer) {
         this.cellSize = cellSize;
         this.numRows = numRows;
         this.numCols = numCols;
         this.renderer = renderer;
-        cellValues = new byte[numRows * numCols];
-        for (int i = 0; i < cellValues.length; ++i) {
-            cellValues[i] = i < valueEnd ? (byte) i : Tiles.EMPTY;
-        }
+        editorTools = new EditorTool[numRows * numCols];
         g = getGraphicsContext2D();
         selectedValue = 0;
         selectedValueRow = -1;
@@ -43,12 +47,29 @@ public class Palette extends Canvas {
         setWidth(numCols * cellSize);
         setHeight(numRows * cellSize);
         setOnMouseClicked(this::pickValue);
+        // Tooltip for tool :-)
+        tooltip = new Tooltip("This tool does...");
+        tooltip.setShowDelay(Duration.seconds(0.1));
+        tooltip.setHideDelay(Duration.seconds(0.5));
+        tooltip.setFont(Font.font("Sans", 12));
+        Tooltip.install(this, tooltip);
+        //TODO Can tooltip text be computed by current tooltip position?
+        setOnMouseMoved(e -> {
+            int row = (int) e.getY() / cellSize;
+            int col = (int) e.getX() / cellSize;
+            int i = row*numCols + col;
+            if (editorTools[i] != null) {
+                String text = editorTools[i].description();
+                Logger.info(text);
+                tooltip.setText(text.isBlank() ? "Tool #" + (i+1) : text);
+            }
+        });
     }
 
-    public void setValues(byte... values) {
-        for (int i = 0; i < values.length; ++i) {
-            if (i < cellValues.length) {
-                cellValues[i] = values[i];
+    public void setTools(EditorTool... someEditorTools) {
+        for (int i = 0; i < someEditorTools.length; ++i) {
+            if (i < editorTools.length) {
+                editorTools[i] = someEditorTools[i];
             }
         }
     }
@@ -56,7 +77,8 @@ public class Palette extends Canvas {
     private void pickValue(MouseEvent e) {
         selectedValueRow = (int) e.getY() / cellSize;
         selectedValueCol = (int) e.getX() / cellSize;
-        selectedValue = cellValues[selectedValueRow * numCols + selectedValueCol];
+        int i = selectedValueRow * numCols + selectedValueCol;
+        selectedValue = editorTools[i].value();
     }
 
     public void draw() {
@@ -66,12 +88,16 @@ public class Palette extends Canvas {
             renderer.setScaling(cellSize / 8.0);
             for (int i = 0; i < numRows * numCols; ++i) {
                 int row = i / numCols, col = i % numCols;
-                renderer.drawTile(g, new Vector2i(col, row), cellValues[i]);
+                if (editorTools[i] != null) {
+                    renderer.drawTile(g, new Vector2i(col, row), editorTools[i].value());
+                } else {
+                    renderer.drawTile(g, new Vector2i(col, row), Tiles.EMPTY);
+                }
             }
         }
         // Grid lines
         g.setStroke(Color.LIGHTGRAY);
-        g.setLineWidth(0.75);
+        g.setLineWidth(1);
         for (int row = 1; row < numRows; ++row) {
             g.strokeLine(0, row * cellSize, getWidth(), row * cellSize);
         }
