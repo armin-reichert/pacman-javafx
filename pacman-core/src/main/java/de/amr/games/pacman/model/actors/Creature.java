@@ -239,16 +239,7 @@ public abstract class Creature extends Entity {
         return newTileEntered;
     }
 
-    /**
-     * Implements the rules by which a creature (ghost) decides how to reach its current target tile.
-     *
-     * @return optional direction the creature takes to reach its current target tile
-     */
-    public Optional<Direction> computeTargetDirection() {
-        if (targetTile().isEmpty()) {
-            return Optional.empty();
-        }
-        final Vector2i currentTile = tile();
+    private Optional<Direction> computeTargetDirection(Vector2i currentTile, Vector2i targetTile) {
         Direction targetDir = null;
         double minDistance = Double.MAX_VALUE;
         for (var dir : DIRECTION_PRIORITY) {
@@ -257,7 +248,7 @@ public abstract class Creature extends Entity {
             }
             final var neighborTile = currentTile.plus(dir.vector());
             if (canAccessTile(neighborTile)) {
-                double distance = neighborTile.euclideanDistance(targetTile().get());
+                double distance = neighborTile.euclideanDistance(targetTile);
                 if (distance < minDistance) {
                     minDistance = distance;
                     targetDir = dir;
@@ -271,16 +262,16 @@ public abstract class Creature extends Entity {
      * Sets the new wish direction for reaching the target tile.
      */
     public void navigateTowardsTarget() {
-        if (targetTile().isEmpty()) {
+        if (!newTileEntered && lastMove.moved) {
+            return; // we don't need no navigation, dim dit didit didit...
+        }
+        if (targetTile == null) {
             return;
         }
-        if (!newTileEntered && lastMove.moved) {
-            return; // we don't need no navigation, dim dit diddit diddit...
+        Vector2i currentTile = tile();
+        if (!world.belongsToPortal(currentTile)) {
+            computeTargetDirection(currentTile, targetTile).ifPresent(this::setWishDir);
         }
-        if (world.belongsToPortal(tile())) {
-            return; // inside portal, no navigation happens
-        }
-        computeTargetDirection().ifPresent(this::setWishDir);
     }
 
     /**
