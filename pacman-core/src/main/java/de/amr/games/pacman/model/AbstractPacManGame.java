@@ -378,13 +378,14 @@ public abstract class AbstractPacManGame implements GameModel {
     }
 
     Vector2i chasingTarget(Ghost ghost) {
+        boolean overflowBug = true; // make this configurable?
         return switch (ghost.id()) {
             // Blinky: attacks Pac-Man directly
             case RED_GHOST -> pac.tile();
             // Pinky: ambushes Pac-Man
-            case PINK_GHOST -> pac.tilesAheadWithOverflowBug(4);
+            case PINK_GHOST -> pac.tilesAhead(4, overflowBug);
             // Inky: attacks from opposite side as Blinky
-            case CYAN_GHOST -> pac.tilesAheadWithOverflowBug(2).scaled(2).minus(ghost(RED_GHOST).tile());
+            case CYAN_GHOST -> pac.tilesAhead(2, overflowBug).scaled(2).minus(ghost(RED_GHOST).tile());
             // Clyde/Sue: attacks directly but retreats if Pac is near
             case ORANGE_GHOST -> ghost.tile().euclideanDistance(pac.tile()) < 8 ? scatterTarget(ghost) : pac.tile();
             default -> throw new IllegalGhostIDException(ghost.id());

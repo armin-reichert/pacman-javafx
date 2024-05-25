@@ -189,13 +189,18 @@ public abstract class Creature extends Entity {
 
     /**
      * @param numTiles number of tiles
+     * @param overflowBug if {@code true} the Arcade game overflow bug is simulated
      * @return the tile located the given number of tiles towards the current move direction of the creature.
-     * In case the creature looks UP, additional {@code numTiles} tiles are added towards LEFT.
-     * This simulates an overflow bug in the original Arcade games.
+     *          Overflow bug: In case the creature looks UP, additional {@code numTiles} tiles are added towards LEFT.
      */
-    public Vector2i tilesAheadWithOverflowBug(int numTiles) {
-        Vector2i ahead = tile().plus(moveDir.vector().scaled(numTiles));
-        return moveDir == Direction.UP ? ahead.minus(numTiles, 0) : ahead;
+    public Vector2i tilesAhead(int numTiles, boolean overflowBug) {
+        Vector2i currentTile = tile();
+        int x = currentTile.x() + moveDir.vector().x() * numTiles;
+        int y = currentTile.y() + moveDir.vector().y() * numTiles;
+        if (overflowBug && moveDir == UP) {
+            x -= numTiles;
+        }
+        return new Vector2i(x, y);
     }
 
     /**
@@ -294,15 +299,15 @@ public abstract class Creature extends Entity {
         tryTeleport();
         if (!lastMove.teleported) {
             if (gotReverseCommand && canReverse()) {
-                setWishDir(moveDir().opposite());
-                Logger.info("{}: turned around at tile {}", name(), tile());
+                setWishDir(moveDir.opposite());
+                Logger.trace("{}: turned around at tile {}", name(), tile());
                 gotReverseCommand = false;
             }
-            tryMoving(wishDir());
+            tryMoving(wishDir);
             if (lastMove.moved) {
-                setMoveDir(wishDir());
+                setMoveDir(wishDir);
             } else {
-                tryMoving(moveDir());
+                tryMoving(moveDir);
             }
         }
         if (lastMove.teleported || lastMove.moved) {
@@ -340,17 +345,17 @@ public abstract class Creature extends Entity {
     }
 
     /**
-     * Tries to move a creature towards the given directory. Handles collisions with walls and moving around corners.
+     * Tries to move a creature towards the given direction. Handles collisions with walls and cornering.
      *
      * @param dir the direction to move
      */
-    public void tryMoving(Direction dir) {
+    private void tryMoving(Direction dir) {
         final Vector2i tileBeforeMove = tile();
         final Vector2f dirVector = dir.vector().toFloatVec();
         final Vector2f newVelocity = dirVector.scaled(velocity().length());
         final Vector2f touchPosition = center().plus(dirVector.scaled(HTS)).plus(newVelocity);
         final Vector2i touchedTile = tileAt(touchPosition);
-        final boolean isTurn = !dir.sameOrientation(moveDir());
+        final boolean isTurn = !dir.sameOrientation(moveDir);
 
         if (!canAccessTile(touchedTile)) {
             if (!isTurn) {
