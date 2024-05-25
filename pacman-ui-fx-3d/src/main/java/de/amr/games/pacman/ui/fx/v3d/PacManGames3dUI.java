@@ -236,6 +236,12 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             "Ms. Pac-Man " + i,
             msPacManGame.loadMap("/de/amr/games/pacman/maps/mspacman/mspacman_" + i + ".world"))
         );
+        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
+        var pacManXXLGame = (PacManXXLGame) GameController.it().game(GameVariant.PACMAN_XXL);
+        rangeClosed(1, 8).forEach(i -> editor.addPredefinedMap(
+            "Pac-Man XXL " + i,
+            pacManXXLGame.loadMap("/de/amr/games/pacman/maps/masonic/masonic_" + i + ".world"))
+        );
     }
 
     @Override
