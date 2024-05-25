@@ -124,8 +124,8 @@ public class TileMapEditor  {
         previewCanvas.widthProperty().bind(editCanvas.widthProperty());
         previewCanvas.heightProperty().bind(editCanvas.heightProperty());
 
-        int fps = 20;
-        clock = new Timeline(30, new KeyFrame(Duration.millis(1000.0 / fps), e -> {
+        int fps = 10;
+        clock = new Timeline(fps, new KeyFrame(Duration.millis(1000.0 / fps), e -> {
             updateInfo();
             try {
                 draw();
