@@ -22,9 +22,11 @@ import static java.util.stream.IntStream.rangeClosed;
  */
 public class TileMapEditorApp extends Application  {
 
+    private TileMapEditor editor;
+
     @Override
     public void start(Stage stage) {
-        var editor = new TileMapEditor();
+        editor = new TileMapEditor();
 
         var layout = new BorderPane();
         layout.setCenter(editor.getLayout());
@@ -34,17 +36,7 @@ public class TileMapEditorApp extends Application  {
         miQuit.setOnAction(e -> stage.close());
         editor.menuFile().getItems().add(miQuit);
 
-        editor.addPredefinedMap("Pac-Man", loadMap("/de/amr/games/pacman/tilemapeditor/maps/pacman.world"));
-        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        rangeClosed(1, 6).forEach(i -> editor.addPredefinedMap(
-            "Ms. Pac-Man " + i,
-            loadMap("/de/amr/games/pacman/tilemapeditor/maps/mspacman/mspacman_" + i + ".world"))
-        );
-        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        rangeClosed(1, 8).forEach(i -> editor.addPredefinedMap(
-                "Pac-Man XXL " + i,
-                loadMap("/de/amr/games/pacman/tilemapeditor/maps/masonic/masonic_" + i + ".world"))
-        );
+        addPredefinedMaps();
 
         double height = Math.max(0.7 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
         double width = 1.9 * height;
@@ -58,6 +50,20 @@ public class TileMapEditorApp extends Application  {
         editor.setOwnerWindow(stage);
         editor.loadMap(editor.getPredefinedMap("Pac-Man XXL 4"));
         editor.start();
+    }
+
+    private void addPredefinedMaps() {
+        editor.addPredefinedMap("Pac-Man", loadMap("/de/amr/games/pacman/tilemapeditor/maps/pacman.world"));
+        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
+        rangeClosed(1, 6).forEach(i -> editor.addPredefinedMap(
+            "Ms. Pac-Man " + i,
+            loadMap("/de/amr/games/pacman/tilemapeditor/maps/mspacman/mspacman_" + i + ".world"))
+        );
+        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
+        rangeClosed(1, 8).forEach(i -> editor.addPredefinedMap(
+            "Pac-Man XXL " + i,
+            loadMap("/de/amr/games/pacman/tilemapeditor/maps/masonic/masonic_" + i + ".world"))
+        );
     }
 
     private WorldMap loadMap(String path) {
