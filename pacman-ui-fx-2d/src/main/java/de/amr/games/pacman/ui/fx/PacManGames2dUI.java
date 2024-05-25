@@ -359,7 +359,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         return page;
     }
 
-    private void setPage(Page page) {
+    protected void setPage(Page page) {
         currentPage = page;
         mainScene.setRoot(page.rootPane());
         page.setSize(mainScene.getWidth(), mainScene.getHeight());

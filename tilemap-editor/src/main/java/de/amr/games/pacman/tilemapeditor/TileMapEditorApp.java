@@ -26,7 +26,7 @@ public class TileMapEditorApp extends Application  {
 
     @Override
     public void start(Stage stage) {
-        var editor = new TileMapEditor(stage);
+        var editor = new TileMapEditor();
 
         var layout = new BorderPane();
         layout.setCenter(editor.getLayout());
@@ -57,7 +57,9 @@ public class TileMapEditorApp extends Application  {
         stage.titleProperty().bind(editor.titlePy);
         stage.show();
 
+        editor.setOwnerWindow(stage);
         editor.loadMap(editor.getPredefinedMap("Pac-Man XXL 4"));
+        editor.start();
     }
 
     private WorldMap loadMap(String path) {

@@ -6,9 +6,11 @@ package de.amr.games.pacman.ui.fx.v3d;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.tilemapeditor.TileMapEditor;
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
+import de.amr.games.pacman.ui.fx.page.Page;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -19,9 +21,11 @@ import javafx.beans.property.*;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
@@ -81,6 +85,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static final KeyCodeCombination KEY_TOGGLE_2D_3D           = alt(KeyCode.DIGIT3);
     public static final KeyCodeCombination KEY_PREV_PERSPECTIVE       = alt(KeyCode.LEFT);
     public static final KeyCodeCombination KEY_NEXT_PERSPECTIVE       = alt(KeyCode.RIGHT);
+
+    public static final KeyCodeCombination KEY_SWITCH_EDITOR          = alt(KeyCode.E);
 
     public static final Picker<String> PICKER_LEVEL_COMPLETE          = Picker.fromBundle(MSG_BUNDLE, "level.complete");
     public static final Picker<String> PICKER_GAME_OVER               = Picker.fromBundle(MSG_BUNDLE, "game.over");
@@ -182,6 +188,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static int TOTAL_TRANSLATE_Y = 330;
     public static int TOTAL_TRANSLATE_Z = -140;
 
+    private TileMapEditor editor;
+
     public PacManGames3dUI(Stage stage) {
         super(stage);
         for (var variant : GameVariant.values()) {
@@ -195,6 +203,28 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
         int hour = LocalTime.now().getHour();
         PY_3D_NIGHT_MODE.set(hour >= 20 || hour <= 5);
+
+        embedMapEditor();
+    }
+
+    private void embedMapEditor() {
+        editor = new TileMapEditor();
+        editor.setOwnerWindow(stage);
+        var editorLayout = new BorderPane();
+        editorLayout.setCenter(editor.getLayout());
+        editorLayout.setTop(editor.getMenuBar());
+        Page editorPage = () -> editorLayout;
+        stage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            if (KEY_SWITCH_EDITOR.match(e)) {
+                if (currentPage != editorPage) {
+                    setPage(editorPage);
+                    editor.start();
+                } else {
+                    editor.stop();
+                    showStartPage();
+                }
+            }
+        });
     }
 
     @Override

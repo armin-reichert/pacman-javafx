@@ -9,5 +9,5 @@ public interface Page {
 
     Pane rootPane();
 
-    void setSize(double width, double height);
+    default void setSize(double width, double height) {}
 }

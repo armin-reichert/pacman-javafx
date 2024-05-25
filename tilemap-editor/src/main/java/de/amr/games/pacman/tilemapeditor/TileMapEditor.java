@@ -71,7 +71,7 @@ public class TileMapEditor  {
     public final BooleanProperty terrainEditedPy = new SimpleBooleanProperty(true);
     public final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
 
-    private final Window ownerWindow;
+    private Window ownerWindow;
 
     private MenuBar menuBar;
     private Menu menuFile;
@@ -100,8 +100,9 @@ public class TileMapEditor  {
     private File lastUsedDir = new File(System.getProperty("user.dir"));
     private File currentMapFile;
 
-    //TODO resources must be loaded differently
-    public TileMapEditor(Stage stage) {
+    private final Timeline clock;
+
+    public TileMapEditor() {
         terrainMapRenderer = new TileMapEditorTerrainRenderer();
         terrainMapRenderer.setWallStrokeColor(DEFAULT_WALL_STROKE_COLOR);
         terrainMapRenderer.setWallFillColor(DEFAULT_WALL_FILL_COLOR);
@@ -110,9 +111,7 @@ public class TileMapEditor  {
         foodMapRenderer.setPelletColor(DEFAULT_FOOD_COLOR);
         foodMapRenderer.setEnergizerColor(DEFAULT_FOOD_COLOR);
 
-        ownerWindow = stage;
-
-        createLayout();
+        createUI();
         createMenus();
 
         map = createNewMap(36, 28);
@@ -125,8 +124,8 @@ public class TileMapEditor  {
         previewCanvas.widthProperty().bind(editCanvas.widthProperty());
         previewCanvas.heightProperty().bind(editCanvas.heightProperty());
 
-        int fps = 30;
-        Timeline clock = new Timeline(30, new KeyFrame(Duration.millis(1000.0 / fps), e -> {
+        int fps = 20;
+        clock = new Timeline(30, new KeyFrame(Duration.millis(1000.0 / fps), e -> {
             updateInfo();
             try {
                 draw();
@@ -136,10 +135,21 @@ public class TileMapEditor  {
             }
         }));
         clock.setCycleCount(Animation.INDEFINITE);
+    }
+
+    public void setOwnerWindow(Window ownerWindow) {
+        this.ownerWindow = ownerWindow;
+    }
+
+    public void start() {
         clock.play();
     }
 
-    private void createLayout() {
+    public void stop() {
+        clock.stop();
+    }
+
+    private void createUI() {
         openDialog = new FileChooser();
         openDialog.setInitialDirectory(lastUsedDir);
 
@@ -148,9 +158,6 @@ public class TileMapEditor  {
         editCanvas.setOnMouseMoved(this::onMouseMovedOverCanvas);
 
         previewCanvas = new Canvas();
-
-        terrainMapPropertiesEditor = new PropertyEditor("Terrain");
-        foodMapPropertiesEditor = new PropertyEditor("Food");
 
         var cbTerrainVisible = new CheckBox("Terrain");
         cbTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
@@ -196,14 +203,20 @@ public class TileMapEditor  {
             tool(Tiles.ENERGIZER, "Energizer")
         );
 
-        TabPane tabPane = new TabPane();
+        var tabPane = new TabPane();
+
         var terrainPaletteTab = new Tab("Terrain", terrainPalette);
         terrainPaletteTab.setClosable(false);
         terrainPaletteTab.setOnSelectionChanged(e -> terrainEditedPy.set(terrainPaletteTab.isSelected()));
+
         var foodPaletteTab = new Tab("Food", foodPalette);
         foodPaletteTab.setClosable(false);
         foodPaletteTab.setOnSelectionChanged(e -> terrainEditedPy.set(!foodPaletteTab.isSelected()));
+
         tabPane.getTabs().addAll(terrainPaletteTab, foodPaletteTab);
+
+        terrainMapPropertiesEditor = new PropertyEditor("Terrain");
+        foodMapPropertiesEditor = new PropertyEditor("Food");
 
         infoLabel = new Label();
 
