@@ -60,7 +60,6 @@ public class Palette extends Canvas {
             int i = row*numCols + col;
             if (editorTools[i] != null) {
                 String text = editorTools[i].description();
-                Logger.info(text);
                 tooltip.setText(text.isBlank() ? "Tool #" + (i+1) : text);
             }
         });
