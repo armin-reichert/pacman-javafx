@@ -241,16 +241,16 @@ public abstract class Creature extends Entity {
 
     private Optional<Direction> computeTargetDirection(Vector2i currentTile, Vector2i targetTile) {
         Direction targetDir = null;
-        double minDistance = Double.MAX_VALUE;
-        for (var dir : DIRECTION_PRIORITY) {
-            if (dir == moveDir().opposite()) {
+        double minDistToTarget = Double.MAX_VALUE;
+        for (Direction dir : DIRECTION_PRIORITY) {
+            if (dir == moveDir.opposite()) {
                 continue; // reversing the move direction is not allowed
             }
-            final var neighborTile = currentTile.plus(dir.vector());
+            Vector2i neighborTile = currentTile.plus(dir.vector());
             if (canAccessTile(neighborTile)) {
-                double distance = neighborTile.euclideanDistance(targetTile);
-                if (distance < minDistance) {
-                    minDistance = distance;
+                double d = neighborTile.euclideanDistance(targetTile);
+                if (d < minDistToTarget) {
+                    minDistToTarget = d;
                     targetDir = dir;
                 }
             }
@@ -262,11 +262,8 @@ public abstract class Creature extends Entity {
      * Sets the new wish direction for reaching the target tile.
      */
     public void navigateTowardsTarget() {
-        if (!newTileEntered && lastMove.moved) {
+        if (!newTileEntered && lastMove.moved || targetTile == null) {
             return; // we don't need no navigation, dim dit didit didit...
-        }
-        if (targetTile == null) {
-            return;
         }
         Vector2i currentTile = tile();
         if (!world.belongsToPortal(currentTile)) {
