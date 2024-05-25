@@ -292,7 +292,7 @@ public abstract class Creature extends Entity {
      */
     public void tryMoving() {
         lastMove.clear();
-        tryTeleport(world.portals());
+        tryTeleport();
         if (!lastMove.teleported) {
             if (gotReverseCommand && canReverse()) {
                 setWishDir(moveDir().opposite());
@@ -311,37 +311,28 @@ public abstract class Creature extends Entity {
         }
     }
 
-    /**
-     * Tries to teleport a creature through a portal.
-     *
-     * @param portals list of available portals
-     */
-    public void tryTeleport(List<Portal> portals) {
-        if (canTeleport) {
-            for (var portal : portals) {
-                tryTeleport(portal);
-                if (lastMove.teleported) {
-                    return;
-                }
+    private void tryTeleport() {
+        if (!canTeleport) {
+            return;
+        }
+        Vector2i currentTile = tile();
+        for (var portal : world.portals()) {
+            tryTeleport(currentTile, portal);
+            if (lastMove.teleported) {
+                return;
             }
         }
     }
 
-    /**
-     * Tries to teleport a creature through a portal.
-     *
-     * @param portal a portal
-     */
-    public void tryTeleport(Portal portal) {
-        var tile = tile();
+    private void tryTeleport(Vector2i currentTile, Portal portal) {
         var oldX = posX;
         var oldY = posY;
-        if (tile.y() == portal.leftTunnelEnd().y() && posX < portal.leftTunnelEnd().x() - portal.depth() * TS) {
+        if (currentTile.y() == portal.leftTunnelEnd().y() && posX < portal.leftTunnelEnd().x() - portal.depth() * TS) {
             centerOverTile(portal.rightTunnelEnd());
             lastMove.teleported = true;
             lastMove.addMessage(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
                 name(), oldX, oldY, posX, posY));
-        } else if (tile.equals(portal.rightTunnelEnd().plus(portal.depth(), 0))) {
+        } else if (currentTile.equals(portal.rightTunnelEnd().plus(portal.depth(), 0))) {
             centerOverTile(portal.leftTunnelEnd().minus(portal.depth(), 0));
             lastMove.teleported = true;
             lastMove.addMessage(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
