@@ -11,6 +11,7 @@ import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.page.Page;
+import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.util.Picker;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.util.Theme;
@@ -19,6 +20,7 @@ import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
 import javafx.beans.property.*;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.*;
 import javafx.scene.layout.BackgroundPosition;
@@ -56,6 +58,10 @@ import static java.util.stream.IntStream.rangeClosed;
  */
 public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D {
 
+    static {
+        System.setProperty("javafx.sg.warn", "true"); // WTF?
+    }
+
     public static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(
         "de.amr.games.pacman.ui.fx.v3d.texts.messages", PacManGames3dUI.class.getModule());
 
@@ -86,7 +92,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static final KeyCodeCombination KEY_PREV_PERSPECTIVE       = alt(KeyCode.LEFT);
     public static final KeyCodeCombination KEY_NEXT_PERSPECTIVE       = alt(KeyCode.RIGHT);
 
-    public static final KeyCodeCombination KEY_SWITCH_EDITOR          = alt(KeyCode.E);
+    public static final KeyCodeCombination KEY_SWITCH_EDITOR          = Keyboard.shift_alt(KeyCode.E);
 
     public static final Picker<String> PICKER_LEVEL_COMPLETE          = Picker.fromBundle(MSG_BUNDLE, "level.complete");
     public static final Picker<String> PICKER_GAME_OVER               = Picker.fromBundle(MSG_BUNDLE, "game.over");
@@ -189,6 +195,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static int TOTAL_TRANSLATE_Z = -140;
 
     private TileMapEditor editor;
+    private Page editorPage;
 
     public PacManGames3dUI(Stage stage) {
         super(stage);
@@ -208,28 +215,40 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         embedMapEditor();
     }
 
+    private void enterMapEditor() {
+        gameClock().stop();
+        currentGameScene().ifPresent(gameScene -> {
+            gameScene.end();
+        });
+        setPage(editorPage);
+        if (game().world() != null) {
+            editor.setMap(game().world().map());
+        }
+        editor.start();
+    }
+
+    private void quitMapEditor() {
+        editor.stop();
+        showStartPage();
+    }
+
     private void embedMapEditor() {
         editor = new TileMapEditor();
         editor.setOwnerWindow(stage);
+        var miQuitEditor = new MenuItem("Back to Game");
+        miQuitEditor.setOnAction(e -> quitMapEditor());
+        editor.menuFile().getItems().add(miQuitEditor);
+
         var editorLayout = new BorderPane();
         editorLayout.setCenter(editor.getLayout());
         editorLayout.setTop(editor.getMenuBar());
-        Page editorPage = () -> editorLayout;
+        editorPage = () -> editorLayout; // fancy, isn't it?
         stage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             if (KEY_SWITCH_EDITOR.match(e)) {
                 if (game().variant() == GameVariant.PACMAN_XXL && currentPage != editorPage) {
-                    currentGameScene().ifPresent(gameScene -> {
-                       gameScene.end();
-                       gameClock().stop();
-                    });
-                    setPage(editorPage);
-                    if (game().world() != null) {
-                        editor.setMap(game().world().map());
-                    }
-                    editor.start();
+                    enterMapEditor();
                 } else {
-                    editor.stop();
-                    showStartPage();
+                    quitMapEditor();
                 }
             }
         });
@@ -296,12 +315,16 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     @Override
     protected void updateStage() {
-        var vk = variantKey(game().variant());
-        var pk = gameClock().isPaused() ? ".paused" : "";
-        var tk = "app.title." + vk + pk;
-        var dimension = tt(PY_3D_ENABLED.get() ? "threeD" : "twoD");
-        stage.setTitle(tt(tk, dimension));
-        stage.getIcons().setAll(theme().image(vk + ".icon"));
+        if (currentPage == editorPage) {
+            //stage.setTitle(editor.titlePy.get());
+        } else {
+            var vk = variantKey(game().variant());
+            var pk = gameClock().isPaused() ? ".paused" : "";
+            var tk = "app.title." + vk + pk;
+            var dimension = tt(PY_3D_ENABLED.get() ? "threeD" : "twoD");
+            stage.setTitle(tt(tk, dimension));
+            stage.getIcons().setAll(theme().image(vk + ".icon"));
+        }
     }
 
     @Override

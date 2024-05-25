@@ -59,6 +59,15 @@ public class Keyboard {
     }
 
     /**
+     * Registers key code combination consisting of {@code Shift} modifier and given code.
+     * @param code key code
+     * @return key code combination
+     */
+    public static KeyCodeCombination shift_alt(KeyCode code) {
+        return register(new KeyCodeCombination(code, KeyCombination.SHIFT_DOWN, KeyCombination.ALT_DOWN));
+    }
+
+    /**
      * Registers key code combination consisting of {@code Control} modifier and given code.
      * @param code key code
      * @return key code combination
