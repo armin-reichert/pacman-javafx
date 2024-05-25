@@ -18,8 +18,6 @@ public enum Direction {
 
     LEFT(-1, 0), RIGHT(1, 0), UP(0, -1), DOWN(0, 1);
 
-    private static final Direction[] OPPOSITE = {RIGHT, LEFT, DOWN, UP};
-
     public static Stream<Direction> stream() {
         return Stream.of(values());
     }
@@ -41,10 +39,15 @@ public enum Direction {
     }
 
     public Direction opposite() {
-        return OPPOSITE[ordinal()];
+        return switch (this) {
+            case UP -> DOWN;
+            case LEFT -> RIGHT;
+            case DOWN -> UP;
+            case RIGHT -> LEFT;
+        };
     }
 
-    public Direction nextAntiClockwise() {
+    public Direction nextCounterClockwise() {
         return switch (this) {
             case UP -> LEFT;
             case LEFT -> DOWN;
@@ -71,6 +74,6 @@ public enum Direction {
     }
 
     public boolean sameOrientation(Direction other) {
-        return isHorizontal() && other.isHorizontal() || isVertical() && other.isVertical();
+        return isHorizontal() && other.isHorizontal();
     }
 }
