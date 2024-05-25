@@ -14,6 +14,7 @@ open module mod.pacman_ui_fx_3d {
     requires mod.pacman_lib;
     requires mod.pacman_ui_fx_2d;
     requires mod.tilemapeditor;
+    requires java.naming;
 
     exports de.amr.games.pacman.ui.fx.v3d;
     exports de.amr.games.pacman.ui.fx.v3d.animation;

@@ -6,18 +6,25 @@ package de.amr.games.pacman.ui.fx.v3d;
 
 import de.amr.games.pacman.ui.fx.GameScene;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
+import de.amr.games.pacman.ui.fx.PacManGames2dUI;
 import de.amr.games.pacman.ui.fx.page.GamePage;
 import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
 import de.amr.games.pacman.ui.fx.util.Keyboard;
 import de.amr.games.pacman.ui.fx.util.ResourceManager;
 import de.amr.games.pacman.ui.fx.v3d.dashboard.Dashboard;
+import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import org.tinylog.Logger;
 
 import java.util.Optional;
 
@@ -33,7 +40,7 @@ public class GamePage3D extends GamePage {
 
     private final Canvas pipCanvas = new Canvas();
     private final PlayScene2D pip = new PlayScene2D();
-    private GamePageContextMenu contextMenu;
+    private ContextMenu contextMenu;
 
     public GamePage3D(GameSceneContext sceneContext, double width, double height) {
         super(sceneContext, width, height);
@@ -57,13 +64,71 @@ public class GamePage3D extends GamePage {
         updateTopLayer();
     }
 
-    public Optional<GamePageContextMenu> currentContextMenu() {
+    public Optional<ContextMenu> currentContextMenu() {
         return Optional.ofNullable(contextMenu);
     }
 
     public void showContextMenu(Node node, double x, double y) {
-        contextMenu = new GamePageContextMenu(context);
+        createGamePageContextMenu();
         contextMenu.show(node, x, y);
+    }
+
+    private void createGamePageContextMenu() {
+        contextMenu = new ContextMenu();
+        if (context.currentGameScene().isEmpty()) {
+            Logger.warn("No game scene exists when context menu was opened");
+            return;
+        }
+        var actionHandler = (ActionHandler3D) context.actionHandler();
+        addContextMenuTitleItem(context.tt("scene_display"));
+        if (context.currentGameScene().get() instanceof PlayScene2D) {
+            var item = new MenuItem(context.tt("use_3D_scene"));
+            item.setOnAction(e -> actionHandler.toggle2D3D());
+            contextMenu.getItems().add(item);
+        } else if (context.currentGameScene().get() instanceof PlayScene3D) {
+            var item = new MenuItem(context.tt("use_2D_scene"));
+            item.setOnAction(e -> actionHandler.toggle2D3D());
+            contextMenu.getItems().add(item);
+            var pipItem = new CheckMenuItem(context.tt("pip"));
+            pipItem.selectedProperty().bindBidirectional(PY_PIP_ON);
+            contextMenu.getItems().add(pipItem);
+            addContextMenuTitleItem(context.tt("select_perspective"));
+            var toggleGroup = new ToggleGroup();
+            for (var perspective : Perspective.values()) {
+                var radioMenuItem = new RadioMenuItem(context.tt(perspective.name()));
+                radioMenuItem.setSelected(perspective.equals(PY_3D_PERSPECTIVE.get()));
+                radioMenuItem.setUserData(perspective);
+                radioMenuItem.setToggleGroup(toggleGroup);
+                contextMenu.getItems().add(radioMenuItem);
+            }
+            toggleGroup.selectedToggleProperty().addListener((py, ov, nv) -> {
+                if (nv != null) {
+                    // Note: These are the user data of the radio menu item!
+                    PY_3D_PERSPECTIVE.set((Perspective) nv.getUserData());
+                }
+            });
+            PY_3D_PERSPECTIVE.addListener((py, ov, nv) -> {
+                for (var radioMenuItem : toggleGroup.getToggles()) {
+                    boolean selected = radioMenuItem.getUserData().equals(PY_3D_PERSPECTIVE.get());
+                    radioMenuItem.setSelected(selected);
+                }
+            });
+        }
+        addContextMenuTitleItem(context.tt("pacman"));
+        var autopilotItem = new CheckMenuItem(context.tt("autopilot"));
+        autopilotItem.selectedProperty().bindBidirectional(PY_USE_AUTOPILOT);
+        contextMenu.getItems().add(autopilotItem);
+        var immunityItem = new CheckMenuItem(context.tt("immunity"));
+        immunityItem.selectedProperty().bindBidirectional(PacManGames2dUI.PY_IMMUNITY);
+        contextMenu.getItems().add(immunityItem);
+    }
+
+    private void addContextMenuTitleItem(String title) {
+        var text = new Text(title);
+        text.setFont(Font.font("Dialog", FontWeight.BLACK, 14));
+        // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
+        text.setFill(Color.CORNFLOWERBLUE);
+        contextMenu.getItems().add(new CustomMenuItem(text));
     }
 
     public void hideContextMenu() {
