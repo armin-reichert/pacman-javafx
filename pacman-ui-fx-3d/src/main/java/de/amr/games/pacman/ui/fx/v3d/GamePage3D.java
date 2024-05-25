@@ -15,6 +15,8 @@ import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -33,11 +35,11 @@ public class GamePage3D extends GamePage {
     private final Canvas pipCanvas = new Canvas();
     private final PlayScene2D pip = new PlayScene2D();
 
-    public GamePage3D(Scene parentScene, GameSceneContext sceneContext, double width, double height) {
+    public GamePage3D(GameSceneContext sceneContext, double width, double height) {
         super(sceneContext, width, height);
 
         dashboard = new Dashboard(sceneContext);
-        contextMenu = new GamePageContextMenu(sceneContext, parentScene);
+        contextMenu = new GamePageContextMenu(sceneContext);
         initPip();
 
         dashboardLayer = new BorderPane();
@@ -54,6 +56,10 @@ public class GamePage3D extends GamePage {
         dashboard.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());
 
         updateTopLayer();
+    }
+
+    public GamePageContextMenu contextMenu() {
+        return contextMenu;
     }
 
     private void initPip() {

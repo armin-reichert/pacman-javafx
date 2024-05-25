@@ -20,9 +20,7 @@ import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
 import javafx.beans.property.*;
 import javafx.scene.Scene;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
@@ -206,6 +204,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         int hour = LocalTime.now().getHour();
         PY_3D_NIGHT_MODE.set(hour >= 20 || hour <= 5);
 
+        mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClicked);
         embedMapEditor();
     }
 
@@ -259,7 +258,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     @Override
     protected GamePage3D createGamePage(Scene parentScene) {
         checkNotNull(parentScene);
-        var page = new GamePage3D(parentScene, this, parentScene.getWidth(), parentScene.getHeight());
+        GamePage3D page = new GamePage3D(this, parentScene.getWidth(), parentScene.getHeight());
         page.setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
         page.setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
         page.setMinScaling(0.7);
@@ -270,6 +269,20 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         page.getCanvasContainer().setBackground(ResourceManager.coloredBackground(theme().color("canvas.background")));
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
         return page;
+    }
+
+    private void onMouseClicked(MouseEvent e) {
+        if (currentPage instanceof GamePage3D gamePage3D) {
+            gamePage3D.contextMenu().hide();
+            if (e.getButton() == MouseButton.SECONDARY) {
+                currentGameScene().ifPresent(gameScene -> {
+                    if (gameScene == sceneConfig().get("play") || gameScene == sceneConfig().get("play3D")) {
+                        gamePage3D.contextMenu().rebuild(gameScene);
+                        gamePage3D.contextMenu().show(mainScene.getRoot(), e.getScreenX(), e.getScreenY());
+                    }
+                });
+            }
+        }
     }
 
     public boolean isPlayScene(GameScene gameScene) {

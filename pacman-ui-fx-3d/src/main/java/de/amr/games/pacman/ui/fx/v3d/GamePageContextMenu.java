@@ -35,22 +35,9 @@ public class GamePageContextMenu extends ContextMenu {
     private CheckMenuItem pipItem;
     private ToggleGroup perspectivesToggleGroup;
 
-    public GamePageContextMenu(GameSceneContext sceneContext, Scene parentScene) {
+    public GamePageContextMenu(GameSceneContext sceneContext) {
         checkNotNull(sceneContext);
-        checkNotNull(parentScene);
         this.sceneContext = sceneContext;
-        parentScene.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            hide();
-            if (e.getButton() == MouseButton.SECONDARY) {
-                sceneContext.currentGameScene().ifPresent(gameScene -> {
-                    if (gameScene == sceneContext.sceneConfig().get("play") ||
-                        gameScene == sceneContext.sceneConfig().get("play3D")) {
-                        rebuild(gameScene);
-                        show(parentScene.getRoot(), e.getScreenX(), e.getScreenY());
-                    }
-                });
-            }
-        });
     }
 
     public void rebuild(GameScene gameScene) {
