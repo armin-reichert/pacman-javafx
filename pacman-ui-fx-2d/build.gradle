@@ -1,16 +1,7 @@
 plugins {
-    id 'java'
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'org.beryx.jlink' version '3.0.1' //  adds also 'application' plugin
 }
-
-group 'de.amr.games.pacman'
-version '1.0'
-
-import org.gradle.internal.os.OperatingSystem
-OperatingSystem os = OperatingSystem.current()
-ext.arch = System.getProperty("os.arch")
-println "Operating System: name='${os.name}' version='${os.version}' arch='${arch}'"
 
 application {
     mainModule = 'mod.pacman_ui_fx_2d'
@@ -20,27 +11,11 @@ application {
 dependencies {
     implementation project(':pacman-lib')
     implementation project(':pacman-core')
-    implementation 'org.tinylog:tinylog-api:2.7.0'
-    implementation 'org.tinylog:tinylog-impl:2.7.0'
 }
 
 javafx {
     version = '21.0.2'
     modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.media']
-}
-
-repositories {
-    mavenCentral()
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
 }
 
 jlink {
@@ -51,15 +26,10 @@ jlink {
     }
     jpackage {
         appVersion = '1.0'
-        description = 'Pac-Man JavaFX (2D version)'
-        vendor = 'Armin Reichert'
         if (os.isWindows()) {
             icon = 'pacman.ico'
-            installerType = 'exe'
+            installerType = 'msi'
             installerOptions.addAll(['--win-dir-chooser', '--win-menu', '--win-menu-group', 'Pac-Man FX', '--win-shortcut'])
-        } else if (os.isLinux()) {
-            // doesn't create working installer
-            installerType = 'deb'
         }
     }
 }

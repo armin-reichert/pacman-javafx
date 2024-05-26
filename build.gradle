@@ -1,0 +1,43 @@
+import org.gradle.internal.os.OperatingSystem
+
+plugins {
+    id 'java'
+}
+
+ext {
+    os = OperatingSystem.current()
+    arch = System.getProperty("os.arch")
+}
+
+println "Operating System: name='${os.name}' version='${os.version}' arch='${arch}'"
+
+allprojects {
+    group 'de.amr.games.pacman'
+    version '1.0'
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        configure(options) {
+            options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
+        }
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        implementation 'org.tinylog:tinylog-api:2.7.0'
+        implementation 'org.tinylog:tinylog-impl:2.7.0'
+        testImplementation 'junit:junit:4.13.2'
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
