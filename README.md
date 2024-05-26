@@ -13,7 +13,8 @@ This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler
 ## Videos
 
 <div float="left">
-    <a href="https://magentacloud.de/s/qYDg6BKK7G6TxpB"><img src="doc/pacman-maze.png" style="width:500px"></a>
+    <a href="https://magentacloud.de/s/qYDg6BKK7G6TxpB">
+  <img src="doc/pacman-maze.png" style="width:500px"></a>
 </div>
 
 ## About this project
@@ -56,21 +57,6 @@ This will create installers in the subdirectories `pacman-ui-fx-2d/build/jpackag
 - Pac-Man 2D: `./gradlew pacman-ui-fx-2d:run`
 - Pac-Man 3D: `./gradlew pacman-ui-fx-3d:run`
 
-## Building with Maven
-
-### Building Windows installers (.exe)
-
-- `cd /whatever/path/to/your/repositories/pacman-javafx`
-- `./mvnw clean install -Pbuild-for-windows`
-
-### Build 2D and 3D user interface variants separately
-
-- `cd /whatever/path/to/your/repositories/pacman-javafx/pacman-ui-fx-2d`
-- `../mvnw install -Djavafx.platform=win` or `mvnw install -P build-for-windows` (Windows executables of 2D game)
-
-- `cd /whatever/path/to/your/repositories/pacman-javafx/pacman-ui-fx-3d`
-- `../mvnw install -Djavafx.platform=win` or `mvnw install -P build-for-windows` (Windows executables of 2D+3D game)
-
 To be able to create the Windows executables, you need to have the following tools installed:
 
 - [Inno Setup](https://jrsoftware.org/isinfo.php)
@@ -80,10 +66,6 @@ as described in the [JavaPackager guide](https://github.com/fvarrui/JavaPackager
 (👏 to [Francisco Vargas Ruiz](https://github.com/fvarrui)).
 
 I also had to add the paths "C:\Program Files (x86)\WiX Toolset v3.11\bin" and "C:\Program Files (x86)\Inno Setup 6" to my PATH variable.
-
-### Running the application(s) using Maven
-
-In the 2D or 3D subproject folder, call `..\mvnw javafx:run`.
 
 ## How to use the application
 
@@ -149,4 +131,3 @@ Cheats:
 ### Tile map editor
 
 ![Map Editor](doc/map-editor.png)
-
