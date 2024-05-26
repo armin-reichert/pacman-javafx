@@ -227,12 +227,12 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     private void enterMapEditor() {
         Logger.info("Entering map editor");
-        gameClock().stop();
-        currentGameScene().ifPresent(GameScene::end);
-        setPage(editorPage);
         if (game().world() != null) {
             editor.setMap(game().world().map());
         }
+        restartIntro();
+        gameClock().stop();
+        setPage(editorPage);
         editor.start();
     }
 
