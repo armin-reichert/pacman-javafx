@@ -1,4 +1,5 @@
 plugins {
+    id 'java'
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'org.beryx.jlink' version '3.0.1' //  adds also 'application' plugin
 }
@@ -9,6 +10,9 @@ application {
 }
 
 dependencies {
+    implementation 'org.tinylog:tinylog-api:2.7.0'
+    implementation 'org.tinylog:tinylog-impl:2.7.0'
+    testImplementation 'junit:junit:4.13.2'
     implementation project(':pacman-lib')
     implementation project(':pacman-core')
 }
@@ -21,18 +25,18 @@ javafx {
 jlink {
     imageZip = project.file("${layout.buildDirectory}/distributions/app-${javafx.platform.classifier}.zip")
     options = [
-            '--strip-debug',
             '--compress', 'zip-9',
+            '--strip-debug',
             '--no-header-files',
             '--no-man-pages']
     launcher {
-        name = 'pacman-javafx-2d'
+        name = 'Pac-Man-FX-2D'
     }
     jpackage {
         appVersion = '1.0'
-        installerOptions.addAll([
+        installerOptions = [
             '--vendor', 'Armin Reichert',
-        ])
+        ]
         if (os.isWindows()) {
             icon = 'pacman.ico'
             installerType = 'msi'

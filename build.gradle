@@ -28,12 +28,6 @@ subprojects {
     repositories {
         mavenCentral()
     }
-
-    dependencies {
-        implementation 'org.tinylog:tinylog-api:2.7.0'
-        implementation 'org.tinylog:tinylog-impl:2.7.0'
-        testImplementation 'junit:junit:4.13.2'
-    }
 }
 
 java {
