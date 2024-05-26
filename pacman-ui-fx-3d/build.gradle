@@ -5,7 +5,7 @@ plugins {
 }
 
 application {
-    mainModule = 'mod.pacman_ui_fx_3d'
+    mainModule = 'de.amr.games.pacman.ui.fx.v3d'
     mainClass = 'de.amr.games.pacman.ui.fx.v3d.Main'
     if (os.isLinux()) {
         applicationDefaultJvmArgs = ['-Dprism.forceGPU=true']

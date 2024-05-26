@@ -6,7 +6,7 @@ plugins {
 }
 
 application {
-    mainModule = 'mod.tilemapeditor'
+    mainModule = 'de.amr.games.pacman.tilemapeditor'
     mainClass = 'de.amr.games.pacman.tilemapeditor.Main'
 }
 

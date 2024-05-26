@@ -5,7 +5,7 @@ plugins {
 }
 
 application {
-    mainModule = 'mod.pacman_ui_fx_2d'
+    mainModule = 'de.amr.games.pacman.ui.fx'
     mainClass = 'de.amr.games.pacman.ui.fx.Main'
 }
 
