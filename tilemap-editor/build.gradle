@@ -40,7 +40,7 @@ jlink {
                 '--vendor', 'Armin Reichert',
         ]
         if (os.isWindows()) {
-            icon = 'pacman.ico'
+            icon = 'map-editor.ico'
             installerType = 'msi'
             installerOptions.addAll([
                     '--win-dir-chooser',
