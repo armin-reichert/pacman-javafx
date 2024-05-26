@@ -7,6 +7,7 @@ package de.amr.games.pacman.lib;
 import org.tinylog.Logger;
 
 import java.io.*;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -20,26 +21,36 @@ public class WorldMap {
     static final String TERRAIN_SECTION_START = "!terrain";
     static final String FOOD_SECTION_START    = "!food";
 
+    private URL url;
     private TileMap terrain;
     private TileMap food;
 
     public static WorldMap copyOf(WorldMap other) {
-        return new WorldMap(TileMap.copyOf(other.terrain), TileMap.copyOf(other.food));
+        var copy = new WorldMap(TileMap.copyOf(other.terrain), TileMap.copyOf(other.food));
+        copy.url = other.url;
+        return copy;
     }
 
     public WorldMap(TileMap terrain, TileMap food) {
         this.terrain = terrain;
         this.food = food;
+        this.url = null;
     }
 
     public WorldMap(URL url) throws IOException {
         var r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
         parse(r.lines());
+        this.url = url;
     }
 
     public WorldMap(File file) throws IOException {
         var r = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
         parse(r.lines());
+        try {
+            url = file.toURI().toURL();
+        } catch (Exception x) {
+            Logger.error(x);
+        }
     }
 
     private void parse(Stream<String> lines) {
@@ -84,6 +95,10 @@ public class WorldMap {
         return terrain.numCols();
     }
 
+    public URL url() {
+        return url;
+    }
+
     public Stream<Vector2i> tiles() {
         return terrain.tiles();
     }
@@ -111,5 +126,4 @@ public class WorldMap {
     public byte food(int row, int col) {
         return food.get(row, col);
     }
-
 }
