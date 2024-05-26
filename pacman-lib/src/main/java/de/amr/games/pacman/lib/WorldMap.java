@@ -7,7 +7,6 @@ package de.amr.games.pacman.lib;
 import org.tinylog.Logger;
 
 import java.io.*;
-import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
