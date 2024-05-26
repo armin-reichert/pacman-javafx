@@ -51,7 +51,8 @@ public class GameLevel3D extends Group {
     static final float FLOOR_THICKNESS       = 0.4f;
     static final float WALL_HEIGHT           = 2.0f;
     static final float WALL_THICKNESS        = 0.75f;
-    static final float WALL_STROKE_THICKNESS = 0.1f;
+    static final float WALL_THICKNESS_DWALL  = 1.5f;
+    static final float WALL_COAT_HEIGHT = 0.1f;
     static final float HOUSE_HEIGHT          = 12.0f;
     static final float HOUSE_OPACITY         = 0.4f;
     static final float PAC_SIZE              = 14.0f;
@@ -221,7 +222,7 @@ public class GameLevel3D extends Group {
     }
 
     private void addHouseWall(Group parent, int x1, int y1, int x2, int y2) {
-        parent.getChildren().add(createWall(v2i(x1, y1), v2i(x2, y2), houseHeightPy, houseFillMaterialPy));
+        parent.getChildren().add(createWall(v2i(x1, y1), v2i(x2, y2), houseHeightPy, houseFillMaterialPy, WALL_THICKNESS));
     }
 
     private void addFood3D(Group parent) {
@@ -261,14 +262,14 @@ public class GameLevel3D extends Group {
             .filter(corner -> corner.x() > 0 && corner.x() < terrainMap.numCols() - 1)
             .filter(corner -> corner.y() > 0 && corner.y() < terrainMap.numRows() - 1)
             .map(corner -> TileMapPath.build(terrainMap, explored, corner, LEFT))
-            .forEach(path -> buildWallsAlongPath(parent, path));
+            .forEach(path -> buildWallsAlongPath(parent, path, WALL_THICKNESS));
 
-        // Obstacles inside maze
+        // Double walls inside maze
         terrainMap.tiles(Tiles.DCORNER_NW)
             .filter(corner -> corner.x() > 0 && corner.x() < terrainMap.numCols() - 1)
             .filter(corner -> corner.y() > 0 && corner.y() < terrainMap.numRows() - 1)
             .map(corner -> TileMapPath.build(terrainMap, explored, corner, LEFT))
-            .forEach(path -> buildWallsAlongPath(parent, path));
+            .forEach(path -> buildWallsAlongPath(parent, path, WALL_THICKNESS_DWALL));
 
         // Paths starting at left and right maze border (over and under tunnel ends)
         var handlesLeft = new ArrayList<Vector2i>();
@@ -287,38 +288,39 @@ public class GameLevel3D extends Group {
         handlesLeft.stream()
             .filter(handle -> !explored.get(terrainMap.index(handle)))
             .map(handle -> TileMapPath.build(terrainMap, explored, handle, RIGHT))
-            .forEach(path -> buildWallsAlongPath(parent, path));
+            .forEach(path -> buildWallsAlongPath(parent, path, WALL_THICKNESS_DWALL));
 
         handlesRight.stream()
             .filter(handle -> !explored.get(terrainMap.index(handle)))
             .map(handle -> TileMapPath.build(terrainMap, explored, handle, LEFT))
-            .forEach(path -> buildWallsAlongPath(parent, path));
+            .forEach(path -> buildWallsAlongPath(parent, path, WALL_THICKNESS_DWALL));
 
         // Closed outer wall?
         terrainMap.tiles(Tiles.DCORNER_NW)
             .filter(corner -> corner.x() == 0)
             .filter(corner -> !explored.get(terrainMap.index(corner)))
             .map(corner -> TileMapPath.build(terrainMap, explored, corner, LEFT))
-            .forEach(path -> buildWallsAlongPath(parent, path));
+            .forEach(path -> buildWallsAlongPath(parent, path, WALL_THICKNESS_DWALL));
     }
 
-    private void buildWallsAlongPath(Group parent, TileMapPath tileMapPath) {
+    private void buildWallsAlongPath(Group parent, TileMapPath tileMapPath, double thickness) {
         Vector2i wallStart = tileMapPath.startTile;
         Vector2i wallEnd = wallStart;
         Direction prevDir = null;
         for (int i = 0; i < tileMapPath.directions.size(); ++i) {
             var dir = tileMapPath.directions.get(i);
             if (prevDir != dir) {
-                parent.getChildren().add(createWall(wallStart, wallEnd, wallHeightPy, wallFillMaterialPy));
+                parent.getChildren().add(createWall(wallStart, wallEnd, wallHeightPy, wallFillMaterialPy, thickness));
                 wallStart = wallEnd;
             }
             wallEnd = wallEnd.plus(dir.vector());
             prevDir = dir;
         }
-        parent.getChildren().add(createWall(wallStart, wallEnd, wallHeightPy, wallFillMaterialPy));
+        parent.getChildren().add(createWall(wallStart, wallEnd, wallHeightPy, wallFillMaterialPy, thickness));
     }
 
-    private Node createWall(Vector2i first, Vector2i second, DoubleProperty heightPy, ObjectProperty<PhongMaterial> fillMaterialPy) {
+    private Node createWall(Vector2i first, Vector2i second, DoubleProperty heightPy,
+                            ObjectProperty<PhongMaterial> fillMaterialPy, double thickness) {
         if (first.y() == second.y()) {
             // horizontal
             Logger.trace("Hor. Wall from {} to {}", first, second);
@@ -327,10 +329,10 @@ public class GameLevel3D extends Group {
                 first = second;
                 second = tmp;
             }
-            double w = (second.x() - first.x()) * 8 + WALL_THICKNESS;
+            double w = (second.x() - first.x()) * 8 + thickness;
             double m = (first.x() + second.x()) * 4;
 
-            var base = new Box(w, WALL_THICKNESS, heightPy.get());
+            var base = new Box(w, thickness, heightPy.get());
             base.materialProperty().bind(fillMaterialPy);
             base.depthProperty().bind(heightPy);
             base.drawModeProperty().bind(PY_3D_DRAW_MODE);
@@ -338,11 +340,11 @@ public class GameLevel3D extends Group {
             base.setTranslateY(first.y() * 8 + 4);
             base.translateZProperty().bind(heightPy.multiply(-0.5));
 
-            var top = new Box(w, WALL_THICKNESS, WALL_STROKE_THICKNESS);
+            var top = new Box(w, thickness, WALL_COAT_HEIGHT);
             top.materialProperty().bind(wallStrokeMaterialPy);
             top.translateXProperty().bind(base.translateXProperty());
             top.translateYProperty().bind(base.translateYProperty());
-            top.translateZProperty().bind(heightPy.multiply(-1).subtract(WALL_STROKE_THICKNESS));
+            top.translateZProperty().bind(heightPy.multiply(-1).subtract(WALL_COAT_HEIGHT));
 
             return new Group(base, top);
         }
@@ -357,7 +359,7 @@ public class GameLevel3D extends Group {
             double h = (second.y() - first.y()) * 8;
             double m = (first.y() + second.y()) * 4;
 
-            var base = new Box(WALL_THICKNESS, h, heightPy.get());
+            var base = new Box(thickness, h, heightPy.get());
             base.materialProperty().bind(fillMaterialPy);
             base.depthProperty().bind(heightPy);
             base.drawModeProperty().bind(PY_3D_DRAW_MODE);
@@ -365,11 +367,11 @@ public class GameLevel3D extends Group {
             base.setTranslateY(m + 4);
             base.translateZProperty().bind(heightPy.multiply(-0.5));
 
-            var top = new Box(WALL_THICKNESS, h, WALL_STROKE_THICKNESS);
+            var top = new Box(thickness, h, WALL_COAT_HEIGHT);
             top.materialProperty().bind(wallStrokeMaterialPy);
             top.translateXProperty().bind(base.translateXProperty());
             top.translateYProperty().bind(base.translateYProperty());
-            top.translateZProperty().bind(heightPy.multiply(-1).subtract(WALL_STROKE_THICKNESS));
+            top.translateZProperty().bind(heightPy.multiply(-1).subtract(WALL_COAT_HEIGHT));
 
             return new Group(base, top);
         }
