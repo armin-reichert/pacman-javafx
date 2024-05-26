@@ -37,12 +37,7 @@ jlink {
     jpackage {
         appVersion = '1.0'
         installerOptions.addAll([
-//            '--copyright', 'COPYRIGHT_HERE',
-//            '--description', 'DESCRIPTION_HERE',
-//            '--help', 'HELP_ME',
-//            '--name', 'Name_HERE',
-            '--vendor', 'Vendor_HERE',
-//            '--version', 'Version_HERE'
+            '--vendor', 'Armin Reichert',
         ])
         if (os.isWindows()) {
             icon = 'pacman.ico'
