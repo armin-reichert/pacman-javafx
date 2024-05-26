@@ -20,13 +20,13 @@ public class Dashboard extends VBox {
     public Dashboard(GameSceneContext sceneContext) {
         infoBoxes.add(new InfoBoxGeneral(sceneContext.theme(), sceneContext.tt("infobox.general.title")));
         infoBoxes.add(new InfoBoxGameControl(sceneContext.theme(), sceneContext.tt("infobox.game_control.title")));
-        infoBoxes.add(new InfoBox3D(sceneContext.theme(), sceneContext.tt("infobox.3D_settings.title")));
         infoBoxes.add(new InfoBoxGameInfo(sceneContext.theme(), sceneContext.tt("infobox.game_info.title")));
         infoBoxes.add(new InfoBoxActorInfo(sceneContext.theme(), sceneContext.tt("infobox.actor_info.title")));
+        infoBoxes.add(new InfoBox3D(sceneContext.theme(), sceneContext.tt("infobox.3D_settings.title")));
         infoBoxes.add(new InfoBoxKeys(sceneContext.theme(), sceneContext.tt("infobox.keyboard_shortcuts.title")));
         infoBoxes.add(new InfoBoxAbout(sceneContext.theme(), sceneContext.tt("infobox.about.title")));
         infoBoxes.forEach(infoBox -> {
-            getChildren().add(infoBox.getRoot());
+            getChildren().add(infoBox);
             infoBox.init(sceneContext);
         });
         setVisible(false);

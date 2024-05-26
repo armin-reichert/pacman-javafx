@@ -31,7 +31,7 @@ import java.util.function.Supplier;
  *
  * @author Armin Reichert
  */
-public abstract class InfoBox {
+public abstract class InfoBox extends TitledPane {
 
     public static String fmtSpeed(byte percentage) {
         return String.format("%.2f px/s (%d%%)", GameModel.PPS_AT_100_PERCENT * percentage * 0.01f, percentage);
@@ -39,7 +39,6 @@ public abstract class InfoBox {
 
     protected final Theme theme;
     protected final List<InfoText> infoTexts = new ArrayList<>();
-    protected final TitledPane root = new TitledPane();
     protected final GridPane content = new GridPane();
 
     private final int minLabelWidth;
@@ -69,11 +68,11 @@ public abstract class InfoBox {
         content.setHgap(4);
         content.setVgap(3);
         content.setPadding(new Insets(5));
-        root.setExpanded(false);
-        root.setOpacity(0.7);
-        root.setFocusTraversable(false);
-        root.setText(title);
-        root.setContent(content);
+        setExpanded(false);
+        setOpacity(0.7);
+        setFocusTraversable(false);
+        setText(title);
+        setContent(content);
     }
 
     public void init(GameSceneContext sceneContext) {
@@ -81,10 +80,6 @@ public abstract class InfoBox {
         if (!(sceneContext.actionHandler() instanceof ActionHandler3D)) {
             throw new IllegalArgumentException("Action handler in scene context must be the 3D version");
         }
-    }
-
-    public TitledPane getRoot() {
-        return root;
     }
 
     public void update() {
@@ -129,8 +124,8 @@ public abstract class InfoBox {
         addInfo("", "");
     }
 
-    protected InfoText addInfo(String labelText, String value) {
-        return addInfo(labelText, () -> value);
+    protected void addInfo(String labelText, String value) {
+        addInfo(labelText, () -> value);
     }
 
     protected Button[] addButtonList(String labelText, String... buttonTexts) {
@@ -175,7 +170,7 @@ public abstract class InfoBox {
 
     protected Slider addSlider(String labelText, double min, double max, double initialValue) {
         Slider slider = new Slider(min, max, initialValue);
-        slider.setMinWidth((Integer) theme.get("infobox.min_col_width"));
+        slider.setMinWidth((int)theme.get("infobox.min_col_width"));
         slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (e.getClickCount() == 2) {
                 slider.setValue(initialValue);
