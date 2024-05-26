@@ -100,7 +100,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     public static final String NO_TEXTURE                             = "No Texture";
 
-    private static void addAssets3D() {
+    static void addAssets3D() {
         Theme theme = PacManGames2dUI.THEME_2D;
         ResourceManager rm = () -> PacManGames3dUI.class;
 
@@ -183,11 +183,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("infobox.text_color",            Color.WHITE);
         theme.set("infobox.label_font",            Font.font("Sans", 12));
         theme.set("infobox.text_font",             rm.loadFont("fonts/SplineSansMono-Regular.ttf", 12));
-    }
-
-    static {
-        addAssets3D();
-        Logger.info("3D assets added to 2D theme.");
     }
 
     public static int TOTAL_ROTATE = 66;

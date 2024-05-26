@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2021-2024 Armin Reichert (MIT License) See file LICENSE in repository root directory for details.
  */
-open module mod.pacman_core {
-
+open module de.amr.games.pacman {
     // module is defined as "open" to give access to non-class resources (map data) via class loader
+
     requires org.tinylog.api;
-    requires mod.pacman_lib;
+    requires de.amr.games.pacman.lib;
 
     exports de.amr.games.pacman.controller;
     exports de.amr.games.pacman.event;

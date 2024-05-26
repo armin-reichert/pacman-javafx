@@ -19,21 +19,32 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void init() {
-        GameController.it().setSupportedGameVariants(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
-        GameController.it().selectGame(GameVariant.PACMAN_XXL);
-        Logger.info("Game controller initialized. Selected game: {}", GameController.it().game().variant());
-        Logger.info("Java version:   {}", Runtime.version());
-        Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
+        try {
+            GameController.it().setSupportedGameVariants(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
+            GameController.it().selectGame(GameVariant.PACMAN_XXL);
+            Logger.info("Game controller initialized. Selected game: {}", GameController.it().game().variant());
+            Logger.info("Java version:   {}", Runtime.version());
+            Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
+
+            PacManGames3dUI.addAssets3D();
+            Logger.info("3D assets added to 2D theme.");
+        } catch (Throwable x) {
+            x.printStackTrace();
+        }
     }
 
     @Override
     public void start(Stage stage) {
-        ui = new PacManGames3dUI(stage);
-        for (var variant : GameController.it().supportedGameVariants()) {
-            GameController.it().game(variant).addGameEventListener(ui);
+        try {
+            ui = new PacManGames3dUI(stage);
+            for (var variant : GameController.it().supportedGameVariants()) {
+                GameController.it().game(variant).addGameEventListener(ui);
+            }
+            ui.showStartPage();
+            Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
+        } catch (Throwable x) {
+            x.printStackTrace();
         }
-        ui.showStartPage();
-        Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }
 
     @Override

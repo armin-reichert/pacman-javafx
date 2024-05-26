@@ -19,7 +19,6 @@ dependencies {
     implementation project(':tilemap-editor')
     implementation 'org.tinylog:tinylog-api:2.7.0'
     implementation 'org.tinylog:tinylog-impl:2.7.0'
-    testImplementation 'junit:junit:4.13.2'
 }
 
 javafx {

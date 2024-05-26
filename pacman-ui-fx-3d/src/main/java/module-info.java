@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-open module mod.pacman_ui_fx_3d {
+open module de.amr.games.pacman.ui.fx.v3d {
 
     // module is open to allow access to resources using class loader
 
@@ -10,11 +10,10 @@ open module mod.pacman_ui_fx_3d {
     requires javafx.controls;
     requires javafx.media;
     requires org.tinylog.api;
-    requires mod.pacman_core;
-    requires mod.pacman_lib;
-    requires mod.pacman_ui_fx_2d;
-    requires mod.tilemapeditor;
-    requires java.naming;
+    requires de.amr.games.pacman;
+    requires de.amr.games.pacman.lib;
+    requires de.amr.games.pacman.ui.fx;
+    requires de.amr.games.pacman.tilemapeditor;
 
     exports de.amr.games.pacman.ui.fx.v3d;
     exports de.amr.games.pacman.ui.fx.v3d.animation;

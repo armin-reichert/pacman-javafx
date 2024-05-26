@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d;
 
+import java.io.PrintWriter;
+
 import static javafx.application.Application.launch;
 
 /**
@@ -11,6 +13,15 @@ import static javafx.application.Application.launch;
  */
 public class Main {
     public static void main(String[] args) {
-        launch(PacManGames3dApp.class, args);
+        try {
+            launch(PacManGames3dApp.class, args);
+        } catch (Throwable x) {
+            try (var pw = new PrintWriter("oh_shit.txt")) {
+                x.printStackTrace(pw);
+            }
+            catch (Exception e) {
+                e.printStackTrace(System.err);
+            }
+        }
     }
 }
