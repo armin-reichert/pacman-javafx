@@ -51,7 +51,7 @@ public class PacManXXLGame extends PacManGame {
     }
 
     @Override
-    void buildRegularLevel(int levelNumber) {
+    public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
         switch (levelNumber) {
             case 1 -> {
@@ -81,7 +81,7 @@ public class PacManXXLGame extends PacManGame {
         return 0;
     }
 
-    World createModernWorld(WorldMap map) {
+    private World createModernWorld(WorldMap map) {
         var world = new World(map);
         world.addHouse(createArcadeHouse(), v2i(10, 15)); //TODO create house from map?
         world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP}); // TODO
@@ -89,7 +89,7 @@ public class PacManXXLGame extends PacManGame {
         return world;
     }
 
-    void loadCustomMaps() throws IOException {
+    private void loadCustomMaps() throws IOException {
         customMaps.clear();
         var mapDir = CUSTOM_MAP_DIR;
         if (mapDir.isDirectory()) {

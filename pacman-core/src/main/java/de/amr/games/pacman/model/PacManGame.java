@@ -77,7 +77,7 @@ public class PacManGame extends AbstractPacManGame {
     }
 
     @Override
-    long huntingTicks(int levelNumber, int phaseIndex) {
+    public long huntingTicks(int levelNumber, int phaseIndex) {
         long ticks = switch (levelNumber) {
             case 1 -> HUNTING_TICKS_1[phaseIndex];
             case 2, 3, 4 -> HUNTING_TICKS_2_TO_4[phaseIndex];
@@ -87,7 +87,7 @@ public class PacManGame extends AbstractPacManGame {
     }
 
     @Override
-    void buildRegularLevel(int levelNumber) {
+    public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
         setWorldAndCreatePopulation(createPacManWorld());
         pac.setName("Pac-Man");
@@ -96,7 +96,7 @@ public class PacManGame extends AbstractPacManGame {
     }
 
     @Override
-    void buildDemoLevel() {
+    public void buildDemoLevel() {
         levelNumber = 1; // determines speed etc
         setWorldAndCreatePopulation(createPacManWorld());
         pac.setName("Pac-Man");
@@ -105,7 +105,7 @@ public class PacManGame extends AbstractPacManGame {
     }
 
     //TODO: store some of this info in map?
-    World createPacManWorld() {
+    protected World createPacManWorld() {
         var map = loadMap("/de/amr/games/pacman/maps/pacman.world");
         var world = new World(map);
         world.addHouse(createArcadeHouse(), v2i(10, 15));
@@ -119,7 +119,7 @@ public class PacManGame extends AbstractPacManGame {
     }
 
     @Override
-    void updateLevelCounter() {
+    public void updateLevelCounter() {
         if (levelNumber == 1) {
             levelCounter.clear();
         }
@@ -145,13 +145,13 @@ public class PacManGame extends AbstractPacManGame {
     }
 
     @Override
-    boolean isBonusReached() {
+    public boolean isBonusReached() {
         return world.eatenFoodCount() == 70 || world.eatenFoodCount() == 170;
     }
 
     // In the Pac-Man game variant, each level has a single bonus symbol appearing twice during the level
     @Override
-    byte computeBonusSymbol() {
+    public byte computeBonusSymbol() {
         return levelNumber > 12 ? 7 : BONUS_SYMBOLS_BY_LEVEL_NUMBER[levelNumber];
     }
 
