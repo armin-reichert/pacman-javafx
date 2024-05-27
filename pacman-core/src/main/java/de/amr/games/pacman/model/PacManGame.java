@@ -46,7 +46,7 @@ import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
  */
 public class PacManGame extends AbstractPacManGame {
 
-    static final NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
+    private static final NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
         np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
         np(18, 23), np(18, 20), np(18, 17), np(15, 14), np(12, 14), np(9, 17),
         np(6, 17), np(6, 11), np(6, 8), np(6, 4), np(1, 8), np(6, 8),
@@ -58,11 +58,11 @@ public class PacManGame extends AbstractPacManGame {
         np(15, 32), np(12, 32), np(3, 29), np(6, 23)
     };
 
-    final int[] HUNTING_TICKS_1 = {420, 1200, 420, 1200, 300, 1200, 300, -1};
-    final int[] HUNTING_TICKS_2_TO_4 = {420, 1200, 420, 1200, 300, 61980, 1, -1};
-    final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 300, 1200, 300, 62262, 1, -1};
-    final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {-1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
-    final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
+    private static final int[] HUNTING_TICKS_1 = {420, 1200, 420, 1200, 300, 1200, 300, -1};
+    private static final int[] HUNTING_TICKS_2_TO_4 = {420, 1200, 420, 1200, 300, 61980, 1, -1};
+    private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 300, 1200, 300, 62262, 1, -1};
+    private static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {-1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
+    private static final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
 
     @Override
     public void init() {

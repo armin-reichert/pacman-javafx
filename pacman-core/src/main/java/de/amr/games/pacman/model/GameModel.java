@@ -32,14 +32,14 @@ public interface GameModel {
 
     static byte checkGhostID(byte id) {
         if (id < 0 || id > 3) {
-            throw new IllegalGhostIDException(id);
+            GameException.illegalGhostID(id);
         }
         return id;
     }
 
     static int checkLevelNumber(int number) {
         if (number < 1) {
-            throw new IllegalLevelNumberException(number);
+            GameException.illegalLevelNumber(number);
         }
         return number;
     }

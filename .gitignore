@@ -27,3 +27,4 @@ hs_err_pid*
 /.idea/
 !gradle/wrapper/gradle-wrapper.jar
 /.run/Map Editor.run.xml
+/pacman-all.iml

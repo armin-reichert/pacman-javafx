@@ -388,7 +388,7 @@ public abstract class AbstractPacManGame implements GameModel {
             case CYAN_GHOST -> pac.tilesAhead(2, overflowBug).scaled(2).minus(ghost(RED_GHOST).tile());
             // Clyde/Sue: attacks directly but retreats if Pac is near
             case ORANGE_GHOST -> ghost.tile().euclideanDistance(pac.tile()) < 8 ? scatterTarget(ghost) : pac.tile();
-            default -> throw new IllegalGhostIDException(ghost.id());
+            default -> throw GameException.illegalGhostID(ghost.id());
         };
     }
 
