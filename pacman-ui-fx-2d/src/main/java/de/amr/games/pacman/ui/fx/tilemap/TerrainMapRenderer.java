@@ -4,13 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.tilemap;
 
-
 import de.amr.games.pacman.lib.*;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-
 
 /**
  * @author Armin Reichert
@@ -91,7 +89,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.beginPath();
 
         //TODO: avoid these special cases
-        Vector2i tile = tileMapPath.startTile;
+        Vector2i tile = tileMapPath.startTile();
         if (tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
             // start at left maze border, not at tile center
             double y = center(tile).y();
@@ -109,7 +107,8 @@ public class TerrainMapRenderer implements TileMapRenderer {
             case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(c.x() - r, c.y() - r, r, r, 270, 90);
             default -> {}
         }
-        for (Direction dir : tileMapPath.directions) {
+        for (int i = 0; i < tileMapPath.size(); ++i) {
+            Direction dir = tileMapPath.dir(i);
             Vector2i prev = tile;
             tile = tile.plus(dir.vector());
             c = center(tile);

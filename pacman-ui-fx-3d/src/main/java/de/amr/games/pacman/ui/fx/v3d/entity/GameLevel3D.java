@@ -273,26 +273,26 @@ public class GameLevel3D extends Group {
 
         handlesLeft.stream()
             .filter(handle -> !explored.get(terrainMap.index(handle)))
-            .map(handle -> TileMapPath.build(terrainMap, explored, handle, RIGHT))
+            .map(handle -> new TileMapPath(terrainMap, explored, handle, RIGHT))
             .forEach(path -> buildWallsAlongPath(parent, path, WALL_THICKNESS_DWALL));
 
         handlesRight.stream()
             .filter(handle -> !explored.get(terrainMap.index(handle)))
-            .map(handle -> TileMapPath.build(terrainMap, explored, handle, LEFT))
+            .map(handle -> new TileMapPath(terrainMap, explored, handle, LEFT))
             .forEach(path -> buildWallsAlongPath(parent, path, WALL_THICKNESS_DWALL));
 
         // Closed outer wall?
         terrainMap.tiles(Tiles.DCORNER_NW)
             .filter(corner -> corner.x() == 0)
             .filter(corner -> !explored.get(terrainMap.index(corner)))
-            .map(corner -> TileMapPath.build(terrainMap, explored, corner, LEFT))
+            .map(corner -> new TileMapPath(terrainMap, explored, corner, LEFT))
             .forEach(path -> buildWallsAlongPath(parent, path, WALL_THICKNESS_DWALL));
 
         // Obstacles inside maze
         terrainMap.tiles(Tiles.CORNER_NW)
             .filter(corner -> corner.x() > 0 && corner.x() < terrainMap.numCols() - 1)
             .filter(corner -> corner.y() > 0 && corner.y() < terrainMap.numRows() - 1)
-            .map(corner -> TileMapPath.build(terrainMap, explored, corner, LEFT))
+            .map(corner -> new TileMapPath(terrainMap, explored, corner, LEFT))
             .forEach(path -> buildWallsAlongPath(parent, path, WALL_THICKNESS));
 
         // Double walls inside maze
@@ -301,17 +301,17 @@ public class GameLevel3D extends Group {
             .filter(corner -> !corner.equals(house.topLeftTile()))
             .filter(corner -> corner.x() > 0 && corner.x() < terrainMap.numCols() - 1)
             .filter(corner -> corner.y() > 0 && corner.y() < terrainMap.numRows() - 1)
-            .map(corner -> TileMapPath.build(terrainMap, explored, corner, LEFT))
+            .map(corner -> new TileMapPath(terrainMap, explored, corner, LEFT))
             .forEach(path -> buildWallsAlongPath(parent, path, WALL_THICKNESS_DWALL));
 
     }
 
     private void buildWallsAlongPath(Group parent, TileMapPath tileMapPath, double thickness) {
-        Vector2i wallStart = tileMapPath.startTile;
+        Vector2i wallStart = tileMapPath.startTile();
         Vector2i wallEnd = wallStart;
         Direction prevDir = null;
-        for (int i = 0; i < tileMapPath.directions.size(); ++i) {
-            var dir = tileMapPath.directions.get(i);
+        for (int i = 0; i < tileMapPath.size(); ++i) {
+            var dir = tileMapPath.dir(i);
             if (prevDir != dir) {
                 parent.getChildren().add(createWall(wallStart, wallEnd, wallHeightPy, wallFillMaterialPy, thickness));
                 wallStart = wallEnd;

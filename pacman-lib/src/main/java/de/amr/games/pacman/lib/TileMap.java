@@ -108,7 +108,7 @@ public class TileMap {
         Predicate<Vector2i> isUnexplored = tile -> !explored.get(index(tile));
 
         tiles(Tiles.CORNER_NW).filter(isUnexplored)
-            .map(corner -> TileMapPath.build(this, explored, corner, LEFT))
+            .map(corner -> new TileMapPath(this, explored, corner, LEFT))
             .forEach(wallPaths::add);
 
         // Paths starting at left and right maze border leading inside maze
@@ -137,17 +137,17 @@ public class TileMap {
 
         handlesLeft.entrySet().stream()
             .filter(entry -> isUnexplored.test(entry.getKey()))
-            .map(entry -> TileMapPath.build(this, explored, entry.getKey(), entry.getValue()))
+            .map(entry -> new TileMapPath(this, explored, entry.getKey(), entry.getValue()))
             .forEach(dwallPaths::add);
 
         handlesRight.entrySet().stream()
             .filter(entry -> isUnexplored.test(entry.getKey()))
-            .map(entry -> TileMapPath.build(this, explored, entry.getKey(), entry.getValue()))
+            .map(entry -> new TileMapPath(this, explored, entry.getKey(), entry.getValue()))
             .forEach(dwallPaths::add);
 
         // find ghost house, doors are included as walls!
         tiles(Tiles.DCORNER_NW).filter(isUnexplored)
-            .map(corner -> TileMapPath.build(this, explored, corner, LEFT))
+            .map(corner -> new TileMapPath(this, explored, corner, LEFT))
             .forEach(dwallPaths::add);
 
         Logger.debug("Paths computed, {} single wall paths, {} double wall paths", wallPaths.size(), dwallPaths.size());
