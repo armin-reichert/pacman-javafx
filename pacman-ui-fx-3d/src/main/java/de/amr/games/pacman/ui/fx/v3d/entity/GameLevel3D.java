@@ -4,7 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.entity;
 
-import de.amr.games.pacman.lib.*;
+import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.TileMap;
+import de.amr.games.pacman.lib.TileMapPath;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -28,13 +31,10 @@ import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Direction.LEFT;
-import static de.amr.games.pacman.lib.Direction.RIGHT;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
 import static de.amr.games.pacman.ui.fx.util.ResourceManager.opaqueColor;
@@ -222,7 +222,7 @@ public class GameLevel3D extends Group {
     }
 
     private void addHouseWall(Group parent, int x1, int y1, int x2, int y2) {
-        parent.getChildren().add(createWall(v2i(x1, y1), v2i(x2, y2), houseHeightPy, houseFillMaterialPy, WALL_THICKNESS));
+        parent.getChildren().add(createWall(v2i(x1, y1), v2i(x2, y2), WALL_THICKNESS, houseHeightPy, houseFillMaterialPy));
     }
 
     private void addFood3D(Group parent) {
@@ -271,72 +271,67 @@ public class GameLevel3D extends Group {
         for (int i = 0; i < tileMapPath.size(); ++i) {
             var dir = tileMapPath.dir(i);
             if (prevDir != dir) {
-                parent.getChildren().add(createWall(wallStart, wallEnd, wallHeightPy, wallFillMaterialPy, thickness));
+                parent.getChildren().add(createWall(wallStart, wallEnd, thickness, wallHeightPy, wallFillMaterialPy));
                 wallStart = wallEnd;
             }
             wallEnd = wallEnd.plus(dir.vector());
             prevDir = dir;
         }
-        parent.getChildren().add(createWall(wallStart, wallEnd, wallHeightPy, wallFillMaterialPy, thickness));
+        parent.getChildren().add(createWall(wallStart, wallEnd, thickness, wallHeightPy, wallFillMaterialPy));
     }
 
-    private Node createWall(Vector2i first, Vector2i second, DoubleProperty heightPy,
-                            ObjectProperty<PhongMaterial> fillMaterialPy, double thickness) {
-        if (first.y() == second.y()) {
-            // horizontal
-            Logger.trace("Hor. Wall from {} to {}", first, second);
-            if (first.x() > second.x()) {
-                var tmp = first;
-                first = second;
-                second = tmp;
+    private Node createWall(Vector2i beginTile, Vector2i endTile, double thickness, DoubleProperty depthPy,
+                            ObjectProperty<PhongMaterial> fillMaterialPy) {
+
+        if (beginTile.y() == endTile.y()) { // horizontal
+            if (beginTile.x() > endTile.x()) {
+                var tmp = beginTile;
+                beginTile = endTile;
+                endTile = tmp;
             }
-            double w = (second.x() - first.x()) * 8 + thickness;
-            double m = (first.x() + second.x()) * 4;
-
-            var base = new Box(w, thickness, heightPy.get());
-            base.materialProperty().bind(fillMaterialPy);
-            base.depthProperty().bind(heightPy);
-            base.drawModeProperty().bind(PY_3D_DRAW_MODE);
-            base.setTranslateX(m + 4);
-            base.setTranslateY(first.y() * 8 + 4);
-            base.translateZProperty().bind(heightPy.multiply(-0.5));
-
-            var top = new Box(w, thickness, WALL_COAT_HEIGHT);
-            top.materialProperty().bind(wallStrokeMaterialPy);
-            top.translateXProperty().bind(base.translateXProperty());
-            top.translateYProperty().bind(base.translateYProperty());
-            top.translateZProperty().bind(heightPy.multiply(-1).subtract(WALL_COAT_HEIGHT));
-
-            return new Group(base, top);
+            return createWall(
+                (beginTile.x() + endTile.x()) * HTS + HTS,
+                beginTile.y() * TS + HTS,
+                (endTile.x() - beginTile.x()) * TS + thickness,
+                thickness,
+                depthPy,
+                fillMaterialPy);
         }
-        else if (first.x() == second.x()){
-            // vertical
-            Logger.trace("Vert. Wall from {} to {}", first, second);
-            if (first.y() > second.y()) {
-                var tmp = first;
-                first = second;
-                second = tmp;
+        else if (beginTile.x() == endTile.x()) { // vertical
+            if (beginTile.y() > endTile.y()) {
+                var tmp = beginTile;
+                beginTile = endTile;
+                endTile = tmp;
             }
-            double h = (second.y() - first.y()) * 8;
-            double m = (first.y() + second.y()) * 4;
-
-            var base = new Box(thickness, h, heightPy.get());
-            base.materialProperty().bind(fillMaterialPy);
-            base.depthProperty().bind(heightPy);
-            base.drawModeProperty().bind(PY_3D_DRAW_MODE);
-            base.setTranslateX(first.x() * 8 + 4);
-            base.setTranslateY(m + 4);
-            base.translateZProperty().bind(heightPy.multiply(-0.5));
-
-            var top = new Box(thickness, h, WALL_COAT_HEIGHT);
-            top.materialProperty().bind(wallStrokeMaterialPy);
-            top.translateXProperty().bind(base.translateXProperty());
-            top.translateYProperty().bind(base.translateYProperty());
-            top.translateZProperty().bind(heightPy.multiply(-1).subtract(WALL_COAT_HEIGHT));
-
-            return new Group(base, top);
+            return createWall(
+                beginTile.x() * TS + HTS,
+                (beginTile.y() + endTile.y()) * HTS + HTS,
+                thickness,
+                (endTile.y() - beginTile.y()) * TS,
+                depthPy,
+                fillMaterialPy);
         }
-        throw new IllegalArgumentException(String.format("Cannot build wall between tiles %s and %s", first, second));
+        throw new IllegalArgumentException(String.format("Cannot build wall between tiles %s and %s", beginTile, endTile));
+    }
+
+    private Group createWall(double x, double y, double sizeX, double sizeY, DoubleProperty depthPy,
+                             ObjectProperty<PhongMaterial> fillMaterialPy) {
+
+        var base = new Box(sizeX, sizeY, depthPy.get());
+        base.setTranslateX(x);
+        base.setTranslateY(y);
+        base.translateZProperty().bind(depthPy.multiply(-0.5));
+        base.materialProperty().bind(fillMaterialPy);
+        base.depthProperty().bind(depthPy);
+        base.drawModeProperty().bind(PY_3D_DRAW_MODE);
+
+        var top = new Box(sizeX, sizeY, WALL_COAT_HEIGHT);
+        top.translateXProperty().bind(base.translateXProperty());
+        top.translateYProperty().bind(base.translateYProperty());
+        top.translateZProperty().bind(depthPy.multiply(-1).subtract(WALL_COAT_HEIGHT));
+        top.materialProperty().bind(wallStrokeMaterialPy);
+
+        return new Group(base, top);
     }
 
     private void createLivesCounter3D() {
