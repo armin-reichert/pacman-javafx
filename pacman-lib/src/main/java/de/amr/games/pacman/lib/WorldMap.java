@@ -12,22 +12,30 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
+
 /**
  * @author Armin Reichert
  */
 public class WorldMap {
 
-    static final String TERRAIN_SECTION_START = "!terrain";
-    static final String FOOD_SECTION_START    = "!food";
+    private static final String TERRAIN_SECTION_START = "!terrain";
+    private static final String FOOD_SECTION_START    = "!food";
 
     private URL url;
     private TileMap terrain;
     private TileMap food;
 
     public static WorldMap copyOf(WorldMap other) {
-        var copy = new WorldMap(TileMap.copyOf(other.terrain), TileMap.copyOf(other.food));
+        checkNotNull(other);
+        var copy = new WorldMap();
         copy.url = other.url;
+        copy.terrain = other.terrain;
+        copy.food = other.food;
         return copy;
+    }
+
+    private WorldMap() {
     }
 
     public WorldMap(TileMap terrain, TileMap food) {
@@ -36,16 +44,20 @@ public class WorldMap {
         this.url = null;
     }
 
-    public WorldMap(URL url) throws IOException {
-        var r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
-        parse(r.lines());
-        this.url = url;
+    public WorldMap(URL url) {
+        try {
+            this.url = url;
+            var r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));
+            parse(r.lines());
+        } catch (Exception x) {
+            Logger.error(x);
+        }
     }
 
-    public WorldMap(File file) throws IOException {
-        var r = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
-        parse(r.lines());
+    public WorldMap(File file)  {
         try {
+            var r = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
+            parse(r.lines());
             url = file.toURI().toURL();
         } catch (Exception x) {
             Logger.error(x);

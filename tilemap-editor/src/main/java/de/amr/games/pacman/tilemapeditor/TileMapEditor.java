@@ -31,7 +31,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -41,6 +40,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * @author Armin Reichert
@@ -345,6 +346,7 @@ public class TileMapEditor  {
     }
 
     public void setMap(WorldMap other) {
+        checkNotNull(other);
         map = other;
         foodMapPropertiesEditor.edit(map.food().getProperties());
         terrainMapPropertiesEditor.edit(map.terrain().getProperties());
@@ -354,6 +356,7 @@ public class TileMapEditor  {
 
 
     public void loadMap(WorldMap other) {
+        checkNotNull(other);
         setMap(WorldMap.copyOf(other));
         currentMapFile = null;
         updateInfo();
@@ -398,16 +401,10 @@ public class TileMapEditor  {
 
     private void readMapFile(File file) {
         if (file.getName().endsWith(".world")) {
-            try {
-                loadMap(new WorldMap(file));
-                lastUsedDir = file.getParentFile();
-                currentMapFile = file;
-                Logger.info("Map read from file {}", file);
-            }
-            catch (Exception x) {
-                Logger.error("Could not load world map from file {}", file);
-                Logger.error(x);
-            }
+            loadMap(new WorldMap(file));
+            lastUsedDir = file.getParentFile();
+            currentMapFile = file;
+            Logger.info("Map read from file {}", file);
         }
         updateInfo();
     }
