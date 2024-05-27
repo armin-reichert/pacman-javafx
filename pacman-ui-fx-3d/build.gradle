@@ -32,14 +32,19 @@ jlink {
         '--compress', 'zip-9',
         '--strip-debug',
         '--no-header-files',
-        '--no-man-pages']
+        '--no-man-pages'
+    ]
     launcher {
         name = 'Pac-Man-FX-3D'
     }
     jpackage {
         appVersion = '1.0'
+        // not supported: copyright
+        description = 'Pac-Man JavaFX 3D'
+        icon = 'pacman.ico'
+        vendor = 'Armin Reichert'
         installerOptions = [
-            '--vendor', 'Armin Reichert',
+            '--copyright', '2021-2024 Armin Reichert',
         ]
         if (os.isWindows()) {
             icon = 'pacman.ico'
