@@ -48,21 +48,21 @@ import static java.lang.Math.PI;
  */
 public class GameLevel3D extends Group {
 
-    static final float FLOOR_THICKNESS       = 0.4f;
-    static final float WALL_HEIGHT           = 2.0f;
-    static final float WALL_THICKNESS        = 0.75f;
-    static final float WALL_THICKNESS_DWALL  = 1.5f;
-    static final float WALL_COAT_HEIGHT      = 0.1f;
-    static final float HOUSE_HEIGHT          = 12.0f;
-    static final float HOUSE_OPACITY         = 0.4f;
-    static final float PAC_SIZE              = 14.0f;
-    static final float GHOST_SIZE            = 13.0f;
-    static final float ENERGIZER_RADIUS      = 3.5f;
-    static final float PELLET_RADIUS         = 1.0f;
+    private static final float FLOOR_THICKNESS       = 0.4f;
+    private static final float WALL_HEIGHT           = 2.0f;
+    private static final float WALL_THICKNESS        = 0.75f;
+    private static final float WALL_THICKNESS_DWALL  = 1.5f;
+    private static final float WALL_COAT_HEIGHT      = 0.1f;
+    private static final float HOUSE_HEIGHT          = 12.0f;
+    private static final float HOUSE_OPACITY         = 0.4f;
+    private static final float PAC_SIZE              = 14.0f;
+    private static final float GHOST_SIZE            = 13.0f;
+    private static final float ENERGIZER_RADIUS      = 3.5f;
+    private static final float PELLET_RADIUS         = 1.0f;
 
-    final Map<String, PhongMaterial> floorTextures = new HashMap<>();
+    public final Map<String, PhongMaterial> floorTextures = new HashMap<>();
 
-    final ObjectProperty<String> floorTextureNamePy = new SimpleObjectProperty<>(this, "floorTextureName") {
+    public final ObjectProperty<String> floorTextureNamePy = new SimpleObjectProperty<>(this, "floorTextureName") {
         @Override
         protected void invalidated() {
             Color floorColor = floorColorPy.get();
@@ -75,7 +75,7 @@ public class GameLevel3D extends Group {
         }
     };
 
-    final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK) {
+    public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK) {
         @Override
         protected void invalidated() {
             Color floorColor = get();
@@ -84,19 +84,19 @@ public class GameLevel3D extends Group {
         }
     };
 
-    final DoubleProperty wallHeightPy  = new SimpleDoubleProperty(this, "wallHeight", WALL_HEIGHT);
+    public final DoubleProperty wallHeightPy  = new SimpleDoubleProperty(this, "wallHeight", WALL_HEIGHT);
 
-    final DoubleProperty houseHeightPy = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
+    public final DoubleProperty houseHeightPy = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
 
-    final ObjectProperty<PhongMaterial> houseFillMaterialPy = new SimpleObjectProperty<>(this, "houseFillMaterial");
+    public final ObjectProperty<PhongMaterial> houseFillMaterialPy = new SimpleObjectProperty<>(this, "houseFillMaterial");
 
-    final ObjectProperty<PhongMaterial> wallStrokeMaterialPy = new SimpleObjectProperty<>(this, "wallStrokeMaterial");
+    public final ObjectProperty<PhongMaterial> wallStrokeMaterialPy = new SimpleObjectProperty<>(this, "wallStrokeMaterial");
 
-    final ObjectProperty<PhongMaterial> wallFillMaterialPy = new SimpleObjectProperty<>(this, "wallFillMaterial");
+    public final ObjectProperty<PhongMaterial> wallFillMaterialPy = new SimpleObjectProperty<>(this, "wallFillMaterial");
 
-    final ObjectProperty<PhongMaterial> foodMaterialPy = new SimpleObjectProperty<>(this, "foodMaterial");
+    public final ObjectProperty<PhongMaterial> foodMaterialPy = new SimpleObjectProperty<>(this, "foodMaterial");
 
-    final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity",1.0) {
+    public final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity",1.0) {
         @Override
         protected void invalidated() {
             double opacity = get();
@@ -108,14 +108,14 @@ public class GameLevel3D extends Group {
         }
     };
 
-    final ObjectProperty<Color> wallStrokeColorPy = new SimpleObjectProperty<>(Color.WHITE) {
+    public final ObjectProperty<Color> wallStrokeColorPy = new SimpleObjectProperty<>(Color.WHITE) {
         @Override
         protected void invalidated() {
             Color strokeColor = get();
             wallStrokeMaterialPy.set(coloredMaterial(strokeColor));        }
     };
 
-    final ObjectProperty<Color> wallFillColorPy = new SimpleObjectProperty<>(Color.GREEN) {
+    public final ObjectProperty<Color> wallFillColorPy = new SimpleObjectProperty<>(Color.GREEN) {
         @Override
         protected void invalidated() {
             Color fillColor = get();
@@ -125,27 +125,27 @@ public class GameLevel3D extends Group {
         }
     };
 
-    final ObjectProperty<Color> foodColorPy = new SimpleObjectProperty<>(Color.PINK) {
+    public final ObjectProperty<Color> foodColorPy = new SimpleObjectProperty<>(Color.PINK) {
         @Override
         protected void invalidated() {
             foodMaterialPy.set(coloredMaterial(get()));
         }
     };
 
-    final GameSceneContext context;
-    final Group worldGroup = new Group();
-    final Group mazeGroup = new Group();
-    final Group levelCounterGroup = new Group();
-    final Box floor;
-    final PointLight houseLight = new PointLight();
-    final Pac3D pac3D;
-    final List<Ghost3D> ghosts3D;
-    final Set<Pellet3D> pellets3D = new HashSet<>();
-    final Set<Energizer3D> energizers3D = new HashSet<>();
+    private final GameSceneContext context;
+    private final Group worldGroup = new Group();
+    private final Group mazeGroup = new Group();
+    private final Group levelCounterGroup = new Group();
+    private final Box floor;
+    private final PointLight houseLight = new PointLight();
+    private final Pac3D pac3D;
+    private final List<Ghost3D> ghosts3D;
+    private final Set<Pellet3D> pellets3D = new HashSet<>();
+    private final Set<Energizer3D> energizers3D = new HashSet<>();
 
-    LivesCounter3D livesCounter3D;
-    Bonus3D bonus3D;
-    Message3D message3D;
+    private LivesCounter3D livesCounter3D;
+    private Bonus3D bonus3D;
+    private Message3D message3D;
 
     public GameLevel3D(GameSceneContext context) {
         this.context = checkNotNull(context);
