@@ -321,8 +321,8 @@ public class GameLevel3D extends Group {
         base.setTranslateX(x);
         base.setTranslateY(y);
         base.translateZProperty().bind(depthPy.multiply(-0.5));
-        base.materialProperty().bind(fillMaterialPy);
         base.depthProperty().bind(depthPy);
+        base.materialProperty().bind(fillMaterialPy);
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         var top = new Box(sizeX, sizeY, WALL_COAT_HEIGHT);
@@ -330,6 +330,7 @@ public class GameLevel3D extends Group {
         top.translateYProperty().bind(base.translateYProperty());
         top.translateZProperty().bind(depthPy.multiply(-1).subtract(WALL_COAT_HEIGHT));
         top.materialProperty().bind(wallStrokeMaterialPy);
+        top.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         return new Group(base, top);
     }
