@@ -52,7 +52,7 @@ public class GameLevel3D extends Group {
     static final float WALL_HEIGHT           = 2.0f;
     static final float WALL_THICKNESS        = 0.75f;
     static final float WALL_THICKNESS_DWALL  = 1.5f;
-    static final float WALL_COAT_HEIGHT = 0.1f;
+    static final float WALL_COAT_HEIGHT      = 0.1f;
     static final float HOUSE_HEIGHT          = 12.0f;
     static final float HOUSE_OPACITY         = 0.4f;
     static final float PAC_SIZE              = 14.0f;
@@ -296,7 +296,9 @@ public class GameLevel3D extends Group {
             .forEach(path -> buildWallsAlongPath(parent, path, WALL_THICKNESS));
 
         // Double walls inside maze
+        House house = context.game().world().house();
         terrainMap.tiles(Tiles.DCORNER_NW)
+            .filter(corner -> !corner.equals(house.topLeftTile()))
             .filter(corner -> corner.x() > 0 && corner.x() < terrainMap.numCols() - 1)
             .filter(corner -> corner.y() > 0 && corner.y() < terrainMap.numRows() - 1)
             .map(corner -> TileMapPath.build(terrainMap, explored, corner, LEFT))
