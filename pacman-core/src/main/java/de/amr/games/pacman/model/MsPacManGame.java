@@ -39,7 +39,7 @@ import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
  */
 public class MsPacManGame extends AbstractPacManGame{
 
-    byte DEMO_LEVEL_MIN_DURATION_SEC = 20;
+    private static final byte DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
     /**
      * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
@@ -47,10 +47,13 @@ public class MsPacManGame extends AbstractPacManGame{
      * @see <a href="https://www.reddit.com/r/Pacman/comments/12q4ny3/is_anyone_able_to_explain_the_ai_behind_the/">Reddit</a>
      * @see <a href="https://github.com/armin-reichert/pacman-basic/blob/main/doc/mspacman-details-reddit-user-damselindis.md">GitHub</a>
      */
-    final int[] HUNTING_TICKS_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
-    final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
+    private static final int[] HUNTING_TICKS_1_TO_4 = {420, 1200, 1, 62220, 1, 62220, 1, -1};
+    private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
 
-    final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
+    private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
+
+    // sprite sheet renderer needs this
+    private int mapNumber;
 
     @Override
     public void init() {
@@ -81,7 +84,7 @@ public class MsPacManGame extends AbstractPacManGame{
      * </ul>
      * <p>
      */
-    int mapNumberByLevelNumber(int levelNumber) {
+    private int mapNumberByLevelNumber(int levelNumber) {
         return switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
@@ -91,21 +94,18 @@ public class MsPacManGame extends AbstractPacManGame{
         };
     }
 
-    // sprite sheet renderer needs this
-    private int mapNumber;
-
     public int mapNumber() {
         return mapNumber;
     }
 
     @Override
-    long huntingTicks(int levelNumber, int phaseIndex) {
+    public long huntingTicks(int levelNumber, int phaseIndex) {
         long ticks = levelNumber < 5 ? HUNTING_TICKS_1_TO_4[phaseIndex] : HUNTING_TICKS_5_PLUS[phaseIndex];
         return ticks != -1 ? ticks : TickTimer.INDEFINITE;
     }
 
     @Override
-    void buildRegularLevel(int levelNumber) {
+    public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
         this.mapNumber = mapNumberByLevelNumber(levelNumber);
         setWorldAndCreatePopulation(createMsPacManWorld(loadMap("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world")));
@@ -116,7 +116,7 @@ public class MsPacManGame extends AbstractPacManGame{
     }
 
     @Override
-    void buildDemoLevel() {
+    public void buildDemoLevel() {
         levelNumber = 1;
         mapNumber = randomInt(1, 7);
         var mapPath = String.format("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world", mapNumber);
@@ -128,7 +128,7 @@ public class MsPacManGame extends AbstractPacManGame{
         ghosts[ORANGE_GHOST].setName("Sue");
     }
 
-    World createMsPacManWorld(WorldMap map) {
+    private World createMsPacManWorld(WorldMap map) {
         var world = new World(map);
         world.addHouse(createArcadeHouse(), v2i(10, 15));
         world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
@@ -139,7 +139,7 @@ public class MsPacManGame extends AbstractPacManGame{
      * (also inside a level) whenever a bonus score is reached. At least that's what I was told.
      */
     @Override
-    void updateLevelCounter() {
+    public void updateLevelCounter() {
         if (levelNumber == 1) {
             levelCounter.clear();
         }
@@ -179,7 +179,7 @@ public class MsPacManGame extends AbstractPacManGame{
     }
 
     @Override
-    boolean isBonusReached() {
+    public boolean isBonusReached() {
         return world.eatenFoodCount() == 64 || world.eatenFoodCount() == 176;
     }
 
@@ -208,7 +208,7 @@ public class MsPacManGame extends AbstractPacManGame{
      * </p>
      */
     @Override
-    byte computeBonusSymbol() {
+    public byte computeBonusSymbol() {
         if (levelNumber <= 7) {
             return (byte) (levelNumber - 1);
         }
