@@ -388,9 +388,13 @@ public class TileMapEditor  {
 
     public void loadMap(WorldMap other) {
         checkNotNull(other);
-        setMap(WorldMap.copyOf(other));
-        currentMapFile = null;
-        updateInfo();
+        if (hasUnsavedChanges()) {
+            showQuitConfirmation(() -> {});
+        } else {
+            setMap(WorldMap.copyOf(other));
+            currentMapFile = null;
+            updateInfo();
+        }
     }
 
     private void showCreateNewMapDialog() {
@@ -448,7 +452,7 @@ public class TileMapEditor  {
         }
     }
 
-    public void showQuitConfirmation(Stage stage, Runnable quitAction) {
+    public void showQuitConfirmation(Runnable quitAction) {
         if (hasUnsavedChanges()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("There are unsaved changes");
