@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui3d;
 import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.tilemapeditor.TileMapEditor;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
-import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.*;
@@ -183,7 +182,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static int TOTAL_TRANSLATE_Z = -140;
 
     private TileMapEditor editor;
-    private Page editorPage;
 
     public PacManGames3dUI(Stage stage) {
         super(stage);
@@ -202,9 +200,9 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClicked);
         mainScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             if (KEY_SWITCH_EDITOR.match(e)) {
-                if (game().variant() == GameVariant.PACMAN_XXL && currentPage != editorPage) {
+                if (game().variant() == GameVariant.PACMAN_XXL && !"editorPage".equals(currentPageID)) {
                     enterMapEditor();
-                } else {
+                } else if ("editorPage".equals(currentPageID)) {
                     quitMapEditor();
                 }
             }
@@ -219,7 +217,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         }
         restartIntro();
         gameClock().stop();
-        setPage(editorPage);
+        selectPage("editorPage");
         editor.start();
     }
 
@@ -238,7 +236,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         var editorLayout = new BorderPane();
         editorLayout.setCenter(editor.getLayout());
         editorLayout.setTop(editor.getMenuBar());
-        editorPage = () -> editorLayout; // fancy, isn't it?
+        pages.put("editorPage", () -> editorLayout); // fancy, isn't it?
 
         // preload maps
         editor.addPredefinedMap(
@@ -281,7 +279,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     }
 
     private void onMouseClicked(MouseEvent e) {
-        if (currentPage instanceof GamePage3D gamePage3D) {
+        if (currentPage() instanceof GamePage3D gamePage3D) {
             gamePage3D.currentContextMenu().ifPresent(ContextMenu::hide);
             if (e.getButton() == MouseButton.SECONDARY) {
                 currentGameScene().ifPresent(gameScene -> {
@@ -304,7 +302,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     @Override
     protected void updateStage() {
-        if (currentPage == editorPage) {
+        if ("editorPage".equals(currentPageID)) {
             stage.setTitle(editor.titlePy.get());
         } else {
             var vk = variantKey(game().variant());

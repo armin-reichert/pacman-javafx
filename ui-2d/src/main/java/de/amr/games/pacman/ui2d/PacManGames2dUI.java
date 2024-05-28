@@ -231,10 +231,11 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     protected final Map<GameVariant, Map<String, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
     protected final Stage stage;
     protected final Scene mainScene;
-    protected final StartPage startPage;
-    protected final GamePage gamePage;
-    protected Page currentPage;
+    protected final Map<String, Page> pages = new HashMap<>();
+    protected String currentPageID;
+
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
+
     private AudioClip voiceClip;
     private final Animation voiceClipExecution = new PauseTransition();
 
@@ -243,8 +244,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
         this.stage = stage;
         mainScene = createMainScene();
-        startPage = createStartPage();
-        gamePage  = createGamePage(mainScene);
+        pages.put("startPage", createStartPage());
+        pages.put("gamePage",  createGamePage(mainScene));
 
         Keyboard.handleKeyEventsFor(mainScene);
 
@@ -262,7 +263,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         });
         clock.setContinousCallback(() -> {
             try {
-                gamePage.render();
+                this.<GamePage>page("gamePage").render();
             } catch (Exception x) {
                 Logger.error("Error during game rendering");
                 Logger.error(x);
@@ -307,6 +308,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             for (var gameScene : gameSceneMap.values()) {
                 gameScene.setContext(this);
                 if (gameScene instanceof GameScene2D gameScene2D) {
+                    GamePage gamePage = (GamePage) pages.get("gamePage");
                     gameScene2D.scalingPy.bind(gamePage.scalingPy);
                     gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
                 }
@@ -319,12 +321,21 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         stage.setScene(mainScene);
     }
 
+    @SuppressWarnings("unchecked")
+    protected <T extends Page> T page(String id) {
+        return (T) pages.get(id);
+    }
+
+    protected <T extends Page> T  currentPage() {
+        return page(currentPageID);
+    }
+
     protected Scene createMainScene() {
         double height = 0.95 * Screen.getPrimary().getVisualBounds().getHeight();
         double width = height * 1.1;
         var scene = new Scene(new Region(), width, height, Color.BLACK);
-        scene.widthProperty().addListener((py, ov, nv) -> currentPage.setSize(scene.getWidth(), scene.getHeight()));
-        scene.heightProperty().addListener((py, ov, nv) -> currentPage.setSize(scene.getWidth(), scene.getHeight()));
+        scene.widthProperty().addListener((py, ov, nv) -> currentPage().setSize(scene.getWidth(), scene.getHeight()));
+        scene.heightProperty().addListener((py, ov, nv) -> currentPage().setSize(scene.getWidth(), scene.getHeight()));
         return scene;
     }
 
@@ -361,11 +372,11 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         return page;
     }
 
-    protected void setPage(Page page) {
-        currentPage = page;
-        mainScene.setRoot(page.rootPane());
-        page.setSize(mainScene.getWidth(), mainScene.getHeight());
-        page.rootPane().requestFocus();
+    protected void selectPage(String pageID) {
+        currentPageID = pageID;
+        mainScene.setRoot(currentPage().rootPane());
+        currentPage().setSize(mainScene.getWidth(), mainScene.getHeight());
+        currentPage().rootPane().requestFocus();
         updateStage();
         stage.show();
     }
@@ -376,14 +387,14 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             clock.stop();
             Logger.info("Clock stopped.");
         }
-        startPage.setGameVariant(game().variant());
-        setPage(startPage);
+        selectPage("startPage");
+        this.<StartPage>currentPage().setGameVariant(game().variant());
     }
 
     public void showGamePage() {
         // call reboot() first such that current game scene is set
         reboot();
-        setPage(gamePage);
+        selectPage("gamePage");
         clock.start();
         Logger.info("Clock started, speed={} Hz", clock.getTargetFrameRate());
     }
@@ -429,9 +440,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             Logger.trace("Game scene changed to {}", gameScenePy.get());
         }
         if (nextGameScene == sceneConfig().get("intro")) {
-            gamePage.showSignature();
+            this.<GamePage>page("gamePage").showSignature();
         } else {
-            gamePage.hideSignature();
+            this.<GamePage>page("gamePage").hideSignature();
         }
         updateStage();
     }
@@ -619,7 +630,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void showFlashMessageSeconds(double seconds, String message, Object... args) {
-        gamePage.flashMessageView().showMessage(String.format(message, args), seconds);
+        this.<GamePage>page("gamePage").flashMessageView().showMessage(String.format(message, args), seconds);
     }
 
     @Override
