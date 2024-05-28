@@ -4,10 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -34,16 +34,29 @@ import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
 public class GamePage extends CanvasLayoutPane implements Page {
 
     protected final GameSceneContext context;
-    protected final FlashMessageView flashMessageLayer = new FlashMessageView();
-    protected final Pane popupLayer = new Pane();
-    protected final FadingPane helpInfoPopUp = new FadingPane();
-    protected final Signature signature;
-
+    private final FlashMessageView flashMessageView = new FlashMessageView();
+    private final Pane popupLayer = new Pane();
+    private final FadingPane helpInfoPopUp = new FadingPane();
+    private Signature signature;
     private BorderPane helpButton;
 
     public GamePage(GameSceneContext context, double width, double height) {
         this.context = context;
+        createSignature();
+        createHelpButton();
+        createDebugInfoBindings();
+        popupLayer.getChildren().addAll(helpButton, signature, helpInfoPopUp);
+        layersContainer.getChildren().addAll(popupLayer, flashMessageView);
+        layersContainer.setOnKeyPressed(this::handle);
+        getCanvas().setOnMouseMoved(e -> {
+            double factor = getScaling() * TS;
+            Vector2i tile = new Vector2i((int)(e.getX() / factor), (int)(e.getY() / factor));
+            Logger.info("tile={}", tile);
+        });
+        setSize(width, height);
+    }
 
+    private void createSignature() {
         signature = new Signature(context);
         signature.remakeText().fontProperty().bind(Bindings.createObjectBinding(
             () -> context.theme().font("font.monospaced", Math.floor(9 * getScaling())), scalingPy));
@@ -52,24 +65,6 @@ public class GamePage extends CanvasLayoutPane implements Page {
         signature.translateXProperty().bind(Bindings.createDoubleBinding(
             () -> 0.5 * (canvasContainer.getWidth() - signature.getWidth()), canvasContainer.widthProperty()
         ));
-
-        createHelpButton();
-        createDebugInfoBindings();
-
-        popupLayer.getChildren().addAll(helpButton, signature, helpInfoPopUp);
-        layersContainer.getChildren().addAll(popupLayer, flashMessageLayer);
-
-        flashMessageLayer.setMouseTransparent(true);
-
-        layersContainer.setOnKeyPressed(this::handle);
-
-        getCanvas().setOnMouseMoved(e -> {
-            double factor = getScaling() * TS;
-            Vector2i tile = new Vector2i((int)(e.getX() / factor), (int)(e.getY() / factor));
-            Logger.info("tile={}", tile);
-        });
-
-        setSize(width, height);
     }
 
     public void showSignature() {
@@ -102,9 +97,10 @@ public class GamePage extends CanvasLayoutPane implements Page {
         if (newGameScene instanceof GameScene2D scene2D) {
             scene2D.setCanvas(getCanvas());
             scene2D.clearCanvas();
-            if (context.game().world() != null) {
-                setUnscaledCanvasHeight(context.game().world().map().numRows() * TS);
-                setUnscaledCanvasWidth(context.game().world().map().numCols() * TS);
+            World world = context.game().world();
+            if (world != null) {
+                setUnscaledCanvasHeight(world.numRows() * TS);
+                setUnscaledCanvasWidth(world.numCols() * TS);
             }
         }
     }
@@ -130,7 +126,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
     }
 
     public FlashMessageView flashMessageView() {
-        return flashMessageLayer;
+        return flashMessageView;
     }
 
     public void render() {
@@ -139,7 +135,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
                 gameScene2D.draw();
             }
         });
-        flashMessageLayer.update();
+        flashMessageView.update();
         popupLayer.setVisible(true);
     }
 
@@ -172,23 +168,23 @@ public class GamePage extends CanvasLayoutPane implements Page {
         } else if (Keyboard.pressed(KEY_SIMULATION_NORMAL)) {
             handler.resetSimulationSpeed();
         } else if (Keyboard.pressed(KEY_QUIT)) {
-            //TODO move into single method of action handler
-            var gameController = GameController.it();
-            var gameState = gameController.state();
-            switch (gameState) {
-                case BOOT -> {}
-                case INTRO -> {
-                    handler.reboot();
-                    handler.showPage("startPage");
-                }
-                default -> {
-                    handler.restartIntro();
-                }
-            }
+            handleQuit();
         } else if (Keyboard.pressed(KEY_TEST_LEVELS)) {
             handler.startLevelTestMode();
         } else {
             context.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
+        }
+    }
+
+    private void handleQuit() {
+        var handler = context.actionHandler();
+        switch (context.gameState()) {
+            case BOOT -> {}
+            case INTRO -> {
+                handler.reboot();
+                handler.showPage("startPage");
+            }
+            default -> handler.restartIntro();
         }
     }
 

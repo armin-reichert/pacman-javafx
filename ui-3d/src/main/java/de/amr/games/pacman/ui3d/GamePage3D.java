@@ -69,30 +69,30 @@ public class GamePage3D extends GamePage {
     }
 
     public void showContextMenu(Node node, double x, double y) {
-        createGamePageContextMenu();
-        contextMenu.show(node, x, y);
-    }
-
-    private void createGamePageContextMenu() {
-        contextMenu = new ContextMenu();
         if (context.currentGameScene().isEmpty()) {
             Logger.warn("No game scene exists when context menu was opened");
             return;
         }
+        contextMenu = new ContextMenu();
+        populateContextMenu(context.currentGameScene().get());
+        contextMenu.show(node, x, y);
+    }
+
+    private void populateContextMenu(GameScene gameScene) {
         var actionHandler = (ActionHandler3D) context.actionHandler();
-        addContextMenuTitleItem(context.tt("scene_display"));
-        if (context.currentGameScene().get() instanceof PlayScene2D) {
+        contextMenu.getItems().add(titleItem(context.tt("scene_display")));
+        if (gameScene instanceof PlayScene2D) {
             var item = new MenuItem(context.tt("use_3D_scene"));
             item.setOnAction(e -> actionHandler.toggle2D3D());
             contextMenu.getItems().add(item);
-        } else if (context.currentGameScene().get() instanceof PlayScene3D) {
+        } else if (gameScene instanceof PlayScene3D) {
             var item = new MenuItem(context.tt("use_2D_scene"));
             item.setOnAction(e -> actionHandler.toggle2D3D());
             contextMenu.getItems().add(item);
             var pipItem = new CheckMenuItem(context.tt("pip"));
             pipItem.selectedProperty().bindBidirectional(PY_PIP_ON);
             contextMenu.getItems().add(pipItem);
-            addContextMenuTitleItem(context.tt("select_perspective"));
+            contextMenu.getItems().add(titleItem(context.tt("select_perspective")));
             var toggleGroup = new ToggleGroup();
             for (var perspective : Perspective.values()) {
                 var radioMenuItem = new RadioMenuItem(context.tt(perspective.name()));
@@ -114,7 +114,7 @@ public class GamePage3D extends GamePage {
                 }
             });
         }
-        addContextMenuTitleItem(context.tt("pacman"));
+        contextMenu.getItems().add(titleItem(context.tt("pacman")));
         var autopilotItem = new CheckMenuItem(context.tt("autopilot"));
         autopilotItem.selectedProperty().bindBidirectional(PY_USE_AUTOPILOT);
         contextMenu.getItems().add(autopilotItem);
@@ -123,12 +123,11 @@ public class GamePage3D extends GamePage {
         contextMenu.getItems().add(immunityItem);
     }
 
-    private void addContextMenuTitleItem(String title) {
+    private MenuItem titleItem(String title) {
         var text = new Text(title);
         text.setFont(Font.font("Dialog", FontWeight.BLACK, 14));
-        // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
-        text.setFill(Color.CORNFLOWERBLUE);
-        contextMenu.getItems().add(new CustomMenuItem(text));
+        text.setFill(Color.CORNFLOWERBLUE); // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
+        return new CustomMenuItem(text);
     }
 
     public void hideContextMenu() {

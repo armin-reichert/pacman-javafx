@@ -10,8 +10,6 @@ import org.tinylog.Logger;
 
 /**
  * Layered container containing a canvas in the center of the lowest layer.
- *
- * <p>TODO: needs testing</p>
  */
 public class CanvasLayoutPane {
 
