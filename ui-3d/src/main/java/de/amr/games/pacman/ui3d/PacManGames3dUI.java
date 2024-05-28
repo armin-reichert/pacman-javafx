@@ -28,6 +28,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.tinylog.Logger;
 
 import java.time.LocalTime;
@@ -180,7 +181,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static int TOTAL_TRANSLATE_Y = 330;
     public static int TOTAL_TRANSLATE_Z = -140;
 
-    private TileMapEditor editor;
+    private final TileMapEditor editor;
 
     public PacManGames3dUI(Stage stage, double width, double height) {
         super(stage, width, height);
@@ -206,27 +207,12 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
                 }
             }
         });
-        embedMapEditor();
-    }
-
-    private void enterMapEditor() {
-        Logger.info("Entering map editor");
-        if (game().world() != null) {
-            editor.setMap(game().world().map());
-        }
-        restartIntro();
-        gameClock().stop();
-        selectPage("editorPage");
-        editor.start();
-    }
-
-    private void quitMapEditor() {
-        editor.showQuitConfirmation(stage, this::showStartPage);
-    }
-
-    private void embedMapEditor() {
         editor = new TileMapEditor();
-        editor.setOwnerWindow(stage);
+        embedMapEditor(stage);
+    }
+
+    private void embedMapEditor(Window window) {
+        editor.setOwnerWindow(window);
         var miQuitEditor = new MenuItem("Back to Game");
         miQuitEditor.setOnAction(e -> quitMapEditor());
         editor.menuFile().getItems().add(miQuitEditor);
@@ -253,6 +239,20 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             "Pac-Man XXL " + i,
             GameModel.loadMap("/de/amr/games/pacman/maps/masonic/masonic_" + i + ".world", PacManXXLGame.class))
         );
+    }
+
+    private void enterMapEditor() {
+        if (game().world() != null) {
+            editor.setMap(game().world().map());
+        }
+        restartIntro();
+        gameClock().stop();
+        selectPage("editorPage");
+        editor.start();
+    }
+
+    private void quitMapEditor() {
+        editor.showQuitConfirmation(stage, this::showStartPage);
     }
 
     @Override
