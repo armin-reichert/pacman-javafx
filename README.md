@@ -30,7 +30,7 @@ In each [release](https://github.com/armin-reichert/pacman-javafx/releases) you 
 
 On Windows, the application must be uninstalled first (if already installed), otherwise the installer crashes (no idea why).
 
-The Linux (.deb) installer has only been tested on Ubuntu inside a VM, it worked after installing the FFMPeg library (see [linux-issues.md](linux-issues.md)).
+The Linux (.deb) installer has only been tested on Ubuntu inside a VM, it worked after installing the FFMPeg library (see [linux-issues.md](doc/linux-issues.md)).
 
 The Mac-OS (.dmg) version has not been tested at all, any help is appreciated.
 
