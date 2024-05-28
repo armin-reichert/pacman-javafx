@@ -36,7 +36,7 @@ public class TileMapEditorApp extends Application  {
             miQuit.setOnAction(e -> editor.showQuitConfirmation(stage, stage::close));
             editor.menuFile().getItems().add(miQuit);
 
-            //addPredefinedMaps();
+            addPredefinedMaps();
 
             double height = Math.max(0.7 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
             double width = 1.9 * height;
