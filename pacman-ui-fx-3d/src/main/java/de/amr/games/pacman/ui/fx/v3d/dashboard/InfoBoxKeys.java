@@ -19,24 +19,24 @@ public class InfoBoxKeys extends InfoBox {
     public InfoBoxKeys(Theme theme, String title) {
         super(theme, title);
 
-        addInfo("F1, Alt+B", "Dashboard On/Off");
-        addInfo("F2", "Picture-in-Picture");
-        addInfo("F3", "Reboot");
-        addInfo("Alt+A", "Autopilot On/Off");
-        addInfo("Alt+C", "Play Cut-Scenes");
-        addInfo("Alt+E", "Eat All Simple Pellets");
-        addInfo("Alt+I", "Player Immunity On/Off");
-        addInfo("Alt+L", "Add 3 Player Lives");
-        addInfo("Alt+N", "Next Level");
-        addInfo("Alt+X", "Kill Hunting Ghosts");
-        addInfo("Alt+LEFT", () -> Perspective.previous(PY_3D_PERSPECTIVE.get()).name());
-        addInfo("Alt+RIGHT", () -> Perspective.next(PY_3D_PERSPECTIVE.get()).name());
-        addInfo("Alt+3", "3D Play Scene On/Off");
-        addInfo("P", "Pause On/Off");
-        addInfo("Shift+P, SPACE", "Single Step");
-        addInfo("Q", "Return to Intro");
-        addInfo("V", "Switch Game Variant");
-        addInfo("1", "Start Playing (Credit?)");
-        addInfo("5", "Add Credit");
+        infoText("F1, Alt+B", "Dashboard On/Off");
+        infoText("F2", "Picture-in-Picture");
+        infoText("F3", "Reboot");
+        infoText("Alt+A", "Autopilot On/Off");
+        infoText("Alt+C", "Play Cut-Scenes");
+        infoText("Alt+E", "Eat All Simple Pellets");
+        infoText("Alt+I", "Player Immunity On/Off");
+        infoText("Alt+L", "Add 3 Player Lives");
+        infoText("Alt+N", "Next Level");
+        infoText("Alt+X", "Kill Hunting Ghosts");
+        infoText("Alt+LEFT", () -> Perspective.previous(PY_3D_PERSPECTIVE.get()).name());
+        infoText("Alt+RIGHT", () -> Perspective.next(PY_3D_PERSPECTIVE.get()).name());
+        infoText("Alt+3", "3D Play Scene On/Off");
+        infoText("P", "Pause On/Off");
+        infoText("Shift+P, SPACE", "Single Step");
+        infoText("Q", "Return to Intro");
+        infoText("V", "Switch Game Variant");
+        infoText("1", "Start Playing (Credit?)");
+        infoText("5", "Add Credit");
     }
 }

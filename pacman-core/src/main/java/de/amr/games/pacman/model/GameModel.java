@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.v2i;
+
 /**
  * Common interface of all game models.
  *
@@ -63,6 +66,7 @@ public interface GameModel {
 
     byte ARCADE_MAP_TILES_X = 28;
     byte ARCADE_MAP_TILES_Y = 36;
+    Vector2i ARCADE_MAP_SIZE_PX = v2i(ARCADE_MAP_TILES_Y * TS, ARCADE_MAP_TILES_Y * TS);
 
     // Ghost IDs
     byte RED_GHOST = 0, PINK_GHOST = 1, CYAN_GHOST = 2, ORANGE_GHOST = 3;

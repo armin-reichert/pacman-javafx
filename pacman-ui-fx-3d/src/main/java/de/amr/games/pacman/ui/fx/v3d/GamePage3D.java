@@ -142,7 +142,7 @@ public class GamePage3D extends GamePage {
         pip.setContext(context);
         pipCanvas.heightProperty().bind(PY_PIP_HEIGHT);
         pipCanvas.widthProperty().bind(Bindings.createDoubleBinding(() -> pipCanvas.getHeight() * ASPECT_RATIO, PY_PIP_HEIGHT));
-        pipCanvas.opacityProperty().bind(PY_PIP_OPACITY);
+        pipCanvas.opacityProperty().bind(PY_PIP_OPACITY_PERCENTAGE.divide(100.0));
         pip.scalingPy.bind(Bindings.createDoubleBinding(() -> pipCanvas.getHeight() / CANVAS_HEIGHT_UNSCALED, PY_PIP_HEIGHT));
         pip.setCanvas(pipCanvas);
         pip.setScoreVisible(true);

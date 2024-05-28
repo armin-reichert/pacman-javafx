@@ -42,13 +42,13 @@ public class InfoBoxGameControl extends InfoBox {
     public InfoBoxGameControl(Theme theme, String title) {
         super(theme, title);
 
-        spinnerCredit = addSpinner("Credit", 0, GameController.MAX_CREDIT, 0);
-        comboGameVariant = addComboBox("Variant", GameVariant.values());
-        comboInitialLives = addComboBox("Initial Lives", new Integer[]{3, 5});
-        buttonsLevelActions = addButtonList("Game Level", "Start", "Quit", "Next");
-        buttonsIntermissionTest = addButtonList("Cut Scenes Test", "Start", "Quit");
-        cbAutopilot = addCheckBox("Autopilot");
-        cbImmunity = addCheckBox("Pac-Man Immune");
+        spinnerCredit = integerSpinner("Credit", 0, GameController.MAX_CREDIT, 0);
+        comboGameVariant = comboBox("Variant", GameVariant.values());
+        comboInitialLives = comboBox("Initial Lives", new Integer[]{3, 5});
+        buttonsLevelActions = buttonList("Game Level", "Start", "Quit", "Next");
+        buttonsIntermissionTest = buttonList("Cut Scenes Test", "Start", "Quit");
+        cbAutopilot = checkBox("Autopilot");
+        cbImmunity = checkBox("Pac-Man Immune");
     }
 
     @Override

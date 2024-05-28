@@ -40,20 +40,20 @@ public class InfoBoxActorInfo extends InfoBox {
     public InfoBoxActorInfo(Theme theme, String title) {
         super(theme, title);
         addPacInfo();
-        addEmptyLine();
+        emptyRow();
         addGhostInfo(GameModel.RED_GHOST);
-        addEmptyLine();
+        emptyRow();
         addGhostInfo(GameModel.PINK_GHOST);
-        addEmptyLine();
+        emptyRow();
         addGhostInfo(GameModel.CYAN_GHOST);
-        addEmptyLine();
+        emptyRow();
         addGhostInfo(GameModel.ORANGE_GHOST);
     }
 
     private void addPacInfo() {
-        addInfo("Pac Name", pacInfoIfPresent((game, pac) -> pac.name()));
-        addInfo("Movement", pacInfoIfPresent(this::movementInfo));
-        addInfo("Tile",     pacInfoIfPresent(this::locationInfo));
+        infoText("Pac Name", pacInfoIfPresent((game, pac) -> pac.name()));
+        infoText("Movement", pacInfoIfPresent(this::movementInfo));
+        infoText("Tile",     pacInfoIfPresent(this::locationInfo));
     }
 
     private String locationInfo(GameModel game, Creature guy) {
@@ -82,10 +82,10 @@ public class InfoBoxActorInfo extends InfoBox {
             case GameModel.ORANGE_GHOST -> "Orange";
             default -> "";
         };
-        addInfo(color + " Ghost", ghostInfoIfPresent(this::ghostNameAndState, ghostID));
-        addInfo("Animation",      ghostInfoIfPresent(this::ghostAnimation, ghostID));
-        addInfo("Movement",       ghostInfoIfPresent(this::movementInfo, ghostID));
-        addInfo("Tile",           ghostInfoIfPresent(this::locationInfo, ghostID));
+        infoText(color + " Ghost", ghostInfoIfPresent(this::ghostNameAndState, ghostID));
+        infoText("Animation",      ghostInfoIfPresent(this::ghostAnimation, ghostID));
+        infoText("Movement",       ghostInfoIfPresent(this::movementInfo, ghostID));
+        infoText("Tile",           ghostInfoIfPresent(this::locationInfo, ghostID));
     }
 
     private String ghostNameAndState(GameModel game, Ghost ghost) {

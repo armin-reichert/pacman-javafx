@@ -4,14 +4,17 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui.fx.v3d.dashboard;
 
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui.fx.GameSceneContext;
 import de.amr.games.pacman.ui.fx.util.Theme;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.Perspective;
 import de.amr.games.pacman.ui.fx.v3d.scene3d.PlayScene3D;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Camera;
 import javafx.scene.control.*;
 import javafx.scene.shape.DrawMode;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
@@ -24,6 +27,9 @@ import static de.amr.games.pacman.ui.fx.v3d.PacManGames3dUI.*;
  * @author Armin Reichert
  */
 public class InfoBox3D extends InfoBox {
+
+    private static final int PIP_MIN_HEIGHT = GameModel.ARCADE_MAP_SIZE_PX.y() * 3 / 4;
+    private static final int PIP_MAX_HEIGHT = GameModel.ARCADE_MAP_SIZE_PX.y() * 2;
 
     private final ColorPicker pickerLightColor;
     private final ColorPicker pickerFloorColor;
@@ -48,34 +54,53 @@ public class InfoBox3D extends InfoBox {
     public InfoBox3D(Theme theme, String title) {
         super(theme, title);
 
-        pickerLightColor = addColorPicker("Light Color", PY_3D_LIGHT_COLOR.get());
-        pickerFloorColor = addColorPicker("Floor Color", PY_3D_FLOOR_COLOR.get());
-        comboFloorTexture = addComboBox("Floor Texture", floorTextureComboBoxEntries());
-        cbFloorTextureRandom = addCheckBox("Random Floor Texture", () -> toggle(PY_3D_FLOOR_TEXTURE_RND));
-        comboPerspectives = addComboBox("Perspective", Perspective.values());
+        pickerLightColor = colorPicker("Light Color", PY_3D_LIGHT_COLOR.get());
+        pickerFloorColor = colorPicker("Floor Color", PY_3D_FLOOR_COLOR.get());
+        comboFloorTexture = comboBox("Floor Texture", floorTextureComboBoxEntries());
+        cbFloorTextureRandom = checkBox("Random Floor Texture", () -> toggle(PY_3D_FLOOR_TEXTURE_RND));
+        comboPerspectives = comboBox("Perspective", Perspective.values());
 
-        addInfo("Camera", this::currentSceneCameraInfo).available(this::isCurrentGameScene3D);
+        infoText("Camera", this::currentSceneCameraInfo).available(this::isCurrentGameScene3D);
 
         // Editors for perspective TOTAL:
-        spinnerCamRotate = addSpinner("- Rotate X", -180, 180, TOTAL_ROTATE);
-        spinnerCamX      = addSpinner("- Translate X", -1000, 1000, TOTAL_TRANSLATE_X);
-        spinnerCamY      = addSpinner("- Translate Y", -1000, 1000, TOTAL_TRANSLATE_Y);
-        spinnerCamZ      = addSpinner("- Translate Z", -1000, 1000, TOTAL_TRANSLATE_Z);
+        spinnerCamRotate = integerSpinner("- Rotate X", -180, 180, TOTAL_ROTATE);
+        spinnerCamX      = integerSpinner("- Translate X", -1000, 1000, TOTAL_TRANSLATE_X);
+        spinnerCamY      = integerSpinner("- Translate Y", -1000, 1000, TOTAL_TRANSLATE_Y);
+        spinnerCamZ      = integerSpinner("- Translate Z", -1000, 1000, TOTAL_TRANSLATE_Z);
 
         spinnerCamRotate.valueProperty().addListener(this::updatePlayScene3DCamera);
         spinnerCamX.valueProperty().addListener(this::updatePlayScene3DCamera);
         spinnerCamY.valueProperty().addListener(this::updatePlayScene3DCamera);
         spinnerCamZ.valueProperty().addListener(this::updatePlayScene3DCamera);
 
-        sliderPiPSceneHeight = addSlider("PiP Size", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
-        sliderPiPOpacity = addSlider("PiP Opacity", 0.0, 1.0, PY_PIP_OPACITY.get());
-        sliderWallHeight = addSlider("Wall Height", 0, 16, PY_3D_WALL_HEIGHT.get());
-        sliderWallOpacity = addSlider("Wall Opacity", 0, 1, PY_3D_WALL_OPACITY.get());
-        cbEnergizerExplodes = addCheckBox("Energizer Explosion");
-        cbNightMode = addCheckBox("Night Mode");
-        cbPacLighted = addCheckBox("Pac-Man Lighted");
-        cbAxesVisible = addCheckBox("Show Axes");
-        cbWireframeMode = addCheckBox("Wireframe Mode");
+        sliderPiPSceneHeight = slider("PiP Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
+        sliderPiPOpacity     = slider("PiP Opacity", 0, 100,PY_PIP_OPACITY_PERCENTAGE.get());
+        sliderWallHeight     = slider("Wall Height", 0, 16, PY_3D_WALL_HEIGHT.get());
+        sliderWallOpacity    = slider("Wall Opacity", 0, 1, PY_3D_WALL_OPACITY.get());
+        cbEnergizerExplodes  = checkBox("Energizer Explosion");
+        cbNightMode          = checkBox("Night Mode");
+        cbPacLighted         = checkBox("Pac-Man Lighted");
+        cbAxesVisible        = checkBox("Show Axes");
+        cbWireframeMode      = checkBox("Wireframe Mode");
+
+        {
+            var tooltip = new Tooltip();
+            tooltip.setShowDelay(Duration.millis(100));
+            tooltip.textProperty().bind(Bindings.createStringBinding(
+                () -> String.format("%.0f px", sliderPiPSceneHeight.getValue()),
+                sliderPiPSceneHeight.valueProperty())
+            );
+            sliderPiPSceneHeight.setTooltip(tooltip);
+        }
+        {
+            var tooltip = new Tooltip();
+            tooltip.setShowDelay(Duration.millis(100));
+            tooltip.textProperty().bind(Bindings.createStringBinding(
+                () -> String.format("%.0f %%", sliderPiPOpacity.getValue()),
+                sliderPiPOpacity.valueProperty())
+            );
+            sliderPiPOpacity.setTooltip(tooltip);
+        }
 
         pickerLightColor.setOnAction(e -> PY_3D_LIGHT_COLOR.set(pickerLightColor.getValue()));
         pickerFloorColor.setOnAction(e -> PY_3D_FLOOR_COLOR.set(pickerFloorColor.getValue()));
@@ -88,12 +113,12 @@ public class InfoBox3D extends InfoBox {
 
         comboPerspectives.setValue(PY_3D_PERSPECTIVE.get());
         sliderPiPSceneHeight.setValue(PY_PIP_HEIGHT.get());
-        sliderPiPOpacity.setValue(PY_PIP_OPACITY.get());
+        sliderPiPOpacity.setValue(PY_PIP_OPACITY_PERCENTAGE.get());
         sliderWallHeight.setValue(PY_3D_WALL_HEIGHT.get());
         sliderWallOpacity.setValue(PY_3D_WALL_OPACITY.get());
 
-        sliderPiPSceneHeight.valueProperty().addListener((py, ov, nv) -> PY_PIP_HEIGHT.set(sliderPiPSceneHeight.getValue()));
-        sliderPiPOpacity.valueProperty().bindBidirectional(PY_PIP_OPACITY);
+        sliderPiPSceneHeight.valueProperty().addListener((py, ov, nv) -> PY_PIP_HEIGHT.set((int) sliderPiPSceneHeight.getValue()));
+        sliderPiPOpacity.valueProperty().bindBidirectional(PY_PIP_OPACITY_PERCENTAGE);
         sliderWallHeight.valueProperty().bindBidirectional(PY_3D_WALL_HEIGHT);
         sliderWallOpacity.valueProperty().bindBidirectional(PY_3D_WALL_OPACITY);
 

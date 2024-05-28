@@ -101,8 +101,8 @@ public abstract class InfoBox extends TitledPane {
             : infoSupplier.apply(context.game().level().get());
     }
 
-    private void addRow(String labelText, Node child) {
-        Label label = new Label(labelText);
+    protected void addRow(String labelText, Node child) {
+        var label = new Label(labelText);
         label.setTextFill(textColor);
         label.setFont(labelFont);
         label.setMinWidth(minLabelWidth);
@@ -111,8 +111,8 @@ public abstract class InfoBox extends TitledPane {
         ++row;
     }
 
-    protected InfoText addInfo(String labelText, Supplier<?> fnValue) {
-        InfoText info = new InfoText(fnValue);
+    protected InfoText infoText(String labelText, Supplier<?> fnValue) {
+        var info = new InfoText(fnValue);
         info.setFill(textColor);
         info.setFont(textFont);
         infoTexts.add(info);
@@ -120,17 +120,17 @@ public abstract class InfoBox extends TitledPane {
         return info;
     }
 
-    protected void addEmptyLine() {
-        addInfo("", "");
+    protected void infoText(String labelText, String value) {
+        infoText(labelText, () -> value);
     }
 
-    protected void addInfo(String labelText, String value) {
-        addInfo(labelText, () -> value);
+    protected void emptyRow() {
+        infoText("", "");
     }
 
-    protected Button[] addButtonList(String labelText, String... buttonTexts) {
-        HBox hbox = new HBox();
-        Button[] buttons = new Button[buttonTexts.length];
+    protected Button[] buttonList(String labelText, String... buttonTexts) {
+        var hbox = new HBox();
+        var buttons = new Button[buttonTexts.length];
         for (int i = 0; i < buttonTexts.length; ++i) {
             buttons[i] = new Button(buttonTexts[i]);
             buttons[i].setFont(textFont);
@@ -140,8 +140,8 @@ public abstract class InfoBox extends TitledPane {
         return buttons;
     }
 
-    protected CheckBox addCheckBox(String labelText, Runnable callback) {
-        CheckBox cb = new CheckBox();
+    protected CheckBox checkBox(String labelText, Runnable callback) {
+        var cb = new CheckBox();
         cb.setTextFill(textColor);
         cb.setFont(textFont);
         if (callback != null) {
@@ -151,26 +151,26 @@ public abstract class InfoBox extends TitledPane {
         return cb;
     }
 
-    protected CheckBox addCheckBox(String labelText) {
-        return addCheckBox(labelText, null);
+    protected CheckBox checkBox(String labelText) {
+        return checkBox(labelText, null);
     }
 
-    protected <T> ComboBox<T> addComboBox(String labelText, T[] items) {
+    protected <T> ComboBox<T> comboBox(String labelText, T[] items) {
         var combo = new ComboBox<>(FXCollections.observableArrayList(items));
-        combo.setStyle(style(textFont));
+        combo.setStyle(fontCSS(textFont));
         addRow(labelText, combo);
         return combo;
     }
 
-    protected ColorPicker addColorPicker(String labelText, Color color) {
+    protected ColorPicker colorPicker(String labelText, Color color) {
         var colorPicker = new ColorPicker(color);
         addRow(labelText, colorPicker);
         return colorPicker;
     }
 
-    protected Slider addSlider(String labelText, double min, double max, double initialValue) {
-        Slider slider = new Slider(min, max, initialValue);
-        slider.setMinWidth((int)theme.get("infobox.min_col_width"));
+    protected Slider slider(String labelText, int min, int max, double initialValue) {
+        var slider = new Slider(min, max, initialValue);
+        slider.setMinWidth(theme.<Integer>get("infobox.min_col_width"));
         slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (e.getClickCount() == 2) {
                 slider.setValue(initialValue);
@@ -180,14 +180,14 @@ public abstract class InfoBox extends TitledPane {
         return slider;
     }
 
-    protected Spinner<Integer> addSpinner(String labelText, int min, int max, int initialValue) {
-        Spinner<Integer> spinner = new Spinner<>(min, max, initialValue);
-        spinner.setStyle(style(textFont));
+    protected Spinner<Integer> integerSpinner(String labelText, int min, int max, int initialValue) {
+        var spinner = new Spinner<Integer>(min, max, initialValue);
+        spinner.setStyle(fontCSS(textFont));
         addRow(labelText, spinner);
         return spinner;
     }
 
-    private static String style(Font font) {
+    private static String fontCSS(Font font) {
         return String.format("-fx-font: %.0fpx \"%s\";", font.getSize(), font.getFamily());
     }
 }

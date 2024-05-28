@@ -39,14 +39,14 @@ public class InfoBoxGeneral extends InfoBox {
     public InfoBoxGeneral(Theme theme, String title) {
         super(theme, title);
 
-        addInfo("Java Version",   Runtime.version().toString());
-        addInfo("JavaFX Version", System.getProperty("javafx.runtime.version"));
+        infoText("Java Version",   Runtime.version().toString());
+        infoText("JavaFX Version", System.getProperty("javafx.runtime.version"));
 
         iconPlay = new ImageView(theme.image("icon.play"));
         iconStop = new ImageView(theme.image("icon.stop"));
         iconStep = new ImageView(theme.image("icon.step"));
 
-        buttonsSimulation = addButtonList("Simulation", "Pause", "Step(s)");
+        buttonsSimulation = buttonList("Simulation", "Pause", "Step(s)");
 
         var btnPlayPause = buttonsSimulation[0];
         btnPlayPause.setGraphic(iconPlay);
@@ -59,22 +59,22 @@ public class InfoBoxGeneral extends InfoBox {
         btnStep.setText(null);
         btnStep.setTooltip(tooltipStep);
 
-        spinnerSimulationSteps = addSpinner("Num Steps", 1, 50, PacManGames3dUI.PY_SIMULATION_STEPS.get());
+        spinnerSimulationSteps = integerSpinner("Num Steps", 1, 50, PacManGames3dUI.PY_SIMULATION_STEPS.get());
         spinnerSimulationSteps.valueProperty().addListener((obs, oldVal, newVal) -> PacManGames3dUI.PY_SIMULATION_STEPS.set(newVal));
 
-        sliderTargetFPS = addSlider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60);
+        sliderTargetFPS = slider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60);
         sliderTargetFPS.setShowTickLabels(false);
         sliderTargetFPS.setShowTickMarks(false);
 
-        addInfo("", () -> String.format("FPS: %.1f (Tgt: %.1f)",
+        infoText("", () -> String.format("FPS: %.1f (Tgt: %.1f)",
             context.gameClock().getActualFrameRate(),
             context.gameClock().getTargetFrameRate()
         ));
-        addInfo("Total Updates", () -> context.gameClock().getUpdateCount());
+        infoText("Total Updates", () -> context.gameClock().getUpdateCount());
 
-        cbUsePlayScene3D = addCheckBox("3D Play Scene");
-        cbDebugUI = addCheckBox("Show Debug Info");
-        cbTimeMeasured = addCheckBox("Time Measured");
+        cbUsePlayScene3D = checkBox("3D Play Scene");
+        cbDebugUI = checkBox("Show Debug Info");
+        cbTimeMeasured = checkBox("Time Measured");
     }
 
     @Override

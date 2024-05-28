@@ -20,35 +20,35 @@ public class InfoBoxGameInfo extends InfoBox {
     public InfoBoxGameInfo(Theme theme, String title) {
         super(theme, title);
 
-        addInfo("Game Scene", () -> context.currentGameScene().isPresent()
+        infoText("Game Scene", () -> context.currentGameScene().isPresent()
             ? context.currentGameScene().get().getClass().getSimpleName() : InfoText.NO_INFO);
-        addInfo("Game State", () -> "%s".formatted(context.gameState()));
-        addInfo("", () -> "Running:   %s%s".formatted(context.gameState().timer().tick(),
+        infoText("Game State", () -> "%s".formatted(context.gameState()));
+        infoText("", () -> "Running:   %s%s".formatted(context.gameState().timer().tick(),
             context.gameState().timer().isStopped() ? " (STOPPED)" : ""));
-        addInfo("", () -> "Remaining: %s".formatted(ticksToString(context.gameState().timer().remaining())));
-        addInfo("Game Level", () -> context.game().level().isPresent()
+        infoText("", () -> "Remaining: %s".formatted(ticksToString(context.gameState().timer().remaining())));
+        infoText("Game Level", () -> context.game().level().isPresent()
             ? context.game().levelNumber() : InfoText.NO_INFO);
-        addInfo("World Map", () -> {
+        infoText("World Map", () -> {
             if (context.game().world() != null) {
                 String url =  context.game().world().map().url().toString();
                 return url.substring(url.lastIndexOf("/") + 1);
             }
             return InfoText.NO_INFO;
         });
-        addInfo("Lives", () -> context.game().level().isPresent() ? context.game().lives() : InfoText.NO_INFO);
+        infoText("Lives", () -> context.game().level().isPresent() ? context.game().lives() : InfoText.NO_INFO);
 
-        addInfo("Hunting Phase", this::fmtHuntingPhase);
-        addInfo("", this::fmtHuntingTicksRunning);
-        addInfo("", this::fmtHuntingTicksRemaining);
+        infoText("Hunting Phase", this::fmtHuntingPhase);
+        infoText("", this::fmtHuntingTicksRunning);
+        infoText("", this::fmtHuntingTicksRemaining);
 
-        addInfo("Pac-Man speed", ifLevelExists(this::fmtPacSpeed));
-        addInfo("- empowered", ifLevelExists(this::fmtPacSpeedPowered));
-        addInfo("Pellets", this::fmtPelletCount);
-        addInfo("Ghost speed", ifLevelExists(this::fmtGhostSpeed));
-        addInfo("- frightened", ifLevelExists(this::fmtGhostSpeedFrightened));
-        addInfo("- in tunnel", ifLevelExists(this::fmtGhostSpeedTunnel));
-        addInfo("Frightened time", ifLevelExists(this::fmtPacPowerSeconds));
-        addInfo("Maze flashings", ifLevelExists(this::fmtNumFlashes));
+        infoText("Pac-Man speed", ifLevelExists(this::fmtPacSpeed));
+        infoText("- empowered", ifLevelExists(this::fmtPacSpeedPowered));
+        infoText("Pellets", this::fmtPelletCount);
+        infoText("Ghost speed", ifLevelExists(this::fmtGhostSpeed));
+        infoText("- frightened", ifLevelExists(this::fmtGhostSpeedFrightened));
+        infoText("- in tunnel", ifLevelExists(this::fmtGhostSpeedTunnel));
+        infoText("Frightened time", ifLevelExists(this::fmtPacPowerSeconds));
+        infoText("Maze flashings", ifLevelExists(this::fmtNumFlashes));
     }
 
     private String fmtHuntingPhase() {
