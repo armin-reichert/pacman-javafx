@@ -28,3 +28,4 @@ hs_err_pid*
 !gradle/wrapper/gradle-wrapper.jar
 /.run/Map Editor.run.xml
 /pacman-all.iml
+/build/tmp/jar/MANIFEST.MF
