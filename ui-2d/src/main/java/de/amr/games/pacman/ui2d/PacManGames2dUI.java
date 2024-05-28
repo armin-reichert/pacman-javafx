@@ -232,7 +232,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     protected final Stage stage;
     protected final Scene mainScene;
     protected final Map<String, Page> pages = new HashMap<>();
-    protected String currentPageID;
+    private String currentPageID;
 
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
@@ -321,15 +321,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         stage.setScene(mainScene);
     }
 
-    @SuppressWarnings("unchecked")
-    protected <T extends Page> T page(String id) {
-        return (T) pages.get(id);
-    }
-
-    protected <T extends Page> T  currentPage() {
-        return page(currentPageID);
-    }
-
     protected Scene createMainScene() {
         double height = 0.95 * Screen.getPrimary().getVisualBounds().getHeight();
         double width = height * 1.1;
@@ -370,6 +361,19 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
         return page;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T extends Page> T page(String id) {
+        return (T) pages.get(id);
+    }
+
+    protected <T extends Page> T  currentPage() {
+        return page(currentPageID);
+    }
+
+    protected boolean isPageSelected(String pageID) {
+        return pageID.equals(currentPageID);
     }
 
     protected void selectPage(String pageID) {

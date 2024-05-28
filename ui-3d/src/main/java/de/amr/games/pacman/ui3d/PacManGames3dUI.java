@@ -35,8 +35,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.util.Keyboard.alt;
-import static de.amr.games.pacman.ui2d.util.Keyboard.just;
+import static de.amr.games.pacman.ui2d.util.Keyboard.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static java.util.stream.IntStream.rangeClosed;
 
@@ -84,7 +83,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static final KeyCodeCombination KEY_PREV_PERSPECTIVE       = alt(KeyCode.LEFT);
     public static final KeyCodeCombination KEY_NEXT_PERSPECTIVE       = alt(KeyCode.RIGHT);
 
-    public static final KeyCodeCombination KEY_SWITCH_EDITOR          = Keyboard.shift_alt(KeyCode.E);
+    public static final KeyCodeCombination KEY_SWITCH_EDITOR          = shift_alt(KeyCode.E);
 
     public static final Picker<String> PICKER_LEVEL_COMPLETE          = Picker.fromBundle(MSG_BUNDLE, "level.complete");
     public static final Picker<String> PICKER_GAME_OVER               = Picker.fromBundle(MSG_BUNDLE, "game.over");
@@ -200,9 +199,9 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClicked);
         mainScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
             if (KEY_SWITCH_EDITOR.match(e)) {
-                if (game().variant() == GameVariant.PACMAN_XXL && !"editorPage".equals(currentPageID)) {
+                if (game().variant() == GameVariant.PACMAN_XXL && !isPageSelected("editorPage")) {
                     enterMapEditor();
-                } else if ("editorPage".equals(currentPageID)) {
+                } else if (isPageSelected("editorPage")) {
                     quitMapEditor();
                 }
             }
@@ -302,7 +301,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     @Override
     protected void updateStage() {
-        if ("editorPage".equals(currentPageID)) {
+        if (isPageSelected("editorPage")) {
             stage.setTitle(editor.titlePy.get());
         } else {
             var vk = variantKey(game().variant());
