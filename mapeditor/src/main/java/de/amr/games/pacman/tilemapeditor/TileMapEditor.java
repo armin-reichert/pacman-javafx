@@ -30,6 +30,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import javafx.util.Duration;
@@ -61,10 +63,10 @@ public class TileMapEditor  {
         {13, 8, 8, 8, 8, 8, 8,12}
     };
 
-    static final Color DEFAULT_WALL_STROKE_COLOR = Color.GREEN;
-    static final Color DEFAULT_WALL_FILL_COLOR = Color.MAROON;
-    static final Color DEFAULT_DOOR_COLOR = Color.YELLOW;
-    static final Color DEFAULT_FOOD_COLOR = Color.MAGENTA;
+    private static final Color DEFAULT_WALL_STROKE_COLOR = Color.GREEN;
+    private static final Color DEFAULT_WALL_FILL_COLOR = Color.MAROON;
+    private static final Color DEFAULT_DOOR_COLOR = Color.YELLOW;
+    private static final Color DEFAULT_FOOD_COLOR = Color.MAGENTA;
 
     public final ObjectProperty<String> titlePy = new SimpleObjectProperty<>(this, "title", "Map Editor");
     public final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
@@ -97,6 +99,7 @@ public class TileMapEditor  {
     private WorldMap map;
     private final Map<String, WorldMap> predefinedMaps = new HashMap<>();
 
+    private final Text editHint = new Text("Click to Start Editing!");
     private boolean editingEnabled;
     private Vector2i hoveredTile;
     private File lastUsedDir = new File(System.getProperty("user.dir"));
@@ -498,10 +501,7 @@ public class TileMapEditor  {
             foodMapRenderer.drawMap(g, map.food());
         }
         if (!editingEnabled) {
-            g.setStroke(Color.WHITE);
-            double x = 100;
-            double y = 300;
-            g.strokeText("Click to Start Editing!", x, y);
+            drawEditingHint(g);
         } else {
             double t1 = tilePx();
             if (hoveredTile != null) {
@@ -510,6 +510,18 @@ public class TileMapEditor  {
                 g.strokeRect(hoveredTile.x() * t1, hoveredTile.y() * t1, t1, t1);
             }
         }
+    }
+
+    private void drawEditingHint(GraphicsContext g) {
+        editHint.setFont(Font.font("Sans", FontWeight.BLACK, Math.floor(editCanvas.getWidth() / 12)));
+        double x = 0.5 * (editCanvas.getWidth()  - editHint.getBoundsInLocal().getWidth());
+        double y = 0.5 * editCanvas.getHeight();
+        g.setFont(editHint.getFont());
+        g.setStroke(Color.LIGHTGREEN);
+        g.setLineWidth(3);
+        g.strokeText(editHint.getText(), x, y);
+        g.setFill(Color.DARKGREEN);
+        g.fillText(editHint.getText(), x, y);
     }
 
     private void drawPreviewCanvas() {
