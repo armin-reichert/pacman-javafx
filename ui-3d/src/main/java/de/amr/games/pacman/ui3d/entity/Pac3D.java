@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.util.Theme;
+import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui3d.animation.HeadBanging;
 import de.amr.games.pacman.ui3d.animation.HipSwaying;
 import de.amr.games.pacman.ui3d.animation.WalkingAnimation;
@@ -31,8 +31,8 @@ import javafx.util.Duration;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
-import static de.amr.games.pacman.ui.fx.util.Ufx.*;
+import static de.amr.games.pacman.ui2d.util.ResourceManager.coloredMaterial;
+import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.animation.Turn.angle;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshView;
 
@@ -173,7 +173,7 @@ public class Pac3D extends Group {
     private final Group shapeGroup;
     private WalkingAnimation walkingAnimation;
     private PointLight light;
-    private double size;
+    private final double size;
 
     private Pac3D(double size, Pac pac, Group shapeGroup) {
         this.size = size;

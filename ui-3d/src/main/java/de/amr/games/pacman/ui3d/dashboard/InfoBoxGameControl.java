@@ -8,14 +8,14 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui.fx.GameSceneContext;
-import de.amr.games.pacman.ui.fx.util.Theme;
+import de.amr.games.pacman.ui2d.GameSceneContext;
+import de.amr.games.pacman.ui2d.util.Theme;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 
-import static de.amr.games.pacman.ui.fx.PacManGames2dUI.PY_USE_AUTOPILOT;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_USE_AUTOPILOT;
 
 /**
  * Game related settings.

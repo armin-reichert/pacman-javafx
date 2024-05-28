@@ -4,14 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.dashboard;
 
-import de.amr.games.pacman.ui.fx.GameSceneContext;
-import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui.fx.util.Ufx;
+import de.amr.games.pacman.ui2d.GameSceneContext;
+import de.amr.games.pacman.ui2d.util.Theme;
+import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.PacManGames3dUI;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 
-import static de.amr.games.pacman.ui.fx.PacManGames2dUI.PY_SHOW_DEBUG_INFO;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_SHOW_DEBUG_INFO;
 
 /**
  * General settings.

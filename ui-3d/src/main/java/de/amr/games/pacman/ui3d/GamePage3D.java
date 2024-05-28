@@ -4,16 +4,16 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.ui.fx.GameScene;
-import de.amr.games.pacman.ui.fx.GameSceneContext;
-import de.amr.games.pacman.ui.fx.PacManGames2dUI;
-import de.amr.games.pacman.ui.fx.page.GamePage;
-import de.amr.games.pacman.ui.fx.scene2d.PlayScene2D;
-import de.amr.games.pacman.ui.fx.util.Keyboard;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui2d.GameScene;
+import de.amr.games.pacman.ui2d.GameSceneContext;
+import de.amr.games.pacman.ui2d.PacManGames2dUI;
+import de.amr.games.pacman.ui2d.page.GamePage;
+import de.amr.games.pacman.ui2d.scene.PlayScene2D;
+import de.amr.games.pacman.ui2d.util.Keyboard;
+import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui3d.dashboard.Dashboard;
-import de.amr.games.pacman.ui3d.scene3d.Perspective;
-import de.amr.games.pacman.ui3d.scene3d.PlayScene3D;
+import de.amr.games.pacman.ui3d.scene.Perspective;
+import de.amr.games.pacman.ui3d.scene.PlayScene3D;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;

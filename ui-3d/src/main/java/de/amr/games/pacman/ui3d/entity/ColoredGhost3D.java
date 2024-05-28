@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.entity;
 
-import de.amr.games.pacman.ui.fx.util.Theme;
+import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui3d.animation.ColorSwitchTransition;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Animation.Status;
@@ -19,7 +19,7 @@ import javafx.scene.transform.Rotate;
 
 import static de.amr.games.pacman.lib.Globals.requirePositive;
 import static de.amr.games.pacman.model.GameModel.checkGhostID;
-import static de.amr.games.pacman.ui.fx.util.Ufx.createColorBoundMaterial;
+import static de.amr.games.pacman.ui2d.util.Ufx.createColorBoundMaterial;
 import static java.util.Objects.requireNonNull;
 
 /**

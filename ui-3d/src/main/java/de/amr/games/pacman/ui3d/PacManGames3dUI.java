@@ -4,20 +4,19 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.tilemapeditor.TileMapEditor;
-import de.amr.games.pacman.ui.fx.GameScene;
-import de.amr.games.pacman.ui.fx.GameSceneContext;
-import de.amr.games.pacman.ui.fx.PacManGames2dUI;
-import de.amr.games.pacman.ui.fx.page.Page;
-import de.amr.games.pacman.ui.fx.util.Keyboard;
-import de.amr.games.pacman.ui.fx.util.Picker;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
-import de.amr.games.pacman.ui.fx.util.Theme;
+import de.amr.games.pacman.ui2d.GameScene;
+import de.amr.games.pacman.ui2d.GameSceneContext;
+import de.amr.games.pacman.ui2d.PacManGames2dUI;
+import de.amr.games.pacman.ui2d.page.Page;
+import de.amr.games.pacman.ui2d.util.Keyboard;
+import de.amr.games.pacman.ui2d.util.Picker;
+import de.amr.games.pacman.ui2d.util.ResourceManager;
+import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui3d.model.Model3D;
-import de.amr.games.pacman.ui3d.scene3d.Perspective;
-import de.amr.games.pacman.ui3d.scene3d.PlayScene3D;
+import de.amr.games.pacman.ui3d.scene.Perspective;
+import de.amr.games.pacman.ui3d.scene.PlayScene3D;
 import javafx.beans.property.*;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
@@ -39,11 +38,10 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui.fx.util.Keyboard.alt;
-import static de.amr.games.pacman.ui.fx.util.Keyboard.just;
-import static de.amr.games.pacman.ui.fx.util.Ufx.toggle;
+import static de.amr.games.pacman.ui2d.util.Keyboard.alt;
+import static de.amr.games.pacman.ui2d.util.Keyboard.just;
+import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static java.util.stream.IntStream.rangeClosed;
 
 /**

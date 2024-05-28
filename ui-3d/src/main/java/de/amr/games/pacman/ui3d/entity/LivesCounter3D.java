@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui.fx.util.ResourceManager.coloredMaterial;
+import static de.amr.games.pacman.ui2d.util.ResourceManager.coloredMaterial;
 
 /**
  * Displays a Pac-Man shape for each live remaining.

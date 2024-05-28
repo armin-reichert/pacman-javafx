@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2024 Armin Reichert (MIT License) See file LICENSE in repository root directory for details.
  */
-open module de.amr.games.pacman.ui.fx {
+open module de.amr.games.pacman.ui2d {
     // module is open to allow access to (non-class) resources
 
     requires org.tinylog.api;
@@ -12,10 +12,10 @@ open module de.amr.games.pacman.ui.fx {
     requires javafx.graphics;
     requires javafx.media;
 
-    exports de.amr.games.pacman.ui.fx;
-    exports de.amr.games.pacman.ui.fx.util;
-    exports de.amr.games.pacman.ui.fx.rendering2d;
-    exports de.amr.games.pacman.ui.fx.scene2d;
-    exports de.amr.games.pacman.ui.fx.page;
-    exports de.amr.games.pacman.ui.fx.tilemap;
+    exports de.amr.games.pacman.ui2d;
+    exports de.amr.games.pacman.ui2d.util;
+    exports de.amr.games.pacman.ui2d.rendering;
+    exports de.amr.games.pacman.ui2d.scene;
+    exports de.amr.games.pacman.ui2d.page;
+    exports de.amr.games.pacman.ui2d.tilemap;
 }

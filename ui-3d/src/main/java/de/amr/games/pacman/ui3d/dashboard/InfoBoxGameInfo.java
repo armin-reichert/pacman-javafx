@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui3d.dashboard;
 
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui.fx.util.Theme;
+import de.amr.games.pacman.ui2d.util.Theme;
 
 import static de.amr.games.pacman.lib.TickTimer.ticksToString;
 

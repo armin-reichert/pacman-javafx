@@ -6,7 +6,7 @@ package de.amr.games.pacman.tilemapeditor;
 
 import de.amr.games.pacman.lib.Tiles;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.ui.fx.tilemap.TileMapRenderer;
+import de.amr.games.pacman.ui2d.tilemap.TileMapRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Tooltip;
@@ -14,7 +14,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 /**
  * @author Armin Reichert

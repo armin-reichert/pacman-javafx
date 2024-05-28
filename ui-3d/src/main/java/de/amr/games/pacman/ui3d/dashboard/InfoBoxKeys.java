@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.dashboard;
 
-import de.amr.games.pacman.ui.fx.util.Theme;
-import de.amr.games.pacman.ui3d.scene3d.Perspective;
+import de.amr.games.pacman.ui2d.util.Theme;
+import de.amr.games.pacman.ui3d.scene.Perspective;
 
 import static de.amr.games.pacman.ui3d.PacManGames3dUI.PY_3D_PERSPECTIVE;
 

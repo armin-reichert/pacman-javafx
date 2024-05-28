@@ -3,6 +3,6 @@ module de.amr.games.pacman.tilemapeditor {
     requires org.tinylog.api;
     requires de.amr.games.pacman;
     requires de.amr.games.pacman.lib;
-    requires de.amr.games.pacman.ui.fx;
+    requires de.amr.games.pacman.ui2d;
     exports de.amr.games.pacman.tilemapeditor;
 }

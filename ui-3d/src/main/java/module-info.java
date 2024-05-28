@@ -12,7 +12,7 @@ open module de.amr.games.pacman.ui3d {
     requires org.tinylog.api;
     requires de.amr.games.pacman;
     requires de.amr.games.pacman.lib;
-    requires de.amr.games.pacman.ui.fx;
+    requires de.amr.games.pacman.ui2d;
     requires de.amr.games.pacman.tilemapeditor;
 
     exports de.amr.games.pacman.ui3d;
@@ -20,5 +20,5 @@ open module de.amr.games.pacman.ui3d {
     exports de.amr.games.pacman.ui3d.dashboard;
     exports de.amr.games.pacman.ui3d.entity;
     exports de.amr.games.pacman.ui3d.model;
-    exports de.amr.games.pacman.ui3d.scene3d;
+    exports de.amr.games.pacman.ui3d.scene;
 }

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.entity;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.ui.fx.util.ResourceManager;
+import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui3d.PacManGames3dUI;
 import de.amr.games.pacman.ui3d.animation.ColorChangeTransition;
 import javafx.animation.SequentialTransition;

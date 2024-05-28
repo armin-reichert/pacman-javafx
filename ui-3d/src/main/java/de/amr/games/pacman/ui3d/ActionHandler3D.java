@@ -1,6 +1,6 @@
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.ui.fx.ActionHandler;
+import de.amr.games.pacman.ui2d.ActionHandler;
 
 public interface ActionHandler3D extends ActionHandler {
     void selectNextPerspective();
