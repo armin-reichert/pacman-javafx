@@ -97,6 +97,7 @@ public class TileMapEditor  {
     private WorldMap map;
     private final Map<String, WorldMap> predefinedMaps = new HashMap<>();
 
+    private boolean editingEnabled;
     private Vector2i hoveredTile;
     private File lastUsedDir = new File(System.getProperty("user.dir"));
     private File currentMapFile;
@@ -148,6 +149,7 @@ public class TileMapEditor  {
 
     public void stop() {
         clock.stop();
+        editingEnabled = false;
     }
 
     private void createUI() {
@@ -155,8 +157,8 @@ public class TileMapEditor  {
         openDialog.setInitialDirectory(lastUsedDir);
 
         editCanvas = new Canvas();
-        editCanvas.setOnMouseClicked(this::onMouseClickedOnCanvas);
-        editCanvas.setOnMouseMoved(this::onMouseMovedOverCanvas);
+        editCanvas.setOnMouseClicked(this::onMouseClickedOnEditCanvas);
+        editCanvas.setOnMouseMoved(this::onMouseMovedOverEditCanvas);
 
         previewCanvas = new Canvas();
 
@@ -495,11 +497,18 @@ public class TileMapEditor  {
             foodMapRenderer.setPelletColor(foodColor);
             foodMapRenderer.drawMap(g, map.food());
         }
-        double t1 = tilePx();
-        if (hoveredTile != null) {
-            g.setStroke(Color.YELLOW);
-            g.setLineWidth(1);
-            g.strokeRect(hoveredTile.x() * t1, hoveredTile.y() * t1, t1, t1);
+        if (!editingEnabled) {
+            g.setStroke(Color.WHITE);
+            double x = 100;
+            double y = 300;
+            g.strokeText("Click to Start Editing!", x, y);
+        } else {
+            double t1 = tilePx();
+            if (hoveredTile != null) {
+                g.setStroke(Color.YELLOW);
+                g.setLineWidth(1);
+                g.strokeRect(hoveredTile.x() * t1, hoveredTile.y() * t1, t1, t1);
+            }
         }
     }
 
@@ -553,7 +562,11 @@ public class TileMapEditor  {
         return new Vector2i(fullTiles(mouseX), fullTiles(mouseY));
     }
 
-    private void onMouseClickedOnCanvas(MouseEvent e) {
+    private void onMouseClickedOnEditCanvas(MouseEvent e) {
+        if (!editingEnabled) {
+            editingEnabled = true;
+            return;
+        }
         if (terrainEditedPy.get()) {
             onTerrainTileClicked(e);
         } else {
@@ -562,7 +575,10 @@ public class TileMapEditor  {
         invalidatePaths();
     }
 
-    private void onMouseMovedOverCanvas(MouseEvent e) {
+    private void onMouseMovedOverEditCanvas(MouseEvent e) {
+        if (!editingEnabled) {
+            return;
+        }
         hoveredTile = tileAtMousePosition(e.getX(), e.getY());
         if (e.isShiftDown()) {
             if (terrainEditedPy.get()) {
