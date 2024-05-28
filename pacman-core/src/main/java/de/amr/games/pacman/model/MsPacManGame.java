@@ -130,11 +130,11 @@ public class MsPacManGame extends AbstractPacManGame  {
         ghosts[ORANGE_GHOST].setName("Sue");
     }
 
-    private World createMsPacManWorld(WorldMap map) {
-        var world = new World(map);
-        world.addHouse(House.createArcadeHouse(), v2i(10, 15));
-        world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
-        return world;
+    private static World createMsPacManWorld(WorldMap map) {
+        var msPacManWorld = new World(map);
+        msPacManWorld.addHouse(House.createArcadeHouse(), v2i(10, 15));
+        msPacManWorld.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
+        return msPacManWorld;
     }
 
     /** In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly

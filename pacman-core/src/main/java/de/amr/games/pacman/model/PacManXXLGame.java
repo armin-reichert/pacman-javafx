@@ -41,13 +41,7 @@ public class PacManXXLGame extends PacManGame {
     @Override
     public void reset() {
         super.reset();
-        try {
-            loadCustomMaps();
-            Logger.info("{} custom maps loaded", customMaps.size());
-        } catch (IOException x) {
-            Logger.error("Loading custom maps failed");
-            Logger.error(x);
-        }
+        loadCustomMaps(CUSTOM_MAP_DIR);
     }
 
     @Override
@@ -77,7 +71,7 @@ public class PacManXXLGame extends PacManGame {
         return 0;
     }
 
-    private World createModernWorld(WorldMap map) {
+    private static World createModernWorld(WorldMap map) {
         var modernWorld = new World(map);
         modernWorld.addHouse(House.createArcadeHouse(), v2i(10, 15)); //TODO create house from map?
         modernWorld.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP}); // TODO
@@ -85,20 +79,26 @@ public class PacManXXLGame extends PacManGame {
         return modernWorld;
     }
 
-    private void loadCustomMaps() throws IOException {
+    private void loadCustomMaps(File mapDir) {
+        if (!mapDir.isDirectory()) {
+            Logger.error("Specified map directory path '{}' does not point to a directory", mapDir);
+            return;
+        }
+        Logger.info("Searching for custom map files in folder {}", mapDir);
         customMaps.clear();
-        var mapDir = CUSTOM_MAP_DIR;
-        if (mapDir.isDirectory()) {
-            Logger.info("Searching for custom map files in folder " + mapDir);
-            var mapFiles = mapDir.listFiles((dir, name) -> name.endsWith(".world"));
-            if (mapFiles != null) {
-                for (var mapFile : mapFiles) {
-                    customMaps.add(new WorldMap(mapFile));
-                    Logger.info("Found custom map file: " + mapFile);
-                }
-            } else {
-                Logger.error("Could not access custom map folder {}", mapDir);
+        var mapFiles = mapDir.listFiles((dir, name) -> name.endsWith(".world"));
+        if (mapFiles != null) {
+            for (var mapFile : mapFiles) {
+                customMaps.add(new WorldMap(mapFile));
+                Logger.info("Found custom map file: " + mapFile);
             }
+            if (customMaps.isEmpty()) {
+                Logger.info("No custom maps found");
+            } else {
+                Logger.info("{} custom map(s) loaded", customMaps.size());
+            }
+        } else {
+            Logger.error("Could not access custom map folder {}", mapDir);
         }
     }
 }
