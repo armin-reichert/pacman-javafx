@@ -5,12 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.ui2d.util.Order;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 /**
@@ -18,8 +18,7 @@ import java.util.stream.IntStream;
  */
 public class MsPacManGameSpriteSheet implements SpriteSheet {
 
-    private static final Order<Direction> DIR_ORDER = new Order<>(//
-        Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
+    private static final List<Direction> ORDER = List.of(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
     private static final int MAZE_IMAGE_WIDTH = 226;
     private static final int MAZE_IMAGE_HEIGHT = 248;
@@ -91,7 +90,7 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
     }
 
     public Rectangle2D[] msPacManMunchingSprites(Direction dir) {
-        return msPacManMunchingSprites[DIR_ORDER.index(dir)];
+        return msPacManMunchingSprites[ORDER.indexOf(dir)];
     }
 
     private final Rectangle2D[] msPacManDyingSprites;
@@ -120,7 +119,7 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
     }
 
     public Rectangle2D[] ghostNormalSprites(byte id, Direction dir) {
-        return ghostsNormalSprites[id][DIR_ORDER.index(dir)];
+        return ghostsNormalSprites[id][ORDER.indexOf(dir)];
     }
 
     private final Rectangle2D[] ghostFrightenedSprites = array(sprite(8, 4), sprite(9, 4));
@@ -145,7 +144,7 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
     }
 
     public Rectangle2D[] ghostEyesSprites(Direction dir) {
-        return ghostEyesSprites[DIR_ORDER.index(dir)];
+        return ghostEyesSprites[ORDER.indexOf(dir)];
     }
 
     // Ms. Pac-Man specific:
@@ -205,7 +204,7 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
     }
 
     public Rectangle2D[] pacManMunchingSprites(Direction dir) {
-        return pacManMunchingSprites[DIR_ORDER.index(dir)];
+        return pacManMunchingSprites[ORDER.indexOf(dir)];
     }
 
     private final Rectangle2D heartSprite = sprite(2, 10);
