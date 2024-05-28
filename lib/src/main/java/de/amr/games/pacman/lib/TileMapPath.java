@@ -6,7 +6,6 @@ package de.amr.games.pacman.lib;
 
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.Iterator;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;

@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.steering.RouteBasedSteering;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
-import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.HashMap;

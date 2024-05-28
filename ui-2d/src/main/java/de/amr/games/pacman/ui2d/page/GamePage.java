@@ -8,10 +8,10 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
+import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
+import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Cursor;
@@ -111,15 +111,15 @@ public class GamePage extends CanvasLayoutPane implements Page {
 
     private void createDebugInfoBindings() {
         layersContainer.borderProperty().bind(Bindings.createObjectBinding(
-            () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? ResourceManager.border(Color.RED, 3) : null,
+            () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.RED, 3) : null,
             PY_SHOW_DEBUG_INFO, context.gameSceneProperty()
         ));
         canvasLayer.borderProperty().bind(Bindings.createObjectBinding(
-            () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? ResourceManager.border(Color.YELLOW, 3) : null,
+            () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.YELLOW, 3) : null,
             PY_SHOW_DEBUG_INFO, context.gameSceneProperty()
         ));
         popupLayer.borderProperty().bind(Bindings.createObjectBinding(
-            () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? ResourceManager.border(Color.GREENYELLOW, 3) : null,
+            () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.GREENYELLOW, 3) : null,
             PY_SHOW_DEBUG_INFO, context.gameSceneProperty()
         ));
         popupLayer.mouseTransparentProperty().bind(PY_SHOW_DEBUG_INFO);

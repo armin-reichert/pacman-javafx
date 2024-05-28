@@ -4,12 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.util;
 
-import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
@@ -37,45 +34,14 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  *
  * @author Armin Reichert
  */
+@FunctionalInterface
 public interface ResourceManager {
-
-    static Background coloredBackground(Color color) {
-        checkNotNull(color);
-        return new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
-    }
-
-    static Background coloredRoundedBackground(Color color, int radius) {
-        checkNotNull(color);
-        return new Background(new BackgroundFill(color, new CornerRadii(radius), Insets.EMPTY));
-    }
-
-    static Border roundedBorder(Color color, double cornerRadius, double width) {
-        checkNotNull(color);
-        return new Border(
-            new BorderStroke(color, BorderStrokeStyle.SOLID, new CornerRadii(cornerRadius), new BorderWidths(width)));
-    }
-
-    static Border border(Color color, double width) {
-        checkNotNull(color);
-        return new Border(new BorderStroke(color, BorderStrokeStyle.SOLID, null, new BorderWidths(width)));
-    }
-
-    static PhongMaterial coloredMaterial(Color color) {
-        checkNotNull(color);
-        var material = new PhongMaterial(color);
-        material.setSpecularColor(color.brighter());
-        return material;
-    }
-
-    static Color opaqueColor(Color color, double opacity) {
-        checkNotNull(color);
-        return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
-    }
 
     /**
      * @return the class relative to whose package the resources are loaded
      */
     Class<?> getResourceRootClass();
+
 
     /**
      * Creates a URL from a resource path. If the path does not start with a slash, the path to the resource

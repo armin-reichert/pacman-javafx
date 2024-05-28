@@ -31,7 +31,6 @@ import javafx.util.Duration;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.util.ResourceManager.coloredMaterial;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.animation.Turn.angle;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshView;

@@ -3,8 +3,8 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.ActionHandler;
-import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui2d.util.Theme;
+import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -81,7 +81,7 @@ public class StartPage implements Page {
         bottom.setTranslateY(-10);
         layout.setBottom(bottom);
 
-        root.setBackground(ResourceManager.coloredBackground(Color.BLACK));
+        root.setBackground(Ufx.coloredBackground(Color.BLACK));
         root.getChildren().add(layout);
     }
 
@@ -126,7 +126,7 @@ public class StartPage implements Page {
         button.setMaxSize(200, 100);
         button.setPadding(new Insets(10));
         button.setCursor(Cursor.HAND);
-        button.setBackground(ResourceManager.coloredRoundedBackground(theme.color("startpage.button.bgColor"), 20));
+        button.setBackground(Ufx.coloredRoundedBackground(theme.color("startpage.button.bgColor"), 20));
 
         return button;
     }

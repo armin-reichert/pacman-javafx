@@ -4,13 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.page.GamePage;
+import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.Keyboard;
-import de.amr.games.pacman.ui2d.util.ResourceManager;
+import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import de.amr.games.pacman.ui3d.scene.PlayScene3D;
@@ -170,7 +170,7 @@ public class GamePage3D extends GamePage {
     private void updateBackground3D() {
         if (isCurrentGameScene3D()) {
             if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
-                getLayersContainer().setBackground(ResourceManager.coloredBackground(Color.BLACK));
+                getLayersContainer().setBackground(Ufx.coloredBackground(Color.BLACK));
             } else {
                 var wallpaperKey = PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
                 getLayersContainer().setBackground(context.theme().background(wallpaperKey));

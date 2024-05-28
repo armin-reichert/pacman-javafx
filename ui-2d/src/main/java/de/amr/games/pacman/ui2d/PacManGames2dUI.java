@@ -17,11 +17,7 @@ import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.rendering.*;
 import de.amr.games.pacman.ui2d.scene.*;
-import de.amr.games.pacman.ui2d.util.GameClockFX;
-import de.amr.games.pacman.ui2d.util.Keyboard;
-import de.amr.games.pacman.ui2d.util.ResourceManager;
-import de.amr.games.pacman.ui2d.util.Theme;
-import de.amr.games.pacman.ui2d.util.Ufx;
+import de.amr.games.pacman.ui2d.util.*;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.BooleanProperty;
@@ -359,7 +355,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         page.setCanvasBorderEnabled(true);
         page.setCanvasBorderColor(theme().color("palette.pale"));
         page.getCanvasLayer().setBackground(theme().background("wallpaper.background"));
-        page.getCanvasContainer().setBackground(ResourceManager.coloredBackground(theme().color("canvas.background")));
+        page.getCanvasContainer().setBackground(Ufx.coloredBackground(theme().color("canvas.background")));
 
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
         return page;

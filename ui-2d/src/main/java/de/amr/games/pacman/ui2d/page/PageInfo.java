@@ -1,6 +1,6 @@
 package de.amr.games.pacman.ui2d.page;
 
-import de.amr.games.pacman.ui2d.util.ResourceManager;
+import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -49,7 +49,7 @@ public class PageInfo {
         }
         var pane = new BorderPane(grid);
         pane.setPadding(new Insets(10));
-        pane.setBackground(ResourceManager.coloredRoundedBackground(backgroundColor, 10));
+        pane.setBackground(Ufx.coloredRoundedBackground(backgroundColor, 10));
         return pane;
     }
 }

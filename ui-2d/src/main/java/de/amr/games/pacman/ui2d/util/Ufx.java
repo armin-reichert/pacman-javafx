@@ -10,6 +10,8 @@ import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.geometry.Insets;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
@@ -28,6 +30,40 @@ public class Ufx {
 
     public static void toggle(BooleanProperty booleanProperty) {
         booleanProperty.set(!booleanProperty.get());
+    }
+
+
+    public static  Background coloredBackground(Color color) {
+        checkNotNull(color);
+        return new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
+    }
+
+    public static  Background coloredRoundedBackground(Color color, int radius) {
+        checkNotNull(color);
+        return new Background(new BackgroundFill(color, new CornerRadii(radius), Insets.EMPTY));
+    }
+
+    public static  Border roundedBorder(Color color, double cornerRadius, double width) {
+        checkNotNull(color);
+        return new Border(
+            new BorderStroke(color, BorderStrokeStyle.SOLID, new CornerRadii(cornerRadius), new BorderWidths(width)));
+    }
+
+    public static  Border border(Color color, double width) {
+        checkNotNull(color);
+        return new Border(new BorderStroke(color, BorderStrokeStyle.SOLID, null, new BorderWidths(width)));
+    }
+
+    public static  PhongMaterial coloredMaterial(Color color) {
+        checkNotNull(color);
+        var material = new PhongMaterial(color);
+        material.setSpecularColor(color.brighter());
+        return material;
+    }
+
+    public static  Color opaqueColor(Color color, double opacity) {
+        checkNotNull(color);
+        return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
     }
 
     public static PhongMaterial createColorBoundMaterial(ObjectProperty<Color> diffuseColorProperty) {

@@ -6,14 +6,11 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.tilemapeditor.TileMapEditor;
-import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.page.Page;
-import de.amr.games.pacman.ui2d.util.Keyboard;
-import de.amr.games.pacman.ui2d.util.Picker;
-import de.amr.games.pacman.ui2d.util.ResourceManager;
-import de.amr.games.pacman.ui2d.util.Theme;
+import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.GameSceneContext;
+import de.amr.games.pacman.ui2d.util.*;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import de.amr.games.pacman.ui3d.scene.PlayScene3D;
@@ -278,7 +275,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         page.setCanvasBorderEnabled(true);
         page.setCanvasBorderColor(theme().color("palette.pale"));
         page.getCanvasLayer().setBackground(theme().background("wallpaper.background"));
-        page.getCanvasContainer().setBackground(ResourceManager.coloredBackground(theme().color("canvas.background")));
+        page.getCanvasContainer().setBackground(Ufx.coloredBackground(theme().color("canvas.background")));
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
         return page;
     }

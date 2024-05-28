@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.entity;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.ui2d.util.ResourceManager;
+import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.PacManGames3dUI;
 import de.amr.games.pacman.ui3d.animation.ColorChangeTransition;
 import javafx.animation.SequentialTransition;
@@ -75,7 +75,7 @@ public class DoorWing3D extends Group {
     public Transition traversalAnimation()
     {
         if (animation == null) {
-            Color color = ResourceManager.opaqueColor(PacManGames3dUI.PY_3D_FLOOR_COLOR.get(), 0.5);
+            Color color = Ufx.opaqueColor(PacManGames3dUI.PY_3D_FLOOR_COLOR.get(), 0.5);
             var fadeOut = new ColorChangeTransition(Duration.seconds(0.5),
                 doorColor, color, barMaterial.diffuseColorProperty()
             );

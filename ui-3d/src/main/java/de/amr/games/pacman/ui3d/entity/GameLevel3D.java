@@ -13,8 +13,8 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
+import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.tilemap.TileMapRenderer;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import javafx.animation.*;
@@ -36,10 +36,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.util.ResourceManager.coloredMaterial;
-import static de.amr.games.pacman.ui2d.util.ResourceManager.opaqueColor;
-import static de.amr.games.pacman.ui2d.util.Ufx.doAfterSec;
-import static de.amr.games.pacman.ui2d.util.Ufx.pauseSec;
+import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
 import static java.lang.Math.PI;
 

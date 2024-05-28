@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.entity;
 
+import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.PacManGames3dUI;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -25,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.util.ResourceManager.coloredMaterial;
 
 /**
  * Displays a Pac-Man shape for each live remaining.
@@ -58,8 +58,8 @@ public class LivesCounter3D extends Group {
         this.pillarHeight = pillarHeight;
         this.plateThickness = plateThickness;
         this.plateRadius = plateRadius;
-        pillarMaterial = coloredMaterial(pillarColor);
-        plateMaterial = coloredMaterial(plateColor);
+        pillarMaterial = Ufx.coloredMaterial(pillarColor);
+        plateMaterial = Ufx.coloredMaterial(plateColor);
 
         var light = new PointLight(lightColor);
         light.setMaxRange  (TS * (maxLives + 1));
