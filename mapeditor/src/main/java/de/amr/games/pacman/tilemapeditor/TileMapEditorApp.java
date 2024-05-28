@@ -7,8 +7,7 @@ package de.amr.games.pacman.tilemapeditor;
 import de.amr.games.pacman.lib.WorldMap;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
@@ -33,7 +32,7 @@ public class TileMapEditorApp extends Application  {
         layout.setTop(editor.getMenuBar());
 
         var miQuit = new MenuItem("Quit");
-        miQuit.setOnAction(e -> stage.close());
+        miQuit.setOnAction(e -> editor.showQuitConfirmation(stage, stage::close));
         editor.menuFile().getItems().add(miQuit);
 
         addPredefinedMaps();
@@ -45,6 +44,7 @@ public class TileMapEditorApp extends Application  {
 
         stage.setScene(scene);
         stage.titleProperty().bind(editor.titlePy);
+        stage.setOnCloseRequest(e -> editor.showQuitConfirmation(stage, stage::close));
         stage.show();
 
         editor.setOwnerWindow(stage);
@@ -77,4 +77,5 @@ public class TileMapEditorApp extends Application  {
         }
         return null;
     }
+
 }

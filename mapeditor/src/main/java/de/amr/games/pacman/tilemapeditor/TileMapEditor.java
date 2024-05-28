@@ -33,6 +33,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -52,6 +53,15 @@ public class TileMapEditor  {
 
     static Palette.EditorTool tool(byte value, String description) {
         return new Palette.EditorTool(value, description);
+    }
+
+    private static WorldMap createNewMap(int numRows, int numCols) {
+        var map = new WorldMap(new TileMap(numRows, numCols), new TileMap(numRows, numCols));
+        map.terrain().setProperty("wall_stroke_color", PropertyEditor.formatColor(DEFAULT_WALL_STROKE_COLOR));
+        map.terrain().setProperty("wall_fill_color",   PropertyEditor.formatColor(DEFAULT_WALL_FILL_COLOR));
+        map.terrain().setProperty("door_color",        PropertyEditor.formatColor(DEFAULT_DOOR_COLOR));
+        map.food().setProperty("food_color",           PropertyEditor.formatColor(DEFAULT_FOOD_COLOR));
+        return map;
     }
 
     static final byte[][] GHOST_HOUSE_SHAPE = {
@@ -101,6 +111,7 @@ public class TileMapEditor  {
 
     private final Text editHint = new Text("Click to Start Editing!");
     private boolean editingEnabled;
+    private boolean edited;
     private Vector2i hoveredTile;
     private File lastUsedDir = new File(System.getProperty("user.dir"));
     private File currentMapFile;
@@ -290,9 +301,8 @@ public class TileMapEditor  {
     }
 
     public void addPredefinedMap(String description, WorldMap map) {
-        if (map == null) {
-            Logger.error("Cannot add map '{}', map is NULL", description);
-        }
+        checkNotNull(description);
+        checkNotNull(map);
         predefinedMaps.put(description, map);
         var miLoadMap = new MenuItem(description);
         miLoadMap.setOnAction(e -> loadMap(map));
@@ -300,6 +310,10 @@ public class TileMapEditor  {
     }
 
     public WorldMap getPredefinedMap(String description) {
+        if (!predefinedMaps.containsKey(description)) {
+            Logger.error("No predefind map '{}' exists", description);
+            return null;
+        }
         return predefinedMaps.get(description);
     }
 
@@ -314,6 +328,14 @@ public class TileMapEditor  {
         pathsUpToDate = false;
     }
 
+    private void mapEdited() {
+        edited = true;
+    }
+
+    public boolean hasUnsavedChanges() {
+        return edited;
+    }
+
     private void addShape(byte[][] shape, int topLeftRow, int topLeftCol) {
         for (int row = 0; row < shape.length; ++row) {
             for (int col = 0; col < shape[0].length; ++col) {
@@ -321,12 +343,14 @@ public class TileMapEditor  {
             }
         }
         invalidatePaths();
+        mapEdited();
     }
 
     private void addHouse() {
         addShape(GHOST_HOUSE_SHAPE, 14, 10);
         map.terrain().set(26, 13, Tiles.PAC_HOME);
         invalidatePaths();
+        mapEdited();
     }
 
     private void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
@@ -347,7 +371,9 @@ public class TileMapEditor  {
         terrain.set(0, terrain.numCols() - 3, Tiles.SCATTER_TARGET_RED);
         terrain.set(terrain.numRows() - emptyRowsBottom, 0, Tiles.SCATTER_TARGET_ORANGE);
         terrain.set(terrain.numRows() - emptyRowsBottom, terrain.numCols() - 1, Tiles.SCATTER_TARGET_CYAN);
+
         invalidatePaths();
+        mapEdited();
     }
 
     public void setMap(WorldMap other) {
@@ -355,10 +381,10 @@ public class TileMapEditor  {
         map = other;
         foodMapPropertiesEditor.edit(map.food().getProperties());
         terrainMapPropertiesEditor.edit(map.terrain().getProperties());
+
         invalidatePaths();
         updatePaths();
     }
-
 
     public void loadMap(WorldMap other) {
         checkNotNull(other);
@@ -385,15 +411,6 @@ public class TileMapEditor  {
         });
     }
 
-    private WorldMap createNewMap(int numRows, int numCols) {
-        var map = new WorldMap(new TileMap(numRows, numCols), new TileMap(numRows, numCols));
-        map.terrain().setProperty("wall_stroke_color", PropertyEditor.formatColor(DEFAULT_WALL_STROKE_COLOR));
-        map.terrain().setProperty("wall_fill_color",   PropertyEditor.formatColor(DEFAULT_WALL_FILL_COLOR));
-        map.terrain().setProperty("door_color",        PropertyEditor.formatColor(DEFAULT_DOOR_COLOR));
-        map.food().setProperty("food_color",           PropertyEditor.formatColor(DEFAULT_FOOD_COLOR));
-        return map;
-    }
-
     private void openMapFile() {
         openDialog.setInitialDirectory(lastUsedDir);
         openDialog.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Word Map Files", ".world"));
@@ -414,7 +431,7 @@ public class TileMapEditor  {
         updateInfo();
     }
 
-    private void saveMapFileAs() {
+    public void saveMapFileAs() {
         openDialog.setInitialDirectory(lastUsedDir);
         openDialog.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("World Map Files", ".world"));
         File file = openDialog.showSaveDialog(ownerWindow);
@@ -422,11 +439,38 @@ public class TileMapEditor  {
             lastUsedDir = file.getParentFile();
             if (file.getName().endsWith(".world")) {
                 map.save(file);
+                edited = false;
                 readMapFile(file);
                 updateInfo();
             } else {
                 Logger.error("No .world file selected"); //TODO
             }
+        }
+    }
+
+    public void showQuitConfirmation(Stage stage, Runnable quitAction) {
+        if (hasUnsavedChanges()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("There are unsaved changes");
+            alert.setHeaderText("Save changes?");
+            alert.setContentText("You can save your changes or leave without saving");
+            var saveButton = new ButtonType("Save Changes");
+            var leaveButton = new ButtonType("Don't Save");
+            var cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+            alert.getButtonTypes().setAll(saveButton, leaveButton, cancelButton);
+            alert.showAndWait().ifPresent(response -> {
+                if (response == saveButton) {
+                    saveMapFileAs();
+                } else if (response == leaveButton) {
+                    stop();
+                    quitAction.run();
+                } else if (response == cancelButton) {
+                    return;
+                }
+            });
+        } else {
+            stop();
+            quitAction.run();
         }
     }
 
@@ -595,8 +639,10 @@ public class TileMapEditor  {
         if (e.isShiftDown()) {
             if (terrainEditedPy.get()) {
                 map.terrain().set(hoveredTile, terrainPalette.selectedValue);
+                mapEdited();
             } else {
                 map.food().set(hoveredTile, foodPalette.selectedValue);
+                mapEdited();
             }
         }
         invalidatePaths();
@@ -617,6 +663,7 @@ public class TileMapEditor  {
             map.terrain().set(tile, terrainPalette.selectedValue);
         }
         invalidatePaths();
+        mapEdited();
         updateInfo();
     }
 
@@ -633,6 +680,7 @@ public class TileMapEditor  {
         else {
             map.food().set(tile, foodPalette.selectedValue);
         }
+        mapEdited();
         updateInfo();
     }
 
