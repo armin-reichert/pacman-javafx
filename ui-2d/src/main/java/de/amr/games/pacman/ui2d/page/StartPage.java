@@ -35,18 +35,6 @@ public class StartPage implements Page {
     private final Theme theme;
     private final Node btnPlay;
 
-    private static Background createBackground(Image image) {
-        var backgroundImage = new BackgroundImage(image,
-            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-            new BackgroundSize(
-                AUTO, AUTO, // width, height
-                false, false, // as percentage
-                true, // contain
-                false // cover
-            ));
-        return new Background(backgroundImage);
-    }
-
     private Button createCarouselButton(Direction dir, Runnable action) {
         double dimmed = 0.25;
         Button button = new Button();
@@ -86,17 +74,21 @@ public class StartPage implements Page {
     }
 
     @Override
-    public void setSize(double width, double height) {
-    }
-
-    @Override
     public Pane rootPane() {
         return root;
     }
 
-    public void setGameVariant(GameVariant variant) {
-        String vk = variantKey(variant);
-        layout.setBackground(createBackground(theme.image(vk + ".startpage.image")));
+    public void updateBackground(GameVariant variant) {
+        Image image = theme.image(variantKey(variant) + ".startpage.image");
+        checkNotNull(image);
+        var bgImage = new BackgroundImage(
+            image,
+            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER,
+            new BackgroundSize(AUTO, AUTO, false, false, /* cover */ true, /* contain */ false)
+        );
+        var bg = new Background(bgImage);
+        layout.setBackground(bg);
     }
 
     public void setPlayButtonAction(Runnable action) {

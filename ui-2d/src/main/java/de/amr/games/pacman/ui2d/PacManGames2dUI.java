@@ -30,7 +30,6 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -330,10 +329,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     protected StartPage createStartPage() {
         var startPage = new StartPage(theme(), this);
-        startPage.setPlayButtonAction(this::showGamePage);
+        startPage.setPlayButtonAction(() -> showPage("gamePage"));
         startPage.setOnKeyPressed(keyEvent -> {
             if (Keyboard.matches(keyEvent, KEYS_SHOW_GAME_PAGE)) {
-                showGamePage();
+                showPage("gamePage");
             } else if (Keyboard.matches(keyEvent, KEYS_SELECT_NEXT_VARIANT)) {
                 selectNextGameVariant();
             } else if (Keyboard.matches(keyEvent, KEY_SELECT_PREV_VARIANT)) {
@@ -383,22 +382,27 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         stage.show();
     }
 
-    @Override
-    public void showStartPage() {
-        if (clock.isRunning()) {
-            clock.stop();
-            Logger.info("Clock stopped.");
+    public void showPage(String pageID) {
+        switch (pageID) {
+            case "startPage" -> {
+                if (clock.isRunning()) {
+                    clock.stop();
+                    Logger.info("Clock stopped.");
+                }
+                selectPage("startPage");
+                this.<StartPage>currentPage().updateBackground(game().variant());
+            }
+            case "gamePage" -> {
+                // call reboot() first such that current game scene is set
+                reboot();
+                selectPage("gamePage");
+                clock.start();
+                Logger.info("Clock started, speed={} Hz", clock.getTargetFrameRate());
+            }
+            case "editorPage" -> {
+                //TODO what?
+            }
         }
-        selectPage("startPage");
-        this.<StartPage>currentPage().setGameVariant(game().variant());
-    }
-
-    public void showGamePage() {
-        // call reboot() first such that current game scene is set
-        reboot();
-        selectPage("gamePage");
-        clock.start();
-        Logger.info("Clock started, speed={} Hz", clock.getTargetFrameRate());
     }
 
     protected void updateStage() {
@@ -756,7 +760,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     private void selectGameVariant(GameVariant variant) {
         gameController().selectGame(variant);
         gameController().restart(GameState.BOOT);
-        showStartPage();
+        showPage("startPage");
     }
 
     @Override

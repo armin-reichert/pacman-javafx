@@ -253,7 +253,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     }
 
     private void quitMapEditor() {
-        editor.showQuitConfirmation(stage, this::showStartPage);
+        editor.showQuitConfirmation(stage, () -> showPage("startPage"));
     }
 
     @Override

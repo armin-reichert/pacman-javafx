@@ -179,7 +179,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
                 case BOOT -> {}
                 case INTRO -> {
                     handler.reboot();
-                    handler.showStartPage();
+                    handler.showPage("startPage");
                 }
                 default -> {
                     handler.restartIntro();
