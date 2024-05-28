@@ -7,6 +7,8 @@ package de.amr.games.pacman.ui2d;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -28,7 +30,9 @@ public class PacManGames2dApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        ui = new PacManGames2dUI(stage);
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        double height = 0.8 * screenSize.getHeight(), width = 36.0 / 28.0 * height;
+        ui = new PacManGames2dUI(stage, width, height);
         for (var variant : GameController.it().supportedGameVariants()) {
              GameController.it().game(variant).addGameEventListener(ui);
         }

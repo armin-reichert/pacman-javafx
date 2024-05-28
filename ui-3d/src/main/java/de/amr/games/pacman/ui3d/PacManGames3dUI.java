@@ -182,8 +182,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     private TileMapEditor editor;
 
-    public PacManGames3dUI(Stage stage) {
-        super(stage);
+    public PacManGames3dUI(Stage stage, double width, double height) {
+        super(stage, width, height);
         for (var variant : GameVariant.values()) {
             var playScene3D = new PlayScene3D();
             playScene3D.setContext(this);

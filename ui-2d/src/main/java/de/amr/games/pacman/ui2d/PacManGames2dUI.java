@@ -239,11 +239,11 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     private AudioClip voiceClip;
     private final Animation voiceClipExecution = new PauseTransition();
 
-    public PacManGames2dUI(Stage stage) {
+    public PacManGames2dUI(Stage stage, double width, double height) {
         checkNotNull(stage);
 
         this.stage = stage;
-        mainScene = createMainScene();
+        mainScene = createMainScene(width, height);
         pages.put("startPage", createStartPage());
         pages.put("gamePage",  createGamePage(mainScene));
 
@@ -321,9 +321,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         stage.setScene(mainScene);
     }
 
-    protected Scene createMainScene() {
-        double height = 0.95 * Screen.getPrimary().getVisualBounds().getHeight();
-        double width = height * 1.1;
+    protected Scene createMainScene(double width, double height) {
         var scene = new Scene(new Region(), width, height, Color.BLACK);
         scene.widthProperty().addListener((py, ov, nv) -> currentPage().setSize(scene.getWidth(), scene.getHeight()));
         scene.heightProperty().addListener((py, ov, nv) -> currentPage().setSize(scene.getWidth(), scene.getHeight()));
