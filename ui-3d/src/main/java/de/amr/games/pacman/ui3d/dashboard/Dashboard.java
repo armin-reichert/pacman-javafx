@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.dashboard;
 
-import de.amr.games.pacman.ui2d.GameSceneContext;
+import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;

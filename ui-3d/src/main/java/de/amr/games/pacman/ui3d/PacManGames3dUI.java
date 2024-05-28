@@ -6,8 +6,8 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.model.*;
 import de.amr.games.pacman.tilemapeditor.TileMapEditor;
-import de.amr.games.pacman.ui2d.GameScene;
-import de.amr.games.pacman.ui2d.GameSceneContext;
+import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.util.Keyboard;

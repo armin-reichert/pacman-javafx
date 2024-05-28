@@ -6,8 +6,6 @@ package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.GameScene;
-import de.amr.games.pacman.ui2d.GameSceneContext;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.rendering.ClassicWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ModernWorldRenderer;

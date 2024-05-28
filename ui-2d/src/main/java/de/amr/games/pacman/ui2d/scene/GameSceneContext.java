@@ -1,8 +1,9 @@
-package de.amr.games.pacman.ui2d;
+package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.Theme;
 import javafx.beans.property.ObjectProperty;
