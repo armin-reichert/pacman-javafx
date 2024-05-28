@@ -1,44 +1,46 @@
 plugins {
     id 'java'
+    id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
-    id 'org.beryx.jlink' version '3.0.1' //  adds also 'application' plugin
+    id 'org.beryx.jlink' version '3.0.1'
 }
 
 application {
-    mainModule = 'de.amr.games.pacman.ui.fx'
-    mainClass = 'de.amr.games.pacman.ui.fx.Main'
+    mainModule = 'de.amr.games.pacman.tilemapeditor'
+    mainClass = 'de.amr.games.pacman.tilemapeditor.Main'
 }
 
 dependencies {
+    implementation project(':lib')
+    implementation project(':core')
+    implementation project(':ui-2d') //TODO should not depend on complete project
     implementation 'org.tinylog:tinylog-api:2.7.0'
     implementation 'org.tinylog:tinylog-impl:2.7.0'
-    testImplementation 'junit:junit:4.13.2'
-    implementation project(':pacman-lib')
-    implementation project(':pacman-core')
 }
 
 javafx {
     version = '21.0.2'
-    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.media']
+    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls']
 }
 
 jlink {
     imageZip = project.file("${layout.buildDirectory}/distributions/app-${javafx.platform.classifier}.zip")
     options = [
-            '--compress', 'zip-9',
             '--strip-debug',
+            '--compress', 'zip-9',
             '--no-header-files',
             '--no-man-pages']
     launcher {
-        name = 'Pac-Man-FX-2D'
+        name = 'Pac-Man-FX-Map-Editor'
     }
     jpackage {
         appVersion = '1.0'
+        vendor = 'Armin Reichert'
         installerOptions = [
-            '--vendor', 'Armin Reichert',
+                '--vendor', 'Armin Reichert',
         ]
         if (os.isWindows()) {
-            icon = 'pacman.ico'
+            icon = 'map-editor.ico'
             installerType = 'msi'
             installerOptions.addAll([
                     '--win-dir-chooser',

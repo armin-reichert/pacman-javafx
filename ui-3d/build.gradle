@@ -13,10 +13,10 @@ application {
 }
 
 dependencies {
-    implementation project(':pacman-lib')
-    implementation project(':pacman-core')
-    implementation project(':pacman-ui-fx-2d')
-    implementation project(':tilemap-editor')
+    implementation project(':lib')
+    implementation project(':core')
+    implementation project(':ui-2d')
+    implementation project(':mapeditor')
     implementation 'org.tinylog:tinylog-api:2.7.0'
     implementation 'org.tinylog:tinylog-impl:2.7.0'
 }
