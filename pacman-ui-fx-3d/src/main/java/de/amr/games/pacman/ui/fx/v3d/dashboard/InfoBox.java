@@ -31,10 +31,16 @@ import java.util.function.Supplier;
  *
  * @author Armin Reichert
  */
-public abstract class InfoBox extends TitledPane {
+public class InfoBox extends TitledPane {
+
+    public static final Color BACKGROUND_COLOR = new Color(0.2, 0.2, 0.4, 0.8);
 
     public static String fmtSpeed(byte percentage) {
         return String.format("%.2f px/s (%d%%)", GameModel.PPS_AT_100_PERCENT * percentage * 0.01f, percentage);
+    }
+
+    protected static String fontCSS(Font font) {
+        return String.format("-fx-font: %.0fpx \"%s\";", font.getSize(), font.getFamily());
     }
 
     protected final Theme theme;
@@ -64,7 +70,7 @@ public abstract class InfoBox extends TitledPane {
         this.textColor = textColor;
         this.textFont = textFont;
         this.labelFont = labelFont;
-        content.setBackground(ResourceManager.coloredBackground(new Color(0.2, 0.2, 0.4, 0.8)));
+        content.setBackground(ResourceManager.coloredBackground(BACKGROUND_COLOR));
         content.setHgap(4);
         content.setVgap(3);
         content.setPadding(new Insets(5));
@@ -185,9 +191,5 @@ public abstract class InfoBox extends TitledPane {
         spinner.setStyle(fontCSS(textFont));
         addRow(labelText, spinner);
         return spinner;
-    }
-
-    private static String fontCSS(Font font) {
-        return String.format("-fx-font: %.0fpx \"%s\";", font.getSize(), font.getFamily());
     }
 }
