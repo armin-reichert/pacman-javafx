@@ -12,6 +12,7 @@ import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,13 +50,15 @@ public class PacManXXLGame extends PacManGame {
             case 1 -> customMaps.isEmpty() ? createPacManWorld() : createModernWorld(customMaps.getFirst());
             case 2, 3, 4, 5, 6, 7, 8, 9 -> {
                 int mapNumber = levelNumber - 1;
-                var path = String.format("/de/amr/games/pacman/maps/masonic/masonic_%d.world", mapNumber);
-                yield createModernWorld(GameModel.loadMap(path, getClass()));
+                URL mapURL = getClass().getResource(String.format("/de/amr/games/pacman/maps/masonic/masonic_%d.world", mapNumber));
+                var map = GameModel.loadMap(mapURL);
+                yield createModernWorld(map);
             }
             default -> {
                 int mapNumber = randomInt(1, 9);
-                var path = String.format("/de/amr/games/pacman/maps/masonic/masonic_%d.world", mapNumber);
-                yield createModernWorld(GameModel.loadMap(path, getClass()));
+                URL mapURL = getClass().getResource(String.format("/de/amr/games/pacman/maps/masonic/masonic_%d.world", mapNumber));
+                var map = GameModel.loadMap(mapURL);
+                yield createModernWorld(map);
             }
         };
         setWorldAndCreatePopulation(world);

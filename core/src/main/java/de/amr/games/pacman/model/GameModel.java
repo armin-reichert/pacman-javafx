@@ -21,8 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.v2i;
+import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * Common interface of all game models.
@@ -37,27 +36,22 @@ public interface GameModel {
 
     static byte checkGhostID(byte id) {
         if (id < 0 || id > 3) {
-            GameException.illegalGhostID(id);
+            throw GameException.illegalGhostID(id);
         }
         return id;
     }
 
     static int checkLevelNumber(int number) {
         if (number < 1) {
-            GameException.illegalLevelNumber(number);
+            throw GameException.illegalLevelNumber(number);
         }
         return number;
     }
 
-    public static WorldMap loadMap(String path, Class<?> loadingClass) {
-        URL mapURL = loadingClass.getResource(path);
-        WorldMap map = null;
-        if (mapURL != null) {
-            map = new WorldMap(mapURL);
-            Logger.info("Map loaded from URL {}", mapURL);
-        } else {
-            Logger.error("Error loading web map from resource path '{}'", path);
-        }
+    static WorldMap loadMap(URL mapURL) {
+        checkNotNull(mapURL);
+        WorldMap map = new WorldMap(mapURL);
+        Logger.info("Map loaded from URL {}", mapURL);
         return map;
     }
 

@@ -18,6 +18,7 @@ import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -108,7 +109,8 @@ public class MsPacManGame extends AbstractPacManGame  {
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
         this.mapNumber = mapNumberByLevelNumber(levelNumber);
-        var map = GameModel.loadMap("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world", getClass());
+        URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world");
+        var map = GameModel.loadMap(mapURL);
         var msPacManWorld = createMsPacManWorld(map);
         setWorldAndCreatePopulation(msPacManWorld);
         pac.setName("Ms. Pac-Man");
@@ -121,8 +123,8 @@ public class MsPacManGame extends AbstractPacManGame  {
     public void buildDemoLevel() {
         levelNumber = 1;
         mapNumber = randomInt(1, 7);
-        var mapPath = String.format("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world", mapNumber);
-        var map = GameModel.loadMap(mapPath, getClass());
+        var mapURL = getClass().getResource(String.format("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world", mapNumber));
+        var map = GameModel.loadMap(mapURL);
         setWorldAndCreatePopulation(createMsPacManWorld(map));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));

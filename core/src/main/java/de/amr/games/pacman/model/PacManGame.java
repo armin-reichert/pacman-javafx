@@ -17,6 +17,7 @@ import de.amr.games.pacman.steering.RouteBasedSteering;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 
 import java.io.File;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,8 +105,9 @@ public class PacManGame extends AbstractPacManGame {
     }
 
     //TODO: store some of this info in map?
-    static World createPacManWorld() {
-        var map = GameModel.loadMap("/de/amr/games/pacman/maps/pacman.world", PacManGame.class);
+    protected World createPacManWorld() {
+        URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/pacman.world");
+        var map = GameModel.loadMap(mapURL);
         var world = new World(map);
         world.addHouse(House.createArcadeHouse(), v2i(10, 15));
         world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});

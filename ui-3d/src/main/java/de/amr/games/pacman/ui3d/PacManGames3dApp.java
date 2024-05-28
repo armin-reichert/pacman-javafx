@@ -32,15 +32,19 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        Rectangle2D screenSize = Screen.getPrimary().getBounds();
-        double aspect = screenSize.getWidth() / screenSize.getHeight();
-        double height = 0.8 * screenSize.getHeight(), width = aspect * height;
-        ui = new PacManGames3dUI(stage, width, height);
-        for (var variant : GameController.it().supportedGameVariants()) {
-            GameController.it().game(variant).addGameEventListener(ui);
+        try {
+            Rectangle2D screenSize = Screen.getPrimary().getBounds();
+            double aspect = screenSize.getWidth() / screenSize.getHeight();
+            double height = 0.8 * screenSize.getHeight(), width = aspect * height;
+            ui = new PacManGames3dUI(stage, width, height);
+            for (var variant : GameController.it().supportedGameVariants()) {
+                GameController.it().game(variant).addGameEventListener(ui);
+            }
+            ui.showStartPage();
+            Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
+        } catch (Exception x) {
+            x.printStackTrace(System.err);
         }
-        ui.showStartPage();
-        Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }
 
     @Override
