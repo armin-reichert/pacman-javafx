@@ -454,17 +454,17 @@ public class TileMapEditor  {
             alert.setTitle("There are unsaved changes");
             alert.setHeaderText("Save changes?");
             alert.setContentText("You can save your changes or leave without saving");
-            var saveButton = new ButtonType("Save Changes");
-            var leaveButton = new ButtonType("Don't Save");
-            var cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-            alert.getButtonTypes().setAll(saveButton, leaveButton, cancelButton);
-            alert.showAndWait().ifPresent(response -> {
-                if (response == saveButton) {
+            var saveChanges = new ButtonType("Save Changes");
+            var leaveWithoutSaving = new ButtonType("Don't Save");
+            var closeDialog = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+            alert.getButtonTypes().setAll(saveChanges, leaveWithoutSaving, closeDialog);
+            alert.showAndWait().ifPresent(choice -> {
+                if (choice == saveChanges) {
                     saveMapFileAs();
-                } else if (response == leaveButton) {
+                } else if (choice == leaveWithoutSaving) {
                     stop();
                     quitAction.run();
-                } else if (response == cancelButton) {
+                } else if (choice == closeDialog) {
                     return;
                 }
             });
