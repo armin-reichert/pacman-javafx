@@ -6,6 +6,7 @@ package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.WorldMap;
+import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -30,7 +31,6 @@ public class PacManXXLGame extends PacManGame {
     public void init() {
         initialLives = 3;
         highScoreFile = new File(GAME_DIR,"highscore-pacman_xxl.xml");
-        Logger.info("Game variant {} initialized.", variant());
     }
 
     @Override
@@ -53,24 +53,20 @@ public class PacManXXLGame extends PacManGame {
     @Override
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
-        switch (levelNumber) {
-            case 1 -> {
-                if (customMaps.isEmpty()) {
-                    setWorldAndCreatePopulation(createPacManWorld());
-                } else {
-                    // entry point for testing custom maps
-                    setWorldAndCreatePopulation(createModernWorld(customMaps.getFirst()));
-                }
-            }
+        var world = switch (levelNumber) {
+            case 1 -> customMaps.isEmpty() ? createPacManWorld() : createModernWorld(customMaps.getFirst());
             case 2, 3, 4, 5, 6, 7, 8, 9 -> {
-                var path = String.format("/de/amr/games/pacman/maps/masonic/masonic_%d.world", levelNumber - 1);
-                setWorldAndCreatePopulation(createModernWorld(loadMap(path)));
+                int mapNumber = levelNumber - 1;
+                var path = String.format("/de/amr/games/pacman/maps/masonic/masonic_%d.world", mapNumber);
+                yield createModernWorld(GameModel.loadMap(path, getClass()));
             }
             default -> {
-                var path = String.format("/de/amr/games/pacman/maps/masonic/masonic_%d.world", randomInt(1, 9));
-                setWorldAndCreatePopulation(createModernWorld(loadMap(path)));
+                int mapNumber = randomInt(1, 9);
+                var path = String.format("/de/amr/games/pacman/maps/masonic/masonic_%d.world", mapNumber);
+                yield createModernWorld(GameModel.loadMap(path, getClass()));
             }
-        }
+        };
+        setWorldAndCreatePopulation(world);
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -82,11 +78,11 @@ public class PacManXXLGame extends PacManGame {
     }
 
     private World createModernWorld(WorldMap map) {
-        var world = new World(map);
-        world.addHouse(createArcadeHouse(), v2i(10, 15)); //TODO create house from map?
-        world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP}); // TODO
-        world.setBonusPosition(halfTileRightOf(13, 20)); // TODO get position from map?
-        return world;
+        var modernWorld = new World(map);
+        modernWorld.addHouse(House.createArcadeHouse(), v2i(10, 15)); //TODO create house from map?
+        modernWorld.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP}); // TODO
+        modernWorld.setBonusPosition(halfTileRightOf(13, 20)); // TODO get position from map?
+        return modernWorld;
     }
 
     private void loadCustomMaps() throws IOException {

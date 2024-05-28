@@ -122,13 +122,6 @@ public abstract class AbstractPacManGame implements GameModel {
 
     abstract void updateLevelCounter();
 
-    House createArcadeHouse() {
-        var house = new House();
-        house.setSize(v2i(8, 5));
-        house.setDoor(new Door(v2i(13, 15), v2i(14, 15)));
-        return house;
-    }
-
     void clearLevel() {
         levelNumber = 0;
         levelStartTime = 0;
@@ -144,17 +137,6 @@ public abstract class AbstractPacManGame implements GameModel {
         world = null;
         blinking.stop();
         blinking.reset();
-    }
-
-    public WorldMap loadMap(String path) {
-        URL mapURL = getClass().getResource(path);
-        if (mapURL != null) {
-            var map = new WorldMap(mapURL);
-            Logger.info("Map loaded from URL {}", mapURL);
-            return map;
-        }
-        Logger.error("Error loading web map from resource path '{}'", path);
-        return null;
     }
 
     void setWorldAndCreatePopulation(World world) {

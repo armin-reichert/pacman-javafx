@@ -13,8 +13,10 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
+import org.tinylog.Logger;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -42,6 +44,18 @@ public interface GameModel {
             GameException.illegalLevelNumber(number);
         }
         return number;
+    }
+
+    public static WorldMap loadMap(String path, Class<?> loadingClass) {
+        URL mapURL = loadingClass.getResource(path);
+        WorldMap map = null;
+        if (mapURL != null) {
+            map = new WorldMap(mapURL);
+            Logger.info("Map loaded from URL {}", mapURL);
+        } else {
+            Logger.error("Error loading web map from resource path '{}'", path);
+        }
+        return map;
     }
 
     File GAME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");

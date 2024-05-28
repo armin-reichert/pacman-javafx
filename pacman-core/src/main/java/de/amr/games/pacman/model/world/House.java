@@ -14,6 +14,13 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class House {
 
+    public static House createArcadeHouse() {
+        var house = new House();
+        house.setSize(v2i(8, 5));
+        house.setDoor(new Door(v2i(13, 15), v2i(14, 15)));
+        return house;
+    }
+
     private Vector2i minTile;
     private Vector2i size;
     private Door door;

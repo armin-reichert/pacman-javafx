@@ -247,20 +247,23 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         editorLayout.setCenter(editor.getLayout());
         editorLayout.setTop(editor.getMenuBar());
         editorPage = () -> editorLayout; // fancy, isn't it?
+
         // preload maps
-        var pacManGame = (PacManGame) GameController.it().game(GameVariant.PACMAN);
-        editor.addPredefinedMap("Pac-Man", pacManGame.loadMap("/de/amr/games/pacman/maps/pacman.world"));
+        editor.addPredefinedMap(
+            "Pac-Man",
+            GameModel.loadMap("/de/amr/games/pacman/maps/pacman.world", PacManGame.class));
+
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        var msPacManGame = (MsPacManGame) GameController.it().game(GameVariant.MS_PACMAN);
+
         rangeClosed(1, 6).forEach(i -> editor.addPredefinedMap(
             "Ms. Pac-Man " + i,
-            msPacManGame.loadMap("/de/amr/games/pacman/maps/mspacman/mspacman_" + i + ".world"))
-        );
+            GameModel.loadMap("/de/amr/games/pacman/maps/mspacman/mspacman_" + i + ".world", MsPacManGame.class)));
+
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        var pacManXXLGame = (PacManXXLGame) GameController.it().game(GameVariant.PACMAN_XXL);
+
         rangeClosed(1, 8).forEach(i -> editor.addPredefinedMap(
             "Pac-Man XXL " + i,
-            pacManXXLGame.loadMap("/de/amr/games/pacman/maps/masonic/masonic_" + i + ".world"))
+            GameModel.loadMap("/de/amr/games/pacman/maps/masonic/masonic_" + i + ".world", PacManXXLGame.class))
         );
     }
 

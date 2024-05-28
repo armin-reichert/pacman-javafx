@@ -57,6 +57,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         game = gameModels.get(GameVariant.PACMAN);
         for (var model : gameModels.values()) {
             model.init();
+            Logger.info("Game (variant={}) initialized.", model.variant());
         }
         createCustomMapDir();
         // map state change events to events of the selected game

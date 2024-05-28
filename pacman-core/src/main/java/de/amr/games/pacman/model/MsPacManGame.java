@@ -12,6 +12,7 @@ import de.amr.games.pacman.lib.WorldMap;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
+import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -37,9 +38,9 @@ import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
  *
  * @author Armin Reichert
  */
-public class MsPacManGame extends AbstractPacManGame{
+public class MsPacManGame extends AbstractPacManGame  {
 
-    private static final byte DEMO_LEVEL_MIN_DURATION_SEC = 20;
+    private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
     /**
      * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
@@ -59,7 +60,6 @@ public class MsPacManGame extends AbstractPacManGame{
     public void init() {
         initialLives = 3;
         highScoreFile = new File(GAME_DIR, "highscore-ms_pacman.xml");
-        Logger.info("Game variant {} initialized.", variant());
     }
 
     @Override
@@ -108,7 +108,9 @@ public class MsPacManGame extends AbstractPacManGame{
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
         this.mapNumber = mapNumberByLevelNumber(levelNumber);
-        setWorldAndCreatePopulation(createMsPacManWorld(loadMap("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world")));
+        var map = GameModel.loadMap("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world", getClass());
+        var msPacManWorld = createMsPacManWorld(map);
+        setWorldAndCreatePopulation(msPacManWorld);
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -120,7 +122,7 @@ public class MsPacManGame extends AbstractPacManGame{
         levelNumber = 1;
         mapNumber = randomInt(1, 7);
         var mapPath = String.format("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world", mapNumber);
-        var map = loadMap(mapPath);
+        var map = GameModel.loadMap(mapPath, getClass());
         setWorldAndCreatePopulation(createMsPacManWorld(map));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
@@ -130,7 +132,7 @@ public class MsPacManGame extends AbstractPacManGame{
 
     private World createMsPacManWorld(WorldMap map) {
         var world = new World(map);
-        world.addHouse(createArcadeHouse(), v2i(10, 15));
+        world.addHouse(House.createArcadeHouse(), v2i(10, 15));
         world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
         return world;
     }

@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.TickTimer;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.StaticBonus;
+import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.steering.RouteBasedSteering;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
@@ -68,7 +69,6 @@ public class PacManGame extends AbstractPacManGame {
     public void init() {
         initialLives = 3;
         highScoreFile = new File(GAME_DIR,"highscore-pacman.xml");
-        Logger.info("Game variant {} initialized.", variant());
     }
 
     @Override
@@ -105,10 +105,10 @@ public class PacManGame extends AbstractPacManGame {
     }
 
     //TODO: store some of this info in map?
-    protected World createPacManWorld() {
-        var map = loadMap("/de/amr/games/pacman/maps/pacman.world");
+    static World createPacManWorld() {
+        var map = GameModel.loadMap("/de/amr/games/pacman/maps/pacman.world", PacManGame.class);
         var world = new World(map);
-        world.addHouse(createArcadeHouse(), v2i(10, 15));
+        world.addHouse(House.createArcadeHouse(), v2i(10, 15));
         world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
         List<Direction> up = List.of(UP);
         Map<Vector2i, List<Direction>> fp = new HashMap<>();
