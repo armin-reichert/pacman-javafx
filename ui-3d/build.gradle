@@ -39,21 +39,15 @@ jlink {
     }
     jpackage {
         appVersion = '1.0'
-        // not supported: copyright
-        description = 'Pac-Man JavaFX 3D'
-        icon = 'pacman.ico'
         vendor = 'Armin Reichert'
-        installerOptions = [
-            '--copyright', '2021-2024 Armin Reichert',
-        ]
         if (os.isWindows()) {
             icon = 'pacman.ico'
             installerType = 'msi'
-            installerOptions.addAll([
+            installerOptions = [
                 '--win-dir-chooser',
                 '--win-menu',
                 '--win-menu-group', 'Pac-Man FX',
-                '--win-shortcut'])
+                '--win-shortcut']
         }
     }
 }

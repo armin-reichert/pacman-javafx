@@ -1,4 +1,4 @@
-package de.amr.games.pacman.tilemapeditor;
+package de.amr.games.pacman.mapeditor;
 
 import java.io.PrintWriter;
 

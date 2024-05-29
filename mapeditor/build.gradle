@@ -1,13 +1,12 @@
 plugins {
     id 'java'
-    id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'org.beryx.jlink' version '3.0.1'
 }
 
 application {
-    mainModule = 'de.amr.games.pacman.tilemapeditor'
-    mainClass = 'de.amr.games.pacman.tilemapeditor.Main'
+    mainModule = 'de.amr.games.pacman.mapeditor'
+    mainClass = 'de.amr.games.pacman.mapeditor.Main'
 }
 
 dependencies {
@@ -36,17 +35,14 @@ jlink {
     jpackage {
         appVersion = '1.0'
         vendor = 'Armin Reichert'
-        installerOptions = [
-                '--vendor', 'Armin Reichert',
-        ]
         if (os.isWindows()) {
-            icon = 'map-editor.ico'
+            icon = 'mapeditor.ico'
             installerType = 'msi'
-            installerOptions.addAll([
+            installerOptions = [
                     '--win-dir-chooser',
                     '--win-menu',
                     '--win-menu-group', 'Pac-Man FX',
-                    '--win-shortcut'])
+                    '--win-shortcut']
         }
     }
 }

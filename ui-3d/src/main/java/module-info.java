@@ -13,7 +13,7 @@ open module de.amr.games.pacman.ui3d {
     requires de.amr.games.pacman;
     requires de.amr.games.pacman.lib;
     requires de.amr.games.pacman.ui2d;
-    requires de.amr.games.pacman.tilemapeditor;
+    requires de.amr.games.pacman.mapeditor;
 
     exports de.amr.games.pacman.ui3d;
     exports de.amr.games.pacman.ui3d.animation;

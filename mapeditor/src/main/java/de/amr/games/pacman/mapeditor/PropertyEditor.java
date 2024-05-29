@@ -1,4 +1,4 @@
-package de.amr.games.pacman.tilemapeditor;
+package de.amr.games.pacman.mapeditor;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
