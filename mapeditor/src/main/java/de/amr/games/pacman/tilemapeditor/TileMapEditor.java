@@ -142,8 +142,8 @@ public class TileMapEditor  {
 
         int fps = 10;
         clock = new Timeline(fps, new KeyFrame(Duration.millis(1000.0 / fps), e -> {
-            updateInfo();
             try {
+                updateInfo();
                 draw();
             } catch (Exception x) {
                 x.printStackTrace(System.err);
@@ -317,6 +317,17 @@ public class TileMapEditor  {
         return predefinedMaps.get(description);
     }
 
+    private void updateInfo() {
+        var text = "Tile: ";
+        text += hoveredTile != null ? String.format("x=%2d y=%2d", hoveredTile.x(), hoveredTile.y()) : "n/a";
+        infoLabel.setText(text);
+        if (currentMapFile != null) {
+            titlePy.set("Map Editor: " + currentMapFile.getPath());
+        } else {
+            titlePy.set("Map Editor");
+        }
+    }
+
     private void updatePaths() {
         if (!pathsUpToDate) {
             map.terrain().computePaths();
@@ -393,7 +404,6 @@ public class TileMapEditor  {
         } else {
             setMap(WorldMap.copyOf(other));
             currentMapFile = null;
-            updateInfo();
         }
     }
 
@@ -421,7 +431,6 @@ public class TileMapEditor  {
         File file = openDialog.showOpenDialog(ownerWindow);
         if (file != null) {
             readMapFile(file);
-            updateInfo();
         }
     }
 
@@ -432,7 +441,6 @@ public class TileMapEditor  {
             currentMapFile = file;
             Logger.info("Map read from file {}", file);
         }
-        updateInfo();
     }
 
     public void saveMapFileAs() {
@@ -445,7 +453,6 @@ public class TileMapEditor  {
                 map.save(file);
                 edited = false;
                 readMapFile(file);
-                updateInfo();
             } else {
                 Logger.error("No .world file selected"); //TODO
             }
@@ -650,7 +657,6 @@ public class TileMapEditor  {
             }
         }
         invalidatePaths();
-        updateInfo();
     }
 
     private void onTerrainTileClicked(MouseEvent e) {
@@ -668,7 +674,6 @@ public class TileMapEditor  {
         }
         invalidatePaths();
         mapEdited();
-        updateInfo();
     }
 
     private void onFoodTileClicked(MouseEvent e) {
@@ -685,17 +690,5 @@ public class TileMapEditor  {
             map.food().set(tile, foodPalette.selectedValue);
         }
         mapEdited();
-        updateInfo();
-    }
-
-    private void updateInfo() {
-        var text = "Tile: ";
-        text += hoveredTile != null ? String.format("x=%2d y=%2d", hoveredTile.x(), hoveredTile.y()) : "n/a";
-        infoLabel.setText(text);
-        if (currentMapFile != null) {
-            titlePy.set("Map Editor: " + currentMapFile.getPath());
-        } else {
-            titlePy.set("Map Editor");
-        }
     }
 }
