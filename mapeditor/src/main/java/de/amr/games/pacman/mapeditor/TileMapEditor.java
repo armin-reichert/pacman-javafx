@@ -63,14 +63,14 @@ public class TileMapEditor  {
         return map;
     }
 
-    private static final byte[][] GHOST_HOUSE_SHAPE = {
+    private static final Shape GHOST_HOUSE_SHAPE = new Shape(new byte[][] {
         { 0, 0, 0,20, 0, 0, 0, 0},
         {10, 8, 8,14,14, 8, 8,11},
         { 9, 0, 0, 0, 0, 0, 0, 9},
         { 9,22, 0,21, 0,23, 0, 9},
         { 9, 0, 0, 0, 0, 0, 0, 9},
         {13, 8, 8, 8, 8, 8, 8,12}
-    };
+    });
 
     private static final Color DEFAULT_WALL_STROKE_COLOR = Color.GREEN;
     private static final Color DEFAULT_WALL_FILL_COLOR = Color.MAROON;
@@ -235,10 +235,10 @@ public class TileMapEditor  {
 
         tabPane.getTabs().addAll(terrainPaletteTab, foodPaletteTab);
 
-        terrainMapPropertiesEditor = new PropertyEditor("Terrain");
+        terrainMapPropertiesEditor = new PropertyEditor("Terrain", this);
         terrainMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
 
-        foodMapPropertiesEditor = new PropertyEditor("Food");
+        foodMapPropertiesEditor = new PropertyEditor("Food", this);
         foodMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
 
         infoLabel = new Label();
@@ -345,7 +345,7 @@ public class TileMapEditor  {
         pathsUpToDate = false;
     }
 
-    private void mapEdited() {
+    public void mapEdited() {
         edited = true;
     }
 
@@ -364,7 +364,7 @@ public class TileMapEditor  {
     }
 
     private void addHouse() {
-        addShape(GHOST_HOUSE_SHAPE, 14, 10);
+        GHOST_HOUSE_SHAPE.addToMap(map.terrain(), 14, 10);
         map.terrain().set(26, 13, Tiles.PAC_HOME);
         invalidatePaths();
         mapEdited();
@@ -396,8 +396,8 @@ public class TileMapEditor  {
     public void setMap(WorldMap other) {
         checkNotNull(other);
         map = other;
-        foodMapPropertiesEditor.edit(map.food().getProperties());
-        terrainMapPropertiesEditor.edit(map.terrain().getProperties());
+        foodMapPropertiesEditor.edit(this, map.food().getProperties());
+        terrainMapPropertiesEditor.edit(this, map.terrain().getProperties());
 
         invalidatePaths();
         updatePaths();
@@ -405,11 +405,14 @@ public class TileMapEditor  {
 
     public void loadMap(WorldMap other) {
         checkNotNull(other);
-        if (hasUnsavedChanges()) {
-            showQuitConfirmation(() -> {});
-        } else {
+        Runnable action = () -> {
             setMap(WorldMap.copyOf(other));
             currentMapFile = null;
+        };
+        if (hasUnsavedChanges()) {
+            showConfirmation(
+                this::saveMapFileAs,
+                () -> {});
         }
     }
 
@@ -465,29 +468,29 @@ public class TileMapEditor  {
         }
     }
 
-    public void showQuitConfirmation(Runnable quitAction) {
+    public void showConfirmation(Runnable saveAction, Runnable dontSaveAction) {
         if (hasUnsavedChanges()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("There are unsaved changes");
             alert.setHeaderText("Save changes?");
             alert.setContentText("You can save your changes or leave without saving");
-            var saveChanges = new ButtonType("Save Changes");
-            var leaveWithoutSaving = new ButtonType("Don't Save");
-            var closeDialog = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-            alert.getButtonTypes().setAll(saveChanges, leaveWithoutSaving, closeDialog);
+            var saveChoice = new ButtonType("Save Changes");
+            var dontSaveChoice = new ButtonType("Don't Save");
+            var cancelChoice = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+            alert.getButtonTypes().setAll(saveChoice, dontSaveChoice, cancelChoice);
             alert.showAndWait().ifPresent(choice -> {
-                if (choice == saveChanges) {
-                    saveMapFileAs();
-                } else if (choice == leaveWithoutSaving) {
+                if (choice == saveChoice) {
+                    saveAction.run();
+                } else if (choice == dontSaveChoice) {
                     stop();
-                    quitAction.run();
-                } else if (choice == closeDialog) {
-                    return;
+                    dontSaveAction.run();
+                } else if (choice == cancelChoice) {
+                    return; // nothing to do?
                 }
             });
         } else {
             stop();
-            quitAction.run();
+            dontSaveAction.run();
         }
     }
 

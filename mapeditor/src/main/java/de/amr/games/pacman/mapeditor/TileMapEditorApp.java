@@ -46,7 +46,7 @@ public class TileMapEditorApp extends Application  {
         layout.setTop(editor.getMenuBar());
 
         var miQuit = new MenuItem("Quit");
-        miQuit.setOnAction(e -> editor.showQuitConfirmation(stage::close));
+        miQuit.setOnAction(e -> editor.showConfirmation(editor::saveMapFileAs, stage::close));
         editor.menuFile().getItems().add(miQuit);
 
 
@@ -57,7 +57,7 @@ public class TileMapEditorApp extends Application  {
 
         stage.setScene(scene);
         stage.titleProperty().bind(editor.titlePy);
-        stage.setOnCloseRequest(e -> editor.showQuitConfirmation(stage::close));
+        stage.setOnCloseRequest(e -> editor.showConfirmation(editor::saveMapFileAs, stage::close));
         stage.show();
 
         editor.loadMap(editor.getPredefinedMap("Pac-Man XXL 4"));
