@@ -48,6 +48,7 @@ public class PropertyEditor extends BorderPane {
             editedProperties.put("aaa_new_property", "first_value");
             updateTable();
         });
+        btnAddEntry.disableProperty().bind(enabledPy.not());
         var header = new HBox(lblTitle, btnAddEntry);
         header.setSpacing(5);
 
@@ -70,13 +71,12 @@ public class PropertyEditor extends BorderPane {
             TextField nameEditor = new TextField(String.valueOf(entry.getKey()));
             int nameColumnMinWidth = 100;
             nameEditor.setMinWidth(nameColumnMinWidth);
+            nameEditor.disableProperty().bind(enabledPy.not());
             grid.add(nameEditor, 0, row);
             if (entry.getKey().toString().endsWith("_color")) {
                 var colorPicker = new ColorPicker();
                 colorPicker.setValue(parseColor(String.valueOf(entry.getValue())));
-                colorPicker.setOnAction(e -> {
-                    saveEditedEntry(nameEditor, formatColor(colorPicker.getValue()));
-                });
+                colorPicker.setOnAction(e -> saveEditedEntry(nameEditor, formatColor(colorPicker.getValue())));
                 colorPicker.disableProperty().bind(enabledPy.not());
                 nameEditor.setOnAction(e -> saveEditedEntry(nameEditor, formatColor(colorPicker.getValue())));
                 grid.add(colorPicker, 1, row);
