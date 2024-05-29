@@ -107,7 +107,7 @@ public class TileMapEditor  {
     private final Map<String, WorldMap> predefinedMaps = new HashMap<>();
 
     private final Text editHint = new Text("Click to Start Editing!");
-    private boolean edited;
+    private boolean unsavedChanges;
     private Vector2i hoveredTile;
     private File lastUsedDir;
     private File currentMapFile;
@@ -166,6 +166,7 @@ public class TileMapEditor  {
     public void stop() {
         clock.stop();
         editingEnabledPy.set(false);
+        unsavedChanges = false;
     }
 
     private void createLayout() {
@@ -351,11 +352,11 @@ public class TileMapEditor  {
     }
 
     public void markMapEdited() {
-        edited = true;
+        unsavedChanges = true;
     }
 
     public boolean hasUnsavedChanges() {
-        return edited;
+        return unsavedChanges;
     }
 
     private void addShape(byte[][] shape, int topLeftRow, int topLeftCol) {
@@ -465,7 +466,7 @@ public class TileMapEditor  {
             lastUsedDir = file.getParentFile();
             if (file.getName().endsWith(".world")) {
                 map.save(file);
-                edited = false;
+                unsavedChanges = false;
                 readMapFile(file);
             } else {
                 Logger.error("No .world file selected"); //TODO
@@ -487,7 +488,6 @@ public class TileMapEditor  {
                 if (choice == saveChoice) {
                     saveAction.run();
                 } else if (choice == dontSaveChoice) {
-                    stop();
                     dontSaveAction.run();
                 } else if (choice == cancelChoice) {
                     return; // nothing to do?
