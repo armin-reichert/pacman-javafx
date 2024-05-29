@@ -51,7 +51,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class TileMapEditor  {
 
-    static Palette.EditorTool tool(byte value, String description) {
+    private static Palette.EditorTool tool(byte value, String description) {
         return new Palette.EditorTool(value, description);
     }
 
@@ -64,7 +64,7 @@ public class TileMapEditor  {
         return map;
     }
 
-    static final byte[][] GHOST_HOUSE_SHAPE = {
+    private static final byte[][] GHOST_HOUSE_SHAPE = {
         { 0, 0, 0,20, 0, 0, 0, 0},
         {10, 8, 8,14,14, 8, 8,11},
         { 9, 0, 0, 0, 0, 0, 0, 9},
@@ -85,12 +85,10 @@ public class TileMapEditor  {
     public final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
 
     private Window ownerWindow;
-
     private MenuBar menuBar;
     private Menu menuFile;
     private Menu menuEdit;
     private Menu menuLoadMap;
-
     private Pane layout;
     private Canvas editCanvas;
     private Canvas previewCanvas;
@@ -113,12 +111,18 @@ public class TileMapEditor  {
     private boolean editingEnabled;
     private boolean edited;
     private Vector2i hoveredTile;
-    private File lastUsedDir = new File(System.getProperty("user.dir"));
+    private File lastUsedDir;
     private File currentMapFile;
 
     private final Timeline clock;
 
     public TileMapEditor() {
+        this(new File(System.getProperty("user.dir")));
+    }
+
+    public TileMapEditor(File workDir) {
+        lastUsedDir = workDir;
+
         terrainMapRenderer = new TileMapEditorTerrainRenderer();
         terrainMapRenderer.setWallStrokeColor(DEFAULT_WALL_STROKE_COLOR);
         terrainMapRenderer.setWallFillColor(DEFAULT_WALL_FILL_COLOR);

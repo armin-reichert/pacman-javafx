@@ -207,7 +207,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
                 }
             }
         });
-        editor = new TileMapEditor();
+        editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
         embedMapEditor(stage);
     }
 
