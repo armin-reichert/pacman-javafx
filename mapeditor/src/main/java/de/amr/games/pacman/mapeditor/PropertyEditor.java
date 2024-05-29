@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.mapeditor;
 
 import javafx.beans.property.*;
@@ -17,6 +21,9 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Properties;
 
+/**
+ * @author Armin Reichert
+ */
 public class PropertyEditor extends BorderPane {
 
     public static Color parseColor(String colorText) {
