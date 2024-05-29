@@ -63,7 +63,7 @@ public class TileMapEditor  {
         return map;
     }
 
-    private static final Shape GHOST_HOUSE_SHAPE = new Shape(new byte[][] {
+    private static final RectShape GHOST_HOUSE_SHAPE = new RectShape(new byte[][] {
         { 0, 0, 0,20, 0, 0, 0, 0},
         {10, 8, 8,14,14, 8, 8,11},
         { 9, 0, 0, 0, 0, 0, 0, 9},

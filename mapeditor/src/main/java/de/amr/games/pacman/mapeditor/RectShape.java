@@ -2,11 +2,11 @@ package de.amr.games.pacman.mapeditor;
 
 import de.amr.games.pacman.lib.TileMap;
 
-public class Shape {
+public class RectShape {
 
     private final byte[][] data;
 
-    public Shape(byte[][] data) {
+    public RectShape(byte[][] data) {
         this.data = data;
     }
 
