@@ -50,8 +50,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class TileMapEditor  {
 
-    private static Color BG_COLOR = Color.BISQUE;
-
     private static Palette.EditorTool tool(byte value, String description) {
         return new Palette.EditorTool(value, description);
     }
@@ -362,16 +360,6 @@ public class TileMapEditor  {
         return unsavedChanges;
     }
 
-    private void addShape(byte[][] shape, int topLeftRow, int topLeftCol) {
-        for (int row = 0; row < shape.length; ++row) {
-            for (int col = 0; col < shape[0].length; ++col) {
-                map.terrain().set(topLeftRow + row, topLeftCol+ col, shape[row][col]);
-            }
-        }
-        invalidatePaths();
-        markMapEdited();
-    }
-
     private void addHouse() {
         GHOST_HOUSE_SHAPE.addToMap(map.terrain(), 14, 10);
         map.terrain().set(26, 13, Tiles.PAC_HOME);
@@ -492,8 +480,6 @@ public class TileMapEditor  {
                     saveAction.run();
                 } else if (choice == dontSaveChoice) {
                     dontSaveAction.run();
-                } else if (choice == cancelChoice) {
-                    return; // nothing to do?
                 }
             });
         } else {
