@@ -60,8 +60,8 @@ public class TileMapEditorApp extends Application  {
         stage.setOnCloseRequest(e -> editor.showConfirmation(editor::saveMapFileAs, stage::close));
         stage.show();
 
-        editor.loadMap(editor.getPredefinedMap("Pac-Man XXL 4"));
         editor.start();
+        editor.loadMap(editor.getPredefinedMap("Pac-Man"));
     }
 
     private void addPredefinedMaps() {

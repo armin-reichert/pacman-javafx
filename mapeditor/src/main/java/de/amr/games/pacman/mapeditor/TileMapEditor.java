@@ -24,10 +24,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -49,6 +46,8 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  * @author Armin Reichert
  */
 public class TileMapEditor  {
+
+    private static Color BG_COLOR = Color.BISQUE;
 
     private static Palette.EditorTool tool(byte value, String description) {
         return new Palette.EditorTool(value, description);
@@ -171,6 +170,9 @@ public class TileMapEditor  {
 
     private void createLayout() {
         openDialog = new FileChooser();
+        var worldExtensionFilter = new FileChooser.ExtensionFilter("World Map Files", ".world");
+        openDialog.getExtensionFilters().add(worldExtensionFilter);
+        openDialog.setSelectedExtensionFilter(worldExtensionFilter);
         openDialog.setInitialDirectory(lastUsedDir);
 
         editCanvas = new Canvas();
@@ -255,13 +257,13 @@ public class TileMapEditor  {
         terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
         foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
-        var editCanvasScrollPane = new ScrollPane(editCanvas);
-        editCanvasScrollPane.setFitToHeight(true);
+        var editCanvasScroll = new ScrollPane(editCanvas);
+        editCanvasScroll.setFitToHeight(true);
 
-        var previewCanvasScrollPane = new ScrollPane(previewCanvas);
-        previewCanvasScrollPane.setFitToHeight(true);
+        var previewCanvasScroll = new ScrollPane(previewCanvas);
+        previewCanvasScroll.setFitToHeight(true);
 
-        var hbox = new HBox(editCanvasScrollPane, controlsPane, previewCanvasScrollPane);
+        var hbox = new HBox(editCanvasScroll, controlsPane, previewCanvasScroll);
         hbox.setSpacing(10);
 
         layout = new BorderPane(hbox);
@@ -270,7 +272,9 @@ public class TileMapEditor  {
     private void createMenus() {
         createFileMenu();
         createActionsMenu();
+
         menuLoadMap = new Menu("Load Map");
+        menuLoadMap.disableProperty().bind(editingEnabledPy.not());
         menuBar = new MenuBar();
         menuBar.getMenus().addAll(menuFile, menuEdit, menuLoadMap);
     }
@@ -304,6 +308,7 @@ public class TileMapEditor  {
 
         menuEdit = new Menu("Edit");
         menuEdit.getItems().addAll(miAddBorder, miAddHouse, miClearTerrain, miClearFood);
+        menuEdit.disableProperty().bind(editingEnabledPy.not());
     }
 
     public void addPredefinedMap(String description, WorldMap map) {
@@ -398,7 +403,6 @@ public class TileMapEditor  {
         map = other;
         foodMapPropertiesEditor.edit(map.food().getProperties());
         terrainMapPropertiesEditor.edit(map.terrain().getProperties());
-
         invalidatePaths();
         updatePaths();
     }
@@ -410,6 +414,10 @@ public class TileMapEditor  {
                 setMap(WorldMap.copyOf(otherMap));
                 currentMapFile = null;
             });
+        } else {
+            var copy  = WorldMap.copyOf(otherMap);
+            setMap(copy);
+            currentMapFile = null;
         }
     }
 
@@ -432,8 +440,8 @@ public class TileMapEditor  {
     }
 
     private void openMapFile() {
+        openDialog.setTitle("Open Pac-Man Map");
         openDialog.setInitialDirectory(lastUsedDir);
-        openDialog.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Word Map Files", ".world"));
         File file = openDialog.showOpenDialog(ownerWindow);
         if (file != null) {
             readMapFile(file);
@@ -450,8 +458,8 @@ public class TileMapEditor  {
     }
 
     public void saveMapFileAs() {
+        openDialog.setTitle("Save Pac-Man Map");
         openDialog.setInitialDirectory(lastUsedDir);
-        openDialog.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("World Map Files", ".world"));
         File file = openDialog.showSaveDialog(ownerWindow);
         if (file != null) {
             lastUsedDir = file.getParentFile();
