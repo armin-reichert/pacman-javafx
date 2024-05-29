@@ -92,7 +92,7 @@ public class TileMapEditor  {
     private Canvas editCanvas;
     private Canvas previewCanvas;
     private Label infoLabel;
-    private FileChooser openDialog;
+    private FileChooser fileChooser;
 
     private Palette terrainPalette;
     private PropertyEditor terrainMapPropertiesEditor;
@@ -170,11 +170,11 @@ public class TileMapEditor  {
     }
 
     private void createLayout() {
-        openDialog = new FileChooser();
+        fileChooser = new FileChooser();
         var worldExtensionFilter = new FileChooser.ExtensionFilter("World Map Files", ".world");
-        openDialog.getExtensionFilters().add(worldExtensionFilter);
-        openDialog.setSelectedExtensionFilter(worldExtensionFilter);
-        openDialog.setInitialDirectory(lastUsedDir);
+        fileChooser.getExtensionFilters().add(worldExtensionFilter);
+        fileChooser.setSelectedExtensionFilter(worldExtensionFilter);
+        fileChooser.setInitialDirectory(lastUsedDir);
 
         editCanvas = new Canvas();
         editCanvas.setOnMouseClicked(this::onMouseClickedOnEditCanvas);
@@ -441,9 +441,9 @@ public class TileMapEditor  {
     }
 
     private void openMapFile() {
-        openDialog.setTitle("Open Pac-Man Map");
-        openDialog.setInitialDirectory(lastUsedDir);
-        File file = openDialog.showOpenDialog(ownerWindow);
+        fileChooser.setTitle("Open Pac-Man Map");
+        fileChooser.setInitialDirectory(lastUsedDir);
+        File file = fileChooser.showOpenDialog(ownerWindow);
         if (file != null) {
             readMapFile(file);
         }
@@ -459,9 +459,9 @@ public class TileMapEditor  {
     }
 
     public void saveMapFileAs() {
-        openDialog.setTitle("Save Pac-Man Map");
-        openDialog.setInitialDirectory(lastUsedDir);
-        File file = openDialog.showSaveDialog(ownerWindow);
+        fileChooser.setTitle("Save Pac-Man Map");
+        fileChooser.setInitialDirectory(lastUsedDir);
+        File file = fileChooser.showSaveDialog(ownerWindow);
         if (file != null) {
             lastUsedDir = file.getParentFile();
             if (file.getName().endsWith(".world")) {
