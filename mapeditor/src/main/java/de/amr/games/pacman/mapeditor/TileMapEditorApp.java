@@ -65,7 +65,7 @@ public class TileMapEditorApp extends Application  {
     }
 
     private void addPredefinedMaps() {
-        editor.addPredefinedMap("Pac-Man", loadMap(getClass().getResource("maps/pacman.world")));
+        editor.addPredefinedMap("Pac-Man", loadMap(getClass().getResource("/de/amr/games/pacman/mapeditor/maps/pacman.world")));
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
         rangeClosed(1, 6).forEach(mapNumber -> editor.addPredefinedMap("Ms. Pac-Man " + mapNumber,
             loadMap(getClass().getResource("/de/amr/games/pacman/mapeditor/maps/mspacman/mspacman_" + mapNumber + ".world")))
