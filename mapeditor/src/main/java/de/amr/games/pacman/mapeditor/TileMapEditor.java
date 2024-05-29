@@ -345,7 +345,7 @@ public class TileMapEditor  {
         pathsUpToDate = false;
     }
 
-    public void mapEdited() {
+    public void markMapEdited() {
         edited = true;
     }
 
@@ -360,14 +360,14 @@ public class TileMapEditor  {
             }
         }
         invalidatePaths();
-        mapEdited();
+        markMapEdited();
     }
 
     private void addHouse() {
         GHOST_HOUSE_SHAPE.addToMap(map.terrain(), 14, 10);
         map.terrain().set(26, 13, Tiles.PAC_HOME);
         invalidatePaths();
-        mapEdited();
+        markMapEdited();
     }
 
     private void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
@@ -390,29 +390,26 @@ public class TileMapEditor  {
         terrain.set(terrain.numRows() - emptyRowsBottom, terrain.numCols() - 1, Tiles.SCATTER_TARGET_CYAN);
 
         invalidatePaths();
-        mapEdited();
+        markMapEdited();
     }
 
     public void setMap(WorldMap other) {
         checkNotNull(other);
         map = other;
-        foodMapPropertiesEditor.edit(this, map.food().getProperties());
-        terrainMapPropertiesEditor.edit(this, map.terrain().getProperties());
+        foodMapPropertiesEditor.edit(map.food().getProperties());
+        terrainMapPropertiesEditor.edit(map.terrain().getProperties());
 
         invalidatePaths();
         updatePaths();
     }
 
-    public void loadMap(WorldMap other) {
-        checkNotNull(other);
-        Runnable action = () -> {
-            setMap(WorldMap.copyOf(other));
-            currentMapFile = null;
-        };
+    public void loadMap(WorldMap otherMap) {
+        checkNotNull(otherMap);
         if (hasUnsavedChanges()) {
-            showConfirmation(
-                this::saveMapFileAs,
-                () -> {});
+            showConfirmation(this::saveMapFileAs, () -> {
+                setMap(WorldMap.copyOf(otherMap));
+                currentMapFile = null;
+            });
         }
     }
 
@@ -659,10 +656,10 @@ public class TileMapEditor  {
         if (e.isShiftDown()) {
             if (terrainEditedPy.get()) {
                 map.terrain().set(hoveredTile, terrainPalette.selectedValue);
-                mapEdited();
+                markMapEdited();
             } else {
                 map.food().set(hoveredTile, foodPalette.selectedValue);
-                mapEdited();
+                markMapEdited();
             }
         }
         invalidatePaths();
@@ -682,7 +679,7 @@ public class TileMapEditor  {
             map.terrain().set(tile, terrainPalette.selectedValue);
         }
         invalidatePaths();
-        mapEdited();
+        markMapEdited();
     }
 
     private void onFoodTileClicked(MouseEvent e) {
@@ -698,6 +695,6 @@ public class TileMapEditor  {
         else {
             map.food().set(tile, foodPalette.selectedValue);
         }
-        mapEdited();
+        markMapEdited();
     }
 }

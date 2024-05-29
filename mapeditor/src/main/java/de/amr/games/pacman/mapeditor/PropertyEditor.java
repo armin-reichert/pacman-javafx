@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.mapeditor;
 
-import de.amr.games.pacman.lib.TileMap;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -42,11 +42,14 @@ public class PropertyEditor extends BorderPane {
 
     public final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
 
+    private final TileMapEditor editor;
     private Properties editedProperties;
     private final GridPane grid = new GridPane();
     private int numRows;
 
     public PropertyEditor(String title, TileMapEditor editor) {
+        this.editor = editor;
+
         var lblTitle = new Label(title);
         lblTitle.setFont(Font.font("Sans", FontWeight.BOLD, 14));
 
@@ -54,7 +57,7 @@ public class PropertyEditor extends BorderPane {
         btnAddEntry.setStyle("-fx-padding: 0 2 0 2");
         btnAddEntry.setOnAction(e -> {
             editedProperties.put("aaa_new_property", "first_value");
-            updateTable(editor);
+            updateEditors();
         });
         btnAddEntry.disableProperty().bind(enabledPy.not());
         var header = new HBox(lblTitle, btnAddEntry);
@@ -64,12 +67,12 @@ public class PropertyEditor extends BorderPane {
         setCenter(grid);
     }
 
-    public void edit(TileMapEditor editor, Properties editedProperties) {
-        this.editedProperties = editedProperties;
-        updateTable(editor);
+    public void edit(Properties properties) {
+        this.editedProperties = properties;
+        updateEditors();
     }
 
-    private void updateTable(TileMapEditor editor) {
+    private void updateEditors() {
         grid.getChildren().clear();
         grid.setHgap(2);
         grid.setVgap(1);
@@ -84,16 +87,16 @@ public class PropertyEditor extends BorderPane {
             if (entry.getKey().toString().endsWith("_color")) {
                 var colorPicker = new ColorPicker();
                 colorPicker.setValue(parseColor(String.valueOf(entry.getValue())));
-                colorPicker.setOnAction(e -> saveEditedEntry(editor, nameEditor, formatColor(colorPicker.getValue())));
+                colorPicker.setOnAction(e -> editProperty(nameEditor, formatColor(colorPicker.getValue())));
                 colorPicker.disableProperty().bind(enabledPy.not());
-                nameEditor.setOnAction(e -> saveEditedEntry(editor, nameEditor, formatColor(colorPicker.getValue())));
+                nameEditor.setOnAction(e -> editProperty(nameEditor, formatColor(colorPicker.getValue())));
                 grid.add(colorPicker, 1, row);
             } else {
                 var inputField = new TextField();
                 inputField.setText(String.valueOf(entry.getValue()));
-                inputField.setOnAction(e -> saveEditedEntry(editor, nameEditor, inputField.getText()));
+                inputField.setOnAction(e -> editProperty(nameEditor, inputField.getText()));
                 inputField.disableProperty().bind(enabledPy.not());
-                nameEditor.setOnAction(e -> saveEditedEntry(editor, nameEditor, inputField.getText()));
+                nameEditor.setOnAction(e -> editProperty(nameEditor, inputField.getText()));
                 grid.add(inputField, 1, row);
             }
             ++row;
@@ -101,24 +104,22 @@ public class PropertyEditor extends BorderPane {
         numRows = row;
     }
 
-    private void saveEditedEntry(TileMapEditor editor, TextField nameEditor, Object value) {
-        String entryKey = nameEditor.getText().trim();
-        Logger.info("Save entry {}: {}", entryKey, value);
-        if (!entryKey.isBlank()) {
-            editedProperties.put(entryKey, value);
+    private void editProperty(TextField nameEditor, Object value) {
+        String name = nameEditor.getText().trim();
+        if (!name.isBlank()) {
+            editedProperties.put(name, value);
         }
-        var names = new HashSet<>();
+        var propertyNames = new HashSet<>();
         for (int row = 0; row < numRows; ++row) {
-            TextField ne = (TextField) grid.getChildren().get(2*row);
-            names.add(ne.getText());
+            var nameField = (TextField) grid.getChildren().get(2 * row);
+            propertyNames.add(nameField.getText());
         }
-        for (var key : editedProperties.keySet()) {
-            if (!names.contains(key)) {
-                editedProperties.remove(key);
+        for (Object propertyName : editedProperties.keySet()) {
+            if (!propertyNames.contains(propertyName)) {
+                editedProperties.remove(propertyName);
             }
         }
-        editor.mapEdited();
-        updateTable(editor);
-        editedProperties.list(System.out);
+        editor.markMapEdited();
+        updateEditors();
     }
 }
