@@ -45,6 +45,7 @@ public class WorldMap {
     }
 
     public WorldMap(URL url) {
+        checkNotNull(url);
         try {
             this.url = url;
             var r = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8));

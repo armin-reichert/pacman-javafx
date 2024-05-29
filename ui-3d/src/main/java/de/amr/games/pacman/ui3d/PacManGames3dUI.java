@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
+import de.amr.games.pacman.lib.WorldMap;
 import de.amr.games.pacman.mapeditor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -229,20 +230,20 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         // preload maps
         editor.addPredefinedMap(
             "Pac-Man",
-            GameModel.loadMap(GameModel.class.getResource("/de/amr/games/pacman/maps/pacman.world")));
+            new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/pacman.world")));
 
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
 
         rangeClosed(1, 6).forEach(mapNumber -> editor.addPredefinedMap(
             "Ms. Pac-Man " + mapNumber,
-            GameModel.loadMap(GameModel.class.getResource("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world")))
+            new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world")))
         );
 
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
 
         rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap(
             "Pac-Man XXL " + mapNumber,
-            GameModel.loadMap(GameModel.class.getResource("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world")))
+            new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world")))
         );
     }
 

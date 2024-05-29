@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.mapeditor;
 
+import de.amr.games.pacman.lib.WorldMap;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
@@ -13,7 +14,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import static de.amr.games.pacman.model.GameModel.loadMap;
 import static java.util.stream.IntStream.rangeClosed;
 
 /**
@@ -65,14 +65,14 @@ public class TileMapEditorApp extends Application  {
     }
 
     private void addPredefinedMaps() {
-        editor.addPredefinedMap("Pac-Man", loadMap(getClass().getResource("/de/amr/games/pacman/mapeditor/maps/pacman.world")));
+        editor.addPredefinedMap("Pac-Man", new WorldMap(getClass().getResource("/de/amr/games/pacman/mapeditor/maps/pacman.world")));
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
         rangeClosed(1, 6).forEach(mapNumber -> editor.addPredefinedMap("Ms. Pac-Man " + mapNumber,
-            loadMap(getClass().getResource("/de/amr/games/pacman/mapeditor/maps/mspacman/mspacman_" + mapNumber + ".world")))
+            new WorldMap(getClass().getResource("/de/amr/games/pacman/mapeditor/maps/mspacman/mspacman_" + mapNumber + ".world")))
         );
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
         rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap("Pac-Man XXL " + mapNumber,
-            loadMap(getClass().getResource("/de/amr/games/pacman/mapeditor/maps/masonic/masonic_" + mapNumber + ".world")))
+            new WorldMap(getClass().getResource("/de/amr/games/pacman/mapeditor/maps/masonic/masonic_" + mapNumber + ".world")))
         );
     }
 }

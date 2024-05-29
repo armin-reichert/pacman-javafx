@@ -5,10 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.NavPoint;
-import de.amr.games.pacman.lib.TickTimer;
-import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.*;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.model.world.House;
@@ -107,7 +104,7 @@ public class PacManGame extends AbstractPacManGame {
     //TODO: store some of this info in map?
     protected World createPacManWorld() {
         URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/pacman.world");
-        var map = GameModel.loadMap(mapURL);
+        var map = new WorldMap(mapURL);
         var world = new World(map);
         world.addHouse(House.createArcadeHouse(), v2i(10, 15));
         world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});

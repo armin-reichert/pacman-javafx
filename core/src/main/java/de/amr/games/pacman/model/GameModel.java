@@ -13,15 +13,14 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import org.tinylog.Logger;
 
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
  * Common interface of all game models.
@@ -46,13 +45,6 @@ public interface GameModel {
             throw GameException.illegalLevelNumber(number);
         }
         return number;
-    }
-
-    static WorldMap loadMap(URL mapURL) {
-        checkNotNull(mapURL);
-        WorldMap map = new WorldMap(mapURL);
-        Logger.info("Map loaded from URL {}", mapURL);
-        return map;
     }
 
     File GAME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");

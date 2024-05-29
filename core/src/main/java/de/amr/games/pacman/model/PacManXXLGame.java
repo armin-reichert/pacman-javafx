@@ -51,13 +51,13 @@ public class PacManXXLGame extends PacManGame {
             case 2, 3, 4, 5, 6, 7, 8, 9 -> {
                 int mapNumber = levelNumber - 1;
                 URL mapURL = getClass().getResource(String.format("/de/amr/games/pacman/maps/masonic/masonic_%d.world", mapNumber));
-                var map = GameModel.loadMap(mapURL);
+                var map = new WorldMap(mapURL);
                 yield createModernWorld(map);
             }
             default -> {
                 int mapNumber = randomInt(1, 9);
                 URL mapURL = getClass().getResource(String.format("/de/amr/games/pacman/maps/masonic/masonic_%d.world", mapNumber));
-                var map = GameModel.loadMap(mapURL);
+                var map = new WorldMap(mapURL);
                 yield createModernWorld(map);
             }
         };

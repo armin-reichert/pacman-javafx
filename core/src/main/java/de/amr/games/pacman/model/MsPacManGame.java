@@ -110,7 +110,7 @@ public class MsPacManGame extends AbstractPacManGame  {
         this.levelNumber = checkLevelNumber(levelNumber);
         this.mapNumber = mapNumberByLevelNumber(levelNumber);
         URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world");
-        var map = GameModel.loadMap(mapURL);
+        var map = new WorldMap(mapURL);
         var msPacManWorld = createMsPacManWorld(map);
         setWorldAndCreatePopulation(msPacManWorld);
         pac.setName("Ms. Pac-Man");
@@ -124,7 +124,7 @@ public class MsPacManGame extends AbstractPacManGame  {
         levelNumber = 1;
         mapNumber = randomInt(1, 7);
         var mapURL = getClass().getResource(String.format("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world", mapNumber));
-        var map = GameModel.loadMap(mapURL);
+        var map = new WorldMap(mapURL);
         setWorldAndCreatePopulation(createMsPacManWorld(map));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
