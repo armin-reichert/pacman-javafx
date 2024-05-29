@@ -33,7 +33,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -97,12 +96,12 @@ public class TileMapEditor  {
 
     private Palette terrainPalette;
     private PropertyEditor terrainMapPropertiesEditor;
-    private final TileMapEditorTerrainRenderer terrainMapRenderer;
+    private TileMapEditorTerrainRenderer terrainMapRenderer;
     private boolean pathsUpToDate;
 
     private Palette foodPalette;
     private PropertyEditor foodMapPropertiesEditor;
-    private final FoodMapRenderer foodMapRenderer;
+    private FoodMapRenderer foodMapRenderer;
 
     private WorldMap map;
     private final Map<String, WorldMap> predefinedMaps = new HashMap<>();
@@ -114,14 +113,20 @@ public class TileMapEditor  {
     private File lastUsedDir;
     private File currentMapFile;
 
-    private final Timeline clock;
+    private Timeline clock;
 
     public TileMapEditor() {
-        this(new File(System.getProperty("user.dir")));
+        map = createNewMap(36, 28);
+        lastUsedDir = new File(System.getProperty("user.home"));
     }
 
     public TileMapEditor(File workDir) {
+        map = createNewMap(36, 28);
         lastUsedDir = workDir;
+    }
+
+    public void createUI(Window ownerWindow) {
+        this.ownerWindow = ownerWindow;
 
         terrainMapRenderer = new TileMapEditorTerrainRenderer();
         terrainMapRenderer.setWallStrokeColor(DEFAULT_WALL_STROKE_COLOR);
@@ -131,10 +136,8 @@ public class TileMapEditor  {
         foodMapRenderer.setPelletColor(DEFAULT_FOOD_COLOR);
         foodMapRenderer.setEnergizerColor(DEFAULT_FOOD_COLOR);
 
-        createUI();
+        createLayout();
         createMenus();
-
-        map = createNewMap(36, 28);
 
         // Note: this must be done after having loaded the initial map!
         editCanvas.heightProperty().bind(layout.heightProperty().multiply(0.95));
@@ -157,10 +160,6 @@ public class TileMapEditor  {
         clock.setCycleCount(Animation.INDEFINITE);
     }
 
-    public void setOwnerWindow(Window ownerWindow) {
-        this.ownerWindow = ownerWindow;
-    }
-
     public void start() {
         clock.play();
     }
@@ -170,7 +169,7 @@ public class TileMapEditor  {
         editingEnabled = false;
     }
 
-    private void createUI() {
+    private void createLayout() {
         openDialog = new FileChooser();
         openDialog.setInitialDirectory(lastUsedDir);
 

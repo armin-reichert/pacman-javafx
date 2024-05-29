@@ -6,7 +6,6 @@ package de.amr.games.pacman.tilemapeditor;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.BorderPane;
@@ -22,12 +21,13 @@ import static java.util.stream.IntStream.rangeClosed;
  */
 public class TileMapEditorApp extends Application  {
 
-    private TileMapEditor editor;
+    private final TileMapEditor editor = new TileMapEditor();
 
     @Override
     public void start(Stage stage) {
         try {
-            editor = new TileMapEditor();
+            editor.createUI(stage);
+            addPredefinedMaps();
 
             var layout = new BorderPane();
             layout.setCenter(editor.getLayout());
@@ -37,7 +37,6 @@ public class TileMapEditorApp extends Application  {
             miQuit.setOnAction(e -> editor.showQuitConfirmation(stage::close));
             editor.menuFile().getItems().add(miQuit);
 
-            addPredefinedMaps(editor.menuLoadMap());
 
             double height = Math.max(0.7 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
             double width = 1.9 * height;
@@ -49,7 +48,6 @@ public class TileMapEditorApp extends Application  {
             stage.setOnCloseRequest(e -> editor.showQuitConfirmation(stage::close));
             stage.show();
 
-            editor.setOwnerWindow(stage);
             editor.loadMap(editor.getPredefinedMap("Pac-Man XXL 4"));
             editor.start();
         } catch (Exception x) {
@@ -57,13 +55,13 @@ public class TileMapEditorApp extends Application  {
         }
     }
 
-    private void addPredefinedMaps(Menu menu) {
+    private void addPredefinedMaps() {
         editor.addPredefinedMap("Pac-Man", loadMap(getClass().getResource("maps/pacman.world")));
-        menu.getItems().add(new SeparatorMenuItem());
+        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
         rangeClosed(1, 6).forEach(mapNumber -> editor.addPredefinedMap("Ms. Pac-Man " + mapNumber,
             loadMap(getClass().getResource("maps/mspacman/mspacman_" + mapNumber + ".world")))
         );
-        menu.getItems().add(new SeparatorMenuItem());
+        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
         rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap("Pac-Man XXL " + mapNumber,
             loadMap(getClass().getResource("maps/masonic/masonic_" + mapNumber + ".world")))
         );
