@@ -212,7 +212,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     }
 
     private void embedMapEditor(Window window) {
-        editor.setOwnerWindow(window);
+        editor.createUI(window);
         var miQuitEditor = new MenuItem("Back to Game");
         miQuitEditor.setOnAction(e -> quitMapEditor());
         editor.menuFile().getItems().add(miQuitEditor);

@@ -82,6 +82,7 @@ public class TileMapEditor  {
     public final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
     public final BooleanProperty terrainEditedPy = new SimpleBooleanProperty(true);
     public final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
+    public final BooleanProperty editingEnabledPy = new SimpleBooleanProperty(false);
 
     private Window ownerWindow;
     private MenuBar menuBar;
@@ -107,7 +108,6 @@ public class TileMapEditor  {
     private final Map<String, WorldMap> predefinedMaps = new HashMap<>();
 
     private final Text editHint = new Text("Click to Start Editing!");
-    private boolean editingEnabled;
     private boolean edited;
     private Vector2i hoveredTile;
     private File lastUsedDir;
@@ -166,7 +166,7 @@ public class TileMapEditor  {
 
     public void stop() {
         clock.stop();
-        editingEnabled = false;
+        editingEnabledPy.set(false);
     }
 
     private void createLayout() {
@@ -236,7 +236,10 @@ public class TileMapEditor  {
         tabPane.getTabs().addAll(terrainPaletteTab, foodPaletteTab);
 
         terrainMapPropertiesEditor = new PropertyEditor("Terrain");
+        terrainMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
+
         foodMapPropertiesEditor = new PropertyEditor("Food");
+        foodMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
 
         infoLabel = new Label();
 
@@ -558,14 +561,14 @@ public class TileMapEditor  {
             foodMapRenderer.setPelletColor(foodColor);
             foodMapRenderer.drawMap(g, map.food());
         }
-        if (!editingEnabled) {
+        if (!editingEnabledPy.get()) {
             drawEditingHint(g);
         } else {
-            double t1 = tilePx();
             if (hoveredTile != null) {
+                double tilePx = tilePx();
                 g.setStroke(Color.YELLOW);
                 g.setLineWidth(1);
-                g.strokeRect(hoveredTile.x() * t1, hoveredTile.y() * t1, t1, t1);
+                g.strokeRect(hoveredTile.x() * tilePx, hoveredTile.y() * tilePx, tilePx, tilePx);
             }
         }
     }
@@ -633,8 +636,8 @@ public class TileMapEditor  {
     }
 
     private void onMouseClickedOnEditCanvas(MouseEvent e) {
-        if (!editingEnabled) {
-            editingEnabled = true;
+        if (!editingEnabledPy.get()) {
+            editingEnabledPy.set(true);
             return;
         }
         if (terrainEditedPy.get()) {
@@ -646,7 +649,7 @@ public class TileMapEditor  {
     }
 
     private void onMouseMovedOverEditCanvas(MouseEvent e) {
-        if (!editingEnabled) {
+        if (!editingEnabledPy.get()) {
             return;
         }
         hoveredTile = tileAtMousePosition(e.getX(), e.getY());

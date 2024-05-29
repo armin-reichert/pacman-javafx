@@ -1,5 +1,6 @@
 package de.amr.games.pacman.mapeditor;
 
+import javafx.beans.property.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -31,7 +32,7 @@ public class PropertyEditor extends BorderPane {
         return String.format("rgb(%d,%d,%d)", (int)(color.getRed()*255), (int)(color.getGreen()*255), (int)(color.getBlue()*255));
     }
 
-    private int nameColumnMinWidth = 100;
+    public final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
 
     private Properties editedProperties;
     private final GridPane grid = new GridPane();
@@ -67,6 +68,7 @@ public class PropertyEditor extends BorderPane {
         var sortedEntries = editedProperties.entrySet().stream().sorted(Comparator.comparing(Object::toString)).toList();
         for (var entry : sortedEntries) {
             TextField nameEditor = new TextField(String.valueOf(entry.getKey()));
+            int nameColumnMinWidth = 100;
             nameEditor.setMinWidth(nameColumnMinWidth);
             grid.add(nameEditor, 0, row);
             if (entry.getKey().toString().endsWith("_color")) {
@@ -75,12 +77,14 @@ public class PropertyEditor extends BorderPane {
                 colorPicker.setOnAction(e -> {
                     saveEditedEntry(nameEditor, formatColor(colorPicker.getValue()));
                 });
+                colorPicker.disableProperty().bind(enabledPy.not());
                 nameEditor.setOnAction(e -> saveEditedEntry(nameEditor, formatColor(colorPicker.getValue())));
                 grid.add(colorPicker, 1, row);
             } else {
                 var inputField = new TextField();
                 inputField.setText(String.valueOf(entry.getValue()));
                 inputField.setOnAction(e -> saveEditedEntry(nameEditor, inputField.getText()));
+                inputField.disableProperty().bind(enabledPy.not());
                 nameEditor.setOnAction(e -> saveEditedEntry(nameEditor, inputField.getText()));
                 grid.add(inputField, 1, row);
             }
