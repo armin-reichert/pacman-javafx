@@ -101,6 +101,7 @@ public enum Perspective implements CameraController {
         }
     };
 
+    //TODO how to compute these values for arbitrary sized worlds?
     public static int TOTAL_ROTATE = 66;
     public static int TOTAL_TRANSLATE_X = 0;
     public static int TOTAL_TRANSLATE_Y = 330;

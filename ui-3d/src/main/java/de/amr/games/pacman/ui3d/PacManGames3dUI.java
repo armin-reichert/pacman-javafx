@@ -62,9 +62,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         System.setProperty("javafx.sg.warn", "true"); // WTF?
     }
 
-    public static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(
-        "de.amr.games.pacman.ui3d.texts.messages", PacManGames3dUI.class.getModule());
-
     public static final IntegerProperty PY_PIP_HEIGHT                 = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_PX.y());
     public static final IntegerProperty PY_PIP_OPACITY_PERCENTAGE     = new SimpleIntegerProperty(100);
     public static final IntegerProperty PY_SIMULATION_STEPS           = new SimpleIntegerProperty(1);
@@ -88,15 +85,20 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static final KeyCodeCombination KEY_TOGGLE_2D_3D           = alt(KeyCode.DIGIT3);
     public static final KeyCodeCombination KEY_PREV_PERSPECTIVE       = alt(KeyCode.LEFT);
     public static final KeyCodeCombination KEY_NEXT_PERSPECTIVE       = alt(KeyCode.RIGHT);
-
     public static final KeyCodeCombination KEY_SWITCH_EDITOR          = shift_alt(KeyCode.E);
-
-    public static final Picker<String> PICKER_LEVEL_COMPLETE          = Picker.fromBundle(MSG_BUNDLE, "level.complete");
-    public static final Picker<String> PICKER_GAME_OVER               = Picker.fromBundle(MSG_BUNDLE, "game.over");
 
     public static final String NO_TEXTURE                             = "No Texture";
 
+    public static ResourceBundle MSG_BUNDLE;
+    public static Picker<String> PICKER_LEVEL_COMPLETE;
+    public static Picker<String> PICKER_GAME_OVER;
+
     static void addAssets3D() {
+        MSG_BUNDLE = ResourceBundle.getBundle(
+            "de.amr.games.pacman.ui3d.texts.messages", PacManGames3dUI.class.getModule());
+        PICKER_LEVEL_COMPLETE = Picker.fromBundle(MSG_BUNDLE, "level.complete");
+        PICKER_GAME_OVER      = Picker.fromBundle(MSG_BUNDLE, "game.over");
+
         Theme theme = PacManGames2dUI.THEME_2D;
         ResourceManager rm = () -> PacManGames3dUI.class;
 
