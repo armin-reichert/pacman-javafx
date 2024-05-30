@@ -36,18 +36,15 @@ public class GamePage3D extends GamePage {
 
     private static class PictureInPictureView extends Canvas {
 
-        static final double ASPECT_RATIO = 0.777;
-
         private final PlayScene2D displayedScene = new PlayScene2D();
 
         public PictureInPictureView(GameSceneContext context) {
             displayedScene.setContext(context);
-            heightProperty().bind(PY_PIP_HEIGHT);
-            widthProperty().bind(Bindings.createDoubleBinding(() -> getHeight() * ASPECT_RATIO, PY_PIP_HEIGHT));
-            opacityProperty().bind(PY_PIP_OPACITY_PERCENTAGE.divide(100.0));
             displayedScene.setCanvas(this);
             displayedScene.setScoreVisible(true);
-            displayedScene.scalingPy.bind(Bindings.createDoubleBinding(() -> getHeight() / CANVAS_HEIGHT_UNSCALED, PY_PIP_HEIGHT));
+            displayedScene.scalingPy.bind(Bindings.createDoubleBinding(() -> getHeight() / CANVAS_HEIGHT_UNSCALED, heightProperty()));
+            widthProperty().bind(Bindings.createDoubleBinding(() -> getHeight() * 0.777, heightProperty()));
+            opacityProperty().bind(PY_PIP_OPACITY_PERCENTAGE.divide(100.0));
         }
 
         public void draw() {
@@ -68,6 +65,8 @@ public class GamePage3D extends GamePage {
         this.parentScene = parentScene;
 
         pip = new PictureInPictureView(sceneContext);
+        pip.heightProperty().bind(PY_PIP_HEIGHT);
+
         dashboard = new Dashboard(sceneContext);
 
         dashboardLayer = new BorderPane();
