@@ -76,7 +76,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         var game = context.game();
-        if (game.level().isEmpty()) {
+        if (game.world() == null) {
             return;
         }
         var ss = context.getSpriteSheet(game.variant());
