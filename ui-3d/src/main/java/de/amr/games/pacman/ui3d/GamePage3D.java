@@ -4,11 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.page.GamePage;
-import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
@@ -38,22 +35,21 @@ import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
  */
 public class GamePage3D extends GamePage {
 
-    private class PictureInPictureView {
+    private static class PictureInPictureView {
 
         static final double ASPECT_RATIO = 0.777;
 
         private final PlayScene2D displayedScene = new PlayScene2D();
         private final Canvas canvas = new Canvas();
 
-        public void setContext(GameSceneContext context) {
+        public PictureInPictureView(GameSceneContext context) {
             displayedScene.setContext(context);
-            displayedScene.setCanvas(canvas);
-            displayedScene.setScoreVisible(true);
-            displayedScene.scalingPy.bind(Bindings.createDoubleBinding(() -> canvas.getHeight() / CANVAS_HEIGHT_UNSCALED, PY_PIP_HEIGHT));
-
             canvas.heightProperty().bind(PY_PIP_HEIGHT);
             canvas.widthProperty().bind(Bindings.createDoubleBinding(() -> canvas.getHeight() * ASPECT_RATIO, PY_PIP_HEIGHT));
             canvas.opacityProperty().bind(PY_PIP_OPACITY_PERCENTAGE.divide(100.0));
+            displayedScene.setCanvas(canvas);
+            displayedScene.setScoreVisible(true);
+            displayedScene.scalingPy.bind(Bindings.createDoubleBinding(() -> canvas.getHeight() / CANVAS_HEIGHT_UNSCALED, PY_PIP_HEIGHT));
         }
 
         public Canvas canvas() {
@@ -61,11 +57,9 @@ public class GamePage3D extends GamePage {
         }
 
         public void draw() {
-            //TODO not so pretty
-            if (displayedScene.context() == null) {
-                setContext(GamePage3D.this.context);
+            if (canvas.isVisible()) {
+                displayedScene.draw();
             }
-            displayedScene.draw();
         }
     }
 
@@ -77,8 +71,7 @@ public class GamePage3D extends GamePage {
     public GamePage3D(GameSceneContext sceneContext, double width, double height) {
         super(sceneContext, width, height);
 
-        pip = new PictureInPictureView();
-
+        pip = new PictureInPictureView(sceneContext);
         dashboard = new Dashboard(sceneContext);
 
         dashboardLayer = new BorderPane();
@@ -213,9 +206,8 @@ public class GamePage3D extends GamePage {
     public void render() {
         super.render();
         dashboard.update();
-        if (PY_3D_PIP_ON.get() && isCurrentGameScene3D()) {
-            pip.draw();
-        }
+        pip.canvas().setVisible(PY_3D_PIP_ON.get() && isCurrentGameScene3D());
+        pip.draw();
     }
 
     @Override
