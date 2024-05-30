@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
+import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 
 import static de.amr.games.pacman.lib.Globals.t;
@@ -14,6 +15,8 @@ import static de.amr.games.pacman.lib.Globals.t;
  */
 public class MsPacManCreditScene extends GameScene2D {
 
+    private PacManGameSpriteSheet ss;
+
     @Override
     public boolean isCreditVisible() {
         return true;
@@ -22,6 +25,7 @@ public class MsPacManCreditScene extends GameScene2D {
     @Override
     public void init() {
         setScoreVisible(true);
+        ss = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
     }
 
     @Override
@@ -39,7 +43,6 @@ public class MsPacManCreditScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        var ss = classicRenderer.getMsPacManSpriteSheet();
         var font6 = sceneFont(6); // TODO looks bad
         var font8 = sceneFont(8);
         var color = context.theme().color("palette.orange");

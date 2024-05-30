@@ -9,6 +9,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.rendering.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 
 import static de.amr.games.pacman.lib.Globals.t;
 
@@ -25,6 +26,7 @@ public class MsPacManCutScene1 extends GameScene2D {
 
     private MsPacManIntermission1 intermission;
     private ClapperboardAnimation clapAnimation;
+    private MsPacManGameSpriteSheet ss;
 
     @Override
     public boolean isCreditVisible() {
@@ -33,7 +35,7 @@ public class MsPacManCutScene1 extends GameScene2D {
 
     @Override
     public void init() {
-        var ss = classicRenderer.getMsPacManSpriteSheet();
+        ss = (MsPacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
         setScoreVisible(true);
         intermission = new MsPacManIntermission1();
         intermission.msPac.setAnimations(new MsPacManGamePacAnimations(intermission.msPac, ss));
@@ -53,7 +55,6 @@ public class MsPacManCutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        var ss = classicRenderer.getMsPacManSpriteSheet();
         classicRenderer.drawClapperBoard(g, context.theme(), clapAnimation, t(3), t(10));
         classicRenderer.drawPac(g, GameVariant.MS_PACMAN, intermission.msPac);
         classicRenderer.drawPac(g, GameVariant.MS_PACMAN, intermission.pacMan);

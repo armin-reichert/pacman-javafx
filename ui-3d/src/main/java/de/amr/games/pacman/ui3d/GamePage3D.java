@@ -38,18 +38,48 @@ import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
  */
 public class GamePage3D extends GamePage {
 
+    private class PictureInPictureView {
+
+        static final double ASPECT_RATIO = 0.777;
+
+        private final PlayScene2D displayedScene = new PlayScene2D();
+        private final Canvas canvas = new Canvas();
+
+        public void setContext(GameSceneContext context) {
+            displayedScene.setContext(context);
+            displayedScene.setCanvas(canvas);
+            displayedScene.setScoreVisible(true);
+            displayedScene.scalingPy.bind(Bindings.createDoubleBinding(() -> canvas.getHeight() / CANVAS_HEIGHT_UNSCALED, PY_PIP_HEIGHT));
+
+            canvas.heightProperty().bind(PY_PIP_HEIGHT);
+            canvas.widthProperty().bind(Bindings.createDoubleBinding(() -> canvas.getHeight() * ASPECT_RATIO, PY_PIP_HEIGHT));
+            canvas.opacityProperty().bind(PY_PIP_OPACITY_PERCENTAGE.divide(100.0));
+        }
+
+        public Canvas canvas() {
+            return canvas;
+        }
+
+        public void draw() {
+            //TODO not so pretty
+            if (displayedScene.context() == null) {
+                setContext(GamePage3D.this.context);
+            }
+            displayedScene.draw();
+        }
+    }
+
     private final BorderPane dashboardLayer;
     private final Dashboard dashboard;
-
-    private final Canvas pipCanvas = new Canvas();
-    private final PlayScene2D pip = new PlayScene2D();
+    private final PictureInPictureView pip;
     private ContextMenu contextMenu;
 
     public GamePage3D(GameSceneContext sceneContext, double width, double height) {
         super(sceneContext, width, height);
 
+        pip = new PictureInPictureView();
+
         dashboard = new Dashboard(sceneContext);
-        initPip();
 
         dashboardLayer = new BorderPane();
         dashboardLayer.setLeft(dashboard);
@@ -139,20 +169,6 @@ public class GamePage3D extends GamePage {
         }
     }
 
-    private void initPip() {
-        final double ASPECT_RATIO = 0.777;
-        pip.setContext(context);
-        pip.setSpritesheets(
-            (MsPacManGameSpriteSheet) context.getSpriteSheet(GameVariant.MS_PACMAN),
-            (PacManGameSpriteSheet) context.getSpriteSheet(GameVariant.PACMAN));
-        pipCanvas.heightProperty().bind(PY_PIP_HEIGHT);
-        pipCanvas.widthProperty().bind(Bindings.createDoubleBinding(() -> pipCanvas.getHeight() * ASPECT_RATIO, PY_PIP_HEIGHT));
-        pipCanvas.opacityProperty().bind(PY_PIP_OPACITY_PERCENTAGE.divide(100.0));
-        pip.scalingPy.bind(Bindings.createDoubleBinding(() -> pipCanvas.getHeight() / CANVAS_HEIGHT_UNSCALED, PY_PIP_HEIGHT));
-        pip.setCanvas(pipCanvas);
-        pip.setScoreVisible(true);
-    }
-
     @Override
     public void onGameSceneChanged(GameScene newGameScene) {
         if (isCurrentGameScene3D()) {
@@ -197,8 +213,9 @@ public class GamePage3D extends GamePage {
     public void render() {
         super.render();
         dashboard.update();
-        pip.canvas().setVisible(PY_3D_PIP_ON.get() && isCurrentGameScene3D());
-        //pip.draw();
+        if (PY_3D_PIP_ON.get() && isCurrentGameScene3D()) {
+            pip.draw();
+        }
     }
 
     @Override

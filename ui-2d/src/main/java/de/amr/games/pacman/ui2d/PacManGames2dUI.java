@@ -149,6 +149,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
         theme.set("ms_pacman.spritesheet.image",       rm.loadImage("graphics/mspacman/mspacman_spritesheet.png"));
         theme.set("ms_pacman.spritesheet.image.mazes", rm.loadImage("graphics/mspacman/mazes_flashing.png"));
+        theme.set("ms_pacman.spritesheet",             new MsPacManGameSpriteSheet(
+            theme.get("ms_pacman.spritesheet.image"), theme.get("ms_pacman.spritesheet.image.mazes")));
 
         theme.set("ms_pacman.icon",                    rm.loadImage("graphics/icons/mspacman.png"));
         theme.set("ms_pacman.logo.midway",             rm.loadImage("graphics/mspacman/midway_logo.png"));
@@ -182,6 +184,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
         theme.set("pacman.spritesheet.image",         rm.loadImage("graphics/pacman/pacman_spritesheet.png"));
         theme.set("pacman.spritesheet.image.mazes",   rm.loadImage("graphics/pacman/maze_flashing.png"));
+        theme.set("pacman.spritesheet",               new PacManGameSpriteSheet(
+            theme.get("pacman.spritesheet.image"),theme.get("pacman.spritesheet.image.mazes")));
 
         theme.set("pacman.icon",                      rm.loadImage("graphics/icons/pacman.png"));
 
@@ -219,8 +223,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     protected Stage stage;
     protected Scene mainScene;
     protected String currentPageID;
-    protected MsPacManGameSpriteSheet ssMsPacMan;
-    protected PacManGameSpriteSheet ssPacMan;
     protected GameClockFX clock;
 
     //TODO reconsider this
@@ -266,14 +268,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         });
         gameController().setClock(clock);
 
-        ssMsPacMan = new MsPacManGameSpriteSheet(
-            theme.get("ms_pacman.spritesheet.image"),
-            theme.get("ms_pacman.spritesheet.image.mazes"));
-
-        ssPacMan = new PacManGameSpriteSheet(
-            theme.get("pacman.spritesheet.image"),
-            theme.get("pacman.spritesheet.image.mazes"));
-
         Logger.info("Creating 2D game scenes for variant " + GameVariant.MS_PACMAN);
         gameScenesForVariant.put(GameVariant.MS_PACMAN, new HashMap<>(Map.of(
             "boot",   new BootScene(),
@@ -313,7 +307,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
                     GamePage gamePage = (GamePage) pages.get("gamePage");
                     gameScene2D.scalingPy.bind(gamePage.scalingPy);
                     gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
-                    gameScene2D.setSpritesheets(ssMsPacMan, ssPacMan);
                 }
             }
         }
@@ -497,8 +490,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     @Override
     public SpriteSheet getSpriteSheet(GameVariant variant) {
         return switch (variant) {
-            case MS_PACMAN -> ssMsPacMan;
-            case PACMAN, PACMAN_XXL -> ssPacMan;
+            case MS_PACMAN -> theme.get("ms_pacman.spritesheet");
+            case PACMAN, PACMAN_XXL -> theme.get("pacman.spritesheet");
         };
     }
 
@@ -577,13 +570,15 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         GameModel game = e.game;
         switch (game.variant()) {
             case MS_PACMAN -> {
-                game.pac().setAnimations(new MsPacManGamePacAnimations(game.pac(), ssMsPacMan));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, ssMsPacMan)));
+                var ss = (MsPacManGameSpriteSheet) getSpriteSheet(game.variant());
+                game.pac().setAnimations(new MsPacManGamePacAnimations(game.pac(), ss));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, ss)));
                 Logger.info("Created Ms. Pac-Man game creature animations for level #{}", game.levelNumber());
             }
             case PACMAN, PACMAN_XXL -> {
-                game.pac().setAnimations(new PacManGamePacAnimations(game.pac(), ssPacMan));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, ssPacMan)));
+                var ss = (PacManGameSpriteSheet) getSpriteSheet(game.variant());
+                game.pac().setAnimations(new PacManGamePacAnimations(game.pac(), ss));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, ss)));
                 Logger.info("Created Pac-Man game creature animations for level #{}", game.levelNumber());
             }
         }

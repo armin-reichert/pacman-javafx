@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.rendering.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.PacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -32,6 +33,7 @@ public class PacManCutScene2 extends GameScene2D {
     private SpriteAnimation blinkyNormal;
     private SpriteAnimation blinkyStretching;
     private SpriteAnimation blinkyDamaged;
+    private PacManGameSpriteSheet ss;
 
     @Override
     public boolean isCreditVisible() {
@@ -40,10 +42,10 @@ public class PacManCutScene2 extends GameScene2D {
 
     @Override
     public void init() {
+        ss = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
         frame = -1;
         initialDelay = 120;
         setScoreVisible(true);
-        var ss = classicRenderer.getPacManSpriteSheet();
         pac = new Pac();
         pac.setAnimations(new PacManGamePacAnimations(pac, ss));
         blinky = new Ghost(GameModel.RED_GHOST);
@@ -113,7 +115,6 @@ public class PacManCutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        var ss = classicRenderer.getPacManSpriteSheet();
         classicRenderer.drawSpriteScaled(g, ss.source(), blinkyStretching.currentSprite(), t(14), t(19) + 3);
         classicRenderer.drawGhost(g, GameVariant.PACMAN, blinky);
         classicRenderer.drawPac(g, GameVariant.PACMAN, pac);

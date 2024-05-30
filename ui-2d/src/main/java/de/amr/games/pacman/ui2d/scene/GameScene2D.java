@@ -41,11 +41,6 @@ public abstract class GameScene2D implements GameScene {
     protected ModernWorldRenderer modernRenderer = new ModernWorldRenderer(scalingPy);
     protected ClassicWorldRenderer classicRenderer = new ClassicWorldRenderer(scalingPy);
 
-    public void setSpritesheets(MsPacManGameSpriteSheet ssMsPacMan, PacManGameSpriteSheet ssPacMan) {
-        classicRenderer.setMsPacManSpriteSheet(ssMsPacMan);
-        classicRenderer.setPacManSpriteSheet(ssPacMan);
-    }
-
     public abstract boolean isCreditVisible();
 
     @Override
@@ -93,13 +88,17 @@ public abstract class GameScene2D implements GameScene {
 
     public void draw() {
         if (g == null) {
-            Logger.error("Cannot render game scene {}, no canvas has been assigned", getClass().getSimpleName());
+            Logger.error("Cannot render game scene {}, no canvas has been assigned", this);
             return;
         }
         clearCanvas();
         if (context == null) {
             Logger.error("Cannot render game scene {}, no scene context has been assigned", getClass().getSimpleName());
             return;
+        }
+        switch (context.game().variant()) {
+            case MS_PACMAN -> classicRenderer.setMsPacManSpriteSheet((MsPacManGameSpriteSheet) context.getSpriteSheet(context.game().variant()));
+            case PACMAN, PACMAN_XXL -> classicRenderer.setPacManSpriteSheet((PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant()));
         }
         if (isScoreVisible()) {
             drawScore(context.game().score(), "SCORE", t(1), t(1));

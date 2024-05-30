@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.rendering.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.PacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.scene.paint.Color;
 
@@ -29,6 +30,7 @@ public class PacManIntroScene extends GameScene2D {
     private static final char QUOTE = '\"';
 
     private PacManIntro intro;
+    private PacManGameSpriteSheet ss;
 
     @Override
     public boolean isCreditVisible() {
@@ -39,7 +41,7 @@ public class PacManIntroScene extends GameScene2D {
     public void init() {
         setScoreVisible(true);
         intro = new PacManIntro();
-        var ss = classicRenderer.getPacManSpriteSheet();
+        ss = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
         intro.pacMan.setAnimations(new PacManGamePacAnimations(intro.pacMan, ss));
         intro.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, ss)));
         intro.blinking.reset();
@@ -95,7 +97,6 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     private void drawGallery() {
-        var ss = classicRenderer.getPacManSpriteSheet();
         var font = sceneFont(8);
 
         int tx = intro.leftTileX;
@@ -127,7 +128,6 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     private void drawBlinkingEnergizer() {
-        var ss = classicRenderer.getPacManSpriteSheet();
         if (intro.blinking.isOn()) {
             classicRenderer.drawSpriteScaled(g, ss.source(), ss.getEnergizerSprite(), t(intro.leftTileX),t(20));
         }
@@ -154,7 +154,6 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     private void drawPoints() {
-        var ss = classicRenderer.getPacManSpriteSheet();
         var color = context.theme().color("palette.pale");
         var font8 = sceneFont(8);
         var font6 = sceneFont(6);

@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.rendering.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.PacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -29,6 +30,7 @@ public class PacManCutScene3 extends GameScene2D {
     private int frame;
     private Pac pac;
     private Ghost blinky;
+    private PacManGameSpriteSheet ss;
 
     @Override
     public boolean isCreditVisible() {
@@ -37,10 +39,10 @@ public class PacManCutScene3 extends GameScene2D {
 
     @Override
     public void init() {
+        ss = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
         frame = -1;
         initialDelay = 120;
         setScoreVisible(true);
-        var ss = classicRenderer.getPacManSpriteSheet();
         pac = new Pac();
         pac.setAnimations(new PacManGamePacAnimations(pac, ss));
         pac.selectAnimation(Pac.ANIM_MUNCHING);
