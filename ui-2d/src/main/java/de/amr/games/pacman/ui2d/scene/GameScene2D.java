@@ -5,12 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.lib.Score;
-import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.rendering.ClassicWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ModernWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -155,8 +151,7 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected void drawMsPacManCopyright(double x, double y) {
-        String vk = PacManGames2dUI.variantKey(GameVariant.MS_PACMAN);
-        Image logo = context.theme().get(vk + ".logo.midway");
+        Image logo = context.theme().get("ms_pacman.logo.midway");
         classicRenderer.drawImageScaled(g, logo, x, y + 2, TS * 4 - 2, TS * 4);
         g.setFill(context.theme().color("palette.red"));
         g.setFont(sceneFont(8));

@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.rendering;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.tilemap.FoodMapRenderer;
 import de.amr.games.pacman.ui2d.tilemap.TerrainMapRenderer;
-import de.amr.games.pacman.ui2d.tilemap.TileMapRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
