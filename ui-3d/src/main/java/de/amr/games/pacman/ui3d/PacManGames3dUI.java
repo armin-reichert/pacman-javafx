@@ -174,8 +174,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("livescounter.light.color",      Color.CORNFLOWERBLUE);
 
         // dashboard
-        theme.set("infobox.min_col_width",         180);
-        theme.set("infobox.min_label_width",       120);
+        theme.set("infobox.min_col_width",         200);
+        theme.set("infobox.min_label_width",       140);
         theme.set("infobox.text_color",            Color.WHITE);
         theme.set("infobox.label_font",            Font.font("Sans", 12));
         theme.set("infobox.text_font",             rm.loadFont("fonts/SplineSansMono-Regular.ttf", 12));
