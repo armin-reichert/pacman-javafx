@@ -19,10 +19,12 @@ import de.amr.games.pacman.ui3d.scene.Perspective;
 import de.amr.games.pacman.ui3d.scene.PlayScene3D;
 import javafx.beans.property.*;
 import javafx.scene.Scene;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.input.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
@@ -267,7 +269,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     @Override
     protected GamePage3D createGamePage(Scene parentScene) {
         checkNotNull(parentScene);
-        GamePage3D page = new GamePage3D(this, parentScene.getWidth(), parentScene.getHeight());
+        GamePage3D page = new GamePage3D(mainScene, this, parentScene.getWidth(), parentScene.getHeight());
         page.setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
         page.setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
         page.setMinScaling(0.7);
@@ -281,16 +283,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     }
 
     private void onMouseClicked(MouseEvent e) {
-        if (currentPage() instanceof GamePage3D gamePage3D) {
-            gamePage3D.currentContextMenu().ifPresent(ContextMenu::hide);
-            if (e.getButton() == MouseButton.SECONDARY) {
-                currentGameScene().ifPresent(gameScene -> {
-                    if (gameScene == sceneConfig().get("play") || gameScene == sceneConfig().get("play3D")) {
-                        gamePage3D.showContextMenu(mainScene.getRoot(), e.getScreenX(), e.getScreenY());
-                    }
-                });
-            }
-        }
+        currentPage().onMouseClicked(e);
     }
 
     private void onKeyPressed(KeyEvent e) {

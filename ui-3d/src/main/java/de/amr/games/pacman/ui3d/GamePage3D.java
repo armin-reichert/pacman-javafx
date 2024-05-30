@@ -15,18 +15,17 @@ import de.amr.games.pacman.ui3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import de.amr.games.pacman.ui3d.scene.PlayScene3D;
 import javafx.beans.binding.Bindings;
-import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import org.tinylog.Logger;
-
-import java.util.Optional;
 
 import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
 
@@ -63,13 +62,15 @@ public class GamePage3D extends GamePage {
         }
     }
 
+    private final Scene parentScene;
     private final BorderPane dashboardLayer;
     private final Dashboard dashboard;
     private final PictureInPictureView pip;
     private ContextMenu contextMenu;
 
-    public GamePage3D(GameSceneContext sceneContext, double width, double height) {
+    public GamePage3D(Scene parentScene, GameSceneContext sceneContext, double width, double height) {
         super(sceneContext, width, height);
+        this.parentScene = parentScene;
 
         pip = new PictureInPictureView(sceneContext);
         dashboard = new Dashboard(sceneContext);
@@ -90,28 +91,31 @@ public class GamePage3D extends GamePage {
         updateTopLayer();
     }
 
-    public Optional<ContextMenu> currentContextMenu() {
-        return Optional.ofNullable(contextMenu);
-    }
-
-    public void showContextMenu(Node node, double x, double y) {
-        if (context.currentGameScene().isEmpty()) {
-            Logger.warn("No game scene exists when context menu was opened");
-            return;
+    @Override
+    public void onMouseClicked(MouseEvent e) {
+        if (contextMenu != null) {
+            contextMenu.hide();
+            contextMenu = null;
         }
-        contextMenu = new ContextMenu();
-        populateContextMenu(context.currentGameScene().get());
-        contextMenu.show(node, x, y);
+        if (e.getButton() == MouseButton.SECONDARY && context.currentGameScene().isPresent()) {
+            GameScene gameScene = context.currentGameScene().get();
+            if (context.sceneConfig().get("play3D") == gameScene) {
+                showContextMenu(false, e.getSceneX(), e.getScreenY());
+            } else if (context.sceneConfig().get("play") == gameScene) {
+                showContextMenu(true, e.getSceneX(), e.getScreenY());
+            }
+        }
     }
 
-    private void populateContextMenu(GameScene gameScene) {
+    private void showContextMenu(boolean isPlayScene2D, double x, double y) {
+        contextMenu = new ContextMenu();
         var actionHandler = (ActionHandler3D) context.actionHandler();
         contextMenu.getItems().add(titleItem(context.tt("scene_display")));
-        if (gameScene instanceof PlayScene2D) {
+        if (isPlayScene2D) {
             var item = new MenuItem(context.tt("use_3D_scene"));
             item.setOnAction(e -> actionHandler.toggle2D3D());
             contextMenu.getItems().add(item);
-        } else if (gameScene instanceof PlayScene3D) {
+        } else {
             var item = new MenuItem(context.tt("use_2D_scene"));
             item.setOnAction(e -> actionHandler.toggle2D3D());
             contextMenu.getItems().add(item);
@@ -147,6 +151,8 @@ public class GamePage3D extends GamePage {
         var immunityItem = new CheckMenuItem(context.tt("immunity"));
         immunityItem.selectedProperty().bindBidirectional(PacManGames2dUI.PY_IMMUNITY);
         contextMenu.getItems().add(immunityItem);
+
+        contextMenu.show(parentScene.getRoot(), x, y);
     }
 
     private MenuItem titleItem(String title) {
