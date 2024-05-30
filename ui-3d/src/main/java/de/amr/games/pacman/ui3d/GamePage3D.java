@@ -93,10 +93,7 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void onMouseClicked(MouseEvent e) {
-        if (contextMenu != null) {
-            contextMenu.hide();
-            contextMenu = null;
-        }
+        hideContextMenu();
         if (e.getButton() == MouseButton.SECONDARY && context.currentGameScene().isPresent()) {
             GameScene gameScene = context.currentGameScene().get();
             if (context.sceneConfig().get("play3D") == gameScene) {
@@ -104,6 +101,13 @@ public class GamePage3D extends GamePage {
             } else if (context.sceneConfig().get("play") == gameScene) {
                 showContextMenu(true, e.getSceneX(), e.getScreenY());
             }
+        }
+    }
+
+    public void hideContextMenu() {
+        if (contextMenu != null) {
+            contextMenu.hide();
+            contextMenu = null;
         }
     }
 
@@ -160,12 +164,6 @@ public class GamePage3D extends GamePage {
         text.setFont(Font.font("Dialog", FontWeight.BLACK, 14));
         text.setFill(Color.CORNFLOWERBLUE); // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
         return new CustomMenuItem(text);
-    }
-
-    public void hideContextMenu() {
-        if (contextMenu != null) {
-            contextMenu.hide();
-        }
     }
 
     @Override
