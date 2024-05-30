@@ -36,6 +36,7 @@ public class InfoBox3D extends InfoBox {
     private final ComboBox<Object> comboFloorTexture;
     private final CheckBox cbFloorTextureRandom;
     private final ComboBox<Perspective> comboPerspectives;
+    private final CheckBox cbPiPOn;
     private final Slider sliderPiPSceneHeight;
     private final Slider sliderPiPOpacity;
     private final CheckBox cbEnergizerExplodes;
@@ -73,8 +74,9 @@ public class InfoBox3D extends InfoBox {
         spinnerCamY.valueProperty().addListener(this::updatePlayScene3DCamera);
         spinnerCamZ.valueProperty().addListener(this::updatePlayScene3DCamera);
 
-        sliderPiPSceneHeight = slider("PiP Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
-        sliderPiPOpacity     = slider("PiP Opacity", 0, 100,PY_PIP_OPACITY_PERCENTAGE.get());
+        cbPiPOn              = checkBox("Picture-In-Picture");
+        sliderPiPSceneHeight = slider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
+        sliderPiPOpacity     = slider("- Opacity", 0, 100,PY_PIP_OPACITY_PERCENTAGE.get());
         sliderWallHeight     = slider("Wall Height", 0, 16, PY_3D_WALL_HEIGHT.get());
         sliderWallOpacity    = slider("Wall Opacity", 0, 1, PY_3D_WALL_OPACITY.get());
         cbEnergizerExplodes  = checkBox("Energizer Explosion");
@@ -122,6 +124,7 @@ public class InfoBox3D extends InfoBox {
         sliderWallHeight.valueProperty().bindBidirectional(PY_3D_WALL_HEIGHT);
         sliderWallOpacity.valueProperty().bindBidirectional(PY_3D_WALL_OPACITY);
 
+        cbPiPOn.setOnAction(e -> toggle(PY_3D_PIP_ON));
         comboPerspectives.setOnAction(e -> PY_3D_PERSPECTIVE.set(comboPerspectives.getValue()));
         cbEnergizerExplodes.setOnAction(e -> toggle(PY_3D_ENERGIZER_EXPLODES));
         cbNightMode.setOnAction(e -> toggle(PY_3D_NIGHT_MODE));
@@ -133,6 +136,7 @@ public class InfoBox3D extends InfoBox {
     @Override
     public void update() {
         super.update();
+        cbPiPOn.setSelected(PY_3D_PIP_ON.getValue());
         comboFloorTexture.setValue(PY_3D_FLOOR_TEXTURE.get());
         cbFloorTextureRandom.setSelected(PY_3D_FLOOR_TEXTURE_RND.get());
         comboPerspectives.setValue(PY_3D_PERSPECTIVE.get());

@@ -67,7 +67,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     public static final IntegerProperty PY_PIP_HEIGHT                 = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_PX.y());
     public static final IntegerProperty PY_PIP_OPACITY_PERCENTAGE     = new SimpleIntegerProperty(100);
-    public static final BooleanProperty PY_PIP_ON                     = new SimpleBooleanProperty(false);
     public static final IntegerProperty PY_SIMULATION_STEPS           = new SimpleIntegerProperty(1);
     public static final BooleanProperty PY_3D_AXES_VISIBLE            = new SimpleBooleanProperty(false);
     public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE      = new SimpleObjectProperty<>(DrawMode.FILL);
@@ -80,6 +79,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static final BooleanProperty PY_3D_NIGHT_MODE              = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_3D_PAC_LIGHT_ENABLED       = new SimpleBooleanProperty(true);
     public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE = new SimpleObjectProperty<>(Perspective.FOLLOWING_PLAYER);
+    public static final BooleanProperty PY_3D_PIP_ON                  = new SimpleBooleanProperty(false);
     public static final DoubleProperty  PY_3D_WALL_HEIGHT             = new SimpleDoubleProperty(4.5);
     public static final DoubleProperty  PY_3D_WALL_OPACITY            = new SimpleDoubleProperty(0.9);
 
@@ -367,7 +367,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     @Override
     public void togglePipVisible() {
-        toggle(PY_PIP_ON);
-        showFlashMessage(tt(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
+        toggle(PY_3D_PIP_ON);
+        showFlashMessage(tt(PY_3D_PIP_ON.get() ? "pip_on" : "pip_off"));
     }
 }

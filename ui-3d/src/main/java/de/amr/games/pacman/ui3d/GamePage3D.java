@@ -58,7 +58,7 @@ public class GamePage3D extends GamePage {
         // data binding
         PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateBackground3D());
         PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground3D());
-        PY_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
+        PY_3D_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
         dashboard.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());
 
         updateTopLayer();
@@ -90,7 +90,7 @@ public class GamePage3D extends GamePage {
             item.setOnAction(e -> actionHandler.toggle2D3D());
             contextMenu.getItems().add(item);
             var pipItem = new CheckMenuItem(context.tt("pip"));
-            pipItem.selectedProperty().bindBidirectional(PY_PIP_ON);
+            pipItem.selectedProperty().bindBidirectional(PY_3D_PIP_ON);
             contextMenu.getItems().add(pipItem);
             contextMenu.getItems().add(titleItem(context.tt("select_perspective")));
             var toggleGroup = new ToggleGroup();
@@ -162,7 +162,7 @@ public class GamePage3D extends GamePage {
     }
 
     private void updateTopLayer() {
-        dashboardLayer.setVisible(dashboard.isVisible() || PY_PIP_ON.get());
+        dashboardLayer.setVisible(dashboard.isVisible() || PY_3D_PIP_ON.get());
         getLayersContainer().requestFocus();
     }
 
@@ -191,7 +191,7 @@ public class GamePage3D extends GamePage {
     public void render() {
         super.render();
         dashboard.update();
-        pip.canvas().setVisible(PY_PIP_ON.get() && isCurrentGameScene3D());
+        pip.canvas().setVisible(PY_3D_PIP_ON.get() && isCurrentGameScene3D());
         pip.draw();
     }
 
