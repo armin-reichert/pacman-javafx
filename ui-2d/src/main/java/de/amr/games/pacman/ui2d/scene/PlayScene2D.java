@@ -5,19 +5,26 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MsPacManGame;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.actors.GhostState.ENTERING_HOUSE;
 import static de.amr.games.pacman.model.actors.GhostState.RETURNING_HOME;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
 
 /**
  * @author Armin Reichert
@@ -46,17 +53,17 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void handleKeyboardInput() {
-        if (Keyboard.pressed(PacManGames2dUI.KEYS_ADD_CREDIT)) {
+        if (Keyboard.pressed(KEYS_ADD_CREDIT)) {
             if (!context.gameController().hasCredit()) {
                 context.actionHandler().addCredit();
             }
-        } else if (Keyboard.pressed(PacManGames2dUI.KEY_CHEAT_EAT_ALL)) {
+        } else if (Keyboard.pressed(KEY_CHEAT_EAT_ALL)) {
             context.actionHandler().cheatEatAllPellets();
-        } else if (Keyboard.pressed(PacManGames2dUI.KEY_CHEAT_ADD_LIVES)) {
+        } else if (Keyboard.pressed(KEY_CHEAT_ADD_LIVES)) {
             context.actionHandler().cheatAddLives();
-        } else if (Keyboard.pressed(PacManGames2dUI.KEY_CHEAT_NEXT_LEVEL)) {
+        } else if (Keyboard.pressed(KEY_CHEAT_NEXT_LEVEL)) {
             context.actionHandler().cheatEnterNextLevel();
-        } else if (Keyboard.pressed(PacManGames2dUI.KEY_CHEAT_KILL_GHOSTS)) {
+        } else if (Keyboard.pressed(KEY_CHEAT_KILL_GHOSTS)) {
             context.actionHandler().cheatKillAllEatableGhosts();
         }
     }
@@ -97,24 +104,14 @@ public class PlayScene2D extends GameScene2D {
             }
         }
         drawLevelMessage();
-        classicRenderer.drawPac(g, ss, game.pac());
-        if (infoVisiblePy.get()) {
-            classicRenderer.drawPacInfo(g, game.pac());
-        }
         if (game.powerTimer().isRunning()) {
-            game.ghosts().forEach(ghost -> {
-                classicRenderer.drawGhost(g, ss, ghost);
-                if (infoVisiblePy.get()) {
-                    classicRenderer.drawGhostInfo(g, ghost);
-                }
-            });
+            Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
+                .map(game::ghost).forEach(ghost -> drawGhost(ss, ghost));
+            drawPac(ss, game.pac());
         } else {
-            game.ghosts().toList().reversed().forEach(ghost -> {
-                classicRenderer.drawGhost(g, ss, ghost);
-                if (infoVisiblePy.get()) {
-                    classicRenderer.drawGhostInfo(g, ghost);
-                }
-            });
+            drawPac(ss, game.pac());
+            Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
+                .map(game::ghost).forEach(ghost -> drawGhost(ss, ghost));
         }
         if (!isCreditVisible()) {
             int numLivesDisplayed = game.lives() - 1;
@@ -124,6 +121,20 @@ public class PlayScene2D extends GameScene2D {
             classicRenderer.drawLivesCounter(g, ss, numLivesDisplayed);
         }
         drawLevelCounter(g);
+    }
+
+    private void drawPac(GameSpriteSheet ss, Pac pac) {
+        classicRenderer.drawPac(g, ss, pac);
+        if (infoVisiblePy.get()) {
+            classicRenderer.drawPacInfo(g, pac);
+        }
+    }
+
+    private void drawGhost(GameSpriteSheet ss, Ghost ghost) {
+        classicRenderer.drawGhost(g, ss, ghost);
+        if (infoVisiblePy.get()) {
+            classicRenderer.drawGhostInfo(g, ghost);
+        }
     }
 
     private void drawLevelMessage() {
