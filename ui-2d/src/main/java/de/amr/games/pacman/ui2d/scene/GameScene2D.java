@@ -96,10 +96,6 @@ public abstract class GameScene2D implements GameScene {
             Logger.error("Cannot render game scene {}, no scene context has been assigned", getClass().getSimpleName());
             return;
         }
-        switch (context.game().variant()) {
-            case MS_PACMAN -> classicRenderer.setMsPacManSpriteSheet((MsPacManGameSpriteSheet) context.getSpriteSheet(context.game().variant()));
-            case PACMAN, PACMAN_XXL -> classicRenderer.setPacManSpriteSheet((PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant()));
-        }
         if (isScoreVisible()) {
             drawScore(context.game().score(), "SCORE", t(1), t(1));
             drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1));
@@ -150,7 +146,8 @@ public abstract class GameScene2D implements GameScene {
             x = t(context.game().world().numCols() - 4);
             y = t(context.game().world().numRows() - 2);
         }
-        classicRenderer.drawLevelCounter(g, context.game().variant(), context.game().levelCounter(), x, y);
+        classicRenderer.drawLevelCounter(g,
+            context.getSpriteSheet(context.game().variant()), context.game().levelCounter(), x, y);
     }
 
     protected void drawMidwayCopyright(double x, double y) {

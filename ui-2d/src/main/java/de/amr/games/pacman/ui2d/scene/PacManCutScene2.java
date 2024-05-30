@@ -116,8 +116,8 @@ public class PacManCutScene2 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         classicRenderer.drawSpriteScaled(g, ss.source(), blinkyStretching.currentSprite(), t(14), t(19) + 3);
-        classicRenderer.drawGhost(g, GameVariant.PACMAN, blinky);
-        classicRenderer.drawPac(g, GameVariant.PACMAN, pac);
+        classicRenderer.drawGhost(g, ss, blinky);
+        classicRenderer.drawPac(g, ss, pac);
         drawLevelCounter(g);
     }
 

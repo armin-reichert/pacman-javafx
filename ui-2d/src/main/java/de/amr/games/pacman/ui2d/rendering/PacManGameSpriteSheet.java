@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 
@@ -15,7 +14,7 @@ import java.util.stream.IntStream;
 /**
  * @author Armin Reichert
  */
-public class PacManGameSpriteSheet implements SpriteSheet {
+public class PacManGameSpriteSheet implements GameSpriteSheet {
 
     private static final List<Direction> ORDER = List.of(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
     private static final int OFF_X = 456;
@@ -29,6 +28,26 @@ public class PacManGameSpriteSheet implements SpriteSheet {
     }
 
     @Override
+    public Image getFlashingMazesImage() {
+        return null;
+    }
+
+    @Override
+    public Rectangle2D emptyMaze(int mapNumber) {
+        return null;
+    }
+
+    @Override
+    public Rectangle2D filledMaze(int mapNumber) {
+        return null;
+    }
+
+    @Override
+    public Rectangle2D[] clapperboardSprites() {
+        return new Rectangle2D[0];
+    }
+
+    @Override
     public Image source() {
         return source;
     }
@@ -38,20 +57,28 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         return 16;
     }
 
+    @Override
     public Image getFlashingMazeImage() {
         return flashingMazeImage;
     }
 
     private final Rectangle2D fullMazeSprite = rect(0, 0, 224, 248);
 
+    @Override
     public Rectangle2D getFullMazeSprite() {
         return fullMazeSprite;
     }
 
     private final Rectangle2D emptyMazeSprite = rect(228, 0, 224, 248);
 
+    @Override
     public Rectangle2D getEmptyMazeSprite() {
         return emptyMazeSprite;
+    }
+
+    @Override
+    public Rectangle2D highlightedMaze(int mapNumber) {
+        return null;
     }
 
     private final Rectangle2D energizerSprite = rect(8, 24, 8, 8);
@@ -74,7 +101,8 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         .mapToObj(sym -> rect(OFF_X + r(2 + sym), r(3) + 0.5, r(1), r(1) - 0.5))
         .toArray(Rectangle2D[]::new);
 
-    public Rectangle2D bonusSymbolSprite(int symbol) {
+    @Override
+    public Rectangle2D bonusSymbolSprite(byte symbol) {
         return bonusSymbolSprites[symbol];
     }
 
@@ -95,7 +123,8 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         }
     }
 
-    public Rectangle2D bonusValueSprite(int symbol) {
+    @Override
+    public Rectangle2D bonusValueSprite(byte symbol) {
         return bonusValueSprites[symbol];
     }
 
@@ -114,6 +143,7 @@ public class PacManGameSpriteSheet implements SpriteSheet {
 
     private final Rectangle2D livesCounterSprite = rect(OFF_X + 129, 15, 16, 16);
 
+    @Override
     public Rectangle2D livesCounterSprite() {
         return livesCounterSprite;
     }
@@ -219,7 +249,6 @@ public class PacManGameSpriteSheet implements SpriteSheet {
         blinkyDamagedSprites[0] = rect(OFF_X + r(8) + m, r(7) + m, size, size);
         blinkyDamagedSprites[1] = rect(OFF_X + r(9) + m, r(7) + m, size, size);
 
-        m = 1;
         size = raster() - 2 * m;
         blinkyPatchedSprites[0] = rect(OFF_X + r(10) + m, r(7) + m, size, size);
         blinkyPatchedSprites[1] = rect(OFF_X + r(11) + m, r(7) + m, size, size);

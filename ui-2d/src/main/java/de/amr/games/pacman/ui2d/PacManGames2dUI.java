@@ -488,7 +488,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     @Override
-    public SpriteSheet getSpriteSheet(GameVariant variant) {
+    public GameSpriteSheet getSpriteSheet(GameVariant variant) {
         return switch (variant) {
             case MS_PACMAN -> theme.get("ms_pacman.spritesheet");
             case PACMAN, PACMAN_XXL -> theme.get("pacman.spritesheet");

@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
-import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 
@@ -16,7 +15,7 @@ import java.util.stream.IntStream;
 /**
  * @author Armin Reichert
  */
-public class MsPacManGameSpriteSheet implements SpriteSheet {
+public class MsPacManGameSpriteSheet implements GameSpriteSheet {
 
     private static final List<Direction> ORDER = List.of(Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN);
 
@@ -60,7 +59,8 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
         .mapToObj(symbol -> sprite(3 + symbol, 0))
         .toArray(Rectangle2D[]::new);
 
-    public Rectangle2D bonusSymbolSprite(int symbol) {
+    @Override
+    public Rectangle2D bonusSymbolSprite(byte symbol) {
         return bonusSymbolSprites[symbol];
     }
 
@@ -68,12 +68,14 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
         .mapToObj(symbol -> sprite(3 + symbol, 1))
         .toArray(Rectangle2D[]::new);
 
-    public Rectangle2D bonusValueSprite(int symbol) {
+    @Override
+    public Rectangle2D bonusValueSprite(byte symbol) {
         return bonusValueSprites[symbol];
     }
 
     private final Rectangle2D livesCounterSprite = sprite(1, 0);
 
+    @Override
     public Rectangle2D livesCounterSprite() {
         return livesCounterSprite;
     }
@@ -147,10 +149,26 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
         return ghostEyesSprites[ORDER.indexOf(dir)];
     }
 
+    @Override
+    public Image getFlashingMazeImage() {
+        return null;
+    }
+
+    @Override
+    public Rectangle2D getEmptyMazeSprite() {
+        return null;
+    }
+
+    @Override
+    public Rectangle2D getFullMazeSprite() {
+        return null;
+    }
+
     // Ms. Pac-Man specific:
 
     private static final int MS_PACMAN_MAZE_COUNT = 6;
 
+    @Override
     public Image getFlashingMazesImage() {
         return flashingMazesImage;
     }
@@ -165,6 +183,7 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
         }
     }
 
+    @Override
     public Rectangle2D highlightedMaze(int mazeNumber) {
         return highlightedMazeSprites[mazeNumber - 1];
     }
@@ -178,6 +197,7 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
         }
     }
 
+    @Override
     public Rectangle2D emptyMaze(int mazeNumber) {
         return emptyMazeSprites[mazeNumber - 1];
     }
@@ -191,6 +211,7 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
         }
     }
 
+    @Override
     public Rectangle2D filledMaze(int mazeNumber) {
         return filledMazeSprites[mazeNumber - 1];
     }
@@ -230,6 +251,7 @@ public class MsPacManGameSpriteSheet implements SpriteSheet {
         rect(488, 208, 32, 32),  // middle
         rect(520, 208, 32, 32)); // closed
 
+    @Override
     public Rectangle2D[] clapperboardSprites() {
         return clapperboardSprites;
     }

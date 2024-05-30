@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.controller.MsPacManIntermission3;
 import de.amr.games.pacman.lib.TickTimer;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.rendering.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
@@ -58,9 +57,9 @@ public class MsPacManCutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        classicRenderer.drawClapperBoard(g, context.theme(), clapAnimation, t(3), t(10));
-        classicRenderer.drawPac(g, GameVariant.MS_PACMAN, intermission.msPacMan);
-        classicRenderer.drawPac(g, GameVariant.MS_PACMAN, intermission.pacMan);
+        classicRenderer.drawClapperBoard(g, ss, context.theme(), clapAnimation, t(3), t(10));
+        classicRenderer.drawPac(g, ss, intermission.msPacMan);
+        classicRenderer.drawPac(g, ss, intermission.pacMan);
         classicRenderer.drawEntitySprite(g, ss, intermission.stork, storkAnimation.currentSprite());
         classicRenderer.drawEntitySprite(g, ss, intermission.bag,
             intermission.bagOpen ? ss.juniorPacSprite() : ss.blueBagSprite());

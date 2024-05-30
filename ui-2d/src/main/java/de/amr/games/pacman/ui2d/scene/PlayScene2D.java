@@ -78,32 +78,33 @@ public class PlayScene2D extends GameScene2D {
         if (game.level().isEmpty()) {
             return;
         }
+        var ss = context.getSpriteSheet(game.variant());
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         boolean blinkingOn = game.blinking().isOn();
         switch (game.variant()) {
             case MS_PACMAN ->
-                classicRenderer.drawMsPacManWorld(g, game.world(), ((MsPacManGame)game).mapNumber(), flashing, blinkingOn);
+                classicRenderer.drawMsPacManWorld(g, ss, game.world(), ((MsPacManGame)game).mapNumber(), flashing, blinkingOn);
             case PACMAN ->
-                classicRenderer.drawPacManWorld(g, game.world(), flashing, blinkingOn);
+                classicRenderer.drawPacManWorld(g, ss, game.world(), flashing, blinkingOn);
             case PACMAN_XXL ->
                 modernRenderer.draw(g, game.world(), flashing, blinkingOn);
         }
         drawLevelMessage();
-        game.bonus().ifPresent(bonus -> classicRenderer.drawBonus(g, context.game().variant(), bonus));
-        classicRenderer.drawPac(g, context.game().variant(), game.pac());
+        game.bonus().ifPresent(bonus -> classicRenderer.drawBonus(g, context.game().variant(), ss, bonus));
+        classicRenderer.drawPac(g, ss, game.pac());
         if (infoVisiblePy.get()) {
             classicRenderer.drawPacInfo(g, game.pac());
         }
         if (game.powerTimer().isRunning()) {
             game.ghosts().forEach(ghost -> {
-                classicRenderer.drawGhost(g, context.game().variant(), ghost);
+                classicRenderer.drawGhost(g, ss, ghost);
                 if (infoVisiblePy.get()) {
                     classicRenderer.drawGhostInfo(g, ghost);
                 }
             });
         } else {
             game.ghosts().toList().reversed().forEach(ghost -> {
-                classicRenderer.drawGhost(g, context.game().variant(), ghost);
+                classicRenderer.drawGhost(g, ss, ghost);
                 if (infoVisiblePy.get()) {
                     classicRenderer.drawGhostInfo(g, ghost);
                 }
@@ -114,7 +115,7 @@ public class PlayScene2D extends GameScene2D {
             if (context.gameState() == GameState.READY && !game.pac().isVisible()) {
                 numLivesDisplayed += 1;
             }
-            classicRenderer.drawLivesCounter(g, context.game().variant(), numLivesDisplayed);
+            classicRenderer.drawLivesCounter(g, ss, numLivesDisplayed);
         }
         drawLevelCounter(g);
     }
