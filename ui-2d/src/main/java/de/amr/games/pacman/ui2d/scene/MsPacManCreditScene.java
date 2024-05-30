@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
-import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 
 import static de.amr.games.pacman.lib.Globals.t;
@@ -15,7 +15,7 @@ import static de.amr.games.pacman.lib.Globals.t;
  */
 public class MsPacManCreditScene extends GameScene2D {
 
-    private PacManGameSpriteSheet ss;
+    private MsPacManGameSpriteSheet ss;
 
     @Override
     public boolean isCreditVisible() {
@@ -25,7 +25,7 @@ public class MsPacManCreditScene extends GameScene2D {
     @Override
     public void init() {
         setScoreVisible(true);
-        ss = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
+        ss = (MsPacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
     }
 
     @Override

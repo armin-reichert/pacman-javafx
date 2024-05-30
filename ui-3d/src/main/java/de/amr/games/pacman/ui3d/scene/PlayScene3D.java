@@ -283,20 +283,26 @@ public class PlayScene3D implements GameScene {
             }
 
             case GHOST_DYING -> {
-                var ssMsPacMan = (MsPacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
-                var ssPacMan = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
-                Rectangle2D[] sprites = switch (context.game().variant()) {
-                    case MS_PACMAN -> ssMsPacMan.ghostNumberSprites();
-                    case PACMAN, PACMAN_XXL -> ssPacMan.ghostNumberSprites();
-                };
-                context.game().eventLog().killedGhosts.forEach(ghost -> {
-                    int index = context.game().victims().indexOf(ghost);
-                    var numberImage = switch (context.game().variant()) {
-                        case MS_PACMAN -> ssMsPacMan.subImage(sprites[index]);
-                        case PACMAN, PACMAN_XXL -> ssPacMan.subImage(sprites[index]);
-                    };
-                    level3D.ghosts3D().get(ghost.id()).setNumberImage(numberImage);
-                });
+                switch (context.game().variant()) {
+                    case MS_PACMAN -> {
+                        var ss = (MsPacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
+                        Rectangle2D[] sprites = ss.ghostNumberSprites();
+                        context.game().eventLog().killedGhosts.forEach(ghost -> {
+                            int index = context.game().victims().indexOf(ghost);
+                            var numberImage = ss.subImage(sprites[index]);
+                            level3D.ghosts3D().get(ghost.id()).setNumberImage(numberImage);
+                        });
+                    }
+                    case PACMAN, PACMAN_XXL -> {
+                        var ss = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
+                        Rectangle2D[] sprites = ss.ghostNumberSprites();
+                        context.game().eventLog().killedGhosts.forEach(ghost -> {
+                            int index = context.game().victims().indexOf(ghost);
+                            var numberImage = ss.subImage(sprites[index]);
+                            level3D.ghosts3D().get(ghost.id()).setNumberImage(numberImage);
+                        });
+                    }
+                }
             }
 
             case LEVEL_COMPLETE -> {

@@ -24,7 +24,6 @@ public class MsPacManCutScene2 extends GameScene2D {
 
     private MsPacManIntermission2 intermission;
     private ClapperboardAnimation clapAnimation;
-    private MsPacManGameSpriteSheet ss;
 
     @Override
     public boolean isCreditVisible() {
@@ -33,7 +32,7 @@ public class MsPacManCutScene2 extends GameScene2D {
 
     @Override
     public void init() {
-        ss = (MsPacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
+        var ss = (MsPacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
         setScoreVisible(true);
         intermission = new MsPacManIntermission2();
         intermission.msPac.setAnimations(new MsPacManGamePacAnimations(intermission.msPac, ss));

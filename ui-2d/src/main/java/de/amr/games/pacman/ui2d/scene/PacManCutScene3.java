@@ -30,7 +30,6 @@ public class PacManCutScene3 extends GameScene2D {
     private int frame;
     private Pac pac;
     private Ghost blinky;
-    private PacManGameSpriteSheet ss;
 
     @Override
     public boolean isCreditVisible() {
@@ -39,7 +38,7 @@ public class PacManCutScene3 extends GameScene2D {
 
     @Override
     public void init() {
-        ss = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
+        var ss = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
         frame = -1;
         initialDelay = 120;
         setScoreVisible(true);
