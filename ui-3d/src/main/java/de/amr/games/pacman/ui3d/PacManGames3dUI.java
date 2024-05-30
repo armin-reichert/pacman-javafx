@@ -288,10 +288,10 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     private void onKeyPressed(KeyEvent e) {
         if (KEY_SWITCH_EDITOR.match(e)) {
-            if (game().variant() == GameVariant.PACMAN_XXL && !isPageSelected("editorPage")) {
-                enterMapEditor();
-            } else if (isPageSelected("editorPage")) {
+            if (isPageSelected("editorPage")) {
                 quitMapEditor();
+            } else if (game().variant() == GameVariant.PACMAN_XXL) {
+                enterMapEditor();
             }
         }
     }
