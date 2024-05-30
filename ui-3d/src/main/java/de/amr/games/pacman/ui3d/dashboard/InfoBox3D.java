@@ -64,10 +64,10 @@ public class InfoBox3D extends InfoBox {
         infoText("Camera", this::currentSceneCameraInfo).available(this::isCurrentGameScene3D);
 
         // Editors for perspective TOTAL:
-        spinnerCamRotate = integerSpinner("- Rotate X", -180, 180, TOTAL_ROTATE);
-        spinnerCamX      = integerSpinner("- Translate X", -1000, 1000, TOTAL_TRANSLATE_X);
-        spinnerCamY      = integerSpinner("- Translate Y", -1000, 1000, TOTAL_TRANSLATE_Y);
-        spinnerCamZ      = integerSpinner("- Translate Z", -1000, 1000, TOTAL_TRANSLATE_Z);
+        spinnerCamRotate = integerSpinner("- Rotate X", -180, 180, Perspective.TOTAL_ROTATE);
+        spinnerCamX      = integerSpinner("- Translate X", -1000, 1000, Perspective.TOTAL_TRANSLATE_X);
+        spinnerCamY      = integerSpinner("- Translate Y", -1000, 1000, Perspective.TOTAL_TRANSLATE_Y);
+        spinnerCamZ      = integerSpinner("- Translate Z", -1000, 1000, Perspective.TOTAL_TRANSLATE_Z);
 
         spinnerCamRotate.valueProperty().addListener(this::updatePlayScene3DCamera);
         spinnerCamX.valueProperty().addListener(this::updatePlayScene3DCamera);
@@ -157,14 +157,14 @@ public class InfoBox3D extends InfoBox {
         context.currentGameScene().ifPresent(gameScene -> {
             if (gameScene instanceof PlayScene3D playScene3D) {
                 Camera cam = playScene3D.camera();
-                TOTAL_ROTATE = spinnerCamRotate.getValue();
-                cam.setRotate(TOTAL_ROTATE);
-                TOTAL_TRANSLATE_X = spinnerCamX.getValue();
-                cam.setTranslateX(TOTAL_TRANSLATE_X);
-                TOTAL_TRANSLATE_Y = spinnerCamY.getValue();
-                cam.setTranslateY(TOTAL_TRANSLATE_Y);
-                TOTAL_TRANSLATE_Z = spinnerCamZ.getValue();
-                cam.setTranslateZ(TOTAL_TRANSLATE_Z);
+                Perspective.TOTAL_ROTATE = spinnerCamRotate.getValue();
+                cam.setRotate(Perspective.TOTAL_ROTATE);
+                Perspective.TOTAL_TRANSLATE_X = spinnerCamX.getValue();
+                cam.setTranslateX(Perspective.TOTAL_TRANSLATE_X);
+                Perspective.TOTAL_TRANSLATE_Y = spinnerCamY.getValue();
+                cam.setTranslateY(Perspective.TOTAL_TRANSLATE_Y);
+                Perspective.TOTAL_TRANSLATE_Z = spinnerCamZ.getValue();
+                cam.setTranslateZ(Perspective.TOTAL_TRANSLATE_Z);
             }
         });
     }

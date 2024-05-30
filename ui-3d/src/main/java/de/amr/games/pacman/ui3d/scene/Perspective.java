@@ -9,7 +9,6 @@ import javafx.scene.Camera;
 import javafx.scene.transform.Rotate;
 
 import static de.amr.games.pacman.lib.Globals.lerp;
-import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
 
 /**
  * Play scene perspectives.
@@ -101,6 +100,11 @@ public enum Perspective implements CameraController {
             cam.setTranslateY(lerp(cam.getTranslateY(), spottedEntity.position().y(), speed));
         }
     };
+
+    public static int TOTAL_ROTATE = 66;
+    public static int TOTAL_TRANSLATE_X = 0;
+    public static int TOTAL_TRANSLATE_Y = 330;
+    public static int TOTAL_TRANSLATE_Z = -140;
 
     public static Perspective next(Perspective p) {
         int n = Perspective.values().length;

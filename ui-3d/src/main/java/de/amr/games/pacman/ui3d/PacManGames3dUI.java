@@ -181,11 +181,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("infobox.text_font",             rm.loadFont("fonts/SplineSansMono-Regular.ttf", 12));
     }
 
-    public static int TOTAL_ROTATE = 66;
-    public static int TOTAL_TRANSLATE_X = 0;
-    public static int TOTAL_TRANSLATE_Y = 330;
-    public static int TOTAL_TRANSLATE_Z = -140;
-
     private final TileMapEditor editor;
 
     public PacManGames3dUI(Stage stage, double width, double height) {
@@ -203,15 +198,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         PY_3D_NIGHT_MODE.set(hour >= 20 || hour <= 5);
 
         mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClicked);
-        mainScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
-            if (KEY_SWITCH_EDITOR.match(e)) {
-                if (game().variant() == GameVariant.PACMAN_XXL && !isPageSelected("editorPage")) {
-                    enterMapEditor();
-                } else if (isPageSelected("editorPage")) {
-                    quitMapEditor();
-                }
-            }
-        });
+        mainScene.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
         editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
         embedMapEditor(stage);
     }
@@ -294,6 +281,16 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
                         gamePage3D.showContextMenu(mainScene.getRoot(), e.getScreenX(), e.getScreenY());
                     }
                 });
+            }
+        }
+    }
+
+    private void onKeyPressed(KeyEvent e) {
+        if (KEY_SWITCH_EDITOR.match(e)) {
+            if (game().variant() == GameVariant.PACMAN_XXL && !isPageSelected("editorPage")) {
+                enterMapEditor();
+            } else if (isPageSelected("editorPage")) {
+                quitMapEditor();
             }
         }
     }
