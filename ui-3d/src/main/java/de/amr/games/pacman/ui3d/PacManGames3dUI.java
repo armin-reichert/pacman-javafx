@@ -13,7 +13,6 @@ import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
-import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import de.amr.games.pacman.ui3d.scene.Perspective;
@@ -93,13 +92,15 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static Picker<String> PICKER_LEVEL_COMPLETE;
     public static Picker<String> PICKER_GAME_OVER;
 
-    static void addAssets3D() {
+    @Override
+    protected void loadAssets() {
+        super.loadAssets();
+
         MSG_BUNDLE = ResourceBundle.getBundle(
             "de.amr.games.pacman.ui3d.texts.messages", PacManGames3dUI.class.getModule());
         PICKER_LEVEL_COMPLETE = Picker.fromBundle(MSG_BUNDLE, "level.complete");
         PICKER_GAME_OVER      = Picker.fromBundle(MSG_BUNDLE, "game.over");
 
-        Theme theme = PacManGames2dUI.THEME_2D;
         ResourceManager rm = () -> PacManGames3dUI.class;
 
         theme.set("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
@@ -183,10 +184,13 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("infobox.text_font",             rm.loadFont("fonts/SplineSansMono-Regular.ttf", 12));
     }
 
-    private final TileMapEditor editor;
+    private TileMapEditor editor;
 
-    public PacManGames3dUI(Stage stage, double width, double height) {
-        super(stage, width, height);
+    public void init(Stage stage, double width, double height) {
+        loadAssets();
+
+        super.init(stage, width, height);
+
         for (var variant : GameVariant.values()) {
             var playScene3D = new PlayScene3D();
             playScene3D.setContext(this);
@@ -194,6 +198,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             gameScenesForVariant.get(variant).put("play3D", playScene3D);
             Logger.info("Added 3D play scene for variant " + variant);
         }
+
         PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateStage());
         PY_3D_ENABLED.addListener((py, ov, nv) -> updateStage());
         int hour = LocalTime.now().getHour();
@@ -201,6 +206,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
         mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClicked);
         mainScene.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
+
         editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
         embedMapEditor(stage);
     }

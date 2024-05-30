@@ -96,9 +96,16 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final BooleanProperty PY_USE_AUTOPILOT   = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
 
-    private static void loadAssets2D() {
+    public static String variantKey(GameVariant variant) {
+        return switch (variant) {
+            case MS_PACMAN -> "ms_pacman";
+            case PACMAN -> "pacman";
+            case PACMAN_XXL -> "pacman_xxl";
+        };
+    }
+
+    protected void loadAssets() {
         ResourceManager rm = () -> PacManGames2dUI.class;
-        var theme = THEME_2D;
 
         //
         // Common to both games
@@ -204,42 +211,30 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         theme.set("pacman_xxl.startpage.image",      rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
     }
 
-    protected static final Theme THEME_2D = new Theme();
-    static {
-        loadAssets2D();
-        Logger.info("2D theme loaded");
-    }
-
-    public static final MsPacManGameSpriteSheet SS_MS_PACMAN = new MsPacManGameSpriteSheet(
-        THEME_2D.get("ms_pacman.spritesheet.image"),
-        THEME_2D.get("ms_pacman.spritesheet.image.mazes"));
-
-    public static final PacManGameSpriteSheet SS_PACMAN = new PacManGameSpriteSheet(
-        THEME_2D.get("pacman.spritesheet.image"),
-        THEME_2D.get("pacman.spritesheet.image.mazes"));
-
-    public static String variantKey(GameVariant variant) {
-        return switch (variant) {
-            case MS_PACMAN -> "ms_pacman";
-            case PACMAN -> "pacman";
-            case PACMAN_XXL -> "pacman_xxl";
-        };
-    }
-
-    protected final GameClockFX clock;
-    protected final Map<GameVariant, Map<String, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
-    protected final Stage stage;
-    protected final Scene mainScene;
-    protected final Map<String, Page> pages = new HashMap<>();
-    private String currentPageID;
-
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
-    private AudioClip voiceClip;
-    private final Animation voiceClipExecution = new PauseTransition();
+    protected final Theme theme = new Theme();
+    protected final Map<String, Page> pages = new HashMap<>();
+    protected final Map<GameVariant, Map<String, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
+    protected Stage stage;
+    protected Scene mainScene;
+    protected String currentPageID;
+    protected MsPacManGameSpriteSheet ssMsPacMan;
+    protected PacManGameSpriteSheet ssPacMan;
+    protected GameClockFX clock;
 
-    public PacManGames2dUI(Stage stage, double width, double height) {
+    //TODO reconsider this
+    protected AudioClip voiceClip;
+    protected final Animation voiceClipExecution = new PauseTransition();
+
+    public PacManGames2dUI() {
+    }
+
+    public void init(Stage stage, double width, double height) {
         checkNotNull(stage);
+
+        loadAssets();
+        Logger.info("2D theme loaded");
 
         this.stage = stage;
         mainScene = createMainScene(width, height);
@@ -270,6 +265,14 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             }
         });
         gameController().setClock(clock);
+
+        ssMsPacMan = new MsPacManGameSpriteSheet(
+            theme.get("ms_pacman.spritesheet.image"),
+            theme.get("ms_pacman.spritesheet.image.mazes"));
+
+        ssPacMan = new PacManGameSpriteSheet(
+            theme.get("pacman.spritesheet.image"),
+            theme.get("pacman.spritesheet.image.mazes"));
 
         Logger.info("Creating 2D game scenes for variant " + GameVariant.MS_PACMAN);
         gameScenesForVariant.put(GameVariant.MS_PACMAN, new HashMap<>(Map.of(
@@ -310,6 +313,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
                     GamePage gamePage = (GamePage) pages.get("gamePage");
                     gameScene2D.scalingPy.bind(gamePage.scalingPy);
                     gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
+                    gameScene2D.setSpritesheets(ssMsPacMan, ssPacMan);
                 }
             }
         }
@@ -412,7 +416,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             titleKey += ".paused";
         }
         stage.setTitle(tt(titleKey));
-        stage.getIcons().setAll(THEME_2D.image(vk + ".icon"));
+        stage.getIcons().setAll(theme.image(vk + ".icon"));
     }
 
     protected GameScene sceneMatchingCurrentGameState() {
@@ -487,7 +491,15 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public Theme theme() {
-        return THEME_2D;
+        return theme;
+    }
+
+    @Override
+    public SpriteSheet getSpriteSheet(GameVariant variant) {
+        return switch (variant) {
+            case MS_PACMAN -> ssMsPacMan;
+            case PACMAN, PACMAN_XXL -> ssPacMan;
+        };
     }
 
     // GameEventListener interface implementation
@@ -565,13 +577,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         GameModel game = e.game;
         switch (game.variant()) {
             case MS_PACMAN -> {
-                game.pac().setAnimations(new MsPacManGamePacAnimations(game.pac(), SS_MS_PACMAN));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, SS_MS_PACMAN)));
+                game.pac().setAnimations(new MsPacManGamePacAnimations(game.pac(), ssMsPacMan));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, ssMsPacMan)));
                 Logger.info("Created Ms. Pac-Man game creature animations for level #{}", game.levelNumber());
             }
             case PACMAN, PACMAN_XXL -> {
-                game.pac().setAnimations(new PacManGamePacAnimations(game.pac(), SS_PACMAN));
-                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, SS_PACMAN)));
+                game.pac().setAnimations(new PacManGamePacAnimations(game.pac(), ssPacMan));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, ssPacMan)));
                 Logger.info("Created Pac-Man game creature animations for level #{}", game.levelNumber());
             }
         }

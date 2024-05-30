@@ -17,7 +17,7 @@ import org.tinylog.Logger;
  */
 public class PacManGames3dApp extends Application {
 
-    private PacManGames3dUI ui;
+    private final PacManGames3dUI ui = new PacManGames3dUI();
 
     @Override
     public void init() {
@@ -26,8 +26,6 @@ public class PacManGames3dApp extends Application {
         Logger.info("Game controller initialized. Selected game: {}", GameController.it().game().variant());
         Logger.info("Java version:   {}", Runtime.version());
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
-        PacManGames3dUI.addAssets3D();
-        Logger.info("3D assets added to 2D theme.");
     }
 
     @Override
@@ -35,7 +33,7 @@ public class PacManGames3dApp extends Application {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double aspect = screenSize.getWidth() / screenSize.getHeight();
         double height = 0.8 * screenSize.getHeight(), width = aspect * height;
-        ui = new PacManGames3dUI(stage, width, height);
+        ui.init(stage, width, height);
         for (var variant : GameController.it().supportedGameVariants()) {
             GameController.it().game(variant).addGameEventListener(ui);
         }

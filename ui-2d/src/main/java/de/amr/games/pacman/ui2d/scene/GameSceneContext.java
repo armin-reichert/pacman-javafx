@@ -3,8 +3,10 @@ package de.amr.games.pacman.ui2d.scene;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
+import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import de.amr.games.pacman.ui2d.util.Theme;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.media.AudioClip;
@@ -45,6 +47,8 @@ public interface GameSceneContext {
     Map<String, GameScene> sceneConfig();
 
     Theme theme();
+
+    SpriteSheet getSpriteSheet(GameVariant variant);
 
     /**
      * Builds a resource key from the given key pattern and the arguments and returns the corresponding text from the

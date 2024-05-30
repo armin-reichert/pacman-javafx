@@ -9,6 +9,8 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.rendering.ClassicWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ModernWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -36,12 +38,12 @@ public abstract class GameScene2D implements GameScene {
 
     protected GameSceneContext context;
     protected GraphicsContext g;
-    protected final ModernWorldRenderer modernRenderer = new ModernWorldRenderer(scalingPy);
-    protected final ClassicWorldRenderer classicRenderer = new ClassicWorldRenderer(scalingPy);
+    protected ModernWorldRenderer modernRenderer = new ModernWorldRenderer(scalingPy);
+    protected ClassicWorldRenderer classicRenderer = new ClassicWorldRenderer(scalingPy);
 
-    protected GameScene2D() {
-        classicRenderer.setMsPacManSpriteSheet(PacManGames2dUI.SS_MS_PACMAN);
-        classicRenderer.setPacManSpriteSheet(PacManGames2dUI.SS_PACMAN);
+    public void setSpritesheets(MsPacManGameSpriteSheet ssMsPacMan, PacManGameSpriteSheet ssPacMan) {
+        classicRenderer.setMsPacManSpriteSheet(ssMsPacMan);
+        classicRenderer.setPacManSpriteSheet(ssPacMan);
     }
 
     public abstract boolean isCreditVisible();

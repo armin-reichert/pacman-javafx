@@ -13,7 +13,8 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui2d.PacManGames2dUI;
+import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.tilemap.TileMapRenderer;
 import de.amr.games.pacman.ui3d.animation.Squirting;
@@ -372,11 +373,11 @@ public class GameLevel3D extends Group {
             var material = new PhongMaterial(Color.WHITE);
             switch (context.game().variant()) {
                 case MS_PACMAN -> {
-                    var ss = PacManGames2dUI.SS_MS_PACMAN;
+                    var ss = (MsPacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
                     material.setDiffuseMap(ss.subImage(ss.bonusSymbolSprite(symbol)));
                 }
                 case PACMAN, PACMAN_XXL -> {
-                    var ss = PacManGames2dUI.SS_PACMAN;
+                    var ss = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
                     material.setDiffuseMap(ss.subImage(ss.bonusSymbolSprite(symbol)));
                 }
             }
@@ -428,12 +429,12 @@ public class GameLevel3D extends Group {
         }
         switch (context.game().variant()) {
             case MS_PACMAN -> {
-                var ss = PacManGames2dUI.SS_MS_PACMAN;
+                var ss = (MsPacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
                 bonus3D = new Bonus3D(bonus,
                     ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));
             }
             case PACMAN, PACMAN_XXL -> {
-                var ss = PacManGames2dUI.SS_PACMAN;
+                var ss = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
                 bonus3D = new Bonus3D(bonus,
                     ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));
             }

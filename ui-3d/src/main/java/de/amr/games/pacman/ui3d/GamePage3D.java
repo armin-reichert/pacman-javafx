@@ -4,8 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.page.GamePage;
+import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
@@ -139,6 +142,9 @@ public class GamePage3D extends GamePage {
     private void initPip() {
         final double ASPECT_RATIO = 0.777;
         pip.setContext(context);
+        pip.setSpritesheets(
+            (MsPacManGameSpriteSheet) context.getSpriteSheet(GameVariant.MS_PACMAN),
+            (PacManGameSpriteSheet) context.getSpriteSheet(GameVariant.PACMAN));
         pipCanvas.heightProperty().bind(PY_PIP_HEIGHT);
         pipCanvas.widthProperty().bind(Bindings.createDoubleBinding(() -> pipCanvas.getHeight() * ASPECT_RATIO, PY_PIP_HEIGHT));
         pipCanvas.opacityProperty().bind(PY_PIP_OPACITY_PERCENTAGE.divide(100.0));
@@ -192,7 +198,7 @@ public class GamePage3D extends GamePage {
         super.render();
         dashboard.update();
         pip.canvas().setVisible(PY_3D_PIP_ON.get() && isCurrentGameScene3D());
-        pip.draw();
+        //pip.draw();
     }
 
     @Override

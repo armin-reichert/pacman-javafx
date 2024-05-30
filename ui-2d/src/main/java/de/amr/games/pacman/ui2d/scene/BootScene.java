@@ -5,8 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui2d.PacManGames2dUI;
-import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import javafx.geometry.Rectangle2D;
 
 import static de.amr.games.pacman.lib.Globals.RND;
@@ -68,15 +66,9 @@ public class BootScene extends GameScene2D {
         }
     }
 
-    private SpriteSheet getSpriteSheet() {
-        return switch (context.game().variant()) {
-            case MS_PACMAN -> PacManGames2dUI.SS_MS_PACMAN;
-            case PACMAN, PACMAN_XXL -> PacManGames2dUI.SS_PACMAN;
-        };
-    }
-
     private void paintRandomSprites() {
         clearCanvas();
+        var spriteSheet = context.getSpriteSheet(context.game().variant());
         for (int row = 0; row < GameModel.ARCADE_MAP_TILES_Y / 2; ++row) {
             if (RND.nextInt(100) > 33) {
                 var region1 = randomSpriteSheetTile();
@@ -84,8 +76,7 @@ public class BootScene extends GameScene2D {
                 var splitX = GameModel.ARCADE_MAP_TILES_X / 8 + RND.nextInt(GameModel.ARCADE_MAP_TILES_X / 4);
                 for (int col = 0; col < GameModel.ARCADE_MAP_TILES_X / 2; ++col) {
                     var region = col < splitX ? region1 : region2;
-                    classicRenderer.drawSpriteScaled(g,
-                        getSpriteSheet().source(),
+                    classicRenderer.drawSpriteScaled(g, spriteSheet.source(),
                         region, region.getWidth() * col, region.getHeight() * row);
                 }
             }
@@ -93,8 +84,9 @@ public class BootScene extends GameScene2D {
     }
 
     private Rectangle2D randomSpriteSheetTile() {
-        var source = getSpriteSheet().source();
-        var raster = getSpriteSheet().raster();
+        var spriteSheet = context.getSpriteSheet(context.game().variant());
+        var source = spriteSheet.source();
+        var raster = spriteSheet.raster();
         double x = RND.nextDouble() * (source.getWidth() - raster);
         double y = RND.nextDouble() * (source.getHeight() - raster);
         return new Rectangle2D(x, y, raster, raster);

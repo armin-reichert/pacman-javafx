@@ -17,7 +17,7 @@ import org.tinylog.Logger;
  */
 public class PacManGames2dApp extends Application {
 
-    private PacManGames2dUI ui;
+    private final PacManGames2dUI ui = new PacManGames2dUI();
 
     @Override
     public void init() {
@@ -32,7 +32,7 @@ public class PacManGames2dApp extends Application {
     public void start(Stage stage) {
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         double height = 0.8 * screenSize.getHeight(), width = 36.0 / 28.0 * height;
-        ui = new PacManGames2dUI(stage, width, height);
+        ui.init(stage, width, height);
         for (var variant : GameController.it().supportedGameVariants()) {
              GameController.it().game(variant).addGameEventListener(ui);
         }

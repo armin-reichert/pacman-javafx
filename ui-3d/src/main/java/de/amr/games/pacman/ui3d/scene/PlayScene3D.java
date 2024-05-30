@@ -10,6 +10,8 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.Keyboard;
@@ -281,15 +283,17 @@ public class PlayScene3D implements GameScene {
             }
 
             case GHOST_DYING -> {
+                var ssMsPacMan = (MsPacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
+                var ssPacMan = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
                 Rectangle2D[] sprites = switch (context.game().variant()) {
-                    case MS_PACMAN -> SS_MS_PACMAN.ghostNumberSprites();
-                    case PACMAN, PACMAN_XXL -> SS_PACMAN.ghostNumberSprites();
+                    case MS_PACMAN -> ssMsPacMan.ghostNumberSprites();
+                    case PACMAN, PACMAN_XXL -> ssPacMan.ghostNumberSprites();
                 };
                 context.game().eventLog().killedGhosts.forEach(ghost -> {
                     int index = context.game().victims().indexOf(ghost);
                     var numberImage = switch (context.game().variant()) {
-                        case MS_PACMAN -> SS_MS_PACMAN.subImage(sprites[index]);
-                        case PACMAN, PACMAN_XXL -> SS_PACMAN.subImage(sprites[index]);
+                        case MS_PACMAN -> ssMsPacMan.subImage(sprites[index]);
+                        case PACMAN, PACMAN_XXL -> ssPacMan.subImage(sprites[index]);
                     };
                     level3D.ghosts3D().get(ghost.id()).setNumberImage(numberImage);
                 });
