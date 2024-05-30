@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
@@ -213,33 +212,24 @@ public class ClassicWorldRenderer {
         }
     }
 
-    public void drawBonus(
-        GraphicsContext g,
-        GameVariant variant,
-        GameSpriteSheet ss,
-        Bonus bonus)
+    public void drawMovingBonus(GraphicsContext g, GameSpriteSheet ss, MovingBonus movingBonus) {
+        //TODO reconsider this way of implementing the jumping bonus
+        g.save();
+        g.translate(0, movingBonus.elongationY());
+        if (movingBonus.state() == Bonus.STATE_EDIBLE) {
+            drawEntitySprite(g, ss, movingBonus.entity(), ss.bonusSymbolSprite(movingBonus.symbol()));
+        } else if (movingBonus.state() == Bonus.STATE_EATEN) {
+            drawEntitySprite(g, ss, movingBonus.entity(), ss.bonusValueSprite(movingBonus.symbol()));
+        }
+        g.restore();
+    }
+
+    public void drawStaticBonus(GraphicsContext g, GameSpriteSheet ss, Bonus bonus)
     {
-        switch (variant) {
-            case MS_PACMAN -> {
-                if (bonus instanceof MovingBonus movingBonus) {
-                    //TODO reconsider this way of implementing the jumping bonus
-                    g.save();
-                    g.translate(0, movingBonus.elongationY());
-                    if (bonus.state() == Bonus.STATE_EDIBLE) {
-                        drawEntitySprite(g, ss, bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
-                    } else if (bonus.state() == Bonus.STATE_EATEN) {
-                        drawEntitySprite(g, ss, bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
-                    }
-                    g.restore();
-                }
-            }
-            case PACMAN, PACMAN_XXL -> {
-                if (bonus.state() == Bonus.STATE_EDIBLE) {
-                    drawEntitySprite(g, ss, bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
-                } else if (bonus.state() == Bonus.STATE_EATEN) {
-                    drawEntitySprite(g, ss, bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
-                }
-            }
+        if (bonus.state() == Bonus.STATE_EDIBLE) {
+            drawEntitySprite(g, ss, bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
+        } else if (bonus.state() == Bonus.STATE_EATEN) {
+            drawEntitySprite(g, ss, bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
         }
     }
 

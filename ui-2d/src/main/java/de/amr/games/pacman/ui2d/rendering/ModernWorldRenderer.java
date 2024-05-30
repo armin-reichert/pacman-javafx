@@ -12,6 +12,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import static de.amr.games.pacman.ui2d.tilemap.TileMapRenderer.getColorFromMap;
 import static java.util.function.Predicate.not;
 
 /**
@@ -38,14 +39,14 @@ public class ModernWorldRenderer {
 
     public void drawTerrain(GraphicsContext g, World world, boolean hiLighted) {
         var terrainMap = world.map().terrain();
-        terrainRenderer.setWallStrokeColor(hiLighted ? Color.WHITE : TileMapRenderer.getColorFromMap(terrainMap, "wall_stroke_color", Color.WHITE));
-        terrainRenderer.setWallFillColor(hiLighted ? Color.BLACK : TileMapRenderer.getColorFromMap(terrainMap, "wall_fill_color", Color.GREEN));
-        terrainRenderer.setDoorColor(hiLighted ? Color.BLACK : TileMapRenderer.getColorFromMap(terrainMap, "door_color", Color.YELLOW));
+        terrainRenderer.setWallStrokeColor(hiLighted ? Color.WHITE : getColorFromMap(terrainMap, "wall_stroke_color", Color.WHITE));
+        terrainRenderer.setWallFillColor(hiLighted ? Color.BLACK : getColorFromMap(terrainMap, "wall_fill_color", Color.GREEN));
+        terrainRenderer.setDoorColor(hiLighted ? Color.BLACK : getColorFromMap(terrainMap, "door_color", Color.YELLOW));
         terrainRenderer.drawMap(g, terrainMap);
     }
 
     public void drawFood(GraphicsContext g, World world, boolean energizersOn) {
-        var foodColor = TileMapRenderer.getColorFromMap(world.map().food(), "food_color", Color.ORANGE);
+        var foodColor = getColorFromMap(world.map().food(), "food_color", Color.ORANGE);
         foodRenderer.setPelletColor(foodColor);
         foodRenderer.setEnergizerColor(foodColor);
         world.tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerTile)).forEach(tile -> foodRenderer.drawPellet(g, tile));

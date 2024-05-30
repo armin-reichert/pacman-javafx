@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MsPacManGame;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.scene.paint.Color;
@@ -82,15 +83,20 @@ public class PlayScene2D extends GameScene2D {
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         boolean blinkingOn = game.blinking().isOn();
         switch (game.variant()) {
-            case MS_PACMAN ->
-                classicRenderer.drawMsPacManWorld(g, ss, game.world(), ((MsPacManGame)game).mapNumber(), flashing, blinkingOn);
-            case PACMAN ->
+            case MS_PACMAN -> {
+                classicRenderer.drawMsPacManWorld(g, ss, game.world(), ((MsPacManGame) game).mapNumber(), flashing, blinkingOn);
+                game.bonus().ifPresent(bonus -> classicRenderer.drawMovingBonus(g, ss, (MovingBonus) bonus));
+            }
+            case PACMAN -> {
                 classicRenderer.drawPacManWorld(g, ss, game.world(), flashing, blinkingOn);
-            case PACMAN_XXL ->
+                game.bonus().ifPresent(bonus -> classicRenderer.drawStaticBonus(g, ss, bonus));
+            }
+            case PACMAN_XXL -> {
                 modernRenderer.draw(g, game.world(), flashing, blinkingOn);
+                game.bonus().ifPresent(bonus -> classicRenderer.drawStaticBonus(g, ss, bonus));
+            }
         }
         drawLevelMessage();
-        game.bonus().ifPresent(bonus -> classicRenderer.drawBonus(g, context.game().variant(), ss, bonus));
         classicRenderer.drawPac(g, ss, game.pac());
         if (infoVisiblePy.get()) {
             classicRenderer.drawPacInfo(g, game.pac());
