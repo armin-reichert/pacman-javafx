@@ -94,6 +94,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static Picker<String> PICKER_LEVEL_COMPLETE;
     public static Picker<String> PICKER_GAME_OVER;
 
+    private TileMapEditor editor;
+
     @Override
     protected void loadAssets() {
         super.loadAssets();
@@ -185,8 +187,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("infobox.label_font",            Font.font("Sans", 12));
         theme.set("infobox.text_font",             rm.loadFont("fonts/SplineSansMono-Regular.ttf", 12));
     }
-
-    private TileMapEditor editor;
 
     public void init(Stage stage, double width, double height) {
         loadAssets();
@@ -296,10 +296,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         }
     }
 
-    public boolean isPlayScene(GameScene gameScene) {
-        return gameScene == sceneConfig().get("play") || gameScene == sceneConfig().get("play3D");
-    }
-
     @Override
     public ActionHandler3D actionHandler() {
         return this;
@@ -352,7 +348,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         currentGameScene().ifPresent(gameScene -> {
             toggle(PY_3D_ENABLED);
             gameScene = sceneMatchingCurrentGameState();
-            if (isPlayScene(gameScene)) {
+            if (gameScene == sceneConfig().get("play") || gameScene == sceneConfig().get("play3D")) {
                 updateOrReloadGameScene(true);
                 gameScene.onSceneVariantSwitch();
             }
