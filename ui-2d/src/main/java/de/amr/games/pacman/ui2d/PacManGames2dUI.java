@@ -28,6 +28,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -320,9 +321,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     protected StartPage createStartPage() {
-        var startPage = new StartPage(theme(), this);
-        startPage.setPlayButtonAction(() -> showPage("gamePage"));
-        startPage.setOnKeyPressed(keyEvent -> {
+        var startPage = new StartPage(this);
+        startPage.playButton().setOnMouseClicked(e -> {
+            if (e.getButton().equals(MouseButton.PRIMARY)) {
+                showPage("gamePage");
+            }
+        });
+        startPage.rootPane().setOnKeyPressed(keyEvent -> {
             if (Keyboard.matches(keyEvent, KEYS_SHOW_GAME_PAGE)) {
                 showPage("gamePage");
             } else if (Keyboard.matches(keyEvent, KEYS_SELECT_NEXT_VARIANT)) {

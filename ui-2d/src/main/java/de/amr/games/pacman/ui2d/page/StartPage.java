@@ -2,10 +2,8 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.ActionHandler;
-import de.amr.games.pacman.ui2d.util.Theme;
+import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.Ufx;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -13,8 +11,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -31,8 +27,8 @@ public class StartPage implements Page {
 
     private final StackPane root = new StackPane();
     private final BorderPane layout = new BorderPane();
-    private final Theme theme;
     private final Node btnPlay;
+    private final GameSceneContext context;
 
     private Button createCarouselButton(Direction dir, Runnable action) {
         double dimmed = 0.25;
@@ -47,13 +43,15 @@ public class StartPage implements Page {
         return button;
     }
 
-    public StartPage(Theme theme, ActionHandler actionHandler) {
-        checkNotNull(theme);
-        this.theme = theme;
+    public StartPage(GameSceneContext context) {
+        this.context = checkNotNull(context);
 
-        var btnNextVariant = createCarouselButton(Direction.RIGHT, actionHandler::selectNextGameVariant);
-        var btnPrevVariant = createCarouselButton(Direction.LEFT, actionHandler::selectPrevGameVariant);
-        btnPlay = createPlayButton();
+        var btnNextVariant = createCarouselButton(Direction.RIGHT,
+            context.actionHandler()::selectNextGameVariant);
+        var btnPrevVariant = createCarouselButton(Direction.LEFT,
+            context.actionHandler()::selectPrevGameVariant);
+
+        btnPlay = createPlayButton(context.tt("play_button"));
 
         VBox left = new VBox(btnPrevVariant);
         left.setAlignment(Pos.CENTER);
@@ -77,8 +75,12 @@ public class StartPage implements Page {
         return root;
     }
 
+    public Node playButton() {
+        return btnPlay;
+    }
+
     public void updateBackground(GameVariant variant) {
-        Image image = theme.image(variant.resourceKey() + ".startpage.image");
+        Image image = context.theme().image(variant.resourceKey() + ".startpage.image");
         checkNotNull(image);
         var bgImage = new BackgroundImage(
             image,
@@ -90,35 +92,23 @@ public class StartPage implements Page {
         layout.setBackground(bg);
     }
 
-    public void setPlayButtonAction(Runnable action) {
-        btnPlay.setOnMouseClicked(e -> {
-            if (e.getButton().equals(MouseButton.PRIMARY)) {
-                action.run();
-            }
-        });
-    }
+    private Node createPlayButton(String buttonText) {
+        var text = new Text(buttonText);
+        text.setFill(context.theme().color("startpage.button.color"));
+        text.setFont(context.theme().font("startpage.button.font"));
 
-    public void setOnKeyPressed(EventHandler<KeyEvent> handler) {
-        root.setOnKeyPressed(handler);
-    }
+        var shadow = new DropShadow();
+        shadow.setOffsetY(3.0f);
+        shadow.setColor(Color.color(0.2f, 0.2f, 0.2f));
+        text.setEffect(shadow);
 
-    // TODO This should be a real button but it seems WebFX/GWT has issues with graphic buttons
-    private Node createPlayButton() {
-        var label = new Text("Play!");
-        label.setFill(theme.color("startpage.button.color"));
-        label.setFont(theme.font("startpage.button.font"));
+        var pane = new BorderPane(text);
+        pane.setMaxSize(200, 100);
+        pane.setPadding(new Insets(10));
+        pane.setCursor(Cursor.HAND);
+        pane.setBackground(Ufx.coloredRoundedBackground(
+            context.theme().color("startpage.button.bgColor"), 20));
 
-        var ds = new DropShadow();
-        ds.setOffsetY(3.0f);
-        ds.setColor(Color.color(0.2f, 0.2f, 0.2f));
-        label.setEffect(ds);
-
-        var button = new BorderPane(label);
-        button.setMaxSize(200, 100);
-        button.setPadding(new Insets(10));
-        button.setCursor(Cursor.HAND);
-        button.setBackground(Ufx.coloredRoundedBackground(theme.color("startpage.button.bgColor"), 20));
-
-        return button;
+        return pane;
     }
 }
