@@ -10,7 +10,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui2d.util.Ufx;
@@ -40,7 +39,6 @@ import javafx.stage.Window;
 import org.tinylog.Logger;
 
 import java.time.LocalTime;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.ui2d.util.Keyboard.*;
@@ -93,7 +91,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     private static final BackgroundSize FILL_PAGE = new BackgroundSize(1, 1, true, true, false, true);
 
-    public static ResourceBundle MSG_BUNDLE;
     public static Picker<String> PICKER_LEVEL_COMPLETE;
     public static Picker<String> PICKER_GAME_OVER;
 
@@ -103,10 +100,10 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public void loadAssets() {
         super.loadAssets();
 
-        MSG_BUNDLE = ResourceBundle.getBundle(
-            "de.amr.games.pacman.ui3d.texts.messages", PacManGames3dUI.class.getModule());
-        PICKER_LEVEL_COMPLETE = Picker.fromBundle(MSG_BUNDLE, "level.complete");
-        PICKER_GAME_OVER      = Picker.fromBundle(MSG_BUNDLE, "game.over");
+        var messages = ResourceBundle.getBundle("de.amr.games.pacman.ui3d.texts.messages", getClass().getModule());
+        PICKER_LEVEL_COMPLETE = Picker.fromBundle(messages, "level.complete");
+        PICKER_GAME_OVER      = Picker.fromBundle(messages, "game.over");
+        bundles.add(messages);
 
         ResourceManager rm = () -> PacManGames3dUI.class;
 
@@ -115,10 +112,10 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("model3D.pellet", new Model3D(rm.url("model3D/12206_Fruit_v1_L3.obj")));
 
         theme.set("model3D.wallpaper", rm.imageBackground("graphics/sea-wallpaper.jpg",
-            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,FILL_PAGE));
+            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, FILL_PAGE));
 
         theme.set("model3D.wallpaper.night", rm.imageBackground("graphics/sea-wallpaper-night.jpg",
-            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,FILL_PAGE));
+            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, FILL_PAGE));
 
         theme.set("image.armin1970", rm.loadImage("graphics/armin.jpg"));
         theme.set("icon.play",       rm.loadImage("graphics/icons/play.png"));
@@ -261,11 +258,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
                 stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
             }
         );
-    }
-
-    @Override
-    public String tt(String key, Object... args) {
-        return GameSceneContext.message(List.of(PacManGames3dUI.MSG_BUNDLE, PacManGames2dUI.MSG_BUNDLE), key, args);
     }
 
     @Override

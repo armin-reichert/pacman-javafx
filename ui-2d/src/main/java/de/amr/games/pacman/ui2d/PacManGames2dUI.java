@@ -24,7 +24,10 @@ import javafx.animation.PauseTransition;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -38,6 +41,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -57,9 +61,6 @@ import static java.util.function.Predicate.not;
  * @author Armin Reichert
  */
 public class PacManGames2dUI implements GameEventListener, GameSceneContext, ActionHandler {
-
-    public static final ResourceBundle MSG_BUNDLE = ResourceBundle.getBundle(
-        "de.amr.games.pacman.ui2d.texts.messages", PacManGames2dUI.class.getModule());
 
     public static final KeyCodeCombination KEY_SHOW_HELP            = just(KeyCode.H);
     public static final KeyCodeCombination KEY_PAUSE                = just(KeyCode.P);
@@ -118,6 +119,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     protected final Theme theme = new Theme();
     protected final Map<String, Page> pages = new HashMap<>();
     protected final Map<GameVariant, Map<String, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
+    protected List<ResourceBundle> bundles = new ArrayList<>();
+
     protected Stage stage;
     protected Scene mainScene;
     protected String currentPageID;
@@ -131,6 +134,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     public void loadAssets() {
+        bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", getClass().getModule()));
         ResourceManager rm = () -> PacManGames2dUI.class;
 
         //
@@ -452,11 +456,22 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         gamePage.signature().ifPresent(Signature::hide);
     }
 
+    protected String message(String key, Object... args) {
+        checkNotNull(key);
+        for (var bundle : bundles) {
+            if (bundle.containsKey(key)) {
+                return MessageFormat.format(bundle.getString(key), args);
+            }
+        }
+        Logger.error("Missing localized text for key {}", key);
+        return null;
+    }
+
     // GameSceneContext interface implementation
 
     @Override
     public String tt(String key, Object... args) {
-        return GameSceneContext.message(List.of(MSG_BUNDLE), key, args);
+        return message(key, args);
     }
 
     @Override
