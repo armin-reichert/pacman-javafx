@@ -24,6 +24,7 @@ import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.MouseButton;
@@ -104,11 +105,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override
         protected void invalidated() {
-            Logger.info("gameVariantPy invalidated");
-            stage.getIcons().setAll(theme.image(get().resourceKey() + ".icon"));
+            Logger.debug("gameVariantPy invalidated");
             StartPage startPage = page("startPage");
             startPage.updateBackground(get());
-    }
+        }
     };
 
     public final StringProperty stageTitlePy = new SimpleStringProperty(this, "stageTitle");
@@ -286,27 +286,19 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             "cut3",   new MsPacManCutScene3()
         )));
 
-        Logger.info("Creating 2D game scenes for variant " + GameVariant.PACMAN);
-        gameScenesForVariant.put(GameVariant.PACMAN, new HashMap<>(Map.of(
-            "boot",   new BootScene(),
-            "intro",  new PacManIntroScene(),
-            "credit", new PacManCreditScene(),
-            "play",   new PlayScene2D(),
-            "cut1",   new PacManCutScene1(),
-            "cut2",   new PacManCutScene2(),
-            "cut3",   new PacManCutScene3()
-        )));
+        Stream.of(GameVariant.PACMAN, GameVariant.PACMAN_XXL).forEach(variant -> {
+            Logger.info("Creating 2D game scenes for variant " + variant);
+            gameScenesForVariant.put(variant, new HashMap<>(Map.of(
+                "boot",   new BootScene(),
+                "intro",  new PacManIntroScene(),
+                "credit", new PacManCreditScene(),
+                "play",   new PlayScene2D(),
+                "cut1",   new PacManCutScene1(),
+                "cut2",   new PacManCutScene2(),
+                "cut3",   new PacManCutScene3()
+            )));
+        });
 
-        Logger.info("Creating 2D game scenes for variant " + GameVariant.PACMAN_XXL);
-        gameScenesForVariant.put(GameVariant.PACMAN_XXL, new HashMap<>(Map.of(
-            "boot",   new BootScene(),
-            "intro",  new PacManIntroScene(),
-            "credit", new PacManCreditScene(),
-            "play",   new PlayScene2D(),
-            "cut1",   new PacManCutScene1(),
-            "cut2",   new PacManCutScene2(),
-            "cut3",   new PacManCutScene3()
-        )));
         for (Map<String, GameScene> gameSceneMap : gameScenesForVariant.values()) {
             for (var gameScene : gameSceneMap.values()) {
                 gameScene.setContext(this);
@@ -318,16 +310,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         }
 
         stage.titleProperty().bind(stageTitlePy);
+        stage.getIcons().setAll(icon(game().variant()));
         stage.setMinWidth(CANVAS_WIDTH_UNSCALED);
         stage.setMinHeight(CANVAS_HEIGHT_UNSCALED);
         stage.centerOnScreen();
         stage.setScene(mainScene);
 
-        gameVariantPy.set(game().variant());
-
-        stageTitlePy.set(computeStageTitle());
-        stageTitlePy.bind(Bindings.createStringBinding(this::computeStageTitle,
-            clock.pausedPy, gameVariantPy));
+        stageTitlePy.bind(Bindings.createStringBinding(this::computeStageTitle, clock.pausedPy, gameVariantPy));
     }
 
     protected String computeStageTitle() {
@@ -524,10 +513,15 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         }
     }
 
+    private Image icon(GameVariant variant) {
+        return theme.image(game().variant().resourceKey() + ".icon");
+    }
+
     @Override
     public void onGameVariantChanged(GameEvent e) {
         Logger.info("Game variant changed to {}", game().variant());
         gameVariantPy.set(game().variant());
+        stage.getIcons().setAll(icon(game().variant()));
     }
 
     @Override
