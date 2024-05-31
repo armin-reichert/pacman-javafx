@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
+import de.amr.games.pacman.ui2d.page.Signature;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.rendering.*;
 import de.amr.games.pacman.ui2d.scene.*;
@@ -243,6 +244,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         pages.put("startPage", createStartPage());
         pages.put("gamePage",  createGamePage(mainScene));
 
+        GamePage gamePage = page("gamePage");
+        gamePage.sign(9, "Remake (2021-2024) by Armin Reichert");
+
         Keyboard.handleKeyEventsFor(mainScene);
 
         clock = new GameClockFX();
@@ -304,7 +308,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             for (var gameScene : gameSceneMap.values()) {
                 gameScene.setContext(this);
                 if (gameScene instanceof GameScene2D gameScene2D) {
-                    GamePage gamePage = (GamePage) pages.get("gamePage");
                     gameScene2D.scalingPy.bind(gamePage.scalingPy);
                     gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
                 }
@@ -452,18 +455,19 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     private void showSignature() {
         GamePage gamePage = page("gamePage");
-        var signature = gamePage.signature();
-        int y = switch (game().variant()) {
-            case MS_PACMAN -> 45;
-            case PACMAN, PACMAN_XXL -> 30;
-        };
-        signature.translateYProperty().bind(gamePage.scalingPy.multiply(y));
-        signature.show();
+        gamePage.signature().ifPresent(signature -> {
+            int y = switch (game().variant()) {
+                case MS_PACMAN -> 45;
+                case PACMAN, PACMAN_XXL -> 30;
+            };
+            signature.translateYProperty().bind(gamePage.scalingPy.multiply(y));
+            signature.show();
+        });
     }
 
     private void hideSignature() {
         GamePage gamePage = page("gamePage");
-        gamePage.signature().hide();
+        gamePage.signature().ifPresent(Signature::hide);
     }
 
     // GameSceneContext interface implementation

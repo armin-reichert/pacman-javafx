@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
@@ -25,7 +24,10 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import java.util.Optional;
+
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
 
 /**
@@ -37,33 +39,39 @@ public class GamePage extends CanvasLayoutPane implements Page {
     private final FlashMessageView flashMessageView = new FlashMessageView();
     private final Pane popupLayer = new Pane();
     private final FadingPane helpInfoPopUp = new FadingPane();
-    private Signature signature;
     private BorderPane helpButton;
 
     public GamePage(GameSceneContext context, double width, double height) {
         this.context = context;
-        createSignature();
         createHelpButton();
         createDebugInfoBindings();
-        popupLayer.getChildren().addAll(helpButton, signature, helpInfoPopUp);
+        popupLayer.getChildren().addAll(helpButton, helpInfoPopUp);
         layersContainer.getChildren().addAll(popupLayer, flashMessageView);
         layersContainer.setOnKeyPressed(this::handle);
         setSize(width, height);
     }
 
-    private void createSignature() {
-        signature = new Signature(context);
-        signature.remakeText().fontProperty().bind(Bindings.createObjectBinding(
-            () -> context.theme().font("font.monospaced", Math.floor(9 * getScaling())), scalingPy));
-        signature.authorText().fontProperty().bind(Bindings.createObjectBinding(
-            () -> context.theme().font("font.monospaced", Math.floor(9 * getScaling())), scalingPy));
+    public void sign(double fontSize, String... words) {
+        var signature = new Signature(checkNotNull(words));
+        var scaledFontSizePy = scalingPy.multiply(fontSize);
+        signature.fontPy.bind(Bindings.createObjectBinding(
+            () -> context.theme().font("font.monospaced", scaledFontSizePy.get()), scaledFontSizePy));
+        // keep centered over canvas container
         signature.translateXProperty().bind(Bindings.createDoubleBinding(
             () -> 0.5 * (canvasContainer.getWidth() - signature.getWidth()), canvasContainer.widthProperty()
         ));
+
+        popupLayer.getChildren().stream()
+            .filter(Signature.class::isInstance)
+            .forEach(popupLayer.getChildren()::remove);
+        popupLayer.getChildren().add(signature);
     }
 
-    public Signature signature() {
-        return signature;
+    public Optional<Signature> signature() {
+        return popupLayer.getChildren().stream()
+            .filter(Signature.class::isInstance)
+            .map(Signature.class::cast)
+            .findFirst();
     }
 
     @Override
