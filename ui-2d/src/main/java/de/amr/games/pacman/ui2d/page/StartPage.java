@@ -24,13 +24,12 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
 /**
  * @author Armin Reichert
  */
-public class StartPage implements Page {
+public class StartPage extends StackPane implements Page {
 
     static final BackgroundSize SIZE_TO_FIT = new BackgroundSize(AUTO, AUTO,
         false, false,
         true, false);
 
-    private final StackPane root = new StackPane();
     private final BorderPane layout = new BorderPane();
     private final Node btnPlay;
     private final GameSceneContext context;
@@ -71,15 +70,15 @@ public class StartPage implements Page {
         bottom.setTranslateY(-10);
         layout.setBottom(bottom);
 
-        updateBackground(context.game().variant());
+        updateBackgroundImage(context.game().variant());
 
-        root.setBackground(Ufx.coloredBackground(Color.BLACK));
-        root.getChildren().add(layout);
+        setBackground(Ufx.coloredBackground(Color.BLACK));
+        getChildren().add(layout);
     }
 
     @Override
     public Pane rootPane() {
-        return root;
+        return this;
     }
 
     public Node playButton() {
@@ -94,18 +93,14 @@ public class StartPage implements Page {
         }
     }
 
-    public void updateBackground(GameVariant variant) {
-        var background = computeBackground(variant);
-        layout.setBackground(background);
-    }
-
-    private Background computeBackground(GameVariant variant) {
+    public void updateBackgroundImage(GameVariant variant) {
         String imageKey = variant.resourceKey() + ".startpage.image";
         Image image = checkNotNull(context.theme().image(imageKey));
-        return new Background(
+        var background = new Background(
             new BackgroundImage(image,BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-            BackgroundPosition.CENTER, SIZE_TO_FIT)
+                BackgroundPosition.CENTER, SIZE_TO_FIT)
         );
+        layout.setBackground(background);
     }
 
     private Node createPlayButton(String buttonText) {
