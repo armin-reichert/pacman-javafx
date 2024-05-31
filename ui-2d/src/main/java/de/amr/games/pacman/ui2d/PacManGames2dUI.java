@@ -309,6 +309,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             }
         }
 
+        stageTitlePy.bind(Bindings.createStringBinding(this::computeStageTitle, clock.pausedPy, gameVariantPy));
+
         stage.titleProperty().bind(stageTitlePy);
         stage.getIcons().setAll(icon(game().variant()));
         stage.setMinWidth(CANVAS_WIDTH_UNSCALED);
@@ -316,7 +318,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         stage.centerOnScreen();
         stage.setScene(mainScene);
 
-        stageTitlePy.bind(Bindings.createStringBinding(this::computeStageTitle, clock.pausedPy, gameVariantPy));
+        selectPage("startPage");
+        stage.show();
     }
 
     protected String computeStageTitle() {
@@ -394,7 +397,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             selectedPage.setSize(mainScene.getWidth(), mainScene.getHeight());
             selectedPage.onSelected();
             mainScene.setRoot(selectedPage.rootPane());
-            stage.show();
             selectedPage.rootPane().requestFocus();
         }
     }

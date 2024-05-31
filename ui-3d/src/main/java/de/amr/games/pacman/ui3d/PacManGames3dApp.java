@@ -53,7 +53,6 @@ public class PacManGames3dApp extends Application {
         for (var variant : GameController.it().supportedGameVariants()) {
             GameController.it().game(variant).addGameEventListener(ui);
         }
-        ui.selectPage("startPage");
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }
 
