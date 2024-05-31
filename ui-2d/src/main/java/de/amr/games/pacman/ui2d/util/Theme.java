@@ -9,6 +9,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,22 +25,27 @@ public class Theme {
     protected Map<String, Object> valuesByName = new HashMap<>();
     protected Map<String, ArrayList<Object>> arraysByName = new HashMap<>();
 
-    private long countEntriesOfType(Class<?> clazz) {
+    public long countEntriesOfType(Class<?> clazz) {
         var count = valuesByName.values().stream().filter(value -> value.getClass().isAssignableFrom(clazz)).count();
         for (var array : arraysByName.values()) {
-            if (!array.isEmpty() && array.get(0).getClass().isAssignableFrom(clazz)) {
+            if (!array.isEmpty() && array.getFirst().getClass().isAssignableFrom(clazz)) {
                 count += array.size();
             }
         }
         return count;
     }
 
-    public String toString() {
-        return getClass().getSimpleName() + ": " +
-            countEntriesOfType(Image.class) + " images" + ", " +
-            countEntriesOfType(Font.class) + " fonts" + ", " +
-            countEntriesOfType(Color.class) + " colors" + ", " +
-            countEntriesOfType(AudioClip.class) + " audio clips" + ", ";
+    public String summary(List<Pair<Class<?>, String>> entryTypes) {
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for (var entry : entryTypes) {
+            sb.append(entry.getValue()).append(" (").append(countEntriesOfType(entry.getKey())).append(")");
+            if (i < entryTypes.size() - 1) {
+                sb.append(", ");
+            }
+            i += 1;
+        }
+        return sb.toString();
     }
 
     public void set(String name, Object value) {

@@ -98,7 +98,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final BooleanProperty PY_USE_AUTOPILOT   = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
 
-    protected void loadAssets() {
+    public void loadAssets() {
         ResourceManager rm = () -> PacManGames2dUI.class;
 
         //
@@ -228,9 +228,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     public void init(Stage stage, double width, double height) {
         checkNotNull(stage);
-
-        loadAssets();
-        Logger.info("2D theme loaded");
 
         this.stage = stage;
         mainScene = createMainScene(width, height);

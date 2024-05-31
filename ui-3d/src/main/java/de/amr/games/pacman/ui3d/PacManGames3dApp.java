@@ -6,11 +6,19 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
+import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import org.tinylog.Logger;
+
+import java.util.List;
 
 /**
  * @author Armin Reichert
@@ -21,11 +29,19 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void init() {
+        Logger.info("Java version:   {}", Runtime.version());
+        Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         GameController.it().setSupportedGameVariants(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
         GameController.it().selectGame(GameVariant.PACMAN_XXL);
         Logger.info("Game controller initialized. Selected game: {}", GameController.it().game().variant());
-        Logger.info("Java version:   {}", Runtime.version());
-        Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
+        ui.loadAssets();
+        Logger.info("Assets loaded: {}", ui.theme().summary(List.of(
+            new Pair<>(Model3D.class,"3D models"),
+            new Pair<>(Image.class, "images"),
+            new Pair<>(Font.class, "fonts"),
+            new Pair<>(Color.class, "colors"),
+            new Pair<>(AudioClip.class, "audio clips")
+        )));
     }
 
     @Override

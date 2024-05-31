@@ -95,7 +95,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     private TileMapEditor editor;
 
     @Override
-    protected void loadAssets() {
+    public void loadAssets() {
         super.loadAssets();
 
         MSG_BUNDLE = ResourceBundle.getBundle(
@@ -187,8 +187,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     }
 
     public void init(Stage stage, double width, double height) {
-        loadAssets();
-
         super.init(stage, width, height);
 
         for (var variant : GameVariant.values()) {
