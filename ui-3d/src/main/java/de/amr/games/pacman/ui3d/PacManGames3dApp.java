@@ -32,7 +32,7 @@ public class PacManGames3dApp extends Application {
         Logger.info("Java version:   {}", Runtime.version());
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         GameController.it().setSupportedGameVariants(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
-        GameController.it().selectGame(GameVariant.PACMAN_XXL);
+        GameController.it().selectGameVariant(GameVariant.PACMAN_XXL);
         Logger.info("Game controller initialized. Selected game: {}", GameController.it().game().variant());
         ui.loadAssets();
         Logger.info("Assets loaded: {}", ui.theme().summary(List.of(

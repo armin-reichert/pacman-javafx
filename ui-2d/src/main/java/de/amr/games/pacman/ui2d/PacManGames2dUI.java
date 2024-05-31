@@ -21,10 +21,8 @@ import de.amr.games.pacman.ui2d.scene.*;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -100,6 +98,36 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
 
     public static final String SIGNATURE_TEXT = "Remake (2021-2024) by Armin Reichert";
+
+    // end static section
+
+    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
+        @Override
+        protected void invalidated() {
+            Logger.info("gameVariantPy invalidated");
+            stage.getIcons().setAll(theme.image(get().resourceKey() + ".icon"));
+            StartPage startPage = page("startPage");
+            startPage.updateBackground(get());
+    }
+    };
+
+    public final StringProperty stageTitlePy = new SimpleStringProperty(this, "stageTitle");
+    public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
+
+    protected final Theme theme = new Theme();
+    protected final Map<String, Page> pages = new HashMap<>();
+    protected final Map<GameVariant, Map<String, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
+    protected Stage stage;
+    protected Scene mainScene;
+    protected String currentPageID;
+    protected GameClockFX clock;
+
+    //TODO reconsider this
+    protected AudioClip voiceClip;
+    protected final Animation voiceClipExecution = new PauseTransition();
+
+    public PacManGames2dUI() {
+    }
 
     public void loadAssets() {
         ResourceManager rm = () -> PacManGames2dUI.class;
@@ -212,23 +240,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         theme.set("pacman_xxl.startpage.image",      rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
     }
 
-    public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
-
-    protected final Theme theme = new Theme();
-    protected final Map<String, Page> pages = new HashMap<>();
-    protected final Map<GameVariant, Map<String, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
-    protected Stage stage;
-    protected Scene mainScene;
-    protected String currentPageID;
-    protected GameClockFX clock;
-
-    //TODO reconsider this
-    protected AudioClip voiceClip;
-    protected final Animation voiceClipExecution = new PauseTransition();
-
-    public PacManGames2dUI() {
-    }
-
     public void init(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
         mainScene = createMainScene(width, height);
@@ -243,7 +254,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         Keyboard.handleKeyEventsFor(mainScene);
 
         clock = new GameClockFX();
-        clock.pausedPy.addListener((py, ov, nv) -> updateStage());
         clock.setPauseableCallback(() -> {
             try {
                 gameController().update();
@@ -307,10 +317,25 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             }
         }
 
+        stage.titleProperty().bind(stageTitlePy);
         stage.setMinWidth(CANVAS_WIDTH_UNSCALED);
         stage.setMinHeight(CANVAS_HEIGHT_UNSCALED);
         stage.centerOnScreen();
         stage.setScene(mainScene);
+
+        gameVariantPy.set(game().variant());
+
+        stageTitlePy.set(computeStageTitle());
+        stageTitlePy.bind(Bindings.createStringBinding(this::computeStageTitle,
+            clock.pausedPy, gameVariantPy));
+    }
+
+    protected String computeStageTitle() {
+        String key = "app.title." + game().variant().resourceKey();
+        if (clock.isPaused()) {
+            key += ".paused";
+        }
+        return tt(key);
     }
 
     protected Scene createMainScene(double width, double height) {
@@ -374,23 +399,15 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (!pages.containsKey(pageID)) {
             throw new IllegalArgumentException("Illegal page ID: " + pageID);
         }
-        currentPageID = pageID;
-        Page selectedPage = currentPage();
-        selectedPage.setSize(mainScene.getWidth(), mainScene.getHeight());
-        selectedPage.onSelected();
-        mainScene.setRoot(selectedPage.rootPane());
-        updateStage();
-        stage.show();
-        selectedPage.rootPane().requestFocus();
-    }
-
-    protected void updateStage() {
-        String key = "app.title." + game().variant().resourceKey();
-        if (clock.isPaused()) {
-            key += ".paused";
+        if (!pageID.equals(currentPageID)) {
+            currentPageID = pageID;
+            Page selectedPage = currentPage();
+            selectedPage.setSize(mainScene.getWidth(), mainScene.getHeight());
+            selectedPage.onSelected();
+            mainScene.setRoot(selectedPage.rootPane());
+            stage.show();
+            selectedPage.rootPane().requestFocus();
         }
-        stage.setTitle(tt(key));
-        stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
     }
 
     protected GameScene sceneMatchingCurrentGameState() {
@@ -428,7 +445,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         } else {
             hideSignature();
         }
-        updateStage();
     }
 
     private void showSignature() {
@@ -501,8 +517,17 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         Logger.trace("Received: {}", e);
         // call event specific hook method:
         GameEventListener.super.onGameEvent(e);
-        updateOrReloadGameScene(false);
-        currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(e));
+        if (gameState() != null) {
+            //TODO check this. On game start, event can be published before game state has been initialized!
+            updateOrReloadGameScene(false);
+            currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(e));
+        }
+    }
+
+    @Override
+    public void onGameVariantChanged(GameEvent e) {
+        Logger.info("Game variant changed to {}", game().variant());
+        gameVariantPy.set(game().variant());
     }
 
     @Override
@@ -764,7 +789,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     private void selectGameVariant(GameVariant variant) {
-        gameController().selectGame(variant);
+        gameController().selectGameVariant(variant);
         gameController().restart(GameState.BOOT);
         selectPage("startPage");
     }

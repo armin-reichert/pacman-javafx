@@ -30,6 +30,7 @@ public interface GameEventListener {
                 onGameStateExit(changeEvent.oldState);
                 onGameStateEntry(changeEvent.newState);
             }
+            case GAME_VARIANT_CHANGED -> onGameVariantChanged(event);
             case GHOST_EATEN -> onGhostEaten(event);
             case GHOST_ENTERS_HOUSE -> onGhostEntersHouse(event);
             case GHOST_STARTS_RETURNING_HOME -> onGhostStartsReturningHome(event);
@@ -67,6 +68,9 @@ public interface GameEventListener {
     }
 
     default void onGameStateEntry(GameState state) {
+    }
+
+    default void onGameVariantChanged(GameEvent e) {
     }
 
     default void onGhostEaten(GameEvent e) {

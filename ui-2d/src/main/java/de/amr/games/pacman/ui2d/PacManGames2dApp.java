@@ -18,7 +18,6 @@ import javafx.util.Pair;
 import org.tinylog.Logger;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Armin Reichert
@@ -32,7 +31,7 @@ public class PacManGames2dApp extends Application {
         Logger.info("Java version:   {}", Runtime.version());
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         GameController.it().setSupportedGameVariants(GameVariant.PACMAN, GameVariant.MS_PACMAN);
-        GameController.it().selectGame(GameVariant.PACMAN);
+        GameController.it().selectGameVariant(GameVariant.PACMAN);
         Logger.info("Game controller initialized. Selected game: {}", GameController.it().game().variant());
         ui.loadAssets();
         Logger.info("Assets loaded: {}", ui.theme().summary(List.of(

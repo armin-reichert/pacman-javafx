@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.controller;
 
+import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.FiniteStateMachine;
 import de.amr.games.pacman.model.*;
@@ -95,8 +96,12 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         return gameModels.get(variant);
     }
 
-    public void selectGame(GameVariant variant) {
+    public void selectGameVariant(GameVariant variant) {
+        var oldVariant = game.variant();
         game = game(variant);
+        if (oldVariant != variant) {
+            game.publishGameEvent(GameEventType.GAME_VARIANT_CHANGED);
+        }
     }
 
     @Override

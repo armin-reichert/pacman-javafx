@@ -1,6 +1,7 @@
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.geometry.Insets;
@@ -70,7 +71,7 @@ public class StartPage implements Page {
         bottom.setTranslateY(-10);
         layout.setBottom(bottom);
 
-        layout.setBackground(computeBackground());
+        updateBackground(context.game().variant());
 
         root.setBackground(Ufx.coloredBackground(Color.BLACK));
         root.getChildren().add(layout);
@@ -87,15 +88,19 @@ public class StartPage implements Page {
 
     @Override
     public void onSelected() {
-        layout.setBackground(computeBackground());
         if (context.gameClock().isRunning()) {
             context.gameClock().stop();
             Logger.info("Clock stopped.");
         }
     }
 
-    private Background computeBackground() {
-        String imageKey = context.game().variant().resourceKey() + ".startpage.image";
+    public void updateBackground(GameVariant variant) {
+        var background = computeBackground(variant);
+        layout.setBackground(background);
+    }
+
+    private Background computeBackground(GameVariant variant) {
+        String imageKey = variant.resourceKey() + ".startpage.image";
         Image image = checkNotNull(context.theme().image(imageKey));
         return new Background(
             new BackgroundImage(image,BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
