@@ -13,4 +13,6 @@ public interface Page {
     default void setSize(double width, double height) {}
 
     default void onMouseClicked(MouseEvent e) {}
+
+    default void onSelected() {}
 }

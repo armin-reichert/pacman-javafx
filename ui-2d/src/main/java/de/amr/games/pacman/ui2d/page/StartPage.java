@@ -1,7 +1,6 @@
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.geometry.Insets;
@@ -25,12 +24,16 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
  */
 public class StartPage implements Page {
 
+    static final BackgroundSize SIZE_TO_FIT = new BackgroundSize(AUTO, AUTO,
+        false, false,
+        true, false);
+
     private final StackPane root = new StackPane();
     private final BorderPane layout = new BorderPane();
     private final Node btnPlay;
     private final GameSceneContext context;
 
-    private Button createCarouselButton(Direction dir, Runnable action) {
+    private static Button createCarouselButton(Direction dir) {
         double dimmed = 0.25;
         Button button = new Button();
         button.setStyle("-fx-text-fill: rgb(0,155,252); -fx-background-color: transparent; -fx-padding: 5");
@@ -39,17 +42,17 @@ public class StartPage implements Page {
         button.setOpacity(dimmed);
         button.setOnMouseEntered(e -> button.setOpacity(1.0));
         button.setOnMouseExited(e -> button.setOpacity(dimmed));
-        button.setOnAction(e -> action.run());
         return button;
     }
 
     public StartPage(GameSceneContext context) {
         this.context = checkNotNull(context);
 
-        var btnNextVariant = createCarouselButton(Direction.RIGHT,
-            context.actionHandler()::selectNextGameVariant);
-        var btnPrevVariant = createCarouselButton(Direction.LEFT,
-            context.actionHandler()::selectPrevGameVariant);
+        var btnNextVariant = createCarouselButton(Direction.RIGHT);
+        btnNextVariant.setOnAction(e -> context.actionHandler().selectNextGameVariant());
+
+        var btnPrevVariant = createCarouselButton(Direction.LEFT);
+        btnPrevVariant.setOnAction(e -> context.actionHandler().selectPrevGameVariant());
 
         btnPlay = createPlayButton(context.tt("play_button"));
 
@@ -66,6 +69,8 @@ public class StartPage implements Page {
         bottom.setTranslateY(-10);
         layout.setBottom(bottom);
 
+        layout.setBackground(computeBackground());
+
         root.setBackground(Ufx.coloredBackground(Color.BLACK));
         root.getChildren().add(layout);
     }
@@ -79,17 +84,18 @@ public class StartPage implements Page {
         return btnPlay;
     }
 
-    public void updateBackground(GameVariant variant) {
-        Image image = context.theme().image(variant.resourceKey() + ".startpage.image");
-        checkNotNull(image);
-        var bgImage = new BackgroundImage(
-            image,
-            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-            BackgroundPosition.CENTER,
-            new BackgroundSize(AUTO, AUTO, false, false, /* cover */ true, /* contain */ false)
+    @Override
+    public void onSelected() {
+        layout.setBackground(computeBackground());
+    }
+
+    private Background computeBackground() {
+        String imageKey = context.game().variant().resourceKey() + ".startpage.image";
+        Image image = checkNotNull(context.theme().image(imageKey));
+        return new Background(
+            new BackgroundImage(image,BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER, SIZE_TO_FIT)
         );
-        var bg = new Background(bgImage);
-        layout.setBackground(bg);
     }
 
     private Node createPlayButton(String buttonText) {

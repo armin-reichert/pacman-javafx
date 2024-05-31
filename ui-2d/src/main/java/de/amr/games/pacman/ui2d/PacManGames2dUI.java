@@ -372,11 +372,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     protected void selectPage(String pageID) {
         currentPageID = pageID;
-        mainScene.setRoot(currentPage().rootPane());
-        currentPage().setSize(mainScene.getWidth(), mainScene.getHeight());
-        currentPage().rootPane().requestFocus();
+        Page selectedPage = currentPage();
+        selectedPage.setSize(mainScene.getWidth(), mainScene.getHeight());
+        selectedPage.onSelected();
+        mainScene.setRoot(selectedPage.rootPane());
         updateStage();
         stage.show();
+        selectedPage.rootPane().requestFocus();
     }
 
     public void showPage(String pageID) {
@@ -387,7 +389,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
                     Logger.info("Clock stopped.");
                 }
                 selectPage("startPage");
-                this.<StartPage>currentPage().updateBackground(game().variant());
             }
             case "gamePage" -> {
                 // call reboot() first such that current game scene is set
