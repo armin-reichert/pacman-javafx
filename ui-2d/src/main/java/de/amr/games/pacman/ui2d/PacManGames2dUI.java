@@ -443,11 +443,27 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             Logger.trace("Game scene changed to {}", gameScenePy.get());
         }
         if (nextGameScene == sceneConfig().get("intro")) {
-            this.<GamePage>page("gamePage").showSignature();
+            showSignature();
         } else {
-            this.<GamePage>page("gamePage").hideSignature();
+            hideSignature();
         }
         updateStage();
+    }
+
+    private void showSignature() {
+        GamePage gamePage = page("gamePage");
+        var signature = gamePage.signature();
+        int y = switch (game().variant()) {
+            case MS_PACMAN -> 45;
+            case PACMAN, PACMAN_XXL -> 30;
+        };
+        signature.translateYProperty().bind(gamePage.scalingPy.multiply(y));
+        signature.show();
+    }
+
+    private void hideSignature() {
+        GamePage gamePage = page("gamePage");
+        gamePage.signature().hide();
     }
 
     // GameSceneContext interface implementation

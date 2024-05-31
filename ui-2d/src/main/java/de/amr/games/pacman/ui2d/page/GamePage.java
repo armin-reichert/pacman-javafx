@@ -48,11 +48,6 @@ public class GamePage extends CanvasLayoutPane implements Page {
         popupLayer.getChildren().addAll(helpButton, signature, helpInfoPopUp);
         layersContainer.getChildren().addAll(popupLayer, flashMessageView);
         layersContainer.setOnKeyPressed(this::handle);
-        getCanvas().setOnMouseMoved(e -> {
-            double factor = getScaling() * TS;
-            Vector2i tile = new Vector2i((int)(e.getX() / factor), (int)(e.getY() / factor));
-            Logger.info("tile={}", tile);
-        });
         setSize(width, height);
     }
 
@@ -67,18 +62,8 @@ public class GamePage extends CanvasLayoutPane implements Page {
         ));
     }
 
-    public void showSignature() {
-        switch (context.game().variant()) {
-            case MS_PACMAN -> signature.translateYProperty().bind(
-                Bindings.createDoubleBinding(() -> 45 * getScaling(), scalingPy));
-            case PACMAN, PACMAN_XXL -> signature.translateYProperty().bind(
-                Bindings.createDoubleBinding(() -> 30 * getScaling(), scalingPy));
-        }
-        signature.show();
-    }
-
-    public void hideSignature() {
-        signature.hide();
+    public Signature signature() {
+        return signature;
     }
 
     @Override

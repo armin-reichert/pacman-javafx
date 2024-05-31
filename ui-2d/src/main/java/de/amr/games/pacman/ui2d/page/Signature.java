@@ -45,11 +45,11 @@ public class Signature extends TextFlow {
         return remakeText;
     }
 
-    void show() {
+    public void show() {
         signatureAnimation.playFromStart();
     }
 
-    void hide() {
+    public void hide() {
         signatureAnimation.stop();
         setOpacity(0);
     }
