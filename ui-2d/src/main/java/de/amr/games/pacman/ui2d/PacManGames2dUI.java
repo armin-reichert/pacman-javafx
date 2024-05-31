@@ -324,12 +324,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         var startPage = new StartPage(this);
         startPage.playButton().setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
-                showPage("gamePage");
+                selectPage("gamePage");
             }
         });
         startPage.rootPane().setOnKeyPressed(keyEvent -> {
             if (Keyboard.matches(keyEvent, KEYS_SHOW_GAME_PAGE)) {
-                showPage("gamePage");
+                selectPage("gamePage");
             } else if (Keyboard.matches(keyEvent, KEYS_SELECT_NEXT_VARIANT)) {
                 selectNextGameVariant();
             } else if (Keyboard.matches(keyEvent, KEY_SELECT_PREV_VARIANT)) {
@@ -370,7 +370,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         return pageID.equals(currentPageID);
     }
 
-    protected void selectPage(String pageID) {
+    @Override
+    public void selectPage(String pageID) {
         currentPageID = pageID;
         Page selectedPage = currentPage();
         selectedPage.setSize(mainScene.getWidth(), mainScene.getHeight());
@@ -379,28 +380,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         updateStage();
         stage.show();
         selectedPage.rootPane().requestFocus();
-    }
-
-    public void showPage(String pageID) {
-        switch (pageID) {
-            case "startPage" -> {
-                if (clock.isRunning()) {
-                    clock.stop();
-                    Logger.info("Clock stopped.");
-                }
-                selectPage("startPage");
-            }
-            case "gamePage" -> {
-                // call reboot() first such that current game scene is set
-                reboot();
-                selectPage("gamePage");
-                clock.start();
-                Logger.info("Clock started, speed={} Hz", clock.getTargetFrameRate());
-            }
-            case "editorPage" -> {
-                //TODO what?
-            }
-        }
     }
 
     protected void updateStage() {
@@ -784,7 +763,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     private void selectGameVariant(GameVariant variant) {
         gameController().selectGame(variant);
         gameController().restart(GameState.BOOT);
-        showPage("startPage");
+        selectPage("startPage");
     }
 
     @Override

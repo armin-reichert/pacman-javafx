@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static javafx.scene.layout.BackgroundSize.AUTO;
@@ -87,6 +88,10 @@ public class StartPage implements Page {
     @Override
     public void onSelected() {
         layout.setBackground(computeBackground());
+        if (context.gameClock().isRunning()) {
+            context.gameClock().stop();
+            Logger.info("Clock stopped.");
+        }
     }
 
     private Background computeBackground() {
@@ -112,8 +117,7 @@ public class StartPage implements Page {
         pane.setMaxSize(200, 100);
         pane.setPadding(new Insets(10));
         pane.setCursor(Cursor.HAND);
-        pane.setBackground(Ufx.coloredRoundedBackground(
-            context.theme().color("startpage.button.bgColor"), 20));
+        pane.setBackground(Ufx.coloredRoundedBackground(context.theme().color("startpage.button.bgColor"), 20));
 
         return pane;
     }

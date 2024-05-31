@@ -11,7 +11,7 @@ public interface ActionHandler {
 
     void setFullScreen(boolean on);
 
-    void showPage(String pageID);
+    void selectPage(String pageID);
 
     void restartIntro();
 

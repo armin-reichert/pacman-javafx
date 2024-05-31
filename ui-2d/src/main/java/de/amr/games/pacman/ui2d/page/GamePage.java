@@ -78,6 +78,13 @@ public class GamePage extends CanvasLayoutPane implements Page {
         return layersContainer;
     }
 
+    @Override
+    public void onSelected() {
+        context.actionHandler().reboot();
+        context.gameClock().start();
+        Logger.info("Clock started, speed={} Hz", context.gameClock().getTargetFrameRate());
+    }
+
     protected void rescale(double newScaling, boolean always) {
         super.rescale(newScaling, always);
         resizeRegion(popupLayer, canvasContainer.getWidth(), canvasContainer.getHeight());
@@ -174,7 +181,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
             case BOOT -> {}
             case INTRO -> {
                 handler.reboot();
-                handler.showPage("startPage");
+                handler.selectPage("startPage");
             }
             default -> handler.restartIntro();
         }
