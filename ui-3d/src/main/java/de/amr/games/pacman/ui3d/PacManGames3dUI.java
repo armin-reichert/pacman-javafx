@@ -248,13 +248,18 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         restartIntro();
         gameClock().stop();
         selectPage("editorPage");
+        stage.titleProperty().bind(editor.titlePy);
         editor.start();
     }
 
     private void quitMapEditor() {
         editor.showConfirmation(
             editor::saveMapFileAs,
-            () -> {editor.stop(); selectPage("startPage");}
+            () -> {
+                editor.stop();
+                selectPage("startPage");
+                stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
+            }
         );
     }
 
@@ -300,14 +305,9 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     @Override
     protected StringBinding stageTitleBinding(Observable... dependencies) {
         return Bindings.createStringBinding(() -> {
-            if (isPageSelected("editorPage")) {
-                return editor.titlePy.get();
-            }
-            var vk = game().variant().resourceKey();
-            var pk = gameClock().isPaused() ? ".paused" : "";
-            var tk = "app.title." + vk + pk;
-            var dimension = tt(PY_3D_ENABLED.get() ? "threeD" : "twoD");
-            return tt(tk, dimension);
+            var tk = "app.title." + game().variant().resourceKey() + (gameClock().isPaused() ? ".paused" : "");
+            var dim = tt(PY_3D_ENABLED.get() ? "threeD" : "twoD");
+            return tt(tk, dim);
         }, dependencies);
     }
 

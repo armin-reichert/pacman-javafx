@@ -322,14 +322,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     protected StringBinding stageTitleBinding(Observable... dependencies) {
-        return Bindings.createStringBinding(() -> {
-            String key = "app.title." + game().variant().resourceKey();
-            if (clock.isPaused()) {
-                key += ".paused";
-            }
-            return tt(key);
-        }, dependencies
-        );
+        return Bindings.createStringBinding(
+            () -> tt("app.title." + game().variant().resourceKey() + (clock.isPaused() ? ".paused" : "")),
+            dependencies);
     }
 
     protected Scene createMainScene(double width, double height) {
