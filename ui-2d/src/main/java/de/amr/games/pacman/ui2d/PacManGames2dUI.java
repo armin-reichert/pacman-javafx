@@ -235,7 +235,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         this.stage = stage;
         mainScene = createMainScene(width, height);
         pages.put("startPage", createStartPage());
-        pages.put("gamePage",  createGamePage(mainScene));
+        pages.put("gamePage",  createGamePage());
 
         GamePage gamePage = page("gamePage");
         gamePage.sign(9, "Remake (2021-2024) by Armin Reichert");
@@ -341,9 +341,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         return startPage;
     }
 
-    protected GamePage createGamePage(Scene parentScene) {
-        checkNotNull(parentScene);
-        var page = new GamePage(this, parentScene.getWidth(), parentScene.getHeight());
+    protected GamePage createGamePage() {
+        var page = new GamePage(this, mainScene.getWidth(), mainScene.getHeight());
         page.setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
         page.setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
         page.setMinScaling(0.7);

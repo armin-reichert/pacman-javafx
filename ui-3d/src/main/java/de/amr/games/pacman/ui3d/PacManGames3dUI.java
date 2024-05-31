@@ -18,7 +18,6 @@ import de.amr.games.pacman.ui3d.model.Model3D;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import de.amr.games.pacman.ui3d.scene.PlayScene3D;
 import javafx.beans.property.*;
-import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyCode;
@@ -41,7 +40,6 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.util.Keyboard.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static java.util.stream.IntStream.rangeClosed;
@@ -267,9 +265,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     }
 
     @Override
-    protected GamePage3D createGamePage(Scene parentScene) {
-        checkNotNull(parentScene);
-        GamePage3D page = new GamePage3D(mainScene, this, parentScene.getWidth(), parentScene.getHeight());
+    protected GamePage3D createGamePage() {
+        GamePage3D page = new GamePage3D(mainScene, this, mainScene.getWidth(), mainScene.getHeight());
         page.setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
         page.setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
         page.setMinScaling(0.7);
