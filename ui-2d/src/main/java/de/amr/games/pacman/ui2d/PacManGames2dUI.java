@@ -21,7 +21,9 @@ import de.amr.games.pacman.ui2d.scene.*;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -111,7 +113,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         }
     };
 
-    public final StringProperty stageTitlePy = new SimpleStringProperty(this, "stageTitle");
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
     protected final Theme theme = new Theme();
@@ -309,9 +310,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             }
         }
 
-        stageTitlePy.bind(Bindings.createStringBinding(this::computeStageTitle, clock.pausedPy, gameVariantPy));
-
-        stage.titleProperty().bind(stageTitlePy);
+        stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy));
         stage.getIcons().setAll(icon(game().variant()));
         stage.setMinWidth(CANVAS_WIDTH_UNSCALED);
         stage.setMinHeight(CANVAS_HEIGHT_UNSCALED);
@@ -322,12 +321,15 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         stage.show();
     }
 
-    protected String computeStageTitle() {
-        String key = "app.title." + game().variant().resourceKey();
-        if (clock.isPaused()) {
-            key += ".paused";
-        }
-        return tt(key);
+    protected StringBinding stageTitleBinding(Observable... dependencies) {
+        return Bindings.createStringBinding(() -> {
+            String key = "app.title." + game().variant().resourceKey();
+            if (clock.isPaused()) {
+                key += ".paused";
+            }
+            return tt(key);
+        }, dependencies
+        );
     }
 
     protected Scene createMainScene(double width, double height) {

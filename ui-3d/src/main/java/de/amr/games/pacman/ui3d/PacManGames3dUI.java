@@ -17,7 +17,9 @@ import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import de.amr.games.pacman.ui3d.scene.PlayScene3D;
+import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -188,9 +190,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public void init(Stage stage, double width, double height) {
         super.init(stage, width, height);
 
-        stageTitlePy.bind(Bindings.createStringBinding(this::computeStageTitle,
-            clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
-
         for (var variant : GameVariant.values()) {
             var playScene3D = new PlayScene3D();
             playScene3D.setContext(this);
@@ -207,6 +206,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
         editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
         embedMapEditor(stage);
+
+        stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
     }
 
     private void embedMapEditor(Window window) {
@@ -297,15 +298,17 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     }
 
     @Override
-    protected String computeStageTitle() {
-        if (isPageSelected("editorPage")) {
-            return editor.titlePy.get();
-        }
-        var vk = game().variant().resourceKey();
-        var pk = gameClock().isPaused() ? ".paused" : "";
-        var tk = "app.title." + vk + pk;
-        var dimension = tt(PY_3D_ENABLED.get() ? "threeD" : "twoD");
-        return tt(tk, dimension);
+    protected StringBinding stageTitleBinding(Observable... dependencies) {
+        return Bindings.createStringBinding(() -> {
+            if (isPageSelected("editorPage")) {
+                return editor.titlePy.get();
+            }
+            var vk = game().variant().resourceKey();
+            var pk = gameClock().isPaused() ? ".paused" : "";
+            var tk = "app.title." + vk + pk;
+            var dimension = tt(PY_3D_ENABLED.get() ? "threeD" : "twoD");
+            return tt(tk, dimension);
+        }, dependencies);
     }
 
     @Override
