@@ -4,13 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d;
 
-import static javafx.application.Application.launch;
+import de.amr.games.pacman.ui2d.util.Ufx;
 
 /**
  * @author Armin Reichert
  */
 public class Main {
     public static void main(String[] args) {
-        launch(PacManGames2dApp.class, args);
+        Ufx.launch(PacManGames2dApp.class, args);
     }
 }

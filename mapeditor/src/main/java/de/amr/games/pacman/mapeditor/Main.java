@@ -1,20 +1,9 @@
 package de.amr.games.pacman.mapeditor;
 
-import java.io.PrintWriter;
-
-import static javafx.application.Application.launch;
+import de.amr.games.pacman.ui2d.util.Ufx;
 
 public class Main {
     public static void main(String[] args) {
-        try {
-            launch(TileMapEditorApp.class, args);
-        } catch (Throwable x) {
-            try (var pw = new PrintWriter("oh_shit.txt")) {
-                x.printStackTrace(pw);
-            }
-            catch (Exception e) {
-                e.printStackTrace(System.err);
-            }
-        }
+        Ufx.launch(TileMapEditorApp.class, args);
     }
 }

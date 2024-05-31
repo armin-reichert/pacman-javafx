@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui2d.util;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.Transition;
+import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -15,6 +16,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
+
+import java.io.PrintWriter;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -26,6 +29,26 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 public class Ufx {
 
     private Ufx() {
+    }
+
+    /**
+     * Launches the application specified by the given class. In case an exception is thrown,
+     * the stacktrace is written to a log file.
+     *
+     * @param appClass application class
+     * @param args application arguments
+     */
+    public static void launch(Class<? extends Application> appClass, String... args) {
+        try {
+            Application.launch(appClass, args);
+        } catch (Throwable x) {
+            try (var pw = new PrintWriter("oh_shit.txt")) {
+                x.printStackTrace(pw);
+            }
+            catch (Exception e) {
+                e.printStackTrace(System.err);
+            }
+        }
     }
 
     public static void toggle(BooleanProperty booleanProperty) {
