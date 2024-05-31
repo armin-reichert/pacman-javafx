@@ -29,7 +29,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.MouseButton;
@@ -252,10 +251,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         pages.put("startPage", createStartPage());
         pages.put("gamePage",  createGamePage());
 
-        GamePage gamePage = page("gamePage");
-        Font signatureFont = theme.font("font.monospaced", 9);
-        gamePage.sign(signatureFont, SIGNATURE_TEXT);
-
         Keyboard.handleKeyEventsFor(mainScene);
 
         clock = new GameClockFX();
@@ -279,6 +274,24 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             }
         });
         gameController().setClock(clock);
+
+        createGameScenes();
+        GamePage gamePage = page("gamePage");
+        Font signatureFont = theme.font("font.monospaced", 9);
+        gamePage.sign(signatureFont, SIGNATURE_TEXT);
+
+        stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy));
+        stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
+        stage.setMinWidth(CANVAS_WIDTH_UNSCALED);
+        stage.setMinHeight(CANVAS_HEIGHT_UNSCALED);
+        stage.centerOnScreen();
+        stage.setScene(mainScene);
+
+        selectPage("startPage");
+        stage.show();
+    }
+
+    protected void createGameScenes() {
 
         Logger.info("Creating 2D game scenes for variant " + GameVariant.MS_PACMAN);
         gameScenesForVariant.put(GameVariant.MS_PACMAN, new HashMap<>(Map.of(
@@ -304,6 +317,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             )));
         });
 
+        GamePage gamePage = page("gamePage");
         for (Map<String, GameScene> gameSceneMap : gameScenesForVariant.values()) {
             for (var gameScene : gameSceneMap.values()) {
                 gameScene.setContext(this);
@@ -314,15 +328,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             }
         }
 
-        stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy));
-        stage.getIcons().setAll(icon(game().variant()));
-        stage.setMinWidth(CANVAS_WIDTH_UNSCALED);
-        stage.setMinHeight(CANVAS_HEIGHT_UNSCALED);
-        stage.centerOnScreen();
-        stage.setScene(mainScene);
-
-        selectPage("startPage");
-        stage.show();
     }
 
     protected StringBinding stageTitleBinding(Observable... dependencies) {
@@ -527,15 +532,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         }
     }
 
-    private Image icon(GameVariant variant) {
-        return theme.image(game().variant().resourceKey() + ".icon");
-    }
-
     @Override
     public void onGameVariantChanged(GameEvent e) {
-        Logger.info("Game variant changed to {}", game().variant());
-        gameVariantPy.set(game().variant());
-        stage.getIcons().setAll(icon(game().variant()));
+        var newVariant = game().variant();
+        Logger.info("Game variant changed to {}", newVariant);
+        gameVariantPy.set(newVariant);
+        stage.getIcons().setAll(theme.image(newVariant.resourceKey() + ".icon"));
     }
 
     @Override

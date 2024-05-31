@@ -186,14 +186,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     public void init(Stage stage, double width, double height) {
         super.init(stage, width, height);
-
-        for (var variant : GameVariant.values()) {
-            var playScene3D = new PlayScene3D();
-            playScene3D.setContext(this);
-            playScene3D.setParentScene(mainScene);
-            gameScenesForVariant.get(variant).put("play3D", playScene3D);
-            Logger.info("Added 3D play scene for variant " + variant);
-        }
+        createGameScenes();
 
         int hour = LocalTime.now().getHour();
         PY_3D_NIGHT_MODE.set(hour >= 20 || hour <= 5);
@@ -205,6 +198,18 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         embedMapEditor(stage);
 
         stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
+    }
+
+    @Override
+    protected void createGameScenes() {
+        super.createGameScenes();
+        for (var variant : GameVariant.values()) {
+            var playScene3D = new PlayScene3D();
+            playScene3D.setContext(this);
+            playScene3D.setParentScene(mainScene);
+            gameScenesForVariant.get(variant).put("play3D", playScene3D);
+            Logger.info("Added 3D play scene for variant " + variant);
+        }
     }
 
     private void embedMapEditor(Window window) {
