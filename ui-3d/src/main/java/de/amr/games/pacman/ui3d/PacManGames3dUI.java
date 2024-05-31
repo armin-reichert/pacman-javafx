@@ -186,8 +186,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     public void init(Stage stage, double width, double height) {
         super.init(stage, width, height);
-        mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClicked);
-        mainScene.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
         stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
         embedMapEditor(stage);
 
@@ -268,11 +266,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         return page;
     }
 
-    private void onMouseClicked(MouseEvent e) {
-        currentPage().onMouseClicked(e);
-    }
-
-    private void onKeyPressed(KeyEvent e) {
+    @Override
+    protected void onKeyPressed(KeyEvent e) {
         if (KEY_SWITCH_EDITOR.match(e)) {
             if (isPageSelected("editorPage")) {
                 quitMapEditor();

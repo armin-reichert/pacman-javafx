@@ -23,7 +23,7 @@ public class Keyboard {
     private static final Set<KeyCodeCombination> registeredCombinations = new HashSet<>();
     private static final List<KeyCodeCombination> matchingCombinations = new ArrayList<>(3);
 
-    public static void handleKeyEventsFor(EventTarget target) {
+    public static void filterKeyEventsFrom(EventTarget target) {
         target.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
             matchingCombinations.clear();
             registeredCombinations.stream().filter(c -> c.match(e)).forEach(matchingCombinations::add);

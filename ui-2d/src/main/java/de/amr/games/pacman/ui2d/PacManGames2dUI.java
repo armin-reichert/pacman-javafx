@@ -29,9 +29,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.MouseButton;
+import javafx.scene.input.*;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -246,8 +244,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     public void init(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
+
         mainScene = createMainScene(width, height);
-        Keyboard.handleKeyEventsFor(mainScene);
+        mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClicked);
+        //TODO how to integrate with Keyboard class?
+        mainScene.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
+        Keyboard.filterKeyEventsFrom(mainScene);
 
         pages.put("startPage", createStartPage());
         pages.put("gamePage",  createGamePage());
@@ -268,6 +270,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
         selectPage("startPage");
         stage.show();
+    }
+
+    protected void onMouseClicked(MouseEvent e) {
+        currentPage().onMouseClicked(e);
+    }
+
+    protected void onKeyPressed(KeyEvent e) {
     }
 
     protected void createGameClock() {
