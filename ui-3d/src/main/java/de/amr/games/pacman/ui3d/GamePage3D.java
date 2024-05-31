@@ -42,8 +42,8 @@ public class GamePage3D extends GamePage {
             displayedScene.setContext(context);
             displayedScene.setCanvas(this);
             displayedScene.setScoreVisible(true);
-            displayedScene.scalingPy.bind(Bindings.createDoubleBinding(() -> getHeight() / CANVAS_HEIGHT_UNSCALED, heightProperty()));
-            widthProperty().bind(Bindings.createDoubleBinding(() -> getHeight() * 0.777, heightProperty()));
+            displayedScene.scalingPy.bind(heightProperty().divide(CANVAS_HEIGHT_UNSCALED));
+            widthProperty().bind(heightProperty().multiply(0.777));
             opacityProperty().bind(PY_PIP_OPACITY_PERCENTAGE.divide(100.0));
         }
 
