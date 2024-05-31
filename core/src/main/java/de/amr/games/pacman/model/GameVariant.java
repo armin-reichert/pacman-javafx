@@ -11,4 +11,12 @@ package de.amr.games.pacman.model;
  */
 public enum GameVariant {
     MS_PACMAN, PACMAN, PACMAN_XXL;
+
+    public String resourceKey() {
+        return switch (this) {
+            case MS_PACMAN  -> "ms_pacman";
+            case PACMAN     -> "pacman";
+            case PACMAN_XXL -> "pacman_xxl";
+        };
+    }
 }

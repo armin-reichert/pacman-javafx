@@ -306,7 +306,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         if (isPageSelected("editorPage")) {
             stage.setTitle(editor.titlePy.get());
         } else {
-            var vk = variantKey(game().variant());
+            var vk = game().variant().resourceKey();
             var pk = gameClock().isPaused() ? ".paused" : "";
             var tk = "app.title." + vk + pk;
             var dimension = tt(PY_3D_ENABLED.get() ? "threeD" : "twoD");

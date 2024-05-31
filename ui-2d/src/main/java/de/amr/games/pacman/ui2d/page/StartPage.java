@@ -22,7 +22,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.variantKey;
 import static javafx.scene.layout.BackgroundSize.AUTO;
 
 /**
@@ -79,7 +78,7 @@ public class StartPage implements Page {
     }
 
     public void updateBackground(GameVariant variant) {
-        Image image = theme.image(variantKey(variant) + ".startpage.image");
+        Image image = theme.image(variant.resourceKey() + ".startpage.image");
         checkNotNull(image);
         var bgImage = new BackgroundImage(
             image,

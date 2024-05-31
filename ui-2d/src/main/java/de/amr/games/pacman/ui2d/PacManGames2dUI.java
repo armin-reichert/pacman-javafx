@@ -97,14 +97,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final BooleanProperty PY_USE_AUTOPILOT   = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
 
-    public static String variantKey(GameVariant variant) {
-        return switch (variant) {
-            case MS_PACMAN -> "ms_pacman";
-            case PACMAN -> "pacman";
-            case PACMAN_XXL -> "pacman_xxl";
-        };
-    }
-
     protected void loadAssets() {
         ResourceManager rm = () -> PacManGames2dUI.class;
 
@@ -406,13 +398,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     protected void updateStage() {
-        String vk = variantKey(game().variant());
-        String titleKey = "app.title." + vk;
+        String key = "app.title." + game().variant().resourceKey();
         if (clock.isPaused()) {
-            titleKey += ".paused";
+            key += ".paused";
         }
-        stage.setTitle(tt(titleKey));
-        stage.getIcons().setAll(theme.image(vk + ".icon"));
+        stage.setTitle(tt(key));
+        stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
     }
 
     protected GameScene sceneMatchingCurrentGameState() {
@@ -852,11 +843,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     @Override
     public AudioClip audioClip(String key) {
         checkNotNull(key);
-        String vk = variantKey(game().variant());
-        if (game().variant() == GameVariant.PACMAN_XXL) {
-            vk = variantKey(GameVariant.PACMAN);
-        }
-        return theme().audioClip(vk + "." + key);
+        String rk = (game().variant() != GameVariant.PACMAN_XXL)
+            ? game().variant().resourceKey()
+            : GameVariant.PACMAN.resourceKey();
+        return theme().audioClip(rk + "." + key);
     }
 
     @Override
