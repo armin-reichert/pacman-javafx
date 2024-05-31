@@ -65,7 +65,6 @@ public class GamePage3D extends GamePage {
         this.parentScene = parentScene;
 
         pip = new PictureInPictureView(sceneContext);
-        pip.heightProperty().bind(PY_PIP_HEIGHT);
 
         dashboard = new Dashboard(sceneContext);
 
@@ -74,11 +73,22 @@ public class GamePage3D extends GamePage {
         dashboardLayer.setRight(pip);
         getLayersContainer().getChildren().add(dashboardLayer);
 
+        getLayersContainer().backgroundProperty().bind(Bindings.createObjectBinding(
+            () -> {
+                if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
+                    return Ufx.coloredBackground(Color.BLACK);
+                } else {
+                    var wallpaperKey = PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
+                    return context.theme().background(wallpaperKey);
+                }
+            },
+            PY_3D_DRAW_MODE, PY_3D_NIGHT_MODE
+        ));
+
         canvasLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
 
         // data binding
-        PY_3D_DRAW_MODE.addListener((py, ov, nv) -> updateBackground3D());
-        PY_3D_NIGHT_MODE.addListener((py, ov, nv) -> updateBackground3D());
+        pip.heightProperty().bind(PY_PIP_HEIGHT);
         PY_3D_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
         dashboard.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());
 
@@ -123,22 +133,20 @@ public class GamePage3D extends GamePage {
             contextMenu.getItems().add(titleItem(context.tt("select_perspective")));
             var toggleGroup = new ToggleGroup();
             for (var perspective : Perspective.values()) {
-                var radioMenuItem = new RadioMenuItem(context.tt(perspective.name()));
-                radioMenuItem.setSelected(perspective.equals(PY_3D_PERSPECTIVE.get()));
-                radioMenuItem.setUserData(perspective);
-                radioMenuItem.setToggleGroup(toggleGroup);
-                contextMenu.getItems().add(radioMenuItem);
+                var radio = new RadioMenuItem(context.tt(perspective.name()));
+                radio.setSelected(perspective.equals(PY_3D_PERSPECTIVE.get()));
+                radio.setUserData(perspective);
+                radio.setToggleGroup(toggleGroup);
+                contextMenu.getItems().add(radio);
             }
-            toggleGroup.selectedToggleProperty().addListener((py, ov, nv) -> {
-                if (nv != null) {
-                    // Note: These are the user data of the radio menu item!
-                    PY_3D_PERSPECTIVE.set((Perspective) nv.getUserData());
+            toggleGroup.selectedToggleProperty().addListener((py, ov, radio) -> {
+                if (radio != null) {
+                    PY_3D_PERSPECTIVE.set((Perspective) radio.getUserData());
                 }
             });
             PY_3D_PERSPECTIVE.addListener((py, ov, nv) -> {
-                for (var radioMenuItem : toggleGroup.getToggles()) {
-                    boolean selected = radioMenuItem.getUserData().equals(PY_3D_PERSPECTIVE.get());
-                    radioMenuItem.setSelected(selected);
+                for (var radio : toggleGroup.getToggles()) {
+                    radio.setSelected(radio.getUserData().equals(PY_3D_PERSPECTIVE.get()));
                 }
             });
         }
@@ -171,23 +179,11 @@ public class GamePage3D extends GamePage {
         }
         hideContextMenu();
         updateTopLayer();
-        updateBackground3D();
     }
 
     private void updateTopLayer() {
         dashboardLayer.setVisible(dashboard.isVisible() || PY_3D_PIP_ON.get());
         getLayersContainer().requestFocus();
-    }
-
-    private void updateBackground3D() {
-        if (isCurrentGameScene3D()) {
-            if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
-                getLayersContainer().setBackground(Ufx.coloredBackground(Color.BLACK));
-            } else {
-                var wallpaperKey = PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
-                getLayersContainer().setBackground(context.theme().background(wallpaperKey));
-            }
-        }
     }
 
     private boolean isCurrentGameScene3D() {
