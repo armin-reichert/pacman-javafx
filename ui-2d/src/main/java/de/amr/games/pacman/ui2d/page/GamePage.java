@@ -12,6 +12,8 @@ import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -50,11 +52,11 @@ public class GamePage extends CanvasLayoutPane implements Page {
         setSize(width, height);
     }
 
-    public void sign(double fontSize, String... words) {
+    public void sign(Font unscaledFont, String... words) {
         var signature = new Signature(checkNotNull(words));
-        var scaledFontSizePy = scalingPy.multiply(fontSize);
-        signature.fontPy.bind(Bindings.createObjectBinding(
-            () -> context.theme().font("font.monospaced", scaledFontSizePy.get()), scaledFontSizePy));
+        //TODO can this be done by binding?
+        scalingPy.addListener((py, ov, nv) -> signature.fontPy.set(Font.font(unscaledFont.getFamily(),
+            scalingPy.get() * unscaledFont.getSize())));
         // keep centered over canvas container
         signature.translateXProperty().bind(Bindings.createDoubleBinding(
             () -> 0.5 * (canvasContainer.getWidth() - signature.getWidth()), canvasContainer.widthProperty()

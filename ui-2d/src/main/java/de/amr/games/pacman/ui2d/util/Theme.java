@@ -48,12 +48,12 @@ public class Theme {
         return sb.toString();
     }
 
-    public void set(String name, Object value) {
-        valuesByName.put(name, value);
+    public void set(String resourceKey, Object value) {
+        valuesByName.put(resourceKey, value);
     }
 
     public void addToArray(String arrayName, Object value) {
-        arraysByName.computeIfAbsent(arrayName, name -> new ArrayList<>()).add(value);
+        arraysByName.computeIfAbsent(arrayName, resourceKey -> new ArrayList<>()).add(value);
     }
 
     public void addAllToArray(String arrayName, Object[] values) {
@@ -75,17 +75,17 @@ public class Theme {
      * </pre>
      *
      * @param <T>  expected return type
-     * @param name name of value
+     * @param resourceKey resourceKey of value
      * @return stored value cast to return type
      */
     @SuppressWarnings("unchecked")
-    public <T> T get(String name) {
-        return (T) valuesByName.get(name);
+    public <T> T get(String resourceKey) {
+        return (T) valuesByName.get(resourceKey);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T get(String name, int i, int j) {
-        return (T) valuesByName.get(String.format("%s.%d.%d", name, i, j));
+    public <T> T get(String resourceKey, int i, int j) {
+        return (T) valuesByName.get(String.format("%s.%d.%d", resourceKey, i, j));
     }
 
     public Color color(String arrayName, int i) {
@@ -93,28 +93,28 @@ public class Theme {
         return (Color) array.get(i);
     }
 
-    public Color color(String name) {
-        return get(name);
+    public Color color(String resourceKey) {
+        return get(resourceKey);
     }
 
-    public Font font(String name) {
-        return get(name);
+    public Font font(String resourceKey) {
+        return get(resourceKey);
     }
 
-    public Font font(String name, double size) {
-        return Font.font(font(name).getFamily(), size);
+    public Font font(String resourceKey, double size) {
+        return Font.font(font(resourceKey).getFamily(), size);
     }
 
-    public Image image(String name) {
-        return get(name);
+    public Image image(String resourceKey) {
+        return get(resourceKey);
     }
 
-    public Background background(String name) {
-        return get(name);
+    public Background background(String resourceKey) {
+        return get(resourceKey);
     }
 
-    public AudioClip audioClip(String name) {
-        return get(name);
+    public AudioClip audioClip(String resourceKey) {
+        return get(resourceKey);
     }
 
     public Stream<AudioClip> audioClips() {

@@ -32,6 +32,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -97,6 +98,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     };
     public static final BooleanProperty PY_USE_AUTOPILOT   = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
+
+    public static final String SIGNATURE_TEXT = "Remake (2021-2024) by Armin Reichert";
 
     public void loadAssets() {
         ResourceManager rm = () -> PacManGames2dUI.class;
@@ -227,15 +230,15 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     public void init(Stage stage, double width, double height) {
-        checkNotNull(stage);
-
-        this.stage = stage;
+        this.stage = checkNotNull(stage);
         mainScene = createMainScene(width, height);
+
         pages.put("startPage", createStartPage());
         pages.put("gamePage",  createGamePage());
 
         GamePage gamePage = page("gamePage");
-        gamePage.sign(9, "Remake (2021-2024) by Armin Reichert");
+        Font signatureFont = theme.font("font.monospaced", 9);
+        gamePage.sign(signatureFont, SIGNATURE_TEXT);
 
         Keyboard.handleKeyEventsFor(mainScene);
 
@@ -368,6 +371,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void selectPage(String pageID) {
+        if (!pages.containsKey(pageID)) {
+            throw new IllegalArgumentException("Illegal page ID: " + pageID);
+        }
         currentPageID = pageID;
         Page selectedPage = currentPage();
         selectedPage.setSize(mainScene.getWidth(), mainScene.getHeight());
@@ -481,10 +487,11 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public GameSpriteSheet getSpriteSheet(GameVariant variant) {
-        return switch (variant) {
-            case MS_PACMAN -> theme.get("ms_pacman.spritesheet");
-            case PACMAN, PACMAN_XXL -> theme.get("pacman.spritesheet");
+        var rk = switch (variant) {
+            case MS_PACMAN -> variant.resourceKey();
+            case PACMAN, PACMAN_XXL -> GameVariant.PACMAN.resourceKey();
         };
+        return theme.get(rk + ".spritesheet");
     }
 
     // GameEventListener interface implementation

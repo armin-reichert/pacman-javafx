@@ -88,6 +88,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     public static final String NO_TEXTURE                             = "No Texture";
 
+    private static final BackgroundSize FILL_PAGE = new BackgroundSize(1, 1, true, true, false, true);
+
     public static ResourceBundle MSG_BUNDLE;
     public static Picker<String> PICKER_LEVEL_COMPLETE;
     public static Picker<String> PICKER_GAME_OVER;
@@ -110,14 +112,10 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("model3D.pellet", new Model3D(rm.url("model3D/12206_Fruit_v1_L3.obj")));
 
         theme.set("model3D.wallpaper", rm.imageBackground("graphics/sea-wallpaper.jpg",
-            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-            new BackgroundSize(1, 1, true, true, false, true)
-        ));
+            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,FILL_PAGE));
 
         theme.set("model3D.wallpaper.night", rm.imageBackground("graphics/sea-wallpaper-night.jpg",
-            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-            new BackgroundSize(1, 1, true, true, false, true)
-        ));
+            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,FILL_PAGE));
 
         theme.set("image.armin1970", rm.loadImage("graphics/armin.jpg"));
         theme.set("icon.play",       rm.loadImage("graphics/icons/play.png"));
