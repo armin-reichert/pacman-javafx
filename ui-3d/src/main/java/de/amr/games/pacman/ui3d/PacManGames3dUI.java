@@ -186,18 +186,13 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     public void init(Stage stage, double width, double height) {
         super.init(stage, width, height);
-        createGameScenes();
+        mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClicked);
+        mainScene.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
+        stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
+        embedMapEditor(stage);
 
         int hour = LocalTime.now().getHour();
         PY_3D_NIGHT_MODE.set(hour >= 20 || hour <= 5);
-
-        mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClicked);
-        mainScene.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
-
-        editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
-        embedMapEditor(stage);
-
-        stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
     }
 
     @Override
@@ -213,34 +208,27 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     }
 
     private void embedMapEditor(Window window) {
+        editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
         editor.createUI(window);
         var miQuitEditor = new MenuItem("Back to Game");
         miQuitEditor.setOnAction(e -> quitMapEditor());
         editor.menuFile().getItems().add(miQuitEditor);
+        editor.addPredefinedMap("Pac-Man",
+            new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/pacman.world")));
+
+        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
+        rangeClosed(1, 6).forEach(mapNumber -> editor.addPredefinedMap("Ms. Pac-Man " + mapNumber,
+            new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world")))
+        );
+        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
+        rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap("Pac-Man XXL " + mapNumber,
+            new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world")))
+        );
 
         var editorLayout = new BorderPane();
         editorLayout.setCenter(editor.getLayout());
         editorLayout.setTop(editor.getMenuBar());
         pages.put("editorPage", () -> editorLayout); // fancy, isn't it?
-
-        // preload maps
-        editor.addPredefinedMap(
-            "Pac-Man",
-            new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/pacman.world")));
-
-        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-
-        rangeClosed(1, 6).forEach(mapNumber -> editor.addPredefinedMap(
-            "Ms. Pac-Man " + mapNumber,
-            new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world")))
-        );
-
-        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-
-        rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap(
-            "Pac-Man XXL " + mapNumber,
-            new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world")))
-        );
     }
 
     private void enterMapEditor() {

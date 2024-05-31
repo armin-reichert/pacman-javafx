@@ -247,12 +247,30 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public void init(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
         mainScene = createMainScene(width, height);
+        Keyboard.handleKeyEventsFor(mainScene);
 
         pages.put("startPage", createStartPage());
         pages.put("gamePage",  createGamePage());
 
-        Keyboard.handleKeyEventsFor(mainScene);
+        createGameClock();
+        createGameScenes();
 
+        GamePage gamePage = page("gamePage");
+        Font signatureFont = theme.font("font.monospaced", 9);
+        gamePage.sign(signatureFont, SIGNATURE_TEXT);
+
+        stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy));
+        stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
+        stage.setMinWidth(CANVAS_WIDTH_UNSCALED);
+        stage.setMinHeight(CANVAS_HEIGHT_UNSCALED);
+        stage.centerOnScreen();
+        stage.setScene(mainScene);
+
+        selectPage("startPage");
+        stage.show();
+    }
+
+    protected void createGameClock() {
         clock = new GameClockFX();
         clock.setPauseableCallback(() -> {
             try {
@@ -274,25 +292,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             }
         });
         gameController().setClock(clock);
-
-        createGameScenes();
-        GamePage gamePage = page("gamePage");
-        Font signatureFont = theme.font("font.monospaced", 9);
-        gamePage.sign(signatureFont, SIGNATURE_TEXT);
-
-        stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy));
-        stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
-        stage.setMinWidth(CANVAS_WIDTH_UNSCALED);
-        stage.setMinHeight(CANVAS_HEIGHT_UNSCALED);
-        stage.centerOnScreen();
-        stage.setScene(mainScene);
-
-        selectPage("startPage");
-        stage.show();
     }
 
     protected void createGameScenes() {
-
         Logger.info("Creating 2D game scenes for variant " + GameVariant.MS_PACMAN);
         gameScenesForVariant.put(GameVariant.MS_PACMAN, new HashMap<>(Map.of(
             "boot",   new BootScene(),
@@ -327,7 +329,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
                 }
             }
         }
-
     }
 
     protected StringBinding stageTitleBinding(Observable... dependencies) {
