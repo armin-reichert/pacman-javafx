@@ -10,15 +10,9 @@ import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.Theme;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.media.AudioClip;
-import org.tinylog.Logger;
 
-import java.text.MessageFormat;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ResourceBundle;
-
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * @author Armin Reichert

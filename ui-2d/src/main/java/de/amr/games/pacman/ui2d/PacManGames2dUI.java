@@ -59,6 +59,9 @@ import static java.util.function.Predicate.not;
  */
 public class PacManGames2dUI implements GameEventListener, GameSceneContext, ActionHandler {
 
+    public static final String START_PAGE_KEY                       = "startPage";
+    public static final String GAME_PAGE_KEY                        = "gamePage";
+
     public static final KeyCodeCombination KEY_SHOW_HELP            = just(KeyCode.H);
     public static final KeyCodeCombination KEY_PAUSE                = just(KeyCode.P);
     public static final KeyCodeCombination KEY_QUIT                 = just(KeyCode.Q);
@@ -106,7 +109,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         @Override
         protected void invalidated() {
             Logger.debug("gameVariantPy invalidated");
-            StartPage startPage = page("startPage");
+            StartPage startPage = page(START_PAGE_KEY);
             startPage.updateBackgroundImage(get());
         }
     };
@@ -251,13 +254,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         mainScene.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
         Keyboard.filterKeyEventsFrom(mainScene);
 
-        pages.put("startPage", createStartPage());
-        pages.put("gamePage",  createGamePage());
+        pages.put(START_PAGE_KEY, createStartPage());
+        pages.put(GAME_PAGE_KEY,  createGamePage());
 
         createGameClock();
         createGameScenes();
 
-        GamePage gamePage = page("gamePage");
+        GamePage gamePage = page(GAME_PAGE_KEY);
         Font signatureFont = theme.font("font.monospaced", 9);
         gamePage.sign(signatureFont, SIGNATURE_TEXT);
 
@@ -268,7 +271,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         stage.centerOnScreen();
         stage.setScene(mainScene);
 
-        selectPage("startPage");
+        selectPage(START_PAGE_KEY);
         stage.show();
     }
 
@@ -293,7 +296,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         });
         clock.setContinousCallback(() -> {
             try {
-                this.<GamePage>page("gamePage").render();
+                this.<GamePage>page(GAME_PAGE_KEY).render();
             } catch (Exception x) {
                 Logger.error("Error during game rendering");
                 Logger.error(x);
@@ -328,7 +331,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             )));
         });
 
-        GamePage gamePage = page("gamePage");
+        GamePage gamePage = page(GAME_PAGE_KEY);
         for (Map<String, GameScene> gameSceneMap : gameScenesForVariant.values()) {
             for (var gameScene : gameSceneMap.values()) {
                 gameScene.setContext(this);
@@ -357,12 +360,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         var startPage = new StartPage(this);
         startPage.playButton().setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
-                selectPage("gamePage");
+                selectPage(GAME_PAGE_KEY);
             }
         });
         startPage.rootPane().setOnKeyPressed(keyEvent -> {
             if (Keyboard.matches(keyEvent, KEYS_SHOW_GAME_PAGE)) {
-                selectPage("gamePage");
+                selectPage(GAME_PAGE_KEY);
             } else if (Keyboard.matches(keyEvent, KEYS_SELECT_NEXT_VARIANT)) {
                 selectNextGameVariant();
             } else if (Keyboard.matches(keyEvent, KEY_SELECT_PREV_VARIANT)) {
@@ -455,7 +458,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     private void showSignature() {
-        GamePage gamePage = page("gamePage");
+        GamePage gamePage = page(GAME_PAGE_KEY);
         gamePage.signature().ifPresent(signature -> {
             int y = switch (game().variant()) {
                 case MS_PACMAN -> 45;
@@ -467,7 +470,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     private void hideSignature() {
-        GamePage gamePage = page("gamePage");
+        GamePage gamePage = page(GAME_PAGE_KEY);
         gamePage.signature().ifPresent(Signature::hide);
     }
 
@@ -687,7 +690,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void showFlashMessageSeconds(double seconds, String message, Object... args) {
-        this.<GamePage>page("gamePage").flashMessageView().showMessage(String.format(message, args), seconds);
+        this.<GamePage>page(GAME_PAGE_KEY).flashMessageView().showMessage(String.format(message, args), seconds);
     }
 
     @Override
@@ -811,7 +814,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     private void selectGameVariant(GameVariant variant) {
         gameController().selectGameVariant(variant);
         gameController().restart(GameState.BOOT);
-        selectPage("startPage");
+        selectPage(START_PAGE_KEY);
     }
 
     @Override

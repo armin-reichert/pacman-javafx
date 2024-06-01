@@ -25,7 +25,6 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
@@ -61,6 +60,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     static {
         System.setProperty("javafx.sg.warn", "true"); // WTF?
     }
+
+    public static final String EDITOR_PAGE_KEY                        = "editorPage";
 
     public static final IntegerProperty PY_PIP_HEIGHT                 = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_PX.y());
     public static final IntegerProperty PY_PIP_OPACITY_PERCENTAGE     = new SimpleIntegerProperty(100);
@@ -187,10 +188,9 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public void init(Stage stage, double width, double height) {
         super.init(stage, width, height);
         stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
-        embedMapEditor(stage);
-
-        int hour = LocalTime.now().getHour();
-        PY_3D_NIGHT_MODE.set(hour >= 20 || hour <= 5);
+        addMapEditor(stage);
+        LocalTime now = LocalTime.now();
+        PY_3D_NIGHT_MODE.set(now.getHour() >= 20 || now.getHour() <= 5);
     }
 
     @Override
@@ -205,7 +205,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         }
     }
 
-    private void embedMapEditor(Window window) {
+    private void addMapEditor(Window window) {
         editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
         editor.createUI(window);
         var miQuitEditor = new MenuItem("Back to Game");
@@ -226,7 +226,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         var editorLayout = new BorderPane();
         editorLayout.setCenter(editor.getLayout());
         editorLayout.setTop(editor.getMenuBar());
-        pages.put("editorPage", () -> editorLayout); // fancy, isn't it?
+        pages.put(EDITOR_PAGE_KEY, () -> editorLayout); // fancy, isn't it?
     }
 
     private void enterMapEditor() {
@@ -235,7 +235,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         }
         restartIntro();
         gameClock().stop();
-        selectPage("editorPage");
+        selectPage(EDITOR_PAGE_KEY);
         stage.titleProperty().bind(editor.titlePy);
         editor.start();
     }
@@ -245,7 +245,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             editor::saveMapFileAs,
             () -> {
                 editor.stop();
-                selectPage("startPage");
+                selectPage(START_PAGE_KEY);
                 stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
             }
         );
@@ -269,7 +269,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     @Override
     protected void onKeyPressed(KeyEvent e) {
         if (KEY_SWITCH_EDITOR.match(e)) {
-            if (isPageSelected("editorPage")) {
+            if (isPageSelected(EDITOR_PAGE_KEY)) {
                 quitMapEditor();
             } else if (game().variant() == GameVariant.PACMAN_XXL) {
                 enterMapEditor();
