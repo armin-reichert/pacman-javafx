@@ -140,39 +140,39 @@ public class GamePage extends CanvasLayoutPane implements Page {
 
     @Override
     public void handleKeyboardInput() {
-        var handler = context.actionHandler();
+        var actionHandler = context.actionHandler();
         if (Keyboard.pressed(KEY_AUTOPILOT)) {
-            handler.toggleAutopilot();
+            actionHandler.toggleAutopilot();
         } else if (Keyboard.pressed(KEY_BOOT)) {
             if (context.gameState() != GameState.BOOT) {
-                handler.reboot();
+                actionHandler.reboot();
             }
         } else if (Keyboard.pressed(KEY_DEBUG_INFO)) {
             Ufx.toggle(PY_SHOW_DEBUG_INFO);
         } else if (Keyboard.pressed(KEY_FULLSCREEN)) {
-            handler.setFullScreen(true);
+            actionHandler.setFullScreen(true);
         } else if (Keyboard.pressed(KEY_IMMUNITY)) {
-            handler.toggleImmunity();
+            actionHandler.toggleImmunity();
         } else if (Keyboard.pressed(KEY_SHOW_HELP)) {
             showHelpInfoPopUp();
         } else if (Keyboard.pressed(KEY_PAUSE)) {
-            handler.togglePaused();
+            actionHandler.togglePaused();
         } else if (Keyboard.pressed(KEYS_SINGLE_STEP)) {
-            handler.doSimulationSteps(1);
+            actionHandler.doSimulationSteps(1);
         } else if (Keyboard.pressed(KEY_TEN_STEPS)) {
-            handler.doSimulationSteps(10);
+            actionHandler.doSimulationSteps(10);
         } else if (Keyboard.pressed(KEY_SIMULATION_FASTER)) {
-            handler.changeSimulationSpeed(5);
+            actionHandler.changeSimulationSpeed(5);
         } else if (Keyboard.pressed(KEY_SIMULATION_SLOWER)) {
-            handler.changeSimulationSpeed(-5);
+            actionHandler.changeSimulationSpeed(-5);
         } else if (Keyboard.pressed(KEY_SIMULATION_NORMAL)) {
-            handler.resetSimulationSpeed();
+            actionHandler.resetSimulationSpeed();
         } else if (Keyboard.pressed(KEY_QUIT)) {
-            handler.stopVoice();
-            handler.stopAllSounds();
-            handler.selectPage(START_PAGE);
+            context.soundHandler().stopVoice();
+            context.soundHandler().stopAllSounds();
+            actionHandler.selectPage(START_PAGE);
         } else if (Keyboard.pressed(KEY_TEST_LEVELS)) {
-            handler.startLevelTestMode();
+            actionHandler.startLevelTestMode();
         } else {
             context.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
         }

@@ -42,7 +42,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void end() {
-        context.actionHandler().stopAllSounds();
+        context.soundHandler().stopAllSounds();
     }
 
     @Override
@@ -75,10 +75,10 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onGameStateEntry(GameState state) {
         switch (state) {
-            case READY, PACMAN_DYING, LEVEL_COMPLETE -> context.actionHandler().stopAllSounds();
+            case READY, PACMAN_DYING, LEVEL_COMPLETE -> context.soundHandler().stopAllSounds();
             case GAME_OVER -> {
-                context.actionHandler().stopAllSounds();
-                context.actionHandler().playAudioClip("audio.game_over");
+                context.soundHandler().stopAllSounds();
+                context.soundHandler().playAudioClip("audio.game_over");
             }
             default -> {}
         }
@@ -175,18 +175,18 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onSceneVariantSwitch() {
         if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
-            context.actionHandler().ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
+            context.soundHandler().ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
         }
     }
 
     private void updateSound() {
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure
-            context.actionHandler().stopAudioClip("audio.pacman_munch");
+            context.soundHandler().stopAudioClip("audio.pacman_munch");
         }
         if (context.game().pac().isAlive() && context.game().ghosts(RETURNING_HOME, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
-            context.actionHandler().ensureAudioLoop("audio.ghost_returning");
+            context.soundHandler().ensureAudioLoop("audio.ghost_returning");
         } else {
-            context.actionHandler().stopAudioClip("audio.ghost_returning");
+            context.soundHandler().stopAudioClip("audio.ghost_returning");
         }
     }
 }

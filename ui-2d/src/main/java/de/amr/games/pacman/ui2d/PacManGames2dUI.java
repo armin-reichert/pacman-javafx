@@ -57,7 +57,7 @@ import static java.util.function.Predicate.not;
  *
  * @author Armin Reichert
  */
-public class PacManGames2dUI implements GameEventListener, GameSceneContext, ActionHandler {
+public class PacManGames2dUI implements GameEventListener, GameSceneContext, ActionHandler, SoundHandler {
 
     public static final String BOOT_SCENE   = "boot";
     public static final String INTRO_SCENE  = "intro";
@@ -473,6 +473,11 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     @Override
+    public SoundHandler soundHandler() {
+        return this;
+    }
+
+    @Override
     public ObjectProperty<GameScene> gameSceneProperty() {
         return gameScenePy;
     }
@@ -869,7 +874,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         }
     }
 
-    // Sound
+    // -----------------------------------------------------------------------------------------------------------------
+    // SoundHandler interface implementation
+    // -----------------------------------------------------------------------------------------------------------------
+
 
     @Override
     public AudioClip audioClip(String key) {

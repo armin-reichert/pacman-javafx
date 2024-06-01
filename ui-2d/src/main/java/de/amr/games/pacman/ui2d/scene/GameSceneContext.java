@@ -5,6 +5,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.ActionHandler;
+import de.amr.games.pacman.ui2d.SoundHandler;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.Theme;
@@ -22,6 +23,8 @@ public interface GameSceneContext {
     GameClockFX gameClock();
 
     ActionHandler actionHandler();
+
+    SoundHandler soundHandler();
 
     ObjectProperty<GameScene> gameSceneProperty();
 
