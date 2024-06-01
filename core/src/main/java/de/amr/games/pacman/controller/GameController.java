@@ -15,12 +15,12 @@ import java.util.*;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
- * Controller (in the sense of MVC) for both (Pac-Man, Ms. Pac-Man) game variants.
+ * Controller (in the sense of MVC) for all game variants.
  * <p>
- * A finite-state machine with states defined in {@link GameState}. The game data are stored in the model of the
- * selected game, see {@link GameVariant}. Scene selection is not controlled by this class but left to the specific user
- * interface implementations.
- * <p>
+ * This is a finite-state machine ({@link FiniteStateMachine}) with states defined in {@link GameState}.
+ * Each game variant ({@link GameVariant}) is represented by an instance of a game model ({@link GameModel}).
+ * <p>Scene selection is not controlled by this class but left to the specific user interface implementations.
+ * <ul>
  * <li>Exact level data for Ms. Pac-Man still not available. Any hints appreciated!
  * <li>Multiple players (1up, 2up) not implemented.</li>
  * </ul>
@@ -39,52 +39,63 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         return SINGLE_INSTANCE;
     }
 
+    /** Maximum number of coins, as in MAME. */
     public static final byte MAX_CREDIT = 99;
 
-    private final Map<GameVariant, GameModel> gameModels = new EnumMap<>(Map.of(
-        GameVariant.MS_PACMAN,  new MsPacManGame(),
-        GameVariant.PACMAN,     new PacManGame(),
-        GameVariant.PACMAN_XXL, new PacManXXLGame()
-    ));
+    private final Map<GameVariant, GameModel> models = new EnumMap<>(GameVariant.class);
+    {
+        models.put(GameVariant.MS_PACMAN,  new MsPacManGame());
+        models.put(GameVariant.PACMAN,     new PacManGame());
+        models.put(GameVariant.PACMAN_XXL, new PacManXXLGame());
+    }
 
-    private final List<GameVariant> supportedGameVariants = new ArrayList<>();
+    private final List<GameVariant> supportedVariants = new ArrayList<>();
     private GameClock clock;
     private GameModel game;
     private boolean pacImmune = false;
     private int credit = 0;
 
-    private GameController() {
-        super(GameState.values());
-        game = gameModels.get(GameVariant.PACMAN);
-        for (var model : gameModels.values()) {
-            model.init();
-            Logger.info("Game (variant={}) initialized.", model.variant());
-        }
-        createCustomMapDir();
-        // map state change events to events of the selected game
-        addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
-    }
-
-    public void setSupportedGameVariants(GameVariant...variants) {
-        checkNotNull(variants);
-        supportedGameVariants.addAll(List.of(variants));
-    }
-
-    public List<GameVariant> supportedGameVariants() {
-        return Collections.unmodifiableList(supportedGameVariants);
-    }
-
-    private void createCustomMapDir() {
+    private static void ensureCustomMapDirExists() {
         var dir = GameModel.CUSTOM_MAP_DIR;
         if (dir.exists() && dir.isDirectory()) {
             return;
         }
         boolean created = dir.mkdirs();
         if (created) {
-            Logger.info("User maps directory created: {}", dir);
+            Logger.info("User map dir created: {}", dir);
         } else {
-            Logger.error("User map dir {} could not be created", dir);
+            Logger.error("User map dir could not be created: {}", dir);
         }
+    }
+
+    private GameController() {
+        super(GameState.values());
+        ensureCustomMapDirExists();
+        for (var model : models.values()) {
+            model.init();
+            Logger.info("Game (variant={}) initialized.", model.variant());
+        }
+        // map state change events to game events
+        addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
+    }
+
+    public void setSupportedVariants(GameVariant...variants) {
+        checkNotNull(variants);
+        if (variants.length == 0) {
+            Logger.error("No supported game variant specified");
+            throw new IllegalArgumentException();
+        }
+        var noDuplicates = new LinkedHashSet<>(List.of(variants));
+        if (noDuplicates.size() < variants.length) {
+            Logger.warn("Detected duplicates in supported game variants!");
+            Logger.warn("Variants specified: {}", List.of(variants));
+        }
+        supportedVariants.addAll(noDuplicates);
+        game = models.get(supportedVariants.getFirst());
+    }
+
+    public List<GameVariant> supportedVariants() {
+        return Collections.unmodifiableList(supportedVariants);
     }
 
     public GameModel game() {
@@ -93,10 +104,19 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     public GameModel game(GameVariant variant) {
         checkNotNull(variant);
-        return gameModels.get(variant);
+        if (!models.containsKey(variant)) {
+            Logger.error("No game model for variant {} exists", variant);
+            throw new IllegalArgumentException();
+        }
+        return models.get(variant);
     }
 
     public void selectGameVariant(GameVariant variant) {
+        checkNotNull(variant);
+        if (!supportedVariants.contains(variant)) {
+            Logger.error("Game variant {} is not supported", variant);
+            return;
+        }
         var oldVariant = game.variant();
         game = game(variant);
         if (oldVariant != variant) {
@@ -123,7 +143,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     }
 
     public void setClock(GameClock clock) {
-        this.clock = clock;
+        this.clock = checkNotNull(clock);
     }
 
     public GameClock clock() {

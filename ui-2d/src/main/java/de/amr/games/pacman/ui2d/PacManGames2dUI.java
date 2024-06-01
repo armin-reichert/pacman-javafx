@@ -797,7 +797,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void selectNextGameVariant() {
-        var all = GameController.it().supportedGameVariants();
+        var all = GameController.it().supportedVariants();
         var current = all.indexOf(game().variant());
         var next = current < all.size() - 1 ? all.get(current + 1) : all.getFirst();
         selectGameVariant(next);
@@ -805,7 +805,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void selectPrevGameVariant() {
-        var all = GameController.it().supportedGameVariants();
+        var all = GameController.it().supportedVariants();
         var current = all.indexOf(game().variant());
         var prev = current > 0 ? all.get(current - 1) : all.getLast();
         selectGameVariant(prev);
