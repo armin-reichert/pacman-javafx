@@ -168,6 +168,8 @@ public class GamePage extends CanvasLayoutPane implements Page {
         } else if (Keyboard.pressed(KEY_SIMULATION_NORMAL)) {
             handler.resetSimulationSpeed();
         } else if (Keyboard.pressed(KEY_QUIT)) {
+            handler.stopVoice();
+            handler.stopAllSounds();
             handler.selectPage(START_PAGE);
         } else if (Keyboard.pressed(KEY_TEST_LEVELS)) {
             handler.startLevelTestMode();

@@ -421,12 +421,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             Logger.info("updateGameScene: {}/{} reload={}", currentPageID, sceneToDisplay.getClass().getSimpleName(), reloadCurrentScene);
             if (currentScene != null) {
                 currentScene.end();
-
-                //TODO check this:
-                if (isCurrentGameScene(BOOT_SCENE)) {
-                    stopVoice();
-                }
-
             }
             sceneToDisplay.init();
             gameScenePy.set(sceneToDisplay);
@@ -942,6 +936,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         voiceClipExecution.play();
     }
 
+    @Override
     public void stopVoice() {
         if (voiceClip != null && voiceClip.isPlaying()) {
             voiceClip.stop();

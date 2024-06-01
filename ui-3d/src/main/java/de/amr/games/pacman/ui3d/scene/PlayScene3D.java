@@ -236,7 +236,7 @@ public class PlayScene3D implements GameScene {
         level3D.pac3D().init(context.game());
         level3D.pac3D().update(context.game());
         if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
-            context.ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
+            context.actionHandler().ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
         }
     }
 
@@ -245,7 +245,7 @@ public class PlayScene3D implements GameScene {
         switch (state) {
 
             case READY -> {
-                context.stopAllSounds();
+                context.actionHandler().stopAllSounds();
                 if (level3D != null) {
                     level3D.pac3D().init(context.game());
                     level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context.game()));
@@ -264,7 +264,7 @@ public class PlayScene3D implements GameScene {
             }
 
             case PACMAN_DYING -> {
-                context.stopAllSounds();
+                context.actionHandler().stopAllSounds();
                 var animation = switch (context.game().variant()) {
                     case MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
                     case PACMAN, PACMAN_XXL -> level3D.pac3D().createPacManDyingAnimation(context.game());
@@ -273,13 +273,13 @@ public class PlayScene3D implements GameScene {
             }
 
             case GAME_OVER -> {
-                context.stopAllSounds();
+                context.actionHandler().stopAllSounds();
                 context.gameState().timer().restartSeconds(3);
                 level3D.stopEnergizerAnimation();
                 level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                 level3D.livesCounter3D().stopAnimation();
                 context.actionHandler().showFlashMessageSeconds(3, PICKER_GAME_OVER.next());
-                context.playAudioClip("audio.game_over");
+                context.actionHandler().playAudioClip("audio.game_over");
             }
 
             case GHOST_DYING -> {
@@ -306,7 +306,7 @@ public class PlayScene3D implements GameScene {
             }
 
             case LEVEL_COMPLETE -> {
-                context.stopAllSounds();
+                context.actionHandler().stopAllSounds();
                 // if cheat has been used to complete level, 3D food might still exist:
                 level3D.pellets3D().forEach(level3D::eat);
                 level3D.energizers3D().forEach(level3D::eat);
@@ -422,13 +422,13 @@ public class PlayScene3D implements GameScene {
                 mazeFlashing.play();
             })
             , pauseSec(2.5)
-            , noIntermission? now(() -> context.playAudioClip("audio.level_complete")) : pauseSec(0)
+            , noIntermission? now(() -> context.actionHandler().playAudioClip("audio.level_complete")) : pauseSec(0)
             , noIntermission
                 ? new SequentialTransition(level3D.createLevelRotateAnimation(1.5), level3D.createMazeDisappearAnimation(1))
                 : pauseSec(0)
             , noIntermission
                 ? doAfterSec(1.5, () -> {
-                    context.playAudioClip("audio.sweep");
+                    context.actionHandler().playAudioClip("audio.sweep");
                     context.actionHandler().showFlashMessageSeconds(1, pickLevelCompleteMessage());
                     PY_3D_PERSPECTIVE.set(selectedPerspective);
                 })
@@ -445,13 +445,13 @@ public class PlayScene3D implements GameScene {
             return;
         }
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure how this is done in Arcade game
-            context.stopAudioClip("audio.pacman_munch");
+            context.actionHandler().stopAudioClip("audio.pacman_munch");
         }
         if (context.game().pac().isAlive()
             && context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
-            context.ensureAudioLoop("audio.ghost_returning");
+            context.actionHandler().ensureAudioLoop("audio.ghost_returning");
         } else {
-            context.stopAudioClip("audio.ghost_returning");
+            context.actionHandler().stopAudioClip("audio.ghost_returning");
         }
     }
 

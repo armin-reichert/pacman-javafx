@@ -41,6 +41,11 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
+    public void end() {
+        context.actionHandler().stopAllSounds();
+    }
+
+    @Override
     public void update() {
         context.game().level().ifPresent(level -> {
             context.game().pac().setUseAutopilot(context.game().isDemoLevel() || PacManGames2dUI.PY_USE_AUTOPILOT.get());
@@ -70,10 +75,10 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onGameStateEntry(GameState state) {
         switch (state) {
-            case READY, PACMAN_DYING, LEVEL_COMPLETE -> context.stopAllSounds();
+            case READY, PACMAN_DYING, LEVEL_COMPLETE -> context.actionHandler().stopAllSounds();
             case GAME_OVER -> {
-                context.stopAllSounds();
-                context.playAudioClip("audio.game_over");
+                context.actionHandler().stopAllSounds();
+                context.actionHandler().playAudioClip("audio.game_over");
             }
             default -> {}
         }
@@ -170,18 +175,18 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onSceneVariantSwitch() {
         if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
-            context.ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
+            context.actionHandler().ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
         }
     }
 
     private void updateSound() {
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure
-            context.stopAudioClip("audio.pacman_munch");
+            context.actionHandler().stopAudioClip("audio.pacman_munch");
         }
         if (context.game().pac().isAlive() && context.game().ghosts(RETURNING_HOME, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
-            context.ensureAudioLoop("audio.ghost_returning");
+            context.actionHandler().ensureAudioLoop("audio.ghost_returning");
         } else {
-            context.stopAudioClip("audio.ghost_returning");
+            context.actionHandler().stopAudioClip("audio.ghost_returning");
         }
     }
 }

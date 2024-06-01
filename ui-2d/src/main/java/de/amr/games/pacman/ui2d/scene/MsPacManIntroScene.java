@@ -53,6 +53,7 @@ public class MsPacManIntroScene extends GameScene2D {
     @Override
     public void end() {
         context.actionHandler().hideSignature();
+        context.actionHandler().stopVoice();
     }
 
     @Override

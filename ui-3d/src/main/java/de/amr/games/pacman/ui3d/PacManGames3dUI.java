@@ -32,7 +32,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import org.tinylog.Logger;
 
 import java.time.LocalTime;
