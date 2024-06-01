@@ -221,8 +221,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
         if (context.currentGameScene().isEmpty() || !isCurrentGameScene2D()) {
             return false;
         }
-        var gameScene = context.currentGameScene().get();
-        return gameScene != context.sceneConfig().get("boot");
+        return !context.isCurrentGameScene("boot");
     }
 
     private void handle(KeyEvent e) {

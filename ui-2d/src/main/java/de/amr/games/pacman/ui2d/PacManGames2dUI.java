@@ -425,7 +425,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
                 currentScene.end();
 
                 //TODO check this:
-                if (currentScene != sceneConfig().get("boot")) {
+                if (isCurrentGameScene("boot")) {
                     stopVoice();
                 }
 
@@ -435,13 +435,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             if (sceneToDisplay == currentScene) {
                 Logger.info("Game scene has been reloaded {}", gameScenePy.get());
             } else {
-                Logger.info("Game scene changed to {}", gameScenePy.get());
+                Logger.info("Game scene changed to {}/{}", currentPageID, gameScenePy.get());
             }
         }
     }
 
     protected GameScene sceneMatchingCurrentGameState() {
-        var config = sceneConfig();
+        var config = gameScenesForCurrentGameVariant();
         return switch (gameState()) {
             case BOOT -> config.get("boot");
             case CREDIT -> config.get("credit");
@@ -491,7 +491,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     @Override
-    public Map<String, GameScene> sceneConfig() {
+    public Map<String, GameScene> gameScenesForCurrentGameVariant() {
         return gameScenesForVariant.get(game().variant());
     }
 

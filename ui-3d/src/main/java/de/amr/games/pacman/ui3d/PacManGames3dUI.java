@@ -299,8 +299,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         if (gameScene == null) {
             return null; // may happen on start page
         }
-        if (gameScene == sceneConfig().get("play") && PY_3D_ENABLED.get() && sceneConfig().containsKey("play3D")) {
-            return sceneConfig().get("play3D");
+        if (isGameScene(gameScene, "play") && PY_3D_ENABLED.get() && gameScenesForCurrentGameVariant().containsKey("play3D")) {
+            return gameScenesForCurrentGameVariant().get("play3D");
         }
         return gameScene;
     }
@@ -329,7 +329,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         currentGameScene().ifPresent(gameScene -> {
             toggle(PY_3D_ENABLED);
             gameScene = sceneMatchingCurrentGameState();
-            if (gameScene == sceneConfig().get("play") || gameScene == sceneConfig().get("play3D")) {
+            if (isGameScene(gameScene, "play") || isGameScene(gameScene, "play3D")) {
                 updateGameScene(true);
                 gameScene.onSceneVariantSwitch();
             }

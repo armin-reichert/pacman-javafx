@@ -100,9 +100,9 @@ public class GamePage3D extends GamePage {
         hideContextMenu();
         if (e.getButton() == MouseButton.SECONDARY && context.currentGameScene().isPresent()) {
             GameScene gameScene = context.currentGameScene().get();
-            if (context.sceneConfig().get("play3D") == gameScene) {
+            if (context.isCurrentGameScene("play3D")) {
                 showContextMenu(false, e.getScreenX(), e.getScreenY());
-            } else if (context.sceneConfig().get("play") == gameScene) {
+            } else if (context.isCurrentGameScene("play")) {
                 showContextMenu(true, e.getScreenX(), e.getScreenY());
             }
         }

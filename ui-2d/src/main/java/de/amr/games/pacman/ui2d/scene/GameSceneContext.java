@@ -27,7 +27,15 @@ public interface GameSceneContext {
 
     Optional<GameScene> currentGameScene();
 
-    Map<String, GameScene> sceneConfig();
+    Map<String, GameScene> gameScenesForCurrentGameVariant();
+
+    default boolean isCurrentGameScene(String sceneID) {
+        return currentGameScene().isPresent() && gameScenesForCurrentGameVariant().get(sceneID) == currentGameScene().get();
+    }
+
+    default boolean isGameScene(GameScene gameScene, String sceneID) {
+        return gameScenesForCurrentGameVariant().get(sceneID) == gameScene;
+    }
 
     Theme theme();
 
