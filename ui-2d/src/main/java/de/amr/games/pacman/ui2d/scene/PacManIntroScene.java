@@ -38,6 +38,7 @@ public class PacManIntroScene extends GameScene2D {
 
     @Override
     public void init() {
+        context.actionHandler().showSignature();
         setScoreVisible(true);
         intro = new PacManIntro();
         ss = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
@@ -45,6 +46,11 @@ public class PacManIntroScene extends GameScene2D {
         intro.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, ss)));
         intro.blinking.reset();
         intro.changeState(State.START);
+    }
+
+    @Override
+    public void end() {
+        context.actionHandler().hideSignature();
     }
 
     @Override

@@ -296,7 +296,10 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     @Override
     protected GameScene sceneMatchingCurrentGameState() {
         var gameScene = super.sceneMatchingCurrentGameState();
-        if (PY_3D_ENABLED.get() && gameScene == sceneConfig().get("play") && sceneConfig().containsKey("play3D")) {
+        if (gameScene == null) {
+            return null; // may happen on start page
+        }
+        if (gameScene == sceneConfig().get("play") && PY_3D_ENABLED.get() && sceneConfig().containsKey("play3D")) {
             return sceneConfig().get("play3D");
         }
         return gameScene;

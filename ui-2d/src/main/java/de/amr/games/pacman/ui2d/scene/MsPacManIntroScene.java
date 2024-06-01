@@ -37,6 +37,7 @@ public class MsPacManIntroScene extends GameScene2D {
     @Override
     public void init() {
         ss = (MsPacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
+        context.actionHandler().showSignature();
         setScoreVisible(true);
         intro = new MsPacManIntro();
         intro.msPacMan.setAnimations(new MsPacManGamePacAnimations(intro.msPacMan, ss));
@@ -46,6 +47,11 @@ public class MsPacManIntroScene extends GameScene2D {
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
         }
         intro.changeState(State.START);
+    }
+
+    @Override
+    public void end() {
+        context.actionHandler().hideSignature();
     }
 
     @Override

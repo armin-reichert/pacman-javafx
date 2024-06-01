@@ -13,6 +13,10 @@ public interface ActionHandler {
 
     void selectPage(String pageID);
 
+    void showSignature();
+
+    void hideSignature();
+
     void restartIntro();
 
     void reboot();

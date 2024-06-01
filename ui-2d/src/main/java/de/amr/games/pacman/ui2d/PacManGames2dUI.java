@@ -414,20 +414,21 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     protected void updateGameScene(boolean reloadCurrentScene) {
-        GameScene sceneToDisplay = sceneMatchingCurrentGameState();
-        if (sceneToDisplay == null) {
-            throw new IllegalStateException("No game scene found for game state " + gameState());
+        if (isPageSelected(START_PAGE_KEY)) {
+            return; // no game scene on start page
         }
-        Logger.info("updateGameScene: {}/{} reload={}",
-            currentPageID, sceneToDisplay.getClass().getSimpleName(), reloadCurrentScene);
+        GameScene sceneToDisplay = sceneMatchingCurrentGameState();
         GameScene currentScene = gameScenePy.get();
         if (reloadCurrentScene || sceneToDisplay != currentScene) {
+            Logger.info("updateGameScene: {}/{} reload={}", currentPageID, sceneToDisplay.getClass().getSimpleName(), reloadCurrentScene);
             if (currentScene != null) {
                 currentScene.end();
+
                 //TODO check this:
                 if (currentScene != sceneConfig().get("boot")) {
                     stopVoice();
                 }
+
             }
             sceneToDisplay.init();
             gameScenePy.set(sceneToDisplay);
@@ -436,11 +437,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             } else {
                 Logger.info("Game scene changed to {}", gameScenePy.get());
             }
-        }
-        if (sceneToDisplay == sceneConfig().get("intro")) {
-            showSignature();
-        } else {
-            hideSignature();
         }
     }
 
@@ -454,23 +450,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             case INTERMISSION_TEST -> config.get("cut" + gameState().<Integer>getProperty("intermissionTestNumber"));
             default -> config.get("play");
         };
-    }
-
-    private void showSignature() {
-        GamePage gamePage = page(GAME_PAGE_KEY);
-        gamePage.signature().ifPresent(signature -> {
-            int y = switch (game().variant()) {
-                case MS_PACMAN -> 45;
-                case PACMAN, PACMAN_XXL -> 30;
-            };
-            signature.translateYProperty().bind(gamePage.scalingPy.multiply(y));
-            signature.show();
-        });
-    }
-
-    private void hideSignature() {
-        GamePage gamePage = page(GAME_PAGE_KEY);
-        gamePage.signature().ifPresent(Signature::hide);
     }
 
     protected String message(String key, Object... args) {
@@ -680,7 +659,29 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         stopAllSounds();
     }
 
+    // --------------------------------------
     // ActionHandler interface implementation
+    // --------------------------------------
+
+    @Override
+    public void showSignature() {
+        GamePage gamePage = page(GAME_PAGE_KEY);
+        gamePage.signature().ifPresent(signature -> {
+            int y = switch (game().variant()) {
+                case MS_PACMAN -> 45;
+                case PACMAN, PACMAN_XXL -> 30;
+            };
+            signature.translateYProperty().bind(gamePage.scalingPy.multiply(y));
+            signature.show();
+        });
+    }
+
+    @Override
+    public void hideSignature() {
+        GamePage gamePage = page(GAME_PAGE_KEY);
+        gamePage.signature().ifPresent(Signature::hide);
+    }
+
 
     @Override
     public void showFlashMessage(String message, Object... args) {
