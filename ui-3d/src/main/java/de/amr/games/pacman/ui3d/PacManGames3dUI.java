@@ -102,9 +102,10 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         super.loadAssets();
 
         var messages = ResourceBundle.getBundle("de.amr.games.pacman.ui3d.texts.messages", getClass().getModule());
+        bundles.add(messages);
+
         PICKER_LEVEL_COMPLETE = Picker.fromBundle(messages, "level.complete");
         PICKER_GAME_OVER      = Picker.fromBundle(messages, "game.over");
-        bundles.add(messages);
 
         ResourceManager rm = () -> PacManGames3dUI.class;
 
@@ -304,14 +305,14 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public void selectNextPerspective() {
         var next = Perspective.next(PY_3D_PERSPECTIVE.get());
         PY_3D_PERSPECTIVE.set(next);
-        showFlashMessage(tt("camera_perspective", tt(PY_3D_PERSPECTIVE.get().name())));
+        showFlashMessage(tt("camera_perspective", tt(next.name())));
     }
 
     @Override
     public void selectPrevPerspective() {
         var prev = Perspective.previous(PY_3D_PERSPECTIVE.get());
         PY_3D_PERSPECTIVE.set(prev);
-        showFlashMessage(tt("camera_perspective", tt(PY_3D_PERSPECTIVE.get().name())));
+        showFlashMessage(tt("camera_perspective", tt(prev.name())));
     }
 
     @Override
