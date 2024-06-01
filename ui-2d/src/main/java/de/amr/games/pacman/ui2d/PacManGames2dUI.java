@@ -400,6 +400,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void selectPage(String pageID) {
+        Logger.info("Select page {}", pageID);
         if (!pages.containsKey(pageID)) {
             throw new IllegalArgumentException("Illegal page ID: " + pageID);
         }
@@ -814,7 +815,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     private void selectGameVariant(GameVariant variant) {
         gameController().selectGameVariant(variant);
         gameController().restart(GameState.BOOT);
-        selectPage(START_PAGE_KEY);
     }
 
     @Override

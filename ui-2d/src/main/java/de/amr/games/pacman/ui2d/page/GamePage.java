@@ -181,10 +181,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
         var handler = context.actionHandler();
         switch (context.gameState()) {
             case BOOT -> {}
-            case INTRO -> {
-                handler.reboot();
-                handler.selectPage(START_PAGE_KEY);
-            }
+            case INTRO -> handler.reboot();
             default -> handler.restartIntro();
         }
     }

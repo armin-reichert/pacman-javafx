@@ -109,6 +109,7 @@ public class StartPage extends StackPane implements Page {
 
     @Override
     public void onKeyPressed(KeyEvent e) {
+        Logger.info("StartPage.onKeyPressed");
         if (Keyboard.matches(e, KEYS_SHOW_GAME_PAGE)) {
             context.actionHandler().selectPage(GAME_PAGE_KEY);
         } else if (Keyboard.matches(e, KEYS_SELECT_NEXT_VARIANT)) {

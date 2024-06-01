@@ -15,6 +15,7 @@ import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
 
 /**
  * Intro scene of the PacMan game.
@@ -60,15 +61,11 @@ public class PacManIntroScene extends GameScene2D {
 
     @Override
     public void handleKeyboardInput() {
-        if (Keyboard.pressed(PacManGames2dUI.KEYS_ADD_CREDIT)) {
+        if (Keyboard.pressed(KEYS_ADD_CREDIT)) {
             context.actionHandler().addCredit();
-        } else if (Keyboard.pressed(PacManGames2dUI.KEYS_START_GAME)) {
+        } else if (Keyboard.pressed(KEYS_START_GAME)) {
             context.actionHandler().startGame();
-        } else if (Keyboard.pressed(PacManGames2dUI.KEYS_SELECT_NEXT_VARIANT)) {
-            context.actionHandler().selectNextGameVariant();
-        } else if (Keyboard.pressed(PacManGames2dUI.KEY_SELECT_PREV_VARIANT)) {
-            context.actionHandler().selectPrevGameVariant();
-        } else if (Keyboard.pressed(PacManGames2dUI.KEY_PLAY_CUTSCENES)) {
+        } else if (Keyboard.pressed(KEY_PLAY_CUTSCENES)) {
             context.actionHandler().startCutscenesTest();
         }
     }
