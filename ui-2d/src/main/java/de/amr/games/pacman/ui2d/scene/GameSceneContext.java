@@ -25,6 +25,8 @@ public interface GameSceneContext {
 
     ObjectProperty<GameScene> gameSceneProperty();
 
+    boolean isPageSelected(String pageID);
+
     Optional<GameScene> currentGameScene();
 
     Map<String, GameScene> gameScenesForCurrentGameVariant();

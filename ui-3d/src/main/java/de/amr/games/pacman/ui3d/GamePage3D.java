@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
@@ -205,9 +206,14 @@ public class GamePage3D extends GamePage {
     }
 
     @Override
-    protected void handleKeyboardInput() {
+    public void handleKeyboardInput() {
         var actionHandler = (ActionHandler3D) context.actionHandler();
-        if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
+        if (Keyboard.pressed(KEY_SWITCH_EDITOR)) {
+            if (context.game().variant() == GameVariant.PACMAN_XXL) {
+                actionHandler.enterMapEditor();
+            }
+        }
+        else if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
             actionHandler.toggle2D3D();
         } else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
             dashboard.toggleVisibility();

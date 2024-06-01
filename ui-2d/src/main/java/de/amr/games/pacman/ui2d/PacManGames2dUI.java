@@ -251,7 +251,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         mainScene = createMainScene(width, height);
         mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClicked);
         //TODO how to integrate with Keyboard class?
-        mainScene.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
+        mainScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> currentPage().handleKeyboardInput());
         Keyboard.filterKeyEventsFrom(mainScene);
 
         pages.put(START_PAGE_KEY, createStartPage());
@@ -277,13 +277,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     protected void onMouseClicked(MouseEvent e) {
         currentPage().onMouseClicked(e);
-    }
-
-    protected void onKeyPressed(KeyEvent e) {
-        if (Keyboard.matches(e, KEY_FULLSCREEN)) {
-            stage.setFullScreen(true);
-        }
-        currentPage().onKeyPressed(e);
     }
 
     protected void createGameClock() {
@@ -392,10 +385,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     protected <T extends Page> T  currentPage() {
         return page(currentPageID);
-    }
-
-    protected boolean isPageSelected(String pageID) {
-        return pageID.equals(currentPageID);
     }
 
     @Override
@@ -660,9 +649,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         stopAllSounds();
     }
 
-    // --------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
     // ActionHandler interface implementation
-    // --------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public void showSignature() {
@@ -683,6 +672,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         gamePage.signature().ifPresent(Signature::hide);
     }
 
+    @Override
+    public boolean isPageSelected(String pageID) {
+        return pageID.equals(currentPageID);
+    }
 
     @Override
     public void showFlashMessage(String message, Object... args) {

@@ -1,6 +1,5 @@
 package de.amr.games.pacman.ui2d.page;
 
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
@@ -15,7 +14,7 @@ public interface Page {
 
     default void onMouseClicked(MouseEvent e) {}
 
-    default void onKeyPressed(KeyEvent e) {}
+    default void handleKeyboardInput() {}
 
     default void onSelected() {}
 }

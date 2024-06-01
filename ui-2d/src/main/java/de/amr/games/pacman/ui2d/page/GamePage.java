@@ -14,7 +14,6 @@ import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Cursor;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -46,7 +45,6 @@ public class GamePage extends CanvasLayoutPane implements Page {
         createDebugInfoBindings();
         popupLayer.getChildren().addAll(helpButton, helpInfoPopUp);
         layersContainer.getChildren().addAll(popupLayer, flashMessageView);
-        layersContainer.setOnKeyPressed(this::handle);
         setSize(width, height);
     }
 
@@ -140,7 +138,8 @@ public class GamePage extends CanvasLayoutPane implements Page {
         popupLayer.setVisible(true);
     }
 
-    protected void handleKeyboardInput() {
+    @Override
+    public void handleKeyboardInput() {
         var handler = context.actionHandler();
         if (Keyboard.pressed(KEY_AUTOPILOT)) {
             handler.toggleAutopilot();
@@ -169,20 +168,11 @@ public class GamePage extends CanvasLayoutPane implements Page {
         } else if (Keyboard.pressed(KEY_SIMULATION_NORMAL)) {
             handler.resetSimulationSpeed();
         } else if (Keyboard.pressed(KEY_QUIT)) {
-            handleQuit();
+            handler.selectPage(START_PAGE_KEY);
         } else if (Keyboard.pressed(KEY_TEST_LEVELS)) {
             handler.startLevelTestMode();
         } else {
             context.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
-        }
-    }
-
-    private void handleQuit() {
-        var handler = context.actionHandler();
-        switch (context.gameState()) {
-            case BOOT -> {}
-            case INTRO -> handler.reboot();
-            default -> handler.restartIntro();
         }
     }
 
@@ -219,10 +209,6 @@ public class GamePage extends CanvasLayoutPane implements Page {
             return false;
         }
         return !context.isCurrentGameScene("boot");
-    }
-
-    private void handle(KeyEvent e) {
-        handleKeyboardInput();
     }
 
     public class HelpInfo extends PageInfo {

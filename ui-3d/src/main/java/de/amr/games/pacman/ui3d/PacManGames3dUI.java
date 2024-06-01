@@ -223,14 +223,11 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap("Pac-Man XXL " + mapNumber,
             new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world")))
         );
-
-        var editorLayout = new BorderPane();
-        editorLayout.setCenter(editor.getLayout());
-        editorLayout.setTop(editor.getMenuBar());
-        pages.put(EDITOR_PAGE_KEY, () -> editorLayout); // fancy, isn't it?
+        pages.put(EDITOR_PAGE_KEY, new EditorPage(editor));
     }
 
-    private void enterMapEditor() {
+    @Override
+    public void enterMapEditor() {
         if (game().world() != null) {
             editor.setMap(game().world().map());
         }
@@ -241,7 +238,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         editor.start();
     }
 
-    private void quitMapEditor() {
+    @Override
+    public void quitMapEditor() {
         editor.showConfirmation(
             editor::saveMapFileAs,
             () -> {
@@ -265,18 +263,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         page.getCanvasContainer().setBackground(Ufx.coloredBackground(theme().color("canvas.background")));
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
         return page;
-    }
-
-    @Override
-    protected void onKeyPressed(KeyEvent e) {
-        super.onKeyPressed(e);
-        if (KEY_SWITCH_EDITOR.match(e)) {
-            if (isPageSelected(EDITOR_PAGE_KEY)) {
-                quitMapEditor();
-            } else if (game().variant() == GameVariant.PACMAN_XXL) {
-                enterMapEditor();
-            }
-        }
     }
 
     @Override
