@@ -455,7 +455,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         return null;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     // GameSceneContext interface implementation
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public String tt(String key, Object... args) {
@@ -506,7 +508,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         return theme.get(rk + ".spritesheet");
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     // GameEventListener interface implementation
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public void onGameEvent(GameEvent e) {
