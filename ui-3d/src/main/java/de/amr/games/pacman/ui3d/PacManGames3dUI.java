@@ -269,6 +269,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     @Override
     protected void onKeyPressed(KeyEvent e) {
+        super.onKeyPressed(e);
         if (KEY_SWITCH_EDITOR.match(e)) {
             if (isPageSelected(EDITOR_PAGE_KEY)) {
                 quitMapEditor();
@@ -326,7 +327,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             toggle(PY_3D_ENABLED);
             gameScene = sceneMatchingCurrentGameState();
             if (gameScene == sceneConfig().get("play") || gameScene == sceneConfig().get("play3D")) {
-                updateOrReloadGameScene(true);
+                updateGameScene(true);
                 gameScene.onSceneVariantSwitch();
             }
             gameController().update();

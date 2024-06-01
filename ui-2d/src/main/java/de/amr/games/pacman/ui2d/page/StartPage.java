@@ -3,6 +3,7 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
+import de.amr.games.pacman.ui2d.util.Keyboard;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -19,6 +21,7 @@ import javafx.scene.text.Text;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
 import static javafx.scene.layout.BackgroundSize.AUTO;
 
 /**
@@ -101,6 +104,17 @@ public class StartPage extends StackPane implements Page {
         if (context.gameClock().isRunning()) {
             context.gameClock().stop();
             Logger.info("Clock stopped.");
+        }
+    }
+
+    @Override
+    public void onKeyPressed(KeyEvent e) {
+        if (Keyboard.matches(e, KEYS_SHOW_GAME_PAGE)) {
+            context.actionHandler().selectPage(GAME_PAGE_KEY);
+        } else if (Keyboard.matches(e, KEYS_SELECT_NEXT_VARIANT)) {
+            context.actionHandler().selectNextGameVariant();
+        } else if (Keyboard.matches(e, KEY_SELECT_PREV_VARIANT)) {
+            context.actionHandler().selectPrevGameVariant();
         }
     }
 

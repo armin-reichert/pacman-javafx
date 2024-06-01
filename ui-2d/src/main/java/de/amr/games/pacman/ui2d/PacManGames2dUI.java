@@ -280,6 +280,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     protected void onKeyPressed(KeyEvent e) {
+        if (Keyboard.matches(e, KEY_FULLSCREEN)) {
+            stage.setFullScreen(true);
+        }
+        currentPage().onKeyPressed(e);
     }
 
     protected void createGameClock() {
@@ -363,17 +367,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
                 selectPage(GAME_PAGE_KEY);
             }
         });
-        startPage.rootPane().setOnKeyPressed(keyEvent -> {
-            if (Keyboard.matches(keyEvent, KEYS_SHOW_GAME_PAGE)) {
-                selectPage(GAME_PAGE_KEY);
-            } else if (Keyboard.matches(keyEvent, KEYS_SELECT_NEXT_VARIANT)) {
-                selectNextGameVariant();
-            } else if (Keyboard.matches(keyEvent, KEY_SELECT_PREV_VARIANT)) {
-                selectPrevGameVariant();
-            } else if (Keyboard.matches(keyEvent, KEY_FULLSCREEN)) {
-                stage.setFullScreen(true);
-            }
-        });
         return startPage;
     }
 
@@ -420,6 +413,37 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         }
     }
 
+    protected void updateGameScene(boolean reloadCurrentScene) {
+        GameScene sceneToDisplay = sceneMatchingCurrentGameState();
+        if (sceneToDisplay == null) {
+            throw new IllegalStateException("No game scene found for game state " + gameState());
+        }
+        Logger.info("updateGameScene: {}/{} reload={}",
+            currentPageID, sceneToDisplay.getClass().getSimpleName(), reloadCurrentScene);
+        GameScene currentScene = gameScenePy.get();
+        if (reloadCurrentScene || sceneToDisplay != currentScene) {
+            if (currentScene != null) {
+                currentScene.end();
+                //TODO check this:
+                if (currentScene != sceneConfig().get("boot")) {
+                    stopVoice();
+                }
+            }
+            sceneToDisplay.init();
+            gameScenePy.set(sceneToDisplay);
+            if (sceneToDisplay == currentScene) {
+                Logger.info("Game scene has been reloaded {}", gameScenePy.get());
+            } else {
+                Logger.info("Game scene changed to {}", gameScenePy.get());
+            }
+        }
+        if (sceneToDisplay == sceneConfig().get("intro")) {
+            showSignature();
+        } else {
+            hideSignature();
+        }
+    }
+
     protected GameScene sceneMatchingCurrentGameState() {
         var config = sceneConfig();
         return switch (gameState()) {
@@ -430,31 +454,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             case INTERMISSION_TEST -> config.get("cut" + gameState().<Integer>getProperty("intermissionTestNumber"));
             default -> config.get("play");
         };
-    }
-
-    protected void updateOrReloadGameScene(boolean reload) {
-        var nextGameScene = sceneMatchingCurrentGameState();
-        if (nextGameScene == null) {
-            throw new IllegalStateException("No game scene found for game state " + gameState());
-        }
-        Logger.trace("updateOrReloadGameScene({}), scene: {}", reload, nextGameScene.getClass().getSimpleName());
-        GameScene prevGameScene = gameScenePy.get();
-        if (nextGameScene != prevGameScene || reload) {
-            if (prevGameScene != null) {
-                prevGameScene.end();
-                if (prevGameScene != sceneConfig().get("boot")) {
-                    stopVoice();
-                }
-            }
-            nextGameScene.init();
-            gameScenePy.set(nextGameScene);
-            Logger.trace("Game scene changed to {}", gameScenePy.get());
-        }
-        if (nextGameScene == sceneConfig().get("intro")) {
-            showSignature();
-        } else {
-            hideSignature();
-        }
     }
 
     private void showSignature() {
@@ -540,7 +539,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         GameEventListener.super.onGameEvent(e);
         if (gameState() != null) {
             //TODO check this. On game start, event can be published before game state has been initialized!
-            updateOrReloadGameScene(false);
+            updateGameScene(false);
             currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(e));
         }
     }
@@ -555,7 +554,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void onUnspecifiedChange(GameEvent e) {
-        updateOrReloadGameScene(true);
+        updateGameScene(true);
     }
 
     @Override
