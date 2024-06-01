@@ -10,7 +10,6 @@ import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.Theme;
 import javafx.beans.property.ObjectProperty;
-import javafx.scene.media.AudioClip;
 
 import java.util.Map;
 import java.util.Optional;

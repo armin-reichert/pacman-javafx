@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.scene;
 import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.rendering.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.PacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
