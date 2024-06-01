@@ -24,11 +24,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
@@ -60,6 +58,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     static {
         System.setProperty("javafx.sg.warn", "true"); // WTF?
     }
+
+    public static final String PLAY_SCENE_3D                          = "play3D";
 
     public static final String EDITOR_PAGE_KEY                        = "editorPage";
 
@@ -201,7 +201,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             var playScene3D = new PlayScene3D();
             playScene3D.setContext(this);
             playScene3D.setParentScene(mainScene);
-            gameScenesForVariant.get(variant).put("play3D", playScene3D);
+            gameScenesForVariant.get(variant).put(PLAY_SCENE_3D, playScene3D);
             Logger.info("Added 3D play scene for variant " + variant);
         }
     }
@@ -244,7 +244,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             editor::saveMapFileAs,
             () -> {
                 editor.stop();
-                selectPage(START_PAGE_KEY);
+                selectPage(START_PAGE);
                 stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
             }
         );
@@ -285,8 +285,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         if (gameScene == null) {
             return null; // may happen on start page
         }
-        if (isGameScene(gameScene, "play") && PY_3D_ENABLED.get() && gameScenesForCurrentGameVariant().containsKey("play3D")) {
-            return gameScenesForCurrentGameVariant().get("play3D");
+        if (isGameScene(gameScene, PLAY_SCENE) && PY_3D_ENABLED.get() && gameScenesForCurrentGameVariant().containsKey(PLAY_SCENE_3D)) {
+            return gameScenesForCurrentGameVariant().get(PLAY_SCENE_3D);
         }
         return gameScene;
     }
@@ -315,7 +315,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         currentGameScene().ifPresent(gameScene -> {
             toggle(PY_3D_ENABLED);
             gameScene = sceneMatchingCurrentGameState();
-            if (isGameScene(gameScene, "play") || isGameScene(gameScene, "play3D")) {
+            if (isGameScene(gameScene, PLAY_SCENE) || isGameScene(gameScene, PLAY_SCENE_3D)) {
                 updateGameScene(true);
                 gameScene.onSceneVariantSwitch();
             }

@@ -12,7 +12,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -110,7 +109,7 @@ public class StartPage extends StackPane implements Page {
     @Override
     public void handleKeyboardInput() {
         if (Keyboard.pressed(KEYS_SHOW_GAME_PAGE)) {
-            context.actionHandler().selectPage(GAME_PAGE_KEY);
+            context.actionHandler().selectPage(GAME_PAGE);
         } else if (Keyboard.pressed(KEYS_SELECT_NEXT_VARIANT)) {
             context.actionHandler().selectNextGameVariant();
         } else if (Keyboard.pressed(KEY_SELECT_PREV_VARIANT)) {

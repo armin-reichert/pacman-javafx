@@ -168,7 +168,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
         } else if (Keyboard.pressed(KEY_SIMULATION_NORMAL)) {
             handler.resetSimulationSpeed();
         } else if (Keyboard.pressed(KEY_QUIT)) {
-            handler.selectPage(START_PAGE_KEY);
+            handler.selectPage(START_PAGE);
         } else if (Keyboard.pressed(KEY_TEST_LEVELS)) {
             handler.startLevelTestMode();
         } else {
@@ -208,7 +208,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
         if (context.currentGameScene().isEmpty() || !isCurrentGameScene2D()) {
             return false;
         }
-        return !context.isCurrentGameScene("boot");
+        return !context.isCurrentGameScene(BOOT_SCENE);
     }
 
     public class HelpInfo extends PageInfo {

@@ -59,8 +59,16 @@ import static java.util.function.Predicate.not;
  */
 public class PacManGames2dUI implements GameEventListener, GameSceneContext, ActionHandler {
 
-    public static final String START_PAGE_KEY                       = "startPage";
-    public static final String GAME_PAGE_KEY                        = "gamePage";
+    public static final String BOOT_SCENE   = "boot";
+    public static final String INTRO_SCENE  = "intro";
+    public static final String CREDIT_SCENE = "credit";
+    public static final String PLAY_SCENE   = "play";
+    public static final String CUT_SCENE_1  = "cut1";
+    public static final String CUT_SCENE_2  = "cut2";
+    public static final String CUT_SCENE_3  = "cut3";
+
+    public static final String START_PAGE   = "startPage";
+    public static final String GAME_PAGE    = "gamePage";
 
     public static final KeyCodeCombination KEY_SHOW_HELP            = just(KeyCode.H);
     public static final KeyCodeCombination KEY_PAUSE                = just(KeyCode.P);
@@ -109,7 +117,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         @Override
         protected void invalidated() {
             Logger.debug("gameVariantPy invalidated");
-            StartPage startPage = page(START_PAGE_KEY);
+            StartPage startPage = page(START_PAGE);
             startPage.updateGameVariantImage(get());
         }
     };
@@ -254,13 +262,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         mainScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> currentPage().handleKeyboardInput());
         Keyboard.filterKeyEventsFrom(mainScene);
 
-        pages.put(START_PAGE_KEY, createStartPage());
-        pages.put(GAME_PAGE_KEY,  createGamePage());
+        pages.put(START_PAGE, createStartPage());
+        pages.put(GAME_PAGE,  createGamePage());
 
         createGameClock();
         createGameScenes();
 
-        GamePage gamePage = page(GAME_PAGE_KEY);
+        GamePage gamePage = page(GAME_PAGE);
         Font signatureFont = theme.font("font.monospaced", 9);
         gamePage.sign(signatureFont, SIGNATURE_TEXT);
 
@@ -271,7 +279,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         stage.centerOnScreen();
         stage.setScene(mainScene);
 
-        selectPage(START_PAGE_KEY);
+        selectPage(START_PAGE);
         stage.show();
     }
 
@@ -293,7 +301,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         });
         clock.setContinousCallback(() -> {
             try {
-                this.<GamePage>page(GAME_PAGE_KEY).render();
+                this.<GamePage>page(GAME_PAGE).render();
             } catch (Exception x) {
                 Logger.error("Error during game rendering");
                 Logger.error(x);
@@ -306,29 +314,29 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     protected void createGameScenes() {
         Logger.info("Creating 2D game scenes for variant " + GameVariant.MS_PACMAN);
         gameScenesForVariant.put(GameVariant.MS_PACMAN, new HashMap<>(Map.of(
-            "boot",   new BootScene(),
-            "intro",  new MsPacManIntroScene(),
-            "credit", new MsPacManCreditScene(),
-            "play",   new PlayScene2D(),
-            "cut1",   new MsPacManCutScene1(),
-            "cut2",   new MsPacManCutScene2(),
-            "cut3",   new MsPacManCutScene3()
+            BOOT_SCENE,   new BootScene(),
+            INTRO_SCENE,  new MsPacManIntroScene(),
+            CREDIT_SCENE, new MsPacManCreditScene(),
+            PLAY_SCENE,   new PlayScene2D(),
+            CUT_SCENE_1,  new MsPacManCutScene1(),
+            CUT_SCENE_2,  new MsPacManCutScene2(),
+            CUT_SCENE_3,  new MsPacManCutScene3()
         )));
 
         Stream.of(GameVariant.PACMAN, GameVariant.PACMAN_XXL).forEach(variant -> {
             Logger.info("Creating 2D game scenes for variant " + variant);
             gameScenesForVariant.put(variant, new HashMap<>(Map.of(
-                "boot",   new BootScene(),
-                "intro",  new PacManIntroScene(),
-                "credit", new PacManCreditScene(),
-                "play",   new PlayScene2D(),
-                "cut1",   new PacManCutScene1(),
-                "cut2",   new PacManCutScene2(),
-                "cut3",   new PacManCutScene3()
+                BOOT_SCENE,   new BootScene(),
+                INTRO_SCENE,  new PacManIntroScene(),
+                CREDIT_SCENE, new PacManCreditScene(),
+                PLAY_SCENE,   new PlayScene2D(),
+                CUT_SCENE_1,  new PacManCutScene1(),
+                CUT_SCENE_2,  new PacManCutScene2(),
+                CUT_SCENE_3,  new PacManCutScene3()
             )));
         });
 
-        GamePage gamePage = page(GAME_PAGE_KEY);
+        GamePage gamePage = page(GAME_PAGE);
         for (Map<String, GameScene> gameSceneMap : gameScenesForVariant.values()) {
             for (var gameScene : gameSceneMap.values()) {
                 gameScene.setContext(this);
@@ -357,7 +365,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         var startPage = new StartPage(this);
         startPage.playButton().setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
-                selectPage(GAME_PAGE_KEY);
+                selectPage(GAME_PAGE);
             }
         });
         return startPage;
@@ -404,7 +412,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     protected void updateGameScene(boolean reloadCurrentScene) {
-        if (isPageSelected(START_PAGE_KEY)) {
+        if (isPageSelected(START_PAGE)) {
             return; // no game scene on start page
         }
         GameScene sceneToDisplay = sceneMatchingCurrentGameState();
@@ -415,7 +423,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
                 currentScene.end();
 
                 //TODO check this:
-                if (isCurrentGameScene("boot")) {
+                if (isCurrentGameScene(BOOT_SCENE)) {
                     stopVoice();
                 }
 
@@ -433,12 +441,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     protected GameScene sceneMatchingCurrentGameState() {
         var config = gameScenesForCurrentGameVariant();
         return switch (gameState()) {
-            case BOOT -> config.get("boot");
-            case CREDIT -> config.get("credit");
-            case INTRO -> config.get("intro");
+            case BOOT -> config.get(BOOT_SCENE);
+            case CREDIT -> config.get(CREDIT_SCENE);
+            case INTRO -> config.get(INTRO_SCENE);
             case INTERMISSION -> config.get("cut" + game().intermissionNumberAfterLevel(game().levelNumber()));
             case INTERMISSION_TEST -> config.get("cut" + gameState().<Integer>getProperty("intermissionTestNumber"));
-            default -> config.get("play");
+            default -> config.get(PLAY_SCENE);
         };
     }
 
@@ -655,7 +663,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void showSignature() {
-        GamePage gamePage = page(GAME_PAGE_KEY);
+        GamePage gamePage = page(GAME_PAGE);
         gamePage.signature().ifPresent(signature -> {
             int y = switch (game().variant()) {
                 case MS_PACMAN -> 45;
@@ -668,7 +676,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void hideSignature() {
-        GamePage gamePage = page(GAME_PAGE_KEY);
+        GamePage gamePage = page(GAME_PAGE);
         gamePage.signature().ifPresent(Signature::hide);
     }
 
@@ -684,7 +692,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void showFlashMessageSeconds(double seconds, String message, Object... args) {
-        this.<GamePage>page(GAME_PAGE_KEY).flashMessageView().showMessage(String.format(message, args), seconds);
+        this.<GamePage>page(GAME_PAGE).flashMessageView().showMessage(String.format(message, args), seconds);
     }
 
     @Override
