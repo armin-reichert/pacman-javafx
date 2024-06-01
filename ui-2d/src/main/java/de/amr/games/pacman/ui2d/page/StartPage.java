@@ -26,53 +26,64 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
  */
 public class StartPage extends StackPane implements Page {
 
-    static final BackgroundSize SIZE_TO_FIT = new BackgroundSize(AUTO, AUTO,
-        false, false,
+    static final String CAROUSEL_ICON_LEFT = "\u2b98";
+    static final String CAROUSEL_ICON_RIGHT = "\u2b9a";
+
+    static final BackgroundSize FIT_HEIGHT = new BackgroundSize(AUTO, 1,
+        false, true,
         true, false);
+
+    static final BackgroundSize FILL = new BackgroundSize(AUTO, AUTO,
+        false, false,
+        true, true);
 
     private final BorderPane layout = new BorderPane();
     private final Node btnPlay;
     private final GameSceneContext context;
 
     private static Button createCarouselButton(Direction dir) {
-        double dimmed = 0.25;
         Button button = new Button();
+        // Without this, button gets input focus after being clicked with the mouse and the LEFT, RIGHT keys stop working!
+        button.setFocusTraversable(false);
         button.setStyle("-fx-text-fill: rgb(0,155,252); -fx-background-color: transparent; -fx-padding: 5");
         button.setFont(Font.font("Sans", FontWeight.BOLD, 80));
-        button.setText(dir == Direction.LEFT ? "\u2b98" : "\u2b9a");
-        button.setOpacity(dimmed);
+        if (dir == Direction.LEFT || dir == Direction.RIGHT) {
+            button.setText(dir == Direction.LEFT ? CAROUSEL_ICON_LEFT : CAROUSEL_ICON_RIGHT);
+        } else {
+            Logger.warn("Carousel button direction must be LEFT or RIGHT but is {}", dir);
+        }
+        button.setOpacity(0.2);
         button.setOnMouseEntered(e -> button.setOpacity(1.0));
-        button.setOnMouseExited(e -> button.setOpacity(dimmed));
+        button.setOnMouseExited(e -> button.setOpacity(0.2));
         return button;
     }
 
     public StartPage(GameSceneContext context) {
         this.context = checkNotNull(context);
 
-        var btnNextVariant = createCarouselButton(Direction.RIGHT);
-        btnNextVariant.setOnAction(e -> context.actionHandler().selectNextGameVariant());
-
         var btnPrevVariant = createCarouselButton(Direction.LEFT);
         btnPrevVariant.setOnAction(e -> context.actionHandler().selectPrevGameVariant());
-
-        btnPlay = createPlayButton(context.tt("play_button"));
-
         VBox left = new VBox(btnPrevVariant);
-        left.setAlignment(Pos.CENTER);
-        layout.setLeft(left);
+        left.setAlignment(Pos.CENTER_LEFT);
 
+        var btnNextVariant = createCarouselButton(Direction.RIGHT);
+        btnNextVariant.setOnAction(e -> context.actionHandler().selectNextGameVariant());
         VBox right = new VBox(btnNextVariant);
         right.setAlignment(Pos.CENTER_RIGHT);
+
+        btnPlay = createPlayButton(context.tt("play_button"));
+        BorderPane.setAlignment(btnPlay, Pos.BOTTOM_CENTER);
+        btnPlay.setTranslateY(-10);
+        var btnPlayContainer = new BorderPane();
+        btnPlayContainer.setBottom(btnPlay);
+
+        layout.setLeft(left);
         layout.setRight(right);
+        layout.setCenter(btnPlayContainer);
 
-        HBox bottom = new HBox(btnPlay);
-        bottom.setAlignment(Pos.BOTTOM_CENTER);
-        bottom.setTranslateY(-10);
-        layout.setBottom(bottom);
+        setBackground(context.theme().get("wallpaper.background"));
+        updateGameVariantImage(context.game().variant());
 
-        updateBackgroundImage(context.game().variant());
-
-        setBackground(Ufx.coloredBackground(Color.BLACK));
         getChildren().add(layout);
     }
 
@@ -93,12 +104,16 @@ public class StartPage extends StackPane implements Page {
         }
     }
 
-    public void updateBackgroundImage(GameVariant variant) {
+    public void updateGameVariantImage(GameVariant variant) {
         String imageKey = variant.resourceKey() + ".startpage.image";
         Image image = checkNotNull(context.theme().image(imageKey));
         var background = new Background(
-            new BackgroundImage(image,BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER, SIZE_TO_FIT)
+            new BackgroundImage(
+                image,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                variant == GameVariant.PACMAN_XXL ? FILL : FIT_HEIGHT)
         );
         layout.setBackground(background);
     }
