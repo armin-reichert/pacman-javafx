@@ -223,7 +223,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap("Pac-Man XXL " + mapNumber,
             new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world")))
         );
-        pages.put(EDITOR_PAGE_KEY, new EditorPage(editor));
+        pages.put(EDITOR_PAGE_KEY, new EditorPage(editor, this));
     }
 
     @Override
