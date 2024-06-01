@@ -189,7 +189,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public void init(Stage stage, double width, double height) {
         super.init(stage, width, height);
         stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
-        addMapEditor(stage);
+        addMapEditor();
         LocalTime now = LocalTime.now();
         PY_3D_NIGHT_MODE.set(now.getHour() >= 20 || now.getHour() <= 5);
     }
@@ -206,23 +206,23 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         }
     }
 
-    private void addMapEditor(Window window) {
+    private void addMapEditor() {
         editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
-        editor.createUI(window);
+        editor.createUI(stage);
+
         var miQuitEditor = new MenuItem("Back to Game");
         miQuitEditor.setOnAction(e -> quitMapEditor());
         editor.menuFile().getItems().add(miQuitEditor);
+
         editor.addPredefinedMap("Pac-Man",
             new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/pacman.world")));
-
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
         rangeClosed(1, 6).forEach(mapNumber -> editor.addPredefinedMap("Ms. Pac-Man " + mapNumber,
-            new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world")))
-        );
+            new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world"))));
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
         rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap("Pac-Man XXL " + mapNumber,
-            new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world")))
-        );
+            new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world"))));
+
         pages.put(EDITOR_PAGE_KEY, new EditorPage(editor, this));
     }
 
@@ -252,7 +252,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     @Override
     protected GamePage3D createGamePage() {
-        GamePage3D page = new GamePage3D(mainScene, this, mainScene.getWidth(), mainScene.getHeight());
+        var page = new GamePage3D(mainScene, this, mainScene.getWidth(), mainScene.getHeight());
         page.setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
         page.setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
         page.setMinScaling(0.7);
@@ -282,9 +282,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     @Override
     protected GameScene sceneMatchingCurrentGameState() {
         var gameScene = super.sceneMatchingCurrentGameState();
-        if (gameScene == null) {
-            return null; // may happen on start page
-        }
         if (isGameScene(gameScene, PLAY_SCENE) && PY_3D_ENABLED.get() && gameScenesForCurrentGameVariant().containsKey(PLAY_SCENE_3D)) {
             return gameScenesForCurrentGameVariant().get(PLAY_SCENE_3D);
         }
