@@ -44,7 +44,11 @@ public class CanvasLayoutPane extends StackPane {
 
     public CanvasLayoutPane() {
         canvas = new Canvas();
+        canvas.widthProperty().bind(unscaledCanvasWidthPy.multiply(scalingPy));
+        canvas.heightProperty().bind(unscaledCanvasHeightPy.multiply(scalingPy));
+
         createCanvasContainer();
+
         canvasLayer = new BorderPane(canvasContainer);
         getChildren().add(canvasLayer);
     }
@@ -113,8 +117,6 @@ public class CanvasLayoutPane extends StackPane {
             return;
         }
         setScaling(newScaling);
-        canvas.setWidth(getUnscaledCanvasWidth() * getScaling());
-        canvas.setHeight(getUnscaledCanvasHeight() * getScaling());
         if (getCanvasBorderEnabled()) {
             var size = canvasContainerSizeWithBorder();
             resizeRegion(canvasContainer, size.x(), size.y());
