@@ -92,7 +92,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
 
     protected void doLayout(double newScaling, boolean always) {
         super.doLayout(newScaling, always);
-        resizeRegion(popupLayer, canvasContainer.getWidth(), canvasContainer.getHeight());
+        setAllSizes(popupLayer, canvasContainer.getWidth(), canvasContainer.getHeight());
     }
 
     public void onGameSceneChanged(GameScene newGameScene) {

@@ -14,7 +14,7 @@ import org.tinylog.Logger;
  */
 public class CanvasLayoutPane extends StackPane {
 
-    public static void resizeRegion(Region region, double width, double height) {
+    public static void setAllSizes(Region region, double width, double height) {
         region.setMinSize(width, height);
         region.setMaxSize(width, height);
         region.setPrefSize(width, height);
@@ -57,6 +57,24 @@ public class CanvasLayoutPane extends StackPane {
         double scaling = computeScaling(width, height);
         doLayout(scaling, false);
     }
+
+    protected void doLayout(double newScaling, boolean always) {
+        if (newScaling < minScaling) {
+            Logger.warn("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
+            return;
+        }
+        if (Math.abs(getScaling() - newScaling) < 1e-2 && !always) { // avoid useless scaling
+            return;
+        }
+        if (getCanvasBorderEnabled()) {
+            var size = canvasContainerSizeWithBorder();
+            setAllSizes(canvasContainer, size.x(), size.y());
+        } else {
+            setAllSizes(canvasContainer, canvas.getWidth(), canvas.getHeight());
+        }
+        setScaling(newScaling);
+    }
+
 
     private double computeScaling(double width, double height) {
         if (getCanvasBorderEnabled()) {
@@ -113,24 +131,6 @@ public class CanvasLayoutPane extends StackPane {
         return new Vector2f(
             (float) Math.round((getUnscaledCanvasWidth() + 25) * getScaling()),
             (float) Math.round((getUnscaledCanvasHeight() + 15) * getScaling()));
-    }
-
-    //TODO use data binding
-    protected void doLayout(double newScaling, boolean always) {
-        if (newScaling < minScaling) {
-            Logger.warn("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
-            return;
-        }
-        if (Math.abs(getScaling() - newScaling) < 1e-2 && !always) { // avoid useless scaling
-            return;
-        }
-        setScaling(newScaling);
-        if (getCanvasBorderEnabled()) {
-            var size = canvasContainerSizeWithBorder();
-            resizeRegion(canvasContainer, size.x(), size.y());
-        } else {
-            resizeRegion(canvasContainer, canvas.getWidth(), canvas.getHeight());
-        }
     }
 
     public BorderPane getCanvasLayer() {
