@@ -116,6 +116,8 @@ public class StartPage extends StackPane implements Page {
             context.actionHandler().selectPrevGameVariant();
         } else if (Keyboard.pressed(KEY_FULLSCREEN)) {
             context.actionHandler().setFullScreen(true);
+        } else if (Keyboard.pressed(KEY_PAUSE)) {
+            context.actionHandler().togglePaused();
         }
     }
 
