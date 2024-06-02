@@ -20,6 +20,8 @@ import javafx.util.Duration;
  */
 public class Palette extends Canvas {
 
+    public static final Color BG_COLOR = Color.WHITE;
+
     public record EditorTool(byte value, String description) {}
 
     final int cellSize;
@@ -52,14 +54,15 @@ public class Palette extends Canvas {
         tooltip.setHideDelay(Duration.seconds(0.5));
         tooltip.setFont(Font.font("Sans", 12));
         Tooltip.install(this, tooltip);
-        //TODO Can tooltip text be computed by current tooltip position?
         setOnMouseMoved(e -> {
             int row = (int) e.getY() / cellSize;
             int col = (int) e.getX() / cellSize;
             int i = row*numCols + col;
             if (editorTools[i] != null) {
                 String text = editorTools[i].description();
-                tooltip.setText(text.isBlank() ? "Tool #" + (i+1) : text);
+                tooltip.setText(text.isEmpty() ? "?" : text);
+            } else {
+                tooltip.setText("No selection");
             }
         });
     }
@@ -73,23 +76,27 @@ public class Palette extends Canvas {
     }
 
     private void pickValue(MouseEvent e) {
-        selectedValueRow = (int) e.getY() / cellSize;
-        selectedValueCol = (int) e.getX() / cellSize;
-        int i = selectedValueRow * numCols + selectedValueCol;
-        selectedValue = editorTools[i].value();
+        int pickRow = (int) e.getY() / cellSize;
+        int pickCol = (int) e.getX() / cellSize;
+        int i = pickRow * numCols + pickCol;
+        if (editorTools[i] != null) {
+            selectedValueRow = pickRow;
+            selectedValueCol = pickCol;
+            selectedValue = editorTools[i].value();
+        }
     }
 
     public void draw() {
-        g.setFill(Color.BLACK);
+        g.setFill(BG_COLOR);
         g.fillRect(0, 0, getWidth(), getHeight());
         if (renderer != null) {
             renderer.setScaling(cellSize / 8.0);
             for (int i = 0; i < numRows * numCols; ++i) {
                 int row = i / numCols, col = i % numCols;
                 if (editorTools[i] != null) {
+                    g.setFill(Color.BLACK);
+                    g.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
                     renderer.drawTile(g, new Vector2i(col, row), editorTools[i].value());
-                } else {
-                    renderer.drawTile(g, new Vector2i(col, row), Tiles.EMPTY);
                 }
             }
         }

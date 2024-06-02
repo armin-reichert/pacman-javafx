@@ -59,8 +59,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     }
 
     public static final String PLAY_SCENE_3D                          = "play3D";
-
-    public static final String EDITOR_PAGE_KEY                        = "editorPage";
+    public static final String EDITOR_PAGE                            = "editorPage";
 
     public static final IntegerProperty PY_PIP_HEIGHT                 = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_PX.y());
     public static final IntegerProperty PY_PIP_OPACITY_PERCENTAGE     = new SimpleIntegerProperty(100);
@@ -222,7 +221,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap("Pac-Man XXL " + mapNumber,
             new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world"))));
 
-        pages.put(EDITOR_PAGE_KEY, new EditorPage(editor, this));
+        pages.put(EDITOR_PAGE, new EditorPage(editor, this));
     }
 
     @Override
@@ -232,7 +231,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         }
         restartIntro();
         gameClock().stop();
-        selectPage(EDITOR_PAGE_KEY);
+        selectPage(EDITOR_PAGE);
         stage.titleProperty().bind(editor.titlePy);
         editor.start();
     }

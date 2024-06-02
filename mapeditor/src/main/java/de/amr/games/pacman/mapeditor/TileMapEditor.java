@@ -14,10 +14,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -80,7 +77,6 @@ public class TileMapEditor  {
     public final ObjectProperty<String> titlePy = new SimpleObjectProperty<>(this, "title", "Map Editor");
     public final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
     public final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
-    public final BooleanProperty terrainEditedPy = new SimpleBooleanProperty(true);
     public final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
     public final BooleanProperty editingEnabledPy = new SimpleBooleanProperty(false);
 
@@ -95,10 +91,13 @@ public class TileMapEditor  {
     private Label infoLabel;
     private FileChooser fileChooser;
 
+    private TabPane palettesTab;
     private Palette terrainPalette;
     private PropertyEditor terrainMapPropertiesEditor;
     private TileMapEditorTerrainRenderer terrainMapRenderer;
     private boolean pathsUpToDate;
+
+    private Palette actorPalette;
 
     private Palette foodPalette;
     private PropertyEditor foodMapPropertiesEditor;
@@ -192,32 +191,36 @@ public class TileMapEditor  {
         var cbGridVisible = new CheckBox("Grid");
         cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
 
-        terrainPalette = new Palette(32, 3, 8, terrainMapRenderer);
+        terrainPalette = new Palette(32, 4, 4, terrainMapRenderer);
         terrainPalette.setTools(
-            tool(Tiles.PAC_HOME, "Pac-Man"),
+            tool(Tiles.WALL_H, "Horiz. Wall"),
+            tool(Tiles.WALL_V, "Vert. Wall"),
+            tool(Tiles.DWALL_H, "Hor. Double-Wall"),
+            tool(Tiles.DWALL_V, "Vert. Double-Wall"),
+            tool(Tiles.CORNER_NW, "NW Corner"),
+            tool(Tiles.CORNER_NE, "NE Corner"),
+            tool(Tiles.CORNER_SW, "SW Corner"),
+            tool(Tiles.CORNER_SE, "SE Corner"),
+            tool(Tiles.DCORNER_NW, "NW Corner"),
+            tool(Tiles.DCORNER_NE, "NE Corner"),
+            tool(Tiles.DCORNER_SW, "SW Corner"),
+            tool(Tiles.DCORNER_SE, "SE Corner"),
             tool(Tiles.EMPTY, "Empty Space"),
             tool(Tiles.TUNNEL, "Tunnel"),
-            tool(Tiles.DOOR, "Door"),
-            tool(Tiles.WALL_H, ""),
-            tool(Tiles.WALL_V, ""),
-            tool(Tiles.DWALL_H, ""),
-            tool(Tiles.DWALL_V, ""),
-            tool(Tiles.CORNER_NW, ""),
-            tool(Tiles.CORNER_NE, ""),
-            tool(Tiles.CORNER_SW, ""),
-            tool(Tiles.CORNER_SE, ""),
-            tool(Tiles.DCORNER_NW, ""),
-            tool(Tiles.DCORNER_NE, ""),
-            tool(Tiles.DCORNER_SW, ""),
-            tool(Tiles.DCORNER_SE, ""),
+            tool(Tiles.DOOR, "Door")
+        );
+
+        actorPalette = new Palette(32, 3, 4, terrainMapRenderer);
+        actorPalette.setTools(
+            tool(Tiles.HOME_RED_GHOST, "Red Ghost"),
+            tool(Tiles.HOME_PINK_GHOST, "Pink Ghost"),
+            tool(Tiles.HOME_CYAN_GHOST, "Cyan Ghost"),
+            tool(Tiles.HOME_ORANGE_GHOST, "Orange Ghost"),
             tool(Tiles.SCATTER_TARGET_RED, "Red Ghost Scatter"),
             tool(Tiles.SCATTER_TARGET_PINK, "Pink Ghost Scatter"),
             tool(Tiles.SCATTER_TARGET_CYAN, "Cyan Ghost Scatter"),
             tool(Tiles.SCATTER_TARGET_ORANGE, "Orange Ghost Scatter"),
-            tool(Tiles.HOME_RED_GHOST, "Red Ghost"),
-            tool(Tiles.HOME_PINK_GHOST, "Pink Ghost"),
-            tool(Tiles.HOME_CYAN_GHOST, "Cyan Ghost"),
-            tool(Tiles.HOME_ORANGE_GHOST, "Orange Ghost")
+            tool(Tiles.PAC_HOME, "Pac-Man")
         );
 
         foodPalette = new Palette(32, 1, 4, foodMapRenderer);
@@ -227,17 +230,20 @@ public class TileMapEditor  {
             tool(Tiles.ENERGIZER, "Energizer")
         );
 
-        var tabPane = new TabPane();
 
         var terrainPaletteTab = new Tab("Terrain", terrainPalette);
         terrainPaletteTab.setClosable(false);
-        terrainPaletteTab.setOnSelectionChanged(e -> terrainEditedPy.set(terrainPaletteTab.isSelected()));
+        terrainPaletteTab.setUserData("Terrain");
+
+        var actorPaletteTab = new Tab("Actors", actorPalette);
+        actorPaletteTab.setClosable(false);
+        actorPaletteTab.setUserData("Actors");
 
         var foodPaletteTab = new Tab("Food", foodPalette);
         foodPaletteTab.setClosable(false);
-        foodPaletteTab.setOnSelectionChanged(e -> terrainEditedPy.set(!foodPaletteTab.isSelected()));
+        foodPaletteTab.setUserData("Food");
 
-        tabPane.getTabs().addAll(terrainPaletteTab, foodPaletteTab);
+        palettesTab = new TabPane(terrainPaletteTab, actorPaletteTab, foodPaletteTab);
 
         terrainMapPropertiesEditor = new PropertyEditor("Terrain", this);
         terrainMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
@@ -252,7 +258,7 @@ public class TileMapEditor  {
         controlsPane.setSpacing(10);
         controlsPane.getChildren().add(new HBox(20, new Label("Show"), cbTerrainVisible, cbFoodVisible, cbGridVisible));
         controlsPane.getChildren().add(infoLabel);
-        controlsPane.getChildren().add(tabPane);
+        controlsPane.getChildren().add(palettesTab);
         controlsPane.getChildren().add(terrainMapPropertiesEditor);
         controlsPane.getChildren().add(foodMapPropertiesEditor);
 
@@ -607,10 +613,11 @@ public class TileMapEditor  {
     private void draw() {
         drawEditCanvas();
         drawPreviewCanvas();
-        if (terrainEditedPy.get()) {
-            terrainPalette.draw();
-        } else {
-            foodPalette.draw();
+        switch (selectedPaletteID()) {
+            case "Terrain" -> terrainPalette.draw();
+            case "Actors" -> actorPalette.draw();
+            case "Food" -> foodPalette.draw();
+            default -> Logger.error("Unknown palette selection");
         }
     }
 
@@ -637,12 +644,25 @@ public class TileMapEditor  {
             editingEnabledPy.set(true);
             return;
         }
-        if (terrainEditedPy.get()) {
-            onTerrainTileClicked(e);
-        } else {
-            onFoodTileClicked(e);
+        switch (selectedPaletteID()) {
+            case "Terrain" -> editTerrainMapTile(e, terrainPalette.selectedValue);
+            case "Actors"  -> editTerrainMapTile(e, actorPalette.selectedValue);
+            case "Food"    -> editFoodMapTile(e, foodPalette.selectedValue);
+            default -> Logger.error("Unknown palette selection");
         }
-        invalidatePaths();
+    }
+
+    private String selectedPaletteID() {
+        return (String) palettesTab.getSelectionModel().getSelectedItem().getUserData();
+    }
+
+    private byte selectedPaletteValue() {
+        return switch (selectedPaletteID()) {
+            case "Terrain" -> terrainPalette.selectedValue;
+            case "Actors"  -> actorPalette.selectedValue;
+            case "Food"    -> foodPalette.selectedValue;
+            default        -> throw new IllegalStateException("Illegal palette selection");
+        };
     }
 
     private void onMouseMovedOverEditCanvas(MouseEvent e) {
@@ -651,18 +671,22 @@ public class TileMapEditor  {
         }
         hoveredTile = tileAtMousePosition(e.getX(), e.getY());
         if (e.isShiftDown()) {
-            if (terrainEditedPy.get()) {
-                map.terrain().set(hoveredTile, terrainPalette.selectedValue);
-                markMapEdited();
-            } else {
-                map.food().set(hoveredTile, foodPalette.selectedValue);
-                markMapEdited();
+            switch (selectedPaletteID()) {
+                case "Terrain", "Actors" -> {
+                    map.terrain().set(hoveredTile, selectedPaletteValue());
+                    markMapEdited();
+                    invalidatePaths();
+                }
+                case "Food" -> {
+                    map.food().set(hoveredTile, selectedPaletteValue());
+                    markMapEdited();
+                }
+                default -> {}
             }
         }
-        invalidatePaths();
     }
 
-    private void onTerrainTileClicked(MouseEvent e) {
+    private void editTerrainMapTile(MouseEvent e, byte selectedValue) {
         var tile = tileAtMousePosition(e.getX(), e.getY());
         if (e.getButton() == MouseButton.SECONDARY) {
             map.terrain().set(tile, Tiles.EMPTY);
@@ -673,24 +697,25 @@ public class TileMapEditor  {
             map.terrain().set(tile, nextValue);
         }
         else {
-            map.terrain().set(tile, terrainPalette.selectedValue);
+            map.terrain().set(tile, selectedValue);
         }
         invalidatePaths();
         markMapEdited();
     }
 
-    private void onFoodTileClicked(MouseEvent e) {
+    private void editFoodMapTile(MouseEvent e, byte selectedValue) {
         var tile = tileAtMousePosition(e.getX(), e.getY());
         if (e.getButton() == MouseButton.SECONDARY) {
             map.food().set(tile, Tiles.EMPTY);
         }
-        else if (e.isShiftDown()) { // cycle through all tile values
+        else if (e.isShiftDown()) {
+            // cycle through all palette values
             byte content = map.food().get(tile);
             byte newValue = content < Tiles.FOOD_TILES_END - 1 ? (byte) (content + 1) : 0;
             map.food().set(tile, newValue);
         }
         else {
-            map.food().set(tile, foodPalette.selectedValue);
+            map.food().set(tile, selectedValue);
         }
         markMapEdited();
     }
