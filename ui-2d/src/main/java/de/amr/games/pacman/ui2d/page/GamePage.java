@@ -200,7 +200,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
         imageView.setImage(image);
         imageView.setFitHeight(size);
         imageView.setFitWidth(size);
-        helpButton.setTranslateX(unscaledCanvasWidth * getScaling());
+        helpButton.setTranslateX(getUnscaledCanvasWidth() * getScaling());
         helpButton.setTranslateY(10 * getScaling());
         helpButton.setVisible(isHelpButtonVisible());
         Logger.trace("Updated help icon, scaling: {}", getScaling());

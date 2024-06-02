@@ -20,14 +20,14 @@ public class CanvasLayoutPane extends StackPane {
     }
 
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
+    public final DoubleProperty unscaledCanvasWidthPy = new SimpleDoubleProperty(this, "unscaledCanvasWidth", 500);
+    public final DoubleProperty unscaledCanvasHeightPy = new SimpleDoubleProperty(this, "unscaledCanvasHeight", 400);
 
     protected final BorderPane canvasLayer = new BorderPane();
     protected final BorderPane canvasContainer = new BorderPane();
     protected final Canvas canvas = new Canvas();
 
     protected double minScaling = 1.0;
-    protected double unscaledCanvasWidth = 300;
-    protected double unscaledCanvasHeight = 400;
     protected Color canvasBorderColor = Color.WHITE;
     protected boolean canvasBorderEnabled = false;
     protected boolean discreteScaling = false;
@@ -61,19 +61,19 @@ public class CanvasLayoutPane extends StackPane {
     }
 
     public double getUnscaledCanvasWidth() {
-        return unscaledCanvasWidth;
+        return unscaledCanvasWidthPy.get();
     }
 
     public void setUnscaledCanvasWidth(double w) {
-        unscaledCanvasWidth = w;
+        unscaledCanvasWidthPy.set(w);
     }
 
     public double getUnscaledCanvasHeight() {
-        return unscaledCanvasHeight;
+        return unscaledCanvasHeightPy.get();
     }
 
     public void setUnscaledCanvasHeight(double h) {
-        unscaledCanvasHeight = h;
+        unscaledCanvasHeightPy.set(h);
     }
 
     public void setMinScaling(double minScaling) {
@@ -96,9 +96,9 @@ public class CanvasLayoutPane extends StackPane {
         double shrink_width = canvasBorderEnabled ? 0.85 : 1.0;
         double shrink_height = canvasBorderEnabled ? 0.92 : 1.0;
 
-        double s = shrink_height * height / unscaledCanvasHeight;
-        if (s * unscaledCanvasWidth > shrink_width * width) {
-            s = shrink_width * width / unscaledCanvasWidth;
+        double s = shrink_height * height / getUnscaledCanvasHeight();
+        if (s * getUnscaledCanvasWidth() > shrink_width * width) {
+            s = shrink_width * width / getUnscaledCanvasWidth();
         }
 
         if (discreteScaling) {
@@ -119,16 +119,17 @@ public class CanvasLayoutPane extends StackPane {
         }
         setScaling(newScaling);
 
-        canvas.setWidth(unscaledCanvasWidth * getScaling());
-        canvas.setHeight(unscaledCanvasHeight * getScaling());
+        canvas.setWidth(getUnscaledCanvasWidth() * getScaling());
+        canvas.setHeight(getUnscaledCanvasHeight() * getScaling());
 
         if (canvasBorderEnabled) {
-            double w = Math.round((unscaledCanvasWidth + 25) * getScaling());
-            double h = Math.round((unscaledCanvasHeight + 15) * getScaling());
-            var roundedRect = new Rectangle(w, h);
-            roundedRect.setArcWidth(26 * getScaling());
-            roundedRect.setArcHeight(26 * getScaling());
-            canvasContainer.setClip(roundedRect);
+            double w = Math.round((getUnscaledCanvasWidth() + 25) * getScaling());
+            double h = Math.round((getUnscaledCanvasHeight() + 15) * getScaling());
+
+            var clipRect = new Rectangle(w, h);
+            clipRect.setArcWidth(26 * getScaling());
+            clipRect.setArcHeight(26 * getScaling());
+            canvasContainer.setClip(clipRect);
 
             double borderWidth = Math.max(5, Math.ceil(h / 55));
             double cornerRadius = Math.ceil(10 * getScaling());
