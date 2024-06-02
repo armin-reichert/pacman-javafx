@@ -139,12 +139,17 @@ public class CanvasLayoutPane extends StackPane {
                     new CornerRadii(cornerRadius),
                     new BorderWidths(borderWidth)));
             canvasContainer.setBorder(roundedBorder);
+
             resizeRegion(canvasContainer, w, h);
+
             Logger.trace("Canvas container resized: scaling: {}, canvas size: {000} x {000} px, border: {0} px",
                 getScaling(), canvas.getWidth(), canvas.getHeight(), borderWidth);
         } else {
+            canvasContainer.setClip(null);
             canvasContainer.setBorder(null);
+
             resizeRegion(canvasContainer, canvas.getWidth(), canvas.getHeight());
+
             Logger.trace("Canvas container resized: scaling: {}, canvas size: {000} x {000} px, no border",
                 getScaling(), canvas.getWidth(), canvas.getHeight());
         }
