@@ -118,7 +118,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         protected void invalidated() {
             Logger.debug("gameVariantPy invalidated");
             StartPage startPage = page(START_PAGE);
-            startPage.updateGameVariantImage(get());
+            startPage.setGameVariant(get());
         }
     };
 

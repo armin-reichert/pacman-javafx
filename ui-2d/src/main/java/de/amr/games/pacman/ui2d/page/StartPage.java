@@ -4,6 +4,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.Keyboard;
+import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -26,22 +27,18 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
 /**
  * @author Armin Reichert
  */
-public class StartPage extends StackPane implements Page {
+public class StartPage implements Page {
 
-    static final String CAROUSEL_ICON_LEFT = "\u2b98";
-    static final String CAROUSEL_ICON_RIGHT = "\u2b9a";
+    private static final String CAROUSEL_ICON_LEFT  = "\u2b98";
+    private static final String CAROUSEL_ICON_RIGHT = "\u2b9a";
 
-    static final BackgroundSize FIT_HEIGHT = new BackgroundSize(AUTO, 1,
+    private static final BackgroundSize FIT_HEIGHT = new BackgroundSize(AUTO, 1,
         false, true,
         true, false);
 
-    static final BackgroundSize FILL = new BackgroundSize(AUTO, AUTO,
+    private static final BackgroundSize FILL = new BackgroundSize(AUTO, AUTO,
         false, false,
         true, true);
-
-    private final BorderPane layout = new BorderPane();
-    private final Node btnPlay;
-    private final GameSceneContext context;
 
     private static Button createCarouselButton(Direction dir) {
         Button button = new Button();
@@ -60,6 +57,30 @@ public class StartPage extends StackPane implements Page {
         return button;
     }
 
+    private static Node createPlayButton(Theme theme, String buttonText) {
+        var text = new Text(buttonText);
+        text.setFill(theme.color("startpage.button.color"));
+        text.setFont(theme.font("startpage.button.font"));
+
+        var shadow = new DropShadow();
+        shadow.setOffsetY(3.0f);
+        shadow.setColor(Color.color(0.2f, 0.2f, 0.2f));
+        text.setEffect(shadow);
+
+        var pane = new BorderPane(text);
+        pane.setMaxSize(200, 100);
+        pane.setPadding(new Insets(10));
+        pane.setCursor(Cursor.HAND);
+        pane.setBackground(Ufx.coloredRoundedBackground(theme.color("startpage.button.bgColor"), 20));
+
+        return pane;
+    }
+
+    private final StackPane root = new StackPane();
+    private final BorderPane layout = new BorderPane();
+    private final Node btnPlay;
+    private final GameSceneContext context;
+
     public StartPage(GameSceneContext context) {
         this.context = checkNotNull(context);
 
@@ -73,7 +94,7 @@ public class StartPage extends StackPane implements Page {
         VBox right = new VBox(btnNextVariant);
         right.setAlignment(Pos.CENTER_RIGHT);
 
-        btnPlay = createPlayButton(context.tt("play_button"));
+        btnPlay = createPlayButton(context.theme(), context.tt("play_button"));
         BorderPane.setAlignment(btnPlay, Pos.BOTTOM_CENTER);
         btnPlay.setTranslateY(-10);
         var btnPlayContainer = new BorderPane();
@@ -83,15 +104,15 @@ public class StartPage extends StackPane implements Page {
         layout.setRight(right);
         layout.setCenter(btnPlayContainer);
 
-        setBackground(context.theme().get("wallpaper.background"));
-        updateGameVariantImage(context.game().variant());
+        setGameVariant(context.game().variant());
 
-        getChildren().add(layout);
+        root.setBackground(context.theme().get("wallpaper.background"));
+        root.getChildren().add(layout);
     }
 
     @Override
     public Pane rootPane() {
-        return this;
+        return root;
     }
 
     public Node playButton() {
@@ -121,7 +142,7 @@ public class StartPage extends StackPane implements Page {
         }
     }
 
-    public void updateGameVariantImage(GameVariant variant) {
+    public void setGameVariant(GameVariant variant) {
         String imageKey = variant.resourceKey() + ".startpage.image";
         Image image = checkNotNull(context.theme().image(imageKey));
         var background = new Background(
@@ -133,24 +154,5 @@ public class StartPage extends StackPane implements Page {
                 variant == GameVariant.PACMAN_XXL ? FILL : FIT_HEIGHT)
         );
         layout.setBackground(background);
-    }
-
-    private Node createPlayButton(String buttonText) {
-        var text = new Text(buttonText);
-        text.setFill(context.theme().color("startpage.button.color"));
-        text.setFont(context.theme().font("startpage.button.font"));
-
-        var shadow = new DropShadow();
-        shadow.setOffsetY(3.0f);
-        shadow.setColor(Color.color(0.2f, 0.2f, 0.2f));
-        text.setEffect(shadow);
-
-        var pane = new BorderPane(text);
-        pane.setMaxSize(200, 100);
-        pane.setPadding(new Insets(10));
-        pane.setCursor(Cursor.HAND);
-        pane.setBackground(Ufx.coloredRoundedBackground(context.theme().color("startpage.button.bgColor"), 20));
-
-        return pane;
     }
 }
