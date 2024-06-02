@@ -2,7 +2,6 @@ package de.amr.games.pacman.ui2d.util;
 
 import de.amr.games.pacman.lib.Vector2f;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
@@ -21,23 +20,37 @@ public class CanvasLayoutPane extends StackPane {
         region.setPrefSize(width, height);
     }
 
-    public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
+    public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0) {
+        @Override
+        protected void invalidated() {
+            doLayout(getScaling(), true);
+        }
+    };
     public final DoubleProperty unscaledCanvasWidthPy = new SimpleDoubleProperty(this, "unscaledCanvasWidth", 500);
     public final DoubleProperty unscaledCanvasHeightPy = new SimpleDoubleProperty(this, "unscaledCanvasHeight", 400);
-    public final BooleanProperty canvasBorderEnabledPy = new SimpleBooleanProperty(this, "canvasBorderEnabled", true);
+    public final BooleanProperty canvasBorderEnabledPy = new SimpleBooleanProperty(this, "canvasBorderEnabled", true) {
+        @Override
+        protected void invalidated() {
+            doLayout(getScaling(), true);
+        }
+    };
 
-    protected final BorderPane canvasLayer = new BorderPane();
-    protected final BorderPane canvasContainer = new BorderPane();
-    protected final Canvas canvas = new Canvas();
+    protected BorderPane canvasLayer;
+    protected BorderPane canvasContainer;
+    protected Canvas canvas;
 
     protected double minScaling = 1.0;
     protected Color canvasBorderColor = Color.WHITE;
 
     public CanvasLayoutPane() {
-        canvasContainer.setCenter(canvas);
-        canvasContainer.widthProperty().addListener((py, ov, nv) -> rescale(getScaling(), false));
-        canvasContainer.heightProperty().addListener((py, ov, nv) -> rescale(getScaling(), false));
+        canvas = new Canvas();
+        createCanvasContainer();
+        canvasLayer = new BorderPane(canvasContainer);
+        getChildren().add(canvasLayer);
+    }
 
+    private void createCanvasContainer() {
+        canvasContainer = new BorderPane(canvas);
         canvasContainer.clipProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (canvasBorderEnabledPy.get()) {
@@ -71,9 +84,6 @@ public class CanvasLayoutPane extends StackPane {
             },
             canvasBorderEnabledPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy
         ));
-
-        canvasLayer.setCenter(canvasContainer);
-        getChildren().add(canvasLayer);
     }
 
     private Vector2f canvasContainerSizeWithBorder() {
@@ -82,12 +92,35 @@ public class CanvasLayoutPane extends StackPane {
             (float) Math.round((getUnscaledCanvasHeight() + 15) * getScaling()));
     }
 
-    public double getScaling() {
-        return scalingPy.get();
+
+    public void setSize(double width, double height) {
+        double shrink_width  = getCanvasBorderEnabled() ? 0.85 : 1.0;
+        double shrink_height = getCanvasBorderEnabled() ? 0.92 : 1.0;
+        double scaling = shrink_height * height / getUnscaledCanvasHeight();
+        if (scaling * getUnscaledCanvasWidth() > shrink_width * width) {
+            scaling = shrink_width * width / getUnscaledCanvasWidth();
+        }
+        doLayout(scaling, false);
     }
 
-    public void setScaling(double scaling) {
-        scalingPy.set(scaling);
+    //TODO use data binding
+    protected void doLayout(double newScaling, boolean always) {
+        if (newScaling < minScaling) {
+            Logger.warn("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
+            return;
+        }
+        if (Math.abs(getScaling() - newScaling) < 1e-2 && !always) { // avoid useless scaling
+            return;
+        }
+        setScaling(newScaling);
+        canvas.setWidth(getUnscaledCanvasWidth() * getScaling());
+        canvas.setHeight(getUnscaledCanvasHeight() * getScaling());
+        if (getCanvasBorderEnabled()) {
+            var size = canvasContainerSizeWithBorder();
+            resizeRegion(canvasContainer, size.x(), size.y());
+        } else {
+            resizeRegion(canvasContainer, canvas.getWidth(), canvas.getHeight());
+        }
     }
 
     public BorderPane getCanvasLayer() {
@@ -100,6 +133,14 @@ public class CanvasLayoutPane extends StackPane {
 
     public Canvas getCanvas() {
         return canvas;
+    }
+
+    public double getScaling() {
+        return scalingPy.get();
+    }
+
+    public void setScaling(double scaling) {
+        scalingPy.set(scaling);
     }
 
     public double getUnscaledCanvasWidth() {
@@ -132,35 +173,5 @@ public class CanvasLayoutPane extends StackPane {
 
     public void setCanvasBorderColor(Color canvasBorderColor) {
         this.canvasBorderColor = canvasBorderColor;
-    }
-
-    public void setSize(double width, double height) {
-        double shrink_width  = getCanvasBorderEnabled() ? 0.85 : 1.0;
-        double shrink_height = getCanvasBorderEnabled() ? 0.92 : 1.0;
-        double s = shrink_height * height / getUnscaledCanvasHeight();
-        if (s * getUnscaledCanvasWidth() > shrink_width * width) {
-            s = shrink_width * width / getUnscaledCanvasWidth();
-        }
-        rescale(s, false);
-    }
-
-    //TODO use data binding
-    protected void rescale(double newScaling, boolean always) {
-        if (newScaling < minScaling) {
-            Logger.warn("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
-            return;
-        }
-        if (Math.abs(getScaling() - newScaling) < 1e-2 && !always) { // avoid useless scaling
-            return;
-        }
-        setScaling(newScaling);
-        canvas.setWidth(getUnscaledCanvasWidth() * getScaling());
-        canvas.setHeight(getUnscaledCanvasHeight() * getScaling());
-        if (getCanvasBorderEnabled()) {
-            var size = canvasContainerSizeWithBorder();
-            resizeRegion(canvasContainer, size.x(), size.y());
-        } else {
-            resizeRegion(canvasContainer, canvas.getWidth(), canvas.getHeight());
-        }
     }
 }

@@ -254,7 +254,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         page.setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
         page.setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
         page.setMinScaling(0.7);
-        page.setCanvasBorderEnabled(true);
         page.setCanvasBorderColor(theme().color("palette.pale"));
         page.getCanvasLayer().setBackground(theme().background("wallpaper.background"));
         page.getCanvasContainer().setBackground(Ufx.coloredBackground(theme().color("canvas.background")));

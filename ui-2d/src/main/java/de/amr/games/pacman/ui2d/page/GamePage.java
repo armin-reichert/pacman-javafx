@@ -46,6 +46,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
         popupLayer.getChildren().addAll(helpButton, helpInfoPopUp);
         getChildren().addAll(popupLayer, flashMessageView);
         setSize(width, height);
+        canvasBorderEnabledPy.bind(PY_CANVAS_DECORATION);
     }
 
     public void sign(Font unscaledFont, String... words) {
@@ -85,14 +86,14 @@ public class GamePage extends CanvasLayoutPane implements Page {
         Logger.info("Clock started, speed={} Hz", context.gameClock().getTargetFrameRate());
     }
 
-    protected void rescale(double newScaling, boolean always) {
-        super.rescale(newScaling, always);
+    protected void doLayout(double newScaling, boolean always) {
+        super.doLayout(newScaling, always);
         resizeRegion(popupLayer, canvasContainer.getWidth(), canvasContainer.getHeight());
     }
 
     public void onGameSceneChanged(GameScene newGameScene) {
         updateHelpButton();
-        rescale(getScaling(), true);
+        doLayout(getScaling(), true);
         if (newGameScene instanceof GameScene2D scene2D) {
             scene2D.setCanvas(getCanvas());
             scene2D.clearCanvas();

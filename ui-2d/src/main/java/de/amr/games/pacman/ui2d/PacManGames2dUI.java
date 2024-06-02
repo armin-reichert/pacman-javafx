@@ -108,6 +108,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     };
     public static final BooleanProperty PY_USE_AUTOPILOT   = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_CANVAS_DECORATION = new SimpleBooleanProperty(true);
 
     public static final String SIGNATURE_TEXT = "Remake (2021-2024) by Armin Reichert";
 
