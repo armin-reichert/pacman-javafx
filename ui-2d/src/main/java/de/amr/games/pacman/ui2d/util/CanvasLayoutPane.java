@@ -32,7 +32,6 @@ public class CanvasLayoutPane extends StackPane {
 
     protected double minScaling = 1.0;
     protected Color canvasBorderColor = Color.WHITE;
-    protected boolean discreteScaling = false;
 
     public CanvasLayoutPane() {
         canvasContainer.setCenter(canvas);
@@ -82,10 +81,6 @@ public class CanvasLayoutPane extends StackPane {
         this.minScaling = minScaling;
     }
 
-    public void setDiscreteScaling(boolean discreteScaling) {
-        this.discreteScaling = discreteScaling;
-    }
-
     public boolean getCanvasBorderEnabled() {
         return canvasBorderEnabledPy.get();
     }
@@ -101,16 +96,10 @@ public class CanvasLayoutPane extends StackPane {
     public void setSize(double width, double height) {
         double shrink_width  = getCanvasBorderEnabled() ? 0.85 : 1.0;
         double shrink_height = getCanvasBorderEnabled() ? 0.92 : 1.0;
-
         double s = shrink_height * height / getUnscaledCanvasHeight();
         if (s * getUnscaledCanvasWidth() > shrink_width * width) {
             s = shrink_width * width / getUnscaledCanvasWidth();
         }
-
-        if (discreteScaling) {
-            s = Math.floor(s * 10) / 10; // round scaling factor to first decimal digit
-        }
-
         rescale(s, false);
     }
 
