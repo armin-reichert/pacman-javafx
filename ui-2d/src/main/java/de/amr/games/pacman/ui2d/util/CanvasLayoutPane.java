@@ -1,9 +1,8 @@
 package de.amr.games.pacman.ui2d.util;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -37,6 +36,24 @@ public class CanvasLayoutPane extends StackPane {
         canvasContainer.setCenter(canvas);
         canvasContainer.widthProperty().addListener((py, ov, nv) -> rescale(getScaling(), false));
         canvasContainer.heightProperty().addListener((py, ov, nv) -> rescale(getScaling(), false));
+        var clipBinding = Bindings.createObjectBinding(
+            () -> {
+                if (canvasBorderEnabledPy.get()) {
+                    double s = getScaling();
+                    double w = Math.round((getUnscaledCanvasWidth() + 25) * s);
+                    double h = Math.round((getUnscaledCanvasHeight() + 15) * s);
+                    double arcSize = 26 * s;
+                    var clipRect = new Rectangle(w, h);
+                    clipRect.setArcWidth(arcSize);
+                    clipRect.setArcHeight(arcSize);
+                    return clipRect;
+                } else {
+                    return null;
+                }
+            }, canvasBorderEnabledPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy
+        );
+        canvasContainer.clipProperty().bind(clipBinding);
+
         canvasLayer.setCenter(canvasContainer);
         getChildren().add(canvasLayer);
     }
@@ -121,11 +138,6 @@ public class CanvasLayoutPane extends StackPane {
             double w = Math.round((getUnscaledCanvasWidth() + 25) * getScaling());
             double h = Math.round((getUnscaledCanvasHeight() + 15) * getScaling());
 
-            var clipRect = new Rectangle(w, h);
-            clipRect.setArcWidth(26 * getScaling());
-            clipRect.setArcHeight(26 * getScaling());
-            canvasContainer.setClip(clipRect);
-
             double borderWidth = Math.max(5, Math.ceil(h / 55));
             double cornerRadius = Math.ceil(10 * getScaling());
             var roundedBorder = new Border(
@@ -140,7 +152,6 @@ public class CanvasLayoutPane extends StackPane {
             Logger.trace("Canvas container resized: scaling: {}, canvas size: {000} x {000} px, border: {0} px",
                 getScaling(), canvas.getWidth(), canvas.getHeight(), borderWidth);
         } else {
-            canvasContainer.setClip(null);
             canvasContainer.setBorder(null);
 
             resizeRegion(canvasContainer, canvas.getWidth(), canvas.getHeight());
