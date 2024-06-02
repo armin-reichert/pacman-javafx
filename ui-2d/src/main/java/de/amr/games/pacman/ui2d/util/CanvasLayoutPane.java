@@ -1,6 +1,8 @@
 package de.amr.games.pacman.ui2d.util;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
@@ -22,6 +24,7 @@ public class CanvasLayoutPane extends StackPane {
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
     public final DoubleProperty unscaledCanvasWidthPy = new SimpleDoubleProperty(this, "unscaledCanvasWidth", 500);
     public final DoubleProperty unscaledCanvasHeightPy = new SimpleDoubleProperty(this, "unscaledCanvasHeight", 400);
+    public final BooleanProperty canvasBorderEnabledPy = new SimpleBooleanProperty(this, "canvasBorderEnabled", true);
 
     protected final BorderPane canvasLayer = new BorderPane();
     protected final BorderPane canvasContainer = new BorderPane();
@@ -29,7 +32,6 @@ public class CanvasLayoutPane extends StackPane {
 
     protected double minScaling = 1.0;
     protected Color canvasBorderColor = Color.WHITE;
-    protected boolean canvasBorderEnabled = false;
     protected boolean discreteScaling = false;
 
     public CanvasLayoutPane() {
@@ -84,8 +86,12 @@ public class CanvasLayoutPane extends StackPane {
         this.discreteScaling = discreteScaling;
     }
 
-    public void setCanvasBorderEnabled(boolean canvasBorderEnabled) {
-        this.canvasBorderEnabled = canvasBorderEnabled;
+    public boolean getCanvasBorderEnabled() {
+        return canvasBorderEnabledPy.get();
+    }
+
+    public void setCanvasBorderEnabled(boolean enabled) {
+        this.canvasBorderEnabledPy.set(enabled);
     }
 
     public void setCanvasBorderColor(Color canvasBorderColor) {
@@ -93,8 +99,8 @@ public class CanvasLayoutPane extends StackPane {
     }
 
     public void setSize(double width, double height) {
-        double shrink_width = canvasBorderEnabled ? 0.85 : 1.0;
-        double shrink_height = canvasBorderEnabled ? 0.92 : 1.0;
+        double shrink_width  = getCanvasBorderEnabled() ? 0.85 : 1.0;
+        double shrink_height = getCanvasBorderEnabled() ? 0.92 : 1.0;
 
         double s = shrink_height * height / getUnscaledCanvasHeight();
         if (s * getUnscaledCanvasWidth() > shrink_width * width) {
@@ -122,7 +128,7 @@ public class CanvasLayoutPane extends StackPane {
         canvas.setWidth(getUnscaledCanvasWidth() * getScaling());
         canvas.setHeight(getUnscaledCanvasHeight() * getScaling());
 
-        if (canvasBorderEnabled) {
+        if (getCanvasBorderEnabled()) {
             double w = Math.round((getUnscaledCanvasWidth() + 25) * getScaling());
             double h = Math.round((getUnscaledCanvasHeight() + 15) * getScaling());
 
