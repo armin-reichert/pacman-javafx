@@ -34,6 +34,10 @@ public class EditorPage extends BorderPane implements Page {
     }
 
     @Override
+    public void onSelected() {
+    }
+
+    @Override
     public void setSize(double width, double height) {
     }
 

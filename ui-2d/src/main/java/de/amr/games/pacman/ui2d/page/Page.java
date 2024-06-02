@@ -10,11 +10,11 @@ public interface Page {
 
     Pane rootPane();
 
+    void onSelected();
+
     void setSize(double width, double height);
 
     default void onMouseClicked(MouseEvent e) {}
 
     default void handleKeyboardInput() {}
-
-    default void onSelected() {}
 }
