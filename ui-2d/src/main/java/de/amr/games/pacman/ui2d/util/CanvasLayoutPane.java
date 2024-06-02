@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui2d.util;
 
+import de.amr.games.pacman.lib.Vector2f;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.*;
@@ -36,14 +37,14 @@ public class CanvasLayoutPane extends StackPane {
         canvasContainer.setCenter(canvas);
         canvasContainer.widthProperty().addListener((py, ov, nv) -> rescale(getScaling(), false));
         canvasContainer.heightProperty().addListener((py, ov, nv) -> rescale(getScaling(), false));
-        var clipBinding = Bindings.createObjectBinding(
+
+        canvasContainer.clipProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (canvasBorderEnabledPy.get()) {
                     double s = getScaling();
-                    double w = Math.round((getUnscaledCanvasWidth() + 25) * s);
-                    double h = Math.round((getUnscaledCanvasHeight() + 15) * s);
+                    Vector2f size = canvasContainerSizeWithBorder();
                     double arcSize = 26 * s;
-                    var clipRect = new Rectangle(w, h);
+                    var clipRect = new Rectangle(size.x(), size.y());
                     clipRect.setArcWidth(arcSize);
                     clipRect.setArcHeight(arcSize);
                     return clipRect;
@@ -51,11 +52,34 @@ public class CanvasLayoutPane extends StackPane {
                     return null;
                 }
             }, canvasBorderEnabledPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy
-        );
-        canvasContainer.clipProperty().bind(clipBinding);
+        ));
+
+        canvasContainer.borderProperty().bind(Bindings.createObjectBinding(
+            () -> {
+                if (canvasBorderEnabledPy.get()) {
+                    Vector2f size = canvasContainerSizeWithBorder();
+                    double borderWidth = Math.max(5, Math.ceil(size.y() / 55));
+                    double cornerRadius = Math.ceil(10 * getScaling());
+                    return new Border(
+                        new BorderStroke(canvasBorderColor,
+                            BorderStrokeStyle.SOLID,
+                            new CornerRadii(cornerRadius),
+                            new BorderWidths(borderWidth)));
+                } else {
+                    return null;
+                }
+            },
+            canvasBorderEnabledPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy
+        ));
 
         canvasLayer.setCenter(canvasContainer);
         getChildren().add(canvasLayer);
+    }
+
+    private Vector2f canvasContainerSizeWithBorder() {
+        return new Vector2f(
+            (float) Math.round((getUnscaledCanvasWidth() + 25) * getScaling()),
+            (float) Math.round((getUnscaledCanvasHeight() + 15) * getScaling()));
     }
 
     public double getScaling() {
@@ -120,44 +144,23 @@ public class CanvasLayoutPane extends StackPane {
         rescale(s, false);
     }
 
+    //TODO use data binding
     protected void rescale(double newScaling, boolean always) {
         if (newScaling < minScaling) {
-            Logger.error("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
+            Logger.warn("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
             return;
         }
-        if (getScaling() == newScaling && !always) {
-            // avoid useless scaling
+        if (Math.abs(getScaling() - newScaling) < 1e-2 && !always) { // avoid useless scaling
             return;
         }
         setScaling(newScaling);
-
         canvas.setWidth(getUnscaledCanvasWidth() * getScaling());
         canvas.setHeight(getUnscaledCanvasHeight() * getScaling());
-
         if (getCanvasBorderEnabled()) {
-            double w = Math.round((getUnscaledCanvasWidth() + 25) * getScaling());
-            double h = Math.round((getUnscaledCanvasHeight() + 15) * getScaling());
-
-            double borderWidth = Math.max(5, Math.ceil(h / 55));
-            double cornerRadius = Math.ceil(10 * getScaling());
-            var roundedBorder = new Border(
-                new BorderStroke(canvasBorderColor,
-                    BorderStrokeStyle.SOLID,
-                    new CornerRadii(cornerRadius),
-                    new BorderWidths(borderWidth)));
-            canvasContainer.setBorder(roundedBorder);
-
-            resizeRegion(canvasContainer, w, h);
-
-            Logger.trace("Canvas container resized: scaling: {}, canvas size: {000} x {000} px, border: {0} px",
-                getScaling(), canvas.getWidth(), canvas.getHeight(), borderWidth);
+            var size = canvasContainerSizeWithBorder();
+            resizeRegion(canvasContainer, size.x(), size.y());
         } else {
-            canvasContainer.setBorder(null);
-
             resizeRegion(canvasContainer, canvas.getWidth(), canvas.getHeight());
-
-            Logger.trace("Canvas container resized: scaling: {}, canvas size: {000} x {000} px, no border",
-                getScaling(), canvas.getWidth(), canvas.getHeight());
         }
     }
 }
