@@ -10,7 +10,7 @@ public interface Page {
 
     Pane rootPane();
 
-    default void setSize(double width, double height) {}
+    void setSize(double width, double height);
 
     default void onMouseClicked(MouseEvent e) {}
 

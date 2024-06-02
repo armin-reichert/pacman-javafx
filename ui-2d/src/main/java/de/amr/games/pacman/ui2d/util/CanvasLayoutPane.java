@@ -11,14 +11,19 @@ import org.tinylog.Logger;
 /**
  * Layered container containing a canvas in the center of the lowest layer.
  */
-public class CanvasLayoutPane {
+public class CanvasLayoutPane extends StackPane {
 
-    protected final StackPane layersContainer = new StackPane();
-    protected final BorderPane canvasLayer = new BorderPane();
-    protected final BorderPane canvasContainer = new BorderPane();
-    private final Canvas canvas = new Canvas();
+    public static void resizeRegion(Region region, double width, double height) {
+        region.setMinSize(width, height);
+        region.setMaxSize(width, height);
+        region.setPrefSize(width, height);
+    }
 
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
+
+    protected final BorderPane canvasLayer = new BorderPane();
+    protected final BorderPane canvasContainer = new BorderPane();
+    protected final Canvas canvas = new Canvas();
 
     protected double minScaling = 1.0;
     protected double unscaledCanvasWidth = 300;
@@ -28,11 +33,11 @@ public class CanvasLayoutPane {
     protected boolean discreteScaling = false;
 
     public CanvasLayoutPane() {
-        canvasLayer.setCenter(canvasContainer);
         canvasContainer.setCenter(canvas);
-        layersContainer.getChildren().add(canvasLayer);
         canvasContainer.widthProperty().addListener((py, ov, nv) -> rescale(getScaling(), false));
         canvasContainer.heightProperty().addListener((py, ov, nv) -> rescale(getScaling(), false));
+        canvasLayer.setCenter(canvasContainer);
+        getChildren().add(canvasLayer);
     }
 
     public double getScaling() {
@@ -41,10 +46,6 @@ public class CanvasLayoutPane {
 
     public void setScaling(double scaling) {
         scalingPy.set(scaling);
-    }
-
-    public StackPane getLayersContainer() {
-        return layersContainer;
     }
 
     public BorderPane getCanvasLayer() {
@@ -59,12 +60,20 @@ public class CanvasLayoutPane {
         return canvas;
     }
 
-    public void setUnscaledCanvasWidth(double unscaledCanvasWidth) {
-        this.unscaledCanvasWidth = unscaledCanvasWidth;
+    public double getUnscaledCanvasWidth() {
+        return unscaledCanvasWidth;
     }
 
-    public void setUnscaledCanvasHeight(double unscaledCanvasHeight) {
-        this.unscaledCanvasHeight = unscaledCanvasHeight;
+    public void setUnscaledCanvasWidth(double w) {
+        unscaledCanvasWidth = w;
+    }
+
+    public double getUnscaledCanvasHeight() {
+        return unscaledCanvasHeight;
+    }
+
+    public void setUnscaledCanvasHeight(double h) {
+        unscaledCanvasHeight = h;
     }
 
     public void setMinScaling(double minScaling) {
@@ -81,12 +90,6 @@ public class CanvasLayoutPane {
 
     public void setCanvasBorderColor(Color canvasBorderColor) {
         this.canvasBorderColor = canvasBorderColor;
-    }
-
-    protected void resizeRegion(Region region, double width, double height) {
-        region.setMinSize(width, height);
-        region.setMaxSize(width, height);
-        region.setPrefSize(width, height);
     }
 
     public void setSize(double width, double height) {

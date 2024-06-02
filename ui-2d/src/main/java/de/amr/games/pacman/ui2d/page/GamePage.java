@@ -44,7 +44,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
         createHelpButton();
         createDebugInfoBindings();
         popupLayer.getChildren().addAll(helpButton, helpInfoPopUp);
-        layersContainer.getChildren().addAll(popupLayer, flashMessageView);
+        getChildren().addAll(popupLayer, flashMessageView);
         setSize(width, height);
     }
 
@@ -75,7 +75,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
 
     @Override
     public Pane rootPane() {
-        return layersContainer;
+        return this;
     }
 
     @Override
@@ -105,7 +105,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
     }
 
     private void createDebugInfoBindings() {
-        layersContainer.borderProperty().bind(Bindings.createObjectBinding(
+        borderProperty().bind(Bindings.createObjectBinding(
             () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.RED, 3) : null,
             PY_SHOW_DEBUG_INFO, context.gameSceneProperty()
         ));

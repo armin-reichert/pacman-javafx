@@ -72,9 +72,9 @@ public class GamePage3D extends GamePage {
         dashboardLayer = new BorderPane();
         dashboardLayer.setLeft(dashboard);
         dashboardLayer.setRight(pip);
-        getLayersContainer().getChildren().add(dashboardLayer);
+        getChildren().add(dashboardLayer);
 
-        getLayersContainer().backgroundProperty().bind(Bindings.createObjectBinding(
+        backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
                     return Ufx.coloredBackground(Color.BLACK);
@@ -100,7 +100,6 @@ public class GamePage3D extends GamePage {
     public void onMouseClicked(MouseEvent e) {
         hideContextMenu();
         if (e.getButton() == MouseButton.SECONDARY && context.currentGameScene().isPresent()) {
-            GameScene gameScene = context.currentGameScene().get();
             if (context.isCurrentGameScene(PLAY_SCENE_3D)) {
                 showContextMenu(false, e.getScreenX(), e.getScreenY());
             } else if (context.isCurrentGameScene(PLAY_SCENE)) {
@@ -173,9 +172,9 @@ public class GamePage3D extends GamePage {
     public void onGameSceneChanged(GameScene newGameScene) {
         if (isCurrentGameScene3D()) {
             updateHelpButton();
-            getLayersContainer().getChildren().set(0, newGameScene.root());
+            getChildren().set(0, newGameScene.root());
         } else {
-            getLayersContainer().getChildren().set(0, canvasLayer);
+            getChildren().set(0, canvasLayer);
             super.onGameSceneChanged(newGameScene);
         }
         hideContextMenu();
@@ -184,7 +183,7 @@ public class GamePage3D extends GamePage {
 
     private void updateTopLayer() {
         dashboardLayer.setVisible(dashboard.isVisible() || PY_3D_PIP_ON.get());
-        getLayersContainer().requestFocus();
+        requestFocus();
     }
 
     private boolean isCurrentGameScene3D() {

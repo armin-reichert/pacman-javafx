@@ -34,6 +34,10 @@ public class EditorPage extends BorderPane implements Page {
     }
 
     @Override
+    public void setSize(double width, double height) {
+    }
+
+    @Override
     public void handleKeyboardInput() {
         if (Keyboard.pressed(KEY_FULLSCREEN)) {
             context.actionHandler().setFullScreen(true);
