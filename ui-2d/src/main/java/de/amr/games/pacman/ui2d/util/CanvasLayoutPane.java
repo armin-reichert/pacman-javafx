@@ -34,13 +34,13 @@ public class CanvasLayoutPane extends StackPane {
             doLayout(getScaling(), true);
         }
     };
+    public final ObjectProperty<Color> canvasBorderColorPy = new SimpleObjectProperty<>(this, "canvasBorderColor", Color.LIGHTBLUE);
 
     protected BorderPane canvasLayer;
     protected BorderPane canvasContainer;
     protected Canvas canvas;
 
     protected double minScaling = 1.0;
-    protected Color canvasBorderColor = Color.WHITE;
 
     public CanvasLayoutPane() {
         canvas = new Canvas();
@@ -74,7 +74,7 @@ public class CanvasLayoutPane extends StackPane {
                     double borderWidth = Math.max(5, Math.ceil(size.y() / 55));
                     double cornerRadius = Math.ceil(10 * getScaling());
                     return new Border(
-                        new BorderStroke(canvasBorderColor,
+                        new BorderStroke(canvasBorderColorPy.get(),
                             BorderStrokeStyle.SOLID,
                             new CornerRadii(cornerRadius),
                             new BorderWidths(borderWidth)));
@@ -159,8 +159,8 @@ public class CanvasLayoutPane extends StackPane {
         unscaledCanvasHeightPy.set(h);
     }
 
-    public void setMinScaling(double minScaling) {
-        this.minScaling = minScaling;
+    public void setMinScaling(double value) {
+        minScaling = value;
     }
 
     public boolean getCanvasBorderEnabled() {
@@ -168,10 +168,14 @@ public class CanvasLayoutPane extends StackPane {
     }
 
     public void setCanvasBorderEnabled(boolean enabled) {
-        this.canvasBorderEnabledPy.set(enabled);
+        canvasBorderEnabledPy.set(enabled);
     }
 
-    public void setCanvasBorderColor(Color canvasBorderColor) {
-        this.canvasBorderColor = canvasBorderColor;
+    public Color getCanvasBorderColor() {
+        return canvasBorderColorPy.get();
+    }
+
+    public void setCanvasBorderColor(Color color) {
+        canvasBorderColorPy.set(color);
     }
 }
