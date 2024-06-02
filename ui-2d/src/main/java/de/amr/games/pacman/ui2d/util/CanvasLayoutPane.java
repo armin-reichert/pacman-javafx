@@ -53,6 +53,25 @@ public class CanvasLayoutPane extends StackPane {
         getChildren().add(canvasLayer);
     }
 
+    public void setSize(double width, double height) {
+        double scaling = computeScaling(width, height);
+        doLayout(scaling, false);
+    }
+
+    private double computeScaling(double width, double height) {
+        if (getCanvasBorderEnabled()) {
+            double shrinkedWidth = 0.85 * width;
+            double shrinkedHeight = 0.92 * height;
+            double scaling = shrinkedHeight / getUnscaledCanvasHeight();
+            if (scaling * getUnscaledCanvasWidth() > shrinkedWidth) {
+                scaling = shrinkedWidth / getUnscaledCanvasWidth();
+            }
+            return scaling;
+        } else {
+            return height / getUnscaledCanvasHeight();
+        }
+    }
+
     private void createCanvasContainer() {
         canvasContainer = new BorderPane(canvas);
         canvasContainer.clipProperty().bind(Bindings.createObjectBinding(
@@ -94,17 +113,6 @@ public class CanvasLayoutPane extends StackPane {
         return new Vector2f(
             (float) Math.round((getUnscaledCanvasWidth() + 25) * getScaling()),
             (float) Math.round((getUnscaledCanvasHeight() + 15) * getScaling()));
-    }
-
-
-    public void setSize(double width, double height) {
-        double shrink_width  = getCanvasBorderEnabled() ? 0.85 : 1.0;
-        double shrink_height = getCanvasBorderEnabled() ? 0.92 : 1.0;
-        double scaling = shrink_height * height / getUnscaledCanvasHeight();
-        if (scaling * getUnscaledCanvasWidth() > shrink_width * width) {
-            scaling = shrink_width * width / getUnscaledCanvasWidth();
-        }
-        doLayout(scaling, false);
     }
 
     //TODO use data binding
