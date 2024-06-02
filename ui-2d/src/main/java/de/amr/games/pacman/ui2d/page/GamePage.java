@@ -93,7 +93,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
 
     public void onGameSceneChanged(GameScene newGameScene) {
         updateHelpButton();
-        doLayout(getScaling(), true);
+        doLayout(getScaling(), true); //TODO check this
         if (newGameScene instanceof GameScene2D scene2D) {
             scene2D.setCanvas(getCanvas());
             scene2D.clearCanvas();
@@ -186,6 +186,8 @@ public class GamePage extends CanvasLayoutPane implements Page {
         helpButton.setCenter(new ImageView());
         helpButton.setCursor(Cursor.HAND);
         helpButton.setOnMouseClicked(e -> showHelpInfoPopUp());
+        helpButton.translateXProperty().bind(unscaledCanvasWidthPy.multiply(scalingPy));
+        helpButton.translateYProperty().bind(scalingPy.multiply(10));
         scalingPy.addListener((py, ov, nv) -> updateHelpButton());
         updateHelpButton();
     }
@@ -201,8 +203,6 @@ public class GamePage extends CanvasLayoutPane implements Page {
         imageView.setImage(image);
         imageView.setFitHeight(size);
         imageView.setFitWidth(size);
-        helpButton.setTranslateX(getUnscaledCanvasWidth() * getScaling());
-        helpButton.setTranslateY(10 * getScaling());
         helpButton.setVisible(isHelpButtonVisible());
         Logger.trace("Updated help icon, scaling: {}", getScaling());
     }
