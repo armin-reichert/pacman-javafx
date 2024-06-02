@@ -12,9 +12,11 @@ import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Cursor;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -33,17 +35,19 @@ import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
  */
 public class GamePage extends CanvasLayoutPane implements Page {
 
+    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant");
+
     protected final GameSceneContext context;
     private final FlashMessageView flashMessageView = new FlashMessageView();
     private final Pane popupLayer = new Pane();
     private final FadingPane helpInfoPopUp = new FadingPane();
-    private BorderPane helpButton;
+    private final ImageView helpButtonIcon = new ImageView();
 
     public GamePage(GameSceneContext context, double width, double height) {
         this.context = context;
         createHelpButton();
         createDebugInfoBindings();
-        popupLayer.getChildren().addAll(helpButton, helpInfoPopUp);
+        popupLayer.getChildren().addAll(helpButtonIcon, helpInfoPopUp);
         getChildren().addAll(popupLayer, flashMessageView);
         setSize(width, height);
         canvasBorderEnabledPy.bind(PY_CANVAS_DECORATION);
@@ -182,36 +186,32 @@ public class GamePage extends CanvasLayoutPane implements Page {
     // Help Info stuff
 
     private void createHelpButton() {
-        helpButton = new BorderPane();
-        helpButton.setCenter(new ImageView());
-        helpButton.setCursor(Cursor.HAND);
-        helpButton.setOnMouseClicked(e -> showHelpInfoPopUp());
-        helpButton.translateXProperty().bind(unscaledCanvasWidthPy.multiply(scalingPy));
-        helpButton.translateYProperty().bind(scalingPy.multiply(10));
+        helpButtonIcon.setCursor(Cursor.HAND);
+        helpButtonIcon.setOnMouseClicked(e -> showHelpInfoPopUp());
+        helpButtonIcon.translateXProperty().bind(unscaledCanvasWidthPy.multiply(scalingPy));
+        helpButtonIcon.translateYProperty().bind(scalingPy.multiply(10));
         scalingPy.addListener((py, ov, nv) -> updateHelpButton());
         updateHelpButton();
     }
 
     protected void updateHelpButton() {
-        ImageView imageView = (ImageView) helpButton.getCenter();
+        boolean visible = context.currentGameScene().isPresent()
+            && isCurrentGameScene2D()
+            && !context.isCurrentGameScene(BOOT_SCENE);
+        helpButtonIcon.setVisible(visible);
+        if (visible) {
+            helpButtonIcon.setImage(helpButtonImage());
+            helpButtonIcon.setFitWidth(Math.ceil(12 * getScaling()));
+            helpButtonIcon.setFitHeight(helpButtonIcon.getFitWidth());
+        }
+    }
+
+    private Image helpButtonImage() {
         String rk = context.game().variant().resourceKey();
         if (context.game().variant() == GameVariant.PACMAN_XXL) {
             rk = GameVariant.PACMAN.resourceKey();
         }
-        var image = context.theme().image(rk + ".helpButton.icon");
-        double size = Math.ceil(12 * getScaling());
-        imageView.setImage(image);
-        imageView.setFitHeight(size);
-        imageView.setFitWidth(size);
-        helpButton.setVisible(isHelpButtonVisible());
-        Logger.trace("Updated help icon, scaling: {}", getScaling());
-    }
-
-    protected boolean isHelpButtonVisible() {
-        if (context.currentGameScene().isEmpty() || !isCurrentGameScene2D()) {
-            return false;
-        }
-        return !context.isCurrentGameScene(BOOT_SCENE);
+        return context.theme().image(rk + ".helpButton.icon");
     }
 
     public class HelpInfo extends PageInfo {

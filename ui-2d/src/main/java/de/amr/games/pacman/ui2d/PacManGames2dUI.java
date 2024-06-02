@@ -374,6 +374,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     protected GamePage createGamePage() {
         var page = new GamePage(this, mainScene.getWidth(), mainScene.getHeight());
+        page.gameVariantPy.bind(gameVariantPy);
         page.setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
         page.setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
         page.setMinScaling(0.7);
