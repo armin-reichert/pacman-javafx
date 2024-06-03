@@ -92,7 +92,9 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void onContextMenuRequested(ContextMenuEvent event) {
-        hideContextMenu();
+        if (contextMenu != null) {
+            contextMenu.hide();
+        }
         if (!context.isCurrentGameScene(PLAY_SCENE) && !context.isCurrentGameScene(PLAY_SCENE_3D)) {
             return;
         }
@@ -201,8 +203,7 @@ public class GamePage3D extends GamePage {
         var actionHandler = (ActionHandler3D) context.actionHandler();
         if (Keyboard.pressed(KEY_SWITCH_EDITOR)) {
             actionHandler.enterMapEditor();
-        }
-        else if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
+        } else if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
             actionHandler.toggle2D3D();
         } else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
             actionHandler.toggleDashboard();
