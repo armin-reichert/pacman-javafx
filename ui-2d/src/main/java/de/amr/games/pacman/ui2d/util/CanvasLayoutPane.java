@@ -1,8 +1,8 @@
 package de.amr.games.pacman.ui2d.util;
 
-import de.amr.games.pacman.lib.Vector2f;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -72,7 +72,7 @@ public class CanvasLayoutPane extends StackPane {
         }
         if (isCanvasDecorated()) {
             var size = canvasContainerSizeWithBorder();
-            setAllSizes(canvasContainer, size.x(), size.y());
+            setAllSizes(canvasContainer, size.getX(), size.getY());
         } else {
             setAllSizes(canvasContainer, canvas.getWidth(), canvas.getHeight());
         }
@@ -99,9 +99,9 @@ public class CanvasLayoutPane extends StackPane {
             () -> {
                 if (canvasDecoratedPy.get()) {
                     double s = getScaling();
-                    Vector2f size = canvasContainerSizeWithBorder();
+                    var size = canvasContainerSizeWithBorder();
                     double arcSize = 26 * s;
-                    var clipRect = new Rectangle(size.x(), size.y());
+                    var clipRect = new Rectangle(size.getX(), size.getY());
                     clipRect.setArcWidth(arcSize);
                     clipRect.setArcHeight(arcSize);
                     return clipRect;
@@ -114,8 +114,8 @@ public class CanvasLayoutPane extends StackPane {
         canvasContainer.borderProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (canvasDecoratedPy.get()) {
-                    Vector2f size = canvasContainerSizeWithBorder();
-                    double borderWidth = Math.max(5, Math.ceil(size.y() / 55));
+                    var size = canvasContainerSizeWithBorder();
+                    double borderWidth = Math.max(5, Math.ceil(size.getY() / 55));
                     double cornerRadius = Math.ceil(10 * getScaling());
                     return new Border(
                         new BorderStroke(canvasBorderColorPy.get(),
@@ -130,10 +130,10 @@ public class CanvasLayoutPane extends StackPane {
         ));
     }
 
-    private Vector2f canvasContainerSizeWithBorder() {
-        return new Vector2f(
-            (float) Math.round((getUnscaledCanvasWidth() + 25) * getScaling()),
-            (float) Math.round((getUnscaledCanvasHeight() + 15) * getScaling()));
+    private Point2D canvasContainerSizeWithBorder() {
+        return new Point2D(
+            Math.round((getUnscaledCanvasWidth() + 25) * getScaling()),
+            Math.round((getUnscaledCanvasHeight() + 15) * getScaling()));
     }
 
     public BorderPane getCanvasLayer() {
