@@ -51,8 +51,9 @@ public class GamePage extends CanvasLayoutPane implements Page {
         canvasBorderEnabledPy.bind(PY_CANVAS_DECORATION);
     }
 
-    public void sign(Font font, String... words) {
+    public void configureSignature(Font font, String... words) {
         signature.setWords(words);
+
         signature.fontPy.bind(Bindings.createObjectBinding(
             () -> Font.font(font.getFamily(), getScaling() * font.getSize()),
             scalingPy
@@ -60,7 +61,12 @@ public class GamePage extends CanvasLayoutPane implements Page {
         // keep centered over canvas container
         signature.translateXProperty().bind(Bindings.createDoubleBinding(
             () -> 0.5 * (canvasContainer.getWidth() - signature.getWidth()),
-            canvasContainer.widthProperty()
+            scalingPy, canvasContainer.widthProperty()
+        ));
+        // keep at vertical position over intro scene
+        signature.translateYProperty().bind(Bindings.createDoubleBinding(
+            () -> getScaling() * 30,
+            scalingPy, canvasContainer.heightProperty()
         ));
     }
 

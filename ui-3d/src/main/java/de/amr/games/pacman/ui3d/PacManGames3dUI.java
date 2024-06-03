@@ -257,6 +257,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         page.setCanvasBorderColor(theme().color("palette.pale"));
         page.getCanvasLayer().setBackground(theme().background("wallpaper.background"));
         page.getCanvasContainer().setBackground(Ufx.coloredBackground(theme().color("canvas.background")));
+        page.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
         return page;
     }

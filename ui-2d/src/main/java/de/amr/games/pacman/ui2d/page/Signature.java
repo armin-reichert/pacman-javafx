@@ -19,14 +19,16 @@ public class Signature extends TextFlow {
 
     public final ObjectProperty<Font> fontPy = new SimpleObjectProperty<>(this, "font", Font.font("Serif"));
     private final Transition animation;
+    private final FadeTransition fadeIn;
+    private final FadeTransition fadeOut;
 
     public Signature(String... words) {
-        var fadeIn = new FadeTransition(Duration.seconds(2), this);
+        fadeIn = new FadeTransition(Duration.seconds(2), this);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
         fadeIn.setDelay(Duration.seconds(2));
 
-        var fadeOut = new FadeTransition(Duration.seconds(3), this);
+        fadeOut = new FadeTransition(Duration.seconds(3), this);
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
 
@@ -50,7 +52,9 @@ public class Signature extends TextFlow {
         }
     }
 
-    public void show() {
+    public void show(double fadeInSec, double fadeOutSec) {
+        fadeIn.setDuration(Duration.seconds(fadeInSec));
+        fadeOut.setDuration(Duration.seconds(fadeOutSec));
         animation.playFromStart();
     }
 

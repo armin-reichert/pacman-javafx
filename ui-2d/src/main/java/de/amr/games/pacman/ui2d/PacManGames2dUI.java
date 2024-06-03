@@ -32,7 +32,6 @@ import javafx.scene.input.*;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -268,10 +267,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         createGameClock();
         createGameScenes();
 
-        GamePage gamePage = page(GAME_PAGE);
-        Font signatureFont = theme.font("font.monospaced", 9);
-        gamePage.sign(signatureFont, SIGNATURE_TEXT);
-
         stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy));
         stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
         stage.setMinWidth(CANVAS_WIDTH_UNSCALED);
@@ -382,6 +377,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         page.getCanvasLayer().setBackground(theme().background("wallpaper.background"));
         page.getCanvasContainer().setBackground(Ufx.coloredBackground(theme().color("canvas.background")));
 
+        page.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
         return page;
     }
@@ -667,13 +663,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     @Override
     public void showSignature() {
         GamePage gamePage = page(GAME_PAGE);
-        var signature = gamePage.signature();
-        int y = switch (game().variant()) {
-            case MS_PACMAN -> 45;
-            case PACMAN, PACMAN_XXL -> 30;
-        };
-        signature.translateYProperty().bind(gamePage.scalingPy.multiply(y));
-        signature.show();
+        gamePage.signature().show(2, 3);
     }
 
     @Override
