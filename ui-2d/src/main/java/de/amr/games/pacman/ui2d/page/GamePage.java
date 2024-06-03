@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
@@ -24,7 +23,6 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
 
@@ -144,11 +142,7 @@ public class GamePage implements Page {
     }
 
     public void render() {
-        context.currentGameScene().ifPresent(gameScene -> {
-            if (gameScene instanceof GameScene2D gameScene2D) {
-                gameScene2D.draw();
-            }
-        });
+        context.currentGameScene().ifPresent(GameScene::draw);
         flashMessageView.update();
         popupLayer.setVisible(true);
     }

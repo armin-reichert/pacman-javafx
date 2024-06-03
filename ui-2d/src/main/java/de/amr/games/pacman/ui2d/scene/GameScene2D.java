@@ -82,6 +82,7 @@ public abstract class GameScene2D implements GameScene {
         return g != null ? g.getCanvas() : null;
     }
 
+    @Override
     public void draw() {
         if (g == null) {
             Logger.error("Cannot render game scene {}, no canvas has been assigned", this);

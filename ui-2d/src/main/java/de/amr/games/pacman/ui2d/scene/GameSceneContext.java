@@ -70,5 +70,4 @@ public interface GameSceneContext {
     default GameModel game() {
         return GameController.it().game();
     }
-
 }
