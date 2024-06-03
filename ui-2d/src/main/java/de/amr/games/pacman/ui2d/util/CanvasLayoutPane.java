@@ -26,14 +26,18 @@ public class CanvasLayoutPane extends StackPane {
             doLayout(getScaling(), true);
         }
     };
+
     public final DoubleProperty unscaledCanvasWidthPy = new SimpleDoubleProperty(this, "unscaledCanvasWidth", 500);
+
     public final DoubleProperty unscaledCanvasHeightPy = new SimpleDoubleProperty(this, "unscaledCanvasHeight", 400);
+
     public final BooleanProperty canvasBorderEnabledPy = new SimpleBooleanProperty(this, "canvasBorderEnabled", true) {
         @Override
         protected void invalidated() {
             doLayout(getScaling(), true);
         }
     };
+
     public final ObjectProperty<Color> canvasBorderColorPy = new SimpleObjectProperty<>(this, "canvasBorderColor", Color.LIGHTBLUE);
 
     protected BorderPane canvasLayer;
@@ -66,7 +70,7 @@ public class CanvasLayoutPane extends StackPane {
         if (Math.abs(getScaling() - newScaling) < 1e-2 && !always) { // avoid useless scaling
             return;
         }
-        if (getCanvasBorderEnabled()) {
+        if (isCanvasBorderEnabled()) {
             var size = canvasContainerSizeWithBorder();
             setAllSizes(canvasContainer, size.x(), size.y());
         } else {
@@ -77,7 +81,7 @@ public class CanvasLayoutPane extends StackPane {
 
 
     private double computeScaling(double width, double height) {
-        if (getCanvasBorderEnabled()) {
+        if (isCanvasBorderEnabled()) {
             double shrinkedWidth = 0.85 * width;
             double shrinkedHeight = 0.92 * height;
             double scaling = shrinkedHeight / getUnscaledCanvasHeight();
@@ -173,7 +177,7 @@ public class CanvasLayoutPane extends StackPane {
         minScaling = value;
     }
 
-    public boolean getCanvasBorderEnabled() {
+    public boolean isCanvasBorderEnabled() {
         return canvasBorderEnabledPy.get();
     }
 

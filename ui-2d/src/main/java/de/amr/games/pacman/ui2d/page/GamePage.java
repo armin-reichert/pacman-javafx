@@ -45,7 +45,18 @@ public class GamePage extends CanvasLayoutPane implements Page {
         this.context = context;
         createHelpButton();
         createDebugInfoBindings();
+
+        // keep popup layer size same as canvas container
+        popupLayer.minHeightProperty().bind(canvasContainer.minHeightProperty());
+        popupLayer.maxHeightProperty().bind(canvasContainer.maxHeightProperty());
+        popupLayer.prefHeightProperty().bind(canvasContainer.prefHeightProperty());
+        popupLayer.minWidthProperty().bind(canvasContainer.minWidthProperty());
+        popupLayer.maxWidthProperty().bind(canvasContainer.maxWidthProperty());
+        popupLayer.prefWidthProperty().bind(canvasContainer.prefWidthProperty());
+
+
         popupLayer.getChildren().addAll(helpButtonIcon, helpInfoPopUp, signature);
+
         getChildren().addAll(popupLayer, flashMessageView);
         setSize(width, height);
         canvasBorderEnabledPy.bind(PY_CANVAS_DECORATION);
@@ -84,11 +95,6 @@ public class GamePage extends CanvasLayoutPane implements Page {
 
     public Signature signature() {
         return signature;
-    }
-
-    protected void doLayout(double newScaling, boolean always) {
-        super.doLayout(newScaling, always);
-        setAllSizes(popupLayer, canvasContainer.getWidth(), canvasContainer.getHeight());
     }
 
     public void onGameSceneChanged(GameScene newGameScene) {
