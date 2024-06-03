@@ -13,9 +13,6 @@ import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.Cursor;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -39,7 +36,6 @@ public class GamePage implements Page {
     private final Pane popupLayer = new Pane();
     private final FlashMessageView flashMessageView = new FlashMessageView();
     private final FadingPane helpInfoPopUp = new FadingPane();
-    private final ImageView helpButtonIcon = new ImageView();
     private final Signature signature = new Signature();
 
     public GamePage(GameSceneContext context, double width, double height) {
@@ -48,7 +44,6 @@ public class GamePage implements Page {
         layout = new CanvasLayoutPane();
         layout.canvasDecoratedPy.bind(PY_CANVAS_DECORATED);
 
-        createHelpButton();
         createDebugInfoBindings();
 
         // keep popup layer size same as canvas container
@@ -60,7 +55,7 @@ public class GamePage implements Page {
         popupLayer.maxWidthProperty().bind(canvasContainer.maxWidthProperty());
         popupLayer.prefWidthProperty().bind(canvasContainer.prefWidthProperty());
 
-        popupLayer.getChildren().addAll(helpButtonIcon, helpInfoPopUp, signature);
+        popupLayer.getChildren().addAll(helpInfoPopUp, signature);
 
         layout.getChildren().addAll(popupLayer, flashMessageView);
         setSize(width, height);
@@ -111,7 +106,6 @@ public class GamePage implements Page {
     }
 
     public void onGameSceneChanged(GameScene newGameScene) {
-        updateHelpButton();
         if (newGameScene instanceof GameScene2D scene2D) {
             scene2D.clearCanvas();
         }
@@ -188,36 +182,6 @@ public class GamePage implements Page {
     }
 
     // Help Info stuff
-
-    //TODO this is all too complicated for such a simple feature
-    private void createHelpButton() {
-        helpButtonIcon.setCursor(Cursor.HAND);
-        helpButtonIcon.setOnMouseClicked(e -> showHelpInfoPopUp());
-        helpButtonIcon.translateXProperty().bind(layout.unscaledCanvasWidthPy.multiply(layout.scalingPy));
-        helpButtonIcon.translateYProperty().bind(layout.scalingPy.multiply(10));
-        layout.scalingPy.addListener((py, ov, nv) -> updateHelpButton());
-        updateHelpButton();
-    }
-
-    protected void updateHelpButton() {
-        boolean visible = context.currentGameScene().isPresent()
-            && isCurrentGameScene2D()
-            && !context.isCurrentGameScene(BOOT_SCENE);
-        helpButtonIcon.setVisible(visible);
-        if (visible) {
-            helpButtonIcon.setImage(helpButtonImage());
-            helpButtonIcon.setFitWidth(Math.ceil(12 * layout.getScaling()));
-            helpButtonIcon.setFitHeight(helpButtonIcon.getFitWidth());
-        }
-    }
-
-    private Image helpButtonImage() {
-        String rk = context.game().variant().resourceKey();
-        if (context.game().variant() == GameVariant.PACMAN_XXL) {
-            rk = GameVariant.PACMAN.resourceKey();
-        }
-        return context.theme().image(rk + ".helpButton.icon");
-    }
 
     public class HelpInfo extends PageInfo {
 

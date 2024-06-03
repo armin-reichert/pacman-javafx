@@ -85,7 +85,7 @@ public class CanvasLayoutPane extends StackPane {
             height = size.getY();
         }
         setAllSizes(canvasContainer, width, height);
-        Logger.info("Canvas container size set to w={} h={}", width, height);
+        Logger.debug("Canvas container size set to w={} h={}", width, height);
         setScaling(newScaling);
     }
 

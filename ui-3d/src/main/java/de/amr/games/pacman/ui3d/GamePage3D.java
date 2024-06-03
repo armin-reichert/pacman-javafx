@@ -173,7 +173,6 @@ public class GamePage3D extends GamePage {
     public void onGameSceneChanged(GameScene newGameScene) {
         //TODO ugly
         if (isCurrentGameScene3D()) {
-            updateHelpButton();
             layout().getChildren().set(0, newGameScene.root());
         } else {
             layout().getChildren().set(0, layout().getCanvasLayer());

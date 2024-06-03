@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.dashboard;
 
-import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui2d.util.Ufx;
@@ -12,7 +11,9 @@ import de.amr.games.pacman.ui3d.PacManGames3dUI;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_CANVAS_DECORATED;
 import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_SHOW_DEBUG_INFO;
+import static de.amr.games.pacman.ui3d.PacManGames3dUI.PY_SIMULATION_STEPS;
 
 /**
  * General settings.
@@ -61,8 +62,8 @@ public class InfoBoxGeneral extends InfoBox {
         btnStep.setText(null);
         btnStep.setTooltip(tooltipStep);
 
-        spinnerSimulationSteps = integerSpinner("Num Steps", 1, 50, PacManGames3dUI.PY_SIMULATION_STEPS.get());
-        spinnerSimulationSteps.valueProperty().addListener((obs, oldVal, newVal) -> PacManGames3dUI.PY_SIMULATION_STEPS.set(newVal));
+        spinnerSimulationSteps = integerSpinner("Num Steps", 1, 50, PY_SIMULATION_STEPS.get());
+        spinnerSimulationSteps.valueProperty().addListener((obs, oldVal, newVal) -> PY_SIMULATION_STEPS.set(newVal));
 
         sliderTargetFPS = slider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60);
         sliderTargetFPS.setShowTickLabels(false);
@@ -84,11 +85,11 @@ public class InfoBoxGeneral extends InfoBox {
     public void init(GameSceneContext sceneContext) {
         super.init(sceneContext);
         buttonsSimulation[0].setOnAction(e -> actionHandler().togglePaused());
-        buttonsSimulation[1].setOnAction(e -> sceneContext.gameClock().makeSteps(PacManGames3dUI.PY_SIMULATION_STEPS.get(), true));
+        buttonsSimulation[1].setOnAction(e -> sceneContext.gameClock().makeSteps(PY_SIMULATION_STEPS.get(), true));
         sliderTargetFPS.valueProperty().addListener(
             (py, ov, nv) -> sceneContext.gameClock().setTargetFrameRate(nv.intValue()));
         cbUsePlayScene3D.setOnAction(e -> actionHandler().toggle2D3D());
-        cbCanvasDecoration.selectedProperty().bindBidirectional(PacManGames2dUI.PY_CANVAS_DECORATED);
+        cbCanvasDecoration.selectedProperty().bindBidirectional(PY_CANVAS_DECORATED);
         cbDebugUI.setOnAction(e -> Ufx.toggle(PY_SHOW_DEBUG_INFO));
         cbTimeMeasured.setOnAction(e -> Ufx.toggle(sceneContext.gameClock().timeMeasuredPy));
     }
@@ -100,7 +101,7 @@ public class InfoBoxGeneral extends InfoBox {
         buttonsSimulation[0].setGraphic(paused ? iconPlay : iconStop);
         buttonsSimulation[0].setTooltip(paused ? tooltipPlay : tooltipStop);
         buttonsSimulation[1].setDisable(!paused);
-        spinnerSimulationSteps.getValueFactory().setValue(PacManGames3dUI.PY_SIMULATION_STEPS.get());
+        spinnerSimulationSteps.getValueFactory().setValue(PY_SIMULATION_STEPS.get());
         sliderTargetFPS.setValue(context.gameClock().getTargetFrameRate());
         cbUsePlayScene3D.setSelected(PacManGames3dUI.PY_3D_ENABLED.get());
         cbTimeMeasured.setSelected(context.gameClock().timeMeasuredPy.get());
