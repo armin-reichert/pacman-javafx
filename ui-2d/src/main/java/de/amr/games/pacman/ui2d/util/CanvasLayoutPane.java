@@ -1,7 +1,5 @@
 package de.amr.games.pacman.ui2d.util;
 
-import de.amr.games.pacman.lib.Globals;
-import de.amr.games.pacman.model.world.World;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Point2D;
