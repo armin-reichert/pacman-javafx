@@ -33,12 +33,7 @@ public class CanvasLayoutPane extends StackPane {
 
     public final DoubleProperty unscaledCanvasHeightPy = new SimpleDoubleProperty(this, "unscaledCanvasHeight", 400);
 
-    public final BooleanProperty canvasDecoratedPy = new SimpleBooleanProperty(this, "canvasDecorated", true) {
-        @Override
-        protected void invalidated() {
-            doLayout(getScaling(), true);
-        }
-    };
+    public final BooleanProperty canvasDecoratedPy = new SimpleBooleanProperty(this, "canvasDecorated", true);
 
     public final ObjectProperty<Color> canvasBorderColorPy = new SimpleObjectProperty<>(this, "canvasBorderColor", Color.LIGHTBLUE);
 

@@ -369,16 +369,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     protected GamePage createGamePage() {
         var page = new GamePage(this, mainScene.getWidth(), mainScene.getHeight());
-        page.gameVariantPy.bind(gameVariantPy);
-        page.layout().setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
-        page.layout().setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
-        page.layout().setMinScaling(0.7);
-        page.layout().setCanvasDecorated(true);
-        page.layout().setCanvasBorderColor(theme().color("palette.pale"));
-        page.layout().getCanvasLayer().setBackground(theme().background("wallpaper.background"));
-        page.layout().getCanvasContainer().setBackground(Ufx.coloredBackground(theme().color("canvas.background")));
-
         page.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
+        page.gameVariantPy.bind(gameVariantPy);
+        page.layout().canvasDecoratedPy.bind(PY_CANVAS_DECORATED);
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
         return page;
     }

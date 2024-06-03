@@ -31,18 +31,30 @@ public class GamePage implements Page {
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant");
 
     protected final GameSceneContext context;
-
-    private final CanvasLayoutPane layout;
-    private final Pane popupLayer = new Pane();
-    private final FlashMessageView flashMessageView = new FlashMessageView();
-    private final FadingPane helpInfoPopUp = new FadingPane();
-    private final Signature signature = new Signature();
+    protected final CanvasLayoutPane layout;
+    protected final Pane popupLayer = new Pane();
+    protected final FlashMessageView flashMessageView = new FlashMessageView();
+    protected final FadingPane helpInfoPopUp = new FadingPane();
+    protected final Signature signature = new Signature();
 
     public GamePage(GameSceneContext context, double width, double height) {
         this.context = checkNotNull(context);
 
         layout = new CanvasLayoutPane();
-        layout.canvasDecoratedPy.bind(PY_CANVAS_DECORATED);
+        layout.setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
+        layout.setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
+        layout.setMinScaling(0.7);
+        layout.setCanvasBorderColor(context.theme().color("palette.pale"));
+        layout.getCanvasLayer().setBackground(context.theme().background("wallpaper.background"));
+        layout.getCanvasContainer().setBackground(Ufx.coloredBackground(context.theme().color("canvas.background")));
+
+        layout.canvasDecoratedPy.addListener((py, ov, nv) -> {
+            if (context.game().world() != null) {
+                layout.updateLayout(context.game().world().numRows(), context.game().world().numCols());
+            } else {
+                layout.doLayout(layout.getScaling(), true);
+            }
+        });
 
         createDebugInfoBindings();
 

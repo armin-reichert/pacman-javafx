@@ -61,33 +61,29 @@ public class GamePage3D extends GamePage {
     private final PictureInPictureView pip;
     private ContextMenu contextMenu;
 
-    public GamePage3D(Scene parentScene, GameSceneContext sceneContext, double width, double height) {
-        super(sceneContext, width, height);
+    public GamePage3D(Scene parentScene, GameSceneContext context, double width, double height) {
+        super(context, width, height);
         this.parentScene = parentScene;
-
-        pip = new PictureInPictureView(sceneContext);
-
-        dashboard = new Dashboard(sceneContext);
+        pip = new PictureInPictureView(context);
+        dashboard = new Dashboard(context);
 
         dashboardLayer = new BorderPane();
         dashboardLayer.setLeft(dashboard);
         dashboardLayer.setRight(pip);
 
-        layout().getChildren().add(dashboardLayer);
-
-        layout().backgroundProperty().bind(Bindings.createObjectBinding(
+        layout.getChildren().add(dashboardLayer);
+        layout.backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
                     return Ufx.coloredBackground(Color.BLACK);
                 } else {
                     var wallpaperKey = PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
-                    return context.theme().background(wallpaperKey);
+                    return this.context.theme().background(wallpaperKey);
                 }
             },
             PY_3D_DRAW_MODE, PY_3D_NIGHT_MODE
         ));
-
-        layout().getCanvasLayer().setBackground(sceneContext.theme().background("wallpaper.background"));
+        layout.getCanvasLayer().setBackground(context.theme().background("wallpaper.background"));
 
         // data binding
         pip.heightProperty().bind(PY_PIP_HEIGHT);
