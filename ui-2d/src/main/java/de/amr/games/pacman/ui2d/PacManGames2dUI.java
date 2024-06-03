@@ -336,6 +336,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             for (var gameScene : gameSceneMap.values()) {
                 gameScene.setContext(this);
                 if (gameScene instanceof GameScene2D gameScene2D) {
+                    gameScene2D.setCanvas(gamePage.layout().getCanvas());
                     gameScene2D.scalingPy.bind(gamePage.layout().scalingPy);
                     gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
                 }

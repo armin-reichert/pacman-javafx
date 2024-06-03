@@ -113,14 +113,10 @@ public class GamePage implements Page {
     }
 
     public void onGameSceneChanged(GameScene newGameScene) {
-        if (newGameScene instanceof GameScene2D scene2D) {
-            scene2D.setCanvas(layout.getCanvas());
-            scene2D.clearCanvas();
-            World world = context.game().world();
-            if (world != null) {
-                layout.setUnscaledCanvasHeight(world.numRows() * TS);
-                layout.setUnscaledCanvasWidth(world.numCols() * TS);
-            }
+        World world = context.game().world();
+        if (world != null) {
+            layout.setUnscaledCanvasHeight(world.numRows() * TS);
+            layout.setUnscaledCanvasWidth(world.numCols() * TS);
         }
         updateHelpButton();
         layout.doLayout(layout.getScaling(), true); //TODO check this
