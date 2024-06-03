@@ -225,14 +225,20 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     @Override
     public void enterMapEditor() {
+        if (game().variant() != GameVariant.PACMAN_XXL) {
+            showFlashMessageSeconds(3, "No Map Editor available for this game variant!");
+            return;
+        }
+        gameClock().stop();
+        currentGameScene().ifPresent(GameScene::end);
+        //TODO introduce GAME_PAUSED state?
+        reboot();
+        stage.titleProperty().bind(editor.titlePy);
         if (game().world() != null) {
             editor.setMap(game().world().map());
         }
-        restartIntro();
-        gameClock().stop();
-        selectPage(EDITOR_PAGE);
-        stage.titleProperty().bind(editor.titlePy);
         editor.start();
+        selectPage(EDITOR_PAGE);
     }
 
     @Override

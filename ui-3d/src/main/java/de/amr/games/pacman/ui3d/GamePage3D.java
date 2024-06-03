@@ -207,9 +207,7 @@ public class GamePage3D extends GamePage {
     public void handleKeyboardInput() {
         var actionHandler = (ActionHandler3D) context.actionHandler();
         if (Keyboard.pressed(KEY_SWITCH_EDITOR)) {
-            if (context.game().variant() == GameVariant.PACMAN_XXL) {
-                actionHandler.enterMapEditor();
-            }
+            actionHandler.enterMapEditor();
         }
         else if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
             actionHandler.toggle2D3D();
