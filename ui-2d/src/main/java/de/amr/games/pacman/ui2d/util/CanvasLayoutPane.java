@@ -3,6 +3,7 @@ package de.amr.games.pacman.ui2d.util;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -10,6 +11,7 @@ import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * Layered container containing a (decorated) canvas in the center of the lowest layer.
@@ -52,6 +54,17 @@ public class CanvasLayoutPane extends StackPane {
 
         canvasLayer = new BorderPane(canvasContainer);
         getChildren().add(canvasLayer);
+    }
+
+    public void replaceCanvasLayer(Node node) {
+        checkNotNull(node);
+        getChildren().set(0, node);
+    }
+
+    public void restoreCanvasLayer() {
+        if (getChildren().getFirst() != canvasLayer) {
+            getChildren().set(0, canvasLayer);
+        }
     }
 
     public void setSize(double width, double height) {

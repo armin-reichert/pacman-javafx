@@ -163,11 +163,11 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void onGameSceneChanged(GameScene newGameScene) {
-        //TODO ugly
         if (isCurrentGameScene3D()) {
-            layout().getChildren().set(0, newGameScene.root());
+            layout().replaceCanvasLayer(newGameScene.root());
         } else {
-            layout().getChildren().set(0, layout().getCanvasLayer());
+            //TODO ugly
+            layout().restoreCanvasLayer();
             super.onGameSceneChanged(newGameScene);
         }
         hideContextMenu();
