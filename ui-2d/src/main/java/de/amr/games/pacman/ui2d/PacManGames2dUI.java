@@ -256,9 +256,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         this.stage = checkNotNull(stage);
 
         mainScene = createMainScene(width, height);
-        mainScene.addEventHandler(MouseEvent.MOUSE_CLICKED, this::onMouseClicked);
-        //TODO how to integrate with Keyboard class?
-        mainScene.addEventHandler(KeyEvent.KEY_PRESSED, e -> currentPage().handleKeyboardInput());
+        mainScene.setOnMouseClicked(this::onMouseClicked);
+        mainScene.setOnContextMenuRequested(this::onContextMenuRequested);
+        mainScene.setOnKeyPressed(e -> currentPage().handleKeyboardInput());
+
         Keyboard.filterKeyEventsFrom(mainScene);
 
         pages.put(START_PAGE, createStartPage());
@@ -280,6 +281,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     protected void onMouseClicked(MouseEvent e) {
         currentPage().onMouseClicked(e);
+    }
+
+    protected void onContextMenuRequested(ContextMenuEvent e) {
+        currentPage().onContextMenuRequested(e);
     }
 
     protected void createGameClock() {

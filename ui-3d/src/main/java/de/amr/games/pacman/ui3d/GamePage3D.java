@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
@@ -18,8 +17,7 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
@@ -93,37 +91,21 @@ public class GamePage3D extends GamePage {
     }
 
     @Override
-    public void onMouseClicked(MouseEvent e) {
+    public void onContextMenuRequested(ContextMenuEvent event) {
         hideContextMenu();
-        if (e.getButton() == MouseButton.SECONDARY && context.currentGameScene().isPresent()) {
-            if (context.isCurrentGameScene(PLAY_SCENE_3D)) {
-                showContextMenu(false, e.getScreenX(), e.getScreenY());
-            } else if (context.isCurrentGameScene(PLAY_SCENE)) {
-                showContextMenu(true, e.getScreenX(), e.getScreenY());
-            }
+        if (!context.isCurrentGameScene(PLAY_SCENE) && !context.isCurrentGameScene(PLAY_SCENE_3D)) {
+            return;
         }
-    }
-
-    public Dashboard dashboard() {
-        return dashboard;
-    }
-
-    public void hideContextMenu() {
-        if (contextMenu != null) {
-            contextMenu.hide();
-            contextMenu = null;
-        }
-    }
-
-    private void showContextMenu(boolean isPlayScene2D, double x, double y) {
-        contextMenu = new ContextMenu();
+        boolean isPlayScene2D = context.isCurrentGameScene(PLAY_SCENE);
         var actionHandler = (ActionHandler3D) context.actionHandler();
-        contextMenu.getItems().add(titleItem(context.tt("scene_display")));
+        contextMenu = new ContextMenu();
         if (isPlayScene2D) {
+            contextMenu.getItems().add(titleItem(context.tt("scene_display")));
             var item = new MenuItem(context.tt("use_3D_scene"));
             item.setOnAction(e -> actionHandler.toggle2D3D());
             contextMenu.getItems().add(item);
         } else {
+            contextMenu.getItems().add(titleItem(context.tt("scene_display")));
             var item = new MenuItem(context.tt("use_2D_scene"));
             item.setOnAction(e -> actionHandler.toggle2D3D());
             contextMenu.getItems().add(item);
@@ -158,7 +140,18 @@ public class GamePage3D extends GamePage {
         immunityItem.selectedProperty().bindBidirectional(PacManGames2dUI.PY_IMMUNITY);
         contextMenu.getItems().add(immunityItem);
 
-        contextMenu.show(parentScene.getRoot(), x, y);
+        contextMenu.requestFocus();
+        contextMenu.show(parentScene.getRoot(), event.getScreenX(), event.getScreenY());
+    }
+
+    public Dashboard dashboard() {
+        return dashboard;
+    }
+
+    public void hideContextMenu() {
+        if (contextMenu != null) {
+            contextMenu.hide();
+        }
     }
 
     private MenuItem titleItem(String title) {
