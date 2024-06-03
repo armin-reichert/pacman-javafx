@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui3d;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.Keyboard;
@@ -168,9 +169,10 @@ public class GamePage3D extends GamePage {
         if (isCurrentGameScene3D()) {
             layout().replaceCanvasLayer(newGameScene.root());
         } else {
-            //TODO ugly
             layout().restoreCanvasLayer();
-            super.onGameSceneChanged(newGameScene);
+            if (newGameScene instanceof GameScene2D scene2D) {
+                scene2D.clearCanvas();
+            }
         }
         hideContextMenu();
         updateTopLayer();
