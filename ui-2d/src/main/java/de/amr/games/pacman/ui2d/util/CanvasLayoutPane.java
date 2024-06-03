@@ -1,5 +1,7 @@
 package de.amr.games.pacman.ui2d.util;
 
+import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.model.world.World;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Point2D;
@@ -8,6 +10,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
+
+import static de.amr.games.pacman.lib.Globals.TS;
 
 /**
  * Layered container containing a (decorated) canvas in the center of the lowest layer.
@@ -62,20 +66,28 @@ public class CanvasLayoutPane extends StackPane {
         doLayout(scaling, false);
     }
 
-    public void doLayout(double newScaling, boolean always) {
+    public void updateLayout(int numRows, int numCols) {
+        setUnscaledCanvasWidth(numCols * TS);
+        setUnscaledCanvasHeight(numRows * TS);
+        doLayout(getScaling(), true);
+    }
+
+    public void doLayout(double newScaling, boolean forced) {
         if (newScaling < minScaling) {
             Logger.warn("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
             return;
         }
-        if (Math.abs(getScaling() - newScaling) < 1e-2 && !always) { // avoid useless scaling
+        if (!forced && Math.abs(getScaling() - newScaling) < 1e-2) { // avoid irrelevant scaling
             return;
         }
+        double width = canvas.getWidth(), height = canvas.getHeight();
         if (isCanvasDecorated()) {
-            var size = canvasContainerSizeWithBorder();
-            setAllSizes(canvasContainer, size.getX(), size.getY());
-        } else {
-            setAllSizes(canvasContainer, canvas.getWidth(), canvas.getHeight());
+            var size = canvasContainerSizeIfDecorated();
+            width = size.getX();
+            height = size.getY();
         }
+        setAllSizes(canvasContainer, width, height);
+        Logger.info("Canvas container size set to w={} h={}", width, height);
         setScaling(newScaling);
     }
 
@@ -99,7 +111,7 @@ public class CanvasLayoutPane extends StackPane {
             () -> {
                 if (canvasDecoratedPy.get()) {
                     double s = getScaling();
-                    var size = canvasContainerSizeWithBorder();
+                    var size = canvasContainerSizeIfDecorated();
                     double arcSize = 26 * s;
                     var clipRect = new Rectangle(size.getX(), size.getY());
                     clipRect.setArcWidth(arcSize);
@@ -114,7 +126,7 @@ public class CanvasLayoutPane extends StackPane {
         canvasContainer.borderProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (canvasDecoratedPy.get()) {
-                    var size = canvasContainerSizeWithBorder();
+                    var size = canvasContainerSizeIfDecorated();
                     double borderWidth = Math.max(5, Math.ceil(size.getY() / 55));
                     double cornerRadius = Math.ceil(10 * getScaling());
                     return new Border(
@@ -130,7 +142,7 @@ public class CanvasLayoutPane extends StackPane {
         ));
     }
 
-    private Point2D canvasContainerSizeWithBorder() {
+    private Point2D canvasContainerSizeIfDecorated() {
         return new Point2D(
             Math.round((getUnscaledCanvasWidth() + 25) * getScaling()),
             Math.round((getUnscaledCanvasHeight() + 15) * getScaling()));

@@ -608,6 +608,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (!game.isDemoLevel()) {
             game.pac().setManualSteering(new KeyboardPacSteering());
         }
+        //TODO better place than here?
+        GamePage gamePage = page(GAME_PAGE);
+        gamePage.layout().updateLayout(game.world().numRows(), game.world().numCols());
     }
 
     @Override
