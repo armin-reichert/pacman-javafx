@@ -59,7 +59,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
 
         getChildren().addAll(popupLayer, flashMessageView);
         setSize(width, height);
-        canvasBorderEnabledPy.bind(PY_CANVAS_DECORATION);
+        canvasDecoratedPy.bind(PY_CANVAS_DECORATION);
     }
 
     public void configureSignature(Font font, String... words) {
