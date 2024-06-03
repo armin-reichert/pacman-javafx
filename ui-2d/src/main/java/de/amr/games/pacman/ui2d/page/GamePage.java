@@ -11,8 +11,6 @@ import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -27,8 +25,6 @@ import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
  * @author Armin Reichert
  */
 public class GamePage implements Page {
-
-    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant");
 
     protected final GameSceneContext context;
     protected final CanvasLayoutPane layout;
