@@ -184,8 +184,7 @@ public class GamePage3D extends GamePage {
     }
 
     private boolean isCurrentGameScene3D() {
-        return context.currentGameScene().isPresent()
-            && context.currentGameScene().get() instanceof PlayScene3D;
+        return context.isCurrentGameScene(PLAY_SCENE_3D);
     }
 
     @Override
