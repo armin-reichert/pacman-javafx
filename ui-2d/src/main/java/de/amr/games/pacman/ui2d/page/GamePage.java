@@ -24,10 +24,7 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.Optional;
-
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
 
 /**
@@ -42,40 +39,29 @@ public class GamePage extends CanvasLayoutPane implements Page {
     private final Pane popupLayer = new Pane();
     private final FadingPane helpInfoPopUp = new FadingPane();
     private final ImageView helpButtonIcon = new ImageView();
+    private final Signature signature = new Signature();
 
     public GamePage(GameSceneContext context, double width, double height) {
         this.context = context;
         createHelpButton();
         createDebugInfoBindings();
-        popupLayer.getChildren().addAll(helpButtonIcon, helpInfoPopUp);
+        popupLayer.getChildren().addAll(helpButtonIcon, helpInfoPopUp, signature);
         getChildren().addAll(popupLayer, flashMessageView);
         setSize(width, height);
         canvasBorderEnabledPy.bind(PY_CANVAS_DECORATION);
     }
 
-    public void sign(Font unscaledFont, String... words) {
-        var signature = new Signature(checkNotNull(words));
-        // resize signature font with scaling
+    public void sign(Font font, String... words) {
+        signature.setWords(words);
         signature.fontPy.bind(Bindings.createObjectBinding(
-            () -> Font.font(unscaledFont.getFamily(), scalingPy.get() * unscaledFont.getSize()),
+            () -> Font.font(font.getFamily(), getScaling() * font.getSize()),
             scalingPy
         ));
         // keep centered over canvas container
         signature.translateXProperty().bind(Bindings.createDoubleBinding(
-            () -> 0.5 * (canvasContainer.getWidth() - signature.getWidth()), canvasContainer.widthProperty()
+            () -> 0.5 * (canvasContainer.getWidth() - signature.getWidth()),
+            canvasContainer.widthProperty()
         ));
-
-        popupLayer.getChildren().stream()
-            .filter(Signature.class::isInstance)
-            .forEach(popupLayer.getChildren()::remove);
-        popupLayer.getChildren().add(signature);
-    }
-
-    public Optional<Signature> signature() {
-        return popupLayer.getChildren().stream()
-            .filter(Signature.class::isInstance)
-            .map(Signature.class::cast)
-            .findFirst();
     }
 
     @Override
@@ -88,6 +74,10 @@ public class GamePage extends CanvasLayoutPane implements Page {
         context.actionHandler().reboot();
         context.gameClock().start();
         Logger.info("Clock started, speed={} Hz", context.gameClock().getTargetFrameRate());
+    }
+
+    public Signature signature() {
+        return signature;
     }
 
     protected void doLayout(double newScaling, boolean always) {

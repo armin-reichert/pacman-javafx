@@ -14,7 +14,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
-import de.amr.games.pacman.ui2d.page.Signature;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.rendering.*;
 import de.amr.games.pacman.ui2d.scene.*;
@@ -668,20 +667,19 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     @Override
     public void showSignature() {
         GamePage gamePage = page(GAME_PAGE);
-        gamePage.signature().ifPresent(signature -> {
-            int y = switch (game().variant()) {
-                case MS_PACMAN -> 45;
-                case PACMAN, PACMAN_XXL -> 30;
-            };
-            signature.translateYProperty().bind(gamePage.scalingPy.multiply(y));
-            signature.show();
-        });
+        var signature = gamePage.signature();
+        int y = switch (game().variant()) {
+            case MS_PACMAN -> 45;
+            case PACMAN, PACMAN_XXL -> 30;
+        };
+        signature.translateYProperty().bind(gamePage.scalingPy.multiply(y));
+        signature.show();
     }
 
     @Override
     public void hideSignature() {
         GamePage gamePage = page(GAME_PAGE);
-        gamePage.signature().ifPresent(Signature::hide);
+        gamePage.signature().hide();
     }
 
     @Override
