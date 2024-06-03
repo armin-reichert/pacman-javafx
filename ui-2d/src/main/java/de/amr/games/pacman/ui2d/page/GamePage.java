@@ -25,28 +25,36 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
 
 /**
  * @author Armin Reichert
  */
-public class GamePage extends CanvasLayoutPane implements Page {
+public class GamePage implements Page {
 
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant");
 
     protected final GameSceneContext context;
-    private final FlashMessageView flashMessageView = new FlashMessageView();
+
+    private final CanvasLayoutPane layout;
     private final Pane popupLayer = new Pane();
+    private final FlashMessageView flashMessageView = new FlashMessageView();
     private final FadingPane helpInfoPopUp = new FadingPane();
     private final ImageView helpButtonIcon = new ImageView();
     private final Signature signature = new Signature();
 
     public GamePage(GameSceneContext context, double width, double height) {
-        this.context = context;
+        this.context = checkNotNull(context);
+
+        layout = new CanvasLayoutPane();
+        layout.canvasDecoratedPy.bind(PY_CANVAS_DECORATION);
+
         createHelpButton();
         createDebugInfoBindings();
 
         // keep popup layer size same as canvas container
+        var canvasContainer = layout.getCanvasContainer();
         popupLayer.minHeightProperty().bind(canvasContainer.minHeightProperty());
         popupLayer.maxHeightProperty().bind(canvasContainer.maxHeightProperty());
         popupLayer.prefHeightProperty().bind(canvasContainer.prefHeightProperty());
@@ -54,36 +62,34 @@ public class GamePage extends CanvasLayoutPane implements Page {
         popupLayer.maxWidthProperty().bind(canvasContainer.maxWidthProperty());
         popupLayer.prefWidthProperty().bind(canvasContainer.prefWidthProperty());
 
-
         popupLayer.getChildren().addAll(helpButtonIcon, helpInfoPopUp, signature);
 
-        getChildren().addAll(popupLayer, flashMessageView);
+        layout.getChildren().addAll(popupLayer, flashMessageView);
         setSize(width, height);
-        canvasDecoratedPy.bind(PY_CANVAS_DECORATION);
     }
 
     public void configureSignature(Font font, String... words) {
         signature.setWords(words);
 
         signature.fontPy.bind(Bindings.createObjectBinding(
-            () -> Font.font(font.getFamily(), getScaling() * font.getSize()),
-            scalingPy
+            () -> Font.font(font.getFamily(), layout.getScaling() * font.getSize()),
+            layout.scalingPy
         ));
         // keep centered over canvas container
         signature.translateXProperty().bind(Bindings.createDoubleBinding(
-            () -> 0.5 * (canvasContainer.getWidth() - signature.getWidth()),
-            scalingPy, canvasContainer.widthProperty()
+            () -> 0.5 * (layout.getCanvasContainer().getWidth() - signature.getWidth()),
+            layout.scalingPy, layout.getCanvasContainer().widthProperty()
         ));
         // keep at vertical position over intro scene
         signature.translateYProperty().bind(Bindings.createDoubleBinding(
-            () -> getScaling() * 30,
-            scalingPy, canvasContainer.heightProperty()
+            () -> layout.getScaling() * 30,
+            layout.scalingPy, layout.getCanvasContainer().heightProperty()
         ));
     }
 
     @Override
     public Pane rootPane() {
-        return this;
+        return layout;
     }
 
     @Override
@@ -93,30 +99,39 @@ public class GamePage extends CanvasLayoutPane implements Page {
         Logger.info("Clock started, speed={} Hz", context.gameClock().getTargetFrameRate());
     }
 
+    @Override
+    public void setSize(double width, double height) {
+        layout.setSize(width, height);
+    }
+
+    public CanvasLayoutPane layout() {
+        return layout;
+    }
+
     public Signature signature() {
         return signature;
     }
 
     public void onGameSceneChanged(GameScene newGameScene) {
-        updateHelpButton();
-        doLayout(getScaling(), true); //TODO check this
         if (newGameScene instanceof GameScene2D scene2D) {
-            scene2D.setCanvas(getCanvas());
+            scene2D.setCanvas(layout.getCanvas());
             scene2D.clearCanvas();
             World world = context.game().world();
             if (world != null) {
-                setUnscaledCanvasHeight(world.numRows() * TS);
-                setUnscaledCanvasWidth(world.numCols() * TS);
+                layout.setUnscaledCanvasHeight(world.numRows() * TS);
+                layout.setUnscaledCanvasWidth(world.numCols() * TS);
             }
         }
+        updateHelpButton();
+        layout.doLayout(layout.getScaling(), true); //TODO check this
     }
 
     private void createDebugInfoBindings() {
-        borderProperty().bind(Bindings.createObjectBinding(
+        layout.borderProperty().bind(Bindings.createObjectBinding(
             () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.RED, 3) : null,
             PY_SHOW_DEBUG_INFO, context.gameSceneProperty()
         ));
-        canvasLayer.borderProperty().bind(Bindings.createObjectBinding(
+        layout.getCanvasLayer().borderProperty().bind(Bindings.createObjectBinding(
             () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.YELLOW, 3) : null,
             PY_SHOW_DEBUG_INFO, context.gameSceneProperty()
         ));
@@ -187,12 +202,13 @@ public class GamePage extends CanvasLayoutPane implements Page {
 
     // Help Info stuff
 
+    //TODO this is all too complicated for such a simple feature
     private void createHelpButton() {
         helpButtonIcon.setCursor(Cursor.HAND);
         helpButtonIcon.setOnMouseClicked(e -> showHelpInfoPopUp());
-        helpButtonIcon.translateXProperty().bind(unscaledCanvasWidthPy.multiply(scalingPy));
-        helpButtonIcon.translateYProperty().bind(scalingPy.multiply(10));
-        scalingPy.addListener((py, ov, nv) -> updateHelpButton());
+        helpButtonIcon.translateXProperty().bind(layout.unscaledCanvasWidthPy.multiply(layout.scalingPy));
+        helpButtonIcon.translateYProperty().bind(layout.scalingPy.multiply(10));
+        layout.scalingPy.addListener((py, ov, nv) -> updateHelpButton());
         updateHelpButton();
     }
 
@@ -203,7 +219,7 @@ public class GamePage extends CanvasLayoutPane implements Page {
         helpButtonIcon.setVisible(visible);
         if (visible) {
             helpButtonIcon.setImage(helpButtonImage());
-            helpButtonIcon.setFitWidth(Math.ceil(12 * getScaling()));
+            helpButtonIcon.setFitWidth(Math.ceil(12 * layout.getScaling()));
             helpButtonIcon.setFitHeight(helpButtonIcon.getFitWidth());
         }
     }
@@ -267,10 +283,10 @@ public class GamePage extends CanvasLayoutPane implements Page {
         var bgColor = context.game().variant() == GameVariant.MS_PACMAN
             ? Color.rgb(255, 0, 0, 0.8)
             : Color.rgb(33, 33, 255, 0.8);
-        var font = context.theme().font("font.monospaced", Math.max(6, 14 * getScaling()));
+        var font = context.theme().font("font.monospaced", Math.max(6, 14 * layout.getScaling()));
         var pane = currentHelpInfo().createPane(bgColor, font);
-        helpInfoPopUp.setTranslateX(10 * getScaling());
-        helpInfoPopUp.setTranslateY(30 * getScaling());
+        helpInfoPopUp.setTranslateX(10 * layout.getScaling());
+        helpInfoPopUp.setTranslateY(30 * layout.getScaling());
         helpInfoPopUp.setContent(pane);
         helpInfoPopUp.show(Duration.seconds(1.5));
     }

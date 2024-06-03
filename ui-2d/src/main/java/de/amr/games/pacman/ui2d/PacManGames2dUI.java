@@ -336,7 +336,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             for (var gameScene : gameSceneMap.values()) {
                 gameScene.setContext(this);
                 if (gameScene instanceof GameScene2D gameScene2D) {
-                    gameScene2D.scalingPy.bind(gamePage.scalingPy);
+                    gameScene2D.scalingPy.bind(gamePage.layout().scalingPy);
                     gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
                 }
             }
@@ -369,13 +369,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     protected GamePage createGamePage() {
         var page = new GamePage(this, mainScene.getWidth(), mainScene.getHeight());
         page.gameVariantPy.bind(gameVariantPy);
-        page.setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
-        page.setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
-        page.setMinScaling(0.7);
-        page.setCanvasDecorated(true);
-        page.setCanvasBorderColor(theme().color("palette.pale"));
-        page.getCanvasLayer().setBackground(theme().background("wallpaper.background"));
-        page.getCanvasContainer().setBackground(Ufx.coloredBackground(theme().color("canvas.background")));
+        page.layout().setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
+        page.layout().setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
+        page.layout().setMinScaling(0.7);
+        page.layout().setCanvasDecorated(true);
+        page.layout().setCanvasBorderColor(theme().color("palette.pale"));
+        page.layout().getCanvasLayer().setBackground(theme().background("wallpaper.background"));
+        page.layout().getCanvasContainer().setBackground(Ufx.coloredBackground(theme().color("canvas.background")));
 
         page.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));

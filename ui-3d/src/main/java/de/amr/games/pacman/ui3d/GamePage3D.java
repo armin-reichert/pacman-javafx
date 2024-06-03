@@ -72,9 +72,10 @@ public class GamePage3D extends GamePage {
         dashboardLayer = new BorderPane();
         dashboardLayer.setLeft(dashboard);
         dashboardLayer.setRight(pip);
-        getChildren().add(dashboardLayer);
 
-        backgroundProperty().bind(Bindings.createObjectBinding(
+        layout().getChildren().add(dashboardLayer);
+
+        layout().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
                     return Ufx.coloredBackground(Color.BLACK);
@@ -86,7 +87,7 @@ public class GamePage3D extends GamePage {
             PY_3D_DRAW_MODE, PY_3D_NIGHT_MODE
         ));
 
-        canvasLayer.setBackground(sceneContext.theme().background("wallpaper.background"));
+        layout().getCanvasLayer().setBackground(sceneContext.theme().background("wallpaper.background"));
 
         // data binding
         pip.heightProperty().bind(PY_PIP_HEIGHT);
@@ -170,11 +171,12 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void onGameSceneChanged(GameScene newGameScene) {
+        //TODO ugly
         if (isCurrentGameScene3D()) {
             updateHelpButton();
-            getChildren().set(0, newGameScene.root());
+            layout().getChildren().set(0, newGameScene.root());
         } else {
-            getChildren().set(0, canvasLayer);
+            layout().getChildren().set(0, layout().getCanvasLayer());
             super.onGameSceneChanged(newGameScene);
         }
         hideContextMenu();
@@ -183,7 +185,7 @@ public class GamePage3D extends GamePage {
 
     private void updateTopLayer() {
         dashboardLayer.setVisible(dashboard.isVisible() || PY_3D_PIP_ON.get());
-        requestFocus();
+        layout().requestFocus();
     }
 
     private boolean isCurrentGameScene3D() {

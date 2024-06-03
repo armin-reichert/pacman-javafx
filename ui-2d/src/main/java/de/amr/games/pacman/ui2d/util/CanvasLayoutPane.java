@@ -62,7 +62,7 @@ public class CanvasLayoutPane extends StackPane {
         doLayout(scaling, false);
     }
 
-    protected void doLayout(double newScaling, boolean always) {
+    public void doLayout(double newScaling, boolean always) {
         if (newScaling < minScaling) {
             Logger.warn("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
             return;
