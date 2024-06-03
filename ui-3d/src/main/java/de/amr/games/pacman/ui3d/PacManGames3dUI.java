@@ -251,12 +251,13 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     @Override
     protected GamePage3D createGamePage() {
         var page = new GamePage3D(mainScene, this, mainScene.getWidth(), mainScene.getHeight());
-        page.setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
-        page.setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
-        page.setMinScaling(0.7);
-        page.setCanvasBorderColor(theme().color("palette.pale"));
-        page.getCanvasLayer().setBackground(theme().background("wallpaper.background"));
-        page.getCanvasContainer().setBackground(Ufx.coloredBackground(theme().color("canvas.background")));
+        page.layout().setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
+        page.layout().setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
+        page.layout().setMinScaling(0.7);
+        page.layout().setCanvasBorderColor(theme().color("palette.pale"));
+        page.layout().getCanvasLayer().setBackground(theme().background("wallpaper.background"));
+        page.layout().getCanvasContainer().setBackground(Ufx.coloredBackground(theme().color("canvas.background")));
+        page.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
         return page;
     }

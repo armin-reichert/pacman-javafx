@@ -18,36 +18,48 @@ import javafx.util.Duration;
 public class Signature extends TextFlow {
 
     public final ObjectProperty<Font> fontPy = new SimpleObjectProperty<>(this, "font", Font.font("Serif"));
-    private final Transition signatureAnimation;
+    private final Transition animation;
+    private final FadeTransition fadeIn;
+    private final FadeTransition fadeOut;
 
     public Signature(String... words) {
-        var texts = new Text[words.length];
-        for (int i = 0; i < words.length; ++i) {
-            texts[i] = new Text(words[i]);
-            texts[i].setFill(Color.grayRgb(200));
-            texts[i].fontProperty().bind(fontPy);
-        }
-        getChildren().addAll(texts);
-
-        var fadeIn = new FadeTransition(Duration.seconds(2), this);
+        fadeIn = new FadeTransition(Duration.seconds(2), this);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
         fadeIn.setDelay(Duration.seconds(2));
 
-        var fadeOut = new FadeTransition(Duration.seconds(3), this);
+        fadeOut = new FadeTransition(Duration.seconds(3), this);
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
 
-        signatureAnimation = new SequentialTransition(fadeIn, fadeOut);
+        animation = new SequentialTransition(fadeIn, fadeOut);
         setOpacity(0);
+
+        if (words.length > 0) {
+            setWords(words);
+        }
     }
 
-    public void show() {
-        signatureAnimation.playFromStart();
+    public void setWords(String... words) {
+        if (words.length > 0) {
+            var texts = new Text[words.length];
+            for (int i = 0; i < words.length; ++i) {
+                texts[i] = new Text(words[i]);
+                texts[i].setFill(Color.grayRgb(200));
+                texts[i].fontProperty().bind(fontPy);
+            }
+            getChildren().setAll(texts);
+        }
+    }
+
+    public void show(double fadeInSec, double fadeOutSec) {
+        fadeIn.setDuration(Duration.seconds(fadeInSec));
+        fadeOut.setDuration(Duration.seconds(fadeOutSec));
+        animation.playFromStart();
     }
 
     public void hide() {
-        signatureAnimation.stop();
+        animation.stop();
         setOpacity(0);
     }
 }

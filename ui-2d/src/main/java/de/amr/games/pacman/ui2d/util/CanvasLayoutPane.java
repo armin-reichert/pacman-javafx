@@ -1,16 +1,18 @@
 package de.amr.games.pacman.ui2d.util;
 
-import de.amr.games.pacman.lib.Vector2f;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.lib.Globals.TS;
+
 /**
- * Layered container containing a canvas in the center of the lowest layer.
+ * Layered container containing a (decorated) canvas in the center of the lowest layer.
  */
 public class CanvasLayoutPane extends StackPane {
 
@@ -26,14 +28,18 @@ public class CanvasLayoutPane extends StackPane {
             doLayout(getScaling(), true);
         }
     };
+
     public final DoubleProperty unscaledCanvasWidthPy = new SimpleDoubleProperty(this, "unscaledCanvasWidth", 500);
+
     public final DoubleProperty unscaledCanvasHeightPy = new SimpleDoubleProperty(this, "unscaledCanvasHeight", 400);
-    public final BooleanProperty canvasBorderEnabledPy = new SimpleBooleanProperty(this, "canvasBorderEnabled", true) {
+
+    public final BooleanProperty canvasDecoratedPy = new SimpleBooleanProperty(this, "canvasDecorated", true) {
         @Override
         protected void invalidated() {
             doLayout(getScaling(), true);
         }
     };
+
     public final ObjectProperty<Color> canvasBorderColorPy = new SimpleObjectProperty<>(this, "canvasBorderColor", Color.LIGHTBLUE);
 
     protected BorderPane canvasLayer;
@@ -58,26 +64,33 @@ public class CanvasLayoutPane extends StackPane {
         doLayout(scaling, false);
     }
 
-    protected void doLayout(double newScaling, boolean always) {
+    public void updateLayout(int numRows, int numCols) {
+        setUnscaledCanvasWidth(numCols * TS);
+        setUnscaledCanvasHeight(numRows * TS);
+        doLayout(getScaling(), true);
+    }
+
+    public void doLayout(double newScaling, boolean forced) {
         if (newScaling < minScaling) {
             Logger.warn("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
             return;
         }
-        if (Math.abs(getScaling() - newScaling) < 1e-2 && !always) { // avoid useless scaling
+        if (!forced && Math.abs(getScaling() - newScaling) < 1e-2) { // avoid irrelevant scaling
             return;
         }
-        if (getCanvasBorderEnabled()) {
-            var size = canvasContainerSizeWithBorder();
-            setAllSizes(canvasContainer, size.x(), size.y());
-        } else {
-            setAllSizes(canvasContainer, canvas.getWidth(), canvas.getHeight());
+        double width = canvas.getWidth(), height = canvas.getHeight();
+        if (isCanvasDecorated()) {
+            var size = canvasContainerSizeIfDecorated();
+            width = size.getX();
+            height = size.getY();
         }
+        setAllSizes(canvasContainer, width, height);
+        Logger.info("Canvas container size set to w={} h={}", width, height);
         setScaling(newScaling);
     }
 
-
     private double computeScaling(double width, double height) {
-        if (getCanvasBorderEnabled()) {
+        if (isCanvasDecorated()) {
             double shrinkedWidth = 0.85 * width;
             double shrinkedHeight = 0.92 * height;
             double scaling = shrinkedHeight / getUnscaledCanvasHeight();
@@ -94,25 +107,25 @@ public class CanvasLayoutPane extends StackPane {
         canvasContainer = new BorderPane(canvas);
         canvasContainer.clipProperty().bind(Bindings.createObjectBinding(
             () -> {
-                if (canvasBorderEnabledPy.get()) {
+                if (canvasDecoratedPy.get()) {
                     double s = getScaling();
-                    Vector2f size = canvasContainerSizeWithBorder();
+                    var size = canvasContainerSizeIfDecorated();
                     double arcSize = 26 * s;
-                    var clipRect = new Rectangle(size.x(), size.y());
+                    var clipRect = new Rectangle(size.getX(), size.getY());
                     clipRect.setArcWidth(arcSize);
                     clipRect.setArcHeight(arcSize);
                     return clipRect;
                 } else {
                     return null;
                 }
-            }, canvasBorderEnabledPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy
+            }, canvasDecoratedPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy
         ));
 
         canvasContainer.borderProperty().bind(Bindings.createObjectBinding(
             () -> {
-                if (canvasBorderEnabledPy.get()) {
-                    Vector2f size = canvasContainerSizeWithBorder();
-                    double borderWidth = Math.max(5, Math.ceil(size.y() / 55));
+                if (canvasDecoratedPy.get()) {
+                    var size = canvasContainerSizeIfDecorated();
+                    double borderWidth = Math.max(5, Math.ceil(size.getY() / 55));
                     double cornerRadius = Math.ceil(10 * getScaling());
                     return new Border(
                         new BorderStroke(canvasBorderColorPy.get(),
@@ -123,14 +136,14 @@ public class CanvasLayoutPane extends StackPane {
                     return null;
                 }
             },
-            canvasBorderEnabledPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy
+            canvasDecoratedPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy
         ));
     }
 
-    private Vector2f canvasContainerSizeWithBorder() {
-        return new Vector2f(
-            (float) Math.round((getUnscaledCanvasWidth() + 25) * getScaling()),
-            (float) Math.round((getUnscaledCanvasHeight() + 15) * getScaling()));
+    private Point2D canvasContainerSizeIfDecorated() {
+        return new Point2D(
+            Math.round((getUnscaledCanvasWidth() + 25) * getScaling()),
+            Math.round((getUnscaledCanvasHeight() + 15) * getScaling()));
     }
 
     public BorderPane getCanvasLayer() {
@@ -173,12 +186,12 @@ public class CanvasLayoutPane extends StackPane {
         minScaling = value;
     }
 
-    public boolean getCanvasBorderEnabled() {
-        return canvasBorderEnabledPy.get();
+    public boolean isCanvasDecorated() {
+        return canvasDecoratedPy.get();
     }
 
-    public void setCanvasBorderEnabled(boolean enabled) {
-        canvasBorderEnabledPy.set(enabled);
+    public void setCanvasDecorated(boolean enabled) {
+        canvasDecoratedPy.set(enabled);
     }
 
     public Color getCanvasBorderColor() {

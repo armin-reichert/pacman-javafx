@@ -14,7 +14,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
-import de.amr.games.pacman.ui2d.page.Signature;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.rendering.*;
 import de.amr.games.pacman.ui2d.scene.*;
@@ -33,7 +32,6 @@ import javafx.scene.input.*;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -269,10 +267,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         createGameClock();
         createGameScenes();
 
-        GamePage gamePage = page(GAME_PAGE);
-        Font signatureFont = theme.font("font.monospaced", 9);
-        gamePage.sign(signatureFont, SIGNATURE_TEXT);
-
         stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy));
         stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
         stage.setMinWidth(CANVAS_WIDTH_UNSCALED);
@@ -342,7 +336,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             for (var gameScene : gameSceneMap.values()) {
                 gameScene.setContext(this);
                 if (gameScene instanceof GameScene2D gameScene2D) {
-                    gameScene2D.scalingPy.bind(gamePage.scalingPy);
+                    gameScene2D.setCanvas(gamePage.layout().getCanvas());
+                    gameScene2D.scalingPy.bind(gamePage.layout().scalingPy);
                     gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
                 }
             }
@@ -375,14 +370,15 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     protected GamePage createGamePage() {
         var page = new GamePage(this, mainScene.getWidth(), mainScene.getHeight());
         page.gameVariantPy.bind(gameVariantPy);
-        page.setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
-        page.setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
-        page.setMinScaling(0.7);
-        page.setCanvasBorderEnabled(true);
-        page.setCanvasBorderColor(theme().color("palette.pale"));
-        page.getCanvasLayer().setBackground(theme().background("wallpaper.background"));
-        page.getCanvasContainer().setBackground(Ufx.coloredBackground(theme().color("canvas.background")));
+        page.layout().setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
+        page.layout().setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
+        page.layout().setMinScaling(0.7);
+        page.layout().setCanvasDecorated(true);
+        page.layout().setCanvasBorderColor(theme().color("palette.pale"));
+        page.layout().getCanvasLayer().setBackground(theme().background("wallpaper.background"));
+        page.layout().getCanvasContainer().setBackground(Ufx.coloredBackground(theme().color("canvas.background")));
 
+        page.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
         return page;
     }
@@ -612,6 +608,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         if (!game.isDemoLevel()) {
             game.pac().setManualSteering(new KeyboardPacSteering());
         }
+        //TODO better place than here?
+        GamePage gamePage = page(GAME_PAGE);
+        gamePage.layout().updateLayout(game.world().numRows(), game.world().numCols());
     }
 
     @Override
@@ -668,20 +667,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     @Override
     public void showSignature() {
         GamePage gamePage = page(GAME_PAGE);
-        gamePage.signature().ifPresent(signature -> {
-            int y = switch (game().variant()) {
-                case MS_PACMAN -> 45;
-                case PACMAN, PACMAN_XXL -> 30;
-            };
-            signature.translateYProperty().bind(gamePage.scalingPy.multiply(y));
-            signature.show();
-        });
+        gamePage.signature().show(2, 3);
     }
 
     @Override
     public void hideSignature() {
         GamePage gamePage = page(GAME_PAGE);
-        gamePage.signature().ifPresent(Signature::hide);
+        gamePage.signature().hide();
     }
 
     @Override
