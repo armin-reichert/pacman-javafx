@@ -46,7 +46,7 @@ public class GamePage implements Page {
         this.context = checkNotNull(context);
 
         layout = new CanvasLayoutPane();
-        layout.canvasDecoratedPy.bind(PY_CANVAS_DECORATION);
+        layout.canvasDecoratedPy.bind(PY_CANVAS_DECORATED);
 
         createHelpButton();
         createDebugInfoBindings();

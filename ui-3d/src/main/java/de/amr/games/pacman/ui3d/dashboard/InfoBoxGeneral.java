@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.dashboard;
 
+import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui2d.util.Ufx;
@@ -11,7 +12,6 @@ import de.amr.games.pacman.ui3d.PacManGames3dUI;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_CANVAS_DECORATED;
 import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_SHOW_DEBUG_INFO;
 
 /**
@@ -88,7 +88,7 @@ public class InfoBoxGeneral extends InfoBox {
         sliderTargetFPS.valueProperty().addListener(
             (py, ov, nv) -> sceneContext.gameClock().setTargetFrameRate(nv.intValue()));
         cbUsePlayScene3D.setOnAction(e -> actionHandler().toggle2D3D());
-        cbCanvasDecoration.selectedProperty().bindBidirectional(PY_CANVAS_DECORATED);
+        cbCanvasDecoration.selectedProperty().bindBidirectional(PacManGames2dUI.PY_CANVAS_DECORATED);
         cbDebugUI.setOnAction(e -> Ufx.toggle(PY_SHOW_DEBUG_INFO));
         cbTimeMeasured.setOnAction(e -> Ufx.toggle(sceneContext.gameClock().timeMeasuredPy));
     }
