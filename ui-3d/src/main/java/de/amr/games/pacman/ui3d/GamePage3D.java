@@ -14,7 +14,6 @@ import de.amr.games.pacman.ui2d.util.Keyboard;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui3d.scene.Perspective;
-import de.amr.games.pacman.ui3d.scene.PlayScene3D;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -103,6 +102,10 @@ public class GamePage3D extends GamePage {
                 showContextMenu(true, e.getScreenX(), e.getScreenY());
             }
         }
+    }
+
+    public Dashboard dashboard() {
+        return dashboard;
     }
 
     public void hideContextMenu() {
@@ -211,7 +214,7 @@ public class GamePage3D extends GamePage {
         else if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
             actionHandler.toggle2D3D();
         } else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
-            dashboard.toggleVisibility();
+            actionHandler.toggleDashboard();
         } else if (Keyboard.pressed(KEY_TOGGLE_PIP_VIEW)) {
             actionHandler.togglePipVisible();
         } else {

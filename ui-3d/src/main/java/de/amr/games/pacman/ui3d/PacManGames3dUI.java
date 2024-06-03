@@ -319,4 +319,10 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         toggle(PY_3D_PIP_ON);
         showFlashMessage(tt(PY_3D_PIP_ON.get() ? "pip_on" : "pip_off"));
     }
+
+    @Override
+    public void toggleDashboard() {
+        GamePage3D gamePage = page(GAME_PAGE);
+        gamePage.dashboard().toggleVisibility();
+    }
 }
