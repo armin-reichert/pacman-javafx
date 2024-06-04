@@ -116,25 +116,21 @@ public class GamePage3D extends GamePage {
             contextMenu.getItems().add(miPictureInPicture);
 
             contextMenu.getItems().add(menuTitleItem(context.tt("select_perspective")));
-            var toggleGroup = new ToggleGroup();
+            var radioGroup = new ToggleGroup();
             for (var perspective : Perspective.values()) {
                 var miPerspective = new RadioMenuItem(context.tt(perspective.name()));
-                miPerspective.setSelected(perspective.equals(PY_3D_PERSPECTIVE.get()));
-                miPerspective.setUserData(perspective);
-                miPerspective.setToggleGroup(toggleGroup);
                 contextMenu.getItems().add(miPerspective);
+                // keep global property in sync with selection
+                miPerspective.selectedProperty().addListener((py, ov, selected) -> {
+                    if (selected) {
+                        PY_3D_PERSPECTIVE.set(perspective);
+                    }
+                });
+                // keep selection in sync with global property value
+                PY_3D_PERSPECTIVE.addListener((py, ov, newPerspective) -> miPerspective.setSelected(newPerspective == perspective));
+                miPerspective.setSelected(perspective == PY_3D_PERSPECTIVE.get()); // == is allowed for enum comparison
+                miPerspective.setToggleGroup(radioGroup);
             }
-            //TODO there mus be a simpler way
-            toggleGroup.selectedToggleProperty().addListener((py, ov, radio) -> {
-                if (radio != null) {
-                    PY_3D_PERSPECTIVE.set((Perspective) radio.getUserData());
-                }
-            });
-            PY_3D_PERSPECTIVE.addListener((py, ov, nv) -> {
-                for (var radio : toggleGroup.getToggles()) {
-                    radio.setSelected(radio.getUserData().equals(PY_3D_PERSPECTIVE.get()));
-                }
-            });
         }
 
         // Common items
