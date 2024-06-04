@@ -731,9 +731,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void reboot() {
-        if (gameState() == BOOT) {
-            return;
-        }
         stopAllSounds();
         currentGameScene().ifPresent(GameScene::end);
         playVoice("voice.explain", 0);
