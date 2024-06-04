@@ -4,14 +4,14 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.rendering;
 
+import de.amr.games.pacman.mapeditor.FoodMapRenderer;
+import de.amr.games.pacman.mapeditor.TerrainMapRenderer;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui2d.tilemap.FoodMapRenderer;
-import de.amr.games.pacman.ui2d.tilemap.TerrainMapRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.ui2d.tilemap.TileMapRenderer.getColorFromMap;
+import static de.amr.games.pacman.mapeditor.TileMapRenderer.getColorFromMap;
 import static java.util.function.Predicate.not;
 
 /**

@@ -1,4 +1,4 @@
-package de.amr.games.pacman.ui2d.tilemap;
+package de.amr.games.pacman.mapeditor;
 
 import de.amr.games.pacman.lib.TileMap;
 import de.amr.games.pacman.lib.Tiles;

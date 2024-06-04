@@ -1,9 +1,9 @@
 package de.amr.games.pacman.mapeditor;
 
-import de.amr.games.pacman.ui2d.util.Ufx;
+import static javafx.application.Application.launch;
 
 public class Main {
     public static void main(String[] args) {
-        Ufx.launch(TileMapEditorApp.class, args);
+        launch(TileMapEditorApp.class, args);
     }
 }

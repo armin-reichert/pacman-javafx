@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.tilemap;
+package de.amr.games.pacman.mapeditor;
 
 import de.amr.games.pacman.lib.TileMap;
 import de.amr.games.pacman.lib.Vector2i;

@@ -15,6 +15,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     implementation project(':lib')
     implementation project(':core')
+    implementation project(':mapeditor')
 }
 
 javafx {

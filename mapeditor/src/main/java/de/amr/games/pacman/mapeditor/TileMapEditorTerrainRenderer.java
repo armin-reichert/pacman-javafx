@@ -7,8 +7,6 @@ package de.amr.games.pacman.mapeditor;
 import de.amr.games.pacman.lib.TileMap;
 import de.amr.games.pacman.lib.Tiles;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.ui2d.tilemap.TerrainMapRenderer;
-import de.amr.games.pacman.ui2d.tilemap.TileMapRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;

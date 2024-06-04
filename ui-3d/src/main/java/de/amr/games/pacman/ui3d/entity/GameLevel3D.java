@@ -16,7 +16,7 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
-import de.amr.games.pacman.ui2d.tilemap.TileMapRenderer;
+import de.amr.games.pacman.mapeditor.TileMapRenderer;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;

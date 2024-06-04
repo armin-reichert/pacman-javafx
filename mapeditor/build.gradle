@@ -12,7 +12,6 @@ application {
 dependencies {
     implementation project(':lib')
     implementation project(':core')
-    implementation project(':ui-2d') //TODO should not depend on complete project
     implementation 'org.tinylog:tinylog-api:2.7.0'
 }
 

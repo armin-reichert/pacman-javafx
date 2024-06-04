@@ -7,6 +7,7 @@ open module de.amr.games.pacman.ui2d {
     requires org.tinylog.api;
     requires de.amr.games.pacman;
     requires de.amr.games.pacman.lib;
+    requires de.amr.games.pacman.mapeditor;
     requires javafx.base;
     requires javafx.controls;
     requires javafx.graphics;
@@ -18,5 +19,4 @@ open module de.amr.games.pacman.ui2d {
     exports de.amr.games.pacman.ui2d.rendering;
     exports de.amr.games.pacman.ui2d.scene;
     exports de.amr.games.pacman.ui2d.page;
-    exports de.amr.games.pacman.ui2d.tilemap;
 }
