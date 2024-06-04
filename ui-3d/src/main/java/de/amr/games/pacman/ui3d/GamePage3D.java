@@ -99,18 +99,17 @@ public class GamePage3D extends GamePage {
         if (!context.isCurrentGameScene(PLAY_SCENE) && !context.isCurrentGameScene(PLAY_SCENE_3D)) {
             return;
         }
-        boolean isPlayScene2D = context.isCurrentGameScene(PLAY_SCENE);
+        boolean isPlayScene3D = context.isCurrentGameScene(PLAY_SCENE_3D);
         var actionHandler = (ActionHandler3D) context.actionHandler();
         contextMenu = new ContextMenu();
 
         contextMenu.getItems().add(menuTitleItem(context.tt("scene_display")));
-        String titleKey = isPlayScene2D ? "use_3D_scene" : "use_2D_scene";
+        String titleKey = isPlayScene3D ? "use_2D_scene" : "use_3D_scene";
         var item = new MenuItem(context.tt(titleKey));
         item.setOnAction(e -> actionHandler.toggle2D3D());
         contextMenu.getItems().add(item);
 
-        // 3D specific items
-        if (!isPlayScene2D) {
+        if (isPlayScene3D) {
             var miPictureInPicture = new CheckMenuItem(context.tt("pip"));
             miPictureInPicture.selectedProperty().bindBidirectional(PY_3D_PIP_ON);
             contextMenu.getItems().add(miPictureInPicture);
