@@ -21,6 +21,10 @@ public interface ActionHandler {
 
     void reboot();
 
+    void enterMapEditor();
+
+    void quitMapEditor();
+
     void togglePaused();
 
     void toggle2D3D();

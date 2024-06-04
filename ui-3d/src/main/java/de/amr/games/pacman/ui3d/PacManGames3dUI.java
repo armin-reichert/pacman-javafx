@@ -4,9 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.lib.WorldMap;
-import de.amr.games.pacman.mapeditor.TileMapEditor;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameScene;
@@ -19,8 +16,6 @@ import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.BackgroundPosition;
@@ -28,17 +23,14 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.DrawMode;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.time.LocalTime;
 import java.util.ResourceBundle;
 
-import static de.amr.games.pacman.ui2d.util.Keyboard.*;
+import static de.amr.games.pacman.ui2d.util.Keyboard.alt;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
-import static java.util.stream.IntStream.rangeClosed;
 
 /**
  * User interface for Pac-Man and Ms. Pac-Man games.
@@ -58,7 +50,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     }
 
     public static final String PLAY_SCENE_3D                          = "play3D";
-    public static final String EDITOR_PAGE                            = "editorPage";
 
     public static final BooleanProperty PY_3D_AXES_VISIBLE            = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_3D_ENERGIZER_EXPLODES      = new SimpleBooleanProperty(true);
@@ -74,7 +65,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
     public static final KeyCodeCombination KEY_PREV_PERSPECTIVE       = alt(KeyCode.LEFT);
     public static final KeyCodeCombination KEY_NEXT_PERSPECTIVE       = alt(KeyCode.RIGHT);
-    public static final KeyCodeCombination KEY_SWITCH_EDITOR          = shift_alt(KeyCode.E);
 
     public static final String NO_TEXTURE                             = "No Texture";
 
@@ -83,7 +73,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static Picker<String> PICKER_LEVEL_COMPLETE;
     public static Picker<String> PICKER_GAME_OVER;
 
-    private TileMapEditor editor;
 
     @Override
     public void loadAssets() {
@@ -165,7 +154,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public void init(Stage stage, double width, double height) {
         super.init(stage, width, height);
         stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
-        addMapEditor();
         LocalTime now = LocalTime.now();
         PY_3D_NIGHT_MODE.set(now.getHour() >= 20 || now.getHour() <= 5);
     }
@@ -180,56 +168,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             gameScenesForVariant.get(variant).put(PLAY_SCENE_3D, playScene3D);
             Logger.info("Added 3D play scene for variant " + variant);
         }
-    }
-
-    private void addMapEditor() {
-        editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
-        editor.createUI(stage);
-
-        var miQuitEditor = new MenuItem("Back to Game");
-        miQuitEditor.setOnAction(e -> quitMapEditor());
-        editor.menuFile().getItems().add(miQuitEditor);
-
-        editor.addPredefinedMap("Pac-Man",
-            new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/pacman.world")));
-        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        rangeClosed(1, 6).forEach(mapNumber -> editor.addPredefinedMap("Ms. Pac-Man " + mapNumber,
-            new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world"))));
-        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap("Pac-Man XXL " + mapNumber,
-            new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world"))));
-
-        pages.put(EDITOR_PAGE, new EditorPage(editor, this));
-    }
-
-    @Override
-    public void enterMapEditor() {
-        if (game().variant() != GameVariant.PACMAN_XXL) {
-            showFlashMessageSeconds(3, "No Map Editor available for this game variant!");
-            return;
-        }
-        gameClock().stop();
-        currentGameScene().ifPresent(GameScene::end);
-        //TODO introduce GAME_PAUSED state?
-        reboot();
-        stage.titleProperty().bind(editor.titlePy);
-        if (game().world() != null) {
-            editor.setMap(game().world().map());
-        }
-        editor.start();
-        selectPage(EDITOR_PAGE);
-    }
-
-    @Override
-    public void quitMapEditor() {
-        editor.showConfirmation(
-            editor::saveMapFileAs,
-            () -> {
-                editor.stop();
-                selectPage(START_PAGE);
-                stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
-            }
-        );
     }
 
     @Override

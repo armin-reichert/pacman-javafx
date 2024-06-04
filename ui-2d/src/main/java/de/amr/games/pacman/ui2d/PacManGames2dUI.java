@@ -9,9 +9,12 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
+import de.amr.games.pacman.lib.WorldMap;
+import de.amr.games.pacman.mapeditor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.page.StartPage;
@@ -26,6 +29,8 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.*;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
@@ -49,6 +54,7 @@ import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.ui2d.util.Keyboard.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static java.util.function.Predicate.not;
+import static java.util.stream.IntStream.rangeClosed;
 
 /**
  * 2D-only user interface for Pac-Man and Ms. Pac-Man games. No 3D scenes.
@@ -67,6 +73,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     public static final String START_PAGE   = "startPage";
     public static final String GAME_PAGE    = "gamePage";
+    public static final String EDITOR_PAGE  = "editorPage";
 
     public static final double MIN_SCALING = 0.75;
 
@@ -96,9 +103,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final KeyCodeCombination[] KEYS_ADD_CREDIT        = {just(KeyCode.DIGIT5), just(KeyCode.NUMPAD5)};
     public static final KeyCodeCombination KEY_BOOT                 = just(KeyCode.F3);
     public static final KeyCodeCombination KEY_FULLSCREEN           = just(KeyCode.F11);
-    public static final KeyCodeCombination[] KEYS_TOGGLE_DASHBOARD    = {just(KeyCode.F1), alt(KeyCode.B)};
-    public static final KeyCodeCombination KEY_TOGGLE_PIP_VIEW        = just(KeyCode.F2);
-    public static final KeyCodeCombination KEY_TOGGLE_2D_3D           = alt(KeyCode.DIGIT3);
+    public static final KeyCodeCombination[] KEYS_TOGGLE_DASHBOARD  = {just(KeyCode.F1), alt(KeyCode.B)};
+    public static final KeyCodeCombination KEY_TOGGLE_PIP_VIEW      = just(KeyCode.F2);
+    public static final KeyCodeCombination KEY_TOGGLE_2D_3D         = alt(KeyCode.DIGIT3);
+    public static final KeyCodeCombination KEY_SWITCH_EDITOR        = shift_alt(KeyCode.E);
 
     public static final int DEFAULT_CANVAS_WIDTH_UNSCALED = GameModel.ARCADE_MAP_TILES_X * TS; // 28*8 = 224
     public static final int DEFAULT_CANVAS_HEIGHT_UNSCALED = GameModel.ARCADE_MAP_TILES_Y * TS; // 36*8 = 288
@@ -144,12 +152,65 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     protected String currentPageID;
     protected GameClockFX clock;
 
+    private TileMapEditor editor;
+
     //TODO reconsider this
     protected AudioClip voiceClip;
     protected final Animation voiceClipExecution = new PauseTransition();
 
     public PacManGames2dUI() {
     }
+
+    private void addMapEditor() {
+        editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
+        editor.createUI(stage);
+
+        var miQuitEditor = new MenuItem("Back to Game");
+        miQuitEditor.setOnAction(e -> quitMapEditor());
+        editor.menuFile().getItems().add(miQuitEditor);
+
+        editor.addPredefinedMap("Pac-Man",
+                new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/pacman.world")));
+        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
+        rangeClosed(1, 6).forEach(mapNumber -> editor.addPredefinedMap("Ms. Pac-Man " + mapNumber,
+                new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world"))));
+        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
+        rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap("Pac-Man XXL " + mapNumber,
+                new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world"))));
+
+        pages.put(EDITOR_PAGE, new EditorPage(editor, this));
+    }
+
+    @Override
+    public void enterMapEditor() {
+        if (game().variant() != GameVariant.PACMAN_XXL) {
+            return;
+        }
+        gameClock().stop();
+        currentGameScene().ifPresent(GameScene::end);
+        //TODO introduce GAME_PAUSED state?
+        reboot();
+        stage.titleProperty().bind(editor.titlePy);
+        if (game().world() != null) {
+            editor.setMap(game().world().map());
+        }
+        editor.start();
+        selectPage(EDITOR_PAGE);
+    }
+
+    @Override
+    public void quitMapEditor() {
+        editor.showConfirmation(
+                editor::saveMapFileAs,
+                () -> {
+                    editor.stop();
+                    selectPage(START_PAGE);
+                    stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
+                }
+        );
+    }
+
+
 
     public void loadAssets() {
         bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", getClass().getModule()));
@@ -285,6 +346,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
         createGameClock();
         createGameScenes();
+        addMapEditor();
 
         stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy));
         stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));

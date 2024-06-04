@@ -144,14 +144,4 @@ public class GamePage3D extends GamePage {
     public void render() {
         super.render();
     }
-
-    @Override
-    public void handleKeyboardInput() {
-        var actionHandler = (ActionHandler3D) context.actionHandler();
-        if (Keyboard.pressed(KEY_SWITCH_EDITOR)) {
-            actionHandler.enterMapEditor();
-        } else {
-            super.handleKeyboardInput();
-        }
-    }
 }

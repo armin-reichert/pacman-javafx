@@ -253,6 +253,8 @@ public class GamePage implements Page {
             actionHandler.toggleDashboard();
         } else if (Keyboard.pressed(KEY_TOGGLE_PIP_VIEW)) {
             actionHandler.togglePipVisible();
+        } else if (Keyboard.pressed(KEY_SWITCH_EDITOR)) {
+            actionHandler.enterMapEditor();
         } else {
             context.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
         }

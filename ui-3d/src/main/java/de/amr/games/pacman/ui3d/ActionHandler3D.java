@@ -15,8 +15,4 @@ public interface ActionHandler3D extends ActionHandler {
 
     void selectPrevPerspective();
 
-    void enterMapEditor();
-
-    void quitMapEditor();
-
 }
