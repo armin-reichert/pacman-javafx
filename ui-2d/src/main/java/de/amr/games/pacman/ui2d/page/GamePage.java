@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.dashboard.Dashboard;
+import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
@@ -81,7 +81,14 @@ public class GamePage implements Page {
         popupLayer.getChildren().addAll(helpInfoPopUp, signature);
 
         pip = new PictureInPictureView(context);
+
         dashboard = new Dashboard(context);
+        dashboard.addInfoBox(new InfoBoxGeneral(context.theme(), context.tt("infobox.general.title")));
+        dashboard.addInfoBox(new InfoBoxGameControl(context.theme(), context.tt("infobox.game_control.title")));
+        dashboard.addInfoBox(new InfoBoxGameInfo(context.theme(), context.tt("infobox.game_info.title")));
+        dashboard.addInfoBox(new InfoBoxActorInfo(context.theme(), context.tt("infobox.actor_info.title")));
+        dashboard.addInfoBox(new InfoBoxKeys(context.theme(), context.tt("infobox.keyboard_shortcuts.title")));
+        dashboard.addInfoBox(new InfoBoxAbout(context.theme(), context.tt("infobox.about.title")));
 
         dashboardLayer = new BorderPane();
         dashboardLayer.setLeft(dashboard);

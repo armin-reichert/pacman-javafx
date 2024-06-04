@@ -9,8 +9,8 @@ import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.Keyboard;
-import de.amr.games.pacman.ui2d.dashboard.Dashboard;
 import de.amr.games.pacman.ui2d.util.Ufx;
+import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.*;
@@ -21,7 +21,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_IMMUNITY;
 import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
 
@@ -45,6 +44,7 @@ public class GamePage3D extends GamePage {
                 },
                 PY_3D_DRAW_MODE, PY_3D_NIGHT_MODE
         ));
+        dashboard().addInfoBox(3, new InfoBox3D(context.theme(), context.tt("infobox.3D_settings.title")));
     }
 
     @Override
