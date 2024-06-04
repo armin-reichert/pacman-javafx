@@ -1,3 +1,3 @@
 ### This is the 2D-only version ###
 
-This stripped-down version contains only the 2D scenes and has been created as the base of a webfx application.
+This version contains no 3D scenes and has originally been created to make the WebFX application.
