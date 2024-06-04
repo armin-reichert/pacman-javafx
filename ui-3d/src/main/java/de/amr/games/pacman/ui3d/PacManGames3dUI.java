@@ -158,6 +158,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
         LocalTime now = LocalTime.now();
         PY_3D_NIGHT_MODE.set(now.getHour() >= 20 || now.getHour() <= 5);
+        PY_3D_ENABLED.set(true);
     }
 
     @Override
