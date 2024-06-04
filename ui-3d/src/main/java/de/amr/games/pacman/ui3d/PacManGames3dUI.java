@@ -76,7 +76,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static Picker<String> PICKER_LEVEL_COMPLETE;
     public static Picker<String> PICKER_GAME_OVER;
 
-
     @Override
     public void loadAssets() {
         super.loadAssets();

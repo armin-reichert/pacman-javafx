@@ -126,7 +126,7 @@ public class InfoBox3D extends InfoBox {
         sliderWallHeight.valueProperty().bindBidirectional(PY_3D_WALL_HEIGHT);
         sliderWallOpacity.valueProperty().bindBidirectional(PY_3D_WALL_OPACITY);
 
-        cbPiPOn.setOnAction(e -> toggle(PY_3D_PIP_ON));
+        cbPiPOn.setOnAction(e -> toggle(PY_PIP_ON));
         comboPerspectives.setOnAction(e -> PY_3D_PERSPECTIVE.set(comboPerspectives.getValue()));
         cbEnergizerExplodes.setOnAction(e -> toggle(PY_3D_ENERGIZER_EXPLODES));
         cbNightMode.setOnAction(e -> toggle(PY_3D_NIGHT_MODE));
@@ -138,7 +138,7 @@ public class InfoBox3D extends InfoBox {
     @Override
     public void update() {
         super.update();
-        cbPiPOn.setSelected(PY_3D_PIP_ON.getValue());
+        cbPiPOn.setSelected(PY_PIP_ON.getValue());
         comboFloorTexture.setValue(PY_3D_FLOOR_TEXTURE.get());
         cbFloorTextureRandom.setSelected(PY_3D_FLOOR_TEXTURE_RND.get());
         comboPerspectives.setValue(PY_3D_PERSPECTIVE.get());

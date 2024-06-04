@@ -81,9 +81,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final KeyCodeCombination KEY_SHOW_HELP            = just(KeyCode.H);
     public static final KeyCodeCombination KEY_PAUSE                = just(KeyCode.P);
     public static final KeyCodeCombination KEY_QUIT                 = just(KeyCode.Q);
-    public static final KeyCodeCombination[] KEYS_SELECT_NEXT_VARIANT  = {just(KeyCode.V), just(KeyCode.RIGHT)};
-    public static final KeyCodeCombination KEY_SELECT_PREV_VARIANT  = just(KeyCode.LEFT);
-
+    public static final KeyCodeCombination[] KEYS_NEXT_VARIANT      = {just(KeyCode.V), just(KeyCode.RIGHT)};
+    public static final KeyCodeCombination KEY_PREV_VARIANT         = just(KeyCode.LEFT);
     public static final KeyCodeCombination KEY_AUTOPILOT            = alt(KeyCode.A);
     public static final KeyCodeCombination KEY_PLAY_CUTSCENES       = alt(KeyCode.C);
     public static final KeyCodeCombination KEY_DEBUG_INFO           = alt(KeyCode.D);
@@ -93,7 +92,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final KeyCodeCombination KEY_CHEAT_NEXT_LEVEL     = alt(KeyCode.N);
     public static final KeyCodeCombination KEY_TEST_LEVELS          = alt(KeyCode.T);
     public static final KeyCodeCombination KEY_CHEAT_KILL_GHOSTS    = alt(KeyCode.X);
-
     public static final KeyCodeCombination[] KEYS_SHOW_GAME_PAGE    = {just(KeyCode.SPACE), just(KeyCode.ENTER)};
     public static final KeyCodeCombination[] KEYS_SINGLE_STEP       = {just(KeyCode.SPACE), shift(KeyCode.P)};
     public static final KeyCodeCombination KEY_TEN_STEPS            = shift(KeyCode.SPACE);
@@ -109,26 +107,26 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final KeyCodeCombination KEY_TOGGLE_2D_3D         = alt(KeyCode.DIGIT3);
     public static final KeyCodeCombination KEY_SWITCH_EDITOR        = shift_alt(KeyCode.E);
 
-    public static final int DEFAULT_CANVAS_WIDTH_UNSCALED = GameModel.ARCADE_MAP_TILES_X * TS; // 28*8 = 224
-    public static final int DEFAULT_CANVAS_HEIGHT_UNSCALED = GameModel.ARCADE_MAP_TILES_Y * TS; // 36*8 = 288
+    public static final int DEFAULT_CANVAS_WIDTH_UNSCALED           = GameModel.ARCADE_MAP_TILES_X * TS; // 28*8 = 224
+    public static final int DEFAULT_CANVAS_HEIGHT_UNSCALED          = GameModel.ARCADE_MAP_TILES_Y * TS; // 36*8 = 288
 
-    public static final IntegerProperty PY_SIMULATION_STEPS           = new SimpleIntegerProperty(1);
-    public static final BooleanProperty PY_IMMUNITY = new SimpleBooleanProperty(false) {
+    public static final IntegerProperty PY_SIMULATION_STEPS         = new SimpleIntegerProperty(1);
+    public static final BooleanProperty PY_IMMUNITY                 = new SimpleBooleanProperty(false) {
         @Override
         protected void invalidated() {
             GameController.it().setPacImmune(get());
         }
     };
-    public static final BooleanProperty PY_USE_AUTOPILOT   = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_CANVAS_DECORATED = new SimpleBooleanProperty(true);
-    public static final IntegerProperty PY_PIP_HEIGHT                 = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_PX.y());
-    public static final IntegerProperty PY_PIP_OPACITY_PERCENTAGE     = new SimpleIntegerProperty(100);
-    public static final BooleanProperty PY_3D_PIP_ON                  = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_3D_ENABLED                 = new SimpleBooleanProperty(true);
-    public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE      = new SimpleObjectProperty<>(DrawMode.FILL);
+    public static final BooleanProperty PY_USE_AUTOPILOT            = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_SHOW_DEBUG_INFO          = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_CANVAS_DECORATED         = new SimpleBooleanProperty(true);
+    public static final BooleanProperty PY_PIP_ON                   = new SimpleBooleanProperty(false);
+    public static final IntegerProperty PY_PIP_HEIGHT               = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_PX.y());
+    public static final IntegerProperty PY_PIP_OPACITY_PERCENTAGE   = new SimpleIntegerProperty(100);
+    public static final BooleanProperty PY_3D_ENABLED               = new SimpleBooleanProperty(false);
+    public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE    = new SimpleObjectProperty<>(DrawMode.FILL);
 
-    public static final String SIGNATURE_TEXT = "Remake (2021-2024) by Armin Reichert";
+    public static final String SIGNATURE_TEXT                       = "Remake (2021-2024) by Armin Reichert";
 
     // end static section
 
@@ -864,8 +862,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void togglePipVisible() {
-        toggle(PY_3D_PIP_ON);
-        showFlashMessage(tt(PY_3D_PIP_ON.get() ? "pip_on" : "pip_off"));
+        toggle(PY_PIP_ON);
+        showFlashMessage(tt(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
     }
 
     @Override

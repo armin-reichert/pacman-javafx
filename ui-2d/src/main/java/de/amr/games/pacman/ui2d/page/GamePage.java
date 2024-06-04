@@ -107,11 +107,10 @@ public class GamePage implements Page {
 
         // data binding
         pip.heightProperty().bind(PY_PIP_HEIGHT);
-        PY_3D_PIP_ON.addListener((py, ov, nv) -> updateDashboardLayer());
+        PY_PIP_ON.addListener((py, ov, nv) -> updateDashboardLayer());
         dashboard.visibleProperty().addListener((py, ov, nv) -> updateDashboardLayer());
 
         updateDashboardLayer();
-
 
         layout.getChildren().addAll(popupLayer, flashMessageView);
         createDebugInfoBindings();
@@ -143,7 +142,7 @@ public class GamePage implements Page {
     }
 
     protected void updateDashboardLayer() {
-        dashboardLayer.setVisible(dashboard.isVisible() || PY_3D_PIP_ON.get());
+        dashboardLayer.setVisible(dashboard.isVisible() || PY_PIP_ON.get());
         layout.requestFocus();
     }
 
@@ -253,51 +252,51 @@ public class GamePage implements Page {
         flashMessageView.update();
         popupLayer.setVisible(true);
         dashboard.update();
-        pip.setVisible(PY_3D_PIP_ON.get() && !isCurrentGameScene2D()); //TODO
+        pip.setVisible(PY_PIP_ON.get() && !isCurrentGameScene2D()); //TODO
         pip.draw();
     }
 
     @Override
     public void handleKeyboardInput() {
-        var actionHandler = context.actionHandler();
+        var ah = context.actionHandler();
         if (Keyboard.pressed(KEY_AUTOPILOT)) {
-            actionHandler.toggleAutopilot();
+            ah.toggleAutopilot();
         } else if (Keyboard.pressed(KEY_BOOT)) {
-            actionHandler.reboot();
+            ah.reboot();
         } else if (Keyboard.pressed(KEY_DEBUG_INFO)) {
             Ufx.toggle(PY_SHOW_DEBUG_INFO);
         } else if (Keyboard.pressed(KEY_FULLSCREEN)) {
-            actionHandler.setFullScreen(true);
+            ah.setFullScreen(true);
         } else if (Keyboard.pressed(KEY_IMMUNITY)) {
-            actionHandler.toggleImmunity();
+            ah.toggleImmunity();
         } else if (Keyboard.pressed(KEY_SHOW_HELP)) {
             showHelpInfoPopUp();
         } else if (Keyboard.pressed(KEY_PAUSE)) {
-            actionHandler.togglePaused();
+            ah.togglePaused();
         } else if (Keyboard.pressed(KEYS_SINGLE_STEP)) {
-            actionHandler.doSimulationSteps(1);
+            ah.doSimulationSteps(1);
         } else if (Keyboard.pressed(KEY_TEN_STEPS)) {
-            actionHandler.doSimulationSteps(10);
+            ah.doSimulationSteps(10);
         } else if (Keyboard.pressed(KEY_SIMULATION_FASTER)) {
-            actionHandler.changeSimulationSpeed(5);
+            ah.changeSimulationSpeed(5);
         } else if (Keyboard.pressed(KEY_SIMULATION_SLOWER)) {
-            actionHandler.changeSimulationSpeed(-5);
+            ah.changeSimulationSpeed(-5);
         } else if (Keyboard.pressed(KEY_SIMULATION_NORMAL)) {
-            actionHandler.resetSimulationSpeed();
+            ah.resetSimulationSpeed();
         } else if (Keyboard.pressed(KEY_QUIT)) {
             context.soundHandler().stopVoice();
             context.soundHandler().stopAllSounds();
-            actionHandler.selectPage(START_PAGE);
+            ah.selectPage(START_PAGE);
         } else if (Keyboard.pressed(KEY_TEST_LEVELS)) {
-            actionHandler.startLevelTestMode();
+            ah.startLevelTestMode();
         } else if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
-            actionHandler.toggle2D3D();
+            ah.toggle2D3D();
         } else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
-            actionHandler.toggleDashboard();
+            ah.toggleDashboard();
         } else if (Keyboard.pressed(KEY_TOGGLE_PIP_VIEW)) {
-            actionHandler.togglePipVisible();
+            ah.togglePipVisible();
         } else if (Keyboard.pressed(KEY_SWITCH_EDITOR)) {
-            actionHandler.enterMapEditor();
+            ah.enterMapEditor();
         } else {
             context.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
         }

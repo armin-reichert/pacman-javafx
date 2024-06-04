@@ -135,9 +135,9 @@ public class StartPage implements Page {
     public void handleKeyboardInput() {
         if (Keyboard.pressed(KEYS_SHOW_GAME_PAGE)) {
             context.actionHandler().selectPage(GAME_PAGE);
-        } else if (Keyboard.pressed(KEYS_SELECT_NEXT_VARIANT)) {
+        } else if (Keyboard.pressed(KEYS_NEXT_VARIANT)) {
             context.actionHandler().selectNextGameVariant();
-        } else if (Keyboard.pressed(KEY_SELECT_PREV_VARIANT)) {
+        } else if (Keyboard.pressed(KEY_PREV_VARIANT)) {
             context.actionHandler().selectPrevGameVariant();
         } else if (Keyboard.pressed(KEY_FULLSCREEN)) {
             context.actionHandler().setFullScreen(true);

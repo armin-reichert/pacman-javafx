@@ -44,7 +44,7 @@ public class GamePage3D extends GamePage {
 
         if (isPlayScene3D) {
             var miPictureInPicture = new CheckMenuItem(context.tt("pip"));
-            miPictureInPicture.selectedProperty().bindBidirectional(PY_3D_PIP_ON);
+            miPictureInPicture.selectedProperty().bindBidirectional(PY_PIP_ON);
             contextMenu.getItems().add(miPictureInPicture);
 
             contextMenu.getItems().add(menuTitleItem(context.tt("select_perspective")));
