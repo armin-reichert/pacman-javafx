@@ -59,8 +59,8 @@ public class GamePage3D extends GamePage {
     private final PictureInPictureView pip;
     private ContextMenu contextMenu;
 
-    public GamePage3D(GameSceneContext context, double width, double height) {
-        super(context, width, height);
+    public GamePage3D(GameSceneContext context) {
+        super(context);
 
         pip = new PictureInPictureView(context);
         dashboard = new Dashboard(context);

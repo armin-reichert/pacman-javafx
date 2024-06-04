@@ -33,7 +33,7 @@ public class GamePage implements Page {
     protected final FadingPane helpInfoPopUp = new FadingPane();
     protected final Signature signature = new Signature();
 
-    public GamePage(GameSceneContext context, double width, double height) {
+    public GamePage(GameSceneContext context) {
         this.context = checkNotNull(context);
 
         layout = new CanvasLayoutPane();
@@ -55,8 +55,6 @@ public class GamePage implements Page {
         popupLayer.getChildren().addAll(helpInfoPopUp, signature);
 
         layout.getChildren().addAll(popupLayer, flashMessageView);
-
-        layout.resizeTo(width, height);
         createDebugInfoBindings();
     }
 
