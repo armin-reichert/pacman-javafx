@@ -258,6 +258,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         var page = new GamePage3D(this);
         page.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         page.layout().canvasDecoratedPy.bind(PY_CANVAS_DECORATED);
+        page.layout().setMinScaling(MIN_SCALING);
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
         return page;
     }

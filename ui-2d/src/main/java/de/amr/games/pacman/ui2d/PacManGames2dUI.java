@@ -27,6 +27,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.input.*;
 import javafx.scene.layout.Region;
@@ -66,6 +67,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     public static final String START_PAGE   = "startPage";
     public static final String GAME_PAGE    = "gamePage";
+
+    public static final double MIN_SCALING = 0.75;
 
     public static final KeyCodeCombination KEY_SHOW_HELP            = just(KeyCode.H);
     public static final KeyCodeCombination KEY_PAUSE                = just(KeyCode.P);
@@ -253,13 +256,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     public void init(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
-
         mainScene = createMainScene(width, height);
-        mainScene.setOnMouseClicked(this::onMouseClicked);
-        mainScene.setOnContextMenuRequested(this::onContextMenuRequested);
-        mainScene.setOnKeyPressed(e -> currentPage().handleKeyboardInput());
-
-        Keyboard.filterKeyEventsFrom(mainScene);
 
         pages.put(START_PAGE, createStartPage());
         pages.put(GAME_PAGE,  createGamePage());
@@ -269,8 +266,13 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
         stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy));
         stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
-        stage.setMinWidth(DEFAULT_CANVAS_WIDTH_UNSCALED);
-        stage.setMinHeight(DEFAULT_CANVAS_HEIGHT_UNSCALED);
+
+        //TODO this does not work yet correctly
+        Dimension2D minSize = CanvasLayoutPane.canvasContainerSize(
+                DEFAULT_CANVAS_WIDTH_UNSCALED, DEFAULT_CANVAS_HEIGHT_UNSCALED, 1.25 * MIN_SCALING);
+        stage.setMinWidth(minSize.getWidth());
+        stage.setMinHeight(minSize.getHeight());
+
         stage.centerOnScreen();
         stage.setScene(mainScene);
 
@@ -358,6 +360,10 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         var scene = new Scene(new Region(), width, height, Color.BLACK);
         scene.widthProperty().addListener((py, ov, nv) -> currentPage().setSize(scene.getWidth(), scene.getHeight()));
         scene.heightProperty().addListener((py, ov, nv) -> currentPage().setSize(scene.getWidth(), scene.getHeight()));
+        scene.setOnMouseClicked(this::onMouseClicked);
+        scene.setOnContextMenuRequested(this::onContextMenuRequested);
+        scene.setOnKeyPressed(e -> currentPage().handleKeyboardInput());
+        Keyboard.filterKeyEventsFrom(scene);
         return scene;
     }
 
@@ -375,6 +381,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         var page = new GamePage(this);
         page.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         page.layout().canvasDecoratedPy.bind(PY_CANVAS_DECORATED);
+        page.layout().setMinScaling(MIN_SCALING);
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
         return page;
     }

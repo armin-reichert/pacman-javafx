@@ -133,7 +133,7 @@ public class CanvasLayoutPane extends StackPane {
             () -> {
                 if (canvasDecoratedPy.get()) {
                     var size = canvasContainerSizeIfDecorated();
-                    double borderWidth = Math.max(5, Math.ceil(size.getHeight() / 55));
+                    double borderWidth = Math.max(5, Math.ceil(size.getHeight() / 55)); // TODO magic number?
                     double cornerRadius = Math.ceil(10 * getScaling());
                     return new Border(
                         new BorderStroke(canvasBorderColorPy.get(),
@@ -148,10 +148,14 @@ public class CanvasLayoutPane extends StackPane {
         ));
     }
 
-    private Dimension2D canvasContainerSizeIfDecorated() {
+    public static Dimension2D canvasContainerSize(double unscaledCanvasWidth, double unscaledCanvasHeight, double scaling) {
         return new Dimension2D(
-            Math.round((getUnscaledCanvasWidth() + 25) * getScaling()),
-            Math.round((getUnscaledCanvasHeight() + 15) * getScaling()));
+            Math.round(unscaledCanvasWidth * scaling + 25 * scaling), // TODO magic number?
+            Math.round(unscaledCanvasHeight * scaling + 15 * scaling) // TODO magic number?
+        );
+    }
+    private Dimension2D canvasContainerSizeIfDecorated() {
+        return canvasContainerSize(getUnscaledCanvasWidth(), getUnscaledCanvasHeight(), getScaling());
     }
 
     public BorderPane getCanvasLayer() {

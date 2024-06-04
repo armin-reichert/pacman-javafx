@@ -39,7 +39,6 @@ public class GamePage implements Page {
         layout = new CanvasLayoutPane();
         layout.canvasDecoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
         layout.setUnscaledCanvasSize(DEFAULT_CANVAS_WIDTH_UNSCALED, DEFAULT_CANVAS_HEIGHT_UNSCALED);
-        layout.setMinScaling(0.7);
         layout.setCanvasBorderColor(context.theme().color("palette.pale"));
         layout.getCanvasLayer().setBackground(context.theme().background("wallpaper.background"));
         layout.getCanvasContainer().setBackground(Ufx.coloredBackground(context.theme().color("canvas.background")));
