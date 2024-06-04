@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui3d.dashboard;
+package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import javafx.scene.layout.VBox;
@@ -22,7 +22,8 @@ public class Dashboard extends VBox {
         infoBoxes.add(new InfoBoxGameControl(sceneContext.theme(), sceneContext.tt("infobox.game_control.title")));
         infoBoxes.add(new InfoBoxGameInfo(sceneContext.theme(), sceneContext.tt("infobox.game_info.title")));
         infoBoxes.add(new InfoBoxActorInfo(sceneContext.theme(), sceneContext.tt("infobox.actor_info.title")));
-        infoBoxes.add(new InfoBox3D(sceneContext.theme(), sceneContext.tt("infobox.3D_settings.title")));
+        //TODO add in 3D UI
+        //infoBoxes.add(new InfoBox3D(sceneContext.theme(), sceneContext.tt("infobox.3D_settings.title")));
         infoBoxes.add(new InfoBoxKeys(sceneContext.theme(), sceneContext.tt("infobox.keyboard_shortcuts.title")));
         infoBoxes.add(new InfoBoxAbout(sceneContext.theme(), sceneContext.tt("infobox.about.title")));
         infoBoxes.forEach(infoBox -> {

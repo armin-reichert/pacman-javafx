@@ -23,6 +23,12 @@ public interface ActionHandler {
 
     void togglePaused();
 
+    void toggle2D3D();
+
+    void togglePipVisible();
+
+    void toggleDrawMode();
+
     void doSimulationSteps(int numSteps);
 
     void changeSimulationSpeed(int delta);
@@ -34,6 +40,8 @@ public interface ActionHandler {
     void startLevelTestMode();
 
     void toggleImmunity();
+
+    void toggleDashboard();
 
     void addCredit();
 
@@ -52,4 +60,5 @@ public interface ActionHandler {
     void cheatEnterNextLevel();
 
     void cheatKillAllEatableGhosts();
+
 }

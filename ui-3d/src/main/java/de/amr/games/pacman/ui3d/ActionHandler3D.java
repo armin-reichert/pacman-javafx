@@ -15,14 +15,6 @@ public interface ActionHandler3D extends ActionHandler {
 
     void selectPrevPerspective();
 
-    void toggle2D3D();
-
-    void toggleDashboard();
-
-    void togglePipVisible();
-
-    void toggleDrawMode();
-
     void enterMapEditor();
 
     void quitMapEditor();

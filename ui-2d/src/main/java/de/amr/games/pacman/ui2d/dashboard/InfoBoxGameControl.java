@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui3d.dashboard;
+package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
@@ -61,16 +61,16 @@ public class InfoBoxGameControl extends InfoBox {
                 context.gameController().restart(GameState.BOOT);
             }
         });
-        buttonsIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> actionHandler().startCutscenesTest());
-        buttonsIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> actionHandler().restartIntro());
+        buttonsIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> context.actionHandler().startCutscenesTest());
+        buttonsIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> context.actionHandler().restartIntro());
         comboInitialLives.setOnAction(e -> context.game().setInitialLives(comboInitialLives.getValue()));
-        buttonsLevelActions[GAME_LEVEL_START].setOnAction(e -> actionHandler().startGame());
-        buttonsLevelActions[GAME_LEVEL_QUIT].setOnAction(e -> actionHandler().restartIntro());
+        buttonsLevelActions[GAME_LEVEL_START].setOnAction(e -> context.actionHandler().startGame());
+        buttonsLevelActions[GAME_LEVEL_QUIT].setOnAction(e -> context.actionHandler().restartIntro());
         buttonsLevelActions[GAME_LEVEL_NEXT].setOnAction(e -> context.actionHandler().cheatEnterNextLevel());
         spinnerCredit.valueProperty().addListener((py, ov, nv) -> context.gameController().setCredit(nv));
         spinnerCredit.getValueFactory().setValue(context.gameController().credit());
-        cbAutopilot.setOnAction(e -> actionHandler().toggleAutopilot());
-        cbImmunity.setOnAction(e -> actionHandler().toggleImmunity());
+        cbAutopilot.setOnAction(e -> context.actionHandler().toggleAutopilot());
+        cbImmunity.setOnAction(e -> context.actionHandler().toggleImmunity());
     }
 
     @Override

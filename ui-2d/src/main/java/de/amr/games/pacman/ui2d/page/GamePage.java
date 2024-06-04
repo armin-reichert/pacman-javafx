@@ -5,11 +5,15 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.dashboard.Dashboard;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
+import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -26,12 +30,35 @@ import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
  */
 public class GamePage implements Page {
 
+    private static class PictureInPictureView extends Canvas {
+
+        private final PlayScene2D displayedScene = new PlayScene2D();
+
+        public PictureInPictureView(GameSceneContext context) {
+            displayedScene.setContext(context);
+            displayedScene.setCanvas(this);
+            displayedScene.setScoreVisible(true);
+            displayedScene.scalingPy.bind(heightProperty().divide(DEFAULT_CANVAS_HEIGHT_UNSCALED));
+            widthProperty().bind(heightProperty().multiply(0.777));
+            opacityProperty().bind(PY_PIP_OPACITY_PERCENTAGE.divide(100.0));
+        }
+
+        public void draw() {
+            if (isVisible()) {
+                displayedScene.draw();
+            }
+        }
+    }
+
     protected final GameSceneContext context;
     protected final CanvasLayoutPane layout;
     protected final Pane popupLayer = new Pane();
     protected final FlashMessageView flashMessageView = new FlashMessageView();
     protected final FadingPane helpInfoPopUp = new FadingPane();
     protected final Signature signature = new Signature();
+    private final BorderPane dashboardLayer;
+    private final Dashboard dashboard;
+    private final PictureInPictureView pip;
 
     public GamePage(GameSceneContext context) {
         this.context = checkNotNull(context);
@@ -52,6 +79,24 @@ public class GamePage implements Page {
         popupLayer.maxWidthProperty().bind(canvasContainer.maxWidthProperty());
         popupLayer.prefWidthProperty().bind(canvasContainer.prefWidthProperty());
         popupLayer.getChildren().addAll(helpInfoPopUp, signature);
+
+        pip = new PictureInPictureView(context);
+        dashboard = new Dashboard(context);
+
+        dashboardLayer = new BorderPane();
+        dashboardLayer.setLeft(dashboard);
+        dashboardLayer.setRight(pip);
+
+        layout.getChildren().add(dashboardLayer);
+        layout.getCanvasLayer().setBackground(context.theme().background("wallpaper.background"));
+
+        // data binding
+        pip.heightProperty().bind(PY_PIP_HEIGHT);
+        PY_3D_PIP_ON.addListener((py, ov, nv) -> updateDashboardLayer());
+        dashboard.visibleProperty().addListener((py, ov, nv) -> updateDashboardLayer());
+
+        updateDashboardLayer();
+
 
         layout.getChildren().addAll(popupLayer, flashMessageView);
         createDebugInfoBindings();
@@ -77,6 +122,16 @@ public class GamePage implements Page {
     public CanvasLayoutPane layout() {
         return layout;
     }
+
+    public Dashboard dashboard() {
+        return dashboard;
+    }
+
+    protected void updateDashboardLayer() {
+        dashboardLayer.setVisible(dashboard.isVisible() || PY_3D_PIP_ON.get());
+        layout.requestFocus();
+    }
+
 
     public Signature signature() {
         return signature;
@@ -106,6 +161,7 @@ public class GamePage implements Page {
             scene2D.clearCanvas();
             adaptCanvasSizeToCurrentWorld();
         }
+        updateDashboardLayer();
     }
 
     public void adaptCanvasSizeToCurrentWorld() {
@@ -146,6 +202,9 @@ public class GamePage implements Page {
         context.currentGameScene().ifPresent(GameScene::draw);
         flashMessageView.update();
         popupLayer.setVisible(true);
+        dashboard.update();
+        pip.setVisible(PY_3D_PIP_ON.get() && !isCurrentGameScene2D()); //TODO
+        pip.draw();
     }
 
     @Override
@@ -181,6 +240,12 @@ public class GamePage implements Page {
             actionHandler.selectPage(START_PAGE);
         } else if (Keyboard.pressed(KEY_TEST_LEVELS)) {
             actionHandler.startLevelTestMode();
+        } else if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
+            actionHandler.toggle2D3D();
+        } else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
+            actionHandler.toggleDashboard();
+        } else if (Keyboard.pressed(KEY_TOGGLE_PIP_VIEW)) {
+            actionHandler.togglePipVisible();
         } else {
             context.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
         }

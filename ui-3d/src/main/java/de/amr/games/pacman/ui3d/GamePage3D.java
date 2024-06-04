@@ -8,17 +8,13 @@ import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
-import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.Keyboard;
+import de.amr.games.pacman.ui2d.dashboard.Dashboard;
 import de.amr.games.pacman.ui2d.util.Ufx;
-import de.amr.games.pacman.ui3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import javafx.beans.binding.Bindings;
-import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
@@ -34,61 +30,21 @@ import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
  */
 public class GamePage3D extends GamePage {
 
-    private static class PictureInPictureView extends Canvas {
-
-        private final PlayScene2D displayedScene = new PlayScene2D();
-
-        public PictureInPictureView(GameSceneContext context) {
-            displayedScene.setContext(context);
-            displayedScene.setCanvas(this);
-            displayedScene.setScoreVisible(true);
-            displayedScene.scalingPy.bind(heightProperty().divide(DEFAULT_CANVAS_HEIGHT_UNSCALED));
-            widthProperty().bind(heightProperty().multiply(0.777));
-            opacityProperty().bind(PY_PIP_OPACITY_PERCENTAGE.divide(100.0));
-        }
-
-        public void draw() {
-            if (isVisible()) {
-                displayedScene.draw();
-            }
-        }
-    }
-
-    private final BorderPane dashboardLayer;
-    private final Dashboard dashboard;
-    private final PictureInPictureView pip;
     private ContextMenu contextMenu;
 
     public GamePage3D(GameSceneContext context) {
         super(context);
-
-        pip = new PictureInPictureView(context);
-        dashboard = new Dashboard(context);
-
-        dashboardLayer = new BorderPane();
-        dashboardLayer.setLeft(dashboard);
-        dashboardLayer.setRight(pip);
-
-        layout.getChildren().add(dashboardLayer);
         layout.backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> {
-                if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
-                    return Ufx.coloredBackground(Color.BLACK);
-                } else {
-                    var wallpaperKey = PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
-                    return this.context.theme().background(wallpaperKey);
-                }
-            },
-            PY_3D_DRAW_MODE, PY_3D_NIGHT_MODE
+                () -> {
+                    if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
+                        return Ufx.coloredBackground(Color.BLACK);
+                    } else {
+                        var wallpaperKey = PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
+                        return this.context.theme().background(wallpaperKey);
+                    }
+                },
+                PY_3D_DRAW_MODE, PY_3D_NIGHT_MODE
         ));
-        layout.getCanvasLayer().setBackground(context.theme().background("wallpaper.background"));
-
-        // data binding
-        pip.heightProperty().bind(PY_PIP_HEIGHT);
-        PY_3D_PIP_ON.addListener((py, ov, nv) -> updateDashboardLayer());
-        dashboard.visibleProperty().addListener((py, ov, nv) -> updateDashboardLayer());
-
-        updateDashboardLayer();
     }
 
     @Override
@@ -147,10 +103,6 @@ public class GamePage3D extends GamePage {
         contextMenu.show(rootPane(), event.getScreenX(), event.getScreenY());
     }
 
-    public Dashboard dashboard() {
-        return dashboard;
-    }
-
     public void hideContextMenu() {
         if (contextMenu != null) {
             contextMenu.hide();
@@ -175,13 +127,8 @@ public class GamePage3D extends GamePage {
                 adaptCanvasSizeToCurrentWorld();
             }
         }
-        hideContextMenu();
         updateDashboardLayer();
-    }
-
-    private void updateDashboardLayer() {
-        dashboardLayer.setVisible(dashboard.isVisible() || PY_3D_PIP_ON.get());
-        layout.requestFocus();
+        hideContextMenu();
     }
 
     private boolean isCurrentGameScene3D() {
@@ -196,9 +143,6 @@ public class GamePage3D extends GamePage {
     @Override
     public void render() {
         super.render();
-        dashboard.update();
-        pip.setVisible(PY_3D_PIP_ON.get() && isCurrentGameScene3D());
-        pip.draw();
     }
 
     @Override
@@ -206,12 +150,6 @@ public class GamePage3D extends GamePage {
         var actionHandler = (ActionHandler3D) context.actionHandler();
         if (Keyboard.pressed(KEY_SWITCH_EDITOR)) {
             actionHandler.enterMapEditor();
-        } else if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
-            actionHandler.toggle2D3D();
-        } else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
-            actionHandler.toggleDashboard();
-        } else if (Keyboard.pressed(KEY_TOGGLE_PIP_VIEW)) {
-            actionHandler.togglePipVisible();
         } else {
             super.handleKeyboardInput();
         }

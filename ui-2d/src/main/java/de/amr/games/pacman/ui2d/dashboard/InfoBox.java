@@ -2,15 +2,13 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui3d.dashboard;
+package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui2d.util.Ufx;
-import de.amr.games.pacman.ui3d.ActionHandler3D;
-import de.amr.games.pacman.ui3d.scene.PlayScene3D;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -83,22 +81,10 @@ public class InfoBox extends TitledPane {
 
     public void init(GameSceneContext sceneContext) {
         this.context = sceneContext;
-        if (!(sceneContext.actionHandler() instanceof ActionHandler3D)) {
-            throw new IllegalArgumentException("Action handler in scene context must be the 3D version");
-        }
     }
 
     public void update() {
         infoTexts.forEach(InfoText::update);
-    }
-
-    protected ActionHandler3D actionHandler() {
-        return (ActionHandler3D) context.actionHandler();
-    }
-
-    protected boolean isCurrentGameScene3D() {
-        return context.currentGameScene().isPresent()
-            && context.currentGameScene().get() instanceof PlayScene3D;
     }
 
     protected Supplier<String> ifLevelExists(Function<GameLevel, String> infoSupplier) {

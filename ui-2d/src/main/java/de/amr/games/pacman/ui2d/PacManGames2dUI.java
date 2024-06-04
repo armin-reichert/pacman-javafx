@@ -23,16 +23,15 @@ import javafx.animation.PauseTransition;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.input.*;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.DrawMode;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -48,6 +47,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.ui2d.util.Keyboard.*;
+import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
 /**
@@ -96,10 +96,14 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final KeyCodeCombination[] KEYS_ADD_CREDIT        = {just(KeyCode.DIGIT5), just(KeyCode.NUMPAD5)};
     public static final KeyCodeCombination KEY_BOOT                 = just(KeyCode.F3);
     public static final KeyCodeCombination KEY_FULLSCREEN           = just(KeyCode.F11);
+    public static final KeyCodeCombination[] KEYS_TOGGLE_DASHBOARD    = {just(KeyCode.F1), alt(KeyCode.B)};
+    public static final KeyCodeCombination KEY_TOGGLE_PIP_VIEW        = just(KeyCode.F2);
+    public static final KeyCodeCombination KEY_TOGGLE_2D_3D           = alt(KeyCode.DIGIT3);
 
     public static final int DEFAULT_CANVAS_WIDTH_UNSCALED = GameModel.ARCADE_MAP_TILES_X * TS; // 28*8 = 224
     public static final int DEFAULT_CANVAS_HEIGHT_UNSCALED = GameModel.ARCADE_MAP_TILES_Y * TS; // 36*8 = 288
 
+    public static final IntegerProperty PY_SIMULATION_STEPS           = new SimpleIntegerProperty(1);
     public static final BooleanProperty PY_IMMUNITY = new SimpleBooleanProperty(false) {
         @Override
         protected void invalidated() {
@@ -109,6 +113,11 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final BooleanProperty PY_USE_AUTOPILOT   = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_SHOW_DEBUG_INFO = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_CANVAS_DECORATED = new SimpleBooleanProperty(true);
+    public static final IntegerProperty PY_PIP_HEIGHT                 = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_PX.y());
+    public static final IntegerProperty PY_PIP_OPACITY_PERCENTAGE     = new SimpleIntegerProperty(100);
+    public static final BooleanProperty PY_3D_PIP_ON                  = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_3D_ENABLED                 = new SimpleBooleanProperty(true);
+    public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE      = new SimpleObjectProperty<>(DrawMode.FILL);
 
     public static final String SIGNATURE_TEXT = "Remake (2021-2024) by Armin Reichert";
 
@@ -252,6 +261,19 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         theme.set("pacman_xxl.icon",                 rm.loadImage("graphics/icons/pacman.png"));
         theme.set("pacman_xxl.helpButton.icon",      rm.loadImage("graphics/icons/help-blue-64.png"));
         theme.set("pacman_xxl.startpage.image",      rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
+
+
+        // dashboard
+        theme.set("image.armin1970", rm.loadImage("graphics/armin.jpg"));
+        theme.set("icon.play",       rm.loadImage("graphics/icons/play.png"));
+        theme.set("icon.stop",       rm.loadImage("graphics/icons/stop.png"));
+        theme.set("icon.step",       rm.loadImage("graphics/icons/step.png"));
+
+        theme.set("infobox.min_col_width",         200);
+        theme.set("infobox.min_label_width",       140);
+        theme.set("infobox.text_color",            Color.WHITE);
+        theme.set("infobox.label_font",            Font.font("Sans", 12));
+        theme.set("infobox.text_font",             rm.loadFont("fonts/SplineSansMono-Regular.ttf", 12));
     }
 
     public void init(Stage stage, double width, double height) {
@@ -770,6 +792,24 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         Logger.info("Game variant ({}) {}", game(), clock.isPaused() ? "paused" : "resumed");
     }
 
+
+    @Override
+    public void toggleDashboard() {
+        GamePage gamePage = page(GAME_PAGE);
+        gamePage.dashboard().toggleVisibility();
+    }
+
+    @Override
+    public void toggleDrawMode() {
+        PY_3D_DRAW_MODE.set(PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+    }
+
+    @Override
+    public void togglePipVisible() {
+        toggle(PY_3D_PIP_ON);
+        showFlashMessage(tt(PY_3D_PIP_ON.get() ? "pip_on" : "pip_off"));
+    }
+
     @Override
     public void doSimulationSteps(int numSteps) {
         if (clock.isPaused()) {
@@ -823,6 +863,11 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         boolean auto = PY_USE_AUTOPILOT.get();
         showFlashMessage(tt(auto ? "autopilot_on" : "autopilot_off"));
         playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
+    }
+
+    @Override
+    public void toggle2D3D() {
+        // not supported
     }
 
     @Override

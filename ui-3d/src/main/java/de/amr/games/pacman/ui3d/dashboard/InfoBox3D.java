@@ -5,6 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.dashboard;
 
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.ui2d.dashboard.InfoBox;
+import de.amr.games.pacman.ui2d.dashboard.InfoText;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui3d.scene.Perspective;
@@ -61,7 +63,7 @@ public class InfoBox3D extends InfoBox {
         cbFloorTextureRandom = checkBox("Random Floor Texture", () -> toggle(PY_3D_FLOOR_TEXTURE_RND));
         comboPerspectives = comboBox("Perspective", Perspective.values());
 
-        infoText("Camera", this::currentSceneCameraInfo).available(this::isCurrentGameScene3D);
+        infoText("Camera", this::currentSceneCameraInfo); //TODO .available(this::isCurrentGameScene3D);
 
         // Editors for perspective TOTAL:
         spinnerCamRotate = integerSpinner("- Rotate X", -180, 180, Perspective.TOTAL_ROTATE);
@@ -130,7 +132,7 @@ public class InfoBox3D extends InfoBox {
         cbNightMode.setOnAction(e -> toggle(PY_3D_NIGHT_MODE));
         cbPacLighted.setOnAction(e -> toggle(PY_3D_PAC_LIGHT_ENABLED));
         cbAxesVisible.setOnAction(e -> toggle(PY_3D_AXES_VISIBLE));
-        cbWireframeMode.setOnAction(e -> actionHandler().toggleDrawMode());
+        cbWireframeMode.setOnAction(e -> context.actionHandler().toggleDrawMode());
     }
 
     @Override

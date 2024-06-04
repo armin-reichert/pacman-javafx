@@ -13,6 +13,7 @@ open module de.amr.games.pacman.ui2d {
     requires javafx.media;
 
     exports de.amr.games.pacman.ui2d;
+    exports de.amr.games.pacman.ui2d.dashboard;
     exports de.amr.games.pacman.ui2d.util;
     exports de.amr.games.pacman.ui2d.rendering;
     exports de.amr.games.pacman.ui2d.scene;

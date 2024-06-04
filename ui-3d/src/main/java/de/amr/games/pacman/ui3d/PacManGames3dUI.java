@@ -60,12 +60,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static final String PLAY_SCENE_3D                          = "play3D";
     public static final String EDITOR_PAGE                            = "editorPage";
 
-    public static final IntegerProperty PY_PIP_HEIGHT                 = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_PX.y());
-    public static final IntegerProperty PY_PIP_OPACITY_PERCENTAGE     = new SimpleIntegerProperty(100);
-    public static final IntegerProperty PY_SIMULATION_STEPS           = new SimpleIntegerProperty(1);
     public static final BooleanProperty PY_3D_AXES_VISIBLE            = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE      = new SimpleObjectProperty<>(DrawMode.FILL);
-    public static final BooleanProperty PY_3D_ENABLED                 = new SimpleBooleanProperty(true);
     public static final BooleanProperty PY_3D_ENERGIZER_EXPLODES      = new SimpleBooleanProperty(true);
     public static final ObjectProperty<Color> PY_3D_FLOOR_COLOR       = new SimpleObjectProperty<>(Color.grayRgb(0x33));
     public static final StringProperty  PY_3D_FLOOR_TEXTURE           = new SimpleStringProperty("knobs");
@@ -74,13 +69,9 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     public static final BooleanProperty PY_3D_NIGHT_MODE              = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_3D_PAC_LIGHT_ENABLED       = new SimpleBooleanProperty(true);
     public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE = new SimpleObjectProperty<>(Perspective.FOLLOWING_PLAYER);
-    public static final BooleanProperty PY_3D_PIP_ON                  = new SimpleBooleanProperty(false);
     public static final DoubleProperty  PY_3D_WALL_HEIGHT             = new SimpleDoubleProperty(4.5);
     public static final DoubleProperty  PY_3D_WALL_OPACITY            = new SimpleDoubleProperty(0.9);
 
-    public static final KeyCodeCombination[] KEYS_TOGGLE_DASHBOARD    = {just(KeyCode.F1), alt(KeyCode.B)};
-    public static final KeyCodeCombination KEY_TOGGLE_PIP_VIEW        = just(KeyCode.F2);
-    public static final KeyCodeCombination KEY_TOGGLE_2D_3D           = alt(KeyCode.DIGIT3);
     public static final KeyCodeCombination KEY_PREV_PERSPECTIVE       = alt(KeyCode.LEFT);
     public static final KeyCodeCombination KEY_NEXT_PERSPECTIVE       = alt(KeyCode.RIGHT);
     public static final KeyCodeCombination KEY_SWITCH_EDITOR          = shift_alt(KeyCode.E);
@@ -115,11 +106,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
 
         theme.set("model3D.wallpaper.night", rm.imageBackground("graphics/sea-wallpaper-night.jpg",
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, FILL_PAGE));
-
-        theme.set("image.armin1970", rm.loadImage("graphics/armin.jpg"));
-        theme.set("icon.play",       rm.loadImage("graphics/icons/play.png"));
-        theme.set("icon.stop",       rm.loadImage("graphics/icons/stop.png"));
-        theme.set("icon.step",       rm.loadImage("graphics/icons/step.png"));
 
         theme.addAllToArray("texture.names", new String[] {"knobs", "plastic", "wood"});
         for (var name : theme.getArray("texture.names")) {
@@ -174,13 +160,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("livescounter.plate.radius",     6.0);
         theme.set("livescounter.plate.thickness",  1.0);
         theme.set("livescounter.light.color",      Color.CORNFLOWERBLUE);
-
-        // dashboard
-        theme.set("infobox.min_col_width",         200);
-        theme.set("infobox.min_label_width",       140);
-        theme.set("infobox.text_color",            Color.WHITE);
-        theme.set("infobox.label_font",            Font.font("Sans", 12));
-        theme.set("infobox.text_font",             rm.loadFont("fonts/SplineSansMono-Regular.ttf", 12));
     }
 
     public void init(Stage stage, double width, double height) {
@@ -301,11 +280,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     }
 
     @Override
-    public void toggleDrawMode() {
-        PY_3D_DRAW_MODE.set(PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
-    }
-
-    @Override
     public void toggle2D3D() {
         currentGameScene().ifPresent(gameScene -> {
             toggle(PY_3D_ENABLED);
@@ -319,17 +293,5 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
                 showFlashMessage(tt(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
             }
         });
-    }
-
-    @Override
-    public void togglePipVisible() {
-        toggle(PY_3D_PIP_ON);
-        showFlashMessage(tt(PY_3D_PIP_ON.get() ? "pip_on" : "pip_off"));
-    }
-
-    @Override
-    public void toggleDashboard() {
-        GamePage3D gamePage = page(GAME_PAGE);
-        gamePage.dashboard().toggleVisibility();
     }
 }
