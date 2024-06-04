@@ -8,15 +8,11 @@ import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
-import de.amr.games.pacman.ui2d.util.Keyboard;
-import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.scene.Perspective;
-import javafx.beans.binding.Bindings;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -33,17 +29,6 @@ public class GamePage3D extends GamePage {
 
     public GamePage3D(GameSceneContext context) {
         super(context);
-        layout.backgroundProperty().bind(Bindings.createObjectBinding(
-                () -> {
-                    if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
-                        return Ufx.coloredBackground(Color.BLACK);
-                    } else {
-                        var wallpaperKey = PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
-                        return this.context.theme().background(wallpaperKey);
-                    }
-                },
-                PY_3D_DRAW_MODE, PY_3D_NIGHT_MODE
-        ));
         dashboard().addInfoBox(3, new InfoBox3D(context.theme(), context.tt("infobox.3D_settings.title")));
     }
 
@@ -138,10 +123,5 @@ public class GamePage3D extends GamePage {
     @Override
     protected boolean isCurrentGameScene2D() {
         return !isCurrentGameScene3D();
-    }
-
-    @Override
-    public void render() {
-        super.render();
     }
 }

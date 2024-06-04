@@ -9,6 +9,7 @@ import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
+import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import de.amr.games.pacman.ui3d.scene.PlayScene3D;
@@ -23,6 +24,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.DrawMode;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
@@ -176,6 +178,17 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         page.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         page.layout().canvasDecoratedPy.bind(PY_CANVAS_DECORATED);
         page.layout().setMinScaling(MIN_SCALING);
+        page.layout().backgroundProperty().bind(Bindings.createObjectBinding(
+            () -> {
+                if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
+                    return Ufx.coloredBackground(Color.BLACK);
+                } else {
+                    var wallpaperKey = PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
+                    return theme().background(wallpaperKey);
+                }
+            },
+            PY_3D_DRAW_MODE, PY_3D_NIGHT_MODE
+        ));
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
         return page;
     }
