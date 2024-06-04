@@ -51,7 +51,7 @@ import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
 /**
- * 2D-only user interface for Pac-Man and Ms. Pac-Man games. No 3D play scene, no dashboard, no picture-in-picture view.
+ * 2D-only user interface for Pac-Man and Ms. Pac-Man games. No 3D scenes.
  *
  * @author Armin Reichert
  */
