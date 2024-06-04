@@ -13,11 +13,18 @@ import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -30,7 +37,7 @@ import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
  */
 public class GamePage implements Page {
 
-    private static class PictureInPictureView extends Canvas {
+    public static class PictureInPictureView extends Canvas {
 
         private final PlayScene2D displayedScene = new PlayScene2D();
 
@@ -56,9 +63,10 @@ public class GamePage implements Page {
     protected final FlashMessageView flashMessageView = new FlashMessageView();
     protected final FadingPane helpInfoPopUp = new FadingPane();
     protected final Signature signature = new Signature();
-    private final BorderPane dashboardLayer;
-    private final Dashboard dashboard;
-    private final PictureInPictureView pip;
+    protected final BorderPane dashboardLayer;
+    protected final Dashboard dashboard;
+    protected final PictureInPictureView pip;
+    protected ContextMenu contextMenu;
 
     public GamePage(GameSceneContext context) {
         this.context = checkNotNull(context);
@@ -162,6 +170,43 @@ public class GamePage implements Page {
             layout.scalingPy, layout.getCanvasContainer().heightProperty()
         ));
     }
+
+    public void onContextMenuRequested(ContextMenuEvent event) {
+        if (contextMenu != null) {
+            contextMenu.hide();
+        }
+        if (!context.isCurrentGameScene(PLAY_SCENE)) {
+            return;
+        }
+        contextMenu = new ContextMenu();
+        contextMenu.getItems().add(menuTitleItem(context.tt("pacman")));
+
+        var miAutopilot = new CheckMenuItem(context.tt("autopilot"));
+        miAutopilot.selectedProperty().bindBidirectional(PY_USE_AUTOPILOT);
+        contextMenu.getItems().add(miAutopilot);
+
+        var miImmunity = new CheckMenuItem(context.tt("immunity"));
+        miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
+        contextMenu.getItems().add(miImmunity);
+
+        contextMenu.requestFocus();
+        contextMenu.show(rootPane(), event.getScreenX(), event.getScreenY());
+    }
+
+    public void hideContextMenu() {
+        if (contextMenu != null) {
+            contextMenu.hide();
+        }
+    }
+
+    protected MenuItem menuTitleItem(String titleText) {
+        var text = new Text(titleText);
+        text.setFont(Font.font("Dialog", FontWeight.BLACK, 14));
+        text.setFill(Color.CORNFLOWERBLUE); // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
+        return new CustomMenuItem(text);
+    }
+
+
 
     public void onGameSceneChanged(GameScene newGameScene) {
         if (newGameScene instanceof GameScene2D scene2D) {

@@ -12,10 +12,6 @@ import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 
 import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_IMMUNITY;
 import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
@@ -24,8 +20,6 @@ import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
  * @author Armin Reichert
  */
 public class GamePage3D extends GamePage {
-
-    private ContextMenu contextMenu;
 
     public GamePage3D(GameSceneContext context) {
         super(context);
@@ -86,19 +80,6 @@ public class GamePage3D extends GamePage {
 
         contextMenu.requestFocus();
         contextMenu.show(rootPane(), event.getScreenX(), event.getScreenY());
-    }
-
-    public void hideContextMenu() {
-        if (contextMenu != null) {
-            contextMenu.hide();
-        }
-    }
-
-    private MenuItem menuTitleItem(String titleText) {
-        var text = new Text(titleText);
-        text.setFont(Font.font("Dialog", FontWeight.BLACK, 14));
-        text.setFill(Color.CORNFLOWERBLUE); // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
-        return new CustomMenuItem(text);
     }
 
     @Override
