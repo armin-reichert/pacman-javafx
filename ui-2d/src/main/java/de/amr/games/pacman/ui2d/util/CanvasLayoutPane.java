@@ -2,7 +2,7 @@ package de.amr.games.pacman.ui2d.util;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.geometry.Point2D;
+import javafx.geometry.Dimension2D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
@@ -89,8 +89,8 @@ public class CanvasLayoutPane extends StackPane {
         double width = canvas.getWidth(), height = canvas.getHeight();
         if (isCanvasDecorated()) {
             var size = canvasContainerSizeIfDecorated();
-            width = size.getX();
-            height = size.getY();
+            width = size.getWidth();
+            height = size.getHeight();
         }
         setAllSizes(canvasContainer, width, height);
         Logger.debug("Canvas container size set to w={} h={}", width, height);
@@ -119,7 +119,7 @@ public class CanvasLayoutPane extends StackPane {
                     double s = getScaling();
                     var size = canvasContainerSizeIfDecorated();
                     double arcSize = 26 * s;
-                    var clipRect = new Rectangle(size.getX(), size.getY());
+                    var clipRect = new Rectangle(size.getWidth(), size.getHeight());
                     clipRect.setArcWidth(arcSize);
                     clipRect.setArcHeight(arcSize);
                     return clipRect;
@@ -133,7 +133,7 @@ public class CanvasLayoutPane extends StackPane {
             () -> {
                 if (canvasDecoratedPy.get()) {
                     var size = canvasContainerSizeIfDecorated();
-                    double borderWidth = Math.max(5, Math.ceil(size.getY() / 55));
+                    double borderWidth = Math.max(5, Math.ceil(size.getHeight() / 55));
                     double cornerRadius = Math.ceil(10 * getScaling());
                     return new Border(
                         new BorderStroke(canvasBorderColorPy.get(),
@@ -148,8 +148,8 @@ public class CanvasLayoutPane extends StackPane {
         ));
     }
 
-    private Point2D canvasContainerSizeIfDecorated() {
-        return new Point2D(
+    private Dimension2D canvasContainerSizeIfDecorated() {
+        return new Dimension2D(
             Math.round((getUnscaledCanvasWidth() + 25) * getScaling()),
             Math.round((getUnscaledCanvasHeight() + 15) * getScaling()));
     }
