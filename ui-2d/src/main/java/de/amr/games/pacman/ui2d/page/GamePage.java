@@ -206,8 +206,6 @@ public class GamePage implements Page {
         return new CustomMenuItem(text);
     }
 
-
-
     public void onGameSceneChanged(GameScene newGameScene) {
         if (newGameScene instanceof GameScene2D scene2D) {
             scene2D.clearCanvas();

@@ -10,6 +10,7 @@ import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui2d.util.Ufx;
+import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import de.amr.games.pacman.ui3d.scene.PlayScene3D;
@@ -190,6 +191,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             PY_3D_DRAW_MODE, PY_3D_NIGHT_MODE
         ));
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
+        page.dashboard().addInfoBox(3, new InfoBox3D(theme, tt("infobox.3D_settings.title")));
         return page;
     }
 

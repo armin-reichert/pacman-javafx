@@ -8,7 +8,6 @@ import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
-import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
@@ -23,7 +22,6 @@ public class GamePage3D extends GamePage {
 
     public GamePage3D(GameSceneContext context) {
         super(context);
-        dashboard().addInfoBox(3, new InfoBox3D(context.theme(), context.tt("infobox.3D_settings.title")));
     }
 
     @Override
@@ -84,7 +82,7 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void onGameSceneChanged(GameScene newGameScene) {
-        if (isCurrentGameScene3D()) {
+        if (context.isCurrentGameScene(PLAY_SCENE_3D)) {
             layout().replaceCanvasLayer(newGameScene.root());
         } else {
             layout().restoreCanvasLayer();
@@ -95,14 +93,5 @@ public class GamePage3D extends GamePage {
         }
         updateDashboardLayer();
         hideContextMenu();
-    }
-
-    private boolean isCurrentGameScene3D() {
-        return context.isCurrentGameScene(PLAY_SCENE_3D);
-    }
-
-    @Override
-    protected boolean isCurrentGameScene2D() {
-        return !isCurrentGameScene3D();
     }
 }
