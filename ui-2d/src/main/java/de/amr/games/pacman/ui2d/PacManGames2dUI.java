@@ -200,17 +200,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void quitMapEditor() {
-        editor.showConfirmation(
-                editor::saveMapFileAs,
-                () -> {
-                    editor.stop();
-                    selectPage(START_PAGE);
-                    stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
-                }
-        );
+        editor.showConfirmation(editor::saveMapFileAs, () -> {
+            stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
+            editor.stop();
+            selectPage(START_PAGE);
+        });
     }
-
-
 
     public void loadAssets() {
         bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", getClass().getModule()));
