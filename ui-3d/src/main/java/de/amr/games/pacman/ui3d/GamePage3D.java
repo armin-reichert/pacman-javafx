@@ -14,7 +14,7 @@ import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.dashboard.Dashboard;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import javafx.beans.binding.Bindings;
-import javafx.scene.Scene;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
@@ -25,6 +25,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_IMMUNITY;
 import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
 
@@ -53,16 +54,14 @@ public class GamePage3D extends GamePage {
         }
     }
 
-    private final Scene parentScene;
     private final BorderPane dashboardLayer;
     private final Dashboard dashboard;
     private final PictureInPictureView pip;
     private ContextMenu contextMenu;
 
-    public GamePage3D(Scene parentScene, GameSceneContext context, double width, double height) {
+    public GamePage3D(GameSceneContext context, double width, double height) {
         super(context, width, height);
 
-        this.parentScene = parentScene;
         pip = new PictureInPictureView(context);
         dashboard = new Dashboard(context);
 
@@ -150,7 +149,7 @@ public class GamePage3D extends GamePage {
         contextMenu.getItems().add(miImmunity);
 
         contextMenu.requestFocus();
-        contextMenu.show(parentScene.getRoot(), event.getScreenX(), event.getScreenY());
+        contextMenu.show(rootPane(), event.getScreenX(), event.getScreenY());
     }
 
     public Dashboard dashboard() {
