@@ -18,6 +18,7 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
 
@@ -37,22 +38,12 @@ public class GamePage implements Page {
         this.context = checkNotNull(context);
 
         layout = new CanvasLayoutPane();
-        layout.setUnscaledCanvasWidth(CANVAS_WIDTH_UNSCALED);
-        layout.setUnscaledCanvasHeight(CANVAS_HEIGHT_UNSCALED);
+        layout.canvasDecoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
+        layout.setUnscaledCanvasSize(DEFAULT_CANVAS_WIDTH_UNSCALED, DEFAULT_CANVAS_HEIGHT_UNSCALED);
         layout.setMinScaling(0.7);
         layout.setCanvasBorderColor(context.theme().color("palette.pale"));
         layout.getCanvasLayer().setBackground(context.theme().background("wallpaper.background"));
         layout.getCanvasContainer().setBackground(Ufx.coloredBackground(context.theme().color("canvas.background")));
-
-        layout.canvasDecoratedPy.addListener((py, ov, nv) -> {
-            if (context.game().world() != null) {
-                layout.updateLayout(context.game().world().numRows(), context.game().world().numCols());
-            } else {
-                layout.doLayout(layout.getScaling(), true);
-            }
-        });
-
-        createDebugInfoBindings();
 
         // keep popup layer size same as canvas container
         var canvasContainer = layout.getCanvasContainer();
@@ -62,11 +53,37 @@ public class GamePage implements Page {
         popupLayer.minWidthProperty().bind(canvasContainer.minWidthProperty());
         popupLayer.maxWidthProperty().bind(canvasContainer.maxWidthProperty());
         popupLayer.prefWidthProperty().bind(canvasContainer.prefWidthProperty());
-
         popupLayer.getChildren().addAll(helpInfoPopUp, signature);
 
         layout.getChildren().addAll(popupLayer, flashMessageView);
-        setSize(width, height);
+
+        layout.resizeTo(width, height);
+        createDebugInfoBindings();
+    }
+
+    @Override
+    public Pane rootPane() {
+        return layout;
+    }
+
+    @Override
+    public void onSelected() {
+        context.actionHandler().reboot();
+        context.gameClock().start();
+        Logger.info("Clock started, speed={} Hz", context.gameClock().getTargetFrameRate());
+    }
+
+    @Override
+    public void setSize(double width, double height) {
+        layout.resizeTo(width, height);
+    }
+
+    public CanvasLayoutPane layout() {
+        return layout;
+    }
+
+    public Signature signature() {
+        return signature;
     }
 
     public void configureSignature(Font font, String... words) {
@@ -88,34 +105,19 @@ public class GamePage implements Page {
         ));
     }
 
-    @Override
-    public Pane rootPane() {
-        return layout;
-    }
-
-    @Override
-    public void onSelected() {
-        context.actionHandler().reboot();
-        context.gameClock().start();
-        Logger.info("Clock started, speed={} Hz", context.gameClock().getTargetFrameRate());
-    }
-
-    @Override
-    public void setSize(double width, double height) {
-        layout.setSize(width, height);
-    }
-
-    public CanvasLayoutPane layout() {
-        return layout;
-    }
-
-    public Signature signature() {
-        return signature;
-    }
-
     public void onGameSceneChanged(GameScene newGameScene) {
         if (newGameScene instanceof GameScene2D scene2D) {
             scene2D.clearCanvas();
+            adaptCanvasSizeToCurrentWorld();
+        }
+    }
+
+    public void adaptCanvasSizeToCurrentWorld() {
+        var world = context.game().world();
+        if (world != null) {
+            layout.setUnscaledCanvasSize(world.numCols() * TS, world.numRows() * TS);
+        } else {
+            layout.setUnscaledCanvasSize(DEFAULT_CANVAS_WIDTH_UNSCALED, DEFAULT_CANVAS_HEIGHT_UNSCALED);
         }
     }
 
@@ -136,7 +138,8 @@ public class GamePage implements Page {
     }
 
     protected boolean isCurrentGameScene2D() {
-        return true;
+        return context.currentGameScene().isPresent()
+            && context.currentGameScene().get() instanceof GameScene2D;
     }
 
     public FlashMessageView flashMessageView() {
@@ -155,9 +158,7 @@ public class GamePage implements Page {
         if (Keyboard.pressed(KEY_AUTOPILOT)) {
             actionHandler.toggleAutopilot();
         } else if (Keyboard.pressed(KEY_BOOT)) {
-            if (context.gameState() != GameState.BOOT) {
-                actionHandler.reboot();
-            }
+            actionHandler.reboot();
         } else if (Keyboard.pressed(KEY_DEBUG_INFO)) {
             Ufx.toggle(PY_SHOW_DEBUG_INFO);
         } else if (Keyboard.pressed(KEY_FULLSCREEN)) {

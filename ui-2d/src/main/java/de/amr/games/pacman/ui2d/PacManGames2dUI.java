@@ -41,8 +41,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.controller.GameState.INTRO;
-import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
+import static de.amr.games.pacman.controller.GameState.*;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
@@ -95,8 +94,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final KeyCodeCombination KEY_BOOT                 = just(KeyCode.F3);
     public static final KeyCodeCombination KEY_FULLSCREEN           = just(KeyCode.F11);
 
-    public static final int CANVAS_WIDTH_UNSCALED = GameModel.ARCADE_MAP_TILES_X * TS; // 28*8 = 224
-    public static final int CANVAS_HEIGHT_UNSCALED = GameModel.ARCADE_MAP_TILES_Y * TS; // 36*8 = 288
+    public static final int DEFAULT_CANVAS_WIDTH_UNSCALED = GameModel.ARCADE_MAP_TILES_X * TS; // 28*8 = 224
+    public static final int DEFAULT_CANVAS_HEIGHT_UNSCALED = GameModel.ARCADE_MAP_TILES_Y * TS; // 36*8 = 288
 
     public static final BooleanProperty PY_IMMUNITY = new SimpleBooleanProperty(false) {
         @Override
@@ -270,8 +269,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
         stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy));
         stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
-        stage.setMinWidth(CANVAS_WIDTH_UNSCALED);
-        stage.setMinHeight(CANVAS_HEIGHT_UNSCALED);
+        stage.setMinWidth(DEFAULT_CANVAS_WIDTH_UNSCALED);
+        stage.setMinHeight(DEFAULT_CANVAS_HEIGHT_UNSCALED);
         stage.centerOnScreen();
         stage.setScene(mainScene);
 
@@ -607,7 +606,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         }
         //TODO better place than here?
         GamePage gamePage = page(GAME_PAGE);
-        gamePage.layout().updateLayout(game.world().numRows(), game.world().numCols());
+        gamePage.adaptCanvasSizeToCurrentWorld();
     }
 
     @Override
@@ -732,6 +731,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     @Override
     public void reboot() {
+        if (gameState() == BOOT) {
+            return;
+        }
         stopAllSounds();
         currentGameScene().ifPresent(GameScene::end);
         playVoice("voice.explain", 0);

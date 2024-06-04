@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -26,6 +25,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_IMMUNITY;
 import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
 
 /**
@@ -41,7 +41,7 @@ public class GamePage3D extends GamePage {
             displayedScene.setContext(context);
             displayedScene.setCanvas(this);
             displayedScene.setScoreVisible(true);
-            displayedScene.scalingPy.bind(heightProperty().divide(CANVAS_HEIGHT_UNSCALED));
+            displayedScene.scalingPy.bind(heightProperty().divide(DEFAULT_CANVAS_HEIGHT_UNSCALED));
             widthProperty().bind(heightProperty().multiply(0.777));
             opacityProperty().bind(PY_PIP_OPACITY_PERCENTAGE.divide(100.0));
         }
@@ -61,6 +61,7 @@ public class GamePage3D extends GamePage {
 
     public GamePage3D(Scene parentScene, GameSceneContext context, double width, double height) {
         super(context, width, height);
+
         this.parentScene = parentScene;
         pip = new PictureInPictureView(context);
         dashboard = new Dashboard(context);
@@ -85,10 +86,10 @@ public class GamePage3D extends GamePage {
 
         // data binding
         pip.heightProperty().bind(PY_PIP_HEIGHT);
-        PY_3D_PIP_ON.addListener((py, ov, nv) -> updateTopLayer());
-        dashboard.visibleProperty().addListener((py, ov, nv) -> updateTopLayer());
+        PY_3D_PIP_ON.addListener((py, ov, nv) -> updateDashboardLayer());
+        dashboard.visibleProperty().addListener((py, ov, nv) -> updateDashboardLayer());
 
-        updateTopLayer();
+        updateDashboardLayer();
     }
 
     @Override
@@ -102,28 +103,29 @@ public class GamePage3D extends GamePage {
         boolean isPlayScene2D = context.isCurrentGameScene(PLAY_SCENE);
         var actionHandler = (ActionHandler3D) context.actionHandler();
         contextMenu = new ContextMenu();
-        if (isPlayScene2D) {
-            contextMenu.getItems().add(titleItem(context.tt("scene_display")));
-            var item = new MenuItem(context.tt("use_3D_scene"));
-            item.setOnAction(e -> actionHandler.toggle2D3D());
-            contextMenu.getItems().add(item);
-        } else {
-            contextMenu.getItems().add(titleItem(context.tt("scene_display")));
-            var item = new MenuItem(context.tt("use_2D_scene"));
-            item.setOnAction(e -> actionHandler.toggle2D3D());
-            contextMenu.getItems().add(item);
-            var pipItem = new CheckMenuItem(context.tt("pip"));
-            pipItem.selectedProperty().bindBidirectional(PY_3D_PIP_ON);
-            contextMenu.getItems().add(pipItem);
-            contextMenu.getItems().add(titleItem(context.tt("select_perspective")));
+
+        contextMenu.getItems().add(menuTitleItem(context.tt("scene_display")));
+        String titleKey = isPlayScene2D ? "use_3D_scene" : "use_2D_scene";
+        var item = new MenuItem(context.tt(titleKey));
+        item.setOnAction(e -> actionHandler.toggle2D3D());
+        contextMenu.getItems().add(item);
+
+        // 3D specific items
+        if (!isPlayScene2D) {
+            var miPictureInPicture = new CheckMenuItem(context.tt("pip"));
+            miPictureInPicture.selectedProperty().bindBidirectional(PY_3D_PIP_ON);
+            contextMenu.getItems().add(miPictureInPicture);
+
+            contextMenu.getItems().add(menuTitleItem(context.tt("select_perspective")));
             var toggleGroup = new ToggleGroup();
             for (var perspective : Perspective.values()) {
-                var radio = new RadioMenuItem(context.tt(perspective.name()));
-                radio.setSelected(perspective.equals(PY_3D_PERSPECTIVE.get()));
-                radio.setUserData(perspective);
-                radio.setToggleGroup(toggleGroup);
-                contextMenu.getItems().add(radio);
+                var miPerspective = new RadioMenuItem(context.tt(perspective.name()));
+                miPerspective.setSelected(perspective.equals(PY_3D_PERSPECTIVE.get()));
+                miPerspective.setUserData(perspective);
+                miPerspective.setToggleGroup(toggleGroup);
+                contextMenu.getItems().add(miPerspective);
             }
+            //TODO there mus be a simpler way
             toggleGroup.selectedToggleProperty().addListener((py, ov, radio) -> {
                 if (radio != null) {
                     PY_3D_PERSPECTIVE.set((Perspective) radio.getUserData());
@@ -135,13 +137,17 @@ public class GamePage3D extends GamePage {
                 }
             });
         }
-        contextMenu.getItems().add(titleItem(context.tt("pacman")));
-        var autopilotItem = new CheckMenuItem(context.tt("autopilot"));
-        autopilotItem.selectedProperty().bindBidirectional(PY_USE_AUTOPILOT);
-        contextMenu.getItems().add(autopilotItem);
-        var immunityItem = new CheckMenuItem(context.tt("immunity"));
-        immunityItem.selectedProperty().bindBidirectional(PacManGames2dUI.PY_IMMUNITY);
-        contextMenu.getItems().add(immunityItem);
+
+        // Common items
+        contextMenu.getItems().add(menuTitleItem(context.tt("pacman")));
+
+        var miAutopilot = new CheckMenuItem(context.tt("autopilot"));
+        miAutopilot.selectedProperty().bindBidirectional(PY_USE_AUTOPILOT);
+        contextMenu.getItems().add(miAutopilot);
+
+        var miImmunity = new CheckMenuItem(context.tt("immunity"));
+        miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
+        contextMenu.getItems().add(miImmunity);
 
         contextMenu.requestFocus();
         contextMenu.show(parentScene.getRoot(), event.getScreenX(), event.getScreenY());
@@ -157,8 +163,8 @@ public class GamePage3D extends GamePage {
         }
     }
 
-    private MenuItem titleItem(String title) {
-        var text = new Text(title);
+    private MenuItem menuTitleItem(String titleText) {
+        var text = new Text(titleText);
         text.setFont(Font.font("Dialog", FontWeight.BLACK, 14));
         text.setFill(Color.CORNFLOWERBLUE); // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
         return new CustomMenuItem(text);
@@ -172,15 +178,16 @@ public class GamePage3D extends GamePage {
             layout().restoreCanvasLayer();
             if (newGameScene instanceof GameScene2D scene2D) {
                 scene2D.clearCanvas();
+                adaptCanvasSizeToCurrentWorld();
             }
         }
         hideContextMenu();
-        updateTopLayer();
+        updateDashboardLayer();
     }
 
-    private void updateTopLayer() {
+    private void updateDashboardLayer() {
         dashboardLayer.setVisible(dashboard.isVisible() || PY_3D_PIP_ON.get());
-        layout().requestFocus();
+        layout.requestFocus();
     }
 
     private boolean isCurrentGameScene3D() {

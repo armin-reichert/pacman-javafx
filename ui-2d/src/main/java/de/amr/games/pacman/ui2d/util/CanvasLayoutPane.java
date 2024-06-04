@@ -10,8 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import java.util.Objects;
 
 /**
  * Layered container containing a (decorated) canvas in the center of the lowest layer.
@@ -57,7 +56,7 @@ public class CanvasLayoutPane extends StackPane {
     }
 
     public void replaceCanvasLayer(Node node) {
-        checkNotNull(node);
+        Objects.requireNonNull(node);
         getChildren().set(0, node);
     }
 
@@ -67,15 +66,16 @@ public class CanvasLayoutPane extends StackPane {
         }
     }
 
-    public void setSize(double width, double height) {
+    public void resizeTo(double width, double height) {
         double scaling = computeScaling(width, height);
         doLayout(scaling, false);
     }
 
-    public void updateLayout(int numRows, int numCols) {
-        setUnscaledCanvasWidth(numCols * TS);
-        setUnscaledCanvasHeight(numRows * TS);
+    public void setUnscaledCanvasSize(double width, double height) {
+        setUnscaledCanvasWidth(width);
+        setUnscaledCanvasHeight(height);
         doLayout(getScaling(), true);
+        Logger.info("Unscaled canvas size: w={} h={}", getUnscaledCanvasWidth(), getUnscaledCanvasHeight());
     }
 
     public void doLayout(double newScaling, boolean forced) {
