@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.dashboard;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
-import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -29,7 +28,7 @@ import java.util.function.Supplier;
  *
  * @author Armin Reichert
  */
-public class InfoBox extends TitledPane {
+public abstract class InfoBox extends TitledPane {
 
     public static final Color BACKGROUND_COLOR = new Color(0.2, 0.2, 0.4, 0.8);
 
@@ -41,50 +40,47 @@ public class InfoBox extends TitledPane {
         return String.format("-fx-font: %.0fpx \"%s\";", font.getSize(), font.getFamily());
     }
 
-    protected final Theme theme;
     protected final List<InfoText> infoTexts = new ArrayList<>();
-    protected final GridPane content = new GridPane();
-
-    private final int minLabelWidth;
-    private final Color textColor;
-    private final Font textFont;
-    private final Font labelFont;
-
+    protected final GridPane grid = new GridPane();
+    protected GameSceneContext context;
+    private int minLabelWidth;
+    private Color textColor;
+    private Font textFont;
+    private Font labelFont;
     private int row;
 
-    protected GameSceneContext context;
-
-    protected InfoBox(Theme theme, String title) {
-        this(theme, title,
-            theme.get("infobox.min_label_width"),
-            theme.get("infobox.text_color"),
-            theme.get("infobox.text_font"),
-            theme.get("infobox.label_font"));
-    }
-
-    protected InfoBox(Theme theme, String title, int minLabelWidth, Color textColor, Font textFont, Font labelFont) {
-        this.theme = theme;
-        this.minLabelWidth = minLabelWidth;
-        this.textColor = textColor;
-        this.textFont = textFont;
-        this.labelFont = labelFont;
-        content.setBackground(Ufx.coloredBackground(BACKGROUND_COLOR));
-        content.setHgap(4);
-        content.setVgap(3);
-        content.setPadding(new Insets(5));
+    public InfoBox(String title) {
+        setText(title);
         setExpanded(false);
         setOpacity(0.7);
         setFocusTraversable(false);
-        setText(title);
-        setContent(content);
+        setContent(grid);
+        grid.setBackground(Ufx.coloredBackground(BACKGROUND_COLOR));
+        grid.setHgap(4);
+        grid.setVgap(3);
+        grid.setPadding(new Insets(5));
     }
 
-    public void init(GameSceneContext sceneContext) {
-        this.context = sceneContext;
-    }
+    public abstract void init(GameSceneContext context);
 
     public void update() {
         infoTexts.forEach(InfoText::update);
+    }
+
+    public void setLabelFont(Font labelFont) {
+        this.labelFont = labelFont;
+    }
+
+    public void setMinLabelWidth(int minLabelWidth) {
+        this.minLabelWidth = minLabelWidth;
+    }
+
+    public void setTextColor(Color textColor) {
+        this.textColor = textColor;
+    }
+
+    public void setTextFont(Font textFont) {
+        this.textFont = textFont;
     }
 
     protected Supplier<String> ifLevelExists(Function<GameLevel, String> infoSupplier) {
@@ -98,8 +94,8 @@ public class InfoBox extends TitledPane {
         label.setTextFill(textColor);
         label.setFont(labelFont);
         label.setMinWidth(minLabelWidth);
-        content.add(label, 0, row);
-        content.add(child, 1, row);
+        grid.add(label, 0, row);
+        grid.add(child, 1, row);
         ++row;
     }
 
@@ -162,7 +158,7 @@ public class InfoBox extends TitledPane {
 
     protected Slider slider(String labelText, int min, int max, double initialValue) {
         var slider = new Slider(min, max, initialValue);
-        slider.setMinWidth(theme.<Integer>get("infobox.min_col_width"));
+        slider.setMinWidth(context.theme().<Integer>get("infobox.min_col_width"));
         slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (e.getClickCount() == 2) {
                 slider.setValue(initialValue);

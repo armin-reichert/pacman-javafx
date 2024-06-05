@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
-import de.amr.games.pacman.ui2d.util.Theme;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -31,16 +30,20 @@ public class InfoBoxGameControl extends InfoBox {
     private static final int INTERMISSION_TEST_START = 0;
     private static final int INTERMISSION_TEST_QUIT = 1;
 
-    private final Spinner<Integer> spinnerCredit;
-    private final ComboBox<GameVariant> comboGameVariant;
-    private final ComboBox<Integer> comboInitialLives;
-    private final Button[] buttonsLevelActions;
-    private final Button[] buttonsIntermissionTest;
-    private final CheckBox cbAutopilot;
-    private final CheckBox cbImmunity;
+    private Spinner<Integer> spinnerCredit;
+    private ComboBox<GameVariant> comboGameVariant;
+    private ComboBox<Integer> comboInitialLives;
+    private Button[] buttonsLevelActions;
+    private Button[] buttonsIntermissionTest;
+    private CheckBox cbAutopilot;
+    private CheckBox cbImmunity;
 
-    public InfoBoxGameControl(Theme theme, String title) {
-        super(theme, title);
+    public InfoBoxGameControl(String title) {
+        super(title);
+    }
+
+    public void init(GameSceneContext context) {
+        this.context = context;
 
         spinnerCredit = integerSpinner("Credit", 0, GameController.MAX_CREDIT, 0);
         comboGameVariant = comboBox("Variant", GameController.it().supportedVariants().toArray(GameVariant[]::new));
@@ -49,11 +52,7 @@ public class InfoBoxGameControl extends InfoBox {
         buttonsIntermissionTest = buttonList("Cut Scenes Test", "Start", "Quit");
         cbAutopilot = checkBox("Autopilot");
         cbImmunity = checkBox("Pac-Man Immune");
-    }
 
-    @Override
-    public void init(GameSceneContext context) {
-        super.init(context);
         comboGameVariant.setOnAction(e -> {
             var selectedVariant = comboGameVariant.getValue();
             if (selectedVariant != context.game().variant()) {

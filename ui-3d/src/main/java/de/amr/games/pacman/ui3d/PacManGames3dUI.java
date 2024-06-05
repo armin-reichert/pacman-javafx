@@ -131,26 +131,26 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
         theme.set("ghost.color.flashing.eyeballs",   theme.color("palette.rose"));
         theme.set("ghost.color.flashing.pupils",     theme.color("palette.red"));
 
-        theme.set("ms_pacman.color.head",           Color.rgb(255, 255, 0));
-        theme.set("ms_pacman.color.palate",         Color.rgb(191, 79, 61));
-        theme.set("ms_pacman.color.eyes",           Color.rgb(33, 33, 33));
-        theme.set("ms_pacman.color.boobs",          Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
-        theme.set("ms_pacman.color.hairbow",        Color.rgb(255, 0, 0));
-        theme.set("ms_pacman.color.hairbow.pearls", Color.rgb(33, 33, 255));
+        theme.set("ms_pacman.color.head",            Color.rgb(255, 255, 0));
+        theme.set("ms_pacman.color.palate",          Color.rgb(191, 79, 61));
+        theme.set("ms_pacman.color.eyes",            Color.rgb(33, 33, 33));
+        theme.set("ms_pacman.color.boobs",           Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
+        theme.set("ms_pacman.color.hairbow",         Color.rgb(255, 0, 0));
+        theme.set("ms_pacman.color.hairbow.pearls",  Color.rgb(33, 33, 255));
 
-        theme.set("pacman.color.head",             Color.rgb(255, 255, 0));
-        theme.set("pacman.color.palate",           Color.rgb(191, 79, 61));
-        theme.set("pacman.color.eyes",             Color.rgb(33, 33, 33));
+        theme.set("pacman.color.head",               Color.rgb(255, 255, 0));
+        theme.set("pacman.color.palate",             Color.rgb(191, 79, 61));
+        theme.set("pacman.color.eyes",               Color.rgb(33, 33, 33));
 
         // lives counter
-        theme.set("livescounter.entries",          5);
-        theme.set("livescounter.pac.size",         10.0);
-        theme.set("livescounter.pillar.color",     Color.grayRgb(120));
-        theme.set("livescounter.pillar.height",    8.0);
-        theme.set("livescounter.plate.color",      Color.grayRgb(180));
-        theme.set("livescounter.plate.radius",     6.0);
-        theme.set("livescounter.plate.thickness",  1.0);
-        theme.set("livescounter.light.color",      Color.CORNFLOWERBLUE);
+        theme.set("livescounter.entries",            5);
+        theme.set("livescounter.pac.size",           10.0);
+        theme.set("livescounter.pillar.color",       Color.grayRgb(120));
+        theme.set("livescounter.pillar.height",      8.0);
+        theme.set("livescounter.plate.color",        Color.grayRgb(180));
+        theme.set("livescounter.plate.radius",       6.0);
+        theme.set("livescounter.plate.thickness",    1.0);
+        theme.set("livescounter.light.color",        Color.CORNFLOWERBLUE);
     }
 
     public void init(Stage stage, double width, double height) {
@@ -191,7 +191,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             PY_3D_DRAW_MODE, PY_3D_NIGHT_MODE
         ));
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
-        page.dashboard().addInfoBox(3, new InfoBox3D(theme, tt("infobox.3D_settings.title")));
+        var infoBox3D = new InfoBox3D(tt("infobox.3D_settings.title"));
+        page.dashboard().addInfoBox(3, infoBox3D);
         return page;
     }
 

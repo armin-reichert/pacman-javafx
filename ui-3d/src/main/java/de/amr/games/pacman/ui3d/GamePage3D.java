@@ -82,7 +82,7 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void onGameSceneChanged(GameScene newGameScene) {
-        if (context.isCurrentGameScene(PLAY_SCENE_3D)) {
+        if (context.isGameScene(newGameScene, PLAY_SCENE_3D)) {
             layout().replaceCanvasLayer(newGameScene.root());
         } else {
             layout().restoreCanvasLayer();

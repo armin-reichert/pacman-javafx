@@ -23,20 +23,22 @@ public class Dashboard extends VBox {
         setVisible(false);
     }
 
+    public GameSceneContext getContext() {
+        return context;
+    }
+
     public void addInfoBox(InfoBox infoBox) {
-        infoBoxes.add(infoBox);
-        getChildren().add(infoBox);
-        infoBox.init(context);
+        addInfoBox(infoBoxes.size(), infoBox);
     }
 
     public void addInfoBox(int index, InfoBox infoBox) {
-        infoBoxes.add(infoBox);
+        infoBoxes.add(index, infoBox);
         getChildren().add(index, infoBox);
+        infoBox.setMinLabelWidth(context.theme().get("infobox.min_label_width"));
+        infoBox.setTextColor(context.theme().get("infobox.text_color"));
+        infoBox.setTextFont(context.theme().get("infobox.text_font"));
+        infoBox.setLabelFont(context.theme().get("infobox.label_font"));
         infoBox.init(context);
-    }
-
-    public List<InfoBox> getInfoBoxes() {
-        return infoBoxes;
     }
 
     public void update() {

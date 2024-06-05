@@ -91,12 +91,12 @@ public class GamePage implements Page {
         pip = new PictureInPictureView(context);
 
         dashboard = new Dashboard(context);
-        dashboard.addInfoBox(new InfoBoxGeneral(context.theme(), context.tt("infobox.general.title")));
-        dashboard.addInfoBox(new InfoBoxGameControl(context.theme(), context.tt("infobox.game_control.title")));
-        dashboard.addInfoBox(new InfoBoxGameInfo(context.theme(), context.tt("infobox.game_info.title")));
-        dashboard.addInfoBox(new InfoBoxActorInfo(context.theme(), context.tt("infobox.actor_info.title")));
-        dashboard.addInfoBox(new InfoBoxKeys(context.theme(), context.tt("infobox.keyboard_shortcuts.title")));
-        dashboard.addInfoBox(new InfoBoxAbout(context.theme(), context.tt("infobox.about.title")));
+        dashboard.addInfoBox(new InfoBoxGeneral(context.tt("infobox.general.title")));
+        dashboard.addInfoBox(new InfoBoxGameControl(context.tt("infobox.game_control.title")));
+        dashboard.addInfoBox(new InfoBoxGameInfo(context.tt("infobox.game_info.title")));
+        dashboard.addInfoBox(new InfoBoxActorInfo(context.tt("infobox.actor_info.title")));
+        dashboard.addInfoBox(new InfoBoxKeys(context.tt("infobox.keyboard_shortcuts.title")));
+        dashboard.addInfoBox(new InfoBoxAbout(context.tt("infobox.about.title")));
 
         dashboardLayer = new BorderPane();
         dashboardLayer.setLeft(dashboard);
@@ -123,6 +123,7 @@ public class GamePage implements Page {
 
     @Override
     public void onSelected() {
+        //TODO check if this is always what is wanted
         context.actionHandler().reboot();
         context.gameClock().start();
         Logger.info("Clock started, speed={} Hz", context.gameClock().getTargetFrameRate());
@@ -145,7 +146,6 @@ public class GamePage implements Page {
         dashboardLayer.setVisible(dashboard.isVisible() || PY_PIP_ON.get());
         layout.requestFocus();
     }
-
 
     public Signature signature() {
         return signature;

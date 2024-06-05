@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
 import de.amr.games.pacman.ui2d.util.Theme;
 
@@ -37,8 +38,13 @@ public class InfoBoxActorInfo extends InfoBox {
             : InfoText.NO_INFO;
     }
 
-    public InfoBoxActorInfo(Theme theme, String title) {
-        super(theme, title);
+    public InfoBoxActorInfo(String title) {
+        super(title);
+    }
+
+    public void init(GameSceneContext context) {
+        this.context = context;
+
         addPacInfo();
         emptyRow();
         addGhostInfo(GameModel.RED_GHOST);

@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui2d.util.Theme;
+import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 
 import static de.amr.games.pacman.lib.TickTimer.ticksToString;
 
@@ -17,8 +17,12 @@ import static de.amr.games.pacman.lib.TickTimer.ticksToString;
  */
 public class InfoBoxGameInfo extends InfoBox {
 
-    public InfoBoxGameInfo(Theme theme, String title) {
-        super(theme, title);
+    public InfoBoxGameInfo(String title) {
+        super(title);
+    }
+
+    public void init(GameSceneContext context) {
+            this.context = context;
 
         infoText("Game Scene", () -> context.currentGameScene().isPresent()
             ? context.currentGameScene().get().getClass().getSimpleName() : InfoText.NO_INFO);

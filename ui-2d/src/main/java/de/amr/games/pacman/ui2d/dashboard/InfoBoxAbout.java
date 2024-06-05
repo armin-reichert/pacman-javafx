@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.ui2d.util.Theme;
+import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import javafx.geometry.Insets;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -17,10 +17,14 @@ import javafx.scene.text.TextFlow;
  */
 public class InfoBoxAbout extends InfoBox {
 
-    public InfoBoxAbout(Theme theme, String title) {
-        super(theme, title);
+    public InfoBoxAbout(String title) {
+        super(title);
+    }
 
-        var theAuthorInYoungerYears = new ImageView(theme.image("image.armin1970"));
+    public void init(GameSceneContext context) {
+        this.context = context;
+
+        var theAuthorInYoungerYears = new ImageView(context.theme().image("image.armin1970"));
         theAuthorInYoungerYears.setFitWidth(303);
         theAuthorInYoungerYears.setPreserveRatio(true);
 
@@ -29,13 +33,13 @@ public class InfoBoxAbout extends InfoBox {
         madeBy.setFill(Color.grayRgb(150));
 
         var signature = new Text("Armin Reichert");
-        var font = theme.font("font.handwriting", 18);
+        var font = context.theme().font("font.handwriting", 18);
         signature.setFont(font);
         signature.setFill(Color.grayRgb(225));
 
         var tf = new TextFlow(madeBy, signature);
         tf.setPadding(new Insets(5, 5, 5, 5));
-        content.add(theAuthorInYoungerYears, 0, 0);
-        content.add(tf, 0, 1);
+        grid.add(theAuthorInYoungerYears, 0, 0);
+        grid.add(tf, 0, 1);
     }
 }

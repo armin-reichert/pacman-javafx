@@ -8,7 +8,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.dashboard.InfoBox;
 import de.amr.games.pacman.ui2d.dashboard.InfoText;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
-import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import de.amr.games.pacman.ui3d.scene.PlayScene3D;
 import javafx.beans.binding.Bindings;
@@ -33,29 +32,33 @@ public class InfoBox3D extends InfoBox {
     private static final int PIP_MIN_HEIGHT = GameModel.ARCADE_MAP_SIZE_PX.y() * 3 / 4;
     private static final int PIP_MAX_HEIGHT = GameModel.ARCADE_MAP_SIZE_PX.y() * 2;
 
-    private final ColorPicker pickerLightColor;
-    private final ColorPicker pickerFloorColor;
-    private final ComboBox<Object> comboFloorTexture;
-    private final CheckBox cbFloorTextureRandom;
-    private final ComboBox<Perspective> comboPerspectives;
-    private final CheckBox cbPiPOn;
-    private final Slider sliderPiPSceneHeight;
-    private final Slider sliderPiPOpacity;
-    private final CheckBox cbEnergizerExplodes;
-    private final Slider sliderWallHeight;
-    private final Slider sliderWallOpacity;
-    private final CheckBox cbPacLighted;
-    private final CheckBox cbNightMode;
-    private final CheckBox cbAxesVisible;
-    private final CheckBox cbWireframeMode;
+    private ColorPicker pickerLightColor;
+    private ColorPicker pickerFloorColor;
+    private ComboBox<Object> comboFloorTexture;
+    private CheckBox cbFloorTextureRandom;
+    private ComboBox<Perspective> comboPerspectives;
+    private CheckBox cbPiPOn;
+    private Slider sliderPiPSceneHeight;
+    private Slider sliderPiPOpacity;
+    private CheckBox cbEnergizerExplodes;
+    private Slider sliderWallHeight;
+    private Slider sliderWallOpacity;
+    private CheckBox cbPacLighted;
+    private CheckBox cbNightMode;
+    private CheckBox cbAxesVisible;
+    private CheckBox cbWireframeMode;
 
-    private final Spinner<Integer> spinnerCamRotate;
-    private final Spinner<Integer> spinnerCamX;
-    private final Spinner<Integer> spinnerCamY;
-    private final Spinner<Integer> spinnerCamZ;
+    private Spinner<Integer> spinnerCamRotate;
+    private Spinner<Integer> spinnerCamX;
+    private Spinner<Integer> spinnerCamY;
+    private Spinner<Integer> spinnerCamZ;
 
-    public InfoBox3D(Theme theme, String title) {
-        super(theme, title);
+    public InfoBox3D(String title) {
+        super(title);
+    }
+
+    public void init(GameSceneContext context) {
+        this.context = context;
 
         pickerLightColor = colorPicker("Light Color", PY_3D_LIGHT_COLOR.get());
         pickerFloorColor = colorPicker("Floor Color", PY_3D_FLOOR_COLOR.get());
@@ -109,11 +112,6 @@ public class InfoBox3D extends InfoBox {
         pickerLightColor.setOnAction(e -> PY_3D_LIGHT_COLOR.set(pickerLightColor.getValue()));
         pickerFloorColor.setOnAction(e -> PY_3D_FLOOR_COLOR.set(pickerFloorColor.getValue()));
         comboFloorTexture.setOnAction(e -> PY_3D_FLOOR_TEXTURE.set(comboFloorTexture.getValue().toString()));
-    }
-
-    @Override
-    public void init(GameSceneContext context) {
-        super.init(context);
 
         comboPerspectives.setValue(PY_3D_PERSPECTIVE.get());
         sliderPiPSceneHeight.setValue(PY_PIP_HEIGHT.get());
@@ -184,7 +182,7 @@ public class InfoBox3D extends InfoBox {
     private Object[] floorTextureComboBoxEntries() {
         var names = new ArrayList<>();
         names.add(NO_TEXTURE);
-        names.addAll(theme.getArray("texture.names"));
+        names.addAll(context.theme().getArray("texture.names"));
         return names.toArray();
     }
 }

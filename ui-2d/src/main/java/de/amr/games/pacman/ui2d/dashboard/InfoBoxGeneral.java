@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
-import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -22,29 +21,33 @@ public class InfoBoxGeneral extends InfoBox {
     public static final int MIN_FRAME_RATE = 5;
     public static final int MAX_FRAME_RATE = 120;
 
-    private final Button[] buttonsSimulation;
-    private final Spinner<Integer> spinnerSimulationSteps;
-    private final Slider sliderTargetFPS;
-    private final CheckBox cbUsePlayScene3D;
-    private final CheckBox cbCanvasDecoration;
-    private final CheckBox cbDebugUI;
-    private final CheckBox cbTimeMeasured;
-    private final ImageView iconPlay;
-    private final ImageView iconStop;
-    private final ImageView iconStep;
-    private final Tooltip tooltipPlay = new Tooltip("Play");
-    private final Tooltip tooltipStop = new Tooltip("Stop");
-    private final Tooltip tooltipStep = new Tooltip("Single Step Mode");
+    private Button[] buttonsSimulation;
+    private Spinner<Integer> spinnerSimulationSteps;
+    private Slider sliderTargetFPS;
+    private CheckBox cbUsePlayScene3D;
+    private CheckBox cbCanvasDecoration;
+    private CheckBox cbDebugUI;
+    private CheckBox cbTimeMeasured;
+    private ImageView iconPlay;
+    private ImageView iconStop;
+    private ImageView iconStep;
+    private Tooltip tooltipPlay = new Tooltip("Play");
+    private Tooltip tooltipStop = new Tooltip("Stop");
+    private Tooltip tooltipStep = new Tooltip("Single Step Mode");
 
-    public InfoBoxGeneral(Theme theme, String title) {
-        super(theme, title);
+    public InfoBoxGeneral(String title) {
+        super(title);
+    }
+
+    public void init(GameSceneContext context) {
+        this.context = context;
 
         infoText("Java Version",   Runtime.version().toString());
         infoText("JavaFX Version", System.getProperty("javafx.runtime.version"));
 
-        iconPlay = new ImageView(theme.image("icon.play"));
-        iconStop = new ImageView(theme.image("icon.stop"));
-        iconStep = new ImageView(theme.image("icon.step"));
+        iconPlay = new ImageView(context.theme().image("icon.play"));
+        iconStop = new ImageView(context.theme().image("icon.stop"));
+        iconStep = new ImageView(context.theme().image("icon.step"));
 
         buttonsSimulation = buttonList("Simulation", "Pause", "Step(s)");
 
@@ -76,19 +79,15 @@ public class InfoBoxGeneral extends InfoBox {
         cbCanvasDecoration = checkBox("Canvas Decoration");
         cbDebugUI = checkBox("Show Debug Info");
         cbTimeMeasured = checkBox("Time Measured");
-    }
 
-    @Override
-    public void init(GameSceneContext sceneContext) {
-        super.init(sceneContext);
         buttonsSimulation[0].setOnAction(e -> context.actionHandler().togglePaused());
-        buttonsSimulation[1].setOnAction(e -> sceneContext.gameClock().makeSteps(PY_SIMULATION_STEPS.get(), true));
+        buttonsSimulation[1].setOnAction(e -> context.gameClock().makeSteps(PY_SIMULATION_STEPS.get(), true));
         sliderTargetFPS.valueProperty().addListener(
-            (py, ov, nv) -> sceneContext.gameClock().setTargetFrameRate(nv.intValue()));
+            (py, ov, nv) -> context.gameClock().setTargetFrameRate(nv.intValue()));
         cbUsePlayScene3D.setOnAction(e -> context.actionHandler().toggle2D3D());
         cbCanvasDecoration.selectedProperty().bindBidirectional(PY_CANVAS_DECORATED);
         cbDebugUI.setOnAction(e -> Ufx.toggle(PY_SHOW_DEBUG_INFO));
-        cbTimeMeasured.setOnAction(e -> Ufx.toggle(sceneContext.gameClock().timeMeasuredPy));
+        cbTimeMeasured.setOnAction(e -> Ufx.toggle(context.gameClock().timeMeasuredPy));
     }
 
     @Override
