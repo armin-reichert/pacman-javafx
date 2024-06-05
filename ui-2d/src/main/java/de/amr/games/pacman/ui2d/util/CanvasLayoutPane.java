@@ -23,6 +23,18 @@ public class CanvasLayoutPane extends StackPane {
         region.setPrefSize(width, height);
     }
 
+    public static Dimension2D canvasContainerSize(double unscaledCanvasWidth, double unscaledCanvasHeight, double scaling) {
+        return new Dimension2D(
+            Math.round(unscaledCanvasWidth * scaling + 25 * scaling), // TODO magic number
+            Math.round(unscaledCanvasHeight * scaling + 15 * scaling) // TODO magic number
+        );
+    }
+
+    private void logCanvasSize() {
+        Logger.debug("Unscaled canvas size: w={0.0} h={0.0}", getUnscaledCanvasWidth(), getUnscaledCanvasHeight());
+        Logger.debug("Canvas size: w={0.0} h={0.0}", canvas.getWidth(), canvas.getHeight());
+    }
+
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0) {
         @Override
         protected void invalidated() {
@@ -41,16 +53,13 @@ public class CanvasLayoutPane extends StackPane {
     protected BorderPane canvasLayer;
     protected BorderPane canvasContainer;
     protected Canvas canvas;
-
     protected double minScaling = 1.0;
 
     public CanvasLayoutPane() {
         canvas = new Canvas();
         canvas.widthProperty().bind(unscaledCanvasWidthPy.multiply(scalingPy));
         canvas.heightProperty().bind(unscaledCanvasHeightPy.multiply(scalingPy));
-
         createCanvasContainer();
-
         canvasLayer = new BorderPane(canvasContainer);
         getChildren().add(canvasLayer);
     }
@@ -77,11 +86,6 @@ public class CanvasLayoutPane extends StackPane {
         doLayout(getScaling(), true);
     }
 
-    private void logCanvasSize() {
-        Logger.debug("Unscaled canvas size: w={0.0} h={0.0}", getUnscaledCanvasWidth(), getUnscaledCanvasHeight());
-        Logger.debug("Canvas size: w={0.0} h={0.0}", canvas.getWidth(), canvas.getHeight());
-    }
-
     public void doLayout(double newScaling, boolean forced) {
         if (newScaling < minScaling) {
             Logger.warn("Cannot scale to {}, minimum scaling is {}", newScaling, minScaling);
@@ -92,7 +96,7 @@ public class CanvasLayoutPane extends StackPane {
         }
         double width = canvas.getWidth(), height = canvas.getHeight();
         if (isCanvasDecorated()) {
-            var size = canvasContainerSizeIfDecorated();
+            var size = canvasContainerSize();
             width = size.getWidth();
             height = size.getHeight();
         }
@@ -121,7 +125,7 @@ public class CanvasLayoutPane extends StackPane {
             () -> {
                 if (canvasDecoratedPy.get()) {
                     double s = getScaling();
-                    var size = canvasContainerSizeIfDecorated();
+                    var size = canvasContainerSize();
                     double arcSize = 26 * s;
                     var clipRect = new Rectangle(size.getWidth(), size.getHeight());
                     clipRect.setArcWidth(arcSize);
@@ -136,7 +140,7 @@ public class CanvasLayoutPane extends StackPane {
         canvasContainer.borderProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (canvasDecoratedPy.get()) {
-                    var size = canvasContainerSizeIfDecorated();
+                    var size = canvasContainerSize();
                     double borderWidth = Math.max(5, Math.ceil(size.getHeight() / 55)); // TODO magic number?
                     double cornerRadius = Math.ceil(10 * getScaling());
                     return new Border(
@@ -152,13 +156,7 @@ public class CanvasLayoutPane extends StackPane {
         ));
     }
 
-    public static Dimension2D canvasContainerSize(double unscaledCanvasWidth, double unscaledCanvasHeight, double scaling) {
-        return new Dimension2D(
-            Math.round(unscaledCanvasWidth * scaling + 25 * scaling), // TODO magic number?
-            Math.round(unscaledCanvasHeight * scaling + 15 * scaling) // TODO magic number?
-        );
-    }
-    private Dimension2D canvasContainerSizeIfDecorated() {
+    private Dimension2D canvasContainerSize() {
         return canvasContainerSize(getUnscaledCanvasWidth(), getUnscaledCanvasHeight(), getScaling());
     }
 
