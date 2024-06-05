@@ -75,7 +75,11 @@ public class CanvasLayoutPane extends StackPane {
         setUnscaledCanvasWidth(width);
         setUnscaledCanvasHeight(height);
         doLayout(getScaling(), true);
-        Logger.info("Unscaled canvas size: w={} h={}", getUnscaledCanvasWidth(), getUnscaledCanvasHeight());
+    }
+
+    private void logCanvasSize() {
+        Logger.debug("Unscaled canvas size: w={0.0} h={0.0}", getUnscaledCanvasWidth(), getUnscaledCanvasHeight());
+        Logger.debug("Canvas size: w={0.0} h={0.0}", canvas.getWidth(), canvas.getHeight());
     }
 
     public void doLayout(double newScaling, boolean forced) {
@@ -93,8 +97,8 @@ public class CanvasLayoutPane extends StackPane {
             height = size.getHeight();
         }
         setAllSizes(canvasContainer, width, height);
-        Logger.debug("Canvas container size set to w={} h={}", width, height);
         setScaling(newScaling);
+        logCanvasSize();
     }
 
     private double computeScaling(double width, double height) {
