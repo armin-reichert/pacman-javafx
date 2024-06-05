@@ -75,7 +75,6 @@ public class Globals {
         return Objects.requireNonNull(value, message);
     }
 
-
     public static Vector2i checkTileNotNull(Vector2i tile) {
         return checkNotNull(tile, MSG_TILE_NULL);
     }

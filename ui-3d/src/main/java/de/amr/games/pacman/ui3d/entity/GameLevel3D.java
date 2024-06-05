@@ -12,11 +12,14 @@ import de.amr.games.pacman.mapeditor.TileMapRenderer;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
+import de.amr.games.pacman.ui3d.animation.HeadBanging;
+import de.amr.games.pacman.ui3d.animation.HipSwaying;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
@@ -171,8 +174,8 @@ public class GameLevel3D extends Group {
         addFood3D(mazeGroup);
 
         pac3D = switch (context.game().variant()) {
-            case MS_PACMAN -> Pac3D.createFemalePac3D(context.theme(), context.game().pac(), PAC_SIZE);
-            case PACMAN, PACMAN_XXL -> Pac3D.createMalePac3D(context.theme(), context.game().pac(), PAC_SIZE);
+            case MS_PACMAN          -> createFemalePac3D(context.game().pac(), PAC_SIZE);
+            case PACMAN, PACMAN_XXL -> createMalePac3D(context.game().pac(), PAC_SIZE);
         };
         ghosts3D = context.game().ghosts().map(this::createGhost3D).toList();
 
@@ -192,6 +195,51 @@ public class GameLevel3D extends Group {
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         wallHeightPy.bind(PY_3D_WALL_HEIGHT);
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+    }
+
+    /**
+     * Creates a 3D Pac-Man.
+     * @param pacMan Pac-Man instance, may be NULL
+     * @param size diameter of Pac-Man
+     * @return 3D Pac-Man instance
+     */
+    private Pac3D createMalePac3D(Pac pacMan, double size) {
+        var body = Pac3D.createPacShape(
+            context.theme().get("model3D.pacman"), size,
+            context.theme().color("pacman.color.head"),
+            context.theme().color("pacman.color.eyes"),
+            context.theme().color("pacman.color.palate")
+        );
+        var pac3D = new Pac3D(size, pacMan, new Group(body));
+        if (pacMan != null) {
+            pac3D.setWalkingAnimation(new HeadBanging(pacMan, pac3D));
+            pac3D.setLight(new PointLight(context.theme().color("pacman.color.head").desaturate()));
+        }
+        return pac3D;
+    }
+
+    /**
+     * Creates a 3D Ms. Pac-Man.
+     * @param msPacMan Ms. Pac-Man instance, may be NULL
+     * @param size diameter of Pac-Man
+     * @return 3D Ms. Pac-Man instance
+     */
+    private Pac3D createFemalePac3D(Pac msPacMan, double size) {
+        var body = Pac3D.createPacShape(
+            context.theme().get("model3D.pacman"), size,
+            context.theme().color("ms_pacman.color.head"),
+            context.theme().color("ms_pacman.color.eyes"),
+            context.theme().color("ms_pacman.color.palate"));
+        var femaleParts = Pac3D.createFemaleParts(size,
+            context.theme().color("ms_pacman.color.hairbow"),
+            context.theme().color("ms_pacman.color.hairbow.pearls"),
+            context.theme().color("ms_pacman.color.boobs"));
+        var pac3D = new Pac3D(size, msPacMan, new Group(body, femaleParts));
+        if (msPacMan != null) {
+            pac3D.setWalkingAnimation(new HipSwaying(msPacMan, pac3D));
+            pac3D.setLight(new PointLight(context.theme().color("ms_pacman.color.head").desaturate()));
+        }
+        return pac3D;
     }
 
     private void addArcadeGhostHouse(Group parent) {
@@ -348,8 +396,8 @@ public class GameLevel3D extends Group {
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         for (int i = 0; i < livesCounter3D.maxLives(); ++i) {
             var pac3D = switch (context.game().variant()) {
-                case MS_PACMAN -> Pac3D.createFemalePac3D(context.theme(), null, theme.get("livescounter.pac.size"));
-                case PACMAN, PACMAN_XXL -> Pac3D.createMalePac3D(context.theme(), null,  theme.get("livescounter.pac.size"));
+                case MS_PACMAN -> createFemalePac3D(null, theme.get("livescounter.pac.size"));
+                case PACMAN, PACMAN_XXL -> createMalePac3D(null,  theme.get("livescounter.pac.size"));
             };
             livesCounter3D.addItem(pac3D, true);
         }

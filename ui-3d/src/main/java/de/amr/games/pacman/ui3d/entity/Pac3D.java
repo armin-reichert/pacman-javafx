@@ -8,9 +8,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui2d.util.Theme;
-import de.amr.games.pacman.ui3d.animation.HeadBanging;
-import de.amr.games.pacman.ui3d.animation.HipSwaying;
 import de.amr.games.pacman.ui3d.animation.WalkingAnimation;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
@@ -49,53 +46,7 @@ public class Pac3D extends Group {
     private static final String MESH_ID_HEAD   = "PacMan.Head";
     private static final String MESH_ID_PALATE = "PacMan.Palate";
 
-    /**
-     * Creates a 3D Pac-Man.
-     * @param theme 3D asset container
-     * @param pacMan Pac-Man instance, may be NULL
-     * @param size diameter of Pac-Man
-     * @return 3D Pac-Man instance
-     */
-    public static Pac3D createMalePac3D(Theme theme, Pac pacMan, double size) {
-        checkNotNull(theme);
-        var body = createPacShape(theme.get("model3D.pacman"), size,
-            theme.color("pacman.color.head"),
-            theme.color("pacman.color.eyes"),
-            theme.color("pacman.color.palate"));
-        var pac3D = new Pac3D(size, pacMan, new Group(body));
-        if (pacMan != null) {
-            pac3D.setWalkingAnimation(new HeadBanging(pacMan, pac3D));
-            pac3D.setLight(new PointLight(theme.color("pacman.color.head").desaturate()));
-        }
-        return pac3D;
-    }
-
-    /**
-     * Creates a 3D Ms. Pac-Man.
-     * @param theme 3D asset container
-     * @param msPacMan Ms. Pac-Man instance, may be NULL
-     * @param size diameter of Pac-Man
-     * @return 3D Ms. Pac-Man instance
-     */
-    public static Pac3D createFemalePac3D(Theme theme, Pac msPacMan, double size) {
-        checkNotNull(theme);
-        var body = createPacShape(theme.get("model3D.pacman"), size,
-            theme.color("ms_pacman.color.head"),
-            theme.color("ms_pacman.color.eyes"),
-            theme.color("ms_pacman.color.palate"));
-        var femaleParts = createFemaleParts(size,
-            theme.color("ms_pacman.color.hairbow"),
-            theme.color("ms_pacman.color.hairbow.pearls"),
-            theme.color("ms_pacman.color.boobs"));
-        var pac3D = new Pac3D(size, msPacMan, new Group(body, femaleParts));
-        if (msPacMan != null) {
-            pac3D.setWalkingAnimation(new HipSwaying(msPacMan, pac3D));
-            pac3D.setLight(new PointLight(theme.color("ms_pacman.color.head").desaturate()));
-        }
-        return pac3D;
-    }
-
-    private static Group createPacShape(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {
+    public static Group createPacShape(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {
         var head = new MeshView(model3D.mesh(MESH_ID_HEAD));
         head.setId(Model3D.toCSS_ID(MESH_ID_HEAD));
         head.setMaterial(coloredMaterial(headColor));
@@ -122,7 +73,7 @@ public class Pac3D extends Group {
         return root;
     }
 
-    private static Group createFemaleParts(double pacSize, Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
+    public static Group createFemaleParts(double pacSize, Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
         var bowMaterial = coloredMaterial(hairBowColor);
 
         var bowLeft = new Sphere(1.2);
@@ -174,7 +125,7 @@ public class Pac3D extends Group {
     private PointLight light;
     private final double size;
 
-    private Pac3D(double size, Pac pac, Group shapeGroup) {
+    public Pac3D(double size, Pac pac, Group shapeGroup) {
         this.size = size;
         this.pac = pac;
         this.shapeGroup = shapeGroup;
@@ -185,10 +136,6 @@ public class Pac3D extends Group {
 
     public Stream<MeshView> meshViews() {
         return Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE).map(id -> meshView(shapeGroup, id));
-    }
-
-    public Pac pac() {
-        return pac;
     }
 
     public Translate position() {
