@@ -18,6 +18,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -168,6 +169,13 @@ public class GamePage implements Page {
             () -> layout.getScaling() * 30,
             layout.scalingPy, layout.getCanvasContainer().heightProperty()
         ));
+    }
+
+    @Override
+    public void onMouseClicked(MouseEvent e) {
+        if (contextMenu != null) {
+            contextMenu.hide(); //TODO is this the recommended way?
+        }
     }
 
     public void onContextMenuRequested(ContextMenuEvent event) {
