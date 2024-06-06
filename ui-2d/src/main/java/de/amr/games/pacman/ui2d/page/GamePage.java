@@ -73,14 +73,14 @@ public class GamePage implements Page {
         this.context = checkNotNull(context);
 
         layout = new CanvasLayoutPane();
-        layout.canvasDecoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
+        layout.decoratedCanvas().decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
         layout.setUnscaledCanvasSize(DEFAULT_CANVAS_WIDTH_UNSCALED, DEFAULT_CANVAS_HEIGHT_UNSCALED);
-        layout.setCanvasBorderColor(context.theme().color("palette.pale"));
-        layout.getCanvasLayer().setBackground(context.theme().background("wallpaper.background"));
-        layout.getCanvasContainer().setBackground(Ufx.coloredBackground(context.theme().color("canvas.background")));
+        layout.decoratedCanvas().setBorderColor(context.theme().color("palette.pale"));
+        layout.canvasLayer().setBackground(context.theme().background("wallpaper.background"));
+        layout.decoratedCanvas().setBackground(Ufx.coloredBackground(context.theme().color("canvas.background")));
 
         // keep popup layer size same as canvas container
-        var canvasContainer = layout.getCanvasContainer();
+        var canvasContainer = layout.decoratedCanvas();
         popupLayer.minHeightProperty().bind(canvasContainer.minHeightProperty());
         popupLayer.maxHeightProperty().bind(canvasContainer.maxHeightProperty());
         popupLayer.prefHeightProperty().bind(canvasContainer.prefHeightProperty());
@@ -104,7 +104,7 @@ public class GamePage implements Page {
         dashboardLayer.setRight(pip);
 
         layout.getChildren().add(dashboardLayer);
-        layout.getCanvasLayer().setBackground(context.theme().background("wallpaper.background"));
+        layout.canvasLayer().setBackground(context.theme().background("wallpaper.background"));
 
         // data binding
         pip.heightProperty().bind(PY_PIP_HEIGHT);
@@ -156,18 +156,18 @@ public class GamePage implements Page {
         signature.setWords(words);
 
         signature.fontPy.bind(Bindings.createObjectBinding(
-            () -> Font.font(font.getFamily(), layout.getScaling() * font.getSize()),
+            () -> Font.font(font.getFamily(), layout.scaling() * font.getSize()),
             layout.scalingPy
         ));
         // keep centered over canvas container
         signature.translateXProperty().bind(Bindings.createDoubleBinding(
-            () -> 0.5 * (layout.getCanvasContainer().getWidth() - signature.getWidth()),
-            layout.scalingPy, layout.getCanvasContainer().widthProperty()
+            () -> 0.5 * (layout.decoratedCanvas().getWidth() - signature.getWidth()),
+            layout.scalingPy, layout.decoratedCanvas().widthProperty()
         ));
         // keep at vertical position over intro scene
         signature.translateYProperty().bind(Bindings.createDoubleBinding(
-            () -> layout.getScaling() * 30,
-            layout.scalingPy, layout.getCanvasContainer().heightProperty()
+            () -> layout.scaling() * 30,
+            layout.scalingPy, layout.decoratedCanvas().heightProperty()
         ));
     }
 
@@ -235,7 +235,7 @@ public class GamePage implements Page {
             () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.RED, 3) : null,
             PY_SHOW_DEBUG_INFO, context.gameSceneProperty()
         ));
-        layout.getCanvasLayer().borderProperty().bind(Bindings.createObjectBinding(
+        layout.canvasLayer().borderProperty().bind(Bindings.createObjectBinding(
             () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.YELLOW, 3) : null,
             PY_SHOW_DEBUG_INFO, context.gameSceneProperty()
         ));
@@ -363,10 +363,10 @@ public class GamePage implements Page {
         var bgColor = context.game().variant() == GameVariant.MS_PACMAN
             ? Color.rgb(255, 0, 0, 0.8)
             : Color.rgb(33, 33, 255, 0.8);
-        var font = context.theme().font("font.monospaced", Math.max(6, 14 * layout.getScaling()));
+        var font = context.theme().font("font.monospaced", Math.max(6, 14 * layout.scaling()));
         var pane = currentHelpInfo().createPane(bgColor, font);
-        helpInfoPopUp.setTranslateX(10 * layout.getScaling());
-        helpInfoPopUp.setTranslateY(30 * layout.getScaling());
+        helpInfoPopUp.setTranslateX(10 * layout.scaling());
+        helpInfoPopUp.setTranslateY(30 * layout.scaling());
         helpInfoPopUp.setContent(pane);
         helpInfoPopUp.show(Duration.seconds(1.5));
     }

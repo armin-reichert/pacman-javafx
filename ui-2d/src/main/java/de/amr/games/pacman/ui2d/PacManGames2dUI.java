@@ -342,7 +342,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
 
         //TODO this does not work yet correctly
-        Dimension2D minSize = CanvasLayoutPane.canvasContainerSize(
+        Dimension2D minSize = DecoratedCanvas.computeSize(
                 DEFAULT_CANVAS_WIDTH_UNSCALED, DEFAULT_CANVAS_HEIGHT_UNSCALED, 1.25 * MIN_SCALING);
         stage.setMinWidth(minSize.getWidth());
         stage.setMinHeight(minSize.getHeight());
@@ -416,7 +416,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
             for (var gameScene : gameSceneMap.values()) {
                 gameScene.setContext(this);
                 if (gameScene instanceof GameScene2D gameScene2D) {
-                    gameScene2D.setCanvas(gamePage.layout().getCanvas());
+                    gameScene2D.setCanvas(gamePage.layout().decoratedCanvas().canvas());
                     gameScene2D.scalingPy.bind(gamePage.layout().scalingPy);
                     gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
                 }
@@ -455,7 +455,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     protected GamePage createGamePage() {
         var page = new GamePage(this);
         page.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
-        page.layout().canvasDecoratedPy.bind(PY_CANVAS_DECORATED);
+        page.layout().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
         page.layout().setMinScaling(MIN_SCALING);
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
         return page;
