@@ -326,6 +326,9 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     public void init(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
+
+        gameVariantPy.set(GameController.it().game().variant());
+
         mainScene = createMainScene(width, height);
 
         pages.put(START_PAGE, createStartPage());
@@ -348,8 +351,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         stage.setScene(mainScene);
 
         selectPage(START_PAGE);
-        gameVariantPy.set(GameController.it().game().variant());
-
         stage.show();
     }
 

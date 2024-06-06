@@ -176,6 +176,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     @Override
     protected GamePage3D createGamePage() {
         var page = new GamePage3D(this);
+        page.dashboard().addInfoBox(3, new InfoBox3D(tt("infobox.3D_settings.title")));
         page.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         page.layout().canvasDecoratedPy.bind(PY_CANVAS_DECORATED);
         page.layout().setMinScaling(MIN_SCALING);
@@ -191,8 +192,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
             PY_3D_DRAW_MODE, PY_3D_NIGHT_MODE
         ));
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
-        var infoBox3D = new InfoBox3D(tt("infobox.3D_settings.title"));
-        page.dashboard().addInfoBox(3, infoBox3D);
         return page;
     }
 
@@ -213,7 +212,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     @Override
     protected GameScene sceneMatchingCurrentGameState() {
         var gameScene = super.sceneMatchingCurrentGameState();
-        if (isGameScene(gameScene, PLAY_SCENE) && PY_3D_ENABLED.get() && gameScenesForCurrentGameVariant().containsKey(PLAY_SCENE_3D)) {
+        if (isGameScene(gameScene, PLAY_SCENE) && PY_3D_ENABLED.get()
+            && gameScenesForCurrentGameVariant().containsKey(PLAY_SCENE_3D)) {
             return gameScenesForCurrentGameVariant().get(PLAY_SCENE_3D);
         }
         return gameScene;
