@@ -48,9 +48,7 @@ Prerequisites: You need to have [JDK 21](https://www.oracle.com/java/technologie
 - `cd pacman-javafx`
 - `./gradlew jpackage`
 
-This will create installers in the subdirectories `ui-2d/build/jpackage` and `ui-3d/build/jpackage`.
-
-(Note: On Windows, `gradlew clean jpackage` always fails because the old exe-files cannot be deleted, see https://github.com/gradle/gradle/issues/26912). Manually deleting the build folder or clearing the exe-file's read-only flag helps.)
+This will create .msi installers in the subdirectories `ui-2d/build/jpackage` and `ui-3d/build/jpackage`.
 
 ### Running the application(s) using Gradle
 
