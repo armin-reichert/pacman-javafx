@@ -26,22 +26,25 @@ public class WorldMap {
     private TileMap terrain;
     private TileMap food;
 
-    public static WorldMap copyOf(WorldMap other) {
-        checkNotNull(other);
-        var copy = new WorldMap();
-        copy.url = other.url;
-        copy.terrain = other.terrain;
-        copy.food = other.food;
-        return copy;
-    }
-
     private WorldMap() {
     }
 
-    public WorldMap(TileMap terrain, TileMap food) {
-        this.terrain = terrain;
-        this.food = food;
-        this.url = null;
+    /**
+     * Creates a world map consisting of copies of the other map's layers.
+     *
+     * @param other other map
+     */
+    public WorldMap(WorldMap other) {
+        checkNotNull(other);
+        terrain = TileMap.copyOf(other.terrain);
+        food = TileMap.copyOf(other.food);
+        url = other.url; //TODO useful?
+    }
+
+    public WorldMap(int numRows, int numCols) {
+        terrain = new TileMap(numRows, numCols);
+        food = new TileMap(numRows, numCols);
+        url = null;
     }
 
     public WorldMap(URL url) {

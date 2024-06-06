@@ -57,7 +57,7 @@ public class TileMapEditor  {
     }
 
     private static WorldMap createNewMap(int numRows, int numCols) {
-        var map = new WorldMap(new TileMap(numRows, numCols), new TileMap(numRows, numCols));
+        var map = new WorldMap(numRows, numCols);
         map.terrain().setProperty("wall_stroke_color", PropertyEditor.formatColor(DEFAULT_WALL_STROKE_COLOR));
         map.terrain().setProperty("wall_fill_color",   PropertyEditor.formatColor(DEFAULT_WALL_FILL_COLOR));
         map.terrain().setProperty("door_color",        PropertyEditor.formatColor(DEFAULT_DOOR_COLOR));
@@ -415,12 +415,11 @@ public class TileMapEditor  {
         checkNotNull(otherMap);
         if (hasUnsavedChanges()) {
             showConfirmation(this::saveMapFileAs, () -> {
-                setMap(WorldMap.copyOf(otherMap));
+                setMap(new WorldMap(otherMap));
                 currentMapFile = null;
             });
         } else {
-            var copy  = WorldMap.copyOf(otherMap);
-            setMap(copy);
+            setMap(new WorldMap(otherMap));
             currentMapFile = null;
         }
     }
