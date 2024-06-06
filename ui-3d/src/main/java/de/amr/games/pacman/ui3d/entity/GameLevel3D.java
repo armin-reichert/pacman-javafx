@@ -620,6 +620,10 @@ public class GameLevel3D extends Group {
         return ghosts3D;
     }
 
+    public Ghost3D ghost3D(byte id) {
+        return ghosts3D.get(id);
+    }
+
     public Optional<Bonus3D> bonus3D() {
         return Optional.ofNullable(bonus3D);
     }

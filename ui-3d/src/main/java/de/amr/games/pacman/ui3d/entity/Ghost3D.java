@@ -12,14 +12,10 @@ import de.amr.games.pacman.ui3d.animation.Turn;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
-import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -54,11 +50,10 @@ public class Ghost3D extends Group {
     private final int numFlashes;
     private final Group coloredGhostGroup;
     private final ColoredGhost3D coloredGhost3D;
-    private final Box numberQuad;
+    private final NumberCube3D numberCube;
     private final Rotate orientation = new Rotate();
     private final RotateTransition brakeAnimation;
     private final RotateTransition dressAnimation;
-    private final RotateTransition numberRotation;
     private Look currentLook;
     private final double size;
 
@@ -79,16 +74,9 @@ public class Ghost3D extends Group {
         coloredGhostGroup = new Group(coloredGhost3D);
         coloredGhostGroup.getTransforms().add(orientation);
 
-        numberQuad = new Box(14, 8, 8);
+        numberCube = new NumberCube3D(14, 8, 8);
 
         getChildren().add(coloredGhostGroup);
-
-        numberRotation = new RotateTransition(Duration.seconds(1), numberQuad);
-        numberRotation.setAxis(Rotate.X_AXIS);
-        numberRotation.setFromAngle(0);
-        numberRotation.setToAngle(360);
-        numberRotation.setInterpolator(Interpolator.LINEAR);
-        numberRotation.setRate(0.75);
 
         brakeAnimation = new RotateTransition(BRAKE_DURATION, coloredGhost3D);
         brakeAnimation.setAxis(Rotate.Y_AXIS);
@@ -108,16 +96,10 @@ public class Ghost3D extends Group {
         setLook(Look.NORMAL);
     }
 
-    public void setNumberImage(Image numberImage) {
-        var material = new PhongMaterial();
-        material.setDiffuseMap(numberImage);
-        numberQuad.setMaterial(material);
-    }
-
     public void init(GameModel game) {
         brakeAnimation.stop();
         dressAnimation.stop();
-        numberRotation.stop();
+        numberCube.stopRotation();
         updateTransform();
         updateLook(game);
     }
@@ -143,7 +125,7 @@ public class Ghost3D extends Group {
         if (currentLook == Look.NUMBER) {
             dressAnimation.stop();
         } else {
-            numberRotation.stop();
+            numberCube.stopRotation();
             if (ghost.lastMove().tunnelEntered) {
                 brakeAnimation.playFromStart();
             }
@@ -176,7 +158,7 @@ public class Ghost3D extends Group {
     private void setLook(Look look) {
         currentLook = look;
         if (currentLook == Look.NUMBER) {
-            getChildren().setAll(numberQuad);
+            getChildren().setAll(numberCube);
         } else {
             getChildren().setAll(coloredGhostGroup);
         }
@@ -191,11 +173,15 @@ public class Ghost3D extends Group {
                     coloredGhost3D.appearFrightened();
                 }
             }
-            case NUMBER -> numberRotation.playFromStart();
+            case NUMBER -> numberCube.startRotation();
         }
     }
 
     private Look frightenedOrFlashingLook(GameModel game) {
         return game.isPowerFading() ? Look.FLASHING : Look.FRIGHTENED;
+    }
+
+    public NumberCube3D getNumberCube() {
+        return numberCube;
     }
 }

@@ -290,7 +290,7 @@ public class PlayScene3D implements GameScene {
                         context.game().eventLog().killedGhosts.forEach(ghost -> {
                             int index = context.game().victims().indexOf(ghost);
                             var numberImage = ss.subImage(sprites[index]);
-                            level3D.ghosts3D().get(ghost.id()).setNumberImage(numberImage);
+                            level3D.ghost3D(ghost.id()).getNumberCube().setImage(numberImage);
                         });
                     }
                     case PACMAN, PACMAN_XXL -> {
@@ -299,7 +299,7 @@ public class PlayScene3D implements GameScene {
                         context.game().eventLog().killedGhosts.forEach(ghost -> {
                             int index = context.game().victims().indexOf(ghost);
                             var numberImage = ss.subImage(sprites[index]);
-                            level3D.ghosts3D().get(ghost.id()).setNumberImage(numberImage);
+                            level3D.ghost3D(ghost.id()).getNumberCube().setImage(numberImage);
                         });
                     }
                 }
