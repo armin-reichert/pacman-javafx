@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.mapeditor;
 
 import de.amr.games.pacman.lib.TileMap;
@@ -8,6 +12,9 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+/**
+ * @author Armin Reichert
+ */
 public class FoodMapRenderer implements TileMapRenderer {
 
     public FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1f);
