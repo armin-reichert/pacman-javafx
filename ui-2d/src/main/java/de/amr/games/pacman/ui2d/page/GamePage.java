@@ -73,20 +73,19 @@ public class GamePage implements Page {
         this.context = checkNotNull(context);
 
         layout = new CanvasLayoutPane();
-        layout.decoratedCanvas().decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
-        layout.setUnscaledCanvasSize(DEFAULT_CANVAS_WIDTH_UNSCALED, DEFAULT_CANVAS_HEIGHT_UNSCALED);
-        layout.decoratedCanvas().setBorderColor(context.theme().color("palette.pale"));
         layout.canvasLayer().setBackground(context.theme().background("wallpaper.background"));
+        layout.decoratedCanvas().decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
         layout.decoratedCanvas().setBackground(Ufx.coloredBackground(context.theme().color("canvas.background")));
+        layout.decoratedCanvas().setBorderColor(context.theme().color("palette.pale"));
+        layout.setUnscaledCanvasSize(DEFAULT_CANVAS_WIDTH_UNSCALED, DEFAULT_CANVAS_HEIGHT_UNSCALED);
 
-        // keep popup layer size same as canvas container
-        var canvasContainer = layout.decoratedCanvas();
-        popupLayer.minHeightProperty().bind(canvasContainer.minHeightProperty());
-        popupLayer.maxHeightProperty().bind(canvasContainer.maxHeightProperty());
-        popupLayer.prefHeightProperty().bind(canvasContainer.prefHeightProperty());
-        popupLayer.minWidthProperty().bind(canvasContainer.minWidthProperty());
-        popupLayer.maxWidthProperty().bind(canvasContainer.maxWidthProperty());
-        popupLayer.prefWidthProperty().bind(canvasContainer.prefWidthProperty());
+        // keep popup layer size same as (decorated) canvas
+        popupLayer.minHeightProperty().bind(layout.decoratedCanvas().minHeightProperty());
+        popupLayer.maxHeightProperty().bind(layout.decoratedCanvas().maxHeightProperty());
+        popupLayer.prefHeightProperty().bind(layout.decoratedCanvas().prefHeightProperty());
+        popupLayer.minWidthProperty().bind(layout.decoratedCanvas().minWidthProperty());
+        popupLayer.maxWidthProperty().bind(layout.decoratedCanvas().maxWidthProperty());
+        popupLayer.prefWidthProperty().bind(layout.decoratedCanvas().prefWidthProperty());
         popupLayer.getChildren().addAll(helpInfoPopUp, signature);
 
         pip = new PictureInPictureView(context);

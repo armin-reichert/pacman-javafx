@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.ui2d.util;
 
 import javafx.beans.property.DoubleProperty;
@@ -12,6 +16,8 @@ import java.util.Objects;
 
 /**
  * Layered container containing a (decorated) canvas in the center of the lowest layer.
+ *
+ * @author Armin Reichert
  */
 public class CanvasLayoutPane extends StackPane {
 
