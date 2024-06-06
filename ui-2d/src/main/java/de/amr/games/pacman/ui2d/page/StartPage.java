@@ -6,6 +6,8 @@ import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui2d.util.Ufx;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -28,6 +30,27 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
  * @author Armin Reichert
  */
 public class StartPage implements Page {
+
+    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
+        @Override
+        protected void invalidated() {
+            GameVariant variant = get();
+            if (variant == null) {
+                return;
+            }
+            String imageKey = variant.resourceKey() + ".startpage.image";
+            Image image = checkNotNull(context.theme().image(imageKey));
+            var background = new Background(
+                new BackgroundImage(
+                    image,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    variant == GameVariant.PACMAN_XXL ? FILL : FIT_HEIGHT)
+            );
+            layout.setBackground(background);
+        }
+    };
 
     private static final String CAROUSEL_ICON_LEFT  = "\u2b98";
     private static final String CAROUSEL_ICON_RIGHT = "\u2b9a";
@@ -104,8 +127,6 @@ public class StartPage implements Page {
         layout.setRight(right);
         layout.setCenter(btnPlayContainer);
 
-        setGameVariant(context.game().variant());
-
         root.setBackground(context.theme().get("wallpaper.background"));
         root.getChildren().add(layout);
     }
@@ -144,19 +165,5 @@ public class StartPage implements Page {
         } else if (Keyboard.pressed(KEY_PAUSE)) {
             context.actionHandler().togglePaused();
         }
-    }
-
-    public void setGameVariant(GameVariant variant) {
-        String imageKey = variant.resourceKey() + ".startpage.image";
-        Image image = checkNotNull(context.theme().image(imageKey));
-        var background = new Background(
-            new BackgroundImage(
-                image,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                variant == GameVariant.PACMAN_XXL ? FILL : FIT_HEIGHT)
-        );
-        layout.setBackground(background);
     }
 }

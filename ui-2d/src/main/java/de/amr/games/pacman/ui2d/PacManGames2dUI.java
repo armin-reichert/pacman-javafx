@@ -130,14 +130,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
 
     // end static section
 
-    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
-        @Override
-        protected void invalidated() {
-            Logger.debug("gameVariantPy invalidated");
-            StartPage startPage = page(START_PAGE);
-            startPage.setGameVariant(get());
-        }
-    };
+    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant");
 
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
@@ -355,6 +348,8 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         stage.setScene(mainScene);
 
         selectPage(START_PAGE);
+        gameVariantPy.set(GameController.it().game().variant());
+
         stage.show();
     }
 
@@ -452,6 +447,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
                 selectPage(GAME_PAGE);
             }
         });
+        startPage.gameVariantPy.bind(gameVariantPy);
         return startPage;
     }
 
@@ -605,7 +601,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     @Override
     public void onGameVariantChanged(GameEvent e) {
         var newVariant = game().variant();
-        Logger.info("Game variant changed to {}", newVariant);
+        Logger.info("onGameVariantChanged: {}", e);
         gameVariantPy.set(newVariant);
         stage.getIcons().setAll(theme.image(newVariant.resourceKey() + ".icon"));
     }
