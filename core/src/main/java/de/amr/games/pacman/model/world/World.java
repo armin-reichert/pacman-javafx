@@ -24,7 +24,7 @@ import static java.util.Collections.unmodifiableList;
  */
 public class World {
 
-    private final WorldMap worldMap;
+    private final WorldMap map;
 
     private final BitSet eaten;
     private final int totalFoodCount;
@@ -42,23 +42,23 @@ public class World {
     private Map<Vector2i, List<Direction>> forbiddenPassages = Map.of();
 
     /**
-     * @param worldMap terrain+food map
+     * @param map terrain+food map
      */
-    public World(WorldMap worldMap) {
-        this.worldMap = checkNotNull(worldMap);
+    public World(WorldMap map) {
+        this.map = checkNotNull(map);
         setScatterTiles();
         setPacPosition();
         setGhostPositions();
         setPortals();
-        worldMap.terrain().computePaths();
+        map.terrain().computePaths();
         energizerTiles = tiles().filter(this::isEnergizerTile).toList();
-        eaten = new BitSet(numCols() * numRows());
+        eaten = new BitSet(map.numCols() * map.numRows());
         totalFoodCount = (int) tiles().filter(this::isFoodTile).count();
         uneatenFoodCount = totalFoodCount;
     }
 
     private void setPacPosition() {
-        Optional<Vector2i> pacHomeTile = worldMap.terrain().tiles(PAC_HOME).findFirst();
+        Optional<Vector2i> pacHomeTile = map.terrain().tiles(PAC_HOME).findFirst();
         if (pacHomeTile.isEmpty()) {
             Logger.warn("No Pac home tile found in map, using default");
         }
@@ -68,25 +68,25 @@ public class World {
     private void setGhostPositions() {
         ghostPositions = new Vector2f[4];
 
-        Optional<Vector2i> homeTileRed = worldMap.terrain().tiles(HOME_RED_GHOST).findFirst();
+        Optional<Vector2i> homeTileRed = map.terrain().tiles(HOME_RED_GHOST).findFirst();
         if (homeTileRed.isEmpty()) {
             Logger.warn("No home tile set for red ghost, using default");
         }
         ghostPositions[GameModel.RED_GHOST] = positionHalfTileRightOf(homeTileRed.orElse(new Vector2i(13, 14)));
 
-        Optional<Vector2i> homeTilePink = worldMap.terrain().tiles(HOME_PINK_GHOST).findFirst();
+        Optional<Vector2i> homeTilePink = map.terrain().tiles(HOME_PINK_GHOST).findFirst();
         if (homeTilePink.isEmpty()) {
             Logger.warn("No home tile set for pink ghost, using default");
         }
         ghostPositions[GameModel.PINK_GHOST] = positionHalfTileRightOf(homeTilePink.orElse(new Vector2i(13, 17)));
 
-        Optional<Vector2i> homeTileCyan = worldMap.terrain().tiles(HOME_CYAN_GHOST).findFirst();
+        Optional<Vector2i> homeTileCyan = map.terrain().tiles(HOME_CYAN_GHOST).findFirst();
         if (homeTileCyan.isEmpty()) {
             Logger.warn("No home tile set for cyan ghost, using default");
         }
         ghostPositions[GameModel.CYAN_GHOST] = positionHalfTileRightOf(homeTileCyan.orElse(new Vector2i(11, 17)));
 
-        Optional<Vector2i> homeTileOrange = worldMap.terrain().tiles(HOME_ORANGE_GHOST).findFirst();
+        Optional<Vector2i> homeTileOrange = map.terrain().tiles(HOME_ORANGE_GHOST).findFirst();
         if (homeTileOrange.isEmpty()) {
             Logger.warn("No home tile set for orange ghost, using default");
         }
@@ -100,25 +100,25 @@ public class World {
     private void setScatterTiles() {
         ghostScatterTiles = new Vector2i[4];
 
-        Optional<Vector2i> scatterTileRed = worldMap.terrain().tiles(SCATTER_TARGET_RED).findFirst();
+        Optional<Vector2i> scatterTileRed = map.terrain().tiles(SCATTER_TARGET_RED).findFirst();
         if (scatterTileRed.isEmpty()) {
             Logger.warn("No scatter target set for red ghost, using default");
         }
         ghostScatterTiles[GameModel.RED_GHOST] = scatterTileRed.orElse(new Vector2i(0, numCols() - 3));
 
-        Optional<Vector2i> scatterTilePink = worldMap.terrain().tiles(SCATTER_TARGET_PINK).findFirst();
+        Optional<Vector2i> scatterTilePink = map.terrain().tiles(SCATTER_TARGET_PINK).findFirst();
         if (scatterTilePink.isEmpty()) {
             Logger.warn("No scatter target set for pink ghost, using default");
         }
         ghostScatterTiles[GameModel.PINK_GHOST] = scatterTilePink.orElse(new Vector2i(0, 3));
 
-        Optional<Vector2i> scatterTileCyan = worldMap.terrain().tiles(SCATTER_TARGET_CYAN).findFirst();
+        Optional<Vector2i> scatterTileCyan = map.terrain().tiles(SCATTER_TARGET_CYAN).findFirst();
         if (scatterTileCyan.isEmpty()) {
             Logger.warn("No scatter target set for cyan ghost, using default");
         }
         ghostScatterTiles[GameModel.CYAN_GHOST] = scatterTileCyan.orElse(new Vector2i(numRows()-1, numCols()-1));
 
-        Optional<Vector2i> scatterTileOrange = worldMap.terrain().tiles(SCATTER_TARGET_ORANGE).findFirst();
+        Optional<Vector2i> scatterTileOrange = map.terrain().tiles(SCATTER_TARGET_ORANGE).findFirst();
         if (scatterTileOrange.isEmpty()) {
             Logger.warn("No scatter target set for orange ghost, using default");
         }
@@ -131,7 +131,7 @@ public class World {
         for (int row = 0; row < numRows(); ++row) {
             var leftBorderTile = v2i(0, row);
             var rightBorderTile = v2i(lastColumn, row);
-            if (worldMap.terrain(row, 0) == TUNNEL && worldMap.terrain(row, lastColumn) == TUNNEL) {
+            if (map.terrain(row, 0) == TUNNEL && map.terrain(row, lastColumn) == TUNNEL) {
                 portals.add(new Portal(leftBorderTile, rightBorderTile, 2));
             }
         }
@@ -147,24 +147,24 @@ public class World {
     }
 
     public int numCols() {
-        return worldMap.numCols();
+        return map.numCols();
     }
 
     public int numRows() {
-        return worldMap.numRows();
+        return map.numRows();
     }
 
     public Stream<Vector2i> tiles() {
-        return worldMap.tiles();
+        return map.tiles();
     }
 
     public WorldMap map() {
-        return worldMap;
+        return map;
     }
 
     public boolean insideBounds(Vector2i tile) {
         checkTileNotNull(tile);
-        return !worldMap.terrain().outOfBounds(tile.y(), tile.x());
+        return !map.terrain().outOfBounds(tile.y(), tile.x());
     }
 
     public boolean containsPoint(double x, double y) {
@@ -242,7 +242,7 @@ public class World {
     }
 
     public boolean isBlockedTile(Vector2i tile) {
-        return insideBounds(tile) && isBlockedTerrain(worldMap.terrain(tile));
+        return insideBounds(tile) && isBlockedTerrain(map.terrain(tile));
     }
 
     private boolean isBlockedTerrain(byte content) {
@@ -256,7 +256,7 @@ public class World {
         if (!insideBounds(tile)) {
             return false;
         }
-        return worldMap.terrain(tile) == TUNNEL;
+        return map.terrain(tile) == TUNNEL;
     }
 
     public boolean isIntersection(Vector2i tile) {
@@ -288,7 +288,7 @@ public class World {
             return; // raise error?
         }
         if (hasFoodAt(tile)) {
-            eaten.set(worldMap.food().index(tile));
+            eaten.set(map.food().index(tile));
             --uneatenFoodCount;
         }
     }
@@ -297,27 +297,27 @@ public class World {
         if (!insideBounds(tile)) {
             return false;
         }
-        return worldMap.food(tile) != EMPTY;
+        return map.food(tile) != EMPTY;
     }
 
     public boolean isEnergizerTile(Vector2i tile) {
         if (!insideBounds(tile)) {
             return false;
         }
-        return worldMap.food(tile) == ENERGIZER;
+        return map.food(tile) == ENERGIZER;
     }
 
     public boolean hasFoodAt(Vector2i tile) {
         if (!insideBounds(tile)) {
             return false;
         }
-        return worldMap.food(tile) != EMPTY && !eaten.get(worldMap.food().index(tile));
+        return map.food(tile) != EMPTY && !eaten.get(map.food().index(tile));
     }
 
     public boolean hasEatenFoodAt(Vector2i tile) {
         if (!insideBounds(tile)) {
             return false;
         }
-        return eaten.get(worldMap.food().index(tile));
+        return eaten.get(map.food().index(tile));
     }
 }
