@@ -35,10 +35,6 @@ public class InfoBoxGeneral extends InfoBox {
     private Tooltip tooltipStop = new Tooltip("Stop");
     private Tooltip tooltipStep = new Tooltip("Single Step Mode");
 
-    public InfoBoxGeneral(String title) {
-        super(title);
-    }
-
     public void init(GameSceneContext context) {
         this.context = context;
 

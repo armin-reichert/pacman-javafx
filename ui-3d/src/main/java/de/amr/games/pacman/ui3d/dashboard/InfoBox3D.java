@@ -53,10 +53,6 @@ public class InfoBox3D extends InfoBox {
     private Spinner<Integer> spinnerCamY;
     private Spinner<Integer> spinnerCamZ;
 
-    public InfoBox3D(String title) {
-        super(title);
-    }
-
     public void init(GameSceneContext context) {
         this.context = context;
 

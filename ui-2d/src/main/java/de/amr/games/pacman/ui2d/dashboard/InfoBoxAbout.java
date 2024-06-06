@@ -17,10 +17,6 @@ import javafx.scene.text.TextFlow;
  */
 public class InfoBoxAbout extends InfoBox {
 
-    public InfoBoxAbout(String title) {
-        super(title);
-    }
-
     public void init(GameSceneContext context) {
         this.context = context;
 

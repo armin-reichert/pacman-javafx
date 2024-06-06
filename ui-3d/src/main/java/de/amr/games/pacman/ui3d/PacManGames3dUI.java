@@ -176,7 +176,7 @@ public class PacManGames3dUI extends PacManGames2dUI implements ActionHandler3D 
     @Override
     protected GamePage3D createGamePage() {
         var page = new GamePage3D(this);
-        page.dashboard().addInfoBox(3, new InfoBox3D(tt("infobox.3D_settings.title")));
+        page.dashboard().addInfoBox(3, tt("infobox.3D_settings.title"), new InfoBox3D());
         page.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         page.layout().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
         page.layout().setMinScaling(MIN_SCALING);

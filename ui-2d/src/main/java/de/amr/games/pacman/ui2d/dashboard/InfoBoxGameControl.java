@@ -38,10 +38,6 @@ public class InfoBoxGameControl extends InfoBox {
     private CheckBox cbAutopilot;
     private CheckBox cbImmunity;
 
-    public InfoBoxGameControl(String title) {
-        super(title);
-    }
-
     public void init(GameSceneContext context) {
         this.context = context;
 

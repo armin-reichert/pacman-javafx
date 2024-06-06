@@ -17,10 +17,6 @@ import static de.amr.games.pacman.lib.TickTimer.ticksToString;
  */
 public class InfoBoxGameInfo extends InfoBox {
 
-    public InfoBoxGameInfo(String title) {
-        super(title);
-    }
-
     public void init(GameSceneContext context) {
             this.context = context;
 

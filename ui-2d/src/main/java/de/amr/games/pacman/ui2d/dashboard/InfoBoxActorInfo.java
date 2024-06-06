@@ -38,10 +38,6 @@ public class InfoBoxActorInfo extends InfoBox {
             : InfoText.NO_INFO;
     }
 
-    public InfoBoxActorInfo(String title) {
-        super(title);
-    }
-
     public void init(GameSceneContext context) {
         this.context = context;
 

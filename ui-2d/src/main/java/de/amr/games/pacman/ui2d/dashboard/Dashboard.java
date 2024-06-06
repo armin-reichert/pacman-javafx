@@ -27,13 +27,14 @@ public class Dashboard extends VBox {
         return context;
     }
 
-    public void addInfoBox(InfoBox infoBox) {
-        addInfoBox(infoBoxes.size(), infoBox);
+    public void addInfoBox(String title, InfoBox infoBox) {
+        addInfoBox(infoBoxes.size(), title, infoBox);
     }
 
-    public void addInfoBox(int index, InfoBox infoBox) {
+    public void addInfoBox(int index, String title, InfoBox infoBox) {
         infoBoxes.add(index, infoBox);
         getChildren().add(index, infoBox);
+        infoBox.setText(title);
         infoBox.setMinLabelWidth(context.theme().get("infobox.min_label_width"));
         infoBox.setTextColor(context.theme().get("infobox.text_color"));
         infoBox.setTextFont(context.theme().get("infobox.text_font"));

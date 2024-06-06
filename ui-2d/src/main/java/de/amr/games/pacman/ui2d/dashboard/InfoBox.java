@@ -49,8 +49,7 @@ public abstract class InfoBox extends TitledPane {
     private Font labelFont;
     private int row;
 
-    public InfoBox(String title) {
-        setText(title);
+    public InfoBox() {
         setExpanded(false);
         setOpacity(0.7);
         setFocusTraversable(false);

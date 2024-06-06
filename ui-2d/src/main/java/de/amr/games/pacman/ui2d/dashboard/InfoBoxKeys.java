@@ -13,10 +13,6 @@ import de.amr.games.pacman.ui2d.scene.GameSceneContext;
  */
 public class InfoBoxKeys extends InfoBox {
 
-    public InfoBoxKeys(String title) {
-        super(title);
-    }
-
     public void init(GameSceneContext context) {
         this.context = context;
 

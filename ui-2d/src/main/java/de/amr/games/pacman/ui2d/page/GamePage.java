@@ -91,12 +91,12 @@ public class GamePage implements Page {
         pip = new PictureInPictureView(context);
 
         dashboard = new Dashboard(context);
-        dashboard.addInfoBox(new InfoBoxGeneral(context.tt("infobox.general.title")));
-        dashboard.addInfoBox(new InfoBoxGameControl(context.tt("infobox.game_control.title")));
-        dashboard.addInfoBox(new InfoBoxGameInfo(context.tt("infobox.game_info.title")));
-        dashboard.addInfoBox(new InfoBoxActorInfo(context.tt("infobox.actor_info.title")));
-        dashboard.addInfoBox(new InfoBoxKeys(context.tt("infobox.keyboard_shortcuts.title")));
-        dashboard.addInfoBox(new InfoBoxAbout(context.tt("infobox.about.title")));
+        dashboard.addInfoBox(context.tt("infobox.general.title"), new InfoBoxGeneral());
+        dashboard.addInfoBox(context.tt("infobox.game_control.title"), new InfoBoxGameControl());
+        dashboard.addInfoBox(context.tt("infobox.game_info.title"), new InfoBoxGameInfo());
+        dashboard.addInfoBox(context.tt("infobox.actor_info.title"), new InfoBoxActorInfo());
+        dashboard.addInfoBox(context.tt("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
+        dashboard.addInfoBox(context.tt("infobox.about.title"), new InfoBoxAbout());
 
         dashboardLayer = new BorderPane();
         dashboardLayer.setLeft(dashboard);
