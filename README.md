@@ -48,14 +48,14 @@ Prerequisites: You need to have [JDK 21](https://www.oracle.com/java/technologie
 - `cd pacman-javafx`
 - `./gradlew jpackage`
 
-This will create installers in the subdirectories `pacman-ui-fx-2d/build/jpackage` and `pacman-ui-fx-3d/build/jpackage`.
+This will create installers in the subdirectories `ui-2d/build/jpackage` and `ui-3d/build/jpackage`.
 
 (Note: On Windows, `gradlew clean jpackage` always fails because the old exe-files cannot be deleted, see https://github.com/gradle/gradle/issues/26912). Manually deleting the build folder or clearing the exe-file's read-only flag helps.)
 
 ### Running the application(s) using Gradle
 
-- Pac-Man 2D: `./gradlew pacman-ui-fx-2d:run`
-- Pac-Man 3D: `./gradlew pacman-ui-fx-3d:run`
+- Pac-Man 2D: `./gradlew ui-2d:run`
+- Pac-Man 3D: `./gradlew ui-3d:run`
 
 To be able to create the Windows executables, you need to have the following tools installed:
 
