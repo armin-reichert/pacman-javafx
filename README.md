@@ -43,12 +43,11 @@ Prerequisites: You need to have [JDK 21](https://www.oracle.com/java/technologie
 - `cd /whatever/path/to/your/repositories`
 - `git clone https://github.com/armin-reichert/pacman-javafx.git`
 
-## Building with Gradle
+## Building the installer
 
-- `cd pacman-javafx`
-- `./gradlew jpackage`
+In folder `cd pacman-javafx` enter `./gradlew jpackage` or just `make` (Windows)
 
-This will create .msi installers in the subdirectories `ui-2d/build/jpackage` and `ui-3d/build/jpackage`.
+This will create installers (.msi, .deb, .dmg) in the subdirectories `ui-2d/build/jpackage` and `ui-3d/build/jpackage`.
 
 ### Running the application(s) using Gradle
 
