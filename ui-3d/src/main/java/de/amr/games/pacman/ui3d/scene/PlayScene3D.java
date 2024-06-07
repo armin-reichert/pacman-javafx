@@ -52,11 +52,10 @@ public class PlayScene3D implements GameScene {
     public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
         @Override
         protected void invalidated() {
-            perspectivePy.get().init(fxSubScene.getCamera());
+            get().init(fxSubScene.getCamera());
         }
     };
 
-    private final Group subSceneRoot = new Group();
     private final SubScene fxSubScene;
     private final Scores3D scores3D;
 
@@ -65,13 +64,14 @@ public class PlayScene3D implements GameScene {
     private boolean scoreVisible;
 
     public PlayScene3D() {
-        // initial scene size is irrelevant, gets bound to parent scene later
-        fxSubScene = new SubScene(subSceneRoot, 42, 42, true, SceneAntialiasing.BALANCED);
-        fxSubScene.setFill(null); // transparent
-
         var camera = new PerspectiveCamera(true);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
+
+        // initial scene size is irrelevant, gets bound to parent scene later
+        var root = new Group();
+        fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
+        fxSubScene.setFill(null); // transparent
         fxSubScene.setCamera(camera);
 
         var ambientLight = new AmbientLight();
@@ -85,8 +85,8 @@ public class PlayScene3D implements GameScene {
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
 
-        // first child is placeholder for game level 3D
-        subSceneRoot.getChildren().addAll(new Group(), scores3D,  coordSystem, ambientLight);
+        var level3DPlaceholder = new Group();
+        root.getChildren().addAll(level3DPlaceholder, scores3D,  coordSystem, ambientLight);
     }
 
     public void setParentScene(Scene parentScene) {
@@ -180,17 +180,17 @@ public class PlayScene3D implements GameScene {
         World world = checkNotNull(context.game().world());
 
         level3D = new GameLevel3D(context);
-        // replace initial placeholder or previous 3D level
-        subSceneRoot.getChildren().set(CHILD_INDEX_LEVEL_3D, level3D);
-
         level3D.setTranslateX(-world.numCols() * HTS);
         level3D.setTranslateY(-world.numRows() * HTS);
-
         level3D.livesCounter3D().setVisible(context.gameController().hasCredit());
 
-        scores3D.setTranslateX(level3D.getTranslateX() + TS);
-        scores3D.setTranslateY(level3D.getTranslateY() -3.5 * TS);
-        scores3D.setTranslateZ(-3 * TS);
+        // replace initial placeholder or previous 3D level
+        var root = (Group) fxSubScene.getRoot();
+        root.getChildren().set(CHILD_INDEX_LEVEL_3D, level3D);
+
+        scores3D.translateXProperty().bind(level3D.translateXProperty().add(TS));
+        scores3D.translateYProperty().bind(level3D.translateYProperty().subtract(3.5 * TS));
+        scores3D.translateZProperty().bind(level3D.translateZProperty().subtract(3 * TS));
 
         if (PY_3D_FLOOR_TEXTURE_RND.get()) {
             List<String> names = context.theme().getArray("texture.names");
