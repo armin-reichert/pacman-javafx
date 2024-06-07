@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui2d.dashboard;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.collections.FXCollections;
@@ -84,6 +85,10 @@ public abstract class InfoBox extends TitledPane {
 
     public void setTextFont(Font textFont) {
         this.textFont = textFont;
+    }
+
+    protected Supplier<String> ifGameScene(Function<GameScene, String> infoSupplier) {
+        return () -> context.currentGameScene().map(infoSupplier).orElse(NO_INFO);
     }
 
     protected Supplier<String> ifLevel(Function<GameLevel, String> infoSupplier) {

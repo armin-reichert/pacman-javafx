@@ -12,8 +12,6 @@ import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import static de.amr.games.pacman.lib.TickTimer.ticksToString;
 
 /**
- * Game related settings.
- *
  * @author Armin Reichert
  */
 public class InfoBoxGameInfo extends InfoBox {
@@ -21,12 +19,7 @@ public class InfoBoxGameInfo extends InfoBox {
     public void init(GameSceneContext context) {
         this.context = context;
 
-        infoText("Game Scene",
-            () -> context.currentGameScene()
-                .map(GameScene::getClass)
-                .map(Class::getSimpleName)
-                .orElse(InfoText.NO_INFO));
-
+        infoText("Game Scene", ifGameScene(gameScene -> gameScene.getClass().getSimpleName()));
         infoText("Game State", () -> "%s".formatted(context.gameState()));
 
         infoText("",
@@ -78,10 +71,7 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtPelletCount(World world) {
-        return String.format("%d of %d (%d energizers)",
-            world.uneatenFoodCount(),
-            world.totalFoodCount(),
-            world.energizerTiles().count());
+        return "%d of %d (%d energizers)".formatted(world.uneatenFoodCount(), world.totalFoodCount(), world.energizerTiles().count());
     }
 
     private String fmtGhostSpeed(GameLevel level) {
