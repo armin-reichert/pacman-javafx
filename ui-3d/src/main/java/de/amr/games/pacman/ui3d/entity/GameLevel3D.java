@@ -492,12 +492,7 @@ public class GameLevel3D extends Group {
     }
 
     private Ghost3D createGhost3D(Ghost ghost) {
-        return new Ghost3D(
-            context.theme().get("model3D.ghost"),
-            context.theme(),
-            ghost,
-            context.game().level().orElseThrow().numFlashes(),
-            GHOST_SIZE);
+        return new Ghost3D(context.theme().get("model3D.ghost"), context.theme(), ghost, GHOST_SIZE);
     }
 
     private void addEnergizerAnimation(World world, Energizer3D energizer3D) {

@@ -16,6 +16,7 @@ import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -70,7 +71,6 @@ public class Ghost3D extends Group {
     };
 
     private final Ghost ghost;
-    private final int numFlashes;
     private final Group coloredGhostGroup;
     private final ColoredGhost3D coloredGhost3D;
     private final NumberCube3D numberCube;
@@ -78,14 +78,14 @@ public class Ghost3D extends Group {
     private final RotateTransition brakeAnimation;
     private final RotateTransition dressAnimation;
     private final double size;
+    private int numFlashes;
 
-    public Ghost3D(Model3D model3D, Theme theme, Ghost ghost, int numFlashes, double size) {
+    public Ghost3D(Model3D model3D, Theme theme, Ghost ghost, double size) {
         requireNonNull(model3D);
         requireNonNull(theme);
         requireNonNull(ghost);
 
         this.ghost = ghost;
-        this.numFlashes = numFlashes;
         this.size = size;
 
         coloredGhost3D = new ColoredGhost3D(model3D, theme, ghost.id(), size);
@@ -130,6 +130,11 @@ public class Ghost3D extends Group {
         updateTransform();
         updateLook(game);
         updateAnimations();
+        game.level().ifPresent(level -> numFlashes = level.numFlashes());
+    }
+
+    public void setNumberImage(Image image) {
+        numberCube.setImage(image);
     }
 
     private void updateTransform() {
@@ -179,9 +184,5 @@ public class Ghost3D extends Group {
 
     private Look frightenedOrFlashing(GameModel game) {
         return game.isPowerFading() ? Look.FLASHING : Look.FRIGHTENED;
-    }
-
-    public NumberCube3D getNumberCube() {
-        return numberCube;
     }
 }
