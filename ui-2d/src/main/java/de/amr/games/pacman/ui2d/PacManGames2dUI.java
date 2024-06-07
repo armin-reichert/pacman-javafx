@@ -911,6 +911,14 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     }
 
     @Override
+    public void selectNextPerspective() {
+    }
+
+    @Override
+    public void selectPrevPerspective() {
+    }
+
+    @Override
     public void toggleAutopilot() {
         Ufx.toggle(PY_USE_AUTOPILOT);
         boolean auto = PY_USE_AUTOPILOT.get();

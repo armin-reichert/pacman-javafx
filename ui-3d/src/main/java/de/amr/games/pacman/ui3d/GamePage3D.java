@@ -33,7 +33,7 @@ public class GamePage3D extends GamePage {
             return;
         }
         boolean isPlayScene3D = context.isCurrentGameScene(PLAY_SCENE_3D);
-        var actionHandler = (ActionHandler3D) context.actionHandler();
+        var actionHandler = context.actionHandler();
         contextMenu = new ContextMenu();
 
         contextMenu.getItems().add(menuTitleItem(context.tt("scene_display")));

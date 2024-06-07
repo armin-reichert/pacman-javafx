@@ -55,6 +55,10 @@ public interface ActionHandler {
 
     void selectPrevGameVariant();
 
+    void selectNextPerspective();
+
+    void selectPrevPerspective();
+
     void startCutscenesTest();
 
     void cheatEatAllPellets();
