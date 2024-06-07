@@ -10,6 +10,7 @@ import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.PacManGames2dUI.KEY_FULLSCREEN;
 
 /**
@@ -21,10 +22,11 @@ public class EditorPage implements Page {
     private final GameSceneContext context;
 
     public EditorPage(TileMapEditor editor, GameSceneContext context) {
+        checkNotNull(editor);
+        this.context = checkNotNull(context);
         pane = new BorderPane();
         pane.setCenter(editor.getLayout());
         pane.setTop(editor.getMenuBar());
-        this.context = context;
     }
 
     @Override
