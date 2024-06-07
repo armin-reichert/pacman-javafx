@@ -21,7 +21,7 @@ public class InfoBoxAbout extends InfoBox {
         this.context = context;
 
         var theAuthorInYoungerYears = new ImageView(context.theme().image("image.armin1970"));
-        theAuthorInYoungerYears.setFitWidth(303);
+        theAuthorInYoungerYears.setFitWidth(250);
         theAuthorInYoungerYears.setPreserveRatio(true);
 
         var madeBy = new Text("Made by     ");
