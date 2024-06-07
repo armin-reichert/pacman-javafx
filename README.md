@@ -28,23 +28,17 @@ Alt+3</kbd>). The game implementation tries to mimic the original Arcade version
 
 In each [release](https://github.com/armin-reichert/pacman-javafx/releases) you find attached 3 installers. 
 
-On Windows, the application must be uninstalled first (if already installed), otherwise the installer crashes (no idea why).
-
-The Linux (.deb) installer has only been tested on Ubuntu inside a VM, it worked after installing the FFMPeg library (see [linux-issues.md](doc/linux-issues.md)).
-
-The Mac-OS (.dmg) version has not been tested at all, any help is appreciated.
+- On Windows, the application must be uninstalled first (if already installed), otherwise the installer crashes (no idea why).
+- The Linux (.deb) installer has only been tested on Ubuntu inside a VM, it worked after installing the FFMPeg library (see [linux-issues.md](doc/linux-issues.md)).
+- The Mac-OS (.dmg) version has not been tested at all, any help is appreciated.
 
 ## How to build
 
 Prerequisites: You need to have [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21) and [Git](https://github.com/git-guides/install-git) installed on your computer.
 
-### Cloning the GitHub repository
-
 - `git clone https://github.com/armin-reichert/pacman-javafx.git`
-
-### Building the installer
-
-In folder `cd pacman-javafx` enter `./gradlew jpackage` or just `make` (Windows)
+- `cd pacman-javafx`
+- `./gradlew jpackage` or just `make` (Windows)
 
 This will create installers (.msi, .deb, .dmg) in the subdirectories `ui-2d/build/jpackage` and `ui-3d/build/jpackage`.
 
