@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.collections.FXCollections;
@@ -20,8 +21,11 @@ import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import static de.amr.games.pacman.ui2d.dashboard.InfoText.NO_INFO;
 
 /**
  * Base class for area displaying UI info/editors.
@@ -82,10 +86,12 @@ public abstract class InfoBox extends TitledPane {
         this.textFont = textFont;
     }
 
-    protected Supplier<String> ifLevelExists(Function<GameLevel, String> infoSupplier) {
-        return () -> context.game().level().isEmpty()
-            ? InfoText.NO_INFO
-            : infoSupplier.apply(context.game().level().get());
+    protected Supplier<String> ifLevel(Function<GameLevel, String> infoSupplier) {
+        return () -> context.game().level().map(infoSupplier).orElse(NO_INFO);
+    }
+
+    protected Supplier<String> ifWorld(Function<World, String> infoSupplier) {
+        return () -> Optional.ofNullable(context.game().world()).map(infoSupplier).orElse(NO_INFO);
     }
 
     protected void addRow(String labelText, Node child) {
