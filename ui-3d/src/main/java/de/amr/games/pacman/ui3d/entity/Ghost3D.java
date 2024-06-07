@@ -45,6 +45,29 @@ public class Ghost3D extends Group {
     public enum Look { NORMAL, FRIGHTENED, FLASHING, EYES, NUMBER }
 
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+    public final ObjectProperty<Look> lookPy = new SimpleObjectProperty<>(this, "look") {
+        @Override
+        protected void invalidated() {
+            if (get() == Look.NUMBER) {
+                getChildren().setAll(numberCube);
+            } else {
+                getChildren().setAll(coloredGhostGroup);
+            }
+            switch (get()) {
+                case NORMAL -> coloredGhost3D.appearNormal();
+                case FRIGHTENED -> coloredGhost3D.appearFrightened();
+                case EYES -> coloredGhost3D.appearEyesOnly();
+                case FLASHING -> {
+                    if (numFlashes > 0) {
+                        coloredGhost3D.appearFlashing(numFlashes, 1.0);
+                    } else {
+                        coloredGhost3D.appearFrightened();
+                    }
+                }
+                case NUMBER -> numberCube.startRotation();
+            }
+        }
+    };
 
     private final Ghost ghost;
     private final int numFlashes;
@@ -54,7 +77,6 @@ public class Ghost3D extends Group {
     private final Rotate orientation = new Rotate();
     private final RotateTransition brakeAnimation;
     private final RotateTransition dressAnimation;
-    private Look currentLook;
     private final double size;
 
     public Ghost3D(Model3D model3D, Theme theme, Ghost ghost, int numFlashes, double size) {
@@ -93,7 +115,7 @@ public class Ghost3D extends Group {
         dressAnimation.setCycleCount(Animation.INDEFINITE);
         dressAnimation.setAutoReverse(true);
 
-        setLook(Look.NORMAL);
+        lookPy.set(Look.NORMAL);
     }
 
     public void init(GameModel game) {
@@ -122,7 +144,7 @@ public class Ghost3D extends Group {
     }
 
     private void updateAnimations() {
-        if (currentLook == Look.NUMBER) {
+        if (look() == Look.NUMBER) {
             dressAnimation.stop();
         } else {
             numberCube.stopRotation();
@@ -136,48 +158,26 @@ public class Ghost3D extends Group {
     }
 
     private void updateLook(GameModel game) {
-        var newLook = computeLook(game);
-        if (currentLook != newLook) {
-            setLook(newLook);
+        var newLook = Look.NORMAL;
+        if (ghost.state() != null) {
+            newLook = switch (ghost.state()) {
+                case LOCKED, LEAVING_HOUSE -> game.powerTimer().isRunning() ? frightenedOrFlashing(game) : Look.NORMAL;
+                case FRIGHTENED -> frightenedOrFlashing(game);
+                case ENTERING_HOUSE, RETURNING_HOME -> Look.EYES;
+                case EATEN -> Look.NUMBER;
+                default -> Look.NORMAL;
+            };
+        }
+        if (look() != newLook) {
+            lookPy.set(newLook);
         }
     }
 
-    private Look computeLook(GameModel game) {
-        if (ghost.state() == null) {
-            return Look.NORMAL;
-        }
-        return switch (ghost.state()) {
-            case LOCKED, LEAVING_HOUSE -> game.powerTimer().isRunning()? frightenedOrFlashingLook(game) : Look.NORMAL;
-            case FRIGHTENED -> frightenedOrFlashingLook(game);
-            case ENTERING_HOUSE, RETURNING_HOME -> Look.EYES;
-            case EATEN -> Look.NUMBER;
-            default -> Look.NORMAL;
-        };
+    public Look look() {
+        return lookPy.get();
     }
 
-    private void setLook(Look look) {
-        currentLook = look;
-        if (currentLook == Look.NUMBER) {
-            getChildren().setAll(numberCube);
-        } else {
-            getChildren().setAll(coloredGhostGroup);
-        }
-        switch (look) {
-            case NORMAL     -> coloredGhost3D.appearNormal();
-            case FRIGHTENED -> coloredGhost3D.appearFrightened();
-            case EYES       -> coloredGhost3D.appearEyesOnly();
-            case FLASHING -> {
-                if (numFlashes > 0) {
-                    coloredGhost3D.appearFlashing(numFlashes, 1.0);
-                } else {
-                    coloredGhost3D.appearFrightened();
-                }
-            }
-            case NUMBER -> numberCube.startRotation();
-        }
-    }
-
-    private Look frightenedOrFlashingLook(GameModel game) {
+    private Look frightenedOrFlashing(GameModel game) {
         return game.isPowerFading() ? Look.FLASHING : Look.FRIGHTENED;
     }
 
