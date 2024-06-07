@@ -40,10 +40,9 @@ Prerequisites: You need to have [JDK 21](https://www.oracle.com/java/technologie
 
 ### Cloning the GitHub repository
 
-- `cd /whatever/path/to/your/repositories`
 - `git clone https://github.com/armin-reichert/pacman-javafx.git`
 
-## Building the installer
+### Building the installer
 
 In folder `cd pacman-javafx` enter `./gradlew jpackage` or just `make` (Windows)
 
