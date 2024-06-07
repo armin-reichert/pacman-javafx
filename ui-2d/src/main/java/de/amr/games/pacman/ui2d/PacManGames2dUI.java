@@ -131,13 +131,12 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     // end static section
 
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant");
-
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
     protected final Theme theme = new Theme();
     protected final Map<String, Page> pages = new HashMap<>();
     protected final Map<GameVariant, Map<String, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
-    protected List<ResourceBundle> bundles = new ArrayList<>();
+    protected final List<ResourceBundle> bundles = new ArrayList<>();
 
     protected Stage stage;
     protected Scene mainScene;
@@ -161,14 +160,16 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
         miQuitEditor.setOnAction(e -> quitMapEditor());
         editor.menuFile().getItems().add(miQuitEditor);
 
+        // load maps from core project resources
+        ResourceManager core = () -> GameModel.class;
         editor.addPredefinedMap("Pac-Man",
-                new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/pacman.world")));
+                new WorldMap(core.url("/de/amr/games/pacman/maps/pacman.world")));
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
         rangeClosed(1, 6).forEach(mapNumber -> editor.addPredefinedMap("Ms. Pac-Man " + mapNumber,
-                new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world"))));
+                new WorldMap(core.url("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world"))));
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
         rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap("Pac-Man XXL " + mapNumber,
-                new WorldMap(GameModel.class.getResource("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world"))));
+                new WorldMap(core.url("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world"))));
 
         pages.put(EDITOR_PAGE, new EditorPage(editor, this));
     }
@@ -176,6 +177,7 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     @Override
     public void enterMapEditor() {
         if (game().variant() != GameVariant.PACMAN_XXL) {
+            showFlashMessageSeconds(3, "Map editor is not available in this game variant");
             return;
         }
         gameClock().stop();
