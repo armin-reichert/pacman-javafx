@@ -285,19 +285,19 @@ public class PlayScene3D implements GameScene {
                 switch (context.game().variant()) {
                     case MS_PACMAN -> {
                         var ss = (MsPacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
-                        Rectangle2D[] sprites = ss.ghostNumberSprites();
+                        Rectangle2D[] numberSprites = ss.ghostNumberSprites();
                         context.game().eventLog().killedGhosts.forEach(ghost -> {
                             int index = context.game().victims().indexOf(ghost);
-                            var numberImage = ss.subImage(sprites[index]);
+                            var numberImage = ss.subImage(numberSprites[index]);
                             level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
                         });
                     }
                     case PACMAN, PACMAN_XXL -> {
                         var ss = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
-                        Rectangle2D[] sprites = ss.ghostNumberSprites();
+                        Rectangle2D[] numberSprites = ss.ghostNumberSprites();
                         context.game().eventLog().killedGhosts.forEach(ghost -> {
                             int index = context.game().victims().indexOf(ghost);
-                            var numberImage = ss.subImage(sprites[index]);
+                            var numberImage = ss.subImage(numberSprites[index]);
                             level3D.ghost3D(ghost.id()).setNumberImage(numberImage);
                         });
                     }
