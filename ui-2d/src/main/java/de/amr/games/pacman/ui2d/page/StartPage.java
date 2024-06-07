@@ -1,6 +1,5 @@
 package de.amr.games.pacman.ui2d.page;
 
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.Keyboard;
@@ -52,9 +51,6 @@ public class StartPage implements Page {
         }
     };
 
-    private static final String CAROUSEL_ICON_LEFT  = "\u2b98";
-    private static final String CAROUSEL_ICON_RIGHT = "\u2b9a";
-
     private static final BackgroundSize FIT_HEIGHT = new BackgroundSize(AUTO, 1,
         false, true,
         true, false);
@@ -63,17 +59,13 @@ public class StartPage implements Page {
         false, false,
         true, true);
 
-    private static Button createCarouselButton(Direction dir) {
+    private static Button createCarouselButton(char arrow) {
         Button button = new Button();
         // Without this, button gets input focus after being clicked with the mouse and the LEFT, RIGHT keys stop working!
         button.setFocusTraversable(false);
         button.setStyle("-fx-text-fill: rgb(0,155,252); -fx-background-color: transparent; -fx-padding: 5");
         button.setFont(Font.font("Sans", FontWeight.BOLD, 80));
-        if (dir == Direction.LEFT || dir == Direction.RIGHT) {
-            button.setText(dir == Direction.LEFT ? CAROUSEL_ICON_LEFT : CAROUSEL_ICON_RIGHT);
-        } else {
-            Logger.warn("Carousel button direction must be LEFT or RIGHT but is {}", dir);
-        }
+        button.setText(String.valueOf(arrow));
         button.setOpacity(0.2);
         button.setOnMouseEntered(e -> button.setOpacity(1.0));
         button.setOnMouseExited(e -> button.setOpacity(0.2));
@@ -107,12 +99,12 @@ public class StartPage implements Page {
     public StartPage(GameSceneContext context) {
         this.context = checkNotNull(context);
 
-        var btnPrevVariant = createCarouselButton(Direction.LEFT);
+        var btnPrevVariant = createCarouselButton('\u2b98');
         btnPrevVariant.setOnAction(e -> context.actionHandler().selectPrevGameVariant());
         VBox left = new VBox(btnPrevVariant);
         left.setAlignment(Pos.CENTER_LEFT);
 
-        var btnNextVariant = createCarouselButton(Direction.RIGHT);
+        var btnNextVariant = createCarouselButton('\u2b9a');
         btnNextVariant.setOnAction(e -> context.actionHandler().selectNextGameVariant());
         VBox right = new VBox(btnNextVariant);
         right.setAlignment(Pos.CENTER_RIGHT);
