@@ -15,7 +15,7 @@ import static de.amr.games.pacman.ui2d.PacManGames2dUI.KEY_FULLSCREEN;
 /**
  * @author Armin Reichert
  */
-public class EditorPage extends BorderPane implements Page {
+public class EditorPage implements Page {
 
     private final BorderPane pane;
     private final GameSceneContext context;
