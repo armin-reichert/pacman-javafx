@@ -10,13 +10,6 @@ An older release of Pac-Man and Ms. Pac-Man (2D) can be played online:
 
 This has been made possible thanks to the [WebFX](https://webfx.dev/) transpiler technology (👏 to Bruno Salmon).
 
-## Videos
-
-<div float="left">
-    <a href="https://magentacloud.de/s/qYDg6BKK7G6TxpB">
-  <img src="doc/pacman-maze.png" style="width:500px"></a>
-</div>
-
 ## About this project
 
 This is an implementation of the classic Arcade games Pac-Man and Ms. Pac-Man in a JavaFX user interface. The game implementation is completely decoupled from the user interface such that also different user interfaces (e.g. a Swing UI) can be implemented without any change to the game code. (When developing the game, I originally maintained a Swing and a JavaFX UI in parallel to validate the UI abstraction, however the Swing UI got outdated and has been abandonded.)
@@ -101,6 +94,11 @@ Cheats:
 - <kbd>Alt+X</kbd> Kills all ghosts outside of the ghost house
 
 ## How it looks
+
+<div float="left">
+    <a href="https://magentacloud.de/s/qYDg6BKK7G6TxpB">
+  <img src="doc/pacman-maze.png" style="width:500px"></a>
+</div>
 
 ### 2D Play Scenes
 
