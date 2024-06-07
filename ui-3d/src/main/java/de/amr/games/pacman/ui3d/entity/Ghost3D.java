@@ -41,11 +41,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class Ghost3D extends Group {
 
-    private static final Duration BRAKE_DURATION = Duration.seconds(0.5);
-
     public enum Look { NORMAL, FRIGHTENED, FLASHING, EYES, NUMBER }
 
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+
     public final ObjectProperty<Look> lookPy = new SimpleObjectProperty<>(this, "look") {
         @Override
         protected void invalidated() {
@@ -100,7 +99,7 @@ public class Ghost3D extends Group {
 
         getChildren().add(coloredGhostGroup);
 
-        brakeAnimation = new RotateTransition(BRAKE_DURATION, coloredGhost3D);
+        brakeAnimation = new RotateTransition(Duration.seconds(0.5), coloredGhost3D);
         brakeAnimation.setAxis(Rotate.Y_AXIS);
         brakeAnimation.setFromAngle(0);
         brakeAnimation.setToAngle(-35);
@@ -138,13 +137,13 @@ public class Ghost3D extends Group {
     }
 
     private void updateTransform() {
-        Vector2f position = ghost.center();
-        setTranslateX(position.x());
-        setTranslateY(position.y());
+        Vector2f center = ghost.center();
+        setTranslateX(center.x());
+        setTranslateY(center.y());
         setTranslateZ(-0.5 * size);
         // TODO: make transition to new wish dir if changed
         orientation.setAngle(Turn.angle(ghost.wishDir()));
-        boolean outside = position.x() < HTS || position.x() > ghost.world().numCols() * TS - HTS;
+        boolean outside = center.x() < HTS || center.x() > ghost.world().numCols() * TS - HTS;
         setVisible(ghost.isVisible() && !outside);
     }
 
@@ -166,7 +165,10 @@ public class Ghost3D extends Group {
         var newLook = Look.NORMAL;
         if (ghost.state() != null) {
             newLook = switch (ghost.state()) {
-                case LOCKED, LEAVING_HOUSE -> game.powerTimer().isRunning() ? frightenedOrFlashing(game) : Look.NORMAL;
+                case LOCKED -> game.powerTimer().isRunning() ? frightenedOrFlashing(game) : Look.NORMAL;
+                case LEAVING_HOUSE -> game.powerTimer().isRunning()
+                        ? game.victims().contains(ghost) ? Look.NORMAL : frightenedOrFlashing(game)
+                        : Look.NORMAL;
                 case FRIGHTENED -> frightenedOrFlashing(game);
                 case ENTERING_HOUSE, RETURNING_HOME -> Look.EYES;
                 case EATEN -> Look.NUMBER;
