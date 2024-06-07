@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
-import de.amr.games.pacman.ui2d.util.Theme;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -23,39 +22,24 @@ import java.util.function.Supplier;
  */
 public class InfoBoxActorInfo extends InfoBox {
 
-    private Supplier<String> pacInfoIfPresent(BiFunction<GameModel, Pac, String> fnPacInfo) {
-        return () -> context.game().level().isPresent()
-            ? fnPacInfo.apply(context.game(), context.game().pac())
-            : InfoText.NO_INFO;
-    }
-
-    private Supplier<String> ghostInfoIfPresent(
-        BiFunction<GameModel, Ghost, String> fnGhostInfo, // (game, ghost) -> info text about this ghost
-        byte ghostID)
-    {
-        return () -> context.game().level().isPresent()
-            ? fnGhostInfo.apply(context.game(), context.game().ghost(ghostID))
-            : InfoText.NO_INFO;
-    }
-
     public void init(GameSceneContext context) {
         this.context = context;
 
-        addPacInfo();
+        infoText("Pac Name", pacInfo((game, pac) -> pac.name()));
+        infoText("Movement", pacInfo(this::movementInfo));
+        infoText("Tile",     pacInfo(this::locationInfo));
         emptyRow();
-        addGhostInfo(GameModel.RED_GHOST);
+        ghostInfo(GameModel.RED_GHOST);
         emptyRow();
-        addGhostInfo(GameModel.PINK_GHOST);
+        ghostInfo(GameModel.PINK_GHOST);
         emptyRow();
-        addGhostInfo(GameModel.CYAN_GHOST);
+        ghostInfo(GameModel.CYAN_GHOST);
         emptyRow();
-        addGhostInfo(GameModel.ORANGE_GHOST);
+        ghostInfo(GameModel.ORANGE_GHOST);
     }
 
-    private void addPacInfo() {
-        infoText("Pac Name", pacInfoIfPresent((game, pac) -> pac.name()));
-        infoText("Movement", pacInfoIfPresent(this::movementInfo));
-        infoText("Tile",     pacInfoIfPresent(this::locationInfo));
+    private Supplier<String> pacInfo(BiFunction<GameModel, Pac, String> fnPacInfo) {
+        return ifLevel(level -> fnPacInfo.apply(context.game(), context.game().pac()));
     }
 
     private String locationInfo(GameModel game, Creature guy) {
@@ -76,18 +60,28 @@ public class InfoBoxActorInfo extends InfoBox {
             : "%.2fpx/s %s (%s)%s".formatted(speed, guy.moveDir(), guy.wishDir(), reverseText);
     }
 
-    private void addGhostInfo(byte ghostID) {
-        var color = switch (ghostID) {
+    private void ghostInfo(byte ghostID) {
+        infoText(ghostColorName(ghostID) + " Ghost", fnGhostInfo(this::ghostNameAndState, ghostID));
+        infoText("Animation",      fnGhostInfo(this::ghostAnimation, ghostID));
+        infoText("Movement",       fnGhostInfo(this::movementInfo, ghostID));
+        infoText("Tile",           fnGhostInfo(this::locationInfo, ghostID));
+    }
+
+    private Supplier<String> fnGhostInfo(
+        BiFunction<GameModel, Ghost, String> fnGhostInfo, // (game, ghost) -> info text about this ghost
+        byte ghostID)
+    {
+        return ifLevel(level -> fnGhostInfo.apply(context.game(), context.game().ghost(ghostID)));
+    }
+
+    private String ghostColorName(byte ghostID) {
+        return switch (ghostID) {
             case GameModel.RED_GHOST -> "Red";
             case GameModel.PINK_GHOST -> "Pink";
             case GameModel.CYAN_GHOST -> "Cyan";
             case GameModel.ORANGE_GHOST -> "Orange";
             default -> "";
         };
-        infoText(color + " Ghost", ghostInfoIfPresent(this::ghostNameAndState, ghostID));
-        infoText("Animation",      ghostInfoIfPresent(this::ghostAnimation, ghostID));
-        infoText("Movement",       ghostInfoIfPresent(this::movementInfo, ghostID));
-        infoText("Tile",           ghostInfoIfPresent(this::locationInfo, ghostID));
     }
 
     private String ghostNameAndState(GameModel game, Ghost ghost) {
