@@ -25,28 +25,28 @@ import static de.amr.games.pacman.ui2d.util.KeyInput.key;
  */
 public class KeyboardPacSteering implements Steering {
 
-    public final Map<KeyInput, Direction> mappings = new HashMap<>();
+    public final Map<KeyInput, Direction> dirByKey = new HashMap<>();
 
     /**
      * Default steering: unmodified cursor keys.
      */
     public KeyboardPacSteering() {
-        mappings.put(KeyInput.of(key(KeyCode.UP)),        Direction.UP);
-        mappings.put(KeyInput.of(key(KeyCode.DOWN)),      Direction.DOWN);
-        mappings.put(KeyInput.of(key(KeyCode.LEFT)),      Direction.LEFT);
-        mappings.put(KeyInput.of(key(KeyCode.RIGHT)),     Direction.RIGHT);
-        mappings.put(KeyInput.of(control(KeyCode.UP)),    Direction.UP);
-        mappings.put(KeyInput.of(control(KeyCode.DOWN)),  Direction.DOWN);
-        mappings.put(KeyInput.of(control(KeyCode.LEFT)),  Direction.LEFT);
-        mappings.put(KeyInput.of(control(KeyCode.RIGHT)), Direction.RIGHT);
+        dirByKey.put(KeyInput.of(key(KeyCode.UP)),        Direction.UP);
+        dirByKey.put(KeyInput.of(key(KeyCode.DOWN)),      Direction.DOWN);
+        dirByKey.put(KeyInput.of(key(KeyCode.LEFT)),      Direction.LEFT);
+        dirByKey.put(KeyInput.of(key(KeyCode.RIGHT)),     Direction.RIGHT);
+        dirByKey.put(KeyInput.of(control(KeyCode.UP)),    Direction.UP);
+        dirByKey.put(KeyInput.of(control(KeyCode.DOWN)),  Direction.DOWN);
+        dirByKey.put(KeyInput.of(control(KeyCode.LEFT)),  Direction.LEFT);
+        dirByKey.put(KeyInput.of(control(KeyCode.RIGHT)), Direction.RIGHT);
     }
 
     @Override
     public void steer(Creature creature, World world) {
-        for (var input : mappings.keySet()) {
-            if (Keyboard.pressed(input)) {
-                creature.setWishDir(mappings.get(input));
-            }
-        }
+        dirByKey.keySet().stream()
+            .filter(Keyboard::pressed)
+            .map(dirByKey::get)
+            .findFirst()
+            .ifPresent(creature::setWishDir);
     }
 }
