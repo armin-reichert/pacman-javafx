@@ -283,7 +283,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     public void init(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
-
+        Keys.register();
         gameVariantPy.set(GameController.it().game().variant());
 
         mainScene = createMainScene(width, height);
@@ -295,19 +295,19 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         createGameScenes();
         addMapEditor();
 
+        stage.setScene(mainScene);
         stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy));
         stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
-
         //TODO this does not work yet correctly
         Dimension2D minSize = DecoratedCanvas.computeSize(
                 DEFAULT_CANVAS_WIDTH_UNSCALED, DEFAULT_CANVAS_HEIGHT_UNSCALED, 1.25 * MIN_SCALING);
         stage.setMinWidth(minSize.getWidth());
         stage.setMinHeight(minSize.getHeight());
-
         stage.centerOnScreen();
-        stage.setScene(mainScene);
-
-        selectPage(START_PAGE);
+        stage.setOnShown(e -> {
+            selectPage(START_PAGE);
+            Logger.info("Stage is focused: {}", stage.isFocused());
+        });
         stage.show();
     }
 
@@ -364,12 +364,20 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     protected Scene createMainScene(double width, double height) {
         var scene = new Scene(new Region(), width, height, Color.BLACK);
-        scene.widthProperty().addListener((py, ov, nv) -> currentPage().setSize(scene.getWidth(), scene.getHeight()));
-        scene.heightProperty().addListener((py, ov, nv) -> currentPage().setSize(scene.getWidth(), scene.getHeight()));
         scene.setOnMouseClicked(this::onMouseClicked);
         scene.setOnContextMenuRequested(this::onContextMenuRequested);
         scene.setOnKeyPressed(e -> currentPage().handleKeyboardInput());
         Keyboard.filterKeyEventsFrom(scene);
+        scene.widthProperty().addListener((py, ov, nv) -> {
+            if (currentPageID != null) {
+                currentPage().setSize(scene.getWidth(), scene.getHeight());
+            }
+        });
+        scene.heightProperty().addListener((py, ov, nv) -> {
+            if (currentPageID != null) {
+                currentPage().setSize(scene.getWidth(), scene.getHeight());
+            }
+        });
         return scene;
     }
 
@@ -394,8 +402,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     @SuppressWarnings("unchecked")
-    protected <T extends Page> T page(String id) {
-        return (T) pages.get(id);
+    protected <T extends Page> T page(String pageID) {
+        if (pages.containsKey(pageID)) {
+            return (T) pages.get(pageID);
+        }
+        Logger.error("Illegal page ID '{}'", pageID);
+        return (T) pages.get(START_PAGE);
     }
 
     protected <T extends Page> T  currentPage() {
@@ -404,17 +416,18 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void selectPage(String pageID) {
-        Logger.info("Select page {}", pageID);
+        checkNotNull(pageID);
         if (!pages.containsKey(pageID)) {
-            throw new IllegalArgumentException("Illegal page ID: " + pageID);
+            Logger.error("Cannot select page: Illegal page ID '{}'", pageID);
+            return;
         }
         if (!pageID.equals(currentPageID)) {
             currentPageID = pageID;
             Page selectedPage = currentPage();
             selectedPage.setSize(mainScene.getWidth(), mainScene.getHeight());
-            selectedPage.onSelected();
             mainScene.setRoot(selectedPage.rootPane());
-            selectedPage.rootPane().requestFocus();
+            mainScene.getRoot().requestFocus();
+            selectedPage.onSelected();
         }
     }
 
