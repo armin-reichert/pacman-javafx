@@ -214,13 +214,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         // Ms. Pac-Man game
         //
 
+        theme.set("ms_pacman.spritesheet",             new MsPacManGameSpriteSheet());
         theme.set("ms_pacman.startpage.image",         rm.loadImage("graphics/mspacman/mspacman_flyer.png"));
         theme.set("ms_pacman.helpButton.icon",         rm.loadImage("graphics/icons/help-red-64.png"));
-
-        theme.set("ms_pacman.spritesheet.image",       rm.loadImage("graphics/mspacman/mspacman_spritesheet.png"));
-        theme.set("ms_pacman.spritesheet.image.mazes", rm.loadImage("graphics/mspacman/mazes_flashing.png"));
-        theme.set("ms_pacman.spritesheet",             new MsPacManGameSpriteSheet());
-
         theme.set("ms_pacman.icon",                    rm.loadImage("graphics/icons/mspacman.png"));
         theme.set("ms_pacman.logo.midway",             rm.loadImage("graphics/mspacman/midway_logo.png"));
 
@@ -248,13 +244,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         // Pac-Man game
         //
 
+        theme.set("pacman.spritesheet",               new PacManGameSpriteSheet());
         theme.set("pacman.startpage.image",           rm.loadImage("graphics/pacman/pacman_flyer.png"));
         theme.set("pacman.helpButton.icon",           rm.loadImage("graphics/icons/help-blue-64.png"));
-
-        theme.set("pacman.spritesheet.image",         rm.loadImage("graphics/pacman/pacman_spritesheet.png"));
-        theme.set("pacman.spritesheet.image.mazes",   rm.loadImage("graphics/pacman/maze_flashing.png"));
-        theme.set("pacman.spritesheet",               new PacManGameSpriteSheet());
-
         theme.set("pacman.icon",                      rm.loadImage("graphics/icons/pacman.png"));
 
         theme.set("pacman.audio.bonus_eaten",         rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));
