@@ -16,7 +16,7 @@ import static de.amr.games.pacman.ui2d.util.KeyInput.*;
  */
 public enum GameKeys {
 
-    HELP(key(KeyCode.H)),
+    HELP                (key(KeyCode.H)),
     PAUSE               (key(KeyCode.P)),
     QUIT                (key(KeyCode.Q)),
     NEXT_VARIANT        (key(KeyCode.V), key(KeyCode.RIGHT)),
@@ -47,8 +47,8 @@ public enum GameKeys {
     PREV_PERSPECTIVE    (alt(KeyCode.LEFT)),
     NEXT_PERSPECTIVE    (alt(KeyCode.RIGHT));
 
-    private GameKeys(KeyCodeCombination... combinations) {
-        this.input = KeyInput.of(combinations);
+    GameKeys(KeyCodeCombination... combinations) {
+        input = KeyInput.of(combinations);
     }
 
     /**
