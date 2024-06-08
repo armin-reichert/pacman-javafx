@@ -360,7 +360,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     protected StringBinding stageTitleBinding(Observable... dependencies) {
         return Bindings.createStringBinding(
-            () -> tt("app.title." + game().variant().resourceKey() + (clock.isPaused() ? ".paused" : "")),
+            () -> tt("app.title." + game().variant().resourceKey() + (clock.isPaused() ? ".paused" : ""), "2D"),
             dependencies);
     }
 

@@ -16,32 +16,27 @@ import java.util.*;
  */
 public class Keyboard {
 
-    private static final Set<KeyCodeCombination> registeredCombinations = new HashSet<>();
+    private static final Set<KeyCodeCombination> registeredInput = new HashSet<>();
     private static final List<KeyCodeCombination> matchingCombinations = new ArrayList<>(3);
 
     public static void filterKeyEventsFrom(EventTarget target) {
         target.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
             Logger.debug("Key press {}", e.getCode());
             matchingCombinations.clear();
-            registeredCombinations.stream().filter(c -> c.match(e)).forEach(matchingCombinations::add);
+            registeredInput.stream().filter(c -> c.match(e)).forEach(matchingCombinations::add);
         });
         target.addEventFilter(KeyEvent.KEY_RELEASED, e -> matchingCombinations.clear());
     }
 
     /**
-     * @param key key input
+     * @param keyInput key input
      * @return tells if any of the given key combinations is matched by the current keyboard state
      */
-    public static boolean pressed(KeyInput key) {
-        var match = Arrays.stream(key.getCombinations()).filter(matchingCombinations::contains).findFirst();
-        if (match.isPresent()) {
-            Logger.debug("Found registered entry for key combination: " + match.get());
-            return true;
-        }
-        return false;
+    public static boolean pressed(KeyInput keyInput) {
+        return Arrays.stream(keyInput.getCombinations()).anyMatch(matchingCombinations::contains);
     }
 
     public static void register(KeyInput input) {
-        registeredCombinations.addAll(Arrays.asList(input.getCombinations()));
+        registeredInput.addAll(Arrays.asList(input.getCombinations()));
     }
 }
