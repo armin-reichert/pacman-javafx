@@ -18,8 +18,6 @@ import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
@@ -32,7 +30,6 @@ import org.tinylog.Logger;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
 
-import static de.amr.games.pacman.ui2d.util.Keyboard.alt;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 
 /**
@@ -65,9 +62,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
     public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE = new SimpleObjectProperty<>(Perspective.FOLLOWING_PLAYER);
     public static final DoubleProperty  PY_3D_WALL_HEIGHT             = new SimpleDoubleProperty(4.5);
     public static final DoubleProperty  PY_3D_WALL_OPACITY            = new SimpleDoubleProperty(0.9);
-
-    public static final KeyCodeCombination KEY_PREV_PERSPECTIVE       = alt(KeyCode.LEFT);
-    public static final KeyCodeCombination KEY_NEXT_PERSPECTIVE       = alt(KeyCode.RIGHT);
 
     public static final String NO_TEXTURE                             = "No Texture";
 

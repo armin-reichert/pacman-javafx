@@ -52,7 +52,6 @@ import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
-import static de.amr.games.pacman.ui2d.util.Keyboard.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static java.util.function.Predicate.not;
 import static java.util.stream.IntStream.rangeClosed;
@@ -77,35 +76,6 @@ public class PacManGames2dUI implements GameEventListener, GameSceneContext, Act
     public static final String EDITOR_PAGE  = "editorPage";
 
     public static final double MIN_SCALING = 0.75;
-
-    public static final KeyCodeCombination KEY_SHOW_HELP            = just(KeyCode.H);
-    public static final KeyCodeCombination KEY_PAUSE                = just(KeyCode.P);
-    public static final KeyCodeCombination KEY_QUIT                 = just(KeyCode.Q);
-    public static final KeyCodeCombination[] KEYS_NEXT_VARIANT      = {just(KeyCode.V), just(KeyCode.RIGHT)};
-    public static final KeyCodeCombination KEY_PREV_VARIANT         = just(KeyCode.LEFT);
-    public static final KeyCodeCombination KEY_AUTOPILOT            = alt(KeyCode.A);
-    public static final KeyCodeCombination KEY_PLAY_CUTSCENES       = alt(KeyCode.C);
-    public static final KeyCodeCombination KEY_DEBUG_INFO           = alt(KeyCode.D);
-    public static final KeyCodeCombination KEY_CHEAT_EAT_ALL        = alt(KeyCode.E);
-    public static final KeyCodeCombination KEY_IMMUNITY             = alt(KeyCode.I);
-    public static final KeyCodeCombination KEY_CHEAT_ADD_LIVES      = alt(KeyCode.L);
-    public static final KeyCodeCombination KEY_CHEAT_NEXT_LEVEL     = alt(KeyCode.N);
-    public static final KeyCodeCombination KEY_TEST_LEVELS          = alt(KeyCode.T);
-    public static final KeyCodeCombination KEY_CHEAT_KILL_GHOSTS    = alt(KeyCode.X);
-    public static final KeyCodeCombination[] KEYS_SHOW_GAME_PAGE    = {just(KeyCode.SPACE), just(KeyCode.ENTER)};
-    public static final KeyCodeCombination[] KEYS_SINGLE_STEP       = {just(KeyCode.SPACE), shift(KeyCode.P)};
-    public static final KeyCodeCombination KEY_TEN_STEPS            = shift(KeyCode.SPACE);
-    public static final KeyCodeCombination KEY_SIMULATION_FASTER    = alt(KeyCode.PLUS);
-    public static final KeyCodeCombination KEY_SIMULATION_SLOWER    = alt(KeyCode.MINUS);
-    public static final KeyCodeCombination KEY_SIMULATION_NORMAL    = alt(KeyCode.DIGIT0);
-    public static final KeyCodeCombination[] KEYS_START_GAME        = {just(KeyCode.DIGIT1), just(KeyCode.NUMPAD1)};
-    public static final KeyCodeCombination[] KEYS_ADD_CREDIT        = {just(KeyCode.DIGIT5), just(KeyCode.NUMPAD5)};
-    public static final KeyCodeCombination KEY_BOOT                 = just(KeyCode.F3);
-    public static final KeyCodeCombination KEY_FULLSCREEN           = just(KeyCode.F11);
-    public static final KeyCodeCombination[] KEYS_TOGGLE_DASHBOARD  = {just(KeyCode.F1), alt(KeyCode.B)};
-    public static final KeyCodeCombination KEY_TOGGLE_PIP_VIEW      = just(KeyCode.F2);
-    public static final KeyCodeCombination KEY_TOGGLE_2D_3D         = alt(KeyCode.DIGIT3);
-    public static final KeyCodeCombination KEY_SWITCH_EDITOR        = shift_alt(KeyCode.E);
 
     public static final int DEFAULT_CANVAS_WIDTH_UNSCALED           = GameModel.ARCADE_MAP_TILES_X * TS; // 28*8 = 224
     public static final int DEFAULT_CANVAS_HEIGHT_UNSCALED          = GameModel.ARCADE_MAP_TILES_Y * TS; // 36*8 = 288

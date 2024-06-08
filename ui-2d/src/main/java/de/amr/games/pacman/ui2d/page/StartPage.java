@@ -1,6 +1,7 @@
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.Keys;
 import de.amr.games.pacman.ui2d.scene.GameSceneContext;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import de.amr.games.pacman.ui2d.util.Theme;
@@ -146,15 +147,15 @@ public class StartPage implements Page {
 
     @Override
     public void handleKeyboardInput() {
-        if (Keyboard.pressed(KEYS_SHOW_GAME_PAGE)) {
+        if (Keyboard.pressed(Keys.ENTER_GAME_PAGE)) {
             context.actionHandler().selectPage(GAME_PAGE);
-        } else if (Keyboard.pressed(KEYS_NEXT_VARIANT)) {
+        } else if (Keyboard.pressed(Keys.NEXT_VARIANT)) {
             context.actionHandler().selectNextGameVariant();
-        } else if (Keyboard.pressed(KEY_PREV_VARIANT)) {
+        } else if (Keyboard.pressed(Keys.PREV_VARIANT)) {
             context.actionHandler().selectPrevGameVariant();
-        } else if (Keyboard.pressed(KEY_FULLSCREEN)) {
+        } else if (Keyboard.pressed(Keys.FULLSCREEN)) {
             context.actionHandler().setFullScreen(true);
-        } else if (Keyboard.pressed(KEY_PAUSE)) {
+        } else if (Keyboard.pressed(Keys.PAUSE)) {
             context.actionHandler().togglePaused();
         }
     }

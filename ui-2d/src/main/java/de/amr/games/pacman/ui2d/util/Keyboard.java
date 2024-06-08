@@ -37,7 +37,7 @@ public class Keyboard {
      * @param code key code
      * @return key code combination
      */
-    public static KeyCodeCombination just(KeyCode code) {
+    public static KeyCodeCombination key(KeyCode code) {
         return register(new KeyCodeCombination(code));
     }
 
@@ -46,7 +46,7 @@ public class Keyboard {
      * @param code key code
      * @return key code combination
      */
-    public static KeyCodeCombination alt(KeyCode code) {
+    public static KeyCodeCombination alt_key(KeyCode code) {
         return register(new KeyCodeCombination(code, KeyCombination.ALT_DOWN));
     }
 
@@ -55,7 +55,7 @@ public class Keyboard {
      * @param code key code
      * @return key code combination
      */
-    public static KeyCodeCombination shift(KeyCode code) {
+    public static KeyCodeCombination shift_key(KeyCode code) {
         return register(new KeyCodeCombination(code, KeyCombination.SHIFT_DOWN));
     }
 
@@ -64,7 +64,7 @@ public class Keyboard {
      * @param code key code
      * @return key code combination
      */
-    public static KeyCodeCombination shift_alt(KeyCode code) {
+    public static KeyCodeCombination shift_alt_key(KeyCode code) {
         return register(new KeyCodeCombination(code, KeyCombination.SHIFT_DOWN, KeyCombination.ALT_DOWN));
     }
 

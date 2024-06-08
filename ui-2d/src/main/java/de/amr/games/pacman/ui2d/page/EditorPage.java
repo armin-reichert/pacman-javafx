@@ -11,7 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.KEY_FULLSCREEN;
+import static de.amr.games.pacman.ui2d.Keys.FULLSCREEN;
 
 /**
  * @author Armin Reichert
@@ -44,7 +44,7 @@ public class EditorPage implements Page {
 
     @Override
     public void handleKeyboardInput() {
-        if (Keyboard.pressed(KEY_FULLSCREEN)) {
+        if (Keyboard.pressed(FULLSCREEN)) {
             context.actionHandler().setFullScreen(true);
         }
     }

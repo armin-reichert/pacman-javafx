@@ -9,13 +9,13 @@ import de.amr.games.pacman.controller.MsPacManIntro.State;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.Keys;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 
 import static de.amr.games.pacman.lib.Globals.t;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -62,11 +62,11 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void handleKeyboardInput() {
-        if (Keyboard.pressed(KEYS_ADD_CREDIT)) {
+        if (Keyboard.pressed(Keys.ADD_CREDIT)) {
             context.actionHandler().addCredit();
-        } else if (Keyboard.pressed(KEYS_START_GAME)) {
+        } else if (Keyboard.pressed(Keys.START_GAME)) {
             context.actionHandler().startGame();
-        } else if (Keyboard.pressed(KEY_PLAY_CUTSCENES)) {
+        } else if (Keyboard.pressed(Keys.CUTSCENES)) {
             context.actionHandler().startCutscenesTest();
         }
     }

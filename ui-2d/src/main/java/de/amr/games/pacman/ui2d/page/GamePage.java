@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.Keys;
 import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -243,45 +244,44 @@ public class GamePage implements Page {
 
     @Override
     public void handleKeyboardInput() {
-        var ah = context.actionHandler();
-        if (Keyboard.pressed(KEY_AUTOPILOT)) {
-            ah.toggleAutopilot();
-        } else if (Keyboard.pressed(KEY_BOOT)) {
-            ah.reboot();
-        } else if (Keyboard.pressed(KEY_DEBUG_INFO)) {
+        if (Keyboard.pressed(Keys.AUTOPILOT)) {
+            context.actionHandler().toggleAutopilot();
+        } else if (Keyboard.pressed(Keys.BOOT)) {
+            context.actionHandler().reboot();
+        } else if (Keyboard.pressed(Keys.DEBUG_INFO)) {
             Ufx.toggle(PY_SHOW_DEBUG_INFO);
-        } else if (Keyboard.pressed(KEY_FULLSCREEN)) {
-            ah.setFullScreen(true);
-        } else if (Keyboard.pressed(KEY_IMMUNITY)) {
-            ah.toggleImmunity();
-        } else if (Keyboard.pressed(KEY_SHOW_HELP)) {
+        } else if (Keyboard.pressed(Keys.FULLSCREEN)) {
+            context.actionHandler().setFullScreen(true);
+        } else if (Keyboard.pressed(Keys.IMMUNITY)) {
+            context.actionHandler().toggleImmunity();
+        } else if (Keyboard.pressed(Keys.HELP)) {
             showHelpInfoPopUp();
-        } else if (Keyboard.pressed(KEY_PAUSE)) {
-            ah.togglePaused();
-        } else if (Keyboard.pressed(KEYS_SINGLE_STEP)) {
-            ah.doSimulationSteps(1);
-        } else if (Keyboard.pressed(KEY_TEN_STEPS)) {
-            ah.doSimulationSteps(10);
-        } else if (Keyboard.pressed(KEY_SIMULATION_FASTER)) {
-            ah.changeSimulationSpeed(5);
-        } else if (Keyboard.pressed(KEY_SIMULATION_SLOWER)) {
-            ah.changeSimulationSpeed(-5);
-        } else if (Keyboard.pressed(KEY_SIMULATION_NORMAL)) {
-            ah.resetSimulationSpeed();
-        } else if (Keyboard.pressed(KEY_QUIT)) {
+        } else if (Keyboard.pressed(Keys.PAUSE)) {
+            context.actionHandler().togglePaused();
+        } else if (Keyboard.pressed(Keys.SIMULATION_STEP)) {
+            context.actionHandler().doSimulationSteps(1);
+        } else if (Keyboard.pressed(Keys.SIMULATION_10_STEPS)) {
+            context.actionHandler().doSimulationSteps(10);
+        } else if (Keyboard.pressed(Keys.SIMULATION_FASTER)) {
+            context.actionHandler().changeSimulationSpeed(5);
+        } else if (Keyboard.pressed(Keys.SIMULATION_SLOWER)) {
+            context.actionHandler().changeSimulationSpeed(-5);
+        } else if (Keyboard.pressed(Keys.SIMULATION_NORMAL)) {
+            context.actionHandler().resetSimulationSpeed();
+        } else if (Keyboard.pressed(Keys.QUIT)) {
             context.soundHandler().stopVoice();
             context.soundHandler().stopAllSounds();
-            ah.selectPage(START_PAGE);
-        } else if (Keyboard.pressed(KEY_TEST_LEVELS)) {
-            ah.startLevelTestMode();
-        } else if (Keyboard.pressed(KEY_TOGGLE_2D_3D)) {
-            ah.toggle2D3D();
-        } else if (Keyboard.pressed(KEYS_TOGGLE_DASHBOARD)) {
-            ah.toggleDashboard();
-        } else if (Keyboard.pressed(KEY_TOGGLE_PIP_VIEW)) {
-            ah.togglePipVisible();
-        } else if (Keyboard.pressed(KEY_SWITCH_EDITOR)) {
-            ah.enterMapEditor();
+            context.actionHandler().selectPage(START_PAGE);
+        } else if (Keyboard.pressed(Keys.TEST_MODE)) {
+            context.actionHandler().startLevelTestMode();
+        } else if (Keyboard.pressed(Keys.TWO_D_THREE_D)) {
+            context.actionHandler().toggle2D3D();
+        } else if (Keyboard.pressed(Keys.DASHBOARD)) {
+            context.actionHandler().toggleDashboard();
+        } else if (Keyboard.pressed(Keys.PIP_VIEW)) {
+            context.actionHandler().togglePipVisible();
+        } else if (Keyboard.pressed(Keys.EDITOR)) {
+            context.actionHandler().enterMapEditor();
         } else {
             context.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
         }
