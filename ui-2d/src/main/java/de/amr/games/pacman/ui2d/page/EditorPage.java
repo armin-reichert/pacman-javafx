@@ -11,7 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.Keys.FULLSCREEN;
+import static de.amr.games.pacman.ui2d.GameKeys.FULLSCREEN;
 
 /**
  * @author Armin Reichert

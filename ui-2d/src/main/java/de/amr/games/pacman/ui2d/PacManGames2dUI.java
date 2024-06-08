@@ -283,7 +283,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     public void init(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
-        Keys.register();
         gameVariantPy.set(GameController.it().game().variant());
 
         mainScene = createMainScene(width, height);

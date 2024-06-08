@@ -9,7 +9,7 @@ import de.amr.games.pacman.controller.MsPacManIntro.State;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.Keys;
+import de.amr.games.pacman.ui2d.GameKeys;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
@@ -62,11 +62,11 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void handleKeyboardInput() {
-        if (Keyboard.pressed(Keys.ADD_CREDIT)) {
+        if (Keyboard.pressed(GameKeys.ADD_CREDIT)) {
             context.actionHandler().addCredit();
-        } else if (Keyboard.pressed(Keys.START_GAME)) {
+        } else if (Keyboard.pressed(GameKeys.START_GAME)) {
             context.actionHandler().startGame();
-        } else if (Keyboard.pressed(Keys.CUTSCENES)) {
+        } else if (Keyboard.pressed(GameKeys.CUTSCENES)) {
             context.actionHandler().startCutscenesTest();
         }
     }

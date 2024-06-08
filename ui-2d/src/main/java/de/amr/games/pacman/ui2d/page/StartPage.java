@@ -1,7 +1,7 @@
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.Keys;
+import de.amr.games.pacman.ui2d.GameKeys;
 import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import de.amr.games.pacman.ui2d.util.Theme;
@@ -23,7 +23,7 @@ import javafx.scene.text.Text;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.GAME_PAGE;
 import static javafx.scene.layout.BackgroundSize.AUTO;
 
 /**
@@ -147,15 +147,15 @@ public class StartPage implements Page {
 
     @Override
     public void handleKeyboardInput() {
-        if (Keyboard.pressed(Keys.ENTER_GAME_PAGE)) {
+        if (Keyboard.pressed(GameKeys.ENTER_GAME_PAGE)) {
             context.actionHandler().selectPage(GAME_PAGE);
-        } else if (Keyboard.pressed(Keys.NEXT_VARIANT)) {
+        } else if (Keyboard.pressed(GameKeys.NEXT_VARIANT)) {
             context.actionHandler().selectNextGameVariant();
-        } else if (Keyboard.pressed(Keys.PREV_VARIANT)) {
+        } else if (Keyboard.pressed(GameKeys.PREV_VARIANT)) {
             context.actionHandler().selectPrevGameVariant();
-        } else if (Keyboard.pressed(Keys.FULLSCREEN)) {
+        } else if (Keyboard.pressed(GameKeys.FULLSCREEN)) {
             context.actionHandler().setFullScreen(true);
-        } else if (Keyboard.pressed(Keys.PAUSE)) {
+        } else if (Keyboard.pressed(GameKeys.PAUSE)) {
             context.actionHandler().togglePaused();
         }
     }

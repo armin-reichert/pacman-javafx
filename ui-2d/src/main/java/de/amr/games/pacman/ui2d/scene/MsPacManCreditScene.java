@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.ui2d.Keys;
+import de.amr.games.pacman.ui2d.GameKeys;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 
@@ -34,9 +34,9 @@ public class MsPacManCreditScene extends GameScene2D {
 
     @Override
     public void handleKeyboardInput() {
-        if (Keyboard.pressed(Keys.ADD_CREDIT)) {
+        if (Keyboard.pressed(GameKeys.ADD_CREDIT)) {
             context.actionHandler().addCredit();
-        } else if (Keyboard.pressed(Keys.START_GAME)) {
+        } else if (Keyboard.pressed(GameKeys.START_GAME)) {
             context.actionHandler().startGame();
         }
     }

@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameSceneManager;
-import de.amr.games.pacman.ui2d.Keys;
+import de.amr.games.pacman.ui2d.GameKeys;
 import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -246,43 +246,43 @@ public class GamePage implements Page {
 
     @Override
     public void handleKeyboardInput() {
-        if (Keyboard.pressed(Keys.AUTOPILOT)) {
+        if (Keyboard.pressed(GameKeys.AUTOPILOT)) {
             context.actionHandler().toggleAutopilot();
-        } else if (Keyboard.pressed(Keys.BOOT)) {
+        } else if (Keyboard.pressed(GameKeys.BOOT)) {
             context.actionHandler().reboot();
-        } else if (Keyboard.pressed(Keys.DEBUG_INFO)) {
+        } else if (Keyboard.pressed(GameKeys.DEBUG_INFO)) {
             Ufx.toggle(PY_SHOW_DEBUG_INFO);
-        } else if (Keyboard.pressed(Keys.FULLSCREEN)) {
+        } else if (Keyboard.pressed(GameKeys.FULLSCREEN)) {
             context.actionHandler().setFullScreen(true);
-        } else if (Keyboard.pressed(Keys.IMMUNITY)) {
+        } else if (Keyboard.pressed(GameKeys.IMMUNITY)) {
             context.actionHandler().toggleImmunity();
-        } else if (Keyboard.pressed(Keys.HELP)) {
+        } else if (Keyboard.pressed(GameKeys.HELP)) {
             showHelpInfoPopUp();
-        } else if (Keyboard.pressed(Keys.PAUSE)) {
+        } else if (Keyboard.pressed(GameKeys.PAUSE)) {
             context.actionHandler().togglePaused();
-        } else if (Keyboard.pressed(Keys.SIMULATION_STEP)) {
+        } else if (Keyboard.pressed(GameKeys.SIMULATION_STEP)) {
             context.actionHandler().doSimulationSteps(1);
-        } else if (Keyboard.pressed(Keys.SIMULATION_10_STEPS)) {
+        } else if (Keyboard.pressed(GameKeys.SIMULATION_10_STEPS)) {
             context.actionHandler().doSimulationSteps(10);
-        } else if (Keyboard.pressed(Keys.SIMULATION_FASTER)) {
+        } else if (Keyboard.pressed(GameKeys.SIMULATION_FASTER)) {
             context.actionHandler().changeSimulationSpeed(5);
-        } else if (Keyboard.pressed(Keys.SIMULATION_SLOWER)) {
+        } else if (Keyboard.pressed(GameKeys.SIMULATION_SLOWER)) {
             context.actionHandler().changeSimulationSpeed(-5);
-        } else if (Keyboard.pressed(Keys.SIMULATION_NORMAL)) {
+        } else if (Keyboard.pressed(GameKeys.SIMULATION_NORMAL)) {
             context.actionHandler().resetSimulationSpeed();
-        } else if (Keyboard.pressed(Keys.QUIT)) {
+        } else if (Keyboard.pressed(GameKeys.QUIT)) {
             context.soundHandler().stopVoice();
             context.soundHandler().stopAllSounds();
             context.actionHandler().selectPage(START_PAGE);
-        } else if (Keyboard.pressed(Keys.TEST_MODE)) {
+        } else if (Keyboard.pressed(GameKeys.TEST_MODE)) {
             context.actionHandler().startLevelTestMode();
-        } else if (Keyboard.pressed(Keys.TWO_D_THREE_D)) {
+        } else if (Keyboard.pressed(GameKeys.TWO_D_THREE_D)) {
             context.actionHandler().toggle2D3D();
-        } else if (Keyboard.pressed(Keys.DASHBOARD)) {
+        } else if (Keyboard.pressed(GameKeys.DASHBOARD)) {
             context.actionHandler().toggleDashboard();
-        } else if (Keyboard.pressed(Keys.PIP_VIEW)) {
+        } else if (Keyboard.pressed(GameKeys.PIP_VIEW)) {
             context.actionHandler().togglePipVisible();
-        } else if (Keyboard.pressed(Keys.EDITOR)) {
+        } else if (Keyboard.pressed(GameKeys.EDITOR)) {
             context.actionHandler().enterMapEditor();
         } else {
             context.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
