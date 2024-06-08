@@ -197,6 +197,7 @@ public class GamePage implements Page {
             adaptCanvasSizeToCurrentWorld();
         }
         updateDashboardLayer();
+        hideContextMenu();
     }
 
     public void adaptCanvasSizeToCurrentWorld() {
