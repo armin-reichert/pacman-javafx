@@ -19,7 +19,8 @@ import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.rendering.*;
-import de.amr.games.pacman.ui2d.scene.*;
+import de.amr.games.pacman.ui2d.scene.GameContext;
+import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
@@ -65,14 +66,6 @@ import static java.util.stream.IntStream.rangeClosed;
  */
 public class PacManGames2dUI implements GameEventListener, GameContext, ActionHandler, SoundHandler {
 
-    public static final String BOOT_SCENE   = "boot";
-    public static final String INTRO_SCENE  = "intro";
-    public static final String CREDIT_SCENE = "credit";
-    public static final String PLAY_SCENE   = "play";
-    public static final String CUT_SCENE_1  = "cut1";
-    public static final String CUT_SCENE_2  = "cut2";
-    public static final String CUT_SCENE_3  = "cut3";
-
     public static final String START_PAGE   = "startPage";
     public static final String GAME_PAGE    = "gamePage";
     public static final String EDITOR_PAGE  = "editorPage";
@@ -107,7 +100,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     protected final Theme theme = new Theme();
     protected final Map<String, Page> pages = new HashMap<>();
-    protected final Map<GameVariant, Map<String, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
+    protected final GameSceneManager gameSceneManager = new GameSceneManager();
     protected final List<ResourceBundle> bundles = new ArrayList<>();
 
     protected Stage stage;
@@ -351,40 +344,15 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     protected void createGameScenes() {
-        Logger.info("Creating 2D game scenes for variant " + GameVariant.MS_PACMAN);
-        gameScenesForVariant.put(GameVariant.MS_PACMAN, new HashMap<>(Map.of(
-            BOOT_SCENE,   new BootScene(),
-            INTRO_SCENE,  new MsPacManIntroScene(),
-            CREDIT_SCENE, new MsPacManCreditScene(),
-            PLAY_SCENE,   new PlayScene2D(),
-            CUT_SCENE_1,  new MsPacManCutScene1(),
-            CUT_SCENE_2,  new MsPacManCutScene2(),
-            CUT_SCENE_3,  new MsPacManCutScene3()
-        )));
-
-        Stream.of(GameVariant.PACMAN, GameVariant.PACMAN_XXL).forEach(variant -> {
-            Logger.info("Creating 2D game scenes for variant " + variant);
-            gameScenesForVariant.put(variant, new HashMap<>(Map.of(
-                BOOT_SCENE,   new BootScene(),
-                INTRO_SCENE,  new PacManIntroScene(),
-                CREDIT_SCENE, new PacManCreditScene(),
-                PLAY_SCENE,   new PlayScene2D(),
-                CUT_SCENE_1,  new PacManCutScene1(),
-                CUT_SCENE_2,  new PacManCutScene2(),
-                CUT_SCENE_3,  new PacManCutScene3()
-            )));
-        });
-
         GamePage gamePage = page(GAME_PAGE);
-        for (Map<String, GameScene> gameSceneMap : gameScenesForVariant.values()) {
-            for (var gameScene : gameSceneMap.values()) {
-                gameScene.setContext(this);
-                if (gameScene instanceof GameScene2D gameScene2D) {
-                    gameScene2D.setCanvas(gamePage.layout().decoratedCanvas().canvas());
-                    gameScene2D.scalingPy.bind(gamePage.layout().scalingPy);
-                    gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
-                }
-            }
+        for (var variant : GameVariant.values()) {
+            gameSceneManager.createGameScenes(variant);
+            gameSceneManager.gameScenes(variant).forEach(gameScene -> gameScene.setContext(this));
+            gameSceneManager.gameScenes2D(variant).forEach(gameScene2D -> {
+                gameScene2D.setCanvas(gamePage.layout().decoratedCanvas().canvas());
+                gameScene2D.scalingPy.bind(gamePage.layout().scalingPy);
+                gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
+            });
         }
     }
 
@@ -472,14 +440,16 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     protected GameScene sceneMatchingCurrentGameState() {
-        var config = gameScenesForCurrentGameVariant();
+        GameVariant variant = game().variant();
         return switch (gameState()) {
-            case BOOT -> config.get(BOOT_SCENE);
-            case CREDIT -> config.get(CREDIT_SCENE);
-            case INTRO -> config.get(INTRO_SCENE);
-            case INTERMISSION -> config.get("cut" + game().intermissionNumberAfterLevel(game().levelNumber()));
-            case INTERMISSION_TEST -> config.get("cut" + gameState().<Integer>getProperty("intermissionTestNumber"));
-            default -> config.get(PLAY_SCENE);
+            case BOOT -> gameSceneManager.gameScene(variant, GameSceneManager.BOOT_SCENE);
+            case CREDIT -> gameSceneManager.gameScene(variant, GameSceneManager.CREDIT_SCENE);
+            case INTRO -> gameSceneManager.gameScene(variant, GameSceneManager.INTRO_SCENE);
+            case INTERMISSION -> gameSceneManager.gameScene(variant,
+                "cut" + game().intermissionNumberAfterLevel(game().levelNumber()));
+            case INTERMISSION_TEST -> gameSceneManager.gameScene(variant,
+                "cut" + gameState().<Integer>getProperty("intermissionTestNumber"));
+            default -> gameSceneManager.gameScene(variant, GameSceneManager.PLAY_SCENE);
         };
     }
 
@@ -529,8 +499,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     @Override
-    public Map<String, GameScene> gameScenesForCurrentGameVariant() {
-        return gameScenesForVariant.get(game().variant());
+    public GameSceneManager gameSceneManager() {
+        return gameSceneManager;
     }
 
     @Override

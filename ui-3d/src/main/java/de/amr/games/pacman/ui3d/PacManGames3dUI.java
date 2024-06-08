@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.GameSceneManager;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
@@ -48,8 +49,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
     static {
         System.setProperty("javafx.sg.warn", "true"); // WTF?
     }
-
-    public static final String PLAY_SCENE_3D                          = "play3D";
 
     public static final BooleanProperty PY_3D_AXES_VISIBLE            = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_3D_ENERGIZER_EXPLODES      = new SimpleBooleanProperty(true);
@@ -162,7 +161,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
             var playScene3D = new PlayScene3D();
             playScene3D.setContext(this);
             playScene3D.setParentScene(mainScene);
-            gameScenesForVariant.get(variant).put(PLAY_SCENE_3D, playScene3D);
+            gameSceneManager.putGameScene(playScene3D, variant, GameSceneManager.PLAY_SCENE_3D);
             Logger.info("Added 3D play scene for variant " + variant);
         }
     }
@@ -200,10 +199,12 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
     @Override
     protected GameScene sceneMatchingCurrentGameState() {
+        GameVariant variant = game().variant();
         var gameScene = super.sceneMatchingCurrentGameState();
-        if (isGameScene(gameScene, PLAY_SCENE) && PY_3D_ENABLED.get()
-            && gameScenesForCurrentGameVariant().containsKey(PLAY_SCENE_3D)) {
-            return gameScenesForCurrentGameVariant().get(PLAY_SCENE_3D);
+        // check if 3D play scene exists and shall be used
+        if (isRegisteredAs(gameScene, GameSceneManager.PLAY_SCENE) && PY_3D_ENABLED.get()
+            && gameSceneManager.gameScene(variant, GameSceneManager.PLAY_SCENE_3D) != null) {
+            return gameSceneManager.gameScene(variant, GameSceneManager.PLAY_SCENE_3D);
         }
         return gameScene;
     }
@@ -227,7 +228,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
         currentGameScene().ifPresent(gameScene -> {
             toggle(PY_3D_ENABLED);
             gameScene = sceneMatchingCurrentGameState();
-            if (isGameScene(gameScene, PLAY_SCENE) || isGameScene(gameScene, PLAY_SCENE_3D)) {
+            if (isRegisteredAs(gameScene, GameSceneManager.PLAY_SCENE)
+                || isRegisteredAs(gameScene, GameSceneManager.PLAY_SCENE_3D)) {
                 updateGameScene(true);
                 gameScene.onSceneVariantSwitch();
             }

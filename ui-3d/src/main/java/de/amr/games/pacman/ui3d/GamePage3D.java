@@ -4,10 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
+import de.amr.games.pacman.ui2d.GameSceneManager;
 import de.amr.games.pacman.ui2d.page.GamePage;
+import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
@@ -29,10 +30,11 @@ public class GamePage3D extends GamePage {
         if (contextMenu != null) {
             contextMenu.hide();
         }
-        if (!context.isCurrentGameScene(PLAY_SCENE) && !context.isCurrentGameScene(PLAY_SCENE_3D)) {
+        if (!context.isCurrentGameSceneRegisteredAs(GameSceneManager.PLAY_SCENE)
+            && !context.isCurrentGameSceneRegisteredAs(GameSceneManager.PLAY_SCENE_3D)) {
             return;
         }
-        boolean isPlayScene3D = context.isCurrentGameScene(PLAY_SCENE_3D);
+        boolean isPlayScene3D = context.isCurrentGameSceneRegisteredAs(GameSceneManager.PLAY_SCENE_3D);
         var actionHandler = context.actionHandler();
         contextMenu = new ContextMenu();
 
@@ -82,7 +84,7 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void onGameSceneChanged(GameScene newGameScene) {
-        if (context.isGameScene(newGameScene, PLAY_SCENE_3D)) {
+        if (context.isRegisteredAs(newGameScene, GameSceneManager.PLAY_SCENE_3D)) {
             layout().replaceCanvasLayer(newGameScene.root());
         } else {
             layout().restoreCanvasLayer();
