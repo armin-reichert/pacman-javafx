@@ -35,15 +35,12 @@ public class StartPage implements Page {
             if (variant == null) {
                 return;
             }
-            var background = new Background(new BackgroundImage(
+            layout.setBackground(new Background(new BackgroundImage(
                 context.theme().image(variant.resourceKey() + ".startpage.image"),
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
                 variant == GameVariant.PACMAN_XXL ? FILL : FIT_HEIGHT
-            ));
-            layout.setBackground(background);
-
+            )));
             switch (variant) {
                 case MS_PACMAN, PACMAN_XXL -> root.setBackground(Ufx.coloredBackground(Color.BLACK));
                 case PACMAN -> root.setBackground(context.theme().get("wallpaper.background"));
