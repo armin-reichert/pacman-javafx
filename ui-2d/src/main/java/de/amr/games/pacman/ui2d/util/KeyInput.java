@@ -1,17 +1,24 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.ui2d.util;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 
+/**
+ * @author Armin Reichert
+ */
 public class KeyInput {
 
     private final KeyCodeCombination[] combinations;
 
     public static KeyInput of(KeyCodeCombination... combinations) {
-        var key = new KeyInput(combinations);
-        Keyboard.register(key);
-        return key;
+        var keyInput = new KeyInput(combinations);
+        Keyboard.register(keyInput);
+        return keyInput;
     }
 
     private KeyInput(KeyCodeCombination... combinations) {

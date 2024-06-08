@@ -140,7 +140,6 @@ public class StartPage implements Page {
     public void onSelected() {
         if (context.gameClock().isRunning()) {
             context.gameClock().stop();
-            Logger.info("Clock stopped.");
         }
     }
 

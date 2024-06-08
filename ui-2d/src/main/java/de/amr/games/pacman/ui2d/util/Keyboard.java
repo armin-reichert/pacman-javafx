@@ -21,7 +21,7 @@ public class Keyboard {
 
     public static void filterKeyEventsFrom(EventTarget target) {
         target.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-            Logger.info("Key press {}", e.getCode());
+            Logger.debug("Key press {}", e.getCode());
             matchingCombinations.clear();
             registeredCombinations.stream().filter(c -> c.match(e)).forEach(matchingCombinations::add);
         });
@@ -35,7 +35,7 @@ public class Keyboard {
     public static boolean pressed(KeyInput key) {
         var match = Arrays.stream(key.getCombinations()).filter(matchingCombinations::contains).findFirst();
         if (match.isPresent()) {
-            Logger.info("Matching key combination: " + match.get());
+            Logger.debug("Found registered entry for key combination: " + match.get());
             return true;
         }
         return false;
