@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.ui2d.util.KeyInput;
+import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 
@@ -50,8 +51,11 @@ public enum GameKeys {
         this.input = KeyInput.of(combinations);
     }
 
-    public de.amr.games.pacman.ui2d.util.KeyInput getInput() {
-        return input;
+    /**
+     * @return {@code true} if any key combination defined for this game key is pressed
+     */
+    public boolean pressed() {
+        return Keyboard.pressed(input);
     }
 
     private final KeyInput input;

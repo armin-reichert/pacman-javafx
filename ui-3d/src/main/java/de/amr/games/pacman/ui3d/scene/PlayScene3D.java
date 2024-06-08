@@ -13,9 +13,8 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.GameKeys;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
-import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameContext;
-import de.amr.games.pacman.ui2d.util.Keyboard;
+import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui3d.entity.Bonus3D;
 import de.amr.games.pacman.ui3d.entity.Eatable3D;
 import de.amr.games.pacman.ui3d.entity.GameLevel3D;
@@ -34,7 +33,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_USE_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
 
@@ -202,21 +201,20 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void handleKeyboardInput() {
-        var handler = context.actionHandler();
-        if (Keyboard.pressed(GameKeys.ADD_CREDIT) && !context.gameController().hasCredit()) {
-            handler.addCredit();
-        } else if (Keyboard.pressed(GameKeys.PREV_PERSPECTIVE)) {
-            handler.selectPrevPerspective();
-        } else if (Keyboard.pressed(GameKeys.NEXT_PERSPECTIVE)) {
-            handler.selectNextPerspective();
-        } else if (Keyboard.pressed(GameKeys.CHEAT_EAT_ALL)) {
-            handler.cheatEatAllPellets();
-        } else if (Keyboard.pressed(GameKeys.CHEAT_ADD_LIVES)) {
-            handler.cheatAddLives();
-        } else if (Keyboard.pressed(GameKeys.CHEAT_NEXT_LEVEL)) {
-            handler.cheatEnterNextLevel();
-        } else if (Keyboard.pressed(GameKeys.CHEAT_KILL_GHOSTS)) {
-            handler.cheatKillAllEatableGhosts();
+        if (GameKeys.ADD_CREDIT.pressed() && !context.gameController().hasCredit()) {
+            context.actionHandler().addCredit();
+        } else if (GameKeys.PREV_PERSPECTIVE.pressed()) {
+            context.actionHandler().selectPrevPerspective();
+        } else if (GameKeys.NEXT_PERSPECTIVE.pressed()) {
+            context.actionHandler().selectNextPerspective();
+        } else if (GameKeys.CHEAT_EAT_ALL.pressed()) {
+            context.actionHandler().cheatEatAllPellets();
+        } else if (GameKeys.CHEAT_ADD_LIVES.pressed()) {
+            context.actionHandler().cheatAddLives();
+        } else if (GameKeys.CHEAT_NEXT_LEVEL.pressed()) {
+            context.actionHandler().cheatEnterNextLevel();
+        } else if (GameKeys.CHEAT_KILL_GHOSTS.pressed()) {
+            context.actionHandler().cheatKillAllEatableGhosts();
         }
     }
 
