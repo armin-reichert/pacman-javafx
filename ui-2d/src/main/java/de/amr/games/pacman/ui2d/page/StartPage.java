@@ -13,7 +13,6 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -36,17 +35,19 @@ public class StartPage implements Page {
             if (variant == null) {
                 return;
             }
-            String imageKey = variant.resourceKey() + ".startpage.image";
-            Image image = checkNotNull(context.theme().image(imageKey));
-            var background = new Background(
-                new BackgroundImage(
-                    image,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundPosition.CENTER,
-                    variant == GameVariant.PACMAN_XXL ? FILL : FIT_HEIGHT)
-            );
+            var background = new Background(new BackgroundImage(
+                context.theme().image(variant.resourceKey() + ".startpage.image"),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                variant == GameVariant.PACMAN_XXL ? FILL : FIT_HEIGHT
+            ));
             layout.setBackground(background);
+
+            switch (variant) {
+                case MS_PACMAN, PACMAN_XXL -> root.setBackground(Ufx.coloredBackground(Color.BLACK));
+                case PACMAN -> root.setBackground(context.theme().get("wallpaper.background"));
+            }
         }
     };
 
@@ -118,7 +119,6 @@ public class StartPage implements Page {
         layout.setRight(right);
         layout.setCenter(btnPlayContainer);
 
-        root.setBackground(context.theme().get("wallpaper.background"));
         root.getChildren().add(layout);
     }
 
