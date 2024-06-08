@@ -38,14 +38,12 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 public interface ResourceManager {
 
     /**
-     * @return the class relative to whose package the resources are loaded
+     * @return the class relative to which resources are loaded if the path does not start with '/'
      */
     Class<?> getResourceRootClass();
 
-
     /**
-     * Creates a URL from a resource path. If the path does not start with a slash, the path to the resource
-     * root directory is prepended.
+     * Creates a URL from a resource path.
      *
      * @param path path of resource
      * @return URL of resource addressed by this path
@@ -62,24 +60,24 @@ public interface ResourceManager {
     }
 
     /**
-     * @param relPath relative path (without leading slash) starting from resource root directory
+     * @param path path to resource
      * @return audio clip from resource addressed by this path
      */
-    default AudioClip loadAudioClip(String relPath) {
-        var url = url(relPath);
+    default AudioClip loadAudioClip(String path) {
+        var url = url(path);
         return new AudioClip(url.toExternalForm());
     }
 
     /**
-     * @param relPath relative path (without leading slash) starting from resource root directory
+     * @param path path to resource
      * @param size    font size (must be a positive number)
      * @return font loaded from resource addressed by this path. If no such font can be loaded, a default font is returned
      */
-    default Font loadFont(String relPath, double size) {
+    default Font loadFont(String path, double size) {
         if (size <= 0) {
             throw new IllegalArgumentException(String.format("Font size must be positive but is %.2f", size));
         }
-        var url = url(relPath);
+        var url = url(path);
         var font = Font.loadFont(url.toExternalForm(), size);
         if (font == null) {
             Logger.error("Font with URL '{}' could not be loaded", url);
@@ -89,30 +87,30 @@ public interface ResourceManager {
     }
 
     /**
-     * @param relPath relative path to image (without leading slash) starting from resource root directory
+     * @param path path to image. If path has no leading '/' the resource managers root class
      * @return image loaded from resource addressed by this path.
      */
-    default Image loadImage(String relPath) {
-        var url = url(relPath);
+    default Image loadImage(String path) {
+        var url = url(path);
         return new Image(url.toExternalForm());
     }
 
     /**
-     * @param relPath relative path to image (without leading slash) starting from resource root directory
+     * @param path path to resource
      * @return image background with default properties, see {@link BackgroundImage}
      */
-    default Background imageBackground(String relPath) {
-        var image = loadImage(relPath);
+    default Background imageBackground(String path) {
+        var image = loadImage(path);
         return new Background(new BackgroundImage(image, null, null, null, null));
     }
 
     /**
-     * @param relPath relative path to image (without leading slash) starting from resource root directory
+     * @param path path to resource
      * @return image background with specified attributes
      */
-    default Background imageBackground(String relPath, BackgroundRepeat repeatX, BackgroundRepeat repeatY,
+    default Background imageBackground(String path, BackgroundRepeat repeatX, BackgroundRepeat repeatY,
                                        BackgroundPosition position, BackgroundSize size) {
-        var image = loadImage(relPath);
+        var image = loadImage(path);
         return new Background(new BackgroundImage(image, repeatX, repeatY, position, size));
     }
 }

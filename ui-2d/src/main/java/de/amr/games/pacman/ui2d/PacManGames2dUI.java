@@ -31,7 +31,9 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.input.*;
+import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -217,9 +219,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
         theme.set("ms_pacman.spritesheet.image",       rm.loadImage("graphics/mspacman/mspacman_spritesheet.png"));
         theme.set("ms_pacman.spritesheet.image.mazes", rm.loadImage("graphics/mspacman/mazes_flashing.png"));
-        theme.set("ms_pacman.spritesheet",             new MsPacManGameSpriteSheet(
-                                                   theme.get("ms_pacman.spritesheet.image"),
-                                         theme.get("ms_pacman.spritesheet.image.mazes")));
+        theme.set("ms_pacman.spritesheet",             new MsPacManGameSpriteSheet());
 
         theme.set("ms_pacman.icon",                    rm.loadImage("graphics/icons/mspacman.png"));
         theme.set("ms_pacman.logo.midway",             rm.loadImage("graphics/mspacman/midway_logo.png"));
@@ -253,9 +253,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
         theme.set("pacman.spritesheet.image",         rm.loadImage("graphics/pacman/pacman_spritesheet.png"));
         theme.set("pacman.spritesheet.image.mazes",   rm.loadImage("graphics/pacman/maze_flashing.png"));
-        theme.set("pacman.spritesheet",               new PacManGameSpriteSheet(
-                                                  theme.get("pacman.spritesheet.image"),
-                                                         theme.get("pacman.spritesheet.image.mazes")));
+        theme.set("pacman.spritesheet",               new PacManGameSpriteSheet());
 
         theme.set("pacman.icon",                      rm.loadImage("graphics/icons/pacman.png"));
 

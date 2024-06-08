@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -28,9 +29,10 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     private final Image source;
     private final Image flashingMazesImage;
 
-    public MsPacManGameSpriteSheet(Image source, Image flashingMazesImage) {
-        this.source = source;
-        this.flashingMazesImage = flashingMazesImage;
+    public MsPacManGameSpriteSheet() {
+        ResourceManager rm = this::getClass;
+        this.source = rm.loadImage("/de/amr/games/pacman/ui2d/graphics/mspacman/mspacman_spritesheet.png");
+        this.flashingMazesImage = rm.loadImage("/de/amr/games/pacman/ui2d/graphics/mspacman/mazes_flashing.png");
     }
 
     @Override
