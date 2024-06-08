@@ -29,11 +29,11 @@ public class Keyboard {
     }
 
     /**
-     * @param input key input
+     * @param key key input
      * @return tells if any of the given key combinations is matched by the current keyboard state
      */
-    public static boolean pressed(KeyInput input) {
-        var match = Arrays.stream(input.getCombinations()).filter(matchingCombinations::contains).findFirst();
+    public static boolean pressed(KeyInput key) {
+        var match = Arrays.stream(key.getCombinations()).filter(matchingCombinations::contains).findFirst();
         if (match.isPresent()) {
             Logger.info("Matching key combination: " + match.get());
             return true;
