@@ -218,7 +218,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("ms_pacman.spritesheet.image",       rm.loadImage("graphics/mspacman/mspacman_spritesheet.png"));
         theme.set("ms_pacman.spritesheet.image.mazes", rm.loadImage("graphics/mspacman/mazes_flashing.png"));
         theme.set("ms_pacman.spritesheet",             new MsPacManGameSpriteSheet(
-            theme.get("ms_pacman.spritesheet.image"), theme.get("ms_pacman.spritesheet.image.mazes")));
+                                                   theme.get("ms_pacman.spritesheet.image"),
+                                         theme.get("ms_pacman.spritesheet.image.mazes")));
 
         theme.set("ms_pacman.icon",                    rm.loadImage("graphics/icons/mspacman.png"));
         theme.set("ms_pacman.logo.midway",             rm.loadImage("graphics/mspacman/midway_logo.png"));
@@ -253,7 +254,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("pacman.spritesheet.image",         rm.loadImage("graphics/pacman/pacman_spritesheet.png"));
         theme.set("pacman.spritesheet.image.mazes",   rm.loadImage("graphics/pacman/maze_flashing.png"));
         theme.set("pacman.spritesheet",               new PacManGameSpriteSheet(
-            theme.get("pacman.spritesheet.image"),theme.get("pacman.spritesheet.image.mazes")));
+                                                  theme.get("pacman.spritesheet.image"),
+                                                         theme.get("pacman.spritesheet.image.mazes")));
 
         theme.set("pacman.icon",                      rm.loadImage("graphics/icons/pacman.png"));
 
@@ -284,16 +286,16 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
 
         // dashboard
-        theme.set("image.armin1970", rm.loadImage("graphics/armin.jpg"));
-        theme.set("icon.play",       rm.loadImage("graphics/icons/play.png"));
-        theme.set("icon.stop",       rm.loadImage("graphics/icons/stop.png"));
-        theme.set("icon.step",       rm.loadImage("graphics/icons/step.png"));
+        theme.set("image.armin1970",                 rm.loadImage("graphics/armin.jpg"));
+        theme.set("icon.play",                       rm.loadImage("graphics/icons/play.png"));
+        theme.set("icon.stop",                       rm.loadImage("graphics/icons/stop.png"));
+        theme.set("icon.step",                       rm.loadImage("graphics/icons/step.png"));
 
-        theme.set("infobox.min_col_width",         200);
-        theme.set("infobox.min_label_width",       140);
-        theme.set("infobox.text_color",            Color.WHITE);
-        theme.set("infobox.label_font",            Font.font("Sans", 12));
-        theme.set("infobox.text_font",             rm.loadFont("fonts/SplineSansMono-Regular.ttf", 12));
+        theme.set("infobox.min_col_width",           200);
+        theme.set("infobox.min_label_width",         140);
+        theme.set("infobox.text_color",              Color.WHITE);
+        theme.set("infobox.label_font",              Font.font("Sans", 12));
+        theme.set("infobox.text_font",               rm.loadFont("fonts/SplineSansMono-Regular.ttf", 12));
     }
 
     public void init(Stage stage, double width, double height) {
