@@ -30,7 +30,7 @@ public class GameSceneManager {
 
     public void createGameScenes(GameVariant variant) {
         switch (variant) {
-            case MS_PACMAN -> {
+            case MS_PACMAN ->
                 gameScenesForVariant.put(variant, new HashMap<>(Map.of(
                     BOOT_SCENE,   new BootScene(),
                     INTRO_SCENE,  new MsPacManIntroScene(),
@@ -40,8 +40,7 @@ public class GameSceneManager {
                     CUT_SCENE_2,  new MsPacManCutScene2(),
                     CUT_SCENE_3,  new MsPacManCutScene3()
                 )));
-            }
-            case PACMAN, PACMAN_XXL -> {
+            case PACMAN, PACMAN_XXL ->
                 gameScenesForVariant.put(variant, new HashMap<>(Map.of(
                     BOOT_SCENE,   new BootScene(),
                     INTRO_SCENE,  new PacManIntroScene(),
@@ -51,7 +50,6 @@ public class GameSceneManager {
                     CUT_SCENE_2,  new PacManCutScene2(),
                     CUT_SCENE_3,  new PacManCutScene3()
                 )));
-            }
         }
     }
 
