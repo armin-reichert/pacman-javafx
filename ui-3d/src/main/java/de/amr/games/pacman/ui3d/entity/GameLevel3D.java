@@ -17,7 +17,7 @@ import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
-import de.amr.games.pacman.ui2d.scene.GameSceneContext;
+import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui3d.animation.HeadBanging;
 import de.amr.games.pacman.ui3d.animation.HipSwaying;
 import de.amr.games.pacman.ui3d.animation.Squirting;
@@ -133,7 +133,7 @@ public class GameLevel3D extends Group {
         }
     };
 
-    private final GameSceneContext context;
+    private final GameContext context;
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
     private final Group levelCounterGroup = new Group();
@@ -148,7 +148,7 @@ public class GameLevel3D extends Group {
     private Bonus3D bonus3D;
     private Message3D message3D;
 
-    public GameLevel3D(GameSceneContext context) {
+    public GameLevel3D(GameContext context) {
         this.context = checkNotNull(context);
 
         // Floor

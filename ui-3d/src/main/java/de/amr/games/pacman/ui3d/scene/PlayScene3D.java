@@ -14,7 +14,7 @@ import de.amr.games.pacman.ui2d.Keys;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.scene.GameSceneContext;
+import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import de.amr.games.pacman.ui3d.entity.Bonus3D;
 import de.amr.games.pacman.ui3d.entity.Eatable3D;
@@ -61,7 +61,7 @@ public class PlayScene3D implements GameScene {
     private final Scores3D scores3D;
 
     private GameLevel3D level3D;
-    private GameSceneContext context;
+    private GameContext context;
     private boolean scoreVisible;
 
     public PlayScene3D() {
@@ -145,12 +145,12 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void setContext(GameSceneContext context) {
+    public void setContext(GameContext context) {
         this.context = checkNotNull(context);
     }
 
     @Override
-    public GameSceneContext context() {
+    public GameContext context() {
         return context;
     }
 

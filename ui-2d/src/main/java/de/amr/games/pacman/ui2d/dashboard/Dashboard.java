@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.ui2d.scene.GameSceneContext;
+import de.amr.games.pacman.ui2d.scene.GameContext;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
@@ -15,15 +15,15 @@ import java.util.List;
  */
 public class Dashboard extends VBox {
 
-    private final GameSceneContext context;
+    private final GameContext context;
     private final List<InfoBox> infoBoxes = new ArrayList<>();
 
-    public Dashboard(GameSceneContext context) {
+    public Dashboard(GameContext context) {
         this.context = context;
         setVisible(false);
     }
 
-    public GameSceneContext getContext() {
+    public GameContext getContext() {
         return context;
     }
 

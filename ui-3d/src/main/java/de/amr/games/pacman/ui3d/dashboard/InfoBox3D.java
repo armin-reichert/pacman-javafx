@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui3d.dashboard;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.dashboard.InfoBox;
 import de.amr.games.pacman.ui2d.dashboard.InfoText;
-import de.amr.games.pacman.ui2d.scene.GameSceneContext;
+import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import de.amr.games.pacman.ui3d.scene.PlayScene3D;
 import javafx.beans.binding.Bindings;
@@ -53,7 +53,7 @@ public class InfoBox3D extends InfoBox {
     private Spinner<Integer> spinnerCamY;
     private Spinner<Integer> spinnerCamZ;
 
-    public void init(GameSceneContext context) {
+    public void init(GameContext context) {
         this.context = context;
 
         pickerLightColor = colorPicker("Light Color", PY_3D_LIGHT_COLOR.get());

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.ui2d.scene.GameSceneContext;
+import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -35,7 +35,7 @@ public class InfoBoxGeneral extends InfoBox {
     private Tooltip tooltipStop = new Tooltip("Stop");
     private Tooltip tooltipStep = new Tooltip("Single Step Mode");
 
-    public void init(GameSceneContext context) {
+    public void init(GameContext context) {
         this.context = context;
 
         infoText("Java Version",   Runtime.version().toString());

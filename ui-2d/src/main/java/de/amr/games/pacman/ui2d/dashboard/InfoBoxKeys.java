@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.ui2d.scene.GameSceneContext;
+import de.amr.games.pacman.ui2d.scene.GameContext;
 
 /**
  * Keyboard shortcuts.
@@ -13,7 +13,7 @@ import de.amr.games.pacman.ui2d.scene.GameSceneContext;
  */
 public class InfoBoxKeys extends InfoBox {
 
-    public void init(GameSceneContext context) {
+    public void init(GameContext context) {
         this.context = context;
 
         infoText("F1, Alt+B", "Dashboard On/Off");

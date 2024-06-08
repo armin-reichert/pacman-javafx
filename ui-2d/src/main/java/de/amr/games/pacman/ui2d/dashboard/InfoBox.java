@@ -8,7 +8,7 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.scene.GameSceneContext;
+import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -47,7 +47,7 @@ public abstract class InfoBox extends TitledPane {
 
     protected final List<InfoText> infoTexts = new ArrayList<>();
     protected final GridPane grid = new GridPane();
-    protected GameSceneContext context;
+    protected GameContext context;
     private int minLabelWidth;
     private Color textColor;
     private Font textFont;
@@ -65,7 +65,7 @@ public abstract class InfoBox extends TitledPane {
         grid.setPadding(new Insets(5));
     }
 
-    public abstract void init(GameSceneContext context);
+    public abstract void init(GameContext context);
 
     public void update() {
         infoTexts.forEach(InfoText::update);

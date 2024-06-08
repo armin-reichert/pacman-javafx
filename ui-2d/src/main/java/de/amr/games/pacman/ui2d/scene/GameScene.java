@@ -58,7 +58,7 @@ public interface GameScene extends GameEventListener {
         // empty default
     }
 
-    GameSceneContext context();
+    GameContext context();
 
-    void setContext(GameSceneContext context);
+    void setContext(GameContext context);
 }

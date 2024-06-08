@@ -32,7 +32,7 @@ public class GameEvent {
         this(type, game, null);
     }
 
-        @Override
+    @Override
     public String toString() {
         return "GameEvent{" +
             "type=" + type +

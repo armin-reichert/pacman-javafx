@@ -21,7 +21,7 @@ import java.util.Optional;
 /**
  * @author Armin Reichert
  */
-public interface GameSceneContext {
+public interface GameContext {
 
     GameClockFX gameClock();
 
@@ -30,8 +30,6 @@ public interface GameSceneContext {
     SoundHandler soundHandler();
 
     ObjectProperty<GameScene> gameSceneProperty();
-
-    boolean isPageSelected(String pageID);
 
     Optional<GameScene> currentGameScene();
 
@@ -58,6 +56,8 @@ public interface GameSceneContext {
      * @return localized text with arguments merged or {@code "<key">} if no text is available
      */
     String tt(String key, Object... args);
+
+    boolean isPageSelected(String pageID);
 
     default GameController gameController() {
         return GameController.it();

@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
-import de.amr.games.pacman.ui2d.scene.GameSceneContext;
+import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import javafx.scene.canvas.Canvas;
 
@@ -18,7 +18,7 @@ public class PictureInPictureView extends Canvas {
 
     private final PlayScene2D displayedScene = new PlayScene2D();
 
-    public PictureInPictureView(GameSceneContext context) {
+    public PictureInPictureView(GameContext context) {
         displayedScene.setContext(context);
         displayedScene.setCanvas(this);
         displayedScene.setScoreVisible(true);

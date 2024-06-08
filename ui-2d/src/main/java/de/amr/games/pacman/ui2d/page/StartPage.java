@@ -2,7 +2,7 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.Keys;
-import de.amr.games.pacman.ui2d.scene.GameSceneContext;
+import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui2d.util.Ufx;
@@ -95,9 +95,9 @@ public class StartPage implements Page {
     private final StackPane root = new StackPane();
     private final BorderPane layout = new BorderPane();
     private final Node btnPlay;
-    private final GameSceneContext context;
+    private final GameContext context;
 
-    public StartPage(GameSceneContext context) {
+    public StartPage(GameContext context) {
         this.context = checkNotNull(context);
 
         var btnPrevVariant = createCarouselButton('\u2b98');

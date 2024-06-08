@@ -9,7 +9,7 @@ import de.amr.games.pacman.ui2d.Keys;
 import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.GameSceneContext;
+import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.CheckMenuItem;
@@ -37,7 +37,7 @@ import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
  */
 public class GamePage implements Page {
 
-    protected final GameSceneContext context;
+    protected final GameContext context;
     protected final CanvasLayoutPane layout;
     protected final Pane popupLayer = new Pane();
     protected final FlashMessageView flashMessageView = new FlashMessageView();
@@ -48,7 +48,7 @@ public class GamePage implements Page {
     protected final PictureInPictureView pip;
     protected ContextMenu contextMenu;
 
-    public GamePage(GameSceneContext context) {
+    public GamePage(GameContext context) {
         this.context = checkNotNull(context);
 
         layout = new CanvasLayoutPane();

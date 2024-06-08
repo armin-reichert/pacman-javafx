@@ -61,7 +61,7 @@ import static java.util.stream.IntStream.rangeClosed;
  *
  * @author Armin Reichert
  */
-public class PacManGames2dUI implements GameEventListener, GameSceneContext, ActionHandler, SoundHandler {
+public class PacManGames2dUI implements GameEventListener, GameContext, ActionHandler, SoundHandler {
 
     public static final String BOOT_SCENE   = "boot";
     public static final String INTRO_SCENE  = "intro";

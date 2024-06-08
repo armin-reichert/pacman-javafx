@@ -32,7 +32,7 @@ public abstract class GameScene2D implements GameScene {
     public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible", false);
     public final DoubleProperty scalingPy       = new SimpleDoubleProperty(this, "scaling", 1.0);
 
-    protected GameSceneContext context;
+    protected GameContext context;
     protected GraphicsContext g;
     protected ModernWorldRenderer modernRenderer = new ModernWorldRenderer(scalingPy);
     protected ClassicWorldRenderer classicRenderer = new ClassicWorldRenderer(scalingPy);
@@ -40,12 +40,12 @@ public abstract class GameScene2D implements GameScene {
     public abstract boolean isCreditVisible();
 
     @Override
-    public GameSceneContext context() {
+    public GameContext context() {
         return context;
     }
 
     @Override
-    public void setContext(GameSceneContext context) {
+    public void setContext(GameContext context) {
         checkNotNull(context);
         this.context = context;
     }

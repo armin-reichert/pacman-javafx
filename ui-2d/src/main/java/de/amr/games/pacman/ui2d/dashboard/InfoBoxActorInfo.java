@@ -11,7 +11,7 @@ import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.scene.GameSceneContext;
+import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
 
 import java.util.function.BiFunction;
@@ -22,7 +22,7 @@ import java.util.function.Supplier;
  */
 public class InfoBoxActorInfo extends InfoBox {
 
-    public void init(GameSceneContext context) {
+    public void init(GameContext context) {
         this.context = context;
 
         infoText("Pac Name", pacInfo((game, pac) -> pac.name()));

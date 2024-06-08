@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.ui2d.scene.GameSceneContext;
+import de.amr.games.pacman.ui2d.scene.GameContext;
 import javafx.geometry.Insets;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -17,7 +17,7 @@ import javafx.scene.text.TextFlow;
  */
 public class InfoBoxAbout extends InfoBox {
 
-    public void init(GameSceneContext context) {
+    public void init(GameContext context) {
         this.context = context;
 
         var theAuthorInYoungerYears = new ImageView(context.theme().image("image.armin1970"));
