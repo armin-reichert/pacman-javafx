@@ -306,10 +306,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         stage.setMinWidth(minSize.getWidth());
         stage.setMinHeight(minSize.getHeight());
         stage.centerOnScreen();
-        stage.setOnShown(e -> {
-            selectPage(START_PAGE);
-            Logger.info("Stage is focused: {}", stage.isFocused());
-        });
+        stage.setOnShown(e -> selectPage(START_PAGE));
         stage.show();
     }
 
@@ -365,7 +362,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     protected Scene createMainScene(double width, double height) {
-        var scene = new Scene(new Region(), width, height, Color.BLACK);
+        var placeholder = new Region();
+        placeholder.setBackground(Ufx.coloredBackground(Color.BLACK));
+        var scene = new Scene(placeholder, width, height);
         scene.setOnMouseClicked(this::onMouseClicked);
         scene.setOnContextMenuRequested(this::onContextMenuRequested);
         scene.setOnKeyPressed(e -> currentPage().handleKeyboardInput());
