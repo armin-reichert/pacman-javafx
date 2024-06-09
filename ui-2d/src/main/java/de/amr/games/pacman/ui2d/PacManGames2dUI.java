@@ -66,34 +66,32 @@ import static java.util.stream.IntStream.rangeClosed;
  */
 public class PacManGames2dUI implements GameEventListener, GameContext, ActionHandler, SoundHandler {
 
+    public static final String SIGNATURE_TEXT = "Remake (2021-2024) by Armin Reichert";
+
     public static final String START_PAGE   = "startPage";
     public static final String GAME_PAGE    = "gamePage";
     public static final String EDITOR_PAGE  = "editorPage";
 
-    public static final double MIN_SCALING = 0.75;
+    public static final double MIN_SCALING                        = 0.75;
+    public static final int DEFAULT_CANVAS_WIDTH_UNSCALED         = GameModel.ARCADE_MAP_TILES_X * TS; // 28*8 = 224
+    public static final int DEFAULT_CANVAS_HEIGHT_UNSCALED        = GameModel.ARCADE_MAP_TILES_Y * TS; // 36*8 = 288
 
-    public static final int DEFAULT_CANVAS_WIDTH_UNSCALED           = GameModel.ARCADE_MAP_TILES_X * TS; // 28*8 = 224
-    public static final int DEFAULT_CANVAS_HEIGHT_UNSCALED          = GameModel.ARCADE_MAP_TILES_Y * TS; // 36*8 = 288
-
-    public static final IntegerProperty PY_SIMULATION_STEPS         = new SimpleIntegerProperty(1);
-    public static final BooleanProperty PY_IMMUNITY                 = new SimpleBooleanProperty(false) {
+    public static final IntegerProperty PY_SIMULATION_STEPS       = new SimpleIntegerProperty(1);
+    public static final BooleanProperty PY_IMMUNITY               = new SimpleBooleanProperty(false) {
         @Override
         protected void invalidated() {
             GameController.it().setPacImmune(get());
         }
     };
-    public static final BooleanProperty PY_USE_AUTOPILOT            = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_SHOW_DEBUG_INFO          = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_CANVAS_DECORATED         = new SimpleBooleanProperty(true);
-    public static final BooleanProperty PY_PIP_ON                   = new SimpleBooleanProperty(false);
-    public static final IntegerProperty PY_PIP_HEIGHT               = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_PX.y());
-    public static final IntegerProperty PY_PIP_OPACITY_PERCENTAGE   = new SimpleIntegerProperty(100);
-    public static final BooleanProperty PY_3D_ENABLED               = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE    = new SimpleObjectProperty<>(DrawMode.FILL);
+    public static final BooleanProperty PY_USE_AUTOPILOT          = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_SHOW_DEBUG_INFO        = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_CANVAS_DECORATED       = new SimpleBooleanProperty(true);
+    public static final BooleanProperty PY_PIP_ON                 = new SimpleBooleanProperty(false);
+    public static final IntegerProperty PY_PIP_HEIGHT             = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_PX.y());
+    public static final IntegerProperty PY_PIP_OPACITY_PERCENTAGE = new SimpleIntegerProperty(100);
+    public static final BooleanProperty PY_3D_ENABLED             = new SimpleBooleanProperty(false);
+    public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE  = new SimpleObjectProperty<>(DrawMode.FILL);
 
-    public static final String SIGNATURE_TEXT                       = "Remake (2021-2024) by Armin Reichert";
-
-    // end static section
 
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant");
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
@@ -107,8 +105,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected Scene mainScene;
     protected String currentPageID;
     protected GameClockFX clock;
-
-    private TileMapEditor editor;
+    protected TileMapEditor editor;
 
     //TODO reconsider this
     protected AudioClip voiceClip;
@@ -145,7 +142,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             showFlashMessageSeconds(3, "Map editor is not available in this game variant");
             return;
         }
-        gameClock().stop();
+        clock.stop();
         currentGameScene().ifPresent(GameScene::end);
         //TODO introduce GAME_PAUSED state?
         reboot();
@@ -283,9 +280,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     public void init(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
-
-        Logger.info("{} game keys registered", GameKeys.values().length);
-
+        // Touch all game keys such that they get registered with keyboard
+        for (var gameKey : GameKeys.values()) {
+            Logger.info("Game key '{}' registered", gameKey);
+        }
         gameVariantPy.set(GameController.it().game().variant());
 
         mainScene = createMainScene(width, height);
@@ -293,9 +291,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         pages.put(START_PAGE, createStartPage());
         pages.put(GAME_PAGE,  createGamePage());
 
-        createGameClock();
-        createGameScenes();
+        createGameScenes(); // must be done *after* creating game page!
         addMapEditor();
+
+        createGameClock();
 
         stage.setScene(mainScene);
         stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy));
@@ -316,6 +315,27 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     protected void onContextMenuRequested(ContextMenuEvent e) {
         currentPage().onContextMenuRequested(e);
+    }
+
+    protected Scene createMainScene(double width, double height) {
+        var placeholder = new Region();
+        placeholder.setBackground(Ufx.coloredBackground(Color.BLACK));
+        var scene = new Scene(placeholder, width, height);
+        scene.setOnMouseClicked(this::onMouseClicked);
+        scene.setOnContextMenuRequested(this::onContextMenuRequested);
+        scene.setOnKeyPressed(e -> currentPage().handleKeyboardInput());
+        Keyboard.filterKeyEventsFrom(scene);
+        scene.widthProperty().addListener((py, ov, nv) -> {
+            if (currentPageID != null) {
+                currentPage().setSize(scene.getWidth(), scene.getHeight());
+            }
+        });
+        scene.heightProperty().addListener((py, ov, nv) -> {
+            if (currentPageID != null) {
+                currentPage().setSize(scene.getWidth(), scene.getHeight());
+            }
+        });
+        return scene;
     }
 
     protected void createGameClock() {
@@ -359,27 +379,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         return Bindings.createStringBinding(
             () -> tt("app.title." + game().variant().resourceKey() + (clock.isPaused() ? ".paused" : ""), "2D"),
             dependencies);
-    }
-
-    protected Scene createMainScene(double width, double height) {
-        var placeholder = new Region();
-        placeholder.setBackground(Ufx.coloredBackground(Color.BLACK));
-        var scene = new Scene(placeholder, width, height);
-        scene.setOnMouseClicked(this::onMouseClicked);
-        scene.setOnContextMenuRequested(this::onContextMenuRequested);
-        scene.setOnKeyPressed(e -> currentPage().handleKeyboardInput());
-        Keyboard.filterKeyEventsFrom(scene);
-        scene.widthProperty().addListener((py, ov, nv) -> {
-            if (currentPageID != null) {
-                currentPage().setSize(scene.getWidth(), scene.getHeight());
-            }
-        });
-        scene.heightProperty().addListener((py, ov, nv) -> {
-            if (currentPageID != null) {
-                currentPage().setSize(scene.getWidth(), scene.getHeight());
-            }
-        });
-        return scene;
     }
 
     protected StartPage createStartPage() {
