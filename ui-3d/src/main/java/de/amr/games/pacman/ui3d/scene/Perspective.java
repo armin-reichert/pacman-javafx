@@ -6,7 +6,9 @@ package de.amr.games.pacman.ui3d.scene;
 
 import de.amr.games.pacman.model.actors.Entity;
 import javafx.scene.Camera;
+import javafx.scene.SubScene;
 import javafx.scene.transform.Rotate;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.lerp;
 
@@ -24,7 +26,8 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void init(Camera cam) {
+        public void init(SubScene scene) {
+            var cam = scene.getCamera();
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(0);
             cam.setTranslateX(0);
@@ -33,11 +36,16 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void update(Camera cam, Entity spottedEntity) {
+        public void update(SubScene scene, Entity spottedEntity) {
+            var cam = scene.getCamera();
             var position = spottedEntity.position();
             double speed = 0.01;
-            cam.setTranslateX(lerp(cam.getTranslateX(), position.x() - 100, speed));
-            cam.setTranslateY(lerp(cam.getTranslateY(), position.y() - 150, speed));
+            double x = lerp(cam.getTranslateX(), position.x() - 100, speed);
+            double y = lerp(cam.getTranslateY(), position.y() - 150, speed);
+            cam.setTranslateX(x);
+            cam.setTranslateY(y);
+            Logger.info("Camera x={0.00} y={0.00} sceneWidth={0}, sceneHeight={0} entityX={0.00}, entityY={0.00}",
+                    x, y, scene.getWidth(), scene.getHeight(), spottedEntity.posX(), spottedEntity.posY());
         }
     },
 
@@ -49,7 +57,8 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void init(Camera cam) {
+        public void init(SubScene scene) {
+            var cam = scene.getCamera();
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(TOTAL_ROTATE);
             cam.setTranslateX(TOTAL_TRANSLATE_X);
@@ -65,14 +74,16 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void init(Camera cam) {
+        public void init(SubScene scene) {
+            var cam = scene.getCamera();
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(60);
             cam.setTranslateZ(-160);
         }
 
         @Override
-        public void update(Camera cam, Entity spottedEntity) {
+        public void update(SubScene scene, Entity spottedEntity) {
+            var cam = scene.getCamera();
             double speedX = 0.03;
             double speedY = 0.06;
             cam.setTranslateX(lerp(cam.getTranslateX(), spottedEntity.position().x() - 100, speedX));
@@ -87,17 +98,23 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void init(Camera cam) {
+        public void init(SubScene scene) {
+            var cam = scene.getCamera();
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(80);
             cam.setTranslateZ(-40);
         }
 
         @Override
-        public void update(Camera cam, Entity spottedEntity) {
+        public void update(SubScene scene, Entity spottedEntity) {
+            var cam = scene.getCamera();
             double speed = 0.02;
-            cam.setTranslateX(lerp(cam.getTranslateX(), spottedEntity.position().x() - 110, speed));
-            cam.setTranslateY(lerp(cam.getTranslateY(), spottedEntity.position().y(), speed));
+            double x = lerp(cam.getTranslateX(), spottedEntity.position().x() - 110, speed);
+            double y = lerp(cam.getTranslateY(), spottedEntity.position().y(), speed);
+            cam.setTranslateX(x);
+            cam.setTranslateY(y);
+            Logger.info("Camera x={0.00} y={0.00} sceneWidth={0}, sceneHeight={0} entityX={0.00}, entityY={0.00}",
+                    x, y, scene.getWidth(), scene.getHeight(), spottedEntity.posX(), spottedEntity.posY());
         }
     };
 
