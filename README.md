@@ -80,6 +80,7 @@ General shortcuts:
 
 Play screen shortcuts:
 
+- <kbd>Alt+Shift+E</kbd>Opens the Map Editor
 - <kbd>Alt+LEFT</kbd> Selects the previous camera perspective
 - <kbd>Alt+RIGHT</kbd> Selects the next camera perspective
 - <kbd>Q</kbd>Quits the play scene and shows the intro screen
