@@ -132,8 +132,12 @@ public class SmoothingGroups {
         return adjacentFaces;
     }
 
-    private Vector3f getNormal(int index) {
-        return new Vector3f(normals[index * 3], normals[index * 3 + 1], normals[index * 3 + 2]);
+    private Vector3f getNormal(int i) {
+        return getNormal(normals, i);
+    }
+
+    private static Vector3f getNormal(float[] normals, int i) {
+        return new Vector3f(normals[i * 3], normals[i * 3 + 1], normals[i * 3 + 2]);
     }
 
     private static boolean areNormalsEqual(Vector3f v1, Vector3f v2) {
@@ -165,7 +169,7 @@ public class SmoothingGroups {
                 }
                 Edge adjEdge = adjFaceEdges[adjEdgeInd];
 
-                if (edge.isSmooth(adjEdge)) {
+                if (edge.isSmooth(adjEdge, normals)) {
                     if (!smoothEdges.containsKey(edge)) {
                         smoothEdges.put(edge, adjFaces);
                     }
@@ -220,48 +224,17 @@ public class SmoothingGroups {
         return generateSmGroups(groups);
     }
 
-    private class Edge {
-        int from, to;
-        int fromNormal, toNormal;
+    record Edge(int from, int to, int fromNormal, int toNormal) {
 
-        public Edge(int from, int to, int fromNormal, int toNormal) {
-            this.from = Math.min(from, to);
-            this.to = Math.max(from, to);
-            this.fromNormal = Math.min(fromNormal, toNormal);
-            this.toNormal = Math.max(fromNormal, toNormal);
+        public static Edge of(int from, int to, int fromNormal, int toNormal) {
+            return new Edge(Math.min(from, to), Math.max(from, to), Math.min(fromNormal, toNormal), Math.max(fromNormal, toNormal));
         }
 
-        public boolean isSmooth(Edge edge) {
-            return (areNormalsEqual(getNormal(fromNormal), getNormal(edge.fromNormal))
-                && areNormalsEqual(getNormal(toNormal), getNormal(edge.toNormal)))
-                || (areNormalsEqual(getNormal(fromNormal), getNormal(edge.toNormal))
-                && areNormalsEqual(getNormal(toNormal), getNormal(edge.fromNormal)));
-        }
-
-        @Override
-        public int hashCode() {
-            int hash = 7;
-            hash = 41 * hash + this.from;
-            hash = 41 * hash + this.to;
-            return hash;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == null) {
-                return false;
-            }
-            if (getClass() != obj.getClass()) {
-                return false;
-            }
-            final Edge other = (Edge) obj;
-            if (this.from != other.from) {
-                return false;
-            }
-            if (this.to != other.to) {
-                return false;
-            }
-            return true;
+        public boolean isSmooth(Edge edge, float[] normals) {
+            return (areNormalsEqual(getNormal(normals, fromNormal), getNormal(normals, edge.fromNormal))
+                    && areNormalsEqual(getNormal(normals, toNormal), getNormal(normals, edge.toNormal))) ||
+                    (areNormalsEqual(getNormal(normals, fromNormal), getNormal(normals, edge.toNormal))
+                    && areNormalsEqual(getNormal(normals, toNormal), getNormal(normals, edge.fromNormal)));
         }
     }
 
