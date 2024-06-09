@@ -13,6 +13,8 @@ public interface SoundHandler {
 
     void stopVoice();
 
+    void playVoice(String clipID, double delaySeconds);
+
     AudioClip audioClip(String key);
 
     default void playAudioClip(String key) {
@@ -32,5 +34,4 @@ public interface SoundHandler {
     void ensureAudioLoop(String key, int repetitions);
 
     void ensureAudioLoop(String key);
-
 }

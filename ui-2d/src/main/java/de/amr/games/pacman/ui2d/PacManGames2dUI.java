@@ -143,6 +143,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             showFlashMessageSeconds(3, "Map editor is not available in this game variant");
             return;
         }
+        stopVoice();
+        stopAllSounds();
         clock.stop();
         currentGameScene().ifPresent(GameScene::end);
         //TODO introduce GAME_PAUSED state?
@@ -760,7 +762,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void reboot() {
         stopAllSounds();
         currentGameScene().ifPresent(GameScene::end);
-        playVoice("voice.explain", 0);
         clock.setTargetFrameRate(GameModel.FPS);
         gameController().restart(GameState.BOOT);
     }
@@ -985,11 +986,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         ensureAudioLoop(key, AudioClip.INDEFINITE);
     }
 
-    public void playVoice(String name, double delaySeconds) {
+    @Override
+    public void playVoice(String clipID, double delaySeconds) {
         if (voiceClip != null && voiceClip.isPlaying()) {
             return; // don't interrupt
         }
-        voiceClip = theme().audioClip(name);
+        voiceClip = theme().audioClip(clipID);
         voiceClipExecution.setDelay(Duration.seconds(delaySeconds));
         voiceClipExecution.setOnFinished(e -> voiceClip.play());
         voiceClipExecution.play();
