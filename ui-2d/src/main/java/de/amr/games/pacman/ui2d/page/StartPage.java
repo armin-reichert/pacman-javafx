@@ -13,11 +13,15 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.PacManGames2dUI.GAME_PAGE;
@@ -27,26 +31,6 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
  * @author Armin Reichert
  */
 public class StartPage implements Page {
-
-    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
-        @Override
-        protected void invalidated() {
-            GameVariant variant = get();
-            if (variant == null) {
-                return;
-            }
-            layout.setBackground(new Background(new BackgroundImage(
-                context.theme().image(variant.resourceKey() + ".startpage.image"),
-                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                variant == GameVariant.PACMAN_XXL ? FILL : FIT_HEIGHT
-            )));
-            switch (variant) {
-                case MS_PACMAN, PACMAN_XXL -> root.setBackground(Ufx.coloredBackground(Color.BLACK));
-                case PACMAN -> root.setBackground(context.theme().get("wallpaper.background"));
-            }
-        }
-    };
 
     private static final BackgroundSize FIT_HEIGHT = new BackgroundSize(AUTO, 1,
         false, true,
@@ -88,13 +72,34 @@ public class StartPage implements Page {
         return pane;
     }
 
+    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
+        @Override
+        protected void invalidated() {
+            var variant = get();
+            if (variant != null && context != null) {
+                root.setBackground(switch (variant) {
+                    case MS_PACMAN, PACMAN_XXL -> Ufx.coloredBackground(Color.BLACK);
+                    case PACMAN -> context.theme().get("wallpaper.background");
+                });
+                layout.setBackground(layoutBackgrounds.get(variant));
+            }
+        }
+    };
+
+    private final GameContext context;
     private final StackPane root = new StackPane();
     private final BorderPane layout = new BorderPane();
     private final Node btnPlay;
-    private final GameContext context;
+    private final Map<GameVariant, Background> layoutBackgrounds = new EnumMap<>(GameVariant.class);
 
     public StartPage(GameContext context) {
         this.context = checkNotNull(context);
+
+        for (var variant : GameVariant.values()) {
+            layoutBackgrounds.put(variant, createLayoutBackground(variant));
+        }
+
+        gameVariantPy.set(context.game().variant());
 
         var btnPrevVariant = createCarouselButton('\u2b98');
         btnPrevVariant.setOnAction(e -> context.actionHandler().selectPrevGameVariant());
@@ -117,6 +122,17 @@ public class StartPage implements Page {
         layout.setCenter(btnPlayContainer);
 
         root.getChildren().add(layout);
+    }
+
+    private Background createLayoutBackground(GameVariant variant) {
+        Image bgImage = context.theme().image(variant.resourceKey() + ".startpage.image");
+        BackgroundSize size = switch (variant) {
+            case MS_PACMAN, PACMAN -> FIT_HEIGHT;
+            case PACMAN_XXL -> FILL;
+        };
+        return new Background(new BackgroundImage(bgImage,
+            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER, size));
     }
 
     @Override
