@@ -40,15 +40,29 @@ import java.util.*;
  */
 public class SmoothingGroups {
 
+    record Edge(int from, int to, int fromNormal, int toNormal) {
+
+        public static Edge of(int from, int to, int fromNormal, int toNormal) {
+            return new Edge(Math.min(from, to), Math.max(from, to), Math.min(fromNormal, toNormal), Math.max(fromNormal, toNormal));
+        }
+
+        public boolean isSmooth(Edge edge, float[] normals) {
+            return (areNormalsEqual(getNormal(normals, fromNormal), getNormal(normals, edge.fromNormal))
+                    && areNormalsEqual(getNormal(normals, toNormal), getNormal(normals, edge.toNormal))) ||
+                    (areNormalsEqual(getNormal(normals, fromNormal), getNormal(normals, edge.toNormal))
+                            && areNormalsEqual(getNormal(normals, toNormal), getNormal(normals, edge.fromNormal)));
+        }
+    }
+
     private static final float NORMAL_ANGLE = 0.9994f; // cos(2)
 
-    private BitSet visited;
-    private BitSet unvisited;
-    private Queue<Integer> q;
+    private final BitSet visited;
+    private final BitSet unvisited;
+    private final Queue<Integer> q;
 
-    private int[][] faces;
-    private int[][] faceNormals;
-    private float[] normals;
+    private final int[][] faces;
+    private final int[][] faceNormals;
+    private final float[] normals;
 
     private Edge[][] faceEdges;
 
@@ -132,10 +146,6 @@ public class SmoothingGroups {
         return adjacentFaces;
     }
 
-    private Vector3f getNormal(int i) {
-        return getNormal(normals, i);
-    }
-
     private static Vector3f getNormal(float[] normals, int i) {
         return new Vector3f(normals[i * 3], normals[i * 3 + 1], normals[i * 3 + 2]);
     }
@@ -181,7 +191,7 @@ public class SmoothingGroups {
 
     private List<List<Integer>> calcConnComponents(Map<Edge, List<Integer>> smoothEdges) {
         // System.out.println("smoothEdges = " + smoothEdges);
-        List<List<Integer>> groups = new ArrayList<List<Integer>>();
+        List<List<Integer>> groups = new ArrayList<>();
         while (hasNextConnectedComponent()) {
             List<Integer> smoothGroup = getNextConnectedComponent(smoothEdges);
             groups.add(smoothGroup);
@@ -222,20 +232,6 @@ public class SmoothingGroups {
         List<List<Integer>> groups = calcConnComponents(smoothEdges);
 
         return generateSmGroups(groups);
-    }
-
-    record Edge(int from, int to, int fromNormal, int toNormal) {
-
-        public static Edge of(int from, int to, int fromNormal, int toNormal) {
-            return new Edge(Math.min(from, to), Math.max(from, to), Math.min(fromNormal, toNormal), Math.max(fromNormal, toNormal));
-        }
-
-        public boolean isSmooth(Edge edge, float[] normals) {
-            return (areNormalsEqual(getNormal(normals, fromNormal), getNormal(normals, edge.fromNormal))
-                    && areNormalsEqual(getNormal(normals, toNormal), getNormal(normals, edge.toNormal))) ||
-                    (areNormalsEqual(getNormal(normals, fromNormal), getNormal(normals, edge.toNormal))
-                    && areNormalsEqual(getNormal(normals, toNormal), getNormal(normals, edge.fromNormal)));
-        }
     }
 
     /**
