@@ -28,6 +28,7 @@ import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
@@ -321,20 +322,17 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         var placeholder = new Region();
         placeholder.setBackground(Ufx.coloredBackground(Color.BLACK));
         var scene = new Scene(placeholder, width, height);
+        Keyboard.filterKeyEventsFor(scene);
         scene.setOnMouseClicked(this::onMouseClicked);
         scene.setOnContextMenuRequested(this::onContextMenuRequested);
         scene.setOnKeyPressed(e -> currentPage().handleKeyboardInput());
-        Keyboard.filterKeyEventsFrom(scene);
-        scene.widthProperty().addListener((py, ov, nv) -> {
+        ChangeListener<Number> resizeCurrentPage = (py, ov, nv) -> {
             if (currentPageID != null) {
                 currentPage().setSize(scene.getWidth(), scene.getHeight());
             }
-        });
-        scene.heightProperty().addListener((py, ov, nv) -> {
-            if (currentPageID != null) {
-                currentPage().setSize(scene.getWidth(), scene.getHeight());
-            }
-        });
+        };
+        scene.widthProperty().addListener(resizeCurrentPage);
+        scene.heightProperty().addListener(resizeCurrentPage);
         return scene;
     }
 

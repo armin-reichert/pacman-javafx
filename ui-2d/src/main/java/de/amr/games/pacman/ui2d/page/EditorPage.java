@@ -34,14 +34,6 @@ public class EditorPage implements Page {
     }
 
     @Override
-    public void onSelected() {
-    }
-
-    @Override
-    public void setSize(double width, double height) {
-    }
-
-    @Override
     public void handleKeyboardInput() {
         if (GameKeys.FULLSCREEN.pressed()) {
             context.actionHandler().setFullScreen(true);

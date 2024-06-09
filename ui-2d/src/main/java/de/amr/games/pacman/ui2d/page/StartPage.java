@@ -136,10 +136,6 @@ public class StartPage implements Page {
     }
 
     @Override
-    public void setSize(double width, double height) {
-    }
-
-    @Override
     public Pane rootPane() {
         return root;
     }

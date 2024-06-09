@@ -19,7 +19,7 @@ public class Keyboard {
     private static final Set<KeyCodeCombination> registeredInput = new HashSet<>();
     private static final List<KeyCodeCombination> matchingCombinations = new ArrayList<>(3);
 
-    public static void filterKeyEventsFrom(EventTarget target) {
+    public static void filterKeyEventsFor(EventTarget target) {
         target.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
             Logger.debug("Key press {}", e.getCode());
             matchingCombinations.clear();
