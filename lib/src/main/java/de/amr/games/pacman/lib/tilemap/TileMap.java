@@ -2,8 +2,10 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.lib;
+package de.amr.games.pacman.lib.tilemap;
 
+import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
 import java.io.IOException;

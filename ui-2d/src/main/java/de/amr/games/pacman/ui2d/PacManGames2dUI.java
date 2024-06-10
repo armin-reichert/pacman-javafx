@@ -9,7 +9,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.WorldMap;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.mapeditor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;

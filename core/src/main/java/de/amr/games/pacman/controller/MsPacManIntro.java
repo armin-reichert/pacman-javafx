@@ -5,6 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.lib.*;
+import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
+import de.amr.games.pacman.lib.fsm.FsmState;
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;

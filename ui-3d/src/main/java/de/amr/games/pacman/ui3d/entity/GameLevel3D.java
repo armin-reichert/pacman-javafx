@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.entity;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.TileMap;
-import de.amr.games.pacman.lib.TileMapPath;
+import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.TileMapPath;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.mapeditor.TileMapRenderer;
 import de.amr.games.pacman.model.actors.Bonus;

@@ -2,9 +2,10 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.lib;
+package de.amr.games.pacman.lib.fsm;
 
-import de.amr.games.pacman.lib.TickTimer.State;
+import de.amr.games.pacman.lib.timer.TickTimer;
+import de.amr.games.pacman.lib.timer.TickTimer.State;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;

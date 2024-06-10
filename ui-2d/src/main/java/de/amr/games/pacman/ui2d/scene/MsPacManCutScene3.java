@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.controller.MsPacManIntermission3;
-import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.ui2d.rendering.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;

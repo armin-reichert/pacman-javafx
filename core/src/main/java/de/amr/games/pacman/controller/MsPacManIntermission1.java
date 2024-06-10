@@ -6,7 +6,7 @@ package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;

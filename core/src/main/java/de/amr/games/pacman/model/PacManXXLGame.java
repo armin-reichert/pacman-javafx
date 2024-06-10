@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.WorldMap;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;

@@ -6,7 +6,7 @@ package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.event.GameStateChangeEvent;
-import de.amr.games.pacman.lib.FiniteStateMachine;
+import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.model.*;
 import org.tinylog.Logger;
 

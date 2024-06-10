@@ -6,6 +6,8 @@ package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.model.world.House;

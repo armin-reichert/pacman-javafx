@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.mapeditor;
 
-import de.amr.games.pacman.lib.TileMap;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 
 /**
  * @author Armin Reichert

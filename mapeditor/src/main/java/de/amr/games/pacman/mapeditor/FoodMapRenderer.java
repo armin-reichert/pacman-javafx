@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.mapeditor;
 
-import de.amr.games.pacman.lib.TileMap;
-import de.amr.games.pacman.lib.Tiles;
+import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.lib.Vector2i;
 import javafx.beans.property.FloatProperty;
 import javafx.beans.property.SimpleFloatProperty;

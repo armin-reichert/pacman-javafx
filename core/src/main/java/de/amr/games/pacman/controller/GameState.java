@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.controller;
 
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.FsmState;
-import de.amr.games.pacman.lib.Pulse;
-import de.amr.games.pacman.lib.TickTimer;
+import de.amr.games.pacman.lib.fsm.FsmState;
+import de.amr.games.pacman.lib.timer.Pulse;
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.*;
 

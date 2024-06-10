@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.mapeditor;
 
-import de.amr.games.pacman.lib.WorldMap;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;

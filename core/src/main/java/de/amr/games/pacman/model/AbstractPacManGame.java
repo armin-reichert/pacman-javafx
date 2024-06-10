@@ -9,6 +9,8 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.*;
+import de.amr.games.pacman.lib.timer.Pulse;
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
@@ -74,10 +76,10 @@ public abstract class AbstractPacManGame implements GameModel {
     static final byte    PPS_GHOST_RETURNING_HOME = 120; // correct?
     static final short[] KILLED_GHOST_VALUES = { 200, 400, 800, 1600 };
 
-    final Pulse          blinking = new Pulse(10, Pulse.OFF);
+    final Pulse blinking = new Pulse(10, Pulse.OFF);
     final byte[]         bonusSymbols = new byte[2];
     final List<Byte>     levelCounter = new ArrayList<>();
-    final TickTimer      huntingTimer = new TickTimer("HuntingTimer");
+    final TickTimer huntingTimer = new TickTimer("HuntingTimer");
     final TickTimer      powerTimer = new TickTimer("PacPowerTimer");
     final List<Ghost>    victims = new ArrayList<>();
     final Score          score = new Score();

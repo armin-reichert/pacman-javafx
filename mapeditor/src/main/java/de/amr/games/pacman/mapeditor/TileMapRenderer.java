@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.mapeditor;
 
-import de.amr.games.pacman.lib.TileMap;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.Vector2i;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
