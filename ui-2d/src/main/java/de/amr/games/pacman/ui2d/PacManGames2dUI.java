@@ -84,12 +84,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             GameController.it().setPacImmune(get());
         }
     };
-    public static final BooleanProperty PY_USE_AUTOPILOT          = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_SHOW_DEBUG_INFO        = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_AUTOPILOT              = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_DEBUG_INFO             = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_CANVAS_DECORATED       = new SimpleBooleanProperty(true);
     public static final BooleanProperty PY_PIP_ON                 = new SimpleBooleanProperty(false);
     public static final IntegerProperty PY_PIP_HEIGHT             = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_PX.y());
-    public static final IntegerProperty PY_PIP_OPACITY_PERCENTAGE = new SimpleIntegerProperty(100);
+    public static final IntegerProperty PY_PIP_OPACITY_PERCENT    = new SimpleIntegerProperty(100);
     public static final BooleanProperty PY_3D_ENABLED             = new SimpleBooleanProperty(false);
     public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE  = new SimpleObjectProperty<>(DrawMode.FILL);
 
@@ -352,7 +352,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         });
         clock.setContinousCallback(() -> {
             try {
-                this.<GamePage>page(GAME_PAGE).render();
+                if (isPageSelected(GAME_PAGE)) {
+                    this.<GamePage>page(GAME_PAGE).render();
+                }
             } catch (Exception x) {
                 Logger.error("Error during game rendering");
                 Logger.error(x);
@@ -370,7 +372,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             gameSceneManager.gameScenes2D(variant).forEach(gameScene2D -> {
                 gameScene2D.setCanvas(gamePage.layout().decoratedCanvas().canvas());
                 gameScene2D.scalingPy.bind(gamePage.layout().scalingPy);
-                gameScene2D.infoVisiblePy.bind(PY_SHOW_DEBUG_INFO);
+                gameScene2D.infoVisiblePy.bind(PY_DEBUG_INFO);
             });
         }
     }
@@ -866,8 +868,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void toggleAutopilot() {
-        Ufx.toggle(PY_USE_AUTOPILOT);
-        boolean auto = PY_USE_AUTOPILOT.get();
+        Ufx.toggle(PY_AUTOPILOT);
+        boolean auto = PY_AUTOPILOT.get();
         showFlashMessage(tt(auto ? "autopilot_on" : "autopilot_off"));
         playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
     }

@@ -77,7 +77,7 @@ public class InfoBox3D extends InfoBox {
 
         cbPiPOn              = checkBox("Picture-In-Picture");
         sliderPiPSceneHeight = slider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
-        sliderPiPOpacity     = slider("- Opacity", 0, 100,PY_PIP_OPACITY_PERCENTAGE.get());
+        sliderPiPOpacity     = slider("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get());
         sliderWallHeight     = slider("Wall Height", 0, 16, PY_3D_WALL_HEIGHT.get());
         sliderWallOpacity    = slider("Wall Opacity", 0, 1, PY_3D_WALL_OPACITY.get());
         cbEnergizerExplodes  = checkBox("Energizer Explosion");
@@ -111,12 +111,12 @@ public class InfoBox3D extends InfoBox {
 
         comboPerspectives.setValue(PY_3D_PERSPECTIVE.get());
         sliderPiPSceneHeight.setValue(PY_PIP_HEIGHT.get());
-        sliderPiPOpacity.setValue(PY_PIP_OPACITY_PERCENTAGE.get());
+        sliderPiPOpacity.setValue(PY_PIP_OPACITY_PERCENT.get());
         sliderWallHeight.setValue(PY_3D_WALL_HEIGHT.get());
         sliderWallOpacity.setValue(PY_3D_WALL_OPACITY.get());
 
         sliderPiPSceneHeight.valueProperty().addListener((py, ov, nv) -> PY_PIP_HEIGHT.set((int) sliderPiPSceneHeight.getValue()));
-        sliderPiPOpacity.valueProperty().bindBidirectional(PY_PIP_OPACITY_PERCENTAGE);
+        sliderPiPOpacity.valueProperty().bindBidirectional(PY_PIP_OPACITY_PERCENT);
         sliderWallHeight.valueProperty().bindBidirectional(PY_3D_WALL_HEIGHT);
         sliderWallOpacity.valueProperty().bindBidirectional(PY_3D_WALL_OPACITY);
 

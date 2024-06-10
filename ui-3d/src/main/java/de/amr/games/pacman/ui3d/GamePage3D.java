@@ -71,7 +71,7 @@ public class GamePage3D extends GamePage {
         contextMenu.getItems().add(menuTitleItem(context.tt("pacman")));
 
         var miAutopilot = new CheckMenuItem(context.tt("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(PY_USE_AUTOPILOT);
+        miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
         contextMenu.getItems().add(miAutopilot);
 
         var miImmunity = new CheckMenuItem(context.tt("immunity"));

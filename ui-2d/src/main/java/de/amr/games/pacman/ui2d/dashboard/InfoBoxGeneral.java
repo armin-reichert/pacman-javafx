@@ -82,7 +82,7 @@ public class InfoBoxGeneral extends InfoBox {
             (py, ov, nv) -> context.gameClock().setTargetFrameRate(nv.intValue()));
         cbUsePlayScene3D.setOnAction(e -> context.actionHandler().toggle2D3D());
         cbCanvasDecoration.selectedProperty().bindBidirectional(PY_CANVAS_DECORATED);
-        cbDebugUI.setOnAction(e -> Ufx.toggle(PY_SHOW_DEBUG_INFO));
+        cbDebugUI.setOnAction(e -> Ufx.toggle(PY_DEBUG_INFO));
         cbTimeMeasured.setOnAction(e -> Ufx.toggle(context.gameClock().timeMeasuredPy));
     }
 
@@ -97,6 +97,6 @@ public class InfoBoxGeneral extends InfoBox {
         sliderTargetFPS.setValue(context.gameClock().getTargetFrameRate());
         cbUsePlayScene3D.setSelected(PY_3D_ENABLED.get());
         cbTimeMeasured.setSelected(context.gameClock().timeMeasuredPy.get());
-        cbDebugUI.setSelected(PY_SHOW_DEBUG_INFO.get());
+        cbDebugUI.setSelected(PY_DEBUG_INFO.get());
     }
 }

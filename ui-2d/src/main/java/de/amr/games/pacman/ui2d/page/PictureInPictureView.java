@@ -9,7 +9,7 @@ import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.games.pacman.ui2d.PacManGames2dUI.DEFAULT_CANVAS_HEIGHT_UNSCALED;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_PIP_OPACITY_PERCENTAGE;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_PIP_OPACITY_PERCENT;
 
 /**
  * @author Armin Reichert
@@ -24,7 +24,7 @@ public class PictureInPictureView extends Canvas {
         displayedScene.setScoreVisible(true);
         displayedScene.scalingPy.bind(heightProperty().divide(DEFAULT_CANVAS_HEIGHT_UNSCALED));
         widthProperty().bind(heightProperty().multiply(0.777));
-        opacityProperty().bind(PY_PIP_OPACITY_PERCENTAGE.divide(100.0));
+        opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
     }
 
     public void draw() {

@@ -169,7 +169,7 @@ public class GamePage implements Page {
         contextMenu.getItems().add(menuTitleItem(context.tt("pacman")));
 
         var miAutopilot = new CheckMenuItem(context.tt("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(PY_USE_AUTOPILOT);
+        miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
         contextMenu.getItems().add(miAutopilot);
 
         var miImmunity = new CheckMenuItem(context.tt("immunity"));
@@ -213,18 +213,18 @@ public class GamePage implements Page {
 
     private void createDebugInfoBindings() {
         layout.borderProperty().bind(Bindings.createObjectBinding(
-            () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.RED, 3) : null,
-            PY_SHOW_DEBUG_INFO, context.gameSceneProperty()
+            () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.RED, 3) : null,
+            PY_DEBUG_INFO, context.gameSceneProperty()
         ));
         layout.canvasLayer().borderProperty().bind(Bindings.createObjectBinding(
-            () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.YELLOW, 3) : null,
-            PY_SHOW_DEBUG_INFO, context.gameSceneProperty()
+            () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.YELLOW, 3) : null,
+            PY_DEBUG_INFO, context.gameSceneProperty()
         ));
         popupLayer.borderProperty().bind(Bindings.createObjectBinding(
-            () -> PY_SHOW_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.GREENYELLOW, 3) : null,
-            PY_SHOW_DEBUG_INFO, context.gameSceneProperty()
+            () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.GREENYELLOW, 3) : null,
+            PY_DEBUG_INFO, context.gameSceneProperty()
         ));
-        popupLayer.mouseTransparentProperty().bind(PY_SHOW_DEBUG_INFO);
+        popupLayer.mouseTransparentProperty().bind(PY_DEBUG_INFO);
     }
 
     protected boolean isCurrentGameScene2D() {
@@ -252,7 +252,7 @@ public class GamePage implements Page {
         } else if (GameKeys.BOOT.pressed()) {
             context.actionHandler().reboot();
         } else if (GameKeys.DEBUG_INFO.pressed()) {
-            Ufx.toggle(PY_SHOW_DEBUG_INFO);
+            Ufx.toggle(PY_DEBUG_INFO);
         } else if (GameKeys.FULLSCREEN.pressed()) {
             context.actionHandler().setFullScreen(true);
         } else if (GameKeys.IMMUNITY.pressed()) {
@@ -306,7 +306,7 @@ public class GamePage implements Page {
             var pane = super.createPane(backgroundColor, font);
             var grid = (GridPane) pane.getChildren().getFirst(); // TODO improve
             // add default entries:
-            if (PY_USE_AUTOPILOT.get()) {
+            if (PY_AUTOPILOT.get()) {
                 var autoPilotEntry = text(context.tt("help.autopilot_on"), Color.ORANGE);
                 autoPilotEntry.setFont(font);
                 GridPane.setColumnSpan(autoPilotEntry, 2);

@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_USE_AUTOPILOT;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
 
@@ -131,7 +131,7 @@ public class PlayScene3D implements GameScene {
         } else {
             replaceGameLevel3D();
         }
-        game.pac().setUseAutopilot(game.isDemoLevel() || PY_USE_AUTOPILOT.get());
+        game.pac().setUseAutopilot(game.isDemoLevel() || PY_AUTOPILOT.get());
         scores3D.setScores(
             game.score().points(), game.score().levelNumber(),
             game.highScore().points(), game.highScore().levelNumber());

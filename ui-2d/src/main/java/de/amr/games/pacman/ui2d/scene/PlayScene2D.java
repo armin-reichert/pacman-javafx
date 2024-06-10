@@ -47,7 +47,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void update() {
         context.game().level().ifPresent(level -> {
-            context.game().pac().setUseAutopilot(context.game().isDemoLevel() || PacManGames2dUI.PY_USE_AUTOPILOT.get());
+            context.game().pac().setUseAutopilot(context.game().isDemoLevel() || PacManGames2dUI.PY_AUTOPILOT.get());
             if (!context.game().isDemoLevel()) {
                 updateSound();
             }
