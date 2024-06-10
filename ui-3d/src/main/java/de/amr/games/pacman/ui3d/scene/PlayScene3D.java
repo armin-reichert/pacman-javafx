@@ -26,6 +26,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -180,8 +181,6 @@ public class PlayScene3D implements GameScene {
         World world = checkNotNull(context.game().world());
 
         level3D = new GameLevel3D(context);
-        level3D.setTranslateX(-world.numCols() * HTS);
-        level3D.setTranslateY(-world.numRows() * HTS);
         level3D.livesCounter3D().setVisible(context.gameController().hasCredit());
 
         // replace initial placeholder or previous 3D level

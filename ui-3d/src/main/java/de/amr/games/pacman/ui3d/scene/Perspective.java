@@ -32,7 +32,7 @@ public enum Perspective implements CameraController {
             cam.setRotate(0);
             cam.setTranslateX(0);
             cam.setTranslateY(0);
-            cam.setTranslateZ(-400);
+            cam.setTranslateZ(-500);
         }
 
         @Override
@@ -40,12 +40,11 @@ public enum Perspective implements CameraController {
             var cam = scene.getCamera();
             var position = spottedEntity.position();
             double speed = 0.01;
-            double x = lerp(cam.getTranslateX(), position.x() - 100, speed);
-            double y = lerp(cam.getTranslateY(), position.y() - 150, speed);
+            double x = lerp(cam.getTranslateX(), position.x(), speed);
+            double y = lerp(cam.getTranslateY(), position.y(), speed);
+            cam.setTranslateZ(-500);
             cam.setTranslateX(x);
             cam.setTranslateY(y);
-            Logger.info("Camera x={0.00} y={0.00} sceneWidth={0}, sceneHeight={0} entityX={0.00}, entityY={0.00}",
-                    x, y, scene.getWidth(), scene.getHeight(), spottedEntity.posX(), spottedEntity.posY());
         }
     },
 
@@ -60,10 +59,10 @@ public enum Perspective implements CameraController {
         public void init(SubScene scene) {
             var cam = scene.getCamera();
             cam.setRotationAxis(Rotate.X_AXIS);
-            cam.setRotate(TOTAL_ROTATE);
-            cam.setTranslateX(TOTAL_TRANSLATE_X);
-            cam.setTranslateY(TOTAL_TRANSLATE_Y);
-            cam.setTranslateZ(TOTAL_TRANSLATE_Z);
+            cam.setRotate(70);
+            cam.setTranslateX(111);
+            cam.setTranslateY(480);
+            cam.setTranslateZ(-120);
         }
     },
 
@@ -86,8 +85,8 @@ public enum Perspective implements CameraController {
             var cam = scene.getCamera();
             double speedX = 0.03;
             double speedY = 0.06;
-            cam.setTranslateX(lerp(cam.getTranslateX(), spottedEntity.position().x() - 100, speedX));
-            cam.setTranslateY(lerp(cam.getTranslateY(), spottedEntity.position().y() + 100, speedY));
+            cam.setTranslateX(lerp(cam.getTranslateX(), spottedEntity.position().x(), speedX));
+            cam.setTranslateY(lerp(cam.getTranslateY(), spottedEntity.position().y() + 200, speedY));
         }
     },
 
@@ -102,27 +101,27 @@ public enum Perspective implements CameraController {
             var cam = scene.getCamera();
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(80);
-            cam.setTranslateZ(-40);
         }
 
         @Override
         public void update(SubScene scene, Entity spottedEntity) {
             var cam = scene.getCamera();
             double speed = 0.02;
-            double x = lerp(cam.getTranslateX(), spottedEntity.position().x() - 110, speed);
-            double y = lerp(cam.getTranslateY(), spottedEntity.position().y(), speed);
+            double x = lerp(cam.getTranslateX(), spottedEntity.position().x(), speed);
+            double y = lerp(cam.getTranslateY(), spottedEntity.position().y() + 150, speed);
             cam.setTranslateX(x);
             cam.setTranslateY(y);
-            Logger.info("Camera x={0.00} y={0.00} sceneWidth={0}, sceneHeight={0} entityX={0.00}, entityY={0.00}",
+            cam.setTranslateZ(-40);
+            Logger.debug("Camera x={0.00} y={0.00} sceneWidth={0}, sceneHeight={0} entityX={0.00}, entityY={0.00}",
                     x, y, scene.getWidth(), scene.getHeight(), spottedEntity.posX(), spottedEntity.posY());
         }
     };
 
     //TODO how to compute these values for arbitrary sized worlds?
-    public static int TOTAL_ROTATE = 66;
-    public static int TOTAL_TRANSLATE_X = 0;
-    public static int TOTAL_TRANSLATE_Y = 330;
-    public static int TOTAL_TRANSLATE_Z = -140;
+    public static int TOTAL_ROTATE = 70;
+    public static int TOTAL_TRANSLATE_X = 108;
+    public static int TOTAL_TRANSLATE_Y = 480;
+    public static int TOTAL_TRANSLATE_Z = -120;
 
     public static Perspective next(Perspective p) {
         int n = Perspective.values().length;
