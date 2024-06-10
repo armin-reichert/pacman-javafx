@@ -8,7 +8,6 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.timer.Pulse;
-import de.amr.games.pacman.lib.Score;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Bonus;

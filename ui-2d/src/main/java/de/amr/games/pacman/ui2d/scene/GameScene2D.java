@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.lib.Score;
+import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.ui2d.rendering.ClassicWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ModernWorldRenderer;
 import javafx.beans.property.BooleanProperty;
