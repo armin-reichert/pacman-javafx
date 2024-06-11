@@ -29,7 +29,7 @@ import static de.amr.games.pacman.model.actors.GhostState.RETURNING_HOME;
  */
 public class PlayScene2D extends GameScene2D {
 
-    private static final Pattern MS_PACMAN_MAP_URL = Pattern.compile(".*mspacman_(\\d).world$");
+    private static final Pattern PATTERN_MS_PACMAN_MAP_URL = Pattern.compile(".*mspacman_(\\d).world$");
 
     @Override
     public boolean isCreditVisible() {
@@ -99,9 +99,9 @@ public class PlayScene2D extends GameScene2D {
             case MS_PACMAN -> {
                 var mapURL = game.world().map().url().toString();
                 //TODO this probably should be precomputed and cached
-                Matcher match = MS_PACMAN_MAP_URL.matcher(mapURL);
-                if (match.matches()) {
-                    int mapNumber = Integer.parseInt(match.group(1));
+                Matcher m = PATTERN_MS_PACMAN_MAP_URL.matcher(mapURL);
+                if (m.matches()) {
+                    int mapNumber = Integer.parseInt(m.group(1));
                     spriteRenderer.drawMsPacManWorld(g, game.world(), mapNumber, flashing, blinkingOn);
                     game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));
                 } else {
