@@ -48,11 +48,7 @@ public class SpriteGameRenderer {
         this.spriteSheet = spriteSheet;
     }
 
-    public void drawPacManWorld(
-        GraphicsContext g,
-        World world,
-        boolean flashing, boolean blinkingOn)
-    {
+    public void drawPacManWorld(GraphicsContext g, World world, boolean flashing, boolean blinkingOn) {
         if (flashing) {
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());

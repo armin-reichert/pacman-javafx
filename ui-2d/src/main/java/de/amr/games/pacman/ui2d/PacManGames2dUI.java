@@ -190,7 +190,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("startpage.button.color",           Color.WHITE);
         theme.set("startpage.button.font",            rm.loadFont("fonts/emulogic.ttf", 30));
 
-        theme.set("wallpaper.background",             rm.imageBackground("graphics/pacman_wallpaper.png"));
+        theme.set("wallpaper.background",             Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
         theme.set("wallpaper.color",                  Color.rgb(72, 78, 135));
 
         theme.set("font.arcade",                      rm.loadFont("fonts/emulogic.ttf", 8));

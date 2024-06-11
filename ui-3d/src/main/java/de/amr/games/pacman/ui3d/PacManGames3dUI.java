@@ -85,10 +85,10 @@ public class PacManGames3dUI extends PacManGames2dUI {
         theme.set("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
         theme.set("model3D.pellet", new Model3D(rm.url("model3D/12206_Fruit_v1_L3.obj")));
 
-        theme.set("model3D.wallpaper", rm.imageBackground("graphics/sea-wallpaper.jpg",
+        theme.set("model3D.wallpaper", Ufx.imageBackground(rm.loadImage("graphics/sea-wallpaper.jpg"),
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, FILL_PAGE));
 
-        theme.set("model3D.wallpaper.night", rm.imageBackground("graphics/sea-wallpaper-night.jpg",
+        theme.set("model3D.wallpaper.night", Ufx.imageBackground(rm.loadImage("graphics/sea-wallpaper-night.jpg"),
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, FILL_PAGE));
 
         theme.addAllToArray("texture.names", new String[] {"knobs", "plastic", "wood"});

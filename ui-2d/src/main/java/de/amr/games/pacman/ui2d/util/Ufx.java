@@ -12,6 +12,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Insets;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -64,6 +65,23 @@ public class Ufx {
     public static  Background coloredRoundedBackground(Color color, int radius) {
         checkNotNull(color);
         return new Background(new BackgroundFill(color, new CornerRadii(radius), Insets.EMPTY));
+    }
+
+    /**
+     * @param image some image
+     * @return image background with default properties, see {@link BackgroundImage}
+     */
+    public static Background imageBackground(Image image) {
+        return new Background(new BackgroundImage(image, null, null, null, null));
+    }
+
+    /**
+     * @param image some image
+     * @return image background with specified attributes
+     */
+    public static Background imageBackground(Image image, BackgroundRepeat repeatX, BackgroundRepeat repeatY,
+                                       BackgroundPosition position, BackgroundSize size) {
+        return new Background(new BackgroundImage(image, repeatX, repeatY, position, size));
     }
 
     public static  Border roundedBorder(Color color, double cornerRadius, double width) {

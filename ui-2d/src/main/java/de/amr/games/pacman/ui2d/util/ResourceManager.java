@@ -94,23 +94,4 @@ public interface ResourceManager {
         var url = url(path);
         return new Image(url.toExternalForm());
     }
-
-    /**
-     * @param path path to resource
-     * @return image background with default properties, see {@link BackgroundImage}
-     */
-    default Background imageBackground(String path) {
-        var image = loadImage(path);
-        return new Background(new BackgroundImage(image, null, null, null, null));
-    }
-
-    /**
-     * @param path path to resource
-     * @return image background with specified attributes
-     */
-    default Background imageBackground(String path, BackgroundRepeat repeatX, BackgroundRepeat repeatY,
-                                       BackgroundPosition position, BackgroundSize size) {
-        var image = loadImage(path);
-        return new Background(new BackgroundImage(image, repeatX, repeatY, position, size));
-    }
 }
