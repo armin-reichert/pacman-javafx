@@ -148,8 +148,7 @@ public abstract class GameScene2D implements GameScene {
             x = t(context.game().world().numCols() - 4);
             y = t(context.game().world().numRows() - 2);
         }
-        spriteRenderer.drawLevelCounter(g,
-            context.getSpriteSheet(context.game().variant()), context.game().levelCounter(), x, y);
+        spriteRenderer.drawLevelCounter(g,context.game().levelCounter(), x, y);
     }
 
     protected void drawMidwayCopyright(double x, double y) {

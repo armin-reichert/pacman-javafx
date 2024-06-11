@@ -155,10 +155,9 @@ public class SpriteGameRenderer {
 
     public void drawLevelCounter(
         GraphicsContext g,
-        GameSpriteSheet ss,
         List<Byte> symbols, double x, double y) {
         for (byte symbol : symbols) {
-            drawSpriteScaled(g, ss.source(), ss.bonusSymbolSprite(symbol), x, y);
+            drawSpriteScaled(g, spriteSheet.source(), spriteSheet.bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
         }
     }
