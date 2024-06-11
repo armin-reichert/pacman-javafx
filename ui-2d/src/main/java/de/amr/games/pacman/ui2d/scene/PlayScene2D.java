@@ -92,6 +92,7 @@ public class PlayScene2D extends GameScene2D {
         var ss = context.getSpriteSheet(game.variant());
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         boolean blinkingOn = game.blinking().isOn();
+        classicRenderer.setBackgroundColor(canvasBackground());
         switch (game.variant()) {
             case MS_PACMAN -> {
                 classicRenderer.drawMsPacManWorld(g, ss, game.world(), ((MsPacManGame) game).mapNumber(), flashing, blinkingOn);

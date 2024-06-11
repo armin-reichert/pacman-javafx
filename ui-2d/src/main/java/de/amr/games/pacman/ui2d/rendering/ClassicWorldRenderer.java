@@ -30,6 +30,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 public class ClassicWorldRenderer {
 
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
+    private Color backgroundColor = Color.BLACK;
 
     public ClassicWorldRenderer(DoubleProperty scalingPy) {
         this.scalingPy.bind(scalingPy);
@@ -37,6 +38,10 @@ public class ClassicWorldRenderer {
 
     public double s(double value) {
         return scalingPy.doubleValue() * value;
+    }
+
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
     }
 
     public void drawPacManWorld(
@@ -71,7 +76,7 @@ public class ClassicWorldRenderer {
         double cx = t(tile.x()) + HTS;
         double cy = t(tile.y()) + HTS;
         double s = scalingPy.get();
-        g.setFill(Color.BLACK);
+        g.setFill(backgroundColor);
         g.fillRect(s * (cx - r), s * (cy - r), s * (2 * r), s * (2 * r));
     }
 

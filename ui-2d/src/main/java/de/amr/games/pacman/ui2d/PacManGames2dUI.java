@@ -184,7 +184,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("palette.pale",                     Color.rgb(222, 222, 255));
         theme.set("palette.rose",                     Color.rgb(252, 187, 179));
 
-        theme.set("canvas.background",                theme.color("palette.black"));
+        theme.set("canvas.background",                Color.rgb(0,0,0));
 
         theme.set("startpage.button.bgColor",         Color.rgb(0, 155, 252, 0.8));
         theme.set("startpage.button.color",           Color.WHITE);

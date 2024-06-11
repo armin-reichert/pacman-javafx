@@ -120,9 +120,12 @@ public abstract class GameScene2D implements GameScene {
     }
 
     public void clearCanvas() {
-        Color fillColor = context.theme() != null ? context.theme().color("canvas.background") : Color.BLACK;
-        g.setFill(fillColor);
+        g.setFill(canvasBackground());
         g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
+    }
+
+    protected Color canvasBackground() {
+        return context.theme() != null ? context.theme().color("canvas.background") : Color.BLACK;
     }
 
     protected void drawScore(Score score, String title, double x, double y) {
