@@ -17,9 +17,9 @@ import static java.util.function.Predicate.not;
 /**
  * @author Armin Reichert
  */
-public class ModernWorldRenderer {
+public class VectorGraphicsWorldRenderer {
 
-    public ModernWorldRenderer(DoubleProperty scalingPy) {
+    public VectorGraphicsWorldRenderer(DoubleProperty scalingPy) {
         terrainRenderer.scalingPy.bind(scalingPy);
         foodRenderer.scalingPy.bind(scalingPy);
     }

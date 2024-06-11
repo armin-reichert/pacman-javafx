@@ -102,7 +102,7 @@ public class PlayScene2D extends GameScene2D {
                 game.bonus().ifPresent(bonus -> spriteRenderer.drawStaticBonus(g, bonus));
             }
             case PACMAN_XXL -> {
-                modernRenderer.draw(g, game.world(), flashing, blinkingOn);
+                vectorRenderer.draw(g, game.world(), flashing, blinkingOn);
                 game.bonus().ifPresent(bonus -> spriteRenderer.drawStaticBonus(g, bonus));
             }
         }

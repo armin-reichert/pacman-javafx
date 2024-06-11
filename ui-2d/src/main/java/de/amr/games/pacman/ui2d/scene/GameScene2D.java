@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.ui2d.rendering.SpriteGameRenderer;
-import de.amr.games.pacman.ui2d.rendering.ModernWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.VectorGraphicsWorldRenderer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -34,7 +34,7 @@ public abstract class GameScene2D implements GameScene {
 
     protected GameContext context;
     protected GraphicsContext g;
-    protected ModernWorldRenderer modernRenderer = new ModernWorldRenderer(scalingPy);
+    protected VectorGraphicsWorldRenderer vectorRenderer = new VectorGraphicsWorldRenderer(scalingPy);
     protected SpriteGameRenderer spriteRenderer = new SpriteGameRenderer(scalingPy);
 
     public abstract boolean isCreditVisible();
