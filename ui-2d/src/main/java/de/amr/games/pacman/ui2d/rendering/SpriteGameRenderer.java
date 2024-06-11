@@ -9,7 +9,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
-import de.amr.games.pacman.ui2d.util.Theme;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Rectangle2D;
@@ -87,10 +86,7 @@ public class SpriteGameRenderer {
         g.fillRect(s * (cx - r), s * (cy - r), s * (2 * r), s * (2 * r));
     }
 
-    public void drawLivesCounter(
-        GraphicsContext g,
-        int numLivesDisplayed)
-    {
+    public void drawLivesCounter(GraphicsContext g, int numLivesDisplayed) {
         if (numLivesDisplayed == 0) {
             return;
         }
@@ -107,10 +103,7 @@ public class SpriteGameRenderer {
         }
     }
 
-    public void drawMsPacManWorld(
-        GraphicsContext g,
-        World world, int mapNumber, boolean flashing, boolean blinkingOn)
-    {
+    public void drawMsPacManWorld(GraphicsContext g, World world, int mapNumber, boolean flashing, boolean blinkingOn) {
         double x = 0, y = t(3);
         if (flashing) {
             g.save();
@@ -136,17 +129,17 @@ public class SpriteGameRenderer {
 
     public void drawClapperBoard(
         GraphicsContext g,
-        Theme theme,
+        Font font, Color textColor,
         ClapperboardAnimation animation, double x, double y)
     {
         var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
         if (sprite != null) {
             drawSpriteCenteredOverBox(g, sprite, x, y);
-            g.setFont(theme.font("font.arcade", s(8)));
-            g.setFill(theme.color("palette.pale").darker());
+            g.setFont(font);
+            g.setFill(textColor.darker());
             var numberX = s(x + sprite.getWidth() - 25);
             var numberY = s(y + 18);
-            g.setFill(theme.color("palette.pale"));
+            g.setFill(textColor);
             g.fillText(animation.number(), numberX, numberY);
             var textX = s(x + sprite.getWidth());
             g.fillText(animation.text(), textX, numberY);
