@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameKeys;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
-import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -89,55 +88,55 @@ public class PlayScene2D extends GameScene2D {
         if (game.world() == null) {
             return;
         }
-        var ss = context.getSpriteSheet(game.variant());
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         boolean blinkingOn = game.blinking().isOn();
-        classicRenderer.setBackgroundColor(canvasBackground());
+        spriteRenderer.setSpriteSheet(context.getSpriteSheet(game.variant()));
+        spriteRenderer.setBackgroundColor(canvasBackground());
         switch (game.variant()) {
             case MS_PACMAN -> {
-                classicRenderer.drawMsPacManWorld(g, ss, game.world(), ((MsPacManGame) game).mapNumber(), flashing, blinkingOn);
-                game.bonus().ifPresent(bonus -> classicRenderer.drawMovingBonus(g, ss, (MovingBonus) bonus));
+                spriteRenderer.drawMsPacManWorld(g, game.world(), ((MsPacManGame) game).mapNumber(), flashing, blinkingOn);
+                game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));
             }
             case PACMAN -> {
-                classicRenderer.drawPacManWorld(g, ss, game.world(), flashing, blinkingOn);
-                game.bonus().ifPresent(bonus -> classicRenderer.drawStaticBonus(g, ss, bonus));
+                spriteRenderer.drawPacManWorld(g, game.world(), flashing, blinkingOn);
+                game.bonus().ifPresent(bonus -> spriteRenderer.drawStaticBonus(g, bonus));
             }
             case PACMAN_XXL -> {
                 modernRenderer.draw(g, game.world(), flashing, blinkingOn);
-                game.bonus().ifPresent(bonus -> classicRenderer.drawStaticBonus(g, ss, bonus));
+                game.bonus().ifPresent(bonus -> spriteRenderer.drawStaticBonus(g, bonus));
             }
         }
         drawLevelMessage();
         if (game.powerTimer().isRunning()) {
             Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
-                .map(game::ghost).forEach(ghost -> drawGhost(ss, ghost));
-            drawPac(ss, game.pac());
+                .map(game::ghost).forEach(ghost -> drawGhost(ghost));
+            drawPac(game.pac());
         } else {
-            drawPac(ss, game.pac());
+            drawPac(game.pac());
             Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
-                .map(game::ghost).forEach(ghost -> drawGhost(ss, ghost));
+                .map(game::ghost).forEach(ghost -> drawGhost(ghost));
         }
         if (!isCreditVisible()) {
             int numLivesDisplayed = game.lives() - 1;
             if (context.gameState() == GameState.READY && !game.pac().isVisible()) {
                 numLivesDisplayed += 1;
             }
-            classicRenderer.drawLivesCounter(g, ss, numLivesDisplayed);
+            spriteRenderer.drawLivesCounter(g, numLivesDisplayed);
         }
         drawLevelCounter(g);
     }
 
-    private void drawPac(GameSpriteSheet ss, Pac pac) {
-        classicRenderer.drawPac(g, ss, pac);
+    private void drawPac(Pac pac) {
+        spriteRenderer.drawPac(g, pac);
         if (infoVisiblePy.get()) {
-            classicRenderer.drawPacInfo(g, pac);
+            spriteRenderer.drawPacInfo(g, pac);
         }
     }
 
-    private void drawGhost(GameSpriteSheet ss, Ghost ghost) {
-        classicRenderer.drawGhost(g, ss, ghost);
+    private void drawGhost(Ghost ghost) {
+        spriteRenderer.drawGhost(g, ghost);
         if (infoVisiblePy.get()) {
-            classicRenderer.drawGhostInfo(g, ghost);
+            spriteRenderer.drawGhostInfo(g, ghost);
         }
     }
 
@@ -145,11 +144,11 @@ public class PlayScene2D extends GameScene2D {
         var game = context.game();
         if (game.isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
             // "GAME OVER" is drawn in demo mode and when game is over
-            classicRenderer.drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(9), t(21));
+            spriteRenderer.drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(9), t(21));
         } else {
             switch (context.gameState()) {
-                case READY      -> classicRenderer.drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(11), t(21));
-                case LEVEL_TEST -> classicRenderer.drawText(g, "TEST    L" + game.levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(21));
+                case READY      -> spriteRenderer.drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(11), t(21));
+                case LEVEL_TEST -> spriteRenderer.drawText(g, "TEST    L" + game.levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(21));
             }
         }
     }

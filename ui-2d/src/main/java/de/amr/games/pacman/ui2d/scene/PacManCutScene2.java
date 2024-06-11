@@ -33,7 +33,6 @@ public class PacManCutScene2 extends GameScene2D {
     private SpriteAnimation blinkyNormal;
     private SpriteAnimation blinkyStretching;
     private SpriteAnimation blinkyDamaged;
-    private PacManGameSpriteSheet ss;
 
     @Override
     public boolean isCreditVisible() {
@@ -42,14 +41,13 @@ public class PacManCutScene2 extends GameScene2D {
 
     @Override
     public void init() {
-        ss = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
         frame = -1;
         initialDelay = 120;
         setScoreVisible(true);
         pac = new Pac();
-        pac.setAnimations(new PacManGamePacAnimations(pac, ss));
+        pac.setAnimations(new PacManGamePacAnimations(pac, (PacManGameSpriteSheet) spriteRenderer.getSpriteSheet()));
         blinky = new Ghost(GameModel.RED_GHOST);
-        var blinkyAnimations = new PacManGameGhostAnimations(blinky, ss);
+        var blinkyAnimations = new PacManGameGhostAnimations(blinky, (PacManGameSpriteSheet) spriteRenderer.getSpriteSheet());
         blinkyNormal = blinkyAnimations.animation(Ghost.ANIM_GHOST_NORMAL);
         blinkyStretching = blinkyAnimations.animation(Ghost.ANIM_BLINKY_STRETCHED);
         blinkyDamaged = blinkyAnimations.animation(Ghost.ANIM_BLINKY_DAMAGED);
@@ -115,9 +113,9 @@ public class PacManCutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        classicRenderer.drawSpriteScaled(g, ss.source(), blinkyStretching.currentSprite(), t(14), t(19) + 3);
-        classicRenderer.drawGhost(g, ss, blinky);
-        classicRenderer.drawPac(g, ss, pac);
+        spriteRenderer.drawSpriteScaled(g, spriteRenderer.getSpriteSheet().source(), blinkyStretching.currentSprite(), t(14), t(19) + 3);
+        spriteRenderer.drawGhost(g,blinky);
+        spriteRenderer.drawPac(g, pac);
         drawLevelCounter(g);
     }
 
@@ -125,6 +123,6 @@ public class PacManCutScene2 extends GameScene2D {
     protected void drawSceneInfo() {
         drawTileGrid();
         var text = initialDelay > 0 ? String.format("Wait %d", initialDelay) : String.format("Frame %d", frame);
-        classicRenderer.drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
+        spriteRenderer.drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
     }
 }

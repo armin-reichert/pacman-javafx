@@ -9,7 +9,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
-import de.amr.games.pacman.ui2d.util.SpriteSheet;
 import de.amr.games.pacman.ui2d.util.Theme;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -27,12 +26,13 @@ import static de.amr.games.pacman.lib.Globals.*;
 /**
  * @author Armin Reichert
  */
-public class ClassicWorldRenderer {
+public class SpriteGameRenderer {
 
     private final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
     private Color backgroundColor = Color.BLACK;
+    private GameSpriteSheet spriteSheet;
 
-    public ClassicWorldRenderer(DoubleProperty scalingPy) {
+    public SpriteGameRenderer(DoubleProperty scalingPy) {
         this.scalingPy.bind(scalingPy);
     }
 
@@ -44,9 +44,16 @@ public class ClassicWorldRenderer {
         this.backgroundColor = backgroundColor;
     }
 
+    public GameSpriteSheet getSpriteSheet() {
+        return spriteSheet;
+    }
+
+    public void setSpriteSheet(GameSpriteSheet spriteSheet) {
+        this.spriteSheet = spriteSheet;
+    }
+
     public void drawPacManWorld(
         GraphicsContext g,
-        GameSpriteSheet ss,
         World world,
         boolean flashing, boolean blinkingOn)
     {
@@ -54,15 +61,15 @@ public class ClassicWorldRenderer {
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());
             if (blinkingOn) {
-                g.drawImage(ss.getFlashingMazeImage(), 0, t(3));
+                g.drawImage(spriteSheet.getFlashingMazeImage(), 0, t(3));
             } else {
-                drawSprite(g, ss.source(), ss.getEmptyMazeSprite(), 0, t(3));
+                drawSprite(g, spriteSheet.source(), spriteSheet.getEmptyMazeSprite(), 0, t(3));
             }
             g.restore();
         } else {
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());
-            drawSprite(g, ss.source(), ss.getFullMazeSprite(), 0, t(3));
+            drawSprite(g, spriteSheet.source(), spriteSheet.getFullMazeSprite(), 0, t(3));
             g.restore();
             world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideFoodTileContent(g, world, tile));
             if (!blinkingOn) {
@@ -82,7 +89,6 @@ public class ClassicWorldRenderer {
 
     public void drawLivesCounter(
         GraphicsContext g,
-        GameSpriteSheet ss,
         int numLivesDisplayed)
     {
         if (numLivesDisplayed == 0) {
@@ -92,7 +98,7 @@ public class ClassicWorldRenderer {
         var x = TS * 2;
         var y = TS * (GameModel.ARCADE_MAP_TILES_Y - 2);
         for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-            drawSpriteScaled(g, ss.source(), ss.livesCounterSprite(), x + TS * (2 * i), y);
+            drawSpriteScaled(g, spriteSheet.source(), spriteSheet.livesCounterSprite(), x + TS * (2 * i), y);
         }
         // text indicating that more lives are available than displayed
         int excessLives = numLivesDisplayed - maxLives;
@@ -103,7 +109,6 @@ public class ClassicWorldRenderer {
 
     public void drawMsPacManWorld(
         GraphicsContext g,
-        GameSpriteSheet ss,
         World world, int mapNumber, boolean flashing, boolean blinkingOn)
     {
         double x = 0, y = t(3);
@@ -111,16 +116,16 @@ public class ClassicWorldRenderer {
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());
             if (blinkingOn) {
-                Rectangle2D emptyMazeBright = ss.highlightedMaze(mapNumber);
-                drawSprite(g, ss.getFlashingMazesImage(), emptyMazeBright, x - 3, y);
+                Rectangle2D emptyMazeBright = spriteSheet.highlightedMaze(mapNumber);
+                drawSprite(g, spriteSheet.getFlashingMazesImage(), emptyMazeBright, x - 3, y);
             } else {
-                drawSprite(g, ss.source(), ss.emptyMaze(mapNumber), x, y);
+                drawSprite(g, spriteSheet.source(), spriteSheet.emptyMaze(mapNumber), x, y);
             }
             g.restore();
         } else {
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());
-            drawSprite(g, ss.source(), ss.filledMaze(mapNumber), x, y);
+            drawSprite(g, spriteSheet.source(), spriteSheet.filledMaze(mapNumber), x, y);
             g.restore();
             world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideFoodTileContent(g, world, tile));
             if (!blinkingOn) {
@@ -131,13 +136,12 @@ public class ClassicWorldRenderer {
 
     public void drawClapperBoard(
         GraphicsContext g,
-        GameSpriteSheet ss,
         Theme theme,
         ClapperboardAnimation animation, double x, double y)
     {
-        var sprite = animation.currentSprite(ss.clapperboardSprites());
+        var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
         if (sprite != null) {
-            drawSpriteCenteredOverBox(g, ss, sprite, x, y);
+            drawSpriteCenteredOverBox(g, sprite, x, y);
             g.setFont(theme.font("font.arcade", s(8)));
             g.setFill(theme.color("palette.pale").darker());
             var numberX = s(x + sprite.getWidth() - 25);
@@ -161,11 +165,10 @@ public class ClassicWorldRenderer {
 
     public void drawPac(
         GraphicsContext g,
-        GameSpriteSheet ss,
         Pac pac)
     {
         if (pac.isVisible() && pac.animations().isPresent() && pac.animations().get() instanceof SpriteAnimations sa) {
-            drawEntitySprite(g, ss, pac, sa.currentSprite());
+            drawEntitySprite(g, pac, sa.currentSprite());
         }
     }
 
@@ -181,13 +184,13 @@ public class ClassicWorldRenderer {
         }
     }
 
-    public void drawGhost(GraphicsContext g, GameSpriteSheet ss, Ghost ghost) {
+    public void drawGhost(GraphicsContext g, Ghost ghost) {
         if (!ghost.isVisible()) {
             return;
         }
         ghost.animations().ifPresent(ga -> {
             if (ga instanceof SpriteAnimations animations) {
-                drawEntitySprite(g, ss, ghost, animations.currentSprite());
+                drawEntitySprite(g,  ghost, animations.currentSprite());
             }
         });
     }
@@ -217,24 +220,24 @@ public class ClassicWorldRenderer {
         }
     }
 
-    public void drawMovingBonus(GraphicsContext g, GameSpriteSheet ss, MovingBonus movingBonus) {
+    public void drawMovingBonus(GraphicsContext g, MovingBonus movingBonus) {
         //TODO reconsider this way of implementing the jumping bonus
         g.save();
         g.translate(0, movingBonus.elongationY());
         if (movingBonus.state() == Bonus.STATE_EDIBLE) {
-            drawEntitySprite(g, ss, movingBonus.entity(), ss.bonusSymbolSprite(movingBonus.symbol()));
+            drawEntitySprite(g,  movingBonus.entity(), spriteSheet.bonusSymbolSprite(movingBonus.symbol()));
         } else if (movingBonus.state() == Bonus.STATE_EATEN) {
-            drawEntitySprite(g, ss, movingBonus.entity(), ss.bonusValueSprite(movingBonus.symbol()));
+            drawEntitySprite(g, movingBonus.entity(), spriteSheet.bonusValueSprite(movingBonus.symbol()));
         }
         g.restore();
     }
 
-    public void drawStaticBonus(GraphicsContext g, GameSpriteSheet ss, Bonus bonus)
+    public void drawStaticBonus(GraphicsContext g, Bonus bonus)
     {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
-            drawEntitySprite(g, ss, bonus.entity(), ss.bonusSymbolSprite(bonus.symbol()));
+            drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
         } else if (bonus.state() == Bonus.STATE_EATEN) {
-            drawEntitySprite(g, ss, bonus.entity(), ss.bonusValueSprite(bonus.symbol()));
+            drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
         }
     }
 
@@ -271,8 +274,8 @@ public class ClassicWorldRenderer {
      * @param x      x coordinate of left-upper corner of bounding box
      * @param y      y coordinate of left-upper corner of bounding box
      */
-    public void drawSpriteCenteredOverBox(GraphicsContext g, SpriteSheet ss, Rectangle2D sprite, double x, double y) {
-        drawSpriteScaled(g, ss.source(), sprite, x + HTS - 0.5 * sprite.getWidth(), y + HTS - 0.5 * sprite.getHeight());
+    public void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D sprite, double x, double y) {
+        drawSpriteScaled(g, spriteSheet.source(), sprite, x + HTS - 0.5 * sprite.getWidth(), y + HTS - 0.5 * sprite.getHeight());
     }
 
     /**
@@ -281,9 +284,9 @@ public class ClassicWorldRenderer {
      * @param entity an entity like Pac-Man or a ghost
      * @param sprite the sprite
      */
-    public void drawEntitySprite(GraphicsContext g, SpriteSheet ss, Entity entity, Rectangle2D sprite) {
+    public void drawEntitySprite(GraphicsContext g, Entity entity, Rectangle2D sprite) {
         if (entity.isVisible()) {
-            drawSpriteCenteredOverBox(g, ss, sprite, entity.posX(), entity.posY());
+            drawSpriteCenteredOverBox(g,  sprite, entity.posX(), entity.posY());
         }
     }
 

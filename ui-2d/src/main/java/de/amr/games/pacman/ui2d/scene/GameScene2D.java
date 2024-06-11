@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.model.Score;
-import de.amr.games.pacman.ui2d.rendering.ClassicWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.SpriteGameRenderer;
 import de.amr.games.pacman.ui2d.rendering.ModernWorldRenderer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -35,7 +35,7 @@ public abstract class GameScene2D implements GameScene {
     protected GameContext context;
     protected GraphicsContext g;
     protected ModernWorldRenderer modernRenderer = new ModernWorldRenderer(scalingPy);
-    protected ClassicWorldRenderer classicRenderer = new ClassicWorldRenderer(scalingPy);
+    protected SpriteGameRenderer spriteRenderer = new SpriteGameRenderer(scalingPy);
 
     public abstract boolean isCreditVisible();
 
@@ -88,17 +88,19 @@ public abstract class GameScene2D implements GameScene {
             Logger.error("Cannot render game scene {}, no canvas has been assigned", this);
             return;
         }
+        spriteRenderer.setBackgroundColor(canvasBackground());
         clearCanvas();
         if (context == null) {
             Logger.error("Cannot render game scene {}, no scene context has been assigned", getClass().getSimpleName());
             return;
         }
+        spriteRenderer.setSpriteSheet(context.getSpriteSheet(context.game().variant()));
         if (isScoreVisible()) {
             drawScore(context.game().score(), "SCORE", t(1), t(1));
             drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1));
         }
         if (isCreditVisible()) {
-            classicRenderer.drawText(g, String.format("CREDIT %2d", context.gameController().credit()),
+            spriteRenderer.drawText(g, String.format("CREDIT %2d", context.gameController().credit()),
                 context.theme().color("palette.pale"), sceneFont(8), t(2), t(36) - 1);
         }
         drawSceneContent();
@@ -132,10 +134,10 @@ public abstract class GameScene2D implements GameScene {
         var pointsText = String.format("%02d", score.points());
         var font = sceneFont(TS);
         var color = context.theme().color("palette.pale");
-        classicRenderer.drawText(g, title, color, font, x, y);
-        classicRenderer.drawText(g, String.format("%7s", pointsText), color, font, x, y + TS + 1);
+        spriteRenderer.drawText(g, title, color, font, x, y);
+        spriteRenderer.drawText(g, String.format("%7s", pointsText), color, font, x, y + TS + 1);
         if (score.points() != 0) {
-            classicRenderer.drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
+            spriteRenderer.drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
         }
     }
 
@@ -146,17 +148,17 @@ public abstract class GameScene2D implements GameScene {
             x = t(context.game().world().numCols() - 4);
             y = t(context.game().world().numRows() - 2);
         }
-        classicRenderer.drawLevelCounter(g,
+        spriteRenderer.drawLevelCounter(g,
             context.getSpriteSheet(context.game().variant()), context.game().levelCounter(), x, y);
     }
 
     protected void drawMidwayCopyright(double x, double y) {
-        classicRenderer.drawText(g, "© 1980 MIDWAY MFG.CO.", context.theme().color("palette.pink"), sceneFont(8), x, y);
+        spriteRenderer.drawText(g, "© 1980 MIDWAY MFG.CO.", context.theme().color("palette.pink"), sceneFont(8), x, y);
     }
 
     protected void drawMsPacManCopyright(double x, double y) {
         Image logo = context.theme().get("ms_pacman.logo.midway");
-        classicRenderer.drawImageScaled(g, logo, x, y + 2, TS * 4 - 2, TS * 4);
+        spriteRenderer.drawImageScaled(g, logo, x, y + 2, TS * 4 - 2, TS * 4);
         g.setFill(context.theme().color("palette.red"));
         g.setFont(sceneFont(8));
         g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2));

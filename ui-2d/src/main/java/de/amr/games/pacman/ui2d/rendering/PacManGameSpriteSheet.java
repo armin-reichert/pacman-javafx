@@ -139,7 +139,8 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
         }
     }
 
-    public Rectangle2D ghostFacingRight(int ghostID) {
+    @Override
+    public Rectangle2D ghostFacingRight(byte ghostID) {
         return ghostFacingRightSprites[ghostID];
     }
 

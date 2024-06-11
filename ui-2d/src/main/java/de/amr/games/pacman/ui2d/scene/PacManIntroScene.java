@@ -28,7 +28,6 @@ public class PacManIntroScene extends GameScene2D {
     private static final char QUOTE = '\"';
 
     private PacManIntro intro;
-    private PacManGameSpriteSheet ss;
 
     @Override
     public boolean isCreditVisible() {
@@ -40,9 +39,9 @@ public class PacManIntroScene extends GameScene2D {
         context.actionHandler().showSignature();
         setScoreVisible(true);
         intro = new PacManIntro();
-        ss = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
-        intro.pacMan.setAnimations(new PacManGamePacAnimations(intro.pacMan, ss));
-        intro.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, ss)));
+        spriteRenderer.setSpriteSheet(context.getSpriteSheet(context.game().variant()));
+        intro.pacMan.setAnimations(new PacManGamePacAnimations(intro.pacMan, (PacManGameSpriteSheet) spriteRenderer.getSpriteSheet()));
+        intro.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, (PacManGameSpriteSheet) spriteRenderer.getSpriteSheet())));
         intro.blinking.reset();
         intro.changeState(State.START);
     }
@@ -102,7 +101,7 @@ public class PacManIntroScene extends GameScene2D {
 
         int tx = intro.leftTileX;
         if (intro.titleVisible) {
-            classicRenderer.drawText(g, "CHARACTER / NICKNAME", context.theme().color("palette.pale"), font, t(tx + 3), t(6));
+            spriteRenderer.drawText(g, "CHARACTER / NICKNAME", context.theme().color("palette.pale"), font, t(tx + 3), t(6));
         }
         Color[] ghostColors = {
             context.theme().color("palette.red"),
@@ -110,32 +109,35 @@ public class PacManIntroScene extends GameScene2D {
             context.theme().color("palette.cyan"),
             context.theme().color("palette.orange"),
         };
-        for (int id = 0; id < 4; ++id) {
+        for (byte id = 0; id < 4; ++id) {
             var ghostInfo = intro.ghostInfo[id];
             if (!ghostInfo.pictureVisible) {
                 continue;
             }
             int ty = 7 + 3 * id;
-            classicRenderer.drawSpriteCenteredOverBox(g, ss, ss.ghostFacingRight(id), t(tx) + 4, t(ty));
+            spriteRenderer.drawSpriteCenteredOverBox(g, spriteRenderer.getSpriteSheet().ghostFacingRight(id), t(tx) + 4, t(ty));
             if (ghostInfo.characterVisible) {
                 var text = "-" + ghostInfo.character;
-                classicRenderer.drawText(g, text, ghostColors[id], font, t(tx + 3), t(ty + 1));
+                spriteRenderer.drawText(g, text, ghostColors[id], font, t(tx + 3), t(ty + 1));
             }
             if (ghostInfo.nicknameVisible) {
                 var text = QUOTE + ghostInfo.ghost.name() + QUOTE;
-                classicRenderer.drawText(g, text, ghostColors[id], font, t(tx + 14), t(ty + 1));
+                spriteRenderer.drawText(g, text, ghostColors[id], font, t(tx + 14), t(ty + 1));
             }
         }
     }
 
     private void drawBlinkingEnergizer() {
         if (intro.blinking.isOn()) {
-            classicRenderer.drawSpriteScaled(g, ss.source(), ss.getEnergizerSprite(), t(intro.leftTileX),t(20));
+            spriteRenderer.drawSpriteScaled(g,
+                spriteRenderer.getSpriteSheet().source(),
+                spriteRenderer.getSpriteSheet().getEnergizerSprite(),
+                t(intro.leftTileX),t(20));
         }
     }
 
     private void drawGhost(Ghost ghost) {
-        classicRenderer.drawGhost(g, ss, ghost);
+        spriteRenderer.drawGhost(g, ghost);
     }
 
     private void drawGuys(int shakingAmount) {
@@ -151,7 +153,7 @@ public class PacManIntroScene extends GameScene2D {
             drawGhost(intro.ghost(2));
             g.restore();
         }
-        classicRenderer.drawPac(g, ss, intro.pacMan);
+        spriteRenderer.drawPac(g, intro.pacMan);
     }
 
     private void drawPoints() {
@@ -163,11 +165,14 @@ public class PacManIntroScene extends GameScene2D {
         g.setFill(Color.rgb(254, 189, 180));
         g.fillRect(s(t(tx) + 4), s(t(ty - 1) + 4), s(2), s(2));
         if (intro.blinking.isOn()) {
-            classicRenderer.drawSpriteScaled(g, ss.source(), ss.getEnergizerSprite(), t(tx), t(ty + 1));
+            spriteRenderer.drawSpriteScaled(g,
+                spriteRenderer.getSpriteSheet().source(),
+                spriteRenderer.getSpriteSheet().getEnergizerSprite(),
+                t(tx), t(ty + 1));
         }
-        classicRenderer.drawText(g, "10",  color, font8, t(tx + 2), t(ty));
-        classicRenderer.drawText(g, "PTS", color, font6, t(tx + 5), t(ty));
-        classicRenderer.drawText(g, "50",  color, font8, t(tx + 2), t(ty + 2));
-        classicRenderer.drawText(g, "PTS", color, font6, t(tx + 5), t(ty + 2));
+        spriteRenderer.drawText(g, "10",  color, font8, t(tx + 2), t(ty));
+        spriteRenderer.drawText(g, "PTS", color, font6, t(tx + 5), t(ty));
+        spriteRenderer.drawText(g, "50",  color, font8, t(tx + 2), t(ty + 2));
+        spriteRenderer.drawText(g, "PTS", color, font6, t(tx + 5), t(ty + 2));
     }
 }

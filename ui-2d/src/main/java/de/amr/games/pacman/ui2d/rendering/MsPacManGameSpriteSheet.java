@@ -126,6 +126,11 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
         return ghostsNormalSprites[id][ORDER.indexOf(dir)];
     }
 
+    @Override
+    public Rectangle2D ghostFacingRight(byte id) {
+        return ghostNormalSprites(id, Direction.RIGHT)[0];
+    }
+
     private final Rectangle2D[] ghostFrightenedSprites = array(sprite(8, 4), sprite(9, 4));
 
     public Rectangle2D[] ghostFrightenedSprites() {
@@ -216,6 +221,11 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     @Override
     public Rectangle2D filledMaze(int mazeNumber) {
         return filledMazeSprites[mazeNumber - 1];
+    }
+
+    @Override
+    public Rectangle2D getEnergizerSprite() {
+        return null; // not needed in Ms. Pac-Man
     }
 
     private final Rectangle2D[][] pacManMunchingSprites = new Rectangle2D[4][];

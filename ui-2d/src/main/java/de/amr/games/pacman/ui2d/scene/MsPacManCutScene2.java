@@ -50,9 +50,9 @@ public class MsPacManCutScene2 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        classicRenderer.drawClapperBoard(g, ss, context.theme(), clapAnimation, t(3), t(10));
-        classicRenderer.drawPac(g, ss, intermission.msPac);
-        classicRenderer.drawPac(g, ss, intermission.pacMan);
+        spriteRenderer.drawClapperBoard(g, context.theme(), clapAnimation, t(3), t(10));
+        spriteRenderer.drawPac(g, intermission.msPac);
+        spriteRenderer.drawPac(g, intermission.pacMan);
         drawLevelCounter(g);
     }
 }

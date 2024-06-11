@@ -45,11 +45,11 @@ public class MsPacManCreditScene extends GameScene2D {
         var font6 = sceneFont(6); // TODO looks bad
         var font8 = sceneFont(8);
         var color = context.theme().color("palette.orange");
-        classicRenderer.drawText(g, "PUSH START BUTTON", color, font8, t(6), t(16));
-        classicRenderer.drawText(g, "1 PLAYER ONLY", color, font8, t(8), t(18));
-        classicRenderer.drawText(g, "ADDITIONAL    AT 10000", color, font8, t(2), t(25));
-        classicRenderer.drawSpriteScaled(g, ss.source(), ss.livesCounterSprite(), t(13), t(23) + 1);
-        classicRenderer.drawText(g, "PTS", color, font6, t(25), t(25));
+        spriteRenderer.drawText(g, "PUSH START BUTTON", color, font8, t(6), t(16));
+        spriteRenderer.drawText(g, "1 PLAYER ONLY", color, font8, t(8), t(18));
+        spriteRenderer.drawText(g, "ADDITIONAL    AT 10000", color, font8, t(2), t(25));
+        spriteRenderer.drawSpriteScaled(g, ss.source(), ss.livesCounterSprite(), t(13), t(23) + 1);
+        spriteRenderer.drawText(g, "PTS", color, font6, t(25), t(25));
         drawMsPacManCopyright(t(6), t(28));
         drawLevelCounter(g);
     }

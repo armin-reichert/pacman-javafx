@@ -54,12 +54,12 @@ public class MsPacManCutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        classicRenderer.drawClapperBoard(g, ss, context.theme(), clapAnimation, t(3), t(10));
-        classicRenderer.drawPac(g, ss, intermission.msPac);
-        classicRenderer.drawPac(g, ss, intermission.pacMan);
-        classicRenderer.drawGhost(g, ss, intermission.inky);
-        classicRenderer.drawGhost(g, ss, intermission.pinky);
-        classicRenderer.drawEntitySprite(g, ss, intermission.heart, ss.heartSprite());
+        spriteRenderer.drawClapperBoard(g, context.theme(), clapAnimation, t(3), t(10));
+        spriteRenderer.drawPac(g, intermission.msPac);
+        spriteRenderer.drawPac(g, intermission.pacMan);
+        spriteRenderer.drawGhost(g, intermission.inky);
+        spriteRenderer.drawGhost(g, intermission.pinky);
+        spriteRenderer.drawEntitySprite(g, intermission.heart, ss.heartSprite());
         drawLevelCounter(g);
     }
 }

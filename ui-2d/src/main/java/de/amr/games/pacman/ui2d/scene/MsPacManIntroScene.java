@@ -26,7 +26,6 @@ import static de.amr.games.pacman.lib.Globals.t;
 public class MsPacManIntroScene extends GameScene2D {
 
     private MsPacManIntro intro;
-    private MsPacManGameSpriteSheet ss;
 
     @Override
     public boolean isCreditVisible() {
@@ -35,14 +34,14 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void init() {
-        ss = (MsPacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
         context.actionHandler().showSignature();
         setScoreVisible(true);
         intro = new MsPacManIntro();
-        intro.msPacMan.setAnimations(new MsPacManGamePacAnimations(intro.msPacMan, ss));
+        spriteRenderer.setSpriteSheet(context.getSpriteSheet(context.game().variant()));
+        intro.msPacMan.setAnimations(new MsPacManGamePacAnimations(intro.msPacMan, (MsPacManGameSpriteSheet) spriteRenderer.getSpriteSheet()));
         intro.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
         for (var ghost : intro.ghosts) {
-            ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, ss));
+            ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, (MsPacManGameSpriteSheet) spriteRenderer.getSpriteSheet()));
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
         }
         intro.changeState(State.START);
@@ -78,7 +77,7 @@ public class MsPacManIntroScene extends GameScene2D {
         var ty = intro.titlePosition.y();
         var y0 = intro.stopY;
         drawMarquee();
-        classicRenderer.drawText(g, "\"MS PAC-MAN\"", context.theme().color("palette.orange"), font8, tx, ty);
+        spriteRenderer.drawText(g, "\"MS PAC-MAN\"", context.theme().color("palette.orange"), font8, tx, ty);
         if (intro.state() == State.GHOSTS_MARCHING_IN) {
             var ghost = intro.ghosts[intro.ghostIndex];
             var color = switch (ghost.id()) {
@@ -89,19 +88,19 @@ public class MsPacManIntroScene extends GameScene2D {
                 default -> throw new IllegalStateException("Unexpected value: " + ghost.id());
             };
             if (ghost.id() == GameModel.RED_GHOST) {
-                classicRenderer.drawText(g, "WITH", context.theme().color("palette.pale"), font8, tx, y0 + t(3));
+                spriteRenderer.drawText(g, "WITH", context.theme().color("palette.pale"), font8, tx, y0 + t(3));
             }
             var text = ghost.name().toUpperCase();
             var dx = text.length() < 4 ? t(1) : 0;
-            classicRenderer.drawText(g, text, color, font8, tx + t(3) + dx, y0 + t(6));
+            spriteRenderer.drawText(g, text, color, font8, tx + t(3) + dx, y0 + t(6));
         } else if (intro.state() == State.MS_PACMAN_MARCHING_IN || intro.state() == State.READY_TO_PLAY) {
-            classicRenderer.drawText(g, "STARRING", context.theme().color("palette.pale"), font8, tx, y0 + t(3));
-            classicRenderer.drawText(g, "MS PAC-MAN", context.theme().color("palette.yellow"), font8, tx, y0 + t(6));
+            spriteRenderer.drawText(g, "STARRING", context.theme().color("palette.pale"), font8, tx, y0 + t(3));
+            spriteRenderer.drawText(g, "MS PAC-MAN", context.theme().color("palette.yellow"), font8, tx, y0 + t(6));
         }
         for (var ghost : intro.ghosts) {
-            classicRenderer.drawGhost(g, ss, ghost);
+            spriteRenderer.drawGhost(g, ghost);
         }
-        classicRenderer.drawPac(g, ss, intro.msPacMan);
+        spriteRenderer.drawPac(g, intro.msPacMan);
         drawMsPacManCopyright(t(6), t(28));
         drawLevelCounter(g);
     }

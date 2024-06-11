@@ -29,7 +29,6 @@ public class PacManCutScene1 extends GameScene2D {
     private int frame;
     private Pac pac;
     private Ghost blinky;
-    private PacManGameSpriteSheet ss;
 
     @Override
     public boolean isCreditVisible() {
@@ -38,15 +37,14 @@ public class PacManCutScene1 extends GameScene2D {
 
     @Override
     public void init() {
-        ss = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
         frame = -1;
         initialDelay = 120;
         setScoreVisible(true);
 
         pac = new Pac();
-        pac.setAnimations(new PacManGamePacAnimations(pac, ss));
+        pac.setAnimations(new PacManGamePacAnimations(pac, (PacManGameSpriteSheet) spriteRenderer.getSpriteSheet()));
         blinky = new Ghost(GameModel.RED_GHOST);
-        blinky.setAnimations(new PacManGameGhostAnimations(blinky, ss));
+        blinky.setAnimations(new PacManGameGhostAnimations(blinky, (PacManGameSpriteSheet) spriteRenderer.getSpriteSheet()));
     }
 
     @Override
@@ -103,8 +101,8 @@ public class PacManCutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        classicRenderer.drawPac(g, ss, pac);
-        classicRenderer.drawGhost(g, ss, blinky);
+        spriteRenderer.drawPac(g, pac);
+        spriteRenderer.drawGhost(g, blinky);
         drawLevelCounter(g);
     }
 
@@ -112,6 +110,6 @@ public class PacManCutScene1 extends GameScene2D {
     protected void drawSceneInfo() {
         drawTileGrid();
         var text = initialDelay > 0 ? String.format("Wait %d", initialDelay) : String.format("Frame %d", frame);
-        classicRenderer.drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
+        spriteRenderer.drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
     }
 }

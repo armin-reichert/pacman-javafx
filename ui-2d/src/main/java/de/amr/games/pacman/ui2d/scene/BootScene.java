@@ -76,7 +76,7 @@ public class BootScene extends GameScene2D {
                 var splitX = GameModel.ARCADE_MAP_TILES_X / 8 + RND.nextInt(GameModel.ARCADE_MAP_TILES_X / 4);
                 for (int col = 0; col < GameModel.ARCADE_MAP_TILES_X / 2; ++col) {
                     var region = col < splitX ? region1 : region2;
-                    classicRenderer.drawSpriteScaled(g, spriteSheet.source(),
+                    spriteRenderer.drawSpriteScaled(g, spriteSheet.source(),
                         region, region.getWidth() * col, region.getHeight() * row);
                 }
             }

@@ -34,4 +34,8 @@ public interface GameSpriteSheet extends SpriteSheet {
     Rectangle2D bonusSymbolSprite(byte symbol);
 
     Rectangle2D bonusValueSprite(byte symbol);
+
+    Rectangle2D ghostFacingRight(byte id);
+
+    Rectangle2D getEnergizerSprite();
 }
