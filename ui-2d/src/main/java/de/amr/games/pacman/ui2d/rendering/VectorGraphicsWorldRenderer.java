@@ -8,6 +8,7 @@ import de.amr.games.pacman.mapeditor.FoodMapRenderer;
 import de.amr.games.pacman.mapeditor.TerrainMapRenderer;
 import de.amr.games.pacman.model.world.World;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -19,13 +20,14 @@ import static java.util.function.Predicate.not;
  */
 public class VectorGraphicsWorldRenderer {
 
-    public VectorGraphicsWorldRenderer(DoubleProperty scalingPy) {
+    public final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
+    private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
+    private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
+
+    public VectorGraphicsWorldRenderer() {
         terrainRenderer.scalingPy.bind(scalingPy);
         foodRenderer.scalingPy.bind(scalingPy);
     }
-
-    private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
-    private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
 
     public void draw(GraphicsContext g, World world, boolean flashing, boolean blinkingOn) {
         if (flashing) {

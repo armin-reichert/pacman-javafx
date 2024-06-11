@@ -27,13 +27,10 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class SpriteGameRenderer {
 
-    private final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
+    public final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
+
     private Color backgroundColor = Color.BLACK;
     private GameSpriteSheet spriteSheet;
-
-    public SpriteGameRenderer(DoubleProperty scalingPy) {
-        this.scalingPy.bind(scalingPy);
-    }
 
     public double s(double value) {
         return scalingPy.doubleValue() * value;
@@ -146,19 +143,14 @@ public class SpriteGameRenderer {
         }
     }
 
-    public void drawLevelCounter(
-        GraphicsContext g,
-        List<Byte> symbols, double x, double y) {
+    public void drawLevelCounter(GraphicsContext g, List<Byte> symbols, double x, double y) {
         for (byte symbol : symbols) {
             drawSpriteScaled(g, spriteSheet.bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
         }
     }
 
-    public void drawPac(
-        GraphicsContext g,
-        Pac pac)
-    {
+    public void drawPac(GraphicsContext g, Pac pac) {
         if (pac.isVisible() && pac.animations().isPresent() && pac.animations().get() instanceof SpriteAnimations sa) {
             drawEntitySprite(g, pac, sa.currentSprite());
         }

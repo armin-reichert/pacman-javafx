@@ -32,10 +32,16 @@ public abstract class GameScene2D implements GameScene {
     public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible", false);
     public final DoubleProperty scalingPy       = new SimpleDoubleProperty(this, "scaling", 1.0);
 
+    protected final VectorGraphicsWorldRenderer vectorRenderer = new VectorGraphicsWorldRenderer();
+    protected final SpriteGameRenderer spriteRenderer = new SpriteGameRenderer();
+
     protected GameContext context;
     protected GraphicsContext g;
-    protected VectorGraphicsWorldRenderer vectorRenderer = new VectorGraphicsWorldRenderer(scalingPy);
-    protected SpriteGameRenderer spriteRenderer = new SpriteGameRenderer(scalingPy);
+
+    public GameScene2D() {
+        vectorRenderer.scalingPy.bind(scalingPy);
+        spriteRenderer.scalingPy.bind(scalingPy);
+    }
 
     public abstract boolean isCreditVisible();
 
