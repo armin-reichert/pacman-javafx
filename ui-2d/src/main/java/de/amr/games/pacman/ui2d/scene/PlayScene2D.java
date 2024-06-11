@@ -109,12 +109,12 @@ public class PlayScene2D extends GameScene2D {
         drawLevelMessage();
         if (game.powerTimer().isRunning()) {
             Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
-                .map(game::ghost).forEach(ghost -> drawGhost(ghost));
+                .map(game::ghost).forEach(this::drawGhost);
             drawPac(game.pac());
         } else {
             drawPac(game.pac());
             Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
-                .map(game::ghost).forEach(ghost -> drawGhost(ghost));
+                .map(game::ghost).forEach(this::drawGhost);
         }
         if (!isCreditVisible()) {
             int numLivesDisplayed = game.lives() - 1;
