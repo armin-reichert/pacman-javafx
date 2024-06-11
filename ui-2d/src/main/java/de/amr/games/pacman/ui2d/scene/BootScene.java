@@ -37,6 +37,7 @@ public class BootScene extends GameScene2D {
 
     @Override
     public void draw() {
+        spriteRenderer.setSpriteSheet(context().getSpriteSheet(context.game().variant()));
         var timer = context.gameState().timer();
         if (timer.tick() == 1) {
             clearCanvas();
@@ -68,7 +69,6 @@ public class BootScene extends GameScene2D {
 
     private void paintRandomSprites() {
         clearCanvas();
-        var spriteSheet = context.getSpriteSheet(context.game().variant());
         for (int row = 0; row < GameModel.ARCADE_MAP_TILES_Y / 2; ++row) {
             if (RND.nextInt(100) > 33) {
                 var region1 = randomSpriteSheetTile();
@@ -76,8 +76,7 @@ public class BootScene extends GameScene2D {
                 var splitX = GameModel.ARCADE_MAP_TILES_X / 8 + RND.nextInt(GameModel.ARCADE_MAP_TILES_X / 4);
                 for (int col = 0; col < GameModel.ARCADE_MAP_TILES_X / 2; ++col) {
                     var region = col < splitX ? region1 : region2;
-                    spriteRenderer.drawSpriteScaled(g, spriteSheet.source(),
-                        region, region.getWidth() * col, region.getHeight() * row);
+                    spriteRenderer.drawSpriteScaled(g, region, region.getWidth() * col, region.getHeight() * row);
                 }
             }
         }

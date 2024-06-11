@@ -129,10 +129,7 @@ public class PacManIntroScene extends GameScene2D {
 
     private void drawBlinkingEnergizer() {
         if (intro.blinking.isOn()) {
-            spriteRenderer.drawSpriteScaled(g,
-                spriteRenderer.getSpriteSheet().source(),
-                spriteRenderer.getSpriteSheet().getEnergizerSprite(),
-                t(intro.leftTileX),t(20));
+            spriteRenderer.drawSpriteScaled(g, spriteRenderer.getSpriteSheet().getEnergizerSprite(),t(intro.leftTileX),t(20));
         }
     }
 
@@ -165,9 +162,7 @@ public class PacManIntroScene extends GameScene2D {
         g.setFill(Color.rgb(254, 189, 180));
         g.fillRect(s(t(tx) + 4), s(t(ty - 1) + 4), s(2), s(2));
         if (intro.blinking.isOn()) {
-            spriteRenderer.drawSpriteScaled(g,
-                spriteRenderer.getSpriteSheet().source(),
-                spriteRenderer.getSpriteSheet().getEnergizerSprite(),
+            spriteRenderer.drawSpriteScaled(g, spriteRenderer.getSpriteSheet().getEnergizerSprite(),
                 t(tx), t(ty + 1));
         }
         spriteRenderer.drawText(g, "10",  color, font8, t(tx + 2), t(ty));

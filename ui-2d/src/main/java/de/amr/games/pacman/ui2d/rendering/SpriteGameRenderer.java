@@ -63,13 +63,13 @@ public class SpriteGameRenderer {
             if (blinkingOn) {
                 g.drawImage(spriteSheet.getFlashingMazeImage(), 0, t(3));
             } else {
-                drawSprite(g, spriteSheet.source(), spriteSheet.getEmptyMazeSprite(), 0, t(3));
+                drawSprite(g, spriteSheet.getEmptyMazeSprite(), 0, t(3));
             }
             g.restore();
         } else {
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());
-            drawSprite(g, spriteSheet.source(), spriteSheet.getFullMazeSprite(), 0, t(3));
+            drawSprite(g, spriteSheet.getFullMazeSprite(), 0, t(3));
             g.restore();
             world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideFoodTileContent(g, world, tile));
             if (!blinkingOn) {
@@ -98,7 +98,7 @@ public class SpriteGameRenderer {
         var x = TS * 2;
         var y = TS * (GameModel.ARCADE_MAP_TILES_Y - 2);
         for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-            drawSpriteScaled(g, spriteSheet.source(), spriteSheet.livesCounterSprite(), x + TS * (2 * i), y);
+            drawSpriteScaled(g, spriteSheet.livesCounterSprite(), x + TS * (2 * i), y);
         }
         // text indicating that more lives are available than displayed
         int excessLives = numLivesDisplayed - maxLives;
@@ -117,15 +117,15 @@ public class SpriteGameRenderer {
             g.scale(scalingPy.get(), scalingPy.get());
             if (blinkingOn) {
                 Rectangle2D emptyMazeBright = spriteSheet.highlightedMaze(mapNumber);
-                drawSprite(g, spriteSheet.getFlashingMazesImage(), emptyMazeBright, x - 3, y);
+                drawSubImage(g, spriteSheet.getFlashingMazesImage(), emptyMazeBright, x - 3, y);
             } else {
-                drawSprite(g, spriteSheet.source(), spriteSheet.emptyMaze(mapNumber), x, y);
+                drawSprite(g, spriteSheet.emptyMaze(mapNumber), x, y);
             }
             g.restore();
         } else {
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());
-            drawSprite(g, spriteSheet.source(), spriteSheet.filledMaze(mapNumber), x, y);
+            drawSprite(g, spriteSheet.filledMaze(mapNumber), x, y);
             g.restore();
             world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideFoodTileContent(g, world, tile));
             if (!blinkingOn) {
@@ -157,7 +157,7 @@ public class SpriteGameRenderer {
         GraphicsContext g,
         List<Byte> symbols, double x, double y) {
         for (byte symbol : symbols) {
-            drawSpriteScaled(g, spriteSheet.source(), spriteSheet.bonusSymbolSprite(symbol), x, y);
+            drawSpriteScaled(g, spriteSheet.bonusSymbolSprite(symbol), x, y);
             x -= TS * 2;
         }
     }
@@ -240,7 +240,11 @@ public class SpriteGameRenderer {
         }
     }
 
-    public void drawSprite(GraphicsContext g, Image sourceImage, Rectangle2D sprite, double x, double y) {
+    public void drawSprite(GraphicsContext g, Rectangle2D sprite, double x, double y) {
+        drawSubImage(g,  spriteSheet.source(), sprite, x, y);
+    }
+
+    public void drawSubImage(GraphicsContext g, Image sourceImage, Rectangle2D sprite, double x, double y) {
         if (sprite != null) {
             g.drawImage(sourceImage,
                 sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
@@ -251,14 +255,13 @@ public class SpriteGameRenderer {
     /**
      * Draws a sprite using the current scene scaling.
      *
-     * @param source sprite sheet source
      * @param sprite sprite sheet region ("sprite")
      * @param x      UNSCALED x position
      * @param y      UNSCALED y position
      */
-    public void drawSpriteScaled(GraphicsContext g, Image source, Rectangle2D sprite, double x, double y) {
+    public void drawSpriteScaled(GraphicsContext g, Rectangle2D sprite, double x, double y) {
         if (sprite != null) {
-            g.drawImage(source,
+            g.drawImage(spriteSheet.source(),
                 sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
                 s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
         }
@@ -274,7 +277,7 @@ public class SpriteGameRenderer {
      * @param y      y coordinate of left-upper corner of bounding box
      */
     public void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D sprite, double x, double y) {
-        drawSpriteScaled(g, spriteSheet.source(), sprite, x + HTS - 0.5 * sprite.getWidth(), y + HTS - 0.5 * sprite.getHeight());
+        drawSpriteScaled(g, sprite, x + HTS - 0.5 * sprite.getWidth(), y + HTS - 0.5 * sprite.getHeight());
     }
 
     /**
