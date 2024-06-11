@@ -94,7 +94,7 @@ public class PlayScene2D extends GameScene2D {
         spriteRenderer.setBackgroundColor(canvasBackground());
         switch (game.variant()) {
             case MS_PACMAN -> {
-                spriteRenderer.drawMsPacManWorld(g, game.world(), ((MsPacManGame) game).mapNumber(), flashing, blinkingOn);
+                spriteRenderer.drawMsPacManWorld(g, game.world(), flashing, blinkingOn);
                 game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));
             }
             case PACMAN -> {

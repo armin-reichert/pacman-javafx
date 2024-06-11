@@ -54,9 +54,6 @@ public class MsPacManGame extends AbstractPacManGame  {
 
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
-    // sprite sheet renderer needs this
-    private int mapNumber;
-
     @Override
     public void init() {
         initialLives = 3;
@@ -85,7 +82,7 @@ public class MsPacManGame extends AbstractPacManGame  {
      * </ul>
      * <p>
      */
-    private int mapNumberByLevelNumber(int levelNumber) {
+    public static int mapNumberByLevelNumber(int levelNumber) {
         return switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
@@ -93,10 +90,6 @@ public class MsPacManGame extends AbstractPacManGame  {
             case 10, 11, 12, 13 -> 4;
             default -> (levelNumber - 14) % 8 < 4 ? 5 : 6;
         };
-    }
-
-    public int mapNumber() {
-        return mapNumber;
     }
 
     @Override
@@ -108,7 +101,7 @@ public class MsPacManGame extends AbstractPacManGame  {
     @Override
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
-        this.mapNumber = mapNumberByLevelNumber(levelNumber);
+        int mapNumber = mapNumberByLevelNumber(levelNumber);
         URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world");
         var map = new WorldMap(mapURL);
         var msPacManWorld = createMsPacManWorld(map);
@@ -122,7 +115,7 @@ public class MsPacManGame extends AbstractPacManGame  {
     @Override
     public void buildDemoLevel() {
         levelNumber = 1;
-        mapNumber = randomInt(1, 7);
+        int mapNumber = randomInt(1, 7);
         var mapURL = getClass().getResource(String.format("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world", mapNumber));
         var map = new WorldMap(mapURL);
         setWorldAndCreatePopulation(createMsPacManWorld(map));
