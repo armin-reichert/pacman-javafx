@@ -103,18 +103,7 @@ public class SpriteGameRenderer {
         }
     }
 
-    public void drawMsPacManWorld(GraphicsContext g, World world, boolean flashing, boolean blinkingOn) {
-        var mapURL = world.map().url().toString();
-        var mapName = mapURL.substring(mapURL.lastIndexOf('/') + 1);
-        int mapNumber = switch (mapName) {
-            case "mspacman_1.world" -> 1;
-            case "mspacman_2.world" -> 2;
-            case "mspacman_3.world" -> 3;
-            case "mspacman_4.world" -> 4;
-            case "mspacman_5.world" -> 5;
-            case "mspacman_6.world" -> 6;
-            default -> throw new IllegalArgumentException("Unknown Ms. Pac-Man map name: " + mapName);
-        };
+    public void drawMsPacManWorld(GraphicsContext g, World world, int mapNumber, boolean flashing, boolean blinkingOn) {
         double x = 0, y = t(3);
         if (flashing) {
             g.save();

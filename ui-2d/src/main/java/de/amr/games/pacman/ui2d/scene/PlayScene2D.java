@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.scene;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.MsPacManGame;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
@@ -17,6 +16,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -27,6 +28,8 @@ import static de.amr.games.pacman.model.actors.GhostState.RETURNING_HOME;
  * @author Armin Reichert
  */
 public class PlayScene2D extends GameScene2D {
+
+    private static final Pattern MS_PACMAN_MAP_URL = Pattern.compile(".*mspacman_(\\d).world$");
 
     @Override
     public boolean isCreditVisible() {
@@ -94,8 +97,16 @@ public class PlayScene2D extends GameScene2D {
         spriteRenderer.setBackgroundColor(canvasBackground());
         switch (game.variant()) {
             case MS_PACMAN -> {
-                spriteRenderer.drawMsPacManWorld(g, game.world(), flashing, blinkingOn);
-                game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));
+                var mapURL = game.world().map().url().toString();
+                //TODO this probably should be precomputed and cached
+                Matcher match = MS_PACMAN_MAP_URL.matcher(mapURL);
+                if (match.matches()) {
+                    int mapNumber = Integer.parseInt(match.group(1));
+                    spriteRenderer.drawMsPacManWorld(g, game.world(), mapNumber, flashing, blinkingOn);
+                    game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));
+                } else {
+                    throw new IllegalArgumentException("Could not determine map number for Ms. Pac-Man map URL: " + mapURL);
+                }
             }
             case PACMAN -> {
                 spriteRenderer.drawPacManWorld(g, game.world(), flashing, blinkingOn);
