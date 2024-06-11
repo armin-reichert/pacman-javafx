@@ -26,7 +26,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -53,7 +52,7 @@ public class PlayScene3D implements GameScene {
     public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
         @Override
         protected void invalidated() {
-            get().init(fxSubScene);
+            get().init(fxSubScene.getCamera(), context.game().world());
         }
     };
 
@@ -128,7 +127,7 @@ public class PlayScene3D implements GameScene {
                 numLivesDisplayed += 1;
             }
             level3D.livesCounter3D().update(numLivesDisplayed);
-            perspective().update(fxSubScene, game.pac());
+            perspective().update(fxSubScene.getCamera(), game.world(), game.pac());
         } else {
             replaceGameLevel3D();
         }
@@ -178,8 +177,6 @@ public class PlayScene3D implements GameScene {
     }
 
     private void replaceGameLevel3D() {
-        World world = checkNotNull(context.game().world());
-
         level3D = new GameLevel3D(context);
         level3D.livesCounter3D().setVisible(context.gameController().hasCredit());
 
@@ -315,7 +312,7 @@ public class PlayScene3D implements GameScene {
                 context.gameState().timer().restartSeconds(3);
                 replaceGameLevel3D();
                 level3D.pac3D().init(context.game());
-                perspective().init(fxSubScene);
+                perspective().init(fxSubScene.getCamera(), context.game().world());
             }
 
             case LEVEL_TEST -> {

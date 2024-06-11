@@ -11,8 +11,6 @@ import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import de.amr.games.pacman.ui3d.scene.PlayScene3D;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.Camera;
 import javafx.scene.control.*;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
@@ -48,11 +46,6 @@ public class InfoBox3D extends InfoBox {
     private CheckBox cbAxesVisible;
     private CheckBox cbWireframeMode;
 
-    private Spinner<Integer> spinnerCamRotate;
-    private Spinner<Integer> spinnerCamX;
-    private Spinner<Integer> spinnerCamY;
-    private Spinner<Integer> spinnerCamZ;
-
     public void init(GameContext context) {
         this.context = context;
 
@@ -63,17 +56,6 @@ public class InfoBox3D extends InfoBox {
         comboPerspectives = comboBox("Perspective", Perspective.values());
 
         infoText("Camera", this::currentSceneCameraInfo); //TODO .available(this::isCurrentGameScene3D);
-
-        // Editors for perspective TOTAL:
-        spinnerCamRotate = integerSpinner("- Rotate X", -180, 180, Perspective.TOTAL_ROTATE);
-        spinnerCamX      = integerSpinner("- Translate X", -1000, 1000, Perspective.TOTAL_TRANSLATE_X);
-        spinnerCamY      = integerSpinner("- Translate Y", -1000, 1000, Perspective.TOTAL_TRANSLATE_Y);
-        spinnerCamZ      = integerSpinner("- Translate Z", -1000, 1000, Perspective.TOTAL_TRANSLATE_Z);
-
-        spinnerCamRotate.valueProperty().addListener(this::updatePlayScene3DCamera);
-        spinnerCamX.valueProperty().addListener(this::updatePlayScene3DCamera);
-        spinnerCamY.valueProperty().addListener(this::updatePlayScene3DCamera);
-        spinnerCamZ.valueProperty().addListener(this::updatePlayScene3DCamera);
 
         cbPiPOn              = checkBox("Picture-In-Picture");
         sliderPiPSceneHeight = slider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
@@ -141,28 +123,6 @@ public class InfoBox3D extends InfoBox {
         cbPacLighted.setSelected(PY_3D_PAC_LIGHT_ENABLED.get());
         cbAxesVisible.setSelected(PY_3D_AXES_VISIBLE.get());
         cbWireframeMode.setSelected(PY_3D_DRAW_MODE.get() == DrawMode.LINE);
-
-        Perspective perspective = PY_3D_PERSPECTIVE.get();
-        spinnerCamRotate.setDisable(perspective != Perspective.TOTAL);
-        spinnerCamX.setDisable(perspective != Perspective.TOTAL);
-        spinnerCamY.setDisable(perspective != Perspective.TOTAL);
-        spinnerCamZ.setDisable(perspective != Perspective.TOTAL);
-    }
-
-    private void updatePlayScene3DCamera(ObservableValue<? extends Integer> py, int oldValue, int newValue) {
-        context.currentGameScene().ifPresent(gameScene -> {
-            if (gameScene instanceof PlayScene3D playScene3D) {
-                Camera cam = playScene3D.camera();
-                Perspective.TOTAL_ROTATE = spinnerCamRotate.getValue();
-                cam.setRotate(Perspective.TOTAL_ROTATE);
-                Perspective.TOTAL_TRANSLATE_X = spinnerCamX.getValue();
-                cam.setTranslateX(Perspective.TOTAL_TRANSLATE_X);
-                Perspective.TOTAL_TRANSLATE_Y = spinnerCamY.getValue();
-                cam.setTranslateY(Perspective.TOTAL_TRANSLATE_Y);
-                Perspective.TOTAL_TRANSLATE_Z = spinnerCamZ.getValue();
-                cam.setTranslateZ(Perspective.TOTAL_TRANSLATE_Z);
-            }
-        });
     }
 
     private String currentSceneCameraInfo() {

@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.scene;
 
 import de.amr.games.pacman.model.actors.Entity;
+import de.amr.games.pacman.model.world.World;
 import javafx.scene.Camera;
-import javafx.scene.SubScene;
 
 /**
  * Camera controller interface for the 3D play scene.
@@ -15,9 +15,9 @@ import javafx.scene.SubScene;
  */
 public interface CameraController {
 
-    default void init(SubScene scene) {
+    default void init(Camera cam, World world) {
     }
 
-    default void update(SubScene scene, Entity spottedEntity) {
+    default void update(Camera cam, World world, Entity spottedEntity) {
     }
 }
