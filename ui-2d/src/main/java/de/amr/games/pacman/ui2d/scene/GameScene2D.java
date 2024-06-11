@@ -75,11 +75,7 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public Node root() {
-        return canvas();
-    }
-
-    public Canvas canvas() {
-        return g != null ? g.getCanvas() : null;
+        return g.getCanvas();
     }
 
     @Override
