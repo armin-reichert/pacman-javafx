@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.ui2d.rendering.SpriteGameRenderer;
 import de.amr.games.pacman.ui2d.rendering.VectorGraphicsWorldRenderer;
@@ -168,12 +169,14 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected void drawTileGrid() {
-        g.setStroke(context.theme().color("palette.pale"));
+        int numRows = context.game().world() != null ? context.game().world().numRows() : GameModel.ARCADE_MAP_TILES_Y;
+        int numCols = context.game().world() != null ? context.game().world().numCols() : GameModel.ARCADE_MAP_TILES_X;
+        g.setStroke(Color.LIGHTGRAY);
         g.setLineWidth(0.2);
-        for (int row = 0; row <= 36; ++row) {
+        for (int row = 0; row <= numRows; ++row) {
             g.strokeLine(0, s(TS * (row)), s(28 * TS), s(TS * (row)));
         }
-        for (int col = 0; col <= 28; ++col) {
+        for (int col = 0; col <= numCols; ++col) {
             g.strokeLine(s(TS * (col)), 0, s(TS * (col)), s(36 * TS));
         }
     }
