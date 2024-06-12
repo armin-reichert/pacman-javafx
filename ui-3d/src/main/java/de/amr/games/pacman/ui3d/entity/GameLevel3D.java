@@ -245,27 +245,29 @@ public class GameLevel3D extends Group {
         return pac3D;
     }
 
-    private void buildGhostHouse(Group parent, int firstRow, int firstCol) {
+    private void buildGhostHouse(Group parent, int yMin, int xMin) {
         WorldMap map = context.game().world().map();
         House house = context.game().world().house();
+        Vector2i leftDoorTile = house.door().leftWing();
+        Vector2i rightDoorTile = house.door().rightWing();
 
         // tiles
-        int width = house.size().x();
-        int height = house.size().y();
+        int tilesX = house.size().x();
+        int tilesY = house.size().y();
 
         // tile coordinates
-        int lastRow = firstRow + height - 1;
-        int lastCol = firstCol + width - 1;
+        int yMax = yMin + tilesY - 1;
+        int xMax = xMin + tilesX - 1;
 
-        addHouseWall(parent, firstCol, firstRow, firstCol + 2,firstRow);
-        addHouseWall(parent, lastCol - 2, firstRow, lastCol,firstRow);
-        addHouseWall(parent, firstCol,firstRow,  firstCol,lastRow);
-        addHouseWall(parent, lastCol, firstRow,  lastCol,lastRow);
-        addHouseWall(parent, firstCol,lastRow, lastCol,lastRow);
+        addHouseWall(parent, xMin, yMin, leftDoorTile.x() - 1,yMin);
+        addHouseWall(parent, rightDoorTile.x() + 1, yMin, xMax,yMin);
+        addHouseWall(parent, xMin,yMin,  xMin,yMax);
+        addHouseWall(parent, xMax, yMin,  xMax,yMax);
+        addHouseWall(parent, xMin,yMax, xMax,yMax);
 
         Color doorColor = TileMapRenderer.getColorFromMap(map.terrain(), "door_color",
             Color.rgb(254,184,174));
-        for (Vector2i wingTile : List.of(house.door().leftWing(), house.door().rightWing())) {
+        for (Vector2i wingTile : List.of(leftDoorTile, rightDoorTile)) {
             var doorWing3D = new DoorWing3D(wingTile, doorColor, PY_3D_FLOOR_COLOR.get());
             doorWing3D.drawModePy.bind(PY_3D_DRAW_MODE);
             parent.getChildren().add(doorWing3D);
