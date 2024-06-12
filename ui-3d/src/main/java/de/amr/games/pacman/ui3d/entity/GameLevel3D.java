@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.entity;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.TileMapPath;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.mapeditor.TileMapRenderer;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -171,9 +171,7 @@ public class GameLevel3D extends Group {
         wallFillColorPy.set(TileMapRenderer.getColorFromMap(map.terrain(), "wall_fill_color", Color.rgb(0,0,0)));
         foodColorPy.set(TileMapRenderer.getColorFromMap(map.terrain(), "food_color", Color.PINK));
         addMazeWalls(mazeGroup);
-        int houseTopRow = map.numRows() / 2 - 3;
-        int houseTopCol = map.numCols() / 2 - 4;
-        buildGhostHouse(mazeGroup, houseTopRow, houseTopCol);
+        buildGhostHouse(mazeGroup);
         addFood3D(mazeGroup);
 
         pac3D = switch (context.game().variant()) {
@@ -245,7 +243,7 @@ public class GameLevel3D extends Group {
         return pac3D;
     }
 
-    private void buildGhostHouse(Group parent, int yMin, int xMin) {
+    private void buildGhostHouse(Group parent) {
         WorldMap map = context.game().world().map();
         House house = context.game().world().house();
         Vector2i leftDoorTile = house.door().leftWing();
@@ -256,14 +254,16 @@ public class GameLevel3D extends Group {
         int tilesY = house.size().y();
 
         // tile coordinates
+        int xMin = map.numCols() / 2 - (int) Math.ceil(0.5 * tilesX);
+        int yMin = map.numRows() / 2 - (int) Math.ceil(0.5 * tilesY);
         int yMax = yMin + tilesY - 1;
         int xMax = xMin + tilesX - 1;
 
-        addHouseWall(parent, xMin, yMin, leftDoorTile.x() - 1,yMin);
-        addHouseWall(parent, rightDoorTile.x() + 1, yMin, xMax,yMin);
-        addHouseWall(parent, xMin,yMin,  xMin,yMax);
-        addHouseWall(parent, xMax, yMin,  xMax,yMax);
-        addHouseWall(parent, xMin,yMax, xMax,yMax);
+        parent.getChildren().add(houseWall(xMin, yMin, leftDoorTile.x() - 1,yMin));
+        parent.getChildren().add(houseWall(rightDoorTile.x() + 1, yMin, xMax,yMin));
+        parent.getChildren().add(houseWall(xMin,yMin,  xMin,yMax));
+        parent.getChildren().add(houseWall(xMax, yMin,  xMax,yMax));
+        parent.getChildren().add(houseWall(xMin,yMax, xMax,yMax));
 
         Color doorColor = TileMapRenderer.getColorFromMap(map.terrain(), "door_color",
             Color.rgb(254,184,174));
@@ -285,8 +285,8 @@ public class GameLevel3D extends Group {
         parent.getChildren().add(houseLight);
     }
 
-    private void addHouseWall(Group parent, int x1, int y1, int x2, int y2) {
-        parent.getChildren().add(createWall(v2i(x1, y1), v2i(x2, y2), WALL_THICKNESS, houseHeightPy, houseFillMaterialPy));
+    private Node houseWall(int x1, int y1, int x2, int y2) {
+        return createWall(v2i(x1, y1), v2i(x2, y2), WALL_THICKNESS, houseHeightPy, houseFillMaterialPy);
     }
 
     private void addFood3D(Group parent) {
