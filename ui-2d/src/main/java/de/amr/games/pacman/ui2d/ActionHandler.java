@@ -11,7 +11,7 @@ public interface ActionHandler {
 
     void setFullScreen(boolean on);
 
-    void selectPage(String pageID);
+    void selectPage(byte pageID);
 
     void showSignature();
 

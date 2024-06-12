@@ -47,7 +47,10 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -70,9 +73,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     public static final String SIGNATURE_TEXT = "Remake (2021-2024) by Armin Reichert";
 
-    public static final String START_PAGE   = "startPage";
-    public static final String GAME_PAGE    = "gamePage";
-    public static final String EDITOR_PAGE  = "editorPage";
+    public static final byte START_PAGE   = 0;
+    public static final byte GAME_PAGE    = 1;
+    public static final byte EDITOR_PAGE  = 2;
 
     public static final double MIN_SCALING                        = 0.75;
     public static final int DEFAULT_CANVAS_WIDTH_UNSCALED         = GameModel.ARCADE_MAP_TILES_X * TS; // 28*8 = 224
@@ -99,13 +102,13 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
     protected final Theme theme = new Theme();
-    protected final Map<String, Page> pages = new HashMap<>();
+    protected final Page[] pages = new Page[3];
     protected final GameSceneManager gameSceneManager = new GameSceneManager();
     protected final List<ResourceBundle> bundles = new ArrayList<>();
 
     protected Stage stage;
     protected Scene mainScene;
-    protected String currentPageID;
+    protected byte currentPageID = -1;
     protected GameClockFX clock;
     protected TileMapEditor editor;
 
@@ -135,7 +138,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap("Pac-Man XXL " + mapNumber,
                 new WorldMap(core.url("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world"))));
 
-        pages.put(EDITOR_PAGE, new EditorPage(editor, this));
+        pages[EDITOR_PAGE] = new EditorPage(editor, this);
     }
 
     @Override
@@ -292,8 +295,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
         mainScene = createMainScene(width, height);
 
-        pages.put(START_PAGE, createStartPage());
-        pages.put(GAME_PAGE,  createGamePage());
+        pages[START_PAGE] = createStartPage();
+        pages[GAME_PAGE]  = createGamePage();
 
         createGameScenes(); // must be done *after* creating game page!
         addMapEditor();
@@ -329,11 +332,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         scene.setOnMouseClicked(this::onMouseClicked);
         scene.setOnContextMenuRequested(this::onContextMenuRequested);
         scene.setOnKeyPressed(e -> currentPage().handleKeyboardInput());
-        ChangeListener<Number> resizeCurrentPage = (py, ov, nv) -> {
-            if (currentPageID != null) {
-                currentPage().setSize(scene.getWidth(), scene.getHeight());
-            }
-        };
+        ChangeListener<Number> resizeCurrentPage = (py, ov, nv) -> currentPage().setSize(scene.getWidth(), scene.getHeight());
         scene.widthProperty().addListener(resizeCurrentPage);
         scene.heightProperty().addListener(resizeCurrentPage);
         return scene;
@@ -405,12 +404,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     @SuppressWarnings("unchecked")
-    protected <T extends Page> T page(String pageID) {
-        if (pages.containsKey(pageID)) {
-            return (T) pages.get(pageID);
+    protected <T extends Page> T page(byte pageID) {
+        if (pageID == -1) {
+            pageID = START_PAGE;
         }
-        Logger.error("Illegal page ID '{}'", pageID);
-        return (T) pages.get(START_PAGE);
+        if (pageID == START_PAGE || pageID == GAME_PAGE || pageID == EDITOR_PAGE) {
+            return (T) pages[pageID];
+        }
+        throw new IllegalArgumentException("Illegal page ID: " + pageID);
     }
 
     protected <T extends Page> T  currentPage() {
@@ -418,13 +419,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     @Override
-    public void selectPage(String pageID) {
-        checkNotNull(pageID);
-        if (!pages.containsKey(pageID)) {
-            Logger.error("Cannot select page: Illegal page ID '{}'", pageID);
-            return;
-        }
-        if (!pageID.equals(currentPageID)) {
+    public void selectPage(byte pageID) {
+        if (pageID != currentPageID) {
             currentPageID = pageID;
             Page selectedPage = currentPage();
             selectedPage.setSize(mainScene.getWidth(), mainScene.getHeight());
@@ -705,8 +701,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     @Override
-    public boolean isPageSelected(String pageID) {
-        return pageID.equals(currentPageID);
+    public boolean isPageSelected(byte pageID) {
+        return pageID == currentPageID;
     }
 
     @Override

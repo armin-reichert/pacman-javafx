@@ -57,7 +57,7 @@ public interface GameContext {
      */
     String tt(String key, Object... args);
 
-    boolean isPageSelected(String pageID);
+    boolean isPageSelected(byte pageID);
 
     default GameController gameController() {
         return GameController.it();
