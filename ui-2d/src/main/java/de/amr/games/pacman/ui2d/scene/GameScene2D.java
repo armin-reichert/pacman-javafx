@@ -97,10 +97,6 @@ public abstract class GameScene2D implements GameScene {
         }
         spriteRenderer.setBackgroundColor(canvasBackground());
         clearCanvas();
-        if (context == null) {
-            Logger.error("Cannot render game scene {}, no scene context has been assigned", getClass().getSimpleName());
-            return;
-        }
         if (isScoreVisible()) {
             drawScore(context.game().score(), "SCORE", t(1), t(1));
             drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1));
