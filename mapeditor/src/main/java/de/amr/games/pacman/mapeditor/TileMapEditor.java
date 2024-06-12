@@ -264,7 +264,6 @@ public class TileMapEditor  {
         infoLabel = new Label();
 
         VBox controlsPane = new VBox();
-        controlsPane.setMinWidth(200);
         controlsPane.setSpacing(10);
         controlsPane.getChildren().add(new HBox(20, new Label("Show"), cbTerrainVisible, cbFoodVisible, cbGridVisible));
         controlsPane.getChildren().add(infoLabel);
@@ -280,11 +279,11 @@ public class TileMapEditor  {
 
         var previewCanvasScroll = new ScrollPane(previewCanvas);
         previewCanvasScroll.setFitToHeight(true);
+        previewCanvasScroll.vvalueProperty().bindBidirectional(editCanvasScroll.vvalueProperty());
 
-        var hbox = new HBox(editCanvasScroll, controlsPane, previewCanvasScroll);
-        hbox.setSpacing(10);
-
-        layout = new BorderPane(hbox);
+        var splitPane = new SplitPane(editCanvasScroll, controlsPane, previewCanvasScroll);
+        splitPane.setDividerPositions(0.45, 0.55);
+        layout = new BorderPane(splitPane);
     }
 
     private void createMenus() {
