@@ -8,6 +8,8 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.TileMapPath;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.Tiles;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.mapeditor.TileMapRenderer;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -243,13 +245,25 @@ public class GameLevel3D extends Group {
     }
 
     private void addArcadeGhostHouse(Group parent) {
-        addHouseWall(parent, 10,15, 12,15);
-        addHouseWall(parent, 10,15, 10,19);
-        addHouseWall(parent, 10,19, 17,19);
-        addHouseWall(parent, 17,19, 17,15);
-        addHouseWall(parent, 17,15, 15,15);
-
+        WorldMap map = context.game().world().map();
         House house = context.game().world().house();
+
+        int width = house.size().x();
+        int height = house.size().y();
+        float centerX = house.topLeftTile().x() * TS + house.size().x() * HTS;
+        float centerY = house.topLeftTile().y() * TS + house.size().y() * HTS;
+
+        int firstRow =  map.numRows() / 2 - 3;
+        int lastRow = firstRow + height - 1;
+        int firstCol = map.numCols() / 2 - 4;
+        int lastCol = firstCol + width - 1;
+
+        addHouseWall(parent, firstCol,firstRow, firstCol + 2,firstRow);
+        addHouseWall(parent, firstCol,firstRow, firstCol,    lastRow);
+        addHouseWall(parent, firstCol,lastRow,  lastCol,     lastRow);
+        addHouseWall(parent, lastCol, lastRow,  lastCol,     firstRow);
+        addHouseWall(parent, lastCol, firstRow, lastCol - 2, firstRow);
+
         Color doorColor = TileMapRenderer.getColorFromMap(context.game().world().map().terrain(), "door_color", Color.rgb(254,184,174));
         for (Vector2i wingTile : List.of(house.door().leftWing(), house.door().rightWing())) {
             var doorWing3D = new DoorWing3D(wingTile, doorColor, PY_3D_FLOOR_COLOR.get());
@@ -257,8 +271,6 @@ public class GameLevel3D extends Group {
             parent.getChildren().add(doorWing3D);
         }
 
-        float centerX = house.topLeftTile().x() * TS + house.size().x() * HTS;
-        float centerY = house.topLeftTile().y() * TS + house.size().y() * HTS;
         houseLight.setColor(Color.GHOSTWHITE);
         houseLight.setMaxRange(3 * TS);
         houseLight.setTranslateX(centerX);
