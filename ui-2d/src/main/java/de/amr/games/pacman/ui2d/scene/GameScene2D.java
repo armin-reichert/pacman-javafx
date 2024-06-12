@@ -174,10 +174,10 @@ public abstract class GameScene2D implements GameScene {
         g.setStroke(Color.LIGHTGRAY);
         g.setLineWidth(0.2);
         for (int row = 0; row <= numRows; ++row) {
-            g.strokeLine(0, s(TS * (row)), s(28 * TS), s(TS * (row)));
+            g.strokeLine(0, s(TS * row), s(28 * TS), s(TS * row));
         }
         for (int col = 0; col <= numCols; ++col) {
-            g.strokeLine(s(TS * (col)), 0, s(TS * (col)), s(36 * TS));
+            g.strokeLine(s(TS * col), 0, s(TS * col), s(numRows * TS));
         }
     }
 }
