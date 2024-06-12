@@ -8,7 +8,6 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.scene.*;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -17,43 +16,34 @@ import java.util.stream.Stream;
  */
 public class GameSceneManager {
 
-    public static final String BOOT_SCENE    = "boot";
-    public static final String INTRO_SCENE   = "intro";
-    public static final String CREDIT_SCENE  = "credit";
-    public static final String PLAY_SCENE    = "play";
-    public static final String PLAY_SCENE_3D = "play3D";
-    public static final String CUT_SCENE_1   = "cut1";
-    public static final String CUT_SCENE_2   = "cut2";
-    public static final String CUT_SCENE_3   = "cut3";
-
-    private final Map<GameVariant, Map<String, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
+    private final Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
 
     public void createGameScenes(GameVariant variant) {
         switch (variant) {
             case MS_PACMAN ->
-                gameScenesForVariant.put(variant, new HashMap<>(Map.of(
-                    BOOT_SCENE,   new BootScene(),
-                    INTRO_SCENE,  new MsPacManIntroScene(),
-                    CREDIT_SCENE, new MsPacManCreditScene(),
-                    PLAY_SCENE,   new PlayScene2D(),
-                    CUT_SCENE_1,  new MsPacManCutScene1(),
-                    CUT_SCENE_2,  new MsPacManCutScene2(),
-                    CUT_SCENE_3,  new MsPacManCutScene3()
+                gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
+                    GameSceneID.BOOT_SCENE,   new BootScene(),
+                    GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
+                    GameSceneID.CREDIT_SCENE, new MsPacManCreditScene(),
+                    GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+                    GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
+                    GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
+                    GameSceneID.CUT_SCENE_3,  new MsPacManCutScene3()
                 )));
             case PACMAN, PACMAN_XXL ->
-                gameScenesForVariant.put(variant, new HashMap<>(Map.of(
-                    BOOT_SCENE,   new BootScene(),
-                    INTRO_SCENE,  new PacManIntroScene(),
-                    CREDIT_SCENE, new PacManCreditScene(),
-                    PLAY_SCENE,   new PlayScene2D(),
-                    CUT_SCENE_1,  new PacManCutScene1(),
-                    CUT_SCENE_2,  new PacManCutScene2(),
-                    CUT_SCENE_3,  new PacManCutScene3()
+                gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
+                    GameSceneID.BOOT_SCENE,   new BootScene(),
+                    GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
+                    GameSceneID.CREDIT_SCENE, new PacManCreditScene(),
+                    GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+                    GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
+                    GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
+                    GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
                 )));
         }
     }
 
-    public void putGameScene(GameScene gameScene, GameVariant variant, String sceneID) {
+    public void putGameScene(GameScene gameScene, GameVariant variant, GameSceneID sceneID) {
         gameScenesForVariant.get(variant).put(sceneID, gameScene);
     }
 
@@ -67,11 +57,11 @@ public class GameSceneManager {
             .map(GameScene2D.class::cast);
     }
 
-    public GameScene gameScene(GameVariant variant, String sceneID) {
+    public GameScene gameScene(GameVariant variant, GameSceneID sceneID) {
         return gameScenesForVariant.get(variant).get(sceneID);
     }
 
-    public boolean isGameSceneRegisteredAs(GameScene gameScene, GameVariant variant, String sceneID) {
+    public boolean isGameSceneRegisteredAs(GameScene gameScene, GameVariant variant, GameSceneID sceneID) {
         return gameScene(variant, sceneID) == gameScene;
     }
 }

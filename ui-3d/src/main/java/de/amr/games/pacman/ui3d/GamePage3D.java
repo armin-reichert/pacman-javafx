@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.ui2d.GameSceneManager;
+import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui2d.scene.GameScene;
@@ -30,11 +30,11 @@ public class GamePage3D extends GamePage {
         if (contextMenu != null) {
             contextMenu.hide();
         }
-        if (!context.isCurrentGameSceneRegisteredAs(GameSceneManager.PLAY_SCENE)
-            && !context.isCurrentGameSceneRegisteredAs(GameSceneManager.PLAY_SCENE_3D)) {
+        if (!context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE)
+            && !context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE_3D)) {
             return;
         }
-        boolean isPlayScene3D = context.isCurrentGameSceneRegisteredAs(GameSceneManager.PLAY_SCENE_3D);
+        boolean isPlayScene3D = context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE_3D);
         var actionHandler = context.actionHandler();
         contextMenu = new ContextMenu();
 
@@ -84,7 +84,7 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void onGameSceneChanged(GameScene newGameScene) {
-        if (context.isRegisteredAs(newGameScene, GameSceneManager.PLAY_SCENE_3D)) {
+        if (context.isRegisteredAs(newGameScene, GameSceneID.PLAY_SCENE_3D)) {
             layout().replaceCanvasLayer(newGameScene.root());
         } else {
             layout().restoreCanvasLayer();

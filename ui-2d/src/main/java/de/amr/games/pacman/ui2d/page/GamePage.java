@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.GameSceneManager;
+import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.GameKeys;
 import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.scene.GameScene;
@@ -162,7 +162,7 @@ public class GamePage implements Page {
         if (contextMenu != null) {
             contextMenu.hide();
         }
-        if (!context.isCurrentGameSceneRegisteredAs(GameSceneManager.PLAY_SCENE)) {
+        if (!context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE)) {
             return;
         }
         contextMenu = new ContextMenu();

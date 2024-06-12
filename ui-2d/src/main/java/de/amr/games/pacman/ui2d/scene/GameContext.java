@@ -35,11 +35,11 @@ public interface GameContext {
 
     GameSceneManager gameSceneManager();
 
-    default boolean isCurrentGameSceneRegisteredAs(String sceneID) {
+    default boolean isCurrentGameSceneRegisteredAs(GameSceneID sceneID) {
         return currentGameScene().isPresent() && isRegisteredAs(currentGameScene().get(), sceneID);
     }
 
-    default boolean isRegisteredAs(GameScene gameScene, String sceneID) {
+    default boolean isRegisteredAs(GameScene gameScene, GameSceneID sceneID) {
         return gameSceneManager().isGameSceneRegisteredAs(gameScene, game().variant(), sceneID);
     }
 

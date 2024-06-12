@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.GameSceneManager;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui2d.util.Ufx;
@@ -161,7 +161,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
             var playScene3D = new PlayScene3D();
             playScene3D.setContext(this);
             playScene3D.setParentScene(mainScene);
-            gameSceneManager.putGameScene(playScene3D, variant, GameSceneManager.PLAY_SCENE_3D);
+            gameSceneManager.putGameScene(playScene3D, variant, GameSceneID.PLAY_SCENE_3D);
             Logger.info("Added 3D play scene for variant " + variant);
         }
     }
@@ -202,9 +202,9 @@ public class PacManGames3dUI extends PacManGames2dUI {
         GameVariant variant = game().variant();
         var gameScene = super.sceneMatchingCurrentGameState();
         // check if 3D play scene exists and shall be used
-        if (isRegisteredAs(gameScene, GameSceneManager.PLAY_SCENE) && PY_3D_ENABLED.get()
-            && gameSceneManager.gameScene(variant, GameSceneManager.PLAY_SCENE_3D) != null) {
-            return gameSceneManager.gameScene(variant, GameSceneManager.PLAY_SCENE_3D);
+        if (isRegisteredAs(gameScene, GameSceneID.PLAY_SCENE) && PY_3D_ENABLED.get()
+            && gameSceneManager.gameScene(variant, GameSceneID.PLAY_SCENE_3D) != null) {
+            return gameSceneManager.gameScene(variant, GameSceneID.PLAY_SCENE_3D);
         }
         return gameScene;
     }
@@ -228,8 +228,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
         currentGameScene().ifPresent(gameScene -> {
             toggle(PY_3D_ENABLED);
             gameScene = sceneMatchingCurrentGameState();
-            if (isRegisteredAs(gameScene, GameSceneManager.PLAY_SCENE)
-                || isRegisteredAs(gameScene, GameSceneManager.PLAY_SCENE_3D)) {
+            if (isRegisteredAs(gameScene, GameSceneID.PLAY_SCENE)
+                || isRegisteredAs(gameScene, GameSceneID.PLAY_SCENE_3D)) {
                 updateGameScene(true);
                 gameScene.onSceneVariantSwitch();
             }

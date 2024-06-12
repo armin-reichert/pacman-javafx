@@ -21,6 +21,7 @@ import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.rendering.*;
 import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
@@ -457,14 +458,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected GameScene sceneMatchingCurrentGameState() {
         GameVariant variant = game().variant();
         return switch (gameState()) {
-            case BOOT -> gameSceneManager.gameScene(variant, GameSceneManager.BOOT_SCENE);
-            case CREDIT -> gameSceneManager.gameScene(variant, GameSceneManager.CREDIT_SCENE);
-            case INTRO -> gameSceneManager.gameScene(variant, GameSceneManager.INTRO_SCENE);
-            case INTERMISSION -> gameSceneManager.gameScene(variant,
-                "cut" + game().intermissionNumberAfterLevel(game().levelNumber()));
-            case INTERMISSION_TEST -> gameSceneManager.gameScene(variant,
-                "cut" + gameState().<Integer>getProperty("intermissionTestNumber"));
-            default -> gameSceneManager.gameScene(variant, GameSceneManager.PLAY_SCENE);
+            case BOOT -> gameSceneManager.gameScene(variant, GameSceneID.BOOT_SCENE);
+            case CREDIT -> gameSceneManager.gameScene(variant, GameSceneID.CREDIT_SCENE);
+            case INTRO -> gameSceneManager.gameScene(variant, GameSceneID.INTRO_SCENE);
+            case INTERMISSION -> gameSceneManager.gameScene(variant, GameSceneID.valueOf(
+                "cut" + game().intermissionNumberAfterLevel(game().levelNumber())));
+            case INTERMISSION_TEST -> gameSceneManager.gameScene(variant, GameSceneID.valueOf(
+                "cut" + gameState().<Integer>getProperty("intermissionTestNumber")));
+            default -> gameSceneManager.gameScene(variant, GameSceneID.PLAY_SCENE);
         };
     }
 
