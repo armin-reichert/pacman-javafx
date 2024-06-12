@@ -74,7 +74,9 @@ public class PacManXXLGame extends PacManGame {
 
     private static World createModernWorld(WorldMap map) {
         var modernWorld = new World(map);
-        modernWorld.addHouse(House.createArcadeHouse(), v2i(10, 15)); //TODO create house from map?
+        int houseTopRow = map.numRows() / 2 - 3;
+        int houseTopCol = map.numCols() / 2 - 4;
+        modernWorld.addHouse(House.createArcadeHouse(houseTopRow, houseTopCol));
         modernWorld.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP}); // TODO
         modernWorld.setBonusPosition(halfTileRightOf(13, 20)); // TODO get position from map?
         return modernWorld;

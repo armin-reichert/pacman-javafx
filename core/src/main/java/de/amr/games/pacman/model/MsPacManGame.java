@@ -127,7 +127,7 @@ public class MsPacManGame extends AbstractPacManGame  {
 
     private static World createMsPacManWorld(WorldMap map) {
         var msPacManWorld = new World(map);
-        msPacManWorld.addHouse(House.createArcadeHouse(), v2i(10, 15));
+        msPacManWorld.addHouse(House.createArcadeHouse(15, 10));
         msPacManWorld.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
         return msPacManWorld;
     }

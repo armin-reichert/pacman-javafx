@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.TileMapPath;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.mapeditor.TileMapRenderer;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -167,12 +166,14 @@ public class GameLevel3D extends Group {
         floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
 
         // Maze
-        var terrain = context.game().world().map().terrain();
-        wallStrokeColorPy.set(TileMapRenderer.getColorFromMap(terrain, "wall_stroke_color", Color.rgb(33, 33, 255)));
-        wallFillColorPy.set(TileMapRenderer.getColorFromMap(terrain, "wall_fill_color", Color.rgb(0,0,0)));
-        foodColorPy.set(TileMapRenderer.getColorFromMap(terrain, "food_color", Color.PINK));
+        WorldMap map = context.game().world().map();
+        wallStrokeColorPy.set(TileMapRenderer.getColorFromMap(map.terrain(), "wall_stroke_color", Color.rgb(33, 33, 255)));
+        wallFillColorPy.set(TileMapRenderer.getColorFromMap(map.terrain(), "wall_fill_color", Color.rgb(0,0,0)));
+        foodColorPy.set(TileMapRenderer.getColorFromMap(map.terrain(), "food_color", Color.PINK));
         addMazeWalls(mazeGroup);
-        addArcadeGhostHouse(mazeGroup);
+        int houseTopRow = map.numRows() / 2 - 3;
+        int houseTopCol = map.numCols() / 2 - 4;
+        buildGhostHouse(mazeGroup, houseTopRow, houseTopCol);
         addFood3D(mazeGroup);
 
         pac3D = switch (context.game().variant()) {
@@ -244,32 +245,35 @@ public class GameLevel3D extends Group {
         return pac3D;
     }
 
-    private void addArcadeGhostHouse(Group parent) {
+    private void buildGhostHouse(Group parent, int firstRow, int firstCol) {
         WorldMap map = context.game().world().map();
         House house = context.game().world().house();
 
+        // tiles
         int width = house.size().x();
         int height = house.size().y();
-        float centerX = house.topLeftTile().x() * TS + house.size().x() * HTS;
-        float centerY = house.topLeftTile().y() * TS + house.size().y() * HTS;
 
-        int firstRow =  map.numRows() / 2 - 3;
+        // tile coordinates
         int lastRow = firstRow + height - 1;
-        int firstCol = map.numCols() / 2 - 4;
         int lastCol = firstCol + width - 1;
 
-        addHouseWall(parent, firstCol,firstRow, firstCol + 2,firstRow);
-        addHouseWall(parent, firstCol,firstRow, firstCol,    lastRow);
-        addHouseWall(parent, firstCol,lastRow,  lastCol,     lastRow);
-        addHouseWall(parent, lastCol, lastRow,  lastCol,     firstRow);
-        addHouseWall(parent, lastCol, firstRow, lastCol - 2, firstRow);
+        addHouseWall(parent, firstCol, firstRow, firstCol + 2,firstRow);
+        addHouseWall(parent, lastCol - 2, firstRow, lastCol,firstRow);
+        addHouseWall(parent, firstCol,firstRow,  firstCol,lastRow);
+        addHouseWall(parent, lastCol, firstRow,  lastCol,lastRow);
+        addHouseWall(parent, firstCol,lastRow, lastCol,lastRow);
 
-        Color doorColor = TileMapRenderer.getColorFromMap(context.game().world().map().terrain(), "door_color", Color.rgb(254,184,174));
+        Color doorColor = TileMapRenderer.getColorFromMap(map.terrain(), "door_color",
+            Color.rgb(254,184,174));
         for (Vector2i wingTile : List.of(house.door().leftWing(), house.door().rightWing())) {
             var doorWing3D = new DoorWing3D(wingTile, doorColor, PY_3D_FLOOR_COLOR.get());
             doorWing3D.drawModePy.bind(PY_3D_DRAW_MODE);
             parent.getChildren().add(doorWing3D);
         }
+
+        // pixel coordinates
+        float centerX = house.topLeftTile().x() * TS + house.size().x() * HTS;
+        float centerY = house.topLeftTile().y() * TS + house.size().y() * HTS;
 
         houseLight.setColor(Color.GHOSTWHITE);
         houseLight.setMaxRange(3 * TS);

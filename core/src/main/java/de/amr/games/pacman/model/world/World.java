@@ -137,9 +137,8 @@ public class World {
         }
     }
 
-    public void addHouse(House house, Vector2i houseTopLeftTile) {
+    public void addHouse(House house) {
         this.house = checkNotNull(house);
-        house.setTopLeftTile(houseTopLeftTile);
     }
 
     public House house() {

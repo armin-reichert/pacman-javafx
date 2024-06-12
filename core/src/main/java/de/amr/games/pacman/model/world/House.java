@@ -14,10 +14,11 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class House {
 
-    public static House createArcadeHouse() {
+    public static House createArcadeHouse(int topRow, int topCol) {
         var house = new House();
+        house.setTopLeftTile(new Vector2i(topCol, topRow));
         house.setSize(v2i(8, 5));
-        house.setDoor(new Door(v2i(13, 15), v2i(14, 15)));
+        house.setDoor(new Door(v2i(topCol + 3, topRow), v2i(topCol + 4, topRow)));
         return house;
     }
 
