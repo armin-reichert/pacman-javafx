@@ -106,10 +106,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected GameClockFX clock;
     protected TileMapEditor editor;
 
-    private StartPage startPage;
-    private GamePage gamePage;
-    private EditorPage editorPage;
-    private Page currentPage;
+    protected StartPage startPage;
+    protected GamePage gamePage;
+    protected EditorPage editorPage;
+    protected Page currentPage;
 
     //TODO reconsider this
     protected AudioClip voiceClip;
