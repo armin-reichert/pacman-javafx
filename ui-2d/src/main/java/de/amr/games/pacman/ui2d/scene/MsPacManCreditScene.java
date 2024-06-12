@@ -20,6 +20,7 @@ public class MsPacManCreditScene extends GameScene2D {
 
     @Override
     public void init() {
+        super.init();
         setScoreVisible(true);
     }
 

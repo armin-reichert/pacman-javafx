@@ -34,6 +34,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void init() {
+        super.init();
         context.actionHandler().showSignature();
         setScoreVisible(true);
         intro = new MsPacManIntro();

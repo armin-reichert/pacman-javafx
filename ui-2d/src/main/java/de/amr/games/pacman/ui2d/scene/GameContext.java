@@ -11,6 +11,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameSceneManager;
 import de.amr.games.pacman.ui2d.SoundHandler;
+import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.Theme;
@@ -57,7 +58,7 @@ public interface GameContext {
      */
     String tt(String key, Object... args);
 
-    boolean isPageSelected(byte pageID);
+    boolean isPageSelected(Page page);
 
     default GameController gameController() {
         return GameController.it();

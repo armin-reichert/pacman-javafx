@@ -38,6 +38,8 @@ public class PacManCutScene3 extends GameScene2D {
 
     @Override
     public void init() {
+        super.init();
+
         frame = -1;
         initialDelay = 120;
         setScoreVisible(true);

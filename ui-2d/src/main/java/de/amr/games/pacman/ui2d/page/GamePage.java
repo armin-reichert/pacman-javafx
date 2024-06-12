@@ -5,13 +5,16 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.GameKeys;
 import de.amr.games.pacman.ui2d.dashboard.*;
+import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.GameContext;
-import de.amr.games.pacman.ui2d.util.*;
+import de.amr.games.pacman.ui2d.scene.GameSceneID;
+import de.amr.games.pacman.ui2d.util.CanvasLayoutPane;
+import de.amr.games.pacman.ui2d.util.FadingPane;
+import de.amr.games.pacman.ui2d.util.FlashMessageView;
+import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
@@ -274,7 +277,7 @@ public class GamePage implements Page {
         } else if (GameKeys.QUIT.pressed()) {
             context.soundHandler().stopVoice();
             context.soundHandler().stopAllSounds();
-            context.actionHandler().selectPage(START_PAGE);
+            context.actionHandler().selectStartPage();
         } else if (GameKeys.TEST_MODE.pressed()) {
             context.actionHandler().startLevelTestMode();
         } else if (GameKeys.TWO_D_THREE_D.pressed()) {

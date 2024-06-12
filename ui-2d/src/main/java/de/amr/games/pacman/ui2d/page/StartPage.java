@@ -24,7 +24,6 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.GAME_PAGE;
 import static javafx.scene.layout.BackgroundSize.AUTO;
 
 /**
@@ -154,7 +153,7 @@ public class StartPage implements Page {
     @Override
     public void handleKeyboardInput() {
         if (GameKeys.ENTER_GAME_PAGE.pressed()) {
-            context.actionHandler().selectPage(GAME_PAGE);
+            context.actionHandler().selectGamePage();
         } else if (GameKeys.NEXT_VARIANT.pressed()) {
             context.actionHandler().selectNextGameVariant();
         } else if (GameKeys.PREV_VARIANT.pressed()) {

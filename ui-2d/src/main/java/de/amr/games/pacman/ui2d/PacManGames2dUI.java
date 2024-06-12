@@ -73,10 +73,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     public static final String SIGNATURE_TEXT = "Remake (2021-2024) by Armin Reichert";
 
-    public static final byte START_PAGE   = 0;
-    public static final byte GAME_PAGE    = 1;
-    public static final byte EDITOR_PAGE  = 2;
-
     public static final double MIN_SCALING                        = 0.75;
     public static final int DEFAULT_CANVAS_WIDTH_UNSCALED         = GameModel.ARCADE_MAP_TILES_X * TS; // 28*8 = 224
     public static final int DEFAULT_CANVAS_HEIGHT_UNSCALED        = GameModel.ARCADE_MAP_TILES_Y * TS; // 36*8 = 288
@@ -102,15 +98,18 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
     protected final Theme theme = new Theme();
-    protected final Page[] pages = new Page[3];
     protected final GameSceneManager gameSceneManager = new GameSceneManager();
     protected final List<ResourceBundle> bundles = new ArrayList<>();
 
     protected Stage stage;
     protected Scene mainScene;
-    protected byte currentPageID = -1;
     protected GameClockFX clock;
     protected TileMapEditor editor;
+
+    private StartPage startPage;
+    private GamePage gamePage;
+    private EditorPage editorPage;
+    private Page currentPage;
 
     //TODO reconsider this
     protected AudioClip voiceClip;
@@ -138,7 +137,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap("Pac-Man XXL " + mapNumber,
                 new WorldMap(core.url("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world"))));
 
-        pages[EDITOR_PAGE] = new EditorPage(editor, this);
+        editorPage = new EditorPage(editor, this);
     }
 
     @Override
@@ -158,7 +157,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             editor.setMap(game().world().map());
         }
         editor.start();
-        selectPage(EDITOR_PAGE);
+        selectPage(editorPage);
     }
 
     @Override
@@ -166,7 +165,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         editor.showConfirmation(editor::saveMapFileAs, () -> {
             stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
             editor.stop();
-            selectPage(START_PAGE);
+            selectPage(startPage);
         });
     }
 
@@ -295,8 +294,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
         mainScene = createMainScene(width, height);
 
-        pages[START_PAGE] = createStartPage();
-        pages[GAME_PAGE]  = createGamePage();
+        startPage = createStartPage();
+        gamePage  = createGamePage();
 
         createGameScenes(); // must be done *after* creating game page!
         addMapEditor();
@@ -312,16 +311,16 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         stage.setMinWidth(minSize.getWidth());
         stage.setMinHeight(minSize.getHeight());
         stage.centerOnScreen();
-        stage.setOnShown(e -> selectPage(START_PAGE));
+        stage.setOnShown(e -> selectStartPage());
         stage.show();
     }
 
     protected void onMouseClicked(MouseEvent e) {
-        currentPage().onMouseClicked(e);
+        currentPage.onMouseClicked(e);
     }
 
     protected void onContextMenuRequested(ContextMenuEvent e) {
-        currentPage().onContextMenuRequested(e);
+        currentPage.onContextMenuRequested(e);
     }
 
     protected Scene createMainScene(double width, double height) {
@@ -331,8 +330,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         Keyboard.filterKeyEventsFor(scene);
         scene.setOnMouseClicked(this::onMouseClicked);
         scene.setOnContextMenuRequested(this::onContextMenuRequested);
-        scene.setOnKeyPressed(e -> currentPage().handleKeyboardInput());
-        ChangeListener<Number> resizeCurrentPage = (py, ov, nv) -> currentPage().setSize(scene.getWidth(), scene.getHeight());
+        scene.setOnKeyPressed(e -> currentPage.handleKeyboardInput());
+        ChangeListener<Number> resizeCurrentPage = (py, ov, nv) -> {
+            if (currentPage != null) {
+                currentPage.setSize(scene.getWidth(), scene.getHeight());
+            }
+        };
         scene.widthProperty().addListener(resizeCurrentPage);
         scene.heightProperty().addListener(resizeCurrentPage);
         return scene;
@@ -352,8 +355,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         });
         clock.setContinousCallback(() -> {
             try {
-                if (isPageSelected(GAME_PAGE)) {
-                    this.<GamePage>page(GAME_PAGE).render();
+                if (currentPage == gamePage) {
+                    gamePage.render();
                 }
             } catch (Exception x) {
                 Logger.error("Error during game rendering");
@@ -365,7 +368,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     protected void createGameScenes() {
-        GamePage gamePage = page(GAME_PAGE);
         for (var variant : GameVariant.values()) {
             gameSceneManager.createGameScenes(variant);
             gameSceneManager.gameScenes(variant).forEach(gameScene -> gameScene.setContext(this));
@@ -387,7 +389,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         var startPage = new StartPage(this);
         startPage.playButton().setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
-                selectPage(GAME_PAGE);
+                selectPage(gamePage);
             }
         });
         startPage.gameVariantPy.bind(gameVariantPy);
@@ -403,41 +405,24 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         return page;
     }
 
-    @SuppressWarnings("unchecked")
-    protected <T extends Page> T page(byte pageID) {
-        if (pageID == -1) {
-            pageID = START_PAGE;
-        }
-        if (pageID == START_PAGE || pageID == GAME_PAGE || pageID == EDITOR_PAGE) {
-            return (T) pages[pageID];
-        }
-        throw new IllegalArgumentException("Illegal page ID: " + pageID);
-    }
-
-    protected <T extends Page> T  currentPage() {
-        return page(currentPageID);
-    }
-
-    @Override
-    public void selectPage(byte pageID) {
-        if (pageID != currentPageID) {
-            currentPageID = pageID;
-            Page selectedPage = currentPage();
-            selectedPage.setSize(mainScene.getWidth(), mainScene.getHeight());
-            mainScene.setRoot(selectedPage.rootPane());
+    private void selectPage(Page page) {
+        if (page != currentPage) {
+            currentPage = page;
+            currentPage.setSize(mainScene.getWidth(), mainScene.getHeight());
+            mainScene.setRoot(currentPage.rootPane());
             mainScene.getRoot().requestFocus();
-            selectedPage.onSelected();
+            currentPage.onSelected();
         }
     }
 
     protected void updateGameScene(boolean reloadCurrentScene) {
-        if (isPageSelected(START_PAGE)) {
+        if (isPageSelected(startPage)) {
             return; // no game scene on start page
         }
         GameScene sceneToDisplay = sceneMatchingCurrentGameState();
         GameScene currentScene = gameScenePy.get();
         if (reloadCurrentScene || sceneToDisplay != currentScene) {
-            Logger.info("updateGameScene: {}/{} reload={}", currentPageID, sceneToDisplay.getClass().getSimpleName(), reloadCurrentScene);
+            Logger.info("updateGameScene: {}/{} reload={}", currentPage, sceneToDisplay.getClass().getSimpleName(), reloadCurrentScene);
             if (currentScene != null) {
                 currentScene.end();
             }
@@ -446,7 +431,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             if (sceneToDisplay == currentScene) {
                 Logger.info("Game scene has been reloaded {}", gameScenePy.get());
             } else {
-                Logger.info("Game scene changed to {}/{}", currentPageID, gameScenePy.get());
+                Logger.info("Game scene changed to {}/{}", currentPage, gameScenePy.get());
             }
         }
     }
@@ -458,9 +443,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             case CREDIT -> gameSceneManager.gameScene(variant, GameSceneID.CREDIT_SCENE);
             case INTRO -> gameSceneManager.gameScene(variant, GameSceneID.INTRO_SCENE);
             case INTERMISSION -> gameSceneManager.gameScene(variant, GameSceneID.valueOf(
-                "cut" + game().intermissionNumberAfterLevel(game().levelNumber())));
+                "CUT_SCENE_" + game().intermissionNumberAfterLevel(game().levelNumber())));
             case INTERMISSION_TEST -> gameSceneManager.gameScene(variant, GameSceneID.valueOf(
-                "cut" + gameState().<Integer>getProperty("intermissionTestNumber")));
+                "CUT_SCENE_" + gameState().<Integer>getProperty("intermissionTestNumber")));
             default -> gameSceneManager.gameScene(variant, GameSceneID.PLAY_SCENE);
         };
     }
@@ -633,7 +618,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             game.pac().setManualSteering(new KeyboardPacSteering());
         }
         //TODO better place than here?
-        GamePage gamePage = page(GAME_PAGE);
         gamePage.adaptCanvasSizeToCurrentWorld();
     }
 
@@ -690,19 +674,32 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void showSignature() {
-        GamePage gamePage = page(GAME_PAGE);
         gamePage.signature().show(2, 3);
     }
 
     @Override
     public void hideSignature() {
-        GamePage gamePage = page(GAME_PAGE);
         gamePage.signature().hide();
     }
 
     @Override
-    public boolean isPageSelected(byte pageID) {
-        return pageID == currentPageID;
+    public void selectStartPage() {
+        selectPage(startPage);
+    }
+
+    @Override
+    public void selectGamePage() {
+        selectPage(gamePage);
+    }
+
+    @Override
+    public void selectEditorPage() {
+        selectPage(editorPage);
+    }
+
+    @Override
+    public boolean isPageSelected(Page page) {
+        return page == currentPage;
     }
 
     @Override
@@ -712,7 +709,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void showFlashMessageSeconds(double seconds, String message, Object... args) {
-        this.<GamePage>page(GAME_PAGE).flashMessageView().showMessage(String.format(message, args), seconds);
+        gamePage.flashMessageView().showMessage(String.format(message, args), seconds);
     }
 
     @Override
@@ -793,7 +790,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void toggleDashboard() {
-        GamePage gamePage = page(GAME_PAGE);
         gamePage.dashboard().toggleVisibility();
     }
 

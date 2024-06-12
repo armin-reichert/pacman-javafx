@@ -85,6 +85,11 @@ public abstract class GameScene2D implements GameScene {
     }
 
     @Override
+    public void init() {
+        spriteRenderer.setSpriteSheet(context.getSpriteSheet(context.game().variant()));
+    }
+
+    @Override
     public void draw() {
         if (g == null) {
             Logger.error("Cannot render game scene {}, no canvas has been assigned", this);
@@ -96,7 +101,6 @@ public abstract class GameScene2D implements GameScene {
             Logger.error("Cannot render game scene {}, no scene context has been assigned", getClass().getSimpleName());
             return;
         }
-        spriteRenderer.setSpriteSheet(context.getSpriteSheet(context.game().variant()));
         if (isScoreVisible()) {
             drawScore(context.game().score(), "SCORE", t(1), t(1));
             drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1));

@@ -1,5 +1,7 @@
 package de.amr.games.pacman.ui2d;
 
+import de.amr.games.pacman.ui2d.page.Page;
+
 /**
  * @author Armin Reichert
  */
@@ -11,7 +13,11 @@ public interface ActionHandler {
 
     void setFullScreen(boolean on);
 
-    void selectPage(byte pageID);
+    void selectStartPage();
+
+    void selectGamePage();
+
+    void selectEditorPage();
 
     void showSignature();
 
