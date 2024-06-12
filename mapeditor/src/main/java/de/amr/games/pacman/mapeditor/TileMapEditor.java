@@ -377,8 +377,10 @@ public class TileMapEditor  {
     }
 
     private void addHouse() {
-        GHOST_HOUSE_SHAPE.addToMap(map().terrain(), 14, 10);
-        map().terrain().set(26, 13, Tiles.PAC_HOME);
+        int row = map().numRows() / 2 - 4;
+        int col = map().numCols() / 2 - 4;
+        GHOST_HOUSE_SHAPE.addToMap(map().terrain(), row, col);
+        map().terrain().set(row + 12, map().numCols() / 2 - 1, Tiles.PAC_HOME);
         invalidatePaths();
         markMapEdited();
     }
