@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d.entity;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.TileMapPath;
@@ -56,6 +57,7 @@ public class GameLevel3D extends Group {
     private static final float WALL_COAT_HEIGHT      = 0.1f;
     private static final float HOUSE_HEIGHT          = 12.0f;
     private static final float HOUSE_OPACITY         = 0.4f;
+    private static final float HOUSE_SENSITIVITY     = 1.5f * TS;
     private static final float PAC_SIZE              = 14.0f;
     private static final float GHOST_SIZE            = 13.0f;
     private static final float ENERGIZER_RADIUS      = 3.5f;
@@ -90,6 +92,15 @@ public class GameLevel3D extends Group {
     public final DoubleProperty houseHeightPy = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
 
     public final BooleanProperty houseUsedPy = new SimpleBooleanProperty(this, "houseUsed", false);
+
+    public final BooleanProperty houseOpenPy = new SimpleBooleanProperty(this, "houseOpen", false) {
+        @Override
+        protected void invalidated() {
+            if (get()) {
+                doorWings3D().map(DoorWing3D::traversalAnimation).forEach(Transition::play);
+            }
+        }
+    };
 
     public final ObjectProperty<PhongMaterial> houseFillMaterialPy = new SimpleObjectProperty<>(this, "houseFillMaterial");
 
@@ -203,7 +214,14 @@ public class GameLevel3D extends Group {
         pac3D.update(context);
         ghosts3D().forEach(ghost3D -> ghost3D.update(context));
         bonus3D().ifPresent(bonus -> bonus.update(context));
-        updateHouseState();
+        houseUsedPy.set(
+            game.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+                .anyMatch(Ghost::isVisible));
+        Vector2f houseEntryPosition = game.world().house().door().entryPosition();
+        houseOpenPy.set(
+            game.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+                .filter(ghost -> ghost.position().euclideanDistance(houseEntryPosition) <= HOUSE_SENSITIVITY)
+                .anyMatch(Ghost::isVisible));
         //TODO reconsider this:
         int numLivesDisplayed = game.lives() - 1;
         if (context.gameState() == GameState.READY && !game.pac().isVisible()) {
@@ -625,20 +643,6 @@ public class GameLevel3D extends Group {
                 elongationPy.set(0.5 * (1 + Math.sin(PI * (2*t + 0.5))));
             }
         };
-    }
-
-    public void updateHouseState() {
-        var game = context.game();
-        var house = game.world().house();
-        boolean houseUsed = game.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            .anyMatch(Ghost::isVisible);
-        boolean houseOpen = game.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            .filter(ghost -> ghost.position().euclideanDistance(house.door().entryPosition()) <= 1.5 * TS)
-            .anyMatch(Ghost::isVisible);
-        houseUsedPy.set(houseUsed);
-        if (houseOpen) {
-            doorWings3D().map(DoorWing3D::traversalAnimation).forEach(Transition::play);
-        }
     }
 
     public Pac3D pac3D() {
