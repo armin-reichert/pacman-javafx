@@ -241,7 +241,7 @@ public class Pac3D extends Group {
 
     // Walking animations
 
-    public void setFemaleWalking(boolean female) {
+    public void setFemale(boolean female) {
         if (female) {
             walking = new HipSwaying();
             walking.setPower(false);
@@ -251,7 +251,7 @@ public class Pac3D extends Group {
         }
     }
 
-    public void setPowerWalking(boolean power) {
+    public void setPower(boolean power) {
         walking.setPower(power);
     }
 

@@ -351,12 +351,12 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onPacGetsPower(GameEvent event) {
-        level3D.pac3D().setPowerWalking(true);
+        level3D.pac3D().setPower(true);
     }
 
     @Override
     public void onPacLostPower(GameEvent event) {
-        level3D.pac3D().setPowerWalking(false);
+        level3D.pac3D().setPower(false);
     }
 
     private void replaceGameLevel3D() {
