@@ -120,14 +120,19 @@ public class Pac3D extends Group {
     private final Rotate orientation = new Rotate();
     private final Pac pac;
     private final Group shapeGroup;
+    private final PointLight light;
     private Walking walking;
-    private PointLight light;
     private final double size;
 
     public Pac3D(double size, Pac pac, Group shapeGroup) {
         this.size = size;
         this.pac = pac;
         this.shapeGroup = shapeGroup;
+        light = new PointLight();
+        light.setMaxRange(2 * TS);
+        light.translateXProperty().bind(position.xProperty());
+        light.translateYProperty().bind(position.yProperty());
+        light.setTranslateZ(-10);
         shapeGroup.getTransforms().setAll(position, orientation);
         getChildren().add(shapeGroup);
         meshViews().forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
@@ -161,15 +166,6 @@ public class Pac3D extends Group {
             walking.walk();
         }
         updateLight(context);
-    }
-
-    public void setLight(PointLight light) {
-        checkNotNull(light);
-        this.light = light;
-        light.setMaxRange(2 * TS);
-        light.translateXProperty().bind(position.xProperty());
-        light.translateYProperty().bind(position.yProperty());
-        light.setTranslateZ(-10);
     }
 
     public PointLight light() {
