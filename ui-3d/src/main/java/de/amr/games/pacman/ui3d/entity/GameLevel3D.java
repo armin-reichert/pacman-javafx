@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.TileMapPath;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.mapeditor.TileMapRenderer;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -25,10 +24,7 @@ import de.amr.games.pacman.ui3d.animation.HeadBanging;
 import de.amr.games.pacman.ui3d.animation.HipSwaying;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import javafx.animation.*;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
@@ -43,6 +39,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.mapeditor.TileMapRenderer.getColorFromMap;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
 import static java.lang.Math.PI;
@@ -92,6 +89,8 @@ public class GameLevel3D extends Group {
 
     public final DoubleProperty houseHeightPy = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
 
+    public final BooleanProperty houseUsedPy = new SimpleBooleanProperty(this, "houseUsed", false);
+
     public final ObjectProperty<PhongMaterial> houseFillMaterialPy = new SimpleObjectProperty<>(this, "houseFillMaterial");
 
     public final ObjectProperty<PhongMaterial> wallStrokeMaterialPy = new SimpleObjectProperty<>(this, "wallStrokeMaterial");
@@ -112,14 +111,14 @@ public class GameLevel3D extends Group {
         }
     };
 
-    public final ObjectProperty<Color> wallStrokeColorPy = new SimpleObjectProperty<>(Color.WHITE) {
+    public final ObjectProperty<Color> wallStrokeColorPy = new SimpleObjectProperty<>(this, "wallStrokeColor", Color.WHITE) {
         @Override
         protected void invalidated() {
             Color strokeColor = get();
             wallStrokeMaterialPy.set(coloredMaterial(strokeColor));        }
     };
 
-    public final ObjectProperty<Color> wallFillColorPy = new SimpleObjectProperty<>(Color.GREEN) {
+    public final ObjectProperty<Color> wallFillColorPy = new SimpleObjectProperty<>(this, "wallFillColor", Color.GREEN) {
         @Override
         protected void invalidated() {
             Color fillColor = get();
@@ -129,7 +128,7 @@ public class GameLevel3D extends Group {
         }
     };
 
-    public final ObjectProperty<Color> foodColorPy = new SimpleObjectProperty<>(Color.PINK) {
+    public final ObjectProperty<Color> foodColorPy = new SimpleObjectProperty<>(this, "foodColor", Color.PINK) {
         @Override
         protected void invalidated() {
             foodMaterialPy.set(coloredMaterial(get()));
@@ -141,7 +140,6 @@ public class GameLevel3D extends Group {
     private final Group mazeGroup = new Group();
     private final Group levelCounterGroup = new Group();
     private final Box floor;
-    private final PointLight houseLight = new PointLight();
     private final Pac3D pac3D;
     private final List<Ghost3D> ghosts3D;
     private final Set<Pellet3D> pellets3D = new HashSet<>();
@@ -169,9 +167,9 @@ public class GameLevel3D extends Group {
 
         // Maze
         WorldMap map = context.game().world().map();
-        wallStrokeColorPy.set(TileMapRenderer.getColorFromMap(map.terrain(), "wall_stroke_color", Color.rgb(33, 33, 255)));
-        wallFillColorPy.set(TileMapRenderer.getColorFromMap(map.terrain(), "wall_fill_color", Color.rgb(0,0,0)));
-        foodColorPy.set(TileMapRenderer.getColorFromMap(map.terrain(), "food_color", Color.PINK));
+        wallStrokeColorPy.set(getColorFromMap(map.terrain(), "wall_stroke_color", Color.rgb(33, 33, 255)));
+        wallFillColorPy.set(getColorFromMap(map.terrain(), "wall_fill_color", Color.rgb(0,0,0)));
+        foodColorPy.set(getColorFromMap(map.terrain(), "food_color", Color.PINK));
         addMazeWalls(mazeGroup);
         buildGhostHouse(mazeGroup);
         addFood3D(mazeGroup);
@@ -242,19 +240,20 @@ public class GameLevel3D extends Group {
      * @return 3D Ms. Pac-Man instance
      */
     private Pac3D createFemalePac3D(Pac msPacMan, double size) {
+        var theme = context.theme();
         var body = Pac3D.createPacShape(
-            context.theme().get("model3D.pacman"), size,
-            context.theme().color("ms_pacman.color.head"),
-            context.theme().color("ms_pacman.color.eyes"),
-            context.theme().color("ms_pacman.color.palate"));
+            theme.get("model3D.pacman"), size,
+            theme.color("ms_pacman.color.head"),
+            theme.color("ms_pacman.color.eyes"),
+            theme.color("ms_pacman.color.palate"));
         var femaleParts = Pac3D.createFemaleParts(size,
-            context.theme().color("ms_pacman.color.hairbow"),
-            context.theme().color("ms_pacman.color.hairbow.pearls"),
-            context.theme().color("ms_pacman.color.boobs"));
+            theme.color("ms_pacman.color.hairbow"),
+            theme.color("ms_pacman.color.hairbow.pearls"),
+            theme.color("ms_pacman.color.boobs"));
         var pac3D = new Pac3D(size, msPacMan, new Group(body, femaleParts));
         if (msPacMan != null) {
             pac3D.setWalkingAnimation(new HipSwaying(msPacMan, pac3D));
-            pac3D.setLight(new PointLight(context.theme().color("ms_pacman.color.head").desaturate()));
+            pac3D.setLight(new PointLight(theme.color("ms_pacman.color.head").desaturate()));
         }
         return pac3D;
     }
@@ -281,8 +280,7 @@ public class GameLevel3D extends Group {
         parent.getChildren().add(houseWall(xMax, yMin,  xMax,yMax));
         parent.getChildren().add(houseWall(xMin,yMax, xMax,yMax));
 
-        Color doorColor = TileMapRenderer.getColorFromMap(map.terrain(), "door_color",
-            Color.rgb(254,184,174));
+        Color doorColor = getColorFromMap(map.terrain(), "door_color",Color.rgb(254,184,174));
         for (Vector2i wingTile : List.of(leftDoorTile, rightDoorTile)) {
             var doorWing3D = new DoorWing3D(wingTile, doorColor, PY_3D_FLOOR_COLOR.get());
             doorWing3D.drawModePy.bind(PY_3D_DRAW_MODE);
@@ -293,6 +291,8 @@ public class GameLevel3D extends Group {
         float centerX = house.topLeftTile().x() * TS + house.size().x() * HTS;
         float centerY = house.topLeftTile().y() * TS + house.size().y() * HTS;
 
+        var houseLight = new PointLight();
+        houseLight.lightOnProperty().bind(houseUsedPy);
         houseLight.setColor(Color.GHOSTWHITE);
         houseLight.setMaxRange(3 * TS);
         houseLight.setTranslateX(centerX);
@@ -307,7 +307,7 @@ public class GameLevel3D extends Group {
 
     private void addFood3D(Group parent) {
         var world = context.game().world();
-        Color color = TileMapRenderer.getColorFromMap(world.map().food(), "food_color", Color.WHITE);
+        Color color = getColorFromMap(world.map().food(), "food_color", Color.WHITE);
         foodColorPy.set(color);
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             if (world.isEnergizerTile(tile)) {
@@ -360,8 +360,9 @@ public class GameLevel3D extends Group {
         parent.getChildren().add(createWall(wallStart, wallEnd, thickness, wallHeightPy, wallFillMaterialPy));
     }
 
-    private Node createWall(Vector2i beginTile, Vector2i endTile, double thickness, DoubleProperty depthPy,
-                            ObjectProperty<PhongMaterial> fillMaterialPy) {
+    private Node createWall(
+        Vector2i beginTile, Vector2i endTile,
+        double thickness, DoubleProperty depthPy, ObjectProperty<PhongMaterial> fillMaterialPy) {
 
         if (beginTile.y() == endTile.y()) { // horizontal
             if (beginTile.x() > endTile.x()) {
@@ -574,9 +575,7 @@ public class GameLevel3D extends Group {
 
     public Animation createMazeDisappearAnimation(double seconds) {
         return new Transition() {
-
             private final DoubleProperty valuePy = new SimpleDoubleProperty();
-
             {
                 setRate(-1); // value goes 1 -> 0
                 setCycleDuration(Duration.seconds(seconds));
@@ -636,7 +635,7 @@ public class GameLevel3D extends Group {
         boolean houseOpen = game.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
             .filter(ghost -> ghost.position().euclideanDistance(house.door().entryPosition()) <= 1.5 * TS)
             .anyMatch(Ghost::isVisible);
-        houseLight.setLightOn(houseUsed);
+        houseUsedPy.set(houseUsed);
         if (houseOpen) {
             doorWings3D().map(DoorWing3D::traversalAnimation).forEach(Transition::play);
         }
