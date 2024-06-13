@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui3d.entity;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui3d.animation.Turn;
 import de.amr.games.pacman.ui3d.model.Model3D;
@@ -117,19 +118,19 @@ public class Ghost3D extends Group {
         lookPy.set(Look.NORMAL);
     }
 
-    public void init(GameModel game) {
+    public void init(GameContext context) {
         brakeAnimation.stop();
         dressAnimation.stop();
         numberCube.stopRotation();
         updateTransform();
-        updateLook(game);
+        updateLook(context.game());
     }
 
-    public void update(GameModel game) {
+    public void update(GameContext context) {
         updateTransform();
-        updateLook(game);
+        updateLook(context.game());
         updateAnimations();
-        game.level().ifPresent(level -> numFlashes = level.numFlashes());
+        context.game().level().ifPresent(level -> numFlashes = level.numFlashes());
     }
 
     public void setNumberImage(Image image) {

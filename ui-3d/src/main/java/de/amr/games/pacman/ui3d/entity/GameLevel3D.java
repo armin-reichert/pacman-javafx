@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.entity;
 
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
@@ -19,6 +20,7 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameContext;
+import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui3d.animation.HeadBanging;
 import de.amr.games.pacman.ui3d.animation.HipSwaying;
 import de.amr.games.pacman.ui3d.animation.Squirting;
@@ -196,6 +198,20 @@ public class GameLevel3D extends Group {
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         wallHeightPy.bind(PY_3D_WALL_HEIGHT);
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+    }
+
+    public void update() {
+        var game = context.game();
+        pac3D.update(context);
+        ghosts3D().forEach(ghost3D -> ghost3D.update(context));
+        bonus3D().ifPresent(bonus -> bonus.update(context));
+        updateHouseState();
+        //TODO reconsider this:
+        int numLivesDisplayed = game.lives() - 1;
+        if (context.gameState() == GameState.READY && !game.pac().isVisible()) {
+            numLivesDisplayed += 1;
+        }
+        livesCounter3D.update(numLivesDisplayed);
     }
 
     /**
@@ -400,7 +416,7 @@ public class GameLevel3D extends Group {
     }
 
     private void createLivesCounter3D() {
-        var theme = context.theme();
+        Theme theme = context.theme();
         livesCounter3D = new LivesCounter3D(
             theme.get("livescounter.entries"),
             theme.get("livescounter.pillar.color"),
@@ -419,6 +435,7 @@ public class GameLevel3D extends Group {
             };
             livesCounter3D.addItem(pac3D, true);
         }
+        livesCounter3D.setVisible(context.gameController().hasCredit());
     }
 
     public void createLevelCounter3D() {

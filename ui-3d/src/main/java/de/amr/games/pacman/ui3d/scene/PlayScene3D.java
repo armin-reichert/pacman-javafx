@@ -68,12 +68,6 @@ public class PlayScene3D implements GameScene {
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
 
-        // initial scene size is irrelevant, gets bound to parent scene later
-        var root = new Group();
-        fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
-        fxSubScene.setFill(null); // transparent
-        fxSubScene.setCamera(camera);
-
         var ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
 
@@ -86,7 +80,12 @@ public class PlayScene3D implements GameScene {
         scores3D.rotateProperty().bind(camera.rotateProperty());
 
         var level3DPlaceholder = new Group();
-        root.getChildren().addAll(level3DPlaceholder, scores3D,  coordSystem, ambientLight);
+        var root = new Group(level3DPlaceholder, scores3D,  coordSystem, ambientLight);
+
+        // initial scene size is irrelevant, gets bound to parent scene later
+        fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
+        fxSubScene.setFill(null); // transparent
+        fxSubScene.setCamera(camera);
     }
 
     public void setParentScene(Scene parentScene) {
@@ -105,7 +104,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void end() {
         perspectivePy.unbind();
-        level3D=null;
+        level3D = null;
         Logger.info("3D play scene ended. {}", this);
     }
 
@@ -113,20 +112,11 @@ public class PlayScene3D implements GameScene {
     public void update() {
         var game = context.game();
         if (game.level().isEmpty()) {
-            Logger.debug("Cannot update 3D play scene, no game level exists");
+            Logger.warn("Cannot update 3D play scene, no game level exists");
             return;
         }
         if (level3D != null) {
-            level3D.pac3D().update(game);
-            level3D.ghosts3D().forEach(ghost3D -> ghost3D.update(game));
-            level3D.bonus3D().ifPresent(bonus -> bonus.update(game.world()));
-            level3D.updateHouseState();
-            // reconsider this:
-            int numLivesDisplayed = game.lives() - 1;
-            if (context.gameState() == GameState.READY && !game.pac().isVisible()) {
-                numLivesDisplayed += 1;
-            }
-            level3D.livesCounter3D().update(numLivesDisplayed);
+            level3D.update();
             perspective().update(fxSubScene.getCamera(), game.world(), game.pac());
         } else {
             replaceGameLevel3D();
@@ -176,25 +166,6 @@ public class PlayScene3D implements GameScene {
         return perspectivePy.get();
     }
 
-    private void replaceGameLevel3D() {
-        level3D = new GameLevel3D(context);
-        level3D.livesCounter3D().setVisible(context.gameController().hasCredit());
-
-        // replace initial placeholder or previous 3D level
-        var root = (Group) fxSubScene.getRoot();
-        root.getChildren().set(CHILD_INDEX_LEVEL_3D, level3D);
-
-        scores3D.translateXProperty().bind(level3D.translateXProperty().add(TS));
-        scores3D.translateYProperty().bind(level3D.translateYProperty().subtract(3.5 * TS));
-        scores3D.translateZProperty().bind(level3D.translateZProperty().subtract(3 * TS));
-
-        if (PY_3D_FLOOR_TEXTURE_RND.get()) {
-            List<String> names = context.theme().getArray("texture.names");
-            PY_3D_FLOOR_TEXTURE.set(names.get(randomInt(0, names.size())));
-        }
-        Logger.info("3D game level {} created.", context.game().levelNumber());
-    }
-
     @Override
     public void handleKeyboardInput() {
         if (GameKeys.ADD_CREDIT.pressed() && !context.gameController().hasCredit()) {
@@ -227,8 +198,8 @@ public class PlayScene3D implements GameScene {
         }
         context.game().pac().show();
         context.game().ghosts().forEach(Ghost::show);
-        level3D.pac3D().init(context.game());
-        level3D.pac3D().update(context.game());
+        level3D.pac3D().init(context);
+        level3D.pac3D().update(context);
         if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
             context.soundHandler().ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
         }
@@ -241,8 +212,8 @@ public class PlayScene3D implements GameScene {
             case READY -> {
                 context.soundHandler().stopAllSounds();
                 if (level3D != null) {
-                    level3D.pac3D().init(context.game());
-                    level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context.game()));
+                    level3D.pac3D().init(context);
+                    level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
                     level3D.stopEnergizerAnimation();
                     level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                     level3D.livesCounter3D().stopAnimation();
@@ -251,8 +222,8 @@ public class PlayScene3D implements GameScene {
             }
 
             case HUNTING -> {
-                level3D.pac3D().init(context.game());
-                level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context.game()));
+                level3D.pac3D().init(context);
+                level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
                 level3D.livesCounter3D().startAnimation();
                 level3D.startEnergizerAnimation();
             }
@@ -261,7 +232,7 @@ public class PlayScene3D implements GameScene {
                 context.soundHandler().stopAllSounds();
                 var animation = switch (context.game().variant()) {
                     case MS_PACMAN -> level3D.pac3D().createMsPacManDyingAnimation();
-                    case PACMAN, PACMAN_XXL -> level3D.pac3D().createPacManDyingAnimation(context.game());
+                    case PACMAN, PACMAN_XXL -> level3D.pac3D().createPacManDyingAnimation(context);
                 };
                 lockGameStateAndPlayAfterOneSecond(animation);
             }
@@ -311,16 +282,18 @@ public class PlayScene3D implements GameScene {
             case LEVEL_TRANSITION -> {
                 context.gameState().timer().restartSeconds(3);
                 replaceGameLevel3D();
-                level3D.pac3D().init(context.game());
+                level3D.pac3D().init(context);
                 perspective().init(fxSubScene.getCamera(), context.game().world());
             }
 
             case LEVEL_TEST -> {
-                ensureLevel3DExists();
-                PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
-                level3D.pac3D().init(context.game());
-                level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context.game()));
+                if (level3D == null) {
+                    replaceGameLevel3D();
+                }
+                level3D.pac3D().init(context);
+                level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
                 showLevelMessage();
+                PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
             }
 
             default -> {}
@@ -353,6 +326,10 @@ public class PlayScene3D implements GameScene {
             showLevelMessage();
         }
         level3D.createLevelCounter3D();
+        if (PY_3D_FLOOR_TEXTURE_RND.get()) {
+            List<String> names = context.theme().getArray("texture.names");
+            PY_3D_FLOOR_TEXTURE.set(names.get(randomInt(0, names.size())));
+        }
     }
 
     @Override
@@ -383,10 +360,18 @@ public class PlayScene3D implements GameScene {
         level3D.pac3D().walkingAnimation().setPowerWalking(false);
     }
 
-    private void ensureLevel3DExists() {
-        if (level3D == null) {
-            replaceGameLevel3D();
-        }
+    private void replaceGameLevel3D() {
+        level3D = new GameLevel3D(context);
+
+        scores3D.translateXProperty().bind(level3D.translateXProperty().add(TS));
+        scores3D.translateYProperty().bind(level3D.translateYProperty().subtract(3.5 * TS));
+        scores3D.translateZProperty().bind(level3D.translateZProperty().subtract(3 * TS));
+
+        // replace initial placeholder or previous 3D level
+        var root = (Group) fxSubScene.getRoot();
+        root.getChildren().set(CHILD_INDEX_LEVEL_3D, level3D);
+
+        Logger.info("3D game level {} created.", context.game().levelNumber());
     }
 
     private void showLevelMessage() {

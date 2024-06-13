@@ -9,7 +9,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.StaticBonus;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui2d.scene.GameContext;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -71,16 +71,18 @@ public class Bonus3D extends Box {
         eatenAnimation.setCycleCount(2);
     }
 
-    public void update(World world) {
+    public void update(GameContext context) {
         Vector2f position = bonus.entity().center();
         setTranslateX(position.x());
         setTranslateY(position.y());
         setTranslateZ(-HTS);
-        boolean outsideWorld = position.x() < HTS || position.x() > world.numCols() * TS - HTS;
-        boolean visible = !(bonus.state() == Bonus.STATE_INACTIVE || outsideWorld);
-        setVisible(visible);
-        if (edibleAnimation.getStatus() == Animation.Status.RUNNING && bonus instanceof MovingBonus movingBonus) {
-            updateMovingBonusEdibleAnimation(movingBonus.entity().moveDir());
+        if (context.game().world() != null) {
+            boolean outsideWorld = position.x() < HTS || position.x() > context.game().world().numCols() * TS - HTS;
+            boolean visible = !(bonus.state() == Bonus.STATE_INACTIVE || outsideWorld);
+            setVisible(visible);
+            if (edibleAnimation.getStatus() == Animation.Status.RUNNING && bonus instanceof MovingBonus movingBonus) {
+                updateMovingBonusEdibleAnimation(movingBonus.entity().moveDir());
+            }
         }
     }
 

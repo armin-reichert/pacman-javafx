@@ -5,9 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.entity;
 
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui3d.animation.WalkingAnimation;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
@@ -150,14 +150,14 @@ public class Pac3D extends Group {
         this.walkingAnimation = walkingAnimation;
     }
 
-    public void init(GameModel game) {
+    public void init(GameContext context) {
         setScaleX(1.0);
         setScaleY(1.0);
         setScaleZ(1.0);
-        update(game);
+        update(context);
     }
 
-    public void update(GameModel game) {
+    public void update(GameContext context) {
         Vector2f center = pac.center();
         position.setX(center.x());
         position.setY(center.y());
@@ -170,7 +170,7 @@ public class Pac3D extends Group {
         } else {
             walkingAnimation.play();
         }
-        updateLight(game);
+        updateLight(context);
     }
 
     public void setLight(PointLight light) {
@@ -186,10 +186,11 @@ public class Pac3D extends Group {
         return light;
     }
 
-    private void updateLight(GameModel game) {
+    private void updateLight(GameContext context) {
         if (light == null) {
             return;
         }
+        var game = context.game();
         double radius = 0;
         if (game.powerTimer().duration() > 0) {
             double t = (double) game.powerTimer().remaining() / game.powerTimer().duration();
@@ -219,7 +220,7 @@ public class Pac3D extends Group {
         );
     }
 
-    public Animation createPacManDyingAnimation(GameModel game) {
+    public Animation createPacManDyingAnimation(GameContext context) {
         Duration duration = Duration.seconds(1.0);
         short numSpins = 6;
 
@@ -241,7 +242,7 @@ public class Pac3D extends Group {
 
         //TODO does not yet work as I want to
         return new SequentialTransition(
-            now(() -> init(game)),
+            now(() -> init(context)),
             pauseSec(0.5),
             new ParallelTransition(spinning, shrinking, falling),
             doAfterSec(1.0, () -> {
