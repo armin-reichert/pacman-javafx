@@ -74,7 +74,7 @@ public class PlayScene3D implements GameScene {
         var coordSystem = new CoordSystem();
         coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
-        scores3D = new Scores3D();
+        scores3D = new Scores3D("SCORE", "HIGH SCORE");
         // keep the scores rotated such that the viewer always sees them frontally
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
