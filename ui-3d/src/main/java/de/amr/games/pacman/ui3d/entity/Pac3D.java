@@ -122,10 +122,10 @@ public class Pac3D extends Group {
     private final Group shapeGroup;
     private final PointLight light;
     private Walking walking;
-    private final double size;
+    private final double zPosGround;
 
     public Pac3D(double size, Pac pac, Group shapeGroup) {
-        this.size = size;
+        zPosGround = -0.5 * size;
         this.pac = pac;
         this.shapeGroup = shapeGroup;
         light = new PointLight();
@@ -137,12 +137,17 @@ public class Pac3D extends Group {
         getChildren().add(shapeGroup);
         meshViews().forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
     }
+
     public Stream<MeshView> meshViews() {
         return Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE).map(id -> meshView(shapeGroup, id));
     }
 
     public Translate position() {
         return position;
+    }
+
+    public PointLight light() {
+        return light;
     }
 
     public void init(GameContext context) {
@@ -156,7 +161,7 @@ public class Pac3D extends Group {
         Vector2f center = pac.center();
         position.setX(center.x());
         position.setY(center.y());
-        position.setZ(-0.5 * size);
+        position.setZ(zPosGround);
         orientation.setAxis(Rotate.Z_AXIS);
         orientation.setAngle(angle(pac.moveDir()));
         setVisible(pac.isVisible() && !outsideWorld(pac.world()));
@@ -168,14 +173,7 @@ public class Pac3D extends Group {
         updateLight(context);
     }
 
-    public PointLight light() {
-        return light;
-    }
-
     private void updateLight(GameContext context) {
-        if (light == null) {
-            return;
-        }
         var game = context.game();
         double radius = 0;
         if (game.powerTimer().duration() > 0) {
@@ -237,7 +235,6 @@ public class Pac3D extends Group {
             })
         );
     }
-
 
     // Walking animations
 

@@ -56,7 +56,7 @@ public class GameLevel3D extends Group {
     private static final float HOUSE_HEIGHT          = 12.0f;
     private static final float HOUSE_OPACITY         = 0.4f;
     private static final float HOUSE_SENSITIVITY     = 1.5f * TS;
-    private static final float PAC_SIZE              = 14.0f;
+    private static final float PAC_SIZE              = 13.5f;
     private static final float GHOST_SIZE            = 13.0f;
     private static final float ENERGIZER_RADIUS      = 3.5f;
     private static final float PELLET_RADIUS         = 1.0f;
