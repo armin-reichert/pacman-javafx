@@ -21,8 +21,6 @@ import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
-import de.amr.games.pacman.ui3d.animation.HeadBanging;
-import de.amr.games.pacman.ui3d.animation.HipSwaying;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import javafx.animation.*;
 import javafx.beans.property.*;
@@ -246,7 +244,7 @@ public class GameLevel3D extends Group {
         );
         var pac3D = new Pac3D(size, pacMan, new Group(body));
         if (pacMan != null) {
-            pac3D.setWalkingAnimation(new HeadBanging(pacMan, pac3D));
+            pac3D.setFemaleWalking(false);
             pac3D.setLight(new PointLight(context.theme().color("pacman.color.head").desaturate()));
         }
         return pac3D;
@@ -271,7 +269,7 @@ public class GameLevel3D extends Group {
             theme.color("ms_pacman.color.boobs"));
         var pac3D = new Pac3D(size, msPacMan, new Group(body, femaleParts));
         if (msPacMan != null) {
-            pac3D.setWalkingAnimation(new HipSwaying(msPacMan, pac3D));
+            pac3D.setFemaleWalking(true);
             pac3D.setLight(new PointLight(theme.color("ms_pacman.color.head").desaturate()));
         }
         return pac3D;

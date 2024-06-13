@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.scene.GameContext;
-import de.amr.games.pacman.ui3d.animation.WalkingAnimation;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
 import javafx.beans.property.BooleanProperty;
@@ -121,7 +120,7 @@ public class Pac3D extends Group {
     private final Rotate orientation = new Rotate();
     private final Pac pac;
     private final Group shapeGroup;
-    private WalkingAnimation walkingAnimation;
+    private Walking walking;
     private PointLight light;
     private final double size;
 
@@ -133,21 +132,12 @@ public class Pac3D extends Group {
         getChildren().add(shapeGroup);
         meshViews().forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
     }
-
     public Stream<MeshView> meshViews() {
         return Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE).map(id -> meshView(shapeGroup, id));
     }
 
     public Translate position() {
         return position;
-    }
-
-    public WalkingAnimation walkingAnimation() {
-        return walkingAnimation;
-    }
-
-    public void setWalkingAnimation(WalkingAnimation walkingAnimation) {
-        this.walkingAnimation = walkingAnimation;
     }
 
     public void init(GameContext context) {
@@ -166,9 +156,9 @@ public class Pac3D extends Group {
         orientation.setAngle(angle(pac.moveDir()));
         setVisible(pac.isVisible() && !outsideWorld(pac.world()));
         if (pac.isStandingStill()) {
-            walkingAnimation.stop();
+            walking.stop();
         } else {
-            walkingAnimation.play();
+            walking.walk();
         }
         updateLight(context);
     }
@@ -250,5 +240,124 @@ public class Pac3D extends Group {
                 setTranslateZ(0);
             })
         );
+    }
+
+
+    // Walking animations
+
+    public void setFemaleWalking(boolean female) {
+        if (female) {
+            walking = new HipSwaying();
+            walking.setPower(false);
+        } else {
+            walking = new HeadBanging();
+            walking.setPower(false);
+        }
+    }
+
+    public void setPowerWalking(boolean power) {
+        walking.setPower(power);
+    }
+
+    private interface Walking {
+
+        void walk();
+
+        void stop();
+
+        void setPower(boolean power);
+    }
+
+    private class HeadBanging implements Walking {
+
+        private static final short DEFAULT_ANGLE_FROM = -25;
+        private static final short DEFAULT_ANGLE_TO = 15;
+        private static final Duration DEFAULT_DURATION = Duration.seconds(0.25);
+
+        private final RotateTransition animation;
+
+        public HeadBanging() {
+            animation = new RotateTransition(DEFAULT_DURATION, Pac3D.this);
+            animation.setAxis(Rotate.X_AXIS);
+            animation.setCycleCount(Animation.INDEFINITE);
+            animation.setAutoReverse(true);
+            animation.setInterpolator(Interpolator.EASE_BOTH);
+        }
+
+        @Override
+        public void setPower(boolean power) {
+            double amplification = power ? 1.5 : 1;
+            double rate = power ? 2 : 1;
+            animation.stop();
+            animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
+            animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
+            animation.setRate(rate);
+        }
+
+        @Override
+        public void walk() {
+            if (pac.isStandingStill()) {
+                stop();
+                animation.getNode().setRotate(0);
+                return;
+            }
+            var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+            if (!axis.equals(animation.getAxis())) {
+                animation.stop();
+                animation.setAxis(axis);
+            }
+            animation.play();
+        }
+
+        @Override
+        public void stop() {
+            animation.stop();
+            animation.getNode().setRotationAxis(animation.getAxis());
+            animation.getNode().setRotate(0);
+        }
+    }
+
+    private class HipSwaying implements Walking {
+
+        private static final short DEFAULT_ANGLE_FROM = -20;
+        private static final short DEFAULT_ANGLE_TO = 20;
+        private static final Duration DEFAULT_DURATION = Duration.seconds(0.4);
+
+        private final RotateTransition animation;
+
+        public HipSwaying() {
+            animation = new RotateTransition(DEFAULT_DURATION, Pac3D.this);
+            animation.setAxis(Rotate.Z_AXIS);
+            animation.setCycleCount(Animation.INDEFINITE);
+            animation.setAutoReverse(true);
+            animation.setInterpolator(Interpolator.EASE_BOTH);
+        }
+
+        @Override
+        public void setPower(boolean power) {
+            double amplification = power ? 1.5 : 1;
+            double rate = power ? 2 : 1;
+            animation.stop();
+            animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
+            animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
+            animation.setRate(rate);
+        }
+
+        @Override
+        public void walk() {
+            if (pac.isStandingStill()) {
+                stop();
+                animation.getNode().setRotate(0);
+                return;
+            }
+            animation.play();
+        }
+
+        @Override
+        public void stop() {
+            animation.stop();
+            animation.getNode().setRotationAxis(animation.getAxis());
+            animation.getNode().setRotate(0);
+        }
     }
 }
