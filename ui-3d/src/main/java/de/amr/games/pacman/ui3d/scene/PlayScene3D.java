@@ -122,13 +122,12 @@ public class PlayScene3D implements GameScene {
             replaceGameLevel3D();
         }
         game.pac().setUseAutopilot(game.isDemoLevel() || PY_AUTOPILOT.get());
-        scores3D.setScores(
-            game.score().points(), game.score().levelNumber(),
-            game.highScore().points(), game.highScore().levelNumber());
         if (context.gameController().hasCredit()) {
-            scores3D.showScore();
+            scores3D.showScores(
+                game.score().points(), game.score().levelNumber(),
+                game.highScore().points(), game.highScore().levelNumber());
         } else {
-            scores3D.showText(Color.RED, "GAME OVER!");
+            scores3D.showAlternativeText("Game OVER!", Color.RED);
         }
         updateSound();
     }

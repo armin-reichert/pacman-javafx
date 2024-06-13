@@ -4,15 +4,13 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.entity;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import static de.amr.games.pacman.lib.Globals.TS;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Displays the score and high score.
@@ -23,9 +21,22 @@ public class Scores3D extends GridPane {
 
     public ObjectProperty<Font> fontPy = new SimpleObjectProperty<>(this, "font", Font.font("Courier", 12));
 
+    public BooleanProperty altTextShownPy = new SimpleBooleanProperty(this, "altTextShown", false) {
+        @Override
+        protected void invalidated() {
+            txtScore.setText(textPy.get());
+        }
+    };
+
+    public StringProperty textPy = new SimpleStringProperty(this, "text", "") {
+        @Override
+        protected void invalidated() {
+            txtScore.setText(get());
+        }
+    };
+
     private final Text txtScore;
     private final Text txtHighScore;
-    private boolean textDisplayed;
 
     public Scores3D() {
         var txtScoreTitle = new Text("SCORE");
@@ -33,7 +44,6 @@ public class Scores3D extends GridPane {
         txtScoreTitle.fontProperty().bind(fontPy);
 
         txtScore = new Text();
-        txtScore.setFill(Color.YELLOW);
         txtScore.fontProperty().bind(fontPy);
 
         var txtHighScoreTitle = new Text("HIGH SCORE");
@@ -51,23 +61,16 @@ public class Scores3D extends GridPane {
         add(txtHighScore,     1,1);
     }
 
-    public void showText(Color color, String text) {
-        requireNonNull(color);
-        txtScore.setFill(color);
-        txtScore.setText(text);
-        textDisplayed = true;
-    }
-
-    public void showScore() {
-        this.textDisplayed = false;
-    }
-
-    public void setScores(int score, int levelNumber, int highScore, int highScoreLevelNumber) {
-        if (!textDisplayed) {
-            txtScore.setFill(Color.YELLOW);
-            txtScore.setText(String.format("%7d L%d", score, levelNumber));
-        }
-        txtHighScore.setFill(Color.YELLOW);
+    public void showScores(int score, int levelNumber, int highScore, int highScoreLevelNumber) {
+        altTextShownPy.set(false);
+        txtScore.setFill(Color.YELLOW);
+        txtScore.setText(String.format("%7d L%d", score, levelNumber));
         txtHighScore.setText(String.format("%7d L%d", highScore, highScoreLevelNumber));
+    }
+
+    public void showAlternativeText(String text, Color color) {
+        altTextShownPy.set(true);
+        textPy.set(text);
+        txtScore.setFill(color);
     }
 }
