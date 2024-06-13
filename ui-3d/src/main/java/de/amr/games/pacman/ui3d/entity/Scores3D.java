@@ -4,7 +4,10 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.entity;
 
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -20,13 +23,6 @@ import static de.amr.games.pacman.lib.Globals.TS;
 public class Scores3D extends GridPane {
 
     public ObjectProperty<Font> fontPy = new SimpleObjectProperty<>(this, "font", Font.font("Courier", 12));
-
-    public BooleanProperty altTextShownPy = new SimpleBooleanProperty(this, "altTextShown", false) {
-        @Override
-        protected void invalidated() {
-            txtScore.setText(textPy.get());
-        }
-    };
 
     public StringProperty textPy = new SimpleStringProperty(this, "text", "") {
         @Override
@@ -62,14 +58,12 @@ public class Scores3D extends GridPane {
     }
 
     public void showScores(int score, int levelNumber, int highScore, int highScoreLevelNumber) {
-        altTextShownPy.set(false);
         txtScore.setFill(Color.YELLOW);
         txtScore.setText(String.format("%7d L%d", score, levelNumber));
         txtHighScore.setText(String.format("%7d L%d", highScore, highScoreLevelNumber));
     }
 
     public void showAlternativeText(String text, Color color) {
-        altTextShownPy.set(true);
         textPy.set(text);
         txtScore.setFill(color);
     }
