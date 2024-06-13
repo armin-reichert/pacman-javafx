@@ -222,12 +222,13 @@ public class GameLevel3D extends Group {
             game.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
                 .filter(ghost -> ghost.position().euclideanDistance(houseEntryPosition) <= HOUSE_SENSITIVITY)
                 .anyMatch(Ghost::isVisible));
+
         //TODO reconsider this:
-        int numLivesDisplayed = game.lives() - 1;
+        int numLivesCounterEntries = game.lives() - 1;
         if (context.gameState() == GameState.READY && !game.pac().isVisible()) {
-            numLivesDisplayed += 1;
+            numLivesCounterEntries += 1;
         }
-        livesCounter3D.update(numLivesDisplayed);
+        livesCounter3D.livesShownPy.set(numLivesCounterEntries);
     }
 
     /**
