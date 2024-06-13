@@ -8,6 +8,7 @@ import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.ui2d.util.KeyInput.*;
 
@@ -55,7 +56,11 @@ public enum GameKeys {
      * @return {@code true} if any key combination defined for this game key is pressed
      */
     public boolean pressed() {
-        return Keyboard.pressed(input);
+        if (Keyboard.pressed(input)) {
+            Logger.info("{} pressed", this);
+            return true;
+        }
+        return false;
     }
 
     private final KeyInput input;
