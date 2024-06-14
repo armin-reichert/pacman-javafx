@@ -37,9 +37,8 @@ public class PacManIntroScene extends GameScene2D {
     @Override
     public void init() {
         super.init();
-
         context.actionHandler().showSignature();
-        setScoreVisible(true);
+        context.setScoreVisible(true);
         intro = new PacManIntro();
         spriteRenderer.setSpriteSheet(context.getSpriteSheet(context.game().variant()));
         intro.pacMan.setAnimations(new PacManGamePacAnimations(intro.pacMan, (PacManGameSpriteSheet) spriteRenderer.getSpriteSheet()));

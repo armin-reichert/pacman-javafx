@@ -93,9 +93,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public static final BooleanProperty PY_3D_ENABLED             = new SimpleBooleanProperty(false);
     public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE  = new SimpleObjectProperty<>(DrawMode.FILL);
 
-
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant");
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
+    public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible", false);
 
     protected final Theme theme = new Theme();
     protected final GameSceneManager gameSceneManager = new GameSceneManager();
@@ -512,6 +512,16 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             case PACMAN, PACMAN_XXL -> GameVariant.PACMAN.resourceKey();
         };
         return theme.get(rk + ".spritesheet");
+    }
+
+    @Override
+    public boolean isScoreVisible() {
+        return scoreVisiblePy.get();
+    }
+
+    @Override
+    public void setScoreVisible(boolean visible) {
+        scoreVisiblePy.set(visible);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -21,7 +21,6 @@ public class PictureInPictureView extends Canvas {
     public PictureInPictureView(GameContext context) {
         displayedScene.setContext(context);
         displayedScene.setCanvas(this);
-        displayedScene.setScoreVisible(true);
         displayedScene.scalingPy.bind(heightProperty().divide(DEFAULT_CANVAS_HEIGHT_UNSCALED));
         widthProperty().bind(heightProperty().multiply(0.777));
         opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));

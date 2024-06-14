@@ -25,7 +25,7 @@ public class BootScene extends GameScene2D {
     @Override
     public void init() {
         start = 1.0;
-        setScoreVisible(false);
+        context.setScoreVisible(false);
     }
 
     @Override

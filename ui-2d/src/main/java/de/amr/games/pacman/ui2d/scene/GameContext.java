@@ -71,4 +71,8 @@ public interface GameContext {
     default GameModel game() {
         return GameController.it().game();
     }
+
+    void setScoreVisible(boolean visible);
+
+    boolean isScoreVisible();
 }

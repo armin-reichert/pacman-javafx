@@ -36,7 +36,7 @@ public class MsPacManIntroScene extends GameScene2D {
     public void init() {
         super.init();
         context.actionHandler().showSignature();
-        setScoreVisible(true);
+        context.setScoreVisible(true);
         intro = new MsPacManIntro();
         spriteRenderer.setSpriteSheet(context.getSpriteSheet(context.game().variant()));
         intro.msPacMan.setAnimations(new MsPacManGamePacAnimations(intro.msPacMan, (MsPacManGameSpriteSheet) spriteRenderer.getSpriteSheet()));

@@ -30,7 +30,6 @@ import static de.amr.games.pacman.lib.Globals.*;
 public abstract class GameScene2D implements GameScene {
 
     public final BooleanProperty infoVisiblePy  = new SimpleBooleanProperty(this, "infoVisible", false);
-    public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible", false);
     public final DoubleProperty scalingPy       = new SimpleDoubleProperty(this, "scaling", 1.0);
 
     protected final VectorGraphicsWorldRenderer vectorRenderer = new VectorGraphicsWorldRenderer();
@@ -62,16 +61,6 @@ public abstract class GameScene2D implements GameScene {
         g = canvas.getGraphicsContext2D();
     }
 
-    @Override
-    public boolean isScoreVisible() {
-        return scoreVisiblePy.get();
-    }
-
-    @Override
-    public void setScoreVisible(boolean scoreVisible) {
-        scoreVisiblePy.set(scoreVisible);
-    }
-
     protected double s(double value) {
         return value * scalingPy.get();
     }
@@ -98,7 +87,7 @@ public abstract class GameScene2D implements GameScene {
         }
         spriteRenderer.setBackgroundColor(canvasBackground());
         clearCanvas();
-        if (isScoreVisible()) {
+        if (context.isScoreVisible()) {
             drawScore(context.game().score(), "SCORE", t(1), t(1));
             drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1));
         }

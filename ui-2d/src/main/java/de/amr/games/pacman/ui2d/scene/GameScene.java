@@ -14,10 +14,6 @@ import javafx.scene.Node;
  */
 public interface GameScene extends GameEventListener {
 
-    boolean isScoreVisible();
-
-    void setScoreVisible(boolean visible);
-
     /**
      * Called when the scene becomes the current one.
      */

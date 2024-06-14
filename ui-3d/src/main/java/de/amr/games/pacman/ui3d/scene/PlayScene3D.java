@@ -61,7 +61,6 @@ public class PlayScene3D implements GameScene {
 
     private GameLevel3D level3D;
     private GameContext context;
-    private boolean scoreVisible;
 
     public PlayScene3D() {
         var camera = new PerspectiveCamera(true);
@@ -95,7 +94,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void init() {
-        setScoreVisible(true);
+        context.setScoreVisible(true);
         scores3D.fontPy.set(context.theme().font("font.arcade", 8));
         perspectivePy.bind(PY_3D_PERSPECTIVE);
         Logger.info("3D play scene initialized. {}", this);
@@ -140,16 +139,6 @@ public class PlayScene3D implements GameScene {
     @Override
     public GameContext context() {
         return context;
-    }
-
-    @Override
-    public boolean isScoreVisible() {
-        return scoreVisible;
-    }
-
-    @Override
-    public void setScoreVisible(boolean scoreVisible) {
-        this.scoreVisible = scoreVisible;
     }
 
     @Override

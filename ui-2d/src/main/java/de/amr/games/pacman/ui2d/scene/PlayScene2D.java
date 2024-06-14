@@ -49,8 +49,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void init() {
         super.init();
-
-        setScoreVisible(true);
+        context.setScoreVisible(true);
     }
 
     @Override
