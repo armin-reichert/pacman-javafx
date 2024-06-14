@@ -244,11 +244,13 @@ public class GameLevel3D extends Group {
         int yMax = yMin + tilesY - 1;
         int xMax = xMin + tilesX - 1;
 
-        parent.getChildren().add(houseWall(xMin, yMin, leftDoorTile.x() - 1,yMin));
-        parent.getChildren().add(houseWall(rightDoorTile.x() + 1, yMin, xMax,yMin));
-        parent.getChildren().add(houseWall(xMin,yMin,  xMin,yMax));
-        parent.getChildren().add(houseWall(xMax, yMin,  xMax,yMax));
-        parent.getChildren().add(houseWall(xMin,yMax, xMax,yMax));
+        parent.getChildren().addAll(
+            houseWall(xMin, yMin, leftDoorTile.x() - 1,yMin),
+            houseWall(rightDoorTile.x() + 1, yMin, xMax,yMin),
+            houseWall(xMin,yMin,  xMin,yMax),
+            houseWall(xMax, yMin,  xMax,yMax),
+            houseWall(xMin,yMax, xMax,yMax)
+        );
 
         Color doorColor = getColorFromMap(map.terrain(), "door_color",Color.rgb(254,184,174));
         for (Vector2i wingTile : List.of(leftDoorTile, rightDoorTile)) {
