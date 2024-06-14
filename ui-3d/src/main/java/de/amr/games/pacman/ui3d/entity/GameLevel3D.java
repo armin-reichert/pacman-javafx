@@ -184,8 +184,8 @@ public class GameLevel3D extends Group {
         addFood3D(mazeGroup);
 
         pac3D = switch (context.game().variant()) {
-            case MS_PACMAN          -> createFemalePac3D(context.game().pac(), PAC_SIZE);
-            case PACMAN, PACMAN_XXL -> createMalePac3D(context.game().pac(), PAC_SIZE);
+            case MS_PACMAN          -> createFemalePac3D(context.game().pac(), PAC_SIZE, context.theme());
+            case PACMAN, PACMAN_XXL -> createMalePac3D(context.game().pac(), PAC_SIZE, context.theme());
         };
         ghosts3D = context.game().ghosts().map(this::createGhost3D).toList();
 
@@ -235,17 +235,17 @@ public class GameLevel3D extends Group {
      * @param size diameter of Pac-Man
      * @return 3D Pac-Man instance
      */
-    private Pac3D createMalePac3D(Pac pacMan, double size) {
+    private static Pac3D createMalePac3D(Pac pacMan, double size, Theme theme) {
         var body = Pac3D.createPacShape(
-            context.theme().get("model3D.pacman"), size,
-            context.theme().color("pacman.color.head"),
-            context.theme().color("pacman.color.eyes"),
-            context.theme().color("pacman.color.palate")
+            theme.get("model3D.pacman"), size,
+            theme.color("pacman.color.head"),
+            theme.color("pacman.color.eyes"),
+            theme.color("pacman.color.palate")
         );
         var pac3D = new Pac3D(size, pacMan, new Group(body));
         if (pacMan != null) {
             pac3D.setFemale(false);
-            pac3D.light().setColor(context.theme().color("pacman.color.head").desaturate());
+            pac3D.light().setColor(theme.color("pacman.color.head").desaturate());
         }
         return pac3D;
     }
@@ -256,8 +256,7 @@ public class GameLevel3D extends Group {
      * @param size diameter of Pac-Man
      * @return 3D Ms. Pac-Man instance
      */
-    private Pac3D createFemalePac3D(Pac msPacMan, double size) {
-        var theme = context.theme();
+    private static Pac3D createFemalePac3D(Pac msPacMan, double size, Theme theme) {
         var body = Pac3D.createPacShape(
             theme.get("model3D.pacman"), size,
             theme.color("ms_pacman.color.head"),
@@ -448,8 +447,8 @@ public class GameLevel3D extends Group {
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         for (int i = 0; i < livesCounter3D.maxLives(); ++i) {
             var pac3D = switch (context.game().variant()) {
-                case MS_PACMAN -> createFemalePac3D(null, theme.get("livescounter.pac.size"));
-                case PACMAN, PACMAN_XXL -> createMalePac3D(null,  theme.get("livescounter.pac.size"));
+                case MS_PACMAN -> createFemalePac3D(null, theme.get("livescounter.pac.size"), theme);
+                case PACMAN, PACMAN_XXL -> createMalePac3D(null,  theme.get("livescounter.pac.size"), theme);
             };
             livesCounter3D.addItem(pac3D, true);
         }
