@@ -27,7 +27,7 @@ javafx {
 }
 
 jlink {
-    imageZip = project.file("${layout.buildDirectory}/distributions/app-${javafx.platform.classifier}.zip")
+    imageZip = layout.buildDirectory.file("distributions/javafx-ui3d-${javafx.platform.classifier}.zip")
     options = [
         '--compress', 'zip-9',
         '--strip-debug',

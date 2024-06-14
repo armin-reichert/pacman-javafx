@@ -20,7 +20,7 @@ javafx {
 }
 
 jlink {
-    imageZip = project.file("${layout.buildDirectory}/distributions/app-${javafx.platform.classifier}.zip")
+    imageZip = layout.buildDirectory.file("distributions/javafx-mapeditor-${javafx.platform.classifier}.zip")
     options = [
             '--strip-debug',
             '--compress', 'zip-9',
