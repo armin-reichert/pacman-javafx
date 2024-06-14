@@ -5,16 +5,16 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.entity;
 
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
-import javafx.animation.Animation;
-import javafx.animation.Interpolator;
-import javafx.animation.RotateTransition;
+import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshView;
 
 /**
@@ -31,7 +31,7 @@ public class PacMan3D extends Pac3D {
      */
     public PacMan3D(double size, Pac pacMan, Theme theme) {
         super(pacMan);
-        zPosGround = -0.5 * size;
+        zStandingOnGround = -0.5 * size;
 
         var body = Pac3D.createPacShape(
             theme.get("model3D.pacman"), size,
@@ -55,7 +55,41 @@ public class PacMan3D extends Pac3D {
         }
     }
 
-    private class HeadBanging implements Walking {
+    @Override
+    public Animation createDyingAnimation(GameContext context) {
+        Duration duration = Duration.seconds(1.0);
+        short numSpins = 6;
+
+        var spinning = new RotateTransition(duration.divide(numSpins), this);
+        spinning.setAxis(Rotate.Z_AXIS);
+        spinning.setByAngle(360);
+        spinning.setCycleCount(numSpins);
+        spinning.setInterpolator(Interpolator.LINEAR);
+
+        var shrinking = new ScaleTransition(duration, this);
+        shrinking.setToX(0.5);
+        shrinking.setToY(0.5);
+        shrinking.setToZ(0.0);
+        shrinking.setInterpolator(Interpolator.LINEAR);
+
+        var falling = new TranslateTransition(duration, this);
+        falling.setToZ(4);
+        falling.setInterpolator(Interpolator.EASE_IN);
+
+        //TODO does not yet work as I want to
+        return new SequentialTransition(
+                now(() -> init(context)),
+                pauseSec(0.5),
+                new ParallelTransition(spinning, shrinking, falling),
+                doAfterSec(1.0, () -> {
+                    setVisible(false);
+                    setTranslateZ(0);
+                })
+        );
+    }
+
+
+    private class HeadBanging implements WalkingAnimation {
 
         private static final short DEFAULT_ANGLE_FROM = -25;
         private static final short DEFAULT_ANGLE_TO = 15;
@@ -82,7 +116,7 @@ public class PacMan3D extends Pac3D {
         }
 
         @Override
-        public void walk() {
+        public void play() {
             if (pac.isStandingStill()) {
                 stop();
                 animation.getNode().setRotate(0);

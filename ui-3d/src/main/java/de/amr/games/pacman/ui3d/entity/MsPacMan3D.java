@@ -5,10 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.entity;
 
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Sphere;
@@ -19,6 +21,7 @@ import javafx.util.Duration;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredMaterial;
+import static de.amr.games.pacman.ui2d.util.Ufx.pauseSec;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshView;
 
 /**
@@ -75,7 +78,7 @@ public class MsPacMan3D extends Pac3D {
      */
     public MsPacMan3D(double size, Pac msPacMan, Theme theme) {
         super(msPacMan);
-        zPosGround = -0.5 * size;
+        zStandingOnGround = -0.5 * size;
 
         var body = Pac3D.createPacShape(
             theme.get("model3D.pacman"), size,
@@ -103,7 +106,23 @@ public class MsPacMan3D extends Pac3D {
         }
     }
 
-    private class HipSwaying implements Walking {
+    @Override
+    public Animation createDyingAnimation(GameContext context) {
+        var spin = new RotateTransition(Duration.seconds(0.5), this);
+        spin.setAxis(Rotate.X_AXIS); //TODO check this
+        spin.setFromAngle(0);
+        spin.setToAngle(360);
+        spin.setInterpolator(Interpolator.LINEAR);
+        spin.setCycleCount(4);
+        spin.setRate(2);
+        spin.setDelay(Duration.seconds(0.5));
+        return new SequentialTransition(
+                spin,
+                pauseSec(2)
+        );
+    }
+
+    private class HipSwaying implements WalkingAnimation {
 
         private static final short DEFAULT_ANGLE_FROM = -20;
         private static final short DEFAULT_ANGLE_TO = 20;
@@ -130,7 +149,7 @@ public class MsPacMan3D extends Pac3D {
         }
 
         @Override
-        public void walk() {
+        public void play() {
             if (pac.isStandingStill()) {
                 stop();
                 animation.getNode().setRotate(0);

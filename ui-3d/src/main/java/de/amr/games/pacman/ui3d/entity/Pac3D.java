@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.entity;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -21,7 +22,6 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
-import javafx.util.Duration;
 
 import java.util.stream.Stream;
 
@@ -38,10 +38,10 @@ import static de.amr.games.pacman.ui3d.animation.Turn.angle;
  *
  * @author Armin Reichert
  */
-public class Pac3D extends Group {
+public abstract class Pac3D extends Group {
 
-    public interface Walking {
-        void walk();
+    public interface WalkingAnimation {
+        void play();
         void stop();
         void setPower(boolean power);
     }
@@ -84,8 +84,8 @@ public class Pac3D extends Group {
     protected final Rotate orientation = new Rotate();
     protected final Pac pac;
     protected final PointLight light;
-    protected double zPosGround;
-    protected Walking walking;
+    protected double zStandingOnGround;
+    protected WalkingAnimation walking;
 
     protected Pac3D(Pac pac) {
         this.pac = pac;
@@ -95,6 +95,8 @@ public class Pac3D extends Group {
         light.translateYProperty().bind(position.yProperty());
         light.setTranslateZ(-10);
     }
+
+    public abstract Animation createDyingAnimation(GameContext context);
 
     public void setPower(boolean power) {
         walking.setPower(power);
@@ -119,24 +121,23 @@ public class Pac3D extends Group {
         Vector2f center = pac.center();
         position.setX(center.x());
         position.setY(center.y());
-        position.setZ(zPosGround);
+        position.setZ(zStandingOnGround);
         orientation.setAxis(Rotate.Z_AXIS);
         orientation.setAngle(angle(pac.moveDir()));
         setVisible(pac.isVisible() && !outsideWorld(pac.world()));
         if (pac.isStandingStill()) {
             walking.stop();
         } else {
-            walking.walk();
+            walking.play();
         }
-        updateLight(context);
+        updateLight(context.game());
     }
 
-    private void updateLight(GameContext context) {
-        var game = context.game();
+    private void updateLight(GameModel game) {
         double radius = 0;
         if (game.powerTimer().duration() > 0) {
-            double t = (double) game.powerTimer().remaining() / game.powerTimer().duration();
-            radius = t * 6 * TS;
+            double frac = (double) game.powerTimer().remaining() / game.powerTimer().duration();
+            radius = frac * 6 * TS;
         }
         boolean hasPower = game.powerTimer().isRunning();
         light.setMaxRange(hasPower ? 2 * TS + radius : 0);
@@ -145,52 +146,5 @@ public class Pac3D extends Group {
 
     private boolean outsideWorld(World world) {
         return position.getX() < HTS || position.getX() > TS * world.numCols() - HTS;
-    }
-
-    public Animation createMsPacManDyingAnimation() {
-        var spin = new RotateTransition(Duration.seconds(0.5), this);
-        spin.setAxis(Rotate.X_AXIS); //TODO check this
-        spin.setFromAngle(0);
-        spin.setToAngle(360);
-        spin.setInterpolator(Interpolator.LINEAR);
-        spin.setCycleCount(4);
-        spin.setRate(2);
-        spin.setDelay(Duration.seconds(0.5));
-        return new SequentialTransition(
-            spin,
-            pauseSec(2)
-        );
-    }
-
-    public Animation createPacManDyingAnimation(GameContext context) {
-        Duration duration = Duration.seconds(1.0);
-        short numSpins = 6;
-
-        var spinning = new RotateTransition(duration.divide(numSpins), this);
-        spinning.setAxis(Rotate.Z_AXIS);
-        spinning.setByAngle(360);
-        spinning.setCycleCount(numSpins);
-        spinning.setInterpolator(Interpolator.LINEAR);
-
-        var shrinking = new ScaleTransition(duration, this);
-        shrinking.setToX(0.5);
-        shrinking.setToY(0.5);
-        shrinking.setToZ(0.0);
-        shrinking.setInterpolator(Interpolator.LINEAR);
-
-        var falling = new TranslateTransition(duration, this);
-        falling.setToZ(4);
-        falling.setInterpolator(Interpolator.EASE_IN);
-
-        //TODO does not yet work as I want to
-        return new SequentialTransition(
-            now(() -> init(context)),
-            pauseSec(0.5),
-            new ParallelTransition(spinning, shrinking, falling),
-            doAfterSec(1.0, () -> {
-                setVisible(false);
-                setTranslateZ(0);
-            })
-        );
     }
 }
