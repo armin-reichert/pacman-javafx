@@ -119,7 +119,6 @@ public class Pac3D extends Group {
     private final Translate position = new Translate();
     private final Rotate orientation = new Rotate();
     private final Pac pac;
-    private final Group shapeGroup;
     private final PointLight light;
     private Walking walking;
     private final double zPosGround;
@@ -127,7 +126,6 @@ public class Pac3D extends Group {
     public Pac3D(double size, Pac pac, Group shapeGroup) {
         zPosGround = -0.5 * size;
         this.pac = pac;
-        this.shapeGroup = shapeGroup;
         light = new PointLight();
         light.setMaxRange(2 * TS);
         light.translateXProperty().bind(position.xProperty());
@@ -135,11 +133,9 @@ public class Pac3D extends Group {
         light.setTranslateZ(-10);
         shapeGroup.getTransforms().setAll(position, orientation);
         getChildren().add(shapeGroup);
-        meshViews().forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
-    }
-
-    public Stream<MeshView> meshViews() {
-        return Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE).map(id -> meshView(shapeGroup, id));
+        Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE)
+                .map(id -> meshView(shapeGroup, id))
+                .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
     }
 
     public Translate position() {
