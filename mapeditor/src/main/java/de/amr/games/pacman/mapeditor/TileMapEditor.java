@@ -228,7 +228,7 @@ public class TileMapEditor  {
         var gridSizeLabel = new Label("Grid Size");
         var gridSizeEditor = new HBox(gridSizeLabel, spinnerGridSize);
         gridSizeEditor.setSpacing(3);
-        gridSizeEditor.setAlignment(Pos.CENTER);
+        gridSizeEditor.setAlignment(Pos.BASELINE_LEFT);
 
         var terrainPalette = new Palette(32, 4, 4, terrainMapRenderer);
         terrainPalette.setTools(
@@ -656,6 +656,7 @@ public class TileMapEditor  {
 
     private void drawGrid(GraphicsContext g) {
         if (gridVisiblePy.get()) {
+            g.save();
             g.setStroke(Color.LIGHTGRAY);
             g.setLineWidth(0.25);
             double gridSize = gridSize();
@@ -665,6 +666,7 @@ public class TileMapEditor  {
             for (int col = 1; col < map().terrain().numCols(); ++col) {
                 g.strokeLine(col * gridSize, 0, col * gridSize, editCanvas.getHeight());
             }
+            g.restore();
         }
     }
 

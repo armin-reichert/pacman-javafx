@@ -62,6 +62,7 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
         g.setFill(color);
         g.fillRect(x, y, TileMapRenderer.TILE_SIZE, TileMapRenderer.TILE_SIZE);
         g.setStroke(Color.WHITE);
+        g.setLineWidth(0.5);
         g.strokeOval(x + 2, y + 2, TileMapRenderer.TILE_SIZE - 4, TileMapRenderer.TILE_SIZE - 4);
         g.strokeLine(x + 0.5 * TileMapRenderer.TILE_SIZE, y, x + 0.5 * TileMapRenderer.TILE_SIZE, y + TileMapRenderer.TILE_SIZE);
         g.strokeLine(x, y + 0.5 * TileMapRenderer.TILE_SIZE, x + TileMapRenderer.TILE_SIZE, y + 0.5 * TileMapRenderer.TILE_SIZE);

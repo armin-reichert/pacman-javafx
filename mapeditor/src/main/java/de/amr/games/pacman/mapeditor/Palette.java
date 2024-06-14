@@ -98,6 +98,7 @@ public class Palette extends Canvas {
                 }
             }
         }
+        g.save();
         // Grid lines
         g.setStroke(Color.LIGHTGRAY);
         g.setLineWidth(1);
@@ -113,5 +114,6 @@ public class Palette extends Canvas {
         if (selectedValueRow != -1 && selectedValueCol != -1) {
             g.strokeRect(selectedValueCol * cellSize, selectedValueRow * cellSize, cellSize, cellSize);
         }
+        g.restore();
     }
 }
