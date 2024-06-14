@@ -5,12 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.entity;
 
 import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui3d.model.Model3D;
-import javafx.animation.*;
+import javafx.animation.Animation;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -27,7 +25,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui2d.util.Ufx.*;
+import static de.amr.games.pacman.ui2d.util.Ufx.coloredMaterial;
 import static de.amr.games.pacman.ui3d.animation.Turn.angle;
 
 /**
@@ -118,22 +116,21 @@ public abstract class Pac3D extends Group {
     }
 
     public void update(GameContext context) {
+        var game = context.game();
+        var world = game.world();
         Vector2f center = pac.center();
         position.setX(center.x());
         position.setY(center.y());
         position.setZ(zStandingOnGround);
         orientation.setAxis(Rotate.Z_AXIS);
         orientation.setAngle(angle(pac.moveDir()));
-        setVisible(pac.isVisible() && !outsideWorld(pac.world()));
+        boolean outsideWorld = position.getX() < HTS || position.getX() > TS * world.numCols() - HTS;
+        setVisible(pac.isVisible() && !outsideWorld);
         if (pac.isStandingStill()) {
             walking.stop();
         } else {
             walking.play();
         }
-        updateLight(context.game());
-    }
-
-    private void updateLight(GameModel game) {
         double radius = 0;
         if (game.powerTimer().duration() > 0) {
             double frac = (double) game.powerTimer().remaining() / game.powerTimer().duration();
@@ -142,9 +139,5 @@ public abstract class Pac3D extends Group {
         boolean hasPower = game.powerTimer().isRunning();
         light.setMaxRange(hasPower ? 2 * TS + radius : 0);
         light.setLightOn(lightedPy.get() && pac.isVisible() && hasPower);
-    }
-
-    private boolean outsideWorld(World world) {
-        return position.getX() < HTS || position.getX() > TS * world.numCols() - HTS;
     }
 }
