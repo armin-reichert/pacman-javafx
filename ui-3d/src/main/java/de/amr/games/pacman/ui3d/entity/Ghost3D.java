@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui3d.entity;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.ui2d.scene.GameContext;
+import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui3d.animation.Turn;
 import de.amr.games.pacman.ui3d.model.Model3D;

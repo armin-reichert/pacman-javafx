@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.world.World;
-import de.amr.games.pacman.ui2d.scene.GameContext;
+import de.amr.games.pacman.ui2d.GameContext;
 
 import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
 

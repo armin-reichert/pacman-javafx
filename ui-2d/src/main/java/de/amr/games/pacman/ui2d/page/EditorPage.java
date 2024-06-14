@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.mapeditor.TileMapEditor;
 import de.amr.games.pacman.ui2d.GameKeys;
-import de.amr.games.pacman.ui2d.scene.GameContext;
+import de.amr.games.pacman.ui2d.GameContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 

@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.Score;
+import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.SpriteGameRenderer;
 import de.amr.games.pacman.ui2d.rendering.VectorGraphicsWorldRenderer;
 import javafx.beans.property.BooleanProperty;
