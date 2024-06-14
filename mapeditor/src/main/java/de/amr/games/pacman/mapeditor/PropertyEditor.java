@@ -56,7 +56,7 @@ public class PropertyEditor extends BorderPane {
         var btnAddEntry = new Button("+");
         btnAddEntry.setStyle("-fx-padding: 0 2 0 2");
         btnAddEntry.setOnAction(e -> {
-            editedProperties.put("aaa_new_property", "first_value");
+            editedProperties.put("a_new_property", "42");
             updateEditors();
         });
         btnAddEntry.disableProperty().bind(enabledPy.not());
@@ -114,7 +114,7 @@ public class PropertyEditor extends BorderPane {
             var nameField = (TextField) grid.getChildren().get(2 * row);
             propertyNames.add(nameField.getText());
         }
-        for (Object propertyName : editedProperties.keySet()) {
+        for (var propertyName : editedProperties.stringPropertyNames()) {
             if (!propertyNames.contains(propertyName)) {
                 editedProperties.remove(propertyName);
             }

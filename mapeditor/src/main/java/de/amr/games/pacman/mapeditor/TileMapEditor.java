@@ -525,7 +525,7 @@ public class TileMapEditor  {
      * @return pixels used by one tile at current window zoom
      */
     private double tilePx() {
-        return 20;
+        return 16;
     }
 
     /**
