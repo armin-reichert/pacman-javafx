@@ -33,7 +33,7 @@ Prerequisites: You need to have [JDK 21](https://www.oracle.com/java/technologie
 - `cd pacman-javafx`
 - `./gradlew jpackage` or just `make` (Windows)
 
-This will create installers (.msi, .deb, .dmg) in the subdirectories `ui-2d/build/jpackage` and `ui-3d/build/jpackage`.
+This will create an installer (.msi, .deb, .dmg) for the local platform (in subdirectories `ui-2d/build/jpackage` and `ui-3d/build/jpackage`).
 
 ### Running the application(s) using Gradle
 
