@@ -12,11 +12,9 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -84,6 +82,14 @@ public class TileMapEditor  {
     public final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
     public final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
     public final BooleanProperty editingEnabledPy = new SimpleBooleanProperty(false);
+    public final ObjectProperty<Integer> gridSizePy = new SimpleObjectProperty<>(this, "gridSize", 16) {
+        @Override
+        protected void invalidated() {
+            Logger.info("Grid size: {}", get());
+            invalidatePaths();
+            draw();
+        }
+    };
 
     private Window ownerWindow;
     private MenuBar menuBar;
@@ -148,9 +154,9 @@ public class TileMapEditor  {
 
         // Note: this must be done after having loaded the initial map!
         editCanvas.heightProperty().bind(Bindings.createDoubleBinding(
-                () -> mapPy.get().numRows() * tilePx(), mapPy));
+                () -> (double) mapPy.get().numRows() * gridSize(), mapPy, gridSizePy));
         editCanvas.widthProperty().bind(Bindings.createDoubleBinding(
-                () -> mapPy.get().numCols() * tilePx(), mapPy));
+                () -> (double) mapPy.get().numCols() * gridSize(), mapPy, gridSizePy));
         previewCanvas.widthProperty().bind(editCanvas.widthProperty());
         previewCanvas.heightProperty().bind(editCanvas.heightProperty());
 
@@ -198,6 +204,13 @@ public class TileMapEditor  {
 
         var cbGridVisible = new CheckBox("Grid");
         cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
+
+        var spinnerGridSize = new Spinner<Integer>(8, 48, 16);
+        spinnerGridSize.getValueFactory().valueProperty().bindBidirectional(gridSizePy);
+        var gridSizeLabel = new Label("Grid Size");
+        var gridSizeEditor = new HBox(gridSizeLabel, spinnerGridSize);
+        gridSizeEditor.setSpacing(3);
+        gridSizeEditor.setAlignment(Pos.CENTER);
 
         var terrainPalette = new Palette(32, 4, 4, terrainMapRenderer);
         terrainPalette.setTools(
@@ -265,7 +278,8 @@ public class TileMapEditor  {
 
         VBox controlsPane = new VBox();
         controlsPane.setSpacing(10);
-        controlsPane.getChildren().add(new HBox(20, new Label("Show"), cbTerrainVisible, cbFoodVisible, cbGridVisible));
+        controlsPane.getChildren().add(new HBox(20, cbTerrainVisible, cbFoodVisible, cbGridVisible));
+        controlsPane.getChildren().add(gridSizeEditor);
         controlsPane.getChildren().add(infoLabel);
         controlsPane.getChildren().add(palettesTab);
         controlsPane.getChildren().add(terrainMapPropertiesEditor);
@@ -524,8 +538,8 @@ public class TileMapEditor  {
     /**
      * @return pixels used by one tile at current window zoom
      */
-    private double tilePx() {
-        return 16;
+    private int gridSize() {
+        return gridSizePy.get();
     }
 
     /**
@@ -533,7 +547,7 @@ public class TileMapEditor  {
      * @return number of full tiles spanned by pixels
      */
     private int fullTiles(double pixels) {
-        return (int) (pixels / tilePx());
+        return (int) (pixels / gridSize());
     }
 
     // TODO use own canvas or Text control
@@ -561,7 +575,7 @@ public class TileMapEditor  {
         drawGrid(g);
         if (terrainVisiblePy.get()) {
             updatePaths();
-            terrainMapRenderer.setScaling(tilePx() / 8);
+            terrainMapRenderer.setScaling(gridSize() / 8.0);
             terrainMapRenderer.setWallStrokeColor(TileMapRenderer.getColorFromMap(map().terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
             terrainMapRenderer.setWallFillColor(TileMapRenderer.getColorFromMap(map().terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
             terrainMapRenderer.setDoorColor(TileMapRenderer.getColorFromMap(map().terrain(), "door_color", DEFAULT_DOOR_COLOR));
@@ -569,7 +583,7 @@ public class TileMapEditor  {
             terrainMapRenderer.drawMap(g, map().terrain());
         }
         if (foodVisiblePy.get()) {
-            foodMapRenderer.setScaling(tilePx() / 8);
+            foodMapRenderer.setScaling(gridSize() / 8.0);
             Color foodColor = TileMapRenderer.getColorFromMap(map().food(), "food_color", DEFAULT_FOOD_COLOR);
             foodMapRenderer.setEnergizerColor(foodColor);
             foodMapRenderer.setPelletColor(foodColor);
@@ -579,7 +593,7 @@ public class TileMapEditor  {
             drawEditingHint(g);
         } else {
             if (hoveredTile != null) {
-                double tilePx = tilePx();
+                double tilePx = gridSize();
                 g.setStroke(Color.YELLOW);
                 g.setLineWidth(1);
                 g.strokeRect(hoveredTile.x() * tilePx, hoveredTile.y() * tilePx, tilePx, tilePx);
@@ -605,7 +619,7 @@ public class TileMapEditor  {
         g.fillRect(0, 0, previewCanvas.getWidth(), previewCanvas.getHeight());
         if (terrainVisiblePy.get()) {
             updatePaths();
-            terrainMapRenderer.setScaling(tilePx() / 8);
+            terrainMapRenderer.setScaling(gridSize() / 8.0);
             terrainMapRenderer.setWallStrokeColor(TileMapRenderer.getColorFromMap(map().terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
             terrainMapRenderer.setWallFillColor(TileMapRenderer.getColorFromMap(map().terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
             terrainMapRenderer.setDoorColor(TileMapRenderer.getColorFromMap(map().terrain(), "door_color", DEFAULT_DOOR_COLOR));
@@ -613,7 +627,7 @@ public class TileMapEditor  {
             terrainMapRenderer.drawMap(g, map().terrain());
         }
         if (foodVisiblePy.get()) {
-            foodMapRenderer.setScaling(tilePx() / 8);
+            foodMapRenderer.setScaling(gridSize() / 8.0);
             Color foodColor = TileMapRenderer.getColorFromMap(map().food(), "food_color", DEFAULT_FOOD_COLOR);
             foodMapRenderer.setEnergizerColor(foodColor);
             foodMapRenderer.setPelletColor(foodColor);
@@ -631,7 +645,7 @@ public class TileMapEditor  {
         if (gridVisiblePy.get()) {
             g.setStroke(Color.LIGHTGRAY);
             g.setLineWidth(0.25);
-            double gridSize = tilePx();
+            double gridSize = gridSize();
             for (int row = 1; row < map().terrain().numRows(); ++row) {
                 g.strokeLine(0, row * gridSize, editCanvas.getWidth(), row * gridSize);
             }
