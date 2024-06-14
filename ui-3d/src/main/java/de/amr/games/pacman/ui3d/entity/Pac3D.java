@@ -29,7 +29,6 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.animation.Turn.angle;
-import static de.amr.games.pacman.ui3d.model.Model3D.meshView;
 
 /**
  * 3D-representation of Pac-Man and Ms. Pac-Man. Uses the OBJ model "pacman.obj".
@@ -41,9 +40,9 @@ import static de.amr.games.pacman.ui3d.model.Model3D.meshView;
  */
 public class Pac3D extends Group {
 
-    private static final String MESH_ID_EYES   = "PacMan.Eyes";
-    private static final String MESH_ID_HEAD   = "PacMan.Head";
-    private static final String MESH_ID_PALATE = "PacMan.Palate";
+    protected static final String MESH_ID_EYES   = "PacMan.Eyes";
+    protected static final String MESH_ID_HEAD   = "PacMan.Head";
+    protected static final String MESH_ID_PALATE = "PacMan.Palate";
 
     public static Group createPacShape(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {
         var head = new MeshView(model3D.mesh(MESH_ID_HEAD));
@@ -116,26 +115,20 @@ public class Pac3D extends Group {
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
     public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
 
-    private final Translate position = new Translate();
-    private final Rotate orientation = new Rotate();
-    private final Pac pac;
-    private final PointLight light;
-    private Walking walking;
-    private final double zPosGround;
+    protected final Translate position = new Translate();
+    protected final Rotate orientation = new Rotate();
+    protected final Pac pac;
+    protected final PointLight light;
+    protected double zPosGround;
+    protected Walking walking;
 
-    public Pac3D(double size, Pac pac, Group shapeGroup) {
-        zPosGround = -0.5 * size;
+    protected Pac3D(Pac pac) {
         this.pac = pac;
         light = new PointLight();
         light.setMaxRange(2 * TS);
         light.translateXProperty().bind(position.xProperty());
         light.translateYProperty().bind(position.yProperty());
         light.setTranslateZ(-10);
-        shapeGroup.getTransforms().setAll(position, orientation);
-        getChildren().add(shapeGroup);
-        Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE)
-                .map(id -> meshView(shapeGroup, id))
-                .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
     }
 
     public Translate position() {
@@ -234,7 +227,7 @@ public class Pac3D extends Group {
 
     // Walking animations
 
-    public void setFemale(boolean female) {
+    public void setFemaleBehavior(boolean female) {
         if (female) {
             walking = new HipSwaying();
             walking.setPower(false);
@@ -248,7 +241,7 @@ public class Pac3D extends Group {
         walking.setPower(power);
     }
 
-    private interface Walking {
+    public interface Walking {
 
         void walk();
 

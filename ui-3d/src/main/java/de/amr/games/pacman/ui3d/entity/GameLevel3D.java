@@ -14,12 +14,11 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
-import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import javafx.animation.*;
@@ -184,8 +183,8 @@ public class GameLevel3D extends Group {
         addFood3D(mazeGroup);
 
         pac3D = switch (context.game().variant()) {
-            case MS_PACMAN          -> createFemalePac3D(context.game().pac(), PAC_SIZE, context.theme());
-            case PACMAN, PACMAN_XXL -> createMalePac3D(context.game().pac(), PAC_SIZE, context.theme());
+            case MS_PACMAN          -> new MsPacMan3D(PAC_SIZE, context.game().pac(), context.theme());
+            case PACMAN, PACMAN_XXL -> new PacMan3D(PAC_SIZE, context.game().pac(), context.theme());
         };
         ghosts3D = context.game().ghosts().map(this::createGhost3D).toList();
 
@@ -227,51 +226,6 @@ public class GameLevel3D extends Group {
             numLivesCounterEntries += 1;
         }
         livesCounter3D.livesShownPy.set(numLivesCounterEntries);
-    }
-
-    /**
-     * Creates a 3D Pac-Man.
-     * @param pacMan Pac-Man instance, may be NULL
-     * @param size diameter of Pac-Man
-     * @return 3D Pac-Man instance
-     */
-    private static Pac3D createMalePac3D(Pac pacMan, double size, Theme theme) {
-        var body = Pac3D.createPacShape(
-            theme.get("model3D.pacman"), size,
-            theme.color("pacman.color.head"),
-            theme.color("pacman.color.eyes"),
-            theme.color("pacman.color.palate")
-        );
-        var pac3D = new Pac3D(size, pacMan, new Group(body));
-        if (pacMan != null) {
-            pac3D.setFemale(false);
-            pac3D.light().setColor(theme.color("pacman.color.head").desaturate());
-        }
-        return pac3D;
-    }
-
-    /**
-     * Creates a 3D Ms. Pac-Man.
-     * @param msPacMan Ms. Pac-Man instance, may be NULL
-     * @param size diameter of Pac-Man
-     * @return 3D Ms. Pac-Man instance
-     */
-    private static Pac3D createFemalePac3D(Pac msPacMan, double size, Theme theme) {
-        var body = Pac3D.createPacShape(
-            theme.get("model3D.pacman"), size,
-            theme.color("ms_pacman.color.head"),
-            theme.color("ms_pacman.color.eyes"),
-            theme.color("ms_pacman.color.palate"));
-        var femaleParts = Pac3D.createFemaleParts(size,
-            theme.color("ms_pacman.color.hairbow"),
-            theme.color("ms_pacman.color.hairbow.pearls"),
-            theme.color("ms_pacman.color.boobs"));
-        var pac3D = new Pac3D(size, msPacMan, new Group(body, femaleParts));
-        if (msPacMan != null) {
-            pac3D.setFemale(true);
-            pac3D.light().setColor(theme.color("ms_pacman.color.head").desaturate());
-        }
-        return pac3D;
     }
 
     private void buildGhostHouse(Group parent) {
@@ -447,8 +401,8 @@ public class GameLevel3D extends Group {
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         for (int i = 0; i < livesCounter3D.maxLives(); ++i) {
             var pac3D = switch (context.game().variant()) {
-                case MS_PACMAN -> createFemalePac3D(null, theme.get("livescounter.pac.size"), theme);
-                case PACMAN, PACMAN_XXL -> createMalePac3D(null,  theme.get("livescounter.pac.size"), theme);
+                case MS_PACMAN -> new MsPacMan3D(theme.get("livescounter.pac.size"), null, theme);
+                case PACMAN, PACMAN_XXL -> new PacMan3D(theme.get("livescounter.pac.size"), null, theme);
             };
             livesCounter3D.addItem(pac3D, true);
         }
