@@ -1,7 +1,5 @@
 package de.amr.games.pacman.ui2d;
 
-import de.amr.games.pacman.ui2d.page.Page;
-
 /**
  * @author Armin Reichert
  */

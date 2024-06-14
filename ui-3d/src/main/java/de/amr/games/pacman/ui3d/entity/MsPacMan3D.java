@@ -116,10 +116,7 @@ public class MsPacMan3D extends Pac3D {
         spin.setCycleCount(4);
         spin.setRate(2);
         spin.setDelay(Duration.seconds(0.5));
-        return new SequentialTransition(
-                spin,
-                pauseSec(2)
-        );
+        return new SequentialTransition(spin, pauseSec(2));
     }
 
     private class HipSwaying implements WalkingAnimation {
@@ -165,5 +162,4 @@ public class MsPacMan3D extends Pac3D {
             animation.getNode().setRotate(0);
         }
     }
-
 }

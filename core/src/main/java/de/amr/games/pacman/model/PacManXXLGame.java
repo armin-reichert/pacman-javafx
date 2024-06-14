@@ -16,7 +16,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.halfTileRightOf;
+import static de.amr.games.pacman.lib.Globals.randomInt;
 import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
 
 /**
