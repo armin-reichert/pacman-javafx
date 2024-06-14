@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
+import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameScene;
@@ -37,7 +38,7 @@ import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
  * User interface for the Pac-Man game variants (Pac-Man, Pac-Man XXL, Ms. Pac-Man) with a 3D
  * play scene ({@link PlayScene3D}). All others scenes are 2D only.
  * </p>
- * <p>The separation of the 2D-only UI into its own project has been done to create a
+ * <p>The separation of the 2D-only UI into its own project was done to create a
  * <a href="https://github.com/armin-reichert/webfx-pacman">WebFX-version</a> of the game.
  * WebFX is a technology that transpiles a JavaFX application into a (very small) GWT application that runs inside
  * any browser supported by GWT. Unfortunately, WebFX has no support for JavaFX 3D so far.</p>
@@ -50,20 +51,19 @@ public class PacManGames3dUI extends PacManGames2dUI {
         System.setProperty("javafx.sg.warn", "true"); // WTF?
     }
 
-    public static final BooleanProperty PY_3D_AXES_VISIBLE            = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_3D_ENERGIZER_EXPLODES      = new SimpleBooleanProperty(true);
-    public static final ObjectProperty<Color> PY_3D_FLOOR_COLOR       = new SimpleObjectProperty<>(Color.grayRgb(0x33));
-    public static final StringProperty  PY_3D_FLOOR_TEXTURE           = new SimpleStringProperty("knobs");
-    public static final BooleanProperty PY_3D_FLOOR_TEXTURE_RND       = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<Color> PY_3D_LIGHT_COLOR       = new SimpleObjectProperty<>(Color.GHOSTWHITE);
-    public static final BooleanProperty PY_3D_NIGHT_MODE              = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_3D_PAC_LIGHT_ENABLED       = new SimpleBooleanProperty(true);
-    public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE = new SimpleObjectProperty<>(Perspective.FOLLOWING_PLAYER);
-    public static final DoubleProperty  PY_3D_WALL_HEIGHT             = new SimpleDoubleProperty(4.5);
-    public static final DoubleProperty  PY_3D_WALL_OPACITY            = new SimpleDoubleProperty(0.9);
+    public static final BooleanProperty             PY_3D_AXES_VISIBLE       = new SimpleBooleanProperty(false);
+    public static final BooleanProperty             PY_3D_ENERGIZER_EXPLODES = new SimpleBooleanProperty(true);
+    public static final ObjectProperty<Color>       PY_3D_FLOOR_COLOR        = new SimpleObjectProperty<>(Color.grayRgb(0x33));
+    public static final StringProperty              PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty("knobs");
+    public static final BooleanProperty             PY_3D_FLOOR_TEXTURE_RND  = new SimpleBooleanProperty(false);
+    public static final ObjectProperty<Color>       PY_3D_LIGHT_COLOR        = new SimpleObjectProperty<>(Color.GHOSTWHITE);
+    public static final BooleanProperty             PY_3D_NIGHT_MODE         = new SimpleBooleanProperty(false);
+    public static final BooleanProperty             PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
+    public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE        = new SimpleObjectProperty<>(Perspective.FOLLOWING_PLAYER);
+    public static final DoubleProperty              PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(4.5);
+    public static final DoubleProperty              PY_3D_WALL_OPACITY       = new SimpleDoubleProperty(0.9);
 
-    public static final String NO_TEXTURE                             = "No Texture";
-
+    public static final String NO_TEXTURE = "No Texture";
     private static final BackgroundSize FILL_PAGE = new BackgroundSize(1, 1, true, true, false, true);
 
     public static Picker<String> PICKER_LEVEL_COMPLETE;
@@ -149,8 +149,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
     public void init(Stage stage, double width, double height) {
         super.init(stage, width, height);
         stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
-        LocalTime now = LocalTime.now();
-        PY_3D_NIGHT_MODE.set(now.getHour() >= 20 || now.getHour() <= 5);
         PY_3D_ENABLED.set(true);
     }
 
@@ -186,6 +184,13 @@ public class PacManGames3dUI extends PacManGames2dUI {
         ));
         gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
         return page;
+    }
+
+    @Override
+    public void onLevelStarted(GameEvent event) {
+        super.onLevelStarted(event);
+        LocalTime now = LocalTime.now();
+        PY_3D_NIGHT_MODE.set(now.getHour() >= 21 || now.getHour() <= 5);
     }
 
     @Override
