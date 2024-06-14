@@ -78,10 +78,17 @@ public class TileMapEditor  {
     private static final Color DEFAULT_FOOD_COLOR = Color.MAGENTA;
 
     public final ObjectProperty<String> titlePy = new SimpleObjectProperty<>(this, "title", "Map Editor");
+
     public final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
+
     public final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
+
     public final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
+
     public final BooleanProperty editingEnabledPy = new SimpleBooleanProperty(false);
+
+    public final BooleanProperty previewVisiblePy = new SimpleBooleanProperty(this, "previewVisible", true);
+
     public final ObjectProperty<Integer> gridSizePy = new SimpleObjectProperty<>(this, "gridSize", 16) {
         @Override
         protected void invalidated() {
@@ -196,6 +203,17 @@ public class TileMapEditor  {
 
         previewCanvas = new Canvas();
 
+        var editCanvasScroll = new ScrollPane(editCanvas);
+        editCanvasScroll.setFitToHeight(true);
+
+        var previewCanvasScroll = new ScrollPane(previewCanvas);
+        previewCanvasScroll.setFitToHeight(true);
+        previewCanvasScroll.vvalueProperty().bindBidirectional(editCanvasScroll.vvalueProperty());
+        previewCanvasScroll.visibleProperty().bind(previewVisiblePy);
+
+        var cbPreviewVisible = new CheckBox("Show Preview");
+        cbPreviewVisible.selectedProperty().bindBidirectional(previewVisiblePy);
+
         var cbTerrainVisible = new CheckBox("Terrain");
         cbTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
 
@@ -278,6 +296,8 @@ public class TileMapEditor  {
 
         VBox controlsPane = new VBox();
         controlsPane.setSpacing(10);
+        controlsPane.setMinWidth(200);
+        controlsPane.getChildren().add(cbPreviewVisible);
         controlsPane.getChildren().add(new HBox(20, cbTerrainVisible, cbFoodVisible, cbGridVisible));
         controlsPane.getChildren().add(gridSizeEditor);
         controlsPane.getChildren().add(infoLabel);
@@ -288,15 +308,8 @@ public class TileMapEditor  {
         terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
         foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
-        var editCanvasScroll = new ScrollPane(editCanvas);
-        editCanvasScroll.setFitToHeight(true);
-
-        var previewCanvasScroll = new ScrollPane(previewCanvas);
-        previewCanvasScroll.setFitToHeight(true);
-        previewCanvasScroll.vvalueProperty().bindBidirectional(editCanvasScroll.vvalueProperty());
-
         var splitPane = new SplitPane(editCanvasScroll, controlsPane, previewCanvasScroll);
-        splitPane.setDividerPositions(0.45, 0.55);
+        //splitPane.setDividerPositions(0.45, 0.55);
         layout = new BorderPane(splitPane);
     }
 
