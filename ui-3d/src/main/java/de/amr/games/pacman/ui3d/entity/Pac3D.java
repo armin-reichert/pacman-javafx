@@ -19,14 +19,14 @@ import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.animation.Turn.angle;
 
@@ -39,6 +39,12 @@ import static de.amr.games.pacman.ui3d.animation.Turn.angle;
  * @author Armin Reichert
  */
 public class Pac3D extends Group {
+
+    public interface Walking {
+        void walk();
+        void stop();
+        void setPower(boolean power);
+    }
 
     protected static final String MESH_ID_EYES   = "PacMan.Eyes";
     protected static final String MESH_ID_HEAD   = "PacMan.Head";
@@ -71,47 +77,6 @@ public class Pac3D extends Group {
         return root;
     }
 
-    public static Group createFemaleParts(double pacSize, Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
-        var bowMaterial = coloredMaterial(hairBowColor);
-
-        var bowLeft = new Sphere(1.2);
-        bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -pacSize * 0.55));
-        bowLeft.setMaterial(bowMaterial);
-
-        var bowRight = new Sphere(1.2);
-        bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -pacSize * 0.55));
-        bowRight.setMaterial(bowMaterial);
-
-        var pearlMaterial = coloredMaterial(hairBowPearlsColor);
-
-        var pearlLeft = new Sphere(0.4);
-        pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacSize * 0.58));
-        pearlLeft.setMaterial(pearlMaterial);
-
-        var pearlRight = new Sphere(0.4);
-        pearlRight.getTransforms().addAll(new Translate(2, -0.5, -pacSize * 0.58));
-        pearlRight.setMaterial(pearlMaterial);
-
-        var beautySpot = new Sphere(0.5);
-        beautySpot.setMaterial(coloredMaterial(Color.rgb(100, 100, 100)));
-        beautySpot.getTransforms().addAll(new Translate(-2.5, -4.5, 4.5));
-
-        var silicone = coloredMaterial(boobsColor);
-
-        double bx = -0.2 * pacSize; // forward
-        double by = 1.6; // or - 1.6 // sidewards
-        double bz = 0.4 * pacSize; // up/down
-        var boobLeft = new Sphere(1.8);
-        boobLeft.setMaterial(silicone);
-        boobLeft.getTransforms().addAll(new Translate(bx, -by, bz));
-
-        var boobRight = new Sphere(1.8);
-        boobRight.setMaterial(silicone);
-        boobRight.getTransforms().addAll(new Translate(bx, by, bz));
-
-        return new Group(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
-    }
-
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
     public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
 
@@ -129,6 +94,10 @@ public class Pac3D extends Group {
         light.translateXProperty().bind(position.xProperty());
         light.translateYProperty().bind(position.yProperty());
         light.setTranslateZ(-10);
+    }
+
+    public void setPower(boolean power) {
+        walking.setPower(power);
     }
 
     public Translate position() {
@@ -223,123 +192,5 @@ public class Pac3D extends Group {
                 setTranslateZ(0);
             })
         );
-    }
-
-    // Walking animations
-
-    public void setFemaleBehavior(boolean female) {
-        if (female) {
-            walking = new HipSwaying();
-            walking.setPower(false);
-        } else {
-            walking = new HeadBanging();
-            walking.setPower(false);
-        }
-    }
-
-    public void setPower(boolean power) {
-        walking.setPower(power);
-    }
-
-    public interface Walking {
-
-        void walk();
-
-        void stop();
-
-        void setPower(boolean power);
-    }
-
-    private class HeadBanging implements Walking {
-
-        private static final short DEFAULT_ANGLE_FROM = -25;
-        private static final short DEFAULT_ANGLE_TO = 15;
-        private static final Duration DEFAULT_DURATION = Duration.seconds(0.25);
-
-        private final RotateTransition animation;
-
-        public HeadBanging() {
-            animation = new RotateTransition(DEFAULT_DURATION, Pac3D.this);
-            animation.setAxis(Rotate.X_AXIS);
-            animation.setCycleCount(Animation.INDEFINITE);
-            animation.setAutoReverse(true);
-            animation.setInterpolator(Interpolator.EASE_BOTH);
-        }
-
-        @Override
-        public void setPower(boolean power) {
-            double amplification = power ? 1.5 : 1;
-            double rate = power ? 2 : 1;
-            animation.stop();
-            animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
-            animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
-            animation.setRate(rate);
-        }
-
-        @Override
-        public void walk() {
-            if (pac.isStandingStill()) {
-                stop();
-                animation.getNode().setRotate(0);
-                return;
-            }
-            var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-            if (!axis.equals(animation.getAxis())) {
-                animation.stop();
-                animation.setAxis(axis);
-            }
-            animation.play();
-        }
-
-        @Override
-        public void stop() {
-            animation.stop();
-            animation.getNode().setRotationAxis(animation.getAxis());
-            animation.getNode().setRotate(0);
-        }
-    }
-
-    private class HipSwaying implements Walking {
-
-        private static final short DEFAULT_ANGLE_FROM = -20;
-        private static final short DEFAULT_ANGLE_TO = 20;
-        private static final Duration DEFAULT_DURATION = Duration.seconds(0.4);
-
-        private final RotateTransition animation;
-
-        public HipSwaying() {
-            animation = new RotateTransition(DEFAULT_DURATION, Pac3D.this);
-            animation.setAxis(Rotate.Z_AXIS);
-            animation.setCycleCount(Animation.INDEFINITE);
-            animation.setAutoReverse(true);
-            animation.setInterpolator(Interpolator.EASE_BOTH);
-        }
-
-        @Override
-        public void setPower(boolean power) {
-            double amplification = power ? 1.5 : 1;
-            double rate = power ? 2 : 1;
-            animation.stop();
-            animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
-            animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
-            animation.setRate(rate);
-        }
-
-        @Override
-        public void walk() {
-            if (pac.isStandingStill()) {
-                stop();
-                animation.getNode().setRotate(0);
-                return;
-            }
-            animation.play();
-        }
-
-        @Override
-        public void stop() {
-            animation.stop();
-            animation.getNode().setRotationAxis(animation.getAxis());
-            animation.getNode().setRotate(0);
-        }
     }
 }
