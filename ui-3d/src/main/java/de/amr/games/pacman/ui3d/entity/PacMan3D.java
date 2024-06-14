@@ -33,7 +33,7 @@ public class PacMan3D extends Pac3D {
         super(pacMan);
         zStandingOnGround = -0.5 * size;
 
-        var body = Pac3D.createPacShape(
+        var body = createPacShape(
             theme.get("model3D.pacman"), size,
             theme.color("pacman.color.head"),
             theme.color("pacman.color.eyes"),
@@ -45,8 +45,8 @@ public class PacMan3D extends Pac3D {
         getChildren().add(shapeGroup);
 
         Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE)
-                .map(id -> meshView(shapeGroup, id))
-                .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
+            .map(id -> meshView(body, id))
+            .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
 
         if (pacMan != null) {
             walking = new HeadBanging();
@@ -87,7 +87,6 @@ public class PacMan3D extends Pac3D {
                 })
         );
     }
-
 
     private class HeadBanging implements WalkingAnimation {
 

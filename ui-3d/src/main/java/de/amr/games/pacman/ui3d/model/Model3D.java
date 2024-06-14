@@ -41,7 +41,6 @@ public class Model3D {
     public static MeshView meshView(Node tree, String id) {
         requireNonNull(tree);
         requireNonNull(id);
-
         var cssID = toCSS_ID(id);
         var node = tree.lookup("#" + cssID);
         if (node == null) {
@@ -50,8 +49,7 @@ public class Model3D {
         if (node instanceof MeshView meshView) {
             return meshView;
         }
-        throw new IllegalArgumentException(
-            "Node with CSS ID '%s' is not a MeshView but a %s".formatted(cssID, node.getClass()));
+        throw new IllegalArgumentException("Node with CSS ID '%s' is no MeshView but a %s".formatted(cssID, node.getClass()));
     }
 
     public static String toCSS_ID(String id) {

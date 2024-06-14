@@ -80,7 +80,7 @@ public class MsPacMan3D extends Pac3D {
         super(msPacMan);
         zStandingOnGround = -0.5 * size;
 
-        var body = Pac3D.createPacShape(
+        var body = createPacShape(
             theme.get("model3D.pacman"), size,
             theme.color("ms_pacman.color.head"),
             theme.color("ms_pacman.color.eyes"),
@@ -96,8 +96,8 @@ public class MsPacMan3D extends Pac3D {
         getChildren().add(shapeGroup);
 
         Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE)
-                .map(id -> meshView(shapeGroup, id))
-                .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
+            .map(id -> meshView(body, id))
+            .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
 
         if (msPacMan != null) {
             walking = new HipSwaying();
