@@ -80,13 +80,12 @@ public abstract class Pac3D extends Group {
 
     protected final Translate position = new Translate();
     protected final Rotate orientation = new Rotate();
-    protected final Pac pac;
     protected final PointLight light;
+    protected Pac pac;
     protected double zStandingOnGround;
     protected WalkingAnimation walking;
 
-    protected Pac3D(Pac pac) {
-        this.pac = pac;
+    protected Pac3D() {
         light = new PointLight();
         light.setMaxRange(2 * TS);
         light.translateXProperty().bind(position.xProperty());

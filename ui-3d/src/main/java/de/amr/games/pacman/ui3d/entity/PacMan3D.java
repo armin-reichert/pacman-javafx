@@ -26,12 +26,17 @@ public class PacMan3D extends Pac3D {
      * Creates a 3D Pac-Man.
      *
      * @param size diameter of Pac-Man
-     * @param pacMan Pac-Man instance, may be NULL
+     * @param pacMan Pac-Man instance, may be NULL if used for lives counter
      * @param theme the theme
      */
     public PacMan3D(double size, Pac pacMan, Theme theme) {
-        super(pacMan);
-        zStandingOnGround = -0.5 * size;
+        if (pacMan != null) {
+            pac = pacMan;
+            zStandingOnGround = -0.5 * size;
+            walking = new HeadBanging();
+            walking.setPower(false);
+            light.setColor(theme.color("pacman.color.head").desaturate());
+        }
 
         var body = createPacShape(
             theme.get("model3D.pacman"), size,
@@ -40,19 +45,13 @@ public class PacMan3D extends Pac3D {
             theme.color("pacman.color.palate")
         );
 
-        var shapeGroup = new Group(body);
-        shapeGroup.getTransforms().setAll(position, orientation);
-        getChildren().add(shapeGroup);
-
         Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE)
             .map(id -> meshView(body, id))
             .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
 
-        if (pacMan != null) {
-            walking = new HeadBanging();
-            walking.setPower(false);
-            light.setColor(theme.color("pacman.color.head").desaturate());
-        }
+        var shapeGroup = new Group(body);
+        shapeGroup.getTransforms().setAll(position, orientation);
+        getChildren().add(shapeGroup);
     }
 
     @Override

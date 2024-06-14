@@ -73,18 +73,27 @@ public class MsPacMan3D extends Pac3D {
     /**
      * Creates a 3D Ms. Pac-Man.
      * @param size diameter of Pac-Man
-     * @param msPacMan Ms. Pac-Man instance, may be NULL
+     * @param msPacMan Ms. Pac-Man instance, may be NULL if used for lives counter
      * @param theme the theme
      */
     public MsPacMan3D(double size, Pac msPacMan, Theme theme) {
-        super(msPacMan);
-        zStandingOnGround = -0.5 * size;
+        if (msPacMan != null) {
+            pac = msPacMan;
+            zStandingOnGround = -0.5 * size;
+            walking = new HipSwaying();
+            walking.setPower(false);
+            light.setColor(theme.color("ms_pacman.color.head").desaturate());
+        }
 
         var body = createPacShape(
             theme.get("model3D.pacman"), size,
             theme.color("ms_pacman.color.head"),
             theme.color("ms_pacman.color.eyes"),
             theme.color("ms_pacman.color.palate"));
+
+        Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE)
+            .map(id -> meshView(body, id))
+            .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
 
         var femaleParts = createFemaleParts(size,
             theme.color("ms_pacman.color.hairbow"),
@@ -94,16 +103,6 @@ public class MsPacMan3D extends Pac3D {
         var shapeGroup = new Group(body, femaleParts);
         shapeGroup.getTransforms().setAll(position, orientation);
         getChildren().add(shapeGroup);
-
-        Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE)
-            .map(id -> meshView(body, id))
-            .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
-
-        if (msPacMan != null) {
-            walking = new HipSwaying();
-            walking.setPower(false);
-            light.setColor(theme.color("ms_pacman.color.head").desaturate());
-        }
     }
 
     @Override
