@@ -125,13 +125,12 @@ public abstract class Pac3D extends Group {
         } else {
             startWalkingAnimation();
         }
-        double radius = 0;
-        if (game.powerTimer().duration() > 0) {
-            double frac = (double) game.powerTimer().remaining() / game.powerTimer().duration();
-            radius = frac * 6 * TS;
-        }
+        // When empowered, Pac-Man is lighted, light range shrinks with ceasing power
         boolean hasPower = game.powerTimer().isRunning();
-        light.setMaxRange(hasPower ? 2 * TS + radius : 0);
+        double range = hasPower && game.powerTimer().duration() > 0
+            ? 2 * TS + ((double) game.powerTimer().remaining() / game.powerTimer().duration()) * 6 * TS
+            : 0;
+        light.setMaxRange(range);
         light.setLightOn(lightedPy.get() && pac.isVisible() && hasPower);
     }
 }
