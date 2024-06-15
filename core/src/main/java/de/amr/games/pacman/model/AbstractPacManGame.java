@@ -160,6 +160,8 @@ public abstract class AbstractPacManGame implements GameModel {
         ghosts[CYAN_GHOST]  .setName("Inky");
         ghosts[ORANGE_GHOST].setName("Clyde");
 
+        // in case there are multiple houses, one could select the nearest house and set the revival position when
+        // a ghost gets killed
         ghosts[RED_GHOST]   .setRevivalPosition(world.house().ghostPosition(PINK_GHOST)); // !
         ghosts[PINK_GHOST]  .setRevivalPosition(world.house().ghostPosition(PINK_GHOST));
         ghosts[CYAN_GHOST]  .setRevivalPosition(world.house().ghostPosition(CYAN_GHOST));
