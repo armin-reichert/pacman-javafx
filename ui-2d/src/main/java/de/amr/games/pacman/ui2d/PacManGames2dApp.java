@@ -8,23 +8,16 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.image.Image;
-import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 import org.tinylog.Logger;
-
-import java.util.List;
 
 /**
  * @author Armin Reichert
  */
 public class PacManGames2dApp extends Application {
 
-    private PacManGames2dUI ui;
+    private Runnable stopAction;
 
     @Override
     public void start(Stage stage) {
@@ -35,25 +28,19 @@ public class PacManGames2dApp extends Application {
         double height = 0.8 * screenSize.getHeight(), width = aspect * height;
         GameController.it().setSupportedVariants(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
         GameController.it().selectGameVariant(GameVariant.PACMAN);
-        ui = new PacManGames2dUI();
+        var ui = new PacManGames2dUI();
+        stopAction = () -> ui.gameClock().stop();
         ui.loadAssets();
-        Logger.info("Assets loaded: {}", ui.theme().summary(List.of(
-            new Pair<>(Image.class, "images"),
-            new Pair<>(Font.class, "fonts"),
-            new Pair<>(Color.class, "colors"),
-            new Pair<>(AudioClip.class, "audio clips")
-        )));
-        ui.init(stage, width, height);
+        ui.createUI(stage, width, height);
         for (var variant : GameController.it().supportedVariants()) {
             GameController.it().game(variant).addGameEventListener(ui);
         }
-        stage.show();
+        ui.show();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }
 
     @Override
     public void stop() {
-        ui.gameClock().stop();
-        Logger.info("Application stopped.");
+        stopAction.run();
     }
 }

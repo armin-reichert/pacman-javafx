@@ -32,6 +32,7 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -42,6 +43,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.util.Pair;
 import org.tinylog.Logger;
 
 import java.text.MessageFormat;
@@ -277,11 +279,21 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("pacman_xxl.icon",                 rm.loadImage("graphics/icons/pacman.png"));
         theme.set("pacman_xxl.helpButton.icon",      rm.loadImage("graphics/icons/help-blue-64.png"));
         theme.set("pacman_xxl.startpage.image",      rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
+
+        Logger.info("Assets loaded: {}", theme.summary(List.of(
+            new Pair<>(Image.class, "images"),
+            new Pair<>(Font.class, "fonts"),
+            new Pair<>(Color.class, "colors"),
+            new Pair<>(AudioClip.class, "audio clips")
+        )));
     }
 
-    public void init(Stage stage, double width, double height) {
+    public void createUI(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
         gameVariantPy.set(GameController.it().game().variant());
+        for (var variant : GameController.it().supportedVariants()) {
+            GameController.it().game(variant).addGameEventListener(this);
+        }
 
         // Touch all game keys such that they get registered with keyboard
         for (var gameKey : GameKeys.values()) {
@@ -299,16 +311,18 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
         stage.titleProperty().bind(stageTitleBinding());
         stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
-        stage.setOnShown(e -> {
-            stage.setScene(mainScene);
-            selectStartPage();
-        });
+        stage.setScene(mainScene);
+        selectStartPage();
+    }
+
+    public void show() {
         //TODO this does not work yet correctly
         Dimension2D minSize = DecoratedCanvas.computeSize(
             DEFAULT_CANVAS_WIDTH_UNSCALED, DEFAULT_CANVAS_HEIGHT_UNSCALED, 1.25 * MIN_SCALING);
         stage.setMinWidth(minSize.getWidth());
         stage.setMinHeight(minSize.getHeight());
         stage.centerOnScreen();
+        stage.show();
     }
 
     protected void onMouseClicked(MouseEvent e) {

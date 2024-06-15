@@ -19,16 +19,21 @@ import de.amr.games.pacman.ui3d.scene.PlayScene3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import org.tinylog.Logger;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
@@ -143,10 +148,19 @@ public class PacManGames3dUI extends PacManGames2dUI {
         theme.set("livescounter.plate.radius",       6.0);
         theme.set("livescounter.plate.thickness",    1.0);
         theme.set("livescounter.light.color",        Color.CORNFLOWERBLUE);
+
+        Logger.info("Assets loaded: {}", theme.summary(List.of(
+            new Pair<>(Model3D.class,"3D models"),
+            new Pair<>(Image.class, "images"),
+            new Pair<>(Font.class, "fonts"),
+            new Pair<>(Color.class, "colors"),
+            new Pair<>(AudioClip.class, "audio clips")
+        )));
     }
 
-    public void init(Stage stage, double width, double height) {
-        super.init(stage, width, height);
+    @Override
+    public void createUI(Stage stage, double width, double height) {
+        super.createUI(stage, width, height);
         stage.titleProperty().bind(stageTitleBinding());
         PY_3D_ENABLED.set(true);
     }
