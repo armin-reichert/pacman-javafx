@@ -65,8 +65,6 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
-        g.setFill(Color.BLACK);
-        g.fillRect(x, y, TILE_SIZE, 6);
         g.setFill(color);
         g.fillRect(x, y + 3, TILE_SIZE, 2);
     }
