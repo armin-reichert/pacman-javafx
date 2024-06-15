@@ -160,10 +160,10 @@ public abstract class AbstractPacManGame implements GameModel {
         ghosts[CYAN_GHOST]  .setName("Inky");
         ghosts[ORANGE_GHOST].setName("Clyde");
 
-        ghosts[RED_GHOST]   .setRevivalPosition(world.ghostPosition(PINK_GHOST)); // !
-        ghosts[PINK_GHOST]  .setRevivalPosition(world.ghostPosition(PINK_GHOST));
-        ghosts[CYAN_GHOST]  .setRevivalPosition(world.ghostPosition(CYAN_GHOST));
-        ghosts[ORANGE_GHOST].setRevivalPosition(world.ghostPosition(ORANGE_GHOST));
+        ghosts[RED_GHOST]   .setRevivalPosition(world.house().ghostPosition(PINK_GHOST)); // !
+        ghosts[PINK_GHOST]  .setRevivalPosition(world.house().ghostPosition(PINK_GHOST));
+        ghosts[CYAN_GHOST]  .setRevivalPosition(world.house().ghostPosition(CYAN_GHOST));
+        ghosts[ORANGE_GHOST].setRevivalPosition(world.house().ghostPosition(ORANGE_GHOST));
 
         ghosts().forEach(ghost -> {
             ghost.reset();
@@ -316,14 +316,14 @@ public abstract class AbstractPacManGame implements GameModel {
     @Override
     public void letsGetReadyToRumble() {
         pac.reset();
-        pac.setPosition(world.pacPosition());
+        pac.setPosition(world.house().pacPosition());
         pac.setMoveAndWishDir(Direction.LEFT);
         pac.selectAnimation(Pac.ANIM_MUNCHING);
         pac.animations().ifPresent(Animations::resetSelected);
         ghosts().forEach(ghost -> {
             ghost.reset();
-            ghost.setPosition(world.ghostPosition(ghost.id()));
-            ghost.setMoveAndWishDir(world.ghostDirection(ghost.id()));
+            ghost.setPosition(world.house().ghostPosition(ghost.id()));
+            ghost.setMoveAndWishDir(world.house().ghostDirection(ghost.id()));
             ghost.setState(LOCKED);
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();

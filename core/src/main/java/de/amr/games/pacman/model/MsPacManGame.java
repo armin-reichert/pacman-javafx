@@ -125,10 +125,12 @@ public class MsPacManGame extends AbstractPacManGame  {
         ghosts[ORANGE_GHOST].setName("Sue");
     }
 
-    private static World createMsPacManWorld(WorldMap map) {
+    private World createMsPacManWorld(WorldMap map) {
         var msPacManWorld = new World(map);
-        msPacManWorld.addHouse(House.createArcadeHouse(15, 10));
-        msPacManWorld.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
+        House house = House.createArcadeHouse(15, 10);
+        house.setPacPositionFromMap(map);
+        house.setGhostPositionsFromMap(map);
+        msPacManWorld.addHouse(house);
         return msPacManWorld;
     }
 

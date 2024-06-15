@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
@@ -73,12 +72,14 @@ public class PacManXXLGame extends PacManGame {
         return 0;
     }
 
-    private static World createModernWorld(WorldMap map) {
+    private World createModernWorld(WorldMap map) {
         var modernWorld = new World(map);
         int houseTopRow = map.numRows() / 2 - 3;
         int houseTopCol = map.numCols() / 2 - 4;
-        modernWorld.addHouse(House.createArcadeHouse(houseTopRow, houseTopCol));
-        modernWorld.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP}); // TODO
+        House house = House.createArcadeHouse(houseTopRow, houseTopCol);
+        house.setPacPositionFromMap(map);
+        house.setGhostPositionsFromMap(map);
+        modernWorld.addHouse(house);
         modernWorld.setBonusPosition(halfTileRightOf(13, 20)); // TODO get position from map?
         return modernWorld;
     }

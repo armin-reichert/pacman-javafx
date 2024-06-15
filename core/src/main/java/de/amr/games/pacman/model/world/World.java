@@ -33,9 +33,6 @@ public class World {
     private House house;
     private final List<Vector2i> energizerTiles;
     private List<Portal> portals;
-    private Vector2f pacPosition;
-    private Vector2f[] ghostPositions;
-    private Direction[] ghostDirections;
     private Vector2i[] ghostScatterTiles;
     private Vector2f bonusPosition;
 
@@ -47,54 +44,12 @@ public class World {
     public World(WorldMap map) {
         this.map = checkNotNull(map);
         setScatterTiles();
-        setPacPosition();
-        setGhostPositions();
         setPortals();
         map.terrain().computePaths();
         energizerTiles = tiles().filter(this::isEnergizerTile).toList();
         eaten = new BitSet(map.numCols() * map.numRows());
         totalFoodCount = (int) tiles().filter(this::isFoodTile).count();
         uneatenFoodCount = totalFoodCount;
-    }
-
-    private void setPacPosition() {
-        Optional<Vector2i> pacHomeTile = map.terrain().tiles(PAC_HOME).findFirst();
-        if (pacHomeTile.isEmpty()) {
-            Logger.warn("No Pac home tile found in map, using default");
-        }
-        pacPosition = pacHomeTile.orElse(new Vector2i(13, 26)).toFloatVec().scaled(TS).plus(HTS, 0);
-    }
-
-    private void setGhostPositions() {
-        ghostPositions = new Vector2f[4];
-
-        Optional<Vector2i> homeTileRed = map.terrain().tiles(HOME_RED_GHOST).findFirst();
-        if (homeTileRed.isEmpty()) {
-            Logger.warn("No home tile set for red ghost, using default");
-        }
-        ghostPositions[GameModel.RED_GHOST] = positionHalfTileRightOf(homeTileRed.orElse(new Vector2i(13, 14)));
-
-        Optional<Vector2i> homeTilePink = map.terrain().tiles(HOME_PINK_GHOST).findFirst();
-        if (homeTilePink.isEmpty()) {
-            Logger.warn("No home tile set for pink ghost, using default");
-        }
-        ghostPositions[GameModel.PINK_GHOST] = positionHalfTileRightOf(homeTilePink.orElse(new Vector2i(13, 17)));
-
-        Optional<Vector2i> homeTileCyan = map.terrain().tiles(HOME_CYAN_GHOST).findFirst();
-        if (homeTileCyan.isEmpty()) {
-            Logger.warn("No home tile set for cyan ghost, using default");
-        }
-        ghostPositions[GameModel.CYAN_GHOST] = positionHalfTileRightOf(homeTileCyan.orElse(new Vector2i(11, 17)));
-
-        Optional<Vector2i> homeTileOrange = map.terrain().tiles(HOME_ORANGE_GHOST).findFirst();
-        if (homeTileOrange.isEmpty()) {
-            Logger.warn("No home tile set for orange ghost, using default");
-        }
-        ghostPositions[GameModel.ORANGE_GHOST] = positionHalfTileRightOf(homeTileOrange.orElse(new Vector2i(15, 17)));
-    }
-
-    private Vector2f positionHalfTileRightOf(Vector2i tile) {
-        return tile.scaled(TS).plus(HTS, 0).toFloatVec();
     }
 
     private void setScatterTiles() {
@@ -168,32 +123,6 @@ public class World {
 
     public boolean containsPoint(double x, double y) {
         return 0 <= x && x <= numCols() * TS && 0 <= y && y <= numRows() * TS;
-    }
-
-    public void setPacPosition(Vector2f tile) {
-        pacPosition = tile;
-    }
-
-    public Vector2f pacPosition() {
-        return pacPosition;
-    }
-
-    public void setGhostPositions(Vector2f[] tiles) {
-        ghostPositions = tiles;
-    }
-
-    public Vector2f ghostPosition(byte ghostID) {
-        checkGhostID(ghostID);
-        return ghostPositions[ghostID];
-    }
-
-    public void setGhostDirections(Direction[] dirs) {
-        ghostDirections = dirs;
-    }
-
-    public Direction ghostDirection(byte ghostID) {
-        checkGhostID(ghostID);
-        return ghostDirections[ghostID];
     }
 
     public void setGhostScatterTiles(Vector2i[] tiles) {

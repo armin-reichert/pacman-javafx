@@ -110,8 +110,11 @@ public class PacManGame extends AbstractPacManGame {
         URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/pacman.world");
         var map = new WorldMap(mapURL);
         var world = new World(map);
-        world.addHouse(House.createArcadeHouse(15, 10));
-        world.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
+        House house = House.createArcadeHouse(15, 10);
+        house.setPacPositionFromMap(map);
+        house.setGhostPositionsFromMap(map);
+        world.addHouse(house);
+        // special tiles
         List<Direction> up = List.of(UP);
         Map<Vector2i, List<Direction>> fp = new HashMap<>();
         Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> fp.put(tile, up));
