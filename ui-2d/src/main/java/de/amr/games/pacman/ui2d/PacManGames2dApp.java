@@ -32,9 +32,6 @@ public class PacManGames2dApp extends Application {
         stopAction = () -> ui.gameClock().stop();
         ui.loadAssets();
         ui.createUI(stage, width, height);
-        for (var variant : GameController.it().supportedVariants()) {
-            GameController.it().game(variant).addGameEventListener(ui);
-        }
         ui.show();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }
