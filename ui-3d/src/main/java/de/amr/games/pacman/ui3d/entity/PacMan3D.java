@@ -22,6 +22,8 @@ import static de.amr.games.pacman.ui3d.model.Model3D.meshView;
  */
 public class PacMan3D extends Pac3D {
 
+    private HeadBanging walkingAnimation;
+
     /**
      * Creates a 3D Pac-Man.
      *
@@ -33,8 +35,8 @@ public class PacMan3D extends Pac3D {
         if (pacMan != null) {
             pac = pacMan;
             zStandingOnGround = -0.5 * size;
-            walking = new HeadBanging();
-            walking.setPower(false);
+            walkingAnimation = new HeadBanging();
+            walkingAnimation.setPower(false);
             light.setColor(theme.color("pacman.color.head").desaturate());
         }
 
@@ -52,6 +54,21 @@ public class PacMan3D extends Pac3D {
         var shapeGroup = new Group(body);
         shapeGroup.getTransforms().setAll(position, orientation);
         getChildren().add(shapeGroup);
+    }
+
+    @Override
+    public void startWalkingAnimation() {
+        walkingAnimation.play();
+    }
+
+    @Override
+    public void stopWalkingAnimation() {
+        walkingAnimation.stop();
+    }
+
+    @Override
+    public void setPower(boolean power) {
+        walkingAnimation.setPower(power);
     }
 
     @Override
@@ -87,7 +104,7 @@ public class PacMan3D extends Pac3D {
         );
     }
 
-    private class HeadBanging implements WalkingAnimation {
+    private class HeadBanging {
 
         private static final short DEFAULT_ANGLE_FROM = -25;
         private static final short DEFAULT_ANGLE_TO = 15;
@@ -103,7 +120,6 @@ public class PacMan3D extends Pac3D {
             animation.setInterpolator(Interpolator.EASE_BOTH);
         }
 
-        @Override
         public void setPower(boolean power) {
             double amplification = power ? 1.5 : 1;
             double rate = power ? 2 : 1;
@@ -113,7 +129,6 @@ public class PacMan3D extends Pac3D {
             animation.setRate(rate);
         }
 
-        @Override
         public void play() {
             if (pac.isStandingStill()) {
                 stop();
@@ -128,7 +143,6 @@ public class PacMan3D extends Pac3D {
             animation.play();
         }
 
-        @Override
         public void stop() {
             animation.stop();
             animation.getNode().setRotationAxis(animation.getAxis());

@@ -38,12 +38,6 @@ import static de.amr.games.pacman.ui3d.animation.Turn.angle;
  */
 public abstract class Pac3D extends Group {
 
-    public interface WalkingAnimation {
-        void play();
-        void stop();
-        void setPower(boolean power);
-    }
-
     protected static final String MESH_ID_EYES   = "PacMan.Eyes";
     protected static final String MESH_ID_HEAD   = "PacMan.Head";
     protected static final String MESH_ID_PALATE = "PacMan.Palate";
@@ -83,7 +77,6 @@ public abstract class Pac3D extends Group {
     protected final PointLight light;
     protected Pac pac;
     protected double zStandingOnGround;
-    protected WalkingAnimation walking;
 
     protected Pac3D() {
         light = new PointLight();
@@ -95,9 +88,11 @@ public abstract class Pac3D extends Group {
 
     public abstract Animation createDyingAnimation(GameContext context);
 
-    public void setPower(boolean power) {
-        walking.setPower(power);
-    }
+    public abstract void startWalkingAnimation();
+
+    public abstract void stopWalkingAnimation();
+
+    public abstract void setPower(boolean power);
 
     public Translate position() {
         return position;
@@ -126,9 +121,9 @@ public abstract class Pac3D extends Group {
         boolean outsideWorld = position.getX() < HTS || position.getX() > TS * world.numCols() - HTS;
         setVisible(pac.isVisible() && !outsideWorld);
         if (pac.isStandingStill()) {
-            walking.stop();
+            stopWalkingAnimation();
         } else {
-            walking.play();
+            startWalkingAnimation();
         }
         double radius = 0;
         if (game.powerTimer().duration() > 0) {

@@ -70,6 +70,8 @@ public class MsPacMan3D extends Pac3D {
         return new Group(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
     }
 
+    private HipSwaying walkingAnimation;
+
     /**
      * Creates a 3D Ms. Pac-Man.
      * @param size diameter of Pac-Man
@@ -80,8 +82,8 @@ public class MsPacMan3D extends Pac3D {
         if (msPacMan != null) {
             pac = msPacMan;
             zStandingOnGround = -0.5 * size;
-            walking = new HipSwaying();
-            walking.setPower(false);
+            walkingAnimation = new HipSwaying();
+            walkingAnimation.setPower(false);
             light.setColor(theme.color("ms_pacman.color.head").desaturate());
         }
 
@@ -106,6 +108,21 @@ public class MsPacMan3D extends Pac3D {
     }
 
     @Override
+    public void startWalkingAnimation() {
+        walkingAnimation.play();
+    }
+
+    @Override
+    public void stopWalkingAnimation() {
+        walkingAnimation.stop();
+    }
+
+    @Override
+    public void setPower(boolean power) {
+        walkingAnimation.setPower(power);
+    }
+
+    @Override
     public Animation createDyingAnimation(GameContext context) {
         var spin = new RotateTransition(Duration.seconds(0.5), this);
         spin.setAxis(Rotate.X_AXIS); //TODO check this
@@ -118,7 +135,7 @@ public class MsPacMan3D extends Pac3D {
         return new SequentialTransition(spin, pauseSec(2));
     }
 
-    private class HipSwaying implements WalkingAnimation {
+    private class HipSwaying {
 
         private static final short DEFAULT_ANGLE_FROM = -20;
         private static final short DEFAULT_ANGLE_TO = 20;
@@ -134,7 +151,6 @@ public class MsPacMan3D extends Pac3D {
             animation.setInterpolator(Interpolator.EASE_BOTH);
         }
 
-        @Override
         public void setPower(boolean power) {
             double amplification = power ? 1.5 : 1;
             double rate = power ? 2 : 1;
@@ -144,7 +160,6 @@ public class MsPacMan3D extends Pac3D {
             animation.setRate(rate);
         }
 
-        @Override
         public void play() {
             if (pac.isStandingStill()) {
                 stop();
@@ -154,7 +169,6 @@ public class MsPacMan3D extends Pac3D {
             animation.play();
         }
 
-        @Override
         public void stop() {
             animation.stop();
             animation.getNode().setRotationAxis(animation.getAxis());
