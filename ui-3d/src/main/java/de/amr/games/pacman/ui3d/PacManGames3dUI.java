@@ -16,7 +16,6 @@ import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import de.amr.games.pacman.ui3d.scene.PlayScene3D;
-import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
@@ -148,7 +147,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
     public void init(Stage stage, double width, double height) {
         super.init(stage, width, height);
-        stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
+        stage.titleProperty().bind(stageTitleBinding());
         PY_3D_ENABLED.set(true);
     }
 
@@ -194,12 +193,12 @@ public class PacManGames3dUI extends PacManGames2dUI {
     }
 
     @Override
-    protected StringBinding stageTitleBinding(Observable... dependencies) {
+    protected StringBinding stageTitleBinding() {
         return Bindings.createStringBinding(() -> {
-            var tk = "app.title." + game().variant().resourceKey() + (gameClock().isPaused() ? ".paused" : "");
+            var tk = "app.title." + gameVariantPy.get().resourceKey() + (clock.pausedPy.get() ? ".paused" : "");
             var dim = tt(PY_3D_ENABLED.get() ? "threeD" : "twoD");
             return tt(tk, dim);
-        }, dependencies);
+        }, clock.pausedPy, gameVariantPy, PY_3D_ENABLED);
     }
 
     @Override

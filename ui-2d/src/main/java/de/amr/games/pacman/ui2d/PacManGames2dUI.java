@@ -24,7 +24,6 @@ import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
-import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
@@ -162,7 +161,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void quitMapEditor() {
         editor.showConfirmation(editor::saveMapFileAs, () -> {
-            stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy, PY_3D_DRAW_MODE, PY_3D_ENABLED));
+            stage.titleProperty().bind(stageTitleBinding());
             editor.stop();
             selectPage(startPage);
         });
@@ -302,7 +301,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         createGameClock();
 
         stage.setScene(mainScene);
-        stage.titleProperty().bind(stageTitleBinding(clock.pausedPy, gameVariantPy));
+        stage.titleProperty().bind(stageTitleBinding());
         stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
         //TODO this does not work yet correctly
         Dimension2D minSize = DecoratedCanvas.computeSize(
@@ -378,10 +377,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
     }
 
-    protected StringBinding stageTitleBinding(Observable... dependencies) {
+    protected StringBinding stageTitleBinding() {
         return Bindings.createStringBinding(
-            () -> tt("app.title." + game().variant().resourceKey() + (clock.isPaused() ? ".paused" : ""), "2D"),
-            dependencies);
+            () -> tt("app.title." + gameVariantPy.get().resourceKey() + (clock.pausedPy.get() ? ".paused" : ""), "2D"),
+            clock.pausedPy, gameVariantPy);
     }
 
     protected StartPage createStartPage() {
