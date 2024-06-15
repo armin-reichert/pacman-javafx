@@ -110,11 +110,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected Page currentPage;
 
     //TODO reconsider this
-    protected AudioClip voiceClip;
     protected final Animation voiceClipExecution = new PauseTransition();
-
-    public PacManGames2dUI() {
-    }
+    protected AudioClip voiceClip;
 
     private void addMapEditor() {
         editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
@@ -168,11 +165,24 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     public void loadAssets() {
-        bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", getClass().getModule()));
+        bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", PacManGames2dUI.class.getModule()));
         ResourceManager rm = () -> PacManGames2dUI.class;
 
+        // Dashboard
+
+        theme.set("image.armin1970",                 rm.loadImage("graphics/armin.jpg"));
+        theme.set("icon.play",                       rm.loadImage("graphics/icons/play.png"));
+        theme.set("icon.stop",                       rm.loadImage("graphics/icons/stop.png"));
+        theme.set("icon.step",                       rm.loadImage("graphics/icons/step.png"));
+
+        theme.set("infobox.min_col_width",           200);
+        theme.set("infobox.min_label_width",         140);
+        theme.set("infobox.text_color",              Color.WHITE);
+        theme.set("infobox.label_font",              Font.font("Sans", 12));
+        theme.set("infobox.text_font",               rm.loadFont("fonts/SplineSansMono-Regular.ttf", 12));
+
         //
-        // Common to both games
+        // Common to all game variants
         //
 
         theme.set("palette.black",                    Color.rgb(0, 0, 0));
@@ -267,28 +277,16 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("pacman_xxl.icon",                 rm.loadImage("graphics/icons/pacman.png"));
         theme.set("pacman_xxl.helpButton.icon",      rm.loadImage("graphics/icons/help-blue-64.png"));
         theme.set("pacman_xxl.startpage.image",      rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
-
-
-        // dashboard
-        theme.set("image.armin1970",                 rm.loadImage("graphics/armin.jpg"));
-        theme.set("icon.play",                       rm.loadImage("graphics/icons/play.png"));
-        theme.set("icon.stop",                       rm.loadImage("graphics/icons/stop.png"));
-        theme.set("icon.step",                       rm.loadImage("graphics/icons/step.png"));
-
-        theme.set("infobox.min_col_width",           200);
-        theme.set("infobox.min_label_width",         140);
-        theme.set("infobox.text_color",              Color.WHITE);
-        theme.set("infobox.label_font",              Font.font("Sans", 12));
-        theme.set("infobox.text_font",               rm.loadFont("fonts/SplineSansMono-Regular.ttf", 12));
     }
 
     public void init(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
+        gameVariantPy.set(GameController.it().game().variant());
+
         // Touch all game keys such that they get registered with keyboard
         for (var gameKey : GameKeys.values()) {
             Logger.info("Game key '{}' registered", gameKey);
         }
-        gameVariantPy.set(GameController.it().game().variant());
 
         mainScene = createMainScene(width, height);
 
@@ -296,21 +294,21 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         gamePage  = createGamePage();
 
         createGameScenes(); // must be done *after* creating game page!
+        createGameClock();
         addMapEditor();
 
-        createGameClock();
-
-        stage.setScene(mainScene);
         stage.titleProperty().bind(stageTitleBinding());
         stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
+        stage.setOnShown(e -> {
+            stage.setScene(mainScene);
+            selectStartPage();
+        });
         //TODO this does not work yet correctly
         Dimension2D minSize = DecoratedCanvas.computeSize(
-                DEFAULT_CANVAS_WIDTH_UNSCALED, DEFAULT_CANVAS_HEIGHT_UNSCALED, 1.25 * MIN_SCALING);
+            DEFAULT_CANVAS_WIDTH_UNSCALED, DEFAULT_CANVAS_HEIGHT_UNSCALED, 1.25 * MIN_SCALING);
         stage.setMinWidth(minSize.getWidth());
         stage.setMinHeight(minSize.getHeight());
         stage.centerOnScreen();
-        stage.setOnShown(e -> selectStartPage());
-        stage.show();
     }
 
     protected void onMouseClicked(MouseEvent e) {
