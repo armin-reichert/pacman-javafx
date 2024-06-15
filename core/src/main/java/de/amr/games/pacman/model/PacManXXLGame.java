@@ -15,8 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.halfTileRightOf;
-import static de.amr.games.pacman.lib.Globals.randomInt;
+import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
 
 /**
@@ -74,9 +73,9 @@ public class PacManXXLGame extends PacManGame {
 
     private World createModernWorld(WorldMap map) {
         var modernWorld = new World(map);
-        int houseTopRow = map.numRows() / 2 - 3;
-        int houseTopCol = map.numCols() / 2 - 4;
-        House house = House.createArcadeHouse(houseTopRow, houseTopCol);
+        int topLeftX = map.numCols() / 2 - 4;
+        int topLeftY = map.numRows() / 2 - 3;
+        House house = House.createArcadeHouse(v2i(topLeftX, topLeftY));
         house.setPacPositionFromMap(map);
         house.setGhostPositionsFromMap(map);
         modernWorld.addHouse(house);

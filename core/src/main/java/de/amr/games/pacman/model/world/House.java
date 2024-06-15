@@ -22,11 +22,11 @@ import static de.amr.games.pacman.model.GameModel.checkGhostID;
  */
 public class House {
 
-    public static House createArcadeHouse(int topRow, int topCol) {
+    public static House createArcadeHouse(Vector2i topLeftTile) {
         var house = new House();
-        house.setTopLeftTile(new Vector2i(topCol, topRow));
+        house.setTopLeftTile(topLeftTile);
         house.setSize(v2i(8, 5));
-        house.setDoor(new Door(v2i(topCol + 3, topRow), v2i(topCol + 4, topRow)));
+        house.setDoor(new Door(v2i(topLeftTile.x() + 3, topLeftTile.y()), v2i(topLeftTile.x() + 4, topLeftTile.y())));
         house.setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
         return house;
     }
@@ -121,16 +121,8 @@ public class House {
         ghostPositions[GameModel.ORANGE_GHOST] = positionHalfTileRightOf(homeTileOrange.orElse(new Vector2i(15, 17)));
     }
 
-    public void setPacPosition(Vector2f tile) {
-        pacPosition = tile;
-    }
-
     public Vector2f pacPosition() {
         return pacPosition;
-    }
-
-    public void setGhostPositions(Vector2f[] tiles) {
-        ghostPositions = tiles;
     }
 
     public Vector2f ghostPosition(byte ghostID) {
@@ -146,5 +138,4 @@ public class House {
         checkGhostID(ghostID);
         return ghostDirections[ghostID];
     }
-
 }
