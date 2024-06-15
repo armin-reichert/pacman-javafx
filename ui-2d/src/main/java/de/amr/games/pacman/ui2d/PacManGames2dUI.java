@@ -29,6 +29,7 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -41,6 +42,7 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.Pair;
@@ -288,8 +290,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         )));
     }
 
-    public void createUI(Stage stage, double width, double height) {
+    public void createUI(Stage stage, Rectangle2D screenSize) {
         this.stage = checkNotNull(stage);
+
         gameVariantPy.set(GameController.it().game().variant());
         for (var variant : GameController.it().supportedVariants()) {
             GameController.it().game(variant).addGameEventListener(this);
@@ -300,7 +303,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             Logger.info("Game key '{}' registered", gameKey);
         }
 
-        mainScene = createMainScene(width, height);
+        mainScene = createMainScene(computeMainSceneSize(screenSize));
 
         startPage = createStartPage();
         gamePage  = createGamePage();
@@ -313,6 +316,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
         stage.setScene(mainScene);
         selectStartPage();
+    }
+
+    protected Dimension2D computeMainSceneSize(Rectangle2D screenSize) {
+        double height = 0.9 * screenSize.getHeight(), width = 0.9 * height;
+        return new Dimension2D(width, height);
     }
 
     public void show() {
@@ -333,10 +341,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         currentPage.onContextMenuRequested(e);
     }
 
-    protected Scene createMainScene(double width, double height) {
+    protected Scene createMainScene(Dimension2D size) {
         var placeholder = new Region();
         placeholder.setBackground(Ufx.coloredBackground(Color.BLACK));
-        var scene = new Scene(placeholder, width, height);
+        var scene = new Scene(placeholder, size.getWidth(), size.getHeight());
         Keyboard.filterKeyEventsFor(scene);
         scene.setOnMouseClicked(this::onMouseClicked);
         scene.setOnContextMenuRequested(this::onContextMenuRequested);

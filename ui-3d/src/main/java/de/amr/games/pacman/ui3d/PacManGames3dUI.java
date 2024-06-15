@@ -19,6 +19,8 @@ import de.amr.games.pacman.ui3d.scene.PlayScene3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
+import javafx.geometry.Dimension2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
@@ -159,10 +161,17 @@ public class PacManGames3dUI extends PacManGames2dUI {
     }
 
     @Override
-    public void createUI(Stage stage, double width, double height) {
-        super.createUI(stage, width, height);
+    public void createUI(Stage stage, Rectangle2D screenSize) {
+        super.createUI(stage, screenSize);
         stage.titleProperty().bind(stageTitleBinding());
         PY_3D_ENABLED.set(true);
+    }
+
+    @Override
+    protected Dimension2D computeMainSceneSize(Rectangle2D screenSize) {
+        double aspect = screenSize.getWidth() / screenSize.getHeight();
+        double height = 0.8 * screenSize.getHeight(), width = aspect * height;
+        return new Dimension2D(width, height);
     }
 
     @Override
