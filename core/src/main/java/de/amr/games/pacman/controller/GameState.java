@@ -270,6 +270,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
+                game.removeWorld();
                 gameController().changeState(gameController().hasCredit() ? CREDIT : INTRO);
             }
         }

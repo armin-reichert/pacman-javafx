@@ -316,6 +316,11 @@ public abstract class AbstractPacManGame implements GameModel {
     }
 
     @Override
+    public void removeWorld() {
+        world = null;
+    }
+
+    @Override
     public void letsGetReadyToRumble() {
         pac.reset();
         pac.setPosition(world.house().pacPosition());
