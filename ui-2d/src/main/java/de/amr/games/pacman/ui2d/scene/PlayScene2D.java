@@ -30,7 +30,7 @@ import static de.amr.games.pacman.model.actors.GhostState.RETURNING_HOME;
  */
 public class PlayScene2D extends GameScene2D {
 
-    private static final Pattern PATTERN_MS_PACMAN_MAP = Pattern.compile(".*mspacman_(\\d).world$");
+    private static final Pattern PATTERN_MS_PACMAN_MAP = Pattern.compile(".*mspacman_(\\d)\\.world$");
 
     private static int mapNumber(WorldMap map) {
         Matcher m = PATTERN_MS_PACMAN_MAP.matcher(map.url().toExternalForm());

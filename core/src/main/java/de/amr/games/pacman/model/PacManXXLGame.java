@@ -8,11 +8,9 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
-import org.tinylog.Logger;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -23,7 +21,7 @@ import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
  */
 public class PacManXXLGame extends PacManGame {
 
-    private final List<WorldMap> customMaps = new ArrayList<>();
+    private List<WorldMap> customMaps;
 
     @Override
     public void init() {
@@ -39,7 +37,7 @@ public class PacManXXLGame extends PacManGame {
     @Override
     public void reset() {
         super.reset();
-        loadCustomMaps(CUSTOM_MAP_DIR);
+        customMaps = loadCustomMaps(CUSTOM_MAP_DIR);
     }
 
     @Override
@@ -81,28 +79,5 @@ public class PacManXXLGame extends PacManGame {
         modernWorld.addHouse(house);
         modernWorld.setBonusPosition(halfTileRightOf(13, 20)); // TODO get position from map?
         return modernWorld;
-    }
-
-    private void loadCustomMaps(File mapDir) {
-        if (!mapDir.isDirectory()) {
-            Logger.error("Specified map directory path '{}' does not point to a directory", mapDir);
-            return;
-        }
-        Logger.info("Searching for custom map files in folder {}", mapDir);
-        customMaps.clear();
-        var mapFiles = mapDir.listFiles((dir, name) -> name.endsWith(".world"));
-        if (mapFiles != null) {
-            for (var mapFile : mapFiles) {
-                customMaps.add(new WorldMap(mapFile));
-                Logger.info("Found custom map file: " + mapFile);
-            }
-            if (customMaps.isEmpty()) {
-                Logger.info("No custom maps found");
-            } else {
-                Logger.info("{} custom map(s) loaded", customMaps.size());
-            }
-        } else {
-            Logger.error("Could not access custom map folder {}", mapDir);
-        }
     }
 }
