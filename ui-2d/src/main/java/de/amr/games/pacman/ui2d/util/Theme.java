@@ -28,7 +28,7 @@ public class Theme {
     public long countEntriesOfType(Class<?> clazz) {
         var count = valuesByName.values().stream().filter(value -> value.getClass().isAssignableFrom(clazz)).count();
         for (var array : arraysByName.values()) {
-            if (!array.isEmpty() && array.getFirst().getClass().isAssignableFrom(clazz)) {
+            if (!array.isEmpty() && array.get(0).getClass().isAssignableFrom(clazz)) {
                 count += array.size();
             }
         }

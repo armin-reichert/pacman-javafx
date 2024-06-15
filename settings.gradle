@@ -3,4 +3,5 @@ plugins {
 }
 
 rootProject.name = 'pacman-javafx'
-include 'lib', 'core', 'ui-2d', 'ui-3d', 'mapeditor'
+
+include 'lib', 'core', 'mapeditor', 'ui-2d', 'ui-3d'

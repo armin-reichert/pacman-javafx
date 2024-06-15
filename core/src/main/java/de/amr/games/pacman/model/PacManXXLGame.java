@@ -48,7 +48,7 @@ public class PacManXXLGame extends PacManGame {
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
         var world = switch (levelNumber) {
-            case 1 -> customMaps.isEmpty() ? createPacManWorld() : createModernWorld(customMaps.getFirst());
+            case 1 -> customMaps.isEmpty() ? createPacManWorld() : createModernWorld(customMaps.get(0));
             case 2, 3, 4, 5, 6, 7, 8, 9 -> {
                 int mapNumber = levelNumber - 1;
                 URL mapURL = getClass().getResource(String.format("/de/amr/games/pacman/maps/masonic/masonic_%d.world", mapNumber));

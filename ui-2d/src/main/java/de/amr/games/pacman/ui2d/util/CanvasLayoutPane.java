@@ -53,7 +53,7 @@ public class CanvasLayoutPane extends StackPane {
     }
 
     public void restoreCanvasLayer() {
-        if (getChildren().getFirst() != canvasLayer) {
+        if (getChildren().get(0) != canvasLayer) {
             getChildren().set(0, canvasLayer);
         }
     }

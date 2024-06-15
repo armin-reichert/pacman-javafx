@@ -307,7 +307,7 @@ public class GamePage implements Page {
         @Override
         public Pane createPane(Color backgroundColor, Font font) {
             var pane = super.createPane(backgroundColor, font);
-            var grid = (GridPane) pane.getChildren().getFirst(); // TODO improve
+            var grid = (GridPane) pane.getChildren().get(0); // TODO improve
             // add default entries:
             if (PY_AUTOPILOT.get()) {
                 var autoPilotEntry = text(context.tt("help.autopilot_on"), Color.ORANGE);

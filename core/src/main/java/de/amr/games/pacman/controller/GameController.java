@@ -91,7 +91,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
             Logger.warn("Variants specified: {}", List.of(variants));
         }
         supportedVariants.addAll(noDuplicates);
-        game = models.get(supportedVariants.getFirst());
+        game = models.get(supportedVariants.get(0));
     }
 
     public List<GameVariant> supportedVariants() {

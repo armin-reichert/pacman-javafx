@@ -128,7 +128,7 @@ public class RuleBasedPacSteering implements Steering {
             return;
 
         if (!data.frightenedGhosts.isEmpty() && game.powerTimer().remaining() >= GameModel.FPS) {
-            Ghost prey = data.frightenedGhosts.getFirst();
+            Ghost prey = data.frightenedGhosts.get(0);
             Logger.trace("Detected frightened ghost {} {} tiles away", prey.name(),
                 prey.tile().manhattanDistance(pac.tile()));
             pac.setTargetTile(prey.tile());
@@ -219,7 +219,7 @@ public class RuleBasedPacSteering implements Steering {
                 return escape;
             }
         }
-        return escapes.isEmpty() ? null : escapes.getFirst();
+        return escapes.isEmpty() ? null : escapes.get(0);
     }
 
     private List<Vector2i> findNearestFoodTiles() {

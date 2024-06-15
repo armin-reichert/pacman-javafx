@@ -1,35 +1,24 @@
 import org.gradle.internal.os.OperatingSystem
 
-plugins {
-    id 'java'
-}
-
 ext {
     os = OperatingSystem.current()
     arch = System.getProperty("os.arch")
 }
 
-println "Operating System: name='${os.name}' version='${os.version}' arch='${arch}'"
-
 allprojects {
-    group 'de.amr.games.pacman'
-    version '1.0'
+    repositories {
+        mavenCentral()
+    }
     tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
         configure(options) {
             options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
         }
     }
+
+    // TODO Are Maven publishing data needed for this app?
+    //group 'de.amr.games.pacman'
+    //version '1.0'
 }
 
-subprojects {
-    repositories {
-        mavenCentral()
-    }
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
+println "Operating System: name='${os.name}' version='${os.version}' arch='${arch}'"

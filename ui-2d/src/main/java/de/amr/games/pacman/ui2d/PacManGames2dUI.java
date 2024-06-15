@@ -857,7 +857,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void selectNextGameVariant() {
         var all = GameController.it().supportedVariants();
         var current = all.indexOf(game().variant());
-        var next = current < all.size() - 1 ? all.get(current + 1) : all.getFirst();
+        var next = current < all.size() - 1 ? all.get(current + 1) : all.get(0);
         selectGameVariant(next);
     }
 
@@ -865,7 +865,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void selectPrevGameVariant() {
         var all = GameController.it().supportedVariants();
         var current = all.indexOf(game().variant());
-        var prev = current > 0 ? all.get(current - 1) : all.getLast();
+        var prev = current > 0 ? all.get(current - 1) : all.get(all.size()-1);
         selectGameVariant(prev);
     }
 
