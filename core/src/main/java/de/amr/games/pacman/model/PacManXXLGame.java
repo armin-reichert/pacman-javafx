@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
@@ -11,7 +12,6 @@ import de.amr.games.pacman.steering.RuleBasedPacSteering;
 
 import java.io.File;
 import java.net.URL;
-import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
@@ -20,8 +20,6 @@ import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
  * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only Sean Williams!).
  */
 public class PacManXXLGame extends PacManGame {
-
-    private List<WorldMap> customMaps;
 
     @Override
     public void init() {
@@ -37,12 +35,12 @@ public class PacManXXLGame extends PacManGame {
     @Override
     public void reset() {
         super.reset();
-        customMaps = loadCustomMaps(CUSTOM_MAP_DIR);
     }
 
     @Override
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
+        var customMaps = GameController.it().getCustomMaps();
         var world = switch (levelNumber) {
             case 1 -> customMaps.isEmpty() ? createPacManWorld() : createModernWorld(customMaps.get(0));
             case 2, 3, 4, 5, 6, 7, 8, 9 -> {

@@ -10,7 +10,6 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.*;
@@ -63,30 +62,6 @@ public abstract class AbstractPacManGame implements GameModel {
 
     static GameLevel level(int levelNumber) {
         return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
-    }
-
-    public static List<WorldMap> loadCustomMaps(File mapDir) {
-        List<WorldMap> customMaps = new ArrayList<>();
-        if (!mapDir.isDirectory()) {
-            Logger.error("Specified map directory path '{}' does not point to a directory", mapDir);
-            return customMaps;
-        }
-        Logger.info("Searching for custom map files in folder {}", mapDir);
-        var mapFiles = mapDir.listFiles((dir, name) -> name.endsWith(".world"));
-        if (mapFiles != null) {
-            for (var mapFile : mapFiles) {
-                customMaps.add(new WorldMap(mapFile));
-                Logger.info("Found custom map file: " + mapFile);
-            }
-            if (customMaps.isEmpty()) {
-                Logger.info("No custom maps found");
-            } else {
-                Logger.info("{} custom map(s) loaded", customMaps.size());
-            }
-        } else {
-            Logger.error("Could not access custom map folder {}", mapDir);
-        }
-        return customMaps;
     }
 
     static final byte    POINTS_PELLET = 10;

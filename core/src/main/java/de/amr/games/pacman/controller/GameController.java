@@ -7,6 +7,7 @@ package de.amr.games.pacman.controller;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.*;
 import org.tinylog.Logger;
 
@@ -55,7 +56,9 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     private boolean pacImmune = false;
     private int credit = 0;
 
-    private static void ensureCustomMapDirExists() {
+    private final List<WorldMap> customMaps = new ArrayList<>();
+
+    private void ensureCustomMapDirExists() {
         var dir = GameModel.CUSTOM_MAP_DIR;
         if (dir.exists() && dir.isDirectory()) {
             return;
@@ -68,9 +71,32 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         }
     }
 
+    public void loadCustomMaps() {
+        ensureCustomMapDirExists();
+        var mapDir = GameModel.CUSTOM_MAP_DIR;
+        if (!mapDir.isDirectory()) {
+            Logger.error("Specified map directory path '{}' does not point to a directory", mapDir);
+        }
+        Logger.info("Searching for custom map files in folder {}", mapDir);
+        var mapFiles = mapDir.listFiles((dir, name) -> name.endsWith(".world"));
+        if (mapFiles != null) {
+            for (var mapFile : mapFiles) {
+                customMaps.add(new WorldMap(mapFile));
+                Logger.info("Found custom map file: " + mapFile);
+            }
+            if (customMaps.isEmpty()) {
+                Logger.info("No custom maps found");
+            } else {
+                Logger.info("{} custom map(s) loaded", customMaps.size());
+            }
+        } else {
+            Logger.error("Could not access custom map folder {}", mapDir);
+        }
+    }
+
     private GameController() {
         super(GameState.values());
-        ensureCustomMapDirExists();
+        loadCustomMaps();
         for (var model : models.values()) {
             model.init();
             Logger.info("Game (variant={}) initialized.", model.variant());
@@ -96,6 +122,10 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     public List<GameVariant> supportedVariants() {
         return Collections.unmodifiableList(supportedVariants);
+    }
+
+    public List<WorldMap> getCustomMaps() {
+        return Collections.unmodifiableList(customMaps);
     }
 
     public GameModel game() {

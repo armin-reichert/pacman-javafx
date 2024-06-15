@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui3d;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
