@@ -28,16 +28,16 @@ import static de.amr.games.pacman.model.actors.GhostState.LOCKED;
  * inside the ghost house is after Pac-Man captures him, and he immediately turns around to leave once revived.
  * That's about all there is to know about Blinky's behavior in terms of the ghost house, but determining when the
  * other three ghosts leave home is an involved process based on several variables and conditions.
- * The rest of this section will deal with them exclusively. Accordingly, any mention of “the ghosts” below refers t
+ * The rest of this section will deal with them exclusively. Accordingly, any mention of "the ghosts" below refers t
  * o Pinky, Inky, and Clyde, but not Blinky.
  * </p>
  * <p>
  * The first control used to evaluate when the ghosts leave home is a personal counter each ghost retains for
- * tracking the number of dots Pac-Man eats. Each ghost's “dot counter” is reset to zero when a level begins and can
+ * tracking the number of dots Pac-Man eats. Each ghost's "dot counter" is reset to zero when a level begins and can
  * only be active when inside the ghost house, but only one ghost's counter can be active at any given time regardless
  * of how many ghosts are inside. The order of preference for choosing which ghost's counter to activate is:
  * Pinky, then Inky, and then Clyde. For every dot Pac-Man eats, the preferred ghost in the house (if any) gets its
- * dot counter increased by one. Each ghost also has a “dot limit” associated with his counter, per level.
+ * dot counter increased by one. Each ghost also has a "dot limit" associated with his counter, per level.
  * If the preferred ghost reaches or exceeds his dot limit, it immediately exits the house and its dot counter is
  * deactivated (but not reset). The most-preferred ghost still waiting inside the house (if any) activates its timer
  * at this point and begins counting dots.
@@ -81,7 +81,7 @@ import static de.amr.games.pacman.model.actors.GhostState.LOCKED;
  * This is accomplished by avoiding eating dots and waiting for the timer limit to force Clyde out.
  * Once Clyde is moving for the exit, start eating dots again until at least 32 dots have been consumed since
  * the life was lost. Now head for an energizer and gobble up some ghosts. Blinky will leave the house immediately
- * as usual, but the other three ghosts will remain “stuck” inside as long as Pac-Man continues eating dots with
+ * as usual, but the other three ghosts will remain "stuck" inside as long as Pac-Man continues eating dots with
  * sufficient frequency as not to trigger the control timer. Why does this happen?
  * The key lies in how the global dot counter works—it cannot be deactivated if Clyde is outside the house when
  * the counter has a value of 32. By letting the timer force Clyde out before 32 dots are eaten, the global dot
