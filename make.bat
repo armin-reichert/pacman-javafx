@@ -1,1 +1,1 @@
-.\gradlew jpackage --info
+.\gradlew clean jpackage --info
