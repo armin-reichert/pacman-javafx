@@ -42,7 +42,6 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.Pair;
@@ -468,7 +467,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         };
     }
 
-    protected String message(String key, Object... args) {
+    // -----------------------------------------------------------------------------------------------------------------
+    // GameSceneContext interface implementation
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String tt(String key, Object... args) {
         checkNotNull(key);
         for (var bundle : bundles) {
             if (bundle.containsKey(key)) {
@@ -477,15 +481,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
         Logger.error("Missing localized text for key {}", key);
         return null;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // GameSceneContext interface implementation
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public String tt(String key, Object... args) {
-        return message(key, args);
     }
 
     @Override
