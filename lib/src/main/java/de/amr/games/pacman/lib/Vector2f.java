@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib;
 
-import java.util.Objects;
-
 import static de.amr.games.pacman.lib.Globals.differsAtMost;
 
 /**
@@ -14,27 +12,11 @@ import static de.amr.games.pacman.lib.Globals.differsAtMost;
  *
  * @author Armin Reichert
  */
-public final class Vector2f {
+public record Vector2f(float x, float y) {
 
     public static final Vector2f ZERO = new Vector2f(0, 0);
 
     public static final float EPSILON = 1e-6f;
-
-    private final float x;
-    private final float y;
-
-    public Vector2f(float x, float y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public float x() {
-        return x;
-    }
-
-    public float y() {
-        return y;
-    }
 
     public Vector2f plus(Vector2f v) {
         return new Vector2f(x + v.x, y + v.y);
@@ -78,11 +60,6 @@ public final class Vector2f {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(x, y);
-    }
-
-    @Override
     public boolean equals(Object other) {
         if (this == other)
             return true;
@@ -93,19 +70,6 @@ public final class Vector2f {
         Vector2f v = (Vector2f) other;
         return Math.abs(v.x - x) <= EPSILON && Math.abs(v.y - y) <= EPSILON;
     }
-
-//	@Override
-//	public boolean equals(Object obj) {
-//		if (this == obj)
-//			return true;
-//		if (obj == null)
-//			return false;
-//		if (getClass() != obj.getClass())
-//			return false;
-//		Vector2f other = (Vector2f) obj;
-//		return Float.floatToIntBits(x) == Float.floatToIntBits(other.x)
-//				&& Float.floatToIntBits(y) == Float.floatToIntBits(other.y);
-//	}
 
     @Override
     public String toString() {
