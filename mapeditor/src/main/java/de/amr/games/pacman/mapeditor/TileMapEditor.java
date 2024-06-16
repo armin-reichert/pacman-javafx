@@ -620,7 +620,7 @@ public class TileMapEditor  {
     private void drawEditingHint(GraphicsContext g) {
         editHint.setFont(Font.font("Sans", FontWeight.BLACK, Math.floor(editCanvas.getWidth() / 12)));
         double x = 0.5 * (editCanvas.getWidth()  - editHint.getBoundsInLocal().getWidth());
-        double y = 0.5 * editCanvas.getHeight();
+        double y = 50;
         g.setFont(editHint.getFont());
         g.setStroke(Color.LIGHTGREEN);
         g.setLineWidth(3);
