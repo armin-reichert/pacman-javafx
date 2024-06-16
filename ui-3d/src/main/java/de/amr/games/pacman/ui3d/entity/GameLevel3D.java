@@ -403,6 +403,7 @@ public class GameLevel3D extends Group {
             };
             livesCounter3D.addItem(pac3D, true);
         }
+        livesCounter3D.lightOnPy.set(context.gameController().hasCredit());
         livesCounter3D.setVisible(context.gameController().hasCredit());
     }
 
