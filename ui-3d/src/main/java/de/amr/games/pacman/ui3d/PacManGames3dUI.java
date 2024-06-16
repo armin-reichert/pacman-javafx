@@ -97,8 +97,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
         theme.set("model3D.wallpaper.night", Ufx.imageBackground(rm.loadImage("graphics/sea-wallpaper-night.jpg"),
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, FILL_PAGE));
 
-        theme.addAllToArray("texture.names", new String[] {"knobs", "plastic", "wood"});
-        for (var name : theme.getArray("texture.names")) {
+        theme.set("texture.names", List.of("knobs", "plastic", "wood"));
+        for (var name : theme.getList("texture.names")) {
             var texture = new PhongMaterial();
             texture.setBumpMap(rm.loadImage("graphics/textures/%s-bump.jpg".formatted(name)));
             texture.setDiffuseMap(rm.loadImage("graphics/textures/%s-diffuse.jpg".formatted(name)));

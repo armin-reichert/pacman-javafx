@@ -11,7 +11,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Pair;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,25 +21,25 @@ import java.util.stream.Stream;
  */
 public class Theme {
 
-    protected Map<String, Object> valuesByName = new HashMap<>();
-    protected Map<String, ArrayList<Object>> arraysByName = new HashMap<>();
+    private final Map<String, Object> map = new HashMap<>();
 
     public long countEntriesOfType(Class<?> clazz) {
-        var count = valuesByName.values().stream().filter(value -> value.getClass().isAssignableFrom(clazz)).count();
-        for (var array : arraysByName.values()) {
-            if (!array.isEmpty() && array.get(0).getClass().isAssignableFrom(clazz)) {
-                count += array.size();
+        long count = map.values().stream().filter(val -> val.getClass().isAssignableFrom(clazz)).count();
+        for (var value : map.values()) {
+            if (value instanceof List<?> list) {
+                count += list.stream().filter(val -> val.getClass().isAssignableFrom(clazz)).count();
             }
         }
         return count;
     }
 
-    public String summary(List<Pair<Class<?>, String>> entryTypes) {
+    public String summary(List<Pair<Class<?>, String>> pairs) {
         StringBuilder sb = new StringBuilder();
         int i = 0;
-        for (var entry : entryTypes) {
-            sb.append(entry.getValue()).append(" (").append(countEntriesOfType(entry.getKey())).append(")");
-            if (i < entryTypes.size() - 1) {
+        for (var pair : pairs) {
+            long count = countEntriesOfType(pair.getKey());
+            sb.append(pair.getValue()).append(" (").append(count).append(")");
+            if (i < pairs.size() - 1) {
                 sb.append(", ");
             }
             i += 1;
@@ -48,23 +47,8 @@ public class Theme {
         return sb.toString();
     }
 
-    public void set(String resourceKey, Object value) {
-        valuesByName.put(resourceKey, value);
-    }
-
-    public void addToArray(String arrayName, Object value) {
-        arraysByName.computeIfAbsent(arrayName, resourceKey -> new ArrayList<>()).add(value);
-    }
-
-    public void addAllToArray(String arrayName, Object[] values) {
-        for (var value : values) {
-            addToArray(arrayName, value);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> List<T> getArray(String arrayName) {
-        return (List<T>) arraysByName.get(arrayName);
+    public void set(String key, Object value) {
+        map.put(key, value);
     }
 
     /**
@@ -75,49 +59,53 @@ public class Theme {
      * </pre>
      *
      * @param <T>  expected return type
-     * @param resourceKey resourceKey of value
+     * @param key resourceKey of value
      * @return stored value cast to return type
      */
     @SuppressWarnings("unchecked")
-    public <T> T get(String resourceKey) {
-        return (T) valuesByName.get(resourceKey);
+    public <T> T get(String key) {
+        return (T) map.get(key);
+    }
+
+    public <T> List<T> getList(String key){
+        return get(key);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T get(String resourceKey, int i, int j) {
-        return (T) valuesByName.get(String.format("%s.%d.%d", resourceKey, i, j));
+    public <T> T get(String key, int i, int j) {
+        return (T) map.get(String.format("%s.%d.%d", key, i, j));
     }
 
-    public Color color(String arrayName, int i) {
-        var array = arraysByName.get(arrayName);
-        return (Color) array.get(i);
+    public Color color(String listKey, int i) {
+        List<Object> list = get(listKey);
+        return (Color) list.get(i);
     }
 
-    public Color color(String resourceKey) {
-        return get(resourceKey);
+    public Color color(String key) {
+        return get(key);
     }
 
-    public Font font(String resourceKey) {
-        return get(resourceKey);
+    public Font font(String key) {
+        return get(key);
     }
 
-    public Font font(String resourceKey, double size) {
-        return Font.font(font(resourceKey).getFamily(), size);
+    public Font font(String key, double size) {
+        return Font.font(font(key).getFamily(), size);
     }
 
-    public Image image(String resourceKey) {
-        return get(resourceKey);
+    public Image image(String key) {
+        return get(key);
     }
 
-    public Background background(String resourceKey) {
-        return get(resourceKey);
+    public Background background(String key) {
+        return get(key);
     }
 
-    public AudioClip audioClip(String resourceKey) {
-        return get(resourceKey);
+    public AudioClip audioClip(String key) {
+        return get(key);
     }
 
     public Stream<AudioClip> audioClips() {
-        return valuesByName.values().stream().filter(AudioClip.class::isInstance).map(AudioClip.class::cast);
+        return map.values().stream().filter(AudioClip.class::isInstance).map(AudioClip.class::cast);
     }
 }

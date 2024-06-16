@@ -161,7 +161,7 @@ public class GameLevel3D extends Group {
         this.context = checkNotNull(context);
 
         // Floor
-        List<String> textureNames = context.theme().getArray("texture.names");
+        List<String> textureNames = context.theme().getList("texture.names");
         for (String textureName : textureNames) {
             String key = "texture." + textureName;
             floorTextures.put(key, context.theme().get(key));

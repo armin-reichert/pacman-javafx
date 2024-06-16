@@ -312,7 +312,7 @@ public class PlayScene3D implements GameScene {
         }
         level3D.createLevelCounter3D();
         if (PY_3D_FLOOR_TEXTURE_RND.get()) {
-            List<String> names = context.theme().getArray("texture.names");
+            List<String> names = context.theme().getList("texture.names");
             PY_3D_FLOOR_TEXTURE.set(names.get(randomInt(0, names.size())));
         }
     }
