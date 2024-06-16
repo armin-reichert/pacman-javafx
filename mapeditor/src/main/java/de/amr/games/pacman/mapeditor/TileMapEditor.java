@@ -39,8 +39,10 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -48,6 +50,12 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  * @author Armin Reichert
  */
 public class TileMapEditor  {
+
+    private static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.mapeditor.texts");
+
+    private static String tt(String key, Object... args) {
+        return MessageFormat.format(TEXTS.getString(key), args);
+    }
 
     private static final String PALETTE_TERRAIN = "Terrain";
     private static final String PALETTE_ACTORS  = "Actors";
@@ -318,42 +326,42 @@ public class TileMapEditor  {
 
     private void createMenus() {
         createFileMenu();
-        createActionsMenu();
+        createEditMenu();
 
-        menuLoadMap = new Menu("Load Map");
+        menuLoadMap = new Menu(tt("menu.load_map"));
         menuLoadMap.disableProperty().bind(editingEnabledPy.not());
         menuBar = new MenuBar();
         menuBar.getMenus().addAll(menuFile, menuEdit, menuLoadMap);
     }
 
     private void createFileMenu() {
-        var miNewMap = new MenuItem("New...");
+        var miNewMap = new MenuItem(tt("menu.file.new"));
         miNewMap.setOnAction(e -> showCreateNewMapDialog());
 
-        var miOpenMapFile = new MenuItem("Open...");
+        var miOpenMapFile = new MenuItem(tt("menu.file.open"));
         miOpenMapFile.setOnAction(e -> openMapFile());
 
-        var miSaveMapFileAs = new MenuItem("Save As...");
+        var miSaveMapFileAs = new MenuItem(tt("menu.file.save_as"));
         miSaveMapFileAs.setOnAction(e -> saveMapFileAs());
 
-        menuFile = new Menu("File");
+        menuFile = new Menu(tt("menu.file"));
         menuFile.getItems().addAll(miNewMap, miOpenMapFile, miSaveMapFileAs);
     }
 
-    private void createActionsMenu() {
-        var miAddBorder = new MenuItem("Add Border");
+    private void createEditMenu() {
+        var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
         miAddBorder.setOnAction(e -> addBorder(map().terrain(), 3, 2));
 
-        var miClearTerrain = new MenuItem("Clear Terrain");
+        var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> map().terrain().clear());
 
-        var miClearFood = new MenuItem("Clear Food");
+        var miClearFood = new MenuItem(tt("menu.edit.clear_food"));
         miClearFood.setOnAction(e -> map().food().clear());
 
-        var miAddHouse = new MenuItem("Add House");
+        var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
         miAddHouse.setOnAction(e -> addHouse());
 
-        menuEdit = new Menu("Edit");
+        menuEdit = new Menu(tt("menu.edit"));
         menuEdit.getItems().addAll(miAddBorder, miAddHouse, miClearTerrain, miClearFood);
         menuEdit.disableProperty().bind(editingEnabledPy.not());
     }
