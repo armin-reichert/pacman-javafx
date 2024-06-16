@@ -71,26 +71,25 @@ import static java.util.stream.IntStream.rangeClosed;
 public class PacManGames2dUI implements GameEventListener, GameContext, ActionHandler, SoundHandler {
 
     public static final String SIGNATURE_TEXT = "Remake (2021-2024) by Armin Reichert";
-
     public static final double MIN_SCALING                        = 0.75;
 
-    public static final IntegerProperty PY_SIMULATION_STEPS       = new SimpleIntegerProperty(1);
+    public static final BooleanProperty PY_AUTOPILOT              = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_CANVAS_DECORATED       = new SimpleBooleanProperty(true);
+    public static final BooleanProperty PY_DEBUG_INFO             = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_IMMUNITY               = new SimpleBooleanProperty(false) {
         @Override
         protected void invalidated() {
             GameController.it().setPacImmune(get());
         }
     };
-    public static final BooleanProperty PY_AUTOPILOT              = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_DEBUG_INFO             = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_CANVAS_DECORATED       = new SimpleBooleanProperty(true);
-    public static final BooleanProperty PY_PIP_ON                 = new SimpleBooleanProperty(false);
     public static final IntegerProperty PY_PIP_HEIGHT             = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_Y);
+    public static final BooleanProperty PY_PIP_ON                 = new SimpleBooleanProperty(false);
     public static final IntegerProperty PY_PIP_OPACITY_PERCENT    = new SimpleIntegerProperty(100);
+    public static final IntegerProperty PY_SIMULATION_STEPS       = new SimpleIntegerProperty(1);
 
-    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant");
-    public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
-    public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible", false);
+    public final ObjectProperty<GameVariant> gameVariantPy        = new SimpleObjectProperty<>(this, "gameVariant");
+    public final ObjectProperty<GameScene>   gameScenePy          = new SimpleObjectProperty<>(this, "gameScene");
+    public final BooleanProperty             scoreVisiblePy       = new SimpleBooleanProperty(this, "scoreVisible");
 
     protected final Theme theme = new Theme();
     protected final GameSceneManager gameSceneManager = new GameSceneManager();
@@ -114,7 +113,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
         editor.createUI(stage);
 
-        var miQuitEditor = new MenuItem("Back to Game");
+        var miQuitEditor = new MenuItem(tt("back_to_game"));
         miQuitEditor.setOnAction(e -> quitMapEditor());
         editor.menuFile().getItems().add(miQuitEditor);
 
