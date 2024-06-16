@@ -134,7 +134,7 @@ public class TileMapEditor  {
     private final ObjectProperty<WorldMap> mapPy = new SimpleObjectProperty<>();
     private final Map<String, WorldMap> predefinedMaps = new HashMap<>();
 
-    private final Text editHint = new Text("Click to Start Editing!");
+    private final Text editHint = new Text(tt("click_to_start"));
     private boolean unsavedChanges;
     private Vector2i hoveredTile;
     private File lastUsedDir;
@@ -222,21 +222,21 @@ public class TileMapEditor  {
         previewCanvasScroll.vvalueProperty().bindBidirectional(editCanvasScroll.vvalueProperty());
         previewCanvasScroll.visibleProperty().bind(previewVisiblePy);
 
-        var cbPreviewVisible = new CheckBox("Show Preview");
+        var cbPreviewVisible = new CheckBox(tt("show_preview"));
         cbPreviewVisible.selectedProperty().bindBidirectional(previewVisiblePy);
 
-        var cbTerrainVisible = new CheckBox("Terrain");
+        var cbTerrainVisible = new CheckBox(tt("terrain"));
         cbTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
 
-        var cbFoodVisible = new CheckBox("Food");
+        var cbFoodVisible = new CheckBox(tt("pellets"));
         cbFoodVisible.selectedProperty().bindBidirectional(foodVisiblePy);
 
-        var cbGridVisible = new CheckBox("Grid");
+        var cbGridVisible = new CheckBox(tt("grid"));
         cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
 
         var spinnerGridSize = new Spinner<Integer>(8, 48, 16);
         spinnerGridSize.getValueFactory().valueProperty().bindBidirectional(gridSizePy);
-        var gridSizeLabel = new Label("Grid Size");
+        var gridSizeLabel = new Label(tt("grid_size"));
         var gridSizeEditor = new HBox(gridSizeLabel, spinnerGridSize);
         gridSizeEditor.setSpacing(3);
         gridSizeEditor.setAlignment(Pos.BASELINE_LEFT);
@@ -283,24 +283,24 @@ public class TileMapEditor  {
         );
         palettes.put(PALETTE_FOOD, foodPalette);
 
-        var terrainPaletteTab = new Tab("Terrain", terrainPalette);
+        var terrainPaletteTab = new Tab(tt("terrain"), terrainPalette);
         terrainPaletteTab.setClosable(false);
         terrainPaletteTab.setUserData("Terrain");
 
-        var actorPaletteTab = new Tab("Actors", actorPalette);
+        var actorPaletteTab = new Tab(tt("actors"), actorPalette);
         actorPaletteTab.setClosable(false);
-        actorPaletteTab.setUserData("Actors");
+        actorPaletteTab.setUserData(tt("actors"));
 
-        var foodPaletteTab = new Tab("Food", foodPalette);
+        var foodPaletteTab = new Tab(tt("pellets"), foodPalette);
         foodPaletteTab.setClosable(false);
         foodPaletteTab.setUserData("Food");
 
         palettesTab = new TabPane(terrainPaletteTab, actorPaletteTab, foodPaletteTab);
 
-        terrainMapPropertiesEditor = new PropertyEditor("Terrain", this);
+        terrainMapPropertiesEditor = new PropertyEditor(tt("terrain"), this);
         terrainMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
 
-        foodMapPropertiesEditor = new PropertyEditor("Food", this);
+        foodMapPropertiesEditor = new PropertyEditor(tt("pellets"), this);
         foodMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
 
         infoLabel = new Label();
@@ -628,7 +628,7 @@ public class TileMapEditor  {
     private void drawEditingHint(GraphicsContext g) {
         editHint.setFont(Font.font("Sans", FontWeight.BLACK, Math.floor(editCanvas.getWidth() / 12)));
         double x = 0.5 * (editCanvas.getWidth()  - editHint.getBoundsInLocal().getWidth());
-        double y = 50;
+        double y = 50 * gridSize() / 8.0;
         g.setFont(editHint.getFont());
         g.setStroke(Color.LIGHTGREEN);
         g.setLineWidth(3);
