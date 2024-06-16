@@ -57,7 +57,6 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
-import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
@@ -75,8 +74,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public static final String SIGNATURE_TEXT = "Remake (2021-2024) by Armin Reichert";
 
     public static final double MIN_SCALING                        = 0.75;
-    public static final int DEFAULT_CANVAS_WIDTH_UNSCALED         = GameModel.ARCADE_MAP_TILES_X * TS; // 28*8 = 224
-    public static final int DEFAULT_CANVAS_HEIGHT_UNSCALED        = GameModel.ARCADE_MAP_TILES_Y * TS; // 36*8 = 288
 
     public static final IntegerProperty PY_SIMULATION_STEPS       = new SimpleIntegerProperty(1);
     public static final BooleanProperty PY_IMMUNITY               = new SimpleBooleanProperty(false) {
@@ -89,7 +86,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public static final BooleanProperty PY_DEBUG_INFO             = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_CANVAS_DECORATED       = new SimpleBooleanProperty(true);
     public static final BooleanProperty PY_PIP_ON                 = new SimpleBooleanProperty(false);
-    public static final IntegerProperty PY_PIP_HEIGHT             = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_PX.y());
+    public static final IntegerProperty PY_PIP_HEIGHT             = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_Y);
     public static final IntegerProperty PY_PIP_OPACITY_PERCENT    = new SimpleIntegerProperty(100);
     public static final BooleanProperty PY_3D_ENABLED             = new SimpleBooleanProperty(false);
     public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE  = new SimpleObjectProperty<>(DrawMode.FILL);
@@ -323,7 +320,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void show() {
         //TODO this does not work yet correctly
         Dimension2D minSize = DecoratedCanvas.computeSize(
-            DEFAULT_CANVAS_WIDTH_UNSCALED, DEFAULT_CANVAS_HEIGHT_UNSCALED, 1.25 * MIN_SCALING);
+            GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y, 1.25 * MIN_SCALING);
         stage.setMinWidth(minSize.getWidth());
         stage.setMinHeight(minSize.getHeight());
         stage.centerOnScreen();

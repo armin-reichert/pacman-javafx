@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameKeys;
@@ -60,7 +61,7 @@ public class GamePage implements Page {
         layout.decoratedCanvas().decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
         layout.decoratedCanvas().setBackground(Ufx.coloredBackground(context.theme().color("canvas.background")));
         layout.decoratedCanvas().setBorderColor(context.theme().color("palette.pale"));
-        layout.setUnscaledCanvasSize(DEFAULT_CANVAS_WIDTH_UNSCALED, DEFAULT_CANVAS_HEIGHT_UNSCALED);
+        layout.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
 
         // keep popup layer size same as (decorated) canvas
         popupLayer.minHeightProperty().bind(layout.decoratedCanvas().minHeightProperty());
@@ -211,7 +212,7 @@ public class GamePage implements Page {
         if (world != null) {
             layout.setUnscaledCanvasSize(world.numCols() * TS, world.numRows() * TS);
         } else {
-            layout.setUnscaledCanvasSize(DEFAULT_CANVAS_WIDTH_UNSCALED, DEFAULT_CANVAS_HEIGHT_UNSCALED);
+            layout.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
         }
     }
 

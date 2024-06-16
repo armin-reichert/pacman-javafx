@@ -4,11 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import javafx.scene.canvas.Canvas;
 
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.DEFAULT_CANVAS_HEIGHT_UNSCALED;
 import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_PIP_OPACITY_PERCENT;
 
 /**
@@ -21,7 +21,7 @@ public class PictureInPictureView extends Canvas {
     public PictureInPictureView(GameContext context) {
         displayedScene.setContext(context);
         displayedScene.setCanvas(this);
-        displayedScene.scalingPy.bind(heightProperty().divide(DEFAULT_CANVAS_HEIGHT_UNSCALED));
+        displayedScene.scalingPy.bind(heightProperty().divide(GameModel.ARCADE_MAP_SIZE_Y));
         widthProperty().bind(heightProperty().multiply(0.777));
         opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
     }
