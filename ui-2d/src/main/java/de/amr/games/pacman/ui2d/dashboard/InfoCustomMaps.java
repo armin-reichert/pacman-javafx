@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.controller.GameController;
@@ -6,6 +10,9 @@ import de.amr.games.pacman.ui2d.GameContext;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author Armin Reichert
+ */
 public class InfoCustomMaps extends InfoBox {
 
     @Override

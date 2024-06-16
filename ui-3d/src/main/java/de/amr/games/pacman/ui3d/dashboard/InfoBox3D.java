@@ -143,7 +143,7 @@ public class InfoBox3D extends InfoBox {
     private Object[] floorTextureComboBoxEntries() {
         var names = new ArrayList<>();
         names.add(NO_TEXTURE);
-        names.addAll(context.theme().getList("texture.names"));
+        names.addAll(context.theme().getMap("floorTextures").keySet());
         return names.toArray();
     }
 }

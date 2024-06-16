@@ -60,8 +60,6 @@ public class GameLevel3D extends Group {
     private static final float ENERGIZER_RADIUS      = 3.5f;
     private static final float PELLET_RADIUS         = 1.0f;
 
-    public final Map<String, PhongMaterial> floorTextures = new HashMap<>();
-
     public final ObjectProperty<String> floorTextureNamePy = new SimpleObjectProperty<>(this, "floorTextureName") {
         @Override
         protected void invalidated() {
@@ -70,7 +68,8 @@ public class GameLevel3D extends Group {
             if (NO_TEXTURE.equals(textureName)) {
                 floor.setMaterial(coloredMaterial(floorColor));
             } else {
-                floor.setMaterial(floorTextures.getOrDefault("texture." + textureName, coloredMaterial(floorColor)));
+                Map<String, PhongMaterial> floorTextures = context.theme().getMap("floorTextures");
+                floor.setMaterial(floorTextures.getOrDefault(textureName, coloredMaterial(floorColor)));
             }
         }
     };
@@ -80,7 +79,8 @@ public class GameLevel3D extends Group {
         protected void invalidated() {
             Color floorColor = get();
             String textureName = floorTextureNamePy.get();
-            floor.setMaterial(floorTextures.getOrDefault("texture." + textureName, coloredMaterial(floorColor)));
+            Map<String, PhongMaterial> floorTextures = context.theme().getMap("floorTextures");
+            floor.setMaterial(floorTextures.getOrDefault(textureName, coloredMaterial(floorColor)));
         }
     };
 
@@ -161,11 +161,6 @@ public class GameLevel3D extends Group {
         this.context = checkNotNull(context);
 
         // Floor
-        List<String> textureNames = context.theme().getList("texture.names");
-        for (String textureName : textureNames) {
-            String key = "texture." + textureName;
-            floorTextures.put(key, context.theme().get(key));
-        }
         floor = new Box(context.game().world().numCols() * TS - 1, context.game().world().numRows() * TS - 1, FLOOR_THICKNESS);
         // place floor such that surface is at z=0
         floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
