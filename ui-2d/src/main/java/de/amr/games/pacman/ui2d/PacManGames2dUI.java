@@ -302,11 +302,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             Logger.info("Game key '{}' registered", gameKey);
         }
 
-        mainScene = createMainScene(computeMainSceneSize(screenSize));
-
-        startPage = createStartPage();
-        gamePage  = createGamePage();
-
+        createMainScene(screenSize);
+        createStartPage();
+        createGamePage();
         createGameScenes(); // must be done *after* creating game page!
         createGameClock();
         addMapEditor();
@@ -340,22 +338,22 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         currentPage.onContextMenuRequested(e);
     }
 
-    protected Scene createMainScene(Dimension2D size) {
+    protected void createMainScene(Rectangle2D screenSize) {
+        Dimension2D size = computeMainSceneSize(screenSize);
         var placeholder = new Region();
         placeholder.setBackground(Ufx.coloredBackground(Color.BLACK));
-        var scene = new Scene(placeholder, size.getWidth(), size.getHeight());
-        Keyboard.filterKeyEventsFor(scene);
-        scene.setOnMouseClicked(this::onMouseClicked);
-        scene.setOnContextMenuRequested(this::onContextMenuRequested);
-        scene.setOnKeyPressed(e -> currentPage.handleKeyboardInput());
+        mainScene = new Scene(placeholder, size.getWidth(), size.getHeight());
+        Keyboard.filterKeyEventsFor(mainScene);
+        mainScene.setOnMouseClicked(this::onMouseClicked);
+        mainScene.setOnContextMenuRequested(this::onContextMenuRequested);
+        mainScene.setOnKeyPressed(e -> currentPage.handleKeyboardInput());
         ChangeListener<Number> resizeCurrentPage = (py, ov, nv) -> {
             if (currentPage != null) {
-                currentPage.setSize(scene.getWidth(), scene.getHeight());
+                currentPage.setSize(mainScene.getWidth(), mainScene.getHeight());
             }
         };
-        scene.widthProperty().addListener(resizeCurrentPage);
-        scene.heightProperty().addListener(resizeCurrentPage);
-        return scene;
+        mainScene.widthProperty().addListener(resizeCurrentPage);
+        mainScene.heightProperty().addListener(resizeCurrentPage);
     }
 
     protected void createGameClock() {
@@ -402,24 +400,22 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             clock.pausedPy, gameVariantPy);
     }
 
-    protected StartPage createStartPage() {
-        var startPage = new StartPage(this);
+    protected void createStartPage() {
+        startPage = new StartPage(this);
         startPage.playButton().setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
                 selectPage(gamePage);
             }
         });
         startPage.gameVariantPy.bind(gameVariantPy);
-        return startPage;
     }
 
-    protected GamePage createGamePage() {
-        var page = new GamePage(this);
-        page.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
-        page.layout().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
-        page.layout().setMinScaling(MIN_SCALING);
-        gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
-        return page;
+    protected void createGamePage() {
+        gamePage = new GamePage(this);
+        gamePage.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
+        gamePage.layout().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
+        gamePage.layout().setMinScaling(MIN_SCALING);
+        gameScenePy.addListener((py, ov, newGameScene) -> gamePage.onGameSceneChanged(newGameScene));
     }
 
     private void selectPage(Page page) {

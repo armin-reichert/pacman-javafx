@@ -187,13 +187,13 @@ public class PacManGames3dUI extends PacManGames2dUI {
     }
 
     @Override
-    protected GamePage3D createGamePage() {
-        var page = new GamePage3D(this);
-        page.dashboard().addInfoBox(3, tt("infobox.3D_settings.title"), new InfoBox3D());
-        page.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
-        page.layout().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
-        page.layout().setMinScaling(MIN_SCALING);
-        page.layout().backgroundProperty().bind(Bindings.createObjectBinding(
+    protected void createGamePage() {
+        gamePage = new GamePage3D(this);
+        gamePage.dashboard().addInfoBox(3, tt("infobox.3D_settings.title"), new InfoBox3D());
+        gamePage.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
+        gamePage.layout().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
+        gamePage.layout().setMinScaling(MIN_SCALING);
+        gamePage.layout().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
                     return Ufx.coloredBackground(Color.BLACK);
@@ -204,8 +204,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
             },
             PY_3D_DRAW_MODE, PY_3D_NIGHT_MODE
         ));
-        gameScenePy.addListener((py, ov, newGameScene) -> page.onGameSceneChanged(newGameScene));
-        return page;
+        gameScenePy.addListener((py, ov, newGameScene) -> gamePage.onGameSceneChanged(newGameScene));
     }
 
     @Override
