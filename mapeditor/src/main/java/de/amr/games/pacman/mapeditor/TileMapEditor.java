@@ -285,15 +285,15 @@ public class TileMapEditor  {
 
         var terrainPaletteTab = new Tab(tt("terrain"), terrainPalette);
         terrainPaletteTab.setClosable(false);
-        terrainPaletteTab.setUserData("Terrain");
+        terrainPaletteTab.setUserData(PALETTE_TERRAIN);
 
         var actorPaletteTab = new Tab(tt("actors"), actorPalette);
         actorPaletteTab.setClosable(false);
-        actorPaletteTab.setUserData(tt("actors"));
+        actorPaletteTab.setUserData(PALETTE_ACTORS);
 
         var foodPaletteTab = new Tab(tt("pellets"), foodPalette);
         foodPaletteTab.setClosable(false);
-        foodPaletteTab.setUserData("Food");
+        foodPaletteTab.setUserData(PALETTE_FOOD);
 
         palettesTab = new TabPane(terrainPaletteTab, actorPaletteTab, foodPaletteTab);
 
