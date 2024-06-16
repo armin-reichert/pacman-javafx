@@ -53,7 +53,7 @@ public class TileMapEditor  {
 
     private static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.mapeditor.texts");
 
-    private static String tt(String key, Object... args) {
+    public static String tt(String key, Object... args) {
         return MessageFormat.format(TEXTS.getString(key), args);
     }
 

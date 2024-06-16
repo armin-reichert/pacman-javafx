@@ -45,7 +45,7 @@ public class TileMapEditorApp extends Application  {
         layout.setCenter(editor.getLayout());
         layout.setTop(editor.getMenuBar());
 
-        var miQuit = new MenuItem("Quit");
+        var miQuit = new MenuItem(TileMapEditor.tt("quit"));
         miQuit.setOnAction(e -> editor.showConfirmation(editor::saveMapFileAs, stage::close));
         editor.menuFile().getItems().add(miQuit);
 
