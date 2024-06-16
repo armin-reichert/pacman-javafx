@@ -24,7 +24,6 @@ public class InfoBoxGeneral extends InfoBox {
     private Button[] buttonsSimulation;
     private Spinner<Integer> spinnerSimulationSteps;
     private Slider sliderTargetFPS;
-    private CheckBox cbUsePlayScene3D;
     private CheckBox cbCanvasDecoration;
     private CheckBox cbDebugUI;
     private CheckBox cbTimeMeasured;
@@ -71,7 +70,6 @@ public class InfoBoxGeneral extends InfoBox {
         ));
         infoText("Total Updates", () -> context.gameClock().getUpdateCount());
 
-        cbUsePlayScene3D = checkBox("3D Play Scene");
         cbCanvasDecoration = checkBox("Canvas Decoration");
         cbDebugUI = checkBox("Show Debug Info");
         cbTimeMeasured = checkBox("Time Measured");
@@ -80,7 +78,6 @@ public class InfoBoxGeneral extends InfoBox {
         buttonsSimulation[1].setOnAction(e -> context.gameClock().makeSteps(PY_SIMULATION_STEPS.get(), true));
         sliderTargetFPS.valueProperty().addListener(
             (py, ov, nv) -> context.gameClock().setTargetFrameRate(nv.intValue()));
-        cbUsePlayScene3D.setOnAction(e -> context.actionHandler().toggle2D3D());
         cbCanvasDecoration.selectedProperty().bindBidirectional(PY_CANVAS_DECORATED);
         cbDebugUI.setOnAction(e -> Ufx.toggle(PY_DEBUG_INFO));
         cbTimeMeasured.setOnAction(e -> Ufx.toggle(context.gameClock().timeMeasuredPy));
@@ -95,7 +92,6 @@ public class InfoBoxGeneral extends InfoBox {
         buttonsSimulation[1].setDisable(!paused);
         spinnerSimulationSteps.getValueFactory().setValue(PY_SIMULATION_STEPS.get());
         sliderTargetFPS.setValue(context.gameClock().getTargetFrameRate());
-        cbUsePlayScene3D.setSelected(PY_3D_ENABLED.get());
         cbTimeMeasured.setSelected(context.gameClock().timeMeasuredPy.get());
         cbDebugUI.setSelected(PY_DEBUG_INFO.get());
     }

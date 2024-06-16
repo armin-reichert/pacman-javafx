@@ -30,6 +30,7 @@ public class InfoBox3D extends InfoBox {
     private static final int PIP_MIN_HEIGHT = GameModel.ARCADE_MAP_SIZE_Y * 3 / 4;
     private static final int PIP_MAX_HEIGHT = GameModel.ARCADE_MAP_SIZE_Y * 2;
 
+    private CheckBox cbUsePlayScene3D;
     private ColorPicker pickerLightColor;
     private ColorPicker pickerFloorColor;
     private ComboBox<Object> comboFloorTexture;
@@ -49,6 +50,7 @@ public class InfoBox3D extends InfoBox {
     public void init(GameContext context) {
         this.context = context;
 
+        cbUsePlayScene3D = checkBox("3D Play Scene");
         pickerLightColor = colorPicker("Light Color", PY_3D_LIGHT_COLOR.get());
         pickerFloorColor = colorPicker("Floor Color", PY_3D_FLOOR_COLOR.get());
         comboFloorTexture = comboBox("Floor Texture", floorTextureComboBoxEntries());
@@ -87,6 +89,8 @@ public class InfoBox3D extends InfoBox {
             sliderPiPOpacity.setTooltip(tooltip);
         }
 
+        cbUsePlayScene3D.setOnAction(e -> context.actionHandler().toggle2D3D());
+
         pickerLightColor.setOnAction(e -> PY_3D_LIGHT_COLOR.set(pickerLightColor.getValue()));
         pickerFloorColor.setOnAction(e -> PY_3D_FLOOR_COLOR.set(pickerFloorColor.getValue()));
         comboFloorTexture.setOnAction(e -> PY_3D_FLOOR_TEXTURE.set(comboFloorTexture.getValue().toString()));
@@ -114,6 +118,7 @@ public class InfoBox3D extends InfoBox {
     @Override
     public void update() {
         super.update();
+        cbUsePlayScene3D.setSelected(PY_3D_ENABLED.get());
         cbPiPOn.setSelected(PY_PIP_ON.getValue());
         comboFloorTexture.setValue(PY_3D_FLOOR_TEXTURE.get());
         cbFloorTextureRandom.setSelected(PY_3D_FLOOR_TEXTURE_RND.get());

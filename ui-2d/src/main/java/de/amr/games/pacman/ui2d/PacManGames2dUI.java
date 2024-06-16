@@ -40,7 +40,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -88,8 +87,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public static final BooleanProperty PY_PIP_ON                 = new SimpleBooleanProperty(false);
     public static final IntegerProperty PY_PIP_HEIGHT             = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_Y);
     public static final IntegerProperty PY_PIP_OPACITY_PERCENT    = new SimpleIntegerProperty(100);
-    public static final BooleanProperty PY_3D_ENABLED             = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE  = new SimpleObjectProperty<>(DrawMode.FILL);
 
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant");
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
@@ -811,7 +808,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void toggleDrawMode() {
-        PY_3D_DRAW_MODE.set(PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
+        // not supported in 2D UI
     }
 
     @Override

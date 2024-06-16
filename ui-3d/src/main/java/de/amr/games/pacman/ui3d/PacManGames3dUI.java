@@ -30,7 +30,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.tinylog.Logger;
 
@@ -58,6 +57,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
     }
 
     public static final BooleanProperty             PY_3D_AXES_VISIBLE       = new SimpleBooleanProperty(false);
+    public static final ObjectProperty<DrawMode>    PY_3D_DRAW_MODE          = new SimpleObjectProperty<>(DrawMode.FILL);
+    public static final BooleanProperty             PY_3D_ENABLED            = new SimpleBooleanProperty(false);
     public static final BooleanProperty             PY_3D_ENERGIZER_EXPLODES = new SimpleBooleanProperty(true);
     public static final ObjectProperty<Color>       PY_3D_FLOOR_COLOR        = new SimpleObjectProperty<>(Color.grayRgb(0x33));
     public static final StringProperty              PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty("knobs");
@@ -257,5 +258,10 @@ public class PacManGames3dUI extends PacManGames2dUI {
                 showFlashMessage(tt(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
             }
         });
+    }
+
+    @Override
+    public void toggleDrawMode() {
+        PY_3D_DRAW_MODE.set(PY_3D_DRAW_MODE.get() == DrawMode.FILL ? DrawMode.LINE : DrawMode.FILL);
     }
 }
