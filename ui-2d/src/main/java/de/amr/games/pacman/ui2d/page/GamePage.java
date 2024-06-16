@@ -9,9 +9,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameKeys;
 import de.amr.games.pacman.ui2d.dashboard.*;
-import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.GameSceneID;
+import de.amr.games.pacman.ui2d.scene.*;
 import de.amr.games.pacman.ui2d.util.CanvasLayoutPane;
 import de.amr.games.pacman.ui2d.util.FadingPane;
 import de.amr.games.pacman.ui2d.util.FlashMessageView;
@@ -72,7 +70,7 @@ public class GamePage implements Page {
         popupLayer.prefWidthProperty().bind(layout.decoratedCanvas().prefWidthProperty());
         popupLayer.getChildren().addAll(helpInfoPopUp, signature);
 
-        pip = new PictureInPictureView(context);
+        pip = new PictureInPictureView(new PlayScene2D(), context);
 
         dashboard = new Dashboard(context);
         dashboard.addInfoBox(context.tt("infobox.general.title"), new InfoBoxGeneral());
@@ -92,6 +90,7 @@ public class GamePage implements Page {
 
         // data binding
         pip.heightProperty().bind(PY_PIP_HEIGHT);
+        pip.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
         PY_PIP_ON.addListener((py, ov, nv) -> updateDashboardLayer());
         dashboard.visibleProperty().addListener((py, ov, nv) -> updateDashboardLayer());
 
