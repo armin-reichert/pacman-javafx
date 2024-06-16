@@ -538,27 +538,27 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void onGameEvent(GameEvent e) {
-        Logger.trace("Received: {}", e);
+    public void onGameEvent(GameEvent event) {
+        Logger.trace("Received: {}", event);
         // call event specific hook method:
-        GameEventListener.super.onGameEvent(e);
+        GameEventListener.super.onGameEvent(event);
         if (gameState() != null) {
             //TODO check this. On game start, event can be published before game state has been initialized!
             updateGameScene(false);
-            currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(e));
+            currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
         }
     }
 
     @Override
-    public void onGameVariantChanged(GameEvent e) {
+    public void onGameVariantChanged(GameEvent event) {
         var newVariant = game().variant();
-        Logger.info("onGameVariantChanged: {}", e);
+        Logger.info("onGameVariantChanged: {}", event);
         gameVariantPy.set(newVariant);
         stage.getIcons().setAll(theme.image(newVariant.resourceKey() + ".icon"));
     }
 
     @Override
-    public void onUnspecifiedChange(GameEvent e) {
+    public void onUnspecifiedChange(GameEvent event) {
         updateGameScene(true);
     }
 
@@ -616,9 +616,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     @Override
-    public void onLevelCreated(GameEvent e) {
+    public void onLevelCreated(GameEvent event) {
         // Found no better point in time to create and assign the sprite animations to the guys
-        GameModel game = e.game;
+        GameModel game = event.game;
         switch (game.variant()) {
             case MS_PACMAN -> {
                 var ss = (MsPacManGameSpriteSheet) getSpriteSheet(game.variant());
@@ -683,7 +683,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     @Override
-    public void onStopAllSounds(GameEvent e) {
+    public void onStopAllSounds(GameEvent event) {
         stopAllSounds();
     }
 
