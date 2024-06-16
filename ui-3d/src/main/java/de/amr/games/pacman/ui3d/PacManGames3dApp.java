@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -25,6 +26,7 @@ public class PacManGames3dApp extends Application {
         GameController.it().setSupportedVariants(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
         GameController.it().selectGameVariant(GameVariant.PACMAN_XXL);
         var ui = new PacManGames3dUI();
+        PacManGames2dUI.PY_3D_ENABLED.set(true);
         stopAction = () -> ui.gameClock().stop();
         ui.loadAssets();
         ui.createUI(stage, Screen.getPrimary().getBounds());

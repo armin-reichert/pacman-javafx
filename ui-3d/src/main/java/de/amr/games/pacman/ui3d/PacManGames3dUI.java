@@ -161,13 +161,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
     }
 
     @Override
-    public void createUI(Stage stage, Rectangle2D screenSize) {
-        super.createUI(stage, screenSize);
-        stage.titleProperty().bind(stageTitleBinding());
-        PY_3D_ENABLED.set(true);
-    }
-
-    @Override
     protected Dimension2D computeMainSceneSize(Rectangle2D screenSize) {
         double aspect = screenSize.getWidth() / screenSize.getHeight();
         double height = 0.8 * screenSize.getHeight(), width = aspect * height;
