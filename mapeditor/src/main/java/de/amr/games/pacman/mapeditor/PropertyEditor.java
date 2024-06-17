@@ -13,10 +13,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import org.tinylog.Logger;
 
 import java.util.Comparator;
 import java.util.HashSet;
@@ -26,19 +24,6 @@ import java.util.Properties;
  * @author Armin Reichert
  */
 public class PropertyEditor extends BorderPane {
-
-    public static Color parseColor(String colorText) {
-        try {
-            return Color.web(colorText);
-        } catch (Exception x) {
-            Logger.error(x);
-            return Color.WHITE;
-        }
-    }
-
-    public static String formatColor(Color color) {
-        return String.format("rgb(%d,%d,%d)", (int)(color.getRed()*255), (int)(color.getGreen()*255), (int)(color.getBlue()*255));
-    }
 
     public final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
 
@@ -84,12 +69,12 @@ public class PropertyEditor extends BorderPane {
             nameEditor.setMinWidth(nameColumnMinWidth);
             nameEditor.disableProperty().bind(enabledPy.not());
             grid.add(nameEditor, 0, row);
-            if (entry.getKey().toString().endsWith("_color")) {
+            if (entry.getKey().toString().endsWith("_color") || entry.getKey().toString().startsWith("color_")) {
                 var colorPicker = new ColorPicker();
-                colorPicker.setValue(parseColor(String.valueOf(entry.getValue())));
-                colorPicker.setOnAction(e -> editProperty(nameEditor, formatColor(colorPicker.getValue())));
+                colorPicker.setValue(TileMapUtil.parseColor(String.valueOf(entry.getValue())));
+                colorPicker.setOnAction(e -> editProperty(nameEditor, TileMapUtil.formatColor(colorPicker.getValue())));
                 colorPicker.disableProperty().bind(enabledPy.not());
-                nameEditor.setOnAction(e -> editProperty(nameEditor, formatColor(colorPicker.getValue())));
+                nameEditor.setOnAction(e -> editProperty(nameEditor, TileMapUtil.formatColor(colorPicker.getValue())));
                 grid.add(colorPicker, 1, row);
             } else {
                 var inputField = new TextField();

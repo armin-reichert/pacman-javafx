@@ -20,6 +20,28 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class WorldMap {
 
+    public static final String PROPERTY_WALL_STROKE_COLOR     = "color_wall_stroke";
+    public static final String PROPERTY_WALL_FILL_COLOR       = "color_wall_fill";
+    public static final String PROPERTY_DOOR_COLOR            = "color_door";
+    public static final String PROPERTY_PAC_POSITION          = "pos_pac";
+    public static final String PROPERTY_RED_GHOST_POSITION    = "pos_red_ghost";
+    public static final String PROPERTY_PINK_GHOST_POSITION   = "pos_pink_ghost";
+    public static final String PROPERTY_CYAN_GHOST_POSITION   = "pos_cyan_ghost";
+    public static final String PROPERTY_ORANGE_GHOST_POSITION = "pos_orange_ghost";
+
+    public static final String PROPERTY_FOOD_COLOR             = "color_food";
+
+    public static final String DEFAULT_WALL_STROKE_COLOR       = "rgb(0,0,255)";
+    public static final String DEFAULT_WALL_FILL_COLOR         = "rgb(0,0,0)";
+    public static final String DEFAULT_DOOR_COLOR              = "rgb(0,255,255)";
+    public static final Vector2i DEFAULT_PAC_POSITION          = new Vector2i(13, 26);
+    public static final Vector2i DEFAULT_RED_GHOST_POSITION    = new Vector2i(13, 14);
+    public static final Vector2i DEFAULT_PINK_GHOST_POSITION   = new Vector2i(13, 17);
+    public static final Vector2i DEFAULT_CYAN_GHOST_POSITION   = new Vector2i(11, 17);
+    public static final Vector2i DEFAULT_ORANGE_GHOST_POSITION = new Vector2i(15, 17);
+
+    public static final String DEFAULT_FOOD_COLOR              = "rgb(255,0,0)";
+
     private static final String TERRAIN_SECTION_START = "!terrain";
     private static final String FOOD_SECTION_START    = "!food";
 

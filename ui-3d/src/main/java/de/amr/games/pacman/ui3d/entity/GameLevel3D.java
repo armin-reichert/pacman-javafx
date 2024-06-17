@@ -37,7 +37,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.mapeditor.TileMapRenderer.getColorFromMap;
+import static de.amr.games.pacman.mapeditor.TileMapUtil.getColorFromMap;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
 import static java.lang.Math.PI;
@@ -170,8 +170,8 @@ public class GameLevel3D extends Group {
 
         // Maze
         WorldMap map = context.game().world().map();
-        wallStrokeColorPy.set(getColorFromMap(map.terrain(), "wall_stroke_color", Color.rgb(33, 33, 255)));
-        wallFillColorPy.set(getColorFromMap(map.terrain(), "wall_fill_color", Color.rgb(0,0,0)));
+        wallStrokeColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_WALL_STROKE_COLOR, Color.rgb(33, 33, 255)));
+        wallFillColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_WALL_FILL_COLOR, Color.rgb(0,0,0)));
         foodColorPy.set(getColorFromMap(map.terrain(), "food_color", Color.PINK));
         addMazeWalls(mazeGroup);
         buildGhostHouse(mazeGroup);

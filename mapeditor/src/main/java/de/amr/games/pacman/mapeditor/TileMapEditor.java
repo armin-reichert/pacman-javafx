@@ -45,11 +45,14 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
+import static de.amr.games.pacman.mapeditor.TileMapUtil.*;
 
 /**
  * @author Armin Reichert
  */
 public class TileMapEditor  {
+
 
     private static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.mapeditor.texts");
 
@@ -67,10 +70,15 @@ public class TileMapEditor  {
 
     private static WorldMap createNewMap(int numRows, int numCols) {
         var map = new WorldMap(numRows, numCols);
-        map.terrain().setProperty("wall_stroke_color", PropertyEditor.formatColor(DEFAULT_WALL_STROKE_COLOR));
-        map.terrain().setProperty("wall_fill_color",   PropertyEditor.formatColor(DEFAULT_WALL_FILL_COLOR));
-        map.terrain().setProperty("door_color",        PropertyEditor.formatColor(DEFAULT_DOOR_COLOR));
-        map.food().setProperty("food_color",           PropertyEditor.formatColor(DEFAULT_FOOD_COLOR));
+        map.terrain().setProperty(PROPERTY_WALL_STROKE_COLOR,     DEFAULT_WALL_STROKE_COLOR);
+        map.terrain().setProperty(PROPERTY_WALL_FILL_COLOR,       DEFAULT_WALL_FILL_COLOR);
+        map.terrain().setProperty(PROPERTY_DOOR_COLOR,            DEFAULT_DOOR_COLOR);
+        map.terrain().setProperty(PROPERTY_PAC_POSITION,          formatTile(DEFAULT_PAC_POSITION));
+        map.terrain().setProperty(PROPERTY_RED_GHOST_POSITION,    formatTile(DEFAULT_RED_GHOST_POSITION));
+        map.terrain().setProperty(PROPERTY_PINK_GHOST_POSITION,   formatTile(DEFAULT_PINK_GHOST_POSITION));
+        map.terrain().setProperty(PROPERTY_CYAN_GHOST_POSITION,   formatTile(DEFAULT_CYAN_GHOST_POSITION));
+        map.terrain().setProperty(PROPERTY_ORANGE_GHOST_POSITION, formatTile(DEFAULT_ORANGE_GHOST_POSITION));
+        map.food().setProperty(PROPERTY_FOOD_COLOR,               DEFAULT_FOOD_COLOR);
         return map;
     }
 
@@ -82,11 +90,6 @@ public class TileMapEditor  {
         { 9, 0, 0, 0, 0, 0, 0, 9},
         {13, 8, 8, 8, 8, 8, 8,12}
     });
-
-    private static final Color DEFAULT_WALL_STROKE_COLOR = Color.GREEN;
-    private static final Color DEFAULT_WALL_FILL_COLOR = Color.MAROON;
-    private static final Color DEFAULT_DOOR_COLOR = Color.YELLOW;
-    private static final Color DEFAULT_FOOD_COLOR = Color.MAGENTA;
 
     public final ObjectProperty<String> titlePy = new SimpleObjectProperty<>(this, "title", "Map Editor");
 
@@ -160,12 +163,12 @@ public class TileMapEditor  {
         this.ownerWindow = ownerWindow;
 
         terrainMapRenderer = new TileMapEditorTerrainRenderer();
-        terrainMapRenderer.setWallStrokeColor(DEFAULT_WALL_STROKE_COLOR);
-        terrainMapRenderer.setWallFillColor(DEFAULT_WALL_FILL_COLOR);
+        terrainMapRenderer.setWallStrokeColor(parseColor(DEFAULT_WALL_STROKE_COLOR));
+        terrainMapRenderer.setWallFillColor(parseColor(DEFAULT_WALL_FILL_COLOR));
 
         foodMapRenderer = new FoodMapRenderer();
-        foodMapRenderer.setPelletColor(DEFAULT_FOOD_COLOR);
-        foodMapRenderer.setEnergizerColor(DEFAULT_FOOD_COLOR);
+        foodMapRenderer.setPelletColor(TileMapUtil.parseColor(DEFAULT_FOOD_COLOR));
+        foodMapRenderer.setEnergizerColor(TileMapUtil.parseColor(DEFAULT_FOOD_COLOR));
 
         createLayout();
         createMenus();
@@ -452,7 +455,7 @@ public class TileMapEditor  {
         terrainMapPropertiesEditor.edit(map().terrain().getProperties());
         invalidatePaths();
         updatePaths();
-        Logger.info("Edit canvas size: w={} h={}", editCanvas.getWidth(), editCanvas.getHeight());
+        Logger.debug("Edit canvas size: w={} h={}", editCanvas.getWidth(), editCanvas.getHeight());
     }
 
     public void loadMap(WorldMap otherMap) {
@@ -592,6 +595,19 @@ public class TileMapEditor  {
         }
     }
 
+    private void drawEditingHint(GraphicsContext g) {
+        double s = gridSize() / 8.0;
+        editHint.setFont(Font.font("Sans", FontWeight.BLACK, 16 * s));
+        double x = 16 * s;
+        double y = 24 * s;
+        g.setFont(editHint.getFont());
+        g.setStroke(Color.LIGHTGREEN);
+        g.setLineWidth(3);
+        g.strokeText(editHint.getText(), x, y);
+        g.setFill(Color.DARKGREEN);
+        g.fillText(editHint.getText(), x, y);
+    }
+
     private void drawEditCanvas() {
         GraphicsContext g = editCanvas.getGraphicsContext2D();
         g.setFill(Color.BLACK);
@@ -600,15 +616,15 @@ public class TileMapEditor  {
         if (terrainVisiblePy.get()) {
             updatePaths();
             terrainMapRenderer.setScaling(gridSize() / 8.0);
-            terrainMapRenderer.setWallStrokeColor(TileMapRenderer.getColorFromMap(map().terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
-            terrainMapRenderer.setWallFillColor(TileMapRenderer.getColorFromMap(map().terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
-            terrainMapRenderer.setDoorColor(TileMapRenderer.getColorFromMap(map().terrain(), "door_color", DEFAULT_DOOR_COLOR));
+            terrainMapRenderer.setWallStrokeColor(getColorFromMap(map().terrain(), PROPERTY_WALL_STROKE_COLOR, parseColor(DEFAULT_WALL_STROKE_COLOR)));
+            terrainMapRenderer.setWallFillColor(getColorFromMap(map().terrain(), PROPERTY_WALL_FILL_COLOR, parseColor(DEFAULT_WALL_FILL_COLOR)));
+            terrainMapRenderer.setDoorColor(getColorFromMap(map().terrain(), PROPERTY_DOOR_COLOR, parseColor(DEFAULT_DOOR_COLOR)));
             terrainMapRenderer.setRuntimeMode(false);
             terrainMapRenderer.drawMap(g, map().terrain());
         }
         if (foodVisiblePy.get()) {
             foodMapRenderer.setScaling(gridSize() / 8.0);
-            Color foodColor = TileMapRenderer.getColorFromMap(map().food(), "food_color", DEFAULT_FOOD_COLOR);
+            Color foodColor = getColorFromMap(map().food(), PROPERTY_FOOD_COLOR, TileMapUtil.parseColor(DEFAULT_FOOD_COLOR));
             foodMapRenderer.setEnergizerColor(foodColor);
             foodMapRenderer.setPelletColor(foodColor);
             foodMapRenderer.drawMap(g, map().food());
@@ -625,19 +641,6 @@ public class TileMapEditor  {
         }
     }
 
-    private void drawEditingHint(GraphicsContext g) {
-        double s = gridSize() / 8.0;
-        editHint.setFont(Font.font("Sans", FontWeight.BLACK, 16 * s));
-        double x = 16 * s;
-        double y = 24 * s;
-        g.setFont(editHint.getFont());
-        g.setStroke(Color.LIGHTGREEN);
-        g.setLineWidth(3);
-        g.strokeText(editHint.getText(), x, y);
-        g.setFill(Color.DARKGREEN);
-        g.fillText(editHint.getText(), x, y);
-    }
-
     private void drawPreviewCanvas() {
         GraphicsContext g = previewCanvas.getGraphicsContext2D();
         g.setFill(Color.BLACK);
@@ -645,15 +648,15 @@ public class TileMapEditor  {
         if (terrainVisiblePy.get()) {
             updatePaths();
             terrainMapRenderer.setScaling(gridSize() / 8.0);
-            terrainMapRenderer.setWallStrokeColor(TileMapRenderer.getColorFromMap(map().terrain(), "wall_stroke_color", DEFAULT_WALL_STROKE_COLOR));
-            terrainMapRenderer.setWallFillColor(TileMapRenderer.getColorFromMap(map().terrain(), "wall_fill_color", DEFAULT_WALL_FILL_COLOR));
-            terrainMapRenderer.setDoorColor(TileMapRenderer.getColorFromMap(map().terrain(), "door_color", DEFAULT_DOOR_COLOR));
+            terrainMapRenderer.setWallStrokeColor(getColorFromMap(map().terrain(), PROPERTY_WALL_STROKE_COLOR, parseColor(DEFAULT_WALL_STROKE_COLOR)));
+            terrainMapRenderer.setWallFillColor(getColorFromMap(map().terrain(), PROPERTY_WALL_FILL_COLOR, parseColor(DEFAULT_WALL_FILL_COLOR)));
+            terrainMapRenderer.setDoorColor(getColorFromMap(map().terrain(), PROPERTY_DOOR_COLOR, parseColor(DEFAULT_DOOR_COLOR)));
             terrainMapRenderer.setRuntimeMode(true);
             terrainMapRenderer.drawMap(g, map().terrain());
         }
         if (foodVisiblePy.get()) {
             foodMapRenderer.setScaling(gridSize() / 8.0);
-            Color foodColor = TileMapRenderer.getColorFromMap(map().food(), "food_color", DEFAULT_FOOD_COLOR);
+            Color foodColor = getColorFromMap(map().food(), PROPERTY_FOOD_COLOR, TileMapUtil.parseColor(DEFAULT_FOOD_COLOR));
             foodMapRenderer.setEnergizerColor(foodColor);
             foodMapRenderer.setPelletColor(foodColor);
             foodMapRenderer.drawMap(g, map().food());

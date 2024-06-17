@@ -230,9 +230,21 @@ public class TileMap {
         StringReader r = new StringReader(text);
         try {
             properties.load(r);
+            migrateProperties();
         } catch (IOException x) {
             Logger.error("Could not read properties from text {}", text);
             Logger.error(x);
+        }
+    }
+
+    private void migrateProperties() {
+        for (var name : properties.stringPropertyNames()) {
+            if (name.endsWith("_color")) {
+                var newName = "color_" + name.substring(0, name.length() - 6);
+                Logger.info("{} -> {}", name, newName);
+                properties.setProperty(newName, properties.getProperty(name));
+                properties.remove(name);
+            }
         }
     }
 

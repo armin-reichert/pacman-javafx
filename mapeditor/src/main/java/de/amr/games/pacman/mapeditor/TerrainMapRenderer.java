@@ -64,9 +64,9 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
-        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
+        double x = tile.x() * TileMapUtil.TILE_SIZE, y = tile.y() * TileMapUtil.TILE_SIZE;
         g.setFill(color);
-        g.fillRect(x, y + 3, TILE_SIZE, 2);
+        g.fillRect(x, y + 3, TileMapUtil.TILE_SIZE, 2);
     }
 
     private double lineWidth(GraphicsContext g) {
@@ -82,13 +82,13 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     public Vector2f center(Vector2i tile) {
-        return new Vector2f(tile.x() * TILE_SIZE + TILE_SIZE / 2f, tile.y() * TILE_SIZE + TILE_SIZE / 2f);
+        return new Vector2f(tile.x() * TileMapUtil.TILE_SIZE + TileMapUtil.TILE_SIZE / 2f, tile.y() * TileMapUtil.TILE_SIZE + TileMapUtil.TILE_SIZE / 2f);
     }
 
     public void drawPath(GraphicsContext g, TileMap map, TileMapPath tileMapPath,
         boolean fill, double lineWidth, Color outlineColor, Color fillColor) {
 
-        double r = 0.45 * TILE_SIZE;
+        double r = 0.45 * TileMapUtil.TILE_SIZE;
         g.beginPath();
 
         //TODO: avoid these special cases
@@ -133,7 +133,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
             g.lineTo(0, c.y());
         }
         if (map.get(tile) == Tiles.DOOR) {
-            g.lineTo(tile.x() * TILE_SIZE, c.y());
+            g.lineTo(tile.x() * TileMapUtil.TILE_SIZE, c.y());
         }
 
         if (fill) {
