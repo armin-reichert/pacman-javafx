@@ -28,6 +28,10 @@ public class WorldMap {
     public static final String PROPERTY_POS_PINK_GHOST = "pos_ghost_2_pink";
     public static final String PROPERTY_POS_CYAN_GHOST = "pos_ghost_3_cyan";
     public static final String PROPERTY_POS_ORANGE_GHOST = "pos_ghost_4_orange";
+    public static final String PROPERTY_POS_SCATTER_RED_GHOST = "pos_ghost_1_red";
+    public static final String PROPERTY_POS_SCATTER_PINK_GHOST = "pos_ghost_2_pink";
+    public static final String PROPERTY_POS_SCATTER_CYAN_GHOST = "pos_ghost_3_cyan";
+    public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_ghost_4_orange";
 
     public static final String PROPERTY_COLOR_FOOD = "color_food";
 
@@ -122,6 +126,10 @@ public class WorldMap {
                 case Tiles.HOME_PINK_GHOST -> terrain.setProperty(WorldMap.PROPERTY_POS_PINK_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
                 case Tiles.HOME_CYAN_GHOST -> terrain.setProperty(WorldMap.PROPERTY_POS_CYAN_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
                 case Tiles.HOME_ORANGE_GHOST -> terrain.setProperty(WorldMap.PROPERTY_POS_ORANGE_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
+                case Tiles.SCATTER_TARGET_RED -> terrain.setProperty(WorldMap.PROPERTY_POS_SCATTER_RED_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
+                case Tiles.SCATTER_TARGET_PINK -> terrain.setProperty(WorldMap.PROPERTY_POS_SCATTER_PINK_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
+                case Tiles.SCATTER_TARGET_CYAN -> terrain.setProperty(WorldMap.PROPERTY_POS_SCATTER_CYAN_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
+                case Tiles.SCATTER_TARGET_ORANGE -> terrain.setProperty(WorldMap.PROPERTY_POS_SCATTER_ORANGE_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
                 default -> {}
             }
         });

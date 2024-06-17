@@ -76,8 +76,8 @@ public class TileMapEditor  {
         map.terrain().setProperty(PROPERTY_POS_PAC,          formatTile(DEFAULT_POS_PAC));
         map.terrain().setProperty(PROPERTY_POS_RED_GHOST,    formatTile(DEFAULT_POS_RED_GHOST));
         map.terrain().setProperty(PROPERTY_POS_PINK_GHOST,   formatTile(DEFAULT_POS_PINK_GHOST));
-        map.terrain().setProperty(PROPERTY_POS_CYAN_GHOST,   formatTile(DEFAULT_POS_CYAN_GHOST));
-        map.terrain().setProperty(PROPERTY_POS_ORANGE_GHOST, formatTile(DEFAULT_POS_ORANGE_GHOST));
+        map.terrain().setProperty(PROPERTY_POS_SCATTER_CYAN_GHOST,   formatTile(DEFAULT_POS_CYAN_GHOST));
+        map.terrain().setProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(DEFAULT_POS_ORANGE_GHOST));
         map.food().setProperty(PROPERTY_COLOR_FOOD,               DEFAULT_FOOD_COLOR);
         return map;
     }
