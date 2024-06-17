@@ -139,14 +139,13 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
         stopVoice();
         stopAllSounds();
-        clock.stop();
         currentGameScene().ifPresent(GameScene::end);
-        //TODO introduce GAME_PAUSED state?
-        reboot();
+        clock.stop();
         stage.titleProperty().bind(editor.titlePy);
         if (game().world() != null) {
             editor.setMap(game().world().map());
         }
+        reboot();
         editor.start();
         selectPage(editorPage);
     }
@@ -156,7 +155,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         editor.showConfirmation(
             () -> {
                 editor.saveMapFileAs();
+                editor.stop();
                 GameController.it().loadCustomMaps();
+                selectPage(startPage);
             },
             () -> {
                 stage.titleProperty().bind(stageTitleBinding());
