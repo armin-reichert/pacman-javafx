@@ -107,6 +107,7 @@ public class GamePage implements Page {
 
     @Override
     public void onSelected() {
+        adaptCanvasSizeToCurrentWorld();
         //TODO check if this is always what is wanted
         context.actionHandler().reboot();
         context.soundHandler().playVoice("voice.explain", 0);
@@ -213,6 +214,8 @@ public class GamePage implements Page {
         } else {
             layout.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
         }
+        Logger.info("Canvas size adapted. w={}, h={}",
+            layout.decoratedCanvas().getWidth(), layout.decoratedCanvas().getHeight());
     }
 
     private void createDebugInfoBindings() {
