@@ -20,16 +20,16 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class WorldMap {
 
-    public static final String PROPERTY_WALL_STROKE_COLOR     = "color_wall_stroke";
-    public static final String PROPERTY_WALL_FILL_COLOR       = "color_wall_fill";
-    public static final String PROPERTY_DOOR_COLOR            = "color_door";
-    public static final String PROPERTY_PAC_POSITION          = "pos_pac";
-    public static final String PROPERTY_RED_GHOST_POSITION    = "pos_red_ghost";
-    public static final String PROPERTY_PINK_GHOST_POSITION   = "pos_pink_ghost";
-    public static final String PROPERTY_CYAN_GHOST_POSITION   = "pos_cyan_ghost";
-    public static final String PROPERTY_ORANGE_GHOST_POSITION = "pos_orange_ghost";
+    public static final String PROPERTY_COLOR_WALL_STROKE = "color_wall_stroke";
+    public static final String PROPERTY_COLOR_WALL_FILL = "color_wall_fill";
+    public static final String PROPERTY_COLOR_DOOR = "color_door";
+    public static final String PROPERTY_POS_PAC = "pos_pac";
+    public static final String PROPERTY_POS_RED_GHOST = "pos_ghost_1_red";
+    public static final String PROPERTY_POS_PINK_GHOST = "pos_ghost_2_pink";
+    public static final String PROPERTY_POS_CYAN_GHOST = "pos_ghost_3_cyan";
+    public static final String PROPERTY_POS_ORANGE_GHOST = "pos_ghost_4_orange";
 
-    public static final String PROPERTY_FOOD_COLOR             = "color_food";
+    public static final String PROPERTY_COLOR_FOOD = "color_food";
 
     public static final String DEFAULT_WALL_STROKE_COLOR       = "rgb(0,0,255)";
     public static final String DEFAULT_WALL_FILL_COLOR         = "rgb(0,0,0)";
@@ -111,6 +111,20 @@ public class WorldMap {
         }
         terrain = TileMap.parse(terrainSection, Tiles.TERRAIN_TILES_END);
         food = TileMap.parse(foodSection, Tiles.FOOD_TILES_END);
+        migrate();
+    }
+
+    private void migrate() {
+        terrain.tiles().forEach(tile -> {
+            switch (terrain.get(tile)) {
+                case Tiles.PAC_HOME -> terrain.setProperty(WorldMap.PROPERTY_POS_PAC, "(%d,%d)".formatted(tile.x(), tile.y()));
+                case Tiles.HOME_RED_GHOST -> terrain.setProperty(WorldMap.PROPERTY_POS_RED_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
+                case Tiles.HOME_PINK_GHOST -> terrain.setProperty(WorldMap.PROPERTY_POS_PINK_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
+                case Tiles.HOME_CYAN_GHOST -> terrain.setProperty(WorldMap.PROPERTY_POS_CYAN_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
+                case Tiles.HOME_ORANGE_GHOST -> terrain.setProperty(WorldMap.PROPERTY_POS_ORANGE_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
+                default -> {}
+            }
+        });
     }
 
     public void save(File file) {

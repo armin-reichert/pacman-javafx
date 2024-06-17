@@ -170,8 +170,8 @@ public class GameLevel3D extends Group {
 
         // Maze
         WorldMap map = context.game().world().map();
-        wallStrokeColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_WALL_STROKE_COLOR, Color.rgb(33, 33, 255)));
-        wallFillColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_WALL_FILL_COLOR, Color.rgb(0,0,0)));
+        wallStrokeColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
+        wallFillColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_WALL_FILL, Color.rgb(0,0,0)));
         foodColorPy.set(getColorFromMap(map.terrain(), "food_color", Color.PINK));
         addMazeWalls(mazeGroup);
         buildGhostHouse(mazeGroup);

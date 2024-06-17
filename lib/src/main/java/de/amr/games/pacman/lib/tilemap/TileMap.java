@@ -61,6 +61,7 @@ public class TileMap {
         // Second pass: read data and build new tile map
         var tileMap = new TileMap(new byte[numDataRows][numDataCols]);
         tileMap.loadPropertiesFromText(propertySection.toString());
+        tileMap.migrate();
 
         for (int lineIndex = dataSectionStartIndex; lineIndex < lines.size(); ++lineIndex) {
             String line = lines.get(lineIndex);
@@ -230,14 +231,13 @@ public class TileMap {
         StringReader r = new StringReader(text);
         try {
             properties.load(r);
-            migrateProperties();
         } catch (IOException x) {
             Logger.error("Could not read properties from text {}", text);
             Logger.error(x);
         }
     }
 
-    private void migrateProperties() {
+    private void migrate() {
         for (var name : properties.stringPropertyNames()) {
             if (name.endsWith("_color")) {
                 var newName = "color_" + name.substring(0, name.length() - 6);

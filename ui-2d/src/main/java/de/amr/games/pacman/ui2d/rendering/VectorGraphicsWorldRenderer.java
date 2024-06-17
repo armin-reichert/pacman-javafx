@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.rendering;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.mapeditor.FoodMapRenderer;
 import de.amr.games.pacman.mapeditor.TerrainMapRenderer;
-import de.amr.games.pacman.mapeditor.TileMapUtil;
 import de.amr.games.pacman.model.world.World;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -42,14 +41,14 @@ public class VectorGraphicsWorldRenderer {
 
     public void drawTerrain(GraphicsContext g, World world, boolean hiLighted) {
         var terrainMap = world.map().terrain();
-        terrainRenderer.setWallStrokeColor(hiLighted ? Color.WHITE : getColorFromMap(terrainMap, WorldMap.PROPERTY_WALL_STROKE_COLOR, Color.WHITE));
-        terrainRenderer.setWallFillColor(hiLighted ? Color.BLACK : getColorFromMap(terrainMap, WorldMap.PROPERTY_WALL_FILL_COLOR, Color.GREEN));
-        terrainRenderer.setDoorColor(hiLighted ? Color.BLACK : getColorFromMap(terrainMap, WorldMap.PROPERTY_DOOR_COLOR, Color.YELLOW));
+        terrainRenderer.setWallStrokeColor(hiLighted ? Color.WHITE : getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_STROKE, Color.WHITE));
+        terrainRenderer.setWallFillColor(hiLighted ? Color.BLACK : getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_FILL, Color.GREEN));
+        terrainRenderer.setDoorColor(hiLighted ? Color.BLACK : getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_DOOR, Color.YELLOW));
         terrainRenderer.drawMap(g, terrainMap);
     }
 
     public void drawFood(GraphicsContext g, World world, boolean energizersOn) {
-        var foodColor = getColorFromMap(world.map().food(), WorldMap.PROPERTY_FOOD_COLOR, Color.ORANGE);
+        var foodColor = getColorFromMap(world.map().food(), WorldMap.PROPERTY_COLOR_FOOD, Color.ORANGE);
         foodRenderer.setPelletColor(foodColor);
         foodRenderer.setEnergizerColor(foodColor);
         world.tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerTile)).forEach(tile -> foodRenderer.drawPellet(g, tile));
