@@ -9,6 +9,7 @@ import de.amr.games.pacman.ui3d.PacManGames3dUI;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
@@ -31,6 +32,13 @@ import static de.amr.games.pacman.lib.Globals.TS;
  */
 public class LivesCounter3D extends Group {
 
+    public final DoubleProperty pillarHeightPy = new SimpleDoubleProperty(this, "pillarHeight", 8);
+    public final ObjectProperty<Color> pillarColorPy = new SimpleObjectProperty<>(this, "pillarColor", Color.grayRgb(120));
+
+    public final DoubleProperty plateRadiusPy = new SimpleDoubleProperty(this, "plateRadius", 6);
+    public final DoubleProperty plateThicknessPy = new SimpleDoubleProperty(this, "plateThickness", 1);
+    public final ObjectProperty<Color> plateColorPy = new SimpleObjectProperty<>(this, "plateColor", Color.grayRgb(180));
+
     public final IntegerProperty livesShownPy = new SimpleIntegerProperty(this, "livesShown", 0) {
         @Override
         protected void invalidated() {
@@ -41,52 +49,47 @@ public class LivesCounter3D extends Group {
         }
     };
 
-    public final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
-
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
-    private final Group standsGroup = new Group();
+    private final ObjectProperty<PhongMaterial> pillarMaterialPy = new SimpleObjectProperty<>(this, "pillarMaterial", new PhongMaterial());
+    private final ObjectProperty<PhongMaterial> plateMaterialPy = new SimpleObjectProperty<>(this, "plateMaterial", new PhongMaterial());
 
-    private final PhongMaterial pillarMaterial;
-    private final PhongMaterial plateMaterial;
+    private final Group standsGroup = new Group();
+    private final PointLight light = new PointLight();
 
     private final List<Pac3D> pacShapes = new ArrayList<>();
     private final List<Animation> animations = new ArrayList<>();
 
     private final int maxLives;
-    private final double pillarHeight;
-    private final double plateRadius;
-    private final double plateThickness;
 
-    public LivesCounter3D(
-        int maxLives,
-        Color pillarColor, double pillarHeight,
-        Color plateColor, double plateThickness, double plateRadius,
-        Color lightColor)
+    public LivesCounter3D(int maxLives)
     {
         this.maxLives = maxLives;
-        this.pillarHeight = pillarHeight;
-        this.plateThickness = plateThickness;
-        this.plateRadius = plateRadius;
-        pillarMaterial = Ufx.coloredMaterial(pillarColor);
-        plateMaterial = Ufx.coloredMaterial(plateColor);
 
-        var light = new PointLight(lightColor);
+        pillarMaterialPy.bind(Bindings.createObjectBinding(() -> Ufx.coloredMaterial(pillarColorPy.get()), pillarColorPy));
+        plateMaterialPy.bind(Bindings.createObjectBinding(() -> Ufx.coloredMaterial(plateColorPy.get()), plateColorPy));
+
         light.setMaxRange  (TS * (maxLives + 1));
         light.setTranslateX(TS * (maxLives - 1));
         light.setTranslateY(TS * (-1));
-        light.setTranslateZ(-(pillarHeight + 20));
-        light.lightOnProperty().bind(lightOnPy);
+        light.translateZProperty().bind(pillarHeightPy.add(20).multiply(-1));
 
         getChildren().addAll(standsGroup, light);
+    }
+
+    public PointLight light() {
+        return light;
     }
 
     public void addItem(Pac3D pac3D, boolean lookRight) {
         int x = pacShapes.size() * 2 * TS;
         addStand(x);
-        double radius = pac3D.getBoundsInLocal().getHeight() / 2f;
+        double pacRadius = pac3D.getBoundsInLocal().getHeight() * 0.5;
         pac3D.position().setX(x);
-        pac3D.position().setZ(-(pillarHeight + plateThickness + radius));
+        pac3D.position.zProperty().bind(Bindings.createDoubleBinding(
+            () -> -(pillarHeightPy.get() + plateThicknessPy.get() + pacRadius),
+            pillarHeightPy, plateThicknessPy)
+        );
         if (lookRight) {
             pac3D.setRotationAxis(Rotate.Z_AXIS);
             pac3D.setRotate(180);
@@ -105,18 +108,23 @@ public class LivesCounter3D extends Group {
     }
 
     private void addStand(double x) {
-        var plate = new Cylinder(plateRadius, plateThickness);
-        plate.setMaterial(plateMaterial);
+        var plate = new Cylinder();
+        plate.radiusProperty().bind(plateRadiusPy);
+        plate.heightProperty().bind(plateThicknessPy);
+        plate.materialProperty().bind(plateMaterialPy);
         plate.setTranslateX(x);
-        plate.setTranslateZ(-pillarHeight - plateThickness);
+        plate.translateZProperty().bind(Bindings.createDoubleBinding(
+            () -> -pillarHeightPy.get() - plateThicknessPy.get(),
+            pillarHeightPy, plateThicknessPy));
         plate.setRotationAxis(Rotate.X_AXIS);
         plate.setRotate(90);
         plate.drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);
 
-        var pillar = new Cylinder(1, pillarHeight);
-        pillar.setMaterial(pillarMaterial);
+        var pillar = new Cylinder(1, 0.1);
+        pillar.heightProperty().bind(pillarHeightPy);
+        pillar.materialProperty().bind(pillarMaterialPy);
         pillar.setTranslateX(x);
-        pillar.setTranslateZ(-0.5 * pillarHeight);
+        pillar.translateZProperty().bind(pillarHeightPy.multiply(-0.5));
         pillar.setRotationAxis(Rotate.X_AXIS);
         pillar.setRotate(90);
         pillar.drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);

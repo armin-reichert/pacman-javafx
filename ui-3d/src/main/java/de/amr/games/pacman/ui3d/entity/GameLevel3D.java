@@ -19,7 +19,6 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
-import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import javafx.animation.*;
 import javafx.beans.property.*;
@@ -384,27 +383,21 @@ public class GameLevel3D extends Group {
     }
 
     private void createLivesCounter3D() {
-        Theme theme = context.theme();
-        livesCounter3D = new LivesCounter3D(
-            theme.get("livescounter.entries"),
-            theme.get("livescounter.pillar.color"),
-            theme.get("livescounter.pillar.height"),
-            theme.get("livescounter.plate.color"),
-            theme.get("livescounter.plate.thickness"),
-            theme.get("livescounter.plate.radius"),
-            theme.get("livescounter.light.color"));
+        livesCounter3D = new LivesCounter3D(5);
         livesCounter3D.setTranslateX(2 * TS);
         livesCounter3D.setTranslateY(2 * TS);
-        livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         for (int i = 0; i < livesCounter3D.maxLives(); ++i) {
             var pac3D = switch (context.game().variant()) {
-                case MS_PACMAN -> new MsPacMan3D(theme.get("livescounter.pac.size"), null, theme);
-                case PACMAN, PACMAN_XXL -> new PacMan3D(theme.get("livescounter.pac.size"), null, theme);
+                case MS_PACMAN -> new MsPacMan3D(10, null, context.theme());
+                case PACMAN, PACMAN_XXL -> new PacMan3D(10, null, context.theme());
             };
             livesCounter3D.addItem(pac3D, true);
         }
-        livesCounter3D.lightOnPy.set(context.gameController().hasCredit());
         livesCounter3D.setVisible(context.gameController().hasCredit());
+        livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
+
+        livesCounter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
+        livesCounter3D.light().setLightOn(context.gameController().hasCredit());
     }
 
     public void createLevelCounter3D() {
