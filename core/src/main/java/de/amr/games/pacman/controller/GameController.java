@@ -80,6 +80,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         Logger.info("Searching for custom map files in folder {}", mapDir);
         var mapFiles = mapDir.listFiles((dir, name) -> name.endsWith(".world"));
         if (mapFiles != null) {
+            customMaps.clear();
             for (var mapFile : mapFiles) {
                 customMaps.add(new WorldMap(mapFile));
                 Logger.info("Found custom map file: " + mapFile);

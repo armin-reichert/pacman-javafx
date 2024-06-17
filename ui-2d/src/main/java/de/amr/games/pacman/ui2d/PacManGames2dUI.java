@@ -153,11 +153,16 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void quitMapEditor() {
-        editor.showConfirmation(editor::saveMapFileAs, () -> {
-            stage.titleProperty().bind(stageTitleBinding());
-            editor.stop();
-            selectPage(startPage);
-        });
+        editor.showConfirmation(
+            () -> {
+                editor.saveMapFileAs();
+                GameController.it().loadCustomMaps();
+            },
+            () -> {
+                stage.titleProperty().bind(stageTitleBinding());
+                editor.stop();
+                selectPage(startPage);
+            });
     }
 
     public void loadAssets() {
