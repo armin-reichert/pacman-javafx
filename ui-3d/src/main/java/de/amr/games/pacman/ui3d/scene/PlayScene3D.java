@@ -346,6 +346,12 @@ public class PlayScene3D implements GameScene {
     }
 
     private void replaceGameLevel3D() {
+        //TODO check this
+        if (context.game().world() == null) {
+            Logger.warn("Cannot create 3D level, world not yet created");
+            return;
+        }
+
         level3D = new GameLevel3D(context);
 
         scores3D.translateXProperty().bind(level3D.translateXProperty().add(TS));
