@@ -17,11 +17,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 
@@ -62,7 +64,7 @@ public class LivesCounter3D extends Group {
 
     private final int maxLives;
 
-    public LivesCounter3D(int maxLives)
+    public LivesCounter3D(int maxLives, Supplier<Pac3D> shapeFactory)
     {
         this.maxLives = maxLives;
 
@@ -75,17 +77,21 @@ public class LivesCounter3D extends Group {
         light.translateZProperty().bind(pillarHeightPy.add(20).multiply(-1));
 
         getChildren().addAll(standsGroup, light);
+
+        for (int i = 0; i < maxLives; ++i) {
+            addItem(shapeFactory.get(), true);
+        }
     }
 
     public PointLight light() {
         return light;
     }
 
-    public void addItem(Pac3D pac3D, boolean lookRight) {
+    private void addItem(Pac3D pac3D, boolean lookRight) {
         int x = pacShapes.size() * 2 * TS;
         addStand(x);
         double pacRadius = pac3D.getBoundsInLocal().getHeight() * 0.5;
-        pac3D.position().setX(x);
+        pac3D.position.setX(x);
         pac3D.position.zProperty().bind(Bindings.createDoubleBinding(
             () -> -(pillarHeightPy.get() + plateThicknessPy.get() + pacRadius),
             pillarHeightPy, plateThicknessPy)

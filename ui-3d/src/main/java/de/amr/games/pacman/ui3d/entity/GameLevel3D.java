@@ -33,6 +33,7 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -383,16 +384,13 @@ public class GameLevel3D extends Group {
     }
 
     private void createLivesCounter3D() {
-        livesCounter3D = new LivesCounter3D(5);
+        Supplier<Pac3D> pacShapeFactory = switch (context.game().variant()) {
+            case MS_PACMAN          -> () -> new MsPacMan3D(10, null, context.theme());
+            case PACMAN, PACMAN_XXL -> () -> new PacMan3D(10, null, context.theme());
+        };
+        livesCounter3D = new LivesCounter3D(5, pacShapeFactory);
         livesCounter3D.setTranslateX(2 * TS);
         livesCounter3D.setTranslateY(2 * TS);
-        for (int i = 0; i < livesCounter3D.maxLives(); ++i) {
-            var pac3D = switch (context.game().variant()) {
-                case MS_PACMAN -> new MsPacMan3D(10, null, context.theme());
-                case PACMAN, PACMAN_XXL -> new PacMan3D(10, null, context.theme());
-            };
-            livesCounter3D.addItem(pac3D, true);
-        }
         livesCounter3D.setVisible(context.gameController().hasCredit());
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
 
