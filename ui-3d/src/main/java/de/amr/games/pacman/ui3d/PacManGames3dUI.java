@@ -183,7 +183,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
     @Override
     protected void createGamePage() {
-        gamePage = new GamePage3D(this);
+        gamePage = new GamePage3D(this, mainScene);
         gamePage.dashboard().addInfoBox(3, tt("infobox.3D_settings.title"), new InfoBox3D());
         gamePage.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         gamePage.layout().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);

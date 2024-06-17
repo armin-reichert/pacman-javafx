@@ -10,6 +10,7 @@ import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui3d.scene.Perspective;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 
@@ -21,8 +22,8 @@ import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
  */
 public class GamePage3D extends GamePage {
 
-    public GamePage3D(GameContext context) {
-        super(context);
+    public GamePage3D(GameContext context, Scene parentScene) {
+        super(context, parentScene);
     }
 
     @Override

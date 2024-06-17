@@ -15,6 +15,7 @@ import de.amr.games.pacman.ui2d.util.FadingPane;
 import de.amr.games.pacman.ui2d.util.FlashMessageView;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.binding.Bindings;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.CustomMenuItem;
@@ -41,6 +42,7 @@ import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
 public class GamePage implements Page {
 
     protected final GameContext context;
+    protected final Scene parentScene;
     protected final CanvasLayoutPane layout;
     protected final Pane popupLayer = new Pane();
     protected final FlashMessageView flashMessageView = new FlashMessageView();
@@ -51,8 +53,9 @@ public class GamePage implements Page {
     protected final PictureInPictureView pip;
     protected ContextMenu contextMenu;
 
-    public GamePage(GameContext context) {
+    public GamePage(GameContext context, Scene parentScene) {
         this.context = checkNotNull(context);
+        this.parentScene = parentScene;
 
         layout = new CanvasLayoutPane();
         layout.canvasLayer().setBackground(context.theme().background("wallpaper.background"));
@@ -214,6 +217,7 @@ public class GamePage implements Page {
         } else {
             layout.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
         }
+        layout.resizeTo(parentScene.getWidth(), parentScene.getHeight());
         Logger.info("Canvas size adapted. w={}, h={}",
             layout.decoratedCanvas().getWidth(), layout.decoratedCanvas().getHeight());
     }

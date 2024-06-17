@@ -409,7 +409,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     protected void createGamePage() {
-        gamePage = new GamePage(this);
+        gamePage = new GamePage(this, mainScene);
         gamePage.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         gamePage.layout().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
         gamePage.layout().setMinScaling(MIN_SCALING);
@@ -775,6 +775,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void reboot() {
         stopAllSounds();
         currentGameScene().ifPresent(GameScene::end);
+        game().removeWorld();
         clock.setTargetFrameRate(GameModel.FPS);
         gameController().restart(GameState.BOOT);
     }
