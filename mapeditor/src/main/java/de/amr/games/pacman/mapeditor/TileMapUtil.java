@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.mapeditor;
 
 import de.amr.games.pacman.lib.tilemap.TileMap;
@@ -5,6 +9,7 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 public interface TileMapUtil {
+
     int TILE_SIZE = 8;
 
     static Color parseColor(String text) {

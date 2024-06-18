@@ -87,9 +87,9 @@ public class WorldMap {
 
     public WorldMap(File file)  {
         try {
+            url = file.toURI().toURL();
             var r = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
             parse(r.lines());
-            url = file.toURI().toURL();
         } catch (Exception x) {
             Logger.error(x);
         }

@@ -82,8 +82,9 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         if (mapFiles != null) {
             customMaps.clear();
             for (var mapFile : mapFiles) {
-                customMaps.add(new WorldMap(mapFile));
                 Logger.info("Found custom map file: " + mapFile);
+                var customMap = new WorldMap(mapFile);
+                customMaps.add(customMap);
             }
             if (customMaps.isEmpty()) {
                 Logger.info("No custom maps found");
