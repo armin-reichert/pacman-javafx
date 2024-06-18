@@ -66,7 +66,7 @@ public class PropertyEditor extends BorderPane {
         var sortedEntries = editedProperties.entrySet().stream().sorted(Comparator.comparing(Object::toString)).toList();
         for (var entry : sortedEntries) {
             TextField nameEditor = new TextField(String.valueOf(entry.getKey()));
-            int nameColumnMinWidth = 100;
+            int nameColumnMinWidth = 150;
             nameEditor.setMinWidth(nameColumnMinWidth);
             nameEditor.disableProperty().bind(enabledPy.not());
             grid.add(nameEditor, 0, row);
