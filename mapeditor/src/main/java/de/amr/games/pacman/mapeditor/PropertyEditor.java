@@ -27,12 +27,14 @@ public class PropertyEditor extends BorderPane {
     public final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
 
     private final TileMapEditor editor;
+    private final TileMap tileMap;
     private Properties editedProperties;
     private final GridPane grid = new GridPane();
     private int numRows;
 
-    public PropertyEditor(String title, TileMapEditor editor) {
+    public PropertyEditor(String title, TileMapEditor editor, TileMap tileMap) {
         this.editor = editor;
+        this.tileMap = tileMap;
 
         var lblTitle = new Label(title);
         lblTitle.setFont(Font.font("Sans", FontWeight.BOLD, 14));
@@ -76,9 +78,9 @@ public class PropertyEditor extends BorderPane {
                 nameEditor.setOnAction(e -> saveEditedProperty(nameEditor, TileMapUtil.formatColor(colorPicker.getValue())));
                 grid.add(colorPicker, 1, row);
             } else if (entry.getKey().toString().startsWith("pos_")) {
-                var spinnerX  = new Spinner<Integer>(0, 100, 0);
+                var spinnerX  = new Spinner<Integer>(0, tileMap.numCols() - 1, 0);
                 spinnerX.disableProperty().bind(enabledPy.not());
-                var spinnerY  = new Spinner<Integer>(0, 100, 0);
+                var spinnerY  = new Spinner<Integer>(0, tileMap.numRows() - 1, 0);
                 spinnerY.disableProperty().bind(enabledPy.not());
                 HBox hbox = new HBox(spinnerX, spinnerY);
                 Vector2i tile = TileMap.parseVector2i(entry.getValue().toString());

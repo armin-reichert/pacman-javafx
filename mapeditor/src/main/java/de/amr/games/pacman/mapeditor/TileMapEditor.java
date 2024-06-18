@@ -297,10 +297,10 @@ public class TileMapEditor  {
 
         palettesTab = new TabPane(terrainPaletteTab, actorPaletteTab, foodPaletteTab);
 
-        terrainMapPropertiesEditor = new PropertyEditor(tt("terrain"), this);
+        terrainMapPropertiesEditor = new PropertyEditor(tt("terrain"), this, map().terrain());
         terrainMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
 
-        foodMapPropertiesEditor = new PropertyEditor(tt("pellets"), this);
+        foodMapPropertiesEditor = new PropertyEditor(tt("pellets"), this, map().food());
         foodMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
 
         infoLabel = new Label();
