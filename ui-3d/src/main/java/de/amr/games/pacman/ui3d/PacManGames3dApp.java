@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import javafx.application.Application;
 import javafx.stage.Screen;
 import javafx.stage.Stage;

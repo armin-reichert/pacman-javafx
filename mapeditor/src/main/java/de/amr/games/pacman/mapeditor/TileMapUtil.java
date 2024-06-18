@@ -1,6 +1,5 @@
 package de.amr.games.pacman.mapeditor;
 
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
