@@ -655,9 +655,13 @@ public class TileMapEditor  {
     }
 
     private void draw() {
-        drawEditCanvas();
-        drawPreviewCanvas();
-        palettes.get(selectedPaletteID()).draw();
+        try {
+            drawEditCanvas();
+            drawPreviewCanvas();
+            palettes.get(selectedPaletteID()).draw();
+        } catch (Exception x) {
+            Logger.error("Exception while drawing: {}", x);
+        }
     }
 
     private void drawGrid(GraphicsContext g) {

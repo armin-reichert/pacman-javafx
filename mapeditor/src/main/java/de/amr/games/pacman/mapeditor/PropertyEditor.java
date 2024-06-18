@@ -4,12 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.mapeditor;
 
+import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -69,19 +68,34 @@ public class PropertyEditor extends BorderPane {
             nameEditor.setMinWidth(nameColumnMinWidth);
             nameEditor.disableProperty().bind(enabledPy.not());
             grid.add(nameEditor, 0, row);
-            if (entry.getKey().toString().endsWith("_color") || entry.getKey().toString().startsWith("color_")) {
+            if (entry.getKey().toString().startsWith("color_")) {
                 var colorPicker = new ColorPicker();
                 colorPicker.setValue(TileMapUtil.parseColor(String.valueOf(entry.getValue())));
-                colorPicker.setOnAction(e -> editProperty(nameEditor, TileMapUtil.formatColor(colorPicker.getValue())));
+                colorPicker.setOnAction(e -> saveEditedProperty(nameEditor, TileMapUtil.formatColor(colorPicker.getValue())));
                 colorPicker.disableProperty().bind(enabledPy.not());
-                nameEditor.setOnAction(e -> editProperty(nameEditor, TileMapUtil.formatColor(colorPicker.getValue())));
+                nameEditor.setOnAction(e -> saveEditedProperty(nameEditor, TileMapUtil.formatColor(colorPicker.getValue())));
                 grid.add(colorPicker, 1, row);
-            } else {
+            } else if (entry.getKey().toString().startsWith("pos_")) {
+                var spinnerX  = new Spinner<Integer>(0, 100, 0);
+                spinnerX.disableProperty().bind(enabledPy.not());
+                var spinnerY  = new Spinner<Integer>(0, 100, 0);
+                spinnerY.disableProperty().bind(enabledPy.not());
+                HBox hbox = new HBox(spinnerX, spinnerY);
+                Vector2i tile = TileMap.parseVector2i(entry.getValue().toString());
+                if (tile != null) {
+                    spinnerX.getValueFactory().setValue(tile.x());
+                    spinnerY.getValueFactory().setValue(tile.y());
+                }
+                spinnerX.valueProperty().addListener((py,ov,nv) -> saveEditedProperty(nameEditor, TileMap.formatTile(new Vector2i(spinnerX.getValue(), spinnerY.getValue()))));
+                spinnerY.valueProperty().addListener((py,ov,nv) -> saveEditedProperty(nameEditor, TileMap.formatTile(new Vector2i(spinnerX.getValue(), spinnerY.getValue()))));
+                grid.add(hbox, 1, row);
+            }
+            else {
                 var inputField = new TextField();
                 inputField.setText(String.valueOf(entry.getValue()));
-                inputField.setOnAction(e -> editProperty(nameEditor, inputField.getText()));
+                inputField.setOnAction(e -> saveEditedProperty(nameEditor, inputField.getText()));
                 inputField.disableProperty().bind(enabledPy.not());
-                nameEditor.setOnAction(e -> editProperty(nameEditor, inputField.getText()));
+                nameEditor.setOnAction(e -> saveEditedProperty(nameEditor, inputField.getText()));
                 grid.add(inputField, 1, row);
             }
             ++row;
@@ -89,7 +103,7 @@ public class PropertyEditor extends BorderPane {
         numRows = row;
     }
 
-    private void editProperty(TextField nameEditor, Object value) {
+    private void saveEditedProperty(TextField nameEditor, Object value) {
         String name = nameEditor.getText().trim();
         if (!name.isBlank()) {
             editedProperties.put(name, value);

@@ -39,7 +39,6 @@ public class TileMap {
         if (m.matches()) {
             return new Vector2i(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
         }
-        Logger.error("Invalid Vector2i format: {}", text);
         return null;
     }
 
