@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
-import static de.amr.games.pacman.model.world.World.getTilePropertyFromMap;
 
 /**
  * @author Armin Reichert
@@ -82,23 +81,23 @@ public class House {
     }
 
     public void setPacPositionFromMap(WorldMap map) {
-        Vector2i pacHomeTile = getTilePropertyFromMap(map.terrain(), WorldMap.PROPERTY_POS_PAC, v2i(13, 26));
+        Vector2i pacHomeTile = map.terrain().getTileProperty(WorldMap.PROPERTY_POS_PAC, v2i(13, 26));
         pacPosition = pacHomeTile.toFloatVec().scaled(TS).plus(HTS, 0);
     }
 
     public void setGhostPositionsFromMap(WorldMap map) {
         ghostPositions = new Vector2f[4];
 
-        Vector2i homeTileRed = getTilePropertyFromMap(map.terrain(), WorldMap.PROPERTY_POS_RED_GHOST, v2i(13,14));
+        Vector2i homeTileRed = map.terrain().getTileProperty(WorldMap.PROPERTY_POS_RED_GHOST, v2i(13,14));
         ghostPositions[RED_GHOST] = positionHalfTileRightOf(homeTileRed);
 
-        Vector2i homeTilePink = getTilePropertyFromMap(map.terrain(), WorldMap.PROPERTY_POS_PINK_GHOST, v2i(13,17));
+        Vector2i homeTilePink = map.terrain().getTileProperty(WorldMap.PROPERTY_POS_PINK_GHOST, v2i(13,17));
         ghostPositions[PINK_GHOST] = positionHalfTileRightOf(homeTilePink);
 
-        Vector2i homeTileCyan = getTilePropertyFromMap(map.terrain(), WorldMap.PROPERTY_POS_CYAN_GHOST, v2i(11,17));
+        Vector2i homeTileCyan = map.terrain().getTileProperty(WorldMap.PROPERTY_POS_CYAN_GHOST, v2i(11,17));
         ghostPositions[CYAN_GHOST] = positionHalfTileRightOf(homeTileCyan);
 
-        Vector2i homeTileOrange = getTilePropertyFromMap(map.terrain(), WorldMap.PROPERTY_POS_ORANGE_GHOST, v2i(15,17));
+        Vector2i homeTileOrange = map.terrain().getTileProperty(WorldMap.PROPERTY_POS_ORANGE_GHOST, v2i(15,17));
         ghostPositions[ORANGE_GHOST] = positionHalfTileRightOf(homeTileOrange);
     }
 

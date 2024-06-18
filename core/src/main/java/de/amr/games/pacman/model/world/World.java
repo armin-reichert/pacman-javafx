@@ -7,16 +7,12 @@ package de.amr.games.pacman.model.world;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -28,26 +24,6 @@ import static java.util.Collections.unmodifiableList;
  * @author Armin Reichert
  */
 public class World {
-
-    //TODO put these methods elsewhere
-
-    public static Vector2i parseVector2i(String text) {
-        Pattern pattern = Pattern.compile("\\((\\d+),(\\d+)\\)");
-        Matcher m = pattern.matcher(text);
-        if (m.matches()) {
-            return new Vector2i(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
-        }
-        Logger.error("Invalid Vector2i format: {}", text);
-        return null;
-    }
-
-    public static Vector2i getTilePropertyFromMap(TileMap map, String key, Vector2i defaultTile) {
-        if (map.hasProperty(key)) {
-            Vector2i tile = parseVector2i(map.getProperty(key));
-            return tile != null ? tile : defaultTile;
-        }
-        return defaultTile;
-    }
 
     private final WorldMap map;
 
@@ -80,16 +56,16 @@ public class World {
     private void setScatterTiles() {
         ghostScatterTiles = new Vector2i[4];
 
-        ghostScatterTiles[RED_GHOST] = getTilePropertyFromMap(map.terrain(),
+        ghostScatterTiles[RED_GHOST] = map.terrain().getTileProperty(
             WorldMap.PROPERTY_POS_SCATTER_RED_GHOST, v2i(0, numCols() - 3));
 
-        ghostScatterTiles[PINK_GHOST] = getTilePropertyFromMap(map.terrain(),
+        ghostScatterTiles[PINK_GHOST] = map.terrain().getTileProperty(
             WorldMap.PROPERTY_POS_SCATTER_PINK_GHOST, v2i(0, 3));
 
-        ghostScatterTiles[CYAN_GHOST] = getTilePropertyFromMap(map.terrain(),
+        ghostScatterTiles[CYAN_GHOST] = map.terrain().getTileProperty(
             WorldMap.PROPERTY_POS_SCATTER_CYAN_GHOST, new Vector2i(numRows()-1, numCols()-1));
 
-        ghostScatterTiles[ORANGE_GHOST] = getTilePropertyFromMap(map.terrain(),
+        ghostScatterTiles[ORANGE_GHOST] = map.terrain().getTileProperty(
              WorldMap.PROPERTY_POS_SCATTER_ORANGE_GHOST, new Vector2i(numRows()-1, 0));
     }
 

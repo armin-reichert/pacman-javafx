@@ -13,6 +13,8 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -30,6 +32,16 @@ public class TileMap {
     private final byte[][] data;
     private final List<TileMapPath> wallPaths = new ArrayList<>();
     private final List<TileMapPath> dwallPaths = new ArrayList<>();
+
+    public static Vector2i parseVector2i(String text) {
+        Pattern pattern = Pattern.compile("\\((\\d+),(\\d+)\\)");
+        Matcher m = pattern.matcher(text);
+        if (m.matches()) {
+            return new Vector2i(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
+        }
+        Logger.error("Invalid Vector2i format: {}", text);
+        return null;
+    }
 
     public static TileMap parse(List<String> lines, byte valueLimit) {
         // First pass: read property section and determine data section size
@@ -225,6 +237,14 @@ public class TileMap {
 
     public Properties getProperties() {
         return properties;
+    }
+
+    public Vector2i getTileProperty(String key, Vector2i defaultTile) {
+        if (hasProperty(key)) {
+            Vector2i tile = parseVector2i(getProperty(key));
+            return tile != null ? tile : defaultTile;
+        }
+        return defaultTile;
     }
 
     public void loadPropertiesFromText(String text) {
