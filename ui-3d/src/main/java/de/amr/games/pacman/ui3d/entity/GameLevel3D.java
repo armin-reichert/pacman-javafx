@@ -384,9 +384,9 @@ public class GameLevel3D extends Group {
     }
 
     private void createLivesCounter3D() {
-        Supplier<Pac3D> pacShapeFactory = switch (context.game().variant()) {
-            case MS_PACMAN          -> () -> new MsPacMan3D(10, null, context.theme());
-            case PACMAN, PACMAN_XXL -> () -> new PacMan3D(10, null, context.theme());
+        Supplier<Pac3D> pacShapeFactory = () -> switch (context.game().variant()) {
+            case MS_PACMAN          -> new MsPacMan3D(10, null, context.theme());
+            case PACMAN, PACMAN_XXL -> new PacMan3D(10, null, context.theme());
         };
         livesCounter3D = new LivesCounter3D(5, pacShapeFactory);
         livesCounter3D.setTranslateX(2 * TS);

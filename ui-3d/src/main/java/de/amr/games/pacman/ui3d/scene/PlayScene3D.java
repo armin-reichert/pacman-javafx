@@ -118,15 +118,20 @@ public class PlayScene3D implements GameScene {
             level3D.update();
             perspective().update(fxSubScene.getCamera(), game.world(), game.pac());
         } else {
+            // if level has been started in 2D scene and user switches to 3D scene, the 3D level must be created
             replaceGameLevel3D();
         }
+
+        // Update autopilot here. Autopilot flag is in core layer where we don't have a JavaFX property to bind with
         game.pac().setUseAutopilot(game.isDemoLevel() || PY_AUTOPILOT.get());
+
         if (context.gameController().hasCredit()) {
             scores3D.showScores(
                 game.score().points(), game.score().levelNumber(),
                 game.highScore().points(), game.highScore().levelNumber());
         } else {
-            scores3D.showAlternativeText("Game OVER!", Color.RED);
+            // demo level or "game over" state
+            scores3D.showAlternativeText("GAME OVER!", Color.RED);
         }
         updateSound();
     }
@@ -346,7 +351,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void replaceGameLevel3D() {
-        //TODO check this
+        // Might be called before the world has been created
         if (context.game().world() == null) {
             Logger.warn("Cannot create 3D level, world not yet created");
             return;
