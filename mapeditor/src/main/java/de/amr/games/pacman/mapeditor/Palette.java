@@ -181,10 +181,10 @@ public class Palette extends Canvas {
             g.strokeLine(col * cellSize, 0, col * cellSize, getHeight());
         }
         // mark selected tool
-        g.setStroke(Color.YELLOW);
-        g.setLineWidth(1);
+        g.setStroke(Color.RED);
+        g.setLineWidth(2);
         if (selectedRow != -1 && selectedCol != -1) {
-            g.strokeRect(selectedCol * cellSize, selectedRow * cellSize, cellSize, cellSize);
+            g.strokeRect(selectedCol * cellSize + 1, selectedRow * cellSize + 1, cellSize - 2, cellSize - 2);
         }
         g.restore();
     }
