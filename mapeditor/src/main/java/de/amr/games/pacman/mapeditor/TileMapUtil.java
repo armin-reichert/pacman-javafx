@@ -5,16 +5,29 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public interface TileMapUtil {
     int TILE_SIZE = 8;
 
-    static Color parseColor(String colorText) {
+    static Color parseColor(String text) {
         try {
-            return Color.web(colorText);
+            return Color.web(text);
         } catch (Exception x) {
             Logger.error(x);
             return Color.WHITE;
         }
+    }
+
+    static Vector2i parseVector2i(String text) {
+        Pattern pattern = Pattern.compile("\\((\\d+),(\\d+)\\)");
+        Matcher m = pattern.matcher(text);
+        if (m.matches()) {
+            return new Vector2i(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
+        }
+        Logger.error("Invalid Vector2i format: {}", text);
+        return null;
     }
 
     static String formatColor(Color color) {
