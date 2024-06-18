@@ -5,9 +5,6 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public interface TileMapUtil {
     int TILE_SIZE = 8;
 
@@ -20,22 +17,8 @@ public interface TileMapUtil {
         }
     }
 
-    static Vector2i parseVector2i(String text) {
-        Pattern pattern = Pattern.compile("\\((\\d+),(\\d+)\\)");
-        Matcher m = pattern.matcher(text);
-        if (m.matches()) {
-            return new Vector2i(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
-        }
-        Logger.error("Invalid Vector2i format: {}", text);
-        return null;
-    }
-
     static String formatColor(Color color) {
         return String.format("rgb(%d,%d,%d)", (int)(color.getRed()*255), (int)(color.getGreen()*255), (int)(color.getBlue()*255));
-    }
-
-    static String formatTile(Vector2i tile) {
-        return "(%d,%d)".formatted(tile.x(), tile.y());
     }
 
     static Color getColorFromMap(TileMap map, String key, Color defaultColor) {
@@ -49,13 +32,5 @@ public interface TileMapUtil {
             }
         }
         return defaultColor;
-    }
-
-    static Vector2i getTileFromMap(TileMap map, String key, Vector2i defaultTile) {
-        if (map.hasProperty(key)) {
-            Vector2i tile = parseVector2i(map.getProperty(key));
-            return tile != null ? tile : defaultTile;
-        }
-        return defaultTile;
     }
 }

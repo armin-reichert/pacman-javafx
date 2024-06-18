@@ -45,8 +45,10 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
-import static de.amr.games.pacman.mapeditor.TileMapUtil.*;
+import static de.amr.games.pacman.mapeditor.TileMapUtil.getColorFromMap;
+import static de.amr.games.pacman.mapeditor.TileMapUtil.parseColor;
 
 /**
  * @author Armin Reichert

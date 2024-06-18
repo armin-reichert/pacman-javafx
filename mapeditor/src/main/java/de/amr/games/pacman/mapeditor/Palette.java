@@ -72,7 +72,7 @@ public class Palette extends Canvas {
 
         @Override
         public void apply(TileMap tileMap, Vector2i tile) {
-            tileMap.setProperty(propertyName, TileMapUtil.formatTile(tile));
+            tileMap.setProperty(propertyName, TileMap.formatTile(tile));
         }
 
         @Override

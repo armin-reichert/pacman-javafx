@@ -43,6 +43,10 @@ public class TileMap {
         return null;
     }
 
+    public static String formatTile(Vector2i tile) {
+        return "(%d,%d)".formatted(tile.x(), tile.y());
+    }
+
     public static TileMap parse(List<String> lines, byte valueLimit) {
         // First pass: read property section and determine data section size
         int numDataRows = 0, numDataCols = -1;

@@ -14,7 +14,7 @@ import javafx.scene.shape.ArcType;
 
 import java.util.Optional;
 
-import static de.amr.games.pacman.mapeditor.TileMapUtil.parseVector2i;
+import static de.amr.games.pacman.lib.tilemap.TileMap.parseVector2i;
 
 /**
  * @author Armin Reichert
