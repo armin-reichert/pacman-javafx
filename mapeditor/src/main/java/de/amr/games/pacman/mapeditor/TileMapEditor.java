@@ -113,7 +113,7 @@ public class TileMapEditor  {
     private Menu menuFile;
     private Menu menuEdit;
     private Menu menuLoadMap;
-    private Pane layout;
+    private BorderPane layout;
     private Canvas editCanvas;
     private Canvas previewCanvas;
     private Label infoLabel;
@@ -240,7 +240,7 @@ public class TileMapEditor  {
         gridSizeEditor.setSpacing(3);
         gridSizeEditor.setAlignment(Pos.BASELINE_LEFT);
 
-        var terrainPalette = new Palette(32, 4, 4, terrainMapRenderer);
+        var terrainPalette = new Palette(32, 2, 8, terrainMapRenderer);
         terrainPalette.setTools(
             terrainPalette.changeTileValueTool(Tiles.WALL_H, "Horiz. Wall"),
             terrainPalette.changeTileValueTool(Tiles.WALL_V, "Vert. Wall"),
@@ -260,7 +260,7 @@ public class TileMapEditor  {
         );
         palettes.put(PALETTE_TERRAIN, terrainPalette);
 
-        var actorPalette = new Palette(32, 3, 4, terrainMapRenderer);
+        var actorPalette = new Palette(32, 2, 8, terrainMapRenderer);
         actorPalette.setTools(
             actorPalette.changePropertyValueTool(PROPERTY_POS_RED_GHOST, "Red Ghost"),
             actorPalette.changePropertyValueTool(PROPERTY_POS_PINK_GHOST, "Pink Ghost"),
@@ -302,15 +302,12 @@ public class TileMapEditor  {
         foodMapPropertiesEditor = new PropertyEditor(tt("pellets"), this, map().food());
         foodMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
 
-        infoLabel = new Label();
-
         VBox controlsPane = new VBox();
         controlsPane.setSpacing(10);
-        controlsPane.setMinWidth(200);
+        controlsPane.setMinWidth(270);
         controlsPane.getChildren().add(cbPreviewVisible);
         controlsPane.getChildren().add(new HBox(20, cbTerrainVisible, cbFoodVisible, cbGridVisible));
         controlsPane.getChildren().add(gridSizeEditor);
-        controlsPane.getChildren().add(infoLabel);
         controlsPane.getChildren().add(palettesTab);
         controlsPane.getChildren().add(terrainMapPropertiesEditor);
         controlsPane.getChildren().add(foodMapPropertiesEditor);
@@ -321,6 +318,11 @@ public class TileMapEditor  {
         var splitPane = new SplitPane(editCanvasScroll, controlsPane, previewCanvasScroll);
         //splitPane.setDividerPositions(0.45, 0.55);
         layout = new BorderPane(splitPane);
+
+        infoLabel = new Label();
+        var footer = new HBox(infoLabel);
+        footer.setPadding(new Insets(0, 10, 0, 10));
+        layout.setBottom(footer);
     }
 
     private void createMenus() {

@@ -75,7 +75,7 @@ public class PropertyEditor extends BorderPane {
             String propertyName = entry.getKey().toString();
             String propertyValue = entry.getValue().toString();
             var nameEditor = new TextField(propertyName);
-            int nameColumnMinWidth = 150;
+            int nameColumnMinWidth = 160;
             nameEditor.setMinWidth(nameColumnMinWidth);
             nameEditor.disableProperty().bind(enabledPy.not());
             grid.add(nameEditor, 0, row);
