@@ -103,7 +103,6 @@ public class TileMapEditor  {
     public final ObjectProperty<Integer> gridSizePy = new SimpleObjectProperty<>(this, "gridSize", 16) {
         @Override
         protected void invalidated() {
-            Logger.info("Grid size: {}", get());
             invalidatePaths();
             draw();
         }

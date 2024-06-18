@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -90,8 +91,10 @@ public class PropertyEditor extends BorderPane {
                     spinnerX.getValueFactory().setValue(tile.x());
                     spinnerY.getValueFactory().setValue(tile.y());
                 }
-                spinnerX.valueProperty().addListener((py,ov,nv) -> saveEditedProperty(nameEditor, TileMap.formatTile(new Vector2i(spinnerX.getValue(), spinnerY.getValue()))));
-                spinnerY.valueProperty().addListener((py,ov,nv) -> saveEditedProperty(nameEditor, TileMap.formatTile(new Vector2i(spinnerX.getValue(), spinnerY.getValue()))));
+                ChangeListener<Number> saveSpinnerValue = (py,ov,nv) ->
+                    saveEditedProperty(nameEditor, TileMap.formatTile(new Vector2i(spinnerX.getValue(), spinnerY.getValue())));
+                spinnerX.valueProperty().addListener(saveSpinnerValue);
+                spinnerY.valueProperty().addListener(saveSpinnerValue);
                 grid.add(hbox, 1, row);
             }
             else {
