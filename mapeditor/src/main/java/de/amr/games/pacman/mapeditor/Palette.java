@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.mapeditor;
 
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Tooltip;
@@ -20,17 +21,48 @@ public class Palette extends Canvas {
 
     public static final Color BG_COLOR = Color.WHITE;
 
-    public record EditorTool(byte value, String description) {}
+    public interface Tool {
+        String description();
+        void apply(TileMap tileMap, Vector2i tile);
+        void draw(GraphicsContext g, int row, int col);
+    }
+
+    public class ChangeTileValueTool implements Tool {
+        private final byte value;
+        private final String description;
+
+        public ChangeTileValueTool(byte value, String description) {
+            this.value = value;
+            this.description = description;
+        }
+
+        @Override
+        public String description() {
+            return description;
+        }
+
+        @Override
+        public void apply(TileMap tileMap, Vector2i tile) {
+            tileMap.set(tile, value);
+        }
+
+        @Override
+        public void draw(GraphicsContext g, int row, int col) {
+            g.setFill(Color.BLACK);
+            g.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+            renderer.drawTile(g, new Vector2i(col, row), value);
+        }
+    }
 
     final int cellSize;
     final int numRows;
     final int numCols;
     final TileMapRenderer renderer;
-    final EditorTool[] editorTools;
+    final ChangeTileValueTool[] tools;
     final GraphicsContext g;
-    byte selectedValue;
-    int selectedValueRow;
-    int selectedValueCol;
+    Tool selectedTool;
+    int selectedRow;
+    int selectedCol;
     Tooltip tooltip;
 
     public Palette(int cellSize, int numRows, int numCols, TileMapRenderer renderer) {
@@ -38,14 +70,14 @@ public class Palette extends Canvas {
         this.numRows = numRows;
         this.numCols = numCols;
         this.renderer = renderer;
-        editorTools = new EditorTool[numRows * numCols];
+        tools = new ChangeTileValueTool[numRows * numCols];
         g = getGraphicsContext2D();
-        selectedValue = 0;
-        selectedValueRow = -1;
-        selectedValueCol = -1;
+        selectedTool = null;
+        selectedRow = -1;
+        selectedCol = -1;
         setWidth(numCols * cellSize);
         setHeight(numRows * cellSize);
-        setOnMouseClicked(this::pickValue);
+        setOnMouseClicked(this::select);
         // Tooltip for tool :-)
         tooltip = new Tooltip("This tool does...");
         tooltip.setShowDelay(Duration.seconds(0.1));
@@ -56,8 +88,8 @@ public class Palette extends Canvas {
             int row = (int) e.getY() / cellSize;
             int col = (int) e.getX() / cellSize;
             int i = row*numCols + col;
-            if (editorTools[i] != null) {
-                String text = editorTools[i].description();
+            if (tools[i] != null) {
+                String text = tools[i].description();
                 tooltip.setText(text.isEmpty() ? "?" : text);
             } else {
                 tooltip.setText("No selection");
@@ -65,22 +97,26 @@ public class Palette extends Canvas {
         });
     }
 
-    public void setTools(EditorTool... someEditorTools) {
+    public Palette.ChangeTileValueTool changeTileValueTool(byte value, String description) {
+        return new ChangeTileValueTool(value, description);
+    }
+
+    public void setTools(ChangeTileValueTool... someEditorTools) {
         for (int i = 0; i < someEditorTools.length; ++i) {
-            if (i < editorTools.length) {
-                editorTools[i] = someEditorTools[i];
+            if (i < tools.length) {
+                tools[i] = someEditorTools[i];
             }
         }
     }
 
-    private void pickValue(MouseEvent e) {
-        int pickRow = (int) e.getY() / cellSize;
-        int pickCol = (int) e.getX() / cellSize;
-        int i = pickRow * numCols + pickCol;
-        if (editorTools[i] != null) {
-            selectedValueRow = pickRow;
-            selectedValueCol = pickCol;
-            selectedValue = editorTools[i].value();
+    private void select(MouseEvent e) {
+        int row = (int) e.getY() / cellSize;
+        int col = (int) e.getX() / cellSize;
+        int i = row * numCols + col;
+        if (tools[i] != null) {
+            selectedRow = row;
+            selectedCol = col;
+            selectedTool = tools[i];
         }
     }
 
@@ -90,11 +126,9 @@ public class Palette extends Canvas {
         if (renderer != null) {
             renderer.setScaling(cellSize / 8.0);
             for (int i = 0; i < numRows * numCols; ++i) {
-                int row = i / numCols, col = i % numCols;
-                if (editorTools[i] != null) {
-                    g.setFill(Color.BLACK);
-                    g.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
-                    renderer.drawTile(g, new Vector2i(col, row), editorTools[i].value());
+                if (tools[i] != null) {
+                    int row = i / numCols, col = i % numCols;
+                    tools[i].draw(g, row, col);
                 }
             }
         }
@@ -108,11 +142,11 @@ public class Palette extends Canvas {
         for (int col = 1; col < numCols; ++col) {
             g.strokeLine(col * cellSize, 0, col * cellSize, getHeight());
         }
-        // mark selected cell
+        // mark selected tool
         g.setStroke(Color.YELLOW);
         g.setLineWidth(1);
-        if (selectedValueRow != -1 && selectedValueCol != -1) {
-            g.strokeRect(selectedValueCol * cellSize, selectedValueRow * cellSize, cellSize, cellSize);
+        if (selectedRow != -1 && selectedCol != -1) {
+            g.strokeRect(selectedCol * cellSize, selectedRow * cellSize, cellSize, cellSize);
         }
         g.restore();
     }

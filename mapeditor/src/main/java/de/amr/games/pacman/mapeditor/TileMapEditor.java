@@ -53,7 +53,6 @@ import static de.amr.games.pacman.mapeditor.TileMapUtil.*;
  */
 public class TileMapEditor  {
 
-
     private static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.mapeditor.texts");
 
     public static String tt(String key, Object... args) {
@@ -63,10 +62,6 @@ public class TileMapEditor  {
     private static final String PALETTE_TERRAIN = "Terrain";
     private static final String PALETTE_ACTORS  = "Actors";
     private static final String PALETTE_FOOD    = "Food";
-
-    private static Palette.EditorTool tool(byte value, String description) {
-        return new Palette.EditorTool(value, description);
-    }
 
     private static WorldMap createNewMap(int numRows, int numCols) {
         var map = new WorldMap(numRows, numCols);
@@ -246,26 +241,27 @@ public class TileMapEditor  {
 
         var terrainPalette = new Palette(32, 4, 4, terrainMapRenderer);
         terrainPalette.setTools(
-            tool(Tiles.WALL_H, "Horiz. Wall"),
-            tool(Tiles.WALL_V, "Vert. Wall"),
-            tool(Tiles.DWALL_H, "Hor. Double-Wall"),
-            tool(Tiles.DWALL_V, "Vert. Double-Wall"),
-            tool(Tiles.CORNER_NW, "NW Corner"),
-            tool(Tiles.CORNER_NE, "NE Corner"),
-            tool(Tiles.CORNER_SW, "SW Corner"),
-            tool(Tiles.CORNER_SE, "SE Corner"),
-            tool(Tiles.DCORNER_NW, "NW Corner"),
-            tool(Tiles.DCORNER_NE, "NE Corner"),
-            tool(Tiles.DCORNER_SW, "SW Corner"),
-            tool(Tiles.DCORNER_SE, "SE Corner"),
-            tool(Tiles.EMPTY, "Empty Space"),
-            tool(Tiles.TUNNEL, "Tunnel"),
-            tool(Tiles.DOOR, "Door")
+            terrainPalette.changeTileValueTool(Tiles.WALL_H, "Horiz. Wall"),
+            terrainPalette.changeTileValueTool(Tiles.WALL_V, "Vert. Wall"),
+            terrainPalette.changeTileValueTool(Tiles.DWALL_H, "Hor. Double-Wall"),
+            terrainPalette.changeTileValueTool(Tiles.DWALL_V, "Vert. Double-Wall"),
+            terrainPalette.changeTileValueTool(Tiles.CORNER_NW, "NW Corner"),
+            terrainPalette.changeTileValueTool(Tiles.CORNER_NE, "NE Corner"),
+            terrainPalette.changeTileValueTool(Tiles.CORNER_SW, "SW Corner"),
+            terrainPalette.changeTileValueTool(Tiles.CORNER_SE, "SE Corner"),
+            terrainPalette.changeTileValueTool(Tiles.DCORNER_NW, "NW Corner"),
+            terrainPalette.changeTileValueTool(Tiles.DCORNER_NE, "NE Corner"),
+            terrainPalette.changeTileValueTool(Tiles.DCORNER_SW, "SW Corner"),
+            terrainPalette.changeTileValueTool(Tiles.DCORNER_SE, "SE Corner"),
+            terrainPalette.changeTileValueTool(Tiles.EMPTY, "Empty Space"),
+            terrainPalette.changeTileValueTool(Tiles.TUNNEL, "Tunnel"),
+            terrainPalette.changeTileValueTool(Tiles.DOOR, "Door")
         );
         palettes.put(PALETTE_TERRAIN, terrainPalette);
 
         var actorPalette = new Palette(32, 3, 4, terrainMapRenderer);
         actorPalette.setTools(
+            /*
             tool(Tiles.HOME_RED_GHOST, "Red Ghost"),
             tool(Tiles.HOME_PINK_GHOST, "Pink Ghost"),
             tool(Tiles.HOME_CYAN_GHOST, "Cyan Ghost"),
@@ -275,14 +271,15 @@ public class TileMapEditor  {
             tool(Tiles.SCATTER_TARGET_CYAN, "Cyan Ghost Scatter"),
             tool(Tiles.SCATTER_TARGET_ORANGE, "Orange Ghost Scatter"),
             tool(Tiles.PAC_HOME, "Pac-Man")
+             */
         );
         palettes.put(PALETTE_ACTORS, actorPalette);
 
         var foodPalette = new Palette(32, 1, 4, foodMapRenderer);
         foodPalette.setTools(
-            tool(Tiles.EMPTY, "No Food"),
-            tool(Tiles.PELLET, "Pellet"),
-            tool(Tiles.ENERGIZER, "Energizer")
+            foodPalette.changeTileValueTool(Tiles.EMPTY, "No Food"),
+            foodPalette.changeTileValueTool(Tiles.PELLET, "Pellet"),
+            foodPalette.changeTileValueTool(Tiles.ENERGIZER, "Energizer")
         );
         palettes.put(PALETTE_FOOD, foodPalette);
 
@@ -695,9 +692,9 @@ public class TileMapEditor  {
             return;
         }
         switch (selectedPaletteID()) {
-            case PALETTE_TERRAIN -> editTerrainMapTile(e, palettes.get(PALETTE_TERRAIN).selectedValue);
-            case PALETTE_ACTORS  -> editTerrainMapTile(e, palettes.get(PALETTE_ACTORS).selectedValue);
-            case PALETTE_FOOD    -> editFoodMapTile(e, palettes.get(PALETTE_FOOD).selectedValue);
+            case PALETTE_TERRAIN -> editTerrainMapTile(e);
+            case PALETTE_ACTORS  -> {} // editTerrainMapTile(e);
+            case PALETTE_FOOD    -> editFoodMapTile(e);
             default -> Logger.error("Unknown palette selection");
         }
     }
@@ -706,8 +703,8 @@ public class TileMapEditor  {
         return (String) palettesTab.getSelectionModel().getSelectedItem().getUserData();
     }
 
-    private byte selectedPaletteValue() {
-        return palettes.get(selectedPaletteID()).selectedValue;
+    private Palette selectedPalette() {
+        return palettes.get(selectedPaletteID());
     }
 
     private void onMouseMovedOverEditCanvas(MouseEvent e) {
@@ -717,13 +714,17 @@ public class TileMapEditor  {
         hoveredTile = tileAtMousePosition(e.getX(), e.getY());
         if (e.isShiftDown()) {
             switch (selectedPaletteID()) {
-                case PALETTE_TERRAIN, PALETTE_ACTORS -> {
-                    map().terrain().set(hoveredTile, selectedPaletteValue());
+                case PALETTE_TERRAIN -> {
+                    if (selectedPalette().selectedTool != null) {
+                        selectedPalette().selectedTool.apply(map().terrain(), hoveredTile);
+                    }
                     markMapEdited();
                     invalidatePaths();
                 }
                 case PALETTE_FOOD -> {
-                    map().food().set(hoveredTile, selectedPaletteValue());
+                    if (selectedPalette().selectedTool != null) {
+                        selectedPalette().selectedTool.apply(map().food(), hoveredTile);
+                    }
                     markMapEdited();
                 }
                 default -> {}
@@ -731,7 +732,7 @@ public class TileMapEditor  {
         }
     }
 
-    private void editTerrainMapTile(MouseEvent e, byte selectedValue) {
+    private void editTerrainMapTile(MouseEvent e) {
         var tile = tileAtMousePosition(e.getX(), e.getY());
         if (e.getButton() == MouseButton.SECONDARY) {
             map().terrain().set(tile, Tiles.EMPTY);
@@ -742,13 +743,15 @@ public class TileMapEditor  {
             map().terrain().set(tile, nextValue);
         }
         else {
-            map().terrain().set(tile, selectedValue);
+            if (selectedPalette().selectedTool != null) {
+                selectedPalette().selectedTool.apply(map().terrain(), tile);
+            }
         }
         invalidatePaths();
         markMapEdited();
     }
 
-    private void editFoodMapTile(MouseEvent e, byte selectedValue) {
+    private void editFoodMapTile(MouseEvent e) {
         var tile = tileAtMousePosition(e.getX(), e.getY());
         if (e.getButton() == MouseButton.SECONDARY) {
             map().food().set(tile, Tiles.EMPTY);
@@ -760,7 +763,9 @@ public class TileMapEditor  {
             map().food().set(tile, newValue);
         }
         else {
-            map().food().set(tile, selectedValue);
+            if (selectedPalette().selectedTool != null) {
+                selectedPalette().selectedTool.apply(map().food(), tile);
+            }
         }
         markMapEdited();
     }
