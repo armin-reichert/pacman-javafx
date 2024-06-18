@@ -157,11 +157,26 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
         }
     }
 
-    private Optional<Vector2i> specialTile(TileMap terrainMap, String propertyName) {
+    public Optional<Vector2i> specialTile(TileMap terrainMap, String propertyName) {
         if (terrainMap.hasProperty(propertyName)) {
             return Optional.ofNullable(parseVector2i(terrainMap.getProperty(propertyName)));
         }
         return Optional.empty();
+    }
+
+    public void drawSpecialTile(GraphicsContext g, String propertyName, Vector2i tile) {
+        switch (propertyName) {
+            case WorldMap.PROPERTY_POS_PAC -> drawPacHome(g, tile);
+            case WorldMap.PROPERTY_POS_RED_GHOST -> drawGhostHome(g, tile, Color.RED);
+            case WorldMap.PROPERTY_POS_PINK_GHOST -> drawGhostHome(g, tile, Color.PINK);
+            case WorldMap.PROPERTY_POS_CYAN_GHOST -> drawGhostHome(g, tile, Color.CYAN);
+            case WorldMap.PROPERTY_POS_ORANGE_GHOST -> drawGhostHome(g, tile, Color.ORANGE);
+            case WorldMap.PROPERTY_POS_SCATTER_RED_GHOST -> drawScatterTarget(g, tile, Color.RED);
+            case WorldMap.PROPERTY_POS_SCATTER_PINK_GHOST -> drawScatterTarget(g, tile, Color.PINK);
+            case WorldMap.PROPERTY_POS_SCATTER_CYAN_GHOST -> drawScatterTarget(g, tile, Color.CYAN);
+            case WorldMap.PROPERTY_POS_SCATTER_ORANGE_GHOST -> drawScatterTarget(g, tile, Color.ORANGE);
+            default -> {}
+        }
     }
 
     public void drawSpecialTiles(GraphicsContext g, TileMap terrainMap) {

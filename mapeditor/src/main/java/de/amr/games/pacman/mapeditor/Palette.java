@@ -14,6 +14,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
+import static de.amr.games.pacman.lib.Globals.TS;
+
 /**
  * @author Armin Reichert
  */
@@ -54,11 +56,43 @@ public class Palette extends Canvas {
         }
     }
 
+    public class ChangePropertyValueTool implements Tool {
+        private final String propertyName;
+        private final String description;
+
+        public ChangePropertyValueTool(String propertyName, String description) {
+            this.propertyName = propertyName;
+            this.description = description;
+        }
+
+        @Override
+        public String description() {
+            return description;
+        }
+
+        @Override
+        public void apply(TileMap tileMap, Vector2i tile) {
+            tileMap.setProperty(propertyName, TileMapUtil.formatTile(tile));
+        }
+
+        @Override
+        public void draw(GraphicsContext g, int row, int col) {
+            g.setFill(Color.BLACK);
+            g.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+            if (renderer instanceof TileMapEditorTerrainRenderer tr) {
+                g.save();
+                g.scale(cellSize / (double)TS, cellSize / (double)TS);
+                tr.drawSpecialTile(g, propertyName, new Vector2i(col, row));
+                g.restore();
+            }
+        }
+    }
+
     final int cellSize;
     final int numRows;
     final int numCols;
     final TileMapRenderer renderer;
-    final ChangeTileValueTool[] tools;
+    final Tool[] tools;
     final GraphicsContext g;
     Tool selectedTool;
     int selectedRow;
@@ -70,7 +104,7 @@ public class Palette extends Canvas {
         this.numRows = numRows;
         this.numCols = numCols;
         this.renderer = renderer;
-        tools = new ChangeTileValueTool[numRows * numCols];
+        tools = new Tool[numRows * numCols];
         g = getGraphicsContext2D();
         selectedTool = null;
         selectedRow = -1;
@@ -101,7 +135,11 @@ public class Palette extends Canvas {
         return new ChangeTileValueTool(value, description);
     }
 
-    public void setTools(ChangeTileValueTool... someEditorTools) {
+    public ChangePropertyValueTool changePropertyValueTool(String propertyName, String description) {
+        return new ChangePropertyValueTool(propertyName, description);
+    }
+
+    public void setTools(Tool... someEditorTools) {
         for (int i = 0; i < someEditorTools.length; ++i) {
             if (i < tools.length) {
                 tools[i] = someEditorTools[i];

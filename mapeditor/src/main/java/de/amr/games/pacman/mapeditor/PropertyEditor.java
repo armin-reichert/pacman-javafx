@@ -57,7 +57,7 @@ public class PropertyEditor extends BorderPane {
         updateEditors();
     }
 
-    private void updateEditors() {
+    public void updateEditors() {
         grid.getChildren().clear();
         grid.setHgap(2);
         grid.setVgap(1);

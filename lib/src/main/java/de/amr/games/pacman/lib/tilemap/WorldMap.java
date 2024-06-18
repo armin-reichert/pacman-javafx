@@ -133,6 +133,14 @@ public class WorldMap {
                 default -> {}
             }
         });
+        terrain.tiles().forEach(tile -> {
+            switch (terrain.get(tile)) {
+                case Tiles.PAC_HOME, Tiles.HOME_RED_GHOST,Tiles.HOME_PINK_GHOST, Tiles.HOME_CYAN_GHOST,
+                     Tiles.HOME_ORANGE_GHOST, Tiles.SCATTER_TARGET_RED, Tiles.SCATTER_TARGET_PINK,
+                     Tiles.SCATTER_TARGET_CYAN, Tiles.SCATTER_TARGET_ORANGE -> terrain.set(tile, Tiles.EMPTY);
+                default -> {}
+            }
+        });
     }
 
     public void save(File file) {

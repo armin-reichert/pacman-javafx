@@ -71,9 +71,9 @@ public class TileMapEditor  {
         map.terrain().setProperty(PROPERTY_POS_PAC,          formatTile(DEFAULT_POS_PAC));
         map.terrain().setProperty(PROPERTY_POS_RED_GHOST,    formatTile(DEFAULT_POS_RED_GHOST));
         map.terrain().setProperty(PROPERTY_POS_PINK_GHOST,   formatTile(DEFAULT_POS_PINK_GHOST));
-        map.terrain().setProperty(PROPERTY_POS_SCATTER_CYAN_GHOST,   formatTile(DEFAULT_POS_CYAN_GHOST));
-        map.terrain().setProperty(PROPERTY_POS_SCATTER_ORANGE_GHOST, formatTile(DEFAULT_POS_ORANGE_GHOST));
-        map.food().setProperty(PROPERTY_COLOR_FOOD,               DEFAULT_FOOD_COLOR);
+        map.terrain().setProperty(PROPERTY_POS_CYAN_GHOST,   formatTile(DEFAULT_POS_CYAN_GHOST));
+        map.terrain().setProperty(PROPERTY_POS_ORANGE_GHOST, formatTile(DEFAULT_POS_ORANGE_GHOST));
+        map.food().setProperty(PROPERTY_COLOR_FOOD, DEFAULT_FOOD_COLOR);
         return map;
     }
 
@@ -261,17 +261,15 @@ public class TileMapEditor  {
 
         var actorPalette = new Palette(32, 3, 4, terrainMapRenderer);
         actorPalette.setTools(
-            /*
-            tool(Tiles.HOME_RED_GHOST, "Red Ghost"),
-            tool(Tiles.HOME_PINK_GHOST, "Pink Ghost"),
-            tool(Tiles.HOME_CYAN_GHOST, "Cyan Ghost"),
-            tool(Tiles.HOME_ORANGE_GHOST, "Orange Ghost"),
-            tool(Tiles.SCATTER_TARGET_RED, "Red Ghost Scatter"),
-            tool(Tiles.SCATTER_TARGET_PINK, "Pink Ghost Scatter"),
-            tool(Tiles.SCATTER_TARGET_CYAN, "Cyan Ghost Scatter"),
-            tool(Tiles.SCATTER_TARGET_ORANGE, "Orange Ghost Scatter"),
-            tool(Tiles.PAC_HOME, "Pac-Man")
-             */
+            actorPalette.changePropertyValueTool(PROPERTY_POS_RED_GHOST, "Red Ghost"),
+            actorPalette.changePropertyValueTool(PROPERTY_POS_PINK_GHOST, "Pink Ghost"),
+            actorPalette.changePropertyValueTool(PROPERTY_POS_CYAN_GHOST, "Cyan Ghost"),
+            actorPalette.changePropertyValueTool(PROPERTY_POS_ORANGE_GHOST, "Orange Ghost"),
+            actorPalette.changePropertyValueTool(PROPERTY_POS_SCATTER_RED_GHOST, "Red Ghost Scatter"),
+            actorPalette.changePropertyValueTool(PROPERTY_POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter"),
+            actorPalette.changePropertyValueTool(PROPERTY_POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter"),
+            actorPalette.changePropertyValueTool(PROPERTY_POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter"),
+            actorPalette.changePropertyValueTool(PROPERTY_POS_PAC, "Pac-Man")
         );
         palettes.put(PALETTE_ACTORS, actorPalette);
 
@@ -693,7 +691,14 @@ public class TileMapEditor  {
         }
         switch (selectedPaletteID()) {
             case PALETTE_TERRAIN -> editTerrainMapTile(e);
-            case PALETTE_ACTORS  -> {} // editTerrainMapTile(e);
+            case PALETTE_ACTORS  -> {
+                if (selectedPalette().selectedTool != null) {
+                    Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
+                    selectedPalette().selectedTool.apply(map().terrain(), tile);
+                    markMapEdited();
+                    terrainMapPropertiesEditor.updateEditors();
+                }
+            }
             case PALETTE_FOOD    -> editFoodMapTile(e);
             default -> Logger.error("Unknown palette selection");
         }
