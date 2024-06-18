@@ -30,6 +30,10 @@ public class PropertyEditor extends BorderPane {
     private final TileMap tileMap;
     private Properties editedProperties;
     private final GridPane grid = new GridPane();
+    private final List<ColorPicker> colorPickers = new ArrayList<>();
+    private final List<Spinner<Integer>> tileXEditors = new ArrayList<>();
+    private final List<Spinner<Integer>> tileYEditors = new ArrayList<>();
+
     private int numRows;
 
     public PropertyEditor(String title, TileMapEditor editor, TileMap tileMap) {
@@ -57,10 +61,6 @@ public class PropertyEditor extends BorderPane {
         this.editedProperties = properties;
         rebuildEditors();
     }
-
-    private List<ColorPicker> colorPickers = new ArrayList<>();
-    private List<Spinner<Integer>> tileXEditors = new ArrayList<>();
-    private List<Spinner<Integer>> tileYEditors = new ArrayList<>();
 
     public void rebuildEditors() {
         colorPickers.clear();
