@@ -695,7 +695,7 @@ public class TileMapEditor  {
                     Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
                     selectedPalette().selectedTool.apply(map().terrain(), tile);
                     markMapEdited();
-                    terrainMapPropertiesEditor.updateEditors();
+                    terrainMapPropertiesEditor.updateEditorValues();
                 }
             }
             case PALETTE_FOOD    -> editFoodMapTile(e);
