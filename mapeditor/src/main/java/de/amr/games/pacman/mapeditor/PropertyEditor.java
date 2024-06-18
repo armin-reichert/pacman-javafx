@@ -161,6 +161,5 @@ public class PropertyEditor extends BorderPane {
             }
         }
         editor.markMapEdited();
-        //updateEditors();
     }
 }
