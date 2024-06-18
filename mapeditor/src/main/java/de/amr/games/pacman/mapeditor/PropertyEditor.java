@@ -65,25 +65,27 @@ public class PropertyEditor extends BorderPane {
         int row = 0;
         var sortedEntries = editedProperties.entrySet().stream().sorted(Comparator.comparing(Object::toString)).toList();
         for (var entry : sortedEntries) {
-            TextField nameEditor = new TextField(String.valueOf(entry.getKey()));
+            String propertyName = entry.getKey().toString();
+            String propertyValue = entry.getValue().toString();
+            TextField nameEditor = new TextField(propertyName);
             int nameColumnMinWidth = 150;
             nameEditor.setMinWidth(nameColumnMinWidth);
             nameEditor.disableProperty().bind(enabledPy.not());
             grid.add(nameEditor, 0, row);
-            if (entry.getKey().toString().startsWith("color_")) {
+            if (propertyName.startsWith("color_")) {
                 var colorPicker = new ColorPicker();
-                colorPicker.setValue(TileMapUtil.parseColor(String.valueOf(entry.getValue())));
+                colorPicker.setValue(TileMapUtil.parseColor(propertyValue));
                 colorPicker.setOnAction(e -> saveEditedProperty(nameEditor, TileMapUtil.formatColor(colorPicker.getValue())));
                 colorPicker.disableProperty().bind(enabledPy.not());
                 nameEditor.setOnAction(e -> saveEditedProperty(nameEditor, TileMapUtil.formatColor(colorPicker.getValue())));
                 grid.add(colorPicker, 1, row);
-            } else if (entry.getKey().toString().startsWith("pos_")) {
+            } else if (propertyName.startsWith("pos_")) {
                 var spinnerX  = new Spinner<Integer>(0, tileMap.numCols() - 1, 0);
                 spinnerX.disableProperty().bind(enabledPy.not());
                 var spinnerY  = new Spinner<Integer>(0, tileMap.numRows() - 1, 0);
                 spinnerY.disableProperty().bind(enabledPy.not());
                 HBox hbox = new HBox(spinnerX, spinnerY);
-                Vector2i tile = TileMap.parseVector2i(entry.getValue().toString());
+                Vector2i tile = TileMap.parseVector2i(propertyValue);
                 if (tile != null) {
                     spinnerX.getValueFactory().setValue(tile.x());
                     spinnerY.getValueFactory().setValue(tile.y());
@@ -94,7 +96,7 @@ public class PropertyEditor extends BorderPane {
             }
             else {
                 var inputField = new TextField();
-                inputField.setText(String.valueOf(entry.getValue()));
+                inputField.setText(propertyValue);
                 inputField.setOnAction(e -> saveEditedProperty(nameEditor, inputField.getText()));
                 inputField.disableProperty().bind(enabledPy.not());
                 nameEditor.setOnAction(e -> saveEditedProperty(nameEditor, inputField.getText()));
