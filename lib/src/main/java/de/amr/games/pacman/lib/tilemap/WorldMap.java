@@ -115,32 +115,6 @@ public class WorldMap {
         }
         terrain = TileMap.parse(terrainSection, Tiles.TERRAIN_TILES_END);
         food = TileMap.parse(foodSection, Tiles.FOOD_TILES_END);
-        migrate();
-    }
-
-    private void migrate() {
-        terrain.tiles().forEach(tile -> {
-            switch (terrain.get(tile)) {
-                case Tiles.PAC_HOME              -> terrain.setProperty(WorldMap.PROPERTY_POS_PAC, "(%d,%d)".formatted(tile.x(), tile.y()));
-                case Tiles.HOME_RED_GHOST        -> terrain.setProperty(WorldMap.PROPERTY_POS_RED_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
-                case Tiles.HOME_PINK_GHOST       -> terrain.setProperty(WorldMap.PROPERTY_POS_PINK_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
-                case Tiles.HOME_CYAN_GHOST       -> terrain.setProperty(WorldMap.PROPERTY_POS_CYAN_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
-                case Tiles.HOME_ORANGE_GHOST     -> terrain.setProperty(WorldMap.PROPERTY_POS_ORANGE_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
-                case Tiles.SCATTER_TARGET_RED    -> terrain.setProperty(WorldMap.PROPERTY_POS_SCATTER_RED_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
-                case Tiles.SCATTER_TARGET_PINK   -> terrain.setProperty(WorldMap.PROPERTY_POS_SCATTER_PINK_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
-                case Tiles.SCATTER_TARGET_CYAN   -> terrain.setProperty(WorldMap.PROPERTY_POS_SCATTER_CYAN_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
-                case Tiles.SCATTER_TARGET_ORANGE -> terrain.setProperty(WorldMap.PROPERTY_POS_SCATTER_ORANGE_GHOST, "(%d,%d)".formatted(tile.x(), tile.y()));
-                default -> {}
-            }
-        });
-        terrain.tiles().forEach(tile -> {
-            switch (terrain.get(tile)) {
-                case Tiles.PAC_HOME, Tiles.HOME_RED_GHOST,Tiles.HOME_PINK_GHOST, Tiles.HOME_CYAN_GHOST,
-                     Tiles.HOME_ORANGE_GHOST, Tiles.SCATTER_TARGET_RED, Tiles.SCATTER_TARGET_PINK,
-                     Tiles.SCATTER_TARGET_CYAN, Tiles.SCATTER_TARGET_ORANGE -> terrain.set(tile, Tiles.EMPTY);
-                default -> {}
-            }
-        });
     }
 
     public void save(File file) {

@@ -8,14 +8,10 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.GameModel;
-import org.tinylog.Logger;
-
-import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.tilemap.Tiles.*;
-import static de.amr.games.pacman.model.GameModel.checkGhostID;
+import static de.amr.games.pacman.model.GameModel.*;
+import static de.amr.games.pacman.model.world.World.getTilePropertyFromMap;
 
 /**
  * @author Armin Reichert
@@ -86,39 +82,24 @@ public class House {
     }
 
     public void setPacPositionFromMap(WorldMap map) {
-        Optional<Vector2i> pacHomeTile = map.terrain().tiles(PAC_HOME).findFirst();
-        if (pacHomeTile.isEmpty()) {
-            Logger.warn("No Pac home tile found in map, using default");
-        }
-        pacPosition = pacHomeTile.orElse(new Vector2i(13, 26)).toFloatVec().scaled(TS).plus(HTS, 0);
+        Vector2i pacHomeTile = getTilePropertyFromMap(map.terrain(), WorldMap.PROPERTY_POS_PAC, v2i(13, 26));
+        pacPosition = pacHomeTile.toFloatVec().scaled(TS).plus(HTS, 0);
     }
 
     public void setGhostPositionsFromMap(WorldMap map) {
         ghostPositions = new Vector2f[4];
 
-        Optional<Vector2i> homeTileRed = map.terrain().tiles(HOME_RED_GHOST).findFirst();
-        if (homeTileRed.isEmpty()) {
-            Logger.warn("No home tile set for red ghost, using default");
-        }
-        ghostPositions[GameModel.RED_GHOST] = positionHalfTileRightOf(homeTileRed.orElse(new Vector2i(13, 14)));
+        Vector2i homeTileRed = getTilePropertyFromMap(map.terrain(), WorldMap.PROPERTY_POS_RED_GHOST, v2i(13,14));
+        ghostPositions[RED_GHOST] = positionHalfTileRightOf(homeTileRed);
 
-        Optional<Vector2i> homeTilePink = map.terrain().tiles(HOME_PINK_GHOST).findFirst();
-        if (homeTilePink.isEmpty()) {
-            Logger.warn("No home tile set for pink ghost, using default");
-        }
-        ghostPositions[GameModel.PINK_GHOST] = positionHalfTileRightOf(homeTilePink.orElse(new Vector2i(13, 17)));
+        Vector2i homeTilePink = getTilePropertyFromMap(map.terrain(), WorldMap.PROPERTY_POS_PINK_GHOST, v2i(13,17));
+        ghostPositions[PINK_GHOST] = positionHalfTileRightOf(homeTilePink);
 
-        Optional<Vector2i> homeTileCyan = map.terrain().tiles(HOME_CYAN_GHOST).findFirst();
-        if (homeTileCyan.isEmpty()) {
-            Logger.warn("No home tile set for cyan ghost, using default");
-        }
-        ghostPositions[GameModel.CYAN_GHOST] = positionHalfTileRightOf(homeTileCyan.orElse(new Vector2i(11, 17)));
+        Vector2i homeTileCyan = getTilePropertyFromMap(map.terrain(), WorldMap.PROPERTY_POS_CYAN_GHOST, v2i(11,17));
+        ghostPositions[CYAN_GHOST] = positionHalfTileRightOf(homeTileCyan);
 
-        Optional<Vector2i> homeTileOrange = map.terrain().tiles(HOME_ORANGE_GHOST).findFirst();
-        if (homeTileOrange.isEmpty()) {
-            Logger.warn("No home tile set for orange ghost, using default");
-        }
-        ghostPositions[GameModel.ORANGE_GHOST] = positionHalfTileRightOf(homeTileOrange.orElse(new Vector2i(15, 17)));
+        Vector2i homeTileOrange = getTilePropertyFromMap(map.terrain(), WorldMap.PROPERTY_POS_ORANGE_GHOST, v2i(15,17));
+        ghostPositions[ORANGE_GHOST] = positionHalfTileRightOf(homeTileOrange);
     }
 
     public Vector2f pacPosition() {

@@ -50,4 +50,12 @@ public interface TileMapUtil {
         }
         return defaultColor;
     }
+
+    static Vector2i getTileFromMap(TileMap map, String key, Vector2i defaultTile) {
+        if (map.hasProperty(key)) {
+            Vector2i tile = parseVector2i(map.getProperty(key));
+            return tile != null ? tile : defaultTile;
+        }
+        return defaultTile;
+    }
 }

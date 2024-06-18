@@ -49,15 +49,6 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
                 drawDCorner(g, tile, content);
             case Tiles.DOOR -> drawDoor(g, tile, doorColor);
             case Tiles.TUNNEL -> drawTunnel(g, tile);
-            case Tiles.PAC_HOME -> drawPacHome(g, tile);
-            case Tiles.HOME_RED_GHOST -> drawGhostHome(g, tile, Color.RED);
-            case Tiles.HOME_PINK_GHOST -> drawGhostHome(g, tile, Color.PINK);
-            case Tiles.HOME_CYAN_GHOST -> drawGhostHome(g, tile, Color.CYAN);
-            case Tiles.HOME_ORANGE_GHOST -> drawGhostHome(g, tile, Color.ORANGE);
-            case Tiles.SCATTER_TARGET_RED -> drawScatterTarget(g, tile, Color.RED);
-            case Tiles.SCATTER_TARGET_PINK -> drawScatterTarget(g, tile, Color.PINK);
-            case Tiles.SCATTER_TARGET_CYAN -> drawScatterTarget(g, tile, Color.CYAN);
-            case Tiles.SCATTER_TARGET_ORANGE -> drawScatterTarget(g, tile, Color.ORANGE);
             default -> {}
         }
         g.restore();

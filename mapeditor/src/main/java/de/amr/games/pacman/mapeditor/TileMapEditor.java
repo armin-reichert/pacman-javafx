@@ -415,7 +415,6 @@ public class TileMapEditor  {
         int row = map().numRows() / 2 - 4;
         int col = map().numCols() / 2 - 4;
         GHOST_HOUSE_SHAPE.addToMap(map().terrain(), row, col);
-        map().terrain().set(row + 12, map().numCols() / 2 - 1, Tiles.PAC_HOME);
         invalidatePaths();
         markMapEdited();
     }
@@ -433,11 +432,6 @@ public class TileMapEditor  {
         terrain.set(emptyRowsTop, terrain.numCols() - 1, Tiles.DCORNER_NE);
         terrain.set(terrain.numRows() - 1 - emptyRowsBottom, 0, Tiles.DCORNER_SW);
         terrain.set(terrain.numRows() - 1 - emptyRowsBottom, terrain.numCols() - 1, Tiles.DCORNER_SE);
-
-        terrain.set(0, 2, Tiles.SCATTER_TARGET_PINK);
-        terrain.set(0, terrain.numCols() - 3, Tiles.SCATTER_TARGET_RED);
-        terrain.set(terrain.numRows() - emptyRowsBottom, 0, Tiles.SCATTER_TARGET_ORANGE);
-        terrain.set(terrain.numRows() - emptyRowsBottom, terrain.numCols() - 1, Tiles.SCATTER_TARGET_CYAN);
 
         invalidatePaths();
         markMapEdited();

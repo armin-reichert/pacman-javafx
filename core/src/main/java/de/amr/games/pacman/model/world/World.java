@@ -7,22 +7,47 @@ package de.amr.games.pacman.model.world;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.GameModel;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.Tiles.*;
-import static de.amr.games.pacman.model.GameModel.checkGhostID;
+import static de.amr.games.pacman.model.GameModel.*;
 import static java.util.Collections.unmodifiableList;
 
 /**
  * @author Armin Reichert
  */
 public class World {
+
+    //TODO put these methods elsewhere
+
+    public static Vector2i parseVector2i(String text) {
+        Pattern pattern = Pattern.compile("\\((\\d+),(\\d+)\\)");
+        Matcher m = pattern.matcher(text);
+        if (m.matches()) {
+            return new Vector2i(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)));
+        }
+        Logger.error("Invalid Vector2i format: {}", text);
+        return null;
+    }
+
+    public static Vector2i getTilePropertyFromMap(TileMap map, String key, Vector2i defaultTile) {
+        if (map.hasProperty(key)) {
+            Vector2i tile = parseVector2i(map.getProperty(key));
+            return tile != null ? tile : defaultTile;
+        }
+        return defaultTile;
+    }
 
     private final WorldMap map;
 
@@ -55,29 +80,17 @@ public class World {
     private void setScatterTiles() {
         ghostScatterTiles = new Vector2i[4];
 
-        Optional<Vector2i> scatterTileRed = map.terrain().tiles(SCATTER_TARGET_RED).findFirst();
-        if (scatterTileRed.isEmpty()) {
-            Logger.warn("No scatter target set for red ghost, using default");
-        }
-        ghostScatterTiles[GameModel.RED_GHOST] = scatterTileRed.orElse(new Vector2i(0, numCols() - 3));
+        ghostScatterTiles[RED_GHOST] = getTilePropertyFromMap(map.terrain(),
+            WorldMap.PROPERTY_POS_SCATTER_RED_GHOST, v2i(0, numCols() - 3));
 
-        Optional<Vector2i> scatterTilePink = map.terrain().tiles(SCATTER_TARGET_PINK).findFirst();
-        if (scatterTilePink.isEmpty()) {
-            Logger.warn("No scatter target set for pink ghost, using default");
-        }
-        ghostScatterTiles[GameModel.PINK_GHOST] = scatterTilePink.orElse(new Vector2i(0, 3));
+        ghostScatterTiles[PINK_GHOST] = getTilePropertyFromMap(map.terrain(),
+            WorldMap.PROPERTY_POS_SCATTER_PINK_GHOST, v2i(0, 3));
 
-        Optional<Vector2i> scatterTileCyan = map.terrain().tiles(SCATTER_TARGET_CYAN).findFirst();
-        if (scatterTileCyan.isEmpty()) {
-            Logger.warn("No scatter target set for cyan ghost, using default");
-        }
-        ghostScatterTiles[GameModel.CYAN_GHOST] = scatterTileCyan.orElse(new Vector2i(numRows()-1, numCols()-1));
+        ghostScatterTiles[CYAN_GHOST] = getTilePropertyFromMap(map.terrain(),
+            WorldMap.PROPERTY_POS_SCATTER_CYAN_GHOST, new Vector2i(numRows()-1, numCols()-1));
 
-        Optional<Vector2i> scatterTileOrange = map.terrain().tiles(SCATTER_TARGET_ORANGE).findFirst();
-        if (scatterTileOrange.isEmpty()) {
-            Logger.warn("No scatter target set for orange ghost, using default");
-        }
-        ghostScatterTiles[GameModel.ORANGE_GHOST] = scatterTileOrange.orElse(new Vector2i(numRows()-1, 0));
+        ghostScatterTiles[ORANGE_GHOST] = getTilePropertyFromMap(map.terrain(),
+             WorldMap.PROPERTY_POS_SCATTER_ORANGE_GHOST, new Vector2i(numRows()-1, 0));
     }
 
     private void setPortals() {
@@ -123,10 +136,6 @@ public class World {
 
     public boolean containsPoint(double x, double y) {
         return 0 <= x && x <= numCols() * TS && 0 <= y && y <= numRows() * TS;
-    }
-
-    public void setGhostScatterTiles(Vector2i[] tiles) {
-        ghostScatterTiles = tiles;
     }
 
     public Vector2i ghostScatterTile(byte ghostID) {
