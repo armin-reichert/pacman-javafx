@@ -316,7 +316,9 @@ public class TileMapEditor  {
 
         Slider sliderGridSize = new Slider(8, 48, 16);
         sliderGridSize.valueProperty().bindBidirectional(gridSizePy);
-        sliderGridSize.setTooltip(new Tooltip("Zoom"));
+        sliderGridSize.setTooltip(new Tooltip("Grid Size"));
+        sliderGridSize.setShowTickLabels(false);
+        sliderGridSize.setShowTickMarks(true);
 
         var footer = new HBox(infoLabel, filler, sliderGridSize);
         footer.setPadding(new Insets(0, 10, 0, 10));
