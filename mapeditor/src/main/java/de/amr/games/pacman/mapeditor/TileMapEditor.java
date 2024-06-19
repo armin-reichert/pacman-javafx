@@ -289,6 +289,10 @@ public class TileMapEditor  {
         foodMapPropertiesEditor = new PropertyEditor(tt("pellets"), this, map().food());
         foodMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
 
+        var propertyEditorArea = new TitledPane(); // TODO localize
+        propertyEditorArea.setText("Properties");
+        propertyEditorArea.setContent(new VBox(terrainMapPropertiesEditor, foodMapPropertiesEditor));
+
         VBox controlsPane = new VBox();
         controlsPane.setSpacing(10);
         controlsPane.setMinWidth(270);
@@ -296,8 +300,8 @@ public class TileMapEditor  {
         checkBoxPanel.setAlignment(Pos.CENTER);
         controlsPane.getChildren().add(checkBoxPanel);
         controlsPane.getChildren().add(palettesTab);
-        controlsPane.getChildren().add(terrainMapPropertiesEditor);
-        controlsPane.getChildren().add(foodMapPropertiesEditor);
+
+        controlsPane.getChildren().add(propertyEditorArea);
 
         terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
         foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
