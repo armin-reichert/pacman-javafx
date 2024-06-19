@@ -117,7 +117,7 @@ public class PacManGame extends AbstractPacManGame {
         world.addHouse(house);
 
         Vector2f bonusPosition = map.terrain().getTileProperty(WorldMap.PROPERTY_POS_BONUS, WorldMap.DEFAULT_POS_BONUS)
-            .toFloatVec().plus(HTS, 0);
+            .scaled(TS).toFloatVec().plus(HTS, 0);
         world.setBonusPosition(bonusPosition);
 
         // special tiles
