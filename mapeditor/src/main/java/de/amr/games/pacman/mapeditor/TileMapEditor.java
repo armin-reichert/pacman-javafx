@@ -583,10 +583,9 @@ public class TileMapEditor  {
     }
 
     private void drawEditingHint(GraphicsContext g) {
-        double s = gridSize() / 8.0;
-        editHint.setFont(Font.font("Sans", FontWeight.BLACK, 16 * s));
-        double x = 16 * s;
-        double y = 24 * s;
+        editHint.setFont(Font.font("Sans", FontWeight.BLACK, 18));
+        double x = 16;
+        double y = 24;
         g.setFont(editHint.getFont());
         g.setStroke(Color.LIGHTGREEN);
         g.setLineWidth(3);
