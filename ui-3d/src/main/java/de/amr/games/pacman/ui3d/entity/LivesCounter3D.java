@@ -103,7 +103,7 @@ public class LivesCounter3D extends Group {
         pacShapes.add(pac3D);
         getChildren().add(pac3D);
 
-        var rotation = new RotateTransition(Duration.seconds(20.0), pac3D);
+        var rotation = new RotateTransition(Duration.seconds(10.0), pac3D);
         rotation.setAxis(Rotate.Z_AXIS);
         rotation.setByAngle(180);
         rotation.setInterpolator(Interpolator.LINEAR);
