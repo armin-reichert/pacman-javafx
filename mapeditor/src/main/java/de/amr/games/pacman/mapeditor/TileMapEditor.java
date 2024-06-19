@@ -12,10 +12,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
@@ -23,10 +20,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -100,7 +94,7 @@ public class TileMapEditor  {
 
     public final BooleanProperty previewVisiblePy = new SimpleBooleanProperty(this, "previewVisible", true);
 
-    public final ObjectProperty<Integer> gridSizePy = new SimpleObjectProperty<>(this, "gridSize", 16) {
+    public final IntegerProperty gridSizePy = new SimpleIntegerProperty(this, "gridSize", 16) {
         @Override
         protected void invalidated() {
             invalidatePaths();
@@ -233,13 +227,6 @@ public class TileMapEditor  {
         var cbGridVisible = new CheckBox(tt("grid"));
         cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
 
-        var spinnerGridSize = new Spinner<Integer>(8, 48, 16);
-        spinnerGridSize.getValueFactory().valueProperty().bindBidirectional(gridSizePy);
-        var gridSizeLabel = new Label(tt("grid_size"));
-        var gridSizeEditor = new HBox(gridSizeLabel, spinnerGridSize);
-        gridSizeEditor.setSpacing(3);
-        gridSizeEditor.setAlignment(Pos.BASELINE_LEFT);
-
         var terrainPalette = new Palette(32, 2, 8, terrainMapRenderer);
         terrainPalette.setTools(
             terrainPalette.changeTileValueTool(Tiles.WALL_H, "Horiz. Wall"),
@@ -305,9 +292,9 @@ public class TileMapEditor  {
         VBox controlsPane = new VBox();
         controlsPane.setSpacing(10);
         controlsPane.setMinWidth(270);
-        controlsPane.getChildren().add(cbPreviewVisible);
-        controlsPane.getChildren().add(new HBox(20, cbTerrainVisible, cbFoodVisible, cbGridVisible));
-        controlsPane.getChildren().add(gridSizeEditor);
+        HBox checkBoxPanel = new HBox(new HBox(5, cbPreviewVisible, cbTerrainVisible, cbFoodVisible, cbGridVisible));
+        checkBoxPanel.setAlignment(Pos.CENTER);
+        controlsPane.getChildren().add(checkBoxPanel);
         controlsPane.getChildren().add(palettesTab);
         controlsPane.getChildren().add(terrainMapPropertiesEditor);
         controlsPane.getChildren().add(foodMapPropertiesEditor);
@@ -320,7 +307,15 @@ public class TileMapEditor  {
         layout = new BorderPane(splitPane);
 
         infoLabel = new Label();
-        var footer = new HBox(infoLabel);
+
+        var filler = new Region();
+        HBox.setHgrow(filler, Priority.ALWAYS);
+
+        Slider sliderGridSize = new Slider(8, 48, 16);
+        sliderGridSize.valueProperty().bindBidirectional(gridSizePy);
+        sliderGridSize.setTooltip(new Tooltip("Zoom"));
+
+        var footer = new HBox(infoLabel, filler, sliderGridSize);
         footer.setPadding(new Insets(0, 10, 0, 10));
         layout.setBottom(footer);
     }
