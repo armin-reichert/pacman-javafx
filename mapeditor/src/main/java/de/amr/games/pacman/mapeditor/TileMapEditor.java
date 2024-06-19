@@ -111,12 +111,12 @@ public class TileMapEditor  {
     private Menu menuFile;
     private Menu menuEdit;
     private Menu menuLoadMap;
-    private BorderPane layout;
+    private final BorderPane layout = new BorderPane();
     private Canvas editCanvas;
     private Canvas previewCanvas;
-    private Label infoLabel;
+    private Label hoveredTileInfo;
     private FileChooser fileChooser;
-    private TabPane palettesTab;
+    private TabPane palettesTabPane;
     private final Text editHint = new Text(tt("click_to_start"));
     private PropertyEditor terrainMapPropertiesEditor;
     private TileMapEditorTerrainRenderer terrainMapRenderer;
@@ -138,12 +138,12 @@ public class TileMapEditor  {
     }
 
     public TileMapEditor(File workDir) {
+        lastUsedDir = workDir;
         mapPy.set(createNewMap(36, 28));
         titlePy.bind(Bindings.createStringBinding(
             () -> tt("map_editor") + (currentFilePy.get() != null ? " - " + currentFilePy.get() : ""),
             currentFilePy
         ));
-        lastUsedDir = workDir;
     }
 
     public WorldMap map() {
@@ -172,7 +172,8 @@ public class TileMapEditor  {
         previewCanvas.widthProperty().bind(editCanvas.widthProperty());
         previewCanvas.heightProperty().bind(editCanvas.heightProperty());
 
-        int fps = 10;
+        // Active rendering
+        int fps = 5;
         clock = new Timeline(fps, new KeyFrame(Duration.millis(1000.0 / fps), e -> {
             try {
                 draw();
@@ -192,6 +193,54 @@ public class TileMapEditor  {
         clock.stop();
         editingEnabledPy.set(false);
         unsavedChanges = false;
+    }
+
+    private Palette createTerrainPalette() {
+        var terrainPalette = new Palette(32, 2, 10, terrainMapRenderer);
+        terrainPalette.setTools(
+            terrainPalette.changeTileValueTool(Tiles.WALL_H, "Horiz. Wall"),
+            terrainPalette.changeTileValueTool(Tiles.WALL_V, "Vert. Wall"),
+            terrainPalette.changeTileValueTool(Tiles.DWALL_H, "Hor. Double-Wall"),
+            terrainPalette.changeTileValueTool(Tiles.DWALL_V, "Vert. Double-Wall"),
+            terrainPalette.changeTileValueTool(Tiles.CORNER_NW, "NW Corner"),
+            terrainPalette.changeTileValueTool(Tiles.CORNER_NE, "NE Corner"),
+            terrainPalette.changeTileValueTool(Tiles.CORNER_SW, "SW Corner"),
+            terrainPalette.changeTileValueTool(Tiles.CORNER_SE, "SE Corner"),
+            terrainPalette.changeTileValueTool(Tiles.DCORNER_NW, "NW Corner"),
+            terrainPalette.changeTileValueTool(Tiles.DCORNER_NE, "NE Corner"),
+            terrainPalette.changeTileValueTool(Tiles.DCORNER_SW, "SW Corner"),
+            terrainPalette.changeTileValueTool(Tiles.DCORNER_SE, "SE Corner"),
+            terrainPalette.changeTileValueTool(Tiles.EMPTY, "Empty Space"),
+            terrainPalette.changeTileValueTool(Tiles.TUNNEL, "Tunnel"),
+            terrainPalette.changeTileValueTool(Tiles.DOOR, "Door")
+        );
+        return terrainPalette;
+    }
+
+    private Palette createActorPalette() {
+        var actorPalette = new Palette(32, 1, 9, terrainMapRenderer);
+        actorPalette.setTools(
+            actorPalette.changePropertyValueTool(PROPERTY_POS_RED_GHOST, "Red Ghost"),
+            actorPalette.changePropertyValueTool(PROPERTY_POS_PINK_GHOST, "Pink Ghost"),
+            actorPalette.changePropertyValueTool(PROPERTY_POS_CYAN_GHOST, "Cyan Ghost"),
+            actorPalette.changePropertyValueTool(PROPERTY_POS_ORANGE_GHOST, "Orange Ghost"),
+            actorPalette.changePropertyValueTool(PROPERTY_POS_SCATTER_RED_GHOST, "Red Ghost Scatter"),
+            actorPalette.changePropertyValueTool(PROPERTY_POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter"),
+            actorPalette.changePropertyValueTool(PROPERTY_POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter"),
+            actorPalette.changePropertyValueTool(PROPERTY_POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter"),
+            actorPalette.changePropertyValueTool(PROPERTY_POS_PAC, "Pac-Man")
+        );
+        return actorPalette;
+    }
+
+    private Palette createFoodPalette() {
+        var foodPalette = new Palette(32, 1, 3, foodMapRenderer);
+        foodPalette.setTools(
+            foodPalette.changeTileValueTool(Tiles.EMPTY, "No Food"),
+            foodPalette.changeTileValueTool(Tiles.PELLET, "Pellet"),
+            foodPalette.changeTileValueTool(Tiles.ENERGIZER, "Energizer")
+        );
+        return foodPalette;
     }
 
     private void createLayout() {
@@ -227,61 +276,23 @@ public class TileMapEditor  {
         var cbGridVisible = new CheckBox(tt("grid"));
         cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
 
-        var terrainPalette = new Palette(32, 2, 10, terrainMapRenderer);
-        terrainPalette.setTools(
-            terrainPalette.changeTileValueTool(Tiles.WALL_H, "Horiz. Wall"),
-            terrainPalette.changeTileValueTool(Tiles.WALL_V, "Vert. Wall"),
-            terrainPalette.changeTileValueTool(Tiles.DWALL_H, "Hor. Double-Wall"),
-            terrainPalette.changeTileValueTool(Tiles.DWALL_V, "Vert. Double-Wall"),
-            terrainPalette.changeTileValueTool(Tiles.CORNER_NW, "NW Corner"),
-            terrainPalette.changeTileValueTool(Tiles.CORNER_NE, "NE Corner"),
-            terrainPalette.changeTileValueTool(Tiles.CORNER_SW, "SW Corner"),
-            terrainPalette.changeTileValueTool(Tiles.CORNER_SE, "SE Corner"),
-            terrainPalette.changeTileValueTool(Tiles.DCORNER_NW, "NW Corner"),
-            terrainPalette.changeTileValueTool(Tiles.DCORNER_NE, "NE Corner"),
-            terrainPalette.changeTileValueTool(Tiles.DCORNER_SW, "SW Corner"),
-            terrainPalette.changeTileValueTool(Tiles.DCORNER_SE, "SE Corner"),
-            terrainPalette.changeTileValueTool(Tiles.EMPTY, "Empty Space"),
-            terrainPalette.changeTileValueTool(Tiles.TUNNEL, "Tunnel"),
-            terrainPalette.changeTileValueTool(Tiles.DOOR, "Door")
-        );
-        palettes.put(PALETTE_TERRAIN, terrainPalette);
+        palettes.put(PALETTE_TERRAIN, createTerrainPalette());
+        palettes.put(PALETTE_ACTORS, createActorPalette());
+        palettes.put(PALETTE_FOOD, createFoodPalette());
 
-        var actorPalette = new Palette(32, 1, 9, terrainMapRenderer);
-        actorPalette.setTools(
-            actorPalette.changePropertyValueTool(PROPERTY_POS_RED_GHOST, "Red Ghost"),
-            actorPalette.changePropertyValueTool(PROPERTY_POS_PINK_GHOST, "Pink Ghost"),
-            actorPalette.changePropertyValueTool(PROPERTY_POS_CYAN_GHOST, "Cyan Ghost"),
-            actorPalette.changePropertyValueTool(PROPERTY_POS_ORANGE_GHOST, "Orange Ghost"),
-            actorPalette.changePropertyValueTool(PROPERTY_POS_SCATTER_RED_GHOST, "Red Ghost Scatter"),
-            actorPalette.changePropertyValueTool(PROPERTY_POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter"),
-            actorPalette.changePropertyValueTool(PROPERTY_POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter"),
-            actorPalette.changePropertyValueTool(PROPERTY_POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter"),
-            actorPalette.changePropertyValueTool(PROPERTY_POS_PAC, "Pac-Man")
-        );
-        palettes.put(PALETTE_ACTORS, actorPalette);
-
-        var foodPalette = new Palette(32, 1, 3, foodMapRenderer);
-        foodPalette.setTools(
-            foodPalette.changeTileValueTool(Tiles.EMPTY, "No Food"),
-            foodPalette.changeTileValueTool(Tiles.PELLET, "Pellet"),
-            foodPalette.changeTileValueTool(Tiles.ENERGIZER, "Energizer")
-        );
-        palettes.put(PALETTE_FOOD, foodPalette);
-
-        var terrainPaletteTab = new Tab(tt("terrain"), terrainPalette);
+        var terrainPaletteTab = new Tab(tt("terrain"), palettes.get(PALETTE_TERRAIN));
         terrainPaletteTab.setClosable(false);
         terrainPaletteTab.setUserData(PALETTE_TERRAIN);
 
-        var actorPaletteTab = new Tab(tt("actors"), actorPalette);
+        var actorPaletteTab = new Tab(tt("actors"), palettes.get(PALETTE_ACTORS));
         actorPaletteTab.setClosable(false);
         actorPaletteTab.setUserData(PALETTE_ACTORS);
 
-        var foodPaletteTab = new Tab(tt("pellets"), foodPalette);
+        var foodPaletteTab = new Tab(tt("pellets"), palettes.get(PALETTE_FOOD));
         foodPaletteTab.setClosable(false);
         foodPaletteTab.setUserData(PALETTE_FOOD);
 
-        palettesTab = new TabPane(terrainPaletteTab, actorPaletteTab, foodPaletteTab);
+        palettesTabPane = new TabPane(terrainPaletteTab, actorPaletteTab, foodPaletteTab);
 
         terrainMapPropertiesEditor = new PropertyEditor(tt("terrain"), this, map().terrain());
         terrainMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
@@ -301,15 +312,13 @@ public class TileMapEditor  {
         HBox checkBoxPanel = new HBox(new HBox(5, cbPreviewVisible, cbTerrainVisible, cbFoodVisible, cbGridVisible));
         checkBoxPanel.setAlignment(Pos.CENTER);
         controlsPane.getChildren().add(checkBoxPanel);
-        controlsPane.getChildren().add(palettesTab);
-
+        controlsPane.getChildren().add(palettesTabPane);
         controlsPane.getChildren().add(propertyEditorArea);
 
         var splitPane = new SplitPane(editCanvasScroll, controlsPane, previewCanvasScroll);
         //splitPane.setDividerPositions(0.45, 0.55);
-        layout = new BorderPane(splitPane);
 
-        infoLabel = new Label();
+        hoveredTileInfo = new Label();
 
         var filler = new Region();
         HBox.setHgrow(filler, Priority.ALWAYS);
@@ -320,8 +329,10 @@ public class TileMapEditor  {
         sliderGridSize.setShowTickLabels(false);
         sliderGridSize.setShowTickMarks(true);
 
-        var footer = new HBox(infoLabel, filler, sliderGridSize);
+        var footer = new HBox(hoveredTileInfo, filler, sliderGridSize);
         footer.setPadding(new Insets(0, 10, 0, 10));
+
+        layout.setCenter(splitPane);
         layout.setBottom(footer);
     }
 
@@ -693,7 +704,7 @@ public class TileMapEditor  {
     }
 
     private String selectedPaletteID() {
-        return (String) palettesTab.getSelectionModel().getSelectedItem().getUserData();
+        return (String) palettesTabPane.getSelectionModel().getSelectedItem().getUserData();
     }
 
     private Palette selectedPalette() {
@@ -704,7 +715,7 @@ public class TileMapEditor  {
         hoveredTile = tile;
         var text = "Tile: ";
         text += hoveredTile != null ? String.format("x=%2d y=%2d", hoveredTile.x(), hoveredTile.y()) : "n/a";
-        infoLabel.setText(text);
+        hoveredTileInfo.setText(text);
     }
 
     private void onMouseMovedOverEditCanvas(MouseEvent e) {
