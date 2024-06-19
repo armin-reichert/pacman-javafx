@@ -689,7 +689,7 @@ public class TileMapEditor  {
             return;
         }
         switch (selectedPaletteID()) {
-            case PALETTE_TERRAIN -> editTerrainMapTile(e);
+            case PALETTE_TERRAIN -> editMapTile(map().terrain(), Tiles.TERRAIN_TILES_END, e);
             case PALETTE_ACTORS  -> {
                 if (selectedPalette().selectedTool != null) {
                     Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
@@ -698,7 +698,7 @@ public class TileMapEditor  {
                     terrainMapPropertiesEditor.updateEditorValues();
                 }
             }
-            case PALETTE_FOOD    -> editFoodMapTile(e);
+            case PALETTE_FOOD -> editMapTile(map().food(), Tiles.FOOD_TILES_END, e);
             default -> Logger.error("Unknown palette selection");
         }
     }
@@ -743,41 +743,21 @@ public class TileMapEditor  {
         }
     }
 
-    private void editTerrainMapTile(MouseEvent e) {
+    private void editMapTile(TileMap tileMap, byte endValue, MouseEvent e) {
         var tile = tileAtMousePosition(e.getX(), e.getY());
         if (e.getButton() == MouseButton.SECONDARY) {
-            map().terrain().set(tile, Tiles.EMPTY);
-        }
-        else if (e.isShiftDown()) { // cycle through all tile values
-            byte content = map().terrain().get(tile);
-            byte nextValue = content < Tiles.TERRAIN_TILES_END - 1 ? (byte) (content + 1) : 0;
-            map().terrain().set(tile, nextValue);
-        }
-        else {
-            if (selectedPalette().selectedTool != null) {
-                selectedPalette().selectedTool.apply(map().terrain(), tile);
-            }
-        }
-        invalidatePaths();
-        markMapEdited();
-    }
-
-    private void editFoodMapTile(MouseEvent e) {
-        var tile = tileAtMousePosition(e.getX(), e.getY());
-        if (e.getButton() == MouseButton.SECONDARY) {
-            map().food().set(tile, Tiles.EMPTY);
+            tileMap.set(tile, Tiles.EMPTY);
         }
         else if (e.isShiftDown()) {
             // cycle through all palette values
-            byte content = map().food().get(tile);
-            byte newValue = content < Tiles.FOOD_TILES_END - 1 ? (byte) (content + 1) : 0;
-            map().food().set(tile, newValue);
+            byte content = tileMap.get(tile);
+            byte newValue = content < endValue - 1 ? (byte) (content + 1) : 0;
+            tileMap.set(tile, newValue);
         }
-        else {
-            if (selectedPalette().selectedTool != null) {
-                selectedPalette().selectedTool.apply(map().food(), tile);
-            }
+        else if (selectedPalette().selectedTool != null) {
+            selectedPalette().selectedTool.apply(tileMap, tile);
         }
+        invalidatePaths();
         markMapEdited();
     }
 }
