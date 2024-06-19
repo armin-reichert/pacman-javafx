@@ -22,6 +22,7 @@ import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
@@ -70,9 +71,10 @@ public class PacManGames3dUI extends PacManGames2dUI {
     public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE        = new SimpleObjectProperty<>(Perspective.FOLLOWING_PLAYER);
     public static final DoubleProperty              PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(4.5);
     public static final DoubleProperty              PY_3D_WALL_OPACITY       = new SimpleDoubleProperty(0.9);
+    public static final ObjectProperty<Image>       PY_3D_WALLPAPER_DAY      = new SimpleObjectProperty<>();
+    public static final ObjectProperty<Image>       PY_3D_WALLPAPER_NIGHT    = new SimpleObjectProperty<>();
 
     public static final String NO_TEXTURE = "No Texture";
-    private static final BackgroundSize FILL_PAGE = new BackgroundSize(1, 1, true, true, false, true);
 
     public static Picker<String> PICKER_LEVEL_COMPLETE;
     public static Picker<String> PICKER_GAME_OVER;
@@ -93,11 +95,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
         theme.set("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
         theme.set("model3D.pellet", new Model3D(rm.url("model3D/12206_Fruit_v1_L3.obj")));
 
-        theme.set("model3D.wallpaper", Ufx.imageBackground(rm.loadImage("graphics/sea-wallpaper.jpg"),
-            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, FILL_PAGE));
-
-        theme.set("model3D.wallpaper.night", Ufx.imageBackground(rm.loadImage("graphics/sea-wallpaper-night.jpg"),
-            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, FILL_PAGE));
+        theme.set("model3D.wallpaper.day",   rm.loadImage("graphics/sea-wallpaper.jpg"));
+        theme.set("model3D.wallpaper.night", rm.loadImage("graphics/sea-wallpaper-night.jpg"));
 
         theme.set("floorTextures", new HashMap<String, PhongMaterial>());
         List.of("knobs", "plastic", "wood").forEach(name -> {
@@ -173,6 +172,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
     @Override
     protected void createGamePage() {
+        PY_3D_WALLPAPER_DAY.set(theme.get("model3D.wallpaper.day"));
+        PY_3D_WALLPAPER_NIGHT.set(theme.get("model3D.wallpaper.night"));
         gamePage = new GamePage3D(this, mainScene);
         gamePage.dashboard().addInfoBox(3, tt("infobox.3D_settings.title"), new InfoBox3D());
         gamePage.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
@@ -183,11 +184,11 @@ public class PacManGames3dUI extends PacManGames2dUI {
                 if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
                     return Ufx.coloredBackground(Color.BLACK);
                 } else {
-                    var wallpaperKey = PY_3D_NIGHT_MODE.get() ? "model3D.wallpaper.night" : "model3D.wallpaper";
-                    return theme().background(wallpaperKey);
+                    return Ufx.wallpaperBackground(PY_3D_NIGHT_MODE.get()
+                            ? PY_3D_WALLPAPER_NIGHT.get() : PY_3D_WALLPAPER_DAY.get());
                 }
             },
-            PY_3D_DRAW_MODE, PY_3D_NIGHT_MODE
+            PY_3D_DRAW_MODE, PY_3D_NIGHT_MODE, PY_3D_WALLPAPER_DAY, PY_3D_WALLPAPER_NIGHT
         ));
         gameScenePy.addListener((py, ov, newGameScene) -> gamePage.onGameSceneChanged(newGameScene));
     }

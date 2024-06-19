@@ -29,6 +29,8 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class Ufx {
 
+    public  static final BackgroundSize FILL_PAGE = new BackgroundSize(1, 1, true, true, false, true);
+
     private Ufx() {
     }
 
@@ -73,6 +75,10 @@ public class Ufx {
      */
     public static Background imageBackground(Image image) {
         return new Background(new BackgroundImage(image, null, null, null, null));
+    }
+
+    public static Background wallpaperBackground(Image image) {
+        return imageBackground(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, FILL_PAGE);
     }
 
     /**
