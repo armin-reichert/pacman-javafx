@@ -227,7 +227,7 @@ public class TileMapEditor  {
         var cbGridVisible = new CheckBox(tt("grid"));
         cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
 
-        var terrainPalette = new Palette(32, 2, 8, terrainMapRenderer);
+        var terrainPalette = new Palette(32, 2, 10, terrainMapRenderer);
         terrainPalette.setTools(
             terrainPalette.changeTileValueTool(Tiles.WALL_H, "Horiz. Wall"),
             terrainPalette.changeTileValueTool(Tiles.WALL_V, "Vert. Wall"),
@@ -247,7 +247,7 @@ public class TileMapEditor  {
         );
         palettes.put(PALETTE_TERRAIN, terrainPalette);
 
-        var actorPalette = new Palette(32, 2, 8, terrainMapRenderer);
+        var actorPalette = new Palette(32, 1, 9, terrainMapRenderer);
         actorPalette.setTools(
             actorPalette.changePropertyValueTool(PROPERTY_POS_RED_GHOST, "Red Ghost"),
             actorPalette.changePropertyValueTool(PROPERTY_POS_PINK_GHOST, "Pink Ghost"),
@@ -261,7 +261,7 @@ public class TileMapEditor  {
         );
         palettes.put(PALETTE_ACTORS, actorPalette);
 
-        var foodPalette = new Palette(32, 1, 4, foodMapRenderer);
+        var foodPalette = new Palette(32, 1, 3, foodMapRenderer);
         foodPalette.setTools(
             foodPalette.changeTileValueTool(Tiles.EMPTY, "No Food"),
             foodPalette.changeTileValueTool(Tiles.PELLET, "Pellet"),
@@ -285,26 +285,25 @@ public class TileMapEditor  {
 
         terrainMapPropertiesEditor = new PropertyEditor(tt("terrain"), this, map().terrain());
         terrainMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
+        terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
         foodMapPropertiesEditor = new PropertyEditor(tt("pellets"), this, map().food());
         foodMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
+        foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
-        var propertyEditorArea = new TitledPane(); // TODO localize
-        propertyEditorArea.setText("Properties");
+        var propertyEditorArea = new TitledPane();
+        propertyEditorArea.setText(tt("properties"));
         propertyEditorArea.setContent(new VBox(terrainMapPropertiesEditor, foodMapPropertiesEditor));
 
         VBox controlsPane = new VBox();
         controlsPane.setSpacing(10);
-        controlsPane.setMinWidth(270);
+        controlsPane.setMinWidth(32*10);
         HBox checkBoxPanel = new HBox(new HBox(5, cbPreviewVisible, cbTerrainVisible, cbFoodVisible, cbGridVisible));
         checkBoxPanel.setAlignment(Pos.CENTER);
         controlsPane.getChildren().add(checkBoxPanel);
         controlsPane.getChildren().add(palettesTab);
 
         controlsPane.getChildren().add(propertyEditorArea);
-
-        terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
-        foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
         var splitPane = new SplitPane(editCanvasScroll, controlsPane, previewCanvasScroll);
         //splitPane.setDividerPositions(0.45, 0.55);
