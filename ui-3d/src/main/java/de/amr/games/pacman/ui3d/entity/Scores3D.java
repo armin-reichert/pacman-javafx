@@ -48,13 +48,16 @@ public class Scores3D extends GridPane {
         add(txtRight,     1,1);
     }
 
-    public void showScores(int score, int levelNumber, int highScore, int highScoreLevelNumber) {
+    public void showScore(int score, int levelNumber) {
         txtLeft.setFill(Color.YELLOW);
         txtLeft.setText(String.format("%7d L%d", score, levelNumber));
+    }
+    public void showHighScore(int highScore, int highScoreLevelNumber) {
+        txtLeft.setFill(Color.YELLOW);
         txtRight.setText(String.format("%7d L%d", highScore, highScoreLevelNumber));
     }
 
-    public void showAlternativeText(String text, Color color) {
+    public void showTextAsScore(String text, Color color) {
         txtLeft.setText(text);
         txtLeft.setFill(color);
     }

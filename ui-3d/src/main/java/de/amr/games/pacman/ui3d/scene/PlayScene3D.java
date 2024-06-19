@@ -125,13 +125,12 @@ public class PlayScene3D implements GameScene {
         // Update autopilot here. Autopilot flag is in core layer where we don't have a JavaFX property to bind with
         game.pac().setUseAutopilot(game.isDemoLevel() || PY_AUTOPILOT.get());
 
+        scores3D.showHighScore(game.highScore().points(), game.highScore().levelNumber());
         if (context.gameController().hasCredit()) {
-            scores3D.showScores(
-                game.score().points(), game.score().levelNumber(),
-                game.highScore().points(), game.highScore().levelNumber());
+            scores3D.showScore(game.score().points(), game.score().levelNumber());
         } else {
             // demo level or "game over" state
-            scores3D.showAlternativeText("GAME OVER!", Color.RED);
+            scores3D.showTextAsScore("GAME OVER!", Color.RED);
         }
         updateSound();
     }
