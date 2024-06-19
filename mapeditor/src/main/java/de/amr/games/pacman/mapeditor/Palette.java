@@ -4,8 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.mapeditor;
 
-import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Tooltip;
@@ -14,79 +12,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.lib.Globals.TS;
-
 /**
  * @author Armin Reichert
  */
 public class Palette extends Canvas {
 
     public static final Color BG_COLOR = Color.WHITE;
-
-    public interface Tool {
-        String description();
-        void apply(TileMap tileMap, Vector2i tile);
-        void draw(GraphicsContext g, int row, int col);
-    }
-
-    public class ChangeTileValueTool implements Tool {
-        private final byte value;
-        private final String description;
-
-        public ChangeTileValueTool(byte value, String description) {
-            this.value = value;
-            this.description = description;
-        }
-
-        @Override
-        public String description() {
-            return description;
-        }
-
-        @Override
-        public void apply(TileMap tileMap, Vector2i tile) {
-            tileMap.set(tile, value);
-        }
-
-        @Override
-        public void draw(GraphicsContext g, int row, int col) {
-            g.setFill(Color.BLACK);
-            g.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
-            renderer.drawTile(g, new Vector2i(col, row), value);
-        }
-    }
-
-    public class ChangePropertyValueTool implements Tool {
-        private final String propertyName;
-        private final String description;
-
-        public ChangePropertyValueTool(String propertyName, String description) {
-            this.propertyName = propertyName;
-            this.description = description;
-        }
-
-        @Override
-        public String description() {
-            return description;
-        }
-
-        @Override
-        public void apply(TileMap tileMap, Vector2i tile) {
-            tileMap.setProperty(propertyName, TileMap.formatTile(tile));
-        }
-
-        @Override
-        public void draw(GraphicsContext g, int row, int col) {
-            g.setFill(Color.BLACK);
-            g.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
-            if (renderer instanceof TileMapEditorTerrainRenderer tr) {
-                g.save();
-                g.scale(cellSize / (double)TS, cellSize / (double)TS);
-                tr.drawSpecialTile(g, propertyName, new Vector2i(col, row));
-                g.restore();
-            }
-        }
-    }
 
     final int cellSize;
     final int numRows;
@@ -131,12 +62,12 @@ public class Palette extends Canvas {
         });
     }
 
-    public Palette.ChangeTileValueTool changeTileValueTool(byte value, String description) {
-        return new ChangeTileValueTool(value, description);
+    public ChangeTileValueTool changeTileValueTool(byte value, String description) {
+        return new ChangeTileValueTool(renderer, cellSize, value, description);
     }
 
     public ChangePropertyValueTool changePropertyValueTool(String propertyName, String description) {
-        return new ChangePropertyValueTool(propertyName, description);
+        return new ChangePropertyValueTool(renderer, cellSize, propertyName, description);
     }
 
     public void setTools(Tool... someEditorTools) {
