@@ -69,6 +69,7 @@ public class TileMapEditor  {
         map.terrain().setProperty(PROPERTY_POS_PINK_GHOST,   formatTile(DEFAULT_POS_PINK_GHOST));
         map.terrain().setProperty(PROPERTY_POS_CYAN_GHOST,   formatTile(DEFAULT_POS_CYAN_GHOST));
         map.terrain().setProperty(PROPERTY_POS_ORANGE_GHOST, formatTile(DEFAULT_POS_ORANGE_GHOST));
+        map.terrain().setProperty(PROPERTY_POS_BONUS,        formatTile(DEFAULT_POS_BONUS));
         map.food().setProperty(PROPERTY_COLOR_FOOD, DEFAULT_FOOD_COLOR);
         return map;
     }
@@ -115,21 +116,17 @@ public class TileMapEditor  {
     private Canvas previewCanvas;
     private Label infoLabel;
     private FileChooser fileChooser;
-
-    private final Map<String, Palette> palettes = new HashMap<>();
-
     private TabPane palettesTab;
-
+    private final Text editHint = new Text(tt("click_to_start"));
     private PropertyEditor terrainMapPropertiesEditor;
     private TileMapEditorTerrainRenderer terrainMapRenderer;
-    private boolean pathsUpToDate;
-
     private PropertyEditor foodMapPropertiesEditor;
     private FoodMapRenderer foodMapRenderer;
 
+    private final Map<String, Palette> palettes = new HashMap<>();
     private final Map<String, WorldMap> predefinedMaps = new HashMap<>();
 
-    private final Text editHint = new Text(tt("click_to_start"));
+    private boolean pathsUpToDate;
     private boolean unsavedChanges;
     private Vector2i hoveredTile;
     private File lastUsedDir;

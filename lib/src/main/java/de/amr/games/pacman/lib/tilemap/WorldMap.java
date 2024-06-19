@@ -32,6 +32,7 @@ public class WorldMap {
     public static final String PROPERTY_POS_SCATTER_PINK_GHOST = "pos_scatter_ghost_2_pink";
     public static final String PROPERTY_POS_SCATTER_CYAN_GHOST = "pos_scatter_ghost_3_cyan";
     public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
+    public static final String PROPERTY_POS_BONUS = "pos_bonus";
 
     public static final String PROPERTY_COLOR_FOOD = "color_food";
 
@@ -43,6 +44,7 @@ public class WorldMap {
     public static final Vector2i DEFAULT_POS_PINK_GHOST = new Vector2i(13, 17);
     public static final Vector2i DEFAULT_POS_CYAN_GHOST = new Vector2i(11, 17);
     public static final Vector2i DEFAULT_POS_ORANGE_GHOST = new Vector2i(15, 17);
+    public static final Vector2i DEFAULT_POS_BONUS = new Vector2i(13, 20);
 
     public static final String DEFAULT_FOOD_COLOR              = "rgb(255,0,0)";
 

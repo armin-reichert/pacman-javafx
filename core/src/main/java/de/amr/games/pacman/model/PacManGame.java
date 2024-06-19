@@ -7,6 +7,7 @@ package de.amr.games.pacman.model;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.NavPoint;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -105,21 +106,26 @@ public class PacManGame extends AbstractPacManGame {
         pac.setUseAutopilot(true);
     }
 
-    //TODO: store some of this info in map?
     protected World createPacManWorld() {
         URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/pacman.world");
         var map = new WorldMap(mapURL);
         var world = new World(map);
+
         House house = House.createArcadeHouse(v2i(10, 15));
         house.setPacPositionFromMap(map);
         house.setGhostPositionsFromMap(map);
         world.addHouse(house);
+
+        Vector2f bonusPosition = map.terrain().getTileProperty(WorldMap.PROPERTY_POS_BONUS, WorldMap.DEFAULT_POS_BONUS)
+            .toFloatVec().plus(HTS, 0);
+        world.setBonusPosition(bonusPosition);
+
         // special tiles
         List<Direction> up = List.of(UP);
         Map<Vector2i, List<Direction>> fp = new HashMap<>();
         Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> fp.put(tile, up));
         world.setForbiddenPassages(fp);
-        world.setBonusPosition(halfTileRightOf(13, 20));
+
         return world;
     }
 
@@ -131,7 +137,7 @@ public class PacManGame extends AbstractPacManGame {
         if (!demoLevel) {
             levelCounter.add(bonusSymbols[0]);
             if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
-                levelCounter.removeFirst();
+                levelCounter.remove(0);
             }
         }
     }
