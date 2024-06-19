@@ -82,7 +82,7 @@ public class TileMapEditor  {
         {13, 8, 8, 8, 8, 8, 8,12}
     });
 
-    public final ObjectProperty<String> titlePy = new SimpleObjectProperty<>(this, "title", "Map Editor");
+    public final ObjectProperty<String> titlePy = new SimpleObjectProperty<>(this, "title");
 
     public final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
 
@@ -101,6 +101,9 @@ public class TileMapEditor  {
             draw();
         }
     };
+
+    public final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>(this, "currentFile");
+    public final ObjectProperty<WorldMap> mapPy = new SimpleObjectProperty<>(this, "map");
 
     private Window ownerWindow;
     private MenuBar menuBar;
@@ -124,24 +127,25 @@ public class TileMapEditor  {
     private PropertyEditor foodMapPropertiesEditor;
     private FoodMapRenderer foodMapRenderer;
 
-    private final ObjectProperty<WorldMap> mapPy = new SimpleObjectProperty<>();
     private final Map<String, WorldMap> predefinedMaps = new HashMap<>();
 
     private final Text editHint = new Text(tt("click_to_start"));
     private boolean unsavedChanges;
     private Vector2i hoveredTile;
     private File lastUsedDir;
-    private File currentMapFile;
 
     private Timeline clock;
 
     public TileMapEditor() {
-        mapPy.set(createNewMap(36, 28));
-        lastUsedDir = new File(System.getProperty("user.home"));
+        this(new File(System.getProperty("user.home")));
     }
 
     public TileMapEditor(File workDir) {
         mapPy.set(createNewMap(36, 28));
+        titlePy.bind(Bindings.createStringBinding(
+            () -> tt("map_editor") + (currentFilePy.get() != null ? " - " + currentFilePy.get() : ""),
+            currentFilePy
+        ));
         lastUsedDir = workDir;
     }
 
@@ -174,7 +178,6 @@ public class TileMapEditor  {
         int fps = 10;
         clock = new Timeline(fps, new KeyFrame(Duration.millis(1000.0 / fps), e -> {
             try {
-                updateInfo();
                 draw();
             } catch (Exception x) {
                 x.printStackTrace(System.err);
@@ -382,17 +385,6 @@ public class TileMapEditor  {
         return predefinedMaps.get(description);
     }
 
-    private void updateInfo() {
-        var text = "Tile: ";
-        text += hoveredTile != null ? String.format("x=%2d y=%2d", hoveredTile.x(), hoveredTile.y()) : "n/a";
-        infoLabel.setText(text);
-        if (currentMapFile != null) {
-            titlePy.set("Map Editor: " + currentMapFile.getPath());
-        } else {
-            titlePy.set("Map Editor");
-        }
-    }
-
     private void updatePaths() {
         if (!pathsUpToDate) {
             map().terrain().computePaths();
@@ -453,11 +445,11 @@ public class TileMapEditor  {
         if (hasUnsavedChanges()) {
             showConfirmation(this::saveMapFileAs, () -> {
                 setMap(new WorldMap(otherMap));
-                currentMapFile = null;
+                currentFilePy.set(null);
             });
         } else {
             setMap(new WorldMap(otherMap));
-            currentMapFile = null;
+            currentFilePy.set(null);
         }
     }
 
@@ -492,7 +484,7 @@ public class TileMapEditor  {
         if (file.getName().endsWith(".world")) {
             loadMap(new WorldMap(file));
             lastUsedDir = file.getParentFile();
-            currentMapFile = file;
+            currentFilePy.set(file);
             Logger.info("Map read from file {}", file);
         }
     }
@@ -710,11 +702,18 @@ public class TileMapEditor  {
         return palettes.get(selectedPaletteID());
     }
 
+    private void setHoveredTile(Vector2i tile) {
+        hoveredTile = tile;
+        var text = "Tile: ";
+        text += hoveredTile != null ? String.format("x=%2d y=%2d", hoveredTile.x(), hoveredTile.y()) : "n/a";
+        infoLabel.setText(text);
+    }
+
     private void onMouseMovedOverEditCanvas(MouseEvent e) {
         if (!editingEnabledPy.get()) {
             return;
         }
-        hoveredTile = tileAtMousePosition(e.getX(), e.getY());
+        setHoveredTile(tileAtMousePosition(e.getX(), e.getY()));
         if (e.isShiftDown()) {
             switch (selectedPaletteID()) {
                 case PALETTE_TERRAIN -> {
