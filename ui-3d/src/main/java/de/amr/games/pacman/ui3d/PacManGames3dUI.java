@@ -183,10 +183,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
             () -> {
                 if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
                     return Ufx.coloredBackground(Color.BLACK);
-                } else {
-                    return Ufx.wallpaperBackground(PY_3D_NIGHT_MODE.get()
-                            ? PY_3D_WALLPAPER_NIGHT.get() : PY_3D_WALLPAPER_DAY.get());
                 }
+                return Ufx.wallpaperBackground(PY_3D_NIGHT_MODE.get() ? PY_3D_WALLPAPER_NIGHT.get() : PY_3D_WALLPAPER_DAY.get());
             },
             PY_3D_DRAW_MODE, PY_3D_NIGHT_MODE, PY_3D_WALLPAPER_DAY, PY_3D_WALLPAPER_NIGHT
         ));
