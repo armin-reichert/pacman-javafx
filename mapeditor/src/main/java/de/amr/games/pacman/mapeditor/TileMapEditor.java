@@ -328,30 +328,29 @@ public class TileMapEditor  {
     private void createMenus() {
         createFileMenu();
         createEditMenu();
-
-        menuLoadMap = new Menu(tt("menu.load_map"));
-        menuLoadMap.disableProperty().bind(editingEnabledPy.not());
-        menuBar = new MenuBar();
-        menuBar.getMenus().addAll(menuFile, menuEdit, menuLoadMap);
+        createLoadMapMenu();
+        menuBar = new MenuBar(menuFile, menuEdit, menuLoadMap);
     }
 
     private void createFileMenu() {
-        var miNewMap = new MenuItem(tt("menu.file.new"));
-        miNewMap.setOnAction(e -> showCreateNewMapDialog());
+        var miNew = new MenuItem(tt("menu.file.new"));
+        miNew.setOnAction(e -> showNewMapDialog());
 
-        var miOpenMapFile = new MenuItem(tt("menu.file.open"));
-        miOpenMapFile.setOnAction(e -> openMapFile());
+        var miOpen = new MenuItem(tt("menu.file.open"));
+        miOpen.setOnAction(e -> openMapFile());
 
-        var miSaveMapFileAs = new MenuItem(tt("menu.file.save_as"));
-        miSaveMapFileAs.setOnAction(e -> saveMapFileAs());
+        var miSaveAs = new MenuItem(tt("menu.file.save_as"));
+        miSaveAs.setOnAction(e -> saveMapFileAs());
 
-        menuFile = new Menu(tt("menu.file"));
-        menuFile.getItems().addAll(miNewMap, miOpenMapFile, miSaveMapFileAs);
+        menuFile = new Menu(tt("menu.file"), null, miNew, miOpen, miSaveAs);
     }
 
     private void createEditMenu() {
         var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
         miAddBorder.setOnAction(e -> addBorder(map().terrain(), 3, 2));
+
+        var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
+        miAddHouse.setOnAction(e -> addHouse());
 
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> map().terrain().clear());
@@ -359,12 +358,13 @@ public class TileMapEditor  {
         var miClearFood = new MenuItem(tt("menu.edit.clear_food"));
         miClearFood.setOnAction(e -> map().food().clear());
 
-        var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
-        miAddHouse.setOnAction(e -> addHouse());
-
-        menuEdit = new Menu(tt("menu.edit"));
-        menuEdit.getItems().addAll(miAddBorder, miAddHouse, miClearTerrain, miClearFood);
+        menuEdit = new Menu(tt("menu.edit"), null, miAddBorder, miAddHouse, miClearTerrain, miClearFood);
         menuEdit.disableProperty().bind(editingEnabledPy.not());
+    }
+
+    private void createLoadMapMenu() {
+        menuLoadMap = new Menu(tt("menu.load_map"));
+        menuLoadMap.disableProperty().bind(editingEnabledPy.not());
     }
 
     public void addPredefinedMap(String description, WorldMap map) {
@@ -452,7 +452,7 @@ public class TileMapEditor  {
         }
     }
 
-    private void showCreateNewMapDialog() {
+    private void showNewMapDialog() {
         TextInputDialog dialog = new TextInputDialog("28x36");
         dialog.setTitle("Map Size");
         dialog.setHeaderText("Enter Map Size (cols x rows)");
