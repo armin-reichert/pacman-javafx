@@ -85,13 +85,13 @@ public class TileMapEditor  {
 
     public final ObjectProperty<String> titlePy = new SimpleObjectProperty<>(this, "title");
 
-    public final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(true);
+    public final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(this, "terrainVisible", true);
 
-    public final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(true);
+    public final BooleanProperty foodVisiblePy = new SimpleBooleanProperty(this, "foodVisible", true);
 
-    public final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(true);
+    public final BooleanProperty gridVisiblePy = new SimpleBooleanProperty(this, "gridVisible", true);
 
-    public final BooleanProperty editingEnabledPy = new SimpleBooleanProperty(false);
+    public final BooleanProperty editingEnabledPy = new SimpleBooleanProperty(this,"editingEnabled", false);
 
     public final BooleanProperty previewVisiblePy = new SimpleBooleanProperty(this, "previewVisible", true);
 
@@ -99,11 +99,11 @@ public class TileMapEditor  {
         @Override
         protected void invalidated() {
             invalidatePaths();
-            draw();
         }
     };
 
     public final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>(this, "currentFile");
+
     public final ObjectProperty<WorldMap> mapPy = new SimpleObjectProperty<>(this, "map");
 
     private Window ownerWindow;
@@ -594,7 +594,6 @@ public class TileMapEditor  {
         g.fillRect(0, 0, editCanvas.getWidth(), editCanvas.getHeight());
         drawGrid(g);
         if (terrainVisiblePy.get()) {
-            updatePaths();
             terrainMapRenderer.setScaling(gridSize() / 8.0);
             terrainMapRenderer.setWallStrokeColor(getColorFromMap(map().terrain(), PROPERTY_COLOR_WALL_STROKE, parseColor(DEFAULT_COLOR_WALL_STROKE)));
             terrainMapRenderer.setWallFillColor(getColorFromMap(map().terrain(), PROPERTY_COLOR_WALL_FILL, parseColor(DEFAULT_COLOR_WALL_FILL)));
@@ -603,8 +602,8 @@ public class TileMapEditor  {
             terrainMapRenderer.drawMap(g, map().terrain());
         }
         if (foodVisiblePy.get()) {
-            foodMapRenderer.setScaling(gridSize() / 8.0);
             Color foodColor = getColorFromMap(map().food(), PROPERTY_COLOR_FOOD, TileMapUtil.parseColor(DEFAULT_FOOD_COLOR));
+            foodMapRenderer.setScaling(gridSize() / 8.0);
             foodMapRenderer.setEnergizerColor(foodColor);
             foodMapRenderer.setPelletColor(foodColor);
             foodMapRenderer.drawMap(g, map().food());
