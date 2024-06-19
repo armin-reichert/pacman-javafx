@@ -36,15 +36,16 @@ public class WorldMap {
 
     public static final String PROPERTY_COLOR_FOOD = "color_food";
 
-    public static final String   DEFAULT_COLOR_WALL_STROKE = "rgb(0,0,255)";
-    public static final String   DEFAULT_COLOR_WALL_FILL = "rgb(0,0,0)";
-    public static final String   DEFAULT_COLOR_DOOR = "rgb(0,255,255)";
-    public static final Vector2i DEFAULT_POS_PAC = new Vector2i(13, 26);
-    public static final Vector2i DEFAULT_POS_RED_GHOST = new Vector2i(13, 14);
-    public static final Vector2i DEFAULT_POS_PINK_GHOST = new Vector2i(13, 17);
-    public static final Vector2i DEFAULT_POS_CYAN_GHOST = new Vector2i(11, 17);
+    public static final String DEFAULT_COLOR_WALL_STROKE = "rgb(0,0,255)";
+    public static final String DEFAULT_COLOR_WALL_FILL   = "rgb(0,0,0)";
+    public static final String DEFAULT_COLOR_DOOR        = "rgb(0,255,255)";
+
+    public static final Vector2i DEFAULT_POS_PAC          = new Vector2i(13, 26);
+    public static final Vector2i DEFAULT_POS_RED_GHOST    = new Vector2i(13, 14);
+    public static final Vector2i DEFAULT_POS_PINK_GHOST   = new Vector2i(13, 17);
+    public static final Vector2i DEFAULT_POS_CYAN_GHOST   = new Vector2i(11, 17);
     public static final Vector2i DEFAULT_POS_ORANGE_GHOST = new Vector2i(15, 17);
-    public static final Vector2i DEFAULT_POS_BONUS = new Vector2i(13, 20);
+    public static final Vector2i DEFAULT_POS_BONUS        = new Vector2i(13, 20);
 
     public static final String DEFAULT_FOOD_COLOR              = "rgb(255,0,0)";
 
@@ -54,9 +55,6 @@ public class WorldMap {
     private URL url;
     private TileMap terrain;
     private TileMap food;
-
-    private WorldMap() {
-    }
 
     /**
      * Creates a world map consisting of copies of the other map's layers.
