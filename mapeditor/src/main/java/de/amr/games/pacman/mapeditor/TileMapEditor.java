@@ -309,14 +309,12 @@ public class TileMapEditor  {
         VBox controlsPane = new VBox();
         controlsPane.setSpacing(10);
         controlsPane.setMinWidth(32*10);
-        HBox checkBoxPanel = new HBox(new HBox(5, cbPreviewVisible, cbTerrainVisible, cbFoodVisible, cbGridVisible));
+        HBox checkBoxPanel = new HBox(5, cbTerrainVisible, cbFoodVisible, cbGridVisible, cbPreviewVisible);
+        cbPreviewVisible.setPadding(new Insets(0, 0, 0, 25));
         checkBoxPanel.setAlignment(Pos.CENTER);
         controlsPane.getChildren().add(checkBoxPanel);
         controlsPane.getChildren().add(palettesTabPane);
         controlsPane.getChildren().add(propertyEditorArea);
-
-        var splitPane = new SplitPane(editCanvasScroll, controlsPane, previewCanvasScroll);
-        //splitPane.setDividerPositions(0.45, 0.55);
 
         hoveredTileInfo = new Label();
 
@@ -332,7 +330,12 @@ public class TileMapEditor  {
         var footer = new HBox(hoveredTileInfo, filler, sliderGridSize);
         footer.setPadding(new Insets(0, 10, 0, 10));
 
-        layout.setCenter(splitPane);
+        var splitPane = new SplitPane(editCanvasScroll, previewCanvasScroll);
+        splitPane.setDividerPositions(0.5);
+
+        var hbox = new HBox(controlsPane, splitPane);
+        HBox.setHgrow(splitPane, Priority.ALWAYS);
+        layout.setCenter(hbox);
         layout.setBottom(footer);
     }
 
