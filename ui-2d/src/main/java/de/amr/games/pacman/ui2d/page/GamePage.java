@@ -364,15 +364,17 @@ public class GamePage implements Page {
     }
 
     private void showHelpInfoPopUp() {
-        var bgColor = context.game().variant() == GameVariant.MS_PACMAN
-            ? Color.rgb(255, 0, 0, 0.8)
-            : Color.rgb(33, 33, 255, 0.8);
-        var font = context.theme().font("font.monospaced", Math.max(6, 14 * canvasLayer.scaling()));
-        var pane = currentHelpInfo().createPane(bgColor, font);
-        helpInfoPopUp.setTranslateX(10 * canvasLayer.scaling());
-        helpInfoPopUp.setTranslateY(30 * canvasLayer.scaling());
-        helpInfoPopUp.setContent(pane);
-        helpInfoPopUp.show(Duration.seconds(1.5));
+        if (isCurrentGameScene2D()) {
+            var bgColor = context.game().variant() == GameVariant.MS_PACMAN
+                    ? Color.rgb(255, 0, 0, 0.8)
+                    : Color.rgb(33, 33, 255, 0.8);
+            var font = context.theme().font("font.monospaced", Math.max(6, 14 * canvasLayer.scaling()));
+            var pane = currentHelpInfo().createPane(bgColor, font);
+            helpInfoPopUp.setTranslateX(10 * canvasLayer.scaling());
+            helpInfoPopUp.setTranslateY(30 * canvasLayer.scaling());
+            helpInfoPopUp.setContent(pane);
+            helpInfoPopUp.show(Duration.seconds(1.5));
+        }
     }
 
     private void addInfoForIntroScene(HelpInfo info) {
@@ -380,8 +382,7 @@ public class GamePage implements Page {
             info.addLocalizedEntry("help.start_game", "1");
         }
         info.addLocalizedEntry("help.add_credit", "5");
-        info.addLocalizedEntry(context.game().variant() == GameVariant.MS_PACMAN
-            ? "help.pacman" : "help.ms_pacman", "V");
+        addInfoForQuittingScene(info);
     }
 
     private void addInfoForQuittingScene(HelpInfo info) {
@@ -393,7 +394,7 @@ public class GamePage implements Page {
             info.addLocalizedEntry("help.start_game", "1");
         }
         info.addLocalizedEntry("help.add_credit", "5");
-        info.addLocalizedEntry("help.show_intro", "Q");
+        addInfoForQuittingScene(info);
     }
 
     private void addInfoForPlayScene(HelpInfo info) {
@@ -401,7 +402,7 @@ public class GamePage implements Page {
         info.addLocalizedEntry("help.move_right", context.tt("help.cursor_right"));
         info.addLocalizedEntry("help.move_up", context.tt("help.cursor_up"));
         info.addLocalizedEntry("help.move_down", context.tt("help.cursor_down"));
-        info.addLocalizedEntry("help.show_intro", "Q");
+        addInfoForQuittingScene(info);
     }
 
     private void addInfoForDemoLevel(HelpInfo info) {
