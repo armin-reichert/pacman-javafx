@@ -342,7 +342,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         gamePage.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         gamePage.canvasPane().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
         gamePage.canvasPane().setMinScaling(MIN_SCALING);
-        gameScenePy.addListener((py, ov, newGameScene) -> gamePage.onGameSceneChanged(newGameScene));
+        gameScenePy.addListener((py, ov, newGameScene) -> gamePage.embedGameScene2D(newGameScene));
     }
 
     private void createMapEditor() {

@@ -6,8 +6,6 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.page.GamePage;
-import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui3d.scene.Perspective;
 import javafx.scene.Scene;
@@ -81,19 +79,5 @@ public class GamePage3D extends GamePage {
 
         contextMenu.requestFocus();
         contextMenu.show(rootPane(), event.getScreenX(), event.getScreenY());
-    }
-
-    @Override
-    public void onGameSceneChanged(GameScene newGameScene) {
-        if (context.isRegisteredAs(newGameScene, GameSceneID.PLAY_SCENE_3D)) {
-            replaceCanvasLayer(newGameScene.root());
-        } else {
-            restoreCanvasLayer();
-            if (newGameScene instanceof GameScene2D scene2D) {
-                scene2D.clearCanvas();
-                adaptCanvasSizeToCurrentWorld();
-            }
-        }
-        hideContextMenu();
     }
 }

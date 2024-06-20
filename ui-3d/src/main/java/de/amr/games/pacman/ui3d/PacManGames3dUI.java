@@ -184,7 +184,14 @@ public class PacManGames3dUI extends PacManGames2dUI {
             },
             PY_3D_DRAW_MODE, PY_3D_NIGHT_MODE, PY_3D_WALLPAPER_DAY, PY_3D_WALLPAPER_NIGHT
         ));
-        gameScenePy.addListener((py, ov, newGameScene) -> gamePage.onGameSceneChanged(newGameScene));
+        gameScenePy.addListener((py, ov, newGameScene) -> {
+            gamePage.hideContextMenu();
+            if (isRegisteredAs(newGameScene, GameSceneID.PLAY_SCENE_3D)) {
+                gamePage.embedGameScene3D(newGameScene);
+            } else {
+                gamePage.embedGameScene2D(newGameScene);
+            }
+        });
     }
 
     @Override

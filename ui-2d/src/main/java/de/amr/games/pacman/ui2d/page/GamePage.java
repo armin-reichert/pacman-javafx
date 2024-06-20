@@ -18,7 +18,6 @@ import de.amr.games.pacman.ui2d.util.FadingPane;
 import de.amr.games.pacman.ui2d.util.FlashMessageView;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.binding.Bindings;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
@@ -155,14 +154,22 @@ public class GamePage implements Page {
         canvasLayer.resizeTo(width, height);
     }
 
-    public void replaceCanvasLayer(Node node) {
-        Objects.requireNonNull(node);
-        stackPane.getChildren().set(0, node);
+    public void embedGameScene3D(GameScene gameScene) {
+        if (gameScene instanceof GameScene2D) {
+            Logger.warn("Cannot embed 2D game scene as 3D scene");
+            return;
+        }
+        Objects.requireNonNull(gameScene.root());
+        stackPane.getChildren().set(0, gameScene.root());
     }
 
-    public void restoreCanvasLayer() {
-        if (stackPane.getChildren().get(0) != canvasLayer) {
+    public void embedGameScene2D(GameScene gameScene) {
+        if (gameScene instanceof GameScene2D scene2D) {
             stackPane.getChildren().set(0, canvasLayer);
+            scene2D.clearCanvas();
+            adaptCanvasSizeToCurrentWorld();
+        } else {
+            Logger.warn("Cannot embed 3D game scene as 2D scene");
         }
     }
 
@@ -237,14 +244,6 @@ public class GamePage implements Page {
         text.setFont(Font.font("Dialog", FontWeight.BLACK, 14));
         text.setFill(Color.CORNFLOWERBLUE); // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
         return new CustomMenuItem(text);
-    }
-
-    public void onGameSceneChanged(GameScene newGameScene) {
-        if (newGameScene instanceof GameScene2D scene2D) {
-            scene2D.clearCanvas();
-            adaptCanvasSizeToCurrentWorld();
-        }
-        hideContextMenu();
     }
 
     public void adaptCanvasSizeToCurrentWorld() {
