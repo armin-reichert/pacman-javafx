@@ -172,7 +172,7 @@ public class GameLevel3D extends Group {
         WorldMap map = context.game().world().map();
         wallStrokeColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
         wallFillColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_WALL_FILL, Color.rgb(0,0,0)));
-        foodColorPy.set(getColorFromMap(map.terrain(), "food_color", Color.PINK));
+        foodColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_FOOD, Color.PINK));
         addMazeWalls(mazeGroup);
         buildGhostHouse(mazeGroup);
         addFood3D(mazeGroup);
@@ -247,7 +247,7 @@ public class GameLevel3D extends Group {
             houseWall(xMin,yMax, xMax,yMax)
         );
 
-        Color doorColor = getColorFromMap(map.terrain(), "door_color",Color.rgb(254,184,174));
+        Color doorColor = getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_DOOR, Color.rgb(254,184,174));
         for (Vector2i wingTile : List.of(leftDoorTile, rightDoorTile)) {
             var doorWing3D = new DoorWing3D(wingTile, doorColor, PY_3D_FLOOR_COLOR.get());
             doorWing3D.drawModePy.bind(PY_3D_DRAW_MODE);
@@ -274,7 +274,7 @@ public class GameLevel3D extends Group {
 
     private void addFood3D(Group parent) {
         var world = context.game().world();
-        Color color = getColorFromMap(world.map().food(), "food_color", Color.WHITE);
+        Color color = getColorFromMap(world.map().food(), WorldMap.PROPERTY_COLOR_FOOD, Color.WHITE);
         foodColorPy.set(color);
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             if (world.isEnergizerTile(tile)) {
