@@ -34,9 +34,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -108,63 +105,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     //TODO reconsider this
     protected final Animation voiceClipExecution = new PauseTransition();
     protected AudioClip voiceClip;
-
-    private void addMapEditor() {
-        editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
-        editor.createUI(stage);
-
-        var miQuitEditor = new MenuItem(tt("back_to_game"));
-        miQuitEditor.setOnAction(e -> quitMapEditor());
-        editor.menuFile().getItems().add(miQuitEditor);
-
-        // load maps from core project resources
-        ResourceManager core = () -> GameModel.class;
-        editor.addPredefinedMap("Pac-Man",
-                new WorldMap(core.url("/de/amr/games/pacman/maps/pacman.world")));
-        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        rangeClosed(1, 6).forEach(mapNumber -> editor.addPredefinedMap("Ms. Pac-Man " + mapNumber,
-                new WorldMap(core.url("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world"))));
-        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap("Pac-Man XXL " + mapNumber,
-                new WorldMap(core.url("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world"))));
-
-        editorPage = new EditorPage(editor, this);
-    }
-
-    @Override
-    public void enterMapEditor() {
-        if (game().variant() != GameVariant.PACMAN_XXL) {
-            showFlashMessageSeconds(3, "Map editor is not available in this game variant");
-            return;
-        }
-        stopVoice();
-        stopAllSounds();
-        currentGameScene().ifPresent(GameScene::end);
-        clock.stop();
-        stage.titleProperty().bind(editor.titlePy);
-        if (game().world() != null) {
-            editor.setMap(game().world().map());
-        }
-        reboot();
-        editor.start();
-        selectPage(editorPage);
-    }
-
-    @Override
-    public void quitMapEditor() {
-        editor.showConfirmation(
-            () -> {
-                editor.saveMapFileAs();
-                editor.stop();
-                GameController.it().loadCustomMaps();
-                selectPage(startPage);
-            },
-            () -> {
-                stage.titleProperty().bind(stageTitleBinding());
-                editor.stop();
-                selectPage(startPage);
-            });
-    }
 
     public void loadAssets() {
         bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", PacManGames2dUI.class.getModule()));
@@ -306,7 +246,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         createGamePage();
         createGameScenes(); // must be done *after* creating game page!
         createGameClock();
-        addMapEditor();
+        createMapEditor();
 
         stage.titleProperty().bind(stageTitleBinding());
         stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
@@ -329,23 +269,15 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         stage.show();
     }
 
-    protected void onMouseClicked(MouseEvent e) {
-        currentPage.onMouseClicked(e);
-    }
-
-    protected void onContextMenuRequested(ContextMenuEvent e) {
-        currentPage.onContextMenuRequested(e);
-    }
-
     protected void createMainScene(Rectangle2D screenSize) {
         Dimension2D size = computeMainSceneSize(screenSize);
         var placeholder = new Region();
         placeholder.setBackground(Ufx.coloredBackground(Color.BLACK));
         mainScene = new Scene(placeholder, size.getWidth(), size.getHeight());
-        Keyboard.filterKeyEventsFor(mainScene);
-        mainScene.setOnMouseClicked(this::onMouseClicked);
-        mainScene.setOnContextMenuRequested(this::onContextMenuRequested);
+        mainScene.setOnMouseClicked(e -> currentPage.onMouseClicked(e));
+        mainScene.setOnContextMenuRequested(e -> currentPage.onContextMenuRequested(e));
         mainScene.setOnKeyPressed(e -> currentPage.handleKeyboardInput());
+        Keyboard.filterKeyEventsFor(mainScene);
         ChangeListener<Number> resizeCurrentPage = (py, ov, nv) -> {
             if (currentPage != null) {
                 currentPage.setSize(mainScene.getWidth(), mainScene.getHeight());
@@ -401,11 +333,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     protected void createStartPage() {
         startPage = new StartPage(this);
-        startPage.playButton().setOnMouseClicked(e -> {
-            if (e.getButton().equals(MouseButton.PRIMARY)) {
-                selectPage(gamePage);
-            }
-        });
+        startPage.setOnPlayButtonPressed(this::selectGamePage);
         startPage.gameVariantPy.bind(gameVariantPy);
     }
 
@@ -415,6 +343,47 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         gamePage.layout().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
         gamePage.layout().setMinScaling(MIN_SCALING);
         gameScenePy.addListener((py, ov, newGameScene) -> gamePage.onGameSceneChanged(newGameScene));
+    }
+
+    private void createMapEditor() {
+        editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
+        editor.createUI(stage);
+
+        var miQuitEditor = new MenuItem(tt("back_to_game"));
+        miQuitEditor.setOnAction(e -> quitMapEditor());
+        editor.menuFile().getItems().add(miQuitEditor);
+
+        // load maps from core project resources
+        ResourceManager core = () -> GameModel.class;
+        editor.addPredefinedMap("Pac-Man",
+            new WorldMap(core.url("/de/amr/games/pacman/maps/pacman.world")));
+        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
+        rangeClosed(1, 6).forEach(mapNumber -> editor.addPredefinedMap("Ms. Pac-Man " + mapNumber,
+            new WorldMap(core.url("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world"))));
+        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
+        rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap("Pac-Man XXL " + mapNumber,
+            new WorldMap(core.url("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world"))));
+
+        editorPage = new EditorPage(editor, this);
+    }
+
+    @Override
+    public void enterMapEditor() {
+        if (game().variant() != GameVariant.PACMAN_XXL) {
+            showFlashMessageSeconds(3, "Map editor is not available in this game variant");
+            return;
+        }
+        stopVoice();
+        stopAllSounds();
+        currentGameScene().ifPresent(GameScene::end);
+        clock.stop();
+        stage.titleProperty().bind(editor.titlePy);
+        if (game().world() != null) {
+            editor.setMap(game().world().map());
+        }
+        reboot();
+        editor.start();
+        selectPage(editorPage);
     }
 
     private void selectPage(Page page) {
@@ -746,6 +715,22 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             }
         }
         PY_IMMUNITY.set(GameController.it().isPacImmune());
+    }
+
+    @Override
+    public void quitMapEditor() {
+        editor.showConfirmation(
+            () -> {
+                editor.saveMapFileAs();
+                editor.stop();
+                GameController.it().loadCustomMaps();
+                selectPage(startPage);
+            },
+            () -> {
+                stage.titleProperty().bind(stageTitleBinding());
+                editor.stop();
+                selectPage(startPage);
+            });
     }
 
     @Override

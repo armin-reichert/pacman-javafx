@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -139,8 +140,12 @@ public class StartPage implements Page {
         return root;
     }
 
-    public Node playButton() {
-        return btnPlay;
+    public void setOnPlayButtonPressed(Runnable action) {
+        btnPlay.setOnMouseClicked(e -> {
+            if (e.getButton().equals(MouseButton.PRIMARY)) {
+                action.run();
+            }
+        });
     }
 
     @Override
