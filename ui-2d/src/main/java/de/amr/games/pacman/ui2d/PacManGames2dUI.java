@@ -34,7 +34,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -94,6 +96,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     protected Stage stage;
     protected Scene mainScene;
+    protected final StackPane rootPane = new StackPane();
+    protected final FlashMessageView messageView = new FlashMessageView();
     protected GameClockFX clock;
     protected TileMapEditor editor;
 
@@ -231,6 +235,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void createUI(Stage stage, Rectangle2D screenSize) {
         this.stage = checkNotNull(stage);
 
+        // first child will be replaced by page
+        rootPane.getChildren().addAll(new Pane(), messageView);
+
         gameVariantPy.set(GameController.it().game().variant());
         for (var variant : GameController.it().supportedVariants()) {
             GameController.it().game(variant).addGameEventListener(this);
@@ -254,11 +261,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         selectStartPage();
     }
 
-    protected Dimension2D computeMainSceneSize(Rectangle2D screenSize) {
-        double height = 0.9 * screenSize.getHeight(), width = 0.9 * height;
-        return new Dimension2D(width, height);
-    }
-
     public void show() {
         //TODO this does not work yet correctly
         Dimension2D minSize = DecoratedCanvas.computeSize(
@@ -269,11 +271,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         stage.show();
     }
 
+    protected Dimension2D computeMainSceneSize(Rectangle2D screenSize) {
+        double height = 0.9 * screenSize.getHeight(), width = 0.9 * height;
+        return new Dimension2D(width, height);
+    }
+
     protected void createMainScene(Rectangle2D screenSize) {
         Dimension2D size = computeMainSceneSize(screenSize);
-        var placeholder = new Region();
-        placeholder.setBackground(Ufx.coloredBackground(Color.BLACK));
-        mainScene = new Scene(placeholder, size.getWidth(), size.getHeight());
+        mainScene = new Scene(rootPane, size.getWidth(), size.getHeight());
         mainScene.setOnMouseClicked(e -> currentPage.onMouseClicked(e));
         mainScene.setOnContextMenuRequested(e -> currentPage.onContextMenuRequested(e));
         mainScene.setOnKeyPressed(e -> currentPage.handleKeyboardInput());
@@ -302,6 +307,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         clock.setContinousCallback(() -> {
             try {
                 if (currentPage == gamePage) {
+                    messageView.update();
                     gamePage.render();
                 }
             } catch (Exception x) {
@@ -390,8 +396,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (page != currentPage) {
             currentPage = page;
             currentPage.setSize(mainScene.getWidth(), mainScene.getHeight());
-            mainScene.setRoot(currentPage.rootPane());
-            mainScene.getRoot().requestFocus();
+            rootPane.getChildren().set(0, currentPage.rootPane());
+            currentPage.rootPane().requestFocus();
             currentPage.onSelected();
         }
     }
@@ -696,7 +702,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void showFlashMessageSeconds(double seconds, String message, Object... args) {
-        gamePage.flashMessageView().showMessage(String.format(message, args), seconds);
+        messageView.showMessage(String.format(message, args), seconds);
     }
 
     @Override

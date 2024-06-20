@@ -54,7 +54,6 @@ public class GamePage implements Page {
     protected final CanvasLayoutPane canvasLayer  = new CanvasLayoutPane();
     protected final BorderPane       infoLayer    = new BorderPane(); // dashboard, picture-in-picture
     protected final Pane             popupLayer   = new Pane(); // help, signature
-    protected final FlashMessageView messageLayer = new FlashMessageView();
 
     protected final FadingPane helpInfoPopUp = new FadingPane();
     protected final Signature signature = new Signature();
@@ -71,7 +70,7 @@ public class GamePage implements Page {
         createPopupLayer();
         createInfoLayer();
         configureDebugDrawing();
-        stackPane.getChildren().addAll(canvasLayer, infoLayer, popupLayer, messageLayer);
+        stackPane.getChildren().addAll(canvasLayer, infoLayer, popupLayer);
     }
 
     private void configureDebugDrawing() {
@@ -159,7 +158,6 @@ public class GamePage implements Page {
             Logger.warn("Cannot embed 2D game scene as 3D scene");
             return;
         }
-        Objects.requireNonNull(gameScene.root());
         stackPane.getChildren().set(0, gameScene.root());
     }
 
@@ -263,13 +261,8 @@ public class GamePage implements Page {
             && context.currentGameScene().get() instanceof GameScene2D;
     }
 
-    public FlashMessageView flashMessageView() {
-        return messageLayer;
-    }
-
     public void render() {
         context.currentGameScene().ifPresent(GameScene::draw);
-        messageLayer.update();
         popupLayer.setVisible(true);
         dashboard.update();
         pip.setVisible(PY_PIP_ON.get() && !isCurrentGameScene2D()); //TODO
