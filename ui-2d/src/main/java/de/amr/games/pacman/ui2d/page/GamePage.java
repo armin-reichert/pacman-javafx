@@ -15,7 +15,6 @@ import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.CanvasLayoutPane;
 import de.amr.games.pacman.ui2d.util.FadingPane;
-import de.amr.games.pacman.ui2d.util.FlashMessageView;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
@@ -35,8 +34,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.tinylog.Logger;
-
-import java.util.Objects;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -353,12 +350,12 @@ public class GamePage implements Page {
             case CREDIT -> addInfoForCreditScene(helpInfo);
             case READY, HUNTING, PACMAN_DYING, GHOST_DYING -> {
                 if (context.game().isDemoLevel()) {
-                    addInfoForDemoLevel(helpInfo);
+                    addInfoForDemoLevelPlayScene(helpInfo);
                 } else {
                     addInfoForPlayScene(helpInfo);
                 }
             }
-            default -> addInfoForQuittingScene(helpInfo);
+            default -> addQuitEntry(helpInfo);
         }
         return helpInfo;
     }
@@ -377,16 +374,16 @@ public class GamePage implements Page {
         }
     }
 
+    private void addQuitEntry(HelpInfo info) {
+        info.addLocalizedEntry("help.show_intro", "Q");
+    }
+
     private void addInfoForIntroScene(HelpInfo info) {
         if (context.gameController().hasCredit()) {
             info.addLocalizedEntry("help.start_game", "1");
         }
         info.addLocalizedEntry("help.add_credit", "5");
-        addInfoForQuittingScene(info);
-    }
-
-    private void addInfoForQuittingScene(HelpInfo info) {
-        info.addLocalizedEntry("help.show_intro", "Q");
+        addQuitEntry(info);
     }
 
     private void addInfoForCreditScene(HelpInfo info) {
@@ -394,7 +391,7 @@ public class GamePage implements Page {
             info.addLocalizedEntry("help.start_game", "1");
         }
         info.addLocalizedEntry("help.add_credit", "5");
-        addInfoForQuittingScene(info);
+        addQuitEntry(info);
     }
 
     private void addInfoForPlayScene(HelpInfo info) {
@@ -402,11 +399,11 @@ public class GamePage implements Page {
         info.addLocalizedEntry("help.move_right", context.tt("help.cursor_right"));
         info.addLocalizedEntry("help.move_up", context.tt("help.cursor_up"));
         info.addLocalizedEntry("help.move_down", context.tt("help.cursor_down"));
-        addInfoForQuittingScene(info);
+        addQuitEntry(info);
     }
 
-    private void addInfoForDemoLevel(HelpInfo info) {
+    private void addInfoForDemoLevelPlayScene(HelpInfo info) {
         info.addLocalizedEntry("help.add_credit", "5");
-        info.addLocalizedEntry("help.show_intro", "Q");
+        addQuitEntry(info);
     }
 }
