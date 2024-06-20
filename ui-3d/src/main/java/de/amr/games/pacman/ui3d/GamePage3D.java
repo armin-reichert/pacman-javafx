@@ -94,7 +94,6 @@ public class GamePage3D extends GamePage {
                 adaptCanvasSizeToCurrentWorld();
             }
         }
-        updateDashboardLayer();
         hideContextMenu();
     }
 }

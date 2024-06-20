@@ -11,8 +11,6 @@ import javafx.scene.layout.Region;
 import org.tinylog.Logger;
 
 /**
- * Layered container containing a (decorated) canvas in the center of the lowest layer.
- *
  * @author Armin Reichert
  */
 public class CanvasLayoutPane extends BorderPane {

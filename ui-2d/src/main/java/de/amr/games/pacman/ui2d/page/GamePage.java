@@ -68,9 +68,9 @@ public class GamePage implements Page {
         canvasPane = new CanvasLayoutPane();
         canvasPane.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
         canvasPane.setBackground(context.theme().background("wallpaper.background"));
-        canvasPane.decoratedCanvas().decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
         canvasPane.decoratedCanvas().setBackground(Ufx.coloredBackground(context.theme().color("canvas.background")));
         canvasPane.decoratedCanvas().setBorderColor(context.theme().color("palette.pale"));
+        canvasPane.decoratedCanvas().decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
 
         // keep popup layer size same as (decorated) canvas
         popupLayer.minHeightProperty().bind(canvasPane.decoratedCanvas().minHeightProperty());
@@ -95,14 +95,15 @@ public class GamePage implements Page {
         dashboardLayer = new BorderPane();
         dashboardLayer.setLeft(dashboard);
         dashboardLayer.setRight(pip);
+        dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
+            () -> dashboard.isVisible() || PY_PIP_ON.get(),
+            dashboard.visibleProperty(), PY_PIP_ON
+        ));
+        dashboard.visibleProperty().addListener((py,ov,nv) -> stackPane.requestFocus());
 
         // data binding
         pip.heightProperty().bind(PY_PIP_HEIGHT);
         pip.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
-        PY_PIP_ON.addListener((py, ov, nv) -> updateDashboardLayer());
-        dashboard.visibleProperty().addListener((py, ov, nv) -> updateDashboardLayer());
-
-        updateDashboardLayer();
 
         stackPane.getChildren().addAll(canvasPane, dashboardLayer, popupLayer, flashMessageView);
         createDebugInfoBindings();
@@ -145,11 +146,6 @@ public class GamePage implements Page {
 
     public Dashboard dashboard() {
         return dashboard;
-    }
-
-    protected void updateDashboardLayer() {
-        dashboardLayer.setVisible(dashboard.isVisible() || PY_PIP_ON.get());
-        stackPane.requestFocus();
     }
 
     public Signature signature() {
@@ -222,7 +218,6 @@ public class GamePage implements Page {
             scene2D.clearCanvas();
             adaptCanvasSizeToCurrentWorld();
         }
-        updateDashboardLayer();
         hideContextMenu();
     }
 
