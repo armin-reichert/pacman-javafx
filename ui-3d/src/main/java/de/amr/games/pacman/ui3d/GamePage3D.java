@@ -86,9 +86,9 @@ public class GamePage3D extends GamePage {
     @Override
     public void onGameSceneChanged(GameScene newGameScene) {
         if (context.isRegisteredAs(newGameScene, GameSceneID.PLAY_SCENE_3D)) {
-            layout().replaceCanvasLayer(newGameScene.root());
+            replaceCanvasLayer(newGameScene.root());
         } else {
-            layout().restoreCanvasLayer();
+            restoreCanvasLayer();
             if (newGameScene instanceof GameScene2D scene2D) {
                 scene2D.clearCanvas();
                 adaptCanvasSizeToCurrentWorld();

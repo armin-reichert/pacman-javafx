@@ -318,8 +318,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             gameSceneManager.createGameScenes(variant);
             gameSceneManager.gameScenes(variant).forEach(gameScene -> gameScene.setContext(this));
             gameSceneManager.gameScenes2D(variant).forEach(gameScene2D -> {
-                gameScene2D.setCanvas(gamePage.layout().decoratedCanvas().canvas());
-                gameScene2D.scalingPy.bind(gamePage.layout().scalingPy);
+                gameScene2D.setCanvas(gamePage.canvasPane().decoratedCanvas().canvas());
+                gameScene2D.scalingPy.bind(gamePage.canvasPane().scalingPy);
                 gameScene2D.infoVisiblePy.bind(PY_DEBUG_INFO);
             });
         }
@@ -340,8 +340,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected void createGamePage() {
         gamePage = new GamePage(this, mainScene);
         gamePage.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
-        gamePage.layout().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
-        gamePage.layout().setMinScaling(MIN_SCALING);
+        gamePage.canvasPane().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
+        gamePage.canvasPane().setMinScaling(MIN_SCALING);
         gameScenePy.addListener((py, ov, newGameScene) -> gamePage.onGameSceneChanged(newGameScene));
     }
 

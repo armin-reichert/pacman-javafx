@@ -19,7 +19,7 @@ import java.util.Objects;
  *
  * @author Armin Reichert
  */
-public class CanvasLayoutPane extends StackPane {
+public class CanvasLayoutPane {
 
     public static void setAllSizes(Region region, double width, double height) {
         region.setMinSize(width, height);
@@ -44,18 +44,6 @@ public class CanvasLayoutPane extends StackPane {
         decoratedCanvas.unscaledCanvasWidthPy.addListener((py, ov, nv) -> doLayout(scaling(), true));
         decoratedCanvas.unscaledCanvasHeightPy.addListener((py, ov, nv) -> doLayout(scaling(), true));
         canvasLayer = new BorderPane(decoratedCanvas);
-        getChildren().add(canvasLayer);
-    }
-
-    public void replaceCanvasLayer(Node node) {
-        Objects.requireNonNull(node);
-        getChildren().set(0, node);
-    }
-
-    public void restoreCanvasLayer() {
-        if (getChildren().get(0) != canvasLayer) {
-            getChildren().set(0, canvasLayer);
-        }
     }
 
     public void resizeTo(double width, double height) {

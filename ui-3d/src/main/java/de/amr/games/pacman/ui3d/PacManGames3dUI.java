@@ -22,10 +22,6 @@ import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -177,9 +173,9 @@ public class PacManGames3dUI extends PacManGames2dUI {
         gamePage = new GamePage3D(this, mainScene);
         gamePage.dashboard().addInfoBox(3, tt("infobox.3D_settings.title"), new InfoBox3D());
         gamePage.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
-        gamePage.layout().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
-        gamePage.layout().setMinScaling(MIN_SCALING);
-        gamePage.layout().backgroundProperty().bind(Bindings.createObjectBinding(
+        gamePage.canvasPane().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
+        gamePage.canvasPane().setMinScaling(MIN_SCALING);
+        gamePage.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
                     return Ufx.coloredBackground(Color.BLACK);
