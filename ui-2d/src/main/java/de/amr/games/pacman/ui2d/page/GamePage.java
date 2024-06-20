@@ -51,62 +51,88 @@ public class GamePage implements Page {
     protected final GameContext context;
     protected final Scene parentScene;
     protected final StackPane stackPane = new StackPane();
-    protected final CanvasLayoutPane canvasPane;
-    protected final Pane popupLayer = new Pane();
-    protected final FlashMessageView flashMessageView = new FlashMessageView();
+
+    protected final CanvasLayoutPane canvasLayer  = new CanvasLayoutPane();
+    protected final BorderPane       infoLayer    = new BorderPane(); // dashboard, picture-in-picture
+    protected final Pane             popupLayer   = new Pane(); // help, signature
+    protected final FlashMessageView messageLayer = new FlashMessageView();
+
     protected final FadingPane helpInfoPopUp = new FadingPane();
     protected final Signature signature = new Signature();
-    protected final BorderPane dashboardLayer;
-    protected final Dashboard dashboard;
-    protected final PictureInPictureView pip;
+    protected Dashboard dashboard;
+    protected PictureInPictureView pip;
     protected ContextMenu contextMenu;
 
     public GamePage(GameContext context, Scene parentScene) {
         this.context = checkNotNull(context);
         this.parentScene = parentScene;
+        createCanvasLayer();
+        createPictureInPicture();
+        createDashboard();
+        createPopupLayer();
+        createInfoLayer();
+        configureDebugDrawing();
+        stackPane.getChildren().addAll(canvasLayer, infoLayer, popupLayer, messageLayer);
+    }
 
-        canvasPane = new CanvasLayoutPane();
-        canvasPane.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
-        canvasPane.setBackground(context.theme().background("wallpaper.background"));
-        canvasPane.decoratedCanvas().setBackground(Ufx.coloredBackground(context.theme().color("canvas.background")));
-        canvasPane.decoratedCanvas().setBorderColor(context.theme().color("palette.pale"));
-        canvasPane.decoratedCanvas().decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
+    private void configureDebugDrawing() {
+        stackPane.borderProperty().bind(Bindings.createObjectBinding(
+            () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.RED, 3) : null,
+            PY_DEBUG_INFO, context.gameSceneProperty()
+        ));
+        canvasLayer.borderProperty().bind(Bindings.createObjectBinding(
+            () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.YELLOW, 3) : null,
+            PY_DEBUG_INFO, context.gameSceneProperty()
+        ));
+        popupLayer.borderProperty().bind(Bindings.createObjectBinding(
+            () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.GREENYELLOW, 3) : null,
+            PY_DEBUG_INFO, context.gameSceneProperty()
+        ));
+        popupLayer.mouseTransparentProperty().bind(PY_DEBUG_INFO);
+    }
 
-        // keep popup layer size same as (decorated) canvas
-        popupLayer.minHeightProperty().bind(canvasPane.decoratedCanvas().minHeightProperty());
-        popupLayer.maxHeightProperty().bind(canvasPane.decoratedCanvas().maxHeightProperty());
-        popupLayer.prefHeightProperty().bind(canvasPane.decoratedCanvas().prefHeightProperty());
-        popupLayer.minWidthProperty().bind(canvasPane.decoratedCanvas().minWidthProperty());
-        popupLayer.maxWidthProperty().bind(canvasPane.decoratedCanvas().maxWidthProperty());
-        popupLayer.prefWidthProperty().bind(canvasPane.decoratedCanvas().prefWidthProperty());
-        popupLayer.getChildren().addAll(helpInfoPopUp, signature);
-
+    private void createPictureInPicture() {
         pip = new PictureInPictureView(new PlayScene2D(), context);
+        pip.heightProperty().bind(PY_PIP_HEIGHT);
+        pip.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
+    }
 
+    private void createDashboard() {
         dashboard = new Dashboard(context);
         dashboard.addInfoBox(context.tt("infobox.general.title"), new InfoBoxGeneral());
         dashboard.addInfoBox(context.tt("infobox.game_control.title"), new InfoBoxGameControl());
-        dashboard.addInfoBox("Custom Maps",new InfoCustomMaps());
+        dashboard.addInfoBox("Custom Maps",new InfoCustomMaps()); //TODO incomplete
         dashboard.addInfoBox(context.tt("infobox.game_info.title"), new InfoBoxGameInfo());
         dashboard.addInfoBox(context.tt("infobox.actor_info.title"), new InfoBoxActorInfo());
         dashboard.addInfoBox(context.tt("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
         dashboard.addInfoBox(context.tt("infobox.about.title"), new InfoBoxAbout());
+    }
 
-        dashboardLayer = new BorderPane();
-        dashboardLayer.setLeft(dashboard);
-        dashboardLayer.setRight(pip);
-        dashboardLayer.visibleProperty().bind(Bindings.createObjectBinding(
+    private void createCanvasLayer() {
+        canvasLayer.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
+        canvasLayer.setBackground(context.theme().background("wallpaper.background"));
+        canvasLayer.decoratedCanvas().setBackground(Ufx.coloredBackground(context.theme().color("canvas.background")));
+        canvasLayer.decoratedCanvas().setBorderColor(context.theme().color("palette.pale"));
+        canvasLayer.decoratedCanvas().decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
+    }
+
+    private void createPopupLayer() {
+        popupLayer.minHeightProperty().bind(canvasLayer.decoratedCanvas().minHeightProperty());
+        popupLayer.maxHeightProperty().bind(canvasLayer.decoratedCanvas().maxHeightProperty());
+        popupLayer.prefHeightProperty().bind(canvasLayer.decoratedCanvas().prefHeightProperty());
+        popupLayer.minWidthProperty().bind(canvasLayer.decoratedCanvas().minWidthProperty());
+        popupLayer.maxWidthProperty().bind(canvasLayer.decoratedCanvas().maxWidthProperty());
+        popupLayer.prefWidthProperty().bind(canvasLayer.decoratedCanvas().prefWidthProperty());
+        popupLayer.getChildren().addAll(helpInfoPopUp, signature);
+    }
+
+    private void createInfoLayer() {
+        infoLayer.setLeft(dashboard);
+        infoLayer.setRight(pip);
+        infoLayer.visibleProperty().bind(Bindings.createObjectBinding(
             () -> dashboard.isVisible() || PY_PIP_ON.get(),
             dashboard.visibleProperty(), PY_PIP_ON
         ));
-        dashboard.visibleProperty().addListener((py,ov,nv) -> stackPane.requestFocus());
-
-        // data binding
-        pip.heightProperty().bind(PY_PIP_HEIGHT);
-        pip.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
-
-        stackPane.getChildren().addAll(canvasPane, dashboardLayer, popupLayer, flashMessageView);
-        createDebugInfoBindings();
     }
 
     @Override
@@ -126,7 +152,7 @@ public class GamePage implements Page {
 
     @Override
     public void setSize(double width, double height) {
-        canvasPane.resizeTo(width, height);
+        canvasLayer.resizeTo(width, height);
     }
 
     public void replaceCanvasLayer(Node node) {
@@ -135,13 +161,13 @@ public class GamePage implements Page {
     }
 
     public void restoreCanvasLayer() {
-        if (stackPane.getChildren().get(0) != canvasPane) {
-            stackPane.getChildren().set(0, canvasPane);
+        if (stackPane.getChildren().get(0) != canvasLayer) {
+            stackPane.getChildren().set(0, canvasLayer);
         }
     }
 
     public CanvasLayoutPane canvasPane() {
-        return canvasPane;
+        return canvasLayer;
     }
 
     public Dashboard dashboard() {
@@ -156,18 +182,18 @@ public class GamePage implements Page {
         signature.setWords(words);
 
         signature.fontPy.bind(Bindings.createObjectBinding(
-            () -> Font.font(font.getFamily(), canvasPane.scaling() * font.getSize()),
-            canvasPane.scalingPy
+            () -> Font.font(font.getFamily(), canvasLayer.scaling() * font.getSize()),
+            canvasLayer.scalingPy
         ));
         // keep centered over canvas container
         signature.translateXProperty().bind(Bindings.createDoubleBinding(
-            () -> 0.5 * (canvasPane.decoratedCanvas().getWidth() - signature.getWidth()),
-            canvasPane.scalingPy, canvasPane.decoratedCanvas().widthProperty()
+            () -> 0.5 * (canvasLayer.decoratedCanvas().getWidth() - signature.getWidth()),
+            canvasLayer.scalingPy, canvasLayer.decoratedCanvas().widthProperty()
         ));
         // keep at vertical position over intro scene
         signature.translateYProperty().bind(Bindings.createDoubleBinding(
-            () -> canvasPane.scaling() * 30,
-            canvasPane.scalingPy, canvasPane.decoratedCanvas().heightProperty()
+            () -> canvasLayer.scaling() * 30,
+            canvasLayer.scalingPy, canvasLayer.decoratedCanvas().heightProperty()
         ));
     }
 
@@ -224,29 +250,13 @@ public class GamePage implements Page {
     public void adaptCanvasSizeToCurrentWorld() {
         var world = context.game().world();
         if (world != null) {
-            canvasPane.setUnscaledCanvasSize(world.numCols() * TS, world.numRows() * TS);
+            canvasLayer.setUnscaledCanvasSize(world.numCols() * TS, world.numRows() * TS);
         } else {
-            canvasPane.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
+            canvasLayer.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
         }
-        canvasPane.resizeTo(parentScene.getWidth(), parentScene.getHeight());
+        canvasLayer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
         Logger.info("Canvas size adapted. w={}, h={}",
-            canvasPane.decoratedCanvas().getWidth(), canvasPane.decoratedCanvas().getHeight());
-    }
-
-    private void createDebugInfoBindings() {
-        stackPane.borderProperty().bind(Bindings.createObjectBinding(
-            () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.RED, 3) : null,
-            PY_DEBUG_INFO, context.gameSceneProperty()
-        ));
-        canvasPane.borderProperty().bind(Bindings.createObjectBinding(
-            () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.YELLOW, 3) : null,
-            PY_DEBUG_INFO, context.gameSceneProperty()
-        ));
-        popupLayer.borderProperty().bind(Bindings.createObjectBinding(
-            () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.GREENYELLOW, 3) : null,
-            PY_DEBUG_INFO, context.gameSceneProperty()
-        ));
-        popupLayer.mouseTransparentProperty().bind(PY_DEBUG_INFO);
+            canvasLayer.decoratedCanvas().getWidth(), canvasLayer.decoratedCanvas().getHeight());
     }
 
     protected boolean isCurrentGameScene2D() {
@@ -255,12 +265,12 @@ public class GamePage implements Page {
     }
 
     public FlashMessageView flashMessageView() {
-        return flashMessageView;
+        return messageLayer;
     }
 
     public void render() {
         context.currentGameScene().ifPresent(GameScene::draw);
-        flashMessageView.update();
+        messageLayer.update();
         popupLayer.setVisible(true);
         dashboard.update();
         pip.setVisible(PY_PIP_ON.get() && !isCurrentGameScene2D()); //TODO
@@ -365,10 +375,10 @@ public class GamePage implements Page {
         var bgColor = context.game().variant() == GameVariant.MS_PACMAN
             ? Color.rgb(255, 0, 0, 0.8)
             : Color.rgb(33, 33, 255, 0.8);
-        var font = context.theme().font("font.monospaced", Math.max(6, 14 * canvasPane.scaling()));
+        var font = context.theme().font("font.monospaced", Math.max(6, 14 * canvasLayer.scaling()));
         var pane = currentHelpInfo().createPane(bgColor, font);
-        helpInfoPopUp.setTranslateX(10 * canvasPane.scaling());
-        helpInfoPopUp.setTranslateY(30 * canvasPane.scaling());
+        helpInfoPopUp.setTranslateX(10 * canvasLayer.scaling());
+        helpInfoPopUp.setTranslateY(30 * canvasLayer.scaling());
         helpInfoPopUp.setContent(pane);
         helpInfoPopUp.show(Duration.seconds(1.5));
     }
