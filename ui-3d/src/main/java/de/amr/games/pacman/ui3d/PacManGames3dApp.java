@@ -23,7 +23,7 @@ public class PacManGames3dApp extends Application {
         Logger.info("Java version:   {}", Runtime.version());
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         GameController.it().setSupportedVariants(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
-        GameController.it().selectGameVariant(GameVariant.PACMAN_XXL);
+        GameController.it().selectGameVariant(GameVariant.PACMAN);
         var ui = new PacManGames3dUI();
         PacManGames3dUI.PY_3D_ENABLED.set(true);
         stopAction = () -> ui.gameClock().stop();
