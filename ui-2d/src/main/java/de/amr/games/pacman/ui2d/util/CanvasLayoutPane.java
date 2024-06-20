@@ -6,20 +6,16 @@ package de.amr.games.pacman.ui2d.util;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import org.tinylog.Logger;
-
-import java.util.Objects;
 
 /**
  * Layered container containing a (decorated) canvas in the center of the lowest layer.
  *
  * @author Armin Reichert
  */
-public class CanvasLayoutPane {
+public class CanvasLayoutPane extends BorderPane {
 
     public static void setAllSizes(Region region, double width, double height) {
         region.setMinSize(width, height);
@@ -34,16 +30,14 @@ public class CanvasLayoutPane {
         }
     };
 
-    protected BorderPane canvasLayer;
-    protected DecoratedCanvas decoratedCanvas;
-    protected double minScaling = 1.0;
+    private final DecoratedCanvas decoratedCanvas = new DecoratedCanvas();
+    private double minScaling = 1.0;
 
     public CanvasLayoutPane() {
-        decoratedCanvas = new DecoratedCanvas();
         decoratedCanvas.scalingPy.bind(scalingPy);
         decoratedCanvas.unscaledCanvasWidthPy.addListener((py, ov, nv) -> doLayout(scaling(), true));
         decoratedCanvas.unscaledCanvasHeightPy.addListener((py, ov, nv) -> doLayout(scaling(), true));
-        canvasLayer = new BorderPane(decoratedCanvas);
+        setCenter(decoratedCanvas);
     }
 
     public void resizeTo(double width, double height) {
@@ -88,10 +82,6 @@ public class CanvasLayoutPane {
         } else {
             return height / decoratedCanvas.getUnscaledCanvasHeight();
         }
-    }
-
-    public BorderPane canvasLayer() {
-        return canvasLayer;
     }
 
     public DecoratedCanvas decoratedCanvas() {

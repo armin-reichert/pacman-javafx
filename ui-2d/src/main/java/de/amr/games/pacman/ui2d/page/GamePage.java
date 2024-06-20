@@ -66,11 +66,11 @@ public class GamePage implements Page {
         this.parentScene = parentScene;
 
         canvasPane = new CanvasLayoutPane();
-        canvasPane.canvasLayer().setBackground(context.theme().background("wallpaper.background"));
+        canvasPane.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
+        canvasPane.setBackground(context.theme().background("wallpaper.background"));
         canvasPane.decoratedCanvas().decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
         canvasPane.decoratedCanvas().setBackground(Ufx.coloredBackground(context.theme().color("canvas.background")));
         canvasPane.decoratedCanvas().setBorderColor(context.theme().color("palette.pale"));
-        canvasPane.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
 
         // keep popup layer size same as (decorated) canvas
         popupLayer.minHeightProperty().bind(canvasPane.decoratedCanvas().minHeightProperty());
@@ -96,9 +96,6 @@ public class GamePage implements Page {
         dashboardLayer.setLeft(dashboard);
         dashboardLayer.setRight(pip);
 
-        stackPane.getChildren().add(canvasPane.canvasLayer());
-        stackPane.getChildren().add(dashboardLayer);
-
         // data binding
         pip.heightProperty().bind(PY_PIP_HEIGHT);
         pip.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
@@ -107,7 +104,7 @@ public class GamePage implements Page {
 
         updateDashboardLayer();
 
-        stackPane.getChildren().addAll(popupLayer, flashMessageView);
+        stackPane.getChildren().addAll(canvasPane, dashboardLayer, popupLayer, flashMessageView);
         createDebugInfoBindings();
     }
 
@@ -137,8 +134,8 @@ public class GamePage implements Page {
     }
 
     public void restoreCanvasLayer() {
-        if (stackPane.getChildren().get(0) != canvasPane.canvasLayer()) {
-            stackPane.getChildren().set(0, canvasPane.canvasLayer());
+        if (stackPane.getChildren().get(0) != canvasPane) {
+            stackPane.getChildren().set(0, canvasPane);
         }
     }
 
@@ -246,7 +243,7 @@ public class GamePage implements Page {
             () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.RED, 3) : null,
             PY_DEBUG_INFO, context.gameSceneProperty()
         ));
-        canvasPane.canvasLayer().borderProperty().bind(Bindings.createObjectBinding(
+        canvasPane.borderProperty().bind(Bindings.createObjectBinding(
             () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.YELLOW, 3) : null,
             PY_DEBUG_INFO, context.gameSceneProperty()
         ));
