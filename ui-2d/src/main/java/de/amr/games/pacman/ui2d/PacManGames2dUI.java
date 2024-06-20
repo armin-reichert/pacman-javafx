@@ -35,7 +35,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -248,7 +247,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             Logger.info("Game key '{}' registered", gameKey);
         }
 
-        createMainScene(screenSize);
+        createMainScene(computeMainSceneSize(screenSize));
         createStartPage();
         createGamePage();
         createGameScenes(); // must be done *after* creating game page!
@@ -276,8 +275,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         return new Dimension2D(width, height);
     }
 
-    protected void createMainScene(Rectangle2D screenSize) {
-        Dimension2D size = computeMainSceneSize(screenSize);
+    protected void createMainScene(Dimension2D size) {
         mainScene = new Scene(rootPane, size.getWidth(), size.getHeight());
         mainScene.setOnMouseClicked(e -> currentPage.onMouseClicked(e));
         mainScene.setOnContextMenuRequested(e -> currentPage.onContextMenuRequested(e));
