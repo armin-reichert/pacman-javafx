@@ -31,6 +31,7 @@ import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -564,6 +565,7 @@ public class GameLevel3D extends Group {
     }
 
     public Animation createMazeFlashingAnimation(int numFlashes) {
+        Logger.info("Create flashing animation, {} flashes", numFlashes);
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }

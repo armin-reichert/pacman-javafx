@@ -385,29 +385,34 @@ public class PlayScene3D implements GameScene {
     }
 
     private void playLevelCompleteAnimation() {
-        boolean noIntermission = context.game().intermissionNumberAfterLevel(context.game().levelNumber()) == 0;
-        int numFlashes = context.game().level().orElseThrow().numFlashes();
-        var mazeFlashing = level3D.createMazeFlashingAnimation(numFlashes);
-        var selectedPerspective = perspective();
-        lockGameStateAndPlayAfterOneSecond(new SequentialTransition(
-            now(() -> {
-                PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
-                mazeFlashing.play();
-            })
-            , pauseSec(2.5)
-            , now(() -> context.game().pac().hide())
-            , noIntermission? now(() -> context.soundHandler().playAudioClip("audio.level_complete")) : pauseSec(0)
-            , noIntermission
-                ? new SequentialTransition(level3D.createLevelRotateAnimation(1.5), level3D.createMazeDisappearAnimation(1))
-                : pauseSec(0)
-            , noIntermission
-                ? doAfterSec(1.5, () -> {
+        boolean intermissionFollows = context.game().intermissionNumberAfterLevel(context.game().levelNumber()) != 0;
+        if (intermissionFollows) {
+            lockGameStateAndPlayAfterOneSecond(levelCompleteAnimationIfIntermissionFollows());
+        } else {
+            final Perspective perspectiveBeforeAnimation = perspective();
+            var animation = new SequentialTransition(
+                //TODO if not wrapped inside now() animation does not play. Why?
+                now(level3D.createMazeFlashingAnimation(context.game().level().orElseThrow().numFlashes())::play)
+                , pauseSec(2.5)
+                , now(() -> context.game().pac().hide())
+                , now(() -> context.soundHandler().playAudioClip("audio.level_complete"))
+                , new SequentialTransition(level3D.createLevelRotateAnimation(1.5), level3D.createMazeDisappearAnimation(1))
+                , doAfterSec(1.5, () -> {
+                    PY_3D_PERSPECTIVE.set(perspectiveBeforeAnimation);
                     context.soundHandler().playAudioClip("audio.sweep");
                     context.actionHandler().showFlashMessageSeconds(1, pickLevelCompleteMessage());
-                    PY_3D_PERSPECTIVE.set(selectedPerspective);
                 })
-                : pauseSec(0)
-        ));
+            );
+            PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
+            lockGameStateAndPlayAfterOneSecond(animation);
+        }
+    }
+
+    private Animation levelCompleteAnimationIfIntermissionFollows() {
+        return new SequentialTransition(
+            now(level3D.createMazeFlashingAnimation(context.game().level().orElseThrow().numFlashes())::play)
+            , doAfterSec(2.5, () -> context.game().pac().hide())
+        );
     }
 
     private String pickLevelCompleteMessage() {
