@@ -184,6 +184,7 @@ public class GameLevel3D extends Group {
         ghosts3D = context.game().ghosts().map(this::createGhost3D).toList();
 
         createLivesCounter3D();
+        updateLivesCounter();
         createLevelCounter3D();
         createMessage3D();
 
@@ -215,9 +216,13 @@ public class GameLevel3D extends Group {
                 .filter(ghost -> ghost.position().euclideanDistance(houseEntryPosition) <= HOUSE_SENSITIVITY)
                 .anyMatch(Ghost::isVisible));
 
+        updateLivesCounter();
+    }
+
+    private void updateLivesCounter() {
         //TODO reconsider this:
-        int numLivesCounterEntries = game.lives() - 1;
-        if (context.gameState() == GameState.READY && !game.pac().isVisible()) {
+        int numLivesCounterEntries = context.game().lives() - 1;
+        if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
             numLivesCounterEntries += 1;
         }
         livesCounter3D.livesShownPy.set(numLivesCounterEntries);
@@ -389,7 +394,6 @@ public class GameLevel3D extends Group {
             case PACMAN, PACMAN_XXL -> new PacMan3D(10, null, context.theme());
         };
         livesCounter3D = new LivesCounter3D(5, pacShapeFactory);
-        livesCounter3D.livesShownPy.set(context.game().lives());
         livesCounter3D.setTranslateX(2 * TS);
         livesCounter3D.setTranslateY(2 * TS);
         livesCounter3D.setVisible(context.gameController().hasCredit());

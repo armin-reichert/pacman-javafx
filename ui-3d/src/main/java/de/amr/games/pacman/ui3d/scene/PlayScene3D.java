@@ -392,10 +392,10 @@ public class PlayScene3D implements GameScene {
         lockGameStateAndPlayAfterOneSecond(new SequentialTransition(
             now(() -> {
                 PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
-                context.game().pac().hide();
                 mazeFlashing.play();
             })
             , pauseSec(2.5)
+            , now(() -> context.game().pac().hide())
             , noIntermission? now(() -> context.soundHandler().playAudioClip("audio.level_complete")) : pauseSec(0)
             , noIntermission
                 ? new SequentialTransition(level3D.createLevelRotateAnimation(1.5), level3D.createMazeDisappearAnimation(1))
