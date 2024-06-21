@@ -390,13 +390,20 @@ public class PlayScene3D implements GameScene {
             lockGameStateAndPlayAfterOneSecond(levelCompleteAnimationIfIntermissionFollows());
         } else {
             final Perspective perspectiveBeforeAnimation = perspective();
+            var flashing = level3D.createMazeFlashingAnimation(
+                context.game().level().orElseThrow().numFlashes(),
+                level3D.wallHeightPy.get());
+            var rotation = level3D.createLevelRotateAnimation(1.5);
+            var disappearing = level3D.createMazeDisappearAnimation(2, level3D.wallHeightPy.get());
             var animation = new SequentialTransition(
-                //TODO if not wrapped inside now() animation does not play. Why?
-                now(level3D.createMazeFlashingAnimation(context.game().level().orElseThrow().numFlashes())::play)
+                flashing
                 , pauseSec(2.5)
-                , now(() -> context.game().pac().hide())
-                , now(() -> context.soundHandler().playAudioClip("audio.level_complete"))
-                , new SequentialTransition(level3D.createLevelRotateAnimation(1.5), level3D.createMazeDisappearAnimation(1))
+                , now(() -> {
+                    context.game().pac().hide();
+                    context.soundHandler().playAudioClip("audio.level_complete");
+                })
+                , rotation
+                , disappearing
                 , doAfterSec(1.5, () -> {
                     PY_3D_PERSPECTIVE.set(perspectiveBeforeAnimation);
                     context.soundHandler().playAudioClip("audio.sweep");
@@ -410,9 +417,17 @@ public class PlayScene3D implements GameScene {
 
     private Animation levelCompleteAnimationIfIntermissionFollows() {
         return new SequentialTransition(
-            now(level3D.createMazeFlashingAnimation(context.game().level().orElseThrow().numFlashes())::play)
+            level3D.createMazeFlashingAnimation(
+                context.game().level().orElseThrow().numFlashes(), level3D.wallHeightPy.get())
             , doAfterSec(2.5, () -> context.game().pac().hide())
         );
+    }
+
+    private void lockGameStateAndPlayAfterOneSecond(Animation animation) {
+        context.gameState().timer().resetIndefinitely();
+        animation.setDelay(Duration.seconds(1.0));
+        animation.setOnFinished(e -> context.gameState().timer().expire());
+        animation.play();
     }
 
     private String pickLevelCompleteMessage() {
@@ -432,12 +447,5 @@ public class PlayScene3D implements GameScene {
         } else {
             context.soundHandler().stopAudioClip("audio.ghost_returning");
         }
-    }
-
-    private void lockGameStateAndPlayAfterOneSecond(Animation animation) {
-        context.gameState().timer().resetIndefinitely();
-        animation.setDelay(Duration.seconds(1.0));
-        animation.setOnFinished(e -> context.gameState().timer().expire());
-        animation.play();
     }
 }

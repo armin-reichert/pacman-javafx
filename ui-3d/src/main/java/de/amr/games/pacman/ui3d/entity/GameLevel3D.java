@@ -31,7 +31,6 @@ import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -538,13 +537,11 @@ public class GameLevel3D extends Group {
         return rotation;
     }
 
-    public Animation createMazeDisappearAnimation(double seconds) {
+    public Animation createMazeDisappearAnimation(double seconds, double initialWallHeight) {
         return new Transition() {
-            private final DoubleProperty valuePy = new SimpleDoubleProperty();
             {
-                setRate(-1); // value goes 1 -> 0
                 setCycleDuration(Duration.seconds(seconds));
-                setInterpolator(Interpolator.EASE_BOTH);
+                setInterpolator(Interpolator.LINEAR);
                 setOnFinished(e -> {
                     mazeGroup.setVisible(false);
                     wallHeightPy.bind(PY_3D_WALL_HEIGHT);
@@ -552,43 +549,33 @@ public class GameLevel3D extends Group {
             }
 
             @Override
-            public void play() {
-                wallHeightPy.bind(valuePy.multiply(wallHeightPy.get()));
-                super.play();
-            }
-
-            @Override
             protected void interpolate(double t) {
-                valuePy.set(t);
+                wallHeightPy.unbind();
+                wallHeightPy.set((1-t) * initialWallHeight);
             }
         };
     }
 
-    public Animation createMazeFlashingAnimation(int numFlashes) {
-        Logger.info("Create flashing animation, {} flashes", numFlashes);
+    public Animation createMazeFlashingAnimation(int numFlashes, double initialWallHeight) {
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }
         return new Transition() {
-            private final DoubleProperty elongationPy = new SimpleDoubleProperty();
+
             {
                 setCycleDuration(Duration.seconds(0.33));
                 setCycleCount(numFlashes);
-                setOnFinished(e -> wallHeightPy.bind(PY_3D_WALL_HEIGHT));
                 setInterpolator(Interpolator.LINEAR);
-            }
-
-            @Override
-            public void play() {
-                wallHeightPy.bind(elongationPy.multiply(wallHeightPy.get()));
-                super.play();
+                setOnFinished(e -> wallHeightPy.bind(PY_3D_WALL_HEIGHT));
             }
 
             @Override
             protected void interpolate(double t) {
                 // t = [0, 1] is mapped to the interval [pi/2, 3*pi/2]. The value of the sin-function in that interval
                 // starts at 1, goes to 0 and back to 1
-                elongationPy.set(0.5 * (1 + Math.sin(PI * (2*t + 0.5))));
+                double elongation = 0.5 * (1 + Math.sin(PI * (2*t + 0.5)));
+                wallHeightPy.unbind(); // TODO when called in constructor does not work. Why?
+                wallHeightPy.set(elongation * initialWallHeight);
             }
         };
     }
