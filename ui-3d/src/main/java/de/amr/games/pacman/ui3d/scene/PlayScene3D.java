@@ -398,6 +398,7 @@ public class PlayScene3D implements GameScene {
         var wallsDisappear = level3D.createWallsDisappearAnimation(2, level3D.wallHeightPy.get());
         return new SequentialTransition(
             now(() -> PY_3D_PERSPECTIVE.set(Perspective.TOTAL))
+            , pauseSec(1)
             , mazeFlashes
             , pauseSec(2.5)
             , now(() -> {

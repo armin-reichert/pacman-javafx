@@ -498,7 +498,6 @@ public abstract class AbstractPacManGame implements GameModel {
         blinking.setStartPhase(Pulse.OFF);
         blinking.reset();
         pac.freeze();
-        ghosts().forEach(Ghost::hide);
         bonus().ifPresent(Bonus::setInactive);
         huntingTimer.stop();
         Logger.info("Hunting timer stopped");
