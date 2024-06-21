@@ -556,7 +556,7 @@ public class GameLevel3D extends Group {
         };
     }
 
-    public Animation createMazeFlashingAnimation(int numFlashes, double initialWallHeight) {
+    public Animation createMazeFlashAnimation(int numFlashes, double initialWallHeight) {
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }

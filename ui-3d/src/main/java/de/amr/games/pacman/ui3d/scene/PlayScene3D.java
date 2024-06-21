@@ -386,14 +386,15 @@ public class PlayScene3D implements GameScene {
 
     private void playLevelCompleteAnimation() {
         boolean intermissionFollows = context.game().intermissionNumberAfterLevel(context.game().levelNumber()) != 0;
+        int nunFlashes = context.game().level().orElseThrow().numFlashes();
         lockGameStateAndPlayAfterOneSecond(intermissionFollows
-            ? levelCompleteAnimationBeforeIntermission()
-            : levelCompleteAnimation());
+            ? levelCompleteAnimationBeforeIntermission(nunFlashes)
+            : levelCompleteAnimation(nunFlashes));
     }
 
-    private Animation levelCompleteAnimation() {
+    private Animation levelCompleteAnimation(int numFlashes) {
         final Perspective perspectiveBeforeAnimation = perspective();
-        var mazeFlashes = level3D.createMazeFlashingAnimation(context.game().level().orElseThrow().numFlashes(),level3D.wallHeightPy.get());
+        var mazeFlashes = level3D.createMazeFlashAnimation(numFlashes,level3D.wallHeightPy.get());
         var mazeRotates = level3D.createMazeRotateAnimation(1.5);
         var wallsDisappear = level3D.createWallsDisappearAnimation(2, level3D.wallHeightPy.get());
         return new SequentialTransition(
@@ -415,10 +416,10 @@ public class PlayScene3D implements GameScene {
         );
     }
 
-    private Animation levelCompleteAnimationBeforeIntermission() {
+    private Animation levelCompleteAnimationBeforeIntermission(int numFlashes) {
         return new SequentialTransition(
-            level3D.createMazeFlashingAnimation(
-                context.game().level().orElseThrow().numFlashes(), level3D.wallHeightPy.get())
+             pauseSec(1)
+            , level3D.createMazeFlashAnimation(numFlashes, level3D.wallHeightPy.get())
             , doAfterSec(2.5, () -> context.game().pac().hide())
         );
     }
