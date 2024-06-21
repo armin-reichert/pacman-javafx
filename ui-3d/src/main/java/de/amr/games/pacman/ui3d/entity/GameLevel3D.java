@@ -528,7 +528,7 @@ public class GameLevel3D extends Group {
         }
     }
 
-    public Transition createLevelRotateAnimation(double seconds) {
+    public Transition createMazeRotateAnimation(double seconds) {
         var rotation = new RotateTransition(Duration.seconds(seconds), this);
         rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
         rotation.setFromAngle(0);
@@ -537,7 +537,7 @@ public class GameLevel3D extends Group {
         return rotation;
     }
 
-    public Animation createMazeDisappearAnimation(double seconds, double initialWallHeight) {
+    public Animation createWallsDisappearAnimation(double seconds, double initialWallHeight) {
         return new Transition() {
             {
                 setCycleDuration(Duration.seconds(seconds));

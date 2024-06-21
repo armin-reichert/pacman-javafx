@@ -386,36 +386,35 @@ public class PlayScene3D implements GameScene {
 
     private void playLevelCompleteAnimation() {
         boolean intermissionFollows = context.game().intermissionNumberAfterLevel(context.game().levelNumber()) != 0;
-        if (intermissionFollows) {
-            lockGameStateAndPlayAfterOneSecond(levelCompleteAnimationIfIntermissionFollows());
-        } else {
-            final Perspective perspectiveBeforeAnimation = perspective();
-            var flashing = level3D.createMazeFlashingAnimation(
-                context.game().level().orElseThrow().numFlashes(),
-                level3D.wallHeightPy.get());
-            var rotation = level3D.createLevelRotateAnimation(1.5);
-            var disappearing = level3D.createMazeDisappearAnimation(2, level3D.wallHeightPy.get());
-            var animation = new SequentialTransition(
-                flashing
-                , pauseSec(2.5)
-                , now(() -> {
-                    context.game().pac().hide();
-                    context.soundHandler().playAudioClip("audio.level_complete");
-                })
-                , rotation
-                , disappearing
-                , doAfterSec(1.5, () -> {
-                    PY_3D_PERSPECTIVE.set(perspectiveBeforeAnimation);
-                    context.soundHandler().playAudioClip("audio.sweep");
-                    context.actionHandler().showFlashMessageSeconds(1, pickLevelCompleteMessage());
-                })
-            );
-            PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
-            lockGameStateAndPlayAfterOneSecond(animation);
-        }
+        lockGameStateAndPlayAfterOneSecond(intermissionFollows
+            ? levelCompleteAnimationBeforeIntermission()
+            : levelCompleteAnimation());
     }
 
-    private Animation levelCompleteAnimationIfIntermissionFollows() {
+    private Animation levelCompleteAnimation() {
+        final Perspective perspectiveBeforeAnimation = perspective();
+        var mazeFlashes = level3D.createMazeFlashingAnimation(context.game().level().orElseThrow().numFlashes(),level3D.wallHeightPy.get());
+        var mazeRotates = level3D.createMazeRotateAnimation(1.5);
+        var wallsDisappear = level3D.createWallsDisappearAnimation(2, level3D.wallHeightPy.get());
+        return new SequentialTransition(
+            now(() -> PY_3D_PERSPECTIVE.set(Perspective.TOTAL))
+            , mazeFlashes
+            , pauseSec(2.5)
+            , now(() -> {
+                context.game().pac().hide();
+                context.soundHandler().playAudioClip("audio.level_complete");
+            })
+            , mazeRotates
+            , wallsDisappear
+            , doAfterSec(1.5, () -> {
+                PY_3D_PERSPECTIVE.set(perspectiveBeforeAnimation);
+                context.soundHandler().playAudioClip("audio.sweep");
+                context.actionHandler().showFlashMessageSeconds(1, pickLevelCompleteMessage());
+            })
+        );
+    }
+
+    private Animation levelCompleteAnimationBeforeIntermission() {
         return new SequentialTransition(
             level3D.createMazeFlashingAnimation(
                 context.game().level().orElseThrow().numFlashes(), level3D.wallHeightPy.get())
