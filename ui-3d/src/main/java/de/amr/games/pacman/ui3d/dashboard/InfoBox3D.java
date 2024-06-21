@@ -62,7 +62,7 @@ public class InfoBox3D extends InfoBox {
         cbPiPOn              = checkBox("Picture-In-Picture");
         sliderPiPSceneHeight = slider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
         sliderPiPOpacity     = slider("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get());
-        sliderWallHeight     = slider("Wall Height", 0, 16, PY_3D_WALL_HEIGHT.get());
+        sliderWallHeight     = slider("Obstacle Height", 0, 16, PY_3D_WALL_HEIGHT.get());
         sliderWallOpacity    = slider("Wall Opacity", 0, 1, PY_3D_WALL_OPACITY.get());
         cbEnergizerExplodes  = checkBox("Energizer Explosion");
         cbNightMode          = checkBox("Night Mode");

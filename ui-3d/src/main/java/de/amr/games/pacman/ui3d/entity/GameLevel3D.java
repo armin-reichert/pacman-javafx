@@ -48,7 +48,6 @@ import static java.lang.Math.PI;
 public class GameLevel3D extends Group {
 
     private static final float FLOOR_THICKNESS       = 0.4f;
-    private static final float WALL_HEIGHT           = 2.0f;
     private static final float WALL_THICKNESS        = 0.5f;
     private static final float WALL_THICKNESS_DWALL  = 2.0f;
     private static final float WALL_COAT_HEIGHT      = 0.1f;
@@ -84,7 +83,9 @@ public class GameLevel3D extends Group {
         }
     };
 
-    public final DoubleProperty wallHeightPy  = new SimpleDoubleProperty(this, "wallHeight", WALL_HEIGHT);
+    public final DoubleProperty outerWallHeightPy  = new SimpleDoubleProperty(this, "outerWallHeight", 6.0);
+
+    public final DoubleProperty wallHeightPy  = new SimpleDoubleProperty(this, "wallHeight", 4.5);
 
     public final DoubleProperty houseHeightPy = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
 
@@ -311,25 +312,25 @@ public class GameLevel3D extends Group {
         House house = context.game().world().house();
         terrainMap.dwallPaths()
             .filter(path -> !house.contains(path.startTile()))
-            .forEach(path -> buildWallsAlongPath(parent, path, WALL_THICKNESS_DWALL));
+            .forEach(path -> buildWallsAlongPath(parent, path, outerWallHeightPy, WALL_THICKNESS_DWALL));
         terrainMap.wallPaths()
-            .forEach(path -> buildWallsAlongPath(parent, path, WALL_THICKNESS));
+            .forEach(path -> buildWallsAlongPath(parent, path, wallHeightPy, WALL_THICKNESS));
     }
 
-    private void buildWallsAlongPath(Group parent, TileMapPath tileMapPath, double thickness) {
+    private void buildWallsAlongPath(Group parent, TileMapPath tileMapPath, DoubleProperty heightPy, double thickness) {
         Vector2i wallStart = tileMapPath.startTile();
         Vector2i wallEnd = wallStart;
         Direction prevDir = null;
         for (int i = 0; i < tileMapPath.size(); ++i) {
             var dir = tileMapPath.dir(i);
             if (prevDir != dir) {
-                parent.getChildren().add(createWall(wallStart, wallEnd, thickness, wallHeightPy, wallFillMaterialPy));
+                parent.getChildren().add(createWall(wallStart, wallEnd, thickness, heightPy, wallFillMaterialPy));
                 wallStart = wallEnd;
             }
             wallEnd = wallEnd.plus(dir.vector());
             prevDir = dir;
         }
-        parent.getChildren().add(createWall(wallStart, wallEnd, thickness, wallHeightPy, wallFillMaterialPy));
+        parent.getChildren().add(createWall(wallStart, wallEnd, thickness, heightPy, wallFillMaterialPy));
     }
 
     private Node createWall(

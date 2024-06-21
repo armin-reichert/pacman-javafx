@@ -65,7 +65,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     public static final BooleanProperty             PY_3D_NIGHT_MODE         = new SimpleBooleanProperty(false);
     public static final BooleanProperty             PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
     public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE        = new SimpleObjectProperty<>(Perspective.FOLLOWING_PLAYER);
-    public static final DoubleProperty              PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(4.5);
+    public static final DoubleProperty              PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(3.5);
     public static final DoubleProperty              PY_3D_WALL_OPACITY       = new SimpleDoubleProperty(0.9);
     public static final ObjectProperty<Image>       PY_3D_WALLPAPER_DAY      = new SimpleObjectProperty<>();
     public static final ObjectProperty<Image>       PY_3D_WALLPAPER_NIGHT    = new SimpleObjectProperty<>();
