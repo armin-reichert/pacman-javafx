@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
+import de.amr.games.pacman.controller.GameClock;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import javafx.application.Application;
@@ -16,7 +17,7 @@ import org.tinylog.Logger;
  */
 public class PacManGames3dApp extends Application {
 
-    private Runnable stopAction;
+    private GameClock clock;
 
     @Override
     public void start(Stage stage) {
@@ -26,15 +27,15 @@ public class PacManGames3dApp extends Application {
         GameController.it().selectGameVariant(GameVariant.PACMAN);
         var ui = new PacManGames3dUI();
         PacManGames3dUI.PY_3D_ENABLED.set(true);
-        stopAction = () -> ui.gameClock().stop();
         ui.loadAssets();
         ui.createUI(stage, Screen.getPrimary().getBounds());
         ui.show();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
+        clock = ui.gameClock();
     }
 
     @Override
     public void stop() {
-        stopAction.run();
+        clock.stop();
     }
 }
