@@ -389,6 +389,7 @@ public class GameLevel3D extends Group {
             case PACMAN, PACMAN_XXL -> new PacMan3D(10, null, context.theme());
         };
         livesCounter3D = new LivesCounter3D(5, pacShapeFactory);
+        livesCounter3D.livesShownPy.set(context.game().lives());
         livesCounter3D.setTranslateX(2 * TS);
         livesCounter3D.setTranslateY(2 * TS);
         livesCounter3D.setVisible(context.gameController().hasCredit());
