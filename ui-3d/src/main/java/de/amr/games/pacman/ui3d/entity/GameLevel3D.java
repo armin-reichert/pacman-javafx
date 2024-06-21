@@ -49,8 +49,8 @@ public class GameLevel3D extends Group {
 
     private static final float FLOOR_THICKNESS       = 0.4f;
     private static final float WALL_HEIGHT           = 2.0f;
-    private static final float WALL_THICKNESS        = 0.75f;
-    private static final float WALL_THICKNESS_DWALL  = 1.5f;
+    private static final float WALL_THICKNESS        = 0.5f;
+    private static final float WALL_THICKNESS_DWALL  = 2.0f;
     private static final float WALL_COAT_HEIGHT      = 0.1f;
     private static final float HOUSE_HEIGHT          = 12.0f;
     private static final float HOUSE_OPACITY         = 0.4f;
