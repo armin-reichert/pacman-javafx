@@ -22,6 +22,7 @@ import static java.util.function.Predicate.not;
 public class VectorGraphicsWorldRenderer {
 
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
+
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
 
@@ -31,29 +32,24 @@ public class VectorGraphicsWorldRenderer {
     }
 
     public void draw(GraphicsContext g, World world, boolean flashing, boolean blinkingOn) {
-        if (flashing) {
-            drawTerrain(g, world, blinkingOn);
-        } else {
-            drawTerrain(g, world, false);
-            drawFood(g, world, blinkingOn);
-        }
-    }
-
-    public void drawTerrain(GraphicsContext g, World world, boolean hiLighted) {
         var terrainMap = world.map().terrain();
-        terrainRenderer.setWallStrokeColor(hiLighted ? Color.WHITE : getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_STROKE, Color.WHITE));
-        terrainRenderer.setWallFillColor(hiLighted ? Color.BLACK : getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_FILL, Color.GREEN));
-        terrainRenderer.setDoorColor(hiLighted ? Color.BLACK : getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_DOOR, Color.YELLOW));
-        terrainRenderer.drawMap(g, terrainMap);
-    }
-
-    public void drawFood(GraphicsContext g, World world, boolean energizersOn) {
-        var foodColor = getColorFromMap(world.map().food(), WorldMap.PROPERTY_COLOR_FOOD, Color.ORANGE);
-        foodRenderer.setPelletColor(foodColor);
-        foodRenderer.setEnergizerColor(foodColor);
-        world.tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerTile)).forEach(tile -> foodRenderer.drawPellet(g, tile));
-        if (energizersOn) {
-            world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(g, tile));
+        if (flashing) {
+            terrainRenderer.setWallStrokeColor(blinkingOn ? Color.WHITE : getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_STROKE, Color.WHITE));
+            terrainRenderer.setWallFillColor(blinkingOn ? Color.BLACK : getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_FILL, Color.GREEN));
+            terrainRenderer.setDoorColor(blinkingOn ? Color.BLACK : getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_DOOR, Color.YELLOW));
+            terrainRenderer.drawMap(g, terrainMap);
+        } else {
+            terrainRenderer.setWallStrokeColor(getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_STROKE, Color.WHITE));
+            terrainRenderer.setWallFillColor(getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_FILL, Color.GREEN));
+            terrainRenderer.setDoorColor(getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_DOOR, Color.YELLOW));
+            terrainRenderer.drawMap(g, terrainMap);
+            var foodColor = getColorFromMap(world.map().food(), WorldMap.PROPERTY_COLOR_FOOD, Color.ORANGE);
+            foodRenderer.setPelletColor(foodColor);
+            foodRenderer.setEnergizerColor(foodColor);
+            world.tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerTile)).forEach(tile -> foodRenderer.drawPellet(g, tile));
+            if (blinkingOn) {
+                world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(g, tile));
+            }
         }
     }
 }
