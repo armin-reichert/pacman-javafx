@@ -538,8 +538,11 @@ public class GameLevel3D extends Group {
         return rotation;
     }
 
-    public Animation createWallsDisappearAnimation(double seconds, double initialWallHeight) {
+    public Animation createWallsDisappearAnimation(double seconds) {
+
         return new Transition() {
+            private final double initialWallHeight = wallHeightPy.get();
+            private final double initialOuterWallHeight = outerWallHeightPy.get();
             {
                 setCycleDuration(Duration.seconds(seconds));
                 setInterpolator(Interpolator.LINEAR);
@@ -553,6 +556,7 @@ public class GameLevel3D extends Group {
             protected void interpolate(double t) {
                 wallHeightPy.unbind();
                 wallHeightPy.set((1-t) * initialWallHeight);
+                outerWallHeightPy.set((1-t) * initialOuterWallHeight);
             }
         };
     }
