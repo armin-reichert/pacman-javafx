@@ -25,7 +25,7 @@ public interface ActionHandler {
 
     void reboot();
 
-    void enterMapEditor();
+    void openMapEditor();
 
     void quitMapEditor();
 

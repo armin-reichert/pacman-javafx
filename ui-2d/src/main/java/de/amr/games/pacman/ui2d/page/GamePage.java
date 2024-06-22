@@ -18,10 +18,7 @@ import de.amr.games.pacman.ui2d.util.FadingPane;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.CustomMenuItem;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -224,6 +221,13 @@ public class GamePage implements Page {
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
         contextMenu.getItems().add(miImmunity);
 
+        if (context.game().variant() == GameVariant.PACMAN_XXL) {
+            contextMenu.getItems().add(new SeparatorMenuItem());
+            var miOpenMapEditor = new MenuItem(context.tt("open_editor"));
+            contextMenu.getItems().add(miOpenMapEditor);
+            miOpenMapEditor.setOnAction(e -> context.actionHandler().openMapEditor());
+        }
+
         contextMenu.requestFocus();
         contextMenu.show(rootPane(), event.getScreenX(), event.getScreenY());
     }
@@ -305,7 +309,7 @@ public class GamePage implements Page {
         } else if (GameKeys.PIP_VIEW.pressed()) {
             context.actionHandler().togglePipVisible();
         } else if (GameKeys.EDITOR.pressed()) {
-            context.actionHandler().enterMapEditor();
+            context.actionHandler().openMapEditor();
         } else {
             context.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
         }

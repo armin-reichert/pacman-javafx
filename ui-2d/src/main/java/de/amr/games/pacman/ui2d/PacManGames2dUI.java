@@ -371,25 +371,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         editorPage = new EditorPage(editor, this);
     }
 
-    @Override
-    public void enterMapEditor() {
-        if (game().variant() != GameVariant.PACMAN_XXL) {
-            showFlashMessageSeconds(3, "Map editor is not available in this game variant");
-            return;
-        }
-        stopVoice();
-        stopAllSounds();
-        currentGameScene().ifPresent(GameScene::end);
-        clock.stop();
-        stage.titleProperty().bind(editor.titlePy);
-        if (game().world() != null) {
-            editor.setMap(game().world().map());
-        }
-        reboot();
-        editor.start();
-        selectPage(editorPage);
-    }
-
     private void selectPage(Page page) {
         if (page != currentPage) {
             currentPage = page;
@@ -719,6 +700,25 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             }
         }
         PY_IMMUNITY.set(GameController.it().isPacImmune());
+    }
+
+    @Override
+    public void openMapEditor() {
+        if (game().variant() != GameVariant.PACMAN_XXL) {
+            showFlashMessageSeconds(3, "Map editor is not available in this game variant");
+            return;
+        }
+        stopVoice();
+        stopAllSounds();
+        currentGameScene().ifPresent(GameScene::end);
+        clock.stop();
+        stage.titleProperty().bind(editor.titlePy);
+        if (game().world() != null) {
+            editor.setMap(game().world().map());
+        }
+        reboot();
+        editor.start();
+        selectPage(editorPage);
     }
 
     @Override
