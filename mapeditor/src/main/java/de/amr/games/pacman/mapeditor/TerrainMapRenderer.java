@@ -51,8 +51,8 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.save();
         g.scale(scaling(), scaling());
         map.dwallPaths().forEach(path -> {
-            drawPath(g, map, path, false,  3*lineWidth, wallStrokeColor, null);
-            drawPath(g, map, path, false,  lineWidth, wallFillColor, null);
+            drawPath(g, map, path, false,  4*lineWidth, wallStrokeColor, null);
+            drawPath(g, map, path, false,  2*lineWidth, wallFillColor, null);
         });
         map.wallPaths().forEach(path -> drawPath(g, map, path, true, lineWidth, wallStrokeColor, wallFillColor));
         map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, door, doorColor));
