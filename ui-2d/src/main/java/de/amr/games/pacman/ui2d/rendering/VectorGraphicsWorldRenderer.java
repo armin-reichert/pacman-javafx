@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.getColorFromMap;
 import static java.util.function.Predicate.not;
 
@@ -34,16 +35,16 @@ public class VectorGraphicsWorldRenderer {
     public void draw(GraphicsContext g, World world, boolean flashing, boolean blinkingOn) {
         var terrainMap = world.map().terrain();
         if (flashing) {
-            terrainRenderer.setWallStrokeColor(blinkingOn ? Color.WHITE : getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_STROKE, Color.WHITE));
-            terrainRenderer.setWallFillColor(blinkingOn ? Color.BLACK : getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_FILL, Color.GREEN));
-            terrainRenderer.setDoorColor(blinkingOn ? Color.BLACK : getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_DOOR, Color.YELLOW));
+            terrainRenderer.setWallStrokeColor(blinkingOn ? Color.WHITE : getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, Color.WHITE));
+            terrainRenderer.setWallFillColor(blinkingOn ? Color.BLACK : getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, Color.GREEN));
+            terrainRenderer.setDoorColor(blinkingOn ? Color.BLACK : getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, Color.YELLOW));
             terrainRenderer.drawMap(g, terrainMap);
         } else {
-            terrainRenderer.setWallStrokeColor(getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_STROKE, Color.WHITE));
-            terrainRenderer.setWallFillColor(getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_WALL_FILL, Color.GREEN));
-            terrainRenderer.setDoorColor(getColorFromMap(terrainMap, WorldMap.PROPERTY_COLOR_DOOR, Color.YELLOW));
+            terrainRenderer.setWallStrokeColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, Color.WHITE));
+            terrainRenderer.setWallFillColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, Color.GREEN));
+            terrainRenderer.setDoorColor(getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, Color.YELLOW));
             terrainRenderer.drawMap(g, terrainMap);
-            var foodColor = getColorFromMap(world.map().food(), WorldMap.PROPERTY_COLOR_FOOD, Color.ORANGE);
+            var foodColor = getColorFromMap(world.map().food(), PROPERTY_COLOR_FOOD, Color.ORANGE);
             foodRenderer.setPelletColor(foodColor);
             foodRenderer.setEnergizerColor(foodColor);
             world.tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerTile)).forEach(tile -> foodRenderer.drawPellet(g, tile));
