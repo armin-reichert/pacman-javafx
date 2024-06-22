@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
@@ -76,6 +77,13 @@ public class GamePage3D extends GamePage {
         var miImmunity = new CheckMenuItem(context.tt("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
         contextMenu.getItems().add(miImmunity);
+
+        if (context.game().variant() == GameVariant.PACMAN_XXL) {
+            contextMenu.getItems().add(new SeparatorMenuItem());
+            var miOpenMapEditor = new MenuItem(context.tt("open_editor"));
+            contextMenu.getItems().add(miOpenMapEditor);
+            miOpenMapEditor.setOnAction(e -> context.actionHandler().openMapEditor());
+        }
 
         contextMenu.requestFocus();
         contextMenu.show(rootPane(), event.getScreenX(), event.getScreenY());
