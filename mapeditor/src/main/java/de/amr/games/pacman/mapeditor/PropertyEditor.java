@@ -27,7 +27,7 @@ public class PropertyEditor extends BorderPane {
     public final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
 
     private final TileMapEditor editor;
-    private final TileMap tileMap;
+    private TileMap tileMap;
     private Properties editedProperties;
     private final GridPane grid = new GridPane();
     private final List<ColorPicker> colorPickers = new ArrayList<>();
@@ -36,9 +36,8 @@ public class PropertyEditor extends BorderPane {
 
     private int numRows;
 
-    public PropertyEditor(String title, TileMapEditor editor, TileMap tileMap) {
+    public PropertyEditor(String title, TileMapEditor editor) {
         this.editor = editor;
-        this.tileMap = tileMap;
 
         var lblTitle = new Label(title);
         lblTitle.setFont(Font.font("Sans", FontWeight.BOLD, 14));
@@ -57,12 +56,13 @@ public class PropertyEditor extends BorderPane {
         setCenter(grid);
     }
 
-    public void edit(Properties properties) {
-        this.editedProperties = properties;
+    public void edit(TileMap tileMap) {
+        this.tileMap = tileMap;
+        this.editedProperties = tileMap.getProperties();
         rebuildEditors();
     }
 
-    public void rebuildEditors() {
+    private void rebuildEditors() {
         colorPickers.clear();
         tileXEditors.clear();
         tileYEditors.clear();
@@ -78,6 +78,7 @@ public class PropertyEditor extends BorderPane {
             int nameColumnMinWidth = 160;
             nameEditor.setMinWidth(nameColumnMinWidth);
             nameEditor.disableProperty().bind(enabledPy.not());
+            nameEditor.setOnAction(e -> rebuildEditors());
             grid.add(nameEditor, 0, row);
             if (propertyName.startsWith("color_")) {
                 var colorPicker = new ColorPicker();

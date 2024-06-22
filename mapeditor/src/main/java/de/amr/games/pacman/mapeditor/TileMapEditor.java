@@ -294,11 +294,11 @@ public class TileMapEditor  {
 
         palettesTabPane = new TabPane(terrainPaletteTab, actorPaletteTab, foodPaletteTab);
 
-        terrainMapPropertiesEditor = new PropertyEditor(tt("terrain"), this, map().terrain());
+        terrainMapPropertiesEditor = new PropertyEditor(tt("terrain"), this);
         terrainMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
         terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
-        foodMapPropertiesEditor = new PropertyEditor(tt("pellets"), this, map().food());
+        foodMapPropertiesEditor = new PropertyEditor(tt("pellets"), this);
         foodMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
         foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
@@ -447,8 +447,8 @@ public class TileMapEditor  {
     public void setMap(WorldMap other) {
         checkNotNull(other);
         mapPy.set(other);
-        foodMapPropertiesEditor.edit(map().food().getProperties());
-        terrainMapPropertiesEditor.edit(map().terrain().getProperties());
+        foodMapPropertiesEditor.edit(map().food());
+        terrainMapPropertiesEditor.edit(map().terrain());
         invalidatePaths();
         updatePaths();
         Logger.debug("Edit canvas size: w={} h={}", editCanvas.getWidth(), editCanvas.getHeight());
