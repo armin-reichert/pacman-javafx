@@ -394,7 +394,7 @@ public class PlayScene3D implements GameScene {
 
     private Animation levelCompleteAnimation(int numFlashes) {
         final Perspective perspectiveBeforeAnimation = perspective();
-        var mazeFlashes = level3D.createMazeFlashAnimation(numFlashes,level3D.wallHeightPy.get());
+        var mazeFlashes = level3D.createMazeFlashAnimation(numFlashes);
         var mazeRotates = level3D.createMazeRotateAnimation(1.5);
         var wallsDisappear = level3D.createWallsDisappearAnimation(1.5);
         return new SequentialTransition(
@@ -419,7 +419,7 @@ public class PlayScene3D implements GameScene {
     private Animation levelCompleteAnimationBeforeIntermission(int numFlashes) {
         return new SequentialTransition(
              pauseSec(1)
-            , level3D.createMazeFlashAnimation(numFlashes, level3D.wallHeightPy.get())
+            , level3D.createMazeFlashAnimation(numFlashes)
             , doAfterSec(2.5, () -> context.game().pac().hide())
         );
     }

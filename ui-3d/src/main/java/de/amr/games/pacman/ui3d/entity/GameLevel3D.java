@@ -561,11 +561,12 @@ public class GameLevel3D extends Group {
         };
     }
 
-    public Animation createMazeFlashAnimation(int numFlashes, double initialWallHeight) {
+    public Animation createMazeFlashAnimation(int numFlashes) {
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }
         return new Transition() {
+            private final double initialWallHeight = wallHeightPy.get();
 
             {
                 setCycleDuration(Duration.seconds(0.33));
