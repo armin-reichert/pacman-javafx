@@ -53,6 +53,8 @@ public class MsPacManGame extends AbstractPacManGame  {
 
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
+    public boolean blueMazeBug = false;
+
     @Override
     public void init() {
         initialLives = 3;
@@ -103,6 +105,9 @@ public class MsPacManGame extends AbstractPacManGame  {
         int mapNumber = mapNumberByLevelNumber(levelNumber);
         URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world");
         var map = new WorldMap(mapURL);
+        if (blueMazeBug) {
+            map.terrain().setProperty(WorldMap.PROPERTY_COLOR_WALL_FILL, "rgb(33,33,255)");
+        }
         var msPacManWorld = createMsPacManWorld(map);
         setWorldAndCreatePopulation(msPacManWorld);
         pac.setName("Ms. Pac-Man");
@@ -144,7 +149,7 @@ public class MsPacManGame extends AbstractPacManGame  {
         if (!demoLevel && levelNumber < 8) {
             levelCounter.add(bonusSymbols[0]);
             if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
-                levelCounter.removeFirst();
+                levelCounter.remove(0);
             }
         }
     }

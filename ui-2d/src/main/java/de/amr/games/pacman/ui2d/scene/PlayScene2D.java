@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.MsPacManGame;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
@@ -109,7 +110,11 @@ public class PlayScene2D extends GameScene2D {
         switch (game.variant()) {
             case MS_PACMAN -> {
                 int mapNumber = mapNumber(game.world().map());
-                spriteRenderer.drawMsPacManWorld(g, game.world(), mapNumber, flashing, blinkingOn);
+                if (game instanceof MsPacManGame msPacManGame && msPacManGame.blueMazeBug) {
+                    vectorRenderer.draw(g, game.world(), flashing, blinkingOn);
+                } else {
+                    spriteRenderer.drawMsPacManWorld(g, game.world(), mapNumber, flashing, blinkingOn);
+                }
                 game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));
             }
             case PACMAN -> {
