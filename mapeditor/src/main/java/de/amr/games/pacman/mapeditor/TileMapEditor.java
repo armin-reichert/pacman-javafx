@@ -326,6 +326,7 @@ public class TileMapEditor  {
         sliderGridSize.setTooltip(new Tooltip("Grid Size"));
         sliderGridSize.setShowTickLabels(false);
         sliderGridSize.setShowTickMarks(true);
+        sliderGridSize.setPrefWidth(250);
 
         var footer = new HBox(hoveredTileInfo, filler, sliderGridSize);
         footer.setPadding(new Insets(0, 10, 0, 10));
