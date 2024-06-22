@@ -100,6 +100,8 @@ public abstract class AbstractPacManGame implements GameModel {
     byte                 numGhostsKilledInLevel;
     byte                 nextBonusIndex; // -1=no bonus, 0=first, 1=second
 
+    boolean              overflowBug = true;
+
     Pac pac;
     Ghost[]              ghosts;
     Bonus bonus;
@@ -179,6 +181,11 @@ public abstract class AbstractPacManGame implements GameModel {
         if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
             cruiseElroy = (byte) -cruiseElroy;
         }
+    }
+
+    @Override
+    public void setOverflowBug(boolean overflowBug) {
+        this.overflowBug = overflowBug;
     }
 
     @Override
@@ -359,8 +366,10 @@ public abstract class AbstractPacManGame implements GameModel {
         return world.ghostScatterTile(ghost.id());
     }
 
+    /*
+     * Regarding the overflow bug, see http://www.donhodges.com/pacman_pinky_explanation.htm
+     */
     Vector2i chasingTarget(Ghost ghost) {
-        boolean overflowBug = true; // make this configurable?
         return switch (ghost.id()) {
             // Blinky: attacks Pac-Man directly
             case RED_GHOST -> pac.tile();

@@ -194,6 +194,12 @@ public interface GameModel {
     byte cruiseElroyState();
 
     /**
+     * @param enabled if the overflow bug should be enabled
+     * @see <a href="http://www.donhodges.com/pacman_pinky_explanation.htm">Don Hodges' explanation of overflow bug</a>
+     */
+    void setOverflowBug(boolean enabled);
+
+    /**
      * @param playing Sets playing state for current game
      */
     void setPlaying(boolean playing);
