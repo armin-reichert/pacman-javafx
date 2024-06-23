@@ -37,7 +37,7 @@ public class BootScene extends GameScene2D {
 
     @Override
     public void draw() {
-        spriteRenderer.setSpriteSheet(context().getSpriteSheet(context.game().variant()));
+        spriteRenderer.setSpriteSheet(context.getSpriteSheet(context.game().variant()));
         var timer = context.gameState().timer();
         if (timer.tick() == 1) {
             clearCanvas();

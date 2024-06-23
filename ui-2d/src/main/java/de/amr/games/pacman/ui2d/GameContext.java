@@ -71,6 +71,14 @@ public interface GameContext {
         return GameController.it().game();
     }
 
+    default int numWorldTilesX() {
+        return game().world() != null ? game().world().numCols() : GameModel.ARCADE_MAP_TILES_X;
+    }
+
+    default int numWorldTilesY() {
+        return game().world() != null ? game().world().numRows() : GameModel.ARCADE_MAP_TILES_Y;
+    }
+
     void setScoreVisible(boolean visible);
 
     boolean isScoreVisible();

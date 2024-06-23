@@ -135,14 +135,8 @@ public class PlayScene3D implements GameScene {
         updateSound();
     }
 
-    @Override
     public void setContext(GameContext context) {
         this.context = checkNotNull(context);
-    }
-
-    @Override
-    public GameContext context() {
-        return context;
     }
 
     @Override

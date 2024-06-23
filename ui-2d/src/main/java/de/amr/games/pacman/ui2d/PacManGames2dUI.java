@@ -320,8 +320,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected void createGameScenes() {
         for (var variant : GameVariant.values()) {
             gameSceneManager.createGameScenes(variant);
-            gameSceneManager.gameScenes(variant).forEach(gameScene -> gameScene.setContext(this));
             gameSceneManager.gameScenes2D(variant).forEach(gameScene2D -> {
+                gameScene2D.setContext(this);
                 gameScene2D.setCanvas(gamePage.canvasPane().decoratedCanvas().canvas());
                 gameScene2D.scalingPy.bind(gamePage.canvasPane().scalingPy);
                 gameScene2D.infoVisiblePy.bind(PY_DEBUG_INFO);

@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.SpriteGameRenderer;
@@ -48,12 +47,6 @@ public abstract class GameScene2D implements GameScene {
 
     protected abstract void drawSceneContent();
 
-    @Override
-    public GameContext context() {
-        return context;
-    }
-
-    @Override
     public void setContext(GameContext context) {
         checkNotNull(context);
         this.context = context;
@@ -132,10 +125,8 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected void drawLevelCounter(GraphicsContext g) {
-        boolean hasWorld = context.game().world() != null;
-        int numRows = hasWorld ? context.game().world().numRows() : GameModel.ARCADE_MAP_TILES_Y;
-        int numCols = hasWorld ? context.game().world().numCols() : GameModel.ARCADE_MAP_TILES_X;
-        spriteRenderer.drawLevelCounter(g,context.game().levelCounter(), t(numCols - 4), t(numRows - 2));
+        spriteRenderer.drawLevelCounter(g,context.game().levelCounter(),
+            t(context.numWorldTilesX() - 4), t(context.numWorldTilesY() - 2));
     }
 
     protected void drawMidwayCopyright(double x, double y) {
@@ -144,24 +135,24 @@ public abstract class GameScene2D implements GameScene {
 
     protected void drawMsPacManCopyright(double x, double y) {
         Image logo = context.theme().get("ms_pacman.logo.midway");
-        spriteRenderer.drawImageScaled(g, logo, x, y + 2, TS * 4 - 2, TS * 4);
+        spriteRenderer.drawImageScaled(g, logo, x, y + 2, t(4) - 2, t(4));
         g.setFill(context.theme().color("palette.red"));
-        g.setFont(sceneFont(8));
+        g.setFont(sceneFont(TS));
         g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2));
         g.fillText("MIDWAY MFG CO", s(x + TS * 7), s(y + TS * 2));
         g.fillText("1980/1981", s(x + TS * 8), s(y + TS * 4));
     }
 
     protected void drawTileGrid() {
-        int numRows = context.game().world() != null ? context.game().world().numRows() : GameModel.ARCADE_MAP_TILES_Y;
-        int numCols = context.game().world() != null ? context.game().world().numCols() : GameModel.ARCADE_MAP_TILES_X;
+        int numWorldTilesX = context.numWorldTilesX();
+        int numWorldTilesY = context.numWorldTilesY();
         g.setStroke(Color.LIGHTGRAY);
         g.setLineWidth(0.2);
-        for (int row = 0; row <= numRows; ++row) {
-            g.strokeLine(0, s(TS * row), s(28 * TS), s(TS * row));
+        for (int row = 0; row <= numWorldTilesY; ++row) {
+            g.strokeLine(0, s(TS * row), s(numWorldTilesX * TS), s(TS * row));
         }
-        for (int col = 0; col <= numCols; ++col) {
-            g.strokeLine(s(TS * col), 0, s(TS * col), s(numRows * TS));
+        for (int col = 0; col <= numWorldTilesX; ++col) {
+            g.strokeLine(s(TS * col), 0, s(TS * col), s(numWorldTilesY * TS));
         }
     }
 }
