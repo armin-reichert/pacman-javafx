@@ -78,12 +78,16 @@ public class GamePage3D extends GamePage {
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
         contextMenu.getItems().add(miImmunity);
 
+        contextMenu.getItems().add(new SeparatorMenuItem());
         if (context.game().variant() == GameVariant.PACMAN_XXL) {
-            contextMenu.getItems().add(new SeparatorMenuItem());
             var miOpenMapEditor = new MenuItem(context.tt("open_editor"));
             contextMenu.getItems().add(miOpenMapEditor);
             miOpenMapEditor.setOnAction(e -> context.actionHandler().openMapEditor());
         }
+
+        var miQuit = new MenuItem(context.tt("quit"));
+        miQuit.setOnAction(e -> quit());
+        contextMenu.getItems().add(miQuit);
 
         contextMenu.requestFocus();
         contextMenu.show(rootPane(), event.getScreenX(), event.getScreenY());

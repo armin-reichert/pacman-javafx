@@ -222,12 +222,16 @@ public class GamePage implements Page {
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
         contextMenu.getItems().add(miImmunity);
 
+        contextMenu.getItems().add(new SeparatorMenuItem());
         if (context.game().variant() == GameVariant.PACMAN_XXL) {
-            contextMenu.getItems().add(new SeparatorMenuItem());
             var miOpenMapEditor = new MenuItem(context.tt("open_editor"));
             contextMenu.getItems().add(miOpenMapEditor);
             miOpenMapEditor.setOnAction(e -> context.actionHandler().openMapEditor());
         }
+
+        var miQuit = new MenuItem(context.tt("quit"));
+        miQuit.setOnAction(e -> quit());
+        contextMenu.getItems().add(miQuit);
 
         contextMenu.requestFocus();
         contextMenu.show(rootPane(), event.getScreenX(), event.getScreenY());
@@ -298,9 +302,7 @@ public class GamePage implements Page {
         } else if (GameKeys.SIMULATION_NORMAL.pressed()) {
             context.actionHandler().resetSimulationSpeed();
         } else if (GameKeys.QUIT.pressed()) {
-            context.soundHandler().stopVoice();
-            context.soundHandler().stopAllSounds();
-            context.actionHandler().selectStartPage();
+            quit();
         } else if (GameKeys.TEST_MODE.pressed()) {
             context.actionHandler().startLevelTestMode();
         } else if (GameKeys.TWO_D_THREE_D.pressed()) {
@@ -314,6 +316,12 @@ public class GamePage implements Page {
         } else {
             context.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
         }
+    }
+
+    protected void quit() {
+        context.soundHandler().stopVoice();
+        context.soundHandler().stopAllSounds();
+        context.actionHandler().selectStartPage();
     }
 
     // Help Info stuff
