@@ -27,7 +27,11 @@ public class PacManGames3dApp extends Application {
         GameController.it().selectGameVariant(GameVariant.PACMAN);
         var ui = new PacManGames3dUI();
         PacManGames3dUI.PY_3D_ENABLED.set(true);
-        ui.loadAssets();
+        try {
+            ui.loadAssets();
+        } catch (Exception x) {
+            x.printStackTrace(System.err);
+        }
         ui.createUI(stage, Screen.getPrimary().getBounds());
         ui.show();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());

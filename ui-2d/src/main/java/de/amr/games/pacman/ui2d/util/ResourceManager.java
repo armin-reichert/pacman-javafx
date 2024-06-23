@@ -52,8 +52,8 @@ public interface ResourceManager {
         URL url = getResourceRootClass().getResource(path);
         if (url == null) {
             throw new MissingResourceException(
-                String.format("Resource '%s' not found relative to class '%s'", path, getClass()),
-                getClass().getName(), path);
+                "Resource '%s' not found relative to class '%s'".formatted(path, getResourceRootClass().getName()),
+                getResourceRootClass().getName(), path);
         }
         return url;
     }
@@ -64,7 +64,9 @@ public interface ResourceManager {
      */
     default AudioClip loadAudioClip(String path) {
         var url = url(path);
-        return new AudioClip(url.toExternalForm());
+        var clip = new AudioClip(url.toExternalForm());
+        Logger.info("Audio clip loaded: {}", url);
+        return clip;
     }
 
     /**
