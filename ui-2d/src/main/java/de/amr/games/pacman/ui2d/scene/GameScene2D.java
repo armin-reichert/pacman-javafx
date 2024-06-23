@@ -46,6 +46,8 @@ public abstract class GameScene2D implements GameScene {
 
     public abstract boolean isCreditVisible();
 
+    protected abstract void drawSceneContent();
+
     @Override
     public GameContext context() {
         return context;
@@ -102,21 +104,16 @@ public abstract class GameScene2D implements GameScene {
         }
     }
 
-    /**
-     * Draws the scene content, e.g. the maze and the guys.
-     */
-    protected abstract void drawSceneContent();
+    public void clearCanvas() {
+        g.setFill(canvasBackground());
+        g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
+    }
 
     /**
      * Draws additional scene info, e.g. tile structure or debug info.
      */
     protected void drawSceneInfo() {
         drawTileGrid();
-    }
-
-    public void clearCanvas() {
-        g.setFill(canvasBackground());
-        g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
     }
 
     protected Color canvasBackground() {
@@ -135,13 +132,10 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected void drawLevelCounter(GraphicsContext g) {
-        double x = t(24);
-        double y = t(34);
-        if (context.game().world() != null) {
-            x = t(context.game().world().numCols() - 4);
-            y = t(context.game().world().numRows() - 2);
-        }
-        spriteRenderer.drawLevelCounter(g,context.game().levelCounter(), x, y);
+        boolean hasWorld = context.game().world() != null;
+        int numRows = hasWorld ? context.game().world().numRows() : GameModel.ARCADE_MAP_TILES_Y;
+        int numCols = hasWorld ? context.game().world().numCols() : GameModel.ARCADE_MAP_TILES_X;
+        spriteRenderer.drawLevelCounter(g,context.game().levelCounter(), t(numCols - 4), t(numRows - 2));
     }
 
     protected void drawMidwayCopyright(double x, double y) {
