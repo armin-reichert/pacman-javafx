@@ -69,7 +69,6 @@ import static java.util.stream.IntStream.rangeClosed;
 public class PacManGames2dUI implements GameEventListener, GameContext, ActionHandler, SoundHandler {
 
     public static final String SIGNATURE_TEXT = "Remake (2021-2024) by Armin Reichert";
-    public static final double MIN_SCALING                        = 0.75;
 
     public static final BooleanProperty PY_AUTOPILOT              = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_CANVAS_DECORATED       = new SimpleBooleanProperty(true);
@@ -263,7 +262,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void show() {
         //TODO this does not work yet correctly
         Dimension2D minSize = DecoratedCanvas.computeSize(
-            GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y, 1.25 * MIN_SCALING);
+            GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y, 1);
         stage.setMinWidth(minSize.getWidth());
         stage.setMinHeight(minSize.getHeight());
         stage.centerOnScreen();
@@ -345,7 +344,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         gamePage = new GamePage(this, mainScene);
         gamePage.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         gamePage.canvasPane().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
-        gamePage.canvasPane().setMinScaling(MIN_SCALING);
         gameScenePy.addListener((py, ov, newGameScene) -> gamePage.embedGameScene2D(newGameScene));
     }
 

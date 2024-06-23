@@ -174,7 +174,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
         gamePage.dashboard().addInfoBox(3, tt("infobox.3D_settings.title"), new InfoBox3D());
         gamePage.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         gamePage.canvasPane().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
-        gamePage.canvasPane().setMinScaling(MIN_SCALING);
         gamePage.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {

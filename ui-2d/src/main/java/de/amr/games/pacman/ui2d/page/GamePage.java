@@ -102,6 +102,7 @@ public class GamePage implements Page {
 
     private void createCanvasLayer() {
         canvasLayer.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
+        canvasLayer.setMinScaling(0.75);
         canvasLayer.setBackground(context.theme().background("wallpaper.background"));
         canvasLayer.decoratedCanvas().setBackground(Ufx.coloredBackground(context.theme().color("canvas.background")));
         canvasLayer.decoratedCanvas().setBorderColor(context.theme().color("palette.pale"));
