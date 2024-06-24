@@ -1,3 +1,7 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.ui2d.util.Ufx;
@@ -13,6 +17,9 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Armin Reichert
+ */
 public class PageInfo {
 
     private final List<Label> column0 = new ArrayList<>();

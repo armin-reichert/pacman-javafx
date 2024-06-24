@@ -22,7 +22,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -49,7 +48,7 @@ public class GamePage implements Page {
     protected final BorderPane       infoLayer    = new BorderPane(); // dashboard, picture-in-picture
     protected final Pane             popupLayer   = new Pane(); // help, signature
 
-    protected final FadingPane helpInfoPopUp = new FadingPane();
+    protected final FadingPane helpPopUp = new FadingPane();
     protected final Signature signature = new Signature();
     protected Dashboard dashboard;
     protected PictureInPictureView pip;
@@ -116,7 +115,7 @@ public class GamePage implements Page {
         popupLayer.minWidthProperty().bind(canvasLayer.decoratedCanvas().minWidthProperty());
         popupLayer.maxWidthProperty().bind(canvasLayer.decoratedCanvas().maxWidthProperty());
         popupLayer.prefWidthProperty().bind(canvasLayer.decoratedCanvas().prefWidthProperty());
-        popupLayer.getChildren().addAll(helpInfoPopUp, signature);
+        popupLayer.getChildren().addAll(helpPopUp, signature);
     }
 
     private void createInfoLayer() {
@@ -288,7 +287,7 @@ public class GamePage implements Page {
         } else if (GameKeys.IMMUNITY.pressed()) {
             context.actionHandler().toggleImmunity();
         } else if (GameKeys.HELP.pressed()) {
-            showHelpInfoPopUp();
+            showHelp();
         } else if (GameKeys.PAUSE.pressed()) {
             context.actionHandler().togglePaused();
         } else if (GameKeys.SIMULATION_STEP.pressed()) {
@@ -324,99 +323,17 @@ public class GamePage implements Page {
         context.actionHandler().selectStartPage();
     }
 
-    // Help Info stuff
-
-    public class HelpInfo extends PageInfo {
-
-        public void addLocalizedEntry(String lhsKey, String keyboardKey) {
-            addRow(
-                label(context.tt(lhsKey), Color.gray(0.9)),
-                text("[" + keyboardKey + "]", Color.YELLOW)
-            );
-        }
-
-        @Override
-        public Pane createPane(Color backgroundColor, Font font) {
-            var pane = super.createPane(backgroundColor, font);
-            var grid = (GridPane) pane.getChildren().get(0); // TODO improve
-            // add default entries:
-            if (PY_AUTOPILOT.get()) {
-                var autoPilotEntry = text(context.tt("help.autopilot_on"), Color.ORANGE);
-                autoPilotEntry.setFont(font);
-                GridPane.setColumnSpan(autoPilotEntry, 2);
-                grid.add(autoPilotEntry, 0, grid.getRowCount());
-            }
-            if (context.gameController().isPacImmune()) {
-                var immunityEntry = text(context.tt("help.immunity_on"), Color.ORANGE);
-                immunityEntry.setFont(font);
-                GridPane.setColumnSpan(immunityEntry, 2);
-                grid.add(immunityEntry, 0, grid.getRowCount() + 1);
-            }
-            return pane;
-        }
-    }
-
-    private HelpInfo currentHelpInfo() {
-        HelpInfo helpInfo = new HelpInfo();
-        switch (context.gameState()) {
-            case INTRO -> addInfoForIntroScene(helpInfo);
-            case CREDIT -> addInfoForCreditScene(helpInfo);
-            case READY, HUNTING, PACMAN_DYING, GHOST_DYING -> {
-                if (context.game().isDemoLevel()) {
-                    addInfoForDemoLevelPlayScene(helpInfo);
-                } else {
-                    addInfoForPlayScene(helpInfo);
-                }
-            }
-            default -> addQuitEntry(helpInfo);
-        }
-        return helpInfo;
-    }
-
-    private void showHelpInfoPopUp() {
+    private void showHelp() {
         if (isCurrentGameScene2D()) {
             var bgColor = context.game().variant() == GameVariant.MS_PACMAN
-                    ? Color.rgb(255, 0, 0, 0.8)
-                    : Color.rgb(33, 33, 255, 0.8);
+                ? context.theme().color("palette.red")
+                : context.theme().color("palette.blue");
             var font = context.theme().font("font.monospaced", Math.max(6, 14 * canvasLayer.scaling()));
-            var pane = currentHelpInfo().createPane(bgColor, font);
-            helpInfoPopUp.setTranslateX(10 * canvasLayer.scaling());
-            helpInfoPopUp.setTranslateY(30 * canvasLayer.scaling());
-            helpInfoPopUp.setContent(pane);
-            helpInfoPopUp.show(Duration.seconds(1.5));
+            var helpPane = HelpInfo.currentHelpContent(context).createPane(Ufx.opaqueColor(bgColor, 0.8), font);
+            helpPopUp.setTranslateX(10 * canvasLayer.scaling());
+            helpPopUp.setTranslateY(30 * canvasLayer.scaling());
+            helpPopUp.setContent(helpPane);
+            helpPopUp.show(Duration.seconds(1.5));
         }
-    }
-
-    private void addQuitEntry(HelpInfo info) {
-        info.addLocalizedEntry("help.show_intro", "Q");
-    }
-
-    private void addInfoForIntroScene(HelpInfo info) {
-        if (context.gameController().hasCredit()) {
-            info.addLocalizedEntry("help.start_game", "1");
-        }
-        info.addLocalizedEntry("help.add_credit", "5");
-        addQuitEntry(info);
-    }
-
-    private void addInfoForCreditScene(HelpInfo info) {
-        if (context.gameController().hasCredit()) {
-            info.addLocalizedEntry("help.start_game", "1");
-        }
-        info.addLocalizedEntry("help.add_credit", "5");
-        addQuitEntry(info);
-    }
-
-    private void addInfoForPlayScene(HelpInfo info) {
-        info.addLocalizedEntry("help.move_left", context.tt("help.cursor_left"));
-        info.addLocalizedEntry("help.move_right", context.tt("help.cursor_right"));
-        info.addLocalizedEntry("help.move_up", context.tt("help.cursor_up"));
-        info.addLocalizedEntry("help.move_down", context.tt("help.cursor_down"));
-        addQuitEntry(info);
-    }
-
-    private void addInfoForDemoLevelPlayScene(HelpInfo info) {
-        info.addLocalizedEntry("help.add_credit", "5");
-        addQuitEntry(info);
     }
 }
