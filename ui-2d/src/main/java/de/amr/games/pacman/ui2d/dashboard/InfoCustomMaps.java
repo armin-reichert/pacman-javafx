@@ -18,7 +18,10 @@ public class InfoCustomMaps extends InfoBox {
     @Override
     public void init(GameContext context) {
         this.context = context;
-
+        if (GameController.it().getCustomMaps().isEmpty()) {
+            infoText("No custom maps found.", "");
+            return;
+        }
         var pattern = Pattern.compile(".*/(.*\\.world)$");
         for (var map : GameController.it().getCustomMaps()) {
             if (map.url() != null) {
