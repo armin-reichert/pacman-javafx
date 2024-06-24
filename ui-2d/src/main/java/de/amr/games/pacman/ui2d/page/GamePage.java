@@ -329,7 +329,7 @@ public class GamePage implements Page {
                 ? context.theme().color("palette.red")
                 : context.theme().color("palette.blue");
             var font = context.theme().font("font.monospaced", Math.max(6, 14 * canvasLayer.scaling()));
-            var helpPane = HelpInfo.currentHelpContent(context).createPane(Ufx.opaqueColor(bgColor, 0.8), font);
+            var helpPane = HelpInfo.build(context).createPane(Ufx.opaqueColor(bgColor, 0.8), font);
             helpPopUp.setTranslateX(10 * canvasLayer.scaling());
             helpPopUp.setTranslateY(30 * canvasLayer.scaling());
             helpPopUp.setContent(helpPane);
