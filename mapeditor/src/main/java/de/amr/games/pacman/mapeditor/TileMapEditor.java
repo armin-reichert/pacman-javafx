@@ -76,10 +76,6 @@ public class TileMapEditor  {
         {13, 8, 8, 8, 8, 8, 8,12}
     });
 
-    private static void addHouse(TileMap terrain, int row, int col) {
-        GHOST_HOUSE_SHAPE.addToMap(terrain, row, col);
-    }
-
     private static void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
         for (int row = emptyRowsTop; row < terrain.numRows() - emptyRowsBottom; ++row) {
             terrain.set(row, 0, Tiles.DWALL_V);
@@ -179,7 +175,7 @@ public class TileMapEditor  {
         map.terrain().setProperty(PROPERTY_POS_BONUS,        formatTile(DEFAULT_POS_BONUS));
         map.food().setProperty(PROPERTY_COLOR_FOOD, DEFAULT_FOOD_COLOR);
         addBorder(map.terrain(), 3, 2);
-        addHouse(map.terrain(), DEFAULT_POS_RED_GHOST.y() + 1, map.numCols() / 2 - 4);
+        GHOST_HOUSE_SHAPE.addToMap(map.terrain(), DEFAULT_POS_RED_GHOST.y() + 1, map.numCols() / 2 - 4);
         invalidatePaths();
         return map;
     }
@@ -416,7 +412,7 @@ public class TileMapEditor  {
         miAddHouse.setOnAction(e -> {
             int row = map().numRows() / 2 - 3;
             int col = map().numCols() / 2 - 4;
-            addHouse(map().terrain(), row, col);
+            GHOST_HOUSE_SHAPE.addToMap(map().terrain(), row, col);
             invalidatePaths();
             markMapEdited();
         });
