@@ -14,7 +14,6 @@ import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -119,6 +118,7 @@ public class TileMapEditor  {
     private Menu menuFile;
     private Menu menuEdit;
     private Menu menuLoadMap;
+    private Menu menuView;
     private final BorderPane layout = new BorderPane();
     private Canvas editCanvas;
     private Canvas previewCanvas;
@@ -304,18 +304,6 @@ public class TileMapEditor  {
         previewCanvasScroll.vvalueProperty().bindBidirectional(editCanvasScroll.vvalueProperty());
         previewCanvasScroll.visibleProperty().bind(previewVisiblePy);
 
-        var cbPreviewVisible = new CheckBox(tt("show_preview"));
-        cbPreviewVisible.selectedProperty().bindBidirectional(previewVisiblePy);
-
-        var cbTerrainVisible = new CheckBox(tt("terrain"));
-        cbTerrainVisible.selectedProperty().bindBidirectional(terrainVisiblePy);
-
-        var cbFoodVisible = new CheckBox(tt("pellets"));
-        cbFoodVisible.selectedProperty().bindBidirectional(foodVisiblePy);
-
-        var cbGridVisible = new CheckBox(tt("grid"));
-        cbGridVisible.selectedProperty().bindBidirectional(gridVisiblePy);
-
         palettes.put(PALETTE_TERRAIN, createTerrainPalette());
         palettes.put(PALETTE_ACTORS, createActorPalette());
         palettes.put(PALETTE_FOOD, createFoodPalette());
@@ -349,10 +337,6 @@ public class TileMapEditor  {
         VBox controlsPane = new VBox();
         controlsPane.setSpacing(10);
         controlsPane.setMinWidth(32*10);
-        HBox checkBoxPanel = new HBox(5, cbTerrainVisible, cbFoodVisible, cbGridVisible, cbPreviewVisible);
-        cbPreviewVisible.setPadding(new Insets(0, 0, 0, 25));
-        checkBoxPanel.setAlignment(Pos.CENTER);
-        controlsPane.getChildren().add(checkBoxPanel);
         controlsPane.getChildren().add(palettesTabPane);
         controlsPane.getChildren().add(propertyEditorArea);
 
@@ -384,7 +368,8 @@ public class TileMapEditor  {
         createFileMenu();
         createEditMenu();
         createLoadMapMenu();
-        menuBar = new MenuBar(menuFile, menuEdit, menuLoadMap);
+        createViewMenu();
+        menuBar = new MenuBar(menuFile, menuEdit, menuLoadMap, menuView);
     }
 
     private void createFileMenu() {
@@ -437,6 +422,19 @@ public class TileMapEditor  {
     private void createLoadMapMenu() {
         menuLoadMap = new Menu(tt("menu.load_map"));
         menuLoadMap.disableProperty().bind(editingEnabledPy.not());
+    }
+
+    private void createViewMenu() {
+        menuView = new Menu(tt("menu.view"));
+        var miViewTerrain = new CheckMenuItem(tt("menu.view.terrain"));
+        miViewTerrain.selectedProperty().bindBidirectional(terrainVisiblePy);
+        var miViewFood = new CheckMenuItem(tt("menu.view.food"));
+        miViewFood.selectedProperty().bindBidirectional(foodVisiblePy);
+        var miViewGrid = new CheckMenuItem(tt("menu.view.grid"));
+        miViewGrid.selectedProperty().bindBidirectional(gridVisiblePy);
+        var miViewPreview = new CheckMenuItem(tt("menu.view.preview"));
+        miViewPreview.selectedProperty().bindBidirectional(previewVisiblePy);
+        menuView.getItems().setAll(miViewTerrain, miViewFood, miViewGrid, new SeparatorMenuItem(), miViewPreview);
     }
 
     public void addPredefinedMap(String description, WorldMap map) {
