@@ -76,6 +76,25 @@ public class TileMapEditor  {
         {13, 8, 8, 8, 8, 8, 8,12}
     });
 
+    private static void addHouse(TileMap terrain, int row, int col) {
+        GHOST_HOUSE_SHAPE.addToMap(terrain, row, col);
+    }
+
+    private static void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
+        for (int row = emptyRowsTop; row < terrain.numRows() - emptyRowsBottom; ++row) {
+            terrain.set(row, 0, Tiles.DWALL_V);
+            terrain.set(row, terrain.numCols() - 1, Tiles.DWALL_V);
+        }
+        for (int col = 1; col < terrain.numCols() - 1; ++col) {
+            terrain.set(emptyRowsTop, col, Tiles.DWALL_H);
+            terrain.set(terrain.numRows() - 1 - emptyRowsBottom, col, Tiles.DWALL_H);
+        }
+        terrain.set(emptyRowsTop, 0, Tiles.DCORNER_NW);
+        terrain.set(emptyRowsTop, terrain.numCols() - 1, Tiles.DCORNER_NE);
+        terrain.set(terrain.numRows() - 1 - emptyRowsBottom, 0, Tiles.DCORNER_SW);
+        terrain.set(terrain.numRows() - 1 - emptyRowsBottom, terrain.numCols() - 1, Tiles.DCORNER_SE);
+    }
+
     public final ObjectProperty<String> titlePy = new SimpleObjectProperty<>(this, "title");
 
     public final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(this, "terrainVisible", true);
@@ -160,8 +179,8 @@ public class TileMapEditor  {
         map.terrain().setProperty(PROPERTY_POS_BONUS,        formatTile(DEFAULT_POS_BONUS));
         map.food().setProperty(PROPERTY_COLOR_FOOD, DEFAULT_FOOD_COLOR);
         addBorder(map.terrain(), 3, 2);
-        int col = map.numCols() / 2 - 4;
-        addHouse(map.terrain(), DEFAULT_POS_RED_GHOST.y() + 1, col);
+        addHouse(map.terrain(), DEFAULT_POS_RED_GHOST.y() + 1, map.numCols() / 2 - 4);
+        invalidatePaths();
         return map;
     }
 
@@ -389,6 +408,7 @@ public class TileMapEditor  {
         var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
         miAddBorder.setOnAction(e -> {
             addBorder(map().terrain(), 3, 2);
+            invalidatePaths();
             markMapEdited();
         });
 
@@ -397,12 +417,14 @@ public class TileMapEditor  {
             int row = map().numRows() / 2 - 3;
             int col = map().numCols() / 2 - 4;
             addHouse(map().terrain(), row, col);
+            invalidatePaths();
             markMapEdited();
         });
 
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
             map().terrain().clear();
+            invalidatePaths();
             markMapEdited();
         });
 
@@ -455,27 +477,6 @@ public class TileMapEditor  {
 
     public boolean hasUnsavedChanges() {
         return unsavedChanges;
-    }
-
-    private void addHouse(TileMap terrain, int row, int col) {
-        GHOST_HOUSE_SHAPE.addToMap(terrain, row, col);
-        invalidatePaths();
-    }
-
-    private void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
-        for (int row = emptyRowsTop; row < terrain.numRows() - emptyRowsBottom; ++row) {
-            terrain.set(row, 0, Tiles.DWALL_V);
-            terrain.set(row, terrain.numCols() - 1, Tiles.DWALL_V);
-        }
-        for (int col = 1; col < terrain.numCols() - 1; ++col) {
-            terrain.set(emptyRowsTop, col, Tiles.DWALL_H);
-            terrain.set(terrain.numRows() - 1 - emptyRowsBottom, col, Tiles.DWALL_H);
-        }
-        terrain.set(emptyRowsTop, 0, Tiles.DCORNER_NW);
-        terrain.set(emptyRowsTop, terrain.numCols() - 1, Tiles.DCORNER_NE);
-        terrain.set(terrain.numRows() - 1 - emptyRowsBottom, 0, Tiles.DCORNER_SW);
-        terrain.set(terrain.numRows() - 1 - emptyRowsBottom, terrain.numCols() - 1, Tiles.DCORNER_SE);
-        invalidatePaths();
     }
 
     public void loadMap(WorldMap otherMap) {
