@@ -15,9 +15,12 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -40,6 +43,7 @@ import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
+import static de.amr.games.pacman.lib.tilemap.TileMap.parseVector2i;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.getColorFromMap;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.parseColor;
@@ -50,6 +54,12 @@ import static de.amr.games.pacman.mapeditor.TileMapUtil.parseColor;
 public class TileMapEditor  {
 
     private static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.mapeditor.texts");
+
+    public static final Rectangle2D PAC_SPRITE = new Rectangle2D(473, 16, 14, 14);
+    public static final Rectangle2D RED_GHOST_SPRITE = new Rectangle2D(505, 65, 14, 14);
+    public static final Rectangle2D PINK_GHOST_SPRITE = new Rectangle2D(553, 81, 14, 14);
+    public static final Rectangle2D CYAN_GHOST_SPRITE = new Rectangle2D(521, 97, 14, 14);
+    public static final Rectangle2D ORANGE_GHOST_SPRITE = new Rectangle2D(521, 113, 14, 14);
 
     public static String tt(String key, Object... args) {
         return MessageFormat.format(TEXTS.getString(key), args);
@@ -133,6 +143,8 @@ public class TileMapEditor  {
 
     private Timeline clock;
 
+    private final Image spriteSheet;
+
     public TileMapEditor() {
         this(new File(System.getProperty("user.home")));
     }
@@ -144,6 +156,7 @@ public class TileMapEditor  {
             () -> tt("map_editor") + (currentFilePy.get() != null ? " - " + currentFilePy.get() : ""),
             currentFilePy
         ));
+        spriteSheet = new Image(getClass().getResource("pacman_spritesheet.png").toExternalForm());
     }
 
     public WorldMap map() {
@@ -655,6 +668,27 @@ public class TileMapEditor  {
             foodMapRenderer.setPelletColor(foodColor);
             foodMapRenderer.drawMap(g, map().food());
         }
+        drawActor(g, PROPERTY_POS_PAC, PAC_SPRITE);
+        drawActor(g, PROPERTY_POS_RED_GHOST, RED_GHOST_SPRITE);
+        drawActor(g, PROPERTY_POS_PINK_GHOST, PINK_GHOST_SPRITE);
+        drawActor(g, PROPERTY_POS_CYAN_GHOST, CYAN_GHOST_SPRITE);
+        drawActor(g, PROPERTY_POS_ORANGE_GHOST, ORANGE_GHOST_SPRITE);
+    }
+
+    private void drawActor(GraphicsContext g, String propertyName, Rectangle2D sprite) {
+        var tile = TileMapUtil.getTileFromMap(map().terrain(), propertyName, null);
+        if (tile != null) {
+            drawSprite(g, sprite, tile.x()*gridSize() + 0.5*gridSize(), tile.y()*gridSize(), 1.8*gridSize(), 1.8*gridSize());
+        }
+    }
+
+    private void drawSprite(GraphicsContext g, Rectangle2D sprite, double x, double y, double w, double h) {
+        double ox = 0.5 * (w - gridSize());
+        double oy = 0.5 * (h - gridSize());
+        g.drawImage(spriteSheet,
+            sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
+            x - ox, y - oy, w, h
+        );
     }
 
     private void draw() {

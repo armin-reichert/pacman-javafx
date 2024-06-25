@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.mapeditor;
 
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -36,5 +37,18 @@ public interface TileMapUtil {
             }
         }
         return defaultColor;
+    }
+
+    static Vector2i getTileFromMap(TileMap map, String key, Vector2i defaultTile) {
+        if (map.hasProperty(key)) {
+            String spec = map.getProperty(key);
+            try {
+                return TileMap.parseVector2i(spec);
+            } catch (Exception x) {
+                Logger.error("Could not create Vector2i from value '{}'", spec);
+                return defaultTile;
+            }
+        }
+        return defaultTile;
     }
 }
