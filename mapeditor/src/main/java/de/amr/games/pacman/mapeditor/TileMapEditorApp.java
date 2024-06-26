@@ -42,7 +42,7 @@ public class TileMapEditorApp extends Application  {
         addPredefinedMaps();
 
         var layout = new BorderPane();
-        layout.setCenter(editor.getLayout());
+        layout.setCenter(editor.getContentPane());
         layout.setTop(editor.getMenuBar());
 
         var miQuit = new MenuItem(TileMapEditor.tt("quit"));

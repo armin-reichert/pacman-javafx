@@ -24,7 +24,7 @@ public class EditorPage implements Page {
         checkNotNull(editor);
         this.context = checkNotNull(context);
         pane = new BorderPane();
-        pane.setCenter(editor.getLayout());
+        pane.setCenter(editor.getContentPane());
         pane.setTop(editor.getMenuBar());
     }
 

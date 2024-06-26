@@ -119,7 +119,7 @@ public class TileMapEditor  {
     private Menu menuEdit;
     private Menu menuLoadMap;
     private Menu menuView;
-    private final BorderPane layout = new BorderPane();
+    private final BorderPane contentPane = new BorderPane();
     private Canvas editCanvas;
     private Canvas previewCanvas;
     private Label hoveredTileInfo;
@@ -360,8 +360,8 @@ public class TileMapEditor  {
 
         var hbox = new HBox(controlsPane, splitPane);
         HBox.setHgrow(splitPane, Priority.ALWAYS);
-        layout.setCenter(hbox);
-        layout.setBottom(footer);
+        contentPane.setCenter(hbox);
+        contentPane.setBottom(footer);
     }
 
     private void createMenus() {
@@ -560,8 +560,8 @@ public class TileMapEditor  {
         }
     }
 
-    public Pane getLayout() {
-        return layout;
+    public Pane getContentPane() {
+        return contentPane;
     }
 
     public MenuBar getMenuBar() {
