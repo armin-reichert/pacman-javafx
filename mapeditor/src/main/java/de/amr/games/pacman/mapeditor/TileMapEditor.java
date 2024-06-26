@@ -105,7 +105,7 @@ public class TileMapEditor  {
     public final IntegerProperty gridSizePy = new SimpleIntegerProperty(this, "gridSize", 16) {
         @Override
         protected void invalidated() {
-            invalidatePaths();
+            invalidateTerrainMapPaths();
         }
     };
 
@@ -165,28 +165,28 @@ public class TileMapEditor  {
     private WorldMap newMap(int numRows, int numCols) {
         var map = new WorldMap(numRows, numCols);
         map.terrain().setProperty(PROPERTY_COLOR_WALL_STROKE, DEFAULT_COLOR_WALL_STROKE);
-        map.terrain().setProperty(PROPERTY_COLOR_WALL_FILL, DEFAULT_COLOR_WALL_FILL);
-        map.terrain().setProperty(PROPERTY_COLOR_DOOR, DEFAULT_COLOR_DOOR);
-        map.terrain().setProperty(PROPERTY_POS_PAC,          formatTile(DEFAULT_POS_PAC));
-        map.terrain().setProperty(PROPERTY_POS_RED_GHOST,    formatTile(DEFAULT_POS_RED_GHOST));
-        map.terrain().setProperty(PROPERTY_POS_PINK_GHOST,   formatTile(DEFAULT_POS_PINK_GHOST));
-        map.terrain().setProperty(PROPERTY_POS_CYAN_GHOST,   formatTile(DEFAULT_POS_CYAN_GHOST));
-        map.terrain().setProperty(PROPERTY_POS_ORANGE_GHOST, formatTile(DEFAULT_POS_ORANGE_GHOST));
-        map.terrain().setProperty(PROPERTY_POS_BONUS,        formatTile(DEFAULT_POS_BONUS));
-        map.food().setProperty(PROPERTY_COLOR_FOOD, DEFAULT_FOOD_COLOR);
+        map.terrain().setProperty(PROPERTY_COLOR_WALL_FILL,   DEFAULT_COLOR_WALL_FILL);
+        map.terrain().setProperty(PROPERTY_COLOR_DOOR,        DEFAULT_COLOR_DOOR);
+        map.terrain().setProperty(PROPERTY_POS_PAC,           formatTile(DEFAULT_POS_PAC));
+        map.terrain().setProperty(PROPERTY_POS_RED_GHOST,     formatTile(DEFAULT_POS_RED_GHOST));
+        map.terrain().setProperty(PROPERTY_POS_PINK_GHOST,    formatTile(DEFAULT_POS_PINK_GHOST));
+        map.terrain().setProperty(PROPERTY_POS_CYAN_GHOST,    formatTile(DEFAULT_POS_CYAN_GHOST));
+        map.terrain().setProperty(PROPERTY_POS_ORANGE_GHOST,  formatTile(DEFAULT_POS_ORANGE_GHOST));
+        map.terrain().setProperty(PROPERTY_POS_BONUS,         formatTile(DEFAULT_POS_BONUS));
+        map.food().setProperty(PROPERTY_COLOR_FOOD,           DEFAULT_FOOD_COLOR);
         addBorder(map.terrain(), 3, 2);
         GHOST_HOUSE_SHAPE.addToMap(map.terrain(), DEFAULT_POS_RED_GHOST.y() + 1, map.numCols() / 2 - 4);
-        invalidatePaths();
+        invalidateTerrainMapPaths();
         return map;
     }
 
-    public void setMap(WorldMap other) {
-        checkNotNull(other);
-        mapPy.set(other);
-        foodMapPropertiesEditor.edit(map().food());
-        terrainMapPropertiesEditor.edit(map().terrain());
-        invalidatePaths();
-        updatePaths();
+    public void setMap(WorldMap worldMap) {
+        checkNotNull(worldMap);
+        mapPy.set(worldMap);
+        foodMapPropertiesEditor.setMap(worldMap.food());
+        terrainMapPropertiesEditor.setMap(worldMap.terrain());
+        invalidateTerrainMapPaths();
+        updateTerrainMapPaths();
         Logger.debug("Edit canvas size: w={} h={}", editCanvas.getWidth(), editCanvas.getHeight());
     }
 
@@ -389,7 +389,7 @@ public class TileMapEditor  {
         var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
         miAddBorder.setOnAction(e -> {
             addBorder(map().terrain(), 3, 2);
-            invalidatePaths();
+            invalidateTerrainMapPaths();
             markMapEdited();
         });
 
@@ -398,14 +398,14 @@ public class TileMapEditor  {
             int row = map().numRows() / 2 - 3;
             int col = map().numCols() / 2 - 4;
             GHOST_HOUSE_SHAPE.addToMap(map().terrain(), row, col);
-            invalidatePaths();
+            invalidateTerrainMapPaths();
             markMapEdited();
         });
 
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
             map().terrain().clear();
-            invalidatePaths();
+            invalidateTerrainMapPaths();
             markMapEdited();
         });
 
@@ -454,14 +454,14 @@ public class TileMapEditor  {
         return predefinedMaps.get(description);
     }
 
-    private void updatePaths() {
+    private void updateTerrainMapPaths() {
         if (!pathsUpToDate) {
             map().terrain().computePaths();
             pathsUpToDate = true;
         }
     }
 
-    private void invalidatePaths() {
+    private void invalidateTerrainMapPaths() {
         pathsUpToDate = false;
     }
 
@@ -473,22 +473,22 @@ public class TileMapEditor  {
         return unsavedChanges;
     }
 
-    public void loadMap(WorldMap otherMap) {
-        checkNotNull(otherMap);
-        if (hasUnsavedChanges()) {
+    public void loadMap(WorldMap worldMap) {
+        checkNotNull(worldMap);
+        if (unsavedChanges) {
             showConfirmation(this::saveMapFileAs, () -> {
-                setMap(new WorldMap(otherMap));
+                setMap(new WorldMap(worldMap));
                 currentFilePy.set(null);
             });
         } else {
-            setMap(new WorldMap(otherMap));
+            setMap(new WorldMap(worldMap));
             currentFilePy.set(null);
         }
     }
 
     private void showNewMapDialog() {
         TextInputDialog dialog = new TextInputDialog("28x36");
-        dialog.setTitle("Map Size");
+        dialog.setTitle("New Map");
         dialog.setHeaderText("Enter Map Size (cols x rows)");
         dialog.setContentText("Map Size:");
         dialog.showAndWait().ifPresent(text -> {
@@ -658,7 +658,7 @@ public class TileMapEditor  {
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, previewCanvas.getWidth(), previewCanvas.getHeight());
         if (terrainVisiblePy.get()) {
-            updatePaths();
+            updateTerrainMapPaths();
             terrainMapRenderer.setScaling(gridSize() / 8.0);
             terrainMapRenderer.setWallStrokeColor(getColorFromMap(map().terrain(), PROPERTY_COLOR_WALL_STROKE, parseColor(DEFAULT_COLOR_WALL_STROKE)));
             terrainMapRenderer.setWallFillColor(getColorFromMap(map().terrain(), PROPERTY_COLOR_WALL_FILL, parseColor(DEFAULT_COLOR_WALL_FILL)));
@@ -773,7 +773,7 @@ public class TileMapEditor  {
                         selectedPalette().selectedTool.apply(map().terrain(), hoveredTile);
                     }
                     markMapEdited();
-                    invalidatePaths();
+                    invalidateTerrainMapPaths();
                 }
                 case PALETTE_FOOD -> {
                     if (selectedPalette().selectedTool != null) {
@@ -800,7 +800,7 @@ public class TileMapEditor  {
         else if (selectedPalette().selectedTool != null) {
             selectedPalette().selectedTool.apply(tileMap, tile);
         }
-        invalidatePaths();
+        invalidateTerrainMapPaths();
         markMapEdited();
     }
 }

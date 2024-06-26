@@ -56,7 +56,7 @@ public class PropertyEditor extends BorderPane {
         setCenter(grid);
     }
 
-    public void edit(TileMap tileMap) {
+    public void setMap(TileMap tileMap) {
         this.tileMap = tileMap;
         this.editedProperties = tileMap.getProperties();
         rebuildEditors();
