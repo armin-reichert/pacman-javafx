@@ -252,7 +252,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         createGamePage();
         createGameScenes(); // must be done *after* creating game page!
         createGameClock();
-        createMapEditor();
 
         stage.titleProperty().bind(stageTitleBinding());
         stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
@@ -350,7 +349,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         });
     }
 
-    private void createMapEditor() {
+    private void createEditorPage() {
         editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
         editor.createUI(stage);
 
@@ -710,6 +709,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (game().variant() != GameVariant.PACMAN_XXL) {
             showFlashMessageSeconds(3, "Map editor is not available in this game variant");
             return;
+        }
+        if (editorPage == null) {
+            createEditorPage();
         }
         stopVoice();
         stopAllSounds();
