@@ -25,7 +25,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import javafx.util.Duration;
@@ -125,7 +124,6 @@ public class TileMapEditor  {
     private Label hoveredTileInfo;
     private FileChooser fileChooser;
     private TabPane palettesTabPane;
-    private final Text editHint = new Text(tt("click_to_start"));
     private PropertyEditor terrainMapPropertiesEditor;
     private TileMapEditorTerrainRenderer terrainMapRenderer;
     private PropertyEditor foodMapPropertiesEditor;
@@ -610,15 +608,15 @@ public class TileMapEditor  {
     }
 
     private void drawEditingHint(GraphicsContext g) {
-        editHint.setFont(Font.font("Sans", FontWeight.BLACK, 18));
         double x = 16;
         double y = 24;
-        g.setFont(editHint.getFont());
+        String text = tt("click_to_start");
+        g.setFont(Font.font("Sans", FontWeight.BLACK, 18));
         g.setStroke(Color.LIGHTGREEN);
         g.setLineWidth(3);
-        g.strokeText(editHint.getText(), x, y);
+        g.strokeText(text, x, y);
         g.setFill(Color.DARKGREEN);
-        g.fillText(editHint.getText(), x, y);
+        g.fillText(text, x, y);
     }
 
     private void drawEditCanvas() {
