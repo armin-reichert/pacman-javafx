@@ -57,7 +57,7 @@ public enum GameKeys {
      */
     public boolean pressed() {
         if (Keyboard.pressed(input)) {
-            Logger.info("{} pressed", this);
+            Logger.debug("{} pressed", this);
             return true;
         }
         return false;

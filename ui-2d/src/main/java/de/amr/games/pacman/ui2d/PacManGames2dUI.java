@@ -245,7 +245,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
         // Touch all game keys such that they get registered with keyboard
         for (var gameKey : GameKeys.values()) {
-            Logger.info("Game key '{}' registered", gameKey);
+            Logger.debug("Game key '{}' registered", gameKey);
         }
 
         createMainScene(computeMainSceneSize(screenSize));
