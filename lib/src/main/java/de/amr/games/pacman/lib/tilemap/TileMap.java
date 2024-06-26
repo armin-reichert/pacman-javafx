@@ -30,8 +30,10 @@ public class TileMap {
 
     private final Properties properties = new Properties();
     private final byte[][] data;
-    private final List<TileMapPath> wallPaths = new ArrayList<>();
-    private final List<TileMapPath> dwallPaths = new ArrayList<>();
+
+    // Terrain maps only
+    private List<TileMapPath> wallPaths;
+    private List<TileMapPath> dwallPaths;
 
     public static Vector2i parseVector2i(String text) {
         Pattern pattern = Pattern.compile("\\((\\d+),(\\d+)\\)");
@@ -118,8 +120,8 @@ public class TileMap {
 
     public void computePaths() {
         Logger.debug("Compute paths for {}", this);
-        wallPaths.clear();
-        dwallPaths.clear();
+        wallPaths = new ArrayList<>();
+        dwallPaths = new ArrayList<>();
 
         var explored = new BitSet();
         Predicate<Vector2i> isUnexplored = tile -> !explored.get(index(tile));
@@ -171,11 +173,11 @@ public class TileMap {
     }
 
     public Stream<TileMapPath> wallPaths() {
-        return wallPaths.stream();
+        return wallPaths == null ? Stream.empty() : wallPaths.stream();
     }
 
     public Stream<TileMapPath> dwallPaths() {
-        return dwallPaths.stream();
+        return dwallPaths == null ? Stream.empty() : dwallPaths.stream();
     }
 
     /**
