@@ -213,13 +213,11 @@ public class PacManGames3dUI extends PacManGames2dUI {
     }
 
     @Override
-    protected GameScene sceneMatchingCurrentGameState() {
-        GameVariant variant = game().variant();
-        var gameScene = super.sceneMatchingCurrentGameState();
-        // check if 3D play scene exists and shall be used
-        if (isRegisteredAs(gameScene, GameSceneID.PLAY_SCENE) && PY_3D_ENABLED.get()
-            && gameSceneManager.gameScene(variant, GameSceneID.PLAY_SCENE_3D) != null) {
-            return gameSceneManager.gameScene(variant, GameSceneID.PLAY_SCENE_3D);
+    protected GameScene gameSceneForCurrentGameState() {
+        GameScene gameScene = super.gameSceneForCurrentGameState();
+        if (PY_3D_ENABLED.get() && isRegisteredAs(gameScene, GameSceneID.PLAY_SCENE)) {
+            GameScene playScene3D = gameSceneManager.gameScene(game().variant(), GameSceneID.PLAY_SCENE_3D);
+            return playScene3D != null ? playScene3D : gameScene;
         }
         return gameScene;
     }
@@ -242,7 +240,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     public void toggle2D3D() {
         currentGameScene().ifPresent(gameScene -> {
             toggle(PY_3D_ENABLED);
-            gameScene = sceneMatchingCurrentGameState();
+            gameScene = gameSceneForCurrentGameState();
             if (isRegisteredAs(gameScene, GameSceneID.PLAY_SCENE)
                 || isRegisteredAs(gameScene, GameSceneID.PLAY_SCENE_3D)) {
                 updateGameScene(true);

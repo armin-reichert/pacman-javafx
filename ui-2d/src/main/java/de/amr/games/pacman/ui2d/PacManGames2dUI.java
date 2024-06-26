@@ -388,7 +388,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (isPageSelected(startPage)) {
             return; // no game scene on start page
         }
-        GameScene sceneToDisplay = sceneMatchingCurrentGameState();
+        GameScene sceneToDisplay = gameSceneForCurrentGameState();
         GameScene currentScene = gameScenePy.get();
         if (reloadCurrentScene || sceneToDisplay != currentScene) {
             Logger.info("updateGameScene: {}/{} reload={}", currentPage, sceneToDisplay.getClass().getSimpleName(), reloadCurrentScene);
@@ -405,7 +405,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
     }
 
-    protected GameScene sceneMatchingCurrentGameState() {
+    protected GameScene gameSceneForCurrentGameState() {
         GameVariant variant = game().variant();
         return switch (gameState()) {
             case BOOT -> gameSceneManager.gameScene(variant, GameSceneID.BOOT_SCENE);
