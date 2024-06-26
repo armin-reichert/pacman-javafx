@@ -42,8 +42,7 @@ import java.util.ResourceBundle;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
-import static de.amr.games.pacman.mapeditor.TileMapUtil.getColorFromMap;
-import static de.amr.games.pacman.mapeditor.TileMapUtil.parseColor;
+import static de.amr.games.pacman.mapeditor.TileMapUtil.*;
 
 /**
  * @author Armin Reichert
@@ -625,12 +624,13 @@ public class TileMapEditor  {
         g.fillRect(0, 0, editCanvas.getWidth(), editCanvas.getHeight());
         drawGrid(g);
         if (terrainVisiblePy.get()) {
+            TileMap terrainMap = map().terrain();
             terrainMapRenderer.setScaling(gridSize() / 8.0);
-            terrainMapRenderer.setWallStrokeColor(getColorFromMap(map().terrain(), PROPERTY_COLOR_WALL_STROKE, parseColor(DEFAULT_COLOR_WALL_STROKE)));
-            terrainMapRenderer.setWallFillColor(getColorFromMap(map().terrain(), PROPERTY_COLOR_WALL_FILL, parseColor(DEFAULT_COLOR_WALL_FILL)));
-            terrainMapRenderer.setDoorColor(getColorFromMap(map().terrain(), PROPERTY_COLOR_DOOR, parseColor(DEFAULT_COLOR_DOOR)));
+            terrainMapRenderer.setWallStrokeColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(DEFAULT_COLOR_WALL_STROKE)));
+            terrainMapRenderer.setWallFillColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(DEFAULT_COLOR_WALL_FILL)));
+            terrainMapRenderer.setDoorColor(getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(DEFAULT_COLOR_DOOR)));
             terrainMapRenderer.setRuntimeMode(false);
-            terrainMapRenderer.drawMap(g, map().terrain());
+            terrainMapRenderer.drawMap(g, terrainMap);
         }
         if (foodVisiblePy.get()) {
             Color foodColor = getColorFromMap(map().food(), PROPERTY_COLOR_FOOD, TileMapUtil.parseColor(DEFAULT_FOOD_COLOR));
@@ -657,12 +657,13 @@ public class TileMapEditor  {
         g.fillRect(0, 0, previewCanvas.getWidth(), previewCanvas.getHeight());
         if (terrainVisiblePy.get()) {
             updateTerrainMapPaths();
+            TileMap terrainMap = map().terrain();
             terrainMapRenderer.setScaling(gridSize() / 8.0);
-            terrainMapRenderer.setWallStrokeColor(getColorFromMap(map().terrain(), PROPERTY_COLOR_WALL_STROKE, parseColor(DEFAULT_COLOR_WALL_STROKE)));
-            terrainMapRenderer.setWallFillColor(getColorFromMap(map().terrain(), PROPERTY_COLOR_WALL_FILL, parseColor(DEFAULT_COLOR_WALL_FILL)));
-            terrainMapRenderer.setDoorColor(getColorFromMap(map().terrain(), PROPERTY_COLOR_DOOR, parseColor(DEFAULT_COLOR_DOOR)));
+            terrainMapRenderer.setWallStrokeColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(DEFAULT_COLOR_WALL_STROKE)));
+            terrainMapRenderer.setWallFillColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(DEFAULT_COLOR_WALL_FILL)));
+            terrainMapRenderer.setDoorColor(getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, parseColor(DEFAULT_COLOR_DOOR)));
             terrainMapRenderer.setRuntimeMode(true);
-            terrainMapRenderer.drawMap(g, map().terrain());
+            terrainMapRenderer.drawMap(g, terrainMap);
         }
         if (foodVisiblePy.get()) {
             foodMapRenderer.setScaling(gridSize() / 8.0);
@@ -679,9 +680,9 @@ public class TileMapEditor  {
     }
 
     private void drawActor(GraphicsContext g, String propertyName, Rectangle2D sprite) {
-        var tile = TileMapUtil.getTileFromMap(map().terrain(), propertyName, null);
+        var tile = getTileFromMap(map().terrain(), propertyName, null);
         if (tile != null) {
-            drawSprite(g, sprite, tile.x()*gridSize() + 0.5*gridSize(), tile.y()*gridSize(), 1.8*gridSize(), 1.8*gridSize());
+            drawSprite(g, sprite, tile.x() * gridSize() + 0.5 * gridSize(), tile.y() * gridSize(), 1.75 * gridSize(), 1.75 * gridSize());
         }
     }
 
