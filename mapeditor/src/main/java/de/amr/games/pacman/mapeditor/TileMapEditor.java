@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
@@ -723,7 +724,7 @@ public class TileMapEditor  {
             return;
         }
         switch (selectedPaletteID()) {
-            case PALETTE_TERRAIN -> editMapTile(map().terrain(), Tiles.TERRAIN_TILES_END, e);
+            case PALETTE_TERRAIN -> editMapTile(map().terrain(), tv -> 0 <= tv && tv <= Tiles.DOOR, e);
             case PALETTE_ACTORS  -> {
                 if (selectedPalette().selectedTool != null) {
                     Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
@@ -732,7 +733,7 @@ public class TileMapEditor  {
                     terrainMapPropertiesEditor.updateEditorValues();
                 }
             }
-            case PALETTE_FOOD -> editMapTile(map().food(), Tiles.FOOD_TILES_END, e);
+            case PALETTE_FOOD -> editMapTile(map().food(), tv -> 0 <= tv && tv <= Tiles.ENERGIZER, e);
             default -> Logger.error("Unknown palette selection");
         }
     }
@@ -777,15 +778,16 @@ public class TileMapEditor  {
         }
     }
 
-    private void editMapTile(TileMap tileMap, byte endValue, MouseEvent e) {
+    private void editMapTile(TileMap tileMap, Predicate<Byte> valueAllowed, MouseEvent e) {
         var tile = tileAtMousePosition(e.getX(), e.getY());
         if (e.getButton() == MouseButton.SECONDARY) {
             tileMap.set(tile, Tiles.EMPTY);
         }
         else if (e.isShiftDown()) {
-            // cycle through all palette values
-            byte content = tileMap.get(tile);
-            byte newValue = content < endValue - 1 ? (byte) (content + 1) : 0;
+            // cycle through all allowed values
+            byte value = tileMap.get(tile);
+            byte next = (byte) (value + 1);
+            byte newValue =  valueAllowed.test(next) ? next : 0;
             tileMap.set(tile, newValue);
         }
         else if (selectedPalette().selectedTool != null) {

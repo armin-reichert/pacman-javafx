@@ -113,9 +113,9 @@ public class WorldMap {
                 Logger.error("Line skipped: '{}'", line);
             }
         }
-        terrain = TileMap.parseTileMap(terrainSection, tileValue -> tileValue < Tiles.TERRAIN_TILES_END);
+        terrain = TileMap.parseTileMap(terrainSection, tv -> 0 <= tv && tv <= Tiles.DOOR);
         terrain.computeTerrainPaths();
-        food = TileMap.parseTileMap(foodSection, tileValue -> tileValue < Tiles.FOOD_TILES_END);
+        food = TileMap.parseTileMap(foodSection, tv -> 0 <= tv && tv <= Tiles.ENERGIZER);
     }
 
     public void save(File file) {

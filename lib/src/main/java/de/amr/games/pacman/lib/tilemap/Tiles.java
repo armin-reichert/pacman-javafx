@@ -27,11 +27,7 @@ public interface Tiles {
     byte DCORNER_SW = 13;
     byte DOOR       = 14;
 
-    byte TERRAIN_TILES_END = 15;
-
     // Food tiles
     byte PELLET = 1;
     byte ENERGIZER = 2;
-
-    byte FOOD_TILES_END = 3;
 }
