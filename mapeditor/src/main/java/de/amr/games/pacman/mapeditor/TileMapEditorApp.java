@@ -50,7 +50,7 @@ public class TileMapEditorApp extends Application  {
         editor.menuFile().getItems().add(miQuit);
 
 
-        double height = Math.max(0.7 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
+        double height = Math.max(0.9 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
         double width = 1.9 * height;
         var scene = new Scene(layout, width, height);
         scene.setFill(Color.BLACK);
