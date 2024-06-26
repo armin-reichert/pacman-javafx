@@ -20,6 +20,7 @@ import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.rendering.*;
 import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.animation.Animation;
@@ -321,8 +322,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             gameSceneManager.createGameScenes(variant);
             gameSceneManager.gameScenes2D(variant).forEach(gameScene2D -> {
                 gameScene2D.setContext(this);
-                gameScene2D.setCanvas(gamePage.canvasPane().decoratedCanvas().canvas());
-                gameScene2D.scalingPy.bind(gamePage.canvasPane().scalingPy);
                 gameScene2D.infoVisiblePy.bind(PY_DEBUG_INFO);
             });
         }
@@ -344,7 +343,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         gamePage = new GamePage(this, mainScene);
         gamePage.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         gamePage.canvasPane().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
-        gameScenePy.addListener((py, ov, newGameScene) -> gamePage.embedGameScene2D(newGameScene));
+        gameScenePy.addListener((py, ov, newGameScene) -> {
+            if (newGameScene instanceof GameScene2D scene2D) {
+                gamePage.embedGameScene2D(scene2D);
+            }
+        });
     }
 
     private void createMapEditor() {

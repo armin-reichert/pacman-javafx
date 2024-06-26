@@ -8,6 +8,7 @@ import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
@@ -187,8 +188,10 @@ public class PacManGames3dUI extends PacManGames2dUI {
             gamePage.hideContextMenu();
             if (isRegisteredAs(newGameScene, GameSceneID.PLAY_SCENE_3D)) {
                 gamePage.embedGameScene3D(newGameScene);
+            } else if (newGameScene instanceof GameScene2D scene2D) {
+                gamePage.embedGameScene2D(scene2D);
             } else {
-                gamePage.embedGameScene2D(newGameScene);
+                Logger.warn("Cannot embed game scene {}", newGameScene);
             }
         });
     }

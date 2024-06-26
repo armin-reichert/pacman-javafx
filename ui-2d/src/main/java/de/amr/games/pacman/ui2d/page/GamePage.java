@@ -44,7 +44,7 @@ public class GamePage implements Page {
     protected final Scene parentScene;
     protected final StackPane stackPane = new StackPane();
 
-    protected final CanvasLayoutPane canvasLayer  = new CanvasLayoutPane();
+    protected final CanvasLayoutPane canvasPane = new CanvasLayoutPane();
     protected final BorderPane       infoLayer    = new BorderPane(); // dashboard, picture-in-picture
     protected final Pane             popupLayer   = new Pane(); // help, signature
 
@@ -63,7 +63,7 @@ public class GamePage implements Page {
         createPopupLayer();
         createInfoLayer();
         configureDebugDrawing();
-        stackPane.getChildren().addAll(canvasLayer, infoLayer, popupLayer);
+        stackPane.getChildren().addAll(canvasPane, infoLayer, popupLayer);
     }
 
     private void configureDebugDrawing() {
@@ -71,7 +71,7 @@ public class GamePage implements Page {
             () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.RED, 3) : null,
             PY_DEBUG_INFO, context.gameSceneProperty()
         ));
-        canvasLayer.borderProperty().bind(Bindings.createObjectBinding(
+        canvasPane.borderProperty().bind(Bindings.createObjectBinding(
             () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.YELLOW, 3) : null,
             PY_DEBUG_INFO, context.gameSceneProperty()
         ));
@@ -100,21 +100,21 @@ public class GamePage implements Page {
     }
 
     private void createCanvasLayer() {
-        canvasLayer.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
-        canvasLayer.setMinScaling(0.75);
-        canvasLayer.setBackground(context.theme().background("wallpaper.background"));
-        canvasLayer.decoratedCanvas().setBackground(Ufx.coloredBackground(context.theme().color("canvas.background")));
-        canvasLayer.decoratedCanvas().setBorderColor(context.theme().color("palette.pale"));
-        canvasLayer.decoratedCanvas().decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
+        canvasPane.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
+        canvasPane.setMinScaling(0.75);
+        canvasPane.setBackground(context.theme().background("wallpaper.background"));
+        canvasPane.decoratedCanvas().setBackground(Ufx.coloredBackground(context.theme().color("canvas.background")));
+        canvasPane.decoratedCanvas().setBorderColor(context.theme().color("palette.pale"));
+        canvasPane.decoratedCanvas().decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
     }
 
     private void createPopupLayer() {
-        popupLayer.minHeightProperty().bind(canvasLayer.decoratedCanvas().minHeightProperty());
-        popupLayer.maxHeightProperty().bind(canvasLayer.decoratedCanvas().maxHeightProperty());
-        popupLayer.prefHeightProperty().bind(canvasLayer.decoratedCanvas().prefHeightProperty());
-        popupLayer.minWidthProperty().bind(canvasLayer.decoratedCanvas().minWidthProperty());
-        popupLayer.maxWidthProperty().bind(canvasLayer.decoratedCanvas().maxWidthProperty());
-        popupLayer.prefWidthProperty().bind(canvasLayer.decoratedCanvas().prefWidthProperty());
+        popupLayer.minHeightProperty().bind(canvasPane.decoratedCanvas().minHeightProperty());
+        popupLayer.maxHeightProperty().bind(canvasPane.decoratedCanvas().maxHeightProperty());
+        popupLayer.prefHeightProperty().bind(canvasPane.decoratedCanvas().prefHeightProperty());
+        popupLayer.minWidthProperty().bind(canvasPane.decoratedCanvas().minWidthProperty());
+        popupLayer.maxWidthProperty().bind(canvasPane.decoratedCanvas().maxWidthProperty());
+        popupLayer.prefWidthProperty().bind(canvasPane.decoratedCanvas().prefWidthProperty());
         popupLayer.getChildren().addAll(helpPopUp, signature);
     }
 
@@ -144,7 +144,7 @@ public class GamePage implements Page {
 
     @Override
     public void setSize(double width, double height) {
-        canvasLayer.resizeTo(width, height);
+        canvasPane.resizeTo(width, height);
     }
 
     public void embedGameScene3D(GameScene gameScene) {
@@ -155,18 +155,16 @@ public class GamePage implements Page {
         stackPane.getChildren().set(0, gameScene.root());
     }
 
-    public void embedGameScene2D(GameScene gameScene) {
-        if (gameScene instanceof GameScene2D scene2D) {
-            stackPane.getChildren().set(0, canvasLayer);
-            scene2D.clearCanvas();
-            adaptCanvasSizeToCurrentWorld();
-        } else {
-            Logger.warn("Cannot embed 3D game scene as 2D scene");
-        }
+    public void embedGameScene2D(GameScene2D scene2D) {
+        stackPane.getChildren().set(0, canvasPane);
+        scene2D.setCanvas(canvasPane.decoratedCanvas().canvas());
+        scene2D.scalingPy.bind(canvasPane.scalingPy);
+        scene2D.clearCanvas();
+        adaptCanvasSizeToCurrentWorld();
     }
 
     public CanvasLayoutPane canvasPane() {
-        return canvasLayer;
+        return canvasPane;
     }
 
     public Dashboard dashboard() {
@@ -181,18 +179,18 @@ public class GamePage implements Page {
         signature.setWords(words);
 
         signature.fontPy.bind(Bindings.createObjectBinding(
-            () -> Font.font(font.getFamily(), canvasLayer.scaling() * font.getSize()),
-            canvasLayer.scalingPy
+            () -> Font.font(font.getFamily(), canvasPane.scaling() * font.getSize()),
+            canvasPane.scalingPy
         ));
         // keep centered over canvas container
         signature.translateXProperty().bind(Bindings.createDoubleBinding(
-            () -> 0.5 * (canvasLayer.decoratedCanvas().getWidth() - signature.getWidth()),
-            canvasLayer.scalingPy, canvasLayer.decoratedCanvas().widthProperty()
+            () -> 0.5 * (canvasPane.decoratedCanvas().getWidth() - signature.getWidth()),
+            canvasPane.scalingPy, canvasPane.decoratedCanvas().widthProperty()
         ));
         // keep at vertical position over intro scene
         signature.translateYProperty().bind(Bindings.createDoubleBinding(
-            () -> canvasLayer.scaling() * 30,
-            canvasLayer.scalingPy, canvasLayer.decoratedCanvas().heightProperty()
+            () -> canvasPane.scaling() * 30,
+            canvasPane.scalingPy, canvasPane.decoratedCanvas().heightProperty()
         ));
     }
 
@@ -252,13 +250,13 @@ public class GamePage implements Page {
     public void adaptCanvasSizeToCurrentWorld() {
         var world = context.game().world();
         if (world != null) {
-            canvasLayer.setUnscaledCanvasSize(world.numCols() * TS, world.numRows() * TS);
+            canvasPane.setUnscaledCanvasSize(world.numCols() * TS, world.numRows() * TS);
         } else {
-            canvasLayer.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
+            canvasPane.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
         }
-        canvasLayer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
+        canvasPane.resizeTo(parentScene.getWidth(), parentScene.getHeight());
         Logger.info("Canvas size adapted. w={}, h={}",
-            canvasLayer.decoratedCanvas().getWidth(), canvasLayer.decoratedCanvas().getHeight());
+            canvasPane.decoratedCanvas().getWidth(), canvasPane.decoratedCanvas().getHeight());
     }
 
     protected boolean isCurrentGameScene2D() {
@@ -328,10 +326,10 @@ public class GamePage implements Page {
             var bgColor = context.game().variant() == GameVariant.MS_PACMAN
                 ? context.theme().color("palette.red")
                 : context.theme().color("palette.blue");
-            var font = context.theme().font("font.monospaced", Math.max(6, 14 * canvasLayer.scaling()));
+            var font = context.theme().font("font.monospaced", Math.max(6, 14 * canvasPane.scaling()));
             var helpPane = HelpInfo.build(context).createPane(Ufx.opaqueColor(bgColor, 0.8), font);
-            helpPopUp.setTranslateX(10 * canvasLayer.scaling());
-            helpPopUp.setTranslateY(30 * canvasLayer.scaling());
+            helpPopUp.setTranslateX(10 * canvasPane.scaling());
+            helpPopUp.setTranslateY(30 * canvasPane.scaling());
             helpPopUp.setContent(helpPane);
             helpPopUp.show(Duration.seconds(1.5));
         }
