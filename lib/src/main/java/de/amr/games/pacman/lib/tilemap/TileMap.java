@@ -48,7 +48,7 @@ public class TileMap {
         return "(%d,%d)".formatted(tile.x(), tile.y());
     }
 
-    public static TileMap parseTileMap(List<String> lines, byte valueLimit) {
+    public static TileMap parseTileMap(List<String> lines, Predicate<Byte> valueAllowed) {
         // First pass: read property section and determine data section size
         int numDataRows = 0, numDataCols = -1;
         int dataSectionStartIndex = -1;
@@ -87,11 +87,11 @@ public class TileMap {
                 String entry = columns[col].trim();
                 try {
                     byte value = Byte.parseByte(entry);
-                    if (value >= valueLimit) {
+                    if (valueAllowed.test(value)) {
+                        tileMap.data[row][col] = value;
+                    } else {
                         tileMap.data[row][col] = Tiles.EMPTY;
                         Logger.info("Invalid tile map value {} at row {}, col {}", value, row, col);
-                    } else {
-                        tileMap.data[row][col] = value;
                     }
                 } catch (NumberFormatException x) {
                     Logger.error("Invalid tile map entry {} at row {}, col {}", entry, row, col);
