@@ -355,16 +355,18 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         miQuitEditor.setOnAction(e -> quitMapEditor());
         editor.menuFile().getItems().add(miQuitEditor);
 
-        // load maps from core project resources
+        // load maps from core module
         ResourceManager core = () -> GameModel.class;
-        editor.addPredefinedMap("Pac-Man",
-            new WorldMap(core.url("/de/amr/games/pacman/maps/pacman.world")));
+        String path = "/de/amr/games/pacman/maps/";
+        editor.addLoadMapMenuEntry("Pac-Man",new WorldMap(core.url(path + "pacman.world")));
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        rangeClosed(1, 6).forEach(mapNumber -> editor.addPredefinedMap("Ms. Pac-Man " + mapNumber,
-            new WorldMap(core.url("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world"))));
+        rangeClosed(1, 6).forEach(mapNumber -> editor.addLoadMapMenuEntry(
+            "Ms. Pac-Man " + mapNumber,
+            new WorldMap(core.url(path + "mspacman/mspacman_" + mapNumber + ".world"))));
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap("Pac-Man XXL " + mapNumber,
-            new WorldMap(core.url("/de/amr/games/pacman/maps/masonic/masonic_" + mapNumber + ".world"))));
+        rangeClosed(1, 8).forEach(mapNumber -> editor.addLoadMapMenuEntry(
+            "Pac-Man XXL " + mapNumber,
+            new WorldMap(core.url(path + "masonic/masonic_" + mapNumber + ".world"))));
 
         editorPage = new EditorPage(editor, this);
     }

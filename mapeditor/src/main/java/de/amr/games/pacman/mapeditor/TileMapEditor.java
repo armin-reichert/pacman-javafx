@@ -129,7 +129,6 @@ public class TileMapEditor  {
     private FoodMapRenderer foodMapRenderer;
 
     private final Map<String, Palette> palettes = new HashMap<>();
-    private final Map<String, WorldMap> predefinedMaps = new HashMap<>();
 
     private boolean pathsUpToDate;
     private boolean unsavedChanges;
@@ -436,21 +435,12 @@ public class TileMapEditor  {
         menuView.getItems().setAll(miViewTerrain, miViewFood, miViewGrid, new SeparatorMenuItem(), miViewPreview);
     }
 
-    public void addPredefinedMap(String description, WorldMap map) {
+    public void addLoadMapMenuEntry(String description, WorldMap map) {
         checkNotNull(description);
         checkNotNull(map);
-        predefinedMaps.put(description, map);
         var miLoadMap = new MenuItem(description);
         miLoadMap.setOnAction(e -> loadMap(map));
         menuLoadMap.getItems().add(miLoadMap);
-    }
-
-    public WorldMap getPredefinedMap(String description) {
-        if (!predefinedMaps.containsKey(description)) {
-            Logger.error("No predefind map '{}' exists", description);
-            return null;
-        }
-        return predefinedMaps.get(description);
     }
 
     private void updateTerrainMapPaths() {

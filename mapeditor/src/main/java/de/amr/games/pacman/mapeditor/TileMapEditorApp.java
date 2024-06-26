@@ -14,6 +14,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.net.URL;
+import java.util.List;
+
 import static java.util.stream.IntStream.rangeClosed;
 
 /**
@@ -39,7 +42,6 @@ public class TileMapEditorApp extends Application  {
 
     private void doStart(Stage stage) {
         editor.createUI(stage);
-        addPredefinedMaps();
 
         var layout = new BorderPane();
         layout.setCenter(editor.getContentPane());
@@ -48,7 +50,6 @@ public class TileMapEditorApp extends Application  {
         var miQuit = new MenuItem(TileMapEditor.tt("quit"));
         miQuit.setOnAction(e -> editor.showConfirmation(editor::saveMapFileAs, stage::close));
         editor.menuFile().getItems().add(miQuit);
-
 
         double height = Math.max(0.9 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
         double width = 1.9 * height;
@@ -60,19 +61,24 @@ public class TileMapEditorApp extends Application  {
         stage.setOnCloseRequest(e -> editor.showConfirmation(editor::saveMapFileAs, stage::close));
         stage.show();
 
-        editor.start();
-        editor.loadMap(editor.getPredefinedMap("Pac-Man"));
-    }
+        String path = "/de/amr/games/pacman/mapeditor/maps/";
+        WorldMap pacManMap = new WorldMap(getClass().getResource(path + "pacman.world"));
+        List<WorldMap> msPacManMaps = rangeClosed(1, 6)
+            .mapToObj(mapNumber -> getClass().getResource(path + "mspacman/mspacman_" + mapNumber + ".world"))
+            .map(WorldMap::new)
+            .toList();
+        List<WorldMap> pacManXXLMaps = rangeClosed(1, 8)
+            .mapToObj(mapNumber -> getClass().getResource(path + "masonic/masonic_" + mapNumber + ".world"))
+            .map(WorldMap::new)
+            .toList();
 
-    private void addPredefinedMaps() {
-        editor.addPredefinedMap("Pac-Man", new WorldMap(getClass().getResource("/de/amr/games/pacman/mapeditor/maps/pacman.world")));
+        editor.addLoadMapMenuEntry("Pac-Man", pacManMap);
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        rangeClosed(1, 6).forEach(mapNumber -> editor.addPredefinedMap("Ms. Pac-Man " + mapNumber,
-            new WorldMap(getClass().getResource("/de/amr/games/pacman/mapeditor/maps/mspacman/mspacman_" + mapNumber + ".world")))
-        );
+        rangeClosed(1, 6).forEach(num -> editor.addLoadMapMenuEntry("Ms. Pac-Man " + num,msPacManMaps.get(num - 1)));
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        rangeClosed(1, 8).forEach(mapNumber -> editor.addPredefinedMap("Pac-Man XXL " + mapNumber,
-            new WorldMap(getClass().getResource("/de/amr/games/pacman/mapeditor/maps/masonic/masonic_" + mapNumber + ".world")))
-        );
+        rangeClosed(1, 8).forEach(num -> editor.addLoadMapMenuEntry("Pac-Man XXL " + num,pacManXXLMaps.get(num - 1)));
+
+        editor.loadMap(pacManMap);
+        editor.start();
     }
 }
