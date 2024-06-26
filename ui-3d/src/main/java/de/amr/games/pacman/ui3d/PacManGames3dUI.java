@@ -159,7 +159,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     @Override
     protected void createGameScenes() {
         super.createGameScenes();
-        for (var variant : GameController.it().supportedVariants()) {
+        for (var variant : gameController().supportedVariants()) {
             var playScene3D = new PlayScene3D();
             playScene3D.setContext(this);
             playScene3D.setParentScene(mainScene);

@@ -237,9 +237,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         // first child will be replaced by page
         rootPane.getChildren().addAll(new Pane(), messageView);
 
-        gameVariantPy.set(GameController.it().game().variant());
-        for (var variant : GameController.it().supportedVariants()) {
-            GameController.it().game(variant).addGameEventListener(this);
+        gameVariantPy.set(game().variant());
+        for (var variant : gameController().supportedVariants()) {
+            gameController().game(variant).addGameEventListener(this);
         }
 
         // Touch all game keys such that they get registered with keyboard
@@ -318,7 +318,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     protected void createGameScenes() {
-        for (var variant : GameController.it().supportedVariants()) {
+        for (var variant : gameController().supportedVariants()) {
             gameSceneManager.createGameScenes(variant);
             gameSceneManager.gameScenes2D(variant).forEach(gameScene2D -> {
                 gameScene2D.setContext(this);
@@ -702,7 +702,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
                 Logger.error("Cannot start playing when in game state {}", gameState());
             }
         }
-        PY_IMMUNITY.set(GameController.it().isPacImmune());
+        PY_IMMUNITY.set(gameController().isPacImmune());
     }
 
     @Override
@@ -730,7 +730,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             () -> {
                 editor.saveMapFileAs();
                 editor.stop();
-                GameController.it().loadCustomMaps();
+                gameController().loadCustomMaps();
                 selectPage(startPage);
             },
             () -> {
@@ -843,7 +843,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void selectNextGameVariant() {
-        var all = GameController.it().supportedVariants();
+        var all = gameController().supportedVariants();
         var current = all.indexOf(game().variant());
         var next = current < all.size() - 1 ? all.get(current + 1) : all.get(0);
         selectGameVariant(next);
@@ -851,7 +851,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void selectPrevGameVariant() {
-        var all = GameController.it().supportedVariants();
+        var all = gameController().supportedVariants();
         var current = all.indexOf(game().variant());
         var prev = current > 0 ? all.get(current - 1) : all.get(all.size()-1);
         selectGameVariant(prev);
