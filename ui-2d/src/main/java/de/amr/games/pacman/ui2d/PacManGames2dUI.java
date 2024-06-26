@@ -359,7 +359,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         editor.menuFile().getItems().add(miQuitEditor);
 
         // load maps from core module
-        editor.addLoadMapMenuEntry("Pac-Man",loadMap("pacman.world"));
+        editor.addLoadMapMenuEntry("Pac-Man", loadMap("pacman.world"));
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
         for (int mapNumber = 1; mapNumber <= 6; ++mapNumber) {
             WorldMap map = loadMap("mspacman/mspacman_%d.world".formatted(mapNumber));
