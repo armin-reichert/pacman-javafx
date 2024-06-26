@@ -344,12 +344,14 @@ public class TileMapEditor  {
 
         Slider sliderGridSize = new Slider(8, 48, 16);
         sliderGridSize.valueProperty().bindBidirectional(gridSizePy);
-        sliderGridSize.setTooltip(new Tooltip("Grid Size"));
         sliderGridSize.setShowTickLabels(false);
         sliderGridSize.setShowTickMarks(true);
         sliderGridSize.setPrefWidth(250);
 
-        var footer = new HBox(hoveredTileInfo, filler, sliderGridSize);
+        var sliderContainer = new HBox(new Label("Zoom"), sliderGridSize);
+        sliderContainer.setSpacing(5);
+
+        var footer = new HBox(hoveredTileInfo, filler, sliderContainer);
         footer.setPadding(new Insets(0, 10, 0, 10));
 
         var splitPane = new SplitPane(editCanvasScroll, previewCanvasScroll);
