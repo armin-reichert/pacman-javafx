@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
@@ -158,7 +159,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     @Override
     protected void createGameScenes() {
         super.createGameScenes();
-        for (var variant : GameVariant.values()) {
+        for (var variant : GameController.it().supportedVariants()) {
             var playScene3D = new PlayScene3D();
             playScene3D.setContext(this);
             playScene3D.setParentScene(mainScene);

@@ -318,7 +318,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     protected void createGameScenes() {
-        for (var variant : GameVariant.values()) {
+        for (var variant : GameController.it().supportedVariants()) {
             gameSceneManager.createGameScenes(variant);
             gameSceneManager.gameScenes2D(variant).forEach(gameScene2D -> {
                 gameScene2D.setContext(this);
