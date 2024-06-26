@@ -445,7 +445,7 @@ public class TileMapEditor  {
 
     private void updateTerrainMapPaths() {
         if (!pathsUpToDate) {
-            map().terrain().computePaths();
+            map().terrain().computeTerrainPaths();
             pathsUpToDate = true;
         }
     }

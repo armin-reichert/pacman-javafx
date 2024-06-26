@@ -47,7 +47,7 @@ public class WorldMap {
     public static final Vector2i DEFAULT_POS_ORANGE_GHOST = new Vector2i(15, 17);
     public static final Vector2i DEFAULT_POS_BONUS        = new Vector2i(13, 20);
 
-    public static final String DEFAULT_FOOD_COLOR              = "rgb(255,0,0)";
+    public static final String DEFAULT_FOOD_COLOR         = "rgb(255,0,0)";
 
     private static final String TERRAIN_SECTION_START = "!terrain";
     private static final String FOOD_SECTION_START    = "!food";
@@ -113,15 +113,16 @@ public class WorldMap {
                 Logger.error("Line skipped: '{}'", line);
             }
         }
-        terrain = TileMap.parse(terrainSection, Tiles.TERRAIN_TILES_END);
-        food = TileMap.parse(foodSection, Tiles.FOOD_TILES_END);
+        terrain = TileMap.parseTileMap(terrainSection, Tiles.TERRAIN_TILES_END);
+        terrain.computeTerrainPaths();
+        food = TileMap.parseTileMap(foodSection, Tiles.FOOD_TILES_END);
     }
 
     public void save(File file) {
         try (PrintWriter w = new PrintWriter(file, StandardCharsets.UTF_8)) {
-            w.println("!terrain");
+            w.println(TERRAIN_SECTION_START);
             terrain.print(w);
-            w.println("!food");
+            w.println(FOOD_SECTION_START);
             food.print(w);
             Logger.info("World map saved to file '{}'.", file);
         } catch (Exception x) {

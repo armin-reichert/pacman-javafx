@@ -26,7 +26,7 @@ import static de.amr.games.pacman.lib.Globals.v2i;
  */
 public class TileMap {
 
-    static final String DATA_SECTION_START = "!data";
+    public static final String DATA_SECTION_START = "!data";
 
     private final Properties properties = new Properties();
     private final byte[][] data;
@@ -48,7 +48,7 @@ public class TileMap {
         return "(%d,%d)".formatted(tile.x(), tile.y());
     }
 
-    public static TileMap parse(List<String> lines, byte valueLimit) {
+    public static TileMap parseTileMap(List<String> lines, byte valueLimit) {
         // First pass: read property section and determine data section size
         int numDataRows = 0, numDataCols = -1;
         int dataSectionStartIndex = -1;
@@ -118,7 +118,7 @@ public class TileMap {
         this.data = data;
     }
 
-    public void computePaths() {
+    public void computeTerrainPaths() {
         Logger.debug("Compute paths for {}", this);
         wallPaths = new ArrayList<>();
         dwallPaths = new ArrayList<>();

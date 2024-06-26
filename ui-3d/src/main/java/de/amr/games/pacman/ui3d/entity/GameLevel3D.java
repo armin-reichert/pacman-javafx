@@ -308,7 +308,7 @@ public class GameLevel3D extends Group {
 
     private void addMazeWalls(Group parent) {
         TileMap terrainMap = context.game().world().map().terrain();
-        terrainMap.computePaths();
+        terrainMap.computeTerrainPaths();
         House house = context.game().world().house();
         terrainMap.dwallPaths()
             .filter(path -> !house.contains(path.startTile()))

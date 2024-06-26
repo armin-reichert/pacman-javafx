@@ -46,7 +46,7 @@ public class World {
         this.map = checkNotNull(map);
         setScatterTiles();
         setPortals();
-        map.terrain().computePaths();
+        map.terrain().computeTerrainPaths();
         energizerTiles = tiles().filter(this::isEnergizerTile).toList();
         eaten = new BitSet(map.numCols() * map.numRows());
         totalFoodCount = (int) tiles().filter(this::isFoodTile).count();
