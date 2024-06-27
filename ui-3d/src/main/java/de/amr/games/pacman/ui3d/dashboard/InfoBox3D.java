@@ -34,7 +34,6 @@ public class InfoBox3D extends InfoBox {
     private ColorPicker pickerLightColor;
     private ColorPicker pickerFloorColor;
     private ComboBox<Object> comboFloorTexture;
-    private CheckBox cbFloorTextureRandom;
     private ComboBox<Perspective> comboPerspectives;
     private CheckBox cbPiPOn;
     private Slider sliderPiPSceneHeight;
@@ -54,7 +53,6 @@ public class InfoBox3D extends InfoBox {
         pickerLightColor = colorPicker("Light Color", PY_3D_LIGHT_COLOR.get());
         pickerFloorColor = colorPicker("Floor Color", PY_3D_FLOOR_COLOR.get());
         comboFloorTexture = comboBox("Floor Texture", floorTextureComboBoxEntries());
-        cbFloorTextureRandom = checkBox("Random Floor Texture", () -> toggle(PY_3D_FLOOR_TEXTURE_RND));
         comboPerspectives = comboBox("Perspective", Perspective.values());
 
         infoText("Camera", this::currentSceneCameraInfo); //TODO .available(this::isCurrentGameScene3D);
@@ -121,7 +119,6 @@ public class InfoBox3D extends InfoBox {
         cbUsePlayScene3D.setSelected(PY_3D_ENABLED.get());
         cbPiPOn.setSelected(PY_PIP_ON.getValue());
         comboFloorTexture.setValue(PY_3D_FLOOR_TEXTURE.get());
-        cbFloorTextureRandom.setSelected(PY_3D_FLOOR_TEXTURE_RND.get());
         comboPerspectives.setValue(PY_3D_PERSPECTIVE.get());
         cbEnergizerExplodes.setSelected(PY_3D_ENERGIZER_EXPLODES.get());
         cbNightMode.setSelected(PY_3D_NIGHT_MODE.get());

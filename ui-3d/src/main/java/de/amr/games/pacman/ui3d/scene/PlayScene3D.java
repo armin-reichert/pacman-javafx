@@ -29,7 +29,6 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.List;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -309,10 +308,6 @@ public class PlayScene3D implements GameScene {
             showLevelMessage();
         }
         level3D.createLevelCounter3D();
-        if (PY_3D_FLOOR_TEXTURE_RND.get()) {
-            List<String> names = context.theme().getMap("floorTextures").keySet().stream().toList();
-            PY_3D_FLOOR_TEXTURE.set(names.get(randomInt(0, names.size())));
-        }
     }
 
     @Override
