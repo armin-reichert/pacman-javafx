@@ -433,7 +433,7 @@ public class PlayScene3D implements GameScene {
         }
         if (context.game().pac().isAlive()
             && context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
-            context.soundHandler().ensureAudioLoop("audio.ghost_returning");
+            context.soundHandler().ensureAudioClipLoops("audio.ghost_returning");
         } else {
             context.soundHandler().stopAudioClip("audio.ghost_returning");
         }

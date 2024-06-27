@@ -11,27 +11,23 @@ import javafx.scene.media.AudioClip;
  */
 public interface SoundHandler {
 
-    void stopVoice();
-
     void playVoice(String clipID, double delaySeconds);
+
+    void stopVoice();
 
     AudioClip audioClip(String key);
 
-    default void playAudioClip(String key) {
-        audioClip(key).play();
-    }
+    void playAudioClip(String key);
 
-    default void stopAudioClip(String key) {
-        audioClip(key).stop();
-    }
+    void stopAudioClip(String key);
+
+    void ensureAudioClipRepeats(String key, int repetitions);
+
+    void ensureAudioClipLoops(String key);
 
     void stopAllSounds();
 
     void ensureSirenPlaying(int sirenIndex);
 
     void stopSiren();
-
-    void ensureAudioLoop(String key, int repetitions);
-
-    void ensureAudioLoop(String key);
 }

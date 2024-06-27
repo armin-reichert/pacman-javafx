@@ -383,7 +383,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             Logger.info("Map loaded from URL {}", url);
             return map;
         }
-        Logger.error("Could not load map from URL {}", url);
+        Logger.error("Could not find map at path {}", relativeMapPath);
         return null;
     }
 
@@ -628,7 +628,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void onPacFoundFood(GameEvent event) {
         if (!game().isDemoLevel()) {
             //TODO (fixme) this does not sound 100% as in the original game
-            ensureAudioLoop("audio.pacman_munch", AudioClip.INDEFINITE);
+            ensureAudioClipRepeats("audio.pacman_munch", AudioClip.INDEFINITE);
         }
     }
 
@@ -952,7 +952,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     // SoundHandler interface implementation
     // -----------------------------------------------------------------------------------------------------------------
 
-
     @Override
     public AudioClip audioClip(String key) {
         checkNotNull(key);
@@ -960,6 +959,44 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             ? game().variant().resourceKey()
             : GameVariant.PACMAN.resourceKey();
         return theme().audioClip(rk + "." + key);
+    }
+
+    @Override
+    public void playAudioClip(String key) {
+        AudioClip clip = audioClip(key);
+        if (clip != null) {
+            clip.play();
+        } else {
+            Logger.error("No audio clip with key {} found in theme", key);
+        }
+    }
+
+    @Override
+    public void stopAudioClip(String key) {
+        AudioClip clip = audioClip(key);
+        if (clip != null) {
+            clip.stop();
+        } else {
+            Logger.error("No audio clip with key {} found in theme", key);
+        }
+    }
+
+    @Override
+    public void ensureAudioClipRepeats(String key, int repetitions) {
+        var clip = audioClip(key);
+        if (clip != null) {
+            if (!clip.isPlaying()) {
+                clip.setCycleCount(repetitions);
+                clip.play();
+            }
+        } else {
+            Logger.error("No audio clip with key {} found in theme", key);
+        }
+    }
+
+    @Override
+    public void ensureAudioClipLoops(String key) {
+        ensureAudioClipRepeats(key, AudioClip.INDEFINITE);
     }
 
     @Override
@@ -997,20 +1034,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (sirenPlayer != null) {
             sirenPlayer.stop();
         }
-    }
-
-    @Override
-    public void ensureAudioLoop(String key, int repetitions) {
-        var clip = audioClip(key);
-        if (!clip.isPlaying()) {
-            clip.setCycleCount(repetitions);
-            clip.play();
-        }
-    }
-
-    @Override
-    public void ensureAudioLoop(String key) {
-        ensureAudioLoop(key, AudioClip.INDEFINITE);
     }
 
     @Override

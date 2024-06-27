@@ -203,7 +203,7 @@ public class PlayScene2D extends GameScene2D {
             context.soundHandler().stopAudioClip("audio.pacman_munch");
         }
         if (context.game().pac().isAlive() && context.game().ghosts(RETURNING_HOME, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
-            context.soundHandler().ensureAudioLoop("audio.ghost_returning");
+            context.soundHandler().ensureAudioClipLoops("audio.ghost_returning");
         } else {
             context.soundHandler().stopAudioClip("audio.ghost_returning");
         }
