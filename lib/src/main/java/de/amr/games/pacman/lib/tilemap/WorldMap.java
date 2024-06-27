@@ -63,9 +63,10 @@ public class WorldMap {
      */
     public WorldMap(WorldMap other) {
         checkNotNull(other);
-        terrain = TileMap.copyOf(other.terrain);
-        food = TileMap.copyOf(other.food);
-        url = other.url; //TODO useful?
+        terrain = new TileMap(other.terrain);
+        food = new TileMap(other.food);
+        url = other.url;
+        terrain.computeTerrainPaths();
     }
 
     public WorldMap(int numRows, int numCols) {

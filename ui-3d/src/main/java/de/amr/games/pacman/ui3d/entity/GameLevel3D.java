@@ -317,20 +317,19 @@ public class GameLevel3D extends Group {
             .forEach(path -> buildWallsAlongPath(parent, path, wallHeightPy, WALL_THICKNESS));
     }
 
-    private void buildWallsAlongPath(Group parent, TileMapPath tileMapPath, DoubleProperty heightPy, double thickness) {
-        Vector2i wallStart = tileMapPath.startTile();
-        Vector2i wallEnd = wallStart;
+    private void buildWallsAlongPath(Group parent, TileMapPath path, DoubleProperty heightPy, double thickness) {
+        Vector2i startTile = path.startTile(), endTile = startTile;
         Direction prevDir = null;
-        for (int i = 0; i < tileMapPath.size(); ++i) {
-            var dir = tileMapPath.dir(i);
+        for (int i = 0; i < path.size(); ++i) {
+            var dir = path.dir(i);
             if (prevDir != dir) {
-                parent.getChildren().add(createWall(wallStart, wallEnd, thickness, heightPy, wallFillMaterialPy));
-                wallStart = wallEnd;
+                parent.getChildren().add(createWall(startTile, endTile, thickness, heightPy, wallFillMaterialPy));
+                startTile = endTile;
             }
-            wallEnd = wallEnd.plus(dir.vector());
+            endTile = endTile.plus(dir.vector());
             prevDir = dir;
         }
-        parent.getChildren().add(createWall(wallStart, wallEnd, thickness, heightPy, wallFillMaterialPy));
+        parent.getChildren().add(createWall(startTile, endTile, thickness, heightPy, wallFillMaterialPy));
     }
 
     private Node createWall(

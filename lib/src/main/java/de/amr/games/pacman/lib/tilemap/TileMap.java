@@ -101,13 +101,15 @@ public class TileMap {
         return tileMap;
     }
 
-    public static TileMap copyOf(TileMap other) {
-        var copy = new TileMap(other.numRows(), other.numCols());
-        for (int row = 0; row < other.numRows(); ++row) {
-            copy.data[row] = Arrays.copyOf(other.data[row], other.numCols());
+    public TileMap(TileMap other) {
+        int numRows = other.numRows(), numCols = other.numCols();
+        properties.putAll(other.properties);
+        data = new byte[numRows][];
+        for (int row = 0; row < numRows; ++row) {
+            data[row] = Arrays.copyOf(other.data[row], numCols);
         }
-        copy.properties.putAll(other.properties);
-        return copy;
+        wallPaths = new ArrayList<>(other.wallPaths);
+        dwallPaths = new ArrayList<>(other.dwallPaths);
     }
 
     public TileMap(int numRows, int numCols) {
@@ -119,7 +121,7 @@ public class TileMap {
     }
 
     public void computeTerrainPaths() {
-        Logger.debug("Compute paths for {}", this);
+        Logger.info("Compute paths for {}", this);
         wallPaths = new ArrayList<>();
         dwallPaths = new ArrayList<>();
 
