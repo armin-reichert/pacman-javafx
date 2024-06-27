@@ -23,8 +23,6 @@ import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.*;
-import javafx.animation.Animation;
-import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
@@ -38,6 +36,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -71,23 +71,23 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     public static final String SIGNATURE_TEXT = "Remake (2021-2024) by Armin Reichert";
 
-    public static final BooleanProperty PY_AUTOPILOT              = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_CANVAS_DECORATED       = new SimpleBooleanProperty(true);
-    public static final BooleanProperty PY_DEBUG_INFO             = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_IMMUNITY               = new SimpleBooleanProperty(false) {
+    public static final BooleanProperty PY_AUTOPILOT           = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_CANVAS_DECORATED    = new SimpleBooleanProperty(true);
+    public static final BooleanProperty PY_DEBUG_INFO          = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_IMMUNITY            = new SimpleBooleanProperty(false) {
         @Override
         protected void invalidated() {
             GameController.it().setPacImmune(get());
         }
     };
-    public static final IntegerProperty PY_PIP_HEIGHT             = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_Y);
-    public static final BooleanProperty PY_PIP_ON                 = new SimpleBooleanProperty(false);
-    public static final IntegerProperty PY_PIP_OPACITY_PERCENT    = new SimpleIntegerProperty(100);
-    public static final IntegerProperty PY_SIMULATION_STEPS       = new SimpleIntegerProperty(1);
+    public static final IntegerProperty PY_PIP_HEIGHT          = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_Y);
+    public static final BooleanProperty PY_PIP_ON              = new SimpleBooleanProperty(false);
+    public static final IntegerProperty PY_PIP_OPACITY_PERCENT = new SimpleIntegerProperty(100);
+    public static final IntegerProperty PY_SIMULATION_STEPS    = new SimpleIntegerProperty(1);
 
-    public final ObjectProperty<GameVariant> gameVariantPy        = new SimpleObjectProperty<>(this, "gameVariant");
-    public final ObjectProperty<GameScene>   gameScenePy          = new SimpleObjectProperty<>(this, "gameScene");
-    public final BooleanProperty             scoreVisiblePy       = new SimpleBooleanProperty(this, "scoreVisible");
+    public final ObjectProperty<GameVariant> gameVariantPy     = new SimpleObjectProperty<>(this, "gameVariant");
+    public final ObjectProperty<GameScene>   gameScenePy       = new SimpleObjectProperty<>(this, "gameScene");
+    public final BooleanProperty             scoreVisiblePy    = new SimpleBooleanProperty(this, "scoreVisible");
 
     protected final Theme theme = new Theme();
     protected final GameSceneManager gameSceneManager = new GameSceneManager();
@@ -105,9 +105,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected EditorPage editorPage;
     protected Page currentPage;
 
-    //TODO reconsider this
-    protected final Animation voiceClipExecution = new PauseTransition();
-    protected AudioClip voiceClip;
+    protected MediaPlayer voicePlayer;
 
     public void loadAssets() {
         bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", PacManGames2dUI.class.getModule()));
@@ -153,11 +151,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("font.handwriting",                 rm.loadFont("fonts/Molle-Italic.ttf", 9));
         theme.set("font.monospaced",                  rm.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12));
 
-        theme.set("voice.explain",                    rm.loadAudioClip("sound/voice/press-key.mp3"));
-        theme.set("voice.autopilot.off",              rm.loadAudioClip("sound/voice/autopilot-off.mp3"));
-        theme.set("voice.autopilot.on",               rm.loadAudioClip("sound/voice/autopilot-on.mp3"));
-        theme.set("voice.immunity.off",               rm.loadAudioClip("sound/voice/immunity-off.mp3"));
-        theme.set("voice.immunity.on",                rm.loadAudioClip("sound/voice/immunity-on.mp3"));
+        theme.set("voice.explain",                    rm.url("sound/voice/press-key.mp3"));
+        theme.set("voice.autopilot.off",              rm.url("sound/voice/autopilot-off.mp3"));
+        theme.set("voice.autopilot.on",               rm.url("sound/voice/autopilot-on.mp3"));
+        theme.set("voice.immunity.off",               rm.url("sound/voice/immunity-off.mp3"));
+        theme.set("voice.immunity.on",                rm.url("sound/voice/immunity-on.mp3"));
 
         //
         // Ms. Pac-Man game
@@ -965,7 +963,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void stopAllSounds() {
-        theme().audioClips().filter(clip -> clip != voiceClip).forEach(AudioClip::stop);
+        theme().audioClips().forEach(AudioClip::stop);
         Logger.trace("All sounds stopped");
     }
 
@@ -1010,23 +1008,21 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     @Override
-    public void playVoice(String clipID, double delaySeconds) {
-        if (voiceClip != null && voiceClip.isPlaying()) {
-            return; // don't interrupt
+    public void playVoice(String voiceKey, double delaySeconds) {
+        if (voicePlayer != null && voicePlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            Logger.info("Cannot play voice {}, another voice is already playing", voiceKey);
+            return;
         }
-        voiceClip = theme().audioClip(clipID);
-        voiceClipExecution.setDelay(Duration.seconds(delaySeconds));
-        voiceClipExecution.setOnFinished(e -> voiceClip.play());
-        voiceClipExecution.play();
+        URL voiceURL = theme.get(voiceKey);
+        voicePlayer = new MediaPlayer(new Media(voiceURL.toExternalForm()));
+        voicePlayer.setStartTime(Duration.seconds(delaySeconds));
+        voicePlayer.play();
     }
 
     @Override
     public void stopVoice() {
-        if (voiceClip != null && voiceClip.isPlaying()) {
-            voiceClip.stop();
-        }
-        if (voiceClipExecution.getStatus() == Animation.Status.RUNNING) {
-            voiceClipExecution.stop();
+        if (voicePlayer != null) {
+            voicePlayer.stop();
         }
     }
 }
