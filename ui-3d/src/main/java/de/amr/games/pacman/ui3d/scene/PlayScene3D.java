@@ -186,7 +186,7 @@ public class PlayScene3D implements GameScene {
         level3D.pac3D().init(context);
         level3D.pac3D().update(context);
         if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
-            context.soundHandler().ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
+            context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
         }
     }
 

@@ -51,8 +51,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
@@ -106,6 +104,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected Page currentPage;
 
     protected MediaPlayer voicePlayer;
+    protected MediaPlayer sirenPlayer;
 
     public void loadAssets() {
         bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", PacManGames2dUI.class.getModule()));
@@ -181,11 +180,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("ms_pacman.audio.pacman_death",      rm.loadAudioClip("sound/mspacman/Died.mp3"));
         theme.set("ms_pacman.audio.pacman_munch",      rm.loadAudioClip("sound/mspacman/Pill.wav"));
         theme.set("ms_pacman.audio.pacman_power",      rm.loadAudioClip("sound/mspacman/ScaredGhost.mp3"));
-        theme.set("ms_pacman.audio.siren.1",           rm.loadAudioClip("sound/mspacman/GhostNoise1.wav"));
-        theme.set("ms_pacman.audio.siren.2",           rm.loadAudioClip("sound/mspacman/GhostNoise1.wav"));// TODO
-        theme.set("ms_pacman.audio.siren.3",           rm.loadAudioClip("sound/mspacman/GhostNoise1.wav"));// TODO
-        theme.set("ms_pacman.audio.siren.4",           rm.loadAudioClip("sound/mspacman/GhostNoise1.wav"));// TODO
         theme.set("ms_pacman.audio.sweep",             rm.loadAudioClip("sound/common/sweep.mp3"));
+
+        theme.set("ms_pacman.audio.siren.1",           rm.url("sound/mspacman/GhostNoise1.wav"));
+        theme.set("ms_pacman.audio.siren.2",           rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
+        theme.set("ms_pacman.audio.siren.3",           rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
+        theme.set("ms_pacman.audio.siren.4",           rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
 
         //
         // Pac-Man game
@@ -208,11 +208,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("pacman.audio.pacman_death",        rm.loadAudioClip("sound/pacman/pacman_death.wav"));
         theme.set("pacman.audio.pacman_munch",        rm.loadAudioClip("sound/pacman/doublemunch.wav"));
         theme.set("pacman.audio.pacman_power",        rm.loadAudioClip("sound/pacman/ghost-turn-to-blue.mp3"));
-        theme.set("pacman.audio.siren.1",             rm.loadAudioClip("sound/pacman/siren_1.mp3"));
-        theme.set("pacman.audio.siren.2",             rm.loadAudioClip("sound/pacman/siren_2.mp3"));
-        theme.set("pacman.audio.siren.3",             rm.loadAudioClip("sound/pacman/siren_3.mp3"));
-        theme.set("pacman.audio.siren.4",             rm.loadAudioClip("sound/pacman/siren_4.mp3"));
         theme.set("pacman.audio.sweep",               rm.loadAudioClip("sound/common/sweep.mp3"));
+
+        theme.set("pacman.audio.siren.1",             rm.url("sound/pacman/siren_1.mp3"));
+        theme.set("pacman.audio.siren.2",             rm.url("sound/pacman/siren_2.mp3"));
+        theme.set("pacman.audio.siren.3",             rm.url("sound/pacman/siren_3.mp3"));
+        theme.set("pacman.audio.siren.4",             rm.url("sound/pacman/siren_4.mp3"));
 
         //
         // Pac-Man XXL
@@ -559,7 +560,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void onHuntingPhaseStarted(GameEvent event) {
         if (!game().isDemoLevel()) {
-            game().scatterPhase().ifPresent(this::ensureSirenStarted);
+            game().scatterPhase().ifPresent(this::ensureSirenPlaying);
         }
     }
 
@@ -634,7 +635,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void onPacGetsPower(GameEvent event) {
         if (!game().isDemoLevel()) {
-            stopSirens();
+            stopSiren();
             var clip = audioClip("audio.pacman_power");
             clip.stop();
             clip.setCycleCount(AudioClip.INDEFINITE);
@@ -646,7 +647,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void onPacLostPower(GameEvent event) {
         if (!game().isDemoLevel()) {
             stopAudioClip("audio.pacman_power");
-            ensureSirenStarted(game().huntingPhaseIndex() / 2);
+            ensureSirenPlaying(game().huntingPhaseIndex() / 2);
         }
     }
 
@@ -963,34 +964,39 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void stopAllSounds() {
+        stopSiren();
+        stopVoice();
         theme().audioClips().forEach(AudioClip::stop);
         Logger.trace("All sounds stopped");
     }
 
-    private void startSiren(int sirenIndex) {
-        stopSirens();
-        var siren = audioClip("audio.siren." + (sirenIndex + 1));
-        siren.setCycleCount(AudioClip.INDEFINITE);
-        siren.play();
-    }
-
-    private Stream<AudioClip> sirens() {
-        return IntStream.rangeClosed(1, 4).mapToObj(i -> audioClip("audio.siren." + i));
+    /**
+     * @param sirenNumber 1..4
+     */
+    private void playSirenSound(int sirenNumber) {
+        stopSiren();
+        String rk = game().variant() == GameVariant.PACMAN_XXL ? GameVariant.PACMAN.resourceKey() : game().variant().resourceKey();
+        URL sirenURL = theme.get(rk + ".audio.siren." + sirenNumber);
+        sirenPlayer = new MediaPlayer(new Media(sirenURL.toExternalForm()));
+        sirenPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        sirenPlayer.play();
     }
 
     /**
      * @param sirenIndex index of siren (0..3)
      */
     @Override
-    public void ensureSirenStarted(int sirenIndex) {
-        if (sirens().noneMatch(AudioClip::isPlaying)) {
-            startSiren(sirenIndex);
+    public void ensureSirenPlaying(int sirenIndex) {
+        if (sirenPlayer == null || sirenPlayer.getStatus() != MediaPlayer.Status.PLAYING) {
+            playSirenSound(sirenIndex + 1);
         }
     }
 
     @Override
-    public void stopSirens() {
-        sirens().forEach(AudioClip::stop);
+    public void stopSiren() {
+        if (sirenPlayer != null) {
+            sirenPlayer.stop();
+        }
     }
 
     @Override

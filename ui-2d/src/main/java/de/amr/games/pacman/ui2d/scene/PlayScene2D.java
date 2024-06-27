@@ -194,7 +194,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onSceneVariantSwitch() {
         if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
-            context.soundHandler().ensureSirenStarted(context.game().huntingPhaseIndex() / 2);
+            context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
         }
     }
 

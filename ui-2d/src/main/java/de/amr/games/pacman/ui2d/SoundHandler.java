@@ -27,9 +27,9 @@ public interface SoundHandler {
 
     void stopAllSounds();
 
-    void ensureSirenStarted(int sirenIndex);
+    void ensureSirenPlaying(int sirenIndex);
 
-    void stopSirens();
+    void stopSiren();
 
     void ensureAudioLoop(String key, int repetitions);
 
