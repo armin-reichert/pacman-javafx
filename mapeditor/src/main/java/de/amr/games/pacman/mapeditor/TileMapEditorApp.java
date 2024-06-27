@@ -14,7 +14,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.net.URL;
 import java.util.List;
 
 import static java.util.stream.IntStream.rangeClosed;

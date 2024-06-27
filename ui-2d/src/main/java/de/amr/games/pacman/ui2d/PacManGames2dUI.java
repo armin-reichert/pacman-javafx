@@ -61,7 +61,6 @@ import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static java.util.function.Predicate.not;
-import static java.util.stream.IntStream.rangeClosed;
 
 /**
  * 2D-only user interface for Pac-Man and Ms. Pac-Man games. No 3D scenes.
