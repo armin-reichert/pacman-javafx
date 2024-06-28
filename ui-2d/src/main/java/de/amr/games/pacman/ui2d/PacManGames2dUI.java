@@ -728,15 +728,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (editorPage == null) {
             createEditorPage();
         }
-        stopVoice();
         stopAllSounds();
         currentGameScene().ifPresent(GameScene::end);
+        reboot();
         clock.stop();
         stage.titleProperty().bind(editor.titlePy);
         if (game().world() != null) {
             editor.setMap(game().world().map());
         }
-        reboot();
         editor.start();
         selectPage(editorPage);
     }

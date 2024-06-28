@@ -176,7 +176,7 @@ public class GameLevel3D extends Group {
         foodColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_FOOD, Color.PINK));
         addMazeWalls(mazeGroup);
         buildGhostHouse(mazeGroup);
-        addFood3D(mazeGroup);
+        addFood3D(this);
 
         pac3D = switch (context.game().variant()) {
             case MS_PACMAN          -> new MsPacMan3D(PAC_SIZE, context.game().pac(), context.theme());
