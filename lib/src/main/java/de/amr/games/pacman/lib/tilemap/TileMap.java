@@ -32,8 +32,8 @@ public class TileMap {
     private final byte[][] data;
 
     // Terrain maps only
-    private List<TileMapPath> wallPaths;
-    private List<TileMapPath> dwallPaths;
+    private List<TileMapPath> wallPaths = List.of();
+    private List<TileMapPath> dwallPaths = List.of();
 
     public static Vector2i parseVector2i(String text) {
         Pattern pattern = Pattern.compile("\\((\\d+),(\\d+)\\)");
