@@ -161,10 +161,11 @@ public class GameLevel3D extends Group {
     public GameLevel3D(GameContext context) {
         this.context = checkNotNull(context);
 
-        // Floor
+        // Place floor such that left-upper corner is at origin and floor surface is at z=0
         floor = new Box(context.game().world().numCols() * TS - 1, context.game().world().numRows() * TS - 1, FLOOR_THICKNESS);
-        // place floor such that surface is at z=0
-        floor.getTransforms().add(new Translate(0.5 * floor.getWidth(), 0.5 * floor.getHeight(), 0.5 * floor.getDepth()));
+        floor.translateXProperty().bind(floor.widthProperty().multiply(0.5));
+        floor.translateYProperty().bind(floor.heightProperty().multiply(0.5));
+        floor.translateZProperty().bind(floor.depthProperty().multiply(0.5));
         floor.drawModeProperty().bind(PY_3D_DRAW_MODE);
         floorColorPy.bind(PY_3D_FLOOR_COLOR);
         floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
@@ -189,10 +190,10 @@ public class GameLevel3D extends Group {
         createLevelCounter3D();
         createMessage3D();
 
-        worldGroup.getChildren().addAll(floor, mazeGroup);
         getChildren().addAll(ghosts3D);
         getChildren().addAll(pac3D, pac3D.light());
-        // Walls group must come after the guys! Otherwise, transparency is not working correctly.
+        // Walls must come after the guys! Otherwise, transparency is not working correctly.
+        worldGroup.getChildren().addAll(floor, mazeGroup);
         getChildren().addAll(message3D, levelCounterGroup, livesCounter3D, worldGroup);
 
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);

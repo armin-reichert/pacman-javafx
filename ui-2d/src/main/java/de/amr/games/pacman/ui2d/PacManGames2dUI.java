@@ -742,18 +742,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void quitMapEditor() {
-        editor.showConfirmation(
-            () -> {
-                editor.saveMapFileAs();
-                editor.stop();
-                gameController().loadCustomMaps();
-                selectPage(startPage);
-            },
-            () -> {
-                stage.titleProperty().bind(stageTitleBinding());
-                editor.stop();
-                selectPage(startPage);
-            });
+        editor.showConfirmation(editor::saveMapFileAs,
+            () -> stage.titleProperty().bind(stageTitleBinding()));
+        editor.stop();
+        gameController().loadCustomMaps();
+        selectPage(startPage);
     }
 
     @Override
@@ -867,9 +860,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void selectPrevGameVariant() {
-        var all = gameController().supportedVariants();
-        var current = all.indexOf(game().variant());
-        var prev = current > 0 ? all.get(current - 1) : all.get(all.size()-1);
+        var gameVariants = gameController().supportedVariants();
+        var current = gameVariants.indexOf(game().variant());
+        var prev = current > 0 ? gameVariants.get(current - 1) : gameVariants.get(gameVariants.size() - 1);
         selectGameVariant(prev);
     }
 
