@@ -20,6 +20,7 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui3d.animation.Squirting;
+import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
 import javafx.beans.property.*;
 import javafx.scene.Group;
@@ -29,7 +30,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import java.util.*;
@@ -48,8 +48,8 @@ import static java.lang.Math.PI;
 public class GameLevel3D extends Group {
 
     private static final float FLOOR_THICKNESS       = 0.4f;
-    private static final float WALL_THICKNESS        = 0.5f;
-    private static final float WALL_THICKNESS_DWALL  = 2.0f;
+    private static final float INNER_WALL_THICKNESS  = 0.5f;
+    private static final float OUTER_WALL_THICKNESS  = 2.0f;
     private static final float WALL_COAT_HEIGHT      = 0.1f;
     private static final float HOUSE_HEIGHT          = 12.0f;
     private static final float HOUSE_OPACITY         = 0.4f;
@@ -175,9 +175,9 @@ public class GameLevel3D extends Group {
         wallStrokeColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
         wallFillColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_WALL_FILL, Color.rgb(0,0,0)));
         foodColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_FOOD, Color.PINK));
-        addMazeWalls(mazeGroup);
-        buildGhostHouse(mazeGroup);
-        addFood3D(this);
+        addWalls(mazeGroup);
+        addHouse(mazeGroup);
+        addPellets(this); // when put inside maze group, transparency does not work!
 
         pac3D = switch (context.game().variant()) {
             case MS_PACMAN          -> new MsPacMan3D(PAC_SIZE, context.game().pac(), context.theme());
@@ -185,10 +185,10 @@ public class GameLevel3D extends Group {
         };
         ghosts3D = context.game().ghosts().map(this::createGhost3D).toList();
 
-        createLivesCounter3D();
+        addLivesCounter();
         updateLivesCounter();
-        createLevelCounter3D();
-        createMessage3D();
+        addLevelCounter();
+        addMessage();
 
         getChildren().addAll(ghosts3D);
         getChildren().addAll(pac3D, pac3D.light());
@@ -230,28 +230,28 @@ public class GameLevel3D extends Group {
         livesCounter3D.livesShownPy.set(numLivesCounterEntries);
     }
 
-    private void buildGhostHouse(Group parent) {
-        WorldMap map = context.game().world().map();
-        House house = context.game().world().house();
-        Vector2i leftDoorTile = house.door().leftWing();
-        Vector2i rightDoorTile = house.door().rightWing();
+    private Ghost3D createGhost3D(Ghost ghost) {
+        return new Ghost3D(context.theme().get("model3D.ghost"), context.theme(), ghost, GHOST_SIZE);
+    }
 
-        // tiles
-        int tilesX = house.size().x();
-        int tilesY = house.size().y();
+    private void addHouse(Group parent) {
+        House house = context.game().world().house();
+        Vector2i leftDoorTile = house.door().leftWing(), rightDoorTile = house.door().rightWing();
+        int tilesX = house.size().x(), tilesY = house.size().y();
 
         // tile coordinates
+        WorldMap map = context.game().world().map();
         int xMin = map.numCols() / 2 - (int) Math.ceil(0.5 * tilesX);
         int yMin = map.numRows() / 2 - (int) Math.ceil(0.5 * tilesY);
         int yMax = yMin + tilesY - 1;
         int xMax = xMin + tilesX - 1;
 
         parent.getChildren().addAll(
-            houseWall(xMin, yMin, leftDoorTile.x() - 1,yMin),
-            houseWall(rightDoorTile.x() + 1, yMin, xMax,yMin),
-            houseWall(xMin,yMin,  xMin,yMax),
-            houseWall(xMax, yMin,  xMax,yMax),
-            houseWall(xMin,yMax, xMax,yMax)
+            createHouseWall(xMin, yMin, leftDoorTile.x() - 1, yMin),
+            createHouseWall(rightDoorTile.x() + 1, yMin, xMax, yMin),
+            createHouseWall(xMin, yMin, xMin, yMax),
+            createHouseWall(xMax, yMin, xMax, yMax),
+            createHouseWall(xMin, yMax, xMax, yMax)
         );
 
         Color doorColor = getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_DOOR, Color.rgb(254,184,174));
@@ -275,14 +275,15 @@ public class GameLevel3D extends Group {
         parent.getChildren().add(houseLight);
     }
 
-    private Node houseWall(int x1, int y1, int x2, int y2) {
-        return createWall(v2i(x1, y1), v2i(x2, y2), WALL_THICKNESS, houseHeightPy, houseFillMaterialPy);
+    private Node createHouseWall(int x1, int y1, int x2, int y2) {
+        return createWall(v2i(x1, y1), v2i(x2, y2), INNER_WALL_THICKNESS, houseHeightPy, houseFillMaterialPy);
     }
 
-    private void addFood3D(Group parent) {
+    private void addPellets(Group parent) {
         var world = context.game().world();
         Color color = getColorFromMap(world.map().food(), WorldMap.PROPERTY_COLOR_FOOD, Color.WHITE);
         foodColorPy.set(color);
+        Model3D pelletModel3D = context.theme().get("model3D.pellet");
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {
             if (world.isEnergizerTile(tile)) {
                 var energizer3D = new Energizer3D(ENERGIZER_RADIUS);
@@ -292,7 +293,7 @@ public class GameLevel3D extends Group {
                 energizer3D.placeAtTile(tile);
                 parent.getChildren().add(energizer3D.root());
             } else {
-                var pellet3D = new Pellet3D(context.theme().get("model3D.pellet"), PELLET_RADIUS);
+                var pellet3D = new Pellet3D(pelletModel3D, PELLET_RADIUS);
                 pellets3D.add(pellet3D);
                 pellet3D.root().materialProperty().bind(foodMaterialPy);
                 pellet3D.placeAtTile(tile);
@@ -307,18 +308,18 @@ public class GameLevel3D extends Group {
             .map(DoorWing3D.class::cast);
     }
 
-    private void addMazeWalls(Group parent) {
+    private void addWalls(Group parent) {
         TileMap terrainMap = context.game().world().map().terrain();
         terrainMap.computeTerrainPaths();
         House house = context.game().world().house();
         terrainMap.outerPaths()
             .filter(path -> !house.contains(path.startTile()))
-            .forEach(path -> buildWallsAlongPath(parent, path, outerWallHeightPy, WALL_THICKNESS_DWALL));
+            .forEach(path -> addWallsAlongPath(parent, path, outerWallHeightPy, OUTER_WALL_THICKNESS));
         terrainMap.innerPaths()
-            .forEach(path -> buildWallsAlongPath(parent, path, wallHeightPy, WALL_THICKNESS));
+            .forEach(path -> addWallsAlongPath(parent, path, wallHeightPy, INNER_WALL_THICKNESS));
     }
 
-    private void buildWallsAlongPath(Group parent, TileMapPath path, DoubleProperty heightPy, double thickness) {
+    private void addWallsAlongPath(Group parent, TileMapPath path, DoubleProperty heightPy, double thickness) {
         Vector2i startTile = path.startTile(), endTile = startTile;
         Direction prevDir = null;
         for (int i = 0; i < path.size(); ++i) {
@@ -389,7 +390,7 @@ public class GameLevel3D extends Group {
         return new Group(base, top);
     }
 
-    private void createLivesCounter3D() {
+    private void addLivesCounter() {
         Supplier<Pac3D> pacShapeFactory = () -> switch (context.game().variant()) {
             case MS_PACMAN          -> new MsPacMan3D(10, null, context.theme());
             case PACMAN, PACMAN_XXL -> new PacMan3D(10, null, context.theme());
@@ -404,7 +405,7 @@ public class GameLevel3D extends Group {
         livesCounter3D.light().setLightOn(context.gameController().hasCredit());
     }
 
-    public void createLevelCounter3D() {
+    public void addLevelCounter() {
         World world = context.game().world();
         double spacing = 2 * TS;
         // this is the *right* edge of the level counter:
@@ -444,7 +445,7 @@ public class GameLevel3D extends Group {
         }
     }
 
-    private void createMessage3D() {
+    private void addMessage() {
         message3D = new Message3D();
         message3D.beginBatch();
         message3D.setBorderColor(Color.WHITE);
@@ -492,10 +493,6 @@ public class GameLevel3D extends Group {
         worldGroup.getChildren().add(bonus3D);
     }
 
-    private Ghost3D createGhost3D(Ghost ghost) {
-        return new Ghost3D(context.theme().get("model3D.ghost"), context.theme(), ghost, GHOST_SIZE);
-    }
-
     private void addEnergizerAnimation(World world, Energizer3D energizer3D) {
         var squirting = new Squirting() {
             @Override
@@ -529,7 +526,7 @@ public class GameLevel3D extends Group {
         }
     }
 
-    public Transition createMazeRotateAnimation(double seconds) {
+    public RotateTransition createMazeRotateAnimation(double seconds) {
         var rotation = new RotateTransition(Duration.seconds(seconds), this);
         rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
         rotation.setFromAngle(0);
@@ -538,8 +535,7 @@ public class GameLevel3D extends Group {
         return rotation;
     }
 
-    public Animation createWallsDisappearAnimation(double seconds) {
-
+    public Transition createWallsDisappearAnimation(double seconds) {
         return new Transition() {
             private final double initialWallHeight = wallHeightPy.get();
             private final double initialOuterWallHeight = outerWallHeightPy.get();
@@ -561,7 +557,7 @@ public class GameLevel3D extends Group {
         };
     }
 
-    public Animation createMazeFlashAnimation(int numFlashes) {
+    public Transition createMazeFlashAnimation(int numFlashes) {
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }
