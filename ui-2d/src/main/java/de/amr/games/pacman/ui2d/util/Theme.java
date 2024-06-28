@@ -10,6 +10,7 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Pair;
+import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -106,7 +107,11 @@ public class Theme {
     }
 
     public AudioClip audioClip(String key) {
-        return get(key);
+        AudioClip clip = get(key);
+        if (clip == null) {
+            Logger.error("No audio clip with key {} found in theme", key);
+        }
+        return clip;
     }
 
     public Stream<AudioClip> audioClips() {

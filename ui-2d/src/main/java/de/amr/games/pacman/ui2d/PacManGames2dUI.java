@@ -955,10 +955,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public AudioClip audioClip(String key) {
         checkNotNull(key);
-        String rk = (game().variant() != GameVariant.PACMAN_XXL)
-            ? game().variant().resourceKey()
-            : GameVariant.PACMAN.resourceKey();
-        return theme().audioClip(rk + "." + key);
+        String rk = game().variant() == GameVariant.PACMAN_XXL ? GameVariant.PACMAN.resourceKey() : game().variant().resourceKey();
+        return theme.audioClip(rk + "." + key);
     }
 
     @Override
@@ -966,8 +964,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         AudioClip clip = audioClip(key);
         if (clip != null) {
             clip.play();
-        } else {
-            Logger.error("No audio clip with key {} found in theme", key);
         }
     }
 
@@ -976,8 +972,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         AudioClip clip = audioClip(key);
         if (clip != null) {
             clip.stop();
-        } else {
-            Logger.error("No audio clip with key {} found in theme", key);
         }
     }
 
@@ -989,8 +983,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
                 clip.setCycleCount(repetitions);
                 clip.play();
             }
-        } else {
-            Logger.error("No audio clip with key {} found in theme", key);
         }
     }
 
@@ -1003,8 +995,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void stopAllSounds() {
         stopSiren();
         stopVoice();
-        theme().audioClips().forEach(AudioClip::stop);
-        Logger.trace("All sounds stopped");
+        theme.audioClips().forEach(AudioClip::stop);
     }
 
     /**
