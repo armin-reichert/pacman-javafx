@@ -49,14 +49,16 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     public void drawMap(GraphicsContext g, TileMap map) {
-        double lineWidth = computeLineWidth(g.getCanvas().getHeight());
+        double innerPathWidth = computeLineWidth(g.getCanvas().getHeight());
+        double outerPathWidth = 3 * innerPathWidth;
+        double outerPathBorderWidth = 0.75 * innerPathWidth;
         g.save();
         g.scale(scaling(), scaling());
-        map.dwallPaths().forEach(path -> {
-            drawPath(g, map, path, false,  3.0 * lineWidth, wallStrokeColor, null);
-            drawPath(g, map, path, false,  1.5 * lineWidth, wallFillColor, null);
+        map.outerPaths().forEach(path -> {
+            drawPath(g, map, path, false,  outerPathWidth, wallStrokeColor, null);
+            drawPath(g, map, path, false,  outerPathWidth - 2 * outerPathBorderWidth, wallFillColor, null);
         });
-        map.wallPaths().forEach(path -> drawPath(g, map, path, true, lineWidth, wallStrokeColor, wallFillColor));
+        map.innerPaths().forEach(path -> drawPath(g, map, path, true, innerPathWidth, wallStrokeColor, wallFillColor));
         map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, door, doorColor));
         g.restore();
     }

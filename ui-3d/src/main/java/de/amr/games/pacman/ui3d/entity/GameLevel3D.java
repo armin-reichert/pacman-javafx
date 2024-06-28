@@ -310,10 +310,10 @@ public class GameLevel3D extends Group {
         TileMap terrainMap = context.game().world().map().terrain();
         terrainMap.computeTerrainPaths();
         House house = context.game().world().house();
-        terrainMap.dwallPaths()
+        terrainMap.outerPaths()
             .filter(path -> !house.contains(path.startTile()))
             .forEach(path -> buildWallsAlongPath(parent, path, outerWallHeightPy, WALL_THICKNESS_DWALL));
-        terrainMap.wallPaths()
+        terrainMap.innerPaths()
             .forEach(path -> buildWallsAlongPath(parent, path, wallHeightPy, WALL_THICKNESS));
     }
 

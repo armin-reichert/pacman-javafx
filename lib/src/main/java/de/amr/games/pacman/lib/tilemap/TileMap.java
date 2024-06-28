@@ -32,8 +32,8 @@ public class TileMap {
     private final byte[][] data;
 
     // Terrain maps only
-    private List<TileMapPath> wallPaths = List.of();
-    private List<TileMapPath> dwallPaths = List.of();
+    private List<TileMapPath> innerPaths = List.of();
+    private List<TileMapPath> outerPaths = List.of();
 
     public static Vector2i parseVector2i(String text) {
         Pattern pattern = Pattern.compile("\\((\\d+),(\\d+)\\)");
@@ -108,8 +108,8 @@ public class TileMap {
         for (int row = 0; row < numRows; ++row) {
             data[row] = Arrays.copyOf(other.data[row], numCols);
         }
-        wallPaths = new ArrayList<>(other.wallPaths);
-        dwallPaths = new ArrayList<>(other.dwallPaths);
+        innerPaths = new ArrayList<>(other.innerPaths);
+        outerPaths = new ArrayList<>(other.outerPaths);
     }
 
     public TileMap(int numRows, int numCols) {
@@ -122,15 +122,15 @@ public class TileMap {
 
     public void computeTerrainPaths() {
         Logger.info("Compute paths for {}", this);
-        wallPaths = new ArrayList<>();
-        dwallPaths = new ArrayList<>();
+        innerPaths = new ArrayList<>();
+        outerPaths = new ArrayList<>();
 
         var explored = new BitSet();
         Predicate<Vector2i> isUnexplored = tile -> !explored.get(index(tile));
 
         tiles(Tiles.CORNER_NW).filter(isUnexplored)
             .map(corner -> new TileMapPath(this, explored, corner, LEFT))
-            .forEach(wallPaths::add);
+            .forEach(innerPaths::add);
 
         // Paths starting at left and right maze border leading inside maze
         var handlesLeft = new HashMap<Vector2i, Direction>();
@@ -159,27 +159,27 @@ public class TileMap {
         handlesLeft.entrySet().stream()
             .filter(entry -> isUnexplored.test(entry.getKey()))
             .map(entry -> new TileMapPath(this, explored, entry.getKey(), entry.getValue()))
-            .forEach(dwallPaths::add);
+            .forEach(outerPaths::add);
 
         handlesRight.entrySet().stream()
             .filter(entry -> isUnexplored.test(entry.getKey()))
             .map(entry -> new TileMapPath(this, explored, entry.getKey(), entry.getValue()))
-            .forEach(dwallPaths::add);
+            .forEach(outerPaths::add);
 
         // find ghost house, doors are included as walls!
         tiles(Tiles.DCORNER_NW).filter(isUnexplored)
             .map(corner -> new TileMapPath(this, explored, corner, LEFT))
-            .forEach(dwallPaths::add);
+            .forEach(outerPaths::add);
 
-        Logger.debug("Paths computed, {} single wall paths, {} double wall paths", wallPaths.size(), dwallPaths.size());
+        Logger.debug("Paths computed, {} single wall paths, {} double wall paths", innerPaths.size(), outerPaths.size());
     }
 
-    public Stream<TileMapPath> wallPaths() {
-        return wallPaths == null ? Stream.empty() : wallPaths.stream();
+    public Stream<TileMapPath> innerPaths() {
+        return innerPaths == null ? Stream.empty() : innerPaths.stream();
     }
 
-    public Stream<TileMapPath> dwallPaths() {
-        return dwallPaths == null ? Stream.empty() : dwallPaths.stream();
+    public Stream<TileMapPath> outerPaths() {
+        return outerPaths == null ? Stream.empty() : outerPaths.stream();
     }
 
     /**
