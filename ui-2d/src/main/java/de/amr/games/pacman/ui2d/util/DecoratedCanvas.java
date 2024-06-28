@@ -25,11 +25,11 @@ public class DecoratedCanvas extends BorderPane {
         );
     }
 
-    public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
-    public final BooleanProperty decoratedPy = new SimpleBooleanProperty(this, "decorated", true);
-    public final DoubleProperty unscaledCanvasWidthPy = new SimpleDoubleProperty(this, "unscaledCanvasWidth", 500);
+    public final DoubleProperty scalingPy              = new SimpleDoubleProperty(this, "scaling", 1.0);
+    public final BooleanProperty decoratedPy           = new SimpleBooleanProperty(this, "decorated", true);
+    public final DoubleProperty unscaledCanvasWidthPy  = new SimpleDoubleProperty(this, "unscaledCanvasWidth", 500);
     public final DoubleProperty unscaledCanvasHeightPy = new SimpleDoubleProperty(this, "unscaledCanvasHeight", 400);
-    public final ObjectProperty<Color> borderColorPy = new SimpleObjectProperty<>(this, "borderColor", Color.LIGHTBLUE);
+    public final ObjectProperty<Color> borderColorPy   = new SimpleObjectProperty<>(this, "borderColor", Color.LIGHTBLUE);
 
     private final Canvas canvas = new Canvas();
 
@@ -41,33 +41,27 @@ public class DecoratedCanvas extends BorderPane {
         clipProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (decoratedPy.get()) {
-                    double s = getScaling();
-                    var size = getSize();
-                    double arcSize = 26 * s;
-                    var clipRect = new Rectangle(size.getWidth(), size.getHeight());
-                    clipRect.setArcWidth(arcSize);
-                    clipRect.setArcHeight(arcSize);
+                    var clipRect = new Rectangle(getSize().getWidth(), getSize().getHeight());
+                    clipRect.setArcWidth(26 * getScaling());
+                    clipRect.setArcHeight(26 * getScaling());
                     return clipRect;
-                } else {
-                    return null;
                 }
+                return null;
             }, decoratedPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy
         ));
 
         borderProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (decoratedPy.get()) {
-                    var size = getSize();
-                    double borderWidth = Math.max(5, Math.ceil(size.getHeight() / 55)); // TODO magic number?
+                    double borderWidth = Math.max(5, Math.ceil(getSize().getHeight() / 55)); // TODO magic number
                     double cornerRadius = Math.ceil(10 * getScaling());
                     return new Border(
                         new BorderStroke(borderColorPy.get(),
                             BorderStrokeStyle.SOLID,
                             new CornerRadii(cornerRadius),
                             new BorderWidths(borderWidth)));
-                } else {
-                    return null;
                 }
+                return null;
             },
             decoratedPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy
         ));
