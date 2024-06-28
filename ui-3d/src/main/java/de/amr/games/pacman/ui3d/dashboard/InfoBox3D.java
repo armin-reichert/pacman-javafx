@@ -12,10 +12,12 @@ import de.amr.games.pacman.ui3d.scene.Perspective;
 import de.amr.games.pacman.ui3d.scene.PlayScene3D;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.*;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
@@ -138,9 +140,10 @@ public class InfoBox3D extends InfoBox {
     }
 
     private Object[] floorTextureComboBoxEntries() {
+        Map<String, PhongMaterial> texturesByName = context.theme().get("floorTextures");
         var names = new ArrayList<>();
         names.add(NO_TEXTURE);
-        names.addAll(context.theme().getMap("floorTextures").keySet());
+        names.addAll(texturesByName.keySet());
         return names.toArray();
     }
 }

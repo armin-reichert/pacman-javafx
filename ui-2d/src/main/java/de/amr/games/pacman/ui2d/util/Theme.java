@@ -68,14 +68,6 @@ public class Theme {
         return (T) map.get(key);
     }
 
-    public <T> List<T> getList(String key){
-        return get(key);
-    }
-
-    public <T> Map<String, T> getMap(String key) {
-        return get(key);
-    }
-
     @SuppressWarnings("unchecked")
     public <T> T get(String key, int i, int j) {
         return (T) map.get(String.format("%s.%d.%d", key, i, j));

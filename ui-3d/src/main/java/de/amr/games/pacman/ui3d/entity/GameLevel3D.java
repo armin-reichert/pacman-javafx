@@ -67,7 +67,7 @@ public class GameLevel3D extends Group {
             if (NO_TEXTURE.equals(textureName)) {
                 floor.setMaterial(coloredMaterial(floorColor));
             } else {
-                Map<String, PhongMaterial> floorTextures = context.theme().getMap("floorTextures");
+                Map<String, PhongMaterial> floorTextures = context.theme().get("floorTextures");
                 floor.setMaterial(floorTextures.getOrDefault(textureName, coloredMaterial(floorColor)));
             }
         }
@@ -78,7 +78,7 @@ public class GameLevel3D extends Group {
         protected void invalidated() {
             Color floorColor = get();
             String textureName = floorTextureNamePy.get();
-            Map<String, PhongMaterial> floorTextures = context.theme().getMap("floorTextures");
+            Map<String, PhongMaterial> floorTextures = context.theme().get("floorTextures");
             floor.setMaterial(floorTextures.getOrDefault(textureName, coloredMaterial(floorColor)));
         }
     };

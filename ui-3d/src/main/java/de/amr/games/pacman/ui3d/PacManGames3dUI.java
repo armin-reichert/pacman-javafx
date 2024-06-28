@@ -33,6 +33,7 @@ import org.tinylog.Logger;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
@@ -93,13 +94,14 @@ public class PacManGames3dUI extends PacManGames2dUI {
         theme.set("model3D.wallpaper.day",   rm.loadImage("graphics/sea-wallpaper.jpg"));
         theme.set("model3D.wallpaper.night", rm.loadImage("graphics/sea-wallpaper-night.jpg"));
 
-        theme.set("floorTextures", new HashMap<String, PhongMaterial>());
+        Map<String, PhongMaterial> texturesByName = new HashMap<>();
+        theme.set("floorTextures", texturesByName);
         List.of("knobs", "plastic", "wood").forEach(name -> {
             var texture = new PhongMaterial();
             texture.setBumpMap(rm.loadImage("graphics/textures/%s-bump.jpg".formatted(name)));
             texture.setDiffuseMap(rm.loadImage("graphics/textures/%s-diffuse.jpg".formatted(name)));
             texture.diffuseColorProperty().bind(PY_3D_FLOOR_COLOR);
-            theme.getMap("floorTextures").put(name, texture);
+            texturesByName.put(name, texture);
         });
 
         theme.set("ghost.0.color.normal.dress",      theme.color("palette.red"));
