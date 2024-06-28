@@ -32,6 +32,7 @@ public class PacManGames2dApp extends Application {
             x.printStackTrace(System.err);
         }
         ui.createUI(stage, Screen.getPrimary().getBounds());
+        ui.sign("Remake (2021-2024) by Armin Reichert");
         ui.show();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
         clock = ui.gameClock();

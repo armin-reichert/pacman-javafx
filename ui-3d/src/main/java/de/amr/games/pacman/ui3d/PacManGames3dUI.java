@@ -171,7 +171,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
         PY_3D_WALLPAPER_NIGHT.set(theme.get("model3D.wallpaper.night"));
         gamePage = new GamePage3D(this, mainScene);
         gamePage.dashboard().addInfoBox(3, tt("infobox.3D_settings.title"), new InfoBox3D());
-        gamePage.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         gamePage.canvasPane().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
         gamePage.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {

@@ -67,8 +67,6 @@ import static java.util.function.Predicate.not;
  */
 public class PacManGames2dUI implements GameEventListener, GameContext, ActionHandler, SoundHandler {
 
-    public static final String SIGNATURE_TEXT = "Remake (2021-2024) by Armin Reichert";
-
     public static final BooleanProperty PY_AUTOPILOT           = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_CANVAS_DECORATED    = new SimpleBooleanProperty(true);
     public static final BooleanProperty PY_DEBUG_INFO          = new SimpleBooleanProperty(false);
@@ -339,13 +337,16 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     protected void createGamePage() {
         gamePage = new GamePage(this, mainScene);
-        gamePage.configureSignature(theme.font("font.monospaced", 9), SIGNATURE_TEXT);
         gamePage.canvasPane().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
         gameScenePy.addListener((py, ov, newGameScene) -> {
             if (newGameScene instanceof GameScene2D scene2D) {
                 gamePage.embedGameScene2D(scene2D);
             }
         });
+    }
+
+    public void sign(String signature) {
+        gamePage.configureSignature(theme.font("font.monospaced", 9), signature);
     }
 
     private void createEditorPage() {
