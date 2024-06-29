@@ -63,7 +63,7 @@ public class GameLevel3D extends Group {
     private static final float PELLET_RADIUS         = 1.0f;
 
     public final ObjectProperty<String> floorTextureNamePy = new SimpleObjectProperty<>(this, "floorTextureName", NO_TEXTURE);
-    public final ObjectProperty<Color> floorColorPy        = new SimpleObjectProperty<>(this, "floorColor");
+    public final ObjectProperty<Color> floorColorPy        = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
     public final DoubleProperty outerWallHeightPy          = new SimpleDoubleProperty(this, "outerWallHeight", OUTER_WALL_HEIGHT);
     public final DoubleProperty wallHeightPy               = new SimpleDoubleProperty(this, "wallHeight", INNER_WALL_HEIGHT);
     public final DoubleProperty houseHeightPy              = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
