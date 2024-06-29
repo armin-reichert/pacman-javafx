@@ -61,18 +61,12 @@ public class GameLevel3D extends Group {
     private static final float PELLET_RADIUS         = 1.0f;
 
     public final ObjectProperty<String> floorTextureNamePy = new SimpleObjectProperty<>(this, "floorTextureName");
-
-    public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
-
-    public final DoubleProperty outerWallHeightPy  = new SimpleDoubleProperty(this, "outerWallHeight", 6.0);
-
-    public final DoubleProperty wallHeightPy  = new SimpleDoubleProperty(this, "wallHeight", 4.5);
-
-    public final DoubleProperty houseHeightPy = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
-
-    public final BooleanProperty houseUsedPy = new SimpleBooleanProperty(this, "houseUsed", false);
-
-    public final BooleanProperty houseOpenPy = new SimpleBooleanProperty(this, "houseOpen", false) {
+    public final ObjectProperty<Color> floorColorPy        = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
+    public final DoubleProperty outerWallHeightPy          = new SimpleDoubleProperty(this, "outerWallHeight", 6.0);
+    public final DoubleProperty wallHeightPy               = new SimpleDoubleProperty(this, "wallHeight", 4.5);
+    public final DoubleProperty houseHeightPy              = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
+    public final BooleanProperty houseUsedPy               = new SimpleBooleanProperty(this, "houseUsed", false);
+    public final BooleanProperty houseOpenPy               = new SimpleBooleanProperty(this, "houseOpen", false) {
         @Override
         protected void invalidated() {
             if (get()) {
@@ -80,33 +74,14 @@ public class GameLevel3D extends Group {
             }
         }
     };
-
-    public final ObjectProperty<PhongMaterial> houseFillMaterialPy = new SimpleObjectProperty<>(this, "houseFillMaterial");
-
+    public final ObjectProperty<PhongMaterial> houseFillMaterialPy  = new SimpleObjectProperty<>(this, "houseFillMaterial");
+    public final ObjectProperty<PhongMaterial> wallFillMaterialPy   = new SimpleObjectProperty<>(this, "wallFillMaterial");
     public final ObjectProperty<PhongMaterial> wallStrokeMaterialPy = new SimpleObjectProperty<>(this, "wallStrokeMaterial");
-
-    public final ObjectProperty<PhongMaterial> wallFillMaterialPy = new SimpleObjectProperty<>(this, "wallFillMaterial");
-
-    public final ObjectProperty<PhongMaterial> foodMaterialPy = new SimpleObjectProperty<>(this, "foodMaterial");
-
-    public final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity",1.0);
-
-    public final ObjectProperty<Color> wallStrokeColorPy = new SimpleObjectProperty<>(this, "wallStrokeColor", Color.WHITE);
-
-    public final ObjectProperty<Color> wallFillColorPy = new SimpleObjectProperty<>(this, "wallFillColor", Color.GREEN) {
-        @Override
-        protected void invalidated() {
-            Color fillColor = get();
-            houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, HOUSE_OPACITY)));
-        }
-    };
-
-    public final ObjectProperty<Color> foodColorPy = new SimpleObjectProperty<>(this, "foodColor", Color.PINK) {
-        @Override
-        protected void invalidated() {
-            foodMaterialPy.set(coloredMaterial(get()));
-        }
-    };
+    public final ObjectProperty<Color>         wallFillColorPy      = new SimpleObjectProperty<>(this, "wallFillColor", Color.GREEN);
+    public final ObjectProperty<Color>         wallStrokeColorPy    = new SimpleObjectProperty<>(this, "wallStrokeColor", Color.WHITE);
+    public final DoubleProperty                wallOpacityPy        = new SimpleDoubleProperty(this, "wallOpacity",1.0);
+    public final ObjectProperty<Color>         foodColorPy          = new SimpleObjectProperty<>(this, "foodColor", Color.PINK);
+    public final ObjectProperty<PhongMaterial> foodMaterialPy       = new SimpleObjectProperty<>(this, "foodMaterial");
 
     private final GameContext context;
     private final Group worldGroup = new Group();
@@ -146,9 +121,11 @@ public class GameLevel3D extends Group {
 
         // Maze
         WorldMap map = context.game().world().map();
-        wallStrokeColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
-        wallFillColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_WALL_FILL, Color.rgb(0,0,0)));
-        foodColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_FOOD, Color.PINK));
+
+        wallStrokeMaterialPy.bind(Bindings.createObjectBinding(
+            () -> coloredMaterial(wallStrokeColorPy.get()),
+            wallStrokeColorPy
+        ));
 
         wallFillMaterialPy.bind(Bindings.createObjectBinding(
             () -> {
@@ -161,7 +138,22 @@ public class GameLevel3D extends Group {
             }, wallOpacityPy, wallFillColorPy
         ));
 
-        wallStrokeMaterialPy.bind(Bindings.createObjectBinding(() -> coloredMaterial(wallStrokeColorPy.get())));
+        houseFillMaterialPy.bind(Bindings.createObjectBinding(
+            () -> coloredMaterial(opaqueColor(wallFillColorPy.get(), HOUSE_OPACITY)),
+                wallFillColorPy
+        ));
+
+        foodMaterialPy.bind(Bindings.createObjectBinding(
+            () -> coloredMaterial(foodColorPy.get()),
+            foodColorPy
+        ));
+
+        wallFillColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_WALL_FILL,
+            Color.rgb(0,0,0)));
+        wallStrokeColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_WALL_STROKE,
+            Color.rgb(33, 33, 255)));
+        foodColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_FOOD,
+            Color.PINK));
 
         addWalls(mazeGroup);
         addHouse(mazeGroup);
