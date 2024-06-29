@@ -49,7 +49,9 @@ import static java.lang.Math.PI;
 public class GameLevel3D extends Group {
 
     private static final float FLOOR_THICKNESS       = 0.4f;
+    private static final float INNER_WALL_HEIGHT     = 4.5f;
     private static final float INNER_WALL_THICKNESS  = 0.5f;
+    private static final float OUTER_WALL_HEIGHT     = 6.0f;
     private static final float OUTER_WALL_THICKNESS  = 2.0f;
     private static final float WALL_COAT_HEIGHT      = 0.1f;
     private static final float HOUSE_HEIGHT          = 12.0f;
@@ -60,10 +62,10 @@ public class GameLevel3D extends Group {
     private static final float ENERGIZER_RADIUS      = 3.5f;
     private static final float PELLET_RADIUS         = 1.0f;
 
-    public final ObjectProperty<String> floorTextureNamePy = new SimpleObjectProperty<>(this, "floorTextureName");
-    public final ObjectProperty<Color> floorColorPy        = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
-    public final DoubleProperty outerWallHeightPy          = new SimpleDoubleProperty(this, "outerWallHeight", 6.0);
-    public final DoubleProperty wallHeightPy               = new SimpleDoubleProperty(this, "wallHeight", 4.5);
+    public final ObjectProperty<String> floorTextureNamePy = new SimpleObjectProperty<>(this, "floorTextureName", NO_TEXTURE);
+    public final ObjectProperty<Color> floorColorPy        = new SimpleObjectProperty<>(this, "floorColor");
+    public final DoubleProperty outerWallHeightPy          = new SimpleDoubleProperty(this, "outerWallHeight", OUTER_WALL_HEIGHT);
+    public final DoubleProperty wallHeightPy               = new SimpleDoubleProperty(this, "wallHeight", INNER_WALL_HEIGHT);
     public final DoubleProperty houseHeightPy              = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
     public final BooleanProperty houseUsedPy               = new SimpleBooleanProperty(this, "houseUsed", false);
     public final BooleanProperty houseOpenPy               = new SimpleBooleanProperty(this, "houseOpen", false) {
@@ -91,7 +93,6 @@ public class GameLevel3D extends Group {
     private final List<Ghost3D> ghosts3D;
     private final Set<Pellet3D> pellets3D = new HashSet<>();
     private final Set<Energizer3D> energizers3D = new HashSet<>();
-
     private LivesCounter3D livesCounter3D;
     private Bonus3D bonus3D;
     private Message3D message3D;
