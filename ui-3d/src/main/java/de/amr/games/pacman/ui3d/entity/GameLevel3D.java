@@ -22,6 +22,7 @@ import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -59,29 +60,9 @@ public class GameLevel3D extends Group {
     private static final float ENERGIZER_RADIUS      = 3.5f;
     private static final float PELLET_RADIUS         = 1.0f;
 
-    public final ObjectProperty<String> floorTextureNamePy = new SimpleObjectProperty<>(this, "floorTextureName") {
-        @Override
-        protected void invalidated() {
-            Color floorColor = floorColorPy.get();
-            String textureName = get();
-            if (NO_TEXTURE.equals(textureName)) {
-                floor.setMaterial(coloredMaterial(floorColor));
-            } else {
-                Map<String, PhongMaterial> floorTextures = context.theme().get("floorTextures");
-                floor.setMaterial(floorTextures.getOrDefault(textureName, coloredMaterial(floorColor)));
-            }
-        }
-    };
+    public final ObjectProperty<String> floorTextureNamePy = new SimpleObjectProperty<>(this, "floorTextureName");
 
-    public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK) {
-        @Override
-        protected void invalidated() {
-            Color floorColor = get();
-            String textureName = floorTextureNamePy.get();
-            Map<String, PhongMaterial> floorTextures = context.theme().get("floorTextures");
-            floor.setMaterial(floorTextures.getOrDefault(textureName, coloredMaterial(floorColor)));
-        }
-    };
+    public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
 
     public final DoubleProperty outerWallHeightPy  = new SimpleDoubleProperty(this, "outerWallHeight", 6.0);
 
@@ -148,7 +129,6 @@ public class GameLevel3D extends Group {
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
     private final Group levelCounterGroup = new Group();
-    private final Box floor;
     private final Pac3D pac3D;
     private final List<Ghost3D> ghosts3D;
     private final Set<Pellet3D> pellets3D = new HashSet<>();
@@ -162,11 +142,22 @@ public class GameLevel3D extends Group {
         this.context = checkNotNull(context);
 
         // Place floor such that left-upper corner is at origin and floor surface is at z=0
-        floor = new Box(context.game().world().numCols() * TS - 1, context.game().world().numRows() * TS - 1, FLOOR_THICKNESS);
+        var floor = new Box(context.game().world().numCols() * TS - 1, context.game().world().numRows() * TS - 1, FLOOR_THICKNESS);
         floor.translateXProperty().bind(floor.widthProperty().multiply(0.5));
         floor.translateYProperty().bind(floor.heightProperty().multiply(0.5));
         floor.translateZProperty().bind(floor.depthProperty().multiply(0.5));
         floor.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        floor.materialProperty().bind(Bindings.createObjectBinding(
+            () -> {
+                Color floorColor = floorColorPy.get();
+                String textureName = floorTextureNamePy.get();
+                Map<String, PhongMaterial> floorTextures = context.theme().get("floorTextures");
+                return NO_TEXTURE.equals(textureName)
+                    ? coloredMaterial(floorColor)
+                    : floorTextures.getOrDefault(textureName, coloredMaterial(floorColor));
+            }, floorColorPy, floorTextureNamePy
+        ));
+
         floorColorPy.bind(PY_3D_FLOOR_COLOR);
         floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
 
