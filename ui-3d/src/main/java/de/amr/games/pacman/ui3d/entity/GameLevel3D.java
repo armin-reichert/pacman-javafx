@@ -89,31 +89,14 @@ public class GameLevel3D extends Group {
 
     public final ObjectProperty<PhongMaterial> foodMaterialPy = new SimpleObjectProperty<>(this, "foodMaterial");
 
-    public final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity",1.0) {
-        @Override
-        protected void invalidated() {
-            double opacity = get();
-            Color fillColor = wallFillColorPy.get();
-            Color color = opaqueColor(fillColor, opacity);
-            PhongMaterial fillMaterial = wallFillMaterialPy.get();
-            fillMaterial.setDiffuseColor(color);
-            fillMaterial.setSpecularColor(color.brighter());
-        }
-    };
+    public final DoubleProperty wallOpacityPy = new SimpleDoubleProperty(this, "wallOpacity",1.0);
 
-    public final ObjectProperty<Color> wallStrokeColorPy = new SimpleObjectProperty<>(this, "wallStrokeColor", Color.WHITE) {
-        @Override
-        protected void invalidated() {
-            Color strokeColor = get();
-            wallStrokeMaterialPy.set(coloredMaterial(strokeColor));        }
-    };
+    public final ObjectProperty<Color> wallStrokeColorPy = new SimpleObjectProperty<>(this, "wallStrokeColor", Color.WHITE);
 
     public final ObjectProperty<Color> wallFillColorPy = new SimpleObjectProperty<>(this, "wallFillColor", Color.GREEN) {
         @Override
         protected void invalidated() {
             Color fillColor = get();
-            double opacity = wallOpacityPy.get();
-            wallFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, opacity)));
             houseFillMaterialPy.set(coloredMaterial(opaqueColor(fillColor, HOUSE_OPACITY)));
         }
     };
@@ -166,6 +149,20 @@ public class GameLevel3D extends Group {
         wallStrokeColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
         wallFillColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_WALL_FILL, Color.rgb(0,0,0)));
         foodColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_FOOD, Color.PINK));
+
+        wallFillMaterialPy.bind(Bindings.createObjectBinding(
+            () -> {
+                double opacity = wallOpacityPy.get();
+                Color fillColor = wallFillColorPy.get();
+                Color color = opaqueColor(fillColor, opacity);
+                PhongMaterial fillMaterial = new PhongMaterial(color);
+                fillMaterial.setSpecularColor(color.brighter());
+                return fillMaterial;
+            }, wallOpacityPy, wallFillColorPy
+        ));
+
+        wallStrokeMaterialPy.bind(Bindings.createObjectBinding(() -> coloredMaterial(wallStrokeColorPy.get())));
+
         addWalls(mazeGroup);
         addHouse(mazeGroup);
         addPellets(this); // when put inside maze group, transparency does not work!
