@@ -267,7 +267,8 @@ public class GameLevel3D extends Group {
     }
 
     private Node createHouseWall(int x1, int y1, int x2, int y2) {
-        return createWall(v2i(x1, y1), v2i(x2, y2), INNER_WALL_THICKNESS, houseHeightPy, houseFillMaterialPy);
+        return createWall(v2i(x1, y1), v2i(x2, y2), INNER_WALL_THICKNESS, houseHeightPy,
+            houseFillMaterialPy, wallStrokeMaterialPy);
     }
 
     private void addPellets(Group parent) {
@@ -316,19 +317,20 @@ public class GameLevel3D extends Group {
         for (int i = 0; i < path.size(); ++i) {
             var dir = path.dir(i);
             if (prevDir != dir) {
-                parent.getChildren().add(createWall(startTile, endTile, thickness, heightPy, wallFillMaterialPy));
+                parent.getChildren().add(createWall(startTile, endTile, thickness, heightPy, wallFillMaterialPy, wallStrokeMaterialPy));
                 startTile = endTile;
             }
             endTile = endTile.plus(dir.vector());
             prevDir = dir;
         }
-        parent.getChildren().add(createWall(startTile, endTile, thickness, heightPy, wallFillMaterialPy));
+        parent.getChildren().add(createWall(startTile, endTile, thickness, heightPy, wallFillMaterialPy, wallStrokeMaterialPy));
     }
 
-    private Node createWall(
+    private static Node createWall(
         Vector2i beginTile, Vector2i endTile,
-        double thickness, DoubleProperty depthPy, ObjectProperty<PhongMaterial> fillMaterialPy) {
-
+        double thickness, DoubleProperty depthPy,
+        ObjectProperty<PhongMaterial> fillMaterialPy, ObjectProperty<PhongMaterial> strokeMaterialPy)
+    {
         if (beginTile.y() == endTile.y()) { // horizontal
             if (beginTile.x() > endTile.x()) {
                 var tmp = beginTile;
@@ -341,7 +343,8 @@ public class GameLevel3D extends Group {
                 (endTile.x() - beginTile.x()) * TS + thickness,
                 thickness,
                 depthPy,
-                fillMaterialPy);
+                fillMaterialPy,
+                strokeMaterialPy);
         }
         else if (beginTile.x() == endTile.x()) { // vertical
             if (beginTile.y() > endTile.y()) {
@@ -355,13 +358,15 @@ public class GameLevel3D extends Group {
                 thickness,
                 (endTile.y() - beginTile.y()) * TS,
                 depthPy,
-                fillMaterialPy);
+                fillMaterialPy,
+                strokeMaterialPy);
         }
         throw new IllegalArgumentException(String.format("Cannot build wall between tiles %s and %s", beginTile, endTile));
     }
 
-    private Group createWall(double x, double y, double sizeX, double sizeY, DoubleProperty depthPy,
-                             ObjectProperty<PhongMaterial> fillMaterialPy) {
+    private static Group createWall(
+        double x, double y, double sizeX, double sizeY, DoubleProperty depthPy,
+        ObjectProperty<PhongMaterial> fillMaterialPy, ObjectProperty<PhongMaterial> strokeMaterialPy) {
 
         var base = new Box(sizeX, sizeY, depthPy.get());
         base.setTranslateX(x);
@@ -375,7 +380,7 @@ public class GameLevel3D extends Group {
         top.translateXProperty().bind(base.translateXProperty());
         top.translateYProperty().bind(base.translateYProperty());
         top.translateZProperty().bind(depthPy.multiply(-1).subtract(WALL_COAT_HEIGHT));
-        top.materialProperty().bind(wallStrokeMaterialPy);
+        top.materialProperty().bind(strokeMaterialPy);
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         return new Group(base, top);
