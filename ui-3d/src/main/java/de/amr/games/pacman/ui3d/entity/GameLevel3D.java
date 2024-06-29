@@ -93,6 +93,7 @@ public class GameLevel3D extends Group {
     private final List<Ghost3D> ghosts3D;
     private final Set<Pellet3D> pellets3D = new HashSet<>();
     private final Set<Energizer3D> energizers3D = new HashSet<>();
+
     private LivesCounter3D livesCounter3D;
     private Bonus3D bonus3D;
     private Message3D message3D;
@@ -100,8 +101,11 @@ public class GameLevel3D extends Group {
     public GameLevel3D(GameContext context) {
         this.context = checkNotNull(context);
 
+        var floor = new Box();
+        floor.setWidth(context.game().world().numCols() * TS - 1);
+        floor.setHeight(context.game().world().numRows() * TS - 1);
+        floor.setDepth(FLOOR_THICKNESS);
         // Place floor such that left-upper corner is at origin and floor surface is at z=0
-        var floor = new Box(context.game().world().numCols() * TS - 1, context.game().world().numRows() * TS - 1, FLOOR_THICKNESS);
         floor.translateXProperty().bind(floor.widthProperty().multiply(0.5));
         floor.translateYProperty().bind(floor.heightProperty().multiply(0.5));
         floor.translateZProperty().bind(floor.depthProperty().multiply(0.5));
