@@ -87,7 +87,7 @@ public class Message3D extends Group {
         Logger.trace("New image produced");
     }
 
-    public void rotate(Point3D axis, double angle) {
+    public void setRotation(Point3D axis, double angle) {
         requireNonNull(axis);
         setRotationAxis(axis);
         setRotate(angle);
