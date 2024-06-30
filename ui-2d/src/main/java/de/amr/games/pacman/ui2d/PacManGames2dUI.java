@@ -730,7 +730,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
         stopAllSounds();
         currentGameScene().ifPresent(GameScene::end);
-        reboot();
         clock.stop();
         stage.titleProperty().bind(editor.titlePy);
         if (game().world() != null) {
@@ -738,6 +737,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
         editor.start();
         selectPage(editorPage);
+        reboot();
     }
 
     @Override
