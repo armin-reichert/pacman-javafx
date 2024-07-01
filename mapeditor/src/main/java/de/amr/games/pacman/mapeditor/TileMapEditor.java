@@ -298,6 +298,7 @@ public class TileMapEditor  {
 
         var previewCanvasScroll = new ScrollPane(previewCanvas);
         previewCanvasScroll.setFitToHeight(true);
+        previewCanvasScroll.hvalueProperty().bindBidirectional(editCanvasScroll.hvalueProperty());
         previewCanvasScroll.vvalueProperty().bindBidirectional(editCanvasScroll.vvalueProperty());
         previewCanvasScroll.visibleProperty().bind(previewVisiblePy);
 
