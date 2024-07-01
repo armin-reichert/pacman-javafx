@@ -72,7 +72,7 @@ public class GameLevel3D extends Group {
         @Override
         protected void invalidated() {
             if (get()) {
-                doorWings3D().map(DoorWing3D::traversalAnimation).forEach(Transition::play);
+                door3D.playTraversalAnimation();
             }
         }
     };
@@ -93,7 +93,7 @@ public class GameLevel3D extends Group {
     private final List<Ghost3D> ghosts3D;
     private final Set<Pellet3D> pellets3D = new HashSet<>();
     private final Set<Energizer3D> energizers3D = new HashSet<>();
-
+    private Door3D door3D;
     private LivesCounter3D livesCounter3D;
     private Bonus3D bonus3D;
     private Message3D message3D;
@@ -240,11 +240,9 @@ public class GameLevel3D extends Group {
         );
 
         Color doorColor = getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_DOOR, Color.rgb(254,184,174));
-        for (Vector2i wingTile : List.of(leftDoorTile, rightDoorTile)) {
-            var doorWing3D = new DoorWing3D(wingTile, doorColor, PY_3D_FLOOR_COLOR.get());
-            doorWing3D.drawModePy.bind(PY_3D_DRAW_MODE);
-            parent.getChildren().add(doorWing3D);
-        }
+        door3D = new Door3D(leftDoorTile, rightDoorTile, doorColor, PY_3D_FLOOR_COLOR);
+        door3D.drawModePy.bind(PY_3D_DRAW_MODE);
+        parent.getChildren().add(door3D);
 
         // pixel coordinates
         float centerX = house.topLeftTile().x() * TS + house.size().x() * HTS;
@@ -286,12 +284,6 @@ public class GameLevel3D extends Group {
                 parent.getChildren().add(pellet3D.root());
             }
         });
-    }
-
-    private Stream<DoorWing3D> doorWings3D() {
-        return worldGroup.getChildren().stream()
-            .filter(node -> node instanceof DoorWing3D)
-            .map(DoorWing3D.class::cast);
     }
 
     private void addWalls(Group parent) {

@@ -20,31 +20,28 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.checkTileNotNull;
 
 /**
- * Left/right wing of ghost house door.
- *
  * @author Armin Reichert
  */
 public class DoorWing3D extends Group {
 
+    public final ObjectProperty<Color> colorPy = new SimpleObjectProperty<>(Color.WHITE);
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     private final PhongMaterial barMaterial = new PhongMaterial();
-    private final Color doorColor;
-    private Transition animation;
 
-    public DoorWing3D(Vector2i tile, Color doorColor, Color floorColor) {
+    public DoorWing3D(Vector2i tile) {
         checkTileNotNull(tile);
-        checkNotNull(doorColor);
 
-        this.doorColor = doorColor;
         setTranslateX(tile.x() * TS);
         setTranslateY(tile.y() * TS);
 
-        barMaterial.setDiffuseColor(doorColor);
-        barMaterial.setSpecularColor(doorColor.brighter());
+        barMaterial.diffuseColorProperty().bind(colorPy);
+        barMaterial.specularColorProperty().bind(
+            barMaterial.diffuseColorProperty().map(Color::brighter));
 
         for (int i = 0; i < 2; ++i) {
             var verticalBar = new Cylinder(1, 8);
@@ -66,25 +63,5 @@ public class DoorWing3D extends Group {
         horizontalBar.setRotationAxis(Rotate.Z_AXIS);
         horizontalBar.setRotate(90);
         getChildren().add(horizontalBar);
-    }
-
-    public Color getDoorColor() {
-        return doorColor;
-    }
-
-    public Transition traversalAnimation()
-    {
-        if (animation == null) {
-            Color color = Ufx.opaqueColor(PacManGames3dUI.PY_3D_FLOOR_COLOR.get(), 0.5);
-            var fadeOut = new ColorChangeTransition(Duration.seconds(0.5),
-                doorColor, color, barMaterial.diffuseColorProperty()
-            );
-            var fadeIn = new ColorChangeTransition(Duration.seconds(0.5),
-                color, doorColor, barMaterial.diffuseColorProperty()
-            );
-            fadeIn.setDelay(Duration.seconds(0.2));
-            animation = new SequentialTransition(fadeOut, fadeIn);
-        }
-        return animation;
     }
 }
