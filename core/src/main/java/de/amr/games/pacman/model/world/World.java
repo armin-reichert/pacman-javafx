@@ -98,7 +98,7 @@ public class World {
     }
 
     public Stream<Vector2i> tiles() {
-        return map.tiles();
+        return map.terrain().tiles();
     }
 
     public WorldMap map() {

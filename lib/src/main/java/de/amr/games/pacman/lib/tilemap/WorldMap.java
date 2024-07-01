@@ -143,10 +143,6 @@ public class WorldMap {
         return url;
     }
 
-    public Stream<Vector2i> tiles() {
-        return terrain.tiles();
-    }
-
     public TileMap terrain() {
         return terrain;
     }
