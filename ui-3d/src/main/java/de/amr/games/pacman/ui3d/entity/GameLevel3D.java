@@ -242,7 +242,8 @@ public class GameLevel3D extends Group {
         Color doorColor = getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_DOOR, Color.rgb(254,184,174));
         door3D = new Door3D(leftDoorTile, rightDoorTile, doorColor, PY_3D_FLOOR_COLOR);
         door3D.drawModePy.bind(PY_3D_DRAW_MODE);
-        parent.getChildren().add(door3D);
+        // add door directly into level group, otherwise transparency doesn't work!
+        getChildren().add(door3D);
 
         // pixel coordinates
         float centerX = house.topLeftTile().x() * TS + house.size().x() * HTS;
