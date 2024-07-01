@@ -10,8 +10,6 @@ import de.amr.games.pacman.ui2d.GameContext;
 
 import java.io.File;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Armin Reichert
