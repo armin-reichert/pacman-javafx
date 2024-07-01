@@ -62,13 +62,13 @@ public class GameLevel3D extends Group {
     static final float ENERGIZER_RADIUS      = 3.5f;
     static final float PELLET_RADIUS         = 1.0f;
 
-    public final StringProperty floorTextureNamePy         = new SimpleStringProperty(this, "floorTextureName", NO_TEXTURE);
-    public final ObjectProperty<Color> floorColorPy        = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
-    public final DoubleProperty outerWallHeightPy          = new SimpleDoubleProperty(this, "outerWallHeight", OUTER_WALL_HEIGHT);
-    public final DoubleProperty wallHeightPy               = new SimpleDoubleProperty(this, "wallHeight", INNER_WALL_HEIGHT);
-    public final DoubleProperty houseHeightPy              = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
-    public final BooleanProperty houseUsedPy               = new SimpleBooleanProperty(this, "houseUsed", false);
-    public final BooleanProperty houseOpenPy               = new SimpleBooleanProperty(this, "houseOpen", false) {
+    public final StringProperty floorTextureNamePy  = new SimpleStringProperty(this, "floorTextureName", NO_TEXTURE);
+    public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
+    public final DoubleProperty outerWallHeightPy   = new SimpleDoubleProperty(this, "outerWallHeight", OUTER_WALL_HEIGHT);
+    public final DoubleProperty wallHeightPy        = new SimpleDoubleProperty(this, "wallHeight", INNER_WALL_HEIGHT);
+    public final DoubleProperty houseHeightPy       = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
+    public final BooleanProperty houseUsedPy        = new SimpleBooleanProperty(this, "houseUsed", false);
+    public final BooleanProperty houseOpenPy        = new SimpleBooleanProperty(this, "houseOpen", false) {
         @Override
         protected void invalidated() {
             if (get()) {
