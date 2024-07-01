@@ -48,19 +48,19 @@ import static java.lang.Math.PI;
  */
 public class GameLevel3D extends Group {
 
-    private static final float FLOOR_THICKNESS       = 0.4f;
-    private static final float INNER_WALL_HEIGHT     = 4.5f;
-    private static final float INNER_WALL_THICKNESS  = 0.5f;
-    private static final float OUTER_WALL_HEIGHT     = 6.0f;
-    private static final float OUTER_WALL_THICKNESS  = 2.0f;
-    private static final float WALL_COAT_HEIGHT      = 0.1f;
-    private static final float HOUSE_HEIGHT          = 12.0f;
-    private static final float HOUSE_OPACITY         = 0.4f;
-    private static final float HOUSE_SENSITIVITY     = 1.5f * TS;
-    private static final float PAC_SIZE              = 13.5f;
-    private static final float GHOST_SIZE            = 13.0f;
-    private static final float ENERGIZER_RADIUS      = 3.5f;
-    private static final float PELLET_RADIUS         = 1.0f;
+    static final float FLOOR_THICKNESS       = 0.4f;
+    static final float INNER_WALL_HEIGHT     = 4.5f;
+    static final float INNER_WALL_THICKNESS  = 0.5f;
+    static final float OUTER_WALL_HEIGHT     = 6.0f;
+    static final float OUTER_WALL_THICKNESS  = 2.0f;
+    static final float WALL_COAT_HEIGHT      = 0.1f;
+    static final float HOUSE_HEIGHT          = 12.0f;
+    static final float HOUSE_OPACITY         = 0.4f;
+    static final float HOUSE_SENSITIVITY     = 1.5f * TS;
+    static final float PAC_SIZE              = 13.5f;
+    static final float GHOST_SIZE            = 13.0f;
+    static final float ENERGIZER_RADIUS      = 3.5f;
+    static final float PELLET_RADIUS         = 1.0f;
 
     public final ObjectProperty<String> floorTextureNamePy = new SimpleObjectProperty<>(this, "floorTextureName", NO_TEXTURE);
     public final ObjectProperty<Color> floorColorPy        = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
@@ -242,7 +242,8 @@ public class GameLevel3D extends Group {
         Color doorColor = getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_DOOR, Color.rgb(254,184,174));
         door3D = new Door3D(leftDoorTile, rightDoorTile, doorColor, PY_3D_FLOOR_COLOR);
         door3D.drawModePy.bind(PY_3D_DRAW_MODE);
-        // add door directly into level group, otherwise transparency doesn't work!
+        // TODO: If door is added to given parent, it is not visible through transparent house wall in front.
+        // But if is added to level 3D group, it shows background wallpaper when color is transparent. WTF?
         getChildren().add(door3D);
 
         // pixel coordinates

@@ -31,21 +31,19 @@ public class DoorWing3D extends Group {
     public final ObjectProperty<Color> colorPy = new SimpleObjectProperty<>(Color.WHITE);
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
-    private final PhongMaterial barMaterial = new PhongMaterial();
-
     public DoorWing3D(Vector2i tile) {
         checkTileNotNull(tile);
 
         setTranslateX(tile.x() * TS);
         setTranslateY(tile.y() * TS);
 
-        barMaterial.diffuseColorProperty().bind(colorPy);
-        barMaterial.specularColorProperty().bind(
-            barMaterial.diffuseColorProperty().map(Color::brighter));
+        var material = new PhongMaterial();
+        material.diffuseColorProperty().bind(colorPy);
+        material.specularColorProperty().bind(material.diffuseColorProperty().map(Color::brighter));
 
         for (int i = 0; i < 2; ++i) {
-            var verticalBar = new Cylinder(1, 8);
-            verticalBar.setMaterial(barMaterial);
+            var verticalBar = new Cylinder(0.75, GameLevel3D.HOUSE_HEIGHT);
+            verticalBar.setMaterial(material);
             verticalBar.setTranslateX(i * 4 + 2);
             verticalBar.setTranslateY(4);
             verticalBar.setTranslateZ(-4);
@@ -56,10 +54,10 @@ public class DoorWing3D extends Group {
         }
 
         var horizontalBar = new Cylinder(0.5, 14);
-        horizontalBar.setMaterial(barMaterial);
+        horizontalBar.setMaterial(material);
         horizontalBar.setTranslateX(4);
         horizontalBar.setTranslateY(4);
-        horizontalBar.setTranslateZ(-4);
+        horizontalBar.setTranslateZ(0.25 - GameLevel3D.HOUSE_HEIGHT * 0.5);
         horizontalBar.setRotationAxis(Rotate.Z_AXIS);
         horizontalBar.setRotate(90);
         getChildren().add(horizontalBar);
