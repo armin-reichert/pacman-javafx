@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
@@ -36,18 +35,18 @@ public class PacManXXLGame extends PacManGame {
     @Override
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
-        var customMaps = GameController.it().getCustomMaps();
+        var customMaps = controller().getCustomMaps();
         var world = switch (levelNumber) {
             case 1 -> customMaps.isEmpty() ? createPacManWorld() : createWorld(customMaps.get(0));
             case 2, 3, 4, 5, 6, 7, 8, 9 -> {
                 int mapNumber = levelNumber - 1;
-                URL mapURL = getClass().getResource(String.format("/de/amr/games/pacman/maps/masonic/masonic_%d.world", mapNumber));
+                URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/masonic/masonic_%d.world".formatted(mapNumber));
                 var map = new WorldMap(mapURL);
                 yield createWorld(map);
             }
             default -> {
                 int mapNumber = randomInt(1, 9);
-                URL mapURL = getClass().getResource(String.format("/de/amr/games/pacman/maps/masonic/masonic_%d.world", mapNumber));
+                URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/masonic/masonic_%d.world".formatted(mapNumber));
                 var map = new WorldMap(mapURL);
                 yield createWorld(map);
             }

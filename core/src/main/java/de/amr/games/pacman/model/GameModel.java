@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
@@ -65,6 +66,10 @@ public interface GameModel {
     float PPS_AT_100_PERCENT = 73.9f; //TODO this should be 75 but that doesn't work yet
 
     void init();
+
+    default GameController controller() {
+        return GameController.it();
+    }
 
     GameVariant variant();
 

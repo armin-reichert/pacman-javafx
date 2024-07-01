@@ -555,7 +555,7 @@ public abstract class AbstractPacManGame implements GameModel {
         if (demoLevel) {
             return pacMeetsKiller && !isPacManKillingIgnoredInDemoLevel();
         } else {
-            return pacMeetsKiller && !GameController.it().isPacImmune();
+            return pacMeetsKiller && !controller().isPacImmune();
         }
     }
 
