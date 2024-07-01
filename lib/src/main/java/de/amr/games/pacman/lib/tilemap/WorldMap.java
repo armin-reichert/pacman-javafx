@@ -151,23 +151,7 @@ public class WorldMap {
         return terrain;
     }
 
-    public byte terrain(Vector2i tile) {
-        return terrain.get(tile);
-    }
-
-    public byte terrain(int row, int col) {
-        return terrain.get(row, col);
-    }
-
     public TileMap food() {
         return food;
-    }
-
-    public byte food(Vector2i tile) {
-        return food.get(tile);
-    }
-
-    public byte food(int row, int col) {
-        return food.get(row, col);
     }
 }
