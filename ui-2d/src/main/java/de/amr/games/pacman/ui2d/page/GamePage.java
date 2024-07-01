@@ -92,7 +92,7 @@ public class GamePage implements Page {
         dashboard = new Dashboard(context);
         dashboard.addInfoBox(context.tt("infobox.general.title"), new InfoBoxGeneral());
         dashboard.addInfoBox(context.tt("infobox.game_control.title"), new InfoBoxGameControl());
-        dashboard.addInfoBox("Custom Maps",new InfoCustomMaps()); //TODO incomplete
+        dashboard.addInfoBox("Custom Maps",new InfoBoxCustomMaps()); //TODO incomplete
         dashboard.addInfoBox(context.tt("infobox.game_info.title"), new InfoBoxGameInfo());
         dashboard.addInfoBox(context.tt("infobox.actor_info.title"), new InfoBoxActorInfo());
         dashboard.addInfoBox(context.tt("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());

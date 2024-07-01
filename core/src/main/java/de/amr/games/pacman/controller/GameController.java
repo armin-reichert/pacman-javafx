@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.*;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.*;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -56,7 +57,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     private boolean pacImmune = false;
     private int credit = 0;
 
-    private final List<WorldMap> customMaps = new ArrayList<>();
+    private final Map<File, WorldMap> customMaps = new HashMap<>();
 
     private void ensureCustomMapDirExists() {
         var dir = GameModel.CUSTOM_MAP_DIR;
@@ -81,10 +82,10 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         var mapFiles = mapDir.listFiles((dir, name) -> name.endsWith(".world"));
         if (mapFiles != null) {
             customMaps.clear();
-            for (var mapFile : mapFiles) {
+            for (File mapFile : mapFiles) {
                 Logger.info("Found custom map file: " + mapFile);
                 var customMap = new WorldMap(mapFile);
-                customMaps.add(customMap);
+                customMaps.put(mapFile, customMap);
             }
             if (customMaps.isEmpty()) {
                 Logger.info("No custom maps found");
@@ -127,7 +128,11 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     }
 
     public List<WorldMap> getCustomMaps() {
-        return Collections.unmodifiableList(customMaps);
+        return new ArrayList<>(customMaps.values());
+    }
+
+    public Map<File, WorldMap> customMapsDict() {
+        return customMaps;
     }
 
     public GameModel game() {
