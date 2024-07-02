@@ -255,8 +255,8 @@ public class GameLevel3D extends Group {
         houseLight.setColor(Color.GHOSTWHITE);
         houseLight.setMaxRange(3 * TS);
         houseLight.setTranslateX(centerX);
-        houseLight.setTranslateY(centerY);
-        houseLight.setTranslateZ(-TS);
+        houseLight.setTranslateY(centerY - 6);
+        houseLight.setTranslateZ(-HOUSE_HEIGHT);
         parent.getChildren().add(houseLight);
     }
 
