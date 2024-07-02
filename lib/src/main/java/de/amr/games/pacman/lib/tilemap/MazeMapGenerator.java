@@ -9,16 +9,19 @@ import de.amr.games.pacman.lib.graph.GridGraphImpl;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.IntStream;
 
 public class MazeMapGenerator {
 
-    public static void createMazeByWilson(GridGraph grid) {
-        List<Integer> vertices = IntStream.range(0, grid.numVertices()).boxed()
-                .collect(Collectors.toCollection(ArrayList::new));
+    public static void createMazeByWilsonAlgorithm(GridGraph grid) {
+        List<Integer> vertices = new ArrayList<>(IntStream.range(0, grid.numVertices()).boxed().toList());
+        Logger.info(vertices);
         Collections.shuffle(vertices);
+        Logger.info(vertices);
         BitSet inTree = new BitSet();
         inTree.set(vertices.get(0));
         DirMap lastWalkDir = new DirMap();
@@ -57,7 +60,7 @@ public class MazeMapGenerator {
 
     public WorldMap createMazeMap(int numRows, int numCols) {
         GridGraphImpl grid = new GridGraphImpl(numRows, numCols);
-        createMazeByWilson(grid);
+        createMazeByWilsonAlgorithm(grid);
         var worldMap = new WorldMap(3 * numRows + EMPTY_ROWS_ABOVE + EMPTY_ROWS_BELOW, 3 * numCols);
         var terrain = worldMap.terrain();
         for (int v = 0; v < grid.numVertices(); ++v) {
@@ -80,17 +83,21 @@ public class MazeMapGenerator {
     }
 
     private Vector2i current;
+    private Vector2i predecessor;
     private Direction moveDir;
+
+    private boolean inRange(Vector2i tile, TileMap map) {
+        return 0 <= tile.x() && tile.x() < map.numCols() && 0 <= tile.y() && tile.y() <= map.numRows();
+    }
 
     public void refine(WorldMap map) {
         TileMap terrain = map.terrain();
+        predecessor = null;
         current = new Vector2i(0, EMPTY_ROWS_ABOVE); //x=col, y=row
         set(terrain, current, Tiles.CORNER_NW);
         moveDir = Direction.RIGHT;
         move();
-        int i = 0;
-        while (i < 1000) {
-            ++i;
+        while (inRange(current, terrain)) {
             Vector2i rightHandedTile = current.plus(moveDir.nextClockwise().vector());
             if (terrain.get(rightHandedTile) == FREE) {
                 if (terrain.get(current.plus(moveDir.vector())) == BLOCKED) {
@@ -131,9 +138,11 @@ public class MazeMapGenerator {
                 move();
             }
         }
+        set(terrain, predecessor, Tiles.WALL_V); //TODO correct?
     }
 
     private void move() {
+        predecessor = current;
         current = current.plus(moveDir.vector());
     }
 
@@ -154,8 +163,8 @@ public class MazeMapGenerator {
 
     public static void main(String[] args)  {
         MazeMapGenerator gen = new MazeMapGenerator();
-        //WorldMap mazeMap = createMazeMap(10, 10);
-        WorldMap mazeMap = new WorldMap(new File("maze.world"));
+        WorldMap mazeMap = gen.createMazeMap(100, 20);
+        //WorldMap mazeMap = new WorldMap(new File("maze.world"));
         try {
             gen.refine(mazeMap);
         } catch (Exception x) {
