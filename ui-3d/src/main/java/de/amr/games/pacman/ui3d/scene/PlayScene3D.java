@@ -307,7 +307,7 @@ public class PlayScene3D implements GameScene {
         if (context.game().levelNumber() == 1 || context.gameState() == GameState.LEVEL_TEST) {
             showLevelMessage();
         }
-        level3D.addLevelCounter();
+        level3D.createLevelCounter3D();
     }
 
     @Override

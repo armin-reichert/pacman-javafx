@@ -88,12 +88,12 @@ public class GameLevel3D extends Group {
     private final GameContext context;
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
-    private final Group levelCounterGroup = new Group();
     private final Pac3D pac3D;
     private final List<Ghost3D> ghosts3D;
     private final Set<Pellet3D> pellets3D = new HashSet<>();
     private final Set<Energizer3D> energizers3D = new HashSet<>();
     private Door3D door3D;
+    private Group levelCounter3D;
     private LivesCounter3D livesCounter3D;
     private Bonus3D bonus3D;
     private Message3D message3D;
@@ -160,26 +160,32 @@ public class GameLevel3D extends Group {
         foodColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_FOOD,
             Color.PINK));
 
-        addWalls(mazeGroup);
-        addHouse(mazeGroup);
-        addPellets(this); // when put inside maze group, transparency does not work!
-
         pac3D = switch (context.game().variant()) {
             case MS_PACMAN          -> new MsPacMan3D(PAC_SIZE, context.game().pac(), context.theme());
             case PACMAN, PACMAN_XXL -> new PacMan3D(PAC_SIZE, context.game().pac(), context.theme());
         };
-        ghosts3D = context.game().ghosts().map(this::createGhost3D).toList();
 
-        addLivesCounter();
-        updateLivesCounter();
-        addLevelCounter();
-        addMessage();
+        Model3D ghostModel3D = context.theme().get("model3D.ghost");
+        ghosts3D = new ArrayList<>(4);
+        context.game().ghosts().forEach(ghost -> {
+            ghosts3D.add(new Ghost3D(ghostModel3D, context.theme(), ghost, GHOST_SIZE));
+        });
 
-        getChildren().addAll(ghosts3D);
+        createLivesCounter3D();
+        createLevelCounter3D();
+        createMessage3D();
+
+        addMaze(mazeGroup);
+        addHouse(mazeGroup);
+        addPellets(this); // when put inside maze group, transparency does not work!
+
         getChildren().addAll(pac3D, pac3D.light());
+        getChildren().addAll(ghosts3D);
         // Walls must come after the guys! Otherwise, transparency is not working correctly.
         worldGroup.getChildren().addAll(floor, mazeGroup);
-        getChildren().addAll(message3D, levelCounterGroup, livesCounter3D, worldGroup);
+        getChildren().addAll(message3D, levelCounter3D, livesCounter3D, worldGroup);
+
+        updateLivesCounter();
 
         pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
         pac3D.drawModePy.bind(PY_3D_DRAW_MODE);
@@ -215,10 +221,6 @@ public class GameLevel3D extends Group {
         livesCounter3D.livesShownPy.set(numLivesCounterEntries);
     }
 
-    private Ghost3D createGhost3D(Ghost ghost) {
-        return new Ghost3D(context.theme().get("model3D.ghost"), context.theme(), ghost, GHOST_SIZE);
-    }
-
     private void addHouse(Group parent) {
         House house = context.game().world().house();
         Vector2i leftDoorTile = house.door().leftWing(), rightDoorTile = house.door().rightWing();
@@ -242,6 +244,7 @@ public class GameLevel3D extends Group {
         Color doorColor = getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_DOOR, Color.rgb(254,184,174));
         door3D = new Door3D(leftDoorTile, rightDoorTile, doorColor, PY_3D_FLOOR_COLOR);
         door3D.drawModePy.bind(PY_3D_DRAW_MODE);
+
         // TODO: If door is added to given parent, it is not visible through transparent house wall in front.
         // But if is added to level 3D group, it shows background wallpaper when color is transparent. WTF?
         getChildren().add(door3D);
@@ -288,7 +291,7 @@ public class GameLevel3D extends Group {
         });
     }
 
-    private void addWalls(Group parent) {
+    private void addMaze(Group parent) {
         TileMap terrainMap = context.game().world().map().terrain();
         terrainMap.computeTerrainPaths();
         House house = context.game().world().house();
@@ -374,7 +377,7 @@ public class GameLevel3D extends Group {
         return new Group(base, top);
     }
 
-    private void addLivesCounter() {
+    private void createLivesCounter3D() {
         Supplier<Pac3D> pacShapeFactory = () -> switch (context.game().variant()) {
             case MS_PACMAN          -> new MsPacMan3D(10, null, context.theme());
             case PACMAN, PACMAN_XXL -> new PacMan3D(10, null, context.theme());
@@ -389,20 +392,21 @@ public class GameLevel3D extends Group {
         livesCounter3D.light().setLightOn(context.gameController().hasCredit());
     }
 
-    public void addLevelCounter() {
+    public void createLevelCounter3D() {
         World world = context.game().world();
         double spacing = 2 * TS;
         // this is the *right* edge of the level counter:
-        levelCounterGroup.setTranslateX(world.numCols() * TS - spacing);
-        levelCounterGroup.setTranslateY(spacing);
-        levelCounterGroup.setTranslateZ(-6);
-        levelCounterGroup.getChildren().clear();
+        levelCounter3D = new Group();
+        levelCounter3D.setTranslateX(world.numCols() * TS - spacing);
+        levelCounter3D.setTranslateY(spacing);
+        levelCounter3D.setTranslateZ(-6);
+        levelCounter3D.getChildren().clear();
         int n = 0;
         for (byte symbol : context.game().levelCounter()) {
             Box cube = new Box(TS, TS, TS);
             cube.setTranslateX(-n * spacing);
             cube.setTranslateZ(-HTS);
-            levelCounterGroup.getChildren().add(cube);
+            levelCounter3D.getChildren().add(cube);
 
             var material = new PhongMaterial(Color.WHITE);
             switch (context.game().variant()) {
@@ -429,7 +433,7 @@ public class GameLevel3D extends Group {
         }
     }
 
-    private void addMessage() {
+    private void createMessage3D() {
         message3D = new Message3D();
         message3D.setRotation(Rotate.X_AXIS, 90);
         message3D.setVisible(false);
