@@ -29,12 +29,12 @@ public class House {
     private Vector2f pacPosition;
     private Vector2f[] ghostPositions;
     private Direction[] ghostDirections;
-    private Vector2i minTile;
+    private Vector2i topLeftTile;
     private Vector2i size;
     private Door door;
 
     public void setTopLeftTile(Vector2i minTile) {
-        this.minTile = checkTileNotNull(minTile);
+        this.topLeftTile = checkTileNotNull(minTile);
     }
 
     public void setSize(Vector2i size) {
@@ -51,7 +51,7 @@ public class House {
     }
 
     public Vector2i topLeftTile() {
-        return minTile;
+        return topLeftTile;
     }
 
     public Vector2i size() {
@@ -63,7 +63,7 @@ public class House {
     }
 
     public Vector2f center() {
-        return minTile.toFloatVec().scaled(TS).plus(size.toFloatVec().scaled(HTS));
+        return topLeftTile.toFloatVec().scaled(TS).plus(size.toFloatVec().scaled(HTS));
     }
 
     /**
@@ -71,9 +71,9 @@ public class House {
      * @return tells if the given tile is part of this house
      */
     public boolean contains(Vector2i tile) {
-        Vector2i max = minTile.plus(size().minus(1, 1));
-        return tile.x() >= minTile.x() && tile.x() <= max.x() //
-            && tile.y() >= minTile.y() && tile.y() <= max.y();
+        Vector2i max = topLeftTile.plus(size().minus(1, 1));
+        return tile.x() >= topLeftTile.x() && tile.x() <= max.x() //
+            && tile.y() >= topLeftTile.y() && tile.y() <= max.y();
     }
 
     private Vector2f positionHalfTileRightOf(Vector2i tile) {

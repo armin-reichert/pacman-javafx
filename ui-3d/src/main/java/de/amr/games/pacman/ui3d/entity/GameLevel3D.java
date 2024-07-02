@@ -14,6 +14,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
+import de.amr.games.pacman.model.world.Door;
 import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -166,16 +167,15 @@ public class GameLevel3D extends Group {
         };
 
         Model3D ghostModel3D = context.theme().get("model3D.ghost");
-        ghosts3D = new ArrayList<>(4);
-        context.game().ghosts().forEach(ghost -> {
-            ghosts3D.add(new Ghost3D(ghostModel3D, context.theme(), ghost, GHOST_SIZE));
-        });
+        ghosts3D = context.game().ghosts()
+            .map(ghost -> new Ghost3D(ghostModel3D, context.theme(), ghost, GHOST_SIZE)).toList();
 
         createLivesCounter3D();
         createLevelCounter3D();
         createMessage3D();
 
         addMaze(mazeGroup);
+
         addHouse(mazeGroup);
         addPellets(this); // when put inside maze group, transparency does not work!
 
@@ -222,17 +222,18 @@ public class GameLevel3D extends Group {
     }
 
     private void addHouse(Group parent) {
-        House house = context.game().world().house();
-        Vector2i leftDoorTile = house.door().leftWing(), rightDoorTile = house.door().rightWing();
-        int tilesX = house.size().x(), tilesY = house.size().y();
+        World world = context.game().world();
+        WorldMap map = world.map();
+        House house = world.house();
+        Door door = house.door();
 
         // tile coordinates
-        WorldMap map = context.game().world().map();
-        int xMin = map.numCols() / 2 - (int) Math.ceil(0.5 * tilesX);
-        int yMin = map.numRows() / 2 - (int) Math.ceil(0.5 * tilesY);
-        int yMax = yMin + tilesY - 1;
-        int xMax = xMin + tilesX - 1;
+        int xMin = house.topLeftTile().x();
+        int xMax = xMin + house.size().x() - 1;
+        int yMin = house.topLeftTile().y();
+        int yMax = yMin + house.size().y() - 1;
 
+        Vector2i leftDoorTile = door.leftWing(), rightDoorTile = door.rightWing();
         parent.getChildren().addAll(
             createHouseWall(xMin, yMin, leftDoorTile.x() - 1, yMin),
             createHouseWall(rightDoorTile.x() + 1, yMin, xMax, yMin),
@@ -246,7 +247,7 @@ public class GameLevel3D extends Group {
         door3D.drawModePy.bind(PY_3D_DRAW_MODE);
 
         // TODO: If door is added to given parent, it is not visible through transparent house wall in front.
-        // But if is added to level 3D group, it shows background wallpaper when color is transparent. WTF?
+        // TODO: If is added to the level 3D group, it shows the background wallpaper when its color is transparent! WTF?
         getChildren().add(door3D);
 
         // pixel coordinates
@@ -292,29 +293,32 @@ public class GameLevel3D extends Group {
     }
 
     private void addMaze(Group parent) {
+        House house = context.game().world().house();
         TileMap terrainMap = context.game().world().map().terrain();
         terrainMap.computeTerrainPaths();
-        House house = context.game().world().house();
         terrainMap.outerPaths()
             .filter(path -> !house.contains(path.startTile()))
-            .forEach(path -> addWallsAlongPath(parent, path, outerWallHeightPy, OUTER_WALL_THICKNESS));
+            .forEach(path -> addWallSegmentsAlongPath(parent, path, outerWallHeightPy, OUTER_WALL_THICKNESS));
         terrainMap.innerPaths()
-            .forEach(path -> addWallsAlongPath(parent, path, wallHeightPy, INNER_WALL_THICKNESS));
+            .forEach(path -> addWallSegmentsAlongPath(parent, path, wallHeightPy, INNER_WALL_THICKNESS));
     }
 
-    private void addWallsAlongPath(Group parent, TileMapPath path, DoubleProperty heightPy, double thickness) {
+    private void addWallSegmentsAlongPath(Group parent, TileMapPath path, DoubleProperty heightPy, double thickness) {
         Vector2i startTile = path.startTile(), endTile = startTile;
         Direction prevDir = null;
+        Node segment;
         for (int i = 0; i < path.size(); ++i) {
-            var dir = path.dir(i);
+            Direction dir = path.dir(i);
             if (prevDir != dir) {
-                parent.getChildren().add(createWall(startTile, endTile, thickness, heightPy, wallFillMaterialPy, wallStrokeMaterialPy));
+                segment = createWall(startTile, endTile, thickness, heightPy, wallFillMaterialPy, wallStrokeMaterialPy);
+                parent.getChildren().add(segment);
                 startTile = endTile;
             }
             endTile = endTile.plus(dir.vector());
             prevDir = dir;
         }
-        parent.getChildren().add(createWall(startTile, endTile, thickness, heightPy, wallFillMaterialPy, wallStrokeMaterialPy));
+        segment = createWall(startTile, endTile, thickness, heightPy, wallFillMaterialPy, wallStrokeMaterialPy);
+        parent.getChildren().add(segment);
     }
 
     private static Node createWall(
@@ -355,7 +359,7 @@ public class GameLevel3D extends Group {
         throw new IllegalArgumentException(String.format("Cannot build wall between tiles %s and %s", beginTile, endTile));
     }
 
-    private static Group createWall(
+    private static Node createWall(
         double x, double y, double sizeX, double sizeY, DoubleProperty depthPy,
         ObjectProperty<PhongMaterial> fillMaterialPy, ObjectProperty<PhongMaterial> strokeMaterialPy) {
 
