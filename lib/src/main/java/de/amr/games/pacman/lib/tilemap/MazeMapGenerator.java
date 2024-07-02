@@ -1,5 +1,7 @@
 package de.amr.games.pacman.lib.tilemap;
 
+import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.graph.Dir;
 import de.amr.games.pacman.lib.graph.DirMap;
 import de.amr.games.pacman.lib.graph.GridGraph;
@@ -7,10 +9,7 @@ import de.amr.games.pacman.lib.graph.GridGraphImpl;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -52,30 +51,97 @@ public class MazeMapGenerator {
         }
     }
 
-    public static WorldMap createMazeMap(int numRows, int numCols) {
+    private static final byte FREE = Tiles.EMPTY;
+    private static final byte BLOCKED = Tiles.TUNNEL;
+    private static final int EMPTY_ROWS_ABOVE = 3, EMPTY_ROWS_BELOW = 2;
+
+    public WorldMap createMazeMap(int numRows, int numCols) {
         GridGraphImpl grid = new GridGraphImpl(numRows, numCols);
         createMazeByWilson(grid);
-        Logger.info("Maze: {}", grid);
-        var worldMap = new WorldMap(3*numRows, 3*numCols);
+        var worldMap = new WorldMap(3 * numRows + EMPTY_ROWS_ABOVE + EMPTY_ROWS_BELOW, 3 * numCols);
         var terrain = worldMap.terrain();
         for (int v = 0; v < grid.numVertices(); ++v) {
-            int row = 3*grid.row(v)+1, col = 3*grid.col(v)+1;
-            byte free = Tiles.EMPTY;
-            byte blocked = Tiles.TUNNEL;
-            set(terrain, row - 1, col - 1, blocked);
-            set(terrain, row - 1, col, grid.connected(v, Dir.N) ? free : blocked);
-            set(terrain, row - 1, col + 1, blocked);
-            set(terrain, row, col - 1, grid.connected(v, Dir.W) ? free : blocked);
-            set(terrain, row, col, free);
-            set(terrain, row, col + 1, grid.connected(v, Dir.E) ? free : blocked);
-            set(terrain, row + 1, col - 1, blocked);
-            set(terrain, row + 1, col, grid.connected(v, Dir.S) ? free : blocked);
-            set(terrain, row + 1, col + 1, blocked);
+            // center of 3x3 "macro" cell
+            int row = 3 * grid.row(v) + 1 + EMPTY_ROWS_ABOVE, col = 3 * grid.col(v) + 1;
+            if (row < 3 || row > 3 * numRows + EMPTY_ROWS_BELOW) {
+                continue;
+            }
+            set(terrain, row - 1, col - 1, BLOCKED);
+            set(terrain, row - 1, col, grid.connected(v, Dir.N) ? FREE : BLOCKED);
+            set(terrain, row - 1, col + 1, BLOCKED);
+            set(terrain, row, col - 1, grid.connected(v, Dir.W) ? FREE : BLOCKED);
+            set(terrain, row, col, FREE);
+            set(terrain, row, col + 1, grid.connected(v, Dir.E) ? FREE : BLOCKED);
+            set(terrain, row + 1, col - 1, BLOCKED);
+            set(terrain, row + 1, col, grid.connected(v, Dir.S) ? FREE : BLOCKED);
+            set(terrain, row + 1, col + 1, BLOCKED);
         }
         return worldMap;
     }
 
-    private static void set(TileMap map, int row, int col, byte value) {
+    private Vector2i current;
+    private Direction moveDir;
+
+    public void refine(WorldMap map) {
+        TileMap terrain = map.terrain();
+        current = new Vector2i(0, EMPTY_ROWS_ABOVE); //x=col, y=row
+        set(terrain, current, Tiles.CORNER_NW);
+        moveDir = Direction.RIGHT;
+        move();
+        int i = 0;
+        while (i < 1000) {
+            ++i;
+            Vector2i rightHandedTile = current.plus(moveDir.nextClockwise().vector());
+            if (terrain.get(rightHandedTile) == FREE) {
+                if (terrain.get(current.plus(moveDir.vector())) == BLOCKED) {
+                    set(terrain, current, moveDir.isHorizontal() ? Tiles.WALL_H : Tiles.WALL_V);
+                    move();
+                } else {
+                    // turn counter-clockwise
+                    switch (moveDir) {
+                        case LEFT -> set(terrain, current, Tiles.CORNER_NW);
+                        case RIGHT -> set(terrain, current, Tiles.CORNER_SE);
+                        case UP -> set(terrain, current, Tiles.CORNER_NE);
+                        case DOWN -> set(terrain, current, Tiles.CORNER_SW);
+                    }
+                    moveDir = moveDir.nextCounterClockwise();
+                    move();
+                }
+            } else {
+                byte corner = Tiles.EMPTY;
+                switch (moveDir) {
+                    case RIGHT -> {
+                        corner = Tiles.CORNER_NE;
+                        moveDir = Direction.DOWN;
+                    }
+                    case DOWN -> {
+                        corner = Tiles.CORNER_SE;
+                        moveDir = Direction.LEFT;
+                    }
+                    case LEFT -> {
+                        corner = Tiles.CORNER_SW;
+                        moveDir = Direction.UP;
+                    }
+                    case UP -> {
+                        corner = Tiles.CORNER_NW;
+                        moveDir = Direction.RIGHT;
+                    }
+                };
+                set(terrain, current, corner);
+                move();
+            }
+        }
+    }
+
+    private void move() {
+        current = current.plus(moveDir.vector());
+    }
+
+    private void set(TileMap map, Vector2i tile, byte value) {
+        set(map, tile.y(), tile.x(), value);
+    }
+
+    private void set(TileMap map, int row, int col, byte value) {
         if (row < 0 || row >= map.numRows()) {
             return;
         }
@@ -83,10 +149,18 @@ public class MazeMapGenerator {
             return;
         }
         map.set(row, col, value);
+        Logger.info("x={} y={}: {} move {}", col, row, value, moveDir);
     }
 
     public static void main(String[] args)  {
-        WorldMap mazeMap = createMazeMap(10, 10);
-        mazeMap.save(new File("maze.world"));
+        MazeMapGenerator gen = new MazeMapGenerator();
+        //WorldMap mazeMap = createMazeMap(10, 10);
+        WorldMap mazeMap = new WorldMap(new File("maze.world"));
+        try {
+            gen.refine(mazeMap);
+        } catch (Exception x) {
+            Logger.error(x);
+        }
+        mazeMap.save(new File("maze_refined.world"));
     }
 }
