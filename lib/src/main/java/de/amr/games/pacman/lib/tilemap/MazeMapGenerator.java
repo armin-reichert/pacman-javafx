@@ -90,55 +90,50 @@ public class MazeMapGenerator {
         return 0 <= tile.x() && tile.x() < map.numCols() && 0 <= tile.y() && tile.y() <= map.numRows();
     }
 
-    public void refine(WorldMap map) {
+    public void setContour(WorldMap map) {
         TileMap terrain = map.terrain();
         predecessor = null;
-        current = new Vector2i(0, EMPTY_ROWS_ABOVE); //x=col, y=row
+        current = new Vector2i(0, EMPTY_ROWS_ABOVE); // top-left tile of terrain
         set(terrain, current, Tiles.CORNER_NW);
         moveDir = Direction.RIGHT;
         move();
         while (inRange(current, terrain)) {
-            Vector2i rightHandedTile = current.plus(moveDir.nextClockwise().vector());
-            if (terrain.get(rightHandedTile) == FREE) {
-                if (terrain.get(current.plus(moveDir.vector())) == BLOCKED) {
+            Vector2i tileAtRightHand = current.plus(moveDir.nextClockwise().vector());
+            if (terrain.get(tileAtRightHand) == FREE) {
+                Vector2i tileAhead = current.plus(moveDir.vector());
+                if (terrain.get(tileAhead) == BLOCKED) {
                     set(terrain, current, moveDir.isHorizontal() ? Tiles.WALL_H : Tiles.WALL_V);
-                    move();
                 } else {
-                    // turn counter-clockwise
-                    switch (moveDir) {
-                        case LEFT -> set(terrain, current, Tiles.CORNER_NW);
-                        case RIGHT -> set(terrain, current, Tiles.CORNER_SE);
-                        case UP -> set(terrain, current, Tiles.CORNER_NE);
-                        case DOWN -> set(terrain, current, Tiles.CORNER_SW);
-                    }
-                    moveDir = moveDir.nextCounterClockwise();
-                    move();
+                    byte corner = switch (moveDir) {
+                        case LEFT  -> Tiles.CORNER_NW;
+                        case RIGHT -> Tiles.CORNER_SE;
+                        case UP    -> Tiles.CORNER_NE;
+                        case DOWN  -> Tiles.CORNER_SW;
+                    };
+                    set(terrain, current, corner);
+                    turnCounterclockwise();
                 }
             } else {
-                byte corner = Tiles.EMPTY;
-                switch (moveDir) {
-                    case RIGHT -> {
-                        corner = Tiles.CORNER_NE;
-                        moveDir = Direction.DOWN;
-                    }
-                    case DOWN -> {
-                        corner = Tiles.CORNER_SE;
-                        moveDir = Direction.LEFT;
-                    }
-                    case LEFT -> {
-                        corner = Tiles.CORNER_SW;
-                        moveDir = Direction.UP;
-                    }
-                    case UP -> {
-                        corner = Tiles.CORNER_NW;
-                        moveDir = Direction.RIGHT;
-                    }
+                byte corner = switch (moveDir) {
+                    case RIGHT -> Tiles.CORNER_NE;
+                    case DOWN  -> Tiles.CORNER_SE;
+                    case LEFT  -> Tiles.CORNER_SW;
+                    case UP    -> Tiles.CORNER_NW;
                 };
                 set(terrain, current, corner);
-                move();
+                turnClockwise();
             }
+            move();
         }
         set(terrain, predecessor, Tiles.WALL_V); //TODO correct?
+    }
+
+    private void turnClockwise() {
+        moveDir = moveDir.nextClockwise();
+    }
+
+    private void turnCounterclockwise() {
+        moveDir = moveDir.nextCounterClockwise();
     }
 
     private void move() {
@@ -163,10 +158,10 @@ public class MazeMapGenerator {
 
     public static void main(String[] args)  {
         MazeMapGenerator gen = new MazeMapGenerator();
-        WorldMap mazeMap = gen.createMazeMap(100, 20);
+        WorldMap mazeMap = gen.createMazeMap(40, 20);
         //WorldMap mazeMap = new WorldMap(new File("maze.world"));
         try {
-            gen.refine(mazeMap);
+            gen.setContour(mazeMap);
         } catch (Exception x) {
             Logger.error(x);
         }
