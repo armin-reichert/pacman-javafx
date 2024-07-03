@@ -24,9 +24,8 @@ public class InfoBoxCustomMaps extends InfoBox {
             infoText("No custom maps found.", "");
             return;
         }
-        for (Map.Entry<File, WorldMap> entry : dict.entrySet()) {
-            File mapFile = entry.getKey();
-            WorldMap map = entry.getValue();
+        for (File mapFile : dict.keySet().stream().sorted().toList()) {
+            WorldMap map = dict.get(mapFile);
             String mapSize = "(%dx%d)".formatted(map.numRows(), map.numCols());
             infoText(mapFile.getName(), mapSize);
         }

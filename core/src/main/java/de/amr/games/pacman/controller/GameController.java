@@ -128,7 +128,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     }
 
     public List<WorldMap> getCustomMaps() {
-        return new ArrayList<>(customMaps.values());
+        return customMaps.keySet().stream().sorted().map(customMaps::get).toList();
     }
 
     public Map<File, WorldMap> customMapsDict() {
