@@ -101,8 +101,12 @@ public class MazeMapGenerator {
     private static final int EMPTY_ROWS_ABOVE = 3, EMPTY_ROWS_BELOW = 2;
 
     public WorldMap createMazeMap(int numRows, int numCols) {
+
+        // create maze graph
         GridGraphImpl grid = new GridGraphImpl(numRows, numCols);
         createMazeByRecursiveDivision(grid);
+
+        // create map from maze (3 times larger!)
         var worldMap = new WorldMap(3 * numRows + EMPTY_ROWS_ABOVE + EMPTY_ROWS_BELOW, 3 * numCols);
         var terrain = worldMap.terrain();
         for (int v = 0; v < grid.numVertices(); ++v) {
@@ -121,6 +125,7 @@ public class MazeMapGenerator {
             set(terrain, row + 1, col, grid.connected(v, Dir.S) ? FREE : BLOCKED);
             set(terrain, row + 1, col + 1, BLOCKED);
         }
+        addFood(worldMap);
         return worldMap;
     }
 
@@ -132,10 +137,10 @@ public class MazeMapGenerator {
         return 0 <= tile.x() && tile.x() < map.numCols() && 0 <= tile.y() && tile.y() <= map.numRows();
     }
 
-    public void setContour(WorldMap map) {
+    private void computeWallContour(WorldMap map, Vector2i startTile) {
         TileMap terrain = map.terrain();
         predecessor = null;
-        current = new Vector2i(0, EMPTY_ROWS_ABOVE); // top-left tile of terrain
+        current = startTile;
         set(terrain, current, Tiles.CORNER_NW);
         moveDir = Direction.RIGHT;
         move();
@@ -178,6 +183,18 @@ public class MazeMapGenerator {
         moveDir = moveDir.nextCounterClockwise();
     }
 
+    private void addFood(WorldMap map) {
+        TileMap terrainMap = map.terrain();
+        TileMap foodMap = map.food();
+        for (int row = EMPTY_ROWS_ABOVE; row < foodMap.numRows() - EMPTY_ROWS_BELOW; ++row) {
+            for (int col = 0; col < foodMap.numCols(); ++col) {
+                if (terrainMap.get(row, col) == Tiles.EMPTY && new Random().nextInt(100) < 40) {
+                    foodMap.set(row, col, Tiles.PELLET);
+                }
+            }
+        }
+    }
+
     private void move() {
         predecessor = current;
         current = current.plus(moveDir.vector());
@@ -204,7 +221,7 @@ public class MazeMapGenerator {
         for (int i = 0; i < 20; ++i) {
             try {
                 WorldMap mazeMap = gen.createMazeMap(40, 20);
-                gen.setContour(mazeMap);
+                gen.computeWallContour(mazeMap, new Vector2i(0, EMPTY_ROWS_ABOVE));
                 File file = new File("maze_%d.world".formatted(i));
                 mazeMap.save(file);
                 Logger.info("Maze map {} saved", file);

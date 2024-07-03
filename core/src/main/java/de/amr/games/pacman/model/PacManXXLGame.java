@@ -36,22 +36,33 @@ public class PacManXXLGame extends PacManGame {
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
         var customMaps = controller().getCustomMaps();
-        var world = switch (levelNumber) {
-            case 1 -> customMaps.isEmpty() ? createPacManWorld() : createWorld(customMaps.get(0));
-            case 2, 3, 4, 5, 6, 7, 8, 9 -> {
-                int mapNumber = levelNumber - 1;
-                URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/masonic/masonic_%d.world".formatted(mapNumber));
-                var map = new WorldMap(mapURL);
-                yield createWorld(map);
-            }
-            default -> {
+        if (customMaps.isEmpty()) {
+            var world = switch (levelNumber) {
+                case 1 -> createPacManWorld();
+                case 2, 3, 4, 5, 6, 7, 8, 9 -> {
+                    int mapNumber = levelNumber - 1;
+                    URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/masonic/masonic_%d.world".formatted(mapNumber));
+                    var map = new WorldMap(mapURL);
+                    yield createWorld(map);
+                }
+                default -> {
+                    int mapNumber = randomInt(1, 9);
+                    URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/masonic/masonic_%d.world".formatted(mapNumber));
+                    var map = new WorldMap(mapURL);
+                    yield createWorld(map);
+                }
+            };
+            setWorldAndCreatePopulation(world);
+        } else {
+            if (levelNumber <= customMaps.size()) {
+                world = createWorld(customMaps.get(levelNumber - 1));
+            } else {
                 int mapNumber = randomInt(1, 9);
                 URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/masonic/masonic_%d.world".formatted(mapNumber));
-                var map = new WorldMap(mapURL);
-                yield createWorld(map);
+                world = createWorld(new WorldMap(mapURL));
             }
-        };
-        setWorldAndCreatePopulation(world);
+            setWorldAndCreatePopulation(world);
+        }
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
