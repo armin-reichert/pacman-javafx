@@ -9,6 +9,8 @@ import de.amr.games.pacman.lib.Vector2i;
 
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Iterator;
+import java.util.List;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -16,7 +18,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class TileMapPath {
+public class TileMapPath implements Iterable<Direction> {
 
     private static Direction newMoveDir(Direction moveDir, byte tileValue) {
         return switch (tileValue) {
@@ -28,10 +30,8 @@ public class TileMapPath {
         };
     }
 
-    private static final Direction[] DIRECTION_VALUES = Direction.values();
-
     private final Vector2i startTile;
-    private final byte[] dirOrdinals;
+    private final List<Direction> directions = new ArrayList<>();
 
     public TileMapPath(TileMap map, BitSet explored, Vector2i startTile, Direction startDir) {
         checkNotNull(map);
@@ -45,7 +45,6 @@ public class TileMapPath {
         explored.set(map.index(startTile));
         var tile = startTile;
         var dir = startDir;
-        var directions = new ArrayList<Direction>();
         while (true) {
             dir = newMoveDir(dir, map.get(tile));
             tile = tile.plus(dir.vector());
@@ -59,10 +58,6 @@ public class TileMapPath {
             directions.add(dir);
             explored.set(map.index(tile));
         }
-        dirOrdinals = new byte[directions.size()];
-        for (int i = 0; i < directions.size(); ++i) {
-            dirOrdinals[i] = (byte) directions.get(i).ordinal();
-        }
     }
 
     public Vector2i startTile() {
@@ -70,10 +65,15 @@ public class TileMapPath {
     }
 
     public int size() {
-        return dirOrdinals.length;
+        return directions.size();
     }
 
     public Direction dir(int i) {
-        return DIRECTION_VALUES[dirOrdinals[i]];
+        return directions.get(i);
+    }
+
+    @Override
+    public Iterator<Direction> iterator() {
+        return directions.iterator();
     }
 }

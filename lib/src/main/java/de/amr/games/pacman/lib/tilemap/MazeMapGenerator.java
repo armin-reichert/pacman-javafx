@@ -22,33 +22,33 @@ public class MazeMapGenerator {
     private static final int EMPTY_ROWS_ABOVE = 3, EMPTY_ROWS_BELOW = 2;
 
     public WorldMap createMazeMap(int numRows, int numCols) {
-
         // create maze graph
-        GridGraph grid = new GridGraphImpl(numRows, numCols);
-        MazeGenerators.createMazeByRecursiveDivision(grid);
+        GridGraph graph = new GridGraphImpl(numRows, numCols);
+        MazeGenerators.createMazeByRecursiveDivision(graph);
 
         // create map from maze (3 times larger!)
-        var worldMap = new WorldMap(3 * numRows + EMPTY_ROWS_ABOVE + EMPTY_ROWS_BELOW, 3 * numCols);
-        var terrain = worldMap.terrain();
-        for (int v = 0; v < grid.numVertices(); ++v) {
+        var map = new WorldMap(3 * numRows + EMPTY_ROWS_ABOVE + EMPTY_ROWS_BELOW, 3 * numCols);
+        var terrain = map.terrain();
+        for (int v = 0; v < graph.numVertices(); ++v) {
             // center of 3x3 "macro" cell
-            int row = 3 * grid.row(v) + 1 + EMPTY_ROWS_ABOVE, col = 3 * grid.col(v) + 1;
+            int row = 3 * graph.row(v) + 1 + EMPTY_ROWS_ABOVE, col = 3 * graph.col(v) + 1;
             if (row < 3 || row > 3 * numRows + EMPTY_ROWS_BELOW) {
                 continue;
             }
             set(terrain, row - 1, col - 1, BLOCKED);
-            set(terrain, row - 1, col, grid.connected(v, Dir.N) ? FREE : BLOCKED);
+            set(terrain, row - 1, col, graph.connected(v, Dir.N) ? FREE : BLOCKED);
             set(terrain, row - 1, col + 1, BLOCKED);
-            set(terrain, row, col - 1, grid.connected(v, Dir.W) ? FREE : BLOCKED);
+            set(terrain, row, col - 1, graph.connected(v, Dir.W) ? FREE : BLOCKED);
             set(terrain, row, col, FREE);
-            set(terrain, row, col + 1, grid.connected(v, Dir.E) ? FREE : BLOCKED);
+            set(terrain, row, col + 1, graph.connected(v, Dir.E) ? FREE : BLOCKED);
             set(terrain, row + 1, col - 1, BLOCKED);
-            set(terrain, row + 1, col, grid.connected(v, Dir.S) ? FREE : BLOCKED);
+            set(terrain, row + 1, col, graph.connected(v, Dir.S) ? FREE : BLOCKED);
             set(terrain, row + 1, col + 1, BLOCKED);
         }
-        addFood(worldMap);
+        computeWallContour(map, new Vector2i(0, EMPTY_ROWS_ABOVE));
+        addFood(map);
         terrain.setProperty(WorldMap.PROPERTY_COLOR_WALL_FILL, "#993300");
-        return worldMap;
+        return map;
     }
 
     private Vector2i current;
@@ -143,7 +143,6 @@ public class MazeMapGenerator {
         for (int i = 0; i < 5; ++i) {
             try {
                 WorldMap mazeMap = mg.createMazeMap(10, 10);
-                mg.computeWallContour(mazeMap, new Vector2i(0, EMPTY_ROWS_ABOVE));
                 File file = new File("maze_%d.world".formatted(i));
                 mazeMap.save(file);
             } catch (Exception x) {

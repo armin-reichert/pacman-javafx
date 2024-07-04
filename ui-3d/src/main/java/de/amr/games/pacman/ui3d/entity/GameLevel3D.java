@@ -307,8 +307,7 @@ public class GameLevel3D extends Group {
         Vector2i startTile = path.startTile(), endTile = startTile;
         Direction prevDir = null;
         Node segment;
-        for (int i = 0; i < path.size(); ++i) {
-            Direction dir = path.dir(i);
+        for (Direction dir : path) {
             if (prevDir != dir) {
                 segment = createWall(startTile, endTile, thickness, heightPy, wallFillMaterialPy, wallStrokeMaterialPy);
                 parent.getChildren().add(segment);

@@ -18,18 +18,18 @@ public interface MazeGenerators {
     public static void createMazeByWilsonAlgorithm(GridGraph grid) {
         List<Integer> vertices = new ArrayList<>(IntStream.range(0, grid.numVertices()).boxed().toList());
         Collections.shuffle(vertices);
-        BitSet inTree = new BitSet();
-        inTree.set(vertices.get(0));
+        BitSet visited = new BitSet();
+        visited.set(vertices.get(0));
         DirMap lastWalkDir = new DirMap();
         for (int vertex : vertices) {
-            loopErasedRandomWalk(grid, vertex, lastWalkDir, inTree);
+            loopErasedRandomWalk(grid, vertex, lastWalkDir, visited);
         }
     }
 
-    private static void loopErasedRandomWalk(GridGraph grid, int start, DirMap lastWalkDir, BitSet inTree) {
+    private static void loopErasedRandomWalk(GridGraph grid, int start, DirMap lastWalkDir, BitSet visited) {
         // random walk until a tree vertex is touched
         int vertex = start;
-        while (!inTree.get(vertex)) {
+        while (!visited.get(vertex)) {
             Dir walkDir = Dir.random();
             int neighbor = grid.neighbor(vertex, walkDir);
             if (neighbor != -1) {
@@ -39,11 +39,11 @@ public interface MazeGenerators {
         }
         // add the (loop-erased) random walk to the tree
         vertex = start;
-        while (!inTree.get(vertex)) {
+        while (!visited.get(vertex)) {
             Dir walkDir = lastWalkDir.get(vertex);
             int neighbor = grid.neighbor(vertex, walkDir);
             if (neighbor != -1) {
-                inTree.set(vertex);
+                visited.set(vertex);
                 grid.connect(vertex, walkDir);
                 vertex = neighbor;
             }
@@ -95,5 +95,4 @@ public interface MazeGenerators {
             divide(grid, rnd, x, y0, w - (x - x0), h);
         }
     }
-
 }

@@ -113,8 +113,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
             case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(c.x() - r, c.y() - r, r, r, 270, 90);
             default -> {}
         }
-        for (int i = 0; i < tileMapPath.size(); ++i) {
-            Direction dir = tileMapPath.dir(i);
+        for (Direction dir : tileMapPath) {
             Vector2i prev = tile;
             tile = tile.plus(dir.vector());
             c = center(tile);
