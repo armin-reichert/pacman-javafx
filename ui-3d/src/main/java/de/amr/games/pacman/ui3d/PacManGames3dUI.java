@@ -177,7 +177,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
         gamePage.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
-                    return Ufx.coloredBackground(Color.BLACK);
+                    return Ufx.coloredBackground(Color.rgb(100,100,200));
                 }
                 return Ufx.wallpaperBackground(PY_3D_NIGHT_MODE.get() ? PY_3D_WALLPAPER_NIGHT.get() : PY_3D_WALLPAPER_DAY.get());
             },

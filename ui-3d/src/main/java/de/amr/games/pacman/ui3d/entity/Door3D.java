@@ -68,7 +68,7 @@ public class Door3D extends Group {
             verticalBar.setMaterial(material);
             verticalBar.setTranslateX(i * 4 + 2);
             verticalBar.setTranslateY(4);
-            verticalBar.setTranslateZ(-4);
+            verticalBar.translateZProperty().bind(verticalBar.heightProperty().multiply(-0.5));
             verticalBar.setRotationAxis(Rotate.X_AXIS);
             verticalBar.setRotate(90);
             verticalBar.drawModeProperty().bind(drawModePy);
@@ -79,9 +79,10 @@ public class Door3D extends Group {
         horizontalBar.setMaterial(material);
         horizontalBar.setTranslateX(4);
         horizontalBar.setTranslateY(4);
-        horizontalBar.setTranslateZ(0.25 - GameLevel3D.HOUSE_HEIGHT * 0.5);
+        horizontalBar.setTranslateZ(0.25 - horizontalBar.getHeight() * 0.5);
         horizontalBar.setRotationAxis(Rotate.Z_AXIS);
         horizontalBar.setRotate(90);
+        horizontalBar.drawModeProperty().bind(drawModePy);
         group.getChildren().add(horizontalBar);
 
         return group;
