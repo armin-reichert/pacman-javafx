@@ -19,6 +19,7 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.lib.tilemap.TileMap.parseVector2i;
@@ -32,6 +33,26 @@ import static java.util.Comparator.comparing;
 public class PropertyEditorPane extends BorderPane {
 
     private static final int NAME_COLUMN_MIN_WIDTH = 180;
+    private static final String DELETE_MARKER = ":delete";
+
+    private static boolean isValidPropertyName(String s) {
+        return Pattern.matches("[a-zA-Z]([a-zA-Z0-9_])*", s);
+    }
+
+    private static boolean matchesDeletePattern(String s) {
+        if (s == null || !s.endsWith(DELETE_MARKER)) {
+            return false;
+        }
+        s = s.substring(0, s.length() - DELETE_MARKER.length());
+        return isValidPropertyName(s);
+    }
+
+    private static String removeDeleteMarker(String s) {
+        if (matchesDeletePattern(s)) {
+            return s.substring(0, s.length() - DELETE_MARKER.length());
+        }
+        return s;
+    }
 
     abstract class PropertyEditor {
 
@@ -181,21 +202,21 @@ public class PropertyEditorPane extends BorderPane {
 
         var btnAddColorEntry = new Button("Color");
         btnAddColorEntry.setOnAction(e -> {
-            editedProperties.put("color_new_color", "green");
+            editedProperties.put("color_RENAME_ME", "green");
             rebuildEditors();
         });
         btnAddColorEntry.disableProperty().bind(enabledPy.not());
 
         var btnAddPosEntry = new Button("Position");
         btnAddPosEntry.setOnAction(e -> {
-            editedProperties.put("pos_new_position", "(0,0)");
+            editedProperties.put("pos_RENAME_ME", "(0,0)");
             rebuildEditors();
         });
         btnAddPosEntry.disableProperty().bind(enabledPy.not());
 
         var btnAddGenericEntry = new Button("Text");
         btnAddGenericEntry.setOnAction(e -> {
-            editedProperties.put("text_property", "any text");
+            editedProperties.put("RENAME_ME", "any text");
             rebuildEditors();
         });
         btnAddGenericEntry.disableProperty().bind(enabledPy.not());
@@ -225,14 +246,20 @@ public class PropertyEditorPane extends BorderPane {
 
     private void doEdit(String editedPropertyName, Object editedValue) {
         //TODO provide better solution
-        if (editedPropertyName.endsWith("*")) {
-            String propertyName = editedPropertyName.substring(0, editedPropertyName.length() - 1);
-            editedProperties.remove(propertyName);
-            Logger.info("Property {} deleted", propertyName);
-            rebuildEditors();
+        if (matchesDeletePattern(editedPropertyName)) {
+            String propertyName = removeDeleteMarker(editedPropertyName);
+            if (isValidPropertyName(propertyName)) {
+                editedProperties.remove(propertyName);
+                Logger.info("Property {} deleted", propertyName);
+                rebuildEditors();
+            } else {
+                Logger.info("Invalid property name: {}", propertyName);
+            }
         }
         else if (!editedPropertyName.isBlank()) {
-            if (editedProperties.containsKey(editedPropertyName)) {
+            if (!isValidPropertyName(editedPropertyName)) {
+                Logger.info("Invalid property name: {}", editedPropertyName);
+            } else if (editedProperties.containsKey(editedPropertyName)) {
                 editedProperties.put(editedPropertyName, editedValue);
             } else {
                 editedProperties.put(editedPropertyName, editedValue);
