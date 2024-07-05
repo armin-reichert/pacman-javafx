@@ -18,7 +18,7 @@ java.sourceCompatibility = JavaVersion.VERSION_17
 
 javafx {
     version = '21.0.2'
-    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls']
+    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.web']
 }
 
 jlink {

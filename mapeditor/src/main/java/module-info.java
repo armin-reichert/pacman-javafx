@@ -7,6 +7,7 @@ open module de.amr.games.pacman.mapeditor {
     requires javafx.controls;
     requires org.tinylog.api;
     requires de.amr.games.pacman.lib;
+    requires javafx.web;
 
     exports de.amr.games.pacman.mapeditor;
 }

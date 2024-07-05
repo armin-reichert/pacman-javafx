@@ -25,6 +25,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.web.HTMLEditor;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import javafx.util.Duration;
@@ -121,6 +123,7 @@ public class TileMapEditor  {
     private final BorderPane contentPane = new BorderPane();
     private Canvas editCanvas;
     private Canvas previewCanvas;
+    private WebView mapSourceView;
     private Label hoveredTileInfo;
     private FileChooser fileChooser;
     private TabPane palettesTabPane;
@@ -184,6 +187,7 @@ public class TileMapEditor  {
         terrainMapPropertiesEditor.setMap(worldMap.terrain());
         invalidateTerrainMapPaths();
         updateTerrainMapPaths();
+        updateSourceHtml();
         Logger.debug("Edit canvas size: w={} h={}", editCanvas.getWidth(), editCanvas.getHeight());
     }
 
@@ -290,17 +294,19 @@ public class TileMapEditor  {
         editCanvas = new Canvas();
         editCanvas.setOnMouseClicked(this::onMouseClickedOnEditCanvas);
         editCanvas.setOnMouseMoved(this::onMouseMovedOverEditCanvas);
-
-        previewCanvas = new Canvas();
-
         var editCanvasScroll = new ScrollPane(editCanvas);
         editCanvasScroll.setFitToHeight(true);
 
+        previewCanvas = new Canvas();
         var previewCanvasScroll = new ScrollPane(previewCanvas);
         previewCanvasScroll.setFitToHeight(true);
         previewCanvasScroll.hvalueProperty().bindBidirectional(editCanvasScroll.hvalueProperty());
         previewCanvasScroll.vvalueProperty().bindBidirectional(editCanvasScroll.vvalueProperty());
         previewCanvasScroll.visibleProperty().bind(previewVisiblePy);
+
+        mapSourceView = new WebView();
+        var mapSourceViewScroll = new ScrollPane(mapSourceView);
+        mapSourceViewScroll.setFitToHeight(true);
 
         palettes.put(PALETTE_TERRAIN, createTerrainPalette());
         palettes.put(PALETTE_ACTORS, createActorPalette());
@@ -361,8 +367,8 @@ public class TileMapEditor  {
         var footer = new HBox(hoveredTileInfo, filler, sliderContainer);
         footer.setPadding(new Insets(0, 10, 0, 10));
 
-        var splitPane = new SplitPane(editCanvasScroll, previewCanvasScroll);
-        splitPane.setDividerPositions(0.5);
+        var splitPane = new SplitPane(editCanvasScroll, previewCanvasScroll, mapSourceViewScroll);
+        splitPane.setDividerPositions(0.45, 0.9);
 
         var hbox = new HBox(controlsPane, splitPane);
         HBox.setHgrow(splitPane, Priority.ALWAYS);
@@ -464,6 +470,7 @@ public class TileMapEditor  {
 
     public void markMapEdited() {
         unsavedChanges = true;
+        updateSourceHtml();
     }
 
     public boolean hasUnsavedChanges() {
@@ -802,5 +809,9 @@ public class TileMapEditor  {
         }
         invalidateTerrainMapPaths();
         markMapEdited();
+    }
+
+    private void updateSourceHtml() {
+        mapSourceView.getEngine().loadContent(map().htmlText());
     }
 }

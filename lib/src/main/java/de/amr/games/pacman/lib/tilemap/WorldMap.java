@@ -131,6 +131,22 @@ public class WorldMap {
         }
     }
 
+    public String htmlText() {
+        StringWriter sw = new StringWriter();
+        PrintWriter w = new PrintWriter(sw);
+        w.println("<pre>");
+        w.println(TERRAIN_SECTION_START);
+        try {
+            terrain.print(w);
+            w.println(FOOD_SECTION_START);
+            food.print(w);
+        } catch (Exception x) {
+            w.println("<b>Something bad happened!</b>");
+        }
+        w.println("</pre>");
+        return sw.toString();
+    }
+
     public int numRows() {
         return terrain.numRows();
     }
