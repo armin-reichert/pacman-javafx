@@ -320,23 +320,29 @@ public class TileMapEditor  {
 
         palettesTabPane = new TabPane(terrainPaletteTab, actorPaletteTab, foodPaletteTab);
 
-        terrainMapPropertiesEditor = new PropertyEditorPane(tt("terrain"), this);
+        terrainMapPropertiesEditor = new PropertyEditorPane(this);
         terrainMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
         terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
-        foodMapPropertiesEditor = new PropertyEditorPane(tt("pellets"), this);
+        foodMapPropertiesEditor = new PropertyEditorPane(this);
         foodMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
         foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
-        var propertyEditorArea = new TitledPane();
-        propertyEditorArea.setText(tt("properties"));
-        propertyEditorArea.setContent(new VBox(terrainMapPropertiesEditor, foodMapPropertiesEditor));
+        var terrainPropertiesArea = new TitledPane();
+        terrainPropertiesArea.setExpanded(false);
+        terrainPropertiesArea.setText(tt("terrain"));
+        terrainPropertiesArea.setContent(terrainMapPropertiesEditor);
+
+        var foodPropertiesArea = new TitledPane();
+        foodPropertiesArea.setExpanded(false);
+        foodPropertiesArea.setText(tt("pellets"));
+        foodPropertiesArea.setContent(foodMapPropertiesEditor);
 
         VBox controlsPane = new VBox();
         controlsPane.setSpacing(10);
         controlsPane.setMinWidth(32*10);
         controlsPane.getChildren().add(palettesTabPane);
-        controlsPane.getChildren().add(propertyEditorArea);
+        controlsPane.getChildren().add(new VBox(terrainPropertiesArea, foodPropertiesArea));
 
         hoveredTileInfo = new Label();
 

@@ -8,12 +8,11 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
 import java.util.*;
@@ -29,35 +28,47 @@ import static java.util.Comparator.comparing;
  */
 public class PropertyEditorPane extends BorderPane {
 
+    private static final int NAME_COLUMN_MIN_WIDTH = 180;
+
     public final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
 
     private final TileMapEditor editor;
-    private TileMap tileMap;
-    private Properties editedProperties;
     private final GridPane grid = new GridPane();
     private final List<ColorPicker> colorPickers = new ArrayList<>();
     private final List<Spinner<Integer>> tileXEditors = new ArrayList<>();
     private final List<Spinner<Integer>> tileYEditors = new ArrayList<>();
+    private TileMap tileMap;
+    private Properties editedProperties;
 
-    private int numRows;
-
-    public PropertyEditorPane(String title, TileMapEditor editor) {
+    public PropertyEditorPane(TileMapEditor editor) {
         this.editor = editor;
 
-        var lblTitle = new Label(title);
-        lblTitle.setFont(Font.font("Sans", FontWeight.BOLD, 14));
-
-        var btnAddEntry = new Button("+");
-        btnAddEntry.setStyle("-fx-padding: 0 2 0 2");
-        btnAddEntry.setOnAction(e -> {
-            editedProperties.put("a_new_property", "42");
+        var btnAddColorEntry = new Button("Color");
+        btnAddColorEntry.setOnAction(e -> {
+            editedProperties.put("color_new_color", "green");
             rebuildEditors();
         });
-        btnAddEntry.disableProperty().bind(enabledPy.not());
-        var header = new HBox(lblTitle, btnAddEntry);
-        header.setSpacing(5);
+        btnAddColorEntry.disableProperty().bind(enabledPy.not());
 
-        setTop(header);
+        var btnAddPosEntry = new Button("Position");
+        btnAddPosEntry.setOnAction(e -> {
+            editedProperties.put("pos_new_position", "(0,0)");
+            rebuildEditors();
+        });
+        btnAddPosEntry.disableProperty().bind(enabledPy.not());
+
+        var btnAddGenericEntry = new Button("Text");
+        btnAddGenericEntry.setOnAction(e -> {
+            editedProperties.put("generic_property", "42");
+            rebuildEditors();
+        });
+        btnAddGenericEntry.disableProperty().bind(enabledPy.not());
+
+        var buttonBar = new HBox(new Label("New"), btnAddColorEntry, btnAddPosEntry, btnAddGenericEntry);
+        buttonBar.setSpacing(3);
+        buttonBar.setAlignment(Pos.CENTER_LEFT);
+
+        setTop(buttonBar);
         setCenter(grid);
     }
 
@@ -80,13 +91,12 @@ public class PropertyEditorPane extends BorderPane {
             .sorted(comparing(entry -> entry.getKey().toString()))
             .toList();
 
-        int nameColumnMinWidth = 160;
         for (var entry : sortedEntries) {
             String propertyName = entry.getKey().toString();
             String propertyValue = entry.getValue().toString();
 
             var nameEditor = new TextField(propertyName);
-            nameEditor.setMinWidth(nameColumnMinWidth);
+            nameEditor.setMinWidth(NAME_COLUMN_MIN_WIDTH);
             nameEditor.disableProperty().bind(enabledPy.not());
             grid.add(nameEditor, 0, row);
 
@@ -141,7 +151,6 @@ public class PropertyEditorPane extends BorderPane {
             }
             ++row;
         }
-        numRows = row;
     }
 
     public void updateEditorValues() {
