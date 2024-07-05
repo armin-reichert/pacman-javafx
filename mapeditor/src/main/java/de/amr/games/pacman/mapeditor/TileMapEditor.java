@@ -122,7 +122,9 @@ public class TileMapEditor  {
     private Menu menuView;
     private final BorderPane contentPane = new BorderPane();
     private Canvas editCanvas;
+    private ScrollPane editCanvasScroll;
     private Canvas previewCanvas;
+    private ScrollPane previewCanvasScroll;
     private WebView mapSourceView;
     private Label hoveredTileInfo;
     private FileChooser fileChooser;
@@ -228,6 +230,8 @@ public class TileMapEditor  {
 
     public void start() {
         clock.play();
+        int gridSize = (int)(editCanvasScroll.getHeight() / map().numRows());
+        gridSizePy.set(Math.max(gridSize, 8));
     }
 
     public void stop() {
@@ -294,11 +298,11 @@ public class TileMapEditor  {
         editCanvas = new Canvas();
         editCanvas.setOnMouseClicked(this::onMouseClickedOnEditCanvas);
         editCanvas.setOnMouseMoved(this::onMouseMovedOverEditCanvas);
-        var editCanvasScroll = new ScrollPane(editCanvas);
+        editCanvasScroll = new ScrollPane(editCanvas);
         editCanvasScroll.setFitToHeight(true);
 
         previewCanvas = new Canvas();
-        var previewCanvasScroll = new ScrollPane(previewCanvas);
+        previewCanvasScroll = new ScrollPane(previewCanvas);
         previewCanvasScroll.setFitToHeight(true);
         previewCanvasScroll.hvalueProperty().bindBidirectional(editCanvasScroll.hvalueProperty());
         previewCanvasScroll.vvalueProperty().bindBidirectional(editCanvasScroll.vvalueProperty());

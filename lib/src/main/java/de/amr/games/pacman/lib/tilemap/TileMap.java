@@ -121,7 +121,7 @@ public class TileMap {
     }
 
     public void computeTerrainPaths() {
-        Logger.info("Compute paths for {}", this);
+        Logger.debug("Compute paths for {}", this);
         innerPaths = new ArrayList<>();
         outerPaths = new ArrayList<>();
 
