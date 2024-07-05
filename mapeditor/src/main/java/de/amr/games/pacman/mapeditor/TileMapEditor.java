@@ -124,9 +124,9 @@ public class TileMapEditor  {
     private Label hoveredTileInfo;
     private FileChooser fileChooser;
     private TabPane palettesTabPane;
-    private PropertyEditor terrainMapPropertiesEditor;
+    private PropertyEditorPane terrainMapPropertiesEditor;
     private TileMapEditorTerrainRenderer terrainMapRenderer;
-    private PropertyEditor foodMapPropertiesEditor;
+    private PropertyEditorPane foodMapPropertiesEditor;
     private FoodMapRenderer foodMapRenderer;
 
     private final Map<String, Palette> palettes = new HashMap<>();
@@ -320,11 +320,11 @@ public class TileMapEditor  {
 
         palettesTabPane = new TabPane(terrainPaletteTab, actorPaletteTab, foodPaletteTab);
 
-        terrainMapPropertiesEditor = new PropertyEditor(tt("terrain"), this);
+        terrainMapPropertiesEditor = new PropertyEditorPane(tt("terrain"), this);
         terrainMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
         terrainMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
-        foodMapPropertiesEditor = new PropertyEditor(tt("pellets"), this);
+        foodMapPropertiesEditor = new PropertyEditorPane(tt("pellets"), this);
         foodMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
         foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
