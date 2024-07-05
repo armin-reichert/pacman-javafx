@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.ui2d.GameContext;
 
 import java.io.File;
-import java.util.Map;
 
 /**
  * @author Armin Reichert
