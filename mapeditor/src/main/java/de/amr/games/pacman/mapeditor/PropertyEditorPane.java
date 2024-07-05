@@ -43,7 +43,18 @@ public class PropertyEditorPane extends BorderPane {
             nameEditor = new TextField(propertyName);
             nameEditor.setMinWidth(NAME_COLUMN_MIN_WIDTH);
             nameEditor.disableProperty().bind(enabledPy.not());
+            nameEditor.setOnAction(e -> edit());
         }
+
+        protected void edit() {
+            doEdit(editedPropertyName(), formattedPropertyValue());
+        }
+
+        protected String editedPropertyName() {
+            return nameEditor.getText().strip();
+        }
+
+        protected abstract String formattedPropertyValue();
 
         protected void updateEditorValue() {
         }
@@ -60,14 +71,17 @@ public class PropertyEditorPane extends BorderPane {
             textEditor = new TextField();
             textEditor.setText(propertyValue);
             textEditor.disableProperty().bind(enabledPy.not());
-
-            nameEditor.setOnAction(e -> edit(nameEditor, textEditor.getText()));
-            textEditor.setOnAction(e -> edit(nameEditor, textEditor.getText()));
+            textEditor.setOnAction(e -> edit());
         }
 
         @Override
         protected Node valueEditorNode() {
             return textEditor;
+        }
+
+        @Override
+        protected String formattedPropertyValue() {
+            return textEditor.getText();
         }
     }
 
@@ -80,9 +94,7 @@ public class PropertyEditorPane extends BorderPane {
             colorPicker.setUserData(propertyName);
             colorPicker.setValue(parseColor(propertyValue));
             colorPicker.disableProperty().bind(enabledPy.not());
-
-            nameEditor.setOnAction(e -> edit(nameEditor, formatColor(colorPicker.getValue())));
-            colorPicker.setOnAction(e -> edit(nameEditor, formatColor(colorPicker.getValue())));
+            colorPicker.setOnAction(e -> edit());
         }
 
         @Override
@@ -96,6 +108,11 @@ public class PropertyEditorPane extends BorderPane {
         protected Node valueEditorNode() {
             return colorPicker;
         }
+
+        @Override
+        protected String formattedPropertyValue() {
+            return formatColor(colorPicker.getValue());
+        }
     }
 
     class TilePropertyEditor extends PropertyEditor {
@@ -105,29 +122,28 @@ public class PropertyEditorPane extends BorderPane {
 
         public TilePropertyEditor(String propertyName, String propertyValue) {
             super(propertyName);
+            Vector2i tile = parseVector2i(propertyValue);
 
             spinnerX  = new Spinner<>(0, tileMap.numCols() - 1, 0);
             spinnerX.setMaxWidth(60);
             spinnerX.setUserData(propertyName);
             spinnerX.disableProperty().bind(enabledPy.not());
+            if (tile != null) {
+                spinnerX.getValueFactory().setValue(tile.x());
+            }
 
             spinnerY  = new Spinner<>(0, tileMap.numRows() - 1, 0);
             spinnerY.setMaxWidth(60);
             spinnerY.setUserData(propertyName);
             spinnerY.disableProperty().bind(enabledPy.not());
-
-            valueEditorPane = new HBox(spinnerX, spinnerY);
-            Vector2i tile = parseVector2i(propertyValue);
             if (tile != null) {
-                spinnerX.getValueFactory().setValue(tile.x());
                 spinnerY.getValueFactory().setValue(tile.y());
             }
 
-            Runnable doEdit = () -> edit(nameEditor,
-                formatTile(new Vector2i(spinnerX.getValue(), spinnerY.getValue())));
-            nameEditor.setOnAction(e -> doEdit.run());
-            spinnerX.valueProperty().addListener((py,ov,nv) -> doEdit.run());
-            spinnerY.valueProperty().addListener((py,ov,nv) -> doEdit.run());
+            spinnerX.valueProperty().addListener((py,ov,nv) -> edit());
+            spinnerY.valueProperty().addListener((py,ov,nv) -> edit());
+
+            valueEditorPane = new HBox(spinnerX, spinnerY);
         }
 
         @Override
@@ -139,6 +155,11 @@ public class PropertyEditorPane extends BorderPane {
                 spinnerX.getValueFactory().setValue(tile.x());
                 spinnerY.getValueFactory().setValue(tile.y());
             }
+        }
+
+        @Override
+        protected String formattedPropertyValue() {
+            return formatTile(new Vector2i(spinnerX.getValue(), spinnerY.getValue()));
         }
 
         @Override
@@ -174,7 +195,7 @@ public class PropertyEditorPane extends BorderPane {
 
         var btnAddGenericEntry = new Button("Text");
         btnAddGenericEntry.setOnAction(e -> {
-            editedProperties.put("generic_property", "42");
+            editedProperties.put("text_property", "any text");
             rebuildEditors();
         });
         btnAddGenericEntry.disableProperty().bind(enabledPy.not());
@@ -202,20 +223,20 @@ public class PropertyEditorPane extends BorderPane {
         }
     }
 
-    private void edit(TextField nameEditor, Object value) {
-        String name = nameEditor.getText().trim();
-        if (name.endsWith("*")) {
-            name = name.substring(0, name.length()-1);
-            editedProperties.remove(name);
-            Logger.info("Property {} deleted", name);
+    private void doEdit(String editedPropertyName, Object editedValue) {
+        //TODO provide better solution
+        if (editedPropertyName.endsWith("*")) {
+            String propertyName = editedPropertyName.substring(0, editedPropertyName.length() - 1);
+            editedProperties.remove(propertyName);
+            Logger.info("Property {} deleted", propertyName);
             rebuildEditors();
         }
-        else if (!name.isBlank()) {
-            if (editedProperties.containsKey(name)) {
-                editedProperties.put(name, value);
+        else if (!editedPropertyName.isBlank()) {
+            if (editedProperties.containsKey(editedPropertyName)) {
+                editedProperties.put(editedPropertyName, editedValue);
             } else {
+                editedProperties.put(editedPropertyName, editedValue);
                 rebuildEditors();
-                editedProperties.put(name, value);
             }
         }
         editor.markMapEdited();
