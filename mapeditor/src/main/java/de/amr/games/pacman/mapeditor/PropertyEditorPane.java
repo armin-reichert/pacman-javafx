@@ -9,13 +9,16 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.lib.tilemap.TileMap.parseVector2i;
@@ -30,13 +33,125 @@ public class PropertyEditorPane extends BorderPane {
 
     private static final int NAME_COLUMN_MIN_WIDTH = 180;
 
+    abstract class PropertyEditor {
+
+        final String propertyName;
+        final TextField nameEditor;
+
+        public PropertyEditor(String propertyName) {
+            this.propertyName = propertyName;
+            nameEditor = new TextField(propertyName);
+            nameEditor.setMinWidth(NAME_COLUMN_MIN_WIDTH);
+            nameEditor.disableProperty().bind(enabledPy.not());
+        }
+
+        protected void updateEditorValue() {
+        }
+
+        protected abstract Node valueEditorNode();
+    }
+
+    class TextPropertyEditor extends PropertyEditor {
+
+        final TextField textEditor;
+
+        public TextPropertyEditor(String propertyName, String propertyValue) {
+            super(propertyName);
+            textEditor = new TextField();
+            textEditor.setText(propertyValue);
+            textEditor.disableProperty().bind(enabledPy.not());
+
+            nameEditor.setOnAction(e -> edit(nameEditor, textEditor.getText()));
+            textEditor.setOnAction(e -> edit(nameEditor, textEditor.getText()));
+        }
+
+        @Override
+        protected Node valueEditorNode() {
+            return textEditor;
+        }
+    }
+
+    class ColorPropertyEditor extends PropertyEditor {
+        final ColorPicker colorPicker;
+
+        public ColorPropertyEditor(String propertyName, String propertyValue) {
+            super(propertyName);
+            colorPicker = new ColorPicker();
+            colorPicker.setUserData(propertyName);
+            colorPicker.setValue(parseColor(propertyValue));
+            colorPicker.disableProperty().bind(enabledPy.not());
+
+            nameEditor.setOnAction(e -> edit(nameEditor, formatColor(colorPicker.getValue())));
+            colorPicker.setOnAction(e -> edit(nameEditor, formatColor(colorPicker.getValue())));
+        }
+
+        @Override
+        protected void updateEditorValue() {
+            String propertyName = (String) colorPicker.getUserData();
+            String propertyValue = (String) editedProperties.get(propertyName);
+            colorPicker.setValue(parseColor(propertyValue));
+        }
+
+        @Override
+        protected Node valueEditorNode() {
+            return colorPicker;
+        }
+    }
+
+    class TilePropertyEditor extends PropertyEditor {
+        final HBox valueEditorPane;
+        final Spinner<Integer> spinnerX;
+        final Spinner<Integer> spinnerY;
+
+        public TilePropertyEditor(String propertyName, String propertyValue) {
+            super(propertyName);
+
+            spinnerX  = new Spinner<>(0, tileMap.numCols() - 1, 0);
+            spinnerX.setMaxWidth(60);
+            spinnerX.setUserData(propertyName);
+            spinnerX.disableProperty().bind(enabledPy.not());
+
+            spinnerY  = new Spinner<>(0, tileMap.numRows() - 1, 0);
+            spinnerY.setMaxWidth(60);
+            spinnerY.setUserData(propertyName);
+            spinnerY.disableProperty().bind(enabledPy.not());
+
+            valueEditorPane = new HBox(spinnerX, spinnerY);
+            Vector2i tile = parseVector2i(propertyValue);
+            if (tile != null) {
+                spinnerX.getValueFactory().setValue(tile.x());
+                spinnerY.getValueFactory().setValue(tile.y());
+            }
+
+            Runnable doEdit = () -> edit(nameEditor,
+                formatTile(new Vector2i(spinnerX.getValue(), spinnerY.getValue())));
+            nameEditor.setOnAction(e -> doEdit.run());
+            spinnerX.valueProperty().addListener((py,ov,nv) -> doEdit.run());
+            spinnerY.valueProperty().addListener((py,ov,nv) -> doEdit.run());
+        }
+
+        @Override
+        protected void updateEditorValue() {
+            String propertyName = (String) spinnerX.getUserData();
+            String propertyValue = (String) editedProperties.get(propertyName);
+            Vector2i tile = parseVector2i(propertyValue);
+            if (tile != null) {
+                spinnerX.getValueFactory().setValue(tile.x());
+                spinnerY.getValueFactory().setValue(tile.y());
+            }
+        }
+
+        @Override
+        protected Node valueEditorNode() {
+            return valueEditorPane;
+        }
+    }
+
     public final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
 
     private final TileMapEditor editor;
+    private final List<PropertyEditor> editors = new ArrayList<>();
     private final GridPane grid = new GridPane();
-    private final List<ColorPicker> colorPickers = new ArrayList<>();
-    private final List<Spinner<Integer>> tileXEditors = new ArrayList<>();
-    private final List<Spinner<Integer>> tileYEditors = new ArrayList<>();
     private TileMap tileMap;
     private Properties editedProperties;
 
@@ -68,6 +183,9 @@ public class PropertyEditorPane extends BorderPane {
         buttonBar.setSpacing(3);
         buttonBar.setAlignment(Pos.CENTER_LEFT);
 
+        grid.setHgap(2);
+        grid.setVgap(1);
+
         setTop(buttonBar);
         setCenter(grid);
     }
@@ -78,95 +196,9 @@ public class PropertyEditorPane extends BorderPane {
         rebuildEditors();
     }
 
-    private void rebuildEditors() {
-        Logger.info("Rebuild editors");
-        colorPickers.clear();
-        tileXEditors.clear();
-        tileYEditors.clear();
-        grid.getChildren().clear();
-        grid.setHgap(2);
-        grid.setVgap(1);
-        int row = 0;
-        var sortedEntries = editedProperties.entrySet().stream()
-            .sorted(comparing(entry -> entry.getKey().toString()))
-            .toList();
-
-        for (var entry : sortedEntries) {
-            String propertyName = entry.getKey().toString();
-            String propertyValue = entry.getValue().toString();
-
-            var nameEditor = new TextField(propertyName);
-            nameEditor.setMinWidth(NAME_COLUMN_MIN_WIDTH);
-            nameEditor.disableProperty().bind(enabledPy.not());
-            grid.add(nameEditor, 0, row);
-
-            if (propertyName.startsWith("color_")) {
-                var colorPicker = new ColorPicker();
-                colorPicker.setUserData(propertyName);
-                colorPicker.setValue(parseColor(propertyValue));
-                colorPicker.disableProperty().bind(enabledPy.not());
-                colorPickers.add(colorPicker);
-
-                nameEditor.setOnAction(e -> edit(nameEditor, formatColor(colorPicker.getValue())));
-                colorPicker.setOnAction(e -> edit(nameEditor, formatColor(colorPicker.getValue())));
-
-                grid.add(colorPicker, 1, row);
-            }
-            else if (propertyName.startsWith("pos_")) {
-                var spinnerX  = new Spinner<Integer>(0, tileMap.numCols() - 1, 0);
-                spinnerX.setMaxWidth(60);
-                spinnerX.setUserData(propertyName);
-                spinnerX.disableProperty().bind(enabledPy.not());
-                tileXEditors.add(spinnerX);
-
-                var spinnerY  = new Spinner<Integer>(0, tileMap.numRows() - 1, 0);
-                spinnerY.setMaxWidth(60);
-                spinnerY.setUserData(propertyName);
-                spinnerY.disableProperty().bind(enabledPy.not());
-                tileYEditors.add(spinnerY);
-
-                HBox hbox = new HBox(spinnerX, spinnerY);
-                Vector2i tile = parseVector2i(propertyValue);
-                if (tile != null) {
-                    spinnerX.getValueFactory().setValue(tile.x());
-                    spinnerY.getValueFactory().setValue(tile.y());
-                }
-
-                Runnable doEdit = () -> edit(nameEditor, formatTile(new Vector2i(spinnerX.getValue(), spinnerY.getValue())));
-                nameEditor.setOnAction(e -> doEdit.run());
-                spinnerX.valueProperty().addListener((py,ov,nv) -> doEdit.run());
-                spinnerY.valueProperty().addListener((py,ov,nv) -> doEdit.run());
-
-                grid.add(hbox, 1, row);
-            }
-            else {
-                var textEditor = new TextField();
-                textEditor.setText(propertyValue);
-                textEditor.disableProperty().bind(enabledPy.not());
-
-                nameEditor.setOnAction(e -> edit(nameEditor, textEditor.getText()));
-                textEditor.setOnAction(e -> edit(nameEditor, textEditor.getText()));
-
-                grid.add(textEditor, 1, row);
-            }
-            ++row;
-        }
-    }
-
     public void updateEditorValues() {
-        for (var colorPicker : colorPickers) {
-            String propertyName = (String) colorPicker.getUserData();
-            String propertyValue = (String) editedProperties.get(propertyName);
-            colorPicker.setValue(parseColor(propertyValue));
-        }
-        for (int i = 0; i < tileXEditors.size(); ++i) {
-            String propertyName = (String) tileXEditors.get(i).getUserData();
-            String propertyValue = (String) editedProperties.get(propertyName);
-            Vector2i tile = parseVector2i(propertyValue);
-            if (tile != null) {
-                tileXEditors.get(i).getValueFactory().setValue(tile.x());
-                tileYEditors.get(i).getValueFactory().setValue(tile.y());
-            }
+        for (var editor : editors) {
+            editor.updateEditorValue();
         }
     }
 
@@ -187,5 +219,33 @@ public class PropertyEditorPane extends BorderPane {
             }
         }
         editor.markMapEdited();
+    }
+
+    private void rebuildEditors() {
+        Logger.info("Rebuild editors");
+        editors.clear();
+
+        var sortedProperties = editedProperties.entrySet().stream()
+            .sorted(comparing(entry -> entry.getKey().toString()))
+            .toList();
+
+        grid.getChildren().clear();
+        int row = 0;
+        for (var property : sortedProperties) {
+            String propertyName = property.getKey().toString();
+            String propertyValue = property.getValue().toString();
+            PropertyEditor editor;
+            if (propertyName.startsWith("color_")) {
+                editor = new ColorPropertyEditor(propertyName, propertyValue);
+            } else if (propertyName.startsWith("pos_")) {
+                editor = new TilePropertyEditor(propertyName, propertyValue);
+            } else {
+                editor = new TextPropertyEditor(propertyName, propertyValue);
+            }
+            editors.add(editor);
+            grid.add(editor.nameEditor, 0, row);
+            grid.add(editor.valueEditorNode(), 1, row);
+            ++row;
+        }
     }
 }
