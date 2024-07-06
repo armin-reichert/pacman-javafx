@@ -88,24 +88,26 @@ public class PropertyEditorPane extends BorderPane {
                     Logger.info("Property {} deleted", propertyName);
                     editor.markMapEdited();
                     rebuildEditors(); //TODO check
+                    editor.showMessage("Property %s deleted".formatted(propertyName), 1, MessageType.INFO);
                 } else {
                     nameEditor.setText(propertyName);
-                    Logger.error("Cannot delete other property {} from here", deletePropertyName);
+                    editor.showMessage("Cannot delete other property %s".formatted(deletePropertyName), 2, MessageType.ERROR);
                 }
                 return;
             }
             if (!isValidPropertyName(editedName)) {
                 nameEditor.setText(propertyName);
-                Logger.error("Property name {} is invalid", editedName); //TODO UI
+                editor.showMessage("Property name %s is invalid".formatted(editedName), 2, MessageType.ERROR);
                 return;
             }
             if (editedProperties.get(editedName) != null) {
-                Logger.error("Property name already used"); //TODO UI
+                editor.showMessage("Property name already used", 2, MessageType.ERROR);
                 nameEditor.setText(propertyName);
                 return;
             }
             propertyName = editedName;
             editedProperties.put(propertyName, formattedPropertyValue());
+            editor.showMessage("Property %s stored".formatted(propertyName), 1, MessageType.INFO);
             editor.markMapEdited();
         }
 

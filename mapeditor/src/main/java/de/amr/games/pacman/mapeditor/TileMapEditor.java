@@ -9,6 +9,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
@@ -28,13 +29,14 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.MessageFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -125,6 +127,7 @@ public class TileMapEditor  {
     private Canvas previewCanvas;
     private ScrollPane previewCanvasScroll;
     private WebView mapSourceView;
+    private Label messageLabel;
     private Label hoveredTileInfo;
     private FileChooser fileChooser;
     private TabPane palettesTabPane;
@@ -139,7 +142,7 @@ public class TileMapEditor  {
     private boolean unsavedChanges;
     private Vector2i hoveredTile;
     private File lastUsedDir;
-
+    private Instant messageCloseTime;
     private Timeline clock;
 
     private final Image spriteSheet;
@@ -215,8 +218,20 @@ public class TileMapEditor  {
         previewCanvas.heightProperty().bind(editCanvas.heightProperty());
 
         // Active rendering
-        int fps = 5;
-        clock = new Timeline(fps, new KeyFrame(Duration.millis(1000.0 / fps), e -> {
+        int fps = 10;
+        clock = new Timeline(fps, new KeyFrame(javafx.util.Duration.millis(1000.0 / fps), e -> {
+            if (messageCloseTime != null && Instant.now().isAfter(messageCloseTime)) {
+                messageCloseTime = null;
+                FadeTransition fade = new FadeTransition(javafx.util.Duration.seconds(2));
+                fade.setNode(messageLabel);
+                fade.setFromValue(1);
+                fade.setToValue(0.1);
+                fade.play();
+                fade.setOnFinished(event -> {
+                    messageLabel.setText("");
+                    messageLabel.setOpacity(1);
+                });
+            }
             try {
                 draw();
             } catch (Exception x) {
@@ -231,12 +246,31 @@ public class TileMapEditor  {
         clock.play();
         int gridSize = (int)(editCanvasScroll.getHeight() / map().numRows());
         gridSizePy.set(Math.max(gridSize, 8));
+        showMessage("Welcome to the tile map editor!", 3, MessageType.INFO);
     }
 
     public void stop() {
         clock.stop();
         editingEnabledPy.set(false);
         unsavedChanges = false;
+    }
+
+    public void showMessage(String message, long seconds, MessageType type) {
+        messageLabel.setText(message);
+        messageLabel.setFont(Font.font("sans", FontWeight.BOLD, 12));
+        switch (type) {
+            case INFO -> {
+                messageLabel.setTextFill(Color.BLACK);
+            }
+            case WARNING -> {
+                messageLabel.setTextFill(Color.GREEN);
+            }
+            case ERROR -> {
+                messageLabel.setTextFill(Color.RED);
+
+            }
+        }
+        messageCloseTime = Instant.now().plus(Duration.ofSeconds(seconds));
     }
 
     private Palette createTerrainPalette() {
@@ -357,6 +391,11 @@ public class TileMapEditor  {
         controlsPane.getChildren().add(new VBox(terrainPropertiesArea, foodPropertiesArea));
 
         hoveredTileInfo = new Label();
+        hoveredTileInfo.setMinWidth(100);
+        hoveredTileInfo.setMaxWidth(100);
+
+        messageLabel = new Label();
+        messageLabel.setPadding(new Insets(0, 0, 0, 10));
 
         var filler = new Region();
         HBox.setHgrow(filler, Priority.ALWAYS);
@@ -370,7 +409,7 @@ public class TileMapEditor  {
         var sliderContainer = new HBox(new Label("Zoom"), sliderGridSize);
         sliderContainer.setSpacing(5);
 
-        var footer = new HBox(hoveredTileInfo, filler, sliderContainer);
+        var footer = new HBox(hoveredTileInfo, messageLabel, filler, sliderContainer);
         footer.setPadding(new Insets(0, 10, 0, 10));
 
         var splitPane = new SplitPane(editCanvasScroll, previewCanvasScroll, mapSourceViewScroll);
@@ -562,6 +601,8 @@ public class TileMapEditor  {
                     saveAction.run();
                 } else if (choice == dontSaveChoice) {
                     dontSaveAction.run();
+                } else if (choice == cancelChoice) {
+                    alert.close();
                 }
             });
         } else {
@@ -819,4 +860,5 @@ public class TileMapEditor  {
     private void updateSourceHtml() {
         mapSourceView.getEngine().loadContent(map().htmlText());
     }
+
 }
