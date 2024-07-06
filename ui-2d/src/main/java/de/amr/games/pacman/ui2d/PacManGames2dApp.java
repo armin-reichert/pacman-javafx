@@ -26,11 +26,7 @@ public class PacManGames2dApp extends Application {
         GameController.it().setSupportedVariants(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
         GameController.it().selectGameVariant(GameVariant.PACMAN);
         var ui = new PacManGames2dUI();
-        try {
-            ui.loadAssets();
-        } catch (Exception x) {
-            x.printStackTrace(System.err);
-        }
+        ui.loadAssets();
         ui.createUI(stage, Screen.getPrimary().getBounds());
         ui.sign("Remake (2021-2024) by Armin Reichert");
         ui.show();
