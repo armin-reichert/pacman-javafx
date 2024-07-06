@@ -36,7 +36,7 @@ public class Ufx {
 
     /**
      * Launches the application specified by the given class. In case an exception is thrown,
-     * the stacktrace is written to a log file.
+     * the stacktrace is written to a log file ("oh_shit.txt").
      *
      * @param appClass application class
      * @param args application arguments

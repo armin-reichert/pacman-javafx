@@ -27,11 +27,7 @@ public class PacManGames3dApp extends Application {
         GameController.it().selectGameVariant(GameVariant.PACMAN);
         var ui = new PacManGames3dUI();
         PacManGames3dUI.PY_3D_ENABLED.set(true);
-        try {
-            ui.loadAssets();
-        } catch (Exception x) {
-            x.printStackTrace(System.err);
-        }
+        ui.loadAssets();
         ui.createUI(stage, Screen.getPrimary().getBounds());
         ui.sign("Remake (2021-2024) by Armin Reichert");
         ui.show();
