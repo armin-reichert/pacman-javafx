@@ -290,7 +290,8 @@ public class TileMapEditor  {
     private void createLayout() {
         fileChooser = new FileChooser();
         var worldExtensionFilter = new FileChooser.ExtensionFilter("World Map Files", "*.world");
-        fileChooser.getExtensionFilters().add(worldExtensionFilter);
+        var anyExtensionFilter = new FileChooser.ExtensionFilter("All Files", "*.*");
+        fileChooser.getExtensionFilters().addAll(worldExtensionFilter, anyExtensionFilter);
         fileChooser.setSelectedExtensionFilter(worldExtensionFilter);
         fileChooser.setInitialDirectory(lastUsedDir);
 
