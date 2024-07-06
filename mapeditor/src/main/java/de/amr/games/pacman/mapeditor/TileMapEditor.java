@@ -652,13 +652,12 @@ public class TileMapEditor  {
         }
         if (!editingEnabledPy.get()) {
             drawEditingHint(g);
-        } else {
-            if (hoveredTile != null) {
-                double tilePx = gridSize();
-                g.setStroke(Color.YELLOW);
-                g.setLineWidth(1);
-                g.strokeRect(hoveredTile.x() * tilePx, hoveredTile.y() * tilePx, tilePx, tilePx);
-            }
+        }
+        if (hoveredTile != null) {
+            double tilePx = gridSize();
+            g.setStroke(Color.YELLOW);
+            g.setLineWidth(1);
+            g.strokeRect(hoveredTile.x() * tilePx, hoveredTile.y() * tilePx, tilePx, tilePx);
         }
     }
 
@@ -737,7 +736,7 @@ public class TileMapEditor  {
     }
 
     private void onMouseClickedOnEditCanvas(MouseEvent e) {
-        if (!editingEnabledPy.get()) {
+        if (!editingEnabledPy.get() && e.getClickCount() == 2) {
             editingEnabledPy.set(true);
             return;
         }
@@ -772,10 +771,10 @@ public class TileMapEditor  {
     }
 
     private void onMouseMovedOverEditCanvas(MouseEvent e) {
+        setHoveredTile(tileAtMousePosition(e.getX(), e.getY()));
         if (!editingEnabledPy.get()) {
             return;
         }
-        setHoveredTile(tileAtMousePosition(e.getX(), e.getY()));
         if (e.isShiftDown()) {
             switch (selectedPaletteID()) {
                 case PALETTE_TERRAIN -> {
