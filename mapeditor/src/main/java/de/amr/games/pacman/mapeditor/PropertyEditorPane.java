@@ -263,30 +263,6 @@ public class PropertyEditorPane extends BorderPane {
         setCenter(grid);
     }
 
-    private void doEdit(String editedPropertyName, Object editedValue) {
-        if (matchesDeletePattern(editedPropertyName)) {
-            String propertyName = removeDeleteMarker(editedPropertyName);
-            if (isValidPropertyName(propertyName)) {
-                editedProperties.remove(propertyName);
-                Logger.info("Property {} deleted", propertyName);
-                rebuildEditors();
-            } else {
-                Logger.info("Invalid property name: {}", propertyName);
-            }
-        }
-        else if (!editedPropertyName.isBlank()) {
-            if (!isValidPropertyName(editedPropertyName)) {
-                Logger.info("Invalid property name: {}", editedPropertyName);
-            } else if (editedProperties.containsKey(editedPropertyName)) {
-                editedProperties.put(editedPropertyName, editedValue);
-            } else {
-                editedProperties.put(editedPropertyName, editedValue);
-                rebuildEditors();
-            }
-        }
-        editor.markMapEdited();
-    }
-
     public void setMap(TileMap tileMap) {
         this.tileMap = tileMap;
         this.editedProperties = tileMap.getProperties();
