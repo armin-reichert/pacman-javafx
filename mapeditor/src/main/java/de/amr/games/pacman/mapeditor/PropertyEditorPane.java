@@ -54,79 +54,121 @@ public class PropertyEditorPane extends BorderPane {
         return s;
     }
 
-    abstract class PropertyEditor {
+    public final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
 
-        final String propertyName;
+    private final TileMapEditor editor;
+    private final List<PropertyEditor> editors = new ArrayList<>();
+    private final GridPane grid = new GridPane();
+    private TileMap tileMap;
+    private Properties editedProperties;
+
+    private abstract class PropertyEditor {
+
+        String propertyName;
         final TextField nameEditor;
 
-        public PropertyEditor(String propertyName) {
+        PropertyEditor(String propertyName) {
             this.propertyName = propertyName;
             nameEditor = new TextField(propertyName);
             nameEditor.setMinWidth(NAME_COLUMN_MIN_WIDTH);
             nameEditor.disableProperty().bind(enabledPy.not());
-            nameEditor.setOnAction(e -> edit());
+            nameEditor.setOnAction(e -> onPropertyNameEdited());
         }
 
-        protected void edit() {
-            doEdit(editedPropertyName(), formattedPropertyValue());
+        void onPropertyNameEdited() {
+            String editedName = nameEditor.getText().trim();
+            if (editedName.isBlank() || propertyName.equals(editedName)) {
+                nameEditor.setText(propertyName);
+                return;
+            }
+            if (matchesDeletePattern(editedName)) {
+                String deletePropertyName = removeDeleteMarker(editedName);
+                if (deletePropertyName.equals(propertyName)) {
+                    editedProperties.remove(propertyName);
+                    Logger.info("Property {} deleted", propertyName);
+                    editor.markMapEdited();
+                    rebuildEditors(); //TODO check
+                } else {
+                    nameEditor.setText(propertyName);
+                    Logger.error("Cannot delete other property {} from here", deletePropertyName);
+                }
+                return;
+            }
+            if (!isValidPropertyName(editedName)) {
+                nameEditor.setText(propertyName);
+                Logger.error("Property name is invalid"); //TODO UI
+                return;
+            }
+            if (editedProperties.get(editedName) != null) {
+                Logger.error("Property name already used"); //TODO UI
+                nameEditor.setText(propertyName);
+                return;
+            }
+            propertyName = editedName;
+            editedProperties.put(propertyName, formattedPropertyValue());
+            editor.markMapEdited();
         }
 
-        protected String editedPropertyName() {
-            return nameEditor.getText().strip();
+        void storePropertyValue() {
+            editedProperties.put(propertyName, formattedPropertyValue());
+            editor.markMapEdited();
         }
 
-        protected abstract String formattedPropertyValue();
+        abstract String formattedPropertyValue();
 
-        protected void updateEditorValue() {
-        }
+        abstract void updateEditorFromProperty();
 
-        protected abstract Node valueEditorNode();
+        abstract Node valueEditor();
     }
 
-    class TextPropertyEditor extends PropertyEditor {
+    private class TextPropertyEditor extends PropertyEditor {
 
         final TextField textEditor;
 
-        public TextPropertyEditor(String propertyName, String propertyValue) {
+        TextPropertyEditor(String propertyName, String propertyValue) {
             super(propertyName);
             textEditor = new TextField();
             textEditor.setText(propertyValue);
             textEditor.disableProperty().bind(enabledPy.not());
-            textEditor.setOnAction(e -> edit());
+            textEditor.setOnAction(e -> storePropertyValue());
         }
 
         @Override
-        protected Node valueEditorNode() {
+        void updateEditorFromProperty() {
+            textEditor.setText(editedProperties.getProperty(propertyName));
+        }
+
+        @Override
+        Node valueEditor() {
             return textEditor;
         }
 
         @Override
-        protected String formattedPropertyValue() {
-            return textEditor.getText();
+        String formattedPropertyValue() {
+            return textEditor.getText().strip();
         }
     }
 
-    class ColorPropertyEditor extends PropertyEditor {
+    private class ColorPropertyEditor extends PropertyEditor {
         final ColorPicker colorPicker;
 
-        public ColorPropertyEditor(String propertyName, String propertyValue) {
+        ColorPropertyEditor(String propertyName, String propertyValue) {
             super(propertyName);
             colorPicker = new ColorPicker();
             colorPicker.setUserData(propertyName);
             colorPicker.setValue(parseColor(propertyValue));
             colorPicker.disableProperty().bind(enabledPy.not());
-            colorPicker.setOnAction(e -> edit());
+            colorPicker.setOnAction(e -> storePropertyValue());
         }
 
         @Override
-        protected void updateEditorValue() {
-            String propertyName = (String) colorPicker.getUserData();
-            String propertyValue = (String) editedProperties.get(propertyName);
+        void updateEditorFromProperty() {
+            String propertyValue = editedProperties.getProperty(propertyName);
             colorPicker.setValue(parseColor(propertyValue));
         }
 
         @Override
-        protected Node valueEditorNode() {
+        protected Node valueEditor() {
             return colorPicker;
         }
 
@@ -136,41 +178,38 @@ public class PropertyEditorPane extends BorderPane {
         }
     }
 
-    class TilePropertyEditor extends PropertyEditor {
-        final HBox valueEditorPane;
+    private class TilePropertyEditor extends PropertyEditor {
         final Spinner<Integer> spinnerX;
         final Spinner<Integer> spinnerY;
+        final HBox valueEditorPane;
 
-        public TilePropertyEditor(String propertyName, String propertyValue) {
+        TilePropertyEditor(String propertyName, String propertyValue) {
             super(propertyName);
             Vector2i tile = parseVector2i(propertyValue);
 
-            spinnerX  = new Spinner<>(0, tileMap.numCols() - 1, 0);
+            spinnerX = new Spinner<>(0, tileMap.numCols() - 1, 0);
             spinnerX.setMaxWidth(60);
-            spinnerX.setUserData(propertyName);
             spinnerX.disableProperty().bind(enabledPy.not());
             if (tile != null) {
                 spinnerX.getValueFactory().setValue(tile.x());
             }
 
-            spinnerY  = new Spinner<>(0, tileMap.numRows() - 1, 0);
+            spinnerY = new Spinner<>(0, tileMap.numRows() - 1, 0);
             spinnerY.setMaxWidth(60);
-            spinnerY.setUserData(propertyName);
             spinnerY.disableProperty().bind(enabledPy.not());
             if (tile != null) {
                 spinnerY.getValueFactory().setValue(tile.y());
             }
 
-            spinnerX.valueProperty().addListener((py,ov,nv) -> edit());
-            spinnerY.valueProperty().addListener((py,ov,nv) -> edit());
+            spinnerX.valueProperty().addListener((py,ov,nv) -> storePropertyValue());
+            spinnerY.valueProperty().addListener((py,ov,nv) -> storePropertyValue());
 
             valueEditorPane = new HBox(spinnerX, spinnerY);
         }
 
         @Override
-        protected void updateEditorValue() {
-            String propertyName = (String) spinnerX.getUserData();
-            String propertyValue = (String) editedProperties.get(propertyName);
+        protected void updateEditorFromProperty() {
+            String propertyValue = editedProperties.getProperty(propertyName);
             Vector2i tile = parseVector2i(propertyValue);
             if (tile != null) {
                 spinnerX.getValueFactory().setValue(tile.x());
@@ -184,18 +223,10 @@ public class PropertyEditorPane extends BorderPane {
         }
 
         @Override
-        protected Node valueEditorNode() {
+        protected Node valueEditor() {
             return valueEditorPane;
         }
     }
-
-    public final BooleanProperty enabledPy = new SimpleBooleanProperty(true);
-
-    private final TileMapEditor editor;
-    private final List<PropertyEditor> editors = new ArrayList<>();
-    private final GridPane grid = new GridPane();
-    private TileMap tileMap;
-    private Properties editedProperties;
 
     public PropertyEditorPane(TileMapEditor editor) {
         this.editor = editor;
@@ -232,20 +263,7 @@ public class PropertyEditorPane extends BorderPane {
         setCenter(grid);
     }
 
-    public void setMap(TileMap tileMap) {
-        this.tileMap = tileMap;
-        this.editedProperties = tileMap.getProperties();
-        rebuildEditors();
-    }
-
-    public void updateEditorValues() {
-        for (var editor : editors) {
-            editor.updateEditorValue();
-        }
-    }
-
     private void doEdit(String editedPropertyName, Object editedValue) {
-        //TODO provide better solution
         if (matchesDeletePattern(editedPropertyName)) {
             String propertyName = removeDeleteMarker(editedPropertyName);
             if (isValidPropertyName(propertyName)) {
@@ -267,6 +285,18 @@ public class PropertyEditorPane extends BorderPane {
             }
         }
         editor.markMapEdited();
+    }
+
+    public void setMap(TileMap tileMap) {
+        this.tileMap = tileMap;
+        this.editedProperties = tileMap.getProperties();
+        rebuildEditors();
+    }
+
+    public void updateEditorValues() {
+        for (var editor : editors) {
+            editor.updateEditorFromProperty();
+        }
     }
 
     private void rebuildEditors() {
@@ -292,7 +322,7 @@ public class PropertyEditorPane extends BorderPane {
             }
             editors.add(editor);
             grid.add(editor.nameEditor, 0, row);
-            grid.add(editor.valueEditorNode(), 1, row);
+            grid.add(editor.valueEditor(), 1, row);
             ++row;
         }
     }
