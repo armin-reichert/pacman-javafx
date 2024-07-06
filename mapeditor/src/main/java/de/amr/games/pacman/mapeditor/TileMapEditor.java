@@ -258,6 +258,7 @@ public class TileMapEditor  {
             terrainPalette.changeTileValueTool(Tiles.TUNNEL, "Tunnel"),
             terrainPalette.changeTileValueTool(Tiles.DOOR, "Door")
         );
+        terrainPalette.selectTool(12); // EMPTY
         return terrainPalette;
     }
 
@@ -284,6 +285,7 @@ public class TileMapEditor  {
             foodPalette.changeTileValueTool(Tiles.PELLET, "Pellet"),
             foodPalette.changeTileValueTool(Tiles.ENERGIZER, "Energizer")
         );
+        foodPalette.selectTool(0); // EMPTY
         return foodPalette;
     }
 
@@ -735,26 +737,6 @@ public class TileMapEditor  {
         return new Vector2i(fullTiles(mouseX), fullTiles(mouseY));
     }
 
-    private void onMouseClickedOnEditCanvas(MouseEvent e) {
-        if (!editingEnabledPy.get() && e.getClickCount() == 2) {
-            editingEnabledPy.set(true);
-            return;
-        }
-        switch (selectedPaletteID()) {
-            case PALETTE_TERRAIN -> editMapTile(map().terrain(), tv -> 0 <= tv && tv <= Tiles.DOOR, e);
-            case PALETTE_ACTORS  -> {
-                if (selectedPalette().selectedTool != null) {
-                    Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
-                    selectedPalette().selectedTool.apply(map().terrain(), tile);
-                    markMapEdited();
-                    terrainMapPropertiesEditor.updateEditorValues();
-                }
-            }
-            case PALETTE_FOOD -> editMapTile(map().food(), tv -> 0 <= tv && tv <= Tiles.ENERGIZER, e);
-            default -> Logger.error("Unknown palette selection");
-        }
-    }
-
     private String selectedPaletteID() {
         return (String) palettesTabPane.getSelectionModel().getSelectedItem().getUserData();
     }
@@ -770,6 +752,26 @@ public class TileMapEditor  {
         hoveredTileInfo.setText(text);
     }
 
+    private void onMouseClickedOnEditCanvas(MouseEvent e) {
+        if (!editingEnabledPy.get() && e.getClickCount() == 2) {
+            editingEnabledPy.set(true);
+            return;
+        }
+        switch (selectedPaletteID()) {
+            case PALETTE_TERRAIN -> editMapTile(map().terrain(), tv -> 0 <= tv && tv <= Tiles.DOOR, e);
+            case PALETTE_ACTORS  -> {
+                if (selectedPalette().isToolSelected()) {
+                    Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
+                    selectedPalette().selectedTool().apply(map().terrain(), tile);
+                    markMapEdited();
+                    terrainMapPropertiesEditor.updateEditorValues();
+                }
+            }
+            case PALETTE_FOOD -> editMapTile(map().food(), tv -> 0 <= tv && tv <= Tiles.ENERGIZER, e);
+            default -> Logger.error("Unknown palette selection");
+        }
+    }
+
     private void onMouseMovedOverEditCanvas(MouseEvent e) {
         setHoveredTile(tileAtMousePosition(e.getX(), e.getY()));
         if (!editingEnabledPy.get()) {
@@ -778,15 +780,15 @@ public class TileMapEditor  {
         if (e.isShiftDown()) {
             switch (selectedPaletteID()) {
                 case PALETTE_TERRAIN -> {
-                    if (selectedPalette().selectedTool != null) {
-                        selectedPalette().selectedTool.apply(map().terrain(), hoveredTile);
+                    if (selectedPalette().isToolSelected()) {
+                        selectedPalette().selectedTool().apply(map().terrain(), hoveredTile);
                     }
                     markMapEdited();
                     invalidateTerrainMapPaths();
                 }
                 case PALETTE_FOOD -> {
-                    if (selectedPalette().selectedTool != null) {
-                        selectedPalette().selectedTool.apply(map().food(), hoveredTile);
+                    if (selectedPalette().isToolSelected()) {
+                        selectedPalette().selectedTool().apply(map().food(), hoveredTile);
                     }
                     markMapEdited();
                 }
@@ -807,8 +809,8 @@ public class TileMapEditor  {
             byte newValue =  valueAllowed.test(next) ? next : 0;
             tileMap.set(tile, newValue);
         }
-        else if (selectedPalette().selectedTool != null) {
-            selectedPalette().selectedTool.apply(tileMap, tile);
+        else if (selectedPalette().isToolSelected()) {
+            selectedPalette().selectedTool().apply(tileMap, tile);
         }
         invalidateTerrainMapPaths();
         markMapEdited();

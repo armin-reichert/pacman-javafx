@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 /**
  * @author Armin Reichert
@@ -19,16 +20,16 @@ public class Palette extends Canvas {
 
     public static final Color BG_COLOR = Color.WHITE;
 
-    final int cellSize;
-    final int numRows;
-    final int numCols;
-    final TileMapRenderer renderer;
-    final Tool[] tools;
-    final GraphicsContext g;
-    Tool selectedTool;
-    int selectedRow;
-    int selectedCol;
-    Tooltip tooltip;
+    private final int cellSize;
+    private final int numRows;
+    private final int numCols;
+    private final TileMapRenderer renderer;
+    private final Tool[] tools;
+    private final GraphicsContext g;
+    private Tool selectedTool;
+    private int selectedRow;
+    private int selectedCol;
+    private Tooltip tooltip;
 
     public Palette(int cellSize, int numRows, int numCols, TileMapRenderer renderer) {
         this.cellSize = cellSize;
@@ -70,11 +71,28 @@ public class Palette extends Canvas {
         return new ChangePropertyValueTool(renderer, cellSize, propertyName, description);
     }
 
-    public void setTools(Tool... someEditorTools) {
-        for (int i = 0; i < someEditorTools.length; ++i) {
+    public void setTools(Tool... editorTools) {
+        for (int i = 0; i < editorTools.length; ++i) {
             if (i < tools.length) {
-                tools[i] = someEditorTools[i];
+                tools[i] = editorTools[i];
+            } else {
+                Logger.error("Palette is full");
+                break;
             }
+        }
+    }
+
+    public boolean isToolSelected() {
+        return selectedTool != null;
+    }
+
+    public Tool selectedTool() {
+        return selectedTool;
+    }
+
+    public void selectTool(int index) {
+        if (index >= 0 && index < tools.length) {
+            selectedTool = tools[index];
         }
     }
 
