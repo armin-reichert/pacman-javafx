@@ -33,7 +33,7 @@ import static java.util.Comparator.comparing;
 public class PropertyEditorPane extends BorderPane {
 
     private static final int NAME_COLUMN_MIN_WIDTH = 180;
-    private static final String DELETE_MARKER = ":delete";
+    private static final String DELETE_MARKER = ":del";
 
     private static boolean isValidPropertyName(String s) {
         return Pattern.matches("[a-zA-Z]([a-zA-Z0-9_])*", s);
@@ -96,7 +96,7 @@ public class PropertyEditorPane extends BorderPane {
             }
             if (!isValidPropertyName(editedName)) {
                 nameEditor.setText(propertyName);
-                Logger.error("Property name is invalid"); //TODO UI
+                Logger.error("Property name {} is invalid", editedName); //TODO UI
                 return;
             }
             if (editedProperties.get(editedName) != null) {
