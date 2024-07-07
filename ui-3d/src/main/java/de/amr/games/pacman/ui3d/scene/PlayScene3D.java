@@ -220,12 +220,13 @@ public class PlayScene3D implements GameScene {
             }
 
             case GAME_OVER -> {
-                context.soundHandler().stopAllSounds();
+                // delay state exit for 3 seconds
                 context.gameState().timer().restartSeconds(3);
                 level3D.stopEnergizerAnimation();
                 level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                 level3D.livesCounter3D().stopAnimation();
                 context.actionHandler().showFlashMessageSeconds(3, PICKER_GAME_OVER.next());
+                context.soundHandler().stopAllSounds();
                 context.soundHandler().playAudioClip("audio.game_over");
             }
 
