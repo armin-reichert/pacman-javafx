@@ -187,8 +187,8 @@ public class TileMapEditor  {
     public void setMap(WorldMap worldMap) {
         checkNotNull(worldMap);
         mapPy.set(worldMap);
-        foodMapPropertiesEditor.setMap(worldMap.food());
-        terrainMapPropertiesEditor.setMap(worldMap.terrain());
+        foodMapPropertiesEditor.setTileMap(worldMap.food());
+        terrainMapPropertiesEditor.setTileMap(worldMap.terrain());
         invalidateTerrainMapPaths();
         updateTerrainMapPaths();
         updateSourceHtml();
@@ -805,7 +805,7 @@ public class TileMapEditor  {
                     Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
                     selectedPalette().selectedTool().apply(map().terrain(), tile);
                     markMapEdited();
-                    terrainMapPropertiesEditor.updateEditorValues();
+                    terrainMapPropertiesEditor.updatePropertyEditorValues();
                 }
             }
             case PALETTE_FOOD -> editMapTile(map().food(), tv -> 0 <= tv && tv <= Tiles.ENERGIZER, e);
