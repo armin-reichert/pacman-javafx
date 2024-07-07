@@ -195,6 +195,21 @@ public class GameLevel3D extends Group {
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
 
+    public void showLevelStartMessage() {
+        World world = context.game().world();
+        House house = world.house();
+        if (context.gameState() == GameState.LEVEL_TEST) {
+            double x = world.numCols() * HTS;
+            double y = (world.numRows() - 2) * TS;
+            showMessage("TEST LEVEL " + context.game().levelNumber(), 5,x, y);
+        } else if (!context.game().isDemoLevel()) {
+            double x = TS * (house.topLeftTile().x() + 0.5 * house.size().x());
+            double y = TS * (house.topLeftTile().y() +       house.size().y());
+            double seconds = context.game().isPlaying() ? 0.5 : 2.5;
+            showMessage("READY!", seconds, x, y);
+        }
+    }
+
     public void update() {
         var game = context.game();
         pac3D.update(context);

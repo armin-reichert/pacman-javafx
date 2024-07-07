@@ -202,7 +202,7 @@ public class PlayScene3D implements GameScene {
                     level3D.stopEnergizerAnimation();
                     level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
                     level3D.livesCounter3D().stopAnimation();
-                    showLevelMessage();
+                    level3D.showLevelStartMessage();
                 }
             }
 
@@ -275,7 +275,7 @@ public class PlayScene3D implements GameScene {
                 }
                 level3D.pac3D().init(context);
                 level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
-                showLevelMessage();
+                level3D.showLevelStartMessage();
                 PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
             }
 
@@ -305,10 +305,10 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        if (context.game().levelNumber() == 1 || context.gameState() == GameState.LEVEL_TEST) {
-            showLevelMessage();
-        }
         level3D.createLevelCounter3D();
+        if (context.game().levelNumber() == 1 || context.gameState() == GameState.LEVEL_TEST) {
+            level3D.showLevelStartMessage();
+        }
     }
 
     @Override
@@ -357,21 +357,6 @@ public class PlayScene3D implements GameScene {
         root.getChildren().set(CHILD_INDEX_LEVEL_3D, level3D);
 
         Logger.info("3D game level {} created.", context.game().levelNumber());
-    }
-
-    private void showLevelMessage() {
-        World world = context.game().world();
-        checkNotNull(world);
-        if (context.gameState() == GameState.LEVEL_TEST) {
-            level3D.showMessage("TEST LEVEL " + context.game().levelNumber(), 5,
-                world.numCols() * HTS, (world.numRows() - 2) * TS);
-        } else if (!context.game().isDemoLevel()) {
-            var house = world.house();
-            double x = TS * (house.topLeftTile().x() + 0.5 * house.size().x());
-            double y = TS * (house.topLeftTile().y() +       house.size().y());
-            double seconds = context.game().isPlaying() ? 0.5 : 2.5;
-            level3D.showMessage("READY!", seconds, x, y);
-        }
     }
 
     private void playLevelCompleteAnimation() {
