@@ -194,7 +194,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
-        Logger.info("{}} entered from {}", this, oldScene);
+        Logger.info("{} entered from {}", this, oldScene);
         ensureSirenPlaying();
     }
 
