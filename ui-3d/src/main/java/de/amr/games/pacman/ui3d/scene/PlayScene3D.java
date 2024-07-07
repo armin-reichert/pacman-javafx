@@ -172,7 +172,7 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
-        Logger.info("{}} entered from {}", oldScene, this);
+        Logger.info("{}} entered from {}", this, oldScene);
         if (level3D == null) {
             replaceGameLevel3D();
         }
