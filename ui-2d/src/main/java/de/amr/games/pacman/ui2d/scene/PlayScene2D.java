@@ -193,19 +193,29 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onSceneVariantSwitch() {
-        if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
-            context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
-        }
+        ensureSirenPlaying();
     }
 
     private void updateSound() {
+        if (context.game().isDemoLevel()) {
+            return;
+        }
+        ensureSirenPlaying();
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure
             context.soundHandler().stopAudioClip("audio.pacman_munch");
         }
-        if (context.game().pac().isAlive() && context.game().ghosts(RETURNING_HOME, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
+        if (context.game().pac().isAlive()
+                && context.game().ghosts(RETURNING_HOME, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
             context.soundHandler().ensureAudioClipLoops("audio.ghost_returning");
         } else {
             context.soundHandler().stopAudioClip("audio.ghost_returning");
         }
     }
+
+    private void ensureSirenPlaying() {
+        if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
+            context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
+        }
+    }
+
 }

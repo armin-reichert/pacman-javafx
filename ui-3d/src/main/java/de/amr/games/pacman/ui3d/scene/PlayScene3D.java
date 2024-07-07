@@ -185,6 +185,7 @@ public class PlayScene3D implements GameScene {
         context.game().ghosts().forEach(Ghost::show);
         level3D.pac3D().init(context);
         level3D.pac3D().update(context);
+        ensureSirenPlaying();
         if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
             context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
         }
@@ -417,6 +418,7 @@ public class PlayScene3D implements GameScene {
         if (context.game().isDemoLevel()) {
             return;
         }
+        ensureSirenPlaying();
         if (context.game().pac().starvingTicks() > 8) {
             // TODO how is this done in Arcade game? Sounds better there :-(
             context.soundHandler().stopAudioClip("audio.pacman_munch");
@@ -426,6 +428,12 @@ public class PlayScene3D implements GameScene {
             context.soundHandler().ensureAudioClipLoops("audio.ghost_returning");
         } else {
             context.soundHandler().stopAudioClip("audio.ghost_returning");
+        }
+    }
+
+    private void ensureSirenPlaying() {
+        if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
+            context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
         }
     }
 }

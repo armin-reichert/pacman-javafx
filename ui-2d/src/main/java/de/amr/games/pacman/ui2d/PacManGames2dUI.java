@@ -52,8 +52,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static de.amr.games.pacman.controller.GameState.INTRO;
-import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
+import static de.amr.games.pacman.controller.GameState.*;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
@@ -803,6 +802,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         Ufx.toggle(clock.pausedPy);
         if (clock.isPaused()) {
             theme().audioClips().forEach(AudioClip::stop);
+            sirenPlayer.stop();
         }
         Logger.info("Game variant ({}) {}", game(), clock.isPaused() ? "paused" : "resumed");
     }
@@ -956,6 +956,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void playAudioClip(String key) {
         AudioClip clip = audioClip(key);
         if (clip != null) {
+            clip.setVolume(0.5);
             clip.play();
         }
     }
@@ -974,6 +975,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (clip != null) {
             if (!clip.isPlaying()) {
                 clip.setCycleCount(repetitions);
+                clip.setVolume(0.5);
                 clip.play();
             }
         }
@@ -1000,6 +1002,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         URL sirenURL = theme.get(rk + ".audio.siren." + sirenNumber);
         sirenPlayer = new MediaPlayer(new Media(sirenURL.toExternalForm()));
         sirenPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        sirenPlayer.setVolume(0.5);
         sirenPlayer.play();
     }
 
