@@ -532,6 +532,12 @@ public class GameLevel3D extends Group {
         }
     }
 
+    public void updateFood() {
+        World world = context.game().world();
+        pellets3D.forEach(pellet3D -> pellet3D.root().setVisible(!world.hasEatenFoodAt(pellet3D.tile())));
+        energizers3D.forEach(energizer3D -> energizer3D.root().setVisible(!world.hasEatenFoodAt(energizer3D.tile())));
+    }
+
     public RotateTransition createMazeRotateAnimation(double seconds) {
         var rotation = new RotateTransition(Duration.seconds(seconds), this);
         rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);

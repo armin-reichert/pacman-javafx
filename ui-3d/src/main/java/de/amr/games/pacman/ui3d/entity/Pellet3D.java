@@ -27,6 +27,7 @@ public class Pellet3D implements Eatable3D {
 
     public static final String MESH_ID_PELLET = "Fruit";
 
+    private Vector2i tile;
     private final Shape3D shape;
 
     public Pellet3D(Model3D model3D, double radius) {
@@ -46,7 +47,7 @@ public class Pellet3D implements Eatable3D {
     @Override
     public void placeAtTile(Vector2i tile) {
         requireNonNull(tile);
-
+        this.tile = tile;
         shape.setTranslateX(tile.x() * TS + HTS);
         shape.setTranslateY(tile.y() * TS + HTS);
         shape.setTranslateZ(-HTS);
@@ -59,7 +60,7 @@ public class Pellet3D implements Eatable3D {
 
     @Override
     public Vector2i tile() {
-        return tileAt((float) shape.getTranslateX(), (float) shape.getTranslateY());
+        return tile;
     }
 
     @Override

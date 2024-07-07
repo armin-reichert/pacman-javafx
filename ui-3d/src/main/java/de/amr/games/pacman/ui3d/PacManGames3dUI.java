@@ -242,7 +242,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
             if (isRegisteredAs(gameScene, GameSceneID.PLAY_SCENE)
                 || isRegisteredAs(gameScene, GameSceneID.PLAY_SCENE_3D)) {
                 updateGameScene(true);
-                gameScene.onSceneVariantSwitch();
+                gameScenePy.get().onSceneVariantSwitch(gameScene);
             }
             gameController().update();
             if (!game().isPlaying()) {

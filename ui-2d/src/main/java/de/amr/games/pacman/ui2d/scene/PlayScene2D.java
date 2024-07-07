@@ -17,6 +17,7 @@ import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import org.tinylog.Logger;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -192,7 +193,8 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void onSceneVariantSwitch() {
+    public void onSceneVariantSwitch(GameScene oldScene) {
+        Logger.info("{}} entered from {}", oldScene, this);
         ensureSirenPlaying();
     }
 

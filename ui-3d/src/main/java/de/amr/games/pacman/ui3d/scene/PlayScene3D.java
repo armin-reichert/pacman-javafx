@@ -171,13 +171,12 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void onSceneVariantSwitch() {
-        World world = context.game().world();
+    public void onSceneVariantSwitch(GameScene oldScene) {
+        Logger.info("{}} entered from {}", oldScene, this);
         if (level3D == null) {
             replaceGameLevel3D();
         }
-        level3D.pellets3D().forEach(pellet3D -> pellet3D.root().setVisible(!world.hasEatenFoodAt(pellet3D.tile())));
-        level3D.energizers3D().forEach(energizer3D -> energizer3D.root().setVisible(!world.hasEatenFoodAt(energizer3D.tile())));
+        level3D.updateFood();
         if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
             level3D.startEnergizerAnimation();
         }

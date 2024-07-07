@@ -43,7 +43,7 @@ public interface GameScene extends GameEventListener {
     /**
      * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.
      */
-    default void onSceneVariantSwitch() {
+    default void onSceneVariantSwitch(GameScene oldScene) {
         // empty default
     }
 

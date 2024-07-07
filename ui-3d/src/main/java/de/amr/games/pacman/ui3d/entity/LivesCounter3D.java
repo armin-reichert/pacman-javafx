@@ -19,6 +19,7 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,7 @@ public class LivesCounter3D extends Group {
             for (int i = 0; i < maxLives; ++i) {
                 pacShapes.get(i).setVisible(i < numLives);
             }
+            Logger.info("Lives counter updated, visible lives {}", numLives);
         }
     };
 

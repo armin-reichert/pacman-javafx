@@ -31,6 +31,7 @@ public class Energizer3D extends Sphere implements Eatable3D {
     private static final double MIN_SCALE = 0.25;
 
     private final ScaleTransition pumping;
+    private Vector2i tile;
     private Animation eatenAnimation;
 
     public Energizer3D(double radius) {
@@ -59,6 +60,7 @@ public class Energizer3D extends Sphere implements Eatable3D {
     @Override
     public void placeAtTile(Vector2i tile) {
         requireNonNull(tile);
+        this.tile = tile;
         setTranslateX(tile.x() * TS + HTS);
         setTranslateY(tile.y() * TS + HTS);
         setTranslateZ(-HTS);
@@ -71,7 +73,7 @@ public class Energizer3D extends Sphere implements Eatable3D {
 
     @Override
     public Vector2i tile() {
-        return tileAt((float) getTranslateX(), (float) getTranslateY());
+        return tile;
     }
 
     @Override
