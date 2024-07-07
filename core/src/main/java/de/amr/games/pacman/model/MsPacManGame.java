@@ -19,6 +19,8 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -41,6 +43,7 @@ import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
 public class MsPacManGame extends AbstractPacManGame  {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
+    private static final Pattern PATTERN_MS_PACMAN_MAP = Pattern.compile(".*mspacman_(\\d)\\.world$");
 
     /**
      * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
@@ -91,6 +94,15 @@ public class MsPacManGame extends AbstractPacManGame  {
             case 10, 11, 12, 13 -> 4;
             default -> (levelNumber - 14) % 8 < 4 ? 5 : 6;
         };
+    }
+
+    public int mapNumber(WorldMap map) {
+        Matcher m = PATTERN_MS_PACMAN_MAP.matcher(map.url().toExternalForm());
+        if (m.matches()) {
+            return Integer.parseInt(m.group(1));
+        } else {
+            throw new IllegalArgumentException("Could not determine map number for Ms. Pac-Man map URL: " + map.url());
+        }
     }
 
     @Override

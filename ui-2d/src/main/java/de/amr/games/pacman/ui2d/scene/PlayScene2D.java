@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MsPacManGame;
@@ -19,8 +18,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import org.tinylog.Logger;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -31,17 +28,6 @@ import static de.amr.games.pacman.model.actors.GhostState.RETURNING_HOME;
  * @author Armin Reichert
  */
 public class PlayScene2D extends GameScene2D {
-
-    private static final Pattern PATTERN_MS_PACMAN_MAP = Pattern.compile(".*mspacman_(\\d)\\.world$");
-
-    private static int mapNumber(WorldMap map) {
-        Matcher m = PATTERN_MS_PACMAN_MAP.matcher(map.url().toExternalForm());
-        if (m.matches()) {
-            return Integer.parseInt(m.group(1));
-        } else {
-            throw new IllegalArgumentException("Could not determine map number for Ms. Pac-Man map URL: " + map.url());
-        }
-    }
 
     @Override
     public boolean isCreditVisible() {
@@ -110,10 +96,11 @@ public class PlayScene2D extends GameScene2D {
         spriteRenderer.setBackgroundColor(canvasBackground());
         switch (game.variant()) {
             case MS_PACMAN -> {
-                int mapNumber = mapNumber(game.world().map());
-                if (game instanceof MsPacManGame msPacManGame && msPacManGame.blueMazeBug) {
+                MsPacManGame msPacManGame = (MsPacManGame) game;
+                if (msPacManGame.blueMazeBug) {
                     vectorRenderer.draw(g, game.world(), flashing, blinkingOn);
                 } else {
+                    int mapNumber = msPacManGame.mapNumber(game.world().map());
                     spriteRenderer.drawMsPacManWorld(g, game.world(), mapNumber, flashing, blinkingOn);
                 }
                 game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));
