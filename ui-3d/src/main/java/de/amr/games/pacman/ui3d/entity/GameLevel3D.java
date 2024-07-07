@@ -608,6 +608,10 @@ public class GameLevel3D extends Group {
         return livesCounter3D;
     }
 
+    public Door3D door3D() {
+        return door3D;
+    }
+
     public Stream<Pellet3D> pellets3D() {
         return pellets3D.stream();
     }
