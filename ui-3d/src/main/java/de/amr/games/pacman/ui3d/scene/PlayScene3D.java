@@ -361,18 +361,19 @@ public class PlayScene3D implements GameScene {
     }
 
     private void playLevelCompleteAnimation() {
-        boolean intermissionFollows = context.game().intermissionNumberAfterLevel(context.game().levelNumber()) != 0;
-        int nunFlashes = context.game().level().orElseThrow().numFlashes();
-        lockGameStateAndPlayAfterOneSecond(intermissionFollows
-            ? levelCompleteAnimationBeforeIntermission(nunFlashes)
-            : levelCompleteAnimation(nunFlashes));
+        boolean intermission = context.game().intermissionNumberAfterLevel(context.game().levelNumber()) != 0;
+        lockGameStateAndPlayAfterOneSecond(intermission
+            ? levelCompleteAnimationBeforeIntermission()
+            : levelCompleteAnimation());
     }
 
-    private Animation levelCompleteAnimation(int numFlashes) {
-        final Perspective perspectiveBeforeAnimation = perspective();
-        var mazeFlashes = level3D.createMazeFlashAnimation(numFlashes);
-        var mazeRotates = level3D.createMazeRotateAnimation(1.5);
-        var wallsDisappear = level3D.createWallsDisappearAnimation(1.0);
+    private Animation levelCompleteAnimation() {
+        int numFlashes = context.game().level().orElseThrow().numFlashes();
+        Perspective perspectiveBeforeAnimation = perspective();
+        Animation mazeFlashes = level3D.createMazeFlashAnimation(numFlashes);
+        Animation mazeRotates = level3D.createMazeRotateAnimation(1.5);
+        Animation wallsDisappear = level3D.createWallsDisappearAnimation(1.0);
+        //TODO is there are better way to do this?
         return new SequentialTransition(
             now(() -> PY_3D_PERSPECTIVE.set(Perspective.TOTAL))
             , pauseSec(1)
@@ -392,7 +393,8 @@ public class PlayScene3D implements GameScene {
         );
     }
 
-    private Animation levelCompleteAnimationBeforeIntermission(int numFlashes) {
+    private Animation levelCompleteAnimationBeforeIntermission() {
+        int numFlashes = context.game().level().orElseThrow().numFlashes();
         return new SequentialTransition(
              pauseSec(1)
             , level3D.createMazeFlashAnimation(numFlashes)
@@ -415,7 +417,8 @@ public class PlayScene3D implements GameScene {
         if (context.game().isDemoLevel()) {
             return;
         }
-        if (context.game().pac().starvingTicks() > 8) { // TODO not sure how this is done in Arcade game
+        if (context.game().pac().starvingTicks() > 8) {
+            // TODO how is this done in Arcade game? Sounds better there :-(
             context.soundHandler().stopAudioClip("audio.pacman_munch");
         }
         if (context.game().pac().isAlive()
