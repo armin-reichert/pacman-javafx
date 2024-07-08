@@ -1010,7 +1010,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             URL sirenURL = theme.get(rk + ".audio.siren." + (sirenIndex + 1));
             siren = new MediaPlayer(new Media(sirenURL.toExternalForm()));
             siren.setCycleCount(MediaPlayer.INDEFINITE);
-            siren.statusProperty().addListener((py,ov,nv) -> logSirens());
+            siren.statusProperty().addListener((py,ov,nv) -> logSound());
             sirens[sirenIndex] = siren;
         }
         if (siren.getStatus() != MediaPlayer.Status.PLAYING && siren.getStatus() != MediaPlayer.Status.READY) {
@@ -1029,7 +1029,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
     }
 
-    private void logSirens() {
+    private void logSound() {
         for (int number = 1; number <= 4; ++number) {
             if (sirens[number-1] != null) {
                 Logger.info("Siren {}: status {} volume {}",
@@ -1037,6 +1037,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             } else {
                 Logger.info("Siren {}: not yet created", number);
             }
+        }
+        if (munching != null) {
+            Logger.info("Munching: status {} volume {}", munching.getStatus(), munching.getVolume());
         }
     }
 
@@ -1048,7 +1051,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             munching = new MediaPlayer(new Media(munchingURL.toExternalForm()));
             munching.setVolume(0.5);
             munching.setCycleCount(MediaPlayer.INDEFINITE);
-        }
+            munching.statusProperty().addListener((py,ov,nv) -> logSound());        }
         //TODO not sure about READY status
         if (munching.getStatus() != MediaPlayer.Status.PLAYING && munching.getStatus() != MediaPlayer.Status.READY) {
             munching.play();
