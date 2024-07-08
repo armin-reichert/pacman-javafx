@@ -991,6 +991,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void stopAllSounds() {
         stopMunchingSound();
+        stopPowerSound();
         stopSirens();
         stopVoice();
         theme.audioClips().forEach(AudioClip::stop);
