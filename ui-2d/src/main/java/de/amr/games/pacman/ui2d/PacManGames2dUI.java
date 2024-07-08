@@ -47,10 +47,7 @@ import org.tinylog.Logger;
 
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static de.amr.games.pacman.controller.GameState.*;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -102,6 +99,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     protected MediaPlayer voice;
     protected final MediaPlayer[] sirens = new MediaPlayer[4];
+    protected MediaPlayer munching;
 
     public void loadAssets() {
         bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", PacManGames2dUI.class.getModule()));
@@ -175,10 +173,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("ms_pacman.audio.intermission.3",    rm.loadAudioClip("sound/mspacman/Act3Junior.mp3"));
         theme.set("ms_pacman.audio.level_complete",    rm.loadAudioClip("sound/common/level-complete.mp3"));
         theme.set("ms_pacman.audio.pacman_death",      rm.loadAudioClip("sound/mspacman/Died.mp3"));
-        theme.set("ms_pacman.audio.pacman_munch",      rm.loadAudioClip("sound/mspacman/Pill.wav"));
         theme.set("ms_pacman.audio.pacman_power",      rm.loadAudioClip("sound/mspacman/ScaredGhost.mp3"));
         theme.set("ms_pacman.audio.sweep",             rm.loadAudioClip("sound/common/sweep.mp3"));
 
+        // Audio played by MediaPlayer
+        theme.set("ms_pacman.audio.pacman_munch",      rm.url("sound/mspacman/Pill.wav"));
         theme.set("ms_pacman.audio.siren.1",           rm.url("sound/mspacman/GhostNoise1.wav"));
         theme.set("ms_pacman.audio.siren.2",           rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
         theme.set("ms_pacman.audio.siren.3",           rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
@@ -193,6 +192,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("pacman.helpButton.icon",           rm.loadImage("graphics/icons/help-blue-64.png"));
         theme.set("pacman.icon",                      rm.loadImage("graphics/icons/pacman.png"));
 
+        theme.set("pacman.audio.pacman_munch",        rm.url("sound/pacman/doublemunch.wav"));
+
         theme.set("pacman.audio.bonus_eaten",         rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));
         theme.set("pacman.audio.credit",              rm.loadAudioClip("sound/pacman/credit.wav"));
         theme.set("pacman.audio.extra_life",          rm.loadAudioClip("sound/pacman/extend.mp3"));
@@ -203,7 +204,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("pacman.audio.intermission",        rm.loadAudioClip("sound/pacman/intermission.mp3"));
         theme.set("pacman.audio.level_complete",      rm.loadAudioClip("sound/common/level-complete.mp3"));
         theme.set("pacman.audio.pacman_death",        rm.loadAudioClip("sound/pacman/pacman_death.wav"));
-        theme.set("pacman.audio.pacman_munch",        rm.loadAudioClip("sound/pacman/doublemunch.wav"));
         theme.set("pacman.audio.pacman_power",        rm.loadAudioClip("sound/pacman/ghost-turn-to-blue.mp3"));
         theme.set("pacman.audio.sweep",               rm.loadAudioClip("sound/common/sweep.mp3"));
 
@@ -242,6 +242,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         for (var gameKey : GameKeys.values()) {
             Logger.debug("Game key '{}' registered", gameKey);
         }
+
+        gameVariantPy.addListener((py,ov,nv) -> {
+           // clear media players, they get recreated for the current game variant on demand
+            Arrays.fill(sirens, null);
+            munching = null;
+        });
 
         createMainScene(computeMainSceneSize(screenSize));
         createStartPage();
@@ -621,15 +627,13 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void onPacDied(GameEvent event) {
         if (!game().isDemoLevel()) {
             playAudioClip("audio.pacman_death");
+            stopMunching();
         }
     }
 
     @Override
     public void onPacFoundFood(GameEvent event) {
-        if (!game().isDemoLevel()) {
-            //TODO (fixme) this does not sound 100% as in the original game
-            ensureAudioClipRepeats("audio.pacman_munch", AudioClip.INDEFINITE);
-        }
+        playMunching();
     }
 
     @Override
@@ -988,6 +992,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void stopAllSounds() {
+        stopMunching();
         stopSirens();
         stopVoice();
         theme.audioClips().forEach(AudioClip::stop);
@@ -1032,6 +1037,28 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             } else {
                 Logger.info("Siren {}: not yet created", number);
             }
+        }
+    }
+
+    @Override
+    public void playMunching() {
+        if (munching == null) {
+            String rk = game().variant() == GameVariant.PACMAN_XXL ? GameVariant.PACMAN.resourceKey() : game().variant().resourceKey();
+            URL munchingURL = theme.get(rk + ".audio.pacman_munch");
+            munching = new MediaPlayer(new Media(munchingURL.toExternalForm()));
+            munching.setVolume(0.5);
+            munching.setCycleCount(MediaPlayer.INDEFINITE);
+        }
+        //TODO not sure about READY status
+        if (munching.getStatus() != MediaPlayer.Status.PLAYING && munching.getStatus() != MediaPlayer.Status.READY) {
+            munching.play();
+        }
+    }
+
+    @Override
+    public void stopMunching() {
+        if (munching != null) {
+            munching.stop();
         }
     }
 

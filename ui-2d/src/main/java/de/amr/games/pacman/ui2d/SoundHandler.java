@@ -30,4 +30,8 @@ public interface SoundHandler {
     void ensureSirenPlaying(int sirenIndex);
 
     void stopSirens();
+
+    void playMunching();
+
+    void stopMunching();
 }

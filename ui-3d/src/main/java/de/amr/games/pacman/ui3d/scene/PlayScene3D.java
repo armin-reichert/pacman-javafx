@@ -404,9 +404,8 @@ public class PlayScene3D implements GameScene {
             return;
         }
         ensureSirenPlaying();
-        if (context.game().pac().starvingTicks() > 8) {
-            // TODO how is this done in Arcade game? Sounds better there :-(
-            context.soundHandler().stopAudioClip("audio.pacman_munch");
+        if (context.game().pac().starvingTicks() > 8) { // TODO not sure
+            context.soundHandler().stopMunching();
         }
         if (context.game().pac().isAlive()
             && context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
