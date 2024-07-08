@@ -98,6 +98,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected Page currentPage;
 
     protected MediaPlayer voice;
+    protected MediaPlayer startGameSound;
     protected final MediaPlayer[] sirens = new MediaPlayer[4];
     protected MediaPlayer munchingSound;
     protected MediaPlayer powerSound;
@@ -166,7 +167,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("ms_pacman.audio.bonus_eaten",       rm.loadAudioClip("sound/mspacman/Fruit.mp3"));
         theme.set("ms_pacman.audio.credit",            rm.loadAudioClip("sound/mspacman/Credit.mp3"));
         theme.set("ms_pacman.audio.extra_life",        rm.loadAudioClip("sound/mspacman/ExtraLife.mp3"));
-        theme.set("ms_pacman.audio.game_ready",        rm.loadAudioClip("sound/mspacman/Start.mp3"));
         theme.set("ms_pacman.audio.game_over",         rm.loadAudioClip("sound/common/game-over.mp3"));
         theme.set("ms_pacman.audio.ghost_eaten",       rm.loadAudioClip("sound/mspacman/Ghost.mp3"));
         theme.set("ms_pacman.audio.ghost_returning",   rm.loadAudioClip("sound/mspacman/GhostEyes.mp3"));
@@ -175,6 +175,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("ms_pacman.audio.sweep",             rm.loadAudioClip("sound/common/sweep.mp3"));
 
         // Audio played by MediaPlayer
+        theme.set("ms_pacman.audio.game_ready",        rm.url("sound/mspacman/Start.mp3"));
         theme.set("ms_pacman.audio.intermission.1",    rm.url("sound/mspacman/Act1TheyMeet.mp3"));
         theme.set("ms_pacman.audio.intermission.2",    rm.url("sound/mspacman/Act2TheChase.mp3"));
         theme.set("ms_pacman.audio.intermission.3",    rm.url("sound/mspacman/Act3Junior.mp3"));
@@ -198,7 +199,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("pacman.audio.bonus_eaten",         rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));
         theme.set("pacman.audio.credit",              rm.loadAudioClip("sound/pacman/credit.wav"));
         theme.set("pacman.audio.extra_life",          rm.loadAudioClip("sound/pacman/extend.mp3"));
-        theme.set("pacman.audio.game_ready",          rm.loadAudioClip("sound/pacman/game_start.mp3"));
         theme.set("pacman.audio.game_over",           rm.loadAudioClip("sound/common/game-over.mp3"));
         theme.set("pacman.audio.ghost_eaten",         rm.loadAudioClip("sound/pacman/eat_ghost.mp3"));
         theme.set("pacman.audio.ghost_returning",     rm.loadAudioClip("sound/pacman/retreating.mp3"));
@@ -206,6 +206,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("pacman.audio.pacman_death",        rm.loadAudioClip("sound/pacman/pacman_death.wav"));
         theme.set("pacman.audio.sweep",               rm.loadAudioClip("sound/common/sweep.mp3"));
 
+        theme.set("pacman.audio.game_ready",          rm.url("sound/pacman/game_start.mp3"));
         theme.set("pacman.audio.intermission",        rm.url("sound/pacman/intermission.mp3"));
         theme.set("pacman.audio.pacman_munch",        rm.url("sound/pacman/doublemunch.wav")); //TODO improve
         theme.set("pacman.audio.pacman_power",        rm.url("sound/pacman/ghost-turn-to-blue.mp3"));
@@ -607,7 +608,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (gameState() == LEVEL_TEST || game().isDemoLevel() || game().levelNumber() > 1) {
             return;
         }
-        playAudioClip("audio.game_ready");
+        soundHandler().playStartGameSound();
     }
 
     @Override
@@ -976,6 +977,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void stopAllSounds() {
+        stop(startGameSound);
         stop(munchingSound);
         stop(powerSound);
         stop(intermissionSound);
@@ -989,6 +991,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
      * Clear media players, they get recreated for the current game variant on demand.
      */
     private void clearSounds() {
+        startGameSound = null;
         munchingSound = null;
         powerSound = null;
         intermissionSound = null;
@@ -1024,18 +1027,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
     }
 
-    private void logSound() {
-        for (int number = 1; number <= 4; ++number) {
-            if (sirens[number-1] != null) {
-                Logger.info("Siren {}: status {} volume {}",
-                    number, sirens[number-1].getStatus(), sirens[number-1].getVolume());
-            } else {
-                Logger.info("Siren {}: not yet created", number);
-            }
+    @Override
+    public void playStartGameSound() {
+        if (startGameSound == null) {
+            URL url = theme.get(rk() + ".audio.game_ready");
+            startGameSound = new MediaPlayer(new Media(url.toExternalForm()));
+            startGameSound.setVolume(0.5);
         }
-        if (munchingSound != null) {
-            Logger.info("Munching: status {} volume {}", munchingSound.getStatus(), munchingSound.getVolume());
-        }
+        startGameSound.play();
     }
 
     @Override
@@ -1114,5 +1113,19 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
      */
     private String rk() {
         return game().variant() == GameVariant.PACMAN_XXL ? GameVariant.PACMAN.resourceKey() : game().variant().resourceKey();
+    }
+
+    private void logSound() {
+        for (int number = 1; number <= 4; ++number) {
+            if (sirens[number-1] != null) {
+                Logger.info("Siren {}: status {} volume {}",
+                        number, sirens[number-1].getStatus(), sirens[number-1].getVolume());
+            } else {
+                Logger.info("Siren {}: not yet created", number);
+            }
+        }
+        if (munchingSound != null) {
+            Logger.info("Munching: status {} volume {}", munchingSound.getStatus(), munchingSound.getVolume());
+        }
     }
 }

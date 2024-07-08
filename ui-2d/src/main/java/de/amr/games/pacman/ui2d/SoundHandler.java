@@ -37,6 +37,8 @@ public interface SoundHandler {
 
     void stopSirens();
 
+    void playStartGameSound();
+
     void playMunchingSound();
 
     void stopMunchingSound();
