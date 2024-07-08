@@ -405,7 +405,7 @@ public class PlayScene3D implements GameScene {
         }
         ensureSirenPlaying();
         if (context.game().pac().starvingTicks() > 8) { // TODO not sure
-            context.soundHandler().stopMunching();
+            context.soundHandler().stopMunchingSound();
         }
         if (context.game().pac().isAlive()
             && context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
