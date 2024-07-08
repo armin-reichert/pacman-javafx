@@ -42,4 +42,6 @@ public interface SoundHandler {
     void stopMunchingSound();
 
     void playPowerSound();
+
+    void playIntermissionSound(int number);
 }

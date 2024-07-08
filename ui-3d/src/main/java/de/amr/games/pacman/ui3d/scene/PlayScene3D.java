@@ -347,7 +347,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void playLevelCompleteAnimation() {
-        boolean intermission = context.game().intermissionNumberAfterLevel(context.game().levelNumber()) != 0;
+        boolean intermission = context.game().intermissionNumber(context.game().levelNumber()) != 0;
         lockGameStateAndPlayAfterOneSecond(intermission
             ? levelCompleteAnimationBeforeIntermission()
             : levelCompleteAnimation());

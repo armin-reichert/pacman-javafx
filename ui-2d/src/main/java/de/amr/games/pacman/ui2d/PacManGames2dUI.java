@@ -101,6 +101,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected final MediaPlayer[] sirens = new MediaPlayer[4];
     protected MediaPlayer munchingSound;
     protected MediaPlayer powerSound;
+    protected MediaPlayer intermissionSound;
 
     public void loadAssets() {
         bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", PacManGames2dUI.class.getModule()));
@@ -169,14 +170,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("ms_pacman.audio.game_over",         rm.loadAudioClip("sound/common/game-over.mp3"));
         theme.set("ms_pacman.audio.ghost_eaten",       rm.loadAudioClip("sound/mspacman/Ghost.mp3"));
         theme.set("ms_pacman.audio.ghost_returning",   rm.loadAudioClip("sound/mspacman/GhostEyes.mp3"));
-        theme.set("ms_pacman.audio.intermission.1",    rm.loadAudioClip("sound/mspacman/Act1TheyMeet.mp3"));
-        theme.set("ms_pacman.audio.intermission.2",    rm.loadAudioClip("sound/mspacman/Act2TheChase.mp3"));
-        theme.set("ms_pacman.audio.intermission.3",    rm.loadAudioClip("sound/mspacman/Act3Junior.mp3"));
         theme.set("ms_pacman.audio.level_complete",    rm.loadAudioClip("sound/common/level-complete.mp3"));
         theme.set("ms_pacman.audio.pacman_death",      rm.loadAudioClip("sound/mspacman/Died.mp3"));
         theme.set("ms_pacman.audio.sweep",             rm.loadAudioClip("sound/common/sweep.mp3"));
 
         // Audio played by MediaPlayer
+        theme.set("ms_pacman.audio.intermission.1",    rm.url("sound/mspacman/Act1TheyMeet.mp3"));
+        theme.set("ms_pacman.audio.intermission.2",    rm.url("sound/mspacman/Act2TheChase.mp3"));
+        theme.set("ms_pacman.audio.intermission.3",    rm.url("sound/mspacman/Act3Junior.mp3"));
         theme.set("ms_pacman.audio.pacman_munch",      rm.url("sound/mspacman/Pill.wav"));
         theme.set("ms_pacman.audio.pacman_power",      rm.url("sound/mspacman/ScaredGhost.mp3"));
         theme.set("ms_pacman.audio.siren.1",           rm.url("sound/mspacman/GhostNoise1.wav"));
@@ -201,11 +202,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("pacman.audio.game_over",           rm.loadAudioClip("sound/common/game-over.mp3"));
         theme.set("pacman.audio.ghost_eaten",         rm.loadAudioClip("sound/pacman/eat_ghost.mp3"));
         theme.set("pacman.audio.ghost_returning",     rm.loadAudioClip("sound/pacman/retreating.mp3"));
-        theme.set("pacman.audio.intermission",        rm.loadAudioClip("sound/pacman/intermission.mp3"));
         theme.set("pacman.audio.level_complete",      rm.loadAudioClip("sound/common/level-complete.mp3"));
         theme.set("pacman.audio.pacman_death",        rm.loadAudioClip("sound/pacman/pacman_death.wav"));
         theme.set("pacman.audio.sweep",               rm.loadAudioClip("sound/common/sweep.mp3"));
 
+        theme.set("pacman.audio.intermission",        rm.url("sound/pacman/intermission.mp3"));
         theme.set("pacman.audio.pacman_munch",        rm.url("sound/pacman/doublemunch.wav")); //TODO improve
         theme.set("pacman.audio.pacman_power",        rm.url("sound/pacman/ghost-turn-to-blue.mp3"));
         theme.set("pacman.audio.siren.1",             rm.url("sound/pacman/siren_1.mp3"));
@@ -428,7 +429,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             case CREDIT -> gameSceneManager.gameScene(variant, GameSceneID.CREDIT_SCENE);
             case INTRO -> gameSceneManager.gameScene(variant, GameSceneID.INTRO_SCENE);
             case INTERMISSION -> gameSceneManager.gameScene(variant, GameSceneID.valueOf(
-                "CUT_SCENE_" + game().intermissionNumberAfterLevel(game().levelNumber())));
+                "CUT_SCENE_" + game().intermissionNumber(game().levelNumber())));
             case INTERMISSION_TEST -> gameSceneManager.gameScene(variant, GameSceneID.valueOf(
                 "CUT_SCENE_" + gameState().<Integer>getProperty("intermissionTestNumber")));
             default -> gameSceneManager.gameScene(variant, GameSceneID.PLAY_SCENE);
@@ -569,21 +570,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void onIntermissionStarted(GameEvent event) {
-        int intermissionNumber; // 0=no intermission
         if (gameState() == GameState.INTERMISSION_TEST) {
-            intermissionNumber = GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber");
+            playIntermissionSound(GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")); //TODO ugly
         } else {
-            intermissionNumber = event.game.intermissionNumberAfterLevel(event.game.levelNumber());
-        }
-        if (intermissionNumber != 0) {
-            switch (game().variant()) {
-                case MS_PACMAN -> playAudioClip("audio.intermission." + intermissionNumber);
-                case PACMAN, PACMAN_XXL -> {
-                    var clip = audioClip("audio.intermission");
-                    clip.setCycleCount(intermissionNumber == 1 || intermissionNumber == 3 ? 2 : 1);
-                    clip.play();
-                }
-            }
+            playIntermissionSound(game().intermissionNumber(game().levelNumber()));
         }
     }
 
@@ -988,10 +978,21 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void stopAllSounds() {
         stop(munchingSound);
         stop(powerSound);
+        stop(intermissionSound);
         stopSirens();
         stopVoice();
         theme.audioClips().forEach(AudioClip::stop);
         Logger.info("All sounds stopped");
+    }
+
+    /**
+     * Clear media players, they get recreated for the current game variant on demand.
+     */
+    private void clearSounds() {
+        munchingSound = null;
+        powerSound = null;
+        intermissionSound = null;
+        Arrays.fill(sirens, null);
     }
 
     /**
@@ -1071,6 +1072,25 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     @Override
+    public void playIntermissionSound(int number) {
+        switch (game().variant()) {
+            case MS_PACMAN -> {
+                URL url = theme.get(rk() + ".audio.intermission." + number);
+                intermissionSound = new MediaPlayer(new Media(url.toExternalForm()));
+                intermissionSound.setVolume(0.5);
+                intermissionSound.play();
+            }
+            case PACMAN, PACMAN_XXL -> {
+                URL url = theme.get(rk() + ".audio.intermission");
+                intermissionSound = new MediaPlayer(new Media(url.toExternalForm()));
+                intermissionSound.setVolume(0.5);
+                intermissionSound.setCycleCount(number == 1 || number == 3 ? 2 : 1);
+                intermissionSound.play();
+            }
+        }
+    }
+
+    @Override
     public void playVoice(String voiceKey, double delaySeconds) {
         if (voice != null && voice.getStatus() == MediaPlayer.Status.PLAYING) {
             Logger.info("Cannot play voice {}, another voice is already playing", voiceKey);
@@ -1087,15 +1107,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (voice != null) {
             voice.stop();
         }
-    }
-
-    /**
-     * Clear media players, they get recreated for the current game variant on demand.
-     */
-    private void clearSound() {
-        Arrays.fill(sirens, null);
-        munchingSound = null;
-        powerSound = null;
     }
 
     /**

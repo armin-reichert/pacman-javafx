@@ -275,7 +275,7 @@ public abstract class AbstractPacManGame implements GameModel {
     }
 
     @Override
-    public int intermissionNumberAfterLevel(int levelNumber) {
+    public int intermissionNumber(int levelNumber) {
         return level(levelNumber).intermissionNumber();
     }
 

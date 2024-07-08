@@ -69,7 +69,7 @@ public class PacManXXLGame extends PacManGame {
     }
 
     @Override
-    public int intermissionNumberAfterLevel(int levelNumber) {
+    public int intermissionNumber(int levelNumber) {
         return 0;
     }
 
