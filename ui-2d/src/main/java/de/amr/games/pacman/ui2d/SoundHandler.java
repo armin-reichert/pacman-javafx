@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d;
 
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.MediaPlayer;
 
 /**
  * @author Armin Reichert
@@ -25,6 +26,11 @@ public interface SoundHandler {
 
     void ensureAudioClipLoops(String key);
 
+    default void stop(MediaPlayer player) {
+        if (player != null) {
+            player.stop();
+        }
+    }
     void stopAllSounds();
 
     void ensureSirenPlaying(int sirenIndex);
@@ -36,6 +42,4 @@ public interface SoundHandler {
     void stopMunchingSound();
 
     void playPowerSound();
-
-    void stopPowerSound();
 }
