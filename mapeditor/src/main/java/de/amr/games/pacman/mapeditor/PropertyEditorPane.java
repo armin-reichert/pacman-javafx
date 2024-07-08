@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -266,10 +267,11 @@ public class PropertyEditorPane extends BorderPane {
 
         var buttonBar = new HBox(new Label("New"), btnAddColorEntry, btnAddPosEntry, btnAddGenericEntry);
         buttonBar.setSpacing(3);
+        buttonBar.setPadding(new Insets(2,2,6,2));
         buttonBar.setAlignment(Pos.CENTER_LEFT);
 
         grid.setHgap(2);
-        grid.setVgap(1);
+        grid.setVgap(2);
 
         setTop(buttonBar);
         setCenter(grid);
