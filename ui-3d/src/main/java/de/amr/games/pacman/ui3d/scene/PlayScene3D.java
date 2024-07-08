@@ -195,21 +195,11 @@ public class PlayScene3D implements GameScene {
             case READY -> {
                 context.soundHandler().stopAllSounds();
                 if (level3D != null) {
-                    level3D.pac3D().init(context);
-                    level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
-                    level3D.stopEnergizerAnimation();
-                    level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-                    level3D.livesCounter3D().stopAnimation();
-                    level3D.showLevelStartMessage();
+                    level3D.getReadyToPlay();
                 }
             }
 
-            case HUNTING -> {
-                level3D.pac3D().init(context);
-                level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
-                level3D.livesCounter3D().startAnimation();
-                level3D.startEnergizerAnimation();
-            }
+            case HUNTING -> level3D.startHunting();
 
             case PACMAN_DYING -> {
                 context.soundHandler().stopAllSounds();
@@ -220,12 +210,10 @@ public class PlayScene3D implements GameScene {
             case GAME_OVER -> {
                 // delay state exit for 3 seconds
                 context.gameState().timer().restartSeconds(3);
-                level3D.stopEnergizerAnimation();
-                level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-                level3D.livesCounter3D().stopAnimation();
                 context.actionHandler().showFlashMessageSeconds(3, PICKER_GAME_OVER.next());
                 context.soundHandler().stopAllSounds();
                 context.soundHandler().playAudioClip("audio.game_over");
+                level3D.stopHunting();
             }
 
             case GHOST_DYING -> {
@@ -429,7 +417,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void ensureSirenPlaying() {
-        if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
+        if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
             context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
         }
     }

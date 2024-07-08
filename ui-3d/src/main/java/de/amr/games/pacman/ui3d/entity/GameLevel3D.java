@@ -210,6 +210,26 @@ public class GameLevel3D extends Group {
         }
     }
 
+    public void getReadyToPlay() {
+        stopHunting();
+        pac3D.init(context);
+        ghosts3D.forEach(ghost3D -> ghost3D.init(context));
+        showLevelStartMessage();
+    }
+
+    public void startHunting() {
+        pac3D.init(context);
+        ghosts3D.forEach(ghost3D -> ghost3D.init(context));
+        livesCounter3D.startAnimation();
+        startEnergizerAnimation();
+    }
+
+    public void stopHunting() {
+        stopEnergizerAnimation();
+        bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
+        livesCounter3D().stopAnimation();
+    }
+
     public void update() {
         var game = context.game();
         pac3D.update(context);

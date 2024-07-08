@@ -100,8 +100,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected EditorPage editorPage;
     protected Page currentPage;
 
-    protected MediaPlayer voicePlayer;
-    protected MediaPlayer sirenPlayer;
+    protected MediaPlayer voice;
+    protected final MediaPlayer[] sirens = new MediaPlayer[4];
 
     public void loadAssets() {
         bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", PacManGames2dUI.class.getModule()));
@@ -635,7 +635,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void onPacGetsPower(GameEvent event) {
         if (!game().isDemoLevel()) {
-            stopSiren();
+            stopSirens();
             var clip = audioClip("audio.pacman_power");
             clip.stop();
             clip.setCycleCount(AudioClip.INDEFINITE);
@@ -802,7 +802,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         Ufx.toggle(clock.pausedPy);
         if (clock.isPaused()) {
             theme().audioClips().forEach(AudioClip::stop);
-            sirenPlayer.stop();
+            stopSirens();;
         }
         Logger.info("Game variant ({}) {}", game(), clock.isPaused() ? "paused" : "resumed");
     }
@@ -988,22 +988,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void stopAllSounds() {
-        stopSiren();
+        stopSirens();
         stopVoice();
         theme.audioClips().forEach(AudioClip::stop);
-    }
-
-    /**
-     * @param sirenNumber 1..4
-     */
-    private void playSirenSound(int sirenNumber) {
-        stopSiren();
-        String rk = game().variant() == GameVariant.PACMAN_XXL ? GameVariant.PACMAN.resourceKey() : game().variant().resourceKey();
-        URL sirenURL = theme.get(rk + ".audio.siren." + sirenNumber);
-        sirenPlayer = new MediaPlayer(new Media(sirenURL.toExternalForm()));
-        sirenPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        sirenPlayer.setVolume(0.5);
-        sirenPlayer.play();
+        Logger.info("All sounds stopped");
     }
 
     /**
@@ -1011,34 +999,58 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
      */
     @Override
     public void ensureSirenPlaying(int sirenIndex) {
-        if (sirenPlayer == null || sirenPlayer.getStatus() != MediaPlayer.Status.PLAYING) {
-            playSirenSound(sirenIndex + 1);
+        MediaPlayer siren = sirens[sirenIndex];
+        if  (siren == null) {
+            String rk = game().variant() == GameVariant.PACMAN_XXL ? GameVariant.PACMAN.resourceKey() : game().variant().resourceKey();
+            URL sirenURL = theme.get(rk + ".audio.siren." + (sirenIndex + 1));
+            siren = new MediaPlayer(new Media(sirenURL.toExternalForm()));
+            siren.setCycleCount(MediaPlayer.INDEFINITE);
+            siren.statusProperty().addListener((py,ov,nv) -> logSirens());
+            sirens[sirenIndex] = siren;
+        }
+        if (siren.getStatus() != MediaPlayer.Status.PLAYING && siren.getStatus() != MediaPlayer.Status.READY) {
+            stopSirens();
+            siren.setVolume(0.1);
+            siren.play();
         }
     }
 
     @Override
-    public void stopSiren() {
-        if (sirenPlayer != null) {
-            sirenPlayer.stop();
+    public void stopSirens() {
+        for (var siren : sirens) {
+            if (siren != null) {
+                siren.stop();
+            }
+        }
+    }
+
+    private void logSirens() {
+        for (int number = 1; number <= 4; ++number) {
+            if (sirens[number-1] != null) {
+                Logger.info("Siren {}: status {} volume {}",
+                    number, sirens[number-1].getStatus(), sirens[number-1].getVolume());
+            } else {
+                Logger.info("Siren {}: not yet created", number);
+            }
         }
     }
 
     @Override
     public void playVoice(String voiceKey, double delaySeconds) {
-        if (voicePlayer != null && voicePlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+        if (voice != null && voice.getStatus() == MediaPlayer.Status.PLAYING) {
             Logger.info("Cannot play voice {}, another voice is already playing", voiceKey);
             return;
         }
         URL voiceURL = theme.get(voiceKey);
-        voicePlayer = new MediaPlayer(new Media(voiceURL.toExternalForm()));
-        voicePlayer.setStartTime(Duration.seconds(delaySeconds));
-        voicePlayer.play();
+        voice = new MediaPlayer(new Media(voiceURL.toExternalForm()));
+        voice.setStartTime(Duration.seconds(delaySeconds));
+        voice.play();
     }
 
     @Override
     public void stopVoice() {
-        if (voicePlayer != null) {
-            voicePlayer.stop();
+        if (voice != null) {
+            voice.stop();
         }
     }
 }

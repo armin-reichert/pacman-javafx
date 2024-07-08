@@ -202,7 +202,7 @@ public class PlayScene2D extends GameScene2D {
     }
 
     private void ensureSirenPlaying() {
-        if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
+        if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
             context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
         }
     }

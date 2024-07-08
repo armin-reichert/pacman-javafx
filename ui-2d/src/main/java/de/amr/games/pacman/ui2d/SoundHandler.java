@@ -29,5 +29,5 @@ public interface SoundHandler {
 
     void ensureSirenPlaying(int sirenIndex);
 
-    void stopSiren();
+    void stopSirens();
 }
