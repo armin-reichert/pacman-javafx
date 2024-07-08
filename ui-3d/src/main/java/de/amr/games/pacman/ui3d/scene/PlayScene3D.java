@@ -109,7 +109,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void update() {
         var game = context.game();
-        if (game.level().isEmpty()) {
+        if (game.level().isEmpty() || game.world() == null) {
             Logger.warn("Cannot update 3D play scene, no game level exists");
             return;
         }

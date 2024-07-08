@@ -1015,7 +1015,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
         if (siren.getStatus() != MediaPlayer.Status.PLAYING && siren.getStatus() != MediaPlayer.Status.READY) {
             stopSirens();
-            siren.setVolume(0.1);
+            siren.setVolume(0.33);
             siren.play();
         }
     }
