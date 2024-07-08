@@ -26,7 +26,6 @@ import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.lib.tilemap.TileMap.parseVector2i;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.formatColor;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.parseColor;
-import static java.util.Comparator.comparing;
 
 /**
  * @author Armin Reichert
@@ -109,6 +108,7 @@ public class PropertyEditorPane extends BorderPane {
             tileMap.getProperties().put(editedName, formattedPropertyValue());
             tileMapEditor.showMessage("Property %s renamed to %s".formatted(propertyName, editedName), 2, MessageType.INFO);
             propertyName = editedName;
+            rebuildPropertyEditors(); // sort order might have changed
             tileMapEditor.markMapEdited();
         }
 
@@ -290,16 +290,9 @@ public class PropertyEditorPane extends BorderPane {
 
     private void rebuildPropertyEditors() {
         Logger.info("Rebuild editors");
-
-        var sortedEntries = tileMap.getProperties().entrySet().stream()
-            .sorted(comparing(entry -> entry.getKey().toString()))
-            .toList();
-
         propertyEditors.clear();
-        for (var entry : sortedEntries) {
-            // assume neither key nor value are null
-            String propertyName = entry.getKey().toString();
-            String propertyValue = entry.getValue().toString();
+        tileMap.getProperties().stringPropertyNames().stream().sorted().forEach(propertyName -> {
+            String propertyValue = tileMap.getProperty(propertyName);
             // primitive way of discriminating but fulfills its purpose
             if (propertyName.startsWith("color_")) {
                 propertyEditors.add(new ColorPropertyEditor(propertyName, propertyValue));
@@ -308,7 +301,7 @@ public class PropertyEditorPane extends BorderPane {
             } else {
                 propertyEditors.add(new TextPropertyEditor(propertyName, propertyValue));
             }
-        }
+        });
 
         int row = 0;
         grid.getChildren().clear();
