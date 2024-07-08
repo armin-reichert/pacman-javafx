@@ -78,7 +78,7 @@ public class PlayScene3D implements GameScene {
         scores3D.rotateProperty().bind(camera.rotateProperty());
 
         var level3DPlaceholder = new Group();
-        var root = new Group(level3DPlaceholder, scores3D,  coordSystem, ambientLight);
+        var root = new Group(level3DPlaceholder, scores3D, coordSystem, ambientLight);
 
         // initial scene size is irrelevant, gets bound to parent scene later
         fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
@@ -113,22 +113,20 @@ public class PlayScene3D implements GameScene {
             Logger.warn("Cannot update 3D play scene, no game level exists");
             return;
         }
-        if (level3D != null) {
-            level3D.update();
-            perspective().update(fxSubScene.getCamera(), game.world(), game.pac());
-        } else {
+        if (level3D == null) {
             // if level has been started in 2D scene and user switches to 3D scene, the 3D level must be created
             replaceGameLevel3D();
         }
+        level3D.update();
+        perspective().update(fxSubScene.getCamera(), game.world(), game.pac());
 
-        // Update autopilot here. Autopilot flag is in core layer where we don't have a JavaFX property to bind with
+        // Update autopilot usage on every update because autopilot flag is in core layer where we don't have a JavaFX property to bind with
         game.pac().setUseAutopilot(game.isDemoLevel() || PY_AUTOPILOT.get());
 
         scores3D.showHighScore(game.highScore().points(), game.highScore().levelNumber());
         if (context.gameController().hasCredit()) {
             scores3D.showScore(game.score().points(), game.score().levelNumber());
-        } else {
-            // demo level or "game over" state
+        } else { // demo level or "game over" state
             scores3D.showTextAsScore("GAME OVER!", Color.RED);
         }
         updateSound();
