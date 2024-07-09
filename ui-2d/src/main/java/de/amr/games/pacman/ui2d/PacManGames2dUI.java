@@ -226,7 +226,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("pacman_xxl.icon",                 rm.loadImage("graphics/icons/pacman.png"));
         theme.set("pacman_xxl.helpButton.icon",      rm.loadImage("graphics/icons/help-blue-64.png"));
         theme.set("pacman_xxl.startpage.image",      rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
+    }
 
+    protected void logAssets() {
         Logger.info("Assets loaded: {}", theme.summary(List.of(
             new Pair<>(Image.class, "images"),
             new Pair<>(Font.class, "fonts"),
@@ -237,6 +239,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     public void createUI(Stage stage, Rectangle2D screenSize) {
         this.stage = checkNotNull(stage);
+
+        logAssets();
 
         Image muteImage = theme.get("icon.mute");
         ImageView muteIcon = new ImageView(muteImage);
