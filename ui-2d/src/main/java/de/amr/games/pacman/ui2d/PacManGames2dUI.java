@@ -106,6 +106,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected final MediaPlayer[] sirens = new MediaPlayer[4];
     protected MediaPlayer munchingSound;
     protected MediaPlayer powerSound;
+    protected MediaPlayer ghostReturningHomeSound;
     protected MediaPlayer intermissionSound;
 
     public void loadAssets() {
@@ -174,7 +175,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("ms_pacman.audio.extra_life",        rm.loadAudioClip("sound/mspacman/ExtraLife.mp3"));
         theme.set("ms_pacman.audio.game_over",         rm.loadAudioClip("sound/common/game-over.mp3"));
         theme.set("ms_pacman.audio.ghost_eaten",       rm.loadAudioClip("sound/mspacman/Ghost.mp3"));
-        theme.set("ms_pacman.audio.ghost_returning",   rm.loadAudioClip("sound/mspacman/GhostEyes.mp3"));
         theme.set("ms_pacman.audio.level_complete",    rm.loadAudioClip("sound/common/level-complete.mp3"));
         theme.set("ms_pacman.audio.pacman_death",      rm.loadAudioClip("sound/mspacman/Died.mp3"));
         theme.set("ms_pacman.audio.sweep",             rm.loadAudioClip("sound/common/sweep.mp3"));
@@ -190,6 +190,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("ms_pacman.audio.siren.2",           rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
         theme.set("ms_pacman.audio.siren.3",           rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
         theme.set("ms_pacman.audio.siren.4",           rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
+        theme.set("ms_pacman.audio.ghost_returning",   rm.url("sound/mspacman/GhostEyes.mp3"));
 
         //
         // Pac-Man game
@@ -206,7 +207,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("pacman.audio.extra_life",          rm.loadAudioClip("sound/pacman/extend.mp3"));
         theme.set("pacman.audio.game_over",           rm.loadAudioClip("sound/common/game-over.mp3"));
         theme.set("pacman.audio.ghost_eaten",         rm.loadAudioClip("sound/pacman/eat_ghost.mp3"));
-        theme.set("pacman.audio.ghost_returning",     rm.loadAudioClip("sound/pacman/retreating.mp3"));
         theme.set("pacman.audio.level_complete",      rm.loadAudioClip("sound/common/level-complete.mp3"));
         theme.set("pacman.audio.pacman_death",        rm.loadAudioClip("sound/pacman/pacman_death.wav"));
         theme.set("pacman.audio.sweep",               rm.loadAudioClip("sound/common/sweep.mp3"));
@@ -219,6 +219,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("pacman.audio.siren.2",             rm.url("sound/pacman/siren_2.mp3"));
         theme.set("pacman.audio.siren.3",             rm.url("sound/pacman/siren_3.mp3"));
         theme.set("pacman.audio.siren.4",             rm.url("sound/pacman/siren_4.mp3"));
+        theme.set("pacman.audio.ghost_returning",     rm.url("sound/pacman/retreating.mp3"));
 
         //
         // Pac-Man XXL
@@ -638,7 +639,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void onPacDied(GameEvent event) {
         if (!game().isDemoLevel()) {
             playAudioClip("audio.pacman_death");
-            stop(munchingSound);
+            stopSound(munchingSound);
         }
     }
 
@@ -660,7 +661,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void onPacLostPower(GameEvent event) {
         if (!game().isDemoLevel()) {
-            soundHandler().stop(powerSound);
+            soundHandler().stopSound(powerSound);
             ensureSirenPlaying(game().huntingPhaseIndex() / 2);
         }
     }
@@ -1010,10 +1011,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void stopAllSounds() {
-        stop(startGameSound);
-        stop(munchingSound);
-        stop(powerSound);
-        stop(intermissionSound);
+        stopSound(startGameSound);
+        stopSound(munchingSound);
+        stopSound(powerSound);
+        stopSound(ghostReturningHomeSound);
+        stopSound(intermissionSound);
         stopSirens();
         stopVoice();
         theme.audioClips().forEach(AudioClip::stop);
@@ -1027,6 +1029,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         startGameSound = null;
         munchingSound = null;
         powerSound = null;
+        ghostReturningHomeSound = null;
         intermissionSound = null;
         Arrays.fill(sirens, null);
     }
@@ -1087,7 +1090,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void stopMunchingSound() {
-        stop(munchingSound);
+        stopSound(munchingSound);
     }
 
     @Override
@@ -1101,6 +1104,24 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             powerSound.statusProperty().addListener((py, ov, nv) -> logSound());
         }
         powerSound.play();
+    }
+
+    @Override
+    public void playGhostReturningHomeSound() {
+        if (ghostReturningHomeSound == null) {
+            URL url = theme.get(rk() + ".audio.ghost_returning");
+            ghostReturningHomeSound = new MediaPlayer(new Media(url.toExternalForm()));
+            ghostReturningHomeSound.muteProperty().bind(mutePy);
+            ghostReturningHomeSound.setVolume(0.5);
+            ghostReturningHomeSound.setCycleCount(MediaPlayer.INDEFINITE);
+            ghostReturningHomeSound.statusProperty().addListener((py, ov, nv) -> logSound());
+        }
+        ghostReturningHomeSound.play();
+    }
+
+    @Override
+    public void stopGhostReturningHomeSound() {
+        stopSound(ghostReturningHomeSound);
     }
 
     @Override
@@ -1162,6 +1183,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
         if (munchingSound != null) {
             Logger.info("Munching: status {} volume {}", munchingSound.getStatus(), munchingSound.getVolume());
+        }
+        if (powerSound != null) {
+            Logger.info("Power: status {} volume {}", powerSound.getStatus(), powerSound.getVolume());
+        }
+        if (ghostReturningHomeSound != null) {
+            Logger.info("Ghost Returns: status {} volume {}", ghostReturningHomeSound.getStatus(), ghostReturningHomeSound.getVolume());
         }
     }
 }

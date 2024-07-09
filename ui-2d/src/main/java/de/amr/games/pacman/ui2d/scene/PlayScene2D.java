@@ -21,13 +21,11 @@ import org.tinylog.Logger;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.actors.GhostState.ENTERING_HOUSE;
-import static de.amr.games.pacman.model.actors.GhostState.RETURNING_HOME;
 
 /**
  * @author Armin Reichert
  */
-public class PlayScene2D extends GameScene2D {
+public class PlayScene2D extends GameScene2D implements PlaySceneSound {
 
     @Override
     public boolean isCreditVisible() {
@@ -50,7 +48,7 @@ public class PlayScene2D extends GameScene2D {
         } else {
             context.setScoreVisible(true);
             context.game().pac().setUseAutopilot(PacManGames2dUI.PY_AUTOPILOT.get());
-            updateSound();
+            updateSound(context);
         }
     }
 
@@ -181,29 +179,6 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        ensureSirenPlaying();
+        ensureSirenPlaying(context);
     }
-
-    private void updateSound() {
-        if (context.game().isDemoLevel()) {
-            return;
-        }
-        ensureSirenPlaying();
-        if (context.game().pac().starvingTicks() > 8) { // TODO not sure
-            context.soundHandler().stopMunchingSound();
-        }
-        if (context.game().pac().isAlive()
-                && context.game().ghosts(RETURNING_HOME, ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
-            context.soundHandler().ensureAudioClipLoops("audio.ghost_returning");
-        } else {
-            context.soundHandler().stopAudioClip("audio.ghost_returning");
-        }
-    }
-
-    private void ensureSirenPlaying() {
-        if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
-            context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
-        }
-    }
-
 }

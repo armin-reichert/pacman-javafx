@@ -30,7 +30,7 @@ public interface SoundHandler {
 
     void ensureAudioClipLoops(String key);
 
-    default void stop(MediaPlayer player) {
+    default void stopSound(MediaPlayer player) {
         if (player != null) {
             player.stop();
         }
@@ -43,11 +43,15 @@ public interface SoundHandler {
 
     void playStartGameSound();
 
+    void playIntermissionSound(int number);
+
     void playMunchingSound();
 
     void stopMunchingSound();
 
     void playPowerSound();
 
-    void playIntermissionSound(int number);
+    void playGhostReturningHomeSound();
+
+    void stopGhostReturningHomeSound();
 }

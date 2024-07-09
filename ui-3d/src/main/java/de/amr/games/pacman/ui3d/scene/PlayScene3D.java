@@ -8,13 +8,13 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameKeys;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.PlaySceneSound;
 import de.amr.games.pacman.ui3d.entity.Bonus3D;
 import de.amr.games.pacman.ui3d.entity.Eatable3D;
 import de.amr.games.pacman.ui3d.entity.GameLevel3D;
@@ -44,7 +44,7 @@ import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
  *
  * @author Armin Reichert
  */
-public class PlayScene3D implements GameScene {
+public class PlayScene3D implements GameScene, PlaySceneSound {
 
     private static final byte CHILD_INDEX_LEVEL_3D = 0;
 
@@ -129,7 +129,7 @@ public class PlayScene3D implements GameScene {
         } else { // demo level or "game over" state
             scores3D.showTextAsScore("GAME OVER!", Color.RED);
         }
-        updateSound();
+        updateSound(context);
     }
 
     public void setContext(GameContext context) {
@@ -182,7 +182,7 @@ public class PlayScene3D implements GameScene {
         context.game().ghosts().forEach(Ghost::show);
         level3D.pac3D().init(context);
         level3D.pac3D().update(context);
-        ensureSirenPlaying();
+        ensureSirenPlaying(context);
         if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
             context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
         }
@@ -397,27 +397,5 @@ public class PlayScene3D implements GameScene {
 
     private String pickLevelCompleteMessage() {
         return PICKER_LEVEL_COMPLETE.next() + "\n\n" + context.tt("level_complete", context.game().levelNumber());
-    }
-
-    private void updateSound() {
-        if (context.game().isDemoLevel()) {
-            return;
-        }
-        ensureSirenPlaying();
-        if (context.game().pac().starvingTicks() > 8) { // TODO not sure
-            context.soundHandler().stopMunchingSound();
-        }
-        if (context.game().pac().isAlive()
-            && context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible)) {
-            context.soundHandler().ensureAudioClipLoops("audio.ghost_returning");
-        } else {
-            context.soundHandler().stopAudioClip("audio.ghost_returning");
-        }
-    }
-
-    private void ensureSirenPlaying() {
-        if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
-            context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
-        }
     }
 }
