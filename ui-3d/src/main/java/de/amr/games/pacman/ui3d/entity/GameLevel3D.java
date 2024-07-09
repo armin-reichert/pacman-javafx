@@ -249,11 +249,11 @@ public class GameLevel3D extends Group {
 
     private void updateLivesCounter() {
         //TODO reconsider this:
-        int numLivesCounterEntries = context.game().lives() - 1;
         if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
-            numLivesCounterEntries += 1;
+            livesCounter3D.livesCountPy.set(context.game().lives());
+        } else {
+            livesCounter3D.livesCountPy.set(context.game().lives() - 1);
         }
-        livesCounter3D.livesCountPy.set(numLivesCounterEntries);
     }
 
     private void addHouse(Group parent) {
