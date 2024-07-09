@@ -1018,7 +1018,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         intermissionSound = null;
     }
 
-    private MediaPlayer createMediaPlayerForCurrentGameVariant(String keySuffix, double volume, boolean loop) {
+    private MediaPlayer createSound(String keySuffix, double volume, boolean loop) {
         String prefix = game().variant() == GameVariant.PACMAN_XXL ? GameVariant.PACMAN.resourceKey() : game().variant().resourceKey();
         URL url = theme.get(prefix + "." + keySuffix);
         var player = new MediaPlayer(new Media(url.toExternalForm()));
@@ -1044,7 +1044,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             siren.player().stop();
         }
         if  (siren == null || siren.number != sirenNumber) {
-            var player = createMediaPlayerForCurrentGameVariant("audio.siren." + sirenNumber, 0.33, true);
+            var player = createSound("audio.siren." + sirenNumber, 0.33, true);
             siren = new Siren(sirenNumber, player);
         }
         siren.player().play();
@@ -1060,7 +1060,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void playStartGameSound() {
         if (startGameSound == null) {
-            startGameSound = createMediaPlayerForCurrentGameVariant("audio.game_ready", 0.5, false);
+            startGameSound = createSound("audio.game_ready", 0.5, false);
         }
         startGameSound.play();
     }
@@ -1068,7 +1068,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void playMunchingSound() {
         if (munchingSound == null) {
-            munchingSound = createMediaPlayerForCurrentGameVariant("audio.pacman_munch", 0.5, true);
+            munchingSound = createSound("audio.pacman_munch", 0.5, true);
         }
         munchingSound.play();
     }
@@ -1081,7 +1081,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void playPowerSound() {
         if (powerSound == null) {
-            powerSound = createMediaPlayerForCurrentGameVariant("audio.pacman_power", 0.5, true);
+            powerSound = createSound("audio.pacman_power", 0.5, true);
         }
         powerSound.play();
     }
@@ -1089,7 +1089,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void playGhostReturningHomeSound() {
         if (ghostReturningHomeSound == null) {
-            ghostReturningHomeSound = createMediaPlayerForCurrentGameVariant("audio.ghost_returning", 0.5, true);
+            ghostReturningHomeSound = createSound("audio.ghost_returning", 0.5, true);
         }
         ghostReturningHomeSound.play();
     }
@@ -1103,11 +1103,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void playIntermissionSound(int number) {
         switch (game().variant()) {
             case MS_PACMAN -> {
-                intermissionSound = createMediaPlayerForCurrentGameVariant("audio.intermission." + number, 0.5, false);
+                intermissionSound = createSound("audio.intermission." + number, 0.5, false);
                 intermissionSound.play();
             }
             case PACMAN, PACMAN_XXL -> {
-                intermissionSound = createMediaPlayerForCurrentGameVariant("audio.intermission", 0.5, false);
+                intermissionSound = createSound("audio.intermission", 0.5, false);
                 intermissionSound.setCycleCount(number == 1 || number == 3 ? 2 : 1);
                 intermissionSound.play();
             }
