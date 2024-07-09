@@ -1024,6 +1024,19 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         intermissionSound = null;
     }
 
+    private MediaPlayer createMediaPlayerForCurrentGameVariant(String keySuffix, double volume, boolean loop) {
+        String prefix = game().variant() == GameVariant.PACMAN_XXL ? GameVariant.PACMAN.resourceKey() : game().variant().resourceKey();
+        URL url = theme.get(prefix + "." + keySuffix);
+        var player = new MediaPlayer(new Media(url.toExternalForm()));
+        player.setVolume(volume);
+        if (loop) {
+            player.setCycleCount(MediaPlayer.INDEFINITE);
+        }
+        player.muteProperty().bind(mutePy);
+        player.statusProperty().addListener((py,ov,nv) -> logSound());
+        return player;
+    }
+
     /**
      * @param sirenIndex index of siren (0..3)
      */
@@ -1037,17 +1050,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             siren.player().stop();
         }
         if  (siren == null || siren.number != sirenNumber) {
-            URL url = theme.get(rk() + ".audio.siren." + (sirenIndex + 1));
-            var player = new MediaPlayer(new Media(url.toExternalForm()));
-            player.muteProperty().bind(mutePy);
-            player.setCycleCount(MediaPlayer.INDEFINITE);
-            player.setVolume(0.33);
-            player.statusProperty().addListener((py,ov,nv) -> logSound());
+            var player = createMediaPlayerForCurrentGameVariant("audio.siren." + sirenNumber, 0.33, true);
             siren = new Siren(sirenNumber, player);
         }
-        if (siren.player().getStatus() != MediaPlayer.Status.PLAYING && siren.player().getStatus() != MediaPlayer.Status.READY) {
-            siren.player().play();
-        }
+        siren.player().play();
     }
 
     @Override
@@ -1060,10 +1066,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void playStartGameSound() {
         if (startGameSound == null) {
-            URL url = theme.get(rk() + ".audio.game_ready");
-            startGameSound = new MediaPlayer(new Media(url.toExternalForm()));
-            startGameSound.setVolume(0.5);
-            startGameSound.muteProperty().bind(mutePy);
+            startGameSound = createMediaPlayerForCurrentGameVariant("audio.game_ready", 0.5, false);
         }
         startGameSound.play();
     }
@@ -1071,12 +1074,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void playMunchingSound() {
         if (munchingSound == null) {
-            URL url = theme.get(rk() + ".audio.pacman_munch");
-            munchingSound = new MediaPlayer(new Media(url.toExternalForm()));
-            munchingSound.muteProperty().bind(mutePy);
-            munchingSound.setVolume(0.5);
-            munchingSound.setCycleCount(MediaPlayer.INDEFINITE);
-            munchingSound.statusProperty().addListener((py, ov, nv) -> logSound());
+            munchingSound = createMediaPlayerForCurrentGameVariant("audio.pacman_munch", 0.5, true);
         }
         munchingSound.play();
     }
@@ -1089,12 +1087,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void playPowerSound() {
         if (powerSound == null) {
-            URL url = theme.get(rk() + ".audio.pacman_power");
-            powerSound = new MediaPlayer(new Media(url.toExternalForm()));
-            powerSound.muteProperty().bind(mutePy);
-            powerSound.setVolume(0.5);
-            powerSound.setCycleCount(MediaPlayer.INDEFINITE);
-            powerSound.statusProperty().addListener((py, ov, nv) -> logSound());
+            powerSound = createMediaPlayerForCurrentGameVariant("audio.pacman_power", 0.5, true);
         }
         powerSound.play();
     }
@@ -1102,12 +1095,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void playGhostReturningHomeSound() {
         if (ghostReturningHomeSound == null) {
-            URL url = theme.get(rk() + ".audio.ghost_returning");
-            ghostReturningHomeSound = new MediaPlayer(new Media(url.toExternalForm()));
-            ghostReturningHomeSound.muteProperty().bind(mutePy);
-            ghostReturningHomeSound.setVolume(0.5);
-            ghostReturningHomeSound.setCycleCount(MediaPlayer.INDEFINITE);
-            ghostReturningHomeSound.statusProperty().addListener((py, ov, nv) -> logSound());
+            ghostReturningHomeSound = createMediaPlayerForCurrentGameVariant("audio.ghost_returning", 0.5, true);
         }
         ghostReturningHomeSound.play();
     }
@@ -1121,17 +1109,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void playIntermissionSound(int number) {
         switch (game().variant()) {
             case MS_PACMAN -> {
-                URL url = theme.get(rk() + ".audio.intermission." + number);
-                intermissionSound = new MediaPlayer(new Media(url.toExternalForm()));
-                intermissionSound.muteProperty().bind(mutePy);
-                intermissionSound.setVolume(0.5);
+                intermissionSound = createMediaPlayerForCurrentGameVariant("audio.intermission." + number, 0.5, false);
                 intermissionSound.play();
             }
             case PACMAN, PACMAN_XXL -> {
-                URL url = theme.get(rk() + ".audio.intermission");
-                intermissionSound = new MediaPlayer(new Media(url.toExternalForm()));
-                intermissionSound.muteProperty().bind(mutePy);
-                intermissionSound.setVolume(0.5);
+                intermissionSound = createMediaPlayerForCurrentGameVariant("audio.intermission", 0.5, false);
                 intermissionSound.setCycleCount(number == 1 || number == 3 ? 2 : 1);
                 intermissionSound.play();
             }
@@ -1156,13 +1138,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (voice != null) {
             voice.stop();
         }
-    }
-
-    /**
-     * @return prefix for player URL for current game variant. PACMAN_XXL uses sounds from PACMAN.
-     */
-    private String rk() {
-        return game().variant() == GameVariant.PACMAN_XXL ? GameVariant.PACMAN.resourceKey() : game().variant().resourceKey();
     }
 
     private void logSound() {
