@@ -16,19 +16,13 @@ public interface SoundHandler {
 
     void mute(boolean muted);
 
-    void playVoice(String clipID, double delaySeconds);
+    void playVoice(String voiceClipID, double delaySeconds);
 
     void stopVoice();
 
     AudioClip audioClip(String key);
 
     void playAudioClip(String key);
-
-    void stopAudioClip(String key);
-
-    void ensureAudioClipRepeats(String key, int repetitions);
-
-    void ensureAudioClipLoops(String key);
 
     default void stopSound(MediaPlayer player) {
         if (player != null) {

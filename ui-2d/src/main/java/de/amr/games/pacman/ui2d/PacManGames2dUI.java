@@ -52,7 +52,8 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.util.*;
 
-import static de.amr.games.pacman.controller.GameState.*;
+import static de.amr.games.pacman.controller.GameState.INTRO;
+import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
@@ -985,31 +986,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     @Override
-    public void stopAudioClip(String key) {
-        AudioClip clip = audioClip(key);
-        if (clip != null) {
-            clip.stop();
-        }
-    }
-
-    @Override
-    public void ensureAudioClipRepeats(String key, int repetitions) {
-        var clip = audioClip(key);
-        if (clip != null && !isMuted()) {
-            if (!clip.isPlaying()) {
-                clip.setCycleCount(repetitions);
-                clip.setVolume(0.5);
-                clip.play();
-            }
-        }
-    }
-
-    @Override
-    public void ensureAudioClipLoops(String key) {
-        ensureAudioClipRepeats(key, AudioClip.INDEFINITE);
-    }
-
-    @Override
     public void stopAllSounds() {
         stopSound(startGameSound);
         stopSound(munchingSound);
@@ -1146,12 +1122,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     @Override
-    public void playVoice(String voiceKey, double delaySeconds) {
+    public void playVoice(String voiceClipID, double delaySeconds) {
         if (voice != null && voice.getStatus() == MediaPlayer.Status.PLAYING) {
-            Logger.info("Cannot play voice {}, another voice is already playing", voiceKey);
+            Logger.info("Cannot play voice {}, another voice is already playing", voiceClipID);
             return;
         }
-        URL url = theme.get(voiceKey);
+        URL url = theme.get(voiceClipID);
         voice = new MediaPlayer(new Media(url.toExternalForm()));
         voice.muteProperty().bind(mutePy);
         voice.setStartTime(Duration.seconds(delaySeconds));
