@@ -288,7 +288,7 @@ public class GamePage implements Page {
             showHelp();
         } else if (GameKeys.PAUSE.pressed()) {
             context.actionHandler().togglePaused();
-        } else if (GameKeys.SIMULATION_STEP.pressed()) {
+        } else if (GameKeys.SIMULATION_1_STEP.pressed()) {
             context.actionHandler().doSimulationSteps(1);
         } else if (GameKeys.SIMULATION_10_STEPS.pressed()) {
             context.actionHandler().doSimulationSteps(10);

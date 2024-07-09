@@ -12,6 +12,10 @@ import javafx.scene.media.MediaPlayer;
  */
 public interface SoundHandler {
 
+    boolean isMuted();
+
+    void mute(boolean muted);
+
     void playVoice(String clipID, double delaySeconds);
 
     void stopVoice();

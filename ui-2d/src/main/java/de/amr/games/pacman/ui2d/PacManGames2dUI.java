@@ -33,6 +33,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
@@ -80,6 +81,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public final ObjectProperty<GameVariant> gameVariantPy     = new SimpleObjectProperty<>(this, "gameVariant");
     public final ObjectProperty<GameScene>   gameScenePy       = new SimpleObjectProperty<>(this, "gameScene");
     public final BooleanProperty             scoreVisiblePy    = new SimpleBooleanProperty(this, "scoreVisible");
+    public final BooleanProperty             mutePy            = new SimpleBooleanProperty(this, "mute", false);
 
     protected final Theme theme = new Theme();
     protected final GameSceneManager gameSceneManager = new GameSceneManager();
@@ -279,7 +281,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         mainScene = new Scene(rootPane, size.getWidth(), size.getHeight());
         mainScene.setOnMouseClicked(e -> currentPage.onMouseClicked(e));
         mainScene.setOnContextMenuRequested(e -> currentPage.onContextMenuRequested(e));
-        mainScene.setOnKeyPressed(e -> currentPage.handleKeyboardInput());
+        mainScene.setOnKeyPressed(this::handleKeyPressed);
         Keyboard.filterKeyEventsFor(mainScene);
         ChangeListener<Number> resizeCurrentPage = (py, ov, nv) -> {
             if (currentPage != null) {
@@ -288,6 +290,13 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         };
         mainScene.widthProperty().addListener(resizeCurrentPage);
         mainScene.heightProperty().addListener(resizeCurrentPage);
+    }
+
+    protected void handleKeyPressed(KeyEvent e) {
+        if (GameKeys.MUTE.pressed()) {
+            mute(!isMuted());
+        }
+        currentPage.handleKeyboardInput();
     }
 
     protected void createGameClock() {
@@ -934,6 +943,17 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
+    public boolean isMuted() {
+        return mutePy.get();
+    }
+
+    @Override
+    public void mute(boolean muted) {
+        mutePy.set(muted);
+        Logger.info(muted? "Muted" : "Unmuted");
+    }
+
+    @Override
     public AudioClip audioClip(String key) {
         checkNotNull(key);
         String rk = game().variant() == GameVariant.PACMAN_XXL ? GameVariant.PACMAN.resourceKey() : game().variant().resourceKey();
@@ -943,7 +963,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void playAudioClip(String key) {
         AudioClip clip = audioClip(key);
-        if (clip != null) {
+        if (clip != null && !isMuted()) {
             clip.setVolume(0.5);
             clip.play();
         }
@@ -960,7 +980,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void ensureAudioClipRepeats(String key, int repetitions) {
         var clip = audioClip(key);
-        if (clip != null) {
+        if (clip != null && !isMuted()) {
             if (!clip.isPlaying()) {
                 clip.setCycleCount(repetitions);
                 clip.setVolume(0.5);
@@ -1006,6 +1026,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if  (siren == null) {
             URL url = theme.get(rk() + ".audio.siren." + (sirenIndex + 1));
             siren = new MediaPlayer(new Media(url.toExternalForm()));
+            siren.muteProperty().bind(mutePy);
             siren.setCycleCount(MediaPlayer.INDEFINITE);
             siren.statusProperty().addListener((py,ov,nv) -> logSound());
             sirens[sirenIndex] = siren;
@@ -1032,6 +1053,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             URL url = theme.get(rk() + ".audio.game_ready");
             startGameSound = new MediaPlayer(new Media(url.toExternalForm()));
             startGameSound.setVolume(0.5);
+            startGameSound.muteProperty().bind(mutePy);
         }
         startGameSound.play();
     }
@@ -1041,13 +1063,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (munchingSound == null) {
             URL url = theme.get(rk() + ".audio.pacman_munch");
             munchingSound = new MediaPlayer(new Media(url.toExternalForm()));
+            munchingSound.muteProperty().bind(mutePy);
             munchingSound.setVolume(0.5);
             munchingSound.setCycleCount(MediaPlayer.INDEFINITE);
-            munchingSound.statusProperty().addListener((py, ov, nv) -> logSound());        }
-        //TODO not sure about READY status
-        if (munchingSound.getStatus() != MediaPlayer.Status.PLAYING && munchingSound.getStatus() != MediaPlayer.Status.READY) {
-            munchingSound.play();
+            munchingSound.statusProperty().addListener((py, ov, nv) -> logSound());
         }
+        munchingSound.play();
     }
 
     @Override
@@ -1060,13 +1081,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (powerSound == null) {
             URL url = theme.get(rk() + ".audio.pacman_power");
             powerSound = new MediaPlayer(new Media(url.toExternalForm()));
+            powerSound.muteProperty().bind(mutePy);
             powerSound.setVolume(0.5);
             powerSound.setCycleCount(MediaPlayer.INDEFINITE);
             powerSound.statusProperty().addListener((py, ov, nv) -> logSound());
         }
-        if (powerSound.getStatus() != MediaPlayer.Status.PLAYING && powerSound.getStatus() != MediaPlayer.Status.READY) {
-            powerSound.play();
-        }
+        powerSound.play();
     }
 
     @Override
@@ -1075,12 +1095,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             case MS_PACMAN -> {
                 URL url = theme.get(rk() + ".audio.intermission." + number);
                 intermissionSound = new MediaPlayer(new Media(url.toExternalForm()));
+                intermissionSound.muteProperty().bind(mutePy);
                 intermissionSound.setVolume(0.5);
                 intermissionSound.play();
             }
             case PACMAN, PACMAN_XXL -> {
                 URL url = theme.get(rk() + ".audio.intermission");
                 intermissionSound = new MediaPlayer(new Media(url.toExternalForm()));
+                intermissionSound.muteProperty().bind(mutePy);
                 intermissionSound.setVolume(0.5);
                 intermissionSound.setCycleCount(number == 1 || number == 3 ? 2 : 1);
                 intermissionSound.play();
@@ -1096,6 +1118,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
         URL url = theme.get(voiceKey);
         voice = new MediaPlayer(new Media(url.toExternalForm()));
+        voice.muteProperty().bind(mutePy);
         voice.setStartTime(Duration.seconds(delaySeconds));
         voice.play();
     }
