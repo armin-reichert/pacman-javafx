@@ -218,8 +218,6 @@ public class GameLevel3D extends Group {
     }
 
     public void startHunting() {
-        pac3D.init(context);
-        ghosts3D.forEach(ghost3D -> ghost3D.init(context));
         livesCounter3D.startAnimation();
         startEnergizerAnimation();
     }
