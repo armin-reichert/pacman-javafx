@@ -35,12 +35,6 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void init() {
-        super.init();
-        context.setScoreVisible(true);
-    }
-
-    @Override
     public void end() {
         context.soundHandler().stopAllSounds();
     }
@@ -48,11 +42,13 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void update() {
         if (context.game().level().isEmpty()) {
+            Logger.warn("Cannot update PlayScene2D: no game level exists");
             return;
         }
         if (context.game().isDemoLevel()) {
             context.game().pac().setUseAutopilot(true);
         } else {
+            context.setScoreVisible(true);
             context.game().pac().setUseAutopilot(PacManGames2dUI.PY_AUTOPILOT.get());
             updateSound();
         }
