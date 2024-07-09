@@ -278,7 +278,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             Logger.debug("Game key '{}' registered", gameKey);
         }
 
-        gameVariantPy.addListener((py,ov,nv) -> clearSounds());
+        gameVariantPy.addListener((py,ov,nv) -> deleteMediaPlayers());
 
         createMainScene(computeMainSceneSize(screenSize));
         createStartPage();
@@ -1007,9 +1007,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     /**
-     * Clear media players, they get recreated for the current game variant on demand.
+     * Deletes media players, they get recreated for the current game variant on demand.
      */
-    private void clearSounds() {
+    private void deleteMediaPlayers() {
         startGameSound = null;
         siren = null;
         munchingSound = null;

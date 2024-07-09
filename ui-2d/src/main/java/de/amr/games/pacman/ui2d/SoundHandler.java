@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d;
 
-import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
 
 /**
