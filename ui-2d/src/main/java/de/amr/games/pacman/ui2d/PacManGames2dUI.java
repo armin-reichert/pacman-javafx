@@ -169,11 +169,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("font.handwriting",                 rm.loadFont("fonts/Molle-Italic.ttf", 9));
         theme.set("font.monospaced",                  rm.loadFont("fonts/Inconsolata_Condensed-Bold.ttf", 12));
 
-        theme.set("voice.explain",                    rm.url("player/voice/press-key.mp3"));
-        theme.set("voice.autopilot.off",              rm.url("player/voice/autopilot-off.mp3"));
-        theme.set("voice.autopilot.on",               rm.url("player/voice/autopilot-on.mp3"));
-        theme.set("voice.immunity.off",               rm.url("player/voice/immunity-off.mp3"));
-        theme.set("voice.immunity.on",                rm.url("player/voice/immunity-on.mp3"));
+        theme.set("voice.explain",                    rm.url("sound/voice/press-key.mp3"));
+        theme.set("voice.autopilot.off",              rm.url("sound/voice/autopilot-off.mp3"));
+        theme.set("voice.autopilot.on",               rm.url("sound/voice/autopilot-on.mp3"));
+        theme.set("voice.immunity.off",               rm.url("sound/voice/immunity-off.mp3"));
+        theme.set("voice.immunity.on",                rm.url("sound/voice/immunity-on.mp3"));
 
         //
         // Ms. Pac-Man game
@@ -185,27 +185,27 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("ms_pacman.icon",                    rm.loadImage("graphics/icons/mspacman.png"));
         theme.set("ms_pacman.logo.midway",             rm.loadImage("graphics/mspacman/midway_logo.png"));
 
-        theme.set("ms_pacman.audio.bonus_eaten",       rm.loadAudioClip("player/mspacman/Fruit.mp3"));
-        theme.set("ms_pacman.audio.credit",            rm.loadAudioClip("player/mspacman/Credit.mp3"));
-        theme.set("ms_pacman.audio.extra_life",        rm.loadAudioClip("player/mspacman/ExtraLife.mp3"));
-        theme.set("ms_pacman.audio.game_over",         rm.loadAudioClip("player/common/game-over.mp3"));
-        theme.set("ms_pacman.audio.ghost_eaten",       rm.loadAudioClip("player/mspacman/Ghost.mp3"));
-        theme.set("ms_pacman.audio.level_complete",    rm.loadAudioClip("player/common/level-complete.mp3"));
-        theme.set("ms_pacman.audio.pacman_death",      rm.loadAudioClip("player/mspacman/Died.mp3"));
-        theme.set("ms_pacman.audio.sweep",             rm.loadAudioClip("player/common/sweep.mp3"));
+        theme.set("ms_pacman.audio.bonus_eaten",       rm.loadAudioClip("sound/mspacman/Fruit.mp3"));
+        theme.set("ms_pacman.audio.credit",            rm.loadAudioClip("sound/mspacman/Credit.mp3"));
+        theme.set("ms_pacman.audio.extra_life",        rm.loadAudioClip("sound/mspacman/ExtraLife.mp3"));
+        theme.set("ms_pacman.audio.game_over",         rm.loadAudioClip("sound/common/game-over.mp3"));
+        theme.set("ms_pacman.audio.ghost_eaten",       rm.loadAudioClip("sound/mspacman/Ghost.mp3"));
+        theme.set("ms_pacman.audio.level_complete",    rm.loadAudioClip("sound/common/level-complete.mp3"));
+        theme.set("ms_pacman.audio.pacman_death",      rm.loadAudioClip("sound/mspacman/Died.mp3"));
+        theme.set("ms_pacman.audio.sweep",             rm.loadAudioClip("sound/common/sweep.mp3"));
 
         // Audio played by MediaPlayer
-        theme.set("ms_pacman.audio.game_ready",        rm.url("player/mspacman/Start.mp3"));
-        theme.set("ms_pacman.audio.intermission.1",    rm.url("player/mspacman/Act1TheyMeet.mp3"));
-        theme.set("ms_pacman.audio.intermission.2",    rm.url("player/mspacman/Act2TheChase.mp3"));
-        theme.set("ms_pacman.audio.intermission.3",    rm.url("player/mspacman/Act3Junior.mp3"));
-        theme.set("ms_pacman.audio.pacman_munch",      rm.url("player/mspacman/Pill.wav"));
-        theme.set("ms_pacman.audio.pacman_power",      rm.url("player/mspacman/ScaredGhost.mp3"));
-        theme.set("ms_pacman.audio.siren.1",           rm.url("player/mspacman/GhostNoise1.wav"));
-        theme.set("ms_pacman.audio.siren.2",           rm.url("player/mspacman/GhostNoise1.wav"));// TODO
-        theme.set("ms_pacman.audio.siren.3",           rm.url("player/mspacman/GhostNoise1.wav"));// TODO
-        theme.set("ms_pacman.audio.siren.4",           rm.url("player/mspacman/GhostNoise1.wav"));// TODO
-        theme.set("ms_pacman.audio.ghost_returning",   rm.url("player/mspacman/GhostEyes.mp3"));
+        theme.set("ms_pacman.audio.game_ready",        rm.url("sound/mspacman/Start.mp3"));
+        theme.set("ms_pacman.audio.intermission.1",    rm.url("sound/mspacman/Act1TheyMeet.mp3"));
+        theme.set("ms_pacman.audio.intermission.2",    rm.url("sound/mspacman/Act2TheChase.mp3"));
+        theme.set("ms_pacman.audio.intermission.3",    rm.url("sound/mspacman/Act3Junior.mp3"));
+        theme.set("ms_pacman.audio.pacman_munch",      rm.url("sound/mspacman/Pill.wav"));
+        theme.set("ms_pacman.audio.pacman_power",      rm.url("sound/mspacman/ScaredGhost.mp3"));
+        theme.set("ms_pacman.audio.siren.1",           rm.url("sound/mspacman/GhostNoise1.wav"));
+        theme.set("ms_pacman.audio.siren.2",           rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
+        theme.set("ms_pacman.audio.siren.3",           rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
+        theme.set("ms_pacman.audio.siren.4",           rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
+        theme.set("ms_pacman.audio.ghost_returning",   rm.url("sound/mspacman/GhostEyes.mp3"));
 
         //
         // Pac-Man game
@@ -217,24 +217,24 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("pacman.icon",                      rm.loadImage("graphics/icons/pacman.png"));
 
 
-        theme.set("pacman.audio.bonus_eaten",         rm.loadAudioClip("player/pacman/eat_fruit.mp3"));
-        theme.set("pacman.audio.credit",              rm.loadAudioClip("player/pacman/credit.wav"));
-        theme.set("pacman.audio.extra_life",          rm.loadAudioClip("player/pacman/extend.mp3"));
-        theme.set("pacman.audio.game_over",           rm.loadAudioClip("player/common/game-over.mp3"));
-        theme.set("pacman.audio.ghost_eaten",         rm.loadAudioClip("player/pacman/eat_ghost.mp3"));
-        theme.set("pacman.audio.level_complete",      rm.loadAudioClip("player/common/level-complete.mp3"));
-        theme.set("pacman.audio.pacman_death",        rm.loadAudioClip("player/pacman/pacman_death.wav"));
-        theme.set("pacman.audio.sweep",               rm.loadAudioClip("player/common/sweep.mp3"));
+        theme.set("pacman.audio.bonus_eaten",         rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));
+        theme.set("pacman.audio.credit",              rm.loadAudioClip("sound/pacman/credit.wav"));
+        theme.set("pacman.audio.extra_life",          rm.loadAudioClip("sound/pacman/extend.mp3"));
+        theme.set("pacman.audio.game_over",           rm.loadAudioClip("sound/common/game-over.mp3"));
+        theme.set("pacman.audio.ghost_eaten",         rm.loadAudioClip("sound/pacman/eat_ghost.mp3"));
+        theme.set("pacman.audio.level_complete",      rm.loadAudioClip("sound/common/level-complete.mp3"));
+        theme.set("pacman.audio.pacman_death",        rm.loadAudioClip("sound/pacman/pacman_death.wav"));
+        theme.set("pacman.audio.sweep",               rm.loadAudioClip("sound/common/sweep.mp3"));
 
-        theme.set("pacman.audio.game_ready",          rm.url("player/pacman/game_start.mp3"));
-        theme.set("pacman.audio.intermission",        rm.url("player/pacman/intermission.mp3"));
-        theme.set("pacman.audio.pacman_munch",        rm.url("player/pacman/doublemunch.wav")); //TODO improve
-        theme.set("pacman.audio.pacman_power",        rm.url("player/pacman/ghost-turn-to-blue.mp3"));
-        theme.set("pacman.audio.siren.1",             rm.url("player/pacman/siren_1.mp3"));
-        theme.set("pacman.audio.siren.2",             rm.url("player/pacman/siren_2.mp3"));
-        theme.set("pacman.audio.siren.3",             rm.url("player/pacman/siren_3.mp3"));
-        theme.set("pacman.audio.siren.4",             rm.url("player/pacman/siren_4.mp3"));
-        theme.set("pacman.audio.ghost_returning",     rm.url("player/pacman/retreating.mp3"));
+        theme.set("pacman.audio.game_ready",          rm.url("sound/pacman/game_start.mp3"));
+        theme.set("pacman.audio.intermission",        rm.url("sound/pacman/intermission.mp3"));
+        theme.set("pacman.audio.pacman_munch",        rm.url("sound/pacman/doublemunch.wav")); //TODO improve
+        theme.set("pacman.audio.pacman_power",        rm.url("sound/pacman/ghost-turn-to-blue.mp3"));
+        theme.set("pacman.audio.siren.1",             rm.url("sound/pacman/siren_1.mp3"));
+        theme.set("pacman.audio.siren.2",             rm.url("sound/pacman/siren_2.mp3"));
+        theme.set("pacman.audio.siren.3",             rm.url("sound/pacman/siren_3.mp3"));
+        theme.set("pacman.audio.siren.4",             rm.url("sound/pacman/siren_4.mp3"));
+        theme.set("pacman.audio.ghost_returning",     rm.url("sound/pacman/retreating.mp3"));
 
         //
         // Pac-Man XXL
