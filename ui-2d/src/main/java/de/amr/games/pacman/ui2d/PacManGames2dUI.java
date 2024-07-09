@@ -28,6 +28,7 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
@@ -242,6 +243,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         muteIcon.setFitWidth(48);
         muteIcon.setPreserveRatio(true);
         muteIcon.visibleProperty().bind(mutePy);
+        StackPane.setAlignment(muteIcon, Pos.BOTTOM_RIGHT);
 
         // first child will be replaced by page
         rootPane.getChildren().addAll(new Pane(), messageView, muteIcon);
