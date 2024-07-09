@@ -980,19 +980,13 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void mute(boolean muted) {
         mutePy.set(muted);
-        Logger.info(muted? "Muted" : "Unmuted");
-    }
-
-    @Override
-    public AudioClip audioClip(String key) {
-        checkNotNull(key);
-        String rk = game().variant() == GameVariant.PACMAN_XXL ? GameVariant.PACMAN.resourceKey() : game().variant().resourceKey();
-        return theme.audioClip(rk + "." + key);
     }
 
     @Override
     public void playAudioClip(String key) {
-        AudioClip clip = audioClip(key);
+        checkNotNull(key);
+        String prefix = game().variant() == GameVariant.PACMAN_XXL ? GameVariant.PACMAN.resourceKey() : game().variant().resourceKey();
+        AudioClip clip = theme.audioClip(prefix + "." + key);
         if (clip != null && !isMuted()) {
             clip.setVolume(0.5);
             clip.play();

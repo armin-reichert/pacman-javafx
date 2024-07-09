@@ -20,8 +20,6 @@ public interface SoundHandler {
 
     void stopVoice();
 
-    AudioClip audioClip(String key);
-
     void playAudioClip(String key);
 
     default void stopSound(MediaPlayer player) {
