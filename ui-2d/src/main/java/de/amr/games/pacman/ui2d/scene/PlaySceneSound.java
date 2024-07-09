@@ -10,7 +10,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameContext;
 
 /**
- * Mixin for sound methods common to 2D and 3D play scene.
+ * Mixin for player methods common to 2D and 3D play scene.
  *
  * @author Armin Reichert
  */

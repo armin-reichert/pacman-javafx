@@ -33,7 +33,7 @@ public interface SoundHandler {
 
     void ensureSirenPlaying(int sirenIndex);
 
-    void stopSirens();
+    void stopSiren();
 
     void playStartGameSound();
 
