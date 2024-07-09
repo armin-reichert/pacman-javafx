@@ -33,6 +33,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -113,6 +114,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         // Dashboard
 
         theme.set("image.armin1970",                 rm.loadImage("graphics/armin.jpg"));
+        theme.set("icon.mute",                       rm.loadImage("graphics/icons/mute.png"));
         theme.set("icon.play",                       rm.loadImage("graphics/icons/play.png"));
         theme.set("icon.stop",                       rm.loadImage("graphics/icons/stop.png"));
         theme.set("icon.step",                       rm.loadImage("graphics/icons/step.png"));
@@ -235,8 +237,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void createUI(Stage stage, Rectangle2D screenSize) {
         this.stage = checkNotNull(stage);
 
+        Image muteImage = theme.get("icon.mute");
+        ImageView muteIcon = new ImageView(muteImage);
+        muteIcon.setFitWidth(48);
+        muteIcon.setPreserveRatio(true);
+        muteIcon.visibleProperty().bind(mutePy);
+
         // first child will be replaced by page
-        rootPane.getChildren().addAll(new Pane(), messageView);
+        rootPane.getChildren().addAll(new Pane(), messageView, muteIcon);
 
         gameVariantPy.set(game().variant());
         for (var variant : gameController().supportedVariants()) {
