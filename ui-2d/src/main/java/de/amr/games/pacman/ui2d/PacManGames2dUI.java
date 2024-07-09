@@ -621,7 +621,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void onPacFoundFood(GameEvent event) {
-        playMunchingSound();
+        if (!game().isDemoLevel()) {
+            playMunchingSound();
+        }
     }
 
     @Override
@@ -751,9 +753,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void restartIntro() {
         stopAllSounds();
         currentGameScene().ifPresent(GameScene::end);
-        if (game().isPlaying()) {
-            gameController().changeCredit(-1);
-        }
         if (gameState() == LEVEL_TEST) {
             gameState().onExit(game()); //TODO exit other states too?
         }

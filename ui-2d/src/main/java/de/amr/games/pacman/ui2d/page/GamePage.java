@@ -319,6 +319,7 @@ public class GamePage implements Page {
         context.soundHandler().stopVoice();
         context.soundHandler().stopAllSounds();
         context.actionHandler().selectStartPage();
+        context.gameController().changeCredit(-1);
     }
 
     private void showHelp() {
