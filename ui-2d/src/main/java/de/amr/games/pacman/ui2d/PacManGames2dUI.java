@@ -430,7 +430,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     protected void updateGameScene(boolean reloadCurrentScene) {
-        if (isPageSelected(startPage)) {
+        if (currentPage == startPage) {
             return; // no game scene on start page
         }
         GameScene sceneToDisplay = gameSceneForCurrentGameState();
@@ -701,11 +701,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void selectEditorPage() {
         selectPage(editorPage);
-    }
-
-    @Override
-    public boolean isPageSelected(Page page) {
-        return page == currentPage;
     }
 
     @Override

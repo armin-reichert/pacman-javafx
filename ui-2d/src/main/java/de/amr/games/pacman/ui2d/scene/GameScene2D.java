@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.SpriteGameRenderer;
@@ -124,9 +125,17 @@ public abstract class GameScene2D implements GameScene {
         }
     }
 
+    protected int numWorldTilesX() {
+        return context.game().world() != null ? context.game().world().numCols() : GameModel.ARCADE_MAP_TILES_X;
+    }
+
+    protected int numWorldTilesY() {
+        return context.game().world() != null ? context.game().world().numRows() : GameModel.ARCADE_MAP_TILES_Y;
+    }
+
     protected void drawLevelCounter(GraphicsContext g) {
         spriteRenderer.drawLevelCounter(g,context.game().levelCounter(),
-            t(context.numWorldTilesX() - 4), t(context.numWorldTilesY() - 2));
+            t(numWorldTilesX() - 4), t(numWorldTilesY() - 2));
     }
 
     protected void drawMidwayCopyright(double x, double y) {
@@ -144,8 +153,8 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected void drawTileGrid() {
-        int numWorldTilesX = context.numWorldTilesX();
-        int numWorldTilesY = context.numWorldTilesY();
+        int numWorldTilesX = numWorldTilesX();
+        int numWorldTilesY = numWorldTilesY();
         g.setStroke(Color.LIGHTGRAY);
         g.setLineWidth(0.2);
         for (int row = 0; row <= numWorldTilesY; ++row) {

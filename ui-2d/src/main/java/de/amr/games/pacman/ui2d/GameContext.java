@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
@@ -23,25 +22,41 @@ import java.util.Optional;
  */
 public interface GameContext {
 
-    GameClockFX gameClock();
+    // Game model and controller
 
-    ActionHandler actionHandler();
+    default GameController gameController() {
+        return GameController.it();
+    }
 
-    SoundHandler soundHandler();
+    default GameState gameState() {
+        return GameController.it().state();
+    }
+
+    default GameModel game() {
+        return GameController.it().game();
+    }
+
+    void setScoreVisible(boolean visible);
+
+    boolean isScoreVisible();
+
+    // Game scenes
+
+    GameSceneManager gameSceneManager();
 
     ObjectProperty<GameScene> gameSceneProperty();
 
     Optional<GameScene> currentGameScene();
 
-    GameSceneManager gameSceneManager();
-
     default boolean isCurrentGameSceneRegisteredAs(GameSceneID sceneID) {
-        return currentGameScene().isPresent() && isRegisteredAs(currentGameScene().get(), sceneID);
+        return currentGameScene().isPresent() && isGameSceneRegisteredAs(currentGameScene().get(), sceneID);
     }
 
-    default boolean isRegisteredAs(GameScene gameScene, GameSceneID sceneID) {
+    default boolean isGameSceneRegisteredAs(GameScene gameScene, GameSceneID sceneID) {
         return gameSceneManager().isGameSceneRegisteredAs(gameScene, game().variant(), sceneID);
     }
+
+    // Resources
 
     Theme theme();
 
@@ -57,29 +72,11 @@ public interface GameContext {
      */
     String tt(String key, Object... args);
 
-    boolean isPageSelected(Page page);
+    // Others
 
-    default GameController gameController() {
-        return GameController.it();
-    }
+    GameClockFX gameClock();
 
-    default GameState gameState() {
-        return GameController.it().state();
-    }
+    ActionHandler actionHandler();
 
-    default GameModel game() {
-        return GameController.it().game();
-    }
-
-    default int numWorldTilesX() {
-        return game().world() != null ? game().world().numCols() : GameModel.ARCADE_MAP_TILES_X;
-    }
-
-    default int numWorldTilesY() {
-        return game().world() != null ? game().world().numRows() : GameModel.ARCADE_MAP_TILES_Y;
-    }
-
-    void setScoreVisible(boolean visible);
-
-    boolean isScoreVisible();
+    SoundHandler soundHandler();
 }

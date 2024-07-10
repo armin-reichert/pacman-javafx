@@ -188,7 +188,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
         ));
         gameScenePy.addListener((py, ov, newGameScene) -> {
             gamePage.hideContextMenu();
-            if (isRegisteredAs(newGameScene, GameSceneID.PLAY_SCENE_3D)) {
+            if (isGameSceneRegisteredAs(newGameScene, GameSceneID.PLAY_SCENE_3D)) {
                 gamePage.embedGameScene3D(newGameScene);
             } else if (newGameScene instanceof GameScene2D scene2D) {
                 gamePage.embedGameScene2D(scene2D);
@@ -217,7 +217,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     @Override
     protected GameScene gameSceneForCurrentGameState() {
         GameScene gameScene = super.gameSceneForCurrentGameState();
-        if (PY_3D_ENABLED.get() && isRegisteredAs(gameScene, GameSceneID.PLAY_SCENE)) {
+        if (PY_3D_ENABLED.get() && isGameSceneRegisteredAs(gameScene, GameSceneID.PLAY_SCENE)) {
             GameScene playScene3D = gameSceneManager.gameScene(game().variant(), GameSceneID.PLAY_SCENE_3D);
             return playScene3D != null ? playScene3D : gameScene;
         }
@@ -242,8 +242,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
     public void toggle2D3D() {
         currentGameScene().ifPresent(gameScene -> {
             toggle(PY_3D_ENABLED);
-            if (isRegisteredAs(gameScene, GameSceneID.PLAY_SCENE)
-                || isRegisteredAs(gameScene, GameSceneID.PLAY_SCENE_3D)) {
+            if (isGameSceneRegisteredAs(gameScene, GameSceneID.PLAY_SCENE)
+                || isGameSceneRegisteredAs(gameScene, GameSceneID.PLAY_SCENE_3D)) {
                 updateGameScene(true);
                 gameScenePy.get().onSceneVariantSwitch(gameScene);
             }
