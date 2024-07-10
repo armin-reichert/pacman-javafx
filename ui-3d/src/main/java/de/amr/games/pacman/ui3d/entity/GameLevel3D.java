@@ -171,7 +171,6 @@ public class GameLevel3D extends Group {
             .map(ghost -> new Ghost3D(ghostModel3D, context.theme(), ghost, GHOST_SIZE)).toList();
 
         createLivesCounter3D();
-        createLevelCounter3D();
         createMessage3D();
 
         addMaze(mazeGroup);
@@ -183,7 +182,7 @@ public class GameLevel3D extends Group {
         getChildren().addAll(ghosts3D);
         // Walls must come after the guys! Otherwise, transparency is not working correctly.
         worldGroup.getChildren().addAll(floor, mazeGroup);
-        getChildren().addAll(message3D, levelCounter3D, livesCounter3D, worldGroup);
+        getChildren().addAll(message3D, livesCounter3D, worldGroup);
 
         updateLivesCounter();
 
@@ -467,6 +466,7 @@ public class GameLevel3D extends Group {
 
             n += 1;
         }
+        getChildren().add(levelCounter3D);
     }
 
     private void createMessage3D() {

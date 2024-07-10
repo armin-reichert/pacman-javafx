@@ -115,7 +115,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         }
         if (level3D == null) {
             // if level has been started in 2D scene and user switches to 3D scene, the 3D level must be created
-            replaceGameLevel3D();
+            replaceGameLevel3D(true);
         }
         level3D.update();
         perspective().update(fxSubScene.getCamera(), game.world(), game.pac());
@@ -172,7 +172,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
         if (level3D == null) {
-            replaceGameLevel3D();
+            replaceGameLevel3D(true);
         }
         level3D.updateFood();
         if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
@@ -251,14 +251,14 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
             case LEVEL_TRANSITION -> {
                 context.gameState().timer().restartSeconds(3);
-                replaceGameLevel3D();
+                replaceGameLevel3D(true);
                 level3D.pac3D().init(context);
                 perspective().init(fxSubScene.getCamera(), context.game().world());
             }
 
             case LEVEL_TEST -> {
                 if (level3D == null) {
-                    replaceGameLevel3D();
+                    replaceGameLevel3D(true);
                 }
                 level3D.pac3D().init(context);
                 level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
@@ -287,7 +287,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
     @Override
     public void onLevelCreated(GameEvent event) {
-        replaceGameLevel3D();
+        replaceGameLevel3D(false); // level counter in model not yet initialized
     }
 
     @Override
@@ -326,7 +326,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         level3D.pac3D().setPower(false);
     }
 
-    private void replaceGameLevel3D() {
+    private void replaceGameLevel3D(boolean createLevelCounter) {
         // Might be called before the world has been created
         if (context.game().world() == null) {
             Logger.warn("Cannot create 3D level, world not yet created");
@@ -334,6 +334,9 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         }
 
         level3D = new GameLevel3D(context);
+        if (createLevelCounter) {
+            level3D.createLevelCounter3D();
+        }
 
         scores3D.translateXProperty().bind(level3D.translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.translateYProperty().subtract(3.5 * TS));
