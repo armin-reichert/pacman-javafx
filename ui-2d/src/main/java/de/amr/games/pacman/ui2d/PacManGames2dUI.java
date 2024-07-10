@@ -823,7 +823,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         Logger.info("Game variant ({}) {}", game(), clock.isPaused() ? "paused" : "resumed");
     }
 
-
     @Override
     public void toggleDashboard() {
         gamePage.dashboard().toggleVisibility();
@@ -889,10 +888,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void selectNextPerspective() {
+        // not supported in 2D UI
     }
 
     @Override
     public void selectPrevPerspective() {
+        // not supported in 2D UI
     }
 
     @Override
@@ -905,7 +906,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void toggle2D3D() {
-        // not supported
+        // not supported in 2D UI
     }
 
     @Override
