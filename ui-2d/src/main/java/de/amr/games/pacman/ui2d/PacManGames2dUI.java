@@ -749,7 +749,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
         editor.start();
         selectPage(editorPage);
-        reboot();
     }
 
     @Override
@@ -758,6 +757,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             () -> stage.titleProperty().bind(stageTitleBinding()));
         editor.stop();
         gameController().loadCustomMaps();
+        reboot();
         selectPage(startPage);
     }
 
