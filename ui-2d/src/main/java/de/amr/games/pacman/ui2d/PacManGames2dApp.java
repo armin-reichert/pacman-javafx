@@ -17,7 +17,7 @@ import org.tinylog.Logger;
  */
 public class PacManGames2dApp extends Application {
 
-    private GameClock clock;
+    private PacManGames2dUI ui;
 
     @Override
     public void start(Stage stage) {
@@ -25,16 +25,14 @@ public class PacManGames2dApp extends Application {
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         GameController.it().setSupportedVariants(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
         GameController.it().selectGameVariant(GameVariant.PACMAN);
-        var ui = new PacManGames2dUI();
-        ui.createUI(stage, Screen.getPrimary().getBounds());
-        ui.sign("Remake (2021-2024) by Armin Reichert");
+        ui = new PacManGames2dUI();
+        ui.create(stage, Screen.getPrimary().getBounds());
         ui.show();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
-        clock = ui.gameClock();
     }
 
     @Override
     public void stop() {
-        clock.stop();
+        ui.gameClock().stop();
     }
 }

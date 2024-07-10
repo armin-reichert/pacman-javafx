@@ -113,7 +113,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected MediaPlayer powerSound;
     protected MediaPlayer ghostReturningHomeSound;
 
-    public void createUI(Stage stage, Rectangle2D screenSize) {
+    public void create(Stage stage, Rectangle2D screenSize) {
         this.stage = checkNotNull(stage);
         loadAssets();
         logAssets();
@@ -146,6 +146,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         createGameScenes();
         createGameClock();
 
+        sign("Remake (2021-2024) by Armin Reichert");
         stage.titleProperty().bind(stageTitleBinding());
         stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
         stage.setScene(mainScene);

@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.controller.GameClock;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import javafx.application.Application;
@@ -17,7 +16,7 @@ import org.tinylog.Logger;
  */
 public class PacManGames3dApp extends Application {
 
-    private GameClock clock;
+    private PacManGames3dUI ui;
 
     @Override
     public void start(Stage stage) {
@@ -25,17 +24,15 @@ public class PacManGames3dApp extends Application {
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         GameController.it().setSupportedVariants(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
         GameController.it().selectGameVariant(GameVariant.PACMAN);
-        var ui = new PacManGames3dUI();
-        PacManGames3dUI.PY_3D_ENABLED.set(true);
-        ui.createUI(stage, Screen.getPrimary().getBounds());
-        ui.sign("Remake (2021-2024) by Armin Reichert");
+        ui = new PacManGames3dUI();
+        ui.create(stage, Screen.getPrimary().getBounds());
         ui.show();
+        PacManGames3dUI.PY_3D_ENABLED.set(true);
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
-        clock = ui.gameClock();
     }
 
     @Override
     public void stop() {
-        clock.stop();
+        ui.gameClock().stop();
     }
 }
