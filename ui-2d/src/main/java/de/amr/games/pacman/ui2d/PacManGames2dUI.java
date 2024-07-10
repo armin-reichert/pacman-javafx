@@ -70,17 +70,6 @@ import static java.util.function.Predicate.not;
  */
 public class PacManGames2dUI implements GameEventListener, GameContext, ActionHandler, SoundHandler {
 
-    public record Siren(int number, MediaPlayer player) {
-        public Siren {
-            if (number < 1 || number > 4) {
-                throw new IllegalArgumentException("Illegal siren number: " + number);
-            }
-            if (player == null) {
-                throw new IllegalArgumentException("No siren player specified");
-            }
-        }
-    }
-
     public static final BooleanProperty PY_AUTOPILOT           = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_CANVAS_DECORATED    = new SimpleBooleanProperty(true);
     public static final BooleanProperty PY_DEBUG_INFO          = new SimpleBooleanProperty(false);
@@ -1040,10 +1029,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             throw new IllegalArgumentException("Illegal siren index: " + sirenIndex);
         }
         int sirenNumber = sirenIndex + 1;
-        if (siren != null && siren.number != sirenNumber) {
+        if (siren != null && siren.number() != sirenNumber) {
             siren.player().stop();
         }
-        if  (siren == null || siren.number != sirenNumber) {
+        if  (siren == null || siren.number() != sirenNumber) {
             var player = createSound("audio.siren." + sirenNumber, 0.33, true);
             siren = new Siren(sirenNumber, player);
         }
@@ -1139,7 +1128,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             Logger.info("Start Game Sound: {} volume {}", startGameSound.getStatus(), startGameSound.getVolume());
         }
         if (siren != null) {
-            Logger.info("Siren {}: {} volume {}", siren.number, siren.player().getStatus(), siren.player().getVolume());
+            Logger.info("Siren {}: {} volume {}", siren.number(), siren.player().getStatus(), siren.player().getVolume());
         }
         if (munchingSound != null) {
             Logger.info("Munching Sound: {} volume {}", munchingSound.getStatus(), munchingSound.getVolume());
