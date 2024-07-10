@@ -113,7 +113,46 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected MediaPlayer powerSound;
     protected MediaPlayer ghostReturningHomeSound;
 
-    public void loadAssets() {
+    public void createUI(Stage stage, Rectangle2D screenSize) {
+        this.stage = checkNotNull(stage);
+        loadAssets();
+        logAssets();
+
+        Image muteImage = theme.get("icon.mute");
+        ImageView muteIcon = new ImageView(muteImage);
+        muteIcon.setFitWidth(48);
+        muteIcon.setPreserveRatio(true);
+        muteIcon.visibleProperty().bind(mutePy);
+        StackPane.setAlignment(muteIcon, Pos.BOTTOM_RIGHT);
+
+        // first child will be replaced by page
+        rootPane.getChildren().addAll(new Pane(), messageView, muteIcon);
+
+        gameVariantPy.set(game().variant());
+        for (var variant : gameController().supportedVariants()) {
+            gameController().game(variant).addGameEventListener(this);
+        }
+
+        // Touch all game keys such that they get registered with keyboard
+        for (var gameKey : GameKeys.values()) {
+            Logger.debug("Game key '{}' registered", gameKey);
+        }
+
+        gameVariantPy.addListener((py,ov,nv) -> deleteSounds());
+
+        createMainScene(computeMainSceneSize(screenSize));
+        createStartPage();
+        createGamePage();
+        createGameScenes();
+        createGameClock();
+
+        stage.titleProperty().bind(stageTitleBinding());
+        stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
+        stage.setScene(mainScene);
+        selectStartPage();
+    }
+
+    protected void loadAssets() {
         bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", PacManGames2dUI.class.getModule()));
         ResourceManager rm = () -> PacManGames2dUI.class;
 
@@ -239,45 +278,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             new Pair<>(Color.class, "colors"),
             new Pair<>(AudioClip.class, "audio clips")
         )));
-    }
-
-    public void createUI(Stage stage, Rectangle2D screenSize) {
-        this.stage = checkNotNull(stage);
-
-        logAssets();
-
-        Image muteImage = theme.get("icon.mute");
-        ImageView muteIcon = new ImageView(muteImage);
-        muteIcon.setFitWidth(48);
-        muteIcon.setPreserveRatio(true);
-        muteIcon.visibleProperty().bind(mutePy);
-        StackPane.setAlignment(muteIcon, Pos.BOTTOM_RIGHT);
-
-        // first child will be replaced by page
-        rootPane.getChildren().addAll(new Pane(), messageView, muteIcon);
-
-        gameVariantPy.set(game().variant());
-        for (var variant : gameController().supportedVariants()) {
-            gameController().game(variant).addGameEventListener(this);
-        }
-
-        // Touch all game keys such that they get registered with keyboard
-        for (var gameKey : GameKeys.values()) {
-            Logger.debug("Game key '{}' registered", gameKey);
-        }
-
-        gameVariantPy.addListener((py,ov,nv) -> deleteSounds());
-
-        createMainScene(computeMainSceneSize(screenSize));
-        createStartPage();
-        createGamePage();
-        createGameScenes();
-        createGameClock();
-
-        stage.titleProperty().bind(stageTitleBinding());
-        stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
-        stage.setScene(mainScene);
-        selectStartPage();
     }
 
     public void show() {

@@ -76,7 +76,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     public static Picker<String> PICKER_GAME_OVER;
 
     @Override
-    public void loadAssets() {
+    protected void loadAssets() {
         super.loadAssets();
 
         var messages = ResourceBundle.getBundle("de.amr.games.pacman.ui3d.texts.messages", getClass().getModule());
