@@ -121,22 +121,26 @@ public class MsPacManIntroScene extends GameScene2D {
 
     // TODO This is too cryptic
     private void drawMarquee() {
-        Color onColor = context.theme().color("palette.pale"), offColor = context.theme().color("palette.red");
-        double bulbSize = s(2);
         double xMin = 60, xMax = 192, yMin = 88, yMax = 148;
-        double xMinS = s(xMin), xMaxS = s(xMax), yMinS = s(yMin), yMaxS = s(yMax); // scaled
         for (int i = 0; i < intro.numBulbs; ++i) {
-            g.setFill(intro.marqueeState().get(i) ? onColor : offColor);
-            if (i <= 33) {
-                g.fillRect(s(xMin + 4 * i), yMaxS, bulbSize, bulbSize);
-            } else if (i <= 48) {
-                g.fillRect(xMaxS, s(280 - 4 * i), bulbSize, bulbSize);
-            } else if (i <= 81) {
-                g.fillRect(s(384 - 4 * i), yMinS, bulbSize, bulbSize);
-            } else {
-                g.fillRect(xMinS, s(4 * i - 236), bulbSize, bulbSize);
+            boolean on = intro.marqueeState().get(i);
+            if (i <= 33) { // lower edge left-to-right
+                drawLight(xMin + 4 * i, yMax, on);
+            } else if (i <= 48) { // right edge bottom-to-top
+                drawLight(xMax, 4 * (70 - i), on);
+            } else if (i <= 81) { // upper edge right-to-left
+                drawLight(4 * (96 - i), yMin, on);
+            } else { // left edge top-to-bottom
+                drawLight(xMin, 4 * (i - 59), on);
             }
         }
+    }
+
+    private void drawLight(double x, double y, boolean on) {
+        Color onColor = context.theme().color("palette.pale"), offColor = context.theme().color("palette.red");
+        double bulbSize = s(2);
+        g.setFill(on ? onColor : offColor);
+        g.fillRect(s(x), s(y), bulbSize, bulbSize);
     }
 
     /**
