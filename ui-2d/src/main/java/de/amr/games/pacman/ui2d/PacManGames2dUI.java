@@ -517,7 +517,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     @Override
-    public GameSpriteSheet getSpriteSheet(GameVariant variant) {
+    public GameSpriteSheet spriteSheet(GameVariant variant) {
         var rk = switch (variant) {
             case MS_PACMAN -> variant.resourceKey();
             case PACMAN, PACMAN_XXL -> GameVariant.PACMAN.resourceKey();
@@ -612,13 +612,13 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         GameModel game = event.game;
         switch (game.variant()) {
             case MS_PACMAN -> {
-                var ss = (MsPacManGameSpriteSheet) getSpriteSheet(game.variant());
+                var ss = (MsPacManGameSpriteSheet) spriteSheet(game.variant());
                 game.pac().setAnimations(new MsPacManGamePacAnimations(game.pac(), ss));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, ss)));
                 Logger.info("Created Ms. Pac-Man game creature animations for level #{}", game.levelNumber());
             }
             case PACMAN, PACMAN_XXL -> {
-                var ss = (PacManGameSpriteSheet) getSpriteSheet(game.variant());
+                var ss = (PacManGameSpriteSheet) spriteSheet(game.variant());
                 game.pac().setAnimations(new PacManGamePacAnimations(game.pac(), ss));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, ss)));
                 Logger.info("Created Pac-Man game creature animations for level #{}", game.levelNumber());

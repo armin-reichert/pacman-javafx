@@ -33,7 +33,7 @@ public class MsPacManCutScene2 extends GameScene2D {
     @Override
     public void init() {
         super.init();
-        ss = (MsPacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
+        ss = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
         context.setScoreVisible(true);
         intermission = new MsPacManIntermission2();
         intermission.msPac.setAnimations(new MsPacManGamePacAnimations(intermission.msPac, ss));

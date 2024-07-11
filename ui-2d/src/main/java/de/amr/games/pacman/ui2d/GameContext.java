@@ -60,7 +60,7 @@ public interface GameContext {
 
     Theme theme();
 
-    GameSpriteSheet getSpriteSheet(GameVariant variant);
+    GameSpriteSheet spriteSheet(GameVariant variant);
 
     /**
      * Builds a resource key from the given key pattern and the arguments and returns the corresponding text from the

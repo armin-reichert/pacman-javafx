@@ -73,7 +73,7 @@ public abstract class GameScene2D implements GameScene {
 
     @Override
     public void init() {
-        spriteRenderer.setSpriteSheet(context.getSpriteSheet(context.game().variant()));
+        spriteRenderer.setSpriteSheet(context.spriteSheet(context.game().variant()));
     }
 
     @Override

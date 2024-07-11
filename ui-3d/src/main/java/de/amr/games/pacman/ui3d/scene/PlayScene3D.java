@@ -219,7 +219,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             case GHOST_DYING -> {
                 switch (context.game().variant()) {
                     case MS_PACMAN -> {
-                        var ss = (MsPacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
+                        var ss = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
                         Rectangle2D[] numberSprites = ss.ghostNumberSprites();
                         context.game().eventLog().killedGhosts.forEach(ghost -> {
                             int index = context.game().victims().indexOf(ghost);
@@ -228,7 +228,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
                         });
                     }
                     case PACMAN, PACMAN_XXL -> {
-                        var ss = (PacManGameSpriteSheet) context.getSpriteSheet(context.game().variant());
+                        var ss = (PacManGameSpriteSheet) context.spriteSheet(context.game().variant());
                         Rectangle2D[] numberSprites = ss.ghostNumberSprites();
                         context.game().eventLog().killedGhosts.forEach(ghost -> {
                             int index = context.game().victims().indexOf(ghost);

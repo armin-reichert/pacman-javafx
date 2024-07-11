@@ -89,7 +89,7 @@ public class PlayScene2D extends GameScene2D implements PlaySceneSound {
         }
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         boolean blinkingOn = game.blinking().isOn();
-        spriteRenderer.setSpriteSheet(context.getSpriteSheet(game.variant()));
+        spriteRenderer.setSpriteSheet(context.spriteSheet(game.variant()));
         spriteRenderer.setBackgroundColor(canvasBackground());
         switch (game.variant()) {
             case MS_PACMAN -> {

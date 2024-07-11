@@ -37,7 +37,7 @@ public class BootScene extends GameScene2D {
 
     @Override
     public void draw() {
-        spriteRenderer.setSpriteSheet(context.getSpriteSheet(context.game().variant()));
+        spriteRenderer.setSpriteSheet(context.spriteSheet(context.game().variant()));
         var timer = context.gameState().timer();
         if (timer.tick() == 1) {
             clearCanvas();
@@ -83,7 +83,7 @@ public class BootScene extends GameScene2D {
     }
 
     private Rectangle2D randomSpriteSheetTile() {
-        var spriteSheet = context.getSpriteSheet(context.game().variant());
+        var spriteSheet = context.spriteSheet(context.game().variant());
         var source = spriteSheet.source();
         var raster = spriteSheet.raster();
         double x = RND.nextDouble() * (source.getWidth() - raster);

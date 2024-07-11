@@ -40,7 +40,7 @@ public class PacManIntroScene extends GameScene2D {
         context.actionHandler().showSignature();
         context.setScoreVisible(true);
         intro = new PacManIntro();
-        spriteRenderer.setSpriteSheet(context.getSpriteSheet(context.game().variant()));
+        spriteRenderer.setSpriteSheet(context.spriteSheet(context.game().variant()));
         intro.pacMan.setAnimations(new PacManGamePacAnimations(intro.pacMan, (PacManGameSpriteSheet) spriteRenderer.getSpriteSheet()));
         intro.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, (PacManGameSpriteSheet) spriteRenderer.getSpriteSheet())));
         intro.blinking.reset();
