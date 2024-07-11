@@ -20,6 +20,7 @@ import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
@@ -101,10 +102,13 @@ public class GameLevel3D extends Group {
 
     public GameLevel3D(GameContext context) {
         this.context = checkNotNull(context);
+        World world  = checkNotNull(context.game().world());
+        WorldMap map = world.map();
+        Theme theme  = checkNotNull(context.theme());
 
         var floor = new Box();
-        floor.setWidth(context.game().world().numCols() * TS - 1);
-        floor.setHeight(context.game().world().numRows() * TS - 1);
+        floor.setWidth(world.numCols() * TS - 1);
+        floor.setHeight(world.numRows() * TS - 1);
         floor.setDepth(FLOOR_THICKNESS);
         // Place floor such that left-upper corner is at origin and floor surface is at z=0
         floor.translateXProperty().bind(floor.widthProperty().multiply(0.5));
@@ -124,9 +128,6 @@ public class GameLevel3D extends Group {
 
         floorColorPy.bind(PY_3D_FLOOR_COLOR);
         floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
-
-        // Maze
-        WorldMap map = context.game().world().map();
 
         wallStrokeMaterialPy.bind(Bindings.createObjectBinding(
             () -> coloredMaterial(wallStrokeColorPy.get()),

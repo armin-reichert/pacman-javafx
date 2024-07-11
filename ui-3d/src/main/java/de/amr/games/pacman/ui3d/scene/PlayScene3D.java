@@ -46,44 +46,45 @@ import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
  */
 public class PlayScene3D implements GameScene, PlaySceneSound {
 
-    private static final byte CHILD_INDEX_LEVEL_3D = 0;
-
     public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
         @Override
         protected void invalidated() {
-            get().init(fxSubScene.getCamera(), context.game().world());
+            perspective().init(fxSubScene.getCamera(), context.game().world());
         }
     };
 
     private final SubScene fxSubScene;
+    private final Group root = new Group();
+    private final AmbientLight ambientLight;
+    private final CoordSystem coordSystem;
     private final Scores3D scores3D;
 
     private GameLevel3D level3D;
     private GameContext context;
 
     public PlayScene3D() {
-        var camera = new PerspectiveCamera(true);
-        camera.setNearClip(0.1);
-        camera.setFarClip(10000.0);
-
-        var ambientLight = new AmbientLight();
+        ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
 
-        var coordSystem = new CoordSystem();
+        coordSystem = new CoordSystem();
         coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
         scores3D = new Scores3D("SCORE", "HIGH SCORE");
+
+        // initial size is irrelevant as it is bound to parent scene later
+        root.getChildren().setAll(scores3D, coordSystem, ambientLight);
+        fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
+        fxSubScene.setFill(null); // transparent
+
+        var camera = new PerspectiveCamera(true);
+        camera.setNearClip(0.1);
+        camera.setFarClip(10000.0);
+        camera.setFieldOfView(30); // default: 30
+        fxSubScene.setCamera(camera);
+
         // keep the scores rotated such that the viewer always sees them frontally
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
-
-        var level3DPlaceholder = new Group();
-        var root = new Group(level3DPlaceholder, scores3D, coordSystem, ambientLight);
-
-        // initial scene size is irrelevant, gets bound to parent scene later
-        fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
-        fxSubScene.setFill(null); // transparent
-        fxSubScene.setCamera(camera);
     }
 
     public void setParentScene(Scene parentScene) {
@@ -327,24 +328,15 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
     }
 
     private void replaceGameLevel3D(boolean createLevelCounter) {
-        // Might be called before the world has been created
-        if (context.game().world() == null) {
-            Logger.warn("Cannot create 3D level, world not yet created");
-            return;
-        }
-
         level3D = new GameLevel3D(context);
         if (createLevelCounter) {
             level3D.createLevelCounter3D();
         }
+        root.getChildren().setAll(scores3D, coordSystem, ambientLight, level3D);
 
         scores3D.translateXProperty().bind(level3D.translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.translateYProperty().subtract(3.5 * TS));
         scores3D.translateZProperty().bind(level3D.translateZProperty().subtract(3 * TS));
-
-        // replace initial placeholder or previous 3D level
-        var root = (Group) fxSubScene.getRoot();
-        root.getChildren().set(CHILD_INDEX_LEVEL_3D, level3D);
 
         Logger.info("3D game level {} created.", context.game().levelNumber());
     }
