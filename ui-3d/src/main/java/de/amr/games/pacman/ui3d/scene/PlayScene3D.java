@@ -48,8 +48,6 @@ import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
  */
 public class PlayScene3D implements GameScene, PlaySceneSound {
 
-    public final DoubleProperty widthPy = new SimpleDoubleProperty(this, "width", 42);
-    public final DoubleProperty heightPy = new SimpleDoubleProperty(this, "height", 42);
     public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
         @Override
         protected void invalidated() {
@@ -79,8 +77,6 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         root.getChildren().setAll(scores3D, coordSystem, ambientLight);
         fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
         fxSubScene.setFill(null); // transparent
-        fxSubScene.widthProperty().bind(widthPy);
-        fxSubScene.heightProperty().bind(heightPy);
         var camera = new PerspectiveCamera(true);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
@@ -90,6 +86,14 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         // keep the scores rotated such that the viewer always sees them frontally
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
+    }
+
+    public DoubleProperty widthProperty() {
+        return fxSubScene.widthProperty();
+    }
+
+    public DoubleProperty heightProperty() {
+        return fxSubScene.heightProperty();
     }
 
     @Override

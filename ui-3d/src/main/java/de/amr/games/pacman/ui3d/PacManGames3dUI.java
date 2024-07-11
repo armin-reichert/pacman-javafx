@@ -163,8 +163,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
         super.createGameScenes();
         for (var variant : gameController().supportedVariants()) {
             var playScene3D = new PlayScene3D();
-            playScene3D.widthPy.bind(mainScene.widthProperty());
-            playScene3D.heightPy.bind(mainScene.heightProperty());
+            playScene3D.widthProperty().bind(mainScene.widthProperty());
+            playScene3D.heightProperty().bind(mainScene.heightProperty());
             playScene3D.setContext(this);
             gameSceneManager.putGameScene(playScene3D, variant, GameSceneID.PLAY_SCENE_3D);
             Logger.info("Added 3D play scene for variant " + variant);
