@@ -17,8 +17,6 @@ import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import java.util.BitSet;
-
 import static de.amr.games.pacman.lib.Globals.t;
 
 /**
