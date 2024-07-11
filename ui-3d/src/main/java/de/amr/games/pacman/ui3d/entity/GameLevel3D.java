@@ -94,8 +94,8 @@ public class GameLevel3D extends Group {
     private final List<Ghost3D> ghosts3D;
     private final Set<Pellet3D> pellets3D = new HashSet<>();
     private final Set<Energizer3D> energizers3D = new HashSet<>();
+    private Box floor;
     private Door3D door3D;
-    private Group levelCounter3D;
     private LivesCounter3D livesCounter3D;
     private Bonus3D bonus3D;
     private Message3D message3D;
@@ -105,29 +105,6 @@ public class GameLevel3D extends Group {
         World world  = checkNotNull(context.game().world());
         WorldMap map = world.map();
         Theme theme  = checkNotNull(context.theme());
-
-        var floor = new Box();
-        floor.setWidth(world.numCols() * TS - 1);
-        floor.setHeight(world.numRows() * TS - 1);
-        floor.setDepth(FLOOR_THICKNESS);
-        // Place floor such that left-upper corner is at origin and floor surface is at z=0
-        floor.translateXProperty().bind(floor.widthProperty().multiply(0.5));
-        floor.translateYProperty().bind(floor.heightProperty().multiply(0.5));
-        floor.translateZProperty().bind(floor.depthProperty().multiply(0.5));
-        floor.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        floor.materialProperty().bind(Bindings.createObjectBinding(
-            () -> {
-                Color floorColor = floorColorPy.get();
-                String textureName = floorTextureNamePy.get();
-                Map<String, PhongMaterial> floorTextures = context.theme().get("floorTextures");
-                return NO_TEXTURE.equals(textureName)
-                    ? coloredMaterial(floorColor)
-                    : floorTextures.getOrDefault(textureName, coloredMaterial(floorColor));
-            }, floorColorPy, floorTextureNamePy
-        ));
-
-        floorColorPy.bind(PY_3D_FLOOR_COLOR);
-        floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
 
         wallStrokeMaterialPy.bind(Bindings.createObjectBinding(
             () -> coloredMaterial(wallStrokeColorPy.get()),
@@ -174,8 +151,8 @@ public class GameLevel3D extends Group {
         createLivesCounter3D();
         createMessage3D();
 
+        createFloor(world.numCols() * TS - 1, world.numRows() * TS - 1);
         addMaze(mazeGroup);
-
         addHouse(mazeGroup);
         addPellets(this); // when put inside maze group, transparency does not work!
 
@@ -193,6 +170,28 @@ public class GameLevel3D extends Group {
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         wallHeightPy.bind(PY_3D_WALL_HEIGHT);
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+    }
+
+    private void createFloor(double width, double height) {
+        floor = new Box(width, height, FLOOR_THICKNESS);
+        // Place floor such that left-upper corner is at origin and floor surface is at z=0
+        floor.translateXProperty().bind(floor.widthProperty().multiply(0.5));
+        floor.translateYProperty().bind(floor.heightProperty().multiply(0.5));
+        floor.translateZProperty().bind(floor.depthProperty().multiply(0.5));
+        floor.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        floor.materialProperty().bind(Bindings.createObjectBinding(
+            () -> {
+                Color floorColor = floorColorPy.get();
+                String textureName = floorTextureNamePy.get();
+                Map<String, PhongMaterial> floorTextures = context.theme().get("floorTextures");
+                return NO_TEXTURE.equals(textureName)
+                    ? coloredMaterial(floorColor)
+                    : floorTextures.getOrDefault(textureName, coloredMaterial(floorColor));
+            }, floorColorPy, floorTextureNamePy
+        ));
+
+        floorColorPy.bind(PY_3D_FLOOR_COLOR);
+        floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
     }
 
     public void showLevelStartMessage() {
@@ -432,7 +431,7 @@ public class GameLevel3D extends Group {
         World world = context.game().world();
         double spacing = 2 * TS;
         // this is the *right* edge of the level counter:
-        levelCounter3D = new Group();
+        var levelCounter3D = new Group();
         levelCounter3D.setTranslateX(world.numCols() * TS - spacing);
         levelCounter3D.setTranslateY(spacing);
         levelCounter3D.setTranslateZ(-6);
