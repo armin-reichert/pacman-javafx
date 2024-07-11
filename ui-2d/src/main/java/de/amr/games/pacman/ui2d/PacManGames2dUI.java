@@ -84,7 +84,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public static final IntegerProperty PY_PIP_OPACITY_PERCENT = new SimpleIntegerProperty(100);
     public static final IntegerProperty PY_SIMULATION_STEPS    = new SimpleIntegerProperty(1);
 
-    public final ObjectProperty<GameVariant> gameVariantPy     = new SimpleObjectProperty<>(this, "gameVariant");
+    public final ObjectProperty<GameVariant> gameVariantPy     = new SimpleObjectProperty<>(this, "gameVariant") {
+        @Override
+        protected void invalidated() {
+            deleteSounds(); // new sounds will be created on demand for the new game variant
+        }
+    };
     public final ObjectProperty<GameScene>   gameScenePy       = new SimpleObjectProperty<>(this, "gameScene");
     public final BooleanProperty             scoreVisiblePy    = new SimpleBooleanProperty(this, "scoreVisible");
     public final BooleanProperty             mutePy            = new SimpleBooleanProperty(this, "mute", false);
@@ -137,8 +142,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         for (var gameKey : GameKeys.values()) {
             Logger.debug("Game key '{}' registered", gameKey);
         }
-
-        gameVariantPy.addListener((py,ov,nv) -> deleteSounds());
 
         createMainScene(computeMainSceneSize(screenSize));
         createStartPage();
@@ -1001,6 +1004,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         powerSound = null;
         ghostReturningHomeSound = null;
         intermissionSound = null;
+        Logger.info("Sounds deleted");
     }
 
     private MediaPlayer createSound(String keySuffix, double volume, boolean loop) {
@@ -1013,6 +1017,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
         player.muteProperty().bind(mutePy);
         player.statusProperty().addListener((py,ov,nv) -> logSound());
+        Logger.info("Sound created: {}", url);
         return player;
     }
 
