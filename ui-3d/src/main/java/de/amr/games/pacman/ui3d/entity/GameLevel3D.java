@@ -427,7 +427,7 @@ public class GameLevel3D extends Group {
         return counter3D;
     }
 
-    public void addLevelCounter3D() {
+    public void addLevelCounter3D(List<Byte> symbols) {
         World world = context.game().world();
         double spacing = 2 * TS;
         // this is the *right* edge of the level counter:
@@ -437,7 +437,7 @@ public class GameLevel3D extends Group {
         levelCounter3D.setTranslateZ(-6);
         levelCounter3D.getChildren().clear();
         int n = 0;
-        for (byte symbol : context.game().levelCounter()) {
+        for (byte symbol : symbols) {
             Box cube = new Box(TS, TS, TS);
             cube.setTranslateX(-n * spacing);
             cube.setTranslateZ(-HTS);

@@ -293,7 +293,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
     @Override
     public void onLevelStarted(GameEvent event) {
-        level3D.addLevelCounter3D();
+        level3D.addLevelCounter3D(context.game().levelCounter());
         if (context.game().levelNumber() == 1 || context.gameState() == GameState.LEVEL_TEST) {
             level3D.showLevelStartMessage();
         }
@@ -330,7 +330,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
     private void replaceGameLevel3D(boolean createLevelCounter) {
         level3D = new GameLevel3D(context);
         if (createLevelCounter) {
-            level3D.addLevelCounter3D();
+            level3D.addLevelCounter3D(context.game().levelCounter());
         }
         root.getChildren().setAll(scores3D, coordSystem, ambientLight, level3D);
 
