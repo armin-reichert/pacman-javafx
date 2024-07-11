@@ -25,8 +25,7 @@ public class PacManGames2dApp extends Application {
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         GameController.it().setSupportedVariants(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
         GameController.it().selectGameVariant(GameVariant.PACMAN);
-        ui = new PacManGames2dUI();
-        ui.create(stage, Screen.getPrimary().getBounds());
+        ui = new PacManGames2dUI(stage, Screen.getPrimary().getBounds());
         ui.show();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }

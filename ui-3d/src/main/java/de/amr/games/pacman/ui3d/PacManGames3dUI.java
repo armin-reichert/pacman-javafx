@@ -27,6 +27,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.tinylog.Logger;
 
@@ -74,6 +75,10 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
     public static Picker<String> PICKER_LEVEL_COMPLETE;
     public static Picker<String> PICKER_GAME_OVER;
+
+    public PacManGames3dUI(Stage stage, Rectangle2D screenSize) {
+        super(stage, screenSize);
+    }
 
     @Override
     protected void loadAssets() {

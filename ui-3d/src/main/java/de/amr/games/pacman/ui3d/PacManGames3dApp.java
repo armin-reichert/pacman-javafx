@@ -24,8 +24,7 @@ public class PacManGames3dApp extends Application {
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         GameController.it().setSupportedVariants(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
         GameController.it().selectGameVariant(GameVariant.PACMAN);
-        ui = new PacManGames3dUI();
-        ui.create(stage, Screen.getPrimary().getBounds());
+        ui = new PacManGames3dUI(stage, Screen.getPrimary().getBounds());
         ui.show();
         PacManGames3dUI.PY_3D_ENABLED.set(true);
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
