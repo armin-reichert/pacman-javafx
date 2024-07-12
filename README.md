@@ -58,41 +58,44 @@ Start screen:
 - <kbd>ENTER</kbd> or <kbd>SPACE</kbd> Start game 
 
 Intro screen:
-- <kbd>5</kbd> Adds one credit ("inserts coin")
-- <kbd>1</kbd> Starts the game
-- <kbd>H</kbd>Shows/hides context-sensitive help
+- <kbd>5</kbd> Add credit ("insert coin")
+- <kbd>1</kbd> Start the game
+- <kbd>H</kbd> Show/hide context-sensitive help
 
 The keys <kbd>5</kbd> and <kbd>1</kbd> have been chosen because the [MAME](https://www.mamedev.org/) emulator uses them too.
 
-Pac-Man steering with the keyboard:
+Pac-Man steering:
 
-- Pac-Man is steered using the *cursor keys*. When the dashboard is open (in the 3D app version), these keys are taken away by the JavaFX widgets.
-  In that case, you can use <kbd>CTRL</kbd>+cursor key.
+- Pac-Man is steered using the *cursor keys*. When the dashboard is open, the cursor keys might also change slider values etc. To avoid this, you can also steer using <kbd>CTRL</kbd>+cursor key.
 
 General shortcuts:
 
-- <kbd>F11</kbd> Enters full-screen mode
-- <kbd>Esc</kbd> Exits full-screen mode
-- <kbd>F1</kbd> or <kbd>Alt+B</kbd> Toggles the dashboard on/off
-- <kbd>F2</kbd> Toggles the picture-in-picture view
-- <kbd>Alt+C</kbd> Plays all cut scenes (only from intro screen)
-- <kbd>Alt+3</kbd> Toggles between 2D and 3D play scene
+- <kbd>F11</kbd> Enter full-screen mode
+- <kbd>Esc</kbd> Exit full-screen mode
+- <kbd>Alt+3</kbd> Toggle 2D and 3D display of play scene
+- <kbd>Q</kbd>Quit current scene and show start screen
+- <kbd>Alt+M</kbd> Mute/unmute
+
+Intro screen shortcuts:
+
+- <kbd>Alt+C</kbd> Play the cut scenes
 
 Play screen shortcuts:
 
-- <kbd>Alt+Shift+E</kbd> Opens the Map Editor
-- <kbd>Alt+LEFT</kbd> Selects the previous camera perspective
-- <kbd>Alt+RIGHT</kbd> Selects the next camera perspective
-- <kbd>Q</kbd>Quits the play scene and shows the intro screen
+- <kbd>F1</kbd> or <kbd>Alt+B</kbd> Toggle the dashboard display
+- <kbd>F2</kbd> Toggle the picture-in-picture view
+- <kbd>Alt+Shift+E</kbd> Open the Map Editor (available only for Pac-Man XXL game variant)
+- <kbd>Alt+LEFT</kbd> Select previous camera perspective
+- <kbd>Alt+RIGHT</kbd> Select next camera perspective
 
 Cheats:
 
-- <kbd>Alt+A</kbd> Toggles manual/autopilot steering modes
-- <kbd>Alt+E</kbd> Eats all pellets (except the energizers)
-- <kbd>Alt+I</kbd> Toggles immunity of player against ghost attacks
-- <kbd>Alt+L</kbd> Adds 3 player lives
-- <kbd>Alt+N</kbd> Enters next game level
-- <kbd>Alt+X</kbd> Kills all ghosts outside of the ghost house
+- <kbd>Alt+A</kbd> Toggle manual/autopilot steering mode
+- <kbd>Alt+E</kbd> Eat all pellets (except the energizers)
+- <kbd>Alt+I</kbd> Toggle immunity of player against ghost attacks
+- <kbd>Alt+L</kbd> Add 3 player lives
+- <kbd>Alt+N</kbd> Enter next game level
+- <kbd>Alt+X</kbd> Kill all ghosts outside of the ghost house
 
 ## How it looks
 
