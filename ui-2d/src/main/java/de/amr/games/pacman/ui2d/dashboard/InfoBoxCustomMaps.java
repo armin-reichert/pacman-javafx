@@ -4,10 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import javafx.scene.control.Button;
 
 import java.io.File;
@@ -26,14 +24,15 @@ public class InfoBoxCustomMaps extends InfoBox {
     }
 
     private void reloadCustomMaps() {
-        context.gameController().loadCustomMaps();
-        var dict = context.gameController().customMapsDict();
+        context.actionHandler().updateCustomMaps();
         clearGrid();
+        var dict = context.gameController().customMapsDict();
         if (dict.isEmpty()) {
             infoText("No custom maps found.", "");
             return;
         }
         var cbEnable = checkBox("Enable Custom Maps");
+        cbEnable.setOnAction(e -> context.actionHandler().updateCustomMaps());
         cbEnable.selectedProperty().bindBidirectional(PY_CUSTOM_MAPS_ENABLED);
         for (File mapFile : dict.keySet().stream().sorted().toList()) {
             WorldMap map = dict.get(mapFile);

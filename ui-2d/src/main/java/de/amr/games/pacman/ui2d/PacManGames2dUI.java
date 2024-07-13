@@ -13,6 +13,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.mapeditor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.PacManXXLGame;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
@@ -50,10 +51,7 @@ import org.tinylog.Logger;
 
 import java.net.URL;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
@@ -89,6 +87,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         @Override
         protected void invalidated() {
             deleteSounds(); // new sounds will be created on demand for the new game variant
+            if (get() == GameVariant.PACMAN_XXL) {
+                updateCustomMaps();
+            }
         }
     };
     public final ObjectProperty<GameScene>   gameScenePy       = new SimpleObjectProperty<>(this, "gameScene");
@@ -764,6 +765,21 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         gameController().loadCustomMaps();
         reboot();
         selectPage(startPage);
+    }
+
+    @Override
+    public void updateCustomMaps() {
+        gameController().loadCustomMaps();
+        var dict = gameController().customMapsDict();
+        if (game().variant() == GameVariant.PACMAN_XXL) {
+            PacManXXLGame game = (PacManXXLGame) game();
+            if (PY_CUSTOM_MAPS_ENABLED.get()) {
+                game.setCustomMaps(dict.keySet().stream().sorted().map(dict::get).toList());
+            } else {
+                game.setCustomMaps(Collections.emptyList());
+            }
+            Logger.info("Custom maps: {}", game.customMaps());
+        }
     }
 
     @Override

@@ -20,6 +20,7 @@ public interface ActionHandler {
     void reboot();
     void openMapEditor();
     void quitMapEditor();
+    void updateCustomMaps();
     void togglePaused();
     void toggle2D3D();
     void togglePipVisible();

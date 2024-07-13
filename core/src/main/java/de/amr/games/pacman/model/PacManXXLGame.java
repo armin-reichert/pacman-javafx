@@ -12,10 +12,11 @@ import de.amr.games.pacman.steering.RuleBasedPacSteering;
 
 import java.io.File;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.halfTileRightOf;
+import static de.amr.games.pacman.lib.Globals.v2i;
 import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
 
 /**
@@ -24,7 +25,8 @@ import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
  */
 public class PacManXXLGame extends PacManGame {
 
-    private WorldMap[] worldMapByLevelNumber = new WorldMap[8];
+    private WorldMap[] masonicMaps = new WorldMap[8];
+    private List<WorldMap> customMaps = new ArrayList<>();
 
     @Override
     public void init() {
@@ -33,7 +35,7 @@ public class PacManXXLGame extends PacManGame {
         String mapPath = "/de/amr/games/pacman/maps/masonic/";
         for (int number = 1; number <= 8; ++number) {
             URL url = getClass().getResource(mapPath + "masonic_%d.world".formatted(number));
-            worldMapByLevelNumber[number-1] = new WorldMap(url);
+            masonicMaps[number-1] = new WorldMap(url);
         }
     }
 
@@ -45,11 +47,15 @@ public class PacManXXLGame extends PacManGame {
     @Override
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
-        if (levelNumber <= worldMapByLevelNumber.length) {
-            setWorldAndCreatePopulation(createWorld(worldMapByLevelNumber[levelNumber-1]));
+        int numCustomMaps = customMaps.size();
+        int mapIndex = levelNumber - 1;
+        if (mapIndex < numCustomMaps) {
+            setWorldAndCreatePopulation(createWorld(customMaps.get(mapIndex)));
+        } else if (mapIndex - numCustomMaps < masonicMaps.length) {
+            setWorldAndCreatePopulation(createWorld(masonicMaps[mapIndex - numCustomMaps]));
         } else {
             int randomIndex = Globals.randomInt(0, 8);
-            setWorldAndCreatePopulation(createWorld(worldMapByLevelNumber[randomIndex]));
+            setWorldAndCreatePopulation(createWorld(masonicMaps[randomIndex]));
         }
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
@@ -59,6 +65,14 @@ public class PacManXXLGame extends PacManGame {
     @Override
     public int intermissionNumber(int levelNumber) {
         return 0;
+    }
+
+    public List<WorldMap> customMaps() {
+        return customMaps;
+    }
+
+    public void setCustomMaps(List<WorldMap> maps) {
+        customMaps = maps;
     }
 
     private World createWorld(WorldMap map) {
