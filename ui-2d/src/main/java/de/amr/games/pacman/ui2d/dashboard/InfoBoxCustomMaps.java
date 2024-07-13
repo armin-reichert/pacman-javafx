@@ -26,16 +26,16 @@ public class InfoBoxCustomMaps extends InfoBox {
     private void reloadCustomMaps() {
         context.actionHandler().updateCustomMaps();
         clearGrid();
-        var dict = context.gameController().customMapsDict();
-        if (dict.isEmpty()) {
+        var customMapsByFile = context.gameController().customMapsByFile();
+        if (customMapsByFile.isEmpty()) {
             infoText("No custom maps found.", "");
             return;
         }
         var cbEnable = checkBox("Enable Custom Maps");
         cbEnable.setOnAction(e -> context.actionHandler().updateCustomMaps());
         cbEnable.selectedProperty().bindBidirectional(PY_CUSTOM_MAPS_ENABLED);
-        for (File mapFile : dict.keySet().stream().sorted().toList()) {
-            WorldMap map = dict.get(mapFile);
+        for (File mapFile : customMapsByFile.keySet().stream().sorted().toList()) {
+            WorldMap map = customMapsByFile.get(mapFile);
             String mapSize = "(%dx%d)".formatted(map.numRows(), map.numCols());
             infoText(mapFile.getName(), mapSize);
         }

@@ -52,7 +52,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     }
 
     private final List<GameVariant> supportedVariants = new ArrayList<>();
-    private final Map<File, WorldMap> customMaps = new HashMap<>();
+    private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
     private GameClock clock;
     private GameModel game;
     private boolean pacImmune = false;
@@ -91,16 +91,16 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         Logger.info("Searching for custom map files in folder {}", mapDir);
         var mapFiles = mapDir.listFiles((dir, name) -> name.endsWith(".world"));
         if (mapFiles != null) {
-            customMaps.clear();
+            customMapsByFile.clear();
             for (File mapFile : mapFiles) {
                 Logger.info("Found custom map file: " + mapFile);
                 var customMap = new WorldMap(mapFile);
-                customMaps.put(mapFile, customMap);
+                customMapsByFile.put(mapFile, customMap);
             }
-            if (customMaps.isEmpty()) {
+            if (customMapsByFile.isEmpty()) {
                 Logger.info("No custom maps found");
             } else {
-                Logger.info("{} custom map(s) loaded", customMaps.size());
+                Logger.info("{} custom map(s) loaded", customMapsByFile.size());
             }
         } else {
             Logger.error("Could not access custom map folder {}", mapDir);
@@ -126,12 +126,12 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         return Collections.unmodifiableList(supportedVariants);
     }
 
-    public List<WorldMap> getCustomMaps() {
-        return customMaps.keySet().stream().sorted().map(customMaps::get).toList();
+    public List<WorldMap> getCustomMapsByFile() {
+        return customMapsByFile.keySet().stream().sorted().map(customMapsByFile::get).toList();
     }
 
-    public Map<File, WorldMap> customMapsDict() {
-        return customMaps;
+    public Map<File, WorldMap> customMapsByFile() {
+        return customMapsByFile;
     }
 
     public GameModel game() {
