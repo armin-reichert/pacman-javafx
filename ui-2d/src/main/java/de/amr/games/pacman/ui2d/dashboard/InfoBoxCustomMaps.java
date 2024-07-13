@@ -28,19 +28,20 @@ public class InfoBoxCustomMaps extends InfoBox {
         clearGrid();
         var customMapsByFile = context.gameController().customMapsByFile();
         if (customMapsByFile.isEmpty()) {
-            infoText("No custom maps found.", "");
+            addTextRow("No custom maps found.", "");
             return;
         }
-        var cbEnable = checkBox("Enable Custom Maps");
-        cbEnable.setOnAction(e -> context.actionHandler().updateCustomMaps());
-        cbEnable.selectedProperty().bindBidirectional(PY_CUSTOM_MAPS_ENABLED);
+        var cbCustomMapEnabled = checkBox("Use Custom Maps", context.actionHandler()::updateCustomMaps);
+        cbCustomMapEnabled.selectedProperty().bindBidirectional(PY_CUSTOM_MAPS_ENABLED);
+
+        var btnReload = new Button("Reload");
+        btnReload.setOnAction(e -> reloadCustomMaps());
+        addRow(cbCustomMapEnabled, btnReload);
+
         for (File mapFile : customMapsByFile.keySet().stream().sorted().toList()) {
             WorldMap map = customMapsByFile.get(mapFile);
             String mapSize = "(%dx%d)".formatted(map.numRows(), map.numCols());
-            infoText(mapFile.getName(), mapSize);
+            addTextRow(mapFile.getName(), mapSize);
         }
-        var btnReload = new Button("Reload");
-        btnReload.setOnAction(e -> reloadCustomMaps());
-        addRow(btnReload, null);
     }
 }

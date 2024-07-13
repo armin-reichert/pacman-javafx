@@ -52,18 +52,18 @@ public class InfoBox3D extends InfoBox {
         this.context = context;
 
         cbUsePlayScene3D = checkBox("3D Play Scene");
-        pickerLightColor = colorPicker("Light Color", PY_3D_LIGHT_COLOR.get());
-        pickerFloorColor = colorPicker("Floor Color", PY_3D_FLOOR_COLOR.get());
-        comboFloorTexture = comboBox("Floor Texture", floorTextureComboBoxEntries());
-        comboPerspectives = comboBox("Perspective", Perspective.values());
+        pickerLightColor = addColorPickerRow("Light Color", PY_3D_LIGHT_COLOR.get());
+        pickerFloorColor = addColorPickerRow("Floor Color", PY_3D_FLOOR_COLOR.get());
+        comboFloorTexture = addComboBoxRow("Floor Texture", floorTextureComboBoxEntries());
+        comboPerspectives = addComboBoxRow("Perspective", Perspective.values());
 
-        infoText("Camera", this::currentSceneCameraInfo); //TODO .available(this::isCurrentGameScene3D);
+        addTextRow("Camera", this::currentSceneCameraInfo); //TODO .available(this::isCurrentGameScene3D);
 
         cbPiPOn              = checkBox("Picture-In-Picture");
-        sliderPiPSceneHeight = slider("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
-        sliderPiPOpacity     = slider("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get());
-        sliderWallHeight     = slider("Obstacle Height", 0, 16, PY_3D_WALL_HEIGHT.get());
-        sliderWallOpacity    = slider("Wall Opacity", 0, 1, PY_3D_WALL_OPACITY.get());
+        sliderPiPSceneHeight = addSliderRow("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
+        sliderPiPOpacity     = addSliderRow("- Opacity", 0, 100, PY_PIP_OPACITY_PERCENT.get());
+        sliderWallHeight     = addSliderRow("Obstacle Height", 0, 16, PY_3D_WALL_HEIGHT.get());
+        sliderWallOpacity    = addSliderRow("Wall Opacity", 0, 1, PY_3D_WALL_OPACITY.get());
         cbEnergizerExplodes  = checkBox("Energizer Explosion");
         cbNightMode          = checkBox("Night Mode");
         cbPacLighted         = checkBox("Pac-Man Lighted");

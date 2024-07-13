@@ -25,16 +25,16 @@ public class InfoBoxActorInfo extends InfoBox {
     public void init(GameContext context) {
         this.context = context;
 
-        infoText("Pac Name", pacInfo((game, pac) -> pac.name()));
-        infoText("Movement", pacInfo(this::movementInfo));
-        infoText("Tile",     pacInfo(this::locationInfo));
-        emptyRow();
+        addTextRow("Pac Name", pacInfo((game, pac) -> pac.name()));
+        addTextRow("Movement", pacInfo(this::movementInfo));
+        addTextRow("Tile",     pacInfo(this::locationInfo));
+        addEmptyRow();
         ghostInfo(GameModel.RED_GHOST);
-        emptyRow();
+        addEmptyRow();
         ghostInfo(GameModel.PINK_GHOST);
-        emptyRow();
+        addEmptyRow();
         ghostInfo(GameModel.CYAN_GHOST);
-        emptyRow();
+        addEmptyRow();
         ghostInfo(GameModel.ORANGE_GHOST);
     }
 
@@ -61,10 +61,10 @@ public class InfoBoxActorInfo extends InfoBox {
     }
 
     private void ghostInfo(byte ghostID) {
-        infoText(ghostColorName(ghostID) + " Ghost", fnGhostInfo(this::ghostNameAndState, ghostID));
-        infoText("Animation",      fnGhostInfo(this::ghostAnimation, ghostID));
-        infoText("Movement",       fnGhostInfo(this::movementInfo, ghostID));
-        infoText("Tile",           fnGhostInfo(this::locationInfo, ghostID));
+        addTextRow(ghostColorName(ghostID) + " Ghost", fnGhostInfo(this::ghostNameAndState, ghostID));
+        addTextRow("Animation",      fnGhostInfo(this::ghostAnimation, ghostID));
+        addTextRow("Movement",       fnGhostInfo(this::movementInfo, ghostID));
+        addTextRow("Tile",           fnGhostInfo(this::locationInfo, ghostID));
     }
 
     private Supplier<String> fnGhostInfo(

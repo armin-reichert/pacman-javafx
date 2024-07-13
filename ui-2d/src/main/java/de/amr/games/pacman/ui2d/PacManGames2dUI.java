@@ -170,8 +170,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("icon.stop",                       rm.loadImage("graphics/icons/stop.png"));
         theme.set("icon.step",                       rm.loadImage("graphics/icons/step.png"));
 
-        theme.set("infobox.min_col_width",           200);
         theme.set("infobox.min_label_width",         140);
+        theme.set("infobox.min_col_width",           200);
         theme.set("infobox.text_color",              Color.WHITE);
         theme.set("infobox.label_font",              Font.font("Sans", 12));
         theme.set("infobox.text_font",               rm.loadFont("fonts/SplineSansMono-Regular.ttf", 12));

@@ -16,24 +16,24 @@ public class InfoBoxKeys extends InfoBox {
     public void init(GameContext context) {
         this.context = context;
 
-        infoText("F1, Alt+B", "Dashboard On/Off");
-        infoText("F2", "Picture-in-Picture");
-        infoText("F3", "Reboot");
-        infoText("Alt+A", "Autopilot On/Off");
-        infoText("Alt+C", "Play Cut-Scenes");
-        infoText("Alt+E", "Eat All Simple Pellets");
-        infoText("Alt+I", "Player Immunity On/Off");
-        infoText("Alt+L", "Add 3 Player Lives");
-        infoText("Alt+N", "Next Level");
-        infoText("Alt+X", "Kill Hunting Ghosts");
+        addTextRow("F1, Alt+B", "Dashboard On/Off");
+        addTextRow("F2", "Picture-in-Picture");
+        addTextRow("F3", "Reboot");
+        addTextRow("Alt+A", "Autopilot On/Off");
+        addTextRow("Alt+C", "Play Cut-Scenes");
+        addTextRow("Alt+E", "Eat All Simple Pellets");
+        addTextRow("Alt+I", "Player Immunity On/Off");
+        addTextRow("Alt+L", "Add 3 Player Lives");
+        addTextRow("Alt+N", "Next Level");
+        addTextRow("Alt+X", "Kill Hunting Ghosts");
 //        infoText("Alt+LEFT", () -> Perspective.previous(PacManGames3dUI.PY_3D_PERSPECTIVE.get()).name());
 //        infoText("Alt+RIGHT", () -> Perspective.next(PacManGames3dUI.PY_3D_PERSPECTIVE.get()).name());
-        infoText("Alt+3", "3D Play Scene On/Off");
-        infoText("P", "Pause On/Off");
-        infoText("Shift+P, SPACE", "Single Step");
-        infoText("Q", "Return to Intro");
-        infoText("V", "Switch Game Variant");
-        infoText("1", "Start Playing (Credit?)");
-        infoText("5", "Add Credit");
+        addTextRow("Alt+3", "3D Play Scene On/Off");
+        addTextRow("P", "Pause On/Off");
+        addTextRow("Shift+P, SPACE", "Single Step");
+        addTextRow("Q", "Return to Intro");
+        addTextRow("V", "Switch Game Variant");
+        addTextRow("1", "Start Playing (Credit?)");
+        addTextRow("5", "Add Credit");
     }
 }

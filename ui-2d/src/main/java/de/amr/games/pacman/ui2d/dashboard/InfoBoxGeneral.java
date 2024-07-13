@@ -37,14 +37,14 @@ public class InfoBoxGeneral extends InfoBox {
     public void init(GameContext context) {
         this.context = context;
 
-        infoText("Java Version",   Runtime.version().toString());
-        infoText("JavaFX Version", System.getProperty("javafx.runtime.version"));
+        addTextRow("Java Version",   Runtime.version().toString());
+        addTextRow("JavaFX Version", System.getProperty("javafx.runtime.version"));
 
         iconPlay = new ImageView(context.theme().image("icon.play"));
         iconStop = new ImageView(context.theme().image("icon.stop"));
         iconStep = new ImageView(context.theme().image("icon.step"));
 
-        buttonsSimulation = buttonList("Simulation", "Pause", "Step(s)");
+        buttonsSimulation = addButtonListRow("Simulation", "Pause", "Step(s)");
 
         var btnPlayPause = buttonsSimulation[0];
         btnPlayPause.setGraphic(iconPlay);
@@ -57,18 +57,18 @@ public class InfoBoxGeneral extends InfoBox {
         btnStep.setText(null);
         btnStep.setTooltip(tooltipStep);
 
-        spinnerSimulationSteps = integerSpinner("Num Steps", 1, 50, PY_SIMULATION_STEPS.get());
+        spinnerSimulationSteps = addIntSpinnerRow("Num Steps", 1, 50, PY_SIMULATION_STEPS.get());
         spinnerSimulationSteps.valueProperty().addListener((obs, oldVal, newVal) -> PY_SIMULATION_STEPS.set(newVal));
 
-        sliderTargetFPS = slider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60);
+        sliderTargetFPS = addSliderRow("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60);
         sliderTargetFPS.setShowTickLabels(false);
         sliderTargetFPS.setShowTickMarks(false);
 
-        infoText("", () -> String.format("FPS: %.1f (Tgt: %.1f)",
+        addTextRow("", () -> String.format("FPS: %.1f (Tgt: %.1f)",
             context.gameClock().getActualFrameRate(),
             context.gameClock().getTargetFrameRate()
         ));
-        infoText("Total Updates", () -> context.gameClock().getUpdateCount());
+        addTextRow("Total Updates", () -> context.gameClock().getUpdateCount());
 
         cbCanvasDecoration = checkBox("Canvas Decoration");
         cbDebugUI = checkBox("Show Debug Info");
