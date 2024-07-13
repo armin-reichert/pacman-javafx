@@ -52,12 +52,22 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     }
 
     private final List<GameVariant> supportedVariants = new ArrayList<>();
+    private final Map<File, WorldMap> customMaps = new HashMap<>();
     private GameClock clock;
     private GameModel game;
     private boolean pacImmune = false;
     private int credit = 0;
 
-    private final Map<File, WorldMap> customMaps = new HashMap<>();
+    private GameController() {
+        super(GameState.values());
+        loadCustomMaps();
+        for (var model : models.values()) {
+            model.init();
+            Logger.info("Game (variant={}) initialized.", model.variant());
+        }
+        // map state change events to game events
+        addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
+    }
 
     private void ensureCustomMapDirExists() {
         var dir = GameModel.CUSTOM_MAP_DIR;
@@ -95,17 +105,6 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         } else {
             Logger.error("Could not access custom map folder {}", mapDir);
         }
-    }
-
-    private GameController() {
-        super(GameState.values());
-        loadCustomMaps();
-        for (var model : models.values()) {
-            model.init();
-            Logger.info("Game (variant={}) initialized.", model.variant());
-        }
-        // map state change events to game events
-        addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
     }
 
     public void setSupportedVariants(GameVariant...variants) {

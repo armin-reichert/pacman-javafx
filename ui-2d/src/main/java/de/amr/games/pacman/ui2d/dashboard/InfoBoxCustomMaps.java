@@ -7,8 +7,12 @@ package de.amr.games.pacman.ui2d.dashboard;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.PacManGames2dUI;
+import javafx.scene.control.Button;
 
 import java.io.File;
+
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_CUSTOM_MAPS_ENABLED;
 
 /**
  * @author Armin Reichert
@@ -18,15 +22,26 @@ public class InfoBoxCustomMaps extends InfoBox {
     @Override
     public void init(GameContext context) {
         this.context = context;
-        var dict = GameController.it().customMapsDict();
+        reloadCustomMaps();
+    }
+
+    private void reloadCustomMaps() {
+        context.gameController().loadCustomMaps();
+        var dict = context.gameController().customMapsDict();
+        clearGrid();
         if (dict.isEmpty()) {
             infoText("No custom maps found.", "");
             return;
         }
+        var cbEnable = checkBox("Enable Custom Maps");
+        cbEnable.selectedProperty().bindBidirectional(PY_CUSTOM_MAPS_ENABLED);
         for (File mapFile : dict.keySet().stream().sorted().toList()) {
             WorldMap map = dict.get(mapFile);
             String mapSize = "(%dx%d)".formatted(map.numRows(), map.numCols());
             infoText(mapFile.getName(), mapSize);
         }
+        var btnReload = new Button("Reload");
+        btnReload.setOnAction(e -> reloadCustomMaps());
+        addRow(btnReload, null);
     }
 }

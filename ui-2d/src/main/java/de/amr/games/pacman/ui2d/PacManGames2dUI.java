@@ -72,6 +72,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     public static final BooleanProperty PY_AUTOPILOT           = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_CANVAS_DECORATED    = new SimpleBooleanProperty(true);
+    public static final BooleanProperty PY_CUSTOM_MAPS_ENABLED = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_DEBUG_INFO          = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_IMMUNITY            = new SimpleBooleanProperty(false) {
         @Override

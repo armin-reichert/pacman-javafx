@@ -99,14 +99,34 @@ public abstract class InfoBox extends TitledPane {
         return () -> Optional.ofNullable(context.game().world()).map(infoSupplier).orElse(NO_INFO);
     }
 
-    protected void addRow(String labelText, Node child) {
+    protected void clearGrid() {
+        grid.getChildren().clear();
+        row = 0;
+    }
+
+    protected void addRow(Node rowNode) {
+        grid.add(rowNode, 0, row, 2, 1);
+        ++row;
+    }
+
+    protected void addRow(Node left, Node right) {
+        if (left != null) {
+            grid.add(left, 0, row);
+        }
+        if (right != null) {
+            grid.add(right, 1, row);
+        }
+        if (left != null || right != null) {
+            ++row;
+        }
+    }
+
+    protected void addRow(String labelText, Node right) {
         var label = new Label(labelText);
         label.setTextFill(textColor);
         label.setFont(labelFont);
         label.setMinWidth(minLabelWidth);
-        grid.add(label, 0, row);
-        grid.add(child, 1, row);
-        ++row;
+        addRow(label, right);
     }
 
     protected InfoText infoText(String labelText, Supplier<?> fnValue) {
