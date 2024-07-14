@@ -320,7 +320,7 @@ public abstract class Creature extends Entity {
             return;
         }
         Vector2i currentTile = tile();
-        for (var portal : world.portals()) {
+        for (var portal : world.portals().toList()) {
             tryTeleport(currentTile, portal);
             if (lastMove.teleported) {
                 return;

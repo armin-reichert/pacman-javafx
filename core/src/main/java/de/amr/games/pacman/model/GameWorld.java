@@ -9,16 +9,12 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.tilemap.Tiles.*;
 import static de.amr.games.pacman.model.GameModel.*;
-import static java.util.Collections.unmodifiableList;
 
 /**
  * @author Armin Reichert
@@ -48,13 +44,14 @@ public class GameWorld {
     private final Vector2f pacPosition;
     private final Vector2f[] ghostPositions = new Vector2f[4];
     private final Direction[] ghostDirections = new Direction[4];
+    private final Vector2i[] energizerTiles;
+    private final Portal[] portals;
+    private Map<Vector2i, List<Direction>> forbiddenPassages = Map.of();
+
     private Vector2i houseTopLeftTile;
     private Vector2i houseSize;
     private Vector2i leftDoorTile;
     private Vector2i rightDoorTile;
-    private final List<Vector2i> energizerTiles;
-    private final ArrayList<Portal> portals;
-    private Map<Vector2i, List<Direction>> forbiddenPassages = Map.of();
 
     // instead of Set<Vector2i> we use a bitmap: tile -> index(tile) -> bitmap value
     private final BitSet eatenFood;
@@ -63,15 +60,15 @@ public class GameWorld {
 
     public GameWorld(WorldMap map) {
         this.map = checkNotNull(map);
-        portals = new ArrayList<>();
+        var portalList = new ArrayList<Portal>();
         int firstColumn = 0, lastColumn = map.numCols() - 1;
         for (int row = 0; row < map.numRows(); ++row) {
             Vector2i leftBorderTile = v2i(firstColumn, row), rightBorderTile = v2i(lastColumn, row);
             if (map.terrain().get(row, firstColumn) == TUNNEL && map.terrain().get(row, lastColumn) == TUNNEL) {
-                portals.add(new Portal(leftBorderTile, rightBorderTile, 2));
+                portalList.add(new Portal(leftBorderTile, rightBorderTile, 2));
             }
         }
-        portals.trimToSize();
+        portals = portalList.toArray(new Portal[0]);
 
         map.terrain().computeTerrainPaths();
 
@@ -87,7 +84,7 @@ public class GameWorld {
         Vector2i homeTileOrangeGhost = map.terrain().getTileProperty(PROPERTY_POS_ORANGE_GHOST, v2i(15,17));
         ghostPositions[ORANGE_GHOST] = halfTileRightOf(homeTileOrangeGhost);
 
-        energizerTiles = map.food().tiles(ENERGIZER).toList();
+        energizerTiles = map.food().tiles(ENERGIZER).toArray(Vector2i[]::new);
         eatenFood = new BitSet(map.food().numCols() * map.food().numRows());
         uneatenFoodCount = totalFoodCount = (int) map.food().tiles().filter(tile -> map.food().get(tile) != EMPTY).count();
     }
@@ -149,19 +146,16 @@ public class GameWorld {
      * @return tiles in order top-to-bottom, left-to-right
      */
     public Stream<Vector2i> energizerTiles() {
-        return energizerTiles.stream();
+        return Arrays.stream(energizerTiles);
     }
 
-    /**
-     * @return Unmodifiable list of portals
-     */
-    public List<Portal> portals() {
-        return unmodifiableList(portals);
+    public Stream<Portal> portals() {
+        return Arrays.stream(portals);
     }
 
     public boolean belongsToPortal(Vector2i tile) {
         checkTileNotNull(tile);
-        return portals.stream().anyMatch(portal -> portal.contains(tile));
+        return portals().anyMatch(portal -> portal.contains(tile));
     }
 
     public boolean belongsToDoors(Vector2i tile) {

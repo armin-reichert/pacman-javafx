@@ -249,8 +249,9 @@ public class MsPacManGame extends AbstractPacManGame  {
         boolean leftToRight = RND.nextBoolean();
         var houseEntry = tileAt(world.houseEntryPosition());
         var houseEntryOpposite = houseEntry.plus(0, world.houseSize().y() + 1);
-        var entryPortal = world.portals().get(RND.nextInt(world.portals().size()));
-        var exitPortal  = world.portals().get(RND.nextInt(world.portals().size()));
+        var portalList = world.portals().toList();
+        var entryPortal = portalList.get(RND.nextInt(portalList.size()));
+        var exitPortal  = portalList.get(RND.nextInt(portalList.size()));
         List<NavPoint> route = Stream.of(
             leftToRight ? entryPortal.leftTunnelEnd() : entryPortal.rightTunnelEnd(),
             houseEntry,
