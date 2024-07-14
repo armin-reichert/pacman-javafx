@@ -49,17 +49,12 @@ public class World {
     private House house;
     private final List<Vector2i> energizerTiles;
     private List<Portal> portals;
-    private Vector2i[] ghostScatterTiles;
 
     private Map<Vector2i, List<Direction>> forbiddenPassages = Map.of();
 
-    /**
-     * @param map terrain+food map
-     */
     public World(WorldMap map) {
         this.map = checkNotNull(map);
-        setScatterTiles();
-        setPortals();
+        findPortals();
         map.terrain().computeTerrainPaths();
         energizerTiles = tiles().filter(this::isEnergizerTile).toList();
         eaten = new BitSet(map.numCols() * map.numRows());
@@ -67,23 +62,22 @@ public class World {
         uneatenFoodCount = totalFoodCount;
     }
 
-    private void setScatterTiles() {
-        ghostScatterTiles = new Vector2i[4];
-
-        ghostScatterTiles[RED_GHOST] = map.terrain().getTileProperty(
-            PROPERTY_POS_SCATTER_RED_GHOST, v2i(0, numCols() - 3));
-
-        ghostScatterTiles[PINK_GHOST] = map.terrain().getTileProperty(
-            PROPERTY_POS_SCATTER_PINK_GHOST, v2i(0, 3));
-
-        ghostScatterTiles[CYAN_GHOST] = map.terrain().getTileProperty(
-            PROPERTY_POS_SCATTER_CYAN_GHOST, new Vector2i(numRows()-1, numCols()-1));
-
-        ghostScatterTiles[ORANGE_GHOST] = map.terrain().getTileProperty(
-             PROPERTY_POS_SCATTER_ORANGE_GHOST, new Vector2i(numRows()-1, 0));
+    public Vector2i ghostScatterTile(byte ghostID) {
+        checkGhostID(ghostID);
+        return switch (ghostID) {
+            case RED_GHOST -> map.terrain().getTileProperty(
+                PROPERTY_POS_SCATTER_RED_GHOST, v2i(0, numCols() - 3));
+            case PINK_GHOST -> map.terrain().getTileProperty(
+                PROPERTY_POS_SCATTER_PINK_GHOST, v2i(0, 3));
+            case CYAN_GHOST -> map.terrain().getTileProperty(
+                PROPERTY_POS_SCATTER_CYAN_GHOST, new Vector2i(numRows()-1, numCols()-1));
+            case ORANGE_GHOST -> map.terrain().getTileProperty(
+                PROPERTY_POS_SCATTER_ORANGE_GHOST, new Vector2i(numRows()-1, 0));
+            default -> throw new IllegalArgumentException("Illegal ghost ID: " + ghostID);
+        };
     }
 
-    private void setPortals() {
+    private void findPortals() {
         portals = new ArrayList<>();
         int lastColumn = numCols() - 1;
         for (int row = 0; row < numRows(); ++row) {
@@ -126,11 +120,6 @@ public class World {
 
     public boolean containsPoint(double x, double y) {
         return 0 <= x && x <= numCols() * TS && 0 <= y && y <= numRows() * TS;
-    }
-
-    public Vector2i ghostScatterTile(byte ghostID) {
-        checkGhostID(ghostID);
-        return ghostScatterTiles[ghostID];
     }
 
     public void setForbiddenPassages(Map<Vector2i, List<Direction>> forbiddenPassages) {
