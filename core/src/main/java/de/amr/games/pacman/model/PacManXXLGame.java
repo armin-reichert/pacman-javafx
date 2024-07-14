@@ -23,6 +23,16 @@ import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
  */
 public class PacManXXLGame extends PacManGame {
 
+    private static World createWorld(WorldMap map) {
+        var world = new World(map);
+        int houseTopLeftX = map.numCols() / 2 - 4;
+        int houseTopLeftY = map.numRows() / 2 - 3;
+        world.createArcadeHouse(houseTopLeftX, houseTopLeftY);
+        world.setPacPositionFromMap(map);
+        world.setGhostPositionsFromMap(map);
+        return world;
+    }
+
     private final WorldMap[] masonicMaps = new WorldMap[8];
     private List<WorldMap> customMaps = new ArrayList<>();
 
@@ -71,15 +81,5 @@ public class PacManXXLGame extends PacManGame {
 
     public void setCustomMaps(List<WorldMap> maps) {
         customMaps = maps;
-    }
-
-    private World createWorld(WorldMap map) {
-        var world = new World(map);
-        int topLeftX = map.numCols() / 2 - 4;
-        int topLeftY = map.numRows() / 2 - 3;
-        world.createArcadeHouse(v2i(topLeftX, topLeftY));
-        world.setPacPositionFromMap(map);
-        world.setGhostPositionsFromMap(map);
-        return world;
     }
 }

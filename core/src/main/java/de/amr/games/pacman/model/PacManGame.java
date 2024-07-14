@@ -64,6 +64,18 @@ public class PacManGame extends AbstractPacManGame {
     private static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {-1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
     private static final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
 
+    private static World createWorld(WorldMap map) {
+        var world = new World(map);
+        world.createArcadeHouse(10, 15);
+        world.setPacPositionFromMap(map);
+        world.setGhostPositionsFromMap(map);
+        List<Direction> up = List.of(UP);
+        Map<Vector2i, List<Direction>> fp = new HashMap<>();
+        Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> fp.put(tile, up));
+        world.setForbiddenPassages(fp);
+        return world;
+    }
+
     @Override
     public void init() {
         initialLives = 3;
@@ -88,7 +100,8 @@ public class PacManGame extends AbstractPacManGame {
     @Override
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
-        setWorldAndCreatePopulation(createPacManWorld());
+        var map = new WorldMap(getClass().getResource("/de/amr/games/pacman/maps/pacman.world"));
+        setWorldAndCreatePopulation(createWorld(map));
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -97,23 +110,11 @@ public class PacManGame extends AbstractPacManGame {
     @Override
     public void buildDemoLevel() {
         levelNumber = 1; // determines speed etc
-        setWorldAndCreatePopulation(createPacManWorld());
+        var map = new WorldMap(getClass().getResource("/de/amr/games/pacman/maps/pacman.world"));
+        setWorldAndCreatePopulation(createWorld(map));
         pac.setName("Pac-Man");
         pac.setAutopilot(new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE)));
         pac.setUseAutopilot(true);
-    }
-
-    protected World createPacManWorld() {
-        var map = new WorldMap(getClass().getResource("/de/amr/games/pacman/maps/pacman.world"));
-        var world = new World(map);
-        world.createArcadeHouse(v2i(10, 15));
-        world.setPacPositionFromMap(map);
-        world.setGhostPositionsFromMap(map);
-        List<Direction> up = List.of(UP);
-        Map<Vector2i, List<Direction>> fp = new HashMap<>();
-        Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> fp.put(tile, up));
-        world.setForbiddenPassages(fp);
-        return world;
     }
 
     @Override

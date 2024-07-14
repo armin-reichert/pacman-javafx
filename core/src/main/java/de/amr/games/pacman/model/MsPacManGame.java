@@ -55,6 +55,14 @@ public class MsPacManGame extends AbstractPacManGame  {
 
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
+    private static World createWorld(WorldMap map) {
+        var world = new World(map);
+        world.createArcadeHouse(10, 15);
+        world.setPacPositionFromMap(map);
+        world.setGhostPositionsFromMap(map);
+        return world;
+    }
+
     public boolean blueMazeBug = false;
 
     @Override
@@ -119,7 +127,7 @@ public class MsPacManGame extends AbstractPacManGame  {
         if (blueMazeBug && levelNumber == 1) {
             map.terrain().setProperty(World.PROPERTY_COLOR_WALL_FILL, "rgb(33,33,255)");
         }
-        var msPacManWorld = createMsPacManWorld(map);
+        var msPacManWorld = createWorld(map);
         setWorldAndCreatePopulation(msPacManWorld);
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
@@ -133,19 +141,11 @@ public class MsPacManGame extends AbstractPacManGame  {
         int mapNumber = randomInt(1, 7);
         var mapURL = getClass().getResource(String.format("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world", mapNumber));
         var map = new WorldMap(mapURL);
-        setWorldAndCreatePopulation(createMsPacManWorld(map));
+        setWorldAndCreatePopulation(createWorld(map));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
         ghosts[ORANGE_GHOST].setName("Sue");
-    }
-
-    private World createMsPacManWorld(WorldMap map) {
-        var msPacManWorld = new World(map);
-        msPacManWorld.createArcadeHouse(v2i(10, 15));
-        msPacManWorld.setPacPositionFromMap(map);
-        msPacManWorld.setGhostPositionsFromMap(map);
-        return msPacManWorld;
     }
 
     /** In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly

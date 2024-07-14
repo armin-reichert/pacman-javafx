@@ -73,10 +73,14 @@ public class World {
             = (int) map.food().tiles().filter(tile -> map.food().get(tile) != EMPTY).count();
     }
 
-    public void createArcadeHouse(Vector2i topLeftTile) {
-        setHouseTopLeftTile(topLeftTile);
+    /**
+     * @param topLeftX tile-x of top left corner
+     * @param topLeftY tile-y of top left corner
+     */
+    public void createArcadeHouse(int topLeftX, int topLeftY) {
+        setHouseTopLeftTile(v2i(topLeftX, topLeftY));
         setHouseSize(v2i(8, 5));
-        setHouseEntry(new Door(v2i(topLeftTile.x() + 3, topLeftTile.y()), v2i(topLeftTile.x() + 4, topLeftTile.y())));
+        setHouseEntry(new Door(v2i(topLeftX + 3, topLeftY), v2i(topLeftX + 4, topLeftY)));
         setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
     }
 
