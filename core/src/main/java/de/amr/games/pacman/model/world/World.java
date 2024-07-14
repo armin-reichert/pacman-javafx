@@ -40,14 +40,14 @@ public class World {
     public static final String PROPERTY_POS_SCATTER_CYAN_GHOST   = "pos_scatter_ghost_3_cyan";
     public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
 
-    private static Vector2f positionHalfTileRightOf(Vector2i tile) {
+    private static Vector2f halfTileRightOf(Vector2i tile) {
         return tile.scaled(TS).plus(HTS, 0).toFloatVec();
     }
 
     private final WorldMap map;
     private final Vector2f pacPosition;
-    private final Vector2f[] ghostPositions;
-    private Direction[] ghostDirections;
+    private final Vector2f[] ghostPositions = new Vector2f[4];
+    private final Direction[] ghostDirections = new Direction[4];
     private Vector2i houseTopLeftTile;
     private Vector2i houseSize;
     private Door houseEntry;
@@ -74,21 +74,17 @@ public class World {
 
         map.terrain().computeTerrainPaths();
 
-        Vector2i pacHomeTile = map.terrain().getTileProperty(World.PROPERTY_POS_PAC, v2i(13, 26));
-        pacPosition = pacHomeTile.toFloatVec().scaled(TS).plus(HTS, 0);
-        ghostPositions = new Vector2f[4];
+        Vector2i homeTilePac = map.terrain().getTileProperty(PROPERTY_POS_PAC, v2i(13, 26));
+        pacPosition = halfTileRightOf(homeTilePac);
 
-        Vector2i homeTileRed = map.terrain().getTileProperty(World.PROPERTY_POS_RED_GHOST, v2i(13,14));
-        ghostPositions[RED_GHOST] = positionHalfTileRightOf(homeTileRed);
-
-        Vector2i homeTilePink = map.terrain().getTileProperty(World.PROPERTY_POS_PINK_GHOST, v2i(13,17));
-        ghostPositions[PINK_GHOST] = positionHalfTileRightOf(homeTilePink);
-
-        Vector2i homeTileCyan = map.terrain().getTileProperty(World.PROPERTY_POS_CYAN_GHOST, v2i(11,17));
-        ghostPositions[CYAN_GHOST] = positionHalfTileRightOf(homeTileCyan);
-
-        Vector2i homeTileOrange = map.terrain().getTileProperty(World.PROPERTY_POS_ORANGE_GHOST, v2i(15,17));
-        ghostPositions[ORANGE_GHOST] = positionHalfTileRightOf(homeTileOrange);
+        Vector2i homeTileRedGhost = map.terrain().getTileProperty(PROPERTY_POS_RED_GHOST, v2i(13,14));
+        ghostPositions[RED_GHOST] = halfTileRightOf(homeTileRedGhost);
+        Vector2i homeTilePinkGhost = map.terrain().getTileProperty(PROPERTY_POS_PINK_GHOST, v2i(13,17));
+        ghostPositions[PINK_GHOST] = halfTileRightOf(homeTilePinkGhost);
+        Vector2i homeTileCyanGhost = map.terrain().getTileProperty(PROPERTY_POS_CYAN_GHOST, v2i(11,17));
+        ghostPositions[CYAN_GHOST] = halfTileRightOf(homeTileCyanGhost);
+        Vector2i homeTileOrangeGhost = map.terrain().getTileProperty(PROPERTY_POS_ORANGE_GHOST, v2i(15,17));
+        ghostPositions[ORANGE_GHOST] = halfTileRightOf(homeTileOrangeGhost);
 
         energizerTiles = map.food().tiles(ENERGIZER).toList();
         eatenFood = new BitSet(map.food().numCols() * map.food().numRows());
@@ -102,7 +98,10 @@ public class World {
     public void createArcadeHouse(int topLeftX, int topLeftY) {
         setHouseArea(topLeftX, topLeftY, 8, 5);
         setHouseEntry(new Door(v2i(topLeftX + 3, topLeftY), v2i(topLeftX + 4, topLeftY)));
-        setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
+        setGhostDirection(RED_GHOST, Direction.LEFT);
+        setGhostDirection(PINK_GHOST, Direction.DOWN);
+        setGhostDirection(CYAN_GHOST, Direction.UP);
+        setGhostDirection(ORANGE_GHOST, Direction.UP);
     }
 
     public Vector2i ghostScatterTile(byte ghostID) {
@@ -239,8 +238,10 @@ public class World {
         return ghostPositions[ghostID];
     }
 
-    public void setGhostDirections(Direction[] dirs) {
-        ghostDirections = dirs;
+    public void setGhostDirection(byte ghostID, Direction dir) {
+        checkGhostID(ghostID);
+        checkNotNull(dir);
+        ghostDirections[ghostID] = dir;
     }
 
     public Direction ghostDirection(byte ghostID) {
