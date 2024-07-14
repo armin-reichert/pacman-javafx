@@ -46,7 +46,7 @@ public class World {
     private final int totalFoodCount;
     private int uneatenFoodCount;
 
-    private List<Vector2i> energizerTiles;
+    private final List<Vector2i> energizerTiles;
     private List<Portal> portals;
     private Map<Vector2i, List<Direction>> forbiddenPassages = Map.of();
     private House house;
@@ -56,9 +56,9 @@ public class World {
         findPortals();
         map.terrain().computeTerrainPaths();
         energizerTiles = map.food().tiles(ENERGIZER).toList();
-        eatenFood = new BitSet(map.numCols() * map.numRows());
-        totalFoodCount = (int) tiles().filter(this::isFoodTile).count();
-        uneatenFoodCount = totalFoodCount;
+        eatenFood = new BitSet(map.food().numCols() * map.food().numRows());
+        uneatenFoodCount = totalFoodCount
+            = (int) map.food().tiles().filter(tile -> map.food().get(tile) != EMPTY).count();
     }
 
     public Vector2i ghostScatterTile(byte ghostID) {
