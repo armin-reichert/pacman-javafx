@@ -163,7 +163,7 @@ public class GateKeeper {
                 Logger.trace("Global dot counter = {}", globalCounter);
             }
         } else {
-            game.ghosts(LOCKED).filter(ghost -> ghost.insideHouse(game.world().house())).findFirst().ifPresent(ghost -> {
+            game.ghosts(LOCKED).filter(Ghost::insideHouse).findFirst().ifPresent(ghost -> {
                 countersByGhost[ghost.id()]++;
                 Logger.trace("{} dot counter = {}", ghost.name(), countersByGhost[ghost.id()]);
             });

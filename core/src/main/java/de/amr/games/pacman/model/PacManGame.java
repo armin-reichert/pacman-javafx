@@ -12,13 +12,11 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.StaticBonus;
-import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.steering.RouteBasedSteering;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 
 import java.io.File;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,21 +104,15 @@ public class PacManGame extends AbstractPacManGame {
     }
 
     protected World createPacManWorld() {
-        URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/pacman.world");
-        var map = new WorldMap(mapURL);
+        var map = new WorldMap(getClass().getResource("/de/amr/games/pacman/maps/pacman.world"));
         var world = new World(map);
-
-        House house = House.createArcadeHouse(v2i(10, 15));
-        house.setPacPositionFromMap(map);
-        house.setGhostPositionsFromMap(map);
-        world.setHouse(house);
-
-        // special tiles
+        world.createArcadeHouse(v2i(10, 15));
+        world.setPacPositionFromMap(map);
+        world.setGhostPositionsFromMap(map);
         List<Direction> up = List.of(UP);
         Map<Vector2i, List<Direction>> fp = new HashMap<>();
         Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> fp.put(tile, up));
         world.setForbiddenPassages(fp);
-
         return world;
     }
 

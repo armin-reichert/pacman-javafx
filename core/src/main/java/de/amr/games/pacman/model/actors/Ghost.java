@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
@@ -96,8 +95,8 @@ public class Ghost extends Creature {
         return Optional.ofNullable(animations);
     }
 
-    public boolean insideHouse(House house) {
-        return house.contains(tile());
+    public boolean insideHouse() {
+        return world.isPartOfHouse(tile());
     }
 
     public void setRevivalPosition(Vector2f position) {
@@ -167,10 +166,10 @@ public class Ghost extends Creature {
                 }
             }
         }
-        if (world.house().door().occupies(tile)) {
+        if (world.houseDoor().occupies(tile)) {
             return inState(ENTERING_HOUSE, LEAVING_HOUSE);
         }
-        if (world.insideBounds(tile)) {
+        if (world.isInsideWorld(tile)) {
             return !world.isBlockedTile(tile);
         }
         return world.belongsToPortal(tile);
@@ -289,7 +288,7 @@ public class Ghost extends Creature {
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
     private void updateStateLocked(GameModel game) {
-        if (insideHouse(world.house())) {
+        if (insideHouse()) {
             float minY = revivalPosition.y() - 4, maxY = revivalPosition.y() + 4;
             setSpeed(speedInsideHouse);
             move();
@@ -319,7 +318,7 @@ public class Ghost extends Creature {
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
     private void updateStateLeavingHouse(GameModel game) {
-        Vector2f houseEntryPosition = world.house().door().entryPosition();
+        Vector2f houseEntryPosition = world.houseDoor().entryPosition();
         if (posY() <= houseEntryPosition.y()) {
             // has raised and is outside house
             setPosition(houseEntryPosition);
@@ -334,7 +333,7 @@ public class Ghost extends Creature {
         }
         // move inside house
         float centerX = center().x();
-        float houseCenterX = world.house().center().x();
+        float houseCenterX = world.houseCenter().x();
         if (differsAtMost(0.5f * speedInsideHouse, centerX, houseCenterX)) {
             // align horizontally and raise
             setPosX(houseCenterX - HTS);
@@ -412,14 +411,14 @@ public class Ghost extends Creature {
      * to the ghost house to be revived. Hallelujah!
      */
     private void updateStateReturningToHouse() {
-        Vector2f houseEntry = world.house().door().entryPosition();
+        Vector2f houseEntry = world.houseDoor().entryPosition();
         if (position().almostEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
             setPosition(houseEntry);
             setMoveAndWishDir(DOWN);
             setState(ENTERING_HOUSE);
         } else {
             setSpeed(speedReturningToHouse);
-            setTargetTile(world.house().door().leftWing());
+            setTargetTile(world.houseDoor().leftWing());
             navigateTowardsTarget();
             tryMoving();
         }

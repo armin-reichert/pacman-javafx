@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.world;
 
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 
@@ -39,6 +40,10 @@ public class World {
     public static final String PROPERTY_POS_SCATTER_CYAN_GHOST   = "pos_scatter_ghost_3_cyan";
     public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
 
+    private static Vector2f positionHalfTileRightOf(Vector2i tile) {
+        return tile.scaled(TS).plus(HTS, 0).toFloatVec();
+    }
+
     private final WorldMap map;
 
     // instead of Set<Vector2i> we use a bitmap: tile -> index(tile) -> bitmap value
@@ -47,18 +52,32 @@ public class World {
     private int uneatenFoodCount;
 
     private final List<Vector2i> energizerTiles;
-    private ArrayList<Portal> portals;
+    private final ArrayList<Portal> portals;
     private Map<Vector2i, List<Direction>> forbiddenPassages = Map.of();
-    private House house;
 
     public World(WorldMap map) {
         this.map = checkNotNull(map);
-        buildPortals();
+        portals = new ArrayList<>();
+        int firstColumn = 0, lastColumn = map.numCols() - 1;
+        for (int row = 0; row < map.numRows(); ++row) {
+            Vector2i leftBorderTile = v2i(firstColumn, row), rightBorderTile = v2i(lastColumn, row);
+            if (map.terrain().get(row, firstColumn) == TUNNEL && map.terrain().get(row, lastColumn) == TUNNEL) {
+                portals.add(new Portal(leftBorderTile, rightBorderTile, 2));
+            }
+        }
+        portals.trimToSize();
         map.terrain().computeTerrainPaths();
         energizerTiles = map.food().tiles(ENERGIZER).toList();
         eatenFood = new BitSet(map.food().numCols() * map.food().numRows());
         uneatenFoodCount = totalFoodCount
             = (int) map.food().tiles().filter(tile -> map.food().get(tile) != EMPTY).count();
+    }
+
+    public void createArcadeHouse(Vector2i topLeftTile) {
+        setHouseTopLeftTile(topLeftTile);
+        setHouseSize(v2i(8, 5));
+        setHouseEntry(new Door(v2i(topLeftTile.x() + 3, topLeftTile.y()), v2i(topLeftTile.x() + 4, topLeftTile.y())));
+        setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
     }
 
     public Vector2i ghostScatterTile(byte ghostID) {
@@ -76,36 +95,17 @@ public class World {
         };
     }
 
-    /**
-     * Searches for tunnels that connect horizontally and creates portals.
-     */
-    private void buildPortals() {
-        portals = new ArrayList<>();
-        int firstColumn = 0, lastColumn = map.numCols() - 1;
-        for (int row = 0; row < map.numRows(); ++row) {
-            Vector2i leftBorderTile = v2i(firstColumn, row), rightBorderTile = v2i(lastColumn, row);
-            if (map.terrain().get(row, firstColumn) == TUNNEL && map.terrain().get(row, lastColumn) == TUNNEL) {
-                portals.add(new Portal(leftBorderTile, rightBorderTile, 2));
-            }
-        }
-        portals.trimToSize();
-    }
-
-    public void setHouse(House house) {
-        this.house = checkNotNull(house);
-    }
-
-    public House house() {
-        return house;
-    }
-
     public WorldMap map() {
         return map;
     }
 
-    public boolean insideBounds(Vector2i tile) {
+    public boolean isOutsideWorld(Vector2i tile) {
         checkTileNotNull(tile);
-        return !map.terrain().outOfBounds(tile.y(), tile.x());
+        return map.terrain().outOfBounds(tile.y(), tile.x());
+    }
+
+    public boolean isInsideWorld(Vector2i tile) {
+        return !isOutsideWorld(tile);
     }
 
     public boolean containsPoint(double x, double y) {
@@ -140,7 +140,7 @@ public class World {
     }
 
     public boolean isBlockedTile(Vector2i tile) {
-        return insideBounds(tile) && isBlockedTerrain(map.terrain().get(tile));
+        return !isOutsideWorld(tile) && isBlockedTerrain(map.terrain().get(tile));
     }
 
     private boolean isBlockedTerrain(byte content) {
@@ -151,7 +151,7 @@ public class World {
     }
 
     public boolean isTunnel(Vector2i tile) {
-        if (!insideBounds(tile)) {
+        if (isOutsideWorld(tile)) {
             return false;
         }
         return map.terrain().get(tile) == TUNNEL;
@@ -159,12 +159,103 @@ public class World {
 
     public boolean isIntersection(Vector2i tile) {
         checkTileNotNull(tile);
-        if (!insideBounds(tile) || house.contains(tile)) {
+        if (isOutsideWorld(tile) || isPartOfHouse(tile)) {
             return false;
         }
-        long numBlockedNeighbors = tile.neighbors().filter(this::insideBounds).filter(this::isBlockedTile).count();
-        long numDoorNeighbors = tile.neighbors().filter(this::insideBounds).filter(house.door()::occupies).count();
+        long numBlockedNeighbors = tile.neighbors().filter(this::isInsideWorld).filter(this::isBlockedTile).count();
+        long numDoorNeighbors = tile.neighbors().filter(this::isInsideWorld).filter(houseDoor()::occupies).count();
         return numBlockedNeighbors + numDoorNeighbors < 2;
+    }
+
+    // House
+
+    private Vector2f pacPosition;
+    private Vector2f[] ghostPositions;
+    private Direction[] ghostDirections;
+    private Vector2i houseTopLeftTile;
+    private Vector2i houseSize;
+    private Door houseEntry;
+
+    public void setHouseTopLeftTile(Vector2i minTile) {
+        this.houseTopLeftTile = checkTileNotNull(minTile);
+    }
+
+    public void setHouseSize(Vector2i size) {
+        checkNotNull(size);
+        if (size.x() < 1 || size.y() < 1) {
+            throw new IllegalArgumentException("House size must be larger than one square tile but is: " + size);
+        }
+        this.houseSize = size;
+    }
+
+    public void setHouseEntry(Door door) {
+        checkNotNull(door);
+        this.houseEntry = door;
+    }
+
+    public Vector2i houseTopLeftTile() {
+        return houseTopLeftTile;
+    }
+
+    public Vector2i houseSize() {
+        return houseSize;
+    }
+
+    public Door houseDoor() {
+        return houseEntry;
+    }
+
+    public Vector2f houseCenter() {
+        return houseTopLeftTile.toFloatVec().scaled(TS).plus(houseSize.toFloatVec().scaled(HTS));
+    }
+
+    /**
+     * @param tile some tile
+     * @return tells if the given tile is part of the ghost house
+     */
+    public boolean isPartOfHouse(Vector2i tile) {
+        Vector2i max = houseTopLeftTile.plus(houseSize().minus(1, 1));
+        return tile.x() >= houseTopLeftTile.x() && tile.x() <= max.x() //
+            && tile.y() >= houseTopLeftTile.y() && tile.y() <= max.y();
+    }
+
+    public void setPacPositionFromMap(WorldMap map) {
+        Vector2i pacHomeTile = map.terrain().getTileProperty(World.PROPERTY_POS_PAC, v2i(13, 26));
+        pacPosition = pacHomeTile.toFloatVec().scaled(TS).plus(HTS, 0);
+    }
+
+    public void setGhostPositionsFromMap(WorldMap map) {
+        ghostPositions = new Vector2f[4];
+
+        Vector2i homeTileRed = map.terrain().getTileProperty(World.PROPERTY_POS_RED_GHOST, v2i(13,14));
+        ghostPositions[RED_GHOST] = positionHalfTileRightOf(homeTileRed);
+
+        Vector2i homeTilePink = map.terrain().getTileProperty(World.PROPERTY_POS_PINK_GHOST, v2i(13,17));
+        ghostPositions[PINK_GHOST] = positionHalfTileRightOf(homeTilePink);
+
+        Vector2i homeTileCyan = map.terrain().getTileProperty(World.PROPERTY_POS_CYAN_GHOST, v2i(11,17));
+        ghostPositions[CYAN_GHOST] = positionHalfTileRightOf(homeTileCyan);
+
+        Vector2i homeTileOrange = map.terrain().getTileProperty(World.PROPERTY_POS_ORANGE_GHOST, v2i(15,17));
+        ghostPositions[ORANGE_GHOST] = positionHalfTileRightOf(homeTileOrange);
+    }
+
+    public Vector2f pacPosition() {
+        return pacPosition;
+    }
+
+    public Vector2f ghostPosition(byte ghostID) {
+        checkGhostID(ghostID);
+        return ghostPositions[ghostID];
+    }
+
+    public void setGhostDirections(Direction[] dirs) {
+        ghostDirections = dirs;
+    }
+
+    public Direction ghostDirection(byte ghostID) {
+        checkGhostID(ghostID);
+        return ghostDirections[ghostID];
     }
 
     // Food
@@ -182,7 +273,7 @@ public class World {
     }
 
     public void eatFoodAt(Vector2i tile) {
-        if (!insideBounds(tile)) {
+        if (isOutsideWorld(tile)) {
             return; // raise error?
         }
         if (hasFoodAt(tile)) {
@@ -192,28 +283,28 @@ public class World {
     }
 
     public boolean isFoodTile(Vector2i tile) {
-        if (!insideBounds(tile)) {
+        if (isOutsideWorld(tile)) {
             return false;
         }
         return map.food().get(tile) != EMPTY;
     }
 
     public boolean isEnergizerTile(Vector2i tile) {
-        if (!insideBounds(tile)) {
+        if (isOutsideWorld(tile)) {
             return false;
         }
         return map.food().get(tile) == ENERGIZER;
     }
 
     public boolean hasFoodAt(Vector2i tile) {
-        if (!insideBounds(tile)) {
+        if (isOutsideWorld(tile)) {
             return false;
         }
         return map.food().get(tile) != EMPTY && !eatenFood.get(map.food().index(tile));
     }
 
     public boolean hasEatenFoodAt(Vector2i tile) {
-        if (!insideBounds(tile)) {
+        if (isOutsideWorld(tile)) {
             return false;
         }
         return eatenFood.get(map.food().index(tile));

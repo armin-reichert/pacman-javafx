@@ -6,7 +6,6 @@ package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 
@@ -78,10 +77,9 @@ public class PacManXXLGame extends PacManGame {
         var world = new World(map);
         int topLeftX = map.numCols() / 2 - 4;
         int topLeftY = map.numRows() / 2 - 3;
-        House house = House.createArcadeHouse(v2i(topLeftX, topLeftY));
-        house.setPacPositionFromMap(map);
-        house.setGhostPositionsFromMap(map);
-        world.setHouse(house);
+        world.createArcadeHouse(v2i(topLeftX, topLeftY));
+        world.setPacPositionFromMap(map);
+        world.setGhostPositionsFromMap(map);
         return world;
     }
 }

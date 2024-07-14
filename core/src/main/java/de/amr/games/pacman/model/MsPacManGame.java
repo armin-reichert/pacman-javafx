@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
@@ -143,10 +142,9 @@ public class MsPacManGame extends AbstractPacManGame  {
 
     private World createMsPacManWorld(WorldMap map) {
         var msPacManWorld = new World(map);
-        House house = House.createArcadeHouse(v2i(10, 15));
-        house.setPacPositionFromMap(map);
-        house.setGhostPositionsFromMap(map);
-        msPacManWorld.setHouse(house);
+        msPacManWorld.createArcadeHouse(v2i(10, 15));
+        msPacManWorld.setPacPositionFromMap(map);
+        msPacManWorld.setGhostPositionsFromMap(map);
         return msPacManWorld;
     }
 
@@ -252,8 +250,8 @@ public class MsPacManGame extends AbstractPacManGame  {
         nextBonusIndex += 1;
 
         boolean leftToRight = RND.nextBoolean();
-        var houseEntry = tileAt(world.house().door().entryPosition());
-        var houseEntryOpposite = houseEntry.plus(0, world.house().size().y() + 1);
+        var houseEntry = tileAt(world.houseDoor().entryPosition());
+        var houseEntryOpposite = houseEntry.plus(0, world.houseSize().y() + 1);
         var entryPortal = world.portals().get(RND.nextInt(world.portals().size()));
         var exitPortal  = world.portals().get(RND.nextInt(world.portals().size()));
         List<NavPoint> route = Stream.of(

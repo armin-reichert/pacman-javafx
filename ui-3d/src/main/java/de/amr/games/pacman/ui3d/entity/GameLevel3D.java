@@ -14,8 +14,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.world.Door;
-import de.amr.games.pacman.model.world.House;
 import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
@@ -172,14 +170,13 @@ public class GameLevel3D extends Group {
 
     public void showLevelStartMessage() {
         World world = context.game().world();
-        House house = world.house();
         if (context.gameState() == GameState.LEVEL_TEST) {
             double x = world.map().numCols() * HTS;
             double y = (world.map().numRows() - 2) * TS;
             showMessage("TEST LEVEL " + context.game().levelNumber(), 5,x, y);
         } else if (!context.game().isDemoLevel()) {
-            double x = TS * (house.topLeftTile().x() + 0.5 * house.size().x());
-            double y = TS * (house.topLeftTile().y() +       house.size().y());
+            double x = TS * (world.houseTopLeftTile().x() + 0.5 * world.houseSize().x());
+            double y = TS * (world.houseTopLeftTile().y() +       world.houseSize().y());
             double seconds = context.game().isPlaying() ? 0.5 : 2.5;
             showMessage("READY!", seconds, x, y);
         }
@@ -211,7 +208,7 @@ public class GameLevel3D extends Group {
         houseUsedPy.set(
             game.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
                 .anyMatch(Ghost::isVisible));
-        Vector2f houseEntryPosition = game.world().house().door().entryPosition();
+        Vector2f houseEntryPosition = game.world().houseDoor().entryPosition();
         houseOpenPy.set(
             game.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
                 .filter(ghost -> ghost.position().euclideanDistance(houseEntryPosition) <= HOUSE_SENSITIVITY)
@@ -254,16 +251,14 @@ public class GameLevel3D extends Group {
     private void addHouse(Group parent) {
         World world = context.game().world();
         WorldMap map = world.map();
-        House house = world.house();
-        Door door = house.door();
 
         // tile coordinates
-        int xMin = house.topLeftTile().x();
-        int xMax = xMin + house.size().x() - 1;
-        int yMin = house.topLeftTile().y();
-        int yMax = yMin + house.size().y() - 1;
+        int xMin = world.houseTopLeftTile().x();
+        int xMax = xMin + world.houseSize().x() - 1;
+        int yMin = world.houseTopLeftTile().y();
+        int yMax = yMin + world.houseSize().y() - 1;
 
-        Vector2i leftDoorTile = door.leftWing(), rightDoorTile = door.rightWing();
+        Vector2i leftDoorTile = world.houseDoor().leftWing(), rightDoorTile = world.houseDoor().rightWing();
         parent.getChildren().addAll(
             createHouseWall(xMin, yMin, leftDoorTile.x() - 1, yMin),
             createHouseWall(rightDoorTile.x() + 1, yMin, xMax, yMin),
@@ -281,8 +276,8 @@ public class GameLevel3D extends Group {
         getChildren().add(door3D);
 
         // pixel coordinates
-        float centerX = house.topLeftTile().x() * TS + house.size().x() * HTS;
-        float centerY = house.topLeftTile().y() * TS + house.size().y() * HTS;
+        float centerX = world.houseTopLeftTile().x() * TS + world.houseSize().x() * HTS;
+        float centerY = world.houseTopLeftTile().y() * TS + world.houseSize().y() * HTS;
 
         var houseLight = new PointLight();
         houseLight.lightOnProperty().bind(houseUsedPy);
@@ -300,11 +295,10 @@ public class GameLevel3D extends Group {
     }
 
     private void addMaze(Group parent) {
-        House house = context.game().world().house();
         TileMap terrainMap = context.game().world().map().terrain();
         terrainMap.computeTerrainPaths();
         terrainMap.outerPaths()
-            .filter(path -> !house.contains(path.startTile()))
+            .filter(path -> !context.game().world().isPartOfHouse(path.startTile()))
             .forEach(path -> addWallSegmentsAlongPath(parent, path, outerWallHeightPy, OUTER_WALL_THICKNESS));
         terrainMap.innerPaths()
             .forEach(path -> addWallSegmentsAlongPath(parent, path, wallHeightPy, INNER_WALL_THICKNESS));
