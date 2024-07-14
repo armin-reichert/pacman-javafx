@@ -139,13 +139,13 @@ public class GameLevel3D extends Group {
             foodColorPy
         ));
 
-        wallFillColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_WALL_FILL,
+        wallFillColorPy.set(getColorFromMap(map.terrain(), World.PROPERTY_COLOR_WALL_FILL,
             Color.rgb(0,0,0)));
 
-        wallStrokeColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_WALL_STROKE,
+        wallStrokeColorPy.set(getColorFromMap(map.terrain(), World.PROPERTY_COLOR_WALL_STROKE,
             Color.rgb(33, 33, 255)));
 
-        foodColorPy.set(getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_FOOD,
+        foodColorPy.set(getColorFromMap(map.terrain(), World.PROPERTY_COLOR_FOOD,
             Color.PINK));
 
         livesCounter3D = createLivesCounter();
@@ -272,7 +272,7 @@ public class GameLevel3D extends Group {
             createHouseWall(xMin, yMax, xMax, yMax)
         );
 
-        Color doorColor = getColorFromMap(map.terrain(), WorldMap.PROPERTY_COLOR_DOOR, Color.rgb(254,184,174));
+        Color doorColor = getColorFromMap(map.terrain(), World.PROPERTY_COLOR_DOOR, Color.rgb(254,184,174));
         door3D = new Door3D(leftDoorTile, rightDoorTile, doorColor, PY_3D_FLOOR_COLOR);
         door3D.drawModePy.bind(PY_3D_DRAW_MODE);
 
@@ -389,7 +389,7 @@ public class GameLevel3D extends Group {
 
     private void addPellets(Group parent) {
         var world = context.game().world();
-        Color color = getColorFromMap(world.map().food(), WorldMap.PROPERTY_COLOR_FOOD, Color.WHITE);
+        Color color = getColorFromMap(world.map().food(), World.PROPERTY_COLOR_FOOD, Color.WHITE);
         foodColorPy.set(color);
         Model3D pelletModel3D = context.theme().get("model3D.pellet");
         world.tiles().filter(world::hasFoodAt).forEach(tile -> {

@@ -45,7 +45,6 @@ import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
-import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.*;
 
 /**
@@ -60,6 +59,34 @@ public class TileMapEditor  {
     public static final Rectangle2D PINK_GHOST_SPRITE = new Rectangle2D(553, 81, 14, 14);
     public static final Rectangle2D CYAN_GHOST_SPRITE = new Rectangle2D(521, 97, 14, 14);
     public static final Rectangle2D ORANGE_GHOST_SPRITE = new Rectangle2D(521, 113, 14, 14);
+
+    public static final String DEFAULT_COLOR_WALL_STROKE = "rgb(0,0,255)";
+    public static final String DEFAULT_COLOR_WALL_FILL   = "rgb(0,0,0)";
+    public static final String DEFAULT_COLOR_DOOR        = "rgb(0,255,255)";
+    public static final String PROPERTY_COLOR_WALL_STROKE = "color_wall_stroke";
+    public static final String PROPERTY_COLOR_WALL_FILL = "color_wall_fill";
+    public static final String PROPERTY_COLOR_DOOR = "color_door";
+    public static final String PROPERTY_POS_BONUS = "pos_bonus";
+    public static final String PROPERTY_POS_PAC = "pos_pac";
+    public static final String PROPERTY_POS_RED_GHOST = "pos_ghost_1_red";
+    public static final String PROPERTY_POS_PINK_GHOST = "pos_ghost_2_pink";
+    public static final String PROPERTY_POS_CYAN_GHOST = "pos_ghost_3_cyan";
+    public static final String PROPERTY_POS_ORANGE_GHOST = "pos_ghost_4_orange";
+    public static final String PROPERTY_POS_SCATTER_RED_GHOST = "pos_scatter_ghost_1_red";
+    public static final String PROPERTY_POS_SCATTER_PINK_GHOST = "pos_scatter_ghost_2_pink";
+    public static final String PROPERTY_POS_SCATTER_CYAN_GHOST = "pos_scatter_ghost_3_cyan";
+    public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
+
+    public static final String PROPERTY_COLOR_FOOD = "color_food";
+
+    public static final Vector2i DEFAULT_POS_PAC          = new Vector2i(13, 26);
+    public static final Vector2i DEFAULT_POS_RED_GHOST    = new Vector2i(13, 14);
+    public static final Vector2i DEFAULT_POS_PINK_GHOST   = new Vector2i(13, 17);
+    public static final Vector2i DEFAULT_POS_CYAN_GHOST   = new Vector2i(11, 17);
+    public static final Vector2i DEFAULT_POS_ORANGE_GHOST = new Vector2i(15, 17);
+    public static final Vector2i DEFAULT_POS_BONUS        = new Vector2i(13, 20);
+
+    public static final String DEFAULT_FOOD_COLOR         = "rgb(255,0,0)";
 
     public static String tt(String key, Object... args) {
         return MessageFormat.format(TEXTS.getString(key), args);
@@ -153,7 +180,7 @@ public class TileMapEditor  {
 
     public TileMapEditor(File workDir) {
         lastUsedDir = workDir;
-        mapPy.set(newMap(36, 28));
+        mapPy.set(newPacManGameMap(36, 28));
         titlePy.bind(Bindings.createStringBinding(
             () -> tt("map_editor") + (currentFilePy.get() != null ? " - " + currentFilePy.get() : ""),
             currentFilePy
@@ -166,18 +193,18 @@ public class TileMapEditor  {
         return mapPy.get();
     }
 
-    private WorldMap newMap(int numRows, int numCols) {
+    private WorldMap newPacManGameMap(int numRows, int numCols) {
         var map = new WorldMap(numRows, numCols);
-        map.terrain().setProperty(PROPERTY_COLOR_WALL_STROKE, DEFAULT_COLOR_WALL_STROKE);
-        map.terrain().setProperty(PROPERTY_COLOR_WALL_FILL,   DEFAULT_COLOR_WALL_FILL);
-        map.terrain().setProperty(PROPERTY_COLOR_DOOR,        DEFAULT_COLOR_DOOR);
-        map.terrain().setProperty(PROPERTY_POS_PAC,           formatTile(DEFAULT_POS_PAC));
-        map.terrain().setProperty(PROPERTY_POS_RED_GHOST,     formatTile(DEFAULT_POS_RED_GHOST));
-        map.terrain().setProperty(PROPERTY_POS_PINK_GHOST,    formatTile(DEFAULT_POS_PINK_GHOST));
-        map.terrain().setProperty(PROPERTY_POS_CYAN_GHOST,    formatTile(DEFAULT_POS_CYAN_GHOST));
-        map.terrain().setProperty(PROPERTY_POS_ORANGE_GHOST,  formatTile(DEFAULT_POS_ORANGE_GHOST));
-        map.terrain().setProperty(PROPERTY_POS_BONUS,         formatTile(DEFAULT_POS_BONUS));
-        map.food().setProperty(PROPERTY_COLOR_FOOD,           DEFAULT_FOOD_COLOR);
+        map.terrain().setProperty("color_wall_stroke", DEFAULT_COLOR_WALL_STROKE);
+        map.terrain().setProperty("color_wall_fill",   DEFAULT_COLOR_WALL_FILL);
+        map.terrain().setProperty("color_door",        DEFAULT_COLOR_DOOR);
+        map.terrain().setProperty("pos_pac",           formatTile(DEFAULT_POS_PAC));
+        map.terrain().setProperty("pos_ghost_1_red",     formatTile(DEFAULT_POS_RED_GHOST));
+        map.terrain().setProperty("pos_ghost_2_pink",    formatTile(DEFAULT_POS_PINK_GHOST));
+        map.terrain().setProperty("pos_ghost_3_cyan",    formatTile(DEFAULT_POS_CYAN_GHOST));
+        map.terrain().setProperty("pos_ghost_4_orange",  formatTile(DEFAULT_POS_ORANGE_GHOST));
+        map.terrain().setProperty("pos_bonus",         formatTile(DEFAULT_POS_BONUS));
+        map.food().setProperty("color_food",           DEFAULT_FOOD_COLOR);
         addBorder(map.terrain(), 3, 2);
         GHOST_HOUSE_SHAPE.addToMap(map.terrain(), DEFAULT_POS_RED_GHOST.y() + 1, map.numCols() / 2 - 4);
         invalidateTerrainMapPaths();
@@ -545,7 +572,7 @@ public class TileMapEditor  {
             try {
                 int numCols = Integer.parseInt(tuple[0].trim());
                 int numRows = Integer.parseInt(tuple[1].trim());
-                setMap(newMap(numRows, numCols));
+                setMap(newPacManGameMap(numRows, numCols));
             } catch (Exception x) {
                 Logger.error(x);
             }
@@ -860,5 +887,4 @@ public class TileMapEditor  {
     private void updateSourceHtml() {
         mapSourceView.getEngine().loadContent(map().htmlText());
     }
-
 }

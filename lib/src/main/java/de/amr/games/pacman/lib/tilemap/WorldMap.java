@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.lib.tilemap;
 
-import de.amr.games.pacman.lib.Vector2i;
 import org.tinylog.Logger;
 
 import java.io.*;
@@ -19,35 +18,6 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  * @author Armin Reichert
  */
 public class WorldMap {
-
-    public static final String PROPERTY_COLOR_WALL_STROKE = "color_wall_stroke";
-    public static final String PROPERTY_COLOR_WALL_FILL = "color_wall_fill";
-    public static final String PROPERTY_COLOR_DOOR = "color_door";
-    public static final String PROPERTY_POS_BONUS = "pos_bonus";
-    public static final String PROPERTY_POS_PAC = "pos_pac";
-    public static final String PROPERTY_POS_RED_GHOST = "pos_ghost_1_red";
-    public static final String PROPERTY_POS_PINK_GHOST = "pos_ghost_2_pink";
-    public static final String PROPERTY_POS_CYAN_GHOST = "pos_ghost_3_cyan";
-    public static final String PROPERTY_POS_ORANGE_GHOST = "pos_ghost_4_orange";
-    public static final String PROPERTY_POS_SCATTER_RED_GHOST = "pos_scatter_ghost_1_red";
-    public static final String PROPERTY_POS_SCATTER_PINK_GHOST = "pos_scatter_ghost_2_pink";
-    public static final String PROPERTY_POS_SCATTER_CYAN_GHOST = "pos_scatter_ghost_3_cyan";
-    public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
-
-    public static final String PROPERTY_COLOR_FOOD = "color_food";
-
-    public static final String DEFAULT_COLOR_WALL_STROKE = "rgb(0,0,255)";
-    public static final String DEFAULT_COLOR_WALL_FILL   = "rgb(0,0,0)";
-    public static final String DEFAULT_COLOR_DOOR        = "rgb(0,255,255)";
-
-    public static final Vector2i DEFAULT_POS_PAC          = new Vector2i(13, 26);
-    public static final Vector2i DEFAULT_POS_RED_GHOST    = new Vector2i(13, 14);
-    public static final Vector2i DEFAULT_POS_PINK_GHOST   = new Vector2i(13, 17);
-    public static final Vector2i DEFAULT_POS_CYAN_GHOST   = new Vector2i(11, 17);
-    public static final Vector2i DEFAULT_POS_ORANGE_GHOST = new Vector2i(15, 17);
-    public static final Vector2i DEFAULT_POS_BONUS        = new Vector2i(13, 20);
-
-    public static final String DEFAULT_FOOD_COLOR         = "rgb(255,0,0)";
 
     private static final String TERRAIN_SECTION_START = "!terrain";
     private static final String FOOD_SECTION_START    = "!food";

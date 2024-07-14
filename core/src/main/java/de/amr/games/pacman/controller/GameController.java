@@ -126,7 +126,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         return Collections.unmodifiableList(supportedVariants);
     }
 
-    public List<WorldMap> getCustomMapsByFile() {
+    public List<WorldMap> getCustomMapsSortedByFileName() {
         return customMapsByFile.keySet().stream().sorted().map(customMapsByFile::get).toList();
     }
 

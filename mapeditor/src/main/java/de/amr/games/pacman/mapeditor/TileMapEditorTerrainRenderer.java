@@ -7,7 +7,6 @@ package de.amr.games.pacman.mapeditor;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -15,6 +14,7 @@ import javafx.scene.shape.ArcType;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.tilemap.TileMap.parseVector2i;
+import static de.amr.games.pacman.mapeditor.TileMapEditor.*;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.TILE_SIZE;
 
 /**
@@ -166,15 +166,15 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
 
     public void drawSpecialTile(GraphicsContext g, String propertyName, Vector2i tile) {
         switch (propertyName) {
-            case WorldMap.PROPERTY_POS_PAC -> drawPacHome(g, tile);
-            case WorldMap.PROPERTY_POS_RED_GHOST -> drawGhostHome(g, tile, Color.RED);
-            case WorldMap.PROPERTY_POS_PINK_GHOST -> drawGhostHome(g, tile, Color.PINK);
-            case WorldMap.PROPERTY_POS_CYAN_GHOST -> drawGhostHome(g, tile, Color.CYAN);
-            case WorldMap.PROPERTY_POS_ORANGE_GHOST -> drawGhostHome(g, tile, Color.ORANGE);
-            case WorldMap.PROPERTY_POS_SCATTER_RED_GHOST -> drawScatterTarget(g, tile, Color.RED);
-            case WorldMap.PROPERTY_POS_SCATTER_PINK_GHOST -> drawScatterTarget(g, tile, Color.PINK);
-            case WorldMap.PROPERTY_POS_SCATTER_CYAN_GHOST -> drawScatterTarget(g, tile, Color.CYAN);
-            case WorldMap.PROPERTY_POS_SCATTER_ORANGE_GHOST -> drawScatterTarget(g, tile, Color.ORANGE);
+            case PROPERTY_POS_PAC -> drawPacHome(g, tile);
+            case PROPERTY_POS_RED_GHOST -> drawGhostHome(g, tile, Color.RED);
+            case PROPERTY_POS_PINK_GHOST -> drawGhostHome(g, tile, Color.PINK);
+            case PROPERTY_POS_CYAN_GHOST -> drawGhostHome(g, tile, Color.CYAN);
+            case PROPERTY_POS_ORANGE_GHOST -> drawGhostHome(g, tile, Color.ORANGE);
+            case PROPERTY_POS_SCATTER_RED_GHOST -> drawScatterTarget(g, tile, Color.RED);
+            case PROPERTY_POS_SCATTER_PINK_GHOST -> drawScatterTarget(g, tile, Color.PINK);
+            case PROPERTY_POS_SCATTER_CYAN_GHOST -> drawScatterTarget(g, tile, Color.CYAN);
+            case PROPERTY_POS_SCATTER_ORANGE_GHOST -> drawScatterTarget(g, tile, Color.ORANGE);
             default -> {}
         }
     }
@@ -182,15 +182,15 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
     public void drawSpecialTiles(GraphicsContext g, TileMap terrainMap) {
         g.save();
         g.scale(scaling(), scaling());
-        specialTile(terrainMap, WorldMap.PROPERTY_POS_PAC).ifPresent(tile -> drawPacHome(g, tile));
-        specialTile(terrainMap, WorldMap.PROPERTY_POS_RED_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.RED));
-        specialTile(terrainMap, WorldMap.PROPERTY_POS_PINK_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.PINK));
-        specialTile(terrainMap, WorldMap.PROPERTY_POS_CYAN_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.CYAN));
-        specialTile(terrainMap, WorldMap.PROPERTY_POS_ORANGE_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.ORANGE));
-        specialTile(terrainMap, WorldMap.PROPERTY_POS_SCATTER_RED_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.RED));
-        specialTile(terrainMap, WorldMap.PROPERTY_POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.PINK));
-        specialTile(terrainMap, WorldMap.PROPERTY_POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.CYAN));
-        specialTile(terrainMap, WorldMap.PROPERTY_POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.ORANGE));
+        specialTile(terrainMap, PROPERTY_POS_PAC).ifPresent(tile -> drawPacHome(g, tile));
+        specialTile(terrainMap, PROPERTY_POS_RED_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.RED));
+        specialTile(terrainMap, PROPERTY_POS_PINK_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.PINK));
+        specialTile(terrainMap, PROPERTY_POS_CYAN_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.CYAN));
+        specialTile(terrainMap, PROPERTY_POS_ORANGE_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.ORANGE));
+        specialTile(terrainMap, PROPERTY_POS_SCATTER_RED_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.RED));
+        specialTile(terrainMap, PROPERTY_POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.PINK));
+        specialTile(terrainMap, PROPERTY_POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.CYAN));
+        specialTile(terrainMap, PROPERTY_POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.ORANGE));
         g.restore();
     }
 }

@@ -118,7 +118,7 @@ public class MsPacManGame extends AbstractPacManGame  {
         URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world");
         var map = new WorldMap(mapURL);
         if (blueMazeBug && levelNumber == 1) {
-            map.terrain().setProperty(WorldMap.PROPERTY_COLOR_WALL_FILL, "rgb(33,33,255)");
+            map.terrain().setProperty(World.PROPERTY_COLOR_WALL_FILL, "rgb(33,33,255)");
         }
         var msPacManWorld = createMsPacManWorld(map);
         setWorldAndCreatePopulation(msPacManWorld);

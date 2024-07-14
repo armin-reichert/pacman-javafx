@@ -15,7 +15,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.halfTileRightOf;
 import static de.amr.games.pacman.lib.Globals.v2i;
 import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
 
@@ -25,7 +24,7 @@ import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
  */
 public class PacManXXLGame extends PacManGame {
 
-    private WorldMap[] masonicMaps = new WorldMap[8];
+    private final WorldMap[] masonicMaps = new WorldMap[8];
     private List<WorldMap> customMaps = new ArrayList<>();
 
     @Override

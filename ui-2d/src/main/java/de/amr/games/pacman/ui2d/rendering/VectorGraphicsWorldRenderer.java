@@ -12,8 +12,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.lib.tilemap.WorldMap.*;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.getColorFromMap;
+import static de.amr.games.pacman.model.world.World.*;
 import static java.util.function.Predicate.not;
 
 /**

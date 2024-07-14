@@ -47,7 +47,7 @@ public class MazeMapGenerator {
         }
         computeWallContour(map, new Vector2i(0, EMPTY_ROWS_ABOVE));
         addFood(map);
-        terrain.setProperty(WorldMap.PROPERTY_COLOR_WALL_FILL, "#993300");
+        terrain.setProperty("color_wall_fill", "#993300");
         return map;
     }
 
