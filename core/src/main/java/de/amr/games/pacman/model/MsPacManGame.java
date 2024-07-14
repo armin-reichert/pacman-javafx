@@ -58,8 +58,6 @@ public class MsPacManGame extends AbstractPacManGame  {
     private static World createWorld(WorldMap map) {
         var world = new World(map);
         world.createArcadeHouse(10, 15);
-        world.setPacPositionFromMap(map);
-        world.setGhostPositionsFromMap(map);
         return world;
     }
 

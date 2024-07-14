@@ -45,15 +45,20 @@ public class World {
     }
 
     private final WorldMap map;
+    private final Vector2f pacPosition;
+    private final Vector2f[] ghostPositions;
+    private Direction[] ghostDirections;
+    private Vector2i houseTopLeftTile;
+    private Vector2i houseSize;
+    private Door houseEntry;
+    private final List<Vector2i> energizerTiles;
+    private final ArrayList<Portal> portals;
+    private Map<Vector2i, List<Direction>> forbiddenPassages = Map.of();
 
     // instead of Set<Vector2i> we use a bitmap: tile -> index(tile) -> bitmap value
     private final BitSet eatenFood;
     private final int totalFoodCount;
     private int uneatenFoodCount;
-
-    private final List<Vector2i> energizerTiles;
-    private final ArrayList<Portal> portals;
-    private Map<Vector2i, List<Direction>> forbiddenPassages = Map.of();
 
     public World(WorldMap map) {
         this.map = checkNotNull(map);
@@ -66,11 +71,28 @@ public class World {
             }
         }
         portals.trimToSize();
+
         map.terrain().computeTerrainPaths();
+
+        Vector2i pacHomeTile = map.terrain().getTileProperty(World.PROPERTY_POS_PAC, v2i(13, 26));
+        pacPosition = pacHomeTile.toFloatVec().scaled(TS).plus(HTS, 0);
+        ghostPositions = new Vector2f[4];
+
+        Vector2i homeTileRed = map.terrain().getTileProperty(World.PROPERTY_POS_RED_GHOST, v2i(13,14));
+        ghostPositions[RED_GHOST] = positionHalfTileRightOf(homeTileRed);
+
+        Vector2i homeTilePink = map.terrain().getTileProperty(World.PROPERTY_POS_PINK_GHOST, v2i(13,17));
+        ghostPositions[PINK_GHOST] = positionHalfTileRightOf(homeTilePink);
+
+        Vector2i homeTileCyan = map.terrain().getTileProperty(World.PROPERTY_POS_CYAN_GHOST, v2i(11,17));
+        ghostPositions[CYAN_GHOST] = positionHalfTileRightOf(homeTileCyan);
+
+        Vector2i homeTileOrange = map.terrain().getTileProperty(World.PROPERTY_POS_ORANGE_GHOST, v2i(15,17));
+        ghostPositions[ORANGE_GHOST] = positionHalfTileRightOf(homeTileOrange);
+
         energizerTiles = map.food().tiles(ENERGIZER).toList();
         eatenFood = new BitSet(map.food().numCols() * map.food().numRows());
-        uneatenFoodCount = totalFoodCount
-            = (int) map.food().tiles().filter(tile -> map.food().get(tile) != EMPTY).count();
+        uneatenFoodCount = totalFoodCount = (int) map.food().tiles().filter(tile -> map.food().get(tile) != EMPTY).count();
     }
 
     /**
@@ -78,8 +100,7 @@ public class World {
      * @param topLeftY tile-y of top left corner
      */
     public void createArcadeHouse(int topLeftX, int topLeftY) {
-        setHouseTopLeftTile(v2i(topLeftX, topLeftY));
-        setHouseSize(v2i(8, 5));
+        setHouseArea(topLeftX, topLeftY, 8, 5);
         setHouseEntry(new Door(v2i(topLeftX + 3, topLeftY), v2i(topLeftX + 4, topLeftY)));
         setGhostDirections(new Direction[] {Direction.LEFT, Direction.DOWN, Direction.UP, Direction.UP});
     }
@@ -173,23 +194,9 @@ public class World {
 
     // House
 
-    private Vector2f pacPosition;
-    private Vector2f[] ghostPositions;
-    private Direction[] ghostDirections;
-    private Vector2i houseTopLeftTile;
-    private Vector2i houseSize;
-    private Door houseEntry;
-
-    public void setHouseTopLeftTile(Vector2i minTile) {
-        this.houseTopLeftTile = checkTileNotNull(minTile);
-    }
-
-    public void setHouseSize(Vector2i size) {
-        checkNotNull(size);
-        if (size.x() < 1 || size.y() < 1) {
-            throw new IllegalArgumentException("House size must be larger than one square tile but is: " + size);
-        }
-        this.houseSize = size;
+    public void setHouseArea(int topLeftX, int topLeftY, int numTilesX, int numTilesY)  {
+        houseTopLeftTile = v2i(topLeftX, topLeftY);
+        houseSize = v2i(numTilesX, numTilesY);
     }
 
     public void setHouseEntry(Door door) {
@@ -221,27 +228,6 @@ public class World {
         Vector2i max = houseTopLeftTile.plus(houseSize().minus(1, 1));
         return tile.x() >= houseTopLeftTile.x() && tile.x() <= max.x() //
             && tile.y() >= houseTopLeftTile.y() && tile.y() <= max.y();
-    }
-
-    public void setPacPositionFromMap(WorldMap map) {
-        Vector2i pacHomeTile = map.terrain().getTileProperty(World.PROPERTY_POS_PAC, v2i(13, 26));
-        pacPosition = pacHomeTile.toFloatVec().scaled(TS).plus(HTS, 0);
-    }
-
-    public void setGhostPositionsFromMap(WorldMap map) {
-        ghostPositions = new Vector2f[4];
-
-        Vector2i homeTileRed = map.terrain().getTileProperty(World.PROPERTY_POS_RED_GHOST, v2i(13,14));
-        ghostPositions[RED_GHOST] = positionHalfTileRightOf(homeTileRed);
-
-        Vector2i homeTilePink = map.terrain().getTileProperty(World.PROPERTY_POS_PINK_GHOST, v2i(13,17));
-        ghostPositions[PINK_GHOST] = positionHalfTileRightOf(homeTilePink);
-
-        Vector2i homeTileCyan = map.terrain().getTileProperty(World.PROPERTY_POS_CYAN_GHOST, v2i(11,17));
-        ghostPositions[CYAN_GHOST] = positionHalfTileRightOf(homeTileCyan);
-
-        Vector2i homeTileOrange = map.terrain().getTileProperty(World.PROPERTY_POS_ORANGE_GHOST, v2i(15,17));
-        ghostPositions[ORANGE_GHOST] = positionHalfTileRightOf(homeTileOrange);
     }
 
     public Vector2f pacPosition() {

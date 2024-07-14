@@ -67,8 +67,6 @@ public class PacManGame extends AbstractPacManGame {
     private static World createWorld(WorldMap map) {
         var world = new World(map);
         world.createArcadeHouse(10, 15);
-        world.setPacPositionFromMap(map);
-        world.setGhostPositionsFromMap(map);
         List<Direction> up = List.of(UP);
         Map<Vector2i, List<Direction>> fp = new HashMap<>();
         Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> fp.put(tile, up));

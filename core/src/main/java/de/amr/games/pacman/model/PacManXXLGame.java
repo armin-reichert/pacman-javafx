@@ -28,8 +28,6 @@ public class PacManXXLGame extends PacManGame {
         int houseTopLeftX = map.numCols() / 2 - 4;
         int houseTopLeftY = map.numRows() / 2 - 3;
         world.createArcadeHouse(houseTopLeftX, houseTopLeftY);
-        world.setPacPositionFromMap(map);
-        world.setGhostPositionsFromMap(map);
         return world;
     }
 
