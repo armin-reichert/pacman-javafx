@@ -58,7 +58,7 @@ public enum Perspective implements CameraController {
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(70);
             cam.setTranslateX(111);
-            int numRows = world != null ? world.numRows() : GameModel.ARCADE_MAP_SIZE_Y;
+            int numRows = world != null ? world.map().numRows() : GameModel.ARCADE_MAP_SIZE_Y;
             cam.setTranslateY( 8.5 * numRows + 175);
             cam.setTranslateZ(-120);
         }

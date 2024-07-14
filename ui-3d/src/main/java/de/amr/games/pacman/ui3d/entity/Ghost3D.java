@@ -144,7 +144,7 @@ public class Ghost3D extends Group {
         setTranslateZ(-0.5 * size);
         // TODO: make transition to new wish dir if changed
         orientation.setAngle(Turn.angle(ghost.wishDir()));
-        boolean outside = center.x() < HTS || center.x() > ghost.world().numCols() * TS - HTS;
+        boolean outside = center.x() < HTS || center.x() > ghost.world().map().numCols() * TS - HTS;
         setVisible(ghost.isVisible() && !outside);
     }
 

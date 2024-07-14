@@ -41,18 +41,19 @@ public class World {
 
     private final WorldMap map;
 
+    // instead of Set<Vector2i> we use a bitmap: tile -> index(tile) -> bitmap value
     private final BitSet eatenFood;
     private final int totalFoodCount;
     private int uneatenFoodCount;
 
     private final List<Vector2i> energizerTiles;
-    private List<Portal> portals;
+    private ArrayList<Portal> portals;
     private Map<Vector2i, List<Direction>> forbiddenPassages = Map.of();
     private House house;
 
     public World(WorldMap map) {
         this.map = checkNotNull(map);
-        findPortals();
+        buildPortals();
         map.terrain().computeTerrainPaths();
         energizerTiles = map.food().tiles(ENERGIZER).toList();
         eatenFood = new BitSet(map.food().numCols() * map.food().numRows());
@@ -64,27 +65,30 @@ public class World {
         checkGhostID(ghostID);
         return switch (ghostID) {
             case RED_GHOST -> map.terrain().getTileProperty(
-                PROPERTY_POS_SCATTER_RED_GHOST, v2i(0, numCols() - 3));
+                PROPERTY_POS_SCATTER_RED_GHOST, v2i(0, map.numCols() - 3));
             case PINK_GHOST -> map.terrain().getTileProperty(
                 PROPERTY_POS_SCATTER_PINK_GHOST, v2i(0, 3));
             case CYAN_GHOST -> map.terrain().getTileProperty(
-                PROPERTY_POS_SCATTER_CYAN_GHOST, new Vector2i(numRows()-1, numCols()-1));
+                PROPERTY_POS_SCATTER_CYAN_GHOST, v2i(map.numRows() - 1, map.numCols() - 1));
             case ORANGE_GHOST -> map.terrain().getTileProperty(
-                PROPERTY_POS_SCATTER_ORANGE_GHOST, new Vector2i(numRows()-1, 0));
+                PROPERTY_POS_SCATTER_ORANGE_GHOST, v2i(map.numRows() - 1, 0));
             default -> throw new IllegalArgumentException("Illegal ghost ID: " + ghostID);
         };
     }
 
-    private void findPortals() {
+    /**
+     * Searches for tunnels that connect horizontally and creates portals.
+     */
+    private void buildPortals() {
         portals = new ArrayList<>();
-        int lastColumn = numCols() - 1;
-        for (int row = 0; row < numRows(); ++row) {
-            var leftBorderTile = v2i(0, row);
-            var rightBorderTile = v2i(lastColumn, row);
-            if (map.terrain().get(row, 0) == TUNNEL && map.terrain().get(row, lastColumn) == TUNNEL) {
+        int firstColumn = 0, lastColumn = map.numCols() - 1;
+        for (int row = 0; row < map.numRows(); ++row) {
+            Vector2i leftBorderTile = v2i(firstColumn, row), rightBorderTile = v2i(lastColumn, row);
+            if (map.terrain().get(row, firstColumn) == TUNNEL && map.terrain().get(row, lastColumn) == TUNNEL) {
                 portals.add(new Portal(leftBorderTile, rightBorderTile, 2));
             }
         }
+        portals.trimToSize();
     }
 
     public void setHouse(House house) {
@@ -93,14 +97,6 @@ public class World {
 
     public House house() {
         return house;
-    }
-
-    public int numCols() {
-        return map.numCols();
-    }
-
-    public int numRows() {
-        return map.numRows();
     }
 
     public WorldMap map() {
@@ -113,7 +109,7 @@ public class World {
     }
 
     public boolean containsPoint(double x, double y) {
-        return 0 <= x && x <= numCols() * TS && 0 <= y && y <= numRows() * TS;
+        return 0 <= x && x <= map.numCols() * TS && 0 <= y && y <= map.numRows() * TS;
     }
 
     public void setForbiddenPassages(Map<Vector2i, List<Direction>> forbiddenPassages) {

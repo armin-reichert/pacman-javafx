@@ -151,7 +151,7 @@ public class GameLevel3D extends Group {
         livesCounter3D = createLivesCounter();
         updateLivesCounter();
         createMessage3D();
-        Box floor = createFloor(world.numCols() * TS - 1, world.numRows() * TS - 1);
+        Box floor = createFloor(world.map().numCols() * TS - 1, world.map().numRows() * TS - 1);
         addMaze(mazeGroup);
         addHouse(mazeGroup);
         addPellets(this); // when put inside maze group, transparency does not work!
@@ -174,8 +174,8 @@ public class GameLevel3D extends Group {
         World world = context.game().world();
         House house = world.house();
         if (context.gameState() == GameState.LEVEL_TEST) {
-            double x = world.numCols() * HTS;
-            double y = (world.numRows() - 2) * TS;
+            double x = world.map().numCols() * HTS;
+            double y = (world.map().numRows() - 2) * TS;
             showMessage("TEST LEVEL " + context.game().levelNumber(), 5,x, y);
         } else if (!context.game().isDemoLevel()) {
             double x = TS * (house.topLeftTile().x() + 0.5 * house.size().x());
@@ -432,7 +432,7 @@ public class GameLevel3D extends Group {
         double spacing = 2 * TS;
         // this is the *right* edge of the level counter:
         var levelCounter3D = new Group();
-        levelCounter3D.setTranslateX(world.numCols() * TS - spacing);
+        levelCounter3D.setTranslateX(world.map().numCols() * TS - spacing);
         levelCounter3D.setTranslateY(spacing);
         levelCounter3D.setTranslateZ(-6);
         levelCounter3D.getChildren().clear();
