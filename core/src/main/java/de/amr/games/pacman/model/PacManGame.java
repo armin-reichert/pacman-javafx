@@ -7,7 +7,6 @@ package de.amr.games.pacman.model;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.NavPoint;
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -116,10 +115,6 @@ public class PacManGame extends AbstractPacManGame {
         house.setGhostPositionsFromMap(map);
         world.addHouse(house);
 
-        Vector2f bonusPosition = map.terrain().getTileProperty(WorldMap.PROPERTY_POS_BONUS, WorldMap.DEFAULT_POS_BONUS)
-            .scaled(TS).toFloatVec().plus(HTS, 0);
-        world.setBonusPosition(bonusPosition);
-
         // special tiles
         List<Direction> up = List.of(UP);
         Map<Vector2i, List<Direction>> fp = new HashMap<>();
@@ -171,7 +166,8 @@ public class PacManGame extends AbstractPacManGame {
         nextBonusIndex += 1;
         byte symbol = bonusSymbols[nextBonusIndex];
         bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
-        bonus.entity().setPosition(world.bonusPosition());
+        Vector2i bonusTile = world.map().terrain().getTileProperty(WorldMap.PROPERTY_POS_BONUS, WorldMap.DEFAULT_POS_BONUS);
+        bonus.entity().setPosition(bonusTile.x() * TS + HTS, bonusTile.y() * TS);
         bonus.setEdible(randomInt(540, 600));
         publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
     }

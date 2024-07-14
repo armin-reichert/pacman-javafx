@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.world;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 
@@ -35,7 +34,6 @@ public class World {
     private final List<Vector2i> energizerTiles;
     private List<Portal> portals;
     private Vector2i[] ghostScatterTiles;
-    private Vector2f bonusPosition;
 
     private Map<Vector2i, List<Direction>> forbiddenPassages = Map.of();
 
@@ -125,14 +123,6 @@ public class World {
 
     public Map<Vector2i, List<Direction>> forbiddenPassages() {
         return forbiddenPassages;
-    }
-
-    public void setBonusPosition(Vector2f position) {
-        bonusPosition = position;
-    }
-
-    public Vector2f bonusPosition() {
-        return bonusPosition;
     }
 
     /**

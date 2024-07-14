@@ -23,6 +23,7 @@ public class WorldMap {
     public static final String PROPERTY_COLOR_WALL_STROKE = "color_wall_stroke";
     public static final String PROPERTY_COLOR_WALL_FILL = "color_wall_fill";
     public static final String PROPERTY_COLOR_DOOR = "color_door";
+    public static final String PROPERTY_POS_BONUS = "pos_bonus";
     public static final String PROPERTY_POS_PAC = "pos_pac";
     public static final String PROPERTY_POS_RED_GHOST = "pos_ghost_1_red";
     public static final String PROPERTY_POS_PINK_GHOST = "pos_ghost_2_pink";
@@ -32,7 +33,6 @@ public class WorldMap {
     public static final String PROPERTY_POS_SCATTER_PINK_GHOST = "pos_scatter_ghost_2_pink";
     public static final String PROPERTY_POS_SCATTER_CYAN_GHOST = "pos_scatter_ghost_3_cyan";
     public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
-    public static final String PROPERTY_POS_BONUS = "pos_bonus";
 
     public static final String PROPERTY_COLOR_FOOD = "color_food";
 

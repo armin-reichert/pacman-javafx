@@ -83,7 +83,6 @@ public class PacManXXLGame extends PacManGame {
         house.setPacPositionFromMap(map);
         house.setGhostPositionsFromMap(map);
         world.addHouse(house);
-        world.setBonusPosition(halfTileRightOf(13, 20)); // TODO get position from map?
         return world;
     }
 }
