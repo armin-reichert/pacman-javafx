@@ -6,7 +6,6 @@ package de.amr.games.pacman.model.world;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 
 import java.util.ArrayList;
@@ -88,7 +87,7 @@ public class World {
         }
     }
 
-    public void addHouse(House house) {
+    public void setHouse(House house) {
         this.house = checkNotNull(house);
     }
 
@@ -102,10 +101,6 @@ public class World {
 
     public int numRows() {
         return map.numRows();
-    }
-
-    public Stream<Vector2i> tiles() {
-        return map.terrain().tiles();
     }
 
     public WorldMap map() {

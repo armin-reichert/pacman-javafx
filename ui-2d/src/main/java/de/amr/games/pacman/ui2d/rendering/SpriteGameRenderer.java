@@ -63,7 +63,7 @@ public class SpriteGameRenderer {
             g.scale(scalingPy.get(), scalingPy.get());
             drawSprite(g, spriteSheet.getFullMazeSprite(), 0, t(3));
             g.restore();
-            world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideFoodTileContent(g, world, tile));
+            world.map().food().tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideFoodTileContent(g, world, tile));
             if (!blinkingOn) {
                 world.energizerTiles().forEach(tile -> hideFoodTileContent(g, world, tile));
             }
@@ -113,7 +113,7 @@ public class SpriteGameRenderer {
             g.scale(scalingPy.get(), scalingPy.get());
             drawSprite(g, spriteSheet.filledMaze(mapNumber), x, y);
             g.restore();
-            world.tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideFoodTileContent(g, world, tile));
+            world.map().food().tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideFoodTileContent(g, world, tile));
             if (!blinkingOn) {
                 world.energizerTiles().forEach(tile -> hideFoodTileContent(g, world, tile));
             }

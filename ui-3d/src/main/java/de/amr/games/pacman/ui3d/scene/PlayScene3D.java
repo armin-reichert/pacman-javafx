@@ -308,7 +308,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         // When cheat "eat all pellets" has been used, no tile is present in the event.
         // In that case, ensure that the 3D pellets are in sync with the model.
         if (event.tile().isEmpty()) {
-            world.tiles()
+            world.map().food().tiles()
                 .filter(world::hasEatenFoodAt)
                 .map(level3D::pellet3D)
                 .flatMap(Optional::stream)

@@ -46,7 +46,7 @@ public class VectorGraphicsWorldRenderer {
             var foodColor = getColorFromMap(world.map().food(), PROPERTY_COLOR_FOOD, Color.ORANGE);
             foodRenderer.setPelletColor(foodColor);
             foodRenderer.setEnergizerColor(foodColor);
-            world.tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerTile)).forEach(tile -> foodRenderer.drawPellet(g, tile));
+            world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerTile)).forEach(tile -> foodRenderer.drawPellet(g, tile));
             if (blinkingOn) {
                 world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(g, tile));
             }

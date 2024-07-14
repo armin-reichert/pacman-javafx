@@ -81,7 +81,7 @@ public class PacManXXLGame extends PacManGame {
         House house = House.createArcadeHouse(v2i(topLeftX, topLeftY));
         house.setPacPositionFromMap(map);
         house.setGhostPositionsFromMap(map);
-        world.addHouse(house);
+        world.setHouse(house);
         return world;
     }
 }

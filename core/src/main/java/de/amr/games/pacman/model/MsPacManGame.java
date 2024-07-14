@@ -146,7 +146,7 @@ public class MsPacManGame extends AbstractPacManGame  {
         House house = House.createArcadeHouse(v2i(10, 15));
         house.setPacPositionFromMap(map);
         house.setGhostPositionsFromMap(map);
-        msPacManWorld.addHouse(house);
+        msPacManWorld.setHouse(house);
         return msPacManWorld;
     }
 

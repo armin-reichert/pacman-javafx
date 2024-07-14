@@ -113,7 +113,7 @@ public class PacManGame extends AbstractPacManGame {
         House house = House.createArcadeHouse(v2i(10, 15));
         house.setPacPositionFromMap(map);
         house.setGhostPositionsFromMap(map);
-        world.addHouse(house);
+        world.setHouse(house);
 
         // special tiles
         List<Direction> up = List.of(UP);
