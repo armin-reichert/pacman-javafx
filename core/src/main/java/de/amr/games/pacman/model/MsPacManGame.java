@@ -248,7 +248,7 @@ public class MsPacManGame extends AbstractPacManGame  {
         nextBonusIndex += 1;
 
         boolean leftToRight = RND.nextBoolean();
-        var houseEntry = tileAt(world.houseDoor().entryPosition());
+        var houseEntry = tileAt(world.houseEntryPosition());
         var houseEntryOpposite = houseEntry.plus(0, world.houseSize().y() + 1);
         var entryPortal = world.portals().get(RND.nextInt(world.portals().size()));
         var exitPortal  = world.portals().get(RND.nextInt(world.portals().size()));

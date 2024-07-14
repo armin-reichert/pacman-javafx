@@ -208,7 +208,7 @@ public class GameLevel3D extends Group {
         houseUsedPy.set(
             game.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
                 .anyMatch(Ghost::isVisible));
-        Vector2f houseEntryPosition = game.world().houseDoor().entryPosition();
+        Vector2f houseEntryPosition = game.world().houseEntryPosition();
         houseOpenPy.set(
             game.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
                 .filter(ghost -> ghost.position().euclideanDistance(houseEntryPosition) <= HOUSE_SENSITIVITY)
@@ -258,7 +258,7 @@ public class GameLevel3D extends Group {
         int yMin = world.houseTopLeftTile().y();
         int yMax = yMin + world.houseSize().y() - 1;
 
-        Vector2i leftDoorTile = world.houseDoor().leftWing(), rightDoorTile = world.houseDoor().rightWing();
+        Vector2i leftDoorTile = world.houseLeftDoorTile(), rightDoorTile = world.houseRightDoorTile();
         parent.getChildren().addAll(
             createHouseWall(xMin, yMin, leftDoorTile.x() - 1, yMin),
             createHouseWall(rightDoorTile.x() + 1, yMin, xMax, yMin),

@@ -166,7 +166,7 @@ public class Ghost extends Creature {
                 }
             }
         }
-        if (world.houseDoor().occupies(tile)) {
+        if (world.belongsToDoors(tile)) {
             return inState(ENTERING_HOUSE, LEAVING_HOUSE);
         }
         if (world.isInsideWorld(tile)) {
@@ -318,7 +318,7 @@ public class Ghost extends Creature {
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
     private void updateStateLeavingHouse(GameModel game) {
-        Vector2f houseEntryPosition = world.houseDoor().entryPosition();
+        Vector2f houseEntryPosition = world.houseEntryPosition();
         if (posY() <= houseEntryPosition.y()) {
             // has raised and is outside house
             setPosition(houseEntryPosition);
@@ -411,14 +411,14 @@ public class Ghost extends Creature {
      * to the ghost house to be revived. Hallelujah!
      */
     private void updateStateReturningToHouse() {
-        Vector2f houseEntry = world.houseDoor().entryPosition();
+        Vector2f houseEntry = world.houseEntryPosition();
         if (position().almostEquals(houseEntry, 0.5f * speedReturningToHouse, 0)) {
             setPosition(houseEntry);
             setMoveAndWishDir(DOWN);
             setState(ENTERING_HOUSE);
         } else {
             setSpeed(speedReturningToHouse);
-            setTargetTile(world.houseDoor().leftWing());
+            setTargetTile(world.houseLeftDoorTile());
             navigateTowardsTarget();
             tryMoving();
         }

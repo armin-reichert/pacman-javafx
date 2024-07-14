@@ -50,7 +50,8 @@ public class World {
     private final Direction[] ghostDirections = new Direction[4];
     private Vector2i houseTopLeftTile;
     private Vector2i houseSize;
-    private Door houseEntry;
+    private Vector2i leftDoorTile;
+    private Vector2i rightDoorTile;
     private final List<Vector2i> energizerTiles;
     private final ArrayList<Portal> portals;
     private Map<Vector2i, List<Direction>> forbiddenPassages = Map.of();
@@ -97,7 +98,7 @@ public class World {
      */
     public void createArcadeHouse(int topLeftX, int topLeftY) {
         setHouseArea(topLeftX, topLeftY, 8, 5);
-        setHouseEntry(new Door(v2i(topLeftX + 3, topLeftY), v2i(topLeftX + 4, topLeftY)));
+        setDoorTiles(v2i(topLeftX + 3, topLeftY), v2i(topLeftX + 4, topLeftY));
         setGhostDirection(RED_GHOST, Direction.LEFT);
         setGhostDirection(PINK_GHOST, Direction.DOWN);
         setGhostDirection(CYAN_GHOST, Direction.UP);
@@ -163,6 +164,11 @@ public class World {
         return portals.stream().anyMatch(portal -> portal.contains(tile));
     }
 
+    public boolean belongsToDoors(Vector2i tile) {
+        checkTileNotNull(tile);
+        return tile.equals(leftDoorTile) || tile.equals(rightDoorTile);
+    }
+
     public boolean isBlockedTile(Vector2i tile) {
         return !isOutsideWorld(tile) && isBlockedTerrain(map.terrain().get(tile));
     }
@@ -187,7 +193,7 @@ public class World {
             return false;
         }
         long numBlockedNeighbors = tile.neighbors().filter(this::isInsideWorld).filter(this::isBlockedTile).count();
-        long numDoorNeighbors = tile.neighbors().filter(this::isInsideWorld).filter(houseDoor()::occupies).count();
+        long numDoorNeighbors = tile.neighbors().filter(this::isInsideWorld).filter(this::belongsToDoors).count();
         return numBlockedNeighbors + numDoorNeighbors < 2;
     }
 
@@ -198,9 +204,11 @@ public class World {
         houseSize = v2i(numTilesX, numTilesY);
     }
 
-    public void setHouseEntry(Door door) {
-        checkNotNull(door);
-        this.houseEntry = door;
+    public void setDoorTiles(Vector2i leftTile, Vector2i rightTile) {
+        checkNotNull(leftTile);
+        checkNotNull(rightTile);
+        leftDoorTile = leftTile;
+        rightDoorTile = rightTile;
     }
 
     public Vector2i houseTopLeftTile() {
@@ -211,8 +219,19 @@ public class World {
         return houseSize;
     }
 
-    public Door houseDoor() {
-        return houseEntry;
+    public Vector2i houseLeftDoorTile() {
+        return leftDoorTile;
+    }
+
+    public Vector2i houseRightDoorTile() {
+        return rightDoorTile;
+    }
+
+    /**
+     * @return position where ghost can enter the door
+     */
+    public Vector2f houseEntryPosition() {
+        return v2f(TS * rightDoorTile.x() - HTS, TS * (rightDoorTile.y() - 1));
     }
 
     public Vector2f houseCenter() {
