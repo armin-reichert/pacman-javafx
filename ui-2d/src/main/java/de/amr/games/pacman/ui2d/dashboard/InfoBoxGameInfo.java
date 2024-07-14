@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.model.GameLevel;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.GameContext;
 
 import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
@@ -69,7 +69,7 @@ public class InfoBoxGameInfo extends InfoBox {
         return "Remaining: %s".formatted(ticksToString(context.game().huntingTimer().remaining()));
     }
 
-    private String fmtPelletCount(World world) {
+    private String fmtPelletCount(GameWorld world) {
         return "%d of %d (%d energizers)".formatted(world.uneatenFoodCount(), world.totalFoodCount(), world.energizerTiles().count());
     }
 

@@ -7,7 +7,7 @@ package de.amr.games.pacman.model.actors;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.steering.Steering;
 import org.tinylog.Logger;
 
@@ -42,7 +42,7 @@ public class Pac extends Creature {
         this(null);
     }
 
-    public Pac(World world) {
+    public Pac(GameWorld world) {
         super(world);
     }
 

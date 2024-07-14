@@ -6,7 +6,7 @@ package de.amr.games.pacman.steering;
 
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.model.actors.Creature;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.GameWorld;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class RouteBasedSteering implements Steering {
     }
 
     @Override
-    public void steer(Creature creature, World world) {
+    public void steer(Creature creature, GameWorld world) {
         creature.navigateTowardsTarget();
         if (targetIndex == route.size()) {
             complete = true;
@@ -59,7 +59,7 @@ public class RouteBasedSteering implements Steering {
         return complete;
     }
 
-    private void nextTarget(Creature creature, World world) {
+    private void nextTarget(Creature creature, GameWorld world) {
         ++targetIndex;
         if (targetIndex < route.size()) {
             creature.setTargetTile(currentTarget().tile());

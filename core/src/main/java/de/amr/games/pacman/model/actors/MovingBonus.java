@@ -11,7 +11,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.steering.RouteBasedSteering;
 import org.tinylog.Logger;
 
@@ -38,7 +38,7 @@ public class MovingBonus extends Creature implements Bonus {
     private long countdown;
     private RouteBasedSteering steering;
 
-    public MovingBonus(World world, byte symbol, int points) {
+    public MovingBonus(GameWorld world, byte symbol, int points) {
         super(world);
         this.symbol = symbol;
         this.points = points;

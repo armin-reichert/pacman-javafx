@@ -15,7 +15,6 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.world.World;
 
 import java.io.File;
 import java.util.List;
@@ -219,7 +218,7 @@ public interface GameModel {
      */
     void reset();
 
-    World world();
+    GameWorld world();
 
     Pulse blinking();
 

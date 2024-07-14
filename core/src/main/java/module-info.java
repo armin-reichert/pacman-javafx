@@ -11,6 +11,5 @@ open module de.amr.games.pacman {
     exports de.amr.games.pacman.event;
     exports de.amr.games.pacman.model;
     exports de.amr.games.pacman.model.actors;
-    exports de.amr.games.pacman.model.world;
     exports de.amr.games.pacman.steering;
 }

@@ -12,7 +12,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.StaticBonus;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.steering.RouteBasedSteering;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 
@@ -64,8 +63,8 @@ public class PacManGame extends AbstractPacManGame {
     private static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {-1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
     private static final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
 
-    private static World createWorld(WorldMap map) {
-        var world = new World(map);
+    private static GameWorld createWorld(WorldMap map) {
+        var world = new GameWorld(map);
         world.createArcadeHouse(10, 15);
         List<Direction> up = List.of(UP);
         Map<Vector2i, List<Direction>> fp = new HashMap<>();
@@ -158,7 +157,7 @@ public class PacManGame extends AbstractPacManGame {
         byte symbol = bonusSymbols[nextBonusIndex];
         bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         // in a Pac-Man XXL custom map, the bonus position might have to be taken from the map
-        Vector2i bonusTile = world.map().terrain().getTileProperty(World.PROPERTY_POS_BONUS, new Vector2i(13, 20));
+        Vector2i bonusTile = world.map().terrain().getTileProperty(GameWorld.PROPERTY_POS_BONUS, new Vector2i(13, 20));
         bonus.entity().setPosition(bonusTile.x() * TS + HTS, bonusTile.y() * TS);
         bonus.setEdible(randomInt(540, 600));
         publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());

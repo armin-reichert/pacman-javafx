@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.rendering;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.*;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -48,7 +48,7 @@ public class SpriteGameRenderer {
         this.spriteSheet = spriteSheet;
     }
 
-    public void drawPacManWorld(GraphicsContext g, World world, boolean flashing, boolean blinkingOn) {
+    public void drawPacManWorld(GraphicsContext g, GameWorld world, boolean flashing, boolean blinkingOn) {
         if (flashing) {
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());
@@ -70,7 +70,7 @@ public class SpriteGameRenderer {
         }
     }
 
-    public void hideFoodTileContent(GraphicsContext g, World world, Vector2i tile) {
+    public void hideFoodTileContent(GraphicsContext g, GameWorld world, Vector2i tile) {
         double r = world.isEnergizerTile(tile) ? 4.5 : 2;
         double cx = t(tile.x()) + HTS;
         double cy = t(tile.y()) + HTS;
@@ -96,7 +96,7 @@ public class SpriteGameRenderer {
         }
     }
 
-    public void drawMsPacManWorld(GraphicsContext g, World world, int mapNumber, boolean flashing, boolean blinkingOn) {
+    public void drawMsPacManWorld(GraphicsContext g, GameWorld world, int mapNumber, boolean flashing, boolean blinkingOn) {
         double x = 0, y = t(3);
         if (flashing) {
             g.save();

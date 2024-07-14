@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.Ufx;
@@ -95,7 +95,7 @@ public abstract class InfoBox extends TitledPane {
         return () -> context.game().level().map(infoSupplier).orElse(NO_INFO);
     }
 
-    protected Supplier<String> ifWorld(Function<World, String> infoSupplier) {
+    protected Supplier<String> ifWorld(Function<GameWorld, String> infoSupplier) {
         return () -> Optional.ofNullable(context.game().world()).map(infoSupplier).orElse(NO_INFO);
     }
 

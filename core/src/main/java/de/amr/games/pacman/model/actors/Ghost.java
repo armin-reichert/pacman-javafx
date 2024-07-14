@@ -10,7 +10,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.GameWorld;
 import org.tinylog.Logger;
 
 import java.util.Optional;
@@ -56,7 +56,7 @@ public class Ghost extends Creature {
      * {@link GameModel#CYAN_GHOST},
      * {@link GameModel#ORANGE_GHOST}.
      */
-    public Ghost(byte id, World world) {
+    public Ghost(byte id, GameWorld world) {
         super(world);
         checkGhostID(id);
         this.id = id;

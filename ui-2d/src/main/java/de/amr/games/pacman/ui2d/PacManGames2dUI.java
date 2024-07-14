@@ -14,7 +14,7 @@ import de.amr.games.pacman.mapeditor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.PacManXXLGame;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
@@ -948,7 +948,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void cheatEatAllPellets() {
         if (game().isPlaying() && gameState() == GameState.HUNTING) {
-            World world = game().world();
+            GameWorld world = game().world();
             world.map().food().tiles().filter(not(world::isEnergizerTile)).forEach(world::eatFoodAt);
             game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
         }
@@ -966,7 +966,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void cheatEnterNextLevel() {
         if (game().isPlaying() && gameState() == GameState.HUNTING) {
-            World world = game().world();
+            GameWorld world = game().world();
             stopAllSounds();
             world.map().food().tiles().forEach(world::eatFoodAt);
             gameController().changeState(GameState.LEVEL_COMPLETE);

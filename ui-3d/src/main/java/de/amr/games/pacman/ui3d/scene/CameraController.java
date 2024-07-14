@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.scene;
 
 import de.amr.games.pacman.model.actors.Entity;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.GameWorld;
 import javafx.scene.Camera;
 
 /**
@@ -15,9 +15,9 @@ import javafx.scene.Camera;
  */
 public interface CameraController {
 
-    default void init(Camera cam, World world) {
+    default void init(Camera cam, GameWorld world) {
     }
 
-    default void update(Camera cam, World world, Entity spottedEntity) {
+    default void update(Camera cam, GameWorld world, Entity spottedEntity) {
     }
 }

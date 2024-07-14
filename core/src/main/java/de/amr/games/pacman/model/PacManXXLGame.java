@@ -6,7 +6,6 @@ package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 
 import java.io.File;
@@ -14,7 +13,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.lib.Globals.v2i;
 import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
 
 /**
@@ -23,8 +21,8 @@ import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
  */
 public class PacManXXLGame extends PacManGame {
 
-    private static World createWorld(WorldMap map) {
-        var world = new World(map);
+    private static GameWorld createWorld(WorldMap map) {
+        var world = new GameWorld(map);
         int houseTopLeftX = map.numCols() / 2 - 4;
         int houseTopLeftY = map.numRows() / 2 - 3;
         world.createArcadeHouse(houseTopLeftX, houseTopLeftY);

@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui3d.scene;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Entity;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.GameWorld;
 import javafx.scene.Camera;
 import javafx.scene.transform.Rotate;
 
@@ -26,7 +26,7 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void init(Camera cam, World world) {
+        public void init(Camera cam, GameWorld world) {
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(0);
             cam.setTranslateX(0);
@@ -35,7 +35,7 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void update(Camera cam, World world, Entity spottedEntity) {
+        public void update(Camera cam, GameWorld world, Entity spottedEntity) {
             var position = spottedEntity.position();
             double speed = 0.01;
             double x = lerp(cam.getTranslateX(), position.x(), speed);
@@ -54,7 +54,7 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void init(Camera cam, World world) {
+        public void init(Camera cam, GameWorld world) {
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(70);
             cam.setTranslateX(111);
@@ -64,7 +64,7 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void update(Camera cam, World world, Entity spottedEntity) {
+        public void update(Camera cam, GameWorld world, Entity spottedEntity) {
             init(cam, world);
         }
     },
@@ -76,14 +76,14 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void init(Camera cam, World world) {
+        public void init(Camera cam, GameWorld world) {
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(60);
             cam.setTranslateZ(-160);
         }
 
         @Override
-        public void update(Camera cam, World world, Entity spottedEntity) {
+        public void update(Camera cam, GameWorld world, Entity spottedEntity) {
             double speedX = 0.03;
             double speedY = 0.06;
             cam.setTranslateX(lerp(cam.getTranslateX(), spottedEntity.position().x(), speedX));
@@ -98,13 +98,13 @@ public enum Perspective implements CameraController {
         }
 
         @Override
-        public void init(Camera cam, World world) {
+        public void init(Camera cam, GameWorld world) {
             cam.setRotationAxis(Rotate.X_AXIS);
             cam.setRotate(80);
         }
 
         @Override
-        public void update(Camera cam, World world, Entity spottedEntity) {
+        public void update(Camera cam, GameWorld world, Entity spottedEntity) {
             double speed = 0.02;
             double x = lerp(cam.getTranslateX(), spottedEntity.position().x(), speed);
             double y = lerp(cam.getTranslateY(), spottedEntity.position().y() + 150, speed);

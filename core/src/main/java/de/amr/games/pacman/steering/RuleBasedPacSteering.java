@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.*;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.GameWorld;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -73,7 +73,7 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     @Override
-    public void steer(Creature creature, World world) {
+    public void steer(Creature creature, GameWorld world) {
         if (creature.lastMove().moved && !creature.isNewTileEntered()) {
             return;
         }

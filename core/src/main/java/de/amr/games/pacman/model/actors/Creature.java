@@ -7,8 +7,8 @@ package de.amr.games.pacman.model.actors;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.world.Portal;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.Portal;
+import de.amr.games.pacman.model.GameWorld;
 import org.tinylog.Logger;
 
 import java.util.Optional;
@@ -26,7 +26,7 @@ public abstract class Creature extends Entity {
     /** Order in which directions are selected when navigation decision is met. */
     Direction[] DIRECTION_PRIORITY = {UP, LEFT, DOWN, RIGHT};
 
-    protected final World world;
+    protected final GameWorld world;
     protected final MoveResult lastMove = new MoveResult();
 
     protected Direction moveDir;
@@ -39,7 +39,7 @@ public abstract class Creature extends Entity {
     protected boolean canTeleport;
     protected float corneringSpeedUp;
 
-    protected Creature(World world) {
+    protected Creature(GameWorld world) {
         this.world = world;
     }
 
@@ -108,7 +108,7 @@ public abstract class Creature extends Entity {
         return Optional.ofNullable(targetTile);
     }
 
-    public World world() {
+    public GameWorld world() {
         return world;
     }
 

@@ -8,7 +8,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameKeys;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
@@ -304,7 +304,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
     @Override
     public void onPacFoundFood(GameEvent event) {
-        World world = context.game().world();
+        GameWorld world = context.game().world();
         // When cheat "eat all pellets" has been used, no tile is present in the event.
         // In that case, ensure that the 3D pellets are in sync with the model.
         if (event.tile().isEmpty()) {

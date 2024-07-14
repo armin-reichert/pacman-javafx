@@ -6,14 +6,14 @@ package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.mapeditor.FoodMapRenderer;
 import de.amr.games.pacman.mapeditor.TerrainMapRenderer;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.GameWorld;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.mapeditor.TileMapUtil.getColorFromMap;
-import static de.amr.games.pacman.model.world.World.*;
+import static de.amr.games.pacman.model.GameWorld.*;
 import static java.util.function.Predicate.not;
 
 /**
@@ -31,7 +31,7 @@ public class VectorGraphicsWorldRenderer {
         foodRenderer.scalingPy.bind(scalingPy);
     }
 
-    public void draw(GraphicsContext g, World world, boolean flashing, boolean blinkingOn) {
+    public void draw(GraphicsContext g, GameWorld world, boolean flashing, boolean blinkingOn) {
         var terrainMap = world.map().terrain();
         if (flashing) {
             terrainRenderer.setWallStrokeColor(blinkingOn ? Color.WHITE : getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, Color.WHITE));

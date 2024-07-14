@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Creature;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.steering.Steering;
 import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.Keyboard;
@@ -42,7 +42,7 @@ public class KeyboardPacSteering implements Steering {
     }
 
     @Override
-    public void steer(Creature creature, World world) {
+    public void steer(Creature creature, GameWorld world) {
         dirByKey.keySet().stream()
             .filter(Keyboard::pressed)
             .map(dirByKey::get)

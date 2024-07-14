@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.model.world;
+package de.amr.games.pacman.model;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
@@ -23,7 +23,7 @@ import static java.util.Collections.unmodifiableList;
 /**
  * @author Armin Reichert
  */
-public class World {
+public class GameWorld {
 
     public static final String PROPERTY_COLOR_FOOD               = "color_food";
     public static final String PROPERTY_COLOR_WALL_STROKE        = "color_wall_stroke";
@@ -61,7 +61,7 @@ public class World {
     private final int totalFoodCount;
     private int uneatenFoodCount;
 
-    public World(WorldMap map) {
+    public GameWorld(WorldMap map) {
         this.map = checkNotNull(map);
         portals = new ArrayList<>();
         int firstColumn = 0, lastColumn = map.numCols() - 1;

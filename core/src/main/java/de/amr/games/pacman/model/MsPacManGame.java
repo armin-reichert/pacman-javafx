@@ -11,7 +11,6 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.model.world.World;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
@@ -55,8 +54,8 @@ public class MsPacManGame extends AbstractPacManGame  {
 
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
-    private static World createWorld(WorldMap map) {
-        var world = new World(map);
+    private static GameWorld createWorld(WorldMap map) {
+        var world = new GameWorld(map);
         world.createArcadeHouse(10, 15);
         return world;
     }
@@ -123,7 +122,7 @@ public class MsPacManGame extends AbstractPacManGame  {
         URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world");
         var map = new WorldMap(mapURL);
         if (blueMazeBug && levelNumber == 1) {
-            map.terrain().setProperty(World.PROPERTY_COLOR_WALL_FILL, "rgb(33,33,255)");
+            map.terrain().setProperty(GameWorld.PROPERTY_COLOR_WALL_FILL, "rgb(33,33,255)");
         }
         var msPacManWorld = createWorld(map);
         setWorldAndCreatePopulation(msPacManWorld);

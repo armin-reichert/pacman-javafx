@@ -12,7 +12,6 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.*;
-import de.amr.games.pacman.model.world.World;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -104,7 +103,7 @@ public abstract class AbstractPacManGame implements GameModel {
     Pac pac;
     Ghost[]              ghosts;
     Bonus bonus;
-    World                world;
+    GameWorld world;
 
     SimulationStepEventLog eventLog;
 
@@ -139,7 +138,7 @@ public abstract class AbstractPacManGame implements GameModel {
         blinking.reset();
     }
 
-    void setWorldAndCreatePopulation(World world) {
+    void setWorldAndCreatePopulation(GameWorld world) {
         this.world = world;
 
         bonusSymbols[0] = computeBonusSymbol();
@@ -397,7 +396,7 @@ public abstract class AbstractPacManGame implements GameModel {
     }
 
     @Override
-    public World world() {
+    public GameWorld world() {
         return world;
     }
 

@@ -14,7 +14,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.world.World;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
@@ -99,7 +99,7 @@ public class GameLevel3D extends Group {
 
     public GameLevel3D(GameContext context) {
         this.context = checkNotNull(context);
-        World world  = checkNotNull(context.game().world());
+        GameWorld world  = checkNotNull(context.game().world());
         WorldMap map = world.map();
         Theme theme  = checkNotNull(context.theme());
 
@@ -137,13 +137,13 @@ public class GameLevel3D extends Group {
             foodColorPy
         ));
 
-        wallFillColorPy.set(getColorFromMap(map.terrain(), World.PROPERTY_COLOR_WALL_FILL,
+        wallFillColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_WALL_FILL,
             Color.rgb(0,0,0)));
 
-        wallStrokeColorPy.set(getColorFromMap(map.terrain(), World.PROPERTY_COLOR_WALL_STROKE,
+        wallStrokeColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_WALL_STROKE,
             Color.rgb(33, 33, 255)));
 
-        foodColorPy.set(getColorFromMap(map.terrain(), World.PROPERTY_COLOR_FOOD,
+        foodColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_FOOD,
             Color.PINK));
 
         livesCounter3D = createLivesCounter();
@@ -169,7 +169,7 @@ public class GameLevel3D extends Group {
     }
 
     public void showLevelStartMessage() {
-        World world = context.game().world();
+        GameWorld world = context.game().world();
         if (context.gameState() == GameState.LEVEL_TEST) {
             double x = world.map().numCols() * HTS;
             double y = (world.map().numRows() - 2) * TS;
@@ -249,7 +249,7 @@ public class GameLevel3D extends Group {
     }
 
     private void addHouse(Group parent) {
-        World world = context.game().world();
+        GameWorld world = context.game().world();
         WorldMap map = world.map();
 
         // tile coordinates
@@ -267,7 +267,7 @@ public class GameLevel3D extends Group {
             createHouseWall(xMin, yMax, xMax, yMax)
         );
 
-        Color doorColor = getColorFromMap(map.terrain(), World.PROPERTY_COLOR_DOOR, Color.rgb(254,184,174));
+        Color doorColor = getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_DOOR, Color.rgb(254,184,174));
         door3D = new Door3D(leftDoorTile, rightDoorTile, doorColor, PY_3D_FLOOR_COLOR);
         door3D.drawModePy.bind(PY_3D_DRAW_MODE);
 
@@ -383,7 +383,7 @@ public class GameLevel3D extends Group {
 
     private void addPellets(Group parent) {
         var world = context.game().world();
-        Color color = getColorFromMap(world.map().food(), World.PROPERTY_COLOR_FOOD, Color.WHITE);
+        Color color = getColorFromMap(world.map().food(), GameWorld.PROPERTY_COLOR_FOOD, Color.WHITE);
         foodColorPy.set(color);
         Model3D pelletModel3D = context.theme().get("model3D.pellet");
         world.map().food().tiles().filter(world::hasFoodAt).forEach(tile -> {
@@ -422,7 +422,7 @@ public class GameLevel3D extends Group {
     }
 
     public void addLevelCounter3D(List<Byte> symbols) {
-        World world = context.game().world();
+        GameWorld world = context.game().world();
         double spacing = 2 * TS;
         // this is the *right* edge of the level counter:
         var levelCounter3D = new Group();
@@ -511,7 +511,7 @@ public class GameLevel3D extends Group {
         worldGroup.getChildren().add(bonus3D);
     }
 
-    private void addEnergizerAnimation(World world, Energizer3D energizer3D) {
+    private void addEnergizerAnimation(GameWorld world, Energizer3D energizer3D) {
         var squirting = new Squirting() {
             @Override
             protected boolean reachedFinalPosition(Drop drop) {
@@ -545,7 +545,7 @@ public class GameLevel3D extends Group {
     }
 
     public void updateFood() {
-        World world = context.game().world();
+        GameWorld world = context.game().world();
         pellets3D.forEach(pellet3D -> pellet3D.root().setVisible(!world.hasEatenFoodAt(pellet3D.tile())));
         energizers3D.forEach(energizer3D -> energizer3D.root().setVisible(!world.hasEatenFoodAt(energizer3D.tile())));
     }
