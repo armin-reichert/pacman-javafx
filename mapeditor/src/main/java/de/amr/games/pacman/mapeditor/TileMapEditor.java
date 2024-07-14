@@ -54,27 +54,27 @@ public class TileMapEditor  {
 
     private static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.mapeditor.texts");
 
-    public static final Rectangle2D PAC_SPRITE = new Rectangle2D(473, 16, 14, 14);
-    public static final Rectangle2D RED_GHOST_SPRITE = new Rectangle2D(505, 65, 14, 14);
-    public static final Rectangle2D PINK_GHOST_SPRITE = new Rectangle2D(553, 81, 14, 14);
-    public static final Rectangle2D CYAN_GHOST_SPRITE = new Rectangle2D(521, 97, 14, 14);
+    public static final Rectangle2D PAC_SPRITE          = new Rectangle2D(473, 16, 14, 14);
+    public static final Rectangle2D RED_GHOST_SPRITE    = new Rectangle2D(505, 65, 14, 14);
+    public static final Rectangle2D PINK_GHOST_SPRITE   = new Rectangle2D(553, 81, 14, 14);
+    public static final Rectangle2D CYAN_GHOST_SPRITE   = new Rectangle2D(521, 97, 14, 14);
     public static final Rectangle2D ORANGE_GHOST_SPRITE = new Rectangle2D(521, 113, 14, 14);
 
-    public static final String DEFAULT_COLOR_WALL_STROKE = "rgb(0,0,255)";
-    public static final String DEFAULT_COLOR_WALL_FILL   = "rgb(0,0,0)";
-    public static final String DEFAULT_COLOR_DOOR        = "rgb(0,255,255)";
-    public static final String PROPERTY_COLOR_WALL_STROKE = "color_wall_stroke";
-    public static final String PROPERTY_COLOR_WALL_FILL = "color_wall_fill";
-    public static final String PROPERTY_COLOR_DOOR = "color_door";
-    public static final String PROPERTY_POS_BONUS = "pos_bonus";
-    public static final String PROPERTY_POS_PAC = "pos_pac";
-    public static final String PROPERTY_POS_RED_GHOST = "pos_ghost_1_red";
-    public static final String PROPERTY_POS_PINK_GHOST = "pos_ghost_2_pink";
-    public static final String PROPERTY_POS_CYAN_GHOST = "pos_ghost_3_cyan";
-    public static final String PROPERTY_POS_ORANGE_GHOST = "pos_ghost_4_orange";
-    public static final String PROPERTY_POS_SCATTER_RED_GHOST = "pos_scatter_ghost_1_red";
-    public static final String PROPERTY_POS_SCATTER_PINK_GHOST = "pos_scatter_ghost_2_pink";
-    public static final String PROPERTY_POS_SCATTER_CYAN_GHOST = "pos_scatter_ghost_3_cyan";
+    public static final String DEFAULT_COLOR_WALL_STROKE         = "rgb(0,0,255)";
+    public static final String DEFAULT_COLOR_WALL_FILL           = "rgb(0,0,0)";
+    public static final String DEFAULT_COLOR_DOOR                = "rgb(0,255,255)";
+    public static final String PROPERTY_COLOR_WALL_STROKE        = "color_wall_stroke";
+    public static final String PROPERTY_COLOR_WALL_FILL          = "color_wall_fill";
+    public static final String PROPERTY_COLOR_DOOR               = "color_door";
+    public static final String PROPERTY_POS_BONUS                = "pos_bonus";
+    public static final String PROPERTY_POS_PAC                  = "pos_pac";
+    public static final String PROPERTY_POS_RED_GHOST            = "pos_ghost_1_red";
+    public static final String PROPERTY_POS_PINK_GHOST           = "pos_ghost_2_pink";
+    public static final String PROPERTY_POS_CYAN_GHOST           = "pos_ghost_3_cyan";
+    public static final String PROPERTY_POS_ORANGE_GHOST         = "pos_ghost_4_orange";
+    public static final String PROPERTY_POS_SCATTER_RED_GHOST    = "pos_scatter_ghost_1_red";
+    public static final String PROPERTY_POS_SCATTER_PINK_GHOST   = "pos_scatter_ghost_2_pink";
+    public static final String PROPERTY_POS_SCATTER_CYAN_GHOST   = "pos_scatter_ghost_3_cyan";
     public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
 
     public static final String PROPERTY_COLOR_FOOD = "color_food";

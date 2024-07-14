@@ -6,6 +6,7 @@ package de.amr.games.pacman.model.world;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 
 import java.util.ArrayList;
@@ -24,40 +25,38 @@ import static java.util.Collections.unmodifiableList;
  */
 public class World {
 
-    public static final String PROPERTY_COLOR_WALL_STROKE = "color_wall_stroke";
-    public static final String PROPERTY_COLOR_WALL_FILL = "color_wall_fill";
-    public static final String PROPERTY_COLOR_DOOR = "color_door";
-    public static final String PROPERTY_POS_BONUS = "pos_bonus";
-    public static final String PROPERTY_POS_PAC = "pos_pac";
-    public static final String PROPERTY_POS_RED_GHOST = "pos_ghost_1_red";
-    public static final String PROPERTY_POS_PINK_GHOST = "pos_ghost_2_pink";
-    public static final String PROPERTY_POS_CYAN_GHOST = "pos_ghost_3_cyan";
-    public static final String PROPERTY_POS_ORANGE_GHOST = "pos_ghost_4_orange";
-    public static final String PROPERTY_POS_SCATTER_RED_GHOST = "pos_scatter_ghost_1_red";
-    public static final String PROPERTY_POS_SCATTER_PINK_GHOST = "pos_scatter_ghost_2_pink";
-    public static final String PROPERTY_POS_SCATTER_CYAN_GHOST = "pos_scatter_ghost_3_cyan";
+    public static final String PROPERTY_COLOR_FOOD               = "color_food";
+    public static final String PROPERTY_COLOR_WALL_STROKE        = "color_wall_stroke";
+    public static final String PROPERTY_COLOR_WALL_FILL          = "color_wall_fill";
+    public static final String PROPERTY_COLOR_DOOR               = "color_door";
+    public static final String PROPERTY_POS_BONUS                = "pos_bonus";
+    public static final String PROPERTY_POS_PAC                  = "pos_pac";
+    public static final String PROPERTY_POS_RED_GHOST            = "pos_ghost_1_red";
+    public static final String PROPERTY_POS_PINK_GHOST           = "pos_ghost_2_pink";
+    public static final String PROPERTY_POS_CYAN_GHOST           = "pos_ghost_3_cyan";
+    public static final String PROPERTY_POS_ORANGE_GHOST         = "pos_ghost_4_orange";
+    public static final String PROPERTY_POS_SCATTER_RED_GHOST    = "pos_scatter_ghost_1_red";
+    public static final String PROPERTY_POS_SCATTER_PINK_GHOST   = "pos_scatter_ghost_2_pink";
+    public static final String PROPERTY_POS_SCATTER_CYAN_GHOST   = "pos_scatter_ghost_3_cyan";
     public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
-
-    public static final String PROPERTY_COLOR_FOOD = "color_food";
 
     private final WorldMap map;
 
-    private final BitSet eaten;
+    private final BitSet eatenFood;
     private final int totalFoodCount;
     private int uneatenFoodCount;
 
-    private House house;
-    private final List<Vector2i> energizerTiles;
+    private List<Vector2i> energizerTiles;
     private List<Portal> portals;
-
     private Map<Vector2i, List<Direction>> forbiddenPassages = Map.of();
+    private House house;
 
     public World(WorldMap map) {
         this.map = checkNotNull(map);
         findPortals();
         map.terrain().computeTerrainPaths();
-        energizerTiles = tiles().filter(this::isEnergizerTile).toList();
-        eaten = new BitSet(map.numCols() * map.numRows());
+        energizerTiles = map.food().tiles(ENERGIZER).toList();
+        eatenFood = new BitSet(map.numCols() * map.numRows());
         totalFoodCount = (int) tiles().filter(this::isFoodTile).count();
         uneatenFoodCount = totalFoodCount;
     }
@@ -196,7 +195,7 @@ public class World {
             return; // raise error?
         }
         if (hasFoodAt(tile)) {
-            eaten.set(map.food().index(tile));
+            eatenFood.set(map.food().index(tile));
             --uneatenFoodCount;
         }
     }
@@ -219,13 +218,13 @@ public class World {
         if (!insideBounds(tile)) {
             return false;
         }
-        return map.food().get(tile) != EMPTY && !eaten.get(map.food().index(tile));
+        return map.food().get(tile) != EMPTY && !eatenFood.get(map.food().index(tile));
     }
 
     public boolean hasEatenFoodAt(Vector2i tile) {
         if (!insideBounds(tile)) {
             return false;
         }
-        return eaten.get(map.food().index(tile));
+        return eatenFood.get(map.food().index(tile));
     }
 }
