@@ -270,9 +270,11 @@ public class TileMapEditor  {
     }
 
     public void start() {
-        clock.play();
-        int gridSize = (int)(editCanvasScroll.getHeight() / map().numRows());
+        // content pane and scroll pane have no height yet at this point!
+        int gridSize = (int)(0.75 *  ownerWindow.getHeight() / map().numRows());
         gridSizePy.set(Math.max(gridSize, 8));
+        clock.play();
+        Logger.info("Window height {}", ownerWindow.getHeight());
         showMessage("Welcome to the tile map editor!", 3, MessageType.INFO);
     }
 
