@@ -36,10 +36,6 @@ public class GameWorld {
     public static final String PROPERTY_POS_SCATTER_CYAN_GHOST   = "pos_scatter_ghost_3_cyan";
     public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
 
-    private static Vector2f posHalfTileRightOf(Vector2i tile) {
-        return v2f(tile.x() * TS + HTS, tile.y() * TS);
-    }
-
     private final WorldMap map;
     private final Vector2f pacPosition;
     private final Vector2f[] ghostPositions = new Vector2f[4];
@@ -70,19 +66,13 @@ public class GameWorld {
         }
         portals = portalList.toArray(new Portal[0]);
 
-        map.terrain().computeTerrainPaths();
+        map.terrain().computeTerrainPaths(); // not sure where to do this
 
-        Vector2i homeTilePac = map.terrain().getTileProperty(PROPERTY_POS_PAC, v2i(13, 26));
-        pacPosition = posHalfTileRightOf(homeTilePac);
-
-        Vector2i homeTileRedGhost = map.terrain().getTileProperty(PROPERTY_POS_RED_GHOST, v2i(13,14));
-        ghostPositions[RED_GHOST] = posHalfTileRightOf(homeTileRedGhost);
-        Vector2i homeTilePinkGhost = map.terrain().getTileProperty(PROPERTY_POS_PINK_GHOST, v2i(13,17));
-        ghostPositions[PINK_GHOST] = posHalfTileRightOf(homeTilePinkGhost);
-        Vector2i homeTileCyanGhost = map.terrain().getTileProperty(PROPERTY_POS_CYAN_GHOST, v2i(11,17));
-        ghostPositions[CYAN_GHOST] = posHalfTileRightOf(homeTileCyanGhost);
-        Vector2i homeTileOrangeGhost = map.terrain().getTileProperty(PROPERTY_POS_ORANGE_GHOST, v2i(15,17));
-        ghostPositions[ORANGE_GHOST] = posHalfTileRightOf(homeTileOrangeGhost);
+        pacPosition                  = map.terrain().getTileProperty(PROPERTY_POS_PAC,          v2i(13,26)).scaled(TS).plus(4f, 0);
+        ghostPositions[RED_GHOST]    = map.terrain().getTileProperty(PROPERTY_POS_RED_GHOST,    v2i(13,14)).scaled(TS).plus(4f, 0);
+        ghostPositions[PINK_GHOST]   = map.terrain().getTileProperty(PROPERTY_POS_PINK_GHOST,   v2i(13,17)).scaled(TS).plus(4f, 0);
+        ghostPositions[CYAN_GHOST]   = map.terrain().getTileProperty(PROPERTY_POS_CYAN_GHOST,   v2i(11,17)).scaled(TS).plus(4f, 0);
+        ghostPositions[ORANGE_GHOST] = map.terrain().getTileProperty(PROPERTY_POS_ORANGE_GHOST, v2i(15,17)).scaled(TS).plus(4f, 0);
 
         energizerTiles = map.food().tiles(ENERGIZER).toArray(Vector2i[]::new);
         eatenFood = new BitSet(map.food().numCols() * map.food().numRows());

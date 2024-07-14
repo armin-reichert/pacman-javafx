@@ -41,6 +41,10 @@ public record Vector2i(int x, int y) {
         return new Vector2i(x + dx, y + dy);
     }
 
+    public Vector2f plus(float dx, float dy) {
+        return new Vector2f(x + dx, y + dy);
+    }
+
     public Vector2i minus(Vector2i v) {
         return new Vector2i(x - v.x, y - v.y);
     }
