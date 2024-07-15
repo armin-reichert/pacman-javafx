@@ -139,15 +139,12 @@ public abstract class Creature extends Entity {
     /**
      * Sets the move direction and updates the velocity vector.
      *
-     * @param dir the new move direction
+     * @param dir the move direction
      */
     public void setMoveDir(Direction dir) {
-        checkDirectionNotNull(dir);
-        if (moveDir != dir) {
-            moveDir = dir;
-            setVelocity(moveDir.vector().toFloatVec().scaled(velocity().length()));
-            Logger.trace("{}: New moveDir: {}. {}", name(), moveDir, this);
-        }
+        moveDir = checkDirectionNotNull(dir);
+        setVelocity(moveDir.vector().scaled(velocity().length()));
+        Logger.trace("{}: moveDir: {}. {}", name(), moveDir, this);
     }
 
     /**
@@ -158,16 +155,13 @@ public abstract class Creature extends Entity {
     }
 
     /**
-     * Sets the wish direction and updates the velocity vector.
+     * Sets the wish direction.
      *
-     * @param dir the new wish direction
+     * @param dir the wish direction
      */
     public void setWishDir(Direction dir) {
-        checkDirectionNotNull(dir);
-        if (wishDir != dir) {
-            wishDir = dir;
-            Logger.trace("{}: New wishDir: {}. {}", name(), wishDir, this);
-        }
+        wishDir = checkDirectionNotNull(dir);
+        Logger.trace("{}: wishDir: {}. {}", name(), wishDir, this);
     }
 
     /**
