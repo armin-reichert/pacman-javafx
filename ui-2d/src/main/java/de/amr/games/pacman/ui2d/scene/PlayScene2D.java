@@ -147,13 +147,15 @@ public class PlayScene2D extends GameScene2D implements PlaySceneSound {
 
     private void drawLevelMessage() {
         var game = context.game();
+        int tileX = game.world().houseTopLeftTile().plus(game.world().houseSize()).x(); // TODO
+        int tileY = game.world().houseTopLeftTile().plus(game.world().houseSize()).y() + 1;
         if (game.isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
             // "GAME OVER" is drawn in demo mode and when game is over
-            spriteRenderer.drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(9), t(21));
+            spriteRenderer.drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(9), t(tileY));
         } else {
             switch (context.gameState()) {
-                case READY      -> spriteRenderer.drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(11), t(21));
-                case LEVEL_TEST -> spriteRenderer.drawText(g, "TEST    L" + game.levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(21));
+                case READY      -> spriteRenderer.drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(11), t(tileY));
+                case LEVEL_TEST -> spriteRenderer.drawText(g, "TEST    L" + game.levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(tileY));
             }
         }
     }
