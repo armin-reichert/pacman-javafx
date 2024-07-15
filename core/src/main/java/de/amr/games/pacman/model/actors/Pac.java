@@ -103,7 +103,7 @@ public class Pac extends Creature {
         if (world.isInsideWorld(tile)) {
             return !world.isBlockedTile(tile);
         }
-        return world.belongsToPortal(tile);
+        return world.isPortalAt(tile);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class Pac extends Creature {
             }
             setSpeedPct(game.powerTimer().isRunning() ? level.pacSpeedPoweredPercentage() : level.pacSpeedPercentage());
             tryMoving();
-            if (lastMove.moved) {
+            if (moveInfo.moved) {
                 animations.startSelected();
             } else {
                 animations.stopSelected();
@@ -193,7 +193,7 @@ public class Pac extends Creature {
      * or if he is resting for an indefinite time.
      */
     public boolean isStandingStill() {
-        return velocity().length() == 0 || !lastMove.moved || restingTicks == REST_INDEFINITELY;
+        return velocity().length() == 0 || !moveInfo.moved || restingTicks == REST_INDEFINITELY;
     }
 
     public void setManualSteering(Steering steering) {

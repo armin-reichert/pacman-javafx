@@ -42,7 +42,7 @@ public class GameWorld {
     private final Direction[] ghostDirections = new Direction[4];
     private final Vector2i[] energizerTiles;
     private final Portal[] portals;
-    private Map<Vector2i, List<Direction>> forbiddenPassages = Map.of();
+    private final Map<Vector2i, List<Direction>> forbiddenPassages = new HashMap<>(4);
 
     private Vector2i houseTopLeftTile;
     private Vector2i houseSize;
@@ -124,17 +124,15 @@ public class GameWorld {
         return 0 <= x && x <= map.numCols() * TS && 0 <= y && y <= map.numRows() * TS;
     }
 
-    public void setForbiddenPassages(Map<Vector2i, List<Direction>> forbiddenPassages) {
-        this.forbiddenPassages = forbiddenPassages;
+    public void setForbiddenPassages(Map<Vector2i, List<Direction>> map) {
+        forbiddenPassages.clear();
+        forbiddenPassages.putAll(map);
     }
 
     public Map<Vector2i, List<Direction>> forbiddenPassages() {
         return forbiddenPassages;
     }
 
-    /**
-     * @return tiles in order top-to-bottom, left-to-right
-     */
     public Stream<Vector2i> energizerTiles() {
         return Arrays.stream(energizerTiles);
     }
@@ -143,12 +141,12 @@ public class GameWorld {
         return Arrays.stream(portals);
     }
 
-    public boolean belongsToPortal(Vector2i tile) {
+    public boolean isPortalAt(Vector2i tile) {
         checkTileNotNull(tile);
         return portals().anyMatch(portal -> portal.contains(tile));
     }
 
-    public boolean belongsToDoors(Vector2i tile) {
+    public boolean isDoorAt(Vector2i tile) {
         checkTileNotNull(tile);
         return tile.equals(leftDoorTile) || tile.equals(rightDoorTile);
     }
@@ -177,7 +175,7 @@ public class GameWorld {
             return false;
         }
         long numBlockedNeighbors = tile.neighbors().filter(this::isInsideWorld).filter(this::isBlockedTile).count();
-        long numDoorNeighbors = tile.neighbors().filter(this::isInsideWorld).filter(this::belongsToDoors).count();
+        long numDoorNeighbors = tile.neighbors().filter(this::isInsideWorld).filter(this::isDoorAt).count();
         return numBlockedNeighbors + numDoorNeighbors < 2;
     }
 

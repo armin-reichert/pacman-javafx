@@ -66,7 +66,7 @@ public class MovingBonus extends Creature implements Bonus {
         if (world.isInsideWorld(tile)) {
             return !world.isBlockedTile(tile);
         }
-        return world.belongsToPortal(tile);
+        return world.isPortalAt(tile);
     }
 
     @Override

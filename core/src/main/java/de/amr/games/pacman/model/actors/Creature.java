@@ -27,7 +27,7 @@ public abstract class Creature extends Entity {
     Direction[] DIRECTION_PRIORITY = {UP, LEFT, DOWN, RIGHT};
 
     protected final GameWorld world;
-    protected final MoveResult lastMove = new MoveResult();
+    protected final MoveResult moveInfo = new MoveResult();
 
     protected Direction moveDir;
     protected Direction wishDir;
@@ -57,7 +57,7 @@ public abstract class Creature extends Entity {
 
     public void reset() {
         super.reset();
-        lastMove.clear();
+        moveInfo.clear();
         setMoveAndWishDir(RIGHT); // updates velocity vector!
         targetTile = null;
         newTileEntered = true;
@@ -65,8 +65,8 @@ public abstract class Creature extends Entity {
         canTeleport = true;
     }
 
-    public MoveResult lastMove() {
-        return lastMove;
+    public MoveResult moveInfo() {
+        return moveInfo;
     }
 
     /**
@@ -266,11 +266,11 @@ public abstract class Creature extends Entity {
      * Sets the new wish direction for reaching the target tile.
      */
     public void navigateTowardsTarget() {
-        if (!newTileEntered && lastMove.moved || targetTile == null) {
+        if (!newTileEntered && moveInfo.moved || targetTile == null) {
             return; // we don't need no navigation, dim dit didit didit...
         }
         Vector2i currentTile = tile();
-        if (!world.belongsToPortal(currentTile)) {
+        if (!world.isPortalAt(currentTile)) {
             computeTargetDirection(currentTile, targetTile).ifPresent(this::setWishDir);
         }
     }
@@ -278,8 +278,8 @@ public abstract class Creature extends Entity {
     /**
      * Lets a creature follow the given target tile.
      *
-     * @param targetTile the target tile e.g. Pac-Man's current tile
-     * @param speedPct the relative speed (in percentage of base speed)
+     * @param targetTile target tile this creature tries to reach
+     * @param speedPct relative speed (in percentage of base speed)
      */
     public void followTarget(Vector2i targetTile, byte speedPct) {
         setSpeedPct(speedPct);
@@ -295,23 +295,23 @@ public abstract class Creature extends Entity {
      * possible, it keeps moving to its current move direction.
      */
     public void tryMoving() {
-        lastMove.clear();
+        moveInfo.clear();
         tryTeleport();
-        if (!lastMove.teleported) {
+        if (!moveInfo.teleported) {
             if (gotReverseCommand && canReverse()) {
                 setWishDir(moveDir.opposite());
                 Logger.trace("{}: turned around at tile {}", name(), tile());
                 gotReverseCommand = false;
             }
             tryMoving(wishDir);
-            if (lastMove.moved) {
+            if (moveInfo.moved) {
                 setMoveDir(wishDir);
             } else {
                 tryMoving(moveDir);
             }
         }
-        if (lastMove.teleported || lastMove.moved) {
-            Logger.trace("{}: {} {} {}", name(), lastMove, String.join(", ", lastMove.infos), this);
+        if (moveInfo.teleported || moveInfo.moved) {
+            Logger.trace("{}: {} {} {}", name(), moveInfo, String.join(", ", moveInfo.infos), this);
         }
     }
 
@@ -320,9 +320,9 @@ public abstract class Creature extends Entity {
             return;
         }
         Vector2i currentTile = tile();
-        for (var portal : world.portals().toList()) {
+        for (Portal portal : world.portals().toList()) {
             tryTeleport(currentTile, portal);
-            if (lastMove.teleported) {
+            if (moveInfo.teleported) {
                 return;
             }
         }
@@ -333,13 +333,13 @@ public abstract class Creature extends Entity {
         var oldY = posY;
         if (currentTile.y() == portal.leftTunnelEnd().y() && posX < portal.leftTunnelEnd().x() - portal.depth() * TS) {
             centerOverTile(portal.rightTunnelEnd());
-            lastMove.teleported = true;
-            lastMove.addInfo(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
+            moveInfo.teleported = true;
+            moveInfo.log(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
                 name(), oldX, oldY, posX, posY));
         } else if (currentTile.equals(portal.rightTunnelEnd().plus(portal.depth(), 0))) {
             centerOverTile(portal.leftTunnelEnd().minus(portal.depth(), 0));
-            lastMove.teleported = true;
-            lastMove.addInfo(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
+            moveInfo.teleported = true;
+            moveInfo.log(String.format("%s: Teleported from (%.2f,%.2f) to (%.2f,%.2f)",
                 name(), oldX, oldY, posX, posY));
         }
     }
@@ -361,7 +361,7 @@ public abstract class Creature extends Entity {
             if (!isTurn) {
                 centerOverTile(tile()); // adjust over tile (would move forward against wall)
             }
-            lastMove.addInfo(String.format("Cannot move %s into tile %s", dir, touchedTile));
+            moveInfo.log(String.format("Cannot move %s into tile %s", dir, touchedTile));
             return;
         }
 
@@ -372,7 +372,7 @@ public abstract class Creature extends Entity {
             if (atTurnPosition) {
                 centerOverTile(tile()); // adjust over tile (starts moving around corner)
             } else {
-                lastMove.addInfo(String.format("Wants to take corner towards %s but not at turn position", dir));
+                moveInfo.log(String.format("Wants to take corner towards %s but not at turn position", dir));
                 return;
             }
         }
@@ -390,20 +390,20 @@ public abstract class Creature extends Entity {
         Vector2i currentTile = tile();
 
         newTileEntered = !tileBeforeMove.equals(currentTile);
-        lastMove.moved = true;
-        lastMove.tunnelEntered = world.isTunnel(currentTile)
+        moveInfo.moved = true;
+        moveInfo.tunnelEntered = world.isTunnel(currentTile)
             && !world.isTunnel(tileBeforeMove)
-            && !world.belongsToPortal(tileBeforeMove);
-        lastMove.tunnelLeft = !world.isTunnel(currentTile)
+            && !world.isPortalAt(tileBeforeMove);
+        moveInfo.tunnelLeft = !world.isTunnel(currentTile)
             && world.isTunnel(tileBeforeMove)
-            && !world.belongsToPortal(currentTile);
+            && !world.isPortalAt(currentTile);
 
-        lastMove.addInfo(String.format("%5s (%.2f pixels)", dir, newVelocity.length()));
+        moveInfo.log(String.format("%5s (%.2f pixels)", dir, newVelocity.length()));
 
-        if (lastMove.tunnelEntered) {
+        if (moveInfo.tunnelEntered) {
             Logger.trace("{} entered tunnel", name());
         }
-        if (lastMove.tunnelLeft) {
+        if (moveInfo.tunnelLeft) {
             Logger.trace("{} left tunnel", name());
         }
     }

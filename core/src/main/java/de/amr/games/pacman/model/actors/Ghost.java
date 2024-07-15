@@ -129,7 +129,7 @@ public class Ghost extends Creature {
      */
     public void roam(byte speedPct) {
         Vector2i currentTile = tile();
-        if (!world.belongsToPortal(currentTile) && (isNewTileEntered() || !lastMove.moved)) {
+        if (!world.isPortalAt(currentTile) && (isNewTileEntered() || !moveInfo.moved)) {
             Direction dir = pseudoRandomDirection();
             while (dir == moveDir().opposite()
                 || !canAccessTile(currentTile.plus(dir.vector()))) {
@@ -166,13 +166,13 @@ public class Ghost extends Creature {
                 }
             }
         }
-        if (world.belongsToDoors(tile)) {
+        if (world.isDoorAt(tile)) {
             return inState(ENTERING_HOUSE, LEAVING_HOUSE);
         }
         if (world.isInsideWorld(tile)) {
             return !world.isBlockedTile(tile);
         }
-        return world.belongsToPortal(tile);
+        return world.isPortalAt(tile);
     }
 
     @Override

@@ -25,7 +25,7 @@ public class MoveResult {
         infos.clear();
     }
 
-    public void addInfo(String info) {
+    public void log(String info) {
         infos.add(info);
     }
 
