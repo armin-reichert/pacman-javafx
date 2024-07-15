@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
@@ -79,13 +78,13 @@ public class SpriteGameRenderer {
         g.fillRect(s * (cx - r), s * (cy - r), s * (2 * r), s * (2 * r));
     }
 
-    public void drawLivesCounter(GraphicsContext g, int numLivesDisplayed) {
+    public void drawLivesCounter(GraphicsContext g, int numLivesDisplayed, int tileY) {
         if (numLivesDisplayed == 0) {
             return;
         }
         int maxLives = 5;
         var x = TS * 2;
-        var y = TS * (GameModel.ARCADE_MAP_TILES_Y - 2);
+        var y = TS * tileY;
         for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
             drawSpriteScaled(g, spriteSheet.livesCounterSprite(), x + TS * (2 * i), y);
         }

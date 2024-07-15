@@ -126,7 +126,7 @@ public class PlayScene2D extends GameScene2D implements PlaySceneSound {
             if (context.gameState() == GameState.READY && !game.pac().isVisible()) {
                 numLivesDisplayed += 1;
             }
-            spriteRenderer.drawLivesCounter(g, numLivesDisplayed);
+            spriteRenderer.drawLivesCounter(g, numLivesDisplayed, context.game().world().map().terrain().numRows() - 2);
         }
         drawLevelCounter(g);
     }
