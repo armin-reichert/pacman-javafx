@@ -206,7 +206,7 @@ public class TileMapEditor  {
         map.terrain().setProperty("pos_bonus",         formatTile(DEFAULT_POS_BONUS));
         map.food().setProperty("color_food",           DEFAULT_FOOD_COLOR);
         addBorder(map.terrain(), 3, 2);
-        GHOST_HOUSE_SHAPE.addToMap(map.terrain(), DEFAULT_POS_RED_GHOST.y() + 1, map.numCols() / 2 - 4);
+        GHOST_HOUSE_SHAPE.addToMap(map.terrain(), DEFAULT_POS_RED_GHOST.y() + 1, map.terrain().numCols() / 2 - 4);
         invalidateTerrainMapPaths();
         return map;
     }
@@ -238,9 +238,9 @@ public class TileMapEditor  {
 
         // Note: this must be done after having loaded the initial map!
         editCanvas.heightProperty().bind(Bindings.createDoubleBinding(
-                () -> (double) mapPy.get().numRows() * gridSize(), mapPy, gridSizePy));
+                () -> (double) mapPy.get().terrain().numRows() * gridSize(), mapPy, gridSizePy));
         editCanvas.widthProperty().bind(Bindings.createDoubleBinding(
-                () -> (double) mapPy.get().numCols() * gridSize(), mapPy, gridSizePy));
+                () -> (double) mapPy.get().terrain().numCols() * gridSize(), mapPy, gridSizePy));
         previewCanvas.widthProperty().bind(editCanvas.widthProperty());
         previewCanvas.heightProperty().bind(editCanvas.heightProperty());
 
@@ -271,7 +271,7 @@ public class TileMapEditor  {
 
     public void start() {
         // content pane and scroll pane have no height yet at this point!
-        int gridSize = (int)(0.75 *  ownerWindow.getHeight() / map().numRows());
+        int gridSize = (int)(0.75 *  ownerWindow.getHeight() / map().terrain().numRows());
         gridSizePy.set(Math.max(gridSize, 8));
         clock.play();
         Logger.info("Window height {}", ownerWindow.getHeight());
@@ -481,8 +481,8 @@ public class TileMapEditor  {
 
         var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
         miAddHouse.setOnAction(e -> {
-            int row = map().numRows() / 2 - 3;
-            int col = map().numCols() / 2 - 4;
+            int row = map().terrain().numRows() / 2 - 3;
+            int col = map().terrain().numCols() / 2 - 4;
             GHOST_HOUSE_SHAPE.addToMap(map().terrain(), row, col);
             invalidateTerrainMapPaths();
             markMapEdited();

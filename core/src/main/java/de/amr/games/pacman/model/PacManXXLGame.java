@@ -23,8 +23,8 @@ public class PacManXXLGame extends PacManGame {
 
     private static GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
-        int houseTopLeftX = map.numCols() / 2 - 4;
-        int houseTopLeftY = map.numRows() / 2 - 3;
+        int houseTopLeftX = map.terrain().numCols() / 2 - 4;
+        int houseTopLeftY = map.terrain().numRows() / 2 - 3;
         world.createArcadeHouse(houseTopLeftX, houseTopLeftY);
         return world;
     }

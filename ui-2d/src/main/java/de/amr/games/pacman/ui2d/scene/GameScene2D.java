@@ -126,11 +126,11 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected int numWorldTilesX() {
-        return context.game().world() != null ? context.game().world().map().numCols() : GameModel.ARCADE_MAP_TILES_X;
+        return context.game().world() != null ? context.game().world().map().terrain().numCols() : GameModel.ARCADE_MAP_TILES_X;
     }
 
     protected int numWorldTilesY() {
-        return context.game().world() != null ? context.game().world().map().numRows() : GameModel.ARCADE_MAP_TILES_Y;
+        return context.game().world() != null ? context.game().world().map().terrain().numRows() : GameModel.ARCADE_MAP_TILES_Y;
     }
 
     protected void drawLevelCounter(GraphicsContext g) {

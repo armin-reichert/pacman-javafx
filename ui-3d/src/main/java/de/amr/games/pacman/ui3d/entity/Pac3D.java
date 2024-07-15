@@ -118,7 +118,7 @@ public abstract class Pac3D extends Group {
         position.setZ(zStandingOnGround);
         orientation.setAxis(Rotate.Z_AXIS);
         orientation.setAngle(angle(pac.moveDir()));
-        boolean outsideWorld = position.getX() < HTS || position.getX() > TS * world.map().numCols() - HTS;
+        boolean outsideWorld = position.getX() < HTS || position.getX() > TS * world.map().terrain().numCols() - HTS;
         setVisible(pac.isVisible() && !outsideWorld);
         if (pac.isStandingStill()) {
             stopWalkingAnimation();

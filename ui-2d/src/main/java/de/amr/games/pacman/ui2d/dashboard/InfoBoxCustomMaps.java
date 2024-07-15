@@ -40,7 +40,7 @@ public class InfoBoxCustomMaps extends InfoBox {
 
         for (File mapFile : customMapsByFile.keySet().stream().sorted().toList()) {
             WorldMap map = customMapsByFile.get(mapFile);
-            String mapSize = "(%dx%d)".formatted(map.numRows(), map.numCols());
+            String mapSize = "(%dx%d)".formatted(map.terrain().numRows(), map.terrain().numCols());
             addTextRow(mapFile.getName(), mapSize);
         }
     }

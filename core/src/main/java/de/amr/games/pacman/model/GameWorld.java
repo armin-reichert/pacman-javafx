@@ -49,7 +49,7 @@ public class GameWorld {
     private Vector2i leftDoorTile;
     private Vector2i rightDoorTile;
 
-    // instead of Set<Vector2i> we use a bitmap: tile -> index(tile) -> bitmap value
+    // instead of Set<Vector2i> we use a bitset indexed by top-down-left-to-right tile index
     private final BitSet eatenFood;
     private final int totalFoodCount;
     private int uneatenFoodCount;
@@ -57,8 +57,8 @@ public class GameWorld {
     public GameWorld(WorldMap map) {
         this.map = checkNotNull(map);
         var portalList = new ArrayList<Portal>();
-        int firstColumn = 0, lastColumn = map.numCols() - 1;
-        for (int row = 0; row < map.numRows(); ++row) {
+        int firstColumn = 0, lastColumn = map.terrain().numCols() - 1;
+        for (int row = 0; row < map.terrain().numRows(); ++row) {
             Vector2i leftBorderTile = v2i(firstColumn, row), rightBorderTile = v2i(lastColumn, row);
             if (map.terrain().get(row, firstColumn) == TUNNEL && map.terrain().get(row, lastColumn) == TUNNEL) {
                 portalList.add(new Portal(leftBorderTile, rightBorderTile, 2));
@@ -96,13 +96,13 @@ public class GameWorld {
         checkGhostID(ghostID);
         return switch (ghostID) {
             case RED_GHOST -> map.terrain().getTileProperty(
-                PROPERTY_POS_SCATTER_RED_GHOST, v2i(0, map.numCols() - 3));
+                PROPERTY_POS_SCATTER_RED_GHOST, v2i(0, map.terrain().numCols() - 3));
             case PINK_GHOST -> map.terrain().getTileProperty(
                 PROPERTY_POS_SCATTER_PINK_GHOST, v2i(0, 3));
             case CYAN_GHOST -> map.terrain().getTileProperty(
-                PROPERTY_POS_SCATTER_CYAN_GHOST, v2i(map.numRows() - 1, map.numCols() - 1));
+                PROPERTY_POS_SCATTER_CYAN_GHOST, v2i(map.terrain().numRows() - 1, map.terrain().numCols() - 1));
             case ORANGE_GHOST -> map.terrain().getTileProperty(
-                PROPERTY_POS_SCATTER_ORANGE_GHOST, v2i(map.numRows() - 1, 0));
+                PROPERTY_POS_SCATTER_ORANGE_GHOST, v2i(map.terrain().numRows() - 1, 0));
             default -> throw new IllegalArgumentException("Illegal ghost ID: " + ghostID);
         };
     }
@@ -121,7 +121,7 @@ public class GameWorld {
     }
 
     public boolean containsPoint(double x, double y) {
-        return 0 <= x && x <= map.numCols() * TS && 0 <= y && y <= map.numRows() * TS;
+        return 0 <= x && x <= map.terrain().numCols() * TS && 0 <= y && y <= map.terrain().numRows() * TS;
     }
 
     public void setForbiddenPassages(Map<Vector2i, List<Direction>> map) {

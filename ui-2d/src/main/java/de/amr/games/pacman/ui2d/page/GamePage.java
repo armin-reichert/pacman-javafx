@@ -250,7 +250,7 @@ public class GamePage implements Page {
     public void adaptCanvasSizeToCurrentWorld() {
         var world = context.game().world();
         if (world != null) {
-            canvasPane.setUnscaledCanvasSize(world.map().numCols() * TS, world.map().numRows() * TS);
+            canvasPane.setUnscaledCanvasSize(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
         } else {
             canvasPane.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
         }

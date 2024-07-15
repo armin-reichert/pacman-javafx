@@ -117,14 +117,6 @@ public class WorldMap {
         return sw.toString();
     }
 
-    public int numRows() {
-        return terrain.numRows();
-    }
-
-    public int numCols() {
-        return terrain.numCols();
-    }
-
     public URL url() {
         return url;
     }
