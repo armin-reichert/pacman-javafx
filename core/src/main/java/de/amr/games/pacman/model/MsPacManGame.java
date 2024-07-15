@@ -116,13 +116,12 @@ public class MsPacManGame extends AbstractPacManGame  {
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
         mapNumber = mapNumberByLevelNumber(levelNumber);
-        URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world");
+        URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world".formatted(mapNumber));
         var map = new WorldMap(mapURL);
         if (blueMazeBug && levelNumber == 1) {
             map.terrain().setProperty(GameWorld.PROPERTY_COLOR_WALL_FILL, "rgb(33,33,255)");
         }
-        var msPacManWorld = createWorld(map);
-        setWorldAndCreatePopulation(msPacManWorld);
+        setWorldAndCreatePopulation(createWorld(map));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -133,7 +132,7 @@ public class MsPacManGame extends AbstractPacManGame  {
     public void buildDemoLevel() {
         levelNumber = 1;
         mapNumber = randomInt(1, 7);
-        URL mapURL = getClass().getResource(String.format("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world", mapNumber));
+        URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world".formatted(mapNumber));
         var map = new WorldMap(mapURL);
         setWorldAndCreatePopulation(createWorld(map));
         pac.setName("Ms. Pac-Man");
