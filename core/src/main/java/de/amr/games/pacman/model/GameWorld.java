@@ -170,7 +170,6 @@ public class GameWorld {
     }
 
     public boolean isIntersection(Vector2i tile) {
-        checkTileNotNull(tile);
         if (isOutsideWorld(tile) || isPartOfHouse(tile)) {
             return false;
         }
