@@ -124,52 +124,54 @@ public class TileMap {
         Logger.debug("Compute paths for {}", this);
         innerPaths = new ArrayList<>();
         outerPaths = new ArrayList<>();
-
-        var explored = new BitSet();
-        Predicate<Vector2i> isUnexplored = tile -> !explored.get(index(tile));
-
-        tiles(Tiles.CORNER_NW).filter(isUnexplored)
-            .map(corner -> new TileMapPath(this, explored, corner, LEFT))
-            .forEach(innerPaths::add);
+        var exploredSet = new BitSet();
 
         // Paths starting at left and right maze border leading inside maze
         int firstCol = 0, lastCol = numCols() - 1;
         for (int row = 0; row < numRows(); ++row) {
             if (get(row, firstCol) == Tiles.DWALL_H) {
-                addOuterPath(new Vector2i(firstCol, row), RIGHT, explored);
+                addOuterPath(new Vector2i(firstCol, row), RIGHT, exploredSet);
             }
             if (get(row, firstCol) == Tiles.DCORNER_SE) {
-                addOuterPath(new Vector2i(firstCol, row), UP, explored);
+                addOuterPath(new Vector2i(firstCol, row), UP, exploredSet);
             }
             if (get(row, firstCol) == Tiles.DCORNER_NE) {
-                addOuterPath(new Vector2i(firstCol, row), RIGHT, explored);
+                addOuterPath(new Vector2i(firstCol, row), RIGHT, exploredSet);
             }
             if (get(row, lastCol) == Tiles.DWALL_H) {
-                addOuterPath(new Vector2i(lastCol, row), LEFT, explored);
+                addOuterPath(new Vector2i(lastCol, row), LEFT, exploredSet);
             }
             if (get(row, lastCol) == Tiles.DCORNER_SW) {
-                addOuterPath(new Vector2i(lastCol, row), UP, explored);
+                addOuterPath(new Vector2i(lastCol, row), UP, exploredSet);
             }
             if (get(row, lastCol) == Tiles.DCORNER_NW) {
-                addOuterPath(new Vector2i(lastCol, row), DOWN, explored);
+                addOuterPath(new Vector2i(lastCol, row), DOWN, exploredSet);
             }
         }
 
         // find ghost house, doors are included as walls!
         tiles(Tiles.DCORNER_NW)
-            .filter(isUnexplored)
+            .filter(tile -> isUnexplored(exploredSet, tile))
             .filter(tile -> tile.x() > firstCol && tile.x() < lastCol)
-            .map(corner -> new TileMapPath(this, explored, corner, LEFT))
+            .map(corner -> new TileMapPath(this, exploredSet, corner, LEFT))
             .forEach(outerPaths::add);
+
+        // add paths for obstacles inside maze, start with top-left corner of obstacle
+        tiles(Tiles.CORNER_NW).filter(tile -> isUnexplored(exploredSet, tile))
+                .map(corner -> new TileMapPath(this, exploredSet, corner, LEFT))
+                .forEach(innerPaths::add);
 
         Logger.debug("Paths computed, {} single wall paths, {} double wall paths", innerPaths.size(), outerPaths.size());
     }
 
-    private void addOuterPath(Vector2i startTile, Direction startDir, BitSet explored) {
-        Predicate<Vector2i> isUnexplored = tile -> !explored.get(index(tile));
-        if (isUnexplored.test(startTile)) {
-            outerPaths.add(new TileMapPath(this, explored, startTile, startDir));
+    private void addOuterPath(Vector2i startTile, Direction startDir, BitSet exploredSet) {
+        if (isUnexplored(exploredSet, startTile)) {
+            outerPaths.add(new TileMapPath(this, exploredSet, startTile, startDir));
         }
+    }
+
+    private boolean isUnexplored(BitSet exploredSet, Vector2i tile) {
+        return !exploredSet.get(index(tile));
     }
 
     public Stream<TileMapPath> innerPaths() {
