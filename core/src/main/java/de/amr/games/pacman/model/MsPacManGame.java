@@ -17,8 +17,6 @@ import org.tinylog.Logger;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -41,7 +39,6 @@ import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
 public class MsPacManGame extends AbstractPacManGame  {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
-    private static final Pattern PATTERN_MS_PACMAN_MAP = Pattern.compile(".*mspacman_(\\d)\\.world$");
 
     /**
      * These numbers are from a conversation with user "damselindis" on Reddit. I am not sure if they are correct.
@@ -60,7 +57,7 @@ public class MsPacManGame extends AbstractPacManGame  {
         return world;
     }
 
-    private int currentMapNumber;
+    private int mapNumber;
     public boolean blueMazeBug = false;
 
     @Override
@@ -106,16 +103,7 @@ public class MsPacManGame extends AbstractPacManGame  {
      * @return map number (1-6)
      */
     public int currentMapNumber() {
-        return currentMapNumber;
-    }
-
-    private int computeCurrentMapNumber() {
-        Matcher m = PATTERN_MS_PACMAN_MAP.matcher(world.map().url().toExternalForm());
-        if (m.matches()) {
-            return Integer.parseInt(m.group(1));
-        }
-        Logger.error("Could not determine current map number");
-        return 1;
+        return mapNumber;
     }
 
     @Override
@@ -127,7 +115,7 @@ public class MsPacManGame extends AbstractPacManGame  {
     @Override
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
-        int mapNumber = mapNumberByLevelNumber(levelNumber);
+        mapNumber = mapNumberByLevelNumber(levelNumber);
         URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/mspacman/mspacman_" + mapNumber + ".world");
         var map = new WorldMap(mapURL);
         if (blueMazeBug && levelNumber == 1) {
@@ -135,7 +123,6 @@ public class MsPacManGame extends AbstractPacManGame  {
         }
         var msPacManWorld = createWorld(map);
         setWorldAndCreatePopulation(msPacManWorld);
-        currentMapNumber = computeCurrentMapNumber();
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -145,11 +132,10 @@ public class MsPacManGame extends AbstractPacManGame  {
     @Override
     public void buildDemoLevel() {
         levelNumber = 1;
-        int mapNumber = randomInt(1, 7);
-        var mapURL = getClass().getResource(String.format("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world", mapNumber));
+        mapNumber = randomInt(1, 7);
+        URL mapURL = getClass().getResource(String.format("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world", mapNumber));
         var map = new WorldMap(mapURL);
         setWorldAndCreatePopulation(createWorld(map));
-        currentMapNumber = computeCurrentMapNumber();
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
