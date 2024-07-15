@@ -7,8 +7,8 @@ package de.amr.games.pacman.model.actors;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.Portal;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.Portal;
 import org.tinylog.Logger;
 
 import java.util.Optional;

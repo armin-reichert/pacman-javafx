@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.scene;
 
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.actors.Entity;
 import javafx.scene.Camera;
 import javafx.scene.transform.Rotate;
 

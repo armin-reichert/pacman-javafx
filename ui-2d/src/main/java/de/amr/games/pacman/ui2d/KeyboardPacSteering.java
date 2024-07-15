@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.steering.Steering;
 import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.Keyboard;
