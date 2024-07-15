@@ -102,6 +102,7 @@ public class PacManGame extends AbstractPacManGame {
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
+        ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
     @Override
@@ -112,6 +113,7 @@ public class PacManGame extends AbstractPacManGame {
         pac.setName("Pac-Man");
         pac.setAutopilot(new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE)));
         pac.setUseAutopilot(true);
+        ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
     @Override
@@ -125,14 +127,6 @@ public class PacManGame extends AbstractPacManGame {
                 levelCounter.remove(0);
             }
         }
-    }
-
-    @Override
-    public void letGhostHunt(Ghost ghost) {
-        byte speed = huntingSpeedPct(ghost);
-        // even phase: scattering, odd phase: chasing
-        boolean chasing = isOdd(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
-        ghost.followTarget(chasing ? chasingTarget(ghost) : scatterTarget(ghost), speed);
     }
 
     @Override
@@ -161,5 +155,11 @@ public class PacManGame extends AbstractPacManGame {
         bonus.entity().setPosition(bonusTile.x() * TS + HTS, bonusTile.y() * TS);
         bonus.setEdible(randomInt(540, 600));
         publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
+    }
+
+    private void ghostHuntingBehaviour(Ghost ghost) {
+        byte speed = huntingSpeedPct(ghost);
+        boolean chase = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
+        ghost.followTarget(chase ? chasingTarget(ghost) : scatterTarget(ghost), speed);
     }
 }

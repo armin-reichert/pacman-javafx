@@ -126,6 +126,7 @@ public class MsPacManGame extends AbstractPacManGame  {
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
         ghosts[ORANGE_GHOST].setName("Sue");
+        ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
     @Override
@@ -139,6 +140,7 @@ public class MsPacManGame extends AbstractPacManGame  {
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
         ghosts[ORANGE_GHOST].setName("Sue");
+        ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 
     /** In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
@@ -154,23 +156,6 @@ public class MsPacManGame extends AbstractPacManGame  {
             if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
                 levelCounter.remove(0);
             }
-        }
-    }
-
-    /**
-     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
-     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
-     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
-     */
-    @Override
-    public void letGhostHunt(Ghost ghost) {
-        byte speed = huntingSpeedPct(ghost);
-        if (huntingPhaseIndex == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
-            ghost.roam(speed);
-        } else {
-            // even phase: scattering, odd phase: chasing
-            boolean chasing = isOdd(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
-            ghost.followTarget(chasing ? chasingTarget(ghost) : scatterTarget(ghost), speed);
         }
     }
 
@@ -264,5 +249,20 @@ public class MsPacManGame extends AbstractPacManGame  {
         bonus = movingBonus;
         bonus.setEdible(TickTimer.INDEFINITE);
         publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
+    }
+
+    /**
+     * In Ms. Pac-Man, Blinky and Pinky move randomly during the *first* scatter phase. Some say,
+     * the original intention had been to randomize the scatter target of *all* ghosts but because of a bug,
+     * only the scatter target of Blinky and Pinky would have been affected. Who knows?
+     */
+    private void ghostHuntingBehaviour(Ghost ghost) {
+        byte speed = huntingSpeedPct(ghost);
+        if (huntingPhaseIndex == 0 && (ghost.id() == RED_GHOST || ghost.id() == PINK_GHOST)) {
+            ghost.roam(speed);
+        } else {
+            boolean chase = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
+            ghost.followTarget(chase ? chasingTarget(ghost) : scatterTarget(ghost), speed);
+        }
     }
 }

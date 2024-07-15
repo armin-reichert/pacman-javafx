@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.GameWorld;
 import org.tinylog.Logger;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.*;
@@ -44,6 +45,7 @@ public class Ghost extends Creature {
     private float speedReturningToHouse;
     private float speedInsideHouse;
     private Animations animations;
+    private Consumer<Ghost> huntingBehaviour = game -> {};
 
     public Ghost(byte id) {
         this(id, null);
@@ -60,6 +62,10 @@ public class Ghost extends Creature {
         super(world);
         checkGhostID(id);
         this.id = id;
+    }
+
+    public void setHuntingBehaviour(Consumer<Ghost> huntingBehaviour) {
+        this.huntingBehaviour = checkNotNull(huntingBehaviour);
     }
 
     @Override
@@ -361,9 +367,9 @@ public class Ghost extends Creature {
      * <p>
      */
     private void updateStateHuntingPac(GameModel game) {
-        // The hunting behaviour is defined by the specific game variant. For example, in Ms. Pac-Man,
+        // The specific hunting behaviour is defined by the game variant. For example, in Ms. Pac-Man,
         // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
-        game.letGhostHunt(this);
+        huntingBehaviour.accept(this);
     }
 
     // --- FRIGHTENED ---

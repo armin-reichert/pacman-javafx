@@ -157,8 +157,6 @@ public interface GameModel {
 
     void doHuntingStep();
 
-    void letGhostHunt(Ghost ghost);
-
     boolean areGhostsKilled();
 
     TickTimer huntingTimer();

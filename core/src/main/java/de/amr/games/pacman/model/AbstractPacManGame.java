@@ -548,6 +548,14 @@ public abstract class AbstractPacManGame implements GameModel {
         eventLog.pacKilled = checkPacKilled();
     }
 
+    boolean isScatteringPhase(int phaseIndex) {
+        return isEven(phaseIndex);
+    }
+
+    boolean isChasingPhase(int phaseIndex) {
+        return isOdd(phaseIndex);
+    }
+
     boolean checkPacKilled() {
         boolean pacMeetsKiller = ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
         if (demoLevel) {
