@@ -97,7 +97,7 @@ public class PlayScene2D extends GameScene2D implements PlaySceneSound {
                 if (msPacManGame.blueMazeBug) {
                     vectorRenderer.draw(g, game.world(), flashing, blinkingOn);
                 } else {
-                    int mapNumber = msPacManGame.mapNumber(game.world().map());
+                    int mapNumber = msPacManGame.currentMapNumber();
                     spriteRenderer.drawMsPacManWorld(g, game.world(), mapNumber, flashing, blinkingOn);
                 }
                 game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));

@@ -60,6 +60,7 @@ public class MsPacManGame extends AbstractPacManGame  {
         return world;
     }
 
+    private int currentMapNumber;
     public boolean blueMazeBug = false;
 
     @Override
@@ -90,7 +91,7 @@ public class MsPacManGame extends AbstractPacManGame  {
      * </ul>
      * <p>
      */
-    public static int mapNumberByLevelNumber(int levelNumber) {
+    private static int mapNumberByLevelNumber(int levelNumber) {
         return switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
@@ -100,13 +101,21 @@ public class MsPacManGame extends AbstractPacManGame  {
         };
     }
 
-    public int mapNumber(WorldMap map) {
-        Matcher m = PATTERN_MS_PACMAN_MAP.matcher(map.url().toExternalForm());
+    /**
+     * Used by sprite based renderer to select the image for the maze.
+     * @return map number (1-6)
+     */
+    public int currentMapNumber() {
+        return currentMapNumber;
+    }
+
+    private int computeCurrentMapNumber() {
+        Matcher m = PATTERN_MS_PACMAN_MAP.matcher(world.map().url().toExternalForm());
         if (m.matches()) {
             return Integer.parseInt(m.group(1));
-        } else {
-            throw new IllegalArgumentException("Could not determine map number for Ms. Pac-Man map URL: " + map.url());
         }
+        Logger.error("Could not determine current map number");
+        return 1;
     }
 
     @Override
@@ -126,6 +135,7 @@ public class MsPacManGame extends AbstractPacManGame  {
         }
         var msPacManWorld = createWorld(map);
         setWorldAndCreatePopulation(msPacManWorld);
+        currentMapNumber = computeCurrentMapNumber();
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -139,6 +149,7 @@ public class MsPacManGame extends AbstractPacManGame  {
         var mapURL = getClass().getResource(String.format("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world", mapNumber));
         var map = new WorldMap(mapURL);
         setWorldAndCreatePopulation(createWorld(map));
+        currentMapNumber = computeCurrentMapNumber();
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
