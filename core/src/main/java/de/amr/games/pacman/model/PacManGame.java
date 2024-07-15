@@ -157,7 +157,7 @@ public class PacManGame extends AbstractPacManGame {
         publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
     }
 
-    private void ghostHuntingBehaviour(Ghost ghost) {
+    protected void ghostHuntingBehaviour(Ghost ghost) {
         byte speed = huntingSpeedPct(ghost);
         boolean chase = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
         ghost.followTarget(chase ? chasingTarget(ghost) : scatterTarget(ghost), speed);
