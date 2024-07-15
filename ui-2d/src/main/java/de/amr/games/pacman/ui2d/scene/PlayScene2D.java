@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MsPacManGame;
@@ -147,14 +148,16 @@ public class PlayScene2D extends GameScene2D implements PlaySceneSound {
 
     private void drawLevelMessage() {
         var game = context.game();
-        int tileX = game.world().houseTopLeftTile().plus(game.world().houseSize()).x(); // TODO
-        int tileY = game.world().houseTopLeftTile().plus(game.world().houseSize()).y() + 1;
+        Vector2i houseOrigin = game.world().houseTopLeftTile();
+        Vector2i houseSize = game.world().houseSize();
+        int centerTileX = houseOrigin.x() + houseSize.x() / 2;
+        int tileY = houseOrigin.y() + houseSize.y() + 1;
         if (game.isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
             // "GAME OVER" is drawn in demo mode and when game is over
-            spriteRenderer.drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(9), t(tileY));
+            spriteRenderer.drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(centerTileX - 5), t(tileY));
         } else {
             switch (context.gameState()) {
-                case READY      -> spriteRenderer.drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(11), t(tileY));
+                case READY      -> spriteRenderer.drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(centerTileX - 3), t(tileY));
                 case LEVEL_TEST -> spriteRenderer.drawText(g, "TEST    L" + game.levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(tileY));
             }
         }
