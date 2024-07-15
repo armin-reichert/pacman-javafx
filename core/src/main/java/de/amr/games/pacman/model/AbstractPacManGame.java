@@ -570,7 +570,7 @@ public abstract class AbstractPacManGame implements GameModel {
         if (world.hasFoodAt(pacTile)) {
             eventLog.foodFoundTile = pacTile;
             pac.onStarvingEnd();
-            if (world.isEnergizerTile(pacTile)) {
+            if (world.isEnergizerPosition(pacTile)) {
                 eventLog.energizerFound = true;
                 pac.setRestingTicks(RESTING_TICKS_ENERGIZER);
                 victims.clear();

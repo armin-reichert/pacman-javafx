@@ -387,7 +387,7 @@ public class GameLevel3D extends Group {
         foodColorPy.set(color);
         Model3D pelletModel3D = context.theme().get("model3D.pellet");
         world.map().food().tiles().filter(world::hasFoodAt).forEach(tile -> {
-            if (world.isEnergizerTile(tile)) {
+            if (world.isEnergizerPosition(tile)) {
                 var energizer3D = new Energizer3D(ENERGIZER_RADIUS);
                 addEnergizerAnimation(world, energizer3D);
                 energizers3D.add(energizer3D);

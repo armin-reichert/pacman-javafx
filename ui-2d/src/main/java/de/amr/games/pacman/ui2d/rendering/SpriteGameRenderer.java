@@ -71,7 +71,7 @@ public class SpriteGameRenderer {
     }
 
     public void hideFoodTileContent(GraphicsContext g, GameWorld world, Vector2i tile) {
-        double r = world.isEnergizerTile(tile) ? 4.5 : 2;
+        double r = world.isEnergizerPosition(tile) ? 4.5 : 2;
         double cx = t(tile.x()) + HTS;
         double cy = t(tile.y()) + HTS;
         double s = scalingPy.get();

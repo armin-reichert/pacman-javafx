@@ -949,7 +949,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void cheatEatAllPellets() {
         if (game().isPlaying() && gameState() == GameState.HUNTING) {
             GameWorld world = game().world();
-            world.map().food().tiles().filter(not(world::isEnergizerTile)).forEach(world::eatFoodAt);
+            world.map().food().tiles().filter(not(world::isEnergizerPosition)).forEach(world::eatFoodAt);
             game().publishGameEvent(GameEventType.PAC_FOUND_FOOD);
         }
     }

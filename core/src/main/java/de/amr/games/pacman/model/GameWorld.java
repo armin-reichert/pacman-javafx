@@ -8,6 +8,7 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -265,7 +266,8 @@ public class GameWorld {
 
     public void eatFoodAt(Vector2i tile) {
         if (isOutsideWorld(tile)) {
-            return; // raise error?
+            Logger.error("Attempt to eat food from non-food tile");
+            return;
         }
         if (hasFoodAt(tile)) {
             eatenFood.set(map.food().index(tile));
@@ -273,31 +275,19 @@ public class GameWorld {
         }
     }
 
-    public boolean isFoodTile(Vector2i tile) {
-        if (isOutsideWorld(tile)) {
-            return false;
-        }
-        return map.food().get(tile) != EMPTY;
+    public boolean isFoodPosition(Vector2i tile) {
+        return !isOutsideWorld(tile) && map.food().get(tile) != EMPTY;
     }
 
-    public boolean isEnergizerTile(Vector2i tile) {
-        if (isOutsideWorld(tile)) {
-            return false;
-        }
-        return map.food().get(tile) == ENERGIZER;
+    public boolean isEnergizerPosition(Vector2i tile) {
+        return !isOutsideWorld(tile) && map.food().get(tile) == ENERGIZER;
     }
 
     public boolean hasFoodAt(Vector2i tile) {
-        if (isOutsideWorld(tile)) {
-            return false;
-        }
-        return map.food().get(tile) != EMPTY && !eatenFood.get(map.food().index(tile));
+        return isFoodPosition(tile) && !hasEatenFoodAt(tile);
     }
 
     public boolean hasEatenFoodAt(Vector2i tile) {
-        if (isOutsideWorld(tile)) {
-            return false;
-        }
-        return eatenFood.get(map.food().index(tile));
+        return !isOutsideWorld(tile) && eatenFood.get(map.food().index(tile));
     }
 }
