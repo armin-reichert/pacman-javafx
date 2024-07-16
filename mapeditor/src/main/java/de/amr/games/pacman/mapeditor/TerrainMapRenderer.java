@@ -28,6 +28,35 @@ public class TerrainMapRenderer implements TileMapRenderer {
     protected Color wallStrokeColor = Color.GREEN;
     protected Color doorColor = Color.PINK;
 
+    @Override
+    public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
+        // this renderer doesn't draw tiles individually
+    }
+
+    @Override
+    public void drawMap(GraphicsContext g, TileMap map) {
+        double innerPathWidth = computeLineWidth(g.getCanvas().getHeight());
+        double outerPathWidth = 3 * innerPathWidth;
+        double outerPathBorderWidth = 0.75 * innerPathWidth;
+        g.save();
+        g.scale(scaling(), scaling());
+        map.outerPaths().forEach(path -> {
+            drawPath(g, map, path, false,  outerPathWidth, wallStrokeColor, null);
+            drawPath(g, map, path, false,  outerPathWidth - 2 * outerPathBorderWidth, wallFillColor, null);
+        });
+        map.innerPaths().forEach(path -> drawPath(g, map, path, true, innerPathWidth, wallStrokeColor, wallFillColor));
+        map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, door, doorColor));
+        g.restore();
+    }
+
+    public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
+        double height = TILE_SIZE * 0.25;
+        g.setFill(color);
+        g.fillRect(x, y + 0.5 * (TILE_SIZE - height), TILE_SIZE, height);
+    }
+
+    @Override
     public void setScaling(double scaling) {
         scalingPy.set((float) scaling);
     }
@@ -48,35 +77,10 @@ public class TerrainMapRenderer implements TileMapRenderer {
         this.doorColor = doorColor;
     }
 
-    public void drawMap(GraphicsContext g, TileMap map) {
-        double innerPathWidth = computeLineWidth(g.getCanvas().getHeight());
-        double outerPathWidth = 3 * innerPathWidth;
-        double outerPathBorderWidth = 0.75 * innerPathWidth;
-        g.save();
-        g.scale(scaling(), scaling());
-        map.outerPaths().forEach(path -> {
-            drawPath(g, map, path, false,  outerPathWidth, wallStrokeColor, null);
-            drawPath(g, map, path, false,  outerPathWidth - 2 * outerPathBorderWidth, wallFillColor, null);
-        });
-        map.innerPaths().forEach(path -> drawPath(g, map, path, true, innerPathWidth, wallStrokeColor, wallFillColor));
-        map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, door, doorColor));
-        g.restore();
-    }
-
-    @Override
-    public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
-    }
-
-    public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
-        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
-        g.setFill(color);
-        g.fillRect(x, y + 3, TILE_SIZE, 2);
-    }
-
     private double computeLineWidth(double canvasHeight) {
         // increase line width for small display
         if (canvasHeight <  36 * TILE_SIZE * 1.5) {
-            return 1.5;
+            return 1.25;
         }
         if (canvasHeight < 36 * TILE_SIZE * 2.5) {
             return 1;
@@ -84,11 +88,11 @@ public class TerrainMapRenderer implements TileMapRenderer {
         return 0.75;
     }
 
-    public Vector2f center(Vector2i tile) {
+    private Vector2f center(Vector2i tile) {
         return new Vector2f(tile.x() * TILE_SIZE + TILE_SIZE / 2f, tile.y() * TILE_SIZE + TILE_SIZE / 2f);
     }
 
-    public void drawPath(GraphicsContext g, TileMap map, TileMapPath tileMapPath,
+    private void drawPath(GraphicsContext g, TileMap map, TileMapPath tileMapPath,
         boolean fill, double lineWidth, Color outlineColor, Color fillColor) {
 
         double r = 0.45 * TILE_SIZE;

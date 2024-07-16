@@ -28,6 +28,7 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
         this.runtimeMode = state;
     }
 
+    @Override
     public void drawMap(GraphicsContext g, TileMap terrainMap) {
         if (runtimeMode) {
             super.drawMap(g, terrainMap);
