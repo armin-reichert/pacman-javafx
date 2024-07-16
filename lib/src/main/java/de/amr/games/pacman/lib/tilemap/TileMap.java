@@ -149,6 +149,13 @@ public class TileMap {
             }
         }
 
+        // closed outer path?
+        for (int row = 0; row < numRows(); ++row) {
+            if (get(row, firstCol) == Tiles.DWALL_V) {
+                addOuterPath(new Vector2i(firstCol, row), DOWN, exploredSet);
+            }
+        }
+
         // find ghost house, doors are included as walls!
         tiles(Tiles.DCORNER_NW)
             .filter(tile -> isUnexplored(exploredSet, tile))

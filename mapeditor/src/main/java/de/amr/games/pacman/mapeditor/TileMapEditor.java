@@ -507,7 +507,7 @@ public class TileMapEditor  {
 
     private void createLoadMapMenu() {
         menuLoadMap = new Menu(tt("menu.load_map"));
-        menuLoadMap.disableProperty().bind(editingEnabledPy.not());
+        //menuLoadMap.disableProperty().bind(editingEnabledPy.not());
     }
 
     private void createViewMenu() {
