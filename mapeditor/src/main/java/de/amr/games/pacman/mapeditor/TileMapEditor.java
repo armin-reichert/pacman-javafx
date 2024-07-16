@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.mapeditor;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
@@ -143,6 +144,15 @@ public class TileMapEditor  {
 
     public final ObjectProperty<WorldMap> mapPy = new SimpleObjectProperty<>(this, "map");
 
+    private ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>(this, "focussedTile") {
+        @Override
+        protected void invalidated() {
+            Vector2i tile = get();
+            var text = "Tile: " + (tile != null ? String.format("x=%2d y=%2d", tile.x(), tile.y()) : "n/a");
+            focussedTileInfo.setText(text);
+        }
+    };
+
     private Window ownerWindow;
     private MenuBar menuBar;
     private Menu menuFile;
@@ -156,7 +166,7 @@ public class TileMapEditor  {
     private ScrollPane previewCanvasScroll;
     private WebView mapSourceView;
     private Label messageLabel;
-    private Label hoveredTileInfo;
+    private Label focussedTileInfo;
     private FileChooser fileChooser;
     private TabPane palettesTabPane;
     private PropertyEditorPane terrainMapPropertiesEditor;
@@ -168,7 +178,6 @@ public class TileMapEditor  {
 
     private boolean pathsUpToDate;
     private boolean unsavedChanges;
-    private Vector2i hoveredTile;
     private File lastUsedDir;
     private Instant messageCloseTime;
     private Timeline clock;
@@ -244,6 +253,24 @@ public class TileMapEditor  {
                 () -> (double) mapPy.get().terrain().numCols() * gridSize(), mapPy, gridSizePy));
         previewCanvas.widthProperty().bind(editCanvas.widthProperty());
         previewCanvas.heightProperty().bind(editCanvas.heightProperty());
+
+        // Cursor navigation
+        editCanvas.setOnKeyPressed(e -> {
+            Direction moveDir = switch (e.getCode()) {
+                case LEFT -> Direction.LEFT;
+                case RIGHT -> Direction.RIGHT;
+                case UP -> Direction.UP;
+                case DOWN -> Direction.DOWN;
+                default -> null;
+            };
+            if (moveDir != null && focussedTilePy.get() != null) {
+                Vector2i newTile = focussedTilePy.get().plus(moveDir.vector());
+                if (!map().terrain().outOfBounds(newTile)) {
+                    focussedTilePy.set(newTile);
+                }
+            }
+        });
+
 
         // Active rendering
         int fps = 10;
@@ -420,9 +447,9 @@ public class TileMapEditor  {
         controlsPane.getChildren().add(palettesTabPane);
         controlsPane.getChildren().add(new VBox(terrainPropertiesArea, foodPropertiesArea));
 
-        hoveredTileInfo = new Label();
-        hoveredTileInfo.setMinWidth(100);
-        hoveredTileInfo.setMaxWidth(100);
+        focussedTileInfo = new Label();
+        focussedTileInfo.setMinWidth(100);
+        focussedTileInfo.setMaxWidth(100);
 
         messageLabel = new Label();
         messageLabel.setPadding(new Insets(0, 0, 0, 10));
@@ -439,7 +466,7 @@ public class TileMapEditor  {
         var sliderContainer = new HBox(new Label("Zoom"), sliderGridSize);
         sliderContainer.setSpacing(5);
 
-        var footer = new HBox(hoveredTileInfo, messageLabel, filler, sliderContainer);
+        var footer = new HBox(focussedTileInfo, messageLabel, filler, sliderContainer);
         footer.setPadding(new Insets(0, 10, 0, 10));
 
         var splitPane = new SplitPane(editCanvasScroll, previewCanvasScroll, mapSourceViewScroll);
@@ -726,11 +753,11 @@ public class TileMapEditor  {
         if (!editingEnabledPy.get()) {
             drawEditingHint(g);
         }
-        if (hoveredTile != null) {
+        if (focussedTilePy.get() != null) {
             double tilePx = gridSize();
             g.setStroke(Color.YELLOW);
             g.setLineWidth(1);
-            g.strokeRect(hoveredTile.x() * tilePx, hoveredTile.y() * tilePx, tilePx, tilePx);
+            g.strokeRect(focussedTilePy.get().x() * tilePx, focussedTilePy.get().y() * tilePx, tilePx, tilePx);
         }
     }
 
@@ -817,16 +844,10 @@ public class TileMapEditor  {
         return palettes.get(selectedPaletteID());
     }
 
-    private void setHoveredTile(Vector2i tile) {
-        hoveredTile = tile;
-        var text = "Tile: ";
-        text += hoveredTile != null ? String.format("x=%2d y=%2d", hoveredTile.x(), hoveredTile.y()) : "n/a";
-        hoveredTileInfo.setText(text);
-    }
-
     private void onMouseClickedOnEditCanvas(MouseEvent e) {
         if (!editingEnabledPy.get() && e.getClickCount() == 2) {
             editingEnabledPy.set(true);
+            editCanvas.requestFocus();
             return;
         }
         switch (selectedPaletteID()) {
@@ -845,7 +866,7 @@ public class TileMapEditor  {
     }
 
     private void onMouseMovedOverEditCanvas(MouseEvent e) {
-        setHoveredTile(tileAtMousePosition(e.getX(), e.getY()));
+        focussedTilePy.set(tileAtMousePosition(e.getX(), e.getY()));
         if (!editingEnabledPy.get()) {
             return;
         }
@@ -853,14 +874,14 @@ public class TileMapEditor  {
             switch (selectedPaletteID()) {
                 case PALETTE_TERRAIN -> {
                     if (selectedPalette().isToolSelected()) {
-                        selectedPalette().selectedTool().apply(map().terrain(), hoveredTile);
+                        selectedPalette().selectedTool().apply(map().terrain(), focussedTilePy.get());
                     }
                     markMapEdited();
                     invalidateTerrainMapPaths();
                 }
                 case PALETTE_FOOD -> {
                     if (selectedPalette().isToolSelected()) {
-                        selectedPalette().selectedTool().apply(map().food(), hoveredTile);
+                        selectedPalette().selectedTool().apply(map().food(), focussedTilePy.get());
                     }
                     markMapEdited();
                 }
