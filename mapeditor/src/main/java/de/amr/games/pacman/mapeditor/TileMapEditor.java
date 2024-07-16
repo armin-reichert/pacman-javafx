@@ -54,11 +54,12 @@ public class TileMapEditor  {
 
     private static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.mapeditor.texts");
 
-    public static final Rectangle2D PAC_SPRITE          = new Rectangle2D(473, 16, 14, 14);
-    public static final Rectangle2D RED_GHOST_SPRITE    = new Rectangle2D(505, 65, 14, 14);
-    public static final Rectangle2D PINK_GHOST_SPRITE   = new Rectangle2D(553, 81, 14, 14);
-    public static final Rectangle2D CYAN_GHOST_SPRITE   = new Rectangle2D(521, 97, 14, 14);
+    public static final Rectangle2D PAC_SPRITE          = new Rectangle2D(473,  16, 14, 14);
+    public static final Rectangle2D RED_GHOST_SPRITE    = new Rectangle2D(505,  65, 14, 14);
+    public static final Rectangle2D PINK_GHOST_SPRITE   = new Rectangle2D(553,  81, 14, 14);
+    public static final Rectangle2D CYAN_GHOST_SPRITE   = new Rectangle2D(521,  97, 14, 14);
     public static final Rectangle2D ORANGE_GHOST_SPRITE = new Rectangle2D(521, 113, 14, 14);
+    public static final Rectangle2D BONUS_SPRITE        = new Rectangle2D(505,  49, 14, 14);
 
     public static final String DEFAULT_COLOR_WALL_STROKE         = "rgb(0,0,255)";
     public static final String DEFAULT_COLOR_WALL_FILL           = "rgb(0,0,0)";
@@ -754,14 +755,15 @@ public class TileMapEditor  {
             foodMapRenderer.setPelletColor(foodColor);
             foodMapRenderer.drawMap(g, map().food());
         }
-        drawActor(g, PROPERTY_POS_PAC, PAC_SPRITE);
-        drawActor(g, PROPERTY_POS_RED_GHOST, RED_GHOST_SPRITE);
-        drawActor(g, PROPERTY_POS_PINK_GHOST, PINK_GHOST_SPRITE);
-        drawActor(g, PROPERTY_POS_CYAN_GHOST, CYAN_GHOST_SPRITE);
-        drawActor(g, PROPERTY_POS_ORANGE_GHOST, ORANGE_GHOST_SPRITE);
+        drawSprite(g, PROPERTY_POS_PAC, PAC_SPRITE);
+        drawSprite(g, PROPERTY_POS_RED_GHOST, RED_GHOST_SPRITE);
+        drawSprite(g, PROPERTY_POS_PINK_GHOST, PINK_GHOST_SPRITE);
+        drawSprite(g, PROPERTY_POS_CYAN_GHOST, CYAN_GHOST_SPRITE);
+        drawSprite(g, PROPERTY_POS_ORANGE_GHOST, ORANGE_GHOST_SPRITE);
+        drawSprite(g, PROPERTY_POS_BONUS, BONUS_SPRITE);
     }
 
-    private void drawActor(GraphicsContext g, String propertyName, Rectangle2D sprite) {
+    private void drawSprite(GraphicsContext g, String propertyName, Rectangle2D sprite) {
         var tile = getTileFromMap(map().terrain(), propertyName, null);
         if (tile != null) {
             drawSprite(g, sprite, tile.x() * gridSize() + 0.5 * gridSize(), tile.y() * gridSize(), 1.75 * gridSize(), 1.75 * gridSize());
