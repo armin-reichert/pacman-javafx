@@ -29,7 +29,7 @@ public class Palette extends Canvas {
     private Tool selectedTool;
     private int selectedRow;
     private int selectedCol;
-    private Tooltip tooltip;
+    private final Tooltip tooltip;
 
     public Palette(int cellSize, int numRows, int numCols, TileMapRenderer renderer) {
         this.cellSize = cellSize;
@@ -63,12 +63,12 @@ public class Palette extends Canvas {
         });
     }
 
-    public ChangeTileValueTool changeTileValueTool(byte value, String description) {
-        return new ChangeTileValueTool(renderer, cellSize, value, description);
+    public TileValueEditorTool createTileValueEditorTool(byte value, String description) {
+        return new TileValueEditorTool(renderer, cellSize, value, description);
     }
 
-    public ChangePropertyValueTool changePropertyValueTool(String propertyName, String description) {
-        return new ChangePropertyValueTool(renderer, cellSize, propertyName, description);
+    public PropertyValueEditorTool createPropertyValueEditorTool(String propertyName, String description) {
+        return new PropertyValueEditorTool(renderer, cellSize, propertyName, description);
     }
 
     public void setTools(Tool... editorTools) {

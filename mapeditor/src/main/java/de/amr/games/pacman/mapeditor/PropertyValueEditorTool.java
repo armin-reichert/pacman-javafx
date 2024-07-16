@@ -14,13 +14,13 @@ import static de.amr.games.pacman.lib.Globals.TS;
 /**
  * @author Armin Reichert
  */
-public class ChangePropertyValueTool implements Tool {
+public class PropertyValueEditorTool implements Tool {
     private final TileMapRenderer renderer;
     private final int size;
     private final String propertyName;
     private final String description;
 
-    public ChangePropertyValueTool(TileMapRenderer renderer, int size, String propertyName, String description) {
+    public PropertyValueEditorTool(TileMapRenderer renderer, int size, String propertyName, String description) {
         this.renderer = renderer;
         this.size = size;
         this.propertyName = propertyName;

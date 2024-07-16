@@ -12,13 +12,13 @@ import javafx.scene.paint.Color;
 /**
  * @author Armin Reichert
  */
-public class ChangeTileValueTool implements Tool {
+public class TileValueEditorTool implements Tool {
     private final TileMapRenderer renderer;
     private final int size;
     private final byte value;
     private final String description;
 
-    public ChangeTileValueTool(TileMapRenderer renderer, int size, byte value, String description) {
+    public TileValueEditorTool(TileMapRenderer renderer, int size, byte value, String description) {
         this.renderer = renderer;
         this.size = size;
         this.value = value;
