@@ -87,7 +87,7 @@ public class MsPacMan3D extends Pac3D {
             light.setColor(theme.color("ms_pacman.color.head").desaturate());
         }
 
-        var body = createPacShape(
+        Group body = createPacShape(
             theme.get("model3D.pacman"), size,
             theme.color("ms_pacman.color.head"),
             theme.color("ms_pacman.color.eyes"),

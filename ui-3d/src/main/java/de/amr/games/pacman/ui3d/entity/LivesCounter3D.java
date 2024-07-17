@@ -11,6 +11,7 @@ import javafx.animation.RotateTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -47,7 +48,7 @@ public class LivesCounter3D extends Group {
     private final PointLight light = new PointLight();
     private final List<Animation> animations = new ArrayList<>();
 
-    public LivesCounter3D(int maxLives, Supplier<Pac3D> shapeFactory)
+    public LivesCounter3D(int maxLives, Supplier<Node> shapeFactory)
     {
         pillarMaterialPy.bind(Bindings.createObjectBinding(() -> coloredMaterial(pillarColorPy.get()), pillarColorPy));
         plateMaterialPy.bind(Bindings.createObjectBinding(() -> coloredMaterial(plateColorPy.get()), plateColorPy));
@@ -63,23 +64,22 @@ public class LivesCounter3D extends Group {
 
             standsGroup.getChildren().add(createStand(x));
 
-            Pac3D pac3D = shapeFactory.get();
-            pac3D.setUserData(i);
-            pac3D.setTranslateX(x);
-            pac3D.setTranslateY(0);
-            double pacRadius = pac3D.getBoundsInLocal().getHeight() * 0.5;
-            pac3D.translateZProperty().bind(Bindings.createDoubleBinding(
+            Node shape = shapeFactory.get();
+            shape.setUserData(i);
+            shape.setTranslateX(x);
+            shape.setTranslateY(0);
+            double pacRadius = shape.getBoundsInLocal().getHeight() * 0.5;
+            shape.translateZProperty().bind(Bindings.createDoubleBinding(
                 () -> -(pillarHeightPy.get() + plateThicknessPy.get() + pacRadius),
                 pillarHeightPy, plateThicknessPy)
             );
-            pac3D.setRotationAxis(Rotate.Z_AXIS);
-            pac3D.setRotate(180);
-            pac3D.drawModePy.bind(drawModePy);
-            pac3D.visibleProperty().bind(Bindings.createBooleanBinding(
-                () -> (int) pac3D.getUserData() < livesCountPy.get(), livesCountPy));
-            getChildren().add(pac3D);
+            shape.setRotationAxis(Rotate.Z_AXIS);
+            shape.setRotate(180);
+            shape.visibleProperty().bind(Bindings.createBooleanBinding(
+                () -> (int) shape.getUserData() < livesCountPy.get(), livesCountPy));
+            getChildren().add(shape);
 
-            var rotation = new RotateTransition(Duration.seconds(10.0), pac3D);
+            var rotation = new RotateTransition(Duration.seconds(10.0), shape);
             rotation.setAxis(Rotate.Z_AXIS);
             rotation.setByAngle(180);
             rotation.setInterpolator(Interpolator.LINEAR);

@@ -30,6 +30,7 @@ import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -405,11 +406,11 @@ public class GameLevel3D extends Group {
     }
 
     private LivesCounter3D createLivesCounter() {
-        Supplier<Pac3D> pacShapeFactory = () -> switch (context.game().variant()) {
+        Supplier<Node> shapeFactory = () -> switch (context.game().variant()) {
             case MS_PACMAN          -> new MsPacMan3D(10, null, context.theme());
             case PACMAN, PACMAN_XXL -> new PacMan3D(10, null, context.theme());
         };
-        var counter3D = new LivesCounter3D(5, pacShapeFactory);
+        var counter3D = new LivesCounter3D(5, shapeFactory);
         counter3D.setTranslateX(2 * TS);
         counter3D.setTranslateY(2 * TS);
         counter3D.setVisible(context.gameController().hasCredit());
