@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.TileMapPath;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
@@ -99,17 +100,19 @@ public class GameLevel3D extends Group {
 
     public GameLevel3D(GameContext context) {
         this.context = checkNotNull(context);
-        GameWorld world  = checkNotNull(context.game().world());
-        WorldMap map = world.map();
-        Theme theme  = checkNotNull(context.theme());
 
-        pac3D = switch (context.game().variant()) {
-            case MS_PACMAN          -> new MsPacMan3D(PAC_SIZE, context.game().pac(), theme);
-            case PACMAN, PACMAN_XXL -> new PacMan3D(PAC_SIZE, context.game().pac(), theme);
+        GameModel game  = context.game();
+        GameWorld world = game.world();
+        WorldMap map    = world.map();
+        Theme theme     = context.theme();
+
+        pac3D = switch (game.variant()) {
+            case MS_PACMAN          -> new MsPacMan3D(PAC_SIZE, game.pac(), theme);
+            case PACMAN, PACMAN_XXL -> new PacMan3D(PAC_SIZE, game.pac(), theme);
         };
 
-        Model3D ghostModel3D = context.theme().get("model3D.ghost");
-        ghosts3D = context.game().ghosts().map(ghost -> new Ghost3D(ghostModel3D, theme, ghost, GHOST_SIZE)).toList();
+        Model3D ghostModel3D = theme.get("model3D.ghost");
+        ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghostModel3D, theme, ghost, GHOST_SIZE)).toList();
 
         wallStrokeMaterialPy.bind(Bindings.createObjectBinding(
             () -> coloredMaterial(wallStrokeColorPy.get()),
@@ -137,19 +140,14 @@ public class GameLevel3D extends Group {
             foodColorPy
         ));
 
-        wallFillColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_WALL_FILL,
-            Color.rgb(0,0,0)));
-
-        wallStrokeColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_WALL_STROKE,
-            Color.rgb(33, 33, 255)));
-
-        foodColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_FOOD,
-            Color.PINK));
+        wallFillColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_WALL_FILL, Color.rgb(0,0,0)));
+        wallStrokeColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
+        foodColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_FOOD, Color.PINK));
 
         livesCounter3D = createLivesCounter(5, 10);
         updateLivesCounter();
         createMessage3D();
-        Box floor = createFloor(world.map().terrain().numCols() * TS - 1, world.map().terrain().numRows() * TS - 1);
+        Box floor = createFloor(map.terrain().numCols() * TS - 1, map.terrain().numRows() * TS - 1);
         addMaze(mazeGroup);
         addHouse(mazeGroup);
         addPellets(this); // when put inside maze group, transparency does not work!

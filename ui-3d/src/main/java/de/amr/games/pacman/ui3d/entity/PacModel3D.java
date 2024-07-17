@@ -73,8 +73,8 @@ public interface PacModel3D {
         pearlRight.setMaterial(pearlMaterial);
 
         var beautySpot = new Sphere(0.5);
+        beautySpot.getTransforms().addAll(new Translate(-2.5, -4.5, pacSize * 0.33));
         beautySpot.setMaterial(coloredMaterial(Color.rgb(100, 100, 100)));
-        beautySpot.getTransforms().addAll(new Translate(-2.5, -4.5, 4.5));
 
         var silicone = coloredMaterial(boobsColor);
 
