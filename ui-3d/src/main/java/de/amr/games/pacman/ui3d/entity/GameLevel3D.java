@@ -407,9 +407,9 @@ public class GameLevel3D extends Group {
             case MS_PACMAN -> new Group(
                 PacModel3D.createPacShape(
                     context.theme().get("model3D.pacman"), shapeSize,
-                    context.theme().color("pacman.color.head"),
-                    context.theme().color("pacman.color.eyes"),
-                    context.theme().color("pacman.color.palate")),
+                    context.theme().color("ms_pacman.color.head"),
+                    context.theme().color("ms_pacman.color.eyes"),
+                    context.theme().color("ms_pacman.color.palate")),
                 PacModel3D.createFemaleParts(shapeSize,
                     context.theme().color("ms_pacman.color.hairbow"),
                     context.theme().color("ms_pacman.color.hairbow.pearls"),
