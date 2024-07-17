@@ -48,7 +48,7 @@ public class LivesCounter3D extends Group {
     private final PointLight light = new PointLight();
     private final List<Animation> animations = new ArrayList<>();
 
-    public LivesCounter3D(Node[] shapes)
+    public LivesCounter3D(Node[] shapes, int shapeHeight)
     {
         int maxLives = shapes.length;
 
@@ -70,9 +70,8 @@ public class LivesCounter3D extends Group {
             shape.setUserData(i);
             shape.setTranslateX(x);
             shape.setTranslateY(0);
-            double pacRadius = shape.getBoundsInLocal().getHeight() * 0.5;
             shape.translateZProperty().bind(Bindings.createDoubleBinding(
-                () -> -(pillarHeightPy.get() + plateThicknessPy.get() + pacRadius),
+                () -> -(pillarHeightPy.get() + plateThicknessPy.get() + 0.5 * shapeHeight),
                 pillarHeightPy, plateThicknessPy)
             );
             shape.setRotationAxis(Rotate.Z_AXIS);

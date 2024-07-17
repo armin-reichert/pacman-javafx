@@ -43,7 +43,6 @@ public interface PacModel3D {
 
         var root = new Group(head, eyes, palate);
         root.getTransforms().add(Model3D.scaled(root, size));
-
         // TODO check/fix Pac-Man mesh position and rotation in .obj file
         root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
         root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));

@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.TileMapPath;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -145,7 +146,7 @@ public class GameLevel3D extends Group {
         foodColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_FOOD,
             Color.PINK));
 
-        livesCounter3D = createLivesCounter(5);
+        livesCounter3D = createLivesCounter(5, 10);
         updateLivesCounter();
         createMessage3D();
         Box floor = createFloor(world.map().terrain().numCols() * TS - 1, world.map().terrain().numRows() * TS - 1);
@@ -403,15 +404,35 @@ public class GameLevel3D extends Group {
         });
     }
 
-    private LivesCounter3D createLivesCounter(int numShapes) {
+    private Node createLivesCounterShape(GameVariant variant, int shapeSize) {
+        return switch (variant) {
+            case MS_PACMAN -> new Group(
+                PacModel3D.createPacShape(
+                    context.theme().get("model3D.pacman"), shapeSize,
+                    context.theme().color("pacman.color.head"),
+                    context.theme().color("pacman.color.eyes"),
+                    context.theme().color("pacman.color.palate")),
+                PacModel3D.createFemaleParts(shapeSize,
+                    context.theme().color("ms_pacman.color.hairbow"),
+                    context.theme().color("ms_pacman.color.hairbow.pearls"),
+                    context.theme().color("ms_pacman.color.boobs"))
+            );
+            case PACMAN, PACMAN_XXL ->
+                 PacModel3D.createPacShape(
+                    context.theme().get("model3D.pacman"), shapeSize,
+                    context.theme().color("pacman.color.head"),
+                    context.theme().color("pacman.color.eyes"),
+                    context.theme().color("pacman.color.palate")
+                );
+        };
+    }
+
+    private LivesCounter3D createLivesCounter(int numShapes, int shapeSize) {
         Node[] shapes = new Node[numShapes];
         for (int i = 0; i < shapes.length; ++i) {
-            shapes[i] = switch (context.game().variant()) {
-                case MS_PACMAN          -> new MsPacMan3D(10, null, context.theme());
-                case PACMAN, PACMAN_XXL -> new PacMan3D(10, null, context.theme());
-            };
+            shapes[i] = createLivesCounterShape(context.game().variant(), shapeSize);
         }
-        var counter3D = new LivesCounter3D(shapes);
+        var counter3D = new LivesCounter3D(shapes, 10);
         counter3D.setTranslateX(2 * TS);
         counter3D.setTranslateY(2 * TS);
         counter3D.setVisible(context.gameController().hasCredit());

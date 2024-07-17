@@ -23,8 +23,7 @@ import javafx.util.Duration;
 
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.pauseSec;
 import static de.amr.games.pacman.ui3d.animation.Turn.angle;
 import static de.amr.games.pacman.ui3d.entity.PacModel3D.*;
@@ -37,30 +36,33 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
     private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
     private final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
     private final Rotate orientation = new Rotate();
-    private PointLight light;
-    private Pac pac;
-    private double zStandingOnGround;
-    private HipSwaying walkingAnimation;
+    private final PointLight light;
+    private final Pac pac;
+    private final double zStandingOnGround;
+    private final HipSwaying walkingAnimation;
 
     /**
      * Creates a 3D Ms. Pac-Man.
      * @param size diameter of Pac-Man
-     * @param msPacMan Ms. Pac-Man instance, may be NULL if used for lives counter
+     * @param msPacMan Ms. Pac-Man instance
      * @param theme the theme
      */
     public MsPacMan3D(double size, Pac msPacMan, Theme theme) {
-        if (msPacMan != null) {
-            pac = msPacMan;
-            zStandingOnGround = -0.5 * size;
-            walkingAnimation = new HipSwaying();
-            walkingAnimation.setPower(false);
-            light = new PointLight();
-            light.setMaxRange(2 * TS);
-            light.translateXProperty().bind(translateXProperty());
-            light.translateYProperty().bind(translateYProperty());
-            light.setTranslateZ(-10);
-            light.setColor(theme.color("ms_pacman.color.head").desaturate());
-        }
+        checkNotNull(msPacMan);
+        checkNotNull(theme);
+
+        pac = msPacMan;
+        zStandingOnGround = -0.5 * size;
+
+        walkingAnimation = new HipSwaying();
+        walkingAnimation.setPower(false);
+
+        light = new PointLight();
+        light.setMaxRange(2 * TS);
+        light.translateXProperty().bind(translateXProperty());
+        light.translateYProperty().bind(translateYProperty());
+        light.setTranslateZ(-10);
+        light.setColor(theme.color("ms_pacman.color.head").desaturate());
 
         Group body = PacModel3D.createPacShape(
             theme.get("model3D.pacman"), size,
