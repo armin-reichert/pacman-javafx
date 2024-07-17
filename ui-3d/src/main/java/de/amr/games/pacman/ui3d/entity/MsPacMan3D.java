@@ -103,7 +103,7 @@ public class MsPacMan3D extends Pac3D {
             theme.color("ms_pacman.color.boobs"));
 
         var shapeGroup = new Group(body, femaleParts);
-        shapeGroup.getTransforms().setAll(position, orientation);
+        shapeGroup.getTransforms().setAll(orientation);
         getChildren().add(shapeGroup);
     }
 

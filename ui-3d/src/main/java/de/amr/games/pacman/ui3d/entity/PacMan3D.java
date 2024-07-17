@@ -52,7 +52,7 @@ public class PacMan3D extends Pac3D {
             .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
 
         var shapeGroup = new Group(body);
-        shapeGroup.getTransforms().setAll(position, orientation);
+        shapeGroup.getTransforms().setAll(orientation);
         getChildren().add(shapeGroup);
     }
 

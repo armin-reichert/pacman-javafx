@@ -19,7 +19,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 
 import java.util.stream.Stream;
 
@@ -72,7 +71,6 @@ public abstract class Pac3D extends Group {
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
     public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
 
-    protected final Translate position = new Translate();
     protected final Rotate orientation = new Rotate();
     protected final PointLight light;
     protected Pac pac;
@@ -81,8 +79,8 @@ public abstract class Pac3D extends Group {
     protected Pac3D() {
         light = new PointLight();
         light.setMaxRange(2 * TS);
-        light.translateXProperty().bind(position.xProperty());
-        light.translateYProperty().bind(position.yProperty());
+        light.translateXProperty().bind(translateXProperty());
+        light.translateYProperty().bind(translateYProperty());
         light.setTranslateZ(-10);
     }
 
@@ -93,10 +91,6 @@ public abstract class Pac3D extends Group {
     public abstract void stopWalkingAnimation();
 
     public abstract void setPower(boolean power);
-
-    public Translate position() {
-        return position;
-    }
 
     public PointLight light() {
         return light;
@@ -113,12 +107,12 @@ public abstract class Pac3D extends Group {
         var game = context.game();
         var world = game.world();
         Vector2f center = pac.center();
-        position.setX(center.x());
-        position.setY(center.y());
-        position.setZ(zStandingOnGround);
+        setTranslateX(center.x());
+        setTranslateY(center.y());
+        setTranslateZ(zStandingOnGround);
         orientation.setAxis(Rotate.Z_AXIS);
         orientation.setAngle(angle(pac.moveDir()));
-        boolean outsideWorld = position.getX() < HTS || position.getX() > TS * world.map().terrain().numCols() - HTS;
+        boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * world.map().terrain().numCols() - HTS;
         setVisible(pac.isVisible() && !outsideWorld);
         if (pac.isStandingStill()) {
             stopWalkingAnimation();

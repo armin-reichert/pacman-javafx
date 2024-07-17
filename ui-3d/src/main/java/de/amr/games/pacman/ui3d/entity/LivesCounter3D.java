@@ -65,10 +65,10 @@ public class LivesCounter3D extends Group {
 
             Pac3D pac3D = shapeFactory.get();
             pac3D.setUserData(i);
-            pac3D.position.setX(x);
-            pac3D.position.setY(0);
+            pac3D.setTranslateX(x);
+            pac3D.setTranslateY(0);
             double pacRadius = pac3D.getBoundsInLocal().getHeight() * 0.5;
-            pac3D.position.zProperty().bind(Bindings.createDoubleBinding(
+            pac3D.translateZProperty().bind(Bindings.createDoubleBinding(
                 () -> -(pillarHeightPy.get() + plateThicknessPy.get() + pacRadius),
                 pillarHeightPy, plateThicknessPy)
             );
