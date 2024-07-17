@@ -48,8 +48,10 @@ public class LivesCounter3D extends Group {
     private final PointLight light = new PointLight();
     private final List<Animation> animations = new ArrayList<>();
 
-    public LivesCounter3D(int maxLives, Supplier<Node> shapeFactory)
+    public LivesCounter3D(Node[] shapes)
     {
+        int maxLives = shapes.length;
+
         pillarMaterialPy.bind(Bindings.createObjectBinding(() -> coloredMaterial(pillarColorPy.get()), pillarColorPy));
         plateMaterialPy.bind(Bindings.createObjectBinding(() -> coloredMaterial(plateColorPy.get()), plateColorPy));
 
@@ -59,12 +61,12 @@ public class LivesCounter3D extends Group {
         light.translateZProperty().bind(pillarHeightPy.add(20).multiply(-1));
 
         var standsGroup = new Group();
-        for (int i = 0; i < maxLives; ++i) {
+        for (int i = 0; i < shapes.length; ++i) {
             int x = i * 2 * TS;
 
             standsGroup.getChildren().add(createStand(x));
 
-            Node shape = shapeFactory.get();
+            Node shape = shapes[i];
             shape.setUserData(i);
             shape.setTranslateX(x);
             shape.setTranslateY(0);

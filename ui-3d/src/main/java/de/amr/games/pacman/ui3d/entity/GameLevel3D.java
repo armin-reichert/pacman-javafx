@@ -30,12 +30,10 @@ import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -147,7 +145,7 @@ public class GameLevel3D extends Group {
         foodColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_FOOD,
             Color.PINK));
 
-        livesCounter3D = createLivesCounter();
+        livesCounter3D = createLivesCounter(5);
         updateLivesCounter();
         createMessage3D();
         Box floor = createFloor(world.map().terrain().numCols() * TS - 1, world.map().terrain().numRows() * TS - 1);
@@ -405,20 +403,21 @@ public class GameLevel3D extends Group {
         });
     }
 
-    private LivesCounter3D createLivesCounter() {
-        Supplier<Node> shapeFactory = () -> switch (context.game().variant()) {
-            case MS_PACMAN          -> new MsPacMan3D(10, null, context.theme());
-            case PACMAN, PACMAN_XXL -> new PacMan3D(10, null, context.theme());
-        };
-        var counter3D = new LivesCounter3D(5, shapeFactory);
+    private LivesCounter3D createLivesCounter(int numShapes) {
+        Node[] shapes = new Node[numShapes];
+        for (int i = 0; i < shapes.length; ++i) {
+            shapes[i] = switch (context.game().variant()) {
+                case MS_PACMAN          -> new MsPacMan3D(10, null, context.theme());
+                case PACMAN, PACMAN_XXL -> new PacMan3D(10, null, context.theme());
+            };
+        }
+        var counter3D = new LivesCounter3D(shapes);
         counter3D.setTranslateX(2 * TS);
         counter3D.setTranslateY(2 * TS);
         counter3D.setVisible(context.gameController().hasCredit());
         counter3D.drawModePy.bind(PY_3D_DRAW_MODE);
-
         counter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
         counter3D.light().setLightOn(context.gameController().hasCredit());
-
         return counter3D;
     }
 
