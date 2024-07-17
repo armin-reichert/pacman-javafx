@@ -37,37 +37,6 @@ import static de.amr.games.pacman.ui3d.animation.Turn.angle;
  */
 public abstract class Pac3D extends Group {
 
-    protected static final String MESH_ID_EYES   = "PacMan.Eyes";
-    protected static final String MESH_ID_HEAD   = "PacMan.Head";
-    protected static final String MESH_ID_PALATE = "PacMan.Palate";
-
-    public static Group createPacShape(Model3D model3D, double size, Color headColor, Color eyesColor, Color palateColor) {
-        var head = new MeshView(model3D.mesh(MESH_ID_HEAD));
-        head.setId(Model3D.toCSS_ID(MESH_ID_HEAD));
-        head.setMaterial(coloredMaterial(headColor));
-
-        var eyes = new MeshView(model3D.mesh(MESH_ID_EYES));
-        eyes.setId(Model3D.toCSS_ID(MESH_ID_EYES));
-        eyes.setMaterial(coloredMaterial(eyesColor));
-
-        var palate = new MeshView(model3D.mesh(MESH_ID_PALATE));
-        palate.setId(Model3D.toCSS_ID(MESH_ID_PALATE));
-        palate.setMaterial(coloredMaterial(palateColor));
-
-        var centeredOverOrigin = Model3D.centeredOverOrigin(head);
-        Stream.of(head, eyes, palate).forEach(node -> node.getTransforms().add(centeredOverOrigin));
-
-        var root = new Group(head, eyes, palate);
-        root.getTransforms().add(Model3D.scaled(root, size));
-
-        // TODO check/fix Pac-Man mesh position and rotation in .obj file
-        root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-        root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
-        root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
-
-        return root;
-    }
-
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
     public final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
 

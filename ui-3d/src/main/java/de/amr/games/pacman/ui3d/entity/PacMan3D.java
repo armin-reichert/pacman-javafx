@@ -40,20 +40,20 @@ public class PacMan3D extends Pac3D {
             light.setColor(theme.color("pacman.color.head").desaturate());
         }
 
-        var body = createPacShape(
+        var body = PacModel3D.createPacShape(
             theme.get("model3D.pacman"), size,
             theme.color("pacman.color.head"),
             theme.color("pacman.color.eyes"),
             theme.color("pacman.color.palate")
         );
 
-        Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE)
-            .map(id -> meshView(body, id))
-            .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
-
         var shapeGroup = new Group(body);
         shapeGroup.getTransforms().setAll(orientation);
         getChildren().add(shapeGroup);
+
+        Stream.of(PacModel3D.MESH_ID_EYES, PacModel3D.MESH_ID_HEAD, PacModel3D.MESH_ID_PALATE)
+            .map(id -> meshView(body, id))
+            .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
     }
 
     @Override

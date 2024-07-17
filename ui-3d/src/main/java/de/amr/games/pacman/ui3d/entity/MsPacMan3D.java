@@ -7,68 +7,24 @@ package de.amr.games.pacman.ui3d.entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
+import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.ui2d.util.Ufx.coloredMaterial;
 import static de.amr.games.pacman.ui2d.util.Ufx.pauseSec;
-import static de.amr.games.pacman.ui3d.model.Model3D.meshView;
+import static de.amr.games.pacman.ui3d.entity.PacModel3D.*;
 
 /**
  * @author Armin Reichert
  */
 public class MsPacMan3D extends Pac3D {
-
-    private static Group createFemaleParts(double pacSize, Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
-        var bowMaterial = coloredMaterial(hairBowColor);
-
-        var bowLeft = new Sphere(1.2);
-        bowLeft.getTransforms().addAll(new Translate(3.0, 1.5, -pacSize * 0.55));
-        bowLeft.setMaterial(bowMaterial);
-
-        var bowRight = new Sphere(1.2);
-        bowRight.getTransforms().addAll(new Translate(3.0, -1.5, -pacSize * 0.55));
-        bowRight.setMaterial(bowMaterial);
-
-        var pearlMaterial = coloredMaterial(hairBowPearlsColor);
-
-        var pearlLeft = new Sphere(0.4);
-        pearlLeft.getTransforms().addAll(new Translate(2, 0.5, -pacSize * 0.58));
-        pearlLeft.setMaterial(pearlMaterial);
-
-        var pearlRight = new Sphere(0.4);
-        pearlRight.getTransforms().addAll(new Translate(2, -0.5, -pacSize * 0.58));
-        pearlRight.setMaterial(pearlMaterial);
-
-        var beautySpot = new Sphere(0.5);
-        beautySpot.setMaterial(coloredMaterial(Color.rgb(100, 100, 100)));
-        beautySpot.getTransforms().addAll(new Translate(-2.5, -4.5, 4.5));
-
-        var silicone = coloredMaterial(boobsColor);
-
-        double bx = -0.2 * pacSize; // forward
-        double by = 1.6; // or - 1.6 // sidewards
-        double bz = 0.4 * pacSize; // up/down
-        var boobLeft = new Sphere(1.8);
-        boobLeft.setMaterial(silicone);
-        boobLeft.getTransforms().addAll(new Translate(bx, -by, bz));
-
-        var boobRight = new Sphere(1.8);
-        boobRight.setMaterial(silicone);
-        boobRight.getTransforms().addAll(new Translate(bx, by, bz));
-
-        return new Group(bowLeft, bowRight, pearlLeft, pearlRight, boobLeft, boobRight, beautySpot);
-    }
 
     private HipSwaying walkingAnimation;
 
@@ -87,17 +43,13 @@ public class MsPacMan3D extends Pac3D {
             light.setColor(theme.color("ms_pacman.color.head").desaturate());
         }
 
-        Group body = createPacShape(
+        Group body = PacModel3D.createPacShape(
             theme.get("model3D.pacman"), size,
             theme.color("ms_pacman.color.head"),
             theme.color("ms_pacman.color.eyes"),
             theme.color("ms_pacman.color.palate"));
 
-        Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE)
-            .map(id -> meshView(body, id))
-            .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
-
-        var femaleParts = createFemaleParts(size,
+        Group femaleParts = PacModel3D.createFemaleParts(size,
             theme.color("ms_pacman.color.hairbow"),
             theme.color("ms_pacman.color.hairbow.pearls"),
             theme.color("ms_pacman.color.boobs"));
@@ -105,6 +57,10 @@ public class MsPacMan3D extends Pac3D {
         var shapeGroup = new Group(body, femaleParts);
         shapeGroup.getTransforms().setAll(orientation);
         getChildren().add(shapeGroup);
+
+        Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE)
+            .map(id -> Model3D.meshView(body, id))
+            .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
     }
 
     @Override
