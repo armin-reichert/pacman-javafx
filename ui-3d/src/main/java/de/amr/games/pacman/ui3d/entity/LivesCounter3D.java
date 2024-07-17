@@ -105,19 +105,19 @@ public class LivesCounter3D extends Group {
         pillar.setRotate(90);
         pillar.drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);
 
-        var plate = new Cylinder();
-        plate.radiusProperty().bind(plateRadiusPy);
-        plate.heightProperty().bind(plateThicknessPy);
-        plate.materialProperty().bind(plateMaterialPy);
-        plate.setTranslateX(x);
-        plate.translateZProperty().bind(Bindings.createDoubleBinding(
+        var podium = new Cylinder();
+        podium.radiusProperty().bind(plateRadiusPy);
+        podium.heightProperty().bind(plateThicknessPy);
+        podium.materialProperty().bind(plateMaterialPy);
+        podium.setTranslateX(x);
+        podium.translateZProperty().bind(Bindings.createDoubleBinding(
             () -> -pillarHeightPy.get() - plateThicknessPy.get(),
             pillarHeightPy, plateThicknessPy));
-        plate.setRotationAxis(Rotate.X_AXIS);
-        plate.setRotate(90);
-        plate.drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);
+        podium.setRotationAxis(Rotate.X_AXIS);
+        podium.setRotate(90);
+        podium.drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);
 
-        return new Group(pillar, plate);
+        return new Group(pillar, podium);
     }
 
     public void startAnimation() {
