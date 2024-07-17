@@ -57,7 +57,7 @@ public class PacMan3D extends Group implements AnimatedPac3D {
         light.setMaxRange(2 * TS);
         light.translateXProperty().bind(translateXProperty());
         light.translateYProperty().bind(translateYProperty());
-        light.setTranslateZ(-10);
+        light.setTranslateZ(-size);
         light.setColor(theme.color("pacman.color.head").desaturate());
 
         Group body = PacModel3D.createPacShape(
