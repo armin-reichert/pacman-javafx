@@ -38,7 +38,6 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
     private final Rotate orientation = new Rotate();
     private final PointLight light;
     private final Pac pac;
-    private final double zStandingOnGround;
     private final HipSwaying walkingAnimation;
 
     /**
@@ -52,7 +51,7 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
         checkNotNull(theme);
 
         pac = msPacMan;
-        zStandingOnGround = -0.5 * size;
+        setTranslateZ(-0.5 * size);
 
         walkingAnimation = new HipSwaying();
         walkingAnimation.setPower(false);
@@ -113,7 +112,6 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
         Vector2f center = pac.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
-        setTranslateZ(zStandingOnGround);
         orientation.setAxis(Rotate.Z_AXIS);
         orientation.setAngle(angle(pac.moveDir()));
         boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * world.map().terrain().numCols() - HTS;
