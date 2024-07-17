@@ -22,7 +22,6 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredMaterial;
