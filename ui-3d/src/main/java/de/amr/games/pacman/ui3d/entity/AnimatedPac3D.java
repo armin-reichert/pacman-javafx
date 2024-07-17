@@ -26,7 +26,7 @@ public interface AnimatedPac3D {
 
     Animation createDyingAnimation(GameContext context);
 
-    void startWalkingAnimation();
+    void playWalkingAnimation();
 
     void stopWalkingAnimation();
 

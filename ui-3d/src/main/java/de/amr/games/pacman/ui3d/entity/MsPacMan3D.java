@@ -119,7 +119,7 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
         if (pac.isStandingStill()) {
             stopWalkingAnimation();
         } else {
-            startWalkingAnimation();
+            playWalkingAnimation();
         }
         // When empowered, Pac-Man is lighted, light range shrinks with ceasing power
         boolean hasPower = game.powerTimer().isRunning();
@@ -136,7 +136,7 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
     }
 
     @Override
-    public void startWalkingAnimation() {
+    public void playWalkingAnimation() {
         walkingAnimation.play();
     }
 
