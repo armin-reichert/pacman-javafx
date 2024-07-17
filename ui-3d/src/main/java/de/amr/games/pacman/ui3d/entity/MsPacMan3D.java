@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.entity;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
@@ -12,20 +13,33 @@ import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
+import javafx.beans.property.*;
 import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.PointLight;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.util.Ufx.pauseSec;
+import static de.amr.games.pacman.ui3d.animation.Turn.angle;
 import static de.amr.games.pacman.ui3d.entity.PacModel3D.*;
 
 /**
  * @author Armin Reichert
  */
-public class MsPacMan3D extends Pac3D {
+public class MsPacMan3D extends Group implements AnimatedPac3D {
 
+    private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+    private final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
+    private final Rotate orientation = new Rotate();
+    private PointLight light;
+    private Pac pac;
+    private double zStandingOnGround;
     private HipSwaying walkingAnimation;
 
     /**
@@ -40,6 +54,11 @@ public class MsPacMan3D extends Pac3D {
             zStandingOnGround = -0.5 * size;
             walkingAnimation = new HipSwaying();
             walkingAnimation.setPower(false);
+            light = new PointLight();
+            light.setMaxRange(2 * TS);
+            light.translateXProperty().bind(translateXProperty());
+            light.translateYProperty().bind(translateYProperty());
+            light.setTranslateZ(-10);
             light.setColor(theme.color("ms_pacman.color.head").desaturate());
         }
 
@@ -61,6 +80,59 @@ public class MsPacMan3D extends Pac3D {
         Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE)
             .map(id -> Model3D.meshView(body, id))
             .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
+    }
+
+    @Override
+    public Node node() {
+        return this;
+    }
+
+    public ObjectProperty<DrawMode> drawModeProperty() {
+        return drawModePy;
+    }
+
+    @Override
+    public Property<Boolean> lightedProperty() {
+        return lightedPy;
+    }
+
+    @Override
+    public void init(GameContext context) {
+        setScaleX(1.0);
+        setScaleY(1.0);
+        setScaleZ(1.0);
+        update(context);
+    }
+
+    @Override
+    public void update(GameContext context) {
+        var game = context.game();
+        var world = game.world();
+        Vector2f center = pac.center();
+        setTranslateX(center.x());
+        setTranslateY(center.y());
+        setTranslateZ(zStandingOnGround);
+        orientation.setAxis(Rotate.Z_AXIS);
+        orientation.setAngle(angle(pac.moveDir()));
+        boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * world.map().terrain().numCols() - HTS;
+        setVisible(pac.isVisible() && !outsideWorld);
+        if (pac.isStandingStill()) {
+            stopWalkingAnimation();
+        } else {
+            startWalkingAnimation();
+        }
+        // When empowered, Pac-Man is lighted, light range shrinks with ceasing power
+        boolean hasPower = game.powerTimer().isRunning();
+        double range = hasPower && game.powerTimer().duration() > 0
+            ? 2 * TS + ((double) game.powerTimer().remaining() / game.powerTimer().duration()) * 6 * TS
+            : 0;
+        light.setMaxRange(range);
+        light.setLightOn(lightedPy.get() && pac.isVisible() && hasPower);
+    }
+
+    @Override
+    public PointLight light() {
+        return light;
     }
 
     @Override

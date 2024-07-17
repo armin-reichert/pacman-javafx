@@ -87,7 +87,7 @@ public class GameLevel3D extends Group {
     private final GameContext context;
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
-    private final Pac3D pac3D;
+    private final AnimatedPac3D pac3D;
     private final List<Ghost3D> ghosts3D;
     private final Set<Pellet3D> pellets3D = new HashSet<>();
     private final Set<Energizer3D> energizers3D = new HashSet<>();
@@ -154,13 +154,13 @@ public class GameLevel3D extends Group {
         addPellets(this); // when put inside maze group, transparency does not work!
 
         worldGroup.getChildren().addAll(floor, mazeGroup);
-        getChildren().addAll(pac3D, pac3D.light());
+        getChildren().addAll(pac3D.node(), pac3D.light());
         getChildren().addAll(ghosts3D);
         // Walls must come after the guys! Otherwise, transparency is not working correctly.
         getChildren().addAll(message3D, livesCounter3D, worldGroup);
 
-        pac3D.lightedPy.bind(PY_3D_PAC_LIGHT_ENABLED);
-        pac3D.drawModePy.bind(PY_3D_DRAW_MODE);
+        pac3D.lightedProperty().bind(PY_3D_PAC_LIGHT_ENABLED);
+        pac3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
         ghosts3D.forEach(ghost3D -> ghost3D.drawModePy.bind(PY_3D_DRAW_MODE));
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         wallHeightPy.bind(PY_3D_WALL_HEIGHT);
@@ -606,7 +606,7 @@ public class GameLevel3D extends Group {
         };
     }
 
-    public Pac3D pac3D() {
+    public AnimatedPac3D pac3D() {
         return pac3D;
     }
 
