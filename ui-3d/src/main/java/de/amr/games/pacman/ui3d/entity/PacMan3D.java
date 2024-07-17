@@ -76,6 +76,7 @@ public class PacMan3D extends Group implements AnimatedPac3D {
             .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
     }
 
+    @Override
     public void init(GameContext context) {
         setScaleX(1.0);
         setScaleY(1.0);
@@ -84,19 +85,6 @@ public class PacMan3D extends Group implements AnimatedPac3D {
     }
 
     @Override
-    public Node node() {
-        return this;
-    }
-
-    public ObjectProperty<DrawMode> drawModeProperty() {
-        return drawModePy;
-    }
-
-    @Override
-    public Property<Boolean> lightedProperty() {
-        return lightedPy;
-    }
-
     public void update(GameContext context) {
         var game = context.game();
         var world = game.world();
@@ -119,6 +107,20 @@ public class PacMan3D extends Group implements AnimatedPac3D {
             : 0;
         light.setMaxRange(range);
         light.setLightOn(lightedPy.get() && pac.isVisible() && hasPower);
+    }
+
+    @Override
+    public Node node() {
+        return this;
+    }
+
+    public ObjectProperty<DrawMode> drawModeProperty() {
+        return drawModePy;
+    }
+
+    @Override
+    public Property<Boolean> lightedProperty() {
+        return lightedPy;
     }
 
     @Override
