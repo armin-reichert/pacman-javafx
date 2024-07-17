@@ -5,6 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.entity;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
@@ -29,10 +31,56 @@ import static de.amr.games.pacman.ui3d.model.Model3D.meshView;
  */
 public class PacMan3D extends Group implements AnimatedPac3D {
 
+    private static class HeadBanging {
+
+        private static final short DEFAULT_ANGLE_FROM = -25;
+        private static final short DEFAULT_ANGLE_TO = 15;
+        private static final Duration DEFAULT_DURATION = Duration.seconds(0.25);
+
+        private final RotateTransition animation;
+
+        public HeadBanging(Node target) {
+            animation = new RotateTransition(DEFAULT_DURATION, target);
+            animation.setAxis(Rotate.X_AXIS);
+            animation.setCycleCount(Animation.INDEFINITE);
+            animation.setAutoReverse(true);
+            animation.setInterpolator(Interpolator.EASE_BOTH);
+        }
+
+        public void setPower(boolean power) {
+            double amplification = power ? 1.5 : 1;
+            double rate = power ? 2 : 1;
+            animation.stop();
+            animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
+            animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
+            animation.setRate(rate);
+        }
+
+        public void play(Pac pac) {
+            if (pac.isStandingStill()) {
+                stop();
+                animation.getNode().setRotate(0);
+                return;
+            }
+            var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+            if (!axis.equals(animation.getAxis())) {
+                animation.stop();
+                animation.setAxis(axis);
+            }
+            animation.play();
+        }
+
+        public void stop() {
+            animation.stop();
+            animation.getNode().setRotationAxis(animation.getAxis());
+            animation.getNode().setRotate(0);
+        }
+    }
+
     private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
     private final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
     private final Rotate orientation = new Rotate();
-    private final Pac pac;
+    private final Pac pacMan;
     private final PointLight light;
     private final HeadBanging walkingAnimation;
 
@@ -44,13 +92,10 @@ public class PacMan3D extends Group implements AnimatedPac3D {
      * @param theme the theme
      */
     public PacMan3D(double size, Pac pacMan, Theme theme) {
-        checkNotNull(pacMan);
+        this.pacMan = checkNotNull(pacMan);
         checkNotNull(theme);
 
-        pac = pacMan;
-        setTranslateZ(-0.5 * size);
-
-        walkingAnimation = new HeadBanging();
+        walkingAnimation = new HeadBanging(this);
         walkingAnimation.setPower(false);
 
         light = new PointLight();
@@ -71,6 +116,8 @@ public class PacMan3D extends Group implements AnimatedPac3D {
         shapeGroup.getTransforms().setAll(orientation);
         getChildren().add(shapeGroup);
 
+        setTranslateZ(-0.5 * size);
+
         Stream.of(PacModel3D.MESH_ID_EYES, PacModel3D.MESH_ID_HEAD, PacModel3D.MESH_ID_PALATE)
             .map(id -> meshView(body, id))
             .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
@@ -86,19 +133,19 @@ public class PacMan3D extends Group implements AnimatedPac3D {
 
     @Override
     public void update(GameContext context) {
-        var game = context.game();
-        var world = game.world();
-        Vector2f center = pac.center();
+        GameModel game = context.game();
+        GameWorld world = game.world();
+        Vector2f center = pacMan.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
         orientation.setAxis(Rotate.Z_AXIS);
-        orientation.setAngle(angle(pac.moveDir()));
+        orientation.setAngle(angle(pacMan.moveDir()));
         boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * world.map().terrain().numCols() - HTS;
-        setVisible(pac.isVisible() && !outsideWorld);
-        if (pac.isStandingStill()) {
-            stopWalkingAnimation();
+        setVisible(pacMan.isVisible() && !outsideWorld);
+        if (pacMan.isStandingStill()) {
+            stand();
         } else {
-            playWalkingAnimation();
+            walk();
         }
         // When empowered, Pac-Man is lighted, light range shrinks with ceasing power
         boolean hasPower = game.powerTimer().isRunning();
@@ -106,7 +153,7 @@ public class PacMan3D extends Group implements AnimatedPac3D {
             ? 2 * TS + ((double) game.powerTimer().remaining() / game.powerTimer().duration()) * 6 * TS
             : 0;
         light.setMaxRange(range);
-        light.setLightOn(lightedPy.get() && pac.isVisible() && hasPower);
+        light.setLightOn(lightedPy.get() && pacMan.isVisible() && hasPower);
     }
 
     @Override
@@ -129,12 +176,12 @@ public class PacMan3D extends Group implements AnimatedPac3D {
     }
 
     @Override
-    public void playWalkingAnimation() {
-        walkingAnimation.play();
+    public void walk() {
+        walkingAnimation.play(pacMan);
     }
 
     @Override
-    public void stopWalkingAnimation() {
+    public void stand() {
         walkingAnimation.stop();
     }
 
@@ -174,51 +221,5 @@ public class PacMan3D extends Group implements AnimatedPac3D {
                     setTranslateZ(0);
                 })
         );
-    }
-
-    private class HeadBanging {
-
-        private static final short DEFAULT_ANGLE_FROM = -25;
-        private static final short DEFAULT_ANGLE_TO = 15;
-        private static final Duration DEFAULT_DURATION = Duration.seconds(0.25);
-
-        private final RotateTransition animation;
-
-        public HeadBanging() {
-            animation = new RotateTransition(DEFAULT_DURATION, PacMan3D.this);
-            animation.setAxis(Rotate.X_AXIS);
-            animation.setCycleCount(Animation.INDEFINITE);
-            animation.setAutoReverse(true);
-            animation.setInterpolator(Interpolator.EASE_BOTH);
-        }
-
-        public void setPower(boolean power) {
-            double amplification = power ? 1.5 : 1;
-            double rate = power ? 2 : 1;
-            animation.stop();
-            animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
-            animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
-            animation.setRate(rate);
-        }
-
-        public void play() {
-            if (pac.isStandingStill()) {
-                stop();
-                animation.getNode().setRotate(0);
-                return;
-            }
-            var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-            if (!axis.equals(animation.getAxis())) {
-                animation.stop();
-                animation.setAxis(axis);
-            }
-            animation.play();
-        }
-
-        public void stop() {
-            animation.stop();
-            animation.getNode().setRotationAxis(animation.getAxis());
-            animation.getNode().setRotate(0);
-        }
     }
 }

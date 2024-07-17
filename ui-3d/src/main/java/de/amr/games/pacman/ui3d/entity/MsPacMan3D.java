@@ -33,11 +33,52 @@ import static de.amr.games.pacman.ui3d.entity.PacModel3D.*;
  */
 public class MsPacMan3D extends Group implements AnimatedPac3D {
 
+    private static class HipSwaying {
+
+        private static final short DEFAULT_ANGLE_FROM = -20;
+        private static final short DEFAULT_ANGLE_TO = 20;
+        private static final Duration DEFAULT_DURATION = Duration.seconds(0.4);
+
+        private final RotateTransition animation;
+
+        public HipSwaying(Node target) {
+            animation = new RotateTransition(DEFAULT_DURATION, target);
+            animation.setAxis(Rotate.Z_AXIS);
+            animation.setCycleCount(Animation.INDEFINITE);
+            animation.setAutoReverse(true);
+            animation.setInterpolator(Interpolator.EASE_BOTH);
+        }
+
+        public void setPower(boolean power) {
+            double amplification = power ? 1.5 : 1;
+            double rate = power ? 2 : 1;
+            animation.stop();
+            animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
+            animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
+            animation.setRate(rate);
+        }
+
+        public void play(Pac pac) {
+            if (pac.isStandingStill()) {
+                stop();
+                animation.getNode().setRotate(0);
+                return;
+            }
+            animation.play();
+        }
+
+        public void stop() {
+            animation.stop();
+            animation.getNode().setRotationAxis(animation.getAxis());
+            animation.getNode().setRotate(0);
+        }
+    }
+
     private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
     private final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
     private final Rotate orientation = new Rotate();
     private final PointLight light;
-    private final Pac pac;
+    private final Pac msPacMan;
     private final HipSwaying walkingAnimation;
 
     /**
@@ -47,13 +88,10 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
      * @param theme the theme
      */
     public MsPacMan3D(double size, Pac msPacMan, Theme theme) {
-        checkNotNull(msPacMan);
+        this.msPacMan = checkNotNull(msPacMan);
         checkNotNull(theme);
 
-        pac = msPacMan;
-        setTranslateZ(-0.5 * size);
-
-        walkingAnimation = new HipSwaying();
+        walkingAnimation = new HipSwaying(this);
         walkingAnimation.setPower(false);
 
         light = new PointLight();
@@ -77,6 +115,8 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
         var shapeGroup = new Group(body, femaleParts);
         shapeGroup.getTransforms().setAll(orientation);
         getChildren().add(shapeGroup);
+
+        setTranslateZ(-0.5 * size);
 
         Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE)
             .map(id -> Model3D.meshView(body, id))
@@ -109,17 +149,17 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
     public void update(GameContext context) {
         var game = context.game();
         var world = game.world();
-        Vector2f center = pac.center();
+        Vector2f center = msPacMan.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
         orientation.setAxis(Rotate.Z_AXIS);
-        orientation.setAngle(angle(pac.moveDir()));
+        orientation.setAngle(angle(msPacMan.moveDir()));
         boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * world.map().terrain().numCols() - HTS;
-        setVisible(pac.isVisible() && !outsideWorld);
-        if (pac.isStandingStill()) {
-            stopWalkingAnimation();
+        setVisible(msPacMan.isVisible() && !outsideWorld);
+        if (msPacMan.isStandingStill()) {
+            stand();
         } else {
-            playWalkingAnimation();
+            walk();
         }
         // When empowered, Pac-Man is lighted, light range shrinks with ceasing power
         boolean hasPower = game.powerTimer().isRunning();
@@ -127,7 +167,7 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
             ? 2 * TS + ((double) game.powerTimer().remaining() / game.powerTimer().duration()) * 6 * TS
             : 0;
         light.setMaxRange(range);
-        light.setLightOn(lightedPy.get() && pac.isVisible() && hasPower);
+        light.setLightOn(lightedPy.get() && msPacMan.isVisible() && hasPower);
     }
 
     @Override
@@ -136,12 +176,12 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
     }
 
     @Override
-    public void playWalkingAnimation() {
-        walkingAnimation.play();
+    public void walk() {
+        walkingAnimation.play(msPacMan);
     }
 
     @Override
-    public void stopWalkingAnimation() {
+    public void stand() {
         walkingAnimation.stop();
     }
 
@@ -161,46 +201,5 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
         spin.setRate(2);
         spin.setDelay(Duration.seconds(0.5));
         return new SequentialTransition(spin, pauseSec(2));
-    }
-
-    private class HipSwaying {
-
-        private static final short DEFAULT_ANGLE_FROM = -20;
-        private static final short DEFAULT_ANGLE_TO = 20;
-        private static final Duration DEFAULT_DURATION = Duration.seconds(0.4);
-
-        private final RotateTransition animation;
-
-        public HipSwaying() {
-            animation = new RotateTransition(DEFAULT_DURATION, MsPacMan3D.this);
-            animation.setAxis(Rotate.Z_AXIS);
-            animation.setCycleCount(Animation.INDEFINITE);
-            animation.setAutoReverse(true);
-            animation.setInterpolator(Interpolator.EASE_BOTH);
-        }
-
-        public void setPower(boolean power) {
-            double amplification = power ? 1.5 : 1;
-            double rate = power ? 2 : 1;
-            animation.stop();
-            animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
-            animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
-            animation.setRate(rate);
-        }
-
-        public void play() {
-            if (pac.isStandingStill()) {
-                stop();
-                animation.getNode().setRotate(0);
-                return;
-            }
-            animation.play();
-        }
-
-        public void stop() {
-            animation.stop();
-            animation.getNode().setRotationAxis(animation.getAxis());
-            animation.getNode().setRotate(0);
-        }
     }
 }
