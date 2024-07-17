@@ -83,6 +83,7 @@ public class PacMan3D extends Group implements AnimatedPac3D {
     private final Pac pacMan;
     private final PointLight light;
     private final HeadBanging walkingAnimation;
+    private final double size;
 
     /**
      * Creates a 3D Pac-Man.
@@ -92,6 +93,7 @@ public class PacMan3D extends Group implements AnimatedPac3D {
      * @param theme the theme
      */
     public PacMan3D(double size, Pac pacMan, Theme theme) {
+        this.size = size;
         this.pacMan = checkNotNull(pacMan);
         checkNotNull(theme);
 
@@ -128,6 +130,7 @@ public class PacMan3D extends Group implements AnimatedPac3D {
         setScaleX(1.0);
         setScaleY(1.0);
         setScaleZ(1.0);
+        setTranslateZ(-0.5 * size);
         update(context);
     }
 
@@ -202,13 +205,11 @@ public class PacMan3D extends Group implements AnimatedPac3D {
         spinning.setInterpolator(Interpolator.LINEAR);
 
         var shrinking = new ScaleTransition(duration, this);
-        shrinking.setToX(0.5);
-        shrinking.setToY(0.5);
-        shrinking.setToZ(0.0);
-        shrinking.setInterpolator(Interpolator.LINEAR);
+        shrinking.setToZ(0.01);
+        shrinking.setInterpolator(Interpolator.EASE_OUT);
 
         var falling = new TranslateTransition(duration, this);
-        falling.setToZ(4);
+        falling.setToZ(0);
         falling.setInterpolator(Interpolator.EASE_IN);
 
         //TODO does not yet work as I want to

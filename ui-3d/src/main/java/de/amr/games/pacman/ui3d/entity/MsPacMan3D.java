@@ -80,6 +80,7 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
     private final PointLight light;
     private final Pac msPacMan;
     private final HipSwaying walkingAnimation;
+    private final double size;
 
     /**
      * Creates a 3D Ms. Pac-Man.
@@ -88,6 +89,7 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
      * @param theme the theme
      */
     public MsPacMan3D(double size, Pac msPacMan, Theme theme) {
+        this.size = size;
         this.msPacMan = checkNotNull(msPacMan);
         checkNotNull(theme);
 
@@ -142,6 +144,7 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
         setScaleX(1.0);
         setScaleY(1.0);
         setScaleZ(1.0);
+        setTranslateZ(-0.5 * size);
         update(context);
     }
 
