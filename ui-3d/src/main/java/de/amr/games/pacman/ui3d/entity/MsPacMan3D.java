@@ -16,7 +16,6 @@ import javafx.animation.SequentialTransition;
 import javafx.beans.property.*;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PointLight;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -25,6 +24,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.pauseSec;
+import static de.amr.games.pacman.ui3d.PacManGames3dUI.PY_3D_PAC_LIGHT_ENABLED;
 import static de.amr.games.pacman.ui3d.animation.Turn.angle;
 import static de.amr.games.pacman.ui3d.entity.PacModel3D.*;
 
@@ -39,47 +39,48 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
         private static final short DEFAULT_ANGLE_TO = 20;
         private static final Duration DEFAULT_DURATION = Duration.seconds(0.4);
 
-        private final RotateTransition animation;
+        private final RotateTransition swaying;
 
         public HipSwaying(Node target) {
-            animation = new RotateTransition(DEFAULT_DURATION, target);
-            animation.setAxis(Rotate.Z_AXIS);
-            animation.setCycleCount(Animation.INDEFINITE);
-            animation.setAutoReverse(true);
-            animation.setInterpolator(Interpolator.EASE_BOTH);
+            swaying = new RotateTransition(DEFAULT_DURATION, target);
+            swaying.setAxis(Rotate.Z_AXIS);
+            swaying.setCycleCount(Animation.INDEFINITE);
+            swaying.setAutoReverse(true);
+            swaying.setInterpolator(Interpolator.EASE_BOTH);
         }
 
-        public void setPower(boolean power) {
+        // Winnetouch is the gay brother of Abahachi
+        public void setWinnetouchMode(boolean power) {
             double amplification = power ? 1.5 : 1;
             double rate = power ? 2 : 1;
-            animation.stop();
-            animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
-            animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
-            animation.setRate(rate);
+            swaying.stop();
+            swaying.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
+            swaying.setToAngle(DEFAULT_ANGLE_TO * amplification);
+            swaying.setRate(rate);
         }
 
         public void play(Pac pac) {
             if (pac.isStandingStill()) {
                 stop();
-                animation.getNode().setRotate(0);
+                swaying.getNode().setRotate(0);
                 return;
             }
-            animation.play();
+            swaying.play();
         }
 
         public void stop() {
-            animation.stop();
-            animation.getNode().setRotationAxis(animation.getAxis());
-            animation.getNode().setRotate(0);
+            swaying.stop();
+            swaying.getNode().setRotationAxis(swaying.getAxis());
+            swaying.getNode().setRotate(0);
         }
     }
 
     private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
-    private final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
+    private final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
+    private final DoubleProperty lightRangePy = new SimpleDoubleProperty(this, "lightRange", 0);
     private final Rotate orientation = new Rotate();
-    private final PointLight light;
     private final Pac msPacMan;
-    private final HipSwaying walkingAnimation;
+    private final HipSwaying hipSwaying;
     private final double size;
 
     /**
@@ -93,15 +94,8 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
         this.msPacMan = checkNotNull(msPacMan);
         checkNotNull(theme);
 
-        walkingAnimation = new HipSwaying(this);
-        walkingAnimation.setPower(false);
-
-        light = new PointLight();
-        light.setMaxRange(2 * TS);
-        light.translateXProperty().bind(translateXProperty());
-        light.translateYProperty().bind(translateYProperty());
-        light.setTranslateZ(-size);
-        light.setColor(theme.color("ms_pacman.color.head").desaturate());
+        hipSwaying = new HipSwaying(this);
+        hipSwaying.setWinnetouchMode(false);
 
         Group body = PacModel3D.createPacShape(
             theme.get("model3D.pacman"), size,
@@ -123,20 +117,6 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
         Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE)
             .map(id -> Model3D.meshView(body, id))
             .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
-    }
-
-    @Override
-    public Node node() {
-        return this;
-    }
-
-    public ObjectProperty<DrawMode> drawModeProperty() {
-        return drawModePy;
-    }
-
-    @Override
-    public Property<Boolean> lightedProperty() {
-        return lightedPy;
     }
 
     @Override
@@ -169,28 +149,42 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
         double range = hasPower && game.powerTimer().duration() > 0
             ? 2 * TS + ((double) game.powerTimer().remaining() / game.powerTimer().duration()) * 6 * TS
             : 0;
-        light.setMaxRange(range);
-        light.setLightOn(lightedPy.get() && msPacMan.isVisible() && hasPower);
+        lightRangeProperty().set(range);
+        lightOnProperty().set(PY_3D_PAC_LIGHT_ENABLED.get() && msPacMan.isVisible() && hasPower);
     }
 
     @Override
-    public PointLight light() {
-        return light;
+    public Node node() {
+        return this;
+    }
+
+    public ObjectProperty<DrawMode> drawModeProperty() {
+        return drawModePy;
+    }
+
+    @Override
+    public BooleanProperty lightOnProperty() {
+        return lightOnPy;
+    }
+
+    @Override
+    public DoubleProperty lightRangeProperty() {
+        return lightRangePy;
     }
 
     @Override
     public void walk() {
-        walkingAnimation.play(msPacMan);
+        hipSwaying.play(msPacMan);
     }
 
     @Override
     public void stand() {
-        walkingAnimation.stop();
+        hipSwaying.stop();
     }
 
     @Override
     public void setPower(boolean power) {
-        walkingAnimation.setPower(power);
+        hipSwaying.setWinnetouchMode(power);
     }
 
     @Override

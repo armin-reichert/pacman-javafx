@@ -12,9 +12,9 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
 import javafx.animation.*;
 import javafx.beans.property.*;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PointLight;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
+import static de.amr.games.pacman.ui3d.PacManGames3dUI.PY_3D_PAC_LIGHT_ENABLED;
 import static de.amr.games.pacman.ui3d.animation.Turn.angle;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshView;
 
@@ -37,52 +38,52 @@ public class PacMan3D extends Group implements AnimatedPac3D {
         private static final short DEFAULT_ANGLE_TO = 15;
         private static final Duration DEFAULT_DURATION = Duration.seconds(0.25);
 
-        private final RotateTransition animation;
+        private final RotateTransition banging;
 
         public HeadBanging(Node target) {
-            animation = new RotateTransition(DEFAULT_DURATION, target);
-            animation.setAxis(Rotate.X_AXIS);
-            animation.setCycleCount(Animation.INDEFINITE);
-            animation.setAutoReverse(true);
-            animation.setInterpolator(Interpolator.EASE_BOTH);
+            banging = new RotateTransition(DEFAULT_DURATION, target);
+            banging.setAxis(Rotate.X_AXIS);
+            banging.setCycleCount(Animation.INDEFINITE);
+            banging.setAutoReverse(true);
+            banging.setInterpolator(Interpolator.EASE_BOTH);
         }
 
-        public void setPower(boolean power) {
+        // Note: Massive headbanging can lead to a stroke!
+        public void setStrokeMode(boolean power) {
             double amplification = power ? 1.5 : 1;
             double rate = power ? 2 : 1;
-            animation.stop();
-            animation.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
-            animation.setToAngle(DEFAULT_ANGLE_TO * amplification);
-            animation.setRate(rate);
+            banging.stop();
+            banging.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
+            banging.setToAngle(DEFAULT_ANGLE_TO * amplification);
+            banging.setRate(rate);
         }
 
-        public void play(Pac pac) {
+        public void apply(Pac pac) {
             if (pac.isStandingStill()) {
                 stop();
-                animation.getNode().setRotate(0);
-                return;
+            } else {
+                Point3D axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+                if (!axis.equals(banging.getAxis())) {
+                    banging.stop();
+                    banging.setAxis(axis);
+                }
+                banging.play();
             }
-            var axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-            if (!axis.equals(animation.getAxis())) {
-                animation.stop();
-                animation.setAxis(axis);
-            }
-            animation.play();
         }
 
         public void stop() {
-            animation.stop();
-            animation.getNode().setRotationAxis(animation.getAxis());
-            animation.getNode().setRotate(0);
+            banging.stop();
+            banging.getNode().setRotationAxis(banging.getAxis());
+            banging.getNode().setRotate(0);
         }
     }
 
     private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
-    private final BooleanProperty lightedPy = new SimpleBooleanProperty(this, "lighted", true);
+    private final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
+    private final DoubleProperty lightRangePy = new SimpleDoubleProperty(this, "lightRange", 0);
     private final Rotate orientation = new Rotate();
     private final Pac pacMan;
-    private final PointLight light;
-    private final HeadBanging walkingAnimation;
+    private final HeadBanging headBanging;
     private final double size;
 
     /**
@@ -97,15 +98,8 @@ public class PacMan3D extends Group implements AnimatedPac3D {
         this.pacMan = checkNotNull(pacMan);
         checkNotNull(theme);
 
-        walkingAnimation = new HeadBanging(this);
-        walkingAnimation.setPower(false);
-
-        light = new PointLight();
-        light.setMaxRange(2 * TS);
-        light.translateXProperty().bind(translateXProperty());
-        light.translateYProperty().bind(translateYProperty());
-        light.setTranslateZ(-size);
-        light.setColor(theme.color("pacman.color.head").desaturate());
+        headBanging = new HeadBanging(this);
+        headBanging.setStrokeMode(false);
 
         Group body = PacModel3D.createPacShape(
             theme.get("model3D.pacman"), size,
@@ -155,8 +149,9 @@ public class PacMan3D extends Group implements AnimatedPac3D {
         double range = hasPower && game.powerTimer().duration() > 0
             ? 2 * TS + ((double) game.powerTimer().remaining() / game.powerTimer().duration()) * 6 * TS
             : 0;
-        light.setMaxRange(range);
-        light.setLightOn(lightedPy.get() && pacMan.isVisible() && hasPower);
+
+        lightRangeProperty().set(range);
+        lightOnProperty().set(PY_3D_PAC_LIGHT_ENABLED.get() && pacMan.isVisible() && hasPower);
     }
 
     @Override
@@ -169,28 +164,28 @@ public class PacMan3D extends Group implements AnimatedPac3D {
     }
 
     @Override
-    public Property<Boolean> lightedProperty() {
-        return lightedPy;
+    public BooleanProperty lightOnProperty() {
+        return lightOnPy;
     }
 
     @Override
-    public PointLight light() {
-        return light;
+    public DoubleProperty lightRangeProperty() {
+        return lightRangePy;
     }
 
     @Override
     public void walk() {
-        walkingAnimation.play(pacMan);
+        headBanging.apply(pacMan);
     }
 
     @Override
     public void stand() {
-        walkingAnimation.stop();
+        headBanging.stop();
     }
 
     @Override
     public void setPower(boolean power) {
-        walkingAnimation.setPower(power);
+        headBanging.setStrokeMode(power);
     }
 
     @Override

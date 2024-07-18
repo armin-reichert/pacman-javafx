@@ -6,9 +6,10 @@ package de.amr.games.pacman.ui3d.entity;
 
 import de.amr.games.pacman.ui2d.GameContext;
 import javafx.animation.Animation;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.Property;
 import javafx.scene.Node;
-import javafx.scene.PointLight;
 import javafx.scene.shape.DrawMode;
 
 /**
@@ -17,8 +18,6 @@ import javafx.scene.shape.DrawMode;
 public interface AnimatedPac3D {
 
     Node node();
-
-    PointLight light();
 
     void init(GameContext context);
 
@@ -34,5 +33,7 @@ public interface AnimatedPac3D {
 
     Property<DrawMode> drawModeProperty();
 
-    Property<Boolean> lightedProperty();
+    BooleanProperty lightOnProperty();
+
+    DoubleProperty lightRangeProperty();
 }
