@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui3d.scene;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -199,6 +200,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             case READY -> {
                 context.soundHandler().stopAllSounds();
                 if (level3D != null) {
+                    showReadyMessage();
                     level3D.getReadyToPlay();
                 }
             }
@@ -265,7 +267,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
                 }
                 level3D.pac3D().init(context);
                 level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
-                level3D.showLevelStartMessage();
+                showLevelTestMessage();
                 PY_3D_PERSPECTIVE.set(Perspective.TOTAL);
             }
 
@@ -297,8 +299,30 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
     public void onLevelStarted(GameEvent event) {
         level3D.addLevelCounter3D(context.game().levelCounter());
         if (context.game().levelNumber() == 1 || context.gameState() == GameState.LEVEL_TEST) {
-            level3D.showLevelStartMessage();
+            if (context.gameState() == GameState.LEVEL_TEST) {
+                showLevelTestMessage();
+            } else if (!context.game().isDemoLevel()){
+                showReadyMessage();
+            }
         }
+    }
+
+    private void showLevelTestMessage() {
+        TileMap terrainMap = context.game().world().map().terrain();
+        double x = terrainMap.numCols() * HTS;
+        double y = (terrainMap.numRows() - 2) * TS;
+        String message = "TEST LEVEL " + context.game().levelNumber();
+        level3D.showAnimatedMessage(message, 5, x, y);
+    }
+
+    private void showReadyMessage() {
+        GameWorld world = context.game().world();
+        Vector2i houseTopLeft = world.houseTopLeftTile();
+        Vector2i houseSize = world.houseSize();
+        double x = TS * (houseTopLeft.x() + 0.5 * houseSize.x());
+        double y = TS * (houseTopLeft.y() +       houseSize.y());
+        double seconds = context.game().isPlaying() ? 0.5 : 2.5;
+        level3D.showAnimatedMessage("READY!", seconds, x, y);
     }
 
     @Override

@@ -176,25 +176,10 @@ public class GameLevel3D extends Group {
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
 
-    public void showLevelStartMessage() {
-        GameWorld world = context.game().world();
-        if (context.gameState() == GameState.LEVEL_TEST) {
-            double x = world.map().terrain().numCols() * HTS;
-            double y = (world.map().terrain().numRows() - 2) * TS;
-            showMessage("TEST LEVEL " + context.game().levelNumber(), 5,x, y);
-        } else if (!context.game().isDemoLevel()) {
-            double x = TS * (world.houseTopLeftTile().x() + 0.5 * world.houseSize().x());
-            double y = TS * (world.houseTopLeftTile().y() +       world.houseSize().y());
-            double seconds = context.game().isPlaying() ? 0.5 : 2.5;
-            showMessage("READY!", seconds, x, y);
-        }
-    }
-
     public void getReadyToPlay() {
         stopHunting();
         pac3D.init(context);
         ghosts3D.forEach(ghost3D -> ghost3D.init(context));
-        showLevelStartMessage();
     }
 
     public void startHunting() {
@@ -503,7 +488,7 @@ public class GameLevel3D extends Group {
         message3D.endBatch();
     }
 
-    public void showMessage(String text, double displaySeconds, double x, double y) {
+    public void showAnimatedMessage(String text, double displaySeconds, double x, double y) {
         message3D.setText(text);
         message3D.setVisible(true);
         double dist = 0.5 * message3D.getBoundsInLocal().getHeight();
