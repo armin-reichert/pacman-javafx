@@ -62,10 +62,9 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
         public void play(Pac pac) {
             if (pac.isStandingStill()) {
                 stop();
-                swaying.getNode().setRotate(0);
-                return;
+            } else {
+                swaying.play();
             }
-            swaying.play();
         }
 
         public void stop() {
