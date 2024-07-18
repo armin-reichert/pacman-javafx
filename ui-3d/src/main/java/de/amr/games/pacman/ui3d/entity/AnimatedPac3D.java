@@ -25,10 +25,6 @@ public interface AnimatedPac3D {
 
     Animation createDyingAnimation(GameContext context);
 
-    void walk();
-
-    void stand();
-
     void setPower(boolean power);
 
     Property<DrawMode> drawModeProperty();

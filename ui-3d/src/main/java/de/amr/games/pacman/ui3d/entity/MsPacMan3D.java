@@ -35,31 +35,31 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
 
     private static class HipSwaying {
 
-        private static final short DEFAULT_ANGLE_FROM = -20;
-        private static final short DEFAULT_ANGLE_TO = 20;
-        private static final Duration DEFAULT_DURATION = Duration.seconds(0.4);
+        private static final short ANGLE_FROM = -20;
+        private static final short ANGLE_TO = 20;
+        private static final Duration DURATION = Duration.seconds(0.4);
 
         private final RotateTransition swaying;
 
         public HipSwaying(Node target) {
-            swaying = new RotateTransition(DEFAULT_DURATION, target);
+            swaying = new RotateTransition(DURATION, target);
             swaying.setAxis(Rotate.Z_AXIS);
             swaying.setCycleCount(Animation.INDEFINITE);
             swaying.setAutoReverse(true);
             swaying.setInterpolator(Interpolator.EASE_BOTH);
         }
 
-        // Winnetouch is the gay brother of Abahachi
+        // Winnetouch is the gay twin-brother of Abahachi
         public void setWinnetouchMode(boolean power) {
             double amplification = power ? 1.5 : 1;
             double rate = power ? 2 : 1;
             swaying.stop();
-            swaying.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
-            swaying.setToAngle(DEFAULT_ANGLE_TO * amplification);
+            swaying.setFromAngle(ANGLE_FROM * amplification);
+            swaying.setToAngle(ANGLE_TO * amplification);
             swaying.setRate(rate);
         }
 
-        public void play(Pac pac) {
+        public void update(Pac pac) {
             if (pac.isStandingStill()) {
                 stop();
             } else {
@@ -134,14 +134,15 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
         Vector2f center = msPacMan.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
+        setTranslateZ(-0.5 * size);
         orientation.setAxis(Rotate.Z_AXIS);
         orientation.setAngle(angle(msPacMan.moveDir()));
         boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * world.map().terrain().numCols() - HTS;
         setVisible(msPacMan.isVisible() && !outsideWorld);
         if (msPacMan.isStandingStill()) {
-            stand();
+            hipSwaying.stop();
         } else {
-            walk();
+            hipSwaying.update(msPacMan);
         }
         // When empowered, Pac-Man is lighted, light range shrinks with ceasing power
         boolean hasPower = game.powerTimer().isRunning();
@@ -169,16 +170,6 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
     @Override
     public DoubleProperty lightRangeProperty() {
         return lightRangePy;
-    }
-
-    @Override
-    public void walk() {
-        hipSwaying.play(msPacMan);
-    }
-
-    @Override
-    public void stand() {
-        hipSwaying.stop();
     }
 
     @Override

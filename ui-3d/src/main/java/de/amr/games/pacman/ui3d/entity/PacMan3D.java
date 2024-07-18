@@ -140,9 +140,9 @@ public class PacMan3D extends Group implements AnimatedPac3D {
         boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * world.map().terrain().numCols() - HTS;
         setVisible(pacMan.isVisible() && !outsideWorld);
         if (pacMan.isStandingStill()) {
-            stand();
+            headBanging.stop();
         } else {
-            walk();
+            headBanging.apply(pacMan);
         }
         // When empowered, Pac-Man is lighted, light range shrinks with ceasing power
         boolean hasPower = game.powerTimer().isRunning();
@@ -174,16 +174,6 @@ public class PacMan3D extends Group implements AnimatedPac3D {
     }
 
     @Override
-    public void walk() {
-        headBanging.apply(pacMan);
-    }
-
-    @Override
-    public void stand() {
-        headBanging.stop();
-    }
-
-    @Override
     public void setPower(boolean power) {
         headBanging.setStrokeMode(power);
     }
@@ -200,6 +190,7 @@ public class PacMan3D extends Group implements AnimatedPac3D {
         spinning.setInterpolator(Interpolator.LINEAR);
 
         var shrinking = new ScaleTransition(duration, this);
+        shrinking.setToY(0.1);
         shrinking.setToZ(0.01);
         shrinking.setInterpolator(Interpolator.EASE_OUT);
 

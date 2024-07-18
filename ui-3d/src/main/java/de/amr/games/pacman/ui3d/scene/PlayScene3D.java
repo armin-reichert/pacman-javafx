@@ -207,8 +207,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
             case PACMAN_DYING -> {
                 context.soundHandler().stopAllSounds();
-                var animation = level3D.pac3D().createDyingAnimation(context);
-                lockGameStateAndPlayAfterOneSecond(animation);
+                lockGameStateAndPlayAfterOneSecond(level3D.pac3D().createDyingAnimation(context));
             }
 
             case GAME_OVER -> {
