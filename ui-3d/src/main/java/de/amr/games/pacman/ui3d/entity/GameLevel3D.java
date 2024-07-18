@@ -90,7 +90,6 @@ public class GameLevel3D extends Group {
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
     private final AnimatedPac3D pac3D;
-    private final PointLight pac3DLight;
     private final List<Ghost3D> ghosts3D;
     private final Set<Pellet3D> pellets3D = new HashSet<>();
     private final Set<Energizer3D> energizers3D = new HashSet<>();
@@ -116,7 +115,7 @@ public class GameLevel3D extends Group {
             ? theme.color("ms_pacman.color.head").desaturate()
             : theme.color("pacman.color.head").desaturate();
 
-        pac3DLight = new PointLight();
+        var pac3DLight = new PointLight();
         pac3DLight.setColor(lightColor);
         pac3DLight.lightOnProperty().bind(pac3D.lightOnProperty());
         pac3DLight.maxRangeProperty().bind(pac3D.lightRangeProperty());
