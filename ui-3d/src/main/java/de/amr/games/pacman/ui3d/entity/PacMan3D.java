@@ -81,8 +81,8 @@ public class PacMan3D extends Group implements AnimatedPac3D {
     private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
     private final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
     private final DoubleProperty lightRangePy = new SimpleDoubleProperty(this, "lightRange", 0);
-    private final Rotate orientation = new Rotate();
     private final Pac pacMan;
+    private final Group bodyGroup = new Group();
     private final HeadBanging headBanging;
     private final double size;
 
@@ -107,10 +107,8 @@ public class PacMan3D extends Group implements AnimatedPac3D {
             theme.color("pacman.color.eyes"),
             theme.color("pacman.color.palate")
         );
-
-        var shapeGroup = new Group(body);
-        shapeGroup.getTransforms().setAll(orientation);
-        getChildren().add(shapeGroup);
+        bodyGroup.getChildren().add(body);
+        getChildren().add(bodyGroup);
 
         setTranslateZ(-0.5 * size);
 
@@ -135,8 +133,8 @@ public class PacMan3D extends Group implements AnimatedPac3D {
         Vector2f center = pacMan.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
-        orientation.setAxis(Rotate.Z_AXIS);
-        orientation.setAngle(angle(pacMan.moveDir()));
+        bodyGroup.setRotationAxis(Rotate.Z_AXIS);
+        bodyGroup.setRotate(angle(pacMan.moveDir()));
         boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * world.map().terrain().numCols() - HTS;
         setVisible(pacMan.isVisible() && !outsideWorld);
         if (pacMan.isStandingStill()) {
