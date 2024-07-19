@@ -186,7 +186,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         context.game().pac().show();
         context.game().ghosts().forEach(Ghost::show);
         level3D.pac3D().init(context);
-        level3D.pac3D().update(context);
+        level3D.pac3D().updateAlive(context);
         ensureSirenPlaying(context);
         if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
             context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
@@ -209,7 +209,11 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
             case PACMAN_DYING -> {
                 context.soundHandler().stopAllSounds();
-                lockGameStateAndPlayAfterOneSecond(level3D.pac3D().createDyingAnimation(context));
+                context.gameState().timer().resetIndefinitely();
+                Animation dying = level3D.pac3D().createDyingAnimation(context);
+                dying.setDelay(Duration.seconds(1));
+                dying.setOnFinished(e -> context.gameState().timer().expire());
+                dying.play();
             }
 
             case GAME_OVER -> {

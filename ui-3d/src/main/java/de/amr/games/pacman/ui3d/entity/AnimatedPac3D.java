@@ -21,7 +21,7 @@ public interface AnimatedPac3D {
 
     void init(GameContext context);
 
-    void update(GameContext context);
+    void updateAlive(GameContext context);
 
     Animation createDyingAnimation(GameContext context);
 

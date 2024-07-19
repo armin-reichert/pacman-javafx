@@ -195,7 +195,9 @@ public class GameLevel3D extends Group {
 
     public void update() {
         var game = context.game();
-        pac3D.update(context);
+        if (game.pac().isAlive()) {
+            pac3D.updateAlive(context);
+        }
         ghosts3D().forEach(ghost3D -> ghost3D.update(context));
         bonus3D().ifPresent(bonus -> bonus.update(context));
         houseUsedPy.set(

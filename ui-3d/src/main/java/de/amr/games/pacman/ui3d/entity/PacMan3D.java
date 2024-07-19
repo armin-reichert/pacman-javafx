@@ -82,9 +82,9 @@ public class PacMan3D extends Group implements AnimatedPac3D {
     private final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
     private final DoubleProperty lightRangePy = new SimpleDoubleProperty(this, "lightRange", 0);
     private final Pac pacMan;
-    private final Group bodyGroup = new Group();
     private final HeadBanging headBanging;
     private final double size;
+    private final Rotate rotation = new Rotate();
 
     /**
      * Creates a 3D Pac-Man.
@@ -107,9 +107,9 @@ public class PacMan3D extends Group implements AnimatedPac3D {
             theme.color("pacman.color.eyes"),
             theme.color("pacman.color.palate")
         );
-        bodyGroup.getChildren().add(body);
-        getChildren().add(bodyGroup);
+        getChildren().add(body);
 
+        getTransforms().add(rotation);
         setTranslateZ(-0.5 * size);
 
         Stream.of(PacModel3D.MESH_ID_EYES, PacModel3D.MESH_ID_HEAD, PacModel3D.MESH_ID_PALATE)
@@ -122,19 +122,19 @@ public class PacMan3D extends Group implements AnimatedPac3D {
         setScaleX(1.0);
         setScaleY(1.0);
         setScaleZ(1.0);
-        setTranslateZ(-0.5 * size);
-        update(context);
+        updateAlive(context);
     }
 
     @Override
-    public void update(GameContext context) {
+    public void updateAlive(GameContext context) {
         GameModel game = context.game();
         GameWorld world = game.world();
         Vector2f center = pacMan.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
-        bodyGroup.setRotationAxis(Rotate.Z_AXIS);
-        bodyGroup.setRotate(angle(pacMan.moveDir()));
+        setTranslateZ(-0.5 * size);
+        rotation.setAxis(Rotate.Z_AXIS);
+        rotation.setAngle(angle(pacMan.moveDir()));
         boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * world.map().terrain().numCols() - HTS;
         setVisible(pacMan.isVisible() && !outsideWorld);
         if (pacMan.isStandingStill()) {
@@ -178,6 +178,8 @@ public class PacMan3D extends Group implements AnimatedPac3D {
 
     @Override
     public Animation createDyingAnimation(GameContext context) {
+        headBanging.stop();
+
         Duration duration = Duration.seconds(1.0);
         short numSpins = 6;
 
@@ -188,23 +190,16 @@ public class PacMan3D extends Group implements AnimatedPac3D {
         spinning.setInterpolator(Interpolator.LINEAR);
 
         var shrinking = new ScaleTransition(duration, this);
-        shrinking.setToY(0.1);
         shrinking.setToZ(0.01);
-        shrinking.setInterpolator(Interpolator.EASE_OUT);
 
         var falling = new TranslateTransition(duration, this);
         falling.setToZ(0);
-        falling.setInterpolator(Interpolator.EASE_IN);
 
-        //TODO does not yet work as I want to
         return new SequentialTransition(
-                now(() -> init(context)),
-                pauseSec(0.5),
-                new ParallelTransition(spinning, shrinking, falling),
-                doAfterSec(1.0, () -> {
-                    setVisible(false);
-                    setTranslateZ(0);
-                })
+            now(() -> init(context)),
+            pauseSec(0.5),
+            new ParallelTransition(spinning, shrinking, falling),
+            doAfterSec(1.0, () -> setVisible(false))
         );
     }
 }

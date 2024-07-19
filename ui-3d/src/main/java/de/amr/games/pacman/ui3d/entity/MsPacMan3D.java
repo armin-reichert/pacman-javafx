@@ -124,11 +124,11 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
         setScaleY(1.0);
         setScaleZ(1.0);
         setTranslateZ(-0.5 * size);
-        update(context);
+        updateAlive(context);
     }
 
     @Override
-    public void update(GameContext context) {
+    public void updateAlive(GameContext context) {
         var game = context.game();
         var world = game.world();
         Vector2f center = msPacMan.center();
@@ -179,14 +179,17 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
 
     @Override
     public Animation createDyingAnimation(GameContext context) {
+        hipSwaying.stop();
+
         var spin = new RotateTransition(Duration.seconds(0.5), this);
-        spin.setAxis(Rotate.X_AXIS); //TODO check this
+        spin.setAxis(Rotate.Z_AXIS);
         spin.setFromAngle(0);
         spin.setToAngle(360);
         spin.setInterpolator(Interpolator.LINEAR);
         spin.setCycleCount(4);
         spin.setRate(2);
         spin.setDelay(Duration.seconds(0.5));
+
         return new SequentialTransition(spin, pauseSec(2));
     }
 }
