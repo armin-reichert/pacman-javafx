@@ -1,0 +1,122 @@
+/*
+Copyright (c) 2021-2024 Armin Reichert (MIT License)
+See file LICENSE in repository root directory for details.
+*/
+package de.amr.games.pacman.ui3d.entity;
+
+import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.util.Theme;
+import javafx.beans.property.*;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.MeshView;
+import javafx.scene.transform.Rotate;
+
+import java.util.stream.Stream;
+
+import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui3d.PacManGames3dUI.PY_3D_PAC_LIGHT_ENABLED;
+import static de.amr.games.pacman.ui3d.animation.Turn.angle;
+
+/**
+ * @author Armin Reichert
+ */
+public abstract class AbstractPac3D extends Group implements AnimatedPac3D {
+
+    protected final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+    protected final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
+    protected final DoubleProperty lightRangePy = new SimpleDoubleProperty(this, "lightRange", 0);
+    protected final Pac pac;
+    protected final double size;
+    protected final Rotate rotation = new Rotate();
+
+    /**
+     * Creates a 3D Pac-Man.
+     *
+     * @param size diameter of Pac-Man
+     * @param pacMan Pac-Man instance
+     * @param theme the theme
+     */
+    public AbstractPac3D(double size, Pac pacMan, Theme theme) {
+        this.size = size;
+        this.pac = checkNotNull(pacMan);
+        checkNotNull(theme);
+        setTranslateZ(-0.5 * size);
+    }
+
+    protected abstract Stream<MeshView> meshViews();
+
+    @Override
+    public void init(GameContext context) {
+        setScaleX(1.0);
+        setScaleY(1.0);
+        setScaleZ(1.0);
+        updatePosition();
+        updateRotation();
+        meshViews().forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
+    }
+
+    protected void updatePosition() {
+        Vector2f center = pac.center();
+        setTranslateX(center.x());
+        setTranslateY(center.y());
+        setTranslateZ(-0.5 * size);
+    }
+
+    protected void updateRotation() {
+        rotation.setAxis(Rotate.Z_AXIS);
+        rotation.setAngle(angle(pac.moveDir()));
+    }
+
+    protected void updateLight(GameContext context) {
+        GameModel game = context.game();
+        // When empowered, Pac-Man is lighted, light range shrinks with ceasing power
+        boolean hasPower = game.powerTimer().isRunning();
+        double range = hasPower && game.powerTimer().duration() > 0
+            ? 2 * TS + ((double) game.powerTimer().remaining() / game.powerTimer().duration()) * 6 * TS
+            : 0;
+        lightRangeProperty().set(range);
+        lightOnProperty().set(PY_3D_PAC_LIGHT_ENABLED.get() && pac.isVisible() && hasPower);
+    }
+
+    protected void updateVisibility(GameContext context) {
+        GameWorld world = context.game().world();
+        boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * world.map().terrain().numCols() - HTS;
+        setVisible(pac.isVisible() && !outsideWorld);
+    }
+
+    protected abstract void updateAliveAnimation();
+
+    @Override
+    public void updateAlive(GameContext context) {
+        updatePosition();
+        updateRotation();
+        updateVisibility(context);
+        updateLight(context);
+        updateAliveAnimation();
+    }
+
+    @Override
+    public Node node() {
+        return this;
+    }
+
+    public ObjectProperty<DrawMode> drawModeProperty() {
+        return drawModePy;
+    }
+
+    @Override
+    public BooleanProperty lightOnProperty() {
+        return lightOnPy;
+    }
+
+    @Override
+    public DoubleProperty lightRangeProperty() {
+        return lightRangePy;
+    }
+}
