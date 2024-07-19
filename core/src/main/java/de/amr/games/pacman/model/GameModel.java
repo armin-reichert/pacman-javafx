@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * Common interface of all game models.
@@ -178,6 +178,14 @@ public interface GameModel {
 
     int huntingPhaseIndex();
 
+    default boolean isScatterPhase(int phaseIndex) {
+        return isEven(phaseIndex);
+    }
+
+    default boolean isChasingPhase(int phaseIndex) {
+        return isOdd(phaseIndex);
+    }
+
     /**
      * @return (optional) index of current scattering phase <code>(0-3)</code>
      */
@@ -187,8 +195,6 @@ public interface GameModel {
      * @return (optional) index of current chasing phase <code>(0-3)</code>
      */
     Optional<Integer> chasingPhase();
-
-    String currentHuntingPhaseName();
 
     /**
      * @return Blinky's "cruise elroy" state. Values: <code>0, 1, 2, -1, -2</code>. (0=off, negative=disabled).

@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.LEFT;
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.GameModel.checkGhostID;
 import static de.amr.games.pacman.model.actors.GhostState.*;
 
@@ -155,16 +155,15 @@ public abstract class AbstractPacManGame implements GameModel {
             new Ghost(CYAN_GHOST,   world),
             new Ghost(ORANGE_GHOST, world)
         };
-        ghosts[RED_GHOST]   .setName("Blinky");
-        ghosts[PINK_GHOST]  .setName("Pinky");
-        ghosts[CYAN_GHOST]  .setName("Inky");
+
+        ghosts[RED_GHOST   ].setName("Blinky");
+        ghosts[PINK_GHOST  ].setName("Pinky");
+        ghosts[CYAN_GHOST  ].setName("Inky");
         ghosts[ORANGE_GHOST].setName("Clyde");
 
-        // in case there are multiple houses, one could select the nearest house and set the revival position when
-        // a ghost gets killed
-        ghosts[RED_GHOST]   .setRevivalPosition(world.ghostPosition(PINK_GHOST)); // !
-        ghosts[PINK_GHOST]  .setRevivalPosition(world.ghostPosition(PINK_GHOST));
-        ghosts[CYAN_GHOST]  .setRevivalPosition(world.ghostPosition(CYAN_GHOST));
+        ghosts[RED_GHOST   ].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // NOTE!
+        ghosts[PINK_GHOST  ].setRevivalPosition(world.ghostPosition(PINK_GHOST));
+        ghosts[CYAN_GHOST  ].setRevivalPosition(world.ghostPosition(CYAN_GHOST));
         ghosts[ORANGE_GHOST].setRevivalPosition(world.ghostPosition(ORANGE_GHOST));
 
         ghosts().forEach(ghost -> {
@@ -231,10 +230,13 @@ public abstract class AbstractPacManGame implements GameModel {
         huntingPhaseIndex = (byte) phaseIndex;
         huntingTimer.reset(huntingTicks(levelNumber, huntingPhaseIndex));
         huntingTimer.start();
+
+        String phaseName = isScatterPhase(huntingPhaseIndex) ? "Scattering" : "Chasing";
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
-            huntingPhaseIndex, currentHuntingPhaseName(),
+            huntingPhaseIndex, phaseName,
             huntingTimer.duration(), (float) huntingTimer.duration() / GameModel.FPS, huntingTimer);
     }
+
     @Override
     public int huntingPhaseIndex() {
         return huntingPhaseIndex;
@@ -242,17 +244,12 @@ public abstract class AbstractPacManGame implements GameModel {
 
     @Override
     public Optional<Integer> scatterPhase() {
-        return isEven(huntingPhaseIndex) ? Optional.of(huntingPhaseIndex / 2) : Optional.empty();
+        return isScatterPhase(huntingPhaseIndex) ? Optional.of(huntingPhaseIndex / 2) : Optional.empty();
     }
 
     @Override
     public Optional<Integer> chasingPhase() {
-        return isOdd(huntingPhaseIndex) ? Optional.of(huntingPhaseIndex / 2) : Optional.empty();
-    }
-
-    @Override
-    public String currentHuntingPhaseName() {
-        return isEven(huntingPhaseIndex) ? "Scattering" : "Chasing";
+        return isChasingPhase(huntingPhaseIndex) ? Optional.of(huntingPhaseIndex / 2) : Optional.empty();
     }
 
     @Override
@@ -546,14 +543,6 @@ public abstract class AbstractPacManGame implements GameModel {
         updateHuntingTimer();
         ghosts(FRIGHTENED).filter(pac::sameTile).forEach(this::killGhost);
         eventLog.pacKilled = checkPacKilled();
-    }
-
-    boolean isScatteringPhase(int phaseIndex) {
-        return isEven(phaseIndex);
-    }
-
-    boolean isChasingPhase(int phaseIndex) {
-        return isOdd(phaseIndex);
     }
 
     boolean checkPacKilled() {

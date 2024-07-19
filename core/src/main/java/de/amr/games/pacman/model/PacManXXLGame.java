@@ -23,6 +23,7 @@ public class PacManXXLGame extends PacManGame {
 
     private static GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
+        //TODO house position should be stored in terrain map
         int houseTopLeftX = map.terrain().numCols() / 2 - 4;
         int houseTopLeftY = map.terrain().numRows() / 2 - 3;
         world.createArcadeHouse(houseTopLeftX, houseTopLeftY);

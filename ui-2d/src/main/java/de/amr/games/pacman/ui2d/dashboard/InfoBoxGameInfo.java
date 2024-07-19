@@ -56,7 +56,7 @@ public class InfoBoxGameInfo extends InfoBox {
         var game = context.game();
         var huntingTimer = game.huntingTimer();
         return "%s #%d%s".formatted(
-            game.currentHuntingPhaseName(),
+            game.isChasingPhase(game.huntingPhaseIndex()) ? "Chasing" : "Scattering",
             game.scatterPhase().orElse(game.chasingPhase().orElse(42)),
             huntingTimer.isStopped() ? " STOPPED" : "");
     }
