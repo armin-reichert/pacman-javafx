@@ -9,19 +9,14 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.util.Theme;
 import javafx.beans.property.*;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
-
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui3d.PacManGames3dUI.PY_3D_PAC_LIGHT_ENABLED;
 import static de.amr.games.pacman.ui3d.animation.Turn.angle;
 
@@ -34,7 +29,6 @@ public abstract class AbstractPac3D extends Group implements AnimatedPac3D {
     protected final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
     protected final DoubleProperty lightRangePy = new SimpleDoubleProperty(this, "lightRange", 0);
     protected final Rotate rotation = new Rotate();
-    protected List<MeshView> meshViews = List.of();
     protected Pac pac;
     protected double size;
 

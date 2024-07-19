@@ -100,9 +100,9 @@ public class PacMan3D extends AbstractPac3D {
         headBanging = new HeadBanging(this);
         headBanging.setStrokeMode(false);
 
-        meshViews = Stream.of(PacModel3D.MESH_ID_EYES, PacModel3D.MESH_ID_HEAD, PacModel3D.MESH_ID_PALATE)
-            .map(id -> meshView(bodyGroup, id)).toList();
-        meshViews.forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
+        Stream.of(PacModel3D.MESH_ID_EYES, PacModel3D.MESH_ID_HEAD, PacModel3D.MESH_ID_PALATE)
+            .map(id -> meshView(bodyGroup, id))
+            .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
     }
 
     @Override
