@@ -57,10 +57,14 @@ public class Globals {
     /**
      * @param tileX tile x coordinate
      * @param tileY tile y coordinate
-     * @return position half tile right of tile origin
+     * @return position  (scaled by tile size) half tile right of tile origin
      */
     public static Vector2f halfTileRightOf(int tileX, int tileY) {
         return v2f(TS * tileX + HTS, TS * tileY);
+    }
+
+    public static Vector2f halfTileRightOf(Vector2i tile) {
+        return halfTileRightOf(tile.x(), tile.y());
     }
 
     public static double t(double tiles) {

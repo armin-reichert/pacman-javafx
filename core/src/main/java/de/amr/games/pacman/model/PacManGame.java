@@ -7,6 +7,7 @@ package de.amr.games.pacman.model;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.NavPoint;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -150,9 +151,10 @@ public class PacManGame extends AbstractPacManGame {
         nextBonusIndex += 1;
         byte symbol = bonusSymbols[nextBonusIndex];
         bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
-        // in a Pac-Man XXL custom map, the bonus position might have to be taken from the map
-        Vector2i bonusTile = world.map().terrain().getTileProperty(GameWorld.PROPERTY_POS_BONUS, new Vector2i(13, 20));
-        bonus.entity().setPosition(bonusTile.x() * TS + HTS, bonusTile.y() * TS);
+        // in a non-Arcade style map, the bonus position must be taken from the terrain map
+        Vector2f bonusPosition = halfTileRightOf(
+            world.map().terrain().getTileProperty(GameWorld.PROPERTY_POS_BONUS, new Vector2i(13, 20)));
+        bonus.entity().setPosition(bonusPosition);
         bonus.setEdible(randomInt(540, 600));
         publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
     }
