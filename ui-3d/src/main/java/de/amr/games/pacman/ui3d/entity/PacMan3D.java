@@ -81,7 +81,7 @@ public class PacMan3D extends Group implements AnimatedPac3D {
     private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
     private final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
     private final DoubleProperty lightRangePy = new SimpleDoubleProperty(this, "lightRange", 0);
-    private final Pac pacMan;
+    private final Pac pac;
     private final HeadBanging headBanging;
     private final double size;
     private final Rotate rotation = new Rotate();
@@ -95,7 +95,7 @@ public class PacMan3D extends Group implements AnimatedPac3D {
      */
     public PacMan3D(double size, Pac pacMan, Theme theme) {
         this.size = size;
-        this.pacMan = checkNotNull(pacMan);
+        this.pac = checkNotNull(pacMan);
         checkNotNull(theme);
 
         headBanging = new HeadBanging(this);
@@ -119,37 +119,54 @@ public class PacMan3D extends Group implements AnimatedPac3D {
 
     @Override
     public void init(GameContext context) {
+        headBanging.stop();
         setScaleX(1.0);
         setScaleY(1.0);
         setScaleZ(1.0);
-        updateAlive(context);
+        updatePosition();
+        updateRotation();
     }
 
-    @Override
-    public void updateAlive(GameContext context) {
-        GameModel game = context.game();
-        GameWorld world = game.world();
-        Vector2f center = pacMan.center();
+    private void updatePosition() {
+        Vector2f center = pac.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-0.5 * size);
+    }
+
+    private void updateRotation() {
         rotation.setAxis(Rotate.Z_AXIS);
-        rotation.setAngle(angle(pacMan.moveDir()));
-        boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * world.map().terrain().numCols() - HTS;
-        setVisible(pacMan.isVisible() && !outsideWorld);
-        if (pacMan.isStandingStill()) {
-            headBanging.stop();
-        } else {
-            headBanging.apply(pacMan);
-        }
+        rotation.setAngle(angle(pac.moveDir()));
+    }
+
+    private void updateLight(GameContext context) {
+        GameModel game = context.game();
         // When empowered, Pac-Man is lighted, light range shrinks with ceasing power
         boolean hasPower = game.powerTimer().isRunning();
         double range = hasPower && game.powerTimer().duration() > 0
             ? 2 * TS + ((double) game.powerTimer().remaining() / game.powerTimer().duration()) * 6 * TS
             : 0;
-
         lightRangeProperty().set(range);
-        lightOnProperty().set(PY_3D_PAC_LIGHT_ENABLED.get() && pacMan.isVisible() && hasPower);
+        lightOnProperty().set(PY_3D_PAC_LIGHT_ENABLED.get() && pac.isVisible() && hasPower);
+    }
+
+    private void updateVisibility(GameContext context) {
+        GameWorld world = context.game().world();
+        boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * world.map().terrain().numCols() - HTS;
+        setVisible(pac.isVisible() && !outsideWorld);
+    }
+
+    @Override
+    public void updateAlive(GameContext context) {
+        updatePosition();
+        updateRotation();
+        updateVisibility(context);
+        updateLight(context);
+        if (pac.isStandingStill()) {
+            headBanging.stop();
+        } else {
+            headBanging.apply(pac);
+        }
     }
 
     @Override
@@ -178,7 +195,6 @@ public class PacMan3D extends Group implements AnimatedPac3D {
 
     @Override
     public Animation createDyingAnimation(GameContext context) {
-        headBanging.stop();
 
         Duration duration = Duration.seconds(1.0);
         short numSpins = 6;

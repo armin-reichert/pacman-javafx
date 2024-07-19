@@ -5,6 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.entity;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
@@ -77,10 +79,10 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
     private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
     private final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
     private final DoubleProperty lightRangePy = new SimpleDoubleProperty(this, "lightRange", 0);
-    private final Rotate orientation = new Rotate();
-    private final Pac msPacMan;
+    private final Pac pac;
     private final HipSwaying hipSwaying;
     private final double size;
+    private final Rotate rotation = new Rotate();
 
     /**
      * Creates a 3D Ms. Pac-Man.
@@ -90,7 +92,7 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
      */
     public MsPacMan3D(double size, Pac msPacMan, Theme theme) {
         this.size = size;
-        this.msPacMan = checkNotNull(msPacMan);
+        this.pac = checkNotNull(msPacMan);
         checkNotNull(theme);
 
         hipSwaying = new HipSwaying(this);
@@ -107,10 +109,10 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
             theme.color("ms_pacman.color.hairbow.pearls"),
             theme.color("ms_pacman.color.boobs"));
 
-        var shapeGroup = new Group(body, femaleParts);
-        shapeGroup.getTransforms().setAll(orientation);
-        getChildren().add(shapeGroup);
+        var bodyGroup = new Group(body, femaleParts);
+        getChildren().add(bodyGroup);
 
+        bodyGroup.getTransforms().setAll(rotation);
         setTranslateZ(-0.5 * size);
 
         Stream.of(MESH_ID_EYES, MESH_ID_HEAD, MESH_ID_PALATE)
@@ -120,37 +122,54 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
 
     @Override
     public void init(GameContext context) {
+        hipSwaying.stop();
         setScaleX(1.0);
         setScaleY(1.0);
         setScaleZ(1.0);
-        setTranslateZ(-0.5 * size);
-        updateAlive(context);
+        updatePosition();
+        updateRotation();
     }
 
-    @Override
-    public void updateAlive(GameContext context) {
-        var game = context.game();
-        var world = game.world();
-        Vector2f center = msPacMan.center();
+    private void updatePosition() {
+        Vector2f center = pac.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-0.5 * size);
-        orientation.setAxis(Rotate.Z_AXIS);
-        orientation.setAngle(angle(msPacMan.moveDir()));
-        boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * world.map().terrain().numCols() - HTS;
-        setVisible(msPacMan.isVisible() && !outsideWorld);
-        if (msPacMan.isStandingStill()) {
-            hipSwaying.stop();
-        } else {
-            hipSwaying.update(msPacMan);
-        }
+    }
+
+    private void updateRotation() {
+        rotation.setAxis(Rotate.Z_AXIS);
+        rotation.setAngle(angle(pac.moveDir()));
+    }
+
+    private void updateLight(GameContext context) {
+        GameModel game = context.game();
         // When empowered, Pac-Man is lighted, light range shrinks with ceasing power
         boolean hasPower = game.powerTimer().isRunning();
         double range = hasPower && game.powerTimer().duration() > 0
             ? 2 * TS + ((double) game.powerTimer().remaining() / game.powerTimer().duration()) * 6 * TS
             : 0;
         lightRangeProperty().set(range);
-        lightOnProperty().set(PY_3D_PAC_LIGHT_ENABLED.get() && msPacMan.isVisible() && hasPower);
+        lightOnProperty().set(PY_3D_PAC_LIGHT_ENABLED.get() && pac.isVisible() && hasPower);
+    }
+
+    private void updateVisibility(GameContext context) {
+        GameWorld world = context.game().world();
+        boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * world.map().terrain().numCols() - HTS;
+        setVisible(pac.isVisible() && !outsideWorld);
+    }
+
+    @Override
+    public void updateAlive(GameContext context) {
+        updatePosition();
+        updateRotation();
+        updateVisibility(context);
+        updateLight(context);
+        if (pac.isStandingStill()) {
+            hipSwaying.stop();
+        } else {
+            hipSwaying.update(pac);
+        }
     }
 
     @Override
@@ -179,8 +198,6 @@ public class MsPacMan3D extends Group implements AnimatedPac3D {
 
     @Override
     public Animation createDyingAnimation(GameContext context) {
-        hipSwaying.stop();
-
         var spin = new RotateTransition(Duration.seconds(0.5), this);
         spin.setAxis(Rotate.Z_AXIS);
         spin.setFromAngle(0);
