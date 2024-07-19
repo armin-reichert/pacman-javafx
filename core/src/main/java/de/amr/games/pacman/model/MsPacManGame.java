@@ -220,7 +220,7 @@ public class MsPacManGame extends AbstractPacManGame  {
      * Note: This is not the exact behavior from the original Arcade game.
      **/
     @Override
-    public void createNextBonus() {
+    public void activateNextBonus() {
         if (bonus != null && bonus.state() != Bonus.STATE_INACTIVE) {
             Logger.info("Previous bonus is still active, skip this one");
             return;

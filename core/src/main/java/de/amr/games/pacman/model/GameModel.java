@@ -114,7 +114,7 @@ public interface GameModel {
 
     int intermissionNumber(int levelNumber);
 
-    void createNextBonus();
+    void activateNextBonus();
 
     /**
      * At this point, the animations of Pac-Man and the ghosts must have been created!

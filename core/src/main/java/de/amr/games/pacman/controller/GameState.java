@@ -331,13 +331,13 @@ public enum GameState implements FsmState<GameModel> {
                 game.blinking().setStartPhase(Pulse.ON);
                 game.blinking().restart();
             } else if (timer().atSecond(2.5)) {
-                game.createNextBonus();
+                game.activateNextBonus();
             } else if (timer().atSecond(4.5)) {
                 game.bonus().ifPresent(bonus -> bonus.setEaten(60));
                 game.publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer().atSecond(6.5)) {
                 game.bonus().ifPresent(Bonus::setInactive); // needed?
-                game.createNextBonus();
+                game.activateNextBonus();
             } else if (timer().atSecond(7.5)) {
                 game.bonus().ifPresent(bonus -> bonus.setEaten(60));
                 game.publishGameEvent(GameEventType.BONUS_EATEN);

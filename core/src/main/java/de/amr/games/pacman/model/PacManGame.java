@@ -32,8 +32,8 @@ import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
  *
  * <p>There are however some differences to the original.
  *     <ul>
- *         <li>Attract mode (demo level) not identical to Arcade version</li>
- *         <li>Only single player can play</li>
+ *         <li>Only single player mode supported</li>
+ *         <li>Attract mode (demo level) not identical to Arcade version because ghosts move randomly</li>
  *         <li>Pac-Man steering more comfortable because next direction can be selected before intersection is reached</li>
  *         <li>Cornering behavior is different</li>
  *         <li>Accuracy only about 90% (estimated) so patterns can not be used</li>
@@ -68,16 +68,16 @@ public class PacManGame extends AbstractPacManGame {
         var world = new GameWorld(map);
         world.createArcadeHouse(10, 15);
         List<Direction> up = List.of(UP);
-        Map<Vector2i, List<Direction>> fp = new HashMap<>();
-        Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> fp.put(tile, up));
-        world.setForbiddenPassages(fp);
+        Map<Vector2i, List<Direction>> forbiddenPassages = new HashMap<>();
+        Stream.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> forbiddenPassages.put(tile, up));
+        world.setForbiddenPassages(forbiddenPassages);
         return world;
     }
 
     @Override
     public void init() {
         initialLives = 3;
-        highScoreFile = new File(GAME_DIR,"highscore-pacman.xml");
+        highScoreFile = new File(GAME_DIR, "highscore-pacman.xml");
     }
 
     @Override
@@ -147,21 +147,20 @@ public class PacManGame extends AbstractPacManGame {
     }
 
     @Override
-    public void createNextBonus() {
+    public void activateNextBonus() {
         nextBonusIndex += 1;
         byte symbol = bonusSymbols[nextBonusIndex];
         bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
-        // in a non-Arcade style map, the bonus position must be taken from the terrain map
+        // in a non-Arcade style custom map, the bonus position must be taken from the terrain map
         Vector2f bonusPosition = halfTileRightOf(
             world.map().terrain().getTileProperty(GameWorld.PROPERTY_POS_BONUS, new Vector2i(13, 20)));
         bonus.entity().setPosition(bonusPosition);
-        bonus.setEdible(randomInt(540, 600));
+        bonus.setEdible(randomInt(540, 600)); // between 9 and 10 seconds
         publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
     }
 
     protected void ghostHuntingBehaviour(Ghost ghost) {
-        byte speed = huntingSpeedPct(ghost);
         boolean chase = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
-        ghost.followTarget(chase ? chasingTarget(ghost) : scatterTarget(ghost), speed);
+        ghost.followTarget(chase ? chasingTarget(ghost) : scatterTarget(ghost), huntingSpeedPct(ghost));
     }
 }

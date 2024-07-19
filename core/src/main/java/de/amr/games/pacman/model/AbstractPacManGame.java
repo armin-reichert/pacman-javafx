@@ -600,7 +600,7 @@ public abstract class AbstractPacManGame implements GameModel {
                 cruiseElroy = 2;
             }
             if (isBonusReached()) {
-                createNextBonus();
+                activateNextBonus();
                 eventLog.bonusIndex = nextBonusIndex;
             }
             publishGameEvent(GameEventType.PAC_FOUND_FOOD, pacTile);
