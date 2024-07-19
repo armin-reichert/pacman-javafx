@@ -11,12 +11,12 @@ import javafx.animation.*;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshView;
 
@@ -82,7 +82,8 @@ public class PacMan3D extends AbstractPac3D {
      * @param theme the theme
      */
     public PacMan3D(double size, Pac pacMan, Theme theme) {
-        super(size, pacMan, theme);
+        this.size = size;
+        this.pac = checkNotNull(pacMan);
 
         Group body = PacModel3D.createPacShape(
             theme.get("model3D.pacman"), size,
@@ -98,12 +99,10 @@ public class PacMan3D extends AbstractPac3D {
 
         headBanging = new HeadBanging(this);
         headBanging.setStrokeMode(false);
-    }
 
-    @Override
-    protected Stream<MeshView> meshViews() {
-        return Stream.of(PacModel3D.MESH_ID_EYES, PacModel3D.MESH_ID_HEAD, PacModel3D.MESH_ID_PALATE)
-            .map(id -> meshView(bodyGroup, id));
+        meshViews = Stream.of(PacModel3D.MESH_ID_EYES, PacModel3D.MESH_ID_HEAD, PacModel3D.MESH_ID_PALATE)
+            .map(id -> meshView(bodyGroup, id)).toList();
+        meshViews.forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
     }
 
     @Override

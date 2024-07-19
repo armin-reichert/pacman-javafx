@@ -17,6 +17,8 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -31,34 +33,19 @@ public abstract class AbstractPac3D extends Group implements AnimatedPac3D {
     protected final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
     protected final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
     protected final DoubleProperty lightRangePy = new SimpleDoubleProperty(this, "lightRange", 0);
-    protected final Pac pac;
-    protected final double size;
     protected final Rotate rotation = new Rotate();
-
-    /**
-     * Creates a 3D Pac-Man.
-     *
-     * @param size diameter of Pac-Man
-     * @param pacMan Pac-Man instance
-     * @param theme the theme
-     */
-    public AbstractPac3D(double size, Pac pacMan, Theme theme) {
-        this.size = size;
-        this.pac = checkNotNull(pacMan);
-        checkNotNull(theme);
-        setTranslateZ(-0.5 * size);
-    }
-
-    protected abstract Stream<MeshView> meshViews();
+    protected List<MeshView> meshViews = List.of();
+    protected Pac pac;
+    protected double size;
 
     @Override
     public void init(GameContext context) {
         setScaleX(1.0);
         setScaleY(1.0);
         setScaleZ(1.0);
+        setTranslateZ(-0.5 * size);
         updatePosition();
         updateRotation();
-        meshViews().forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
     }
 
     protected void updatePosition() {
@@ -90,8 +77,6 @@ public abstract class AbstractPac3D extends Group implements AnimatedPac3D {
         setVisible(pac.isVisible() && !outsideWorld);
     }
 
-    protected abstract void updateAliveAnimation();
-
     @Override
     public void updateAlive(GameContext context) {
         updatePosition();
@@ -100,6 +85,8 @@ public abstract class AbstractPac3D extends Group implements AnimatedPac3D {
         updateLight(context);
         updateAliveAnimation();
     }
+
+    protected abstract void updateAliveAnimation();
 
     @Override
     public Node node() {
