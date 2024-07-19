@@ -190,7 +190,13 @@ public class PacMan3D extends Group implements AnimatedPac3D {
         spinning.setInterpolator(Interpolator.LINEAR);
 
         var shrinking = new ScaleTransition(duration, this);
-        shrinking.setToZ(0.01);
+        shrinking.setToX(0.25);
+        shrinking.setToY(0.25);
+        shrinking.setToZ(0.02);
+        shrinking.setOnFinished(e -> {
+            setScaleX(0.75);
+            setScaleX(0.75);
+        });
 
         var falling = new TranslateTransition(duration, this);
         falling.setToZ(0);
