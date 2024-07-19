@@ -100,10 +100,10 @@ public abstract class AbstractPacManGame implements GameModel {
 
     boolean              overflowBug = true;
 
-    Pac pac;
+    Pac                  pac;
     Ghost[]              ghosts;
-    Bonus bonus;
-    GameWorld world;
+    Bonus                bonus;
+    GameWorld            world;
 
     SimulationStepEventLog eventLog;
 
