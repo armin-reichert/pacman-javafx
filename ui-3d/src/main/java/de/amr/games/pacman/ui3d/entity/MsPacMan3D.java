@@ -7,10 +7,12 @@ package de.amr.games.pacman.ui3d.entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
+import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
@@ -68,8 +70,9 @@ public class MsPacMan3D extends AbstractPac3D {
         }
     }
 
-    private final HipSwaying hipSwaying;
     private final Group bodyGroup;
+    private final HipSwaying hipSwaying;
+    private final RotateTransition chewing;
 
     /**
      * Creates a 3D Ms. Pac-Man.
@@ -81,8 +84,9 @@ public class MsPacMan3D extends AbstractPac3D {
         this.size = size;
         this.pac = checkNotNull(msPacMan);
 
+        Model3D model3D = theme.get("model3D.pacman");
         Group body = PacModel3D.createPacShape(
-            theme.get("model3D.pacman"), size,
+            model3D, size,
             theme.color("ms_pacman.color.head"),
             theme.color("ms_pacman.color.eyes"),
             theme.color("ms_pacman.color.palate"));
@@ -98,6 +102,10 @@ public class MsPacMan3D extends AbstractPac3D {
         hipSwaying = new HipSwaying(bodyGroup);
         hipSwaying.setWinnetouchMode(false);
 
+        var secondBody = PacModel3D.createPacHead(model3D, size, theme.color("pacman.color.head"));
+        bodyGroup.getChildren().add(secondBody);
+        chewing = createChewingAnimation(secondBody);
+
         Stream.of(PacModel3D.MESH_ID_EYES, PacModel3D.MESH_ID_HEAD, PacModel3D.MESH_ID_PALATE)
             .map(id -> meshView(bodyGroup, id))
             .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
@@ -112,6 +120,7 @@ public class MsPacMan3D extends AbstractPac3D {
     public void init(GameContext context) {
         super.init(context);
         hipSwaying.stop();
+        chewing.stop();
     }
 
     @Override
@@ -120,6 +129,12 @@ public class MsPacMan3D extends AbstractPac3D {
             hipSwaying.stop();
         } else {
             hipSwaying.update(pac);
+            Point3D axis = Rotate.Y_AXIS;
+            if (!axis.equals(chewing.getAxis())) {
+                chewing.stop();
+                chewing.setAxis(axis);
+            }
+            chewing.play();
         }
     }
 
@@ -138,5 +153,15 @@ public class MsPacMan3D extends AbstractPac3D {
         spin.setCycleCount(4);
         spin.setDelay(Duration.seconds(0.5));
         return new SequentialTransition(spin, pauseSec(2));
+    }
+
+    private RotateTransition createChewingAnimation(Node node) {
+        var rotation = new RotateTransition(Duration.seconds(0.25), node);
+        rotation.setDelay(Duration.seconds(0.05));
+        rotation.setCycleCount(Animation.INDEFINITE);
+        rotation.setInterpolator(Interpolator.EASE_IN);
+        rotation.setFromAngle(10);
+        rotation.setToAngle(-60);
+        return rotation;
     }
 }

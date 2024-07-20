@@ -12,8 +12,6 @@ import javafx.animation.*;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -120,6 +118,7 @@ public class PacMan3D extends AbstractPac3D {
     public void init(GameContext context) {
         super.init(context);
         headBanging.stop();
+        chewing.stop();
     }
 
     @Override
