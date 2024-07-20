@@ -152,7 +152,7 @@ public class GameLevel3D extends Group {
         Box floor = createFloor(map.terrain().numCols() * TS - 1, map.terrain().numRows() * TS - 1);
         addMaze(mazeGroup);
         addHouse(mazeGroup);
-        addPellets(this); // when put inside maze group, transparency does not work!
+        addPellets(); // when put inside maze group, transparency does not work!
 
         worldGroup.getChildren().addAll(floor, mazeGroup);
         getChildren().addAll(pac3D.node(), createPacLight(pac3D));
@@ -381,7 +381,7 @@ public class GameLevel3D extends Group {
         return new Group(base, top);
     }
 
-    private void addPellets(Group parent) {
+    private void addPellets() {
         var world = context.game().world();
         Color color = getColorFromMap(world.map().food(), GameWorld.PROPERTY_COLOR_FOOD, Color.WHITE);
         foodColorPy.set(color);
@@ -393,13 +393,13 @@ public class GameLevel3D extends Group {
                 energizers3D.add(energizer3D);
                 energizer3D.root().materialProperty().bind(foodMaterialPy);
                 energizer3D.placeAtTile(tile);
-                parent.getChildren().add(energizer3D.root());
+                getChildren().add(energizer3D.root());
             } else {
                 var pellet3D = new Pellet3D(pelletModel3D, PELLET_RADIUS);
                 pellets3D.add(pellet3D);
                 pellet3D.root().materialProperty().bind(foodMaterialPy);
                 pellet3D.placeAtTile(tile);
-                parent.getChildren().add(pellet3D.root());
+                getChildren().add(pellet3D.root());
             }
         });
     }
