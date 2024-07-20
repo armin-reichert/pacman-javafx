@@ -95,9 +95,7 @@ public class MsPacMan3D extends AbstractPac3D {
         bodyGroup = new Group(body, femaleParts);
         bodyGroup.getTransforms().add(rotation);
 
-        getChildren().add(bodyGroup);
-
-        hipSwaying = new HipSwaying(this);
+        hipSwaying = new HipSwaying(bodyGroup);
         hipSwaying.setWinnetouchMode(false);
 
         Stream.of(PacModel3D.MESH_ID_EYES, PacModel3D.MESH_ID_HEAD, PacModel3D.MESH_ID_PALATE)
@@ -107,7 +105,7 @@ public class MsPacMan3D extends AbstractPac3D {
 
     @Override
     public Node node() {
-        return this;
+        return bodyGroup;
     }
 
     @Override
@@ -132,7 +130,7 @@ public class MsPacMan3D extends AbstractPac3D {
 
     @Override
     public Animation createDyingAnimation(GameContext context) {
-        var spin = new RotateTransition(Duration.seconds(0.25), this);
+        var spin = new RotateTransition(Duration.seconds(0.25), bodyGroup);
         spin.setAxis(Rotate.Z_AXIS);
         spin.setFromAngle(0);
         spin.setToAngle(360);

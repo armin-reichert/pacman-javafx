@@ -22,7 +22,7 @@ import static de.amr.games.pacman.ui3d.animation.Turn.angle;
 /**
  * @author Armin Reichert
  */
-public abstract class AbstractPac3D extends Group implements AnimatedPac3D {
+public abstract class AbstractPac3D implements AnimatedPac3D {
 
     protected final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
     protected final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
@@ -33,19 +33,19 @@ public abstract class AbstractPac3D extends Group implements AnimatedPac3D {
 
     @Override
     public void init(GameContext context) {
-        setScaleX(1.0);
-        setScaleY(1.0);
-        setScaleZ(1.0);
-        setTranslateZ(-0.5 * size);
+        node().setScaleX(1.0);
+        node().setScaleY(1.0);
+        node().setScaleZ(1.0);
+        node().setTranslateZ(-0.5 * size);
         updatePosition();
         updateRotation();
     }
 
     protected void updatePosition() {
         Vector2f center = pac.center();
-        setTranslateX(center.x());
-        setTranslateY(center.y());
-        setTranslateZ(-0.5 * size);
+        node().setTranslateX(center.x());
+        node().setTranslateY(center.y());
+        node().setTranslateZ(-0.5 * size);
     }
 
     protected void updateRotation() {
@@ -66,8 +66,8 @@ public abstract class AbstractPac3D extends Group implements AnimatedPac3D {
 
     protected void updateVisibility(GameContext context) {
         GameWorld world = context.game().world();
-        boolean outsideWorld = getTranslateX() < HTS || getTranslateX() > TS * world.map().terrain().numCols() - HTS;
-        setVisible(pac.isVisible() && !outsideWorld);
+        boolean outsideWorld = node().getTranslateX() < HTS || node().getTranslateX() > TS * world.map().terrain().numCols() - HTS;
+        node().setVisible(pac.isVisible() && !outsideWorld);
     }
 
     @Override

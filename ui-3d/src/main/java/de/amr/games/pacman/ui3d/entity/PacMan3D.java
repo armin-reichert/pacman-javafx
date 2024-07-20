@@ -95,9 +95,7 @@ public class PacMan3D extends AbstractPac3D {
         bodyGroup = new Group(body);
         bodyGroup.getTransforms().add(rotation);
 
-        getChildren().add(bodyGroup);
-
-        headBanging = new HeadBanging(this);
+        headBanging = new HeadBanging(bodyGroup);
         headBanging.setStrokeMode(false);
 
         Stream.of(PacModel3D.MESH_ID_EYES, PacModel3D.MESH_ID_HEAD, PacModel3D.MESH_ID_PALATE)
@@ -107,7 +105,7 @@ public class PacMan3D extends AbstractPac3D {
 
     @Override
     public Node node() {
-        return this;
+        return bodyGroup;
     }
 
     @Override
@@ -135,29 +133,29 @@ public class PacMan3D extends AbstractPac3D {
         Duration duration = Duration.seconds(1.0);
         byte numSpins = 6;
 
-        var spins = new RotateTransition(duration.divide(numSpins), this);
+        var spins = new RotateTransition(duration.divide(numSpins), bodyGroup);
         spins.setAxis(Rotate.Z_AXIS);
         spins.setByAngle(360);
         spins.setCycleCount(numSpins);
         spins.setInterpolator(Interpolator.LINEAR);
 
-        var shrinks = new ScaleTransition(duration.multiply(0.66), this);
+        var shrinks = new ScaleTransition(duration.multiply(0.66), bodyGroup);
         shrinks.setToX(0.25);
         shrinks.setToY(0.25);
         shrinks.setToZ(0.02);
 
-        var expands = new ScaleTransition(duration.multiply(0.34), this);
+        var expands = new ScaleTransition(duration.multiply(0.34), bodyGroup);
         expands.setToX(0.75);
         expands.setToY(0.75);
 
-        var sinks = new TranslateTransition(duration, this);
+        var sinks = new TranslateTransition(duration, bodyGroup);
         sinks.setToZ(0);
 
         return new SequentialTransition(
             now(() -> init(context)), // TODO check this
             pauseSec(0.5),
             new ParallelTransition(spins, new SequentialTransition(shrinks, expands), sinks),
-            doAfterSec(1.0, () -> setVisible(false))
+            doAfterSec(1.0, () -> bodyGroup.setVisible(false))
         );
     }
 }
