@@ -9,9 +9,15 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.util.Theme;
+import de.amr.games.pacman.ui2d.util.Ufx;
+import de.amr.games.pacman.ui3d.model.Model3D;
+import javafx.animation.*;
 import javafx.beans.property.*;
+import javafx.scene.Group;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -27,8 +33,26 @@ public abstract class AbstractPac3D implements Pac3D {
     protected final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
     protected final DoubleProperty lightRangePy = new SimpleDoubleProperty(this, "lightRange", 0);
     protected final Rotate rotation = new Rotate();
-    protected Pac pac;
-    protected double size;
+    protected final Group jaw;
+    protected final RotateTransition jawRotation;
+    protected final Transition chewingAnimation;
+    protected final Pac pac;
+    protected final double size;
+    protected final Model3D model3D;
+
+    protected AbstractPac3D(Pac pac, double size, Theme theme) {
+        this.size = size;
+        this.pac = pac;
+        this.model3D = theme.get("model3D.pacman");
+        jaw = PacModel3D.createPacHead(model3D, size, theme.color("pacman.color.head"));
+        jawRotation = new RotateTransition(Duration.seconds(0.3));
+        jawRotation.setAxis(Rotate.Y_AXIS);
+        jawRotation.setInterpolator(Interpolator.EASE_IN);
+        jawRotation.setFromAngle(30);
+        jawRotation.setToAngle(-60);
+        chewingAnimation = new SequentialTransition(jawRotation, Ufx.pauseSec(0.15));
+        chewingAnimation.setCycleCount(Animation.INDEFINITE);
+    }
 
     @Override
     public void init(GameContext context) {
@@ -76,6 +100,12 @@ public abstract class AbstractPac3D implements Pac3D {
         updateVisibility(context);
         updateLight(context);
         updateAliveAnimation();
+    }
+
+    protected void stopChewing() {
+        chewingAnimation.stop();
+        jaw.setRotationAxis(Rotate.Y_AXIS);
+        jaw.setRotate(0);
     }
 
     protected abstract void updateAliveAnimation();

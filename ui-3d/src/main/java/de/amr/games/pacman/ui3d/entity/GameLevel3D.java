@@ -109,8 +109,8 @@ public class GameLevel3D extends Group {
         Theme theme     = context.theme();
 
         pac3D = game.variant() == GameVariant.MS_PACMAN
-            ? new MsPacMan3D(PAC_SIZE, game.pac(), theme)
-            : new PacMan3D(PAC_SIZE, game.pac(), theme);
+            ? new MsPacMan3D(game.pac(), PAC_SIZE, theme)
+            : new PacMan3D(game.pac(), PAC_SIZE, theme);
         pac3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         Model3D ghostModel3D = theme.get("model3D.ghost");
