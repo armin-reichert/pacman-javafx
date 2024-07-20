@@ -49,6 +49,8 @@ import static java.lang.Math.PI;
  */
 public class GameLevel3D extends Group {
 
+    static final int   MAX_LIVES             = 5;
+    static final float LIVE_SHAPE_SIZE       = 10;
     static final float FLOOR_THICKNESS       = 0.4f;
     static final float INNER_WALL_HEIGHT     = 4.5f;
     static final float INNER_WALL_THICKNESS  = 0.5f;
@@ -111,18 +113,6 @@ public class GameLevel3D extends Group {
             : new PacMan3D(PAC_SIZE, game.pac(), theme);
         pac3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
-        Color lightColor = game.variant() == GameVariant.MS_PACMAN
-            ? theme.color("ms_pacman.color.head").desaturate()
-            : theme.color("pacman.color.head").desaturate();
-
-        var pac3DLight = new PointLight();
-        pac3DLight.setColor(lightColor);
-        pac3DLight.lightOnProperty().bind(pac3D.lightOnProperty());
-        pac3DLight.maxRangeProperty().bind(pac3D.lightRangeProperty());
-        pac3DLight.translateXProperty().bind(pac3D.node().translateXProperty());
-        pac3DLight.translateYProperty().bind(pac3D.node().translateYProperty());
-        pac3DLight.translateZProperty().bind(pac3D.node().translateZProperty().subtract(PAC_SIZE));
-
         Model3D ghostModel3D = theme.get("model3D.ghost");
         ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghostModel3D, theme, ghost, GHOST_SIZE)).toList();
 
@@ -156,7 +146,7 @@ public class GameLevel3D extends Group {
         wallStrokeColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
         foodColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_FOOD, Color.PINK));
 
-        livesCounter3D = createLivesCounter(5, 10);
+        livesCounter3D = createLivesCounter();
         updateLivesCounter();
         createMessage3D();
         Box floor = createFloor(map.terrain().numCols() * TS - 1, map.terrain().numRows() * TS - 1);
@@ -165,7 +155,7 @@ public class GameLevel3D extends Group {
         addPellets(this); // when put inside maze group, transparency does not work!
 
         worldGroup.getChildren().addAll(floor, mazeGroup);
-        getChildren().addAll(pac3D.node(), pac3DLight);
+        getChildren().addAll(pac3D.node(), createPacLight(context, pac3D));
         getChildren().addAll(ghosts3D);
         // Walls must come after the guys! Otherwise, transparency is not working correctly.
         getChildren().addAll(message3D, livesCounter3D, worldGroup);
@@ -174,6 +164,21 @@ public class GameLevel3D extends Group {
         livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         wallHeightPy.bind(PY_3D_WALL_HEIGHT);
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+    }
+
+    private static PointLight createPacLight(GameContext context, Pac3D pac3D) {
+        Color lightColor = context.game().variant() == GameVariant.MS_PACMAN
+            ? context.theme().color("ms_pacman.color.head").desaturate()
+            : context.theme().color("pacman.color.head").desaturate();
+
+        var light = new PointLight();
+        light.setColor(lightColor);
+        light.lightOnProperty().bind(pac3D.lightOnProperty());
+        light.maxRangeProperty().bind(pac3D.lightRangeProperty());
+        light.translateXProperty().bind(pac3D.node().translateXProperty());
+        light.translateYProperty().bind(pac3D.node().translateYProperty());
+        light.translateZProperty().bind(pac3D.node().translateZProperty().subtract(PAC_SIZE));
+        return light;
     }
 
     public void getReadyToPlay() {
@@ -399,22 +404,22 @@ public class GameLevel3D extends Group {
         });
     }
 
-    private Node createLivesCounterShape(GameVariant variant, int shapeSize) {
+    private Node createLivesCounterShape(GameVariant variant) {
         return switch (variant) {
             case MS_PACMAN -> new Group(
                 PacModel3D.createPacShape(
-                    context.theme().get("model3D.pacman"), shapeSize,
+                    context.theme().get("model3D.pacman"), LIVE_SHAPE_SIZE,
                     context.theme().color("ms_pacman.color.head"),
                     context.theme().color("ms_pacman.color.eyes"),
                     context.theme().color("ms_pacman.color.palate")),
-                PacModel3D.createFemaleParts(shapeSize,
+                PacModel3D.createFemaleParts(LIVE_SHAPE_SIZE,
                     context.theme().color("ms_pacman.color.hairbow"),
                     context.theme().color("ms_pacman.color.hairbow.pearls"),
                     context.theme().color("ms_pacman.color.boobs"))
             );
             case PACMAN, PACMAN_XXL ->
                  PacModel3D.createPacShape(
-                    context.theme().get("model3D.pacman"), shapeSize,
+                    context.theme().get("model3D.pacman"), LIVE_SHAPE_SIZE,
                     context.theme().color("pacman.color.head"),
                     context.theme().color("pacman.color.eyes"),
                     context.theme().color("pacman.color.palate")
@@ -422,10 +427,10 @@ public class GameLevel3D extends Group {
         };
     }
 
-    private LivesCounter3D createLivesCounter(int numShapes, int shapeSize) {
-        Node[] shapes = new Node[numShapes];
+    private LivesCounter3D createLivesCounter() {
+        Node[] shapes = new Node[MAX_LIVES];
         for (int i = 0; i < shapes.length; ++i) {
-            shapes[i] = createLivesCounterShape(context.game().variant(), shapeSize);
+            shapes[i] = createLivesCounterShape(context.game().variant());
         }
         var counter3D = new LivesCounter3D(shapes, 10);
         counter3D.setTranslateX(2 * TS);
