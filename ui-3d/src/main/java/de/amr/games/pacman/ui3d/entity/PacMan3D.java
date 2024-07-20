@@ -28,7 +28,7 @@ public class PacMan3D extends AbstractPac3D {
 
     private static class HeadBanging {
 
-        private static final short ANGLE_FROM = -25;
+        private static final short ANGLE_FROM = -30;
         private static final short ANGLE_TO = 15;
         private static final Duration DURATION = Duration.seconds(0.25);
 

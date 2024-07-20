@@ -98,7 +98,7 @@ public class MsPacMan3D extends AbstractPac3D {
         hipSwaying = new HipSwaying(bodyGroup);
         hipSwaying.setWinnetouchMode(false);
 
-        var jaw = PacModel3D.createPacHead(model3D, size, theme.color("pacman.color.head"));
+        var jaw = PacModel3D.createPacHead(model3D, size, theme.color("pacman.color.head"), theme.color("pacman.color.palate"));
         jawRotation.setNode(jaw);
         bodyGroup.getChildren().add(jaw);
 

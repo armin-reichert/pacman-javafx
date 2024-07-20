@@ -141,7 +141,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
         theme.set("pacman.color.head",               Color.rgb(255, 255, 0));
         theme.set("pacman.color.eyes",               Color.rgb(33, 33, 33));
-        theme.set("pacman.color.palate",             Color.web("#A84724"));   //Color.rgb(191, 79, 61));
+        theme.set("pacman.color.palate",             Color.web("#c9898a"));
     }
 
     @Override

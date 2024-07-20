@@ -51,15 +51,20 @@ public interface PacModel3D {
         return root;
     }
 
-    static Group createPacHead(Model3D model3D, double size, Color headColor) {
+    static Group createPacHead(Model3D model3D, double size, Color headColor, Color palateColor) {
         var head = new MeshView(model3D.mesh(PacModel3D.MESH_ID_HEAD));
         head.setId(Model3D.toCSS_ID(PacModel3D.MESH_ID_HEAD));
         head.setMaterial(coloredMaterial(headColor));
 
+        var palate = new MeshView(model3D.mesh(PacModel3D.MESH_ID_PALATE));
+        palate.setId(Model3D.toCSS_ID(PacModel3D.MESH_ID_PALATE));
+        palate.setMaterial(coloredMaterial(palateColor));
+
         var centeredOverOrigin = Model3D.centeredOverOrigin(head);
         head.getTransforms().add(centeredOverOrigin);
+        palate.getTransforms().add(centeredOverOrigin);
 
-        var root = new Group(head);
+        var root = new Group(head, palate);
         root.getTransforms().add(Model3D.scaled(root, size));
         // TODO check/fix Pac-Man mesh position and rotation in .obj file
         root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));

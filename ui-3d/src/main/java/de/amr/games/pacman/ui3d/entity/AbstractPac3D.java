@@ -44,13 +44,14 @@ public abstract class AbstractPac3D implements Pac3D {
         this.size = size;
         this.pac = pac;
         this.model3D = theme.get("model3D.pacman");
-        jaw = PacModel3D.createPacHead(model3D, size, theme.color("pacman.color.head"));
-        jawRotation = new RotateTransition(Duration.seconds(0.3));
+        jaw = PacModel3D.createPacHead(model3D, size, theme.color("pacman.color.head"), theme.color("pacman.color.palate"));
+        jawRotation = new RotateTransition(Duration.seconds(0.4));
+        jawRotation.setAutoReverse(true);
         jawRotation.setAxis(Rotate.Y_AXIS);
         jawRotation.setInterpolator(Interpolator.EASE_IN);
-        jawRotation.setFromAngle(30);
-        jawRotation.setToAngle(-60);
-        chewingAnimation = new SequentialTransition(jawRotation, Ufx.pauseSec(0.15));
+        jawRotation.setFromAngle(0);
+        jawRotation.setToAngle(-55);
+        chewingAnimation = new SequentialTransition(jawRotation, Ufx.pauseSec(0.1));
         chewingAnimation.setCycleCount(Animation.INDEFINITE);
     }
 
