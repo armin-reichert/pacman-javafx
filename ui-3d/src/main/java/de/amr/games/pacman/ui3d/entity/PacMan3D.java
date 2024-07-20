@@ -136,14 +136,14 @@ public class PacMan3D extends AbstractPac3D {
         spinning.setCycleCount(numSpins);
         spinning.setInterpolator(Interpolator.LINEAR);
 
-        var shrinking = new ScaleTransition(duration, this);
+        var shrinking = new ScaleTransition(duration.multiply(0.66), this);
         shrinking.setToX(0.25);
         shrinking.setToY(0.25);
         shrinking.setToZ(0.02);
-        shrinking.setOnFinished(e -> {
-            setScaleX(0.75);
-            setScaleX(0.75);
-        });
+
+        var expanding = new ScaleTransition(duration.multiply(0.34), this);
+        expanding.setToX(0.75);
+        expanding.setToY(0.75);
 
         var falling = new TranslateTransition(duration, this);
         falling.setToZ(0);
@@ -151,7 +151,7 @@ public class PacMan3D extends AbstractPac3D {
         return new SequentialTransition(
             now(() -> init(context)),
             pauseSec(0.5),
-            new ParallelTransition(spinning, shrinking, falling),
+            new ParallelTransition(spinning, new SequentialTransition(shrinking, expanding), falling),
             doAfterSec(1.0, () -> setVisible(false))
         );
     }
