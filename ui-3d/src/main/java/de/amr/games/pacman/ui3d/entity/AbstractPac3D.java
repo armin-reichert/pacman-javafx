@@ -10,7 +10,6 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import javafx.beans.property.*;
-import javafx.scene.Group;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 
@@ -22,7 +21,7 @@ import static de.amr.games.pacman.ui3d.animation.Turn.angle;
 /**
  * @author Armin Reichert
  */
-public abstract class AbstractPac3D implements AnimatedPac3D {
+public abstract class AbstractPac3D implements Pac3D {
 
     protected final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
     protected final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);

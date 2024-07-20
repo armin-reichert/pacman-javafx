@@ -15,7 +15,7 @@ import javafx.scene.shape.DrawMode;
 /**
  * @author Armin Reichert
  */
-public interface AnimatedPac3D {
+public interface Pac3D {
 
     Node node();
 

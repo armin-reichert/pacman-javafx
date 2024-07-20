@@ -89,7 +89,7 @@ public class GameLevel3D extends Group {
     private final GameContext context;
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
-    private final AnimatedPac3D pac3D;
+    private final Pac3D pac3D;
     private final List<Ghost3D> ghosts3D;
     private final Set<Pellet3D> pellets3D = new HashSet<>();
     private final Set<Energizer3D> energizers3D = new HashSet<>();
@@ -622,7 +622,7 @@ public class GameLevel3D extends Group {
         };
     }
 
-    public AnimatedPac3D pac3D() {
+    public Pac3D pac3D() {
         return pac3D;
     }
 
