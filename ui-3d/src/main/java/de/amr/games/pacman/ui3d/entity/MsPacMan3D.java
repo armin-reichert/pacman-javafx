@@ -127,15 +127,13 @@ public class MsPacMan3D extends AbstractPac3D {
 
     @Override
     public Animation createDyingAnimation(GameContext context) {
-        var spin = new RotateTransition(Duration.seconds(0.5), this);
+        var spin = new RotateTransition(Duration.seconds(0.25), this);
         spin.setAxis(Rotate.Z_AXIS);
         spin.setFromAngle(0);
         spin.setToAngle(360);
         spin.setInterpolator(Interpolator.LINEAR);
         spin.setCycleCount(4);
-        spin.setRate(2);
         spin.setDelay(Duration.seconds(0.5));
-
         return new SequentialTransition(spin, pauseSec(2));
     }
 }

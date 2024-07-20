@@ -27,14 +27,14 @@ public class PacMan3D extends AbstractPac3D {
 
     private static class HeadBanging {
 
-        private static final short DEFAULT_ANGLE_FROM = -25;
-        private static final short DEFAULT_ANGLE_TO = 15;
-        private static final Duration DEFAULT_DURATION = Duration.seconds(0.25);
+        private static final short ANGLE_FROM = -25;
+        private static final short ANGLE_TO = 15;
+        private static final Duration DURATION = Duration.seconds(0.25);
 
         private final RotateTransition banging;
 
         public HeadBanging(Node target) {
-            banging = new RotateTransition(DEFAULT_DURATION, target);
+            banging = new RotateTransition(DURATION, target);
             banging.setAxis(Rotate.X_AXIS);
             banging.setCycleCount(Animation.INDEFINITE);
             banging.setAutoReverse(true);
@@ -46,12 +46,12 @@ public class PacMan3D extends AbstractPac3D {
             double amplification = power ? 1.5 : 1;
             double rate = power ? 2 : 1;
             banging.stop();
-            banging.setFromAngle(DEFAULT_ANGLE_FROM * amplification);
-            banging.setToAngle(DEFAULT_ANGLE_TO * amplification);
+            banging.setFromAngle(ANGLE_FROM * amplification);
+            banging.setToAngle(ANGLE_TO * amplification);
             banging.setRate(rate);
         }
 
-        public void apply(Pac pac) {
+        public void update(Pac pac) {
             if (pac.isStandingStill()) {
                 stop();
             } else {
@@ -116,7 +116,7 @@ public class PacMan3D extends AbstractPac3D {
         if (pac.isStandingStill()) {
             headBanging.stop();
         } else {
-            headBanging.apply(pac);
+            headBanging.update(pac);
         }
     }
 
@@ -128,30 +128,30 @@ public class PacMan3D extends AbstractPac3D {
     @Override
     public Animation createDyingAnimation(GameContext context) {
         Duration duration = Duration.seconds(1.0);
-        short numSpins = 6;
+        byte numSpins = 6;
 
-        var spinning = new RotateTransition(duration.divide(numSpins), this);
-        spinning.setAxis(Rotate.Z_AXIS);
-        spinning.setByAngle(360);
-        spinning.setCycleCount(numSpins);
-        spinning.setInterpolator(Interpolator.LINEAR);
+        var spins = new RotateTransition(duration.divide(numSpins), this);
+        spins.setAxis(Rotate.Z_AXIS);
+        spins.setByAngle(360);
+        spins.setCycleCount(numSpins);
+        spins.setInterpolator(Interpolator.LINEAR);
 
-        var shrinking = new ScaleTransition(duration.multiply(0.66), this);
-        shrinking.setToX(0.25);
-        shrinking.setToY(0.25);
-        shrinking.setToZ(0.02);
+        var shrinks = new ScaleTransition(duration.multiply(0.66), this);
+        shrinks.setToX(0.25);
+        shrinks.setToY(0.25);
+        shrinks.setToZ(0.02);
 
-        var expanding = new ScaleTransition(duration.multiply(0.34), this);
-        expanding.setToX(0.75);
-        expanding.setToY(0.75);
+        var expands = new ScaleTransition(duration.multiply(0.34), this);
+        expands.setToX(0.75);
+        expands.setToY(0.75);
 
-        var falling = new TranslateTransition(duration, this);
-        falling.setToZ(0);
+        var sinks = new TranslateTransition(duration, this);
+        sinks.setToZ(0);
 
         return new SequentialTransition(
-            now(() -> init(context)),
+            now(() -> init(context)), // TODO check this
             pauseSec(0.5),
-            new ParallelTransition(spinning, new SequentialTransition(shrinking, expanding), falling),
+            new ParallelTransition(spins, new SequentialTransition(shrinks, expands), sinks),
             doAfterSec(1.0, () -> setVisible(false))
         );
     }
