@@ -11,7 +11,6 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import javafx.beans.property.*;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 
@@ -81,11 +80,6 @@ public abstract class AbstractPac3D extends Group implements AnimatedPac3D {
     }
 
     protected abstract void updateAliveAnimation();
-
-    @Override
-    public Node node() {
-        return this;
-    }
 
     public ObjectProperty<DrawMode> drawModeProperty() {
         return drawModePy;

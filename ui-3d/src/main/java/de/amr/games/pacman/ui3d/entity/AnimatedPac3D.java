@@ -17,8 +17,6 @@ import javafx.scene.shape.DrawMode;
  */
 public interface AnimatedPac3D {
 
-    Node node();
-
     void init(GameContext context);
 
     void updateAlive(GameContext context);
