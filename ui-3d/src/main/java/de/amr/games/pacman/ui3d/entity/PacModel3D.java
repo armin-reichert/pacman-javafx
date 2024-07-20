@@ -51,6 +51,24 @@ public interface PacModel3D {
         return root;
     }
 
+    static Group createPacHead(Model3D model3D, double size, Color headColor) {
+        var head = new MeshView(model3D.mesh(PacModel3D.MESH_ID_HEAD));
+        head.setId(Model3D.toCSS_ID(PacModel3D.MESH_ID_HEAD));
+        head.setMaterial(coloredMaterial(headColor));
+
+        var centeredOverOrigin = Model3D.centeredOverOrigin(head);
+        head.getTransforms().add(centeredOverOrigin);
+
+        var root = new Group(head);
+        root.getTransforms().add(Model3D.scaled(root, size));
+        // TODO check/fix Pac-Man mesh position and rotation in .obj file
+        root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+        root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
+        root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+
+        return root;
+    }
+
     static Group createFemaleParts(double pacSize, Color hairBowColor, Color hairBowPearlsColor, Color boobsColor) {
         var bowMaterial = coloredMaterial(hairBowColor);
 
