@@ -155,7 +155,7 @@ public class GameLevel3D extends Group {
         addPellets(this); // when put inside maze group, transparency does not work!
 
         worldGroup.getChildren().addAll(floor, mazeGroup);
-        getChildren().addAll(pac3D.node(), createPacLight(context, pac3D));
+        getChildren().addAll(pac3D.node(), createPacLight(pac3D));
         getChildren().addAll(ghosts3D);
         // Walls must come after the guys! Otherwise, transparency is not working correctly.
         getChildren().addAll(message3D, livesCounter3D, worldGroup);
@@ -166,7 +166,7 @@ public class GameLevel3D extends Group {
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
 
-    private static PointLight createPacLight(GameContext context, Pac3D pac3D) {
+    private PointLight createPacLight(Pac3D pac3D) {
         Color lightColor = context.game().variant() == GameVariant.MS_PACMAN
             ? context.theme().color("ms_pacman.color.head").desaturate()
             : context.theme().color("pacman.color.head").desaturate();
