@@ -115,6 +115,7 @@ public class GameLevel3D extends Group {
 
         Model3D ghostModel3D = theme.get("model3D.ghost");
         ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghostModel3D, theme, ghost, GHOST_SIZE)).toList();
+        ghosts3D.forEach(ghost3D -> ghost3D.drawModePy.bind(PY_3D_DRAW_MODE));
 
         wallStrokeMaterialPy.bind(Bindings.createObjectBinding(
             () -> coloredMaterial(wallStrokeColorPy.get()),
@@ -149,19 +150,19 @@ public class GameLevel3D extends Group {
         livesCounter3D = createLivesCounter();
         updateLivesCounter();
         createMessage3D();
+
         Box floor = createFloor(map.terrain().numCols() * TS - 1, map.terrain().numRows() * TS - 1);
-        addMaze(mazeGroup);
-        addHouse(mazeGroup);
+        worldGroup.getChildren().add(floor);
+        worldGroup.getChildren().add(mazeGroup);
+        addMaze();
+        addHouse();
         addPellets(); // when put inside maze group, transparency does not work!
 
-        worldGroup.getChildren().addAll(floor, mazeGroup);
+        // Walls must be added after the guys! Otherwise, transparency is not working correctly.
         getChildren().addAll(pac3D.node(), createPacLight(pac3D));
         getChildren().addAll(ghosts3D);
-        // Walls must come after the guys! Otherwise, transparency is not working correctly.
         getChildren().addAll(message3D, livesCounter3D, worldGroup);
 
-        ghosts3D.forEach(ghost3D -> ghost3D.drawModePy.bind(PY_3D_DRAW_MODE));
-        livesCounter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         wallHeightPy.bind(PY_3D_WALL_HEIGHT);
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
@@ -248,7 +249,7 @@ public class GameLevel3D extends Group {
         return floor;
     }
 
-    private void addHouse(Group parent) {
+    private void addHouse() {
         GameWorld world = context.game().world();
         WorldMap map = world.map();
 
@@ -259,7 +260,7 @@ public class GameLevel3D extends Group {
         int yMax = yMin + world.houseSize().y() - 1;
 
         Vector2i leftDoorTile = world.houseLeftDoorTile(), rightDoorTile = world.houseRightDoorTile();
-        parent.getChildren().addAll(
+        mazeGroup.getChildren().addAll(
             createHouseWall(xMin, yMin, leftDoorTile.x() - 1, yMin),
             createHouseWall(rightDoorTile.x() + 1, yMin, xMax, yMin),
             createHouseWall(xMin, yMin, xMin, yMax),
@@ -279,14 +280,14 @@ public class GameLevel3D extends Group {
         float centerX = world.houseTopLeftTile().x() * TS + world.houseSize().x() * HTS;
         float centerY = world.houseTopLeftTile().y() * TS + world.houseSize().y() * HTS;
 
-        var houseLight = new PointLight();
-        houseLight.lightOnProperty().bind(houseUsedPy);
-        houseLight.setColor(Color.GHOSTWHITE);
-        houseLight.setMaxRange(3 * TS);
-        houseLight.setTranslateX(centerX);
-        houseLight.setTranslateY(centerY - 6);
-        houseLight.setTranslateZ(-HOUSE_HEIGHT);
-        parent.getChildren().add(houseLight);
+        var light = new PointLight();
+        light.lightOnProperty().bind(houseUsedPy);
+        light.setColor(Color.GHOSTWHITE);
+        light.setMaxRange(3 * TS);
+        light.setTranslateX(centerX);
+        light.setTranslateY(centerY - 6);
+        light.setTranslateZ(-HOUSE_HEIGHT);
+        mazeGroup.getChildren().add(light);
     }
 
     private Node createHouseWall(int x1, int y1, int x2, int y2) {
@@ -294,14 +295,14 @@ public class GameLevel3D extends Group {
             houseFillMaterialPy, wallStrokeMaterialPy);
     }
 
-    private void addMaze(Group parent) {
+    private void addMaze() {
         TileMap terrainMap = context.game().world().map().terrain();
         terrainMap.computeTerrainPaths();
         terrainMap.outerPaths()
             .filter(path -> !context.game().world().isPartOfHouse(path.startTile()))
-            .forEach(path -> addWallSegmentsAlongPath(parent, path, outerWallHeightPy, OUTER_WALL_THICKNESS));
+            .forEach(path -> addWallSegmentsAlongPath(mazeGroup, path, outerWallHeightPy, OUTER_WALL_THICKNESS));
         terrainMap.innerPaths()
-            .forEach(path -> addWallSegmentsAlongPath(parent, path, wallHeightPy, INNER_WALL_THICKNESS));
+            .forEach(path -> addWallSegmentsAlongPath(mazeGroup, path, wallHeightPy, INNER_WALL_THICKNESS));
     }
 
     private void addWallSegmentsAlongPath(Group parent, TileMapPath path, DoubleProperty heightPy, double thickness) {
