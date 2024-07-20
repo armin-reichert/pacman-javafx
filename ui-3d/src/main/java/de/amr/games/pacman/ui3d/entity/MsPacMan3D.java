@@ -106,6 +106,11 @@ public class MsPacMan3D extends AbstractPac3D {
     }
 
     @Override
+    public Node node() {
+        return this;
+    }
+
+    @Override
     public void init(GameContext context) {
         super.init(context);
         hipSwaying.stop();
