@@ -18,7 +18,8 @@ import java.io.File;
 
 public class ModelViewer extends Application {
 
-    static final String DIR = "C:\\Users\\armin\\git\\pacman-javafx\\ui-3d\\src\\main\\resources\\de\\amr\\games\\pacman\\ui3d\\model3D";
+    static final String REPOSITORY_DIR = System.getProperty("user.home") + "/git/pacman-javafx/";
+    static final String DIR = REPOSITORY_DIR + "ui-3d/src/main/resources/de/amr/games/pacman/ui3d/model3D";
 
     private Stage stage;
     private SubScene previewArea;
