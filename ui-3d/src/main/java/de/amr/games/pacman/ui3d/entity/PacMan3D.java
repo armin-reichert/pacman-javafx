@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui3d.entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
-import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -17,7 +16,6 @@ import javafx.util.Duration;
 
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshView;
 
@@ -81,7 +79,7 @@ public class PacMan3D extends AbstractPac3D {
      * @param size diameter of Pac-Man
      * @param theme the theme
      */
-    public PacMan3D(Pac pacMan,double size, Theme theme) {
+    public PacMan3D(Pac pacMan, double size, Theme theme) {
         super(pacMan, size, theme);
 
         Group body = PacModel3D.createPacShape(
