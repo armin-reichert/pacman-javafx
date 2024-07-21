@@ -1143,19 +1143,19 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     private void logSound() {
         if (startGameSound != null) {
-            Logger.info("Start Game Sound: {} volume {}", startGameSound.getStatus(), startGameSound.getVolume());
+            Logger.debug("Start Game Sound: {} volume {}", startGameSound.getStatus(), startGameSound.getVolume());
         }
         if (siren != null) {
-            Logger.info("Siren {}: {} volume {}", siren.number(), siren.player().getStatus(), siren.player().getVolume());
+            Logger.debug("Siren {}: {} volume {}", siren.number(), siren.player().getStatus(), siren.player().getVolume());
         }
         if (munchingSound != null) {
-            Logger.info("Munching Sound: {} volume {}", munchingSound.getStatus(), munchingSound.getVolume());
+            Logger.debug("Munching Sound: {} volume {}", munchingSound.getStatus(), munchingSound.getVolume());
         }
         if (powerSound != null) {
-            Logger.info("Power Sound: {} volume {}", powerSound.getStatus(), powerSound.getVolume());
+            Logger.debug("Power Sound: {} volume {}", powerSound.getStatus(), powerSound.getVolume());
         }
         if (ghostReturningHomeSound != null) {
-            Logger.info("Ghost Returning Home Sound: {} volume {}", ghostReturningHomeSound.getStatus(), ghostReturningHomeSound.getVolume());
+            Logger.debug("Ghost Returning Home Sound: {} volume {}", ghostReturningHomeSound.getStatus(), ghostReturningHomeSound.getVolume());
         }
     }
 }

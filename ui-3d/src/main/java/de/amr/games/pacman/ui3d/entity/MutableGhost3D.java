@@ -21,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -46,27 +47,10 @@ public class MutableGhost3D extends Group {
 
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
-    public final ObjectProperty<Look> lookPy = new SimpleObjectProperty<>(this, "look") {
+    private final ObjectProperty<Look> lookPy = new SimpleObjectProperty<>(this, "look") {
         @Override
         protected void invalidated() {
-            if (get() == Look.NUMBER) {
-                getChildren().setAll(numberCube);
-            } else {
-                getChildren().setAll(coloredGhostGroup);
-            }
-            switch (get()) {
-                case NORMAL -> coloredGhost3D.appearNormal();
-                case FRIGHTENED -> coloredGhost3D.appearFrightened();
-                case EYES -> coloredGhost3D.appearEyesOnly();
-                case FLASHING -> {
-                    if (numFlashes > 0) {
-                        coloredGhost3D.appearFlashing(numFlashes, 1.0);
-                    } else {
-                        coloredGhost3D.appearFrightened();
-                    }
-                }
-                case NUMBER -> numberCube.startRotation();
-            }
+            onLookChanged(get());
         }
     };
 
@@ -176,8 +160,28 @@ public class MutableGhost3D extends Group {
                 default -> Look.NORMAL;
             };
         }
-        if (look() != newLook) {
-            lookPy.set(newLook);
+        lookPy.set(newLook);
+    }
+
+    private void onLookChanged(Look look) {
+        Logger.info("Ghost {} gets new look: {}", ghost.name(), look);
+        if (look == Look.NUMBER) {
+            getChildren().setAll(numberCube);
+        } else {
+            getChildren().setAll(coloredGhostGroup);
+        }
+        switch (look) {
+            case NORMAL -> coloredGhost3D.appearNormal();
+            case FRIGHTENED -> coloredGhost3D.appearFrightened();
+            case EYES -> coloredGhost3D.appearEyesOnly();
+            case FLASHING -> {
+                if (numFlashes > 0) {
+                    coloredGhost3D.appearFlashing(numFlashes, 1.0);
+                } else {
+                    coloredGhost3D.appearFrightened();
+                }
+            }
+            case NUMBER -> numberCube.startRotation();
         }
     }
 
