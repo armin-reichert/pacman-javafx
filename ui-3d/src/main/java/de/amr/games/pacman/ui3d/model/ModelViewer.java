@@ -7,9 +7,12 @@ import javafx.scene.*;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
+import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
@@ -28,6 +31,9 @@ public class ModelViewer extends Application {
     private FileChooser fileChooser;
     private double lastX = -1;
     private double lastY = -1;
+    private Node currentNode;
+    private Rotate rotX = new Rotate(0, Rotate.X_AXIS);
+    private Rotate rotY = new Rotate(0, Rotate.Y_AXIS);
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -38,13 +44,13 @@ public class ModelViewer extends Application {
         fileChooser.getExtensionFilters().addAll(objFilter, allFilter);
         fileChooser.setSelectedExtensionFilter(objFilter);
         fileChooser.setInitialDirectory(new File(DIR));
+
         Scene scene = new Scene(createSceneContent(), 800, 600);
+
         cam = new PerspectiveCamera(true);
         cam.setTranslateZ(-100);
-        //cam.setTranslateY(-100);
-        //cam.setRotationAxis(Rotate.X_AXIS);
-        //cam.setRotate(30);
         previewArea.setCamera(cam);
+
         stage.setScene(scene);
         stage.setTitle("3D Model Viewer");
         stage.show();
@@ -65,22 +71,15 @@ public class ModelViewer extends Application {
 
         previewArea = new SubScene(new Group(), 800, 600, true, SceneAntialiasing.BALANCED);
         previewArea.setFill(Color.BLACK);
-        previewArea.setOnMouseClicked(e -> Logger.info(e));
-        previewArea.setOnMouseDragged(e -> {
-            if (e.getTarget() instanceof MeshView) {
-                if (lastX != -1) {
-                    double dx = e.getX() - lastX;
-                    double dy = e.getY() - lastY;
-                    Point3D axis = new Point3D(0, 0, cam.getTranslateZ());
-                    cam.setRotationAxis(axis);
-                    cam.setRotate(cam.getRotate() + dx);
-                    Logger.info("dx {0.00} dy {0.00}", dx, dy);
-                    Logger.info("Cam rotate: {}", cam.getRotate());
-                }
-                lastX = e.getX();
-                lastY = e.getY();
+        previewArea.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                rotX.setAngle(0);
+                rotY.setAngle(0);
             }
         });
+        previewArea.setOnMouseDragged(this::handleMouseDragged);
+        previewArea.widthProperty().bind(layoutPane.widthProperty());
+        previewArea.heightProperty().bind(layoutPane.heightProperty());
 
         layoutPane.setCenter(previewArea);
         return layoutPane;
@@ -91,9 +90,34 @@ public class ModelViewer extends Application {
         if (selectedFile != null) {
             Logger.info("File {} selected", selectedFile);
             Model3D model3D = new Model3D(selectedFile);
-            Group pacMan3D = PacModel3D.createPacShape(model3D, 16, Color.YELLOW, Color.BLACK, Color.PINK);
-            Group root = (Group) previewArea.getRoot();
-            root.getChildren().setAll(pacMan3D);
+            Node shape = PacModel3D.createPacShape(model3D, 16, Color.YELLOW, Color.BLACK, Color.PINK);
+            Model3D.meshView(shape, PacModel3D.MESH_ID_HEAD).setDrawMode(DrawMode.LINE);
+            Model3D.meshView(shape, PacModel3D.MESH_ID_PALATE).setDrawMode(DrawMode.LINE);
+            Model3D.meshView(shape, PacModel3D.MESH_ID_EYES).setDrawMode(DrawMode.LINE);
+            setCurrentNode(new Group(shape));
+        }
+    }
+
+    private void setCurrentNode(Node node) {
+        currentNode = node;
+        Group root = (Group) previewArea.getRoot();
+        root.getChildren().setAll(currentNode, new AmbientLight());
+        currentNode.getTransforms().setAll(rotX, rotY);
+    }
+
+    private void handleMouseDragged(MouseEvent e) {
+        if (currentNode != null && e.getTarget() instanceof MeshView) {
+            if (lastX != -1) {
+                double hDist = 0.5 * Math.round(e.getX() - lastX);
+                double vDist = 0.5 * Math.round(e.getY() - lastY);
+                double rx = (rotX.getAngle() + vDist);
+                double ry = (rotY.getAngle() + hDist);
+                rotX.setAngle(rx % 360);
+                rotY.setAngle(ry % 360);
+                Logger.info("rx={} ry={}", rx, ry);
+            }
+            lastX = e.getX();
+            lastY = e.getY();
         }
     }
 }
