@@ -34,7 +34,8 @@ public abstract class AbstractPac3D implements Pac3D {
     protected final DoubleProperty lightRangePy = new SimpleDoubleProperty(this, "lightRange", 0);
     protected final Rotate rotation = new Rotate();
     protected final Group jaw;
-    protected final RotateTransition jawRotation;
+    protected final RotateTransition openMouthRotation;
+    protected final RotateTransition closeMouthRotation;
     protected final Transition chewingAnimation;
     protected final Pac pac;
     protected final double size;
@@ -45,13 +46,18 @@ public abstract class AbstractPac3D implements Pac3D {
         this.pac = pac;
         this.model3D = theme.get("model3D.pacman");
         jaw = PacModel3D.createPacHead(model3D, size, theme.color("pacman.color.head"), theme.color("pacman.color.palate"));
-        jawRotation = new RotateTransition(Duration.seconds(0.4));
-        jawRotation.setAutoReverse(true);
-        jawRotation.setAxis(Rotate.Y_AXIS);
-        jawRotation.setInterpolator(Interpolator.EASE_IN);
-        jawRotation.setFromAngle(0);
-        jawRotation.setToAngle(-55);
-        chewingAnimation = new SequentialTransition(jawRotation, Ufx.pauseSec(0.1));
+        openMouthRotation = new RotateTransition(Duration.seconds(0.5));
+        openMouthRotation.setAxis(Rotate.Y_AXIS);
+        openMouthRotation.setInterpolator(Interpolator.EASE_BOTH);
+        openMouthRotation.setFromAngle(0);
+        openMouthRotation.setToAngle(-54);
+        closeMouthRotation = new RotateTransition(Duration.seconds(0.1));
+        closeMouthRotation.setAxis(Rotate.Y_AXIS);
+        closeMouthRotation.setInterpolator(Interpolator.LINEAR);
+        closeMouthRotation.setFromAngle(-54);
+        closeMouthRotation.setToAngle(0);
+        closeMouthRotation.setDelay(Duration.seconds(0.1));
+        chewingAnimation = new SequentialTransition(openMouthRotation, closeMouthRotation);
         chewingAnimation.setCycleCount(Animation.INDEFINITE);
     }
 

@@ -26,9 +26,10 @@ public class PacMan3D extends AbstractPac3D {
 
     private static class HeadBanging {
 
-        private static final short ANGLE_FROM = -30;
-        private static final short ANGLE_TO = 15;
-        private static final Duration DURATION = Duration.seconds(0.25);
+        private static final float POWER_AMPLIFICATION = 2;
+        private static final short ANGLE_FROM = -15;
+        private static final short ANGLE_TO = 20;
+        private static final Duration DURATION = Duration.seconds(0.3);
 
         private final RotateTransition banging;
 
@@ -42,11 +43,11 @@ public class PacMan3D extends AbstractPac3D {
 
         // Note: Massive headbanging can lead to a stroke!
         public void setStrokeMode(boolean power) {
-            double amplification = power ? 1.5 : 1;
             banging.stop();
-            banging.setFromAngle(ANGLE_FROM * amplification);
-            banging.setToAngle(ANGLE_TO * amplification);
-            banging.setRate(amplification);
+            float rate = power ? POWER_AMPLIFICATION : 1;
+            banging.setFromAngle(ANGLE_FROM * rate);
+            banging.setToAngle(ANGLE_TO * rate);
+            banging.setRate(rate);
         }
 
         public void update(Pac pac) {
@@ -95,7 +96,8 @@ public class PacMan3D extends AbstractPac3D {
         headBanging = new HeadBanging(bodyGroup);
         headBanging.setStrokeMode(false);
 
-        jawRotation.setNode(jaw);
+        openMouthRotation.setNode(jaw);
+        closeMouthRotation.setNode(jaw);
         bodyGroup.getChildren().add(jaw);
 
         Stream.of(PacModel3D.MESH_ID_EYES, PacModel3D.MESH_ID_HEAD, PacModel3D.MESH_ID_PALATE)
