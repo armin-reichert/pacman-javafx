@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
+import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import org.tinylog.Logger;
@@ -60,27 +61,27 @@ public class Model3D {
     private final Map<String, Mesh> meshesByName = new HashMap<>();
     private final Map<String, PhongMaterial> materials = new HashMap<>();
 
-    public Model3D(URL url) {
-        if (url == null) {
+    public Model3D(URL objFileURL) {
+        if (objFileURL == null) {
             throw new Model3DException("3D model cannot be created: URL is null");
         }
-        var urlString = url.toExternalForm();
-        int lastSlash = urlString.lastIndexOf('/');
-        var fileName = urlString.substring(lastSlash + 1);
-        Logger.trace("Load 3D model from file '{}'. URL: {}", fileName, url);
+        String url = objFileURL.toExternalForm();
+        String fileName = url.substring(url.lastIndexOf('/') + 1);
+        Logger.info("Loading 3D model from OBJ file '{}'. URL: {}", fileName, objFileURL);
         try {
-            var importer = new ObjImporter(url.toExternalForm());
-            for (var meshName : importer.getMeshNames()) {
-                var mesh = importer.getMesh(meshName);
+            var importer = new ObjImporter(url);
+            for (String meshName : importer.getMeshNames()) {
+                TriangleMesh mesh = importer.getMesh(meshName);
                 ObjImporter.validateTriangleMesh(mesh);
                 meshesByName.put(meshName, mesh);
+                Logger.info("Mesh ID: '{}'", meshName);
             }
             for (var materialMap : importer.materialLibrary()) {
                 for (var entry : materialMap.entrySet()) {
                     materials.put(entry.getKey(), (PhongMaterial) entry.getValue());
                 }
             }
-            Logger.trace(contentAsText(url));
+            Logger.trace(contentAsText(objFileURL));
         } catch (Exception e) {
             Logger.error(e);
         }
