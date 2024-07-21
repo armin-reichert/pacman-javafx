@@ -1,7 +1,4 @@
-# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 13.12.2011 15:12:40
-
-mtllib 12206_Fruit_v1_L3.mtl
+mtllib fruit.mtl
 
 #
 # object Fruit

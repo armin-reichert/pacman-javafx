@@ -93,7 +93,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
         theme.set("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
         theme.set("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
-        theme.set("model3D.pellet", new Model3D(rm.url("model3D/12206_Fruit_v1_L3.obj")));
+        theme.set("model3D.pellet", new Model3D(rm.url("model3D/fruit.obj")));
 
         theme.set("model3D.wallpaper.day",   rm.loadImage("graphics/sea-wallpaper.jpg"));
         theme.set("model3D.wallpaper.night", rm.loadImage("graphics/sea-wallpaper-night.jpg"));
