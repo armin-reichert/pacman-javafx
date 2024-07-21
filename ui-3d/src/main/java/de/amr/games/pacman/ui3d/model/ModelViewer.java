@@ -51,12 +51,18 @@ public class ModelViewer extends Application {
 
     private Parent createSceneContent() {
         MenuItem miOpenFile = new MenuItem("Open...");
+        miOpenFile.setOnAction(e -> openFile());
+
+        MenuItem miExit = new MenuItem("Exit");
+        miExit.setOnAction(e -> stage.close());
+
         Menu fileMenu = new Menu("File");
-        fileMenu.setOnAction(e -> openFile());
-        fileMenu.getItems().add(miOpenFile);
+        fileMenu.getItems().addAll(miOpenFile, miExit);
+
         MenuBar menuBar = new MenuBar(fileMenu);
         layoutPane.setTop(menuBar);
         previewArea = new SubScene(new Group(), 800, 600, true, SceneAntialiasing.BALANCED);
+        previewArea.setFill(Color.BLACK);
         layoutPane.setCenter(previewArea);
         return layoutPane;
     }
