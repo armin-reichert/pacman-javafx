@@ -4,188 +4,163 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.entity;
 
-import de.amr.games.pacman.lib.Vector2f;
-import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
-import de.amr.games.pacman.ui3d.animation.Turn;
+import de.amr.games.pacman.ui3d.animation.ColorSwitchTransition;
 import de.amr.games.pacman.ui3d.model.Model3D;
-import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
-import javafx.animation.RotateTransition;
+import javafx.animation.ParallelTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
-import javafx.scene.shape.DrawMode;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
-import javafx.util.Duration;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.requirePositive;
+import static de.amr.games.pacman.model.GameModel.checkGhostID;
+import static de.amr.games.pacman.ui2d.util.Ufx.createColorBoundMaterial;
 import static java.util.Objects.requireNonNull;
 
 /**
- * 3D representation of a ghost.
- * <p>
- * A ghost is displayed in one of the following modes:
- * <ul>
- * <li>{@link Look#NORMAL}: colored ghost with blue eyes,
- * <li>{@link Look#FRIGHTENED}: blue ghost with empty pinkish eyes (ghost looking blind),
- * <li>{@link Look#FLASHING}: blue-white flashing skin, pink-red flashing eyes,
- * <li>{@link Look#EYES} blue eyes only,
- * <li>{@link Look#NUMBER}: number cube showing eaten ghost's value.
- * </ul>
- *
  * @author Armin Reichert
  */
 public class Ghost3D extends Group {
 
-    public enum Look { NORMAL, FRIGHTENED, FLASHING, EYES, NUMBER }
+    public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
+    public static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
+    public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
 
-    public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+    private final byte id;
+    private final Theme theme;
+    private final Group eyesGroup;
+    private final Group dressGroup;
+    private final Shape3D dressShape;
+    private final Shape3D eyeballsShape;
+    private final Shape3D pupilsShape;
 
-    public final ObjectProperty<Look> lookPy = new SimpleObjectProperty<>(this, "look") {
-        @Override
-        protected void invalidated() {
-            if (get() == Look.NUMBER) {
-                getChildren().setAll(numberCube);
-            } else {
-                getChildren().setAll(coloredGhostGroup);
-            }
-            switch (get()) {
-                case NORMAL -> coloredGhost3D.appearNormal();
-                case FRIGHTENED -> coloredGhost3D.appearFrightened();
-                case EYES -> coloredGhost3D.appearEyesOnly();
-                case FLASHING -> {
-                    if (numFlashes > 0) {
-                        coloredGhost3D.appearFlashing(numFlashes, 1.0);
-                    } else {
-                        coloredGhost3D.appearFrightened();
-                    }
-                }
-                case NUMBER -> numberCube.startRotation();
-            }
-        }
-    };
+    private final ObjectProperty<Color> dressColorPy = new SimpleObjectProperty<>(this, "dressColor", Color.ORANGE);
+    private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(this, "eyeballsColor", Color.WHITE);
+    private final ObjectProperty<Color> pupilsColorPy = new SimpleObjectProperty<>(this, "pupilsColor", Color.BLUE);
 
-    private final Ghost ghost;
-    private final Group coloredGhostGroup;
-    private final ColoredGhost3D coloredGhost3D;
-    private final NumberCube3D numberCube;
-    private final Rotate orientation = new Rotate();
-    private final RotateTransition brakeAnimation;
-    private final RotateTransition dressAnimation;
-    private final double size;
-    private int numFlashes;
+    private ParallelTransition flashingAnimation;
+    private ColorSwitchTransition dressFlashingAnimation;
+    private ColorSwitchTransition pupilsFlashingAnimation;
 
-    public Ghost3D(Model3D model3D, Theme theme, Ghost ghost, double size) {
+    public Ghost3D(Model3D model3D, Theme theme, byte id, double size) {
         requireNonNull(model3D);
         requireNonNull(theme);
-        requireNonNull(ghost);
+        checkGhostID(id);
+        requirePositive(size, "ColoredGhost3D size must be positive but is %f");
 
-        this.ghost = ghost;
-        this.size = size;
+        this.theme = theme;
+        this.id = id;
 
-        coloredGhost3D = new ColoredGhost3D(model3D, theme, ghost.id(), size);
-        coloredGhost3D.dressShape().drawModeProperty().bind(drawModePy);
-        coloredGhost3D.eyeballsShape().drawModeProperty().bind(drawModePy);
-        coloredGhost3D.pupilsShape().drawModeProperty().bind(drawModePy);
+        dressShape = new MeshView(model3D.mesh(MESH_ID_GHOST_DRESS));
+        dressShape.setMaterial(createColorBoundMaterial(dressColorPy));
+        dressColorPy.set(theme.color("ghost.%d.color.normal.dress".formatted(id)));
 
-        coloredGhostGroup = new Group(coloredGhost3D);
-        coloredGhostGroup.getTransforms().add(orientation);
+        eyeballsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_EYEBALLS));
+        eyeballsShape.setMaterial(createColorBoundMaterial(eyeballsColorPy));
+        eyeballsColorPy.set(theme.color("ghost.%d.color.normal.eyeballs".formatted(id)));
 
-        numberCube = new NumberCube3D(14, 8, 8);
+        pupilsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_PUPILS));
+        pupilsShape.setMaterial(createColorBoundMaterial(pupilsColorPy));
+        pupilsColorPy.set(theme.color("ghost.%d.color.normal.pupils".formatted(id)));
 
-        getChildren().add(coloredGhostGroup);
+        var centeredOverOrigin = Model3D.centeredOverOrigin(dressShape);
+        dressShape.getTransforms().add(centeredOverOrigin);
 
-        brakeAnimation = new RotateTransition(Duration.seconds(0.5), coloredGhost3D);
-        brakeAnimation.setAxis(Rotate.Y_AXIS);
-        brakeAnimation.setFromAngle(0);
-        brakeAnimation.setToAngle(-35);
-        brakeAnimation.setAutoReverse(true);
-        brakeAnimation.setCycleCount(2);
+        dressGroup = new Group(dressShape);
 
-        dressAnimation = new RotateTransition(Duration.seconds(0.3), coloredGhost3D.getDressGroup());
-        // TODO I expected this should be the z-axis but... (transforms messed-up?)
-        dressAnimation.setAxis(Rotate.Y_AXIS);
-        dressAnimation.setFromAngle(-15);
-        dressAnimation.setToAngle(15);
-        dressAnimation.setCycleCount(Animation.INDEFINITE);
-        dressAnimation.setAutoReverse(true);
+        eyesGroup = new Group(pupilsShape, eyeballsShape);
+        eyesGroup.getTransforms().add(centeredOverOrigin);
 
-        lookPy.set(Look.NORMAL);
+        getChildren().setAll(dressGroup, eyesGroup);
+
+        // TODO fix orientation in obj file
+        getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
+        getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+        getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+        getTransforms().add(Model3D.scaled(this, size));
     }
 
-    public void init(GameContext context) {
-        brakeAnimation.stop();
-        dressAnimation.stop();
-        numberCube.stopRotation();
-        updateTransform();
-        updateLook(context.game());
+    public Group getEyesGroup() {
+        return eyesGroup;
     }
 
-    public void update(GameContext context) {
-        updateTransform();
-        updateLook(context.game());
-        updateAnimations();
-        context.game().level().ifPresent(level -> numFlashes = level.numFlashes());
+    public Group getDressGroup() {
+        return dressGroup;
     }
 
-    public void setNumberImage(Image image) {
-        numberCube.setImage(image);
+    public Shape3D dressShape() {
+        return dressShape;
     }
 
-    private void updateTransform() {
-        Vector2f center = ghost.center();
-        setTranslateX(center.x());
-        setTranslateY(center.y());
-        setTranslateZ(-0.5 * size);
-        // TODO: make transition to new wish dir if changed
-        orientation.setAngle(Turn.angle(ghost.wishDir()));
-        boolean outside = center.x() < HTS || center.x() > ghost.world().map().terrain().numCols() * TS - HTS;
-        setVisible(ghost.isVisible() && !outside);
+    public Shape3D eyeballsShape() {
+        return eyeballsShape;
     }
 
-    private void updateAnimations() {
-        if (look() == Look.NUMBER) {
-            dressAnimation.stop();
-        } else {
-            numberCube.stopRotation();
-            if (ghost.moveInfo().tunnelEntered) {
-                brakeAnimation.playFromStart();
-            }
-            if (dressAnimation.getStatus() != Status.RUNNING) {
-                dressAnimation.play();
-            }
+    public Shape3D pupilsShape() {
+        return pupilsShape;
+    }
+
+    public void appearFlashing(int numFlashes, double durationSeconds) {
+        ensureFlashingAnimationIsPlaying(numFlashes, durationSeconds);
+        dressColorPy.bind(dressFlashingAnimation.colorPy);
+        eyeballsColorPy.set(theme.color("ghost.color.frightened.eyeballs"));
+        pupilsColorPy.bind(pupilsFlashingAnimation.colorPy);
+        dressShape.setVisible(true);
+    }
+
+    public void appearFrightened() {
+        dressColorPy.unbind();
+        dressColorPy.set(theme.color("ghost.color.frightened.dress"));
+        eyeballsColorPy.set(theme.color("ghost.color.frightened.eyeballs"));
+        pupilsColorPy.unbind();
+        pupilsColorPy.set(theme.color("ghost.color.frightened.pupils"));
+        dressShape.setVisible(true);
+        ensureFlashingAnimationIsStopped();
+    }
+
+    public void appearNormal() {
+        dressColorPy.unbind();
+        dressColorPy.set(theme.color("ghost.%d.color.normal.dress".formatted(id)));
+        eyeballsColorPy.set(theme.color("ghost.%d.color.normal.eyeballs".formatted(id)));
+        pupilsColorPy.unbind();
+        pupilsColorPy.set(theme.color("ghost.%d.color.normal.pupils".formatted(id)));
+        dressShape.setVisible(true);
+        ensureFlashingAnimationIsStopped();
+    }
+
+    public void appearEyesOnly() {
+        appearNormal();
+        dressShape.setVisible(false);
+    }
+
+    private void createFlashingAnimation(int numFlashes, double durationSeconds) {
+        dressFlashingAnimation = new ColorSwitchTransition(theme.color("ghost.color.frightened.dress"),
+            theme.color("ghost.color.flashing.dress"), durationSeconds, numFlashes);
+
+        pupilsFlashingAnimation = new ColorSwitchTransition(theme.color("ghost.color.frightened.pupils"),
+            theme.color("ghost.color.flashing.pupils"), durationSeconds, numFlashes);
+
+        flashingAnimation = new ParallelTransition(dressFlashingAnimation, pupilsFlashingAnimation);
+    }
+
+    private void ensureFlashingAnimationIsPlaying(int numFlashes, double durationSeconds) {
+        if (flashingAnimation == null) {
+            createFlashingAnimation(numFlashes, durationSeconds);
+        }
+        if (flashingAnimation.getStatus() != Status.RUNNING) {
+            flashingAnimation.playFromStart();
         }
     }
 
-    private void updateLook(GameModel game) {
-        var newLook = Look.NORMAL;
-        if (ghost.state() != null) {
-            newLook = switch (ghost.state()) {
-                case LOCKED -> game.powerTimer().isRunning() ? frightenedOrFlashing(game) : Look.NORMAL;
-                case LEAVING_HOUSE -> game.powerTimer().isRunning()
-                        ? game.victims().contains(ghost) ? Look.NORMAL : frightenedOrFlashing(game)
-                        : Look.NORMAL;
-                case FRIGHTENED -> frightenedOrFlashing(game);
-                case ENTERING_HOUSE, RETURNING_HOME -> Look.EYES;
-                case EATEN -> Look.NUMBER;
-                default -> Look.NORMAL;
-            };
+    private void ensureFlashingAnimationIsStopped() {
+        if (flashingAnimation != null && flashingAnimation.getStatus() == Status.RUNNING) {
+            flashingAnimation.stop();
+            flashingAnimation = null;
         }
-        if (look() != newLook) {
-            lookPy.set(newLook);
-        }
-    }
-
-    public Look look() {
-        return lookPy.get();
-    }
-
-    private Look frightenedOrFlashing(GameModel game) {
-        return game.isPowerFading() ? Look.FLASHING : Look.FRIGHTENED;
     }
 }

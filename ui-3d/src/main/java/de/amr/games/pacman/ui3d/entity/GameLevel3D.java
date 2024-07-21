@@ -92,7 +92,7 @@ public class GameLevel3D extends Group {
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
     private final Pac3D pac3D;
-    private final List<Ghost3D> ghosts3D;
+    private final List<MutableGhost3D> ghosts3D;
     private final Set<Pellet3D> pellets3D = new HashSet<>();
     private final Set<Energizer3D> energizers3D = new HashSet<>();
     private Door3D door3D;
@@ -114,7 +114,7 @@ public class GameLevel3D extends Group {
         pac3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         Model3D ghostModel3D = theme.get("model3D.ghost");
-        ghosts3D = game.ghosts().map(ghost -> new Ghost3D(ghostModel3D, theme, ghost, GHOST_SIZE)).toList();
+        ghosts3D = game.ghosts().map(ghost -> new MutableGhost3D(ghostModel3D, theme, ghost, GHOST_SIZE)).toList();
         ghosts3D.forEach(ghost3D -> ghost3D.drawModePy.bind(PY_3D_DRAW_MODE));
 
         wallStrokeMaterialPy.bind(Bindings.createObjectBinding(
@@ -632,11 +632,11 @@ public class GameLevel3D extends Group {
         return pac3D;
     }
 
-    public List<Ghost3D> ghosts3D() {
+    public List<MutableGhost3D> ghosts3D() {
         return ghosts3D;
     }
 
-    public Ghost3D ghost3D(byte id) {
+    public MutableGhost3D ghost3D(byte id) {
         return ghosts3D.get(id);
     }
 
