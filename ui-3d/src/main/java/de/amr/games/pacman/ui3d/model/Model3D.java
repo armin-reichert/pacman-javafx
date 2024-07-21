@@ -14,6 +14,8 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import org.tinylog.Logger;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,25 +67,34 @@ public class Model3D {
         if (objFileURL == null) {
             throw new Model3DException("3D model cannot be created: URL is null");
         }
-        String url = objFileURL.toExternalForm();
-        String fileName = url.substring(url.lastIndexOf('/') + 1);
-        Logger.info("Loading 3D model from OBJ file '{}'. URL: {}", fileName, objFileURL);
+        Logger.info("Loading 3D model from URL: {}", objFileURL);
         try {
-            var importer = new ObjImporter(url);
-            for (String meshName : importer.getMeshNames()) {
-                TriangleMesh mesh = importer.getMesh(meshName);
-                ObjImporter.validateTriangleMesh(mesh);
-                meshesByName.put(meshName, mesh);
-                Logger.info("Mesh ID: '{}'", meshName);
+            importModel(new ObjImporter(objFileURL.toExternalForm()));
+        } catch (Exception x) {
+            Logger.error(x);
+        }
+    }
+
+    public Model3D(File objFile) {
+        Logger.info("Loading 3D model from OBJ file '{}'", objFile);
+        try (var in = new FileInputStream(objFile)) {
+            importModel(new ObjImporter(in));
+        } catch (Exception x) {
+            Logger.error(x);
+        }
+    }
+
+    private void importModel(ObjImporter importer) {
+        for (String meshName : importer.getMeshNames()) {
+            TriangleMesh mesh = importer.getMesh(meshName);
+            ObjImporter.validateTriangleMesh(mesh);
+            meshesByName.put(meshName, mesh);
+            Logger.info("Mesh ID: '{}'", meshName);
+        }
+        for (var materialMap : importer.materialLibrary()) {
+            for (var entry : materialMap.entrySet()) {
+                materials.put(entry.getKey(), (PhongMaterial) entry.getValue());
             }
-            for (var materialMap : importer.materialLibrary()) {
-                for (var entry : materialMap.entrySet()) {
-                    materials.put(entry.getKey(), (PhongMaterial) entry.getValue());
-                }
-            }
-            Logger.trace(contentAsText(objFileURL));
-        } catch (Exception e) {
-            Logger.error(e);
         }
     }
 
