@@ -389,16 +389,15 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         //TODO is there are better way to do this?
         return new SequentialTransition(
             now(() -> PY_3D_PERSPECTIVE.set(Perspective.TOTAL))
-            , pauseSec(1)
+            , pauseSec(2)
             , mazeFlashes
-            , pauseSec(2.5)
-            , now(() -> {
-                context.game().pac().hide();
-                context.soundHandler().playAudioClip("audio.level_complete");
-            })
+            , pauseSec(2)
+            , now(() -> context.game().pac().hide())
+            , now(() -> context.soundHandler().playAudioClip("audio.level_complete"))
+            , pauseSec(1)
             , mazeRotates
             , wallsDisappear
-            , doAfterSec(1.5, () -> {
+            , doAfterSec(1, () -> {
                 PY_3D_PERSPECTIVE.set(perspectiveBeforeAnimation);
                 context.soundHandler().playAudioClip("audio.sweep");
                 context.actionHandler().showFlashMessageSeconds(1, pickLevelCompleteMessage());
