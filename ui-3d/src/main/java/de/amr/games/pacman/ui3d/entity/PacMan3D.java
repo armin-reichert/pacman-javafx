@@ -70,7 +70,8 @@ public class PacMan3D extends AbstractPac3D {
         }
     }
 
-    private final Group bodyGroup;
+    private final Node jaw;
+    private final Group bodyGroup = new Group();
     private final HeadBanging headBanging;
 
     /**
@@ -90,15 +91,14 @@ public class PacMan3D extends AbstractPac3D {
             theme.color("pacman.color.palate")
         );
 
-        bodyGroup = new Group(body);
+        jaw = PacModel3D.createPacHead(model3D, size, theme.color("pacman.color.head"), theme.color("pacman.color.palate"));
+        createChewingAnimation(jaw);
+
+        bodyGroup.getChildren().addAll(body, jaw);
         bodyGroup.getTransforms().add(rotation);
 
         headBanging = new HeadBanging(bodyGroup);
         headBanging.setStrokeMode(false);
-
-        closeMouth.setNode(jaw);
-        openMouth.setNode(jaw);
-        bodyGroup.getChildren().add(jaw);
 
         Stream.of(PacModel3D.MESH_ID_EYES, PacModel3D.MESH_ID_HEAD, PacModel3D.MESH_ID_PALATE)
             .map(id -> meshView(bodyGroup, id))
@@ -115,6 +115,13 @@ public class PacMan3D extends AbstractPac3D {
         super.init(context);
         headBanging.stop();
         stopChewing();
+    }
+
+    @Override
+    protected void stopChewing() {
+        chewingAnimation.stop();
+        jaw.setRotationAxis(Rotate.Y_AXIS);
+        jaw.setRotate(0);
     }
 
     @Override

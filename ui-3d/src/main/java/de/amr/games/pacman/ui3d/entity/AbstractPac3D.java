@@ -15,6 +15,7 @@ import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
 import javafx.beans.property.*;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -33,10 +34,9 @@ public abstract class AbstractPac3D implements Pac3D {
     protected final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
     protected final DoubleProperty lightRangePy = new SimpleDoubleProperty(this, "lightRange", 0);
     protected final Rotate rotation = new Rotate();
-    protected final Group jaw;
-    protected final RotateTransition closeMouth;
-    protected final RotateTransition openMouth;
-    protected final Transition chewingAnimation;
+    protected RotateTransition closeMouth;
+    protected RotateTransition openMouth;
+    protected Transition chewingAnimation;
     protected final Pac pac;
     protected final double size;
     protected final Model3D model3D;
@@ -45,13 +45,15 @@ public abstract class AbstractPac3D implements Pac3D {
         this.size = size;
         this.pac = pac;
         this.model3D = theme.get("model3D.pacman");
-        jaw = PacModel3D.createPacHead(model3D, size, theme.color("pacman.color.head"), theme.color("pacman.color.palate"));
-        closeMouth = new RotateTransition(Duration.millis(100));
+    }
+
+    protected void createChewingAnimation(Node jaw) {
+        closeMouth = new RotateTransition(Duration.millis(100), jaw);
         closeMouth.setAxis(Rotate.Y_AXIS);
         closeMouth.setFromAngle(0);
         closeMouth.setToAngle(-54);
         closeMouth.setInterpolator(Interpolator.LINEAR);
-        openMouth = new RotateTransition(Duration.millis(25));
+        openMouth = new RotateTransition(Duration.millis(25), jaw);
         openMouth.setAxis(Rotate.Y_AXIS);
         openMouth.setFromAngle(-54);
         openMouth.setToAngle(0);
@@ -59,6 +61,8 @@ public abstract class AbstractPac3D implements Pac3D {
         chewingAnimation = new SequentialTransition(openMouth, Ufx.pauseSec(0.1), closeMouth);
         chewingAnimation.setCycleCount(Animation.INDEFINITE);
     }
+
+    protected abstract void stopChewing();
 
     @Override
     public void init(GameContext context) {
@@ -106,12 +110,6 @@ public abstract class AbstractPac3D implements Pac3D {
         updateVisibility(context);
         updateLight(context);
         updateAliveAnimation();
-    }
-
-    protected void stopChewing() {
-        chewingAnimation.stop();
-        jaw.setRotationAxis(Rotate.Y_AXIS);
-        jaw.setRotate(0);
     }
 
     protected abstract void updateAliveAnimation();

@@ -67,7 +67,8 @@ public class MsPacMan3D extends AbstractPac3D {
         }
     }
 
-    private final Group bodyGroup;
+    private final Group bodyGroup = new Group();
+    private final Node jaw;
     private final HipSwaying hipSwaying;
 
     /**
@@ -90,16 +91,14 @@ public class MsPacMan3D extends AbstractPac3D {
             theme.color("ms_pacman.color.hairbow.pearls"),
             theme.color("ms_pacman.color.boobs"));
 
-        bodyGroup = new Group(body, femaleParts);
+        jaw = PacModel3D.createPacHead(model3D, size, theme.color("pacman.color.head"), theme.color("pacman.color.palate"));
+        createChewingAnimation(jaw);
+
+        bodyGroup.getChildren().addAll(body, femaleParts, jaw);
         bodyGroup.getTransforms().add(rotation);
 
         hipSwaying = new HipSwaying(bodyGroup);
         hipSwaying.setWinnetouchMode(false);
-
-        var jaw = PacModel3D.createPacHead(model3D, size, theme.color("pacman.color.head"), theme.color("pacman.color.palate"));
-        closeMouth.setNode(jaw);
-        openMouth.setNode(jaw);
-        bodyGroup.getChildren().add(jaw);
 
         Stream.of(PacModel3D.MESH_ID_EYES, PacModel3D.MESH_ID_HEAD, PacModel3D.MESH_ID_PALATE)
             .map(id -> meshView(bodyGroup, id))
@@ -116,6 +115,13 @@ public class MsPacMan3D extends AbstractPac3D {
         super.init(context);
         hipSwaying.stop();
         stopChewing();
+    }
+
+    @Override
+    protected void stopChewing() {
+        chewingAnimation.stop();
+        jaw.setRotationAxis(Rotate.Y_AXIS);
+        jaw.setRotate(0);
     }
 
     @Override
