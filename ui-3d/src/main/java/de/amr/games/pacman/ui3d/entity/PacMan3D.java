@@ -96,8 +96,8 @@ public class PacMan3D extends AbstractPac3D {
         headBanging = new HeadBanging(bodyGroup);
         headBanging.setStrokeMode(false);
 
-        openMouthRotation.setNode(jaw);
-        closeMouthRotation.setNode(jaw);
+        closeMouth.setNode(jaw);
+        openMouth.setNode(jaw);
         bodyGroup.getChildren().add(jaw);
 
         Stream.of(PacModel3D.MESH_ID_EYES, PacModel3D.MESH_ID_HEAD, PacModel3D.MESH_ID_PALATE)
