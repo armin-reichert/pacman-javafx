@@ -52,9 +52,9 @@ public class GameLevel3D extends Group {
     static final int   MAX_LIVES             = 5;
     static final float LIVE_SHAPE_SIZE       = 10;
     static final float FLOOR_THICKNESS       = 0.4f;
-    static final float INNER_WALL_HEIGHT     = 4.5f;
+    static final float INNER_WALL_HEIGHT     = 5.5f;
     static final float INNER_WALL_THICKNESS  = 0.5f;
-    static final float OUTER_WALL_HEIGHT     = 6.0f;
+    static final float OUTER_WALL_HEIGHT     = 7.0f;
     static final float OUTER_WALL_THICKNESS  = 2.0f;
     static final float WALL_COAT_HEIGHT      = 0.1f;
     static final float HOUSE_HEIGHT          = 12.0f;
@@ -300,12 +300,12 @@ public class GameLevel3D extends Group {
         terrainMap.computeTerrainPaths();
         terrainMap.outerPaths()
             .filter(path -> !context.game().world().isPartOfHouse(path.startTile()))
-            .forEach(path -> addWallSegmentsAlongPath(mazeGroup, path, outerWallHeightPy, OUTER_WALL_THICKNESS));
+            .forEach(path -> buildWallAlongPath(mazeGroup, path, outerWallHeightPy, OUTER_WALL_THICKNESS));
         terrainMap.innerPaths()
-            .forEach(path -> addWallSegmentsAlongPath(mazeGroup, path, wallHeightPy, INNER_WALL_THICKNESS));
+            .forEach(path -> buildWallAlongPath(mazeGroup, path, wallHeightPy, INNER_WALL_THICKNESS));
     }
 
-    private void addWallSegmentsAlongPath(Group parent, TileMapPath path, DoubleProperty heightPy, double thickness) {
+    private void buildWallAlongPath(Group parent, TileMapPath path, DoubleProperty heightPy, double thickness) {
         Vector2i startTile = path.startTile(), endTile = startTile;
         Direction prevDir = null;
         Node segment;
@@ -323,41 +323,25 @@ public class GameLevel3D extends Group {
     }
 
     private static Node createWall(
-        Vector2i beginTile, Vector2i endTile,
+        Vector2i tile1, Vector2i tile2,
         double thickness, DoubleProperty depthPy,
         ObjectProperty<PhongMaterial> fillMaterialPy, ObjectProperty<PhongMaterial> strokeMaterialPy)
     {
-        if (beginTile.y() == endTile.y()) { // horizontal
-            if (beginTile.x() > endTile.x()) {
-                var tmp = beginTile;
-                beginTile = endTile;
-                endTile = tmp;
-            }
-            return createWall(
-                (beginTile.x() + endTile.x()) * HTS + HTS,
-                beginTile.y() * TS + HTS,
-                (endTile.x() - beginTile.x()) * TS + thickness,
-                thickness,
-                depthPy,
-                fillMaterialPy,
-                strokeMaterialPy);
+        if (tile1.y() == tile2.y()) { // horizontal wall
+            Vector2i left  = tile1.x() < tile2.x() ? tile1 : tile2;
+            Vector2i right = tile1.x() < tile2.x() ? tile2 : tile1;
+            Vector2f center = left.plus(right).scaled(HTS).toFloatVec().plus(HTS, HTS);
+            Vector2f length = right.minus(left).scaled(TS).toFloatVec();
+            return createWall(center.x(), center.y(),length.x() + thickness, thickness, depthPy, fillMaterialPy, strokeMaterialPy);
         }
-        else if (beginTile.x() == endTile.x()) { // vertical
-            if (beginTile.y() > endTile.y()) {
-                var tmp = beginTile;
-                beginTile = endTile;
-                endTile = tmp;
-            }
-            return createWall(
-                beginTile.x() * TS + HTS,
-                (beginTile.y() + endTile.y()) * HTS + HTS,
-                thickness,
-                (endTile.y() - beginTile.y()) * TS,
-                depthPy,
-                fillMaterialPy,
-                strokeMaterialPy);
+        else if (tile1.x() == tile2.x()) { // vertical wall
+            Vector2i top    = tile1.y() < tile2.y() ? tile1 : tile2;
+            Vector2i bottom = tile1.y() < tile2.y() ? tile2 : tile1;
+            Vector2f center = top.plus(bottom).scaled(HTS).toFloatVec().plus(HTS, HTS);
+            Vector2f length = bottom.minus(top).scaled(TS).toFloatVec();
+            return createWall(center.x(), center.y(), thickness, length.y(), depthPy, fillMaterialPy, strokeMaterialPy);
         }
-        throw new IllegalArgumentException(String.format("Cannot build wall between tiles %s and %s", beginTile, endTile));
+        throw new IllegalArgumentException(String.format("Cannot build wall between tiles %s and %s", tile1, tile2));
     }
 
     private static Node createWall(
