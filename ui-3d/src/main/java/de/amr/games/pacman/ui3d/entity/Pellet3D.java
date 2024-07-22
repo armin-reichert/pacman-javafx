@@ -27,7 +27,6 @@ public class Pellet3D implements Eatable3D {
 
     public static final String MESH_ID_PELLET = "Fruit";
 
-    private Vector2i tile;
     private final Shape3D shape;
 
     public Pellet3D(Model3D model3D, double radius) {
@@ -37,7 +36,6 @@ public class Pellet3D implements Eatable3D {
         shape = model3D.meshView(MESH_ID_PELLET);
         shape.setRotationAxis(Rotate.Z_AXIS);
         shape.setRotate(90);
-        shape.setUserData(this);
         var bounds = shape.getBoundsInLocal();
         var max = Math.max(Math.max(bounds.getWidth(), bounds.getHeight()), bounds.getDepth());
         var scaling = new Scale(2 * radius / max, 2 * radius / max, 2 * radius / max);
@@ -47,7 +45,7 @@ public class Pellet3D implements Eatable3D {
     @Override
     public void placeAtTile(Vector2i tile, double overGround) {
         requireNonNull(tile);
-        this.tile = tile;
+        shape.setUserData(tile);
         shape.setTranslateX(tile.x() * TS + HTS);
         shape.setTranslateY(tile.y() * TS + HTS);
         shape.setTranslateZ(-overGround);
@@ -60,7 +58,7 @@ public class Pellet3D implements Eatable3D {
 
     @Override
     public Vector2i tile() {
-        return tile;
+        return (Vector2i) shape.getUserData();
     }
 
     @Override
