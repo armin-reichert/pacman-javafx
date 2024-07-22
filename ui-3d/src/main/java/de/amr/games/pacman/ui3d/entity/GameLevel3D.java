@@ -393,13 +393,13 @@ public class GameLevel3D extends Group {
                 addEnergizerAnimation(world, energizer3D);
                 energizers3D.add(energizer3D);
                 energizer3D.root().materialProperty().bind(foodMaterialPy);
-                energizer3D.placeAtTile(tile);
+                energizer3D.placeAtTile(tile, 5);
                 getChildren().add(energizer3D.root());
             } else {
                 var pellet3D = new Pellet3D(pelletModel3D, PELLET_RADIUS);
                 pellets3D.add(pellet3D);
                 pellet3D.root().materialProperty().bind(foodMaterialPy);
-                pellet3D.placeAtTile(tile);
+                pellet3D.placeAtTile(tile, 5);
                 getChildren().add(pellet3D.root());
             }
         });

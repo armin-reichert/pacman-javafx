@@ -24,7 +24,7 @@ public interface Eatable3D {
 
     Vector2i tile();
 
-    void placeAtTile(Vector2i tile);
+    void placeAtTile(Vector2i tile, double overGround);
 
     Point3D position();
 }

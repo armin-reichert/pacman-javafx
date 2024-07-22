@@ -58,12 +58,12 @@ public class Energizer3D extends Sphere implements Eatable3D {
     }
 
     @Override
-    public void placeAtTile(Vector2i tile) {
+    public void placeAtTile(Vector2i tile, double overGround) {
         requireNonNull(tile);
         this.tile = tile;
         setTranslateX(tile.x() * TS + HTS);
         setTranslateY(tile.y() * TS + HTS);
-        setTranslateZ(-HTS);
+        setTranslateZ(-overGround);
     }
 
     @Override

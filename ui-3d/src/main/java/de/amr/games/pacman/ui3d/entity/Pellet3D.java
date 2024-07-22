@@ -45,12 +45,12 @@ public class Pellet3D implements Eatable3D {
     }
 
     @Override
-    public void placeAtTile(Vector2i tile) {
+    public void placeAtTile(Vector2i tile, double overGround) {
         requireNonNull(tile);
         this.tile = tile;
         shape.setTranslateX(tile.x() * TS + HTS);
         shape.setTranslateY(tile.y() * TS + HTS);
-        shape.setTranslateZ(-HTS);
+        shape.setTranslateZ(-overGround);
     }
 
     @Override
