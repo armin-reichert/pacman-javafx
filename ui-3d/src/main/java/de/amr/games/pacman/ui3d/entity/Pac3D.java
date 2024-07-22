@@ -19,11 +19,13 @@ public interface Pac3D {
 
     Node node();
 
-    void init(GameContext context);
+    GameContext context();
 
-    void updateAlive(GameContext context);
+    void init();
 
-    Animation createDyingAnimation(GameContext context);
+    void updateAlive();
+
+    Animation createDyingAnimation();
 
     void setPower(boolean power);
 

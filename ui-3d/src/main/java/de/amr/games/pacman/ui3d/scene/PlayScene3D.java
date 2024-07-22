@@ -185,8 +185,8 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         }
         context.game().pac().show();
         context.game().ghosts().forEach(Ghost::show);
-        level3D.pac3D().init(context);
-        level3D.pac3D().updateAlive(context);
+        level3D.pac3D().init();
+        level3D.pac3D().updateAlive();
         ensureSirenPlaying(context);
         if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
             context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
@@ -211,8 +211,8 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
                 context.soundHandler().stopAllSounds();
                 context.gameState().timer().resetIndefinitely();
                 // last update before dying animation
-                level3D.pac3D().updateAlive(context);
-                Animation dying = level3D.pac3D().createDyingAnimation(context);
+                level3D.pac3D().updateAlive();
+                Animation dying = level3D.pac3D().createDyingAnimation();
                 dying.setDelay(Duration.seconds(1));
                 dying.setOnFinished(e -> context.gameState().timer().expire());
                 dying.play();
@@ -254,7 +254,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             case LEVEL_TRANSITION -> {
                 context.gameState().timer().restartSeconds(3);
                 replaceGameLevel3D(true);
-                level3D.pac3D().init(context);
+                level3D.pac3D().init();
                 perspective().init(fxSubScene.getCamera(), context.game().world());
             }
 
@@ -271,7 +271,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
                 if (level3D == null) {
                     replaceGameLevel3D(true);
                 }
-                level3D.pac3D().init(context);
+                level3D.pac3D().init();
                 level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
                 showLevelTestMessage();
                 PY_3D_PERSPECTIVE.set(Perspective.TOTAL);

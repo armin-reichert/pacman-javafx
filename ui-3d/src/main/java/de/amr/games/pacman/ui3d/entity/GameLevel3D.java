@@ -109,8 +109,8 @@ public class GameLevel3D extends Group {
         Theme theme     = context.theme();
 
         pac3D = game.variant() == GameVariant.MS_PACMAN
-            ? new MsPacMan3D(game.pac(), PAC_SIZE, theme, theme.get("model3D.pacman"))
-            : new PacMan3D(game.pac(), PAC_SIZE, theme, theme.get("model3D.pacman"));
+            ? new MsPacMan3D(context, game.pac(), PAC_SIZE, theme.get("model3D.pacman"))
+            : new PacMan3D(context, game.pac(), PAC_SIZE, theme.get("model3D.pacman"));
         pac3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         Model3D ghostModel3D = theme.get("model3D.ghost");
@@ -184,7 +184,7 @@ public class GameLevel3D extends Group {
 
     public void getReadyToPlay() {
         stopHunting();
-        pac3D.init(context);
+        pac3D.init();
         ghosts3D.forEach(ghost3D -> ghost3D.init(context));
     }
 
@@ -202,7 +202,7 @@ public class GameLevel3D extends Group {
     public void update() {
         var game = context.game();
         if (game.pac().isAlive()) {
-            pac3D.updateAlive(context);
+            pac3D.updateAlive();
         }
         ghosts3D().forEach(ghost3D -> ghost3D.update(context));
         bonus3D().ifPresent(bonus -> bonus.update(context));

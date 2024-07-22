@@ -33,18 +33,42 @@ public abstract class AbstractPac3D implements Pac3D {
     protected final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
     protected final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
     protected final DoubleProperty lightRangePy = new SimpleDoubleProperty(this, "lightRange", 0);
+
     protected final Rotate rotation = new Rotate();
+
     protected RotateTransition closeMouth;
     protected RotateTransition openMouth;
     protected Transition chewingAnimation;
+
+    protected final GameContext context;
     protected final Pac pac;
     protected final double size;
     protected final Model3D model3D;
 
-    protected AbstractPac3D(Pac pac, double size, Model3D model3D) {
+    protected AbstractPac3D(GameContext context, Pac pac, double size, Model3D model3D) {
+        this.context = context;
         this.size = size;
         this.pac = pac;
         this.model3D = model3D;
+    }
+
+    protected abstract void stopChewing();
+
+    protected abstract void updateAliveAnimation();
+
+    @Override
+    public GameContext context() {
+        return context;
+    }
+
+    @Override
+    public void init() {
+        node().setScaleX(1.0);
+        node().setScaleY(1.0);
+        node().setScaleZ(1.0);
+        node().setTranslateZ(-0.5 * size);
+        updatePosition();
+        updateRotation();
     }
 
     protected void createChewingAnimation(Node jaw) {
@@ -62,18 +86,6 @@ public abstract class AbstractPac3D implements Pac3D {
         chewingAnimation.setCycleCount(Animation.INDEFINITE);
     }
 
-    protected abstract void stopChewing();
-
-    @Override
-    public void init(GameContext context) {
-        node().setScaleX(1.0);
-        node().setScaleY(1.0);
-        node().setScaleZ(1.0);
-        node().setTranslateZ(-0.5 * size);
-        updatePosition();
-        updateRotation();
-    }
-
     protected void updatePosition() {
         Vector2f center = pac.center();
         node().setTranslateX(center.x());
@@ -86,7 +98,7 @@ public abstract class AbstractPac3D implements Pac3D {
         rotation.setAngle(angle(pac.moveDir()));
     }
 
-    protected void updateLight(GameContext context) {
+    protected void updateLight() {
         GameModel game = context.game();
         // When empowered, Pac-Man is lighted, light range shrinks with ceasing power
         boolean hasPower = game.powerTimer().isRunning();
@@ -97,23 +109,22 @@ public abstract class AbstractPac3D implements Pac3D {
         lightOnProperty().set(PY_3D_PAC_LIGHT_ENABLED.get() && pac.isVisible() && hasPower);
     }
 
-    protected void updateVisibility(GameContext context) {
+    protected void updateVisibility() {
         GameWorld world = context.game().world();
         boolean outsideWorld = node().getTranslateX() < HTS || node().getTranslateX() > TS * world.map().terrain().numCols() - HTS;
         node().setVisible(pac.isVisible() && !outsideWorld);
     }
 
     @Override
-    public void updateAlive(GameContext context) {
+    public void updateAlive() {
         updatePosition();
         updateRotation();
-        updateVisibility(context);
-        updateLight(context);
+        updateVisibility();
+        updateLight();
         updateAliveAnimation();
     }
 
-    protected abstract void updateAliveAnimation();
-
+    @Override
     public ObjectProperty<DrawMode> drawModeProperty() {
         return drawModePy;
     }

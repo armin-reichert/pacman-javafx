@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui3d.entity;
 
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -74,29 +73,29 @@ public class MsPacMan3D extends AbstractPac3D {
 
     /**
      * Creates a 3D Ms. Pac-Man.
+     * @param context game context
      * @param msPacMan Ms. Pac-Man instance
      * @param size diameter of Pac-Man
-     * @param theme the theme
      * @param model3D 3D model
      */
-    public MsPacMan3D(Pac msPacMan, double size, Theme theme, Model3D model3D) {
-        super(msPacMan, size, model3D);
+    public MsPacMan3D(GameContext context, Pac msPacMan, double size, Model3D model3D) {
+        super(context, msPacMan, size, model3D);
 
         Group body = PacModel3D.createPacShape(
             model3D, size,
-            theme.color("ms_pacman.color.head"),
-            theme.color("ms_pacman.color.eyes"),
-            theme.color("ms_pacman.color.palate"));
+            context.theme().color("ms_pacman.color.head"),
+            context.theme().color("ms_pacman.color.eyes"),
+            context.theme().color("ms_pacman.color.palate"));
 
         Group femaleParts = PacModel3D.createFemaleParts(size,
-            theme.color("ms_pacman.color.hairbow"),
-            theme.color("ms_pacman.color.hairbow.pearls"),
-            theme.color("ms_pacman.color.boobs"));
+            context.theme().color("ms_pacman.color.hairbow"),
+            context.theme().color("ms_pacman.color.hairbow.pearls"),
+            context.theme().color("ms_pacman.color.boobs"));
 
         jaw = PacModel3D.createPacSkull(
             model3D, size,
-            theme.color("pacman.color.head"),
-            theme.color("pacman.color.palate"));
+            context.theme().color("pacman.color.head"),
+            context.theme().color("pacman.color.palate"));
 
         bodyGroup.getChildren().addAll(body, femaleParts, jaw);
         bodyGroup.getTransforms().add(rotation);
@@ -118,8 +117,8 @@ public class MsPacMan3D extends AbstractPac3D {
     }
 
     @Override
-    public void init(GameContext context) {
-        super.init(context);
+    public void init() {
+        super.init();
         hipSwaying.stop();
         stopChewing();
     }
@@ -148,7 +147,7 @@ public class MsPacMan3D extends AbstractPac3D {
     }
 
     @Override
-    public Animation createDyingAnimation(GameContext context) {
+    public Animation createDyingAnimation() {
         var spin = new RotateTransition(Duration.seconds(0.25), bodyGroup);
         spin.setAxis(Rotate.Z_AXIS);
         spin.setFromAngle(0);

@@ -78,26 +78,30 @@ public class PacMan3D extends AbstractPac3D {
     /**
      * Creates a 3D Pac-Man.
      *
+     * @param context game context
      * @param pacMan Pac-Man instance
      * @param size diameter of Pac-Man
-     * @param theme theme
      * @param model3D 3D model for Pac-Man
      */
-    public PacMan3D(Pac pacMan, double size, Theme theme, Model3D model3D) {
-        super(pacMan, size, model3D);
+    public PacMan3D(GameContext context, Pac pacMan, double size, Model3D model3D) {
+        super(context, pacMan, size, model3D);
 
         Group body = PacModel3D.createPacShape(
             model3D, size,
-            theme.color("pacman.color.head"),
-            theme.color("pacman.color.eyes"),
-            theme.color("pacman.color.palate")
+            context.theme().color("pacman.color.head"),
+            context.theme().color("pacman.color.eyes"),
+            context.theme().color("pacman.color.palate")
         );
 
-        jaw = PacModel3D.createPacSkull(model3D, size, theme.color("pacman.color.head"), theme.color("pacman.color.palate"));
-        createChewingAnimation(jaw);
+        jaw = PacModel3D.createPacSkull(
+            model3D, size,
+            context.theme().color("pacman.color.head"),
+            context.theme().color("pacman.color.palate"));
 
         bodyGroup.getChildren().addAll(body, jaw);
         bodyGroup.getTransforms().add(rotation);
+
+        createChewingAnimation(jaw);
 
         headBanging = new HeadBanging(bodyGroup);
         headBanging.setStrokeMode(false);
@@ -113,8 +117,8 @@ public class PacMan3D extends AbstractPac3D {
     }
 
     @Override
-    public void init(GameContext context) {
-        super.init(context);
+    public void init() {
+        super.init();
         headBanging.stop();
         stopChewing();
     }
@@ -143,7 +147,7 @@ public class PacMan3D extends AbstractPac3D {
     }
 
     @Override
-    public Animation createDyingAnimation(GameContext context) {
+    public Animation createDyingAnimation() {
         Duration duration = Duration.seconds(1.0);
         byte numSpins = 6;
 
@@ -166,7 +170,7 @@ public class PacMan3D extends AbstractPac3D {
         sinks.setToZ(0);
 
         return new SequentialTransition(
-            now(() -> init(context)), // TODO check this
+            now(this::init), // TODO check this
             pauseSec(0.5),
             new ParallelTransition(spins, new SequentialTransition(shrinks, expands), sinks),
             doAfterSec(1.0, () -> bodyGroup.setVisible(false))
