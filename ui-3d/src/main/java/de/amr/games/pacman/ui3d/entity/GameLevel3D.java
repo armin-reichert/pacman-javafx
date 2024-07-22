@@ -330,22 +330,22 @@ public class GameLevel3D extends Group {
         if (tile1.y() == tile2.y()) { // horizontal wall
             Vector2i left  = tile1.x() < tile2.x() ? tile1 : tile2;
             Vector2i right = tile1.x() < tile2.x() ? tile2 : tile1;
-            Vector2f origin = left.plus(right).scaled(HTS).toFloatVec().plus(HTS, HTS);
-            Vector2f length = right.minus(left).scaled(TS).toFloatVec();
-            return createWall(origin,length.x() + thickness, thickness, depthPy, fillMaterialPy, strokeMaterialPy);
+            Vector2i origin = left.plus(right).scaled(HTS).plus(HTS, HTS);
+            int length = right.minus(left).scaled(TS).x();
+            return createWall(origin, length + thickness, thickness, depthPy, fillMaterialPy, strokeMaterialPy);
         }
         else if (tile1.x() == tile2.x()) { // vertical wall
             Vector2i top    = tile1.y() < tile2.y() ? tile1 : tile2;
             Vector2i bottom = tile1.y() < tile2.y() ? tile2 : tile1;
-            Vector2f origin = top.plus(bottom).scaled(HTS).toFloatVec().plus(HTS, HTS);
-            Vector2f length = bottom.minus(top).scaled(TS).toFloatVec();
-            return createWall(origin, thickness, length.y(), depthPy, fillMaterialPy, strokeMaterialPy);
+            Vector2i origin = top.plus(bottom).scaled(HTS).plus(HTS, HTS);
+            int length = bottom.minus(top).scaled(TS).y();
+            return createWall(origin, thickness, length, depthPy, fillMaterialPy, strokeMaterialPy);
         }
         throw new IllegalArgumentException(String.format("Cannot build wall between tiles %s and %s", tile1, tile2));
     }
 
     private static Node createWall(
-        Vector2f origin, double sizeX, double sizeY, DoubleProperty depthPy,
+        Vector2i origin, double sizeX, double sizeY, DoubleProperty depthPy,
         ObjectProperty<PhongMaterial> fillMaterialPy, ObjectProperty<PhongMaterial> strokeMaterialPy) {
 
         var base = new Box(sizeX, sizeY, depthPy.get());
