@@ -330,27 +330,27 @@ public class GameLevel3D extends Group {
         if (tile1.y() == tile2.y()) { // horizontal wall
             Vector2i left  = tile1.x() < tile2.x() ? tile1 : tile2;
             Vector2i right = tile1.x() < tile2.x() ? tile2 : tile1;
-            Vector2f center = left.plus(right).scaled(HTS).toFloatVec().plus(HTS, HTS);
+            Vector2f origin = left.plus(right).scaled(HTS).toFloatVec().plus(HTS, HTS);
             Vector2f length = right.minus(left).scaled(TS).toFloatVec();
-            return createWall(center.x(), center.y(),length.x() + thickness, thickness, depthPy, fillMaterialPy, strokeMaterialPy);
+            return createWall(origin,length.x() + thickness, thickness, depthPy, fillMaterialPy, strokeMaterialPy);
         }
         else if (tile1.x() == tile2.x()) { // vertical wall
             Vector2i top    = tile1.y() < tile2.y() ? tile1 : tile2;
             Vector2i bottom = tile1.y() < tile2.y() ? tile2 : tile1;
-            Vector2f center = top.plus(bottom).scaled(HTS).toFloatVec().plus(HTS, HTS);
+            Vector2f origin = top.plus(bottom).scaled(HTS).toFloatVec().plus(HTS, HTS);
             Vector2f length = bottom.minus(top).scaled(TS).toFloatVec();
-            return createWall(center.x(), center.y(), thickness, length.y(), depthPy, fillMaterialPy, strokeMaterialPy);
+            return createWall(origin, thickness, length.y(), depthPy, fillMaterialPy, strokeMaterialPy);
         }
         throw new IllegalArgumentException(String.format("Cannot build wall between tiles %s and %s", tile1, tile2));
     }
 
     private static Node createWall(
-        double x, double y, double sizeX, double sizeY, DoubleProperty depthPy,
+        Vector2f origin, double sizeX, double sizeY, DoubleProperty depthPy,
         ObjectProperty<PhongMaterial> fillMaterialPy, ObjectProperty<PhongMaterial> strokeMaterialPy) {
 
         var base = new Box(sizeX, sizeY, depthPy.get());
-        base.setTranslateX(x);
-        base.setTranslateY(y);
+        base.setTranslateX(origin.x());
+        base.setTranslateY(origin.y());
         base.translateZProperty().bind(depthPy.multiply(-0.5));
         base.depthProperty().bind(depthPy);
         base.materialProperty().bind(fillMaterialPy);
