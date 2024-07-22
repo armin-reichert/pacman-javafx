@@ -23,6 +23,10 @@ public interface Pac3D {
 
     void init();
 
+    void stopChewing();
+
+    void updateAliveAnimation();
+
     void updateAlive();
 
     Animation createDyingAnimation();

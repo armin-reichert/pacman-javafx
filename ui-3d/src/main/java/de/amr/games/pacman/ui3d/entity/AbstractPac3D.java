@@ -5,16 +5,14 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.entity;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
 import javafx.beans.property.*;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
@@ -34,16 +32,16 @@ public abstract class AbstractPac3D implements Pac3D {
     protected final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
     protected final DoubleProperty lightRangePy = new SimpleDoubleProperty(this, "lightRange", 0);
 
+    protected final GameContext context;
+    protected final Pac pac;
+    protected final double size;
+    protected final Model3D model3D;
+
     protected final Rotate rotation = new Rotate();
 
     protected RotateTransition closeMouth;
     protected RotateTransition openMouth;
     protected Transition chewingAnimation;
-
-    protected final GameContext context;
-    protected final Pac pac;
-    protected final double size;
-    protected final Model3D model3D;
 
     protected AbstractPac3D(GameContext context, Pac pac, double size, Model3D model3D) {
         this.context = context;
@@ -51,10 +49,6 @@ public abstract class AbstractPac3D implements Pac3D {
         this.pac = pac;
         this.model3D = model3D;
     }
-
-    protected abstract void stopChewing();
-
-    protected abstract void updateAliveAnimation();
 
     @Override
     public GameContext context() {
@@ -69,21 +63,6 @@ public abstract class AbstractPac3D implements Pac3D {
         node().setTranslateZ(-0.5 * size);
         updatePosition();
         updateRotation();
-    }
-
-    protected void createChewingAnimation(Node jaw) {
-        closeMouth = new RotateTransition(Duration.millis(100), jaw);
-        closeMouth.setAxis(Rotate.Y_AXIS);
-        closeMouth.setFromAngle(0);
-        closeMouth.setToAngle(-54);
-        closeMouth.setInterpolator(Interpolator.LINEAR);
-        openMouth = new RotateTransition(Duration.millis(25), jaw);
-        openMouth.setAxis(Rotate.Y_AXIS);
-        openMouth.setFromAngle(-54);
-        openMouth.setToAngle(0);
-        openMouth.setInterpolator(Interpolator.LINEAR);
-        chewingAnimation = new SequentialTransition(openMouth, Ufx.pauseSec(0.1), closeMouth);
-        chewingAnimation.setCycleCount(Animation.INDEFINITE);
     }
 
     protected void updatePosition() {
@@ -110,8 +89,8 @@ public abstract class AbstractPac3D implements Pac3D {
     }
 
     protected void updateVisibility() {
-        GameWorld world = context.game().world();
-        boolean outsideWorld = node().getTranslateX() < HTS || node().getTranslateX() > TS * world.map().terrain().numCols() - HTS;
+        WorldMap map = context.game().world().map();
+        boolean outsideWorld = node().getTranslateX() < HTS || node().getTranslateX() > TS * map.terrain().numCols() - HTS;
         node().setVisible(pac.isVisible() && !outsideWorld);
     }
 
@@ -137,5 +116,20 @@ public abstract class AbstractPac3D implements Pac3D {
     @Override
     public DoubleProperty lightRangeProperty() {
         return lightRangePy;
+    }
+
+    protected void createChewingAnimation(Node jaw) {
+        closeMouth = new RotateTransition(Duration.millis(100), jaw);
+        closeMouth.setAxis(Rotate.Y_AXIS);
+        closeMouth.setFromAngle(0);
+        closeMouth.setToAngle(-54);
+        closeMouth.setInterpolator(Interpolator.LINEAR);
+        openMouth = new RotateTransition(Duration.millis(25), jaw);
+        openMouth.setAxis(Rotate.Y_AXIS);
+        openMouth.setFromAngle(-54);
+        openMouth.setToAngle(0);
+        openMouth.setInterpolator(Interpolator.LINEAR);
+        chewingAnimation = new SequentialTransition(openMouth, Ufx.pauseSec(0.1), closeMouth);
+        chewingAnimation.setCycleCount(Animation.INDEFINITE);
     }
 }
