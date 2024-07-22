@@ -41,10 +41,10 @@ public abstract class AbstractPac3D implements Pac3D {
     protected final double size;
     protected final Model3D model3D;
 
-    protected AbstractPac3D(Pac pac, double size, Theme theme) {
+    protected AbstractPac3D(Pac pac, double size, Model3D model3D) {
         this.size = size;
         this.pac = pac;
-        this.model3D = theme.get("model3D.pacman");
+        this.model3D = model3D;
     }
 
     protected void createChewingAnimation(Node jaw) {

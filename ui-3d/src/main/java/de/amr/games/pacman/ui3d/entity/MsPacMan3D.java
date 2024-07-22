@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui3d.entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
+import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -76,9 +77,10 @@ public class MsPacMan3D extends AbstractPac3D {
      * @param msPacMan Ms. Pac-Man instance
      * @param size diameter of Pac-Man
      * @param theme the theme
+     * @param model3D 3D model
      */
-    public MsPacMan3D(Pac msPacMan, double size, Theme theme) {
-        super(msPacMan, size, theme);
+    public MsPacMan3D(Pac msPacMan, double size, Theme theme, Model3D model3D) {
+        super(msPacMan, size, model3D);
 
         Group body = PacModel3D.createPacShape(
             model3D, size,
@@ -91,15 +93,20 @@ public class MsPacMan3D extends AbstractPac3D {
             theme.color("ms_pacman.color.hairbow.pearls"),
             theme.color("ms_pacman.color.boobs"));
 
-        jaw = PacModel3D.createPacHead(model3D, size, theme.color("pacman.color.head"), theme.color("pacman.color.palate"));
-        createChewingAnimation(jaw);
+        jaw = PacModel3D.createPacSkull(
+            model3D, size,
+            theme.color("pacman.color.head"),
+            theme.color("pacman.color.palate"));
 
         bodyGroup.getChildren().addAll(body, femaleParts, jaw);
         bodyGroup.getTransforms().add(rotation);
 
+        createChewingAnimation(jaw);
+
         hipSwaying = new HipSwaying(bodyGroup);
         hipSwaying.setWinnetouchMode(false);
 
+        // for wireframe mode
         Stream.of(PacModel3D.MESH_ID_EYES, PacModel3D.MESH_ID_HEAD, PacModel3D.MESH_ID_PALATE)
             .map(id -> meshView(bodyGroup, id))
             .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));

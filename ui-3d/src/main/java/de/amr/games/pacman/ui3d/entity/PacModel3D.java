@@ -51,7 +51,7 @@ public interface PacModel3D {
         return root;
     }
 
-    static Group createPacHead(Model3D model3D, double size, Color headColor, Color palateColor) {
+    static Group createPacSkull(Model3D model3D, double size, Color headColor, Color palateColor) {
         var head = new MeshView(model3D.mesh(PacModel3D.MESH_ID_HEAD));
         head.setId(Model3D.toCSS_ID(PacModel3D.MESH_ID_HEAD));
         head.setMaterial(coloredMaterial(headColor));

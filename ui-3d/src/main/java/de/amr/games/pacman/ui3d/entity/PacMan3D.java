@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui3d.entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
+import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -79,10 +80,11 @@ public class PacMan3D extends AbstractPac3D {
      *
      * @param pacMan Pac-Man instance
      * @param size diameter of Pac-Man
-     * @param theme the theme
+     * @param theme theme
+     * @param model3D 3D model for Pac-Man
      */
-    public PacMan3D(Pac pacMan, double size, Theme theme) {
-        super(pacMan, size, theme);
+    public PacMan3D(Pac pacMan, double size, Theme theme, Model3D model3D) {
+        super(pacMan, size, model3D);
 
         Group body = PacModel3D.createPacShape(
             model3D, size,
@@ -91,7 +93,7 @@ public class PacMan3D extends AbstractPac3D {
             theme.color("pacman.color.palate")
         );
 
-        jaw = PacModel3D.createPacHead(model3D, size, theme.color("pacman.color.head"), theme.color("pacman.color.palate"));
+        jaw = PacModel3D.createPacSkull(model3D, size, theme.color("pacman.color.head"), theme.color("pacman.color.palate"));
         createChewingAnimation(jaw);
 
         bodyGroup.getChildren().addAll(body, jaw);
