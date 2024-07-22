@@ -124,7 +124,7 @@ public class MsPacMan3D extends AbstractPac3D {
     }
 
     @Override
-    protected void stopChewing() {
+    public void stopChewing() {
         chewingAnimation.stop();
         jaw.setRotationAxis(Rotate.Y_AXIS);
         jaw.setRotate(0);

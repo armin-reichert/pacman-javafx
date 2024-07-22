@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui3d.entity;
 
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
 import javafx.geometry.Point3D;
@@ -124,14 +123,14 @@ public class PacMan3D extends AbstractPac3D {
     }
 
     @Override
-    protected void stopChewing() {
+    public void stopChewing() {
         chewingAnimation.stop();
         jaw.setRotationAxis(Rotate.Y_AXIS);
         jaw.setRotate(0);
     }
 
     @Override
-    protected void updateAliveAnimation() {
+    public void updateAliveAnimation() {
         if (pac.isStandingStill()) {
             headBanging.stop();
             stopChewing();
