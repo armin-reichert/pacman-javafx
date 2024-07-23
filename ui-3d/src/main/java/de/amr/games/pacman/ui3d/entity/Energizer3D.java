@@ -92,7 +92,6 @@ public class Energizer3D extends Sphere implements Eatable3D {
     @Override
     public void onEaten() {
         pumping.stop();
-        // TODO check this
         var hideAfterDelay = doAfterSec(0.05, () -> setVisible(false));
         if (eatenAnimation != null) {
             new SequentialTransition(hideAfterDelay, eatenAnimation).play();

@@ -27,6 +27,7 @@ import javafx.animation.Transition;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
@@ -40,26 +41,23 @@ import static de.amr.games.pacman.lib.Globals.*;
 public abstract class Squirting extends Transition {
 
     public static class Drop extends Sphere {
-        private double vx;
-        private double vy;
-        private double vz;
+        private double vx, vy, vz;
 
-        private Drop(Squirting squirting, double radius) {
+        Drop(Material material, double radius, Point3D origin) {
             super(radius);
-            setMaterial(squirting.dropMaterial);
-            setTranslateX(squirting.origin.getX());
-            setTranslateY(squirting.origin.getY());
-            setTranslateZ(squirting.origin.getZ());
-            setVisible(false);
+            setMaterial(material);
+            setTranslateX(origin.getX());
+            setTranslateY(origin.getY());
+            setTranslateZ(origin.getZ());
         }
 
-        private void setVelocity(double x, double y, double z) {
+        void setVelocity(double x, double y, double z) {
             vx = x;
             vy = y;
             vz = z;
         }
 
-        private void move(Point3D gravity) {
+        void move(Point3D gravity) {
             setTranslateX(getTranslateX() + vx);
             setTranslateY(getTranslateY() + vy);
             setTranslateZ(getTranslateZ() + vz);
@@ -162,26 +160,34 @@ public abstract class Squirting extends Transition {
         return dropMaterial;
     }
 
-    private void createDrops() {
+    public void createDrops() {
         for (int i = 0; i < randomInt(dropCountMin, dropCountMax); ++i) {
-            var drop = new Drop(this, randomFloat(dropRadiusMin, dropRadiusMax));
-            drop.setVisible(true);
-            drop.setVelocity(//
-                randomDouble(dropVelocityMin.getX(), dropVelocityMax.getX()), //
-                randomDouble(dropVelocityMin.getY(), dropVelocityMax.getY()), //
+            var drop = new Drop(dropMaterial, randomFloat(dropRadiusMin, dropRadiusMax), origin);
+            drop.setVisible(false);
+            drop.setVelocity(
+                randomDouble(dropVelocityMin.getX(), dropVelocityMax.getX()),
+                randomDouble(dropVelocityMin.getY(), dropVelocityMax.getY()),
                 randomDouble(dropVelocityMin.getZ(), dropVelocityMax.getZ()));
             root.getChildren().add(drop);
         }
-        Logger.trace("{} drops created", root.getChildren().size());
+        Logger.info("{} drops created", root.getChildren().size());
     }
 
     @Override
     protected void interpolate(double t) {
-        if (t == 0) {
-            createDrops();
+        Logger.info("t={}", t);
+        if (t == 0.0) {
+            //TODO why is this never called?
+            Logger.info("First interpolation frame");
+            return;
         }
-        for (var particle : root.getChildren()) {
-            var drop = (Drop) particle;
+        if (t >= 1.0) {
+            Logger.info("Last interpolation frame");
+            return;
+        }
+        for (var drops : root.getChildren()) {
+            var drop = (Drop) drops;
+            drop.setVisible(true);
             if (reachedFinalPosition(drop)) {
                 drop.setVelocity(0, 0, 0);
                 drop.setScaleZ(0.1);

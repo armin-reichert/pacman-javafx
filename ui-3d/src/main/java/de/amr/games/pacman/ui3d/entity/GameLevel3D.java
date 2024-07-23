@@ -34,7 +34,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -375,11 +374,11 @@ public class GameLevel3D extends Group {
         world.map().food().tiles().filter(world::hasFoodAt).forEach(tile -> {
             if (world.isEnergizerPosition(tile)) {
                 var energizer3D = new Energizer3D(ENERGIZER_RADIUS);
-                addEnergizerAnimation(world, energizer3D);
                 energizers3D.add(energizer3D);
                 energizer3D.root().materialProperty().bind(foodMaterialPy);
                 energizer3D.placeAtTile(tile, 5);
                 getChildren().add(energizer3D.root());
+                addEnergizerAnimation(world, energizer3D);
             } else {
                 var pellet3D = new Pellet3D(pelletModel3D, PELLET_RADIUS);
                 pellets3D.add(pellet3D);
@@ -530,6 +529,7 @@ public class GameLevel3D extends Group {
         squirting.setDropCountMax(45);
         squirting.setDropMaterial(coloredMaterial(foodColorPy.get().desaturate()));
         squirting.setOnFinished(e -> getChildren().remove(squirting.root()));
+        squirting.createDrops();
         getChildren().add(squirting.root());
         energizer3D.setEatenAnimation(squirting);
     }
@@ -627,29 +627,9 @@ public class GameLevel3D extends Group {
         return energizers3D().filter(e3D -> e3D.tile().equals(tile)).findFirst();
     }
 
+    //TODO performance?
     public Optional<Pellet3D> pellet3D(Vector2i tile) {
         checkTileNotNull(tile);
         return pellets3D().filter(p3D -> p3D.tile().equals(tile)).findFirst();
-    }
-
-    public void eatEnergizer3D(Energizer3D energizer3D) {
-        checkNotNull(energizer3D);
-        energizer3D.stopPumping();
-        // Delay disappearance of pellet for some milliseconds because in case the player approaches the pellet from the right,
-        // the pellet would disappear too early (collision detection by tile equality is too coarse).
-        var hideFood = doAfterSec(0.05, () -> energizer3D.root().setVisible(false));
-        if (energizer3D.getEatenAnimation().isPresent() && PY_3D_ENERGIZER_EXPLODES.get()) {
-            Logger.info("Play energizer animation");
-            new SequentialTransition(hideFood, energizer3D.getEatenAnimation().get()).play();
-        } else {
-            hideFood.play();
-        }
-    }
-
-    public void eatPellet3D(Pellet3D pellet3D) {
-        checkNotNull(pellet3D);
-        // Delay disappearance of pellet for some milliseconds because in case the player approaches the pellet from the right,
-        // the pellet would disappear too early (collision detection by tile equality is too coarse).
-        doAfterSec(0.05, () -> pellet3D.root().setVisible(false)).play();
     }
 }
