@@ -26,9 +26,7 @@ package de.amr.games.pacman.ui3d.animation;
 import javafx.animation.Transition;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.paint.Material;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -68,11 +66,7 @@ public abstract class Squirting extends Transition {
     }
 
     private final Group root = new Group();
-    private PhongMaterial dropMaterial = new PhongMaterial();
-    private Point3D origin = new Point3D(0, 0, 0);
     private Point3D gravity = new Point3D(0, 0, 0.1f);
-    private int dropCountMin = 20;
-    private int dropCountMax = 40;
     private float dropRadiusMin = 0.1f;
     private float dropRadiusMax = 1.0f;
     private Point3D dropVelocityMin = new Point3D(-0.25f, -0.25f, -4.0f);
@@ -88,40 +82,12 @@ public abstract class Squirting extends Transition {
         return root;
     }
 
-    public void setDropMaterial(PhongMaterial dropMaterial) {
-        this.dropMaterial = dropMaterial;
-    }
-
-    public void setOrigin(float x, float y, float z) {
-        origin = new Point3D(x, y, z);
-    }
-
-    public void setOrigin(Node node) {
-        setOrigin((float) node.getTranslateX(), (float) node.getTranslateY(), (float) node.getTranslateZ());
-    }
-
     public Point3D getGravity() {
         return gravity;
     }
 
     public void setGravity(Point3D gravity) {
         this.gravity = gravity;
-    }
-
-    public int getDropCountMin() {
-        return dropCountMin;
-    }
-
-    public void setDropCountMin(int dropCountMin) {
-        this.dropCountMin = dropCountMin;
-    }
-
-    public int getDropCountMax() {
-        return dropCountMax;
-    }
-
-    public void setDropCountMax(int dropCountMax) {
-        this.dropCountMax = dropCountMax;
     }
 
     public float getDropRadiusMin() {
@@ -156,13 +122,9 @@ public abstract class Squirting extends Transition {
         this.dropVelocityMax = dropVelocityMax;
     }
 
-    public PhongMaterial getDropMaterial() {
-        return dropMaterial;
-    }
-
-    public void createDrops() {
-        for (int i = 0; i < randomInt(dropCountMin, dropCountMax); ++i) {
-            var drop = new Drop(dropMaterial, randomFloat(dropRadiusMin, dropRadiusMax), origin);
+    public void createDrops(int min, int maxEx, Material material, Point3D origin) {
+        for (int i = 0; i < randomInt(min, maxEx); ++i) {
+            var drop = new Drop(material, randomFloat(dropRadiusMin, dropRadiusMax), origin);
             drop.setVisible(false);
             drop.setVelocity(
                 randomDouble(dropVelocityMin.getX(), dropVelocityMax.getX()),

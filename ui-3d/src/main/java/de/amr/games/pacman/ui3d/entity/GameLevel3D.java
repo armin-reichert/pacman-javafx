@@ -26,6 +26,7 @@ import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
@@ -524,12 +525,10 @@ public class GameLevel3D extends Group {
                 return drop.getTranslateZ() >= -1 && world.containsPoint(drop.getTranslateX(), drop.getTranslateY());
             }
         };
-        squirting.setOrigin(energizer3D.root());
-        squirting.setDropCountMin(15);
-        squirting.setDropCountMax(45);
-        squirting.setDropMaterial(coloredMaterial(foodColorPy.get().desaturate()));
+        //TODO is this the way how to get the position?
+        Point3D origin = energizer3D.root().getLocalToParentTransform().transform(Point3D.ZERO);
         squirting.setOnFinished(e -> getChildren().remove(squirting.root()));
-        squirting.createDrops();
+        squirting.createDrops(15, 46, coloredMaterial(foodColorPy.get().desaturate()), origin);
         getChildren().add(squirting.root());
         energizer3D.setEatenAnimation(squirting);
     }
