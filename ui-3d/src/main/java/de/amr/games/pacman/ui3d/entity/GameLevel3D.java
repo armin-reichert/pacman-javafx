@@ -369,24 +369,25 @@ public class GameLevel3D {
     }
 
     private Node createLivesCounterShape(GameVariant variant) {
+        Theme theme = context.theme();
         return switch (variant) {
             case MS_PACMAN -> new Group(
                 PacModel3D.createPacShape(
-                    context.theme().get("model3D.pacman"), LIVE_SHAPE_SIZE,
-                    context.theme().color("ms_pacman.color.head"),
-                    context.theme().color("ms_pacman.color.eyes"),
-                    context.theme().color("ms_pacman.color.palate")),
+                    theme.get("model3D.pacman"), LIVE_SHAPE_SIZE,
+                    theme.color("ms_pacman.color.head"),
+                    theme.color("ms_pacman.color.eyes"),
+                    theme.color("ms_pacman.color.palate")),
                 PacModel3D.createFemaleParts(LIVE_SHAPE_SIZE,
-                    context.theme().color("ms_pacman.color.hairbow"),
-                    context.theme().color("ms_pacman.color.hairbow.pearls"),
-                    context.theme().color("ms_pacman.color.boobs"))
+                    theme.color("ms_pacman.color.hairbow"),
+                    theme.color("ms_pacman.color.hairbow.pearls"),
+                    theme.color("ms_pacman.color.boobs"))
             );
             case PACMAN, PACMAN_XXL ->
                  PacModel3D.createPacShape(
-                    context.theme().get("model3D.pacman"), LIVE_SHAPE_SIZE,
-                    context.theme().color("pacman.color.head"),
-                    context.theme().color("pacman.color.eyes"),
-                    context.theme().color("pacman.color.palate")
+                    theme.get("model3D.pacman"), LIVE_SHAPE_SIZE,
+                    theme.color("pacman.color.head"),
+                    theme.color("pacman.color.eyes"),
+                    theme.color("pacman.color.palate")
                 );
         };
     }
