@@ -13,9 +13,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import org.tinylog.Logger;
-
-import java.util.stream.Stream;
 
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshView;
