@@ -245,9 +245,9 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
             case LEVEL_COMPLETE -> {
                 context.soundHandler().stopAllSounds();
-                // if cheat has been used to complete level, 3D food might still exist:
-                level3D.pellets3D().forEach(level3D::eatFood);
-                level3D.energizers3D().forEach(level3D::eatFood);
+                // if cheat has been used to complete level, 3D food might still exist, so eat it:
+                level3D.pellets3D().forEach(level3D::eatPellet3D);
+                level3D.energizers3D().forEach(level3D::eatEnergizer3D);
                 level3D.livesCounter3D().stopAnimation();
                 level3D.door3D().setVisible(false);
                 playLevelCompleteAnimation();
@@ -336,9 +336,9 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
     @Override
     public void onPacFoundFood(GameEvent event) {
         GameWorld world = context.game().world();
-        // When cheat "eat all pellets" has been used, no tile is present in the event.
-        // In that case, ensure that the 3D pellets are in sync with the model.
         if (event.tile().isEmpty()) {
+            // When cheat "eat all pellets" has been used, no tile is present in the event.
+            // In that case, ensure that the 3D representations are in sync with the game model.
             world.map().food().tiles()
                 .filter(world::hasEatenFoodAt)
                 .map(level3D::pellet3D)
@@ -346,8 +346,8 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
                 .forEach(Eatable3D::onEaten);
         } else {
             Vector2i tile = event.tile().get();
-            level3D.energizer3D(tile).ifPresent(level3D::eatFood);
-            level3D.pellet3D(tile).ifPresent(level3D::eatFood);
+            level3D.energizer3D(tile).ifPresent(level3D::eatEnergizer3D);
+            level3D.pellet3D(tile).ifPresent(level3D::eatPellet3D);
         }
     }
 

@@ -34,6 +34,7 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -530,23 +531,7 @@ public class GameLevel3D extends Group {
         squirting.setDropMaterial(coloredMaterial(foodColorPy.get().desaturate()));
         squirting.setOnFinished(e -> getChildren().remove(squirting.root()));
         getChildren().add(squirting.root());
-
         energizer3D.setEatenAnimation(squirting);
-    }
-
-    public void eatFood(Eatable3D food) {
-        checkNotNull(food);
-        if (food instanceof Energizer3D energizer3D) {
-            energizer3D.stopPumping();
-        }
-        // Delay disappearance of pellet for some milliseconds because in case the player approaches the pellet from the right,
-        // the pellet would disappear too early (collision detection by tile equality is too coarse).
-        var hideFood = doAfterSec(0.05, () -> food.root().setVisible(false));
-        if (food.getEatenAnimation().isPresent() && PY_3D_ENERGIZER_EXPLODES.get()) {
-            new SequentialTransition(hideFood, food.getEatenAnimation().get()).play();
-        } else {
-            hideFood.play();
-        }
     }
 
     public RotateTransition createMazeRotateAnimation(double seconds) {
@@ -645,5 +630,26 @@ public class GameLevel3D extends Group {
     public Optional<Pellet3D> pellet3D(Vector2i tile) {
         checkTileNotNull(tile);
         return pellets3D().filter(p3D -> p3D.tile().equals(tile)).findFirst();
+    }
+
+    public void eatEnergizer3D(Energizer3D energizer3D) {
+        checkNotNull(energizer3D);
+        energizer3D.stopPumping();
+        // Delay disappearance of pellet for some milliseconds because in case the player approaches the pellet from the right,
+        // the pellet would disappear too early (collision detection by tile equality is too coarse).
+        var hideFood = doAfterSec(0.05, () -> energizer3D.root().setVisible(false));
+        if (energizer3D.getEatenAnimation().isPresent() && PY_3D_ENERGIZER_EXPLODES.get()) {
+            Logger.info("Play energizer animation");
+            new SequentialTransition(hideFood, energizer3D.getEatenAnimation().get()).play();
+        } else {
+            hideFood.play();
+        }
+    }
+
+    public void eatPellet3D(Pellet3D pellet3D) {
+        checkNotNull(pellet3D);
+        // Delay disappearance of pellet for some milliseconds because in case the player approaches the pellet from the right,
+        // the pellet would disappear too early (collision detection by tile equality is too coarse).
+        doAfterSec(0.05, () -> pellet3D.root().setVisible(false)).play();
     }
 }
