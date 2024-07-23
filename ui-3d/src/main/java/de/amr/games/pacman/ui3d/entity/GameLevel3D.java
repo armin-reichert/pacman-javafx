@@ -124,14 +124,8 @@ public class GameLevel3D {
         livesCounter3D = createLivesCounter();
         updateLivesCounter();
         createMessage3D();
-        buildWorld3D(map);
-
-        foodColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_FOOD, Color.PINK));
-        foodMaterialPy.bind(Bindings.createObjectBinding(
-            () -> coloredMaterial(foodColorPy.get()),
-            foodColorPy
-        ));
-        addPellets();
+        buildWorld3D(map.terrain());
+        addFood(world);
 
         // Walls must be added after the guys! Otherwise, transparency is not working correctly.
         root.getChildren().addAll(pac3D.node(), createPacLight(pac3D));
@@ -139,17 +133,15 @@ public class GameLevel3D {
         root.getChildren().addAll(message3D, livesCounter3D, worldGroup);
     }
 
-    private void buildWorld3D(WorldMap map) {
+    private void buildWorld3D(TileMap terrain) {
         wallHeightPy.bind(PY_3D_WALL_HEIGHT);
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
-        wallFillColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_WALL_FILL, Color.rgb(0,0,0)));
-        wallStrokeColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
-
+        wallFillColorPy.set(getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_FILL, Color.rgb(0,0,0)));
+        wallStrokeColorPy.set(getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
         wallStrokeMaterialPy.bind(Bindings.createObjectBinding(
             () -> coloredMaterial(wallStrokeColorPy.get()),
             wallStrokeColorPy
         ));
-
         wallFillMaterialPy.bind(Bindings.createObjectBinding(
             () -> {
                 double opacity = wallOpacityPy.get();
@@ -160,23 +152,20 @@ public class GameLevel3D {
                 return fillMaterial;
             }, wallOpacityPy, wallFillColorPy
         ));
-
         houseFillMaterialPy.bind(Bindings.createObjectBinding(
             () -> coloredMaterial(opaqueColor(wallFillColorPy.get(), HOUSE_OPACITY)),
             wallFillColorPy
         ));
 
-
-        Box floor = createFloor(map.terrain().numCols() * TS - 1, map.terrain().numRows() * TS - 1);
+        Box floor = createFloor(terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
         worldGroup.getChildren().add(floor);
         worldGroup.getChildren().add(mazeGroup);
 
-        TileMap terrainMap = context.game().world().map().terrain();
-        terrainMap.computeTerrainPaths();
-        terrainMap.outerPaths()
+        terrain.computeTerrainPaths();
+        terrain.outerPaths()
             .filter(path -> !context.game().world().isPartOfHouse(path.startTile()))
             .forEach(path -> buildWallAlongPath(mazeGroup, path, outerWallHeightPy, OUTER_WALL_THICKNESS));
-        terrainMap.innerPaths()
+        terrain.innerPaths()
             .forEach(path -> buildWallAlongPath(mazeGroup, path, wallHeightPy, INNER_WALL_THICKNESS));
 
         addHouse();
@@ -371,15 +360,14 @@ public class GameLevel3D {
         return new Group(base, top);
     }
 
-    private void addPellets() {
-        var world = context.game().world();
-        Color color = getColorFromMap(world.map().food(), GameWorld.PROPERTY_COLOR_FOOD, Color.WHITE);
-        foodColorPy.set(color);
-        Material material = coloredMaterial(foodColorPy.get().desaturate());
+    private void addFood(GameWorld world) {
+        TileMap foodMap = world.map().food();
+        foodColorPy.set(getColorFromMap(foodMap, GameWorld.PROPERTY_COLOR_FOOD, Color.WHITE));
+        foodMaterialPy.bind(Bindings.createObjectBinding(() -> coloredMaterial(foodColorPy.get()), foodColorPy));
         Model3D pelletModel3D = context.theme().get("model3D.pellet");
-        world.map().food().tiles().filter(world::hasFoodAt).forEach(tile -> {
+        foodMap.tiles().filter(world::hasFoodAt).forEach(tile -> {
+            Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
             if (world.isEnergizerPosition(tile)) {
-                Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
                 var energizer3D = new Energizer3D(ENERGIZER_RADIUS);
                 energizer3D.root().materialProperty().bind(foodMaterialPy);
                 energizer3D.setTile(tile);
@@ -387,7 +375,7 @@ public class GameLevel3D {
                 var squirting = new Squirting(root, Duration.seconds(2));
                 squirting.setDropReachesFinalPosition(drop ->
                     drop.getTranslateZ() >= -1 && world.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
-                squirting.createDrops(15, 46, material, position);
+                squirting.createDrops(15, 46, foodMaterialPy.get(), position);
                 energizer3D.setEatenAnimation(squirting);
                 root.getChildren().add(energizer3D.root());
                 energizers3D.add(energizer3D);
@@ -395,7 +383,7 @@ public class GameLevel3D {
                 var pellet3D = new Pellet3D(pelletModel3D, PELLET_RADIUS);
                 pellet3D.root().materialProperty().bind(foodMaterialPy);
                 pellet3D.setTile(tile);
-                pellet3D.setPosition(new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6));
+                pellet3D.setPosition(position);
                 root.getChildren().add(pellet3D.root());
                 pellets3D.add(pellet3D);
             }
