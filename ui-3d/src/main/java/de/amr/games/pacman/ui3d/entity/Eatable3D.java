@@ -22,9 +22,11 @@ public interface Eatable3D {
 
     Optional<Animation> getEatenAnimation();
 
+    void setTile(Vector2i tile);
+
     Vector2i tile();
 
-    void placeAtTile(Vector2i tile, double overGround);
+    void setPosition(Point3D position);
 
     Point3D position();
 }

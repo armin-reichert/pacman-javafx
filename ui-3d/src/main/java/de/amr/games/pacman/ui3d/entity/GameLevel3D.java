@@ -31,6 +31,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
@@ -371,26 +372,29 @@ public class GameLevel3D extends Group {
         var world = context.game().world();
         Color color = getColorFromMap(world.map().food(), GameWorld.PROPERTY_COLOR_FOOD, Color.WHITE);
         foodColorPy.set(color);
+        Material material = coloredMaterial(foodColorPy.get().desaturate());
         Model3D pelletModel3D = context.theme().get("model3D.pellet");
         world.map().food().tiles().filter(world::hasFoodAt).forEach(tile -> {
             if (world.isEnergizerPosition(tile)) {
+                Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
                 var energizer3D = new Energizer3D(ENERGIZER_RADIUS);
-                energizers3D.add(energizer3D);
                 energizer3D.root().materialProperty().bind(foodMaterialPy);
-                energizer3D.placeAtTile(tile, 5);
-                getChildren().add(energizer3D.root());
+                energizer3D.setTile(tile);
+                energizer3D.setPosition(position);
                 var squirting = new Squirting(this, Duration.seconds(2));
-                //TODO is this the right way how to get the position?
-                Point3D origin = energizer3D.root().getLocalToParentTransform().transform(Point3D.ZERO);
-                squirting.setDropReachesFinalPosition(drop -> drop.getTranslateZ() >= -1 && world.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
-                squirting.createDrops(15, 46, coloredMaterial(foodColorPy.get().desaturate()), origin);
+                squirting.setDropReachesFinalPosition(drop ->
+                    drop.getTranslateZ() >= -1 && world.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
+                squirting.createDrops(15, 46, material, position);
                 energizer3D.setEatenAnimation(squirting);
+                getChildren().add(energizer3D.root());
+                energizers3D.add(energizer3D);
             } else {
                 var pellet3D = new Pellet3D(pelletModel3D, PELLET_RADIUS);
-                pellets3D.add(pellet3D);
                 pellet3D.root().materialProperty().bind(foodMaterialPy);
-                pellet3D.placeAtTile(tile, 5);
+                pellet3D.setTile(tile);
+                pellet3D.setPosition(new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6));
                 getChildren().add(pellet3D.root());
+                pellets3D.add(pellet3D);
             }
         });
     }

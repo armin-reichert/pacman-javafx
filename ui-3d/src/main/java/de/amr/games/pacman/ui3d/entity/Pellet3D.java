@@ -14,7 +14,7 @@ import javafx.scene.transform.Scale;
 
 import java.util.Optional;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.requirePositive;
 import static de.amr.games.pacman.ui2d.util.Ufx.doAfterSec;
 import static java.util.Objects.requireNonNull;
 
@@ -43,17 +43,21 @@ public class Pellet3D implements Eatable3D {
     }
 
     @Override
-    public void placeAtTile(Vector2i tile, double overGround) {
-        requireNonNull(tile);
-        shape.setUserData(tile);
-        shape.setTranslateX(tile.x() * TS + HTS);
-        shape.setTranslateY(tile.y() * TS + HTS);
-        shape.setTranslateZ(-overGround);
+    public void setPosition(Point3D position) {
+        requireNonNull(position);
+        shape.setTranslateX(position.getX());
+        shape.setTranslateY(position.getY());
+        shape.setTranslateZ(position.getZ());
     }
 
     @Override
     public Point3D position() {
         return new Point3D(shape.getTranslateX(), shape.getTranslateY(), shape.getTranslateZ());
+    }
+
+    @Override
+    public void setTile(Vector2i tile) {
+        shape.setUserData(tile);
     }
 
     @Override
