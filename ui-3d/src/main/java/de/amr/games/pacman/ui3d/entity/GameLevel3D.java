@@ -121,6 +121,30 @@ public class GameLevel3D {
         ghosts3D = game.ghosts().map(ghost -> new MutableGhost3D(ghostModel3D, theme, ghost, GHOST_SIZE)).toList();
         ghosts3D.forEach(ghost3D -> ghost3D.drawModePy.bind(PY_3D_DRAW_MODE));
 
+        livesCounter3D = createLivesCounter();
+        updateLivesCounter();
+        createMessage3D();
+        buildWorld3D(map);
+
+        foodColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_FOOD, Color.PINK));
+        foodMaterialPy.bind(Bindings.createObjectBinding(
+            () -> coloredMaterial(foodColorPy.get()),
+            foodColorPy
+        ));
+        addPellets();
+
+        // Walls must be added after the guys! Otherwise, transparency is not working correctly.
+        root.getChildren().addAll(pac3D.node(), createPacLight(pac3D));
+        root.getChildren().addAll(ghosts3D);
+        root.getChildren().addAll(message3D, livesCounter3D, worldGroup);
+    }
+
+    private void buildWorld3D(WorldMap map) {
+        wallHeightPy.bind(PY_3D_WALL_HEIGHT);
+        wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+        wallFillColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_WALL_FILL, Color.rgb(0,0,0)));
+        wallStrokeColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
+
         wallStrokeMaterialPy.bind(Bindings.createObjectBinding(
             () -> coloredMaterial(wallStrokeColorPy.get()),
             wallStrokeColorPy
@@ -139,36 +163,64 @@ public class GameLevel3D {
 
         houseFillMaterialPy.bind(Bindings.createObjectBinding(
             () -> coloredMaterial(opaqueColor(wallFillColorPy.get(), HOUSE_OPACITY)),
-                wallFillColorPy
+            wallFillColorPy
         ));
 
-        foodMaterialPy.bind(Bindings.createObjectBinding(
-            () -> coloredMaterial(foodColorPy.get()),
-            foodColorPy
-        ));
-
-        wallFillColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_WALL_FILL, Color.rgb(0,0,0)));
-        wallStrokeColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
-        foodColorPy.set(getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_FOOD, Color.PINK));
-
-        livesCounter3D = createLivesCounter();
-        updateLivesCounter();
-        createMessage3D();
 
         Box floor = createFloor(map.terrain().numCols() * TS - 1, map.terrain().numRows() * TS - 1);
         worldGroup.getChildren().add(floor);
         worldGroup.getChildren().add(mazeGroup);
-        addMaze();
+
+        TileMap terrainMap = context.game().world().map().terrain();
+        terrainMap.computeTerrainPaths();
+        terrainMap.outerPaths()
+            .filter(path -> !context.game().world().isPartOfHouse(path.startTile()))
+            .forEach(path -> buildWallAlongPath(mazeGroup, path, outerWallHeightPy, OUTER_WALL_THICKNESS));
+        terrainMap.innerPaths()
+            .forEach(path -> buildWallAlongPath(mazeGroup, path, wallHeightPy, INNER_WALL_THICKNESS));
+
         addHouse();
-        addPellets(); // when put inside maze group, transparency does not work!
+    }
 
-        // Walls must be added after the guys! Otherwise, transparency is not working correctly.
-        root.getChildren().addAll(pac3D.node(), createPacLight(pac3D));
-        root.getChildren().addAll(ghosts3D);
-        root.getChildren().addAll(message3D, livesCounter3D, worldGroup);
+    private void addHouse() {
+        GameWorld world = context.game().world();
+        WorldMap map = world.map();
 
-        wallHeightPy.bind(PY_3D_WALL_HEIGHT);
-        wallOpacityPy.bind(PY_3D_WALL_OPACITY);
+        // tile coordinates
+        int xMin = world.houseTopLeftTile().x();
+        int xMax = xMin + world.houseSize().x() - 1;
+        int yMin = world.houseTopLeftTile().y();
+        int yMax = yMin + world.houseSize().y() - 1;
+
+        Vector2i leftDoorTile = world.houseLeftDoorTile(), rightDoorTile = world.houseRightDoorTile();
+        mazeGroup.getChildren().addAll(
+            createHouseWall(xMin, yMin, leftDoorTile.x() - 1, yMin),
+            createHouseWall(rightDoorTile.x() + 1, yMin, xMax, yMin),
+            createHouseWall(xMin, yMin, xMin, yMax),
+            createHouseWall(xMax, yMin, xMax, yMax),
+            createHouseWall(xMin, yMax, xMax, yMax)
+        );
+
+        Color doorColor = getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_DOOR, Color.rgb(254,184,174));
+        door3D = new Door3D(leftDoorTile, rightDoorTile, doorColor, PY_3D_FLOOR_COLOR);
+        door3D.drawModePy.bind(PY_3D_DRAW_MODE);
+
+        // TODO: If door is added to given parent, it is not visible through transparent house wall in front.
+        // TODO: If is added to the level 3D group, it shows the background wallpaper when its color is transparent! WTF?
+        root.getChildren().add(door3D);
+
+        // pixel coordinates
+        float centerX = world.houseTopLeftTile().x() * TS + world.houseSize().x() * HTS;
+        float centerY = world.houseTopLeftTile().y() * TS + world.houseSize().y() * HTS;
+
+        var light = new PointLight();
+        light.lightOnProperty().bind(houseUsedPy);
+        light.setColor(Color.GHOSTWHITE);
+        light.setMaxRange(3 * TS);
+        light.setTranslateX(centerX);
+        light.setTranslateY(centerY - 6);
+        light.setTranslateZ(-HOUSE_HEIGHT);
+        mazeGroup.getChildren().add(light);
     }
 
     private PointLight createPacLight(Pac3D pac3D) {
@@ -253,60 +305,9 @@ public class GameLevel3D {
         return floor;
     }
 
-    private void addHouse() {
-        GameWorld world = context.game().world();
-        WorldMap map = world.map();
-
-        // tile coordinates
-        int xMin = world.houseTopLeftTile().x();
-        int xMax = xMin + world.houseSize().x() - 1;
-        int yMin = world.houseTopLeftTile().y();
-        int yMax = yMin + world.houseSize().y() - 1;
-
-        Vector2i leftDoorTile = world.houseLeftDoorTile(), rightDoorTile = world.houseRightDoorTile();
-        mazeGroup.getChildren().addAll(
-            createHouseWall(xMin, yMin, leftDoorTile.x() - 1, yMin),
-            createHouseWall(rightDoorTile.x() + 1, yMin, xMax, yMin),
-            createHouseWall(xMin, yMin, xMin, yMax),
-            createHouseWall(xMax, yMin, xMax, yMax),
-            createHouseWall(xMin, yMax, xMax, yMax)
-        );
-
-        Color doorColor = getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_DOOR, Color.rgb(254,184,174));
-        door3D = new Door3D(leftDoorTile, rightDoorTile, doorColor, PY_3D_FLOOR_COLOR);
-        door3D.drawModePy.bind(PY_3D_DRAW_MODE);
-
-        // TODO: If door is added to given parent, it is not visible through transparent house wall in front.
-        // TODO: If is added to the level 3D group, it shows the background wallpaper when its color is transparent! WTF?
-        root.getChildren().add(door3D);
-
-        // pixel coordinates
-        float centerX = world.houseTopLeftTile().x() * TS + world.houseSize().x() * HTS;
-        float centerY = world.houseTopLeftTile().y() * TS + world.houseSize().y() * HTS;
-
-        var light = new PointLight();
-        light.lightOnProperty().bind(houseUsedPy);
-        light.setColor(Color.GHOSTWHITE);
-        light.setMaxRange(3 * TS);
-        light.setTranslateX(centerX);
-        light.setTranslateY(centerY - 6);
-        light.setTranslateZ(-HOUSE_HEIGHT);
-        mazeGroup.getChildren().add(light);
-    }
-
     private Node createHouseWall(int x1, int y1, int x2, int y2) {
         return createWall(v2i(x1, y1), v2i(x2, y2), INNER_WALL_THICKNESS, houseHeightPy,
             houseFillMaterialPy, wallStrokeMaterialPy);
-    }
-
-    private void addMaze() {
-        TileMap terrainMap = context.game().world().map().terrain();
-        terrainMap.computeTerrainPaths();
-        terrainMap.outerPaths()
-            .filter(path -> !context.game().world().isPartOfHouse(path.startTile()))
-            .forEach(path -> buildWallAlongPath(mazeGroup, path, outerWallHeightPy, OUTER_WALL_THICKNESS));
-        terrainMap.innerPaths()
-            .forEach(path -> buildWallAlongPath(mazeGroup, path, wallHeightPy, INNER_WALL_THICKNESS));
     }
 
     private void buildWallAlongPath(Group parent, TileMapPath path, DoubleProperty wallHeightPy, double thickness) {
