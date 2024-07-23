@@ -49,7 +49,7 @@ import static java.lang.Math.PI;
 /**
  * @author Armin Reichert
  */
-public class GameLevel3D extends Group {
+public class GameLevel3D {
 
     static final int   MAX_LIVES             = 5;
     static final float LIVE_SHAPE_SIZE       = 10;
@@ -91,6 +91,8 @@ public class GameLevel3D extends Group {
     public final ObjectProperty<PhongMaterial> foodMaterialPy       = new SimpleObjectProperty<>(this, "foodMaterial");
 
     private final GameContext context;
+
+    private final Group root = new Group();
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
     private final Pac3D pac3D;
@@ -161,9 +163,9 @@ public class GameLevel3D extends Group {
         addPellets(); // when put inside maze group, transparency does not work!
 
         // Walls must be added after the guys! Otherwise, transparency is not working correctly.
-        getChildren().addAll(pac3D.node(), createPacLight(pac3D));
-        getChildren().addAll(ghosts3D);
-        getChildren().addAll(message3D, livesCounter3D, worldGroup);
+        root.getChildren().addAll(pac3D.node(), createPacLight(pac3D));
+        root.getChildren().addAll(ghosts3D);
+        root.getChildren().addAll(message3D, livesCounter3D, worldGroup);
 
         wallHeightPy.bind(PY_3D_WALL_HEIGHT);
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
@@ -276,7 +278,7 @@ public class GameLevel3D extends Group {
 
         // TODO: If door is added to given parent, it is not visible through transparent house wall in front.
         // TODO: If is added to the level 3D group, it shows the background wallpaper when its color is transparent! WTF?
-        getChildren().add(door3D);
+        root.getChildren().add(door3D);
 
         // pixel coordinates
         float centerX = world.houseTopLeftTile().x() * TS + world.houseSize().x() * HTS;
@@ -381,19 +383,19 @@ public class GameLevel3D extends Group {
                 energizer3D.root().materialProperty().bind(foodMaterialPy);
                 energizer3D.setTile(tile);
                 energizer3D.setPosition(position);
-                var squirting = new Squirting(this, Duration.seconds(2));
+                var squirting = new Squirting(root, Duration.seconds(2));
                 squirting.setDropReachesFinalPosition(drop ->
                     drop.getTranslateZ() >= -1 && world.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
                 squirting.createDrops(15, 46, material, position);
                 energizer3D.setEatenAnimation(squirting);
-                getChildren().add(energizer3D.root());
+                root.getChildren().add(energizer3D.root());
                 energizers3D.add(energizer3D);
             } else {
                 var pellet3D = new Pellet3D(pelletModel3D, PELLET_RADIUS);
                 pellet3D.root().materialProperty().bind(foodMaterialPy);
                 pellet3D.setTile(tile);
                 pellet3D.setPosition(new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6));
-                getChildren().add(pellet3D.root());
+                root.getChildren().add(pellet3D.root());
                 pellets3D.add(pellet3D);
             }
         });
@@ -476,7 +478,7 @@ public class GameLevel3D extends Group {
 
             n += 1;
         }
-        getChildren().add(levelCounter3D);
+        root.getChildren().add(levelCounter3D);
     }
 
     private void createMessage3D() {
@@ -528,7 +530,7 @@ public class GameLevel3D extends Group {
     }
 
     public RotateTransition createMazeRotateAnimation(double seconds) {
-        var rotation = new RotateTransition(Duration.seconds(seconds), this);
+        var rotation = new RotateTransition(Duration.seconds(seconds), root);
         rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
         rotation.setFromAngle(0);
         rotation.setToAngle(360);
@@ -582,6 +584,8 @@ public class GameLevel3D extends Group {
             }
         };
     }
+
+    public Group root() { return root; }
 
     public Pac3D pac3D() {
         return pac3D;

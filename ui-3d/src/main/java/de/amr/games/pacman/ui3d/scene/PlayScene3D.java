@@ -366,11 +366,11 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         if (createLevelCounter) {
             level3D.addLevelCounter3D(context.game().levelCounter());
         }
-        root.getChildren().setAll(scores3D, coordSystem, ambientLight, level3D);
+        root.getChildren().setAll(scores3D, coordSystem, ambientLight, level3D.root());
 
-        scores3D.translateXProperty().bind(level3D.translateXProperty().add(TS));
-        scores3D.translateYProperty().bind(level3D.translateYProperty().subtract(3.5 * TS));
-        scores3D.translateZProperty().bind(level3D.translateZProperty().subtract(3 * TS));
+        scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
+        scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
+        scores3D.translateZProperty().bind(level3D.root().translateZProperty().subtract(3 * TS));
 
         Logger.info("3D game level {} created.", context.game().levelNumber());
     }
