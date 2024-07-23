@@ -62,8 +62,8 @@ public class GameLevel3D {
     static final float HOUSE_WALL_THICKNESS  = 1.5f;
     static final float HOUSE_OPACITY         = 0.4f;
     static final float HOUSE_SENSITIVITY     = 1.5f * TS;
-    static final float PAC_SIZE              = 14.0f;
-    static final float GHOST_SIZE            = 13f;
+    static final float PAC_SIZE              = 14.5f;
+    static final float GHOST_SIZE            = 14;
     static final float ENERGIZER_RADIUS      = 3.5f;
     static final float PELLET_RADIUS         = 1.0f;
 
