@@ -379,7 +379,12 @@ public class GameLevel3D extends Group {
                 energizer3D.root().materialProperty().bind(foodMaterialPy);
                 energizer3D.placeAtTile(tile, 5);
                 getChildren().add(energizer3D.root());
-                addEnergizerAnimation(world, energizer3D);
+                var squirting = new Squirting(this, Duration.seconds(2));
+                //TODO is this the right way how to get the position?
+                Point3D origin = energizer3D.root().getLocalToParentTransform().transform(Point3D.ZERO);
+                squirting.setDropReachesFinalPosition(drop -> drop.getTranslateZ() >= -1 && world.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
+                squirting.createDrops(15, 46, coloredMaterial(foodColorPy.get().desaturate()), origin);
+                energizer3D.setEatenAnimation(squirting);
             } else {
                 var pellet3D = new Pellet3D(pelletModel3D, PELLET_RADIUS);
                 pellets3D.add(pellet3D);
@@ -516,15 +521,6 @@ public class GameLevel3D extends Group {
         }
         bonus3D.showEdible();
         worldGroup.getChildren().add(bonus3D);
-    }
-
-    private void addEnergizerAnimation(GameWorld world, Energizer3D energizer3D) {
-        var squirting = new Squirting(this, Duration.seconds(2));
-        //TODO is this the right way how to get the position?
-        Point3D origin = energizer3D.root().getLocalToParentTransform().transform(Point3D.ZERO);
-        squirting.setDropReachesFinalPosition(drop -> drop.getTranslateZ() >= -1 && world.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
-        squirting.createDrops(15, 46, coloredMaterial(foodColorPy.get().desaturate()), origin);
-        energizer3D.setEatenAnimation(squirting);
     }
 
     public RotateTransition createMazeRotateAnimation(double seconds) {
