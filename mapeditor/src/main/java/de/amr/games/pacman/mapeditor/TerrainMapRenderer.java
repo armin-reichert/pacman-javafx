@@ -40,11 +40,11 @@ public class TerrainMapRenderer implements TileMapRenderer {
         double outerPathBorderWidth = 0.75 * innerPathWidth;
         g.save();
         g.scale(scaling(), scaling());
-        map.outerPaths().forEach(path -> {
+        map.doubleStrokePaths().forEach(path -> {
             drawPath(g, map, path, false,  outerPathWidth, wallStrokeColor, null);
             drawPath(g, map, path, false,  outerPathWidth - 2 * outerPathBorderWidth, wallFillColor, null);
         });
-        map.innerPaths().forEach(path -> drawPath(g, map, path, true, innerPathWidth, wallStrokeColor, wallFillColor));
+        map.singleStrokePaths().forEach(path -> drawPath(g, map, path, true, innerPathWidth, wallStrokeColor, wallFillColor));
         map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, door, doorColor));
         g.restore();
     }

@@ -152,10 +152,10 @@ public class GameLevel3D {
 
         worldGroup.getChildren().add(mazeGroup);
         terrain.computeTerrainPaths();
-        terrain.outerPaths()
+        terrain.doubleStrokePaths()
             .filter(path -> !context.game().world().isPartOfHouse(path.startTile()))
             .forEach(path -> buildWallAlongPath(mazeGroup, path, borderWallHeightPy, BORDER_WALL_THICKNESS));
-        terrain.innerPaths()
+        terrain.singleStrokePaths()
             .forEach(path -> buildWallAlongPath(mazeGroup, path, obstacleHeightPy, OBSTACLE_THICKNESS));
 
         addHouse(world);
