@@ -347,7 +347,7 @@ public class GameLevel3D {
             Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
             if (world.isEnergizerPosition(tile)) {
                 var energizer3D = new Energizer3D(ENERGIZER_RADIUS);
-                energizer3D.root().materialProperty().bind(foodMaterialPy);
+                energizer3D.shape3D().materialProperty().bind(foodMaterialPy);
                 energizer3D.setTile(tile);
                 energizer3D.setPosition(position);
                 var squirting = new Squirting(root, Duration.seconds(2));
@@ -355,14 +355,14 @@ public class GameLevel3D {
                     drop.getTranslateZ() >= -1 && world.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
                 squirting.createDrops(15, 46, foodMaterialPy.get(), position);
                 energizer3D.setEatenAnimation(squirting);
-                root.getChildren().add(energizer3D.root());
+                root.getChildren().add(energizer3D.shape3D());
                 energizers3D.add(energizer3D);
             } else {
                 var pellet3D = new Pellet3D(pelletModel3D, PELLET_RADIUS);
-                pellet3D.root().materialProperty().bind(foodMaterialPy);
+                pellet3D.shape3D().materialProperty().bind(foodMaterialPy);
                 pellet3D.setTile(tile);
                 pellet3D.setPosition(position);
-                root.getChildren().add(pellet3D.root());
+                root.getChildren().add(pellet3D.shape3D());
                 pellets3D.add(pellet3D);
             }
         });

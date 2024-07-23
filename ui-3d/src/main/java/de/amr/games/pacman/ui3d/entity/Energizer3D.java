@@ -80,7 +80,7 @@ public class Energizer3D extends Sphere implements Eatable3D {
     }
 
     @Override
-    public Shape3D root() {
+    public Shape3D shape3D() {
         return this;
     }
 

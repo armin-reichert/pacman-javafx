@@ -177,10 +177,10 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             replaceGameLevel3D(true);
         }
         level3D.pellets3D().forEach(
-            pellet3D -> pellet3D.root().setVisible(!context.game().world().hasEatenFoodAt(pellet3D.tile()))
+            pellet3D -> pellet3D.shape3D().setVisible(!context.game().world().hasEatenFoodAt(pellet3D.tile()))
         );
         level3D.energizers3D().forEach(
-            energizer3D -> energizer3D.root().setVisible(!context.game().world().hasEatenFoodAt(energizer3D.tile()))
+            energizer3D -> energizer3D.shape3D().setVisible(!context.game().world().hasEatenFoodAt(energizer3D.tile()))
         );
         if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
             level3D.energizers3D().forEach(Energizer3D::startPumping);

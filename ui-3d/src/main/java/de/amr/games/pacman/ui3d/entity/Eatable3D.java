@@ -16,7 +16,7 @@ import java.util.Optional;
  */
 public interface Eatable3D {
 
-    Node root();
+    Node shape3D();
 
     void onEaten();
 
