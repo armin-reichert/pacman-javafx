@@ -55,10 +55,11 @@ public class GameLevel3D {
     static final float FLOOR_THICKNESS       = 0.4f;
     static final float OBSTACLE_HEIGHT       = 5.5f;
     static final float OBSTACLE_THICKNESS    = 0.5f;
-    static final float BORDER_WALL_HEIGHT    = 7.0f;
-    static final float BORDER_WALL_THICKNESS = 2.0f;
+    static final float BORDER_WALL_HEIGHT    = 8.0f;
+    static final float BORDER_WALL_THICKNESS = 2.5f;
     static final float WALL_COAT_HEIGHT      = 0.1f;
     static final float HOUSE_HEIGHT          = 12.0f;
+    static final float HOUSE_WALL_THICKNESS  = 1.5f;
     static final float HOUSE_OPACITY         = 0.4f;
     static final float HOUSE_SENSITIVITY     = 1.5f * TS;
     static final float PAC_SIZE              = 14.0f;
@@ -130,10 +131,7 @@ public class GameLevel3D {
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
         wallFillColorPy.set(getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_FILL, Color.rgb(0,0,0)));
         wallStrokeColorPy.set(getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
-        wallStrokeMaterialPy.bind(Bindings.createObjectBinding(
-            () -> coloredMaterial(wallStrokeColorPy.get()),
-            wallStrokeColorPy
-        ));
+        wallStrokeMaterialPy.bind(Bindings.createObjectBinding(() -> coloredMaterial(wallStrokeColorPy.get()), wallStrokeColorPy));
         wallFillMaterialPy.bind(Bindings.createObjectBinding(
             () -> {
                 double opacity = wallOpacityPy.get();
@@ -151,8 +149,8 @@ public class GameLevel3D {
 
         Box floor = createFloor(terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
         worldGroup.getChildren().add(floor);
-        worldGroup.getChildren().add(mazeGroup);
 
+        worldGroup.getChildren().add(mazeGroup);
         terrain.computeTerrainPaths();
         terrain.outerPaths()
             .filter(path -> !context.game().world().isPartOfHouse(path.startTile()))
@@ -275,7 +273,7 @@ public class GameLevel3D {
     }
 
     private Node createHouseWall(int x1, int y1, int x2, int y2) {
-        return createWall(v2i(x1, y1), v2i(x2, y2), OBSTACLE_THICKNESS, houseHeightPy,
+        return createWall(v2i(x1, y1), v2i(x2, y2), HOUSE_WALL_THICKNESS, houseHeightPy,
             houseFillMaterialPy, wallStrokeMaterialPy);
     }
 

@@ -125,7 +125,7 @@ public class MutableGhost3D extends Group {
         Vector2f center = ghost.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
-        setTranslateZ(-0.5 * size);
+        setTranslateZ(-0.5 * size - 2.0);
         // TODO: make transition to new wish dir if changed
         orientation.setAngle(Turn.angle(ghost.wishDir()));
         boolean outside = center.x() < HTS || center.x() > ghost.world().map().terrain().numCols() * TS - HTS;
