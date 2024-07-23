@@ -55,8 +55,8 @@ public class MutableGhost3D extends Group {
     };
 
     private final Ghost ghost;
-    private final Group coloredGhostGroup;
-    private final Ghost3D coloredGhost3D;
+    private final Group ghostGroup;
+    private final Ghost3D ghost3D;
     private final NumberCube3D numberCube;
     private final Rotate orientation = new Rotate();
     private final RotateTransition brakeAnimation;
@@ -72,26 +72,26 @@ public class MutableGhost3D extends Group {
         this.ghost = ghost;
         this.size = size;
 
-        coloredGhost3D = new Ghost3D(model3D, theme, ghost.id(), size);
-        coloredGhost3D.dressShape().drawModeProperty().bind(drawModePy);
-        coloredGhost3D.eyeballsShape().drawModeProperty().bind(drawModePy);
-        coloredGhost3D.pupilsShape().drawModeProperty().bind(drawModePy);
+        ghost3D = new Ghost3D(model3D, theme, ghost.id(), size);
+        ghost3D.dressShape().drawModeProperty().bind(drawModePy);
+        ghost3D.eyeballsShape().drawModeProperty().bind(drawModePy);
+        ghost3D.pupilsShape().drawModeProperty().bind(drawModePy);
 
-        coloredGhostGroup = new Group(coloredGhost3D);
-        coloredGhostGroup.getTransforms().add(orientation);
+        ghostGroup = new Group(ghost3D);
+        ghostGroup.getTransforms().add(orientation);
 
         numberCube = new NumberCube3D(14, 8, 8);
 
-        getChildren().add(coloredGhostGroup);
+        getChildren().add(ghostGroup);
 
-        brakeAnimation = new RotateTransition(Duration.seconds(0.5), coloredGhost3D);
+        brakeAnimation = new RotateTransition(Duration.seconds(0.5), ghost3D);
         brakeAnimation.setAxis(Rotate.Y_AXIS);
         brakeAnimation.setFromAngle(0);
         brakeAnimation.setToAngle(-35);
         brakeAnimation.setAutoReverse(true);
         brakeAnimation.setCycleCount(2);
 
-        dressAnimation = new RotateTransition(Duration.seconds(0.3), coloredGhost3D.getDressGroup());
+        dressAnimation = new RotateTransition(Duration.seconds(0.3), ghost3D.getDressGroup());
         // TODO I expected this should be the z-axis but... (transforms messed-up?)
         dressAnimation.setAxis(Rotate.Y_AXIS);
         dressAnimation.setFromAngle(-15);
@@ -168,17 +168,17 @@ public class MutableGhost3D extends Group {
         if (look == Look.NUMBER) {
             getChildren().setAll(numberCube);
         } else {
-            getChildren().setAll(coloredGhostGroup);
+            getChildren().setAll(ghostGroup);
         }
         switch (look) {
-            case NORMAL -> coloredGhost3D.appearNormal();
-            case FRIGHTENED -> coloredGhost3D.appearFrightened();
-            case EYES -> coloredGhost3D.appearEyesOnly();
+            case NORMAL -> ghost3D.appearNormal();
+            case FRIGHTENED -> ghost3D.appearFrightened();
+            case EYES -> ghost3D.appearEyesOnly();
             case FLASHING -> {
                 if (numFlashes > 0) {
-                    coloredGhost3D.appearFlashing(numFlashes, 1.0);
+                    ghost3D.appearFlashing(numFlashes, 1.0);
                 } else {
-                    coloredGhost3D.appearFrightened();
+                    ghost3D.appearFrightened();
                 }
             }
             case NUMBER -> numberCube.startRotation();

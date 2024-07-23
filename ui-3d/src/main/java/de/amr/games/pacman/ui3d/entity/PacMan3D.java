@@ -13,6 +13,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.util.stream.Stream;
 
@@ -91,11 +92,15 @@ public class PacMan3D extends AbstractPac3D {
             context.theme().color("pacman.color.eyes"),
             context.theme().color("pacman.color.palate")
         );
+        meshView(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(drawModePy);
+        meshView(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
+        meshView(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
         jaw = PacModel3D.createPacSkull(
             model3D, size,
             context.theme().color("pacman.color.head"),
             context.theme().color("pacman.color.palate"));
+        meshView(jaw, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
 
         bodyGroup.getChildren().addAll(body, jaw);
         bodyGroup.getTransforms().add(rotation);
@@ -105,9 +110,6 @@ public class PacMan3D extends AbstractPac3D {
         headBanging = new HeadBanging(bodyGroup);
         headBanging.setStrokeMode(false);
 
-        Stream.of(PacModel3D.MESH_ID_EYES, PacModel3D.MESH_ID_HEAD, PacModel3D.MESH_ID_PALATE)
-            .map(id -> meshView(bodyGroup, id))
-            .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
     }
 
     @Override
