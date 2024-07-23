@@ -26,17 +26,20 @@ package de.amr.games.pacman.ui3d.animation;
 import javafx.animation.Transition;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Material;
 import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 import org.tinylog.Logger;
+
+import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * @author Armin Reichert
  */
-public abstract class Squirting extends Transition {
+public class Squirting extends Transition {
 
     public static class Drop extends Sphere {
         private double vx, vy, vz;
@@ -66,17 +69,59 @@ public abstract class Squirting extends Transition {
     }
 
     private final Group root = new Group();
-    private Point3D gravity = new Point3D(0, 0, 0.1f);
+
     private float dropRadiusMin = 0.1f;
     private float dropRadiusMax = 1.0f;
     private Point3D dropVelocityMin = new Point3D(-0.25f, -0.25f, -4.0f);
     private Point3D dropVelocityMax = new Point3D(0.25f, 0.25f, -1.0f);
+    private Point3D gravity = new Point3D(0, 0, 0.1f);
+    private Predicate<Drop> dropReachesFinalPosition = drop -> false;
 
-    protected Squirting() {
-        setCycleDuration(Duration.seconds(2));
+    public Squirting(Group parent, Duration duration) {
+        setCycleDuration(duration);
+        setOnFinished(e -> parent.getChildren().remove(root));
+        parent.getChildren().add(root);
     }
 
-    protected abstract boolean reachedFinalPosition(Drop drop);
+    public void createDrops(int minCount, int maxCountEx, Material material, Point3D origin) {
+        for (int i = 0; i < randomInt(minCount, maxCountEx); ++i) {
+            var drop = new Drop(material, randomFloat(dropRadiusMin, dropRadiusMax), origin);
+            drop.setVisible(false);
+            drop.setVelocity(
+                randomDouble(dropVelocityMin.getX(), dropVelocityMax.getX()),
+                randomDouble(dropVelocityMin.getY(), dropVelocityMax.getY()),
+                randomDouble(dropVelocityMin.getZ(), dropVelocityMax.getZ()));
+            root.getChildren().add(drop);
+        }
+        Logger.info("{} drops created", root.getChildren().size());
+    }
+
+    @Override
+    protected void interpolate(double t) {
+        if (t == 0.0) {
+            //TODO why is this never called?
+            Logger.debug("First interpolation frame t={}", t);
+            return;
+        }
+        if (t >= 1.0) {
+            Logger.debug("Last interpolation frame t={}", t);
+            return;
+        }
+        for (Node drops : root.getChildren()) {
+            var drop = (Drop) drops;
+            drop.setVisible(true);
+            if (dropReachesFinalPosition.test(drop)) {
+                drop.setVelocity(0, 0, 0);
+                drop.setScaleZ(0.1);
+            } else {
+                drop.move(gravity);
+            }
+        }
+    }
+
+    public void setDropReachesFinalPosition(Predicate<Drop> condition) {
+        this.dropReachesFinalPosition = condition;
+    }
 
     public Group root() {
         return root;
@@ -120,42 +165,5 @@ public abstract class Squirting extends Transition {
 
     public void setDropVelocityMax(Point3D dropVelocityMax) {
         this.dropVelocityMax = dropVelocityMax;
-    }
-
-    public void createDrops(int min, int maxEx, Material material, Point3D origin) {
-        for (int i = 0; i < randomInt(min, maxEx); ++i) {
-            var drop = new Drop(material, randomFloat(dropRadiusMin, dropRadiusMax), origin);
-            drop.setVisible(false);
-            drop.setVelocity(
-                randomDouble(dropVelocityMin.getX(), dropVelocityMax.getX()),
-                randomDouble(dropVelocityMin.getY(), dropVelocityMax.getY()),
-                randomDouble(dropVelocityMin.getZ(), dropVelocityMax.getZ()));
-            root.getChildren().add(drop);
-        }
-        Logger.info("{} drops created", root.getChildren().size());
-    }
-
-    @Override
-    protected void interpolate(double t) {
-        Logger.info("t={}", t);
-        if (t == 0.0) {
-            //TODO why is this never called?
-            Logger.info("First interpolation frame");
-            return;
-        }
-        if (t >= 1.0) {
-            Logger.info("Last interpolation frame");
-            return;
-        }
-        for (var drops : root.getChildren()) {
-            var drop = (Drop) drops;
-            drop.setVisible(true);
-            if (reachedFinalPosition(drop)) {
-                drop.setVelocity(0, 0, 0);
-                drop.setScaleZ(0.1);
-            } else {
-                drop.move(gravity);
-            }
-        }
     }
 }

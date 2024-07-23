@@ -519,17 +519,11 @@ public class GameLevel3D extends Group {
     }
 
     private void addEnergizerAnimation(GameWorld world, Energizer3D energizer3D) {
-        var squirting = new Squirting() {
-            @Override
-            protected boolean reachedFinalPosition(Drop drop) {
-                return drop.getTranslateZ() >= -1 && world.containsPoint(drop.getTranslateX(), drop.getTranslateY());
-            }
-        };
-        //TODO is this the way how to get the position?
+        var squirting = new Squirting(this, Duration.seconds(2));
+        //TODO is this the right way how to get the position?
         Point3D origin = energizer3D.root().getLocalToParentTransform().transform(Point3D.ZERO);
-        squirting.setOnFinished(e -> getChildren().remove(squirting.root()));
+        squirting.setDropReachesFinalPosition(drop -> drop.getTranslateZ() >= -1 && world.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
         squirting.createDrops(15, 46, coloredMaterial(foodColorPy.get().desaturate()), origin);
-        getChildren().add(squirting.root());
         energizer3D.setEatenAnimation(squirting);
     }
 
