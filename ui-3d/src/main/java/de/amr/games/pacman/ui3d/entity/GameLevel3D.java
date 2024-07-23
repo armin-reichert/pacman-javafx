@@ -534,26 +534,19 @@ public class GameLevel3D extends Group {
         energizer3D.setEatenAnimation(squirting);
     }
 
-    public void eat(Eatable3D eatable3D) {
-        checkNotNull(eatable3D);
-        if (eatable3D instanceof Energizer3D energizer3D) {
+    public void eatFood(Eatable3D food) {
+        checkNotNull(food);
+        if (food instanceof Energizer3D energizer3D) {
             energizer3D.stopPumping();
         }
-        // Delay hiding of pellet for some milliseconds because in case the player approaches the pellet from the right,
-        // the pellet disappears too early (collision by tile equality is too coarse).
-        var hiding = doAfterSec(0.05, () -> eatable3D.root().setVisible(false));
-        var energizerExplosion = eatable3D.getEatenAnimation().orElse(null);
-        if (energizerExplosion != null && PY_3D_ENERGIZER_EXPLODES.get()) {
-            new SequentialTransition(hiding, energizerExplosion).play();
+        // Delay disappearance of pellet for some milliseconds because in case the player approaches the pellet from the right,
+        // the pellet would disappear too early (collision detection by tile equality is too coarse).
+        var hideFood = doAfterSec(0.05, () -> food.root().setVisible(false));
+        if (food.getEatenAnimation().isPresent() && PY_3D_ENERGIZER_EXPLODES.get()) {
+            new SequentialTransition(hideFood, food.getEatenAnimation().get()).play();
         } else {
-            hiding.play();
+            hideFood.play();
         }
-    }
-
-    public void updateFood() {
-        GameWorld world = context.game().world();
-        pellets3D.forEach(pellet3D -> pellet3D.root().setVisible(!world.hasEatenFoodAt(pellet3D.tile())));
-        energizers3D.forEach(energizer3D -> energizer3D.root().setVisible(!world.hasEatenFoodAt(energizer3D.tile())));
     }
 
     public RotateTransition createMazeRotateAnimation(double seconds) {
