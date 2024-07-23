@@ -31,7 +31,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
@@ -54,10 +53,10 @@ public class GameLevel3D {
     static final int   MAX_LIVES             = 5;
     static final float LIVE_SHAPE_SIZE       = 10;
     static final float FLOOR_THICKNESS       = 0.4f;
-    static final float INNER_WALL_HEIGHT     = 5.5f;
-    static final float INNER_WALL_THICKNESS  = 0.5f;
-    static final float OUTER_WALL_HEIGHT     = 7.0f;
-    static final float OUTER_WALL_THICKNESS  = 2.0f;
+    static final float OBSTACLE_HEIGHT       = 5.5f;
+    static final float OBSTACLE_THICKNESS    = 0.5f;
+    static final float BORDER_WALL_HEIGHT    = 7.0f;
+    static final float BORDER_WALL_THICKNESS = 2.0f;
     static final float WALL_COAT_HEIGHT      = 0.1f;
     static final float HOUSE_HEIGHT          = 12.0f;
     static final float HOUSE_OPACITY         = 0.4f;
@@ -67,20 +66,13 @@ public class GameLevel3D {
     static final float ENERGIZER_RADIUS      = 3.5f;
     static final float PELLET_RADIUS         = 1.0f;
 
-    public final StringProperty floorTextureNamePy  = new SimpleStringProperty(this, "floorTextureName", NO_TEXTURE);
-    public final ObjectProperty<Color> floorColorPy = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
-    public final DoubleProperty outerWallHeightPy   = new SimpleDoubleProperty(this, "outerWallHeight", OUTER_WALL_HEIGHT);
-    public final DoubleProperty wallHeightPy        = new SimpleDoubleProperty(this, "wallHeight", INNER_WALL_HEIGHT);
-    public final DoubleProperty houseHeightPy       = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
-    public final BooleanProperty houseUsedPy        = new SimpleBooleanProperty(this, "houseUsed", false);
-    public final BooleanProperty houseOpenPy        = new SimpleBooleanProperty(this, "houseOpen", false) {
-        @Override
-        protected void invalidated() {
-            if (get()) {
-                door3D.playTraversalAnimation();
-            }
-        }
-    };
+    public final StringProperty                floorTextureNamePy   = new SimpleStringProperty(this, "floorTextureName", NO_TEXTURE);
+    public final ObjectProperty<Color>         floorColorPy         = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
+    public final DoubleProperty                borderWallHeightPy   = new SimpleDoubleProperty(this, "borderWallHeight", BORDER_WALL_HEIGHT);
+    public final DoubleProperty                obstacleHeightPy     = new SimpleDoubleProperty(this, "obstacleHeight", OBSTACLE_HEIGHT);
+    public final DoubleProperty                houseHeightPy        = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
+    public final BooleanProperty               houseUsedPy          = new SimpleBooleanProperty(this, "houseUsed", false);
+    public final BooleanProperty               houseOpenPy          = new SimpleBooleanProperty(this, "houseOpen", false);
     public final ObjectProperty<PhongMaterial> houseFillMaterialPy  = new SimpleObjectProperty<>(this, "houseFillMaterial");
     public final ObjectProperty<PhongMaterial> wallFillMaterialPy   = new SimpleObjectProperty<>(this, "wallFillMaterial");
     public final ObjectProperty<PhongMaterial> wallStrokeMaterialPy = new SimpleObjectProperty<>(this, "wallStrokeMaterial");
@@ -109,7 +101,6 @@ public class GameLevel3D {
 
         GameModel game  = context.game();
         GameWorld world = game.world();
-        WorldMap map    = world.map();
         Theme theme     = context.theme();
 
         pac3D = game.variant() == GameVariant.MS_PACMAN
@@ -124,7 +115,7 @@ public class GameLevel3D {
         livesCounter3D = createLivesCounter();
         updateLivesCounter();
         createMessage3D();
-        buildWorld3D(map.terrain());
+        buildWorld3D(world);
         addFood(world);
 
         // Walls must be added after the guys! Otherwise, transparency is not working correctly.
@@ -133,8 +124,9 @@ public class GameLevel3D {
         root.getChildren().addAll(message3D, livesCounter3D, worldGroup);
     }
 
-    private void buildWorld3D(TileMap terrain) {
-        wallHeightPy.bind(PY_3D_WALL_HEIGHT);
+    private void buildWorld3D(GameWorld world) {
+        TileMap terrain = world.map().terrain();
+        obstacleHeightPy.bind(PY_3D_WALL_HEIGHT);
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
         wallFillColorPy.set(getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_FILL, Color.rgb(0,0,0)));
         wallStrokeColorPy.set(getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
@@ -164,15 +156,14 @@ public class GameLevel3D {
         terrain.computeTerrainPaths();
         terrain.outerPaths()
             .filter(path -> !context.game().world().isPartOfHouse(path.startTile()))
-            .forEach(path -> buildWallAlongPath(mazeGroup, path, outerWallHeightPy, OUTER_WALL_THICKNESS));
+            .forEach(path -> buildWallAlongPath(mazeGroup, path, borderWallHeightPy, BORDER_WALL_THICKNESS));
         terrain.innerPaths()
-            .forEach(path -> buildWallAlongPath(mazeGroup, path, wallHeightPy, INNER_WALL_THICKNESS));
+            .forEach(path -> buildWallAlongPath(mazeGroup, path, obstacleHeightPy, OBSTACLE_THICKNESS));
 
-        addHouse();
+        addHouse(world);
     }
 
-    private void addHouse() {
-        GameWorld world = context.game().world();
+    private void addHouse(GameWorld world) {
         WorldMap map = world.map();
 
         // tile coordinates
@@ -210,6 +201,12 @@ public class GameLevel3D {
         light.setTranslateY(centerY - 6);
         light.setTranslateZ(-HOUSE_HEIGHT);
         mazeGroup.getChildren().add(light);
+
+        houseOpenPy.addListener((py, wasOpen, isOpen) -> {
+            if (isOpen) {
+                door3D.playTraversalAnimation();
+            }
+        });
     }
 
     private PointLight createPacLight(Pac3D pac3D) {
@@ -225,23 +222,6 @@ public class GameLevel3D {
         light.translateYProperty().bind(pac3D.node().translateYProperty());
         light.translateZProperty().bind(pac3D.node().translateZProperty().subtract(PAC_SIZE));
         return light;
-    }
-
-    public void getReadyToPlay() {
-        stopHunting();
-        pac3D.init();
-        ghosts3D.forEach(ghost3D -> ghost3D.init(context));
-    }
-
-    public void startHunting() {
-        livesCounter3D.startAnimation();
-        energizers3D.forEach(Energizer3D::startPumping);
-    }
-
-    public void stopHunting() {
-        energizers3D.forEach(Energizer3D::stopPumping);
-        bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
-        livesCounter3D().stopAnimation();
     }
 
     public void update() {
@@ -295,7 +275,7 @@ public class GameLevel3D {
     }
 
     private Node createHouseWall(int x1, int y1, int x2, int y2) {
-        return createWall(v2i(x1, y1), v2i(x2, y2), INNER_WALL_THICKNESS, houseHeightPy,
+        return createWall(v2i(x1, y1), v2i(x2, y2), OBSTACLE_THICKNESS, houseHeightPy,
             houseFillMaterialPy, wallStrokeMaterialPy);
     }
 
@@ -489,7 +469,7 @@ public class GameLevel3D {
         message3D.setTranslateY(y);
         message3D.setTranslateZ(dist); // under floor
         var moveUpAnimation = new TranslateTransition(Duration.seconds(1), message3D);
-        moveUpAnimation.setToZ(-(dist + 0.5 * wallHeightPy.get()));
+        moveUpAnimation.setToZ(-(dist + 0.5 * obstacleHeightPy.get()));
         var moveDownAnimation = new TranslateTransition(Duration.seconds(1), message3D);
         moveDownAnimation.setDelay(Duration.seconds(displaySeconds));
         moveDownAnimation.setToZ(dist);
@@ -529,22 +509,22 @@ public class GameLevel3D {
 
     public Transition createWallsDisappearAnimation(double seconds) {
         return new Transition() {
-            private final double initialWallHeight = wallHeightPy.get();
-            private final double initialOuterWallHeight = outerWallHeightPy.get();
+            private final double initialWallHeight = obstacleHeightPy.get();
+            private final double initialOuterWallHeight = borderWallHeightPy.get();
             {
                 setCycleDuration(Duration.seconds(seconds));
                 setInterpolator(Interpolator.LINEAR);
                 setOnFinished(e -> {
                     mazeGroup.setVisible(false);
-                    wallHeightPy.bind(PY_3D_WALL_HEIGHT);
+                    obstacleHeightPy.bind(PY_3D_WALL_HEIGHT);
                 });
             }
 
             @Override
             protected void interpolate(double t) {
-                wallHeightPy.unbind();
-                wallHeightPy.set((1-t) * initialWallHeight);
-                outerWallHeightPy.set((1-t) * initialOuterWallHeight);
+                obstacleHeightPy.unbind();
+                obstacleHeightPy.set((1-t) * initialWallHeight);
+                borderWallHeightPy.set((1-t) * initialOuterWallHeight);
             }
         };
     }
@@ -554,13 +534,13 @@ public class GameLevel3D {
             return pauseSec(1.0);
         }
         return new Transition() {
-            private final double initialWallHeight = wallHeightPy.get();
+            private final double initialWallHeight = obstacleHeightPy.get();
 
             {
                 setCycleDuration(Duration.seconds(0.33));
                 setCycleCount(numFlashes);
                 setInterpolator(Interpolator.LINEAR);
-                setOnFinished(e -> wallHeightPy.bind(PY_3D_WALL_HEIGHT));
+                setOnFinished(e -> obstacleHeightPy.bind(PY_3D_WALL_HEIGHT));
             }
 
             @Override
@@ -568,8 +548,8 @@ public class GameLevel3D {
                 // t = [0, 1] is mapped to the interval [pi/2, 3*pi/2]. The value of the sin-function in that interval
                 // starts at 1, goes to 0 and back to 1
                 double elongation = 0.5 * (1 + Math.sin(PI * (2*t + 0.5)));
-                wallHeightPy.unbind(); // TODO when called in constructor does not work. Why?
-                wallHeightPy.set(elongation * initialWallHeight);
+                obstacleHeightPy.unbind(); // TODO when called in constructor does not work. Why?
+                obstacleHeightPy.set(elongation * initialWallHeight);
             }
         };
     }

@@ -195,6 +195,12 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         }
     }
 
+    private void stopHunting() {
+        level3D.energizers3D().forEach(Energizer3D::stopPumping);
+        level3D.bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
+        level3D.livesCounter3D().stopAnimation();
+    }
+
     @Override
     public void onGameStateEntry(GameState state) {
         switch (state) {
@@ -202,12 +208,17 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             case READY -> {
                 context.soundHandler().stopAllSounds();
                 if (level3D != null) {
+                    stopHunting();
+                    level3D.pac3D().init();
+                    level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
                     showReadyMessage();
-                    level3D.getReadyToPlay();
                 }
             }
 
-            case HUNTING -> level3D.startHunting();
+            case HUNTING -> {
+                level3D.livesCounter3D().startAnimation();
+                level3D.energizers3D().forEach(Energizer3D::startPumping);
+            }
 
             case PACMAN_DYING -> {
                 context.soundHandler().stopAllSounds();
@@ -261,12 +272,12 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             }
 
             case GAME_OVER -> {
+                stopHunting();
                 // delay state exit for 3 seconds
                 context.gameState().timer().restartSeconds(3);
                 context.actionHandler().showFlashMessageSeconds(3, PICKER_GAME_OVER.next());
                 context.soundHandler().stopAllSounds();
                 context.soundHandler().playAudioClip("audio.game_over");
-                level3D.stopHunting();
             }
 
             case LEVEL_TEST -> {
