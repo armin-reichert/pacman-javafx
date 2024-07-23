@@ -16,10 +16,7 @@ import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.PlaySceneSound;
-import de.amr.games.pacman.ui3d.entity.Bonus3D;
-import de.amr.games.pacman.ui3d.entity.Eatable3D;
-import de.amr.games.pacman.ui3d.entity.GameLevel3D;
-import de.amr.games.pacman.ui3d.entity.Scores3D;
+import de.amr.games.pacman.ui3d.entity.*;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.DoubleProperty;
@@ -186,7 +183,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             energizer3D -> energizer3D.root().setVisible(!context.game().world().hasEatenFoodAt(energizer3D.tile()))
         );
         if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
-            level3D.startEnergizerAnimation();
+            level3D.energizers3D().forEach(Energizer3D::startPumping);
         }
         context.game().pac().show();
         context.game().ghosts().forEach(Ghost::show);

@@ -190,11 +190,11 @@ public class GameLevel3D extends Group {
 
     public void startHunting() {
         livesCounter3D.startAnimation();
-        startEnergizerAnimation();
+        energizers3D.forEach(Energizer3D::startPumping);
     }
 
     public void stopHunting() {
-        stopEnergizerAnimation();
+        energizers3D.forEach(Energizer3D::stopPumping);
         bonus3D().ifPresent(bonus3D -> bonus3D.setVisible(false));
         livesCounter3D().stopAnimation();
     }
@@ -635,14 +635,6 @@ public class GameLevel3D extends Group {
 
     public Stream<Energizer3D> energizers3D() {
         return energizers3D.stream();
-    }
-
-    public void startEnergizerAnimation() {
-        energizers3D.forEach(Energizer3D::startPumping);
-    }
-
-    public void stopEnergizerAnimation() {
-        energizers3D.forEach(Energizer3D::stopPumping);
     }
 
     public Optional<Energizer3D> energizer3D(Vector2i tile) {
