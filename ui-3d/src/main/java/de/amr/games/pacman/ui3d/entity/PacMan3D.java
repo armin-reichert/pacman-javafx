@@ -101,6 +101,7 @@ public class PacMan3D extends AbstractPac3D {
             context.theme().color("pacman.color.head"),
             context.theme().color("pacman.color.palate"));
         meshView(jaw, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
+        meshView(jaw, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
         bodyGroup.getChildren().addAll(body, jaw);
         bodyGroup.getTransforms().add(rotation);
