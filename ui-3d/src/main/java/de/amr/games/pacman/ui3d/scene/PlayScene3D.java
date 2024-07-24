@@ -54,18 +54,16 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
     private final SubScene fxSubScene;
     private final Group root = new Group();
-    private final AmbientLight ambientLight;
-    private final CoordSystem coordSystem;
     private final Scores3D scores3D;
 
     private GameLevel3D level3D;
     private GameContext context;
 
     public PlayScene3D() {
-        ambientLight = new AmbientLight();
+        var ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
 
-        coordSystem = new CoordSystem();
+        var coordSystem = new CoordSystem();
         coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
         scores3D = new Scores3D("SCORE", "HIGH SCORE");
@@ -84,7 +82,8 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
 
-        root.getChildren().setAll(scores3D, coordSystem, ambientLight);
+        // last child is placeholder for level 3D
+        root.getChildren().setAll(scores3D, coordSystem, ambientLight, new Group());
     }
 
     public DoubleProperty widthProperty() {
@@ -391,7 +390,8 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         if (createLevelCounter) {
             level3D.addLevelCounter3D(context.game().levelCounter());
         }
-        root.getChildren().setAll(scores3D, coordSystem, ambientLight, level3D.root());
+        int lastIndex = root.getChildren().size() - 1;
+        root.getChildren().set(lastIndex, level3D.root());
 
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
