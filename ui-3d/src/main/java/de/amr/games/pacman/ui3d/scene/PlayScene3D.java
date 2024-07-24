@@ -71,9 +71,9 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         scores3D = new Scores3D("SCORE", "HIGH SCORE");
 
         // initial size is irrelevant as it is bound to parent scene later
-        root.getChildren().setAll(scores3D, coordSystem, ambientLight);
         fxSubScene = new SubScene(root, 42, 42, true, SceneAntialiasing.BALANCED);
         fxSubScene.setFill(null); // transparent
+
         var camera = new PerspectiveCamera(true);
         camera.setNearClip(0.1);
         camera.setFarClip(10000.0);
@@ -83,6 +83,8 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         // keep the scores rotated such that the viewer always sees them frontally
         scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
         scores3D.rotateProperty().bind(camera.rotateProperty());
+
+        root.getChildren().setAll(scores3D, coordSystem, ambientLight);
     }
 
     public DoubleProperty widthProperty() {
@@ -115,14 +117,17 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             Logger.warn("Cannot update 3D play scene, no game level exists");
             return;
         }
+
+        // If level started in 2D and user switches to 3D scene, the 3D level must be created
         if (level3D == null) {
-            // if level has been started in 2D scene and user switches to 3D scene, the 3D level must be created
             replaceGameLevel3D(true);
         }
         level3D.update();
+
+        // Update camera
         perspective().update(fxSubScene.getCamera(), game.world(), game.pac());
 
-        // Update autopilot usage on every update because autopilot flag is in core layer where we don't have a JavaFX property to bind with
+        // Autopilot usage is updated on every frame because autopilot flag is in core layer without JavaFX property to bind
         game.pac().setUseAutopilot(game.isDemoLevel() || PY_AUTOPILOT.get());
 
         scores3D.showHighScore(game.highScore().points(), game.highScore().levelNumber());
@@ -131,6 +136,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         } else { // demo level or "game over" state
             scores3D.showTextAsScore("GAME OVER!", Color.RED);
         }
+
         updateSound(context);
     }
 
@@ -172,7 +178,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
-        Logger.info("{} entered from {}", this, oldScene);
+        Logger.info("{} entered from {}", this.getClass().getSimpleName(), oldScene.getClass().getSimpleName());
         if (level3D == null) {
             replaceGameLevel3D(true);
         }
@@ -183,15 +189,23 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             energizer3D -> energizer3D.shape3D().setVisible(!context.game().world().hasEatenFoodAt(energizer3D.tile()))
         );
         if (oneOf(context.gameState(), GameState.HUNTING, GameState.GHOST_DYING)) {
-            level3D.energizers3D().forEach(Energizer3D::startPumping);
+            level3D.energizers3D().filter(energizer3D -> energizer3D.shape3D().isVisible()).forEach(Energizer3D::startPumping);
         }
         context.game().pac().show();
         context.game().ghosts().forEach(Ghost::show);
         level3D.pac3D().init();
         level3D.pac3D().updateAlive();
-        ensureSirenPlaying(context);
-        if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING) {
-            context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
+
+        if (context.game().isDemoLevel()) {
+            return; // no sound in demo level
+        }
+
+        if (context.gameState() == GameState.HUNTING) {
+            if (context.game().powerTimer().isRunning()) {
+                context.soundHandler().playPowerSound();
+            } else {
+                context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
+            }
         }
     }
 
