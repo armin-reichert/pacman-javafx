@@ -91,10 +91,6 @@ public class GameLevel3D {
     private Bonus3D bonus3D;
     private Message3D message3D;
 
-    private PhongMaterial wallStrokeMaterial;
-    private PhongMaterial wallFillMaterial;
-    private PhongMaterial houseFillMaterial;
-
     public GameLevel3D(GameContext context) {
         this.context = checkNotNull(context);
 
@@ -123,17 +119,44 @@ public class GameLevel3D {
         root.getChildren().addAll(message3D, livesCounter3D, worldGroup);
     }
 
+    public void update() {
+        var game = context.game();
+        if (game.pac().isAlive()) {
+            pac3D.updateAlive();
+        }
+        ghosts3D().forEach(ghost3D -> ghost3D.update(context));
+        bonus3D().ifPresent(bonus -> bonus.update(context));
+        houseUsedPy.set(
+            game.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+                .anyMatch(Ghost::isVisible));
+        Vector2f houseEntryPosition = game.world().houseEntryPosition();
+        houseOpenPy.set(
+            game.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+                .filter(ghost -> ghost.position().euclideanDistance(houseEntryPosition) <= HOUSE_SENSITIVITY)
+                .anyMatch(Ghost::isVisible));
+
+        updateLivesCounter();
+    }
+
+    private void updateLivesCounter() {
+        //TODO reconsider this:
+        if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
+            livesCounter3D.livesCountPy.set(context.game().lives());
+        } else {
+            livesCounter3D.livesCountPy.set(context.game().lives() - 1);
+        }
+    }
+
     private void buildWorld3D(GameWorld world) {
         TileMap terrain = world.map().terrain();
         obstacleHeightPy.bind(PY_3D_WALL_HEIGHT);
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
 
         Color wallStrokeColor = getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255));
-        wallStrokeMaterial = coloredMaterial(wallStrokeColor);
+        PhongMaterial wallStrokeMaterial = coloredMaterial(wallStrokeColor);
         Color wallFillColor = getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_FILL, Color.rgb(0, 0, 0));
-        wallFillMaterial = new PhongMaterial(opaqueColor(wallFillColor, wallOpacityPy.get()));
+        PhongMaterial wallFillMaterial = new PhongMaterial(opaqueColor(wallFillColor, wallOpacityPy.get()));
         wallFillMaterial.setSpecularColor(wallFillMaterial.getDiffuseColor().brighter());
-        houseFillMaterial = coloredMaterial(opaqueColor(wallFillColor, HOUSE_OPACITY));
 
         Box floor = createFloor(terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
         worldGroup.getChildren().add(floor);
@@ -142,14 +165,15 @@ public class GameLevel3D {
         terrain.computeTerrainPaths();
         terrain.doubleStrokePaths()
             .filter(path -> !context.game().world().isPartOfHouse(path.startTile()))
-            .forEach(path -> buildWallAlongPath(mazeGroup, path, borderWallHeightPy, BORDER_WALL_THICKNESS));
+            .forEach(path -> buildWallAlongPath(mazeGroup, path, borderWallHeightPy, BORDER_WALL_THICKNESS, wallFillMaterial, wallStrokeMaterial));
         terrain.singleStrokePaths()
-            .forEach(path -> buildWallAlongPath(mazeGroup, path, obstacleHeightPy, OBSTACLE_THICKNESS));
+            .forEach(path -> buildWallAlongPath(mazeGroup, path, obstacleHeightPy, OBSTACLE_THICKNESS, wallFillMaterial, wallStrokeMaterial));
 
-        addHouse(world);
+        PhongMaterial houseFillMaterial = coloredMaterial(opaqueColor(wallFillColor, HOUSE_OPACITY));
+        addHouse(world, houseFillMaterial, wallStrokeMaterial);
     }
 
-    private void addHouse(GameWorld world) {
+    private void addHouse(GameWorld world, PhongMaterial fillMaterial, PhongMaterial strokeMaterial) {
         WorldMap map = world.map();
 
         // tile coordinates
@@ -160,11 +184,11 @@ public class GameLevel3D {
 
         Vector2i leftDoorTile = world.houseLeftDoorTile(), rightDoorTile = world.houseRightDoorTile();
         mazeGroup.getChildren().addAll(
-            createHouseWall(xMin, yMin, leftDoorTile.x() - 1, yMin),
-            createHouseWall(rightDoorTile.x() + 1, yMin, xMax, yMin),
-            createHouseWall(xMin, yMin, xMin, yMax),
-            createHouseWall(xMax, yMin, xMax, yMax),
-            createHouseWall(xMin, yMax, xMax, yMax)
+            createHouseWall(xMin, yMin, leftDoorTile.x() - 1, yMin, fillMaterial, strokeMaterial),
+            createHouseWall(rightDoorTile.x() + 1, yMin, xMax, yMin, fillMaterial, strokeMaterial),
+            createHouseWall(xMin, yMin, xMin, yMax, fillMaterial, strokeMaterial),
+            createHouseWall(xMax, yMin, xMax, yMax, fillMaterial, strokeMaterial),
+            createHouseWall(xMin, yMax, xMax, yMax, fillMaterial, strokeMaterial)
         );
 
         Color doorColor = getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_DOOR, Color.rgb(254,184,174));
@@ -210,34 +234,6 @@ public class GameLevel3D {
         return light;
     }
 
-    public void update() {
-        var game = context.game();
-        if (game.pac().isAlive()) {
-            pac3D.updateAlive();
-        }
-        ghosts3D().forEach(ghost3D -> ghost3D.update(context));
-        bonus3D().ifPresent(bonus -> bonus.update(context));
-        houseUsedPy.set(
-            game.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-                .anyMatch(Ghost::isVisible));
-        Vector2f houseEntryPosition = game.world().houseEntryPosition();
-        houseOpenPy.set(
-            game.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-                .filter(ghost -> ghost.position().euclideanDistance(houseEntryPosition) <= HOUSE_SENSITIVITY)
-                .anyMatch(Ghost::isVisible));
-
-        updateLivesCounter();
-    }
-
-    private void updateLivesCounter() {
-        //TODO reconsider this:
-        if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
-            livesCounter3D.livesCountPy.set(context.game().lives());
-        } else {
-            livesCounter3D.livesCountPy.set(context.game().lives() - 1);
-        }
-    }
-
     private Box createFloor(double width, double height) {
         var floor = new Box(width, height, FLOOR_THICKNESS);
         // Place floor such that left-upper corner is at origin and floor surface is at z=0
@@ -260,11 +256,15 @@ public class GameLevel3D {
         return floor;
     }
 
-    private Node createHouseWall(int x1, int y1, int x2, int y2) {
-        return createWall(v2i(x1, y1), v2i(x2, y2), HOUSE_WALL_THICKNESS, houseHeightPy, houseFillMaterial, wallStrokeMaterial);
+    private Node createHouseWall(int x1, int y1, int x2, int y2, PhongMaterial fillMaterial, PhongMaterial strokeMaterial) {
+        return createWall(v2i(x1, y1), v2i(x2, y2), HOUSE_WALL_THICKNESS, houseHeightPy, fillMaterial, strokeMaterial);
     }
 
-    private void buildWallAlongPath(Group parent, TileMapPath path, DoubleProperty wallHeightPy, double thickness) {
+    private void buildWallAlongPath(
+        Group parent, TileMapPath path,
+        DoubleProperty wallHeightPy, double thickness,
+        PhongMaterial wallFillMaterial, PhongMaterial wallStrokeMaterial)
+    {
         Vector2i startTile = path.startTile(), endTile = startTile;
         Direction prevDir = null;
         Node segment;
