@@ -388,9 +388,11 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
     private void playLevelCompleteAnimation() {
         boolean intermission = context.game().intermissionNumber(context.game().levelNumber()) != 0;
-        lockGameStateAndPlayAfterOneSecond(intermission
-            ? levelCompleteAnimationBeforeIntermission()
-            : levelCompleteAnimation());
+        Animation animation = intermission ? levelCompleteAnimationBeforeIntermission() : levelCompleteAnimation();
+        animation.setDelay(Duration.seconds(1.0));
+        animation.setOnFinished(e -> context.gameState().timer().expire());
+        context.gameState().timer().resetIndefinitely();
+        animation.play();
     }
 
     private Animation levelCompleteAnimation() {
@@ -404,10 +406,9 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             now(() -> PY_3D_PERSPECTIVE.set(Perspective.TOTAL))
             , pauseSec(2)
             , mazeFlashes
-            , pauseSec(2)
-            , now(() -> context.game().pac().hide())
-            , now(() -> context.soundHandler().playAudioClip("audio.level_complete"))
             , pauseSec(1)
+            , now(() -> { context.game().pac().hide(); context.soundHandler().playAudioClip("audio.level_complete"); })
+            , pauseSec(0.5)
             , mazeRotates
             , wallsDisappear
             , doAfterSec(1, () -> {
@@ -425,13 +426,6 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             , level3D.createMazeFlashAnimation(numFlashes)
             , doAfterSec(2.5, () -> context.game().pac().hide())
         );
-    }
-
-    private void lockGameStateAndPlayAfterOneSecond(Animation animation) {
-        context.gameState().timer().resetIndefinitely();
-        animation.setDelay(Duration.seconds(1.0));
-        animation.setOnFinished(e -> context.gameState().timer().expire());
-        animation.play();
     }
 
     private String pickLevelCompleteMessage() {
