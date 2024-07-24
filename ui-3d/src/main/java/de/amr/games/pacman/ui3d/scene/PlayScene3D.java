@@ -397,13 +397,13 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
     private Animation levelCompleteAnimation() {
         int numFlashes = context.game().level().orElseThrow().numFlashes();
-        Perspective perspectiveBeforeAnimation = perspective();
         Animation mazeFlashes = level3D.createMazeFlashAnimation(numFlashes);
         Animation mazeRotates = level3D.createMazeRotateAnimation(1.5);
         Animation wallsDisappear = level3D.createWallsDisappearAnimation(1.0);
+        String message = PICKER_LEVEL_COMPLETE.next() + "\n\n" + context.tt("level_complete", context.game().levelNumber());
         //TODO is there are better way to do this?
         return new SequentialTransition(
-            now(() -> PY_3D_PERSPECTIVE.set(Perspective.TOTAL))
+              now(() -> { perspectivePy.unbind(); perspectivePy.set(Perspective.TOTAL); })
             , pauseSec(2)
             , mazeFlashes
             , pauseSec(1)
@@ -412,9 +412,9 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             , mazeRotates
             , wallsDisappear
             , doAfterSec(1, () -> {
-                PY_3D_PERSPECTIVE.set(perspectiveBeforeAnimation);
                 context.soundHandler().playAudioClip("audio.sweep");
-                context.actionHandler().showFlashMessageSeconds(1, pickLevelCompleteMessage());
+                context.actionHandler().showFlashMessageSeconds(1, message);
+                perspectivePy.bind(PY_3D_PERSPECTIVE);
             })
         );
     }
@@ -426,9 +426,5 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             , level3D.createMazeFlashAnimation(numFlashes)
             , doAfterSec(2.5, () -> context.game().pac().hide())
         );
-    }
-
-    private String pickLevelCompleteMessage() {
-        return PICKER_LEVEL_COMPLETE.next() + "\n\n" + context.tt("level_complete", context.game().levelNumber());
     }
 }
