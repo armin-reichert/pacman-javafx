@@ -119,6 +119,7 @@ public class PacMan3D extends AbstractPac3D {
     public void init() {
         super.init();
         headBanging.stop();
+        headBanging.setStrokeMode(false);
         stopChewing();
     }
 

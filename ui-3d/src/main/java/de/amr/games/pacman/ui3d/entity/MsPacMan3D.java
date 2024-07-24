@@ -120,6 +120,7 @@ public class MsPacMan3D extends AbstractPac3D {
     public void init() {
         super.init();
         hipSwaying.stop();
+        hipSwaying.setWinnetouchMode(false);
         stopChewing();
     }
 
