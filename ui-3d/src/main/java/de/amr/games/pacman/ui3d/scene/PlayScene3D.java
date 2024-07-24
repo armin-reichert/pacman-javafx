@@ -235,13 +235,9 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
             case PACMAN_DYING -> {
                 context.soundHandler().stopAllSounds();
-                context.gameState().timer().resetIndefinitely();
                 // last update before dying animation
                 level3D.pac3D().updateAlive();
-                Animation dying = level3D.pac3D().createDyingAnimation();
-                dying.setDelay(Duration.seconds(1));
-                dying.setOnFinished(e -> context.gameState().timer().expire());
-                dying.play();
+                playPacManDiesAnimation();
             }
 
             case GHOST_DYING -> {
@@ -398,6 +394,14 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         scores3D.translateZProperty().bind(level3D.root().translateZProperty().subtract(3 * TS));
 
         Logger.info("3D game level {} created.", context.game().levelNumber());
+    }
+
+    private void playPacManDiesAnimation() {
+        Animation animation = level3D.pac3D().createDyingAnimation();
+        animation.setDelay(Duration.seconds(1));
+        animation.setOnFinished(e -> context.gameState().timer().expire());
+        context.gameState().timer().resetIndefinitely();
+        animation.play();
     }
 
     private void playLevelCompleteAnimation() {
