@@ -387,21 +387,21 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
     }
 
     private void playLevelCompleteAnimation() {
+        int numFlashes = context.game().level().orElseThrow().numFlashes();
         boolean intermission = context.game().intermissionNumber(context.game().levelNumber()) != 0;
-        Animation animation = intermission ? levelCompleteAnimationBeforeIntermission() : levelCompleteAnimation();
+        Animation animation = intermission ? levelCompleteAnimationBeforeIntermission(numFlashes) : levelCompleteAnimation(numFlashes);
         animation.setDelay(Duration.seconds(1.0));
         animation.setOnFinished(e -> context.gameState().timer().expire());
         context.gameState().timer().resetIndefinitely();
         animation.play();
     }
 
-    private Animation levelCompleteAnimation() {
-        int numFlashes = context.game().level().orElseThrow().numFlashes();
-        Animation mazeFlashes = level3D.createMazeFlashAnimation(numFlashes);
-        Animation mazeRotates = level3D.createMazeRotateAnimation(1.5);
-        Animation wallsDisappear = level3D.createWallsDisappearAnimation(1.0);
+    private Animation levelCompleteAnimation(int numFlashes) {
+        Animation mazeFlashes    = level3D.createMazeFlashAnimation(numFlashes);
+        Animation mazeRotates    = level3D.createMazeRotateAnimation(1.5);
+        Animation mazeDisappears = level3D.createWallsDisappearAnimation(1.0);
         String message = PICKER_LEVEL_COMPLETE.next() + "\n\n" + context.tt("level_complete", context.game().levelNumber());
-        //TODO is there are better way to do this?
+        //TODO is there are better way to do this e.g. using a TimeLine?
         return new SequentialTransition(
               now(() -> { perspectivePy.unbind(); perspectivePy.set(Perspective.TOTAL); })
             , pauseSec(2)
@@ -410,7 +410,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             , now(() -> { context.game().pac().hide(); context.soundHandler().playAudioClip("audio.level_complete"); })
             , pauseSec(0.5)
             , mazeRotates
-            , wallsDisappear
+            , mazeDisappears
             , doAfterSec(1, () -> {
                 context.soundHandler().playAudioClip("audio.sweep");
                 context.actionHandler().showFlashMessageSeconds(1, message);
@@ -419,10 +419,9 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         );
     }
 
-    private Animation levelCompleteAnimationBeforeIntermission() {
-        int numFlashes = context.game().level().orElseThrow().numFlashes();
+    private Animation levelCompleteAnimationBeforeIntermission(int numFlashes) {
         return new SequentialTransition(
-             pauseSec(1)
+              pauseSec(1)
             , level3D.createMazeFlashAnimation(numFlashes)
             , doAfterSec(2.5, () -> context.game().pac().hide())
         );
