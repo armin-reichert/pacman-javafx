@@ -100,7 +100,7 @@ Cheats:
 - <kbd>Alt+N</kbd> Enter next game level
 - <kbd>Alt+X</kbd> Kill all ghosts outside of the ghost house
 
-## How it looks
+## How it looks (Click to play video)
 
 <div float="left">
     <a href="https://magentacloud.de/s/qYDg6BKK7G6TxpB">
