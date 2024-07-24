@@ -77,10 +77,10 @@ public class GameLevel3D {
     private final BooleanProperty       houseOpenPy         = new SimpleBooleanProperty(this, "houseOpen", false);
     private final DoubleProperty        wallOpacityPy       = new SimpleDoubleProperty(this, "wallOpacity",1.0);
     private final ObjectProperty<Color> wallFillColorPy     = new SimpleObjectProperty<>(this, "wallFillColor", Color.BLUE);
-    private final ObjectProperty<Color> wallStrokeColorPy    = new SimpleObjectProperty<>(this, "wallStrokeColor", Color.LIGHTBLUE);
-    private final ObjectProperty<PhongMaterial> wallFillMaterialPy = new SimpleObjectProperty<>(this, "wallFillMaterial");
+    private final ObjectProperty<Color> wallStrokeColorPy   = new SimpleObjectProperty<>(this, "wallStrokeColor", Color.LIGHTBLUE);
+    private final ObjectProperty<PhongMaterial> wallFillMaterialPy   = new SimpleObjectProperty<>(this, "wallFillMaterial");
     private final ObjectProperty<PhongMaterial> wallStrokeMaterialPy = new SimpleObjectProperty<>(this, "wallStrokeMaterial");
-    private final ObjectProperty<PhongMaterial> houseFillMaterialPy = new SimpleObjectProperty<>(this, "houseFillMaterial");
+    private final ObjectProperty<PhongMaterial> houseFillMaterialPy  = new SimpleObjectProperty<>(this, "houseFillMaterial");
 
     private final GameContext context;
 
