@@ -90,9 +90,9 @@ public class ModelViewer extends Application {
             Logger.info("File {} selected", selectedFile);
             Model3D model3D = new Model3D(selectedFile);
             Node shape = PacModel3D.createPacShape(model3D, 16, Color.YELLOW, Color.BLACK, Color.PINK);
-            Model3D.meshView(shape, PacModel3D.MESH_ID_HEAD).setDrawMode(DrawMode.LINE);
-            Model3D.meshView(shape, PacModel3D.MESH_ID_PALATE).setDrawMode(DrawMode.LINE);
-            Model3D.meshView(shape, PacModel3D.MESH_ID_EYES).setDrawMode(DrawMode.LINE);
+            Model3D.meshViewById(shape, PacModel3D.MESH_ID_HEAD).setDrawMode(DrawMode.LINE);
+            Model3D.meshViewById(shape, PacModel3D.MESH_ID_PALATE).setDrawMode(DrawMode.LINE);
+            Model3D.meshViewById(shape, PacModel3D.MESH_ID_EYES).setDrawMode(DrawMode.LINE);
             setCurrentNode(new Group(shape));
         }
     }

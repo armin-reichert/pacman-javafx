@@ -15,7 +15,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
-import static de.amr.games.pacman.ui3d.model.Model3D.meshView;
+import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
 
 /**
  * @author Armin Reichert
@@ -89,16 +89,16 @@ public class PacMan3D extends AbstractPac3D {
             context.theme().color("pacman.color.eyes"),
             context.theme().color("pacman.color.palate")
         );
-        meshView(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(drawModePy);
-        meshView(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
-        meshView(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
+        meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(drawModePy);
+        meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
+        meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
         jaw = PacModel3D.createPacSkull(
             model3D, size,
             context.theme().color("pacman.color.head"),
             context.theme().color("pacman.color.palate"));
-        meshView(jaw, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
-        meshView(jaw, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
+        meshViewById(jaw, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
+        meshViewById(jaw, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
         bodyGroup.getChildren().addAll(body, jaw);
         bodyGroup.getTransforms().add(rotation);

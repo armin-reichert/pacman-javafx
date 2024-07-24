@@ -19,7 +19,7 @@ import javafx.util.Duration;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.ui2d.util.Ufx.pauseSec;
-import static de.amr.games.pacman.ui3d.model.Model3D.meshView;
+import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
 
 /**
  * @author Armin Reichert
@@ -107,7 +107,7 @@ public class MsPacMan3D extends AbstractPac3D {
 
         // for wireframe mode
         Stream.of(PacModel3D.MESH_ID_EYES, PacModel3D.MESH_ID_HEAD, PacModel3D.MESH_ID_PALATE)
-            .map(id -> meshView(bodyGroup, id))
+            .map(id -> meshViewById(bodyGroup, id))
             .forEach(meshView -> meshView.drawModeProperty().bind(drawModePy));
     }
 

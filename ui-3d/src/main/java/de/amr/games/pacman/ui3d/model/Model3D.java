@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -41,11 +42,11 @@ public class Model3D {
         return new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth());
     }
 
-    public static MeshView meshView(Node tree, String id) {
-        requireNonNull(tree);
+    public static MeshView meshViewById(Node root, String id) {
+        requireNonNull(root);
         requireNonNull(id);
         var cssID = toCSS_ID(id);
-        var node = tree.lookup("#" + cssID);
+        var node = root.lookup("#" + cssID);
         if (node == null) {
             throw new IllegalArgumentException("No mesh view with ID '%s' found".formatted(cssID));
         }
@@ -56,7 +57,7 @@ public class Model3D {
     }
 
     public static String toCSS_ID(String id) {
-        // TODO what else need to be escaped?
+        // what else need to be escaped?
         return id.replace('.', '-');
     }
 
@@ -64,10 +65,8 @@ public class Model3D {
     private final Map<String, PhongMaterial> materials = new HashMap<>();
 
     public Model3D(URL objFileURL) {
-        if (objFileURL == null) {
-            throw new Model3DException("3D model cannot be created: URL is null");
-        }
-        Logger.info("Loading 3D model from URL: {}", objFileURL);
+        checkNotNull(objFileURL);
+        Logger.info("Loading 3D OBJ model from URL: {}", objFileURL);
         try {
             importModel(new ObjImporter(objFileURL.toExternalForm()));
         } catch (Exception x) {
@@ -76,7 +75,8 @@ public class Model3D {
     }
 
     public Model3D(File objFile) {
-        Logger.info("Loading 3D model from OBJ file '{}'", objFile);
+        checkNotNull(objFile);
+        Logger.info("Loading 3D OBJ model from file '{}'", objFile);
         try (var in = new FileInputStream(objFile)) {
             importModel(new ObjImporter(in));
         } catch (Exception x) {
@@ -119,7 +119,7 @@ public class Model3D {
         throw new Model3DException("No mesh with name %s found", name);
     }
 
-    public MeshView meshView(String name) {
+    public MeshView meshViewById(String name) {
         return new MeshView(mesh(name));
     }
 
