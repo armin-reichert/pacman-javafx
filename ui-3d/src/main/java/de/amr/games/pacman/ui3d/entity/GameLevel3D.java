@@ -31,6 +31,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
@@ -74,14 +75,7 @@ public class GameLevel3D {
     public final DoubleProperty                houseHeightPy        = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
     public final BooleanProperty               houseUsedPy          = new SimpleBooleanProperty(this, "houseUsed", false);
     public final BooleanProperty               houseOpenPy          = new SimpleBooleanProperty(this, "houseOpen", false);
-    public final ObjectProperty<PhongMaterial> houseFillMaterialPy  = new SimpleObjectProperty<>(this, "houseFillMaterial");
-    public final ObjectProperty<PhongMaterial> wallFillMaterialPy   = new SimpleObjectProperty<>(this, "wallFillMaterial");
-    public final ObjectProperty<PhongMaterial> wallStrokeMaterialPy = new SimpleObjectProperty<>(this, "wallStrokeMaterial");
-    public final ObjectProperty<Color>         wallFillColorPy      = new SimpleObjectProperty<>(this, "wallFillColor", Color.GREEN);
-    public final ObjectProperty<Color>         wallStrokeColorPy    = new SimpleObjectProperty<>(this, "wallStrokeColor", Color.WHITE);
     public final DoubleProperty                wallOpacityPy        = new SimpleDoubleProperty(this, "wallOpacity",1.0);
-    public final ObjectProperty<Color>         foodColorPy          = new SimpleObjectProperty<>(this, "foodColor", Color.PINK);
-    public final ObjectProperty<PhongMaterial> foodMaterialPy       = new SimpleObjectProperty<>(this, "foodMaterial");
 
     private final GameContext context;
 
@@ -96,6 +90,10 @@ public class GameLevel3D {
     private final LivesCounter3D livesCounter3D;
     private Bonus3D bonus3D;
     private Message3D message3D;
+
+    private PhongMaterial wallStrokeMaterial;
+    private PhongMaterial wallFillMaterial;
+    private PhongMaterial houseFillMaterial;
 
     public GameLevel3D(GameContext context) {
         this.context = checkNotNull(context);
@@ -129,23 +127,13 @@ public class GameLevel3D {
         TileMap terrain = world.map().terrain();
         obstacleHeightPy.bind(PY_3D_WALL_HEIGHT);
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
-        wallFillColorPy.set(getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_FILL, Color.rgb(0,0,0)));
-        wallStrokeColorPy.set(getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
-        wallStrokeMaterialPy.bind(Bindings.createObjectBinding(() -> coloredMaterial(wallStrokeColorPy.get()), wallStrokeColorPy));
-        wallFillMaterialPy.bind(Bindings.createObjectBinding(
-            () -> {
-                double opacity = wallOpacityPy.get();
-                Color fillColor = wallFillColorPy.get();
-                Color color = opaqueColor(fillColor, opacity);
-                PhongMaterial fillMaterial = new PhongMaterial(color);
-                fillMaterial.setSpecularColor(color.brighter());
-                return fillMaterial;
-            }, wallOpacityPy, wallFillColorPy
-        ));
-        houseFillMaterialPy.bind(Bindings.createObjectBinding(
-            () -> coloredMaterial(opaqueColor(wallFillColorPy.get(), HOUSE_OPACITY)),
-            wallFillColorPy
-        ));
+
+        Color wallStrokeColor = getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255));
+        wallStrokeMaterial = coloredMaterial(wallStrokeColor);
+        Color wallFillColor = getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_FILL, Color.rgb(0, 0, 0));
+        wallFillMaterial = new PhongMaterial(opaqueColor(wallFillColor, wallOpacityPy.get()));
+        wallFillMaterial.setSpecularColor(wallFillMaterial.getDiffuseColor().brighter());
+        houseFillMaterial = coloredMaterial(opaqueColor(wallFillColor, HOUSE_OPACITY));
 
         Box floor = createFloor(terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
         worldGroup.getChildren().add(floor);
@@ -273,8 +261,7 @@ public class GameLevel3D {
     }
 
     private Node createHouseWall(int x1, int y1, int x2, int y2) {
-        return createWall(v2i(x1, y1), v2i(x2, y2), HOUSE_WALL_THICKNESS, houseHeightPy,
-            houseFillMaterialPy, wallStrokeMaterialPy);
+        return createWall(v2i(x1, y1), v2i(x2, y2), HOUSE_WALL_THICKNESS, houseHeightPy, houseFillMaterial, wallStrokeMaterial);
     }
 
     private void buildWallAlongPath(Group parent, TileMapPath path, DoubleProperty wallHeightPy, double thickness) {
@@ -283,56 +270,56 @@ public class GameLevel3D {
         Node segment;
         for (Direction dir : path) {
             if (prevDir != dir) {
-                segment = createWall(startTile, endTile, thickness, wallHeightPy, wallFillMaterialPy, wallStrokeMaterialPy);
+                segment = createWall(startTile, endTile, thickness, wallHeightPy, wallFillMaterial, wallStrokeMaterial);
                 parent.getChildren().add(segment);
                 startTile = endTile;
             }
             endTile = endTile.plus(dir.vector());
             prevDir = dir;
         }
-        segment = createWall(startTile, endTile, thickness, wallHeightPy, wallFillMaterialPy, wallStrokeMaterialPy);
+        segment = createWall(startTile, endTile, thickness, wallHeightPy, wallFillMaterial, wallStrokeMaterial);
         parent.getChildren().add(segment);
     }
 
     private static Node createWall(
         Vector2i tile1, Vector2i tile2,
         double thickness, DoubleProperty wallHeightPy,
-        ObjectProperty<PhongMaterial> fillMaterialPy, ObjectProperty<PhongMaterial> strokeMaterialPy)
+        PhongMaterial fillMaterial, PhongMaterial strokeMaterial)
     {
         if (tile1.y() == tile2.y()) { // horizontal wall
             Vector2i left  = tile1.x() < tile2.x() ? tile1 : tile2;
             Vector2i right = tile1.x() < tile2.x() ? tile2 : tile1;
             Vector2i origin = left.plus(right).scaled(HTS).plus(HTS, HTS);
             int length = right.minus(left).scaled(TS).x();
-            return createWall(origin, length + thickness, thickness, wallHeightPy, fillMaterialPy, strokeMaterialPy);
+            return createWall(origin, length + thickness, thickness, wallHeightPy, fillMaterial, strokeMaterial);
         }
         else if (tile1.x() == tile2.x()) { // vertical wall
             Vector2i top    = tile1.y() < tile2.y() ? tile1 : tile2;
             Vector2i bottom = tile1.y() < tile2.y() ? tile2 : tile1;
             Vector2i origin = top.plus(bottom).scaled(HTS).plus(HTS, HTS);
             int length = bottom.minus(top).scaled(TS).y();
-            return createWall(origin, thickness, length, wallHeightPy, fillMaterialPy, strokeMaterialPy);
+            return createWall(origin, thickness, length, wallHeightPy, fillMaterial, strokeMaterial);
         }
         throw new IllegalArgumentException(String.format("Cannot build wall between tiles %s and %s", tile1, tile2));
     }
 
     private static Node createWall(
         Vector2i origin, double sizeX, double sizeY, DoubleProperty wallHeightPy,
-        ObjectProperty<PhongMaterial> fillMaterialPy, ObjectProperty<PhongMaterial> strokeMaterialPy) {
+        PhongMaterial fillMaterial, PhongMaterial strokeMaterial) {
 
         var base = new Box(sizeX, sizeY, wallHeightPy.get());
         base.setTranslateX(origin.x());
         base.setTranslateY(origin.y());
         base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
         base.depthProperty().bind(wallHeightPy);
-        base.materialProperty().bind(fillMaterialPy);
+        base.materialProperty().set(fillMaterial);
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         var top = new Box(sizeX, sizeY, WALL_COAT_HEIGHT);
         top.translateXProperty().bind(base.translateXProperty());
         top.translateYProperty().bind(base.translateYProperty());
         top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(WALL_COAT_HEIGHT));
-        top.materialProperty().bind(strokeMaterialPy);
+        top.materialProperty().set(strokeMaterial);
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         return new Group(base, top);
@@ -340,26 +327,26 @@ public class GameLevel3D {
 
     private void addFood(GameWorld world) {
         TileMap foodMap = world.map().food();
-        foodColorPy.set(getColorFromMap(foodMap, GameWorld.PROPERTY_COLOR_FOOD, Color.WHITE));
-        foodMaterialPy.bind(Bindings.createObjectBinding(() -> coloredMaterial(foodColorPy.get()), foodColorPy));
+        Color foodColor = getColorFromMap(foodMap, GameWorld.PROPERTY_COLOR_FOOD, Color.WHITE);
+        Material foodMaterial = coloredMaterial(foodColor);
         Model3D pelletModel3D = context.theme().get("model3D.pellet");
         foodMap.tiles().filter(world::hasFoodAt).forEach(tile -> {
             Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
             if (world.isEnergizerPosition(tile)) {
                 var energizer3D = new Energizer3D(ENERGIZER_RADIUS);
-                energizer3D.shape3D().materialProperty().bind(foodMaterialPy);
+                energizer3D.shape3D().setMaterial(foodMaterial);
                 energizer3D.setTile(tile);
                 energizer3D.setPosition(position);
                 var squirting = new Squirting(root, Duration.seconds(2));
                 squirting.setDropReachesFinalPosition(drop ->
                     drop.getTranslateZ() >= -1 && world.containsPoint(drop.getTranslateX(), drop.getTranslateY()));
-                squirting.createDrops(15, 46, foodMaterialPy.get(), position);
+                squirting.createDrops(15, 46, foodMaterial, position);
                 energizer3D.setEatenAnimation(squirting);
                 root.getChildren().add(energizer3D.shape3D());
                 energizers3D.add(energizer3D);
             } else {
                 var pellet3D = new Pellet3D(pelletModel3D, PELLET_RADIUS);
-                pellet3D.shape3D().materialProperty().bind(foodMaterialPy);
+                pellet3D.shape3D().setMaterial(foodMaterial);
                 pellet3D.setTile(tile);
                 pellet3D.setPosition(position);
                 root.getChildren().add(pellet3D.shape3D());
