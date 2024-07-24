@@ -68,14 +68,19 @@ public class GameLevel3D {
     static final float ENERGIZER_RADIUS      = 3.5f;
     static final float PELLET_RADIUS         = 1.0f;
 
-    public final StringProperty                floorTextureNamePy   = new SimpleStringProperty(this, "floorTextureName", NO_TEXTURE);
-    public final ObjectProperty<Color>         floorColorPy         = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
-    public final DoubleProperty                borderWallHeightPy   = new SimpleDoubleProperty(this, "borderWallHeight", BORDER_WALL_HEIGHT);
-    public final DoubleProperty                obstacleHeightPy     = new SimpleDoubleProperty(this, "obstacleHeight", OBSTACLE_HEIGHT);
-    public final DoubleProperty                houseHeightPy        = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
-    public final BooleanProperty               houseUsedPy          = new SimpleBooleanProperty(this, "houseUsed", false);
-    public final BooleanProperty               houseOpenPy          = new SimpleBooleanProperty(this, "houseOpen", false);
-    public final DoubleProperty                wallOpacityPy        = new SimpleDoubleProperty(this, "wallOpacity",1.0);
+    private final StringProperty        floorTextureNamePy  = new SimpleStringProperty(this, "floorTextureName", NO_TEXTURE);
+    private final ObjectProperty<Color> floorColorPy        = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
+    private final DoubleProperty        borderWallHeightPy  = new SimpleDoubleProperty(this, "borderWallHeight", BORDER_WALL_HEIGHT);
+    private final DoubleProperty        obstacleHeightPy    = new SimpleDoubleProperty(this, "obstacleHeight", OBSTACLE_HEIGHT);
+    private final DoubleProperty        houseHeightPy       = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
+    private final BooleanProperty       houseUsedPy         = new SimpleBooleanProperty(this, "houseUsed", false);
+    private final BooleanProperty       houseOpenPy         = new SimpleBooleanProperty(this, "houseOpen", false);
+    private final DoubleProperty        wallOpacityPy       = new SimpleDoubleProperty(this, "wallOpacity",1.0);
+    private final ObjectProperty<Color> wallFillColorPy     = new SimpleObjectProperty<>(this, "wallFillColor", Color.BLUE);
+    private final ObjectProperty<Color> wallStrokeColorPy    = new SimpleObjectProperty<>(this, "wallStrokeColor", Color.LIGHTBLUE);
+    private final ObjectProperty<PhongMaterial> wallFillMaterialPy = new SimpleObjectProperty<>(this, "wallFillMaterial");
+    private final ObjectProperty<PhongMaterial> wallStrokeMaterialPy = new SimpleObjectProperty<>(this, "wallStrokeMaterial");
+    private final ObjectProperty<PhongMaterial> houseFillMaterialPy = new SimpleObjectProperty<>(this, "houseFillMaterial");
 
     private final GameContext context;
 
@@ -110,6 +115,21 @@ public class GameLevel3D {
         livesCounter3D = createLivesCounter();
         updateLivesCounter();
         createMessage3D();
+
+        wallFillMaterialPy.bind(Bindings.createObjectBinding(
+            () -> {
+                Color diffuseColor = opaqueColor(getWallFillColor(), wallOpacityPy.get());
+                Color specularColor = diffuseColor.brighter();
+                PhongMaterial material = new PhongMaterial(diffuseColor);
+                material.setSpecularColor(specularColor);
+                return material;
+            }, wallOpacityPy, wallFillColorPy
+        ));
+
+        wallStrokeMaterialPy.bind(Bindings.createObjectBinding(
+            () -> coloredMaterial(getWallStrokeColor()),
+            wallStrokeColorPy));
+
         buildWorld3D(world);
         addFood(world);
 
@@ -152,11 +172,8 @@ public class GameLevel3D {
         obstacleHeightPy.bind(PY_3D_WALL_HEIGHT);
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
 
-        Color wallStrokeColor = getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255));
-        PhongMaterial wallStrokeMaterial = coloredMaterial(wallStrokeColor);
-        Color wallFillColor = getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_FILL, Color.rgb(0, 0, 0));
-        PhongMaterial wallFillMaterial = new PhongMaterial(opaqueColor(wallFillColor, wallOpacityPy.get()));
-        wallFillMaterial.setSpecularColor(wallFillMaterial.getDiffuseColor().brighter());
+        wallStrokeColorPy.set(getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
+        wallFillColorPy.set(getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_FILL, Color.rgb(0, 0, 0)));
 
         Box floor = createFloor(terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
         worldGroup.getChildren().add(floor);
@@ -165,15 +182,18 @@ public class GameLevel3D {
         terrain.computeTerrainPaths();
         terrain.doubleStrokePaths()
             .filter(path -> !context.game().world().isPartOfHouse(path.startTile()))
-            .forEach(path -> buildWallAlongPath(mazeGroup, path, borderWallHeightPy, BORDER_WALL_THICKNESS, wallFillMaterial, wallStrokeMaterial));
+            .forEach(path -> buildWallAlongPath(mazeGroup, path, borderWallHeightPy, BORDER_WALL_THICKNESS));
         terrain.singleStrokePaths()
-            .forEach(path -> buildWallAlongPath(mazeGroup, path, obstacleHeightPy, OBSTACLE_THICKNESS, wallFillMaterial, wallStrokeMaterial));
+            .forEach(path -> buildWallAlongPath(mazeGroup, path, obstacleHeightPy, OBSTACLE_THICKNESS));
 
-        PhongMaterial houseFillMaterial = coloredMaterial(opaqueColor(wallFillColor, HOUSE_OPACITY));
-        addHouse(world, houseFillMaterial, wallStrokeMaterial);
+        houseFillMaterialPy.set(coloredMaterial(opaqueColor(getWallFillColor(), HOUSE_OPACITY)));
+        addHouse(world, houseFillMaterialPy, wallStrokeMaterialPy);
     }
 
-    private void addHouse(GameWorld world, PhongMaterial fillMaterial, PhongMaterial strokeMaterial) {
+    private void addHouse(
+        GameWorld world,
+        Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy)
+    {
         WorldMap map = world.map();
 
         // tile coordinates
@@ -184,11 +204,11 @@ public class GameLevel3D {
 
         Vector2i leftDoorTile = world.houseLeftDoorTile(), rightDoorTile = world.houseRightDoorTile();
         mazeGroup.getChildren().addAll(
-            createHouseWall(xMin, yMin, leftDoorTile.x() - 1, yMin, fillMaterial, strokeMaterial),
-            createHouseWall(rightDoorTile.x() + 1, yMin, xMax, yMin, fillMaterial, strokeMaterial),
-            createHouseWall(xMin, yMin, xMin, yMax, fillMaterial, strokeMaterial),
-            createHouseWall(xMax, yMin, xMax, yMax, fillMaterial, strokeMaterial),
-            createHouseWall(xMin, yMax, xMax, yMax, fillMaterial, strokeMaterial)
+            createHouseWall(xMin, yMin, leftDoorTile.x() - 1, yMin, fillMaterialPy, strokeMaterialPy),
+            createHouseWall(rightDoorTile.x() + 1, yMin, xMax, yMin, fillMaterialPy, strokeMaterialPy),
+            createHouseWall(xMin, yMin, xMin, yMax, fillMaterialPy, strokeMaterialPy),
+            createHouseWall(xMax, yMin, xMax, yMax, fillMaterialPy, strokeMaterialPy),
+            createHouseWall(xMin, yMax, xMax, yMax, fillMaterialPy, strokeMaterialPy)
         );
 
         Color doorColor = getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_DOOR, Color.rgb(254,184,174));
@@ -256,70 +276,71 @@ public class GameLevel3D {
         return floor;
     }
 
-    private Node createHouseWall(int x1, int y1, int x2, int y2, PhongMaterial fillMaterial, PhongMaterial strokeMaterial) {
-        return createWall(v2i(x1, y1), v2i(x2, y2), HOUSE_WALL_THICKNESS, houseHeightPy, fillMaterial, strokeMaterial);
+    private Node createHouseWall(
+        int x1, int y1, int x2, int y2,
+        Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy) {
+        return createWall(v2i(x1, y1), v2i(x2, y2), HOUSE_WALL_THICKNESS, houseHeightPy, fillMaterialPy, strokeMaterialPy);
     }
 
     private void buildWallAlongPath(
         Group parent, TileMapPath path,
-        DoubleProperty wallHeightPy, double thickness,
-        PhongMaterial wallFillMaterial, PhongMaterial wallStrokeMaterial)
+        DoubleProperty wallHeightPy, double thickness)
     {
         Vector2i startTile = path.startTile(), endTile = startTile;
         Direction prevDir = null;
         Node segment;
         for (Direction dir : path) {
             if (prevDir != dir) {
-                segment = createWall(startTile, endTile, thickness, wallHeightPy, wallFillMaterial, wallStrokeMaterial);
+                segment = createWall(startTile, endTile, thickness, wallHeightPy, wallFillMaterialPy, wallStrokeMaterialPy);
                 parent.getChildren().add(segment);
                 startTile = endTile;
             }
             endTile = endTile.plus(dir.vector());
             prevDir = dir;
         }
-        segment = createWall(startTile, endTile, thickness, wallHeightPy, wallFillMaterial, wallStrokeMaterial);
+        segment = createWall(startTile, endTile, thickness, wallHeightPy, wallFillMaterialPy, wallStrokeMaterialPy);
         parent.getChildren().add(segment);
     }
 
     private static Node createWall(
         Vector2i tile1, Vector2i tile2,
         double thickness, DoubleProperty wallHeightPy,
-        PhongMaterial fillMaterial, PhongMaterial strokeMaterial)
+        Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy)
     {
         if (tile1.y() == tile2.y()) { // horizontal wall
             Vector2i left  = tile1.x() < tile2.x() ? tile1 : tile2;
             Vector2i right = tile1.x() < tile2.x() ? tile2 : tile1;
             Vector2i origin = left.plus(right).scaled(HTS).plus(HTS, HTS);
             int length = right.minus(left).scaled(TS).x();
-            return createWall(origin, length + thickness, thickness, wallHeightPy, fillMaterial, strokeMaterial);
+            return createWall(origin, length + thickness, thickness, wallHeightPy, fillMaterialPy, strokeMaterialPy);
         }
         else if (tile1.x() == tile2.x()) { // vertical wall
             Vector2i top    = tile1.y() < tile2.y() ? tile1 : tile2;
             Vector2i bottom = tile1.y() < tile2.y() ? tile2 : tile1;
             Vector2i origin = top.plus(bottom).scaled(HTS).plus(HTS, HTS);
             int length = bottom.minus(top).scaled(TS).y();
-            return createWall(origin, thickness, length, wallHeightPy, fillMaterial, strokeMaterial);
+            return createWall(origin, thickness, length, wallHeightPy, fillMaterialPy, strokeMaterialPy);
         }
         throw new IllegalArgumentException(String.format("Cannot build wall between tiles %s and %s", tile1, tile2));
     }
 
     private static Node createWall(
         Vector2i origin, double sizeX, double sizeY, DoubleProperty wallHeightPy,
-        PhongMaterial fillMaterial, PhongMaterial strokeMaterial) {
+        Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy) {
 
         var base = new Box(sizeX, sizeY, wallHeightPy.get());
         base.setTranslateX(origin.x());
         base.setTranslateY(origin.y());
         base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
         base.depthProperty().bind(wallHeightPy);
-        base.materialProperty().set(fillMaterial);
+        base.materialProperty().bind(fillMaterialPy);
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         var top = new Box(sizeX, sizeY, WALL_COAT_HEIGHT);
         top.translateXProperty().bind(base.translateXProperty());
         top.translateYProperty().bind(base.translateYProperty());
         top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(WALL_COAT_HEIGHT));
-        top.materialProperty().set(strokeMaterial);
+        top.materialProperty().bind(strokeMaterialPy);
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         return new Group(base, top);
@@ -577,6 +598,14 @@ public class GameLevel3D {
     public Optional<Energizer3D> energizer3D(Vector2i tile) {
         checkTileNotNull(tile);
         return energizers3D().filter(e3D -> e3D.tile().equals(tile)).findFirst();
+    }
+
+    public Color getWallFillColor() {
+        return wallFillColorPy.get();
+    }
+
+    public Color getWallStrokeColor() {
+        return wallStrokeColorPy.get();
     }
 
     //TODO performance?
