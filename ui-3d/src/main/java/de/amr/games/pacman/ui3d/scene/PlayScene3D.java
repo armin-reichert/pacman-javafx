@@ -16,7 +16,7 @@ import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.PlaySceneSound;
-import de.amr.games.pacman.ui3d.entity.*;
+import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.DoubleProperty;
@@ -410,6 +410,14 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         animation.play();
     }
 
+    private Animation levelCompleteAnimationBeforeIntermission(int numFlashes) {
+        return new SequentialTransition(
+            pauseSec(1)
+            , level3D.createMazeFlashAnimation(numFlashes)
+            , doAfterSec(2.5, () -> context.game().pac().hide())
+        );
+    }
+
     private Animation levelCompleteAnimation(int numFlashes) {
         Animation mazeFlashes    = level3D.createMazeFlashAnimation(numFlashes);
         Animation mazeRotates    = level3D.createMazeRotateAnimation(1.5);
@@ -430,14 +438,6 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
                 context.actionHandler().showFlashMessageSeconds(1, message);
                 perspectivePy.bind(PY_3D_PERSPECTIVE);
             })
-        );
-    }
-
-    private Animation levelCompleteAnimationBeforeIntermission(int numFlashes) {
-        return new SequentialTransition(
-              pauseSec(1)
-            , level3D.createMazeFlashAnimation(numFlashes)
-            , doAfterSec(2.5, () -> context.game().pac().hide())
         );
     }
 }

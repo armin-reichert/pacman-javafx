@@ -1,8 +1,7 @@
 package de.amr.games.pacman.ui3d.model;
 
-import de.amr.games.pacman.ui3d.entity.PacModel3D;
+import de.amr.games.pacman.ui3d.level.PacModel3D;
 import javafx.application.Application;
-import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;

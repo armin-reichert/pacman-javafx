@@ -26,7 +26,7 @@ package de.amr.games.pacman.ui3d.animation;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui3d.entity.Pellet3D;
+import de.amr.games.pacman.ui3d.level.Pellet3D;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
 import javafx.scene.Group;
