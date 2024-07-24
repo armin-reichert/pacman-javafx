@@ -101,9 +101,11 @@ Cheats:
 - <kbd>Alt+X</kbd> Kill all ghosts outside of the ghost house
 
 ## How it looks (Click to play video)
-
+https://magentacloud.de/s/wiBT4sHy52dApYG
 <div float="left">
-    <a href="https://magentacloud.de/s/qYDg6BKK7G6TxpB"><img src="doc/pacman-maze.png" style="width:500px"></a>
+    <a href="https://magentacloud.de/s/qYDg6BKK7G6TxpB">
+        <img src="doc/pacman-maze.png" style="width:500px">
+    </a>
 </div>
 
 ### 2D Play Scenes
