@@ -17,13 +17,12 @@ import de.amr.games.pacman.ui2d.util.CanvasLayoutPane;
 import de.amr.games.pacman.ui2d.util.FadingPane;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.binding.Bindings;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -84,8 +83,8 @@ public class GamePage implements Page {
 
     private void createPictureInPicture() {
         pip = new PictureInPictureView(new PlayScene2D(), context);
-        pip.heightProperty().bind(PY_PIP_HEIGHT);
-        pip.opacityProperty().bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
+        pip.heightPy.bind(PY_PIP_HEIGHT);
+        pip.opacityPy.bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
     }
 
     private void createDashboard() {
@@ -120,7 +119,8 @@ public class GamePage implements Page {
 
     private void createInfoLayer() {
         infoLayer.setLeft(dashboard);
-        infoLayer.setRight(pip);
+        var spacer = new HBox();
+        infoLayer.setRight(new VBox(pip.node(), spacer));
         infoLayer.visibleProperty().bind(Bindings.createObjectBinding(
             () -> dashboard.isVisible() || PY_PIP_ON.get(),
             dashboard.visibleProperty(), PY_PIP_ON
