@@ -171,20 +171,20 @@ public class GameLevel3D {
 
     private void buildWorld3D(GameWorld world) {
         TileMap terrain = world.map().terrain();
+        terrain.computeTerrainPaths();
+
         obstacleHeightPy.bind(PY_3D_WALL_HEIGHT);
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
 
         wallStrokeColorPy.set(getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
         wallFillColorPy.set(getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_FILL, Color.rgb(0, 0, 0)));
 
-        Box floor = createFloor(terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
-        worldGroup.getChildren().add(floor);
+        Box floor = createFloor(terrain);
 
-        worldGroup.getChildren().add(mazeGroup);
-        terrain.computeTerrainPaths();
         terrain.doubleStrokePaths()
             .filter(path -> !context.game().world().isPartOfHouse(path.startTile()))
             .forEach(path -> buildWallAlongPath(mazeGroup, path, borderWallHeightPy, BORDER_WALL_THICKNESS));
+
         terrain.singleStrokePaths()
             .forEach(path -> buildWallAlongPath(mazeGroup, path, obstacleHeightPy, OBSTACLE_THICKNESS));
 
@@ -196,6 +196,7 @@ public class GameLevel3D {
         house3D.usedPy.bind(houseUsedPy);
         house3D.openPy.bind(houseOpenPy);
 
+        worldGroup.getChildren().addAll(floor, mazeGroup);
         //TODO check this, get transparency right
         root.getChildren().add(house3D.door3D());
     }
@@ -215,8 +216,9 @@ public class GameLevel3D {
         return light;
     }
 
-    private Box createFloor(double width, double height) {
-        var floor = new Box(width, height, FLOOR_THICKNESS);
+    private Box createFloor(TileMap terrain) {
+        double sizeX = terrain.numCols() * TS - 1, sizeY = terrain.numRows() * TS - 1;
+        var floor = new Box(sizeX, sizeY, FLOOR_THICKNESS);
         // Place floor such that left-upper corner is at origin and floor surface is at z=0
         floor.translateXProperty().bind(floor.widthProperty().multiply(0.5));
         floor.translateYProperty().bind(floor.heightProperty().multiply(0.5));
@@ -226,10 +228,10 @@ public class GameLevel3D {
             () -> {
                 Color floorColor = floorColorPy.get();
                 String textureName = floorTextureNamePy.get();
-                Map<String, PhongMaterial> floorTextures = context.theme().get("floorTextures");
-                return NO_TEXTURE.equals(textureName)
+                Map<String, PhongMaterial> textures = context.theme().get("floorTextures");
+                return NO_TEXTURE.equals(textureName) || !textures.containsKey(textureName)
                     ? coloredMaterial(floorColor)
-                    : floorTextures.getOrDefault(textureName, coloredMaterial(floorColor));
+                    : textures.get(textureName);
             }, floorColorPy, floorTextureNamePy
         ));
         floorColorPy.bind(PY_3D_FLOOR_COLOR);
