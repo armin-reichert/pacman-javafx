@@ -208,7 +208,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
     private void onEnterStatePacManDying() {
         context.soundHandler().stopAllSounds();
         // last update before dying animation
-        level3D.pac3D().updateAlive();
+        level3D.pac3D().update();
         playPacManDiesAnimation();
     }
 
@@ -296,7 +296,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         context.game().pac().show();
         context.game().ghosts().forEach(Ghost::show);
         level3D.pac3D().init();
-        level3D.pac3D().updateAlive();
+        level3D.pac3D().update();
 
         if (context.game().isDemoLevel()) {
             return; // no sound in demo level
@@ -432,7 +432,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
     private Animation levelCompleteAnimation(int numFlashes) {
         Animation mazeFlashes    = level3D.createMazeFlashAnimation(numFlashes);
-        Animation mazeRotates    = level3D.createMazeRotateAnimation(1.5);
+        Animation mazeRotates    = level3D.createLevelRotateAnimation(1.5);
         Animation mazeDisappears = level3D.createWallsDisappearAnimation(1.0);
         String message = PICKER_LEVEL_COMPLETE.next() + "\n\n" + context.tt("level_complete", context.game().levelNumber());
         //TODO is there are better way to do this e.g. using a TimeLine?

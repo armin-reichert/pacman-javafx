@@ -95,12 +95,14 @@ public abstract class AbstractPac3D implements Pac3D {
     }
 
     @Override
-    public void updateAlive() {
-        updatePosition();
-        updateRotation();
-        updateVisibility();
-        updateLight();
-        updateAliveAnimation();
+    public void update() {
+        if (pac.isAlive()) {
+            updatePosition();
+            updateRotation();
+            updateVisibility();
+            updateLight();
+            updateAliveAnimation();
+        }
     }
 
     @Override

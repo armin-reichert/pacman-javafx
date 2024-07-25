@@ -27,7 +27,7 @@ public interface Pac3D {
 
     void updateAliveAnimation();
 
-    void updateAlive();
+    void update();
 
     Animation createDyingAnimation();
 

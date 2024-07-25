@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameModel;
@@ -108,52 +107,45 @@ public class GameLevel3D {
             : new PacMan3D(context, game.pac(), PAC_SIZE, theme.get("model3D.pacman"));
         pac3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
-        Model3D ghostModel3D = theme.get("model3D.ghost");
-        ghosts3D = game.ghosts().map(ghost -> new MutableGhost3D(ghostModel3D, theme, ghost, GHOST_SIZE)).toList();
+        ghosts3D = game.ghosts().map(ghost -> new MutableGhost3D(theme.get("model3D.ghost"), theme, ghost, GHOST_SIZE)).toList();
         ghosts3D.forEach(ghost3D -> ghost3D.drawModePy.bind(PY_3D_DRAW_MODE));
 
-        livesCounter3D = createLivesCounter();
+        livesCounter3D = createLivesCounter3D();
         updateLivesCounter();
+
         createMessage3D();
 
         wallFillMaterialPy.bind(Bindings.createObjectBinding(
-            () -> {
-                Color diffuseColor = opaqueColor(getWallFillColor(), wallOpacityPy.get());
-                Color specularColor = diffuseColor.brighter();
-                PhongMaterial material = new PhongMaterial(diffuseColor);
-                material.setSpecularColor(specularColor);
-                return material;
-            }, wallOpacityPy, wallFillColorPy
-        ));
+            () -> coloredMaterial(opaqueColor(wallFillColorPy.get(), wallOpacityPy.get())), wallFillColorPy, wallOpacityPy));
 
         wallStrokeMaterialPy.bind(Bindings.createObjectBinding(
-            () -> coloredMaterial(getWallStrokeColor()),
-            wallStrokeColorPy));
+            () -> coloredMaterial(wallStrokeColorPy.get()), wallStrokeColorPy));
 
         buildWorld3D(world);
-        addFood(world);
+        addFood3D(world);
 
-        // Walls must be added after the guys! Otherwise, transparency is not working correctly.
+        // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
         root.getChildren().addAll(pac3D.node(), createPacLight(pac3D));
         root.getChildren().addAll(ghosts3D);
         root.getChildren().addAll(message3D, livesCounter3D, worldGroup);
     }
 
+    /**
+     * Updates level from game state.
+     */
     public void update() {
         var game = context.game();
-        if (game.pac().isAlive()) {
-            pac3D.updateAlive();
-        }
+        pac3D.update();
         ghosts3D().forEach(ghost3D -> ghost3D.update(context));
         bonus3D().ifPresent(bonus -> bonus.update(context));
-        houseUsedPy.set(
-            game.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-                .anyMatch(Ghost::isVisible));
-        Vector2f houseEntryPosition = game.world().houseEntryPosition();
-        houseOpenPy.set(
-            game.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-                .filter(ghost -> ghost.position().euclideanDistance(houseEntryPosition) <= HOUSE_SENSITIVITY)
-                .anyMatch(Ghost::isVisible));
+
+        boolean ghostNeedsHouseAccess = game.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+            .anyMatch(Ghost::isVisible);
+        boolean ghostNearHouseEntry = game.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+            .filter(ghost -> ghost.position().euclideanDistance(game.world().houseEntryPosition()) <= HOUSE_SENSITIVITY)
+            .anyMatch(Ghost::isVisible);
+        houseUsedPy.set(ghostNeedsHouseAccess);
+        houseOpenPy.set(ghostNearHouseEntry);
 
         updateLivesCounter();
     }
@@ -240,7 +232,7 @@ public class GameLevel3D {
         return floor;
     }
 
-    private void addFood(GameWorld world) {
+    private void addFood3D(GameWorld world) {
         TileMap foodMap = world.map().food();
         Color foodColor = getColorFromMap(foodMap, GameWorld.PROPERTY_COLOR_FOOD, Color.WHITE);
         Material foodMaterial = coloredMaterial(foodColor);
@@ -294,7 +286,7 @@ public class GameLevel3D {
         };
     }
 
-    private LivesCounter3D createLivesCounter() {
+    private LivesCounter3D createLivesCounter3D() {
         Node[] shapes = new Node[MAX_LIVES];
         for (int i = 0; i < shapes.length; ++i) {
             shapes[i] = createLivesCounterShape(context.game().variant());
@@ -399,7 +391,7 @@ public class GameLevel3D {
         worldGroup.getChildren().add(bonus3D);
     }
 
-    public RotateTransition createMazeRotateAnimation(double seconds) {
+    public RotateTransition createLevelRotateAnimation(double seconds) {
         var rotation = new RotateTransition(Duration.seconds(seconds), root);
         rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
         rotation.setFromAngle(0);
@@ -457,52 +449,29 @@ public class GameLevel3D {
 
     public Group root() { return root; }
 
-    public Pac3D pac3D() {
-        return pac3D;
-    }
+    public Pac3D pac3D() { return pac3D; }
 
-    public List<MutableGhost3D> ghosts3D() {
-        return ghosts3D;
-    }
+    public List<MutableGhost3D> ghosts3D() { return ghosts3D; }
 
-    public MutableGhost3D ghost3D(byte id) {
-        return ghosts3D.get(id);
-    }
+    public MutableGhost3D ghost3D(byte id) { return ghosts3D.get(id); }
 
-    public Optional<Bonus3D> bonus3D() {
-        return Optional.ofNullable(bonus3D);
-    }
+    public Optional<Bonus3D> bonus3D() { return Optional.ofNullable(bonus3D); }
 
-    public LivesCounter3D livesCounter3D() {
-        return livesCounter3D;
-    }
+    public LivesCounter3D livesCounter3D() { return livesCounter3D; }
 
-    public House3D house3D() {
-        return house3D;
-    }
+    public House3D house3D() { return house3D; }
 
-    public Stream<Pellet3D> pellets3D() {
-        return pellets3D.stream();
-    }
+    public Stream<Pellet3D> pellets3D() { return pellets3D.stream(); }
 
-    public Stream<Energizer3D> energizers3D() {
-        return energizers3D.stream();
-    }
+    public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
 
     public Optional<Energizer3D> energizer3D(Vector2i tile) {
         checkTileNotNull(tile);
         return energizers3D().filter(e3D -> e3D.tile().equals(tile)).findFirst();
     }
 
-    public Color getWallFillColor() {
-        return wallFillColorPy.get();
-    }
+    public Color getWallFillColor() { return wallFillColorPy.get(); }
 
-    public Color getWallStrokeColor() {
-        return wallStrokeColorPy.get();
-    }
-
-    //TODO performance?
     public Optional<Pellet3D> pellet3D(Vector2i tile) {
         checkTileNotNull(tile);
         return pellets3D().filter(p3D -> p3D.tile().equals(tile)).findFirst();
