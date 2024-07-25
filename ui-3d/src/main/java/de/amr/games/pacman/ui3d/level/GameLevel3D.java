@@ -190,8 +190,9 @@ public class GameLevel3D {
 
         house3D = new House3D(world, mazeGroup);
         house3D.heightPy.bind(houseHeightPy);
-        //TODO check this
-        house3D.fillMaterialPy.set(coloredMaterial(opaqueColor(getWallFillColor(), HOUSE_OPACITY)));
+        house3D.fillMaterialPy.bind(Bindings.createObjectBinding(
+            () -> coloredMaterial(opaqueColor(getWallFillColor(), HOUSE_OPACITY)), wallFillColorPy
+        ));
         house3D.strokeMaterialPy.bind(wallStrokeMaterialPy);
         house3D.usedPy.bind(houseUsedPy);
         house3D.openPy.bind(houseOpenPy);

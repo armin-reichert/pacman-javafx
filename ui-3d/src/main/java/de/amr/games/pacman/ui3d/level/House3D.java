@@ -25,10 +25,10 @@ import static de.amr.games.pacman.ui3d.PacManGames3dUI.PY_3D_FLOOR_COLOR;
  */
 public class House3D {
 
-    static final float HOUSE_WALL_THICKNESS  = 1.5f;
     static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial();
 
     public final DoubleProperty heightPy = new SimpleDoubleProperty(this, "height", 7);
+    public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.5);
     public final BooleanProperty openPy = new SimpleBooleanProperty();
     public final BooleanProperty usedPy = new SimpleBooleanProperty();
     public final ObjectProperty<PhongMaterial> fillMaterialPy  = new SimpleObjectProperty<>(this, "fillMaterial", DEFAULT_MATERIAL);
@@ -79,7 +79,7 @@ public class House3D {
     }
 
     private Node createWall(int x1, int y1, int x2, int y2) {
-        return GameLevel3D.createWall(v2i(x1, y1), v2i(x2, y2), HOUSE_WALL_THICKNESS, heightPy, fillMaterialPy, strokeMaterialPy);
+        return GameLevel3D.createWall(v2i(x1, y1), v2i(x2, y2), wallThicknessPy.get(), heightPy, fillMaterialPy, strokeMaterialPy);
     }
 
     public Door3D door3D() {
