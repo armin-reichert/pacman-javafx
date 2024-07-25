@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.util.Ufx;
@@ -15,7 +14,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -39,13 +38,13 @@ public class PictureInPictureView {
         gameScene.setContext(context);
         gameScene.setCanvas(canvas);
         gameScene.scalingPy.bind(heightPy.divide(36*8));
-        canvas.opacityProperty().bind(opacityPy);
-        canvas.visibleProperty().bind(visiblePy);
         canvas.widthProperty().bind(widthPy);
         canvas.heightProperty().bind(heightPy);
         widthPy.bind(heightPy.multiply(0.777));
 
         HBox pane = new HBox(canvas);
+        pane.opacityProperty().bind(opacityPy);
+        pane.visibleProperty().bind(visiblePy);
         pane.setBackground(Ufx.coloredBackground(Color.BLACK));
         pane.setPadding(new Insets(5,10,5,10));
 
