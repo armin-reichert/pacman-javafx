@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.TileMapPath;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
@@ -60,7 +59,6 @@ public class GameLevel3D {
     static final float BORDER_WALL_THICKNESS = 2.5f;
     static final float WALL_COAT_HEIGHT      = 0.1f;
     static final float HOUSE_HEIGHT          = 12.0f;
-    static final float HOUSE_WALL_THICKNESS  = 1.5f;
     static final float HOUSE_OPACITY         = 0.4f;
     static final float HOUSE_SENSITIVITY     = 1.5f * TS;
     static final float PAC_SIZE              = 14.5f;
@@ -68,19 +66,23 @@ public class GameLevel3D {
     static final float ENERGIZER_RADIUS      = 3.5f;
     static final float PELLET_RADIUS         = 1.0f;
 
-    private final StringProperty        floorTextureNamePy  = new SimpleStringProperty(this, "floorTextureName", NO_TEXTURE);
-    private final ObjectProperty<Color> floorColorPy        = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
-    private final DoubleProperty        borderWallHeightPy  = new SimpleDoubleProperty(this, "borderWallHeight", BORDER_WALL_HEIGHT);
-    private final DoubleProperty        obstacleHeightPy    = new SimpleDoubleProperty(this, "obstacleHeight", OBSTACLE_HEIGHT);
-    private final DoubleProperty        houseHeightPy       = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
-    private final BooleanProperty       houseUsedPy         = new SimpleBooleanProperty(this, "houseUsed", false);
-    private final BooleanProperty       houseOpenPy         = new SimpleBooleanProperty(this, "houseOpen", false);
-    private final DoubleProperty        wallOpacityPy       = new SimpleDoubleProperty(this, "wallOpacity",1.0);
-    private final ObjectProperty<Color> wallFillColorPy     = new SimpleObjectProperty<>(this, "wallFillColor", Color.BLUE);
-    private final ObjectProperty<Color> wallStrokeColorPy   = new SimpleObjectProperty<>(this, "wallStrokeColor", Color.LIGHTBLUE);
-    private final ObjectProperty<PhongMaterial> wallFillMaterialPy   = new SimpleObjectProperty<>(this, "wallFillMaterial");
-    private final ObjectProperty<PhongMaterial> wallStrokeMaterialPy = new SimpleObjectProperty<>(this, "wallStrokeMaterial");
-    private final ObjectProperty<PhongMaterial> houseFillMaterialPy  = new SimpleObjectProperty<>(this, "houseFillMaterial");
+    static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial();
+
+    private final StringProperty  floorTextureNamePy  = new SimpleStringProperty(this, "floorTextureName", NO_TEXTURE);
+    private final DoubleProperty  borderWallHeightPy  = new SimpleDoubleProperty(this, "borderWallHeight", BORDER_WALL_HEIGHT);
+    private final DoubleProperty  obstacleHeightPy    = new SimpleDoubleProperty(this, "obstacleHeight", OBSTACLE_HEIGHT);
+    private final DoubleProperty  wallOpacityPy       = new SimpleDoubleProperty(this, "wallOpacity",1.0);
+
+    private final DoubleProperty  houseHeightPy       = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
+    private final BooleanProperty houseUsedPy         = new SimpleBooleanProperty(this, "houseUsed", false);
+    private final BooleanProperty houseOpenPy         = new SimpleBooleanProperty(this, "houseOpen", false);
+
+    private final ObjectProperty<Color> floorColorPy      = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
+    private final ObjectProperty<Color> wallFillColorPy   = new SimpleObjectProperty<>(this, "wallFillColor", Color.BLUE);
+    private final ObjectProperty<Color> wallStrokeColorPy = new SimpleObjectProperty<>(this, "wallStrokeColor", Color.LIGHTBLUE);
+
+    private final ObjectProperty<PhongMaterial> wallFillMaterialPy   = new SimpleObjectProperty<>(this, "wallFillMaterial", DEFAULT_MATERIAL);
+    private final ObjectProperty<PhongMaterial> wallStrokeMaterialPy = new SimpleObjectProperty<>(this, "wallStrokeMaterial", DEFAULT_MATERIAL);
 
     private final GameContext context;
 
@@ -91,7 +93,7 @@ public class GameLevel3D {
     private final List<MutableGhost3D> ghosts3D;
     private final Set<Pellet3D> pellets3D = new HashSet<>();
     private final Set<Energizer3D> energizers3D = new HashSet<>();
-    private Door3D door3D;
+    private House3D house3D;
     private final LivesCounter3D livesCounter3D;
     private Bonus3D bonus3D;
     private Message3D message3D;
@@ -186,57 +188,16 @@ public class GameLevel3D {
         terrain.singleStrokePaths()
             .forEach(path -> buildWallAlongPath(mazeGroup, path, obstacleHeightPy, OBSTACLE_THICKNESS));
 
-        houseFillMaterialPy.set(coloredMaterial(opaqueColor(getWallFillColor(), HOUSE_OPACITY)));
-        addHouse(world, houseFillMaterialPy, wallStrokeMaterialPy);
-    }
+        house3D = new House3D(world, mazeGroup);
+        house3D.heightPy.bind(houseHeightPy);
+        //TODO check this
+        house3D.fillMaterialPy.set(coloredMaterial(opaqueColor(getWallFillColor(), HOUSE_OPACITY)));
+        house3D.strokeMaterialPy.bind(wallStrokeMaterialPy);
+        house3D.usedPy.bind(houseUsedPy);
+        house3D.openPy.bind(houseOpenPy);
 
-    private void addHouse(
-        GameWorld world,
-        Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy)
-    {
-        WorldMap map = world.map();
-
-        // tile coordinates
-        int xMin = world.houseTopLeftTile().x();
-        int xMax = xMin + world.houseSize().x() - 1;
-        int yMin = world.houseTopLeftTile().y();
-        int yMax = yMin + world.houseSize().y() - 1;
-
-        Vector2i leftDoorTile = world.houseLeftDoorTile(), rightDoorTile = world.houseRightDoorTile();
-        mazeGroup.getChildren().addAll(
-            createHouseWall(xMin, yMin, leftDoorTile.x() - 1, yMin, fillMaterialPy, strokeMaterialPy),
-            createHouseWall(rightDoorTile.x() + 1, yMin, xMax, yMin, fillMaterialPy, strokeMaterialPy),
-            createHouseWall(xMin, yMin, xMin, yMax, fillMaterialPy, strokeMaterialPy),
-            createHouseWall(xMax, yMin, xMax, yMax, fillMaterialPy, strokeMaterialPy),
-            createHouseWall(xMin, yMax, xMax, yMax, fillMaterialPy, strokeMaterialPy)
-        );
-
-        Color doorColor = getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_DOOR, Color.rgb(254,184,174));
-        door3D = new Door3D(leftDoorTile, rightDoorTile, doorColor, PY_3D_FLOOR_COLOR);
-        door3D.drawModePy.bind(PY_3D_DRAW_MODE);
-
-        // TODO: If door is added to given parent, it is not visible through transparent house wall in front.
-        // TODO: If is added to the level 3D group, it shows the background wallpaper when its color is transparent! WTF?
-        root.getChildren().add(door3D);
-
-        // pixel coordinates
-        float centerX = world.houseTopLeftTile().x() * TS + world.houseSize().x() * HTS;
-        float centerY = world.houseTopLeftTile().y() * TS + world.houseSize().y() * HTS;
-
-        var light = new PointLight();
-        light.lightOnProperty().bind(houseUsedPy);
-        light.setColor(Color.GHOSTWHITE);
-        light.setMaxRange(3 * TS);
-        light.setTranslateX(centerX);
-        light.setTranslateY(centerY - 6);
-        light.setTranslateZ(-HOUSE_HEIGHT);
-        mazeGroup.getChildren().add(light);
-
-        houseOpenPy.addListener((py, wasOpen, isOpen) -> {
-            if (isOpen) {
-                door3D.playTraversalAnimation();
-            }
-        });
+        //TODO check this, get transparency right
+        root.getChildren().add(house3D.door3D());
     }
 
     private PointLight createPacLight(Pac3D pac3D) {
@@ -276,12 +237,6 @@ public class GameLevel3D {
         return floor;
     }
 
-    private Node createHouseWall(
-        int x1, int y1, int x2, int y2,
-        Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy) {
-        return createWall(v2i(x1, y1), v2i(x2, y2), HOUSE_WALL_THICKNESS, houseHeightPy, fillMaterialPy, strokeMaterialPy);
-    }
-
     private void buildWallAlongPath(
         Group parent, TileMapPath path,
         DoubleProperty wallHeightPy, double thickness)
@@ -302,7 +257,7 @@ public class GameLevel3D {
         parent.getChildren().add(segment);
     }
 
-    private static Node createWall(
+    static Node createWall(
         Vector2i tile1, Vector2i tile2,
         double thickness, DoubleProperty wallHeightPy,
         Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy)
@@ -583,8 +538,8 @@ public class GameLevel3D {
         return livesCounter3D;
     }
 
-    public Door3D door3D() {
-        return door3D;
+    public House3D house3D() {
+        return house3D;
     }
 
     public Stream<Pellet3D> pellets3D() {
