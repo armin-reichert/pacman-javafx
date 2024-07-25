@@ -303,11 +303,12 @@ public class GameLevel3D {
     }
 
     public void addLevelCounter3D(List<Byte> symbols) {
-        GameWorld world = context.game().world();
+        TileMap terrain = context.game().world().map().terrain();
         double spacing = 2 * TS;
         // this is the *right* edge of the level counter:
+        double x = terrain.numCols() * TS - spacing;
         var levelCounter3D = new Group();
-        levelCounter3D.setTranslateX(world.map().terrain().numCols() * TS - spacing);
+        levelCounter3D.setTranslateX(x);
         levelCounter3D.setTranslateY(spacing);
         levelCounter3D.setTranslateZ(-6);
         levelCounter3D.getChildren().clear();
