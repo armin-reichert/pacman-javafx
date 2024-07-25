@@ -180,7 +180,7 @@ public class GameLevel3D {
             .forEach(path -> WallBuilder.buildWallAlongPath(mazeGroup, path, obstacleHeightPy, OBSTACLE_THICKNESS, WALL_COAT_HEIGHT,
                 wallFillMaterialPy, wallStrokeMaterialPy));
 
-        house3D = new House3D(world, mazeGroup);
+        house3D = new House3D(world);
         house3D.heightPy.bind(houseHeightPy);
         house3D.fillMaterialPy.bind(Bindings.createObjectBinding(
             () -> coloredMaterial(opaqueColor(getWallFillColor(), HOUSE_OPACITY)), wallFillColorPy
@@ -189,6 +189,7 @@ public class GameLevel3D {
         house3D.usedPy.bind(houseUsedPy);
         house3D.openPy.bind(houseOpenPy);
 
+        mazeGroup.getChildren().add(house3D.root());
         worldGroup.getChildren().addAll(floor, mazeGroup);
         //TODO check this, get transparency right
         root.getChildren().add(house3D.door3D());

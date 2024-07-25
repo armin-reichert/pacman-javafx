@@ -34,9 +34,10 @@ public class House3D {
     public final ObjectProperty<PhongMaterial> fillMaterialPy  = new SimpleObjectProperty<>(this, "fillMaterial", DEFAULT_MATERIAL);
     public final ObjectProperty<PhongMaterial> strokeMaterialPy  = new SimpleObjectProperty<>(this, "strokeMaterial", DEFAULT_MATERIAL);
 
+    private final Group root = new Group();
     private final Door3D door3D;
 
-    public House3D(GameWorld world, Group parent) {
+    public House3D(GameWorld world) {
         WorldMap map = world.map();
 
         // tile coordinates
@@ -46,7 +47,7 @@ public class House3D {
         int yMax = yMin + world.houseSize().y() - 1;
 
         Vector2i leftDoorTile = world.houseLeftDoorTile(), rightDoorTile = world.houseRightDoorTile();
-        parent.getChildren().addAll(
+        root.getChildren().addAll(
             createWall(xMin, yMin, leftDoorTile.x() - 1, yMin),
             createWall(rightDoorTile.x() + 1, yMin, xMax, yMin),
             createWall(xMin, yMin, xMin, yMax),
@@ -69,7 +70,7 @@ public class House3D {
         light.setTranslateX(centerX);
         light.setTranslateY(centerY - 6);
         light.translateZProperty().bind(heightPy.multiply(-1));
-        parent.getChildren().add(light);
+        root.getChildren().add(light);
 
         openPy.addListener((py, wasOpen, isOpen) -> {
             if (isOpen) {
@@ -83,6 +84,8 @@ public class House3D {
             wallThicknessPy.get(), heightPy, WALL_COAT_HEIGHT,
             fillMaterialPy, strokeMaterialPy);
     }
+
+    public Group root() { return root; }
 
     public Door3D door3D() {
         return door3D;
