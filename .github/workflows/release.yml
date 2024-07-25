@@ -1,4 +1,4 @@
-# Builds installers (exe, deb, dmg) for Windows, Linux and Mac-OS and attaches the installers for the
+# Builds installers (msi, deb, dmg) for Windows, Linux and Mac-OS and attaches the installers for the
 # Pac-Man 3D game version to a release (when it is published via the GitHub UI).
 
 name: Release
