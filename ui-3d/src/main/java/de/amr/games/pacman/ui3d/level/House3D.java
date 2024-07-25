@@ -15,7 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.lib.Globals.v2i;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.getColorFromMap;
 import static de.amr.games.pacman.ui3d.PacManGames3dUI.PY_3D_DRAW_MODE;
 import static de.amr.games.pacman.ui3d.PacManGames3dUI.PY_3D_FLOOR_COLOR;
@@ -26,6 +25,7 @@ import static de.amr.games.pacman.ui3d.PacManGames3dUI.PY_3D_FLOOR_COLOR;
 public class House3D {
 
     static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial();
+    static final float WALL_COAT_HEIGHT = 0.1f;
 
     public final DoubleProperty heightPy = new SimpleDoubleProperty(this, "height", 7);
     public final DoubleProperty wallThicknessPy = new SimpleDoubleProperty(this, "wallThickness", 1.5);
@@ -79,7 +79,9 @@ public class House3D {
     }
 
     private Node createWall(int x1, int y1, int x2, int y2) {
-        return GameLevel3D.createWall(v2i(x1, y1), v2i(x2, y2), wallThicknessPy.get(), heightPy, fillMaterialPy, strokeMaterialPy);
+        return WallBuilder.createWall(v2i(x1, y1), v2i(x2, y2),
+            wallThicknessPy.get(), heightPy, WALL_COAT_HEIGHT,
+            fillMaterialPy, strokeMaterialPy);
     }
 
     public Door3D door3D() {

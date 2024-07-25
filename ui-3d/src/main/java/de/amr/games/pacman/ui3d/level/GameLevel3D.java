@@ -5,11 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.controller.GameState;
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.lib.tilemap.TileMapPath;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
@@ -183,10 +181,12 @@ public class GameLevel3D {
 
         terrain.doubleStrokePaths()
             .filter(path -> !context.game().world().isPartOfHouse(path.startTile()))
-            .forEach(path -> buildWallAlongPath(mazeGroup, path, borderWallHeightPy, BORDER_WALL_THICKNESS));
+            .forEach(path -> WallBuilder.buildWallAlongPath(mazeGroup, path, borderWallHeightPy, BORDER_WALL_THICKNESS, WALL_COAT_HEIGHT,
+                wallFillMaterialPy, wallStrokeMaterialPy));
 
         terrain.singleStrokePaths()
-            .forEach(path -> buildWallAlongPath(mazeGroup, path, obstacleHeightPy, OBSTACLE_THICKNESS));
+            .forEach(path -> WallBuilder.buildWallAlongPath(mazeGroup, path, obstacleHeightPy, OBSTACLE_THICKNESS, WALL_COAT_HEIGHT,
+                wallFillMaterialPy, wallStrokeMaterialPy));
 
         house3D = new House3D(world, mazeGroup);
         house3D.heightPy.bind(houseHeightPy);
@@ -238,70 +238,6 @@ public class GameLevel3D {
         floorColorPy.bind(PY_3D_FLOOR_COLOR);
         floorTextureNamePy.bind(PY_3D_FLOOR_TEXTURE);
         return floor;
-    }
-
-    private void buildWallAlongPath(
-        Group parent, TileMapPath path,
-        DoubleProperty wallHeightPy, double thickness)
-    {
-        Vector2i startTile = path.startTile(), endTile = startTile;
-        Direction prevDir = null;
-        Node segment;
-        for (Direction dir : path) {
-            if (prevDir != dir) {
-                segment = createWall(startTile, endTile, thickness, wallHeightPy, wallFillMaterialPy, wallStrokeMaterialPy);
-                parent.getChildren().add(segment);
-                startTile = endTile;
-            }
-            endTile = endTile.plus(dir.vector());
-            prevDir = dir;
-        }
-        segment = createWall(startTile, endTile, thickness, wallHeightPy, wallFillMaterialPy, wallStrokeMaterialPy);
-        parent.getChildren().add(segment);
-    }
-
-    static Node createWall(
-        Vector2i tile1, Vector2i tile2,
-        double thickness, DoubleProperty wallHeightPy,
-        Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy)
-    {
-        if (tile1.y() == tile2.y()) { // horizontal wall
-            Vector2i left  = tile1.x() < tile2.x() ? tile1 : tile2;
-            Vector2i right = tile1.x() < tile2.x() ? tile2 : tile1;
-            Vector2i origin = left.plus(right).scaled(HTS).plus(HTS, HTS);
-            int length = right.minus(left).scaled(TS).x();
-            return createWall(origin, length + thickness, thickness, wallHeightPy, fillMaterialPy, strokeMaterialPy);
-        }
-        else if (tile1.x() == tile2.x()) { // vertical wall
-            Vector2i top    = tile1.y() < tile2.y() ? tile1 : tile2;
-            Vector2i bottom = tile1.y() < tile2.y() ? tile2 : tile1;
-            Vector2i origin = top.plus(bottom).scaled(HTS).plus(HTS, HTS);
-            int length = bottom.minus(top).scaled(TS).y();
-            return createWall(origin, thickness, length, wallHeightPy, fillMaterialPy, strokeMaterialPy);
-        }
-        throw new IllegalArgumentException(String.format("Cannot build wall between tiles %s and %s", tile1, tile2));
-    }
-
-    private static Node createWall(
-        Vector2i origin, double sizeX, double sizeY, DoubleProperty wallHeightPy,
-        Property<PhongMaterial> fillMaterialPy, Property<PhongMaterial> strokeMaterialPy) {
-
-        var base = new Box(sizeX, sizeY, wallHeightPy.get());
-        base.setTranslateX(origin.x());
-        base.setTranslateY(origin.y());
-        base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
-        base.depthProperty().bind(wallHeightPy);
-        base.materialProperty().bind(fillMaterialPy);
-        base.drawModeProperty().bind(PY_3D_DRAW_MODE);
-
-        var top = new Box(sizeX, sizeY, WALL_COAT_HEIGHT);
-        top.translateXProperty().bind(base.translateXProperty());
-        top.translateYProperty().bind(base.translateYProperty());
-        top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(WALL_COAT_HEIGHT));
-        top.materialProperty().bind(strokeMaterialPy);
-        top.drawModeProperty().bind(PY_3D_DRAW_MODE);
-
-        return new Group(base, top);
     }
 
     private void addFood(GameWorld world) {
