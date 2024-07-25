@@ -241,7 +241,8 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         level3D.pellets3D().forEach(Pellet3D::onEaten);
         level3D.energizers3D().forEach(Energizer3D::onEaten);
         level3D.livesCounter3D().stopAnimation();
-        level3D.door3D().setVisible(false);
+        //TODO change this
+        level3D.house3D().door3D().setVisible(false);
         playLevelCompleteAnimation();
     }
 
