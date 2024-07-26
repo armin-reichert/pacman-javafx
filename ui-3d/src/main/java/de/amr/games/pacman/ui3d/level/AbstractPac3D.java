@@ -45,8 +45,8 @@ public abstract class AbstractPac3D implements Pac3D {
 
     protected AbstractPac3D(GameContext context, Pac pac, double size, Model3D model3D) {
         this.context = context;
-        this.size = size;
         this.pac = pac;
+        this.size = size;
         this.model3D = model3D;
     }
 
@@ -60,7 +60,6 @@ public abstract class AbstractPac3D implements Pac3D {
         node().setScaleX(1.0);
         node().setScaleY(1.0);
         node().setScaleZ(1.0);
-        node().setTranslateZ(-0.5 * size);
         updatePosition();
         updateRotation();
     }
@@ -84,8 +83,8 @@ public abstract class AbstractPac3D implements Pac3D {
         double range = hasPower && game.powerTimer().duration() > 0
             ? 2 * TS + ((double) game.powerTimer().remaining() / game.powerTimer().duration()) * 6 * TS
             : 0;
-        lightRangeProperty().set(range);
-        lightOnProperty().set(PY_3D_PAC_LIGHT_ENABLED.get() && pac.isVisible() && hasPower);
+        lightRangePy.set(range);
+        lightOnPy.set(PY_3D_PAC_LIGHT_ENABLED.get() && pac.isVisible() && hasPower);
     }
 
     protected void updateVisibility() {

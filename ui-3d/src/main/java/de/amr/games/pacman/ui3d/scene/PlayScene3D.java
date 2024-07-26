@@ -435,7 +435,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         Animation mazeRotates    = level3D.createLevelRotateAnimation(1.5);
         Animation mazeDisappears = level3D.createWallsDisappearAnimation(1.0);
         String message = PICKER_LEVEL_COMPLETE.next() + "\n\n" + context.tt("level_complete", context.game().levelNumber());
-        //TODO is there are better way to do this e.g. using a TimeLine?
+        //TODO is there are better way to do this e.g. using a Timeline?
         return new SequentialTransition(
               now(() -> { perspectivePy.unbind(); perspectivePy.set(Perspective.TOTAL); })
             , pauseSec(2)
