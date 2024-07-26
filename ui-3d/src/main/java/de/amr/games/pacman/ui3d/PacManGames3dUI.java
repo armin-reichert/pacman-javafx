@@ -14,8 +14,6 @@ import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.model.Model3D;
-import de.amr.games.pacman.ui3d.scene.Perspective;
-import de.amr.games.pacman.ui3d.scene.PlayScene3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
