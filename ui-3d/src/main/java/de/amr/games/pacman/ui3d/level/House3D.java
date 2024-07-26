@@ -56,7 +56,7 @@ public class House3D {
         );
 
         Color doorColor = getColorFromMap(map.terrain(), GameWorld.PROPERTY_COLOR_DOOR, Color.rgb(254,184,174));
-        door3D = new Door3D(leftDoorTile, rightDoorTile, doorColor, PY_3D_FLOOR_COLOR);
+        door3D = new Door3D(leftDoorTile, rightDoorTile, doorColor);
         door3D.drawModePy.bind(PY_3D_DRAW_MODE);
 
         // pixel coordinates
