@@ -17,7 +17,7 @@ import static de.amr.games.pacman.lib.Globals.lerp;
  *
  * @author Armin Reichert
  */
-public enum Perspective implements CameraController {
+public enum Perspective {
 
     DRONE {
         @Override
@@ -114,7 +114,6 @@ public enum Perspective implements CameraController {
         }
     };
 
-
     public static Perspective next(Perspective p) {
         int n = Perspective.values().length;
         return Perspective.values()[p.ordinal() < n - 1 ? p.ordinal() + 1 : 0];
@@ -124,4 +123,8 @@ public enum Perspective implements CameraController {
         int n = Perspective.values().length;
         return Perspective.values()[p.ordinal() > 0 ? p.ordinal() - 1 : n - 1];
     }
+
+    public abstract void init(Camera cam, GameWorld world);
+
+    public abstract void update(Camera cam, GameWorld world, Entity spottedEntity);
 }
