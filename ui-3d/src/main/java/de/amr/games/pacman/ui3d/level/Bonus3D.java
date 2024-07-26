@@ -63,7 +63,7 @@ public class Bonus3D extends Box {
         edibleAnimation.setInterpolator(Interpolator.LINEAR);
         edibleAnimation.setCycleCount(Animation.INDEFINITE);
 
-        eatenAnimation = new RotateTransition(Duration.seconds(2), this);
+        eatenAnimation = new RotateTransition(Duration.seconds(1), this);
         eatenAnimation.setAxis(Rotate.X_AXIS);
         eatenAnimation.setByAngle(360);
         eatenAnimation.setInterpolator(Interpolator.LINEAR);
