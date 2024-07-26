@@ -16,13 +16,13 @@ import javafx.scene.transform.Rotate;
  *
  * @author Armin Reichert
  */
-public class CoordSystem extends Group {
+public class CoordinateSystem extends Group {
 
-    public CoordSystem() {
+    public CoordinateSystem() {
         this(1000);
     }
 
-    public CoordSystem(double axisLength) {
+    public CoordinateSystem(double axisLength) {
         Sphere origin = new Sphere(1);
         origin.setMaterial(new PhongMaterial(Color.CHOCOLATE));
 

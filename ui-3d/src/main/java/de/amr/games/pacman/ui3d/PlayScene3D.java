@@ -63,7 +63,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         var ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(PY_3D_LIGHT_COLOR);
 
-        var coordSystem = new CoordSystem();
+        var coordSystem = new CoordinateSystem();
         coordSystem.visibleProperty().bind(PY_3D_AXES_VISIBLE);
 
         scores3D = new Scores3D("SCORE", "HIGH SCORE");
