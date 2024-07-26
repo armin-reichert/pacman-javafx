@@ -21,16 +21,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class Message3D extends Group {
 
-    public static Message3D create(String text, Color color, Font font) {
-        Message3D message3D = new Message3D();
-        message3D.beginBatch();
-        message3D.setTextColor(color);
-        message3D.setFont(font);
-        message3D.setText(text);
-        message3D.endBatch();
-        return message3D;
-    }
-
     private final Box blackboard;
     private double quality;
     private Font font;
@@ -39,16 +29,20 @@ public class Message3D extends Group {
     private String text;
     private boolean batchUpdate;
 
-    public Message3D() {
+    public Message3D(String text, Font font, Color textColor, Color borderColor) {
         blackboard = new Box(100, 10, 0.1);
         getChildren().add(blackboard);
         beginBatch();
         setQuality(3);
-        setFont(Font.font("Sans", 8));
-        setBorderColor(Color.grayRgb(200));
-        setTextColor(Color.WHITE);
-        setText("Hello, world!");
+        setFont(font);
+        setBorderColor(borderColor);
+        setTextColor(textColor);
+        setText(text);
         endBatch();
+    }
+
+    public Message3D() {
+        this("Hello, world!", Font.font("Sans", 8), Color.WHITE, Color.grayRgb(200));
     }
 
     private void updateImage() {

@@ -346,28 +346,23 @@ public class GameLevel3D {
     }
 
     private void createMessage3D() {
-        message3D = new Message3D();
+        message3D = new Message3D("", context.theme().font("font.arcade", 6), Color.YELLOW, Color.WHITE);
         message3D.setRotation(Rotate.X_AXIS, 90);
         message3D.setVisible(false);
-        message3D.beginBatch();
-        message3D.setBorderColor(Color.WHITE);
-        message3D.setTextColor(Color.YELLOW);
-        message3D.setFont(context.theme().font("font.arcade", 6));
-        message3D.endBatch();
     }
 
     public void showAnimatedMessage(String text, double displaySeconds, double x, double y) {
         message3D.setText(text);
         message3D.setVisible(true);
-        double dist = 0.5 * message3D.getBoundsInLocal().getHeight();
+        double halfHeight = 0.5 * message3D.getBoundsInLocal().getHeight();
         message3D.setTranslateX(x);
         message3D.setTranslateY(y);
-        message3D.setTranslateZ(dist); // under floor
+        message3D.setTranslateZ(halfHeight); // just under floor
         var moveUpAnimation = new TranslateTransition(Duration.seconds(1), message3D);
-        moveUpAnimation.setToZ(-(dist + 0.5 * obstacleHeightPy.get()));
+        moveUpAnimation.setToZ(-(halfHeight + 0.5 * obstacleHeightPy.get()));
         var moveDownAnimation = new TranslateTransition(Duration.seconds(1), message3D);
         moveDownAnimation.setDelay(Duration.seconds(displaySeconds));
-        moveDownAnimation.setToZ(dist);
+        moveDownAnimation.setToZ(halfHeight);
         moveDownAnimation.setOnFinished(e -> message3D.setVisible(false));
         new SequentialTransition(moveUpAnimation, moveDownAnimation).play();
     }
