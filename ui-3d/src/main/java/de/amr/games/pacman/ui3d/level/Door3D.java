@@ -43,12 +43,12 @@ public class Door3D extends Group {
 
     public void playTraversalAnimation() {
         new Timeline(
-            new KeyFrame(Duration.seconds(0.5),
-                new KeyValue(barThicknessPy, 0)),
-            new KeyFrame(Duration.seconds(1),
+                new KeyFrame(Duration.seconds(0.5),
                         new KeyValue(barThicknessPy, 0)),
-            new KeyFrame(Duration.seconds(1.5),
-                new KeyValue(barThicknessPy, 0.75))
+                new KeyFrame(Duration.seconds(1),
+                        new KeyValue(barThicknessPy, 0)),
+                new KeyFrame(Duration.seconds(1.5),
+                        new KeyValue(barThicknessPy, 0.75))
         ).play();
     }
 
