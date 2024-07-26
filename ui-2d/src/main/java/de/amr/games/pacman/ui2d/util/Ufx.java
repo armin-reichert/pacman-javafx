@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.util;
 
+import de.amr.games.pacman.lib.Direction;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.Transition;
@@ -27,12 +28,9 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  *
  * @author Armin Reichert
  */
-public class Ufx {
+public interface Ufx {
 
-    public  static final BackgroundSize FILL_PAGE = new BackgroundSize(1, 1, true, true, false, true);
-
-    private Ufx() {
-    }
+    BackgroundSize FILL_PAGE = new BackgroundSize(1, 1, true, true, false, true);
 
     /**
      * Launches the application specified by the given class. In case an exception is thrown,
@@ -41,7 +39,7 @@ public class Ufx {
      * @param appClass application class
      * @param args application arguments
      */
-    public static void launch(Class<? extends Application> appClass, String... args) {
+    static void launch(Class<? extends Application> appClass, String... args) {
         try {
             Application.launch(appClass, args);
         } catch (Throwable x) {
@@ -54,17 +52,17 @@ public class Ufx {
         }
     }
 
-    public static void toggle(BooleanProperty booleanProperty) {
+    static void toggle(BooleanProperty booleanProperty) {
         booleanProperty.set(!booleanProperty.get());
     }
 
 
-    public static  Background coloredBackground(Color color) {
+    static  Background coloredBackground(Color color) {
         checkNotNull(color);
         return new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY));
     }
 
-    public static  Background coloredRoundedBackground(Color color, int radius) {
+    static  Background coloredRoundedBackground(Color color, int radius) {
         checkNotNull(color);
         return new Background(new BackgroundFill(color, new CornerRadii(radius), Insets.EMPTY));
     }
@@ -73,11 +71,11 @@ public class Ufx {
      * @param image some image
      * @return image background with default properties, see {@link BackgroundImage}
      */
-    public static Background imageBackground(Image image) {
+    static Background imageBackground(Image image) {
         return new Background(new BackgroundImage(image, null, null, null, null));
     }
 
-    public static Background wallpaperBackground(Image image) {
+    static Background wallpaperBackground(Image image) {
         return imageBackground(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, FILL_PAGE);
     }
 
@@ -85,35 +83,35 @@ public class Ufx {
      * @param image some image
      * @return image background with specified attributes
      */
-    public static Background imageBackground(Image image, BackgroundRepeat repeatX, BackgroundRepeat repeatY,
+    static Background imageBackground(Image image, BackgroundRepeat repeatX, BackgroundRepeat repeatY,
                                        BackgroundPosition position, BackgroundSize size) {
         return new Background(new BackgroundImage(image, repeatX, repeatY, position, size));
     }
 
-    public static  Border roundedBorder(Color color, double cornerRadius, double width) {
+    static  Border roundedBorder(Color color, double cornerRadius, double width) {
         checkNotNull(color);
         return new Border(
             new BorderStroke(color, BorderStrokeStyle.SOLID, new CornerRadii(cornerRadius), new BorderWidths(width)));
     }
 
-    public static  Border border(Color color, double width) {
+    static  Border border(Color color, double width) {
         checkNotNull(color);
         return new Border(new BorderStroke(color, BorderStrokeStyle.SOLID, null, new BorderWidths(width)));
     }
 
-    public static  PhongMaterial coloredMaterial(Color color) {
+    static  PhongMaterial coloredMaterial(Color color) {
         checkNotNull(color);
         var material = new PhongMaterial(color);
         material.setSpecularColor(color.brighter());
         return material;
     }
 
-    public static  Color opaqueColor(Color color, double opacity) {
+    static  Color opaqueColor(Color color, double opacity) {
         checkNotNull(color);
         return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
     }
 
-    public static PhongMaterial createColorBoundMaterial(ObjectProperty<Color> diffuseColorProperty) {
+    static PhongMaterial createColorBoundMaterial(ObjectProperty<Color> diffuseColorProperty) {
         var material = new PhongMaterial();
         material.diffuseColorProperty().bind(diffuseColorProperty);
         material.specularColorProperty()
@@ -127,7 +125,7 @@ public class Ufx {
      * @param seconds number of seconds
      * @return pause transition
      */
-    public static PauseTransition pauseSec(double seconds) {
+    static PauseTransition pauseSec(double seconds) {
         return new PauseTransition(Duration.seconds(seconds));
     }
 
@@ -141,14 +139,14 @@ public class Ufx {
      * @param action       code to run
      * @return pause transition
      */
-    public static Transition doAfterSec(double delaySeconds, Runnable action) {
+    static Transition doAfterSec(double delaySeconds, Runnable action) {
         checkNotNull(action);
         var pause = new PauseTransition(Duration.seconds(delaySeconds));
         pause.setOnFinished(e -> action.run());
         return pause;
     }
 
-    public static Transition now(Runnable action) {
+    static Transition now(Runnable action) {
         checkNotNull(action);
         var wrapper = new Transition() {
             @Override
@@ -157,5 +155,14 @@ public class Ufx {
         };
         wrapper.setOnFinished(e -> action.run());
         return wrapper;
+    }
+
+    static double angle(Direction dir) {
+        return switch (dir) {
+            case LEFT  -> 0;
+            case UP    -> 90;
+            case RIGHT -> 180;
+            case DOWN  -> 270;
+        };
     }
 }

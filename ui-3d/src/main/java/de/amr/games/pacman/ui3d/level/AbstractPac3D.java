@@ -21,7 +21,6 @@ import javafx.util.Duration;
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui3d.PacManGames3dUI.PY_3D_PAC_LIGHT_ENABLED;
-import static de.amr.games.pacman.ui3d.animation.Turn.angle;
 
 /**
  * @author Armin Reichert
@@ -73,7 +72,7 @@ public abstract class AbstractPac3D implements Pac3D {
 
     protected void updateRotation() {
         rotation.setAxis(Rotate.Z_AXIS);
-        rotation.setAngle(angle(pac.moveDir()));
+        rotation.setAngle(Ufx.angle(pac.moveDir()));
     }
 
     protected void updateLight() {

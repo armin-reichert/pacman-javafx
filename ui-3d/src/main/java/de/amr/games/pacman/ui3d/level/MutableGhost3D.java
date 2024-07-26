@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
-import de.amr.games.pacman.ui3d.animation.Turn;
+import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
@@ -127,7 +127,7 @@ public class MutableGhost3D extends Group {
         setTranslateY(center.y());
         setTranslateZ(-0.5 * size - 2.0);
         // TODO: make transition to new wish dir if changed
-        orientation.setAngle(Turn.angle(ghost.wishDir()));
+        orientation.setAngle(Ufx.angle(ghost.wishDir()));
         boolean outside = center.x() < HTS || center.x() > ghost.world().map().terrain().numCols() * TS - HTS;
         setVisible(ghost.isVisible() && !outside);
     }
