@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -32,23 +33,18 @@ public class Door3D extends Group {
     private final PhongMaterial barMaterial;
 
     public Door3D(Vector2i leftWingTile, Vector2i rightWingTile, Color color) {
-        barMaterial = new PhongMaterial();
-        barMaterial.setDiffuseColor(color);
-        barMaterial.specularColorProperty().bind(barMaterial.diffuseColorProperty().map(Color::brighter));
-
-        var leftWing = createDoorWing(leftWingTile);
-        var rightWing = createDoorWing(rightWingTile);
-        getChildren().addAll(leftWing, rightWing);
+        barMaterial = Ufx.coloredMaterial(color);
+        getChildren().addAll(createDoorWing(leftWingTile), createDoorWing(rightWingTile));
     }
 
     public void playTraversalAnimation() {
         new Timeline(
-                new KeyFrame(Duration.seconds(0.5),
-                        new KeyValue(barThicknessPy, 0)),
-                new KeyFrame(Duration.seconds(1),
-                        new KeyValue(barThicknessPy, 0)),
-                new KeyFrame(Duration.seconds(1.5),
-                        new KeyValue(barThicknessPy, 0.75))
+            new KeyFrame(Duration.seconds(0.5),
+                    new KeyValue(barThicknessPy, 0)),
+            new KeyFrame(Duration.seconds(1),
+                    new KeyValue(barThicknessPy, 0)),
+            new KeyFrame(Duration.seconds(1.5),
+                    new KeyValue(barThicknessPy, 0.75))
         ).play();
     }
 
