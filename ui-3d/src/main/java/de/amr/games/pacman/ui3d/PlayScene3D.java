@@ -434,13 +434,16 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
     private Animation levelCompleteAnimation(int numFlashes) {
         String message = PICKER_LEVEL_COMPLETE.next() + "\n\n" + context.tt("level_complete", context.game().levelNumber());
         return new SequentialTransition(
-              now(() -> { perspectivePy.unbind(); perspectivePy.set(Perspective.TOTAL); })
-            , pauseSec(2)
-            , level3D.createMazeFlashAnimation(numFlashes)
-            , pauseSec(1)
-            , now(() -> { context.game().pac().hide(); context.soundHandler().playAudioClip("audio.level_complete"); })
-            , pauseSec(0.5)
-            , level3D.createLevelRotateAnimation(1.5)
+              now(() -> {
+                  perspectivePy.unbind();
+                  perspectivePy.set(Perspective.TOTAL);
+              })
+            , doAfterSec(2, level3D.createMazeFlashAnimation(numFlashes))
+            , doAfterSec(1, () -> {
+                context.game().pac().hide();
+                context.soundHandler().playAudioClip("audio.level_complete");
+            })
+            , doAfterSec(0.5, level3D.createLevelRotateAnimation(1.5))
             , level3D.createWallsDisappearAnimation(1.0)
             , doAfterSec(1, () -> {
                 context.soundHandler().playAudioClip("audio.sweep");

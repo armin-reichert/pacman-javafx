@@ -146,6 +146,12 @@ public interface Ufx {
         return pause;
     }
 
+    static Animation doAfterSec(double delaySeconds, Animation animation) {
+        checkNotNull(animation);
+        animation.setDelay(Duration.seconds(delaySeconds).add(animation.getDelay()));
+        return animation;
+    }
+
     static Transition now(Runnable action) {
         checkNotNull(action);
         var wrapper = new Transition() {
