@@ -388,7 +388,7 @@ public class GameLevel3D {
         worldGroup.getChildren().add(bonus3D);
     }
 
-    public RotateTransition createLevelRotateAnimation(double seconds) {
+    public RotateTransition levelRotateAnimation(double seconds) {
         var rotation = new RotateTransition(Duration.seconds(seconds), root);
         rotation.setAxis(RND.nextBoolean() ? Rotate.X_AXIS : Rotate.Z_AXIS);
         rotation.setFromAngle(0);
@@ -397,7 +397,7 @@ public class GameLevel3D {
         return rotation;
     }
 
-    public Transition createWallsDisappearAnimation(double seconds) {
+    public Transition wallsDisappearAnimation(double seconds) {
         return new Transition() {
             private final double initialWallHeight = obstacleHeightPy.get();
             private final double initialOuterWallHeight = borderWallHeightPy.get();
@@ -419,7 +419,7 @@ public class GameLevel3D {
         };
     }
 
-    public Transition createMazeFlashAnimation(int numFlashes) {
+    public Transition mazeFlashAnimation(int numFlashes) {
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }

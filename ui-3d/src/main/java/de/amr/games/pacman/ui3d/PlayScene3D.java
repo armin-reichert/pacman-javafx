@@ -425,7 +425,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
     private Animation levelCompleteAnimationBeforeIntermission(int numFlashes) {
         return new SequentialTransition(
             pauseSec(1)
-            , level3D.createMazeFlashAnimation(numFlashes)
+            , level3D.mazeFlashAnimation(numFlashes)
             , doAfterSec(2.5, () -> context.game().pac().hide())
         );
     }
@@ -438,13 +438,13 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
                   perspectivePy.unbind();
                   perspectivePy.set(Perspective.TOTAL);
               })
-            , doAfterSec(2, level3D.createMazeFlashAnimation(numFlashes))
+            , doAfterSec(2, level3D.mazeFlashAnimation(numFlashes))
             , doAfterSec(1, () -> {
                 context.game().pac().hide();
                 context.soundHandler().playAudioClip("audio.level_complete");
             })
-            , doAfterSec(0.5, level3D.createLevelRotateAnimation(1.5))
-            , level3D.createWallsDisappearAnimation(1.0)
+            , doAfterSec(0.5, level3D.levelRotateAnimation(1.5))
+            , level3D.wallsDisappearAnimation(1.0)
             , doAfterSec(1, () -> {
                 context.soundHandler().playAudioClip("audio.sweep");
                 context.actionHandler().showFlashMessageSeconds(1, message);
