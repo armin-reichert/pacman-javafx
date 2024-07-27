@@ -74,7 +74,7 @@ public record Vector2i(int x, int y) {
         return String.format("(%2d,%2d)", x, y);
     }
 
-    public Vector2f toFloatVec() {
+    public Vector2f toVector2f() {
         return new Vector2f(x, y);
     }
 }

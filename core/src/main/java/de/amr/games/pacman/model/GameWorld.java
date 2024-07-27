@@ -217,7 +217,7 @@ public class GameWorld {
     }
 
     public Vector2f houseCenter() {
-        return houseTopLeftTile.toFloatVec().scaled(TS).plus(houseSize.toFloatVec().scaled(HTS));
+        return houseTopLeftTile.toVector2f().scaled(TS).plus(houseSize.toVector2f().scaled(HTS));
     }
 
     /**

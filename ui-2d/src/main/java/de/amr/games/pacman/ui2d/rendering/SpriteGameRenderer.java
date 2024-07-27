@@ -190,7 +190,7 @@ public class SpriteGameRenderer {
         if (guy.wishDir() != null) {
             float r = 2;
             var pacCenter = guy.center();
-            var indicatorCenter = guy.center().plus(guy.wishDir().vector().toFloatVec().scaled(1.5f * TS));
+            var indicatorCenter = guy.center().plus(guy.wishDir().vector().toVector2f().scaled(1.5f * TS));
             var indicatorTopLeft = indicatorCenter.minus(r, r);
             g.setStroke(Color.WHITE);
             g.strokeLine(s(pacCenter.x()), s(pacCenter.y()), s(indicatorCenter.x()), s(indicatorCenter.y()));

@@ -230,7 +230,7 @@ public abstract class Creature extends Entity {
         if (pixelSpeed < 0) {
             throw new IllegalArgumentException("Negative pixel speed: " + pixelSpeed);
         }
-        setVelocity(pixelSpeed == 0 ? Vector2f.ZERO : moveDir.vector().toFloatVec().scaled(pixelSpeed));
+        setVelocity(pixelSpeed == 0 ? Vector2f.ZERO : moveDir.vector().toVector2f().scaled(pixelSpeed));
     }
 
     public boolean isNewTileEntered() {
@@ -345,7 +345,7 @@ public abstract class Creature extends Entity {
      */
     private void tryMoving(Direction dir) {
         final Vector2i tileBeforeMove = tile();
-        final Vector2f dirVector = dir.vector().toFloatVec();
+        final Vector2f dirVector = dir.vector().toVector2f();
         final Vector2f newVelocity = dirVector.scaled(velocity().length());
         final Vector2f touchPosition = center().plus(dirVector.scaled(HTS)).plus(newVelocity);
         final Vector2i touchedTile = tileAt(touchPosition);
