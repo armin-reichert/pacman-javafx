@@ -82,6 +82,7 @@ public class StartPage implements Page {
     private final Node btnPlay;
 
     private int msPacManImageNumber;
+    private int pacManImageNumber;
 
     public StartPage(GameContext context) {
         this.context = checkNotNull(context);
@@ -120,12 +121,21 @@ public class StartPage implements Page {
         msPacManImageNumber = number;
     }
 
+    private void setPacManImage(int number) {
+        Image bgImage = context.theme().image("pacman.startpage.image" + number);
+        var bg = new Background(new BackgroundImage(bgImage,
+            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER, FIT_HEIGHT));
+        layout.setBackground(bg);
+        pacManImageNumber = number;
+    }
+
     private void changeBackgroundImage() {
         var variant = gameVariantPy.get();
         if (variant != null && context != null) {
             switch (variant) {
                 case MS_PACMAN -> {
-                    root.setBackground(Ufx.coloredBackground(Color.BLACK));
+                    root.setBackground(context.theme().get("wallpaper.background"));
                     setMsPacManImage(1);
                     layout.setOnMouseClicked(e -> {
                         if (msPacManImageNumber == 1) {
@@ -137,12 +147,14 @@ public class StartPage implements Page {
                 }
                 case PACMAN -> {
                     root.setBackground(context.theme().get("wallpaper.background"));
-                    Image bgImage = context.theme().image("pacman.startpage.image");
-                    var bg = new Background(new BackgroundImage(bgImage,
-                        BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-                        BackgroundPosition.CENTER, FIT_HEIGHT));
-                    layout.setBackground(bg);
-                    layout.setOnMouseClicked(null);
+                    setPacManImage(1);
+                    layout.setOnMouseClicked(e -> {
+                        if (pacManImageNumber == 1) {
+                            setPacManImage(2);
+                        } else if (pacManImageNumber == 2) {
+                            setPacManImage(1);
+                        }
+                    });
                 }
                 case PACMAN_XXL -> {
                     root.setBackground(Ufx.coloredBackground(Color.BLACK));
