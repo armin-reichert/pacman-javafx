@@ -89,8 +89,6 @@ public class StartPage implements Page {
     public StartPage(GameContext context) {
         this.context = checkNotNull(context);
 
-        gameVariantPy.set(context.game().variant());
-
         var btnPrevVariant = createCarouselButton('\u2b98');
         btnPrevVariant.setOnAction(e -> context.actionHandler().selectPrevGameVariant());
         VBox left = new VBox(btnPrevVariant);
@@ -181,6 +179,7 @@ public class StartPage implements Page {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
                 action.run();
             }
+            e.consume(); // do not propagate event to layout such that image changes
         });
     }
 
