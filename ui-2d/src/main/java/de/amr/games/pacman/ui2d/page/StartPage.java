@@ -25,6 +25,8 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static javafx.scene.layout.BackgroundSize.AUTO;
 
 /**
+ * Got the flyer images from https://flyers.arcade-museum.com/.
+ *
  * @author Armin Reichert
  */
 public class StartPage implements Page {
