@@ -121,21 +121,26 @@ public class MsPacMan3D extends AbstractPac3D {
         super.init();
         hipSwaying.stop();
         hipSwaying.setWinnetouchMode(false);
-        stopChewing();
+        stopChewingAnimation();
     }
 
     @Override
-    public void stopChewing() {
+    public void stopChewingAnimation() {
         chewingAnimation.stop();
         jaw.setRotationAxis(Rotate.Y_AXIS);
         jaw.setRotate(0);
     }
 
     @Override
+    public void stopWalkingAnimation() {
+        hipSwaying.stop();
+    }
+
+    @Override
     public void updateAliveAnimation() {
         if (pac.isStandingStill()) {
             hipSwaying.stop();
-            stopChewing();
+            stopChewingAnimation();
         } else {
             hipSwaying.update(pac);
             chewingAnimation.play();

@@ -120,21 +120,26 @@ public class PacMan3D extends AbstractPac3D {
         super.init();
         headBanging.stop();
         headBanging.setStrokeMode(false);
-        stopChewing();
+        stopChewingAnimation();
     }
 
     @Override
-    public void stopChewing() {
+    public void stopChewingAnimation() {
         chewingAnimation.stop();
         jaw.setRotationAxis(Rotate.Y_AXIS);
         jaw.setRotate(0);
     }
 
     @Override
+    public void stopWalkingAnimation() {
+       headBanging.stop();
+    }
+
+    @Override
     public void updateAliveAnimation() {
         if (pac.isStandingStill()) {
             headBanging.stop();
-            stopChewing();
+            stopChewingAnimation();
         } else {
             headBanging.update(pac);
             chewingAnimation.play();

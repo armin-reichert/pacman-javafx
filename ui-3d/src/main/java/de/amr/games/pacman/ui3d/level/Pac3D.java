@@ -23,7 +23,9 @@ public interface Pac3D {
 
     void init();
 
-    void stopChewing();
+    void stopWalkingAnimation();
+
+    void stopChewingAnimation();
 
     void updateAliveAnimation();
 

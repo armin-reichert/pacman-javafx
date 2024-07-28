@@ -100,6 +100,9 @@ public abstract class AbstractPac3D implements Pac3D {
             updateVisibility();
             updateLight();
             updateAliveAnimation();
+        } else {
+            stopChewingAnimation();
+            stopWalkingAnimation();
         }
     }
 
