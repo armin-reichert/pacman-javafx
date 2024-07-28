@@ -47,7 +47,7 @@ import static java.lang.Math.PI;
  */
 public class GameLevel3D {
 
-    static final int   MAX_LIVES             = 5;
+    static final int   LIVES_COUNTER_SIZE    = 5;
     static final float LIVE_SHAPE_SIZE       = 10;
     static final float FLOOR_THICKNESS       = 0.4f;
     static final float OBSTACLE_HEIGHT       = 5.5f;
@@ -288,7 +288,7 @@ public class GameLevel3D {
     }
 
     private LivesCounter3D createLivesCounter3D() {
-        Node[] shapes = new Node[MAX_LIVES];
+        Node[] shapes = new Node[LIVES_COUNTER_SIZE];
         for (int i = 0; i < shapes.length; ++i) {
             shapes[i] = createLivesCounterShape(context.game().variant());
         }
