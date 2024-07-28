@@ -91,7 +91,7 @@ public class MutableGhost3D extends Group {
         brakeAnimation.setAutoReverse(true);
         brakeAnimation.setCycleCount(2);
 
-        dressAnimation = new RotateTransition(Duration.seconds(0.3), ghost3D.getDressGroup());
+        dressAnimation = new RotateTransition(Duration.seconds(0.3), ghost3D.dressGroup());
         // TODO I expected this should be the z-axis but... (transforms messed-up?)
         dressAnimation.setAxis(Rotate.Y_AXIS);
         dressAnimation.setFromAngle(-15);

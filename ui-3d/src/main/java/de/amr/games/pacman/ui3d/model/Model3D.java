@@ -11,7 +11,6 @@ import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -31,11 +30,6 @@ import static java.util.Objects.requireNonNull;
  * @author Armin Reichert
  */
 public class Model3D {
-
-    public static Translate centeredOverOrigin(Node node) {
-        var bounds = node.getBoundsInLocal();
-        return new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
-    }
 
     public static Scale scaled(Node node, double size) {
         var bounds = node.getBoundsInLocal();

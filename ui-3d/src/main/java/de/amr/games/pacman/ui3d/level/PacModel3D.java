@@ -5,11 +5,13 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.ui3d.model.Model3D;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
 import java.util.stream.Stream;
@@ -38,15 +40,18 @@ public interface PacModel3D {
         palate.setId(Model3D.toCSS_ID(PacModel3D.MESH_ID_PALATE));
         palate.setMaterial(coloredMaterial(palateColor));
 
-        var centeredOverOrigin = Model3D.centeredOverOrigin(head);
+        var root = new Group(head, eyes, palate);
+
+        var bounds = head.getBoundsInLocal();
+        var centeredOverOrigin = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
         Stream.of(head, eyes, palate).forEach(node -> node.getTransforms().add(centeredOverOrigin));
 
-        var root = new Group(head, eyes, palate);
-        root.getTransforms().add(Model3D.scaled(root, size));
-        // TODO check/fix Pac-Man mesh position and rotation in .obj file
+        // TODO check/fix Pac-Man mesh position and rotation in OBJ file
         root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
         root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
         root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+        var rootBounds = root.getBoundsInLocal();
+        root.getTransforms().add(new Scale(size / rootBounds.getWidth(), size / rootBounds.getHeight(), size / rootBounds.getDepth()));
 
         return root;
     }
@@ -60,16 +65,19 @@ public interface PacModel3D {
         palate.setId(Model3D.toCSS_ID(PacModel3D.MESH_ID_PALATE));
         palate.setMaterial(coloredMaterial(palateColor));
 
-        var centeredOverOrigin = Model3D.centeredOverOrigin(head);
+        Bounds bounds = head.getBoundsInLocal();
+        var centeredOverOrigin = new Translate(-bounds.getCenterX(), -bounds.getCenterY(), -bounds.getCenterZ());
         head.getTransforms().add(centeredOverOrigin);
         palate.getTransforms().add(centeredOverOrigin);
 
         var root = new Group(head, palate);
-        root.getTransforms().add(Model3D.scaled(root, size));
+
+        Bounds rootBounds = root.getBoundsInLocal();
         // TODO check/fix Pac-Man mesh position and rotation in .obj file
         root.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
         root.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
         root.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+        root.getTransforms().add(new Scale(size / rootBounds.getWidth(), size / rootBounds.getHeight(), size / rootBounds.getDepth()));
 
         return root;
     }

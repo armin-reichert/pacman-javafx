@@ -11,11 +11,14 @@ import javafx.animation.Animation.Status;
 import javafx.animation.ParallelTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 
 import static de.amr.games.pacman.lib.Globals.requirePositive;
 import static de.amr.games.pacman.model.GameModel.checkGhostID;
@@ -51,7 +54,7 @@ public class Ghost3D extends Group {
         requireNonNull(model3D);
         requireNonNull(theme);
         checkGhostID(id);
-        requirePositive(size, "ColoredGhost3D size must be positive but is %f");
+        requirePositive(size, "Size must be positive but is %f");
 
         this.theme = theme;
         this.id = id;
@@ -68,41 +71,25 @@ public class Ghost3D extends Group {
         pupilsShape.setMaterial(createColorBoundMaterial(pupilsColorPy));
         pupilsColorPy.set(theme.color("ghost.%d.color.normal.pupils".formatted(id)));
 
-        var centeredOverOrigin = Model3D.centeredOverOrigin(dressShape);
-        dressShape.getTransforms().add(centeredOverOrigin);
-
         dressGroup = new Group(dressShape);
-
         eyesGroup = new Group(pupilsShape, eyeballsShape);
-        eyesGroup.getTransforms().add(centeredOverOrigin);
-
         getChildren().setAll(dressGroup, eyesGroup);
 
-        // TODO fix orientation in obj file
+        Bounds dressBounds = dressShape.getBoundsInLocal();
+        var centeredOverOrigin = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
+        dressShape.getTransforms().add(centeredOverOrigin);
+        eyesGroup.getTransforms().add(centeredOverOrigin);
+
+        // TODO: fix orientation in OBJ file
+        getTransforms().add(new Rotate(90, Rotate.X_AXIS));
         getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
         getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
-        getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-        getTransforms().add(Model3D.scaled(this, size));
+        resizeTo(size);
     }
 
-    public Group getEyesGroup() {
-        return eyesGroup;
-    }
-
-    public Group getDressGroup() {
-        return dressGroup;
-    }
-
-    public Shape3D dressShape() {
-        return dressShape;
-    }
-
-    public Shape3D eyeballsShape() {
-        return eyeballsShape;
-    }
-
-    public Shape3D pupilsShape() {
-        return pupilsShape;
+    private void resizeTo(double size) {
+        Bounds bounds = getBoundsInLocal();
+        getTransforms().add(new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth()));
     }
 
     public void appearFlashing(int numFlashes, double durationSeconds) {
@@ -162,5 +149,25 @@ public class Ghost3D extends Group {
             flashingAnimation.stop();
             flashingAnimation = null;
         }
+    }
+
+    public Group eyesGroup() {
+        return eyesGroup;
+    }
+
+    public Group dressGroup() {
+        return dressGroup;
+    }
+
+    public Shape3D dressShape() {
+        return dressShape;
+    }
+
+    public Shape3D eyeballsShape() {
+        return eyeballsShape;
+    }
+
+    public Shape3D pupilsShape() {
+        return pupilsShape;
     }
 }
