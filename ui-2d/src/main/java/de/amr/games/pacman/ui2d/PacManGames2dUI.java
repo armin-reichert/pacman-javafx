@@ -215,6 +215,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
         theme.set("ms_pacman.spritesheet",           new MsPacManGameSpriteSheet());
         theme.set("ms_pacman.startpage.image",       rm.loadImage("graphics/mspacman/mspacman_flyer.png"));
+        theme.set("ms_pacman.startpage.image1",       rm.loadImage("graphics/mspacman/mspacman_flyer1.jpg"));
+        theme.set("ms_pacman.startpage.image2",       rm.loadImage("graphics/mspacman/mspacman_flyer2.jpg"));
         theme.set("ms_pacman.helpButton.icon",       rm.loadImage("graphics/icons/help-red-64.png"));
         theme.set("ms_pacman.icon",                  rm.loadImage("graphics/icons/mspacman.png"));
         theme.set("ms_pacman.logo.midway",           rm.loadImage("graphics/mspacman/midway_logo.png"));
