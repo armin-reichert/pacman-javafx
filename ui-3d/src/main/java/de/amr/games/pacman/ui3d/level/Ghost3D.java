@@ -48,8 +48,6 @@ public class Ghost3D extends Group {
     private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(this, "eyeballsColor", Color.WHITE);
     private final ObjectProperty<Color> pupilsColorPy = new SimpleObjectProperty<>(this, "pupilsColor", Color.BLUE);
 
-    private PhongMaterial dressMaterial;
-    private PhongMaterial pupilsMaterial;
     private Animation flashingAnimation;
 
     public Ghost3D(Model3D model3D, Theme theme, byte id, double size) {
@@ -62,14 +60,14 @@ public class Ghost3D extends Group {
         this.id = id;
 
         dressShape = new MeshView(model3D.mesh(MESH_ID_GHOST_DRESS));
-        dressMaterial = coloredMaterial(dressColorPy.get());
+        PhongMaterial dressMaterial = coloredMaterial(dressColorPy.get());
         dressMaterial.diffuseColorProperty().bind(dressColorPy);
         dressMaterial.specularColorProperty().bind(dressColorPy.map(Color::brighter));
         dressShape.setMaterial(dressMaterial);
         dressColorPy.set(theme.color("ghost.%d.color.normal.dress".formatted(id)));
 
         pupilsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_PUPILS));
-        pupilsMaterial = coloredMaterial(pupilsColorPy.get());
+        PhongMaterial pupilsMaterial = coloredMaterial(pupilsColorPy.get());
         pupilsMaterial.diffuseColorProperty().bind(pupilsColorPy);
         pupilsMaterial.specularColorProperty().bind(pupilsColorPy.map(Color::brighter));
         pupilsShape.setMaterial(pupilsMaterial);
