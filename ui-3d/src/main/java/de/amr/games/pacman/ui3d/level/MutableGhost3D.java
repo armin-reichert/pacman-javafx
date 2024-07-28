@@ -176,7 +176,7 @@ public class MutableGhost3D extends Group {
             case EYES -> ghost3D.appearEyesOnly();
             case FLASHING -> {
                 if (numFlashes > 0) {
-                    ghost3D.appearFlashing(numFlashes, 1.0);
+                    ghost3D.appearFlashing(numFlashes, 2.0);
                 } else {
                     ghost3D.appearFrightened();
                 }
