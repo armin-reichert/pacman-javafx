@@ -36,7 +36,6 @@ public class Ghost3D extends Group {
 
     private final byte id;
     private final Theme theme;
-    private final Group eyesGroup;
     private final Group dressGroup;
     private final Shape3D dressShape;
     private final Shape3D eyeballsShape;
@@ -72,7 +71,7 @@ public class Ghost3D extends Group {
         pupilsColorPy.set(theme.color("ghost.%d.color.normal.pupils".formatted(id)));
 
         dressGroup = new Group(dressShape);
-        eyesGroup = new Group(pupilsShape, eyeballsShape);
+        Group eyesGroup = new Group(pupilsShape, eyeballsShape);
         getChildren().setAll(dressGroup, eyesGroup);
 
         Bounds dressBounds = dressShape.getBoundsInLocal();
@@ -149,10 +148,6 @@ public class Ghost3D extends Group {
             flashingAnimation.stop();
             flashingAnimation = null;
         }
-    }
-
-    public Group eyesGroup() {
-        return eyesGroup;
     }
 
     public Group dressGroup() {
