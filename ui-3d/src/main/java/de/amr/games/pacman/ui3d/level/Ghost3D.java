@@ -99,12 +99,16 @@ public class Ghost3D extends Group {
     }
 
     public void appearFlashing(int numFlashes) {
-        // Note: Total flashing time must be shorter than Pac power fading time (2s)!
-        Duration totalFlashingTime = Duration.seconds(1.9);
-        ensureFlashingAnimationIsPlaying(numFlashes, totalFlashingTime);
-        eyeballsColorPy.set(theme.color("ghost.color.frightened.eyeballs"));
-        dressShape.setVisible(true);
-        Logger.info("Appear flashing, ghost {}", id);
+        if (numFlashes == 0) {
+            appearFrightened();
+        } else {
+            // Note: Total flashing time must be shorter than Pac power fading time (2s)!
+            Duration totalFlashingTime = Duration.seconds(1.9);
+            ensureFlashingAnimationIsPlaying(numFlashes, totalFlashingTime);
+            eyeballsColorPy.set(theme.color("ghost.color.frightened.eyeballs"));
+            dressShape.setVisible(true);
+            Logger.info("Appear flashing, ghost {}", id);
+        }
     }
 
     public void appearFrightened() {

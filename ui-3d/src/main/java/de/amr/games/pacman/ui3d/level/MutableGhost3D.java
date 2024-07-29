@@ -94,8 +94,7 @@ public class MutableGhost3D extends Group {
         dressAnimation = new RotateTransition(Duration.seconds(0.3), ghost3D.dressGroup());
         // TODO I expected this should be the z-axis but... (transforms messed-up?)
         dressAnimation.setAxis(Rotate.Y_AXIS);
-        dressAnimation.setFromAngle(-15);
-        dressAnimation.setToAngle(15);
+        dressAnimation.setByAngle(30);
         dressAnimation.setCycleCount(Animation.INDEFINITE);
         dressAnimation.setAutoReverse(true);
 
@@ -150,8 +149,9 @@ public class MutableGhost3D extends Group {
         var newLook = Look.NORMAL;
         if (ghost.state() != null) {
             newLook = switch (ghost.state()) {
-                case LEAVING_HOUSE, LOCKED -> game.powerTimer().isRunning() && !game.victims().contains(ghost)
-                    ? frightenedOrFlashing(game) : Look.NORMAL;
+                case LEAVING_HOUSE, LOCKED ->
+                    game.powerTimer().isRunning() && !game.victims().contains(ghost)
+                        ? frightenedOrFlashing(game) : Look.NORMAL;
                 case FRIGHTENED -> frightenedOrFlashing(game);
                 case ENTERING_HOUSE, RETURNING_HOME -> Look.EYES;
                 case EATEN -> Look.NUMBER;
@@ -163,23 +163,13 @@ public class MutableGhost3D extends Group {
 
     private void onLookChanged(Look look) {
         Logger.info("Ghost {} gets new look: {}", ghost.id(), look);
-        if (look == Look.NUMBER) {
-            getChildren().setAll(numberCube);
-        } else {
-            getChildren().setAll(ghostGroup);
-        }
+        getChildren().setAll(look == Look.NUMBER ? numberCube : ghostGroup);
         switch (look) {
-            case NORMAL -> ghost3D.appearNormal();
+            case NORMAL     -> ghost3D.appearNormal();
             case FRIGHTENED -> ghost3D.appearFrightened();
-            case EYES -> ghost3D.appearEyesOnly();
-            case FLASHING -> {
-                if (numFlashes > 0) {
-                    ghost3D.appearFlashing(numFlashes);
-                } else {
-                    ghost3D.appearFrightened();
-                }
-            }
-            case NUMBER -> numberCube.startRotation();
+            case EYES       -> ghost3D.appearEyesOnly();
+            case FLASHING   -> ghost3D.appearFlashing(numFlashes);
+            case NUMBER     -> numberCube.startRotation();
         }
     }
 
