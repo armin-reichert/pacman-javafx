@@ -98,10 +98,13 @@ public class Ghost3D extends Group {
         getTransforms().add(new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth()));
     }
 
-    public void appearFlashing(int numFlashes, double durationSeconds) {
-        ensureFlashingAnimationIsPlaying(numFlashes, Duration.seconds(durationSeconds));
+    public void appearFlashing(int numFlashes) {
+        // Note: Total flashing time must be shorter than Pac power fading time (2s)!
+        Duration totalFlashingTime = Duration.seconds(1.9);
+        ensureFlashingAnimationIsPlaying(numFlashes, totalFlashingTime);
         eyeballsColorPy.set(theme.color("ghost.color.frightened.eyeballs"));
         dressShape.setVisible(true);
+        Logger.info("Appear flashing, ghost {}", id);
     }
 
     public void appearFrightened() {
@@ -110,7 +113,7 @@ public class Ghost3D extends Group {
         eyeballsColorPy.set(theme.color("ghost.color.frightened.eyeballs"));
         pupilsColorPy.set(theme.color("ghost.color.frightened.pupils"));
         dressShape.setVisible(true);
-        Logger.info("Set colors to frightened for ghost {}", id);
+        Logger.info("Appear frightened, ghost {}", id);
     }
 
     public void appearNormal() {
@@ -119,43 +122,45 @@ public class Ghost3D extends Group {
         pupilsColorPy.set(theme.color("ghost.%d.color.normal.pupils".formatted(id)));
         eyeballsColorPy.set(theme.color("ghost.%d.color.normal.eyeballs".formatted(id)));
         dressShape.setVisible(true);
-        Logger.info("Set colors to normal for ghost {}", id);
+        Logger.info("Appear normal, ghost {}", id);
     }
 
     public void appearEyesOnly() {
-        appearNormal();
         dressShape.setVisible(false);
+        Logger.info("Appear eyes, ghost {}", id);
     }
 
-    private void createFlashingAnimation(int numFlashes, Duration duration) {
-        Duration halfFlashDuration = duration.divide(2*numFlashes);
+    private void createFlashingAnimation(int numFlashes, Duration totalDuration) {
+        Duration flashEndTime = totalDuration.divide(numFlashes), highlightTime = flashEndTime.divide(3);
         flashingAnimation = new Timeline(
-            new KeyFrame(Duration.ZERO,
-                new KeyValue(dressColorPy,  theme.color("ghost.color.frightened.dress"), Interpolator.LINEAR),
-                new KeyValue(pupilsColorPy, theme.color("ghost.color.frightened.pupils"), Interpolator.LINEAR)
+            new KeyFrame(highlightTime,
+                new KeyValue(dressColorPy,  theme.color("ghost.color.flashing.dress")),
+                new KeyValue(pupilsColorPy, theme.color("ghost.color.flashing.pupils"))
             ),
-            new KeyFrame(halfFlashDuration,
-                new KeyValue(dressColorPy,  theme.color("ghost.color.flashing.dress"), Interpolator.LINEAR),
-                new KeyValue(pupilsColorPy, theme.color("ghost.color.flashing.pupils"), Interpolator.LINEAR)
+            new KeyFrame(flashEndTime,
+                new KeyValue(dressColorPy,  theme.color("ghost.color.frightened.dress")),
+                new KeyValue(pupilsColorPy, theme.color("ghost.color.frightened.pupils"))
             )
         );
-        flashingAnimation.setAutoReverse(true);
-        //TODO: Why the f*** doesn't the color return to normal without the -1?
-        flashingAnimation.setCycleCount(2 * numFlashes - 1);
-        Logger.info("Created flashing animation (duration: {} seconds) for ghost {}", duration.toSeconds(), id);
+        flashingAnimation.setCycleCount(numFlashes);
+        Logger.info("Created flashing animation ({} flashes, total time: {} seconds) for ghost {}",
+            numFlashes, totalDuration.toSeconds(), id);
     }
 
     private void ensureFlashingAnimationIsPlaying(int numFlashes, Duration duration) {
-        if (flashingAnimation == null || flashingAnimation.getStatus() != Status.RUNNING) {
+        if (flashingAnimation == null) {
             createFlashingAnimation(numFlashes, duration);
+        }
+        if (flashingAnimation.getStatus() != Status.RUNNING) {
             Logger.info("Playing flashing animation for ghost {}", id);
-            flashingAnimation.playFromStart();
+            flashingAnimation.play();
         }
     }
 
     private void ensureFlashingAnimationIsStopped() {
-        if (flashingAnimation != null && flashingAnimation.getStatus() == Status.RUNNING) {
+        if (flashingAnimation != null) {
             flashingAnimation.stop();
+            flashingAnimation = null;
             Logger.info("Stopped flashing animation for ghost {}", id);
         }
     }

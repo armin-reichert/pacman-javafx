@@ -202,7 +202,7 @@ public abstract class Creature extends Entity {
      */
     public void reverseAsSoonAsPossible() {
         gotReverseCommand = true;
-        Logger.info("Reverse! {}", this);
+        Logger.debug("Reverse! {}", this);
     }
 
     public boolean gotReverseCommand() {

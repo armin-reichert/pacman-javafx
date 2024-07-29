@@ -150,10 +150,8 @@ public class MutableGhost3D extends Group {
         var newLook = Look.NORMAL;
         if (ghost.state() != null) {
             newLook = switch (ghost.state()) {
-                case LOCKED -> game.powerTimer().isRunning() ? frightenedOrFlashing(game) : Look.NORMAL;
-                case LEAVING_HOUSE -> game.powerTimer().isRunning()
-                        ? game.victims().contains(ghost) ? Look.NORMAL : frightenedOrFlashing(game)
-                        : Look.NORMAL;
+                case LEAVING_HOUSE, LOCKED -> game.powerTimer().isRunning() && !game.victims().contains(ghost)
+                    ? frightenedOrFlashing(game) : Look.NORMAL;
                 case FRIGHTENED -> frightenedOrFlashing(game);
                 case ENTERING_HOUSE, RETURNING_HOME -> Look.EYES;
                 case EATEN -> Look.NUMBER;
@@ -164,7 +162,7 @@ public class MutableGhost3D extends Group {
     }
 
     private void onLookChanged(Look look) {
-        Logger.info("Ghost {} gets new look: {}", ghost.name(), look);
+        Logger.info("Ghost {} gets new look: {}", ghost.id(), look);
         if (look == Look.NUMBER) {
             getChildren().setAll(numberCube);
         } else {
@@ -176,7 +174,7 @@ public class MutableGhost3D extends Group {
             case EYES -> ghost3D.appearEyesOnly();
             case FLASHING -> {
                 if (numFlashes > 0) {
-                    ghost3D.appearFlashing(numFlashes, 2.0);
+                    ghost3D.appearFlashing(numFlashes);
                 } else {
                     ghost3D.appearFrightened();
                 }
