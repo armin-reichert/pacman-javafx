@@ -67,7 +67,6 @@ public class MutableGhost3D extends Group {
     private final Group ghostGroup;
     private final Ghost3D ghost3D;
     private final NumberCube3D numberCube;
-    private final Rotate orientation = new Rotate();
     private final RotateTransition brakeAnimation;
     private final RotateTransition dressAnimation;
     private final double size;
@@ -87,7 +86,6 @@ public class MutableGhost3D extends Group {
         ghost3D.pupilsShape().drawModeProperty().bind(drawModePy);
 
         ghostGroup = new Group(ghost3D);
-        ghostGroup.getTransforms().add(orientation);
 
         numberCube = new NumberCube3D(14, 8, 8);
 
@@ -135,7 +133,7 @@ public class MutableGhost3D extends Group {
         setTranslateY(center.y());
         setTranslateZ(-0.5 * size - 2.0);
         // TODO: make transition to new wish dir if changed
-        orientation.setAngle(Ufx.angle(ghost.wishDir()));
+        ghost3D.turnTo(Ufx.angle(ghost.wishDir()));
         boolean outside = center.x() < HTS || center.x() > ghost.world().map().terrain().numCols() * TS - HTS;
         setVisible(ghost.isVisible() && !outside);
     }

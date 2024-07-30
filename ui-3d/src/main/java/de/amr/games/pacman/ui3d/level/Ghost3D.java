@@ -98,6 +98,11 @@ public class Ghost3D extends Group {
         getTransforms().add(new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth()));
     }
 
+    public void turnTo(double angle) {
+        setRotationAxis(Rotate.Z_AXIS);
+        setRotate(angle);
+    }
+
     public void appearFlashing(int numFlashes) {
         if (numFlashes == 0) {
             appearFrightened();
