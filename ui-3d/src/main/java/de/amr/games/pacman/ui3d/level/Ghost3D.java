@@ -6,8 +6,11 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui3d.model.Model3D;
-import javafx.animation.*;
+import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
@@ -100,6 +103,9 @@ public class Ghost3D extends Group {
 
     public void turnTo(double angle) {
         setRotationAxis(Rotate.Z_AXIS);
+        //TODO should turn clockwise or anticlockwise depending on current orientation
+        //Timeline animation = new Timeline(new KeyFrame(Duration.millis(80), new KeyValue(rotateProperty(), angle)));
+        //animation.play();
         setRotate(angle);
     }
 
