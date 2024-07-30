@@ -87,6 +87,7 @@ public class MutableGhost3D extends Group {
         ghost3D.dressShape().drawModeProperty().bind(drawModePy);
         ghost3D.eyeballsShape().drawModeProperty().bind(drawModePy);
         ghost3D.pupilsShape().drawModeProperty().bind(drawModePy);
+        getChildren().add(ghost3D);
 
         numberCube = new Box(14, 8, 8);
         numberCubeRotation = new RotateTransition(Duration.seconds(1), this);
@@ -95,8 +96,6 @@ public class MutableGhost3D extends Group {
         numberCubeRotation.setToAngle(360);
         numberCubeRotation.setInterpolator(Interpolator.LINEAR);
         numberCubeRotation.setRate(0.75);
-
-        getChildren().add(ghost3D);
 
         brakeAnimation = new RotateTransition(Duration.seconds(0.5), ghost3D);
         brakeAnimation.setAxis(Rotate.Y_AXIS);
@@ -141,7 +140,6 @@ public class MutableGhost3D extends Group {
         setTranslateX(center.x());
         setTranslateY(center.y());
         setTranslateZ(-0.5 * size - 2.0);
-        // TODO: make transition to new wish dir if changed
         ghost3D.turnTo(Ufx.angle(ghost.wishDir()));
         boolean outside = center.x() < HTS || center.x() > ghost.world().map().terrain().numCols() * TS - HTS;
         setVisible(ghost.isVisible() && !outside);
