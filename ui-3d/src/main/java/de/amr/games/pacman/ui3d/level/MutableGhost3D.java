@@ -50,7 +50,16 @@ public class MutableGhost3D extends Group {
     private final ObjectProperty<Look> lookPy = new SimpleObjectProperty<>(this, "look") {
         @Override
         protected void invalidated() {
-            onLookChanged(get());
+            Look look = get();
+            Logger.info("Ghost {} look changed to {}", ghost.id(), look);
+            getChildren().setAll(look == Look.NUMBER ? numberCube : ghostGroup);
+            switch (look) {
+                case NORMAL     -> ghost3D.appearNormal();
+                case FRIGHTENED -> ghost3D.appearFrightened();
+                case EYES       -> ghost3D.appearEyesOnly();
+                case FLASHING   -> ghost3D.appearFlashing(numFlashes);
+                case NUMBER     -> numberCube.startRotation();
+            }
         }
     };
 
@@ -159,18 +168,6 @@ public class MutableGhost3D extends Group {
             };
         }
         lookPy.set(newLook);
-    }
-
-    private void onLookChanged(Look look) {
-        Logger.info("Ghost {} gets new look: {}", ghost.id(), look);
-        getChildren().setAll(look == Look.NUMBER ? numberCube : ghostGroup);
-        switch (look) {
-            case NORMAL     -> ghost3D.appearNormal();
-            case FRIGHTENED -> ghost3D.appearFrightened();
-            case EYES       -> ghost3D.appearEyesOnly();
-            case FLASHING   -> ghost3D.appearFlashing(numFlashes);
-            case NUMBER     -> numberCube.startRotation();
-        }
     }
 
     public Look look() {
