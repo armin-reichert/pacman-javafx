@@ -130,6 +130,9 @@ public class Ghost3D extends Group {
     }
 
     public void appearEyesOnly() {
+        ensureFlashingAnimationIsStopped();
+        pupilsColorPy.set(theme.color("ghost.%d.color.normal.pupils".formatted(id)));
+        eyeballsColorPy.set(theme.color("ghost.%d.color.normal.eyeballs".formatted(id)));
         dressShape.setVisible(false);
         Logger.info("Appear eyes, ghost {}", id);
     }
