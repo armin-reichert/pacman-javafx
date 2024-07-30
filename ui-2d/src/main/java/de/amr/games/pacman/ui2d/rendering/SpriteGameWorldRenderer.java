@@ -24,57 +24,58 @@ import static de.amr.games.pacman.lib.Globals.*;
 /**
  * @author Armin Reichert
  */
-public class SpriteGameRenderer {
+public class SpriteGameWorldRenderer {
+
+    static final Color BACKGROUND_COLOR = Color.BLACK;
 
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
 
-    private Color backgroundColor = Color.BLACK;
     private GameSpriteSheet spriteSheet;
 
     public double s(double value) {
         return scalingPy.doubleValue() * value;
     }
 
-    public void setBackgroundColor(Color backgroundColor) {
-        this.backgroundColor = backgroundColor;
-    }
-
-    public GameSpriteSheet getSpriteSheet() {
+    public GameSpriteSheet spriteSheet() {
         return spriteSheet;
     }
 
     public void setSpriteSheet(GameSpriteSheet spriteSheet) {
-        this.spriteSheet = spriteSheet;
+        this.spriteSheet = checkNotNull(spriteSheet);
     }
 
-    public void drawPacManWorld(GraphicsContext g, GameWorld world, boolean flashing, boolean blinkingOn) {
+    public void drawPacManWorld(GraphicsContext g, GameWorld world, int tileX, int tileY, boolean flashing, boolean brightPhase) {
         if (flashing) {
-            g.save();
-            g.scale(scalingPy.get(), scalingPy.get());
-            if (blinkingOn) {
-                g.drawImage(spriteSheet.getFlashingMazeImage(), 0, t(3));
-            } else {
-                drawSprite(g, spriteSheet.getEmptyMazeSprite(), 0, t(3));
-            }
-            g.restore();
+            drawPacManWorldFlashing(g, tileX, tileY, brightPhase);
         } else {
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());
-            drawSprite(g, spriteSheet.getFullMazeSprite(), 0, t(3));
+            drawSprite(g, spriteSheet.getFullMazeSprite(), t(tileX), t(tileY));
             g.restore();
-            world.map().food().tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideFoodTileContent(g, world, tile));
-            if (!blinkingOn) {
-                world.energizerTiles().forEach(tile -> hideFoodTileContent(g, world, tile));
+            world.map().food().tiles().filter(world::hasEatenFoodAt).forEach(tile -> overpaintFood(g, world, tile));
+            if (!brightPhase) {
+                world.energizerTiles().forEach(tile -> overpaintFood(g, world, tile));
             }
         }
     }
 
-    public void hideFoodTileContent(GraphicsContext g, GameWorld world, Vector2i tile) {
-        double r = world.isEnergizerPosition(tile) ? 4.5 : 2;
+    private void drawPacManWorldFlashing(GraphicsContext g, int tileX, int tileY, boolean brightPhase) {
+        g.save();
+        g.scale(scalingPy.get(), scalingPy.get());
+        if (brightPhase) {
+            g.drawImage(spriteSheet.getFlashingMazeImage(), t(tileX), t(tileY));
+        } else {
+            drawSprite(g, spriteSheet.getEmptyMazeSprite(), t(tileX), t(tileY));
+        }
+        g.restore();
+    }
+
+    private void overpaintFood(GraphicsContext g, GameWorld world, Vector2i tile) {
         double cx = t(tile.x()) + HTS;
         double cy = t(tile.y()) + HTS;
         double s = scalingPy.get();
-        g.setFill(backgroundColor);
+        double r = world.isEnergizerPosition(tile) ? 4.5 : 2;
+        g.setFill(BACKGROUND_COLOR);
         g.fillRect(s * (cx - r), s * (cy - r), s * (2 * r), s * (2 * r));
     }
 
@@ -112,9 +113,9 @@ public class SpriteGameRenderer {
             g.scale(scalingPy.get(), scalingPy.get());
             drawSprite(g, spriteSheet.filledMaze(mapNumber), x, y);
             g.restore();
-            world.map().food().tiles().filter(world::hasEatenFoodAt).forEach(tile -> hideFoodTileContent(g, world, tile));
+            world.map().food().tiles().filter(world::hasEatenFoodAt).forEach(tile -> overpaintFood(g, world, tile));
             if (!blinkingOn) {
-                world.energizerTiles().forEach(tile -> hideFoodTileContent(g, world, tile));
+                world.energizerTiles().forEach(tile -> overpaintFood(g, world, tile));
             }
         }
     }

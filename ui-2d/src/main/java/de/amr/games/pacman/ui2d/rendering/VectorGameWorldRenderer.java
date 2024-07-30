@@ -19,14 +19,14 @@ import static java.util.function.Predicate.not;
 /**
  * @author Armin Reichert
  */
-public class VectorGraphicsWorldRenderer {
+public class VectorGameWorldRenderer {
 
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
 
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
 
-    public VectorGraphicsWorldRenderer() {
+    public VectorGameWorldRenderer() {
         terrainRenderer.scalingPy.bind(scalingPy);
         foodRenderer.scalingPy.bind(scalingPy);
     }

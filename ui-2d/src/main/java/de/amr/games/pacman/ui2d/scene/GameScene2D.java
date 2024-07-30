@@ -7,8 +7,8 @@ package de.amr.games.pacman.ui2d.scene;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.SpriteGameRenderer;
-import de.amr.games.pacman.ui2d.rendering.VectorGraphicsWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.SpriteGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.VectorGameWorldRenderer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -33,8 +33,8 @@ public abstract class GameScene2D implements GameScene {
     public final BooleanProperty infoVisiblePy  = new SimpleBooleanProperty(this, "infoVisible", false);
     public final DoubleProperty scalingPy       = new SimpleDoubleProperty(this, "scaling", 1.0);
 
-    protected final VectorGraphicsWorldRenderer vectorRenderer = new VectorGraphicsWorldRenderer();
-    protected final SpriteGameRenderer spriteRenderer = new SpriteGameRenderer();
+    protected final VectorGameWorldRenderer vectorRenderer = new VectorGameWorldRenderer();
+    protected final SpriteGameWorldRenderer spriteRenderer = new SpriteGameWorldRenderer();
 
     protected GameContext context;
     protected GraphicsContext g;
@@ -82,7 +82,6 @@ public abstract class GameScene2D implements GameScene {
             Logger.error("Cannot render game scene {}, no canvas has been assigned", this);
             return;
         }
-        spriteRenderer.setBackgroundColor(canvasBackground());
         clearCanvas();
         if (context.isScoreVisible()) {
             drawScore(context.game().score(), "SCORE", t(1), t(1));

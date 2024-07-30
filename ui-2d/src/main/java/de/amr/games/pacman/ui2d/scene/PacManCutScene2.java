@@ -46,9 +46,9 @@ public class PacManCutScene2 extends GameScene2D {
         initialDelay = 120;
         context.setScoreVisible(true);
         pac = new Pac();
-        pac.setAnimations(new PacManGamePacAnimations(pac, (PacManGameSpriteSheet) spriteRenderer.getSpriteSheet()));
+        pac.setAnimations(new PacManGamePacAnimations(pac, (PacManGameSpriteSheet) spriteRenderer.spriteSheet()));
         blinky = new Ghost(GameModel.RED_GHOST);
-        var blinkyAnimations = new PacManGameGhostAnimations(blinky, (PacManGameSpriteSheet) spriteRenderer.getSpriteSheet());
+        var blinkyAnimations = new PacManGameGhostAnimations(blinky, (PacManGameSpriteSheet) spriteRenderer.spriteSheet());
         blinkyNormal = blinkyAnimations.animation(Ghost.ANIM_GHOST_NORMAL);
         blinkyStretching = blinkyAnimations.animation(Ghost.ANIM_BLINKY_STRETCHED);
         blinkyDamaged = blinkyAnimations.animation(Ghost.ANIM_BLINKY_DAMAGED);

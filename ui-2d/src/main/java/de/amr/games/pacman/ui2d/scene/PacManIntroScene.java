@@ -41,8 +41,8 @@ public class PacManIntroScene extends GameScene2D {
         context.setScoreVisible(true);
         intro = new PacManIntro();
         spriteRenderer.setSpriteSheet(context.spriteSheet(context.game().variant()));
-        intro.pacMan.setAnimations(new PacManGamePacAnimations(intro.pacMan, (PacManGameSpriteSheet) spriteRenderer.getSpriteSheet()));
-        intro.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, (PacManGameSpriteSheet) spriteRenderer.getSpriteSheet())));
+        intro.pacMan.setAnimations(new PacManGamePacAnimations(intro.pacMan, (PacManGameSpriteSheet) spriteRenderer.spriteSheet()));
+        intro.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, (PacManGameSpriteSheet) spriteRenderer.spriteSheet())));
         intro.blinking.reset();
         intro.changeState(State.START);
     }
@@ -116,7 +116,7 @@ public class PacManIntroScene extends GameScene2D {
                 continue;
             }
             int ty = 7 + 3 * id;
-            spriteRenderer.drawSpriteCenteredOverBox(g, spriteRenderer.getSpriteSheet().ghostFacingRight(id), t(tx) + 4, t(ty));
+            spriteRenderer.drawSpriteCenteredOverBox(g, spriteRenderer.spriteSheet().ghostFacingRight(id), t(tx) + 4, t(ty));
             if (ghostInfo.characterVisible) {
                 var text = "-" + ghostInfo.character;
                 spriteRenderer.drawText(g, text, ghostColors[id], font, t(tx + 3), t(ty + 1));
@@ -130,7 +130,7 @@ public class PacManIntroScene extends GameScene2D {
 
     private void drawBlinkingEnergizer() {
         if (intro.blinking.isOn()) {
-            spriteRenderer.drawSpriteScaled(g, spriteRenderer.getSpriteSheet().getEnergizerSprite(),t(intro.leftTileX),t(20));
+            spriteRenderer.drawSpriteScaled(g, spriteRenderer.spriteSheet().getEnergizerSprite(),t(intro.leftTileX),t(20));
         }
     }
 
@@ -163,7 +163,7 @@ public class PacManIntroScene extends GameScene2D {
         g.setFill(Color.rgb(254, 189, 180));
         g.fillRect(s(t(tx) + 4), s(t(ty - 1) + 4), s(2), s(2));
         if (intro.blinking.isOn()) {
-            spriteRenderer.drawSpriteScaled(g, spriteRenderer.getSpriteSheet().getEnergizerSprite(),
+            spriteRenderer.drawSpriteScaled(g, spriteRenderer.spriteSheet().getEnergizerSprite(),
                 t(tx), t(ty + 1));
         }
         spriteRenderer.drawText(g, "10",  color, font8, t(tx + 2), t(ty));

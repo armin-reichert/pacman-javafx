@@ -91,7 +91,6 @@ public class PlayScene2D extends GameScene2D implements PlaySceneSound {
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         boolean blinkingOn = game.blinking().isOn();
         spriteRenderer.setSpriteSheet(context.spriteSheet(game.variant()));
-        spriteRenderer.setBackgroundColor(canvasBackground());
         switch (game.variant()) {
             case MS_PACMAN -> {
                 MsPacManGame msPacManGame = (MsPacManGame) game;
@@ -104,7 +103,7 @@ public class PlayScene2D extends GameScene2D implements PlaySceneSound {
                 game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));
             }
             case PACMAN -> {
-                spriteRenderer.drawPacManWorld(g, game.world(), flashing, blinkingOn);
+                spriteRenderer.drawPacManWorld(g, game.world(), 0, 3, flashing, blinkingOn);
                 game.bonus().ifPresent(bonus -> spriteRenderer.drawStaticBonus(g, bonus));
             }
             case PACMAN_XXL -> {

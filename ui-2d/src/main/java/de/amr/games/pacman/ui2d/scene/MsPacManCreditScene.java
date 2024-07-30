@@ -45,7 +45,7 @@ public class MsPacManCreditScene extends GameScene2D {
         spriteRenderer.drawText(g, "PUSH START BUTTON", color, font8, t(6), t(16));
         spriteRenderer.drawText(g, "1 PLAYER ONLY", color, font8, t(8), t(18));
         spriteRenderer.drawText(g, "ADDITIONAL    AT 10000", color, font8, t(2), t(25));
-        spriteRenderer.drawSpriteScaled(g, spriteRenderer.getSpriteSheet().livesCounterSprite(), t(13), t(23) + 1);
+        spriteRenderer.drawSpriteScaled(g, spriteRenderer.spriteSheet().livesCounterSprite(), t(13), t(23) + 1);
         spriteRenderer.drawText(g, "PTS", color, font6, t(25), t(25));
         drawMsPacManCopyright(t(6), t(28));
         drawLevelCounter(g);
