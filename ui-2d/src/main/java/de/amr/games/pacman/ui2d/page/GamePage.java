@@ -17,7 +17,6 @@ import de.amr.games.pacman.ui2d.util.CanvasLayoutPane;
 import de.amr.games.pacman.ui2d.util.FadingPane;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.binding.Bindings;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
@@ -102,7 +101,6 @@ public class GamePage implements Page {
         canvasPane.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
         canvasPane.setMinScaling(0.75);
         canvasPane.setBackground(context.theme().background("wallpaper.background"));
-        canvasPane.decoratedCanvas().setBackground(Ufx.coloredBackground(context.theme().color("canvas.background")));
         canvasPane.decoratedCanvas().setBorderColor(context.theme().color("palette.pale"));
         canvasPane.decoratedCanvas().decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
     }
@@ -159,6 +157,9 @@ public class GamePage implements Page {
         stackPane.getChildren().set(0, canvasPane);
         scene2D.setCanvas(canvasPane.decoratedCanvas().canvas());
         scene2D.scalingPy.bind(canvasPane.scalingPy);
+        canvasPane.decoratedCanvas().backgroundProperty().bind(Bindings.createObjectBinding(
+            () -> Ufx.coloredBackground(scene2D.backgroundColorPy.get()), scene2D.backgroundColorPy
+        ));
         scene2D.clearCanvas();
         adaptCanvasSizeToCurrentWorld();
     }
