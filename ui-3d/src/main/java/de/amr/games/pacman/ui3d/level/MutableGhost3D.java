@@ -13,11 +13,14 @@ import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
+import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -58,14 +61,15 @@ public class MutableGhost3D extends Group {
                 case FRIGHTENED -> ghost3D.appearFrightened();
                 case EYES       -> ghost3D.appearEyesOnly();
                 case FLASHING   -> ghost3D.appearFlashing(numFlashes);
-                case NUMBER     -> numberCube.startRotation();
+                case NUMBER     -> numberCubeRotation.playFromStart();
             }
         }
     };
 
     private final Ghost ghost;
     private final Ghost3D ghost3D;
-    private final NumberCube3D numberCube;
+    private final Box numberCube;
+    private final RotateTransition numberCubeRotation;
     private final RotateTransition brakeAnimation;
     private final RotateTransition dressAnimation;
     private final double size;
@@ -84,7 +88,13 @@ public class MutableGhost3D extends Group {
         ghost3D.eyeballsShape().drawModeProperty().bind(drawModePy);
         ghost3D.pupilsShape().drawModeProperty().bind(drawModePy);
 
-        numberCube = new NumberCube3D(14, 8, 8);
+        numberCube = new Box(14, 8, 8);
+        numberCubeRotation = new RotateTransition(Duration.seconds(1), this);
+        numberCubeRotation.setAxis(Rotate.X_AXIS);
+        numberCubeRotation.setFromAngle(0);
+        numberCubeRotation.setToAngle(360);
+        numberCubeRotation.setInterpolator(Interpolator.LINEAR);
+        numberCubeRotation.setRate(0.75);
 
         getChildren().add(ghost3D);
 
@@ -108,7 +118,7 @@ public class MutableGhost3D extends Group {
     public void init(GameContext context) {
         brakeAnimation.stop();
         dressAnimation.stop();
-        numberCube.stopRotation();
+        numberCubeRotation.stop();
         updateTransform();
         updateLook(context.game());
     }
@@ -121,7 +131,9 @@ public class MutableGhost3D extends Group {
     }
 
     public void setNumberImage(Image image) {
-        numberCube.setImage(image);
+        var material = new PhongMaterial();
+        material.setDiffuseMap(image);
+        numberCube.setMaterial(material);
     }
 
     private void updateTransform() {
@@ -139,7 +151,7 @@ public class MutableGhost3D extends Group {
         if (look() == Look.NUMBER) {
             dressAnimation.stop();
         } else {
-            numberCube.stopRotation();
+            numberCubeRotation.stop();
             if (ghost.moveInfo().tunnelEntered) {
                 brakeAnimation.playFromStart();
             }
