@@ -69,6 +69,7 @@ import static java.util.function.Predicate.not;
 public class PacManGames2dUI implements GameEventListener, GameContext, ActionHandler, SoundHandler {
 
     public static final BooleanProperty PY_AUTOPILOT           = new SimpleBooleanProperty(false);
+    public static final ObjectProperty<Color> PY_CANVAS_COLOR  = new SimpleObjectProperty<>(Color.BLACK);
     public static final BooleanProperty PY_CANVAS_DECORATED    = new SimpleBooleanProperty(true);
     public static final BooleanProperty PY_CUSTOM_MAPS_ENABLED = new SimpleBooleanProperty(false);
     public static final BooleanProperty PY_DEBUG_INFO          = new SimpleBooleanProperty(false);
