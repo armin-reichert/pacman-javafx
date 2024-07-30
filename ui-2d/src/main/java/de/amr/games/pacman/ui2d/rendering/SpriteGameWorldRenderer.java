@@ -9,7 +9,9 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.*;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -26,9 +28,8 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class SpriteGameWorldRenderer {
 
-    static final Color BACKGROUND_COLOR = Color.BLACK;
-
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(1);
+    public final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(this, "backgroundColor", Color.BLACK);
 
     private GameSpriteSheet spriteSheet;
 
@@ -63,6 +64,7 @@ public class SpriteGameWorldRenderer {
         g.save();
         g.scale(scalingPy.get(), scalingPy.get());
         if (brightPhase) {
+            // bright maze is in separate image, not in sprite sheet
             g.drawImage(spriteSheet.getFlashingMazeImage(), t(tileX), t(tileY));
         } else {
             drawSprite(g, spriteSheet.getEmptyMazeSprite(), t(tileX), t(tileY));
@@ -75,7 +77,7 @@ public class SpriteGameWorldRenderer {
         double cy = t(tile.y()) + HTS;
         double s = scalingPy.get();
         double r = world.isEnergizerPosition(tile) ? 4.5 : 2;
-        g.setFill(BACKGROUND_COLOR);
+        g.setFill(backgroundColorPy.get());
         g.fillRect(s * (cx - r), s * (cy - r), s * (2 * r), s * (2 * r));
     }
 

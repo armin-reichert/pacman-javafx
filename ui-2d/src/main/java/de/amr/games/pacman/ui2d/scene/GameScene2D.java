@@ -9,10 +9,7 @@ import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.SpriteGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.VectorGameWorldRenderer;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -32,6 +29,7 @@ public abstract class GameScene2D implements GameScene {
 
     public final BooleanProperty infoVisiblePy  = new SimpleBooleanProperty(this, "infoVisible", false);
     public final DoubleProperty scalingPy       = new SimpleDoubleProperty(this, "scaling", 1.0);
+    public final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(this, "backgroundColor", Color.BLACK);
 
     protected final VectorGameWorldRenderer vectorRenderer = new VectorGameWorldRenderer();
     protected final SpriteGameWorldRenderer spriteRenderer = new SpriteGameWorldRenderer();
@@ -42,6 +40,7 @@ public abstract class GameScene2D implements GameScene {
     public GameScene2D() {
         vectorRenderer.scalingPy.bind(scalingPy);
         spriteRenderer.scalingPy.bind(scalingPy);
+        spriteRenderer.backgroundColorPy.bind(backgroundColorPy);
     }
 
     public abstract boolean isCreditVisible();
@@ -98,7 +97,7 @@ public abstract class GameScene2D implements GameScene {
     }
 
     public void clearCanvas() {
-        g.setFill(canvasBackground());
+        g.setFill(backgroundColorPy.get());
         g.fillRect(0, 0, g.getCanvas().getWidth(), g.getCanvas().getHeight());
     }
 
@@ -107,10 +106,6 @@ public abstract class GameScene2D implements GameScene {
      */
     protected void drawSceneInfo() {
         drawTileGrid();
-    }
-
-    protected Color canvasBackground() {
-        return context.theme() != null ? context.theme().color("canvas.background") : Color.BLACK;
     }
 
     protected void drawScore(Score score, String title, double x, double y) {

@@ -10,8 +10,8 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.TileMapPath;
 import de.amr.games.pacman.lib.tilemap.Tiles;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -22,7 +22,7 @@ import static de.amr.games.pacman.mapeditor.TileMapUtil.TILE_SIZE;
  */
 public class TerrainMapRenderer implements TileMapRenderer {
 
-    public FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1f);
+    public DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1);
 
     protected Color wallFillColor = Color.BLACK;
     protected Color wallStrokeColor = Color.GREEN;
@@ -61,7 +61,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         scalingPy.set((float) scaling);
     }
 
-    public float scaling() {
+    public double scaling() {
         return scalingPy.get();
     }
 
