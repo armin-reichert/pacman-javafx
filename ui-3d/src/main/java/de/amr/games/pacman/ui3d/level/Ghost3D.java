@@ -134,7 +134,7 @@ public class Ghost3D {
             appearFrightened();
         } else {
             // Note: Total flashing time must be shorter than Pac power fading time (2s)!
-            Duration totalFlashingTime = Duration.seconds(1.95);
+            Duration totalFlashingTime = Duration.seconds(2).multiply(0.95);
             ensureFlashingAnimationIsPlaying(numFlashes, totalFlashingTime);
             eyeballsColorPy.set(theme.color("ghost.color.frightened.eyeballs"));
             dressShape.setVisible(true);
