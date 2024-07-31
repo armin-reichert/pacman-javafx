@@ -47,8 +47,6 @@ public class Ghost3D extends Group {
     private final Theme theme;
     private final Group dressGroup;
     private final Shape3D dressShape;
-    private final Shape3D eyeballsShape;
-    private final Shape3D pupilsShape;
 
     private final ObjectProperty<Color> dressColorPy = new SimpleObjectProperty<>(this, "dressColor", Color.ORANGE);
     private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(this, "eyeballsColor", Color.WHITE);
@@ -73,7 +71,7 @@ public class Ghost3D extends Group {
         dressColorPy.set(theme.color("ghost.%d.color.normal.dress".formatted(id)));
         dressShape.drawModeProperty().bind(drawModePy);
 
-        pupilsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_PUPILS));
+        Shape3D pupilsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_PUPILS));
         PhongMaterial pupilsMaterial = coloredMaterial(pupilsColorPy.get());
         pupilsMaterial.diffuseColorProperty().bind(pupilsColorPy);
         pupilsMaterial.specularColorProperty().bind(pupilsColorPy.map(Color::brighter));
@@ -81,7 +79,7 @@ public class Ghost3D extends Group {
         pupilsColorPy.set(theme.color("ghost.%d.color.normal.pupils".formatted(id)));
         pupilsShape.drawModeProperty().bind(drawModePy);
 
-        eyeballsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_EYEBALLS));
+        Shape3D eyeballsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_EYEBALLS));
         eyeballsShape.setMaterial(createColorBoundMaterial(eyeballsColorPy));
         eyeballsColorPy.set(theme.color("ghost.%d.color.normal.eyeballs".formatted(id)));
         eyeballsShape.drawModeProperty().bind(drawModePy);
@@ -191,17 +189,5 @@ public class Ghost3D extends Group {
 
     public Group dressGroup() {
         return dressGroup;
-    }
-
-    public Shape3D dressShape() {
-        return dressShape;
-    }
-
-    public Shape3D eyeballsShape() {
-        return eyeballsShape;
-    }
-
-    public Shape3D pupilsShape() {
-        return pupilsShape;
     }
 }
