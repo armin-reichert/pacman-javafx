@@ -35,16 +35,15 @@ import static java.util.Objects.requireNonNull;
  */
 public class Ghost3D {
 
-    public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
-    public static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
-    public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
+    static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
+    static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
+    static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
 
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     private final byte id;
     private final Theme theme;
     private final Group root = new Group();
-    private final Group dressGroup;
     private final Shape3D dressShape;
 
     private final ObjectProperty<Color> dressColorPy = new SimpleObjectProperty<>(this, "dressColor", Color.ORANGE);
@@ -68,10 +67,10 @@ public class Ghost3D {
         dressMaterial.diffuseColorProperty().bind(dressColorPy);
         dressMaterial.specularColorProperty().bind(dressColorPy.map(Color::brighter));
         dressShape.setMaterial(dressMaterial);
-        dressColorPy.set(theme.color("ghost.%d.color.normal.dress".formatted(id)));
         dressShape.drawModeProperty().bind(drawModePy);
+        dressColorPy.set(theme.color("ghost.%d.color.normal.dress".formatted(id)));
 
-        dressGroup = new Group(dressShape);
+        var dressGroup = new Group(dressShape);
 
         dressAnimation = new RotateTransition(Duration.seconds(0.3), dressGroup);
         // TODO I expected this should be the z-axis but... (transforms messed-up?)
@@ -80,20 +79,20 @@ public class Ghost3D {
         dressAnimation.setCycleCount(Animation.INDEFINITE);
         dressAnimation.setAutoReverse(true);
 
-        Shape3D pupilsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_PUPILS));
+        var pupilsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_PUPILS));
         PhongMaterial pupilsMaterial = coloredMaterial(pupilsColorPy.get());
         pupilsMaterial.diffuseColorProperty().bind(pupilsColorPy);
         pupilsMaterial.specularColorProperty().bind(pupilsColorPy.map(Color::brighter));
         pupilsShape.setMaterial(pupilsMaterial);
-        pupilsColorPy.set(theme.color("ghost.%d.color.normal.pupils".formatted(id)));
         pupilsShape.drawModeProperty().bind(drawModePy);
+        pupilsColorPy.set(theme.color("ghost.%d.color.normal.pupils".formatted(id)));
 
-        Shape3D eyeballsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_EYEBALLS));
+        var eyeballsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_EYEBALLS));
         eyeballsShape.setMaterial(createColorBoundMaterial(eyeballsColorPy));
-        eyeballsColorPy.set(theme.color("ghost.%d.color.normal.eyeballs".formatted(id)));
         eyeballsShape.drawModeProperty().bind(drawModePy);
+        eyeballsColorPy.set(theme.color("ghost.%d.color.normal.eyeballs".formatted(id)));
 
-        Group eyesGroup = new Group(pupilsShape, eyeballsShape);
+        var eyesGroup = new Group(pupilsShape, eyeballsShape);
         root.getChildren().setAll(dressGroup, eyesGroup);
 
         Bounds dressBounds = dressShape.getBoundsInLocal();
@@ -107,9 +106,7 @@ public class Ghost3D {
 
     // TODO: fix orientation in OBJ file
     private void fixOrientation(Node shape) {
-        shape.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-        shape.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
-        shape.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+        shape.getTransforms().addAll(new Rotate(90, Rotate.X_AXIS), new Rotate(180, Rotate.Y_AXIS), new Rotate(180, Rotate.Z_AXIS));
     }
 
     private void resizeTo(double size) {
@@ -119,10 +116,9 @@ public class Ghost3D {
 
     public void turnTo(double angle) {
         root.setRotationAxis(Rotate.Z_AXIS);
-        //TODO should turn clockwise or anticlockwise depending on current orientation
-        //Timeline animation = new Timeline(new KeyFrame(Duration.millis(80), new KeyValue(rotateProperty(), angle)));
-        //animation.play();
         root.setRotate(angle);
+        //TODO doesn't work as wanted: should turn clockwise/anticlockwise depending on orientation change
+        //new Timeline(new KeyFrame(Duration.millis(80), new KeyValue(root.rotateProperty(), angle))).play();
     }
 
     public void playDressAnimation() {
@@ -138,7 +134,7 @@ public class Ghost3D {
             appearFrightened();
         } else {
             // Note: Total flashing time must be shorter than Pac power fading time (2s)!
-            Duration totalFlashingTime = Duration.seconds(1.9);
+            Duration totalFlashingTime = Duration.seconds(1.95);
             ensureFlashingAnimationIsPlaying(numFlashes, totalFlashingTime);
             eyeballsColorPy.set(theme.color("ghost.color.frightened.eyeballs"));
             dressShape.setVisible(true);
@@ -209,9 +205,5 @@ public class Ghost3D {
 
     public Group root() {
         return root;
-    }
-
-    public Group dressGroup() {
-        return dressGroup;
     }
 }
