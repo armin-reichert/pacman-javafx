@@ -14,7 +14,6 @@ import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
@@ -27,7 +26,6 @@ import org.tinylog.Logger;
 import static de.amr.games.pacman.lib.Globals.requirePositive;
 import static de.amr.games.pacman.model.GameModel.checkGhostID;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredMaterial;
-import static de.amr.games.pacman.ui2d.util.Ufx.createColorBoundMaterial;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -44,7 +42,7 @@ public class Ghost3D {
     private final byte id;
     private final Theme theme;
     private final Group root = new Group();
-    private final Shape3D dressShape;
+    private final Shape3D dress;
 
     private final ObjectProperty<Color> dressColorPy = new SimpleObjectProperty<>(this, "dressColor", Color.ORANGE);
     private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(this, "eyeballsColor", Color.WHITE);
@@ -52,6 +50,39 @@ public class Ghost3D {
 
     private final RotateTransition dressAnimation;
     private Animation flashingAnimation;
+
+
+    private Color normalDressColor() {
+        return theme.color("ghost.%d.color.normal.dress".formatted(id));
+    }
+
+    private Color normalPupilsColor() {
+        return theme.color("ghost.%d.color.normal.pupils".formatted(id));
+    }
+
+    private Color normalEyeballsColor() {
+        return theme.color("ghost.%d.color.normal.eyeballs".formatted(id));
+    }
+
+    private Color frightenedDressColor() {
+        return theme.color("ghost.color.frightened.dress");
+    }
+
+    private Color frightenedPupilsColor() {
+        return theme.color("ghost.color.frightened.pupils");
+    }
+
+    private Color frightenedEyeballsColor() {
+        return theme.color("ghost.color.frightened.eyeballs");
+    }
+
+    private Color flashingDressColor() {
+        return theme.color("ghost.color.flashing.dress");
+    }
+
+    private Color flashingPupilsColor() {
+        return theme.color("ghost.color.flashing.pupils");
+    }
 
     public Ghost3D(Model3D model3D, Theme theme, byte id, double size) {
         requireNonNull(model3D);
@@ -62,15 +93,12 @@ public class Ghost3D {
         this.theme = theme;
         this.id = id;
 
-        dressShape = new MeshView(model3D.mesh(MESH_ID_GHOST_DRESS));
-        PhongMaterial dressMaterial = coloredMaterial(dressColorPy.get());
-        dressMaterial.diffuseColorProperty().bind(dressColorPy);
-        dressMaterial.specularColorProperty().bind(dressColorPy.map(Color::brighter));
-        dressShape.setMaterial(dressMaterial);
-        dressShape.drawModeProperty().bind(drawModePy);
-        dressColorPy.set(theme.color("ghost.%d.color.normal.dress".formatted(id)));
+        dress = new MeshView(model3D.mesh(MESH_ID_GHOST_DRESS));
+        dress.setMaterial(coloredMaterial(dressColorPy));
+        dress.drawModeProperty().bind(drawModePy);
+        dressColorPy.set(normalDressColor());
 
-        var dressGroup = new Group(dressShape);
+        var dressGroup = new Group(dress);
 
         dressAnimation = new RotateTransition(Duration.seconds(0.3), dressGroup);
         // TODO I expected this should be the z-axis but... (transforms messed-up?)
@@ -79,25 +107,22 @@ public class Ghost3D {
         dressAnimation.setCycleCount(Animation.INDEFINITE);
         dressAnimation.setAutoReverse(true);
 
-        var pupilsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_PUPILS));
-        PhongMaterial pupilsMaterial = coloredMaterial(pupilsColorPy.get());
-        pupilsMaterial.diffuseColorProperty().bind(pupilsColorPy);
-        pupilsMaterial.specularColorProperty().bind(pupilsColorPy.map(Color::brighter));
-        pupilsShape.setMaterial(pupilsMaterial);
-        pupilsShape.drawModeProperty().bind(drawModePy);
-        pupilsColorPy.set(theme.color("ghost.%d.color.normal.pupils".formatted(id)));
+        var pupils = new MeshView(model3D.mesh(MESH_ID_GHOST_PUPILS));
+        pupils.setMaterial(coloredMaterial(pupilsColorPy));
+        pupils.drawModeProperty().bind(drawModePy);
+        pupilsColorPy.set(normalPupilsColor());
 
-        var eyeballsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_EYEBALLS));
-        eyeballsShape.setMaterial(createColorBoundMaterial(eyeballsColorPy));
-        eyeballsShape.drawModeProperty().bind(drawModePy);
-        eyeballsColorPy.set(theme.color("ghost.%d.color.normal.eyeballs".formatted(id)));
+        var eyeballs = new MeshView(model3D.mesh(MESH_ID_GHOST_EYEBALLS));
+        eyeballs.setMaterial(coloredMaterial(eyeballsColorPy));
+        eyeballs.drawModeProperty().bind(drawModePy);
+        eyeballsColorPy.set(normalEyeballsColor());
 
-        var eyesGroup = new Group(pupilsShape, eyeballsShape);
+        var eyesGroup = new Group(pupils, eyeballs);
         root.getChildren().setAll(dressGroup, eyesGroup);
 
-        Bounds dressBounds = dressShape.getBoundsInLocal();
+        Bounds dressBounds = dress.getBoundsInLocal();
         var centeredOverOrigin = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
-        dressShape.getTransforms().add(centeredOverOrigin);
+        dress.getTransforms().add(centeredOverOrigin);
         eyesGroup.getTransforms().add(centeredOverOrigin);
 
         fixOrientation(root);
@@ -133,38 +158,37 @@ public class Ghost3D {
         if (numFlashes == 0) {
             appearFrightened();
         } else {
+            dress.setVisible(true);
             // Note: Total flashing time must be shorter than Pac power fading time (2s)!
             Duration totalFlashingTime = Duration.seconds(2).multiply(0.95);
             ensureFlashingAnimationIsPlaying(numFlashes, totalFlashingTime);
-            eyeballsColorPy.set(theme.color("ghost.color.frightened.eyeballs"));
-            dressShape.setVisible(true);
             Logger.info("Appear flashing, ghost {}", id);
         }
     }
 
     public void appearFrightened() {
+        dress.setVisible(true);
         ensureFlashingAnimationIsStopped();
-        dressColorPy.set(theme.color("ghost.color.frightened.dress"));
-        eyeballsColorPy.set(theme.color("ghost.color.frightened.eyeballs"));
-        pupilsColorPy.set(theme.color("ghost.color.frightened.pupils"));
-        dressShape.setVisible(true);
+        dressColorPy.set(frightenedDressColor());
+        eyeballsColorPy.set(frightenedEyeballsColor());
+        pupilsColorPy.set(frightenedPupilsColor());
         Logger.info("Appear frightened, ghost {}", id);
     }
 
     public void appearNormal() {
+        dress.setVisible(true);
         ensureFlashingAnimationIsStopped();
-        dressColorPy.set(theme.color("ghost.%d.color.normal.dress".formatted(id)));
-        pupilsColorPy.set(theme.color("ghost.%d.color.normal.pupils".formatted(id)));
-        eyeballsColorPy.set(theme.color("ghost.%d.color.normal.eyeballs".formatted(id)));
-        dressShape.setVisible(true);
+        dressColorPy.set(normalDressColor());
+        eyeballsColorPy.set(normalEyeballsColor());
+        pupilsColorPy.set(normalPupilsColor());
         Logger.info("Appear normal, ghost {}", id);
     }
 
     public void appearEyesOnly() {
+        dress.setVisible(false);
         ensureFlashingAnimationIsStopped();
-        pupilsColorPy.set(theme.color("ghost.%d.color.normal.pupils".formatted(id)));
-        eyeballsColorPy.set(theme.color("ghost.%d.color.normal.eyeballs".formatted(id)));
-        dressShape.setVisible(false);
+        eyeballsColorPy.set(normalEyeballsColor());
+        pupilsColorPy.set(normalPupilsColor());
         Logger.info("Appear eyes, ghost {}", id);
     }
 
@@ -172,12 +196,12 @@ public class Ghost3D {
         Duration flashEndTime = totalDuration.divide(numFlashes), highlightTime = flashEndTime.divide(3);
         flashingAnimation = new Timeline(
             new KeyFrame(highlightTime,
-                new KeyValue(dressColorPy,  theme.color("ghost.color.flashing.dress")),
-                new KeyValue(pupilsColorPy, theme.color("ghost.color.flashing.pupils"))
+                new KeyValue(dressColorPy,  flashingDressColor()),
+                new KeyValue(pupilsColorPy, flashingPupilsColor())
             ),
             new KeyFrame(flashEndTime,
-                new KeyValue(dressColorPy,  theme.color("ghost.color.frightened.dress")),
-                new KeyValue(pupilsColorPy, theme.color("ghost.color.frightened.pupils"))
+                new KeyValue(dressColorPy,  frightenedDressColor()),
+                new KeyValue(pupilsColorPy, frightenedPupilsColor())
             )
         );
         flashingAnimation.setCycleCount(numFlashes);

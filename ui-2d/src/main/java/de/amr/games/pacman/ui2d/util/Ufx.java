@@ -9,7 +9,6 @@ import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.Transition;
 import javafx.application.Application;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Insets;
@@ -56,6 +55,11 @@ public interface Ufx {
         booleanProperty.set(!booleanProperty.get());
     }
 
+
+    static  Color opaqueColor(Color color, double opacity) {
+        checkNotNull(color);
+        return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+    }
 
     static  Background coloredBackground(Color color) {
         checkNotNull(color);
@@ -106,16 +110,10 @@ public interface Ufx {
         return material;
     }
 
-    static  Color opaqueColor(Color color, double opacity) {
-        checkNotNull(color);
-        return Color.color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
-    }
-
-    static PhongMaterial createColorBoundMaterial(ObjectProperty<Color> diffuseColorProperty) {
+    static PhongMaterial coloredMaterial(ObjectProperty<Color> colorProperty) {
         var material = new PhongMaterial();
-        material.diffuseColorProperty().bind(diffuseColorProperty);
-        material.specularColorProperty()
-            .bind(Bindings.createObjectBinding(() -> diffuseColorProperty.get().brighter(), diffuseColorProperty));
+        material.diffuseColorProperty().bind(colorProperty);
+        material.specularColorProperty().bind(colorProperty.map(Color::brighter));
         return material;
     }
 
