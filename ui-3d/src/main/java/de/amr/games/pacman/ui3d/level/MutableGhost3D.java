@@ -128,17 +128,18 @@ public class MutableGhost3D extends Group {
         Vector2f center = ghost.center();
         setTranslateX(center.x());
         setTranslateY(center.y());
-        setTranslateZ(-0.5 * size - 2.0);
+        setTranslateZ(-0.5 * size - 2.0); // lift a bit over floor
         ghost3D.turnTo(Ufx.angle(ghost.wishDir()));
         boolean outside = center.x() < HTS || center.x() > ghost.world().map().terrain().numCols() * TS - HTS;
         setVisible(ghost.isVisible() && !outside);
     }
 
     private void updateAnimations() {
-        if (look() == Look.NUMBER) {
+        if (lookPy.get() == Look.NUMBER) {
             ghost3D.stopDressAnimation();
         } else {
             numberCubeRotation.stop();
+            ghost3D.playDressAnimation();
             if (ghost.moveInfo().tunnelEntered) {
                 switch (ghost.moveDir()) {
                     case LEFT -> {
@@ -152,28 +153,26 @@ public class MutableGhost3D extends Group {
                     default -> {}
                 }
             }
-            ghost3D.playDressAnimation();
         }
     }
 
     private void updateLook(GameModel game) {
-        var newLook = Look.NORMAL;
-        if (ghost.state() != null) {
-            newLook = switch (ghost.state()) {
-                case LEAVING_HOUSE, LOCKED ->
-                    game.powerTimer().isRunning() && !game.victims().contains(ghost)
-                        ? frightenedOrFlashing(game) : Look.NORMAL;
-                case FRIGHTENED -> frightenedOrFlashing(game);
-                case ENTERING_HOUSE, RETURNING_HOME -> Look.EYES;
-                case EATEN -> Look.NUMBER;
-                default -> Look.NORMAL;
-            };
+        if (ghost.state() == null) {
+            // can this happen?
+            lookPy.set(Look.NORMAL);
+            return;
         }
+        Look newLook = switch (ghost.state()) {
+            case LEAVING_HOUSE, LOCKED ->
+                // ghost that have been killed by current energizer will not look frightened
+                game.powerTimer().isRunning() && !game.victims().contains(ghost)
+                    ? frightenedOrFlashing(game) : Look.NORMAL;
+            case FRIGHTENED -> frightenedOrFlashing(game);
+            case ENTERING_HOUSE, RETURNING_HOME -> Look.EYES;
+            case EATEN -> Look.NUMBER;
+            default -> Look.NORMAL;
+        };
         lookPy.set(newLook);
-    }
-
-    public Look look() {
-        return lookPy.get();
     }
 
     private Look frightenedOrFlashing(GameModel game) {
