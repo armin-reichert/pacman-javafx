@@ -17,6 +17,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
@@ -39,6 +40,8 @@ public class Ghost3D extends Group {
     public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
     public static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
     public static final String MESH_ID_GHOST_PUPILS = "Sphere.010_Sphere.039_grey_wall";
+
+    public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     private final byte id;
     private final Theme theme;
@@ -68,6 +71,7 @@ public class Ghost3D extends Group {
         dressMaterial.specularColorProperty().bind(dressColorPy.map(Color::brighter));
         dressShape.setMaterial(dressMaterial);
         dressColorPy.set(theme.color("ghost.%d.color.normal.dress".formatted(id)));
+        dressShape.drawModeProperty().bind(drawModePy);
 
         pupilsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_PUPILS));
         PhongMaterial pupilsMaterial = coloredMaterial(pupilsColorPy.get());
@@ -75,10 +79,12 @@ public class Ghost3D extends Group {
         pupilsMaterial.specularColorProperty().bind(pupilsColorPy.map(Color::brighter));
         pupilsShape.setMaterial(pupilsMaterial);
         pupilsColorPy.set(theme.color("ghost.%d.color.normal.pupils".formatted(id)));
+        pupilsShape.drawModeProperty().bind(drawModePy);
 
         eyeballsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_EYEBALLS));
         eyeballsShape.setMaterial(createColorBoundMaterial(eyeballsColorPy));
         eyeballsColorPy.set(theme.color("ghost.%d.color.normal.eyeballs".formatted(id)));
+        eyeballsShape.drawModeProperty().bind(drawModePy);
 
         dressGroup = new Group(dressShape);
         Group eyesGroup = new Group(pupilsShape, eyeballsShape);

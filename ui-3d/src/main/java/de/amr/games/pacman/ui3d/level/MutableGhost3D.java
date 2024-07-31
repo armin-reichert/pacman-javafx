@@ -26,8 +26,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -79,18 +78,16 @@ public class MutableGhost3D extends Group {
         requireNonNull(model3D);
         requireNonNull(theme);
         requireNonNull(ghost);
+        requirePositive(size);
 
         this.ghost = ghost;
         this.size = size;
 
         ghost3D = new Ghost3D(model3D, theme, ghost.id(), size);
-        ghost3D.dressShape().drawModeProperty().bind(drawModePy);
-        ghost3D.eyeballsShape().drawModeProperty().bind(drawModePy);
-        ghost3D.pupilsShape().drawModeProperty().bind(drawModePy);
-        getChildren().add(ghost3D);
+        ghost3D.drawModePy.bind(drawModePy);
 
         numberCube = new Box(14, 8, 8);
-        numberCubeRotation = new RotateTransition(Duration.seconds(1), this);
+        numberCubeRotation = new RotateTransition(Duration.seconds(1), numberCube);
         numberCubeRotation.setAxis(Rotate.X_AXIS);
         numberCubeRotation.setFromAngle(0);
         numberCubeRotation.setToAngle(360);
