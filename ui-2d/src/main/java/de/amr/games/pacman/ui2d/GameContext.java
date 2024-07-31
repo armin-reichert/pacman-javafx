@@ -42,19 +42,11 @@ public interface GameContext {
 
     // Game scenes
 
-    GameSceneManager gameSceneManager();
+    boolean isCurrentGameSceneRegisteredAs(GameSceneID gameSceneID);
 
     ObjectProperty<GameScene> gameSceneProperty();
 
     Optional<GameScene> currentGameScene();
-
-    default boolean isCurrentGameSceneRegisteredAs(GameSceneID sceneID) {
-        return currentGameScene().isPresent() && isGameSceneRegisteredAs(currentGameScene().get(), sceneID);
-    }
-
-    default boolean isGameSceneRegisteredAs(GameScene gameScene, GameSceneID sceneID) {
-        return gameSceneManager().isGameSceneRegisteredAs(gameScene, game().variant(), sceneID);
-    }
 
     // Resources
 

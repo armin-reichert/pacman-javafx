@@ -20,9 +20,7 @@ import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.rendering.*;
-import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.GameSceneID;
+import de.amr.games.pacman.ui2d.scene.*;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -52,6 +50,7 @@ import org.tinylog.Logger;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
@@ -98,8 +97,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public final BooleanProperty             mutePy            = new SimpleBooleanProperty(this, "mute", false);
 
     protected final Theme theme = new Theme();
-    protected final GameSceneManager gameSceneManager = new GameSceneManager();
     protected final List<ResourceBundle> bundles = new ArrayList<>();
+
+    protected final Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
 
     protected Stage stage;
     protected Scene mainScene;
@@ -354,8 +354,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     protected void createGameScenes() {
         for (var variant : gameController().supportedVariants()) {
-            gameSceneManager.createGameScenes(variant);
-            gameSceneManager.gameScenes2D(variant).forEach(gameScene2D -> {
+            createGameScenes(variant);
+            gameScenes2D(variant).forEach(gameScene2D -> {
                 gameScene2D.setContext(this);
                 gameScene2D.infoVisiblePy.bind(PY_DEBUG_INFO);
             });
@@ -461,14 +461,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected GameScene gameSceneForCurrentGameState() {
         GameVariant variant = game().variant();
         return switch (gameState()) {
-            case BOOT -> gameSceneManager.gameScene(variant, GameSceneID.BOOT_SCENE);
-            case CREDIT -> gameSceneManager.gameScene(variant, GameSceneID.CREDIT_SCENE);
-            case INTRO -> gameSceneManager.gameScene(variant, GameSceneID.INTRO_SCENE);
-            case INTERMISSION -> gameSceneManager.gameScene(variant, GameSceneID.valueOf(
+            case BOOT -> gameScene(variant, GameSceneID.BOOT_SCENE);
+            case CREDIT -> gameScene(variant, GameSceneID.CREDIT_SCENE);
+            case INTRO -> gameScene(variant, GameSceneID.INTRO_SCENE);
+            case INTERMISSION -> gameScene(variant, GameSceneID.valueOf(
                 "CUT_SCENE_" + game().intermissionNumber(game().levelNumber())));
-            case INTERMISSION_TEST -> gameSceneManager.gameScene(variant, GameSceneID.valueOf(
+            case INTERMISSION_TEST -> gameScene(variant, GameSceneID.valueOf(
                 "CUT_SCENE_" + gameState().<Integer>getProperty("intermissionTestNumber")));
-            default -> gameSceneManager.gameScene(variant, GameSceneID.PLAY_SCENE);
+            default -> gameScene(variant, GameSceneID.PLAY_SCENE);
         };
     }
 
@@ -514,11 +514,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     @Override
-    public GameSceneManager gameSceneManager() {
-        return gameSceneManager;
-    }
-
-    @Override
     public Theme theme() {
         return theme;
     }
@@ -540,6 +535,65 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void setScoreVisible(boolean visible) {
         scoreVisiblePy.set(visible);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // GameSceneManager
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public boolean isCurrentGameSceneRegisteredAs(GameSceneID sceneID) {
+        return currentGameScene().isPresent() && isGameSceneRegisteredAs(currentGameScene().get(), sceneID);
+    }
+
+    public boolean isGameSceneRegisteredAs(GameScene gameScene, GameSceneID sceneID) {
+        return isGameSceneRegisteredAs(gameScene, game().variant(), sceneID);
+    }
+
+    public void createGameScenes(GameVariant variant) {
+        switch (variant) {
+            case MS_PACMAN ->
+                    gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
+                            GameSceneID.BOOT_SCENE,   new BootScene(),
+                            GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
+                            GameSceneID.CREDIT_SCENE, new MsPacManCreditScene(),
+                            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+                            GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
+                            GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
+                            GameSceneID.CUT_SCENE_3,  new MsPacManCutScene3()
+                    )));
+            case PACMAN, PACMAN_XXL ->
+                    gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
+                            GameSceneID.BOOT_SCENE,   new BootScene(),
+                            GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
+                            GameSceneID.CREDIT_SCENE, new PacManCreditScene(),
+                            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+                            GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
+                            GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
+                            GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
+                    )));
+        }
+    }
+
+    public void putGameScene(GameScene gameScene, GameVariant variant, GameSceneID sceneID) {
+        gameScenesForVariant.get(variant).put(sceneID, gameScene);
+    }
+
+    public Stream<GameScene> gameScenes(GameVariant variant) {
+        return gameScenesForVariant.get(variant).values().stream();
+    }
+
+    public Stream<GameScene2D> gameScenes2D(GameVariant variant) {
+        return gameScenesForVariant.get(variant).values().stream()
+                .filter(GameScene2D.class::isInstance)
+                .map(GameScene2D.class::cast);
+    }
+
+    public GameScene gameScene(GameVariant variant, GameSceneID sceneID) {
+        return gameScenesForVariant.get(variant).get(sceneID);
+    }
+
+    public boolean isGameSceneRegisteredAs(GameScene gameScene, GameVariant variant, GameSceneID sceneID) {
+        return gameScene(variant, sceneID) == gameScene;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

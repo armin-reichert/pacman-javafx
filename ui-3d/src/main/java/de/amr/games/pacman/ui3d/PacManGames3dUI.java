@@ -168,7 +168,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
             playScene3D.widthProperty().bind(mainScene.widthProperty());
             playScene3D.heightProperty().bind(mainScene.heightProperty());
             playScene3D.setContext(this);
-            gameSceneManager.putGameScene(playScene3D, variant, GameSceneID.PLAY_SCENE_3D);
+            putGameScene(playScene3D, variant, GameSceneID.PLAY_SCENE_3D);
             Logger.info("Added 3D play scene for variant " + variant);
         }
     }
@@ -221,7 +221,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     protected GameScene gameSceneForCurrentGameState() {
         GameScene gameScene = super.gameSceneForCurrentGameState();
         if (PY_3D_ENABLED.get() && isGameSceneRegisteredAs(gameScene, GameSceneID.PLAY_SCENE)) {
-            GameScene playScene3D = gameSceneManager.gameScene(game().variant(), GameSceneID.PLAY_SCENE_3D);
+            GameScene playScene3D = gameScene(game().variant(), GameSceneID.PLAY_SCENE_3D);
             return playScene3D != null ? playScene3D : gameScene;
         }
         return gameScene;
