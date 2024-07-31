@@ -549,7 +549,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         return isGameSceneRegisteredAs(gameScene, game().variant(), sceneID);
     }
 
-    public void createGameScenes(GameVariant variant) {
+    public boolean isGameSceneRegisteredAs(GameScene gameScene, GameVariant variant, GameSceneID sceneID) {
+        return gameScene(variant, sceneID) == gameScene;
+    }
+
+    protected void createGameScenes(GameVariant variant) {
         switch (variant) {
             case MS_PACMAN ->
                     gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
@@ -574,13 +578,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
     }
 
-    public void putGameScene(GameScene gameScene, GameVariant variant, GameSceneID sceneID) {
+    protected void putGameScene(GameScene gameScene, GameVariant variant, GameSceneID sceneID) {
         gameScenesForVariant.get(variant).put(sceneID, gameScene);
     }
 
-    public Stream<GameScene> gameScenes(GameVariant variant) {
-        return gameScenesForVariant.get(variant).values().stream();
-    }
 
     public Stream<GameScene2D> gameScenes2D(GameVariant variant) {
         return gameScenesForVariant.get(variant).values().stream()
@@ -590,10 +591,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     public GameScene gameScene(GameVariant variant, GameSceneID sceneID) {
         return gameScenesForVariant.get(variant).get(sceneID);
-    }
-
-    public boolean isGameSceneRegisteredAs(GameScene gameScene, GameVariant variant, GameSceneID sceneID) {
-        return gameScene(variant, sceneID) == gameScene;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
