@@ -70,7 +70,6 @@ public class MutableGhost3D extends Group {
     private final Box numberCube;
     private final RotateTransition numberCubeRotation;
     private final RotateTransition brakeAnimation;
-    private final RotateTransition dressAnimation;
     private final double size;
     private int numFlashes;
 
@@ -101,19 +100,12 @@ public class MutableGhost3D extends Group {
         brakeAnimation.setAutoReverse(true);
         brakeAnimation.setCycleCount(2);
 
-        dressAnimation = new RotateTransition(Duration.seconds(0.3), ghost3D.dressGroup());
-        // TODO I expected this should be the z-axis but... (transforms messed-up?)
-        dressAnimation.setAxis(Rotate.Y_AXIS);
-        dressAnimation.setByAngle(30);
-        dressAnimation.setCycleCount(Animation.INDEFINITE);
-        dressAnimation.setAutoReverse(true);
-
         lookPy.set(Look.NORMAL);
     }
 
     public void init(GameContext context) {
         brakeAnimation.stop();
-        dressAnimation.stop();
+        ghost3D.stopDressAnimation();
         numberCubeRotation.stop();
         updateTransform();
         updateLook(context.game());
@@ -144,15 +136,13 @@ public class MutableGhost3D extends Group {
 
     private void updateAnimations() {
         if (look() == Look.NUMBER) {
-            dressAnimation.stop();
+            ghost3D.stopDressAnimation();
         } else {
             numberCubeRotation.stop();
             if (ghost.moveInfo().tunnelEntered) {
                 brakeAnimation.playFromStart();
             }
-            if (dressAnimation.getStatus() != Status.RUNNING) {
-                dressAnimation.play();
-            }
+            ghost3D.playDressAnimation();
         }
     }
 

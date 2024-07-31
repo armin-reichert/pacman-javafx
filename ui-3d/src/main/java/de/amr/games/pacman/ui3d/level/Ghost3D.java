@@ -6,11 +6,8 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui3d.model.Model3D;
-import javafx.animation.Animation;
+import javafx.animation.*;
 import javafx.animation.Animation.Status;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
@@ -54,6 +51,7 @@ public class Ghost3D {
     private final ObjectProperty<Color> eyeballsColorPy = new SimpleObjectProperty<>(this, "eyeballsColor", Color.WHITE);
     private final ObjectProperty<Color> pupilsColorPy = new SimpleObjectProperty<>(this, "pupilsColor", Color.BLUE);
 
+    private final RotateTransition dressAnimation;
     private Animation flashingAnimation;
 
     public Ghost3D(Model3D model3D, Theme theme, byte id, double size) {
@@ -73,6 +71,15 @@ public class Ghost3D {
         dressColorPy.set(theme.color("ghost.%d.color.normal.dress".formatted(id)));
         dressShape.drawModeProperty().bind(drawModePy);
 
+        dressGroup = new Group(dressShape);
+
+        dressAnimation = new RotateTransition(Duration.seconds(0.3), dressGroup);
+        // TODO I expected this should be the z-axis but... (transforms messed-up?)
+        dressAnimation.setAxis(Rotate.Y_AXIS);
+        dressAnimation.setByAngle(30);
+        dressAnimation.setCycleCount(Animation.INDEFINITE);
+        dressAnimation.setAutoReverse(true);
+
         Shape3D pupilsShape = new MeshView(model3D.mesh(MESH_ID_GHOST_PUPILS));
         PhongMaterial pupilsMaterial = coloredMaterial(pupilsColorPy.get());
         pupilsMaterial.diffuseColorProperty().bind(pupilsColorPy);
@@ -86,7 +93,6 @@ public class Ghost3D {
         eyeballsColorPy.set(theme.color("ghost.%d.color.normal.eyeballs".formatted(id)));
         eyeballsShape.drawModeProperty().bind(drawModePy);
 
-        dressGroup = new Group(dressShape);
         Group eyesGroup = new Group(pupilsShape, eyeballsShape);
         root.getChildren().setAll(dressGroup, eyesGroup);
 
@@ -117,6 +123,14 @@ public class Ghost3D {
         //Timeline animation = new Timeline(new KeyFrame(Duration.millis(80), new KeyValue(rotateProperty(), angle)));
         //animation.play();
         root.setRotate(angle);
+    }
+
+    public void playDressAnimation() {
+        dressAnimation.play();
+    }
+
+    public void stopDressAnimation() {
+        dressAnimation.stop();
     }
 
     public void appearFlashing(int numFlashes) {
