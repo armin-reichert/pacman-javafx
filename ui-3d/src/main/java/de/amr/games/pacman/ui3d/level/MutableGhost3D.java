@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
+import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -93,10 +94,9 @@ public class MutableGhost3D extends Group {
         numberCubeRotation.setInterpolator(Interpolator.LINEAR);
         numberCubeRotation.setRate(0.75);
 
-        brakeAnimation = new RotateTransition(Duration.seconds(0.5), ghost3D.root());
+        brakeAnimation = new RotateTransition(Duration.seconds(0.5), this);
         brakeAnimation.setAxis(Rotate.Y_AXIS);
-        brakeAnimation.setFromAngle(0);
-        brakeAnimation.setToAngle(-35);
+        brakeAnimation.setByAngle(35);
         brakeAnimation.setAutoReverse(true);
         brakeAnimation.setCycleCount(2);
 
@@ -140,7 +140,17 @@ public class MutableGhost3D extends Group {
         } else {
             numberCubeRotation.stop();
             if (ghost.moveInfo().tunnelEntered) {
-                brakeAnimation.playFromStart();
+                switch (ghost.moveDir()) {
+                    case LEFT -> {
+                        brakeAnimation.setByAngle(-40);
+                        brakeAnimation.playFromStart();
+                    }
+                    case RIGHT -> {
+                        brakeAnimation.setByAngle(40);
+                        brakeAnimation.playFromStart();
+                    }
+                    default -> {}
+                }
             }
             ghost3D.playDressAnimation();
         }
