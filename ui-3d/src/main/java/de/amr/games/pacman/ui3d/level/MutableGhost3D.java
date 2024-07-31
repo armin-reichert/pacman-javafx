@@ -54,7 +54,7 @@ public class MutableGhost3D extends Group {
         protected void invalidated() {
             Look look = get();
             Logger.info("Ghost {} look changed to {}", ghost.id(), look);
-            getChildren().setAll(look == Look.NUMBER ? numberCube : ghost3D);
+            getChildren().setAll(look == Look.NUMBER ? numberCube : ghost3D.root());
             switch (look) {
                 case NORMAL     -> ghost3D.appearNormal();
                 case FRIGHTENED -> ghost3D.appearFrightened();
@@ -94,7 +94,7 @@ public class MutableGhost3D extends Group {
         numberCubeRotation.setInterpolator(Interpolator.LINEAR);
         numberCubeRotation.setRate(0.75);
 
-        brakeAnimation = new RotateTransition(Duration.seconds(0.5), ghost3D);
+        brakeAnimation = new RotateTransition(Duration.seconds(0.5), ghost3D.root());
         brakeAnimation.setAxis(Rotate.Y_AXIS);
         brakeAnimation.setFromAngle(0);
         brakeAnimation.setToAngle(-35);

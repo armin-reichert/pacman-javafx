@@ -15,6 +15,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
@@ -35,7 +36,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * @author Armin Reichert
  */
-public class Ghost3D extends Group {
+public class Ghost3D {
 
     public static final String MESH_ID_GHOST_DRESS = "Sphere.004_Sphere.034_light_blue_ghost";
     public static final String MESH_ID_GHOST_EYEBALLS = "Sphere.009_Sphere.036_white";
@@ -45,6 +46,7 @@ public class Ghost3D extends Group {
 
     private final byte id;
     private final Theme theme;
+    private final Group root = new Group();
     private final Group dressGroup;
     private final Shape3D dressShape;
 
@@ -86,31 +88,35 @@ public class Ghost3D extends Group {
 
         dressGroup = new Group(dressShape);
         Group eyesGroup = new Group(pupilsShape, eyeballsShape);
-        getChildren().setAll(dressGroup, eyesGroup);
+        root.getChildren().setAll(dressGroup, eyesGroup);
 
         Bounds dressBounds = dressShape.getBoundsInLocal();
         var centeredOverOrigin = new Translate(-dressBounds.getCenterX(), -dressBounds.getCenterY(), -dressBounds.getCenterZ());
         dressShape.getTransforms().add(centeredOverOrigin);
         eyesGroup.getTransforms().add(centeredOverOrigin);
 
-        // TODO: fix orientation in OBJ file
-        getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-        getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
-        getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+        fixOrientation(root);
         resizeTo(size);
     }
 
+    // TODO: fix orientation in OBJ file
+    private void fixOrientation(Node shape) {
+        shape.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+        shape.getTransforms().add(new Rotate(180, Rotate.Y_AXIS));
+        shape.getTransforms().add(new Rotate(180, Rotate.Z_AXIS));
+    }
+
     private void resizeTo(double size) {
-        Bounds bounds = getBoundsInLocal();
-        getTransforms().add(new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth()));
+        Bounds bounds = root.getBoundsInLocal();
+        root.getTransforms().add(new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth()));
     }
 
     public void turnTo(double angle) {
-        setRotationAxis(Rotate.Z_AXIS);
+        root.setRotationAxis(Rotate.Z_AXIS);
         //TODO should turn clockwise or anticlockwise depending on current orientation
         //Timeline animation = new Timeline(new KeyFrame(Duration.millis(80), new KeyValue(rotateProperty(), angle)));
         //animation.play();
-        setRotate(angle);
+        root.setRotate(angle);
     }
 
     public void appearFlashing(int numFlashes) {
@@ -185,6 +191,10 @@ public class Ghost3D extends Group {
             flashingAnimation = null;
             Logger.info("Stopped flashing animation for ghost {}", id);
         }
+    }
+
+    public Group root() {
+        return root;
     }
 
     public Group dressGroup() {
