@@ -17,7 +17,6 @@ import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.geometry.Dimension2D;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -52,8 +51,8 @@ public class PacManGames3dUI extends PacManGames2dUI implements GameParameters3D
     public static Picker<String> PICKER_LEVEL_COMPLETE;
     public static Picker<String> PICKER_GAME_OVER;
 
-    public PacManGames3dUI(Stage stage, Rectangle2D screenSize) {
-        super(stage, screenSize);
+    public PacManGames3dUI(Stage stage, double screenWidth, double screenHeight) {
+        super(stage, screenWidth, screenHeight);
     }
 
     @Override
@@ -133,9 +132,9 @@ public class PacManGames3dUI extends PacManGames2dUI implements GameParameters3D
     }
 
     @Override
-    protected Dimension2D computeMainSceneSize(Rectangle2D screenSize) {
-        double aspect = screenSize.getWidth() / screenSize.getHeight();
-        double height = 0.8 * screenSize.getHeight(), width = aspect * height;
+    protected Dimension2D computeMainSceneSize(double screenWidth, double screenHeight) {
+        double aspect = screenWidth / screenHeight;
+        double height = 0.8 * screenHeight, width = aspect * height;
         return new Dimension2D(width, height);
     }
 

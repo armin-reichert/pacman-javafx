@@ -107,7 +107,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, GamePara
     protected MediaPlayer powerSound;
     protected MediaPlayer ghostReturningHomeSound;
 
-    public PacManGames2dUI(Stage stage, Rectangle2D screenSize) {
+    public PacManGames2dUI(Stage stage, double screenWidth, double screenHeight) {
         this.stage = checkNotNull(stage);
         loadAssets();
         logAssets();
@@ -132,7 +132,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, GamePara
             Logger.debug("Game key '{}' registered", gameKey);
         }
 
-        createMainScene(computeMainSceneSize(screenSize));
+        createMainScene(computeMainSceneSize(screenWidth, screenHeight));
         createStartPage();
         createGamePage();
         createGameScenes();
@@ -284,9 +284,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, GamePara
         stage.show();
     }
 
-    protected Dimension2D computeMainSceneSize(Rectangle2D screenSize) {
-        double height = 0.9 * screenSize.getHeight(), width = 0.9 * height;
-        return new Dimension2D(width, height);
+    protected Dimension2D computeMainSceneSize(double screenWidth, double screenHeight) {
+        return new Dimension2D(0.9 * screenWidth, 0.9 * screenHeight);
     }
 
     protected void createMainScene(Dimension2D size) {
