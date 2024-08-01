@@ -161,7 +161,7 @@ public interface Ufx {
         return wrapper;
     }
 
-    static double angle(Direction dir) {
+    static int angle(Direction dir) {
         return switch (dir) {
             case LEFT  -> 0;
             case UP    -> 90;

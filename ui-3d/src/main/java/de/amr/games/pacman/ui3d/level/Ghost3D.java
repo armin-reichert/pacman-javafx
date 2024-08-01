@@ -142,11 +142,9 @@ public class Ghost3D {
         return root;
     }
 
-    public void turnTo(double angle) {
+    public void turnTo(int angle) {
         root.setRotationAxis(Rotate.Z_AXIS);
         root.setRotate(angle);
-        //TODO doesn't work as wanted: should turn clockwise/anticlockwise depending on orientation change
-        //new Timeline(new KeyFrame(Duration.millis(80), new KeyValue(root.rotateProperty(), angle))).play();
     }
 
     public void playDressAnimation() {
