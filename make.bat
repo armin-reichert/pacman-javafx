@@ -1,1 +1,1 @@
-.\gradlew clean jpackage --info
+.\gradlew clean jpackage --info --warning-mode all
