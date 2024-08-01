@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
@@ -24,7 +23,10 @@ import de.amr.games.pacman.ui2d.scene.*;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
@@ -65,25 +67,9 @@ import static java.util.function.Predicate.not;
  *
  * @author Armin Reichert
  */
-public class PacManGames2dUI implements GameEventListener, GameContext, ActionHandler, SoundHandler {
+public class PacManGames2dUI implements GameEventListener, GameContext, GameParameters, ActionHandler, SoundHandler {
 
-    public static final BooleanProperty PY_AUTOPILOT           = new SimpleBooleanProperty(false);
-    public static final ObjectProperty<Color> PY_CANVAS_COLOR  = new SimpleObjectProperty<>(Color.BLACK);
-    public static final BooleanProperty PY_CANVAS_DECORATED    = new SimpleBooleanProperty(true);
-    public static final BooleanProperty PY_CUSTOM_MAPS_ENABLED = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_DEBUG_INFO          = new SimpleBooleanProperty(false);
-    public static final BooleanProperty PY_IMMUNITY            = new SimpleBooleanProperty(false) {
-        @Override
-        protected void invalidated() {
-            GameController.it().setPacImmune(get());
-        }
-    };
-    public static final IntegerProperty PY_PIP_HEIGHT          = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_Y);
-    public static final BooleanProperty PY_PIP_ON              = new SimpleBooleanProperty(false);
-    public static final IntegerProperty PY_PIP_OPACITY_PERCENT = new SimpleIntegerProperty(100);
-    public static final IntegerProperty PY_SIMULATION_STEPS    = new SimpleIntegerProperty(1);
-
-    public final ObjectProperty<GameVariant> gameVariantPy     = new SimpleObjectProperty<>(this, "gameVariant") {
+    public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override
         protected void invalidated() {
             deleteSounds(); // new sounds will be created on demand for the new game variant
@@ -92,9 +78,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             }
         }
     };
-    public final ObjectProperty<GameScene>   gameScenePy       = new SimpleObjectProperty<>(this, "gameScene");
-    public final BooleanProperty             scoreVisiblePy    = new SimpleBooleanProperty(this, "scoreVisible");
-    public final BooleanProperty             mutePy            = new SimpleBooleanProperty(this, "mute", false);
+    public final ObjectProperty<GameScene> gameScenePy    = new SimpleObjectProperty<>(this, "gameScene");
+    public final BooleanProperty           scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible");
+    public final BooleanProperty           mutePy         = new SimpleBooleanProperty(this, "mute", false);
 
     protected final Theme theme = new Theme();
     protected final List<ResourceBundle> bundles = new ArrayList<>();
@@ -556,32 +542,27 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected void createGameScenes(GameVariant variant) {
         switch (variant) {
             case MS_PACMAN ->
-                    gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
-                            GameSceneID.BOOT_SCENE,   new BootScene(),
-                            GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
-                            GameSceneID.CREDIT_SCENE, new MsPacManCreditScene(),
-                            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-                            GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
-                            GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
-                            GameSceneID.CUT_SCENE_3,  new MsPacManCutScene3()
-                    )));
+                gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
+                    GameSceneID.BOOT_SCENE,   new BootScene(),
+                    GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
+                    GameSceneID.CREDIT_SCENE, new MsPacManCreditScene(),
+                    GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+                    GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
+                    GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
+                    GameSceneID.CUT_SCENE_3,  new MsPacManCutScene3()
+                )));
             case PACMAN, PACMAN_XXL ->
-                    gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
-                            GameSceneID.BOOT_SCENE,   new BootScene(),
-                            GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
-                            GameSceneID.CREDIT_SCENE, new PacManCreditScene(),
-                            GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-                            GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
-                            GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
-                            GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
-                    )));
+                gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
+                    GameSceneID.BOOT_SCENE,   new BootScene(),
+                    GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
+                    GameSceneID.CREDIT_SCENE, new PacManCreditScene(),
+                    GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+                    GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
+                    GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
+                    GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
+                )));
         }
     }
-
-    protected void putGameScene(GameScene gameScene, GameVariant variant, GameSceneID sceneID) {
-        gameScenesForVariant.get(variant).put(sceneID, gameScene);
-    }
-
 
     public Stream<GameScene2D> gameScenes2D(GameVariant variant) {
         return gameScenesForVariant.get(variant).values().stream()
