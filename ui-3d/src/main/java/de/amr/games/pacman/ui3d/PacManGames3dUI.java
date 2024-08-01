@@ -49,11 +49,6 @@ import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
  */
 public class PacManGames3dUI extends PacManGames2dUI implements GameParameters3D {
 
-    static {
-        System.setProperty("javafx.sg.warn", "true"); // WTF?
-    }
-
-
     public static Picker<String> PICKER_LEVEL_COMPLETE;
     public static Picker<String> PICKER_GAME_OVER;
 
