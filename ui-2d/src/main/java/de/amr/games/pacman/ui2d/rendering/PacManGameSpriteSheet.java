@@ -169,16 +169,9 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
 
     private final Rectangle2D[] pacDyingSprites = new Rectangle2D[11];
     {
-        // TODO why do I get drawing artifacts if size is exactly 16?
-        double m = 1;
-        double size = raster() - 2*m;
         for (int i = 0; i < pacDyingSprites.length; ++i) {
-            if (i < pacDyingSprites.length - 1) {
-                pacDyingSprites[i] = rect(504 + i * raster() + m, 0 + m, size, size);
-            } else {
-                // TODO ensure last image is completely visible. What a mess!
-                pacDyingSprites[i] = rect(504 + i * raster(), 0, raster(), raster());
-            }
+            boolean last = i == pacDyingSprites.length - 1;
+            pacDyingSprites[i] = rect(504 + i * 16, 0, 15, last?16:15);
         }
     }
 
