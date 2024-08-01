@@ -92,18 +92,18 @@ public interface Ufx {
         return new Background(new BackgroundImage(image, repeatX, repeatY, position, size));
     }
 
-    static  Border roundedBorder(Color color, double cornerRadius, double width) {
+    static Border roundedBorder(Color color, double cornerRadius, double width) {
         checkNotNull(color);
         return new Border(
             new BorderStroke(color, BorderStrokeStyle.SOLID, new CornerRadii(cornerRadius), new BorderWidths(width)));
     }
 
-    static  Border border(Color color, double width) {
+    static Border border(Color color, double width) {
         checkNotNull(color);
         return new Border(new BorderStroke(color, BorderStrokeStyle.SOLID, null, new BorderWidths(width)));
     }
 
-    static  PhongMaterial coloredMaterial(Color color) {
+    static PhongMaterial coloredMaterial(Color color) {
         checkNotNull(color);
         var material = new PhongMaterial(color);
         material.setSpecularColor(color.brighter());
@@ -111,6 +111,7 @@ public interface Ufx {
     }
 
     static PhongMaterial coloredMaterial(ObjectProperty<Color> colorProperty) {
+        checkNotNull(colorProperty);
         var material = new PhongMaterial();
         material.diffuseColorProperty().bind(colorProperty);
         material.specularColorProperty().bind(colorProperty.map(Color::brighter));
@@ -154,8 +155,7 @@ public interface Ufx {
         checkNotNull(action);
         var wrapper = new Transition() {
             @Override
-            protected void interpolate(double frac) {
-            }
+            protected void interpolate(double frac) {}
         };
         wrapper.setOnFinished(e -> action.run());
         return wrapper;
