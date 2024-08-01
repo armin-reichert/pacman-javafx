@@ -56,18 +56,18 @@ public abstract class AbstractPac3D implements Pac3D {
 
     @Override
     public void init() {
-        node().setScaleX(1.0);
-        node().setScaleY(1.0);
-        node().setScaleZ(1.0);
+        root().setScaleX(1.0);
+        root().setScaleY(1.0);
+        root().setScaleZ(1.0);
         updatePosition();
         updateRotation();
     }
 
     protected void updatePosition() {
         Vector2f center = pac.center();
-        node().setTranslateX(center.x());
-        node().setTranslateY(center.y());
-        node().setTranslateZ(-0.5 * size);
+        root().setTranslateX(center.x());
+        root().setTranslateY(center.y());
+        root().setTranslateZ(-0.5 * size);
     }
 
     protected void updateRotation() {
@@ -88,8 +88,8 @@ public abstract class AbstractPac3D implements Pac3D {
 
     protected void updateVisibility() {
         WorldMap map = context.game().world().map();
-        boolean outsideWorld = node().getTranslateX() < HTS || node().getTranslateX() > TS * map.terrain().numCols() - HTS;
-        node().setVisible(pac.isVisible() && !outsideWorld);
+        boolean outsideWorld = root().getTranslateX() < HTS || root().getTranslateX() > TS * map.terrain().numCols() - HTS;
+        root().setVisible(pac.isVisible() && !outsideWorld);
     }
 
     @Override

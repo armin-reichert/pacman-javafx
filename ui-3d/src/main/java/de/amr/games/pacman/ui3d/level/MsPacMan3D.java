@@ -112,7 +112,7 @@ public class MsPacMan3D extends AbstractPac3D {
     }
 
     @Override
-    public Node node() {
+    public Group root() {
         return bodyGroup;
     }
 

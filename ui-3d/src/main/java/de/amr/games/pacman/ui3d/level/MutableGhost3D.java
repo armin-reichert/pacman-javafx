@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -12,8 +11,6 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.model.Model3D;
-import javafx.animation.Animation;
-import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
@@ -44,7 +41,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Armin Reichert
  */
-public class MutableGhost3D extends Group {
+public class MutableGhost3D {
 
     public enum Look { NORMAL, FRIGHTENED, FLASHING, EYES, NUMBER }
 
@@ -55,7 +52,7 @@ public class MutableGhost3D extends Group {
         protected void invalidated() {
             Look look = get();
             Logger.info("Ghost {} look changed to {}", ghost.id(), look);
-            getChildren().setAll(look == Look.NUMBER ? numberCube : ghost3D.root());
+            root.getChildren().setAll(look == Look.NUMBER ? numberCube : ghost3D.root());
             switch (look) {
                 case NORMAL     -> ghost3D.appearNormal();
                 case FRIGHTENED -> ghost3D.appearFrightened();
@@ -67,6 +64,7 @@ public class MutableGhost3D extends Group {
     };
 
     private final Ghost ghost;
+    private final Group root = new Group();
     private final Ghost3D ghost3D;
     private final Box numberCube;
     private final RotateTransition numberCubeRotation;
@@ -94,7 +92,7 @@ public class MutableGhost3D extends Group {
         numberCubeRotation.setInterpolator(Interpolator.LINEAR);
         numberCubeRotation.setRate(0.75);
 
-        brakeAnimation = new RotateTransition(Duration.seconds(0.5), this);
+        brakeAnimation = new RotateTransition(Duration.seconds(0.5), root);
         brakeAnimation.setAxis(Rotate.Y_AXIS);
         brakeAnimation.setByAngle(35);
         brakeAnimation.setAutoReverse(true);
@@ -118,6 +116,10 @@ public class MutableGhost3D extends Group {
         context.game().level().ifPresent(level -> numFlashes = level.numFlashes());
     }
 
+    public Group root() {
+        return root;
+    }
+
     public void setNumberImage(Image image) {
         var material = new PhongMaterial();
         material.setDiffuseMap(image);
@@ -126,12 +128,12 @@ public class MutableGhost3D extends Group {
 
     private void updateTransform() {
         Vector2f center = ghost.center();
-        setTranslateX(center.x());
-        setTranslateY(center.y());
-        setTranslateZ(-0.5 * size - 2.0); // lift a bit over floor
+        root.setTranslateX(center.x());
+        root.setTranslateY(center.y());
+        root.setTranslateZ(-0.5 * size - 2.0); // lift a bit over floor
         ghost3D.turnTo(Ufx.angle(ghost.wishDir()));
         boolean outside = center.x() < HTS || center.x() > ghost.world().map().terrain().numCols() * TS - HTS;
-        setVisible(ghost.isVisible() && !outside);
+        root.setVisible(ghost.isVisible() && !outside);
     }
 
     private void updateAnimations() {

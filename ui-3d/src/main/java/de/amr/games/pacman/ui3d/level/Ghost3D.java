@@ -51,7 +51,6 @@ public class Ghost3D {
     private final RotateTransition dressAnimation;
     private Animation flashingAnimation;
 
-
     private Color normalDressColor() {
         return theme.color("ghost.%d.color.normal.dress".formatted(id));
     }
@@ -137,6 +136,10 @@ public class Ghost3D {
     private void resizeTo(double size) {
         Bounds bounds = root.getBoundsInLocal();
         root.getTransforms().add(new Scale(size / bounds.getWidth(), size / bounds.getHeight(), size / bounds.getDepth()));
+    }
+
+    public Group root() {
+        return root;
     }
 
     public void turnTo(double angle) {
@@ -225,9 +228,5 @@ public class Ghost3D {
             flashingAnimation = null;
             Logger.info("Stopped flashing animation for ghost {}", id);
         }
-    }
-
-    public Group root() {
-        return root;
     }
 }

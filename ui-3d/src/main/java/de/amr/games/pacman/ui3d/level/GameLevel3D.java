@@ -125,8 +125,8 @@ public class GameLevel3D {
         addFood3D(world);
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
-        root.getChildren().addAll(pac3D.node(), createPacLight(pac3D));
-        root.getChildren().addAll(ghosts3D);
+        root.getChildren().addAll(pac3D.root(), createPacLight(pac3D));
+        ghosts3D.forEach(ghost3D -> root.getChildren().add(ghost3D.root()));
         root.getChildren().addAll(message3D, livesCounter3D, worldGroup);
     }
 
@@ -204,9 +204,9 @@ public class GameLevel3D {
         light.setColor(lightColor);
         light.lightOnProperty().bind(pac3D.lightOnProperty());
         light.maxRangeProperty().bind(pac3D.lightRangeProperty());
-        light.translateXProperty().bind(pac3D.node().translateXProperty());
-        light.translateYProperty().bind(pac3D.node().translateYProperty());
-        light.translateZProperty().bind(pac3D.node().translateZProperty().subtract(PAC_SIZE));
+        light.translateXProperty().bind(pac3D.root().translateXProperty());
+        light.translateYProperty().bind(pac3D.root().translateYProperty());
+        light.translateZProperty().bind(pac3D.root().translateZProperty().subtract(PAC_SIZE));
         return light;
     }
 

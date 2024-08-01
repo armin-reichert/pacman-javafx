@@ -17,7 +17,7 @@ import javafx.scene.shape.DrawMode;
  */
 public interface Pac3D {
 
-    Node node();
+    Node root();
 
     GameContext context();
 
