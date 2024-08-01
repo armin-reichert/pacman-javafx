@@ -132,7 +132,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, GamePara
             Logger.debug("Game key '{}' registered", gameKey);
         }
 
-        createMainScene(computeMainSceneSize(screenWidth, screenHeight));
+        createMainScene(screenWidth, screenHeight);
         createStartPage();
         createGamePage();
         createGameScenes();
@@ -288,7 +288,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, GamePara
         return new Dimension2D(0.9 * screenWidth, 0.9 * screenHeight);
     }
 
-    protected void createMainScene(Dimension2D size) {
+    protected void createMainScene(double screenWidth, double screenHeight) {
+        Dimension2D size = computeMainSceneSize(screenWidth, screenHeight);
         mainScene = new Scene(rootPane, size.getWidth(), size.getHeight());
         mainScene.setOnMouseClicked(e -> currentPage.onMouseClicked(e));
         mainScene.setOnContextMenuRequested(e -> currentPage.onContextMenuRequested(e));
