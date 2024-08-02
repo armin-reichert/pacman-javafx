@@ -163,7 +163,9 @@ public class GameLevel3D {
         TileMap terrain = world.map().terrain();
         terrain.computeTerrainPaths();
 
-        obstacleHeightPy.bind(PY_3D_WALL_HEIGHT);
+        PY_3D_WALL_HEIGHT.addListener((py,ov,nv) -> obstacleHeightPy.set(nv.doubleValue()));
+        obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
+
         wallOpacityPy.bind(PY_3D_WALL_OPACITY);
 
         wallStrokeColorPy.set(getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
@@ -397,26 +399,16 @@ public class GameLevel3D {
         return rotation;
     }
 
-    public Transition wallsDisappearAnimation(double seconds) {
-        return new Transition() {
-            private final double initialWallHeight = obstacleHeightPy.get();
-            private final double initialOuterWallHeight = borderWallHeightPy.get();
-            {
-                setCycleDuration(Duration.seconds(seconds));
-                setInterpolator(Interpolator.LINEAR);
-                setOnFinished(e -> {
-                    mazeGroup.setVisible(false);
-                    obstacleHeightPy.bind(PY_3D_WALL_HEIGHT);
-                });
-            }
-
-            @Override
-            protected void interpolate(double t) {
-                obstacleHeightPy.unbind();
-                obstacleHeightPy.set((1-t) * initialWallHeight);
-                borderWallHeightPy.set((1-t) * initialOuterWallHeight);
-            }
-        };
+    public Animation wallsDisappearAnimation(double seconds) {
+        var animation = new Timeline(
+            new KeyFrame(Duration.seconds(seconds),
+                new KeyValue(obstacleHeightPy, 0, Interpolator.LINEAR),
+                new KeyValue(borderWallHeightPy, 0, Interpolator.LINEAR),
+                new KeyValue(houseHeightPy, 0, Interpolator.LINEAR)
+            )
+        );
+        animation.setOnFinished(e -> mazeGroup.setVisible(false));
+        return animation;
     }
 
     public Transition mazeFlashAnimation(int numFlashes) {
@@ -430,7 +422,6 @@ public class GameLevel3D {
                 setCycleDuration(Duration.seconds(0.33));
                 setCycleCount(numFlashes);
                 setInterpolator(Interpolator.LINEAR);
-                setOnFinished(e -> obstacleHeightPy.bind(PY_3D_WALL_HEIGHT));
             }
 
             @Override
@@ -438,7 +429,6 @@ public class GameLevel3D {
                 // t = [0, 1] is mapped to the interval [pi/2, 3*pi/2]. The value of the sin-function in that interval
                 // starts at 1, goes to 0 and back to 1
                 double elongation = 0.5 * (1 + Math.sin(PI * (2*t + 0.5)));
-                obstacleHeightPy.unbind(); // TODO when called in constructor does not work. Why?
                 obstacleHeightPy.set(elongation * initialWallHeight);
             }
         };
