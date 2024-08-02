@@ -28,10 +28,7 @@ import javafx.util.Pair;
 import org.tinylog.Logger;
 
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 
@@ -74,12 +71,12 @@ public class PacManGames3dUI extends PacManGames2dUI implements GameParameters3D
         theme.set("model3D.wallpaper.day",   rm.loadImage("graphics/sea-wallpaper.jpg"));
         theme.set("model3D.wallpaper.night", rm.loadImage("graphics/sea-wallpaper-night.jpg"));
 
-        Map<String, PhongMaterial> texturesByName = new HashMap<>();
+        Map<String, PhongMaterial> texturesByName = new LinkedHashMap<>();
         theme.set("floorTextures", texturesByName);
-        List.of("knobs", "plastic", "wood").forEach(name -> {
+        List.of("Carpet", "Rubber", "Wood").forEach(name -> {
             var texture = new PhongMaterial();
-            texture.setBumpMap(rm.loadImage("graphics/textures/%s-bump.jpg".formatted(name)));
-            texture.setDiffuseMap(rm.loadImage("graphics/textures/%s-diffuse.jpg".formatted(name)));
+            texture.setBumpMap(rm.loadImage("graphics/textures/%s-bump.jpg".formatted(name.toLowerCase())));
+            texture.setDiffuseMap(rm.loadImage("graphics/textures/%s-diffuse.jpg".formatted(name.toLowerCase())));
             texture.diffuseColorProperty().bind(PY_3D_FLOOR_COLOR);
             texturesByName.put(name, texture);
         });

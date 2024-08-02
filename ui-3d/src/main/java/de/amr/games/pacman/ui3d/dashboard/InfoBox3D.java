@@ -57,7 +57,7 @@ public class InfoBox3D extends InfoBox {
         comboFloorTexture = addComboBoxRow("Floor Texture", floorTextureComboBoxEntries());
         comboPerspectives = addComboBoxRow("Perspective", Perspective.values());
 
-        addTextRow("Camera", this::currentSceneCameraInfo); //TODO .available(this::isCurrentGameScene3D);
+        addTextRow("Camera", this::currentSceneCameraInfo);
 
         cbPiPOn              = checkBox("Picture-In-Picture");
         sliderPiPSceneHeight = addSliderRow("- Height", PIP_MIN_HEIGHT, PIP_MAX_HEIGHT, PY_PIP_HEIGHT.get());
