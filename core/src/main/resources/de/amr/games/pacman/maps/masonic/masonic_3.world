@@ -4,6 +4,7 @@
 color_door=rgb(252,181,255)
 color_wall_fill=rgb(134,102,156)
 color_wall_stroke=rgb(246,196,224)
+pos_bonus=(13,20)
 pos_ghost_1_red=(13,14)
 pos_ghost_2_pink=(13,17)
 pos_ghost_3_cyan=(11,17)
