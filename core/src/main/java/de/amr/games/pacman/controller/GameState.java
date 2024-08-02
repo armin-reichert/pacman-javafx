@@ -153,8 +153,9 @@ public enum GameState implements FsmState<GameModel> {
                 } else {
                     game.controller().changeState(LEVEL_TRANSITION);
                 }
-            } else if (timer.atSecond(2)) {
+            } else if (timer.atSecond(1)) {
                 game.ghosts().forEach(Ghost::hide);
+            } else if (timer.atSecond(2)) {
                 setProperty("mazeFlashing", true);
                 game.blinking().setStartPhase(Pulse.OFF);
                 game.blinking().restart(2 * game.level().orElseThrow().numFlashes());
