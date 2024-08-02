@@ -87,8 +87,8 @@ public class GameLevel3D {
     private final Group mazeGroup = new Group();
     private final Pac3D pac3D;
     private final List<MutableGhost3D> ghosts3D;
-    private final Set<Pellet3D> pellets3D = new HashSet<>();
-    private final Set<Energizer3D> energizers3D = new HashSet<>();
+    private final Map<Vector2i, Pellet3D> pellets3D = new HashMap<>();
+    private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
     private House3D house3D;
     private final LivesCounter3D livesCounter3D;
     private Bonus3D bonus3D;
@@ -259,9 +259,10 @@ public class GameLevel3D {
                 pellet3D.setTile(tile);
                 pellet3D.setPosition(position);
                 root.getChildren().add(pellet3D.shape3D());
-                pellets3D.add(pellet3D);
+                pellets3D.put(tile, pellet3D);
             }
         });
+        energizers3D.trimToSize();
     }
 
     private Node createLivesCounterShape(GameVariant variant) {
@@ -436,7 +437,7 @@ public class GameLevel3D {
 
     public House3D house3D() { return house3D; }
 
-    public Stream<Pellet3D> pellets3D() { return pellets3D.stream(); }
+    public Stream<Pellet3D> pellets3D() { return pellets3D.values().stream(); }
 
     public Stream<Energizer3D> energizers3D() { return energizers3D.stream(); }
 
@@ -449,6 +450,6 @@ public class GameLevel3D {
 
     public Optional<Pellet3D> pellet3D(Vector2i tile) {
         checkTileNotNull(tile);
-        return pellets3D().filter(p3D -> p3D.tile().equals(tile)).findFirst();
+        return Optional.ofNullable(pellets3D.get(tile));
     }
 }
