@@ -4,6 +4,8 @@ plugins {
     id 'org.beryx.jlink' version '3.0.1' //  adds also 'application' plugin
 }
 
+java.sourceCompatibility = JavaVersion.VERSION_17
+
 application {
     mainModule = 'de.amr.games.pacman.ui2d'
     mainClass = 'de.amr.games.pacman.ui2d.Main'
@@ -16,8 +18,6 @@ dependencies {
     implementation project(':core')
     implementation project(':mapeditor')
 }
-
-java.sourceCompatibility = JavaVersion.VERSION_17
 
 javafx {
     version = '21.0.2'
