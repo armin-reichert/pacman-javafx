@@ -444,7 +444,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
                 context.soundHandler().playAudioClip("audio.level_complete");
             })
             , doAfterSec(0.5, level3D.levelRotateAnimation(1.5))
-            , level3D.wallsDisappearAnimation(1.0)
+            , level3D.wallsDisappearAnimation(2.0)
             , doAfterSec(1, () -> {
                 context.soundHandler().playAudioClip("audio.sweep");
                 context.actionHandler().showFlashMessageSeconds(1, message);
