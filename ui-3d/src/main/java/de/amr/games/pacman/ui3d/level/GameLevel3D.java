@@ -184,7 +184,7 @@ public class GameLevel3D {
         house3D = new House3D(world);
         house3D.heightPy.bind(houseHeightPy);
         house3D.fillMaterialPy.bind(Bindings.createObjectBinding(
-            () -> coloredMaterial(opaqueColor(getWallFillColor(), HOUSE_OPACITY)), wallFillColorPy
+            () -> coloredMaterial(opaqueColor(wallFillColorPy.get(), HOUSE_OPACITY)), wallFillColorPy
         ));
         house3D.strokeMaterialPy.bind(wallStrokeMaterialPy);
         house3D.usedPy.bind(houseUsedPy);
@@ -453,8 +453,6 @@ public class GameLevel3D {
         checkTileNotNull(tile);
         return energizers3D().filter(e3D -> e3D.tile().equals(tile)).findFirst();
     }
-
-    public Color getWallFillColor() { return wallFillColorPy.get(); }
 
     public Optional<Pellet3D> pellet3D(Vector2i tile) {
         checkTileNotNull(tile);
