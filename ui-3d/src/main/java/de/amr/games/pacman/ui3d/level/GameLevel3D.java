@@ -40,7 +40,6 @@ import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.getColorFromMap;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
-import static java.lang.Math.PI;
 
 /**
  * @author Armin Reichert
@@ -411,27 +410,16 @@ public class GameLevel3D {
         return animation;
     }
 
-    public Transition mazeFlashAnimation(int numFlashes) {
+    public Animation mazeFlashAnimation(int numFlashes) {
         if (numFlashes == 0) {
             return pauseSec(1.0);
         }
-        return new Transition() {
-            private final double initialWallHeight = obstacleHeightPy.get();
-
-            {
-                setCycleDuration(Duration.seconds(0.33));
-                setCycleCount(numFlashes);
-                setInterpolator(Interpolator.LINEAR);
-            }
-
-            @Override
-            protected void interpolate(double t) {
-                // t = [0, 1] is mapped to the interval [pi/2, 3*pi/2]. The value of the sin-function in that interval
-                // starts at 1, goes to 0 and back to 1
-                double elongation = 0.5 * (1 + Math.sin(PI * (2*t + 0.5)));
-                obstacleHeightPy.set(elongation * initialWallHeight);
-            }
-        };
+        var animation = new Timeline(
+            new KeyFrame(Duration.millis(125), new KeyValue(obstacleHeightPy, 0, Interpolator.EASE_BOTH))
+        );
+        animation.setAutoReverse(true);
+        animation.setCycleCount(2*numFlashes);
+        return animation;
     }
 
     public Group root() { return root; }
