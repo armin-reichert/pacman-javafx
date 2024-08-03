@@ -109,7 +109,7 @@ public class InfoBox3D extends InfoBox {
         cbPiPOn.setOnAction(e -> toggle(PY_PIP_ON));
         comboPerspectives.setOnAction(e -> PY_3D_PERSPECTIVE.set(comboPerspectives.getValue()));
         cbEnergizerExplodes.setOnAction(e -> toggle(PY_3D_ENERGIZER_EXPLODES));
-        cbNightMode.setOnAction(e -> toggle(PY_3D_NIGHT_MODE));
+        cbNightMode.setOnAction(e -> toggle(PY_NIGHT_MODE));
         cbPacLighted.setOnAction(e -> toggle(PY_3D_PAC_LIGHT_ENABLED));
         cbAxesVisible.setOnAction(e -> toggle(PY_3D_AXES_VISIBLE));
         cbWireframeMode.setOnAction(e -> context.actionHandler().toggleDrawMode());
@@ -123,7 +123,7 @@ public class InfoBox3D extends InfoBox {
         comboFloorTexture.setValue(PY_3D_FLOOR_TEXTURE.get());
         comboPerspectives.setValue(PY_3D_PERSPECTIVE.get());
         cbEnergizerExplodes.setSelected(PY_3D_ENERGIZER_EXPLODES.get());
-        cbNightMode.setSelected(PY_3D_NIGHT_MODE.get());
+        cbNightMode.setSelected(PY_NIGHT_MODE.get());
         cbPacLighted.setSelected(PY_3D_PAC_LIGHT_ENABLED.get());
         cbAxesVisible.setSelected(PY_3D_AXES_VISIBLE.get());
         cbWireframeMode.setSelected(PY_3D_DRAW_MODE.get() == DrawMode.LINE);
