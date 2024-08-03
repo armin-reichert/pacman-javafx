@@ -35,7 +35,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
@@ -97,7 +96,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected Scene mainScene;
     protected final StackPane rootPane = new StackPane();
     protected final FlashMessageView messageView = new FlashMessageView();
-    protected GameClockFX clock;
+    protected final GameClockFX clock = new GameClockFX();
     protected TileMapEditor editor;
 
     protected StartPage startPage;
@@ -143,7 +142,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         createStartPage();
         gamePage = createGamePage(mainScene);
 
-        createGameClock();
+        configureGameClock();
+        gameController().setClock(clock);
 
         sign("Remake (2021-2024) by Armin Reichert");
         stage.titleProperty().bind(stageTitleBinding());
@@ -295,7 +295,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         mainScene = new Scene(rootPane, width, height);
         mainScene.setOnMouseClicked(e -> currentPage.onMouseClicked(e));
         mainScene.setOnContextMenuRequested(e -> currentPage.onContextMenuRequested(e));
-        mainScene.setOnKeyPressed(this::handleKeyPressed);
+        mainScene.setOnKeyPressed(e -> {
+            if (GameKeys.MUTE.pressed()) {
+                mute(!isMuted());
+            }
+            currentPage.handleKeyboardInput();
+        });
         Keyboard.filterKeyEventsFor(mainScene);
         ChangeListener<Number> resizeCurrentPage = (py, ov, nv) -> {
             if (currentPage != null) {
@@ -306,23 +311,15 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         mainScene.heightProperty().addListener(resizeCurrentPage);
     }
 
-    protected void handleKeyPressed(KeyEvent e) {
-        if (GameKeys.MUTE.pressed()) {
-            mute(!isMuted());
-        }
-        currentPage.handleKeyboardInput();
-    }
-
-    protected void createGameClock() {
-        clock = new GameClockFX();
+    protected void configureGameClock() {
         clock.setPauseableCallback(() -> {
             try {
                 gameController().update();
                 currentGameScene().ifPresent(GameScene::update);
             } catch (Exception x) {
-                Logger.error("Error during game update");
-                Logger.error(x);
                 clock.stop();
+                Logger.error("Game update caused an error, game clock stopped!");
+                Logger.error(x);
             }
         });
         clock.setContinousCallback(() -> {
@@ -332,12 +329,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
                     gamePage.render();
                 }
             } catch (Exception x) {
-                Logger.error("Error during game rendering");
-                Logger.error(x);
                 clock.stop();
+                Logger.error("Game page rendering caused an error, game clock stopped!");
+                Logger.error(x);
             }
         });
-        gameController().setClock(clock);
     }
 
     protected void createGameScenes(Scene parentScene) {
