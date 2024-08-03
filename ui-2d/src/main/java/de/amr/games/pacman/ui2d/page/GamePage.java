@@ -185,11 +185,13 @@ public class GamePage implements Page {
             () -> Font.font(font.getFamily(), canvasPane.scaling() * font.getSize()),
             canvasPane.scalingPy
         ));
+
         // keep centered over canvas container
         signature.translateXProperty().bind(Bindings.createDoubleBinding(
             () -> 0.5 * (canvasPane.decoratedCanvas().getWidth() - signature.getWidth()),
             canvasPane.scalingPy, canvasPane.decoratedCanvas().widthProperty()
         ));
+
         // keep at vertical position over intro scene
         signature.translateYProperty().bind(Bindings.createDoubleBinding(
             () -> canvasPane.scaling() * 30,
@@ -283,8 +285,6 @@ public class GamePage implements Page {
             context.actionHandler().reboot();
         } else if (GameKeys.DEBUG_INFO.pressed()) {
             Ufx.toggle(PY_DEBUG_INFO);
-        } else if (GameKeys.FULLSCREEN.pressed()) {
-            context.actionHandler().setFullScreen(true);
         } else if (GameKeys.IMMUNITY.pressed()) {
             context.actionHandler().toggleImmunity();
         } else if (GameKeys.HELP.pressed()) {

@@ -8,7 +8,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.mapeditor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -31,8 +30,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -97,7 +94,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected final StackPane rootPane = new StackPane();
     protected final FlashMessageView messageView = new FlashMessageView();
     protected final GameClockFX clock = new GameClockFX();
-    protected TileMapEditor editor;
 
     protected StartPage startPage;
     protected GamePage gamePage;
@@ -145,7 +141,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         configureGameClock();
         gameController().setClock(clock);
 
-        sign("Remake (2021-2024) by Armin Reichert");
+        signGamePage("Remake (2021-2024) by Armin Reichert");
         stage.titleProperty().bind(stageTitleBinding());
         stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
         stage.setScene(mainScene);
@@ -296,6 +292,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         mainScene.setOnMouseClicked(e -> currentPage.onMouseClicked(e));
         mainScene.setOnContextMenuRequested(e -> currentPage.onContextMenuRequested(e));
         mainScene.setOnKeyPressed(e -> {
+            if (GameKeys.FULLSCREEN.pressed()) {
+                setFullScreen(true);
+            }
             if (GameKeys.MUTE.pressed()) {
                 mute(!isMuted());
             }
@@ -362,49 +361,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         return new GamePage(this, mainScene);
     }
 
-    public void sign(String signature) {
-        gamePage.configureSignature(theme.font("font.monospaced", 9), signature);
-    }
-
-    private void createEditorPage() {
-        editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
-        editor.createUI(stage);
-
-        var miQuitEditor = new MenuItem(tt("back_to_game"));
-        miQuitEditor.setOnAction(e -> quitMapEditor());
-        editor.menuFile().getItems().add(miQuitEditor);
-
-        // load maps from core module
-        editor.addLoadMapMenuEntry("Pac-Man", loadMap("pacman.world"));
-        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        for (int mapNumber = 1; mapNumber <= 6; ++mapNumber) {
-            WorldMap map = loadMap("mspacman/mspacman_%d.world".formatted(mapNumber));
-            if (map != null) {
-                editor.addLoadMapMenuEntry("Ms. Pac-Man " + mapNumber, map);
-            }
-        }
-        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        for (int mapNumber = 1; mapNumber <= 8; ++mapNumber) {
-            WorldMap map = loadMap("masonic/masonic_%d.world".formatted(mapNumber));
-            if (map != null) {
-                editor.addLoadMapMenuEntry("Pac-Man XXL " + mapNumber, map);
-            }
-        }
-        editorPage = new EditorPage(editor, this);
-    }
-
-    private WorldMap loadMap(String relativeMapPath) {
-        ResourceManager core = () -> GameModel.class;
-        URL url = core.url("/de/amr/games/pacman/maps/" + relativeMapPath);
-        if (url != null) {
-            WorldMap map = new WorldMap(url);
-            Logger.info("Map loaded from URL {}", url);
-            return map;
-        }
-        Logger.error("Could not find map at path {}", relativeMapPath);
-        return null;
-    }
-
     private void selectPage(Page page) {
         if (page != currentPage) {
             currentPage = page;
@@ -413,6 +369,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             currentPage.rootPane().requestFocus();
             currentPage.onSelected();
         }
+    }
+
+    public void signGamePage(String signature) {
+        gamePage.configureSignature(theme.font("font.monospaced", 9), signature);
     }
 
     protected void updateGameScene(boolean reloadCurrentScene) {
@@ -453,7 +413,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     // -----------------------------------------------------------------------------------------------------------------
     // GameSceneContext interface implementation
     // -----------------------------------------------------------------------------------------------------------------
-
 
     @Override
     public List<ResourceBundle> bundles() {
@@ -775,27 +734,28 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             return;
         }
         if (editorPage == null) {
-            createEditorPage();
+            editorPage = new EditorPage(stage, this);
+            editorPage.setCloseAction(this::quitMapEditor);
         }
         stopAllSounds();
         currentGameScene().ifPresent(GameScene::end);
         clock.stop();
-        stage.titleProperty().bind(editor.titlePy);
+        stage.titleProperty().bind(editorPage.editor().titlePy);
         if (game().world() != null) {
-            editor.setMap(game().world().map());
+            editorPage.editor().setMap(game().world().map());
         }
-        editor.start();
-        selectPage(editorPage);
+        editorPage.startEditor();
+        selectEditorPage();
     }
 
     @Override
-    public void quitMapEditor() {
+    public void quitMapEditor(TileMapEditor editor) {
         editor.showConfirmation(editor::saveMapFileAs,
             () -> stage.titleProperty().bind(stageTitleBinding()));
         editor.stop();
         gameController().loadCustomMaps();
         reboot();
-        selectPage(startPage);
+        selectStartPage();
     }
 
     @Override

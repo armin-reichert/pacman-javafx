@@ -4,6 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d;
 
+import de.amr.games.pacman.mapeditor.TileMapEditor;
+
 /**
  * @author Armin Reichert
  */
@@ -19,7 +21,7 @@ public interface ActionHandler {
     void restartIntro();
     void reboot();
     void openMapEditor();
-    void quitMapEditor();
+    void quitMapEditor(TileMapEditor editor);
     void updateCustomMaps();
     void togglePaused();
     void toggle2D3D();
