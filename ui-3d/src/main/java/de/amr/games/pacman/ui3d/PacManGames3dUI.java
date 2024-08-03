@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
-import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -27,8 +26,10 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.tinylog.Logger;
 
-import java.time.LocalTime;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 
@@ -160,9 +161,9 @@ public class PacManGames3dUI extends PacManGames2dUI implements GameParameters3D
                 if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
                     return Ufx.coloredBackground(Color.rgb(100,100,200));
                 }
-                return Ufx.wallpaperBackground(PY_3D_NIGHT_MODE.get() ? PY_3D_WALLPAPER_NIGHT.get() : PY_3D_WALLPAPER_DAY.get());
+                return Ufx.wallpaperBackground(PY_NIGHT_MODE.get() ? PY_3D_WALLPAPER_NIGHT.get() : PY_3D_WALLPAPER_DAY.get());
             },
-            PY_3D_DRAW_MODE, PY_3D_NIGHT_MODE, PY_3D_WALLPAPER_DAY, PY_3D_WALLPAPER_NIGHT
+            PY_3D_DRAW_MODE, PY_NIGHT_MODE, PY_3D_WALLPAPER_DAY, PY_3D_WALLPAPER_NIGHT
         ));
         gameScenePy.addListener((py, ov, newGameScene) -> {
             gamePage.hideContextMenu();
@@ -174,13 +175,6 @@ public class PacManGames3dUI extends PacManGames2dUI implements GameParameters3D
                 Logger.warn("Cannot embed game scene {}", newGameScene);
             }
         });
-    }
-
-    @Override
-    public void onLevelStarted(GameEvent event) {
-        super.onLevelStarted(event);
-        LocalTime now = LocalTime.now();
-        PY_3D_NIGHT_MODE.set(now.getHour() >= 21 || now.getHour() <= 5);
     }
 
     @Override

@@ -25,6 +25,7 @@ public interface GameParameters {
             GameController.it().setPacImmune(get());
         }
     };
+    BooleanProperty PY_NIGHT_MODE          = new SimpleBooleanProperty(false);
     IntegerProperty PY_PIP_HEIGHT          = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_Y);
     BooleanProperty PY_PIP_ON              = new SimpleBooleanProperty(false);
     IntegerProperty PY_PIP_OPACITY_PERCENT = new SimpleIntegerProperty(100);

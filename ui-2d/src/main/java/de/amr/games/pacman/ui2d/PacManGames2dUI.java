@@ -30,7 +30,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -51,6 +50,7 @@ import org.tinylog.Logger;
 
 import java.net.URL;
 import java.text.MessageFormat;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -673,6 +673,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, GamePara
             return;
         }
         soundHandler().playStartGameSound();
+        LocalTime now = LocalTime.now();
+        PY_NIGHT_MODE.set(now.getHour() >= 21 || now.getHour() <= 5);
     }
 
     @Override

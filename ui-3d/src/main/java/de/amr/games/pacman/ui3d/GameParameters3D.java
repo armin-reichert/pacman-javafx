@@ -23,7 +23,6 @@ public interface GameParameters3D extends GameParameters {
     ObjectProperty<Color>       PY_3D_FLOOR_COLOR        = new SimpleObjectProperty<>(Color.web("#202020"));
     StringProperty              PY_3D_FLOOR_TEXTURE      = new SimpleStringProperty(NO_TEXTURE);
     ObjectProperty<Color>       PY_3D_LIGHT_COLOR        = new SimpleObjectProperty<>(Color.GHOSTWHITE);
-    BooleanProperty             PY_3D_NIGHT_MODE         = new SimpleBooleanProperty(false);
     BooleanProperty             PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
     ObjectProperty<Perspective> PY_3D_PERSPECTIVE        = new SimpleObjectProperty<>(Perspective.FOLLOWING_PLAYER);
     DoubleProperty              PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(3.5);
