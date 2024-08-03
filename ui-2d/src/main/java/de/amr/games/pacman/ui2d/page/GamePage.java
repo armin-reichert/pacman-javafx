@@ -62,6 +62,7 @@ public class GamePage implements Page {
         createInfoLayer();
         configureDebugDrawing();
         stackPane.getChildren().addAll(canvasPane, infoLayer, popupLayer);
+        canvasPane().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
     }
 
     private void configureDebugDrawing() {
@@ -145,15 +146,16 @@ public class GamePage implements Page {
         canvasPane.resizeTo(width, height);
     }
 
-    public void embedGameScene3D(GameScene gameScene) {
-        if (gameScene instanceof GameScene2D) {
-            Logger.warn("Cannot embed 2D game scene as 3D scene");
-            return;
+    public void embedGameScene(GameScene gameScene) {
+        hideContextMenu();
+        if (gameScene instanceof GameScene2D gameScene2D) {
+            embedGameScene2D(gameScene2D);
+        } else {
+            Logger.error("Cannot embed 3D game scene");
         }
-        stackPane.getChildren().set(0, gameScene.root());
     }
 
-    public void embedGameScene2D(GameScene2D scene2D) {
+    protected void embedGameScene2D(GameScene2D scene2D) {
         stackPane.getChildren().set(0, canvasPane);
         scene2D.setCanvas(canvasPane.decoratedCanvas().canvas());
         scene2D.scalingPy.bind(canvasPane.scalingPy);

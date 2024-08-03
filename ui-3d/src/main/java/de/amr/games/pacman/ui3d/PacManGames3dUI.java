@@ -6,11 +6,8 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
-import de.amr.games.pacman.ui2d.util.Ufx;
-import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -141,16 +138,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     @Override
     protected void createGamePage() {
         gamePage = new GamePage3D(this, mainScene);
-        gameScenePy.addListener((py, ov, newGameScene) -> {
-            gamePage.hideContextMenu();
-            if (isGameSceneRegisteredAs(newGameScene, GameSceneID.PLAY_SCENE_3D)) {
-                gamePage.embedGameScene3D(newGameScene);
-            } else if (newGameScene instanceof GameScene2D scene2D) {
-                gamePage.embedGameScene2D(scene2D);
-            } else {
-                Logger.warn("Cannot embed game scene {}", newGameScene);
-            }
-        });
+        gameScenePy.addListener((py, ov, gameScene) -> gamePage.embedGameScene(gameScene));
     }
 
     @Override

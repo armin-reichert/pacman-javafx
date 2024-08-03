@@ -7,6 +7,8 @@ package de.amr.games.pacman.ui3d;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.page.GamePage;
+import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
@@ -16,6 +18,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.ui2d.GameParameters.*;
 import static de.amr.games.pacman.ui3d.GameParameters3D.*;
@@ -106,5 +109,17 @@ public class GamePage3D extends GamePage {
 
         contextMenu.requestFocus();
         contextMenu.show(rootPane(), event.getScreenX(), event.getScreenY());
+    }
+
+    @Override
+    public void embedGameScene(GameScene gameScene) {
+        hideContextMenu();
+        if (gameScene instanceof PlayScene3D) {
+            stackPane.getChildren().set(0, gameScene.root());
+        } else if (gameScene instanceof GameScene2D scene2D) {
+            embedGameScene2D(scene2D);
+        } else {
+            Logger.warn("Cannot embed game scene {}", gameScene);
+        }
     }
 }

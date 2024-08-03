@@ -358,12 +358,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     protected void createGamePage() {
         gamePage = new GamePage(this, mainScene);
-        gamePage.canvasPane().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
-        gameScenePy.addListener((py, ov, newGameScene) -> {
-            if (newGameScene instanceof GameScene2D scene2D) {
-                gamePage.embedGameScene2D(scene2D);
-            }
-        });
+        gameScenePy.addListener((py, ov, gameScene) -> gamePage.embedGameScene(gameScene));
     }
 
     public void sign(String signature) {
