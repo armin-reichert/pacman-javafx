@@ -65,6 +65,9 @@ public class PacManGames3dUI extends PacManGames2dUI {
         theme.set("model3D.wallpaper.day",   rm.loadImage("graphics/sea-wallpaper.jpg"));
         theme.set("model3D.wallpaper.night", rm.loadImage("graphics/sea-wallpaper-night.jpg"));
 
+        PY_3D_WALLPAPER_DAY.set(theme.get("model3D.wallpaper.day"));
+        PY_3D_WALLPAPER_NIGHT.set(theme.get("model3D.wallpaper.night"));
+
         Map<String, PhongMaterial> texturesByName = new LinkedHashMap<>();
         theme.set("floorTextures", texturesByName);
         List.of("Carpet", "Rubber", "Wood").forEach(name -> {
@@ -137,20 +140,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
     @Override
     protected void createGamePage() {
-        PY_3D_WALLPAPER_DAY.set(theme.get("model3D.wallpaper.day"));
-        PY_3D_WALLPAPER_NIGHT.set(theme.get("model3D.wallpaper.night"));
         gamePage = new GamePage3D(this, mainScene);
-        gamePage.dashboard().addInfoBox(3, tt("infobox.3D_settings.title"), new InfoBox3D());
-        gamePage.canvasPane().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
-        gamePage.rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> {
-                if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
-                    return Ufx.coloredBackground(Color.rgb(100,100,200));
-                }
-                return Ufx.wallpaperBackground(PY_NIGHT_MODE.get() ? PY_3D_WALLPAPER_NIGHT.get() : PY_3D_WALLPAPER_DAY.get());
-            },
-            PY_3D_DRAW_MODE, PY_NIGHT_MODE, PY_3D_WALLPAPER_DAY, PY_3D_WALLPAPER_NIGHT
-        ));
         gameScenePy.addListener((py, ov, newGameScene) -> {
             gamePage.hideContextMenu();
             if (isGameSceneRegisteredAs(newGameScene, GameSceneID.PLAY_SCENE_3D)) {

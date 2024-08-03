@@ -8,12 +8,17 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
+import de.amr.games.pacman.ui2d.util.Ufx;
+import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
+import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.DrawMode;
 
 import static de.amr.games.pacman.ui2d.GameParameters.*;
-import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_PERSPECTIVE;
+import static de.amr.games.pacman.ui3d.GameParameters3D.*;
 
 /**
  * @author Armin Reichert
@@ -22,6 +27,17 @@ public class GamePage3D extends GamePage {
 
     public GamePage3D(GameContext context, Scene parentScene) {
         super(context, parentScene);
+        dashboard().addInfoBox(3, context.tt("infobox.3D_settings.title"), new InfoBox3D());
+        canvasPane().decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
+        rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
+            () -> {
+                if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
+                    return Ufx.coloredBackground(Color.rgb(100,100,200));
+                }
+                return Ufx.wallpaperBackground(PY_NIGHT_MODE.get() ? PY_3D_WALLPAPER_NIGHT.get() : PY_3D_WALLPAPER_DAY.get());
+            },
+            PY_3D_DRAW_MODE, PY_NIGHT_MODE, PY_3D_WALLPAPER_DAY, PY_3D_WALLPAPER_NIGHT
+        ));
     }
 
     @Override
