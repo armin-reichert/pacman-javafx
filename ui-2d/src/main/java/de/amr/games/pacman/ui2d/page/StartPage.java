@@ -113,8 +113,8 @@ public class StartPage implements Page {
     }
 
     private void setMsPacManFlyerFrontPage(boolean frontPage) {
-        Image bgImage = context.theme().image("ms_pacman.startpage.image" + (frontPage? 1 : 2));
-        var bg = new Background(new BackgroundImage(bgImage,
+        Image flyer = context.theme().image("ms_pacman.startpage.image" + (frontPage? 1 : 2));
+        var bg = new Background(new BackgroundImage(flyer,
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
             BackgroundPosition.CENTER, FIT_HEIGHT));
         layout.setBackground(bg);
@@ -122,8 +122,8 @@ public class StartPage implements Page {
     }
 
     private void setPacManFlyerFrontPage(boolean frontPage) {
-        Image bgImage = context.theme().image("pacman.startpage.image" + (frontPage? 1 : 2));
-        var bg = new Background(new BackgroundImage(bgImage,
+        Image flyer = context.theme().image("pacman.startpage.image" + (frontPage? 1 : 2));
+        var bg = new Background(new BackgroundImage(flyer,
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
             BackgroundPosition.CENTER, FIT_HEIGHT));
         layout.setBackground(bg);
