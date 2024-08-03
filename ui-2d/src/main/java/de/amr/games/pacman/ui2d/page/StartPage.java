@@ -194,8 +194,6 @@ public class StartPage implements Page {
             context.actionHandler().selectNextGameVariant();
         } else if (GameKeys.PREV_VARIANT.pressed()) {
             context.actionHandler().selectPrevGameVariant();
-        } else if (GameKeys.PAUSE.pressed()) {
-            context.actionHandler().togglePaused();
         }
     }
 }
