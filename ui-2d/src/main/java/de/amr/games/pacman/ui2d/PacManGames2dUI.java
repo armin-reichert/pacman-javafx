@@ -70,6 +70,12 @@ import static java.util.function.Predicate.not;
  */
 public class PacManGames2dUI implements GameEventListener, GameContext, ActionHandler, SoundHandler {
 
+    public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
+        @Override
+        protected void invalidated() {
+            gamePage.embedGameScene(get());
+        }
+    };
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override
         protected void invalidated() {
@@ -79,9 +85,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             }
         }
     };
-    public final ObjectProperty<GameScene> gameScenePy    = new SimpleObjectProperty<>(this, "gameScene");
-    public final BooleanProperty           scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible");
-    public final BooleanProperty           mutePy         = new SimpleBooleanProperty(this, "mute", false);
+    public final BooleanProperty mutedPy = new SimpleBooleanProperty(this, "muted", false);
+    public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible");
 
     protected final Theme theme = new Theme();
     protected final List<ResourceBundle> bundles = new ArrayList<>();
@@ -117,7 +122,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         ImageView muteIcon = new ImageView(muteImage);
         muteIcon.setFitWidth(48);
         muteIcon.setPreserveRatio(true);
-        muteIcon.visibleProperty().bind(mutePy);
+        muteIcon.visibleProperty().bind(mutedPy);
         StackPane.setAlignment(muteIcon, Pos.BOTTOM_RIGHT);
 
         // first child will be replaced by page
@@ -135,7 +140,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
         createMainScene(width, height);
         createStartPage();
-        createGamePage();
+        gamePage = createGamePage(mainScene);
         createGameScenes();
         createGameClock();
 
@@ -356,9 +361,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         startPage.gameVariantPy.bind(gameVariantPy);
     }
 
-    protected void createGamePage() {
-        gamePage = new GamePage(this, mainScene);
-        gameScenePy.addListener((py, ov, gameScene) -> gamePage.embedGameScene(gameScene));
+    protected GamePage createGamePage(Scene mainScene) {
+        return new GamePage(this, mainScene);
     }
 
     public void sign(String signature) {
@@ -1009,12 +1013,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public boolean isMuted() {
-        return mutePy.get();
+        return mutedPy.get();
     }
 
     @Override
     public void mute(boolean muted) {
-        mutePy.set(muted);
+        mutedPy.set(muted);
     }
 
     @Override
@@ -1062,7 +1066,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (loop) {
             player.setCycleCount(MediaPlayer.INDEFINITE);
         }
-        player.muteProperty().bind(mutePy);
+        player.muteProperty().bind(mutedPy);
         player.statusProperty().addListener((py,ov,nv) -> logSound());
         Logger.info("Sound created: {}", url);
         return player;
@@ -1159,7 +1163,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
         URL url = theme.get(voiceClipID);
         voice = new MediaPlayer(new Media(url.toExternalForm()));
-        voice.muteProperty().bind(mutePy);
+        voice.muteProperty().bind(mutedPy);
         voice.setStartTime(Duration.seconds(delaySeconds));
         voice.play();
     }

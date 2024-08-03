@@ -5,12 +5,14 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
+import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -59,11 +61,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
         theme.set("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
         theme.set("model3D.pellet", new Model3D(rm.url("model3D/fruit.obj")));
 
-        theme.set("model3D.wallpaper.day",   rm.loadImage("graphics/sea-wallpaper.jpg"));
-        theme.set("model3D.wallpaper.night", rm.loadImage("graphics/sea-wallpaper-night.jpg"));
-
-        PY_3D_WALLPAPER_DAY.set(theme.get("model3D.wallpaper.day"));
-        PY_3D_WALLPAPER_NIGHT.set(theme.get("model3D.wallpaper.night"));
+        PY_3D_WALLPAPER_DAY.set(rm.loadImage("graphics/sea-wallpaper.jpg"));
+        PY_3D_WALLPAPER_NIGHT.set(rm.loadImage("graphics/sea-wallpaper-night.jpg"));
 
         Map<String, PhongMaterial> texturesByName = new LinkedHashMap<>();
         theme.set("floorTextures", texturesByName);
@@ -136,9 +135,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
     }
 
     @Override
-    protected void createGamePage() {
-        gamePage = new GamePage3D(this, mainScene);
-        gameScenePy.addListener((py, ov, gameScene) -> gamePage.embedGameScene(gameScene));
+    protected GamePage createGamePage(Scene mainScene) {
+        return new GamePage3D(this, mainScene);
     }
 
     @Override
