@@ -25,7 +25,7 @@ import static de.amr.games.pacman.ui2d.util.Ufx.coloredRoundedBackground;
 import static javafx.scene.layout.BackgroundSize.AUTO;
 
 /**
- * Got the flyer images from https://flyers.arcade-museum.com/.
+ * Got the flyer images from <a href="https://flyers.arcade-museum.com/">The Arcade Flyer Archive</a>.
  *
  * @author Armin Reichert
  */
@@ -51,8 +51,8 @@ public class StartPage implements Page {
     private final BorderPane layout = new BorderPane();
     private final Node btnPlay;
 
-    private int msPacManImageNumber;
-    private int pacManImageNumber;
+    private boolean msPacManFlyerFrontPage;
+    private boolean pacManFlyerFrontPage;
 
     public StartPage(GameContext context) {
         this.context = checkNotNull(context);
@@ -112,22 +112,22 @@ public class StartPage implements Page {
         return pane;
     }
 
-    private void setMsPacManImage(int number) {
-        Image bgImage = context.theme().image("ms_pacman.startpage.image" + number);
-        var bg = new Background(new BackgroundImage(bgImage,
-                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER, FIT_HEIGHT));
-        layout.setBackground(bg);
-        msPacManImageNumber = number;
-    }
-
-    private void setPacManImage(int number) {
-        Image bgImage = context.theme().image("pacman.startpage.image" + number);
+    private void setMsPacManFlyerFrontPage(boolean frontPage) {
+        Image bgImage = context.theme().image("ms_pacman.startpage.image" + (frontPage? 1 : 2));
         var bg = new Background(new BackgroundImage(bgImage,
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
             BackgroundPosition.CENTER, FIT_HEIGHT));
         layout.setBackground(bg);
-        pacManImageNumber = number;
+        msPacManFlyerFrontPage = frontPage;
+    }
+
+    private void setPacManFlyerFrontPage(boolean frontPage) {
+        Image bgImage = context.theme().image("pacman.startpage.image" + (frontPage? 1 : 2));
+        var bg = new Background(new BackgroundImage(bgImage,
+            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER, FIT_HEIGHT));
+        layout.setBackground(bg);
+        pacManFlyerFrontPage = frontPage;
     }
 
     private void changeBackgroundImage() {
@@ -136,19 +136,19 @@ public class StartPage implements Page {
             switch (variant) {
                 case MS_PACMAN -> {
                     root.setBackground(context.theme().get("wallpaper.background"));
-                    setMsPacManImage(1);
+                    setMsPacManFlyerFrontPage(true);
                     layout.setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
-                            setMsPacManImage(msPacManImageNumber == 1 ? 2 : 1);
+                            setMsPacManFlyerFrontPage(!msPacManFlyerFrontPage);
                         }
                     });
                 }
                 case PACMAN -> {
                     root.setBackground(context.theme().get("wallpaper.background"));
-                    setPacManImage(1);
+                    setPacManFlyerFrontPage(true);
                     layout.setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
-                            setPacManImage(pacManImageNumber == 1 ? 2 : 1);
+                            setPacManFlyerFrontPage(!pacManFlyerFrontPage);
                         }
                     });
                 }
