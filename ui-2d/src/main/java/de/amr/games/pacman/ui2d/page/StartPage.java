@@ -32,8 +32,7 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
 public class StartPage implements Page {
 
     private static final BackgroundSize FIT_HEIGHT = new BackgroundSize(AUTO, 1,false, true, true, false);
-
-    private static final BackgroundSize FILL = new BackgroundSize(AUTO, AUTO, false, false, true, true);
+    private static final BackgroundSize FILL       = new BackgroundSize(AUTO, AUTO, false, false, true, true);
 
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override
