@@ -47,9 +47,6 @@ import static de.amr.games.pacman.ui3d.GameParameters3D.*;
  */
 public class PacManGames3dUI extends PacManGames2dUI {
 
-    public static Picker<String> PICKER_LEVEL_COMPLETE;
-    public static Picker<String> PICKER_GAME_OVER;
-
     public PacManGames3dUI(Stage stage, double screenWidth, double screenHeight) {
         super(stage, screenWidth, screenHeight);
     }
@@ -58,11 +55,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
     protected void loadAssets() {
         super.loadAssets();
 
-        var messages = ResourceBundle.getBundle("de.amr.games.pacman.ui3d.texts.messages", getClass().getModule());
-        bundles.add(messages);
-
-        PICKER_LEVEL_COMPLETE = Picker.fromBundle(messages, "level.complete");
-        PICKER_GAME_OVER      = Picker.fromBundle(messages, "game.over");
+        var bundle = ResourceBundle.getBundle("de.amr.games.pacman.ui3d.texts.messages", getClass().getModule());
+        bundles.add(bundle);
 
         ResourceManager rm = () -> PacManGames3dUI.class;
 

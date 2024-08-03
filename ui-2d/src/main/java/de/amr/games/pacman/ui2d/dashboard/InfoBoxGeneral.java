@@ -9,7 +9,7 @@ import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
+import static de.amr.games.pacman.ui2d.GameParameters.*;
 
 /**
  * General settings.

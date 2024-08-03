@@ -16,6 +16,7 @@ import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.PlaySceneSound;
+import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
@@ -31,9 +32,8 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_AUTOPILOT;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
-import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
+import static de.amr.games.pacman.ui3d.GameParameters3D.*;
 
 /**
  * 3D play scene.
@@ -58,6 +58,8 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
     private GameLevel3D level3D;
     private GameContext context;
+    private Picker<String> pickerGameOver;
+    private Picker<String> pickerLevelComplete;
 
     public PlayScene3D() {
         var ambientLight = new AmbientLight();
@@ -99,6 +101,9 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         context.setScoreVisible(true);
         scores3D.fontPy.set(context.theme().font("font.arcade", 8));
         perspectivePy.bind(PY_3D_PERSPECTIVE);
+        pickerGameOver = Picker.fromBundle(context.bundles().getLast(), "game.over");
+        pickerLevelComplete = Picker.fromBundle(context.bundles().getLast(), "level.complete");
+
         Logger.info("3D play scene initialized. {}", this);
     }
 
@@ -267,7 +272,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         stopLevelAnimations();
         // delay state exit for 3 seconds
         context.gameState().timer().restartSeconds(3);
-        context.actionHandler().showFlashMessageSeconds(3, PICKER_GAME_OVER.next());
+        context.actionHandler().showFlashMessageSeconds(3, pickerGameOver.next());
         context.soundHandler().stopAllSounds();
         context.soundHandler().playAudioClip("audio.game_over");
     }
@@ -432,7 +437,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
     //TODO is there are better way to do this e.g. using a Timeline?
     private Animation levelCompleteAnimation(int numFlashes) {
-        String message = PICKER_LEVEL_COMPLETE.next() + "\n\n" + context.tt("level_complete", context.game().levelNumber());
+        String message = pickerLevelComplete.next() + "\n\n" + context.tt("level_complete", context.game().levelNumber());
         return new SequentialTransition(
               now(() -> {
                   perspectivePy.unbind();

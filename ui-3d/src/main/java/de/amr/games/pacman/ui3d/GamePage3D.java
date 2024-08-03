@@ -12,8 +12,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_IMMUNITY;
-import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
+import static de.amr.games.pacman.ui2d.GameParameters.*;
+import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_PERSPECTIVE;
 
 /**
  * @author Armin Reichert

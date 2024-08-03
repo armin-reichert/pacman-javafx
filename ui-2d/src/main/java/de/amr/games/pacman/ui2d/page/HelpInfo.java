@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.GameParameters;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -18,7 +19,6 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_AUTOPILOT;
 
 /**
  * @author Armin Reichert
@@ -67,7 +67,7 @@ public class HelpInfo {
         pane.setBackground(Ufx.coloredRoundedBackground(backgroundColor, 10));
 
         // add default entries:
-        if (PY_AUTOPILOT.get()) {
+        if (GameParameters.PY_AUTOPILOT.get()) {
             var autoPilotEntry = text(context.tt("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);

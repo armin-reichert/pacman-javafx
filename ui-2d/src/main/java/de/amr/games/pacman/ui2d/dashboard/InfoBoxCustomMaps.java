@@ -6,11 +6,11 @@ package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.GameParameters;
 import javafx.scene.control.Button;
 
 import java.io.File;
 
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_CUSTOM_MAPS_ENABLED;
 
 /**
  * @author Armin Reichert
@@ -32,7 +32,7 @@ public class InfoBoxCustomMaps extends InfoBox {
             return;
         }
         var cbCustomMapEnabled = checkBox("Use Custom Maps", context.actionHandler()::updateCustomMaps);
-        cbCustomMapEnabled.selectedProperty().bindBidirectional(PY_CUSTOM_MAPS_ENABLED);
+        cbCustomMapEnabled.selectedProperty().bindBidirectional(GameParameters.PY_CUSTOM_MAPS_ENABLED);
 
         var btnReload = new Button("Reload");
         btnReload.setOnAction(e -> reloadCustomMaps());

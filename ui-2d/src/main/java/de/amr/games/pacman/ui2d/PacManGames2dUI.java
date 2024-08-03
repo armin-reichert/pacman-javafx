@@ -463,6 +463,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     // GameSceneContext interface implementation
     // -----------------------------------------------------------------------------------------------------------------
 
+
+    @Override
+    public List<ResourceBundle> bundles() {
+        return bundles;
+    }
+
     @Override
     public String tt(String key, Object... args) {
         checkNotNull(key);

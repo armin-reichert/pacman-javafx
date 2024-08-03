@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameKeys;
-import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -22,6 +21,7 @@ import org.tinylog.Logger;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui2d.GameParameters.PY_AUTOPILOT;
 
 /**
  * @author Armin Reichert
@@ -48,7 +48,7 @@ public class PlayScene2D extends GameScene2D implements PlaySceneSound {
             context.game().pac().setUseAutopilot(true);
         } else {
             context.setScoreVisible(true);
-            context.game().pac().setUseAutopilot(PacManGames2dUI.PY_AUTOPILOT.get());
+            context.game().pac().setUseAutopilot(PY_AUTOPILOT.get());
             updateSound(context);
         }
     }

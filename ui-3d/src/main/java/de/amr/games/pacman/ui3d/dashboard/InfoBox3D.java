@@ -19,8 +19,9 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Map;
 
+import static de.amr.games.pacman.ui2d.GameParameters.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
-import static de.amr.games.pacman.ui3d.PacManGames3dUI.*;
+import static de.amr.games.pacman.ui3d.GameParameters3D.*;
 
 /**
  * 3D related settings.

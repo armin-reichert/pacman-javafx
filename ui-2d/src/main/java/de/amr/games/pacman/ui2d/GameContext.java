@@ -15,7 +15,9 @@ import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.Theme;
 import javafx.beans.property.ObjectProperty;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  * @author Armin Reichert
@@ -53,6 +55,8 @@ public interface GameContext {
     Theme theme();
 
     GameSpriteSheet spriteSheet(GameVariant variant);
+
+    List<ResourceBundle> bundles();
 
     /**
      * Builds a resource key from the given key pattern and the arguments and returns the corresponding text from the

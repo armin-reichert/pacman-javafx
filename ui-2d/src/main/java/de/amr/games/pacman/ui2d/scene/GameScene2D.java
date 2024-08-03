@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui2d.scene;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.GameParameters;
 import de.amr.games.pacman.ui2d.rendering.SpriteGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.VectorGameWorldRenderer;
 import javafx.beans.property.*;
@@ -19,7 +20,6 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.PY_CANVAS_COLOR;
 
 /**
  * Base class of all 2D scenes.
@@ -42,7 +42,7 @@ public abstract class GameScene2D implements GameScene {
         vectorRenderer.scalingPy.bind(scalingPy);
         spriteRenderer.scalingPy.bind(scalingPy);
         spriteRenderer.backgroundColorPy.bind(backgroundColorPy);
-        backgroundColorPy.bind(PY_CANVAS_COLOR);
+        backgroundColorPy.bind(GameParameters.PY_CANVAS_COLOR);
     }
 
     public abstract boolean isCreditVisible();

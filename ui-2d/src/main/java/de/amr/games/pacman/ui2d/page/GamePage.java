@@ -31,7 +31,7 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.*;
+import static de.amr.games.pacman.ui2d.GameParameters.*;
 
 /**
  * @author Armin Reichert

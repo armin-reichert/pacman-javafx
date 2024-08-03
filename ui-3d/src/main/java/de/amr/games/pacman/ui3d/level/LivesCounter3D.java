@@ -25,6 +25,7 @@ import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredMaterial;
+import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_DRAW_MODE;
 
 /**
  * Displays a Pac-Man shape for each live remaining.
@@ -102,7 +103,7 @@ public class LivesCounter3D extends Group {
         pillar.translateZProperty().bind(pillarHeightPy.multiply(-0.5));
         pillar.setRotationAxis(Rotate.X_AXIS);
         pillar.setRotate(90);
-        pillar.drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);
+        pillar.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         var podium = new Cylinder();
         podium.radiusProperty().bind(plateRadiusPy);
@@ -114,7 +115,7 @@ public class LivesCounter3D extends Group {
             pillarHeightPy, plateThicknessPy));
         podium.setRotationAxis(Rotate.X_AXIS);
         podium.setRotate(90);
-        podium.drawModeProperty().bind(PacManGames3dUI.PY_3D_DRAW_MODE);
+        podium.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         return new Group(pillar, podium);
     }

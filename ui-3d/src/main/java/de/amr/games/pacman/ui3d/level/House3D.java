@@ -16,8 +16,7 @@ import javafx.scene.paint.PhongMaterial;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.getColorFromMap;
-import static de.amr.games.pacman.ui3d.PacManGames3dUI.PY_3D_DRAW_MODE;
-import static de.amr.games.pacman.ui3d.PacManGames3dUI.PY_3D_FLOOR_COLOR;
+import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_DRAW_MODE;
 
 /**
  * @author Armin Reichert
