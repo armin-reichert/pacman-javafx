@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
+import static de.amr.games.pacman.ui3d.GameParameters3D.*;
 
 /**
  * User interface for the Pac-Man game variants (Pac-Man, Pac-Man XXL, Ms. Pac-Man) with a 3D
@@ -44,7 +45,7 @@ import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
  *
  * @author Armin Reichert
  */
-public class PacManGames3dUI extends PacManGames2dUI implements GameParameters3D {
+public class PacManGames3dUI extends PacManGames2dUI {
 
     public static Picker<String> PICKER_LEVEL_COMPLETE;
     public static Picker<String> PICKER_GAME_OVER;
