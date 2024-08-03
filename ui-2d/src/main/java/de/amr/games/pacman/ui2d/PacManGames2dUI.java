@@ -108,7 +108,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected MediaPlayer powerSound;
     protected MediaPlayer ghostReturningHomeSound;
 
-    public PacManGames2dUI(Stage stage, double screenWidth, double screenHeight) {
+    public PacManGames2dUI(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
         loadAssets();
         logAssets();
@@ -133,7 +133,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             Logger.debug("Game key '{}' registered", gameKey);
         }
 
-        createMainScene(screenWidth, screenHeight);
+        createMainScene(width, height);
         createStartPage();
         createGamePage();
         createGameScenes();
@@ -285,13 +285,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         stage.show();
     }
 
-    protected Dimension2D computeMainSceneSize(double screenWidth, double screenHeight) {
-        return new Dimension2D(0.9 * screenWidth, 0.9 * screenHeight);
-    }
-
-    protected void createMainScene(double screenWidth, double screenHeight) {
-        Dimension2D size = computeMainSceneSize(screenWidth, screenHeight);
-        mainScene = new Scene(rootPane, size.getWidth(), size.getHeight());
+    protected void createMainScene(double width, double height) {
+        mainScene = new Scene(rootPane, width, height);
         mainScene.setOnMouseClicked(e -> currentPage.onMouseClicked(e));
         mainScene.setOnContextMenuRequested(e -> currentPage.onContextMenuRequested(e));
         mainScene.setOnKeyPressed(this::handleKeyPressed);

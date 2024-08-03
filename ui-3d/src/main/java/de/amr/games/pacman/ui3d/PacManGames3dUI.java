@@ -8,14 +8,12 @@ import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
-import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.dashboard.InfoBox3D;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
-import javafx.geometry.Dimension2D;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
@@ -47,8 +45,8 @@ import static de.amr.games.pacman.ui3d.GameParameters3D.*;
  */
 public class PacManGames3dUI extends PacManGames2dUI {
 
-    public PacManGames3dUI(Stage stage, double screenWidth, double screenHeight) {
-        super(stage, screenWidth, screenHeight);
+    public PacManGames3dUI(Stage stage, double width, double height) {
+        super(stage, width, height);
     }
 
     @Override
@@ -122,13 +120,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
             new Pair<>(Color.class, "colors"),
             new Pair<>(AudioClip.class, "audio clips")
         )));
-    }
-
-    @Override
-    protected Dimension2D computeMainSceneSize(double screenWidth, double screenHeight) {
-        double aspect = screenWidth / screenHeight;
-        double height = 0.8 * screenHeight, width = aspect * height;
-        return new Dimension2D(width, height);
     }
 
     @Override
