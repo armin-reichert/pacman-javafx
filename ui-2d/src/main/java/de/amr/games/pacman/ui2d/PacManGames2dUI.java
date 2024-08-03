@@ -139,9 +139,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
 
         createMainScene(width, height);
+        createGameScenes(mainScene);
         createStartPage();
         gamePage = createGamePage(mainScene);
-        createGameScenes();
+
         createGameClock();
 
         sign("Remake (2021-2024) by Armin Reichert");
@@ -339,8 +340,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         gameController().setClock(clock);
     }
 
-    protected void createGameScenes() {
-        for (var variant : gameController().supportedVariants()) {
+    protected void createGameScenes(Scene parentScene) {
+        for (GameVariant variant : gameController().supportedVariants()) {
             createGameScenes(variant);
             gameScenes2D(variant).forEach(gameScene2D -> {
                 gameScene2D.setContext(this);
