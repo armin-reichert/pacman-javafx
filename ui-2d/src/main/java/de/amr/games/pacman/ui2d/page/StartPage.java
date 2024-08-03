@@ -138,10 +138,8 @@ public class StartPage implements Page {
                     root.setBackground(context.theme().get("wallpaper.background"));
                     setMsPacManImage(1);
                     layout.setOnMouseClicked(e -> {
-                        if (msPacManImageNumber == 1) {
-                            setMsPacManImage(2);
-                        } else if (msPacManImageNumber == 2) {
-                            setMsPacManImage(1);
+                        if (e.getButton() == MouseButton.PRIMARY) {
+                            setMsPacManImage(msPacManImageNumber == 1 ? 2 : 1);
                         }
                     });
                 }
@@ -149,10 +147,8 @@ public class StartPage implements Page {
                     root.setBackground(context.theme().get("wallpaper.background"));
                     setPacManImage(1);
                     layout.setOnMouseClicked(e -> {
-                        if (pacManImageNumber == 1) {
-                            setPacManImage(2);
-                        } else if (pacManImageNumber == 2) {
-                            setPacManImage(1);
+                        if (e.getButton() == MouseButton.PRIMARY) {
+                            setPacManImage(pacManImageNumber == 1 ? 2 : 1);
                         }
                     });
                 }
