@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.util;
 
-import javafx.event.EventTarget;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
@@ -19,13 +18,14 @@ public class Keyboard {
     private static final Set<KeyCodeCombination> registeredInput = new HashSet<>();
     private static final List<KeyCodeCombination> matchingCombinations = new ArrayList<>(3);
 
-    public static void filterKeyEventsFor(EventTarget target) {
-        target.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-            Logger.debug("Key press {}", e.getCode());
-            matchingCombinations.clear();
-            registeredInput.stream().filter(c -> c.match(e)).forEach(matchingCombinations::add);
-        });
-        target.addEventFilter(KeyEvent.KEY_RELEASED, e -> matchingCombinations.clear());
+    public static void onKeyPressed(KeyEvent e) {
+        Logger.debug("Key pressed: {}", e.getCode());
+        registeredInput.stream().filter(c -> c.match(e)).forEach(matchingCombinations::add);
+    }
+
+    public static void onKeyReleased(KeyEvent e) {
+        Logger.debug("Key released: {}", e.getCode());
+        matchingCombinations.clear();
     }
 
     /**

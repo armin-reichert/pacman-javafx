@@ -33,6 +33,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
@@ -160,9 +161,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     protected Scene createMainScene(Parent root, double width, double height) {
         var scene = new Scene(root, width, height);
-        Keyboard.filterKeyEventsFor(scene);
-        scene.setOnMouseClicked(e -> currentPage.onMouseClicked(e));
-        scene.setOnContextMenuRequested(e -> currentPage.onContextMenuRequested(e));
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, Keyboard::onKeyPressed);
+        scene.addEventFilter(KeyEvent.KEY_RELEASED, Keyboard::onKeyReleased);
         scene.setOnKeyPressed(e -> {
             if (GameKeys.FULLSCREEN.pressed()) {
                 setFullScreen(true);
@@ -172,6 +172,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
                 currentPage.handleKeyboardInput();
             }
         });
+        scene.setOnMouseClicked(e -> currentPage.onMouseClicked(e));
+        scene.setOnContextMenuRequested(e -> currentPage.onContextMenuRequested(e));
         ChangeListener<Number> resizeCurrentPage = (py, ov, nv) -> {
             if (currentPage != null) {
                 currentPage.setSize(scene.getWidth(), scene.getHeight());
