@@ -3,7 +3,6 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameKeys;
-import de.amr.games.pacman.ui2d.util.Theme;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -22,6 +21,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui2d.util.Ufx.coloredRoundedBackground;
 import static javafx.scene.layout.BackgroundSize.AUTO;
 
 /**
@@ -38,38 +38,6 @@ public class StartPage implements Page {
     private static final BackgroundSize FILL = new BackgroundSize(AUTO, AUTO,
         false, false,
         true, true);
-
-    private static Button createCarouselButton(char arrow) {
-        Button button = new Button();
-        // Without this, button gets input focus after being clicked with the mouse and the LEFT, RIGHT keys stop working!
-        button.setFocusTraversable(false);
-        button.setStyle("-fx-text-fill: rgb(0,155,252); -fx-background-color: transparent; -fx-padding: 5");
-        button.setFont(Font.font("Sans", FontWeight.BOLD, 80));
-        button.setText(String.valueOf(arrow));
-        button.setOpacity(0.2);
-        button.setOnMouseEntered(e -> button.setOpacity(1.0));
-        button.setOnMouseExited(e -> button.setOpacity(0.2));
-        return button;
-    }
-
-    private static Node createPlayButton(Theme theme, String buttonText) {
-        var text = new Text(buttonText);
-        text.setFill(theme.color("startpage.button.color"));
-        text.setFont(theme.font("startpage.button.font"));
-
-        var shadow = new DropShadow();
-        shadow.setOffsetY(3.0f);
-        shadow.setColor(Color.color(0.2f, 0.2f, 0.2f));
-        text.setEffect(shadow);
-
-        var pane = new BorderPane(text);
-        pane.setMaxSize(200, 100);
-        pane.setPadding(new Insets(10));
-        pane.setCursor(Cursor.HAND);
-        pane.setBackground(Ufx.coloredRoundedBackground(theme.color("startpage.button.bgColor"), 20));
-
-        return pane;
-    }
 
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override
@@ -99,7 +67,7 @@ public class StartPage implements Page {
         VBox right = new VBox(btnNextVariant);
         right.setAlignment(Pos.CENTER_RIGHT);
 
-        btnPlay = createPlayButton(context.theme(), context.tt("play_button"));
+        btnPlay = createPlayButton(context.tt("play_button"));
         BorderPane.setAlignment(btnPlay, Pos.BOTTOM_CENTER);
         btnPlay.setTranslateY(-10);
         var btnPlayContainer = new BorderPane();
@@ -110,6 +78,38 @@ public class StartPage implements Page {
         layout.setCenter(btnPlayContainer);
 
         root.getChildren().add(layout);
+    }
+
+    private Button createCarouselButton(char arrow) {
+        Button button = new Button();
+        // Without this, button gets input focus after being clicked with the mouse and the LEFT, RIGHT keys stop working!
+        button.setFocusTraversable(false);
+        button.setStyle("-fx-text-fill: rgb(0,155,252); -fx-background-color: transparent; -fx-padding: 5");
+        button.setFont(Font.font("Sans", FontWeight.BOLD, 80));
+        button.setText(String.valueOf(arrow));
+        button.setOpacity(0.2);
+        button.setOnMouseEntered(e -> button.setOpacity(1.0));
+        button.setOnMouseExited(e -> button.setOpacity(0.2));
+        return button;
+    }
+
+    private Node createPlayButton(String buttonText) {
+        var text = new Text(buttonText);
+        text.setFill(context.theme().color("startpage.button.color"));
+        text.setFont(context.theme().font("startpage.button.font"));
+
+        var shadow = new DropShadow();
+        shadow.setOffsetY(3.0f);
+        shadow.setColor(Color.color(0.2f, 0.2f, 0.2f));
+        text.setEffect(shadow);
+
+        var pane = new BorderPane(text);
+        pane.setMaxSize(200, 100);
+        pane.setPadding(new Insets(10));
+        pane.setCursor(Cursor.HAND);
+        pane.setBackground(coloredRoundedBackground(context.theme().color("startpage.button.bgColor"), 20));
+
+        return pane;
     }
 
     private void setMsPacManImage(int number) {
