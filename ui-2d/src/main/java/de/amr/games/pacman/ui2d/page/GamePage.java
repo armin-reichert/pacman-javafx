@@ -178,7 +178,7 @@ public class GamePage implements Page {
         return signature;
     }
 
-    public void configureSignature(Font font, String... words) {
+    public void sign(Font font, String... words) {
         signature.setWords(words);
 
         signature.fontPy.bind(Bindings.createObjectBinding(
