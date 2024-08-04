@@ -86,6 +86,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             if (variant == GameVariant.PACMAN_XXL) {
                 updateCustomMaps();
             }
+            Logger.info("Game variant changed to: {}", variant);
         }
     };
 
@@ -120,7 +121,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         this.stage = checkNotNull(stage);
         loadAssets(true);
 
-        gameVariantPy.set(game().variant());
         for (var variant : gameController().supportedVariants()) {
             gameController().game(variant).addGameEventListener(this);
         }
@@ -142,16 +142,17 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         configureGameClock();
         gameController().setClock(clock);
 
-        stage.titleProperty().bind(stageTitleBinding());
         stage.setScene(mainScene);
     }
 
     public void show() {
+        gameVariantPy.set(game().variant());
         selectStartPage();
         //TODO this does not work yet correctly
         Dimension2D minSize = DecoratedCanvas.computeSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y, 1);
         stage.setMinWidth(minSize.getWidth());
         stage.setMinHeight(minSize.getHeight());
+        stage.titleProperty().bind(stageTitleBinding());
         stage.centerOnScreen();
         stage.show();
     }
@@ -423,9 +424,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void onGameVariantChanged(GameEvent event) {
-        var newVariant = game().variant();
-        Logger.info("onGameVariantChanged: {}", event);
-        gameVariantPy.set(newVariant);
+        gameVariantPy.set(event.game.variant());
     }
 
     @Override
