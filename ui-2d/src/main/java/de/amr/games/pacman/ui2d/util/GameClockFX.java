@@ -85,6 +85,7 @@ public class GameClockFX implements GameClock {
     @Override
     public void start() {
         timeline.play();
+        Logger.info("Clock started, target freq: {} Hz", getTargetFrameRate());
     }
 
     @Override

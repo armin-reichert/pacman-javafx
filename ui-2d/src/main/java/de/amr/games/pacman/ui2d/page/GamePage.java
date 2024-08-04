@@ -137,8 +137,6 @@ public class GamePage implements Page {
         //TODO check if this is always what is wanted
         context.actionHandler().reboot();
         context.soundHandler().playVoice("voice.explain", 0);
-        context.gameClock().start();
-        Logger.info("Clock started, speed={} Hz", context.gameClock().getTargetFrameRate());
     }
 
     @Override

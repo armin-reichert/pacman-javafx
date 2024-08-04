@@ -29,7 +29,7 @@ public class PacManGames2dApp extends Application {
         double aspect = 1.2;
         double height = 0.8 * screenSize.getHeight();
         ui = new PacManGames2dUI(stage, aspect * height, height);
-        ui.show();
+        ui.start();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }
 

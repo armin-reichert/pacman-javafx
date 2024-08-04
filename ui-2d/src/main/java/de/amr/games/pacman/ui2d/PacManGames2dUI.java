@@ -133,25 +133,26 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         // first child will be replaced by page
         mainSceneLayout.getChildren().addAll(new Pane(), messageView, createMutedIcon());
         mainScene = createMainScene(mainSceneLayout, width, height);
+        stage.setScene(mainScene);
+
         startPage = createStartPage();
         gamePage = createGamePage(mainScene);
         gamePage.sign(theme.font("font.monospaced", 9), BY_ARMIN_REICHERT);
 
         createGameScenes(mainScene);
-
-        configureGameClock();
-        gameController().setClock(clock);
-
-        stage.setScene(mainScene);
     }
 
-    public void show() {
+    public void start() {
+        configureGameClock();
+        gameController().setClock(clock);
         gameVariantPy.set(game().variant());
         selectStartPage();
+
         //TODO this does not work yet correctly
         Dimension2D minSize = DecoratedCanvas.computeSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y, 1);
         stage.setMinWidth(minSize.getWidth());
         stage.setMinHeight(minSize.getHeight());
+
         stage.titleProperty().bind(stageTitleBinding());
         stage.centerOnScreen();
         stage.show();
@@ -561,16 +562,19 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void selectStartPage() {
+        clock.stop();
         selectPage(startPage);
     }
 
     @Override
     public void selectGamePage() {
         selectPage(gamePage);
+        clock.start();
     }
 
     @Override
     public void selectEditorPage() {
+        clock.stop();
         selectPage(editorPage);
     }
 
@@ -614,7 +618,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
         stopAllSounds();
         currentGameScene().ifPresent(GameScene::end);
-        clock.stop();
         stage.titleProperty().bind(editorPage.editor().titlePy);
         if (game().world() != null) {
             editorPage.editor().setMap(game().world().map());

@@ -32,7 +32,7 @@ public class PacManGames3dApp extends Application {
         double height = 0.8 * screenSize.getHeight();
         double width = aspect * height;
         ui = new PacManGames3dUI(stage, width, height);
-        ui.show();
+        ui.start();
         PY_3D_ENABLED.set(true);
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }
