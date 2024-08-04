@@ -89,16 +89,11 @@ public class PacMan3D extends AbstractPac3D {
             context.assets().color("pacman.color.eyes"),
             context.assets().color("pacman.color.palate")
         );
-        meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(drawModePy);
-        meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
-        meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
         jaw = PacModel3D.createPacSkull(
             model3D, size,
             context.assets().color("pacman.color.head"),
             context.assets().color("pacman.color.palate"));
-        meshViewById(jaw, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
-        meshViewById(jaw, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
         bodyGroup.getChildren().addAll(body, jaw);
         bodyGroup.getTransforms().add(rotation);
@@ -108,6 +103,11 @@ public class PacMan3D extends AbstractPac3D {
         headBanging = new HeadBanging(bodyGroup);
         headBanging.setStrokeMode(false);
 
+        meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(drawModePy);
+        meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
+        meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
+        meshViewById(jaw,  PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
+        meshViewById(jaw,  PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
     }
 
     @Override
