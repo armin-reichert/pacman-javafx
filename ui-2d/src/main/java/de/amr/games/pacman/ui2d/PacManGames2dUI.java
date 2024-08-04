@@ -68,6 +68,8 @@ import static java.util.function.Predicate.not;
  */
 public class PacManGames2dUI implements GameEventListener, GameContext, ActionHandler, SoundHandler {
 
+    public static final String BY_ARMIN_REICHERT = "Remake (2021-2024) by Armin Reichert";
+
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
         @Override
         protected void invalidated() {
@@ -78,8 +80,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override
         protected void invalidated() {
+            GameVariant variant = get();
+            stage.getIcons().setAll(theme.image(variant.resourceKey() + ".icon"));
             deleteSounds(); // new sounds will be created on demand for the new game variant
-            if (get() == GameVariant.PACMAN_XXL) {
+            if (variant == GameVariant.PACMAN_XXL) {
                 updateCustomMaps();
             }
         }
@@ -126,30 +130,24 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             Logger.debug("Game key '{}' registered", gameKey);
         }
 
-        var muteIcon = new ImageView(theme.<Image>get("icon.mute"));
-        muteIcon.setFitWidth(48);
-        muteIcon.setPreserveRatio(true);
-        muteIcon.visibleProperty().bind(mutedPy);
-        StackPane.setAlignment(muteIcon, Pos.BOTTOM_RIGHT);
         // first child will be replaced by page
-        mainSceneLayout.getChildren().addAll(new Pane(), messageView, muteIcon);
-
+        mainSceneLayout.getChildren().addAll(new Pane(), messageView, createMutedIcon());
         mainScene = createMainScene(mainSceneLayout, width, height);
-        createGameScenes(mainScene);
-        createStartPage();
+        startPage = createStartPage();
         gamePage = createGamePage(mainScene);
-        gamePage.sign(theme.font("font.monospaced", 9), "Remake (2021-2024) by Armin Reichert");
+        gamePage.sign(theme.font("font.monospaced", 9), BY_ARMIN_REICHERT);
+
+        createGameScenes(mainScene);
 
         configureGameClock();
         gameController().setClock(clock);
 
         stage.titleProperty().bind(stageTitleBinding());
-        stage.getIcons().setAll(theme.image(game().variant().resourceKey() + ".icon"));
         stage.setScene(mainScene);
-        selectStartPage();
     }
 
     public void show() {
+        selectStartPage();
         //TODO this does not work yet correctly
         Dimension2D minSize = DecoratedCanvas.computeSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y, 1);
         stage.setMinWidth(minSize.getWidth());
@@ -224,14 +222,24 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             clock.pausedPy, gameVariantPy);
     }
 
-    protected void createStartPage() {
-        startPage = new StartPage(this);
-        startPage.setOnPlayButtonPressed(this::selectGamePage);
-        startPage.gameVariantPy.bind(gameVariantPy);
+    protected StartPage createStartPage() {
+        var page = new StartPage(this);
+        page.setOnPlayButtonPressed(this::selectGamePage);
+        page.gameVariantPy.bind(gameVariantPy);
+        return page;
     }
 
     protected GamePage createGamePage(Scene mainScene) {
         return new GamePage(this, mainScene);
+    }
+
+    private ImageView createMutedIcon() {
+        var icon = new ImageView(theme.<Image>get("icon.mute"));
+        icon.setFitWidth(48);
+        icon.setPreserveRatio(true);
+        icon.visibleProperty().bind(mutedPy);
+        StackPane.setAlignment(icon, Pos.BOTTOM_RIGHT);
+        return icon;
     }
 
     private void selectPage(Page page) {
@@ -418,7 +426,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         var newVariant = game().variant();
         Logger.info("onGameVariantChanged: {}", event);
         gameVariantPy.set(newVariant);
-        stage.getIcons().setAll(theme.image(newVariant.resourceKey() + ".icon"));
     }
 
     @Override
