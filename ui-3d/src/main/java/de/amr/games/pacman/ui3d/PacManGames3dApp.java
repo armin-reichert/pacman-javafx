@@ -19,11 +19,11 @@ import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_ENABLED;
  */
 public class PacManGames3dApp extends Application {
 
-    private PacManGames3dUI ui;
+    private final PacManGames3dUI ui = new PacManGames3dUI();
 
     @Override
     public void start(Stage stage) {
-        Logger.info("Java version:   {}", Runtime.version());
+        Logger.info("Java   version: {}", Runtime.version());
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         GameController.it().setSupportedVariants(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
         GameController.it().selectGameVariant(GameVariant.PACMAN);
@@ -31,7 +31,8 @@ public class PacManGames3dApp extends Application {
         double aspect = screenSize.getWidth() / screenSize.getHeight();
         double height = 0.8 * screenSize.getHeight();
         double width = aspect * height;
-        ui = new PacManGames3dUI(stage, width, height);
+        ui.loadAssets(true);
+        ui.createUI(stage, width, height);
         ui.start();
         PY_3D_ENABLED.set(true);
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());

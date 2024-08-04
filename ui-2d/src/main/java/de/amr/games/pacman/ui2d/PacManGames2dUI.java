@@ -98,8 +98,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     protected final Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
 
-    protected final Stage stage;
-    protected final Scene mainScene;
+    protected Stage stage;
+    protected Scene mainScene;
     protected final StackPane mainSceneLayout = new StackPane();
     protected final FlashMessageView messageView = new FlashMessageView();
     protected final GameClockFX clock = new GameClockFX();
@@ -117,9 +117,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected MediaPlayer powerSound;
     protected MediaPlayer ghostReturningHomeSound;
 
-    public PacManGames2dUI(Stage stage, double width, double height) {
+    public PacManGames2dUI() {
+    }
+
+    public void createUI(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
-        loadAssets(true);
 
         for (var variant : gameController().supportedVariants()) {
             gameController().game(variant).addGameEventListener(this);
@@ -1032,7 +1034,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     // Assets
     // -----------------------------------------------------------------------------------------------------------------
 
-    protected void loadAssets(boolean log) {
+    public void loadAssets(boolean log) {
         ResourceManager rm = () -> PacManGames2dUI.class;
 
         bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", rm.getClass().getModule()));

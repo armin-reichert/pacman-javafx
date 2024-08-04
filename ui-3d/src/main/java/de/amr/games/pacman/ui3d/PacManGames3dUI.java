@@ -45,18 +45,17 @@ import static de.amr.games.pacman.ui3d.GameParameters3D.*;
  */
 public class PacManGames3dUI extends PacManGames2dUI {
 
-    public PacManGames3dUI(Stage stage, double width, double height) {
-        super(stage, width, height);
+    public PacManGames3dUI() {
     }
 
     @Override
-    protected void loadAssets(boolean log) {
-        super.loadAssets(false); // do not log 2D assets
+    public void loadAssets(boolean log) {
+        super.loadAssets(false);
+
+        ResourceManager rm = this::getClass;
 
         var bundle = ResourceBundle.getBundle("de.amr.games.pacman.ui3d.texts.messages", getClass().getModule());
         bundles.add(bundle);
-
-        ResourceManager rm = () -> PacManGames3dUI.class;
 
         assets.set("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
         assets.set("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));

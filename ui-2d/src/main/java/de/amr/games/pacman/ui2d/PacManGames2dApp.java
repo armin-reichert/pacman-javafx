@@ -17,18 +17,19 @@ import org.tinylog.Logger;
  */
 public class PacManGames2dApp extends Application {
 
-    private PacManGames2dUI ui;
+    private final PacManGames2dUI ui = new PacManGames2dUI();
 
     @Override
     public void start(Stage stage) {
-        Logger.info("Java version:   {}", Runtime.version());
+        Logger.info("Java   version: {}", Runtime.version());
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         GameController.it().setSupportedVariants(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
         GameController.it().selectGameVariant(GameVariant.PACMAN);
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double aspect = 1.2;
         double height = 0.8 * screenSize.getHeight();
-        ui = new PacManGames2dUI(stage, aspect * height, height);
+        ui.loadAssets(true);
+        ui.createUI(stage, aspect * height, height);
         ui.start();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }
