@@ -50,8 +50,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
     }
 
     @Override
-    protected void loadAssets() {
-        super.loadAssets();
+    protected void loadAssets(boolean log) {
+        super.loadAssets(false); // do not log 2D assets
 
         var bundle = ResourceBundle.getBundle("de.amr.games.pacman.ui3d.texts.messages", getClass().getModule());
         bundles.add(bundle);
@@ -109,17 +109,16 @@ public class PacManGames3dUI extends PacManGames2dUI {
         theme.set("pacman.color.head",               Color.rgb(255, 255, 0));
         theme.set("pacman.color.eyes",               Color.rgb(33, 33, 33));
         theme.set("pacman.color.palate",             Color.web("#c9898a"));
-    }
 
-    @Override
-    protected void logAssets() {
-        Logger.info("Assets loaded: {}", theme.summary(List.of(
-            new Pair<>(Model3D.class,"3D models"),
-            new Pair<>(Image.class, "images"),
-            new Pair<>(Font.class, "fonts"),
-            new Pair<>(Color.class, "colors"),
-            new Pair<>(AudioClip.class, "audio clips")
-        )));
+        if (log) {
+            Logger.info("Assets loaded: {}", theme.summary(List.of(
+                new Pair<>(Model3D.class,"3D models"),
+                new Pair<>(Image.class, "images"),
+                new Pair<>(Font.class, "fonts"),
+                new Pair<>(Color.class, "colors"),
+                new Pair<>(AudioClip.class, "audio clips")
+            )));
+        }
     }
 
     @Override

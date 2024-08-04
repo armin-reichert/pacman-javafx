@@ -114,8 +114,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     public PacManGames2dUI(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
-        loadAssets();
-        logAssets();
+        loadAssets(true);
 
         gameVariantPy.set(game().variant());
         for (var variant : gameController().supportedVariants()) {
@@ -1024,7 +1023,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     // Assets
     // -----------------------------------------------------------------------------------------------------------------
 
-    protected void loadAssets() {
+    protected void loadAssets(boolean log) {
         ResourceManager rm = () -> PacManGames2dUI.class;
 
         bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", rm.getClass().getModule()));
@@ -1143,15 +1142,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         theme.set("pacman_xxl.icon",                 rm.loadImage("graphics/icons/pacman.png"));
         theme.set("pacman_xxl.helpButton.icon",      rm.loadImage("graphics/icons/help-blue-64.png"));
         theme.set("pacman_xxl.startpage.image",      rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
-    }
 
-    protected void logAssets() {
-        Logger.info("Assets loaded: {}", theme.summary(List.of(
-            new Pair<>(Image.class, "images"),
-            new Pair<>(Font.class, "fonts"),
-            new Pair<>(Color.class, "colors"),
-            new Pair<>(AudioClip.class, "audio clips")
-        )));
+        if (log) {
+            Logger.info("Assets loaded: {}", theme.summary(List.of(
+                new Pair<>(Image.class, "images"),
+                new Pair<>(Font.class, "fonts"),
+                new Pair<>(Color.class, "colors"),
+                new Pair<>(AudioClip.class, "audio clips")
+            )));
+        }
     }
-
 }
