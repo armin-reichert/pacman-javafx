@@ -20,7 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.tinylog.Logger;
 
@@ -44,9 +43,6 @@ import static de.amr.games.pacman.ui3d.GameParameters3D.*;
  * @author Armin Reichert
  */
 public class PacManGames3dUI extends PacManGames2dUI {
-
-    public PacManGames3dUI() {
-    }
 
     @Override
     public void loadAssets(boolean log) {
