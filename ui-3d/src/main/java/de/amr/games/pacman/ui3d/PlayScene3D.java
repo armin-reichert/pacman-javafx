@@ -103,7 +103,6 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         perspectivePy.bind(PY_3D_PERSPECTIVE);
         pickerGameOver = Picker.fromBundle(context.bundles().getLast(), "game.over");
         pickerLevelComplete = Picker.fromBundle(context.bundles().getLast(), "level.complete");
-
         Logger.info("3D play scene initialized. {}", this);
     }
 
@@ -121,10 +120,9 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             Logger.warn("Cannot update 3D play scene, no game level exists");
             return;
         }
-
-        // If level started in 2D and user switches to 3D scene, the 3D level must be created
         if (level3D == null) {
-            replaceGameLevel3D(true);
+            Logger.warn("Cannot update 3D play scene, no 3D game level exists");
+            return;
         }
         level3D.update();
 
@@ -163,7 +161,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
     @Override
     public void handleKeyboardInput() {
-        if (GameKeys.ADD_CREDIT.pressed() && !context.gameController().hasCredit()) {
+        if (GameKeys.ADD_CREDIT.pressed() && context.game().isDemoLevel()) {
             context.actionHandler().addCredit();
         } else if (GameKeys.PREV_PERSPECTIVE.pressed()) {
             context.actionHandler().selectPrevPerspective();
@@ -333,7 +331,11 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
     @Override
     public void onLevelCreated(GameEvent event) {
-        replaceGameLevel3D(false); // level counter in model not yet initialized
+        if (level3D == null) {
+            replaceGameLevel3D(false); // level counter in model not yet initialized
+        } else {
+            Logger.error("3D level already created?");
+        }
     }
 
     @Override

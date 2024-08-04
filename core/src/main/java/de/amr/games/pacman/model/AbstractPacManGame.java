@@ -324,6 +324,7 @@ public abstract class AbstractPacManGame implements GameModel {
 
     @Override
     public void letsGetReadyToRumble() {
+        powerTimer.resetIndefinitely();
         pac.reset();
         pac.setPosition(world.pacPosition());
         pac.setMoveAndWishDir(Direction.LEFT);
