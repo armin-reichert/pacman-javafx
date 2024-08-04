@@ -85,9 +85,9 @@ public class PacMan3D extends AbstractPac3D {
 
         Group body = PacModel3D.createPacShape(
             model3D, size,
-            context.theme().color("pacman.color.head"),
-            context.theme().color("pacman.color.eyes"),
-            context.theme().color("pacman.color.palate")
+            context.assets().color("pacman.color.head"),
+            context.assets().color("pacman.color.eyes"),
+            context.assets().color("pacman.color.palate")
         );
         meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(drawModePy);
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
@@ -95,8 +95,8 @@ public class PacMan3D extends AbstractPac3D {
 
         jaw = PacModel3D.createPacSkull(
             model3D, size,
-            context.theme().color("pacman.color.head"),
-            context.theme().color("pacman.color.palate"));
+            context.assets().color("pacman.color.head"),
+            context.assets().color("pacman.color.palate"));
         meshViewById(jaw, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
         meshViewById(jaw, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 

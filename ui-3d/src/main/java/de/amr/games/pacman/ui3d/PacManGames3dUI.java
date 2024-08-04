@@ -58,15 +58,15 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
         ResourceManager rm = () -> PacManGames3dUI.class;
 
-        theme.set("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
-        theme.set("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
-        theme.set("model3D.pellet", new Model3D(rm.url("model3D/fruit.obj")));
+        assets.set("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
+        assets.set("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
+        assets.set("model3D.pellet", new Model3D(rm.url("model3D/fruit.obj")));
 
         PY_3D_WALLPAPER_DAY.set(rm.loadImage("graphics/sea-wallpaper.jpg"));
         PY_3D_WALLPAPER_NIGHT.set(rm.loadImage("graphics/sea-wallpaper-night.jpg"));
 
         Map<String, PhongMaterial> texturesByName = new LinkedHashMap<>();
-        theme.set("floorTextures", texturesByName);
+        assets.set("floorTextures", texturesByName);
         List.of("Carpet", "Rubber", "Wood").forEach(name -> {
             var texture = new PhongMaterial();
             texture.setBumpMap(rm.loadImage("graphics/textures/%s-bump.jpg".formatted(name.toLowerCase())));
@@ -75,43 +75,43 @@ public class PacManGames3dUI extends PacManGames2dUI {
             texturesByName.put(name, texture);
         });
 
-        theme.set("ghost.0.color.normal.dress",      theme.color("palette.red"));
-        theme.set("ghost.0.color.normal.eyeballs",   theme.color("palette.pale"));
-        theme.set("ghost.0.color.normal.pupils",     theme.color("palette.blue"));
+        assets.set("ghost.0.color.normal.dress",      assets.color("palette.red"));
+        assets.set("ghost.0.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.set("ghost.0.color.normal.pupils",     assets.color("palette.blue"));
 
-        theme.set("ghost.1.color.normal.dress",      theme.color("palette.pink"));
-        theme.set("ghost.1.color.normal.eyeballs",   theme.color("palette.pale"));
-        theme.set("ghost.1.color.normal.pupils",     theme.color("palette.blue"));
+        assets.set("ghost.1.color.normal.dress",      assets.color("palette.pink"));
+        assets.set("ghost.1.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.set("ghost.1.color.normal.pupils",     assets.color("palette.blue"));
 
-        theme.set("ghost.2.color.normal.dress",      theme.color("palette.cyan"));
-        theme.set("ghost.2.color.normal.eyeballs",   theme.color("palette.pale"));
-        theme.set("ghost.2.color.normal.pupils",     theme.color("palette.blue"));
+        assets.set("ghost.2.color.normal.dress",      assets.color("palette.cyan"));
+        assets.set("ghost.2.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.set("ghost.2.color.normal.pupils",     assets.color("palette.blue"));
 
-        theme.set("ghost.3.color.normal.dress",      theme.color("palette.orange"));
-        theme.set("ghost.3.color.normal.eyeballs",   theme.color("palette.pale"));
-        theme.set("ghost.3.color.normal.pupils",     theme.color("palette.blue"));
+        assets.set("ghost.3.color.normal.dress",      assets.color("palette.orange"));
+        assets.set("ghost.3.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.set("ghost.3.color.normal.pupils",     assets.color("palette.blue"));
 
-        theme.set("ghost.color.frightened.dress",    theme.color("palette.blue"));
-        theme.set("ghost.color.frightened.eyeballs", theme.color("palette.rose"));
-        theme.set("ghost.color.frightened.pupils",   theme.color("palette.rose"));
+        assets.set("ghost.color.frightened.dress",    assets.color("palette.blue"));
+        assets.set("ghost.color.frightened.eyeballs", assets.color("palette.rose"));
+        assets.set("ghost.color.frightened.pupils",   assets.color("palette.rose"));
 
-        theme.set("ghost.color.flashing.dress",      theme.color("palette.pale"));
-        theme.set("ghost.color.flashing.eyeballs",   theme.color("palette.rose"));
-        theme.set("ghost.color.flashing.pupils",     theme.color("palette.red"));
+        assets.set("ghost.color.flashing.dress",      assets.color("palette.pale"));
+        assets.set("ghost.color.flashing.eyeballs",   assets.color("palette.rose"));
+        assets.set("ghost.color.flashing.pupils",     assets.color("palette.red"));
 
-        theme.set("ms_pacman.color.head",            Color.rgb(255, 255, 0));
-        theme.set("ms_pacman.color.eyes",            Color.rgb(33, 33, 33));
-        theme.set("ms_pacman.color.palate",          Color.rgb(191, 79, 61));
-        theme.set("ms_pacman.color.boobs",           Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
-        theme.set("ms_pacman.color.hairbow",         Color.rgb(255, 0, 0));
-        theme.set("ms_pacman.color.hairbow.pearls",  Color.rgb(33, 33, 255));
+        assets.set("ms_pacman.color.head",            Color.rgb(255, 255, 0));
+        assets.set("ms_pacman.color.eyes",            Color.rgb(33, 33, 33));
+        assets.set("ms_pacman.color.palate",          Color.rgb(191, 79, 61));
+        assets.set("ms_pacman.color.boobs",           Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
+        assets.set("ms_pacman.color.hairbow",         Color.rgb(255, 0, 0));
+        assets.set("ms_pacman.color.hairbow.pearls",  Color.rgb(33, 33, 255));
 
-        theme.set("pacman.color.head",               Color.rgb(255, 255, 0));
-        theme.set("pacman.color.eyes",               Color.rgb(33, 33, 33));
-        theme.set("pacman.color.palate",             Color.web("#c9898a"));
+        assets.set("pacman.color.head",               Color.rgb(255, 255, 0));
+        assets.set("pacman.color.eyes",               Color.rgb(33, 33, 33));
+        assets.set("pacman.color.palate",             Color.web("#c9898a"));
 
         if (log) {
-            Logger.info("Assets loaded: {}", theme.summary(List.of(
+            Logger.info("Assets loaded: {}", assets.summary(List.of(
                 new Pair<>(Model3D.class,"3D models"),
                 new Pair<>(Image.class, "images"),
                 new Pair<>(Font.class, "fonts"),

@@ -99,7 +99,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
     @Override
     public void init() {
         context.setScoreVisible(true);
-        scores3D.fontPy.set(context.theme().font("font.arcade", 8));
+        scores3D.fontPy.set(context.assets().font("font.arcade", 8));
         perspectivePy.bind(PY_3D_PERSPECTIVE);
         pickerGameOver = Picker.fromBundle(context.bundles().getLast(), "game.over");
         pickerLevelComplete = Picker.fromBundle(context.bundles().getLast(), "level.complete");

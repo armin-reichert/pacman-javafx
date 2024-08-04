@@ -102,13 +102,13 @@ public class PacManIntroScene extends GameScene2D {
 
         int tx = intro.leftTileX;
         if (intro.titleVisible) {
-            spriteRenderer.drawText(g, "CHARACTER / NICKNAME", context.theme().color("palette.pale"), font, t(tx + 3), t(6));
+            spriteRenderer.drawText(g, "CHARACTER / NICKNAME", context.assets().color("palette.pale"), font, t(tx + 3), t(6));
         }
         Color[] ghostColors = {
-            context.theme().color("palette.red"),
-            context.theme().color("palette.pink"),
-            context.theme().color("palette.cyan"),
-            context.theme().color("palette.orange"),
+            context.assets().color("palette.red"),
+            context.assets().color("palette.pink"),
+            context.assets().color("palette.cyan"),
+            context.assets().color("palette.orange"),
         };
         for (byte id = 0; id < 4; ++id) {
             var ghostInfo = intro.ghostInfo[id];
@@ -155,7 +155,7 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     private void drawPoints() {
-        var color = context.theme().color("palette.pale");
+        var color = context.assets().color("palette.pale");
         var font8 = sceneFont(8);
         var font6 = sceneFont(6);
         int tx = intro.leftTileX + 6;

@@ -35,10 +35,10 @@ public class Dashboard extends VBox {
         infoBoxes.add(index, infoBox);
         getChildren().add(index, infoBox);
         infoBox.setText(title);
-        infoBox.setMinLabelWidth(context.theme().get("infobox.min_label_width"));
-        infoBox.setTextColor(context.theme().get("infobox.text_color"));
-        infoBox.setTextFont(context.theme().get("infobox.text_font"));
-        infoBox.setLabelFont(context.theme().get("infobox.label_font"));
+        infoBox.setMinLabelWidth(context.assets().get("infobox.min_label_width"));
+        infoBox.setTextColor(context.assets().get("infobox.text_color"));
+        infoBox.setTextFont(context.assets().get("infobox.text_font"));
+        infoBox.setLabelFont(context.assets().get("infobox.label_font"));
         infoBox.init(context);
     }
 

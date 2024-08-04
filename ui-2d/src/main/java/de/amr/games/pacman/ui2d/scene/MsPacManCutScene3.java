@@ -59,8 +59,8 @@ public class MsPacManCutScene3 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         spriteRenderer.drawClapperBoard(g,
-            context.theme().font("font.arcade", s(8)),
-            context.theme().color("palette.pale"),
+            context.assets().font("font.arcade", s(8)),
+            context.assets().color("palette.pale"),
             clapAnimation, t(3), t(10));
         spriteRenderer.drawPac(g, intermission.msPacMan);
         spriteRenderer.drawPac(g, intermission.pacMan);

@@ -101,8 +101,8 @@ public class GamePage implements Page {
     private void createCanvasLayer() {
         canvasPane.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
         canvasPane.setMinScaling(0.75);
-        canvasPane.setBackground(context.theme().background("wallpaper.background"));
-        canvasPane.decoratedCanvas().setBorderColor(context.theme().color("palette.pale"));
+        canvasPane.setBackground(context.assets().background("wallpaper.background"));
+        canvasPane.decoratedCanvas().setBorderColor(context.assets().color("palette.pale"));
         canvasPane.decoratedCanvas().decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
     }
 
@@ -326,9 +326,9 @@ public class GamePage implements Page {
     private void showHelp() {
         if (isCurrentGameScene2D()) {
             var bgColor = context.game().variant() == GameVariant.MS_PACMAN
-                ? context.theme().color("palette.red")
-                : context.theme().color("palette.blue");
-            var font = context.theme().font("font.monospaced", Math.max(6, 14 * canvasPane.scaling()));
+                ? context.assets().color("palette.red")
+                : context.assets().color("palette.blue");
+            var font = context.assets().font("font.monospaced", Math.max(6, 14 * canvasPane.scaling()));
             var helpPane = HelpInfo.build(context).createPane(Ufx.opaqueColor(bgColor, 0.8), font);
             helpPopUp.setTranslateX(10 * canvasPane.scaling());
             helpPopUp.setTranslateY(30 * canvasPane.scaling());

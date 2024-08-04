@@ -11,8 +11,8 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
+import de.amr.games.pacman.ui2d.util.AssetMap;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
-import de.amr.games.pacman.ui2d.util.Theme;
 import javafx.beans.property.ObjectProperty;
 
 import java.util.List;
@@ -52,7 +52,7 @@ public interface GameContext {
 
     // Resources
 
-    Theme theme();
+    AssetMap assets();
 
     GameSpriteSheet spriteSheet(GameVariant variant);
 

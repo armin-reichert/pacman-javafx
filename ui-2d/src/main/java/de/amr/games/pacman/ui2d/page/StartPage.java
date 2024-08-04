@@ -92,8 +92,8 @@ public class StartPage implements Page {
 
     private Node createPlayButton(String buttonText) {
         var text = new Text(buttonText);
-        text.setFill(context.theme().color("startpage.button.color"));
-        text.setFont(context.theme().font("startpage.button.font"));
+        text.setFill(context.assets().color("startpage.button.color"));
+        text.setFont(context.assets().font("startpage.button.font"));
 
         var shadow = new DropShadow();
         shadow.setOffsetY(3.0f);
@@ -104,13 +104,13 @@ public class StartPage implements Page {
         pane.setMaxSize(200, 100);
         pane.setPadding(new Insets(10));
         pane.setCursor(Cursor.HAND);
-        pane.setBackground(coloredRoundedBackground(context.theme().color("startpage.button.bgColor"), 20));
+        pane.setBackground(coloredRoundedBackground(context.assets().color("startpage.button.bgColor"), 20));
 
         return pane;
     }
 
     private void setMsPacManFlyerFrontPage(boolean frontPage) {
-        Image flyer = context.theme().image("ms_pacman.startpage.image" + (frontPage? 1 : 2));
+        Image flyer = context.assets().image("ms_pacman.startpage.image" + (frontPage? 1 : 2));
         var bg = new Background(new BackgroundImage(flyer,
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
             BackgroundPosition.CENTER, FIT_HEIGHT));
@@ -119,7 +119,7 @@ public class StartPage implements Page {
     }
 
     private void setPacManFlyerFrontPage(boolean frontPage) {
-        Image flyer = context.theme().image("pacman.startpage.image" + (frontPage? 1 : 2));
+        Image flyer = context.assets().image("pacman.startpage.image" + (frontPage? 1 : 2));
         var bg = new Background(new BackgroundImage(flyer,
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
             BackgroundPosition.CENTER, FIT_HEIGHT));
@@ -132,7 +132,7 @@ public class StartPage implements Page {
         if (variant != null && context != null) {
             switch (variant) {
                 case MS_PACMAN -> {
-                    root.setBackground(context.theme().get("wallpaper.background"));
+                    root.setBackground(context.assets().get("wallpaper.background"));
                     setMsPacManFlyerFrontPage(true);
                     layout.setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
@@ -141,7 +141,7 @@ public class StartPage implements Page {
                     });
                 }
                 case PACMAN -> {
-                    root.setBackground(context.theme().get("wallpaper.background"));
+                    root.setBackground(context.assets().get("wallpaper.background"));
                     setPacManFlyerFrontPage(true);
                     layout.setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
@@ -151,7 +151,7 @@ public class StartPage implements Page {
                 }
                 case PACMAN_XXL -> {
                     root.setBackground(Ufx.coloredBackground(Color.BLACK));
-                    Image bgImage = context.theme().image("pacman_xxl.startpage.image");
+                    Image bgImage = context.assets().image("pacman_xxl.startpage.image");
                     var bg = new Background(new BackgroundImage(bgImage,
                         BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                         BackgroundPosition.CENTER, FILL));

@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 /**
  * @author Armin Reichert
  */
-public class Theme {
+public class AssetMap {
 
     private final Map<String, Object> map = new HashMap<>();
 
@@ -56,7 +56,7 @@ public class Theme {
      * Generic getter. Example usage:
      *
      * <pre>
-     * AnyType value = theme.get("key.for.value");
+     * AnyType value = assets.get("key.for.value");
      * </pre>
      *
      * @param <T>  expected return type
@@ -101,7 +101,7 @@ public class Theme {
     public AudioClip audioClip(String key) {
         AudioClip clip = get(key);
         if (clip == null) {
-            Logger.error("No audio clip with key {} found in theme", key);
+            Logger.error("No audio clip with key {} found in assets", key);
         }
         return clip;
     }

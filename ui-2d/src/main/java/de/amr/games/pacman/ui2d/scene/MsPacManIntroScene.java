@@ -83,31 +83,31 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        var theme = context.theme();
+        var assets = context.assets();
         var font8 = sceneFont(8);
         var tx = intro.titlePosition.x();
         var ty = intro.titlePosition.y();
         var y0 = intro.stopY;
         drawMarquee();
-        spriteRenderer.drawText(g, "\"MS PAC-MAN\"", theme.color("palette.orange"), font8, tx, ty);
+        spriteRenderer.drawText(g, "\"MS PAC-MAN\"", assets.color("palette.orange"), font8, tx, ty);
         if (intro.state() == State.GHOSTS_MARCHING_IN) {
             var ghost = intro.ghosts[intro.ghostIndex];
             var color = switch (ghost.id()) {
-                case GameModel.RED_GHOST -> theme.color("palette.red");
-                case GameModel.PINK_GHOST -> theme.color("palette.pink");
-                case GameModel.CYAN_GHOST -> theme.color("palette.cyan");
-                case GameModel.ORANGE_GHOST -> theme.color("palette.orange");
+                case GameModel.RED_GHOST -> assets.color("palette.red");
+                case GameModel.PINK_GHOST -> assets.color("palette.pink");
+                case GameModel.CYAN_GHOST -> assets.color("palette.cyan");
+                case GameModel.ORANGE_GHOST -> assets.color("palette.orange");
                 default -> throw new IllegalStateException("Unexpected value: " + ghost.id());
             };
             if (ghost.id() == GameModel.RED_GHOST) {
-                spriteRenderer.drawText(g, "WITH", theme.color("palette.pale"), font8, tx, y0 + t(3));
+                spriteRenderer.drawText(g, "WITH", assets.color("palette.pale"), font8, tx, y0 + t(3));
             }
             var text = ghost.name().toUpperCase();
             var dx = text.length() < 4 ? t(1) : 0;
             spriteRenderer.drawText(g, text, color, font8, tx + t(3) + dx, y0 + t(6));
         } else if (intro.state() == State.MS_PACMAN_MARCHING_IN || intro.state() == State.READY_TO_PLAY) {
-            spriteRenderer.drawText(g, "STARRING", theme.color("palette.pale"), font8, tx, y0 + t(3));
-            spriteRenderer.drawText(g, "MS PAC-MAN", theme.color("palette.yellow"), font8, tx, y0 + t(6));
+            spriteRenderer.drawText(g, "STARRING", assets.color("palette.pale"), font8, tx, y0 + t(3));
+            spriteRenderer.drawText(g, "MS PAC-MAN", assets.color("palette.yellow"), font8, tx, y0 + t(6));
         }
         for (var ghost : intro.ghosts) {
             spriteRenderer.drawGhost(g, ghost);
@@ -135,7 +135,7 @@ public class MsPacManIntroScene extends GameScene2D {
     }
 
     private void drawLight(double x, double y, boolean on) {
-        Color onColor = context.theme().color("palette.pale"), offColor = context.theme().color("palette.red");
+        Color onColor = context.assets().color("palette.pale"), offColor = context.assets().color("palette.red");
         double bulbSize = s(2);
         g.setFill(on ? onColor : offColor);
         g.fillRect(s(x), s(y), bulbSize, bulbSize);

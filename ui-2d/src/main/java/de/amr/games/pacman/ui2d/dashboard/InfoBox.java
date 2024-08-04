@@ -193,7 +193,7 @@ public abstract class InfoBox extends TitledPane {
 
     protected Slider addSliderRow(String labelText, int min, int max, double initialValue) {
         var slider = new Slider(min, max, initialValue);
-        slider.setMinWidth(context.theme().<Integer>get("infobox.min_col_width"));
+        slider.setMinWidth(context.assets().<Integer>get("infobox.min_col_width"));
         slider.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             if (e.getClickCount() == 2) {
                 slider.setValue(initialValue);

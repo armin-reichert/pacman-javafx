@@ -83,19 +83,19 @@ public class MsPacMan3D extends AbstractPac3D {
 
         Group body = PacModel3D.createPacShape(
             model3D, size,
-            context.theme().color("ms_pacman.color.head"),
-            context.theme().color("ms_pacman.color.eyes"),
-            context.theme().color("ms_pacman.color.palate"));
+            context.assets().color("ms_pacman.color.head"),
+            context.assets().color("ms_pacman.color.eyes"),
+            context.assets().color("ms_pacman.color.palate"));
 
         Group femaleParts = PacModel3D.createFemaleParts(size,
-            context.theme().color("ms_pacman.color.hairbow"),
-            context.theme().color("ms_pacman.color.hairbow.pearls"),
-            context.theme().color("ms_pacman.color.boobs"));
+            context.assets().color("ms_pacman.color.hairbow"),
+            context.assets().color("ms_pacman.color.hairbow.pearls"),
+            context.assets().color("ms_pacman.color.boobs"));
 
         jaw = PacModel3D.createPacSkull(
             model3D, size,
-            context.theme().color("pacman.color.head"),
-            context.theme().color("pacman.color.palate"));
+            context.assets().color("pacman.color.head"),
+            context.assets().color("pacman.color.palate"));
 
         bodyGroup.getChildren().addAll(body, femaleParts, jaw);
         bodyGroup.getTransforms().add(rotation);

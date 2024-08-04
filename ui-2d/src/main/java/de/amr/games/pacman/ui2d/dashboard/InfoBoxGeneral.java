@@ -41,9 +41,9 @@ public class InfoBoxGeneral extends InfoBox {
         addTextRow("Java Version",   Runtime.version().toString());
         addTextRow("JavaFX Version", System.getProperty("javafx.runtime.version"));
 
-        iconPlay = new ImageView(context.theme().image("icon.play"));
-        iconStop = new ImageView(context.theme().image("icon.stop"));
-        iconStep = new ImageView(context.theme().image("icon.step"));
+        iconPlay = new ImageView(context.assets().image("icon.play"));
+        iconStop = new ImageView(context.assets().image("icon.stop"));
+        iconStep = new ImageView(context.assets().image("icon.step"));
 
         buttonsSimulation = addButtonListRow("Simulation", "Pause", "Step(s)");
 

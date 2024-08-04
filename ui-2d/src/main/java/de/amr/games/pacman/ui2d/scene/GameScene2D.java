@@ -64,7 +64,7 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected Font sceneFont(double size) {
-        return context.theme().font("font.arcade", s(size));
+        return context.assets().font("font.arcade", s(size));
     }
 
     @Override
@@ -90,7 +90,7 @@ public abstract class GameScene2D implements GameScene {
         }
         if (isCreditVisible()) {
             spriteRenderer.drawText(g, String.format("CREDIT %2d", context.gameController().credit()),
-                context.theme().color("palette.pale"), sceneFont(8), t(2), t(36) - 1);
+                context.assets().color("palette.pale"), sceneFont(8), t(2), t(36) - 1);
         }
         drawSceneContent();
         if (infoVisiblePy.get()) {
@@ -113,7 +113,7 @@ public abstract class GameScene2D implements GameScene {
     protected void drawScore(Score score, String title, double x, double y) {
         var pointsText = String.format("%02d", score.points());
         var font = sceneFont(TS);
-        var color = context.theme().color("palette.pale");
+        var color = context.assets().color("palette.pale");
         spriteRenderer.drawText(g, title, color, font, x, y);
         spriteRenderer.drawText(g, String.format("%7s", pointsText), color, font, x, y + TS + 1);
         if (score.points() != 0) {
@@ -135,13 +135,13 @@ public abstract class GameScene2D implements GameScene {
     }
 
     protected void drawMidwayCopyright(double x, double y) {
-        spriteRenderer.drawText(g, "© 1980 MIDWAY MFG.CO.", context.theme().color("palette.pink"), sceneFont(8), x, y);
+        spriteRenderer.drawText(g, "© 1980 MIDWAY MFG.CO.", context.assets().color("palette.pink"), sceneFont(8), x, y);
     }
 
     protected void drawMsPacManCopyright(double x, double y) {
-        Image logo = context.theme().get("ms_pacman.logo.midway");
+        Image logo = context.assets().get("ms_pacman.logo.midway");
         spriteRenderer.drawImageScaled(g, logo, x, y + 2, t(4) - 2, t(4));
-        g.setFill(context.theme().color("palette.red"));
+        g.setFill(context.assets().color("palette.red"));
         g.setFont(sceneFont(TS));
         g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2));
         g.fillText("MIDWAY MFG CO", s(x + TS * 7), s(y + TS * 2));

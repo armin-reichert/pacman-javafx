@@ -16,7 +16,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
-import de.amr.games.pacman.ui2d.util.Theme;
+import de.amr.games.pacman.ui2d.util.AssetMap;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
@@ -99,14 +99,14 @@ public class GameLevel3D {
 
         GameModel game  = context.game();
         GameWorld world = game.world();
-        Theme theme     = context.theme();
+        AssetMap assets = context.assets();
 
         pac3D = game.variant() == GameVariant.MS_PACMAN
-            ? new MsPacMan3D(context, game.pac(), PAC_SIZE, theme.get("model3D.pacman"))
-            : new PacMan3D(context, game.pac(), PAC_SIZE, theme.get("model3D.pacman"));
+            ? new MsPacMan3D(context, game.pac(), PAC_SIZE, assets.get("model3D.pacman"))
+            : new PacMan3D(context, game.pac(), PAC_SIZE, assets.get("model3D.pacman"));
         pac3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
-        ghosts3D = game.ghosts().map(ghost -> new MutableGhost3D(theme.get("model3D.ghost"), theme, ghost, GHOST_SIZE)).toList();
+        ghosts3D = game.ghosts().map(ghost -> new MutableGhost3D(assets.get("model3D.ghost"), assets, ghost, GHOST_SIZE)).toList();
         ghosts3D.forEach(ghost3D -> ghost3D.drawModePy.bind(PY_3D_DRAW_MODE));
 
         livesCounter3D = createLivesCounter3D();
@@ -198,8 +198,8 @@ public class GameLevel3D {
 
     private PointLight createPacLight(Pac3D pac3D) {
         Color lightColor = context.game().variant() == GameVariant.MS_PACMAN
-            ? context.theme().color("ms_pacman.color.head").desaturate()
-            : context.theme().color("pacman.color.head").desaturate();
+            ? context.assets().color("ms_pacman.color.head").desaturate()
+            : context.assets().color("pacman.color.head").desaturate();
 
         var light = new PointLight();
         light.setColor(lightColor);
@@ -223,7 +223,7 @@ public class GameLevel3D {
             () -> {
                 Color floorColor = floorColorPy.get();
                 String textureName = floorTextureNamePy.get();
-                Map<String, PhongMaterial> textures = context.theme().get("floorTextures");
+                Map<String, PhongMaterial> textures = context.assets().get("floorTextures");
                 return NO_TEXTURE.equals(textureName) || !textures.containsKey(textureName)
                     ? coloredMaterial(floorColor)
                     : textures.get(textureName);
@@ -238,7 +238,7 @@ public class GameLevel3D {
         TileMap foodMap = world.map().food();
         Color foodColor = getColorFromMap(foodMap, GameWorld.PROPERTY_COLOR_FOOD, Color.WHITE);
         Material foodMaterial = coloredMaterial(foodColor);
-        Model3D pelletModel3D = context.theme().get("model3D.pellet");
+        Model3D pelletModel3D = context.assets().get("model3D.pellet");
         foodMap.tiles().filter(world::hasFoodAt).forEach(tile -> {
             Point3D position = new Point3D(tile.x() * TS + HTS, tile.y() * TS + HTS, -6);
             if (world.isEnergizerPosition(tile)) {
@@ -266,25 +266,25 @@ public class GameLevel3D {
     }
 
     private Node createLivesCounterShape(GameVariant variant) {
-        Theme theme = context.theme();
+        AssetMap assets = context.assets();
         return switch (variant) {
             case MS_PACMAN -> new Group(
                 PacModel3D.createPacShape(
-                    theme.get("model3D.pacman"), LIVE_SHAPE_SIZE,
-                    theme.color("ms_pacman.color.head"),
-                    theme.color("ms_pacman.color.eyes"),
-                    theme.color("ms_pacman.color.palate")),
+                    assets.get("model3D.pacman"), LIVE_SHAPE_SIZE,
+                    assets.color("ms_pacman.color.head"),
+                    assets.color("ms_pacman.color.eyes"),
+                    assets.color("ms_pacman.color.palate")),
                 PacModel3D.createFemaleParts(LIVE_SHAPE_SIZE,
-                    theme.color("ms_pacman.color.hairbow"),
-                    theme.color("ms_pacman.color.hairbow.pearls"),
-                    theme.color("ms_pacman.color.boobs"))
+                    assets.color("ms_pacman.color.hairbow"),
+                    assets.color("ms_pacman.color.hairbow.pearls"),
+                    assets.color("ms_pacman.color.boobs"))
             );
             case PACMAN, PACMAN_XXL ->
                  PacModel3D.createPacShape(
-                    theme.get("model3D.pacman"), LIVE_SHAPE_SIZE,
-                    theme.color("pacman.color.head"),
-                    theme.color("pacman.color.eyes"),
-                    theme.color("pacman.color.palate")
+                    assets.get("model3D.pacman"), LIVE_SHAPE_SIZE,
+                    assets.color("pacman.color.head"),
+                    assets.color("pacman.color.eyes"),
+                    assets.color("pacman.color.palate")
                 );
         };
     }
@@ -348,7 +348,7 @@ public class GameLevel3D {
     }
 
     private void createMessage3D() {
-        message3D = new Message3D("", context.theme().font("font.arcade", 6), Color.YELLOW, Color.WHITE);
+        message3D = new Message3D("", context.assets().font("font.arcade", 6), Color.YELLOW, Color.WHITE);
         message3D.setRotation(Rotate.X_AXIS, 90);
         message3D.setVisible(false);
     }

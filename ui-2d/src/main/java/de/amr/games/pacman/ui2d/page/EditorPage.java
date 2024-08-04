@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.mapeditor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GameKeys;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;

@@ -57,7 +57,7 @@ public class BootScene extends GameScene2D {
 
     private void paintRandomHexCodes() {
         clearCanvas();
-        g.setFill(context.theme().color("palette.pale"));
+        g.setFill(context.assets().color("palette.pale"));
         g.setFont(sceneFont(8));
         for (int row = 0; row < GameModel.ARCADE_MAP_TILES_Y; ++row) {
             for (int col = 0; col < GameModel.ARCADE_MAP_TILES_X; ++col) {
@@ -96,7 +96,7 @@ public class BootScene extends GameScene2D {
         double width = t(28), height = t(36), raster = 16;
         var numRows = GameModel.ARCADE_MAP_TILES_Y / 2;
         var numCols = GameModel.ARCADE_MAP_TILES_X / 2;
-        g.setStroke(context.theme().color("palette.pale"));
+        g.setStroke(context.assets().color("palette.pale"));
         g.setLineWidth(s(2.0));
         for (int row = 0; row <= numRows; ++row) {
             g.setLineWidth(row == 0 || row == numRows ? s(4.0) : s(2.0));
