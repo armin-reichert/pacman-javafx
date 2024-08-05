@@ -20,6 +20,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
+
 import static de.amr.games.pacman.ui2d.GameParameters.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 import static de.amr.games.pacman.ui2d.util.Ufx.wallpaperBackground;
@@ -48,33 +50,40 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void onContextMenuRequested(ContextMenuEvent event) {
-        if (contextMenu != null) {
+        if (contextMenu == null) {
+            contextMenu = new ContextMenu();
+        } else {
             contextMenu.hide();
         }
+
         if (!context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE)
             && !context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE_3D)) {
             return;
         }
-        boolean isPlayScene3D = context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE_3D);
-        var actionHandler = context.actionHandler();
-        contextMenu = new ContextMenu();
 
-        contextMenu.getItems().add(menuTitleItem(context.tt("scene_display")));
-        String titleKey = isPlayScene3D ? "use_2D_scene" : "use_3D_scene";
-        var item = new MenuItem(context.tt(titleKey));
-        item.setOnAction(e -> actionHandler.toggle2D3D());
-        contextMenu.getItems().add(item);
+        var items = new ArrayList<MenuItem>();
 
-        if (isPlayScene3D) {
+        items.add(menuTitleItem(context.tt("scene_display")));
+
+        // Toggle 2D-3D
+        boolean is3D = context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE_3D);
+        var item = new MenuItem(context.tt(is3D ? "use_2D_scene" : "use_3D_scene"));
+        item.setOnAction(e -> context.actionHandler().toggle2D3D());
+        items.add(item);
+
+        if (is3D) {
+            // Toggle PiP display
             var miPictureInPicture = new CheckMenuItem(context.tt("pip"));
             miPictureInPicture.selectedProperty().bindBidirectional(PY_PIP_ON);
-            contextMenu.getItems().add(miPictureInPicture);
+            items.add(miPictureInPicture);
 
-            contextMenu.getItems().add(menuTitleItem(context.tt("select_perspective")));
-            var radioGroup = new ToggleGroup();
+            items.add(menuTitleItem(context.tt("select_perspective")));
+
+            // Camera perspective selection
+            var perspectivesGroup = new ToggleGroup();
             for (var perspective : Perspective.values()) {
                 var miPerspective = new RadioMenuItem(context.tt(perspective.name()));
-                contextMenu.getItems().add(miPerspective);
+                miPerspective.setToggleGroup(perspectivesGroup);
                 // keep global property in sync with selection
                 miPerspective.selectedProperty().addListener((py, ov, selected) -> {
                     if (selected) {
@@ -84,32 +93,34 @@ public class GamePage3D extends GamePage {
                 // keep selection in sync with global property value
                 PY_3D_PERSPECTIVE.addListener((py, ov, newPerspective) -> miPerspective.setSelected(newPerspective == perspective));
                 miPerspective.setSelected(perspective == PY_3D_PERSPECTIVE.get()); // == is allowed for enum comparison
-                miPerspective.setToggleGroup(radioGroup);
+                items.add(miPerspective);
             }
         }
 
         // Common items
-        contextMenu.getItems().add(menuTitleItem(context.tt("pacman")));
+        items.add(menuTitleItem(context.tt("pacman")));
 
         var miAutopilot = new CheckMenuItem(context.tt("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
-        contextMenu.getItems().add(miAutopilot);
+        items.add(miAutopilot);
 
         var miImmunity = new CheckMenuItem(context.tt("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
-        contextMenu.getItems().add(miImmunity);
+        items.add(miImmunity);
 
-        contextMenu.getItems().add(new SeparatorMenuItem());
+        items.add(new SeparatorMenuItem());
+
         if (context.game().variant() == GameVariant.PACMAN_XXL) {
             var miOpenMapEditor = new MenuItem(context.tt("open_editor"));
-            contextMenu.getItems().add(miOpenMapEditor);
             miOpenMapEditor.setOnAction(e -> context.actionHandler().openMapEditor());
+            items.add(miOpenMapEditor);
         }
 
         var miQuit = new MenuItem(context.tt("quit"));
         miQuit.setOnAction(e -> quit());
-        contextMenu.getItems().add(miQuit);
+        items.add(miQuit);
 
+        contextMenu.getItems().setAll(items);
         contextMenu.requestFocus();
         contextMenu.show(rootPane(), event.getScreenX(), event.getScreenY());
     }
