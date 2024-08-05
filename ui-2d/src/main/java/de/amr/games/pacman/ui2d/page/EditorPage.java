@@ -34,11 +34,11 @@ public class EditorPage implements Page {
     public EditorPage(Window window, GameContext context) {
         this.context = checkNotNull(context);
         editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
+        editor.createUI(window);
 
         pane = new BorderPane();
         pane.setCenter(editor.getContentPane());
         pane.setTop(editor.getMenuBar());
-        editor.createUI(window);
 
         var miQuitEditor = new MenuItem(context.tt("back_to_game"));
         miQuitEditor.setOnAction(e -> closeAction.accept(editor));
