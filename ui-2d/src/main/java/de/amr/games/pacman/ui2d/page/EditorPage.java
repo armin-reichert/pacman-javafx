@@ -27,12 +27,13 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 public class EditorPage implements Page {
 
     private final TileMapEditor editor;
-    private final GameContext context;
     private final BorderPane pane;
     private Consumer<TileMapEditor> closeAction = editor -> {};
 
     public EditorPage(Window window, GameContext context) {
-        this.context = checkNotNull(context);
+        checkNotNull(window);
+        checkNotNull(context);
+
         editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
         editor.createUI(window);
 
