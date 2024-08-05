@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.util;
 
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import org.tinylog.Logger;
@@ -34,6 +35,10 @@ public class Keyboard {
      */
     public static boolean pressed(KeyInput keyInput) {
         return Arrays.stream(keyInput.getCombinations()).anyMatch(matchingCombinations::contains);
+    }
+
+    public static boolean pressed(KeyCode code) {
+        return pressed(KeyInput.of(KeyInput.key(code)));
     }
 
     public static void register(KeyInput input) {

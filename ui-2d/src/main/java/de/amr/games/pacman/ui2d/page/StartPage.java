@@ -3,6 +3,8 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameKeys;
+import de.amr.games.pacman.ui2d.util.KeyInput;
+import de.amr.games.pacman.ui2d.util.Keyboard;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -13,6 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -118,6 +121,10 @@ public class StartPage implements Page {
         msPacManFlyerFrontPage = frontPage;
     }
 
+    private void toggleMsPacManFlyer() {
+        setMsPacManFlyerFrontPage(!msPacManFlyerFrontPage);
+    }
+
     private void setPacManFlyerFrontPage(boolean frontPage) {
         Image flyer = context.assets().image("pacman.startpage.image" + (frontPage? 1 : 2));
         var bg = new Background(new BackgroundImage(flyer,
@@ -125,6 +132,10 @@ public class StartPage implements Page {
             BackgroundPosition.CENTER, FIT_HEIGHT));
         layout.setBackground(bg);
         pacManFlyerFrontPage = frontPage;
+    }
+
+    private void togglePacManFlyer() {
+        setPacManFlyerFrontPage(!pacManFlyerFrontPage);
     }
 
     private void changeBackgroundImage() {
@@ -136,7 +147,7 @@ public class StartPage implements Page {
                     setMsPacManFlyerFrontPage(true);
                     layout.setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
-                            setMsPacManFlyerFrontPage(!msPacManFlyerFrontPage);
+                            toggleMsPacManFlyer();
                         }
                     });
                 }
@@ -145,7 +156,7 @@ public class StartPage implements Page {
                     setPacManFlyerFrontPage(true);
                     layout.setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
-                            setPacManFlyerFrontPage(!pacManFlyerFrontPage);
+                            togglePacManFlyer();
                         }
                     });
                 }
@@ -191,6 +202,12 @@ public class StartPage implements Page {
             context.actionHandler().selectNextGameVariant();
         } else if (GameKeys.PREV_VARIANT.pressed()) {
             context.actionHandler().selectPrevGameVariant();
+        } else if (Keyboard.pressed(KeyCode.DOWN) || Keyboard.pressed(KeyCode.UP)) {
+            if (context.game().variant() == GameVariant.MS_PACMAN) {
+                toggleMsPacManFlyer();
+            } else if (context.game().variant() == GameVariant.PACMAN) {
+                togglePacManFlyer();
+            }
         }
     }
 }
