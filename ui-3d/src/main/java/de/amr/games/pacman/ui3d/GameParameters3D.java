@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.ui2d.GameParameters;
 import javafx.beans.property.*;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
@@ -27,6 +26,4 @@ public interface GameParameters3D extends GameParameters {
     ObjectProperty<Perspective> PY_3D_PERSPECTIVE        = new SimpleObjectProperty<>(Perspective.FOLLOWING_PLAYER);
     DoubleProperty              PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(3.5);
     DoubleProperty              PY_3D_WALL_OPACITY       = new SimpleDoubleProperty(0.9);
-    ObjectProperty<Image>       PY_3D_WALLPAPER_DAY      = new SimpleObjectProperty<>();
-    ObjectProperty<Image>       PY_3D_WALLPAPER_NIGHT    = new SimpleObjectProperty<>();
 }

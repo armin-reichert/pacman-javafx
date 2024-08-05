@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.Stream;
 
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static de.amr.games.pacman.ui3d.GameParameters3D.*;
@@ -57,12 +58,12 @@ public class PacManGames3dUI extends PacManGames2dUI {
         assets.set("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
         assets.set("model3D.pellet", new Model3D(rm.url("model3D/fruit.obj")));
 
-        PY_3D_WALLPAPER_DAY.set(rm.loadImage("graphics/sea-wallpaper.jpg"));
-        PY_3D_WALLPAPER_NIGHT.set(rm.loadImage("graphics/sea-wallpaper-night.jpg"));
+        assets.set("wallpaper.day",   rm.loadImage("graphics/sea-wallpaper.jpg"));
+        assets.set("wallpaper.night", rm.loadImage("graphics/sea-wallpaper-night.jpg"));
 
         Map<String, PhongMaterial> texturesByName = new LinkedHashMap<>();
         assets.set("floorTextures", texturesByName);
-        List.of("Carpet", "Rubber", "Wood").forEach(name -> {
+        Stream.of("Carpet", "Rubber", "Wood").forEach(name -> {
             var texture = new PhongMaterial();
             texture.setBumpMap(rm.loadImage("graphics/textures/%s-bump.jpg".formatted(name.toLowerCase())));
             texture.setDiffuseMap(rm.loadImage("graphics/textures/%s-diffuse.jpg".formatted(name.toLowerCase())));
