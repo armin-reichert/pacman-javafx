@@ -50,11 +50,8 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void onContextMenuRequested(ContextMenuEvent event) {
-        if (contextMenu == null) {
-            contextMenu = new ContextMenu();
-        } else {
-            contextMenu.hide();
-        }
+        contextMenu.getItems().clear();
+        contextMenu.hide();
 
         if (!context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE)
             && !context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE_3D)) {
@@ -127,7 +124,7 @@ public class GamePage3D extends GamePage {
 
     @Override
     public void embedGameScene(GameScene gameScene) {
-        hideContextMenu();
+        contextMenu.hide();
         if (gameScene instanceof PlayScene3D) {
             stackPane.getChildren().set(0, gameScene.root());
         } else if (gameScene instanceof GameScene2D scene2D) {

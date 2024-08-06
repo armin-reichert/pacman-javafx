@@ -42,16 +42,14 @@ public class GamePage implements Page {
     protected final GameContext context;
     protected final Scene parentScene;
     protected final StackPane stackPane = new StackPane();
-
     protected final CanvasLayoutPane canvasPane = new CanvasLayoutPane();
-    protected final BorderPane       infoLayer    = new BorderPane(); // dashboard, picture-in-picture
-    protected final Pane             popupLayer   = new Pane(); // help, signature
-
+    protected final BorderPane infoLayer = new BorderPane(); // dashboard, picture-in-picture
+    protected final Pane popupLayer = new Pane(); // help, signature
     protected final FadingPane helpPopUp = new FadingPane();
     protected final Signature signature = new Signature();
+    protected final ContextMenu contextMenu = new ContextMenu();
     protected Dashboard dashboard;
     protected PictureInPictureView pip;
-    protected ContextMenu contextMenu;
 
     public GamePage(GameContext context, Scene parentScene) {
         this.context = checkNotNull(context);
@@ -146,7 +144,7 @@ public class GamePage implements Page {
     }
 
     public void embedGameScene(GameScene gameScene) {
-        hideContextMenu();
+        contextMenu.hide();
         if (gameScene instanceof GameScene2D gameScene2D) {
             embedGameScene2D(gameScene2D);
         } else {
@@ -200,19 +198,15 @@ public class GamePage implements Page {
 
     @Override
     public void onMouseClicked(MouseEvent e) {
-        if (contextMenu != null) {
-            contextMenu.hide(); //TODO is this the recommended way?
-        }
+        contextMenu.hide(); //TODO is this the recommended way?
     }
 
     public void onContextMenuRequested(ContextMenuEvent event) {
-        if (contextMenu != null) {
-            contextMenu.hide();
-        }
+        contextMenu.hide();
         if (!context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE)) {
             return;
         }
-        contextMenu = new ContextMenu();
+        contextMenu.getItems().clear();
         contextMenu.getItems().add(menuTitleItem(context.tt("pacman")));
 
         var miAutopilot = new CheckMenuItem(context.tt("autopilot"));
@@ -236,12 +230,6 @@ public class GamePage implements Page {
 
         contextMenu.requestFocus();
         contextMenu.show(rootPane(), event.getScreenX(), event.getScreenY());
-    }
-
-    public void hideContextMenu() {
-        if (contextMenu != null) {
-            contextMenu.hide();
-        }
     }
 
     protected MenuItem menuTitleItem(String titleText) {
