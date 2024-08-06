@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.ui2d.ActionHandler;
 import javafx.scene.Node;
 
 /**
@@ -17,9 +18,7 @@ public interface GameScene extends GameEventListener {
     /**
      * Called when the scene becomes the current one.
      */
-    default void init() {
-        // empty default
-    }
+    default void init() {}
 
     /**
      * Called when the scene needs to be updated.
@@ -29,9 +28,7 @@ public interface GameScene extends GameEventListener {
     /**
      * Called when the scene ends and gets replaced by another scene.
      */
-    default void end() {
-        // empty default
-    }
+    default void end() {}
 
     default void draw() {}
 
@@ -43,14 +40,10 @@ public interface GameScene extends GameEventListener {
     /**
      * Called when scene variants for 2D and 3D exist and variant changes between 2D and 3D.
      */
-    default void onSceneVariantSwitch(GameScene oldScene) {
-        // empty default
-    }
+    default void onSceneVariantSwitch(GameScene oldScene) {}
 
     /**
      * Handles keyboard input.
      */
-    default void handleKeyboardInput() {
-        // empty default
-    }
+    default void handleKeyboardInput(ActionHandler handler) {}
 }

@@ -1,5 +1,6 @@
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.ui2d.ActionHandler;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -13,7 +14,7 @@ public interface Page {
 
     Pane rootPane();
 
-    default void onSelected() {};
+    default void onSelected() {}
 
     default void setSize(double width, double height) {}
 
@@ -21,5 +22,5 @@ public interface Page {
 
     default void onMouseClicked(MouseEvent e) {}
 
-    default void handleKeyboardInput() {}
+    default void handleKeyboardInput(ActionHandler handler) {}
 }

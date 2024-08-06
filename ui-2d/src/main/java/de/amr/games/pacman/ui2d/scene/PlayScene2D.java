@@ -12,6 +12,7 @@ import de.amr.games.pacman.model.MsPacManGame;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameKeys;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -54,19 +55,17 @@ public class PlayScene2D extends GameScene2D implements PlaySceneSound {
     }
 
     @Override
-    public void handleKeyboardInput() {
-        if (GameKeys.ADD_CREDIT.pressed()) {
-            if (!context.gameController().hasCredit()) {
-                context.actionHandler().addCredit();
-            }
+    public void handleKeyboardInput(ActionHandler handler) {
+        if (GameKeys.ADD_CREDIT.pressed() && context.game().isDemoLevel()) {
+            handler.addCredit();
         } else if (GameKeys.CHEAT_EAT_ALL.pressed()) {
-            context.actionHandler().cheatEatAllPellets();
+            handler.cheatEatAllPellets();
         } else if (GameKeys.CHEAT_ADD_LIVES.pressed()) {
-            context.actionHandler().cheatAddLives();
+            handler.cheatAddLives();
         } else if (GameKeys.CHEAT_NEXT_LEVEL.pressed()) {
-            context.actionHandler().cheatEnterNextLevel();
+            handler.cheatEnterNextLevel();
         } else if (GameKeys.CHEAT_KILL_GHOSTS.pressed()) {
-            context.actionHandler().cheatKillAllEatableGhosts();
+            handler.cheatKillAllEatableGhosts();
         }
     }
 

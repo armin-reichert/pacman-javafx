@@ -167,7 +167,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             } else if (GameKeys.MUTE.pressed()) {
                 mute(!isMuted());
             } else {
-                currentPage.handleKeyboardInput();
+                currentPage.handleKeyboardInput(this);
             }
         });
         scene.setOnMouseClicked(e -> currentPage.onMouseClicked(e));

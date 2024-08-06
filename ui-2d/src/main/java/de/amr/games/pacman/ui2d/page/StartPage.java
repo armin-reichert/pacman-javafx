@@ -1,9 +1,9 @@
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameKeys;
-import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.ObjectProperty;
@@ -34,7 +34,7 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
  */
 public class StartPage implements Page {
 
-    static final char ARROW_LEFT = '\u2b98';
+    static final char ARROW_LEFT  = '\u2b98';
     static final char ARROW_RIGHT = '\u2b9a';
     static final BackgroundSize FIT_HEIGHT = new BackgroundSize(AUTO, 1, false, true, true, false);
     static final BackgroundSize FILL       = new BackgroundSize(AUTO, AUTO, false, false, true, true);
@@ -51,8 +51,8 @@ public class StartPage implements Page {
     private final BorderPane layout = new BorderPane();
     private final Node btnPlay;
 
-    private boolean msPacManFlyerFrontPage;
-    private boolean pacManFlyerFrontPage;
+    private boolean msPacManFlyerFrontPage = true;
+    private boolean pacManFlyerFrontPage = true;
 
     public StartPage(GameContext context) {
         this.context = checkNotNull(context);
@@ -195,13 +195,13 @@ public class StartPage implements Page {
     }
 
     @Override
-    public void handleKeyboardInput() {
+    public void handleKeyboardInput(ActionHandler handler) {
         if (GameKeys.ENTER_GAME_PAGE.pressed()) {
-            context.actionHandler().selectGamePage();
+            handler.selectGamePage();
         } else if (GameKeys.NEXT_VARIANT.pressed()) {
-            context.actionHandler().selectNextGameVariant();
+            handler.selectNextGameVariant();
         } else if (GameKeys.PREV_VARIANT.pressed()) {
-            context.actionHandler().selectPrevGameVariant();
+            handler.selectPrevGameVariant();
         } else if (Keyboard.pressed(KeyCode.DOWN) || Keyboard.pressed(KeyCode.UP)) {
             if (context.game().variant() == GameVariant.MS_PACMAN) {
                 toggleMsPacManFlyer();
