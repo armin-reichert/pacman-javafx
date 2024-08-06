@@ -310,6 +310,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             } else {
                 context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
             }
+            level3D.livesCounter3D().startAnimation();
         }
     }
 
