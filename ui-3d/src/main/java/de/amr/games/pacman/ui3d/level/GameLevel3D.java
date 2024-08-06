@@ -48,9 +48,9 @@ public class GameLevel3D {
 
     static final int   LIVES_COUNTER_MAX     = 5;
     static final float LIVE_SHAPE_SIZE       = 10;
-    static final float FLOOR_THICKNESS       = 0.4f;
+    static final float FLOOR_THICKNESS       = 0.5f;
     static final float OBSTACLE_HEIGHT       = 5.5f;
-    static final float OBSTACLE_COAT_HEIGHT  = 0.15f;
+    static final float OBSTACLE_COAT_HEIGHT  = 0.1f;
     static final float OBSTACLE_THICKNESS    = 0.5f;
     static final float BORDER_WALL_HEIGHT    = 6.0f;
     static final float BORDER_WALL_THICKNESS = 2.5f;

@@ -258,9 +258,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
     }
 
     private void onEnterStateLevelTest() {
-        if (level3D == null) {
-            replaceGameLevel3D(true);
-        }
+        replaceGameLevel3D(true);
         level3D.pac3D().init();
         level3D.ghosts3D().forEach(ghost3D -> ghost3D.init(context));
         showLevelTestMessage();
@@ -345,6 +343,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         if (context.game().levelNumber() == 1 || context.gameState() == GameState.LEVEL_TEST) {
             if (context.gameState() == GameState.LEVEL_TEST) {
                 showLevelTestMessage();
+                replaceGameLevel3D(false);
             } else if (!context.game().isDemoLevel()){
                 showReadyMessage();
             }
