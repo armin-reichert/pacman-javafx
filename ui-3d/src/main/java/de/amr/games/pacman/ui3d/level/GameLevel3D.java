@@ -50,10 +50,10 @@ public class GameLevel3D {
     static final float LIVE_SHAPE_SIZE       = 10;
     static final float FLOOR_THICKNESS       = 0.4f;
     static final float OBSTACLE_HEIGHT       = 5.5f;
+    static final float OBSTACLE_COAT_HEIGHT  = 0.15f;
     static final float OBSTACLE_THICKNESS    = 0.5f;
     static final float BORDER_WALL_HEIGHT    = 6.0f;
     static final float BORDER_WALL_THICKNESS = 2.5f;
-    static final float WALL_COAT_HEIGHT      = 0.1f;
     static final float HOUSE_HEIGHT          = 12.0f;
     static final float HOUSE_OPACITY         = 0.4f;
     static final float HOUSE_SENSITIVITY     = 1.5f * TS;
@@ -174,11 +174,11 @@ public class GameLevel3D {
 
         terrain.doubleStrokePaths()
             .filter(path -> !context.game().world().isPartOfHouse(path.startTile()))
-            .forEach(path -> WallBuilder.buildWallAlongPath(mazeGroup, path, borderWallHeightPy, BORDER_WALL_THICKNESS, WALL_COAT_HEIGHT,
+            .forEach(path -> WallBuilder.buildWallAlongPath(mazeGroup, path, borderWallHeightPy, BORDER_WALL_THICKNESS, OBSTACLE_COAT_HEIGHT,
                 wallFillMaterialPy, wallStrokeMaterialPy));
 
         terrain.singleStrokePaths()
-            .forEach(path -> WallBuilder.buildWallAlongPath(mazeGroup, path, obstacleHeightPy, OBSTACLE_THICKNESS, WALL_COAT_HEIGHT,
+            .forEach(path -> WallBuilder.buildWallAlongPath(mazeGroup, path, obstacleHeightPy, OBSTACLE_THICKNESS, OBSTACLE_COAT_HEIGHT,
                 wallFillMaterialPy, wallStrokeMaterialPy));
 
         house3D = new House3D(world);

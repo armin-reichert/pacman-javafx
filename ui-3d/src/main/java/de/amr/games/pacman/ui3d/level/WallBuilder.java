@@ -52,7 +52,7 @@ public interface WallBuilder {
         var base = new Box(sizeX, sizeY, wallHeightPy.get());
         base.setTranslateX(origin.x());
         base.setTranslateY(origin.y());
-        base.translateZProperty().bind(wallHeightPy.multiply(-0.5));
+        base.translateZProperty().bind(wallHeightPy.multiply(-0.5).add(2*coatHeight));
         base.depthProperty().bind(wallHeightPy);
         base.materialProperty().bind(fillMaterialPy);
         base.drawModeProperty().bind(PY_3D_DRAW_MODE);
@@ -60,11 +60,12 @@ public interface WallBuilder {
         var top = new Box(sizeX, sizeY, coatHeight);
         top.translateXProperty().bind(base.translateXProperty());
         top.translateYProperty().bind(base.translateYProperty());
-        top.translateZProperty().bind(wallHeightPy.multiply(-1).subtract(coatHeight));
+        top.translateZProperty().bind(wallHeightPy.add(0.5*coatHeight).multiply(-1).add(2*coatHeight));
         top.materialProperty().bind(strokeMaterialPy);
         top.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
-        return new Group(base, top);
+        var wall = new Group(base, top);
+        return wall;
     }
 
     static void buildWallAlongPath(
