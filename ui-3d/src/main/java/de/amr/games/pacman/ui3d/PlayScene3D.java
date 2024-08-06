@@ -342,8 +342,8 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         level3D.addLevelCounter3D(context.game().levelCounter());
         if (context.game().levelNumber() == 1 || context.gameState() == GameState.LEVEL_TEST) {
             if (context.gameState() == GameState.LEVEL_TEST) {
-                showLevelTestMessage();
                 replaceGameLevel3D(false);
+                showLevelTestMessage();
             } else if (!context.game().isDemoLevel()){
                 showReadyMessage();
             }
