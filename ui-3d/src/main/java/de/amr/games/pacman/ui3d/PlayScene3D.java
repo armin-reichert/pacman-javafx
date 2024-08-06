@@ -445,6 +445,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
               now(() -> {
                   perspectivePy.unbind();
                   perspectivePy.set(Perspective.TOTAL);
+                  level3D.livesCounter3D().light().setLightOn(false);
               })
             , doAfterSec(2, level3D.mazeFlashAnimation(numFlashes))
             , doAfterSec(1, () -> {

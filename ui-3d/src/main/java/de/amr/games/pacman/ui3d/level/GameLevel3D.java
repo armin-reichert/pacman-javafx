@@ -415,7 +415,9 @@ public class GameLevel3D {
             )
         );
         var animation  = new SequentialTransition(phase1, phase2, phase3);
-        animation.setOnFinished(e -> mazeGroup.setVisible(false));
+        animation.setOnFinished(e -> {
+            mazeGroup.setVisible(false);
+        });
         return animation;
     }
 
