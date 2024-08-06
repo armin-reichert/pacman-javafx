@@ -39,6 +39,9 @@ import static de.amr.games.pacman.ui2d.GameParameters.*;
  */
 public class GamePage implements Page {
 
+    public static final Font CONTEXT_MENU_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14);
+    public static final Color CONTEXT_MENU_TITLE_BACKGROUND = Color.CORNFLOWERBLUE; // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
+
     protected final GameContext context;
     protected final Scene parentScene;
     protected final StackPane stackPane = new StackPane();
@@ -218,11 +221,6 @@ public class GamePage implements Page {
         contextMenu.getItems().add(miImmunity);
 
         contextMenu.getItems().add(new SeparatorMenuItem());
-        if (context.game().variant() == GameVariant.PACMAN_XXL) {
-            var miOpenMapEditor = new MenuItem(context.tt("open_editor"));
-            contextMenu.getItems().add(miOpenMapEditor);
-            miOpenMapEditor.setOnAction(e -> context.actionHandler().openMapEditor());
-        }
 
         var miQuit = new MenuItem(context.tt("quit"));
         miQuit.setOnAction(e -> quit());
@@ -234,8 +232,8 @@ public class GamePage implements Page {
 
     protected MenuItem menuTitleItem(String titleText) {
         var text = new Text(titleText);
-        text.setFont(Font.font("Dialog", FontWeight.BLACK, 14));
-        text.setFill(Color.CORNFLOWERBLUE); // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
+        text.setFont(CONTEXT_MENU_TITLE_FONT);
+        text.setFill(CONTEXT_MENU_TITLE_BACKGROUND);
         return new CustomMenuItem(text);
     }
 
