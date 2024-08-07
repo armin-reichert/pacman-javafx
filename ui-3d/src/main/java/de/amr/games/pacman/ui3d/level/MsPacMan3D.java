@@ -16,8 +16,6 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import java.util.stream.Stream;
-
 import static de.amr.games.pacman.ui2d.util.Ufx.pauseSec;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
 
@@ -119,7 +117,11 @@ public class MsPacMan3D extends AbstractPac3D {
 
     @Override
     public void init() {
-        super.init();
+        bodyGroup.setScaleX(1.0);
+        bodyGroup.setScaleY(1.0);
+        bodyGroup.setScaleZ(1.0);
+        updatePosition();
+        updateRotation();
         hipSwaying.stop();
         hipSwaying.setWinnetouchMode(false);
         stopChewingAnimation();

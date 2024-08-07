@@ -117,7 +117,11 @@ public class PacMan3D extends AbstractPac3D {
 
     @Override
     public void init() {
-        super.init();
+        bodyGroup.setScaleX(1.0);
+        bodyGroup.setScaleY(1.0);
+        bodyGroup.setScaleZ(1.0);
+        updatePosition();
+        updateRotation();
         headBanging.stop();
         headBanging.setStrokeMode(false);
         stopChewingAnimation();

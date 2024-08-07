@@ -54,15 +54,6 @@ public abstract class AbstractPac3D implements Pac3D {
         return context;
     }
 
-    @Override
-    public void init() {
-        root().setScaleX(1.0);
-        root().setScaleY(1.0);
-        root().setScaleZ(1.0);
-        updatePosition();
-        updateRotation();
-    }
-
     protected void updatePosition() {
         Vector2f center = pac.center();
         root().setTranslateX(center.x());
