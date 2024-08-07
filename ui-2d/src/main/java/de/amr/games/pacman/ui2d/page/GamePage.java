@@ -15,6 +15,7 @@ import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.CanvasLayoutPane;
+import de.amr.games.pacman.ui2d.util.DecoratedCanvas;
 import de.amr.games.pacman.ui2d.util.FadingPane;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.binding.Bindings;
@@ -42,6 +43,13 @@ public class GamePage implements Page {
     public static final Font CONTEXT_MENU_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14);
     public static final Color CONTEXT_MENU_TITLE_BACKGROUND = Color.CORNFLOWERBLUE; // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
 
+    protected static MenuItem menuTitleItem(String titleText) {
+        var text = new Text(titleText);
+        text.setFont(CONTEXT_MENU_TITLE_FONT);
+        text.setFill(CONTEXT_MENU_TITLE_BACKGROUND);
+        return new CustomMenuItem(text);
+    }
+
     protected final GameContext context;
     protected final Scene parentScene;
     protected final StackPane stackPane = new StackPane();
@@ -67,23 +75,24 @@ public class GamePage implements Page {
         dashboard.addInfoBox(context.tt("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
         dashboard.addInfoBox(context.tt("infobox.about.title"), new InfoBoxAbout());
 
+        DecoratedCanvas canvas = canvasPane.decoratedCanvas();
         canvasPane.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
         canvasPane.setMinScaling(0.75);
         canvasPane.setBackground(context.assets().background("wallpaper.background"));
-        canvasPane.decoratedCanvas().setBorderColor(context.assets().color("palette.pale"));
-        canvasPane.decoratedCanvas().decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
-        canvasPane.decoratedCanvas().decoratedPy.bind(PY_CANVAS_DECORATED);
+        canvas.setBorderColor(context.assets().color("palette.pale"));
+        canvas.decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
+        canvas.decoratedPy.bind(PY_CANVAS_DECORATED);
 
         pip = new PictureInPictureView(new PlayScene2D(), context);
         pip.heightPy.bind(PY_PIP_HEIGHT);
         pip.opacityPy.bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
 
-        popupLayer.minHeightProperty().bind(canvasPane.decoratedCanvas().minHeightProperty());
-        popupLayer.maxHeightProperty().bind(canvasPane.decoratedCanvas().maxHeightProperty());
-        popupLayer.prefHeightProperty().bind(canvasPane.decoratedCanvas().prefHeightProperty());
-        popupLayer.minWidthProperty().bind(canvasPane.decoratedCanvas().minWidthProperty());
-        popupLayer.maxWidthProperty().bind(canvasPane.decoratedCanvas().maxWidthProperty());
-        popupLayer.prefWidthProperty().bind(canvasPane.decoratedCanvas().prefWidthProperty());
+        popupLayer.minHeightProperty().bind(canvas.minHeightProperty());
+        popupLayer.maxHeightProperty().bind(canvas.maxHeightProperty());
+        popupLayer.prefHeightProperty().bind(canvas.prefHeightProperty());
+        popupLayer.minWidthProperty().bind(canvas.minWidthProperty());
+        popupLayer.maxWidthProperty().bind(canvas.maxWidthProperty());
+        popupLayer.prefWidthProperty().bind(canvas.prefWidthProperty());
         popupLayer.getChildren().addAll(helpPopUp, signature);
 
         infoLayer.setLeft(dashboard);
@@ -205,15 +214,8 @@ public class GamePage implements Page {
         miQuit.setOnAction(e -> quit());
         contextMenu.getItems().add(miQuit);
 
-        contextMenu.requestFocus();
         contextMenu.show(rootPane(), event.getScreenX(), event.getScreenY());
-    }
-
-    protected MenuItem menuTitleItem(String titleText) {
-        var text = new Text(titleText);
-        text.setFont(CONTEXT_MENU_TITLE_FONT);
-        text.setFill(CONTEXT_MENU_TITLE_BACKGROUND);
-        return new CustomMenuItem(text);
+        contextMenu.requestFocus();
     }
 
     public void adaptCanvasSizeToCurrentWorld() {

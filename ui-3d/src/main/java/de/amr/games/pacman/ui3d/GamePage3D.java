@@ -113,8 +113,8 @@ public class GamePage3D extends GamePage {
         miQuit.setOnAction(e -> quit());
         contextMenu.getItems().add(miQuit);
 
-        contextMenu.requestFocus();
         contextMenu.show(rootPane(), event.getScreenX(), event.getScreenY());
+        contextMenu.requestFocus();
     }
 
     @Override
