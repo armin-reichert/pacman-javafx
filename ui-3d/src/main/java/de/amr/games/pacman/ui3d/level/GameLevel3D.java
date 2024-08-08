@@ -84,7 +84,7 @@ public class GameLevel3D {
     private final Group root = new Group();
     private final Group worldGroup = new Group();
     private final Group mazeGroup = new Group();
-    private final Pac3D pac3D;
+    private Pac3D pac3D;
     private final List<MutableGhost3D> ghosts3D;
     private final Map<Vector2i, Pellet3D> pellets3D = new HashMap<>();
     private final ArrayList<Energizer3D> energizers3D = new ArrayList<>();
@@ -96,18 +96,21 @@ public class GameLevel3D {
     public GameLevel3D(GameContext context) {
         this.context = checkNotNull(context);
 
-        GameModel game  = context.game();
-        GameWorld world = game.world();
-        AssetMap assets = context.assets();
+        final AssetMap assets = context.assets();
+        final GameModel game  = context.game();
+        final GameWorld world = game.world();
 
-        pac3D = game.variant() == GameVariant.MS_PACMAN
-            ? new MsPacMan3D(context, game.pac(), PAC_SIZE, assets.get("model3D.pacman"))
-            : new PacMan3D(context, game.pac(), PAC_SIZE, assets.get("model3D.pacman"));
+        switch (game.variant()) {
+            case MS_PACMAN -> {
+                pac3D = new MsPacMan3D(context, game.pac(), PAC_SIZE, assets.get("model3D.pacman"));
+                pac3D.light().setColor(context.assets().color("ms_pacman.color.head").desaturate());
+            }
+            case PACMAN, PACMAN_XXL -> {
+                pac3D = new PacMan3D(context, game.pac(), PAC_SIZE, assets.get("model3D.pacman"));
+                pac3D.light().setColor(context.assets().color("pacman.color.head").desaturate());
+            }
+        }
         pac3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
-        Color lightColor = context.game().variant() == GameVariant.MS_PACMAN
-                ? context.assets().color("ms_pacman.color.head").desaturate()
-                : context.assets().color("pacman.color.head").desaturate();
-        pac3D.light().setColor(lightColor);
 
         ghosts3D = game.ghosts().map(ghost -> new MutableGhost3D(assets.get("model3D.ghost"), assets, ghost, GHOST_SIZE)).toList();
         ghosts3D.forEach(ghost3D -> ghost3D.drawModePy.bind(PY_3D_DRAW_MODE));
