@@ -25,7 +25,6 @@ import javafx.beans.property.*;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
@@ -105,6 +104,10 @@ public class GameLevel3D {
             ? new MsPacMan3D(context, game.pac(), PAC_SIZE, assets.get("model3D.pacman"))
             : new PacMan3D(context, game.pac(), PAC_SIZE, assets.get("model3D.pacman"));
         pac3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
+        Color lightColor = context.game().variant() == GameVariant.MS_PACMAN
+                ? context.assets().color("ms_pacman.color.head").desaturate()
+                : context.assets().color("pacman.color.head").desaturate();
+        pac3D.light().setColor(lightColor);
 
         ghosts3D = game.ghosts().map(ghost -> new MutableGhost3D(assets.get("model3D.ghost"), assets, ghost, GHOST_SIZE)).toList();
         ghosts3D.forEach(ghost3D -> ghost3D.drawModePy.bind(PY_3D_DRAW_MODE));
@@ -123,13 +126,8 @@ public class GameLevel3D {
         buildWorld3D(world);
         addFood3D(world);
 
-        Color lightColor = context.game().variant() == GameVariant.MS_PACMAN
-                ? context.assets().color("ms_pacman.color.head").desaturate()
-                : context.assets().color("pacman.color.head").desaturate();
-        PointLight pacLight = createPacLight(pac3D, lightColor);
-
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
-        root.getChildren().addAll(pac3D.root(), pacLight);
+        root.getChildren().addAll(pac3D.root(), pac3D.light());
         ghosts3D.forEach(ghost3D -> root.getChildren().add(ghost3D.root()));
         root.getChildren().addAll(message3D, livesCounter3D, worldGroup);
     }
@@ -199,17 +197,6 @@ public class GameLevel3D {
         worldGroup.getChildren().addAll(floor, mazeGroup);
         //TODO check this, get transparency right
         root.getChildren().add(house3D.door3D());
-    }
-
-    private PointLight createPacLight(Pac3D pac3D, Color color) {
-        var light = new PointLight();
-        light.setColor(color);
-        light.lightOnProperty().bind(pac3D.lightOnProperty());
-        light.maxRangeProperty().bind(pac3D.lightRangeProperty());
-        light.translateXProperty().bind(pac3D.root().translateXProperty());
-        light.translateYProperty().bind(pac3D.root().translateYProperty());
-        light.translateZProperty().bind(pac3D.root().translateZProperty().subtract(PAC_SIZE));
-        return light;
     }
 
     private Box createFloor(TileMap terrain) {

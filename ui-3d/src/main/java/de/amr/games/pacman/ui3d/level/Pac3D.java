@@ -9,6 +9,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.Property;
 import javafx.scene.Node;
+import javafx.scene.PointLight;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 
 /**
@@ -28,7 +30,5 @@ public interface Pac3D {
 
     Property<DrawMode> drawModeProperty();
 
-    BooleanProperty lightOnProperty();
-
-    DoubleProperty lightRangeProperty();
+    PointLight light();
 }

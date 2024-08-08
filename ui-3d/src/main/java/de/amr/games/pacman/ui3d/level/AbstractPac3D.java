@@ -12,8 +12,10 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
+import javafx.scene.PointLight;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -28,13 +30,12 @@ import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_PAC_LIGHT_ENABLED;
 public abstract class AbstractPac3D implements Pac3D {
 
     protected final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
-    protected final BooleanProperty lightOnPy = new SimpleBooleanProperty(this, "lightOn", true);
-    protected final DoubleProperty lightRangePy = new SimpleDoubleProperty(this, "lightRange", 0);
 
     protected final GameContext context;
     protected final Pac pac;
     protected final double size;
     protected final Model3D model3D;
+    protected final PointLight light;
 
     protected final Rotate rotation = new Rotate();
 
@@ -47,6 +48,7 @@ public abstract class AbstractPac3D implements Pac3D {
         this.pac = pac;
         this.size = size;
         this.model3D = model3D;
+        this.light = new PointLight();
     }
 
     protected void updatePosition() {
@@ -54,6 +56,9 @@ public abstract class AbstractPac3D implements Pac3D {
         root().setTranslateX(center.x());
         root().setTranslateY(center.y());
         root().setTranslateZ(-0.5 * size);
+        light.setTranslateX(center.x());
+        light.setTranslateY(center.y());
+        light.setTranslateZ(-1.5 * size);
     }
 
     protected void updateRotation() {
@@ -68,8 +73,8 @@ public abstract class AbstractPac3D implements Pac3D {
         double range = hasPower && game.powerTimer().duration() > 0
             ? 2 * TS + ((double) game.powerTimer().remaining() / game.powerTimer().duration()) * 6 * TS
             : 0;
-        lightRangePy.set(range);
-        lightOnPy.set(PY_3D_PAC_LIGHT_ENABLED.get() && pac.isVisible() && hasPower);
+        light.setMaxRange(range);
+        light.setLightOn(PY_3D_PAC_LIGHT_ENABLED.get() && pac.isVisible() && hasPower);
     }
 
     protected void updateVisibility() {
@@ -102,13 +107,8 @@ public abstract class AbstractPac3D implements Pac3D {
     }
 
     @Override
-    public BooleanProperty lightOnProperty() {
-        return lightOnPy;
-    }
-
-    @Override
-    public DoubleProperty lightRangeProperty() {
-        return lightRangePy;
+    public PointLight light() {
+        return light;
     }
 
     protected void createChewingAnimation(Node jaw) {
