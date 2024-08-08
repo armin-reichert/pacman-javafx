@@ -123,8 +123,13 @@ public class GameLevel3D {
         buildWorld3D(world);
         addFood3D(world);
 
+        Color lightColor = context.game().variant() == GameVariant.MS_PACMAN
+                ? context.assets().color("ms_pacman.color.head").desaturate()
+                : context.assets().color("pacman.color.head").desaturate();
+        PointLight pacLight = createPacLight(pac3D, lightColor);
+
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
-        root.getChildren().addAll(pac3D.root(), createPacLight(pac3D));
+        root.getChildren().addAll(pac3D.root(), pacLight);
         ghosts3D.forEach(ghost3D -> root.getChildren().add(ghost3D.root()));
         root.getChildren().addAll(message3D, livesCounter3D, worldGroup);
     }
@@ -196,13 +201,9 @@ public class GameLevel3D {
         root.getChildren().add(house3D.door3D());
     }
 
-    private PointLight createPacLight(Pac3D pac3D) {
-        Color lightColor = context.game().variant() == GameVariant.MS_PACMAN
-            ? context.assets().color("ms_pacman.color.head").desaturate()
-            : context.assets().color("pacman.color.head").desaturate();
-
+    private PointLight createPacLight(Pac3D pac3D, Color color) {
         var light = new PointLight();
-        light.setColor(lightColor);
+        light.setColor(color);
         light.lightOnProperty().bind(pac3D.lightOnProperty());
         light.maxRangeProperty().bind(pac3D.lightRangeProperty());
         light.translateXProperty().bind(pac3D.root().translateXProperty());
@@ -415,9 +416,7 @@ public class GameLevel3D {
             )
         );
         var animation  = new SequentialTransition(phase1, phase2, phase3);
-        animation.setOnFinished(e -> {
-            mazeGroup.setVisible(false);
-        });
+        animation.setOnFinished(e -> mazeGroup.setVisible(false));
         return animation;
     }
 
