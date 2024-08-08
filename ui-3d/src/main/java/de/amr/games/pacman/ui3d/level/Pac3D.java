@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
-import de.amr.games.pacman.ui2d.GameContext;
 import javafx.animation.Animation;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -19,15 +18,7 @@ public interface Pac3D {
 
     Node root();
 
-    GameContext context();
-
     void init();
-
-    void stopWalkingAnimation();
-
-    void stopChewingAnimation();
-
-    void updateAliveAnimation();
 
     void update();
 

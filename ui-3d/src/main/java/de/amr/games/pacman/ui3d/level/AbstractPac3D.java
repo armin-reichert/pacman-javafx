@@ -49,11 +49,6 @@ public abstract class AbstractPac3D implements Pac3D {
         this.model3D = model3D;
     }
 
-    @Override
-    public GameContext context() {
-        return context;
-    }
-
     protected void updatePosition() {
         Vector2f center = pac.center();
         root().setTranslateX(center.x());
@@ -82,6 +77,10 @@ public abstract class AbstractPac3D implements Pac3D {
         boolean outsideWorld = root().getTranslateX() < HTS || root().getTranslateX() > TS * map.terrain().numCols() - HTS;
         root().setVisible(pac.isVisible() && !outsideWorld);
     }
+
+    protected abstract void stopChewingAnimation();
+    protected abstract void stopWalkingAnimation();
+    protected abstract void updateAliveAnimation();
 
     @Override
     public void update() {
