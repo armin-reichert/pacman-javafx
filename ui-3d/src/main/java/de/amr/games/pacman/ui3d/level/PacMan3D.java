@@ -78,11 +78,12 @@ public class PacMan3D extends AbstractPac3D {
      *
      * @param pacMan Pac-Man instance
      * @param size diameter of Pac-Man
-     * @param model3D 3D model for Pac-Man
      * @param assets asset map
      */
-    public PacMan3D(Pac pacMan, double size, Model3D model3D, AssetMap assets) {
-        super(pacMan, size, model3D);
+    public PacMan3D(Pac pacMan, double size, AssetMap assets) {
+        super(pacMan);
+
+        Model3D model3D = assets.get("model3D.pacman");
 
         Group body = PacModel3D.createPacShape(
             model3D, size,
@@ -109,6 +110,9 @@ public class PacMan3D extends AbstractPac3D {
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
         meshViewById(jaw,  PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
         meshViewById(jaw,  PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
+
+        bodyGroup.setTranslateZ(-0.5 * size);
+        light.setTranslateZ(-1.5 * size);
     }
 
     @Override

@@ -102,11 +102,11 @@ public class GameLevel3D {
 
         switch (game.variant()) {
             case MS_PACMAN -> {
-                pac3D = new MsPacMan3D(game.pac(), PAC_SIZE, assets.get("model3D.pacman"), assets);
+                pac3D = new MsPacMan3D(game.pac(), PAC_SIZE, assets);
                 pac3D.light().setColor(context.assets().color("ms_pacman.color.head").desaturate());
             }
             case PACMAN, PACMAN_XXL -> {
-                pac3D = new PacMan3D(game.pac(), PAC_SIZE, assets.get("model3D.pacman"), assets);
+                pac3D = new PacMan3D(game.pac(), PAC_SIZE, assets);
                 pac3D.light().setColor(context.assets().color("pacman.color.head").desaturate());
             }
         }

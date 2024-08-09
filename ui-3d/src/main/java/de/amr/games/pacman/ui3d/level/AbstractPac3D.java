@@ -9,7 +9,6 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.util.Ufx;
-import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -30,17 +29,12 @@ public abstract class AbstractPac3D implements Pac3D {
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     protected final Pac pac;
-    protected final double size;
-    protected final Model3D model3D;
     protected final PointLight light = new PointLight();
     protected final Rotate moveRotation = new Rotate();
+    private Animation chewingAnimation;
 
-    private Transition chewingAnimation;
-
-    protected AbstractPac3D(Pac pac, double size, Model3D model3D) {
+    protected AbstractPac3D(Pac pac) {
         this.pac = checkNotNull(pac);
-        this.size = size;
-        this.model3D = checkNotNull(model3D);
     }
 
     protected void createChewingAnimation(Node jaw) {
@@ -73,10 +67,8 @@ public abstract class AbstractPac3D implements Pac3D {
         Vector2f center = pac.center();
         root.setTranslateX(center.x());
         root.setTranslateY(center.y());
-        root.setTranslateZ(-0.5 * size);
         light.setTranslateX(center.x());
         light.setTranslateY(center.y());
-        light.setTranslateZ(-1.5 * size);
     }
 
     protected void updateMoveRotation() {
