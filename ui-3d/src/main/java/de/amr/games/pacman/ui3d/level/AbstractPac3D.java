@@ -35,7 +35,7 @@ public abstract class AbstractPac3D implements Pac3D {
     protected final PointLight light = new PointLight();
     protected final Rotate moveRotation = new Rotate();
 
-    protected Transition chewingAnimation;
+    private Transition chewingAnimation;
 
     protected AbstractPac3D(Pac pac, double size, Model3D model3D) {
         this.pac = checkNotNull(pac);
@@ -57,6 +57,16 @@ public abstract class AbstractPac3D implements Pac3D {
         openMouth.setInterpolator(Interpolator.LINEAR);
         chewingAnimation = new SequentialTransition(openMouth, Ufx.pauseSec(0.2), closeMouth);
         chewingAnimation.setCycleCount(Animation.INDEFINITE);
+    }
+
+    protected void playChewingAnimation() {
+        chewingAnimation.play();
+    }
+
+    protected void stopChewingAnimation(Node jaw) {
+        chewingAnimation.stop();
+        jaw.setRotationAxis(Rotate.Y_AXIS);
+        jaw.setRotate(0);
     }
 
     protected void updatePosition(Node root) {
@@ -89,9 +99,6 @@ public abstract class AbstractPac3D implements Pac3D {
         boolean outsideWorld = root().getTranslateX() < HTS || root().getTranslateX() > TS * map.terrain().numCols() - HTS;
         root().setVisible(pac.isVisible() && !outsideWorld);
     }
-
-    protected abstract void stopChewingAnimation();
-    protected abstract void stopWalkingAnimation();
 
     @Override
     public ObjectProperty<DrawMode> drawModeProperty() {

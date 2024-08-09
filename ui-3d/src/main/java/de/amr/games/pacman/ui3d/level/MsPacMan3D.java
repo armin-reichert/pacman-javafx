@@ -122,7 +122,7 @@ public class MsPacMan3D extends AbstractPac3D {
         updateMoveRotation();
         hipSwayingAnimation.stop();
         hipSwayingAnimation.setWinnetouchMode(false);
-        stopChewingAnimation();
+        stopChewingAnimation(jaw);
     }
 
     @Override
@@ -132,29 +132,14 @@ public class MsPacMan3D extends AbstractPac3D {
             updateMoveRotation();
             updateVisibility(context.game());
             updateLight(context.game());
-            if (pac.isStandingStill()) {
-                hipSwayingAnimation.stop();
-                stopChewingAnimation();
-            } else {
-                hipSwayingAnimation.update(pac);
-                chewingAnimation.play();
-            }
-        } else {
-            stopChewingAnimation();
-            stopWalkingAnimation();
         }
-    }
-
-    @Override
-    public void stopChewingAnimation() {
-        chewingAnimation.stop();
-        jaw.setRotationAxis(Rotate.Y_AXIS);
-        jaw.setRotate(0);
-    }
-
-    @Override
-    public void stopWalkingAnimation() {
-        hipSwayingAnimation.stop();
+        if (pac.isAlive() && !pac.isStandingStill()) {
+            hipSwayingAnimation.update(pac);
+            playChewingAnimation();
+        } else {
+            hipSwayingAnimation.stop();
+            stopChewingAnimation(jaw);
+        }
     }
 
     @Override

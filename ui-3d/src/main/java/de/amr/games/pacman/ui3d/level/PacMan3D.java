@@ -125,7 +125,7 @@ public class PacMan3D extends AbstractPac3D {
         updateMoveRotation();
         headBangingAnimation.stop();
         headBangingAnimation.setStrokeMode(false);
-        stopChewingAnimation();
+        stopChewingAnimation(jaw);
     }
 
     @Override
@@ -135,30 +135,16 @@ public class PacMan3D extends AbstractPac3D {
             updateMoveRotation();
             updateVisibility(context.game());
             updateLight(context.game());
-            if (pac.isStandingStill()) {
-                headBangingAnimation.stop();
-                stopChewingAnimation();
-            } else {
-                headBangingAnimation.update(pac);
-                chewingAnimation.play();
-            }
+        }
+        if (pac.isAlive() && !pac.isStandingStill()) {
+            headBangingAnimation.update(pac);
+            playChewingAnimation();
         } else {
-            stopChewingAnimation();
-            stopWalkingAnimation();
+            headBangingAnimation.stop();
+            stopChewingAnimation(jaw);
         }
     }
 
-    @Override
-    public void stopChewingAnimation() {
-        chewingAnimation.stop();
-        jaw.setRotationAxis(Rotate.Y_AXIS);
-        jaw.setRotate(0);
-    }
-
-    @Override
-    public void stopWalkingAnimation() {
-       headBangingAnimation.stop();
-    }
 
     @Override
     public void setPower(boolean power) {
