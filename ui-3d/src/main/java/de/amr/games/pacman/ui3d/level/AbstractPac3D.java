@@ -36,8 +36,6 @@ public abstract class AbstractPac3D implements Pac3D {
     protected final PointLight light = new PointLight();
     protected final Rotate moveRotation = new Rotate();
 
-    protected RotateTransition closeMouth;
-    protected RotateTransition openMouth;
     protected Transition chewingAnimation;
 
     protected AbstractPac3D(Pac pac, double size, Model3D model3D) {
@@ -46,11 +44,27 @@ public abstract class AbstractPac3D implements Pac3D {
         this.model3D = checkNotNull(model3D);
     }
 
+    protected void createChewingAnimation(Node jaw) {
+        final int openAngle = 0, closedAngle = -54;
+        var closeMouth = new RotateTransition(Duration.millis(100), jaw);
+        closeMouth.setAxis(Rotate.Y_AXIS);
+        closeMouth.setFromAngle(openAngle);
+        closeMouth.setToAngle(closedAngle);
+        closeMouth.setInterpolator(Interpolator.LINEAR);
+        var openMouth = new RotateTransition(Duration.millis(40), jaw);
+        openMouth.setAxis(Rotate.Y_AXIS);
+        openMouth.setFromAngle(closedAngle);
+        openMouth.setToAngle(openAngle);
+        openMouth.setInterpolator(Interpolator.LINEAR);
+        chewingAnimation = new SequentialTransition(openMouth, Ufx.pauseSec(0.2), closeMouth);
+        chewingAnimation.setCycleCount(Animation.INDEFINITE);
+    }
+
     protected void updatePosition(Node root) {
         Vector2f center = pac.center();
-        root().setTranslateX(center.x());
-        root().setTranslateY(center.y());
-        root().setTranslateZ(-0.5 * size);
+        root.setTranslateX(center.x());
+        root.setTranslateY(center.y());
+        root.setTranslateZ(-0.5 * size);
         light.setTranslateX(center.x());
         light.setTranslateY(center.y());
         light.setTranslateZ(-1.5 * size);
@@ -90,21 +104,5 @@ public abstract class AbstractPac3D implements Pac3D {
     @Override
     public PointLight light() {
         return light;
-    }
-
-    protected void createChewingAnimation(Node jaw) {
-        final int openAngle = 0, closedAngle = -54;
-        closeMouth = new RotateTransition(Duration.millis(100), jaw);
-        closeMouth.setAxis(Rotate.Y_AXIS);
-        closeMouth.setFromAngle(openAngle);
-        closeMouth.setToAngle(closedAngle);
-        closeMouth.setInterpolator(Interpolator.LINEAR);
-        openMouth = new RotateTransition(Duration.millis(40), jaw);
-        openMouth.setAxis(Rotate.Y_AXIS);
-        openMouth.setFromAngle(closedAngle);
-        openMouth.setToAngle(openAngle);
-        openMouth.setInterpolator(Interpolator.LINEAR);
-        chewingAnimation = new SequentialTransition(openMouth, Ufx.pauseSec(0.2), closeMouth);
-        chewingAnimation.setCycleCount(Animation.INDEFINITE);
     }
 }
