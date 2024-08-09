@@ -20,8 +20,7 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_PAC_LIGHT_ENABLED;
 
 /**
@@ -29,29 +28,25 @@ import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_PAC_LIGHT_ENABLED;
  */
 public abstract class AbstractPac3D implements Pac3D {
 
-    protected final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+    public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
-    protected final GameContext context;
     protected final Pac pac;
     protected final double size;
     protected final Model3D model3D;
-    protected final PointLight light;
-
-    protected final Rotate rotation = new Rotate();
+    protected final PointLight light = new PointLight();
+    protected final Rotate moveRotation = new Rotate();
 
     protected RotateTransition closeMouth;
     protected RotateTransition openMouth;
     protected Transition chewingAnimation;
 
-    protected AbstractPac3D(GameContext context, Pac pac, double size, Model3D model3D) {
-        this.context = context;
-        this.pac = pac;
+    protected AbstractPac3D(Pac pac, double size, Model3D model3D) {
+        this.pac = checkNotNull(pac);
         this.size = size;
-        this.model3D = model3D;
-        this.light = new PointLight();
+        this.model3D = checkNotNull(model3D);
     }
 
-    protected void updatePosition() {
+    protected void updatePosition(Node root) {
         Vector2f center = pac.center();
         root().setTranslateX(center.x());
         root().setTranslateY(center.y());
@@ -61,13 +56,13 @@ public abstract class AbstractPac3D implements Pac3D {
         light.setTranslateZ(-1.5 * size);
     }
 
-    protected void updateRotation() {
-        rotation.setAxis(Rotate.Z_AXIS);
-        rotation.setAngle(Ufx.angle(pac.moveDir()));
+    protected void updateMoveRotation() {
+        moveRotation.setAxis(Rotate.Z_AXIS);
+        moveRotation.setAngle(Ufx.angle(pac.moveDir()));
     }
 
     protected void updateLight() {
-        GameModel game = context.game();
+        GameModel game = context().game();
         // When empowered, Pac-Man is lighted, light range shrinks with ceasing power
         boolean hasPower = game.powerTimer().isRunning();
         double range = hasPower && game.powerTimer().duration() > 0
@@ -78,28 +73,14 @@ public abstract class AbstractPac3D implements Pac3D {
     }
 
     protected void updateVisibility() {
-        WorldMap map = context.game().world().map();
+        WorldMap map = context().game().world().map();
         boolean outsideWorld = root().getTranslateX() < HTS || root().getTranslateX() > TS * map.terrain().numCols() - HTS;
         root().setVisible(pac.isVisible() && !outsideWorld);
     }
 
+    protected abstract GameContext context();
     protected abstract void stopChewingAnimation();
     protected abstract void stopWalkingAnimation();
-    protected abstract void updateAliveAnimation();
-
-    @Override
-    public void update() {
-        if (pac.isAlive()) {
-            updatePosition();
-            updateRotation();
-            updateVisibility();
-            updateLight();
-            updateAliveAnimation();
-        } else {
-            stopChewingAnimation();
-            stopWalkingAnimation();
-        }
-    }
 
     @Override
     public ObjectProperty<DrawMode> drawModeProperty() {
@@ -112,17 +93,18 @@ public abstract class AbstractPac3D implements Pac3D {
     }
 
     protected void createChewingAnimation(Node jaw) {
+        final int openAngle = 0, closedAngle = -54;
         closeMouth = new RotateTransition(Duration.millis(100), jaw);
         closeMouth.setAxis(Rotate.Y_AXIS);
-        closeMouth.setFromAngle(0);
-        closeMouth.setToAngle(-54);
+        closeMouth.setFromAngle(openAngle);
+        closeMouth.setToAngle(closedAngle);
         closeMouth.setInterpolator(Interpolator.LINEAR);
-        openMouth = new RotateTransition(Duration.millis(25), jaw);
+        openMouth = new RotateTransition(Duration.millis(40), jaw);
         openMouth.setAxis(Rotate.Y_AXIS);
-        openMouth.setFromAngle(-54);
-        openMouth.setToAngle(0);
+        openMouth.setFromAngle(closedAngle);
+        openMouth.setToAngle(openAngle);
         openMouth.setInterpolator(Interpolator.LINEAR);
-        chewingAnimation = new SequentialTransition(openMouth, Ufx.pauseSec(0.1), closeMouth);
+        chewingAnimation = new SequentialTransition(openMouth, Ufx.pauseSec(0.2), closeMouth);
         chewingAnimation.setCycleCount(Animation.INDEFINITE);
     }
 }

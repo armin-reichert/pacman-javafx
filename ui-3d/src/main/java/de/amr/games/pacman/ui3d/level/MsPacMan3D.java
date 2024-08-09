@@ -16,6 +16,7 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.util.Ufx.pauseSec;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
 
@@ -24,7 +25,7 @@ import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
  */
 public class MsPacMan3D extends AbstractPac3D {
 
-    private static class HipSwaying {
+    private static class HipSwayingAnimation {
 
         private static final short ANGLE_FROM = -20;
         private static final short ANGLE_TO = 20;
@@ -32,7 +33,7 @@ public class MsPacMan3D extends AbstractPac3D {
 
         private final RotateTransition swaying;
 
-        public HipSwaying(Node target) {
+        public HipSwayingAnimation(Node target) {
             swaying = new RotateTransition(DURATION, target);
             swaying.setAxis(Rotate.Z_AXIS);
             swaying.setCycleCount(Animation.INDEFINITE);
@@ -65,9 +66,10 @@ public class MsPacMan3D extends AbstractPac3D {
         }
     }
 
+    private final GameContext context;
     private final Group bodyGroup = new Group();
     private final Node jaw;
-    private final HipSwaying hipSwaying;
+    private final HipSwayingAnimation hipSwayingAnimation;
 
     /**
      * Creates a 3D Ms. Pac-Man.
@@ -77,7 +79,8 @@ public class MsPacMan3D extends AbstractPac3D {
      * @param model3D 3D model
      */
     public MsPacMan3D(GameContext context, Pac msPacMan, double size, Model3D model3D) {
-        super(context, msPacMan, size, model3D);
+        super(msPacMan, size, model3D);
+        this.context = checkNotNull(context);
 
         Group body = PacModel3D.createPacShape(
             model3D, size,
@@ -96,12 +99,12 @@ public class MsPacMan3D extends AbstractPac3D {
             context.assets().color("pacman.color.palate"));
 
         bodyGroup.getChildren().addAll(body, femaleParts, jaw);
-        bodyGroup.getTransforms().add(rotation);
+        bodyGroup.getTransforms().add(moveRotation);
 
         createChewingAnimation(jaw);
 
-        hipSwaying = new HipSwaying(bodyGroup);
-        hipSwaying.setWinnetouchMode(false);
+        hipSwayingAnimation = new HipSwayingAnimation(bodyGroup);
+        hipSwayingAnimation.setWinnetouchMode(false);
 
         meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(drawModePy);
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
@@ -111,20 +114,42 @@ public class MsPacMan3D extends AbstractPac3D {
     }
 
     @Override
+    protected GameContext context() {
+        return context;
+    }
+
+    @Override
     public Group root() {
         return bodyGroup;
     }
 
     @Override
     public void init() {
-        bodyGroup.setScaleX(1.0);
-        bodyGroup.setScaleY(1.0);
-        bodyGroup.setScaleZ(1.0);
-        updatePosition();
-        updateRotation();
-        hipSwaying.stop();
-        hipSwaying.setWinnetouchMode(false);
+        updatePosition(bodyGroup);
+        updateMoveRotation();
+        hipSwayingAnimation.stop();
+        hipSwayingAnimation.setWinnetouchMode(false);
         stopChewingAnimation();
+    }
+
+    @Override
+    public void update() {
+        if (pac.isAlive()) {
+            updatePosition(root());
+            updateMoveRotation();
+            updateVisibility();
+            updateLight();
+            if (pac.isStandingStill()) {
+                hipSwayingAnimation.stop();
+                stopChewingAnimation();
+            } else {
+                hipSwayingAnimation.update(pac);
+                chewingAnimation.play();
+            }
+        } else {
+            stopChewingAnimation();
+            stopWalkingAnimation();
+        }
     }
 
     @Override
@@ -136,23 +161,12 @@ public class MsPacMan3D extends AbstractPac3D {
 
     @Override
     public void stopWalkingAnimation() {
-        hipSwaying.stop();
-    }
-
-    @Override
-    public void updateAliveAnimation() {
-        if (pac.isStandingStill()) {
-            hipSwaying.stop();
-            stopChewingAnimation();
-        } else {
-            hipSwaying.update(pac);
-            chewingAnimation.play();
-        }
+        hipSwayingAnimation.stop();
     }
 
     @Override
     public void setPower(boolean power) {
-        hipSwaying.setWinnetouchMode(power);
+        hipSwayingAnimation.setWinnetouchMode(power);
     }
 
     @Override

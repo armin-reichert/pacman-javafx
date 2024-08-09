@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
 
@@ -22,7 +23,7 @@ import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
  */
 public class PacMan3D extends AbstractPac3D {
 
-    private static class HeadBanging {
+    private static class HeadBangingAnimation {
 
         private static final float POWER_AMPLIFICATION = 2;
         private static final short ANGLE_FROM = -15;
@@ -31,7 +32,7 @@ public class PacMan3D extends AbstractPac3D {
 
         private final RotateTransition banging;
 
-        public HeadBanging(Node target) {
+        public HeadBangingAnimation(Node target) {
             banging = new RotateTransition(DURATION, target);
             banging.setAxis(Rotate.X_AXIS);
             banging.setCycleCount(Animation.INDEFINITE);
@@ -68,9 +69,10 @@ public class PacMan3D extends AbstractPac3D {
         }
     }
 
+    private final GameContext context;
     private final Node jaw;
     private final Group bodyGroup = new Group();
-    private final HeadBanging headBanging;
+    private final HeadBangingAnimation headBangingAnimation;
 
     /**
      * Creates a 3D Pac-Man.
@@ -81,7 +83,8 @@ public class PacMan3D extends AbstractPac3D {
      * @param model3D 3D model for Pac-Man
      */
     public PacMan3D(GameContext context, Pac pacMan, double size, Model3D model3D) {
-        super(context, pacMan, size, model3D);
+        super(pacMan, size, model3D);
+        this.context = checkNotNull(context);
 
         Group body = PacModel3D.createPacShape(
             model3D, size,
@@ -96,18 +99,23 @@ public class PacMan3D extends AbstractPac3D {
             context.assets().color("pacman.color.palate"));
 
         bodyGroup.getChildren().addAll(body, jaw);
-        bodyGroup.getTransforms().add(rotation);
+        bodyGroup.getTransforms().add(moveRotation);
 
         createChewingAnimation(jaw);
 
-        headBanging = new HeadBanging(bodyGroup);
-        headBanging.setStrokeMode(false);
+        headBangingAnimation = new HeadBangingAnimation(bodyGroup);
+        headBangingAnimation.setStrokeMode(false);
 
         meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(drawModePy);
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
         meshViewById(jaw,  PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
         meshViewById(jaw,  PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
+    }
+
+    @Override
+    protected GameContext context() {
+        return context;
     }
 
     @Override
@@ -120,11 +128,31 @@ public class PacMan3D extends AbstractPac3D {
         bodyGroup.setScaleX(1.0);
         bodyGroup.setScaleY(1.0);
         bodyGroup.setScaleZ(1.0);
-        updatePosition();
-        updateRotation();
-        headBanging.stop();
-        headBanging.setStrokeMode(false);
+        updatePosition(bodyGroup);
+        updateMoveRotation();
+        headBangingAnimation.stop();
+        headBangingAnimation.setStrokeMode(false);
         stopChewingAnimation();
+    }
+
+    @Override
+    public void update() {
+        if (pac.isAlive()) {
+            updatePosition(root());
+            updateMoveRotation();
+            updateVisibility();
+            updateLight();
+            if (pac.isStandingStill()) {
+                headBangingAnimation.stop();
+                stopChewingAnimation();
+            } else {
+                headBangingAnimation.update(pac);
+                chewingAnimation.play();
+            }
+        } else {
+            stopChewingAnimation();
+            stopWalkingAnimation();
+        }
     }
 
     @Override
@@ -136,23 +164,12 @@ public class PacMan3D extends AbstractPac3D {
 
     @Override
     public void stopWalkingAnimation() {
-       headBanging.stop();
-    }
-
-    @Override
-    public void updateAliveAnimation() {
-        if (pac.isStandingStill()) {
-            headBanging.stop();
-            stopChewingAnimation();
-        } else {
-            headBanging.update(pac);
-            chewingAnimation.play();
-        }
+       headBangingAnimation.stop();
     }
 
     @Override
     public void setPower(boolean power) {
-        headBanging.setStrokeMode(power);
+        headBangingAnimation.setStrokeMode(power);
     }
 
     @Override
