@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.util.AssetMap;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
 import javafx.geometry.Point3D;
@@ -14,7 +15,6 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
 
@@ -69,7 +69,6 @@ public class PacMan3D extends AbstractPac3D {
         }
     }
 
-    private final GameContext context;
     private final Node jaw;
     private final Group bodyGroup = new Group();
     private final HeadBangingAnimation headBangingAnimation;
@@ -77,26 +76,25 @@ public class PacMan3D extends AbstractPac3D {
     /**
      * Creates a 3D Pac-Man.
      *
-     * @param context game context
      * @param pacMan Pac-Man instance
      * @param size diameter of Pac-Man
      * @param model3D 3D model for Pac-Man
+     * @param assets asset map
      */
-    public PacMan3D(GameContext context, Pac pacMan, double size, Model3D model3D) {
+    public PacMan3D(Pac pacMan, double size, Model3D model3D, AssetMap assets) {
         super(pacMan, size, model3D);
-        this.context = checkNotNull(context);
 
         Group body = PacModel3D.createPacShape(
             model3D, size,
-            context.assets().color("pacman.color.head"),
-            context.assets().color("pacman.color.eyes"),
-            context.assets().color("pacman.color.palate")
+            assets.color("pacman.color.head"),
+            assets.color("pacman.color.eyes"),
+            assets.color("pacman.color.palate")
         );
 
         jaw = PacModel3D.createPacSkull(
             model3D, size,
-            context.assets().color("pacman.color.head"),
-            context.assets().color("pacman.color.palate"));
+            assets.color("pacman.color.head"),
+            assets.color("pacman.color.palate"));
 
         bodyGroup.getChildren().addAll(body, jaw);
         bodyGroup.getTransforms().add(moveRotation);
@@ -111,11 +109,6 @@ public class PacMan3D extends AbstractPac3D {
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
         meshViewById(jaw,  PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
         meshViewById(jaw,  PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
-    }
-
-    @Override
-    protected GameContext context() {
-        return context;
     }
 
     @Override
@@ -136,12 +129,12 @@ public class PacMan3D extends AbstractPac3D {
     }
 
     @Override
-    public void update() {
+    public void update(GameContext context) {
         if (pac.isAlive()) {
             updatePosition(root());
             updateMoveRotation();
-            updateVisibility();
-            updateLight();
+            updateVisibility(context.game());
+            updateLight(context.game());
             if (pac.isStandingStill()) {
                 headBangingAnimation.stop();
                 stopChewingAnimation();

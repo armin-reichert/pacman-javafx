@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
@@ -75,8 +74,7 @@ public abstract class AbstractPac3D implements Pac3D {
         moveRotation.setAngle(Ufx.angle(pac.moveDir()));
     }
 
-    protected void updateLight() {
-        GameModel game = context().game();
+    protected void updateLight(GameModel game) {
         // When empowered, Pac-Man is lighted, light range shrinks with ceasing power
         boolean hasPower = game.powerTimer().isRunning();
         double range = hasPower && game.powerTimer().duration() > 0
@@ -86,13 +84,12 @@ public abstract class AbstractPac3D implements Pac3D {
         light.setLightOn(PY_3D_PAC_LIGHT_ENABLED.get() && pac.isVisible() && hasPower);
     }
 
-    protected void updateVisibility() {
-        WorldMap map = context().game().world().map();
+    protected void updateVisibility(GameModel game) {
+        WorldMap map = game.world().map();
         boolean outsideWorld = root().getTranslateX() < HTS || root().getTranslateX() > TS * map.terrain().numCols() - HTS;
         root().setVisible(pac.isVisible() && !outsideWorld);
     }
 
-    protected abstract GameContext context();
     protected abstract void stopChewingAnimation();
     protected abstract void stopWalkingAnimation();
 

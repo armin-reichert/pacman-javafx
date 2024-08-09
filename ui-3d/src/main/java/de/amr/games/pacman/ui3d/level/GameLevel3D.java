@@ -102,11 +102,11 @@ public class GameLevel3D {
 
         switch (game.variant()) {
             case MS_PACMAN -> {
-                pac3D = new MsPacMan3D(context, game.pac(), PAC_SIZE, assets.get("model3D.pacman"));
+                pac3D = new MsPacMan3D(game.pac(), PAC_SIZE, assets.get("model3D.pacman"), assets);
                 pac3D.light().setColor(context.assets().color("ms_pacman.color.head").desaturate());
             }
             case PACMAN, PACMAN_XXL -> {
-                pac3D = new PacMan3D(context, game.pac(), PAC_SIZE, assets.get("model3D.pacman"));
+                pac3D = new PacMan3D(game.pac(), PAC_SIZE, assets.get("model3D.pacman"), assets);
                 pac3D.light().setColor(context.assets().color("pacman.color.head").desaturate());
             }
         }
@@ -139,20 +139,22 @@ public class GameLevel3D {
      * Updates level from game state.
      */
     public void update() {
-        var game = context.game();
-        pac3D.update();
+        pac3D.update(context);
         ghosts3D().forEach(ghost3D -> ghost3D.update(context));
         bonus3D().ifPresent(bonus -> bonus.update(context));
-
-        boolean ghostNeedsHouseAccess = game.ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            .anyMatch(Ghost::isVisible);
-        boolean ghostNearHouseEntry = game.ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
-            .filter(ghost -> ghost.position().euclideanDistance(game.world().houseEntryPosition()) <= HOUSE_SENSITIVITY)
-            .anyMatch(Ghost::isVisible);
-        houseUsedPy.set(ghostNeedsHouseAccess);
-        houseOpenPy.set(ghostNearHouseEntry);
-
         updateLivesCounter();
+
+        boolean houseAccessRequired = context.game()
+            .ghosts(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+            .anyMatch(Ghost::isVisible);
+
+        boolean ghostNearHouseEntry = context.game()
+            .ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE)
+            .filter(ghost -> ghost.position().euclideanDistance(context.game().world().houseEntryPosition()) <= HOUSE_SENSITIVITY)
+            .anyMatch(Ghost::isVisible);
+
+        houseUsedPy.set(houseAccessRequired);
+        houseOpenPy.set(ghostNearHouseEntry);
     }
 
     private void updateLivesCounter() {

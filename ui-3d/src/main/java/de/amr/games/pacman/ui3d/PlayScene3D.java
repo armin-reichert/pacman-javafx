@@ -212,7 +212,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
     private void onEnterStatePacManDying() {
         context.soundHandler().stopAllSounds();
         // last update before dying animation
-        level3D.pac3D().update();
+        level3D.pac3D().update(context);
         playPacManDiesAnimation();
     }
 
@@ -298,7 +298,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
         context.game().pac().show();
         context.game().ghosts().forEach(Ghost::show);
         level3D.pac3D().init();
-        level3D.pac3D().update();
+        level3D.pac3D().update(context);
 
         if (context.game().isDemoLevel()) {
             return; // no sound in demo level

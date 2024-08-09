@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.util.AssetMap;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -16,7 +17,6 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.util.Ufx.pauseSec;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
 
@@ -66,37 +66,35 @@ public class MsPacMan3D extends AbstractPac3D {
         }
     }
 
-    private final GameContext context;
     private final Group bodyGroup = new Group();
     private final Node jaw;
     private final HipSwayingAnimation hipSwayingAnimation;
 
     /**
      * Creates a 3D Ms. Pac-Man.
-     * @param context game context
      * @param msPacMan Ms. Pac-Man instance
      * @param size diameter of Pac-Man
      * @param model3D 3D model
+     * @param assets asset map
      */
-    public MsPacMan3D(GameContext context, Pac msPacMan, double size, Model3D model3D) {
+    public MsPacMan3D(Pac msPacMan, double size, Model3D model3D, AssetMap assets) {
         super(msPacMan, size, model3D);
-        this.context = checkNotNull(context);
 
         Group body = PacModel3D.createPacShape(
             model3D, size,
-            context.assets().color("ms_pacman.color.head"),
-            context.assets().color("ms_pacman.color.eyes"),
-            context.assets().color("ms_pacman.color.palate"));
+            assets.color("ms_pacman.color.head"),
+            assets.color("ms_pacman.color.eyes"),
+            assets.color("ms_pacman.color.palate"));
 
         Group femaleParts = PacModel3D.createFemaleParts(size,
-            context.assets().color("ms_pacman.color.hairbow"),
-            context.assets().color("ms_pacman.color.hairbow.pearls"),
-            context.assets().color("ms_pacman.color.boobs"));
+            assets.color("ms_pacman.color.hairbow"),
+            assets.color("ms_pacman.color.hairbow.pearls"),
+            assets.color("ms_pacman.color.boobs"));
 
         jaw = PacModel3D.createPacSkull(
             model3D, size,
-            context.assets().color("pacman.color.head"),
-            context.assets().color("pacman.color.palate"));
+            assets.color("pacman.color.head"),
+            assets.color("pacman.color.palate"));
 
         bodyGroup.getChildren().addAll(body, femaleParts, jaw);
         bodyGroup.getTransforms().add(moveRotation);
@@ -114,11 +112,6 @@ public class MsPacMan3D extends AbstractPac3D {
     }
 
     @Override
-    protected GameContext context() {
-        return context;
-    }
-
-    @Override
     public Group root() {
         return bodyGroup;
     }
@@ -133,12 +126,12 @@ public class MsPacMan3D extends AbstractPac3D {
     }
 
     @Override
-    public void update() {
+    public void update(GameContext context) {
         if (pac.isAlive()) {
             updatePosition(root());
             updateMoveRotation();
-            updateVisibility();
-            updateLight();
+            updateVisibility(context.game());
+            updateLight(context.game());
             if (pac.isStandingStill()) {
                 hipSwayingAnimation.stop();
                 stopChewingAnimation();
