@@ -17,6 +17,7 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.util.Ufx.pauseSec;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
 
@@ -66,19 +67,21 @@ public class MsPacMan3D extends AbstractPac3D {
         }
     }
 
+    private final Pac msPacMan;
     private final Group bodyGroup = new Group();
     private final Node jaw;
     private final HipSwayingAnimation hipSwayingAnimation;
+    private final double initialZ;
 
     /**
      * Creates a 3D Ms. Pac-Man.
+     *
      * @param msPacMan Ms. Pac-Man instance
      * @param size diameter of Pac-Man
      * @param assets asset map
      */
     public MsPacMan3D(Pac msPacMan, double size, AssetMap assets) {
-        super(msPacMan);
-
+        this.msPacMan = checkNotNull(msPacMan);
         Model3D model3D = assets.get("model3D.pacman");
 
         Group body = PacModel3D.createPacShape(
@@ -111,8 +114,14 @@ public class MsPacMan3D extends AbstractPac3D {
         meshViewById(jaw,  PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
         meshViewById(jaw,  PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
-        bodyGroup.setTranslateZ(-0.5 * size);
-        light.setTranslateZ(-1.5 * size);
+        initialZ = -0.5 * size;
+        bodyGroup.setTranslateZ(initialZ);
+        light.setTranslateZ(initialZ - size);
+    }
+
+    @Override
+    protected Pac pac() {
+        return msPacMan;
     }
 
     @Override
@@ -122,6 +131,7 @@ public class MsPacMan3D extends AbstractPac3D {
 
     @Override
     public void init() {
+        bodyGroup.setTranslateZ(initialZ);
         updatePosition(bodyGroup);
         updateMoveRotation();
         hipSwayingAnimation.stop();
@@ -131,14 +141,14 @@ public class MsPacMan3D extends AbstractPac3D {
 
     @Override
     public void update(GameContext context) {
-        if (pac.isAlive()) {
-            updatePosition(root());
+        if (msPacMan.isAlive()) {
+            updatePosition(bodyGroup);
             updateMoveRotation();
             updateVisibility(context.game());
             updateLight(context.game());
         }
-        if (pac.isAlive() && !pac.isStandingStill()) {
-            hipSwayingAnimation.update(pac);
+        if (msPacMan.isAlive() && !msPacMan.isStandingStill()) {
+            hipSwayingAnimation.update(msPacMan);
             playChewingAnimation();
         } else {
             hipSwayingAnimation.stop();
