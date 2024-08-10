@@ -126,7 +126,7 @@ public class PacMan3D implements Pac3D {
             shape3D.chew();
         } else {
             headBangingAnimation.stop();
-            shape3D.stopChewing();
+            shape3D.stopChewingAndOpenMouth();
         }
     }
 

@@ -124,7 +124,7 @@ public class MsPacMan3D implements Pac3D {
             shape3D.chew();
         } else {
             hipSwayingAnimation.stop();
-            shape3D.stopChewing();
+            shape3D.stopChewingAndOpenMouth();
         }
     }
 
