@@ -78,7 +78,6 @@ public class MsPacMan3D implements Pac3D {
     private final Rotate moveRotation = new Rotate();
     private final Pac msPacMan;
     private final Group bodyGroup = new Group();
-    private final Node jaw;
     private final HipSwayingAnimation hipSwayingAnimation;
     private final Animation chewingAnimation;
     private final double initialZ;
@@ -111,7 +110,7 @@ public class MsPacMan3D implements Pac3D {
             assets.color("ms_pacman.color.hairbow.pearls"),
             assets.color("ms_pacman.color.boobs"));
 
-        jaw = PacModel3D.createPacSkull(
+        Node jaw = PacModel3D.createPacSkull(
             model3D, size,
             assets.color("pacman.color.head"),
             assets.color("pacman.color.palate"));
@@ -152,7 +151,7 @@ public class MsPacMan3D implements Pac3D {
         bodyGroup.setVisible(msPacMan.isVisible());
         hipSwayingAnimation.stop();
         hipSwayingAnimation.setWinnetouchMode(false);
-        stopChewingAnimation();
+        chewingAnimation.stop();
     }
 
     @Override
@@ -167,7 +166,7 @@ public class MsPacMan3D implements Pac3D {
             chewingAnimation.play();
         } else {
             hipSwayingAnimation.stop();
-            stopChewingAnimation();
+            chewingAnimation.stop();
         }
     }
 
@@ -214,11 +213,5 @@ public class MsPacMan3D implements Pac3D {
         WorldMap map = game.world().map();
         boolean outsideWorld = root().getTranslateX() < HTS || root().getTranslateX() > TS * map.terrain().numCols() - HTS;
         root().setVisible(msPacMan.isVisible() && !outsideWorld);
-    }
-
-    private void stopChewingAnimation() {
-        chewingAnimation.stop();
-        jaw.setRotationAxis(Rotate.Y_AXIS);
-        jaw.setRotate(0);
     }
 }

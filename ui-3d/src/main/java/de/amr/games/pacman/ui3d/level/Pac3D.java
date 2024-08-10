@@ -16,6 +16,7 @@ import javafx.scene.PointLight;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 /**
  * @author Armin Reichert
@@ -50,6 +51,13 @@ public interface Pac3D {
         openMouth.setInterpolator(Interpolator.LINEAR);
         var chewingAnimation = new SequentialTransition(openMouth, Ufx.pauseSec(0.1), closeMouth);
         chewingAnimation.setCycleCount(Animation.INDEFINITE);
+        chewingAnimation.statusProperty().addListener((py, ov, nv) -> {
+            if (nv == Animation.Status.STOPPED) {
+                jaw.setRotationAxis(Rotate.Y_AXIS);
+                jaw.setRotate(0);
+                Logger.info("Chewing stopped");
+            }
+        });
         return chewingAnimation;
     }
 }

@@ -85,7 +85,6 @@ public class PacMan3D implements Pac3D {
     private final PointLight light = new PointLight();
     private final Rotate moveRotation = new Rotate();
     private final Pac pacMan;
-    private final Node jaw;
     private final Group bodyGroup = new Group();
     private final HeadBangingAnimation headBangingAnimation;
     private final Animation chewingAnimation;
@@ -114,7 +113,7 @@ public class PacMan3D implements Pac3D {
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
-        jaw = PacModel3D.createPacSkull(
+        Node jaw = PacModel3D.createPacSkull(
             model3D, size,
             assets.color("pacman.color.head"),
             assets.color("pacman.color.palate"));
@@ -166,7 +165,7 @@ public class PacMan3D implements Pac3D {
         bodyGroup.setScaleZ(1.0);
         headBangingAnimation.stop();
         headBangingAnimation.setStrokeMode(false);
-        stopChewingAnimation();
+        chewingAnimation.stop();
     }
 
     @Override
@@ -181,7 +180,7 @@ public class PacMan3D implements Pac3D {
             chewingAnimation.play();
         } else {
             headBangingAnimation.stop();
-            stopChewingAnimation();
+            chewingAnimation.stop();
         }
     }
 
@@ -240,11 +239,5 @@ public class PacMan3D implements Pac3D {
         WorldMap map = game.world().map();
         boolean outsideWorld = root().getTranslateX() < HTS || root().getTranslateX() > TS * map.terrain().numCols() - HTS;
         bodyGroup.setVisible(pacMan.isVisible() && !outsideWorld);
-    }
-
-    private void stopChewingAnimation() {
-        chewingAnimation.stop();
-        jaw.setRotationAxis(Rotate.Y_AXIS);
-        jaw.setRotate(0);
     }
 }
