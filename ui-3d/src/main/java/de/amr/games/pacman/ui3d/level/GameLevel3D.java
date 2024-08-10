@@ -104,13 +104,14 @@ public class GameLevel3D {
             case MS_PACMAN -> {
                 pac3D = new MsPacMan3D(game.pac(), PAC_SIZE, assets);
                 pac3D.light().setColor(context.assets().color("ms_pacman.color.head").desaturate());
+                pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
             }
             case PACMAN, PACMAN_XXL -> {
                 pac3D = new PacMan3D(game.pac(), PAC_SIZE, assets);
                 pac3D.light().setColor(context.assets().color("pacman.color.head").desaturate());
+                pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
             }
         }
-        pac3D.drawModeProperty().bind(PY_3D_DRAW_MODE);
 
         ghosts3D = game.ghosts().map(ghost -> new MutableGhost3D(assets.get("model3D.ghost"), assets, ghost, GHOST_SIZE)).toList();
         ghosts3D.forEach(ghost3D -> ghost3D.drawModePy.bind(PY_3D_DRAW_MODE));
@@ -130,7 +131,7 @@ public class GameLevel3D {
         addFood3D(world);
 
         // Walls and house must be added after the guys! Otherwise, transparency is not working correctly.
-        root.getChildren().addAll(pac3D.root(), pac3D.light());
+        root.getChildren().addAll(pac3D.shape3D(), pac3D.light());
         ghosts3D.forEach(ghost3D -> root.getChildren().add(ghost3D.root()));
         root.getChildren().addAll(message3D, livesCounter3D, worldGroup);
     }
