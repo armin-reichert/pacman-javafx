@@ -14,7 +14,6 @@ import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PointLight;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -104,11 +103,6 @@ public class MsPacMan3D implements Pac3D {
     @Override
     public PacShape3D shape3D() {
         return shape3D;
-    }
-
-    @Override
-    public PointLight light() {
-        return shape3D.light();
     }
 
     @Override

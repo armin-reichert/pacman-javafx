@@ -12,7 +12,6 @@ import javafx.animation.*;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.PointLight;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -109,11 +108,6 @@ public class PacMan3D implements Pac3D {
     }
 
     @Override
-    public PointLight light() {
-        return shape3D.light();
-    }
-
-    @Override
     public void init() {
         shape3D.init(pacMan);
         headBangingAnimation.stop();
@@ -171,5 +165,4 @@ public class PacMan3D implements Pac3D {
             doAfterSec(1.0, () -> shape3D.setVisible(false))
         );
     }
-
 }

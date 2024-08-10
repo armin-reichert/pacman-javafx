@@ -32,6 +32,4 @@ public interface Pac3D {
     Animation createDyingAnimation();
 
     void setPower(boolean power);
-
-    PointLight light();
 }
