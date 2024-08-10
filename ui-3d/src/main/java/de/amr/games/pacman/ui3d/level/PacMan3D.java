@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui3d.level;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.AssetMap;
@@ -172,7 +173,7 @@ public class PacMan3D implements Pac3D {
     public void update(GameContext context) {
         if (pacMan.isAlive()) {
             updatePosition();
-            updateVisibility(context.game());
+            updateVisibility(context.game().world());
             updateLight(context.game());
         }
         if (pacMan.isAlive() && !pacMan.isStandingStill()) {
@@ -235,9 +236,10 @@ public class PacMan3D implements Pac3D {
         light.setLightOn(PY_3D_PAC_LIGHT_ENABLED.get() && pacMan.isVisible() && hasPower);
     }
 
-    private void updateVisibility(GameModel game) {
-        WorldMap map = game.world().map();
-        boolean outsideWorld = bodyGroup.getTranslateX() < HTS || bodyGroup.getTranslateX() > TS * map.terrain().numCols() - HTS;
+    private void updateVisibility(GameWorld world) {
+        WorldMap map = world.map();
+        boolean outsideWorld = bodyGroup.getTranslateX() < HTS
+            || bodyGroup.getTranslateX() > TS * map.terrain().numCols() - HTS;
         bodyGroup.setVisible(pacMan.isVisible() && !outsideWorld);
     }
 }
