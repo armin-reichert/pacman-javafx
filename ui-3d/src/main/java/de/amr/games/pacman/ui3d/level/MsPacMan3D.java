@@ -164,7 +164,7 @@ public class MsPacMan3D implements Pac3D {
         }
         if (msPacMan.isAlive() && !msPacMan.isStandingStill()) {
             hipSwayingAnimation.play();
-            playChewingAnimation();
+            chewingAnimation.play();
         } else {
             hipSwayingAnimation.stop();
             stopChewingAnimation();
@@ -214,10 +214,6 @@ public class MsPacMan3D implements Pac3D {
         WorldMap map = game.world().map();
         boolean outsideWorld = root().getTranslateX() < HTS || root().getTranslateX() > TS * map.terrain().numCols() - HTS;
         root().setVisible(msPacMan.isVisible() && !outsideWorld);
-    }
-
-    private void playChewingAnimation() {
-        chewingAnimation.play();
     }
 
     private void stopChewingAnimation() {

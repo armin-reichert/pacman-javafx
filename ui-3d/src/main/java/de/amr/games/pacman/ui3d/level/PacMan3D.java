@@ -178,7 +178,7 @@ public class PacMan3D implements Pac3D {
         }
         if (pacMan.isAlive() && !pacMan.isStandingStill()) {
             headBangingAnimation.update(pacMan);
-            playChewingAnimation();
+            chewingAnimation.play();
         } else {
             headBangingAnimation.stop();
             stopChewingAnimation();
@@ -240,11 +240,6 @@ public class PacMan3D implements Pac3D {
         WorldMap map = game.world().map();
         boolean outsideWorld = root().getTranslateX() < HTS || root().getTranslateX() > TS * map.terrain().numCols() - HTS;
         bodyGroup.setVisible(pacMan.isVisible() && !outsideWorld);
-    }
-
-
-    private void playChewingAnimation() {
-        chewingAnimation.play();
     }
 
     private void stopChewingAnimation() {
