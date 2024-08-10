@@ -28,6 +28,7 @@ import javafx.util.Duration;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.pauseSec;
 import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_PAC_LIGHT_ENABLED;
+import static de.amr.games.pacman.ui3d.level.Pac3D.createChewingAnimation;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
 
 /**
@@ -126,7 +127,7 @@ public class MsPacMan3D implements Pac3D {
         light.translateYProperty().bind(bodyGroup.translateYProperty());
         light.setTranslateZ(initialZ - size);
 
-        chewingAnimation = Pac3D.createChewingAnimation(jaw);
+        chewingAnimation = createChewingAnimation(jaw);
         hipSwayingAnimation = new HipSwayingAnimation(bodyGroup);
     }
 
@@ -211,7 +212,7 @@ public class MsPacMan3D implements Pac3D {
 
     private void updateVisibility(GameModel game) {
         WorldMap map = game.world().map();
-        boolean outsideWorld = root().getTranslateX() < HTS || root().getTranslateX() > TS * map.terrain().numCols() - HTS;
-        root().setVisible(msPacMan.isVisible() && !outsideWorld);
+        boolean outsideWorld = bodyGroup.getTranslateX() < HTS || bodyGroup.getTranslateX() > TS * map.terrain().numCols() - HTS;
+        bodyGroup.setVisible(msPacMan.isVisible() && !outsideWorld);
     }
 }

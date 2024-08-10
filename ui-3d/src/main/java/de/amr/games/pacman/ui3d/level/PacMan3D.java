@@ -36,10 +36,10 @@ public class PacMan3D implements Pac3D {
 
     private static class HeadBangingAnimation {
 
-        private static final float POWER_AMPLIFICATION = 2;
-        private static final short ANGLE_FROM = -15;
-        private static final short ANGLE_TO = 20;
-        private static final Duration DURATION = Duration.seconds(0.3);
+        static final float POWER_AMPLIFICATION = 2;
+        static final short ANGLE_FROM = -15;
+        static final short ANGLE_TO = 20;
+        static final Duration DURATION = Duration.seconds(0.3);
 
         private final RotateTransition banging;
 
@@ -237,7 +237,7 @@ public class PacMan3D implements Pac3D {
 
     private void updateVisibility(GameModel game) {
         WorldMap map = game.world().map();
-        boolean outsideWorld = root().getTranslateX() < HTS || root().getTranslateX() > TS * map.terrain().numCols() - HTS;
+        boolean outsideWorld = bodyGroup.getTranslateX() < HTS || bodyGroup.getTranslateX() > TS * map.terrain().numCols() - HTS;
         bodyGroup.setVisible(pacMan.isVisible() && !outsideWorld);
     }
 }
