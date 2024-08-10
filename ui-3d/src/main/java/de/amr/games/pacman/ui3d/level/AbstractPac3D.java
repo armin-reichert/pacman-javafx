@@ -64,14 +64,6 @@ public abstract class AbstractPac3D implements Pac3D {
         jaw.setRotate(0);
     }
 
-    protected void updatePosition(Node root) {
-        Vector2f center = pac().center();
-        root.setTranslateX(center.x());
-        root.setTranslateY(center.y());
-        light.setTranslateX(center.x());
-        light.setTranslateY(center.y());
-    }
-
     protected void updateMoveRotation() {
         moveRotation.setAxis(Rotate.Z_AXIS);
         moveRotation.setAngle(Ufx.angle(pac().moveDir()));

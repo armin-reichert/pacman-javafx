@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.AssetMap;
@@ -39,6 +40,7 @@ public class PacMan3D extends AbstractPac3D {
             banging.setCycleCount(Animation.INDEFINITE);
             banging.setAutoReverse(true);
             banging.setInterpolator(Interpolator.EASE_BOTH);
+            setStrokeMode(false);
         }
 
         // Note: Massive headbanging can lead to a stroke!
@@ -85,6 +87,8 @@ public class PacMan3D extends AbstractPac3D {
      */
     public PacMan3D(Pac pacMan, double size, AssetMap assets) {
         this.pacMan = checkNotNull(pacMan);
+        initialZ = -0.5 * size;
+
         Model3D model3D = assets.get("model3D.pacman");
 
         Group body = PacModel3D.createPacShape(
@@ -93,29 +97,27 @@ public class PacMan3D extends AbstractPac3D {
             assets.color("pacman.color.eyes"),
             assets.color("pacman.color.palate")
         );
+        meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(drawModePy);
+        meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
+        meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
         jaw = PacModel3D.createPacSkull(
             model3D, size,
             assets.color("pacman.color.head"),
             assets.color("pacman.color.palate"));
+        meshViewById(jaw, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
+        meshViewById(jaw, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
         bodyGroup.getChildren().addAll(body, jaw);
         bodyGroup.getTransforms().add(moveRotation);
+        bodyGroup.setTranslateZ(initialZ);
+
+        light.translateXProperty().bind(bodyGroup.translateXProperty());
+        light.translateYProperty().bind(bodyGroup.translateYProperty());
+        light.setTranslateZ(initialZ - size);
 
         createChewingAnimation(jaw);
-
         headBangingAnimation = new HeadBangingAnimation(bodyGroup);
-        headBangingAnimation.setStrokeMode(false);
-
-        meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(drawModePy);
-        meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
-        meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
-        meshViewById(jaw,  PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
-        meshViewById(jaw,  PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
-
-        initialZ = -0.5 * size;
-        bodyGroup.setTranslateZ(initialZ);
-        light.setTranslateZ(initialZ - size);
     }
 
     @Override
@@ -128,14 +130,21 @@ public class PacMan3D extends AbstractPac3D {
         return bodyGroup;
     }
 
+    private void updatePosition() {
+        Vector2f center = pacMan.center();
+        bodyGroup.setTranslateX(center.x());
+        bodyGroup.setTranslateY(center.y());
+        bodyGroup.setTranslateZ(initialZ);
+        updateMoveRotation();
+    }
+
     @Override
     public void init() {
+        updatePosition();
+        bodyGroup.setVisible(pacMan.isVisible());
         bodyGroup.setScaleX(1.0);
         bodyGroup.setScaleY(1.0);
         bodyGroup.setScaleZ(1.0);
-        updatePosition(bodyGroup);
-        bodyGroup.setTranslateZ(initialZ);
-        updateMoveRotation();
         headBangingAnimation.stop();
         headBangingAnimation.setStrokeMode(false);
         stopChewingAnimation(jaw);
@@ -144,8 +153,7 @@ public class PacMan3D extends AbstractPac3D {
     @Override
     public void update(GameContext context) {
         if (pacMan.isAlive()) {
-            updatePosition(bodyGroup);
-            updateMoveRotation();
+            updatePosition();
             updateVisibility(context.game());
             updateLight(context.game());
         }

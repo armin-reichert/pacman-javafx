@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.AssetMap;
@@ -28,9 +29,9 @@ public class MsPacMan3D extends AbstractPac3D {
 
     private static class HipSwayingAnimation {
 
-        private static final short ANGLE_FROM = -20;
-        private static final short ANGLE_TO = 20;
-        private static final Duration DURATION = Duration.seconds(0.4);
+        static final short ANGLE_FROM = -20;
+        static final short ANGLE_TO = 20;
+        static final Duration DURATION = Duration.seconds(0.4);
 
         private final RotateTransition swaying;
 
@@ -40,9 +41,10 @@ public class MsPacMan3D extends AbstractPac3D {
             swaying.setCycleCount(Animation.INDEFINITE);
             swaying.setAutoReverse(true);
             swaying.setInterpolator(Interpolator.EASE_BOTH);
+            setWinnetouchMode(false);
         }
 
-        // Winnetouch is the gay twin-brother of Abahachi
+        // Note: Winnetouch is the gay twin-brother of Abahachi
         public void setWinnetouchMode(boolean power) {
             double amplification = power ? 1.5 : 1;
             double rate = power ? 2 : 1;
@@ -52,12 +54,8 @@ public class MsPacMan3D extends AbstractPac3D {
             swaying.setRate(rate);
         }
 
-        public void update(Pac pac) {
-            if (pac.isStandingStill()) {
-                stop();
-            } else {
-                swaying.play();
-            }
+        public void play() {
+            swaying.play();
         }
 
         public void stop() {
@@ -82,6 +80,8 @@ public class MsPacMan3D extends AbstractPac3D {
      */
     public MsPacMan3D(Pac msPacMan, double size, AssetMap assets) {
         this.msPacMan = checkNotNull(msPacMan);
+        initialZ = -0.5 * size;
+
         Model3D model3D = assets.get("model3D.pacman");
 
         Group body = PacModel3D.createPacShape(
@@ -89,6 +89,10 @@ public class MsPacMan3D extends AbstractPac3D {
             assets.color("ms_pacman.color.head"),
             assets.color("ms_pacman.color.eyes"),
             assets.color("ms_pacman.color.palate"));
+
+        meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(drawModePy);
+        meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
+        meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
         Group femaleParts = PacModel3D.createFemaleParts(size,
             assets.color("ms_pacman.color.hairbow"),
@@ -100,23 +104,19 @@ public class MsPacMan3D extends AbstractPac3D {
             assets.color("pacman.color.head"),
             assets.color("pacman.color.palate"));
 
-        bodyGroup.getChildren().addAll(body, femaleParts, jaw);
-        bodyGroup.getTransforms().add(moveRotation);
-
-        createChewingAnimation(jaw);
-
-        hipSwayingAnimation = new HipSwayingAnimation(bodyGroup);
-        hipSwayingAnimation.setWinnetouchMode(false);
-
-        meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(drawModePy);
-        meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
-        meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
         meshViewById(jaw,  PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
         meshViewById(jaw,  PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
-        initialZ = -0.5 * size;
+        bodyGroup.getChildren().addAll(body, femaleParts, jaw);
+        bodyGroup.getTransforms().add(moveRotation);
         bodyGroup.setTranslateZ(initialZ);
+
+        light.translateXProperty().bind(bodyGroup.translateXProperty());
+        light.translateYProperty().bind(bodyGroup.translateYProperty());
         light.setTranslateZ(initialZ - size);
+
+        createChewingAnimation(jaw);
+        hipSwayingAnimation = new HipSwayingAnimation(bodyGroup);
     }
 
     @Override
@@ -129,11 +129,18 @@ public class MsPacMan3D extends AbstractPac3D {
         return bodyGroup;
     }
 
+    private void updatePosition() {
+        Vector2f center = msPacMan.center();
+        bodyGroup.setTranslateX(center.x());
+        bodyGroup.setTranslateY(center.y());
+        bodyGroup.setTranslateZ(initialZ);
+        updateMoveRotation();
+    }
+
     @Override
     public void init() {
-        bodyGroup.setTranslateZ(initialZ);
-        updatePosition(bodyGroup);
-        updateMoveRotation();
+        updatePosition();
+        bodyGroup.setVisible(msPacMan.isVisible());
         hipSwayingAnimation.stop();
         hipSwayingAnimation.setWinnetouchMode(false);
         stopChewingAnimation(jaw);
@@ -142,13 +149,12 @@ public class MsPacMan3D extends AbstractPac3D {
     @Override
     public void update(GameContext context) {
         if (msPacMan.isAlive()) {
-            updatePosition(bodyGroup);
-            updateMoveRotation();
+            updatePosition();
             updateVisibility(context.game());
             updateLight(context.game());
         }
         if (msPacMan.isAlive() && !msPacMan.isStandingStill()) {
-            hipSwayingAnimation.update(msPacMan);
+            hipSwayingAnimation.play();
             playChewingAnimation();
         } else {
             hipSwayingAnimation.stop();
@@ -169,7 +175,6 @@ public class MsPacMan3D extends AbstractPac3D {
         spin.setToAngle(360);
         spin.setInterpolator(Interpolator.LINEAR);
         spin.setCycleCount(4);
-        spin.setDelay(Duration.seconds(0.5));
-        return new SequentialTransition(spin, pauseSec(2));
+        return new SequentialTransition(pauseSec(1), spin, pauseSec(1.5));
     }
 }
