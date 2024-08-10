@@ -5,27 +5,35 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.lib.Vector2f;
+import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.AssetMap;
+import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.PointLight;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.pauseSec;
+import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_PAC_LIGHT_ENABLED;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
 
 /**
  * @author Armin Reichert
  */
-public class MsPacMan3D extends AbstractPac3D {
+public class MsPacMan3D implements Pac3D {
 
     private static class HipSwayingAnimation {
 
@@ -65,10 +73,14 @@ public class MsPacMan3D extends AbstractPac3D {
         }
     }
 
+    private final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
+    private final PointLight light = new PointLight();
+    private final Rotate moveRotation = new Rotate();
     private final Pac msPacMan;
     private final Group bodyGroup = new Group();
     private final Node jaw;
     private final HipSwayingAnimation hipSwayingAnimation;
+    private final Animation chewingAnimation;
     private final double initialZ;
 
     /**
@@ -115,13 +127,8 @@ public class MsPacMan3D extends AbstractPac3D {
         light.translateYProperty().bind(bodyGroup.translateYProperty());
         light.setTranslateZ(initialZ - size);
 
-        createChewingAnimation(jaw);
+        chewingAnimation = Pac3D.createChewingAnimation(jaw);
         hipSwayingAnimation = new HipSwayingAnimation(bodyGroup);
-    }
-
-    @Override
-    protected Pac pac() {
-        return msPacMan;
     }
 
     @Override
@@ -129,12 +136,14 @@ public class MsPacMan3D extends AbstractPac3D {
         return bodyGroup;
     }
 
-    private void updatePosition() {
-        Vector2f center = msPacMan.center();
-        bodyGroup.setTranslateX(center.x());
-        bodyGroup.setTranslateY(center.y());
-        bodyGroup.setTranslateZ(initialZ);
-        updateMoveRotation();
+    @Override
+    public PointLight light() {
+        return light;
+    }
+
+    @Override
+    public ObjectProperty<DrawMode> drawModeProperty() {
+        return drawModePy;
     }
 
     @Override
@@ -143,7 +152,7 @@ public class MsPacMan3D extends AbstractPac3D {
         bodyGroup.setVisible(msPacMan.isVisible());
         hipSwayingAnimation.stop();
         hipSwayingAnimation.setWinnetouchMode(false);
-        stopChewingAnimation(jaw);
+        stopChewingAnimation();
     }
 
     @Override
@@ -158,7 +167,7 @@ public class MsPacMan3D extends AbstractPac3D {
             playChewingAnimation();
         } else {
             hipSwayingAnimation.stop();
-            stopChewingAnimation(jaw);
+            stopChewingAnimation();
         }
     }
 
@@ -176,5 +185,44 @@ public class MsPacMan3D extends AbstractPac3D {
         spin.setInterpolator(Interpolator.LINEAR);
         spin.setCycleCount(4);
         return new SequentialTransition(pauseSec(1), spin, pauseSec(1.5));
+    }
+
+    private void updatePosition() {
+        Vector2f center = msPacMan.center();
+        bodyGroup.setTranslateX(center.x());
+        bodyGroup.setTranslateY(center.y());
+        bodyGroup.setTranslateZ(initialZ);
+        updateMoveRotation();
+    }
+
+    private void updateMoveRotation() {
+        moveRotation.setAxis(Rotate.Z_AXIS);
+        moveRotation.setAngle(Ufx.angle(msPacMan.moveDir()));
+    }
+
+    private void updateLight(GameModel game) {
+        // When empowered, Pac-Man is lighted, light range shrinks with ceasing power
+        boolean hasPower = game.powerTimer().isRunning();
+        double range = hasPower && game.powerTimer().duration() > 0
+            ? 2 * TS + ((double) game.powerTimer().remaining() / game.powerTimer().duration()) * 6 * TS
+            : 0;
+        light.setMaxRange(range);
+        light.setLightOn(PY_3D_PAC_LIGHT_ENABLED.get() && msPacMan.isVisible() && hasPower);
+    }
+
+    private void updateVisibility(GameModel game) {
+        WorldMap map = game.world().map();
+        boolean outsideWorld = root().getTranslateX() < HTS || root().getTranslateX() > TS * map.terrain().numCols() - HTS;
+        root().setVisible(msPacMan.isVisible() && !outsideWorld);
+    }
+
+    private void playChewingAnimation() {
+        chewingAnimation.play();
+    }
+
+    private void stopChewingAnimation() {
+        chewingAnimation.stop();
+        jaw.setRotationAxis(Rotate.Y_AXIS);
+        jaw.setRotate(0);
     }
 }
