@@ -73,7 +73,7 @@ public class PacMan3D implements Pac3D {
 
     private final Pac pacMan;
     private final PacShape3D shape3D;
-    private final HeadBangingAnimation headBangingAnimation;
+    private final HeadBangingAnimation walkAnimation;
 
     /**
      * Creates a 3D Pac-Man.
@@ -99,7 +99,7 @@ public class PacMan3D implements Pac3D {
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(shape3D.drawModeProperty());
 
         shape3D.getChildren().addAll(body);
-        headBangingAnimation = new HeadBangingAnimation(shape3D);
+        walkAnimation = new HeadBangingAnimation(shape3D);
     }
 
     @Override
@@ -110,29 +110,29 @@ public class PacMan3D implements Pac3D {
     @Override
     public void init() {
         shape3D.init(pacMan);
-        headBangingAnimation.stop();
-        headBangingAnimation.setStrokeMode(false);
+        walkAnimation.stop();
+        walkAnimation.setStrokeMode(false);
     }
 
     @Override
     public void update(GameContext context) {
         if (pacMan.isAlive()) {
             shape3D.updatePosition(pacMan);
-            shape3D.updateVisibility(pacMan, context.game().world());
             shape3D.updateLight(pacMan, context.game());
+            shape3D.updateVisibility(pacMan, context.game().world());
         }
         if (pacMan.isAlive() && !pacMan.isStandingStill()) {
-            headBangingAnimation.update(pacMan);
+            walkAnimation.update(pacMan);
             shape3D.chew();
         } else {
-            headBangingAnimation.stop();
+            walkAnimation.stop();
             shape3D.stopChewingAndOpenMouth();
         }
     }
 
     @Override
-    public void setPower(boolean power) {
-        headBangingAnimation.setStrokeMode(power);
+    public void setPowerMode(boolean power) {
+        walkAnimation.setStrokeMode(power);
     }
 
     @Override

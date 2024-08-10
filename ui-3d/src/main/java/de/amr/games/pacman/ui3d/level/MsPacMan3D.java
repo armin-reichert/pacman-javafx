@@ -66,7 +66,7 @@ public class MsPacMan3D implements Pac3D {
 
     private final Pac msPacMan;
     private final PacShape3D shape3D;
-    private final HipSwayingAnimation hipSwayingAnimation;
+    private final HipSwayingAnimation walkAnimation;
 
     /**
      * Creates a 3D Ms. Pac-Man.
@@ -97,7 +97,7 @@ public class MsPacMan3D implements Pac3D {
             assets.color("ms_pacman.color.boobs"));
 
         shape3D.getChildren().addAll(body, femaleParts);
-        hipSwayingAnimation = new HipSwayingAnimation(shape3D);
+        walkAnimation = new HipSwayingAnimation(shape3D);
     }
 
     @Override
@@ -108,39 +108,39 @@ public class MsPacMan3D implements Pac3D {
     @Override
     public void init() {
         shape3D.init(msPacMan);
-        hipSwayingAnimation.stop();
-        hipSwayingAnimation.setWinnetouchMode(false);
+        walkAnimation.stop();
+        walkAnimation.setWinnetouchMode(false);
     }
 
     @Override
     public void update(GameContext context) {
         if (msPacMan.isAlive()) {
             shape3D.updatePosition(msPacMan);
-            shape3D.updateVisibility(msPacMan, context.game().world());
             shape3D.updateLight(msPacMan, context.game());
+            shape3D.updateVisibility(msPacMan, context.game().world());
         }
         if (msPacMan.isAlive() && !msPacMan.isStandingStill()) {
-            hipSwayingAnimation.play();
+            walkAnimation.play();
             shape3D.chew();
         } else {
-            hipSwayingAnimation.stop();
+            walkAnimation.stop();
             shape3D.stopChewingAndOpenMouth();
         }
     }
 
     @Override
-    public void setPower(boolean power) {
-        hipSwayingAnimation.setWinnetouchMode(power);
+    public void setPowerMode(boolean power) {
+        walkAnimation.setWinnetouchMode(power);
     }
 
     @Override
     public Animation createDyingAnimation() {
-        var spin = new RotateTransition(Duration.seconds(0.25), shape3D);
-        spin.setAxis(Rotate.Z_AXIS);
-        spin.setFromAngle(0);
-        spin.setToAngle(360);
-        spin.setInterpolator(Interpolator.LINEAR);
-        spin.setCycleCount(4);
-        return new SequentialTransition(pauseSec(1), spin, pauseSec(1.5));
+        var spinning = new RotateTransition(Duration.seconds(0.25), shape3D);
+        spinning.setAxis(Rotate.Z_AXIS);
+        spinning.setFromAngle(0);
+        spinning.setToAngle(360);
+        spinning.setInterpolator(Interpolator.LINEAR);
+        spinning.setCycleCount(4);
+        return new SequentialTransition(pauseSec(1), spinning, pauseSec(1.5));
     }
 }

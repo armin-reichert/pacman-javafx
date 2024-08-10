@@ -389,12 +389,12 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
     @Override
     public void onPacGetsPower(GameEvent event) {
-        level3D.pac3D().setPower(true);
+        level3D.pac3D().setPowerMode(true);
     }
 
     @Override
     public void onPacLostPower(GameEvent event) {
-        level3D.pac3D().setPower(false);
+        level3D.pac3D().setPowerMode(false);
     }
 
     private void replaceGameLevel3D(boolean createLevelCounter) {
