@@ -117,8 +117,8 @@ public class MsPacMan3D implements Pac3D {
             assets.color("pacman.color.head"),
             assets.color("pacman.color.palate"));
 
-        meshViewById(jaw,  PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
-        meshViewById(jaw,  PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
+        meshViewById(jaw, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
+        meshViewById(jaw, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
         bodyGroup.getChildren().addAll(body, femaleParts, jaw);
         bodyGroup.getTransforms().add(moveRotation);
@@ -196,6 +196,12 @@ public class MsPacMan3D implements Pac3D {
         updateMoveRotation();
     }
 
+    private void updateVisibility(GameWorld world) {
+        WorldMap map = world.map();
+        boolean outsideWorld = bodyGroup.getTranslateX() < HTS || bodyGroup.getTranslateX() > TS * map.terrain().numCols() - HTS;
+        bodyGroup.setVisible(msPacMan.isVisible() && !outsideWorld);
+    }
+
     private void updateMoveRotation() {
         moveRotation.setAxis(Rotate.Z_AXIS);
         moveRotation.setAngle(Ufx.angle(msPacMan.moveDir()));
@@ -209,11 +215,5 @@ public class MsPacMan3D implements Pac3D {
             : 0;
         light.setMaxRange(range);
         light.setLightOn(PY_3D_PAC_LIGHT_ENABLED.get() && msPacMan.isVisible() && hasPower);
-    }
-
-    private void updateVisibility(GameWorld world) {
-        WorldMap map = world.map();
-        boolean outsideWorld = bodyGroup.getTranslateX() < HTS || bodyGroup.getTranslateX() > TS * map.terrain().numCols() - HTS;
-        bodyGroup.setVisible(msPacMan.isVisible() && !outsideWorld);
     }
 }
