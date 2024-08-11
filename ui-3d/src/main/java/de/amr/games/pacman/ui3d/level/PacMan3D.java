@@ -43,9 +43,9 @@ public class PacMan3D implements Pac3D {
         }
 
         // Note: Massive headbanging can lead to a stroke!
-        public void setStrokeMode(boolean power) {
+        public void setStrokeMode(boolean on) {
             banging.stop();
-            float rate = power ? POWER_AMPLIFICATION : 1;
+            float rate = on ? POWER_AMPLIFICATION : 1;
             banging.setFromAngle(ANGLE_FROM * rate);
             banging.setToAngle(ANGLE_TO * rate);
             banging.setRate(rate);

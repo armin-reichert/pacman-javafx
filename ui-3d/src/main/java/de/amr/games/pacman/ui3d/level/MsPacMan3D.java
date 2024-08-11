@@ -129,8 +129,8 @@ public class MsPacMan3D implements Pac3D {
     }
 
     @Override
-    public void setPowerMode(boolean power) {
-        walkAnimation.setWinnetouchMode(power);
+    public void setPowerMode(boolean on) {
+        walkAnimation.setWinnetouchMode(on);
     }
 
     @Override
