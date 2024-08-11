@@ -267,18 +267,21 @@ public class GameLevel3D {
                     assets.get("model3D.pacman"), LIVE_SHAPE_SIZE,
                     assets.color("ms_pacman.color.head"),
                     assets.color("ms_pacman.color.eyes"),
-                    assets.color("ms_pacman.color.palate")),
+                    assets.color("ms_pacman.color.palate")
+                ),
                 PacModel3D.createFemaleParts(LIVE_SHAPE_SIZE,
                     assets.color("ms_pacman.color.hairbow"),
                     assets.color("ms_pacman.color.hairbow.pearls"),
-                    assets.color("ms_pacman.color.boobs"))
+                    assets.color("ms_pacman.color.boobs")
+                )
             );
             case PACMAN, PACMAN_XXL ->
                  PacModel3D.createPacShape(
                     assets.get("model3D.pacman"), LIVE_SHAPE_SIZE,
                     assets.color("pacman.color.head"),
                     assets.color("pacman.color.eyes"),
-                    assets.color("pacman.color.palate")
+                    Color.WHEAT
+                    //assets.color("pacman.color.palate")
                 );
         };
     }
