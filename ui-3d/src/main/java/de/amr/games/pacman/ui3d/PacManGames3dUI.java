@@ -97,7 +97,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
         assets.set("ms_pacman.color.head",            Color.rgb(255, 255, 0));
         assets.set("ms_pacman.color.eyes",            Color.rgb(33, 33, 33));
-        assets.set("ms_pacman.color.palate",          Color.rgb(191, 79, 61));
+        assets.set("ms_pacman.color.palate",          Color.rgb(240, 180, 160));
         assets.set("ms_pacman.color.boobs",           Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
         assets.set("ms_pacman.color.hairbow",         Color.rgb(255, 0, 0));
         assets.set("ms_pacman.color.hairbow.pearls",  Color.rgb(33, 33, 255));
