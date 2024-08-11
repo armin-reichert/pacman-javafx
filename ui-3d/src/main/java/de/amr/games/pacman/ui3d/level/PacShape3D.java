@@ -149,9 +149,9 @@ public class PacShape3D extends Group {
         Timeline animation = new Timeline(
             new KeyFrame(Duration.ZERO,        "Open", open),
             new KeyFrame(Duration.millis(100), "Still Open", open),
-            new KeyFrame(Duration.millis(150), "Closed", closed),
-            new KeyFrame(Duration.millis(500), "Still Closed", closed),
-            new KeyFrame(Duration.millis(700), "Open Again", open)
+            new KeyFrame(Duration.millis(130), "Closed", closed),
+            new KeyFrame(Duration.millis(200), "Still Closed", closed),
+            new KeyFrame(Duration.millis(250), "Open Again", open)
         );
         animation.setCycleCount(Animation.INDEFINITE);
         return animation;
