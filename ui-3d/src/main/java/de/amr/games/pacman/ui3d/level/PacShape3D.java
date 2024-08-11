@@ -12,18 +12,19 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.util.AssetMap;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.model.Model3D;
-import javafx.animation.Animation;
-import javafx.animation.Interpolator;
-import javafx.animation.RotateTransition;
-import javafx.animation.SequentialTransition;
+import javafx.animation.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+
+import java.security.Key;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -64,7 +65,7 @@ public class PacShape3D extends Group {
         getTransforms().add(moveRotation);
         setTranslateZ(initialZ);
 
-        chewingAnimation = createChewingAnimation();
+        chewingAnimation = createChewingTimeline();
     }
 
     public void init(Pac pac) {
@@ -129,18 +130,40 @@ public class PacShape3D extends Group {
     // Maybe this should be implemented using a Timeline?
     private Animation createChewingAnimation() {
         final int openAngle = 0, closedAngle = -54;
+
         var closeMouth = new RotateTransition(Duration.millis(30), jaw);
         closeMouth.setAxis(Rotate.Y_AXIS);
         closeMouth.setFromAngle(openAngle);
         closeMouth.setToAngle(closedAngle);
         closeMouth.setInterpolator(Interpolator.LINEAR);
+
         var openMouth = new RotateTransition(Duration.millis(90), jaw);
         openMouth.setAxis(Rotate.Y_AXIS);
         openMouth.setFromAngle(closedAngle);
         openMouth.setToAngle(openAngle);
         openMouth.setInterpolator(Interpolator.LINEAR);
+
         var chewingAnimation = new SequentialTransition(openMouth, Ufx.pauseSec(0.1), closeMouth);
         chewingAnimation.setCycleCount(Animation.INDEFINITE);
         return chewingAnimation;
+    }
+
+    private Animation createChewingTimeline() {
+        final int openAngle = 0, closedAngle = -54;
+        Timeline animation = new Timeline(
+            new KeyFrame(Duration.ZERO, "Mouth Open",
+                new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
+                new KeyValue(jaw.rotateProperty(), openAngle, Interpolator.LINEAR)),
+            new KeyFrame(Duration.millis(300), "Mouth Still Open"),
+            new KeyFrame(Duration.millis(350), "Mouth Closed",
+                new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
+                new KeyValue(jaw.rotateProperty(), closedAngle, Interpolator.LINEAR)),
+            new KeyFrame(Duration.millis(400), "Mouth Still Open"),
+            new KeyFrame(Duration.millis(450), "Mouth Open Again",
+                new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
+                new KeyValue(jaw.rotateProperty(), openAngle, Interpolator.LINEAR))
+        );
+        animation.setCycleCount(Animation.INDEFINITE);
+        return animation;
     }
 }
