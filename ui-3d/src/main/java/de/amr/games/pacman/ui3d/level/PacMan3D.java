@@ -24,56 +24,9 @@ import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
  */
 public class PacMan3D implements Pac3D {
 
-    private static class HeadBangingAnimation {
-
-        static final float POWER_AMPLIFICATION = 2;
-        static final short ANGLE_FROM = -10;
-        static final short ANGLE_TO = 15;
-        static final Duration DURATION = Duration.seconds(0.3);
-
-        private final RotateTransition banging;
-
-        public HeadBangingAnimation(Node target) {
-            banging = new RotateTransition(DURATION, target);
-            banging.setAxis(Rotate.X_AXIS);
-            banging.setCycleCount(Animation.INDEFINITE);
-            banging.setAutoReverse(true);
-            banging.setInterpolator(Interpolator.EASE_BOTH);
-            setStrokeMode(false);
-        }
-
-        // Note: Massive headbanging can lead to a stroke!
-        public void setStrokeMode(boolean on) {
-            banging.stop();
-            float rate = on ? POWER_AMPLIFICATION : 1;
-            banging.setFromAngle(ANGLE_FROM * rate);
-            banging.setToAngle(ANGLE_TO * rate);
-            banging.setRate(rate);
-        }
-
-        public void update(Pac pac) {
-            if (pac.isStandingStill()) {
-                stop();
-            } else {
-                Point3D axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-                if (!axis.equals(banging.getAxis())) {
-                    banging.stop();
-                    banging.setAxis(axis);
-                }
-                banging.play();
-            }
-        }
-
-        public void stop() {
-            banging.stop();
-            banging.getNode().setRotationAxis(banging.getAxis());
-            banging.getNode().setRotate(0);
-        }
-    }
-
     private final Pac pacMan;
     private final PacShape3D shape3D;
-    private final HeadBangingAnimation walkAnimation;
+    private RotateTransition headBanging;
 
     /**
      * Creates a 3D Pac-Man.
@@ -92,8 +45,7 @@ public class PacMan3D implements Pac3D {
             assets.color("pacman.color.head"),
             assets.color("pacman.color.palate"));
 
-        Group body = PacModel3D.createPacShape(
-            model3D, size,
+        Group body = PacModel3D.createPacShape(model3D, size,
             assets.color("pacman.color.head"),
             assets.color("pacman.color.eyes"),
             assets.color("pacman.color.palate")
@@ -101,9 +53,9 @@ public class PacMan3D implements Pac3D {
         meshViewById(body, PacModel3D.MESH_ID_EYES).drawModeProperty().bind(shape3D.drawModeProperty());
         meshViewById(body, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(shape3D.drawModeProperty());
         meshViewById(body, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(shape3D.drawModeProperty());
+        shape3D.getChildren().add(body);
 
-        shape3D.getChildren().addAll(body);
-        walkAnimation = new HeadBangingAnimation(shape3D);
+        createHeadBangingAnimation(shape3D);
     }
 
     @Override
@@ -114,8 +66,8 @@ public class PacMan3D implements Pac3D {
     @Override
     public void init() {
         shape3D.init(pacMan);
-        walkAnimation.stop();
-        walkAnimation.setStrokeMode(false);
+        stopHeadBanging();
+        setStrokeMode(false);
     }
 
     @Override
@@ -126,17 +78,17 @@ public class PacMan3D implements Pac3D {
             shape3D.updateVisibility(pacMan, context.game().world());
         }
         if (pacMan.isAlive() && !pacMan.isStandingStill()) {
-            walkAnimation.update(pacMan);
+            updateHeadBanging(pacMan);
             shape3D.chew();
         } else {
-            walkAnimation.stop();
+            stopHeadBanging();
             shape3D.stopChewingAndOpenMouth();
         }
     }
 
     @Override
-    public void setPowerMode(boolean power) {
-        walkAnimation.setStrokeMode(power);
+    public void setPowerMode(boolean on) {
+        setStrokeMode(on);
     }
 
     @Override
@@ -168,5 +120,49 @@ public class PacMan3D implements Pac3D {
             new ParallelTransition(spins, new SequentialTransition(shrinks, expands), sinks),
             doAfterSec(1.0, () -> shape3D.setVisible(false))
         );
+    }
+
+    // Head banging animation
+
+    static final float POWER_AMPLIFICATION = 2;
+    static final short ANGLE_FROM = -10;
+    static final short ANGLE_TO = 15;
+    static final Duration DURATION = Duration.seconds(0.3);
+
+    private void createHeadBangingAnimation(Node target) {
+        headBanging = new RotateTransition(DURATION, target);
+        headBanging.setAxis(Rotate.X_AXIS);
+        headBanging.setCycleCount(Animation.INDEFINITE);
+        headBanging.setAutoReverse(true);
+        headBanging.setInterpolator(Interpolator.EASE_BOTH);
+        setStrokeMode(false);
+    }
+
+    // Note: Massive headbanging can lead to a stroke!
+    private void setStrokeMode(boolean on) {
+        headBanging.stop();
+        float rate = on ? POWER_AMPLIFICATION : 1;
+        headBanging.setFromAngle(ANGLE_FROM * rate);
+        headBanging.setToAngle(ANGLE_TO * rate);
+        headBanging.setRate(rate);
+    }
+
+    private void updateHeadBanging(Pac pac) {
+        if (pac.isStandingStill()) {
+            stopHeadBanging();
+        } else {
+            Point3D axis = pac.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+            if (!axis.equals(headBanging.getAxis())) {
+                headBanging.stop();
+                headBanging.setAxis(axis);
+            }
+            headBanging.play();
+        }
+    }
+
+    private void stopHeadBanging() {
+        headBanging.stop();
+        headBanging.getNode().setRotationAxis(headBanging.getAxis());
+        headBanging.getNode().setRotate(0);
     }
 }
