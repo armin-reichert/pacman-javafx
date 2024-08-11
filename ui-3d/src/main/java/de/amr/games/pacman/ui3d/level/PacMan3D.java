@@ -93,7 +93,7 @@ public class PacMan3D implements Pac3D {
 
     @Override
     public Animation createDyingAnimation() {
-        Duration duration = Duration.seconds(1.0);
+        Duration duration = Duration.seconds(1.5);
         byte numSpins = 6;
 
         var spins = new RotateTransition(duration.divide(numSpins), shape3D);
