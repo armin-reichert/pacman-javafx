@@ -20,6 +20,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PointLight;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -44,16 +45,9 @@ public class PacShape3D extends Group {
     private final Rotate moveRotation = new Rotate();
     private final Animation chewingAnimation;
 
-    public PacShape3D(double size, AssetMap assets) {
+    public PacShape3D(double size, Model3D model3D, Color headColor, Color palateColor) {
         initialZ = -0.5 * size;
-
-        Model3D model3D = assets.get("model3D.pacman");
-
-        jaw = PacModel3D.createPacSkull(
-            model3D, size,
-            assets.color("pacman.color.head"),
-            assets.color("pacman.color.palate"));
-
+        jaw = PacModel3D.createPacSkull(model3D, size, headColor, palateColor);
         meshViewById(jaw, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
         meshViewById(jaw, PacModel3D.MESH_ID_PALATE).drawModeProperty().bind(drawModePy);
 
@@ -149,19 +143,20 @@ public class PacShape3D extends Group {
     }
 
     private Animation createChewingTimeline() {
-        final int openAngle = 0, closedAngle = -54;
+        var closed = new KeyValue[] {
+            new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
+            new KeyValue(jaw.rotateProperty(), -54, Interpolator.LINEAR)
+        };
+        var open = new KeyValue[] {
+            new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
+            new KeyValue(jaw.rotateProperty(), 0, Interpolator.LINEAR)
+        };
         Timeline animation = new Timeline(
-            new KeyFrame(Duration.ZERO, "Mouth Open",
-                new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
-                new KeyValue(jaw.rotateProperty(), openAngle, Interpolator.LINEAR)),
-            new KeyFrame(Duration.millis(300), "Mouth Still Open"),
-            new KeyFrame(Duration.millis(350), "Mouth Closed",
-                new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
-                new KeyValue(jaw.rotateProperty(), closedAngle, Interpolator.LINEAR)),
-            new KeyFrame(Duration.millis(400), "Mouth Still Open"),
-            new KeyFrame(Duration.millis(450), "Mouth Open Again",
-                new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
-                new KeyValue(jaw.rotateProperty(), openAngle, Interpolator.LINEAR))
+            new KeyFrame(Duration.ZERO,        "Open", open),
+            new KeyFrame(Duration.millis(100), "Still Open", open),
+            new KeyFrame(Duration.millis(150), "Closed", closed),
+            new KeyFrame(Duration.millis(500), "Still Closed", closed),
+            new KeyFrame(Duration.millis(700), "Open Again", open)
         );
         animation.setCycleCount(Animation.INDEFINITE);
         return animation;

@@ -27,8 +27,8 @@ public class PacMan3D implements Pac3D {
     private static class HeadBangingAnimation {
 
         static final float POWER_AMPLIFICATION = 2;
-        static final short ANGLE_FROM = -15;
-        static final short ANGLE_TO = 20;
+        static final short ANGLE_FROM = -10;
+        static final short ANGLE_TO = 15;
         static final Duration DURATION = Duration.seconds(0.3);
 
         private final RotateTransition banging;
@@ -84,9 +84,13 @@ public class PacMan3D implements Pac3D {
      */
     public PacMan3D(Pac pacMan, double size, AssetMap assets) {
         this.pacMan = checkNotNull(pacMan);
-        this.shape3D = new PacShape3D(size, assets);
+        checkNotNull(assets);
 
         Model3D model3D = assets.get("model3D.pacman");
+
+        shape3D = new PacShape3D(size, model3D,
+            assets.color("pacman.color.head"),
+            assets.color("pacman.color.palate"));
 
         Group body = PacModel3D.createPacShape(
             model3D, size,

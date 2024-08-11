@@ -446,6 +446,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
                   perspectivePy.unbind();
                   perspectivePy.set(Perspective.TOTAL);
                   level3D.livesCounter3D().light().setLightOn(false);
+                  context.actionHandler().showFlashMessageSeconds(1, message);
               })
             , doAfterSec(2, level3D.mazeFlashAnimation(numFlashes))
             , doAfterSec(1, () -> {
@@ -456,7 +457,6 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             , level3D.wallsDisappearAnimation(2.0)
             , doAfterSec(1, () -> {
                 context.soundHandler().playAudioClip("audio.sweep");
-                context.actionHandler().showFlashMessageSeconds(1, message);
                 perspectivePy.bind(PY_3D_PERSPECTIVE);
             })
         );

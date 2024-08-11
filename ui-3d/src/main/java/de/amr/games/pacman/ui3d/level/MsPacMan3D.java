@@ -77,9 +77,13 @@ public class MsPacMan3D implements Pac3D {
      */
     public MsPacMan3D(Pac msPacMan, double size, AssetMap assets) {
         this.msPacMan = checkNotNull(msPacMan);
-        this.shape3D = new PacShape3D(size, assets);
+        checkNotNull(assets);
 
         Model3D model3D = assets.get("model3D.pacman");
+
+        shape3D = new PacShape3D(size, model3D,
+            assets.color("ms_pacman.color.head"),
+            assets.color("ms_pacman.color.palate"));
 
         Group body = PacModel3D.createPacShape(
             model3D, size,
