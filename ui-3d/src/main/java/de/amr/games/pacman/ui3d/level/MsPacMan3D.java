@@ -81,7 +81,7 @@ public class MsPacMan3D implements Pac3D {
 
         Model3D model3D = assets.get("model3D.pacman");
 
-        shape3D = new PacShape3D(size, model3D,
+        shape3D = new PacShape3D(model3D, size,
             assets.color("ms_pacman.color.head"),
             assets.color("ms_pacman.color.palate"));
 

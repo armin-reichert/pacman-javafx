@@ -45,7 +45,7 @@ public class PacShape3D extends Group {
     private final Rotate moveRotation = new Rotate();
     private final Animation chewingAnimation;
 
-    public PacShape3D(double size, Model3D model3D, Color headColor, Color palateColor) {
+    public PacShape3D(Model3D model3D, double size, Color headColor, Color palateColor) {
         initialZ = -0.5 * size;
         jaw = PacModel3D.createPacSkull(model3D, size, headColor, palateColor);
         meshViewById(jaw, PacModel3D.MESH_ID_HEAD).drawModeProperty().bind(drawModePy);
