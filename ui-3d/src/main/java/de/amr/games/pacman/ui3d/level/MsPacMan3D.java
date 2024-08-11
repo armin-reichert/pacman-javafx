@@ -26,47 +26,9 @@ import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
  */
 public class MsPacMan3D implements Pac3D {
 
-    private static class HipSwayingAnimation {
-
-        static final short ANGLE_FROM = -20;
-        static final short ANGLE_TO = 20;
-        static final Duration DURATION = Duration.seconds(0.4);
-
-        private final RotateTransition swaying;
-
-        public HipSwayingAnimation(Node target) {
-            swaying = new RotateTransition(DURATION, target);
-            swaying.setAxis(Rotate.Z_AXIS);
-            swaying.setCycleCount(Animation.INDEFINITE);
-            swaying.setAutoReverse(true);
-            swaying.setInterpolator(Interpolator.EASE_BOTH);
-            setWinnetouchMode(false);
-        }
-
-        // Note: Winnetouch is the gay twin-brother of Abahachi
-        public void setWinnetouchMode(boolean power) {
-            double amplification = power ? 1.5 : 1;
-            double rate = power ? 2 : 1;
-            swaying.stop();
-            swaying.setFromAngle(ANGLE_FROM * amplification);
-            swaying.setToAngle(ANGLE_TO * amplification);
-            swaying.setRate(rate);
-        }
-
-        public void play() {
-            swaying.play();
-        }
-
-        public void stop() {
-            swaying.stop();
-            swaying.getNode().setRotationAxis(swaying.getAxis());
-            swaying.getNode().setRotate(0);
-        }
-    }
-
     private final Pac msPacMan;
     private final PacShape3D shape3D;
-    private final HipSwayingAnimation walkAnimation;
+    private RotateTransition hipSwayingAnimation;
 
     /**
      * Creates a 3D Ms. Pac-Man.
@@ -101,7 +63,7 @@ public class MsPacMan3D implements Pac3D {
             assets.color("ms_pacman.color.boobs"));
 
         shape3D.getChildren().addAll(body, femaleParts);
-        walkAnimation = new HipSwayingAnimation(shape3D);
+        createHipSwayingAnimation(shape3D);
     }
 
     @Override
@@ -112,8 +74,8 @@ public class MsPacMan3D implements Pac3D {
     @Override
     public void init() {
         shape3D.init(msPacMan);
-        walkAnimation.stop();
-        walkAnimation.setWinnetouchMode(false);
+        stopSwayingHips();
+        setWinnetouchMode(false);
     }
 
     @Override
@@ -124,17 +86,17 @@ public class MsPacMan3D implements Pac3D {
             shape3D.updateVisibility(msPacMan, context.game().world());
         }
         if (msPacMan.isAlive() && !msPacMan.isStandingStill()) {
-            walkAnimation.play();
+            swayHips();
             shape3D.chew();
         } else {
-            walkAnimation.stop();
+            stopSwayingHips();
             shape3D.stopChewingAndOpenMouth();
         }
     }
 
     @Override
     public void setPowerMode(boolean on) {
-        walkAnimation.setWinnetouchMode(on);
+        setWinnetouchMode(on);
     }
 
     @Override
@@ -146,5 +108,40 @@ public class MsPacMan3D implements Pac3D {
         spinning.setInterpolator(Interpolator.LINEAR);
         spinning.setCycleCount(4);
         return new SequentialTransition(pauseSec(1), spinning, pauseSec(1.5));
+    }
+
+    // Hip swaying animation
+
+    static final short ANGLE_FROM = -20;
+    static final short ANGLE_TO = 20;
+    static final Duration DURATION = Duration.seconds(0.4);
+
+    private void createHipSwayingAnimation(Node target) {
+        hipSwayingAnimation = new RotateTransition(DURATION, target);
+        hipSwayingAnimation.setAxis(Rotate.Z_AXIS);
+        hipSwayingAnimation.setCycleCount(Animation.INDEFINITE);
+        hipSwayingAnimation.setAutoReverse(true);
+        hipSwayingAnimation.setInterpolator(Interpolator.EASE_BOTH);
+        setWinnetouchMode(false);
+    }
+
+    // Note: Winnetouch is the gay twin-brother of Abahachi
+    private void setWinnetouchMode(boolean on) {
+        double amplification = on ? 1.5 : 1;
+        double rate = on ? 2 : 1;
+        hipSwayingAnimation.stop();
+        hipSwayingAnimation.setFromAngle(ANGLE_FROM * amplification);
+        hipSwayingAnimation.setToAngle(ANGLE_TO * amplification);
+        hipSwayingAnimation.setRate(rate);
+    }
+
+    private void swayHips() {
+        hipSwayingAnimation.play();
+    }
+
+    private void stopSwayingHips() {
+        hipSwayingAnimation.stop();
+        hipSwayingAnimation.getNode().setRotationAxis(hipSwayingAnimation.getAxis());
+        hipSwayingAnimation.getNode().setRotate(0);
     }
 }
