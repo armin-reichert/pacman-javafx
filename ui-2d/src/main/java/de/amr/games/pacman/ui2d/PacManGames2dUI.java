@@ -115,7 +115,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected MediaPlayer powerSound;
     protected MediaPlayer ghostReturningHomeSound;
 
-    public void createUI(Stage stage, double width, double height) {
+    public void create(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
 
         for (var variant : GameVariant.values()) {

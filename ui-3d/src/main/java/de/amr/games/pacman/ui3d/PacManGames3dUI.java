@@ -48,7 +48,7 @@ import static de.amr.games.pacman.ui3d.GameParameters3D.*;
 public class PacManGames3dUI extends PacManGames2dUI {
 
     @Override
-    public void createUI(Stage stage, double width, double height) {
+    public void create(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
 
         for (var variant : GameVariant.values()) {
