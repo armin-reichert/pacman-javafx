@@ -139,19 +139,19 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         gamePage.sign(assets.font("font.monospaced", 9), BY_ARMIN_REICHERT);
 
         createGameScenes();
+        configureGameClock();
+        gameController().setClock(clock);
     }
 
     public void start() {
-        configureGameClock();
-        gameController().setClock(clock);
+        // select game variant of current game model
         gameVariantPy.set(game().variant());
         selectStartPage();
-
+        bindStageTitle();
         //TODO this does not work yet correctly
         Dimension2D minSize = DecoratedCanvas.computeSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y, 1);
         stage.setMinWidth(minSize.getWidth());
         stage.setMinHeight(minSize.getHeight());
-        bindStageTitle();
         stage.centerOnScreen();
         stage.show();
     }
