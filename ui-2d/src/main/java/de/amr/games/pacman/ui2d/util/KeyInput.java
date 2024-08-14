@@ -8,6 +8,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
  * @author Armin Reichert
  */
@@ -23,6 +26,14 @@ public class KeyInput {
 
     private KeyInput(KeyCodeCombination... combinations) {
         this.combinations = combinations;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.stream(combinations)
+                .map(KeyCodeCombination::toString)
+                .map(s -> "[" +s + "]")
+                .collect(Collectors.joining(", "));
     }
 
     public KeyCodeCombination[] getCombinations() {

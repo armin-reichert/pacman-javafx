@@ -51,6 +51,7 @@ public enum GameKeys {
 
     GameKeys(KeyCodeCombination... combinations) {
         input = KeyInput.of(combinations);
+        Logger.info("{} => {}", input, this);
     }
 
     /**
