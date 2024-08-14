@@ -133,7 +133,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         stage.setScene(mainScene);
 
         startPage = new StartPage(this);
-        startPage.setOnPlayButtonPressed(this::selectGamePage);
         startPage.gameVariantPy.bind(gameVariantPy);
 
         gamePage = new GamePage(this, mainScene);

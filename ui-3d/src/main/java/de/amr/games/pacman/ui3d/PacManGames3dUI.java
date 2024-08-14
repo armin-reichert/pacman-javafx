@@ -66,7 +66,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
         stage.setScene(mainScene);
 
         startPage = new StartPage(this);
-        startPage.setOnPlayButtonPressed(this::selectGamePage);
         startPage.gameVariantPy.bind(gameVariantPy);
 
         gamePage = new GamePage3D(this, mainScene);

@@ -36,20 +36,20 @@ public class StartPage implements Page {
 
     static final char ARROW_LEFT  = '\u2b98';
     static final char ARROW_RIGHT = '\u2b9a';
+
     static final BackgroundSize FIT_HEIGHT = new BackgroundSize(AUTO, 1, false, true, true, false);
     static final BackgroundSize FILL       = new BackgroundSize(AUTO, AUTO, false, false, true, true);
 
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override
         protected void invalidated() {
-            changeBackgroundImage();
+            updateBackgroundImage(get());
         }
     };
 
     private final GameContext context;
     private final StackPane root = new StackPane();
     private final BorderPane layout = new BorderPane();
-    private final Node btnPlay;
 
     private boolean msPacManFlyerFrontPage = true;
     private boolean pacManFlyerFrontPage = true;
@@ -67,11 +67,17 @@ public class StartPage implements Page {
         VBox right = new VBox(btnNextVariant);
         right.setAlignment(Pos.CENTER_RIGHT);
 
-        btnPlay = createPlayButton(context.tt("play_button"));
+        Node btnPlay = createPlayButton(context.tt("play_button"));
         BorderPane.setAlignment(btnPlay, Pos.BOTTOM_CENTER);
         btnPlay.setTranslateY(-10);
         var btnPlayContainer = new BorderPane();
         btnPlayContainer.setBottom(btnPlay);
+        btnPlay.setOnMouseClicked(e -> {
+            if (e.getButton().equals(MouseButton.PRIMARY)) {
+                context.actionHandler().selectGamePage();
+            }
+            e.consume(); // do not propagate event to layout such that image changes
+        });
 
         layout.setLeft(left);
         layout.setRight(right);
@@ -138,8 +144,7 @@ public class StartPage implements Page {
         setPacManFlyerFrontPage(!pacManFlyerFrontPage);
     }
 
-    private void changeBackgroundImage() {
-        var variant = gameVariantPy.get();
+    private void updateBackgroundImage(GameVariant variant) {
         if (variant != null && context != null) {
             switch (variant) {
                 case MS_PACMAN -> {
@@ -176,15 +181,6 @@ public class StartPage implements Page {
     @Override
     public Pane rootPane() {
         return root;
-    }
-
-    public void setOnPlayButtonPressed(Runnable action) {
-        btnPlay.setOnMouseClicked(e -> {
-            if (e.getButton().equals(MouseButton.PRIMARY)) {
-                action.run();
-            }
-            e.consume(); // do not propagate event to layout such that image changes
-        });
     }
 
     @Override
