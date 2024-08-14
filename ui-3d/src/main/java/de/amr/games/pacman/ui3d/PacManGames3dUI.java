@@ -5,21 +5,23 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.GameKeys;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
-import de.amr.games.pacman.ui2d.page.GamePage;
+import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.tinylog.Logger;
 
@@ -29,6 +31,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static de.amr.games.pacman.ui3d.GameParameters3D.*;
 
@@ -44,6 +47,42 @@ import static de.amr.games.pacman.ui3d.GameParameters3D.*;
  * @author Armin Reichert
  */
 public class PacManGames3dUI extends PacManGames2dUI {
+
+    @Override
+    public void createUI(Stage stage, double width, double height) {
+        this.stage = checkNotNull(stage);
+
+        for (var variant : GameVariant.values()) {
+            gameController().gameModel(variant).addGameEventListener(this);
+        }
+
+        // Touch all game keys such that they get registered with keyboard
+        for (var gameKey : GameKeys.values()) {
+            Logger.debug("Game key '{}' registered", gameKey);
+        }
+
+        // first child will be replaced by page
+        mainSceneLayout.getChildren().addAll(new Pane(), messageView, createMutedIcon());
+        mainScene = createMainScene(mainSceneLayout, width, height);
+        stage.setScene(mainScene);
+
+        startPage = new StartPage(this);
+        startPage.setOnPlayButtonPressed(this::selectGamePage);
+        startPage.gameVariantPy.bind(gameVariantPy);
+
+        gamePage = new GamePage3D(this, mainScene);
+        gamePage.sign(assets.font("font.monospaced", 9), BY_ARMIN_REICHERT);
+
+        createGameScenes();
+        for (GameVariant variant : GameVariant.values()) {
+            var playScene3D = new PlayScene3D();
+            playScene3D.widthProperty().bind(mainScene.widthProperty());
+            playScene3D.heightProperty().bind(mainScene.heightProperty());
+            playScene3D.setContext(this);
+            gameScenesForVariant.get(variant).put(GameSceneID.PLAY_SCENE_3D, playScene3D);
+            Logger.info("Added 3D play scene for variant " + variant);
+        }
+    }
 
     @Override
     public void loadAssets(boolean log) {
@@ -115,24 +154,6 @@ public class PacManGames3dUI extends PacManGames2dUI {
                 new Pair<>(AudioClip.class, "audio clips")
             )));
         }
-    }
-
-    @Override
-    protected void createGameScenes(Scene parentScene) {
-        super.createGameScenes(parentScene);
-        for (GameVariant variant : GameVariant.values()) {
-            var playScene3D = new PlayScene3D();
-            playScene3D.widthProperty().bind(parentScene.widthProperty());
-            playScene3D.heightProperty().bind(parentScene.heightProperty());
-            playScene3D.setContext(this);
-            gameScenesForVariant.get(variant).put(GameSceneID.PLAY_SCENE_3D, playScene3D);
-            Logger.info("Added 3D play scene for variant " + variant);
-        }
-    }
-
-    @Override
-    protected GamePage createGamePage(Scene mainScene) {
-        return new GamePage3D(this, mainScene);
     }
 
     @Override

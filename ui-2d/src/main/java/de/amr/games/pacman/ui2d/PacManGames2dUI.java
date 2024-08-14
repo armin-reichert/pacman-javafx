@@ -50,7 +50,6 @@ import java.net.URL;
 import java.text.MessageFormat;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Stream;
 
 import static de.amr.games.pacman.controller.GameState.INTRO;
 import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
@@ -134,11 +133,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         mainScene = createMainScene(mainSceneLayout, width, height);
         stage.setScene(mainScene);
 
-        startPage = createStartPage();
-        gamePage = createGamePage(mainScene);
+        startPage = new StartPage(this);
+        startPage.setOnPlayButtonPressed(this::selectGamePage);
+        startPage.gameVariantPy.bind(gameVariantPy);
+
+        gamePage = new GamePage(this, mainScene);
         gamePage.sign(assets.font("font.monospaced", 9), BY_ARMIN_REICHERT);
 
-        createGameScenes(mainScene);
+        createGameScenes();
     }
 
     public void start() {
@@ -207,7 +209,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         });
     }
 
-    protected void createGameScenes(Scene parentScene) {
+    protected void createGameScenes() {
         for (GameVariant variant : GameVariant.values()) {
             switch (variant) {
                 case MS_PACMAN ->
@@ -231,9 +233,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
                         GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
                     )));
             }
-            gameScenes2D(variant).forEach(gameScene2D -> {
-                gameScene2D.setContext(this);
-                gameScene2D.infoVisiblePy.bind(PY_DEBUG_INFO);
+            gameScenesForVariant.get(variant).values().forEach(gameScene -> {
+                if (gameScene instanceof GameScene2D gameScene2D) {
+                    gameScene2D.setContext(this);
+                    gameScene2D.infoVisiblePy.bind(PY_DEBUG_INFO);
+                }
             });
         }
     }
@@ -244,18 +248,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             clock.pausedPy, gameVariantPy);
     }
 
-    protected StartPage createStartPage() {
-        var page = new StartPage(this);
-        page.setOnPlayButtonPressed(this::selectGamePage);
-        page.gameVariantPy.bind(gameVariantPy);
-        return page;
-    }
-
-    protected GamePage createGamePage(Scene mainScene) {
-        return new GamePage(this, mainScene);
-    }
-
-    private ImageView createMutedIcon() {
+    protected ImageView createMutedIcon() {
         var icon = new ImageView(assets.<Image>get("icon.mute"));
         icon.setFitWidth(48);
         icon.setPreserveRatio(true);
@@ -264,7 +257,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         return icon;
     }
 
-    private void selectPage(Page page) {
+    protected void selectPage(Page page) {
         if (page != currentPage) {
             currentPage = page;
             currentPage.setSize(mainScene.getWidth(), mainScene.getHeight());
@@ -393,12 +386,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     public boolean isGameSceneRegisteredAs(GameScene gameScene, GameVariant variant, GameSceneID sceneID) {
         return gameScene(variant, sceneID) == gameScene;
-    }
-
-    public Stream<GameScene2D> gameScenes2D(GameVariant variant) {
-        return gameScenesForVariant.get(variant).values().stream()
-                .filter(GameScene2D.class::isInstance)
-                .map(GameScene2D.class::cast);
     }
 
     public GameScene gameScene(GameVariant variant, GameSceneID sceneID) {
