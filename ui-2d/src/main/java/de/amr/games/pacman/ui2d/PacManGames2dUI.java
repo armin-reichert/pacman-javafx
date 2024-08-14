@@ -139,13 +139,34 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         gamePage.sign(assets.font("font.monospaced", 9), BY_ARMIN_REICHERT);
 
         createGameScenes();
-        configureGameClock();
-        gameController().setClock(clock);
     }
 
     public void start() {
         // select game variant of current game model
         gameVariantPy.set(game().variant());
+        clock.setPauseableCallback(() -> {
+            try {
+                gameController().update();
+                currentGameScene().ifPresent(GameScene::update);
+            } catch (Exception x) {
+                clock.stop();
+                Logger.error("Game update caused an error, game clock stopped!");
+                Logger.error(x);
+            }
+        });
+        clock.setContinousCallback(() -> {
+            try {
+                if (currentPage == gamePage) {
+                    messageView.update();
+                    gamePage.render();
+                }
+            } catch (Exception x) {
+                clock.stop();
+                Logger.error("Game page rendering caused an error, game clock stopped!");
+                Logger.error(x);
+            }
+        });
+        gameController().setClock(clock);
         selectStartPage();
         bindStageTitle();
         //TODO this does not work yet correctly
@@ -179,31 +200,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         scene.widthProperty().addListener(resizeCurrentPage);
         scene.heightProperty().addListener(resizeCurrentPage);
         return scene;
-    }
-
-    protected void configureGameClock() {
-        clock.setPauseableCallback(() -> {
-            try {
-                gameController().update();
-                currentGameScene().ifPresent(GameScene::update);
-            } catch (Exception x) {
-                clock.stop();
-                Logger.error("Game update caused an error, game clock stopped!");
-                Logger.error(x);
-            }
-        });
-        clock.setContinousCallback(() -> {
-            try {
-                if (currentPage == gamePage) {
-                    messageView.update();
-                    gamePage.render();
-                }
-            } catch (Exception x) {
-                clock.stop();
-                Logger.error("Game page rendering caused an error, game clock stopped!");
-                Logger.error(x);
-            }
-        });
     }
 
     protected void createGameScenes() {
