@@ -13,7 +13,6 @@ import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
@@ -157,12 +156,14 @@ public class PacManGames3dUI extends PacManGames2dUI {
     }
 
     @Override
-    protected StringBinding stageTitleBinding() {
-        return Bindings.createStringBinding(() -> {
-            var tk = "app.title." + gameVariantPy.get().resourceKey() + (clock.pausedPy.get() ? ".paused" : "");
-            var dim = tt(PY_3D_ENABLED.get() ? "threeD" : "twoD");
-            return tt(tk, dim);
-        }, clock.pausedPy, gameVariantPy, PY_3D_ENABLED);
+    protected void bindStageTitle() {
+        stage.titleProperty().bind(Bindings.createStringBinding(() -> {
+            // resource key is composed from game variant, paused state and display mode (2D, 3D)
+            String gameVariantPart = "app.title." + gameVariantPy.get().resourceKey();
+            String pausedPart = clock.pausedPy.get() ? ".paused" : "";
+            String displayMode = tt(PY_3D_ENABLED.get() ? "threeD" : "twoD");
+            return tt(gameVariantPart + pausedPart, displayMode);
+        }, clock.pausedPy, gameVariantPy, PY_3D_ENABLED));
     }
 
     @Override

@@ -21,7 +21,6 @@ import de.amr.games.pacman.ui2d.rendering.*;
 import de.amr.games.pacman.ui2d.scene.*;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -153,8 +152,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         Dimension2D minSize = DecoratedCanvas.computeSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y, 1);
         stage.setMinWidth(minSize.getWidth());
         stage.setMinHeight(minSize.getHeight());
-
-        stage.titleProperty().bind(stageTitleBinding());
+        bindStageTitle();
         stage.centerOnScreen();
         stage.show();
     }
@@ -242,10 +240,15 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
     }
 
-    protected StringBinding stageTitleBinding() {
-        return Bindings.createStringBinding(
-            () -> tt("app.title." + gameVariantPy.get().resourceKey() + (clock.pausedPy.get() ? ".paused" : ""), "2D"),
-            clock.pausedPy, gameVariantPy);
+    protected void bindStageTitle() {
+
+        stage.titleProperty().bind(Bindings.createStringBinding(
+            () -> {
+                String gameVariantPart = "app.title." + gameVariantPy.get().resourceKey();
+                String pausedPart = clock.pausedPy.get() ? ".paused" : "";
+                return tt(gameVariantPart + pausedPart, "2D");
+            },
+            clock.pausedPy, gameVariantPy));
     }
 
     protected ImageView createMutedIcon() {
@@ -610,8 +613,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void quitMapEditor(TileMapEditor editor) {
-        editor.showConfirmation(editor::saveMapFileAs,
-            () -> stage.titleProperty().bind(stageTitleBinding()));
+        editor.showConfirmation(editor::saveMapFileAs, this::bindStageTitle);
         editor.stop();
         gameController().loadCustomMaps();
         reboot();
