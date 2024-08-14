@@ -41,7 +41,7 @@ public class EditorPage implements Page {
         pane.setCenter(editor.getContentPane());
         pane.setTop(editor.getMenuBar());
 
-        var miQuitEditor = new MenuItem(context.tt("back_to_game"));
+        var miQuitEditor = new MenuItem(context.locText("back_to_game"));
         miQuitEditor.setOnAction(e -> closeAction.accept(editor));
         editor.menuFile().getItems().add(miQuitEditor);
 

@@ -33,7 +33,7 @@ public class GamePage3D extends GamePage {
 
     public GamePage3D(GameContext context, Scene parentScene) {
         super(context, parentScene);
-        dashboard().addInfoBox(3, context.tt("infobox.3D_settings.title"), new InfoBox3D());
+        dashboard().addInfoBox(3, context.locText("infobox.3D_settings.title"), new InfoBox3D());
         rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
@@ -56,26 +56,26 @@ public class GamePage3D extends GamePage {
             return;
         }
 
-        contextMenu.getItems().add(menuTitleItem(context.tt("scene_display")));
+        contextMenu.getItems().add(menuTitleItem(context.locText("scene_display")));
 
         // Toggle 2D-3D
         boolean is3D = context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE_3D);
-        var item = new MenuItem(context.tt(is3D ? "use_2D_scene" : "use_3D_scene"));
+        var item = new MenuItem(context.locText(is3D ? "use_2D_scene" : "use_3D_scene"));
         item.setOnAction(e -> context.actionHandler().toggle2D3D());
         contextMenu.getItems().add(item);
 
         if (is3D) {
             // Toggle PiP display
-            var miPictureInPicture = new CheckMenuItem(context.tt("pip"));
+            var miPictureInPicture = new CheckMenuItem(context.locText("pip"));
             miPictureInPicture.selectedProperty().bindBidirectional(PY_PIP_ON);
             contextMenu.getItems().add(miPictureInPicture);
 
-            contextMenu.getItems().add(menuTitleItem(context.tt("select_perspective")));
+            contextMenu.getItems().add(menuTitleItem(context.locText("select_perspective")));
 
             // Camera perspective selection
             var perspectivesGroup = new ToggleGroup();
             for (var perspective : Perspective.values()) {
-                var miPerspective = new RadioMenuItem(context.tt(perspective.name()));
+                var miPerspective = new RadioMenuItem(context.locText(perspective.name()));
                 miPerspective.setToggleGroup(perspectivesGroup);
                 // keep global property in sync with selection
                 miPerspective.selectedProperty().addListener((py, ov, selected) -> {
@@ -91,25 +91,25 @@ public class GamePage3D extends GamePage {
         }
 
         // Common items
-        contextMenu.getItems().add(menuTitleItem(context.tt("pacman")));
+        contextMenu.getItems().add(menuTitleItem(context.locText("pacman")));
 
-        var miAutopilot = new CheckMenuItem(context.tt("autopilot"));
+        var miAutopilot = new CheckMenuItem(context.locText("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
         contextMenu.getItems().add(miAutopilot);
 
-        var miImmunity = new CheckMenuItem(context.tt("immunity"));
+        var miImmunity = new CheckMenuItem(context.locText("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
         contextMenu.getItems().add(miImmunity);
 
         contextMenu.getItems().add(new SeparatorMenuItem());
 
         if (context.game().variant() == GameVariant.PACMAN_XXL) {
-            var miOpenMapEditor = new MenuItem(context.tt("open_editor"));
+            var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
             miOpenMapEditor.setOnAction(e -> context.actionHandler().openMapEditor());
             contextMenu.getItems().add(miOpenMapEditor);
         }
 
-        var miQuit = new MenuItem(context.tt("quit"));
+        var miQuit = new MenuItem(context.locText("quit"));
         miQuit.setOnAction(e -> quit());
         contextMenu.getItems().add(miQuit);
 

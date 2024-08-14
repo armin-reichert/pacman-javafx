@@ -59,14 +59,15 @@ public interface GameContext {
     List<ResourceBundle> bundles();
 
     /**
-     * Builds a resource key from the given key pattern and the arguments and returns the corresponding text from the
-     * first resource bundle containing the key.
+     * Returns a translated text (for the current locale).
+     * <p></p>
+     * The key is constructed using the given key pattern and the arguments.
      *
-     * @param key     key in resource bundle
-     * @param args    optional arguments merged into the message (if pattern)
-     * @return localized text with arguments merged or {@code "<key">} if no text is available
+     * @param keyOrPattern     key in resource bundle
+     * @param args    optional arguments merged into the key pattern
+     * @return localized text with constructed key or default text if no such key exists
      */
-    String tt(String key, Object... args);
+    String locText(String keyOrPattern, Object... args);
 
     // Others
 

@@ -245,7 +245,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             () -> {
                 String gameVariantPart = "app.title." + gameVariantPy.get().resourceKey();
                 String pausedPart = clock.pausedPy.get() ? ".paused" : "";
-                return tt(gameVariantPart + pausedPart, "2D");
+                return locText(gameVariantPart + pausedPart, "2D");
             },
             clock.pausedPy, gameVariantPy));
     }
@@ -314,14 +314,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     @Override
-    public String tt(String key, Object... args) {
-        checkNotNull(key);
+    public String locText(String keyOrPattern, Object... args) {
+        checkNotNull(keyOrPattern);
         for (var bundle : bundles) {
-            if (bundle.containsKey(key)) {
-                return MessageFormat.format(bundle.getString(key), args);
+            if (bundle.containsKey(keyOrPattern)) {
+                return MessageFormat.format(bundle.getString(keyOrPattern), args);
             }
         }
-        Logger.error("Missing localized text for key {}", key);
+        Logger.error("Missing localized text for key {}", keyOrPattern);
         return null;
     }
 
@@ -703,7 +703,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void togglePipVisible() {
         toggle(PY_PIP_ON);
-        showFlashMessage(tt(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
+        showFlashMessage(locText(PY_PIP_ON.get() ? "pip_on" : "pip_off"));
     }
 
     @Override
@@ -767,7 +767,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void toggleAutopilot() {
         Ufx.toggle(PY_AUTOPILOT);
         boolean auto = PY_AUTOPILOT.get();
-        showFlashMessage(tt(auto ? "autopilot_on" : "autopilot_off"));
+        showFlashMessage(locText(auto ? "autopilot_on" : "autopilot_off"));
         playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
     }
 
@@ -779,7 +779,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void toggleImmunity() {
         Ufx.toggle(PY_IMMUNITY);
-        showFlashMessage(tt(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
+        showFlashMessage(locText(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
         playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
     }
 
@@ -794,7 +794,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void cheatAddLives() {
         game().addLives(3);
-        showFlashMessage(tt("cheat_add_lives", game().lives()));
+        showFlashMessage(locText("cheat_add_lives", game().lives()));
     }
 
     @Override

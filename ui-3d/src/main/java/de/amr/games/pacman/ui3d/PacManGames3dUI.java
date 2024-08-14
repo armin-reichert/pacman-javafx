@@ -160,8 +160,8 @@ public class PacManGames3dUI extends PacManGames2dUI {
             // resource key is composed from game variant, paused state and display mode (2D, 3D)
             String gameVariantPart = "app.title." + gameVariantPy.get().resourceKey();
             String pausedPart = clock.pausedPy.get() ? ".paused" : "";
-            String displayMode = tt(PY_3D_ENABLED.get() ? "threeD" : "twoD");
-            return tt(gameVariantPart + pausedPart, displayMode);
+            String displayMode = locText(PY_3D_ENABLED.get() ? "threeD" : "twoD");
+            return locText(gameVariantPart + pausedPart, displayMode);
         }, clock.pausedPy, gameVariantPy, PY_3D_ENABLED));
     }
 
@@ -179,14 +179,14 @@ public class PacManGames3dUI extends PacManGames2dUI {
     public void selectNextPerspective() {
         var next = Perspective.next(PY_3D_PERSPECTIVE.get());
         PY_3D_PERSPECTIVE.set(next);
-        showFlashMessage(tt("camera_perspective", tt(next.name())));
+        showFlashMessage(locText("camera_perspective", locText(next.name())));
     }
 
     @Override
     public void selectPrevPerspective() {
         var prev = Perspective.previous(PY_3D_PERSPECTIVE.get());
         PY_3D_PERSPECTIVE.set(prev);
-        showFlashMessage(tt("camera_perspective", tt(prev.name())));
+        showFlashMessage(locText("camera_perspective", locText(prev.name())));
     }
 
     @Override
@@ -200,7 +200,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
             }
             gameController().update();
             if (!game().isPlaying()) {
-                showFlashMessage(tt(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
+                showFlashMessage(locText(PY_3D_ENABLED.get() ? "use_3D_scene" : "use_2D_scene"));
             }
         });
     }

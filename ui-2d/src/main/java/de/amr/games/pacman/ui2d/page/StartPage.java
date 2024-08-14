@@ -67,7 +67,7 @@ public class StartPage implements Page {
         VBox right = new VBox(btnNextVariant);
         right.setAlignment(Pos.CENTER_RIGHT);
 
-        Node btnPlay = createPlayButton(context.tt("play_button"));
+        Node btnPlay = createPlayButton(context.locText("play_button"));
         BorderPane.setAlignment(btnPlay, Pos.BOTTOM_CENTER);
         btnPlay.setTranslateY(-10);
         var btnPlayContainer = new BorderPane();

@@ -440,7 +440,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
 
     //TODO is there are better way to do this e.g. using a Timeline?
     private Animation levelCompleteAnimation(int numFlashes) {
-        String message = pickerLevelComplete.next() + "\n\n" + context.tt("level_complete", context.game().levelNumber());
+        String message = pickerLevelComplete.next() + "\n\n" + context.locText("level_complete", context.game().levelNumber());
         return new SequentialTransition(
               now(() -> {
                   perspectivePy.unbind();

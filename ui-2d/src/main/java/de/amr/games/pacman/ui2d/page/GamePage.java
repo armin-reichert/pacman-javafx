@@ -67,13 +67,13 @@ public class GamePage implements Page {
         this.parentScene = parentScene;
 
         dashboard = new Dashboard(context);
-        dashboard.addInfoBox(context.tt("infobox.general.title"), new InfoBoxGeneral());
-        dashboard.addInfoBox(context.tt("infobox.game_control.title"), new InfoBoxGameControl());
+        dashboard.addInfoBox(context.locText("infobox.general.title"), new InfoBoxGeneral());
+        dashboard.addInfoBox(context.locText("infobox.game_control.title"), new InfoBoxGameControl());
         dashboard.addInfoBox("Custom Maps",new InfoBoxCustomMaps()); //TODO incomplete
-        dashboard.addInfoBox(context.tt("infobox.game_info.title"), new InfoBoxGameInfo());
-        dashboard.addInfoBox(context.tt("infobox.actor_info.title"), new InfoBoxActorInfo());
-        dashboard.addInfoBox(context.tt("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
-        dashboard.addInfoBox(context.tt("infobox.about.title"), new InfoBoxAbout());
+        dashboard.addInfoBox(context.locText("infobox.game_info.title"), new InfoBoxGameInfo());
+        dashboard.addInfoBox(context.locText("infobox.actor_info.title"), new InfoBoxActorInfo());
+        dashboard.addInfoBox(context.locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
+        dashboard.addInfoBox(context.locText("infobox.about.title"), new InfoBoxAbout());
 
         DecoratedCanvas canvas = canvasPane.decoratedCanvas();
         canvasPane.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
@@ -198,19 +198,19 @@ public class GamePage implements Page {
             return;
         }
         contextMenu.getItems().clear();
-        contextMenu.getItems().add(menuTitleItem(context.tt("pacman")));
+        contextMenu.getItems().add(menuTitleItem(context.locText("pacman")));
 
-        var miAutopilot = new CheckMenuItem(context.tt("autopilot"));
+        var miAutopilot = new CheckMenuItem(context.locText("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
         contextMenu.getItems().add(miAutopilot);
 
-        var miImmunity = new CheckMenuItem(context.tt("immunity"));
+        var miImmunity = new CheckMenuItem(context.locText("immunity"));
         miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
         contextMenu.getItems().add(miImmunity);
 
         contextMenu.getItems().add(new SeparatorMenuItem());
 
-        var miQuit = new MenuItem(context.tt("quit"));
+        var miQuit = new MenuItem(context.locText("quit"));
         miQuit.setOnAction(e -> quit());
         contextMenu.getItems().add(miQuit);
 

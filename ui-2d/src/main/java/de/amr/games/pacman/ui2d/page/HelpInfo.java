@@ -68,13 +68,13 @@ public class HelpInfo {
 
         // add default entries:
         if (GameParameters.PY_AUTOPILOT.get()) {
-            var autoPilotEntry = text(context.tt("help.autopilot_on"), Color.ORANGE);
+            var autoPilotEntry = text(context.locText("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
         if (context.gameController().isPacImmune()) {
-            var immunityEntry = text(context.tt("help.immunity_on"), Color.ORANGE);
+            var immunityEntry = text(context.locText("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);
             grid.add(immunityEntry, 0, grid.getRowCount() + 1);
@@ -100,7 +100,7 @@ public class HelpInfo {
     }
 
     private void addRow(String lhsKey, String keyboardKey) {
-        addRow(label(context.tt(lhsKey), Color.gray(0.9)), text("[" + keyboardKey + "]", Color.YELLOW));
+        addRow(label(context.locText(lhsKey), Color.gray(0.9)), text("[" + keyboardKey + "]", Color.YELLOW));
     }
 
     private void addQuitEntry() {
@@ -124,10 +124,10 @@ public class HelpInfo {
     }
 
     private void addInfoForPlayScene() {
-        addRow("help.move_left", context.tt("help.cursor_left"));
-        addRow("help.move_right", context.tt("help.cursor_right"));
-        addRow("help.move_up", context.tt("help.cursor_up"));
-        addRow("help.move_down", context.tt("help.cursor_down"));
+        addRow("help.move_left", context.locText("help.cursor_left"));
+        addRow("help.move_right", context.locText("help.cursor_right"));
+        addRow("help.move_up", context.locText("help.cursor_up"));
+        addRow("help.move_down", context.locText("help.cursor_down"));
         addQuitEntry();
     }
 
