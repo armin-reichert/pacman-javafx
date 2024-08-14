@@ -26,6 +26,7 @@ public interface SoundHandler {
             player.stop();
         }
     }
+
     void stopAllSounds();
 
     void ensureSirenPlaying(int sirenIndex);

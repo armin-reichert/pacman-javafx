@@ -35,7 +35,7 @@ public interface GameContext {
     }
 
     default GameModel game() {
-        return GameController.it().game();
+        return GameController.it().gameModel();
     }
 
     void setScoreVisible(boolean visible);

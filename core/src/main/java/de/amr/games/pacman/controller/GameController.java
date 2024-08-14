@@ -12,7 +12,9 @@ import de.amr.games.pacman.model.*;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.*;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -51,7 +53,6 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         models.put(GameVariant.PACMAN_XXL, new PacManXXLGame());
     }
 
-    private final List<GameVariant> supportedVariants = new ArrayList<>();
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
     private GameClock clock;
     private GameModel game;
@@ -107,38 +108,15 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         }
     }
 
-    public void setSupportedVariants(GameVariant...variants) {
-        checkNotNull(variants);
-        if (variants.length == 0) {
-            Logger.error("No supported game variant specified");
-            throw new IllegalArgumentException();
-        }
-        var noDuplicates = new LinkedHashSet<>(List.of(variants));
-        if (noDuplicates.size() < variants.length) {
-            Logger.warn("Detected duplicates in supported game variants!");
-            Logger.warn("Variants specified: {}", List.of(variants));
-        }
-        supportedVariants.addAll(noDuplicates);
-        game = models.get(supportedVariants.get(0));
-    }
-
-    public List<GameVariant> supportedVariants() {
-        return Collections.unmodifiableList(supportedVariants);
-    }
-
-    public List<WorldMap> getCustomMapsSortedByFileName() {
-        return customMapsByFile.keySet().stream().sorted().map(customMapsByFile::get).toList();
-    }
-
     public Map<File, WorldMap> customMapsByFile() {
         return customMapsByFile;
     }
 
-    public GameModel game() {
+    public GameModel gameModel() {
         return game;
     }
 
-    public GameModel game(GameVariant variant) {
+    public GameModel gameModel(GameVariant variant) {
         checkNotNull(variant);
         if (!models.containsKey(variant)) {
             Logger.error("No game model for variant {} exists", variant);
@@ -149,12 +127,8 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     public void selectGameVariant(GameVariant variant) {
         checkNotNull(variant);
-        if (!supportedVariants.contains(variant)) {
-            Logger.error("Game variant {} is not supported", variant);
-            return;
-        }
-        var oldVariant = game.variant();
-        game = game(variant);
+        GameVariant oldVariant = game != null ? game.variant() : null;
+        game = gameModel(variant);
         if (oldVariant != variant) {
             game.publishGameEvent(GameEventType.GAME_VARIANT_CHANGED);
         }

@@ -42,7 +42,7 @@ public class InfoBoxGameControl extends InfoBox {
         this.context = context;
 
         spinnerCredit = addIntSpinnerRow("Credit", 0, GameController.MAX_CREDIT, 0);
-        comboGameVariant = addComboBoxRow("Variant", context.gameController().supportedVariants().toArray(GameVariant[]::new));
+        comboGameVariant = addComboBoxRow("Variant", GameVariant.values());
         comboInitialLives = addComboBoxRow("Initial Lives", new Integer[]{3, 5});
         buttonsLevelActions = addButtonListRow("Game Level", "Start", "Quit", "Next");
         buttonsIntermissionTest = addButtonListRow("Cut Scenes Test", "Start", "Quit");

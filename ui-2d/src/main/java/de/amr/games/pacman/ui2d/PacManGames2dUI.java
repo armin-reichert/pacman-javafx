@@ -120,8 +120,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void createUI(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
 
-        for (var variant : gameController().supportedVariants()) {
-            gameController().game(variant).addGameEventListener(this);
+        for (var variant : GameVariant.values()) {
+            gameController().gameModel(variant).addGameEventListener(this);
         }
 
         // Touch all game keys such that they get registered with keyboard
@@ -208,8 +208,29 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     protected void createGameScenes(Scene parentScene) {
-        for (GameVariant variant : gameController().supportedVariants()) {
-            createGameScenes(variant);
+        for (GameVariant variant : GameVariant.values()) {
+            switch (variant) {
+                case MS_PACMAN ->
+                    gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
+                        GameSceneID.BOOT_SCENE,   new BootScene(),
+                        GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
+                        GameSceneID.CREDIT_SCENE, new MsPacManCreditScene(),
+                        GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+                        GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
+                        GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
+                        GameSceneID.CUT_SCENE_3,  new MsPacManCutScene3()
+                    )));
+                case PACMAN, PACMAN_XXL ->
+                    gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
+                        GameSceneID.BOOT_SCENE,   new BootScene(),
+                        GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
+                        GameSceneID.CREDIT_SCENE, new PacManCreditScene(),
+                        GameSceneID.PLAY_SCENE,   new PlayScene2D(),
+                        GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
+                        GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
+                        GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
+                    )));
+            }
             gameScenes2D(variant).forEach(gameScene2D -> {
                 gameScene2D.setContext(this);
                 gameScene2D.infoVisiblePy.bind(PY_DEBUG_INFO);
@@ -374,31 +395,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         return gameScene(variant, sceneID) == gameScene;
     }
 
-    protected void createGameScenes(GameVariant variant) {
-        switch (variant) {
-            case MS_PACMAN ->
-                gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
-                    GameSceneID.BOOT_SCENE,   new BootScene(),
-                    GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
-                    GameSceneID.CREDIT_SCENE, new MsPacManCreditScene(),
-                    GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-                    GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
-                    GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
-                    GameSceneID.CUT_SCENE_3,  new MsPacManCutScene3()
-                )));
-            case PACMAN, PACMAN_XXL ->
-                gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
-                    GameSceneID.BOOT_SCENE,   new BootScene(),
-                    GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
-                    GameSceneID.CREDIT_SCENE, new PacManCreditScene(),
-                    GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-                    GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
-                    GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
-                    GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
-                )));
-        }
-    }
-
     public Stream<GameScene2D> gameScenes2D(GameVariant variant) {
         return gameScenesForVariant.get(variant).values().stream()
                 .filter(GameScene2D.class::isInstance)
@@ -528,14 +524,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void onPacGetsPower(GameEvent event) {
         if (!game().isDemoLevel()) {
             stopSiren();
-            soundHandler().playPowerSound();
+            playPowerSound();
         }
     }
 
     @Override
     public void onPacLostPower(GameEvent event) {
         if (!game().isDemoLevel()) {
-            soundHandler().stopSound(powerSound);
+            stopSound(powerSound);
             ensureSirenPlaying(game().huntingPhaseIndex() / 2);
         }
     }
@@ -750,7 +746,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void selectNextGameVariant() {
-        var all = gameController().supportedVariants();
+        var all = Arrays.asList(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
         var current = all.indexOf(game().variant());
         var next = current < all.size() - 1 ? all.get(current + 1) : all.get(0);
         selectGameVariant(next);
@@ -758,9 +754,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void selectPrevGameVariant() {
-        var gameVariants = gameController().supportedVariants();
-        var current = gameVariants.indexOf(game().variant());
-        var prev = current > 0 ? gameVariants.get(current - 1) : gameVariants.get(gameVariants.size() - 1);
+        var all = Arrays.asList(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
+        var current = all.indexOf(game().variant());
+        var prev = current > 0 ? all.get(current - 1) : all.get(all.size() - 1);
         selectGameVariant(prev);
     }
 
@@ -892,17 +888,18 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         Logger.info("Sounds deleted");
     }
 
-    private MediaPlayer createSound(String keySuffix, double volume, boolean loop) {
+    private MediaPlayer createSoundPlayer(String keySuffix, double volume, boolean loop) {
         String prefix = game().variant() == GameVariant.PACMAN_XXL ? GameVariant.PACMAN.resourceKey() : game().variant().resourceKey();
         URL url = assets.get(prefix + "." + keySuffix);
-        var player = new MediaPlayer(new Media(url.toExternalForm()));
+        var sound = new Media(url.toExternalForm());
+        var player = new MediaPlayer(sound);
         player.setVolume(volume);
         if (loop) {
             player.setCycleCount(MediaPlayer.INDEFINITE);
         }
         player.muteProperty().bind(mutedPy);
         player.statusProperty().addListener((py,ov,nv) -> logSound());
-        Logger.info("Sound created: {}", url);
+        Logger.info("Media player created from URL {}", url);
         return player;
     }
 
@@ -919,7 +916,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             siren.player().stop();
         }
         if  (siren == null || siren.number() != sirenNumber) {
-            var player = createSound("audio.siren." + sirenNumber, 0.33, true);
+            var player = createSoundPlayer("audio.siren." + sirenNumber, 0.33, true);
             siren = new Siren(sirenNumber, player);
         }
         siren.player().play();
@@ -935,7 +932,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void playStartGameSound() {
         if (startGameSound == null) {
-            startGameSound = createSound("audio.game_ready", 0.5, false);
+            startGameSound = createSoundPlayer("audio.game_ready", 0.5, false);
         }
         startGameSound.play();
     }
@@ -943,7 +940,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void playMunchingSound() {
         if (munchingSound == null) {
-            munchingSound = createSound("audio.pacman_munch", 0.5, true);
+            munchingSound = createSoundPlayer("audio.pacman_munch", 0.5, true);
         }
         munchingSound.play();
     }
@@ -956,7 +953,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void playPowerSound() {
         if (powerSound == null) {
-            powerSound = createSound("audio.pacman_power", 0.5, true);
+            powerSound = createSoundPlayer("audio.pacman_power", 0.5, true);
         }
         powerSound.play();
     }
@@ -964,7 +961,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void playGhostReturningHomeSound() {
         if (ghostReturningHomeSound == null) {
-            ghostReturningHomeSound = createSound("audio.ghost_returning", 0.5, true);
+            ghostReturningHomeSound = createSoundPlayer("audio.ghost_returning", 0.5, true);
         }
         ghostReturningHomeSound.play();
     }
@@ -978,11 +975,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void playIntermissionSound(int number) {
         switch (game().variant()) {
             case MS_PACMAN -> {
-                intermissionSound = createSound("audio.intermission." + number, 0.5, false);
+                intermissionSound = createSoundPlayer("audio.intermission." + number, 0.5, false);
                 intermissionSound.play();
             }
             case PACMAN, PACMAN_XXL -> {
-                intermissionSound = createSound("audio.intermission", 0.5, false);
+                intermissionSound = createSoundPlayer("audio.intermission", 0.5, false);
                 intermissionSound.setCycleCount(number == 1 || number == 3 ? 2 : 1);
                 intermissionSound.play();
             }
