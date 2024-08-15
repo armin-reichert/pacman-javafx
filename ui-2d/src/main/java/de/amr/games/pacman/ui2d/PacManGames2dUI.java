@@ -190,7 +190,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
                     gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
                         GameSceneID.BOOT_SCENE,   new BootScene(),
                         GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
-                        GameSceneID.CREDIT_SCENE, new MsPacManCreditScene(),
+                        GameSceneID.CREDIT_SCENE, new CreditScene(),
                         GameSceneID.PLAY_SCENE,   new PlayScene2D(),
                         GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
                         GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
@@ -200,7 +200,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
                     gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
                         GameSceneID.BOOT_SCENE,   new BootScene(),
                         GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
-                        GameSceneID.CREDIT_SCENE, new PacManCreditScene(),
+                        GameSceneID.CREDIT_SCENE, new CreditScene(),
                         GameSceneID.PLAY_SCENE,   new PlayScene2D(),
                         GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
                         GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
