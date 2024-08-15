@@ -245,12 +245,17 @@ public class GameSounds {
     }
 
     public static void playVoice(String voiceClipID, double delaySeconds) {
-        if (voice != null && voice.getStatus() == MediaPlayer.Status.PLAYING) {
+        if (voice != null) {
             Logger.info("Cannot play voice {}, another voice is already playing", voiceClipID);
             return;
         }
         URL url = assets.get(voiceClipID);
         voice = new MediaPlayer(new Media(url.toExternalForm()));
+        // media player stays in state PLAYING so we reset the reference when it reaches the end
+        voice.setOnEndOfMedia(() -> voice = null);
+        voice.statusProperty().addListener((py,ov,nv) -> {
+            Logger.info("Voice status {} -> {}", ov, nv);
+        });
         voice.muteProperty().bind(mutedPy);
         voice.setStartTime(Duration.seconds(delaySeconds));
         voice.play();
