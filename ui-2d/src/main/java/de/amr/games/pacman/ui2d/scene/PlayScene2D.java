@@ -37,7 +37,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void end() {
-        context.soundHandler().stopAllSounds();
+        GameSounds.stopAllSounds();
     }
 
     @Override
@@ -51,7 +51,7 @@ public class PlayScene2D extends GameScene2D {
         } else {
             context.setScoreVisible(true);
             context.game().pac().setUseAutopilot(PY_AUTOPILOT.get());
-            PlaySceneSound.updateSound(context);
+            GameSounds.updateSound();
         }
     }
 
@@ -73,10 +73,10 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onGameStateEntry(GameState state) {
         switch (state) {
-            case READY, PACMAN_DYING, LEVEL_COMPLETE -> context.soundHandler().stopAllSounds();
+            case READY, PACMAN_DYING, LEVEL_COMPLETE -> GameSounds.stopAllSounds();
             case GAME_OVER -> {
-                context.soundHandler().stopAllSounds();
-                context.soundHandler().playAudioClip("audio.game_over");
+                GameSounds.stopAllSounds();
+                GameSounds.playGameOverSound();
             }
             default -> {}
         }
@@ -183,27 +183,21 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        PlaySceneSound.ensureSirenPlaying(context);
+        GameSounds.ensureSirenPlaying();
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        if (!context.game().isDemoLevel()) {
-            context.soundHandler().playAudioClip("bonus_eaten");
-        }
+        GameSounds.playBonusEatenSound();
     }
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        if (!context.game().isDemoLevel()) {
-            context.soundHandler().playAudioClip("extra_life");
-        }
+        GameSounds.playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        if (!context.game().isDemoLevel()) {
-            context.soundHandler().playAudioClip("ghost_eaten");
-        }
+        GameSounds.playGhostEatenSound();
     }
 }

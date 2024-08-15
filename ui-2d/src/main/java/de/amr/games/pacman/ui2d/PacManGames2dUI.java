@@ -36,16 +36,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import javafx.util.Pair;
 import org.tinylog.Logger;
 
-import java.net.URL;
 import java.text.MessageFormat;
 import java.time.LocalTime;
 import java.util.*;
@@ -64,7 +60,7 @@ import static java.util.function.Predicate.not;
  *
  * @author Armin Reichert
  */
-public class PacManGames2dUI implements GameEventListener, GameContext, ActionHandler, SoundHandler {
+public class PacManGames2dUI implements GameEventListener, GameContext, ActionHandler {
 
     public static final String BY_ARMIN_REICHERT = "Remake (2021-2024) by Armin Reichert";
 
@@ -82,10 +78,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
     };
 
-    public final BooleanProperty mutedPy = new SimpleBooleanProperty(this, "muted", false);
     public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible");
 
-    protected final AssetMap assets = new AssetMap();
+    public final AssetMap assets = new AssetMap();
+
     protected final List<ResourceBundle> bundles = new ArrayList<>();
 
     protected final Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
@@ -100,14 +96,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected GamePage gamePage;
     protected EditorPage editorPage;
     protected Page currentPage;
-
-    protected MediaPlayer voice;
-    protected Siren siren;
-    protected MediaPlayer startGameSound;
-    protected MediaPlayer intermissionSound;
-    protected MediaPlayer munchingSound;
-    protected MediaPlayer powerSound;
-    protected MediaPlayer ghostReturningHomeSound;
 
     public void create(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
@@ -179,7 +167,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             if (GameKey.FULLSCREEN.pressed()) {
                 setFullScreen(true);
             } else if (GameKey.MUTE.pressed()) {
-                mute(!isMuted());
+                GameSounds.toggleMuted();
             } else {
                 currentPage.handleKeyboardInput(this);
             }
@@ -231,7 +219,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     private void handleGameVariantChange(GameVariant variant) {
         stage.getIcons().setAll(assets.image(variant.resourceKey() + ".icon"));
-        deleteSounds(); // new sounds will be created on demand for the new game variant
+        GameSounds.deleteSounds(); // new sounds will be created on demand for the new game variant
         if (variant == GameVariant.PACMAN_XXL) {
             updateCustomMaps();
         }
@@ -252,7 +240,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         var icon = new ImageView(assets.<Image>get("icon.mute"));
         icon.setFitWidth(48);
         icon.setPreserveRatio(true);
-        icon.visibleProperty().bind(mutedPy);
+        icon.visibleProperty().bind(GameSounds.mutedPy);
         StackPane.setAlignment(icon, Pos.BOTTOM_RIGHT);
         return icon;
     }
@@ -330,11 +318,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public ActionHandler actionHandler() {
-        return this;
-    }
-
-    @Override
-    public SoundHandler soundHandler() {
         return this;
     }
 
@@ -417,22 +400,22 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void onCreditAdded(GameEvent event) {
-        playAudioClip("credit");
+        GameSounds.playCreditSound();
     }
 
     @Override
     public void onHuntingPhaseStarted(GameEvent event) {
         if (!game().isDemoLevel()) {
-            game().scatterPhase().ifPresent(this::ensureSirenPlaying);
+            game().scatterPhase().ifPresent(GameSounds::ensureSirenPlaying);
         }
     }
 
     @Override
     public void onIntermissionStarted(GameEvent event) {
         if (gameState() == GameState.INTERMISSION_TEST) {
-            playIntermissionSound(GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")); //TODO ugly
+            GameSounds.playIntermissionSound(GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")); //TODO ugly
         } else {
-            playIntermissionSound(game().intermissionNumber(game().levelNumber()));
+            GameSounds.playIntermissionSound(game().intermissionNumber(game().levelNumber()));
         }
     }
 
@@ -466,45 +449,49 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (gameState() == LEVEL_TEST || game().isDemoLevel() || game().levelNumber() > 1) {
             return;
         }
-        soundHandler().playStartGameSound();
+        GameSounds.playStartGameSound();
         LocalTime now = LocalTime.now();
         PY_NIGHT_MODE.set(now.getHour() >= 21 || now.getHour() <= 5);
     }
 
     @Override
     public void onPacDied(GameEvent event) {
+        //TODO move into play scene classes
         if (!game().isDemoLevel()) {
-            playAudioClip("pacman_death");
-            stopSound(munchingSound);
+            GameSounds.playPacManDeathSound();
+            GameSounds.stopMunchingSound();
         }
     }
 
     @Override
     public void onPacFoundFood(GameEvent event) {
+        //TODO move into play scene classes
         if (!game().isDemoLevel()) {
-            playMunchingSound();
+            GameSounds.playMunchingSound();
         }
     }
 
     @Override
     public void onPacGetsPower(GameEvent event) {
+        //TODO move into play scene classes
         if (!game().isDemoLevel()) {
-            stopSiren();
-            playPowerSound();
+            GameSounds.stopSiren();
+            GameSounds.playPowerSound();
         }
     }
 
     @Override
     public void onPacLostPower(GameEvent event) {
+        //TODO move into play scene classes
         if (!game().isDemoLevel()) {
-            stopSound(powerSound);
-            ensureSirenPlaying(game().huntingPhaseIndex() / 2);
+            GameSounds.stopPowerSound();
+            GameSounds.ensureSirenPlaying(game().huntingPhaseIndex() / 2);
         }
     }
 
     @Override
     public void onStopAllSounds(GameEvent event) {
-        stopAllSounds();
+        GameSounds.stopAllSounds();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -557,7 +544,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void startGame() {
         if (gameController().hasCredit()) {
-            stopVoice();
+            GameSounds.stopVoice();
             if (gameState() == GameState.INTRO || gameState() == GameState.CREDIT) {
                 gameController().changeState(GameState.READY);
             } else {
@@ -577,7 +564,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             editorPage = new EditorPage(stage, this);
             editorPage.setCloseAction(this::quitMapEditor);
         }
-        stopAllSounds();
+        GameSounds.stopAllSounds();
         currentGameScene().ifPresent(GameScene::end);
         stage.titleProperty().bind(editorPage.editor().titlePy);
         if (game().world() != null) {
@@ -623,7 +610,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void restartIntro() {
-        stopAllSounds();
+        GameSounds.stopAllSounds();
         currentGameScene().ifPresent(GameScene::end);
         if (gameState() == LEVEL_TEST) {
             gameState().onExit(game()); //TODO exit other states too?
@@ -634,7 +621,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void reboot() {
-        stopAllSounds();
+        GameSounds.stopAllSounds();
         currentGameScene().ifPresent(GameScene::end);
         game().removeWorld();
         clock.setTargetFrameRate(GameModel.FPS);
@@ -662,7 +649,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         Ufx.toggle(clock.pausedPy);
         if (clock.isPaused()) {
             assets().audioClips().forEach(AudioClip::stop);
-            stopSiren();
+            GameSounds.stopSiren();
         }
         Logger.info("Game variant ({}) {}", game(), clock.isPaused() ? "paused" : "resumed");
     }
@@ -745,7 +732,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         Ufx.toggle(PY_AUTOPILOT);
         boolean auto = PY_AUTOPILOT.get();
         showFlashMessage(locText(auto ? "autopilot_on" : "autopilot_off"));
-        playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
+        GameSounds.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
     }
 
     @Override
@@ -757,7 +744,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void toggleImmunity() {
         Ufx.toggle(PY_IMMUNITY);
         showFlashMessage(locText(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
-        playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
+        GameSounds.playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
     }
 
     @Override
@@ -796,200 +783,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void cheatEnterNextLevel() {
         if (game().isPlaying() && gameState() == GameState.HUNTING) {
             GameWorld world = game().world();
-            stopAllSounds();
+            GameSounds.stopAllSounds();
             world.map().food().tiles().forEach(world::eatFoodAt);
             gameController().changeState(GameState.LEVEL_COMPLETE);
-        }
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // SoundHandler interface implementation
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean isMuted() {
-        return mutedPy.get();
-    }
-
-    @Override
-    public void mute(boolean muted) {
-        mutedPy.set(muted);
-    }
-
-    @Override
-    public void playAudioClip(String keySuffix) {
-        checkNotNull(keySuffix);
-        AudioClip clip = assets.get(audioPrefix() + keySuffix);
-        if (clip == null) {
-            Logger.error("No sound exists for key {}", audioPrefix() + keySuffix);
-            return;
-        }
-        if (!isMuted()) {
-            clip.setVolume(0.5);
-            clip.play();
-        }
-    }
-
-    @Override
-    public void stopAllSounds() {
-        stopSound(ghostReturningHomeSound);
-        stopSound(intermissionSound);
-        stopSound(munchingSound);
-        stopSound(powerSound);
-        stopSound(startGameSound);
-        stopSiren();
-        stopVoice();
-        assets.audioClips().forEach(AudioClip::stop); // TODO needed anymore?
-        Logger.info("All sounds stopped");
-    }
-
-    /**
-     * Deletes media players, they get recreated for the current game variant on demand.
-     */
-    private void deleteSounds() {
-        ghostReturningHomeSound = null;
-        intermissionSound = null;
-        munchingSound = null;
-        powerSound = null;
-        startGameSound = null;
-        siren = null;
-        Logger.info("Sounds deleted. Will be recreated on demand.");
-    }
-
-    private MediaPlayer createSoundPlayer(String keySuffix, double volume, boolean loop) {
-        URL url = assets.get(audioPrefix() + keySuffix);
-        var player = new MediaPlayer(new Media(url.toExternalForm()));
-        Logger.info("Media player created from URL {}", url);
-        player.setCycleCount(loop ? MediaPlayer.INDEFINITE : 1);
-        player.setVolume(volume);
-        player.muteProperty().bind(mutedPy);
-        player.statusProperty().addListener((py,ov,nv) -> logSound());
-        return player;
-    }
-
-    private String audioPrefix() {
-        String prefix = game().variant() == GameVariant.PACMAN_XXL
-            ? GameVariant.PACMAN.resourceKey() : game().variant().resourceKey();
-        return prefix + ".audio.";
-    }
-
-    /**
-     * @param sirenIndex index of siren (0..3)
-     */
-    @Override
-    public void ensureSirenPlaying(int sirenIndex) {
-        if (sirenIndex < 0 || sirenIndex > 3) {
-            throw new IllegalArgumentException("Illegal siren index: " + sirenIndex);
-        }
-        int sirenNumber = sirenIndex + 1;
-        if (siren != null && siren.number() != sirenNumber) {
-            siren.player().stop();
-        }
-        if (siren == null || siren.number() != sirenNumber) {
-            siren = new Siren(sirenNumber, createSoundPlayer("siren." + sirenNumber, 0.25, true));
-        }
-        siren.player().play();
-    }
-
-    @Override
-    public void stopSiren() {
-        if (siren != null) {
-            siren.player().stop();
-        }
-    }
-
-    @Override
-    public void playStartGameSound() {
-        if (startGameSound == null) {
-            startGameSound = createSoundPlayer("game_ready", 0.5, false);
-        }
-        startGameSound.play();
-    }
-
-    @Override
-    public void playMunchingSound() {
-        if (munchingSound == null) {
-            munchingSound = createSoundPlayer("pacman_munch", 0.5, true);
-        }
-        munchingSound.play();
-    }
-
-    @Override
-    public void stopMunchingSound() {
-        stopSound(munchingSound);
-    }
-
-    @Override
-    public void playPowerSound() {
-        if (powerSound == null) {
-            powerSound = createSoundPlayer("pacman_power", 0.5, true);
-        }
-        powerSound.play();
-    }
-
-    @Override
-    public void playGhostReturningHomeSound() {
-        if (ghostReturningHomeSound == null) {
-            ghostReturningHomeSound = createSoundPlayer("ghost_returning", 0.5, true);
-        }
-        ghostReturningHomeSound.play();
-    }
-
-    @Override
-    public void stopGhostReturningHomeSound() {
-        stopSound(ghostReturningHomeSound);
-    }
-
-    @Override
-    public void playIntermissionSound(int number) {
-        switch (game().variant()) {
-            case MS_PACMAN -> {
-                intermissionSound = createSoundPlayer("intermission." + number, 0.5, false);
-                intermissionSound.play();
-            }
-            case PACMAN, PACMAN_XXL -> {
-                intermissionSound = createSoundPlayer("intermission", 0.5, false);
-                intermissionSound.setCycleCount(number == 1 || number == 3 ? 2 : 1);
-                intermissionSound.play();
-            }
-        }
-    }
-
-    @Override
-    public void playVoice(String voiceClipID, double delaySeconds) {
-        if (voice != null && voice.getStatus() == MediaPlayer.Status.PLAYING) {
-            Logger.info("Cannot play voice {}, another voice is already playing", voiceClipID);
-            return;
-        }
-        URL url = assets.get(voiceClipID);
-        voice = new MediaPlayer(new Media(url.toExternalForm()));
-        voice.muteProperty().bind(mutedPy);
-        voice.setStartTime(Duration.seconds(delaySeconds));
-        voice.play();
-    }
-
-    @Override
-    public void stopVoice() {
-        if (voice != null) {
-            voice.stop();
-        }
-    }
-
-    private void logSound() {
-        if (startGameSound != null) {
-            Logger.debug("Start Game Sound: {} volume {}", startGameSound.getStatus(), startGameSound.getVolume());
-        }
-        if (siren != null) {
-            Logger.debug("Siren {}: {} volume {}", siren.number(), siren.player().getStatus(), siren.player().getVolume());
-        }
-        if (munchingSound != null) {
-            Logger.debug("Munching Sound: {} volume {}", munchingSound.getStatus(), munchingSound.getVolume());
-        }
-        if (powerSound != null) {
-            Logger.debug("Power Sound: {} volume {}", powerSound.getStatus(), powerSound.getVolume());
-        }
-        if (ghostReturningHomeSound != null) {
-            Logger.debug("Ghost Returning Home Sound: {} volume {}", ghostReturningHomeSound.getStatus(), ghostReturningHomeSound.getVolume());
         }
     }
 

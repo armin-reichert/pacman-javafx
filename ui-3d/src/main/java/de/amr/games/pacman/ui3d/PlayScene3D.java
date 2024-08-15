@@ -16,7 +16,7 @@ import de.amr.games.pacman.ui2d.GameKey;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.scene.PlaySceneSound;
+import de.amr.games.pacman.ui2d.scene.GameSounds;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;
@@ -140,7 +140,7 @@ public class PlayScene3D implements GameScene {
             scores3D.showTextAsScore("GAME OVER!", Color.RED);
         }
 
-        PlaySceneSound.updateSound(context);
+        GameSounds.updateSound();
     }
 
     public void setContext(GameContext context) {
@@ -195,7 +195,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStateReady() {
-        context.soundHandler().stopAllSounds();
+        GameSounds.stopAllSounds();
         if (level3D != null) {
             stopLevelAnimations();
             level3D.pac3D().init();
@@ -210,7 +210,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStatePacManDying() {
-        context.soundHandler().stopAllSounds();
+        GameSounds.stopAllSounds();
         // last update before dying animation
         level3D.pac3D().update(context);
         playPacManDiesAnimation();
@@ -240,7 +240,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStateLevelComplete() {
-        context.soundHandler().stopAllSounds();
+        GameSounds.stopAllSounds();
         // if cheat has been used to complete level, 3D food might still exist, so eat it:
         level3D.pellets3D().forEach(Pellet3D::onEaten);
         level3D.energizers3D().forEach(Energizer3D::onEaten);
@@ -270,8 +270,8 @@ public class PlayScene3D implements GameScene {
         // delay state exit for 3 seconds
         context.gameState().timer().restartSeconds(3);
         context.actionHandler().showFlashMessageSeconds(3, pickerGameOver.next());
-        context.soundHandler().stopAllSounds();
-        context.soundHandler().playAudioClip("audio.game_over");
+        GameSounds.stopAllSounds();
+        GameSounds.playGameOverSound();
     }
 
     private void stopLevelAnimations() {
@@ -306,9 +306,9 @@ public class PlayScene3D implements GameScene {
 
         if (context.gameState() == GameState.HUNTING) {
             if (context.game().powerTimer().isRunning()) {
-                context.soundHandler().playPowerSound();
+                GameSounds.playPowerSound();
             } else {
-                context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
+                GameSounds.ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
             }
             level3D.livesCounter3D().startAnimation();
         }
@@ -322,9 +322,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        if (!context.game().isDemoLevel()) {
-            context.soundHandler().playAudioClip("bonus_eaten");
-        }
+        GameSounds.playBonusEatenSound();
     }
 
     @Override
@@ -334,16 +332,12 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        if (!context.game().isDemoLevel()) {
-            context.soundHandler().playAudioClip("extra_life");
-        }
+        GameSounds.playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        if (!context.game().isDemoLevel()) {
-            context.soundHandler().playAudioClip("ghost_eaten");
-        }
+        GameSounds.playGhostEatenSound();
     }
 
     @Override
@@ -468,12 +462,12 @@ public class PlayScene3D implements GameScene {
             , doAfterSec(2, level3D.mazeFlashAnimation(numFlashes))
             , doAfterSec(1, () -> {
                 context.game().pac().hide();
-                context.soundHandler().playAudioClip("audio.level_complete");
+                GameSounds.playLevelCompleteSound();
             })
             , doAfterSec(0.5, level3D.levelRotateAnimation(1.5))
             , level3D.wallsDisappearAnimation(2.0)
             , doAfterSec(1, () -> {
-                context.soundHandler().playAudioClip("audio.sweep");
+                GameSounds.playLevelChangedSound();
                 perspectivePy.bind(PY_3D_PERSPECTIVE);
             })
         );

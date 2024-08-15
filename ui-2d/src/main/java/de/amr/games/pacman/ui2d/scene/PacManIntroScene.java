@@ -51,7 +51,7 @@ public class PacManIntroScene extends GameScene2D {
     @Override
     public void end() {
         context.actionHandler().hideSignature();
-        context.soundHandler().stopVoice();
+        GameSounds.stopVoice();
     }
 
     @Override

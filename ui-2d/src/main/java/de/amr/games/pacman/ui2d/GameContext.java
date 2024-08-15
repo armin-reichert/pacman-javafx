@@ -74,6 +74,4 @@ public interface GameContext {
     GameClockFX gameClock();
 
     ActionHandler actionHandler();
-
-    SoundHandler soundHandler();
 }

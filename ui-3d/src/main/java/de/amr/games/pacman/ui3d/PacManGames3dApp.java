@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.scene.GameSounds;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
@@ -34,6 +35,7 @@ public class PacManGames3dApp extends Application {
         double height = 0.8 * screenSize.getHeight();
         double width = aspect * height;
         ui.loadAssets(true);
+        GameSounds.init(ui.assets, ui);
         ui.create(stage, width, height);
         ui.start();
         PY_3D_ENABLED.set(true);

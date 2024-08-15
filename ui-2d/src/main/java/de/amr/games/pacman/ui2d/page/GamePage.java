@@ -10,10 +10,7 @@ import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameKey;
 import de.amr.games.pacman.ui2d.dashboard.*;
-import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.scene.GameScene2D;
-import de.amr.games.pacman.ui2d.scene.GameSceneID;
-import de.amr.games.pacman.ui2d.scene.PlayScene2D;
+import de.amr.games.pacman.ui2d.scene.*;
 import de.amr.games.pacman.ui2d.util.CanvasLayoutPane;
 import de.amr.games.pacman.ui2d.util.DecoratedCanvas;
 import de.amr.games.pacman.ui2d.util.FadingPane;
@@ -130,7 +127,7 @@ public class GamePage implements Page {
         adaptCanvasSizeToCurrentWorld();
         //TODO check if this is always what is wanted
         context.actionHandler().reboot();
-        context.soundHandler().playVoice("voice.explain", 0);
+        GameSounds.playVoice("voice.explain", 0);
     }
 
     @Override
@@ -285,8 +282,8 @@ public class GamePage implements Page {
     }
 
     protected void quit() {
-        context.soundHandler().stopVoice();
-        context.soundHandler().stopAllSounds();
+        GameSounds.stopVoice();
+        GameSounds.stopAllSounds();
         context.actionHandler().selectStartPage();
         context.gameController().changeCredit(-1);
     }

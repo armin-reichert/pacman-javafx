@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.scene.GameSounds;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
@@ -31,6 +32,7 @@ public class PacManGames2dApp extends Application {
         double aspect = 1.2;
         double height = 0.8 * screenSize.getHeight();
         ui.loadAssets(true);
+        GameSounds.init(ui.assets, ui);
         ui.create(stage, aspect * height, height);
         ui.start();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
