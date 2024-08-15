@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.scene.GameSounds;
+import de.amr.games.pacman.ui2d.GameSounds;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;

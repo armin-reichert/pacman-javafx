@@ -2,15 +2,12 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.scene;
+package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.PacManGames2dUI;
-import de.amr.games.pacman.ui2d.Siren;
 import de.amr.games.pacman.ui2d.util.AssetMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;

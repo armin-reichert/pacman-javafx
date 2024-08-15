@@ -16,7 +16,7 @@ import de.amr.games.pacman.ui2d.GameKey;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.scene.GameSounds;
+import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;

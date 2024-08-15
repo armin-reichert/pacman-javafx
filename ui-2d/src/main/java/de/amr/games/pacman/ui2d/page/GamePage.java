@@ -9,6 +9,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameKey;
+import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.scene.*;
 import de.amr.games.pacman.ui2d.util.CanvasLayoutPane;

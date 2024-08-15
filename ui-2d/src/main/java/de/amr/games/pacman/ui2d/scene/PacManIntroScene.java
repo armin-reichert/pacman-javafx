@@ -9,6 +9,7 @@ import de.amr.games.pacman.controller.PacManIntro.State;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameKey;
+import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.PacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;

@@ -15,6 +15,7 @@ import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameKey;
+import de.amr.games.pacman.ui2d.GameSounds;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
