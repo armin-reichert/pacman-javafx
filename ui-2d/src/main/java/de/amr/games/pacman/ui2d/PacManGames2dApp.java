@@ -32,7 +32,7 @@ public class PacManGames2dApp extends Application {
         double aspect = 1.2;
         double height = 0.8 * screenSize.getHeight();
         ui.loadAssets(true);
-        GameSounds.init(ui.assets, ui);
+        GameSounds.init(ui.assets(), ui);
         ui.create(stage, aspect * height, height);
         ui.start();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());

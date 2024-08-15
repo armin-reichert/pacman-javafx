@@ -80,10 +80,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible");
 
-    public final AssetMap assets = new AssetMap();
-
+    protected final AssetMap assets = new AssetMap();
     protected final List<ResourceBundle> bundles = new ArrayList<>();
-
     protected final Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
 
     protected Stage stage;
