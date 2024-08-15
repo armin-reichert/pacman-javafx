@@ -46,8 +46,8 @@ public class CreditScene extends GameScene2D {
         GameSounds.playCreditSound();
     }
 
-//    @Override
-    public void _drawSceneContent() {
+    @Override
+    public void drawSceneContent() {
         var font8 = sceneFont(8);
         var font6 = sceneFont(6);
         var cyan = context.assets().color("palette.cyan");
