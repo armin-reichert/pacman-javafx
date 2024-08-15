@@ -841,7 +841,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void playAudioClip(String keySuffix) {
         checkNotNull(keySuffix);
         AudioClip clip = assets.get(audioPrefix() + keySuffix);
-        if (clip != null && !isMuted()) {
+        if (clip == null) {
+            Logger.error("No sound exists for key {}", audioPrefix() + keySuffix);
+            return;
+        }
+        if (!isMuted()) {
             clip.setVolume(0.5);
             clip.play();
         }
@@ -849,11 +853,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void stopAllSounds() {
-        stopSound(startGameSound);
-        stopSound(munchingSound);
-        stopSound(powerSound);
         stopSound(ghostReturningHomeSound);
         stopSound(intermissionSound);
+        stopSound(munchingSound);
+        stopSound(powerSound);
+        stopSound(startGameSound);
         stopSiren();
         stopVoice();
         assets.audioClips().forEach(AudioClip::stop); // TODO needed anymore?
@@ -864,23 +868,21 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
      * Deletes media players, they get recreated for the current game variant on demand.
      */
     private void deleteSounds() {
-        startGameSound = null;
-        siren = null;
-        munchingSound = null;
-        powerSound = null;
         ghostReturningHomeSound = null;
         intermissionSound = null;
-        Logger.info("Sounds deleted");
+        munchingSound = null;
+        powerSound = null;
+        startGameSound = null;
+        siren = null;
+        Logger.info("Sounds deleted. Will be recreated on demand.");
     }
 
     private MediaPlayer createSoundPlayer(String keySuffix, double volume, boolean loop) {
         URL url = assets.get(audioPrefix() + keySuffix);
         var player = new MediaPlayer(new Media(url.toExternalForm()));
         Logger.info("Media player created from URL {}", url);
+        player.setCycleCount(loop ? MediaPlayer.INDEFINITE : 1);
         player.setVolume(volume);
-        if (loop) {
-            player.setCycleCount(MediaPlayer.INDEFINITE);
-        }
         player.muteProperty().bind(mutedPy);
         player.statusProperty().addListener((py,ov,nv) -> logSound());
         return player;
@@ -904,9 +906,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (siren != null && siren.number() != sirenNumber) {
             siren.player().stop();
         }
-        if  (siren == null || siren.number() != sirenNumber) {
-            var player = createSoundPlayer("siren." + sirenNumber, 0.33, true);
-            siren = new Siren(sirenNumber, player);
+        if (siren == null || siren.number() != sirenNumber) {
+            siren = new Siren(sirenNumber, createSoundPlayer("siren." + sirenNumber, 0.25, true));
         }
         siren.player().play();
     }
