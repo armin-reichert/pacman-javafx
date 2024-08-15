@@ -416,29 +416,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     @Override
-    public void onBonusEaten(GameEvent event) {
-        if (!game().isDemoLevel()) {
-            playAudioClip("bonus_eaten");
-        }
-    }
-
-    @Override
     public void onCreditAdded(GameEvent event) {
         playAudioClip("credit");
-    }
-
-    @Override
-    public void onExtraLifeWon(GameEvent event) {
-        if (!game().isDemoLevel()) {
-            playAudioClip("extra_life");
-        }
-    }
-
-    @Override
-    public void onGhostEaten(GameEvent event) {
-        if (!game().isDemoLevel()) {
-            playAudioClip("ghost_eaten");
-        }
     }
 
     @Override

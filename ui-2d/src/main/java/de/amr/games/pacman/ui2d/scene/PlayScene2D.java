@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -27,7 +28,7 @@ import static de.amr.games.pacman.ui2d.GameParameters.PY_AUTOPILOT;
 /**
  * @author Armin Reichert
  */
-public class PlayScene2D extends GameScene2D implements PlaySceneSound {
+public class PlayScene2D extends GameScene2D {
 
     @Override
     public boolean isCreditVisible() {
@@ -50,7 +51,7 @@ public class PlayScene2D extends GameScene2D implements PlaySceneSound {
         } else {
             context.setScoreVisible(true);
             context.game().pac().setUseAutopilot(PY_AUTOPILOT.get());
-            updateSound(context);
+            PlaySceneSound.updateSound(context);
         }
     }
 
@@ -182,6 +183,27 @@ public class PlayScene2D extends GameScene2D implements PlaySceneSound {
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        ensureSirenPlaying(context);
+        PlaySceneSound.ensureSirenPlaying(context);
+    }
+
+    @Override
+    public void onBonusEaten(GameEvent e) {
+        if (!context.game().isDemoLevel()) {
+            context.soundHandler().playAudioClip("bonus_eaten");
+        }
+    }
+
+    @Override
+    public void onExtraLifeWon(GameEvent e) {
+        if (!context.game().isDemoLevel()) {
+            context.soundHandler().playAudioClip("extra_life");
+        }
+    }
+
+    @Override
+    public void onGhostEaten(GameEvent e) {
+        if (!context.game().isDemoLevel()) {
+            context.soundHandler().playAudioClip("ghost_eaten");
+        }
     }
 }

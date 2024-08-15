@@ -16,7 +16,7 @@ import de.amr.games.pacman.ui2d.GameContext;
  */
 public interface PlaySceneSound {
 
-    default void updateSound(GameContext context) {
+    static void updateSound(GameContext context) {
         if (context.game().isDemoLevel()) {
             return;
         }
@@ -32,7 +32,7 @@ public interface PlaySceneSound {
         }
     }
 
-    default void ensureSirenPlaying(GameContext context) {
+    static void ensureSirenPlaying(GameContext context) {
         if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
             context.soundHandler().ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
         }

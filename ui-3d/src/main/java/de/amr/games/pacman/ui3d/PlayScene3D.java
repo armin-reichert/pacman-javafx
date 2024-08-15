@@ -44,7 +44,7 @@ import static de.amr.games.pacman.ui3d.GameParameters3D.*;
  *
  * @author Armin Reichert
  */
-public class PlayScene3D implements GameScene, PlaySceneSound {
+public class PlayScene3D implements GameScene {
 
     public final ObjectProperty<Perspective> perspectivePy = new SimpleObjectProperty<>(this, "perspective") {
         @Override
@@ -140,7 +140,7 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
             scores3D.showTextAsScore("GAME OVER!", Color.RED);
         }
 
-        updateSound(context);
+        PlaySceneSound.updateSound(context);
     }
 
     public void setContext(GameContext context) {
@@ -322,11 +322,28 @@ public class PlayScene3D implements GameScene, PlaySceneSound {
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
+        if (!context.game().isDemoLevel()) {
+            context.soundHandler().playAudioClip("bonus_eaten");
+        }
     }
 
     @Override
     public void onBonusExpired(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::onBonusExpired);
+    }
+
+    @Override
+    public void onExtraLifeWon(GameEvent e) {
+        if (!context.game().isDemoLevel()) {
+            context.soundHandler().playAudioClip("extra_life");
+        }
+    }
+
+    @Override
+    public void onGhostEaten(GameEvent e) {
+        if (!context.game().isDemoLevel()) {
+            context.soundHandler().playAudioClip("ghost_eaten");
+        }
     }
 
     @Override
