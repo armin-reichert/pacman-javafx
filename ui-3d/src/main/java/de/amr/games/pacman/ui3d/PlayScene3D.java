@@ -161,21 +161,21 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void handleKeyboardInput(ActionHandler handler) {
+    public void handleKeyboardInput(ActionHandler actions) {
         if (GameKey.ADD_CREDIT.pressed() && context.game().isDemoLevel()) {
-            handler.addCredit();
+            actions.addCredit();
         } else if (GameKey.PREV_PERSPECTIVE.pressed()) {
-            handler.selectPrevPerspective();
+            actions.selectPrevPerspective();
         } else if (GameKey.NEXT_PERSPECTIVE.pressed()) {
-            handler.selectNextPerspective();
+            actions.selectNextPerspective();
         } else if (GameKey.CHEAT_EAT_ALL.pressed()) {
-            handler.cheatEatAllPellets();
+            actions.cheatEatAllPellets();
         } else if (GameKey.CHEAT_ADD_LIVES.pressed()) {
-            handler.cheatAddLives();
+            actions.cheatAddLives();
         } else if (GameKey.CHEAT_NEXT_LEVEL.pressed()) {
-            handler.cheatEnterNextLevel();
+            actions.cheatEnterNextLevel();
         } else if (GameKey.CHEAT_KILL_GHOSTS.pressed()) {
-            handler.cheatKillAllEatableGhosts();
+            actions.cheatKillAllEatableGhosts();
         }
     }
 
