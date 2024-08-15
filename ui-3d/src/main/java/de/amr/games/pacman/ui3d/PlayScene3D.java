@@ -140,7 +140,7 @@ public class PlayScene3D implements GameScene {
             scores3D.showTextAsScore("GAME OVER!", Color.RED);
         }
 
-        GameSounds.updateSound();
+        GameSounds.updatePlaySceneSound();
     }
 
     public void setContext(GameContext context) {
@@ -195,7 +195,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStateReady() {
-        GameSounds.stopAllSounds();
+        GameSounds.stopAll();
         if (level3D != null) {
             stopLevelAnimations();
             level3D.pac3D().init();
@@ -210,7 +210,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStatePacManDying() {
-        GameSounds.stopAllSounds();
+        GameSounds.stopAll();
         // last update before dying animation
         level3D.pac3D().update(context);
         playPacManDiesAnimation();
@@ -240,7 +240,7 @@ public class PlayScene3D implements GameScene {
     }
 
     private void onEnterStateLevelComplete() {
-        GameSounds.stopAllSounds();
+        GameSounds.stopAll();
         // if cheat has been used to complete level, 3D food might still exist, so eat it:
         level3D.pellets3D().forEach(Pellet3D::onEaten);
         level3D.energizers3D().forEach(Energizer3D::onEaten);
@@ -270,7 +270,7 @@ public class PlayScene3D implements GameScene {
         // delay state exit for 3 seconds
         context.gameState().timer().restartSeconds(3);
         context.actionHandler().showFlashMessageSeconds(3, pickerGameOver.next());
-        GameSounds.stopAllSounds();
+        GameSounds.stopAll();
         GameSounds.playGameOverSound();
     }
 
@@ -308,7 +308,7 @@ public class PlayScene3D implements GameScene {
             if (context.game().powerTimer().isRunning()) {
                 GameSounds.playPowerSound();
             } else {
-                GameSounds.ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
+                GameSounds.playHuntingSound();
             }
             level3D.livesCounter3D().startAnimation();
         }
@@ -383,10 +383,9 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onHuntingPhaseStarted(GameEvent event) {
         if (!context.game().isDemoLevel()) {
-            context.game().scatterPhase().ifPresent(GameSounds::ensureSirenPlaying);
+            GameSounds.playHuntingSound();
         }
     }
-
 
     @Override
     public void onPacFoundFood(GameEvent event) {
@@ -423,7 +422,7 @@ public class PlayScene3D implements GameScene {
         level3D.pac3D().setPowerMode(false);
         if (!context.game().isDemoLevel()) {
             GameSounds.stopPowerSound();
-            GameSounds.ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
+            GameSounds.playHuntingSound();
         }
     }
 

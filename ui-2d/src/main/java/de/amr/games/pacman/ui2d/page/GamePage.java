@@ -283,7 +283,7 @@ public class GamePage implements Page {
 
     protected void quit() {
         GameSounds.stopVoice();
-        GameSounds.stopAllSounds();
+        GameSounds.stopAll();
         context.actionHandler().selectStartPage();
         context.gameController().changeCredit(-1);
     }

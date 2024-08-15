@@ -124,6 +124,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void start() {
         // select game variant of current game model
         gameVariantPy.set(game().variant());
+        GameSounds.gameVariantPy.bind(gameVariantPy);
         clock.setPauseableCallback(() -> {
             try {
                 gameController().update();
@@ -217,7 +218,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     private void handleGameVariantChange(GameVariant variant) {
         stage.getIcons().setAll(assets.image(variant.resourceKey() + ".icon"));
-        GameSounds.deleteSounds(); // new sounds will be created on demand for the new game variant
         if (variant == GameVariant.PACMAN_XXL) {
             updateCustomMaps();
         }
@@ -447,7 +447,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void onStopAllSounds(GameEvent event) {
-        GameSounds.stopAllSounds();
+        GameSounds.stopAll();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -520,7 +520,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             editorPage = new EditorPage(stage, this);
             editorPage.setCloseAction(this::quitMapEditor);
         }
-        GameSounds.stopAllSounds();
+        GameSounds.stopAll();
         currentGameScene().ifPresent(GameScene::end);
         stage.titleProperty().bind(editorPage.editor().titlePy);
         if (game().world() != null) {
@@ -566,7 +566,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void restartIntro() {
-        GameSounds.stopAllSounds();
+        GameSounds.stopAll();
         currentGameScene().ifPresent(GameScene::end);
         if (gameState() == LEVEL_TEST) {
             gameState().onExit(game()); //TODO exit other states too?
@@ -577,7 +577,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void reboot() {
-        GameSounds.stopAllSounds();
+        GameSounds.stopAll();
         currentGameScene().ifPresent(GameScene::end);
         game().removeWorld();
         clock.setTargetFrameRate(GameModel.FPS);
@@ -739,7 +739,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void cheatEnterNextLevel() {
         if (game().isPlaying() && gameState() == GameState.HUNTING) {
             GameWorld world = game().world();
-            GameSounds.stopAllSounds();
+            GameSounds.stopAll();
             world.map().food().tiles().forEach(world::eatFoodAt);
             gameController().changeState(GameState.LEVEL_COMPLETE);
         }

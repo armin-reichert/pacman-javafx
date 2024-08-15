@@ -37,7 +37,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void end() {
-        GameSounds.stopAllSounds();
+        GameSounds.stopAll();
     }
 
     @Override
@@ -51,7 +51,7 @@ public class PlayScene2D extends GameScene2D {
         } else {
             context.setScoreVisible(true);
             context.game().pac().setUseAutopilot(PY_AUTOPILOT.get());
-            GameSounds.updateSound();
+            GameSounds.updatePlaySceneSound();
         }
     }
 
@@ -73,9 +73,9 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onGameStateEntry(GameState state) {
         switch (state) {
-            case READY, PACMAN_DYING, LEVEL_COMPLETE -> GameSounds.stopAllSounds();
+            case READY, PACMAN_DYING, LEVEL_COMPLETE -> GameSounds.stopAll();
             case GAME_OVER -> {
-                GameSounds.stopAllSounds();
+                GameSounds.stopAll();
                 GameSounds.playGameOverSound();
             }
             default -> {}
@@ -183,13 +183,13 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        GameSounds.ensureSirenPlaying();
+        GameSounds.playHuntingSound();
     }
 
     @Override
     public void onHuntingPhaseStarted(GameEvent event) {
         if (!context.game().isDemoLevel()) {
-            context.game().scatterPhase().ifPresent(GameSounds::ensureSirenPlaying);
+            GameSounds.playHuntingSound();
         }
     }
 
@@ -235,7 +235,7 @@ public class PlayScene2D extends GameScene2D {
     public void onPacLostPower(GameEvent event) {
         if (!context.game().isDemoLevel()) {
             GameSounds.stopPowerSound();
-            GameSounds.ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
+            GameSounds.playHuntingSound();
         }
     }
 }
