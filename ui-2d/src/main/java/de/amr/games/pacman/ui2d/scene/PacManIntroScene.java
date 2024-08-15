@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.controller.PacManIntro;
 import de.amr.games.pacman.controller.PacManIntro.State;
+import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameKey;
@@ -69,6 +70,11 @@ public class PacManIntroScene extends GameScene2D {
         } else if (GameKey.CUTSCENES.pressed()) {
             handler.startCutscenesTest();
         }
+    }
+
+    @Override
+    public void onCreditAdded(GameEvent e) {
+        GameSounds.playCreditSound();
     }
 
     @Override

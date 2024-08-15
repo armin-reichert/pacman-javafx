@@ -383,6 +383,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         // call event specific hook method:
         GameEventListener.super.onGameEvent(event);
         updateGameScene(false);
+        // dispatch event to current game scene if any
         currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
     }
 
@@ -397,14 +398,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     @Override
-    public void onCreditAdded(GameEvent event) {
-        GameSounds.playCreditSound();
-    }
-
-    @Override
     public void onIntermissionStarted(GameEvent event) {
         if (gameState() == GameState.INTERMISSION_TEST) {
-            GameSounds.playIntermissionSound(GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")); //TODO ugly
+            //TODO this is ugly
+            int number = GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber");
+            GameSounds.playIntermissionSound(number);
         } else {
             GameSounds.playIntermissionSound(game().intermissionNumber(game().levelNumber()));
         }
