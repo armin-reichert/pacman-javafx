@@ -271,7 +271,9 @@ public class PlayScene3D implements GameScene {
         context.gameState().timer().restartSeconds(3);
         context.actionHandler().showFlashMessageSeconds(3, pickerGameOver.next());
         GameSounds.stopAll();
-        GameSounds.playGameOverSound();
+        if (!context.game().isDemoLevel()) {
+            GameSounds.playGameOverSound();
+        }
     }
 
     private void stopLevelAnimations() {
@@ -322,7 +324,9 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        GameSounds.playBonusEatenSound();
+        if (!context.game().isDemoLevel()) {
+            GameSounds.playBonusEatenSound();
+        }
     }
 
     @Override
@@ -332,12 +336,16 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        GameSounds.playExtraLifeSound();
+        if (!context.game().isDemoLevel()) {
+            GameSounds.playExtraLifeSound();
+        }
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        GameSounds.playGhostEatenSound();
+        if (!context.game().isDemoLevel()) {
+            GameSounds.playGhostEatenSound();
+        }
     }
 
     @Override

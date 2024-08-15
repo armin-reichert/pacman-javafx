@@ -183,7 +183,9 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        GameSounds.playHuntingSound();
+        if (!context.game().isDemoLevel()) {
+            GameSounds.playHuntingSound();
+        }
     }
 
     @Override
@@ -195,17 +197,23 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        GameSounds.playBonusEatenSound();
+        if (!context.game().isDemoLevel()) {
+            GameSounds.playBonusEatenSound();
+        }
     }
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        GameSounds.playExtraLifeSound();
+        if (!context.game().isDemoLevel()) {
+            GameSounds.playExtraLifeSound();
+        }
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        GameSounds.playGhostEatenSound();
+        if (!context.game().isDemoLevel()) {
+            GameSounds.playGhostEatenSound();
+        }
     }
 
     @Override
