@@ -15,7 +15,7 @@ import static de.amr.games.pacman.ui2d.util.KeyInput.*;
 /**
  * @author Armin Reichert
  */
-public enum GameKeys {
+public enum GameKey {
 
     ADD_CREDIT          (key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5)),
     AUTOPILOT           (alt(KeyCode.A)),
@@ -49,7 +49,7 @@ public enum GameKeys {
     TEST_MODE           (alt(KeyCode.T)),
     TWO_D_THREE_D       (alt(KeyCode.DIGIT3));
 
-    GameKeys(KeyCodeCombination... combinations) {
+    GameKey(KeyCodeCombination... combinations) {
         input = KeyInput.of(combinations);
         Logger.info("{} => {}", input, this);
     }

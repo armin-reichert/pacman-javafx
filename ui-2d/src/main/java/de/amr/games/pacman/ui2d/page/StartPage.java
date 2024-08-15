@@ -3,7 +3,7 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GameKeys;
+import de.amr.games.pacman.ui2d.GameKey;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.ObjectProperty;
@@ -192,11 +192,11 @@ public class StartPage implements Page {
 
     @Override
     public void handleKeyboardInput(ActionHandler handler) {
-        if (GameKeys.ENTER_GAME_PAGE.pressed()) {
+        if (GameKey.ENTER_GAME_PAGE.pressed()) {
             handler.selectGamePage();
-        } else if (GameKeys.NEXT_VARIANT.pressed()) {
+        } else if (GameKey.NEXT_VARIANT.pressed()) {
             handler.selectNextGameVariant();
-        } else if (GameKeys.PREV_VARIANT.pressed()) {
+        } else if (GameKey.PREV_VARIANT.pressed()) {
             handler.selectPrevGameVariant();
         } else if (Keyboard.pressed(KeyCode.DOWN) || Keyboard.pressed(KeyCode.UP)) {
             if (context.game().variant() == GameVariant.MS_PACMAN) {
