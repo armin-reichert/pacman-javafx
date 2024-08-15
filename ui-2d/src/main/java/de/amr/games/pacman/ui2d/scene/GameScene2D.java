@@ -26,7 +26,7 @@ import static de.amr.games.pacman.lib.Globals.*;
  *
  * @author Armin Reichert
  */
-public abstract class GameScene2D implements GameScene {
+public class GameScene2D implements GameScene {
 
     public final BooleanProperty infoVisiblePy  = new SimpleBooleanProperty(this, "infoVisible", false);
     public final DoubleProperty scalingPy       = new SimpleDoubleProperty(this, "scaling", 1.0);
@@ -45,9 +45,14 @@ public abstract class GameScene2D implements GameScene {
         backgroundColorPy.bind(GameParameters.PY_CANVAS_COLOR);
     }
 
-    public abstract boolean isCreditVisible();
+    public boolean isCreditVisible() {
+        return context.gameController().hasCredit();
+    }
 
-    protected abstract void drawSceneContent();
+    protected void drawSceneContent() {
+        Font font = Font.font("Monospaced", 20);
+        spriteRenderer.drawText(g, "Implement method drawSceneContent()!", Color.WHITE, font, 10, 100);
+    }
 
     public void setContext(GameContext context) {
         checkNotNull(context);
@@ -75,6 +80,10 @@ public abstract class GameScene2D implements GameScene {
     @Override
     public void init() {
         spriteRenderer.setSpriteSheet(context.spriteSheet(context.game().variant()));
+    }
+
+    @Override
+    public void update() {
     }
 
     @Override
