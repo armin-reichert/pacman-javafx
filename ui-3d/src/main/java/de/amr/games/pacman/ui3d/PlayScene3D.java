@@ -381,6 +381,14 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
+    public void onHuntingPhaseStarted(GameEvent event) {
+        if (!context.game().isDemoLevel()) {
+            context.game().scatterPhase().ifPresent(GameSounds::ensureSirenPlaying);
+        }
+    }
+
+
+    @Override
     public void onPacFoundFood(GameEvent event) {
         GameWorld world = context.game().world();
         if (event.tile().isEmpty()) {
@@ -396,16 +404,35 @@ public class PlayScene3D implements GameScene {
             level3D.energizer3D(tile).ifPresent(Energizer3D::onEaten);
             level3D.pellet3D(tile).ifPresent(Pellet3D::onEaten);
         }
+        if (!context.game().isDemoLevel()) {
+            GameSounds.playMunchingSound();
+        }
     }
 
     @Override
     public void onPacGetsPower(GameEvent event) {
         level3D.pac3D().setPowerMode(true);
+        if (!context.game().isDemoLevel()) {
+            GameSounds.stopSiren();
+            GameSounds.playPowerSound();
+        }
     }
 
     @Override
     public void onPacLostPower(GameEvent event) {
         level3D.pac3D().setPowerMode(false);
+        if (!context.game().isDemoLevel()) {
+            GameSounds.stopPowerSound();
+            GameSounds.ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
+        }
+    }
+
+    @Override
+    public void onPacDied(GameEvent event) {
+        if (!context.game().isDemoLevel()) {
+            GameSounds.playPacManDeathSound();
+            GameSounds.stopMunchingSound();
+        }
     }
 
     private void replaceGameLevel3D(boolean createLevelCounter) {

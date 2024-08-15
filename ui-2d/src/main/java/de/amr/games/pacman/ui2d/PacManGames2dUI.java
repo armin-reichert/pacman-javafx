@@ -402,13 +402,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     @Override
-    public void onHuntingPhaseStarted(GameEvent event) {
-        if (!game().isDemoLevel()) {
-            game().scatterPhase().ifPresent(GameSounds::ensureSirenPlaying);
-        }
-    }
-
-    @Override
     public void onIntermissionStarted(GameEvent event) {
         if (gameState() == GameState.INTERMISSION_TEST) {
             GameSounds.playIntermissionSound(GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")); //TODO ugly
@@ -450,41 +443,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         GameSounds.playStartGameSound();
         LocalTime now = LocalTime.now();
         PY_NIGHT_MODE.set(now.getHour() >= 21 || now.getHour() <= 5);
-    }
-
-    @Override
-    public void onPacDied(GameEvent event) {
-        //TODO move into play scene classes
-        if (!game().isDemoLevel()) {
-            GameSounds.playPacManDeathSound();
-            GameSounds.stopMunchingSound();
-        }
-    }
-
-    @Override
-    public void onPacFoundFood(GameEvent event) {
-        //TODO move into play scene classes
-        if (!game().isDemoLevel()) {
-            GameSounds.playMunchingSound();
-        }
-    }
-
-    @Override
-    public void onPacGetsPower(GameEvent event) {
-        //TODO move into play scene classes
-        if (!game().isDemoLevel()) {
-            GameSounds.stopSiren();
-            GameSounds.playPowerSound();
-        }
-    }
-
-    @Override
-    public void onPacLostPower(GameEvent event) {
-        //TODO move into play scene classes
-        if (!game().isDemoLevel()) {
-            GameSounds.stopPowerSound();
-            GameSounds.ensureSirenPlaying(game().huntingPhaseIndex() / 2);
-        }
     }
 
     @Override

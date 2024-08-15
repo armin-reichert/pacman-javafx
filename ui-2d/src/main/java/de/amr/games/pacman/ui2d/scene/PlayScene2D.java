@@ -187,6 +187,13 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
+    public void onHuntingPhaseStarted(GameEvent event) {
+        if (!context.game().isDemoLevel()) {
+            context.game().scatterPhase().ifPresent(GameSounds::ensureSirenPlaying);
+        }
+    }
+
+    @Override
     public void onBonusEaten(GameEvent e) {
         GameSounds.playBonusEatenSound();
     }
@@ -199,5 +206,36 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onGhostEaten(GameEvent e) {
         GameSounds.playGhostEatenSound();
+    }
+
+    @Override
+    public void onPacDied(GameEvent event) {
+        if (!context.game().isDemoLevel()) {
+            GameSounds.playPacManDeathSound();
+            GameSounds.stopMunchingSound();
+        }
+    }
+
+    @Override
+    public void onPacFoundFood(GameEvent event) {
+        if (!context.game().isDemoLevel()) {
+            GameSounds.playMunchingSound();
+        }
+    }
+
+    @Override
+    public void onPacGetsPower(GameEvent event) {
+        if (!context.game().isDemoLevel()) {
+            GameSounds.stopSiren();
+            GameSounds.playPowerSound();
+        }
+    }
+
+    @Override
+    public void onPacLostPower(GameEvent event) {
+        if (!context.game().isDemoLevel()) {
+            GameSounds.stopPowerSound();
+            GameSounds.ensureSirenPlaying(context.game().huntingPhaseIndex() / 2);
+        }
     }
 }
