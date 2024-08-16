@@ -308,7 +308,7 @@ public class PlayScene3D implements GameScene {
 
         if (context.gameState() == GameState.HUNTING) {
             if (context.game().powerTimer().isRunning()) {
-                GameSounds.playPowerSound();
+                GameSounds.playPacPowerSound();
             } else {
                 GameSounds.playHuntingSound(context);
             }
@@ -421,7 +421,7 @@ public class PlayScene3D implements GameScene {
         level3D.pac3D().setPowerMode(true);
         if (!context.game().isDemoLevel()) {
             GameSounds.stopSiren();
-            GameSounds.playPowerSound();
+            GameSounds.playPacPowerSound();
         }
     }
 
@@ -429,7 +429,7 @@ public class PlayScene3D implements GameScene {
     public void onPacLostPower(GameEvent event) {
         level3D.pac3D().setPowerMode(false);
         if (!context.game().isDemoLevel()) {
-            GameSounds.stopPowerSound();
+            GameSounds.stopPacPowerSound();
             GameSounds.playHuntingSound(context);
         }
     }
@@ -437,7 +437,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onPacDied(GameEvent event) {
         if (!context.game().isDemoLevel()) {
-            GameSounds.playPacManDeathSound();
+            GameSounds.playPacDeathSound();
             GameSounds.stopMunchingSound();
         }
     }

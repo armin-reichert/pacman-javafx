@@ -35,8 +35,6 @@ public class GameSounds {
         }
     };
 
-    public static final BooleanProperty mutedPy = new SimpleBooleanProperty(false);
-
     public static final BooleanProperty enabledPy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
@@ -44,12 +42,16 @@ public class GameSounds {
         }
     };
 
+    public static final BooleanProperty mutedPy = new SimpleBooleanProperty(false);
+
     private static AssetMap assets;
 
     // These are created when game variant changes
-    private static MediaPlayer startGameSound;
+    private static MediaPlayer gameOverSound;
+    private static MediaPlayer gameReadySound;
     private static MediaPlayer munchingSound;
-    private static MediaPlayer powerSound;
+    private static MediaPlayer pacDeathSound;
+    private static MediaPlayer pacPowerSound;
     private static MediaPlayer ghostReturningHomeSound;
 
     // These are created on demand
@@ -62,29 +64,47 @@ public class GameSounds {
     }
 
     private static void loadSoundsForCurrentGameVariant() {
+        gameOverSound = createAudioPlayer("game_over", 0.5, false);
+        gameReadySound = createAudioPlayer("game_ready", 0.5, false);
         ghostReturningHomeSound = createAudioPlayer("ghost_returning", 0.5, true);
         munchingSound = createAudioPlayer("pacman_munch", 0.5, true);
-        powerSound = createAudioPlayer("pacman_power", 0.5, true);
-        startGameSound = createAudioPlayer("game_ready", 0.5, false);
+        pacDeathSound = createAudioPlayer("pacman_death", 0.5, true);
+        pacPowerSound = createAudioPlayer("pacman_power", 0.5, true);
         // these are created on demand
         intermissionSound = null;
         siren = null;
     }
 
-    private static void logSound(MediaPlayer sound, String description) {
-        if (sound != null) {
-            Logger.info(description + ": state={} volume={}", sound.getStatus() != null ? sound.getStatus() : "UNDEFINED", sound.getVolume());
-        }
+    public static void stopAll() {
+        stopSound(gameOverSound);
+        stopSound(gameReadySound);
+        stopSound(ghostReturningHomeSound);
+        stopSound(intermissionSound);
+        stopSound(munchingSound);
+        stopSound(pacDeathSound);
+        stopSound(pacPowerSound);
+        stopSiren();
+        stopVoice();
+        Logger.info("All sounds stopped");
     }
 
     private static void logSounds() {
-        logSound(ghostReturningHomeSound, "GhostReturningHome Sound");
-        logSound(munchingSound, "Munching Sound");
-        logSound(powerSound, "Power Sound");
-        logSound(startGameSound, "StartingGame Sound");
-        logSound(intermissionSound, "Intermission Sound");
+        logSound(gameOverSound, "Game Over");
+        logSound(gameReadySound, "Game Ready");
+        logSound(ghostReturningHomeSound, "Ghost Returning Home");
+        logSound(intermissionSound, "Intermission");
+        logSound(munchingSound, "Munching");
+        logSound(pacDeathSound, "Death");
+        logSound(pacPowerSound, "Power");
         if (siren != null) {
             logSound(siren.player(), "Siren" + siren.number());
+        }
+    }
+
+    private static void logSound(MediaPlayer sound, String description) {
+        if (sound != null) {
+            Logger.info("[{}] state={} volume={}", description,
+                sound.getStatus() != null ? sound.getStatus() : "UNDEFINED", sound.getVolume());
         }
     }
 
@@ -111,6 +131,11 @@ public class GameSounds {
         }
     }
 
+    private static void stopSound(MediaPlayer player) {
+        if (player != null)
+            player.stop();
+    }
+
     private static void playClip(String keySuffix) {
         if (!isEnabled()) {
             return;
@@ -126,22 +151,6 @@ public class GameSounds {
             clip.setVolume(0.5);
             clip.play();
         }
-    }
-
-    public static void stop(MediaPlayer player) {
-        if (player != null)
-            player.stop();
-    }
-
-    public static void stopAll() {
-        stop(ghostReturningHomeSound);
-        stop(intermissionSound);
-        stop(munchingSound);
-        stop(powerSound);
-        stop(startGameSound);
-        stopSiren();
-        stopVoice();
-        Logger.info("All sounds stopped");
     }
 
     public static boolean isMuted() {
@@ -176,21 +185,6 @@ public class GameSounds {
         }
     }
 
-    public static void playHuntingSound(GameContext context) {
-        //TODO check this
-        if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
-            int sirenIndex = context.game().huntingPhaseIndex() / 2;
-            int sirenNumber = sirenIndex + 1;
-            if (siren != null && siren.number() != sirenNumber) {
-                siren.player().stop();
-            }
-            if (siren == null || siren.number() != sirenNumber) {
-                siren = new Siren(sirenNumber, createAudioPlayer("siren." + sirenNumber, 0.25, true));
-            }
-            playSound(siren.player());
-        }
-    }
-
     public static void stopSiren() {
         if (siren != null) {
             siren.player().stop();
@@ -210,8 +204,39 @@ public class GameSounds {
         playClip("extra_life");
     }
 
+    public static void playGameOverSound() {
+        playSound(gameOverSound);
+    }
+
+    public static void playGameReadySound() {
+        playSound(gameReadySound);
+    }
+
     public static void playGhostEatenSound() {
         playClip("ghost_eaten");
+    }
+
+    public static void playGhostReturningHomeSound() {
+        playSound(ghostReturningHomeSound);
+    }
+
+    public static void stopGhostReturningHomeSound() {
+        stopSound(ghostReturningHomeSound);
+    }
+
+    public static void playHuntingSound(GameContext context) {
+        //TODO check this
+        if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
+            int sirenIndex = context.game().huntingPhaseIndex() / 2;
+            int sirenNumber = sirenIndex + 1;
+            if (siren != null && siren.number() != sirenNumber) {
+                siren.player().stop();
+            }
+            if (siren == null || siren.number() != sirenNumber) {
+                siren = new Siren(sirenNumber, createAudioPlayer("siren." + sirenNumber, 0.25, true));
+            }
+            playSound(siren.player());
+        }
     }
 
     public static void playLevelChangedSound() {
@@ -222,40 +247,24 @@ public class GameSounds {
         playClip("level_complete");
     }
 
-    public static void playStartGameSound() {
-        playSound(startGameSound);
-    }
-
-    public static void playGameOverSound() {
-        playClip("game_over");
-    }
-
     public static void playMunchingSound() {
         playSound(munchingSound);
     }
 
     public static void stopMunchingSound() {
-        stop(munchingSound);
+        stopSound(munchingSound);
     }
 
-    public static void playPowerSound() {
-        playSound(powerSound);
+    public static void playPacDeathSound() {
+        playSound(pacDeathSound);
     }
 
-    public static void stopPowerSound() {
-        stop(powerSound);
+    public static void playPacPowerSound() {
+        playSound(pacPowerSound);
     }
 
-    public static void playGhostReturningHomeSound() {
-        playSound(ghostReturningHomeSound);
-    }
-
-    public static void stopGhostReturningHomeSound() {
-        stop(ghostReturningHomeSound);
-    }
-
-    public static void playPacManDeathSound() {
-        playClip("pacman_death");
+    public static void stopPacPowerSound() {
+        stopSound(pacPowerSound);
     }
 
     public static void playIntermissionSound(int number) {

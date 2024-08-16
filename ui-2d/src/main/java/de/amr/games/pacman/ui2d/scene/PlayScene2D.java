@@ -220,7 +220,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onPacDied(GameEvent event) {
         if (!context.game().isDemoLevel()) {
-            GameSounds.playPacManDeathSound();
+            GameSounds.playPacDeathSound();
             GameSounds.stopMunchingSound();
         }
     }
@@ -236,14 +236,14 @@ public class PlayScene2D extends GameScene2D {
     public void onPacGetsPower(GameEvent event) {
         if (!context.game().isDemoLevel()) {
             GameSounds.stopSiren();
-            GameSounds.playPowerSound();
+            GameSounds.playPacPowerSound();
         }
     }
 
     @Override
     public void onPacLostPower(GameEvent event) {
         if (!context.game().isDemoLevel()) {
-            GameSounds.stopPowerSound();
+            GameSounds.stopPacPowerSound();
             GameSounds.playHuntingSound(context);
         }
     }
