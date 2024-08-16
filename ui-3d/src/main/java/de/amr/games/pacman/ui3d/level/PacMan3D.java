@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetMap;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
@@ -116,7 +117,7 @@ public class PacMan3D implements Pac3D {
 
         return new SequentialTransition(
             now(this::init), // TODO check this
-            pauseSec(0.5),
+            doAfterSec(0.5, GameSounds::playPacDeathSound),
             new ParallelTransition(spins, new SequentialTransition(shrinks, expands), sinks),
             doAfterSec(1.0, () -> shape3D.setVisible(false))
         );

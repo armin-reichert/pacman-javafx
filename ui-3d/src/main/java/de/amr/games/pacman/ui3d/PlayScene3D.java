@@ -21,6 +21,7 @@ import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;
+import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -405,11 +406,6 @@ public class PlayScene3D implements GameScene {
         GameSounds.stopPacPowerSound();
     }
 
-    @Override
-    public void onPacDied(GameEvent event) {
-        GameSounds.playPacDeathSound();
-    }
-
     private void replaceGameLevel3D(boolean createLevelCounter) {
         level3D = new GameLevel3D(context);
         if (createLevelCounter) {
@@ -442,10 +438,10 @@ public class PlayScene3D implements GameScene {
     }
 
     private void playPacManDiesAnimation() {
+        context.gameState().timer().resetIndefinitely();
         Animation animation = level3D.pac3D().createDyingAnimation();
         animation.setDelay(Duration.seconds(1));
         animation.setOnFinished(e -> context.gameState().timer().expire());
-        context.gameState().timer().resetIndefinitely();
         animation.play();
     }
 

@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.util.AssetMap;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Animation;
@@ -18,6 +19,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui2d.util.Ufx.now;
 import static de.amr.games.pacman.ui2d.util.Ufx.pauseSec;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
 
@@ -101,13 +103,14 @@ public class MsPacMan3D implements Pac3D {
 
     @Override
     public Animation createDyingAnimation() {
+        //TODO use Timeline?
         var spinning = new RotateTransition(Duration.seconds(0.25), shape3D);
         spinning.setAxis(Rotate.Z_AXIS);
         spinning.setFromAngle(0);
         spinning.setToAngle(360);
         spinning.setInterpolator(Interpolator.LINEAR);
         spinning.setCycleCount(4);
-        return new SequentialTransition(pauseSec(1), spinning, pauseSec(1.5));
+        return new SequentialTransition(pauseSec(1), now(GameSounds::playPacDeathSound), spinning, pauseSec(1.5));
     }
 
     // Hip swaying animation
