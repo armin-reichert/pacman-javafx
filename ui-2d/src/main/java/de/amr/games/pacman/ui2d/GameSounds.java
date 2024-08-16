@@ -28,21 +28,21 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class GameSounds {
 
-    public static final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>() {
+    private static final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
             loadSoundsForCurrentGameVariant();
         }
     };
 
-    public static final BooleanProperty enabledPy = new SimpleBooleanProperty(true) {
+    private static final BooleanProperty enabledPy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
             Logger.info("Game sounds are " + (get() ? "enabled" : "disbaled"));
         }
     };
 
-    public static final BooleanProperty mutedPy = new SimpleBooleanProperty(false);
+    private static final BooleanProperty mutedPy = new SimpleBooleanProperty(false);
 
     private static AssetMap assets;
 
@@ -62,6 +62,18 @@ public class GameSounds {
 
     public static void init(AssetMap assets) {
         GameSounds.assets = checkNotNull(assets);
+    }
+
+    public static ObjectProperty<GameVariant> gameVariantProperty() {
+        return gameVariantPy;
+    }
+
+    public static BooleanProperty enabledProperty() {
+        return enabledPy;
+    }
+
+    public static BooleanProperty mutedProperty() {
+        return mutedPy;
     }
 
     private static void loadSoundsForCurrentGameVariant() {

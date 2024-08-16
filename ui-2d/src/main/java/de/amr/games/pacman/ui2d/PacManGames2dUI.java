@@ -124,7 +124,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void start() {
         // select game variant of current game model
         gameVariantPy.set(game().variant());
-        GameSounds.gameVariantPy.bind(gameVariantPy);
+        GameSounds.gameVariantProperty().bind(gameVariantPy);
         clock.setPauseableCallback(() -> {
             try {
                 gameController().update();
@@ -238,7 +238,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         var icon = new ImageView(assets.<Image>get("icon.mute"));
         icon.setFitWidth(48);
         icon.setPreserveRatio(true);
-        icon.visibleProperty().bind(GameSounds.mutedPy);
+        icon.visibleProperty().bind(GameSounds.mutedProperty());
         StackPane.setAlignment(icon, Pos.BOTTOM_RIGHT);
         return icon;
     }
@@ -429,7 +429,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (!game.isDemoLevel()) {
             game.pac().setManualSteering(new KeyboardPacSteering());
         }
-        GameSounds.enabledPy.set(!game.isDemoLevel());
+        GameSounds.enabledProperty().set(!game.isDemoLevel());
         //TODO better place than here?
         gamePage.adaptCanvasSizeToCurrentWorld();
     }
