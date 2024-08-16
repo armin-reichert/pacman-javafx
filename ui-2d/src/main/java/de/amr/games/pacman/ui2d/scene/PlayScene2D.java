@@ -11,11 +11,10 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.MsPacManGame;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.ActionHandler;
-import de.amr.games.pacman.ui2d.GameKey;
-import de.amr.games.pacman.ui2d.GameSounds;
+import de.amr.games.pacman.ui2d.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -52,7 +51,24 @@ public class PlayScene2D extends GameScene2D {
         } else {
             context.setScoreVisible(true);
             context.game().pac().setUseAutopilot(PY_AUTOPILOT.get());
-            GameSounds.updatePlaySceneSound(context);
+            updatePlaySceneSound();
+        }
+    }
+
+    private void updatePlaySceneSound() {
+        if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
+            int sirenNumber = 1 + context.game().huntingPhaseIndex() / 2;
+            GameSounds.selectSiren(sirenNumber);
+            GameSounds.playSiren();
+        }
+        if (context.game().pac().starvingTicks() > 8) { // TODO not sure how to do this right
+            GameSounds.stopMunchingSound();
+        }
+        boolean ghostsReturning = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
+        if (context.game().pac().isAlive() && ghostsReturning) {
+            GameSounds.playGhostReturningHomeSound();
+        } else {
+            GameSounds.stopGhostReturningHomeSound();
         }
     }
 
@@ -184,12 +200,6 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        GameSounds.playHuntingSound(context);
-    }
-
-    @Override
-    public void onHuntingPhaseStarted(GameEvent event) {
-        GameSounds.playHuntingSound(context);
     }
 
     @Override
@@ -226,6 +236,5 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onPacLostPower(GameEvent event) {
         GameSounds.stopPacPowerSound();
-        GameSounds.playHuntingSound(context);
     }
 }

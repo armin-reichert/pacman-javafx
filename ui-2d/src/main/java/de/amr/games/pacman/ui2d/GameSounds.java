@@ -4,10 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d;
 
-import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.util.AssetMap;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -20,6 +17,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.net.URL;
+import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -185,19 +183,25 @@ public class GameSounds {
         return enabledPy.get();
     }
 
-    public static void updatePlaySceneSound(GameContext context) {
-        if (context.game().isDemoLevel()) {
-            return;
+    public static Optional<Siren> siren() {
+        return Optional.ofNullable(siren);
+    }
+
+    public static void selectSiren(int number) {
+        if (number < 1 || number > 4) {
+            Logger.error("Siren number must be in 1..4 but is " + number);
         }
-        playHuntingSound(context);
-        if (context.game().pac().starvingTicks() > 8) { // TODO not sure
-            stopMunchingSound();
+        if (siren == null || siren.number() != number) {
+            if (siren != null) {
+                stopSound(siren.player());
+            }
+            siren = new Siren(number, createPlayer("siren." + number, 0.25, true));
         }
-        boolean ghostsReturning = context.game().ghosts(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).anyMatch(Ghost::isVisible);
-        if (context.game().pac().isAlive() && ghostsReturning) {
-            playGhostReturningHomeSound();
-        } else {
-            stopGhostReturningHomeSound();
+    }
+
+    public static void playSiren() {
+        if (siren != null) {
+            playSound(siren.player());
         }
     }
 
@@ -238,21 +242,6 @@ public class GameSounds {
 
     public static void stopGhostReturningHomeSound() {
         stopSound(ghostReturningHomeSound);
-    }
-
-    public static void playHuntingSound(GameContext context) {
-        //TODO check this
-        if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
-            int sirenIndex = context.game().huntingPhaseIndex() / 2;
-            int sirenNumber = sirenIndex + 1;
-            if (siren != null && siren.number() != sirenNumber) {
-                siren.player().stop();
-            }
-            if (siren == null || siren.number() != sirenNumber) {
-                siren = new Siren(sirenNumber, createPlayer("siren." + sirenNumber, 0.25, true));
-            }
-            playSound(siren.player());
-        }
     }
 
     public static void playLevelChangedSound() {
