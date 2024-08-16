@@ -184,67 +184,48 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
-        if (!context.game().isDemoLevel()) {
-            GameSounds.playHuntingSound(context);
-        }
+        GameSounds.playHuntingSound(context);
     }
 
     @Override
     public void onHuntingPhaseStarted(GameEvent event) {
-        if (!context.game().isDemoLevel()) {
-            GameSounds.playHuntingSound(context);
-        }
+        GameSounds.playHuntingSound(context);
     }
 
     @Override
     public void onBonusEaten(GameEvent e) {
-        if (!context.game().isDemoLevel()) {
-            GameSounds.playBonusEatenSound();
-        }
+        GameSounds.playBonusEatenSound();
     }
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        if (!context.game().isDemoLevel()) {
-            GameSounds.playExtraLifeSound();
-        }
+        GameSounds.playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        if (!context.game().isDemoLevel()) {
-            GameSounds.playGhostEatenSound();
-        }
+        GameSounds.playGhostEatenSound();
     }
 
     @Override
     public void onPacDied(GameEvent event) {
-        if (!context.game().isDemoLevel()) {
-            GameSounds.playPacDeathSound();
-            GameSounds.stopMunchingSound();
-        }
+        GameSounds.playPacDeathSound();
     }
 
     @Override
     public void onPacFoundFood(GameEvent event) {
-        if (!context.game().isDemoLevel()) {
-            GameSounds.playMunchingSound();
-        }
+        GameSounds.playMunchingSound();
     }
 
     @Override
     public void onPacGetsPower(GameEvent event) {
-        if (!context.game().isDemoLevel()) {
-            GameSounds.stopSiren();
-            GameSounds.playPacPowerSound();
-        }
+        GameSounds.stopSiren();
+        GameSounds.playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(GameEvent event) {
-        if (!context.game().isDemoLevel()) {
-            GameSounds.stopPacPowerSound();
-            GameSounds.playHuntingSound(context);
-        }
+        GameSounds.stopPacPowerSound();
+        GameSounds.playHuntingSound(context);
     }
 }

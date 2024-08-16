@@ -68,7 +68,7 @@ public class GameSounds {
         gameReadySound = createAudioPlayer("game_ready", 0.5, false);
         ghostReturningHomeSound = createAudioPlayer("ghost_returning", 0.5, true);
         munchingSound = createAudioPlayer("pacman_munch", 0.5, true);
-        pacDeathSound = createAudioPlayer("pacman_death", 0.5, true);
+        pacDeathSound = createAudioPlayer("pacman_death", 0.5, false);
         pacPowerSound = createAudioPlayer("pacman_power", 0.5, true);
         // these are created on demand
         intermissionSound = null;

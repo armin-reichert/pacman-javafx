@@ -13,10 +13,10 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameKey;
+import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui3d.level.*;
 import javafx.animation.Animation;
@@ -271,9 +271,7 @@ public class PlayScene3D implements GameScene {
         context.gameState().timer().restartSeconds(3);
         context.actionHandler().showFlashMessageSeconds(3, pickerGameOver.next());
         GameSounds.stopAll();
-        if (!context.game().isDemoLevel()) {
-            GameSounds.playGameOverSound();
-        }
+        GameSounds.playGameOverSound();
     }
 
     private void stopLevelAnimations() {
@@ -302,10 +300,6 @@ public class PlayScene3D implements GameScene {
         level3D.pac3D().init();
         level3D.pac3D().update(context);
 
-        if (context.game().isDemoLevel()) {
-            return; // no sound in demo level
-        }
-
         if (context.gameState() == GameState.HUNTING) {
             if (context.game().powerTimer().isRunning()) {
                 GameSounds.playPacPowerSound();
@@ -324,9 +318,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onBonusEaten(GameEvent event) {
         level3D.bonus3D().ifPresent(Bonus3D::showEaten);
-        if (!context.game().isDemoLevel()) {
-            GameSounds.playBonusEatenSound();
-        }
+        GameSounds.playBonusEatenSound();
     }
 
     @Override
@@ -336,16 +328,12 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void onExtraLifeWon(GameEvent e) {
-        if (!context.game().isDemoLevel()) {
-            GameSounds.playExtraLifeSound();
-        }
+        GameSounds.playExtraLifeSound();
     }
 
     @Override
     public void onGhostEaten(GameEvent e) {
-        if (!context.game().isDemoLevel()) {
-            GameSounds.playGhostEatenSound();
-        }
+        GameSounds.playGhostEatenSound();
     }
 
     @Override
@@ -370,29 +358,9 @@ public class PlayScene3D implements GameScene {
         }
     }
 
-    private void showLevelTestMessage() {
-        TileMap terrainMap = context.game().world().map().terrain();
-        double x = terrainMap.numCols() * HTS;
-        double y = (terrainMap.numRows() - 2) * TS;
-        String message = "TEST LEVEL " + context.game().levelNumber();
-        level3D.showAnimatedMessage(message, 5, x, y);
-    }
-
-    private void showReadyMessage() {
-        GameWorld world = context.game().world();
-        Vector2i houseTopLeft = world.houseTopLeftTile();
-        Vector2i houseSize = world.houseSize();
-        double x = TS * (houseTopLeft.x() + 0.5 * houseSize.x());
-        double y = TS * (houseTopLeft.y() +       houseSize.y());
-        double seconds = context.game().isPlaying() ? 0.5 : 2.5;
-        level3D.showAnimatedMessage("READY!", seconds, x, y);
-    }
-
     @Override
     public void onHuntingPhaseStarted(GameEvent event) {
-        if (!context.game().isDemoLevel()) {
-            GameSounds.playHuntingSound(context);
-        }
+        GameSounds.playHuntingSound(context);
     }
 
     @Override
@@ -411,35 +379,26 @@ public class PlayScene3D implements GameScene {
             level3D.energizer3D(tile).ifPresent(Energizer3D::onEaten);
             level3D.pellet3D(tile).ifPresent(Pellet3D::onEaten);
         }
-        if (!context.game().isDemoLevel()) {
-            GameSounds.playMunchingSound();
-        }
+        GameSounds.playMunchingSound();
     }
 
     @Override
     public void onPacGetsPower(GameEvent event) {
         level3D.pac3D().setPowerMode(true);
-        if (!context.game().isDemoLevel()) {
-            GameSounds.stopSiren();
-            GameSounds.playPacPowerSound();
-        }
+        GameSounds.stopSiren();
+        GameSounds.playPacPowerSound();
     }
 
     @Override
     public void onPacLostPower(GameEvent event) {
         level3D.pac3D().setPowerMode(false);
-        if (!context.game().isDemoLevel()) {
-            GameSounds.stopPacPowerSound();
-            GameSounds.playHuntingSound(context);
-        }
+        GameSounds.stopPacPowerSound();
+        GameSounds.playHuntingSound(context);
     }
 
     @Override
     public void onPacDied(GameEvent event) {
-        if (!context.game().isDemoLevel()) {
-            GameSounds.playPacDeathSound();
-            GameSounds.stopMunchingSound();
-        }
+        GameSounds.playPacDeathSound();
     }
 
     private void replaceGameLevel3D(boolean createLevelCounter) {
@@ -449,12 +408,28 @@ public class PlayScene3D implements GameScene {
         }
         int lastIndex = root.getChildren().size() - 1;
         root.getChildren().set(lastIndex, level3D.root());
-
         scores3D.translateXProperty().bind(level3D.root().translateXProperty().add(TS));
         scores3D.translateYProperty().bind(level3D.root().translateYProperty().subtract(3.5 * TS));
         scores3D.translateZProperty().bind(level3D.root().translateZProperty().subtract(3 * TS));
-
         Logger.info("3D game level {} created.", context.game().levelNumber());
+    }
+
+    private void showLevelTestMessage() {
+        TileMap terrainMap = context.game().world().map().terrain();
+        double x = terrainMap.numCols() * HTS;
+        double y = (terrainMap.numRows() - 2) * TS;
+        String message = "TEST LEVEL " + context.game().levelNumber();
+        level3D.showAnimatedMessage(message, 5, x, y);
+    }
+
+    private void showReadyMessage() {
+        GameWorld world = context.game().world();
+        Vector2i houseTopLeft = world.houseTopLeftTile();
+        Vector2i houseSize = world.houseSize();
+        double x = TS * (houseTopLeft.x() + 0.5 * houseSize.x());
+        double y = TS * (houseTopLeft.y() +       houseSize.y());
+        double seconds = context.game().isPlaying() ? 0.5 : 2.5;
+        level3D.showAnimatedMessage("READY!", seconds, x, y);
     }
 
     private void playPacManDiesAnimation() {
