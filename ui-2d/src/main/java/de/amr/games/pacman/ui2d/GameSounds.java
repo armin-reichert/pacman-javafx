@@ -31,7 +31,7 @@ public class GameSounds {
     public static final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>() {
         @Override
         protected void invalidated() {
-            loadAllSoundsForGameVariant(get());
+            loadSoundsForCurrentGameVariant();
         }
     };
 
@@ -61,7 +61,7 @@ public class GameSounds {
         GameSounds.assets = checkNotNull(assets);
     }
 
-    private static void loadAllSoundsForGameVariant(GameVariant variant) {
+    private static void loadSoundsForCurrentGameVariant() {
         ghostReturningHomeSound = createAudioPlayer("ghost_returning", 0.5, true);
         munchingSound = createAudioPlayer("pacman_munch", 0.5, true);
         powerSound = createAudioPlayer("pacman_power", 0.5, true);
@@ -69,6 +69,23 @@ public class GameSounds {
         // these are created on demand
         intermissionSound = null;
         siren = null;
+    }
+
+    private static void logSound(MediaPlayer sound, String description) {
+        if (sound != null) {
+            Logger.info(description + ": state={} volume={}", sound.getStatus() != null ? sound.getStatus() : "UNDEFINED", sound.getVolume());
+        }
+    }
+
+    private static void logSounds() {
+        logSound(ghostReturningHomeSound, "GhostReturningHome Sound");
+        logSound(munchingSound, "Munching Sound");
+        logSound(powerSound, "Power Sound");
+        logSound(startGameSound, "StartingGame Sound");
+        logSound(intermissionSound, "Intermission Sound");
+        if (siren != null) {
+            logSound(siren.player(), "Siren" + siren.number());
+        }
     }
 
     private static String audioPrefix(GameVariant variant) {
@@ -84,8 +101,14 @@ public class GameSounds {
         player.setCycleCount(loop ? MediaPlayer.INDEFINITE : 1);
         player.setVolume(volume);
         player.muteProperty().bind(mutedPy);
-        player.statusProperty().addListener((py,ov,nv) -> logSound());
+        player.statusProperty().addListener((py,ov,nv) -> logSounds());
         return player;
+    }
+
+    private static void playSound(MediaPlayer player) {
+        if (enabledPy.get()) {
+            player.play();
+        }
     }
 
     private static void playClip(String keySuffix) {
@@ -154,7 +177,8 @@ public class GameSounds {
     }
 
     public static void playHuntingSound(GameContext context) {
-        if (!context.game().isDemoLevel() && context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
+        //TODO check this
+        if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
             int sirenIndex = context.game().huntingPhaseIndex() / 2;
             int sirenNumber = sirenIndex + 1;
             if (siren != null && siren.number() != sirenNumber) {
@@ -163,7 +187,7 @@ public class GameSounds {
             if (siren == null || siren.number() != sirenNumber) {
                 siren = new Siren(sirenNumber, createAudioPlayer("siren." + sirenNumber, 0.25, true));
             }
-            siren.player().play();
+            playSound(siren.player());
         }
     }
 
@@ -199,9 +223,7 @@ public class GameSounds {
     }
 
     public static void playStartGameSound() {
-        if (isEnabled()) {
-            startGameSound.play();
-        }
+        playSound(startGameSound);
     }
 
     public static void playGameOverSound() {
@@ -209,9 +231,7 @@ public class GameSounds {
     }
 
     public static void playMunchingSound() {
-        if (isEnabled()) {
-            munchingSound.play();
-        }
+        playSound(munchingSound);
     }
 
     public static void stopMunchingSound() {
@@ -219,9 +239,7 @@ public class GameSounds {
     }
 
     public static void playPowerSound() {
-        if (isEnabled()) {
-            powerSound.play();
-        }
+        playSound(powerSound);
     }
 
     public static void stopPowerSound() {
@@ -229,9 +247,7 @@ public class GameSounds {
     }
 
     public static void playGhostReturningHomeSound() {
-        if (isEnabled()) {
-            ghostReturningHomeSound.play();
-        }
+        playSound(ghostReturningHomeSound);
     }
 
     public static void stopGhostReturningHomeSound() {
@@ -244,7 +260,7 @@ public class GameSounds {
 
     public static void playIntermissionSound(int number) {
         GameVariant variant = gameVariantPy.get();
-        switch (gameVariantPy.get()) {
+        switch (variant) {
             case MS_PACMAN -> {
                 intermissionSound = createAudioPlayer("intermission." + number, 0.5, false);
                 intermissionSound.play();
@@ -266,35 +282,15 @@ public class GameSounds {
         voice = new MediaPlayer(new Media(url.toExternalForm()));
         // media player stays in state PLAYING so we reset the reference when it reaches the end
         voice.setOnEndOfMedia(() -> voice = null);
-        voice.statusProperty().addListener((py,ov,nv) -> {
-            Logger.info("Voice status {} -> {}", ov, nv);
-        });
+        voice.statusProperty().addListener((py,ov,nv) -> Logger.info("Voice status {} -> {}", ov, nv));
         voice.muteProperty().bind(mutedPy);
         voice.setStartTime(Duration.seconds(delaySeconds));
-        voice.play();
+        voice.play(); // play also if enabledPy is set to false
     }
 
     public static void stopVoice() {
         if (voice != null) {
             voice.stop();
-        }
-    }
-
-    private static void logSound() {
-        if (startGameSound != null) {
-            Logger.debug("Start Game Sound: {} volume {}", startGameSound.getStatus(), startGameSound.getVolume());
-        }
-        if (siren != null) {
-            Logger.debug("Siren {}: {} volume {}", siren.number(), siren.player().getStatus(), siren.player().getVolume());
-        }
-        if (munchingSound != null) {
-            Logger.debug("Munching Sound: {} volume {}", munchingSound.getStatus(), munchingSound.getVolume());
-        }
-        if (powerSound != null) {
-            Logger.debug("Power Sound: {} volume {}", powerSound.getStatus(), powerSound.getVolume());
-        }
-        if (ghostReturningHomeSound != null) {
-            Logger.debug("Ghost Returning Home Sound: {} volume {}", ghostReturningHomeSound.getStatus(), ghostReturningHomeSound.getVolume());
         }
     }
 }
