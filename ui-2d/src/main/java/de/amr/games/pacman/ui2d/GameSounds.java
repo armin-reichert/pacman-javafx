@@ -49,6 +49,7 @@ public class GameSounds {
     // These are created when game variant changes
     private static MediaPlayer gameOverSound;
     private static MediaPlayer gameReadySound;
+    private static MediaPlayer levelCompleteSound;
     private static MediaPlayer munchingSound;
     private static MediaPlayer pacDeathSound;
     private static MediaPlayer pacPowerSound;
@@ -64,12 +65,13 @@ public class GameSounds {
     }
 
     private static void loadSoundsForCurrentGameVariant() {
-        gameOverSound = createAudioPlayer("game_over", 0.5, false);
-        gameReadySound = createAudioPlayer("game_ready", 0.5, false);
-        ghostReturningHomeSound = createAudioPlayer("ghost_returning", 0.5, true);
-        munchingSound = createAudioPlayer("pacman_munch", 0.5, true);
-        pacDeathSound = createAudioPlayer("pacman_death", 0.5, false);
-        pacPowerSound = createAudioPlayer("pacman_power", 0.5, true);
+        gameOverSound = createPlayer("game_over", 0.5, false);
+        gameReadySound = createPlayer("game_ready", 0.5, false);
+        ghostReturningHomeSound = createPlayer("ghost_returning", 0.5, true);
+        levelCompleteSound = createPlayer("level_complete", 0.5, false);
+        munchingSound = createPlayer("pacman_munch", 0.5, true);
+        pacDeathSound = createPlayer("pacman_death", 0.5, false);
+        pacPowerSound = createPlayer("pacman_power", 0.5, true);
         // these are created on demand
         intermissionSound = null;
         siren = null;
@@ -80,6 +82,7 @@ public class GameSounds {
         stopSound(gameReadySound);
         stopSound(ghostReturningHomeSound);
         stopSound(intermissionSound);
+        stopSound(levelCompleteSound);
         stopSound(munchingSound);
         stopSound(pacDeathSound);
         stopSound(pacPowerSound);
@@ -93,6 +96,7 @@ public class GameSounds {
         logSound(gameReadySound, "Game Ready");
         logSound(ghostReturningHomeSound, "Ghost Returning Home");
         logSound(intermissionSound, "Intermission");
+        logSound(levelCompleteSound, "Level Complete");
         logSound(munchingSound, "Munching");
         logSound(pacDeathSound, "Death");
         logSound(pacPowerSound, "Power");
@@ -113,7 +117,7 @@ public class GameSounds {
         return prefix + ".audio.";
     }
 
-    private static MediaPlayer createAudioPlayer(String keySuffix, double volume, boolean loop) {
+    private static MediaPlayer createPlayer(String keySuffix, double volume, boolean loop) {
         GameVariant variant = gameVariantPy.get();
         URL url = assets.get(audioPrefix(variant) + keySuffix);
         var player = new MediaPlayer(new Media(url.toExternalForm()));
@@ -233,7 +237,7 @@ public class GameSounds {
                 siren.player().stop();
             }
             if (siren == null || siren.number() != sirenNumber) {
-                siren = new Siren(sirenNumber, createAudioPlayer("siren." + sirenNumber, 0.25, true));
+                siren = new Siren(sirenNumber, createPlayer("siren." + sirenNumber, 0.25, true));
             }
             playSound(siren.player());
         }
@@ -244,7 +248,7 @@ public class GameSounds {
     }
 
     public static void playLevelCompleteSound() {
-        playClip("level_complete");
+        playSound(levelCompleteSound);
     }
 
     public static void playMunchingSound() {
@@ -271,11 +275,11 @@ public class GameSounds {
         GameVariant variant = gameVariantPy.get();
         switch (variant) {
             case MS_PACMAN -> {
-                intermissionSound = createAudioPlayer("intermission." + number, 0.5, false);
+                intermissionSound = createPlayer("intermission." + number, 0.5, false);
                 intermissionSound.play();
             }
             case PACMAN, PACMAN_XXL -> {
-                intermissionSound = createAudioPlayer("intermission", 0.5, false);
+                intermissionSound = createPlayer("intermission", 0.5, false);
                 intermissionSound.setCycleCount(number == 1 || number == 3 ? 2 : 1);
                 intermissionSound.play();
             }

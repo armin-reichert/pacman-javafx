@@ -811,11 +811,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         assets.set("ms_pacman.icon",                  rm.loadImage("graphics/icons/mspacman.png"));
         assets.set("ms_pacman.logo.midway",           rm.loadImage("graphics/mspacman/midway_logo.png"));
 
+        // Clips
         assets.set("ms_pacman.audio.bonus_eaten",     rm.loadAudioClip("sound/mspacman/Fruit.mp3"));
         assets.set("ms_pacman.audio.credit",          rm.loadAudioClip("sound/mspacman/Credit.mp3"));
         assets.set("ms_pacman.audio.extra_life",      rm.loadAudioClip("sound/mspacman/ExtraLife.mp3"));
         assets.set("ms_pacman.audio.ghost_eaten",     rm.loadAudioClip("sound/mspacman/Ghost.mp3"));
-        assets.set("ms_pacman.audio.level_complete",  rm.loadAudioClip("sound/common/level-complete.mp3"));
         assets.set("ms_pacman.audio.sweep",           rm.loadAudioClip("sound/common/sweep.mp3"));
 
         // Audio played by MediaPlayer
@@ -824,6 +824,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         assets.set("ms_pacman.audio.intermission.1",  rm.url("sound/mspacman/Act1TheyMeet.mp3"));
         assets.set("ms_pacman.audio.intermission.2",  rm.url("sound/mspacman/Act2TheChase.mp3"));
         assets.set("ms_pacman.audio.intermission.3",  rm.url("sound/mspacman/Act3Junior.mp3"));
+        assets.set("ms_pacman.audio.level_complete",  rm.url("sound/common/level-complete.mp3"));
         assets.set("ms_pacman.audio.pacman_death",    rm.url("sound/mspacman/Died.mp3"));
         assets.set("ms_pacman.audio.pacman_munch",    rm.url("sound/mspacman/Pill.wav"));
         assets.set("ms_pacman.audio.pacman_power",    rm.url("sound/mspacman/ScaredGhost.mp3"));
@@ -843,19 +844,21 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         assets.set("pacman.helpButton.icon",          rm.loadImage("graphics/icons/help-blue-64.png"));
         assets.set("pacman.icon",                     rm.loadImage("graphics/icons/pacman.png"));
 
+        // Clips
         assets.set("pacman.audio.bonus_eaten",        rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));
         assets.set("pacman.audio.credit",             rm.loadAudioClip("sound/pacman/credit.wav"));
         assets.set("pacman.audio.extra_life",         rm.loadAudioClip("sound/pacman/extend.mp3"));
         assets.set("pacman.audio.ghost_eaten",        rm.loadAudioClip("sound/pacman/eat_ghost.mp3"));
-        assets.set("pacman.audio.level_complete",     rm.loadAudioClip("sound/common/level-complete.mp3"));
         assets.set("pacman.audio.sweep",              rm.loadAudioClip("sound/common/sweep.mp3"));
 
+        // Media player sounds
         assets.set("pacman.audio.game_ready",         rm.url("sound/pacman/game_start.mp3"));
         assets.set("pacman.audio.game_over",          rm.url("sound/common/game-over.mp3"));
         assets.set("pacman.audio.intermission",       rm.url("sound/pacman/intermission.mp3"));
         assets.set("pacman.audio.pacman_death",       rm.url("sound/pacman/pacman_death.wav"));
         assets.set("pacman.audio.pacman_munch",       rm.url("sound/pacman/doublemunch.wav")); //TODO improve
         assets.set("pacman.audio.pacman_power",       rm.url("sound/pacman/ghost-turn-to-blue.mp3"));
+        assets.set("pacman.audio.level_complete",     rm.url("sound/common/level-complete.mp3"));
         assets.set("pacman.audio.siren.1",            rm.url("sound/pacman/siren_1.mp3"));
         assets.set("pacman.audio.siren.2",            rm.url("sound/pacman/siren_2.mp3"));
         assets.set("pacman.audio.siren.3",            rm.url("sound/pacman/siren_3.mp3"));
