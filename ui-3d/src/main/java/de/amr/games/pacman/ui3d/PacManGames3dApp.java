@@ -35,7 +35,7 @@ public class PacManGames3dApp extends Application {
         double height = 0.8 * screenSize.getHeight();
         double width = aspect * height;
         ui.loadAssets(true);
-        GameSounds.init(ui);
+        GameSounds.init(ui.assets());
         ui.create(stage, width, height);
         ui.start();
         PY_3D_ENABLED.set(true);

@@ -140,7 +140,7 @@ public class PlayScene3D implements GameScene {
             scores3D.showTextAsScore("GAME OVER!", Color.RED);
         }
 
-        GameSounds.updatePlaySceneSound();
+        GameSounds.updatePlaySceneSound(context);
     }
 
     public void setContext(GameContext context) {
@@ -310,7 +310,7 @@ public class PlayScene3D implements GameScene {
             if (context.game().powerTimer().isRunning()) {
                 GameSounds.playPowerSound();
             } else {
-                GameSounds.playHuntingSound();
+                GameSounds.playHuntingSound(context);
             }
             level3D.livesCounter3D().startAnimation();
         }
@@ -391,7 +391,7 @@ public class PlayScene3D implements GameScene {
     @Override
     public void onHuntingPhaseStarted(GameEvent event) {
         if (!context.game().isDemoLevel()) {
-            GameSounds.playHuntingSound();
+            GameSounds.playHuntingSound(context);
         }
     }
 
@@ -430,7 +430,7 @@ public class PlayScene3D implements GameScene {
         level3D.pac3D().setPowerMode(false);
         if (!context.game().isDemoLevel()) {
             GameSounds.stopPowerSound();
-            GameSounds.playHuntingSound();
+            GameSounds.playHuntingSound(context);
         }
     }
 

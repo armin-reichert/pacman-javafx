@@ -62,19 +62,14 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     @Override
-    public void handleKeyboardInput(ActionHandler handler) {
+    public void handleKeyboardInput(ActionHandler actions) {
         if (GameKey.ADD_CREDIT.pressed()) {
-            handler.addCredit();
+            actions.addCredit();
         } else if (GameKey.START_GAME.pressed()) {
-            handler.startGame();
+            actions.startGame();
         } else if (GameKey.CUTSCENES.pressed()) {
-            handler.startCutscenesTest();
+            actions.startCutscenesTest();
         }
-    }
-
-    @Override
-    public void onCreditAdded(GameEvent e) {
-        GameSounds.playCreditSound();
     }
 
     @Override

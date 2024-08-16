@@ -29,21 +29,12 @@ public class CreditScene extends GameScene2D {
     }
 
     @Override
-    public void update() {
-    }
-
-    @Override
     public void handleKeyboardInput(ActionHandler actions) {
         if (GameKey.ADD_CREDIT.pressed()) {
             actions.addCredit();
         } else if (GameKey.START_GAME.pressed()) {
             actions.startGame();
         }
-    }
-
-    @Override
-    public void onCreditAdded(GameEvent e) {
-        GameSounds.playCreditSound();
     }
 
     @Override

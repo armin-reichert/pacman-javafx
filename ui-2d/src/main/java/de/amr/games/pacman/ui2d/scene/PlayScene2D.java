@@ -52,7 +52,7 @@ public class PlayScene2D extends GameScene2D {
         } else {
             context.setScoreVisible(true);
             context.game().pac().setUseAutopilot(PY_AUTOPILOT.get());
-            GameSounds.updatePlaySceneSound();
+            GameSounds.updatePlaySceneSound(context);
         }
     }
 
@@ -185,14 +185,14 @@ public class PlayScene2D extends GameScene2D {
     public void onSceneVariantSwitch(GameScene oldScene) {
         Logger.info("{} entered from {}", this, oldScene);
         if (!context.game().isDemoLevel()) {
-            GameSounds.playHuntingSound();
+            GameSounds.playHuntingSound(context);
         }
     }
 
     @Override
     public void onHuntingPhaseStarted(GameEvent event) {
         if (!context.game().isDemoLevel()) {
-            GameSounds.playHuntingSound();
+            GameSounds.playHuntingSound(context);
         }
     }
 
@@ -244,7 +244,7 @@ public class PlayScene2D extends GameScene2D {
     public void onPacLostPower(GameEvent event) {
         if (!context.game().isDemoLevel()) {
             GameSounds.stopPowerSound();
-            GameSounds.playHuntingSound();
+            GameSounds.playHuntingSound(context);
         }
     }
 }

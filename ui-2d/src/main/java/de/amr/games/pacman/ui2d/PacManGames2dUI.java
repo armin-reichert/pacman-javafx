@@ -429,6 +429,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (!game.isDemoLevel()) {
             game.pac().setManualSteering(new KeyboardPacSteering());
         }
+        GameSounds.enabledPy.set(!game.isDemoLevel());
         //TODO better place than here?
         gamePage.adaptCanvasSizeToCurrentWorld();
     }
@@ -587,6 +588,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
      */
     @Override
     public void addCredit() {
+        GameSounds.playCreditSound();
         if (!game().isPlaying()) {
             boolean added = gameController().changeCredit(1);
             if (added) {
