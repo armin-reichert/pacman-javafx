@@ -4,10 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameKey;
-import de.amr.games.pacman.ui2d.GameSounds;
 import javafx.geometry.Rectangle2D;
 
 import static de.amr.games.pacman.lib.Globals.t;
