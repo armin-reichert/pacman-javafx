@@ -98,6 +98,23 @@ public class PlayScene3D implements GameScene {
         return fxSubScene.heightProperty();
     }
 
+    public void setContext(GameContext context) {
+        this.context = checkNotNull(context);
+    }
+
+    @Override
+    public Node root() {
+        return fxSubScene;
+    }
+
+    public Camera camera() {
+        return fxSubScene.getCamera();
+    }
+
+    public Perspective perspective() {
+        return perspectivePy.get();
+    }
+
     @Override
     public void init() {
         context.setScoreVisible(true);
@@ -119,31 +136,28 @@ public class PlayScene3D implements GameScene {
     public void update() {
         var game = context.game();
         if (game.level().isEmpty() || game.world() == null) {
-            Logger.warn("Cannot update 3D play scene, no game level exists");
+            Logger.error("Cannot update 3D play scene, no game level exists!");
             return;
         }
         if (level3D == null) {
-            Logger.warn("Cannot update 3D play scene, no 3D game level exists");
+            Logger.warn("Cannot update 3D play scene, 3D game level not yet created?");
             return;
         }
         level3D.update();
-
-        // Update camera
         perspective().update(fxSubScene.getCamera(), game.world(), game.pac());
 
         // Autopilot usage is updated on every frame because autopilot flag is in core layer without JavaFX property to bind
         game.pac().setUseAutopilot(game.isDemoLevel() || PY_AUTOPILOT.get());
 
+        // Scores
         scores3D.showHighScore(game.highScore().points(), game.highScore().levelNumber());
         if (context.gameController().hasCredit()) {
             scores3D.showScore(game.score().points(), game.score().levelNumber());
         } else { // demo level or "game over" state
             scores3D.showTextAsScore("GAME OVER!", Color.RED);
         }
-        updatePlaySceneSound();
-    }
 
-    private void updatePlaySceneSound() {
+        // Sound
         if (context.gameState() == GameState.HUNTING && !context.game().powerTimer().isRunning()) {
             int sirenNumber = 1 + context.game().huntingPhaseIndex() / 2;
             GameSounds.selectSiren(sirenNumber);
@@ -158,23 +172,6 @@ public class PlayScene3D implements GameScene {
         } else {
             GameSounds.stopGhostReturningHomeSound();
         }
-    }
-
-    public void setContext(GameContext context) {
-        this.context = checkNotNull(context);
-    }
-
-    @Override
-    public Node root() {
-        return fxSubScene;
-    }
-
-    public Camera camera() {
-        return fxSubScene.getCamera();
-    }
-
-    public Perspective perspective() {
-        return perspectivePy.get();
     }
 
     @Override
