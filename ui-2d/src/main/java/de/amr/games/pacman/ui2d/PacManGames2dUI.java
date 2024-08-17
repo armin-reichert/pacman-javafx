@@ -60,9 +60,9 @@ import static java.util.function.Predicate.not;
  *
  * @author Armin Reichert
  */
-public class PacManGames2dUI implements GameEventListener, GameContext, ActionHandler {
+public class PacManGames2dUI extends StackPane implements GameEventListener, GameContext, ActionHandler {
 
-    public static final String BY_ARMIN_REICHERT = "Remake (2021-2024) by Armin Reichert";
+    public static final String MADE_BY = "Remake (2021-2024) by Armin Reichert";
 
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
         @Override
@@ -86,7 +86,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     protected Stage stage;
     protected Scene mainScene;
-    protected final StackPane mainSceneLayout = new StackPane();
     protected final FlashMessageView messageView = new FlashMessageView();
     protected final GameClockFX clock = new GameClockFX();
 
@@ -108,15 +107,15 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
 
         // first child will be replaced by page
-        mainSceneLayout.getChildren().addAll(new Pane(), messageView, createMutedIcon());
-        mainScene = createMainScene(mainSceneLayout, width, height);
+        getChildren().addAll(new Pane(), messageView, createMutedIcon());
+        mainScene = createMainScene(this, width, height);
         stage.setScene(mainScene);
 
         startPage = new StartPage(this);
         startPage.gameVariantPy.bind(gameVariantPy);
 
         gamePage = new GamePage(this, mainScene);
-        gamePage.sign(assets.font("font.monospaced", 9), BY_ARMIN_REICHERT);
+        gamePage.sign(assets.font("font.monospaced", 9), MADE_BY);
 
         createGameScenes();
     }
@@ -247,7 +246,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (page != currentPage) {
             currentPage = page;
             currentPage.setSize(mainScene.getWidth(), mainScene.getHeight());
-            mainSceneLayout.getChildren().set(0, currentPage.rootPane());
+            getChildren().set(0, currentPage.rootPane());
             currentPage.rootPane().requestFocus();
             currentPage.onSelected();
         }

@@ -61,15 +61,15 @@ public class PacManGames3dUI extends PacManGames2dUI {
         }
 
         // first child will be replaced by page
-        mainSceneLayout.getChildren().addAll(new Pane(), messageView, createMutedIcon());
-        mainScene = createMainScene(mainSceneLayout, width, height);
+        getChildren().addAll(new Pane(), messageView, createMutedIcon());
+        mainScene = createMainScene(this, width, height);
         stage.setScene(mainScene);
 
         startPage = new StartPage(this);
         startPage.gameVariantPy.bind(gameVariantPy);
 
         gamePage = new GamePage3D(this, mainScene);
-        gamePage.sign(assets.font("font.monospaced", 9), BY_ARMIN_REICHERT);
+        gamePage.sign(assets.font("font.monospaced", 9), MADE_BY);
 
         createGameScenes();
         for (GameVariant variant : GameVariant.values()) {
