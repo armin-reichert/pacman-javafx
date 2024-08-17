@@ -32,13 +32,15 @@ public interface Page {
 
     void onSelected();
 
-    void setSize(double width, double height);
+    void onResize(double width, double height);
 
     default void onContextMenuRequested(ContextMenuEvent e) {
         Logger.info("Context menu requested for page " + this);
     }
 
-    void onMouseClicked(MouseEvent e);
+    default void onMouseClicked(MouseEvent e) {
+        Logger.info("Context menu requested for page " + this);
+    }
 
     void handleKeyboardInput(ActionHandler handler);
 }

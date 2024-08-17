@@ -12,7 +12,6 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Window;
@@ -97,11 +96,7 @@ public class EditorPage extends BorderPane implements Page {
     }
 
     @Override
-    public void setSize(double width, double height) {
-    }
-
-    @Override
-    public void onMouseClicked(MouseEvent e) {
+    public void onResize(double width, double height) {
     }
 
     @Override

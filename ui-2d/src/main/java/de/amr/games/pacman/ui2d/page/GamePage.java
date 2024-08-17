@@ -49,9 +49,9 @@ public class GamePage extends StackPane implements Page {
     protected final Pane popupLayer = new Pane(); // help, signature
     protected final FadingPane helpPopUp = new FadingPane();
     protected final Signature signature = new Signature();
-    protected final ContextMenu contextMenu = new ContextMenu();
     protected final Dashboard dashboard;
     protected final PictureInPictureView pip;
+    protected final ContextMenu contextMenu = new ContextMenu();
 
     public GamePage(GameContext context, Scene parentScene) {
         this.context = checkNotNull(context);
@@ -125,7 +125,7 @@ public class GamePage extends StackPane implements Page {
     }
 
     @Override
-    public void setSize(double width, double height) {
+    public void onResize(double width, double height) {
         canvasPane.resizeTo(width, height);
     }
 
@@ -180,12 +180,13 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void onMouseClicked(MouseEvent e) {
-        contextMenu.hide(); //TODO is this the recommended way?
+        contextMenu.hide(); //TODO check this
     }
 
     @Override
     public void onContextMenuRequested(ContextMenuEvent event) {
-        contextMenu.hide();
+        contextMenu.hide(); //TODO check this
+
         if (!context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE)) {
             return;
         }
@@ -236,43 +237,43 @@ public class GamePage extends StackPane implements Page {
     }
 
     @Override
-    public void handleKeyboardInput(ActionHandler handler) {
+    public void handleKeyboardInput(ActionHandler actions) {
         if (GameKey.AUTOPILOT.pressed()) {
-            handler.toggleAutopilot();
+            actions.toggleAutopilot();
         } else if (GameKey.BOOT.pressed()) {
-            handler.reboot();
+            actions.reboot();
         } else if (GameKey.DEBUG_INFO.pressed()) {
             Ufx.toggle(PY_DEBUG_INFO);
         } else if (GameKey.IMMUNITY.pressed()) {
-            handler.toggleImmunity();
+            actions.toggleImmunity();
         } else if (GameKey.HELP.pressed()) {
             showHelp();
         } else if (GameKey.PAUSE.pressed()) {
-            handler.togglePaused();
+            actions.togglePaused();
         } else if (GameKey.SIMULATION_1_STEP.pressed()) {
-            handler.doSimulationSteps(1);
+            actions.doSimulationSteps(1);
         } else if (GameKey.SIMULATION_10_STEPS.pressed()) {
-            handler.doSimulationSteps(10);
+            actions.doSimulationSteps(10);
         } else if (GameKey.SIMULATION_FASTER.pressed()) {
-            handler.changeSimulationSpeed(5);
+            actions.changeSimulationSpeed(5);
         } else if (GameKey.SIMULATION_SLOWER.pressed()) {
-            handler.changeSimulationSpeed(-5);
+            actions.changeSimulationSpeed(-5);
         } else if (GameKey.SIMULATION_NORMAL.pressed()) {
-            handler.resetSimulationSpeed();
+            actions.resetSimulationSpeed();
         } else if (GameKey.QUIT.pressed()) {
             quit();
         } else if (GameKey.TEST_MODE.pressed()) {
-            handler.startLevelTestMode();
+            actions.startLevelTestMode();
         } else if (GameKey.TWO_D_THREE_D.pressed()) {
-            handler.toggle2D3D();
+            actions.toggle2D3D();
         } else if (GameKey.DASHBOARD.pressed()) {
-            handler.toggleDashboard();
+            actions.toggleDashboard();
         } else if (GameKey.PIP_VIEW.pressed()) {
-            handler.togglePipVisible();
+            actions.togglePipVisible();
         } else if (GameKey.EDITOR.pressed()) {
-            handler.openMapEditor();
+            actions.openMapEditor();
         } else {
-            context.currentGameScene().ifPresent(gameScene -> gameScene.handleKeyboardInput(handler));
+            context.currentGameScene().ifPresent(gameScene -> gameScene.handleKeyboardInput(actions));
         }
     }
 

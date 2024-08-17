@@ -208,10 +208,6 @@ public class StartPage extends StackPane implements Page {
     }
 
     @Override
-    public void setSize(double width, double height) {
-    }
-
-    @Override
-    public void onMouseClicked(MouseEvent e) {
+    public void onResize(double width, double height) {
     }
 }
