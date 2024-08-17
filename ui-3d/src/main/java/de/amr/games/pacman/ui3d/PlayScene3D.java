@@ -471,7 +471,7 @@ public class PlayScene3D implements GameScene {
                   perspectivePy.unbind();
                   perspectivePy.set(Perspective.TOTAL);
                   level3D.livesCounter3D().light().setLightOn(false);
-                  context.actionHandler().showFlashMessageSeconds(1, message);
+                  context.actionHandler().showFlashMessageSeconds(3, message);
               })
             , doAfterSec(2, level3D.mazeFlashAnimation(numFlashes))
             , doAfterSec(1, () -> {

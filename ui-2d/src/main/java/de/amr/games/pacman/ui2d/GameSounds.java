@@ -17,7 +17,6 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.net.URL;
-import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -140,7 +139,7 @@ public class GameSounds {
     }
 
     private static void playSound(MediaPlayer player) {
-        if (enabledPy.get()) {
+        if (player != null && isEnabled()) {
             player.play();
         }
     }
@@ -151,17 +150,14 @@ public class GameSounds {
     }
 
     private static void playClip(String keySuffix) {
-        if (!isEnabled()) {
-            return;
-        }
         checkNotNull(keySuffix);
-        GameVariant variant = gameVariantPy.get();
-        AudioClip clip = assets.get(audioPrefix(variant) + keySuffix);
+        String assetKey = audioPrefix(gameVariantPy.get()) + keySuffix;
+        AudioClip clip = assets.get(assetKey);
         if (clip == null) {
-            Logger.error("No sound exists for key {}", audioPrefix(variant) + keySuffix);
+            Logger.error("No audio clip with key {}", assetKey);
             return;
         }
-        if (!isMuted()) {
+        if (!isMuted() && isEnabled()) {
             clip.setVolume(0.5);
             clip.play();
         }
@@ -183,13 +179,10 @@ public class GameSounds {
         return enabledPy.get();
     }
 
-    public static Optional<Siren> siren() {
-        return Optional.ofNullable(siren);
-    }
-
     public static void selectSiren(int number) {
         if (number < 1 || number > 4) {
             Logger.error("Siren number must be in 1..4 but is " + number);
+            return;
         }
         if (siren == null || siren.number() != number) {
             if (siren != null) {
@@ -216,7 +209,6 @@ public class GameSounds {
     }
 
     public static void playCreditSound() {
-        enabledPy.set(true); // TODO check this
         playClip("credit");
     }
 
@@ -273,18 +265,18 @@ public class GameSounds {
     }
 
     public static void playIntermissionSound(int number) {
-        GameVariant variant = gameVariantPy.get();
-        switch (variant) {
-            case MS_PACMAN -> {
-                intermissionSound = createPlayer("intermission." + number, 0.5, false);
-                intermissionSound.play();
-            }
+        if (number < 1 || number > 3) {
+            Logger.error("Intermission number must be from 1..3 but is " + number);
+            return;
+        }
+        switch (gameVariantPy.get()) {
+            case MS_PACMAN -> intermissionSound = createPlayer("intermission." + number, 0.5, false);
             case PACMAN, PACMAN_XXL -> {
                 intermissionSound = createPlayer("intermission", 0.5, false);
-                intermissionSound.setCycleCount(number == 1 || number == 3 ? 2 : 1);
-                intermissionSound.play();
+                intermissionSound.setCycleCount(number == 2 ? 1 : 2);
             }
         }
+        intermissionSound.play();
     }
 
     public static void playVoice(String voiceClipID, double delaySeconds) {
@@ -296,7 +288,6 @@ public class GameSounds {
         voice = new MediaPlayer(new Media(url.toExternalForm()));
         // media player stays in state PLAYING so we reset the reference when it reaches the end
         voice.setOnEndOfMedia(() -> voice = null);
-        voice.statusProperty().addListener((py,ov,nv) -> Logger.info("Voice status {} -> {}", ov, nv));
         voice.muteProperty().bind(mutedPy);
         voice.setStartTime(Duration.seconds(delaySeconds));
         voice.play(); // play also if enabledPy is set to false
