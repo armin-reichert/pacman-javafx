@@ -602,7 +602,7 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
 
     @Override
     public void togglePaused() {
-        Ufx.toggle(clock.pausedPy);
+        toggle(clock.pausedPy);
         if (clock.isPaused()) {
             assets().audioClips().forEach(AudioClip::stop);
             GameSounds.stopSiren();
@@ -685,7 +685,7 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
 
     @Override
     public void toggleAutopilot() {
-        Ufx.toggle(PY_AUTOPILOT);
+        toggle(PY_AUTOPILOT);
         boolean auto = PY_AUTOPILOT.get();
         showFlashMessage(locText(auto ? "autopilot_on" : "autopilot_off"));
         GameSounds.playVoice(auto ? "voice.autopilot.on" : "voice.autopilot.off", 0);
@@ -698,7 +698,7 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
 
     @Override
     public void toggleImmunity() {
-        Ufx.toggle(PY_IMMUNITY);
+        toggle(PY_IMMUNITY);
         showFlashMessage(locText(PY_IMMUNITY.get() ? "player_immunity_on" : "player_immunity_off"));
         GameSounds.playVoice(PY_IMMUNITY.get() ? "voice.immunity.on" : "voice.immunity.off", 0);
     }
