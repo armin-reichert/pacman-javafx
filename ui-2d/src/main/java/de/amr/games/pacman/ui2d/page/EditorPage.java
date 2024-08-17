@@ -7,11 +7,14 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.mapeditor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Window;
 import org.tinylog.Logger;
 
@@ -23,22 +26,20 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class EditorPage extends Page {
+public class EditorPage extends BorderPane implements Page {
 
     private final TileMapEditor editor;
     private Consumer<TileMapEditor> closeAction = editor -> {};
 
     public EditorPage(Window window, GameContext context) {
-        super(new BorderPane());
-
         checkNotNull(window);
         checkNotNull(context);
 
         editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
         editor.createUI(window);
 
-        rootPane().setCenter(editor.getContentPane());
-        rootPane().setTop(editor.getMenuBar());
+        setCenter(editor.getContentPane());
+        setTop(editor.getMenuBar());
 
         var miQuitEditor = new MenuItem(context.locText("back_to_game"));
         miQuitEditor.setOnAction(e -> closeAction.accept(editor));
@@ -74,11 +75,6 @@ public class EditorPage extends Page {
         this.closeAction = closeAction;
     }
 
-    @Override
-    public BorderPane rootPane() {
-        return (BorderPane) getRoot();
-    }
-
     private WorldMap loadMap(String relativeMapPath) {
         ResourceManager core = () -> GameModel.class;
         URL url = core.url("/de/amr/games/pacman/maps/" + relativeMapPath);
@@ -89,5 +85,26 @@ public class EditorPage extends Page {
         }
         Logger.error("Could not find map at path {}", relativeMapPath);
         return null;
+    }
+
+    @Override
+    public Pane rootPane() {
+        return this;
+    }
+
+    @Override
+    public void onSelected() {
+    }
+
+    @Override
+    public void setSize(double width, double height) {
+    }
+
+    @Override
+    public void onMouseClicked(MouseEvent e) {
+    }
+
+    @Override
+    public void handleKeyboardInput(ActionHandler handler) {
     }
 }

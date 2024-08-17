@@ -40,7 +40,7 @@ import static de.amr.games.pacman.ui2d.GameParameters.*;
 /**
  * @author Armin Reichert
  */
-public class GamePage extends Page {
+public class GamePage extends StackPane implements Page {
 
     protected final GameContext context;
     protected final Scene parentScene;
@@ -54,8 +54,6 @@ public class GamePage extends Page {
     protected final PictureInPictureView pip;
 
     public GamePage(GameContext context, Scene parentScene) {
-        super(new StackPane());
-
         this.context = checkNotNull(context);
         this.parentScene = parentScene;
 
@@ -96,7 +94,7 @@ public class GamePage extends Page {
                 dashboard.visibleProperty(), PY_PIP_ON
         ));
 
-        rootPane().borderProperty().bind(Bindings.createObjectBinding(
+        borderProperty().bind(Bindings.createObjectBinding(
                 () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.RED, 3) : null,
                 PY_DEBUG_INFO, context.gameSceneProperty()
         ));
@@ -110,12 +108,12 @@ public class GamePage extends Page {
         ));
         popupLayer.mouseTransparentProperty().bind(PY_DEBUG_INFO);
 
-        rootPane().getChildren().addAll(canvasPane, infoLayer, popupLayer);
+        getChildren().addAll(canvasPane, infoLayer, popupLayer);
     }
 
     @Override
     public Pane rootPane() {
-        return (StackPane) getRoot();
+        return this;
     }
 
     @Override
@@ -141,7 +139,7 @@ public class GamePage extends Page {
     }
 
     protected void embedGameScene2D(GameScene2D scene2D) {
-        rootPane().getChildren().set(0, canvasPane);
+        getChildren().set(0, canvasPane);
         scene2D.setCanvas(canvasPane.decoratedCanvas().canvas());
         scene2D.scalingPy.bind(canvasPane.scalingPy);
         canvasPane.decoratedCanvas().backgroundProperty().bind(Bindings.createObjectBinding(
@@ -185,13 +183,14 @@ public class GamePage extends Page {
         contextMenu.hide(); //TODO is this the recommended way?
     }
 
+    @Override
     public void onContextMenuRequested(ContextMenuEvent event) {
         contextMenu.hide();
         if (!context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE)) {
             return;
         }
         contextMenu.getItems().clear();
-        contextMenu.getItems().add(menuTitleItem(context.locText("pacman")));
+        contextMenu.getItems().add(Page.menuTitleItem(context.locText("pacman")));
 
         var miAutopilot = new CheckMenuItem(context.locText("autopilot"));
         miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
@@ -207,7 +206,7 @@ public class GamePage extends Page {
         miQuit.setOnAction(e -> quit());
         contextMenu.getItems().add(miQuit);
 
-        contextMenu.show(rootPane(), event.getScreenX(), event.getScreenY());
+        contextMenu.show(this, event.getScreenX(), event.getScreenY());
         contextMenu.requestFocus();
     }
 

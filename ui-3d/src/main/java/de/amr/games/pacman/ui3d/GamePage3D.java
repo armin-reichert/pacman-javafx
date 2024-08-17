@@ -21,6 +21,7 @@ import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.ui2d.GameParameters.*;
+import static de.amr.games.pacman.ui2d.page.Page.menuTitleItem;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 import static de.amr.games.pacman.ui2d.util.Ufx.wallpaperBackground;
 import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_DRAW_MODE;
@@ -34,7 +35,7 @@ public class GamePage3D extends GamePage {
     public GamePage3D(GameContext context, Scene parentScene) {
         super(context, parentScene);
         dashboard().addInfoBox(3, context.locText("infobox.3D_settings.title"), new InfoBox3D());
-        rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
+        backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
                     return coloredBackground(Color.rgb(150, 150, 200));
@@ -113,7 +114,7 @@ public class GamePage3D extends GamePage {
         miQuit.setOnAction(e -> quit());
         contextMenu.getItems().add(miQuit);
 
-        contextMenu.show(rootPane(), event.getScreenX(), event.getScreenY());
+        contextMenu.show(this, event.getScreenX(), event.getScreenY());
         contextMenu.requestFocus();
     }
 
@@ -121,7 +122,7 @@ public class GamePage3D extends GamePage {
     public void embedGameScene(GameScene gameScene) {
         contextMenu.hide();
         if (gameScene instanceof PlayScene3D) {
-            rootPane().getChildren().set(0, gameScene.root());
+            getChildren().set(0, gameScene.root());
         } else if (gameScene instanceof GameScene2D scene2D) {
             embedGameScene2D(scene2D);
         } else {
