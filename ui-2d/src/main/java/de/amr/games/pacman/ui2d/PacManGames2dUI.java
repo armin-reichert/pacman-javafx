@@ -173,7 +173,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         });
         scene.setOnMouseClicked(e -> currentPage.onMouseClicked(e));
         scene.setOnContextMenuRequested(e -> currentPage.onContextMenuRequested(e));
-        ChangeListener<Number> sizeListener = (py,ov,nv) -> currentPage.onResize(scene.getWidth(), scene.getHeight());
+        ChangeListener<Number> sizeListener = (py,ov,nv) -> {
+            if (currentPage != null) {
+                currentPage.setSize(scene.getWidth(), scene.getHeight());
+            }
+        };
         scene.widthProperty().addListener(sizeListener);
         scene.heightProperty().addListener(sizeListener);
         return scene;
@@ -241,10 +245,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     protected void selectPage(Page page) {
         if (page != currentPage) {
-            mainSceneLayout.getChildren().set(0, page.rootPane());
-            page.rootPane().requestFocus();
-            page.onSelected();
             currentPage = page;
+            currentPage.setSize(mainScene.getWidth(), mainScene.getHeight());
+            mainSceneLayout.getChildren().set(0, currentPage.rootPane());
+            currentPage.rootPane().requestFocus();
+            currentPage.onSelected();
         }
     }
 

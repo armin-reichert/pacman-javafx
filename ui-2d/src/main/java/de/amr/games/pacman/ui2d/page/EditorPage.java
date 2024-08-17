@@ -96,7 +96,7 @@ public class EditorPage extends BorderPane implements Page {
     }
 
     @Override
-    public void onResize(double width, double height) {
+    public void setSize(double width, double height) {
     }
 
     @Override

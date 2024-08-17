@@ -1,7 +1,6 @@
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.ui2d.ActionHandler;
-import javafx.scene.Scene;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
@@ -32,7 +31,7 @@ public interface Page {
 
     void onSelected();
 
-    void onResize(double width, double height);
+    void setSize(double width, double height);
 
     default void onContextMenuRequested(ContextMenuEvent e) {
         Logger.info("Context menu requested for page " + this);
