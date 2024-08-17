@@ -12,7 +12,6 @@ import de.amr.games.pacman.ui2d.util.ResourceManager;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Window;
 import org.tinylog.Logger;
 
@@ -24,22 +23,22 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 /**
  * @author Armin Reichert
  */
-public class EditorPage implements Page {
+public class EditorPage extends Page {
 
     private final TileMapEditor editor;
-    private final BorderPane pane;
     private Consumer<TileMapEditor> closeAction = editor -> {};
 
     public EditorPage(Window window, GameContext context) {
+        super(new BorderPane());
+
         checkNotNull(window);
         checkNotNull(context);
 
         editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
         editor.createUI(window);
 
-        pane = new BorderPane();
-        pane.setCenter(editor.getContentPane());
-        pane.setTop(editor.getMenuBar());
+        rootPane().setCenter(editor.getContentPane());
+        rootPane().setTop(editor.getMenuBar());
 
         var miQuitEditor = new MenuItem(context.locText("back_to_game"));
         miQuitEditor.setOnAction(e -> closeAction.accept(editor));
@@ -76,8 +75,8 @@ public class EditorPage implements Page {
     }
 
     @Override
-    public Pane rootPane() {
-        return pane;
+    public BorderPane rootPane() {
+        return (BorderPane) getRoot();
     }
 
     private WorldMap loadMap(String relativeMapPath) {

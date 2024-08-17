@@ -121,7 +121,7 @@ public class GamePage3D extends GamePage {
     public void embedGameScene(GameScene gameScene) {
         contextMenu.hide();
         if (gameScene instanceof PlayScene3D) {
-            stackPane.getChildren().set(0, gameScene.root());
+            rootPane().getChildren().set(0, gameScene.root());
         } else if (gameScene instanceof GameScene2D scene2D) {
             embedGameScene2D(scene2D);
         } else {

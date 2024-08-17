@@ -32,7 +32,7 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
  *
  * @author Armin Reichert
  */
-public class StartPage implements Page {
+public class StartPage extends Page {
 
     static final char ARROW_LEFT  = '\u2b98';
     static final char ARROW_RIGHT = '\u2b9a';
@@ -48,13 +48,14 @@ public class StartPage implements Page {
     };
 
     private final GameContext context;
-    private final StackPane root = new StackPane();
     private final BorderPane layout = new BorderPane();
 
     private boolean msPacManFlyerFrontPage = true;
     private boolean pacManFlyerFrontPage = true;
 
     public StartPage(GameContext context) {
+        super(new StackPane());
+
         this.context = checkNotNull(context);
 
         var btnPrevVariant = createCarouselButton(ARROW_LEFT);
@@ -83,7 +84,7 @@ public class StartPage implements Page {
         layout.setRight(right);
         layout.setCenter(btnPlayContainer);
 
-        root.getChildren().add(layout);
+        rootPane().getChildren().add(layout);
     }
 
     private Button createCarouselButton(char arrow) {
@@ -148,7 +149,7 @@ public class StartPage implements Page {
         if (variant != null && context != null) {
             switch (variant) {
                 case MS_PACMAN -> {
-                    root.setBackground(context.assets().get("wallpaper.background"));
+                    rootPane().setBackground(context.assets().get("wallpaper.background"));
                     setMsPacManFlyerFrontPage(true);
                     layout.setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
@@ -157,7 +158,7 @@ public class StartPage implements Page {
                     });
                 }
                 case PACMAN -> {
-                    root.setBackground(context.assets().get("wallpaper.background"));
+                    rootPane().setBackground(context.assets().get("wallpaper.background"));
                     setPacManFlyerFrontPage(true);
                     layout.setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
@@ -166,7 +167,7 @@ public class StartPage implements Page {
                     });
                 }
                 case PACMAN_XXL -> {
-                    root.setBackground(Ufx.coloredBackground(Color.BLACK));
+                    rootPane().setBackground(Ufx.coloredBackground(Color.BLACK));
                     Image bgImage = context.assets().image("pacman_xxl.startpage.image");
                     var bg = new Background(new BackgroundImage(bgImage,
                         BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
@@ -180,7 +181,7 @@ public class StartPage implements Page {
 
     @Override
     public Pane rootPane() {
-        return root;
+        return (Pane) getRoot();
     }
 
     @Override

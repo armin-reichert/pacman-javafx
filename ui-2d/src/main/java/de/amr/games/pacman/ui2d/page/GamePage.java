@@ -21,14 +21,15 @@ import de.amr.games.pacman.ui2d.util.FadingPane;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -39,21 +40,10 @@ import static de.amr.games.pacman.ui2d.GameParameters.*;
 /**
  * @author Armin Reichert
  */
-public class GamePage implements Page {
-
-    public static final Font CONTEXT_MENU_TITLE_FONT = Font.font("Dialog", FontWeight.BLACK, 14);
-    public static final Color CONTEXT_MENU_TITLE_BACKGROUND = Color.CORNFLOWERBLUE; // "Kornblumenblau, sind die Augen der Frauen beim Weine..."
-
-    protected static MenuItem menuTitleItem(String titleText) {
-        var text = new Text(titleText);
-        text.setFont(CONTEXT_MENU_TITLE_FONT);
-        text.setFill(CONTEXT_MENU_TITLE_BACKGROUND);
-        return new CustomMenuItem(text);
-    }
+public class GamePage extends Page {
 
     protected final GameContext context;
     protected final Scene parentScene;
-    protected final StackPane stackPane = new StackPane();
     protected final CanvasLayoutPane canvasPane = new CanvasLayoutPane();
     protected final BorderPane infoLayer = new BorderPane(); // dashboard, picture-in-picture
     protected final Pane popupLayer = new Pane(); // help, signature
@@ -64,6 +54,8 @@ public class GamePage implements Page {
     protected final PictureInPictureView pip;
 
     public GamePage(GameContext context, Scene parentScene) {
+        super(new StackPane());
+
         this.context = checkNotNull(context);
         this.parentScene = parentScene;
 
@@ -104,7 +96,7 @@ public class GamePage implements Page {
                 dashboard.visibleProperty(), PY_PIP_ON
         ));
 
-        stackPane.borderProperty().bind(Bindings.createObjectBinding(
+        rootPane().borderProperty().bind(Bindings.createObjectBinding(
                 () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.RED, 3) : null,
                 PY_DEBUG_INFO, context.gameSceneProperty()
         ));
@@ -118,12 +110,12 @@ public class GamePage implements Page {
         ));
         popupLayer.mouseTransparentProperty().bind(PY_DEBUG_INFO);
 
-        stackPane.getChildren().addAll(canvasPane, infoLayer, popupLayer);
+        rootPane().getChildren().addAll(canvasPane, infoLayer, popupLayer);
     }
 
     @Override
     public Pane rootPane() {
-        return stackPane;
+        return (StackPane) getRoot();
     }
 
     @Override
@@ -149,7 +141,7 @@ public class GamePage implements Page {
     }
 
     protected void embedGameScene2D(GameScene2D scene2D) {
-        stackPane.getChildren().set(0, canvasPane);
+        rootPane().getChildren().set(0, canvasPane);
         scene2D.setCanvas(canvasPane.decoratedCanvas().canvas());
         scene2D.scalingPy.bind(canvasPane.scalingPy);
         canvasPane.decoratedCanvas().backgroundProperty().bind(Bindings.createObjectBinding(
