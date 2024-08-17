@@ -361,11 +361,7 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     }
 
     public boolean isGameSceneRegisteredAs(GameScene gameScene, GameSceneID sceneID) {
-        return isGameSceneRegisteredAs(gameScene, game().variant(), sceneID);
-    }
-
-    public boolean isGameSceneRegisteredAs(GameScene gameScene, GameVariant variant, GameSceneID sceneID) {
-        return gameScene(variant, sceneID) == gameScene;
+        return gameScene(game().variant(), sceneID) == gameScene;
     }
 
     public GameScene gameScene(GameVariant variant, GameSceneID sceneID) {
