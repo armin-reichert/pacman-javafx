@@ -30,7 +30,6 @@ public interface ActionHandler {
     void selectPrevGameVariant();
     void selectPrevPerspective();
     void selectStartPage();
-    void setFullScreen(boolean on);
     void showFlashMessage(String message, Object... args);
     void showFlashMessageSeconds(double seconds, String message, Object... args);
     void showSignature();

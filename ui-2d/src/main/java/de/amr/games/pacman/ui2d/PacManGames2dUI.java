@@ -163,7 +163,7 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
         scene.addEventFilter(KeyEvent.KEY_RELEASED, Keyboard::onKeyReleased);
         scene.setOnKeyPressed(e -> {
             if (GameKey.FULLSCREEN.pressed()) {
-                setFullScreen(true);
+                stage.setFullScreen(true);
             } else if (GameKey.MUTE.pressed()) {
                 GameSounds.toggleMuted();
             } else {
@@ -488,11 +488,6 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     @Override
     public void showFlashMessageSeconds(double seconds, String message, Object... args) {
         messageView.showMessage(String.format(message, args), seconds);
-    }
-
-    @Override
-    public void setFullScreen(boolean on) {
-        stage.setFullScreen(on);
     }
 
     @Override
