@@ -35,6 +35,7 @@ import org.tinylog.Logger;
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.GameParameters.*;
+import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 
 /**
  * @author Armin Reichert
@@ -137,10 +138,10 @@ public class GamePage extends StackPane implements Page {
 
     public void setGameScene(GameScene gameScene) {
         contextMenu.hide();
-        if (gameScene instanceof GameScene2D gameScene2D) {
-            setGameScene2D(gameScene2D);
+        if (gameScene instanceof GameScene2D scene2D) {
+            setGameScene2D(scene2D);
         } else {
-            Logger.error("Cannot embed 3D game scene");
+            Logger.error("Cannot embed non-2D game scene");
         }
     }
 
@@ -149,7 +150,7 @@ public class GamePage extends StackPane implements Page {
         scene2D.setCanvas(canvasPane.decoratedCanvas().canvas());
         scene2D.scalingPy.bind(canvasPane.scalingPy);
         canvasPane.decoratedCanvas().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> Ufx.coloredBackground(scene2D.backgroundColorPy.get()), scene2D.backgroundColorPy
+            () -> coloredBackground(scene2D.backgroundColorPy.get()), scene2D.backgroundColorPy
         ));
         scene2D.clearCanvas();
         adaptCanvasSizeToCurrentWorld();
@@ -219,8 +220,7 @@ public class GamePage extends StackPane implements Page {
     }
 
     protected boolean isCurrentGameScene2D() {
-        return context.currentGameScene().isPresent()
-            && context.currentGameScene().get() instanceof GameScene2D;
+        return context.currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
     }
 
     public void render() {
