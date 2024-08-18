@@ -118,6 +118,10 @@ public class GamePage extends StackPane implements Page {
         return this;
     }
 
+    public Signature signature() {
+        return signature;
+    }
+
     @Override
     public void onSelected() {
         adaptCanvasSizeToCurrentWorld();
@@ -153,10 +157,6 @@ public class GamePage extends StackPane implements Page {
 
     public Dashboard dashboard() {
         return dashboard;
-    }
-
-    public Signature signature() {
-        return signature;
     }
 
     public void sign(Font font, String... words) {

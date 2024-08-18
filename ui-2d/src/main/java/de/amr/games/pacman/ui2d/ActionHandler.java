@@ -17,7 +17,6 @@ public interface ActionHandler {
     void cheatEnterNextLevel();
     void cheatKillAllEatableGhosts();
     void doSimulationSteps(int numSteps);
-    void hideSignature();
     void openMapEditor();
     void quitMapEditor(TileMapEditor editor);
     void reboot();
@@ -32,7 +31,6 @@ public interface ActionHandler {
     void selectStartPage();
     void showFlashMessage(String message, Object... args);
     void showFlashMessageSeconds(double seconds, String message, Object... args);
-    void showSignature();
     void startCutscenesTest();
     void startGame();
     void startLevelTestMode();

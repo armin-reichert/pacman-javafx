@@ -352,6 +352,14 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
         scoreVisiblePy.set(visible);
     }
 
+    public void showSignature() {
+        gamePage.signature().show(2, 3);
+    }
+
+    public void hideSignature() {
+        gamePage.signature().hide();
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // GameSceneManager
     // -----------------------------------------------------------------------------------------------------------------
@@ -447,16 +455,6 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     // -----------------------------------------------------------------------------------------------------------------
     // ActionHandler interface implementation
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void showSignature() {
-        gamePage.signature().show(2, 3);
-    }
-
-    @Override
-    public void hideSignature() {
-        gamePage.signature().hide();
-    }
 
     @Override
     public void selectStartPage() {

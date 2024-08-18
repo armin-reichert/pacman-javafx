@@ -74,4 +74,8 @@ public interface GameContext {
     GameClockFX gameClock();
 
     ActionHandler actionHandler();
+
+    void showSignature();
+
+    void hideSignature();
 }

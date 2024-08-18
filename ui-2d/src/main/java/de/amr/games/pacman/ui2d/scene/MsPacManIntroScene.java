@@ -44,7 +44,7 @@ public class MsPacManIntroScene extends GameScene2D {
         var sheet = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
         spriteRenderer.setSpriteSheet(sheet);
 
-        context.actionHandler().showSignature();
+        context.showSignature();
         context.setScoreVisible(true);
         clearBlueMazeBug();
 
@@ -60,7 +60,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void end() {
-        context.actionHandler().hideSignature();
+        context.hideSignature();
         GameSounds.stopVoice();
     }
 
