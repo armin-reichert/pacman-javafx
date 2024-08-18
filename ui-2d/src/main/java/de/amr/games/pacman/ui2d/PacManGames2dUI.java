@@ -288,7 +288,7 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    // GameSceneContext interface implementation
+    // GameContext interface implementation
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
@@ -329,6 +329,11 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     }
 
     @Override
+    public boolean currentGameSceneIs(GameSceneID sceneID) {
+        return currentGameScene().isPresent() && hasID(currentGameScene().get(), sceneID);
+    }
+
+    @Override
     public AssetMap assets() {
         return assets;
     }
@@ -361,18 +366,14 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    // GameSceneManager
+    // GameScene related
     // -----------------------------------------------------------------------------------------------------------------
 
-    public boolean isCurrentGameSceneRegisteredAs(GameSceneID sceneID) {
-        return currentGameScene().isPresent() && isGameSceneRegisteredAs(currentGameScene().get(), sceneID);
-    }
-
-    public boolean isGameSceneRegisteredAs(GameScene gameScene, GameSceneID sceneID) {
+    protected boolean hasID(GameScene gameScene, GameSceneID sceneID) {
         return gameScene(game().variant(), sceneID) == gameScene;
     }
 
-    public GameScene gameScene(GameVariant variant, GameSceneID sceneID) {
+    protected GameScene gameScene(GameVariant variant, GameSceneID sceneID) {
         return gameScenesForVariant.get(variant).get(sceneID);
     }
 

@@ -182,7 +182,7 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void handleContextMenuRequest(ContextMenuEvent event) {
-        if (!context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE)) {
+        if (!context.currentGameSceneIs(GameSceneID.PLAY_SCENE)) {
             return;
         }
         contextMenu.getItems().clear();

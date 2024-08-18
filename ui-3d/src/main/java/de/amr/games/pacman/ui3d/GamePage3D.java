@@ -52,15 +52,15 @@ public class GamePage3D extends GamePage {
         contextMenu.getItems().clear();
         contextMenu.hide();
 
-        if (!context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE)
-            && !context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE_3D)) {
+        if (!context.currentGameSceneIs(GameSceneID.PLAY_SCENE)
+            && !context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D)) {
             return;
         }
 
         contextMenu.getItems().add(menuTitleItem(context.locText("scene_display")));
 
         // Toggle 2D-3D
-        boolean is3D = context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE_3D);
+        boolean is3D = context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D);
         var item = new MenuItem(context.locText(is3D ? "use_2D_scene" : "use_3D_scene"));
         item.setOnAction(e -> context.actionHandler().toggle2D3D());
         contextMenu.getItems().add(item);

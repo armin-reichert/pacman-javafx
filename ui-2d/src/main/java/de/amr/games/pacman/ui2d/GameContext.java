@@ -44,7 +44,7 @@ public interface GameContext {
 
     // Game scenes
 
-    boolean isCurrentGameSceneRegisteredAs(GameSceneID gameSceneID);
+    boolean currentGameSceneIs(GameSceneID gameSceneID);
 
     ObjectProperty<GameScene> gameSceneProperty();
 
