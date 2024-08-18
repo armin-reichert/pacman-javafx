@@ -5,7 +5,6 @@ import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameKey;
 import de.amr.games.pacman.ui2d.util.Keyboard;
-import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
@@ -24,6 +23,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredRoundedBackground;
 import static javafx.scene.layout.BackgroundSize.AUTO;
 
@@ -166,12 +166,12 @@ public class StartPage extends StackPane implements Page {
                     });
                 }
                 case PACMAN_XXL -> {
-                    setBackground(Ufx.coloredBackground(Color.BLACK));
-                    Image bgImage = context.assets().image("pacman_xxl.startpage.image");
-                    var bg = new Background(new BackgroundImage(bgImage,
+                    setBackground(coloredBackground(Color.BLACK));
+                    Image xxlGameImage = context.assets().image("pacman_xxl.startpage.image");
+                    var xxlGameBackground = new Background(new BackgroundImage(xxlGameImage,
                         BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                         BackgroundPosition.CENTER, FILL));
-                    layout.setBackground(bg);
+                    layout.setBackground(xxlGameBackground);
                     setOnMouseClicked(null);
                 }
             }
