@@ -34,8 +34,7 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
  */
 public class StartPage extends StackPane implements Page {
 
-    static final char ARROW_LEFT  = '\u2b98';
-    static final char ARROW_RIGHT = '\u2b9a';
+    static final char ARROW_LEFT  = '\u2b98', ARROW_RIGHT = '\u2b9a';
 
     static final BackgroundSize FIT_HEIGHT = new BackgroundSize(AUTO, 1, false, true, true, false);
     static final BackgroundSize FILL       = new BackgroundSize(AUTO, AUTO, false, false, true, true);
@@ -49,12 +48,10 @@ public class StartPage extends StackPane implements Page {
 
     private final GameContext context;
     private final BorderPane layout = new BorderPane();
-
     private final Image[] msPacManFlyerPages;
-    private int msPacManFlyerPage = 0;
-
     private final Image[] pacManFlyerPages;
-    private int pacManFlyerPage = 0;
+    private int msPacManFlyerPage;
+    private int pacManFlyerPage;
 
     public StartPage(GameContext context) {
         this.context = checkNotNull(context);
@@ -68,12 +65,12 @@ public class StartPage extends StackPane implements Page {
             context.assets().image("pacman.startpage.image2")
         };
 
-        var btnPrevVariant = createCarouselButton(ARROW_LEFT);
+        Button btnPrevVariant = createCarouselButton(ARROW_LEFT);
         btnPrevVariant.setOnAction(e -> context.actionHandler().selectPrevGameVariant());
         VBox left = new VBox(btnPrevVariant);
         left.setAlignment(Pos.CENTER_LEFT);
 
-        var btnNextVariant = createCarouselButton(ARROW_RIGHT);
+        Button btnNextVariant = createCarouselButton(ARROW_RIGHT);
         btnNextVariant.setOnAction(e -> context.actionHandler().selectNextGameVariant());
         VBox right = new VBox(btnNextVariant);
         right.setAlignment(Pos.CENTER_RIGHT);
@@ -81,14 +78,14 @@ public class StartPage extends StackPane implements Page {
         Node btnPlay = createPlayButton(context.locText("play_button"));
         BorderPane.setAlignment(btnPlay, Pos.BOTTOM_CENTER);
         btnPlay.setTranslateY(-10);
-        var btnPlayContainer = new BorderPane();
-        btnPlayContainer.setBottom(btnPlay);
         btnPlay.setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
                 context.actionHandler().selectGamePage();
             }
             e.consume(); // do not propagate event to layout such that image changes
         });
+        var btnPlayContainer = new BorderPane();
+        btnPlayContainer.setBottom(btnPlay);
 
         layout.setLeft(left);
         layout.setRight(right);
@@ -98,7 +95,7 @@ public class StartPage extends StackPane implements Page {
     }
 
     private Button createCarouselButton(char arrow) {
-        Button button = new Button();
+        var button = new Button();
         // Without this, button gets input focus after being clicked with the mouse and the LEFT, RIGHT keys stop working!
         button.setFocusTraversable(false);
         button.setStyle("-fx-text-fill: rgb(0,155,252); -fx-background-color: transparent; -fx-padding: 5");
@@ -153,7 +150,7 @@ public class StartPage extends StackPane implements Page {
                 case MS_PACMAN -> {
                     setBackground(context.assets().get("wallpaper.background"));
                     msPacManFlyerPage = selectFlyerPage(msPacManFlyerPages, 0);
-                    layout.setOnMouseClicked(e -> {
+                    setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
                             browseMsPacManFlyer();
                         }
@@ -162,7 +159,7 @@ public class StartPage extends StackPane implements Page {
                 case PACMAN -> {
                     setBackground(context.assets().get("wallpaper.background"));
                     pacManFlyerPage = selectFlyerPage(pacManFlyerPages, 0);
-                    layout.setOnMouseClicked(e -> {
+                    setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
                             browsePacManFlyer();
                         }
@@ -175,7 +172,7 @@ public class StartPage extends StackPane implements Page {
                         BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                         BackgroundPosition.CENTER, FILL));
                     layout.setBackground(bg);
-                    layout.setOnMouseClicked(null);
+                    setOnMouseClicked(null);
                 }
             }
         }
@@ -202,10 +199,10 @@ public class StartPage extends StackPane implements Page {
         } else if (GameKey.PREV_VARIANT.pressed()) {
             handler.selectPrevGameVariant();
         } else if (Keyboard.pressed(KeyCode.DOWN) || Keyboard.pressed(KeyCode.UP)) {
-            if (context.game().variant() == GameVariant.MS_PACMAN) {
-                browseMsPacManFlyer();
-            } else if (context.game().variant() == GameVariant.PACMAN) {
-                browsePacManFlyer();
+            switch (context.game().variant()) {
+                case MS_PACMAN  -> browseMsPacManFlyer();
+                case PACMAN     -> browsePacManFlyer();
+                case PACMAN_XXL -> {}
             }
         }
     }
