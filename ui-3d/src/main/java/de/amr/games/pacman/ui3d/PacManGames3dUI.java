@@ -69,7 +69,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
         startPage.gameVariantPy.bind(gameVariantPy);
 
         gamePage = new GamePage3D(this, mainScene);
-        gamePage.sign(assets.font("font.monospaced", 9), MADE_BY);
+        gamePage.sign(assets.font("font.monospaced", 9), locText("app.signature"));
 
         createGameScenes();
         for (GameVariant variant : GameVariant.values()) {

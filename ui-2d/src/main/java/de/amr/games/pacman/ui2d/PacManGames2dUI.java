@@ -62,8 +62,6 @@ import static java.util.function.Predicate.not;
  */
 public class PacManGames2dUI extends StackPane implements GameEventListener, GameContext, ActionHandler {
 
-    public static final String MADE_BY = "Remake (2021-2024) by Armin Reichert";
-
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
         @Override
         protected void invalidated() {
@@ -115,7 +113,7 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
         startPage.gameVariantPy.bind(gameVariantPy);
 
         gamePage = new GamePage(this, mainScene);
-        gamePage.sign(assets.font("font.monospaced", 9), MADE_BY);
+        gamePage.sign(assets.font("font.monospaced", 9), locText("app.signature"));
 
         createGameScenes();
     }
