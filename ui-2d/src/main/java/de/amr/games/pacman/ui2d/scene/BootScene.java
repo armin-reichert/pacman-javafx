@@ -15,8 +15,6 @@ import static de.amr.games.pacman.lib.Globals.t;
  */
 public class BootScene extends GameScene2D {
 
-    private double start; // seconds
-
     @Override
     public boolean isCreditVisible() {
         return false;
@@ -25,13 +23,12 @@ public class BootScene extends GameScene2D {
     @Override
     public void init() {
         super.init();
-        start = 1.0;
         context.setScoreVisible(false);
     }
 
     @Override
     public void update() {
-        if (context.gameState().timer().atSecond(start + 3)) {
+        if (context.gameState().timer().atSecond(4)) {
             context.gameController().terminateCurrentState();
         }
     }
@@ -39,11 +36,13 @@ public class BootScene extends GameScene2D {
     @Override
     public void draw() {
         var timer = context.gameState().timer();
-        if (timer.betweenSeconds(start, start + 1) && timer.tick() % 4 == 0) {
+        if (timer.tick() == 1) {
+            clearCanvas();
+        } else if (timer.betweenSeconds(1, 2) && timer.tick() % 4 == 0) {
             paintRandomHexCodes();
-        } else if (timer.betweenSeconds(start + 1, start + 2.5) && timer.tick() % 4 == 0) {
+        } else if (timer.betweenSeconds(2, 3.5) && timer.tick() % 4 == 0) {
             paintRandomSprites();
-        } else if (timer.atSecond(start + 2.5)) {
+        } else if (timer.atSecond(3.5)) {
             paintGrid();
         }
     }
