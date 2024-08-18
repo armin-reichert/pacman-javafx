@@ -86,7 +86,6 @@ public class GameScene2D implements GameScene {
     public void update() {
     }
 
-    @Override
     public void draw() {
         if (g == null) {
             Logger.error("Cannot render game scene {}, no canvas has been assigned", this);

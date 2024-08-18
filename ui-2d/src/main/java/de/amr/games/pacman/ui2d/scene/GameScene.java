@@ -30,8 +30,6 @@ public interface GameScene extends GameEventListener {
      */
     default void end() {}
 
-    default void draw() {}
-
     /**
      * @return the root of the game scene (used to embed the scene into the scene graph)
      */
