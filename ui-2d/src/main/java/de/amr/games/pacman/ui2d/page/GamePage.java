@@ -224,11 +224,7 @@ public class GamePage extends StackPane implements Page {
     }
 
     public void render() {
-        context.currentGameScene().ifPresent(gameScene -> {
-            if (gameScene instanceof GameScene2D gameScene2D) {
-                gameScene2D.draw();
-            }
-        });
+        context.currentGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(GameScene2D::draw);
         popupLayer.setVisible(true);
         dashboard.update();
         pip.setVisible(PY_PIP_ON.get() && !isCurrentGameScene2D()); //TODO
