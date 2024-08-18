@@ -43,18 +43,30 @@ public class StartPage extends StackPane implements Page {
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override
         protected void invalidated() {
-            updateBackgroundImage(get());
+            initPageForGameVariant(get());
         }
     };
 
     private final GameContext context;
     private final BorderPane layout = new BorderPane();
 
-    private boolean msPacManFlyerFrontPage = true;
-    private boolean pacManFlyerFrontPage = true;
+    private final Image[] msPacManFlyerPages;
+    private int msPacManFlyerPage = 0;
+
+    private final Image[] pacManFlyerPages;
+    private int pacManFlyerPage = 0;
 
     public StartPage(GameContext context) {
         this.context = checkNotNull(context);
+
+        msPacManFlyerPages = new Image[] {
+            context.assets().image("ms_pacman.startpage.image1"),
+            context.assets().image("ms_pacman.startpage.image2")
+        };
+        pacManFlyerPages = new Image[] {
+            context.assets().image("pacman.startpage.image1"),
+            context.assets().image("pacman.startpage.image2")
+        };
 
         var btnPrevVariant = createCarouselButton(ARROW_LEFT);
         btnPrevVariant.setOnAction(e -> context.actionHandler().selectPrevGameVariant());
@@ -117,50 +129,42 @@ public class StartPage extends StackPane implements Page {
         return pane;
     }
 
-    private void setMsPacManFlyerFrontPage(boolean frontPage) {
-        Image flyer = context.assets().image("ms_pacman.startpage.image" + (frontPage? 1 : 2));
-        var bg = new Background(new BackgroundImage(flyer,
+    private int selectFlyerPage(Image[] flyerPages, int page) {
+        layout.setBackground(new Background(new BackgroundImage(flyerPages[page],
             BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-            BackgroundPosition.CENTER, FIT_HEIGHT));
-        layout.setBackground(bg);
-        msPacManFlyerFrontPage = frontPage;
+            BackgroundPosition.CENTER, FIT_HEIGHT)));
+        return page;
     }
 
-    private void toggleMsPacManFlyer() {
-        setMsPacManFlyerFrontPage(!msPacManFlyerFrontPage);
+    private void browseMsPacManFlyer() {
+        int nextPage = (msPacManFlyerPage + 1) % msPacManFlyerPages.length;
+        msPacManFlyerPage = selectFlyerPage(msPacManFlyerPages, nextPage);
     }
 
-    private void setPacManFlyerFrontPage(boolean frontPage) {
-        Image flyer = context.assets().image("pacman.startpage.image" + (frontPage? 1 : 2));
-        var bg = new Background(new BackgroundImage(flyer,
-            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-            BackgroundPosition.CENTER, FIT_HEIGHT));
-        layout.setBackground(bg);
-        pacManFlyerFrontPage = frontPage;
+    private void browsePacManFlyer()
+    {
+        int nextPage = (pacManFlyerPage + 1) % pacManFlyerPages.length;
+        pacManFlyerPage = selectFlyerPage(pacManFlyerPages, nextPage);
     }
 
-    private void togglePacManFlyer() {
-        setPacManFlyerFrontPage(!pacManFlyerFrontPage);
-    }
-
-    private void updateBackgroundImage(GameVariant variant) {
+    private void initPageForGameVariant(GameVariant variant) {
         if (variant != null && context != null) {
             switch (variant) {
                 case MS_PACMAN -> {
                     setBackground(context.assets().get("wallpaper.background"));
-                    setMsPacManFlyerFrontPage(true);
+                    msPacManFlyerPage = selectFlyerPage(msPacManFlyerPages, 0);
                     layout.setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
-                            toggleMsPacManFlyer();
+                            browseMsPacManFlyer();
                         }
                     });
                 }
                 case PACMAN -> {
                     setBackground(context.assets().get("wallpaper.background"));
-                    setPacManFlyerFrontPage(true);
+                    pacManFlyerPage = selectFlyerPage(pacManFlyerPages, 0);
                     layout.setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
-                            togglePacManFlyer();
+                            browsePacManFlyer();
                         }
                     });
                 }
@@ -199,9 +203,9 @@ public class StartPage extends StackPane implements Page {
             handler.selectPrevGameVariant();
         } else if (Keyboard.pressed(KeyCode.DOWN) || Keyboard.pressed(KeyCode.UP)) {
             if (context.game().variant() == GameVariant.MS_PACMAN) {
-                toggleMsPacManFlyer();
+                browseMsPacManFlyer();
             } else if (context.game().variant() == GameVariant.PACMAN) {
-                togglePacManFlyer();
+                browsePacManFlyer();
             }
         }
     }
