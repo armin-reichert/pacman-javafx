@@ -38,13 +38,6 @@ public class GameScene2D implements GameScene {
     protected GameContext context;
     protected GraphicsContext g;
 
-    public GameScene2D() {
-        vectorRenderer.scalingPy.bind(scalingPy);
-        spriteRenderer.scalingPy.bind(scalingPy);
-        spriteRenderer.backgroundColorPy.bind(backgroundColorPy);
-        backgroundColorPy.bind(GameParameters.PY_CANVAS_COLOR);
-    }
-
     public boolean isCreditVisible() {
         return context.gameController().hasCredit();
     }
@@ -80,6 +73,10 @@ public class GameScene2D implements GameScene {
 
     @Override
     public void init() {
+        backgroundColorPy.bind(GameParameters.PY_CANVAS_COLOR);
+        vectorRenderer.scalingPy.bind(scalingPy);
+        spriteRenderer.scalingPy.bind(scalingPy);
+        spriteRenderer.backgroundColorPy.bind(backgroundColorPy);
         spriteRenderer.setSpriteSheet(context.spriteSheet(context.game().variant()));
     }
 

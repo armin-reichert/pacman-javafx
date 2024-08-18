@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameParameters;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -27,7 +28,14 @@ public class PictureInPictureView {
     public final DoubleProperty widthPy  = new SimpleDoubleProperty(28*8);
     public final DoubleProperty heightPy = new SimpleDoubleProperty(36*8);
     public final DoubleProperty opacityPy = new SimpleDoubleProperty(1);
-    public final BooleanProperty visiblePy = new SimpleBooleanProperty(true);
+    public final BooleanProperty visiblePy = new SimpleBooleanProperty(true) {
+        @Override
+        protected void invalidated() {
+            if (get()) {
+                gameScene.init();
+            }
+        }
+    };
 
     private final HBox layout = new HBox();
     private final Canvas canvas = new Canvas();
