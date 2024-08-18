@@ -53,6 +53,9 @@ jlink {
                 '--win-menu-group', 'Pac-Man FX',
                 '--win-shortcut']
         }
+	if (os.isLinux()) {
+		installerType='deb'
+	}
     }
 }
 
