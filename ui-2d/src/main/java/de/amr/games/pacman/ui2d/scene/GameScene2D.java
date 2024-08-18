@@ -62,6 +62,7 @@ public class GameScene2D implements GameScene {
     public void setCanvas(Canvas canvas) {
         checkNotNull(canvas);
         g = canvas.getGraphicsContext2D();
+        clearCanvas();
     }
 
     protected double s(double value) {
