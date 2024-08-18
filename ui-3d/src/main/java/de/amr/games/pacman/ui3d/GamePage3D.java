@@ -48,7 +48,7 @@ public class GamePage3D extends GamePage {
     }
 
     @Override
-    public void onContextMenuRequested(ContextMenuEvent event) {
+    public void handleContextMenuRequest(ContextMenuEvent event) {
         contextMenu.getItems().clear();
         contextMenu.hide();
 
@@ -119,12 +119,12 @@ public class GamePage3D extends GamePage {
     }
 
     @Override
-    public void embedGameScene(GameScene gameScene) {
+    public void setGameScene(GameScene gameScene) {
         contextMenu.hide();
         if (gameScene instanceof PlayScene3D) {
             getChildren().set(0, gameScene.root());
         } else if (gameScene instanceof GameScene2D scene2D) {
-            embedGameScene2D(scene2D);
+            setGameScene2D(scene2D);
         } else {
             Logger.warn("Cannot embed game scene {}", gameScene);
         }

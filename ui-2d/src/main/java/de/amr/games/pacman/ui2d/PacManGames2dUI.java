@@ -67,7 +67,7 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
         @Override
         protected void invalidated() {
-            gamePage.embedGameScene(get());
+            gamePage.setGameScene(get());
         }
     };
 
@@ -170,8 +170,10 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
                 currentPage.handleKeyboardInput(this);
             }
         });
-        scene.setOnMouseClicked(e -> currentPage.onMouseClicked(e));
-        scene.setOnContextMenuRequested(e -> currentPage.onContextMenuRequested(e));
+        scene.setOnContextMenuRequested(e -> {
+            currentPage.handleContextMenuRequest(e);
+            e.consume();
+        });
         ChangeListener<Number> sizeListener = (py,ov,nv) -> {
             if (currentPage != null) {
                 currentPage.setSize(scene.getWidth(), scene.getHeight());

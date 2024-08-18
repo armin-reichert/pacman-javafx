@@ -26,7 +26,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -55,7 +54,7 @@ public class GamePage extends StackPane implements Page {
 
     public GamePage(GameContext context, Scene parentScene) {
         this.context = checkNotNull(context);
-        this.parentScene = parentScene;
+        this.parentScene = checkNotNull(parentScene);
 
         dashboard = new Dashboard(context);
         dashboard.addInfoBox(context.locText("infobox.general.title"), new InfoBoxGeneral());
@@ -66,10 +65,11 @@ public class GamePage extends StackPane implements Page {
         dashboard.addInfoBox(context.locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
         dashboard.addInfoBox(context.locText("infobox.about.title"), new InfoBoxAbout());
 
-        DecoratedCanvas canvas = canvasPane.decoratedCanvas();
+        canvasPane.setBackground(context.assets().background("wallpaper.background"));
         canvasPane.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
         canvasPane.setMinScaling(0.75);
-        canvasPane.setBackground(context.assets().background("wallpaper.background"));
+
+        DecoratedCanvas canvas = canvasPane.decoratedCanvas();
         canvas.setBorderColor(context.assets().color("palette.pale"));
         canvas.decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
         canvas.decoratedPy.bind(PY_CANVAS_DECORATED);
@@ -84,11 +84,11 @@ public class GamePage extends StackPane implements Page {
         popupLayer.minWidthProperty().bind(canvas.minWidthProperty());
         popupLayer.maxWidthProperty().bind(canvas.maxWidthProperty());
         popupLayer.prefWidthProperty().bind(canvas.prefWidthProperty());
+
         popupLayer.getChildren().addAll(helpPopUp, signature);
 
         infoLayer.setLeft(dashboard);
-        var spacer = new HBox();
-        infoLayer.setRight(new VBox(pip.node(), spacer));
+        infoLayer.setRight(new VBox(pip.node(), new HBox()));
         infoLayer.visibleProperty().bind(Bindings.createObjectBinding(
                 () -> dashboard.isVisible() || PY_PIP_ON.get(),
                 dashboard.visibleProperty(), PY_PIP_ON
@@ -107,6 +107,8 @@ public class GamePage extends StackPane implements Page {
                 PY_DEBUG_INFO, context.gameSceneProperty()
         ));
         popupLayer.mouseTransparentProperty().bind(PY_DEBUG_INFO);
+
+        setOnMouseClicked(e -> contextMenu.hide());
 
         getChildren().addAll(canvasPane, infoLayer, popupLayer);
     }
@@ -129,16 +131,16 @@ public class GamePage extends StackPane implements Page {
         canvasPane.resizeTo(width, height);
     }
 
-    public void embedGameScene(GameScene gameScene) {
+    public void setGameScene(GameScene gameScene) {
         contextMenu.hide();
         if (gameScene instanceof GameScene2D gameScene2D) {
-            embedGameScene2D(gameScene2D);
+            setGameScene2D(gameScene2D);
         } else {
             Logger.error("Cannot embed 3D game scene");
         }
     }
 
-    protected void embedGameScene2D(GameScene2D scene2D) {
+    protected void setGameScene2D(GameScene2D scene2D) {
         getChildren().set(0, canvasPane);
         scene2D.setCanvas(canvasPane.decoratedCanvas().canvas());
         scene2D.scalingPy.bind(canvasPane.scalingPy);
@@ -179,14 +181,7 @@ public class GamePage extends StackPane implements Page {
     }
 
     @Override
-    public void onMouseClicked(MouseEvent e) {
-        contextMenu.hide(); //TODO check this
-    }
-
-    @Override
-    public void onContextMenuRequested(ContextMenuEvent event) {
-        contextMenu.hide(); //TODO check this
-
+    public void handleContextMenuRequest(ContextMenuEvent event) {
         if (!context.isCurrentGameSceneRegisteredAs(GameSceneID.PLAY_SCENE)) {
             return;
         }
@@ -278,10 +273,9 @@ public class GamePage extends StackPane implements Page {
     }
 
     protected void quit() {
-        GameSounds.stopVoice();
         GameSounds.stopAll();
-        context.actionHandler().selectStartPage();
         context.gameController().changeCredit(-1);
+        context.actionHandler().selectStartPage();
     }
 
     private void showHelp() {

@@ -4,7 +4,6 @@ import de.amr.games.pacman.ui2d.ActionHandler;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -33,12 +32,11 @@ public interface Page {
 
     void setSize(double width, double height);
 
-    default void onContextMenuRequested(ContextMenuEvent e) {
+    default void handleContextMenuRequest(ContextMenuEvent e) {
         Logger.info("Context menu requested for page " + this);
-    }
-
-    default void onMouseClicked(MouseEvent e) {
-        Logger.info("Context menu requested for page " + this);
+        if (e.isKeyboardTrigger()) {
+            Logger.info("Context menu requested by key");
+        }
     }
 
     void handleKeyboardInput(ActionHandler handler);
