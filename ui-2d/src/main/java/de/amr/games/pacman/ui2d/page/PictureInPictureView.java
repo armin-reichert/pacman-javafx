@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
-import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameParameters;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -68,7 +67,7 @@ public class PictureInPictureView {
     }
 
     public void draw() {
-        if (canvas.isVisible()) {
+        if (visiblePy.get()) {
             gameScene.draw();
         }
     }

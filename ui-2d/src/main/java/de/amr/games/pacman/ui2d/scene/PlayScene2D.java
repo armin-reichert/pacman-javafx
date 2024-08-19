@@ -109,13 +109,14 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        var game = context.game();
+        GameModel game = context.game();
         if (game.world() == null) {
+            // This happens for one frame
+            Logger.warn("Cannot draw scene content, no game world exists!");
             return;
         }
         boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         boolean blinkingOn = game.blinking().isOn();
-        spriteRenderer.setSpriteSheet(context.spriteSheet(game.variant()));
         switch (game.variant()) {
             case MS_PACMAN -> {
                 MsPacManGame msPacManGame = (MsPacManGame) game;
