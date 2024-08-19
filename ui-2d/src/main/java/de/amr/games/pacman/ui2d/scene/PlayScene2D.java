@@ -14,7 +14,6 @@ import de.amr.games.pacman.model.MsPacManGame;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameKey;
 import de.amr.games.pacman.ui2d.GameSounds;
@@ -138,15 +137,14 @@ public class PlayScene2D extends GameScene2D {
             }
         }
         drawLevelMessage();
-        if (game.powerTimer().isRunning()) {
-            Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
-                .map(game::ghost).forEach(this::drawGhost);
-            drawPac(game.pac());
-        } else {
-            drawPac(game.pac());
-            Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
-                .map(game::ghost).forEach(this::drawGhost);
+
+        spriteRenderer.drawPac(g, game.pac());
+        ghostsInZOrder().forEach(ghost -> spriteRenderer.drawGhost(g, ghost));
+        if (infoVisiblePy.get()) {
+            spriteRenderer.drawPacInfo(g, game.pac());
+            ghostsInZOrder().forEach(ghost -> spriteRenderer.drawGhostInfo(g, ghost));
         }
+
         if (!isCreditVisible()) {
             int numLivesDisplayed = game.lives() - 1;
             if (context.gameState() == GameState.READY && !game.pac().isVisible()) {
@@ -157,18 +155,13 @@ public class PlayScene2D extends GameScene2D {
         drawLevelCounter(g);
     }
 
-    private void drawPac(Pac pac) {
-        spriteRenderer.drawPac(g, pac);
-        if (infoVisiblePy.get()) {
-            spriteRenderer.drawPacInfo(g, pac);
-        }
-    }
-
-    private void drawGhost(Ghost ghost) {
-        spriteRenderer.drawGhost(g, ghost);
-        if (infoVisiblePy.get()) {
-            spriteRenderer.drawGhostInfo(g, ghost);
-        }
+    private Stream<Ghost> ghostsInZOrder() {
+        return Stream.of(
+            context.game().ghost(GameModel.ORANGE_GHOST),
+            context.game().ghost(GameModel.CYAN_GHOST),
+            context.game().ghost(GameModel.PINK_GHOST),
+            context.game().ghost(GameModel.RED_GHOST)
+        );
     }
 
     private void drawLevelMessage() {
