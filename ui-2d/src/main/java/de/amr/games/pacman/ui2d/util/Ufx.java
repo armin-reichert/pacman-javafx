@@ -42,7 +42,7 @@ public interface Ufx {
      */
     static void launchApplication(Class<? extends Application> appClass, String... args) {
         try {
-            Logger.info("Java   version:   {}", Runtime.version());
+            Logger.info("Java version:     {}", Runtime.version());
             Logger.info("Locale (default): {}", Locale.getDefault());
             Application.launch(appClass, args);
         } catch (Throwable x) {
