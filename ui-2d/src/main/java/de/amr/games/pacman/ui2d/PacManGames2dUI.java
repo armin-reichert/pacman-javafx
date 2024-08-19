@@ -83,7 +83,6 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     protected final Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
 
     protected Stage stage;
-    protected Scene mainScene;
     protected final FlashMessageView messageView = new FlashMessageView();
     protected final GameClockFX clock = new GameClockFX();
 
@@ -106,8 +105,10 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
 
         // first child will be replaced by page
         getChildren().addAll(new Pane(), messageView, createMutedIcon());
-        mainScene = createMainScene(this, width, height);
+        Scene mainScene = new Scene(this, width, height);
         stage.setScene(mainScene);
+
+        initMainScene(mainScene);
 
         startPage = new StartPage(this);
         startPage.gameVariantPy.bind(gameVariantPy);
@@ -119,6 +120,11 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     }
 
     public void start() {
+        //TODO this does not work yet correctly
+        Dimension2D minSize = DecoratedCanvas.computeSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y, 1);
+        stage.setMinWidth(minSize.getWidth());
+        stage.setMinHeight(minSize.getHeight());
+
         // select game variant of current game model
         gameVariantPy.set(game().variant());
         GameSounds.gameVariantProperty().bind(gameVariantPy);
@@ -147,19 +153,14 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
         gameController().setClock(clock);
         selectStartPage();
         bindStageTitle();
-        //TODO this does not work yet correctly
-        Dimension2D minSize = DecoratedCanvas.computeSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y, 1);
-        stage.setMinWidth(minSize.getWidth());
-        stage.setMinHeight(minSize.getHeight());
         stage.centerOnScreen();
         stage.show();
     }
 
-    protected Scene createMainScene(Parent root, double width, double height) {
-        var scene = new Scene(root, width, height);
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, Keyboard::onKeyPressed);
-        scene.addEventFilter(KeyEvent.KEY_RELEASED, Keyboard::onKeyReleased);
-        scene.setOnKeyPressed(e -> {
+    protected void initMainScene(Scene mainScene) {
+        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, Keyboard::onKeyPressed);
+        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, Keyboard::onKeyReleased);
+        mainScene.setOnKeyPressed(e -> {
             if (GameKey.FULLSCREEN.pressed()) {
                 stage.setFullScreen(true);
             } else if (GameKey.MUTE.pressed()) {
@@ -168,18 +169,17 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
                 currentPage.handleKeyboardInput(this);
             }
         });
-        scene.setOnContextMenuRequested(e -> {
+        mainScene.setOnContextMenuRequested(e -> {
             currentPage.handleContextMenuRequest(e);
             e.consume();
         });
         ChangeListener<Number> sizeListener = (py,ov,nv) -> {
             if (currentPage != null) {
-                currentPage.setSize(scene.getWidth(), scene.getHeight());
+                currentPage.setSize(mainScene.getWidth(), mainScene.getHeight());
             }
         };
-        scene.widthProperty().addListener(sizeListener);
-        scene.heightProperty().addListener(sizeListener);
-        return scene;
+        mainScene.widthProperty().addListener(sizeListener);
+        mainScene.heightProperty().addListener(sizeListener);
     }
 
     protected void createGameScenes() {
@@ -245,7 +245,7 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     protected void selectPage(Page page) {
         if (page != currentPage) {
             currentPage = page;
-            currentPage.setSize(mainScene.getWidth(), mainScene.getHeight());
+            currentPage.setSize(stage.getScene().getWidth(), stage.getScene().getHeight());
             getChildren().set(0, currentPage.rootPane());
             currentPage.rootPane().requestFocus();
             currentPage.onSelected();

@@ -13,6 +13,7 @@ import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.beans.binding.Bindings;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
@@ -62,8 +63,10 @@ public class PacManGames3dUI extends PacManGames2dUI {
 
         // first child will be replaced by page
         getChildren().addAll(new Pane(), messageView, createMutedIcon());
-        mainScene = createMainScene(this, width, height);
+
+        Scene mainScene = new Scene(this, width, height);
         stage.setScene(mainScene);
+        initMainScene(mainScene);
 
         startPage = new StartPage(this);
         startPage.gameVariantPy.bind(gameVariantPy);
