@@ -255,11 +255,12 @@ public class PlayScene3D implements GameScene {
 
     private void onEnterStateLevelComplete() {
         GameSounds.stopAll();
-        // if cheat has been used to complete level, 3D food might still exist, so eat it:
+        // if cheat has been used to complete level, food might still exist, so eat it:
+        GameWorld world = context.game().world();
+        world.map().food().tiles().forEach(world::eatFoodAt);
         level3D.pellets3D().forEach(Pellet3D::onEaten);
         level3D.energizers3D().forEach(Energizer3D::onEaten);
         level3D.livesCounter3D().stopAnimation();
-        //TODO change this
         level3D.house3D().door3D().setVisible(false);
         playLevelCompleteAnimation();
     }

@@ -728,9 +728,6 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     @Override
     public void cheatEnterNextLevel() {
         if (game().isPlaying() && gameState() == GameState.HUNTING) {
-            GameWorld world = game().world();
-            GameSounds.stopAll();
-            world.map().food().tiles().forEach(world::eatFoodAt);
             gameController().changeState(GameState.LEVEL_COMPLETE);
         }
     }
