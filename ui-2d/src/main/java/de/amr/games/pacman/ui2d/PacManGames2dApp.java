@@ -12,8 +12,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.util.Locale;
-
 /**
  * @author Armin Reichert
  */
