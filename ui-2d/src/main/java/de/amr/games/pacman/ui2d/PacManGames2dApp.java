@@ -23,9 +23,7 @@ public class PacManGames2dApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        Logger.info("Java   version:   {}", Runtime.version());
         Logger.info("JavaFX version:   {}", System.getProperty("javafx.runtime.version"));
-        Logger.info("Locale (default): {}", Locale.getDefault());
         GameController.it().selectGameVariant(GameVariant.PACMAN);
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double aspect = 1.2;

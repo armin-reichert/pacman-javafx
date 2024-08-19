@@ -13,8 +13,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.tinylog.Logger;
 
-import java.util.Locale;
-
 import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_ENABLED;
 
 /**
@@ -26,9 +24,7 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        Logger.info("Java   version:   {}", Runtime.version());
         Logger.info("JavaFX version:   {}", System.getProperty("javafx.runtime.version"));
-        Logger.info("Locale (default): {}", Locale.getDefault());
         GameController.it().selectGameVariant(GameVariant.PACMAN);
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double aspect = screenSize.getWidth() / screenSize.getHeight();

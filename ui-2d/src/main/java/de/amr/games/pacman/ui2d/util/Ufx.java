@@ -17,8 +17,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import java.io.PrintWriter;
+import java.util.Locale;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
@@ -38,8 +40,10 @@ public interface Ufx {
      * @param appClass application class
      * @param args application arguments
      */
-    static void launch(Class<? extends Application> appClass, String... args) {
+    static void launchApplication(Class<? extends Application> appClass, String... args) {
         try {
+            Logger.info("Java   version:   {}", Runtime.version());
+            Logger.info("Locale (default): {}", Locale.getDefault());
             Application.launch(appClass, args);
         } catch (Throwable x) {
             try (var pw = new PrintWriter("oh_shit.txt")) {
