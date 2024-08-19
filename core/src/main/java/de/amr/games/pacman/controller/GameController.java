@@ -73,38 +73,39 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     private void ensureCustomMapDirExists() {
         var dir = GameModel.CUSTOM_MAP_DIR;
         if (dir.exists() && dir.isDirectory()) {
+            Logger.info("Custom map directory found: '{}'", dir);
             return;
         }
         boolean created = dir.mkdirs();
         if (created) {
-            Logger.info("User map dir created: {}", dir);
+            Logger.info("Custom map directory created: '{}'", dir);
         } else {
-            Logger.error("User map dir could not be created: {}", dir);
+            Logger.error("Custom map directory could not be created: '{}'", dir);
         }
     }
 
     public void loadCustomMaps() {
         ensureCustomMapDirExists();
-        var mapDir = GameModel.CUSTOM_MAP_DIR;
+        File mapDir = GameModel.CUSTOM_MAP_DIR;
         if (!mapDir.isDirectory()) {
-            Logger.error("Specified map directory path '{}' does not point to a directory", mapDir);
+            Logger.error("Cannot load custom maps: '{}' is not a directory", mapDir);
+            return;
         }
-        Logger.info("Searching for custom map files in folder {}", mapDir);
-        var mapFiles = mapDir.listFiles((dir, name) -> name.endsWith(".world"));
-        if (mapFiles != null) {
-            customMapsByFile.clear();
-            for (File mapFile : mapFiles) {
-                Logger.info("Found custom map file: " + mapFile);
-                var customMap = new WorldMap(mapFile);
-                customMapsByFile.put(mapFile, customMap);
-            }
-            if (customMapsByFile.isEmpty()) {
-                Logger.info("No custom maps found");
-            } else {
-                Logger.info("{} custom map(s) loaded", customMapsByFile.size());
-            }
+        Logger.info("Searching for custom map files in '{}'", mapDir);
+        File[] mapFiles = mapDir.listFiles((dir, name) -> name.endsWith(".world"));
+        if (mapFiles == null) {
+            Logger.error("An error occurred on accessing custom map folder {}", mapDir);
+            return;
+        }
+        if (mapFiles.length == 0) {
+            Logger.info("No custom maps found");
         } else {
-            Logger.error("Could not access custom map folder {}", mapDir);
+            Logger.info("{} custom map(s) found", mapFiles.length);
+        }
+        customMapsByFile.clear();
+        for (File mapFile : mapFiles) {
+            customMapsByFile.put(mapFile, new WorldMap(mapFile));
+            Logger.info("Created custom map from file: " + mapFile);
         }
     }
 

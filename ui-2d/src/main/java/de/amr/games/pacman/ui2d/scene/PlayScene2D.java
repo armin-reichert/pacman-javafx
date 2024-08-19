@@ -121,6 +121,7 @@ public class PlayScene2D extends GameScene2D {
             case MS_PACMAN -> {
                 MsPacManGame msPacManGame = (MsPacManGame) game;
                 if (msPacManGame.blueMazeBug) {
+                    // no map image available, use vector renderer
                     vectorRenderer.draw(g, game.world(), flashing, blinkingOn);
                 } else {
                     int mapNumber = msPacManGame.currentMapNumber();
