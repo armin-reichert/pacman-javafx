@@ -768,6 +768,8 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
         assets.set("palette.pale",                    Color.rgb(222, 222, 255));
         assets.set("palette.rose",                    Color.rgb(252, 187, 179));
 
+        assets.set("startpage.arrow.left",            rm.loadImage("graphics/icons/arrow-left.png"));
+        assets.set("startpage.arrow.right",           rm.loadImage("graphics/icons/arrow-right.png"));
         assets.set("startpage.button.bgColor",        Color.rgb(0, 155, 252, 0.8));
         assets.set("startpage.button.color",          Color.WHITE);
         assets.set("startpage.button.font",           rm.loadFont("fonts/emulogic.ttf", 30));

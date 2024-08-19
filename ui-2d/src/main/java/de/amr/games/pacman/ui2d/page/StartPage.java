@@ -14,12 +14,11 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -33,8 +32,6 @@ import static javafx.scene.layout.BackgroundSize.AUTO;
  * @author Armin Reichert
  */
 public class StartPage extends StackPane implements Page {
-
-    static final char ARROW_LEFT  = '\u2b98', ARROW_RIGHT = '\u2b9a';
 
     static final BackgroundSize FIT_HEIGHT = new BackgroundSize(AUTO, 1, false, true, true, false);
     static final BackgroundSize FILL       = new BackgroundSize(AUTO, AUTO, false, false, true, true);
@@ -65,12 +62,12 @@ public class StartPage extends StackPane implements Page {
             context.assets().image("pacman.startpage.image2")
         };
 
-        Button btnPrevVariant = createCarouselButton(ARROW_LEFT);
+        Button btnPrevVariant = createCarouselButton(context.assets().image("startpage.arrow.left"));
         btnPrevVariant.setOnAction(e -> context.actionHandler().selectPrevGameVariant());
         VBox left = new VBox(btnPrevVariant);
         left.setAlignment(Pos.CENTER_LEFT);
 
-        Button btnNextVariant = createCarouselButton(ARROW_RIGHT);
+        Button btnNextVariant = createCarouselButton(context.assets().image("startpage.arrow.right"));
         btnNextVariant.setOnAction(e -> context.actionHandler().selectNextGameVariant());
         VBox right = new VBox(btnNextVariant);
         right.setAlignment(Pos.CENTER_RIGHT);
@@ -94,16 +91,17 @@ public class StartPage extends StackPane implements Page {
         getChildren().add(layout);
     }
 
-    private Button createCarouselButton(char arrow) {
+    private Button createCarouselButton(Image image) {
+        ImageView icon = new ImageView(image);
+        icon.setFitHeight(64);
+        icon.setFitWidth(64);
         var button = new Button();
         // Without this, button gets input focus after being clicked with the mouse and the LEFT, RIGHT keys stop working!
         button.setFocusTraversable(false);
-        button.setStyle("-fx-text-fill: rgb(0,155,252); -fx-background-color: transparent; -fx-padding: 5");
-        button.setFont(Font.font("Sans", FontWeight.BOLD, 80));
-        button.setText(String.valueOf(arrow));
-        button.setOpacity(0.2);
-        button.setOnMouseEntered(e -> button.setOpacity(1.0));
-        button.setOnMouseExited(e -> button.setOpacity(0.2));
+        button.setGraphic(icon);
+        button.setOpacity(0.1);
+        button.setOnMouseEntered(e -> button.setOpacity(0.25));
+        button.setOnMouseExited(e -> button.setOpacity(0.1));
         return button;
     }
 
