@@ -32,7 +32,7 @@ public class PacManGames2dApp extends Application {
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         double aspect = 1.2;
         double height = 0.8 * screenSize.getHeight();
-        ui.loadAssets(true);
+        ui.loadAssets(() -> PacManGames2dUI.class, true);
         ui.createLayout(stage, aspect * height, height);
         ui.setGameScenes(createGameScenes(ui));
         ui.start();

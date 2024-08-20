@@ -44,10 +44,8 @@ import static de.amr.games.pacman.ui3d.GameParameters3D.*;
 public class PacManGames3dUI extends PacManGames2dUI {
 
     @Override
-    public void loadAssets(boolean log) {
-        super.loadAssets(false);
-
-        ResourceManager rm = this::getClass;
+    public void loadAssets(ResourceManager rm, boolean log) {
+        super.loadAssets(() -> PacManGames2dUI.class, false);
 
         var bundle = ResourceBundle.getBundle("de.amr.games.pacman.ui3d.texts.messages", getClass().getModule());
         bundles.add(bundle);

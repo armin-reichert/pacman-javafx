@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.scene.*;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -35,7 +34,7 @@ public class PacManGames3dApp extends Application {
         double aspect = screenSize.getWidth() / screenSize.getHeight();
         double height = 0.8 * screenSize.getHeight();
         double width = aspect * height;
-        ui.loadAssets(true);
+        ui.loadAssets(() -> PacManGames3dUI.class, true);
         ui.createLayout(stage, width, height);
         ui.setGameScenes(createGameScenes(ui));
         ui.start();
