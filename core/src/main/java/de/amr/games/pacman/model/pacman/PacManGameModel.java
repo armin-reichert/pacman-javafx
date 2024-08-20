@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.model;
+package de.amr.games.pacman.model.pacman;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
@@ -11,6 +11,9 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.steering.RouteBasedSteering;
@@ -76,7 +79,7 @@ public class PacManGameModel extends GameModel {
     @Override
     public void init() {
         initialLives = 3;
-        highScoreFile = new File(GAME_DIR, "highscore-pacman.xml");
+        highScoreFile = new File(USER_DIR, "highscore-pacman.xml");
     }
 
     @Override

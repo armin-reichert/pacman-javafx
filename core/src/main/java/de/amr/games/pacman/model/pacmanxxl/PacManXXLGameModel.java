@@ -2,10 +2,13 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.model;
+package de.amr.games.pacman.model.pacmanxxl;
 
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.pacman.PacManGameModel;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 
 import java.io.File;
@@ -34,7 +37,7 @@ public class PacManXXLGameModel extends PacManGameModel {
     @Override
     public void init() {
         initialLives = 3;
-        highScoreFile = new File(GAME_DIR,"highscore-pacman_xxl.xml");
+        highScoreFile = new File(USER_DIR,"highscore-pacman_xxl.xml");
         String mapPath = "/de/amr/games/pacman/maps/masonic/";
         for (int number = 1; number <= 8; ++number) {
             URL url = getClass().getResource(mapPath + "masonic_%d.world".formatted(number));

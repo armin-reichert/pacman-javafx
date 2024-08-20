@@ -9,6 +9,9 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.*;
+import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
+import de.amr.games.pacman.model.pacman.PacManGameModel;
+import de.amr.games.pacman.model.pacmanxxl.PacManXXLGameModel;
 import org.tinylog.Logger;
 
 import java.io.File;

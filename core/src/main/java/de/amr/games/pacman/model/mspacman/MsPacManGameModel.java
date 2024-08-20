@@ -2,12 +2,15 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.model;
+package de.amr.games.pacman.model.mspacman;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.MovingBonus;
@@ -62,7 +65,7 @@ public class MsPacManGameModel extends GameModel {
     @Override
     public void init() {
         initialLives = 3;
-        highScoreFile = new File(GAME_DIR, "highscore-ms_pacman.xml");
+        highScoreFile = new File(USER_DIR, "highscore-ms_pacman.xml");
     }
 
     @Override

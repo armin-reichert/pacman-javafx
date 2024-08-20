@@ -12,4 +12,7 @@ open module de.amr.games.pacman {
     exports de.amr.games.pacman.model;
     exports de.amr.games.pacman.model.actors;
     exports de.amr.games.pacman.steering;
+    exports de.amr.games.pacman.model.pacman;
+    exports de.amr.games.pacman.model.mspacman;
+    exports de.amr.games.pacman.model.pacmanxxl;
 }

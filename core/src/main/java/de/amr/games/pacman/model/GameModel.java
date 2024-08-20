@@ -34,8 +34,8 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public abstract class GameModel {
 
-    public static final File GAME_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
-    public static final File CUSTOM_MAP_DIR = new File(GAME_DIR, "maps");
+    public static final File USER_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
+    public static final File CUSTOM_MAP_DIR = new File(USER_DIR, "maps");
 
     public static final byte ARCADE_MAP_TILES_X = 28;
     public static final byte ARCADE_MAP_TILES_Y = 36;
@@ -109,51 +109,51 @@ public abstract class GameModel {
         return number;
     }
 
-    final Pulse          blinking = new Pulse(10, Pulse.OFF);
-    final byte[]         bonusSymbols = new byte[2];
-    final List<Byte>     levelCounter = new ArrayList<>();
-    final TickTimer      huntingTimer = new TickTimer("HuntingTimer");
-    final TickTimer      powerTimer = new TickTimer("PacPowerTimer");
-    final List<Ghost>    victims = new ArrayList<>();
-    final Score          score = new Score();
-    final Score          highScore = new Score();
-    final GateKeeper     gateKeeper = new GateKeeper();
+    protected final Pulse          blinking = new Pulse(10, Pulse.OFF);
+    protected final byte[]         bonusSymbols = new byte[2];
+    protected final List<Byte>     levelCounter = new ArrayList<>();
+    protected final TickTimer      huntingTimer = new TickTimer("HuntingTimer");
+    protected final TickTimer      powerTimer = new TickTimer("PacPowerTimer");
+    protected final List<Ghost>    victims = new ArrayList<>();
+    protected final Score          score = new Score();
+    protected final Score          highScore = new Score();
+    protected final GateKeeper     gateKeeper = new GateKeeper();
 
-    File                 highScoreFile;
-    int                  levelNumber; // 1=first level
-    boolean              demoLevel;
-    long                 levelStartTime;
-    boolean              playing;
-    int                  initialLives;
-    int                  lives;
+    protected File                 highScoreFile;
+    protected int                  levelNumber; // 1=first level
+    protected boolean              demoLevel;
+    protected long                 levelStartTime;
+    protected boolean              playing;
+    protected int                  initialLives;
+    protected int                  lives;
 
-    byte                 huntingPhaseIndex;
-    byte                 cruiseElroy;
-    byte                 numGhostsKilledInLevel;
-    byte                 nextBonusIndex; // -1=no bonus, 0=first, 1=second
+    protected byte                 huntingPhaseIndex;
+    protected byte                 cruiseElroy;
+    protected byte                 numGhostsKilledInLevel;
+    protected byte                 nextBonusIndex; // -1=no bonus, 0=first, 1=second
 
-    boolean              overflowBug = true;
+    protected boolean              overflowBug = true;
 
-    Pac                  pac;
-    Ghost[]              ghosts;
-    Bonus                bonus;
-    GameWorld            world;
+    protected Pac                  pac;
+    protected Ghost[]              ghosts;
+    protected Bonus                bonus;
+    protected GameWorld            world;
 
-    SimulationStepEventLog eventLog;
+    protected SimulationStepEventLog eventLog;
 
     public abstract void init();
     public abstract GameVariant variant();
     public abstract void activateNextBonus();
 
-    abstract void buildRegularLevel(int levelNumber);
-    abstract void buildDemoLevel();
-    abstract byte computeBonusSymbol();
-    abstract long huntingTicks(int levelNumber, int phaseIndex);
-    abstract boolean isPacManKillingIgnoredInDemoLevel();
-    abstract boolean isBonusReached();
-    abstract void updateLevelCounter();
+    protected abstract void buildRegularLevel(int levelNumber);
+    protected abstract void buildDemoLevel();
+    protected abstract byte computeBonusSymbol();
+    protected abstract long huntingTicks(int levelNumber, int phaseIndex);
+    protected abstract boolean isPacManKillingIgnoredInDemoLevel();
+    protected abstract boolean isBonusReached();
+    protected abstract void updateLevelCounter();
 
-    void clearLevel() {
+    protected void clearLevel() {
         levelNumber = 0;
         levelStartTime = 0;
         huntingPhaseIndex = 0;
@@ -170,7 +170,7 @@ public abstract class GameModel {
         blinking.reset();
     }
 
-    void setWorldAndCreatePopulation(GameWorld world) {
+    protected void setWorldAndCreatePopulation(GameWorld world) {
         this.world = world;
 
         bonusSymbols[0] = computeBonusSymbol();
@@ -206,20 +206,15 @@ public abstract class GameModel {
         });
     }
 
-    void setCruiseElroyEnabled(boolean enabled) {
+    protected void setCruiseElroyEnabled(boolean enabled) {
         if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
             cruiseElroy = (byte) -cruiseElroy;
         }
     }
 
-    public void setOverflowBug(boolean overflowBug) {
-        this.overflowBug = overflowBug;
-    }
-
     public GameController controller() {
         return GameController.it();
     }
-
 
     public Pac pac() {
         return pac;
@@ -377,14 +372,14 @@ public abstract class GameModel {
         eventLog = new SimulationStepEventLog();
     }
 
-    Vector2i scatterTarget(Ghost ghost) {
+    protected Vector2i scatterTarget(Ghost ghost) {
         return world.ghostScatterTile(ghost.id());
     }
 
     /*
      * Regarding the overflow bug, see http://www.donhodges.com/pacman_pinky_explanation.htm
      */
-    Vector2i chasingTarget(Ghost ghost) {
+    protected Vector2i chasingTarget(Ghost ghost) {
         return switch (ghost.id()) {
             // Blinky: attacks Pac-Man directly
             case RED_GHOST -> pac.tile();
@@ -398,7 +393,7 @@ public abstract class GameModel {
         };
     }
 
-    byte huntingSpeedPct(Ghost ghost) {
+    protected byte huntingSpeedPct(Ghost ghost) {
         GameLevel level = level(levelNumber);
         if (world.isTunnel(ghost.tile())) {
             return level.ghostSpeedTunnelPct();
@@ -545,7 +540,7 @@ public abstract class GameModel {
         eventLog.pacKilled = checkPacKilled();
     }
 
-    boolean checkPacKilled() {
+    private boolean checkPacKilled() {
         boolean pacMeetsKiller = ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
         if (demoLevel) {
             return pacMeetsKiller && !isPacManKillingIgnoredInDemoLevel();
@@ -554,7 +549,7 @@ public abstract class GameModel {
         }
     }
 
-    void checkForFood() {
+    private void checkForFood() {
         final Vector2i pacTile = pac.tile();
         if (world.hasFoodAt(pacTile)) {
             eventLog.foodFoundTile = pacTile;
@@ -598,7 +593,7 @@ public abstract class GameModel {
         }
     }
 
-    void updatePacPower() {
+    private void updatePacPower() {
         powerTimer.advance();
         if (powerTimer.remaining() == PAC_POWER_FADING_TICKS) {
             eventLog.pacStartsLosingPower = true;
@@ -625,7 +620,7 @@ public abstract class GameModel {
             || powerTimer.duration() < PAC_POWER_FADING_TICKS && powerTimer.tick() == 1;
     }
 
-    void updateBonus() {
+    private void updateBonus() {
         if (bonus.state() == Bonus.STATE_EDIBLE && pac.sameTile(bonus.entity())) {
             bonus.setEaten(BONUS_POINTS_SHOWN_TICKS);
             scorePoints(bonus.points());
@@ -637,7 +632,7 @@ public abstract class GameModel {
         }
     }
 
-    void updateHuntingTimer( ) {
+    private void updateHuntingTimer( ) {
         huntingTimer.advance();
         if (huntingTimer.hasExpired()) {
             Logger.info("Hunting timer expired, tick={}", huntingTimer.tick());
@@ -646,7 +641,7 @@ public abstract class GameModel {
         }
     }
 
-    void unlockGhosts() {
+    private void unlockGhosts() {
         Ghost blinky = ghost(RED_GHOST);
         if (blinky.inState(LOCKED)) {
             if (blinky.insideHouse()) {
