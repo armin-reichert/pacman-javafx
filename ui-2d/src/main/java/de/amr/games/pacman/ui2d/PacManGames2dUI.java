@@ -79,7 +79,6 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
 
     protected final AssetMap assets = new AssetMap();
     protected final List<ResourceBundle> bundles = new ArrayList<>();
-    protected final Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
 
     protected Stage stage;
     protected final FlashMessageView messageView = new FlashMessageView();
@@ -90,7 +89,9 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     protected EditorPage editorPage;
     protected Page currentPage;
 
-    public void create(Stage stage, double width, double height) {
+    protected Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
+
+    public void createLayout(Stage stage, double width, double height) {
         this.stage = checkNotNull(stage);
 
         for (var variant : GameVariant.values()) {
@@ -104,6 +105,7 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
 
         // first child will be replaced by page
         getChildren().addAll(new Pane(), messageView, createMutedIcon());
+
         Scene mainScene = new Scene(this, width, height);
         stage.setScene(mainScene);
 
@@ -112,10 +114,12 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
         startPage = new StartPage(this);
         startPage.gameVariantPy.bind(gameVariantPy);
 
-        gamePage = new GamePage(this, mainScene);
+        gamePage = createGamePage(mainScene);
         gamePage.sign(assets.font("font.monospaced", 9), locText("app.signature"));
+    }
 
-        createGameScenes();
+    public void setGameScenes(Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant) {
+        this.gameScenesForVariant = gameScenesForVariant;
     }
 
     public void start() {
@@ -181,37 +185,8 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
         mainScene.heightProperty().addListener(sizeListener);
     }
 
-    protected void createGameScenes() {
-        for (GameVariant variant : GameVariant.values()) {
-            switch (variant) {
-                case MS_PACMAN ->
-                    gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
-                        GameSceneID.BOOT_SCENE,   new BootScene(),
-                        GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
-                        GameSceneID.CREDIT_SCENE, new CreditScene(),
-                        GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-                        GameSceneID.CUT_SCENE_1,  new MsPacManCutScene1(),
-                        GameSceneID.CUT_SCENE_2,  new MsPacManCutScene2(),
-                        GameSceneID.CUT_SCENE_3,  new MsPacManCutScene3()
-                    )));
-                case PACMAN, PACMAN_XXL ->
-                    gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
-                        GameSceneID.BOOT_SCENE,   new BootScene(),
-                        GameSceneID.INTRO_SCENE,  new PacManIntroScene(),
-                        GameSceneID.CREDIT_SCENE, new CreditScene(),
-                        GameSceneID.PLAY_SCENE,   new PlayScene2D(),
-                        GameSceneID.CUT_SCENE_1,  new PacManCutScene1(),
-                        GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
-                        GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
-                    )));
-            }
-            gameScenesForVariant.get(variant).values().forEach(gameScene -> {
-                if (gameScene instanceof GameScene2D gameScene2D) {
-                    gameScene2D.setContext(this);
-                    gameScene2D.infoVisiblePy.bind(PY_DEBUG_INFO);
-                }
-            });
-        }
+    protected GamePage createGamePage(Scene mainScene) {
+        return new GamePage(this, mainScene);
     }
 
     private void handleGameVariantChange(GameVariant variant) {
