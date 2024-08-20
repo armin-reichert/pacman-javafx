@@ -61,7 +61,7 @@ import static java.util.function.Predicate.not;
  *
  * @author Armin Reichert
  */
-public class PacManGames2dUI extends StackPane implements GameEventListener, GameContext, ActionHandler {
+public class PacManGames2dUI implements GameEventListener, GameContext, ActionHandler {
 
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
         @Override
@@ -82,6 +82,7 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     protected final AssetMap assets = new AssetMap();
     protected final FlashMessageView messageView = new FlashMessageView();
     protected final GameClockFX clock = new GameClockFX();
+    protected final StackPane layout = new StackPane();
     protected Stage stage;
     protected StartPage startPage;
     protected GamePage gamePage;
@@ -102,9 +103,9 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
         }
 
         // first child will be replaced by page
-        getChildren().addAll(new Pane(), messageView, createMutedIcon());
+        layout.getChildren().addAll(new Pane(), messageView, createMutedIcon());
 
-        Scene mainScene = new Scene(this, width, height);
+        Scene mainScene = new Scene(layout, width, height);
         stage.setScene(mainScene);
 
         initMainScene(mainScene);
@@ -118,6 +119,10 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
 
     public void setGameScenes(Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant) {
         this.gameScenesForVariant = gameScenesForVariant;
+    }
+
+    public StackPane layout() {
+        return layout;
     }
 
     public void start() {
@@ -221,7 +226,7 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
         if (page != currentPage) {
             currentPage = page;
             currentPage.setSize(stage.getScene().getWidth(), stage.getScene().getHeight());
-            getChildren().set(0, currentPage.rootPane());
+            layout.getChildren().set(0, currentPage.rootPane());
             currentPage.rootPane().requestFocus();
             currentPage.onSelected();
         }

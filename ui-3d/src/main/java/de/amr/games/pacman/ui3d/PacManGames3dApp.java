@@ -82,8 +82,8 @@ public class PacManGames3dApp extends Application {
         for (GameVariant variant : GameVariant.values()) {
             var playScene3D = new PlayScene3D();
             playScene3D.setContext(ui);
-            playScene3D.widthProperty().bind(ui.widthProperty());
-            playScene3D.heightProperty().bind(ui.heightProperty());
+            playScene3D.widthProperty().bind(ui.layout().widthProperty());
+            playScene3D.heightProperty().bind(ui.layout().heightProperty());
             gameScenesForVariant.get(variant).put(GameSceneID.PLAY_SCENE_3D, playScene3D);
             Logger.info("Added 3D play scene for variant " + variant);
         }
