@@ -73,6 +73,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override
         protected void invalidated() {
+            Logger.info("Game variant changed to: {}", get());
             handleGameVariantChange(get());
         }
     };
@@ -200,7 +201,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (variant == GameVariant.PACMAN_XXL) {
             updateCustomMaps();
         }
-        Logger.info("Game variant changed to: {}", variant);
     }
 
     protected ObservableValue<String> stageTitleBinding() {
@@ -819,7 +819,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         assets.set("pacman.audio.game_over",          rm.url("sound/common/game-over.mp3"));
         assets.set("pacman.audio.intermission",       rm.url("sound/pacman/intermission.mp3"));
         assets.set("pacman.audio.pacman_death",       rm.url("sound/pacman/pacman_death.wav"));
-        assets.set("pacman.audio.pacman_munch",       rm.url("sound/pacman/doublemunch.wav")); //TODO improve
+        assets.set("pacman.audio.pacman_munch",       rm.url("sound/pacman/doublemunch.wav"));
         assets.set("pacman.audio.pacman_power",       rm.url("sound/pacman/ghost-turn-to-blue.mp3"));
         assets.set("pacman.audio.level_complete",     rm.url("sound/common/level-complete.mp3"));
         assets.set("pacman.audio.siren.1",            rm.url("sound/pacman/siren_1.mp3"));
