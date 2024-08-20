@@ -7,7 +7,6 @@ package de.amr.games.pacman.model.pacman;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.NavPoint;
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -48,7 +47,7 @@ import static de.amr.games.pacman.lib.NavPoint.np;
  */
 public class PacManGameModel extends GameModel {
 
-    private static final NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
+    protected static final NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
         np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
         np(18, 23), np(18, 20), np(18, 17), np(15, 14), np(12, 14), np(9, 17),
         np(6, 17), np(6, 11), np(6, 8), np(6, 4), np(1, 8), np(6, 8),
@@ -60,11 +59,13 @@ public class PacManGameModel extends GameModel {
         np(15, 32), np(12, 32), np(3, 29), np(6, 23)
     };
 
-    private static final int[] HUNTING_TICKS_1 = {420, 1200, 420, 1200, 300, 1200, 300, -1};
-    private static final int[] HUNTING_TICKS_2_TO_4 = {420, 1200, 420, 1200, 300, 61980, 1, -1};
-    private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 300, 1200, 300, 62262, 1, -1};
-    private static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {-1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
-    private static final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
+    protected static final int[] HUNTING_TICKS_1 = {420, 1200, 420, 1200, 300, 1200, 300, -1};
+    protected static final int[] HUNTING_TICKS_2_TO_4 = {420, 1200, 420, 1200, 300, 61980, 1, -1};
+    protected static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 300, 1200, 300, 62262, 1, -1};
+
+    protected static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {-1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
+    protected static final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
+    protected static final Vector2i BONUS_TILE = v2i(13, 20);
 
     private static GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
@@ -153,12 +154,13 @@ public class PacManGameModel extends GameModel {
         nextBonusIndex += 1;
         byte symbol = bonusSymbols[nextBonusIndex];
         bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
-        // in a non-Arcade style custom map, the bonus position must be taken from the terrain map
-        Vector2f bonusPosition = halfTileRightOf(
-            world.map().terrain().getTileProperty(GameWorld.PROPERTY_POS_BONUS, new Vector2i(13, 20)));
-        bonus.entity().setPosition(bonusPosition);
-        bonus.setEdible(randomInt(540, 600)); // between 9 and 10 seconds
+        bonus.entity().setPosition(halfTileRightOf(BONUS_TILE));
+        bonus.setEdible(bonusEdibleTicks());
         publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
+    }
+
+    protected int bonusEdibleTicks() {
+        return randomInt(9 * (int)FPS, 10 * (int)FPS);
     }
 
     protected void ghostHuntingBehaviour(Ghost ghost) {

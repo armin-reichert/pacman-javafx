@@ -78,7 +78,7 @@ public abstract class GameModel {
         /*21*/ new GameLevel( 90, 95, 50, 120, 100, 60, 105,   0,  0, 0, 0, 0)
     };
 
-    static GameLevel level(int levelNumber) {
+    private static GameLevel level(int levelNumber) {
         return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
     }
 
