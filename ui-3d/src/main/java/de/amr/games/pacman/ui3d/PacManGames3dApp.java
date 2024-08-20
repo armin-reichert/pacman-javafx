@@ -6,24 +6,107 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.PacManGames2dApp;
 import de.amr.games.pacman.ui2d.scene.*;
+import de.amr.games.pacman.ui2d.util.AssetMap;
+import de.amr.games.pacman.ui2d.util.ResourceManager;
+import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.application.Application;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
+import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import org.tinylog.Logger;
 
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Stream;
 
 import static de.amr.games.pacman.ui2d.GameParameters.PY_DEBUG_INFO;
 import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_ENABLED;
+import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_FLOOR_COLOR;
 
 /**
  * @author Armin Reichert
  */
 public class PacManGames3dApp extends Application {
+
+    private static void loadAssets(AssetMap assets, boolean log) {
+        // Load assets for 2D UI from other module
+        PacManGames2dApp.loadAssets(assets, false);
+
+        ResourceManager rm = () -> PacManGames3dApp.class;
+
+        assets.addBundle(ResourceBundle.getBundle("de.amr.games.pacman.ui3d.texts.messages", rm.rootClass().getModule()));
+
+        assets.set("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
+        assets.set("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
+        assets.set("model3D.pellet", new Model3D(rm.url("model3D/fruit.obj")));
+
+        assets.set("wallpaper.day",   rm.loadImage("graphics/sea-wallpaper.jpg"));
+        assets.set("wallpaper.night", rm.loadImage("graphics/sea-wallpaper-night.jpg"));
+
+        Map<String, PhongMaterial> texturesByName = new LinkedHashMap<>();
+        assets.set("floorTextures", texturesByName);
+        Stream.of("Carpet", "Rubber", "Wood").forEach(name -> {
+            var texture = new PhongMaterial();
+            texture.setBumpMap(rm.loadImage("graphics/textures/%s-bump.jpg".formatted(name.toLowerCase())));
+            texture.setDiffuseMap(rm.loadImage("graphics/textures/%s-diffuse.jpg".formatted(name.toLowerCase())));
+            texture.diffuseColorProperty().bind(PY_3D_FLOOR_COLOR);
+            texturesByName.put(name, texture);
+        });
+
+        assets.set("ghost.0.color.normal.dress",      assets.color("palette.red"));
+        assets.set("ghost.0.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.set("ghost.0.color.normal.pupils",     assets.color("palette.blue"));
+
+        assets.set("ghost.1.color.normal.dress",      assets.color("palette.pink"));
+        assets.set("ghost.1.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.set("ghost.1.color.normal.pupils",     assets.color("palette.blue"));
+
+        assets.set("ghost.2.color.normal.dress",      assets.color("palette.cyan"));
+        assets.set("ghost.2.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.set("ghost.2.color.normal.pupils",     assets.color("palette.blue"));
+
+        assets.set("ghost.3.color.normal.dress",      assets.color("palette.orange"));
+        assets.set("ghost.3.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.set("ghost.3.color.normal.pupils",     assets.color("palette.blue"));
+
+        assets.set("ghost.color.frightened.dress",    assets.color("palette.blue"));
+        assets.set("ghost.color.frightened.eyeballs", assets.color("palette.rose"));
+        assets.set("ghost.color.frightened.pupils",   assets.color("palette.rose"));
+
+        assets.set("ghost.color.flashing.dress",      assets.color("palette.pale"));
+        assets.set("ghost.color.flashing.eyeballs",   assets.color("palette.rose"));
+        assets.set("ghost.color.flashing.pupils",     assets.color("palette.red"));
+
+        assets.set("ms_pacman.color.head",            Color.rgb(255, 255, 0));
+        assets.set("ms_pacman.color.eyes",            Color.rgb(33, 33, 33));
+        assets.set("ms_pacman.color.palate",          Color.rgb(240, 180, 160));
+        assets.set("ms_pacman.color.boobs",           Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
+        assets.set("ms_pacman.color.hairbow",         Color.rgb(255, 0, 0));
+        assets.set("ms_pacman.color.hairbow.pearls",  Color.rgb(33, 33, 255));
+
+        assets.set("pacman.color.head",               Color.rgb(255, 255, 0));
+        assets.set("pacman.color.eyes",               Color.rgb(33, 33, 33));
+        assets.set("pacman.color.palate",             Color.rgb(240, 180, 160));
+
+        if (log) {
+            Logger.info("Assets loaded: {}", assets.summary(List.of(
+                    new Pair<>(Model3D.class,"3D models"),
+                    new Pair<>(Image.class, "images"),
+                    new Pair<>(Font.class, "fonts"),
+                    new Pair<>(Color.class, "colors"),
+                    new Pair<>(AudioClip.class, "audio clips")
+            )));
+        }
+    }
+
 
     private final PacManGames3dUI ui = new PacManGames3dUI();
 
@@ -34,7 +117,7 @@ public class PacManGames3dApp extends Application {
         for (var variant : GameVariant.values()) {
             GameController.it().gameModel(variant).addGameEventListener(ui);
         }
-        ui.loadAssets(() -> PacManGames3dUI.class, true);
+        loadAssets(ui.assets(), true);
         ui.createLayout(stage, computeSize());
         ui.setGameScenes(createGameScenes(ui));
         ui.start();
