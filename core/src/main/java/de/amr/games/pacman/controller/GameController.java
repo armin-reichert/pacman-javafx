@@ -73,13 +73,14 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         return game;
     }
 
-    public GameModel gameModel(GameVariant variant) {
+    @SuppressWarnings("unchecked")
+    public <T extends GameModel> T gameModel(GameVariant variant) {
         checkNotNull(variant);
         if (!models.containsKey(variant)) {
             Logger.error("No game model for variant {} exists", variant);
             throw new IllegalArgumentException();
         }
-        return models.get(variant);
+        return (T) models.get(variant);
     }
 
     public void selectGameVariant(GameVariant variant) {

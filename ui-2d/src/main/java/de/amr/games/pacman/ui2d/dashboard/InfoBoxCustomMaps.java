@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacmanxxl.PacManXXLGameModel;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameParameters;
@@ -34,6 +35,16 @@ public class InfoBoxCustomMaps extends InfoBox {
         var cbCustomMapEnabled = checkBox("Use Custom Maps", context.actionHandler()::updateCustomMaps);
         cbCustomMapEnabled.selectedProperty().bindBidirectional(GameParameters.PY_CUSTOM_MAPS_ENABLED);
 
+        //TODO check where this belongs
+        GameParameters.PY_CUSTOM_MAPS_ENABLED.addListener((py, ov, nv) -> {
+           PacManXXLGameModel xxlGame = context.gameController().gameModel(GameVariant.PACMAN_XXL);
+           xxlGame.setCustomMapsEnabled(nv);
+           if (nv) {
+               xxlGame.loadCustomMaps();
+               reloadCustomMapsAndUpdateTableView();
+           }
+        });
+
         var btnReload = new Button("Reload");
         btnReload.setOnAction(e -> reloadCustomMapsAndUpdateTableView());
         addRow(cbCustomMapEnabled, btnReload);
@@ -56,12 +67,11 @@ public class InfoBoxCustomMaps extends InfoBox {
 
     private void reloadCustomMapsAndUpdateTableView() {
         ObservableList<MapInfo> items = FXCollections.observableArrayList();
-        context.actionHandler().updateCustomMaps();
-        if (context.game() instanceof PacManXXLGameModel xxlGame) {
-            for (File file  : xxlGame.customMapsByFile().keySet().stream().sorted().toList()) {
-                WorldMap map = xxlGame.customMapsByFile().get(file);
-                items.add(new MapInfo(file.getName(), map.terrain().numRows(), map.terrain().numCols()));
-            }
+        PacManXXLGameModel xxlGame = context.gameController().gameModel(GameVariant.PACMAN_XXL);
+        xxlGame.loadCustomMaps();
+        for (File file  : xxlGame.customMapsByFile().keySet().stream().sorted().toList()) {
+            WorldMap map = xxlGame.customMapsByFile().get(file);
+            items.add(new MapInfo(file.getName(), map.terrain().numRows(), map.terrain().numCols()));
         }
         mapTable.setItems(items);
     }

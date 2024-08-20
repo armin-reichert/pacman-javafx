@@ -38,6 +38,7 @@ public class PacManXXLGameModel extends PacManGameModel {
 
     private final WorldMap[] masonicMaps = new WorldMap[8];
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
+    private boolean customMapsEnabled;
 
     @Override
     public void init() {
@@ -59,7 +60,7 @@ public class PacManXXLGameModel extends PacManGameModel {
     @Override
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
-        int numCustomMaps = customMapsByFile().size();
+        int numCustomMaps = customMapsEnabled ? customMapsByFile().size() : 0;
         int mapIndex = levelNumber - 1;
         if (mapIndex < numCustomMaps) {
             //TODO improve
@@ -102,6 +103,10 @@ public class PacManXXLGameModel extends PacManGameModel {
     public List<WorldMap> customMaps() {
         var customMapFiles = customMapsByFile.keySet().stream().sorted().toList();
         return customMapFiles.stream().map(customMapsByFile::get).toList();
+    }
+
+    public void setCustomMapsEnabled(boolean customMapsEnabled) {
+        this.customMapsEnabled = customMapsEnabled;
     }
 
     public void loadCustomMaps() {
