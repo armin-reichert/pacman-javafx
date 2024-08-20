@@ -36,7 +36,7 @@ import static de.amr.games.pacman.ui2d.GameParameters.PY_DEBUG_INFO;
  */
 public class PacManGames2dApp extends Application {
 
-    public static void loadAssets(AssetMap assets, boolean log) {
+    public static void loadAssets(AssetMap assets) {
         ResourceManager rm = () -> PacManGames2dApp.class;
 
         assets.addBundle(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", rm.rootClass().getModule()));
@@ -161,15 +161,6 @@ public class PacManGames2dApp extends Application {
         assets.set("pacman_xxl.helpButton.icon",      rm.loadImage("graphics/icons/help-blue-64.png"));
         assets.set("pacman_xxl.startpage.image",      rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
 
-        if (log) {
-            Logger.info("Assets loaded: {}", assets.summary(List.of(
-                    new Pair<>(Image.class, "images"),
-                    new Pair<>(Font.class, "fonts"),
-                    new Pair<>(Color.class, "colors"),
-                    new Pair<>(AudioClip.class, "audio clips")
-            )));
-        }
-
         GameSounds.setAssets(assets);
     }
 
@@ -182,7 +173,13 @@ public class PacManGames2dApp extends Application {
         for (var variant : GameVariant.values()) {
             GameController.it().gameModel(variant).addGameEventListener(ui);
         }
-        loadAssets(ui.assets(), true);
+        loadAssets(ui.assets());
+        Logger.info("Assets loaded: {}", ui.assets().summary(List.of(
+            new Pair<>(Image.class, "images"),
+            new Pair<>(Font.class, "fonts"),
+            new Pair<>(Color.class, "colors"),
+            new Pair<>(AudioClip.class, "audio clips")
+        )));
         ui.createLayout(stage, computeSize());
         ui.setGameScenes(createGameScenes(ui));
         ui.start();

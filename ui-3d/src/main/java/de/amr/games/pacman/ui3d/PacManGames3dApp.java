@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.PacManGames2dApp;
 import de.amr.games.pacman.ui2d.scene.*;
 import de.amr.games.pacman.ui2d.util.AssetMap;
@@ -36,9 +37,9 @@ import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_FLOOR_COLOR;
  */
 public class PacManGames3dApp extends Application {
 
-    private static void loadAssets(AssetMap assets, boolean log) {
+    private static void loadAssets(AssetMap assets) {
         // Load assets for 2D UI from other module
-        PacManGames2dApp.loadAssets(assets, false);
+        PacManGames2dApp.loadAssets(assets);
 
         ResourceManager rm = () -> PacManGames3dApp.class;
 
@@ -96,17 +97,8 @@ public class PacManGames3dApp extends Application {
         assets.set("pacman.color.eyes",               Color.rgb(33, 33, 33));
         assets.set("pacman.color.palate",             Color.rgb(240, 180, 160));
 
-        if (log) {
-            Logger.info("Assets loaded: {}", assets.summary(List.of(
-                    new Pair<>(Model3D.class,"3D models"),
-                    new Pair<>(Image.class, "images"),
-                    new Pair<>(Font.class, "fonts"),
-                    new Pair<>(Color.class, "colors"),
-                    new Pair<>(AudioClip.class, "audio clips")
-            )));
-        }
+        GameSounds.setAssets(assets);
     }
-
 
     private final PacManGames3dUI ui = new PacManGames3dUI();
 
@@ -117,7 +109,14 @@ public class PacManGames3dApp extends Application {
         for (var variant : GameVariant.values()) {
             GameController.it().gameModel(variant).addGameEventListener(ui);
         }
-        loadAssets(ui.assets(), true);
+        loadAssets(ui.assets());
+        Logger.info("Assets loaded: {}", ui.assets().summary(List.of(
+            new Pair<>(Model3D.class,"3D models"),
+            new Pair<>(Image.class, "images"),
+            new Pair<>(Font.class, "fonts"),
+            new Pair<>(Color.class, "colors"),
+            new Pair<>(AudioClip.class, "audio clips")
+        )));
         ui.createLayout(stage, computeSize());
         ui.setGameScenes(createGameScenes(ui));
         ui.start();
