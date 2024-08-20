@@ -18,7 +18,8 @@ import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.rendering.*;
-import de.amr.games.pacman.ui2d.scene.*;
+import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -26,6 +27,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -123,14 +125,8 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     }
 
     public void start() {
-        //TODO this does not work yet correctly
-        Dimension2D minSize = DecoratedCanvas.computeSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y, 1);
-        stage.setMinWidth(minSize.getWidth());
-        stage.setMinHeight(minSize.getHeight());
 
-        // select game variant of current game model
-        gameVariantPy.set(game().variant());
-        GameSounds.gameVariantProperty().bind(gameVariantPy);
+        // Configure game clock
         clock.setPauseableCallback(() -> {
             try {
                 gameController().update();
@@ -154,9 +150,18 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
             }
         });
         gameController().setClock(clock);
-        selectStartPage();
-        bindStageTitle();
+
+        // select game variant of current game model
+        gameVariantPy.set(game().variant());
+        GameSounds.gameVariantProperty().bind(gameVariantPy);
+
+        stage.titleProperty().bind(stageTitleBinding());
+        //TODO this does not work yet correctly
+        Dimension2D minSize = DecoratedCanvas.computeSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y, 1);
+        stage.setMinWidth(minSize.getWidth());
+        stage.setMinHeight(minSize.getHeight());
         stage.centerOnScreen();
+        stage.setOnShowing(e-> selectStartPage());
         stage.show();
     }
 
@@ -197,14 +202,14 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
         Logger.info("Game variant changed to: {}", variant);
     }
 
-    protected void bindStageTitle() {
-        stage.titleProperty().bind(Bindings.createStringBinding(
+    protected ObservableValue<String> stageTitleBinding() {
+        return Bindings.createStringBinding(
             () -> {
                 String gameVariantPart = "app.title." + gameVariantPy.get().resourceKey();
                 String pausedPart = clock.pausedPy.get() ? ".paused" : "";
                 return locText(gameVariantPart + pausedPart, "2D");
             },
-            clock.pausedPy, gameVariantPy));
+            clock.pausedPy, gameVariantPy);
     }
 
     protected ImageView createMutedIcon() {
@@ -494,7 +499,7 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
 
     @Override
     public void quitMapEditor(TileMapEditor editor) {
-        editor.showConfirmation(editor::saveMapFileAs, this::bindStageTitle);
+        editor.showConfirmation(editor::saveMapFileAs, () -> stage.titleProperty().bind(stageTitleBinding()));
         editor.stop();
         updateCustomMaps();
         reboot();
@@ -843,5 +848,7 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
                 new Pair<>(AudioClip.class, "audio clips")
             )));
         }
+
+        GameSounds.setAssets(assets);
     }
 }

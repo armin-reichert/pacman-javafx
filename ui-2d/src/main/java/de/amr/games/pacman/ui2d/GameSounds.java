@@ -25,7 +25,7 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class GameSounds {
 
-    private static final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>() {
+    private static final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(GameVariant.PACMAN) {
         @Override
         protected void invalidated() {
             loadSoundsForCurrentGameVariant();
@@ -57,7 +57,7 @@ public class GameSounds {
     private static Siren siren;
     private static MediaPlayer voice;
 
-    public static void init(AssetMap assets) {
+    public static void setAssets(AssetMap assets) {
         GameSounds.assets = checkNotNull(assets);
     }
 

@@ -38,7 +38,6 @@ public class PacManGames3dApp extends Application {
         ui.loadAssets(true);
         ui.createLayout(stage, width, height);
         ui.setGameScenes(createGameScenes(ui));
-        GameSounds.init(ui.assets());
         ui.start();
         PY_3D_ENABLED.set(true);
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
