@@ -120,8 +120,8 @@ public class PlayScene3D implements GameScene {
         context.setScoreVisible(true);
         scores3D.fontPy.set(context.assets().font("font.arcade", 8));
         perspectivePy.bind(PY_3D_PERSPECTIVE);
-        pickerGameOver = Picker.fromBundle(context.bundles().getLast(), "game.over");
-        pickerLevelComplete = Picker.fromBundle(context.bundles().getLast(), "level.complete");
+        pickerGameOver = Picker.fromBundle(context.assets().bundles().getLast(), "game.over");
+        pickerLevelComplete = Picker.fromBundle(context.assets().bundles().getLast(), "level.complete");
         Logger.info("3D play scene initialized. {}", this);
     }
 

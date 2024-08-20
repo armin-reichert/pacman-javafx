@@ -15,9 +15,7 @@ import de.amr.games.pacman.ui2d.util.AssetMap;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
 import javafx.beans.property.ObjectProperty;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 /**
  * @author Armin Reichert
@@ -55,8 +53,6 @@ public interface GameContext {
     AssetMap assets();
 
     GameSpriteSheet spriteSheet(GameVariant variant);
-
-    List<ResourceBundle> bundles();
 
     /**
      * Returns a translated text (for the current locale).

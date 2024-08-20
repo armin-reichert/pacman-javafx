@@ -11,9 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Pair;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -21,30 +19,15 @@ import java.util.stream.Stream;
  */
 public class AssetMap {
 
+    private final List<ResourceBundle> bundles = new ArrayList<>();
     private final Map<String, Object> map = new HashMap<>();
 
-    public long countEntriesOfType(Class<?> clazz) {
-        long count = map.values().stream().filter(val -> val.getClass().isAssignableFrom(clazz)).count();
-        for (var value : map.values()) {
-            if (value instanceof List<?> list) {
-                count += list.stream().filter(val -> val.getClass().isAssignableFrom(clazz)).count();
-            }
-        }
-        return count;
+    public void addBundle(ResourceBundle bundle) {
+        bundles.add(bundle);
     }
 
-    public String summary(List<Pair<Class<?>, String>> pairs) {
-        StringBuilder sb = new StringBuilder();
-        int i = 0;
-        for (var pair : pairs) {
-            long count = countEntriesOfType(pair.getKey());
-            sb.append(pair.getValue()).append(" (").append(count).append(")");
-            if (i < pairs.size() - 1) {
-                sb.append(", ");
-            }
-            i += 1;
-        }
-        return sb.toString();
+    public List<ResourceBundle> bundles() {
+        return bundles;
     }
 
     public void set(String key, Object value) {
@@ -99,5 +82,29 @@ public class AssetMap {
 
     public Stream<AudioClip> audioClips() {
         return map.values().stream().filter(AudioClip.class::isInstance).map(AudioClip.class::cast);
+    }
+
+    public long countEntriesOfType(Class<?> clazz) {
+        long count = map.values().stream().filter(val -> val.getClass().isAssignableFrom(clazz)).count();
+        for (var value : map.values()) {
+            if (value instanceof List<?> list) {
+                count += list.stream().filter(val -> val.getClass().isAssignableFrom(clazz)).count();
+            }
+        }
+        return count;
+    }
+
+    public String summary(List<Pair<Class<?>, String>> pairs) {
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for (var pair : pairs) {
+            long count = countEntriesOfType(pair.getKey());
+            sb.append(pair.getValue()).append(" (").append(count).append(")");
+            if (i < pairs.size() - 1) {
+                sb.append(", ");
+            }
+            i += 1;
+        }
+        return sb.toString();
     }
 }

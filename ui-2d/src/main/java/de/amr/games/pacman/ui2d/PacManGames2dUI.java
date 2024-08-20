@@ -80,17 +80,13 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible");
 
     protected final AssetMap assets = new AssetMap();
-    protected final List<ResourceBundle> bundles = new ArrayList<>();
-
-    protected Stage stage;
     protected final FlashMessageView messageView = new FlashMessageView();
     protected final GameClockFX clock = new GameClockFX();
-
+    protected Stage stage;
     protected StartPage startPage;
     protected GamePage gamePage;
     protected EditorPage editorPage;
     protected Page currentPage;
-
     protected Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
 
     public void createLayout(Stage stage, double width, double height) {
@@ -271,14 +267,9 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<ResourceBundle> bundles() {
-        return bundles;
-    }
-
-    @Override
     public String locText(String keyOrPattern, Object... args) {
         checkNotNull(keyOrPattern);
-        for (var bundle : bundles) {
+        for (var bundle : assets.bundles()) {
             if (bundle.containsKey(keyOrPattern)) {
                 return MessageFormat.format(bundle.getString(keyOrPattern), args);
             }
@@ -716,7 +707,8 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     // -----------------------------------------------------------------------------------------------------------------
 
     public void loadAssets(ResourceManager rm, boolean log) {
-        bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", rm.rootClass().getModule()));
+
+        assets.addBundle(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", rm.rootClass().getModule()));
 
         // Dashboard
 

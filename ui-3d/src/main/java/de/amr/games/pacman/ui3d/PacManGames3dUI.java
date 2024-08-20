@@ -48,7 +48,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
         // Load assets for 2D UI from other module
         super.loadAssets(() -> PacManGames2dUI.class, false);
 
-        bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui3d.texts.messages", rm.rootClass().getModule()));
+        assets.addBundle(ResourceBundle.getBundle("de.amr.games.pacman.ui3d.texts.messages", rm.rootClass().getModule()));
 
         assets.set("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
         assets.set("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
