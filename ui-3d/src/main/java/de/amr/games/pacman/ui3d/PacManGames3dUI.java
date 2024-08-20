@@ -114,8 +114,10 @@ public class PacManGames3dUI extends PacManGames2dUI {
     }
 
     @Override
-    protected GamePage3D createGamePage(Scene mainScene) {
-        return new GamePage3D(this, mainScene);
+    protected GamePage3D createGamePage(Scene parentScene) {
+        var gamePage = new GamePage3D(this, parentScene);
+        gamePage.sign(assets.font("font.monospaced", 9), locText("app.signature"));
+        return gamePage;
     }
 
     @Override

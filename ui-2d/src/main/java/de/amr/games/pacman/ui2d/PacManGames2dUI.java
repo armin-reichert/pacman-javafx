@@ -83,7 +83,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected final AssetMap assets = new AssetMap();
     protected final FlashMessageView messageView = new FlashMessageView();
     protected final GameClockFX clock = new GameClockFX();
-    protected final StackPane layout = new StackPane();
+    protected final StackPane sceneRoot = new StackPane();
     protected Stage stage;
     protected StartPage startPage;
     protected GamePage gamePage;
@@ -93,25 +93,38 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     public void createLayout(Stage stage, Dimension2D size) {
         this.stage = checkNotNull(stage);
-
-        // Touch all game keys such that they get registered with keyboard
-        for (var gameKey : GameKey.values()) {
-            Logger.debug("Game key '{}' registered", gameKey);
-        }
-
-        // first child will be replaced by page
-        layout.getChildren().addAll(new Pane(), messageView, createMutedIcon());
-
-        Scene mainScene = new Scene(layout, size.getWidth(), size.getHeight());
-        stage.setScene(mainScene);
-
-        initMainScene(mainScene);
-
+        sceneRoot.getChildren().addAll(new Pane(), messageView, createMutedIcon());
+        stage.setScene(createMainScene(size));
         startPage = new StartPage(this);
         startPage.gameVariantPy.bind(gameVariantPy);
+        gamePage = createGamePage(stage.getScene());
+    }
 
-        gamePage = createGamePage(mainScene);
-        gamePage.sign(assets.font("font.monospaced", 9), locText("app.signature"));
+    protected Scene createMainScene(Dimension2D size) {
+        Scene mainScene = new Scene(sceneRoot, size.getWidth(), size.getHeight());
+        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, Keyboard::onKeyPressed);
+        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, Keyboard::onKeyReleased);
+        mainScene.setOnKeyPressed(e -> {
+            if (GameKey.FULLSCREEN.pressed()) {
+                stage.setFullScreen(true);
+            } else if (GameKey.MUTE.pressed()) {
+                GameSounds.toggleMuted();
+            } else {
+                currentPage.handleKeyboardInput(this);
+            }
+        });
+        mainScene.setOnContextMenuRequested(e -> {
+            currentPage.handleContextMenuRequest(e);
+            e.consume();
+        });
+        ChangeListener<Number> sizeListener = (py,ov,nv) -> {
+            if (currentPage != null) {
+                currentPage.setSize(mainScene.getWidth(), mainScene.getHeight());
+            }
+        };
+        mainScene.widthProperty().addListener(sizeListener);
+        mainScene.heightProperty().addListener(sizeListener);
+        return mainScene;
     }
 
     public void setGameScenes(Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant) {
@@ -119,10 +132,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     public StackPane layout() {
-        return layout;
+        return sceneRoot;
     }
 
     public void start() {
+        // Touch all game keys such that they get registered with keyboard
+        for (var gameKey : GameKey.values()) {
+            Logger.debug("Game key '{}' registered", gameKey);
+        }
 
         // Configure game clock
         clock.setPauseableCallback(() -> {
@@ -163,33 +180,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         stage.show();
     }
 
-    protected void initMainScene(Scene mainScene) {
-        mainScene.addEventFilter(KeyEvent.KEY_PRESSED, Keyboard::onKeyPressed);
-        mainScene.addEventFilter(KeyEvent.KEY_RELEASED, Keyboard::onKeyReleased);
-        mainScene.setOnKeyPressed(e -> {
-            if (GameKey.FULLSCREEN.pressed()) {
-                stage.setFullScreen(true);
-            } else if (GameKey.MUTE.pressed()) {
-                GameSounds.toggleMuted();
-            } else {
-                currentPage.handleKeyboardInput(this);
-            }
-        });
-        mainScene.setOnContextMenuRequested(e -> {
-            currentPage.handleContextMenuRequest(e);
-            e.consume();
-        });
-        ChangeListener<Number> sizeListener = (py,ov,nv) -> {
-            if (currentPage != null) {
-                currentPage.setSize(mainScene.getWidth(), mainScene.getHeight());
-            }
-        };
-        mainScene.widthProperty().addListener(sizeListener);
-        mainScene.heightProperty().addListener(sizeListener);
-    }
-
-    protected GamePage createGamePage(Scene mainScene) {
-        return new GamePage(this, mainScene);
+    protected GamePage createGamePage(Scene parentScene) {
+        var gamePage = new GamePage(this, parentScene);
+        gamePage.sign(assets.font("font.monospaced", 9), locText("app.signature"));
+        return gamePage;
     }
 
     private void handleGameVariantChange(GameVariant variant) {
@@ -222,7 +216,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         if (page != currentPage) {
             currentPage = page;
             currentPage.setSize(stage.getScene().getWidth(), stage.getScene().getHeight());
-            layout.getChildren().set(0, currentPage.rootPane());
+            sceneRoot.getChildren().set(0, currentPage.rootPane());
             currentPage.rootPane().requestFocus();
             currentPage.onSelected();
         }
