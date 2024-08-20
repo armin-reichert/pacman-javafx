@@ -91,12 +91,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected Page currentPage;
     protected Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
 
-    public void createLayout(Stage stage, double width, double height) {
+    public void createLayout(Stage stage, Dimension2D size) {
         this.stage = checkNotNull(stage);
-
-        for (var variant : GameVariant.values()) {
-            gameController().gameModel(variant).addGameEventListener(this);
-        }
 
         // Touch all game keys such that they get registered with keyboard
         for (var gameKey : GameKey.values()) {
@@ -106,7 +102,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         // first child will be replaced by page
         layout.getChildren().addAll(new Pane(), messageView, createMutedIcon());
 
-        Scene mainScene = new Scene(layout, width, height);
+        Scene mainScene = new Scene(layout, size.getWidth(), size.getHeight());
         stage.setScene(mainScene);
 
         initMainScene(mainScene);
@@ -504,7 +500,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void updateCustomMaps() {
-        PacManXXLGameModel xxlGame = (PacManXXLGameModel) gameController().gameModel(GameVariant.PACMAN_XXL);
+        PacManXXLGameModel xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
         xxlGame.loadCustomMaps();
         Logger.info("Custom maps: {}", xxlGame.customMaps());
         //TODO dashboard should be updated too!

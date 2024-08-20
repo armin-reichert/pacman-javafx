@@ -8,6 +8,7 @@ import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.scene.*;
 import javafx.application.Application;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -29,11 +30,11 @@ public class PacManGames2dApp extends Application {
     public void start(Stage stage) {
         Logger.info("JavaFX version:   {}", System.getProperty("javafx.runtime.version"));
         GameController.it().selectGameVariant(GameVariant.PACMAN);
-        Rectangle2D screenSize = Screen.getPrimary().getBounds();
-        double aspect = 1.2;
-        double height = 0.8 * screenSize.getHeight();
+        for (var variant : GameVariant.values()) {
+            GameController.it().gameModel(variant).addGameEventListener(ui);
+        }
         ui.loadAssets(() -> PacManGames2dUI.class, true);
-        ui.createLayout(stage, aspect * height, height);
+        ui.createLayout(stage, computeSize());
         ui.setGameScenes(createGameScenes(ui));
         ui.start();
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
@@ -42,6 +43,13 @@ public class PacManGames2dApp extends Application {
     @Override
     public void stop() {
         ui.gameClock().stop();
+    }
+
+    private Dimension2D computeSize() {
+        Rectangle2D screenSize = Screen.getPrimary().getBounds();
+        double aspect = 1.2;
+        double height = 0.8 * screenSize.getHeight();
+        return new Dimension2D(aspect * height, height);
     }
 
     private Map<GameVariant, Map<GameSceneID, GameScene>> createGameScenes(PacManGames2dUI ui) {
