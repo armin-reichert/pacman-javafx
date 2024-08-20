@@ -7,6 +7,7 @@ package de.amr.games.pacman.model.pacman;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.NavPoint;
+import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -65,7 +66,7 @@ public class PacManGameModel extends GameModel {
 
     protected static final byte[] BONUS_SYMBOLS_BY_LEVEL_NUMBER = {-1, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6};
     protected static final byte[] BONUS_VALUE_FACTORS = {1, 3, 5, 7, 10, 20, 30, 50};
-    protected static final Vector2i BONUS_TILE = v2i(13, 20);
+    protected static final Vector2f BONUS_POS = halfTileRightOf(v2i(13, 20));
 
     private static GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
@@ -154,7 +155,7 @@ public class PacManGameModel extends GameModel {
         nextBonusIndex += 1;
         byte symbol = bonusSymbols[nextBonusIndex];
         bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
-        bonus.entity().setPosition(halfTileRightOf(BONUS_TILE));
+        bonus.entity().setPosition(BONUS_POS);
         bonus.setEdible(bonusEdibleTicks());
         publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
     }

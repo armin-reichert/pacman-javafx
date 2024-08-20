@@ -6,7 +6,6 @@ package de.amr.games.pacman.model.pacmanxxl;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Globals;
-import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
@@ -18,8 +17,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import static de.amr.games.pacman.lib.Globals.halfTileRightOf;
 
 /**
  * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only
@@ -80,10 +77,12 @@ public class PacManXXLGameModel extends PacManGameModel {
         byte symbol = bonusSymbols[nextBonusIndex];
         bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         // in a non-Arcade style custom map, the bonus position must be taken from the terrain map
-        Vector2f bonusPosition = halfTileRightOf(
-            world.map().terrain().getTileProperty(GameWorld.PROPERTY_POS_BONUS, BONUS_TILE));
-        bonus.entity().setPosition(bonusPosition);
-        //TODO in large maps this could be too short
+        if (world.map().terrain().hasProperty(GameWorld.PROPERTY_POS_BONUS)) {
+            bonus.entity().setPosition(world.map().terrain().getProperty(GameWorld.PROPERTY_POS_BONUS));
+        } else {
+            bonus.entity().setPosition(BONUS_POS);
+        }
+        //TODO in large maps this could be too short:
         bonus.setEdible(bonusEdibleTicks());
         publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
     }
