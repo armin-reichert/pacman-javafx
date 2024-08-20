@@ -47,7 +47,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     public void loadAssets(ResourceManager rm, boolean log) {
         super.loadAssets(() -> PacManGames2dUI.class, false);
 
-        var bundle = ResourceBundle.getBundle("de.amr.games.pacman.ui3d.texts.messages", getClass().getModule());
+        var bundle = ResourceBundle.getBundle("de.amr.games.pacman.ui3d.texts.messages", rm.rootClass().getModule());
         bundles.add(bundle);
 
         assets.set("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));

@@ -716,7 +716,7 @@ public class PacManGames2dUI extends StackPane implements GameEventListener, Gam
     // -----------------------------------------------------------------------------------------------------------------
 
     public void loadAssets(ResourceManager rm, boolean log) {
-        bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", rm.getClass().getModule()));
+        bundles.add(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", rm.rootClass().getModule()));
 
         // Dashboard
 

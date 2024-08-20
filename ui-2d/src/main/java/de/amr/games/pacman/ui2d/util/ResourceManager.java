@@ -37,9 +37,9 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
 public interface ResourceManager {
 
     /**
-     * @return the class relative to which resources are loaded if the path does not start with '/'
+     * @return class relative to which resources are loaded if the path does not start with '/'
      */
-    Class<?> getResourceRootClass();
+    Class<?> rootClass();
 
     /**
      * Creates a URL from a resource path.
@@ -49,28 +49,25 @@ public interface ResourceManager {
      */
     default URL url(String path) {
         checkNotNull(path);
-        URL url = getResourceRootClass().getResource(path);
+        URL url = rootClass().getResource(path);
         if (url == null) {
             throw new MissingResourceException(
-                "Resource '%s' not found relative to class '%s'".formatted(path, getResourceRootClass().getName()),
-                getResourceRootClass().getName(), path);
+                "Resource '%s' not found relative to class '%s'".formatted(path, rootClass().getName()),
+                rootClass().getName(), path);
         }
         return url;
     }
 
     /**
-     * @param path path to resource
+     * @param path path to audio file
      * @return audio clip from resource addressed by this path
      */
     default AudioClip loadAudioClip(String path) {
-        var url = url(path);
-        var clip = new AudioClip(url.toExternalForm());
-        Logger.info("Audio clip loaded: {}", url);
-        return clip;
+        return new AudioClip(url(path).toExternalForm());
     }
 
     /**
-     * @param path path to resource
+     * @param path path to font file
      * @param size    font size (must be a positive number)
      * @return font loaded from resource addressed by this path. If no such font can be loaded, a default font is returned
      */
@@ -81,18 +78,17 @@ public interface ResourceManager {
         var url = url(path);
         var font = Font.loadFont(url.toExternalForm(), size);
         if (font == null) {
-            Logger.error("Font with URL '{}' could not be loaded", url);
+            Logger.error("Font could not be loaded from URL '{}' ", url);
             return Font.font(Font.getDefault().getFamily(), size);
         }
         return font;
     }
 
     /**
-     * @param path path to image. If path has no leading '/' the resource managers root class
+     * @param path path to image file.
      * @return image loaded from resource addressed by this path.
      */
     default Image loadImage(String path) {
-        var url = url(path);
-        return new Image(url.toExternalForm());
+        return new Image(url(path).toExternalForm());
     }
 }
