@@ -131,7 +131,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         this.gameScenesForVariant = gameScenesForVariant;
     }
 
-    public StackPane layout() {
+    public StackPane rootPane() {
         return sceneRoot;
     }
 
