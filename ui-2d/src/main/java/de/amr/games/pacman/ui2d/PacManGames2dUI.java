@@ -504,17 +504,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void updateCustomMaps() {
-        gameController().loadCustomMaps();
-        var dict = gameController().customMapsByFile();
-        if (game().variant() == GameVariant.PACMAN_XXL) {
-            PacManXXLGameModel game = (PacManXXLGameModel) game();
-            if (PY_CUSTOM_MAPS_ENABLED.get()) {
-                game.setCustomMaps(dict.keySet().stream().sorted().map(dict::get).toList());
-            } else {
-                game.setCustomMaps(Collections.emptyList());
-            }
-            Logger.info("Custom maps: {}", game.customMaps());
-        }
+        PacManXXLGameModel xxlGame = (PacManXXLGameModel) gameController().gameModel(GameVariant.PACMAN_XXL);
+        xxlGame.loadCustomMaps();
+        Logger.info("Custom maps: {}", xxlGame.customMaps());
+        //TODO dashboard should be updated too!
     }
 
     @Override

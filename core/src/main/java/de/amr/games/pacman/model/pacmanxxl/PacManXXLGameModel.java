@@ -7,16 +7,19 @@ package de.amr.games.pacman.model.pacmanxxl;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.StaticBonus;
 import de.amr.games.pacman.model.pacman.PacManGameModel;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
+import org.tinylog.Logger;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only
@@ -34,7 +37,7 @@ public class PacManXXLGameModel extends PacManGameModel {
     }
 
     private final WorldMap[] masonicMaps = new WorldMap[8];
-    private List<WorldMap> customMaps = new ArrayList<>();
+    private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
 
     @Override
     public void init() {
@@ -45,6 +48,7 @@ public class PacManXXLGameModel extends PacManGameModel {
             URL url = getClass().getResource(mapPath + "masonic_%d.world".formatted(number));
             masonicMaps[number-1] = new WorldMap(url);
         }
+        loadCustomMaps();
     }
 
     @Override
@@ -55,10 +59,13 @@ public class PacManXXLGameModel extends PacManGameModel {
     @Override
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
-        int numCustomMaps = customMaps.size();
+        int numCustomMaps = customMapsByFile().size();
         int mapIndex = levelNumber - 1;
         if (mapIndex < numCustomMaps) {
-            setWorldAndCreatePopulation(createWorld(customMaps.get(mapIndex)));
+            //TODO improve
+            var customMapFiles = customMapsByFile.keySet().stream().sorted().toList();
+            WorldMap map = customMapsByFile.get(customMapFiles.get(mapIndex));
+            setWorldAndCreatePopulation(createWorld(map));
         } else if (mapIndex - numCustomMaps < masonicMaps.length) {
             setWorldAndCreatePopulation(createWorld(masonicMaps[mapIndex - numCustomMaps]));
         } else {
@@ -93,10 +100,50 @@ public class PacManXXLGameModel extends PacManGameModel {
     }
 
     public List<WorldMap> customMaps() {
-        return customMaps;
+        var customMapFiles = customMapsByFile.keySet().stream().sorted().toList();
+        return customMapFiles.stream().map(customMapsByFile::get).toList();
     }
 
-    public void setCustomMaps(List<WorldMap> maps) {
-        customMaps = maps;
+    public void loadCustomMaps() {
+        ensureCustomMapDirExists();
+        File mapDir = GameModel.CUSTOM_MAP_DIR;
+        if (!mapDir.isDirectory()) {
+            Logger.error("Cannot load custom maps: '{}' is not a directory", mapDir);
+            return;
+        }
+        Logger.info("Searching for custom map files in '{}'", mapDir);
+        File[] mapFiles = mapDir.listFiles((dir, name) -> name.endsWith(".world"));
+        if (mapFiles == null) {
+            Logger.error("An error occurred on accessing custom map folder {}", mapDir);
+            return;
+        }
+        if (mapFiles.length == 0) {
+            Logger.info("No custom maps found");
+        } else {
+            Logger.info("{} custom map(s) found", mapFiles.length);
+        }
+        customMapsByFile.clear();
+        for (File mapFile : mapFiles) {
+            customMapsByFile.put(mapFile, new WorldMap(mapFile));
+            Logger.info("Created custom map from file: " + mapFile);
+        }
+    }
+
+    private void ensureCustomMapDirExists() {
+        var dir = GameModel.CUSTOM_MAP_DIR;
+        if (dir.exists() && dir.isDirectory()) {
+            Logger.info("Custom map directory found: '{}'", dir);
+            return;
+        }
+        boolean created = dir.mkdirs();
+        if (created) {
+            Logger.info("Custom map directory created: '{}'", dir);
+        } else {
+            Logger.error("Custom map directory could not be created: '{}'", dir);
+        }
+    }
+
+    public Map<File, WorldMap> customMapsByFile() {
+        return customMapsByFile;
     }
 }

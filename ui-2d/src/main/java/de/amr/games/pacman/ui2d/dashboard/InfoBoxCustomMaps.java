@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.model.pacmanxxl.PacManXXLGameModel;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameParameters;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -56,10 +57,11 @@ public class InfoBoxCustomMaps extends InfoBox {
     private void reloadCustomMapsAndUpdateTableView() {
         ObservableList<MapInfo> items = FXCollections.observableArrayList();
         context.actionHandler().updateCustomMaps();
-        var maps = context.gameController().customMapsByFile();
-        for (File file : maps.keySet().stream().sorted().toList()) {
-            WorldMap map = maps.get(file);
-            items.add(new MapInfo(file.getName(), map.terrain().numRows(), map.terrain().numCols()));
+        if (context.game() instanceof PacManXXLGameModel xxlGame) {
+            for (File file  : xxlGame.customMapsByFile().keySet().stream().sorted().toList()) {
+                WorldMap map = xxlGame.customMapsByFile().get(file);
+                items.add(new MapInfo(file.getName(), map.terrain().numRows(), map.terrain().numCols()));
+            }
         }
         mapTable.setItems(items);
     }

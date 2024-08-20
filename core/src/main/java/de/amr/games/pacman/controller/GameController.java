@@ -7,16 +7,14 @@ package de.amr.games.pacman.controller;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
-import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.*;
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
 import de.amr.games.pacman.model.pacman.PacManGameModel;
 import de.amr.games.pacman.model.pacmanxxl.PacManXXLGameModel;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -56,7 +54,6 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         models.put(GameVariant.PACMAN_XXL, new PacManXXLGameModel());
     }
 
-    private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
     private GameClock clock;
     private GameModel game;
     private boolean pacImmune = false;
@@ -64,56 +61,12 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     private GameController() {
         super(GameState.values());
-        loadCustomMaps();
         for (var model : models.values()) {
             model.init();
             Logger.info("Game (variant={}) initialized.", model.variant());
         }
         // map state change events to game events
         addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
-    }
-
-    private void ensureCustomMapDirExists() {
-        var dir = GameModel.CUSTOM_MAP_DIR;
-        if (dir.exists() && dir.isDirectory()) {
-            Logger.info("Custom map directory found: '{}'", dir);
-            return;
-        }
-        boolean created = dir.mkdirs();
-        if (created) {
-            Logger.info("Custom map directory created: '{}'", dir);
-        } else {
-            Logger.error("Custom map directory could not be created: '{}'", dir);
-        }
-    }
-
-    public void loadCustomMaps() {
-        ensureCustomMapDirExists();
-        File mapDir = GameModel.CUSTOM_MAP_DIR;
-        if (!mapDir.isDirectory()) {
-            Logger.error("Cannot load custom maps: '{}' is not a directory", mapDir);
-            return;
-        }
-        Logger.info("Searching for custom map files in '{}'", mapDir);
-        File[] mapFiles = mapDir.listFiles((dir, name) -> name.endsWith(".world"));
-        if (mapFiles == null) {
-            Logger.error("An error occurred on accessing custom map folder {}", mapDir);
-            return;
-        }
-        if (mapFiles.length == 0) {
-            Logger.info("No custom maps found");
-        } else {
-            Logger.info("{} custom map(s) found", mapFiles.length);
-        }
-        customMapsByFile.clear();
-        for (File mapFile : mapFiles) {
-            customMapsByFile.put(mapFile, new WorldMap(mapFile));
-            Logger.info("Created custom map from file: " + mapFile);
-        }
-    }
-
-    public Map<File, WorldMap> customMapsByFile() {
-        return customMapsByFile;
     }
 
     public GameModel gameModel() {
