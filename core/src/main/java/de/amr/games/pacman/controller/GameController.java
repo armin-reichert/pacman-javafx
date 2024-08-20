@@ -48,9 +48,9 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     private final Map<GameVariant, GameModel> models = new EnumMap<>(GameVariant.class);
     {
-        models.put(GameVariant.MS_PACMAN,  new MsPacManGame());
-        models.put(GameVariant.PACMAN,     new PacManGame());
-        models.put(GameVariant.PACMAN_XXL, new PacManXXLGame());
+        models.put(GameVariant.MS_PACMAN,  new MsPacManGameModel());
+        models.put(GameVariant.PACMAN,     new PacManGameModel());
+        models.put(GameVariant.PACMAN_XXL, new PacManXXLGameModel());
     }
 
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();

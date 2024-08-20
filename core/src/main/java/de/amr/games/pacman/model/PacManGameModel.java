@@ -25,7 +25,6 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
-import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
 
 /**
  * Classic Arcade Pac-Man.
@@ -44,7 +43,7 @@ import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
  *
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
-public class PacManGame extends AbstractPacManGame {
+public class PacManGameModel extends GameModel {
 
     private static final NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
         np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),

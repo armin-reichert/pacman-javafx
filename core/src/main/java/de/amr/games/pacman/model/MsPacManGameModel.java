@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
 
 /**
  * Ms. Pac-Man game variant.
@@ -36,7 +35,7 @@ import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
  *
  * @author Armin Reichert
  */
-public class MsPacManGame extends AbstractPacManGame  {
+public class MsPacManGameModel extends GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 

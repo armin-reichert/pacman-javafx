@@ -13,13 +13,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.model.GameModel.checkLevelNumber;
-
 /**
  * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only
  * <a href="https://github.com/masonicGIT/pacman">Sean Williams</a>).
  */
-public class PacManXXLGame extends PacManGame {
+public class PacManXXLGameModel extends PacManGameModel {
 
     private static GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);

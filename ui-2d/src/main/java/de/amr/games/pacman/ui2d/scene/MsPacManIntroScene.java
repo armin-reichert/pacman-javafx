@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.scene;
 import de.amr.games.pacman.controller.MsPacManIntro;
 import de.amr.games.pacman.controller.MsPacManIntro.State;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.MsPacManGame;
+import de.amr.games.pacman.model.MsPacManGameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.ActionHandler;
@@ -150,13 +150,13 @@ public class MsPacManIntroScene extends GameScene2D {
      * @see  <a href="http://www.donhodges.com/ms_pacman_bugs.htm">Ms. Pac-Man blue maze bug</a>
      */
     private void triggerBlueMazeBug() {
-        MsPacManGame game = (MsPacManGame) context.game();
+        MsPacManGameModel game = (MsPacManGameModel) context.game();
         game.blueMazeBug = true;
         Logger.info("Blue maze bug triggered");
     }
 
     private void clearBlueMazeBug() {
-        MsPacManGame game = (MsPacManGame) context.game();
+        MsPacManGameModel game = (MsPacManGameModel) context.game();
         game.blueMazeBug = false;
         Logger.info("Blue maze bug cleared");
     }

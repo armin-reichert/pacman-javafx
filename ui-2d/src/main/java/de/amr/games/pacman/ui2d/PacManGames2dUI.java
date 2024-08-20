@@ -12,7 +12,7 @@ import de.amr.games.pacman.mapeditor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.PacManXXLGame;
+import de.amr.games.pacman.model.PacManXXLGameModel;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
@@ -507,7 +507,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         gameController().loadCustomMaps();
         var dict = gameController().customMapsByFile();
         if (game().variant() == GameVariant.PACMAN_XXL) {
-            PacManXXLGame game = (PacManXXLGame) game();
+            PacManXXLGameModel game = (PacManXXLGameModel) game();
             if (PY_CUSTOM_MAPS_ENABLED.get()) {
                 game.setCustomMaps(dict.keySet().stream().sorted().map(dict::get).toList());
             } else {
