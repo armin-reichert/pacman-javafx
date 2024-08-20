@@ -6,6 +6,7 @@ package de.amr.games.pacman.model.pacmanxxl;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -86,7 +87,8 @@ public class PacManXXLGameModel extends PacManGameModel {
         bonus = new StaticBonus(symbol, BONUS_VALUE_FACTORS[symbol] * 100);
         // in a non-Arcade style custom map, the bonus position must be taken from the terrain map
         if (world.map().terrain().hasProperty(GameWorld.PROPERTY_POS_BONUS)) {
-            bonus.entity().setPosition(world.map().terrain().getProperty(GameWorld.PROPERTY_POS_BONUS));
+            Vector2i bonusTile = world.map().terrain().getTileProperty(GameWorld.PROPERTY_POS_BONUS, new Vector2i(13, 20));
+            bonus.entity().setPosition(Globals.halfTileRightOf(bonusTile));
         } else {
             bonus.entity().setPosition(BONUS_POS);
         }
