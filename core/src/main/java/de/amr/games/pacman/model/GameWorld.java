@@ -10,7 +10,10 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import org.tinylog.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -43,7 +46,7 @@ public class GameWorld {
     private final Direction[] ghostDirections = new Direction[4];
     private final Vector2i[] energizerTiles;
     private final Portal[] portals;
-    private final Map<Vector2i, List<Direction>> forbiddenPassages = new HashMap<>(4);
+    private final List<Vector2i> cannotMoveUpTiles = new ArrayList<>();
 
     private Vector2i houseTopLeftTile;
     private Vector2i houseSize;
@@ -126,14 +129,14 @@ public class GameWorld {
         return 0 <= x && x <= map.terrain().numCols() * TS && 0 <= y && y <= map.terrain().numRows() * TS;
     }
 
-    public void setForbiddenPassages(Map<Vector2i, List<Direction>> map) {
+    public void setCannotMoveUpTiles(List<Vector2i> tiles) {
         checkNotNull(map);
-        forbiddenPassages.clear();
-        forbiddenPassages.putAll(map);
+        cannotMoveUpTiles.clear();
+        cannotMoveUpTiles.addAll(tiles);
     }
 
-    public Map<Vector2i, List<Direction>> forbiddenPassages() {
-        return forbiddenPassages;
+    public List<Vector2i> cannotMoveUpTiles() {
+        return cannotMoveUpTiles;
     }
 
     public Stream<Vector2i> energizerTiles() {

@@ -163,12 +163,10 @@ public class Ghost extends Creature {
         // hunting ghosts cannot move up at certain tiles in Pac-Man game
         if (state == HUNTING_PAC) {
             var currentTile = tile();
-            if (world.forbiddenPassages().containsKey(currentTile)) {
-                for (Direction dir : world.forbiddenPassages().get(currentTile)) {
-                    if (currentTile.plus(dir.vector()).equals(tile)) {
-                        Logger.trace("Hunting {} cannot move {} at {}", name, dir, currentTile);
-                        return false;
-                    }
+            if (world.cannotMoveUpTiles().contains(currentTile)) {
+                if (currentTile.plus(UP.vector()).equals(tile)) {
+                    Logger.trace("Hunting {} cannot move up at {}", name, currentTile);
+                    return false;
                 }
             }
         }

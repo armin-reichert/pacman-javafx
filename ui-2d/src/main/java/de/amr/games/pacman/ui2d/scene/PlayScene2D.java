@@ -10,10 +10,10 @@ import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.MovingBonus;
+import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
 import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameKey;
 import de.amr.games.pacman.ui2d.GameSounds;
@@ -188,8 +188,7 @@ public class PlayScene2D extends GameScene2D {
         var game = context.game();
         drawTileGrid();
         if (game.variant() == GameVariant.PACMAN && game.world() != null) {
-            game.world().forbiddenPassages().forEach((tile, directions) -> {
-                // TODO indicate direction
+            game.world().cannotMoveUpTiles().forEach(tile -> {
                 g.setFill(Color.RED);
                 g.fillOval(s(t(tile.x())), s(t(tile.y() - 1)), s(TS), s(TS));
                 g.setFill(Color.WHITE);

@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.pacman;
 
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
@@ -20,11 +19,8 @@ import de.amr.games.pacman.steering.RouteBasedSteering;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static de.amr.games.pacman.lib.Direction.UP;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.lib.NavPoint.np;
 
@@ -50,10 +46,9 @@ public class PacManGameModel extends GameModel {
     // The Pac-Man Arcade game map
     private static final WorldMap WORLD_MAP = new WorldMap(PacManGameModel.class.getResource("/de/amr/games/pacman/maps/pacman.world"));
 
-    private static final Map<Vector2i, List<Direction>> FORBIDDEN_PASSAGES = new HashMap<>();
-    static {
-        List.of(v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)).forEach(tile -> FORBIDDEN_PASSAGES.put(tile, List.of(UP)));
-    }
+    private static final List<Vector2i> CANNOT_MOVE_UP_TILES = List.of(
+        v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)
+    );
 
     protected static final NavPoint[] PACMAN_DEMO_LEVEL_ROUTE = {
         np(12, 26), np(9, 26), np(12, 32), np(15, 32), np(24, 29), np(21, 23),
@@ -173,7 +168,7 @@ public class PacManGameModel extends GameModel {
     private GameWorld createWorld() {
         var world = new GameWorld(WORLD_MAP);
         world.createArcadeHouse(10, 15);
-        world.setForbiddenPassages(FORBIDDEN_PASSAGES);
+        world.setCannotMoveUpTiles(CANNOT_MOVE_UP_TILES);
         return world;
     }
 }
