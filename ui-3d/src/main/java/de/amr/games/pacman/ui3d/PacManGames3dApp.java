@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -101,6 +102,11 @@ public class PacManGames3dApp extends Application {
     }
 
     private final PacManGames3dUI ui = new PacManGames3dUI();
+
+    @Override
+    public void init() {
+        GameController.init(new File(System.getProperty("user.home"), ".pacmanfx"));
+    }
 
     @Override
     public void start(Stage stage) {

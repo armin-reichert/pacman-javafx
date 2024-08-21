@@ -75,9 +75,9 @@ public class PacManGameModel extends GameModel {
     protected static final Vector2f BONUS_POS = halfTileRightOf(13, 20);
 
     @Override
-    public void init() {
+    public void init(File userDir) {
         initialLives = 3;
-        highScoreFile = new File(USER_DIR, "highscore-pacman.xml");
+        highScoreFile = new File(userDir, "highscore-pacman.xml");
     }
 
     @Override

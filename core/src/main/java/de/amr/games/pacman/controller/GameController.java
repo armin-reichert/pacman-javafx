@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.pacman.PacManGameModel;
 import de.amr.games.pacman.model.pacmanxxl.PacManXXLGameModel;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -39,9 +40,14 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
-    private static final GameController SINGLE_INSTANCE = new GameController();
+    private static GameController THE_ONE;
+
+    public static void init(File userDir) {
+        THE_ONE = new GameController(userDir);
+    }
+
     public static GameController it() {
-        return SINGLE_INSTANCE;
+        return THE_ONE;
     }
 
     /** Maximum number of coins, as in MAME. */
@@ -54,19 +60,25 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         models.put(GameVariant.PACMAN_XXL, new PacManXXLGameModel());
     }
 
+    private final File userDir;
     private GameClock clock;
     private GameModel game;
     private boolean pacImmune = false;
     private int credit = 0;
 
-    private GameController() {
+    private GameController(File userDir) {
         super(GameState.values());
+        this.userDir = userDir;
         for (var model : models.values()) {
-            model.init();
+            model.init(userDir);
             Logger.info("Game (variant={}) initialized.", model.variant());
         }
         // map state change events to game events
         addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
+    }
+
+    public File userDir() {
+        return userDir;
     }
 
     public GameModel gameModel() {

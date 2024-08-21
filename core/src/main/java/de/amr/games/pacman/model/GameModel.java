@@ -34,9 +34,6 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  */
 public abstract class GameModel {
 
-    public static final File USER_DIR = new File(System.getProperty("user.home"), ".pacmanfx");
-    public static final File CUSTOM_MAP_DIR = new File(USER_DIR, "maps");
-
     public static final byte ARCADE_MAP_TILES_X = 28;
     public static final byte ARCADE_MAP_TILES_Y = 36;
     public static final int  ARCADE_MAP_SIZE_X = ARCADE_MAP_TILES_X * TS;
@@ -141,7 +138,7 @@ public abstract class GameModel {
 
     protected SimulationStepEventLog eventLog;
 
-    public abstract void init();
+    public abstract void init(File userDir);
     public abstract GameVariant variant();
     public abstract void activateNextBonus();
 

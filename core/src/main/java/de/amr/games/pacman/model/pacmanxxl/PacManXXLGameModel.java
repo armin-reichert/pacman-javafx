@@ -7,7 +7,6 @@ package de.amr.games.pacman.model.pacmanxxl;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.StaticBonus;
@@ -32,12 +31,14 @@ public class PacManXXLGameModel extends PacManGameModel {
 
     private final WorldMap[] masonicMaps = new WorldMap[8];
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
+    private File customMapDir;
     private boolean customMapsEnabled;
 
     @Override
-    public void init() {
+    public void init(File userDir) {
         initialLives = 3;
-        highScoreFile = new File(USER_DIR, "highscore-pacman_xxl.xml");
+        customMapDir = new File(userDir, "maps");
+        highScoreFile = new File(userDir, "highscore-pacman_xxl.xml");
         String mapPath = "/de/amr/games/pacman/maps/masonic/";
         for (int number = 1; number <= 8; ++number) {
             URL url = getClass().getResource(mapPath + "masonic_%d.world".formatted(number));
@@ -104,8 +105,11 @@ public class PacManXXLGameModel extends PacManGameModel {
         this.customMapsEnabled = customMapsEnabled;
     }
 
+    public File customMapDir() {
+        return customMapDir;
+    }
+
     public void loadCustomMaps() {
-        File customMapDir = GameModel.CUSTOM_MAP_DIR;
         if (customMapDir.exists() && customMapDir.isDirectory()) {
             Logger.info("Custom map directory found: '{}'", customMapDir);
         } else {

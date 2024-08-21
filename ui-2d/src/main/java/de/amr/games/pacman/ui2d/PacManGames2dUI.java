@@ -470,7 +470,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             return;
         }
         if (editorPage == null) {
-            editorPage = new EditorPage(stage, this);
+            PacManXXLGameModel xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
+            editorPage = new EditorPage(stage, this, xxlGame.customMapDir());
             editorPage.setCloseAction(this::quitMapEditor);
         }
         GameSounds.stopAll();

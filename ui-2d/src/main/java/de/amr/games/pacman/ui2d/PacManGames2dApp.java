@@ -24,6 +24,7 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -165,6 +166,11 @@ public class PacManGames2dApp extends Application {
     }
 
     private final PacManGames2dUI ui = new PacManGames2dUI();
+
+    @Override
+    public void init() {
+        GameController.init(new File(System.getProperty("user.home"), ".pacmanfx"));
+    }
 
     @Override
     public void start(Stage stage) {

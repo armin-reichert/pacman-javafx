@@ -17,6 +17,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Window;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.net.URL;
 import java.util.function.Consumer;
 
@@ -30,11 +31,11 @@ public class EditorPage extends BorderPane implements Page {
     private final TileMapEditor editor;
     private Consumer<TileMapEditor> closeAction = editor -> {};
 
-    public EditorPage(Window window, GameContext context) {
+    public EditorPage(Window window, GameContext context, File customMapDir) {
         checkNotNull(window);
         checkNotNull(context);
 
-        editor = new TileMapEditor(GameModel.CUSTOM_MAP_DIR);
+        editor = new TileMapEditor(customMapDir);
         editor.createUI(window);
 
         setCenter(editor.getContentPane());
