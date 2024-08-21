@@ -30,11 +30,12 @@ public class TileMapPath implements Iterable<Direction> {
         };
     }
 
+    private final TileMap map;
     private final Vector2i startTile;
     private final List<Direction> directions = new ArrayList<>();
 
     public TileMapPath(TileMap map, BitSet explored, Vector2i startTile, Direction startDir) {
-        checkNotNull(map);
+        this.map = checkNotNull(map);
         checkNotNull(explored);
         checkNotNull(startTile);
         checkNotNull(startDir);
@@ -58,6 +59,10 @@ public class TileMapPath implements Iterable<Direction> {
             directions.add(dir);
             explored.set(map.index(tile));
         }
+    }
+
+    public TileMap map() {
+        return map;
     }
 
     public Vector2i startTile() {
