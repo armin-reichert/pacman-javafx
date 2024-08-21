@@ -247,9 +247,7 @@ public abstract class GameModel {
     }
 
     public void startHuntingPhase(int phaseIndex) {
-        if (phaseIndex < 0 || phaseIndex > 7) {
-            throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + phaseIndex);
-        }
+        checkHuntingPhaseIndex(phaseIndex);
         huntingPhaseIndex = (byte) phaseIndex;
         huntingTimer.reset(huntingTicks(levelNumber, huntingPhaseIndex));
         huntingTimer.start();
