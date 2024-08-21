@@ -16,6 +16,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.TILE_SIZE;
 
 /**
@@ -99,16 +100,15 @@ public class TerrainMapRenderer implements TileMapRenderer {
     {
         g.beginPath();
         Vector2i tile = tileMapPath.startTile();
-        {
-            if (tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
-                // start path at left border, not at tile center
-                double y = center(tile).y();
-                g.moveTo(0, y);
-                g.lineTo(HTS, y);
+        if (tile.x() == 0) {
+            // start path at left border, not at tile center
+            g.moveTo(0, tile.y() * TS + HTS);
+            if (map.get(tile) == Tiles.DWALL_H) {
+                g.lineTo(HTS, tile.y() * TS + HTS);
             }
-            //TODO clarify this
-            followPath(g, map.get(tile), center(tile), true, true, tile.x() != 0, true);
         }
+        //TODO clarify this
+        followPath(g, map.get(tile), center(tile), true, true, tile.x() != 0, true);
         for (Direction dir : tileMapPath) {
             Vector2i prev = tile;
             tile = prev.plus(dir.vector());
@@ -116,7 +116,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         }
         if (tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
             // end path at left border
-            g.lineTo(0, center(tile).y());
+            g.lineTo(0, tile.y() * TS + HTS);
         }
         if (fill) {
             g.setFill(fillColor);
