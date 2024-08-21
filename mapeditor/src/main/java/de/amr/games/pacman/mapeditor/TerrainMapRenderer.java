@@ -95,12 +95,23 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     //TODO: avoid special cases
-    private void drawPath(GraphicsContext g, TileMapPath tileMapPath,
-        boolean fill, double lineWidth, Color outlineColor, Color fillColor)
+    private void drawPath(GraphicsContext g, TileMapPath path,
+        boolean fill, double lineWidth, Color strokeColor, Color fillColor)
     {
-        TileMap map = tileMapPath.map();
         g.beginPath();
-        Vector2i tile = tileMapPath.startTile();
+        buildPath(g, path);
+        if (fill) {
+            g.setFill(fillColor);
+            g.fill();
+        }
+        g.setLineWidth(lineWidth);
+        g.setStroke(strokeColor);
+        g.stroke();
+    }
+
+    private void buildPath(GraphicsContext g, TileMapPath path) {
+        TileMap map = path.map();
+        Vector2i tile = path.startTile();
         if (tile.x() == 0) {
             // start path at left border, not at tile center
             g.moveTo(0, tile.y() * TS + HTS);
@@ -109,25 +120,18 @@ public class TerrainMapRenderer implements TileMapRenderer {
             }
         }
         //TODO this is unclear
-        followPath(g, map.get(tile), center(tile), true, true, tile.x() != 0, true);
-        for (Direction dir : tileMapPath) {
+        extendPath(g, map.get(tile), center(tile), true, true, tile.x() != 0, true);
+        for (Direction dir : path) {
             tile = tile.plus(dir.vector());
-            followPath(g, map.get(tile), center(tile), dir == Direction.LEFT, dir == Direction.RIGHT, dir == Direction.UP, dir == Direction.DOWN);
+            extendPath(g, map.get(tile), center(tile), dir == Direction.LEFT, dir == Direction.RIGHT, dir == Direction.UP, dir == Direction.DOWN);
         }
         if (tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
             // end path at left border
             g.lineTo(0, tile.y() * TS + HTS);
         }
-        if (fill) {
-            g.setFill(fillColor);
-            g.fill();
-        }
-        g.setStroke(outlineColor);
-        g.setLineWidth(lineWidth);
-        g.stroke();
     }
 
-    private void followPath(GraphicsContext g, byte tileValue, Vector2f center, boolean left, boolean right, boolean up, boolean down) {
+    private void extendPath(GraphicsContext g, byte tileValue, Vector2f center, boolean left, boolean right, boolean up, boolean down) {
         float r = 0.5f * TILE_SIZE, cx = center.x(), cy = center.y();
         switch (tileValue) {
             case Tiles.WALL_H,
