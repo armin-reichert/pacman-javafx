@@ -15,6 +15,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.TILE_SIZE;
 
 /**
@@ -95,51 +96,34 @@ public class TerrainMapRenderer implements TileMapRenderer {
     private void drawPath(GraphicsContext g, TileMap map, TileMapPath tileMapPath,
         boolean fill, double lineWidth, Color outlineColor, Color fillColor) {
 
-        double r = 0.45 * TILE_SIZE;
+        float radius = 0.45f * TILE_SIZE;
         g.beginPath();
 
-        //TODO: avoid these special cases
         Vector2i tile = tileMapPath.startTile();
-        if (tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
-            // start at left maze border, not at tile center
-            double y = center(tile).y();
-            g.moveTo(0, y);
-            g.lineTo(r, y);
-        }
-
-        Vector2f c = center(tile);
-        switch (map.get(tile)) {
-            case Tiles.WALL_H, Tiles.DWALL_H       -> g.lineTo(c.x() + r, c.y());
-            case Tiles.WALL_V, Tiles.DWALL_V       -> g.lineTo(c.x(), c.y() + r);
-            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> g.arc(c.x() + r, c.y() + r, r, r,  90, 90);
-            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> g.arc(c.x() + r, c.y() - r, r, r, 180, 90);
-            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(c.x() - r, c.y() + r, r, r, tile.x() != 0 ? 0:90, tile.x() != 0? 90:-90);
-            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(c.x() - r, c.y() - r, r, r, 270, 90);
-            default -> {}
+        Vector2f center = center(tile);
+        {
+            float cx = center.x(), cy = center.y();
+            //TODO: avoid these special cases
+            if (tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
+                // start at left maze border, not at tile center
+                double y = center(tile).y();
+                g.moveTo(0, y);
+                g.lineTo(HTS, y);
+            }
+            drawTile(g, map.get(tile), cx, cy, radius, true, true, tile.x() != 0, true);
         }
         for (Direction dir : tileMapPath) {
             Vector2i prev = tile;
-            tile = tile.plus(dir.vector());
-            c = center(tile);
-            boolean left  = prev.x() > tile.x();
-            boolean right = prev.x() < tile.x();
-            boolean up    = prev.y() > tile.y();
-            boolean down  = prev.y() < tile.y();
-            switch (map.get(tile)) {
-                case Tiles.WALL_H,    Tiles.DWALL_H    -> g.lineTo(c.x() + r, c.y());
-                case Tiles.WALL_V,    Tiles.DWALL_V    -> g.lineTo(c.x(), c.y() + r);
-                case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(c.x() - r, c.y() + r, r, r, up?      0: 90, up?    90:-90);
-                case Tiles.CORNER_NW, Tiles.DCORNER_NW -> g.arc(c.x() + r, c.y() + r, r, r, left?   90:180, left?  90:-90);
-                case Tiles.CORNER_SW, Tiles.DCORNER_SW -> g.arc(c.x() + r, c.y() - r, r, r, down?  180:270, down?  90:-90);
-                case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(c.x() - r, c.y() - r, r, r, right? 270:  0, right? 90:-90);
-                default -> {}
-            }
+            tile = prev.plus(dir.vector());
+            center = center(tile);
+            float cx = center.x(), cy = center.y();
+            drawTile(g, map.get(tile), cx, cy, radius, dir == Direction.LEFT, dir == Direction.RIGHT, dir == Direction.UP, dir == Direction.DOWN);
         }
         if (tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
-            g.lineTo(0, c.y());
+            g.lineTo(0, center.y());
         }
         if (map.get(tile) == Tiles.DOOR) {
-            g.lineTo(tile.x() * TILE_SIZE, c.y());
+            g.lineTo(tile.x() * TILE_SIZE, center.y());
         }
 
         if (fill) {
@@ -149,5 +133,17 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.setStroke(outlineColor);
         g.setLineWidth(lineWidth);
         g.stroke();
+    }
+
+    private void drawTile(GraphicsContext g, byte tileValue, float cx, float cy, float radius, boolean left, boolean right, boolean up, boolean down) {
+        switch (tileValue) {
+            case Tiles.WALL_H,    Tiles.DWALL_H    -> g.lineTo(cx + radius, cy);
+            case Tiles.WALL_V,    Tiles.DWALL_V    -> g.lineTo(cx, cy + radius);
+            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> g.arc(cx + radius, cy + radius, radius, radius, left?   90:180, left?  90:-90);
+            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> g.arc(cx + radius, cy - radius, radius, radius, down?  180:270, down?  90:-90);
+            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(cx - radius, cy + radius, radius, radius, up?      0: 90, up?    90:-90);
+            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(cx - radius, cy - radius, radius, radius, right? 270:  0, right? 90:-90);
+            default -> {}
+        }
     }
 }
