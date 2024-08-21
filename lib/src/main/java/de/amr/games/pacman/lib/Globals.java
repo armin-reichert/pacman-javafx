@@ -83,10 +83,11 @@ public class Globals {
         return checkNotNull(tile, MSG_TILE_NULL);
     }
 
-    public static void checkHuntingPhaseIndex(int phaseIndex) {
+    public static byte checkHuntingPhaseIndex(int phaseIndex) {
         if (phaseIndex < 0 || phaseIndex > 7) {
             throw new IllegalArgumentException("Hunting phase index must be 0..7, but is " + phaseIndex);
         }
+        return (byte) phaseIndex;
     }
 
     public static Direction checkDirectionNotNull(Direction dir) {

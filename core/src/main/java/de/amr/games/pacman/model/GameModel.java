@@ -247,11 +247,9 @@ public abstract class GameModel {
     }
 
     public void startHuntingPhase(int phaseIndex) {
-        checkHuntingPhaseIndex(phaseIndex);
-        huntingPhaseIndex = (byte) phaseIndex;
+        huntingPhaseIndex = checkHuntingPhaseIndex(phaseIndex);
         huntingTimer.reset(huntingTicks(levelNumber, huntingPhaseIndex));
         huntingTimer.start();
-
         String phaseName = isScatterPhase(huntingPhaseIndex) ? "Scattering" : "Chasing";
         Logger.info("Hunting phase {} ({}, {} ticks / {} seconds) started. {}",
             huntingPhaseIndex, phaseName,
