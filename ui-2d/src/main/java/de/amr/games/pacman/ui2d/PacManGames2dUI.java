@@ -496,7 +496,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     public void updateCustomMaps() {
         PacManXXLGameModel xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
         xxlGame.loadCustomMaps();
-        Logger.info("Custom maps: {}", xxlGame.customMaps());
+        Logger.info("Custom maps: {}", xxlGame.customMapsSortedByFile());
         //TODO dashboard should be updated too!
     }
 

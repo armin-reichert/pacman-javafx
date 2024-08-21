@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.pacmanxxl;
 
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameModel;
@@ -22,20 +21,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static de.amr.games.pacman.lib.Globals.halfTileRightOf;
+import static de.amr.games.pacman.lib.Globals.randomInt;
+
 /**
  * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only
  * <a href="https://github.com/masonicGIT/pacman">Sean Williams</a>).
  */
 public class PacManXXLGameModel extends PacManGameModel {
-
-    private static GameWorld createWorld(WorldMap map) {
-        var world = new GameWorld(map);
-        //TODO house position should be stored in terrain map
-        int houseTopLeftX = map.terrain().numCols() / 2 - 4;
-        int houseTopLeftY = map.terrain().numRows() / 2 - 3;
-        world.createArcadeHouse(houseTopLeftX, houseTopLeftY);
-        return world;
-    }
 
     private final WorldMap[] masonicMaps = new WorldMap[8];
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
@@ -44,11 +37,11 @@ public class PacManXXLGameModel extends PacManGameModel {
     @Override
     public void init() {
         initialLives = 3;
-        highScoreFile = new File(USER_DIR,"highscore-pacman_xxl.xml");
+        highScoreFile = new File(USER_DIR, "highscore-pacman_xxl.xml");
         String mapPath = "/de/amr/games/pacman/maps/masonic/";
         for (int number = 1; number <= 8; ++number) {
             URL url = getClass().getResource(mapPath + "masonic_%d.world".formatted(number));
-            masonicMaps[number-1] = new WorldMap(url);
+            masonicMaps[number - 1] = new WorldMap(url);
         }
         loadCustomMaps();
     }
@@ -64,14 +57,12 @@ public class PacManXXLGameModel extends PacManGameModel {
         int numCustomMaps = customMapsEnabled ? customMapsByFile().size() : 0;
         int mapIndex = levelNumber - 1;
         if (mapIndex < numCustomMaps) {
-            //TODO improve
-            var customMapFiles = customMapsByFile.keySet().stream().sorted().toList();
-            WorldMap map = customMapsByFile.get(customMapFiles.get(mapIndex));
+            WorldMap map = customMapsSortedByFile().get(mapIndex);
             setWorldAndCreatePopulation(createWorld(map));
         } else if (mapIndex - numCustomMaps < masonicMaps.length) {
             setWorldAndCreatePopulation(createWorld(masonicMaps[mapIndex - numCustomMaps]));
         } else {
-            int randomIndex = Globals.randomInt(0, 8);
+            int randomIndex = randomInt(0, masonicMaps.length);
             setWorldAndCreatePopulation(createWorld(masonicMaps[randomIndex]));
         }
         pac.setName("Pac-Man");
@@ -88,11 +79,10 @@ public class PacManXXLGameModel extends PacManGameModel {
         // in a non-Arcade style custom map, the bonus position must be taken from the terrain map
         if (world.map().terrain().hasProperty(GameWorld.PROPERTY_POS_BONUS)) {
             Vector2i bonusTile = world.map().terrain().getTileProperty(GameWorld.PROPERTY_POS_BONUS, new Vector2i(13, 20));
-            bonus.entity().setPosition(Globals.halfTileRightOf(bonusTile));
+            bonus.entity().setPosition(halfTileRightOf(bonusTile));
         } else {
             bonus.entity().setPosition(BONUS_POS);
         }
-        //TODO in large maps this could be too short:
         bonus.setEdible(bonusEdibleTicks());
         publishGameEvent(GameEventType.BONUS_ACTIVATED, bonus.entity().tile());
     }
@@ -102,9 +92,12 @@ public class PacManXXLGameModel extends PacManGameModel {
         return 0;
     }
 
-    public List<WorldMap> customMaps() {
-        var customMapFiles = customMapsByFile.keySet().stream().sorted().toList();
-        return customMapFiles.stream().map(customMapsByFile::get).toList();
+    public Map<File, WorldMap> customMapsByFile() {
+        return customMapsByFile;
+    }
+
+    public List<WorldMap> customMapsSortedByFile() {
+        return customMapsByFile.keySet().stream().sorted().map(customMapsByFile::get).toList();
     }
 
     public void setCustomMapsEnabled(boolean customMapsEnabled) {
@@ -112,16 +105,20 @@ public class PacManXXLGameModel extends PacManGameModel {
     }
 
     public void loadCustomMaps() {
-        ensureCustomMapDirExists();
-        File mapDir = GameModel.CUSTOM_MAP_DIR;
-        if (!mapDir.isDirectory()) {
-            Logger.error("Cannot load custom maps: '{}' is not a directory", mapDir);
-            return;
+        File customMapDir = GameModel.CUSTOM_MAP_DIR;
+        if (customMapDir.exists() && customMapDir.isDirectory()) {
+            Logger.info("Custom map directory found: '{}'", customMapDir);
+        } else {
+            if (customMapDir.mkdirs()) {
+                Logger.info("Custom map directory created: '{}'", customMapDir);
+            } else {
+                Logger.error("Custom map directory could not be created: '{}'", customMapDir);
+                return;
+            }
         }
-        Logger.info("Searching for custom map files in '{}'", mapDir);
-        File[] mapFiles = mapDir.listFiles((dir, name) -> name.endsWith(".world"));
+        File[] mapFiles = customMapDir.listFiles((dir, name) -> name.endsWith(".world"));
         if (mapFiles == null) {
-            Logger.error("An error occurred on accessing custom map folder {}", mapDir);
+            Logger.error("An error occurred accessing custom map directory {}", customMapDir);
             return;
         }
         if (mapFiles.length == 0) {
@@ -132,25 +129,16 @@ public class PacManXXLGameModel extends PacManGameModel {
         customMapsByFile.clear();
         for (File mapFile : mapFiles) {
             customMapsByFile.put(mapFile, new WorldMap(mapFile));
-            Logger.info("Created custom map from file: " + mapFile);
+            Logger.info("Custom map loaded from " + mapFile);
         }
     }
 
-    private void ensureCustomMapDirExists() {
-        var dir = GameModel.CUSTOM_MAP_DIR;
-        if (dir.exists() && dir.isDirectory()) {
-            Logger.info("Custom map directory found: '{}'", dir);
-            return;
-        }
-        boolean created = dir.mkdirs();
-        if (created) {
-            Logger.info("Custom map directory created: '{}'", dir);
-        } else {
-            Logger.error("Custom map directory could not be created: '{}'", dir);
-        }
-    }
-
-    public Map<File, WorldMap> customMapsByFile() {
-        return customMapsByFile;
+    private GameWorld createWorld(WorldMap map) {
+        var world = new GameWorld(map);
+        //TODO house position should be stored in terrain map
+        int houseTopLeftX = map.terrain().numCols() / 2 - 4;
+        int houseTopLeftY = map.terrain().numRows() / 2 - 3;
+        world.createArcadeHouse(houseTopLeftX, houseTopLeftY);
+        return world;
     }
 }
