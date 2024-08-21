@@ -107,11 +107,10 @@ public class TerrainMapRenderer implements TileMapRenderer {
                 g.lineTo(HTS, tile.y() * TS + HTS);
             }
         }
-        //TODO clarify this
+        //TODO this is unclear
         followPath(g, map.get(tile), center(tile), true, true, tile.x() != 0, true);
         for (Direction dir : tileMapPath) {
-            Vector2i prev = tile;
-            tile = prev.plus(dir.vector());
+            tile = tile.plus(dir.vector());
             followPath(g, map.get(tile), center(tile), dir == Direction.LEFT, dir == Direction.RIGHT, dir == Direction.UP, dir == Direction.DOWN);
         }
         if (tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
@@ -128,15 +127,20 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     private void followPath(GraphicsContext g, byte tileValue, Vector2f center, boolean left, boolean right, boolean up, boolean down) {
-        float radius = 0.5f * TILE_SIZE;
-        float cx = center.x(), cy = center.y();
+        float r = 0.5f * TILE_SIZE, cx = center.x(), cy = center.y();
         switch (tileValue) {
-            case Tiles.WALL_H,    Tiles.DWALL_H    -> g.lineTo(cx + radius, cy);
-            case Tiles.WALL_V,    Tiles.DWALL_V    -> g.lineTo(cx, cy + radius);
-            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> g.arc(cx + radius, cy + radius, radius, radius, left?   90:180, left?  90:-90);
-            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> g.arc(cx + radius, cy - radius, radius, radius, down?  180:270, down?  90:-90);
-            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> g.arc(cx - radius, cy + radius, radius, radius, up?      0: 90, up?    90:-90);
-            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> g.arc(cx - radius, cy - radius, radius, radius, right? 270:  0, right? 90:-90);
+            case Tiles.WALL_H,
+                 Tiles.DWALL_H    -> g.lineTo(cx + r, cy);
+            case Tiles.WALL_V,
+                 Tiles.DWALL_V    -> g.lineTo(cx, cy + r);
+            case Tiles.CORNER_NW,
+                 Tiles.DCORNER_NW -> g.arc(cx + r, cy + r, r, r, left?   90:180, left?  90:-90);
+            case Tiles.CORNER_SW,
+                 Tiles.DCORNER_SW -> g.arc(cx + r, cy - r, r, r, down?  180:270, down?  90:-90);
+            case Tiles.CORNER_NE,
+                 Tiles.DCORNER_NE -> g.arc(cx - r, cy + r, r, r, up?      0: 90, up?    90:-90);
+            case Tiles.CORNER_SE,
+                 Tiles.DCORNER_SE -> g.arc(cx - r, cy - r, r, r, right? 270:  0, right? 90:-90);
             default -> {}
         }
     }
