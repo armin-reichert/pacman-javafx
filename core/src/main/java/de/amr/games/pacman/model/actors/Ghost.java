@@ -13,6 +13,8 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -46,6 +48,7 @@ public class Ghost extends Creature {
     private float speedInsideHouse;
     private Animations animations;
     private Consumer<Ghost> huntingBehaviour = game -> {};
+    private List<Vector2i> cannotMoveUpTiles = List.of();
 
     public Ghost(byte id) {
         this(id, null);
@@ -110,6 +113,14 @@ public class Ghost extends Creature {
         revivalPosition = position;
     }
 
+    public void setCannotMoveUpTiles(List<Vector2i> tiles) {
+        cannotMoveUpTiles = new ArrayList<>(tiles);
+    }
+
+    public List<Vector2i> cannotMoveUpTiles() {
+        return cannotMoveUpTiles;
+    }
+
     public void setSpeedReturningHome(float pixelsPerTick) {
         speedReturningToHouse = pixelsPerTick;
     }
@@ -163,7 +174,7 @@ public class Ghost extends Creature {
         // hunting ghosts cannot move up at certain tiles in Pac-Man game
         if (state == HUNTING_PAC) {
             var currentTile = tile();
-            if (world.cannotMoveUpTiles().contains(currentTile)) {
+            if (cannotMoveUpTiles.contains(currentTile)) {
                 if (currentTile.plus(UP.vector()).equals(tile)) {
                     Logger.trace("Hunting {} cannot move up at {}", name, currentTile);
                     return false;

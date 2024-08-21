@@ -104,7 +104,10 @@ public class PacManGameModel extends GameModel {
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
-        ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        ghosts().forEach(ghost -> {
+            ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
+            ghost.setCannotMoveUpTiles(CANNOT_MOVE_UP_TILES);
+        });
     }
 
     @Override
@@ -114,7 +117,10 @@ public class PacManGameModel extends GameModel {
         pac.setName("Pac-Man");
         pac.setAutopilot(new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE)));
         pac.setUseAutopilot(true);
-        ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+        ghosts().forEach(ghost -> {
+            ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
+            ghost.setCannotMoveUpTiles(CANNOT_MOVE_UP_TILES);
+        });
     }
 
     @Override
@@ -168,7 +174,6 @@ public class PacManGameModel extends GameModel {
     private GameWorld createWorld() {
         var world = new GameWorld(WORLD_MAP);
         world.createArcadeHouse(10, 15);
-        world.setCannotMoveUpTiles(CANNOT_MOVE_UP_TILES);
         return world;
     }
 }

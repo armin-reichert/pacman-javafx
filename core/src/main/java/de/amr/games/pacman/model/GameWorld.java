@@ -13,7 +13,6 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
@@ -46,7 +45,6 @@ public class GameWorld {
     private final Direction[] ghostDirections = new Direction[4];
     private final Vector2i[] energizerTiles;
     private final Portal[] portals;
-    private final List<Vector2i> cannotMoveUpTiles = new ArrayList<>();
 
     private Vector2i houseTopLeftTile;
     private Vector2i houseSize;
@@ -127,16 +125,6 @@ public class GameWorld {
 
     public boolean containsPoint(double x, double y) {
         return 0 <= x && x <= map.terrain().numCols() * TS && 0 <= y && y <= map.terrain().numRows() * TS;
-    }
-
-    public void setCannotMoveUpTiles(List<Vector2i> tiles) {
-        checkNotNull(map);
-        cannotMoveUpTiles.clear();
-        cannotMoveUpTiles.addAll(tiles);
-    }
-
-    public List<Vector2i> cannotMoveUpTiles() {
-        return cannotMoveUpTiles;
     }
 
     public Stream<Vector2i> energizerTiles() {

@@ -188,11 +188,14 @@ public class PlayScene2D extends GameScene2D {
         var game = context.game();
         drawTileGrid();
         if (game.variant() == GameVariant.PACMAN && game.world() != null) {
-            game.world().cannotMoveUpTiles().forEach(tile -> {
-                g.setFill(Color.RED);
-                g.fillOval(s(t(tile.x())), s(t(tile.y() - 1)), s(TS), s(TS));
-                g.setFill(Color.WHITE);
-                g.fillRect(s(t(tile.x()) + 1), s(t(tile.y()) - HTS - 1), s(TS - 2), s(2));
+            game.ghosts().forEach(ghost -> {
+                // Are currently the same for each ghost, but who knows what comes...
+                ghost.cannotMoveUpTiles().forEach(tile -> {
+                    g.setFill(Color.RED);
+                    g.fillOval(s(t(tile.x())), s(t(tile.y() - 1)), s(TS), s(TS));
+                    g.setFill(Color.WHITE);
+                    g.fillRect(s(t(tile.x()) + 1), s(t(tile.y()) - HTS - 1), s(TS - 2), s(2));
+                });
             });
         }
         g.setFill(Color.YELLOW);
