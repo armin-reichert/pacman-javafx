@@ -29,7 +29,9 @@ import static de.amr.games.pacman.lib.Globals.randomInt;
  */
 public class PacManXXLGameModel extends PacManGameModel {
 
-    private final WorldMap[] masonicMaps = new WorldMap[8];
+    private static final int NUM_MAPS = 8;
+
+    private final WorldMap[] worldMaps = new WorldMap[NUM_MAPS];
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
     private File customMapDir;
     private boolean customMapsEnabled;
@@ -39,10 +41,9 @@ public class PacManXXLGameModel extends PacManGameModel {
         initialLives = 3;
         customMapDir = new File(userDir, "maps");
         highScoreFile = new File(userDir, "highscore-pacman_xxl.xml");
-        String mapPath = "/de/amr/games/pacman/maps/masonic/";
-        for (int number = 1; number <= 8; ++number) {
-            URL url = getClass().getResource(mapPath + "masonic_%d.world".formatted(number));
-            masonicMaps[number - 1] = new WorldMap(url);
+        for (int i = 0; i < NUM_MAPS; ++i) {
+            URL url = getClass().getResource("/de/amr/games/pacman/maps/masonic/masonic_%d.world".formatted(i+1));
+            worldMaps[i] = new WorldMap(url);
         }
         loadCustomMaps();
     }
@@ -60,11 +61,11 @@ public class PacManXXLGameModel extends PacManGameModel {
         if (mapIndex < numCustomMaps) {
             WorldMap map = customMapsSortedByFile().get(mapIndex);
             setWorldAndCreatePopulation(createWorld(map));
-        } else if (mapIndex - numCustomMaps < masonicMaps.length) {
-            setWorldAndCreatePopulation(createWorld(masonicMaps[mapIndex - numCustomMaps]));
+        } else if (mapIndex - numCustomMaps < worldMaps.length) {
+            setWorldAndCreatePopulation(createWorld(worldMaps[mapIndex - numCustomMaps]));
         } else {
-            int randomIndex = randomInt(0, masonicMaps.length);
-            setWorldAndCreatePopulation(createWorld(masonicMaps[randomIndex]));
+            int randomIndex = randomInt(0, worldMaps.length);
+            setWorldAndCreatePopulation(createWorld(worldMaps[randomIndex]));
         }
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
