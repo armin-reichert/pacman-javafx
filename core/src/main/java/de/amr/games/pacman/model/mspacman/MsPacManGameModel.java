@@ -53,12 +53,6 @@ public class MsPacManGameModel extends GameModel {
 
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
-    private static GameWorld createWorld(WorldMap map) {
-        var world = new GameWorld(map);
-        world.createArcadeHouse(10, 15);
-        return world;
-    }
-
     private int mapNumber;
     public boolean blueMazeBug = false;
 
@@ -90,7 +84,7 @@ public class MsPacManGameModel extends GameModel {
      * </ul>
      * <p>
      */
-    private static int mapNumberByLevelNumber(int levelNumber) {
+    private int mapNumberByLevelNumber(int levelNumber) {
         return switch (levelNumber) {
             case 1, 2 -> 1;
             case 3, 4, 5 -> 2;
@@ -266,5 +260,11 @@ public class MsPacManGameModel extends GameModel {
             boolean chase = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
             ghost.followTarget(chase ? chasingTarget(ghost) : scatterTarget(ghost), speed);
         }
+    }
+
+    private GameWorld createWorld(WorldMap map) {
+        var world = new GameWorld(map);
+        world.createArcadeHouse(10, 15);
+        return world;
     }
 }
