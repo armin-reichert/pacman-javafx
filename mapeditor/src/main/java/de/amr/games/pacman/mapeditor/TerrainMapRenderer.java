@@ -93,39 +93,31 @@ public class TerrainMapRenderer implements TileMapRenderer {
         return new Vector2f(tile.x() * TILE_SIZE + TILE_SIZE / 2f, tile.y() * TILE_SIZE + TILE_SIZE / 2f);
     }
 
+    //TODO: avoid special cases
     private void drawPath(GraphicsContext g, TileMap map, TileMapPath tileMapPath,
-        boolean fill, double lineWidth, Color outlineColor, Color fillColor) {
-
-        float radius = 0.45f * TILE_SIZE;
+        boolean fill, double lineWidth, Color outlineColor, Color fillColor)
+    {
         g.beginPath();
-
         Vector2i tile = tileMapPath.startTile();
-        Vector2f center = center(tile);
         {
-            float cx = center.x(), cy = center.y();
-            //TODO: avoid these special cases
             if (tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
-                // start at left maze border, not at tile center
+                // start path at left border, not at tile center
                 double y = center(tile).y();
                 g.moveTo(0, y);
                 g.lineTo(HTS, y);
             }
-            drawTile(g, map.get(tile), cx, cy, radius, true, true, tile.x() != 0, true);
+            //TODO clarify this
+            followPath(g, map.get(tile), center(tile), true, true, tile.x() != 0, true);
         }
         for (Direction dir : tileMapPath) {
             Vector2i prev = tile;
             tile = prev.plus(dir.vector());
-            center = center(tile);
-            float cx = center.x(), cy = center.y();
-            drawTile(g, map.get(tile), cx, cy, radius, dir == Direction.LEFT, dir == Direction.RIGHT, dir == Direction.UP, dir == Direction.DOWN);
+            followPath(g, map.get(tile), center(tile), dir == Direction.LEFT, dir == Direction.RIGHT, dir == Direction.UP, dir == Direction.DOWN);
         }
         if (tile.x() == 0 && map.get(tile) == Tiles.DWALL_H) {
-            g.lineTo(0, center.y());
+            // end path at left border
+            g.lineTo(0, center(tile).y());
         }
-        if (map.get(tile) == Tiles.DOOR) {
-            g.lineTo(tile.x() * TILE_SIZE, center.y());
-        }
-
         if (fill) {
             g.setFill(fillColor);
             g.fill();
@@ -135,7 +127,9 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.stroke();
     }
 
-    private void drawTile(GraphicsContext g, byte tileValue, float cx, float cy, float radius, boolean left, boolean right, boolean up, boolean down) {
+    private void followPath(GraphicsContext g, byte tileValue, Vector2f center, boolean left, boolean right, boolean up, boolean down) {
+        float radius = 0.5f * TILE_SIZE;
+        float cx = center.x(), cy = center.y();
         switch (tileValue) {
             case Tiles.WALL_H,    Tiles.DWALL_H    -> g.lineTo(cx + radius, cy);
             case Tiles.WALL_V,    Tiles.DWALL_V    -> g.lineTo(cx, cy + radius);
