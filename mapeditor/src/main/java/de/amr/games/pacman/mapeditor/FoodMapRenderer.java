@@ -12,12 +12,17 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import static de.amr.games.pacman.mapeditor.TileMapUtil.TILE_SIZE;
+
 /**
  * @author Armin Reichert
  */
 public class FoodMapRenderer implements TileMapRenderer {
 
     public FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1f);
+
+    private Color pelletColor = Color.PINK;
+    private Color energizerColor = Color.YELLOW;
 
     public void setScaling(double scaling) {
         scalingPy.set((float) scaling);
@@ -26,9 +31,6 @@ public class FoodMapRenderer implements TileMapRenderer {
     public float scaling() {
         return scalingPy.get();
     }
-
-    private Color pelletColor = Color.PINK;
-    private Color energizerColor = Color.YELLOW;
 
     public void setEnergizerColor(Color energizerColor) {
         this.energizerColor = energizerColor;
@@ -54,7 +56,7 @@ public class FoodMapRenderer implements TileMapRenderer {
     public void drawPellet(GraphicsContext g, Vector2i tile) {
         g.save();
         g.scale(scaling(), scaling());
-        double x = tile.x() * TileMapUtil.TILE_SIZE, y = tile.y() * TileMapUtil.TILE_SIZE;
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(pelletColor);
         g.fillRect(x + 3, y + 3, 2, 2);
         g.restore();
@@ -63,11 +65,11 @@ public class FoodMapRenderer implements TileMapRenderer {
     public void drawEnergizer(GraphicsContext g, Vector2i tile) {
         g.save();
         g.scale(scaling(), scaling());
-        double x = tile.x() * TileMapUtil.TILE_SIZE, y = tile.y() * TileMapUtil.TILE_SIZE;
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(energizerColor);
-        g.fillRect(x + 2, y, 0.5 * TileMapUtil.TILE_SIZE, TileMapUtil.TILE_SIZE);
-        g.fillRect(x, y + 2, TileMapUtil.TILE_SIZE, 0.5 * TileMapUtil.TILE_SIZE);
-        g.fillRect(x + 1, y + 1, TileMapUtil.TILE_SIZE - 2, TileMapUtil.TILE_SIZE - 2);
+        g.fillRect(x + 2, y, 0.5 * TILE_SIZE, TILE_SIZE);
+        g.fillRect(x, y + 2, TILE_SIZE, 0.5 * TILE_SIZE);
+        g.fillRect(x + 1, y + 1, TILE_SIZE - 2, TILE_SIZE - 2);
         g.restore();
     }
 }
