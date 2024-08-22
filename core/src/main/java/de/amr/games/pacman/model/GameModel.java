@@ -83,7 +83,7 @@ public abstract class GameModel {
     public static final byte    POINTS_ENERGIZER = 50;
     public static final short   POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
     public static final short   EXTRA_LIFE_SCORE = 10_000;
-    public static final byte    LEVEL_COUNTER_MAX_SYMBOLS = 7;
+    public static final byte LEVEL_COUNTER_MAX_SIZE = 7;
     public static final byte    PAC_POWER_FADING_TICKS = 120; // unsure
     public static final byte    BONUS_POINTS_SHOWN_TICKS = 120; // unsure
     public static final byte    RESTING_TICKS_PELLET = 1;
@@ -148,7 +148,7 @@ public abstract class GameModel {
     protected abstract long huntingTicks(int levelNumber, int phaseIndex);
     protected abstract boolean isPacManKillingIgnoredInDemoLevel();
     protected abstract boolean isBonusReached();
-    protected abstract void updateLevelCounter();
+    protected abstract boolean isLevelCounterEnabled();
 
     protected void clearLevel() {
         levelNumber = 0;
@@ -321,11 +321,19 @@ public abstract class GameModel {
     }
 
     public void startLevel() {
-        updateLevelCounter();
+        if (levelNumber == 1) {
+            levelCounter.clear();
+        }
+        if (isLevelCounterEnabled()) {
+            levelCounter.add(bonusSymbols[0]);
+            if (levelCounter.size() > LEVEL_COUNTER_MAX_SIZE) {
+                levelCounter.remove(0);
+            }
+        }
         gateKeeper.init(levelNumber);
         letsGetReadyToRumble();
         levelStartTime = System.currentTimeMillis();
-        Logger.info("{} started ({})", demoLevel ? "Demo Level" : "Level " + levelNumber, this);
+        Logger.info("{} started ({})", demoLevel ? "Demo Level" : "Level " + levelNumber, variant());
         publishGameEvent(GameEventType.LEVEL_STARTED);
     }
 

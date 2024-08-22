@@ -118,16 +118,8 @@ public class PacManGameModel extends GameModel {
     }
 
     @Override
-    public void updateLevelCounter() {
-        if (levelNumber == 1) {
-            levelCounter.clear();
-        }
-        if (!demoLevel) {
-            levelCounter.add(bonusSymbols[0]);
-            if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
-                levelCounter.remove(0);
-            }
-        }
+    protected boolean isLevelCounterEnabled() {
+        return !demoLevel;
     }
 
     @Override

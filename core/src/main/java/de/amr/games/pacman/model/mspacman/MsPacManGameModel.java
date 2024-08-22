@@ -143,16 +143,8 @@ public class MsPacManGameModel extends GameModel {
      * (also inside a level) whenever a bonus score is reached. At least that's what I was told.
      */
     @Override
-    public void updateLevelCounter() {
-        if (levelNumber == 1) {
-            levelCounter.clear();
-        }
-        if (!demoLevel && levelNumber < 8) {
-            levelCounter.add(bonusSymbols[0]);
-            if (levelCounter.size() > LEVEL_COUNTER_MAX_SYMBOLS) {
-                levelCounter.remove(0);
-            }
-        }
+    protected boolean isLevelCounterEnabled() {
+        return levelNumber < 8 && !demoLevel;
     }
 
     @Override
