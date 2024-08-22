@@ -43,23 +43,20 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     private static GameController THE_ONE;
 
     public static void init(File userDir) {
+        if (THE_ONE != null) {
+            throw new IllegalStateException("Game controller has already been initialized");
+        }
         THE_ONE = new GameController(userDir);
     }
 
     public static GameController it() {
+        if (THE_ONE == null) {
+            throw new IllegalStateException("Game controller has not been initialized");
+        }
         return THE_ONE;
     }
 
-    /** Maximum number of coins, as in MAME. */
-    public static final byte MAX_CREDIT = 99;
-
     private final Map<GameVariant, GameModel> models = new EnumMap<>(GameVariant.class);
-    {
-        models.put(GameVariant.MS_PACMAN,  new MsPacManGameModel());
-        models.put(GameVariant.PACMAN,     new PacManGameModel());
-        models.put(GameVariant.PACMAN_XXL, new PacManXXLGameModel());
-    }
-
     private final File userDir;
     private GameClock clock;
     private GameModel game;
@@ -68,10 +65,13 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     private GameController(File userDir) {
         super(GameState.values());
-        this.userDir = userDir;
-        for (var model : models.values()) {
-            model.init(userDir);
-            Logger.info("Game (variant={}) initialized.", model.variant());
+        this.userDir = checkNotNull(userDir);
+        Logger.info("Creating game models...");
+        models.put(GameVariant.MS_PACMAN,  new MsPacManGameModel(userDir));
+        models.put(GameVariant.PACMAN,     new PacManGameModel(userDir));
+        models.put(GameVariant.PACMAN_XXL, new PacManXXLGameModel(userDir));
+        for (var entry : models.entrySet()) {
+            Logger.info("{}: {}", entry.getKey(), entry.getValue());
         }
         // map state change events to game events
         addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
@@ -138,7 +138,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     }
 
     public boolean setCredit(int credit) {
-        if (0 <= credit && credit <= MAX_CREDIT) {
+        if (0 <= credit && credit <= GameModel.MAX_CREDIT) {
             this.credit = credit;
             return true;
         }

@@ -33,11 +33,11 @@ public class PacManXXLGameModel extends PacManGameModel {
 
     private final WorldMap[] worldMaps = new WorldMap[NUM_MAPS];
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
-    private File customMapDir;
+    private final File customMapDir;
     private boolean customMapsEnabled;
 
-    @Override
-    public void init(File userDir) {
+    public PacManXXLGameModel(File userDir) {
+        super(userDir);
         initialLives = 3;
         customMapDir = new File(userDir, "maps");
         highScoreFile = new File(userDir, "highscore-pacman_xxl.xml");

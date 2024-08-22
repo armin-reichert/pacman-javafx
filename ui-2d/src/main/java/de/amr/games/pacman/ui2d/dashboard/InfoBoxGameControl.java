@@ -4,9 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.dashboard;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameParameters;
@@ -41,7 +41,7 @@ public class InfoBoxGameControl extends InfoBox {
     public void init(GameContext context) {
         this.context = context;
 
-        spinnerCredit = addIntSpinnerRow("Credit", 0, GameController.MAX_CREDIT, 0);
+        spinnerCredit = addIntSpinnerRow("Credit", 0, GameModel.MAX_CREDIT, 0);
         comboGameVariant = addComboBoxRow("Variant", GameVariant.values());
         comboInitialLives = addComboBoxRow("Initial Lives", new Integer[]{3, 5});
         buttonsLevelActions = addButtonListRow("Game Level", "Start", "Quit", "Next");

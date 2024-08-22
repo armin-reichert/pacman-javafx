@@ -79,11 +79,13 @@ public abstract class GameModel {
         return LEVELS[Math.min(levelNumber - 1, LEVELS.length - 1)];
     }
 
+    /** Maximum number of coins, as in MAME. */
+    public static final byte    MAX_CREDIT = 99;
     public static final byte    POINTS_PELLET = 10;
     public static final byte    POINTS_ENERGIZER = 50;
     public static final short   POINTS_ALL_GHOSTS_IN_LEVEL = 12_000;
     public static final short   EXTRA_LIFE_SCORE = 10_000;
-    public static final byte LEVEL_COUNTER_MAX_SIZE = 7;
+    public static final byte    LEVEL_COUNTER_MAX_SIZE = 7;
     public static final byte    PAC_POWER_FADING_TICKS = 120; // unsure
     public static final byte    BONUS_POINTS_SHOWN_TICKS = 120; // unsure
     public static final byte    RESTING_TICKS_PELLET = 1;
@@ -106,6 +108,7 @@ public abstract class GameModel {
         return number;
     }
 
+    protected final File userDir;
     protected final Pulse          blinking = new Pulse(10, Pulse.OFF);
     protected final byte[]         bonusSymbols = new byte[2];
     protected final List<Byte>     levelCounter = new ArrayList<>();
@@ -138,7 +141,10 @@ public abstract class GameModel {
 
     protected SimulationStepEventLog eventLog;
 
-    public abstract void init(File userDir);
+    protected GameModel(File userDir) {
+        this.userDir = checkNotNull(userDir);
+    }
+
     public abstract GameVariant variant();
     public abstract void activateNextBonus();
 

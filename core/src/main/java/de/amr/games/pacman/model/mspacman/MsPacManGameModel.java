@@ -56,8 +56,8 @@ public class MsPacManGameModel extends GameModel {
     private int mapNumber;
     public boolean blueMazeBug = false;
 
-    @Override
-    public void init(File userDir) {
+    public MsPacManGameModel(File userDir) {
+        super(userDir);
         initialLives = 3;
         highScoreFile = new File(userDir, "highscore-ms_pacman.xml");
     }
