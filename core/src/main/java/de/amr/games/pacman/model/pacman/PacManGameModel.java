@@ -112,15 +112,9 @@ public class PacManGameModel extends GameModel {
 
     @Override
     public void buildDemoLevel() {
-        levelNumber = 1; // determines speed etc.
-        setWorldAndCreatePopulation(createWorld());
-        pac.setName("Pac-Man");
+        buildRegularLevel(1);
         pac.setAutopilot(new RouteBasedSteering(List.of(PACMAN_DEMO_LEVEL_ROUTE)));
         pac.setUseAutopilot(true);
-        ghosts().forEach(ghost -> {
-            ghost.setHuntingBehaviour(this::ghostHuntingBehaviour);
-            ghost.setCannotMoveUpTiles(CANNOT_MOVE_UP_TILES);
-        });
     }
 
     @Override
