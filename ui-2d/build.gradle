@@ -26,31 +26,21 @@ javafx {
 
 jlink {
     imageZip = layout.buildDirectory.file("distributions/javafx-ui2d-${javafx.platform.classifier}.zip")
-    options = [
-            '--compress', 'zip-9',
-            '--strip-debug',
-            '--no-header-files',
-            '--no-man-pages']
+    options = ['--compress', 'zip-9', '--strip-debug', '--no-header-files', '--no-man-pages']
     launcher {
         name = 'Pac-Man-FX-2D'
     }
     jpackage {
         appVersion = '1.0'
-        installerOptions = [
-            '--vendor', 'Armin Reichert',
-        ]
+        installerOptions = ['--vendor', 'Armin Reichert']
         if (os.isWindows()) {
             icon = 'pacman.ico'
             installerType = 'msi'
-            installerOptions.addAll([
-                    '--win-dir-chooser',
-                    '--win-menu',
-                    '--win-menu-group', 'Pac-Man FX',
-                    '--win-shortcut'])
+            installerOptions.addAll(['--win-dir-chooser', '--win-menu', '--win-menu-group', 'Pac-Man FX', '--win-shortcut'])
         }
-	if (os.isLinux()) {
-		installerType = 'deb'
-	}
+        if (os.isLinux()) {
+            installerType = 'deb'
+        }
     }
 }
 

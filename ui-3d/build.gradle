@@ -30,32 +30,20 @@ javafx {
 
 jlink {
     imageZip = layout.buildDirectory.file("distributions/javafx-ui3d-${javafx.platform.classifier}.zip")
-    options = [
-        '--compress', 'zip-9',
-        '--strip-debug',
-        '--no-header-files',
-        '--no-man-pages'
-    ]
+    options = ['--compress', 'zip-9', '--strip-debug', '--no-header-files', '--no-man-pages']
     launcher {
         name = 'Pac-Man-FX-3D'
     }
     jpackage {
-        installerOptions = [
-            '--vendor', 'Armin Reichert',
-            '--app-version', '1.0'
-        ]
+        installerOptions = ['--vendor', 'Armin Reichert', '--app-version', '1.0']
         if (os.isWindows()) {
             icon = 'pacman.ico'
             installerType = 'msi'
-            installerOptions += [
-                '--win-dir-chooser',
-                '--win-menu',
-                '--win-menu-group', 'Pac-Man FX',
-                '--win-shortcut']
+            installerOptions += ['--win-dir-chooser', '--win-menu', '--win-menu-group', 'Pac-Man FX', '--win-shortcut']
         }
-	if (os.isLinux()) {
-		installerType='deb'
-	}
+        if (os.isLinux()) {
+            installerType='deb'
+        }
     }
 }
 
