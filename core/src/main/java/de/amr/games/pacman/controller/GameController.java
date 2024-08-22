@@ -57,7 +57,6 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     }
 
     private final Map<GameVariant, GameModel> models = new EnumMap<>(GameVariant.class);
-    private final File userDir;
     private GameClock clock;
     private GameModel game;
     private boolean pacImmune = false;
@@ -65,7 +64,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     private GameController(File userDir) {
         super(GameState.values());
-        this.userDir = checkNotNull(userDir);
+        checkNotNull(userDir);
         Logger.info("Creating game models...");
         models.put(GameVariant.MS_PACMAN,  new MsPacManGameModel(userDir));
         models.put(GameVariant.PACMAN,     new PacManGameModel(userDir));
@@ -77,10 +76,9 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
     }
 
-    public File userDir() {
-        return userDir;
-    }
-
+    /**
+     * @return The currently selected game (model).
+     */
     public GameModel gameModel() {
         return game;
     }
