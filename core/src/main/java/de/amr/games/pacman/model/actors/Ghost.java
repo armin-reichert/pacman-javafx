@@ -50,21 +50,19 @@ public class Ghost extends Creature {
     private Consumer<Ghost> huntingBehaviour = game -> {};
     private List<Vector2i> cannotMoveUpTiles = List.of();
 
-    public Ghost(byte id) {
-        this(id, null);
-    }
-
     /**
      * @param id  The ghost ID. One of
      * {@link GameModel#RED_GHOST},
      * {@link GameModel#PINK_GHOST},
      * {@link GameModel#CYAN_GHOST},
      * {@link GameModel#ORANGE_GHOST}.
+     * @param name readable name like "Blinky"
+     * @param world the world where this ghost lives (optional)
      */
-    public Ghost(byte id, GameWorld world) {
+    public Ghost(byte id, String name, GameWorld world) {
         super(world);
-        checkGhostID(id);
-        this.id = id;
+        this.id = checkGhostID(id);
+        this.name = checkNotNull(name);
     }
 
     public void setHuntingBehaviour(Consumer<Ghost> huntingBehaviour) {

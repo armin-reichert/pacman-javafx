@@ -185,16 +185,11 @@ public abstract class GameModel {
         pac.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
 
         ghosts = new Ghost[] {
-            new Ghost(RED_GHOST,    world),
-            new Ghost(PINK_GHOST,   world),
-            new Ghost(CYAN_GHOST,   world),
-            new Ghost(ORANGE_GHOST, world)
+            new Ghost(RED_GHOST,    "Blinky", world),
+            new Ghost(PINK_GHOST,   "Pinky", world),
+            new Ghost(CYAN_GHOST,   "Inky", world),
+            new Ghost(ORANGE_GHOST, "Clyde", world)
         };
-
-        ghosts[RED_GHOST   ].setName("Blinky");
-        ghosts[PINK_GHOST  ].setName("Pinky");
-        ghosts[CYAN_GHOST  ].setName("Inky");
-        ghosts[ORANGE_GHOST].setName("Clyde");
 
         ghosts[RED_GHOST   ].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // NOTE!
         ghosts[PINK_GHOST  ].setRevivalPosition(world.ghostPosition(PINK_GHOST));

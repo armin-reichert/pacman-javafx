@@ -176,15 +176,11 @@ public class MsPacManIntro extends FiniteStateMachine<MsPacManIntro.State, MsPac
         super(State.values());
         msPacMan = new Pac();
         ghosts = new Ghost[] {
-            new Ghost(RED_GHOST),
-            new Ghost(PINK_GHOST),
-            new Ghost(CYAN_GHOST),
-            new Ghost(ORANGE_GHOST)
+            new Ghost(RED_GHOST,    "Blinky", null),
+            new Ghost(PINK_GHOST,   "Pinky", null),
+            new Ghost(CYAN_GHOST,   "Inky", null),
+            new Ghost(ORANGE_GHOST, "Sue", null)
         };
-        ghosts[RED_GHOST].setName("Blinky");
-        ghosts[PINK_GHOST].setName("Pinky");
-        ghosts[CYAN_GHOST].setName("Inky");
-        ghosts[ORANGE_GHOST].setName("Sue");
     }
 
     @Override

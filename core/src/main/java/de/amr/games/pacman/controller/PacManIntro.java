@@ -42,8 +42,7 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
         public boolean characterVisible;
 
         public GhostInfo(byte id, String name, String character) {
-            ghost = new Ghost(id);
-            ghost.setName(name);
+            ghost = new Ghost(id, name, null);
             this.character = character;
         }
     }

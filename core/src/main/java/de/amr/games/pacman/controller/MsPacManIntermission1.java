@@ -59,10 +59,10 @@ public class MsPacManIntermission1 {
 
     public MsPacManIntermission1() {
         pacMan = new Pac();
-        inky = new Ghost(GameModel.CYAN_GHOST);
-        msPac = new Pac();
-        pinky = new Ghost(GameModel.PINK_GHOST);
-        heart = new Entity();
+        inky   = new Ghost(GameModel.CYAN_GHOST, "Inky", null);
+        msPac  = new Pac();
+        pinky  = new Ghost(GameModel.PINK_GHOST, "Pinky", null);
+        heart  = new Entity();
     }
 
     public void tick() {
