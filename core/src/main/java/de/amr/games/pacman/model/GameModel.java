@@ -366,9 +366,14 @@ public abstract class GameModel {
         blinking.reset();
     }
 
-    public void makeGuysVisible(boolean visible) {
-        pac.setVisible(visible);
-        ghosts().forEach(ghost -> ghost.setVisible(visible));
+    public void showGuys() {
+        pac.setVisible(true);
+        ghosts().forEach(ghost -> ghost.setVisible(true));
+    }
+
+    public void hideGuys() {
+        pac.setVisible(false);
+        ghosts().forEach(ghost -> ghost.setVisible(false));
     }
 
     public SimulationStepEventLog eventLog() {

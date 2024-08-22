@@ -75,7 +75,7 @@ public enum GameState implements FsmState<GameModel> {
             if (game.isPlaying()) { // resume running game
                 if (timer.tick() == 1) {
                     game.letsGetReadyToRumble();
-                    game.makeGuysVisible(true);
+                    game.showGuys();
                 } else if (timer.tick() == TICK_RESUME_GAME) {
                     game.startHuntingPhase(0);
                     game.controller().changeState(GameState.HUNTING);
@@ -90,7 +90,7 @@ public enum GameState implements FsmState<GameModel> {
                     game.startLevel();
                 }
                 else if (timer.tick() == TICK_NEW_GAME_SHOW_GUYS) {
-                    game.makeGuysVisible(true);
+                    game.showGuys();
                 }
                 else if (timer.tick() == TICK_NEW_GAME_START_PLAYING) {
                     game.setPlaying(true);
@@ -102,7 +102,7 @@ public enum GameState implements FsmState<GameModel> {
                 if (timer.tick() == TICK_CREATE_LEVEL) {
                     game.createDemoLevel();
                     game.startLevel();
-                    game.makeGuysVisible(true);
+                    game.showGuys();
                 }
                 else if (timer.tick() == TICK_DEMO_LEVEL_START_PLAYING) {
                     game.startHuntingPhase(0);
@@ -171,7 +171,7 @@ public enum GameState implements FsmState<GameModel> {
             timer.restartSeconds(1);
             game.createLevel(game.levelNumber() + 1);
             game.startLevel();
-            game.makeGuysVisible(true);
+            game.showGuys();
         }
 
         @Override
@@ -306,7 +306,7 @@ public enum GameState implements FsmState<GameModel> {
             game.reset();
             game.createLevel(1);
             game.startLevel();
-            game.makeGuysVisible(true);
+            game.showGuys();
         }
 
         @Override
@@ -326,8 +326,7 @@ public enum GameState implements FsmState<GameModel> {
             }
             if (timer().atSecond(1.0)) {
                 game.letsGetReadyToRumble();
-                game.pac().show();
-                game.ghosts().forEach(Ghost::show);
+                game.showGuys();
             } else if (timer().atSecond(2)) {
                 game.blinking().setStartPhase(Pulse.ON);
                 game.blinking().restart();
@@ -343,8 +342,7 @@ public enum GameState implements FsmState<GameModel> {
                 game.bonus().ifPresent(bonus -> bonus.setEaten(60));
                 game.publishGameEvent(GameEventType.BONUS_EATEN);
             } else if (timer().atSecond(8.5)) {
-                game.pac().hide();
-                game.ghosts().forEach(Ghost::hide);
+                game.hideGuys();
                 game.blinking().stop();
                 game.blinking().setStartPhase(Pulse.ON);
                 game.blinking().reset();
@@ -355,13 +353,12 @@ public enum GameState implements FsmState<GameModel> {
             } else if (timer().atSecond(12.0)) {
                 timer().restartIndefinitely();
                 game.pac().freeze();
-                game.ghosts().forEach(Ghost::hide);
                 game.bonus().ifPresent(Bonus::setInactive);
                 setProperty("mazeFlashing", false);
                 game.blinking().reset();
                 game.createLevel(game.levelNumber() + 1);
                 game.startLevel();
-                game.makeGuysVisible(true);
+                game.showGuys();
             }
         }
 
