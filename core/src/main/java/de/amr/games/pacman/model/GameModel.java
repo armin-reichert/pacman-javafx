@@ -347,21 +347,25 @@ public abstract class GameModel {
         world = null;
     }
 
+    /**
+     * Sets each guy to his start position and resets him to his initial state. Note that they are all invisible
+     * initially!
+     */
     public void letsGetReadyToRumble() {
-        powerTimer.resetIndefinitely();
-        pac.reset();
+        pac.reset(); // invisible!
         pac.setPosition(world.pacPosition());
         pac.setMoveAndWishDir(Direction.LEFT);
         pac.selectAnimation(Pac.ANIM_MUNCHING);
         pac.animations().ifPresent(Animations::resetSelected);
         ghosts().forEach(ghost -> {
-            ghost.reset();
+            ghost.reset(); // invisible!
             ghost.setPosition(world.ghostPosition(ghost.id()));
             ghost.setMoveAndWishDir(world.ghostDirection(ghost.id()));
             ghost.setState(LOCKED);
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
             ghost.resetAnimation();
         });
+        powerTimer.resetIndefinitely();
         blinking.setStartPhase(Pulse.ON); // Energizers are visible when ON
         blinking.reset();
     }
