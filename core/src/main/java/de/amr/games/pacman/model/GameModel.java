@@ -191,17 +191,14 @@ public abstract class GameModel {
             new Ghost(ORANGE_GHOST, "Clyde", world)
         };
 
-        ghosts[RED_GHOST   ].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // NOTE!
-        ghosts[PINK_GHOST  ].setRevivalPosition(world.ghostPosition(PINK_GHOST));
-        ghosts[CYAN_GHOST  ].setRevivalPosition(world.ghostPosition(CYAN_GHOST));
-        ghosts[ORANGE_GHOST].setRevivalPosition(world.ghostPosition(ORANGE_GHOST));
-
         ghosts().forEach(ghost -> {
             ghost.reset();
             ghost.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
             ghost.setSpeedReturningHome(PPS_GHOST_RETURNING_HOME * SEC_PER_TICK);
             ghost.setSpeedInsideHouse(PPS_GHOST_INSIDE_HOUSE * SEC_PER_TICK);
+            ghost.setRevivalPosition(world.ghostPosition(ghost.id()));
         });
+        ghosts[RED_GHOST].setRevivalPosition(world.ghostPosition(PINK_GHOST)); // middle house position
     }
 
     protected void setCruiseElroyEnabled(boolean enabled) {
