@@ -105,7 +105,7 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void init() {
-        GameController.init(new File(System.getProperty("user.home"), ".pacmanfx"));
+        GameController.create(new File(System.getProperty("user.home"), ".pacmanfx"));
     }
 
     @Override

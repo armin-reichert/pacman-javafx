@@ -42,7 +42,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     private static GameController THE_ONE;
 
-    public static void init(File userDir) {
+    public static void create(File userDir) {
         if (THE_ONE != null) {
             throw new IllegalStateException("Game controller has already been initialized");
         }
