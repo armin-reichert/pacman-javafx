@@ -34,14 +34,14 @@ Prerequisites: You need to have [JDK 21](https://www.oracle.com/java/technologie
 - `./gradlew jpackage` or just `make` (Windows) or `./make.sh` (Linux)
 
 This will create
-- an installer (.msi/.deb/.dmg depending on your platform) for the 2D-only game (subdirectory `ui-2d/build/jpackage`)
-- an installer for the full game (subdirectory `ui-3d/build/jpackage`)
-- an installer for the map editor (subdirectory `mapeditor/build/jpackage`)
+- an installer (.msi/.deb/.dmg depending on your platform) for the 2D-only game (subdirectory `pacman-ui-2d/build/jpackage`)
+- an installer for the full game (subdirectory `pacman-ui-3d/build/jpackage`)
+- an installer for the map editor (subdirectory `pacman-mapeditor/build/jpackage`)
 
 ### Running the application(s) using Gradle
 
-- Pac-Man 2D: `./gradlew ui-2d:run`
-- Pac-Man 3D: `./gradlew ui-3d:run`
+- Pac-Man 2D: `./gradlew pacman-ui-2d:run`
+- Pac-Man 3D: `./gradlew pacman-ui-3d:run`
 
 To be able to create the Windows executables, you need to have the following tools installed:
 

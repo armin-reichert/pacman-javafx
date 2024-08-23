@@ -38,19 +38,19 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}
-          path: ui-3d/build/jpackage/*.msi
+          path: pacman-ui-3d/build/jpackage/*.msi
           if-no-files-found: ignore
       - name: Upload Linux deb
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}
-          path: ui-3d/build/jpackage/*.deb
+          path: pacman-ui-3d/build/jpackage/*.deb
           if-no-files-found: ignore
       - name: Upload Mac-OS dmg
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}
-          path: ui-3d/build/jpackage/*.dmg
+          path: pacman-ui-3d/build/jpackage/*.dmg
           if-no-files-found: ignore
 
   download-and-release-artifacts:
@@ -60,13 +60,13 @@ jobs:
       - name: Download artifacts created for 3D game version
         uses: actions/download-artifact@v4
         with:
-          path: ui-3d/build/jpackage
+          path: pacman-ui-3d/build/jpackage
       - name: List files
         run: ls -R
       - name: Attach installers to the release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./ui-3d/build/jpackage/macos-latest/*.dmg
-            ./ui-3d/build/jpackage/ubuntu-latest/*.deb
-            ./ui-3d/build/jpackage/windows-latest/*.msi
+            ./pacman-ui-3d/build/jpackage/macos-latest/*.dmg
+            ./pacman-ui-3d/build/jpackage/ubuntu-latest/*.deb
+            ./pacman-ui-3d/build/jpackage/windows-latest/*.msi

@@ -12,7 +12,7 @@ application {
 }
 
 dependencies {
-    implementation project(':lib')
+    implementation project(':pacman-lib')
     implementation 'org.tinylog:tinylog-api:2.7.0'
 }
 

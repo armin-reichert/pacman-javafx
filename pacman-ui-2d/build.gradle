@@ -14,9 +14,9 @@ application {
 dependencies {
     implementation 'org.tinylog:tinylog-api:2.7.0'
     implementation 'org.tinylog:tinylog-impl:2.7.0'
-    implementation project(':lib')
-    implementation project(':core')
-    implementation project(':mapeditor')
+    implementation project(':pacman-lib')
+    implementation project(':pacman-core')
+    implementation project(':pacman-mapeditor')
 }
 
 javafx {
