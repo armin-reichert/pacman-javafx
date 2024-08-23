@@ -55,9 +55,9 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
         START {
             @Override
             public void onUpdate(PacManIntro intro) {
-                if (timer.tick() == 2) {
+                if (timer.currentTick() == 2) {
                     intro.creditVisible = true;
-                } else if (timer.tick() == 3) {
+                } else if (timer.currentTick() == 3) {
                     intro.titleVisible = true;
                 } else if (timer.atSecond(1)) {
                     intro.changeState(State.PRESENTING_GHOSTS);
@@ -68,7 +68,7 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
         PRESENTING_GHOSTS {
             @Override
             public void onUpdate(PacManIntro intro) {
-                if (timer.tick() == 1) {
+                if (timer.currentTick() == 1) {
                     intro.ghostInfo[intro.ghostIndex].pictureVisible = true;
                 } else if (timer.atSecond(1.0)) {
                     intro.ghostInfo[intro.ghostIndex].characterVisible = true;
@@ -151,7 +151,7 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
             @Override
             public void onEnter(PacManIntro intro) {
                 timer.restartIndefinitely();
-                intro.ghostKilledTime = timer.tick();
+                intro.ghostKilledTime = timer.currentTick();
                 intro.pacMan.setMoveDir(Direction.RIGHT);
                 intro.pacMan.setSpeed(intro.chaseSpeed);
                 intro.victims.clear();
@@ -170,7 +170,7 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
                     .findFirst()
                     .ifPresent(victim -> {
                         intro.victims.add(victim);
-                        intro.ghostKilledTime = timer.tick();
+                        intro.ghostKilledTime = timer.currentTick();
                         intro.pacMan.hide();
                         intro.pacMan.setSpeed(0);
                         intro.ghosts().forEach(ghost -> {
@@ -182,7 +182,7 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
                     });
 
                 // After 50 ticks, Pac-Man and the surviving ghosts get visible again and move on
-                if (timer.tick() == intro.ghostKilledTime + 50) {
+                if (timer.currentTick() == intro.ghostKilledTime + 50) {
                     intro.pacMan.show();
                     intro.pacMan.setSpeed(intro.chaseSpeed);
                     intro.ghosts().forEach(ghost -> {

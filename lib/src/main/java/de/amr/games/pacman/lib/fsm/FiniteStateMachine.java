@@ -161,7 +161,7 @@ public abstract class FiniteStateMachine<S extends FsmState<C>, C> {
         if (currentState.timer().state() == State.READY) {
             currentState.timer().start();
         } else {
-            currentState.timer().advance();
+            currentState.timer().tick();
         }
     }
 }

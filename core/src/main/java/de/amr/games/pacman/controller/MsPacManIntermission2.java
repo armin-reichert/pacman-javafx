@@ -59,7 +59,7 @@ public class MsPacManIntermission2 {
                 throw new IllegalStateException("Illegal state: " + state);
 
         }
-        stateTimer.advance();
+        stateTimer.tick();
     }
 
     private void updateStateFlap() {

@@ -51,7 +51,7 @@ public class MsPacManIntro extends FiniteStateMachine<MsPacManIntro.State, MsPac
      */
     public BitSet marqueeState() {
         var state = new BitSet(numBulbs);
-        long t = marqueeTimer.tick();
+        long t = marqueeTimer.currentTick();
         for (int b = 0; b < 6; ++b) {
             state.set((int) (b * bulbOnDistance + t) % numBulbs);
         }
@@ -86,7 +86,7 @@ public class MsPacManIntro extends FiniteStateMachine<MsPacManIntro.State, MsPac
 
             @Override
             public void onUpdate(MsPacManIntro intro) {
-                intro.marqueeTimer.advance();
+                intro.marqueeTimer.tick();
                 if (timer.atSecond(1)) {
                     intro.changeState(State.GHOSTS_MARCHING_IN);
                 }
@@ -96,7 +96,7 @@ public class MsPacManIntro extends FiniteStateMachine<MsPacManIntro.State, MsPac
         GHOSTS_MARCHING_IN {
             @Override
             public void onUpdate(MsPacManIntro intro) {
-                intro.marqueeTimer.advance();
+                intro.marqueeTimer.tick();
                 var ghost = intro.ghosts[intro.ghostIndex];
                 ghost.show();
 
@@ -136,7 +136,7 @@ public class MsPacManIntro extends FiniteStateMachine<MsPacManIntro.State, MsPac
         MS_PACMAN_MARCHING_IN {
             @Override
             public void onUpdate(MsPacManIntro intro) {
-                intro.marqueeTimer.advance();
+                intro.marqueeTimer.tick();
                 intro.msPacMan.show();
                 intro.msPacMan.move();
                 if (intro.msPacMan.posX() <= intro.stopMsPacX) {
@@ -150,7 +150,7 @@ public class MsPacManIntro extends FiniteStateMachine<MsPacManIntro.State, MsPac
         READY_TO_PLAY {
             @Override
             public void onUpdate(MsPacManIntro intro) {
-                intro.marqueeTimer.advance();
+                intro.marqueeTimer.tick();
                 if (timer.atSecond(2.0) && !gameController().hasCredit()) {
                     gameController().changeState(GameState.READY);
                     // go into demo mode

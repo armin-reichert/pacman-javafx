@@ -23,7 +23,7 @@ public class InfoBoxGameInfo extends InfoBox {
 
         addTextRow("",
             () -> "Running:   %s%s".formatted(
-                context.gameState().timer().tick(),
+                context.gameState().timer().currentTick(),
                 context.gameState().timer().isStopped() ? " (STOPPED)" : ""));
 
         addTextRow("",
@@ -62,7 +62,7 @@ public class InfoBoxGameInfo extends InfoBox {
     }
 
     private String fmtHuntingTicksRunning(GameLevel level) {
-        return "Running:   %d".formatted(context.game().huntingTimer().tick());
+        return "Running:   %d".formatted(context.game().huntingTimer().currentTick());
     }
 
     private String fmtHuntingTicksRemaining(GameLevel level) {

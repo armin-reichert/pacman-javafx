@@ -602,7 +602,7 @@ public abstract class GameModel {
     }
 
     private void updatePacPower() {
-        powerTimer.advance();
+        powerTimer.tick();
         if (powerTimer.remaining() == PAC_POWER_FADING_TICKS) {
             eventLog.pacStartsLosingPower = true;
             publishGameEvent(GameEventType.PAC_STARTS_LOSING_POWER);
@@ -625,7 +625,7 @@ public abstract class GameModel {
 
     public boolean isPowerFadingStarting() {
         return powerTimer.isRunning() && powerTimer.remaining() == PAC_POWER_FADING_TICKS
-            || powerTimer.duration() < PAC_POWER_FADING_TICKS && powerTimer.tick() == 1;
+            || powerTimer.duration() < PAC_POWER_FADING_TICKS && powerTimer.currentTick() == 1;
     }
 
     private void updateBonus() {
@@ -641,9 +641,9 @@ public abstract class GameModel {
     }
 
     private void updateHuntingTimer( ) {
-        huntingTimer.advance();
+        huntingTimer.tick();
         if (huntingTimer.hasExpired()) {
-            Logger.info("Hunting timer expired, tick={}", huntingTimer.tick());
+            Logger.info("Hunting timer expired, tick={}", huntingTimer.currentTick());
             startHuntingPhase(huntingPhaseIndex + 1);
             ghosts(HUNTING_PAC, LOCKED, LEAVING_HOUSE).forEach(Ghost::reverseAsSoonAsPossible);
         }

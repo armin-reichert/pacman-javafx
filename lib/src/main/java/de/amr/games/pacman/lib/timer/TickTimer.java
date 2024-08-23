@@ -14,22 +14,22 @@ import java.util.function.Consumer;
 import static de.amr.games.pacman.lib.timer.TickTimer.State.*;
 
 /**
- * A simple, but useful, passive timer counting ticks.
+ * A simple but useful passive timer counting ticks.
  *
  * @author Armin Reichert
  */
 public class TickTimer {
 
     public enum State {
-        READY, RUNNING, STOPPED, EXPIRED;
+        READY, RUNNING, STOPPED, EXPIRED
     }
 
-    public static final long INDEFINITE = Long.MAX_VALUE;
+    public static final long INDEFINITE = Long.MAX_VALUE; // TODO use -1?
 
     /**
      * @param sec seconds
      */
-    public long secToTicks(double sec) {
+    public static long secToTicks(double sec) {
         return Math.round(sec * 60);
     }
 
@@ -40,58 +40,31 @@ public class TickTimer {
     private final String name;
     private State state;
     private long duration;
-    private long tick;
-    private List<Consumer<TickTimerEvent>> subscribers;
+    private long tickCount;
+    private List<Consumer<TickTimerEvent>> listeners;
 
     public TickTimer(String name) {
-        this.name = name;
+        this.name = name != null ? name : "unnamed";
         resetIndefinitely();
-    }
-
-    public void addEventListener(Consumer<TickTimerEvent> subscriber) {
-        if (subscribers == null) {
-            subscribers = new ArrayList<>(3);
-        }
-        subscribers.add(subscriber);
-    }
-
-    public void removeEventListener(Consumer<TickTimerEvent> subscriber) {
-        if (subscribers != null) {
-            subscribers.remove(subscriber);
-        }
-    }
-
-    private void fireEvent(TickTimerEvent e) {
-        if (subscribers != null) {
-            subscribers.forEach(subscriber -> subscriber.accept(e));
-        }
     }
 
     @Override
     public String toString() {
-        return String.format("[%s %s tick: %s remaining: %s total: %s]", name, state, ticksToString(tick),
+        return String.format("[%s %s tick: %s remaining: %s total: %s]", name, state, ticksToString(tickCount),
             ticksToString(remaining()), ticksToString(duration));
-    }
-
-    public State state() {
-        return state;
-    }
-
-    public String name() {
-        return name;
     }
 
     /**
      * Sets the timer to given duration and its state to {@link State#READY}. The timer is not running after this call!
      *
-     * @param ticks timer duration in ticks
+     * @param duration timer duration in ticks
      */
-    public void reset(long ticks) {
-        duration = ticks;
-        tick = 0;
+    public void reset(long duration) {
+        this.duration = duration;
+        tickCount = 0;
         state = READY;
         Logger.trace("{} reset", this);
-        fireEvent(new TickTimerEvent(Type.RESET, ticks));
+        publishEvent(new TickTimerEvent(Type.RESET, duration));
     }
 
     /**
@@ -115,15 +88,51 @@ public class TickTimer {
      * Starts the timer. If the timer is already running, does nothing.
      */
     public void start() {
-        switch (state) {
-            case RUNNING -> Logger.trace("Timer {} not started, already running", this);
-            case EXPIRED -> Logger.trace("Timer {} not started, has expired", this);
-            default -> {
-                state = RUNNING;
-                tick = 1;
-                Logger.trace("{} started", this);
-                fireEvent(new TickTimerEvent(Type.STARTED));
+        if (state == STOPPED || state == READY) {
+            state = RUNNING;
+            Logger.trace("{} started", this);
+            publishEvent(new TickTimerEvent(Type.STARTED));
+        } else {
+            Logger.warn("Timer {} not started, state is {}", this, state);
+        }
+    }
+
+    /**
+     * Stops the timer. If the timer is not running, does nothing.
+     */
+    public void stop() {
+        if (state == RUNNING) {
+            state = STOPPED;
+            Logger.trace("{} stopped", this);
+            publishEvent(new TickTimerEvent(Type.STOPPED));
+        } else {
+            Logger.warn("Timer {} not stopped, state is {}", this, state);
+        }
+    }
+
+    /**
+     * Advances the timer by one step, if it is running. Does nothing, else.
+     */
+    public void tick() {
+        if (state == RUNNING) {
+            if (tickCount == duration) {
+                expire();
+            } else {
+                ++tickCount;
             }
+        }
+    }
+
+    /**
+     * Forces the timer to expire.
+     */
+    public void expire() {
+        if (state != EXPIRED) {
+            state = EXPIRED;
+            Logger.trace("{} expired", this);
+            publishEvent(new TickTimerEvent(Type.EXPIRED, tickCount));
+        } else {
+            Logger.warn("Timer {} not expired, state is {}", this, state);
         }
     }
 
@@ -145,56 +154,12 @@ public class TickTimer {
         start();
     }
 
-    /**
-     * Stops the timer. If the timer is not running, does nothing.
-     */
-    public void stop() {
-        switch (state) {
-            case RUNNING: {
-                state = STOPPED;
-                Logger.trace("{} stopped", this);
-                fireEvent(new TickTimerEvent(Type.STOPPED));
-                break;
-            }
-            case STOPPED: {
-                Logger.trace("{} already stopped", this);
-                break;
-            }
-            case READY: {
-                Logger.trace("{} not stopped, was not running", this);
-                break;
-            }
-            case EXPIRED: {
-                Logger.trace("{} not stopped, has expired", this);
-                break;
-            }
-            default:
-                throw new IllegalArgumentException("Unexpected value: " + state);
-        }
+    public State state() {
+        return state;
     }
 
-    /**
-     * Advances the timer by one step, if it is running. Does nothing, else.
-     */
-    public void advance() {
-        if (state == RUNNING) {
-            if (tick == duration) {
-                expire();
-            } else {
-                ++tick;
-            }
-        }
-    }
-
-    /**
-     * Forces the timer to expire.
-     */
-    public void expire() {
-        if (state != EXPIRED) {
-            state = EXPIRED;
-            Logger.trace("{} expired", this);
-            fireEvent(new TickTimerEvent(Type.EXPIRED, tick));
-        }
+    public String name() {
+        return name;
     }
 
     public boolean hasExpired() {
@@ -217,19 +182,38 @@ public class TickTimer {
         return duration;
     }
 
-    public long tick() {
-        return tick;
+    public long currentTick() {
+        return tickCount;
     }
 
     public boolean atSecond(double seconds) {
-        return tick == secToTicks(seconds);
+        return tickCount == secToTicks(seconds);
     }
 
     public boolean betweenSeconds(double begin, double end) {
-        return secToTicks(begin) <= tick && tick < secToTicks(end);
+        return secToTicks(begin) <= tickCount && tickCount < secToTicks(end);
     }
 
     public long remaining() {
-        return duration == INDEFINITE ? INDEFINITE : duration - tick;
+        return duration == INDEFINITE ? INDEFINITE : duration - tickCount;
+    }
+
+    public void addListener(Consumer<TickTimerEvent> subscriber) {
+        if (listeners == null) {
+            listeners = new ArrayList<>(3);
+        }
+        listeners.add(subscriber);
+    }
+
+    public void removeListener(Consumer<TickTimerEvent> subscriber) {
+        if (listeners != null) {
+            listeners.remove(subscriber);
+        }
+    }
+
+    private void publishEvent(TickTimerEvent e) {
+        if (listeners != null) {
+            listeners.forEach(subscriber -> subscriber.accept(e));
+        }
     }
 }

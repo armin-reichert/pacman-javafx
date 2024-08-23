@@ -73,38 +73,38 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (game.isPlaying()) { // resume running game
-                if (timer.tick() == 1) {
+                if (timer.currentTick() == 1) {
                     game.letsGetReadyToRumble();
                     game.showGuys();
-                } else if (timer.tick() == TICK_RESUME_GAME) {
+                } else if (timer.currentTick() == TICK_RESUME_GAME) {
                     game.startHuntingPhase(0);
                     game.controller().changeState(GameState.HUNTING);
                 }
             }
             else if (game.controller().hasCredit()) { // start new game
-                if (timer.tick() == TICK_CREATE_LEVEL) {
+                if (timer.currentTick() == TICK_CREATE_LEVEL) {
                     game.reset();
                     game.createLevel(1);
                 }
-                else if (timer.tick() == TICK_START_LEVEL) {
+                else if (timer.currentTick() == TICK_START_LEVEL) {
                     game.startLevel();
                 }
-                else if (timer.tick() == TICK_NEW_GAME_SHOW_GUYS) {
+                else if (timer.currentTick() == TICK_NEW_GAME_SHOW_GUYS) {
                     game.showGuys();
                 }
-                else if (timer.tick() == TICK_NEW_GAME_START_PLAYING) {
+                else if (timer.currentTick() == TICK_NEW_GAME_START_PLAYING) {
                     game.setPlaying(true);
                     game.startHuntingPhase(0);
                     game.controller().changeState(GameState.HUNTING);
                 }
             }
             else { // start demo level
-                if (timer.tick() == TICK_CREATE_LEVEL) {
+                if (timer.currentTick() == TICK_CREATE_LEVEL) {
                     game.createDemoLevel();
                     game.startLevel();
                     game.showGuys();
                 }
-                else if (timer.tick() == TICK_DEMO_LEVEL_START_PLAYING) {
+                else if (timer.currentTick() == TICK_DEMO_LEVEL_START_PLAYING) {
                     game.startHuntingPhase(0);
                     game.controller().changeState(GameState.HUNTING);
                 }
@@ -233,16 +233,16 @@ public enum GameState implements FsmState<GameModel> {
                     game.controller().changeState(game.lives() == 0 ? GAME_OVER : READY);
                 }
             }
-            else if (timer.tick() == TICK_HIDE_GHOSTS) {
+            else if (timer.currentTick() == TICK_HIDE_GHOSTS) {
                 game.ghosts().forEach(Ghost::hide);
                 game.pac().selectAnimation(Pac.ANIM_DYING);
                 game.pac().animations().ifPresent(Animations::resetSelected);
             }
-            else if (timer.tick() == TICK_START_PAC_ANIMATION) {
+            else if (timer.currentTick() == TICK_START_PAC_ANIMATION) {
                 game.pac().animations().ifPresent(Animations::startSelected);
                 game.publishGameEvent(GameEventType.PAC_DYING, game.pac().tile());
             }
-            else if (timer.tick() == TICK_HIDE_PAC) {
+            else if (timer.currentTick() == TICK_HIDE_PAC) {
                 game.pac().hide();
             }
             else {
@@ -319,7 +319,7 @@ public enum GameState implements FsmState<GameModel> {
                 game.controller().restart(GameState.BOOT);
                 return;
             }
-            if (timer().tick() > 2 * GameModel.FPS) {
+            if (timer().currentTick() > 2 * GameModel.FPS) {
                 game.blinking().tick();
                 game.ghosts().forEach(ghost -> ghost.update(game));
                 game.bonus().ifPresent(bonus -> bonus.update(game));

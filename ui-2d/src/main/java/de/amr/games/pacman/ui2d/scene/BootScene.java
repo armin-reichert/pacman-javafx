@@ -36,11 +36,11 @@ public class BootScene extends GameScene2D {
     @Override
     public void draw() {
         var timer = context.gameState().timer();
-        if (timer.tick() == 1) {
+        if (timer.currentTick() == 1) {
             clearCanvas();
-        } else if (timer.betweenSeconds(1, 2) && timer.tick() % 4 == 0) {
+        } else if (timer.betweenSeconds(1, 2) && timer.currentTick() % 4 == 0) {
             paintRandomHexCodes();
-        } else if (timer.betweenSeconds(2, 3.5) && timer.tick() % 4 == 0) {
+        } else if (timer.betweenSeconds(2, 3.5) && timer.currentTick() % 4 == 0) {
             paintRandomSprites();
         } else if (timer.atSecond(3.5)) {
             paintGrid();

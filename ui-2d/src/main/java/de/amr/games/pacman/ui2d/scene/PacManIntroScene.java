@@ -80,7 +80,7 @@ public class PacManIntroScene extends GameScene2D {
             case CHASING_PAC -> {
                 drawPoints();
                 drawBlinkingEnergizer();
-                drawGuys(flutter(timer.tick()));
+                drawGuys(flutter(timer.currentTick()));
                 drawMidwayCopyright(t(4), t(32));
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
