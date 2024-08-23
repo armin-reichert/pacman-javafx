@@ -702,16 +702,20 @@ public abstract class GameModel {
         gameEventListeners.add(listener);
     }
 
+    public void publishGameEvent(GameEvent event) {
+        checkNotNull(event);
+        gameEventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
+        Logger.trace("Published game event: {}", event);
+    }
+
     public void publishGameEvent(GameEventType type) {
+        checkNotNull(type);
         publishGameEvent(new GameEvent(type, this));
     }
 
     public void publishGameEvent(GameEventType type, Vector2i tile) {
+        checkNotNull(type);
         publishGameEvent(new GameEvent(type, this, tile));
     }
 
-    public void publishGameEvent(GameEvent event) {
-        Logger.trace("Game event: {}", event);
-        gameEventListeners.forEach(subscriber -> subscriber.onGameEvent(event));
-    }
 }
