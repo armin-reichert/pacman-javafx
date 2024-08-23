@@ -93,14 +93,14 @@ public class StartPage extends StackPane implements Page {
 
     private Button createCarouselButton(Image image) {
         ImageView icon = new ImageView(image);
-        icon.setFitHeight(64);
-        icon.setFitWidth(64);
+        icon.setFitHeight(32);
+        icon.setFitWidth(32);
         var button = new Button();
         // Without this, button gets input focus after being clicked with the mouse and the LEFT, RIGHT keys stop working!
         button.setFocusTraversable(false);
         button.setGraphic(icon);
         button.setOpacity(0.1);
-        button.setOnMouseEntered(e -> button.setOpacity(0.25));
+        button.setOnMouseEntered(e -> button.setOpacity(0.4));
         button.setOnMouseExited(e -> button.setOpacity(0.1));
         return button;
     }
