@@ -116,7 +116,7 @@ public class GameSounds {
 
     private static void logSound(MediaPlayer sound, String description) {
         if (sound != null) {
-            Logger.info("[{}] state={} volume={}", description,
+            Logger.debug("[{}] state={} volume={}", description,
                 sound.getStatus() != null ? sound.getStatus() : "UNDEFINED", sound.getVolume());
         }
     }
