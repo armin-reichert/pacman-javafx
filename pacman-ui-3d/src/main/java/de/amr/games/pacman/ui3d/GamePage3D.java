@@ -34,16 +34,16 @@ public class GamePage3D extends GamePage {
 
     public GamePage3D(GameContext context, Scene parentScene) {
         super(context, parentScene);
-        dashboard().addInfoBox(3, context.locText("infobox.3D_settings.title"), new InfoBox3D());
+        dashboard.addInfoBox(3, context.locText("infobox.3D_settings.title"), new InfoBox3D());
         backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {
                     return coloredBackground(Color.rgb(150, 150, 200));
                 }
-                Image wallpaper = context.assets().get(PY_NIGHT_MODE.get() ? "wallpaper.night" : "wallpaper.day");
+                Image wallpaper = context.assets().get(PY_NIGHT_MODE.get()
+                    ? "wallpaper.night" : "wallpaper.day");
                 return wallpaperBackground(wallpaper);
-            },
-            PY_3D_DRAW_MODE, PY_NIGHT_MODE
+            }, PY_3D_DRAW_MODE, PY_NIGHT_MODE
         ));
     }
 
@@ -52,8 +52,9 @@ public class GamePage3D extends GamePage {
         contextMenu.getItems().clear();
         contextMenu.hide();
 
-        if (!context.currentGameSceneIs(GameSceneID.PLAY_SCENE)
-            && !context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D)) {
+        boolean isPlayScene = context.currentGameSceneIs(GameSceneID.PLAY_SCENE)
+            || context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D);
+        if (!isPlayScene) {
             return;
         }
 
@@ -66,10 +67,10 @@ public class GamePage3D extends GamePage {
         contextMenu.getItems().add(item);
 
         if (is3D) {
-            // Toggle PiP display
-            var miPictureInPicture = new CheckMenuItem(context.locText("pip"));
-            miPictureInPicture.selectedProperty().bindBidirectional(PY_PIP_ON);
-            contextMenu.getItems().add(miPictureInPicture);
+            // Toggle picture-in-picture display
+            var miPiP = new CheckMenuItem(context.locText("pip"));
+            miPiP.selectedProperty().bindBidirectional(PY_PIP_ON);
+            contextMenu.getItems().add(miPiP);
 
             contextMenu.getItems().add(menuTitleItem(context.locText("select_perspective")));
 
