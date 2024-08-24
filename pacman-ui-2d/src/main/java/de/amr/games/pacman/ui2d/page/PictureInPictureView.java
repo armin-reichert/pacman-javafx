@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameParameters;
-import de.amr.games.pacman.ui2d.scene.GameScene2D;
+import de.amr.games.pacman.ui2d.scene.*;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -36,15 +36,13 @@ public class PictureInPictureView {
         }
     };
 
+    private final GameContext context;
     private final HBox layout = new HBox();
     private final Canvas canvas = new Canvas();
-    private final GameScene2D gameScene;
+    private GameScene gameScene;
 
-    public PictureInPictureView(GameScene2D gameScene2D, GameContext context) {
-        this.gameScene = checkNotNull(gameScene2D);
-        gameScene.setContext(context);
-        gameScene.setCanvas(canvas);
-        gameScene.scalingPy.bind(heightPy.divide(36*8));
+    public PictureInPictureView(GameContext context) {
+        this.context = checkNotNull(context);
         canvas.widthProperty().bind(widthPy);
         canvas.heightProperty().bind(heightPy);
         widthPy.bind(heightPy.multiply(0.777));
@@ -56,6 +54,17 @@ public class PictureInPictureView {
         pane.setPadding(new Insets(5,10,5,10));
 
         layout.getChildren().add(pane);
+
+        setGameScene(new PlayScene2D());
+    }
+
+    public void setGameScene(GameScene gameScene) {
+        this.gameScene = gameScene;
+        if (gameScene instanceof GameScene2D gameScene2D) {
+            gameScene2D.setContext(context);
+            gameScene2D.setCanvas(canvas);
+            gameScene2D.scalingPy.bind(heightPy.divide(36 * 8));
+        }
     }
 
     public void setVisible(boolean visible) {
@@ -68,7 +77,10 @@ public class PictureInPictureView {
 
     public void draw() {
         if (visiblePy.get()) {
-            gameScene.draw();
+            if (gameScene instanceof GameScene2D gameScene2D) {
+                //gameScene2D.update();
+                gameScene2D.draw();
+            }
         }
     }
 }

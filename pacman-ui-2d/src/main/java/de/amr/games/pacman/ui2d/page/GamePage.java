@@ -75,7 +75,7 @@ public class GamePage extends StackPane implements Page {
         canvas.decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
         canvas.decoratedPy.bind(PY_CANVAS_DECORATED);
 
-        pip = new PictureInPictureView(new PlayScene2D(), context);
+        pip = new PictureInPictureView(context);
         pip.heightPy.bind(PY_PIP_HEIGHT);
         pip.opacityPy.bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
 
