@@ -240,6 +240,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
             } else {
                 Logger.info("Game scene changed to {}/{}", currentPage, gameScenePy.get());
             }
+            if (currentGameSceneIs(GameSceneID.INTRO_SCENE)) {
+                gamePage.signature().show(2, 3);
+            } else {
+                gamePage.signature().hide();
+            }
         }
     }
 
@@ -320,14 +325,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public void setScoreVisible(boolean visible) {
         scoreVisiblePy.set(visible);
-    }
-
-    public void showSignature() {
-        gamePage.signature().show(2, 3);
-    }
-
-    public void hideSignature() {
-        gamePage.signature().hide();
     }
 
     // -----------------------------------------------------------------------------------------------------------------

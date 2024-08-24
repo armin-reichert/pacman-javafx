@@ -4,8 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.controller.PacManIntro;
-import de.amr.games.pacman.controller.PacManIntro.State;
+import de.amr.games.pacman.controller.PacManIntroController;
+import de.amr.games.pacman.controller.PacManIntroController.State;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameKey;
@@ -29,7 +29,7 @@ public class PacManIntroScene extends GameScene2D {
 
     private static final char QUOTE = '\"';
 
-    private PacManIntro intro;
+    private PacManIntroController introController;
 
     @Override
     public boolean isCreditVisible() {
@@ -39,25 +39,23 @@ public class PacManIntroScene extends GameScene2D {
     @Override
     public void init() {
         super.init();
-        context.showSignature();
         context.setScoreVisible(true);
-        intro = new PacManIntro();
+        introController = new PacManIntroController();
         spriteRenderer.setSpriteSheet(context.spriteSheet(context.game().variant()));
-        intro.pacMan.setAnimations(new PacManGamePacAnimations(intro.pacMan, (PacManGameSpriteSheet) spriteRenderer.spriteSheet()));
-        intro.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, (PacManGameSpriteSheet) spriteRenderer.spriteSheet())));
-        intro.blinking.reset();
-        intro.changeState(State.START);
+        introController.pacMan.setAnimations(new PacManGamePacAnimations(introController.pacMan, (PacManGameSpriteSheet) spriteRenderer.spriteSheet()));
+        introController.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, (PacManGameSpriteSheet) spriteRenderer.spriteSheet())));
+        introController.blinking.reset();
+        introController.changeState(State.START);
     }
 
     @Override
     public void end() {
-        context.hideSignature();
         GameSounds.stopVoice();
     }
 
     @Override
     public void update() {
-        intro.update();
+        introController.update();
     }
 
     @Override
@@ -73,9 +71,9 @@ public class PacManIntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        var timer = intro.state().timer();
+        var timer = introController.state().timer();
         drawGallery();
-        switch (intro.state()) {
+        switch (introController.state()) {
             case SHOWING_POINTS -> drawPoints();
             case CHASING_PAC -> {
                 drawPoints();
@@ -102,8 +100,8 @@ public class PacManIntroScene extends GameScene2D {
     private void drawGallery() {
         var font = sceneFont(8);
 
-        int tx = intro.leftTileX;
-        if (intro.titleVisible) {
+        int tx = introController.leftTileX;
+        if (introController.titleVisible) {
             spriteRenderer.drawText(g, "CHARACTER / NICKNAME", context.assets().color("palette.pale"), font, t(tx + 3), t(6));
         }
         Color[] ghostColors = {
@@ -113,7 +111,7 @@ public class PacManIntroScene extends GameScene2D {
             context.assets().color("palette.orange"),
         };
         for (byte id = 0; id < 4; ++id) {
-            var ghostInfo = intro.ghostInfo[id];
+            var ghostInfo = introController.ghostInfo[id];
             if (!ghostInfo.pictureVisible) {
                 continue;
             }
@@ -131,8 +129,8 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     private void drawBlinkingEnergizer() {
-        if (intro.blinking.isOn()) {
-            spriteRenderer.drawSpriteScaled(g, spriteRenderer.spriteSheet().getEnergizerSprite(),t(intro.leftTileX),t(20));
+        if (introController.blinking.isOn()) {
+            spriteRenderer.drawSpriteScaled(g, spriteRenderer.spriteSheet().getEnergizerSprite(),t(introController.leftTileX),t(20));
         }
     }
 
@@ -142,29 +140,29 @@ public class PacManIntroScene extends GameScene2D {
 
     private void drawGuys(int shakingAmount) {
         if (shakingAmount == 0) {
-            intro.ghosts().forEach(this::drawGhost);
+            introController.ghosts().forEach(this::drawGhost);
         } else {
-            drawGhost(intro.ghost(0));
-            drawGhost(intro.ghost(3));
+            drawGhost(introController.ghost(0));
+            drawGhost(introController.ghost(3));
             // shaking ghosts effect, not quite as in original game
             g.save();
             g.translate(shakingAmount, 0);
-            drawGhost(intro.ghost(1));
-            drawGhost(intro.ghost(2));
+            drawGhost(introController.ghost(1));
+            drawGhost(introController.ghost(2));
             g.restore();
         }
-        spriteRenderer.drawPac(g, intro.pacMan);
+        spriteRenderer.drawPac(g, introController.pacMan);
     }
 
     private void drawPoints() {
         var color = context.assets().color("palette.pale");
         var font8 = sceneFont(8);
         var font6 = sceneFont(6);
-        int tx = intro.leftTileX + 6;
+        int tx = introController.leftTileX + 6;
         int ty = 25;
         g.setFill(Color.rgb(254, 189, 180));
         g.fillRect(s(t(tx) + 4), s(t(ty - 1) + 4), s(2), s(2));
-        if (intro.blinking.isOn()) {
+        if (introController.blinking.isOn()) {
             spriteRenderer.drawSpriteScaled(g, spriteRenderer.spriteSheet().getEnergizerSprite(),
                 t(tx), t(ty + 1));
         }

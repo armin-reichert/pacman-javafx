@@ -32,7 +32,7 @@ import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
  *
  * @author Armin Reichert
  */
-public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManIntro> {
+public class PacManIntroController extends FiniteStateMachine<PacManIntroController.State, PacManIntroController> {
 
     public static class GhostInfo {
         public Ghost ghost;
@@ -50,11 +50,11 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
     /**
      * Intro is controlled by a FSM, here come the states.
      */
-    public enum State implements FsmState<PacManIntro> {
+    public enum State implements FsmState<PacManIntroController> {
 
         START {
             @Override
-            public void onUpdate(PacManIntro intro) {
+            public void onUpdate(PacManIntroController intro) {
                 if (timer.currentTick() == 2) {
                     intro.creditVisible = true;
                 } else if (timer.currentTick() == 3) {
@@ -67,7 +67,7 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
 
         PRESENTING_GHOSTS {
             @Override
-            public void onUpdate(PacManIntro intro) {
+            public void onUpdate(PacManIntroController intro) {
                 if (timer.currentTick() == 1) {
                     intro.ghostInfo[intro.ghostIndex].pictureVisible = true;
                 } else if (timer.atSecond(1.0)) {
@@ -87,12 +87,12 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
 
         SHOWING_POINTS {
             @Override
-            public void onEnter(PacManIntro intro) {
+            public void onEnter(PacManIntroController intro) {
                 intro.blinking.stop();
             }
 
             @Override
-            public void onUpdate(PacManIntro intro) {
+            public void onUpdate(PacManIntroController intro) {
                 if (timer.atSecond(1)) {
                     intro.changeState(State.CHASING_PAC);
                 }
@@ -101,7 +101,7 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
 
         CHASING_PAC {
             @Override
-            public void onEnter(PacManIntro intro) {
+            public void onEnter(PacManIntroController intro) {
                 timer.restartIndefinitely();
                 intro.pacMan.setPosition(TS * 36, TS * 20);
                 intro.pacMan.setMoveDir(Direction.LEFT);
@@ -121,7 +121,7 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
             }
 
             @Override
-            public void onUpdate(PacManIntro intro) {
+            public void onUpdate(PacManIntroController intro) {
                 if (timer.atSecond(1)) {
                     intro.blinking.start();
                 }
@@ -149,7 +149,7 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
 
         CHASING_GHOSTS {
             @Override
-            public void onEnter(PacManIntro intro) {
+            public void onEnter(PacManIntroController intro) {
                 timer.restartIndefinitely();
                 intro.ghostKilledTime = timer.currentTick();
                 intro.pacMan.setMoveDir(Direction.RIGHT);
@@ -158,7 +158,7 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
             }
 
             @Override
-            public void onUpdate(PacManIntro intro) {
+            public void onUpdate(PacManIntroController intro) {
                 if (intro.ghosts().allMatch(ghost -> ghost.inState(EATEN))) {
                     intro.pacMan.hide();
                     intro.changeState(READY_TO_PLAY);
@@ -204,7 +204,7 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
 
         READY_TO_PLAY {
             @Override
-            public void onUpdate(PacManIntro intro) {
+            public void onUpdate(PacManIntroController intro) {
                 if (timer.atSecond(0.75)) {
                     intro.ghostInfo[3].ghost.hide();
                     if (!gameController().hasCredit()) {
@@ -254,12 +254,12 @@ public class PacManIntro extends FiniteStateMachine<PacManIntro.State, PacManInt
         return Stream.of(ghostInfo).map(info -> info.ghost);
     }
 
-    public PacManIntro() {
+    public PacManIntroController() {
         super(State.values());
     }
 
     @Override
-    public PacManIntro context() {
+    public PacManIntroController context() {
         return this;
     }
 }
