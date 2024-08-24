@@ -238,18 +238,6 @@ public class PacManIntroScene extends GameScene2D {
         }
     }
 
-    private class SceneController extends FiniteStateMachine<SceneState, PacManIntroScene> {
-
-        public SceneController() {
-            super(SceneState.values());
-        }
-
-        @Override
-        public PacManIntroScene context() {
-            return PacManIntroScene.this;
-        }
-    }
-
     // PacManIntroScene
 
     private static class Data {
@@ -280,9 +268,15 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     private Data data;
-    private SceneController sceneController;
+    private final FiniteStateMachine<SceneState, PacManIntroScene> sceneController;
 
     public PacManIntroScene() {
+        sceneController = new FiniteStateMachine<>(SceneState.values()) {
+            @Override
+            public PacManIntroScene context() {
+                return PacManIntroScene.this;
+            }
+        };
     }
 
     @Override
@@ -303,7 +297,6 @@ public class PacManIntroScene extends GameScene2D {
         data.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, ss)));
         data.blinking.reset();
 
-        sceneController = new SceneController(); // creating new one is easier than implementing reset() method
         sceneController.changeState(SceneState.STARTING);
     }
 
