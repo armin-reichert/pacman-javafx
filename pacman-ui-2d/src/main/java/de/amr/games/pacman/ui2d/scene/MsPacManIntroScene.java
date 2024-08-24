@@ -68,7 +68,7 @@ public class MsPacManIntroScene extends GameScene2D {
             public void onUpdate(MsPacManIntroScene intro) {
                 intro.data.marqueeTimer.tick();
                 if (timer.atSecond(1)) {
-                    intro.sceneController.changeState(SceneState.GHOSTS_MARCHING_IN);
+                    intro.sceneController.changeState(GHOSTS_MARCHING_IN);
                 }
             }
         },
@@ -101,7 +101,7 @@ public class MsPacManIntroScene extends GameScene2D {
                         ghost.stopAnimation();
                         ghost.resetAnimation();
                         if (intro.data.ghostIndex == 3) {
-                            intro.sceneController.changeState(SceneState.MS_PACMAN_MARCHING_IN);
+                            intro.sceneController.changeState(MS_PACMAN_MARCHING_IN);
                         } else {
                             ++intro.data.ghostIndex;
                         }
@@ -121,7 +121,7 @@ public class MsPacManIntroScene extends GameScene2D {
                 if (intro.data.msPacMan.posX() <= intro.data.stopMsPacX) {
                     intro.data.msPacMan.setSpeed(0);
                     intro.data.msPacMan.animations().ifPresent(Animations::resetSelected);
-                    intro.sceneController.changeState(SceneState.READY_TO_PLAY);
+                    intro.sceneController.changeState(READY_TO_PLAY);
                 }
             }
         },
@@ -161,18 +161,17 @@ public class MsPacManIntroScene extends GameScene2D {
         final int bulbOnDistance = 16;
         int ticksUntilLifting = 0;
         int ghostIndex = 0;
-
         Pac msPacMan = new Pac();
         Ghost[] ghosts = new Ghost[] {
-            new Ghost(RED_GHOST,    "Blinky", null),
-                    new Ghost(PINK_GHOST,   "Pinky", null),
-                    new Ghost(CYAN_GHOST,   "Inky", null),
-                    new Ghost(ORANGE_GHOST, "Sue", null)
+            new Ghost(RED_GHOST, "Blinky", null),
+            new Ghost(PINK_GHOST, "Pinky", null),
+            new Ghost(CYAN_GHOST, "Inky", null),
+            new Ghost(ORANGE_GHOST, "Sue", null)
         };
     }
 
-    private Data data;
     private final FiniteStateMachine<SceneState, MsPacManIntroScene> sceneController;
+    private Data data;
 
     public MsPacManIntroScene() {
         sceneController = new FiniteStateMachine<>(SceneState.values()) {
@@ -200,7 +199,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
         data.msPacMan.setAnimations(new MsPacManGamePacAnimations(data.msPacMan, sheet));
         data.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
-        for (var ghost : data.ghosts) {
+        for (Ghost ghost : data.ghosts) {
             ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, sheet));
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
         }
@@ -249,7 +248,7 @@ public class MsPacManIntroScene extends GameScene2D {
                 case GameModel.PINK_GHOST -> assets.color("palette.pink");
                 case GameModel.CYAN_GHOST -> assets.color("palette.cyan");
                 case GameModel.ORANGE_GHOST -> assets.color("palette.orange");
-                default -> throw new IllegalStateException("Unexpected value: " + ghost.id());
+                default -> throw new IllegalStateException("Illegal ghost ID: " + ghost.id());
             };
             if (ghost.id() == GameModel.RED_GHOST) {
                 spriteRenderer.drawText(g, "WITH", assets.color("palette.pale"), font8, tx, y0 + t(3));
@@ -300,13 +299,13 @@ public class MsPacManIntroScene extends GameScene2D {
      * @see  <a href="http://www.donhodges.com/ms_pacman_bugs.htm">Ms. Pac-Man blue maze bug</a>
      */
     private void triggerBlueMazeBug() {
-        MsPacManGameModel game = (MsPacManGameModel) context.game();
+        var game = (MsPacManGameModel) context.game();
         game.blueMazeBug = true;
         Logger.info("Blue maze bug triggered");
     }
 
     private void clearBlueMazeBug() {
-        MsPacManGameModel game = (MsPacManGameModel) context.game();
+        var game = (MsPacManGameModel) context.game();
         game.blueMazeBug = false;
         Logger.info("Blue maze bug cleared");
     }
