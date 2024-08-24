@@ -222,14 +222,15 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
     }
 
-    protected void updateGameScene(boolean reloadCurrentScene) {
-        if (currentPage == startPage) {
-            return; // no game scene on start page
+    protected void updateGameScene(boolean reloadCurrent) {
+        if (currentPage != gamePage) {
+            Logger.warn("Game scene can only be updated on game page. WTF?");
+            return;
         }
         GameScene sceneToDisplay = gameSceneForCurrentGameState();
         GameScene currentScene = gameScenePy.get();
-        if (reloadCurrentScene || sceneToDisplay != currentScene) {
-            Logger.info("updateGameScene: {}/{} reload={}", currentPage, sceneToDisplay.getClass().getSimpleName(), reloadCurrentScene);
+        if (reloadCurrent || sceneToDisplay != currentScene) {
+            Logger.info("Update game scene: {} reload={}", sceneToDisplay.getClass().getSimpleName(), reloadCurrent);
             if (currentScene != null) {
                 currentScene.end();
             }
