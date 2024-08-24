@@ -15,7 +15,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 
-
 /**
  * Game related settings.
  *

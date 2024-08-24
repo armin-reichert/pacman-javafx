@@ -60,7 +60,7 @@ public class GamePage extends StackPane implements Page {
         dashboard = new Dashboard(context);
         dashboard.addInfoBox(context.locText("infobox.general.title"), new InfoBoxGeneral());
         dashboard.addInfoBox(context.locText("infobox.game_control.title"), new InfoBoxGameControl());
-        dashboard.addInfoBox("Custom Maps",new InfoBoxCustomMaps()); //TODO incomplete
+        dashboard.addInfoBox(context.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
         dashboard.addInfoBox(context.locText("infobox.game_info.title"), new InfoBoxGameInfo());
         dashboard.addInfoBox(context.locText("infobox.actor_info.title"), new InfoBoxActorInfo());
         dashboard.addInfoBox(context.locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
