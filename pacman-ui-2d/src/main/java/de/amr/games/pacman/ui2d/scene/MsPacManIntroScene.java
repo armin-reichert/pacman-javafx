@@ -4,9 +4,16 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.controller.MsPacManIntro;
-import de.amr.games.pacman.controller.MsPacManIntro.State;
+import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
+import de.amr.games.pacman.lib.fsm.FsmState;
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.actors.Animations;
+import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
@@ -19,7 +26,11 @@ import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.lib.Globals.t;
+import java.util.BitSet;
+
+import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.model.GameModel.*;
+import static de.amr.games.pacman.model.GameModel.ORANGE_GHOST;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -30,7 +41,147 @@ import static de.amr.games.pacman.lib.Globals.t;
  */
 public class MsPacManIntroScene extends GameScene2D {
 
-    private MsPacManIntro intro;
+    private enum SceneState implements FsmState<MsPacManIntroScene> {
+
+        START {
+            @Override
+            public void onEnter(MsPacManIntroScene intro) {
+                intro.data.marqueeTimer.restartIndefinitely();
+                intro.data.msPacMan.setPosition(TS * 31, TS * 20);
+                intro.data.msPacMan.setMoveDir(Direction.LEFT);
+                intro.data.msPacMan.setSpeed(intro.data.speed);
+                intro.data.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
+                intro.data.msPacMan.animations().ifPresent(Animations::startSelected);
+                for (var ghost : intro.data.ghosts) {
+                    ghost.setPosition(TS * 33.5f, TS * 20);
+                    ghost.setMoveAndWishDir(Direction.LEFT);
+                    ghost.setSpeed(intro.data.speed);
+                    ghost.setState(GhostState.HUNTING_PAC);
+                    ghost.startAnimation();
+                }
+                intro.data.ghostIndex = 0;
+            }
+
+            @Override
+            public void onUpdate(MsPacManIntroScene intro) {
+                intro.data.marqueeTimer.tick();
+                if (timer.atSecond(1)) {
+                    intro.sceneController.changeState(SceneState.GHOSTS_MARCHING_IN);
+                }
+            }
+        },
+
+        GHOSTS_MARCHING_IN {
+            @Override
+            public void onUpdate(MsPacManIntroScene intro) {
+                intro.data.marqueeTimer.tick();
+                var ghost = intro.data.ghosts[intro.data.ghostIndex];
+                ghost.show();
+
+                if (ghost.moveDir() == Direction.LEFT) {
+                    if (ghost.posX() <= intro.data.stopX) {
+                        ghost.setPosX(intro.data.stopX);
+                        ghost.setMoveAndWishDir(Direction.UP);
+                        intro.data.ticksUntilLifting = 2;
+                    } else {
+                        ghost.move();
+                    }
+                    return;
+                }
+
+                if (ghost.moveDir() == Direction.UP) {
+                    if (intro.data.ticksUntilLifting > 0) {
+                        intro.data.ticksUntilLifting -= 1;
+                        Logger.trace("Ticks until lifting {}: {}", ghost.name(), intro.data.ticksUntilLifting);
+                        return;
+                    }
+                    if (ghost.posY() <= intro.data.stopY + ghost.id() * 16) {
+                        ghost.setSpeed(0);
+                        ghost.stopAnimation();
+                        ghost.resetAnimation();
+                        if (intro.data.ghostIndex == 3) {
+                            intro.sceneController.changeState(SceneState.MS_PACMAN_MARCHING_IN);
+                        } else {
+                            ++intro.data.ghostIndex;
+                        }
+                    } else {
+                        ghost.move();
+                    }
+                }
+            }
+        },
+
+        MS_PACMAN_MARCHING_IN {
+            @Override
+            public void onUpdate(MsPacManIntroScene intro) {
+                intro.data.marqueeTimer.tick();
+                intro.data.msPacMan.show();
+                intro.data.msPacMan.move();
+                if (intro.data.msPacMan.posX() <= intro.data.stopMsPacX) {
+                    intro.data.msPacMan.setSpeed(0);
+                    intro.data.msPacMan.animations().ifPresent(Animations::resetSelected);
+                    intro.sceneController.changeState(SceneState.READY_TO_PLAY);
+                }
+            }
+        },
+
+        READY_TO_PLAY {
+            @Override
+            public void onUpdate(MsPacManIntroScene intro) {
+                intro.data.marqueeTimer.tick();
+                if (timer.atSecond(2.0) && !gameController().hasCredit()) {
+                    gameController().changeState(GameState.READY);
+                    // go into demo mode
+                } else if (timer.atSecond(5)) {
+                    gameController().changeState(GameState.CREDIT);
+                }
+            }
+        };
+
+        final TickTimer timer = new TickTimer("Timer-" + name());
+
+        @Override
+        public TickTimer timer() {
+            return timer;
+        }
+
+        GameController gameController() {
+            return GameController.it();
+        }
+    }
+
+    private static class Data {
+        public final float speed = 1.1f;
+        public final int stopY = TS * 11 + 1;
+        public final int stopX = TS * 6 - 4;
+        public final int stopMsPacX = TS * 15 + 2;
+        public final Vector2i titlePosition = v2i(TS * 10, TS * 8);
+        public final TickTimer marqueeTimer = new TickTimer("marquee-timer");
+        public final int numBulbs = 96;
+        public final int bulbOnDistance = 16;
+        public int ticksUntilLifting = 0;
+        public int ghostIndex = 0;
+
+        public Pac msPacMan = new Pac();
+        public Ghost[] ghosts = new Ghost[] {
+            new Ghost(RED_GHOST,    "Blinky", null),
+                    new Ghost(PINK_GHOST,   "Pinky", null),
+                    new Ghost(CYAN_GHOST,   "Inky", null),
+                    new Ghost(ORANGE_GHOST, "Sue", null)
+        };
+    }
+
+    private Data data;
+    private final FiniteStateMachine<SceneState, MsPacManIntroScene> sceneController;
+
+    public MsPacManIntroScene() {
+        sceneController = new FiniteStateMachine<>(SceneState.values()) {
+            @Override
+            public MsPacManIntroScene context() {
+                return MsPacManIntroScene.this;
+            }
+        };
+    }
 
     @Override
     public boolean isCreditVisible() {
@@ -40,21 +191,21 @@ public class MsPacManIntroScene extends GameScene2D {
     @Override
     public void init() {
         super.init();
+        data = new Data();
 
         var sheet = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
         spriteRenderer.setSpriteSheet(sheet);
-
         context.setScoreVisible(true);
         clearBlueMazeBug();
 
-        intro = new MsPacManIntro();
-        intro.msPacMan.setAnimations(new MsPacManGamePacAnimations(intro.msPacMan, sheet));
-        intro.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
-        for (var ghost : intro.ghosts) {
+        data.msPacMan.setAnimations(new MsPacManGamePacAnimations(data.msPacMan, sheet));
+        data.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
+        for (var ghost : data.ghosts) {
             ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, sheet));
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
         }
-        intro.changeState(State.START);
+
+        sceneController.changeState(SceneState.START);
     }
 
     @Override
@@ -64,13 +215,13 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void update() {
-        intro.update();
+        sceneController.update();
     }
 
     @Override
     public void handleKeyboardInput(ActionHandler actions) {
         if (GameKey.ADD_CREDIT.pressed()) {
-            if (intro.state() == State.START) {
+            if (sceneController.state() == SceneState.START) {
                 triggerBlueMazeBug();
             }
             actions.addCredit();
@@ -85,13 +236,13 @@ public class MsPacManIntroScene extends GameScene2D {
     public void drawSceneContent() {
         var assets = context.assets();
         var font8 = sceneFont(8);
-        var tx = intro.titlePosition.x();
-        var ty = intro.titlePosition.y();
-        var y0 = intro.stopY;
+        var tx = data.titlePosition.x();
+        var ty = data.titlePosition.y();
+        var y0 = data.stopY;
         drawMarquee();
         spriteRenderer.drawText(g, "\"MS PAC-MAN\"", assets.color("palette.orange"), font8, tx, ty);
-        if (intro.state() == State.GHOSTS_MARCHING_IN) {
-            var ghost = intro.ghosts[intro.ghostIndex];
+        if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
+            var ghost = data.ghosts[data.ghostIndex];
             var color = switch (ghost.id()) {
                 case GameModel.RED_GHOST -> assets.color("palette.red");
                 case GameModel.PINK_GHOST -> assets.color("palette.pink");
@@ -105,14 +256,14 @@ public class MsPacManIntroScene extends GameScene2D {
             var text = ghost.name().toUpperCase();
             var dx = text.length() < 4 ? t(1) : 0;
             spriteRenderer.drawText(g, text, color, font8, tx + t(3) + dx, y0 + t(6));
-        } else if (intro.state() == State.MS_PACMAN_MARCHING_IN || intro.state() == State.READY_TO_PLAY) {
+        } else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
             spriteRenderer.drawText(g, "STARRING", assets.color("palette.pale"), font8, tx, y0 + t(3));
             spriteRenderer.drawText(g, "MS PAC-MAN", assets.color("palette.yellow"), font8, tx, y0 + t(6));
         }
-        for (var ghost : intro.ghosts) {
+        for (var ghost : data.ghosts) {
             spriteRenderer.drawGhost(g, ghost);
         }
-        spriteRenderer.drawPac(g, intro.msPacMan);
+        spriteRenderer.drawPac(g, data.msPacMan);
         drawMsPacManCopyright(t(6), t(28));
         drawLevelCounter(g);
     }
@@ -120,8 +271,8 @@ public class MsPacManIntroScene extends GameScene2D {
     // TODO This is too cryptic
     private void drawMarquee() {
         double xMin = 60, xMax = 192, yMin = 88, yMax = 148;
-        for (int i = 0; i < intro.numBulbs; ++i) {
-            boolean on = intro.marqueeState().get(i);
+        for (int i = 0; i < data.numBulbs; ++i) {
+            boolean on = marqueeState().get(i);
             if (i <= 33) { // lower edge left-to-right
                 drawLight(xMin + 4 * i, yMax, on);
             } else if (i <= 48) { // right edge bottom-to-top
@@ -157,5 +308,25 @@ public class MsPacManIntroScene extends GameScene2D {
         MsPacManGameModel game = (MsPacManGameModel) context.game();
         game.blueMazeBug = false;
         Logger.info("Blue maze bug cleared");
+    }
+
+    /**
+     * In the Arcade game, 6 of the 96 bulbs are switched-on every frame, shifting every tick. The bulbs in the leftmost
+     * column however are switched-off every second frame. Maybe a bug?
+     *
+     * @return bitset indicating which marquee bulbs are on
+     */
+    private BitSet marqueeState() {
+        var state = new BitSet(data.numBulbs);
+        long t = data.marqueeTimer.currentTick();
+        for (int b = 0; b < 6; ++b) {
+            state.set((int) (b * data.bulbOnDistance + t) % data.numBulbs);
+        }
+        for (int i = 81; i < data.numBulbs; ++i) {
+            if (isOdd(i)) {
+                state.clear(i);
+            }
+        }
+        return state;
     }
 }
