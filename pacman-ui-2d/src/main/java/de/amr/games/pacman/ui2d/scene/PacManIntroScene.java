@@ -45,15 +45,17 @@ public class PacManIntroScene extends GameScene2D {
     private static final char QUOTE = '\"';
 
     private static class GhostInfo {
-        public Ghost ghost;
-        public String character;
-        public boolean pictureVisible;
-        public boolean nicknameVisible;
-        public boolean characterVisible;
+        final Ghost ghost;
+        final Color color;
+        final String character;
+        boolean pictureVisible;
+        boolean nicknameVisible;
+        boolean characterVisible;
 
-        public GhostInfo(byte id, String name, String character) {
+        GhostInfo(byte id, String name, String character, Color color) {
             ghost = new Ghost(id, name, null);
             this.character = character;
+            this.color = color;
         }
     }
 
@@ -241,27 +243,25 @@ public class PacManIntroScene extends GameScene2D {
     // PacManIntroScene
 
     private static class Data {
-        private final float chaseSpeed = 1.1f;
-        private final float ghostFrightenedSpeed = 0.6f;
-        private final int leftTileX = 4;
-        private final Pulse blinking = new Pulse(10, true);
-        private final Pac pacMan = new Pac();
-        private final GhostInfo[] ghostInfos = {
-            new GhostInfo(GameModel.RED_GHOST, "BLINKY", "SHADOW"),
-            new GhostInfo(GameModel.PINK_GHOST, "PINKY", "SPEEDY"),
-            new GhostInfo(GameModel.CYAN_GHOST, "INKY", "BASHFUL"),
-            new GhostInfo(GameModel.ORANGE_GHOST, "CLYDE", "POKEY")
+        final float chaseSpeed = 1.1f;
+        final float ghostFrightenedSpeed = 0.6f;
+        final int leftTileX = 4;
+        final Pulse blinking = new Pulse(10, true);
+        final Pac pacMan = new Pac();
+        final GhostInfo[] ghostInfos = {
+            new GhostInfo(GameModel.RED_GHOST, "BLINKY", "SHADOW", Color.RED),
+            new GhostInfo(GameModel.PINK_GHOST, "PINKY", "SPEEDY", Color.rgb(252, 181, 255)),
+            new GhostInfo(GameModel.CYAN_GHOST, "INKY", "BASHFUL", Color.CYAN),
+            new GhostInfo(GameModel.ORANGE_GHOST, "CLYDE", "POKEY", Color.rgb(251, 190, 88))
         };
-        private boolean creditVisible = false;
-        private boolean titleVisible = false;
-        private int ghostIndex;
-        private long ghostKilledTime;
-        private final List<Ghost> victims = new ArrayList<>();
-
+        final List<Ghost> victims = new ArrayList<>();
+        boolean creditVisible = false;
+        boolean titleVisible = false;
+        int ghostIndex;
+        long ghostKilledTime;
         Ghost ghost(int id) {
             return ghostInfos[id].ghost;
         }
-
         Stream<Ghost> ghosts() {
             return Stream.of(ghostInfos).map(info -> info.ghost);
         }
@@ -356,12 +356,6 @@ public class PacManIntroScene extends GameScene2D {
         if (data.titleVisible) {
             spriteRenderer.drawText(g, "CHARACTER / NICKNAME", context.assets().color("palette.pale"), font, t(tx + 3), t(6));
         }
-        Color[] ghostColors = {
-            context.assets().color("palette.red"),
-            context.assets().color("palette.pink"),
-            context.assets().color("palette.cyan"),
-            context.assets().color("palette.orange"),
-        };
         for (byte id = 0; id < 4; ++id) {
             var ghostInfo = data.ghostInfos[id];
             if (!ghostInfo.pictureVisible) {
@@ -371,11 +365,11 @@ public class PacManIntroScene extends GameScene2D {
             spriteRenderer.drawSpriteCenteredOverBox(g, spriteRenderer.spriteSheet().ghostFacingRight(id), t(tx) + 4, t(ty));
             if (ghostInfo.characterVisible) {
                 var text = "-" + ghostInfo.character;
-                spriteRenderer.drawText(g, text, ghostColors[id], font, t(tx + 3), t(ty + 1));
+                spriteRenderer.drawText(g, text, ghostInfo.color, font, t(tx + 3), t(ty + 1));
             }
             if (ghostInfo.nicknameVisible) {
                 var text = QUOTE + ghostInfo.ghost.name() + QUOTE;
-                spriteRenderer.drawText(g, text, ghostColors[id], font, t(tx + 14), t(ty + 1));
+                spriteRenderer.drawText(g, text, ghostInfo.color, font, t(tx + 14), t(ty + 1));
             }
         }
     }
