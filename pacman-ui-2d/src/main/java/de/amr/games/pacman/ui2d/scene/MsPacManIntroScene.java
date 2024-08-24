@@ -23,7 +23,9 @@ import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.util.AssetMap;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.BitSet;
@@ -52,7 +54,7 @@ public class MsPacManIntroScene extends GameScene2D {
                 intro.data.msPacMan.setSpeed(intro.data.speed);
                 intro.data.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
                 intro.data.msPacMan.animations().ifPresent(Animations::startSelected);
-                for (var ghost : intro.data.ghosts) {
+                for (Ghost ghost : intro.data.ghosts) {
                     ghost.setPosition(TS * 33.5f, TS * 20);
                     ghost.setMoveAndWishDir(Direction.LEFT);
                     ghost.setSpeed(intro.data.speed);
@@ -75,7 +77,7 @@ public class MsPacManIntroScene extends GameScene2D {
             @Override
             public void onUpdate(MsPacManIntroScene intro) {
                 intro.data.marqueeTimer.tick();
-                var ghost = intro.data.ghosts[intro.data.ghostIndex];
+                Ghost ghost = intro.data.ghosts[intro.data.ghostIndex];
                 ghost.show();
 
                 if (ghost.moveDir() == Direction.LEFT) {
@@ -92,7 +94,6 @@ public class MsPacManIntroScene extends GameScene2D {
                 if (ghost.moveDir() == Direction.UP) {
                     if (intro.data.ticksUntilLifting > 0) {
                         intro.data.ticksUntilLifting -= 1;
-                        Logger.trace("Ticks until lifting {}: {}", ghost.name(), intro.data.ticksUntilLifting);
                         return;
                     }
                     if (ghost.posY() <= intro.data.stopY + ghost.id() * 16) {
@@ -130,8 +131,7 @@ public class MsPacManIntroScene extends GameScene2D {
             public void onUpdate(MsPacManIntroScene intro) {
                 intro.data.marqueeTimer.tick();
                 if (timer.atSecond(2.0) && !gameController().hasCredit()) {
-                    gameController().changeState(GameState.READY);
-                    // go into demo mode
+                    gameController().changeState(GameState.READY); // demo level
                 } else if (timer.atSecond(5)) {
                     gameController().changeState(GameState.CREDIT);
                 }
@@ -151,19 +151,19 @@ public class MsPacManIntroScene extends GameScene2D {
     }
 
     private static class Data {
-        public final float speed = 1.1f;
-        public final int stopY = TS * 11 + 1;
-        public final int stopX = TS * 6 - 4;
-        public final int stopMsPacX = TS * 15 + 2;
-        public final Vector2i titlePosition = v2i(TS * 10, TS * 8);
-        public final TickTimer marqueeTimer = new TickTimer("marquee-timer");
-        public final int numBulbs = 96;
-        public final int bulbOnDistance = 16;
-        public int ticksUntilLifting = 0;
-        public int ghostIndex = 0;
+        final float speed = 1.1f;
+        final int stopY = TS * 11 + 1;
+        final int stopX = TS * 6 - 4;
+        final int stopMsPacX = TS * 15 + 2;
+        final Vector2i titlePosition = v2i(TS * 10, TS * 8);
+        final TickTimer marqueeTimer = new TickTimer("marquee-timer");
+        final int numBulbs = 96;
+        final int bulbOnDistance = 16;
+        int ticksUntilLifting = 0;
+        int ghostIndex = 0;
 
-        public Pac msPacMan = new Pac();
-        public Ghost[] ghosts = new Ghost[] {
+        Pac msPacMan = new Pac();
+        Ghost[] ghosts = new Ghost[] {
             new Ghost(RED_GHOST,    "Blinky", null),
                     new Ghost(PINK_GHOST,   "Pinky", null),
                     new Ghost(CYAN_GHOST,   "Inky", null),
@@ -234,16 +234,17 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        var assets = context.assets();
-        var font8 = sceneFont(8);
-        var tx = data.titlePosition.x();
-        var ty = data.titlePosition.y();
-        var y0 = data.stopY;
+        AssetMap assets = context.assets();
+        Font font8 = sceneFont(8);
+        int tx = data.titlePosition.x();
+        int ty = data.titlePosition.y();
+        int y0 = data.stopY;
+
         drawMarquee();
         spriteRenderer.drawText(g, "\"MS PAC-MAN\"", assets.color("palette.orange"), font8, tx, ty);
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
-            var ghost = data.ghosts[data.ghostIndex];
-            var color = switch (ghost.id()) {
+            Ghost ghost = data.ghosts[data.ghostIndex];
+            Color color = switch (ghost.id()) {
                 case GameModel.RED_GHOST -> assets.color("palette.red");
                 case GameModel.PINK_GHOST -> assets.color("palette.pink");
                 case GameModel.CYAN_GHOST -> assets.color("palette.cyan");
@@ -253,14 +254,14 @@ public class MsPacManIntroScene extends GameScene2D {
             if (ghost.id() == GameModel.RED_GHOST) {
                 spriteRenderer.drawText(g, "WITH", assets.color("palette.pale"), font8, tx, y0 + t(3));
             }
-            var text = ghost.name().toUpperCase();
-            var dx = text.length() < 4 ? t(1) : 0;
+            String text = ghost.name().toUpperCase();
+            double dx = text.length() < 4 ? t(1) : 0;
             spriteRenderer.drawText(g, text, color, font8, tx + t(3) + dx, y0 + t(6));
         } else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
             spriteRenderer.drawText(g, "STARRING", assets.color("palette.pale"), font8, tx, y0 + t(3));
             spriteRenderer.drawText(g, "MS PAC-MAN", assets.color("palette.yellow"), font8, tx, y0 + t(6));
         }
-        for (var ghost : data.ghosts) {
+        for (Ghost ghost : data.ghosts) {
             spriteRenderer.drawGhost(g, ghost);
         }
         spriteRenderer.drawPac(g, data.msPacMan);
