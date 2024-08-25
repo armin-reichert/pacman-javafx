@@ -36,7 +36,7 @@ public class GameClockFX implements GameClock {
     public final BooleanProperty timeMeasuredPy = new SimpleBooleanProperty(this, "timeMeasured", false);
 
     private Runnable pauseableCallback = () -> {};
-    private Runnable continousCallback = () -> {};
+    private Runnable permanentCallback = () -> {};
     private Timeline timeline;
     private long updateCount;
     private long ticksPerSec;
@@ -51,8 +51,8 @@ public class GameClockFX implements GameClock {
         this.pauseableCallback = callback;
     }
 
-    public void setContinousCallback(Runnable callback) {
-        this.continousCallback = callback;
+    public void setPermanentCallback(Runnable callback) {
+        this.permanentCallback = callback;
     }
 
     private void createTimeline(double targetFPS) {
@@ -125,7 +125,7 @@ public class GameClockFX implements GameClock {
             execute(pauseableCallback, "Pausable phase: {} milliseconds");
             updateCount++;
         }
-        execute(continousCallback, "Continous phase: {} milliseconds");
+        execute(permanentCallback, "Continous phase: {} milliseconds");
         ++ticks;
         computeFrameRate(executionTime);
     }

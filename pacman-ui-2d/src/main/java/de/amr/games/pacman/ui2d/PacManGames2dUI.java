@@ -152,7 +152,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
                 Logger.error(x);
             }
         });
-        clock.setContinousCallback(() -> {
+        clock.setPermanentCallback(() -> {
             try {
                 if (currentPage == gamePage) {
                     messageView.update();
