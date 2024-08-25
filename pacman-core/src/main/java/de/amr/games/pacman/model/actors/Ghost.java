@@ -444,8 +444,7 @@ public class Ghost extends Creature {
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
     private void updateStateEnteringHouse() {
-        float speed = speedReturningToHouse; // correct?
-        if (position().almostEquals(revivalPosition, speed / 2, speed / 2)) {
+        if (position().almostEquals(revivalPosition, speedReturningToHouse / 2, speedReturningToHouse / 2)) {
             setPosition(revivalPosition);
             setMoveAndWishDir(UP);
             setState(LOCKED);
@@ -458,7 +457,7 @@ public class Ghost extends Creature {
         } else if (posX < revivalPosition.x()) {
             setMoveAndWishDir(RIGHT);
         }
-        setSpeed(speed);
+        setSpeed(speedReturningToHouse);
         move();
     }
 }
