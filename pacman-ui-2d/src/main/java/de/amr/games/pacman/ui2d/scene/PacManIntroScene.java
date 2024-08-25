@@ -32,16 +32,13 @@ import static de.amr.games.pacman.model.actors.GhostState.EATEN;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 
 /**
- * Intro scene of the PacMan game.
+ * Intro scene of the Pac-Man game.
  * <p>
- * The ghosts are presented one after another, then Pac-Man is chased by the ghosts, turns the card and hunts the ghost
- * himself.
+ * The ghosts are presented one by one, Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
  *
  * @author Armin Reichert
  */
 public class PacManIntroScene extends GameScene2D {
-
-    private static final char QUOTE = '\"';
 
     /**
      * Intro is controlled by a FSM, here come the states.
@@ -357,7 +354,7 @@ public class PacManIntroScene extends GameScene2D {
                 spriteRenderer.drawText(g, text, data.ghostColors[id], font, t(tx + 3), t(ty + 1));
             }
             if (data.ghostNicknameVisible[id]) {
-                var text = QUOTE + data.ghosts.get(id).name() + QUOTE;
+                var text = '"' + data.ghosts.get(id).name() + '"';
                 spriteRenderer.drawText(g, text, data.ghostColors[id], font, t(tx + 14), t(ty + 1));
             }
         }
