@@ -349,9 +349,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         Logger.trace("Received: {}", event);
         // call event specific hook method:
         GameEventListener.super.onGameEvent(event);
-        updateGameScene(false);
-        // dispatch event to current game scene if any
-        currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
+        if (currentPage == gamePage) {
+            updateGameScene(false);
+            // dispatch event to current game scene if any
+            currentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(event));
+        }
     }
 
     @Override
