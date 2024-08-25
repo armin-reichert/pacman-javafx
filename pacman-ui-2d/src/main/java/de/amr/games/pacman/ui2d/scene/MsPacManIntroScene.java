@@ -175,7 +175,7 @@ public class MsPacManIntroScene extends GameScene2D {
         // Marquee
         final TickTimer marqueeTimer = new TickTimer("marquee-timer");
         final int numBulbs = 96;
-        final int bulbOnDistance = 16;
+        final int distanceBetweenActiveBulbs = 16;
         // Mutable state
         int ghostIndex;
         int waitBeforeRising;
@@ -218,6 +218,24 @@ public class MsPacManIntroScene extends GameScene2D {
         sceneController.changeState(SceneState.STARTING);
     }
 
+    /**
+     * 6 of the 96 bulbs are switched on per frame, shifting counter-clockwise every tick.
+     * The bulbs on the left border however are switched off every second frame. Bug in original game?
+     *
+     * @return bit set indicating which bulbs are switched on
+     */
+    private BitSet computeMarqueeState(long tick) {
+        var state = new BitSet(data.numBulbs);
+        for (int b = 0; b < 6; ++b) {
+            state.set((b * data.distanceBetweenActiveBulbs + (int) tick) % data.numBulbs);
+        }
+        // Simulate bug on left border
+        for (int i = 81; i < data.numBulbs; i += 2) {
+            state.clear(i);
+        }
+        return state;
+    }
+
     @Override
     public void end() {
         GameSounds.stopVoice();
@@ -246,7 +264,8 @@ public class MsPacManIntroScene extends GameScene2D {
     public void drawSceneContent() {
         AssetMap assets = context.assets();
         Font font8 = sceneFont(8); // depends on current scaling!
-        drawMarquee();
+        BitSet marqueeState = computeMarqueeState(data.marqueeTimer.currentTick());
+        drawMarquee(marqueeState);
         spriteRenderer.drawText(g, "\"MS PAC-MAN\"", assets.color("palette.orange"), font8, data.titlePosition.x(), data.titlePosition.y());
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
             if (data.ghostIndex == GameModel.RED_GHOST) {
@@ -275,23 +294,23 @@ public class MsPacManIntroScene extends GameScene2D {
     }
 
     // TODO This is too cryptic
-    private void drawMarquee() {
+    private void drawMarquee(BitSet marqueeState) {
         double xMin = 60, xMax = 192, yMin = 88, yMax = 148;
         for (int i = 0; i < data.numBulbs; ++i) {
-            boolean on = marqueeState().get(i);
+            boolean on = marqueeState.get(i);
             if (i <= 33) { // lower edge left-to-right
-                drawLightBulb(xMin + 4 * i, yMax, on);
+                drawBulb(xMin + 4 * i, yMax, on);
             } else if (i <= 48) { // right edge bottom-to-top
-                drawLightBulb(xMax, 4 * (70 - i), on);
+                drawBulb(xMax, 4 * (70 - i), on);
             } else if (i <= 81) { // upper edge right-to-left
-                drawLightBulb(4 * (96 - i), yMin, on);
+                drawBulb(4 * (96 - i), yMin, on);
             } else { // left edge top-to-bottom
-                drawLightBulb(xMin, 4 * (i - 59), on);
+                drawBulb(xMin, 4 * (i - 59), on);
             }
         }
     }
 
-    private void drawLightBulb(double x, double y, boolean on) {
+    private void drawBulb(double x, double y, boolean on) {
         g.setFill(on ? context.assets().color("palette.pale") : context.assets().color("palette.red"));
         g.fillRect(s(x), s(y), s(2), s(2));
     }
@@ -311,26 +330,5 @@ public class MsPacManIntroScene extends GameScene2D {
     private void clearBlueMazeBug() {
         var game = (MsPacManGameModel) context.game();
         game.blueMazeBug = false;
-        Logger.info("Blue maze bug cleared");
-    }
-
-    /**
-     * In the Arcade game, 6 of the 96 bulbs are switched-on every frame, shifting every tick. The bulbs in the leftmost
-     * column however are switched-off every second frame. Maybe a bug?
-     *
-     * @return bitset indicating which marquee bulbs are on
-     */
-    private BitSet marqueeState() {
-        var state = new BitSet(data.numBulbs);
-        long t = data.marqueeTimer.currentTick();
-        for (int b = 0; b < 6; ++b) {
-            state.set((int) (b * data.bulbOnDistance + t) % data.numBulbs);
-        }
-        for (int i = 81; i < data.numBulbs; ++i) {
-            if (isOdd(i)) {
-                state.clear(i);
-            }
-        }
-        return state;
     }
 }
