@@ -45,7 +45,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
     private enum SceneState implements FsmState<MsPacManIntroScene> {
 
-        START {
+        STARTING {
             @Override
             public void onEnter(MsPacManIntroScene intro) {
                 intro.data.marqueeTimer.restartIndefinitely();
@@ -59,6 +59,7 @@ public class MsPacManIntroScene extends GameScene2D {
                     ghost.setMoveAndWishDir(Direction.LEFT);
                     ghost.setSpeed(intro.data.speed);
                     ghost.setState(GhostState.HUNTING_PAC);
+                    ghost.setVisible(true);
                     ghost.startAnimation();
                 }
                 intro.data.ghostIndex = 0;
@@ -74,41 +75,45 @@ public class MsPacManIntroScene extends GameScene2D {
         },
 
         GHOSTS_MARCHING_IN {
+
             @Override
             public void onUpdate(MsPacManIntroScene intro) {
                 intro.data.marqueeTimer.tick();
                 Ghost ghost = intro.data.ghosts[intro.data.ghostIndex];
-                ghost.show();
+                boolean reachedEndPosition = letGhostMarchIn(ghost, intro.data, intro.data.stopY + intro.data.ghostIndex * 16);
+                if (reachedEndPosition) {
+                    if (intro.data.ghostIndex == 3) {
+                        intro.sceneController.changeState(MS_PACMAN_MARCHING_IN);
+                    } else {
+                        ++intro.data.ghostIndex;
+                    }
+                }
+            }
 
+            boolean letGhostMarchIn(Ghost ghost, Data data, int endPositionY) {
                 if (ghost.moveDir() == Direction.LEFT) {
-                    if (ghost.posX() <= intro.data.stopX) {
-                        ghost.setPosX(intro.data.stopX);
+                    if (ghost.posX() <= data.stopX) {
+                        ghost.setPosX(data.stopX);
                         ghost.setMoveAndWishDir(Direction.UP);
-                        intro.data.ticksUntilLifting = 2;
+                        data.waitBeforeRising = 2;
                     } else {
                         ghost.move();
                     }
-                    return;
                 }
-
-                if (ghost.moveDir() == Direction.UP) {
-                    if (intro.data.ticksUntilLifting > 0) {
-                        intro.data.ticksUntilLifting -= 1;
-                        return;
+                else if (ghost.moveDir() == Direction.UP) {
+                    if (data.waitBeforeRising > 0) {
+                        data.waitBeforeRising -= 1;
                     }
-                    if (ghost.posY() <= intro.data.stopY + ghost.id() * 16) {
+                    else if (ghost.posY() <= endPositionY) {
                         ghost.setSpeed(0);
                         ghost.stopAnimation();
                         ghost.resetAnimation();
-                        if (intro.data.ghostIndex == 3) {
-                            intro.sceneController.changeState(MS_PACMAN_MARCHING_IN);
-                        } else {
-                            ++intro.data.ghostIndex;
-                        }
+                        return true;
                     } else {
                         ghost.move();
                     }
                 }
+                return false;
             }
         },
 
@@ -159,7 +164,7 @@ public class MsPacManIntroScene extends GameScene2D {
         final TickTimer marqueeTimer = new TickTimer("marquee-timer");
         final int numBulbs = 96;
         final int bulbOnDistance = 16;
-        int ticksUntilLifting = 0;
+        int waitBeforeRising = 0;
         int ghostIndex = 0;
         Pac msPacMan = new Pac();
         Ghost[] ghosts = new Ghost[] {
@@ -204,7 +209,7 @@ public class MsPacManIntroScene extends GameScene2D {
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
         }
 
-        sceneController.changeState(SceneState.START);
+        sceneController.changeState(SceneState.STARTING);
     }
 
     @Override
@@ -220,7 +225,7 @@ public class MsPacManIntroScene extends GameScene2D {
     @Override
     public void handleKeyboardInput(ActionHandler actions) {
         if (GameKey.ADD_CREDIT.pressed()) {
-            if (sceneController.state() == SceneState.START) {
+            if (sceneController.state() == SceneState.STARTING) {
                 triggerBlueMazeBug();
             }
             actions.addCredit();
