@@ -214,8 +214,7 @@ public class MsPacManIntroScene extends GameScene2D {
             ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, sheet));
             ghost.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
         }
-
-        sceneController.changeState(SceneState.STARTING);
+        sceneController.restart(SceneState.STARTING);
     }
 
     /**

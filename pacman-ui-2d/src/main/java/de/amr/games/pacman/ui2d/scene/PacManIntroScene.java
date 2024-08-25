@@ -281,7 +281,7 @@ public class PacManIntroScene extends GameScene2D {
         data.ghosts.forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, sheet)));
         data.blinking.reset();
 
-        sceneController.changeState(SceneState.STARTING);
+        sceneController.restart(SceneState.STARTING);
     }
 
     @Override
