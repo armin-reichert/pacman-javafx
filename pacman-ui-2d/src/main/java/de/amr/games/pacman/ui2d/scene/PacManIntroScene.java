@@ -48,9 +48,7 @@ public class PacManIntroScene extends GameScene2D {
         STARTING {
             @Override
             public void onUpdate(PacManIntroScene intro) {
-                if (timer.currentTick() == 2) {
-                    intro.data.creditVisible = true;
-                } else if (timer.currentTick() == 3) {
+                if (timer.currentTick() == 3) {
                     intro.data.titleVisible = true;
                 } else if (timer.atSecond(1)) {
                     intro.sceneController.changeState(PRESENTING_GHOSTS);
@@ -248,7 +246,6 @@ public class PacManIntroScene extends GameScene2D {
         final boolean[] ghostCharacterVisible = new boolean[4];
 
         final List<Ghost> victims = new ArrayList<>();
-        boolean creditVisible = false;
         boolean titleVisible = false;
         int ghostIndex;
         long ghostKilledTime;
