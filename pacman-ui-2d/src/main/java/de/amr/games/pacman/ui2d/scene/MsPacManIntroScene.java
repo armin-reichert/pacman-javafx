@@ -52,6 +52,7 @@ public class MsPacManIntroScene extends GameScene2D {
                 intro.data.msPacMan.setPosition(TS * 31, TS * 20);
                 intro.data.msPacMan.setMoveDir(Direction.LEFT);
                 intro.data.msPacMan.setSpeed(intro.data.speed);
+                intro.data.msPacMan.setVisible(true);
                 intro.data.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
                 intro.data.msPacMan.animations().ifPresent(Animations::startSelected);
                 for (Ghost ghost : intro.data.ghosts) {
@@ -92,8 +93,8 @@ public class MsPacManIntroScene extends GameScene2D {
             boolean letGhostMarchIn(Data data) {
                 Ghost ghost = data.ghosts[data.ghostIndex];
                 if (ghost.moveDir() == Direction.LEFT) {
-                    if (ghost.posX() <= data.stopX) {
-                        ghost.setPosX(data.stopX);
+                    if (ghost.posX() <= data.stopXGhost) {
+                        ghost.setPosX(data.stopXGhost);
                         ghost.setMoveAndWishDir(Direction.UP);
                         data.waitBeforeRising = 2;
                     } else {
@@ -120,12 +121,12 @@ public class MsPacManIntroScene extends GameScene2D {
         },
 
         MS_PACMAN_MARCHING_IN {
+
             @Override
             public void onUpdate(MsPacManIntroScene intro) {
                 intro.data.marqueeTimer.tick();
-                intro.data.msPacMan.show();
                 intro.data.msPacMan.move();
-                if (intro.data.msPacMan.posX() <= intro.data.stopMsPacX) {
+                if (intro.data.msPacMan.posX() <= intro.data.stopXMsPacMan) {
                     intro.data.msPacMan.setSpeed(0);
                     intro.data.msPacMan.animations().ifPresent(Animations::resetSelected);
                     intro.sceneController.changeState(READY_TO_PLAY);
@@ -134,6 +135,7 @@ public class MsPacManIntroScene extends GameScene2D {
         },
 
         READY_TO_PLAY {
+
             @Override
             public void onUpdate(MsPacManIntroScene intro) {
                 intro.data.marqueeTimer.tick();
@@ -160,21 +162,23 @@ public class MsPacManIntroScene extends GameScene2D {
     private static class Data {
         final float speed = 1.1f;
         final int topY = TS * 11 + 1;
-        final int stopX = TS * 6 - 4;
-        final int stopMsPacX = TS * 15 + 2;
+        final int stopXGhost = TS * 6 - 4;
+        final int stopXMsPacMan = TS * 15 + 2;
         final Vector2i titlePosition = v2i(TS * 10, TS * 8);
-        final TickTimer marqueeTimer = new TickTimer("marquee-timer");
-        final int numBulbs = 96;
-        final int bulbOnDistance = 16;
-        int waitBeforeRising = 0;
-        int ghostIndex = 0;
-        Pac msPacMan = new Pac();
-        Ghost[] ghosts = new Ghost[] {
+        final Pac msPacMan = new Pac();
+        final Ghost[] ghosts = new Ghost[] {
             new Ghost(RED_GHOST, "Blinky", null),
             new Ghost(PINK_GHOST, "Pinky", null),
             new Ghost(CYAN_GHOST, "Inky", null),
             new Ghost(ORANGE_GHOST, "Sue", null)
         };
+        // Marquee
+        final TickTimer marqueeTimer = new TickTimer("marquee-timer");
+        final int numBulbs = 96;
+        final int bulbOnDistance = 16;
+        // Mutable state
+        int ghostIndex;
+        int waitBeforeRising;
     }
 
     private final FiniteStateMachine<SceneState, MsPacManIntroScene> sceneController;
@@ -197,13 +201,13 @@ public class MsPacManIntroScene extends GameScene2D {
     @Override
     public void init() {
         super.init();
-        data = new Data();
+        context.setScoreVisible(true);
 
         var sheet = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
         spriteRenderer.setSpriteSheet(sheet);
-        context.setScoreVisible(true);
         clearBlueMazeBug();
 
+        data = new Data();
         data.msPacMan.setAnimations(new MsPacManGamePacAnimations(data.msPacMan, sheet));
         data.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
         for (Ghost ghost : data.ghosts) {
@@ -241,31 +245,26 @@ public class MsPacManIntroScene extends GameScene2D {
     @Override
     public void drawSceneContent() {
         AssetMap assets = context.assets();
-        Font font8 = sceneFont(8);
-        int tx = data.titlePosition.x();
-        int ty = data.titlePosition.y();
-        int y0 = data.topY;
-
+        Font font8 = sceneFont(8); // depends on current scaling!
         drawMarquee();
-        spriteRenderer.drawText(g, "\"MS PAC-MAN\"", assets.color("palette.orange"), font8, tx, ty);
+        spriteRenderer.drawText(g, "\"MS PAC-MAN\"", assets.color("palette.orange"), font8, data.titlePosition.x(), data.titlePosition.y());
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
-            Ghost ghost = data.ghosts[data.ghostIndex];
-            Color color = switch (ghost.id()) {
+            if (data.ghostIndex == GameModel.RED_GHOST) {
+                spriteRenderer.drawText(g, "WITH", assets.color("palette.pale"), font8, data.titlePosition.x(), data.topY + t(3));
+            }
+            String ghostName = data.ghosts[data.ghostIndex].name().toUpperCase();
+            Color color = switch (data.ghostIndex) {
                 case GameModel.RED_GHOST -> assets.color("palette.red");
                 case GameModel.PINK_GHOST -> assets.color("palette.pink");
                 case GameModel.CYAN_GHOST -> assets.color("palette.cyan");
                 case GameModel.ORANGE_GHOST -> assets.color("palette.orange");
-                default -> throw new IllegalStateException("Illegal ghost ID: " + ghost.id());
+                default -> throw new IllegalStateException("Illegal ghost index: " + data.ghostIndex);
             };
-            if (ghost.id() == GameModel.RED_GHOST) {
-                spriteRenderer.drawText(g, "WITH", assets.color("palette.pale"), font8, tx, y0 + t(3));
-            }
-            String text = ghost.name().toUpperCase();
-            double dx = text.length() < 4 ? t(1) : 0;
-            spriteRenderer.drawText(g, text, color, font8, tx + t(3) + dx, y0 + t(6));
+            double dx = ghostName.length() < 4 ? t(1) : 0;
+            spriteRenderer.drawText(g, ghostName, color, font8, data.titlePosition.x() + t(3) + dx, data.topY + t(6));
         } else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
-            spriteRenderer.drawText(g, "STARRING", assets.color("palette.pale"), font8, tx, y0 + t(3));
-            spriteRenderer.drawText(g, "MS PAC-MAN", assets.color("palette.yellow"), font8, tx, y0 + t(6));
+            spriteRenderer.drawText(g, "STARRING", assets.color("palette.pale"), font8, data.titlePosition.x(), data.topY + t(3));
+            spriteRenderer.drawText(g, "MS PAC-MAN", assets.color("palette.yellow"), font8, data.titlePosition.x(), data.topY + t(6));
         }
         for (Ghost ghost : data.ghosts) {
             spriteRenderer.drawGhost(g, ghost);
@@ -281,22 +280,20 @@ public class MsPacManIntroScene extends GameScene2D {
         for (int i = 0; i < data.numBulbs; ++i) {
             boolean on = marqueeState().get(i);
             if (i <= 33) { // lower edge left-to-right
-                drawLight(xMin + 4 * i, yMax, on);
+                drawLightBulb(xMin + 4 * i, yMax, on);
             } else if (i <= 48) { // right edge bottom-to-top
-                drawLight(xMax, 4 * (70 - i), on);
+                drawLightBulb(xMax, 4 * (70 - i), on);
             } else if (i <= 81) { // upper edge right-to-left
-                drawLight(4 * (96 - i), yMin, on);
+                drawLightBulb(4 * (96 - i), yMin, on);
             } else { // left edge top-to-bottom
-                drawLight(xMin, 4 * (i - 59), on);
+                drawLightBulb(xMin, 4 * (i - 59), on);
             }
         }
     }
 
-    private void drawLight(double x, double y, boolean on) {
-        Color onColor = context.assets().color("palette.pale"), offColor = context.assets().color("palette.red");
-        double bulbSize = s(2);
-        g.setFill(on ? onColor : offColor);
-        g.fillRect(s(x), s(y), bulbSize, bulbSize);
+    private void drawLightBulb(double x, double y, boolean on) {
+        g.setFill(on ? context.assets().color("palette.pale") : context.assets().color("palette.red"));
+        g.fillRect(s(x), s(y), s(2), s(2));
     }
 
     /**
