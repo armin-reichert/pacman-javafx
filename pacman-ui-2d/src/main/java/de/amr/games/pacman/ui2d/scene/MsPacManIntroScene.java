@@ -91,7 +91,6 @@ public class MsPacManIntroScene extends GameScene2D {
 
             boolean letGhostMarchIn(Data data) {
                 Ghost ghost = data.ghosts[data.ghostIndex];
-                int endPositionY = data.stopY + data.ghostIndex * 16;
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.posX() <= data.stopX) {
                         ghost.setPosX(data.stopX);
@@ -102,15 +101,17 @@ public class MsPacManIntroScene extends GameScene2D {
                     }
                 }
                 else if (ghost.moveDir() == Direction.UP) {
+                    int endPositionY = data.topY + data.ghostIndex * 16;
                     if (data.waitBeforeRising > 0) {
-                        data.waitBeforeRising -= 1;
+                        data.waitBeforeRising--;
                     }
                     else if (ghost.posY() <= endPositionY) {
                         ghost.setSpeed(0);
                         ghost.stopAnimation();
                         ghost.resetAnimation();
                         return true;
-                    } else {
+                    }
+                    else {
                         ghost.move();
                     }
                 }
@@ -158,7 +159,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
     private static class Data {
         final float speed = 1.1f;
-        final int stopY = TS * 11 + 1;
+        final int topY = TS * 11 + 1;
         final int stopX = TS * 6 - 4;
         final int stopMsPacX = TS * 15 + 2;
         final Vector2i titlePosition = v2i(TS * 10, TS * 8);
@@ -243,7 +244,7 @@ public class MsPacManIntroScene extends GameScene2D {
         Font font8 = sceneFont(8);
         int tx = data.titlePosition.x();
         int ty = data.titlePosition.y();
-        int y0 = data.stopY;
+        int y0 = data.topY;
 
         drawMarquee();
         spriteRenderer.drawText(g, "\"MS PAC-MAN\"", assets.color("palette.orange"), font8, tx, ty);
