@@ -35,14 +35,15 @@ jlink {
         name = 'Pac-Man-FX-3D'
     }
     jpackage {
-        installerOptions = ['--vendor', 'Armin Reichert', '--app-version', '1.0']
+        appVersion = '1.0'
+        vendor = 'Armin Reichert'
+        installerOptions = []
         if (os.isWindows()) {
             icon = 'pacman.ico'
             installerType = 'msi'
             installerOptions += ['--win-dir-chooser', '--win-menu', '--win-menu-group', 'Pac-Man FX', '--win-shortcut']
-        }
-        if (os.isLinux()) {
-            installerType='deb'
+        } else if (os.isLinux()) {
+            installerType = 'deb'
         }
     }
 }

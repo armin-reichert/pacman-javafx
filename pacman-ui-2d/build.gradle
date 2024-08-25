@@ -32,13 +32,13 @@ jlink {
     }
     jpackage {
         appVersion = '1.0'
-        installerOptions = ['--vendor', 'Armin Reichert']
+        vendor = 'Armin Reichert'
+        installerOptions = []
         if (os.isWindows()) {
             icon = 'pacman.ico'
             installerType = 'msi'
-            installerOptions.addAll(['--win-dir-chooser', '--win-menu', '--win-menu-group', 'Pac-Man FX', '--win-shortcut'])
-        }
-        if (os.isLinux()) {
+            installerOptions += ['--win-dir-chooser', '--win-menu', '--win-menu-group', 'Pac-Man FX', '--win-shortcut']
+        } else if (os.isLinux()) {
             installerType = 'deb'
         }
     }
