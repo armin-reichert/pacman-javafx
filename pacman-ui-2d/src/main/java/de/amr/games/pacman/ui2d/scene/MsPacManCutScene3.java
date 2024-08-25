@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.controller.MsPacManIntermission3;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.ui2d.rendering.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGamePacAnimations;
@@ -25,7 +24,7 @@ import static de.amr.games.pacman.lib.Globals.t;
  */
 public class MsPacManCutScene3 extends GameScene2D {
 
-    private MsPacManIntermission3 intermission;
+    private MsPacManCutScene3Controller intermission;
     private ClapperboardAnimation clapAnimation;
     private SpriteAnimation storkAnimation;
     private MsPacManGameSpriteSheet ss;
@@ -40,14 +39,14 @@ public class MsPacManCutScene3 extends GameScene2D {
         super.init();
         ss = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
         context.setScoreVisible(true);
-        intermission = new MsPacManIntermission3();
+        intermission = new MsPacManCutScene3Controller();
         intermission.msPacMan.setAnimations(new MsPacManGamePacAnimations(intermission.msPacMan, ss));
         intermission.pacMan.setAnimations(new MsPacManGamePacAnimations(intermission.pacMan, ss));
         storkAnimation = ss.createStorkFlyingAnimation();
         storkAnimation.start();
         clapAnimation = new ClapperboardAnimation("3", "JUNIOR");
         clapAnimation.start();
-        intermission.changeState(MsPacManIntermission3.STATE_FLAP, TickTimer.INDEFINITE);
+        intermission.changeState(MsPacManCutScene3Controller.STATE_FLAP, TickTimer.INDEFINITE);
     }
 
     @Override

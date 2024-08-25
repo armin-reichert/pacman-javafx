@@ -2,8 +2,9 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.controller;
+package de.amr.games.pacman.ui2d.scene;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
@@ -24,7 +25,7 @@ import static de.amr.games.pacman.lib.Globals.TS;
  *
  * @author Armin Reichert
  */
-public class MsPacManIntermission3 {
+public class MsPacManCutScene3Controller {
 
     public static final byte STATE_FLAP = 0;
     public static final byte STATE_DELIVER_JUNIOR = 1;
@@ -49,7 +50,7 @@ public class MsPacManIntermission3 {
         stateTimer.start();
     }
 
-    public MsPacManIntermission3() {
+    public MsPacManCutScene3Controller() {
         pacMan   = new Pac();
         msPacMan = new Pac();
         stork    = new Entity();
