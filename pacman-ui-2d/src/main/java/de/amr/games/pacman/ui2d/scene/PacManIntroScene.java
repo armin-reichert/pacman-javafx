@@ -53,7 +53,7 @@ public class PacManIntroScene extends GameScene2D {
                 } else if (timer.currentTick() == 3) {
                     intro.data.titleVisible = true;
                 } else if (timer.atSecond(1)) {
-                    intro.sceneController.changeState(SceneState.PRESENTING_GHOSTS);
+                    intro.sceneController.changeState(PRESENTING_GHOSTS);
                 }
             }
         },
@@ -73,7 +73,7 @@ public class PacManIntroScene extends GameScene2D {
                     }
                     intro.data.ghostIndex += 1;
                 } else if (timer.atSecond(2.5)) {
-                    intro.sceneController.changeState(SceneState.SHOWING_POINTS);
+                    intro.sceneController.changeState(SHOWING_POINTS);
                 }
             }
         },
@@ -87,7 +87,7 @@ public class PacManIntroScene extends GameScene2D {
             @Override
             public void onUpdate(PacManIntroScene intro) {
                 if (timer.atSecond(1)) {
-                    intro.sceneController.changeState(SceneState.CHASING_PAC);
+                    intro.sceneController.changeState(CHASING_PAC);
                 }
             }
         },
@@ -120,7 +120,7 @@ public class PacManIntroScene extends GameScene2D {
                 }
                 // Pac-Man reaches the energizer at the left and turns
                 if (intro.data.pacMan.posX() <= TS * intro.data.leftTileX) {
-                    intro.sceneController.changeState(SceneState.CHASING_GHOSTS);
+                    intro.sceneController.changeState(CHASING_GHOSTS);
                 }
                 // Ghosts already reverse direction before Pac-Man eats the energizer and turns!
                 else if (intro.data.pacMan.posX() <= TS * intro.data.leftTileX + HTS) {
