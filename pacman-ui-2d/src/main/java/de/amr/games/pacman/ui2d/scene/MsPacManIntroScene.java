@@ -79,8 +79,7 @@ public class MsPacManIntroScene extends GameScene2D {
             @Override
             public void onUpdate(MsPacManIntroScene intro) {
                 intro.data.marqueeTimer.tick();
-                Ghost ghost = intro.data.ghosts[intro.data.ghostIndex];
-                boolean reachedEndPosition = letGhostMarchIn(ghost, intro.data, intro.data.stopY + intro.data.ghostIndex * 16);
+                boolean reachedEndPosition = letGhostMarchIn(intro.data);
                 if (reachedEndPosition) {
                     if (intro.data.ghostIndex == 3) {
                         intro.sceneController.changeState(MS_PACMAN_MARCHING_IN);
@@ -90,7 +89,9 @@ public class MsPacManIntroScene extends GameScene2D {
                 }
             }
 
-            boolean letGhostMarchIn(Ghost ghost, Data data, int endPositionY) {
+            boolean letGhostMarchIn(Data data) {
+                Ghost ghost = data.ghosts[data.ghostIndex];
+                int endPositionY = data.stopY + data.ghostIndex * 16;
                 if (ghost.moveDir() == Direction.LEFT) {
                     if (ghost.posX() <= data.stopX) {
                         ghost.setPosX(data.stopX);
