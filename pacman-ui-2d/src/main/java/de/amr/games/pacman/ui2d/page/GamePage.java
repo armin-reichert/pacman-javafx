@@ -144,7 +144,7 @@ public class GamePage extends StackPane implements Page {
         canvasPane.resizeTo(width, height);
     }
 
-    public void setGameScene(GameScene gameScene) {
+    protected void setGameScene(GameScene gameScene) {
         contextMenu.hide();
         if (gameScene instanceof GameScene2D scene2D) {
             setGameScene2D(scene2D);
