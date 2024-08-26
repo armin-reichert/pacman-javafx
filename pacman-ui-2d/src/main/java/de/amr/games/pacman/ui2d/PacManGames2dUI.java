@@ -222,24 +222,31 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         }
     }
 
+    private String displayName(GameScene gameScene) {
+        String text = gameScene != null ? gameScene.getClass().getSimpleName() : "n/a";
+        text += String.format(" (%s)", game().variant());
+        return text;
+    }
+
     protected void updateGameScene(boolean reloadCurrent) {
         if (currentPage != gamePage) {
-            Logger.warn("Game scene can only be updated on game page. WTF?");
+            Logger.warn("Game scene can only be updated when game page is selected. WTF?");
             return;
         }
-        GameScene sceneToDisplay = gameSceneForCurrentGameState();
-        GameScene currentScene = gameScenePy.get();
-        if (reloadCurrent || sceneToDisplay != currentScene) {
-            Logger.info("Update game scene: {} reload={}", sceneToDisplay.getClass().getSimpleName(), reloadCurrent);
-            if (currentScene != null) {
-                currentScene.end();
+        GameScene currentGameScene = gameScenePy.get();
+        GameScene nextGameScene = gameSceneForCurrentGameState();
+        boolean sceneChanging = nextGameScene != currentGameScene;
+        if (reloadCurrent || sceneChanging) {
+            if (currentGameScene != null) {
+                currentGameScene.end();
+                Logger.info("Game scene ended: {}", displayName(currentGameScene));
             }
-            sceneToDisplay.init();
-            gameScenePy.set(sceneToDisplay);
-            if (sceneToDisplay == currentScene) {
-                Logger.info("Game scene has been reloaded {}", gameScenePy.get());
+            nextGameScene.init();
+            if (sceneChanging) {
+                gameScenePy.set(nextGameScene);
+                Logger.info("Game scene changed to: {}", displayName(gameScenePy.get()));
             } else {
-                Logger.info("Game scene changed to {}/{}", currentPage, gameScenePy.get());
+                Logger.info("Game scene reloaded: {}", displayName(currentGameScene));
             }
             if (currentGameSceneIs(GameSceneID.INTRO_SCENE)) {
                 gamePage.signature().show(2, 3);
@@ -337,7 +344,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     protected GameScene gameScene(GameVariant variant, GameSceneID sceneID) {
-        return gameScenesForVariant.get(variant).get(sceneID);
+        GameScene gameScene = gameScenesForVariant.get(variant).get(sceneID);
+        if (gameScene != null) {
+            return gameScene;
+        }
+        throw new IllegalStateException(
+            String.format("No game scene found for ID %s in game variant %s", sceneID, variant));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
