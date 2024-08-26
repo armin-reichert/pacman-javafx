@@ -108,78 +108,6 @@ public class GamePage extends StackPane implements Page {
         canvasLayer.resizeTo(width, height);
     }
 
-    protected void setGameScene(GameScene gameScene) {
-        contextMenu.hide();
-        if (gameScene instanceof GameScene2D scene2D) {
-            setGameScene2D(scene2D);
-        } else {
-            Logger.error("Cannot embed non-2D game scene");
-        }
-    }
-
-    protected void setGameScene2D(GameScene2D scene2D) {
-        getChildren().set(0, canvasLayer);
-        scene2D.setCanvas(canvasLayer.decoratedCanvas().canvas());
-        scene2D.scalingPy.bind(canvasLayer.scalingPy);
-        canvasLayer.decoratedCanvas().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> coloredBackground(scene2D.backgroundColorPy.get()), scene2D.backgroundColorPy
-        ));
-        scene2D.clearCanvas();
-        adaptCanvasSizeToCurrentWorld();
-    }
-
-    public void toggleDashboard() {
-        dashboardLayer.dashboard().toggleVisibility();
-    }
-
-    @Override
-    public void handleContextMenuRequest(ContextMenuEvent event) {
-        if (!context.currentGameSceneIs(GameSceneID.PLAY_SCENE)) {
-            return;
-        }
-        contextMenu.getItems().clear();
-        contextMenu.getItems().add(Page.menuTitleItem(context.locText("pacman")));
-
-        var miAutopilot = new CheckMenuItem(context.locText("autopilot"));
-        miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
-        contextMenu.getItems().add(miAutopilot);
-
-        var miImmunity = new CheckMenuItem(context.locText("immunity"));
-        miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
-        contextMenu.getItems().add(miImmunity);
-
-        contextMenu.getItems().add(new SeparatorMenuItem());
-
-        var miQuit = new MenuItem(context.locText("quit"));
-        miQuit.setOnAction(e -> quit());
-        contextMenu.getItems().add(miQuit);
-
-        contextMenu.show(this, event.getScreenX(), event.getScreenY());
-        contextMenu.requestFocus();
-    }
-
-    public void adaptCanvasSizeToCurrentWorld() {
-        var world = context.game().world();
-        if (world != null) {
-            canvasLayer.setUnscaledCanvasSize(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
-        } else {
-            canvasLayer.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
-        }
-        canvasLayer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
-        Logger.info("Canvas size adapted. w={}, h={}",
-            canvasLayer.decoratedCanvas().getWidth(), canvasLayer.decoratedCanvas().getHeight());
-    }
-
-    protected boolean isCurrentGameScene2D() {
-        return context.currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
-    }
-
-    public void render() {
-        context.currentGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(GameScene2D::draw);
-        popupLayer.setVisible(true);
-        dashboardLayer.update();
-    }
-
     @Override
     public void handleKeyboardInput(ActionHandler actions) {
         if (GameKey.AUTOPILOT.pressed()) {
@@ -221,6 +149,74 @@ public class GamePage extends StackPane implements Page {
         }
     }
 
+    @Override
+    public void handleContextMenuRequest(ContextMenuEvent event) {
+        if (!context.currentGameSceneIs(GameSceneID.PLAY_SCENE)) {
+            return;
+        }
+        contextMenu.getItems().clear();
+        contextMenu.getItems().add(Page.menuTitleItem(context.locText("pacman")));
+
+        var miAutopilot = new CheckMenuItem(context.locText("autopilot"));
+        miAutopilot.selectedProperty().bindBidirectional(PY_AUTOPILOT);
+        contextMenu.getItems().add(miAutopilot);
+
+        var miImmunity = new CheckMenuItem(context.locText("immunity"));
+        miImmunity.selectedProperty().bindBidirectional(PY_IMMUNITY);
+        contextMenu.getItems().add(miImmunity);
+
+        contextMenu.getItems().add(new SeparatorMenuItem());
+
+        var miQuit = new MenuItem(context.locText("quit"));
+        miQuit.setOnAction(e -> quit());
+        contextMenu.getItems().add(miQuit);
+
+        contextMenu.show(this, event.getScreenX(), event.getScreenY());
+        contextMenu.requestFocus();
+    }
+
+    public void adaptCanvasSizeToCurrentWorld() {
+        var world = context.game().world();
+        if (world != null) {
+            canvasLayer.setUnscaledCanvasSize(world.map().terrain().numCols() * TS, world.map().terrain().numRows() * TS);
+        } else {
+            canvasLayer.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
+        }
+        canvasLayer.resizeTo(parentScene.getWidth(), parentScene.getHeight());
+        Logger.info("Canvas size adapted. w={}, h={}",
+            canvasLayer.decoratedCanvas().getWidth(), canvasLayer.decoratedCanvas().getHeight());
+    }
+
+    protected void setGameScene(GameScene gameScene) {
+        contextMenu.hide();
+        if (gameScene instanceof GameScene2D scene2D) {
+            setGameScene2D(scene2D);
+        } else {
+            Logger.error("Cannot embed non-2D game scene");
+        }
+    }
+
+    protected void setGameScene2D(GameScene2D scene2D) {
+        getChildren().set(0, canvasLayer);
+        scene2D.setCanvas(canvasLayer.decoratedCanvas().canvas());
+        scene2D.scalingPy.bind(canvasLayer.scalingPy);
+        canvasLayer.decoratedCanvas().backgroundProperty().bind(Bindings.createObjectBinding(
+            () -> coloredBackground(scene2D.backgroundColorPy.get()), scene2D.backgroundColorPy
+        ));
+        scene2D.clearCanvas();
+        adaptCanvasSizeToCurrentWorld();
+    }
+
+    protected boolean isCurrentGameScene2D() {
+        return context.currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
+    }
+
+    public void render() {
+        context.currentGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(GameScene2D::draw);
+        popupLayer.setVisible(true);
+        dashboardLayer.update();
+    }
+
     public void showSignature() {
         popupLayer.signature().show(2, 3);
     }
@@ -229,13 +225,17 @@ public class GamePage extends StackPane implements Page {
         popupLayer.signature().hide();
     }
 
+    public void toggleDashboard() {
+        dashboardLayer.dashboard().toggleVisibility();
+    }
+
     protected void quit() {
         GameSounds.stopAll();
         context.gameController().changeCredit(-1);
         context.actionHandler().selectStartPage();
     }
 
-    private void showHelp() {
+    protected void showHelp() {
         if (isCurrentGameScene2D()) {
             popupLayer.showHelp(canvasLayer.scaling());
         }
