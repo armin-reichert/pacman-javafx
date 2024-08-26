@@ -7,19 +7,12 @@ package de.amr.games.pacman.ui2d.util;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
 import org.tinylog.Logger;
 
 /**
  * @author Armin Reichert
  */
 public class CanvasLayoutPane extends BorderPane {
-
-    public static void setAllSizes(Region region, double width, double height) {
-        region.setMinSize(width, height);
-        region.setMaxSize(width, height);
-        region.setPrefSize(width, height);
-    }
 
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0) {
         @Override
@@ -63,22 +56,27 @@ public class CanvasLayoutPane extends BorderPane {
             width = size.getWidth();
             height = size.getHeight();
         }
-        setAllSizes(decoratedCanvas, width, height);
+        decoratedCanvas.setMinSize(width, height);
+        decoratedCanvas.setMaxSize(width, height);
+        decoratedCanvas.setPrefSize(width, height);
+
         setScaling(newScaling);
-        decoratedCanvas.logCanvasSize();
+
+        Logger.debug("Unscaled canvas size: w={0.0} h={0.0}", decoratedCanvas.unscaledCanvasWidth(), decoratedCanvas.unscaledCanvasHeight());
+        Logger.debug("Canvas size: w={0.0} h={0.0}", decoratedCanvas.canvas().getWidth(), decoratedCanvas.canvas().getHeight());
     }
 
     private double computeScaling(double width, double height) {
         if (decoratedCanvas.isDecorated()) {
             double shrinkedWidth = 0.85 * width;
             double shrinkedHeight = 0.92 * height;
-            double scaling = shrinkedHeight / decoratedCanvas.getUnscaledCanvasHeight();
-            if (scaling * decoratedCanvas.getUnscaledCanvasWidth() > shrinkedWidth) {
-                scaling = shrinkedWidth / decoratedCanvas.getUnscaledCanvasWidth();
+            double scaling = shrinkedHeight / decoratedCanvas.unscaledCanvasHeight();
+            if (scaling * decoratedCanvas.unscaledCanvasWidth() > shrinkedWidth) {
+                scaling = shrinkedWidth / decoratedCanvas.unscaledCanvasWidth();
             }
             return scaling;
         } else {
-            return height / decoratedCanvas.getUnscaledCanvasHeight();
+            return height / decoratedCanvas.unscaledCanvasHeight();
         }
     }
 

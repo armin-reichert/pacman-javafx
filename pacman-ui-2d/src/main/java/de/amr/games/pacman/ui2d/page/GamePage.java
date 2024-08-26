@@ -51,7 +51,7 @@ public class GamePage extends StackPane implements Page {
     protected final GameContext context;
     protected final Scene parentScene;
     protected final CanvasLayoutPane canvasLayer = new CanvasLayoutPane();
-    protected final DashboardLayer dashboardLayer;
+    protected final DashboardLayer dashboardLayer; // dashboard, picture-in-picture view
     protected final PopupLayer popupLayer; // help, signature
     protected final ContextMenu contextMenu = new ContextMenu();
 

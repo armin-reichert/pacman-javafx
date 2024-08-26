@@ -11,7 +11,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import org.tinylog.Logger;
 
 /**
  * @author Armin Reichert
@@ -42,8 +41,8 @@ public class DecoratedCanvas extends BorderPane {
             () -> {
                 if (decoratedPy.get()) {
                     var clipRect = new Rectangle(getSize().getWidth(), getSize().getHeight());
-                    clipRect.setArcWidth(26 * getScaling());
-                    clipRect.setArcHeight(26 * getScaling());
+                    clipRect.setArcWidth(26 * scaling());
+                    clipRect.setArcHeight(26 * scaling());
                     return clipRect;
                 }
                 return null;
@@ -52,16 +51,13 @@ public class DecoratedCanvas extends BorderPane {
 
         borderProperty().bind(Bindings.createObjectBinding(
             () -> {
-                if (decoratedPy.get()) {
-                    double borderWidth = Math.max(5, Math.ceil(getSize().getHeight() / 55)); // TODO magic number
-                    double cornerRadius = Math.ceil(10 * getScaling());
-                    return new Border(
-                        new BorderStroke(borderColorPy.get(),
-                            BorderStrokeStyle.SOLID,
-                            new CornerRadii(cornerRadius),
-                            new BorderWidths(borderWidth)));
+                if (!isDecorated()) {
+                    return null;
                 }
-                return null;
+                double w = Math.max(5, Math.ceil(getSize().getHeight() / 55)); // TODO avoid magic numbers
+                double r = Math.ceil(10 * scaling());
+                return new Border(
+                    new BorderStroke(borderColor(), BorderStrokeStyle.SOLID, new CornerRadii(r), new BorderWidths(w)));
             },
             decoratedPy, scalingPy, unscaledCanvasWidthPy, unscaledCanvasHeightPy
         ));
@@ -72,10 +68,10 @@ public class DecoratedCanvas extends BorderPane {
     }
 
     public Dimension2D getSize() {
-        return computeSize(getUnscaledCanvasWidth(), getUnscaledCanvasHeight(), getScaling());
+        return computeSize(unscaledCanvasWidth(), unscaledCanvasHeight(), scaling());
     }
 
-    public double getScaling() {
+    public double scaling() {
         return scalingPy.get();
     }
 
@@ -83,7 +79,7 @@ public class DecoratedCanvas extends BorderPane {
         scalingPy.set(scaling);
     }
 
-    public double getUnscaledCanvasWidth() {
+    public double unscaledCanvasWidth() {
         return unscaledCanvasWidthPy.get();
     }
 
@@ -91,7 +87,7 @@ public class DecoratedCanvas extends BorderPane {
         unscaledCanvasWidthPy.set(w);
     }
 
-    public double getUnscaledCanvasHeight() {
+    public double unscaledCanvasHeight() {
         return unscaledCanvasHeightPy.get();
     }
 
@@ -107,16 +103,11 @@ public class DecoratedCanvas extends BorderPane {
         decoratedPy.set(enabled);
     }
 
-    public Color getBorderColor() {
+    public Color borderColor() {
         return borderColorPy.get();
     }
 
     public void setBorderColor(Color color) {
         borderColorPy.set(color);
-    }
-
-    public void logCanvasSize() {
-        Logger.debug("Unscaled canvas size: w={0.0} h={0.0}", getUnscaledCanvasWidth(), getUnscaledCanvasHeight());
-        Logger.debug("Canvas size: w={0.0} h={0.0}", canvas.getWidth(), canvas.getHeight());
     }
 }
