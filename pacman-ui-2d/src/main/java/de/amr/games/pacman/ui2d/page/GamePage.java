@@ -188,11 +188,14 @@ public class GamePage extends StackPane implements Page {
     }
 
     protected void setGameScene(GameScene gameScene) {
+        if (gameScene == null) {
+            return; // happens when app is initialized
+        }
         contextMenu.hide();
         if (gameScene instanceof GameScene2D scene2D) {
             setGameScene2D(scene2D);
         } else {
-            Logger.error("Cannot embed non-2D game scene");
+            Logger.error("Cannot embed non-2D game scene: {}", gameScene);
         }
     }
 
