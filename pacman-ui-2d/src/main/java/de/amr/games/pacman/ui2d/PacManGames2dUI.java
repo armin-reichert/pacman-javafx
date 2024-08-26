@@ -565,7 +565,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     @Override
     public void toggleDashboard() {
-        gamePage.dashboard().toggleVisibility();
+        gamePage.toggleDashboard();
     }
 
     @Override

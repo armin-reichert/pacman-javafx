@@ -10,7 +10,6 @@ import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameKey;
 import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
@@ -27,7 +26,8 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -53,73 +53,51 @@ public class GamePage extends StackPane implements Page {
     protected final GameContext context;
     protected final Scene parentScene;
     protected final CanvasLayoutPane canvasPane = new CanvasLayoutPane();
-    protected final BorderPane infoLayer = new BorderPane(); // dashboard, picture-in-picture
-    protected final Pane popupLayer = new Pane(); // help, signature
+    protected final Pane popupLayer; // help, signature
     protected final FadingPane helpPopUp = new FadingPane();
     protected final Signature signature = new Signature();
-    protected final Dashboard dashboard;
-    protected final PictureInPictureView pip;
+    protected final DashboardLayer dashboardLayer;
     protected final ContextMenu contextMenu = new ContextMenu();
 
     public GamePage(GameContext context, Scene parentScene) {
         this.context = checkNotNull(context);
         this.parentScene = checkNotNull(parentScene);
 
-        dashboard = new Dashboard(context);
-        dashboard.addInfoBox(context.locText("infobox.general.title"), new InfoBoxGeneral());
-        dashboard.addInfoBox(context.locText("infobox.game_control.title"), new InfoBoxGameControl());
-        dashboard.addInfoBox(context.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
-        dashboard.addInfoBox(context.locText("infobox.game_info.title"), new InfoBoxGameInfo());
-        dashboard.addInfoBox(context.locText("infobox.actor_info.title"), new InfoBoxActorInfo());
-        dashboard.addInfoBox(context.locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
-        dashboard.addInfoBox(context.locText("infobox.about.title"), new InfoBoxAbout());
-
         canvasPane.setBackground(context.assets().background("wallpaper.background"));
         canvasPane.setUnscaledCanvasSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y);
         canvasPane.setMinScaling(0.75);
+        canvasPane.borderProperty().bind(Bindings.createObjectBinding(
+            () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.YELLOW, 3) : null,
+            PY_DEBUG_INFO, context.gameSceneProperty()
+        ));
 
         DecoratedCanvas canvas = canvasPane.decoratedCanvas();
         canvas.setBorderColor(context.assets().color("palette.pale"));
         canvas.decoratedPy.addListener((py, ov, nv) -> adaptCanvasSizeToCurrentWorld());
         canvas.decoratedPy.bind(PY_CANVAS_DECORATED);
 
-        pip = new PictureInPictureView(context);
-        pip.heightPy.bind(PY_PIP_HEIGHT);
-        pip.opacityPy.bind(PY_PIP_OPACITY_PERCENT.divide(100.0));
+        dashboardLayer = new DashboardLayer(context);
 
+        popupLayer = new Pane();
         popupLayer.minHeightProperty().bind(canvas.minHeightProperty());
         popupLayer.maxHeightProperty().bind(canvas.maxHeightProperty());
         popupLayer.prefHeightProperty().bind(canvas.prefHeightProperty());
         popupLayer.minWidthProperty().bind(canvas.minWidthProperty());
         popupLayer.maxWidthProperty().bind(canvas.maxWidthProperty());
         popupLayer.prefWidthProperty().bind(canvas.prefWidthProperty());
-
         popupLayer.getChildren().addAll(helpPopUp, signature);
-
-        infoLayer.setLeft(dashboard);
-        infoLayer.setRight(new VBox(pip.node(), new HBox()));
-        infoLayer.visibleProperty().bind(Bindings.createObjectBinding(
-                () -> dashboard.isVisible() || PY_PIP_ON.get(),
-                dashboard.visibleProperty(), PY_PIP_ON
-        ));
-
-        borderProperty().bind(Bindings.createObjectBinding(
-                () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.RED, 3) : null,
-                PY_DEBUG_INFO, context.gameSceneProperty()
-        ));
-        canvasPane.borderProperty().bind(Bindings.createObjectBinding(
-                () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.YELLOW, 3) : null,
-                PY_DEBUG_INFO, context.gameSceneProperty()
-        ));
         popupLayer.borderProperty().bind(Bindings.createObjectBinding(
-                () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.GREENYELLOW, 3) : null,
-                PY_DEBUG_INFO, context.gameSceneProperty()
+            () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.GREENYELLOW, 3) : null,
+            PY_DEBUG_INFO, context.gameSceneProperty()
         ));
         popupLayer.mouseTransparentProperty().bind(PY_DEBUG_INFO);
 
+        getChildren().addAll(canvasPane, dashboardLayer, popupLayer);
         setOnMouseClicked(e -> contextMenu.hide());
-
-        getChildren().addAll(canvasPane, infoLayer, popupLayer);
+        borderProperty().bind(Bindings.createObjectBinding(
+            () -> PY_DEBUG_INFO.get() && isCurrentGameScene2D() ? Ufx.border(Color.RED, 3) : null,
+            PY_DEBUG_INFO, context.gameSceneProperty()
+        ));
     }
 
     @Override
@@ -164,8 +142,8 @@ public class GamePage extends StackPane implements Page {
         adaptCanvasSizeToCurrentWorld();
     }
 
-    public Dashboard dashboard() {
-        return dashboard;
+    public void toggleDashboard() {
+        dashboardLayer.dashboard().toggleVisibility();
     }
 
     public void sign(Font font, String... words) {
@@ -234,9 +212,7 @@ public class GamePage extends StackPane implements Page {
     public void render() {
         context.currentGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(GameScene2D::draw);
         popupLayer.setVisible(true);
-        dashboard.update();
-        pip.setVisible(PY_PIP_ON.get() && !isCurrentGameScene2D()); //TODO
-        pip.draw();
+        dashboardLayer.update();
     }
 
     @Override
