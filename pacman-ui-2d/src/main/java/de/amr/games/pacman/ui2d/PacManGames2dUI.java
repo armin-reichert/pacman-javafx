@@ -63,12 +63,7 @@ import static java.util.function.Predicate.not;
  */
 public class PacManGames2dUI implements GameEventListener, GameContext, ActionHandler {
 
-    public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
-        @Override
-        protected void invalidated() {
-            gamePage.setGameScene(get());
-        }
-    };
+    public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
         @Override
@@ -182,6 +177,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     protected GamePage createGamePage(Scene parentScene) {
         var gamePage = new GamePage(this, parentScene);
+        gamePage.gameScenePy.bind(gameScenePy);
         gamePage.sign(assets.font("font.monospaced", 9), locText("app.signature"));
         return gamePage;
     }
@@ -223,16 +219,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     }
 
     private String displayName(GameScene gameScene) {
-        String text = gameScene != null ? gameScene.getClass().getSimpleName() : "n/a";
+        String text = gameScene != null ? gameScene.getClass().getSimpleName() : "NO GAME SCENE";
         text += String.format(" (%s)", game().variant());
         return text;
     }
 
     protected void updateGameScene(boolean reloadCurrent) {
-        if (currentPage != gamePage) {
-            Logger.warn("Game scene can only be updated when game page is selected. WTF?");
-            return;
-        }
         GameScene currentGameScene = gameScenePy.get();
         GameScene nextGameScene = gameSceneForCurrentGameState();
         boolean sceneChanging = nextGameScene != currentGameScene;

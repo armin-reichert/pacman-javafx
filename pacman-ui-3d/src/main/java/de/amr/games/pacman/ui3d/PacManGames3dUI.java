@@ -31,6 +31,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     @Override
     protected GamePage3D createGamePage(Scene parentScene) {
         var gamePage = new GamePage3D(this, parentScene);
+        gamePage.gameScenePy.bind(gameScenePy);
         gamePage.sign(assets.font("font.monospaced", 9), locText("app.signature"));
         return gamePage;
     }

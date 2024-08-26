@@ -14,12 +14,13 @@ import de.amr.games.pacman.ui2d.dashboard.*;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
-import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.CanvasLayoutPane;
 import de.amr.games.pacman.ui2d.util.DecoratedCanvas;
 import de.amr.games.pacman.ui2d.util.FadingPane;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
@@ -41,6 +42,13 @@ import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
  * @author Armin Reichert
  */
 public class GamePage extends StackPane implements Page {
+
+    public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene") {
+        @Override
+        protected void invalidated() {
+            setGameScene(get());
+        }
+    };
 
     protected final GameContext context;
     protected final Scene parentScene;
