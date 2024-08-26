@@ -232,7 +232,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
                 currentGameScene.end();
                 Logger.info("Game scene ended: {}", displayName(currentGameScene));
             }
-            nextGameScene.init();
+            if (nextGameScene != null) {
+                nextGameScene.init();
+            }
             if (sceneChanging) {
                 gameScenePy.set(nextGameScene);
                 Logger.info("Game scene changed to: {}", displayName(gameScenePy.get()));
@@ -334,6 +336,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         return gameScene(game().variant(), sceneID) == gameScene;
     }
 
+    //TODO maybe return an Optional?
     protected GameScene gameScene(GameVariant variant, GameSceneID sceneID) {
         GameScene gameScene = gameScenesForVariant.get(variant).get(sceneID);
         if (gameScene != null) {
