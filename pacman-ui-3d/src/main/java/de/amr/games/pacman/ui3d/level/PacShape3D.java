@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui3d.level;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Pac;
@@ -21,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -48,7 +50,7 @@ public class PacShape3D extends Group {
 
         light.translateXProperty().bind(translateXProperty());
         light.translateYProperty().bind(translateYProperty());
-        light.setTranslateZ(-2.5 * size);
+        light.setTranslateZ(-30);
 
         getChildren().add(jaw);
         getTransforms().add(moveRotation);
@@ -101,12 +103,17 @@ public class PacShape3D extends Group {
      * When empowered, Pac-Man is lighted, light range shrinks with ceasing power.
      */
      public void updateLight(Pac pac, GameModel game) {
-        boolean hasPower = game.powerTimer().isRunning();
-        double range = hasPower && game.powerTimer().duration() > 0
-            ? 2 * TS + ((double) game.powerTimer().remaining() / game.powerTimer().duration()) * 6 * TS
-            : 0;
-        light.setMaxRange(range);
-        light.setLightOn(PY_3D_PAC_LIGHT_ENABLED.get() && pac.isVisible() && hasPower);
+        TickTimer powerTimer = game.powerTimer();
+        if (powerTimer.isRunning()) {
+            double remaining = game.powerTimer().remaining();
+            double duration = game.powerTimer().duration();
+            double maxRange = (remaining / duration) * 60 + 30;
+            light.setMaxRange(maxRange);
+            light.setLightOn(PY_3D_PAC_LIGHT_ENABLED.get() && pac.isVisible());
+            Logger.debug("Power remaining: {} light range: {0.00}", remaining, maxRange);
+        } else {
+            light.setLightOn(false);
+        }
     }
 
     public void updateVisibility(Pac pac, GameWorld world) {
