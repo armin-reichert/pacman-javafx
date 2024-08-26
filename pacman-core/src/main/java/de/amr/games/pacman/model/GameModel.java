@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.model;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
@@ -205,10 +204,6 @@ public abstract class GameModel {
         if (enabled && cruiseElroy < 0 || !enabled && cruiseElroy > 0) {
             cruiseElroy = (byte) -cruiseElroy;
         }
-    }
-
-    public GameController controller() {
-        return GameController.it();
     }
 
     public Pac pac() {
@@ -535,7 +530,7 @@ public abstract class GameModel {
         return !eventLog.killedGhosts.isEmpty();
     }
 
-    public void doHuntingStep() {
+    public void doHuntingStep(boolean pacImmune) {
         blinking.tick();
         checkForFood();
         unlockGhosts();
@@ -545,15 +540,15 @@ public abstract class GameModel {
         updatePacPower();
         updateHuntingTimer();
         ghosts(FRIGHTENED).filter(pac::sameTile).forEach(this::killGhost);
-        eventLog.pacKilled = checkPacKilled();
+        eventLog.pacKilled = checkPacKilled(pacImmune);
     }
 
-    private boolean checkPacKilled() {
+    private boolean checkPacKilled(boolean pacImmune) {
         boolean pacMeetsKiller = ghosts(HUNTING_PAC).anyMatch(pac::sameTile);
         if (demoLevel) {
             return pacMeetsKiller && !isPacManKillingIgnoredInDemoLevel();
         } else {
-            return pacMeetsKiller && !controller().isPacImmune();
+            return pacMeetsKiller && !pacImmune;
         }
     }
 
