@@ -178,7 +178,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     protected GamePage createGamePage(Scene parentScene) {
         var gamePage = new GamePage(this, parentScene);
         gamePage.gameScenePy.bind(gameScenePy);
-        gamePage.sign(assets.font("font.monospaced", 9), locText("app.signature"));
         return gamePage;
     }
 
@@ -241,9 +240,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
                 Logger.info("Game scene reloaded: {}", displayName(currentGameScene));
             }
             if (currentGameSceneIs(GameSceneID.INTRO_SCENE)) {
-                gamePage.signature().show(2, 3);
+                gamePage.showSignature();
             } else {
-                gamePage.signature().hide();
+                gamePage.hideSignature();
             }
         }
     }
