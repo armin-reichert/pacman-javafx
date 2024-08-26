@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -16,6 +17,8 @@ import de.amr.games.pacman.ui2d.util.SpriteAnimations;
 
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
+
+import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
 
 /**
  * @author Armin Reichert
@@ -28,6 +31,12 @@ public class InfoBoxActorInfo extends InfoBox {
         addTextRow("Pac Name", pacInfo((game, pac) -> pac.name()));
         addTextRow("Movement", pacInfo(this::movementInfo));
         addTextRow("Tile",     pacInfo(this::locationInfo));
+        addTextRow("Power", () -> {
+            TickTimer powerTimer = context.game().powerTimer();
+            return powerTimer.isRunning()
+                ? "Remaining: %s".formatted(ticksToString(powerTimer.remaining()))
+                : "No Power";
+        });
         addEmptyRow();
         ghostInfo(GameModel.RED_GHOST);
         addEmptyRow();
