@@ -18,7 +18,7 @@ import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GameKey;
+import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGamePacAnimations;
@@ -247,14 +247,14 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void handleKeyboardInput(GameContext context) {
-        if (GameKey.ADD_CREDIT.pressed()) {
+        if (GameAction.ADD_CREDIT.executed()) {
             if (sceneController.state() == SceneState.STARTING) {
                 triggerBlueMazeBug();
             }
             context.addCredit();
-        } else if (GameKey.START_GAME.pressed()) {
+        } else if (GameAction.START_GAME.executed()) {
             context.startGame();
-        } else if (GameKey.CUTSCENES.pressed()) {
+        } else if (GameAction.CUTSCENES.executed()) {
             context.startCutscenesTest();
         }
     }

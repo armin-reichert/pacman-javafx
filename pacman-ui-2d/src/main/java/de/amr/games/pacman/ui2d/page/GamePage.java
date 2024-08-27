@@ -6,7 +6,7 @@ package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GameKey;
+import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -109,39 +109,39 @@ public class GamePage extends StackPane implements Page {
 
     @Override
     public void handleKeyboardInput(GameContext context) {
-        if (GameKey.AUTOPILOT.pressed()) {
+        if (GameAction.AUTOPILOT.executed()) {
             context.toggleAutopilot();
-        } else if (GameKey.BOOT.pressed()) {
+        } else if (GameAction.BOOT.executed()) {
             context.reboot();
-        } else if (GameKey.DEBUG_INFO.pressed()) {
+        } else if (GameAction.DEBUG_INFO.executed()) {
             Ufx.toggle(PY_DEBUG_INFO);
-        } else if (GameKey.IMMUNITY.pressed()) {
+        } else if (GameAction.IMMUNITY.executed()) {
             context.toggleImmunity();
-        } else if (GameKey.HELP.pressed()) {
+        } else if (GameAction.HELP.executed()) {
             showHelp();
-        } else if (GameKey.PAUSE.pressed()) {
+        } else if (GameAction.PAUSE.executed()) {
             context.togglePaused();
-        } else if (GameKey.SIMULATION_1_STEP.pressed()) {
+        } else if (GameAction.SIMULATION_1_STEP.executed()) {
             context.doSimulationSteps(1);
-        } else if (GameKey.SIMULATION_10_STEPS.pressed()) {
+        } else if (GameAction.SIMULATION_10_STEPS.executed()) {
             context.doSimulationSteps(10);
-        } else if (GameKey.SIMULATION_FASTER.pressed()) {
+        } else if (GameAction.SIMULATION_FASTER.executed()) {
             context.changeSimulationSpeed(5);
-        } else if (GameKey.SIMULATION_SLOWER.pressed()) {
+        } else if (GameAction.SIMULATION_SLOWER.executed()) {
             context.changeSimulationSpeed(-5);
-        } else if (GameKey.SIMULATION_NORMAL.pressed()) {
+        } else if (GameAction.SIMULATION_NORMAL.executed()) {
             context.resetSimulationSpeed();
-        } else if (GameKey.QUIT.pressed()) {
+        } else if (GameAction.QUIT.executed()) {
             quit();
-        } else if (GameKey.TEST_MODE.pressed()) {
+        } else if (GameAction.TEST_MODE.executed()) {
             context.startLevelTestMode();
-        } else if (GameKey.TWO_D_THREE_D.pressed()) {
+        } else if (GameAction.TWO_D_THREE_D.executed()) {
             context.toggle2D3D();
-        } else if (GameKey.DASHBOARD.pressed()) {
+        } else if (GameAction.DASHBOARD.executed()) {
             context.toggleDashboard();
-        } else if (GameKey.PIP_VIEW.pressed()) {
+        } else if (GameAction.PIP_VIEW.executed()) {
             context.togglePipVisible();
-        } else if (GameKey.EDITOR.pressed()) {
+        } else if (GameAction.EDITOR.executed()) {
             context.openMapEditor();
         } else {
             this.context.currentGameScene().ifPresent(gameScene -> gameScene.handleKeyboardInput(context));

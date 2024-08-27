@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GameKey;
+import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameParameters;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
@@ -182,19 +182,19 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void handleKeyboardInput(GameContext context) {
-        if (GameKey.ADD_CREDIT.pressed() && this.context.game().isDemoLevel()) {
+        if (GameAction.ADD_CREDIT.executed() && this.context.game().isDemoLevel()) {
             context.addCredit();
-        } else if (GameKey.PREV_PERSPECTIVE.pressed()) {
+        } else if (GameAction.PREV_PERSPECTIVE.executed()) {
             context.selectPrevPerspective();
-        } else if (GameKey.NEXT_PERSPECTIVE.pressed()) {
+        } else if (GameAction.NEXT_PERSPECTIVE.executed()) {
             context.selectNextPerspective();
-        } else if (GameKey.CHEAT_EAT_ALL.pressed()) {
+        } else if (GameAction.CHEAT_EAT_ALL.executed()) {
             context.cheatEatAllPellets();
-        } else if (GameKey.CHEAT_ADD_LIVES.pressed()) {
+        } else if (GameAction.CHEAT_ADD_LIVES.executed()) {
             context.cheatAddLives();
-        } else if (GameKey.CHEAT_NEXT_LEVEL.pressed()) {
+        } else if (GameAction.CHEAT_NEXT_LEVEL.executed()) {
             context.cheatEnterNextLevel();
-        } else if (GameKey.CHEAT_KILL_GHOSTS.pressed()) {
+        } else if (GameAction.CHEAT_KILL_GHOSTS.executed()) {
             context.cheatKillAllEatableGhosts();
         }
     }

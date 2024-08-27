@@ -15,7 +15,7 @@ import static de.amr.games.pacman.ui2d.util.KeyInput.*;
 /**
  * @author Armin Reichert
  */
-public enum GameKey {
+public enum GameAction {
 
     ADD_CREDIT          (key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5)),
     AUTOPILOT           (alt(KeyCode.A)),
@@ -49,7 +49,7 @@ public enum GameKey {
     TEST_MODE           (alt(KeyCode.T)),
     TWO_D_THREE_D       (alt(KeyCode.DIGIT3));
 
-    GameKey(KeyCodeCombination... combinations) {
+    GameAction(KeyCodeCombination... combinations) {
         input = KeyInput.of(combinations);
         Logger.info("{} => {}", input, this);
     }
@@ -57,7 +57,7 @@ public enum GameKey {
     /**
      * @return {@code true} if any key combination defined for this game key is pressed
      */
-    public boolean pressed() {
+    public boolean executed() {
         if (Keyboard.pressed(input)) {
             Logger.debug("{} pressed", this);
             return true;
