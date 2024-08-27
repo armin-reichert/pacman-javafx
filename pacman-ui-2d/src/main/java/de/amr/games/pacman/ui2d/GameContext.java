@@ -24,37 +24,26 @@ import java.util.Optional;
 public interface GameContext {
 
     // Game model and controller
-
     default GameController gameController() {
         return GameController.it();
     }
-
     default GameState gameState() {
         return GameController.it().state();
     }
-
     default GameModel game() {
         return GameController.it().gameModel();
     }
-
     void setScoreVisible(boolean visible);
-
     boolean isScoreVisible();
 
     // Game scenes
-
     boolean currentGameSceneIs(GameSceneID gameSceneID);
-
     ObjectProperty<GameScene> gameSceneProperty();
-
     Optional<GameScene> currentGameScene();
 
     // Resources
-
     AssetMap assets();
-
     GameSpriteSheet spriteSheet(GameVariant variant);
-
     /**
      * Returns a translated text (for the current locale).
      * <p></p>
@@ -101,6 +90,5 @@ public interface GameContext {
     void updateCustomMaps();
 
     // Others
-
     GameClockFX gameClock();
 }
