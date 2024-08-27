@@ -446,7 +446,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    // ActionHandler interface implementation
+    // Actions
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
