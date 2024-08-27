@@ -10,6 +10,7 @@ import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.*;
 import de.amr.games.pacman.ui2d.util.AssetMap;
+import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.application.Application;
@@ -30,14 +31,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import static de.amr.games.pacman.ui2d.GameParameters.PY_DEBUG_INFO;
-
 /**
  * @author Armin Reichert
  */
 public class PacManGames2dApp extends Application {
 
-    public static void loadAssets(AssetMap assets) {
+    public static void addAssets(AssetMap assets) {
         ResourceManager rm = () -> PacManGames2dApp.class;
 
         assets.addBundle(ResourceBundle.getBundle("de.amr.games.pacman.ui2d.texts.messages", rm.rootClass().getModule()));
@@ -165,46 +164,7 @@ public class PacManGames2dApp extends Application {
         GameSounds.setAssets(assets);
     }
 
-    private final PacManGames2dUI ui = new PacManGames2dUI();
-
-    @Override
-    public void init() {
-        GameController.create(new File(System.getProperty("user.home"), ".pacmanfx"));
-    }
-
-    @Override
-    public void start(Stage stage) {
-        Logger.info("JavaFX version:   {}", System.getProperty("javafx.runtime.version"));
-        GameController.it().selectGameVariant(GameVariant.PACMAN);
-        for (var variant : GameVariant.values()) {
-            GameController.it().gameModel(variant).addGameEventListener(ui);
-        }
-        loadAssets(ui.assets());
-        Logger.info("Assets loaded: {}", ui.assets().summary(List.of(
-            new Pair<>(Image.class, "images"),
-            new Pair<>(Font.class, "fonts"),
-            new Pair<>(Color.class, "colors"),
-            new Pair<>(AudioClip.class, "audio clips")
-        )));
-        ui.createLayout(stage, computeSize());
-        ui.setGameScenes(createGameScenes(ui));
-        ui.start();
-        Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
-    }
-
-    @Override
-    public void stop() {
-        ui.gameClock().stop();
-    }
-
-    private Dimension2D computeSize() {
-        Rectangle2D screenSize = Screen.getPrimary().getBounds();
-        double aspect = 1.2;
-        double height = 0.8 * screenSize.getHeight();
-        return new Dimension2D(aspect * height, height);
-    }
-
-    private Map<GameVariant, Map<GameSceneID, GameScene>> createGameScenes(PacManGames2dUI ui) {
+    private static Map<GameVariant, Map<GameSceneID, GameScene>> createGameScenes() {
         Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
         for (GameVariant variant : GameVariant.values()) {
             switch (variant) {
@@ -229,13 +189,45 @@ public class PacManGames2dApp extends Application {
                         GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
                     )));
             }
-            gameScenesForVariant.get(variant).values().forEach(gameScene -> {
-                if (gameScene instanceof GameScene2D gameScene2D) {
-                    gameScene2D.setContext(ui);
-                    gameScene2D.infoVisiblePy.bind(PY_DEBUG_INFO);
-                }
-            });
         }
         return gameScenesForVariant;
+    }
+
+    @Override
+    public void init() {
+        File userDir = new File(System.getProperty("user.home"), ".pacmanfx");
+        GameController.create(userDir);
+        GameController.it().selectGameVariant(GameVariant.PACMAN);
+        GameController.it().setClock(new GameClockFX());
+    }
+
+    @Override
+    public void start(Stage stage) {
+        Logger.info("JavaFX version:   {}", System.getProperty("javafx.runtime.version"));
+
+        var ui = new PacManGames2dUI(GameController.it().clock(), createGameScenes());
+        addAssets(ui.assets());
+        ui.create(stage, computeSize());
+        ui.start();
+
+        Logger.info("Assets loaded: {}", ui.assets().summary(List.of(
+            new Pair<>(Image.class, "images"),
+            new Pair<>(Font.class, "fonts"),
+            new Pair<>(Color.class, "colors"),
+            new Pair<>(AudioClip.class, "audio clips")
+        )));
+        Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
+    }
+
+    @Override
+    public void stop() {
+        GameController.it().clock().stop();
+    }
+
+    private Dimension2D computeSize() {
+        Rectangle2D screenSize = Screen.getPrimary().getBounds();
+        double aspect = 1.2;
+        double height = 0.8 * screenSize.getHeight();
+        return new Dimension2D(aspect * height, height);
     }
 }

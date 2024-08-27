@@ -84,14 +84,23 @@ public class GameClockFX implements GameClock {
 
     @Override
     public void start() {
-        timeline.play();
-        Logger.info("Clock started, target freq: {} Hz", getTargetFrameRate());
+        if (timeline.getStatus() != Status.RUNNING) {
+            timeline.play();
+            Logger.info("Clock status: {}", timeline.getStatus());
+        } else {
+            Logger.info("Clock status remains {}", timeline.getStatus());
+        }
+        Logger.info("Clock target frequency: {} Hz", getTargetFrameRate());
     }
 
     @Override
     public void stop() {
-        timeline.stop();
-        Logger.info("Clock stopped");
+        if (timeline.getStatus() == Status.RUNNING) {
+            timeline.stop();
+            Logger.info("Clock status: {}", timeline.getStatus());
+        } else {
+            Logger.info("Clock status remains {}", timeline.getStatus());
+        }
     }
 
     @Override

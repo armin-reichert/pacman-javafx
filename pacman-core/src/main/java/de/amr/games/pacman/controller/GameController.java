@@ -124,8 +124,9 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         this.clock = checkNotNull(clock);
     }
 
-    public GameClock clock() {
-        return clock;
+    @SuppressWarnings("unchecked")
+    public <T extends GameClock> T clock() {
+        return (T) clock;
     }
 
     /**

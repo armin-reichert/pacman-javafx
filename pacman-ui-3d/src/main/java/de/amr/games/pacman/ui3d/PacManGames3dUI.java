@@ -4,13 +4,17 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d;
 
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
+import de.amr.games.pacman.ui2d.util.GameClockFX;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.shape.DrawMode;
+
+import java.util.Map;
 
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static de.amr.games.pacman.ui3d.GameParameters3D.*;
@@ -27,6 +31,19 @@ import static de.amr.games.pacman.ui3d.GameParameters3D.*;
  * @author Armin Reichert
  */
 public class PacManGames3dUI extends PacManGames2dUI {
+
+    public PacManGames3dUI(
+        GameClockFX clock,
+        Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant)
+    {
+        super(clock, gameScenesForVariant);
+        for (GameVariant variant : GameVariant.values()) {
+            var playScene3D = (PlayScene3D) gameScenesForVariant.get(variant).get(GameSceneID.PLAY_SCENE_3D);
+            playScene3D.setContext(this);
+            playScene3D.widthProperty().bind(rootPane().widthProperty());
+            playScene3D.heightProperty().bind(rootPane().heightProperty());
+        }
+    }
 
     @Override
     protected GamePage3D createGamePage(Scene parentScene) {

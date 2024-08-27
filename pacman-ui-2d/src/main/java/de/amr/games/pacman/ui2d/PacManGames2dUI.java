@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d;
 
+import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
@@ -19,6 +20,7 @@ import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.rendering.*;
 import de.amr.games.pacman.ui2d.scene.GameScene;
+import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
 import de.amr.games.pacman.ui2d.util.*;
 import javafx.beans.binding.Bindings;
@@ -43,7 +45,6 @@ import org.tinylog.Logger;
 import java.text.MessageFormat;
 import java.time.LocalTime;
 import java.util.Arrays;
-import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -75,18 +76,69 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
 
     public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible");
 
-    protected final AssetMap assets = new AssetMap();
-    protected final FlashMessageView messageView = new FlashMessageView();
-    protected final GameClockFX clock = new GameClockFX();
-    protected final StackPane sceneRoot = new StackPane();
+    protected final AssetMap assets;
+    protected final Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant;
+    protected final FlashMessageView messageView;
+    protected final GameClockFX clock;
+    protected final StackPane sceneRoot;
     protected Stage stage;
     protected StartPage startPage;
     protected GamePage gamePage;
     protected EditorPage editorPage;
     protected Page currentPage;
-    protected Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
 
-    public void createLayout(Stage stage, Dimension2D size) {
+    public PacManGames2dUI(
+        GameClockFX clock,
+        Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant)
+    {
+        this.clock = checkNotNull(clock);
+        this.gameScenesForVariant = checkNotNull(gameScenesForVariant);
+        for (GameVariant variant : GameVariant.values()) {
+            gameScenesForVariant.get(variant).values().forEach(gameScene -> {
+                if (gameScene instanceof GameScene2D gameScene2D) {
+                    gameScene2D.setContext(this);
+                    gameScene2D.infoVisiblePy.bind(PY_DEBUG_INFO);
+                }
+            });
+        }
+
+        sceneRoot = new StackPane();
+        assets = new AssetMap();
+        messageView = new FlashMessageView();
+        clock.setPauseableCallback(() -> {
+            try {
+                gameController().update();
+                currentGameScene().ifPresent(GameScene::update);
+            } catch (Exception x) {
+                clock.stop();
+                Logger.error("Game update caused an error, game clock stopped!");
+                Logger.error(x);
+            }
+        });
+        clock.setPermanentCallback(() -> {
+            try {
+                if (currentPage == gamePage) {
+                    currentGameScene()
+                        .filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast)
+                        .ifPresent(GameScene2D::draw);
+                    gamePage.updateDashboard();
+                    messageView.update();
+                }
+            } catch (Exception x) {
+                clock.stop();
+                Logger.error("Game page rendering error: {}", x.getMessage());
+                Logger.error(x);
+            }
+        });
+    }
+
+    /**
+     * Called from application start method (on JavaFX application thread). Builds UI components.
+
+     * @param stage primary stage (window)
+     * @param size initial window size
+     */
+    public void create(Stage stage, Dimension2D size) {
         this.stage = checkNotNull(stage);
         sceneRoot.getChildren().addAll(new Pane(), messageView, createMutedIcon());
         stage.setScene(createMainScene(size));
@@ -122,44 +174,18 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         return mainScene;
     }
 
-    public void setGameScenes(Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant) {
-        this.gameScenesForVariant = gameScenesForVariant;
-    }
-
     public StackPane rootPane() {
         return sceneRoot;
     }
 
     public void start() {
+        for (var variant : GameVariant.values()) {
+            GameController.it().gameModel(variant).addGameEventListener(this);
+        }
         // Touch all game keys such that they get registered with keyboard
         for (var gameKey : GameKey.values()) {
             Logger.debug("Game key '{}' registered", gameKey);
         }
-
-        // Configure game clock
-        clock.setPauseableCallback(() -> {
-            try {
-                gameController().update();
-                currentGameScene().ifPresent(GameScene::update);
-            } catch (Exception x) {
-                clock.stop();
-                Logger.error("Game update caused an error, game clock stopped!");
-                Logger.error(x);
-            }
-        });
-        clock.setPermanentCallback(() -> {
-            try {
-                if (currentPage == gamePage) {
-                    messageView.update();
-                    gamePage.render();
-                }
-            } catch (Exception x) {
-                clock.stop();
-                Logger.error("Game page rendering caused an error, game clock stopped!");
-                Logger.error(x);
-            }
-        });
-        gameController().setClock(clock);
 
         // select game variant of current game model
         gameVariantPy.set(game().variant());

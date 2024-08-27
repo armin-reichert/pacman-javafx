@@ -10,6 +10,7 @@ import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.PacManGames2dApp;
 import de.amr.games.pacman.ui2d.scene.*;
 import de.amr.games.pacman.ui2d.util.AssetMap;
+import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.application.Application;
@@ -29,7 +30,6 @@ import java.io.File;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.ui2d.GameParameters.PY_DEBUG_INFO;
 import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_ENABLED;
 import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_FLOOR_COLOR;
 
@@ -38,9 +38,9 @@ import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_FLOOR_COLOR;
  */
 public class PacManGames3dApp extends Application {
 
-    private static void loadAssets(AssetMap assets) {
+    private static void addAssets(AssetMap assets) {
         // Load assets for 2D UI from other module
-        PacManGames2dApp.loadAssets(assets);
+        PacManGames2dApp.addAssets(assets);
 
         ResourceManager rm = () -> PacManGames3dApp.class;
 
@@ -101,49 +101,7 @@ public class PacManGames3dApp extends Application {
         GameSounds.setAssets(assets);
     }
 
-    private final PacManGames3dUI ui = new PacManGames3dUI();
-
-    @Override
-    public void init() {
-        GameController.create(new File(System.getProperty("user.home"), ".pacmanfx"));
-    }
-
-    @Override
-    public void start(Stage stage) {
-        Logger.info("JavaFX version:   {}", System.getProperty("javafx.runtime.version"));
-        GameController.it().selectGameVariant(GameVariant.PACMAN);
-        for (var variant : GameVariant.values()) {
-            GameController.it().gameModel(variant).addGameEventListener(ui);
-        }
-        loadAssets(ui.assets());
-        Logger.info("Assets loaded: {}", ui.assets().summary(List.of(
-            new Pair<>(Model3D.class,"3D models"),
-            new Pair<>(Image.class, "images"),
-            new Pair<>(Font.class, "fonts"),
-            new Pair<>(Color.class, "colors"),
-            new Pair<>(AudioClip.class, "audio clips")
-        )));
-        ui.createLayout(stage, computeSize());
-        ui.setGameScenes(createGameScenes(ui));
-        ui.start();
-        PY_3D_ENABLED.set(true);
-        Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
-    }
-
-    @Override
-    public void stop() {
-        ui.gameClock().stop();
-    }
-
-    private Dimension2D computeSize() {
-        Rectangle2D screenSize = Screen.getPrimary().getBounds();
-        double aspect = screenSize.getWidth() / screenSize.getHeight();
-        double height = 0.8 * screenSize.getHeight();
-        double width = aspect * height;
-        return new Dimension2D(width, height);
-    }
-
-    private Map<GameVariant, Map<GameSceneID, GameScene>> createGameScenes(PacManGames3dUI ui) {
+    private static Map<GameVariant, Map<GameSceneID, GameScene>> createGameScenes() {
         Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
         for (GameVariant variant : GameVariant.values()) {
             switch (variant) {
@@ -168,21 +126,52 @@ public class PacManGames3dApp extends Application {
                         GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
                     )));
             }
-            gameScenesForVariant.get(variant).values().forEach(gameScene -> {
-                if (gameScene instanceof GameScene2D gameScene2D) {
-                    gameScene2D.setContext(ui);
-                    gameScene2D.infoVisiblePy.bind(PY_DEBUG_INFO);
-                }
-            });
         }
         for (GameVariant variant : GameVariant.values()) {
-            var playScene3D = new PlayScene3D();
-            playScene3D.setContext(ui);
-            playScene3D.widthProperty().bind(ui.rootPane().widthProperty());
-            playScene3D.heightProperty().bind(ui.rootPane().heightProperty());
-            gameScenesForVariant.get(variant).put(GameSceneID.PLAY_SCENE_3D, playScene3D);
+            gameScenesForVariant.get(variant).put(GameSceneID.PLAY_SCENE_3D, new PlayScene3D());
             Logger.info("Added 3D play scene for variant " + variant);
         }
         return gameScenesForVariant;
+    }
+
+    @Override
+    public void init() {
+        File userDir = new File(System.getProperty("user.home"), ".pacmanfx");
+        GameController.create(userDir);
+        GameController.it().selectGameVariant(GameVariant.PACMAN);
+        GameController.it().setClock(new GameClockFX());
+        PY_3D_ENABLED.set(true);
+    }
+
+    @Override
+    public void start(Stage stage) {
+        Logger.info("JavaFX version:   {}", System.getProperty("javafx.runtime.version"));
+
+        var ui = new PacManGames3dUI(GameController.it().clock(), createGameScenes());
+        addAssets(ui.assets());
+        ui.create(stage, computeSize());
+        ui.start();
+
+        Logger.info("Assets: {}", ui.assets().summary(List.of(
+            new Pair<>(Model3D.class,"3D models"),
+            new Pair<>(Image.class, "images"),
+            new Pair<>(Font.class, "fonts"),
+            new Pair<>(Color.class, "colors"),
+            new Pair<>(AudioClip.class, "audio clips")
+        )));
+        Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
+    }
+
+    @Override
+    public void stop() {
+        GameController.it().clock().stop();
+    }
+
+    private Dimension2D computeSize() {
+        Rectangle2D screenSize = Screen.getPrimary().getBounds();
+        double aspect = screenSize.getWidth() / screenSize.getHeight();
+        double height = 0.8 * screenSize.getHeight();
+        double width = aspect * height;
+        return new Dimension2D(width, height);
     }
 }

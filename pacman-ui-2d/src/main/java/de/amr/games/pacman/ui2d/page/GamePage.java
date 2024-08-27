@@ -214,12 +214,6 @@ public class GamePage extends StackPane implements Page {
         return context.currentGameScene().map(GameScene2D.class::isInstance).orElse(false);
     }
 
-    public void render() {
-        context.currentGameScene().filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast).ifPresent(GameScene2D::draw);
-        popupLayer.setVisible(true);
-        dashboardLayer.update();
-    }
-
     public void showSignature() {
         popupLayer.signature().show(2, 3);
     }
@@ -230,6 +224,10 @@ public class GamePage extends StackPane implements Page {
 
     public void toggleDashboard() {
         dashboardLayer.dashboard().toggleVisibility();
+    }
+
+    public void updateDashboard() {
+        dashboardLayer.update();
     }
 
     protected void quit() {
