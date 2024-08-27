@@ -232,7 +232,7 @@ public class GamePage extends StackPane implements Page {
 
     protected void quit() {
         GameSounds.stopAll();
-        context.gameController().changeCredit(-1);
+        context.gameController().consumeCoin();
         context.actionHandler().selectStartPage();
     }
 

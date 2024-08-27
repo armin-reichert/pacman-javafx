@@ -59,7 +59,7 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     private final Map<GameVariant, GameModel> models = new EnumMap<>(GameVariant.class);
     private GameClock clock;
     private GameModel game;
-    private int credit = 0;
+    private int numCoins = 0;
 
     private GameController(File userDir) {
         super(GameState.values());
@@ -132,22 +132,30 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
      * @return number of coins inserted.
      */
     public int credit() {
-        return credit;
+        return numCoins;
     }
 
-    public boolean setCredit(int credit) {
-        if (0 <= credit && credit <= GameModel.MAX_CREDIT) {
-            this.credit = credit;
+    public void setNumCoins(int numCoins) {
+        if (numCoins >= 0 && numCoins <= GameModel.MAX_CREDIT) {
+            this.numCoins = numCoins;
+        }
+    }
+
+    public boolean insertCoin() {
+        if (numCoins < GameModel.MAX_CREDIT) {
+            ++numCoins;
             return true;
         }
         return false;
     }
 
-    public boolean changeCredit(int delta) {
-        return setCredit(credit + delta);
+    public void consumeCoin() {
+        if (numCoins > 0) {
+            --numCoins;
+        }
     }
 
     public boolean hasCredit() {
-        return credit > 0;
+        return numCoins > 0;
     }
 }

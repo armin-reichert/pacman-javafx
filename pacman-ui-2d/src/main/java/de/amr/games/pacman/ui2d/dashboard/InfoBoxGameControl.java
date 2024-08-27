@@ -61,7 +61,7 @@ public class InfoBoxGameControl extends InfoBox {
         buttonsLevelActions[GAME_LEVEL_START].setOnAction(e -> context.actionHandler().startGame());
         buttonsLevelActions[GAME_LEVEL_QUIT].setOnAction(e -> context.actionHandler().restartIntro());
         buttonsLevelActions[GAME_LEVEL_NEXT].setOnAction(e -> context.actionHandler().cheatEnterNextLevel());
-        spinnerCredit.valueProperty().addListener((py, ov, nv) -> context.gameController().setCredit(nv));
+        spinnerCredit.valueProperty().addListener((py, ov, nv) -> context.gameController().setNumCoins(nv));
         spinnerCredit.getValueFactory().setValue(context.gameController().credit());
         cbAutopilot.setOnAction(e -> context.actionHandler().toggleAutopilot());
         cbImmunity.setOnAction(e -> context.actionHandler().toggleImmunity());

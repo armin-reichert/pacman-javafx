@@ -266,7 +266,7 @@ public enum GameState implements FsmState<GameModel> {
             timer.reset(TICKS_STATE_DURATION);
             timer.start();
             game.updateHighScore();
-            GameController.it().changeCredit(-1);
+            GameController.it().consumeCoin();
         }
 
         @Override

@@ -570,8 +570,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
         GameSounds.enabledProperty().set(true); // in demo mode, sound is disabled
         GameSounds.playCreditSound();
         if (!game().isPlaying()) {
-            boolean added = gameController().changeCredit(1);
-            if (added) {
+            boolean coinInserted = gameController().insertCoin();
+            if (coinInserted) {
                 game().publishGameEvent(GameEventType.CREDIT_ADDED);
             }
             if (gameState() != GameState.CREDIT) {
