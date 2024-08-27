@@ -133,15 +133,15 @@ public class GamePage extends StackPane implements Page {
             context.resetSimulationSpeed();
         } else if (GameAction.QUIT.executed()) {
             quit();
-        } else if (GameAction.TEST_MODE.executed()) {
+        } else if (GameAction.START_TEST_MODE.executed()) {
             context.startLevelTestMode();
         } else if (GameAction.TWO_D_THREE_D.executed()) {
             context.toggle2D3D();
-        } else if (GameAction.DASHBOARD.executed()) {
+        } else if (GameAction.TOGGLE_DASHBOARD.executed()) {
             context.toggleDashboard();
-        } else if (GameAction.PIP_VIEW.executed()) {
+        } else if (GameAction.TOGGLE_PIP_VIEW.executed()) {
             context.togglePipVisible();
-        } else if (GameAction.EDITOR.executed()) {
+        } else if (GameAction.OPEN_EDITOR.executed()) {
             context.openMapEditor();
         } else {
             this.context.currentGameScene().ifPresent(gameScene -> gameScene.handleKeyboardInput(context));

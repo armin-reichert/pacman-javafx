@@ -16,7 +16,6 @@ import static de.amr.games.pacman.ui2d.util.KeyInput.*;
  * @author Armin Reichert
  */
 public enum GameAction {
-
     ADD_CREDIT          (key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5)),
     AUTOPILOT           (alt(KeyCode.A)),
     BOOT                (key(KeyCode.F3)),
@@ -25,9 +24,7 @@ public enum GameAction {
     CHEAT_KILL_GHOSTS   (alt(KeyCode.X)),
     CHEAT_NEXT_LEVEL    (alt(KeyCode.N)),
     CUTSCENES           (alt(KeyCode.C)),
-    DASHBOARD           (key(KeyCode.F1), alt(KeyCode.B)),
     DEBUG_INFO          (alt(KeyCode.D)),
-    EDITOR              (shift_alt(KeyCode.E)),
     ENTER_GAME_PAGE     (key(KeyCode.SPACE), key(KeyCode.ENTER)),
     FULLSCREEN          (key(KeyCode.F11)),
     HELP                (key(KeyCode.H)),
@@ -36,7 +33,7 @@ public enum GameAction {
     NEXT_PERSPECTIVE    (alt(KeyCode.RIGHT)),
     NEXT_VARIANT        (key(KeyCode.V), key(KeyCode.RIGHT)),
     PAUSE               (key(KeyCode.P)),
-    PIP_VIEW            (key(KeyCode.F2)),
+    OPEN_EDITOR         (shift_alt(KeyCode.E)),
     PREV_PERSPECTIVE    (alt(KeyCode.LEFT)),
     PREV_VARIANT        (key(KeyCode.LEFT)),
     QUIT                (key(KeyCode.Q)),
@@ -46,7 +43,9 @@ public enum GameAction {
     SIMULATION_1_STEP   (key(KeyCode.SPACE), shift(KeyCode.P)),
     SIMULATION_10_STEPS (shift(KeyCode.SPACE)),
     START_GAME          (key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1)),
-    TEST_MODE           (alt(KeyCode.T)),
+    START_TEST_MODE     (alt(KeyCode.T)),
+    TOGGLE_DASHBOARD    (key(KeyCode.F1), alt(KeyCode.B)),
+    TOGGLE_PIP_VIEW     (key(KeyCode.F2)),
     TWO_D_THREE_D       (alt(KeyCode.DIGIT3));
 
     GameAction(KeyCodeCombination... combinations) {
