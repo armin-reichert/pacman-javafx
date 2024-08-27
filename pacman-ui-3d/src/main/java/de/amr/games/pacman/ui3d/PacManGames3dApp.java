@@ -103,7 +103,7 @@ public class PacManGames3dApp extends Application {
 
     private static Map<GameVariant, Map<GameSceneID, GameScene>> createGameScenes() {
         Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
-        for (GameVariant variant : GameVariant.values()) {
+        for (var variant : GameVariant.values()) {
             switch (variant) {
                 case MS_PACMAN ->
                     gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
@@ -126,8 +126,6 @@ public class PacManGames3dApp extends Application {
                         GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
                     )));
             }
-        }
-        for (GameVariant variant : GameVariant.values()) {
             gameScenesForVariant.get(variant).put(GameSceneID.PLAY_SCENE_3D, new PlayScene3D());
             Logger.info("Added 3D play scene for variant " + variant);
         }
