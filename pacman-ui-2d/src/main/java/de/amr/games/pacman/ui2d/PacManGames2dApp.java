@@ -203,13 +203,12 @@ public class PacManGames2dApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        Logger.info("JavaFX version:   {}", System.getProperty("javafx.runtime.version"));
-
         var ui = new PacManGames2dUI(GameController.it().clock(), createGameScenes());
         addAssets(ui.assets());
         ui.create(stage, computeSize());
         ui.start();
 
+        Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         Logger.info("Assets loaded: {}", ui.assets().summary(List.of(
             new Pair<>(Image.class, "images"),
             new Pair<>(Font.class, "fonts"),

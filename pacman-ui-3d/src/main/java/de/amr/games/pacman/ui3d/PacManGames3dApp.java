@@ -143,13 +143,12 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        Logger.info("JavaFX version:   {}", System.getProperty("javafx.runtime.version"));
-
         var ui = new PacManGames3dUI(GameController.it().clock(), createGameScenes());
         addAssets(ui.assets());
         ui.create(stage, computeSize());
         ui.start();
 
+        Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         Logger.info("Assets: {}", ui.assets().summary(List.of(
             new Pair<>(Model3D.class,"3D models"),
             new Pair<>(Image.class, "images"),
