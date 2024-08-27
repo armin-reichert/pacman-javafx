@@ -55,16 +55,16 @@ public class InfoBoxGameControl extends InfoBox {
                 context.gameController().restart(GameState.BOOT);
             }
         });
-        buttonsIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> context.actionHandler().startCutscenesTest());
-        buttonsIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> context.actionHandler().restartIntro());
+        buttonsIntermissionTest[INTERMISSION_TEST_START].setOnAction(e -> context.startCutscenesTest());
+        buttonsIntermissionTest[INTERMISSION_TEST_QUIT].setOnAction(e -> context.restartIntro());
         comboInitialLives.setOnAction(e -> context.game().setInitialLives(comboInitialLives.getValue()));
-        buttonsLevelActions[GAME_LEVEL_START].setOnAction(e -> context.actionHandler().startGame());
-        buttonsLevelActions[GAME_LEVEL_QUIT].setOnAction(e -> context.actionHandler().restartIntro());
-        buttonsLevelActions[GAME_LEVEL_NEXT].setOnAction(e -> context.actionHandler().cheatEnterNextLevel());
+        buttonsLevelActions[GAME_LEVEL_START].setOnAction(e -> context.startGame());
+        buttonsLevelActions[GAME_LEVEL_QUIT].setOnAction(e -> context.restartIntro());
+        buttonsLevelActions[GAME_LEVEL_NEXT].setOnAction(e -> context.cheatEnterNextLevel());
         spinnerCredit.valueProperty().addListener((py, ov, nv) -> context.gameController().setNumCoins(nv));
         spinnerCredit.getValueFactory().setValue(context.gameController().credit());
-        cbAutopilot.setOnAction(e -> context.actionHandler().toggleAutopilot());
-        cbImmunity.setOnAction(e -> context.actionHandler().toggleImmunity());
+        cbAutopilot.setOnAction(e -> context.toggleAutopilot());
+        cbImmunity.setOnAction(e -> context.toggleImmunity());
     }
 
     @Override

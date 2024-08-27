@@ -1,7 +1,6 @@
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameKey;
 import de.amr.games.pacman.ui2d.util.Keyboard;
@@ -63,12 +62,12 @@ public class StartPage extends StackPane implements Page {
         };
 
         Button btnPrevVariant = createCarouselButton(context.assets().image("startpage.arrow.left"));
-        btnPrevVariant.setOnAction(e -> context.actionHandler().selectPrevGameVariant());
+        btnPrevVariant.setOnAction(e -> context.selectPrevGameVariant());
         VBox left = new VBox(btnPrevVariant);
         left.setAlignment(Pos.CENTER_LEFT);
 
         Button btnNextVariant = createCarouselButton(context.assets().image("startpage.arrow.right"));
-        btnNextVariant.setOnAction(e -> context.actionHandler().selectNextGameVariant());
+        btnNextVariant.setOnAction(e -> context.selectNextGameVariant());
         VBox right = new VBox(btnNextVariant);
         right.setAlignment(Pos.CENTER_RIGHT);
 
@@ -77,7 +76,7 @@ public class StartPage extends StackPane implements Page {
         btnPlay.setTranslateY(-10);
         btnPlay.setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
-                context.actionHandler().selectGamePage();
+                context.selectGamePage();
             }
             e.consume(); // do not propagate event to layout such that image changes
         });
@@ -189,15 +188,15 @@ public class StartPage extends StackPane implements Page {
     }
 
     @Override
-    public void handleKeyboardInput(ActionHandler handler) {
+    public void handleKeyboardInput(GameContext context) {
         if (GameKey.ENTER_GAME_PAGE.pressed()) {
-            handler.selectGamePage();
+            context.selectGamePage();
         } else if (GameKey.NEXT_VARIANT.pressed()) {
-            handler.selectNextGameVariant();
+            context.selectNextGameVariant();
         } else if (GameKey.PREV_VARIANT.pressed()) {
-            handler.selectPrevGameVariant();
+            context.selectPrevGameVariant();
         } else if (Keyboard.pressed(KeyCode.DOWN) || Keyboard.pressed(KeyCode.UP)) {
-            switch (context.game().variant()) {
+            switch (this.context.game().variant()) {
                 case MS_PACMAN  -> browseMsPacManFlyer();
                 case PACMAN     -> browsePacManFlyer();
                 case PACMAN_XXL -> {}

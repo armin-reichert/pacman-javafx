@@ -63,7 +63,7 @@ public class GamePage3D extends GamePage {
         // Toggle 2D-3D
         boolean is3D = context.currentGameSceneIs(GameSceneID.PLAY_SCENE_3D);
         var item = new MenuItem(context.locText(is3D ? "use_2D_scene" : "use_3D_scene"));
-        item.setOnAction(e -> context.actionHandler().toggle2D3D());
+        item.setOnAction(e -> context.toggle2D3D());
         contextMenu.getItems().add(item);
 
         if (is3D) {
@@ -107,7 +107,7 @@ public class GamePage3D extends GamePage {
 
         if (context.game().variant() == GameVariant.PACMAN_XXL) {
             var miOpenMapEditor = new MenuItem(context.locText("open_editor"));
-            miOpenMapEditor.setOnAction(e -> context.actionHandler().openMapEditor());
+            miOpenMapEditor.setOnAction(e -> context.openMapEditor());
             contextMenu.getItems().add(miOpenMapEditor);
         }
 

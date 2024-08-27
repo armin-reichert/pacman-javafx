@@ -14,7 +14,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
-import de.amr.games.pacman.ui2d.ActionHandler;
+import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameKey;
 import de.amr.games.pacman.ui2d.GameParameters;
 import de.amr.games.pacman.ui2d.GameSounds;
@@ -78,17 +78,17 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void handleKeyboardInput(ActionHandler actions) {
+    public void handleKeyboardInput(GameContext context) {
         if (GameKey.ADD_CREDIT.pressed() && context.game().isDemoLevel()) {
-            actions.addCredit();
+            context.addCredit();
         } else if (GameKey.CHEAT_EAT_ALL.pressed()) {
-            actions.cheatEatAllPellets();
+            context.cheatEatAllPellets();
         } else if (GameKey.CHEAT_ADD_LIVES.pressed()) {
-            actions.cheatAddLives();
+            context.cheatAddLives();
         } else if (GameKey.CHEAT_NEXT_LEVEL.pressed()) {
-            actions.cheatEnterNextLevel();
+            context.cheatEnterNextLevel();
         } else if (GameKey.CHEAT_KILL_GHOSTS.pressed()) {
-            actions.cheatKillAllEatableGhosts();
+            context.cheatKillAllEatableGhosts();
         }
     }
 

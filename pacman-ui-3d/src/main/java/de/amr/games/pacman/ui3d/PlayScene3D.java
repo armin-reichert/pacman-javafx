@@ -11,7 +11,10 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.ui2d.*;
+import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.GameKey;
+import de.amr.games.pacman.ui2d.GameParameters;
+import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
@@ -178,21 +181,21 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void handleKeyboardInput(ActionHandler actions) {
-        if (GameKey.ADD_CREDIT.pressed() && context.game().isDemoLevel()) {
-            actions.addCredit();
+    public void handleKeyboardInput(GameContext context) {
+        if (GameKey.ADD_CREDIT.pressed() && this.context.game().isDemoLevel()) {
+            context.addCredit();
         } else if (GameKey.PREV_PERSPECTIVE.pressed()) {
-            actions.selectPrevPerspective();
+            context.selectPrevPerspective();
         } else if (GameKey.NEXT_PERSPECTIVE.pressed()) {
-            actions.selectNextPerspective();
+            context.selectNextPerspective();
         } else if (GameKey.CHEAT_EAT_ALL.pressed()) {
-            actions.cheatEatAllPellets();
+            context.cheatEatAllPellets();
         } else if (GameKey.CHEAT_ADD_LIVES.pressed()) {
-            actions.cheatAddLives();
+            context.cheatAddLives();
         } else if (GameKey.CHEAT_NEXT_LEVEL.pressed()) {
-            actions.cheatEnterNextLevel();
+            context.cheatEnterNextLevel();
         } else if (GameKey.CHEAT_KILL_GHOSTS.pressed()) {
-            actions.cheatKillAllEatableGhosts();
+            context.cheatKillAllEatableGhosts();
         }
     }
 
@@ -287,7 +290,7 @@ public class PlayScene3D implements GameScene {
         stopLevelAnimations();
         // delay state exit for 3 seconds
         context.gameState().timer().restartSeconds(3);
-        context.actionHandler().showFlashMessageSeconds(3, pickerGameOver.next());
+        context.showFlashMessageSeconds(3, pickerGameOver.next());
         GameSounds.stopAll();
         GameSounds.playGameOverSound();
     }
@@ -471,7 +474,7 @@ public class PlayScene3D implements GameScene {
                   perspectivePy.unbind();
                   perspectivePy.set(Perspective.TOTAL);
                   level3D.livesCounter3D().light().setLightOn(false);
-                  context.actionHandler().showFlashMessageSeconds(3, message);
+                  context.showFlashMessageSeconds(3, message);
               })
             , doAfterSec(2, level3D.mazeFlashAnimation(numFlashes))
             , doAfterSec(1, () -> {

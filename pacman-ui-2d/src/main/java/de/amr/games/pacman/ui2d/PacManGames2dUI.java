@@ -62,7 +62,7 @@ import static java.util.function.Predicate.not;
  *
  * @author Armin Reichert
  */
-public class PacManGames2dUI implements GameEventListener, GameContext, ActionHandler {
+public class PacManGames2dUI implements GameEventListener, GameContext {
 
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
@@ -308,11 +308,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
     @Override
     public GameClockFX gameClock() {
         return clock;
-    }
-
-    @Override
-    public ActionHandler actionHandler() {
-        return this;
     }
 
     @Override

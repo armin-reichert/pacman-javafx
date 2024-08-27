@@ -76,7 +76,7 @@ public class InfoBoxGeneral extends InfoBox {
         cbDebugUI = checkBox("Show Debug Info");
         cbTimeMeasured = checkBox("Time Measured");
 
-        buttonsSimulation[0].setOnAction(e -> context.actionHandler().togglePaused());
+        buttonsSimulation[0].setOnAction(e -> context.togglePaused());
         buttonsSimulation[1].setOnAction(e -> context.gameClock().makeSteps(PY_SIMULATION_STEPS.get(), true));
         sliderTargetFPS.valueProperty().addListener(
             (py, ov, nv) -> context.gameClock().setTargetFrameRate(nv.intValue()));

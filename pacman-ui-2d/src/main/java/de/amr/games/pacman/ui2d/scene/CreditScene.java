@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.ui2d.ActionHandler;
+import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameKey;
 import javafx.geometry.Rectangle2D;
 
@@ -27,11 +27,11 @@ public class CreditScene extends GameScene2D {
     }
 
     @Override
-    public void handleKeyboardInput(ActionHandler actions) {
+    public void handleKeyboardInput(GameContext context) {
         if (GameKey.ADD_CREDIT.pressed()) {
-            actions.addCredit();
+            context.addCredit();
         } else if (GameKey.START_GAME.pressed()) {
-            actions.startGame();
+            context.startGame();
         }
     }
 

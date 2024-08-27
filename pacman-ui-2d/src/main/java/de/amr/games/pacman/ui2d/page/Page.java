@@ -1,6 +1,6 @@
 package de.amr.games.pacman.ui2d.page;
 
-import de.amr.games.pacman.ui2d.ActionHandler;
+import de.amr.games.pacman.ui2d.GameContext;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
@@ -39,5 +39,5 @@ public interface Page {
         }
     }
 
-    void handleKeyboardInput(ActionHandler handler);
+    void handleKeyboardInput(GameContext context);
 }

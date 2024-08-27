@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.mapeditor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import javafx.scene.control.MenuItem;
@@ -101,6 +100,6 @@ public class EditorPage extends BorderPane implements Page {
     }
 
     @Override
-    public void handleKeyboardInput(ActionHandler handler) {
+    public void handleKeyboardInput(GameContext context) {
     }
 }

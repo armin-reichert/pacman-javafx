@@ -90,7 +90,7 @@ public class InfoBox3D extends InfoBox {
             sliderPiPOpacity.setTooltip(tooltip);
         }
 
-        cbUsePlayScene3D.setOnAction(e -> context.actionHandler().toggle2D3D());
+        cbUsePlayScene3D.setOnAction(e -> context.toggle2D3D());
 
         pickerLightColor.setOnAction(e -> PY_3D_LIGHT_COLOR.set(pickerLightColor.getValue()));
         pickerFloorColor.setOnAction(e -> PY_3D_FLOOR_COLOR.set(pickerFloorColor.getValue()));
@@ -113,7 +113,7 @@ public class InfoBox3D extends InfoBox {
         cbNightMode.setOnAction(e -> toggle(PY_NIGHT_MODE));
         cbPacLighted.setOnAction(e -> toggle(PY_3D_PAC_LIGHT_ENABLED));
         cbAxesVisible.setOnAction(e -> toggle(PY_3D_AXES_VISIBLE));
-        cbWireframeMode.setOnAction(e -> context.actionHandler().toggleDrawMode());
+        cbWireframeMode.setOnAction(e -> context.toggleDrawMode());
     }
 
     @Override

@@ -32,7 +32,7 @@ public class InfoBoxCustomMaps extends InfoBox {
     public void init(GameContext context) {
         this.context = context;
 
-        var cbCustomMapEnabled = checkBox("Use Custom Maps", context.actionHandler()::updateCustomMaps);
+        var cbCustomMapEnabled = checkBox("Use Custom Maps", context::updateCustomMaps);
         cbCustomMapEnabled.selectedProperty().bindBidirectional(GameParameters.PY_CUSTOM_MAPS_ENABLED);
 
         //TODO check where this belongs

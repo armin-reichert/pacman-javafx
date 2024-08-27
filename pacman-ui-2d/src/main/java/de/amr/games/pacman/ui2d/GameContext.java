@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.mapeditor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
@@ -65,9 +66,41 @@ public interface GameContext {
      */
     String locText(String keyOrPattern, Object... args);
 
+    // Actions
+    void addCredit();
+    void changeSimulationSpeed(int delta);
+    void cheatAddLives();
+    void cheatEatAllPellets();
+    void cheatEnterNextLevel();
+    void cheatKillAllEatableGhosts();
+    void doSimulationSteps(int numSteps);
+    void openMapEditor();
+    void quitMapEditor(TileMapEditor editor);
+    void reboot();
+    void resetSimulationSpeed();
+    void restartIntro();
+    void selectEditorPage();
+    void selectGamePage();
+    void selectNextGameVariant();
+    void selectNextPerspective();
+    void selectPrevGameVariant();
+    void selectPrevPerspective();
+    void selectStartPage();
+    void showFlashMessage(String message, Object... args);
+    void showFlashMessageSeconds(double seconds, String message, Object... args);
+    void startCutscenesTest();
+    void startGame();
+    void startLevelTestMode();
+    void toggle2D3D();
+    void toggleAutopilot();
+    void toggleDashboard();
+    void toggleDrawMode();
+    void toggleImmunity();
+    void togglePaused();
+    void togglePipVisible();
+    void updateCustomMaps();
+
     // Others
 
     GameClockFX gameClock();
-
-    ActionHandler actionHandler();
 }

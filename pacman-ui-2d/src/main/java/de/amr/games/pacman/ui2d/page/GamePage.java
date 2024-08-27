@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameKey;
 import de.amr.games.pacman.ui2d.GameSounds;
@@ -99,7 +98,7 @@ public class GamePage extends StackPane implements Page {
     public void onSelected() {
         adaptCanvasSizeToCurrentWorld();
         //TODO check if this is always what is wanted
-        context.actionHandler().reboot();
+        context.reboot();
         GameSounds.playVoice("voice.explain", 0);
     }
 
@@ -109,43 +108,43 @@ public class GamePage extends StackPane implements Page {
     }
 
     @Override
-    public void handleKeyboardInput(ActionHandler actions) {
+    public void handleKeyboardInput(GameContext context) {
         if (GameKey.AUTOPILOT.pressed()) {
-            actions.toggleAutopilot();
+            context.toggleAutopilot();
         } else if (GameKey.BOOT.pressed()) {
-            actions.reboot();
+            context.reboot();
         } else if (GameKey.DEBUG_INFO.pressed()) {
             Ufx.toggle(PY_DEBUG_INFO);
         } else if (GameKey.IMMUNITY.pressed()) {
-            actions.toggleImmunity();
+            context.toggleImmunity();
         } else if (GameKey.HELP.pressed()) {
             showHelp();
         } else if (GameKey.PAUSE.pressed()) {
-            actions.togglePaused();
+            context.togglePaused();
         } else if (GameKey.SIMULATION_1_STEP.pressed()) {
-            actions.doSimulationSteps(1);
+            context.doSimulationSteps(1);
         } else if (GameKey.SIMULATION_10_STEPS.pressed()) {
-            actions.doSimulationSteps(10);
+            context.doSimulationSteps(10);
         } else if (GameKey.SIMULATION_FASTER.pressed()) {
-            actions.changeSimulationSpeed(5);
+            context.changeSimulationSpeed(5);
         } else if (GameKey.SIMULATION_SLOWER.pressed()) {
-            actions.changeSimulationSpeed(-5);
+            context.changeSimulationSpeed(-5);
         } else if (GameKey.SIMULATION_NORMAL.pressed()) {
-            actions.resetSimulationSpeed();
+            context.resetSimulationSpeed();
         } else if (GameKey.QUIT.pressed()) {
             quit();
         } else if (GameKey.TEST_MODE.pressed()) {
-            actions.startLevelTestMode();
+            context.startLevelTestMode();
         } else if (GameKey.TWO_D_THREE_D.pressed()) {
-            actions.toggle2D3D();
+            context.toggle2D3D();
         } else if (GameKey.DASHBOARD.pressed()) {
-            actions.toggleDashboard();
+            context.toggleDashboard();
         } else if (GameKey.PIP_VIEW.pressed()) {
-            actions.togglePipVisible();
+            context.togglePipVisible();
         } else if (GameKey.EDITOR.pressed()) {
-            actions.openMapEditor();
+            context.openMapEditor();
         } else {
-            context.currentGameScene().ifPresent(gameScene -> gameScene.handleKeyboardInput(actions));
+            this.context.currentGameScene().ifPresent(gameScene -> gameScene.handleKeyboardInput(context));
         }
     }
 
@@ -233,7 +232,7 @@ public class GamePage extends StackPane implements Page {
     protected void quit() {
         GameSounds.stopAll();
         context.gameController().consumeCoin();
-        context.actionHandler().selectStartPage();
+        context.selectStartPage();
     }
 
     protected void showHelp() {
