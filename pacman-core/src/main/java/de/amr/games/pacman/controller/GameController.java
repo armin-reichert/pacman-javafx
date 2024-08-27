@@ -59,7 +59,6 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     private final Map<GameVariant, GameModel> models = new EnumMap<>(GameVariant.class);
     private GameClock clock;
     private GameModel game;
-    private boolean pacImmune = false;
     private int credit = 0;
 
     private GameController(File userDir) {
@@ -150,13 +149,5 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     public boolean hasCredit() {
         return credit > 0;
-    }
-
-    public boolean isPacImmune() {
-        return pacImmune;
-    }
-
-    public void setPacImmune(boolean pacImmune) {
-        this.pacImmune = pacImmune;
     }
 }

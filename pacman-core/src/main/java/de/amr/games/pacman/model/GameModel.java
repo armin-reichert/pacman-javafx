@@ -530,7 +530,7 @@ public abstract class GameModel {
         return !eventLog.killedGhosts.isEmpty();
     }
 
-    public void doHuntingStep(boolean pacImmune) {
+    public void doHuntingStep() {
         blinking.tick();
         checkForFood();
         unlockGhosts();
@@ -540,7 +540,7 @@ public abstract class GameModel {
         updatePacPower();
         updateHuntingTimer();
         ghosts(FRIGHTENED).filter(pac::sameTile).forEach(this::killGhost);
-        eventLog.pacKilled = checkPacKilled(pacImmune);
+        eventLog.pacKilled = checkPacKilled(pac.isImmune());
     }
 
     private boolean checkPacKilled(boolean pacImmune) {

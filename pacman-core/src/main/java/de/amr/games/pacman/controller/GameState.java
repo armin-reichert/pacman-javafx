@@ -124,7 +124,7 @@ public enum GameState implements FsmState<GameModel> {
 
         @Override
         public void onUpdate(GameModel game) {
-            game.doHuntingStep(GameController.it().isPacImmune());
+            game.doHuntingStep();
             if (game.isLevelComplete()) {
                 GameController.it().changeState(LEVEL_COMPLETE);
             } else if (game.isPacManKilled()) {

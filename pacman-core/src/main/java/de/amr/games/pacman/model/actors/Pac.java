@@ -37,6 +37,7 @@ public class Pac extends Creature {
     private Steering autopilot;
     private boolean useAutopilot;
     private Animations animations;
+    private boolean immune;
 
     public Pac() {
         this(null);
@@ -57,7 +58,8 @@ public class Pac extends Creature {
     @Override
     public String toString() {
         return "Pac{" +
-            "dead=" + dead +
+            "immune=" + immune +
+            ", dead=" + dead +
             ", restingTicks=" + restingTicks +
             ", starvingTicks=" + starvingTicks +
             ", visible=" + visible +
@@ -116,6 +118,14 @@ public class Pac extends Creature {
         if (animations != null) {
             animations.select(ANIM_MUNCHING, 0);
         }
+    }
+
+    public boolean isImmune() {
+        return immune;
+    }
+
+    public void setImmune(boolean immune) {
+        this.immune = immune;
     }
 
     public void update(GameModel game) {

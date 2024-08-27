@@ -75,7 +75,7 @@ public class InfoBoxGameControl extends InfoBox {
         comboGameVariant.setDisable(context.gameState() != GameState.INTRO);
         comboInitialLives.setValue(context.game().initialLives());
         cbAutopilot.setSelected(GameParameters.PY_AUTOPILOT.get());
-        cbImmunity.setSelected(context.gameController().isPacImmune());
+        cbImmunity.setSelected(GameParameters.PY_IMMUNITY.get());
         buttonsLevelActions[GAME_LEVEL_START].setDisable(!canStartLevel());
         buttonsLevelActions[GAME_LEVEL_QUIT].setDisable(context.game().level().isEmpty());
         buttonsLevelActions[GAME_LEVEL_NEXT].setDisable(!canEnterNextLevel());

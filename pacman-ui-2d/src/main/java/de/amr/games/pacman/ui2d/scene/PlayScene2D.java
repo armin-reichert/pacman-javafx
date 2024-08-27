@@ -16,6 +16,7 @@ import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
 import de.amr.games.pacman.ui2d.ActionHandler;
 import de.amr.games.pacman.ui2d.GameKey;
+import de.amr.games.pacman.ui2d.GameParameters;
 import de.amr.games.pacman.ui2d.GameSounds;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -50,9 +51,11 @@ public class PlayScene2D extends GameScene2D {
         }
         if (context.game().isDemoLevel()) {
             context.game().pac().setUseAutopilot(true);
+            context.game().pac().setImmune(false);
         } else {
             context.setScoreVisible(true);
             context.game().pac().setUseAutopilot(PY_AUTOPILOT.get());
+            context.game().pac().setImmune(GameParameters.PY_IMMUNITY.get());
             updatePlaySceneSound();
         }
     }

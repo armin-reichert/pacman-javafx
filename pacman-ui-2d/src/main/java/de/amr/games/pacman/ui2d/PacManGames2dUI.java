@@ -492,7 +492,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext, ActionHa
                 Logger.error("Cannot start playing when in game state {}", gameState());
             }
         }
-        PY_IMMUNITY.set(gameController().isPacImmune());
     }
 
     @Override

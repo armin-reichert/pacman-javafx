@@ -11,10 +11,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.ui2d.ActionHandler;
-import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GameKey;
-import de.amr.games.pacman.ui2d.GameSounds;
+import de.amr.games.pacman.ui2d.*;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
@@ -146,8 +143,14 @@ public class PlayScene3D implements GameScene {
         level3D.update();
         perspective().update(fxSubScene.getCamera(), game.world(), game.pac());
 
-        // Autopilot usage is updated on every frame because autopilot flag is in core layer without JavaFX property to bind
-        game.pac().setUseAutopilot(game.isDemoLevel() || PY_AUTOPILOT.get());
+        if (context.game().isDemoLevel()) {
+            context.game().pac().setUseAutopilot(true);
+            context.game().pac().setImmune(false);
+        } else {
+            context.setScoreVisible(true);
+            context.game().pac().setUseAutopilot(PY_AUTOPILOT.get());
+            context.game().pac().setImmune(GameParameters.PY_IMMUNITY.get());
+        }
 
         // Scores
         scores3D.showHighScore(game.highScore().points(), game.highScore().levelNumber());

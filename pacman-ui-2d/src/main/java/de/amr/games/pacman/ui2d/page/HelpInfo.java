@@ -73,7 +73,7 @@ public class HelpInfo {
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
-        if (context.gameController().isPacImmune()) {
+        if (GameParameters.PY_IMMUNITY.get()) {
             var immunityEntry = text(context.locText("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);
