@@ -398,14 +398,21 @@ public enum GameState implements FsmState<GameModel> {
         return timer;
     }
 
-    private final Map<String, Object> properties = new HashMap<>();
+    private Map<String, Object> propertyMap;
+
+    private Map<String, Object> propertyMap() {
+        if (propertyMap == null) {
+            propertyMap = new HashMap<>(4);
+        }
+        return propertyMap;
+    }
 
     @SuppressWarnings("unchecked")
     public <T> T getProperty(String key) {
-        return (T) properties.get(key);
+        return (T) propertyMap().get(key);
     }
 
     public void setProperty(String key, Object value) {
-        properties.put(key, value);
+        propertyMap().put(key, value);
     }
 }
