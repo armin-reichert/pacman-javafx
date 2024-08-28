@@ -17,6 +17,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
+import javafx.geometry.Side;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -411,6 +412,7 @@ public class TileMapEditor  {
         previewCanvasScroll.visibleProperty().bind(previewVisiblePy);
 
         mapSourceView = new Text();
+        mapSourceView.setSmooth(true);
         mapSourceView.setFontSmoothingType(FontSmoothingType.LCD);
         mapSourceView.setFont(Font.font("Monospace", 14));
 
@@ -484,11 +486,25 @@ public class TileMapEditor  {
         var footer = new HBox(focussedTileInfo, messageLabel, filler, sliderContainer);
         footer.setPadding(new Insets(0, 10, 0, 10));
 
-        var splitPane = new SplitPane(editCanvasScroll, previewCanvasScroll, mapSourceViewScroll);
-        splitPane.setDividerPositions(0.45, 0.9);
+        var splitPane = new SplitPane(editCanvasScroll, previewCanvasScroll);
+        splitPane.setDividerPositions(0.5);
 
-        var hbox = new HBox(controlsPane, splitPane);
-        HBox.setHgrow(splitPane, Priority.ALWAYS);
+        var tabSourceView = new Tab(tt("source"), mapSourceViewScroll);
+        tabSourceView.setClosable(false);
+
+        var tabPreview = new Tab(tt("preview"), splitPane);
+        tabPreview.setClosable(false);
+
+        var tabPaneViews = new TabPane(tabPreview, tabSourceView);
+        tabPaneViews.setSide(Side.BOTTOM);
+
+        var vbox2 = new VBox(tabPaneViews);
+        vbox2.setPadding(new Insets(0,5,0,5));
+
+        var hbox = new HBox(controlsPane, vbox2);
+        hbox.setPadding(new Insets(0,0,10,0));
+        HBox.setHgrow(vbox2, Priority.ALWAYS);
+
         contentPane.setCenter(hbox);
         contentPane.setBottom(footer);
     }
