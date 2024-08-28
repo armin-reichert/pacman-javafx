@@ -34,6 +34,7 @@ import javafx.stage.Window;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.MessageFormat;
@@ -925,16 +926,10 @@ public class TileMapEditor  {
         mapSourceView.setText(worldMapAsText(map()));
     }
 
-    private String tileMapToString(TileMap tileMap) {
-        try {
-            StringWriter sw = new StringWriter();
-            tileMap.print(new PrintWriter(sw));
-            return sw.toString();
-        } catch (Exception x) {
-            Logger.error("Could not create text for map");
-            Logger.error(x);
-            return "";
-        }
+    private String tileMapToString(TileMap tileMap) throws IOException {
+        StringWriter sw = new StringWriter();
+        tileMap.print(new PrintWriter(sw));
+        return sw.toString();
     }
 
     private String worldMapAsText(WorldMap map) {
