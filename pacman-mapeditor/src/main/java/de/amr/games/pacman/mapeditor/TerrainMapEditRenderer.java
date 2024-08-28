@@ -107,8 +107,7 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
             case Tiles.DWALL_H -> drawDWallH(g, tile);
             case Tiles.DWALL_V -> drawDWallV(g, tile);
             case Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE -> drawCorner(g, tile, content);
-            case Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE ->
-                    drawDCorner(g, tile, content);
+            case Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE -> drawDCorner(g, tile, content);
             case Tiles.DOOR -> drawDoor(g, tile, doorColor);
             case Tiles.TUNNEL -> drawTunnel(g, tile);
             default -> {}
