@@ -53,9 +53,9 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
 
     @Override
     public void drawMap(GraphicsContext g, TileMap terrainMap) {
-        terrainMap.tiles().forEach(tile -> drawTile(g, tile, terrainMap.get(tile)));
         g.save();
         g.scale(scaling(), scaling());
+        terrainMap.tiles().forEach(tile -> drawTileUnscaled(g, tile, terrainMap.get(tile)));
         specialTile(terrainMap, PROPERTY_POS_PAC).ifPresent(tile -> drawPacHome(g, tile));
         specialTile(terrainMap, PROPERTY_POS_RED_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.RED));
         specialTile(terrainMap, PROPERTY_POS_PINK_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.PINK));
@@ -68,6 +68,29 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
         g.restore();
     }
 
+    @Override
+    public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
+        g.save();
+        g.scale(scaling(), scaling());
+        drawTileUnscaled(g, tile, content);
+        g.restore();
+    }
+
+    public void drawSpecialTile(GraphicsContext g, String propertyName, Vector2i tile) {
+        switch (propertyName) {
+            case PROPERTY_POS_PAC -> drawPacHome(g, tile);
+            case PROPERTY_POS_RED_GHOST -> drawGhostHome(g, tile, Color.RED);
+            case PROPERTY_POS_PINK_GHOST -> drawGhostHome(g, tile, Color.PINK);
+            case PROPERTY_POS_CYAN_GHOST -> drawGhostHome(g, tile, Color.CYAN);
+            case PROPERTY_POS_ORANGE_GHOST -> drawGhostHome(g, tile, Color.ORANGE);
+            case PROPERTY_POS_SCATTER_RED_GHOST -> drawScatterTarget(g, tile, Color.RED);
+            case PROPERTY_POS_SCATTER_PINK_GHOST -> drawScatterTarget(g, tile, Color.PINK);
+            case PROPERTY_POS_SCATTER_CYAN_GHOST -> drawScatterTarget(g, tile, Color.CYAN);
+            case PROPERTY_POS_SCATTER_ORANGE_GHOST -> drawScatterTarget(g, tile, Color.ORANGE);
+            default -> {}
+        }
+    }
+
     private Optional<Vector2i> specialTile(TileMap terrainMap, String propertyName) {
         if (terrainMap.hasProperty(propertyName)) {
             Vector2i tile = parseVector2i(terrainMap.getProperty(propertyName));
@@ -76,10 +99,7 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
         return Optional.empty();
     }
 
-    @Override
-    public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
-        g.save();
-        g.scale(scaling(), scaling());
+    private void drawTileUnscaled(GraphicsContext g, Vector2i tile, byte content) {
         switch (content) {
             case Tiles.WALL -> drawWall(g, tile);
             case Tiles.WALL_H -> drawWallH(g, tile);
@@ -88,22 +108,21 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
             case Tiles.DWALL_V -> drawDWallV(g, tile);
             case Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE -> drawCorner(g, tile, content);
             case Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE ->
-                drawDCorner(g, tile, content);
+                    drawDCorner(g, tile, content);
             case Tiles.DOOR -> drawDoor(g, tile, doorColor);
             case Tiles.TUNNEL -> drawTunnel(g, tile);
             default -> {}
         }
-        g.restore();
     }
 
-    public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
+    private void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         double height = TILE_SIZE * 0.25;
         g.setFill(color);
         g.fillRect(x, y + 0.5 * (TILE_SIZE - height), TILE_SIZE, height);
     }
 
-    public void drawScatterTarget(GraphicsContext g, Vector2i tile, Color color) {
+    private void drawScatterTarget(GraphicsContext g, Vector2i tile, Color color) {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(color);
         g.fillRect(x, y, TILE_SIZE, TILE_SIZE);
@@ -114,37 +133,37 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
         g.strokeLine(x, y + 0.5 * TILE_SIZE, x + TILE_SIZE, y + 0.5 * TILE_SIZE);
     }
 
-    public void drawPacHome(GraphicsContext g, Vector2i tile) {
+    private void drawPacHome(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(Color.YELLOW);
         g.fillOval(x, y, TILE_SIZE, TILE_SIZE);
     }
 
-    public void drawGhostHome(GraphicsContext g, Vector2i tile, Color color) {
+    private void drawGhostHome(GraphicsContext g, Vector2i tile, Color color) {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(color);
         g.fillOval(x, y, TILE_SIZE, TILE_SIZE);
     }
 
-    public void drawTunnel(GraphicsContext g, Vector2i tile) {
+    private void drawTunnel(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(Color.GRAY);
         g.fillRect(x, y, TILE_SIZE, TILE_SIZE);
     }
 
-    public void drawWall(GraphicsContext g, Vector2i tile) {
+    private void drawWall(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(wallFillColor);
         g.fillRect(x, y, TILE_SIZE, TILE_SIZE);
     }
 
-    public void drawWallH(GraphicsContext g, Vector2i tile) {
+    private void drawWallH(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(wallStrokeColor);
         g.fillRect(x, y + 3.5f, TILE_SIZE, 1);
     }
 
-    public void drawDWallH(GraphicsContext g, Vector2i tile) {
+    private void drawDWallH(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(wallStrokeColor);
         // add 1 pixel to avoid gaps
@@ -152,21 +171,21 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
         g.fillRect(x, y + 4.5f, TILE_SIZE, 1);
     }
 
-    public void drawWallV(GraphicsContext g, Vector2i tile) {
+    private void drawWallV(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(wallStrokeColor);
         // add 1 pixel to avoid gaps
         g.fillRect(x + 3.5f, y, 1, TILE_SIZE);
     }
 
-    public void drawDWallV(GraphicsContext g, Vector2i tile) {
+    private void drawDWallV(GraphicsContext g, Vector2i tile) {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(wallStrokeColor);
         g.fillRect(x + 2.5f, y, 1, TILE_SIZE);
         g.fillRect(x + 4.5f, y, 1, TILE_SIZE);
     }
 
-    public void drawCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
+    private void drawCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setStroke(wallStrokeColor);
         g.setLineWidth(1);
@@ -179,7 +198,7 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
         }
     }
 
-    public void drawDCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
+    private void drawDCorner(GraphicsContext g, Vector2i tile, byte cornerType) {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setStroke(wallStrokeColor);
         g.setLineWidth(1);
@@ -200,21 +219,6 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
                 g.strokeArc(x + 5, y - 3, 6, 6, 180, 90, ArcType.OPEN);
                 g.strokeArc(x + 3, y - 5, 10, 10, 180, 90, ArcType.OPEN);
             }
-            default -> {}
-        }
-    }
-
-    public void drawSpecialTile(GraphicsContext g, String propertyName, Vector2i tile) {
-        switch (propertyName) {
-            case PROPERTY_POS_PAC -> drawPacHome(g, tile);
-            case PROPERTY_POS_RED_GHOST -> drawGhostHome(g, tile, Color.RED);
-            case PROPERTY_POS_PINK_GHOST -> drawGhostHome(g, tile, Color.PINK);
-            case PROPERTY_POS_CYAN_GHOST -> drawGhostHome(g, tile, Color.CYAN);
-            case PROPERTY_POS_ORANGE_GHOST -> drawGhostHome(g, tile, Color.ORANGE);
-            case PROPERTY_POS_SCATTER_RED_GHOST -> drawScatterTarget(g, tile, Color.RED);
-            case PROPERTY_POS_SCATTER_PINK_GHOST -> drawScatterTarget(g, tile, Color.PINK);
-            case PROPERTY_POS_SCATTER_CYAN_GHOST -> drawScatterTarget(g, tile, Color.CYAN);
-            case PROPERTY_POS_SCATTER_ORANGE_GHOST -> drawScatterTarget(g, tile, Color.ORANGE);
             default -> {}
         }
     }
