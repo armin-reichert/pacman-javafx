@@ -26,8 +26,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.FontWeight;
-import javafx.scene.web.WebView;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
 import org.tinylog.Logger;
@@ -164,7 +165,7 @@ public class TileMapEditor  {
     private ScrollPane editCanvasScroll;
     private Canvas previewCanvas;
     private ScrollPane previewCanvasScroll;
-    private WebView mapSourceView;
+    private Text mapSourceView;
     private Label messageLabel;
     private Label focussedTileInfo;
     private FileChooser fileChooser;
@@ -408,8 +409,14 @@ public class TileMapEditor  {
         previewCanvasScroll.vvalueProperty().bindBidirectional(editCanvasScroll.vvalueProperty());
         previewCanvasScroll.visibleProperty().bind(previewVisiblePy);
 
-        mapSourceView = new WebView();
-        var mapSourceViewScroll = new ScrollPane(mapSourceView);
+        mapSourceView = new Text();
+        mapSourceView.setFontSmoothingType(FontSmoothingType.LCD);
+        mapSourceView.setFont(Font.font("Monospace", 14));
+
+        var vbox = new VBox(mapSourceView);
+        vbox.setPadding(new Insets(10,20,10,20));
+
+        var mapSourceViewScroll = new ScrollPane(vbox);
         mapSourceViewScroll.setFitToHeight(true);
 
         palettes.put(PALETTE_TERRAIN, createTerrainPalette());
@@ -915,6 +922,32 @@ public class TileMapEditor  {
     }
 
     private void updateSourceHtml() {
-        mapSourceView.getEngine().loadContent(map().htmlText());
+        mapSourceView.setText(worldMapAsText(map()));
+    }
+
+    private String tileMapToString(TileMap tileMap) {
+        try {
+            StringWriter sw = new StringWriter();
+            tileMap.print(new PrintWriter(sw));
+            return sw.toString();
+        } catch (Exception x) {
+            Logger.error("Could not create text for map");
+            Logger.error(x);
+            return "";
+        }
+    }
+
+    private String worldMapAsText(WorldMap map) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            sb.append(WorldMap.TERRAIN_SECTION_START).append("\n");
+            sb.append(tileMapToString(map.terrain()));
+            sb.append(WorldMap.FOOD_SECTION_START).append("\n");
+            sb.append(tileMapToString(map.food()));
+        } catch (Exception x) {
+            Logger.error("Could not create text for map");
+            Logger.error(x);
+        }
+        return sb.toString();
     }
 }

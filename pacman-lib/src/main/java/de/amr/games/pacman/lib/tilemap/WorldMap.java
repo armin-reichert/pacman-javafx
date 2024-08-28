@@ -19,8 +19,8 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class WorldMap {
 
-    private static final String TERRAIN_SECTION_START = "!terrain";
-    private static final String FOOD_SECTION_START    = "!food";
+    public static final String TERRAIN_SECTION_START = "!terrain";
+    public static final String FOOD_SECTION_START    = "!food";
 
     private URL url;
     private TileMap terrain;
@@ -99,22 +99,6 @@ public class WorldMap {
         } catch (Exception x) {
             Logger.error(x);
         }
-    }
-
-    public String htmlText() {
-        StringWriter sw = new StringWriter();
-        PrintWriter w = new PrintWriter(sw);
-        w.println("<pre>");
-        w.println(TERRAIN_SECTION_START);
-        try {
-            terrain.print(w);
-            w.println(FOOD_SECTION_START);
-            food.print(w);
-        } catch (Exception x) {
-            w.println("<b>Something bad happened!</b>");
-        }
-        w.println("</pre>");
-        return sw.toString();
     }
 
     public URL url() {

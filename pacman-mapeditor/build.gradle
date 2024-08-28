@@ -18,7 +18,7 @@ dependencies {
 
 javafx {
     version = '21'
-    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls', 'javafx.web']
+    modules = ['javafx.base', 'javafx.graphics', 'javafx.controls']
 }
 
 jlink {
