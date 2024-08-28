@@ -57,7 +57,6 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     }
 
     private final Map<GameVariant, GameModel> models = new EnumMap<>(GameVariant.class);
-    private GameClock clock;
     private GameModel game;
     private int numCoins = 0;
 
@@ -117,15 +116,6 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
                 Logger.info("- " + msg);
             }
         }
-    }
-
-    public void setClock(GameClock clock) {
-        this.clock = checkNotNull(clock);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T extends GameClock> T clock() {
-        return (T) clock;
     }
 
     /**

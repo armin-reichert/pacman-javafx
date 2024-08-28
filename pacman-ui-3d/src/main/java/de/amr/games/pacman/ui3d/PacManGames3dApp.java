@@ -132,18 +132,19 @@ public class PacManGames3dApp extends Application {
         return gameScenesForVariant;
     }
 
+    private final GameClockFX clock = new GameClockFX();
+
     @Override
     public void init() {
         File userDir = new File(System.getProperty("user.home"), ".pacmanfx");
         GameController.create(userDir);
         GameController.it().selectGameVariant(GameVariant.PACMAN);
-        GameController.it().setClock(new GameClockFX());
         PY_3D_ENABLED.set(true);
     }
 
     @Override
     public void start(Stage stage) {
-        var ui = new PacManGames3dUI(GameController.it().clock(), createGameScenes());
+        var ui = new PacManGames3dUI(clock, createGameScenes());
         addAssets(ui.assets());
         ui.create(stage, computeSize());
         ui.start();
@@ -161,7 +162,7 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void stop() {
-        GameController.it().clock().stop();
+        clock.stop();
     }
 
     private Dimension2D computeSize() {

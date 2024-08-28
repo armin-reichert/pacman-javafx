@@ -301,7 +301,6 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onEnter(GameModel game) {
             timer.restartIndefinitely();
-            GameController.it().clock().setTargetFrameRate(2 * GameModel.FPS);
             game.reset();
             game.createLevel(1);
             game.startLevel();
@@ -314,7 +313,6 @@ public enum GameState implements FsmState<GameModel> {
                 return;
             }
             if (game.levelNumber() == 25) {
-                GameController.it().clock().setTargetFrameRate(GameModel.FPS);
                 GameController.it().restart(GameState.BOOT);
                 return;
             }
@@ -364,7 +362,6 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onExit(GameModel game) {
             game.levelCounter().clear();
-            GameController.it().clock().setTargetFrameRate(GameModel.FPS);
         }
     },
 

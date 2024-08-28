@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.util;
 
-import de.amr.games.pacman.controller.GameClock;
 import de.amr.games.pacman.model.GameModel;
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
@@ -22,7 +21,7 @@ import org.tinylog.Logger;
  *
  * @author Armin Reichert
  */
-public class GameClockFX implements GameClock {
+public class GameClockFX {
 
     private final DoubleProperty targetFrameRatePy = new SimpleDoubleProperty(this, "targetFrameRate", GameModel.FPS) {
         @Override
@@ -72,17 +71,14 @@ public class GameClockFX implements GameClock {
         }
     }
 
-    @Override
     public double getTargetFrameRate() {
         return targetFrameRatePy.get();
     }
 
-    @Override
     public void setTargetFrameRate(double fps) {
         targetFrameRatePy.set(fps);
     }
 
-    @Override
     public void start() {
         if (timeline.getStatus() != Status.RUNNING) {
             timeline.play();
@@ -93,7 +89,6 @@ public class GameClockFX implements GameClock {
         Logger.info("Clock target frequency: {} Hz", getTargetFrameRate());
     }
 
-    @Override
     public void stop() {
         if (timeline.getStatus() == Status.RUNNING) {
             timeline.stop();
@@ -103,17 +98,14 @@ public class GameClockFX implements GameClock {
         }
     }
 
-    @Override
     public boolean isRunning() {
         return timeline.getStatus() == Status.RUNNING;
     }
 
-    @Override
     public boolean isPaused() {
         return pausedPy.get();
     }
 
-    @Override
     public double getActualFrameRate() {
         return ticksPerSec;
     }

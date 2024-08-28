@@ -193,17 +193,18 @@ public class PacManGames2dApp extends Application {
         return gameScenesForVariant;
     }
 
+    private final GameClockFX clock = new GameClockFX();
+
     @Override
     public void init() {
         File userDir = new File(System.getProperty("user.home"), ".pacmanfx");
         GameController.create(userDir);
         GameController.it().selectGameVariant(GameVariant.PACMAN);
-        GameController.it().setClock(new GameClockFX());
     }
 
     @Override
     public void start(Stage stage) {
-        var ui = new PacManGames2dUI(GameController.it().clock(), createGameScenes());
+        var ui = new PacManGames2dUI(clock, createGameScenes());
         addAssets(ui.assets());
         ui.create(stage, computeSize());
         ui.start();
@@ -220,7 +221,7 @@ public class PacManGames2dApp extends Application {
 
     @Override
     public void stop() {
-        GameController.it().clock().stop();
+        clock.stop();
     }
 
     private Dimension2D computeSize() {
