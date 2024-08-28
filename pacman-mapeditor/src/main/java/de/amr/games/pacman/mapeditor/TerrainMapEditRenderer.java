@@ -54,9 +54,29 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
     @Override
     public void drawMap(GraphicsContext g, TileMap terrainMap) {
         terrainMap.tiles().forEach(tile -> drawTile(g, tile, terrainMap.get(tile)));
-        drawSpecialTiles(g, terrainMap);
+        g.save();
+        g.scale(scaling(), scaling());
+        specialTile(terrainMap, PROPERTY_POS_PAC).ifPresent(tile -> drawPacHome(g, tile));
+        specialTile(terrainMap, PROPERTY_POS_RED_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.RED));
+        specialTile(terrainMap, PROPERTY_POS_PINK_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.PINK));
+        specialTile(terrainMap, PROPERTY_POS_CYAN_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.CYAN));
+        specialTile(terrainMap, PROPERTY_POS_ORANGE_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.ORANGE));
+        specialTile(terrainMap, PROPERTY_POS_SCATTER_RED_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.RED));
+        specialTile(terrainMap, PROPERTY_POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.PINK));
+        specialTile(terrainMap, PROPERTY_POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.CYAN));
+        specialTile(terrainMap, PROPERTY_POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.ORANGE));
+        g.restore();
     }
 
+    private Optional<Vector2i> specialTile(TileMap terrainMap, String propertyName) {
+        if (terrainMap.hasProperty(propertyName)) {
+            Vector2i tile = parseVector2i(terrainMap.getProperty(propertyName));
+            return Optional.ofNullable(tile);
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
         g.save();
         g.scale(scaling(), scaling());
@@ -184,13 +204,6 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
         }
     }
 
-    public Optional<Vector2i> specialTile(TileMap terrainMap, String propertyName) {
-        if (terrainMap.hasProperty(propertyName)) {
-            return Optional.ofNullable(parseVector2i(terrainMap.getProperty(propertyName)));
-        }
-        return Optional.empty();
-    }
-
     public void drawSpecialTile(GraphicsContext g, String propertyName, Vector2i tile) {
         switch (propertyName) {
             case PROPERTY_POS_PAC -> drawPacHome(g, tile);
@@ -204,20 +217,5 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
             case PROPERTY_POS_SCATTER_ORANGE_GHOST -> drawScatterTarget(g, tile, Color.ORANGE);
             default -> {}
         }
-    }
-
-    public void drawSpecialTiles(GraphicsContext g, TileMap terrainMap) {
-        g.save();
-        g.scale(scaling(), scaling());
-        specialTile(terrainMap, PROPERTY_POS_PAC).ifPresent(tile -> drawPacHome(g, tile));
-        specialTile(terrainMap, PROPERTY_POS_RED_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.RED));
-        specialTile(terrainMap, PROPERTY_POS_PINK_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.PINK));
-        specialTile(terrainMap, PROPERTY_POS_CYAN_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.CYAN));
-        specialTile(terrainMap, PROPERTY_POS_ORANGE_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.ORANGE));
-        specialTile(terrainMap, PROPERTY_POS_SCATTER_RED_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.RED));
-        specialTile(terrainMap, PROPERTY_POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.PINK));
-        specialTile(terrainMap, PROPERTY_POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.CYAN));
-        specialTile(terrainMap, PROPERTY_POS_SCATTER_ORANGE_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.ORANGE));
-        g.restore();
     }
 }
