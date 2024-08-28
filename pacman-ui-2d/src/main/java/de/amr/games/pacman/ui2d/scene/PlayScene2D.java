@@ -35,7 +35,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     public boolean isCreditVisible() {
-        return !context.gameController().hasCredit() || context.gameState() == GameState.GAME_OVER;
+        return !context.game().hasCredit() || context.gameState() == GameState.GAME_OVER;
     }
 
     @Override

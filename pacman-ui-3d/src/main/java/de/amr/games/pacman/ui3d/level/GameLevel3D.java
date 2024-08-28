@@ -294,10 +294,10 @@ public class GameLevel3D {
         var counter3D = new LivesCounter3D(shapes, 10);
         counter3D.setTranslateX(2 * TS);
         counter3D.setTranslateY(2 * TS);
-        counter3D.setVisible(context.gameController().hasCredit());
+        counter3D.setVisible(context.game().hasCredit());
         counter3D.drawModePy.bind(PY_3D_DRAW_MODE);
         counter3D.light().colorProperty().set(Color.CORNFLOWERBLUE);
-        counter3D.light().setLightOn(context.gameController().hasCredit());
+        counter3D.light().setLightOn(context.game().hasCredit());
         return counter3D;
     }
 

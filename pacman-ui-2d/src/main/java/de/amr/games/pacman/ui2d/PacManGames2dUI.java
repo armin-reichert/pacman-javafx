@@ -479,7 +479,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void startGame() {
-        if (gameController().hasCredit()) {
+        if (game().hasCredit()) {
             GameSounds.stopVoice();
             if (gameState() == GameState.INTRO || gameState() == GameState.CREDIT) {
                 gameController().changeState(GameState.READY);
@@ -565,7 +565,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         GameSounds.enabledProperty().set(true); // in demo mode, sound is disabled
         GameSounds.playCreditSound();
         if (!game().isPlaying()) {
-            boolean coinInserted = gameController().insertCoin();
+            boolean coinInserted = game().insertCoin();
             if (coinInserted) {
                 game().publishGameEvent(GameEventType.CREDIT_ADDED);
             }

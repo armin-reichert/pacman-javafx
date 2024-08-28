@@ -61,8 +61,8 @@ public class InfoBoxGameControl extends InfoBox {
         buttonsLevelActions[GAME_LEVEL_START].setOnAction(e -> context.startGame());
         buttonsLevelActions[GAME_LEVEL_QUIT].setOnAction(e -> context.restartIntro());
         buttonsLevelActions[GAME_LEVEL_NEXT].setOnAction(e -> context.cheatEnterNextLevel());
-        spinnerCredit.valueProperty().addListener((py, ov, nv) -> context.gameController().setNumCoins(nv));
-        spinnerCredit.getValueFactory().setValue(context.gameController().credit());
+        spinnerCredit.valueProperty().addListener((py, ov, nv) -> context.game().setNumCoins(nv));
+        spinnerCredit.getValueFactory().setValue(context.game().credit());
         cbAutopilot.setOnAction(e -> context.toggleAutopilot());
         cbImmunity.setOnAction(e -> context.toggleImmunity());
     }
@@ -82,11 +82,11 @@ public class InfoBoxGameControl extends InfoBox {
         buttonsIntermissionTest[INTERMISSION_TEST_START].setDisable(
             context.gameState() == GameState.INTERMISSION_TEST || context.gameState() != GameState.INTRO);
         buttonsIntermissionTest[INTERMISSION_TEST_QUIT].setDisable(context.gameState() != GameState.INTERMISSION_TEST);
-        spinnerCredit.getValueFactory().setValue(context.gameController().credit());
+        spinnerCredit.getValueFactory().setValue(context.game().credit());
     }
 
     private boolean canStartLevel() {
-        return context.gameController().hasCredit()
+        return context.game().hasCredit()
             && Globals.oneOf(context.gameState(), GameState.INTRO, GameState.CREDIT);
     }
 

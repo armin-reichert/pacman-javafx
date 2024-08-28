@@ -231,7 +231,7 @@ public class GamePage extends StackPane implements Page {
 
     protected void quit() {
         GameSounds.stopAll();
-        context.gameController().consumeCoin();
+        context.game().consumeCoin();
         context.selectStartPage();
     }
 

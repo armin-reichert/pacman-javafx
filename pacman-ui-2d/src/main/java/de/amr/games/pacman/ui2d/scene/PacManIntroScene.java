@@ -198,7 +198,7 @@ public class PacManIntroScene extends GameScene2D {
             public void onUpdate(PacManIntroScene intro) {
                 if (timer.atSecond(0.75)) {
                     intro.data.ghosts.get(3).hide();
-                    if (!gameController().hasCredit()) {
+                    if (!intro.context.game().hasCredit()) {
                         gameController().changeState(GameState.READY);
                     }
                 } else if (timer.atSecond(5)) {

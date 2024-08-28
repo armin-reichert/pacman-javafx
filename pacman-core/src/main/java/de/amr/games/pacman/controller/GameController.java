@@ -58,7 +58,6 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     private final Map<GameVariant, GameModel> models = new EnumMap<>(GameVariant.class);
     private GameModel game;
-    private int numCoins = 0;
 
     private GameController(File userDir) {
         super(GameState.values());
@@ -116,36 +115,5 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
                 Logger.info("- " + msg);
             }
         }
-    }
-
-    /**
-     * @return number of coins inserted.
-     */
-    public int credit() {
-        return numCoins;
-    }
-
-    public void setNumCoins(int numCoins) {
-        if (numCoins >= 0 && numCoins <= GameModel.MAX_CREDIT) {
-            this.numCoins = numCoins;
-        }
-    }
-
-    public boolean insertCoin() {
-        if (numCoins < GameModel.MAX_CREDIT) {
-            ++numCoins;
-            return true;
-        }
-        return false;
-    }
-
-    public void consumeCoin() {
-        if (numCoins > 0) {
-            --numCoins;
-        }
-    }
-
-    public boolean hasCredit() {
-        return numCoins > 0;
     }
 }

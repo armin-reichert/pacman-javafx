@@ -157,7 +157,7 @@ public class PlayScene3D implements GameScene {
 
         // Scores
         scores3D.showHighScore(game.highScore().points(), game.highScore().levelNumber());
-        if (context.gameController().hasCredit()) {
+        if (context.game().hasCredit()) {
             scores3D.showScore(game.score().points(), game.score().levelNumber());
         } else { // demo level or "game over" state
             scores3D.showTextAsScore("GAME OVER!", Color.RED);

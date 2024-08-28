@@ -33,7 +33,7 @@ public class PacManCutScene3 extends GameScene2D {
 
     @Override
     public boolean isCreditVisible() {
-        return !context.gameController().hasCredit();
+        return !context.game().hasCredit();
     }
 
     @Override

@@ -139,7 +139,7 @@ public class MsPacManIntroScene extends GameScene2D {
             @Override
             public void onUpdate(MsPacManIntroScene intro) {
                 intro.data.marqueeTimer.tick();
-                if (timer.atSecond(2.0) && !gameController().hasCredit()) {
+                if (timer.atSecond(2.0) && !intro.context.game().hasCredit()) {
                     gameController().changeState(GameState.READY); // demo level
                 } else if (timer.atSecond(5)) {
                     gameController().changeState(GameState.CREDIT);

@@ -39,7 +39,7 @@ public class GameScene2D implements GameScene {
     protected GraphicsContext g;
 
     public boolean isCreditVisible() {
-        return context.gameController().hasCredit();
+        return context.game().hasCredit();
     }
 
     protected void drawSceneContent() {
@@ -95,7 +95,7 @@ public class GameScene2D implements GameScene {
             drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1));
         }
         if (isCreditVisible()) {
-            spriteRenderer.drawText(g, String.format("CREDIT %2d", context.gameController().credit()),
+            spriteRenderer.drawText(g, String.format("CREDIT %2d", context.game().credit()),
                 context.assets().color("palette.pale"), sceneFont(8), t(2), t(36) - 1);
         }
         drawSceneContent();
