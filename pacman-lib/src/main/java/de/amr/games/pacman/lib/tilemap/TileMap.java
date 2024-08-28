@@ -11,6 +11,7 @@ import org.tinylog.Logger;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.io.Writer;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -329,17 +330,19 @@ public class TileMap {
         }
     }
 
-    public void print(PrintWriter w) throws IOException {
+    public void print(Writer w) throws IOException {
+        var pw = new PrintWriter(w);
         properties.store(w, "");
-        w.println(DATA_SECTION_START);
+        pw.println(DATA_SECTION_START);
         for (int row = 0; row < numRows(); ++row) {
             for (int col = 0; col < numCols(); ++col) {
-                w.printf("%2d", data[row][col]);
+                pw.printf("%2d", data[row][col]);
                 if (col < numCols() - 1) {
-                    w.print(",");
+                    pw.print(",");
                 }
             }
-            w.println();
+            pw.println();
         }
+        pw.flush();
     }
 }

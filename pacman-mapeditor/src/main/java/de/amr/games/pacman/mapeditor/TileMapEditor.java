@@ -928,7 +928,7 @@ public class TileMapEditor  {
 
     private String tileMapToString(TileMap tileMap) throws IOException {
         StringWriter sw = new StringWriter();
-        tileMap.print(new PrintWriter(sw));
+        tileMap.print(sw);
         return sw.toString();
     }
 
