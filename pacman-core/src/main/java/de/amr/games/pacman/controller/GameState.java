@@ -35,7 +35,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                GameController.it().changeState(INTRO);
+                enterState(INTRO);
             }
         }
     },
@@ -50,7 +50,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                GameController.it().changeState(READY);
+                enterState(READY);
             }
         }
     },
@@ -58,7 +58,7 @@ public enum GameState implements FsmState<GameModel> {
     CREDIT {
         @Override
         public void onUpdate(GameModel game) {
-            // wait for user interaction
+            // wait for user interaction to leave state
         }
     },
 
@@ -78,7 +78,7 @@ public enum GameState implements FsmState<GameModel> {
                     game.showGuys();
                 } else if (timer.currentTick() == TICK_RESUME_GAME) {
                     game.startHuntingPhase(0);
-                    GameController.it().changeState(GameState.HUNTING);
+                    enterState(GameState.HUNTING);
                 }
             }
             else if (GameController.it().hasCredit()) { // start new game
@@ -95,7 +95,7 @@ public enum GameState implements FsmState<GameModel> {
                 else if (timer.currentTick() == TICK_NEW_GAME_START_PLAYING) {
                     game.setPlaying(true);
                     game.startHuntingPhase(0);
-                    GameController.it().changeState(GameState.HUNTING);
+                    enterState(GameState.HUNTING);
                 }
             }
             else { // start demo level
@@ -106,7 +106,7 @@ public enum GameState implements FsmState<GameModel> {
                 }
                 else if (timer.currentTick() == TICK_DEMO_LEVEL_START_PLAYING) {
                     game.startHuntingPhase(0);
-                    GameController.it().changeState(GameState.HUNTING);
+                    enterState(GameState.HUNTING);
                 }
             }
         }
@@ -126,11 +126,11 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             game.doHuntingStep();
             if (game.isLevelComplete()) {
-                GameController.it().changeState(LEVEL_COMPLETE);
+                enterState(LEVEL_COMPLETE);
             } else if (game.isPacManKilled()) {
-                GameController.it().changeState(PACMAN_DYING);
+                enterState(PACMAN_DYING);
             } else if (game.areGhostsKilled()) {
-                GameController.it().changeState(GHOST_DYING);
+                enterState(GHOST_DYING);
             }
         }
     },
@@ -147,11 +147,11 @@ public enum GameState implements FsmState<GameModel> {
             if (timer.hasExpired()) {
                 setProperty("mazeFlashing", false);
                 if (game.isDemoLevel()) { // just in case demo level is completed: back to intro scene
-                    GameController.it().changeState(INTRO);
+                    enterState(INTRO);
                 } else if (game.intermissionNumber(game.levelNumber()) != 0) {
-                    GameController.it().changeState(INTERMISSION);
+                    enterState(INTERMISSION);
                 } else {
-                    GameController.it().changeState(LEVEL_TRANSITION);
+                    enterState(LEVEL_TRANSITION);
                 }
             } else if (timer.atSecond(1)) {
                 game.ghosts().forEach(Ghost::hide);
@@ -177,7 +177,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                GameController.it().changeState(READY);
+                enterState(READY);
             }
         }
     },
@@ -196,8 +196,7 @@ public enum GameState implements FsmState<GameModel> {
             if (timer.hasExpired()) {
                 GameController.it().resumePreviousState();
             } else {
-                game.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE)
-                    .forEach(ghost -> ghost.update(game));
+                game.ghosts(GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE).forEach(ghost -> ghost.update(game));
                 game.blinking().tick();
             }
         }
@@ -228,9 +227,9 @@ public enum GameState implements FsmState<GameModel> {
             if (timer.hasExpired()) {
                 game.loseLife();
                 if (game.isDemoLevel()) {
-                    GameController.it().changeState(INTRO);
+                    enterState(INTRO);
                 } else {
-                    GameController.it().changeState(game.lives() == 0 ? GAME_OVER : READY);
+                    enterState(game.lives() == 0 ? GAME_OVER : READY);
                 }
             }
             else if (timer.currentTick() == TICK_HIDE_GHOSTS) {
@@ -273,7 +272,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
                 game.removeWorld();
-                GameController.it().changeState(GameController.it().hasCredit() ? CREDIT : INTRO);
+                enterState(GameController.it().hasCredit() ? CREDIT : INTRO);
             }
         }
 
@@ -292,7 +291,7 @@ public enum GameState implements FsmState<GameModel> {
         @Override
         public void onUpdate(GameModel game) {
             if (timer.hasExpired()) {
-                GameController.it().changeState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
+                enterState(game.isPlaying() ? LEVEL_TRANSITION : INTRO);
             }
         }
     },
@@ -385,19 +384,17 @@ public enum GameState implements FsmState<GameModel> {
                     timer.restartIndefinitely();
                     game.publishGameEvent(GameEventType.UNSPECIFIED_CHANGE);
                 } else {
-                    GameController.it().changeState(INTRO);
+                    enterState(INTRO);
                 }
             }
         }
     };
 
-    final TickTimer timer = new TickTimer("GameState-Timer-" + name());
-
-    @Override
-    public TickTimer timer() {
-        return timer;
+    void enterState(GameState state) {
+        GameController.it().changeState(state);
     }
 
+    final TickTimer timer = new TickTimer("GameState-Timer-" + name());
     private Map<String, Object> propertyMap;
 
     private Map<String, Object> propertyMap() {
@@ -414,5 +411,10 @@ public enum GameState implements FsmState<GameModel> {
 
     public void setProperty(String key, Object value) {
         propertyMap().put(key, value);
+    }
+
+    @Override
+    public TickTimer timer() {
+        return timer;
     }
 }
