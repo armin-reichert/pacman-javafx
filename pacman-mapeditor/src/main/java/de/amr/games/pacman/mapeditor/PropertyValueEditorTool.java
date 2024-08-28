@@ -51,7 +51,7 @@ public class PropertyValueEditorTool implements Tool {
     public void draw(GraphicsContext g, int row, int col) {
         g.setFill(Color.BLACK);
         g.fillRect(col * size, row * size, size, size);
-        if (renderer instanceof TileMapEditorTerrainRenderer tr) {
+        if (renderer instanceof TerrainMapEditRenderer tr) {
             g.save();
             g.scale(size / (double) TS, size / (double) TS);
             tr.drawSpecialTile(g, propertyName, new Vector2i(col, row));

@@ -7,6 +7,8 @@ package de.amr.games.pacman.mapeditor;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -20,22 +22,39 @@ import static de.amr.games.pacman.mapeditor.TileMapUtil.TILE_SIZE;
 /**
  * @author Armin Reichert
  */
-public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
+public class TerrainMapEditRenderer implements TileMapRenderer {
 
-    private boolean runtimeMode;
+    public DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1);
 
-    public void setRuntimeMode(boolean state) {
-        this.runtimeMode = state;
+    protected Color wallFillColor = Color.BLACK;
+    protected Color wallStrokeColor = Color.GREEN;
+    protected Color doorColor = Color.PINK;
+
+    @Override
+    public void setScaling(double scaling) {
+        scalingPy.set((float) scaling);
+    }
+
+    public double scaling() {
+        return scalingPy.get();
+    }
+
+    public void setWallStrokeColor(Color color) {
+        wallStrokeColor = color;
+    }
+
+    public void setWallFillColor(Color wallFillColor) {
+        this.wallFillColor = wallFillColor;
+    }
+
+    public void setDoorColor(Color doorColor) {
+        this.doorColor = doorColor;
     }
 
     @Override
     public void drawMap(GraphicsContext g, TileMap terrainMap) {
-        if (runtimeMode) {
-            super.drawMap(g, terrainMap);
-        } else {
-            terrainMap.tiles().forEach(tile -> drawTile(g, tile, terrainMap.get(tile)));
-            drawSpecialTiles(g, terrainMap);
-        }
+        terrainMap.tiles().forEach(tile -> drawTile(g, tile, terrainMap.get(tile)));
+        drawSpecialTiles(g, terrainMap);
     }
 
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
@@ -55,6 +74,13 @@ public class TileMapEditorTerrainRenderer extends TerrainMapRenderer {
             default -> {}
         }
         g.restore();
+    }
+
+    public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
+        double height = TILE_SIZE * 0.25;
+        g.setFill(color);
+        g.fillRect(x, y + 0.5 * (TILE_SIZE - height), TILE_SIZE, height);
     }
 
     public void drawScatterTarget(GraphicsContext g, Vector2i tile, Color color) {
