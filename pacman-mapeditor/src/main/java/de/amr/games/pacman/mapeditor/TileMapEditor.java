@@ -325,18 +325,12 @@ public class TileMapEditor  {
     public void showMessage(String message, long seconds, MessageType type) {
         messageLabel.setText(message);
         messageLabel.setFont(Font.font("sans", FontWeight.BOLD, 12));
-        switch (type) {
-            case INFO -> {
-                messageLabel.setTextFill(Color.BLACK);
-            }
-            case WARNING -> {
-                messageLabel.setTextFill(Color.GREEN);
-            }
-            case ERROR -> {
-                messageLabel.setTextFill(Color.RED);
-
-            }
-        }
+        Color color = switch (type) {
+            case INFO -> Color.BLACK;
+            case WARNING -> Color.GREEN;
+            case ERROR -> Color.RED;
+        };
+        messageLabel.setTextFill(color);
         messageCloseTime = Instant.now().plus(Duration.ofSeconds(seconds));
     }
 
