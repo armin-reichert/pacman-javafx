@@ -43,13 +43,13 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.*;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -57,6 +57,10 @@ import static de.amr.games.pacman.mapeditor.TileMapUtil.*;
 public class TileMapEditor  {
 
     private static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.mapeditor.texts");
+
+    public static String tt(String key, Object... args) {
+        return MessageFormat.format(TEXTS.getString(key), args);
+    }
 
     public static final Rectangle2D PAC_SPRITE          = new Rectangle2D(473,  16, 14, 14);
     public static final Rectangle2D RED_GHOST_SPRITE    = new Rectangle2D(505,  65, 14, 14);
@@ -92,10 +96,6 @@ public class TileMapEditor  {
     public static final Vector2i DEFAULT_POS_BONUS        = new Vector2i(13, 20);
 
     public static final String DEFAULT_FOOD_COLOR         = "rgb(255,0,0)";
-
-    public static String tt(String key, Object... args) {
-        return MessageFormat.format(TEXTS.getString(key), args);
-    }
 
     private static final String PALETTE_TERRAIN = "Terrain";
     private static final String PALETTE_ACTORS  = "Actors";
@@ -147,7 +147,7 @@ public class TileMapEditor  {
 
     public final ObjectProperty<WorldMap> mapPy = new SimpleObjectProperty<>(this, "map");
 
-    private ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>(this, "focussedTile") {
+    private final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>(this, "focussedTile") {
         @Override
         protected void invalidated() {
             Vector2i tile = get();
@@ -157,21 +157,20 @@ public class TileMapEditor  {
     };
 
     private Window ownerWindow;
-    private MenuBar menuBar;
-    private Menu menuFile;
-    private Menu menuEdit;
-    private Menu menuLoadMap;
-    private Menu menuView;
     private final BorderPane contentPane = new BorderPane();
     private Canvas editCanvas;
-    private ScrollPane editCanvasScroll;
     private Canvas previewCanvas;
-    private ScrollPane previewCanvasScroll;
     private Text mapSourceView;
     private Label messageLabel;
     private Label focussedTileInfo;
     private FileChooser fileChooser;
     private TabPane palettesTabPane;
+
+    private MenuBar menuBar;
+    private Menu menuFile;
+    private Menu menuEdit;
+    private Menu menuLoadMap;
+    private Menu menuView;
 
     private PropertyEditorPane terrainMapPropertiesEditor;
     private PropertyEditorPane foodMapPropertiesEditor;
@@ -196,12 +195,12 @@ public class TileMapEditor  {
 
     public TileMapEditor(File workDir) {
         lastUsedDir = workDir;
-        mapPy.set(newPacManGameMap(36, 28));
+        mapPy.set(createWorldMap(36, 28));
         titlePy.bind(Bindings.createStringBinding(
             () -> tt("map_editor") + (currentFilePy.get() != null ? " - " + currentFilePy.get() : ""),
             currentFilePy
         ));
-        var url = Objects.requireNonNull(getClass().getResource("pacman_spritesheet.png"));
+        var url = requireNonNull(getClass().getResource("pacman_spritesheet.png"));
         spriteSheet = new Image(url.toExternalForm());
     }
 
@@ -209,21 +208,22 @@ public class TileMapEditor  {
         return mapPy.get();
     }
 
-    private WorldMap newPacManGameMap(int numRows, int numCols) {
+    private WorldMap createWorldMap(int numRows, int numCols) {
         var map = new WorldMap(numRows, numCols);
-        map.terrain().setProperty("color_wall_stroke", DEFAULT_COLOR_WALL_STROKE);
-        map.terrain().setProperty("color_wall_fill",   DEFAULT_COLOR_WALL_FILL);
-        map.terrain().setProperty("color_door",        DEFAULT_COLOR_DOOR);
-        map.terrain().setProperty("pos_pac",           formatTile(DEFAULT_POS_PAC));
-        map.terrain().setProperty("pos_ghost_1_red",     formatTile(DEFAULT_POS_RED_GHOST));
-        map.terrain().setProperty("pos_ghost_2_pink",    formatTile(DEFAULT_POS_PINK_GHOST));
-        map.terrain().setProperty("pos_ghost_3_cyan",    formatTile(DEFAULT_POS_CYAN_GHOST));
-        map.terrain().setProperty("pos_ghost_4_orange",  formatTile(DEFAULT_POS_ORANGE_GHOST));
-        map.terrain().setProperty("pos_bonus",         formatTile(DEFAULT_POS_BONUS));
-        map.food().setProperty("color_food",           DEFAULT_FOOD_COLOR);
-        addBorder(map.terrain(), 3, 2);
-        GHOST_HOUSE_SHAPE.addToMap(map.terrain(), DEFAULT_POS_RED_GHOST.y() + 1, map.terrain().numCols() / 2 - 4);
+        TileMap terrain = map.terrain();
+        addBorder(terrain, 3, 2);
+        GHOST_HOUSE_SHAPE.addToMap(terrain, DEFAULT_POS_RED_GHOST.y() + 1, terrain.numCols() / 2 - 4);
         invalidateTerrainMapPaths();
+        terrain.setProperty("color_wall_stroke",  DEFAULT_COLOR_WALL_STROKE);
+        terrain.setProperty("color_wall_fill",    DEFAULT_COLOR_WALL_FILL);
+        terrain.setProperty("color_door",         DEFAULT_COLOR_DOOR);
+        terrain.setProperty("pos_pac",            formatTile(DEFAULT_POS_PAC));
+        terrain.setProperty("pos_ghost_1_red",    formatTile(DEFAULT_POS_RED_GHOST));
+        terrain.setProperty("pos_ghost_2_pink",   formatTile(DEFAULT_POS_PINK_GHOST));
+        terrain.setProperty("pos_ghost_3_cyan",   formatTile(DEFAULT_POS_CYAN_GHOST));
+        terrain.setProperty("pos_ghost_4_orange", formatTile(DEFAULT_POS_ORANGE_GHOST));
+        terrain.setProperty("pos_bonus",          formatTile(DEFAULT_POS_BONUS));
+        map.food().setProperty("color_food",            DEFAULT_FOOD_COLOR);
         return map;
     }
 
@@ -401,11 +401,11 @@ public class TileMapEditor  {
         editCanvas = new Canvas();
         editCanvas.setOnMouseClicked(this::onMouseClickedOnEditCanvas);
         editCanvas.setOnMouseMoved(this::onMouseMovedOverEditCanvas);
-        editCanvasScroll = new ScrollPane(editCanvas);
+        ScrollPane editCanvasScroll = new ScrollPane(editCanvas);
         editCanvasScroll.setFitToHeight(true);
 
         previewCanvas = new Canvas();
-        previewCanvasScroll = new ScrollPane(previewCanvas);
+        ScrollPane previewCanvasScroll = new ScrollPane(previewCanvas);
         previewCanvasScroll.setFitToHeight(true);
         previewCanvasScroll.hvalueProperty().bindBidirectional(editCanvasScroll.hvalueProperty());
         previewCanvasScroll.vvalueProperty().bindBidirectional(editCanvasScroll.vvalueProperty());
@@ -633,7 +633,7 @@ public class TileMapEditor  {
             try {
                 int numCols = Integer.parseInt(tuple[0].trim());
                 int numRows = Integer.parseInt(tuple[1].trim());
-                setMap(newPacManGameMap(numRows, numCols));
+                setMap(createWorldMap(numRows, numCols));
             } catch (Exception x) {
                 Logger.error(x);
             }
