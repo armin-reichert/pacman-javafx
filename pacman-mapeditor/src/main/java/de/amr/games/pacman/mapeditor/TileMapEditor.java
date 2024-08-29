@@ -335,53 +335,53 @@ public class TileMapEditor  {
     }
 
     private Palette createTerrainPalette() {
-        var terrainPalette = new Palette(32, 2, 10, terrainMapEditRenderer);
-        terrainPalette.setTools(
-            terrainPalette.createTileValueEditorTool(Tiles.WALL_H, "Horiz. Wall"),
-            terrainPalette.createTileValueEditorTool(Tiles.WALL_V, "Vert. Wall"),
-            terrainPalette.createTileValueEditorTool(Tiles.DWALL_H, "Hor. Double-Wall"),
-            terrainPalette.createTileValueEditorTool(Tiles.DWALL_V, "Vert. Double-Wall"),
-            terrainPalette.createTileValueEditorTool(Tiles.CORNER_NW, "NW Corner"),
-            terrainPalette.createTileValueEditorTool(Tiles.CORNER_NE, "NE Corner"),
-            terrainPalette.createTileValueEditorTool(Tiles.CORNER_SW, "SW Corner"),
-            terrainPalette.createTileValueEditorTool(Tiles.CORNER_SE, "SE Corner"),
-            terrainPalette.createTileValueEditorTool(Tiles.DCORNER_NW, "NW Corner"),
-            terrainPalette.createTileValueEditorTool(Tiles.DCORNER_NE, "NE Corner"),
-            terrainPalette.createTileValueEditorTool(Tiles.DCORNER_SW, "SW Corner"),
-            terrainPalette.createTileValueEditorTool(Tiles.DCORNER_SE, "SE Corner"),
-            terrainPalette.createTileValueEditorTool(Tiles.EMPTY, "Empty Space"),
-            terrainPalette.createTileValueEditorTool(Tiles.TUNNEL, "Tunnel"),
-            terrainPalette.createTileValueEditorTool(Tiles.DOOR, "Door")
+        var palette = new Palette(32, 2, 10, terrainMapEditRenderer);
+        palette.setTools(
+            palette.createTileValueEditorTool(Tiles.WALL_H, "Horiz. Wall"),
+            palette.createTileValueEditorTool(Tiles.WALL_V, "Vert. Wall"),
+            palette.createTileValueEditorTool(Tiles.DWALL_H, "Hor. Double-Wall"),
+            palette.createTileValueEditorTool(Tiles.DWALL_V, "Vert. Double-Wall"),
+            palette.createTileValueEditorTool(Tiles.CORNER_NW, "NW Corner"),
+            palette.createTileValueEditorTool(Tiles.CORNER_NE, "NE Corner"),
+            palette.createTileValueEditorTool(Tiles.CORNER_SW, "SW Corner"),
+            palette.createTileValueEditorTool(Tiles.CORNER_SE, "SE Corner"),
+            palette.createTileValueEditorTool(Tiles.DCORNER_NW, "NW Corner"),
+            palette.createTileValueEditorTool(Tiles.DCORNER_NE, "NE Corner"),
+            palette.createTileValueEditorTool(Tiles.DCORNER_SW, "SW Corner"),
+            palette.createTileValueEditorTool(Tiles.DCORNER_SE, "SE Corner"),
+            palette.createTileValueEditorTool(Tiles.EMPTY, "Empty Space"),
+            palette.createTileValueEditorTool(Tiles.TUNNEL, "Tunnel"),
+            palette.createTileValueEditorTool(Tiles.DOOR, "Door")
         );
-        terrainPalette.selectTool(12); // EMPTY
-        return terrainPalette;
+        palette.selectTool(12); // EMPTY
+        return palette;
     }
 
     private Palette createActorPalette() {
-        var actorPalette = new Palette(32, 1, 9, terrainMapEditRenderer);
-        actorPalette.setTools(
-            actorPalette.createPropertyValueEditorTool(PROPERTY_POS_RED_GHOST, "Red Ghost"),
-            actorPalette.createPropertyValueEditorTool(PROPERTY_POS_PINK_GHOST, "Pink Ghost"),
-            actorPalette.createPropertyValueEditorTool(PROPERTY_POS_CYAN_GHOST, "Cyan Ghost"),
-            actorPalette.createPropertyValueEditorTool(PROPERTY_POS_ORANGE_GHOST, "Orange Ghost"),
-            actorPalette.createPropertyValueEditorTool(PROPERTY_POS_SCATTER_RED_GHOST, "Red Ghost Scatter"),
-            actorPalette.createPropertyValueEditorTool(PROPERTY_POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter"),
-            actorPalette.createPropertyValueEditorTool(PROPERTY_POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter"),
-            actorPalette.createPropertyValueEditorTool(PROPERTY_POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter"),
-            actorPalette.createPropertyValueEditorTool(PROPERTY_POS_PAC, "Pac-Man")
+        var palette = new Palette(32, 1, 9, terrainMapEditRenderer);
+        palette.setTools(
+            palette.createPropertyValueEditorTool(PROPERTY_POS_RED_GHOST, "Red Ghost"),
+            palette.createPropertyValueEditorTool(PROPERTY_POS_PINK_GHOST, "Pink Ghost"),
+            palette.createPropertyValueEditorTool(PROPERTY_POS_CYAN_GHOST, "Cyan Ghost"),
+            palette.createPropertyValueEditorTool(PROPERTY_POS_ORANGE_GHOST, "Orange Ghost"),
+            palette.createPropertyValueEditorTool(PROPERTY_POS_SCATTER_RED_GHOST, "Red Ghost Scatter"),
+            palette.createPropertyValueEditorTool(PROPERTY_POS_SCATTER_PINK_GHOST, "Pink Ghost Scatter"),
+            palette.createPropertyValueEditorTool(PROPERTY_POS_SCATTER_CYAN_GHOST, "Cyan Ghost Scatter"),
+            palette.createPropertyValueEditorTool(PROPERTY_POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter"),
+            palette.createPropertyValueEditorTool(PROPERTY_POS_PAC, "Pac-Man")
         );
-        return actorPalette;
+        return palette;
     }
 
     private Palette createFoodPalette() {
-        var foodPalette = new Palette(32, 1, 3, foodMapRenderer);
-        foodPalette.setTools(
-            foodPalette.createTileValueEditorTool(Tiles.EMPTY, "No Food"),
-            foodPalette.createTileValueEditorTool(Tiles.PELLET, "Pellet"),
-            foodPalette.createTileValueEditorTool(Tiles.ENERGIZER, "Energizer")
+        var palette = new Palette(32, 1, 3, foodMapRenderer);
+        palette.setTools(
+            palette.createTileValueEditorTool(Tiles.EMPTY, "No Food"),
+            palette.createTileValueEditorTool(Tiles.PELLET, "Pellet"),
+            palette.createTileValueEditorTool(Tiles.ENERGIZER, "Energizer")
         );
-        foodPalette.selectTool(0); // EMPTY
-        return foodPalette;
+        palette.selectTool(0); // EMPTY
+        return palette;
     }
 
     private void createLayout() {
@@ -521,7 +521,7 @@ public class TileMapEditor  {
         var miSaveAs = new MenuItem(tt("menu.file.save_as"));
         miSaveAs.setOnAction(e -> saveMapFileAs());
 
-        menuFile = new Menu(tt("menu.file"), null, miNew, miOpen, miSaveAs);
+        menuFile = new Menu(tt("menu.file"), null /* graphic */, miNew, miOpen, miSaveAs);
     }
 
     private void createEditMenu() {
@@ -564,19 +564,22 @@ public class TileMapEditor  {
     }
 
     private void createViewMenu() {
-        menuView = new Menu(tt("menu.view"));
         var miViewTerrain = new CheckMenuItem(tt("menu.view.terrain"));
         miViewTerrain.selectedProperty().bindBidirectional(terrainVisiblePy);
+
         var miViewFood = new CheckMenuItem(tt("menu.view.food"));
         miViewFood.selectedProperty().bindBidirectional(foodVisiblePy);
+
         var miViewGrid = new CheckMenuItem(tt("menu.view.grid"));
         miViewGrid.selectedProperty().bindBidirectional(gridVisiblePy);
+
         var miViewPreview = new CheckMenuItem(tt("menu.view.preview"));
         miViewPreview.selectedProperty().bindBidirectional(previewVisiblePy);
-        menuView.getItems().setAll(miViewTerrain, miViewFood, miViewGrid, new SeparatorMenuItem(), miViewPreview);
+
+        menuView = new Menu(tt("menu.view"), null, miViewTerrain, miViewFood, miViewGrid, new SeparatorMenuItem(), miViewPreview);
     }
 
-    public void addLoadMapMenuEntry(String description, WorldMap map) {
+    public void addLoadMapMenuItem(String description, WorldMap map) {
         checkNotNull(description);
         checkNotNull(map);
         var miLoadMap = new MenuItem(description);

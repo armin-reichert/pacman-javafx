@@ -71,11 +71,11 @@ public class TileMapEditorApp extends Application  {
             .map(WorldMap::new)
             .toList();
 
-        editor.addLoadMapMenuEntry("Pac-Man", pacManMap);
+        editor.addLoadMapMenuItem("Pac-Man", pacManMap);
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        rangeClosed(1, 6).forEach(num -> editor.addLoadMapMenuEntry("Ms. Pac-Man " + num,msPacManMaps.get(num - 1)));
+        rangeClosed(1, 6).forEach(num -> editor.addLoadMapMenuItem("Ms. Pac-Man " + num,msPacManMaps.get(num - 1)));
         editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        rangeClosed(1, 8).forEach(num -> editor.addLoadMapMenuEntry("Pac-Man XXL " + num,pacManXXLMaps.get(num - 1)));
+        rangeClosed(1, 8).forEach(num -> editor.addLoadMapMenuItem("Pac-Man XXL " + num,pacManXXLMaps.get(num - 1)));
 
         editor.loadMap(pacManMap);
         editor.start();
