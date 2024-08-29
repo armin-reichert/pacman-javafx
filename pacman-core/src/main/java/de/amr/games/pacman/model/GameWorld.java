@@ -7,6 +7,7 @@ package de.amr.games.pacman.model;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import org.tinylog.Logger;
 
@@ -58,27 +59,37 @@ public class GameWorld {
 
     public GameWorld(WorldMap map) {
         this.map = checkNotNull(map);
+        TileMap terrain = map.terrain(), food = map.food();
+
+        terrain.computeTerrainPaths();
+
         var portalList = new ArrayList<Portal>();
-        int firstColumn = 0, lastColumn = map.terrain().numCols() - 1;
-        for (int row = 0; row < map.terrain().numRows(); ++row) {
+        int firstColumn = 0, lastColumn = terrain.numCols() - 1;
+        for (int row = 0; row < terrain.numRows(); ++row) {
             Vector2i leftBorderTile = v2i(firstColumn, row), rightBorderTile = v2i(lastColumn, row);
-            if (map.terrain().get(row, firstColumn) == TUNNEL && map.terrain().get(row, lastColumn) == TUNNEL) {
+            if (terrain.get(row, firstColumn) == TUNNEL && terrain.get(row, lastColumn) == TUNNEL) {
                 portalList.add(new Portal(leftBorderTile, rightBorderTile, 2));
             }
         }
         portals = portalList.toArray(new Portal[0]);
 
-        map.terrain().computeTerrainPaths(); // not sure where to do this
+        pacPosition                  = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_PAC,          v2i(13,26)));
+        ghostPositions[RED_GHOST]    = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_RED_GHOST,    v2i(13,14)));
+        ghostPositions[PINK_GHOST]   = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_PINK_GHOST,   v2i(13,17)));
+        ghostPositions[CYAN_GHOST]   = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_CYAN_GHOST,   v2i(11,17)));
+        ghostPositions[ORANGE_GHOST] = posHalfTileRightOf(terrain.getTileProperty(PROPERTY_POS_ORANGE_GHOST, v2i(15,17)));
 
-        pacPosition                  = map.terrain().getTileProperty(PROPERTY_POS_PAC,          v2i(13,26)).scaled(TS).plus(4f, 0);
-        ghostPositions[RED_GHOST]    = map.terrain().getTileProperty(PROPERTY_POS_RED_GHOST,    v2i(13,14)).scaled(TS).plus(4f, 0);
-        ghostPositions[PINK_GHOST]   = map.terrain().getTileProperty(PROPERTY_POS_PINK_GHOST,   v2i(13,17)).scaled(TS).plus(4f, 0);
-        ghostPositions[CYAN_GHOST]   = map.terrain().getTileProperty(PROPERTY_POS_CYAN_GHOST,   v2i(11,17)).scaled(TS).plus(4f, 0);
-        ghostPositions[ORANGE_GHOST] = map.terrain().getTileProperty(PROPERTY_POS_ORANGE_GHOST, v2i(15,17)).scaled(TS).plus(4f, 0);
+        energizerTiles = food.tiles(ENERGIZER).toArray(Vector2i[]::new);
+        eatenFood = new BitSet(food.numCols() * food.numRows());
+        uneatenFoodCount = totalFoodCount = (int) food.tiles().filter(tile -> food.get(tile) != EMPTY).count();
+    }
 
-        energizerTiles = map.food().tiles(ENERGIZER).toArray(Vector2i[]::new);
-        eatenFood = new BitSet(map.food().numCols() * map.food().numRows());
-        uneatenFoodCount = totalFoodCount = (int) map.food().tiles().filter(tile -> map.food().get(tile) != EMPTY).count();
+    /**
+     * @param tile a tile coordinate
+     * @return position in world (scaled by tile size) between given tile and right neighbor tile
+     */
+    private static Vector2f posHalfTileRightOf(Vector2i tile) {
+        return tile.scaled(TS).plus(HTS, 0).toVector2f();
     }
 
     /**
