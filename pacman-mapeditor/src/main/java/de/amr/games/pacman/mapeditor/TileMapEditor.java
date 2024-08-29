@@ -234,7 +234,7 @@ public class TileMapEditor  {
         terrainMapPropertiesEditor.setTileMap(worldMap.terrain());
         invalidateTerrainMapPaths();
         updateTerrainMapPaths();
-        updateSourceHtml();
+        updateSourceView();
         Logger.debug("Edit canvas size: w={} h={}", editCanvas.getWidth(), editCanvas.getHeight());
     }
 
@@ -603,7 +603,7 @@ public class TileMapEditor  {
 
     public void markMapEdited() {
         unsavedChanges = true;
-        updateSourceHtml();
+        updateSourceView();
     }
 
     public boolean hasUnsavedChanges() {
@@ -938,27 +938,23 @@ public class TileMapEditor  {
         markMapEdited();
     }
 
-    private void updateSourceHtml() {
-        mapSourceView.setText(worldMapAsText(map()));
-    }
-
-    private String tileMapToString(TileMap tileMap) throws IOException {
-        StringWriter sw = new StringWriter();
-        tileMap.print(sw);
-        return sw.toString();
-    }
-
-    private String worldMapAsText(WorldMap map) {
+    private void updateSourceView() {
         StringBuilder sb = new StringBuilder();
         try {
             sb.append(WorldMap.TERRAIN_SECTION_START).append("\n");
-            sb.append(tileMapToString(map.terrain()));
+            sb.append(tileMapSource(map().terrain()));
             sb.append(WorldMap.FOOD_SECTION_START).append("\n");
-            sb.append(tileMapToString(map.food()));
+            sb.append(tileMapSource(map().food()));
+            mapSourceView.setText(sb.toString());
         } catch (Exception x) {
             Logger.error("Could not create text for map");
             Logger.error(x);
         }
-        return sb.toString();
+    }
+
+    private String tileMapSource(TileMap tileMap) throws IOException {
+        StringWriter sw = new StringWriter();
+        tileMap.print(sw);
+        return sw.toString();
     }
 }
