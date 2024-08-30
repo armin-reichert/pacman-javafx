@@ -1,9 +1,7 @@
 import org.gradle.internal.os.OperatingSystem
 
-ext {
-    os = OperatingSystem.current()
-    arch = System.getProperty("os.arch")
-}
+ext["os"]   = OperatingSystem.current()
+ext["arch"] = System.getProperty("os.arch")
 
 allprojects {
     repositories {
