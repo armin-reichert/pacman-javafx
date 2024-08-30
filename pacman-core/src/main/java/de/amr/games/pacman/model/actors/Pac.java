@@ -9,16 +9,13 @@ import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.steering.Steering;
-import org.tinylog.Logger;
-
-import java.util.Optional;
 
 /**
  * Pac-Man / Ms. Pac-Man.
  *
  * @author Armin Reichert
  */
-public class Pac extends Creature {
+public class Pac extends Creature implements AnimatedEntity {
 
     public static final String ANIM_MUNCHING = "munching";
     public static final String ANIM_DYING = "dying";
@@ -72,48 +69,14 @@ public class Pac extends Creature {
             '}';
     }
 
+    @Override
     public void setAnimations(Animations animations) {
         this.animations = animations;
     }
 
-    public Optional<Animations> animations() {
-        return Optional.ofNullable(animations);
-    }
-
-    public void selectAnimation(String name) {
-        selectAnimation(name, 0);
-    }
-
-    public void selectAnimation(String name, int index) {
-        if (animations != null) {
-            animations.select(name, index);
-        } else {
-            Logger.warn("Trying to select animation '{}' (index: {}) before animations have been created!", name, index);
-        }
-    }
-
-    public void startAnimation() {
-        if (animations != null) {
-            animations.startSelected();
-        } else {
-            Logger.warn("Trying to start animation before animations have been created!");
-        }
-    }
-
-    public void stopAnimation() {
-        if (animations != null) {
-            animations.stopSelected();
-        } else {
-            Logger.warn("Trying to stop animation before animations have been created!");
-        }
-    }
-
-    public void resetAnimation() {
-        if (animations != null) {
-            animations.resetSelected();
-        } else {
-            Logger.warn("Trying to reset animation before animations have been created!");
-        }
+    @Override
+    public Animations animationSet() {
+        return animations;
     }
 
     @Override

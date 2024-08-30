@@ -15,7 +15,6 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import static de.amr.games.pacman.lib.Direction.*;
@@ -28,7 +27,7 @@ import static de.amr.games.pacman.model.actors.GhostState.*;
  *
  * @author Armin Reichert
  */
-public class Ghost extends Creature {
+public class Ghost extends Creature implements AnimatedEntity {
 
     public static final String ANIM_GHOST_NORMAL     = "normal";
     public static final String ANIM_GHOST_FRIGHTENED = "frightened";
@@ -94,12 +93,14 @@ public class Ghost extends Creature {
         return name;
     }
 
+    @Override
     public void setAnimations(Animations animations) {
         this.animations = animations;
     }
 
-    public Optional<Animations> animations() {
-        return Optional.ofNullable(animations);
+    @Override
+    public Animations animationSet() {
+        return animations;
     }
 
     public boolean insideHouse() {
@@ -191,42 +192,6 @@ public class Ghost extends Creature {
     @Override
     public boolean canReverse() {
         return newTileEntered && inState(HUNTING_PAC, FRIGHTENED);
-    }
-
-    public void selectAnimation(String name) {
-        selectAnimation(name, 0);
-    }
-
-    public void selectAnimation(String name, int index) {
-        if (animations != null) {
-            animations.select(name, index);
-        } else {
-            Logger.warn("Trying to select animation '{}' (index: {}) before animations have been created!", name, index);
-        }
-    }
-
-    public void startAnimation() {
-        if (animations != null) {
-            animations.startSelected();
-        } else {
-            Logger.warn("Trying to start animation before animations have been created!");
-        }
-    }
-
-    public void stopAnimation() {
-        if (animations != null) {
-            animations.stopSelected();
-        } else {
-            Logger.warn("Trying to stop animation before animations have been created!");
-        }
-    }
-
-    public void resetAnimation() {
-        if (animations != null) {
-            animations.resetSelected();
-        } else {
-            Logger.warn("Trying to reset animation before animations have been created!");
-        }
     }
 
     // Here begins the state machine part
