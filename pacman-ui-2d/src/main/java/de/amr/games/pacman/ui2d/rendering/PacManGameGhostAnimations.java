@@ -24,10 +24,8 @@ public class PacManGameGhostAnimations extends SpriteAnimations {
     private final PacManGameSpriteSheet spriteSheet;
 
     public PacManGameGhostAnimations(Ghost ghost, PacManGameSpriteSheet spriteSheet) {
-        checkNotNull(ghost);
-        checkNotNull(spriteSheet);
-        this.ghost = ghost;
-        this.spriteSheet = spriteSheet;
+        this.ghost = checkNotNull(ghost);
+        this.spriteSheet = checkNotNull(spriteSheet);
 
         var normal = SpriteAnimation.begin()
             .sprites(spriteSheet.ghostNormalSprites(ghost.id(), Direction.LEFT))

@@ -92,6 +92,30 @@ public class Pac extends Creature {
         }
     }
 
+    public void startAnimation() {
+        if (animations != null) {
+            animations.startSelected();
+        } else {
+            Logger.warn("Trying to start animation before animations have been created!");
+        }
+    }
+
+    public void stopAnimation() {
+        if (animations != null) {
+            animations.stopSelected();
+        } else {
+            Logger.warn("Trying to stop animation before animations have been created!");
+        }
+    }
+
+    public void resetAnimation() {
+        if (animations != null) {
+            animations.resetSelected();
+        } else {
+            Logger.warn("Trying to reset animation before animations have been created!");
+        }
+    }
+
     @Override
     public boolean canReverse() {
         return newTileEntered;

@@ -115,7 +115,7 @@ public enum GameState implements FsmState<GameModel> {
     HUNTING {
         @Override
         public void onEnter(GameModel game) {
-            game.pac().animations().ifPresent(Animations::startSelected);
+            game.pac().startAnimation();
             game.ghosts().forEach(Ghost::startAnimation);
             game.blinking().setStartPhase(Pulse.ON);
             game.blinking().restart(Integer.MAX_VALUE);
@@ -235,10 +235,10 @@ public enum GameState implements FsmState<GameModel> {
             else if (timer.currentTick() == TICK_HIDE_GHOSTS) {
                 game.ghosts().forEach(Ghost::hide);
                 game.pac().selectAnimation(Pac.ANIM_DYING);
-                game.pac().animations().ifPresent(Animations::resetSelected);
+                game.pac().resetAnimation();
             }
             else if (timer.currentTick() == TICK_START_PAC_ANIMATION) {
-                game.pac().animations().ifPresent(Animations::startSelected);
+                game.pac().startAnimation();
                 game.publishGameEvent(GameEventType.PAC_DYING, game.pac().tile());
             }
             else if (timer.currentTick() == TICK_HIDE_PAC) {
