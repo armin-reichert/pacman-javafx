@@ -1,28 +1,6 @@
 import org.gradle.internal.os.OperatingSystem
 
-ext["os"]   = OperatingSystem.current()
-ext["arch"] = System.getProperty("os.arch")
-
-allprojects {
-
-    repositories {
-        mavenCentral()
-    }
-
-    tasks.withType(JavaCompile).configureEach {
-        options.encoding = 'UTF-8'
-        configure(options) {
-            options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
-        }
-    }
-
-    // TODO Are Maven publishing data needed for this app?
-    //group 'de.amr.games.pacman'
-    //version '1.0'
-}
-
 buildscript {
-
     ext.libs = [
         "tinylog_api": "org.tinylog:tinylog-api:2.7.0",
         "tinylog_impl": 'org.tinylog:tinylog-impl:2.7.0'
@@ -32,5 +10,31 @@ buildscript {
     ]
 }
 
+plugins {
+    id "java"
+}
 
-println "Operating System: name='${os.name}' version='${os.version}' arch='${arch}'"
+ext["os"]   = OperatingSystem.current()
+ext["arch"] = System.getProperty("os.arch")
+println("Operating System: name='${os.name}' version='${os.version}' arch='${arch}'")
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        configure(options) {
+            options.compilerArgs << '-Xlint:deprecation' << '-Xlint:unchecked'
+        }
+    }
+
+    // TODO Are Maven publishing data needed?
+    //group 'de.amr.games.pacman'
+    //version '1.0'
+}
