@@ -13,12 +13,12 @@ import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Animations;
-import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
 import de.amr.games.pacman.model.actors.Ghost;
+import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
 import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGamePacAnimations;
@@ -32,7 +32,6 @@ import java.util.BitSet;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.model.GameModel.*;
-import static de.amr.games.pacman.model.GameModel.ORANGE_GHOST;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -166,7 +165,7 @@ public class MsPacManIntroScene extends GameScene2D {
         final int stopXMsPacMan = TS * 15 + 2;
         final Vector2i titlePosition = v2i(TS * 10, TS * 8);
         final Pac msPacMan = new Pac();
-        final Ghost[] ghosts = { new Ghost(RED_GHOST), new Ghost(PINK_GHOST), new Ghost(CYAN_GHOST), new Ghost(ORANGE_GHOST) };
+        final Ghost[] ghosts = { Ghost.red(), Ghost.pink(), Ghost.cyan(), Ghost.orange() };
         // Marquee
         final TickTimer marqueeTimer = new TickTimer("marquee-timer");
         final int numBulbs = 96;

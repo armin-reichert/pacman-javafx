@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.scene;
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -43,7 +42,7 @@ public class PacManCutScene1 extends GameScene2D {
         context.setScoreVisible(true);
         pac = new Pac();
         pac.setAnimations(new PacManGamePacAnimations(pac, (PacManGameSpriteSheet) spriteRenderer.spriteSheet()));
-        blinky = new Ghost(GameModel.RED_GHOST);
+        blinky = Ghost.red();
         blinky.setAnimations(new PacManGameGhostAnimations(blinky, (PacManGameSpriteSheet) spriteRenderer.spriteSheet()));
     }
 

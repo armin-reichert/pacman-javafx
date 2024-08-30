@@ -9,7 +9,6 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
@@ -213,8 +212,8 @@ public class MsPacManCutScene1 extends GameScene2D {
     private static class Data {
         final Pac pacMan = new Pac();
         final Pac msPac = new Pac();
-        final Ghost inky = new Ghost(GameModel.CYAN_GHOST);
-        final Ghost pinky = new Ghost(GameModel.PINK_GHOST);
+        final Ghost inky = Ghost.cyan();
+        final Ghost pinky = Ghost.pink();
         final Entity heart = new Entity();
     }
 

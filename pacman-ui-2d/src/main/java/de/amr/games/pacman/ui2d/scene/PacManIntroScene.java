@@ -229,21 +229,12 @@ public class PacManIntroScene extends GameScene2D {
         final Pac pacMan = new Pac();
 
         // Ghosts
-        final List<Ghost> ghosts = List.of(
-            new Ghost(GameModel.RED_GHOST),
-            new Ghost(GameModel.PINK_GHOST),
-            new Ghost(GameModel.CYAN_GHOST),
-            new Ghost(GameModel.ORANGE_GHOST)
-        );
-        final String[] ghostCharacters = {
-            "SHADOW", "SPEEDY", "BASHFUL", "POKEY"
-        };
-        final Color[] ghostColors = {
-            Color.RED, Color.rgb(252, 181, 255), Color.CYAN, Color.rgb(251, 190, 88)
-        };
-        final boolean[] ghostImageVisible = new boolean[4];
-        final boolean[] ghostNicknameVisible = new boolean[4];
-        final boolean[] ghostCharacterVisible = new boolean[4];
+        final List<Ghost> ghosts = List.of(Ghost.red(), Ghost.pink(), Ghost.cyan(), Ghost.orange());
+        final String[]    ghostCharacters = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
+        final Color[]     ghostColors = { Color.RED, Color.rgb(252, 181, 255), Color.CYAN, Color.rgb(251, 190, 88) };
+        final boolean[]   ghostImageVisible = new boolean[4];
+        final boolean[]   ghostNicknameVisible = new boolean[4];
+        final boolean[]   ghostCharacterVisible = new boolean[4];
 
         final List<Ghost> victims = new ArrayList<>();
         boolean titleVisible = false;

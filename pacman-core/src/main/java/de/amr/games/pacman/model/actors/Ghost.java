@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameWorld;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -39,6 +38,22 @@ public class Ghost extends Creature implements AnimatedEntity {
     public static final String ANIM_BLINKY_PATCHED   = "patched";
     public static final String ANIM_BLINKY_NAKED     = "naked";
 
+    public static Ghost red() {
+        return new Ghost(GameModel.RED_GHOST);
+    }
+
+    public static Ghost pink() {
+        return new Ghost(GameModel.PINK_GHOST);
+    }
+
+    public static Ghost cyan() {
+        return new Ghost(GameModel.CYAN_GHOST);
+    }
+
+    public static Ghost orange() {
+        return new Ghost(GameModel.ORANGE_GHOST);
+    }
+
     private final byte id;
     private String name;
     private GhostState state;
@@ -50,20 +65,10 @@ public class Ghost extends Creature implements AnimatedEntity {
     private List<Vector2i> cannotMoveUpTiles = List.of();
 
     /**
-     * @param id  The ghost ID. One of {@link GameModel#RED_GHOST}, {@link GameModel#PINK_GHOST},
-     * {@link GameModel#CYAN_GHOST}, {@link GameModel#ORANGE_GHOST}.
-     * @param world the world where this ghost lives (optional)
-     */
-    public Ghost(byte id, GameWorld world) {
-        this.id = checkGhostID(id);
-        this.world = checkNotNull(world);
-    }
-
-    /**
      * Constructs a ghost without associated world like the ones in the cut scenes.
      * @param id ghost ID
      */
-    public Ghost(byte id) {
+    private Ghost(byte id) {
         this.id = checkGhostID(id);
     }
 
