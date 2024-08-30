@@ -644,7 +644,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     private void selectGameVariant(GameVariant variant) {
-        gameController().selectGameVariant(variant);
+        gameController().selectGame(variant);
         gameController().restart(GameState.BOOT);
     }
 

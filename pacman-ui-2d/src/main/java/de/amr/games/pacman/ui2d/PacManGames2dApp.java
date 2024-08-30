@@ -199,7 +199,7 @@ public class PacManGames2dApp extends Application {
     public void init() {
         File userDir = new File(System.getProperty("user.home"), ".pacmanfx");
         GameController.create(userDir);
-        GameController.it().selectGameVariant(GameVariant.PACMAN);
+        GameController.it().selectGame(GameVariant.PACMAN);
     }
 
     @Override

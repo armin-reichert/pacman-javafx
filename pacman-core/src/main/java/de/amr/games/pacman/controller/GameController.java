@@ -44,71 +44,71 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
 
     public static void create(File userDir) {
         if (THE_ONE != null) {
-            throw new IllegalStateException("Game controller has already been initialized");
+            throw new IllegalStateException("Game controller has already been created");
         }
         THE_ONE = new GameController(userDir);
     }
 
     public static GameController it() {
         if (THE_ONE == null) {
-            throw new IllegalStateException("Game controller has not been initialized");
+            throw new IllegalStateException("Game controller has not yet been created");
         }
         return THE_ONE;
     }
 
-    private final Map<GameVariant, GameModel> models = new EnumMap<>(GameVariant.class);
-    private GameModel game;
+    private final Map<GameVariant, GameModel> gameModelsByVariant = new EnumMap<>(GameVariant.class);
+    private GameModel currentGame;
 
     private GameController(File userDir) {
         super(GameState.values());
         checkNotNull(userDir);
         Logger.info("Creating game models...");
-        models.put(GameVariant.MS_PACMAN,  new MsPacManGameModel(userDir));
-        models.put(GameVariant.PACMAN,     new PacManGameModel(userDir));
-        models.put(GameVariant.PACMAN_XXL, new PacManXXLGameModel(userDir));
-        for (var entry : models.entrySet()) {
+        gameModelsByVariant.put(GameVariant.MS_PACMAN,  new MsPacManGameModel(userDir));
+        gameModelsByVariant.put(GameVariant.PACMAN,     new PacManGameModel(userDir));
+        gameModelsByVariant.put(GameVariant.PACMAN_XXL, new PacManXXLGameModel(userDir));
+        for (var entry : gameModelsByVariant.entrySet()) {
             Logger.info("{}: {}", entry.getKey(), entry.getValue());
         }
         // map state change events to game events
-        addStateChangeListener((oldState, newState) -> game.publishGameEvent(new GameStateChangeEvent(game, oldState, newState)));
+        addStateChangeListener((oldState, newState) -> currentGame.publishGameEvent(new GameStateChangeEvent(currentGame, oldState, newState)));
     }
 
     /**
      * @return The currently selected game (model).
      */
-    public GameModel gameModel() {
-        return game;
+    public GameModel currentGame() {
+        return currentGame;
     }
 
     @SuppressWarnings("unchecked")
     public <T extends GameModel> T gameModel(GameVariant variant) {
         checkNotNull(variant);
-        if (!models.containsKey(variant)) {
+        if (!gameModelsByVariant.containsKey(variant)) {
             Logger.error("No game model for variant {} exists", variant);
             throw new IllegalArgumentException();
         }
-        return (T) models.get(variant);
+        return (T) gameModelsByVariant.get(variant);
     }
 
-    public void selectGameVariant(GameVariant variant) {
+    public void selectGame(GameVariant variant) {
         checkNotNull(variant);
-        GameVariant oldVariant = game != null ? game.variant() : null;
-        game = gameModel(variant);
+        GameVariant oldVariant = currentGame != null ? currentGame.variant() : null;
+        currentGame = gameModel(variant);
         if (oldVariant != variant) {
-            game.publishGameEvent(GameEventType.GAME_VARIANT_CHANGED);
+            currentGame.publishGameEvent(GameEventType.GAME_VARIANT_CHANGED);
         }
     }
 
     @Override
     public GameModel context() {
-        return game;
+        return currentGame;
     }
 
     @Override
     public void update() {
-        game.clearEventLog();
+        currentGame.clearEventLog();
         super.update();
-        var messageList = game.eventLog().createMessageList();
+        var messageList = currentGame.eventLog().createMessageList();
         if (!messageList.isEmpty()) {
             Logger.info("During last simulation step:");
             for (var msg : messageList) {
