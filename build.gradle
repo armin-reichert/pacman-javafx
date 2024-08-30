@@ -8,14 +8,14 @@ buildscript {
     ext.versions = [
         "javafx": "21"
     ]
+    ext.os = OperatingSystem.current()
+    ext.arch = System.getProperty("os.arch")
 }
 
 plugins {
     id "java"
 }
 
-ext["os"]   = OperatingSystem.current()
-ext["arch"] = System.getProperty("os.arch")
 println("Operating System: name='${os.name}' version='${os.version}' arch='${arch}'")
 
 allprojects {
