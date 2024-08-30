@@ -46,22 +46,17 @@ public class Ghost extends Creature implements AnimatedEntity {
     private float speedReturningToHouse;
     private float speedInsideHouse;
     private Animations animations;
-    private Consumer<Ghost> huntingBehaviour = game -> {};
+    private Consumer<Ghost> huntingBehaviour = ghost -> {};
     private List<Vector2i> cannotMoveUpTiles = List.of();
 
     /**
-     * @param id  The ghost ID. One of
-     * {@link GameModel#RED_GHOST},
-     * {@link GameModel#PINK_GHOST},
-     * {@link GameModel#CYAN_GHOST},
-     * {@link GameModel#ORANGE_GHOST}.
-     * @param name readable name like "Blinky"
+     * @param id  The ghost ID. One of {@link GameModel#RED_GHOST}, {@link GameModel#PINK_GHOST},
+     * {@link GameModel#CYAN_GHOST}, {@link GameModel#ORANGE_GHOST}.
      * @param world the world where this ghost lives (optional)
      */
-    public Ghost(byte id, String name, GameWorld world) {
+    public Ghost(byte id, GameWorld world) {
         super(world);
         this.id = checkGhostID(id);
-        this.name = checkNotNull(name);
     }
 
     public void setHuntingBehaviour(Consumer<Ghost> huntingBehaviour) {

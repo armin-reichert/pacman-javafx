@@ -16,8 +16,8 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.PacManGamePacAnimations;
@@ -230,10 +230,10 @@ public class PacManIntroScene extends GameScene2D {
 
         // Ghosts
         final List<Ghost> ghosts = List.of(
-            new Ghost(GameModel.RED_GHOST, "BLINKY", null),
-            new Ghost(GameModel.PINK_GHOST, "PINKY", null),
-            new Ghost(GameModel.CYAN_GHOST, "INKY", null),
-            new Ghost(GameModel.ORANGE_GHOST, "CLYDE", null)
+            new Ghost(GameModel.RED_GHOST, null),
+            new Ghost(GameModel.PINK_GHOST, null),
+            new Ghost(GameModel.CYAN_GHOST, null),
+            new Ghost(GameModel.ORANGE_GHOST, null)
         );
         final String[] ghostCharacters = {
             "SHADOW", "SPEEDY", "BASHFUL", "POKEY"
@@ -249,6 +249,13 @@ public class PacManIntroScene extends GameScene2D {
         boolean titleVisible = false;
         int ghostIndex;
         long ghostKilledTime;
+
+        Data() {
+            ghosts.get(GameModel.RED_GHOST).setName("Blinky");
+            ghosts.get(GameModel.PINK_GHOST).setName("Pinky");
+            ghosts.get(GameModel.CYAN_GHOST).setName("Inky");
+            ghosts.get(GameModel.ORANGE_GHOST).setName("Clyde");
+        }
     }
 
     private Data data;
@@ -351,7 +358,7 @@ public class PacManIntroScene extends GameScene2D {
                 spriteRenderer.drawText(g, text, data.ghostColors[id], font, t(tx + 3), t(ty + 1));
             }
             if (data.ghostNicknameVisible[id]) {
-                var text = '"' + data.ghosts.get(id).name() + '"';
+                var text = '"' + data.ghosts.get(id).name().toUpperCase() + '"';
                 spriteRenderer.drawText(g, text, data.ghostColors[id], font, t(tx + 14), t(ty + 1));
             }
         }

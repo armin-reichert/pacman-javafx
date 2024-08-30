@@ -121,6 +121,9 @@ public class MsPacManGameModel extends GameModel {
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
+        ghosts[RED_GHOST].setName("Blinky");
+        ghosts[PINK_GHOST].setName("Pinky");
+        ghosts[CYAN_GHOST].setName("Inky");
         ghosts[ORANGE_GHOST].setName("Sue");
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
@@ -135,6 +138,9 @@ public class MsPacManGameModel extends GameModel {
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
+        ghosts[RED_GHOST].setName("Blinky");
+        ghosts[PINK_GHOST].setName("Pinky");
+        ghosts[CYAN_GHOST].setName("Inky");
         ghosts[ORANGE_GHOST].setName("Sue");
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }

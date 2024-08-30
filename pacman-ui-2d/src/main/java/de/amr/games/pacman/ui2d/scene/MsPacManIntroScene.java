@@ -167,10 +167,10 @@ public class MsPacManIntroScene extends GameScene2D {
         final Vector2i titlePosition = v2i(TS * 10, TS * 8);
         final Pac msPacMan = new Pac();
         final Ghost[] ghosts = new Ghost[] {
-            new Ghost(RED_GHOST, "Blinky", null),
-            new Ghost(PINK_GHOST, "Pinky", null),
-            new Ghost(CYAN_GHOST, "Inky", null),
-            new Ghost(ORANGE_GHOST, "Sue", null)
+            new Ghost(RED_GHOST, null),
+            new Ghost(PINK_GHOST, null),
+            new Ghost(CYAN_GHOST, null),
+            new Ghost(ORANGE_GHOST, null)
         };
         // Marquee
         final TickTimer marqueeTimer = new TickTimer("marquee-timer");
@@ -179,6 +179,13 @@ public class MsPacManIntroScene extends GameScene2D {
         // Mutable state
         int ghostIndex;
         int waitBeforeRising;
+
+        Data() {
+            ghosts[RED_GHOST].setName("Blinky");
+            ghosts[PINK_GHOST].setName("Pinky");
+            ghosts[CYAN_GHOST].setName("Inky");
+            ghosts[ORANGE_GHOST].setName("Sue");
+        }
     }
 
     private final FiniteStateMachine<SceneState, MsPacManIntroScene> sceneController;

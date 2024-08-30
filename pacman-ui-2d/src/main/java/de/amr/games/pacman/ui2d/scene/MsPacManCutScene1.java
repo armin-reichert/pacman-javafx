@@ -213,8 +213,8 @@ public class MsPacManCutScene1 extends GameScene2D {
     private static class Data {
         final Pac pacMan = new Pac();
         final Pac msPac = new Pac();
-        final Ghost inky = new Ghost(GameModel.CYAN_GHOST, "Inky", null);
-        final Ghost pinky = new Ghost(GameModel.PINK_GHOST, "Pinky", null);
+        final Ghost inky = new Ghost(GameModel.CYAN_GHOST, null);
+        final Ghost pinky = new Ghost(GameModel.PINK_GHOST, null);
         final Entity heart = new Entity();
     }
 

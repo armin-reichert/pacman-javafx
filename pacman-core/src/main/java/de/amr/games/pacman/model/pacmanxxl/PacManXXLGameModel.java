@@ -70,6 +70,10 @@ public class PacManXXLGameModel extends PacManGameModel {
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
+        ghosts[RED_GHOST].setName("Blinky");
+        ghosts[PINK_GHOST].setName("Pinky");
+        ghosts[CYAN_GHOST].setName("Inky");
+        ghosts[ORANGE_GHOST].setName("Clyde");
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
     }
 

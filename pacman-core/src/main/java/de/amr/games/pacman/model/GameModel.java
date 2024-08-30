@@ -184,10 +184,10 @@ public abstract class GameModel {
         pac.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);
 
         ghosts = new Ghost[] {
-            new Ghost(RED_GHOST,    "Blinky", world),
-            new Ghost(PINK_GHOST,   "Pinky", world),
-            new Ghost(CYAN_GHOST,   "Inky", world),
-            new Ghost(ORANGE_GHOST, "Clyde", world)
+            new Ghost(RED_GHOST, world),
+            new Ghost(PINK_GHOST, world),
+            new Ghost(CYAN_GHOST, world),
+            new Ghost(ORANGE_GHOST, world)
         };
 
         ghosts().forEach(ghost -> {
