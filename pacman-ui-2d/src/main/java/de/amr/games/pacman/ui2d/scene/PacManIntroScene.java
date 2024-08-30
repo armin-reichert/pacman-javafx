@@ -294,11 +294,11 @@ public class PacManIntroScene extends GameScene2D {
 
     @Override
     public void handleKeyboardInput(GameContext context) {
-        if (GameAction.ADD_CREDIT.executed()) {
+        if (GameAction.ADD_CREDIT.requested()) {
             context.addCredit();
-        } else if (GameAction.START_GAME.executed()) {
+        } else if (GameAction.START_GAME.requested()) {
             context.startGame();
-        } else if (GameAction.CUTSCENES.executed()) {
+        } else if (GameAction.CUTSCENES.requested()) {
             context.startCutscenesTest();
         }
     }

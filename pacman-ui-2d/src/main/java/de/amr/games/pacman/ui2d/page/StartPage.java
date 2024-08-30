@@ -189,11 +189,11 @@ public class StartPage extends StackPane implements Page {
 
     @Override
     public void handleKeyboardInput(GameContext context) {
-        if (GameAction.ENTER_GAME_PAGE.executed()) {
+        if (GameAction.ENTER_GAME_PAGE.requested()) {
             context.selectGamePage();
-        } else if (GameAction.NEXT_VARIANT.executed()) {
+        } else if (GameAction.NEXT_VARIANT.requested()) {
             context.selectNextGameVariant();
-        } else if (GameAction.PREV_VARIANT.executed()) {
+        } else if (GameAction.PREV_VARIANT.requested()) {
             context.selectPrevGameVariant();
         } else if (Keyboard.pressed(KeyCode.DOWN) || Keyboard.pressed(KeyCode.UP)) {
             switch (this.context.game().variant()) {

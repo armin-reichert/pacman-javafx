@@ -152,9 +152,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, Keyboard::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, Keyboard::onKeyReleased);
         mainScene.setOnKeyPressed(e -> {
-            if (GameAction.FULLSCREEN.executed()) {
+            if (GameAction.FULLSCREEN.requested()) {
                 stage.setFullScreen(true);
-            } else if (GameAction.MUTE.executed()) {
+            } else if (GameAction.MUTE.requested()) {
                 GameSounds.toggleMuted();
             } else {
                 currentPage.handleKeyboardInput(this);

@@ -56,7 +56,7 @@ public enum GameAction {
     /**
      * @return {@code true} if any key combination defined for this game key is pressed
      */
-    public boolean executed() {
+    public boolean requested() {
         if (Keyboard.pressed(input)) {
             Logger.debug("{} pressed", this);
             return true;
