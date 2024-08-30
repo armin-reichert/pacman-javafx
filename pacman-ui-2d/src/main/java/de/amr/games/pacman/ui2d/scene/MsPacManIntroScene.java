@@ -166,12 +166,7 @@ public class MsPacManIntroScene extends GameScene2D {
         final int stopXMsPacMan = TS * 15 + 2;
         final Vector2i titlePosition = v2i(TS * 10, TS * 8);
         final Pac msPacMan = new Pac();
-        final Ghost[] ghosts = new Ghost[] {
-            new Ghost(RED_GHOST, null),
-            new Ghost(PINK_GHOST, null),
-            new Ghost(CYAN_GHOST, null),
-            new Ghost(ORANGE_GHOST, null)
-        };
+        final Ghost[] ghosts = { new Ghost(RED_GHOST), new Ghost(PINK_GHOST), new Ghost(CYAN_GHOST), new Ghost(ORANGE_GHOST) };
         // Marquee
         final TickTimer marqueeTimer = new TickTimer("marquee-timer");
         final int numBulbs = 96;

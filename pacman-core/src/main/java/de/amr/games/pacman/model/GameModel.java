@@ -178,7 +178,8 @@ public abstract class GameModel {
         bonusSymbols[0] = computeBonusSymbol();
         bonusSymbols[1] = computeBonusSymbol();
 
-        pac = new Pac(world);
+        pac = new Pac();
+        pac.setWorld(world);
         pac.setName("Pac-Man");
         pac.reset();
         pac.setBaseSpeed(PPS_AT_100_PERCENT * SEC_PER_TICK);

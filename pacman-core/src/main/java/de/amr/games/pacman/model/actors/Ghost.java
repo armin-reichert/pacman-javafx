@@ -55,7 +55,15 @@ public class Ghost extends Creature implements AnimatedEntity {
      * @param world the world where this ghost lives (optional)
      */
     public Ghost(byte id, GameWorld world) {
-        super(world);
+        this.id = checkGhostID(id);
+        this.world = checkNotNull(world);
+    }
+
+    /**
+     * Constructs a ghost without associated world like the ones in the cut scenes.
+     * @param id ghost ID
+     */
+    public Ghost(byte id) {
         this.id = checkGhostID(id);
     }
 

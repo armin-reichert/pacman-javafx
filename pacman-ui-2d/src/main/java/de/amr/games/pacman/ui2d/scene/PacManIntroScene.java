@@ -230,10 +230,10 @@ public class PacManIntroScene extends GameScene2D {
 
         // Ghosts
         final List<Ghost> ghosts = List.of(
-            new Ghost(GameModel.RED_GHOST, null),
-            new Ghost(GameModel.PINK_GHOST, null),
-            new Ghost(GameModel.CYAN_GHOST, null),
-            new Ghost(GameModel.ORANGE_GHOST, null)
+            new Ghost(GameModel.RED_GHOST),
+            new Ghost(GameModel.PINK_GHOST),
+            new Ghost(GameModel.CYAN_GHOST),
+            new Ghost(GameModel.ORANGE_GHOST)
         );
         final String[] ghostCharacters = {
             "SHADOW", "SPEEDY", "BASHFUL", "POKEY"

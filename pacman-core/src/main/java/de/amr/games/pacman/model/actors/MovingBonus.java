@@ -39,7 +39,7 @@ public class MovingBonus extends Creature implements Bonus {
     private RouteBasedSteering steering;
 
     public MovingBonus(GameWorld world, byte symbol, int points) {
-        super(world);
+        this.world = checkNotNull(world);
         this.symbol = symbol;
         this.points = points;
         reset();

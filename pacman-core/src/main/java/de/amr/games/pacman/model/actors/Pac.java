@@ -7,7 +7,6 @@ package de.amr.games.pacman.model.actors;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameLevel;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.steering.Steering;
 
 /**
@@ -35,14 +34,6 @@ public class Pac extends Creature implements AnimatedEntity {
     private boolean useAutopilot;
     private Animations animations;
     private boolean immune;
-
-    public Pac() {
-        this(null);
-    }
-
-    public Pac(GameWorld world) {
-        super(world);
-    }
 
     public void setName(String name) {
         this.name = name;

@@ -26,8 +26,9 @@ public abstract class Creature extends Entity {
     /** Order in which directions are selected when navigation decision is met. */
     Direction[] DIRECTION_PRIORITY = {UP, LEFT, DOWN, RIGHT};
 
-    protected final GameWorld world;
     protected final MoveResult moveInfo = new MoveResult();
+
+    protected GameWorld world;
 
     protected Direction moveDir;
     protected Direction wishDir;
@@ -38,10 +39,6 @@ public abstract class Creature extends Entity {
     protected boolean gotReverseCommand;
     protected boolean canTeleport;
     protected float corneringSpeedUp;
-
-    protected Creature(GameWorld world) {
-        this.world = world;
-    }
 
     @Override
     public String toString() {
@@ -106,6 +103,10 @@ public abstract class Creature extends Entity {
      */
     public Optional<Vector2i> targetTile() {
         return Optional.ofNullable(targetTile);
+    }
+
+    public void setWorld(GameWorld world) {
+        this.world = checkNotNull(world);
     }
 
     public GameWorld world() {

@@ -50,7 +50,7 @@ public class PacManCutScene3 extends GameScene2D {
         pac.setMoveDir(Direction.LEFT);
         pac.setSpeed(1.25f);
         pac.show();
-        blinky = new Ghost(GameModel.RED_GHOST, null);
+        blinky = new Ghost(GameModel.RED_GHOST);
         blinky.setAnimations(new PacManGameGhostAnimations(blinky, (PacManGameSpriteSheet) spriteRenderer.spriteSheet()));
         blinky.selectAnimation(Ghost.ANIM_BLINKY_PATCHED);
         blinky.startAnimation();
