@@ -4,6 +4,7 @@ ext["os"]   = OperatingSystem.current()
 ext["arch"] = System.getProperty("os.arch")
 
 allprojects {
+
     repositories {
         mavenCentral()
     }
@@ -19,5 +20,17 @@ allprojects {
     //group 'de.amr.games.pacman'
     //version '1.0'
 }
+
+buildscript {
+
+    ext.libs = [
+        "tinylog_api": "org.tinylog:tinylog-api:2.7.0",
+        "tinylog_impl": 'org.tinylog:tinylog-impl:2.7.0'
+    ]
+    ext.versions = [
+        "javafx": "21"
+    ]
+}
+
 
 println "Operating System: name='${os.name}' version='${os.version}' arch='${arch}'"

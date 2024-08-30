@@ -2,9 +2,12 @@ plugins {
     id 'java'
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
 
 dependencies {
     implementation project(':pacman-lib')
-    implementation 'org.tinylog:tinylog-api:2.7.0'
+    implementation libs.tinylog_api
+    implementation libs.tinylog_impl
 }

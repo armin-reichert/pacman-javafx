@@ -2,9 +2,11 @@ plugins {
     id 'java'
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
 
 dependencies {
-    implementation 'org.tinylog:tinylog-api:2.7.0'
-    implementation 'org.tinylog:tinylog-impl:2.7.0'
+    implementation libs["tinylog_api"]
+    implementation libs["tinylog_impl"]
 }

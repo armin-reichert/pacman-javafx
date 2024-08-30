@@ -4,7 +4,9 @@ plugins {
     id 'org.beryx.jlink' version '3.0.1'
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
 
 application {
     mainModule = 'de.amr.games.pacman.mapeditor'
@@ -13,11 +15,12 @@ application {
 
 dependencies {
     implementation project(':pacman-lib')
-    implementation 'org.tinylog:tinylog-api:2.7.0'
+    implementation libs["tinylog_api"]
+    implementation libs["tinylog_impl"]
 }
 
 javafx {
-    version = '21'
+    version = versions.javafx
     modules = ['javafx.base', 'javafx.graphics', 'javafx.controls']
 }
 
