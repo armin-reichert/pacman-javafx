@@ -9,7 +9,6 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.rendering.ClapperboardAnimation;
@@ -44,7 +43,7 @@ public class MsPacManCutScene3 extends GameScene2D {
         public int numBagBounces;
     }
 
-    private static class MsPacManCutScene3Controller {
+    private class MsPacManCutScene3Controller {
 
         public static final byte STATE_FLAP = 0;
         public static final byte STATE_DELIVER_JUNIOR = 1;
@@ -59,10 +58,10 @@ public class MsPacManCutScene3 extends GameScene2D {
             stateTimer.start();
         }
 
-        public void tick(Data data) {
+        public void tick() {
             switch (state) {
                 case STATE_FLAP:
-                    updateStateFlap(data);
+                    updateStateFlap();
                     break;
                 case STATE_DELIVER_JUNIOR:
                     updateStateDeliverJunior(data);
@@ -76,15 +75,15 @@ public class MsPacManCutScene3 extends GameScene2D {
             stateTimer.tick();
         }
 
-        private void updateStateFlap(Data data) {
+        private void updateStateFlap() {
             if (stateTimer.atSecond(1)) {
-                GameController.it().gameModel(GameVariant.MS_PACMAN).publishGameEvent(GameEventType.INTERMISSION_STARTED);
+                context.game().publishGameEvent(GameEventType.INTERMISSION_STARTED);
             } else if (stateTimer.atSecond(3)) {
-                enterStateDeliverJunior(data);
+                enterStateDeliverJunior();
             }
         }
 
-        private void enterStateDeliverJunior(Data data) {
+        private void enterStateDeliverJunior() {
             data.pacMan.setMoveDir(Direction.RIGHT);
             data.pacMan.setPosition(TS * 3, Data.LANE_Y - 4);
             data.pacMan.selectAnimation(Pac.ANIM_HUSBAND_MUNCHING);
@@ -173,7 +172,7 @@ public class MsPacManCutScene3 extends GameScene2D {
 
     @Override
     public void update() {
-        sceneController.tick(data);
+        sceneController.tick();
         clapAnimation.tick();
     }
 

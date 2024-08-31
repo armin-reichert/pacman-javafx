@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
@@ -138,9 +137,9 @@ public class MsPacManIntroScene extends GameScene2D {
             public void onUpdate(MsPacManIntroScene intro) {
                 intro.data.marqueeTimer.tick();
                 if (timer.atSecond(2.0) && !intro.context.game().hasCredit()) {
-                    gameController().changeState(GameState.READY); // demo level
+                    intro.context.gameController().changeState(GameState.READY); // demo level
                 } else if (timer.atSecond(5)) {
-                    gameController().changeState(GameState.CREDIT);
+                    intro.context.gameController().changeState(GameState.CREDIT);
                 }
             }
         };
@@ -150,10 +149,6 @@ public class MsPacManIntroScene extends GameScene2D {
         @Override
         public TickTimer timer() {
             return timer;
-        }
-
-        GameController gameController() {
-            return GameController.it();
         }
     }
 

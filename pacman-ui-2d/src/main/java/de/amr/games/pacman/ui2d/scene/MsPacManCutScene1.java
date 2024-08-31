@@ -9,7 +9,6 @@ import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
@@ -33,7 +32,15 @@ import static de.amr.games.pacman.lib.Globals.t;
  */
 public class MsPacManCutScene1 extends GameScene2D {
 
-    private static class MsPacManCutScene1Controller {
+    private static class Data {
+        final Pac pacMan = new Pac();
+        final Pac msPac = new Pac();
+        final Ghost inky = Ghost.cyan();
+        final Ghost pinky = Ghost.pink();
+        final Entity heart = new Entity();
+    }
+
+    private class MsPacManCutScene1Controller {
 
         public static final byte STATE_FLAP = 0;
         public static final byte STATE_CHASED_BY_GHOSTS = 1;
@@ -58,16 +65,16 @@ public class MsPacManCutScene1 extends GameScene2D {
             stateTimer.start();
         }
 
-        public void tick(Data data) {
+        public void tick() {
             switch (state) {
                 case STATE_FLAP:
-                    updateStateFlap(data);
+                    updateStateFlap();
                     break;
                 case STATE_CHASED_BY_GHOSTS:
-                    updateStateChasedByGhosts(data);
+                    updateStateChasedByGhosts();
                     break;
                 case STATE_COMING_TOGETHER:
-                    updateStateComingTogether(data);
+                    updateStateComingTogether();
                     break;
                 case STATE_IN_HEAVEN:
                     if (stateTimer.hasExpired()) {
@@ -81,15 +88,15 @@ public class MsPacManCutScene1 extends GameScene2D {
             stateTimer.tick();
         }
 
-        private void updateStateFlap(Data data) {
+        private void updateStateFlap() {
             if (stateTimer.atSecond(1)) {
-                GameController.it().gameModel(GameVariant.MS_PACMAN).publishGameEvent(GameEventType.INTERMISSION_STARTED);
+                context.game().publishGameEvent(GameEventType.INTERMISSION_STARTED);
             } else if (stateTimer.hasExpired()) {
-                enterStateChasedByGhosts(data);
+                enterStateChasedByGhosts();
             }
         }
 
-        private void enterStateChasedByGhosts(Data data) {
+        private void enterStateChasedByGhosts() {
             data.pacMan.setMoveDir(Direction.RIGHT);
             data.pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
             data.pacMan.setSpeed(SPEED_PAC_CHASING);
@@ -121,9 +128,9 @@ public class MsPacManCutScene1 extends GameScene2D {
             changeState(STATE_CHASED_BY_GHOSTS, TickTimer.INDEFINITE);
         }
 
-        private void updateStateChasedByGhosts(Data data) {
+        private void updateStateChasedByGhosts() {
             if (data.inky.posX() > TS * 30) {
-                enterStateComingTogether(data);
+                enterStateComingTogether();
             } else {
                 data.pacMan.move();
                 data.msPac.move();
@@ -132,7 +139,7 @@ public class MsPacManCutScene1 extends GameScene2D {
             }
         }
 
-        private void enterStateComingTogether(Data data) {
+        private void enterStateComingTogether() {
             data.msPac.setPosition(TS * (-3), MIDDLE_LANE_Y);
             data.msPac.setMoveDir(Direction.RIGHT);
             data.pinky.setPosition(data.msPac.position().minus(TS * 5, 0));
@@ -144,10 +151,10 @@ public class MsPacManCutScene1 extends GameScene2D {
             changeState(STATE_COMING_TOGETHER, TickTimer.INDEFINITE);
         }
 
-        private void updateStateComingTogether(Data data) {
+        private void updateStateComingTogether() {
             // Pac-Man and Ms. Pac-Man reach end position?
             if (data.pacMan.moveDir() == Direction.UP && data.pacMan.posY() < UPPER_LANE_Y) {
-                enterStateInHeaven(data);
+                enterStateInHeaven();
             }
 
             // Pac-Man and Ms. Pac-Man meet?
@@ -185,7 +192,7 @@ public class MsPacManCutScene1 extends GameScene2D {
             }
         }
 
-        private void enterStateInHeaven(Data data) {
+        private void enterStateInHeaven() {
             data.pacMan.setSpeed(0);
             data.pacMan.setMoveDir(Direction.LEFT);
             data.pacMan.animations().ifPresent(Animations::stopSelected);
@@ -207,14 +214,6 @@ public class MsPacManCutScene1 extends GameScene2D {
 
             changeState(STATE_IN_HEAVEN, 3 * 60);
         }
-    }
-
-    private static class Data {
-        final Pac pacMan = new Pac();
-        final Pac msPac = new Pac();
-        final Ghost inky = Ghost.cyan();
-        final Ghost pinky = Ghost.pink();
-        final Entity heart = new Entity();
     }
 
     private MsPacManCutScene1Controller sceneController;
@@ -246,7 +245,7 @@ public class MsPacManCutScene1 extends GameScene2D {
 
     @Override
     public void update() {
-        sceneController.tick(data);
+        sceneController.tick();
         clapAnimation.tick();
     }
 

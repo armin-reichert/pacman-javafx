@@ -4,11 +4,9 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.timer.TickTimer;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.rendering.ClapperboardAnimation;
@@ -36,7 +34,7 @@ public class MsPacManCutScene2 extends GameScene2D {
         public final Pac msPac = new Pac();
     }
 
-    private static class MsPacManCutScene2Controller {
+    private class MsPacManCutScene2Controller {
 
         public static final byte STATE_FLAP = 0;
         public static final byte STATE_CHASING = 1;
@@ -50,13 +48,13 @@ public class MsPacManCutScene2 extends GameScene2D {
             stateTimer.start();
         }
 
-        public void tick(Data data) {
+        public void tick() {
             switch (state) {
                 case STATE_FLAP:
-                    updateStateFlap(data);
+                    updateStateFlap();
                     break;
                 case STATE_CHASING:
-                    updateStateChasing(data);
+                    updateStateChasing();
                     break;
                 default:
                     throw new IllegalStateException("Illegal state: " + state);
@@ -65,14 +63,14 @@ public class MsPacManCutScene2 extends GameScene2D {
             stateTimer.tick();
         }
 
-        private void updateStateFlap(Data data) {
+        private void updateStateFlap() {
             if (stateTimer.hasExpired()) {
-                GameController.it().gameModel(GameVariant.MS_PACMAN).publishGameEvent(GameEventType.INTERMISSION_STARTED);
-                enterStateChasing(data);
+                context.game().publishGameEvent(GameEventType.INTERMISSION_STARTED);
+                enterStateChasing();
             }
         }
 
-        private void enterStateChasing(Data data) {
+        private void enterStateChasing() {
             data.pacMan.setMoveDir(Direction.RIGHT);
             data.pacMan.selectAnimation(Pac.ANIM_HUSBAND_MUNCHING);
             data.pacMan.animations().ifPresent(Animations::startSelected);
@@ -83,7 +81,7 @@ public class MsPacManCutScene2 extends GameScene2D {
             changeState(STATE_CHASING, TickTimer.INDEFINITE);
         }
 
-        private void updateStateChasing(Data data) {
+        private void updateStateChasing() {
             if (stateTimer.atSecond(4.5)) {
                 data.pacMan.setPosition(TS * (-2), Data.UPPER_LANE_Y);
                 data.pacMan.setMoveDir(Direction.RIGHT);
@@ -122,7 +120,7 @@ public class MsPacManCutScene2 extends GameScene2D {
                 data.msPac.setMoveDir(Direction.RIGHT);
                 data.msPac.setSpeed(4.0f);
             } else if (stateTimer.atSecond(23)) {
-                GameController.it().terminateCurrentState();
+                context.gameController().terminateCurrentState();
                 return;
             }
             data.pacMan.move();
@@ -158,7 +156,7 @@ public class MsPacManCutScene2 extends GameScene2D {
 
     @Override
     public void update() {
-        sceneController.tick(data);
+        sceneController.tick();
         clapAnimation.tick();
     }
 
