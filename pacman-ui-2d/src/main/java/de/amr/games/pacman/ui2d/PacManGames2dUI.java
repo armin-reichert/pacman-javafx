@@ -642,7 +642,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public void selectNextGameVariant() {
         var all = Arrays.asList(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
         var current = all.indexOf(game().variant());
-        var next = current < all.size() - 1 ? all.get(current + 1) : all.get(0);
+        var next = current < all.size() - 1 ? all.get(current + 1) : all.getFirst();
         selectGameVariant(next);
     }
 
@@ -650,7 +650,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public void selectPrevGameVariant() {
         var all = Arrays.asList(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
         var current = all.indexOf(game().variant());
-        var prev = current > 0 ? all.get(current - 1) : all.get(all.size() - 1);
+        var prev = current > 0 ? all.get(current - 1) : all.getLast();
         selectGameVariant(prev);
     }
 
