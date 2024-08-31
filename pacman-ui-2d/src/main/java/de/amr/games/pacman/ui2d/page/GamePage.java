@@ -72,7 +72,10 @@ public class GamePage extends StackPane implements Page {
         dashboardLayer = new DashboardLayer(context);
 
         popupLayer = new PopupLayer(context, decoratedCanvas);
-        popupLayer.prepareSignature(canvasLayer, assets.font("font.monospaced", 9), context.locText("app.signature"));
+        popupLayer.configureSignature(canvasLayer,
+            assets.font("font.monospaced", 10),
+            Color.grayRgb(200),
+            context.locText("app.signature"));
 
         getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
 
@@ -214,11 +217,11 @@ public class GamePage extends StackPane implements Page {
     }
 
     public void showSignature() {
-        popupLayer.signature().show(2, 3);
+        popupLayer.showSignature(1, 3, 5);
     }
 
     public void hideSignature() {
-        popupLayer.signature().hide();
+        popupLayer.hideSignature();
     }
 
     public void toggleDashboard() {

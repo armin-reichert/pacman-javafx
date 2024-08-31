@@ -11,10 +11,15 @@ import de.amr.games.pacman.ui2d.util.CanvasLayoutPane;
 import de.amr.games.pacman.ui2d.util.DecoratedCanvas;
 import de.amr.games.pacman.ui2d.util.FadingPane;
 import de.amr.games.pacman.ui2d.util.Ufx;
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
+import javafx.animation.SequentialTransition;
 import javafx.beans.binding.Bindings;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
 import static de.amr.games.pacman.ui2d.GameParameters.PY_DEBUG_INFO;
@@ -27,7 +32,8 @@ public class PopupLayer extends Pane {
 
     private final GameContext context;
     private final FadingPane helpPopUp = new FadingPane();
-    private final Signature signature = new Signature();
+    private final TextFlow signature = new TextFlow();
+    private Animation signatureAnimation;
 
     public PopupLayer(GameContext context, DecoratedCanvas canvas) {
         this.context = context;
@@ -49,26 +55,49 @@ public class PopupLayer extends Pane {
         mouseTransparentProperty().bind(PY_DEBUG_INFO);
     }
 
-    public Signature signature() {
-        return signature;
-    }
+    public void configureSignature(CanvasLayoutPane canvasPane, Font font, Color color, String... words) {
+        signature.setOpacity(0); // invisible initially
+        signature.getChildren().clear(); // just in case
+        for (String word : words) {
+            var text = new Text(word);
+            text.setFill(color);
+            text.fontProperty().bind(Bindings.createObjectBinding(
+                () -> Font.font(font.getFamily(), canvasPane.scaling() * font.getSize()),
+                canvasPane.scalingPy
+            ));
+            signature.getChildren().add(text);
+        }
 
-    public void prepareSignature(CanvasLayoutPane canvasPane, Font font, String... words) {
-        signature.setWords(words);
-        signature.fontPy.bind(Bindings.createObjectBinding(
-            () -> Font.font(font.getFamily(), canvasPane.scaling() * font.getSize()),
-            canvasPane.scalingPy
-        ));
-        // keep centered over canvas container
+        // keep centered over canvas
         signature.translateXProperty().bind(Bindings.createDoubleBinding(
             () -> 0.5 * (canvasPane.decoratedCanvas().getWidth() - signature.getWidth()),
             canvasPane.scalingPy, canvasPane.decoratedCanvas().widthProperty()
         ));
-        // keep at vertical position over intro scene
+
+        // keep vertical position over intro scene, also when scene gets scaled
         signature.translateYProperty().bind(Bindings.createDoubleBinding(
             () -> canvasPane.scaling() * 30,
             canvasPane.scalingPy, canvasPane.decoratedCanvas().heightProperty()
         ));
+    }
+
+    public void showSignature(double delaySec, double fadeInSec, double fadeOutSec) {
+        var fadeIn = new FadeTransition(Duration.seconds(fadeInSec), signature);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        var fadeOut = new FadeTransition(Duration.seconds(fadeOutSec), signature);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        signatureAnimation = new SequentialTransition(fadeIn, fadeOut);
+        signatureAnimation.setDelay(Duration.seconds(delaySec));
+        signatureAnimation.play();
+    }
+
+    public void hideSignature() {
+        if (signatureAnimation != null) {
+            signatureAnimation.stop();
+            signature.setOpacity(0);
+        }
     }
 
     public void showHelp(double scaling) {
