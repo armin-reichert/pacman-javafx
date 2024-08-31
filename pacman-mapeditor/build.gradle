@@ -9,6 +9,12 @@ application {
     mainClass = 'de.amr.games.pacman.mapeditor.Main'
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 dependencies {
     implementation project(':pacman-lib')
     implementation libs.tinylog_api

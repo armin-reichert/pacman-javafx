@@ -9,6 +9,12 @@ application {
     mainClass = 'de.amr.games.pacman.ui2d.Main'
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 dependencies {
     implementation project(':pacman-lib')
     implementation project(':pacman-core')
