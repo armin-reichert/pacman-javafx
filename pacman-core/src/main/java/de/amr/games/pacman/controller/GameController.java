@@ -108,12 +108,5 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     public void update() {
         currentGame.clearEventLog();
         super.update();
-        var messageList = currentGame.eventLog().createMessageList();
-        if (!messageList.isEmpty()) {
-            Logger.info("During last simulation step:");
-            for (var msg : messageList) {
-                Logger.info("- " + msg);
-            }
-        }
     }
 }

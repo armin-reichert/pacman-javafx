@@ -109,6 +109,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             try {
                 gameController().update();
                 currentGameScene().ifPresent(GameScene::update);
+                logUpdateResult();
             } catch (Exception x) {
                 clock.stop();
                 Logger.error("Game update caused an error, game clock stopped!");
@@ -130,6 +131,16 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                 Logger.error(x);
             }
         });
+    }
+
+    private void logUpdateResult() {
+        var messageList = game().eventLog().createMessageList();
+        if (!messageList.isEmpty()) {
+            Logger.info("Simulation step #{}:", clock.getUpdateCount());
+            for (var msg : messageList) {
+                Logger.info("- " + msg);
+            }
+        }
     }
 
     /**
