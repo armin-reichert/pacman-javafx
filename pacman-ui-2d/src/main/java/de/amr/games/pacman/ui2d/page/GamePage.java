@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
@@ -111,7 +111,7 @@ public class GamePage extends StackPane implements Page {
     }
 
     @Override
-    public void handleKeyboardInput(GameContext context) {
+    public void handleKeyboardInput() {
         if (GameAction.AUTOPILOT.requested()) {
             context.toggleAutopilot();
         } else if (GameAction.BOOT.requested()) {
@@ -147,7 +147,7 @@ public class GamePage extends StackPane implements Page {
         } else if (GameAction.OPEN_EDITOR.requested()) {
             context.openMapEditor();
         } else {
-            this.context.currentGameScene().ifPresent(gameScene -> gameScene.handleKeyboardInput(context));
+            context.currentGameScene().ifPresent(gameScene -> gameScene.handleKeyboardInput(context));
         }
     }
 

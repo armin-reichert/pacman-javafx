@@ -98,8 +98,4 @@ public class EditorPage extends BorderPane implements Page {
     @Override
     public void setSize(double width, double height) {
     }
-
-    @Override
-    public void handleKeyboardInput(GameContext context) {
-    }
 }

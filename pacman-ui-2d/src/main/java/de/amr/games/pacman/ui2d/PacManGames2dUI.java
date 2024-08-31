@@ -168,7 +168,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             } else if (GameAction.MUTE.requested()) {
                 GameSounds.toggleMuted();
             } else {
-                currentPage.handleKeyboardInput(this);
+                currentPage.handleKeyboardInput();
             }
         });
         mainScene.setOnContextMenuRequested(e -> {
