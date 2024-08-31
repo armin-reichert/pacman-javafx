@@ -2,8 +2,8 @@ import org.gradle.internal.os.OperatingSystem
 
 buildscript {
     ext.libs = [
-        "tinylog_api": "org.tinylog:tinylog-api:2.7.0",
-        "tinylog_impl": 'org.tinylog:tinylog-impl:2.7.0'
+        "tinylog_api"  : "org.tinylog:tinylog-api:2.7.0",
+        "tinylog_impl" : "org.tinylog:tinylog-impl:2.7.0"
     ]
     ext.versions = [
         "javafx": "21"
@@ -12,19 +12,11 @@ buildscript {
     ext.arch = System.getProperty("os.arch")
 }
 
-plugins {
-    id "java"
-}
-
 println("Operating System: name='${os.name}' version='${os.version}' arch='${arch}'")
 
 allprojects {
     repositories {
         mavenCentral()
-    }
-
-    java {
-        sourceCompatibility = JavaVersion.VERSION_17
     }
 
     tasks.withType(JavaCompile).configureEach {
