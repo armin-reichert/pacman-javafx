@@ -26,13 +26,9 @@ import static de.amr.games.pacman.lib.Globals.t;
  */
 public class MsPacManCutScene2 extends GameScene2D {
 
-    private static class Data {
-        public static final int UPPER_LANE_Y = TS * 12;
-        public static final int MIDDLE_LANE_Y = TS * 18;
-        public static final int LOWER_LANE_Y = TS * 24;
-        public final Pac pacMan = new Pac();
-        public final Pac msPac = new Pac();
-    }
+    static final int UPPER_LANE_Y = TS * 12;
+    static final int MIDDLE_LANE_Y = TS * 18;
+    static final int LOWER_LANE_Y = TS * 24;
 
     private class MsPacManCutScene2Controller {
 
@@ -71,64 +67,65 @@ public class MsPacManCutScene2 extends GameScene2D {
         }
 
         private void enterStateChasing() {
-            data.pacMan.setMoveDir(Direction.RIGHT);
-            data.pacMan.selectAnimation(Pac.ANIM_HUSBAND_MUNCHING);
-            data.pacMan.animations().ifPresent(Animations::startSelected);
-            data.msPac.setMoveDir(Direction.RIGHT);
-            data.msPac.selectAnimation(Pac.ANIM_MUNCHING);
-            data.msPac.animations().ifPresent(Animations::startSelected);
+            pacMan.setMoveDir(Direction.RIGHT);
+            pacMan.selectAnimation(Pac.ANIM_HUSBAND_MUNCHING);
+            pacMan.animations().ifPresent(Animations::startSelected);
+            msPacMan.setMoveDir(Direction.RIGHT);
+            msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
+            msPacMan.animations().ifPresent(Animations::startSelected);
 
             changeState(STATE_CHASING, TickTimer.INDEFINITE);
         }
 
         private void updateStateChasing() {
             if (stateTimer.atSecond(4.5)) {
-                data.pacMan.setPosition(TS * (-2), Data.UPPER_LANE_Y);
-                data.pacMan.setMoveDir(Direction.RIGHT);
-                data.pacMan.setSpeed(2.0f);
-                data.pacMan.show();
-                data.msPac.setPosition(TS * (-8), Data.UPPER_LANE_Y);
-                data.msPac.setMoveDir(Direction.RIGHT);
-                data.msPac.setSpeed(2.0f);
-                data.msPac.show();
+                pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
+                pacMan.setMoveDir(Direction.RIGHT);
+                pacMan.setSpeed(2.0f);
+                pacMan.show();
+                msPacMan.setPosition(TS * (-8), UPPER_LANE_Y);
+                msPacMan.setMoveDir(Direction.RIGHT);
+                msPacMan.setSpeed(2.0f);
+                msPacMan.show();
             } else if (stateTimer.atSecond(9)) {
-                data.pacMan.setPosition(TS * 36, Data.LOWER_LANE_Y);
-                data.pacMan.setMoveDir(Direction.LEFT);
-                data.pacMan.setSpeed(2.0f);
-                data.msPac.setPosition(TS * 30, Data.LOWER_LANE_Y);
-                data.msPac.setMoveDir(Direction.LEFT);
-                data.msPac.setSpeed(2.0f);
+                pacMan.setPosition(TS * 36, LOWER_LANE_Y);
+                pacMan.setMoveDir(Direction.LEFT);
+                pacMan.setSpeed(2.0f);
+                msPacMan.setPosition(TS * 30, LOWER_LANE_Y);
+                msPacMan.setMoveDir(Direction.LEFT);
+                msPacMan.setSpeed(2.0f);
             } else if (stateTimer.atSecond(13.5)) {
-                data.pacMan.setMoveDir(Direction.RIGHT);
-                data.pacMan.setSpeed(2.0f);
-                data.msPac.setPosition(TS * (-8), Data.MIDDLE_LANE_Y);
-                data.msPac.setMoveDir(Direction.RIGHT);
-                data.msPac.setSpeed(2.0f);
-                data.pacMan.setPosition(TS * (-2), Data.MIDDLE_LANE_Y);
+                pacMan.setMoveDir(Direction.RIGHT);
+                pacMan.setSpeed(2.0f);
+                msPacMan.setPosition(TS * (-8), MIDDLE_LANE_Y);
+                msPacMan.setMoveDir(Direction.RIGHT);
+                msPacMan.setSpeed(2.0f);
+                pacMan.setPosition(TS * (-2), MIDDLE_LANE_Y);
             } else if (stateTimer.atSecond(17.5)) {
-                data.pacMan.setPosition(TS * 42, Data.UPPER_LANE_Y);
-                data.pacMan.setMoveDir(Direction.LEFT);
-                data.pacMan.setSpeed(4.0f);
-                data.msPac.setPosition(TS * 30, Data.UPPER_LANE_Y);
-                data.msPac.setMoveDir(Direction.LEFT);
-                data.msPac.setSpeed(4.0f);
+                pacMan.setPosition(TS * 42, UPPER_LANE_Y);
+                pacMan.setMoveDir(Direction.LEFT);
+                pacMan.setSpeed(4.0f);
+                msPacMan.setPosition(TS * 30, UPPER_LANE_Y);
+                msPacMan.setMoveDir(Direction.LEFT);
+                msPacMan.setSpeed(4.0f);
             } else if (stateTimer.atSecond(18.5)) {
-                data.pacMan.setPosition(TS * (-2), Data.LOWER_LANE_Y);
-                data.pacMan.setMoveDir(Direction.RIGHT);
-                data.pacMan.setSpeed(4.0f);
-                data.msPac.setPosition(TS * (-14), Data.LOWER_LANE_Y);
-                data.msPac.setMoveDir(Direction.RIGHT);
-                data.msPac.setSpeed(4.0f);
+                pacMan.setPosition(TS * (-2), LOWER_LANE_Y);
+                pacMan.setMoveDir(Direction.RIGHT);
+                pacMan.setSpeed(4.0f);
+                msPacMan.setPosition(TS * (-14), LOWER_LANE_Y);
+                msPacMan.setMoveDir(Direction.RIGHT);
+                msPacMan.setSpeed(4.0f);
             } else if (stateTimer.atSecond(23)) {
                 context.gameController().terminateCurrentState();
                 return;
             }
-            data.pacMan.move();
-            data.msPac.move();
+            pacMan.move();
+            msPacMan.move();
         }
     }
 
-    private Data data;
+    private Pac pacMan;
+    private Pac msPacMan;
     private MsPacManCutScene2Controller sceneController;
     private ClapperboardAnimation clapAnimation;
 
@@ -144,9 +141,10 @@ public class MsPacManCutScene2 extends GameScene2D {
 
         var sheet = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
 
-        data = new Data();
-        data.msPac.setAnimations(new MsPacManGamePacAnimations(data.msPac, sheet));
-        data.pacMan.setAnimations(new MsPacManGamePacAnimations(data.pacMan, sheet));
+        pacMan = new Pac();
+        msPacMan = new Pac();
+        msPacMan.setAnimations(new MsPacManGamePacAnimations(msPacMan, sheet));
+        pacMan.setAnimations(new MsPacManGamePacAnimations(pacMan, sheet));
         clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
         clapAnimation.start();
 
@@ -166,8 +164,8 @@ public class MsPacManCutScene2 extends GameScene2D {
             context.assets().font("font.arcade", s(8)),
             context.assets().color("palette.pale"),
             clapAnimation, t(3), t(10));
-        spriteRenderer.drawPac(g, data.msPac);
-        spriteRenderer.drawPac(g, data.pacMan);
+        spriteRenderer.drawPac(g, msPacMan);
+        spriteRenderer.drawPac(g, pacMan);
         drawLevelCounter(g);
     }
 }

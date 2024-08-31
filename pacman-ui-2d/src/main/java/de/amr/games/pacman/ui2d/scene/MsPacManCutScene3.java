@@ -31,18 +31,6 @@ import static de.amr.games.pacman.lib.Globals.t;
  */
 public class MsPacManCutScene3 extends GameScene2D {
 
-    private static class Data {
-        public static final int LANE_Y = TS * 24;
-
-        public final Pac pacMan = new Pac();
-        public final Pac msPacMan = new Pac();
-        public final Entity stork = new Entity();
-        public final Entity bag = new Entity();
-
-        public boolean bagOpen;
-        public int numBagBounces;
-    }
-
     private class MsPacManCutScene3Controller {
 
         public static final byte STATE_FLAP = 0;
@@ -64,10 +52,10 @@ public class MsPacManCutScene3 extends GameScene2D {
                     updateStateFlap();
                     break;
                 case STATE_DELIVER_JUNIOR:
-                    updateStateDeliverJunior(data);
+                    updateStateDeliverJunior();
                     break;
                 case STATE_STORK_LEAVES_SCENE:
-                    updateStateStorkLeavesScene(data);
+                    updateStateStorkLeavesScene();
                     break;
                 default:
                     throw new IllegalStateException("Illegal state: " + state);
@@ -84,63 +72,71 @@ public class MsPacManCutScene3 extends GameScene2D {
         }
 
         private void enterStateDeliverJunior() {
-            data.pacMan.setMoveDir(Direction.RIGHT);
-            data.pacMan.setPosition(TS * 3, Data.LANE_Y - 4);
-            data.pacMan.selectAnimation(Pac.ANIM_HUSBAND_MUNCHING);
-            data.pacMan.show();
+            pacMan.setMoveDir(Direction.RIGHT);
+            pacMan.setPosition(TS * 3, LANE_Y - 4);
+            pacMan.selectAnimation(Pac.ANIM_HUSBAND_MUNCHING);
+            pacMan.show();
 
-            data.msPacMan.setMoveDir(Direction.RIGHT);
-            data.msPacMan.setPosition(TS * 5, Data.LANE_Y - 4);
-            data.msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
-            data.msPacMan.show();
+            msPacMan.setMoveDir(Direction.RIGHT);
+            msPacMan.setPosition(TS * 5, LANE_Y - 4);
+            msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
+            msPacMan.show();
 
-            data.stork.setPosition(TS * 30, TS * 12);
-            data.stork.setVelocity(-0.8f, 0);
-            data.stork.show();
+            stork.setPosition(TS * 30, TS * 12);
+            stork.setVelocity(-0.8f, 0);
+            stork.show();
 
-            data.bag.setPosition(data.stork.position().plus(-14, 3));
-            data.bag.setVelocity(data.stork.velocity());
-            data.bag.setAcceleration(Vector2f.ZERO);
-            data.bag.show();
-            data.bagOpen = false;
-            data.numBagBounces = 0;
+            bag.setPosition(stork.position().plus(-14, 3));
+            bag.setVelocity(stork.velocity());
+            bag.setAcceleration(Vector2f.ZERO);
+            bag.show();
+            bagOpen = false;
+            numBagBounces = 0;
 
             changeState(STATE_DELIVER_JUNIOR, TickTimer.INDEFINITE);
         }
 
-        private void updateStateDeliverJunior(Data data) {
-            data.stork.move();
-            data.bag.move();
+        private void updateStateDeliverJunior() {
+            stork.move();
+            bag.move();
 
             // release bag from storks beak?
-            if (data.stork.tile().x() == 20) {
-                data.bag.setAcceleration(0, 0.04f); // gravity
-                data.stork.setVelocity(-1, 0);
+            if (stork.tile().x() == 20) {
+                bag.setAcceleration(0, 0.04f); // gravity
+                stork.setVelocity(-1, 0);
             }
 
             // (closed) bag reaches ground for first time?
-            if (!data.bagOpen && data.bag.posY() > Data.LANE_Y) {
-                ++data.numBagBounces;
-                if (data.numBagBounces < 3) {
-                    data.bag.setVelocity(-0.2f, -1f / data.numBagBounces);
-                    data.bag.setPosY(Data.LANE_Y);
+            if (!bagOpen && bag.posY() > LANE_Y) {
+                ++numBagBounces;
+                if (numBagBounces < 3) {
+                    bag.setVelocity(-0.2f, -1f / numBagBounces);
+                    bag.setPosY(LANE_Y);
                 } else {
-                    data.bagOpen = true;
-                    data.bag.setVelocity(Vector2f.ZERO);
+                    bagOpen = true;
+                    bag.setVelocity(Vector2f.ZERO);
                     changeState(STATE_STORK_LEAVES_SCENE, 3 * 60);
                 }
             }
         }
 
-        private void updateStateStorkLeavesScene(Data data) {
-            data.stork.move();
+        private void updateStateStorkLeavesScene() {
+            stork.move();
             if (stateTimer.hasExpired()) {
                 GameController.it().terminateCurrentState();
             }
         }
     }
 
-    private Data data;
+    public static final int LANE_Y = TS * 24;
+
+    private Pac pacMan;
+    private Pac msPacMan;
+    private Entity stork;
+    private Entity bag;
+    private boolean bagOpen;
+    private int numBagBounces;
+
     private MsPacManCutScene3Controller sceneController;
     private ClapperboardAnimation clapAnimation;
     private SpriteAnimation storkAnimation;
@@ -158,9 +154,13 @@ public class MsPacManCutScene3 extends GameScene2D {
 
         sheet = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
 
-        data = new Data();
-        data.msPacMan.setAnimations(new MsPacManGamePacAnimations(data.msPacMan, sheet));
-        data.pacMan.setAnimations(new MsPacManGamePacAnimations(data.pacMan, sheet));
+        pacMan = new Pac();
+        msPacMan = new Pac();
+        stork = new Entity();
+        bag = new Entity();
+
+        msPacMan.setAnimations(new MsPacManGamePacAnimations(msPacMan, sheet));
+        pacMan.setAnimations(new MsPacManGamePacAnimations(pacMan, sheet));
         storkAnimation = sheet.createStorkFlyingAnimation();
         storkAnimation.start();
         clapAnimation = new ClapperboardAnimation("3", "JUNIOR");
@@ -182,10 +182,10 @@ public class MsPacManCutScene3 extends GameScene2D {
             context.assets().font("font.arcade", s(8)),
             context.assets().color("palette.pale"),
             clapAnimation, t(3), t(10));
-        spriteRenderer.drawPac(g, data.msPacMan);
-        spriteRenderer.drawPac(g, data.pacMan);
-        spriteRenderer.drawEntitySprite(g, data.stork, storkAnimation.currentSprite());
-        spriteRenderer.drawEntitySprite(g, data.bag, data.bagOpen ? sheet.juniorPacSprite() : sheet.blueBagSprite());
+        spriteRenderer.drawPac(g, msPacMan);
+        spriteRenderer.drawPac(g, pacMan);
+        spriteRenderer.drawEntitySprite(g, stork, storkAnimation.currentSprite());
+        spriteRenderer.drawEntitySprite(g, bag, bagOpen ? sheet.juniorPacSprite() : sheet.blueBagSprite());
         drawLevelCounter(g);
     }
 }

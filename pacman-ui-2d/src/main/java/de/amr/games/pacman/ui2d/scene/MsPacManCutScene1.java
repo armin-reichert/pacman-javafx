@@ -32,29 +32,21 @@ import static de.amr.games.pacman.lib.Globals.t;
  */
 public class MsPacManCutScene1 extends GameScene2D {
 
-    private static class Data {
-        final Pac pacMan = new Pac();
-        final Pac msPac = new Pac();
-        final Ghost inky = Ghost.cyan();
-        final Ghost pinky = Ghost.pink();
-        final Entity heart = new Entity();
-    }
+    static final int UPPER_LANE_Y = TS * 12;
+    static final int MIDDLE_LANE_Y = TS * 18;
+    static final int LOWER_LANE_Y = TS * 24;
+
+    static final float SPEED_PAC_CHASING = 1.125f;
+    static final float SPEED_PAC_RISING = 0.75f;
+    static final float SPEED_GHOST_AFTER_COLLISION = 0.3f;
+    static final float SPEED_GHOST_CHASING = 1.25f;
 
     private class MsPacManCutScene1Controller {
 
-        public static final byte STATE_FLAP = 0;
-        public static final byte STATE_CHASED_BY_GHOSTS = 1;
-        public static final byte STATE_COMING_TOGETHER = 2;
-        public static final byte STATE_IN_HEAVEN = 3;
-
-        public static final int UPPER_LANE_Y = TS * 12;
-        public static final int MIDDLE_LANE_Y = TS * 18;
-        public static final int LOWER_LANE_Y = TS * 24;
-
-        public static final float SPEED_PAC_CHASING = 1.125f;
-        public static final float SPEED_PAC_RISING = 0.75f;
-        public static final float SPEED_GHOST_AFTER_COLLISION = 0.3f;
-        public static final float SPEED_GHOST_CHASING = 1.25f;
+        static final byte STATE_FLAP = 0;
+        static final byte STATE_CHASED_BY_GHOSTS = 1;
+        static final byte STATE_COMING_TOGETHER = 2;
+        static final byte STATE_IN_HEAVEN = 3;
 
         private byte state;
         private final TickTimer stateTimer = new TickTimer("MsPacManIntermission1");
@@ -97,127 +89,133 @@ public class MsPacManCutScene1 extends GameScene2D {
         }
 
         private void enterStateChasedByGhosts() {
-            data.pacMan.setMoveDir(Direction.RIGHT);
-            data.pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
-            data.pacMan.setSpeed(SPEED_PAC_CHASING);
-            data.pacMan.selectAnimation(Pac.ANIM_HUSBAND_MUNCHING);
-            data.pacMan.animations().ifPresent(Animations::startSelected);
-            data.pacMan.show();
+            pacMan.setMoveDir(Direction.RIGHT);
+            pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
+            pacMan.setSpeed(SPEED_PAC_CHASING);
+            pacMan.selectAnimation(Pac.ANIM_HUSBAND_MUNCHING);
+            pacMan.animations().ifPresent(Animations::startSelected);
+            pacMan.show();
 
-            data.inky.setMoveAndWishDir(Direction.RIGHT);
-            data.inky.setPosition(data.pacMan.position().minus(TS * 6, 0));
-            data.inky.setSpeed(SPEED_GHOST_CHASING);
-            data.inky.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
-            data.inky.startAnimation();
-            data.inky.show();
+            inky.setMoveAndWishDir(Direction.RIGHT);
+            inky.setPosition(pacMan.position().minus(TS * 6, 0));
+            inky.setSpeed(SPEED_GHOST_CHASING);
+            inky.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
+            inky.startAnimation();
+            inky.show();
 
-            data.msPac.setMoveDir(Direction.LEFT);
-            data.msPac.setPosition(TS * 30, LOWER_LANE_Y);
-            data.msPac.setSpeed(SPEED_PAC_CHASING);
-            data.msPac.selectAnimation(Pac.ANIM_MUNCHING);
-            data.msPac.animations().ifPresent(Animations::startSelected);
-            data.msPac.show();
+            msPac.setMoveDir(Direction.LEFT);
+            msPac.setPosition(TS * 30, LOWER_LANE_Y);
+            msPac.setSpeed(SPEED_PAC_CHASING);
+            msPac.selectAnimation(Pac.ANIM_MUNCHING);
+            msPac.animations().ifPresent(Animations::startSelected);
+            msPac.show();
 
-            data.pinky.setMoveAndWishDir(Direction.LEFT);
-            data.pinky.setPosition(data.msPac.position().plus(TS * 6, 0));
-            data.pinky.setSpeed(SPEED_GHOST_CHASING);
-            data.pinky.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
-            data.pinky.startAnimation();
-            data.pinky.show();
+            pinky.setMoveAndWishDir(Direction.LEFT);
+            pinky.setPosition(msPac.position().plus(TS * 6, 0));
+            pinky.setSpeed(SPEED_GHOST_CHASING);
+            pinky.selectAnimation(Ghost.ANIM_GHOST_NORMAL);
+            pinky.startAnimation();
+            pinky.show();
 
             changeState(STATE_CHASED_BY_GHOSTS, TickTimer.INDEFINITE);
         }
 
         private void updateStateChasedByGhosts() {
-            if (data.inky.posX() > TS * 30) {
+            if (inky.posX() > TS * 30) {
                 enterStateComingTogether();
             } else {
-                data.pacMan.move();
-                data.msPac.move();
-                data.inky.move();
-                data.pinky.move();
+                pacMan.move();
+                msPac.move();
+                inky.move();
+                pinky.move();
             }
         }
 
         private void enterStateComingTogether() {
-            data.msPac.setPosition(TS * (-3), MIDDLE_LANE_Y);
-            data.msPac.setMoveDir(Direction.RIGHT);
-            data.pinky.setPosition(data.msPac.position().minus(TS * 5, 0));
-            data.pinky.setMoveAndWishDir(Direction.RIGHT);
-            data.pacMan.setPosition(TS * 31, MIDDLE_LANE_Y);
-            data.pacMan.setMoveDir(Direction.LEFT);
-            data.inky.setPosition(data.pacMan.position().plus(TS * 5, 0));
-            data.inky.setMoveAndWishDir(Direction.LEFT);
+            msPac.setPosition(TS * (-3), MIDDLE_LANE_Y);
+            msPac.setMoveDir(Direction.RIGHT);
+            pinky.setPosition(msPac.position().minus(TS * 5, 0));
+            pinky.setMoveAndWishDir(Direction.RIGHT);
+            pacMan.setPosition(TS * 31, MIDDLE_LANE_Y);
+            pacMan.setMoveDir(Direction.LEFT);
+            inky.setPosition(pacMan.position().plus(TS * 5, 0));
+            inky.setMoveAndWishDir(Direction.LEFT);
             changeState(STATE_COMING_TOGETHER, TickTimer.INDEFINITE);
         }
 
         private void updateStateComingTogether() {
             // Pac-Man and Ms. Pac-Man reach end position?
-            if (data.pacMan.moveDir() == Direction.UP && data.pacMan.posY() < UPPER_LANE_Y) {
+            if (pacMan.moveDir() == Direction.UP && pacMan.posY() < UPPER_LANE_Y) {
                 enterStateInHeaven();
             }
 
             // Pac-Man and Ms. Pac-Man meet?
-            else if (data.pacMan.moveDir() == Direction.LEFT && data.pacMan.posX() - data.msPac.posX() < TS * (2)) {
-                data.pacMan.setMoveDir(Direction.UP);
-                data.pacMan.setSpeed(SPEED_PAC_RISING);
-                data.msPac.setMoveDir(Direction.UP);
-                data.msPac.setSpeed(SPEED_PAC_RISING);
+            else if (pacMan.moveDir() == Direction.LEFT && pacMan.posX() - msPac.posX() < TS * (2)) {
+                pacMan.setMoveDir(Direction.UP);
+                pacMan.setSpeed(SPEED_PAC_RISING);
+                msPac.setMoveDir(Direction.UP);
+                msPac.setSpeed(SPEED_PAC_RISING);
             }
 
             // Inky and Pinky collide?
-            else if (data.inky.moveDir() == Direction.LEFT && data.inky.posX() - data.pinky.posX() < TS * (2)) {
-                data.inky.setMoveAndWishDir(Direction.RIGHT);
-                data.inky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
-                data.inky.setVelocity(data.inky.velocity().minus(0, 2.0f));
-                data.inky.setAcceleration(0, 0.4f);
+            else if (inky.moveDir() == Direction.LEFT && inky.posX() - pinky.posX() < TS * (2)) {
+                inky.setMoveAndWishDir(Direction.RIGHT);
+                inky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
+                inky.setVelocity(inky.velocity().minus(0, 2.0f));
+                inky.setAcceleration(0, 0.4f);
 
-                data.pinky.setMoveAndWishDir(Direction.LEFT);
-                data.pinky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
-                data.pinky.setVelocity(data.pinky.velocity().minus(0, 2.0f));
-                data.pinky.setAcceleration(0, 0.4f);
+                pinky.setMoveAndWishDir(Direction.LEFT);
+                pinky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
+                pinky.setVelocity(pinky.velocity().minus(0, 2.0f));
+                pinky.setAcceleration(0, 0.4f);
             } else {
-                data.pacMan.move();
-                data.msPac.move();
-                data.inky.move();
-                data.pinky.move();
-                if (data.inky.posY() > MIDDLE_LANE_Y) {
-                    data.inky.setPosition(data.inky.posX(), MIDDLE_LANE_Y);
-                    data.inky.setAcceleration(Vector2f.ZERO);
+                pacMan.move();
+                msPac.move();
+                inky.move();
+                pinky.move();
+                if (inky.posY() > MIDDLE_LANE_Y) {
+                    inky.setPosition(inky.posX(), MIDDLE_LANE_Y);
+                    inky.setAcceleration(Vector2f.ZERO);
                 }
-                if (data.pinky.posY() > MIDDLE_LANE_Y) {
-                    data.pinky.setPosition(data.pinky.posX(), MIDDLE_LANE_Y);
-                    data.pinky.setAcceleration(Vector2f.ZERO);
+                if (pinky.posY() > MIDDLE_LANE_Y) {
+                    pinky.setPosition(pinky.posX(), MIDDLE_LANE_Y);
+                    pinky.setAcceleration(Vector2f.ZERO);
                 }
             }
         }
 
         private void enterStateInHeaven() {
-            data.pacMan.setSpeed(0);
-            data.pacMan.setMoveDir(Direction.LEFT);
-            data.pacMan.animations().ifPresent(Animations::stopSelected);
-            data.pacMan.animations().ifPresent(Animations::resetSelected);
+            pacMan.setSpeed(0);
+            pacMan.setMoveDir(Direction.LEFT);
+            pacMan.animations().ifPresent(Animations::stopSelected);
+            pacMan.animations().ifPresent(Animations::resetSelected);
 
-            data.msPac.setSpeed(0);
-            data.msPac.setMoveDir(Direction.RIGHT);
-            data.msPac.animations().ifPresent(Animations::stopSelected);
-            data.msPac.animations().ifPresent(Animations::resetSelected);
+            msPac.setSpeed(0);
+            msPac.setMoveDir(Direction.RIGHT);
+            msPac.animations().ifPresent(Animations::stopSelected);
+            msPac.animations().ifPresent(Animations::resetSelected);
 
-            data.inky.setSpeed(0);
-            data.inky.hide();
+            inky.setSpeed(0);
+            inky.hide();
 
-            data.pinky.setSpeed(0);
-            data.pinky.hide();
+            pinky.setSpeed(0);
+            pinky.hide();
 
-            data.heart.setPosition((data.pacMan.posX() + data.msPac.posX()) / 2, data.pacMan.posY() - TS * (2));
-            data.heart.show();
+            heart.setPosition((pacMan.posX() + msPac.posX()) / 2, pacMan.posY() - TS * (2));
+            heart.show();
 
             changeState(STATE_IN_HEAVEN, 3 * 60);
         }
     }
 
     private MsPacManCutScene1Controller sceneController;
-    private Data data;
+
+    private Pac pacMan;
+    private Pac msPac;
+    private Ghost inky;
+    private Ghost pinky;
+    private Entity heart;
+
     private ClapperboardAnimation clapAnimation;
     private MsPacManGameSpriteSheet sheet;
 
@@ -231,11 +229,15 @@ public class MsPacManCutScene1 extends GameScene2D {
         super.init();
         context.setScoreVisible(true);
         sheet = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
-        data = new Data();
-        data.msPac.setAnimations(new MsPacManGamePacAnimations(data.msPac, sheet));
-        data.pacMan.setAnimations(new MsPacManGamePacAnimations(data.pacMan, sheet));
-        data.inky.setAnimations(new MsPacManGameGhostAnimations(data.inky, sheet));
-        data.pinky.setAnimations(new MsPacManGameGhostAnimations(data.pinky, sheet));
+        pacMan = new Pac();
+        msPac = new Pac();
+        inky = Ghost.cyan();
+        pinky = Ghost.pink();
+        heart = new Entity();
+        msPac.setAnimations(new MsPacManGamePacAnimations(msPac, sheet));
+        pacMan.setAnimations(new MsPacManGamePacAnimations(pacMan, sheet));
+        inky.setAnimations(new MsPacManGameGhostAnimations(inky, sheet));
+        pinky.setAnimations(new MsPacManGameGhostAnimations(pinky, sheet));
         clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapAnimation.start();
 
@@ -255,11 +257,11 @@ public class MsPacManCutScene1 extends GameScene2D {
             context.assets().font("font.arcade", s(8)),
             context.assets().color("palette.pale"),
             clapAnimation, t(3), t(10));
-        spriteRenderer.drawPac(g, data.msPac);
-        spriteRenderer.drawPac(g, data.pacMan);
-        spriteRenderer.drawGhost(g, data.inky);
-        spriteRenderer.drawGhost(g, data.pinky);
-        spriteRenderer.drawEntitySprite(g, data.heart, sheet.heartSprite());
+        spriteRenderer.drawPac(g, msPac);
+        spriteRenderer.drawPac(g, pacMan);
+        spriteRenderer.drawGhost(g, inky);
+        spriteRenderer.drawGhost(g, pinky);
+        spriteRenderer.drawEntitySprite(g, heart, sheet.heartSprite());
         drawLevelCounter(g);
     }
 }
