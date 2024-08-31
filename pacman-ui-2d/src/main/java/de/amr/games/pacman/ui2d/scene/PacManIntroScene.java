@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
@@ -198,10 +197,10 @@ public class PacManIntroScene extends GameScene2D {
                 if (timer.atSecond(0.75)) {
                     intro.data.ghosts.get(3).hide();
                     if (!intro.context.game().hasCredit()) {
-                        gameController().changeState(GameState.READY);
+                        intro.context.gameController().changeState(GameState.READY);
                     }
                 } else if (timer.atSecond(5)) {
-                    gameController().changeState(GameState.CREDIT);
+                    intro.context.gameController().changeState(GameState.CREDIT);
                 }
             }
         };
@@ -211,10 +210,6 @@ public class PacManIntroScene extends GameScene2D {
         @Override
         public TickTimer timer() {
             return timer;
-        }
-
-        GameController gameController() {
-            return GameController.it();
         }
     }
 

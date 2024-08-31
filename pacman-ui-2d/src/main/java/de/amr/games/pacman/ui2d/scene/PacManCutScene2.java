@@ -4,10 +4,8 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
@@ -61,7 +59,7 @@ public class PacManCutScene2 extends GameScene2D {
         if (initialDelay > 0) {
             --initialDelay;
             if (initialDelay == 0) {
-                GameController.it().gameModel(GameVariant.PACMAN).publishGameEvent(GameEventType.INTERMISSION_STARTED);
+                context.game().publishGameEvent(GameEventType.INTERMISSION_STARTED);
             }
             return;
         }
