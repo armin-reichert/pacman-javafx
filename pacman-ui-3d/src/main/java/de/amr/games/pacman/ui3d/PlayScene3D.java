@@ -11,8 +11,8 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameParameters;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
@@ -181,7 +181,7 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void handleKeyboardInput(GameContext context) {
+    public void handleKeyboardInput() {
         if (GameAction.ADD_CREDIT.requested() && this.context.game().isDemoLevel()) {
             context.addCredit();
         } else if (GameAction.PREV_PERSPECTIVE.requested()) {

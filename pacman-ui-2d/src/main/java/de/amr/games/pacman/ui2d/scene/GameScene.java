@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.event.GameEventListener;
-import de.amr.games.pacman.ui2d.GameContext;
 import javafx.scene.Node;
 
 /**
@@ -43,5 +42,5 @@ public interface GameScene extends GameEventListener {
     /**
      * Handles keyboard input.
      */
-    default void handleKeyboardInput(GameContext context) {}
+    default void handleKeyboardInput() {}
 }

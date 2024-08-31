@@ -17,7 +17,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.PacManGamePacAnimations;
@@ -293,7 +292,7 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     @Override
-    public void handleKeyboardInput(GameContext context) {
+    public void handleKeyboardInput() {
         if (GameAction.ADD_CREDIT.requested()) {
             context.addCredit();
         } else if (GameAction.START_GAME.requested()) {

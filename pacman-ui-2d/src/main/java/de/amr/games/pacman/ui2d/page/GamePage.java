@@ -147,7 +147,7 @@ public class GamePage extends StackPane implements Page {
         } else if (GameAction.OPEN_EDITOR.requested()) {
             context.openMapEditor();
         } else {
-            context.currentGameScene().ifPresent(gameScene -> gameScene.handleKeyboardInput(context));
+            context.currentGameScene().ifPresent(GameScene::handleKeyboardInput);
         }
     }
 

@@ -14,7 +14,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
-import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameParameters;
 import de.amr.games.pacman.ui2d.GameSounds;
@@ -78,7 +77,7 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void handleKeyboardInput(GameContext context) {
+    public void handleKeyboardInput() {
         if (GameAction.ADD_CREDIT.requested() && context.game().isDemoLevel()) {
             context.addCredit();
         } else if (GameAction.CHEAT_EAT_ALL.requested()) {
