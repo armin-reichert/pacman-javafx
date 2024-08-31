@@ -3,7 +3,6 @@ package de.amr.games.pacman.ui2d.page;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
@@ -14,7 +13,6 @@ import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -46,8 +44,8 @@ public class StartPage extends StackPane implements Page {
     private final BorderPane layout = new BorderPane();
     private final Image[] msPacManFlyerPages;
     private final Image[] pacManFlyerPages;
-    private int msPacManFlyerPage;
-    private int pacManFlyerPage;
+    private int msPacManFlyerPageIndex;
+    private int pacManFlyerPageIndex;
 
     public StartPage(GameContext context) {
         this.context = checkNotNull(context);
@@ -131,17 +129,13 @@ public class StartPage extends StackPane implements Page {
     }
 
     private void browseMsPacManFlyer(boolean forward) {
-        int n = msPacManFlyerPages.length;
-        int delta = forward ? 1 : n - 1;
-        int nextPageIndex = (msPacManFlyerPage + delta) % n;
-        msPacManFlyerPage = selectFlyerPage(msPacManFlyerPages, nextPageIndex);
+        int n = msPacManFlyerPages.length, delta = forward ? 1 : n - 1;
+        msPacManFlyerPageIndex = selectFlyerPage(msPacManFlyerPages, (msPacManFlyerPageIndex + delta) % n);
     }
 
     private void browsePacManFlyer(boolean forward) {
-        int n = pacManFlyerPages.length;
-        int delta = forward ? 1 : n - 1;
-        int nextPageIndex = (pacManFlyerPage + delta) % n;
-        pacManFlyerPage = selectFlyerPage(pacManFlyerPages, nextPageIndex);
+        int n = pacManFlyerPages.length, delta = forward ? 1 : n - 1;
+        pacManFlyerPageIndex = selectFlyerPage(pacManFlyerPages, (pacManFlyerPageIndex + delta) % n);
     }
 
     private void initPageForGameVariant(GameVariant variant) {
@@ -149,7 +143,7 @@ public class StartPage extends StackPane implements Page {
             switch (variant) {
                 case MS_PACMAN -> {
                     setBackground(context.assets().get("wallpaper.background"));
-                    msPacManFlyerPage = selectFlyerPage(msPacManFlyerPages, 0);
+                    msPacManFlyerPageIndex = selectFlyerPage(msPacManFlyerPages, 0);
                     setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
                             browseMsPacManFlyer(true);
@@ -158,7 +152,7 @@ public class StartPage extends StackPane implements Page {
                 }
                 case PACMAN -> {
                     setBackground(context.assets().get("wallpaper.background"));
-                    pacManFlyerPage = selectFlyerPage(pacManFlyerPages, 0);
+                    pacManFlyerPageIndex = selectFlyerPage(pacManFlyerPages, 0);
                     setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
                             browsePacManFlyer(true);
