@@ -130,15 +130,18 @@ public class StartPage extends StackPane implements Page {
         return page;
     }
 
-    private void browseMsPacManFlyer() {
-        int nextPage = (msPacManFlyerPage + 1) % msPacManFlyerPages.length;
-        msPacManFlyerPage = selectFlyerPage(msPacManFlyerPages, nextPage);
+    private void browseMsPacManFlyer(boolean forward) {
+        int n = msPacManFlyerPages.length;
+        int delta = forward ? 1 : n - 1;
+        int nextPageIndex = (msPacManFlyerPage + delta) % n;
+        msPacManFlyerPage = selectFlyerPage(msPacManFlyerPages, nextPageIndex);
     }
 
-    private void browsePacManFlyer()
-    {
-        int nextPage = (pacManFlyerPage + 1) % pacManFlyerPages.length;
-        pacManFlyerPage = selectFlyerPage(pacManFlyerPages, nextPage);
+    private void browsePacManFlyer(boolean forward) {
+        int n = pacManFlyerPages.length;
+        int delta = forward ? 1 : n - 1;
+        int nextPageIndex = (pacManFlyerPage + delta) % n;
+        pacManFlyerPage = selectFlyerPage(pacManFlyerPages, nextPageIndex);
     }
 
     private void initPageForGameVariant(GameVariant variant) {
@@ -149,7 +152,7 @@ public class StartPage extends StackPane implements Page {
                     msPacManFlyerPage = selectFlyerPage(msPacManFlyerPages, 0);
                     setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
-                            browseMsPacManFlyer();
+                            browseMsPacManFlyer(true);
                         }
                     });
                 }
@@ -158,7 +161,7 @@ public class StartPage extends StackPane implements Page {
                     pacManFlyerPage = selectFlyerPage(pacManFlyerPages, 0);
                     setOnMouseClicked(e -> {
                         if (e.getButton() == MouseButton.PRIMARY) {
-                            browsePacManFlyer();
+                            browsePacManFlyer(true);
                         }
                     });
                 }
@@ -195,10 +198,16 @@ public class StartPage extends StackPane implements Page {
             context.selectNextGameVariant();
         } else if (GameAction.PREV_VARIANT.requested()) {
             context.selectPrevGameVariant();
-        } else if (Keyboard.pressed(KeyCode.DOWN) || Keyboard.pressed(KeyCode.UP)) {
-            switch (this.context.game().variant()) {
-                case MS_PACMAN  -> browseMsPacManFlyer();
-                case PACMAN     -> browsePacManFlyer();
+        } else if (GameAction.NEXT_FLYER_PAGE.requested()) {
+            switch (context.game().variant()) {
+                case MS_PACMAN  -> browseMsPacManFlyer(true);
+                case PACMAN     -> browsePacManFlyer(true);
+                case PACMAN_XXL -> {}
+            }
+        } else if (GameAction.PREV_FLYER_PAGE.requested()) {
+            switch (context.game().variant()) {
+                case MS_PACMAN  -> browseMsPacManFlyer(false);
+                case PACMAN     -> browsePacManFlyer(false);
                 case PACMAN_XXL -> {}
             }
         }
