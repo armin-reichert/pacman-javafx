@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.event.GameEventType;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -12,6 +12,7 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGamePacAnimations;
@@ -70,7 +71,7 @@ public class MsPacManCutScene1 extends GameScene2D {
         void updateStateFlap() {
             clapAnimation.tick();
             if (stateTimer.atSecond(1)) {
-                context.game().publishGameEvent(GameEventType.INTERMISSION_STARTED);
+                startMusic();
             } else if (stateTimer.hasExpired()) {
                 enterStateChasedByGhosts();
             }
@@ -218,6 +219,13 @@ public class MsPacManCutScene1 extends GameScene2D {
 
     private ClapperboardAnimation clapAnimation;
     private MsPacManGameSpriteSheet sheet;
+
+    private void startMusic() {
+        int number  = context.gameState() == GameState.INTERMISSION_TEST
+            ? GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")
+            : context.game().intermissionNumber(context.game().levelNumber());
+        GameSounds.playIntermissionSound(number);
+    }
 
     @Override
     public boolean isCreditVisible() {

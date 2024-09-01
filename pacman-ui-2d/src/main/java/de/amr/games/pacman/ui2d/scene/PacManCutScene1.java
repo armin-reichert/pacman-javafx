@@ -4,13 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.controller.GameController;
-import de.amr.games.pacman.event.GameEventType;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.PacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
@@ -46,12 +45,19 @@ public class PacManCutScene1 extends GameScene2D {
         blinky.setAnimations(new PacManGameGhostAnimations(blinky, (PacManGameSpriteSheet) spriteRenderer.spriteSheet()));
     }
 
+    private void startMusic() {
+        int number  = context.gameState() == GameState.INTERMISSION_TEST
+            ? GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")
+            : context.game().intermissionNumber(context.game().levelNumber());
+        GameSounds.playIntermissionSound(number);
+    }
+
     @Override
     public void update() {
         if (initialDelay > 0) {
             --initialDelay;
             if (initialDelay == 0) {
-                context.game().publishGameEvent(GameEventType.INTERMISSION_STARTED);
+                startMusic();
             }
             return;
         }

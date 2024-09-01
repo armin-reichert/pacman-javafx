@@ -4,11 +4,12 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.event.GameEventType;
+import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Pac;
+import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
@@ -56,7 +57,7 @@ public class MsPacManCutScene2 extends GameScene2D {
         void updateStateFlap() {
             clapAnimation.tick();
             if (stateTimer.hasExpired()) {
-                context.game().publishGameEvent(GameEventType.INTERMISSION_STARTED);
+                startMusic();
                 enterStateChasing();
             }
         }
@@ -130,6 +131,13 @@ public class MsPacManCutScene2 extends GameScene2D {
 
     private SceneController sceneController;
     private ClapperboardAnimation clapAnimation;
+
+    private void startMusic() {
+        int number  = context.gameState() == GameState.INTERMISSION_TEST
+            ? GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")
+            : context.game().intermissionNumber(context.game().levelNumber());
+        GameSounds.playIntermissionSound(number);
+    }
 
     @Override
     public boolean isCreditVisible() {

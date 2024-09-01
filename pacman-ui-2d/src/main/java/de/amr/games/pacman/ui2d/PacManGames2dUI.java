@@ -405,17 +405,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void onIntermissionStarted(GameEvent event) {
-        if (gameState() == GameState.INTERMISSION_TEST) {
-            //TODO this is ugly
-            int number = GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber");
-            GameSounds.playIntermissionSound(number);
-        } else {
-            GameSounds.playIntermissionSound(game().intermissionNumber(game().levelNumber()));
-        }
-    }
-
-    @Override
     public void onLevelCreated(GameEvent event) {
         // Found no better point in time to create and assign the sprite animations to the guys
         GameModel game = event.game;
