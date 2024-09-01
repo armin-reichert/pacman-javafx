@@ -30,43 +30,38 @@ public class MsPacManCutScene2 extends GameScene2D {
     static final int MIDDLE_LANE_Y = TS * 18;
     static final int LOWER_LANE_Y = TS * 24;
 
-    private class MsPacManCutScene2Controller {
+    private class SceneController {
 
-        public static final byte STATE_FLAP = 0;
-        public static final byte STATE_CHASING = 1;
+        static final byte STATE_FLAP = 0;
+        static final byte STATE_CHASING = 1;
 
-        private byte state;
-        private final TickTimer stateTimer = new TickTimer("MsPacManIntermission2");
+        byte state;
+        final TickTimer stateTimer = new TickTimer("MsPacManCutScene2");
 
-        public void changeState(byte state, long ticks) {
+        void setState(byte state, long ticks) {
             this.state = state;
             stateTimer.reset(ticks);
             stateTimer.start();
         }
 
-        public void tick() {
+        void tick() {
             switch (state) {
-                case STATE_FLAP:
-                    updateStateFlap();
-                    break;
-                case STATE_CHASING:
-                    updateStateChasing();
-                    break;
-                default:
-                    throw new IllegalStateException("Illegal state: " + state);
-
+                case STATE_FLAP -> updateStateFlap();
+                case STATE_CHASING -> updateStateChasing();
+                default -> throw new IllegalStateException("Illegal state: " + state);
             }
             stateTimer.tick();
         }
 
-        private void updateStateFlap() {
+        void updateStateFlap() {
+            clapAnimation.tick();
             if (stateTimer.hasExpired()) {
                 context.game().publishGameEvent(GameEventType.INTERMISSION_STARTED);
                 enterStateChasing();
             }
         }
 
-        private void enterStateChasing() {
+        void enterStateChasing() {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.selectAnimation(Pac.ANIM_HUSBAND_MUNCHING);
             pacMan.animations().ifPresent(Animations::startSelected);
@@ -74,10 +69,10 @@ public class MsPacManCutScene2 extends GameScene2D {
             msPacMan.selectAnimation(Pac.ANIM_MUNCHING);
             msPacMan.animations().ifPresent(Animations::startSelected);
 
-            changeState(STATE_CHASING, TickTimer.INDEFINITE);
+            setState(STATE_CHASING, TickTimer.INDEFINITE);
         }
 
-        private void updateStateChasing() {
+        void updateStateChasing() {
             if (stateTimer.atSecond(4.5)) {
                 pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
                 pacMan.setMoveDir(Direction.RIGHT);
@@ -87,46 +82,53 @@ public class MsPacManCutScene2 extends GameScene2D {
                 msPacMan.setMoveDir(Direction.RIGHT);
                 msPacMan.setSpeed(2.0f);
                 msPacMan.show();
-            } else if (stateTimer.atSecond(9)) {
+            }
+            else if (stateTimer.atSecond(9)) {
                 pacMan.setPosition(TS * 36, LOWER_LANE_Y);
                 pacMan.setMoveDir(Direction.LEFT);
                 pacMan.setSpeed(2.0f);
                 msPacMan.setPosition(TS * 30, LOWER_LANE_Y);
                 msPacMan.setMoveDir(Direction.LEFT);
                 msPacMan.setSpeed(2.0f);
-            } else if (stateTimer.atSecond(13.5)) {
+            }
+            else if (stateTimer.atSecond(13.5)) {
                 pacMan.setMoveDir(Direction.RIGHT);
                 pacMan.setSpeed(2.0f);
                 msPacMan.setPosition(TS * (-8), MIDDLE_LANE_Y);
                 msPacMan.setMoveDir(Direction.RIGHT);
                 msPacMan.setSpeed(2.0f);
                 pacMan.setPosition(TS * (-2), MIDDLE_LANE_Y);
-            } else if (stateTimer.atSecond(17.5)) {
+            }
+            else if (stateTimer.atSecond(17.5)) {
                 pacMan.setPosition(TS * 42, UPPER_LANE_Y);
                 pacMan.setMoveDir(Direction.LEFT);
                 pacMan.setSpeed(4.0f);
                 msPacMan.setPosition(TS * 30, UPPER_LANE_Y);
                 msPacMan.setMoveDir(Direction.LEFT);
                 msPacMan.setSpeed(4.0f);
-            } else if (stateTimer.atSecond(18.5)) {
+            }
+            else if (stateTimer.atSecond(18.5)) {
                 pacMan.setPosition(TS * (-2), LOWER_LANE_Y);
                 pacMan.setMoveDir(Direction.RIGHT);
                 pacMan.setSpeed(4.0f);
                 msPacMan.setPosition(TS * (-14), LOWER_LANE_Y);
                 msPacMan.setMoveDir(Direction.RIGHT);
                 msPacMan.setSpeed(4.0f);
-            } else if (stateTimer.atSecond(23)) {
-                context.gameController().terminateCurrentState();
-                return;
             }
-            pacMan.move();
-            msPacMan.move();
+            else if (stateTimer.atSecond(23)) {
+                context.gameController().terminateCurrentState();
+            }
+            else {
+                pacMan.move();
+                msPacMan.move();
+            }
         }
     }
 
     private Pac pacMan;
     private Pac msPacMan;
-    private MsPacManCutScene2Controller sceneController;
+
+    private SceneController sceneController;
     private ClapperboardAnimation clapAnimation;
 
     @Override
@@ -145,17 +147,17 @@ public class MsPacManCutScene2 extends GameScene2D {
         msPacMan = new Pac();
         msPacMan.setAnimations(new MsPacManGamePacAnimations(msPacMan, sheet));
         pacMan.setAnimations(new MsPacManGamePacAnimations(pacMan, sheet));
+
         clapAnimation = new ClapperboardAnimation("2", "THE CHASE");
         clapAnimation.start();
 
-        sceneController = new MsPacManCutScene2Controller();
-        sceneController.changeState(MsPacManCutScene2Controller.STATE_FLAP, 120);
+        sceneController = new SceneController();
+        sceneController.setState(SceneController.STATE_FLAP, 120);
     }
 
     @Override
     public void update() {
         sceneController.tick();
-        clapAnimation.tick();
     }
 
     @Override

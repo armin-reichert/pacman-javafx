@@ -58,6 +58,7 @@ public class MsPacManCutScene3 extends GameScene2D {
         }
 
         void updateStateFlap() {
+            clapAnimation.tick();
             if (stateTimer.atSecond(1)) {
                 context.game().publishGameEvent(GameEventType.INTERMISSION_STARTED);
             } else if (stateTimer.atSecond(3)) {
@@ -166,7 +167,6 @@ public class MsPacManCutScene3 extends GameScene2D {
     @Override
     public void update() {
         sceneController.tick();
-        clapAnimation.tick();
     }
 
     @Override
