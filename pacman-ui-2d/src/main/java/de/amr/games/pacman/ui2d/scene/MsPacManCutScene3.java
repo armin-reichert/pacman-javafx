@@ -4,7 +4,6 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
-import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2f;
@@ -31,39 +30,34 @@ import static de.amr.games.pacman.lib.Globals.t;
  */
 public class MsPacManCutScene3 extends GameScene2D {
 
-    private class MsPacManCutScene3Controller {
+    static final int LANE_Y = TS * 24;
 
-        public static final byte STATE_FLAP = 0;
-        public static final byte STATE_DELIVER_JUNIOR = 1;
-        public static final byte STATE_STORK_LEAVES_SCENE = 2;
+    private class SceneController {
 
-        private byte state;
-        private final TickTimer stateTimer = new TickTimer("MsPacManIntermission3");
+        static final byte STATE_FLAP = 0;
+        static final byte STATE_DELIVER_JUNIOR = 1;
+        static final byte STATE_STORK_LEAVES_SCENE = 2;
 
-        public void changeState(byte state, long ticks) {
+        byte state;
+        final TickTimer stateTimer = new TickTimer("MsPacManCutScene3");
+
+        void setState(byte state, long ticks) {
             this.state = state;
             stateTimer.reset(ticks);
             stateTimer.start();
         }
 
-        public void tick() {
+        void tick() {
             switch (state) {
-                case STATE_FLAP:
-                    updateStateFlap();
-                    break;
-                case STATE_DELIVER_JUNIOR:
-                    updateStateDeliverJunior();
-                    break;
-                case STATE_STORK_LEAVES_SCENE:
-                    updateStateStorkLeavesScene();
-                    break;
-                default:
-                    throw new IllegalStateException("Illegal state: " + state);
+                case STATE_FLAP -> updateStateFlap();
+                case STATE_DELIVER_JUNIOR -> updateStateDeliverJunior();
+                case STATE_STORK_LEAVES_SCENE -> updateStateStorkLeavesScene();
+                default -> throw new IllegalStateException("Illegal state: " + state);
             }
             stateTimer.tick();
         }
 
-        private void updateStateFlap() {
+        void updateStateFlap() {
             if (stateTimer.atSecond(1)) {
                 context.game().publishGameEvent(GameEventType.INTERMISSION_STARTED);
             } else if (stateTimer.atSecond(3)) {
@@ -71,7 +65,7 @@ public class MsPacManCutScene3 extends GameScene2D {
             }
         }
 
-        private void enterStateDeliverJunior() {
+        void enterStateDeliverJunior() {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(TS * 3, LANE_Y - 4);
             pacMan.selectAnimation(Pac.ANIM_HUSBAND_MUNCHING);
@@ -93,10 +87,10 @@ public class MsPacManCutScene3 extends GameScene2D {
             bagOpen = false;
             numBagBounces = 0;
 
-            changeState(STATE_DELIVER_JUNIOR, TickTimer.INDEFINITE);
+            setState(STATE_DELIVER_JUNIOR, TickTimer.INDEFINITE);
         }
 
-        private void updateStateDeliverJunior() {
+        void updateStateDeliverJunior() {
             stork.move();
             bag.move();
 
@@ -115,20 +109,19 @@ public class MsPacManCutScene3 extends GameScene2D {
                 } else {
                     bagOpen = true;
                     bag.setVelocity(Vector2f.ZERO);
-                    changeState(STATE_STORK_LEAVES_SCENE, 3 * 60);
+                    setState(STATE_STORK_LEAVES_SCENE, 3 * 60);
                 }
             }
         }
 
-        private void updateStateStorkLeavesScene() {
+        void updateStateStorkLeavesScene() {
             stork.move();
             if (stateTimer.hasExpired()) {
-                GameController.it().terminateCurrentState();
+                context.gameController().terminateCurrentState();
             }
         }
     }
 
-    public static final int LANE_Y = TS * 24;
 
     private Pac pacMan;
     private Pac msPacMan;
@@ -137,7 +130,7 @@ public class MsPacManCutScene3 extends GameScene2D {
     private boolean bagOpen;
     private int numBagBounces;
 
-    private MsPacManCutScene3Controller sceneController;
+    private SceneController sceneController;
     private ClapperboardAnimation clapAnimation;
     private SpriteAnimation storkAnimation;
     private MsPacManGameSpriteSheet sheet;
@@ -166,8 +159,8 @@ public class MsPacManCutScene3 extends GameScene2D {
         clapAnimation = new ClapperboardAnimation("3", "JUNIOR");
         clapAnimation.start();
 
-        sceneController = new MsPacManCutScene3Controller();
-        sceneController.changeState(MsPacManCutScene3Controller.STATE_FLAP, TickTimer.INDEFINITE);
+        sceneController = new SceneController();
+        sceneController.setState(SceneController.STATE_FLAP, TickTimer.INDEFINITE);
     }
 
     @Override
