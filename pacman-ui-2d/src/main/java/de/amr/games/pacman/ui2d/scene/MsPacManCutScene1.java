@@ -32,55 +32,43 @@ import static de.amr.games.pacman.lib.Globals.t;
  */
 public class MsPacManCutScene1 extends GameScene2D {
 
-    static final int UPPER_LANE_Y = TS * 12;
+    static final int UPPER_LANE_Y  = TS * 12;
     static final int MIDDLE_LANE_Y = TS * 18;
-    static final int LOWER_LANE_Y = TS * 24;
+    static final int LOWER_LANE_Y  = TS * 24;
 
     static final float SPEED_PAC_CHASING = 1.125f;
     static final float SPEED_PAC_RISING = 0.75f;
     static final float SPEED_GHOST_AFTER_COLLISION = 0.3f;
     static final float SPEED_GHOST_CHASING = 1.25f;
 
-    private class MsPacManCutScene1Controller {
+    private class SceneController {
 
         static final byte STATE_FLAP = 0;
         static final byte STATE_CHASED_BY_GHOSTS = 1;
         static final byte STATE_COMING_TOGETHER = 2;
         static final byte STATE_IN_HEAVEN = 3;
 
-        private byte state;
-        private final TickTimer stateTimer = new TickTimer("MsPacManIntermission1");
+        byte state;
+        final TickTimer stateTimer = new TickTimer("MsPacManCutScene1");
 
-        public void changeState(byte state, long ticks) {
+        void setState(byte state, long ticks) {
             this.state = state;
             stateTimer.reset(ticks);
             stateTimer.start();
         }
 
-        public void tick() {
+        void tick() {
             switch (state) {
-                case STATE_FLAP:
-                    updateStateFlap();
-                    break;
-                case STATE_CHASED_BY_GHOSTS:
-                    updateStateChasedByGhosts();
-                    break;
-                case STATE_COMING_TOGETHER:
-                    updateStateComingTogether();
-                    break;
-                case STATE_IN_HEAVEN:
-                    if (stateTimer.hasExpired()) {
-                        GameController.it().terminateCurrentState();
-                        return;
-                    }
-                    break;
-                default:
-                    throw new IllegalStateException("Illegal state: " + state);
+                case STATE_FLAP -> updateStateFlap();
+                case STATE_CHASED_BY_GHOSTS -> updateStateChasedByGhosts();
+                case STATE_COMING_TOGETHER -> updateStateComingTogether();
+                case STATE_IN_HEAVEN -> updateStateInHeaven();
+                default -> throw new IllegalStateException("Illegal state: " + state);
             }
             stateTimer.tick();
         }
 
-        private void updateStateFlap() {
+        void updateStateFlap() {
             if (stateTimer.atSecond(1)) {
                 context.game().publishGameEvent(GameEventType.INTERMISSION_STARTED);
             } else if (stateTimer.hasExpired()) {
@@ -88,7 +76,7 @@ public class MsPacManCutScene1 extends GameScene2D {
             }
         }
 
-        private void enterStateChasedByGhosts() {
+        void enterStateChasedByGhosts() {
             pacMan.setMoveDir(Direction.RIGHT);
             pacMan.setPosition(TS * (-2), UPPER_LANE_Y);
             pacMan.setSpeed(SPEED_PAC_CHASING);
@@ -117,13 +105,14 @@ public class MsPacManCutScene1 extends GameScene2D {
             pinky.startAnimation();
             pinky.show();
 
-            changeState(STATE_CHASED_BY_GHOSTS, TickTimer.INDEFINITE);
+            setState(STATE_CHASED_BY_GHOSTS, TickTimer.INDEFINITE);
         }
 
-        private void updateStateChasedByGhosts() {
+        void updateStateChasedByGhosts() {
             if (inky.posX() > TS * 30) {
                 enterStateComingTogether();
-            } else {
+            }
+            else {
                 pacMan.move();
                 msPac.move();
                 inky.move();
@@ -131,19 +120,23 @@ public class MsPacManCutScene1 extends GameScene2D {
             }
         }
 
-        private void enterStateComingTogether() {
+        void enterStateComingTogether() {
             msPac.setPosition(TS * (-3), MIDDLE_LANE_Y);
             msPac.setMoveDir(Direction.RIGHT);
+
             pinky.setPosition(msPac.position().minus(TS * 5, 0));
             pinky.setMoveAndWishDir(Direction.RIGHT);
+
             pacMan.setPosition(TS * 31, MIDDLE_LANE_Y);
             pacMan.setMoveDir(Direction.LEFT);
+
             inky.setPosition(pacMan.position().plus(TS * 5, 0));
             inky.setMoveAndWishDir(Direction.LEFT);
-            changeState(STATE_COMING_TOGETHER, TickTimer.INDEFINITE);
+
+            setState(STATE_COMING_TOGETHER, TickTimer.INDEFINITE);
         }
 
-        private void updateStateComingTogether() {
+        void updateStateComingTogether() {
             // Pac-Man and Ms. Pac-Man reach end position?
             if (pacMan.moveDir() == Direction.UP && pacMan.posY() < UPPER_LANE_Y) {
                 enterStateInHeaven();
@@ -168,7 +161,8 @@ public class MsPacManCutScene1 extends GameScene2D {
                 pinky.setSpeed(SPEED_GHOST_AFTER_COLLISION);
                 pinky.setVelocity(pinky.velocity().minus(0, 2.0f));
                 pinky.setAcceleration(0, 0.4f);
-            } else {
+            }
+            else {
                 pacMan.move();
                 msPac.move();
                 inky.move();
@@ -184,7 +178,7 @@ public class MsPacManCutScene1 extends GameScene2D {
             }
         }
 
-        private void enterStateInHeaven() {
+        void enterStateInHeaven() {
             pacMan.setSpeed(0);
             pacMan.setMoveDir(Direction.LEFT);
             pacMan.animations().ifPresent(Animations::stopSelected);
@@ -204,11 +198,17 @@ public class MsPacManCutScene1 extends GameScene2D {
             heart.setPosition((pacMan.posX() + msPac.posX()) / 2, pacMan.posY() - TS * (2));
             heart.show();
 
-            changeState(STATE_IN_HEAVEN, 3 * 60);
+            setState(STATE_IN_HEAVEN, 3 * 60);
+        }
+
+        void updateStateInHeaven() {
+            if (stateTimer.hasExpired()) {
+                context.gameController().terminateCurrentState();
+            }
         }
     }
 
-    private MsPacManCutScene1Controller sceneController;
+    private SceneController sceneController;
 
     private Pac pacMan;
     private Pac msPac;
@@ -241,8 +241,8 @@ public class MsPacManCutScene1 extends GameScene2D {
         clapAnimation = new ClapperboardAnimation("1", "THEY MEET");
         clapAnimation.start();
 
-        sceneController = new MsPacManCutScene1Controller();
-        sceneController.changeState(MsPacManCutScene1Controller.STATE_FLAP, 120);
+        sceneController = new SceneController();
+        sceneController.setState(SceneController.STATE_FLAP, 120);
     }
 
     @Override
