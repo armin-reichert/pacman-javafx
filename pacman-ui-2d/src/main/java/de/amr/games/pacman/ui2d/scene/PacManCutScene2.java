@@ -56,7 +56,7 @@ public class PacManCutScene2 extends GameScene2D {
     }
 
     private void startMusic() {
-        int number  = context.gameState() == GameState.INTERMISSION_TEST
+        int number = context.gameState() == GameState.INTERMISSION_TEST
             ? GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")
             : context.game().intermissionNumber(context.game().levelNumber());
         GameSounds.playIntermissionSound(number);
@@ -109,8 +109,7 @@ public class PacManCutScene2 extends GameScene2D {
                 blinky.setVisible(false);
                 context.gameState().timer().expire();
             }
-            default -> {
-            }
+            default -> {}
         }
 
         blinky.move();
@@ -120,7 +119,7 @@ public class PacManCutScene2 extends GameScene2D {
     @Override
     public void drawSceneContent() {
         spriteRenderer.drawSpriteScaled(g, blinkyStretching.currentSprite(), t(14), t(19) + 3);
-        spriteRenderer.drawGhost(g,blinky);
+        spriteRenderer.drawGhost(g, blinky);
         spriteRenderer.drawPac(g, pac);
         drawLevelCounter(g);
     }

@@ -59,7 +59,7 @@ public class PacManCutScene3 extends GameScene2D {
     }
 
     private void startMusic() {
-        int number  = context.gameState() == GameState.INTERMISSION_TEST
+        int number = context.gameState() == GameState.INTERMISSION_TEST
             ? GameState.INTERMISSION_TEST.getProperty("intermissionTestNumber")
             : context.game().intermissionNumber(context.game().levelNumber());
         GameSounds.playIntermissionSound(number);
@@ -85,8 +85,7 @@ public class PacManCutScene3 extends GameScene2D {
                 blinky.startAnimation();
             }
             case 700 -> context.gameState().timer().expire();
-            default -> {
-            }
+            default -> {}
         }
         pac.move();
         blinky.move();

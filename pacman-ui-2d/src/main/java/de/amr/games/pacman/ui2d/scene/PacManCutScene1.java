@@ -6,13 +6,11 @@ package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
-import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.PacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -23,7 +21,8 @@ import static de.amr.games.pacman.lib.Globals.t;
  */
 public class PacManCutScene1 extends GameScene2D {
 
-    private int initialDelay;
+    static final short ANIMATION_START = 120;
+
     private int frame;
     private Pac pac;
     private Ghost blinky;
@@ -36,13 +35,12 @@ public class PacManCutScene1 extends GameScene2D {
     @Override
     public void init() {
         super.init();
-        frame = -1;
-        initialDelay = 120;
         context.setScoreVisible(true);
         pac = new Pac();
-        pac.setAnimations(new PacManGamePacAnimations(pac, (PacManGameSpriteSheet) spriteRenderer.spriteSheet()));
+        pac.setAnimations(new PacManGamePacAnimations(pac, spriteRenderer.spriteSheet()));
         blinky = Ghost.red();
-        blinky.setAnimations(new PacManGameGhostAnimations(blinky, (PacManGameSpriteSheet) spriteRenderer.spriteSheet()));
+        blinky.setAnimations(new PacManGameGhostAnimations(blinky, spriteRenderer.spriteSheet()));
+        frame = -1;
     }
 
     private void startMusic() {
@@ -54,25 +52,20 @@ public class PacManCutScene1 extends GameScene2D {
 
     @Override
     public void update() {
-        if (initialDelay > 0) {
-            --initialDelay;
-            if (initialDelay == 0) {
-                startMusic();
-            }
-            return;
+        ++frame;
+        if (frame >= ANIMATION_START) {
+            pac.move();
+            blinky.move();
         }
-
-        if (context.gameState().timer().hasExpired()) {
-            return;
-        }
-
         switch (frame) {
-            case 0 -> {
+            case ANIMATION_START -> {
+                startMusic();
+
                 pac.placeAtTile(29, 20, 0, 0);
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.25f);
                 pac.selectAnimation(Pac.ANIM_MUNCHING);
-                pac.animations().ifPresent(Animations::startSelected);
+                pac.startAnimation();
                 pac.show();
 
                 blinky.placeAtTile(32, 20, 0, 0);
@@ -82,26 +75,22 @@ public class PacManCutScene1 extends GameScene2D {
                 blinky.startAnimation();
                 blinky.show();
             }
-            case 260 -> {
+            case ANIMATION_START + 260 -> {
                 blinky.placeAtTile(-2, 20, 4, 0);
                 blinky.setMoveAndWishDir(Direction.RIGHT);
                 blinky.setSpeed(0.75f);
                 blinky.selectAnimation(Ghost.ANIM_GHOST_FRIGHTENED);
                 blinky.startAnimation();
             }
-            case 400 -> {
+            case ANIMATION_START + 400 -> {
                 pac.placeAtTile(-3, 18, 0, 6.5f);
                 pac.setMoveDir(Direction.RIGHT);
                 pac.selectAnimation(Pac.ANIM_BIG_PACMAN);
-                pac.animations().ifPresent(Animations::startSelected);
+                pac.startAnimation();
             }
-            case 632 -> context.gameState().timer().expire();
-            default -> {
-                pac.move();
-                blinky.move();
-            }
+            case ANIMATION_START + 632 -> context.gameState().timer().expire();
+            default -> {}
         }
-        ++frame;
     }
 
     @Override
@@ -114,7 +103,7 @@ public class PacManCutScene1 extends GameScene2D {
     @Override
     protected void drawSceneInfo() {
         drawTileGrid();
-        var text = initialDelay > 0 ? String.format("Wait %d", initialDelay) : String.format("Frame %d", frame);
+        var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
         spriteRenderer.drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
     }
 }

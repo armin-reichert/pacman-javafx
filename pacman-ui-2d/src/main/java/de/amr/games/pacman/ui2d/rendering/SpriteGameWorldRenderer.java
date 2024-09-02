@@ -37,8 +37,9 @@ public class SpriteGameWorldRenderer {
         return scalingPy.doubleValue() * value;
     }
 
-    public GameSpriteSheet spriteSheet() {
-        return spriteSheet;
+    @SuppressWarnings("unchecked")
+    public <T extends GameSpriteSheet> T spriteSheet() {
+        return (T) spriteSheet;
     }
 
     public void setSpriteSheet(GameSpriteSheet spriteSheet) {
