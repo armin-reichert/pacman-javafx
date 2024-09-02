@@ -12,7 +12,6 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.PacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -24,7 +23,8 @@ import static de.amr.games.pacman.lib.Globals.t;
  */
 public class PacManCutScene2 extends GameScene2D {
 
-    private int initialDelay;
+    static final short ANIMATION_START = 120;
+
     private int frame;
     private Pac pac;
     private Ghost blinky;
@@ -40,19 +40,18 @@ public class PacManCutScene2 extends GameScene2D {
     @Override
     public void init() {
         super.init();
-        frame = -1;
-        initialDelay = 120;
         context.setScoreVisible(true);
         pac = new Pac();
-        pac.setAnimations(new PacManGamePacAnimations(pac, (PacManGameSpriteSheet) spriteRenderer.spriteSheet()));
+        pac.setAnimations(new PacManGamePacAnimations(pac, spriteRenderer.spriteSheet()));
         blinky = Ghost.red();
-        var blinkyAnimations = new PacManGameGhostAnimations(blinky, (PacManGameSpriteSheet) spriteRenderer.spriteSheet());
+        var blinkyAnimations = new PacManGameGhostAnimations(blinky, spriteRenderer.spriteSheet());
         blinkyNormal = blinkyAnimations.animation(Ghost.ANIM_GHOST_NORMAL);
         blinkyStretching = blinkyAnimations.animation(Ghost.ANIM_BLINKY_STRETCHED);
         blinkyDamaged = blinkyAnimations.animation(Ghost.ANIM_BLINKY_DAMAGED);
         blinky.setAnimations(blinkyAnimations);
         blinky.setSpeed(0);
         blinky.hide();
+        frame = -1;
     }
 
     private void startMusic() {
@@ -64,21 +63,15 @@ public class PacManCutScene2 extends GameScene2D {
 
     @Override
     public void update() {
-        if (initialDelay > 0) {
-            --initialDelay;
-            if (initialDelay == 0) {
-                startMusic();
-            }
-            return;
+        ++frame;
+        if (frame >= ANIMATION_START) {
+            pac.move();
+            blinky.move();
         }
-
-        if (context.gameState().timer().hasExpired()) {
-            return;
-        }
-
-        switch (++frame) {
-            case 1 -> blinkyStretching.setFrameIndex(0); // Show nail
-            case 25 -> {
+        switch (frame) {
+            case ANIMATION_START -> startMusic();
+            case ANIMATION_START + 1 -> blinkyStretching.setFrameIndex(0); // Show nail
+            case ANIMATION_START + 25 -> {
                 pac.placeAtTile(28, 20, 0, 0);
                 pac.setMoveDir(Direction.LEFT);
                 pac.setSpeed(1.15f);
@@ -86,7 +79,7 @@ public class PacManCutScene2 extends GameScene2D {
                 pac.animations().ifPresent(Animations::startSelected);
                 pac.show();
             }
-            case 111 -> {
+            case ANIMATION_START + 111 -> {
                 blinky.placeAtTile(28, 20, -3, 0);
                 blinky.setMoveAndWishDir(Direction.LEFT);
                 blinky.setSpeed(1.25f);
@@ -94,26 +87,25 @@ public class PacManCutScene2 extends GameScene2D {
                 blinky.startAnimation();
                 blinky.show();
             }
-            case 194 -> {
+            case ANIMATION_START + 194 -> {
                 blinky.setSpeed(0.09f);
                 blinkyNormal.setFrameTicks(32);
             }
-            case 198, 226, 248 -> blinkyStretching.nextFrame(); // Stretched S-M-L
-            case 328 -> {
+            case ANIMATION_START + 198,
+                 ANIMATION_START + 226,
+                 ANIMATION_START + 248 -> blinkyStretching.nextFrame(); // Stretched S-M-L
+            case ANIMATION_START + 328 -> {
                 blinky.setSpeed(0);
                 blinkyStretching.nextFrame(); // Rapture
             }
-            case 329 -> blinky.selectAnimation(Ghost.ANIM_BLINKY_DAMAGED); // Eyes up
-            case 389 -> blinkyDamaged.nextFrame(); // Eyes right-down
-            case 508 -> {
+            case ANIMATION_START + 329 -> blinky.selectAnimation(Ghost.ANIM_BLINKY_DAMAGED); // Eyes up
+            case ANIMATION_START + 389 -> blinkyDamaged.nextFrame(); // Eyes right-down
+            case ANIMATION_START + 508 -> {
                 blinky.setVisible(false);
                 context.gameState().timer().expire();
             }
             default -> {}
         }
-
-        blinky.move();
-        pac.move();
     }
 
     @Override
@@ -127,7 +119,7 @@ public class PacManCutScene2 extends GameScene2D {
     @Override
     protected void drawSceneInfo() {
         drawTileGrid();
-        var text = initialDelay > 0 ? String.format("Wait %d", initialDelay) : String.format("Frame %d", frame);
+        var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
         spriteRenderer.drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
     }
 }
