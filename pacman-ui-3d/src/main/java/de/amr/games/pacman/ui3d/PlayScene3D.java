@@ -181,7 +181,7 @@ public class PlayScene3D implements GameScene {
     }
 
     @Override
-    public void handleKeyboardInput() {
+    public void handleUserInput() {
         if (GameAction.ADD_CREDIT.requested() && this.context.game().isDemoLevel()) {
             context.addCredit();
         } else if (GameAction.PREV_PERSPECTIVE.requested()) {

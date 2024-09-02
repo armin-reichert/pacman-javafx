@@ -241,7 +241,7 @@ public class MsPacManIntroScene extends GameScene2D {
     }
 
     @Override
-    public void handleKeyboardInput() {
+    public void handleUserInput() {
         if (GameAction.ADD_CREDIT.requested()) {
             if (sceneController.state() == SceneState.STARTING) {
                 triggerBlueMazeBug();

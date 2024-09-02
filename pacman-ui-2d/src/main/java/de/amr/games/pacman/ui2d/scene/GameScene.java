@@ -40,7 +40,7 @@ public interface GameScene extends GameEventListener {
     default void onSceneVariantSwitch(GameScene oldScene) {}
 
     /**
-     * Handles keyboard input.
+     * Handles user input like pressed keys.
      */
-    default void handleKeyboardInput() {}
+    default void handleUserInput() {}
 }

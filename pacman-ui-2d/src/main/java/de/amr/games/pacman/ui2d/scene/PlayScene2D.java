@@ -77,7 +77,7 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    public void handleKeyboardInput() {
+    public void handleUserInput() {
         if (GameAction.ADD_CREDIT.requested() && context.game().isDemoLevel()) {
             context.addCredit();
         } else if (GameAction.CHEAT_EAT_ALL.requested()) {
