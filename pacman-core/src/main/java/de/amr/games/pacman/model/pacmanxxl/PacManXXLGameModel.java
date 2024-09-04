@@ -16,6 +16,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +32,10 @@ public class PacManXXLGameModel extends PacManGameModel {
 
     private static final int NUM_MAPS = 8;
 
-    private final WorldMap[] worldMaps = new WorldMap[NUM_MAPS];
+    private final List<WorldMap> standardMaps = new ArrayList<>();
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
     private final File customMapDir;
-    private boolean customMapsEnabled;
+    private MapSelectionMode mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;
 
     public PacManXXLGameModel(File userDir) {
         super(userDir);
@@ -43,7 +44,7 @@ public class PacManXXLGameModel extends PacManGameModel {
         highScoreFile = new File(userDir, "highscore-pacman_xxl.xml");
         for (int i = 0; i < NUM_MAPS; ++i) {
             URL url = getClass().getResource("/de/amr/games/pacman/maps/masonic/masonic_%d.world".formatted(i+1));
-            worldMaps[i] = new WorldMap(url);
+            standardMaps.add(new WorldMap(url));
         }
         loadCustomMaps();
     }
@@ -53,20 +54,19 @@ public class PacManXXLGameModel extends PacManGameModel {
         return GameVariant.PACMAN_XXL;
     }
 
+    public void setMapSelectionMode(MapSelectionMode mapSelectionMode) {
+        this.mapSelectionMode = mapSelectionMode;
+    }
+
+    public MapSelectionMode mapSelectionMode() {
+        return mapSelectionMode;
+    }
+
     @Override
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
-        int numCustomMaps = customMapsEnabled ? customMapsByFile().size() : 0;
-        int mapIndex = levelNumber - 1;
-        if (mapIndex < numCustomMaps) {
-            WorldMap map = customMapsSortedByFile().get(mapIndex);
-            setWorldAndCreatePopulation(createWorld(map));
-        } else if (mapIndex - numCustomMaps < worldMaps.length) {
-            setWorldAndCreatePopulation(createWorld(worldMaps[mapIndex - numCustomMaps]));
-        } else {
-            int randomIndex = randomInt(0, worldMaps.length);
-            setWorldAndCreatePopulation(createWorld(worldMaps[randomIndex]));
-        }
+        WorldMap map = selectMap(levelNumber);
+        setWorldAndCreatePopulation(createWorld(map));
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -75,6 +75,29 @@ public class PacManXXLGameModel extends PacManGameModel {
         ghosts[CYAN_GHOST].setName("Inky");
         ghosts[ORANGE_GHOST].setName("Clyde");
         ghosts().forEach(ghost -> ghost.setHuntingBehaviour(this::ghostHuntingBehaviour));
+    }
+
+    private WorldMap selectMap(int levelNumber) {
+        switch (mapSelectionMode) {
+            case NO_CUSTOM_MAPS -> {
+                return levelNumber <= standardMaps.size()
+                    ? standardMaps.get(levelNumber - 1)
+                    : standardMaps.get(randomInt(0, standardMaps.size()));
+            }
+            case CUSTOM_MAPS_FIRST -> {
+                List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
+                maps.addAll(standardMaps);
+                return levelNumber <= maps.size()
+                    ? maps.get(levelNumber - 1)
+                    : maps.get(randomInt(0, maps.size()));
+            }
+            case ALL_RANDOM -> {
+                List<WorldMap> maps = new ArrayList<>(customMapsSortedByFile());
+                maps.addAll(standardMaps);
+                return maps.get(randomInt(0, maps.size()));
+            }
+        }
+        throw new IllegalStateException("Illegal map selection mode " + mapSelectionMode);
     }
 
     @Override
@@ -104,10 +127,6 @@ public class PacManXXLGameModel extends PacManGameModel {
 
     public List<WorldMap> customMapsSortedByFile() {
         return customMapsByFile.keySet().stream().sorted().map(customMapsByFile::get).toList();
-    }
-
-    public void setCustomMapsEnabled(boolean customMapsEnabled) {
-        this.customMapsEnabled = customMapsEnabled;
     }
 
     public File customMapDir() {

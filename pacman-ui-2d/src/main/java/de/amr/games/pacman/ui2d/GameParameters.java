@@ -16,7 +16,6 @@ public interface GameParameters {
     BooleanProperty PY_AUTOPILOT           = new SimpleBooleanProperty(false);
     ObjectProperty<Color> PY_CANVAS_COLOR  = new SimpleObjectProperty<>(Color.BLACK);
     BooleanProperty PY_CANVAS_DECORATED    = new SimpleBooleanProperty(true);
-    BooleanProperty PY_CUSTOM_MAPS_ENABLED = new SimpleBooleanProperty(false);
     BooleanProperty PY_DEBUG_INFO          = new SimpleBooleanProperty(false);
     BooleanProperty PY_IMMUNITY            = new SimpleBooleanProperty(false);
     BooleanProperty PY_NIGHT_MODE          = new SimpleBooleanProperty(false);

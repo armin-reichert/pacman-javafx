@@ -6,14 +6,14 @@ package de.amr.games.pacman.ui2d.dashboard;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.pacmanxxl.MapSelectionMode;
 import de.amr.games.pacman.model.pacmanxxl.PacManXXLGameModel;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GameParameters;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -27,27 +27,19 @@ public class InfoBoxCustomMaps extends InfoBox {
     record MapInfo(String fileName, int numRows, int numCols) {}
 
     private TableView<MapInfo> mapTable;
+    private ComboBox<MapSelectionMode> comboMapSelectionMode;
 
     @Override
     public void init(GameContext context) {
         this.context = context;
 
-        var cbCustomMapEnabled = checkBox("Use Custom Maps", context::updateCustomMaps);
-        cbCustomMapEnabled.selectedProperty().bindBidirectional(GameParameters.PY_CUSTOM_MAPS_ENABLED);
-
-        //TODO check where this belongs
-        GameParameters.PY_CUSTOM_MAPS_ENABLED.addListener((py, ov, nv) -> {
-           PacManXXLGameModel xxlGame = context.gameController().gameModel(GameVariant.PACMAN_XXL);
-           xxlGame.setCustomMapsEnabled(nv);
-           if (nv) {
-               xxlGame.loadCustomMaps();
-               reloadCustomMapsAndUpdateTableView();
-           }
+        comboMapSelectionMode = addComboBoxRow("Map Selection", MapSelectionMode.values());
+        comboMapSelectionMode.setOnAction(e -> {
+            PacManXXLGameModel xxlGame = context.gameController().gameModel(GameVariant.PACMAN_XXL);
+            xxlGame.setMapSelectionMode(comboMapSelectionMode.getValue());
+            xxlGame.loadCustomMaps();
+            reloadCustomMapsAndUpdateTableView();
         });
-
-        var btnReload = new Button("Reload");
-        btnReload.setOnAction(e -> reloadCustomMapsAndUpdateTableView());
-        addRow(cbCustomMapEnabled, btnReload);
 
         mapTable = new TableView<>();
         mapTable.setPrefHeight(200);
@@ -63,6 +55,13 @@ public class InfoBoxCustomMaps extends InfoBox {
         addRow(mapTable);
 
         reloadCustomMapsAndUpdateTableView();
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        PacManXXLGameModel xxlGame = context.gameController().gameModel(GameVariant.PACMAN_XXL);
+        comboMapSelectionMode.getSelectionModel().select(xxlGame.mapSelectionMode());
     }
 
     private void reloadCustomMapsAndUpdateTableView() {
