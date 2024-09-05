@@ -117,26 +117,26 @@ public class PlayScene2D extends GameScene2D {
             Logger.warn("Cannot draw scene content, no game world exists!");
             return;
         }
-        boolean flashing = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
+        boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         boolean blinkingOn = game.blinking().isOn();
         switch (game.variant()) {
             case MS_PACMAN -> {
                 MsPacManGameModel msPacManGame = (MsPacManGameModel) game;
                 if (msPacManGame.blueMazeBug) {
                     // no map image available, use vector renderer
-                    vectorRenderer.draw(g, game.world(), flashing, blinkingOn);
+                    vectorRenderer.draw(g, game.world(), flashMode, blinkingOn);
                 } else {
                     int mapNumber = msPacManGame.currentMapNumber();
-                    spriteRenderer.drawMsPacManWorld(g, game.world(), mapNumber, flashing, blinkingOn);
+                    spriteRenderer.drawMsPacManWorld(g, game.world(), mapNumber, flashMode, blinkingOn);
                 }
                 game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));
             }
             case PACMAN -> {
-                spriteRenderer.drawPacManWorld(g, game.world(), 0, 3, flashing, blinkingOn);
+                spriteRenderer.drawPacManWorld(g, game.world(), 0, 3, flashMode, blinkingOn);
                 game.bonus().ifPresent(bonus -> spriteRenderer.drawStaticBonus(g, bonus));
             }
             case PACMAN_XXL -> {
-                vectorRenderer.draw(g, game.world(), flashing, blinkingOn);
+                vectorRenderer.draw(g, game.world(), flashMode, blinkingOn);
                 game.bonus().ifPresent(bonus -> spriteRenderer.drawStaticBonus(g, bonus));
             }
         }

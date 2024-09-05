@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.rendering;
 
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.mapeditor.FoodMapRenderer;
 import de.amr.games.pacman.mapeditor.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameWorld;
@@ -31,23 +32,27 @@ public class VectorGameWorldRenderer {
         foodRenderer.scalingPy.bind(scalingPy);
     }
 
-    public void draw(GraphicsContext g, GameWorld world, boolean flashing, boolean blinkingOn) {
-        var terrainMap = world.map().terrain();
-        if (flashing) {
-            terrainRenderer.setWallStrokeColor(blinkingOn ? Color.WHITE : getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, Color.WHITE));
-            terrainRenderer.setWallFillColor(blinkingOn ? Color.BLACK : getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, Color.GREEN));
-            terrainRenderer.setDoorColor(blinkingOn ? Color.BLACK : getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, Color.YELLOW));
-            terrainRenderer.drawMap(g, terrainMap);
-        } else {
-            terrainRenderer.setWallStrokeColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, Color.WHITE));
-            terrainRenderer.setWallFillColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, Color.GREEN));
-            terrainRenderer.setDoorColor(getColorFromMap(terrainMap, PROPERTY_COLOR_DOOR, Color.YELLOW));
-            terrainRenderer.drawMap(g, terrainMap);
-            var foodColor = getColorFromMap(world.map().food(), PROPERTY_COLOR_FOOD, Color.ORANGE);
+    public void draw(GraphicsContext g, GameWorld world, boolean flashMode, boolean highlighted) {
+        TileMap terrain = world.map().terrain();
+        Color wallStrokeColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_STROKE, Color.WHITE);
+        Color wallFillColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, Color.GREEN);
+        Color doorColor = getColorFromMap(terrain, PROPERTY_COLOR_DOOR, Color.YELLOW);
+        if (flashMode) {
+            terrainRenderer.setWallStrokeColor(highlighted ? Color.WHITE : Color.BLACK);
+            terrainRenderer.setWallFillColor(highlighted   ? Color.BLACK : Color.WHITE);
+            terrainRenderer.setDoorColor(Color.BLACK);
+            terrainRenderer.drawMap(g, terrain);
+        }
+        else {
+            terrainRenderer.setWallStrokeColor(wallStrokeColor);
+            terrainRenderer.setWallFillColor(wallFillColor);
+            terrainRenderer.setDoorColor(doorColor);
+            terrainRenderer.drawMap(g, terrain);
+            Color foodColor = getColorFromMap(world.map().food(), PROPERTY_COLOR_FOOD, Color.ORANGE);
             foodRenderer.setPelletColor(foodColor);
             foodRenderer.setEnergizerColor(foodColor);
             world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition)).forEach(tile -> foodRenderer.drawPellet(g, tile));
-            if (blinkingOn) {
+            if (highlighted) {
                 world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(g, tile));
             }
         }
