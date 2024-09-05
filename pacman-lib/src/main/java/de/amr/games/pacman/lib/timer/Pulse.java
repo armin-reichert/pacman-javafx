@@ -84,4 +84,8 @@ public class Pulse {
     public boolean isRunning() {
         return running;
     }
+
+    public int getNumPhasesCompleted() {
+        return numPhasesCompleted;
+    }
 }
