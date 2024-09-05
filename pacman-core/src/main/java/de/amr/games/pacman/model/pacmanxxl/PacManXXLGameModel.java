@@ -25,7 +25,7 @@ import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only
- * <a href="https://github.com/masonicGIT/pacman">Sean Williams</a>).
+ * <a href="https://github.com/masonicGIT/pacman">Shaun Williams</a>).
  */
 public class PacManXXLGameModel extends PacManGameModel {
 
