@@ -38,14 +38,14 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     @Override
     public void drawMap(GraphicsContext g, TileMap map) {
-        double strokeWidth = computeStrokeWidth(g.getCanvas().getHeight());
+        double lineWidth = computeLineWidth(g.getCanvas().getHeight());
         g.save();
         g.scale(scaling(), scaling());
         map.doubleStrokePaths().forEach(path -> {
-            drawPath(g, path, false,  3 * strokeWidth, wallStrokeColor, null);
-            drawPath(g, path, false,  1.5 * strokeWidth, wallFillColor, null);
+            drawPath(g, path, false,  2.5 * lineWidth, wallStrokeColor, null);
+            drawPath(g, path, false,  lineWidth, wallFillColor, null);
         });
-        map.singleStrokePaths().forEach(path -> drawPath(g, path, true, strokeWidth, wallStrokeColor, wallFillColor));
+        map.singleStrokePaths().forEach(path -> drawPath(g, path, true, lineWidth, wallStrokeColor, wallFillColor));
         map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, door, doorColor));
         g.restore();
     }
@@ -78,7 +78,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         this.doorColor = doorColor;
     }
 
-    private double computeStrokeWidth(double canvasHeight) {
+    private double computeLineWidth(double canvasHeight) {
         // increase line width for small display
         if (canvasHeight <  36 * TILE_SIZE * 1.5) {
             return 1.25;
@@ -90,7 +90,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     private Vector2f center(Vector2i tile) {
-        return new Vector2f(tile.x() * TILE_SIZE + HALF_TILE_SIZE, tile.y() * TILE_SIZE + HALF_TILE_SIZE);
+        return tile.scaled(TILE_SIZE).plus((float)HALF_TILE_SIZE, (float)HALF_TILE_SIZE);
     }
 
     //TODO: avoid special cases
