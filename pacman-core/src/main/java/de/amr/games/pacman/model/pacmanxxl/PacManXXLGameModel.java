@@ -21,8 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static de.amr.games.pacman.lib.Globals.halfTileRightOf;
-import static de.amr.games.pacman.lib.Globals.randomInt;
+import static de.amr.games.pacman.lib.Globals.*;
 
 /**
  * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only
@@ -31,19 +30,21 @@ import static de.amr.games.pacman.lib.Globals.randomInt;
 public class PacManXXLGameModel extends PacManGameModel {
 
     private static final int NUM_MAPS = 8;
+    private static final String MAP_PATH_PATTERN = "/de/amr/games/pacman/maps/masonic/masonic_%d.world";
 
     private final List<WorldMap> standardMaps = new ArrayList<>();
     private final Map<File, WorldMap> customMapsByFile = new HashMap<>();
     private final File customMapDir;
-    private MapSelectionMode mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;
+    private MapSelectionMode mapSelectionMode;
 
     public PacManXXLGameModel(File userDir) {
         super(userDir);
         initialLives = 3;
+        mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;
         customMapDir = new File(userDir, "maps");
         highScoreFile = new File(userDir, "highscore-pacman_xxl.xml");
-        for (int i = 0; i < NUM_MAPS; ++i) {
-            URL url = getClass().getResource("/de/amr/games/pacman/maps/masonic/masonic_%d.world".formatted(i+1));
+        for (int num = 1; num <= NUM_MAPS; ++num) {
+            URL url = getClass().getResource(MAP_PATH_PATTERN.formatted(num));
             standardMaps.add(new WorldMap(url));
         }
         loadCustomMaps();
@@ -55,7 +56,7 @@ public class PacManXXLGameModel extends PacManGameModel {
     }
 
     public void setMapSelectionMode(MapSelectionMode mapSelectionMode) {
-        this.mapSelectionMode = mapSelectionMode;
+        this.mapSelectionMode = checkNotNull(mapSelectionMode);
     }
 
     public MapSelectionMode mapSelectionMode() {
