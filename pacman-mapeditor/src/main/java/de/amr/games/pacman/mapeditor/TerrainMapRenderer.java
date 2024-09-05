@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
+import static de.amr.games.pacman.mapeditor.TileMapUtil.HALF_TILE_SIZE;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.TILE_SIZE;
 
 /**
@@ -37,16 +38,14 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     @Override
     public void drawMap(GraphicsContext g, TileMap map) {
-        double innerPathWidth = computeLineWidth(g.getCanvas().getHeight());
-        double outerPathWidth = 3 * innerPathWidth;
-        double outerPathBorderWidth = 0.75 * innerPathWidth;
+        double strokeWidth = computeStrokeWidth(g.getCanvas().getHeight());
         g.save();
         g.scale(scaling(), scaling());
         map.doubleStrokePaths().forEach(path -> {
-            drawPath(g, path, false,  outerPathWidth, wallStrokeColor, null);
-            drawPath(g, path, false,  outerPathWidth - 2 * outerPathBorderWidth, wallFillColor, null);
+            drawPath(g, path, false,  3 * strokeWidth, wallStrokeColor, null);
+            drawPath(g, path, false,  1.5 * strokeWidth, wallFillColor, null);
         });
-        map.singleStrokePaths().forEach(path -> drawPath(g, path, true, innerPathWidth, wallStrokeColor, wallFillColor));
+        map.singleStrokePaths().forEach(path -> drawPath(g, path, true, strokeWidth, wallStrokeColor, wallFillColor));
         map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, door, doorColor));
         g.restore();
     }
@@ -79,7 +78,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         this.doorColor = doorColor;
     }
 
-    private double computeLineWidth(double canvasHeight) {
+    private double computeStrokeWidth(double canvasHeight) {
         // increase line width for small display
         if (canvasHeight <  36 * TILE_SIZE * 1.5) {
             return 1.25;
@@ -91,7 +90,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     private Vector2f center(Vector2i tile) {
-        return new Vector2f(tile.x() * TILE_SIZE + TILE_SIZE / 2f, tile.y() * TILE_SIZE + TILE_SIZE / 2f);
+        return new Vector2f(tile.x() * TILE_SIZE + HALF_TILE_SIZE, tile.y() * TILE_SIZE + HALF_TILE_SIZE);
     }
 
     //TODO: avoid special cases
@@ -132,7 +131,8 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     private void extendPath(GraphicsContext g, byte tileValue, Vector2f center, boolean left, boolean right, boolean up, boolean down) {
-        float r = 0.5f * TILE_SIZE, cx = center.x(), cy = center.y();
+        float r = HALF_TILE_SIZE;
+        float cx = center.x(), cy = center.y();
         switch (tileValue) {
             case Tiles.WALL_H,
                  Tiles.DWALL_H    -> g.lineTo(cx + r, cy);

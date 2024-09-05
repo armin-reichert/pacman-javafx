@@ -12,6 +12,7 @@ import org.tinylog.Logger;
 public interface TileMapUtil {
 
     int TILE_SIZE = 8;
+    int HALF_TILE_SIZE = 4;
 
     static Color parseColor(String text) {
         try {
