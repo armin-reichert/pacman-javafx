@@ -4,12 +4,15 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
+import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.mapeditor.FoodMapRenderer;
+import de.amr.games.pacman.mapeditor.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameParameters;
 import de.amr.games.pacman.ui2d.rendering.SpriteGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.VectorGameWorldRenderer;
 import javafx.beans.property.*;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -20,6 +23,10 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.mapeditor.TileMapUtil.getColorFromMap;
+import static de.amr.games.pacman.model.GameWorld.*;
+import static de.amr.games.pacman.model.GameWorld.PROPERTY_COLOR_FOOD;
+import static java.util.function.Predicate.not;
 
 /**
  * Base class of all 2D scenes.
@@ -29,10 +36,11 @@ import static de.amr.games.pacman.lib.Globals.*;
 public class GameScene2D implements GameScene {
 
     public final BooleanProperty infoVisiblePy  = new SimpleBooleanProperty(this, "infoVisible", false);
-    public final DoubleProperty scalingPy       = new SimpleDoubleProperty(this, "scaling", 1.0);
+    public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
     public final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(this, "backgroundColor", Color.BLACK);
 
-    protected final VectorGameWorldRenderer vectorRenderer = new VectorGameWorldRenderer();
+    protected final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
+    protected final FoodMapRenderer foodRenderer = new FoodMapRenderer();
     protected final SpriteGameWorldRenderer spriteRenderer = new SpriteGameWorldRenderer();
 
     protected GameContext context;
@@ -74,7 +82,8 @@ public class GameScene2D implements GameScene {
     @Override
     public void init() {
         backgroundColorPy.bind(GameParameters.PY_CANVAS_COLOR);
-        vectorRenderer.scalingPy.bind(scalingPy);
+        terrainRenderer.scalingPy.bind(scalingPy);
+        foodRenderer.scalingPy.bind(scalingPy);
         spriteRenderer.scalingPy.bind(scalingPy);
         spriteRenderer.backgroundColorPy.bind(backgroundColorPy);
         spriteRenderer.setSpriteSheet(context.spriteSheet(context.game().variant()));
@@ -166,4 +175,32 @@ public class GameScene2D implements GameScene {
             g.strokeLine(s(TS * col), 0, s(TS * col), s(numWorldTilesY * TS));
         }
     }
+
+    protected void drawWorld(boolean flashMode, boolean highlighted) {
+        GameWorld world = context.game().world();
+        TileMap terrain = world.map().terrain();
+        Color wallStrokeColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_STROKE, Color.WHITE);
+        Color wallFillColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, Color.GREEN);
+        Color doorColor = getColorFromMap(terrain, PROPERTY_COLOR_DOOR, Color.YELLOW);
+        if (flashMode) {
+            terrainRenderer.setWallStrokeColor(highlighted ? Color.WHITE : Color.BLACK);
+            terrainRenderer.setWallFillColor(highlighted   ? Color.BLACK : Color.WHITE);
+            terrainRenderer.setDoorColor(Color.BLACK);
+            terrainRenderer.drawMap(g, terrain);
+        }
+        else {
+            terrainRenderer.setWallStrokeColor(wallStrokeColor);
+            terrainRenderer.setWallFillColor(wallFillColor);
+            terrainRenderer.setDoorColor(doorColor);
+            terrainRenderer.drawMap(g, terrain);
+            Color foodColor = getColorFromMap(world.map().food(), PROPERTY_COLOR_FOOD, Color.ORANGE);
+            foodRenderer.setPelletColor(foodColor);
+            foodRenderer.setEnergizerColor(foodColor);
+            world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition)).forEach(tile -> foodRenderer.drawPellet(g, tile));
+            if (highlighted) {
+                world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(g, tile));
+            }
+        }
+    }
+
 }

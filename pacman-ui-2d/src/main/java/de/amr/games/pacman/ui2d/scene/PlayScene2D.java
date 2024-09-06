@@ -114,17 +114,17 @@ public class PlayScene2D extends GameScene2D {
         GameModel game = context.game();
         if (game.world() == null) {
             // This happens for one frame
-            Logger.warn("Cannot draw scene content, no game world exists!");
+            Logger.warn("Cannot draw scene content, game world not yet available!");
             return;
         }
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         boolean blinkingOn = game.blinking().isOn();
         switch (game.variant()) {
             case MS_PACMAN -> {
-                MsPacManGameModel msPacManGame = (MsPacManGameModel) game;
+                var msPacManGame = (MsPacManGameModel) game;
                 if (msPacManGame.blueMazeBug) {
                     // no map image available, use vector renderer
-                    vectorRenderer.draw(g, game.world(), flashMode, blinkingOn);
+                    drawWorld(flashMode, blinkingOn);
                 } else {
                     int mapNumber = msPacManGame.currentMapNumber();
                     spriteRenderer.drawMsPacManWorld(g, game.world(), mapNumber, flashMode, blinkingOn);
@@ -136,7 +136,7 @@ public class PlayScene2D extends GameScene2D {
                 game.bonus().ifPresent(bonus -> spriteRenderer.drawStaticBonus(g, bonus));
             }
             case PACMAN_XXL -> {
-                vectorRenderer.draw(g, game.world(), flashMode, blinkingOn);
+                drawWorld(flashMode, blinkingOn);
                 game.bonus().ifPresent(bonus -> spriteRenderer.drawStaticBonus(g, bonus));
             }
         }
@@ -154,24 +154,19 @@ public class PlayScene2D extends GameScene2D {
             if (context.gameState() == GameState.READY && !game.pac().isVisible()) {
                 numLivesDisplayed += 1;
             }
-            spriteRenderer.drawLivesCounter(g, numLivesDisplayed, context.game().world().map().terrain().numRows() - 2);
+            spriteRenderer.drawLivesCounter(g, numLivesDisplayed, game.world().map().terrain().numRows() - 2);
         }
         drawLevelCounter(g);
     }
 
     private Stream<Ghost> ghostsInZOrder() {
-        return Stream.of(
-            context.game().ghost(GameModel.ORANGE_GHOST),
-            context.game().ghost(GameModel.CYAN_GHOST),
-            context.game().ghost(GameModel.PINK_GHOST),
-            context.game().ghost(GameModel.RED_GHOST)
-        );
+        return Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
+            .map(context.game()::ghost);
     }
 
     private void drawLevelMessage() {
-        var game = context.game();
-        Vector2i houseOrigin = game.world().houseTopLeftTile();
-        Vector2i houseSize = game.world().houseSize();
+        GameModel game = context.game();
+        Vector2i houseOrigin = game.world().houseTopLeftTile(), houseSize = game.world().houseSize();
         int centerTileX = houseOrigin.x() + houseSize.x() / 2;
         int tileY = houseOrigin.y() + houseSize.y() + 1;
         if (game.isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
@@ -187,7 +182,7 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneInfo() {
-        var game = context.game();
+        GameModel game = context.game();
         drawTileGrid();
         if (game.variant() == GameVariant.PACMAN && game.world() != null) {
             game.ghosts().forEach(ghost -> {
