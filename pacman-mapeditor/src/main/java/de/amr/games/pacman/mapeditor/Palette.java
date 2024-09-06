@@ -63,8 +63,8 @@ public class Palette extends Canvas {
         });
     }
 
-    public TileValueEditorTool createTileValueEditorTool(byte value, String description) {
-        return new TileValueEditorTool(renderer, cellSize, value, description);
+    public TileValueEditorTool createTileValueEditorTool(TileMapEditor editor, byte value, String description) {
+        return new TileValueEditorTool(editor, renderer, cellSize, value, description);
     }
 
     public PropertyValueEditorTool createPropertyValueEditorTool(String propertyName, String description) {

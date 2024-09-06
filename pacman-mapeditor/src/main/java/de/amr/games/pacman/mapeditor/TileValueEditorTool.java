@@ -13,12 +13,14 @@ import javafx.scene.paint.Color;
  * @author Armin Reichert
  */
 public class TileValueEditorTool implements Tool {
+    private final TileMapEditor editor;
     private final TileMapRenderer renderer;
     private final int size;
     private final byte value;
     private final String description;
 
-    public TileValueEditorTool(TileMapRenderer renderer, int size, byte value, String description) {
+    public TileValueEditorTool(TileMapEditor editor, TileMapRenderer renderer, int size, byte value, String description) {
+        this.editor = editor;
         this.renderer = renderer;
         this.size = size;
         this.value = value;
@@ -42,7 +44,7 @@ public class TileValueEditorTool implements Tool {
 
     @Override
     public void apply(TileMap tileMap, Vector2i tile) {
-        tileMap.set(tile, value);
+        editor.setTileValue(tileMap, tile, value);
     }
 
     @Override

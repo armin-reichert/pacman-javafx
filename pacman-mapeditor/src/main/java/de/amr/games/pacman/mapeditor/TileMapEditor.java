@@ -124,6 +124,30 @@ public class TileMapEditor  {
         terrain.set(terrain.numRows() - 1 - emptyRowsBottom, terrain.numCols() - 1, Tiles.DCORNER_SE);
     }
 
+    private static void copyLeftContentToRightSideMirrored(WorldMap map) {
+        int middleCol = map.terrain().numCols() / 2;
+        for (int row = 0; row < map.terrain().numRows(); ++row) {
+            for (int col = 0; col < middleCol; ++col) {
+                map.terrain().set(row, map.terrain().numCols() - 1 - col, hMirror(map.terrain().get(row, col)));
+                map.food().set(row, map.food().numCols() - 1 - col, map.food().get(row, col));
+            }
+        }
+    }
+
+    private static byte hMirror(byte content) {
+        return switch (content) {
+            case Tiles.CORNER_NE -> Tiles.CORNER_NW;
+            case Tiles.CORNER_NW -> Tiles.CORNER_NE;
+            case Tiles.CORNER_SE -> Tiles.CORNER_SW;
+            case Tiles.CORNER_SW -> Tiles.CORNER_SE;
+            case Tiles.DCORNER_NE -> Tiles.DCORNER_NW;
+            case Tiles.DCORNER_NW -> Tiles.DCORNER_NE;
+            case Tiles.DCORNER_SE -> Tiles.DCORNER_SW;
+            case Tiles.DCORNER_SW -> Tiles.DCORNER_SE;
+            default -> content;
+        };
+    }
+
     public final ObjectProperty<String> titlePy = new SimpleObjectProperty<>(this, "title");
 
     public final BooleanProperty terrainVisiblePy = new SimpleBooleanProperty(this, "terrainVisible", true);
@@ -155,6 +179,8 @@ public class TileMapEditor  {
             focussedTileInfo.setText(text);
         }
     };
+
+    private final BooleanProperty symmetricModePy = new SimpleBooleanProperty(this, "symmetricMode", false);
 
     private Window ownerWindow;
     private final BorderPane contentPane = new BorderPane();
@@ -337,21 +363,21 @@ public class TileMapEditor  {
     private Palette createTerrainPalette() {
         var palette = new Palette(32, 2, 10, terrainMapEditRenderer);
         palette.setTools(
-            palette.createTileValueEditorTool(Tiles.WALL_H, "Horiz. Wall"),
-            palette.createTileValueEditorTool(Tiles.WALL_V, "Vert. Wall"),
-            palette.createTileValueEditorTool(Tiles.DWALL_H, "Hor. Double-Wall"),
-            palette.createTileValueEditorTool(Tiles.DWALL_V, "Vert. Double-Wall"),
-            palette.createTileValueEditorTool(Tiles.CORNER_NW, "NW Corner"),
-            palette.createTileValueEditorTool(Tiles.CORNER_NE, "NE Corner"),
-            palette.createTileValueEditorTool(Tiles.CORNER_SW, "SW Corner"),
-            palette.createTileValueEditorTool(Tiles.CORNER_SE, "SE Corner"),
-            palette.createTileValueEditorTool(Tiles.DCORNER_NW, "NW Corner"),
-            palette.createTileValueEditorTool(Tiles.DCORNER_NE, "NE Corner"),
-            palette.createTileValueEditorTool(Tiles.DCORNER_SW, "SW Corner"),
-            palette.createTileValueEditorTool(Tiles.DCORNER_SE, "SE Corner"),
-            palette.createTileValueEditorTool(Tiles.EMPTY, "Empty Space"),
-            palette.createTileValueEditorTool(Tiles.TUNNEL, "Tunnel"),
-            palette.createTileValueEditorTool(Tiles.DOOR, "Door")
+            palette.createTileValueEditorTool(this, Tiles.WALL_H, "Horiz. Wall"),
+            palette.createTileValueEditorTool(this, Tiles.WALL_V, "Vert. Wall"),
+            palette.createTileValueEditorTool(this, Tiles.DWALL_H, "Hor. Double-Wall"),
+            palette.createTileValueEditorTool(this, Tiles.DWALL_V, "Vert. Double-Wall"),
+            palette.createTileValueEditorTool(this, Tiles.CORNER_NW, "NW Corner"),
+            palette.createTileValueEditorTool(this, Tiles.CORNER_NE, "NE Corner"),
+            palette.createTileValueEditorTool(this, Tiles.CORNER_SW, "SW Corner"),
+            palette.createTileValueEditorTool(this, Tiles.CORNER_SE, "SE Corner"),
+            palette.createTileValueEditorTool(this, Tiles.DCORNER_NW, "NW Corner"),
+            palette.createTileValueEditorTool(this, Tiles.DCORNER_NE, "NE Corner"),
+            palette.createTileValueEditorTool(this, Tiles.DCORNER_SW, "SW Corner"),
+            palette.createTileValueEditorTool(this, Tiles.DCORNER_SE, "SE Corner"),
+            palette.createTileValueEditorTool(this, Tiles.EMPTY, "Empty Space"),
+            palette.createTileValueEditorTool(this, Tiles.TUNNEL, "Tunnel"),
+            palette.createTileValueEditorTool(this, Tiles.DOOR, "Door")
         );
         palette.selectTool(12); // EMPTY
         return palette;
@@ -376,9 +402,9 @@ public class TileMapEditor  {
     private Palette createFoodPalette() {
         var palette = new Palette(32, 1, 3, foodMapRenderer);
         palette.setTools(
-            palette.createTileValueEditorTool(Tiles.EMPTY, "No Food"),
-            palette.createTileValueEditorTool(Tiles.PELLET, "Pellet"),
-            palette.createTileValueEditorTool(Tiles.ENERGIZER, "Energizer")
+            palette.createTileValueEditorTool(this, Tiles.EMPTY, "No Food"),
+            palette.createTileValueEditorTool(this, Tiles.PELLET, "Pellet"),
+            palette.createTileValueEditorTool(this, Tiles.ENERGIZER, "Energizer")
         );
         palette.selectTool(0); // EMPTY
         return palette;
@@ -525,6 +551,9 @@ public class TileMapEditor  {
     }
 
     private void createEditMenu() {
+        var miSymmetricMode = new CheckMenuItem("Symmetric Mode");
+        miSymmetricMode.selectedProperty().bindBidirectional(symmetricModePy);
+
         var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
         miAddBorder.setOnAction(e -> {
             addBorder(map().terrain(), 3, 2);
@@ -537,6 +566,13 @@ public class TileMapEditor  {
             int row = map().terrain().numRows() / 2 - 3;
             int col = map().terrain().numCols() / 2 - 4;
             GHOST_HOUSE_SHAPE.addToMap(map().terrain(), row, col);
+            invalidateTerrainMapPaths();
+            markMapEdited();
+        });
+
+        var miCopyLeftToRight = new MenuItem("Copy Left to Right Mirrored");
+        miCopyLeftToRight.setOnAction(e -> {
+            copyLeftContentToRightSideMirrored(map());
             invalidateTerrainMapPaths();
             markMapEdited();
         });
@@ -554,7 +590,8 @@ public class TileMapEditor  {
             markMapEdited();
         });
 
-        menuEdit = new Menu(tt("menu.edit"), null, miAddBorder, miAddHouse, miClearTerrain, miClearFood);
+        menuEdit = new Menu(tt("menu.edit"), null, miSymmetricMode, miAddBorder, miAddHouse
+                /*miCopyLeftToRight*/, miClearTerrain, miClearFood);
         menuEdit.disableProperty().bind(editingEnabledPy.not());
     }
 
@@ -919,20 +956,27 @@ public class TileMapEditor  {
     private void editMapTile(TileMap tileMap, Predicate<Byte> valueAllowed, MouseEvent e) {
         var tile = tileAtMousePosition(e.getX(), e.getY());
         if (e.getButton() == MouseButton.SECONDARY) {
-            tileMap.set(tile, Tiles.EMPTY);
+            setTileValue(tileMap, tile, Tiles.EMPTY);
         }
         else if (e.isShiftDown()) {
             // cycle through all allowed values
             byte value = tileMap.get(tile);
             byte next = (byte) (value + 1);
             byte newValue =  valueAllowed.test(next) ? next : 0;
-            tileMap.set(tile, newValue);
+            setTileValue(tileMap, tile, newValue);
         }
         else if (selectedPalette().isToolSelected()) {
             selectedPalette().selectedTool().apply(tileMap, tile);
         }
         invalidateTerrainMapPaths();
         markMapEdited();
+    }
+
+    void setTileValue(TileMap tileMap, Vector2i tile, byte value) {
+        tileMap.set(tile, value);
+        if (symmetricModePy.get()) {
+            tileMap.set(tile.y(), tileMap.numCols() - 1 - tile.x(), hMirror(tileMap.get(tile)));
+        }
     }
 
     private void updateSourceView() {
