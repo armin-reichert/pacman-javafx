@@ -7,6 +7,9 @@ package de.amr.games.pacman.ui2d.scene;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.TileMap;
+import de.amr.games.pacman.mapeditor.FoodMapRenderer;
+import de.amr.games.pacman.mapeditor.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
@@ -25,16 +28,30 @@ import org.tinylog.Logger;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.mapeditor.TileMapUtil.getColorFromMap;
+import static de.amr.games.pacman.model.GameWorld.*;
+import static de.amr.games.pacman.model.GameWorld.PROPERTY_COLOR_FOOD;
 import static de.amr.games.pacman.ui2d.GameParameters.PY_AUTOPILOT;
+import static java.util.function.Predicate.not;
 
 /**
  * @author Armin Reichert
  */
 public class PlayScene2D extends GameScene2D {
 
+    private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
+    private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
+
     @Override
     public boolean isCreditVisible() {
         return !context.game().hasCredit() || context.gameState() == GameState.GAME_OVER;
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        terrainRenderer.scalingPy.bind(scalingPy);
+        foodRenderer.scalingPy.bind(scalingPy);
     }
 
     @Override
@@ -162,6 +179,33 @@ public class PlayScene2D extends GameScene2D {
     private Stream<Ghost> ghostsInZOrder() {
         return Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
             .map(context.game()::ghost);
+    }
+
+    private void drawWorld(boolean flashMode, boolean highlighted) {
+        GameWorld world = context.game().world();
+        TileMap terrain = world.map().terrain();
+        Color wallStrokeColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_STROKE, Color.WHITE);
+        Color wallFillColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, Color.GREEN);
+        Color doorColor = getColorFromMap(terrain, PROPERTY_COLOR_DOOR, Color.YELLOW);
+        if (flashMode) {
+            terrainRenderer.setWallStrokeColor(highlighted ? Color.WHITE : Color.BLACK);
+            terrainRenderer.setWallFillColor(highlighted   ? Color.BLACK : Color.WHITE);
+            terrainRenderer.setDoorColor(Color.BLACK);
+            terrainRenderer.drawMap(g, terrain);
+        }
+        else {
+            terrainRenderer.setWallStrokeColor(wallStrokeColor);
+            terrainRenderer.setWallFillColor(wallFillColor);
+            terrainRenderer.setDoorColor(doorColor);
+            terrainRenderer.drawMap(g, terrain);
+            Color foodColor = getColorFromMap(world.map().food(), PROPERTY_COLOR_FOOD, Color.ORANGE);
+            foodRenderer.setPelletColor(foodColor);
+            foodRenderer.setEnergizerColor(foodColor);
+            world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition)).forEach(tile -> foodRenderer.drawPellet(g, tile));
+            if (highlighted) {
+                world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(g, tile));
+            }
+        }
     }
 
     private void drawLevelMessage() {
