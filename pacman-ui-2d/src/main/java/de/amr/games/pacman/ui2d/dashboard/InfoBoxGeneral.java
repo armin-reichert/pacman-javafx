@@ -36,7 +36,7 @@ public class InfoBoxGeneral extends InfoBox {
     private Tooltip tooltipStep = new Tooltip("Single Step Mode");
 
     public void init(GameContext context) {
-        this.context = context;
+        super.init(context);
 
         addTextRow("Java Version",   Runtime.version().toString());
         addTextRow("JavaFX Version", System.getProperty("javafx.runtime.version"));

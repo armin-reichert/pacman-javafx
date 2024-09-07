@@ -102,6 +102,7 @@ public class GamePage extends StackPane implements Page {
         adaptCanvasSizeToCurrentWorld();
         //TODO check if this is always what is wanted
         context.reboot();
+        context.updateCustomMaps();
         GameSounds.playVoice("voice.explain", 0);
     }
 
@@ -230,6 +231,10 @@ public class GamePage extends StackPane implements Page {
 
     public void updateDashboard() {
         dashboardLayer.update();
+    }
+
+    public DashboardLayer dashboardLayer() {
+        return dashboardLayer;
     }
 
     protected void quit() {

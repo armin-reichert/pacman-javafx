@@ -16,7 +16,7 @@ import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
 public class InfoBoxGameInfo extends InfoBox {
 
     public void init(GameContext context) {
-        this.context = context;
+        super.init(context);
 
         addTextRow("Game Scene", ifGameScene(gameScene -> gameScene.getClass().getSimpleName()));
         addTextRow("Game State", () -> "%s".formatted(context.gameState()));

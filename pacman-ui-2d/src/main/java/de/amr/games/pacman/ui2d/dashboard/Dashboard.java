@@ -23,6 +23,10 @@ public class Dashboard extends VBox {
         setVisible(false);
     }
 
+    public List<InfoBox> getInfoBoxes() {
+        return infoBoxes;
+    }
+
     public GameContext getContext() {
         return context;
     }

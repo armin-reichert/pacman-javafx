@@ -9,7 +9,6 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.scene.GameScene;
-import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -27,6 +26,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static de.amr.games.pacman.ui2d.dashboard.InfoText.NO_INFO;
+import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 
 /**
  * Base class for area displaying UI info/editors.
@@ -34,8 +34,6 @@ import static de.amr.games.pacman.ui2d.dashboard.InfoText.NO_INFO;
  * @author Armin Reichert
  */
 public abstract class InfoBox extends TitledPane {
-
-    public static final Color BACKGROUND_COLOR = new Color(0.2, 0.2, 0.4, 0.8);
 
     public static String fmtSpeed(byte percentage) {
         return String.format("%.2f px/s (%d%%)", GameModel.PPS_AT_100_PERCENT * percentage * 0.01f, percentage);
@@ -59,13 +57,15 @@ public abstract class InfoBox extends TitledPane {
         setOpacity(0.7);
         setFocusTraversable(false);
         setContent(grid);
-        grid.setBackground(Ufx.coloredBackground(BACKGROUND_COLOR));
         grid.setHgap(4);
         grid.setVgap(3);
         grid.setPadding(new Insets(5));
     }
 
-    public abstract void init(GameContext context);
+    public void init(GameContext context) {
+        this.context = context;
+        grid.setBackground(coloredBackground(context.assets().color("infobox.background_color")));
+    }
 
     public void update() {
         infoTexts.forEach(InfoText::update);

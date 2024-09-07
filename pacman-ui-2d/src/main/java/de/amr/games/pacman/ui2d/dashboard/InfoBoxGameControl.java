@@ -38,7 +38,7 @@ public class InfoBoxGameControl extends InfoBox {
     private CheckBox cbImmunity;
 
     public void init(GameContext context) {
-        this.context = context;
+        super.init(context);
 
         spinnerCredit = addIntSpinnerRow("Credit", 0, GameModel.MAX_CREDIT, 0);
         comboGameVariant = addComboBoxRow("Variant", GameVariant.values());

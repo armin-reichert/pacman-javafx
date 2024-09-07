@@ -49,8 +49,9 @@ public class PacManGames2dApp extends Application {
         assets.set("icon.stop",                       rm.loadImage("graphics/icons/stop.png"));
         assets.set("icon.step",                       rm.loadImage("graphics/icons/step.png"));
 
-        assets.set("infobox.min_label_width",         140);
-        assets.set("infobox.min_col_width",           200);
+        assets.set("infobox.background_color",        Color.rgb(0,0,100,0.9));
+        assets.set("infobox.min_label_width",         110);
+        assets.set("infobox.min_col_width",           180);
         assets.set("infobox.text_color",              Color.WHITE);
         assets.set("infobox.label_font",              Font.font("Sans", 12));
         assets.set("infobox.text_font",               rm.loadFont("fonts/SplineSansMono-Regular.ttf", 12));

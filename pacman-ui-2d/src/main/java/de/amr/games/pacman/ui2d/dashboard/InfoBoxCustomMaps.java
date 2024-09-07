@@ -14,6 +14,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
@@ -33,7 +34,7 @@ public class InfoBoxCustomMaps extends InfoBox {
 
     @Override
     public void init(GameContext context) {
-        this.context = context;
+        super.init(context);
 
         comboMapSelectionMode = addComboBoxRow("Map Selection", MapSelectionMode.values());
         comboMapSelectionMode.setOnAction(e -> PY_MAP_SELECTION_MODE.set(comboMapSelectionMode.getValue()));
@@ -63,7 +64,7 @@ public class InfoBoxCustomMaps extends InfoBox {
         updateTableView();
     }
 
-    private void updateTableView() {
+    public void updateTableView() {
         PacManXXLGameModel xxlGame = context.gameController().gameModel(GameVariant.PACMAN_XXL);
         ObservableList<MapInfo> items = FXCollections.observableArrayList();
         for (File file  : xxlGame.customMapsByFile().keySet().stream().sorted().toList()) {

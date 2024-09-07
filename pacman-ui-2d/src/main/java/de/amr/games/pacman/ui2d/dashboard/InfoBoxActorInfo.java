@@ -26,7 +26,7 @@ import static de.amr.games.pacman.lib.timer.TickTimer.ticksToString;
 public class InfoBoxActorInfo extends InfoBox {
 
     public void init(GameContext context) {
-        this.context = context;
+        super.init(context);
 
         addTextRow("Pac Name", pacInfo((game, pac) -> pac.name()));
         addTextRow("Movement", pacInfo(this::movementInfo));

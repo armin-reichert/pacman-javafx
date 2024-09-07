@@ -14,7 +14,7 @@ import de.amr.games.pacman.ui2d.GameContext;
 public class InfoBoxKeys extends InfoBox {
 
     public void init(GameContext context) {
-        this.context = context;
+        super.init(context);
 
         addTextRow("F1, Alt+B", "Dashboard On/Off");
         addTextRow("F2", "Pic-in-Pic On/Off");

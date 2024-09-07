@@ -29,8 +29,8 @@ public class DashboardLayer extends BorderPane {
         dashboard = new Dashboard(context);
         dashboard.addInfoBox(context.locText("infobox.general.title"), new InfoBoxGeneral());
         dashboard.addInfoBox(context.locText("infobox.game_control.title"), new InfoBoxGameControl());
-        dashboard.addInfoBox(context.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
         dashboard.addInfoBox(context.locText("infobox.game_info.title"), new InfoBoxGameInfo());
+        dashboard.addInfoBox(context.locText("infobox.custom_maps.title"), new InfoBoxCustomMaps());
         dashboard.addInfoBox(context.locText("infobox.actor_info.title"), new InfoBoxActorInfo());
         dashboard.addInfoBox(context.locText("infobox.keyboard_shortcuts.title"), new InfoBoxKeys());
         dashboard.addInfoBox(context.locText("infobox.about.title"), new InfoBoxAbout());

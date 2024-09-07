@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.pacmanxxl.PacManXXLGameModel;
+import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
@@ -532,7 +533,15 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         PacManXXLGameModel xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
         xxlGame.loadCustomMaps();
         Logger.info("Custom maps: {}", xxlGame.customMapsSortedByFile());
-        //TODO dashboard should be updated too!
+        // TODO this is totla crap! But as the custom map collection lives in the model which is
+        // JavaFX-unaware, there is no observable FX collection where the infobox could register a
+        // change listener
+        for (var infoBox : gamePage.dashboardLayer().dashboard().getInfoBoxes()) {
+            if (infoBox instanceof InfoBoxCustomMaps customMapsInfoBox) {
+                customMapsInfoBox.updateTableView();
+                break;
+            }
+        }
     }
 
     @Override

@@ -50,7 +50,7 @@ public class InfoBox3D extends InfoBox {
     private CheckBox cbWireframeMode;
 
     public void init(GameContext context) {
-        this.context = context;
+        super.init(context);
 
         cbUsePlayScene3D = checkBox("3D Play Scene");
         pickerLightColor = addColorPickerRow("Light Color", PY_3D_LIGHT_COLOR.get());

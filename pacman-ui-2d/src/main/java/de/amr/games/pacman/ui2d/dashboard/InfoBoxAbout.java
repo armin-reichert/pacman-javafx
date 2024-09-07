@@ -18,7 +18,7 @@ import javafx.scene.text.TextFlow;
 public class InfoBoxAbout extends InfoBox {
 
     public void init(GameContext context) {
-        this.context = context;
+        super.init(context);
 
         var theAuthorInYoungerYears = new ImageView(context.assets().image("image.armin1970"));
         theAuthorInYoungerYears.setFitWidth(250);
