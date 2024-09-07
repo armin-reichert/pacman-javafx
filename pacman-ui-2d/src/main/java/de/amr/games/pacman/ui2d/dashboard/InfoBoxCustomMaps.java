@@ -41,16 +41,24 @@ public class InfoBoxCustomMaps extends InfoBox {
 
         mapTable = new TableView<>();
         mapTable.setPrefHeight(200);
-        var col1 = new TableColumn<MapInfo, String>("Map File");
-        col1.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().fileName));
-        var col2 = new TableColumn<MapInfo, Integer>("Rows");
-        col2.setCellValueFactory(p -> new SimpleIntegerProperty(p.getValue().numRows).asObject());
-        var col3 = new TableColumn<MapInfo, Integer>("Cols");
-        col3.setCellValueFactory(p -> new SimpleIntegerProperty(p.getValue().numCols).asObject());
-        mapTable.getColumns().add(col1);
-        mapTable.getColumns().add(col2);
-        mapTable.getColumns().add(col3);
         addRow(mapTable);
+
+        var tcMapFile = new TableColumn<MapInfo, String>("Map File");
+        tcMapFile.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().fileName));
+
+        var tcMapRowCount = new TableColumn<MapInfo, Integer>("Rows");
+        tcMapRowCount.setCellValueFactory(p -> new SimpleIntegerProperty(p.getValue().numRows).asObject());
+
+        var tcMapColCount = new TableColumn<MapInfo, Integer>("Cols");
+        tcMapColCount.setCellValueFactory(p -> new SimpleIntegerProperty(p.getValue().numCols).asObject());
+
+        mapTable.getColumns().add(tcMapFile);
+        mapTable.getColumns().add(tcMapRowCount);
+        mapTable.getColumns().add(tcMapColCount);
+        mapTable.getColumns().forEach(column -> {
+            column.setSortable(false);
+            column.setReorderable(false);
+        });
 
         updateTableView();
     }
