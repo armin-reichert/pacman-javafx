@@ -34,7 +34,7 @@ public class GamePage3D extends GamePage {
 
     public GamePage3D(GameContext context, Scene parentScene) {
         super(context, parentScene);
-        dashboardLayer.dashboard().addInfoBox(3, context.locText("infobox.3D_settings.title"), new InfoBox3D());
+        dashboardLayer.addInfoBox(3, context.locText("infobox.3D_settings.title"), new InfoBox3D());
         backgroundProperty().bind(Bindings.createObjectBinding(
             () -> {
                 if (PY_3D_DRAW_MODE.get() == DrawMode.LINE) {

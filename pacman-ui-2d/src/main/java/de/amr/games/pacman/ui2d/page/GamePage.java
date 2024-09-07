@@ -226,7 +226,7 @@ public class GamePage extends StackPane implements Page {
     }
 
     public void toggleDashboard() {
-        dashboardLayer.dashboard().toggleVisibility();
+        dashboardLayer.toggleDashboardVisibility();
     }
 
     public void updateDashboard() {

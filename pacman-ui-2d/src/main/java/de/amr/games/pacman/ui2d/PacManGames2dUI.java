@@ -533,10 +533,11 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         PacManXXLGameModel xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
         xxlGame.loadCustomMaps();
         Logger.info("Custom maps: {}", xxlGame.customMapsSortedByFile());
-        // TODO this is totla crap! But as the custom map collection lives in the model which is
-        // JavaFX-unaware, there is no observable FX collection where the infobox could register a
-        // change listener
-        for (var infoBox : gamePage.dashboardLayer().dashboard().getInfoBoxes()) {
+        /* TODO: Find better solution
+        This is total crap! But the "custom map" collection lives inside the model which is
+        JavaFX-unaware, there is no observable FX collection where the infobox could register a
+        change listener. */
+        for (var infoBox : gamePage.dashboardLayer().getInfoBoxes()) {
             if (infoBox instanceof InfoBoxCustomMaps customMapsInfoBox) {
                 customMapsInfoBox.updateTableView();
                 break;
