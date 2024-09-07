@@ -19,6 +19,8 @@ import javafx.scene.control.TableView;
 
 import java.io.File;
 
+import static de.amr.games.pacman.ui2d.GameParameters.PY_MAP_SELECTION_MODE;
+
 /**
  * @author Armin Reichert
  */
@@ -34,12 +36,8 @@ public class InfoBoxCustomMaps extends InfoBox {
         this.context = context;
 
         comboMapSelectionMode = addComboBoxRow("Map Selection", MapSelectionMode.values());
-        comboMapSelectionMode.setOnAction(e -> {
-            PacManXXLGameModel xxlGame = context.gameController().gameModel(GameVariant.PACMAN_XXL);
-            xxlGame.setMapSelectionMode(comboMapSelectionMode.getValue());
-            xxlGame.loadCustomMaps();
-            reloadCustomMapsAndUpdateTableView();
-        });
+        comboMapSelectionMode.setOnAction(e -> PY_MAP_SELECTION_MODE.set(comboMapSelectionMode.getValue()));
+        comboMapSelectionMode.getSelectionModel().select(PY_MAP_SELECTION_MODE.get());
 
         mapTable = new TableView<>();
         mapTable.setPrefHeight(200);
@@ -54,20 +52,12 @@ public class InfoBoxCustomMaps extends InfoBox {
         mapTable.getColumns().add(col3);
         addRow(mapTable);
 
-        reloadCustomMapsAndUpdateTableView();
+        updateTableView();
     }
 
-    @Override
-    public void update() {
-        super.update();
+    private void updateTableView() {
         PacManXXLGameModel xxlGame = context.gameController().gameModel(GameVariant.PACMAN_XXL);
-        comboMapSelectionMode.getSelectionModel().select(xxlGame.mapSelectionMode());
-    }
-
-    private void reloadCustomMapsAndUpdateTableView() {
         ObservableList<MapInfo> items = FXCollections.observableArrayList();
-        PacManXXLGameModel xxlGame = context.gameController().gameModel(GameVariant.PACMAN_XXL);
-        xxlGame.loadCustomMaps();
         for (File file  : xxlGame.customMapsByFile().keySet().stream().sorted().toList()) {
             WorldMap map = xxlGame.customMapsByFile().get(file);
             items.add(new MapInfo(file.getName(), map.terrain().numRows(), map.terrain().numCols()));

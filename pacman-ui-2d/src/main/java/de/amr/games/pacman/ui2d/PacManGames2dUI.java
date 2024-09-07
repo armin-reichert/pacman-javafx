@@ -202,6 +202,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         gameVariantPy.set(game().variant());
         GameSounds.gameVariantProperty().bind(gameVariantPy);
 
+        // Not sure where this belongs
+        PacManXXLGameModel xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
+        GameParameters.PY_MAP_SELECTION_MODE.addListener((py,ov,nv) -> {
+            xxlGame.loadCustomMaps();
+            xxlGame.setMapSelectionMode(nv);
+        });
+        xxlGame.setMapSelectionMode(PY_MAP_SELECTION_MODE.get());
+
         stage.titleProperty().bind(stageTitleBinding());
         //TODO this does not work yet correctly
         Dimension2D minSize = DecoratedCanvas.computeSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y, 1);

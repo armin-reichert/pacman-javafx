@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.pacmanxxl.MapSelectionMode;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 
@@ -16,6 +17,7 @@ public interface GameParameters {
     BooleanProperty PY_AUTOPILOT           = new SimpleBooleanProperty(false);
     ObjectProperty<Color> PY_CANVAS_COLOR  = new SimpleObjectProperty<>(Color.BLACK);
     BooleanProperty PY_CANVAS_DECORATED    = new SimpleBooleanProperty(true);
+    ObjectProperty<MapSelectionMode> PY_MAP_SELECTION_MODE = new SimpleObjectProperty<>(MapSelectionMode.CUSTOM_MAPS_FIRST);
     BooleanProperty PY_DEBUG_INFO          = new SimpleBooleanProperty(false);
     BooleanProperty PY_IMMUNITY            = new SimpleBooleanProperty(false);
     BooleanProperty PY_NIGHT_MODE          = new SimpleBooleanProperty(false);

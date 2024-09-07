@@ -57,6 +57,7 @@ public class PacManXXLGameModel extends PacManGameModel {
 
     public void setMapSelectionMode(MapSelectionMode mapSelectionMode) {
         this.mapSelectionMode = checkNotNull(mapSelectionMode);
+        Logger.info("Map selection mode is now {}", mapSelectionMode);
     }
 
     public MapSelectionMode mapSelectionMode() {
@@ -67,6 +68,8 @@ public class PacManXXLGameModel extends PacManGameModel {
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
         WorldMap map = selectMap(levelNumber);
+        Logger.info("Map selection mode is {}", mapSelectionMode);
+        Logger.info("Selected map URL is {}", map.url());
         setWorldAndCreatePopulation(createWorld(map));
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
