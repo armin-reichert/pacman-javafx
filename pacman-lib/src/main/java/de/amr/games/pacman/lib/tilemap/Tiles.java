@@ -27,6 +27,10 @@ public interface Tiles {
     byte DCORNER_SW = 13;
     byte DOOR       = 14;
     byte WALL       = 15;
+    byte DCORNER_ANGULAR_NW = 16;
+    byte DCORNER_ANGULAR_NE = 17;
+    byte DCORNER_ANGULAR_SE = 18;
+    byte DCORNER_ANGULAR_SW = 19;
 
     // Food tiles
     byte PELLET = 1;

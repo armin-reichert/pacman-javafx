@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import static de.amr.games.pacman.lib.tilemap.TileMap.parseVector2i;
 import static de.amr.games.pacman.mapeditor.TileMapEditor.*;
+import static de.amr.games.pacman.mapeditor.TileMapUtil.HALF_TILE_SIZE;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.TILE_SIZE;
 
 /**
@@ -108,6 +109,7 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
             case Tiles.DWALL_V -> drawDWallV(g, tile);
             case Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE -> drawCorner(g, tile, content);
             case Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE -> drawDCorner(g, tile, content);
+            case Tiles.DCORNER_ANGULAR_NW, Tiles.DCORNER_ANGULAR_NE, Tiles.DCORNER_ANGULAR_SW, Tiles.DCORNER_ANGULAR_SE -> drawDCornerAngular(g, tile, content);
             case Tiles.DOOR -> drawDoor(g, tile, doorColor);
             case Tiles.TUNNEL -> drawTunnel(g, tile);
             default -> {}
@@ -217,6 +219,37 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
             case Tiles.DCORNER_SW -> {
                 g.strokeArc(x + 5, y - 3, 6, 6, 180, 90, ArcType.OPEN);
                 g.strokeArc(x + 3, y - 5, 10, 10, 180, 90, ArcType.OPEN);
+            }
+            default -> {}
+        }
+    }
+
+    private void drawDCornerAngular(GraphicsContext g, Vector2i tile, byte cornerType) {
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
+        double cx = x + HALF_TILE_SIZE, cy = y + HALF_TILE_SIZE;
+        double rightEdge = x + TILE_SIZE, bottomEdge = y + TILE_SIZE;
+        g.setStroke(wallStrokeColor);
+        g.setLineWidth(1);
+        switch (cornerType) {
+            case Tiles.DCORNER_ANGULAR_NW -> {
+                //TODO still single line
+                g.strokeLine(cx, bottomEdge, cx, cy);
+                g.strokeLine(cx, cy, rightEdge, cy);
+            }
+            case Tiles.DCORNER_ANGULAR_NE -> {
+                //TODO still single line
+                g.strokeLine(cx, bottomEdge, cx, cy);
+                g.strokeLine(cx, cy, x, cy);
+            }
+            case Tiles.DCORNER_ANGULAR_SE -> {
+                //TODO still single line
+                g.strokeLine(x, cy, cx, cy);
+                g.strokeLine(cx, cy, cx, y);
+            }
+            case Tiles.DCORNER_ANGULAR_SW -> {
+                //TODO still single line
+                g.strokeLine(cx, y, cx, cy);
+                g.strokeLine(cx, cy, rightEdge, cy);
             }
             default -> {}
         }

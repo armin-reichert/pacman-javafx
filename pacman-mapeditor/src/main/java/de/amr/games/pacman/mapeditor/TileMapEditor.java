@@ -386,7 +386,7 @@ public class TileMapEditor  {
     }
 
     private Palette createTerrainPalette() {
-        var palette = new Palette(32, 1, 15, terrainMapEditRenderer);
+        var palette = new Palette(32, 1, 19, terrainMapEditRenderer);
         palette.setTools(
             palette.createTileValueEditorTool(this, Tiles.WALL_H, "Horiz. Wall"),
             palette.createTileValueEditorTool(this, Tiles.WALL_V, "Vert. Wall"),
@@ -400,6 +400,10 @@ public class TileMapEditor  {
             palette.createTileValueEditorTool(this, Tiles.DCORNER_NE, "NE Corner"),
             palette.createTileValueEditorTool(this, Tiles.DCORNER_SW, "SW Corner"),
             palette.createTileValueEditorTool(this, Tiles.DCORNER_SE, "SE Corner"),
+            palette.createTileValueEditorTool(this, Tiles.DCORNER_ANGULAR_NW, "NW Corner"),
+            palette.createTileValueEditorTool(this, Tiles.DCORNER_ANGULAR_NE, "NE Corner"),
+            palette.createTileValueEditorTool(this, Tiles.DCORNER_ANGULAR_SW, "SW Corner"),
+            palette.createTileValueEditorTool(this, Tiles.DCORNER_ANGULAR_SE, "SE Corner"),
             palette.createTileValueEditorTool(this, Tiles.EMPTY, "Empty Space"),
             palette.createTileValueEditorTool(this, Tiles.TUNNEL, "Tunnel"),
             palette.createTileValueEditorTool(this, Tiles.DOOR, "Door")
