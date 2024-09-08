@@ -178,10 +178,10 @@ public class TileMapEditor  {
             WorldMap map = get();
             //TODO use binding?
             if (foodMapPropertiesEditor != null) {
-                foodMapPropertiesEditor.setMap(map.food());
+                foodMapPropertiesEditor.setTileMap(map.food());
             }
             if (terrainMapPropertiesEditor != null) {
-                terrainMapPropertiesEditor.setMap(map.terrain());
+                terrainMapPropertiesEditor.setTileMap(map.terrain());
             }
             invalidateTerrainMapPaths();
             updateTerrainMapPaths();
@@ -233,7 +233,7 @@ public class TileMapEditor  {
 
     private final Map<String, Palette> palettes = new HashMap<>();
 
-    private boolean pathsUpToDate;
+    private boolean terrainMapPathsUpToDate;
     private boolean unsavedChanges;
     private File lastUsedDir;
     private Instant messageCloseTime;
@@ -583,8 +583,7 @@ public class TileMapEditor  {
         var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
         miAddBorder.setOnAction(e -> {
             addBorder(map().terrain(), 3, 2);
-            invalidateTerrainMapPaths();
-            markMapEdited();
+            markTileMapEdited(map().terrain());
         });
 
         var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
@@ -592,28 +591,26 @@ public class TileMapEditor  {
             int row = map().terrain().numRows() / 2 - 3;
             int col = map().terrain().numCols() / 2 - 4;
             GHOST_HOUSE_SHAPE.addToMap(map().terrain(), row, col);
-            invalidateTerrainMapPaths();
-            markMapEdited();
+            markTileMapEdited(map().terrain());
         });
 
         var miCopyLeftToRight = new MenuItem("Copy Left to Right Mirrored");
         miCopyLeftToRight.setOnAction(e -> {
             copyLeftContentToRightSideMirrored(map());
-            invalidateTerrainMapPaths();
-            markMapEdited();
+            markTileMapEdited(map().terrain());
+            markTileMapEdited(map().food());
         });
 
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
             map().terrain().clear();
-            invalidateTerrainMapPaths();
-            markMapEdited();
+            markTileMapEdited(map().terrain());
         });
 
         var miClearFood = new MenuItem(tt("menu.edit.clear_food"));
         miClearFood.setOnAction(e -> {
             map().food().clear();
-            markMapEdited();
+            markTileMapEdited(map().food());
         });
 
         menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
@@ -662,19 +659,22 @@ public class TileMapEditor  {
     }
 
     private void updateTerrainMapPaths() {
-        if (!pathsUpToDate) {
+        if (!terrainMapPathsUpToDate) {
             map().terrain().computeTerrainPaths();
-            pathsUpToDate = true;
+            terrainMapPathsUpToDate = true;
         }
     }
 
     private void invalidateTerrainMapPaths() {
-        pathsUpToDate = false;
+        terrainMapPathsUpToDate = false;
     }
 
-    public void markMapEdited() {
+    public void markTileMapEdited(TileMap tileMap) {
         unsavedChanges = true;
         updateSourceView(map());
+        if (tileMap == map().terrain()) {
+            invalidateTerrainMapPaths();
+        }
     }
 
     public boolean hasUnsavedChanges() {
@@ -971,7 +971,7 @@ public class TileMapEditor  {
                 if (selectedPalette().isToolSelected()) {
                     Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
                     selectedPalette().selectedTool().apply(map().terrain(), tile);
-                    markMapEdited();
+                    markTileMapEdited(map().terrain());
                     terrainMapPropertiesEditor.updatePropertyEditorValues();
                 }
             }
@@ -991,14 +991,13 @@ public class TileMapEditor  {
                     if (selectedPalette().isToolSelected()) {
                         selectedPalette().selectedTool().apply(map().terrain(), focussedTilePy.get());
                     }
-                    markMapEdited();
-                    invalidateTerrainMapPaths();
+                    markTileMapEdited(map().terrain());
                 }
                 case PALETTE_FOOD -> {
                     if (selectedPalette().isToolSelected()) {
                         selectedPalette().selectedTool().apply(map().food(), focussedTilePy.get());
                     }
-                    markMapEdited();
+                    markTileMapEdited(map().food());
                 }
                 default -> {}
             }
@@ -1020,8 +1019,7 @@ public class TileMapEditor  {
         else if (selectedPalette().isToolSelected()) {
             selectedPalette().selectedTool().apply(tileMap, tile);
         }
-        invalidateTerrainMapPaths();
-        markMapEdited();
+        markTileMapEdited(tileMap);
     }
 
     void setTileValue(TileMap tileMap, Vector2i tile, byte value) {
