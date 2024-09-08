@@ -16,6 +16,7 @@ import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
+import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Side;
@@ -264,6 +265,7 @@ public class TileMapEditor  {
         terrain.setProperty("pos_ghost_4_orange", formatTile(DEFAULT_POS_ORANGE_GHOST));
         terrain.setProperty("pos_bonus",          formatTile(DEFAULT_POS_BONUS));
         map.food().setProperty("color_food",            DEFAULT_FOOD_COLOR);
+        Logger.info("Map created. rows={}, cols={}", numRows, numCols);
         return map;
     }
 
@@ -672,21 +674,34 @@ public class TileMapEditor  {
     }
 
     private void showNewMapDialog() {
-        TextInputDialog dialog = new TextInputDialog("28x36");
+        var dialog = new TextInputDialog("28x36");
         dialog.setTitle(tt("new_dialog.title"));
         dialog.setHeaderText(tt("new_dialog.header_text"));
         dialog.setContentText(tt("new_dialog.content_text"));
         dialog.showAndWait().ifPresent(text -> {
-            String[] tuple = text.split("x");
-            try {
-                int numCols = Integer.parseInt(tuple[0].trim());
-                int numRows = Integer.parseInt(tuple[1].trim());
-                setMap(createWorldMap(numRows, numCols));
+            Vector2i size = parseSize(text);
+            if (size != null) {
+                WorldMap map = createWorldMap(size.y(), size.x());
+                setMap(map);
                 currentFilePy.set(null);
-            } catch (Exception x) {
-                Logger.error(x); //TODO user message
             }
         });
+    }
+
+    private Vector2i parseSize(String colsCrossRows) {
+        String[] tuple = colsCrossRows.split("x");
+        if (tuple.length != 2) {
+            showMessage("Map size must be given as cols x rows", 2, MessageType.ERROR);
+            return null;
+        }
+        try {
+            int numCols = Integer.parseInt(tuple[0].trim());
+            int numRows = Integer.parseInt(tuple[1].trim());
+            return new Vector2i(numCols, numRows);
+        } catch (Exception x) {
+            showMessage("Map size must be given as cols x rows", 2, MessageType.ERROR);
+            return null;
+        }
     }
 
     private void openMapFile() {
@@ -718,7 +733,8 @@ public class TileMapEditor  {
                 unsavedChanges = false;
                 readMapFile(file);
             } else {
-                Logger.error("No .world file selected"); //TODO
+                Logger.error("No .world file selected");
+                showMessage("No .world file selected", 2, MessageType.WARNING);
             }
         }
     }

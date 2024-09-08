@@ -84,7 +84,7 @@ public class PropertyEditorPane extends BorderPane {
                 String deletePropertyName = chopDeleteCommand(editedName);
                 if (deletePropertyName.equals(propertyName)) {
                     tileMap.getProperties().remove(propertyName);
-                    Logger.info("Property {} deleted", propertyName);
+                    Logger.debug("Property {} deleted", propertyName);
                     tileMapEditor.markMapEdited();
                     rebuildPropertyEditors(); //TODO check
                     tileMapEditor.showMessage("Property %s deleted".formatted(propertyName), 1, MessageType.INFO);
@@ -289,7 +289,7 @@ public class PropertyEditorPane extends BorderPane {
     }
 
     private void rebuildPropertyEditors() {
-        Logger.info("Rebuild editors");
+        Logger.debug("Rebuild editors");
         propertyEditors.clear();
         tileMap.getProperties().stringPropertyNames().stream().sorted().forEach(propertyName -> {
             String propertyValue = tileMap.getProperty(propertyName);
