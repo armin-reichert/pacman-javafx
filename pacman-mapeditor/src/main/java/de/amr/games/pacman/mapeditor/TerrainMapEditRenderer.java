@@ -12,7 +12,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
-import javafx.scene.shape.StrokeLineCap;
 
 import java.util.Optional;
 
@@ -31,6 +30,9 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
     protected Color wallFillColor = Color.BLACK;
     protected Color wallStrokeColor = Color.GREEN;
     protected Color doorColor = Color.PINK;
+
+    private final double[] xp = new double[3];
+    private final double[] yp = new double[3];
 
     @Override
     public void setScaling(double scaling) {
@@ -110,7 +112,8 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
             case Tiles.DWALL_V -> drawDWallV(g, tile);
             case Tiles.CORNER_NW, Tiles.CORNER_NE, Tiles.CORNER_SW, Tiles.CORNER_SE -> drawCorner(g, tile, content);
             case Tiles.DCORNER_NW, Tiles.DCORNER_NE, Tiles.DCORNER_SW, Tiles.DCORNER_SE -> drawDCorner(g, tile, content);
-            case Tiles.DCORNER_ANGULAR_NW, Tiles.DCORNER_ANGULAR_NE, Tiles.DCORNER_ANGULAR_SW, Tiles.DCORNER_ANGULAR_SE -> drawDCornerAngular(g, tile, content);
+            case Tiles.DCORNER_ANGULAR_NW, Tiles.DCORNER_ANGULAR_NE, Tiles.DCORNER_ANGULAR_SW, Tiles.DCORNER_ANGULAR_SE
+                    -> drawDCornerAngular(g, tile, content, xp, yp);
             case Tiles.DOOR -> drawDoor(g, tile, doorColor);
             case Tiles.TUNNEL -> drawTunnel(g, tile);
             default -> {}
@@ -225,7 +228,7 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
         }
     }
 
-    private void drawDCornerAngular(GraphicsContext g, Vector2i tile, byte cornerType) {
+    private void drawDCornerAngular(GraphicsContext g, Vector2i tile, byte cornerType, double[] xp, double[] yp) {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         double cx = x + HALF_TILE_SIZE, cy = y + HALF_TILE_SIZE;
         double rightEdge = x + TILE_SIZE, bottomEdge = y + TILE_SIZE;
@@ -234,20 +237,40 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
         g.setLineWidth(1);
         switch (cornerType) {
             case Tiles.DCORNER_ANGULAR_NW -> {
-                g.strokePolyline(new double[]{cx-d,cx-d,rightEdge}, new double[]{bottomEdge,cy-d,cy-d}, 3);
-                g.strokePolyline(new double[]{cx+d,cx+d,rightEdge}, new double[]{bottomEdge,cy+d,cy+d}, 3);
+                xp[0]=xp[1]=cx-d;xp[2]=rightEdge;
+                yp[0]=bottomEdge;yp[1]=yp[2]=cy-d;
+                g.strokePolyline(xp,yp,xp.length);
+
+                xp[0]=xp[1]=cx+d;xp[2]=rightEdge;
+                yp[0]=bottomEdge;yp[1]=yp[2]=cy+d;
+                g.strokePolyline(xp,yp,xp.length);
             }
             case Tiles.DCORNER_ANGULAR_NE -> {
-                g.strokePolyline(new double[]{x,cx+d,cx+d}, new double[]{cy-d,cy-d,bottomEdge}, 3);
-                g.strokePolyline(new double[]{x,cx-d,cx-d}, new double[]{cy+d,cy+d,bottomEdge}, 3);
+                xp[0]=x; xp[1]=xp[2]=cx+d;
+                yp[0]=yp[1]=cy-d; yp[2]=bottomEdge;
+                g.strokePolyline(xp,yp,xp.length);
+
+                xp[0]=x; xp[1]=xp[2]=cx-d;
+                yp[0]=yp[1]=cy+d; yp[2]=bottomEdge;
+                g.strokePolyline(xp,yp,xp.length);
             }
             case Tiles.DCORNER_ANGULAR_SE -> {
-                g.strokePolyline(new double[]{x,cx-d,cx-d}, new double[]{cy-d,cy-d,y}, 3);
-                g.strokePolyline(new double[]{x,cx+d,cx+d}, new double[]{cy+d,cy+d,y}, 3);
+                xp[0]=x; xp[1]=xp[2]=cx-d;
+                yp[0]=yp[1]=cy-d; yp[2]=y;
+                g.strokePolyline(xp,yp,xp.length);
+
+                xp[0]=x; xp[1]=xp[2]=cx+d;
+                yp[0]=yp[1]=cy+d; yp[2]=y;
+                g.strokePolyline(xp,yp,xp.length);
             }
             case Tiles.DCORNER_ANGULAR_SW -> {
-                g.strokePolyline(new double[]{cx-d,cx-d,rightEdge}, new double[]{y,cy+d,cy+d}, 3);
-                g.strokePolyline(new double[]{cx+d,cx+d,rightEdge}, new double[]{y,cy-d,cy-d}, 3);
+                xp[0]=xp[1]=cx-d; xp[2]=rightEdge;
+                yp[0]=y; yp[1]=yp[2]=cy+d;
+                g.strokePolyline(xp,yp,xp.length);
+
+                xp[0]=xp[1]=cx+d; xp[2]=rightEdge;
+                yp[0]=y; yp[1]=yp[2]=cy-d;
+                g.strokePolyline(xp,yp,xp.length);
             }
             default -> {}
         }
