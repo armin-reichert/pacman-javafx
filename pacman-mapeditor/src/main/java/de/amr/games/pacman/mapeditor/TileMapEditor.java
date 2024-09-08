@@ -223,8 +223,15 @@ public class TileMapEditor  {
         lastUsedDir = workDir;
         mapPy.set(createWorldMap(36, 28));
         titlePy.bind(Bindings.createStringBinding(
-            () -> tt("map_editor") + (currentFilePy.get() != null ? " - " + currentFilePy.get() : ""),
-            currentFilePy
+            () -> {
+                String title = tt("map_editor");
+                if (currentFilePy.get() != null) {
+                    title += " - " + currentFilePy.get();
+                } else if (map() != null) {
+                    title += " - " + map().url();
+                }
+                return title;
+            }, currentFilePy, mapPy
         ));
         var url = requireNonNull(getClass().getResource("pacman_spritesheet.png"));
         spriteSheet = new Image(url.toExternalForm());
