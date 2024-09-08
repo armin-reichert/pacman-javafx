@@ -72,6 +72,7 @@ public class GamePage extends StackPane implements Page {
         dashboardLayer = new DashboardLayer(context);
 
         popupLayer = new PopupLayer(context, decoratedCanvas);
+        popupLayer.setMouseTransparent(true);
         popupLayer.configureSignature(canvasLayer,
             assets.font("font.monospaced", 10),
             Color.grayRgb(200),
@@ -79,6 +80,7 @@ public class GamePage extends StackPane implements Page {
 
         getChildren().addAll(canvasLayer, dashboardLayer, popupLayer);
 
+        //TODO is this the recommended way to close an open context-menu?
         setOnMouseClicked(e -> contextMenu.hide());
 
         // Debugging

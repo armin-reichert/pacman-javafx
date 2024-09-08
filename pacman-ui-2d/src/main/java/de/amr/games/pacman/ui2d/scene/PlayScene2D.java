@@ -50,6 +50,7 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void init() {
         super.init();
+        terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
         terrainRenderer.scalingPy.bind(scalingPy);
         foodRenderer.scalingPy.bind(scalingPy);
     }

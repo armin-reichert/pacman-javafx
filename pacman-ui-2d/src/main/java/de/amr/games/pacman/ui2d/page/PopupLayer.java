@@ -52,7 +52,6 @@ public class PopupLayer extends Pane {
                 ? Ufx.border(Color.GREENYELLOW, 3) : null,
             PY_DEBUG_INFO, context.gameSceneProperty()
         ));
-        mouseTransparentProperty().bind(PY_DEBUG_INFO);
     }
 
     public void configureSignature(CanvasLayoutPane canvasPane, Font font, Color color, String... words) {

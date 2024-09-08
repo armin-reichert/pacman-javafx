@@ -27,9 +27,10 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     public DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1);
 
-    protected Color wallFillColor = Color.BLACK;
-    protected Color wallStrokeColor = Color.GREEN;
-    protected Color doorColor = Color.PINK;
+    private Color mapBackgroundColor = Color.BLACK;
+    private Color wallFillColor = Color.BLACK;
+    private Color wallStrokeColor = Color.GREEN;
+    private Color doorColor = Color.PINK;
 
     @Override
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
@@ -52,9 +53,11 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
-        double height = TILE_SIZE * 0.25;
+        double height = TILE_SIZE * 0.2;
+        g.setFill(mapBackgroundColor);
+        g.fillRect(x - 0.5, y + 0.5 * (TILE_SIZE - height) - 2, TILE_SIZE + 1, height + 4);
         g.setFill(color);
-        g.fillRect(x, y + 0.5 * (TILE_SIZE - height), TILE_SIZE, height);
+        g.fillRect(x - 0.5, y + 0.5 * (TILE_SIZE - height), TILE_SIZE + 1, height);
     }
 
     @Override
@@ -64,6 +67,10 @@ public class TerrainMapRenderer implements TileMapRenderer {
 
     public double scaling() {
         return scalingPy.get();
+    }
+
+    public void setMapBackgroundColor(Color mapBackgroundColor) {
+        this.mapBackgroundColor = mapBackgroundColor;
     }
 
     public void setWallStrokeColor(Color color) {
