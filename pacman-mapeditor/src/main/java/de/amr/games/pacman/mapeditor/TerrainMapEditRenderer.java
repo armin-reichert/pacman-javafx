@@ -12,6 +12,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import javafx.scene.shape.StrokeLineCap;
 
 import java.util.Optional;
 
@@ -228,28 +229,25 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
         double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         double cx = x + HALF_TILE_SIZE, cy = y + HALF_TILE_SIZE;
         double rightEdge = x + TILE_SIZE, bottomEdge = y + TILE_SIZE;
+        double d = 1;
         g.setStroke(wallStrokeColor);
         g.setLineWidth(1);
         switch (cornerType) {
             case Tiles.DCORNER_ANGULAR_NW -> {
-                //TODO still single line
-                g.strokeLine(cx, bottomEdge, cx, cy);
-                g.strokeLine(cx, cy, rightEdge, cy);
+                g.strokePolyline(new double[]{cx-d,cx-d,rightEdge}, new double[]{bottomEdge,cy-d,cy-d}, 3);
+                g.strokePolyline(new double[]{cx+d,cx+d,rightEdge}, new double[]{bottomEdge,cy+d,cy+d}, 3);
             }
             case Tiles.DCORNER_ANGULAR_NE -> {
-                //TODO still single line
-                g.strokeLine(cx, bottomEdge, cx, cy);
-                g.strokeLine(cx, cy, x, cy);
+                g.strokePolyline(new double[]{x,cx+d,cx+d}, new double[]{cy-d,cy-d,bottomEdge}, 3);
+                g.strokePolyline(new double[]{x,cx-d,cx-d}, new double[]{cy+d,cy+d,bottomEdge}, 3);
             }
             case Tiles.DCORNER_ANGULAR_SE -> {
-                //TODO still single line
-                g.strokeLine(x, cy, cx, cy);
-                g.strokeLine(cx, cy, cx, y);
+                g.strokePolyline(new double[]{x,cx-d,cx-d}, new double[]{cy-d,cy-d,y}, 3);
+                g.strokePolyline(new double[]{x,cx+d,cx+d}, new double[]{cy+d,cy+d,y}, 3);
             }
             case Tiles.DCORNER_ANGULAR_SW -> {
-                //TODO still single line
-                g.strokeLine(cx, y, cx, cy);
-                g.strokeLine(cx, cy, rightEdge, cy);
+                g.strokePolyline(new double[]{cx-d,cx-d,rightEdge}, new double[]{y,cy+d,cy+d}, 3);
+                g.strokePolyline(new double[]{cx+d,cx+d,rightEdge}, new double[]{y,cy-d,cy-d}, 3);
             }
             default -> {}
         }
