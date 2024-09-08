@@ -42,7 +42,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.save();
         g.scale(scaling(), scaling());
         map.doubleStrokePaths().forEach(path -> {
-            drawPath(g, path, false,  2.5 * lineWidth, wallStrokeColor, null);
+            drawPath(g, path, false,  4* lineWidth, wallStrokeColor, null);
             drawPath(g, path, false,  lineWidth, wallFillColor, null);
         });
         map.singleStrokePaths().forEach(path -> drawPath(g, path, true, lineWidth, wallStrokeColor, wallFillColor));
