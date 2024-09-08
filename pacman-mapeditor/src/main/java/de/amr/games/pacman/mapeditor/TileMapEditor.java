@@ -361,7 +361,7 @@ public class TileMapEditor  {
         gridSizePy.set(Math.max(gridSize, 8));
         clock.play();
         Logger.info("Window height {}", ownerWindow.getHeight());
-        showMessage("Welcome to the tile map editor!", 3, MessageType.INFO);
+        showMessage(tt("welcome_message"), 3, MessageType.INFO);
     }
 
     public void stop() {
@@ -511,22 +511,23 @@ public class TileMapEditor  {
         focussedTileInfo.setMaxWidth(100);
 
         messageLabel = new Label();
+        messageLabel.setMinWidth(200);
         messageLabel.setPadding(new Insets(0, 0, 0, 10));
 
         var filler = new Region();
         HBox.setHgrow(filler, Priority.ALWAYS);
 
-        Slider sliderGridSize = new Slider(8, 48, 16);
-        sliderGridSize.valueProperty().bindBidirectional(gridSizePy);
-        sliderGridSize.setShowTickLabels(false);
-        sliderGridSize.setShowTickMarks(true);
-        sliderGridSize.setPrefWidth(250);
+        Slider sliderZoom = new Slider(8, 48, 16);
+        sliderZoom.valueProperty().bindBidirectional(gridSizePy);
+        sliderZoom.setShowTickLabels(false);
+        sliderZoom.setShowTickMarks(true);
+        sliderZoom.setPrefWidth(200);
 
-        var sliderContainer = new HBox(new Label("Zoom"), sliderGridSize);
-        sliderContainer.setSpacing(5);
+        var sliderZoomContainer = new HBox(new Label("Zoom"), sliderZoom);
+        sliderZoomContainer.setSpacing(5);
 
-        var footer = new HBox(focussedTileInfo, messageLabel, filler, sliderContainer);
-        footer.setPadding(new Insets(0, 10, 0, 10));
+        var footer = new HBox(focussedTileInfo, messageLabel, filler, sliderZoomContainer);
+        footer.setPadding(new Insets(0, 50, 0, 10));
 
         var splitPane = new SplitPane(editCanvasScroll, previewCanvasScroll);
         splitPane.setDividerPositions(0.5);
