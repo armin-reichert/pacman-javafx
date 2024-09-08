@@ -19,6 +19,7 @@ import javafx.beans.property.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -55,6 +56,8 @@ import static java.util.Objects.requireNonNull;
  * @author Armin Reichert
  */
 public class TileMapEditor  {
+
+    private static final Node NO_GRAPHIC = null;
 
     private static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.mapeditor.texts");
 
@@ -570,11 +573,11 @@ public class TileMapEditor  {
         var miSaveAs = new MenuItem(tt("menu.file.save_as"));
         miSaveAs.setOnAction(e -> showSaveDialog());
 
-        menuFile = new Menu(tt("menu.file"), null /* graphic */, miNew, miOpen, miSaveAs);
+        menuFile = new Menu(tt("menu.file"), NO_GRAPHIC, miNew, miOpen, miSaveAs);
     }
 
     private void createEditMenu() {
-        var miSymmetricMode = new CheckMenuItem("Symmetric Mode");
+        var miSymmetricMode = new CheckMenuItem(tt("menu.edit.symmetric"));
         miSymmetricMode.selectedProperty().bindBidirectional(symmetricModePy);
 
         var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
@@ -613,8 +616,14 @@ public class TileMapEditor  {
             markMapEdited();
         });
 
-        menuEdit = new Menu(tt("menu.edit"), null, miSymmetricMode, miAddBorder, miAddHouse
-                /*miCopyLeftToRight*/, miClearTerrain, miClearFood);
+        menuEdit = new Menu(tt("menu.edit"), NO_GRAPHIC,
+            miSymmetricMode,
+            new SeparatorMenuItem(),
+            miAddBorder,
+            miAddHouse,
+            miClearTerrain,
+            miClearFood);
+
         menuEdit.disableProperty().bind(editingEnabledPy.not());
     }
 
@@ -636,7 +645,12 @@ public class TileMapEditor  {
         var miViewPreview = new CheckMenuItem(tt("menu.view.preview"));
         miViewPreview.selectedProperty().bindBidirectional(previewVisiblePy);
 
-        menuView = new Menu(tt("menu.view"), null, miViewTerrain, miViewFood, miViewGrid, new SeparatorMenuItem(), miViewPreview);
+        menuView = new Menu(tt("menu.view"), NO_GRAPHIC,
+            miViewTerrain,
+            miViewFood,
+            miViewGrid,
+            new SeparatorMenuItem(),
+            miViewPreview);
     }
 
     public void addLoadMapMenuItem(String description, WorldMap map) {
