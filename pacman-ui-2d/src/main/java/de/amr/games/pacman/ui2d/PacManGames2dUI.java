@@ -521,7 +521,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void quitMapEditor(TileMapEditor editor) {
-        editor.showConfirmation(editor::saveMapFileAs, () -> stage.titleProperty().bind(stageTitleBinding()));
+        editor.showSaveConfirmationDialog(editor::saveMapFileAs, () -> stage.titleProperty().bind(stageTitleBinding()));
         editor.stop();
         updateCustomMaps();
         reboot();

@@ -14,6 +14,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
@@ -221,20 +222,26 @@ public class TileMapEditor  {
 
     public TileMapEditor(File workDir) {
         lastUsedDir = workDir;
+        titlePy.bind(titleBinding());
+        var url = requireNonNull(getClass().getResource("pacman_spritesheet.png"));
+        spriteSheet = new Image(url.toExternalForm());
         mapPy.set(createWorldMap(36, 28));
-        titlePy.bind(Bindings.createStringBinding(
+    }
+
+    private StringBinding titleBinding() {
+        return Bindings.createStringBinding(
             () -> {
                 String title = tt("map_editor");
                 if (currentFilePy.get() != null) {
                     title += " - " + currentFilePy.get();
-                } else if (map() != null) {
+                } else if (map() != null && map().url() != null) {
                     title += " - " + map().url();
+                } else {
+                    title += " - <" + tt("unsaved_map") + ">";
                 }
                 return title;
             }, currentFilePy, mapPy
-        ));
-        var url = requireNonNull(getClass().getResource("pacman_spritesheet.png"));
-        spriteSheet = new Image(url.toExternalForm());
+        );
     }
 
     public WorldMap map() {
@@ -654,7 +661,7 @@ public class TileMapEditor  {
     public void loadMap(WorldMap worldMap) {
         checkNotNull(worldMap);
         if (unsavedChanges) {
-            showConfirmation(this::saveMapFileAs, () -> {
+            showSaveConfirmationDialog(this::saveMapFileAs, () -> {
                 setMap(new WorldMap(worldMap));
                 currentFilePy.set(null);
             });
@@ -675,6 +682,7 @@ public class TileMapEditor  {
                 int numCols = Integer.parseInt(tuple[0].trim());
                 int numRows = Integer.parseInt(tuple[1].trim());
                 setMap(createWorldMap(numRows, numCols));
+                currentFilePy.set(null);
             } catch (Exception x) {
                 Logger.error(x);
             }
@@ -715,28 +723,28 @@ public class TileMapEditor  {
         }
     }
 
-    public void showConfirmation(Runnable saveAction, Runnable dontSaveAction) {
+    public void showSaveConfirmationDialog(Runnable saveAction, Runnable noSaveAction) {
         if (hasUnsavedChanges()) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("There are unsaved changes");
-            alert.setHeaderText("Save changes?");
-            alert.setContentText("You can save your changes or leave without saving");
-            var saveChoice = new ButtonType("Save Changes");
-            var dontSaveChoice = new ButtonType("Don't Save");
-            var cancelChoice = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-            alert.getButtonTypes().setAll(saveChoice, dontSaveChoice, cancelChoice);
-            alert.showAndWait().ifPresent(choice -> {
-                if (choice == saveChoice) {
+            var confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmationDialog.setTitle(tt("save_dialog.title"));
+            confirmationDialog.setHeaderText(tt("save_dialog.header_text"));
+            confirmationDialog.setContentText(tt("save_dialog.content_text"));
+            var choiceSave   = new ButtonType(tt("save_changes"));
+            var choiceNoSave = new ButtonType(tt("no_save_changes"));
+            var choiceCancel = new ButtonType(tt("cancel"), ButtonBar.ButtonData.CANCEL_CLOSE);
+            confirmationDialog.getButtonTypes().setAll(choiceSave, choiceNoSave, choiceCancel);
+            confirmationDialog.showAndWait().ifPresent(choice -> {
+                if (choice == choiceSave) {
                     saveAction.run();
-                } else if (choice == dontSaveChoice) {
-                    dontSaveAction.run();
-                } else if (choice == cancelChoice) {
-                    alert.close();
+                } else if (choice == choiceNoSave) {
+                    noSaveAction.run();
+                } else if (choice == choiceCancel) {
+                    confirmationDialog.close();
                 }
             });
         } else {
             stop();
-            dontSaveAction.run();
+            noSaveAction.run();
         }
     }
 
