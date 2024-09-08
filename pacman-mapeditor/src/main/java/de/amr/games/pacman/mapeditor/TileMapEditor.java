@@ -36,7 +36,6 @@ import javafx.stage.Window;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.MessageFormat;
@@ -109,27 +108,6 @@ public class TileMapEditor  {
         { 9, 0, 0, 0, 0, 0, 0, 9},
         {13, 8, 8, 8, 8, 8, 8,12}
     });
-
-    private static String worldMapSource(WorldMap worldMap) {
-        StringBuilder sb = new StringBuilder();
-        try {
-            sb.append(WorldMap.TERRAIN_SECTION_START).append("\n");
-            sb.append(tileMapSource(worldMap.terrain()));
-            sb.append(WorldMap.FOOD_SECTION_START).append("\n");
-            sb.append(tileMapSource(worldMap.food()));
-            return sb.toString();
-        } catch (IOException x) {
-            Logger.error("Could not create map source");
-            Logger.error(x);
-            return "";
-        }
-    }
-
-    private static String tileMapSource(TileMap tileMap) throws IOException {
-        StringWriter sw = new StringWriter();
-        tileMap.print(sw);
-        return sw.toString();
-    }
 
     private static void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
         for (int row = emptyRowsTop; row < terrain.numRows() - emptyRowsBottom; ++row) {
@@ -1045,7 +1023,7 @@ public class TileMapEditor  {
             return;
         }
         try {
-            String source = worldMapSource(map);
+            String source = map.makeSource();
             mapSourceView.setText(source);
         } catch (Exception x) {
             Logger.error("Could not create text for map");

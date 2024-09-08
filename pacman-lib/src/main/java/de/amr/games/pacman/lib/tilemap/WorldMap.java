@@ -22,6 +22,12 @@ public class WorldMap {
     public static final String TERRAIN_SECTION_START = "!terrain";
     public static final String FOOD_SECTION_START    = "!food";
 
+    private static String tileMapSource(TileMap tileMap) throws IOException {
+        StringWriter sw = new StringWriter();
+        tileMap.print(sw);
+        return sw.toString();
+    }
+
     private URL url;
     private TileMap terrain;
     private TileMap food;
@@ -64,6 +70,10 @@ public class WorldMap {
         } catch (Exception x) {
             Logger.error(x);
         }
+    }
+
+    public String makeSource() throws IOException {
+        return TERRAIN_SECTION_START + "\n" + tileMapSource(terrain) + FOOD_SECTION_START + "\n" + tileMapSource(food);
     }
 
     private void parse(Stream<String> lines) {
