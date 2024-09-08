@@ -105,11 +105,11 @@ public class TileMapEditor  {
     private static final String PALETTE_FOOD    = "Food";
 
     private static final RectShape GHOST_HOUSE_SHAPE = new RectShape(new byte[][] {
-        {10, 8, 8,14,14, 8, 8,11},
+        {16, 8, 8,14,14, 8, 8,17},
         { 9, 0, 0, 0, 0, 0, 0, 9},
         { 9, 0, 0, 0, 0, 0, 0, 9},
         { 9, 0, 0, 0, 0, 0, 0, 9},
-        {13, 8, 8, 8, 8, 8, 8,12}
+        {19, 8, 8, 8, 8, 8, 8,18}
     });
 
     private static void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {

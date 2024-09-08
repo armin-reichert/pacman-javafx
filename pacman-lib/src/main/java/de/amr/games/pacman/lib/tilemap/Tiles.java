@@ -32,6 +32,9 @@ public interface Tiles {
     byte DCORNER_ANGULAR_SE = 18;
     byte DCORNER_ANGULAR_SW = 19;
 
+
+    byte LAST_TERRAIN_VALUE = 19; // Adapt when adding new tiles!
+
     // Food tiles
     byte PELLET = 1;
     byte ENERGIZER = 2;

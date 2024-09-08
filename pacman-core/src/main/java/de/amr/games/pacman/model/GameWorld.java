@@ -165,7 +165,8 @@ public class GameWorld {
         return content == WALL_H  || content == WALL_V
             || content == DWALL_H || content == DWALL_V
             || content == CORNER_NE  || content == CORNER_NW  || content == CORNER_SE  || content == CORNER_SW
-            || content == DCORNER_NE || content == DCORNER_NW || content == DCORNER_SE || content == DCORNER_SW;
+            || content == DCORNER_NE || content == DCORNER_NW || content == DCORNER_SE || content == DCORNER_SW
+            || content == DCORNER_ANGULAR_NE || content == DCORNER_ANGULAR_NW || content == DCORNER_ANGULAR_SE || content == DCORNER_ANGULAR_SW;
     }
 
     public boolean isTunnel(Vector2i tile) {
