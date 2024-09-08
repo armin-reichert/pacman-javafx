@@ -22,10 +22,10 @@ public class TileMapPath implements Iterable<Direction> {
 
     private static Direction newMoveDir(Direction moveDir, byte tileValue) {
         return switch (tileValue) {
-            case Tiles.CORNER_NW, Tiles.DCORNER_NW -> moveDir == LEFT  ? DOWN  : RIGHT;
-            case Tiles.CORNER_NE, Tiles.DCORNER_NE -> moveDir == RIGHT ? DOWN  : LEFT;
-            case Tiles.CORNER_SE, Tiles.DCORNER_SE -> moveDir == DOWN  ? LEFT  : UP;
-            case Tiles.CORNER_SW, Tiles.DCORNER_SW -> moveDir == DOWN  ? RIGHT : UP;
+            case Tiles.CORNER_NW, Tiles.DCORNER_NW, Tiles.DCORNER_ANGULAR_NW -> moveDir == LEFT  ? DOWN  : RIGHT;
+            case Tiles.CORNER_NE, Tiles.DCORNER_NE, Tiles.DCORNER_ANGULAR_NE -> moveDir == RIGHT ? DOWN  : LEFT;
+            case Tiles.CORNER_SE, Tiles.DCORNER_SE, Tiles.DCORNER_ANGULAR_SE -> moveDir == DOWN  ? LEFT  : UP;
+            case Tiles.CORNER_SW, Tiles.DCORNER_SW, Tiles.DCORNER_ANGULAR_SW -> moveDir == DOWN  ? RIGHT : UP;
             default -> moveDir;
         };
     }

@@ -134,8 +134,8 @@ public class TileMap {
             byte firstColContent = get(row, firstCol);
             startDir = switch (firstColContent) {
                 case Tiles.DWALL_H    -> RIGHT;
-                case Tiles.DCORNER_SE -> UP;
-                case Tiles.DCORNER_NE -> RIGHT;
+                case Tiles.DCORNER_SE, Tiles.DCORNER_ANGULAR_SE -> UP;
+                case Tiles.DCORNER_NE, Tiles.DCORNER_ANGULAR_NE -> RIGHT;
                 default -> null; // should never happen
             };
             if (startDir != null) {
@@ -144,8 +144,8 @@ public class TileMap {
             byte lastColContent = get(row, lastCol);
             startDir = switch (lastColContent) {
                 case Tiles.DWALL_H    -> LEFT;
-                case Tiles.DCORNER_SW -> UP;
-                case Tiles.DCORNER_NW -> DOWN;
+                case Tiles.DCORNER_SW, Tiles.DCORNER_ANGULAR_SW -> UP;
+                case Tiles.DCORNER_NW, Tiles.DCORNER_ANGULAR_NW -> DOWN;
                 default -> null; // should never happen
             };
             if (startDir != null) {
@@ -161,7 +161,7 @@ public class TileMap {
         }
 
         // find ghost house, doors are included as walls!
-        tiles(Tiles.DCORNER_NW)
+        tiles(Tiles.DCORNER_ANGULAR_NW)
             .filter(tile -> isUnexplored(exploredSet, tile))
             .filter(tile -> tile.x() > firstCol && tile.x() < lastCol)
             .map(corner -> new TileMapPath(this, exploredSet, corner, LEFT))
