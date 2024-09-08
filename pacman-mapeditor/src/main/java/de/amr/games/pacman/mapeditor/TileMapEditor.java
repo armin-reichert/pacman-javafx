@@ -559,7 +559,7 @@ public class TileMapEditor  {
         miOpen.setOnAction(e -> openMapFile());
 
         var miSaveAs = new MenuItem(tt("menu.file.save_as"));
-        miSaveAs.setOnAction(e -> saveMapFileAs());
+        miSaveAs.setOnAction(e -> showSaveDialog());
 
         menuFile = new Menu(tt("menu.file"), null /* graphic */, miNew, miOpen, miSaveAs);
     }
@@ -661,7 +661,7 @@ public class TileMapEditor  {
     public void loadMap(WorldMap worldMap) {
         checkNotNull(worldMap);
         if (unsavedChanges) {
-            showSaveConfirmationDialog(this::saveMapFileAs, () -> {
+            showSaveConfirmationDialog(this::showSaveDialog, () -> {
                 setMap(new WorldMap(worldMap));
                 currentFilePy.set(null);
             });
@@ -673,9 +673,9 @@ public class TileMapEditor  {
 
     private void showNewMapDialog() {
         TextInputDialog dialog = new TextInputDialog("28x36");
-        dialog.setTitle("New Map");
-        dialog.setHeaderText("Enter Map Size (cols x rows)");
-        dialog.setContentText("Map Size:");
+        dialog.setTitle(tt("new_dialog.title"));
+        dialog.setHeaderText(tt("new_dialog.header_text"));
+        dialog.setContentText(tt("new_dialog.content_text"));
         dialog.showAndWait().ifPresent(text -> {
             String[] tuple = text.split("x");
             try {
@@ -684,13 +684,13 @@ public class TileMapEditor  {
                 setMap(createWorldMap(numRows, numCols));
                 currentFilePy.set(null);
             } catch (Exception x) {
-                Logger.error(x);
+                Logger.error(x); //TODO user message
             }
         });
     }
 
     private void openMapFile() {
-        fileChooser.setTitle("Open Pac-Man Map");
+        fileChooser.setTitle(tt("open_file"));
         fileChooser.setInitialDirectory(lastUsedDir);
         File file = fileChooser.showOpenDialog(ownerWindow);
         if (file != null) {
@@ -707,8 +707,8 @@ public class TileMapEditor  {
         }
     }
 
-    public void saveMapFileAs() {
-        fileChooser.setTitle("Save Pac-Man Map");
+    public void showSaveDialog() {
+        fileChooser.setTitle(tt("save_file"));
         fileChooser.setInitialDirectory(lastUsedDir);
         File file = fileChooser.showSaveDialog(ownerWindow);
         if (file != null) {

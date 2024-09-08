@@ -47,7 +47,7 @@ public class TileMapEditorApp extends Application  {
         layout.setTop(editor.getMenuBar());
 
         var miQuit = new MenuItem(TileMapEditor.tt("quit"));
-        miQuit.setOnAction(e -> editor.showSaveConfirmationDialog(editor::saveMapFileAs, stage::close));
+        miQuit.setOnAction(e -> editor.showSaveConfirmationDialog(editor::showSaveDialog, stage::close));
         editor.menuFile().getItems().add(miQuit);
 
         double height = Math.max(0.9 * Screen.getPrimary().getVisualBounds().getHeight(), 600);
@@ -57,7 +57,7 @@ public class TileMapEditorApp extends Application  {
 
         stage.setScene(scene);
         stage.titleProperty().bind(editor.titlePy);
-        stage.setOnCloseRequest(e -> editor.showSaveConfirmationDialog(editor::saveMapFileAs, stage::close));
+        stage.setOnCloseRequest(e -> editor.showSaveConfirmationDialog(editor::showSaveDialog, stage::close));
         stage.show();
 
         String path = "/de/amr/games/pacman/mapeditor/maps/";
