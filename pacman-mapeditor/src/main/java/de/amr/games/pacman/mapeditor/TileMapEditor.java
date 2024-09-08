@@ -386,7 +386,7 @@ public class TileMapEditor  {
     }
 
     private Palette createTerrainPalette() {
-        var palette = new Palette(32, 2, 10, terrainMapEditRenderer);
+        var palette = new Palette(32, 1, 15, terrainMapEditRenderer);
         palette.setTools(
             palette.createTileValueEditorTool(this, Tiles.WALL_H, "Horiz. Wall"),
             palette.createTileValueEditorTool(this, Tiles.WALL_V, "Vert. Wall"),
@@ -484,6 +484,7 @@ public class TileMapEditor  {
         foodPaletteTab.setUserData(PALETTE_FOOD);
 
         palettesTabPane = new TabPane(terrainPaletteTab, actorPaletteTab, foodPaletteTab);
+        palettesTabPane.setPadding(new Insets(5,5,5,5));
 
         terrainMapPropertiesEditor = new PropertyEditorPane(this);
         terrainMapPropertiesEditor.enabledPy.bind(editingEnabledPy);
@@ -494,19 +495,18 @@ public class TileMapEditor  {
         foodMapPropertiesEditor.setPadding(new Insets(10,0,0,0));
 
         var terrainPropertiesArea = new TitledPane();
-        terrainPropertiesArea.setExpanded(false);
+        terrainPropertiesArea.setExpanded(true);
         terrainPropertiesArea.setText(tt("terrain"));
         terrainPropertiesArea.setContent(terrainMapPropertiesEditor);
 
         var foodPropertiesArea = new TitledPane();
-        foodPropertiesArea.setExpanded(false);
+        foodPropertiesArea.setExpanded(true);
         foodPropertiesArea.setText(tt("pellets"));
         foodPropertiesArea.setContent(foodMapPropertiesEditor);
 
         VBox controlsPane = new VBox();
         controlsPane.setSpacing(10);
         controlsPane.setMinWidth(32*10);
-        controlsPane.getChildren().add(palettesTabPane);
         controlsPane.getChildren().add(new VBox(terrainPropertiesArea, foodPropertiesArea));
 
         focussedTileInfo = new Label();
@@ -551,6 +551,7 @@ public class TileMapEditor  {
         hbox.setPadding(new Insets(0,0,10,0));
         HBox.setHgrow(vbox2, Priority.ALWAYS);
 
+        contentPane.setTop(palettesTabPane);
         contentPane.setCenter(hbox);
         contentPane.setBottom(footer);
     }
