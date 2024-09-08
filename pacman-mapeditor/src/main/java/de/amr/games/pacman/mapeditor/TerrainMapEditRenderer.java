@@ -237,12 +237,12 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
         g.setLineWidth(1);
         switch (cornerType) {
             case Tiles.DCORNER_ANGULAR_NW -> {
-                xp[0]=xp[1]=cx-d;xp[2]=rightEdge;
-                yp[0]=bottomEdge;yp[1]=yp[2]=cy-d;
+                xp[0]=xp[1]=cx-d; xp[2]=rightEdge;
+                yp[0]=bottomEdge; yp[1]=yp[2]=cy-d;
                 g.strokePolyline(xp,yp,xp.length);
 
-                xp[0]=xp[1]=cx+d;xp[2]=rightEdge;
-                yp[0]=bottomEdge;yp[1]=yp[2]=cy+d;
+                xp[0]=xp[1]=cx+d; xp[2]=rightEdge;
+                yp[0]=bottomEdge; yp[1]=yp[2]=cy+d;
                 g.strokePolyline(xp,yp,xp.length);
             }
             case Tiles.DCORNER_ANGULAR_NE -> {
