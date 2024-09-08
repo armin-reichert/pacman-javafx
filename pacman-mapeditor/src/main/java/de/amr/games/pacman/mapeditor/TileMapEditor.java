@@ -110,6 +110,27 @@ public class TileMapEditor  {
         {13, 8, 8, 8, 8, 8, 8,12}
     });
 
+    private static String worldMapSource(WorldMap worldMap) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            sb.append(WorldMap.TERRAIN_SECTION_START).append("\n");
+            sb.append(tileMapSource(worldMap.terrain()));
+            sb.append(WorldMap.FOOD_SECTION_START).append("\n");
+            sb.append(tileMapSource(worldMap.food()));
+            return sb.toString();
+        } catch (IOException x) {
+            Logger.error("Could not create map source");
+            Logger.error(x);
+            return "";
+        }
+    }
+
+    private static String tileMapSource(TileMap tileMap) throws IOException {
+        StringWriter sw = new StringWriter();
+        tileMap.print(sw);
+        return sw.toString();
+    }
+
     private static void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
         for (int row = emptyRowsTop; row < terrain.numRows() - emptyRowsBottom; ++row) {
             terrain.set(row, 0, Tiles.DWALL_V);
@@ -173,16 +194,17 @@ public class TileMapEditor  {
     private final ObjectProperty<WorldMap> mapPy = new SimpleObjectProperty<>(this, "map") {
         @Override
         protected void invalidated() {
+            WorldMap map = get();
             //TODO use binding?
             if (foodMapPropertiesEditor != null) {
-                foodMapPropertiesEditor.setMap(get().food());
+                foodMapPropertiesEditor.setMap(map.food());
             }
             if (terrainMapPropertiesEditor != null) {
-                terrainMapPropertiesEditor.setMap(get().terrain());
+                terrainMapPropertiesEditor.setMap(map.terrain());
             }
             invalidateTerrainMapPaths();
             updateTerrainMapPaths();
-            updateSourceView();
+            updateSourceView(map);
         }
     };
 
@@ -660,7 +682,7 @@ public class TileMapEditor  {
 
     public void markMapEdited() {
         unsavedChanges = true;
-        updateSourceView();
+        updateSourceView(map());
     }
 
     public boolean hasUnsavedChanges() {
@@ -1017,27 +1039,17 @@ public class TileMapEditor  {
         }
     }
 
-    private void updateSourceView() {
+    private void updateSourceView(WorldMap map) {
         if (mapSourceView == null) {
             Logger.warn("Cannot update source view as it doesn't exist yet");
             return;
         }
-        StringBuilder sb = new StringBuilder();
         try {
-            sb.append(WorldMap.TERRAIN_SECTION_START).append("\n");
-            sb.append(tileMapSource(map().terrain()));
-            sb.append(WorldMap.FOOD_SECTION_START).append("\n");
-            sb.append(tileMapSource(map().food()));
-            mapSourceView.setText(sb.toString());
+            String source = worldMapSource(map);
+            mapSourceView.setText(source);
         } catch (Exception x) {
             Logger.error("Could not create text for map");
             Logger.error(x);
         }
-    }
-
-    private String tileMapSource(TileMap tileMap) throws IOException {
-        StringWriter sw = new StringWriter();
-        tileMap.print(sw);
-        return sw.toString();
     }
 }
