@@ -1025,6 +1025,9 @@ public class TileMapEditor  {
     }
 
     void setTileValue(TileMap tileMap, Vector2i tile, byte value) {
+        if (!editingEnabledPy.get()) {
+            return;
+        }
         tileMap.set(tile, value);
         if (symmetricModePy.get()) {
             tileMap.set(tile.y(), tileMap.numCols() - 1 - tile.x(), hMirror(tileMap.get(tile)));
