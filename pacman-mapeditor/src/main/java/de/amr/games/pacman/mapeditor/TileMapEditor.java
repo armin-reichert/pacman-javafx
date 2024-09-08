@@ -1025,6 +1025,8 @@ public class TileMapEditor  {
     }
 
     void setTileValue(TileMap tileMap, Vector2i tile, byte value) {
+        checkNotNull(tileMap);
+        checkNotNull(tile);
         if (!editingEnabledPy.get()) {
             return;
         }
