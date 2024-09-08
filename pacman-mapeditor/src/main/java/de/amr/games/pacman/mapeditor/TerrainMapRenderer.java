@@ -146,6 +146,38 @@ public class TerrainMapRenderer implements TileMapRenderer {
                  Tiles.DCORNER_NE -> g.arc(cx - r, cy + r, r, r, up?      0: 90, up?    90:-90);
             case Tiles.CORNER_SE,
                  Tiles.DCORNER_SE -> g.arc(cx - r, cy - r, r, r, right? 270:  0, right? 90:-90);
+            case Tiles.DCORNER_ANGULAR_NW -> {
+                g.lineTo(cx, cy);
+                if (left) {
+                    g.lineTo(cx, cy + r);
+                } else if (up) {
+                    g.lineTo(cx + r, cy);
+                }
+            }
+            case Tiles.DCORNER_ANGULAR_SW -> {
+                g.lineTo(cx, cy);
+                if (left) {
+                    g.lineTo(cx, cy);
+                } else if (down) {
+                    g.lineTo(cx + r, cy);
+                }
+            }
+            case Tiles.DCORNER_ANGULAR_NE -> {
+                g.lineTo(cx, cy);
+                if (right) {
+                    g.lineTo(cx, cy + r);
+                } else if (up) {
+                    g.lineTo(cx - r, cy);
+                }
+            }
+            case Tiles.DCORNER_ANGULAR_SE -> {
+                g.lineTo(cx, cy);
+                if (right) {
+                    g.lineTo(cx, cy - r);
+                } else if (down) {
+                    g.lineTo(cx - r, cy);
+                }
+            }
             default -> {}
         }
     }

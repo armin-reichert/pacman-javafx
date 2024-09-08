@@ -129,24 +129,27 @@ public class TileMap {
 
         // Paths starting at left and right maze border leading inside maze
         int firstCol = 0, lastCol = numCols() - 1;
+        Direction startDir;
         for (int row = 0; row < numRows(); ++row) {
-            if (get(row, firstCol) == Tiles.DWALL_H) {
-                addDoubleStrokePath(new Vector2i(firstCol, row), RIGHT, exploredSet);
+            byte firstColContent = get(row, firstCol);
+            startDir = switch (firstColContent) {
+                case Tiles.DWALL_H    -> RIGHT;
+                case Tiles.DCORNER_SE -> UP;
+                case Tiles.DCORNER_NE -> RIGHT;
+                default -> null; // should never happen
+            };
+            if (startDir != null) {
+                addDoubleStrokePath(new Vector2i(firstCol, row), startDir, exploredSet);
             }
-            if (get(row, firstCol) == Tiles.DCORNER_SE) {
-                addDoubleStrokePath(new Vector2i(firstCol, row), UP, exploredSet);
-            }
-            if (get(row, firstCol) == Tiles.DCORNER_NE) {
-                addDoubleStrokePath(new Vector2i(firstCol, row), RIGHT, exploredSet);
-            }
-            if (get(row, lastCol) == Tiles.DWALL_H) {
-                addDoubleStrokePath(new Vector2i(lastCol, row), LEFT, exploredSet);
-            }
-            if (get(row, lastCol) == Tiles.DCORNER_SW) {
-                addDoubleStrokePath(new Vector2i(lastCol, row), UP, exploredSet);
-            }
-            if (get(row, lastCol) == Tiles.DCORNER_NW) {
-                addDoubleStrokePath(new Vector2i(lastCol, row), DOWN, exploredSet);
+            byte lastColContent = get(row, lastCol);
+            startDir = switch (lastColContent) {
+                case Tiles.DWALL_H    -> LEFT;
+                case Tiles.DCORNER_SW -> UP;
+                case Tiles.DCORNER_NW -> DOWN;
+                default -> null; // should never happen
+            };
+            if (startDir != null) {
+                addDoubleStrokePath(new Vector2i(lastCol, row), startDir, exploredSet);
             }
         }
 
