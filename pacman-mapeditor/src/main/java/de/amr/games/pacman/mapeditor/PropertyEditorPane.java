@@ -7,7 +7,9 @@ package de.amr.games.pacman.mapeditor;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -19,13 +21,13 @@ import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.lib.tilemap.TileMap.parseVector2i;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.formatColor;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.parseColor;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Armin Reichert
@@ -56,10 +58,24 @@ public class PropertyEditorPane extends BorderPane {
 
     public final BooleanProperty enabledPy = new SimpleBooleanProperty(this, "enabled", true);
 
+    private final ObjectProperty<TileMap> mapPy = new SimpleObjectProperty<>(this, "map") {
+        @Override
+        protected void invalidated() {
+            rebuildPropertyEditors();
+        }
+    };
+
+    public void setMap(TileMap tileMap) {
+        mapPy.set(requireNonNull(tileMap));
+    }
+
+    public TileMap map() {
+        return mapPy.get();
+    }
+
     private final TileMapEditor tileMapEditor;
     private final GridPane grid = new GridPane();
     private final List<PropertyEditor> propertyEditors = new ArrayList<>();
-    private TileMap tileMap;
 
     private abstract class PropertyEditor {
 
@@ -83,7 +99,7 @@ public class PropertyEditorPane extends BorderPane {
             if (matchesDeleteCommand(editedName)) {
                 String deletePropertyName = chopDeleteCommand(editedName);
                 if (deletePropertyName.equals(propertyName)) {
-                    tileMap.getProperties().remove(propertyName);
+                    map().getProperties().remove(propertyName);
                     Logger.debug("Property {} deleted", propertyName);
                     tileMapEditor.markMapEdited();
                     rebuildPropertyEditors(); //TODO check
@@ -99,13 +115,13 @@ public class PropertyEditorPane extends BorderPane {
                 tileMapEditor.showMessage("Property name %s is invalid".formatted(editedName), 2, MessageType.ERROR);
                 return;
             }
-            if (tileMap.getProperties().get(editedName) != null) {
+            if (map().getProperties().get(editedName) != null) {
                 tileMapEditor.showMessage("Property name already used", 2, MessageType.ERROR);
                 nameEditor.setText(propertyName);
                 return;
             }
-            tileMap.getProperties().remove(propertyName);
-            tileMap.getProperties().put(editedName, formattedPropertyValue());
+            map().getProperties().remove(propertyName);
+            map().getProperties().put(editedName, formattedPropertyValue());
             tileMapEditor.showMessage("Property %s renamed to %s".formatted(propertyName, editedName), 2, MessageType.INFO);
             propertyName = editedName;
             rebuildPropertyEditors(); // sort order might have changed
@@ -113,7 +129,7 @@ public class PropertyEditorPane extends BorderPane {
         }
 
         void storePropertyValue() {
-            tileMap.getProperties().put(propertyName, formattedPropertyValue());
+            map().getProperties().put(propertyName, formattedPropertyValue());
             tileMapEditor.markMapEdited();
         }
 
@@ -142,7 +158,7 @@ public class PropertyEditorPane extends BorderPane {
 
         @Override
         void updateEditorFromProperty() {
-            textEditor.setText(tileMap.getProperties().getProperty(propertyName));
+            textEditor.setText(map().getProperties().getProperty(propertyName));
         }
 
         @Override
@@ -170,7 +186,7 @@ public class PropertyEditorPane extends BorderPane {
 
         @Override
         void updateEditorFromProperty() {
-            String propertyValue = tileMap.getProperties().getProperty(propertyName);
+            String propertyValue = map().getProperties().getProperty(propertyName);
             colorPicker.setValue(parseColor(propertyValue));
         }
 
@@ -194,14 +210,14 @@ public class PropertyEditorPane extends BorderPane {
             super(propertyName);
             Vector2i tile = parseVector2i(propertyValue);
 
-            spinnerX = new Spinner<>(0, tileMap.numCols() - 1, 0);
+            spinnerX = new Spinner<>(0, map().numCols() - 1, 0);
             spinnerX.setMaxWidth(60);
             spinnerX.disableProperty().bind(enabledPy.not());
             if (tile != null) {
                 spinnerX.getValueFactory().setValue(tile.x());
             }
 
-            spinnerY = new Spinner<>(0, tileMap.numRows() - 1, 0);
+            spinnerY = new Spinner<>(0, map().numRows() - 1, 0);
             spinnerY.setMaxWidth(60);
             spinnerY.disableProperty().bind(enabledPy.not());
             if (tile != null) {
@@ -216,7 +232,7 @@ public class PropertyEditorPane extends BorderPane {
 
         @Override
         protected void updateEditorFromProperty() {
-            String propertyValue = tileMap.getProperties().getProperty(propertyName);
+            String propertyValue = map().getProperties().getProperty(propertyName);
             Vector2i tile = parseVector2i(propertyValue);
             if (tile != null) {
                 spinnerX.getValueFactory().setValue(tile.x());
@@ -241,7 +257,7 @@ public class PropertyEditorPane extends BorderPane {
         var btnAddColorEntry = new Button("Color");
         btnAddColorEntry.setOnAction(e -> {
             String propertyName = "color_RENAME_ME";
-            tileMap.getProperties().put(propertyName, "green");
+            map().getProperties().put(propertyName, "green");
             tileMapEditor.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
             rebuildPropertyEditors();
         });
@@ -250,7 +266,7 @@ public class PropertyEditorPane extends BorderPane {
         var btnAddPosEntry = new Button("Position");
         btnAddPosEntry.setOnAction(e -> {
             String propertyName = "pos_RENAME_ME";
-            tileMap.getProperties().put(propertyName, "(0,0)");
+            map().getProperties().put(propertyName, "(0,0)");
             tileMapEditor.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
             rebuildPropertyEditors();
         });
@@ -259,7 +275,7 @@ public class PropertyEditorPane extends BorderPane {
         var btnAddGenericEntry = new Button("Text");
         btnAddGenericEntry.setOnAction(e -> {
             String propertyName = "RENAME_ME";
-            tileMap.getProperties().put(propertyName, "any text");
+            map().getProperties().put(propertyName, "any text");
             tileMapEditor.showMessage("New property %s added".formatted(propertyName), 1, MessageType.INFO);
             rebuildPropertyEditors();
         });
@@ -277,11 +293,6 @@ public class PropertyEditorPane extends BorderPane {
         setCenter(grid);
     }
 
-    public void setTileMap(TileMap tileMap) {
-        this.tileMap = Objects.requireNonNull(tileMap);
-        rebuildPropertyEditors();
-    }
-
     public void updatePropertyEditorValues() {
         for (var editor : propertyEditors) {
             editor.updateEditorFromProperty();
@@ -291,8 +302,8 @@ public class PropertyEditorPane extends BorderPane {
     private void rebuildPropertyEditors() {
         Logger.debug("Rebuild editors");
         propertyEditors.clear();
-        tileMap.getProperties().stringPropertyNames().stream().sorted().forEach(propertyName -> {
-            String propertyValue = tileMap.getProperty(propertyName);
+        map().getProperties().stringPropertyNames().stream().sorted().forEach(propertyName -> {
+            String propertyValue = map().getProperty(propertyName);
             // primitive way of discriminating but fulfills its purpose
             if (propertyName.startsWith("color_")) {
                 propertyEditors.add(new ColorPropertyEditor(propertyName, propertyValue));

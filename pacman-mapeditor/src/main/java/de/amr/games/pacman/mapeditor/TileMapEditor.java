@@ -16,7 +16,6 @@ import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
-import javafx.geometry.Dimension2D;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.Side;
@@ -171,7 +170,29 @@ public class TileMapEditor  {
 
     public final ObjectProperty<File> currentFilePy = new SimpleObjectProperty<>(this, "currentFile");
 
-    public final ObjectProperty<WorldMap> mapPy = new SimpleObjectProperty<>(this, "map");
+    private final ObjectProperty<WorldMap> mapPy = new SimpleObjectProperty<>(this, "map") {
+        @Override
+        protected void invalidated() {
+            //TODO use binding?
+            if (foodMapPropertiesEditor != null) {
+                foodMapPropertiesEditor.setMap(get().food());
+            }
+            if (terrainMapPropertiesEditor != null) {
+                terrainMapPropertiesEditor.setMap(get().terrain());
+            }
+            invalidateTerrainMapPaths();
+            updateTerrainMapPaths();
+            updateSourceView();
+        }
+    };
+
+    public WorldMap map() {
+        return mapPy.get();
+    }
+
+    public void setMap(WorldMap map) {
+        mapPy.set(checkNotNull(map));
+    }
 
     private final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>(this, "focussedTile") {
         @Override
@@ -245,10 +266,6 @@ public class TileMapEditor  {
         );
     }
 
-    public WorldMap map() {
-        return mapPy.get();
-    }
-
     private WorldMap createWorldMap(int numRows, int numCols) {
         var map = new WorldMap(numRows, numCols);
         TileMap terrain = map.terrain();
@@ -267,17 +284,6 @@ public class TileMapEditor  {
         map.food().setProperty("color_food",            DEFAULT_FOOD_COLOR);
         Logger.info("Map created. rows={}, cols={}", numRows, numCols);
         return map;
-    }
-
-    public void setMap(WorldMap worldMap) {
-        checkNotNull(worldMap);
-        mapPy.set(worldMap);
-        foodMapPropertiesEditor.setTileMap(worldMap.food());
-        terrainMapPropertiesEditor.setTileMap(worldMap.terrain());
-        invalidateTerrainMapPaths();
-        updateTerrainMapPaths();
-        updateSourceView();
-        Logger.debug("Edit canvas size: w={} h={}", editCanvas.getWidth(), editCanvas.getHeight());
     }
 
     public void createUI(Window ownerWindow) {
@@ -1011,6 +1017,10 @@ public class TileMapEditor  {
     }
 
     private void updateSourceView() {
+        if (mapSourceView == null) {
+            Logger.warn("Cannot update source view as it doesn't exist yet");
+            return;
+        }
         StringBuilder sb = new StringBuilder();
         try {
             sb.append(WorldMap.TERRAIN_SECTION_START).append("\n");
