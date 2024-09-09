@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Direction.*;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.v2i;
+import static java.util.function.Predicate.not;
 
 /**
  * @author Armin Reichert
@@ -36,6 +37,9 @@ public class TileMap {
     // Terrain maps only
     private List<TileMapPath> singleStrokePaths = List.of();
     private List<TileMapPath> doubleStrokePaths = List.of();
+
+    // used by terrain path computation
+    private final BitSet exploredSet = new BitSet();
 
     public static Vector2i parseVector2i(String text) {
         Pattern pattern = Pattern.compile("\\((\\d+),(\\d+)\\)");
@@ -122,68 +126,18 @@ public class TileMap {
         this.data = data;
     }
 
-    public void computeTerrainPaths() {
-        Logger.debug("Compute paths for {}", this);
-        singleStrokePaths = new ArrayList<>();
-        doubleStrokePaths = new ArrayList<>();
-        var exploredSet = new BitSet();
-
-        // Paths starting at left and right maze border leading inside maze
-        int firstCol = 0, lastCol = numCols() - 1;
-        Direction startDir;
-        for (int row = 0; row < numRows(); ++row) {
-            byte firstColContent = get(row, firstCol);
-            startDir = switch (firstColContent) {
-                case Tiles.DWALL_H -> RIGHT;
-                case Tiles.DCORNER_SE, Tiles.DCORNER_ANGULAR_SE -> UP;
-                case Tiles.DCORNER_NE, Tiles.DCORNER_ANGULAR_NE -> RIGHT;
-                default -> null; // should never happen
-            };
-            if (startDir != null) {
-                addDoubleStrokePath(new Vector2i(firstCol, row), startDir, exploredSet);
-            }
-            byte lastColContent = get(row, lastCol);
-            startDir = switch (lastColContent) {
-                case Tiles.DWALL_H -> LEFT;
-                case Tiles.DCORNER_SW, Tiles.DCORNER_ANGULAR_SW -> UP;
-                case Tiles.DCORNER_NW, Tiles.DCORNER_ANGULAR_NW -> DOWN;
-                default -> null; // should never happen
-            };
-            if (startDir != null) {
-                addDoubleStrokePath(new Vector2i(lastCol, row), startDir, exploredSet);
-            }
-        }
-
-        // closed outer path?
-        for (int row = 0; row < numRows(); ++row) {
-            if (get(row, firstCol) == Tiles.DWALL_V) {
-                addDoubleStrokePath(new Vector2i(firstCol, row), DOWN, exploredSet);
-            }
-        }
-
-        // find ghost house, doors are included as walls!
-        tiles(Tiles.DCORNER_ANGULAR_NW)
-            .filter(tile -> isUnexplored(exploredSet, tile))
-            .filter(tile -> tile.x() > firstCol && tile.x() < lastCol)
-            .map(corner -> computePath(exploredSet, corner, LEFT))
-            .forEach(doubleStrokePaths::add);
-
-        // add paths for obstacles inside maze, start with top-left corner of obstacle
-        tiles(Tiles.CORNER_NW).filter(tile -> isUnexplored(exploredSet, tile))
-                .map(corner -> computePath(exploredSet, corner, LEFT))
-                .forEach(singleStrokePaths::add);
-
-        Logger.debug("Paths computed, {} single wall paths, {} double wall paths", singleStrokePaths.size(), doubleStrokePaths.size());
-    }
-
-    private void addDoubleStrokePath(Vector2i startTile, Direction startDir, BitSet exploredSet) {
-        if (isUnexplored(exploredSet, startTile)) {
-            doubleStrokePaths.add(computePath(exploredSet, startTile, startDir));
+    private void addDoubleStrokePath(Vector2i startTile, Direction startDir) {
+        if (!isExplored(startTile)) {
+            doubleStrokePaths.add(computePath(startTile, startDir));
         }
     }
 
-    private boolean isUnexplored(BitSet exploredSet, Vector2i tile) {
-        return !exploredSet.get(index(tile));
+    private boolean isExplored(Vector2i tile) {
+        return exploredSet.get(index(tile));
+    }
+
+    private void setExplored(Vector2i tile) {
+        exploredSet.set(index(tile));
     }
 
     public Stream<TileMapPath> singleStrokePaths() {
@@ -350,39 +304,100 @@ public class TileMap {
         pw.flush();
     }
 
-    private static Direction newMoveDir(Direction moveDir, byte tileValue) {
-        return switch (tileValue) {
-            case Tiles.CORNER_NW, Tiles.DCORNER_NW, Tiles.DCORNER_ANGULAR_NW -> moveDir == LEFT  ? DOWN  : RIGHT;
-            case Tiles.CORNER_NE, Tiles.DCORNER_NE, Tiles.DCORNER_ANGULAR_NE -> moveDir == RIGHT ? DOWN  : LEFT;
-            case Tiles.CORNER_SE, Tiles.DCORNER_SE, Tiles.DCORNER_ANGULAR_SE -> moveDir == DOWN  ? LEFT  : UP;
-            case Tiles.CORNER_SW, Tiles.DCORNER_SW, Tiles.DCORNER_ANGULAR_SW -> moveDir == DOWN  ? RIGHT : UP;
-            default -> moveDir;
+    // How the move direction changes when "traversing" a tile
+    private static Direction exitDirection(Direction incomingDir, byte tileType) {
+        return switch (tileType) {
+            case Tiles.CORNER_NW, Tiles.DCORNER_NW, Tiles.DCORNER_ANGULAR_NW -> incomingDir == LEFT  ? DOWN  : RIGHT;
+            case Tiles.CORNER_NE, Tiles.DCORNER_NE, Tiles.DCORNER_ANGULAR_NE -> incomingDir == RIGHT ? DOWN  : LEFT;
+            case Tiles.CORNER_SE, Tiles.DCORNER_SE, Tiles.DCORNER_ANGULAR_SE -> incomingDir == DOWN  ? LEFT  : UP;
+            case Tiles.CORNER_SW, Tiles.DCORNER_SW, Tiles.DCORNER_ANGULAR_SW -> incomingDir == DOWN  ? RIGHT : UP;
+            default -> incomingDir;
         };
     }
 
-    public TileMapPath computePath(BitSet explored, Vector2i startTile, Direction startDir) {
-        checkNotNull(explored);
+    /**
+     * Computes the contour paths created by terrain tiles which are then used by the renderer. Outer paths like the
+     * maze border are double-stroked, inner paths like normal obstacles are single-stroked. The ghost house is
+     * double-stroked and uses angular corner tiles.
+     */
+    public void computeTerrainPaths() {
+        singleStrokePaths = new ArrayList<>();
+        doubleStrokePaths = new ArrayList<>();
+        exploredSet.clear();
+
+        int firstCol = 0, lastCol = numCols() - 1;
+        Direction startDir;
+        // Paths starting at left maze border leading inside maze
+        for (int row = 0; row < numRows(); ++row) {
+            byte firstColContent = get(row, firstCol);
+            startDir = switch (firstColContent) {
+                case Tiles.DWALL_H -> RIGHT;
+                case Tiles.DCORNER_SE, Tiles.DCORNER_ANGULAR_SE -> UP; // tunnel entry, path continues upwards
+                case Tiles.DCORNER_NE, Tiles.DCORNER_ANGULAR_NE -> RIGHT; // ??? why not down?
+                default -> null; // should never happen
+            };
+            if (startDir != null) {
+                addDoubleStrokePath(new Vector2i(firstCol, row), startDir);
+            }
+        }
+        // Paths starting at right maze border leading inside maze
+        for (int row = 0; row < numRows(); ++row) {
+            byte lastColContent = get(row, lastCol);
+            startDir = switch (lastColContent) {
+                case Tiles.DWALL_H -> LEFT;
+                case Tiles.DCORNER_SW, Tiles.DCORNER_ANGULAR_SW -> UP; // tunnel entry, path continues upwards
+                case Tiles.DCORNER_NW, Tiles.DCORNER_ANGULAR_NW -> DOWN; // tunnel entry, path continues downwards
+                default -> null; // should never happen
+            };
+            if (startDir != null) {
+                addDoubleStrokePath(new Vector2i(lastCol, row), startDir);
+            }
+        }
+
+        // closed outer path?
+        for (int row = 0; row < numRows(); ++row) {
+            if (get(row, firstCol) == Tiles.DWALL_V) {
+                addDoubleStrokePath(new Vector2i(firstCol, row), DOWN);
+            }
+        }
+
+        // find ghost house, doors are included as walls!
+        tiles(Tiles.DCORNER_ANGULAR_NW)
+            .filter(not(this::isExplored))
+            .filter(tile -> tile.x() > firstCol && tile.x() < lastCol)
+            .map(corner -> computePath(corner, LEFT))
+            .forEach(doubleStrokePaths::add);
+
+        // add paths for obstacles inside maze, start with top-left corner of obstacle
+        tiles(Tiles.CORNER_NW).filter(not(this::isExplored))
+            .map(corner -> computePath(corner, LEFT))
+            .forEach(singleStrokePaths::add);
+
+        Logger.debug("Paths computed, {} single wall paths, {} double wall paths", singleStrokePaths.size(), doubleStrokePaths.size());
+    }
+
+    private TileMapPath computePath(Vector2i startTile, Direction startDir) {
         checkNotNull(startTile);
         checkNotNull(startDir);
         if (outOfBounds(startTile)) {
-            throw new IllegalArgumentException("Start tile must be inside map");
+            throw new IllegalArgumentException("Start tile of path must be inside map");
         }
         TileMapPath path = new TileMapPath(startTile);
-        explored.set(index(startTile));
+        setExplored(startTile);
         var tile = startTile;
         var dir = startDir;
         while (true) {
-            dir = newMoveDir(dir, get(tile));
+            dir = exitDirection(dir, get(tile));
             tile = tile.plus(dir.vector());
             if (outOfBounds(tile)) {
                 break;
             }
-            if (explored.get(index(tile))) {
+            if (isExplored(tile)) {
                 path.addDirection(dir);
                 break;
             }
             path.addDirection(dir);
-            explored.set(index(tile));
+            setExplored(tile);
         }
         return path;
     }
