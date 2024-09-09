@@ -511,12 +511,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
         GameSounds.stopAll();
         currentGameScene().ifPresent(GameScene::end);
-        stage.titleProperty().bind(editorPage.editor().titlePy);
         if (game().world() != null) {
             editorPage.editor().setMap(game().world().map());
         }
         editorPage.startEditor();
         selectEditorPage();
+        stage.titleProperty().bind(editorPage.editor().titlePy);
     }
 
     @Override
