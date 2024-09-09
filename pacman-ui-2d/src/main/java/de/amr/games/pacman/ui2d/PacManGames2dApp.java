@@ -74,7 +74,7 @@ public class PacManGames2dApp extends Application {
         assets.set("startpage.arrow.right",           rm.loadImage("graphics/icons/arrow-right.png"));
         assets.set("startpage.button.bgColor",        Color.rgb(0, 155, 252, 0.8));
         assets.set("startpage.button.color",          Color.WHITE);
-        assets.set("startpage.button.font",           rm.loadFont("fonts/emulogic.ttf", 30));
+        assets.set("startpage.button.font",           rm.loadFont("fonts/emulogic.ttf", 32));
 
         assets.set("wallpaper.background",            Ufx.imageBackground(rm.loadImage("graphics/pacman_wallpaper.png")));
         assets.set("wallpaper.color",                 Color.rgb(72, 78, 135));

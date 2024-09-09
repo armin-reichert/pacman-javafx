@@ -71,7 +71,7 @@ public class StartPage extends StackPane implements Page {
 
         Node btnPlay = createPlayButton(context.locText("play_button"));
         BorderPane.setAlignment(btnPlay, Pos.BOTTOM_CENTER);
-        btnPlay.setTranslateY(-10);
+        btnPlay.setTranslateY(-25);
         btnPlay.setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
                 context.selectGamePage();
