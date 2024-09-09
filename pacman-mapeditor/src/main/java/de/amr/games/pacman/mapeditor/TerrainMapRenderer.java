@@ -118,13 +118,15 @@ public class TerrainMapRenderer implements TileMapRenderer {
     private void buildPath(GraphicsContext g, TileMap map, TileMapPath path) {
         Vector2i tile = path.startTile();
         if (tile.x() == 0) {
+            int cx = HTS;
+            int cy = tile.y() * TS + HTS;
             if (map.get(tile) == Tiles.DWALL_V) {
-                g.moveTo(HTS, tile.y() * TS + HTS);
+                g.moveTo(cx, cy);
             } else {
                 // start path at left border, not at tile center
-                g.moveTo(0, tile.y() * TS + HTS);
+                g.moveTo(0, cy);
                 if (map.get(tile) == Tiles.DWALL_H) {
-                    g.lineTo(HTS, tile.y() * TS + HTS);
+                    g.lineTo(cx, cy);
                 }
             }
         }
