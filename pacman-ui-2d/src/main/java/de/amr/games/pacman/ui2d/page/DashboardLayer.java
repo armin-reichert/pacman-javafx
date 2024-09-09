@@ -52,6 +52,10 @@ public class DashboardLayer extends BorderPane {
         ));
     }
 
+    public PictureInPictureView getPip() {
+        return pip;
+    }
+
     public void addInfoBox(String title, InfoBox infoBox) {
         addInfoBox(infoBoxes.size(), title, infoBox);
     }

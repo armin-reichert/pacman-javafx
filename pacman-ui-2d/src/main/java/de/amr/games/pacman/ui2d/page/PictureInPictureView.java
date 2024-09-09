@@ -4,8 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.event.GameEvent;
+import de.amr.games.pacman.event.GameEventListener;
+import de.amr.games.pacman.lib.Globals;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameParameters;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
@@ -18,17 +21,24 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.HBox;
+import org.tinylog.Logger;
 
 /**
  * @author Armin Reichert
  */
-public class PictureInPictureView {
+public class PictureInPictureView implements GameEventListener {
 
-    public final DoubleProperty heightPy = new SimpleDoubleProperty(GameModel.ARCADE_MAP_SIZE_Y);
-    public final DoubleProperty aspectPy = new SimpleDoubleProperty(0.77) {
+    public final DoubleProperty heightPy = new SimpleDoubleProperty(GameModel.ARCADE_MAP_SIZE_Y) {
         @Override
         protected void invalidated() {
-            gameScene.init(); // updates renderer scaling
+            rescale();
+        }
+    };
+
+    private final DoubleProperty aspectPy = new SimpleDoubleProperty(0.77) {
+        @Override
+        protected void invalidated() {
+            rescale();
         }
     };
 
@@ -38,7 +48,7 @@ public class PictureInPictureView {
         @Override
         protected void invalidated() {
             if (get()) {
-                gameScene.init();
+                rescale();
             }
         }
     };
@@ -77,14 +87,25 @@ public class PictureInPictureView {
 
     public void draw() {
         if (visiblePy.get()) {
-            GameWorld world = context.game().world();
-            if (world != null) {
-                double numCols = world.map().terrain().numCols();
-                double numRows = world.map().terrain().numRows();
-                aspectPy.set(numCols / numRows);
-                gameScene.scalingPy.set(GameModel.ARCADE_MAP_TILES_Y / numRows);
-            }
             gameScene.draw();
         }
+    }
+
+    @Override
+    public void onLevelCreated(GameEvent e) {
+        if (context.game().world() != null) {
+            TileMap terrain = context.game().world().map().terrain();
+            aspectPy.set((double) terrain.numCols() / terrain.numRows());
+        }
+    }
+
+    private void rescale() {
+        double referenceHeight = context.game().world() != null
+            ? context.game().world().map().terrain().numRows() * Globals.TS
+            : GameModel.ARCADE_MAP_SIZE_Y;
+        double scaling = heightPy.get() / referenceHeight;
+        Logger.debug("PiP scaling: {}", scaling);
+        gameScene.scalingPy.set(scaling);
+        gameScene.init();
     }
 }

@@ -193,6 +193,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public void start() {
         for (var variant : GameVariant.values()) {
             GameController.it().gameModel(variant).addGameEventListener(this);
+            // TODO: find better way
+            GameController.it().gameModel(variant).addGameEventListener(gamePage.dashboardLayer().getPip());
         }
         // Touch all game keys such that they get registered with keyboard
         for (var gameKey : GameAction.values()) {
