@@ -11,6 +11,7 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,7 @@ public class DashboardLayer extends BorderPane {
     }
 
     public void toggleDashboardVisibility() {
-        dashboard.setVisible(!isVisible());
+        dashboard.setVisible(!dashboard.isVisible());
     }
 
     public List<InfoBox> getInfoBoxes() {
