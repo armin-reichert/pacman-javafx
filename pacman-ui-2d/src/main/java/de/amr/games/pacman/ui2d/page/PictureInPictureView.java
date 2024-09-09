@@ -4,9 +4,11 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.page;
 
+import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameParameters;
-import de.amr.games.pacman.ui2d.scene.*;
+import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -17,16 +19,21 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.HBox;
 
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
-
 /**
  * @author Armin Reichert
  */
 public class PictureInPictureView {
 
-    public final DoubleProperty widthPy  = new SimpleDoubleProperty(28*8);
-    public final DoubleProperty heightPy = new SimpleDoubleProperty(36*8);
+    public final DoubleProperty heightPy = new SimpleDoubleProperty(GameModel.ARCADE_MAP_SIZE_Y);
+    public final DoubleProperty aspectPy = new SimpleDoubleProperty(0.77) {
+        @Override
+        protected void invalidated() {
+            gameScene.init(); // updates renderer scaling
+        }
+    };
+
     public final DoubleProperty opacityPy = new SimpleDoubleProperty(1);
+
     public final BooleanProperty visiblePy = new SimpleBooleanProperty(true) {
         @Override
         protected void invalidated() {
@@ -38,14 +45,18 @@ public class PictureInPictureView {
 
     private final GameContext context;
     private final HBox layout = new HBox();
-    private final Canvas canvas = new Canvas();
-    private GameScene gameScene;
+    private final PlayScene2D gameScene;
 
     public PictureInPictureView(GameContext context) {
-        this.context = checkNotNull(context);
-        canvas.widthProperty().bind(widthPy);
+        this.context = context;
+
+        Canvas canvas = new Canvas();
         canvas.heightProperty().bind(heightPy);
-        widthPy.bind(heightPy.multiply(0.777));
+        canvas.widthProperty().bind(heightPy.multiply(aspectPy));
+
+        gameScene = new PlayScene2D();
+        gameScene.setContext(context);
+        gameScene.setCanvas(canvas);
 
         HBox pane = new HBox(canvas);
         pane.opacityProperty().bind(opacityPy);
@@ -54,17 +65,6 @@ public class PictureInPictureView {
         pane.setPadding(new Insets(5,10,5,10));
 
         layout.getChildren().add(pane);
-
-        setGameScene(new PlayScene2D());
-    }
-
-    public void setGameScene(GameScene gameScene) {
-        this.gameScene = gameScene;
-        if (gameScene instanceof GameScene2D gameScene2D) {
-            gameScene2D.setContext(context);
-            gameScene2D.setCanvas(canvas);
-            gameScene2D.scalingPy.bind(heightPy.divide(36 * 8));
-        }
     }
 
     public void setVisible(boolean visible) {
@@ -77,10 +77,14 @@ public class PictureInPictureView {
 
     public void draw() {
         if (visiblePy.get()) {
-            if (gameScene instanceof GameScene2D gameScene2D) {
-                //gameScene2D.update();
-                gameScene2D.draw();
+            GameWorld world = context.game().world();
+            if (world != null) {
+                double numCols = world.map().terrain().numCols();
+                double numRows = world.map().terrain().numRows();
+                aspectPy.set(numCols / numRows);
+                gameScene.scalingPy.set(GameModel.ARCADE_MAP_TILES_Y / numRows);
             }
+            gameScene.draw();
         }
     }
 }
