@@ -13,7 +13,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.Window;
+import javafx.stage.Stage;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -27,15 +27,16 @@ import static de.amr.games.pacman.lib.Globals.checkNotNull;
  */
 public class EditorPage extends BorderPane implements Page {
 
+    private final Stage stage;
     private final TileMapEditor editor;
     private Consumer<TileMapEditor> closeAction = editor -> {};
 
-    public EditorPage(Window window, GameContext context, File customMapDir) {
-        checkNotNull(window);
+    public EditorPage(Stage stage, GameContext context, File customMapDir) {
+        this.stage = checkNotNull(stage);
         checkNotNull(context);
 
         editor = new TileMapEditor(customMapDir);
-        editor.createUI(window);
+        editor.createUI(stage);
 
         setCenter(editor.getContentPane());
         setTop(editor.getMenuBar());
@@ -62,11 +63,11 @@ public class EditorPage extends BorderPane implements Page {
         }
     }
 
-    public TileMapEditor editor() {
-        return editor;
-    }
-
-    public void startEditor() {
+    public void startEditor(WorldMap map) {
+        if (map != null) {
+            editor.setMap(map);
+        }
+        stage.titleProperty().bind(editor.titlePy);
         editor.start();
     }
 

@@ -68,7 +68,6 @@ public interface GameContext {
     void reboot();
     void resetSimulationSpeed();
     void restartIntro();
-    void selectEditorPage();
     void selectGamePage();
     void selectNextGameVariant();
     void selectNextPerspective();

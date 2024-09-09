@@ -471,8 +471,20 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void selectEditorPage() {
+    public void openMapEditor() {
+        if (game().variant() != GameVariant.PACMAN_XXL) {
+            showFlashMessageSeconds(3, "Map editor is not available in this game variant");
+            return;
+        }
+        currentGameScene().ifPresent(GameScene::end);
+        GameSounds.stopAll();
         clock.stop();
+        if (editorPage == null) {
+            var xxlGame = (PacManXXLGameModel) game();
+            editorPage = new EditorPage(stage, this, xxlGame.customMapDir());
+            editorPage.setCloseAction(this::quitMapEditor);
+        }
+        editorPage.startEditor(game().world().map());
         selectPage(editorPage);
     }
 
@@ -496,27 +508,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                 Logger.error("Cannot start playing when in game state {}", gameState());
             }
         }
-    }
-
-    @Override
-    public void openMapEditor() {
-        if (game().variant() != GameVariant.PACMAN_XXL) {
-            showFlashMessageSeconds(3, "Map editor is not available in this game variant");
-            return;
-        }
-        if (editorPage == null) {
-            PacManXXLGameModel xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
-            editorPage = new EditorPage(stage, this, xxlGame.customMapDir());
-            editorPage.setCloseAction(this::quitMapEditor);
-        }
-        GameSounds.stopAll();
-        currentGameScene().ifPresent(GameScene::end);
-        if (game().world() != null) {
-            editorPage.editor().setMap(game().world().map());
-        }
-        editorPage.startEditor();
-        selectEditorPage();
-        stage.titleProperty().bind(editorPage.editor().titlePy);
     }
 
     @Override
