@@ -31,15 +31,19 @@ public class TileMap {
 
     public static final String DATA_SECTION_START = "!data";
 
-    private final Properties properties = new Properties();
-    private final byte[][] data;
+    // only used in terrain maps for computing and storing contours
+    private static class TerrainMapData {
+        private final BitSet exploredSet = new BitSet();
+        private List<TileMapPath> singleStrokePaths = new ArrayList<>();
+        private List<TileMapPath> doubleStrokePaths = new ArrayList<>();
 
-    // Terrain maps only
-    private List<TileMapPath> singleStrokePaths = List.of();
-    private List<TileMapPath> doubleStrokePaths = List.of();
+        TerrainMapData() {}
 
-    // used by terrain path computation
-    private final BitSet exploredSet = new BitSet();
+        TerrainMapData(TerrainMapData other) {
+            singleStrokePaths = new ArrayList<>(other.singleStrokePaths);
+            doubleStrokePaths = new ArrayList<>(other.doubleStrokePaths);
+        }
+    }
 
     public static Vector2i parseVector2i(String text) {
         Pattern pattern = Pattern.compile("\\((\\d+),(\\d+)\\)");
@@ -107,6 +111,10 @@ public class TileMap {
         return tileMap;
     }
 
+    private final Properties properties = new Properties();
+    private final byte[][] data;
+    private TerrainMapData terrainMapData;
+
     public TileMap(TileMap other) {
         int numRows = other.numRows(), numCols = other.numCols();
         properties.putAll(other.properties);
@@ -114,8 +122,9 @@ public class TileMap {
         for (int row = 0; row < numRows; ++row) {
             data[row] = Arrays.copyOf(other.data[row], numCols);
         }
-        singleStrokePaths = new ArrayList<>(other.singleStrokePaths);
-        doubleStrokePaths = new ArrayList<>(other.doubleStrokePaths);
+        if (other.terrainMapData != null) {
+            terrainMapData = new TerrainMapData(other.terrainMapData);
+        }
     }
 
     public TileMap(int numRows, int numCols) {
@@ -124,28 +133,6 @@ public class TileMap {
 
     private TileMap(byte[][] data) {
         this.data = data;
-    }
-
-    private void addDoubleStrokePath(Vector2i startTile, Direction startDir) {
-        if (!isExplored(startTile)) {
-            doubleStrokePaths.add(computePath(startTile, startDir));
-        }
-    }
-
-    private boolean isExplored(Vector2i tile) {
-        return exploredSet.get(index(tile));
-    }
-
-    private void setExplored(Vector2i tile) {
-        exploredSet.set(index(tile));
-    }
-
-    public Stream<TileMapPath> singleStrokePaths() {
-        return singleStrokePaths == null ? Stream.empty() : singleStrokePaths.stream();
-    }
-
-    public Stream<TileMapPath> doubleStrokePaths() {
-        return doubleStrokePaths == null ? Stream.empty() : doubleStrokePaths.stream();
     }
 
     /**
@@ -321,9 +308,7 @@ public class TileMap {
      * double-stroked and uses angular corner tiles.
      */
     public void computeTerrainPaths() {
-        singleStrokePaths = new ArrayList<>();
-        doubleStrokePaths = new ArrayList<>();
-        exploredSet.clear();
+        terrainMapData = new TerrainMapData();
 
         int firstCol = 0, lastCol = numCols() - 1;
         Direction startDir;
@@ -366,14 +351,23 @@ public class TileMap {
             .filter(not(this::isExplored))
             .filter(tile -> tile.x() > firstCol && tile.x() < lastCol)
             .map(corner -> computePath(corner, LEFT))
-            .forEach(doubleStrokePaths::add);
+            .forEach(terrainMapData.doubleStrokePaths::add);
 
         // add paths for obstacles inside maze, start with top-left corner of obstacle
         tiles(Tiles.CORNER_NW).filter(not(this::isExplored))
             .map(corner -> computePath(corner, LEFT))
-            .forEach(singleStrokePaths::add);
+            .forEach(terrainMapData.singleStrokePaths::add);
 
-        Logger.debug("Paths computed, {} single wall paths, {} double wall paths", singleStrokePaths.size(), doubleStrokePaths.size());
+        Logger.debug("Paths computed, {} single wall paths, {} double wall paths",
+            terrainMapData.singleStrokePaths.size(), terrainMapData.doubleStrokePaths.size());
+    }
+
+    public Stream<TileMapPath> singleStrokePaths() {
+        return terrainMapData != null ? terrainMapData.singleStrokePaths.stream() : Stream.empty();
+    }
+
+    public Stream<TileMapPath> doubleStrokePaths() {
+        return terrainMapData != null ? terrainMapData.doubleStrokePaths.stream() : Stream.empty();
     }
 
     private TileMapPath computePath(Vector2i startTile, Direction startDir) {
@@ -400,5 +394,19 @@ public class TileMap {
             setExplored(tile);
         }
         return path;
+    }
+
+    private void addDoubleStrokePath(Vector2i startTile, Direction startDir) {
+        if (!isExplored(startTile)) {
+            terrainMapData.doubleStrokePaths.add(computePath(startTile, startDir));
+        }
+    }
+
+    private boolean isExplored(Vector2i tile) {
+        return terrainMapData.exploredSet.get(index(tile));
+    }
+
+    private void setExplored(Vector2i tile) {
+        terrainMapData.exploredSet.set(index(tile));
     }
 }
