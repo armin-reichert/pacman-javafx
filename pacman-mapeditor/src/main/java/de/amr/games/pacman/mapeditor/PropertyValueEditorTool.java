@@ -16,20 +16,15 @@ import static de.amr.games.pacman.lib.Globals.TS;
  */
 public class PropertyValueEditorTool implements Tool {
     private final TileMapRenderer renderer;
-    private final int size;
+    private final double size;
     private final String propertyName;
     private final String description;
 
-    public PropertyValueEditorTool(TileMapRenderer renderer, int size, String propertyName, String description) {
+    public PropertyValueEditorTool(TileMapRenderer renderer, double size, String propertyName, String description) {
         this.renderer = renderer;
         this.size = size;
         this.propertyName = propertyName;
         this.description = description;
-    }
-
-    @Override
-    public int size() {
-        return size;
     }
 
     @Override

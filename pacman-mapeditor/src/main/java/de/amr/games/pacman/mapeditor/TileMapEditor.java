@@ -231,6 +231,8 @@ public class TileMapEditor  {
     private TerrainMapRenderer terrainMapPreviewRenderer;
     private FoodMapRenderer foodMapRenderer;
 
+    private TerrainMapEditRenderer terrainPaletteRenderer;
+
     private final Map<String, Palette> palettes = new HashMap<>();
 
     private boolean terrainMapPathsUpToDate;
@@ -386,7 +388,9 @@ public class TileMapEditor  {
     }
 
     private Palette createTerrainPalette() {
-        var palette = new Palette(32, 1, 19, terrainMapEditRenderer);
+        terrainPaletteRenderer = new TerrainMapEditRenderer();
+        terrainPaletteRenderer.setScaling(4);
+        var palette = new Palette(32, 1, 19, terrainPaletteRenderer);
         palette.setTools(
             palette.createTileValueEditorTool(this, Tiles.WALL_H, "Horiz. Wall"),
             palette.createTileValueEditorTool(this, Tiles.WALL_V, "Vert. Wall"),
@@ -930,10 +934,18 @@ public class TileMapEditor  {
         try {
             drawEditCanvas();
             drawPreviewCanvas();
-            palettes.get(selectedPaletteID()).draw();
+            drawSelectedPalette();
         } catch (Exception x) {
             Logger.error("Exception while drawing: {}", x);
         }
+    }
+
+    private void drawSelectedPalette() {
+        Palette selectedPalette = palettes.get(selectedPaletteID());
+        if (selectedPaletteID().equals(PALETTE_TERRAIN)) {
+            terrainPaletteRenderer.setWallStrokeColor(terrainMapEditRenderer.wallStrokeColor);
+        }
+        selectedPalette.draw();
     }
 
     private void drawGrid(GraphicsContext g) {

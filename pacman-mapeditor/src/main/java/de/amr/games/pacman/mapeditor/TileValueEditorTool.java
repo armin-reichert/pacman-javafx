@@ -15,21 +15,16 @@ import javafx.scene.paint.Color;
 public class TileValueEditorTool implements Tool {
     private final TileMapEditor editor;
     private final TileMapRenderer renderer;
-    private final int size;
+    private final double size;
     private final byte value;
     private final String description;
 
-    public TileValueEditorTool(TileMapEditor editor, TileMapRenderer renderer, int size, byte value, String description) {
+    public TileValueEditorTool(TileMapEditor editor, TileMapRenderer renderer, double size, byte value, String description) {
         this.editor = editor;
         this.renderer = renderer;
         this.size = size;
         this.value = value;
         this.description = description;
-    }
-
-    @Override
-    public int size() {
-        return size;
     }
 
     @Override

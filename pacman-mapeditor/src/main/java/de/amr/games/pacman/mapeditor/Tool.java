@@ -15,8 +15,6 @@ public interface Tool {
 
     String description();
 
-    int size();
-
     void apply(TileMap tileMap, Vector2i tile);
 
     TileMapRenderer renderer();
