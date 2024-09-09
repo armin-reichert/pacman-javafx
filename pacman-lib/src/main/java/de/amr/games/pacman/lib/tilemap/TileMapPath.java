@@ -8,61 +8,19 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.Iterator;
 import java.util.List;
-
-import static de.amr.games.pacman.lib.Direction.*;
-import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * @author Armin Reichert
  */
 public class TileMapPath implements Iterable<Direction> {
 
-    private static Direction newMoveDir(Direction moveDir, byte tileValue) {
-        return switch (tileValue) {
-            case Tiles.CORNER_NW, Tiles.DCORNER_NW, Tiles.DCORNER_ANGULAR_NW -> moveDir == LEFT  ? DOWN  : RIGHT;
-            case Tiles.CORNER_NE, Tiles.DCORNER_NE, Tiles.DCORNER_ANGULAR_NE -> moveDir == RIGHT ? DOWN  : LEFT;
-            case Tiles.CORNER_SE, Tiles.DCORNER_SE, Tiles.DCORNER_ANGULAR_SE -> moveDir == DOWN  ? LEFT  : UP;
-            case Tiles.CORNER_SW, Tiles.DCORNER_SW, Tiles.DCORNER_ANGULAR_SW -> moveDir == DOWN  ? RIGHT : UP;
-            default -> moveDir;
-        };
-    }
-
-    private final TileMap map;
     private final Vector2i startTile;
     private final List<Direction> directions = new ArrayList<>();
 
-    public TileMapPath(TileMap map, BitSet explored, Vector2i startTile, Direction startDir) {
-        this.map = checkNotNull(map);
-        checkNotNull(explored);
-        checkNotNull(startTile);
-        checkNotNull(startDir);
-        if (map.outOfBounds(startTile)) {
-            throw new IllegalArgumentException("Start tile must be inside map");
-        }
+    public TileMapPath(Vector2i startTile) {
         this.startTile = startTile;
-        explored.set(map.index(startTile));
-        var tile = startTile;
-        var dir = startDir;
-        while (true) {
-            dir = newMoveDir(dir, map.get(tile));
-            tile = tile.plus(dir.vector());
-            if (map.outOfBounds(tile)) {
-                break;
-            }
-            if (explored.get(map.index(tile))) {
-                directions.add(dir);
-                break;
-            }
-            directions.add(dir);
-            explored.set(map.index(tile));
-        }
-    }
-
-    public TileMap map() {
-        return map;
     }
 
     public Vector2i startTile() {
@@ -71,6 +29,10 @@ public class TileMapPath implements Iterable<Direction> {
 
     public int size() {
         return directions.size();
+    }
+
+    public void addDirection(Direction dir) {
+        directions.add(dir);
     }
 
     public Direction dir(int i) {

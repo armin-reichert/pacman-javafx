@@ -20,6 +20,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Direction.*;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.Globals.v2i;
 
 /**
@@ -133,7 +134,7 @@ public class TileMap {
         for (int row = 0; row < numRows(); ++row) {
             byte firstColContent = get(row, firstCol);
             startDir = switch (firstColContent) {
-                case Tiles.DWALL_H    -> RIGHT;
+                case Tiles.DWALL_H -> RIGHT;
                 case Tiles.DCORNER_SE, Tiles.DCORNER_ANGULAR_SE -> UP;
                 case Tiles.DCORNER_NE, Tiles.DCORNER_ANGULAR_NE -> RIGHT;
                 default -> null; // should never happen
@@ -143,7 +144,7 @@ public class TileMap {
             }
             byte lastColContent = get(row, lastCol);
             startDir = switch (lastColContent) {
-                case Tiles.DWALL_H    -> LEFT;
+                case Tiles.DWALL_H -> LEFT;
                 case Tiles.DCORNER_SW, Tiles.DCORNER_ANGULAR_SW -> UP;
                 case Tiles.DCORNER_NW, Tiles.DCORNER_ANGULAR_NW -> DOWN;
                 default -> null; // should never happen
@@ -164,12 +165,12 @@ public class TileMap {
         tiles(Tiles.DCORNER_ANGULAR_NW)
             .filter(tile -> isUnexplored(exploredSet, tile))
             .filter(tile -> tile.x() > firstCol && tile.x() < lastCol)
-            .map(corner -> new TileMapPath(this, exploredSet, corner, LEFT))
+            .map(corner -> computePath(exploredSet, corner, LEFT))
             .forEach(doubleStrokePaths::add);
 
         // add paths for obstacles inside maze, start with top-left corner of obstacle
         tiles(Tiles.CORNER_NW).filter(tile -> isUnexplored(exploredSet, tile))
-                .map(corner -> new TileMapPath(this, exploredSet, corner, LEFT))
+                .map(corner -> computePath(exploredSet, corner, LEFT))
                 .forEach(singleStrokePaths::add);
 
         Logger.debug("Paths computed, {} single wall paths, {} double wall paths", singleStrokePaths.size(), doubleStrokePaths.size());
@@ -177,7 +178,7 @@ public class TileMap {
 
     private void addDoubleStrokePath(Vector2i startTile, Direction startDir, BitSet exploredSet) {
         if (isUnexplored(exploredSet, startTile)) {
-            doubleStrokePaths.add(new TileMapPath(this, exploredSet, startTile, startDir));
+            doubleStrokePaths.add(computePath(exploredSet, startTile, startDir));
         }
     }
 
@@ -347,5 +348,42 @@ public class TileMap {
             pw.println();
         }
         pw.flush();
+    }
+
+    private static Direction newMoveDir(Direction moveDir, byte tileValue) {
+        return switch (tileValue) {
+            case Tiles.CORNER_NW, Tiles.DCORNER_NW, Tiles.DCORNER_ANGULAR_NW -> moveDir == LEFT  ? DOWN  : RIGHT;
+            case Tiles.CORNER_NE, Tiles.DCORNER_NE, Tiles.DCORNER_ANGULAR_NE -> moveDir == RIGHT ? DOWN  : LEFT;
+            case Tiles.CORNER_SE, Tiles.DCORNER_SE, Tiles.DCORNER_ANGULAR_SE -> moveDir == DOWN  ? LEFT  : UP;
+            case Tiles.CORNER_SW, Tiles.DCORNER_SW, Tiles.DCORNER_ANGULAR_SW -> moveDir == DOWN  ? RIGHT : UP;
+            default -> moveDir;
+        };
+    }
+
+    public TileMapPath computePath(BitSet explored, Vector2i startTile, Direction startDir) {
+        checkNotNull(explored);
+        checkNotNull(startTile);
+        checkNotNull(startDir);
+        if (outOfBounds(startTile)) {
+            throw new IllegalArgumentException("Start tile must be inside map");
+        }
+        TileMapPath path = new TileMapPath(startTile);
+        explored.set(index(startTile));
+        var tile = startTile;
+        var dir = startDir;
+        while (true) {
+            dir = newMoveDir(dir, get(tile));
+            tile = tile.plus(dir.vector());
+            if (outOfBounds(tile)) {
+                break;
+            }
+            if (explored.get(index(tile))) {
+                path.addDirection(dir);
+                break;
+            }
+            path.addDirection(dir);
+            explored.set(index(tile));
+        }
+        return path;
     }
 }

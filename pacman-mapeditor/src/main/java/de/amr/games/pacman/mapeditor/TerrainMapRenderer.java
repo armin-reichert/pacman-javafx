@@ -43,10 +43,10 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.save();
         g.scale(scaling(), scaling());
         map.doubleStrokePaths().forEach(path -> {
-            drawPath(g, path, false,  4* lineWidth, wallStrokeColor, null);
-            drawPath(g, path, false,  lineWidth, wallFillColor, null);
+            drawPath(g, map, path, false,  4* lineWidth, wallStrokeColor, null);
+            drawPath(g, map, path, false,  lineWidth, wallFillColor, null);
         });
-        map.singleStrokePaths().forEach(path -> drawPath(g, path, true, lineWidth, wallStrokeColor, wallFillColor));
+        map.singleStrokePaths().forEach(path -> drawPath(g, map, path, true, lineWidth, wallStrokeColor, wallFillColor));
         map.tiles(Tiles.DOOR).forEach(door -> drawDoor(g, door, doorColor));
         g.restore();
     }
@@ -101,11 +101,11 @@ public class TerrainMapRenderer implements TileMapRenderer {
     }
 
     //TODO: avoid special cases
-    private void drawPath(GraphicsContext g, TileMapPath path,
+    private void drawPath(GraphicsContext g, TileMap map, TileMapPath path,
         boolean fill, double lineWidth, Color strokeColor, Color fillColor)
     {
         g.beginPath();
-        buildPath(g, path);
+        buildPath(g, map, path);
         if (fill) {
             g.setFill(fillColor);
             g.fill();
@@ -115,8 +115,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.stroke();
     }
 
-    private void buildPath(GraphicsContext g, TileMapPath path) {
-        TileMap map = path.map();
+    private void buildPath(GraphicsContext g, TileMap map, TileMapPath path) {
         Vector2i tile = path.startTile();
         if (tile.x() == 0) {
             // start path at left border, not at tile center
