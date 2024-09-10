@@ -63,14 +63,14 @@ public class GameLevel3D {
 
     static final PhongMaterial DEFAULT_MATERIAL = new PhongMaterial();
 
-    private final StringProperty  floorTextureNamePy  = new SimpleStringProperty(this, "floorTextureName", NO_TEXTURE);
-    private final DoubleProperty  borderWallHeightPy  = new SimpleDoubleProperty(this, "borderWallHeight", BORDER_WALL_HEIGHT);
-    private final DoubleProperty  obstacleHeightPy    = new SimpleDoubleProperty(this, "obstacleHeight", OBSTACLE_HEIGHT);
-    private final DoubleProperty  wallOpacityPy       = new SimpleDoubleProperty(this, "wallOpacity",1.0);
+    private final StringProperty floorTextureNamePy = new SimpleStringProperty(this, "floorTextureName", NO_TEXTURE);
+    private final DoubleProperty borderWallHeightPy = new SimpleDoubleProperty(this, "borderWallHeight", BORDER_WALL_HEIGHT);
+    private final DoubleProperty obstacleHeightPy   = new SimpleDoubleProperty(this, "obstacleHeight", OBSTACLE_HEIGHT);
+    private final DoubleProperty wallOpacityPy      = new SimpleDoubleProperty(this, "wallOpacity",1.0);
 
-    private final DoubleProperty  houseHeightPy       = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
-    private final BooleanProperty houseUsedPy         = new SimpleBooleanProperty(this, "houseUsed", false);
-    private final BooleanProperty houseOpenPy         = new SimpleBooleanProperty(this, "houseOpen", false);
+    private final DoubleProperty  houseHeightPy = new SimpleDoubleProperty(this, "houseHeight", HOUSE_HEIGHT);
+    private final BooleanProperty houseUsedPy   = new SimpleBooleanProperty(this, "houseUsed", false);
+    private final BooleanProperty houseOpenPy   = new SimpleBooleanProperty(this, "houseOpen", false);
 
     private final ObjectProperty<Color> floorColorPy      = new SimpleObjectProperty<>(this, "floorColor", Color.BLACK);
     private final ObjectProperty<Color> wallFillColorPy   = new SimpleObjectProperty<>(this, "wallFillColor", Color.BLUE);
@@ -134,6 +134,9 @@ public class GameLevel3D {
         root.getChildren().addAll(pac3D.shape3D(), pac3D.shape3D().light());
         ghosts3D.forEach(ghost3D -> root.getChildren().add(ghost3D.root()));
         root.getChildren().addAll(message3D, livesCounter3D, worldGroup);
+
+        PY_3D_WALL_HEIGHT.addListener((py,ov,nv) -> obstacleHeightPy.set(nv.doubleValue()));
+        wallOpacityPy.bind(PY_3D_WALL_OPACITY);
     }
 
     /**
@@ -168,25 +171,24 @@ public class GameLevel3D {
     }
 
     private void buildWorld3D(GameWorld world) {
-        TileMap terrain = world.map().terrain();
-
-        PY_3D_WALL_HEIGHT.addListener((py,ov,nv) -> obstacleHeightPy.set(nv.doubleValue()));
+        //TODO check this
         obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());
 
-        wallOpacityPy.bind(PY_3D_WALL_OPACITY);
-
+        TileMap terrain = world.map().terrain();
         wallStrokeColorPy.set(getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_STROKE, Color.rgb(33, 33, 255)));
         wallFillColorPy.set(getColorFromMap(terrain, GameWorld.PROPERTY_COLOR_WALL_FILL, Color.rgb(0, 0, 0)));
 
-        Box floor = createFloor(terrain);
+        Box floor = createFloor(terrain.numCols() * TS - 1, terrain.numRows() * TS - 1);
 
         terrain.doubleStrokePaths()
             .filter(path -> !context.game().world().isPartOfHouse(path.startTile()))
-            .forEach(path -> WallBuilder.buildWallAlongPath(mazeGroup, path, borderWallHeightPy, BORDER_WALL_THICKNESS, OBSTACLE_COAT_HEIGHT,
+            .forEach(path -> WallBuilder.buildWallAlongPath(mazeGroup, path,
+                borderWallHeightPy, BORDER_WALL_THICKNESS, OBSTACLE_COAT_HEIGHT,
                 wallFillMaterialPy, wallStrokeMaterialPy));
 
         terrain.singleStrokePaths()
-            .forEach(path -> WallBuilder.buildWallAlongPath(mazeGroup, path, obstacleHeightPy, OBSTACLE_THICKNESS, OBSTACLE_COAT_HEIGHT,
+            .forEach(path -> WallBuilder.buildWallAlongPath(mazeGroup, path,
+                obstacleHeightPy, OBSTACLE_THICKNESS, OBSTACLE_COAT_HEIGHT,
                 wallFillMaterialPy, wallStrokeMaterialPy));
 
         house3D = new House3D(world);
@@ -200,12 +202,10 @@ public class GameLevel3D {
 
         mazeGroup.getChildren().add(house3D.root());
         worldGroup.getChildren().addAll(floor, mazeGroup);
-        //TODO check this, get transparency right
         root.getChildren().add(house3D.door3D());
     }
 
-    private Box createFloor(TileMap terrain) {
-        double sizeX = terrain.numCols() * TS - 1, sizeY = terrain.numRows() * TS - 1;
+    private Box createFloor(double sizeX, double sizeY) {
         var floor = new Box(sizeX, sizeY, FLOOR_THICKNESS);
         // Place floor such that left-upper corner is at origin and floor surface is at z=0
         floor.translateXProperty().bind(floor.widthProperty().multiply(0.5));
