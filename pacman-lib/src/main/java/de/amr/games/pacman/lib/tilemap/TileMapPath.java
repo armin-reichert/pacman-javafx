@@ -10,6 +10,7 @@ import de.amr.games.pacman.lib.Vector2i;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Armin Reichert
@@ -20,7 +21,7 @@ public class TileMapPath implements Iterable<Direction> {
     private final List<Direction> directions = new ArrayList<>();
 
     public TileMapPath(Vector2i startTile) {
-        this.startTile = startTile;
+        this.startTile = Objects.requireNonNull(startTile);
     }
 
     public Vector2i startTile() {
@@ -31,7 +32,8 @@ public class TileMapPath implements Iterable<Direction> {
         return directions.size();
     }
 
-    public void addDirection(Direction dir) {
+    public void add(Direction dir) {
+        Objects.requireNonNull(dir);
         directions.add(dir);
     }
 

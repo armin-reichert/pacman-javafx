@@ -169,7 +169,6 @@ public class GameLevel3D {
 
     private void buildWorld3D(GameWorld world) {
         TileMap terrain = world.map().terrain();
-        terrain.computeTerrainPaths();
 
         PY_3D_WALL_HEIGHT.addListener((py,ov,nv) -> obstacleHeightPy.set(nv.doubleValue()));
         obstacleHeightPy.set(PY_3D_WALL_HEIGHT.get());

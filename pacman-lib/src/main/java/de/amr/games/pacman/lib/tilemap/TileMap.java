@@ -387,10 +387,10 @@ public class TileMap {
                 break;
             }
             if (isExplored(tile)) {
-                path.addDirection(dir);
+                path.add(dir);
                 break;
             }
-            path.addDirection(dir);
+            path.add(dir);
             setExplored(tile);
         }
         return path;
