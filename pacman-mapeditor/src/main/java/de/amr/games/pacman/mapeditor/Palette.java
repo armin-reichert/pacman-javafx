@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.mapeditor;
 
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Tooltip;
@@ -16,11 +17,11 @@ import org.tinylog.Logger;
 /**
  * @author Armin Reichert
  */
-public class Palette extends Canvas {
+public class Palette {
 
     public static final Color BG_COLOR = Color.WHITE;
 
-    private final int cellSize;
+    private final int toolSize;
     private final int numRows;
     private final int numCols;
     private final TileMapRenderer renderer;
@@ -31,44 +32,37 @@ public class Palette extends Canvas {
     private int selectedCol;
     private final Tooltip tooltip;
 
-    public Palette(int cellSize, int numRows, int numCols, TileMapRenderer renderer) {
-        this.cellSize = cellSize;
+    public Palette(int toolSize, int numRows, int numCols, TileMapRenderer renderer) {
+        this.toolSize = toolSize;
         this.numRows = numRows;
         this.numCols = numCols;
         this.renderer = renderer;
         tools = new Tool[numRows * numCols];
-        g = getGraphicsContext2D();
+
         selectedTool = null;
         selectedRow = -1;
         selectedCol = -1;
-        setWidth(numCols * cellSize);
-        setHeight(numRows * cellSize);
-        setOnMouseClicked(this::select);
+
         // Tooltip for tool :-)
         tooltip = new Tooltip("This tool does...");
         tooltip.setShowDelay(Duration.seconds(0.1));
         tooltip.setHideDelay(Duration.seconds(0.5));
         tooltip.setFont(Font.font("Sans", 12));
-        Tooltip.install(this, tooltip);
-        setOnMouseMoved(e -> {
-            int row = (int) e.getY() / cellSize;
-            int col = (int) e.getX() / cellSize;
-            int i = row*numCols + col;
-            if (tools[i] != null) {
-                String text = tools[i].description();
-                tooltip.setText(text.isEmpty() ? "?" : text);
-            } else {
-                tooltip.setText("No selection");
-            }
-        });
+
+        var canvas = new Canvas(numCols * toolSize, numRows * toolSize);
+        canvas.setOnMouseClicked(this::handleMouseClick);
+        canvas.setOnMouseMoved(this::handleMouseMove);
+
+        g = canvas.getGraphicsContext2D();
+        Tooltip.install(canvas, tooltip);
     }
 
     public TileValueEditorTool createTileValueEditorTool(TileMapEditor editor, byte value, String description) {
-        return new TileValueEditorTool(editor, renderer, cellSize, value, description);
+        return new TileValueEditorTool(editor, renderer, toolSize, value, description);
     }
 
     public PropertyValueEditorTool createPropertyValueEditorTool(String propertyName, String description) {
-        return new PropertyValueEditorTool(renderer, cellSize, propertyName, description);
+        return new PropertyValueEditorTool(renderer, toolSize, propertyName, description);
     }
 
     public void setTools(Tool... editorTools) {
@@ -80,6 +74,10 @@ public class Palette extends Canvas {
                 break;
             }
         }
+    }
+
+    public Node root() {
+        return g.getCanvas();
     }
 
     public boolean isToolSelected() {
@@ -96,9 +94,9 @@ public class Palette extends Canvas {
         }
     }
 
-    private void select(MouseEvent e) {
-        int row = (int) e.getY() / cellSize;
-        int col = (int) e.getX() / cellSize;
+    private void handleMouseClick(MouseEvent e) {
+        int row = (int) e.getY() / toolSize;
+        int col = (int) e.getX() / toolSize;
         int i = row * numCols + col;
         if (tools[i] != null) {
             selectedRow = row;
@@ -107,34 +105,51 @@ public class Palette extends Canvas {
         }
     }
 
+    private void handleMouseMove(MouseEvent e) {
+        int row = (int) e.getY() / toolSize;
+        int col = (int) e.getX() / toolSize;
+        int i = row * numCols + col;
+        if (tools[i] != null) {
+            String text = tools[i].description();
+            tooltip.setText(text.isEmpty() ? "?" : text);
+        } else {
+            tooltip.setText("No selection");
+        }
+    }
+
     public void draw() {
+        double width = g.getCanvas().getWidth(), height = g.getCanvas().getHeight();
+        g.save();
+
         g.setFill(BG_COLOR);
-        g.fillRect(0, 0, getWidth(), getHeight());
+        g.fillRect(0, 0, width, height);
+
         if (renderer != null) {
-            renderer.setScaling(cellSize / 8.0);
+            renderer.setScaling(toolSize / 8.0);
             for (int i = 0; i < numRows * numCols; ++i) {
                 if (tools[i] != null) {
-                    int row = i / numCols, col = i % numCols;
-                    tools[i].draw(g, row, col);
+                    tools[i].draw(g, i / numCols, i % numCols);
                 }
             }
         }
-        g.save();
+
         // Grid lines
         g.setStroke(Color.LIGHTGRAY);
         g.setLineWidth(1);
         for (int row = 1; row < numRows; ++row) {
-            g.strokeLine(0, row * cellSize, getWidth(), row * cellSize);
+            g.strokeLine(0, row * toolSize, width, row * toolSize);
         }
         for (int col = 1; col < numCols; ++col) {
-            g.strokeLine(col * cellSize, 0, col * cellSize, getHeight());
+            g.strokeLine(col * toolSize, 0, col * toolSize, height);
         }
+
         // mark selected tool
-        g.setStroke(Color.RED);
-        g.setLineWidth(2);
         if (selectedRow != -1 && selectedCol != -1) {
-            g.strokeRect(selectedCol * cellSize + 1, selectedRow * cellSize + 1, cellSize - 2, cellSize - 2);
+            g.setStroke(Color.RED);
+            g.setLineWidth(2);
+            g.strokeRect(selectedCol * toolSize + 1, selectedRow * toolSize + 1, toolSize - 2, toolSize - 2);
         }
+
         g.restore();
     }
 }

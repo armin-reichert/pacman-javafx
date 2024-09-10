@@ -104,6 +104,8 @@ public class TileMapEditor  {
     private static final String PALETTE_ACTORS  = "Actors";
     private static final String PALETTE_FOOD    = "Food";
 
+    private static final int TOOL_SIZE = 32;
+
     private static final RectShape GHOST_HOUSE_SHAPE = new RectShape(new byte[][] {
         {16, 8, 8,14,14, 8, 8,17},
         { 9, 0, 0, 0, 0, 0, 0, 9},
@@ -390,7 +392,7 @@ public class TileMapEditor  {
     private Palette createTerrainPalette() {
         terrainPaletteRenderer = new TerrainMapEditRenderer();
         terrainPaletteRenderer.setScaling(4);
-        var palette = new Palette(32, 1, 19, terrainPaletteRenderer);
+        var palette = new Palette(TOOL_SIZE, 1, 19, terrainPaletteRenderer);
         palette.setTools(
             palette.createTileValueEditorTool(this, Tiles.WALL_H, "Horiz. Wall"),
             palette.createTileValueEditorTool(this, Tiles.WALL_V, "Vert. Wall"),
@@ -417,7 +419,7 @@ public class TileMapEditor  {
     }
 
     private Palette createActorPalette() {
-        var palette = new Palette(32, 1, 9, terrainMapEditRenderer);
+        var palette = new Palette(TOOL_SIZE, 1, 9, terrainMapEditRenderer);
         palette.setTools(
             palette.createPropertyValueEditorTool(PROPERTY_POS_RED_GHOST, "Red Ghost"),
             palette.createPropertyValueEditorTool(PROPERTY_POS_PINK_GHOST, "Pink Ghost"),
@@ -433,7 +435,7 @@ public class TileMapEditor  {
     }
 
     private Palette createFoodPalette() {
-        var palette = new Palette(32, 1, 3, foodMapRenderer);
+        var palette = new Palette(TOOL_SIZE, 1, 3, foodMapRenderer);
         palette.setTools(
             palette.createTileValueEditorTool(this, Tiles.EMPTY, "No Food"),
             palette.createTileValueEditorTool(this, Tiles.PELLET, "Pellet"),
@@ -479,15 +481,15 @@ public class TileMapEditor  {
         palettes.put(PALETTE_ACTORS, createActorPalette());
         palettes.put(PALETTE_FOOD, createFoodPalette());
 
-        var terrainPaletteTab = new Tab(tt("terrain"), palettes.get(PALETTE_TERRAIN));
+        var terrainPaletteTab = new Tab(tt("terrain"), palettes.get(PALETTE_TERRAIN).root());
         terrainPaletteTab.setClosable(false);
         terrainPaletteTab.setUserData(PALETTE_TERRAIN);
 
-        var actorPaletteTab = new Tab(tt("actors"), palettes.get(PALETTE_ACTORS));
+        var actorPaletteTab = new Tab(tt("actors"), palettes.get(PALETTE_ACTORS).root());
         actorPaletteTab.setClosable(false);
         actorPaletteTab.setUserData(PALETTE_ACTORS);
 
-        var foodPaletteTab = new Tab(tt("pellets"), palettes.get(PALETTE_FOOD));
+        var foodPaletteTab = new Tab(tt("pellets"), palettes.get(PALETTE_FOOD).root());
         foodPaletteTab.setClosable(false);
         foodPaletteTab.setUserData(PALETTE_FOOD);
 
@@ -512,10 +514,8 @@ public class TileMapEditor  {
         foodPropertiesArea.setText(tt("pellets"));
         foodPropertiesArea.setContent(foodMapPropertiesEditor);
 
-        VBox controlsPane = new VBox();
-        controlsPane.setSpacing(10);
-        controlsPane.setMinWidth(32*10);
-        controlsPane.getChildren().add(new VBox(terrainPropertiesArea, foodPropertiesArea));
+        var propertyEditorsPane = new VBox();
+        propertyEditorsPane.getChildren().addAll(terrainPropertiesArea, foodPropertiesArea);
 
         focussedTileInfo = new Label();
         focussedTileInfo.setMinWidth(100);
@@ -555,7 +555,7 @@ public class TileMapEditor  {
         var vbox2 = new VBox(tabPaneViews);
         vbox2.setPadding(new Insets(0,5,0,5));
 
-        var hbox = new HBox(controlsPane, vbox2);
+        var hbox = new HBox(propertyEditorsPane, vbox2);
         hbox.setPadding(new Insets(0,0,10,0));
         HBox.setHgrow(vbox2, Priority.ALWAYS);
 
