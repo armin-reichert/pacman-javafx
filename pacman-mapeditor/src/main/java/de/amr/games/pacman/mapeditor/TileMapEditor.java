@@ -46,6 +46,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
@@ -267,6 +269,9 @@ public class TileMapEditor  {
                     title += " - " + map().url();
                 } else {
                     title += " - <" + tt("unsaved_map") + ">";
+                }
+                if (map() != null) {
+                    title += " (%d rows, %d cols)".formatted(map().terrain().numRows(), map().terrain().numCols());
                 }
                 return title;
             }, currentFilePy, mapPy
@@ -1058,7 +1063,11 @@ public class TileMapEditor  {
         }
         try {
             String source = map.makeSource();
-            mapSourceView.setText(source);
+            String lines[] = source.split("\n");
+            for (int i = 0; i < lines.length; ++i) {
+                lines[i] = "%5d:   %s".formatted(i+1, lines[i]);
+            }
+            mapSourceView.setText(String.join("\n", lines));
         } catch (Exception x) {
             Logger.error("Could not create text for map");
             Logger.error(x);
