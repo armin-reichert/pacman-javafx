@@ -291,7 +291,7 @@ public class TileMapEditor  {
         terrain.setProperty("pos_ghost_3_cyan",   formatTile(DEFAULT_POS_CYAN_GHOST));
         terrain.setProperty("pos_ghost_4_orange", formatTile(DEFAULT_POS_ORANGE_GHOST));
         terrain.setProperty("pos_bonus",          formatTile(DEFAULT_POS_BONUS));
-        map.food().setProperty("color_food",            DEFAULT_FOOD_COLOR);
+        map.food().setProperty("color_food",      DEFAULT_FOOD_COLOR);
         Logger.info("Map created. rows={}, cols={}", numRows, numCols);
         return map;
     }
@@ -898,6 +898,7 @@ public class TileMapEditor  {
             foodMapRenderer.setPelletColor(foodColor);
             foodMapRenderer.drawMap(g, map().food());
         }
+        drawActorSprites(g);
         if (!editingEnabledPy.get()) {
             drawEditingHint(g);
         }
@@ -907,6 +908,16 @@ public class TileMapEditor  {
             g.setLineWidth(1);
             g.strokeRect(focussedTilePy.get().x() * tilePx, focussedTilePy.get().y() * tilePx, tilePx, tilePx);
         }
+    }
+
+    private void drawActorSprites(GraphicsContext g) {
+        drawSprite(g, PROPERTY_POS_PAC, PAC_SPRITE, DEFAULT_POS_PAC);
+        drawSprite(g, PROPERTY_POS_RED_GHOST, RED_GHOST_SPRITE, DEFAULT_POS_RED_GHOST);
+        drawSprite(g, PROPERTY_POS_PINK_GHOST, PINK_GHOST_SPRITE, DEFAULT_POS_PINK_GHOST);
+        drawSprite(g, PROPERTY_POS_CYAN_GHOST, CYAN_GHOST_SPRITE, DEFAULT_POS_CYAN_GHOST);
+        drawSprite(g, PROPERTY_POS_ORANGE_GHOST, ORANGE_GHOST_SPRITE, DEFAULT_POS_ORANGE_GHOST);
+        drawSprite(g, PROPERTY_POS_BONUS, BONUS_SPRITE, DEFAULT_POS_BONUS);
+
     }
 
     private void drawPreviewCanvas() {
@@ -929,16 +940,11 @@ public class TileMapEditor  {
             foodMapRenderer.setPelletColor(foodColor);
             foodMapRenderer.drawMap(g, map().food());
         }
-        drawSprite(g, PROPERTY_POS_PAC, PAC_SPRITE);
-        drawSprite(g, PROPERTY_POS_RED_GHOST, RED_GHOST_SPRITE);
-        drawSprite(g, PROPERTY_POS_PINK_GHOST, PINK_GHOST_SPRITE);
-        drawSprite(g, PROPERTY_POS_CYAN_GHOST, CYAN_GHOST_SPRITE);
-        drawSprite(g, PROPERTY_POS_ORANGE_GHOST, ORANGE_GHOST_SPRITE);
-        drawSprite(g, PROPERTY_POS_BONUS, BONUS_SPRITE);
+        drawActorSprites(g);
     }
 
-    private void drawSprite(GraphicsContext g, String propertyName, Rectangle2D sprite) {
-        var tile = getTileFromMap(map().terrain(), propertyName, null);
+    private void drawSprite(GraphicsContext g, String propertyName, Rectangle2D sprite, Vector2i defaultTile) {
+        var tile = getTileFromMap(map().terrain(), propertyName, defaultTile);
         if (tile != null) {
             drawSprite(g, sprite, tile.x() * gridSize() + 0.5 * gridSize(), tile.y() * gridSize(), 1.75 * gridSize(), 1.75 * gridSize());
         }

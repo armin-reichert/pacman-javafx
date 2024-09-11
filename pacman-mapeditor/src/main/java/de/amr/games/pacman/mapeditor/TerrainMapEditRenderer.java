@@ -60,11 +60,6 @@ public class TerrainMapEditRenderer implements TileMapRenderer {
         g.save();
         g.scale(scaling(), scaling());
         terrainMap.tiles().forEach(tile -> drawTileUnscaled(g, tile, terrainMap.get(tile)));
-        specialTile(terrainMap, PROPERTY_POS_PAC).ifPresent(tile -> drawPacHome(g, tile));
-        specialTile(terrainMap, PROPERTY_POS_RED_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.RED));
-        specialTile(terrainMap, PROPERTY_POS_PINK_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.PINK));
-        specialTile(terrainMap, PROPERTY_POS_CYAN_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.CYAN));
-        specialTile(terrainMap, PROPERTY_POS_ORANGE_GHOST).ifPresent(tile -> drawGhostHome(g, tile, Color.ORANGE));
         specialTile(terrainMap, PROPERTY_POS_SCATTER_RED_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.RED));
         specialTile(terrainMap, PROPERTY_POS_SCATTER_PINK_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.PINK));
         specialTile(terrainMap, PROPERTY_POS_SCATTER_CYAN_GHOST).ifPresent(tile -> drawScatterTarget(g, tile, Color.CYAN));
