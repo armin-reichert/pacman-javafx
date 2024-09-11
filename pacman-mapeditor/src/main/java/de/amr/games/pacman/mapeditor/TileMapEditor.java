@@ -374,7 +374,9 @@ public class TileMapEditor  {
                 });
             }
             try {
-                draw();
+                drawEditCanvas();
+                drawPreviewCanvas();
+                drawSelectedPalette();
             } catch (Exception x) {
                 x.printStackTrace(System.err);
                 drawBlueScreen(x);
@@ -949,16 +951,6 @@ public class TileMapEditor  {
             sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
             x - ox, y - oy, w, h
         );
-    }
-
-    private void draw() {
-        try {
-            drawEditCanvas();
-            drawPreviewCanvas();
-            drawSelectedPalette();
-        } catch (Exception x) {
-            Logger.error("Exception while drawing: {}", x);
-        }
     }
 
     private void drawSelectedPalette() {
