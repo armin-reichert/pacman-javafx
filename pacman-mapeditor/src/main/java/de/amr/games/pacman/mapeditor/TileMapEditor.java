@@ -339,6 +339,24 @@ public class TileMapEditor  {
             }
         });
 
+        editCanvas.setOnContextMenuRequested(e -> {
+            if (editingEnabledPy.get()) {
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem miInsertCircle = new MenuItem("Insert Circle");
+                miInsertCircle.setOnAction(actionEvent -> {
+                    Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
+                    TileMap terrain = map().terrain();
+                    setTileValue(terrain, tile, Tiles.CORNER_NW);
+                    setTileValue(terrain, tile.plus(1, 0), Tiles.CORNER_NE);
+                    setTileValue(terrain, tile.plus(0, 1), Tiles.CORNER_SW);
+                    setTileValue(terrain, tile.plus(1, 1), Tiles.CORNER_SE);
+                    markTileMapEdited(terrain);
+                });
+                contextMenu.getItems().add(miInsertCircle);
+                contextMenu.show(editCanvas, e.getScreenX(), e.getScreenY());
+        }
+        });
+
 
         // Active rendering
         int fps = 10;
@@ -985,23 +1003,26 @@ public class TileMapEditor  {
             editCanvas.requestFocus();
             return;
         }
-        switch (selectedPaletteID()) {
-            case PALETTE_TERRAIN -> editMapTile(map().terrain(), tv -> 0 <= tv && tv <= Tiles.DOOR, e);
-            case PALETTE_ACTORS  -> {
-                if (selectedPalette().isToolSelected()) {
-                    Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
-                    selectedPalette().selectedTool().apply(map().terrain(), tile);
-                    markTileMapEdited(map().terrain());
-                    terrainMapPropertiesEditor.updatePropertyEditorValues();
+        if (e.getButton() == MouseButton.PRIMARY) {
+            switch (selectedPaletteID()) {
+                case PALETTE_TERRAIN -> editMapTile(map().terrain(), tv -> 0 <= tv && tv <= Tiles.DOOR, e);
+                case PALETTE_ACTORS -> {
+                    if (selectedPalette().isToolSelected()) {
+                        Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
+                        selectedPalette().selectedTool().apply(map().terrain(), tile);
+                        markTileMapEdited(map().terrain());
+                        terrainMapPropertiesEditor.updatePropertyEditorValues();
+                    }
                 }
+                case PALETTE_FOOD -> editMapTile(map().food(), tv -> 0 <= tv && tv <= Tiles.ENERGIZER, e);
+                default -> Logger.error("Unknown palette selection");
             }
-            case PALETTE_FOOD -> editMapTile(map().food(), tv -> 0 <= tv && tv <= Tiles.ENERGIZER, e);
-            default -> Logger.error("Unknown palette selection");
         }
     }
 
     private void onMouseMovedOverEditCanvas(MouseEvent e) {
-        focussedTilePy.set(tileAtMousePosition(e.getX(), e.getY()));
+        Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
+        focussedTilePy.set(tile);
         if (!editingEnabledPy.get()) {
             return;
         }
@@ -1021,20 +1042,24 @@ public class TileMapEditor  {
                 }
                 default -> {}
             }
+        } else if (e.isControlDown()) {
+            // delete content while moving
+            switch (selectedPaletteID()) {
+                case PALETTE_TERRAIN -> {
+                    setTileValue(map().terrain(), tile, Tiles.EMPTY);
+                }
+                case PALETTE_FOOD -> {
+                    setTileValue(map().food(), tile, Tiles.EMPTY);
+                }
+                default -> {}
+            }
         }
     }
 
     private void editMapTile(TileMap tileMap, Predicate<Byte> valueAllowed, MouseEvent e) {
         var tile = tileAtMousePosition(e.getX(), e.getY());
-        if (e.getButton() == MouseButton.SECONDARY) {
+        if (e.isControlDown()) {
             setTileValue(tileMap, tile, Tiles.EMPTY);
-        }
-        else if (e.isShiftDown()) {
-            // cycle through all allowed values
-            byte value = tileMap.get(tile);
-            byte next = (byte) (value + 1);
-            byte newValue =  valueAllowed.test(next) ? next : 0;
-            setTileValue(tileMap, tile, newValue);
         }
         else if (selectedPalette().isToolSelected()) {
             selectedPalette().selectedTool().apply(tileMap, tile);
