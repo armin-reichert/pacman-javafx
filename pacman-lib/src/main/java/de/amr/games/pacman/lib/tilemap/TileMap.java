@@ -339,10 +339,12 @@ public class TileMap {
             }
         }
 
-        // closed outer path?
+        // Other closed double-stroke paths
         for (int row = 0; row < numRows(); ++row) {
-            if (get(row, firstCol) == Tiles.DWALL_V) {
-                addDoubleStrokePath(new Vector2i(firstCol, row), DOWN);
+            for (int col = 0; col < numCols(); ++col) {
+                if (get(row, col) == Tiles.DWALL_V) {
+                    addDoubleStrokePath(new Vector2i(col, row), DOWN);
+                }
             }
         }
 
