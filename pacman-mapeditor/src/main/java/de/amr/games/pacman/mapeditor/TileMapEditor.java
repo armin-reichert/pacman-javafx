@@ -435,7 +435,7 @@ public class TileMapEditor  {
             palette.createTileValueEditorTool(this, Tiles.TUNNEL, "Tunnel"),
             palette.createTileValueEditorTool(this, Tiles.DOOR, "Door")
         );
-        palette.selectTool(12); // EMPTY
+        palette.selectTool(16); // EMPTY
         return palette;
     }
 
@@ -998,24 +998,25 @@ public class TileMapEditor  {
     }
 
     private void onMouseClickedOnEditCanvas(MouseEvent e) {
-        if (!editingEnabledPy.get() && e.getClickCount() == 2) {
-            editingEnabledPy.set(true);
-            editCanvas.requestFocus();
-            return;
-        }
         if (e.getButton() == MouseButton.PRIMARY) {
-            switch (selectedPaletteID()) {
-                case PALETTE_TERRAIN -> editMapTile(map().terrain(), tv -> 0 <= tv && tv <= Tiles.DOOR, e);
-                case PALETTE_ACTORS -> {
-                    if (selectedPalette().isToolSelected()) {
-                        Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
-                        selectedPalette().selectedTool().apply(map().terrain(), tile);
-                        markTileMapEdited(map().terrain());
-                        terrainMapPropertiesEditor.updatePropertyEditorValues();
+            if (e.getClickCount() == 2) { // double-click
+
+                editingEnabledPy.set(true);
+                editCanvas.requestFocus();
+            } else if (e.getClickCount() == 1) {
+                switch (selectedPaletteID()) {
+                    case PALETTE_TERRAIN -> editMapTile(map().terrain(), tv -> 0 <= tv && tv <= Tiles.DOOR, e);
+                    case PALETTE_ACTORS -> {
+                        if (selectedPalette().isToolSelected()) {
+                            Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
+                            selectedPalette().selectedTool().apply(map().terrain(), tile);
+                            markTileMapEdited(map().terrain());
+                            terrainMapPropertiesEditor.updatePropertyEditorValues();
+                        }
                     }
+                    case PALETTE_FOOD -> editMapTile(map().food(), tv -> 0 <= tv && tv <= Tiles.ENERGIZER, e);
+                    default -> Logger.error("Unknown palette selection");
                 }
-                case PALETTE_FOOD -> editMapTile(map().food(), tv -> 0 <= tv && tv <= Tiles.ENERGIZER, e);
-                default -> Logger.error("Unknown palette selection");
             }
         }
     }

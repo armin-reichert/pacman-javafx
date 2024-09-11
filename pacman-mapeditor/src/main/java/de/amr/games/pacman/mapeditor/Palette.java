@@ -91,6 +91,8 @@ public class Palette {
     public void selectTool(int index) {
         if (index >= 0 && index < tools.length) {
             selectedTool = tools[index];
+            selectedRow = index / numCols;
+            selectedCol = index % numCols;
         }
     }
 
