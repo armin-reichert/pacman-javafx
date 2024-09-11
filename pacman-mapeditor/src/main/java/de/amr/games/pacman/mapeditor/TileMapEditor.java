@@ -46,8 +46,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
@@ -210,7 +208,7 @@ public class TileMapEditor  {
         }
     };
 
-    private final BooleanProperty symmetricModePy = new SimpleBooleanProperty(this, "symmetricMode", false);
+    private final BooleanProperty symmetricEditModePy = new SimpleBooleanProperty(this, "symmetricEditMode", true);
 
     private Window ownerWindow;
     private final BorderPane contentPane = new BorderPane();
@@ -592,7 +590,7 @@ public class TileMapEditor  {
 
     private void createEditMenu() {
         var miSymmetricMode = new CheckMenuItem(tt("menu.edit.symmetric"));
-        miSymmetricMode.selectedProperty().bindBidirectional(symmetricModePy);
+        miSymmetricMode.selectedProperty().bindBidirectional(symmetricEditModePy);
 
         var miAddBorder = new MenuItem(tt("menu.edit.add_border"));
         miAddBorder.setOnAction(e -> {
@@ -1051,7 +1049,7 @@ public class TileMapEditor  {
             return;
         }
         tileMap.set(tile, value);
-        if (symmetricModePy.get()) {
+        if (symmetricEditModePy.get()) {
             tileMap.set(tile.y(), tileMap.numCols() - 1 - tile.x(), hMirror(tileMap.get(tile)));
         }
     }
