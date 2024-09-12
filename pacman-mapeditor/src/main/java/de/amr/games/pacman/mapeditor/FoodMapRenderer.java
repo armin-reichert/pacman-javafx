@@ -12,12 +12,15 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import static de.amr.games.pacman.mapeditor.TileMapUtil.HALF_TILE_SIZE;
 import static de.amr.games.pacman.mapeditor.TileMapUtil.TILE_SIZE;
 
 /**
  * @author Armin Reichert
  */
 public class FoodMapRenderer implements TileMapRenderer {
+
+    static final double PELLET_SIZE = 2;
 
     public FloatProperty scalingPy = new SimpleFloatProperty(this, "scaling", 1f);
 
@@ -45,6 +48,7 @@ public class FoodMapRenderer implements TileMapRenderer {
         map.tiles().forEach(tile -> drawTile(g, tile, map.get(tile)));
     }
 
+    @Override
     public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
         switch (content) {
             case Tiles.PELLET -> drawPellet(g, tile);
@@ -54,22 +58,25 @@ public class FoodMapRenderer implements TileMapRenderer {
     }
 
     public void drawPellet(GraphicsContext g, Vector2i tile) {
+        double offset = 0.5 * (TILE_SIZE - PELLET_SIZE);
         g.save();
         g.scale(scaling(), scaling());
-        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(pelletColor);
-        g.fillRect(x + 3, y + 3, 2, 2);
+        g.fillRect(tile.x() * TILE_SIZE + offset, tile.y() * TILE_SIZE + offset, PELLET_SIZE, PELLET_SIZE);
         g.restore();
     }
 
     public void drawEnergizer(GraphicsContext g, Vector2i tile) {
+        double size = TILE_SIZE;
+        double offset = 0.5 * (HALF_TILE_SIZE);
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.save();
         g.scale(scaling(), scaling());
-        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
         g.setFill(energizerColor);
-        g.fillRect(x + 2, y, 0.5 * TILE_SIZE, TILE_SIZE);
-        g.fillRect(x, y + 2, TILE_SIZE, 0.5 * TILE_SIZE);
-        g.fillRect(x + 1, y + 1, TILE_SIZE - 2, TILE_SIZE - 2);
+        // draw pixelized "circle"
+        g.fillRect(x + offset, y, HALF_TILE_SIZE, size);
+        g.fillRect(x, y + offset, size, HALF_TILE_SIZE);
+        g.fillRect(x + 1, y + 1, size - 2, size - 2);
         g.restore();
     }
 }
