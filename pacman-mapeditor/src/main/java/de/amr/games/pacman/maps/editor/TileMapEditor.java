@@ -2,13 +2,15 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.mapeditor;
+package de.amr.games.pacman.maps.editor;
 
 import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.Tiles;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
+import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
+import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -49,7 +51,7 @@ import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
-import static de.amr.games.pacman.mapeditor.TileMapUtil.*;
+import static de.amr.games.pacman.maps.editor.TileMapUtil.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -59,10 +61,10 @@ public class TileMapEditor  {
 
     private static final Node NO_GRAPHIC = null;
 
-    private static final ResourceBundle TEXTS = ResourceBundle.getBundle("de.amr.games.pacman.mapeditor.texts");
+    private static ResourceBundle textBundle;
 
     public static String tt(String key, Object... args) {
-        return MessageFormat.format(TEXTS.getString(key), args);
+        return MessageFormat.format(textBundle.getString(key), args);
     }
 
     public static final Rectangle2D PAC_SPRITE          = new Rectangle2D(473,  16, 14, 14);
@@ -250,6 +252,7 @@ public class TileMapEditor  {
     }
 
     public TileMapEditor(File workDir) {
+        textBundle = ResourceBundle.getBundle(getClass().getPackageName() + ".texts");
         lastUsedDir = workDir;
         titlePy.bind(titleBinding());
         var url = requireNonNull(getClass().getResource("pacman_spritesheet.png"));

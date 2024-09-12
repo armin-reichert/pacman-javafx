@@ -6,7 +6,7 @@ plugins {
 
 application {
     mainModule = 'de.amr.games.pacman.mapeditor'
-    mainClass = 'de.amr.games.pacman.mapeditor.Main'
+    mainClass  = 'de.amr.games.pacman.maps.editor.Main'
 }
 
 java {

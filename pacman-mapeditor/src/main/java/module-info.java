@@ -8,5 +8,6 @@ open module de.amr.games.pacman.mapeditor {
     requires org.tinylog.api;
     requires de.amr.games.pacman.lib;
 
-    exports de.amr.games.pacman.mapeditor;
+    exports de.amr.games.pacman.maps.rendering;
+    exports de.amr.games.pacman.maps.editor;
 }

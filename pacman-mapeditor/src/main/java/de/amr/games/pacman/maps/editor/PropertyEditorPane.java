@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.mapeditor;
+package de.amr.games.pacman.maps.editor;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
@@ -26,8 +26,8 @@ import java.util.regex.Pattern;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
 import static de.amr.games.pacman.lib.tilemap.TileMap.parseVector2i;
-import static de.amr.games.pacman.mapeditor.TileMapUtil.formatColor;
-import static de.amr.games.pacman.mapeditor.TileMapUtil.parseColor;
+import static de.amr.games.pacman.maps.editor.TileMapUtil.formatColor;
+import static de.amr.games.pacman.maps.editor.TileMapUtil.parseColor;
 import static java.util.Objects.requireNonNull;
 
 /**

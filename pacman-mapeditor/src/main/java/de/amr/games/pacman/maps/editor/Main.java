@@ -1,4 +1,4 @@
-package de.amr.games.pacman.mapeditor;
+package de.amr.games.pacman.maps.editor;
 
 import static javafx.application.Application.launch;
 

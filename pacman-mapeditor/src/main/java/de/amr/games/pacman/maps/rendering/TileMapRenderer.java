@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.mapeditor;
+package de.amr.games.pacman.maps.rendering;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
@@ -11,13 +11,11 @@ import javafx.scene.canvas.GraphicsContext;
 /**
  * @author Armin Reichert
  */
-public interface Tool {
+public interface TileMapRenderer {
 
-    String description();
+    void setScaling(double scaling);
 
-    void apply(TileMap tileMap, Vector2i tile);
+    void drawMap(GraphicsContext g, TileMap map);
 
-    TileMapRenderer renderer();
-
-    void draw(GraphicsContext g, int row, int col);
+    void drawTile(GraphicsContext g, Vector2i tile, byte content);
 }

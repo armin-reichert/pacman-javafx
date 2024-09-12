@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.mapeditor;
+package de.amr.games.pacman.maps.rendering;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
@@ -12,8 +12,8 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import static de.amr.games.pacman.mapeditor.TileMapUtil.HALF_TILE_SIZE;
-import static de.amr.games.pacman.mapeditor.TileMapUtil.TILE_SIZE;
+import static de.amr.games.pacman.maps.editor.TileMapUtil.HALF_TILE_SIZE;
+import static de.amr.games.pacman.maps.editor.TileMapUtil.TILE_SIZE;
 
 /**
  * @author Armin Reichert

@@ -2,7 +2,7 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.mapeditor;
+package de.amr.games.pacman.maps.editor;
 
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import javafx.application.Application;
@@ -23,10 +23,17 @@ import static java.util.stream.IntStream.rangeClosed;
  */
 public class TileMapEditorApp extends Application  {
 
+    static final String SAMPLE_MAPS_PATH = "/de/amr/games/pacman/maps/samples/";
+
+    private WorldMap mapPacManGame;
+    private List<WorldMap> mapsMsPacManGame;
+    private List<WorldMap> mapsPacManXXLGame;
+
     private TileMapEditor editor;
 
     @Override
     public void init() throws Exception {
+        loadSampleMaps();
         editor = new TileMapEditor();
     }
 
@@ -54,30 +61,31 @@ public class TileMapEditorApp extends Application  {
         double width = 1.9 * height;
         var scene = new Scene(layout, width, height);
         scene.setFill(Color.BLACK);
-
         stage.setScene(scene);
+
+        editor.addLoadMapMenuItem("Pac-Man", mapPacManGame);
+        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
+        rangeClosed(1, 6).forEach(num -> editor.addLoadMapMenuItem("Ms. Pac-Man " + num, mapsMsPacManGame.get(num - 1)));
+        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
+        rangeClosed(1, 8).forEach(num -> editor.addLoadMapMenuItem("Pac-Man XXL " + num, mapsPacManXXLGame.get(num - 1)));
+
         stage.titleProperty().bind(editor.titlePy);
         stage.setOnCloseRequest(e -> editor.showSaveConfirmationDialog(editor::showSaveDialog, stage::close));
         stage.show();
 
-        String path = "/de/amr/games/pacman/mapeditor/maps/";
-        WorldMap pacManMap = new WorldMap(getClass().getResource(path + "pacman.world"));
-        List<WorldMap> msPacManMaps = rangeClosed(1, 6)
-            .mapToObj(mapNumber -> getClass().getResource(path + "mspacman/mspacman_" + mapNumber + ".world"))
-            .map(WorldMap::new)
-            .toList();
-        List<WorldMap> pacManXXLMaps = rangeClosed(1, 8)
-            .mapToObj(mapNumber -> getClass().getResource(path + "masonic/masonic_" + mapNumber + ".world"))
-            .map(WorldMap::new)
-            .toList();
-
-        editor.addLoadMapMenuItem("Pac-Man", pacManMap);
-        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        rangeClosed(1, 6).forEach(num -> editor.addLoadMapMenuItem("Ms. Pac-Man " + num,msPacManMaps.get(num - 1)));
-        editor.menuLoadMap().getItems().add(new SeparatorMenuItem());
-        rangeClosed(1, 8).forEach(num -> editor.addLoadMapMenuItem("Pac-Man XXL " + num,pacManXXLMaps.get(num - 1)));
-
-        editor.loadMap(pacManMap);
+        editor.loadMap(mapPacManGame);
         editor.start();
+    }
+
+    private void loadSampleMaps() {
+        mapPacManGame = new WorldMap(getClass().getResource(SAMPLE_MAPS_PATH + "pacman.world"));
+        mapsMsPacManGame = rangeClosed(1, 6)
+            .mapToObj(mapNumber -> getClass().getResource(SAMPLE_MAPS_PATH + "mspacman/mspacman_" + mapNumber + ".world"))
+            .map(WorldMap::new)
+            .toList();
+        mapsPacManXXLGame = rangeClosed(1, 8)
+            .mapToObj(mapNumber -> getClass().getResource(SAMPLE_MAPS_PATH + "masonic/masonic_" + mapNumber + ".world"))
+            .map(WorldMap::new)
+            .toList();
     }
 }
