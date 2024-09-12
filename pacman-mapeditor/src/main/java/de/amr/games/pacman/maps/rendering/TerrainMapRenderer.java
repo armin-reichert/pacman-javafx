@@ -25,17 +25,12 @@ import static de.amr.games.pacman.maps.editor.TileMapUtil.TILE_SIZE;
  */
 public class TerrainMapRenderer implements TileMapRenderer {
 
-    public DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1);
+    public DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
 
     private Color mapBackgroundColor = Color.BLACK;
     private Color wallFillColor = Color.BLACK;
     private Color wallStrokeColor = Color.GREEN;
     private Color doorColor = Color.PINK;
-
-    @Override
-    public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
-        // this renderer doesn't draw tiles individually
-    }
 
     @Override
     public void drawMap(GraphicsContext g, TileMap map) {
@@ -51,13 +46,9 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.restore();
     }
 
-    public void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
-        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
-        double height = TILE_SIZE * 0.2;
-        g.setFill(mapBackgroundColor);
-        g.fillRect(x - 0.5, y + 0.5 * (TILE_SIZE - height) - 2, TILE_SIZE + 1, height + 4);
-        g.setFill(color);
-        g.fillRect(x - 0.5, y + 0.5 * (TILE_SIZE - height), TILE_SIZE + 1, height);
+    @Override
+    public void drawTile(GraphicsContext g, Vector2i tile, byte content) {
+        // this renderer doesn't draw tiles individually but computes contour paths and draws these
     }
 
     @Override
@@ -100,7 +91,15 @@ public class TerrainMapRenderer implements TileMapRenderer {
         return tile.scaled(TILE_SIZE).plus((float)HALF_TILE_SIZE, (float)HALF_TILE_SIZE);
     }
 
-    //TODO: avoid special cases
+    private void drawDoor(GraphicsContext g, Vector2i tile, Color color) {
+        double x = tile.x() * TILE_SIZE, y = tile.y() * TILE_SIZE;
+        double height = TILE_SIZE * 0.2;
+        g.setFill(mapBackgroundColor);
+        g.fillRect(x - 0.5, y + 0.5 * (TILE_SIZE - height) - 2, TILE_SIZE + 1, height + 4);
+        g.setFill(color);
+        g.fillRect(x - 0.5, y + 0.5 * (TILE_SIZE - height), TILE_SIZE + 1, height);
+    }
+
     private void drawPath(GraphicsContext g, TileMap map, TileMapPath path,
         boolean fill, double lineWidth, Color strokeColor, Color fillColor)
     {
@@ -115,11 +114,11 @@ public class TerrainMapRenderer implements TileMapRenderer {
         g.stroke();
     }
 
+    //TODO: Needs to be cleaned up or even reimplemented. Maybe we should represent a path by points instead of directions?
     private void buildPath(GraphicsContext g, TileMap map, TileMapPath path) {
         Vector2i tile = path.startTile();
         if (tile.x() == 0) {
-            int cx = HTS;
-            int cy = tile.y() * TS + HTS;
+            int cx = HTS, cy = tile.y() * TS + HTS;
             if (map.get(tile) == Tiles.DWALL_V) {
                 g.moveTo(cx, cy);
             } else {
@@ -150,6 +149,7 @@ public class TerrainMapRenderer implements TileMapRenderer {
                  Tiles.DWALL_H    -> g.lineTo(cx + r, cy);
             case Tiles.WALL_V,
                  Tiles.DWALL_V    -> g.lineTo(cx, cy + r);
+            //TODO: Should we use arcTo() instead?
             case Tiles.CORNER_NW,
                  Tiles.DCORNER_NW -> g.arc(cx + r, cy + r, r, r, left?   90:180, left?  90:-90);
             case Tiles.CORNER_SW,
