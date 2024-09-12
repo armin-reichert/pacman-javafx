@@ -6,6 +6,7 @@ package de.amr.games.pacman.model.pacmanxxl;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
@@ -167,10 +168,16 @@ public class PacManXXLGameModel extends PacManGameModel {
 
     private GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
-        //TODO house position should be stored in terrain map
-        int houseTopLeftX = map.terrain().numCols() / 2 - 4;
-        int houseTopLeftY = map.terrain().numRows() / 2 - 3;
-        world.createArcadeHouse(houseTopLeftX, houseTopLeftY);
+        if (!map.terrain().hasProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE)) {
+            Logger.warn("No house min tile found in map!");
+            map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(v2i(10, 15)));
+        }
+        if (!map.terrain().hasProperty(GameWorld.PROPERTY_POS_HOUSE_MAX_TILE)) {
+            Logger.warn("No house max tile found in map!");
+            map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MAX_TILE, TileMap.formatTile(v2i(17, 19)));
+        }
+        Vector2i topLeftTile = map.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, null);
+        world.createArcadeHouse(topLeftTile.x(), topLeftTile.y());
         return world;
     }
 }

@@ -6,6 +6,8 @@ package de.amr.games.pacman.model.mspacman;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
+import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
@@ -262,7 +264,11 @@ public class MsPacManGameModel extends GameModel {
 
     private GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
-        world.createArcadeHouse(10, 15);
+        Vector2i topLeftTile = v2i(10, 15);
+        Vector2i size = v2i(8, 5);
+        world.createArcadeHouse(topLeftTile.x(), topLeftTile.y());
+        map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(topLeftTile));
+        map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MAX_TILE, TileMap.formatTile(topLeftTile.plus(size).minus(1, 1)));
         return world;
     }
 }
