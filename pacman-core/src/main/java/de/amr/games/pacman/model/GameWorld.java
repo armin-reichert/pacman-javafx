@@ -94,19 +94,6 @@ public class GameWorld {
         return tile.scaled(TS).plus(HTS, 0).toVector2f();
     }
 
-    /**
-     * @param topLeftX tile-x of top left corner
-     * @param topLeftY tile-y of top left corner
-     */
-    public void createArcadeHouse(int topLeftX, int topLeftY) {
-        setHouseArea(topLeftX, topLeftY, 8, 5);
-        setDoorTiles(v2i(topLeftX + 3, topLeftY), v2i(topLeftX + 4, topLeftY));
-        setGhostDirection(RED_GHOST, Direction.LEFT);
-        setGhostDirection(PINK_GHOST, Direction.DOWN);
-        setGhostDirection(CYAN_GHOST, Direction.UP);
-        setGhostDirection(ORANGE_GHOST, Direction.UP);
-    }
-
     public Vector2i ghostScatterTile(byte ghostID) {
         checkGhostID(ghostID);
         return switch (ghostID) {
@@ -191,16 +178,19 @@ public class GameWorld {
 
     // House
 
-    public void setHouseArea(int topLeftX, int topLeftY, int numTilesX, int numTilesY)  {
+    /**
+     * @param topLeftX tile-x of top left corner
+     * @param topLeftY tile-y of top left corner
+     */
+    public void createArcadeHouse(int topLeftX, int topLeftY) {
         houseTopLeftTile = v2i(topLeftX, topLeftY);
-        houseSize = v2i(numTilesX, numTilesY);
-    }
-
-    public void setDoorTiles(Vector2i leftTile, Vector2i rightTile) {
-        checkTileNotNull(leftTile);
-        checkTileNotNull(rightTile);
-        leftDoorTile = leftTile;
-        rightDoorTile = rightTile;
+        houseSize = v2i(8, 5);
+        leftDoorTile = v2i(topLeftX + 3, topLeftY);
+        rightDoorTile = v2i(topLeftX + 4, topLeftY);
+        setGhostDirection(RED_GHOST, Direction.LEFT);
+        setGhostDirection(PINK_GHOST, Direction.DOWN);
+        setGhostDirection(CYAN_GHOST, Direction.UP);
+        setGhostDirection(ORANGE_GHOST, Direction.UP);
     }
 
     public Vector2i houseTopLeftTile() {
