@@ -356,7 +356,7 @@ public class TileMapEditor  {
         });
 
 
-        // Active rendering
+        // Active rendering (good idea?)
         int fps = 10;
         clock = new Timeline(fps, new KeyFrame(javafx.util.Duration.millis(1000.0 / fps), e -> {
             if (messageCloseTime != null && Instant.now().isAfter(messageCloseTime)) {
@@ -464,6 +464,14 @@ public class TileMapEditor  {
         );
         palette.selectTool(0); // EMPTY
         return palette;
+    }
+
+    private String selectedPaletteID() {
+        return (String) palettesTabPane.getSelectionModel().getSelectedItem().getUserData();
+    }
+
+    private Palette selectedPalette() {
+        return palettes.get(selectedPaletteID());
     }
 
     private void createLayout() {
@@ -716,8 +724,8 @@ public class TileMapEditor  {
         });
     }
 
-    private Vector2i parseSize(String colsCrossRows) {
-        String[] tuple = colsCrossRows.split("x");
+    private Vector2i parseSize(String cols_x_rows) {
+        String[] tuple = cols_x_rows.split("x");
         if (tuple.length != 2) {
             showMessage("Map size must be given as cols x rows", 2, MessageType.ERROR);
             return null;
@@ -823,6 +831,114 @@ public class TileMapEditor  {
         return (int) (pixels / gridSize());
     }
 
+    private Vector2i tileAtMousePosition(double mouseX, double mouseY) {
+        return new Vector2i(fullTiles(mouseX), fullTiles(mouseY));
+    }
+
+    private void onMouseClickedOnEditCanvas(MouseEvent e) {
+        if (e.getButton() == MouseButton.PRIMARY) {
+            if (e.getClickCount() == 2) { // double-click
+
+                editingEnabledPy.set(true);
+                editCanvas.requestFocus();
+            } else if (e.getClickCount() == 1) {
+                switch (selectedPaletteID()) {
+                    case PALETTE_TERRAIN -> editMapTileAtMousePosition(map().terrain(), e);
+                    case PALETTE_ACTORS -> {
+                        if (selectedPalette().isToolSelected()) {
+                            Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
+                            selectedPalette().selectedTool().apply(map().terrain(), tile);
+                            markTileMapEdited(map().terrain());
+                            terrainMapPropertiesEditor.updatePropertyEditorValues();
+                        }
+                    }
+                    case PALETTE_FOOD -> editMapTileAtMousePosition(map().food(), e);
+                    default -> Logger.error("Unknown palette selection");
+                }
+            }
+        }
+    }
+
+    private void onMouseMovedOverEditCanvas(MouseEvent e) {
+        Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
+        focussedTilePy.set(tile);
+        if (!editingEnabledPy.get()) {
+            return;
+        }
+        if (e.isShiftDown()) {
+            switch (selectedPaletteID()) {
+                case PALETTE_TERRAIN -> {
+                    if (selectedPalette().isToolSelected()) {
+                        selectedPalette().selectedTool().apply(map().terrain(), focussedTilePy.get());
+                    }
+                    markTileMapEdited(map().terrain());
+                }
+                case PALETTE_FOOD -> {
+                    if (selectedPalette().isToolSelected()) {
+                        selectedPalette().selectedTool().apply(map().food(), focussedTilePy.get());
+                    }
+                    markTileMapEdited(map().food());
+                }
+                default -> {}
+            }
+        } else if (e.isControlDown()) {
+            // delete content while moving
+            switch (selectedPaletteID()) {
+                case PALETTE_TERRAIN -> setTileValue(map().terrain(), tile, Tiles.EMPTY);
+                case PALETTE_FOOD    -> setTileValue(map().food(), tile, Tiles.EMPTY);
+                default -> {}
+            }
+        }
+    }
+
+    private void editMapTileAtMousePosition(TileMap tileMap, MouseEvent mouse) {
+        var tile = tileAtMousePosition(mouse.getX(), mouse.getY());
+        if (mouse.isControlDown()) { // Control-Click clears tile content
+            setTileValue(tileMap, tile, Tiles.EMPTY);
+        }
+        else if (selectedPalette().isToolSelected()) {
+            selectedPalette().selectedTool().apply(tileMap, tile);
+        }
+    }
+
+    /**
+     * This method should be used whenever a tile value is set! It takes editor enabled state and symmetric editing mode
+     * into account.
+     */
+    void setTileValue(TileMap tileMap, Vector2i tile, byte value) {
+        checkNotNull(tileMap);
+        checkNotNull(tile);
+        if (editingEnabledPy.get()) {
+            tileMap.set(tile, value);
+            if (symmetricEditModePy.get()) {
+                tileMap.set(tile.y(), tileMap.numCols() - 1 - tile.x(), mirroredTileContent(tileMap.get(tile)));
+            }
+        }
+        markTileMapEdited(tileMap);
+    }
+
+    private void updateSourceView(WorldMap map) {
+        if (mapSourceView == null) {
+            Logger.warn("Cannot update source view as it doesn't exist yet");
+            return;
+        }
+        try {
+            String source = map.makeSource();
+            String[] lines = source.split("\n");
+            for (int i = 0; i < lines.length; ++i) {
+                lines[i] = "%5d:   %s".formatted(i+1, lines[i]);
+            }
+            mapSourceView.setText(String.join("\n", lines));
+        } catch (Exception x) {
+            Logger.error("Could not create text for map");
+            Logger.error(x);
+        }
+    }
+
+    //
+    // Drawing
+    //
+
     // TODO use own canvas or Text control
     private void drawBlueScreen(Exception drawException) {
         GraphicsContext g = editCanvas.getGraphicsContext2D();
@@ -892,7 +1008,6 @@ public class TileMapEditor  {
         drawSprite(g, PROPERTY_POS_CYAN_GHOST, CYAN_GHOST_SPRITE, DEFAULT_POS_CYAN_GHOST);
         drawSprite(g, PROPERTY_POS_ORANGE_GHOST, ORANGE_GHOST_SPRITE, DEFAULT_POS_ORANGE_GHOST);
         drawSprite(g, PROPERTY_POS_BONUS, BONUS_SPRITE, DEFAULT_POS_BONUS);
-
     }
 
     private void drawPreviewCanvas() {
@@ -921,8 +1036,8 @@ public class TileMapEditor  {
         drawActorSprites(g);
     }
 
-    private void drawSprite(GraphicsContext g, String propertyName, Rectangle2D sprite, Vector2i defaultTile) {
-        var tile = getTileFromMap(map().terrain(), propertyName, defaultTile);
+    private void drawSprite(GraphicsContext g, String tilePropertyName, Rectangle2D sprite, Vector2i defaultTile) {
+        var tile = getTileFromMap(map().terrain(), tilePropertyName, defaultTile);
         if (tile != null) {
             drawSprite(g, sprite, tile.x() * gridSize() + 0.5 * gridSize(), tile.y() * gridSize(), 1.75 * gridSize(), 1.75 * gridSize());
         }
@@ -931,10 +1046,7 @@ public class TileMapEditor  {
     private void drawSprite(GraphicsContext g, Rectangle2D sprite, double x, double y, double w, double h) {
         double ox = 0.5 * (w - gridSize());
         double oy = 0.5 * (h - gridSize());
-        g.drawImage(spriteSheet,
-            sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
-            x - ox, y - oy, w, h
-        );
+        g.drawImage(spriteSheet, sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(), x - ox, y - oy, w, h);
     }
 
     private void drawSelectedPalette() {
@@ -958,115 +1070,6 @@ public class TileMapEditor  {
                 g.strokeLine(col * gridSize, 0, col * gridSize, editCanvas.getHeight());
             }
             g.restore();
-        }
-    }
-
-    private Vector2i tileAtMousePosition(double mouseX, double mouseY) {
-        return new Vector2i(fullTiles(mouseX), fullTiles(mouseY));
-    }
-
-    private String selectedPaletteID() {
-        return (String) palettesTabPane.getSelectionModel().getSelectedItem().getUserData();
-    }
-
-    private Palette selectedPalette() {
-        return palettes.get(selectedPaletteID());
-    }
-
-    private void onMouseClickedOnEditCanvas(MouseEvent e) {
-        if (e.getButton() == MouseButton.PRIMARY) {
-            if (e.getClickCount() == 2) { // double-click
-
-                editingEnabledPy.set(true);
-                editCanvas.requestFocus();
-            } else if (e.getClickCount() == 1) {
-                switch (selectedPaletteID()) {
-                    case PALETTE_TERRAIN -> editMapTile(map().terrain(), e);
-                    case PALETTE_ACTORS -> {
-                        if (selectedPalette().isToolSelected()) {
-                            Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
-                            selectedPalette().selectedTool().apply(map().terrain(), tile);
-                            markTileMapEdited(map().terrain());
-                            terrainMapPropertiesEditor.updatePropertyEditorValues();
-                        }
-                    }
-                    case PALETTE_FOOD -> editMapTile(map().food(), e);
-                    default -> Logger.error("Unknown palette selection");
-                }
-            }
-        }
-    }
-
-    private void onMouseMovedOverEditCanvas(MouseEvent e) {
-        Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
-        focussedTilePy.set(tile);
-        if (!editingEnabledPy.get()) {
-            return;
-        }
-        if (e.isShiftDown()) {
-            switch (selectedPaletteID()) {
-                case PALETTE_TERRAIN -> {
-                    if (selectedPalette().isToolSelected()) {
-                        selectedPalette().selectedTool().apply(map().terrain(), focussedTilePy.get());
-                    }
-                    markTileMapEdited(map().terrain());
-                }
-                case PALETTE_FOOD -> {
-                    if (selectedPalette().isToolSelected()) {
-                        selectedPalette().selectedTool().apply(map().food(), focussedTilePy.get());
-                    }
-                    markTileMapEdited(map().food());
-                }
-                default -> {}
-            }
-        } else if (e.isControlDown()) {
-            // delete content while moving
-            switch (selectedPaletteID()) {
-                case PALETTE_TERRAIN -> setTileValue(map().terrain(), tile, Tiles.EMPTY);
-                case PALETTE_FOOD    -> setTileValue(map().food(), tile, Tiles.EMPTY);
-                default -> {}
-            }
-        }
-    }
-
-    private void editMapTile(TileMap tileMap, MouseEvent e) {
-        var tile = tileAtMousePosition(e.getX(), e.getY());
-        if (e.isControlDown()) {
-            setTileValue(tileMap, tile, Tiles.EMPTY);
-        }
-        else if (selectedPalette().isToolSelected()) {
-            selectedPalette().selectedTool().apply(tileMap, tile);
-        }
-        markTileMapEdited(tileMap);
-    }
-
-    void setTileValue(TileMap tileMap, Vector2i tile, byte value) {
-        checkNotNull(tileMap);
-        checkNotNull(tile);
-        if (!editingEnabledPy.get()) {
-            return;
-        }
-        tileMap.set(tile, value);
-        if (symmetricEditModePy.get()) {
-            tileMap.set(tile.y(), tileMap.numCols() - 1 - tile.x(), mirroredTileContent(tileMap.get(tile)));
-        }
-    }
-
-    private void updateSourceView(WorldMap map) {
-        if (mapSourceView == null) {
-            Logger.warn("Cannot update source view as it doesn't exist yet");
-            return;
-        }
-        try {
-            String source = map.makeSource();
-            String[] lines = source.split("\n");
-            for (int i = 0; i < lines.length; ++i) {
-                lines[i] = "%5d:   %s".formatted(i+1, lines[i]);
-            }
-            mapSourceView.setText(String.join("\n", lines));
-        } catch (Exception x) {
-            Logger.error("Could not create text for map");
-            Logger.error(x);
         }
     }
 }
