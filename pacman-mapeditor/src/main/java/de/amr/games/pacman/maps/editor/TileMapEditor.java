@@ -35,19 +35,20 @@ import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
@@ -61,10 +62,10 @@ public class TileMapEditor  {
 
     private static final Node NO_GRAPHIC = null;
 
-    private static ResourceBundle textBundle;
+    private static final ResourceBundle TEXT_BUNDLE = ResourceBundle.getBundle(TileMapEditor.class.getPackageName() + ".texts");
 
     public static String tt(String key, Object... args) {
-        return MessageFormat.format(textBundle.getString(key), args);
+        return MessageFormat.format(TEXT_BUNDLE.getString(key), args);
     }
 
     public static final Rectangle2D PAC_SPRITE          = new Rectangle2D(473,  16, 14, 14);
@@ -74,9 +75,10 @@ public class TileMapEditor  {
     public static final Rectangle2D ORANGE_GHOST_SPRITE = new Rectangle2D(521, 113, 14, 14);
     public static final Rectangle2D BONUS_SPRITE        = new Rectangle2D(505,  49, 14, 14);
 
-    public static final String DEFAULT_COLOR_WALL_STROKE         = "rgb(0,0,255)";
+    public static final String DEFAULT_COLOR_WALL_STROKE         = "rgb(33,33,255)";
     public static final String DEFAULT_COLOR_WALL_FILL           = "rgb(0,0,0)";
-    public static final String DEFAULT_COLOR_DOOR                = "rgb(0,255,255)";
+    public static final String DEFAULT_COLOR_DOOR                = "rgb(255,183, 255)";
+
     public static final String PROPERTY_COLOR_WALL_STROKE        = "color_wall_stroke";
     public static final String PROPERTY_COLOR_WALL_FILL          = "color_wall_fill";
     public static final String PROPERTY_COLOR_DOOR               = "color_door";
@@ -92,6 +94,7 @@ public class TileMapEditor  {
     public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
 
     public static final String PROPERTY_COLOR_FOOD = "color_food";
+    public static final String DEFAULT_FOOD_COLOR  = "rgb(255,0,0)";
 
     public static final Vector2i DEFAULT_POS_PAC          = new Vector2i(13, 26);
     public static final Vector2i DEFAULT_POS_RED_GHOST    = new Vector2i(13, 14);
@@ -99,8 +102,6 @@ public class TileMapEditor  {
     public static final Vector2i DEFAULT_POS_CYAN_GHOST   = new Vector2i(11, 17);
     public static final Vector2i DEFAULT_POS_ORANGE_GHOST = new Vector2i(15, 17);
     public static final Vector2i DEFAULT_POS_BONUS        = new Vector2i(13, 20);
-
-    public static final String DEFAULT_FOOD_COLOR         = "rgb(255,0,0)";
 
     private static final String PALETTE_TERRAIN = "Terrain";
     private static final String PALETTE_ACTORS  = "Actors";
@@ -114,6 +115,11 @@ public class TileMapEditor  {
         { 9, 0, 0, 0, 0, 0, 0, 9},
         { 9, 0, 0, 0, 0, 0, 0, 9},
         {19, 8, 8, 8, 8, 8, 8,18}
+    });
+
+    private static final RectShape CIRCLE_2x2 = new RectShape(new byte[][] {
+        {Tiles.CORNER_NW, Tiles.CORNER_NE},
+        {Tiles.CORNER_SW, Tiles.CORNER_SE}
     });
 
     private static void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
@@ -131,17 +137,7 @@ public class TileMapEditor  {
         terrain.set(terrain.numRows() - 1 - emptyRowsBottom, terrain.numCols() - 1, Tiles.DCORNER_SE);
     }
 
-    private static void copyLeftContentToRightSideMirrored(WorldMap map) {
-        int middleCol = map.terrain().numCols() / 2;
-        for (int row = 0; row < map.terrain().numRows(); ++row) {
-            for (int col = 0; col < middleCol; ++col) {
-                map.terrain().set(row, map.terrain().numCols() - 1 - col, hMirror(map.terrain().get(row, col)));
-                map.food().set(row, map.food().numCols() - 1 - col, map.food().get(row, col));
-            }
-        }
-    }
-
-    private static byte hMirror(byte content) {
+    private static byte mirroredTileContent(byte content) {
         return switch (content) {
             case Tiles.CORNER_NE -> Tiles.CORNER_NW;
             case Tiles.CORNER_NW -> Tiles.CORNER_NE;
@@ -151,6 +147,10 @@ public class TileMapEditor  {
             case Tiles.DCORNER_NW -> Tiles.DCORNER_NE;
             case Tiles.DCORNER_SE -> Tiles.DCORNER_SW;
             case Tiles.DCORNER_SW -> Tiles.DCORNER_SE;
+            case Tiles.DCORNER_ANGULAR_NE -> Tiles.DCORNER_ANGULAR_NW;
+            case Tiles.DCORNER_ANGULAR_NW -> Tiles.DCORNER_ANGULAR_NE;
+            case Tiles.DCORNER_ANGULAR_SE -> Tiles.DCORNER_ANGULAR_SW;
+            case Tiles.DCORNER_ANGULAR_SW -> Tiles.DCORNER_ANGULAR_SE;
             default -> content;
         };
     }
@@ -188,18 +188,9 @@ public class TileMapEditor  {
                 terrainMapPropertiesEditor.setTileMap(map.terrain());
             }
             invalidateTerrainMapPaths();
-            updateTerrainMapPaths();
             updateSourceView(map);
         }
     };
-
-    public WorldMap map() {
-        return mapPy.get();
-    }
-
-    public void setMap(WorldMap map) {
-        mapPy.set(checkNotNull(map));
-    }
 
     private final ObjectProperty<Vector2i> focussedTilePy = new SimpleObjectProperty<>(this, "focussedTile") {
         @Override
@@ -212,7 +203,7 @@ public class TileMapEditor  {
 
     private final BooleanProperty symmetricEditModePy = new SimpleBooleanProperty(this, "symmetricEditMode", true);
 
-    private Window ownerWindow;
+    private Window stage;
     private final BorderPane contentPane = new BorderPane();
     private Canvas editCanvas;
     private Canvas previewCanvas;
@@ -221,6 +212,8 @@ public class TileMapEditor  {
     private Label focussedTileInfo;
     private FileChooser fileChooser;
     private TabPane palettesTabPane;
+    private final Map<String, Palette> palettes = new HashMap<>();
+    private final Image spriteSheet;
 
     private MenuBar menuBar;
     private Menu menuFile;
@@ -228,16 +221,12 @@ public class TileMapEditor  {
     private Menu menuLoadMap;
     private Menu menuView;
 
-    private PropertyEditorPane terrainMapPropertiesEditor;
-    private PropertyEditorPane foodMapPropertiesEditor;
-
+    private PropertyEditorPane     terrainMapPropertiesEditor;
+    private PropertyEditorPane     foodMapPropertiesEditor;
     private TerrainMapEditRenderer terrainMapEditRenderer;
-    private TerrainMapRenderer terrainMapPreviewRenderer;
-    private FoodMapRenderer foodMapRenderer;
-
+    private TerrainMapRenderer     terrainMapPreviewRenderer;
+    private FoodMapRenderer        foodMapRenderer;
     private TerrainMapEditRenderer terrainPaletteRenderer;
-
-    private final Map<String, Palette> palettes = new HashMap<>();
 
     private boolean terrainMapPathsUpToDate;
     private boolean unsavedChanges;
@@ -245,22 +234,28 @@ public class TileMapEditor  {
     private Instant messageCloseTime;
     private Timeline clock;
 
-    private final Image spriteSheet;
-
     public TileMapEditor() {
         this(new File(System.getProperty("user.home")));
     }
 
     public TileMapEditor(File workDir) {
-        textBundle = ResourceBundle.getBundle(getClass().getPackageName() + ".texts");
         lastUsedDir = workDir;
-        titlePy.bind(titleBinding());
-        var url = requireNonNull(getClass().getResource("pacman_spritesheet.png"));
+        titlePy.bind(createTitleBinding());
+        URL url = requireNonNull(getClass().getResource("pacman_spritesheet.png"));
         spriteSheet = new Image(url.toExternalForm());
-        mapPy.set(createWorldMap(36, 28));
+        WorldMap map = createWorldMap(36, 28); // standard Arcade map size
+        setMap(map);
     }
 
-    private StringBinding titleBinding() {
+    public WorldMap map() {
+        return mapPy.get();
+    }
+
+    public void setMap(WorldMap map) {
+        mapPy.set(checkNotNull(map));
+    }
+
+    private StringBinding createTitleBinding() {
         return Bindings.createStringBinding(
             () -> {
                 String title = tt("map_editor");
@@ -281,26 +276,28 @@ public class TileMapEditor  {
 
     private WorldMap createWorldMap(int numRows, int numCols) {
         var map = new WorldMap(numRows, numCols);
+        Logger.info("Map created. rows={}, cols={}", numRows, numCols);
+
         TileMap terrain = map.terrain();
         addBorder(terrain, 3, 2);
-        GHOST_HOUSE_SHAPE.addToMap(terrain, DEFAULT_POS_RED_GHOST.y() + 1, terrain.numCols() / 2 - 4);
+
+        terrain.setProperty(PROPERTY_COLOR_WALL_STROKE, DEFAULT_COLOR_WALL_STROKE);
+        terrain.setProperty(PROPERTY_COLOR_WALL_FILL,   DEFAULT_COLOR_WALL_FILL);
+        terrain.setProperty(PROPERTY_COLOR_DOOR,        DEFAULT_COLOR_DOOR);
+        terrain.setProperty(PROPERTY_POS_PAC,           formatTile(DEFAULT_POS_PAC));
+        terrain.setProperty(PROPERTY_POS_RED_GHOST,     formatTile(DEFAULT_POS_RED_GHOST));
+        terrain.setProperty(PROPERTY_POS_PINK_GHOST,    formatTile(DEFAULT_POS_PINK_GHOST));
+        terrain.setProperty(PROPERTY_POS_CYAN_GHOST,    formatTile(DEFAULT_POS_CYAN_GHOST));
+        terrain.setProperty(PROPERTY_POS_ORANGE_GHOST,  formatTile(DEFAULT_POS_ORANGE_GHOST));
+        terrain.setProperty(PROPERTY_POS_BONUS,         formatTile(DEFAULT_POS_BONUS));
+        map.food().setProperty(PROPERTY_COLOR_FOOD,     DEFAULT_FOOD_COLOR);
+
         invalidateTerrainMapPaths();
-        terrain.setProperty("color_wall_stroke",  DEFAULT_COLOR_WALL_STROKE);
-        terrain.setProperty("color_wall_fill",    DEFAULT_COLOR_WALL_FILL);
-        terrain.setProperty("color_door",         DEFAULT_COLOR_DOOR);
-        terrain.setProperty("pos_pac",            formatTile(DEFAULT_POS_PAC));
-        terrain.setProperty("pos_ghost_1_red",    formatTile(DEFAULT_POS_RED_GHOST));
-        terrain.setProperty("pos_ghost_2_pink",   formatTile(DEFAULT_POS_PINK_GHOST));
-        terrain.setProperty("pos_ghost_3_cyan",   formatTile(DEFAULT_POS_CYAN_GHOST));
-        terrain.setProperty("pos_ghost_4_orange", formatTile(DEFAULT_POS_ORANGE_GHOST));
-        terrain.setProperty("pos_bonus",          formatTile(DEFAULT_POS_BONUS));
-        map.food().setProperty("color_food",      DEFAULT_FOOD_COLOR);
-        Logger.info("Map created. rows={}, cols={}", numRows, numCols);
         return map;
     }
 
-    public void createUI(Window ownerWindow) {
-        this.ownerWindow = ownerWindow;
+    public void createUI(Stage stage) {
+        this.stage = stage;
 
         terrainMapEditRenderer = new TerrainMapEditRenderer();
         terrainMapEditRenderer.setWallStrokeColor(parseColor(DEFAULT_COLOR_WALL_STROKE));
@@ -317,15 +314,15 @@ public class TileMapEditor  {
         createLayout();
         createMenus();
 
-        // Note: this must be done after having loaded the initial map!
+        // Note: this must be done *after* the initial map has been created/loaded!
         editCanvas.heightProperty().bind(Bindings.createDoubleBinding(
-                () -> (double) mapPy.get().terrain().numRows() * gridSize(), mapPy, gridSizePy));
+            () -> (double) mapPy.get().terrain().numRows() * gridSize(), mapPy, gridSizePy));
         editCanvas.widthProperty().bind(Bindings.createDoubleBinding(
-                () -> (double) mapPy.get().terrain().numCols() * gridSize(), mapPy, gridSizePy));
+            () -> (double) mapPy.get().terrain().numCols() * gridSize(), mapPy, gridSizePy));
         previewCanvas.widthProperty().bind(editCanvas.widthProperty());
         previewCanvas.heightProperty().bind(editCanvas.heightProperty());
 
-        // Cursor navigation
+        // Cursor navigation, whatever it's good for
         editCanvas.setOnKeyPressed(e -> {
             Direction moveDir = switch (e.getCode()) {
                 case LEFT -> Direction.LEFT;
@@ -342,22 +339,20 @@ public class TileMapEditor  {
             }
         });
 
-        editCanvas.setOnContextMenuRequested(e -> {
+        editCanvas.setOnContextMenuRequested(mouse -> {
             if (editingEnabledPy.get()) {
+                Vector2i tile = tileAtMousePosition(mouse.getX(), mouse.getY());
+
+                var miAddCircle2x2 = new MenuItem("2x2 Circle");
+                miAddCircle2x2.setOnAction(actionEvent -> CIRCLE_2x2.addToMap(this, map().terrain(), tile));
+
+                var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
+                miAddHouse.setOnAction(actionEvent -> GHOST_HOUSE_SHAPE.addToMap(this, map().terrain(), tile));
+
                 ContextMenu contextMenu = new ContextMenu();
-                MenuItem miInsertCircle = new MenuItem("Insert Circle");
-                miInsertCircle.setOnAction(actionEvent -> {
-                    Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
-                    TileMap terrain = map().terrain();
-                    setTileValue(terrain, tile, Tiles.CORNER_NW);
-                    setTileValue(terrain, tile.plus(1, 0), Tiles.CORNER_NE);
-                    setTileValue(terrain, tile.plus(0, 1), Tiles.CORNER_SW);
-                    setTileValue(terrain, tile.plus(1, 1), Tiles.CORNER_SE);
-                    markTileMapEdited(terrain);
-                });
-                contextMenu.getItems().add(miInsertCircle);
-                contextMenu.show(editCanvas, e.getScreenX(), e.getScreenY());
-        }
+                contextMenu.getItems().addAll(miAddCircle2x2, miAddHouse);
+                contextMenu.show(editCanvas, mouse.getScreenX(), mouse.getScreenY());
+            }
         });
 
 
@@ -390,10 +385,10 @@ public class TileMapEditor  {
 
     public void start() {
         // content pane and scroll pane have no height yet at this point!
-        int gridSize = (int)(0.75 *  ownerWindow.getHeight() / map().terrain().numRows());
+        int gridSize = (int)(0.75 *  stage.getHeight() / map().terrain().numRows());
         gridSizePy.set(Math.max(gridSize, 8));
         clock.play();
-        Logger.info("Window height {}", ownerWindow.getHeight());
+        Logger.info("Window height {}", stage.getHeight());
         showMessage(tt("welcome_message"), 3, MessageType.INFO);
     }
 
@@ -621,21 +616,6 @@ public class TileMapEditor  {
             markTileMapEdited(map().terrain());
         });
 
-        var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
-        miAddHouse.setOnAction(e -> {
-            int row = map().terrain().numRows() / 2 - 3;
-            int col = map().terrain().numCols() / 2 - 4;
-            GHOST_HOUSE_SHAPE.addToMap(map().terrain(), row, col);
-            markTileMapEdited(map().terrain());
-        });
-
-        var miCopyLeftToRight = new MenuItem("Copy Left to Right Mirrored");
-        miCopyLeftToRight.setOnAction(e -> {
-            copyLeftContentToRightSideMirrored(map());
-            markTileMapEdited(map().terrain());
-            markTileMapEdited(map().food());
-        });
-
         var miClearTerrain = new MenuItem(tt("menu.edit.clear_terrain"));
         miClearTerrain.setOnAction(e -> {
             map().terrain().clear();
@@ -652,7 +632,6 @@ public class TileMapEditor  {
             miSymmetricMode,
             new SeparatorMenuItem(),
             miAddBorder,
-            miAddHouse,
             miClearTerrain,
             miClearFood);
 
@@ -691,13 +670,6 @@ public class TileMapEditor  {
         var miLoadMap = new MenuItem(description);
         miLoadMap.setOnAction(e -> loadMap(map));
         menuLoadMap.getItems().add(miLoadMap);
-    }
-
-    private void updateTerrainMapPaths() {
-        if (!terrainMapPathsUpToDate) {
-            map().terrain().computeTerrainPaths();
-            terrainMapPathsUpToDate = true;
-        }
     }
 
     private void invalidateTerrainMapPaths() {
@@ -763,7 +735,7 @@ public class TileMapEditor  {
     private void openMapFile() {
         fileChooser.setTitle(tt("open_file"));
         fileChooser.setInitialDirectory(lastUsedDir);
-        File file = fileChooser.showOpenDialog(ownerWindow);
+        File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
             readMapFile(file);
         }
@@ -781,7 +753,7 @@ public class TileMapEditor  {
     public void showSaveDialog() {
         fileChooser.setTitle(tt("save_file"));
         fileChooser.setInitialDirectory(lastUsedDir);
-        File file = fileChooser.showSaveDialog(ownerWindow);
+        File file = fileChooser.showSaveDialog(stage);
         if (file != null) {
             lastUsedDir = file.getParentFile();
             if (file.getName().endsWith(".world")) {
@@ -928,8 +900,11 @@ public class TileMapEditor  {
         g.setFill(Color.BLACK);
         g.fillRect(0, 0, previewCanvas.getWidth(), previewCanvas.getHeight());
         if (terrainVisiblePy.get()) {
-            updateTerrainMapPaths();
             TileMap terrainMap = map().terrain();
+            if (!terrainMapPathsUpToDate) {
+                terrainMap.computeTerrainPaths();
+                terrainMapPathsUpToDate = true;
+            }
             terrainMapPreviewRenderer.setScaling(gridSize() / 8.0);
             terrainMapPreviewRenderer.setWallStrokeColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_STROKE, parseColor(DEFAULT_COLOR_WALL_STROKE)));
             terrainMapPreviewRenderer.setWallFillColor(getColorFromMap(terrainMap, PROPERTY_COLOR_WALL_FILL, parseColor(DEFAULT_COLOR_WALL_FILL)));
@@ -1006,7 +981,7 @@ public class TileMapEditor  {
                 editCanvas.requestFocus();
             } else if (e.getClickCount() == 1) {
                 switch (selectedPaletteID()) {
-                    case PALETTE_TERRAIN -> editMapTile(map().terrain(), tv -> 0 <= tv && tv <= Tiles.DOOR, e);
+                    case PALETTE_TERRAIN -> editMapTile(map().terrain(), e);
                     case PALETTE_ACTORS -> {
                         if (selectedPalette().isToolSelected()) {
                             Vector2i tile = tileAtMousePosition(e.getX(), e.getY());
@@ -1015,7 +990,7 @@ public class TileMapEditor  {
                             terrainMapPropertiesEditor.updatePropertyEditorValues();
                         }
                     }
-                    case PALETTE_FOOD -> editMapTile(map().food(), tv -> 0 <= tv && tv <= Tiles.ENERGIZER, e);
+                    case PALETTE_FOOD -> editMapTile(map().food(), e);
                     default -> Logger.error("Unknown palette selection");
                 }
             }
@@ -1047,18 +1022,14 @@ public class TileMapEditor  {
         } else if (e.isControlDown()) {
             // delete content while moving
             switch (selectedPaletteID()) {
-                case PALETTE_TERRAIN -> {
-                    setTileValue(map().terrain(), tile, Tiles.EMPTY);
-                }
-                case PALETTE_FOOD -> {
-                    setTileValue(map().food(), tile, Tiles.EMPTY);
-                }
+                case PALETTE_TERRAIN -> setTileValue(map().terrain(), tile, Tiles.EMPTY);
+                case PALETTE_FOOD    -> setTileValue(map().food(), tile, Tiles.EMPTY);
                 default -> {}
             }
         }
     }
 
-    private void editMapTile(TileMap tileMap, Predicate<Byte> valueAllowed, MouseEvent e) {
+    private void editMapTile(TileMap tileMap, MouseEvent e) {
         var tile = tileAtMousePosition(e.getX(), e.getY());
         if (e.isControlDown()) {
             setTileValue(tileMap, tile, Tiles.EMPTY);
@@ -1077,7 +1048,7 @@ public class TileMapEditor  {
         }
         tileMap.set(tile, value);
         if (symmetricEditModePy.get()) {
-            tileMap.set(tile.y(), tileMap.numCols() - 1 - tile.x(), hMirror(tileMap.get(tile)));
+            tileMap.set(tile.y(), tileMap.numCols() - 1 - tile.x(), mirroredTileContent(tileMap.get(tile)));
         }
     }
 
@@ -1088,7 +1059,7 @@ public class TileMapEditor  {
         }
         try {
             String source = map.makeSource();
-            String lines[] = source.split("\n");
+            String[] lines = source.split("\n");
             for (int i = 0; i < lines.length; ++i) {
                 lines[i] = "%5d:   %s".formatted(i+1, lines[i]);
             }
