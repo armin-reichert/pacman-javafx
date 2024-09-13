@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameParameters;
@@ -92,8 +93,11 @@ public class GameScene2D implements GameScene {
             drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1));
         }
         if (isCreditVisible()) {
+            int numRows = context.game().world() != null
+                ? context.game().world().map().terrain().numRows()
+                : GameModel.ARCADE_MAP_TILES_Y;
             spriteRenderer.drawText(g, String.format("CREDIT %2d", context.game().credit()),
-                context.assets().color("palette.pale"), sceneFont(8), t(2), t(36) - 1);
+                context.assets().color("palette.pale"), sceneFont(8), t(2), t(numRows) - 1);
         }
         drawSceneContent();
         if (infoVisiblePy.get()) {
