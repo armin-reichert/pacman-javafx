@@ -206,6 +206,7 @@ public class TileMapEditor  {
     private Window stage;
     private final BorderPane contentPane = new BorderPane();
     private Canvas editCanvas;
+    private final ContextMenu contextMenu = new ContextMenu();
     private Canvas previewCanvas;
     private Text mapSourceView;
     private Label messageLabel;
@@ -349,8 +350,7 @@ public class TileMapEditor  {
                 var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
                 miAddHouse.setOnAction(actionEvent -> GHOST_HOUSE_SHAPE.addToMap(this, map().terrain(), tile));
 
-                ContextMenu contextMenu = new ContextMenu();
-                contextMenu.getItems().addAll(miAddCircle2x2, miAddHouse);
+                contextMenu.getItems().setAll(miAddCircle2x2, miAddHouse);
                 contextMenu.show(editCanvas, mouse.getScreenX(), mouse.getScreenY());
             }
         });
