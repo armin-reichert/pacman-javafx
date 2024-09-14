@@ -36,7 +36,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -203,7 +202,7 @@ public class TileMapEditor  {
 
     private final BooleanProperty symmetricEditModePy = new SimpleBooleanProperty(this, "symmetricEditMode", true);
 
-    private Window stage;
+    private Stage stage;
     private final BorderPane contentPane = new BorderPane();
     private Canvas editCanvas;
     private final ContextMenu contextMenu = new ContextMenu();
@@ -387,7 +386,7 @@ public class TileMapEditor  {
         int gridSize = (int)(0.75 *  stage.getHeight() / map().terrain().numRows());
         gridSizePy.set(Math.max(gridSize, 8));
         clock.play();
-        Logger.info("Window height {}", stage.getHeight());
+        Logger.info("Stage height {}", stage.getHeight());
         showMessage(tt("welcome_message"), 3, MessageType.INFO);
     }
 
