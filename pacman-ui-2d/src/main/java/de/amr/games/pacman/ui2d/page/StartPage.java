@@ -71,7 +71,7 @@ public class StartPage extends StackPane implements Page {
 
         Node btnPlay = createPlayButton(context.locText("play_button"));
         BorderPane.setAlignment(btnPlay, Pos.BOTTOM_CENTER);
-        btnPlay.setTranslateY(-25);
+        btnPlay.setTranslateY(-40);
         btnPlay.setOnMouseClicked(e -> {
             if (e.getButton().equals(MouseButton.PRIMARY)) {
                 context.selectGamePage();
@@ -151,7 +151,11 @@ public class StartPage extends StackPane implements Page {
                     });
                 }
                 case MS_PACMAN_TENGEN -> {
-                    setBackground(coloredBackground(Color.BLACK));
+                    Image flyerImage = context.assets().image("tengen.startpage.image");
+                    var background = new Background(new BackgroundImage(flyerImage,
+                        BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                        BackgroundPosition.CENTER, FIT_HEIGHT));
+                    layout.setBackground(background);
                     setOnMouseClicked(null);
                 }
                 case PACMAN -> {

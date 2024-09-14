@@ -129,9 +129,7 @@ public class PacManGames2dApp extends Application {
         //
 
         assets.set("tengen.spritesheet",           new MsPacManGameSpriteSheet());
-        assets.set("tengen.startpage.image",       rm.loadImage("graphics/mspacman/mspacman_flyer.png"));
-        assets.set("tengen.startpage.image1",      rm.loadImage("graphics/mspacman/mspacman_flyer1.jpg"));
-        assets.set("tengen.startpage.image2",      rm.loadImage("graphics/mspacman/mspacman_flyer2.jpg"));
+        assets.set("tengen.startpage.image",       rm.loadImage("graphics/tengen/tengen_flyer.jpg"));
         assets.set("tengen.helpButton.icon",       rm.loadImage("graphics/icons/help-red-64.png"));
         assets.set("tengen.icon",                  rm.loadImage("graphics/icons/mspacman.png"));
         assets.set("tengen.logo.midway",           rm.loadImage("graphics/mspacman/midway_logo.png"));
