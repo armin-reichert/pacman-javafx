@@ -150,7 +150,7 @@ public class PacManGames3dApp extends Application {
         File userDir = new File(System.getProperty("user.home"), ".pacmanfx");
         GameController.create(userDir);
         GameController.it().selectGame(GameVariant.PACMAN);
-        PY_3D_ENABLED.set(true);
+        PY_3D_ENABLED.set(false);
     }
 
     @Override
