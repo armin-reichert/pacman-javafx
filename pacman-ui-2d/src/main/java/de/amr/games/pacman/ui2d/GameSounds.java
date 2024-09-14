@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.net.URL;
+import java.util.MissingResourceException;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.ui2d.PacManGames2dUI.assetPrefix;
@@ -127,8 +128,9 @@ public class GameSounds {
         String assetKey = assetPrefix(variant) + ".audio." + keySuffix;
         URL url = assets.get(assetKey);
         if (url == null) {
-            Logger.error("Could not load audio resource using asset key '{}'", assetKey);
-            return null;
+            String msg = "Could not load audio resource using asset key: " + assetKey;
+            Logger.error(msg);
+            throw new MissingResourceException(msg, GameSounds.class.getName(), assetKey);
         }
         var player = new MediaPlayer(new Media(url.toExternalForm()));
         Logger.info("Media player created from URL {}", url);
@@ -271,7 +273,7 @@ public class GameSounds {
             return;
         }
         switch (gameVariantPy.get()) {
-            case MS_PACMAN -> intermissionSound = createPlayer("intermission." + number, 0.5, false);
+            case MS_PACMAN, MS_PACMAN_TENGEN -> intermissionSound = createPlayer("intermission." + number, 0.5, false);
             case PACMAN, PACMAN_XXL -> {
                 intermissionSound = createPlayer("intermission", 0.5, false);
                 intermissionSound.setCycleCount(number == 2 ? 1 : 2);

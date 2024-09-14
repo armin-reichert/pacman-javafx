@@ -370,9 +370,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     @Override
     public GameSpriteSheet spriteSheet(GameVariant variant) {
         return switch(variant) {
-            case MS_PACMAN -> assets.get("ms_pacman.spritesheet");
-            case PACMAN -> assets.get("pacman.spritesheet");
-            case PACMAN_XXL -> assets.get("pacman_xxl.spritesheet");
+            case MS_PACMAN        -> assets.get("ms_pacman.spritesheet");
+            case PACMAN           -> assets.get("pacman.spritesheet");
+            case PACMAN_XXL       -> assets.get("pacman_xxl.spritesheet");
             case MS_PACMAN_TENGEN -> assets.get("tengen.spritesheet");
         };
     }

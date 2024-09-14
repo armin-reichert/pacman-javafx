@@ -238,7 +238,7 @@ public class PlayScene3D implements GameScene {
 
     private void onEnterStateGhostDying() {
         switch (context.game().variant()) {
-            case MS_PACMAN -> {
+            case MS_PACMAN, MS_PACMAN_TENGEN -> {
                 var ss = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
                 Rectangle2D[] numberSprites = ss.ghostNumberSprites();
                 context.game().eventLog().killedGhosts.forEach(ghost -> {

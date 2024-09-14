@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.model.tengen;
 
 import de.amr.games.pacman.event.GameEventType;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
@@ -21,6 +22,7 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -42,6 +44,9 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class MsPacManTengenGameModel extends GameModel {
 
+    private static final int NUM_MAPS = 21; //TODO adapt
+    private static final String MAP_PATH_PATTERN = "/de/amr/games/pacman/maps/tengen/map%02d.world";
+
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
     /**
@@ -55,13 +60,18 @@ public class MsPacManTengenGameModel extends GameModel {
 
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
+    private final List<WorldMap> standardMaps = new ArrayList<>();
     private int mapNumber;
     public boolean blueMazeBug = false;
 
     public MsPacManTengenGameModel(File userDir) {
         super(userDir);
         initialLives = 3;
-        highScoreFile = new File(userDir, "highscore-ms_pacman.xml");
+        highScoreFile = new File(userDir, "highscore-ms_pacman_tengen.xml");
+        for (int num = 1; num <= NUM_MAPS; ++num) {
+            URL url = getClass().getResource(MAP_PATH_PATTERN.formatted(num));
+            standardMaps.add(new WorldMap(url));
+        }
     }
 
     @Override
@@ -69,31 +79,8 @@ public class MsPacManTengenGameModel extends GameModel {
         return GameVariant.MS_PACMAN_TENGEN;
     }
 
-    /**
-     * <p>In Ms. Pac-Man, there are 4 maps and 6 mazes. Let (num_map, num_maze) denote the combination
-     * map #num_map and maze #num_maze.
-     * </p>
-     * <ul>
-     * <li>Levels 1-2: (1, 1): pink maze, white dots
-     * <li>Levels 3-5: (2, 2)): light blue maze, yellow dots
-     * <li>Levels 6-9: (3, 3): orange maze, red dots
-     * <li>Levels 10-13: (4, 4): blue maze, white dots
-     * </ul>
-     * For level 14 and later, (map, maze) alternates every 4th level between (3, 5) and (4, 6):
-     * <ul>
-     * <li>(3, 5): pink maze, cyan dots
-     * <li>(4, 6): orange maze, white dots
-     * </ul>
-     * <p>
-     */
     private int mapNumberByLevelNumber(int levelNumber) {
-        return switch (levelNumber) {
-            case 1, 2 -> 1;
-            case 3, 4, 5 -> 2;
-            case 6, 7, 8, 9 -> 3;
-            case 10, 11, 12, 13 -> 4;
-            default -> (levelNumber - 14) % 8 < 4 ? 5 : 6;
-        };
+        return levelNumber <= NUM_MAPS ? levelNumber : Globals.randomInt(1, NUM_MAPS + 1);
     }
 
     /**
@@ -114,11 +101,7 @@ public class MsPacManTengenGameModel extends GameModel {
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
         mapNumber = mapNumberByLevelNumber(levelNumber);
-        URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world".formatted(mapNumber));
-        var map = new WorldMap(mapURL);
-        if (blueMazeBug && levelNumber == 1) {
-            map.terrain().setProperty(GameWorld.PROPERTY_COLOR_WALL_FILL, "rgb(33,33,255)");
-        }
+        var map = standardMaps.get(mapNumber - 1);
         setWorldAndCreatePopulation(createWorld(map));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
@@ -133,10 +116,8 @@ public class MsPacManTengenGameModel extends GameModel {
     @Override
     public void buildDemoLevel() {
         levelNumber = 1;
-        mapNumber = randomInt(1, 7);
-        URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world".formatted(mapNumber));
-        var map = new WorldMap(mapURL);
-        setWorldAndCreatePopulation(createWorld(map));
+        mapNumber = randomInt(1, NUM_MAPS + 1);
+        setWorldAndCreatePopulation(createWorld(standardMaps.get(mapNumber-1)));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);

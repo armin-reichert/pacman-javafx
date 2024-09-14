@@ -330,7 +330,7 @@ public class GameLevel3D {
 
             var material = new PhongMaterial(Color.WHITE);
             switch (context.game().variant()) {
-                case MS_PACMAN -> {
+                case MS_PACMAN, MS_PACMAN_TENGEN -> {
                     var ss = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
                     material.setDiffuseMap(ss.subImage(ss.bonusSymbolSprite(symbol)));
                 }
@@ -338,6 +338,7 @@ public class GameLevel3D {
                     var ss = (PacManGameSpriteSheet) context.spriteSheet(context.game().variant());
                     material.setDiffuseMap(ss.subImage(ss.bonusSymbolSprite(symbol)));
                 }
+                default -> throw new IllegalArgumentException("Unsupported game variant: " + context.game().variant());
             }
             cube.setMaterial(material);
 
@@ -382,7 +383,7 @@ public class GameLevel3D {
             worldGroup.getChildren().remove(bonus3D);
         }
         switch (context.game().variant()) {
-            case MS_PACMAN -> {
+            case MS_PACMAN, MS_PACMAN_TENGEN -> {
                 var ss = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
                 bonus3D = new Bonus3D(bonus,
                     ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));
@@ -392,6 +393,7 @@ public class GameLevel3D {
                 bonus3D = new Bonus3D(bonus,
                     ss.subImage(ss.bonusSymbolSprite(bonus.symbol())), ss.subImage(ss.bonusValueSprite(bonus.symbol())));
             }
+            default -> throw new IllegalArgumentException("Unsupported game variant: " + context.game().variant());
         }
         bonus3D.showEdible();
         worldGroup.getChildren().add(bonus3D);
