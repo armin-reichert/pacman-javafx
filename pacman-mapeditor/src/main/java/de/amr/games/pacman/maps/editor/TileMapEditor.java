@@ -502,8 +502,8 @@ public class TileMapEditor  {
         var mapSourceViewScroll = new ScrollPane(vbox);
         mapSourceViewScroll.setFitToHeight(true);
 
-        palettes.put(PALETTE_TERRAIN, createTerrainPalette());
         palettes.put(PALETTE_ACTORS, createActorPalette());
+        palettes.put(PALETTE_TERRAIN, createTerrainPalette());
         palettes.put(PALETTE_FOOD, createFoodPalette());
 
         var terrainPaletteTab = new Tab(tt("terrain"), palettes.get(PALETTE_TERRAIN).root());
@@ -518,7 +518,7 @@ public class TileMapEditor  {
         foodPaletteTab.setClosable(false);
         foodPaletteTab.setUserData(PALETTE_FOOD);
 
-        palettesTabPane = new TabPane(terrainPaletteTab, actorPaletteTab, foodPaletteTab);
+        palettesTabPane = new TabPane(actorPaletteTab, terrainPaletteTab, foodPaletteTab);
         palettesTabPane.setPadding(new Insets(5,5,5,5));
 
         terrainMapPropertiesEditor = new PropertyEditorPane(this);
