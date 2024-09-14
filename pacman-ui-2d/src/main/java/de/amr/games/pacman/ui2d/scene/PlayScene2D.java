@@ -151,7 +151,7 @@ public class PlayScene2D extends GameScene2D {
             }
             case MS_PACMAN_TENGEN -> {
                 drawWorld(flashMode, blinkingOn);
-                game.bonus().ifPresent(bonus -> spriteRenderer.drawStaticBonus(g, bonus));
+                game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));
             }
             case PACMAN -> {
                 spriteRenderer.drawPacManWorld(g, game.world(), 0, 3, flashMode, blinkingOn);

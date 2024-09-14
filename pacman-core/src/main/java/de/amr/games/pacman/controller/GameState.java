@@ -304,8 +304,16 @@ public enum GameState implements FsmState<GameModel> {
 
     LEVEL_TEST {
 
+        private int lastLevelNumber;
+
         @Override
         public void onEnter(GameModel game) {
+            lastLevelNumber = switch (game.variant()) {
+                case MS_PACMAN -> 17;
+                case MS_PACMAN_TENGEN -> 32;
+                case PACMAN -> 21;
+                case PACMAN_XXL -> 8; //TODO what about custom maps?
+            };
             timer.restartIndefinitely();
             game.reset();
             game.createLevel(1);
@@ -318,7 +326,7 @@ public enum GameState implements FsmState<GameModel> {
             if (game.level().isEmpty()) {
                 return;
             }
-            if (game.levelNumber() == 25) {
+            if (game.levelNumber() == lastLevelNumber) {
                 GameController.it().restart(GameState.BOOT);
                 return;
             }
