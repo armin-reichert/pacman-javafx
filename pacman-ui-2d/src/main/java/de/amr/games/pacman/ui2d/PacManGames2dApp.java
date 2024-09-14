@@ -125,6 +125,41 @@ public class PacManGames2dApp extends Application {
         assets.set("ms_pacman.audio.ghost_returning", rm.url("sound/mspacman/GhostEyes.mp3"));
 
         //
+        // Ms. Pac-Man game Tengen
+        //
+
+        assets.set("tengen.spritesheet",           new MsPacManGameSpriteSheet());
+        assets.set("tengen.startpage.image",       rm.loadImage("graphics/mspacman/mspacman_flyer.png"));
+        assets.set("tengen.startpage.image1",      rm.loadImage("graphics/mspacman/mspacman_flyer1.jpg"));
+        assets.set("tengen.startpage.image2",      rm.loadImage("graphics/mspacman/mspacman_flyer2.jpg"));
+        assets.set("tengen.helpButton.icon",       rm.loadImage("graphics/icons/help-red-64.png"));
+        assets.set("tengen.icon",                  rm.loadImage("graphics/icons/mspacman.png"));
+        assets.set("tengen.logo.midway",           rm.loadImage("graphics/mspacman/midway_logo.png"));
+
+        // Clips
+        assets.set("tengen.audio.bonus_eaten",     rm.loadAudioClip("sound/mspacman/Fruit.mp3"));
+        assets.set("tengen.audio.credit",          rm.loadAudioClip("sound/mspacman/Credit.mp3"));
+        assets.set("tengen.audio.extra_life",      rm.loadAudioClip("sound/mspacman/ExtraLife.mp3"));
+        assets.set("tengen.audio.ghost_eaten",     rm.loadAudioClip("sound/mspacman/Ghost.mp3"));
+        assets.set("tengen.audio.sweep",           rm.loadAudioClip("sound/common/sweep.mp3"));
+
+        // Audio played by MediaPlayer
+        assets.set("tengen.audio.game_ready",      rm.url("sound/mspacman/Start.mp3"));
+        assets.set("tengen.audio.game_over",       rm.url("sound/common/game-over.mp3"));
+        assets.set("tengen.audio.intermission.1",  rm.url("sound/mspacman/Act1TheyMeet.mp3"));
+        assets.set("tengen.audio.intermission.2",  rm.url("sound/mspacman/Act2TheChase.mp3"));
+        assets.set("tengen.audio.intermission.3",  rm.url("sound/mspacman/Act3Junior.mp3"));
+        assets.set("tengen.audio.level_complete",  rm.url("sound/common/level-complete.mp3"));
+        assets.set("tengen.audio.pacman_death",    rm.url("sound/mspacman/Died.mp3"));
+        assets.set("tengen.audio.pacman_munch",    rm.url("sound/mspacman/Pill.wav"));
+        assets.set("tengen.audio.pacman_power",    rm.url("sound/mspacman/ScaredGhost.mp3"));
+        assets.set("tengen.audio.siren.1",         rm.url("sound/mspacman/GhostNoise1.wav"));
+        assets.set("tengen.audio.siren.2",         rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
+        assets.set("tengen.audio.siren.3",         rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
+        assets.set("tengen.audio.siren.4",         rm.url("sound/mspacman/GhostNoise1.wav"));// TODO
+        assets.set("tengen.audio.ghost_returning", rm.url("sound/mspacman/GhostEyes.mp3"));
+
+        //
         // Pac-Man game
         //
 
@@ -212,6 +247,7 @@ public class PacManGames2dApp extends Application {
                         GameSceneID.CUT_SCENE_2,  new PacManCutScene2(),
                         GameSceneID.CUT_SCENE_3,  new PacManCutScene3()
                     )));
+                default -> throw new IllegalArgumentException("Unsupported game variant: " + variant);
             }
         }
         return gameScenesForVariant;

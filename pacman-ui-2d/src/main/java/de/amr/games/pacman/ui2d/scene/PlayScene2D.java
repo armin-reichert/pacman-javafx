@@ -149,6 +149,10 @@ public class PlayScene2D extends GameScene2D {
                 }
                 game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));
             }
+            case MS_PACMAN_TENGEN -> {
+                drawWorld(flashMode, blinkingOn);
+                game.bonus().ifPresent(bonus -> spriteRenderer.drawStaticBonus(g, bonus));
+            }
             case PACMAN -> {
                 spriteRenderer.drawPacManWorld(g, game.world(), 0, 3, flashMode, blinkingOn);
                 game.bonus().ifPresent(bonus -> spriteRenderer.drawStaticBonus(g, bonus));
@@ -157,6 +161,7 @@ public class PlayScene2D extends GameScene2D {
                 drawWorld(flashMode, blinkingOn);
                 game.bonus().ifPresent(bonus -> spriteRenderer.drawStaticBonus(g, bonus));
             }
+            default -> throw new IllegalArgumentException("Unsupported game variant: " + game.variant());
         }
         drawLevelMessage();
 

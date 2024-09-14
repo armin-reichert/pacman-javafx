@@ -106,11 +106,22 @@ public class GameLevel3D {
                 pac3D.shape3D().light().setColor(context.assets().color("ms_pacman.color.head").desaturate());
                 pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
             }
-            case PACMAN, PACMAN_XXL -> {
+            case MS_PACMAN_TENGEN -> {
+                pac3D = new MsPacMan3D(game.pac(), PAC_SIZE, assets);
+                pac3D.shape3D().light().setColor(context.assets().color("tengen.color.head").desaturate());
+                pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
+            }
+            case PACMAN -> {
                 pac3D = new PacMan3D(game.pac(), PAC_SIZE, assets);
                 pac3D.shape3D().light().setColor(context.assets().color("pacman.color.head").desaturate());
                 pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
             }
+            case PACMAN_XXL -> {
+                pac3D = new PacMan3D(game.pac(), PAC_SIZE, assets);
+                pac3D.shape3D().light().setColor(context.assets().color("pacman_xxl.color.head").desaturate());
+                pac3D.shape3D().drawModeProperty().bind(PY_3D_DRAW_MODE);
+            }
+            default -> throw new IllegalArgumentException("Unsupported game variant: " + game.variant());
         }
 
         ghosts3D = game.ghosts().map(ghost -> new MutableGhost3D(assets.get("model3D.ghost"), assets, ghost, GHOST_SIZE)).toList();

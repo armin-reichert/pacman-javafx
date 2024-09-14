@@ -150,6 +150,10 @@ public class StartPage extends StackPane implements Page {
                         }
                     });
                 }
+                case MS_PACMAN_TENGEN -> {
+                    setBackground(coloredBackground(Color.BLACK));
+                    setOnMouseClicked(null);
+                }
                 case PACMAN -> {
                     setBackground(context.assets().get("wallpaper.background"));
                     pacManFlyerPageIndex = selectFlyerPage(pacManFlyerPages, 0);

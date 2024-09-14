@@ -42,7 +42,7 @@ public class CreditScene extends GameScene2D {
         var orange = context.assets().color("palette.orange");
         var rose = context.assets().color("palette.rose");
         switch (context.game().variant()) {
-            case MS_PACMAN -> {
+            case MS_PACMAN, MS_PACMAN_TENGEN -> {
                 Rectangle2D livesCounterSprite = spriteRenderer.spriteSheet().livesCounterSprite();
                 spriteRenderer.drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(16));
                 spriteRenderer.drawText(g, "1 PLAYER ONLY", orange, font8, t(8), t(18));
@@ -58,6 +58,7 @@ public class CreditScene extends GameScene2D {
                 spriteRenderer.drawText(g, "PTS", rose, font6, t(25), t(25));
                 drawMidwayCopyright(t(4), t(29));
             }
+            default -> throw new IllegalArgumentException("Unsupported game variant: " + context.game().variant());
         }
         drawLevelCounter(g);
     }

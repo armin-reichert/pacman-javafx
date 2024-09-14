@@ -316,13 +316,15 @@ public class MsPacManIntroScene extends GameScene2D {
      * @see  <a href="http://www.donhodges.com/ms_pacman_bugs.htm">Ms. Pac-Man blue maze bug</a>
      */
     private void triggerBlueMazeBug() {
-        var game = (MsPacManGameModel) context.game();
-        game.blueMazeBug = true;
-        Logger.info("Blue maze bug triggered");
+        if (context.game() instanceof MsPacManGameModel msPacManGame) {
+            msPacManGame.blueMazeBug = true;
+            Logger.info("Blue maze bug triggered");
+        }
     }
 
     private void clearBlueMazeBug() {
-        var game = (MsPacManGameModel) context.game();
-        game.blueMazeBug = false;
+        if (context.game() instanceof MsPacManGameModel msPacManGame) {
+            msPacManGame.blueMazeBug = false;
+        }
     }
 }

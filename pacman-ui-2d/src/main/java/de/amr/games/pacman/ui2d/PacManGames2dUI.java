@@ -65,14 +65,15 @@ import static java.util.function.Predicate.not;
  */
 public class PacManGames2dUI implements GameEventListener, GameContext {
 
-    public static List<GameVariant> SUPPORTED_GAME_VARIANTS = List.of(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
+    public static List<GameVariant> SUPPORTED_GAME_VARIANTS = List.of(
+        GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_TENGEN);
 
     public static String assetPrefix(GameVariant variant) {
         return switch (variant) {
             case MS_PACMAN -> "ms_pacman";
+            case MS_PACMAN_TENGEN -> "tengen";
             case PACMAN -> "pacman";
             case PACMAN_XXL -> "pacman_xxl";
-            case MS_PACMAN_TENGEN -> "tengen";
         };
     }
 
@@ -241,7 +242,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     private void handleGameVariantChange(GameVariant variant) {
-        stage.getIcons().setAll(assets.image(assetPrefix(variant) + ".icon"));
+        Image icon = assets.image(assetPrefix(variant) + ".icon");
+        if (icon != null) {
+            stage.getIcons().setAll(icon);
+        }
         if (variant == GameVariant.PACMAN_XXL) {
             updateCustomMaps();
         }
@@ -368,8 +372,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         return switch(variant) {
             case MS_PACMAN -> assets.get("ms_pacman.spritesheet");
             case PACMAN -> assets.get("pacman.spritesheet");
-            case PACMAN_XXL -> assets.get("pacman.spritesheet");
-            case MS_PACMAN_TENGEN -> assets.get("ms_pacman.spritesheet");
+            case PACMAN_XXL -> assets.get("pacman_xxl.spritesheet");
+            case MS_PACMAN_TENGEN -> assets.get("tengen.spritesheet");
         };
     }
 
@@ -438,12 +442,19 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, ss)));
                 Logger.info("Created Ms. Pac-Man game creature animations for level #{}", game.levelNumber());
             }
+            case MS_PACMAN_TENGEN -> {
+                var ss = (MsPacManGameSpriteSheet) spriteSheet(game.variant());
+                game.pac().setAnimations(new MsPacManGamePacAnimations(game.pac(), ss));
+                game.ghosts().forEach(ghost -> ghost.setAnimations(new MsPacManGameGhostAnimations(ghost, ss)));
+                Logger.info("Created Ms. Pac-Man Tengen game creature animations for level #{}", game.levelNumber());
+            }
             case PACMAN, PACMAN_XXL -> {
                 var ss = (PacManGameSpriteSheet) spriteSheet(game.variant());
                 game.pac().setAnimations(new PacManGamePacAnimations(game.pac(), ss));
                 game.ghosts().forEach(ghost -> ghost.setAnimations(new PacManGameGhostAnimations(ghost, ss)));
                 Logger.info("Created Pac-Man game creature animations for level #{}", game.levelNumber());
             }
+            default -> throw new IllegalArgumentException("Unsupported game variant: " + game.variant());
         }
         if (!game.isDemoLevel()) {
             game.pac().setManualSteering(new KeyboardPacSteering());
@@ -673,6 +684,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     private void selectGameVariant(GameVariant variant) {
         gameController().selectGame(variant);
         gameController().restart(GameState.BOOT);
+        Logger.info("Selected game variant: {}", variant);
     }
 
     @Override
