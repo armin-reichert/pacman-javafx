@@ -833,8 +833,8 @@ public class TileMapEditor  {
 
     private void onMouseClickedOnEditCanvas(MouseEvent e) {
         if (e.getButton() == MouseButton.PRIMARY) {
+            contextMenu.hide();
             if (e.getClickCount() == 2) { // double-click
-
                 editingEnabledPy.set(true);
                 editCanvas.requestFocus();
             } else if (e.getClickCount() == 1) {
