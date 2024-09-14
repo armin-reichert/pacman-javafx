@@ -45,7 +45,7 @@ import org.tinylog.Logger;
 
 import java.text.MessageFormat;
 import java.time.LocalTime;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -64,6 +64,8 @@ import static java.util.function.Predicate.not;
  * @author Armin Reichert
  */
 public class PacManGames2dUI implements GameEventListener, GameContext {
+
+    public static List<GameVariant> SUPPORTED_GAME_VARIANTS = List.of(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
 
     public static String assetPrefix(GameVariant variant) {
         return switch (variant) {
@@ -652,17 +654,19 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void selectNextGameVariant() {
-        var all = Arrays.asList(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
-        var current = all.indexOf(game().variant());
-        var next = current < all.size() - 1 ? all.get(current + 1) : all.getFirst();
+        var current = SUPPORTED_GAME_VARIANTS.indexOf(game().variant());
+        var next = current < SUPPORTED_GAME_VARIANTS.size() - 1
+            ? SUPPORTED_GAME_VARIANTS.get(current + 1)
+            : SUPPORTED_GAME_VARIANTS.getFirst();
         selectGameVariant(next);
     }
 
     @Override
     public void selectPrevGameVariant() {
-        var all = Arrays.asList(GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL);
-        var current = all.indexOf(game().variant());
-        var prev = current > 0 ? all.get(current - 1) : all.getLast();
+        var current = SUPPORTED_GAME_VARIANTS.indexOf(game().variant());
+        var prev = current > 0
+            ? SUPPORTED_GAME_VARIANTS.get(current - 1)
+            : SUPPORTED_GAME_VARIANTS.getLast();
         selectGameVariant(prev);
     }
 
@@ -739,5 +743,4 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             gameController().changeState(GameState.LEVEL_COMPLETE);
         }
     }
-
 }
