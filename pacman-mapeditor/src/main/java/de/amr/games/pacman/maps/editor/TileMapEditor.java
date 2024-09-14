@@ -227,7 +227,6 @@ public class TileMapEditor  {
     private TerrainMapEditRenderer terrainMapEditRenderer;
     private TerrainMapRenderer     terrainMapPreviewRenderer;
     private FoodMapRenderer        foodMapRenderer;
-    private TerrainMapEditRenderer terrainPaletteRenderer;
 
     private boolean terrainMapPathsUpToDate;
     private boolean unsavedChanges;
@@ -411,9 +410,7 @@ public class TileMapEditor  {
     }
 
     private Palette createTerrainPalette() {
-        terrainPaletteRenderer = new TerrainMapEditRenderer();
-        terrainPaletteRenderer.setScaling(4);
-        var palette = new Palette(TOOL_SIZE, 1, 19, terrainPaletteRenderer);
+        var palette = new Palette(TOOL_SIZE, 1, 19, terrainMapEditRenderer);
         palette.setTools(
             palette.createTileValueEditorTool(this, Tiles.WALL_H, "Horiz. Wall"),
             palette.createTileValueEditorTool(this, Tiles.WALL_V, "Vert. Wall"),
@@ -1052,7 +1049,10 @@ public class TileMapEditor  {
     private void drawSelectedPalette() {
         Palette selectedPalette = palettes.get(selectedPaletteID());
         if (selectedPaletteID().equals(PALETTE_TERRAIN)) {
-            terrainPaletteRenderer.setWallStrokeColor(terrainMapEditRenderer.wallStrokeColor);
+            double scaling = terrainMapEditRenderer.scaling();
+            terrainMapEditRenderer.setScaling((double) TOOL_SIZE / 8);
+            terrainMapEditRenderer.setWallStrokeColor(terrainMapEditRenderer.wallStrokeColor);
+            terrainMapEditRenderer.setScaling(scaling);
         }
         selectedPalette.draw();
     }
