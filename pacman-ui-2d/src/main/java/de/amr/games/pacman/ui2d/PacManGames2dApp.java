@@ -162,6 +162,29 @@ public class PacManGames2dApp extends Application {
         assets.set("pacman_xxl.helpButton.icon",      rm.loadImage("graphics/icons/help-blue-64.png"));
         assets.set("pacman_xxl.startpage.image",      rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
 
+        assets.set("pacman_xxl.spritesheet",              new PacManGameSpriteSheet());
+
+        // Clips
+        assets.set("pacman_xxl.audio.bonus_eaten",        rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));
+        assets.set("pacman_xxl.audio.credit",             rm.loadAudioClip("sound/pacman/credit.wav"));
+        assets.set("pacman_xxl.audio.extra_life",         rm.loadAudioClip("sound/pacman/extend.mp3"));
+        assets.set("pacman_xxl.audio.ghost_eaten",        rm.loadAudioClip("sound/pacman/eat_ghost.mp3"));
+        assets.set("pacman_xxl.audio.sweep",              rm.loadAudioClip("sound/common/sweep.mp3"));
+
+        // Media player sounds
+        assets.set("pacman_xxl.audio.game_ready",         rm.url("sound/pacman/game_start.mp3"));
+        assets.set("pacman_xxl.audio.game_over",          rm.url("sound/common/game-over.mp3"));
+        assets.set("pacman_xxl.audio.intermission",       rm.url("sound/pacman/intermission.mp3"));
+        assets.set("pacman_xxl.audio.pacman_death",       rm.url("sound/pacman/pacman_death.wav"));
+        assets.set("pacman_xxl.audio.pacman_munch",       rm.url("sound/pacman/doublemunch.wav"));
+        assets.set("pacman_xxl.audio.pacman_power",       rm.url("sound/pacman/ghost-turn-to-blue.mp3"));
+        assets.set("pacman_xxl.audio.level_complete",     rm.url("sound/common/level-complete.mp3"));
+        assets.set("pacman_xxl.audio.siren.1",            rm.url("sound/pacman/siren_1.mp3"));
+        assets.set("pacman_xxl.audio.siren.2",            rm.url("sound/pacman/siren_2.mp3"));
+        assets.set("pacman_xxl.audio.siren.3",            rm.url("sound/pacman/siren_3.mp3"));
+        assets.set("pacman_xxl.audio.siren.4",            rm.url("sound/pacman/siren_4.mp3"));
+        assets.set("pacman_xxl.audio.ghost_returning",    rm.url("sound/pacman/retreating.mp3"));
+
         GameSounds.setAssets(assets);
     }
 

@@ -124,7 +124,12 @@ public class GameSounds {
 
     private static MediaPlayer createPlayer(String keySuffix, double volume, boolean loop) {
         GameVariant variant = gameVariantPy.get();
-        URL url = assets.get(assetPrefix(variant) + ".audio." + keySuffix);
+        String assetKey = assetPrefix(variant) + ".audio." + keySuffix;
+        URL url = assets.get(assetKey);
+        if (url == null) {
+            Logger.error("Could not load audio resource using asset key '{}'", assetKey);
+            return null;
+        }
         var player = new MediaPlayer(new Media(url.toExternalForm()));
         Logger.info("Media player created from URL {}", url);
         player.setCycleCount(loop ? MediaPlayer.INDEFINITE : 1);
