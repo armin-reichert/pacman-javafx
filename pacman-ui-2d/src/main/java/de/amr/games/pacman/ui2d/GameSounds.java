@@ -19,6 +19,7 @@ import org.tinylog.Logger;
 import java.net.URL;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
+import static de.amr.games.pacman.ui2d.PacManGames2dUI.assetPrefix;
 
 /**
  * @author Armin Reichert
@@ -121,14 +122,9 @@ public class GameSounds {
         }
     }
 
-    private static String audioPrefix(GameVariant variant) {
-        String prefix = variant == GameVariant.PACMAN_XXL ? GameVariant.PACMAN.resourceKey() : variant.resourceKey();
-        return prefix + ".audio.";
-    }
-
     private static MediaPlayer createPlayer(String keySuffix, double volume, boolean loop) {
         GameVariant variant = gameVariantPy.get();
-        URL url = assets.get(audioPrefix(variant) + keySuffix);
+        URL url = assets.get(assetPrefix(variant) + ".audio." + keySuffix);
         var player = new MediaPlayer(new Media(url.toExternalForm()));
         Logger.info("Media player created from URL {}", url);
         player.setCycleCount(loop ? MediaPlayer.INDEFINITE : 1);
@@ -151,7 +147,7 @@ public class GameSounds {
 
     private static void playClip(String keySuffix) {
         checkNotNull(keySuffix);
-        String assetKey = audioPrefix(gameVariantPy.get()) + keySuffix;
+        String assetKey = assetPrefix(gameVariantPy.get()) + ".audio." + keySuffix;
         AudioClip clip = assets.get(assetKey);
         if (clip == null) {
             Logger.error("No audio clip with key {}", assetKey);

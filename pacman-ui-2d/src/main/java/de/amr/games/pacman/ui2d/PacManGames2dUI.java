@@ -65,6 +65,15 @@ import static java.util.function.Predicate.not;
  */
 public class PacManGames2dUI implements GameEventListener, GameContext {
 
+    public static String assetPrefix(GameVariant variant) {
+        return switch (variant) {
+            case MS_PACMAN -> "ms_pacman";
+            case PACMAN -> "pacman";
+            case PACMAN_XXL -> "pacman_xxl";
+            case MS_PACMAN_TENGEN -> "tengen";
+        };
+    }
+
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {
@@ -230,7 +239,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     private void handleGameVariantChange(GameVariant variant) {
-        stage.getIcons().setAll(assets.image(variant.resourceKey() + ".icon"));
+        stage.getIcons().setAll(assets.image(assetPrefix(variant) + ".icon"));
         if (variant == GameVariant.PACMAN_XXL) {
             updateCustomMaps();
         }
@@ -239,7 +248,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected ObservableValue<String> stageTitleBinding() {
         return Bindings.createStringBinding(
             () -> {
-                String gameVariantPart = "app.title." + gameVariantPy.get().resourceKey();
+                String gameVariantPart = "app.title." + assetPrefix(gameVariantPy.get());
                 String pausedPart = clock.pausedPy.get() ? ".paused" : "";
                 return locText(gameVariantPart + pausedPart, "2D");
             },
@@ -354,11 +363,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public GameSpriteSheet spriteSheet(GameVariant variant) {
-        var rk = switch (variant) {
-            case MS_PACMAN -> variant.resourceKey();
-            case PACMAN, PACMAN_XXL -> GameVariant.PACMAN.resourceKey();
+        return switch(variant) {
+            case MS_PACMAN -> assets.get("ms_pacman.spritesheet");
+            case PACMAN -> assets.get("pacman.spritesheet");
+            case PACMAN_XXL -> assets.get("pacman.spritesheet");
+            case MS_PACMAN_TENGEN -> assets.get("ms_pacman.spritesheet");
         };
-        return assets.get(rk + ".spritesheet");
     }
 
     @Override

@@ -10,13 +10,5 @@ package de.amr.games.pacman.model;
  * @author Armin Reichert
  */
 public enum GameVariant {
-    MS_PACMAN, PACMAN, PACMAN_XXL;
-
-    public String resourceKey() {
-        return switch (this) {
-            case MS_PACMAN  -> "ms_pacman";
-            case PACMAN     -> "pacman";
-            case PACMAN_XXL -> "pacman_xxl";
-        };
-    }
+    MS_PACMAN, PACMAN, PACMAN_XXL, MS_PACMAN_TENGEN;
 }

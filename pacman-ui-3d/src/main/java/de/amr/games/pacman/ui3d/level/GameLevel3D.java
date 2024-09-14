@@ -261,7 +261,7 @@ public class GameLevel3D {
     private Node createLivesCounterShape(GameVariant variant) {
         AssetMap assets = context.assets();
         return switch (variant) {
-            case MS_PACMAN -> new Group(
+            case MS_PACMAN, MS_PACMAN_TENGEN -> new Group(
                 PacModel3D.createPacShape(
                     assets.get("model3D.pacman"), LIVE_SHAPE_SIZE,
                     assets.color("ms_pacman.color.head"),

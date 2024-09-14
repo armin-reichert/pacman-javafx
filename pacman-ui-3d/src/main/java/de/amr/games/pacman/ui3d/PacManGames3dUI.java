@@ -56,7 +56,7 @@ public class PacManGames3dUI extends PacManGames2dUI {
     protected ObservableValue<String> stageTitleBinding() {
         return Bindings.createStringBinding(() -> {
             // resource key is composed from game variant, paused state and display mode (2D, 3D)
-            String gameVariantPart = "app.title." + gameVariantPy.get().resourceKey();
+            String gameVariantPart = "app.title." + assetPrefix(gameVariantPy.get());
             String pausedPart = clock.pausedPy.get() ? ".paused" : "";
             String displayMode = locText(PY_3D_ENABLED.get() ? "threeD" : "twoD");
             return locText(gameVariantPart + pausedPart, displayMode);
