@@ -108,18 +108,18 @@ public class TileMapEditor  {
 
     private static final int TOOL_SIZE = 32;
 
-    private static final RectShape GHOST_HOUSE_SHAPE = new RectShape(new byte[][] {
+    private static final byte[][] GHOST_HOUSE_SHAPE = {
         {16, 8, 8,14,14, 8, 8,17},
         { 9, 0, 0, 0, 0, 0, 0, 9},
         { 9, 0, 0, 0, 0, 0, 0, 9},
         { 9, 0, 0, 0, 0, 0, 0, 9},
         {19, 8, 8, 8, 8, 8, 8,18}
-    });
+    };
 
-    private static final RectShape CIRCLE_2x2 = new RectShape(new byte[][] {
+    private static final byte[][] CIRCLE_2x2 = {
         {Tiles.CORNER_NW, Tiles.CORNER_NE},
         {Tiles.CORNER_SW, Tiles.CORNER_SE}
-    });
+    };
 
     private static void addBorder(TileMap terrain, int emptyRowsTop, int emptyRowsBottom) {
         for (int row = emptyRowsTop; row < terrain.numRows() - emptyRowsBottom; ++row) {
@@ -343,10 +343,10 @@ public class TileMapEditor  {
                 Vector2i tile = tileAtMousePosition(mouse.getX(), mouse.getY());
 
                 var miAddCircle2x2 = new MenuItem("2x2 Circle");
-                miAddCircle2x2.setOnAction(actionEvent -> CIRCLE_2x2.addToMap(this, map().terrain(), tile));
+                miAddCircle2x2.setOnAction(actionEvent -> addShape(map().terrain(), CIRCLE_2x2, tile));
 
                 var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
-                miAddHouse.setOnAction(actionEvent -> GHOST_HOUSE_SHAPE.addToMap(this, map().terrain(), tile));
+                miAddHouse.setOnAction(actionEvent -> addShape(map().terrain(), GHOST_HOUSE_SHAPE, tile));
 
                 contextMenu.getItems().setAll(miAddCircle2x2, miAddHouse);
                 contextMenu.show(editCanvas, mouse.getScreenX(), mouse.getScreenY());
@@ -911,6 +911,16 @@ public class TileMapEditor  {
             }
         }
         markTileMapEdited(tileMap);
+    }
+
+    private void addShape(TileMap map, byte[][] content, Vector2i originTile) {
+        int numRows = content.length, numCols = content[0].length;
+        for (int row = 0; row < numRows; ++row) {
+            for (int col = 0; col < numCols; ++col) {
+                setTileValue(map, originTile.plus(col, row), content[row][col]);
+            }
+        }
+        markTileMapEdited(map);
     }
 
     private void updateSourceView(WorldMap map) {
