@@ -254,6 +254,10 @@ public class TileMapEditor  {
         mapPy.set(checkNotNull(map));
     }
 
+    public Stage stage() {
+        return stage;
+    }
+
     private StringBinding createTitleBinding() {
         return Bindings.createStringBinding(
             () -> {

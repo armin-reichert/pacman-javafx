@@ -76,14 +76,14 @@ public class PropertyEditorPane extends BorderPane {
 
     private final TileMapEditor mapEditor;
     private final GridPane grid = new GridPane();
-    private final List<PropertyEditor> propertyEditors = new ArrayList<>();
+    private final List<AbstractPropertyEditor> propertyEditors = new ArrayList<>();
 
-    private abstract class PropertyEditor {
+    private abstract class AbstractPropertyEditor {
 
         String propertyName;
         final TextField nameEditor;
 
-        PropertyEditor(String propertyName) {
+        AbstractPropertyEditor(String propertyName) {
             this.propertyName = propertyName;
             nameEditor = new TextField(propertyName);
             nameEditor.setMinWidth(NAME_COLUMN_MIN_WIDTH);
@@ -145,7 +145,7 @@ public class PropertyEditorPane extends BorderPane {
         }
     }
 
-    private class TextPropertyEditor extends PropertyEditor {
+    private class TextPropertyEditor extends AbstractPropertyEditor {
 
         final TextField textEditor;
 
@@ -173,7 +173,7 @@ public class PropertyEditorPane extends BorderPane {
         }
     }
 
-    private class ColorPropertyEditor extends PropertyEditor {
+    private class ColorPropertyEditor extends AbstractPropertyEditor {
         final ColorPicker colorPicker;
 
         ColorPropertyEditor(String propertyName, String propertyValue) {
@@ -202,7 +202,7 @@ public class PropertyEditorPane extends BorderPane {
         }
     }
 
-    private class TilePropertyEditor extends PropertyEditor {
+    private class TilePropertyEditor extends AbstractPropertyEditor {
         final Spinner<Integer> spinnerX;
         final Spinner<Integer> spinnerY;
         final HBox valueEditorPane;
