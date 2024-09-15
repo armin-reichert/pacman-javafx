@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui3d.level;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.util.AssetMap;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -39,7 +39,7 @@ public class MsPacMan3D implements Pac3D {
      * @param size diameter of Pac-Man
      * @param assets asset map
      */
-    public MsPacMan3D(Pac msPacMan, double size, AssetMap assets) {
+    public MsPacMan3D(Pac msPacMan, double size, AssetStorage assets) {
         this.msPacMan = checkNotNull(msPacMan);
         checkNotNull(assets);
 

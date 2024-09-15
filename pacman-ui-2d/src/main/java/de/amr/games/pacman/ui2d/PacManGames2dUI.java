@@ -89,7 +89,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible");
 
-    protected final AssetMap assets;
+    protected final AssetStorage assets;
     protected final Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant;
     protected final FlashMessageView messageView;
     protected final GameClockFX clock;
@@ -116,7 +116,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         }
 
         sceneRoot = new StackPane();
-        assets = new AssetMap();
+        assets = new AssetStorage();
         messageView = new FlashMessageView();
         clock.setPauseableCallback(() -> {
             try {
@@ -363,7 +363,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public AssetMap assets() {
+    public AssetStorage assets() {
         return assets;
     }
 

@@ -21,7 +21,7 @@ import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
-import de.amr.games.pacman.ui2d.util.AssetMap;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -256,7 +256,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        AssetMap assets = context.assets();
+        AssetStorage assets = context.assets();
         Font font8 = sceneFont(8); // depends on current scaling!
         BitSet marqueeState = computeMarqueeState(data.marqueeTimer.currentTick());
         drawMarquee(marqueeState);

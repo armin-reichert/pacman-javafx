@@ -4,7 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui3d.level;
 
-import de.amr.games.pacman.ui2d.util.AssetMap;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
 import javafx.animation.Animation.Status;
@@ -40,7 +40,7 @@ public class Ghost3D {
     public final ObjectProperty<DrawMode> drawModePy = new SimpleObjectProperty<>(this, "drawMode", DrawMode.FILL);
 
     private final byte id;
-    private final AssetMap assets;
+    private final AssetStorage assets;
     private final Group root = new Group();
     private final Shape3D dress;
 
@@ -83,7 +83,7 @@ public class Ghost3D {
         return assets.color("ghost.color.flashing.pupils");
     }
 
-    public Ghost3D(Model3D model3D, AssetMap assets, byte id, double size) {
+    public Ghost3D(Model3D model3D, AssetStorage assets, byte id, double size) {
         requireNonNull(model3D);
         requireNonNull(assets);
         checkGhostID(id);

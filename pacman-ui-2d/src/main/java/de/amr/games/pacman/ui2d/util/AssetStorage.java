@@ -9,7 +9,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.util.Pair;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -17,7 +16,7 @@ import java.util.stream.Stream;
 /**
  * @author Armin Reichert
  */
-public class AssetMap {
+public class AssetStorage {
 
     private final List<ResourceBundle> bundles = new ArrayList<>();
     private final Map<String, Object> map = new HashMap<>();
@@ -30,34 +29,20 @@ public class AssetMap {
         return bundles;
     }
 
-    public void set(String key, Object value) {
+    public void store(String key, Object value) {
         map.put(key, value);
     }
 
     /**
      * Generic getter. Example usage:
      *
-     * <pre>
-     * AnyType value = assets.get("key.for.value");
-     * </pre>
-     *
-     * @param <T>  expected return type
-     * @param key resourceKey of value
-     * @return stored value cast to return type
+     * @param <T>  expected asset type
+     * @param key asset key
+     * @return stored asset cast to expected type
      */
     @SuppressWarnings("unchecked")
     public <T> T get(String key) {
         return (T) map.get(key);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> T get(String key, int i, int j) {
-        return (T) map.get(String.format("%s.%d.%d", key, i, j));
-    }
-
-    public Color color(String listKey, int i) {
-        List<Object> list = get(listKey);
-        return (Color) list.get(i);
     }
 
     public Color color(String key) {
@@ -84,11 +69,13 @@ public class AssetMap {
         return map.values().stream().filter(AudioClip.class::isInstance).map(AudioClip.class::cast);
     }
 
-    public long countEntriesOfType(Class<?> clazz) {
-        long count = map.values().stream().filter(val -> val.getClass().isAssignableFrom(clazz)).count();
-        for (var value : map.values()) {
-            if (value instanceof List<?> list) {
-                count += list.stream().filter(val -> val.getClass().isAssignableFrom(clazz)).count();
+    public long countAssetsOfClass(Class<?> assetClass) {
+        long count = map.values().stream()
+            .filter(asset -> asset.getClass().isAssignableFrom(assetClass)).count();
+        for (var mapValue : map.values()) {
+            if (mapValue instanceof List<?> assetList) {
+                count += assetList.stream()
+                    .filter(asset -> asset.getClass().isAssignableFrom(assetClass)).count();
             }
         }
         return count;
@@ -98,7 +85,7 @@ public class AssetMap {
         StringBuilder sb = new StringBuilder();
         int i = 0;
         for (Class<?> assetClass : assetTypesByClass.keySet()) {
-            long count = countEntriesOfType(assetClass);
+            long count = countAssetsOfClass(assetClass);
             sb.append(assetTypesByClass.get(assetClass)).append(" (").append(count).append(")");
             if (i < assetTypesByClass.size() - 1) {
                 sb.append(", ");

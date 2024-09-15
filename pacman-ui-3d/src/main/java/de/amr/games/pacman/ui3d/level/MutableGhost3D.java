@@ -8,7 +8,7 @@ import de.amr.games.pacman.lib.Vector2f;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.util.AssetMap;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.Interpolator;
@@ -72,7 +72,7 @@ public class MutableGhost3D {
     private final double size;
     private int numFlashes;
 
-    public MutableGhost3D(Model3D model3D, AssetMap assets, Ghost ghost, double size) {
+    public MutableGhost3D(Model3D model3D, AssetStorage assets, Ghost ghost, double size) {
         requireNonNull(model3D);
         requireNonNull(assets);
         requireNonNull(ghost);

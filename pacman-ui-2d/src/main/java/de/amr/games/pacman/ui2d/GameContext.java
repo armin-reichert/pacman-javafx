@@ -12,7 +12,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
-import de.amr.games.pacman.ui2d.util.AssetMap;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
 import javafx.beans.property.ObjectProperty;
 
@@ -42,7 +42,7 @@ public interface GameContext {
     Optional<GameScene> currentGameScene();
 
     // Resources
-    AssetMap assets();
+    AssetStorage assets();
     GameSpriteSheet spriteSheet(GameVariant variant);
     /**
      * Returns a translated text (for the current locale).

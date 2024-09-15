@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.PacManGames2dApp;
 import de.amr.games.pacman.ui2d.scene.*;
-import de.amr.games.pacman.ui2d.util.AssetMap;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui3d.model.Model3D;
@@ -40,7 +40,7 @@ import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_FLOOR_COLOR;
  */
 public class PacManGames3dApp extends Application {
 
-    private static void addAssets(AssetMap assets) {
+    private static void addAssets(AssetStorage assets) {
         // Load assets for 2D UI from other module
         PacManGames2dApp.addAssets(assets);
 
@@ -48,15 +48,15 @@ public class PacManGames3dApp extends Application {
 
         assets.addBundle(ResourceBundle.getBundle("de.amr.games.pacman.ui3d.texts.messages", rm.rootClass().getModule()));
 
-        assets.set("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
-        assets.set("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
-        assets.set("model3D.pellet", new Model3D(rm.url("model3D/fruit.obj")));
+        assets.store("model3D.pacman", new Model3D(rm.url("model3D/pacman.obj")));
+        assets.store("model3D.ghost",  new Model3D(rm.url("model3D/ghost.obj")));
+        assets.store("model3D.pellet", new Model3D(rm.url("model3D/fruit.obj")));
 
-        assets.set("wallpaper.day",   rm.loadImage("graphics/sea-wallpaper.jpg"));
-        assets.set("wallpaper.night", rm.loadImage("graphics/sea-wallpaper-night.jpg"));
+        assets.store("wallpaper.day",   rm.loadImage("graphics/sea-wallpaper.jpg"));
+        assets.store("wallpaper.night", rm.loadImage("graphics/sea-wallpaper-night.jpg"));
 
         Map<String, PhongMaterial> texturesByName = new LinkedHashMap<>();
-        assets.set("floorTextures", texturesByName);
+        assets.store("floorTextures", texturesByName);
         Stream.of("Carpet", "Rubber", "Wood").forEach(name -> {
             var texture = new PhongMaterial();
             texture.setBumpMap(rm.loadImage("graphics/textures/%s-bump.jpg".formatted(name.toLowerCase())));
@@ -65,51 +65,51 @@ public class PacManGames3dApp extends Application {
             texturesByName.put(name, texture);
         });
 
-        assets.set("ghost.0.color.normal.dress",      assets.color("palette.red"));
-        assets.set("ghost.0.color.normal.eyeballs",   assets.color("palette.pale"));
-        assets.set("ghost.0.color.normal.pupils",     assets.color("palette.blue"));
+        assets.store("ghost.0.color.normal.dress",      assets.color("palette.red"));
+        assets.store("ghost.0.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.store("ghost.0.color.normal.pupils",     assets.color("palette.blue"));
 
-        assets.set("ghost.1.color.normal.dress",      assets.color("palette.pink"));
-        assets.set("ghost.1.color.normal.eyeballs",   assets.color("palette.pale"));
-        assets.set("ghost.1.color.normal.pupils",     assets.color("palette.blue"));
+        assets.store("ghost.1.color.normal.dress",      assets.color("palette.pink"));
+        assets.store("ghost.1.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.store("ghost.1.color.normal.pupils",     assets.color("palette.blue"));
 
-        assets.set("ghost.2.color.normal.dress",      assets.color("palette.cyan"));
-        assets.set("ghost.2.color.normal.eyeballs",   assets.color("palette.pale"));
-        assets.set("ghost.2.color.normal.pupils",     assets.color("palette.blue"));
+        assets.store("ghost.2.color.normal.dress",      assets.color("palette.cyan"));
+        assets.store("ghost.2.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.store("ghost.2.color.normal.pupils",     assets.color("palette.blue"));
 
-        assets.set("ghost.3.color.normal.dress",      assets.color("palette.orange"));
-        assets.set("ghost.3.color.normal.eyeballs",   assets.color("palette.pale"));
-        assets.set("ghost.3.color.normal.pupils",     assets.color("palette.blue"));
+        assets.store("ghost.3.color.normal.dress",      assets.color("palette.orange"));
+        assets.store("ghost.3.color.normal.eyeballs",   assets.color("palette.pale"));
+        assets.store("ghost.3.color.normal.pupils",     assets.color("palette.blue"));
 
-        assets.set("ghost.color.frightened.dress",    assets.color("palette.blue"));
-        assets.set("ghost.color.frightened.eyeballs", assets.color("palette.rose"));
-        assets.set("ghost.color.frightened.pupils",   assets.color("palette.rose"));
+        assets.store("ghost.color.frightened.dress",    assets.color("palette.blue"));
+        assets.store("ghost.color.frightened.eyeballs", assets.color("palette.rose"));
+        assets.store("ghost.color.frightened.pupils",   assets.color("palette.rose"));
 
-        assets.set("ghost.color.flashing.dress",      assets.color("palette.pale"));
-        assets.set("ghost.color.flashing.eyeballs",   assets.color("palette.rose"));
-        assets.set("ghost.color.flashing.pupils",     assets.color("palette.red"));
+        assets.store("ghost.color.flashing.dress",      assets.color("palette.pale"));
+        assets.store("ghost.color.flashing.eyeballs",   assets.color("palette.rose"));
+        assets.store("ghost.color.flashing.pupils",     assets.color("palette.red"));
 
-        assets.set("ms_pacman.color.head",            Color.rgb(255, 255, 0));
-        assets.set("ms_pacman.color.eyes",            Color.rgb(33, 33, 33));
-        assets.set("ms_pacman.color.palate",          Color.rgb(240, 180, 160));
-        assets.set("ms_pacman.color.boobs",           Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
-        assets.set("ms_pacman.color.hairbow",         Color.rgb(255, 0, 0));
-        assets.set("ms_pacman.color.hairbow.pearls",  Color.rgb(33, 33, 255));
+        assets.store("ms_pacman.color.head",            Color.rgb(255, 255, 0));
+        assets.store("ms_pacman.color.eyes",            Color.rgb(33, 33, 33));
+        assets.store("ms_pacman.color.palate",          Color.rgb(240, 180, 160));
+        assets.store("ms_pacman.color.boobs",           Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
+        assets.store("ms_pacman.color.hairbow",         Color.rgb(255, 0, 0));
+        assets.store("ms_pacman.color.hairbow.pearls",  Color.rgb(33, 33, 255));
 
-        assets.set("tengen.color.head",            Color.rgb(255, 255, 0));
-        assets.set("tengen.color.eyes",            Color.rgb(33, 33, 33));
-        assets.set("tengen.color.palate",          Color.rgb(240, 180, 160));
-        assets.set("tengen.color.boobs",           Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
-        assets.set("tengen.color.hairbow",         Color.rgb(255, 0, 0));
-        assets.set("tengen.color.hairbow.pearls",  Color.rgb(33, 33, 255));
+        assets.store("tengen.color.head",            Color.rgb(255, 255, 0));
+        assets.store("tengen.color.eyes",            Color.rgb(33, 33, 33));
+        assets.store("tengen.color.palate",          Color.rgb(240, 180, 160));
+        assets.store("tengen.color.boobs",           Color.rgb(255, 255, 0).deriveColor(0, 1.0, 0.96, 1.0));
+        assets.store("tengen.color.hairbow",         Color.rgb(255, 0, 0));
+        assets.store("tengen.color.hairbow.pearls",  Color.rgb(33, 33, 255));
 
-        assets.set("pacman.color.head",               Color.rgb(255, 255, 0));
-        assets.set("pacman.color.eyes",               Color.rgb(33, 33, 33));
-        assets.set("pacman.color.palate",             Color.rgb(240, 180, 160));
+        assets.store("pacman.color.head",               Color.rgb(255, 255, 0));
+        assets.store("pacman.color.eyes",               Color.rgb(33, 33, 33));
+        assets.store("pacman.color.palate",             Color.rgb(240, 180, 160));
 
-        assets.set("pacman_xxl.color.head",               Color.rgb(255, 255, 0));
-        assets.set("pacman_xxl.color.eyes",               Color.rgb(33, 33, 33));
-        assets.set("pacman_xxl.color.palate",             Color.rgb(240, 180, 160));
+        assets.store("pacman_xxl.color.head",               Color.rgb(255, 255, 0));
+        assets.store("pacman_xxl.color.eyes",               Color.rgb(33, 33, 33));
+        assets.store("pacman_xxl.color.palate",             Color.rgb(240, 180, 160));
 
         GameSounds.setAssets(assets);
     }

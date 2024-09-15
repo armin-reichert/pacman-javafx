@@ -11,7 +11,7 @@ import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
-import de.amr.games.pacman.ui2d.util.AssetMap;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.CanvasLayoutPane;
 import de.amr.games.pacman.ui2d.util.DecoratedCanvas;
 import de.amr.games.pacman.ui2d.util.Ufx;
@@ -58,7 +58,7 @@ public class GamePage extends StackPane implements Page {
         this.context = checkNotNull(context);
         this.parentScene = checkNotNull(parentScene);
 
-        AssetMap assets = context.assets();
+        AssetStorage assets = context.assets();
 
         canvasLayer.setBackground(assets.background("wallpaper.background"));
         canvasLayer.setMinScaling(0.75);

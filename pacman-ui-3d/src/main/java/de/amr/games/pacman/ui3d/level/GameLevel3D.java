@@ -16,7 +16,7 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
-import de.amr.games.pacman.ui2d.util.AssetMap;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui3d.animation.Squirting;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.animation.*;
@@ -96,7 +96,7 @@ public class GameLevel3D {
     public GameLevel3D(GameContext context) {
         this.context = checkNotNull(context);
 
-        final AssetMap assets = context.assets();
+        final AssetStorage assets = context.assets();
         final GameModel game  = context.game();
         final GameWorld world = game.world();
 
@@ -270,7 +270,7 @@ public class GameLevel3D {
     }
 
     private Node createLivesCounterShape(GameVariant variant) {
-        AssetMap assets = context.assets();
+        AssetStorage assets = context.assets();
         return switch (variant) {
             case MS_PACMAN, MS_PACMAN_TENGEN -> new Group(
                 PacModel3D.createPacShape(

@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.ui2d.util.AssetMap;
+import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -43,7 +43,7 @@ public class GameSounds {
 
     private static final BooleanProperty mutedPy = new SimpleBooleanProperty(false);
 
-    private static AssetMap assets;
+    private static AssetStorage assets;
 
     // These are created when game variant changes
     private static MediaPlayer gameOverSound;
@@ -59,7 +59,7 @@ public class GameSounds {
     private static Siren siren;
     private static MediaPlayer voice;
 
-    public static void setAssets(AssetMap assets) {
+    public static void setAssets(AssetStorage assets) {
         GameSounds.assets = checkNotNull(assets);
     }
 
