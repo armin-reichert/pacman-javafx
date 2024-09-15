@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.model.GameModel;
-import javafx.geometry.Rectangle2D;
+import de.amr.games.pacman.ui2d.rendering.SpriteArea;
 
 import static de.amr.games.pacman.lib.Globals.RND;
 import static de.amr.games.pacman.lib.Globals.t;
@@ -73,19 +73,19 @@ public class BootScene extends GameScene2D {
                 var splitX = GameModel.ARCADE_MAP_TILES_X / 8 + RND.nextInt(GameModel.ARCADE_MAP_TILES_X / 4);
                 for (int col = 0; col < GameModel.ARCADE_MAP_TILES_X / 2; ++col) {
                     var region = col < splitX ? region1 : region2;
-                    spriteRenderer.drawSpriteScaled(g, region, region.getWidth() * col, region.getHeight() * row);
+                    spriteRenderer.drawSpriteScaled(g, region, region.width() * col, region.height() * row);
                 }
             }
         }
     }
 
-    private Rectangle2D randomSpriteSheetTile() {
+    private SpriteArea randomSpriteSheetTile() {
         var spriteSheet = context.spriteSheet(context.game().variant());
         var source = spriteSheet.source();
         var raster = spriteSheet.raster();
-        double x = RND.nextDouble() * (source.getWidth() - raster);
-        double y = RND.nextDouble() * (source.getHeight() - raster);
-        return new Rectangle2D(x, y, raster, raster);
+        int x = (int)(RND.nextDouble() * ((int)source.getWidth() - raster));
+        int y = (int)(RND.nextDouble() * ((int)source.getHeight() - raster));
+        return new SpriteArea(x, y, raster, raster);
     }
 
     private void paintGrid() {

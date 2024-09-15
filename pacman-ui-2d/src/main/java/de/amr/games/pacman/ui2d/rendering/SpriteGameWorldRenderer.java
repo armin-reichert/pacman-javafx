@@ -12,7 +12,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -105,7 +104,7 @@ public class SpriteGameWorldRenderer {
             g.save();
             g.scale(scalingPy.get(), scalingPy.get());
             if (blinkingOn) {
-                Rectangle2D emptyMazeBright = spriteSheet.highlightedMaze(mapNumber);
+                SpriteArea emptyMazeBright = spriteSheet.highlightedMaze(mapNumber);
                 drawSubImage(g, spriteSheet.getFlashingMazesImage(), emptyMazeBright, x - 3, y);
             } else {
                 drawSprite(g, spriteSheet.emptyMaze(mapNumber), x, y);
@@ -133,11 +132,11 @@ public class SpriteGameWorldRenderer {
             drawSpriteCenteredOverBox(g, sprite, x, y);
             g.setFont(font);
             g.setFill(textColor.darker());
-            var numberX = s(x + sprite.getWidth() - 25);
+            var numberX = s(x + sprite.width() - 25);
             var numberY = s(y + 18);
             g.setFill(textColor);
             g.fillText(animation.number(), numberX, numberY);
-            var textX = s(x + sprite.getWidth());
+            var textX = s(x + sprite.width());
             g.fillText(animation.text(), textX, numberY);
         }
     }
@@ -244,7 +243,7 @@ public class SpriteGameWorldRenderer {
      * @param x             scaled x-coordinate
      * @param y             scaled y-coordinate
      */
-    public void drawSprite(GraphicsContext g, Rectangle2D sprite, double x, double y) {
+    public void drawSprite(GraphicsContext g, SpriteArea sprite, double x, double y) {
         drawSubImage(g,  spriteSheet.source(), sprite, x, y);
     }
 
@@ -257,11 +256,11 @@ public class SpriteGameWorldRenderer {
      * @param x             scaled x-coordinate
      * @param y             scaled y-coordinate
      */
-    public void drawSubImage(GraphicsContext g, Image sourceImage, Rectangle2D sprite, double x, double y) {
+    public void drawSubImage(GraphicsContext g, Image sourceImage, SpriteArea sprite, double x, double y) {
         if (sprite != null) {
             g.drawImage(sourceImage,
-                sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
-                x, y, sprite.getWidth(), sprite.getHeight());
+                sprite.x(), sprite.y(), sprite.width(), sprite.height(),
+                x, y, sprite.width(), sprite.height());
         }
     }
 
@@ -273,11 +272,11 @@ public class SpriteGameWorldRenderer {
      * @param x         UNSCALED x position
      * @param y         UNSCALED y position
      */
-    public void drawSpriteScaled(GraphicsContext g, Rectangle2D sprite, double x, double y) {
+    public void drawSpriteScaled(GraphicsContext g, SpriteArea sprite, double x, double y) {
         if (sprite != null) {
             g.drawImage(spriteSheet.source(),
-                sprite.getMinX(), sprite.getMinY(), sprite.getWidth(), sprite.getHeight(),
-                s(x), s(y), s(sprite.getWidth()), s(sprite.getHeight()));
+                sprite.x(), sprite.y(), sprite.width(), sprite.height(),
+                s(x), s(y), s(sprite.width()), s(sprite.height()));
         }
     }
 
@@ -291,8 +290,8 @@ public class SpriteGameWorldRenderer {
      * @param x         x-coordinate of left-upper corner of bounding box
      * @param y         y-coordinate of left-upper corner of bounding box
      */
-    public void drawSpriteCenteredOverBox(GraphicsContext g, Rectangle2D sprite, double x, double y) {
-        drawSpriteScaled(g, sprite, x + HTS - 0.5 * sprite.getWidth(), y + HTS - 0.5 * sprite.getHeight());
+    public void drawSpriteCenteredOverBox(GraphicsContext g, SpriteArea sprite, double x, double y) {
+        drawSpriteScaled(g, sprite, x + HTS - 0.5 * sprite.width(), y + HTS - 0.5 * sprite.height());
     }
 
     /**
@@ -302,7 +301,7 @@ public class SpriteGameWorldRenderer {
      * @param entity    an entity like Pac-Man or a ghost
      * @param sprite    sprite sheet region (can be null)
      */
-    public void drawEntitySprite(GraphicsContext g, Entity entity, Rectangle2D sprite) {
+    public void drawEntitySprite(GraphicsContext g, Entity entity, SpriteArea sprite) {
         if (entity.isVisible()) {
             drawSpriteCenteredOverBox(g,  sprite, entity.posX(), entity.posY());
         }

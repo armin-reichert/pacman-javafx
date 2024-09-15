@@ -5,6 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.util;
 
 import de.amr.games.pacman.model.actors.Animations;
+import de.amr.games.pacman.ui2d.rendering.SpriteArea;
 import javafx.geometry.Rectangle2D;
 import org.tinylog.Logger;
 
@@ -24,7 +25,7 @@ public abstract class SpriteAnimations implements Animations {
         return currentAnimationName != null ? animation(currentAnimationName) : null;
     }
 
-    public abstract Rectangle2D currentSprite();
+    public abstract SpriteArea currentSprite();
 
     public abstract SpriteAnimation animation(String name);
 

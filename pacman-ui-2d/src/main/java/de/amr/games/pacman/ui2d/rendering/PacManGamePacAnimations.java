@@ -8,7 +8,6 @@ import de.amr.games.pacman.lib.Direction;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
-import javafx.geometry.Rectangle2D;
 
 import java.util.Map;
 
@@ -57,7 +56,7 @@ public class PacManGamePacAnimations extends SpriteAnimations {
     }
 
     @Override
-    public Rectangle2D currentSprite() {
+    public SpriteArea currentSprite() {
         var currentAnimation = currentAnimation();
         if (Pac.ANIM_MUNCHING.equals(currentAnimationName)) {
             currentAnimation.setSprites(spriteSheet.pacMunchingSprites(pac.moveDir()));

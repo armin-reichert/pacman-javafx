@@ -45,7 +45,7 @@ public class ClapperboardAnimation {
         }
     }
 
-    public Rectangle2D currentSprite(Rectangle2D[] sprites) {
+    public SpriteArea currentSprite(SpriteArea[] sprites) {
         if (tick == 0) {
             return sprites[CLOSED];
         }

@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.ui2d.util.SpriteSheet;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 
 /**
@@ -15,27 +14,27 @@ public interface GameSpriteSheet extends SpriteSheet {
 
     Image getFlashingMazeImage();
 
-    Rectangle2D getFullMazeSprite();
+    SpriteArea getFullMazeSprite();
 
-    Rectangle2D getEmptyMazeSprite();
+    SpriteArea getEmptyMazeSprite();
 
-    Rectangle2D livesCounterSprite();
+    SpriteArea livesCounterSprite();
 
-    Rectangle2D highlightedMaze(int mapNumber);
+    SpriteArea highlightedMaze(int mapNumber);
 
     Image getFlashingMazesImage();
 
-    Rectangle2D emptyMaze(int mapNumber);
+    SpriteArea emptyMaze(int mapNumber);
 
-    Rectangle2D filledMaze(int mapNumber);
+    SpriteArea filledMaze(int mapNumber);
 
-    Rectangle2D[] clapperboardSprites();
+    SpriteArea[] clapperboardSprites();
 
-    Rectangle2D bonusSymbolSprite(byte symbol);
+    SpriteArea bonusSymbolSprite(byte symbol);
 
-    Rectangle2D bonusValueSprite(byte symbol);
+    SpriteArea bonusValueSprite(byte symbol);
 
-    Rectangle2D ghostFacingRight(byte id);
+    SpriteArea ghostFacingRight(byte id);
 
-    Rectangle2D getEnergizerSprite();
+    SpriteArea getEnergizerSprite();
 }

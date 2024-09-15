@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.util;
 
+import de.amr.games.pacman.ui2d.rendering.SpriteArea;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -21,17 +22,17 @@ public interface SpriteSheet {
      * @param n number of raster tiles
      * @return pixels spanned by raster cells
      */
-    default double r(double n) {
+    default int r(int n) {
         return n * raster();
     }
 
     Image source();
 
-    default Rectangle2D rect(double x, double y, double width, double height) {
-        return new Rectangle2D(x, y, width, height);
+    default SpriteArea rect(int x, int y, int width, int height) {
+        return new SpriteArea(x, y, width, height);
     }
 
-    default Rectangle2D[] array(Rectangle2D... sprites) {
+    default SpriteArea[] array(SpriteArea... sprites) {
         return sprites;
     }
 
@@ -39,8 +40,8 @@ public interface SpriteSheet {
      * @param r spritesheet region
      * @return image (copy) of spritesheet region
      */
-    default Image subImage(Rectangle2D r) {
-        return subImage((int) r.getMinX(), (int) r.getMinY(), (int) r.getWidth(), (int) r.getHeight());
+    default Image subImage(SpriteArea r) {
+        return subImage(r.x(), r.y(), r.width(), r.height());
     }
 
     /**
@@ -65,7 +66,7 @@ public interface SpriteSheet {
      * @param tileY grid row
      * @return square tile at given grid position
      */
-    default Rectangle2D tile(int tileX, int tileY) {
+    default SpriteArea tile(int tileX, int tileY) {
         return rect(r(tileX), r(tileY), r(1), r(1));
     }
 
@@ -76,15 +77,15 @@ public interface SpriteSheet {
      * @param numTiles number of tiles
      * @return horizontal stripe of tiles at given grid position
      */
-    default Rectangle2D[] tilesRightOf(int offsetX, int tileX, int tileY, int numTiles) {
-        var tiles = new Rectangle2D[numTiles];
+    default SpriteArea[] tilesRightOf(int offsetX, int tileX, int tileY, int numTiles) {
+        var tiles = new SpriteArea[numTiles];
         for (int i = 0; i < numTiles; ++i) {
             tiles[i] = rect(offsetX + r(tileX + i), r(tileY), raster(), raster());
         }
         return tiles;
     }
 
-    default Rectangle2D[] tilesRightOf(int tileX, int tileY, int numTiles) {
+    default SpriteArea[] tilesRightOf(int tileX, int tileY, int numTiles) {
         return tilesRightOf(0, tileX, tileY, numTiles);
     }
 }

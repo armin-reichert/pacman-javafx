@@ -16,6 +16,7 @@ import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.SpriteArea;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.util.Picker;
 import de.amr.games.pacman.ui3d.level.*;
@@ -24,7 +25,6 @@ import javafx.animation.SequentialTransition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -241,7 +241,7 @@ public class PlayScene3D implements GameScene {
         switch (context.game().variant()) {
             case MS_PACMAN, MS_PACMAN_TENGEN -> {
                 var ss = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
-                Rectangle2D[] numberSprites = ss.ghostNumberSprites();
+                SpriteArea[] numberSprites = ss.ghostNumberSprites();
                 context.game().eventLog().killedGhosts.forEach(ghost -> {
                     int index = context.game().victims().indexOf(ghost);
                     var numberImage = ss.subImage(numberSprites[index]);
@@ -250,7 +250,7 @@ public class PlayScene3D implements GameScene {
             }
             case PACMAN, PACMAN_XXL -> {
                 var ss = (PacManGameSpriteSheet) context.spriteSheet(context.game().variant());
-                Rectangle2D[] numberSprites = ss.ghostNumberSprites();
+                SpriteArea[] numberSprites = ss.ghostNumberSprites();
                 context.game().eventLog().killedGhosts.forEach(ghost -> {
                     int index = context.game().victims().indexOf(ghost);
                     var numberImage = ss.subImage(numberSprites[index]);

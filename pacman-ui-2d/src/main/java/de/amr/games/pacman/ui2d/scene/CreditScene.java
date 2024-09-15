@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.ui2d.GameAction;
-import javafx.geometry.Rectangle2D;
+import de.amr.games.pacman.ui2d.rendering.SpriteArea;
 
 import static de.amr.games.pacman.lib.Globals.t;
 
@@ -43,7 +43,7 @@ public class CreditScene extends GameScene2D {
         var rose = context.assets().color("palette.rose");
         switch (context.game().variant()) {
             case MS_PACMAN, MS_PACMAN_TENGEN -> {
-                Rectangle2D livesCounterSprite = spriteRenderer.spriteSheet().livesCounterSprite();
+                SpriteArea livesCounterSprite = spriteRenderer.spriteSheet().livesCounterSprite();
                 spriteRenderer.drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(16));
                 spriteRenderer.drawText(g, "1 PLAYER ONLY", orange, font8, t(8), t(18));
                 spriteRenderer.drawText(g, "ADDITIONAL    AT 10000", orange, font8, t(2), t(25));
