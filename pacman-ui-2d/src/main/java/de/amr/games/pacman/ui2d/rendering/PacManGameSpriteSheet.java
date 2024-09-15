@@ -23,10 +23,10 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
     private final Image source;
     private final Image flashingMazeImage;
 
-    public PacManGameSpriteSheet() {
+    public PacManGameSpriteSheet(String resourcePath) {
         ResourceManager rm = this::getClass;
-        this.source = rm.loadImage("/de/amr/games/pacman/ui2d/graphics/pacman/pacman_spritesheet.png");
-        this.flashingMazeImage = rm.loadImage("/de/amr/games/pacman/ui2d/graphics/pacman/maze_flashing.png");
+        this.source = rm.loadImage(resourcePath + "pacman_spritesheet.png");
+        this.flashingMazeImage = rm.loadImage(resourcePath + "maze_flashing.png");
     }
 
     @Override

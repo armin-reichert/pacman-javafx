@@ -174,7 +174,7 @@ public class PacManGames2dApp extends Application {
         // Pac-Man game
         //
 
-        assets.store("pacman.spritesheet",              new PacManGameSpriteSheet());
+        assets.store("pacman.spritesheet",              new PacManGameSpriteSheet("/de/amr/games/pacman/ui2d/graphics/pacman/"));
         assets.store("pacman.startpage.image1",         rm.loadImage("graphics/pacman/pacman_flyer.png"));
         assets.store("pacman.startpage.image2",         rm.loadImage("graphics/pacman/pacman_flyer2.jpg"));
         assets.store("pacman.helpButton.icon",          rm.loadImage("graphics/icons/help-blue-64.png"));
@@ -204,11 +204,11 @@ public class PacManGames2dApp extends Application {
         //
         // Pac-Man XXL
         //
-        assets.store("pacman_xxl.icon",                 rm.loadImage("graphics/icons/pacman.png"));
-        assets.store("pacman_xxl.helpButton.icon",      rm.loadImage("graphics/icons/help-blue-64.png"));
-        assets.store("pacman_xxl.startpage.image",      rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
+        assets.store("pacman_xxl.icon",                     rm.loadImage("graphics/icons/pacman.png"));
+        assets.store("pacman_xxl.helpButton.icon",          rm.loadImage("graphics/icons/help-blue-64.png"));
+        assets.store("pacman_xxl.startpage.image",          rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
 
-        assets.store("pacman_xxl.spritesheet",              new PacManGameSpriteSheet());
+        assets.store("pacman_xxl.spritesheet", new PacManGameSpriteSheet("/de/amr/games/pacman/ui2d/graphics/pacman/"));
 
         // Clips
         assets.store("pacman_xxl.audio.bonus_eaten",        rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));
