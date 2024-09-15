@@ -23,11 +23,13 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.*;
+import java.util.EnumMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_ENABLED;
@@ -161,13 +163,12 @@ public class PacManGames3dApp extends Application {
         ui.start();
 
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
-        Logger.info("Assets: {}", ui.assets().summary(List.of(
-            new Pair<>(Model3D.class,"3D models"),
-            new Pair<>(Image.class, "images"),
-            new Pair<>(Font.class, "fonts"),
-            new Pair<>(Color.class, "colors"),
-            new Pair<>(AudioClip.class, "audio clips")
-        )));
+        Logger.info("Assets: {}", ui.assets().summary(Map.of(
+            Model3D.class,"3D models",
+            Image.class, "images",
+            Font.class, "fonts",
+            Color.class, "colors",
+            AudioClip.class, "audio clips")));
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }
 

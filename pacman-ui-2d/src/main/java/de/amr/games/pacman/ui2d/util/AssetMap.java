@@ -94,13 +94,13 @@ public class AssetMap {
         return count;
     }
 
-    public String summary(List<Pair<Class<?>, String>> pairs) {
+    public String summary(Map<Class<?>, String> assetTypesByClass) {
         StringBuilder sb = new StringBuilder();
         int i = 0;
-        for (var pair : pairs) {
-            long count = countEntriesOfType(pair.getKey());
-            sb.append(pair.getValue()).append(" (").append(count).append(")");
-            if (i < pairs.size() - 1) {
+        for (Class<?> assetClass : assetTypesByClass.keySet()) {
+            long count = countEntriesOfType(assetClass);
+            sb.append(assetTypesByClass.get(assetClass)).append(" (").append(count).append(")");
+            if (i < assetTypesByClass.size() - 1) {
                 sb.append(", ");
             }
             i += 1;

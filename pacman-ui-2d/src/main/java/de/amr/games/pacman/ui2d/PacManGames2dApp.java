@@ -22,12 +22,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 import org.tinylog.Logger;
 
 import java.io.File;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -268,12 +266,9 @@ public class PacManGames2dApp extends Application {
         ui.start();
 
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
-        Logger.info("Assets loaded: {}", ui.assets().summary(List.of(
-            new Pair<>(Image.class, "images"),
-            new Pair<>(Font.class, "fonts"),
-            new Pair<>(Color.class, "colors"),
-            new Pair<>(AudioClip.class, "audio clips")
-        )));
+        Logger.info("Assets loaded: {}", ui.assets().summary(
+            Map.of(Image.class, "images",  Font.class, "fonts", Color.class, "colors", AudioClip.class, "audio clips")
+        ));
         Logger.info("Application started. Stage size: {0} x {0} px", stage.getWidth(), stage.getHeight());
     }
 
