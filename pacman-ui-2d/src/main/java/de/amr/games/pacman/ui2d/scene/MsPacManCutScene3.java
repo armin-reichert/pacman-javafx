@@ -11,9 +11,9 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.rendering.ClapperboardAnimation;
-import de.amr.games.pacman.ui2d.rendering.MsPacManGamePacAnimations;
-import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 
 import static de.amr.games.pacman.lib.Globals.TS;

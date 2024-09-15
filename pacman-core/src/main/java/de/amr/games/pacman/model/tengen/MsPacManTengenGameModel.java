@@ -44,8 +44,8 @@ import static de.amr.games.pacman.lib.Globals.*;
  */
 public class MsPacManTengenGameModel extends GameModel {
 
-    private static final int NUM_MAPS = 21; //TODO adapt
-    private static final String MAP_PATH_PATTERN = "/de/amr/games/pacman/maps/tengen/map%02d.world";
+    private static final String NON_ARCADE_MAPS_PATH = "/de/amr/games/pacman/maps/tengen/non_arcade/map%02d.world";
+    private static final String ARCADE_MAPS_PATH = "/de/amr/games/pacman/maps/tengen/arcade/map%02d.world";
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
@@ -60,17 +60,24 @@ public class MsPacManTengenGameModel extends GameModel {
 
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
-    private final List<WorldMap> standardMaps = new ArrayList<>();
+    private final List<WorldMap> maps = new ArrayList<>();
     private int mapNumber;
-    public boolean blueMazeBug = false;
 
     public MsPacManTengenGameModel(File userDir) {
         super(userDir);
         initialLives = 3;
         highScoreFile = new File(userDir, "highscore-ms_pacman_tengen.xml");
-        for (int num = 1; num <= NUM_MAPS; ++num) {
-            URL url = getClass().getResource(MAP_PATH_PATTERN.formatted(num));
-            standardMaps.add(new WorldMap(url));
+        for (int num = 1; num <= 9; ++num) {
+            URL url = getClass().getResource(ARCADE_MAPS_PATH.formatted(num));
+            if (url != null) {
+                maps.add(new WorldMap(url));
+            }
+        }
+        for (int num = 1; num <= 36; ++num) {
+            URL url = getClass().getResource(NON_ARCADE_MAPS_PATH.formatted(num));
+            if (url != null) {
+                maps.add(new WorldMap(url));
+            }
         }
     }
 
@@ -80,15 +87,8 @@ public class MsPacManTengenGameModel extends GameModel {
     }
 
     private int mapNumberByLevelNumber(int levelNumber) {
-        return levelNumber <= NUM_MAPS ? levelNumber : Globals.randomInt(1, NUM_MAPS + 1);
-    }
-
-    /**
-     * Used by sprite based renderer to select the image for the maze.
-     * @return map number (1-6)
-     */
-    public int currentMapNumber() {
-        return mapNumber;
+        int numMaps = maps.size();
+        return levelNumber <= numMaps ? levelNumber : Globals.randomInt(1, numMaps + 1);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class MsPacManTengenGameModel extends GameModel {
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
         mapNumber = mapNumberByLevelNumber(levelNumber);
-        var map = standardMaps.get(mapNumber - 1);
+        var map = maps.get(mapNumber - 1);
         setWorldAndCreatePopulation(createWorld(map));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
@@ -116,8 +116,8 @@ public class MsPacManTengenGameModel extends GameModel {
     @Override
     public void buildDemoLevel() {
         levelNumber = 1;
-        mapNumber = randomInt(1, NUM_MAPS + 1);
-        setWorldAndCreatePopulation(createWorld(standardMaps.get(mapNumber-1)));
+        mapNumber = randomInt(1, maps.size() + 1);
+        setWorldAndCreatePopulation(createWorld(maps.get(mapNumber-1)));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);

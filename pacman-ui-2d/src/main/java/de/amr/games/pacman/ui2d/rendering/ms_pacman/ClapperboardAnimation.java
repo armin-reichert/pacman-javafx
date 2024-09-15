@@ -2,9 +2,9 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.ui2d.rendering;
+package de.amr.games.pacman.ui2d.rendering.ms_pacman;
 
-import javafx.geometry.Rectangle2D;
+import de.amr.games.pacman.ui2d.rendering.SpriteArea;
 
 /**
  * @author Armin Reichert
