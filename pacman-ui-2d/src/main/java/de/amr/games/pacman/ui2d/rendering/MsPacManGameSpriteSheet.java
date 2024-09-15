@@ -82,7 +82,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     private final SpriteArea[][] msPacManMunchingSprites = new SpriteArea[4][];
-
     {
         for (byte d = 0; d < 4; ++d) {
             var wide = sprite(0, d);
@@ -97,7 +96,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     private final SpriteArea[] msPacManDyingSprites;
-
     {
         var right = sprite(1, 0);
         var left = sprite(1, 1);
@@ -112,7 +110,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     private final SpriteArea[][][] ghostsNormalSprites = new SpriteArea[4][4][];
-
     {
         for (byte id = 0; id < 4; ++id) {
             for (byte d = 0; d < 4; ++d) {
@@ -144,7 +141,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     private final SpriteArea[][] ghostEyesSprites = new SpriteArea[4][];
-
     {
         for (byte d = 0; d < 4; ++d) {
             ghostEyesSprites[d] = array(sprite(8 + d, 5));
@@ -180,7 +176,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     private final SpriteArea[] highlightedMazeSprites = new SpriteArea[MS_PACMAN_MAZE_COUNT];
-
     {
         for (byte mazeNumber = 1; mazeNumber <= 6; ++mazeNumber) {
             highlightedMazeSprites[mazeNumber - 1] = new SpriteArea(
@@ -195,7 +190,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     private final SpriteArea[] emptyMazeSprites = new SpriteArea[MS_PACMAN_MAZE_COUNT];
-
     {
         for (byte mazeNumber = 1; mazeNumber <= 6; ++mazeNumber) {
             emptyMazeSprites[mazeNumber - 1] = rect(SECOND_COLUMN, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT,
@@ -209,7 +203,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     private final SpriteArea[] filledMazeSprites = new SpriteArea[MS_PACMAN_MAZE_COUNT];
-
     {
         for (byte mazeNumber = 1; mazeNumber <= 6; ++mazeNumber) {
             filledMazeSprites[mazeNumber - 1] = rect(0, (mazeNumber - 1) * MAZE_IMAGE_HEIGHT,
@@ -228,7 +221,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     private final SpriteArea[][] pacManMunchingSprites = new SpriteArea[4][];
-
     {
         for (byte d = 0; d < 4; ++d) {
             pacManMunchingSprites[d] = array(sprite(0, 9 + d), sprite(1, 9 + d), sprite(2, 9));

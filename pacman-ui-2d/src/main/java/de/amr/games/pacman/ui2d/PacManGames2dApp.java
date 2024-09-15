@@ -238,7 +238,7 @@ public class PacManGames2dApp extends Application {
         Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant = new EnumMap<>(GameVariant.class);
         for (GameVariant variant : GameVariant.values()) {
             switch (variant) {
-                case MS_PACMAN ->
+                case MS_PACMAN, MS_PACMAN_TENGEN ->
                     gameScenesForVariant.put(variant, new EnumMap<>(Map.of(
                         GameSceneID.BOOT_SCENE,   new BootScene(),
                         GameSceneID.INTRO_SCENE,  new MsPacManIntroScene(),
