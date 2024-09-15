@@ -31,7 +31,7 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.GameParameters.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.border;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 

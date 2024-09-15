@@ -7,7 +7,6 @@ package de.amr.games.pacman.ui2d.scene;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GameParameters;
 import de.amr.games.pacman.ui2d.rendering.SpriteGameWorldRenderer;
 import javafx.beans.property.*;
 import javafx.scene.Node;
@@ -19,6 +18,7 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_CANVAS_COLOR;
 
 /**
  * Base class of all 2D scenes.
@@ -71,7 +71,7 @@ public class GameScene2D implements GameScene {
 
     @Override
     public void init() {
-        backgroundColorPy.bind(GameParameters.PY_CANVAS_COLOR);
+        backgroundColorPy.bind(PY_CANVAS_COLOR);
         spriteRenderer.scalingPy.bind(scalingPy);
         spriteRenderer.backgroundColorPy.bind(backgroundColorPy);
         spriteRenderer.setSpriteSheet(context.spriteSheet(context.game().variant()));

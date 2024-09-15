@@ -18,7 +18,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.GameParameters;
 import de.amr.games.pacman.ui2d.GameSounds;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -30,8 +29,8 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.maps.editor.TileMapUtil.getColorFromMap;
 import static de.amr.games.pacman.model.GameWorld.*;
-import static de.amr.games.pacman.model.GameWorld.PROPERTY_COLOR_FOOD;
-import static de.amr.games.pacman.ui2d.GameParameters.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static java.util.function.Predicate.not;
 
 /**
@@ -72,7 +71,7 @@ public class PlayScene2D extends GameScene2D {
         } else {
             context.setScoreVisible(true);
             context.game().pac().setUseAutopilot(PY_AUTOPILOT.get());
-            context.game().pac().setImmune(GameParameters.PY_IMMUNITY.get());
+            context.game().pac().setImmune(PY_IMMUNITY.get());
             updatePlaySceneSound();
         }
     }

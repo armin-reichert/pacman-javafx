@@ -10,7 +10,6 @@ import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GameParameters;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.BooleanProperty;
@@ -22,6 +21,8 @@ import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.HBox;
 import org.tinylog.Logger;
+
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_CANVAS_COLOR;
 
 /**
  * @author Armin Reichert
@@ -71,7 +72,7 @@ public class PictureInPictureView implements GameEventListener {
         HBox pane = new HBox(canvas);
         pane.opacityProperty().bind(opacityPy);
         pane.visibleProperty().bind(visiblePy);
-        pane.backgroundProperty().bind(GameParameters.PY_CANVAS_COLOR.map(Ufx::coloredBackground));
+        pane.backgroundProperty().bind(PY_CANVAS_COLOR.map(Ufx::coloredBackground));
         pane.setPadding(new Insets(5,10,5,10));
 
         layout.getChildren().add(pane);

@@ -14,13 +14,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 import java.io.File;
 
-import static de.amr.games.pacman.ui2d.GameParameters.PY_MAP_SELECTION_MODE;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_MAP_SELECTION_MODE;
 
 /**
  * @author Armin Reichert

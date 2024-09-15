@@ -13,7 +13,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GameParameters;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
@@ -34,8 +33,10 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
-import static de.amr.games.pacman.ui3d.GameParameters3D.*;
+import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
 /**
  * 3D play scene.
@@ -152,7 +153,7 @@ public class PlayScene3D implements GameScene {
         } else {
             context.setScoreVisible(true);
             context.game().pac().setUseAutopilot(PY_AUTOPILOT.get());
-            context.game().pac().setImmune(GameParameters.PY_IMMUNITY.get());
+            context.game().pac().setImmune(PY_IMMUNITY.get());
         }
 
         // Scores

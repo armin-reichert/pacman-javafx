@@ -17,7 +17,7 @@ import javafx.scene.shape.DrawMode;
 import java.util.Map;
 
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
-import static de.amr.games.pacman.ui3d.GameParameters3D.*;
+import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
 /**
  * User interface for the Pac-Man game variants (Pac-Man, Pac-Man XXL, Ms. Pac-Man) with a 3D

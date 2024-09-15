@@ -38,7 +38,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.maps.editor.TileMapUtil.getColorFromMap;
 import static de.amr.games.pacman.ui2d.util.Ufx.*;
-import static de.amr.games.pacman.ui3d.GameParameters3D.*;
+import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
 /**
  * @author Armin Reichert

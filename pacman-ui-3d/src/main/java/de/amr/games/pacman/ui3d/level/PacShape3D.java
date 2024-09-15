@@ -26,7 +26,7 @@ import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_PAC_LIGHT_ENABLED;
+import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PAC_LIGHT_ENABLED;
 import static de.amr.games.pacman.ui3d.model.Model3D.meshViewById;
 
 /**

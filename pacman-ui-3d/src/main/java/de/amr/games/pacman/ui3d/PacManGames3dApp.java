@@ -14,12 +14,14 @@ import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.application.Application;
+import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -32,13 +34,24 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
-import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_ENABLED;
-import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_FLOOR_COLOR;
-
 /**
  * @author Armin Reichert
  */
 public class PacManGames3dApp extends Application {
+
+    public static final String NO_TEXTURE = "No Texture";
+
+    public static final BooleanProperty PY_3D_AXES_VISIBLE                   = new SimpleBooleanProperty(false);
+    public static final ObjectProperty<DrawMode> PY_3D_DRAW_MODE             = new SimpleObjectProperty<>(DrawMode.FILL);
+    public static final BooleanProperty             PY_3D_ENABLED            = new SimpleBooleanProperty(false);
+    public static final BooleanProperty             PY_3D_ENERGIZER_EXPLODES = new SimpleBooleanProperty(true);
+    public static final ObjectProperty<Color>       PY_3D_FLOOR_COLOR        = new SimpleObjectProperty<>(Color.web("#202020"));
+    public static final StringProperty PY_3D_FLOOR_TEXTURE                   = new SimpleStringProperty(NO_TEXTURE);
+    public static final ObjectProperty<Color>       PY_3D_LIGHT_COLOR        = new SimpleObjectProperty<>(Color.GHOSTWHITE);
+    public static final BooleanProperty             PY_3D_PAC_LIGHT_ENABLED  = new SimpleBooleanProperty(true);
+    public static final ObjectProperty<Perspective> PY_3D_PERSPECTIVE        = new SimpleObjectProperty<>(Perspective.FOLLOWING_PLAYER);
+    public static final DoubleProperty              PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(3.5);
+    public static final DoubleProperty              PY_3D_WALL_OPACITY       = new SimpleDoubleProperty(0.9);
 
     private static void addAssets(AssetStorage assets) {
         // Load assets for 2D UI from other module

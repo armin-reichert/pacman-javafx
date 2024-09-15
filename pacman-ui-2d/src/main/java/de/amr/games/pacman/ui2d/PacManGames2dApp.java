@@ -5,7 +5,9 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.controller.GameController;
+import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
+import de.amr.games.pacman.model.pacmanxxl.MapSelectionMode;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.*;
@@ -14,6 +16,7 @@ import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.application.Application;
+import javafx.beans.property.*;
 import javafx.geometry.Dimension2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -33,6 +36,18 @@ import java.util.ResourceBundle;
  * @author Armin Reichert
  */
 public class PacManGames2dApp extends Application {
+
+    public static final BooleanProperty PY_AUTOPILOT           = new SimpleBooleanProperty(false);
+    public static final ObjectProperty<Color> PY_CANVAS_COLOR  = new SimpleObjectProperty<>(Color.BLACK);
+    public static final BooleanProperty PY_CANVAS_DECORATED    = new SimpleBooleanProperty(true);
+    public static final ObjectProperty<MapSelectionMode> PY_MAP_SELECTION_MODE = new SimpleObjectProperty<>(MapSelectionMode.CUSTOM_MAPS_FIRST);
+    public static final BooleanProperty PY_DEBUG_INFO          = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_IMMUNITY            = new SimpleBooleanProperty(false);
+    public static final BooleanProperty PY_NIGHT_MODE          = new SimpleBooleanProperty(false);
+    public static final IntegerProperty PY_PIP_HEIGHT          = new SimpleIntegerProperty(GameModel.ARCADE_MAP_SIZE_Y);
+    public static final BooleanProperty PY_PIP_ON              = new SimpleBooleanProperty(false);
+    public static final IntegerProperty PY_PIP_OPACITY_PERCENT = new SimpleIntegerProperty(100);
+    public static final IntegerProperty PY_SIMULATION_STEPS    = new SimpleIntegerProperty(1);
 
     public static void addAssets(AssetStorage assets) {
         ResourceManager rm = () -> PacManGames2dApp.class;

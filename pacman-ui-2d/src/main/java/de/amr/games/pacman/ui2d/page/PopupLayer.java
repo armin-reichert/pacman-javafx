@@ -22,7 +22,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
-import static de.amr.games.pacman.ui2d.GameParameters.PY_DEBUG_INFO;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_DEBUG_INFO;
 import static de.amr.games.pacman.ui2d.util.Ufx.opaqueColor;
 
 /**

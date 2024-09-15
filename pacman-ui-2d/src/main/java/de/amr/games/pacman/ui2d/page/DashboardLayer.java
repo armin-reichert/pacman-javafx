@@ -11,12 +11,11 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.amr.games.pacman.ui2d.GameParameters.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 
 /**
  * @author Armin Reichert

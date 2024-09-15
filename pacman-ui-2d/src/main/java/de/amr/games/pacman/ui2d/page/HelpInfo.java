@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.page;
 
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.GameParameters;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -19,6 +18,8 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 
 /**
  * @author Armin Reichert
@@ -67,13 +68,13 @@ public class HelpInfo {
         pane.setBackground(Ufx.coloredRoundedBackground(backgroundColor, 10));
 
         // add default entries:
-        if (GameParameters.PY_AUTOPILOT.get()) {
+        if (PY_AUTOPILOT.get()) {
             var autoPilotEntry = text(context.locText("help.autopilot_on"), Color.ORANGE);
             autoPilotEntry.setFont(font);
             GridPane.setColumnSpan(autoPilotEntry, 2);
             grid.add(autoPilotEntry, 0, grid.getRowCount());
         }
-        if (GameParameters.PY_IMMUNITY.get()) {
+        if (PY_IMMUNITY.get()) {
             var immunityEntry = text(context.locText("help.immunity_on"), Color.ORANGE);
             immunityEntry.setFont(font);
             GridPane.setColumnSpan(immunityEntry, 2);

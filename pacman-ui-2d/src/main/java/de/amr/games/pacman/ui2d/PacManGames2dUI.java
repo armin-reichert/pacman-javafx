@@ -54,7 +54,7 @@ import static de.amr.games.pacman.controller.GameState.LEVEL_TEST;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
 import static de.amr.games.pacman.model.actors.GhostState.HUNTING_PAC;
-import static de.amr.games.pacman.ui2d.GameParameters.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
@@ -219,7 +219,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
         // Not sure where this belongs
         PacManXXLGameModel xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
-        GameParameters.PY_MAP_SELECTION_MODE.addListener((py,ov,nv) -> {
+        PY_MAP_SELECTION_MODE.addListener((py,ov,nv) -> {
             xxlGame.loadCustomMaps();
             xxlGame.setMapSelectionMode(nv);
         });

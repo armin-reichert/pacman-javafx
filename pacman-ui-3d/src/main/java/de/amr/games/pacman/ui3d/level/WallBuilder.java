@@ -16,7 +16,7 @@ import javafx.scene.shape.Box;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.TS;
-import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_DRAW_MODE;
+import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
 
 /**
  * @author Armin Reichert

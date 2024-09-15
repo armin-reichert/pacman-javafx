@@ -20,12 +20,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
 import org.tinylog.Logger;
 
-import static de.amr.games.pacman.ui2d.GameParameters.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
 import static de.amr.games.pacman.ui2d.page.Page.menuTitleItem;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredBackground;
 import static de.amr.games.pacman.ui2d.util.Ufx.wallpaperBackground;
-import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_DRAW_MODE;
-import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_PERSPECTIVE;
+import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
+import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_PERSPECTIVE;
 
 /**
  * @author Armin Reichert

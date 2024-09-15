@@ -24,7 +24,7 @@ import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.ui2d.util.Ufx.coloredMaterial;
-import static de.amr.games.pacman.ui3d.GameParameters3D.PY_3D_DRAW_MODE;
+import static de.amr.games.pacman.ui3d.PacManGames3dApp.PY_3D_DRAW_MODE;
 
 /**
  * Displays a Pac-Man shape for each live remaining.
