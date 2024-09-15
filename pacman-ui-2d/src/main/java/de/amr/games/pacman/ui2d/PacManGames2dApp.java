@@ -106,7 +106,7 @@ public class PacManGames2dApp extends Application {
         // Ms. Pac-Man game
         //
 
-        assets.store("ms_pacman.spritesheet",           new MsPacManGameSpriteSheet());
+        assets.store("ms_pacman.spritesheet",           new MsPacManGameSpriteSheet("/de/amr/games/pacman/ui2d/graphics/mspacman/"));
         assets.store("ms_pacman.startpage.image",       rm.loadImage("graphics/mspacman/mspacman_flyer.png"));
         assets.store("ms_pacman.startpage.image1",      rm.loadImage("graphics/mspacman/mspacman_flyer1.jpg"));
         assets.store("ms_pacman.startpage.image2",      rm.loadImage("graphics/mspacman/mspacman_flyer2.jpg"));
@@ -141,7 +141,7 @@ public class PacManGames2dApp extends Application {
         // Ms. Pac-Man game Tengen
         //
 
-        assets.store("tengen.spritesheet",           new MsPacManGameSpriteSheet());
+        assets.store("tengen.spritesheet",           new MsPacManGameSpriteSheet("/de/amr/games/pacman/ui2d/graphics/mspacman/"));
         assets.store("tengen.startpage.image",       rm.loadImage("graphics/tengen/tengen_flyer.jpg"));
         assets.store("tengen.helpButton.icon",       rm.loadImage("graphics/icons/help-red-64.png"));
         assets.store("tengen.icon",                  rm.loadImage("graphics/icons/mspacman.png"));
