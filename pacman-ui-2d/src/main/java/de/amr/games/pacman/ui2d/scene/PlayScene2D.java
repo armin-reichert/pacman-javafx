@@ -7,17 +7,14 @@ package de.amr.games.pacman.ui2d.scene;
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.lib.tilemap.TileMap;
-import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
-import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
-import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
+import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.pacman_xxl.PacManXXLGameWorldRenderer;
@@ -30,10 +27,7 @@ import org.tinylog.Logger;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.maps.editor.TileMapUtil.getColorFromMap;
-import static de.amr.games.pacman.model.GameWorld.*;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
-import static java.util.function.Predicate.not;
 
 /**
  * @author Armin Reichert
@@ -45,9 +39,6 @@ public class PlayScene2D extends GameScene2D {
     private PacManXXLGameWorldRenderer pacManXXLGameWorldRenderer;
     private TengenMsPacManGameWorldRenderer tengenMsPacManGameWorldRenderer;
 
-    private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
-    private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
-
     @Override
     public boolean isCreditVisible() {
         return !context.game().hasCredit() || context.gameState() == GameState.GAME_OVER;
@@ -56,11 +47,6 @@ public class PlayScene2D extends GameScene2D {
     @Override
     public void init() {
         backgroundColorPy.bind(PY_CANVAS_COLOR);
-
-        terrainRenderer.setMapBackgroundColor(backgroundColorPy.get());
-        terrainRenderer.scalingPy.bind(scalingPy);
-
-        foodRenderer.scalingPy.bind(scalingPy);
 
         spriteRenderer.scalingPy.bind(scalingPy);
         spriteRenderer.backgroundColorPy.bind(backgroundColorPy);
@@ -159,38 +145,22 @@ public class PlayScene2D extends GameScene2D {
     @Override
     protected void drawSceneContent() {
         GameModel game = context.game();
-        if (game.world() == null) {
-            // This happens for one frame
+        if (game.world() == null) { // This happens on level start
             Logger.warn("Cannot draw scene content, game world not yet available!");
             return;
         }
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         boolean blinkingOn = game.blinking().isOn();
-        switch (game.variant()) {
-            case MS_PACMAN -> {
-                msPacManGameWorldRenderer.setFlashMode(flashMode);
-                msPacManGameWorldRenderer.setBlinkingOn(blinkingOn);
-                msPacManGameWorldRenderer.drawWorld(g, context, game.world());
-            }
-            case MS_PACMAN_TENGEN -> {
-                tengenMsPacManGameWorldRenderer.setFlashMode(flashMode);
-                tengenMsPacManGameWorldRenderer.setBlinkingOn(blinkingOn);
-                tengenMsPacManGameWorldRenderer.drawWorld(g, context, game.world());
-                //drawWorld(flashMode, blinkingOn);
-                //game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));
-            }
-            case PACMAN -> {
-                pacManGameWorldRenderer.setFlashMode(flashMode);
-                pacManGameWorldRenderer.setBlinkingOn(blinkingOn);
-                pacManGameWorldRenderer.drawWorld(g, context, game.world());
-            }
-            case PACMAN_XXL -> {
-                pacManXXLGameWorldRenderer.setFlashMode(flashMode);
-                pacManXXLGameWorldRenderer.setBlinkingOn(blinkingOn);
-                pacManXXLGameWorldRenderer.drawWorld(g, context, game.world());
-            }
-            default -> throw new IllegalArgumentException("Unsupported game variant: " + game.variant());
-        }
+        GameWorldRenderer gameWorldRenderer = switch (game.variant()) {
+            case MS_PACMAN -> msPacManGameWorldRenderer;
+            case MS_PACMAN_TENGEN -> tengenMsPacManGameWorldRenderer;
+            case PACMAN -> pacManGameWorldRenderer;
+            case PACMAN_XXL -> pacManXXLGameWorldRenderer;
+        };
+        gameWorldRenderer.setFlashMode(flashMode);
+        gameWorldRenderer.setBlinkingOn(blinkingOn);
+        gameWorldRenderer.drawWorld(g, context, game.world());
+
         drawLevelMessage();
 
         spriteRenderer.drawPac(g, game.pac());
