@@ -41,15 +41,6 @@ public class SpriteRenderer {
         this.spriteSheet = checkNotNull(spriteSheet);
     }
 
-    public void overpaintFood(GraphicsContext g, GameWorld world, Vector2i tile) {
-        double cx = t(tile.x()) + HTS;
-        double cy = t(tile.y()) + HTS;
-        double s = scalingPy.get();
-        double r = world.isEnergizerPosition(tile) ? 4.5 : 2;
-        g.setFill(backgroundColorPy.get());
-        g.fillRect(s * (cx - r), s * (cy - r), s * (2 * r), s * (2 * r));
-    }
-
     /**
      * Draws a moving bonus entity at its current position (including jump offset).
      * TODO reconsider this way of implementing the jumping bonus
