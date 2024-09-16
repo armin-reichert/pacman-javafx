@@ -1,6 +1,7 @@
 package de.amr.games.pacman.ui2d.rendering.ms_pacman;
 
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -90,7 +91,25 @@ public class MsPacManGameWorldRenderer implements GameWorldRenderer {
             spriteRenderer.drawMsPacManWorld(g, game.world(), mapNumber, flashMode, blinkingOn);
         }
         */
-        game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));
+        game.bonus().ifPresent(bonus -> drawMovingBonus(g, (MovingBonus) bonus));
+    }
+
+    /**
+     * Draws a moving bonus entity at its current position (including jump offset).
+     * TODO reconsider this way of implementing the jumping bonus
+     *
+     * @param g     graphics context
+     * @param movingBonus moving bonus entity
+     */
+    public void drawMovingBonus(GraphicsContext g, MovingBonus movingBonus) {
+        g.save();
+        g.translate(0, movingBonus.elongationY());
+        if (movingBonus.state() == Bonus.STATE_EDIBLE) {
+            spriteRenderer.drawEntitySprite(g,  movingBonus.entity(), spriteSheet.bonusSymbolSprite(movingBonus.symbol()));
+        } else if (movingBonus.state() == Bonus.STATE_EATEN) {
+            spriteRenderer.drawEntitySprite(g, movingBonus.entity(), spriteSheet.bonusValueSprite(movingBonus.symbol()));
+        }
+        g.restore();
     }
 
     public void drawClapperBoard(

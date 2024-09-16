@@ -42,24 +42,6 @@ public class SpriteRenderer {
     }
 
     /**
-     * Draws a moving bonus entity at its current position (including jump offset).
-     * TODO reconsider this way of implementing the jumping bonus
-     *
-     * @param g     graphics context
-     * @param movingBonus moving bonus entity
-     */
-    public void drawMovingBonus(GraphicsContext g, MovingBonus movingBonus) {
-        g.save();
-        g.translate(0, movingBonus.elongationY());
-        if (movingBonus.state() == Bonus.STATE_EDIBLE) {
-            drawEntitySprite(g,  movingBonus.entity(), spriteSheet.bonusSymbolSprite(movingBonus.symbol()));
-        } else if (movingBonus.state() == Bonus.STATE_EATEN) {
-            drawEntitySprite(g, movingBonus.entity(), spriteSheet.bonusValueSprite(movingBonus.symbol()));
-        }
-        g.restore();
-    }
-
-    /**
      * Draws a static bonus entity.
      *
      * @param g     graphics context
