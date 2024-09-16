@@ -8,7 +8,10 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.SpriteGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.pacman_xxl.PacManXXLGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameWorldRenderer;
 import javafx.beans.property.*;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -32,6 +35,10 @@ public class GameScene2D implements GameScene {
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
     public final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(this, "backgroundColor", Color.BLACK);
 
+    protected PacManGameWorldRenderer pacManGameWorldRenderer;
+    protected MsPacManGameWorldRenderer msPacManGameWorldRenderer;
+    protected PacManXXLGameWorldRenderer pacManXXLGameWorldRenderer;
+    protected TengenMsPacManGameWorldRenderer tengenMsPacManGameWorldRenderer;
 
     protected final SpriteGameWorldRenderer spriteRenderer = new SpriteGameWorldRenderer();
 
@@ -74,9 +81,27 @@ public class GameScene2D implements GameScene {
     @Override
     public void init() {
         backgroundColorPy.bind(PY_CANVAS_COLOR);
+
         spriteRenderer.scalingPy.bind(scalingPy);
         spriteRenderer.backgroundColorPy.bind(backgroundColorPy);
         spriteRenderer.setSpriteSheet(context.spriteSheet(context.game().variant()));
+
+        pacManGameWorldRenderer = new PacManGameWorldRenderer(context.assets());
+        pacManGameWorldRenderer.scalingProperty().bind(scalingPy);
+        pacManGameWorldRenderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
+
+        msPacManGameWorldRenderer = new MsPacManGameWorldRenderer(context.assets());
+        msPacManGameWorldRenderer.scalingProperty().bind(scalingPy);
+        msPacManGameWorldRenderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
+
+        pacManXXLGameWorldRenderer = new PacManXXLGameWorldRenderer(context.assets());
+        pacManXXLGameWorldRenderer.scalingProperty().bind(scalingPy);
+        pacManXXLGameWorldRenderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
+
+        tengenMsPacManGameWorldRenderer = new TengenMsPacManGameWorldRenderer(context.assets());
+        tengenMsPacManGameWorldRenderer.scalingProperty().bind(scalingPy);
+        tengenMsPacManGameWorldRenderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
+
     }
 
     @Override

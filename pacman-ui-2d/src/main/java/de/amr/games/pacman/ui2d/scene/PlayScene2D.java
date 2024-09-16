@@ -15,10 +15,6 @@ import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.pacman_xxl.PacManXXLGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameWorldRenderer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -27,47 +23,17 @@ import org.tinylog.Logger;
 import java.util.stream.Stream;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.PacManGames2dApp.*;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_AUTOPILOT;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_IMMUNITY;
 
 /**
  * @author Armin Reichert
  */
 public class PlayScene2D extends GameScene2D {
 
-    private PacManGameWorldRenderer pacManGameWorldRenderer;
-    private MsPacManGameWorldRenderer msPacManGameWorldRenderer;
-    private PacManXXLGameWorldRenderer pacManXXLGameWorldRenderer;
-    private TengenMsPacManGameWorldRenderer tengenMsPacManGameWorldRenderer;
-
     @Override
     public boolean isCreditVisible() {
         return !context.game().hasCredit() || context.gameState() == GameState.GAME_OVER;
-    }
-
-    @Override
-    public void init() {
-        backgroundColorPy.bind(PY_CANVAS_COLOR);
-
-        spriteRenderer.scalingPy.bind(scalingPy);
-        spriteRenderer.backgroundColorPy.bind(backgroundColorPy);
-        spriteRenderer.setSpriteSheet(context.spriteSheet(context.game().variant()));
-
-        pacManGameWorldRenderer = new PacManGameWorldRenderer(context.assets());
-        pacManGameWorldRenderer.scalingProperty().bind(scalingPy);
-        pacManGameWorldRenderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
-
-        msPacManGameWorldRenderer = new MsPacManGameWorldRenderer(context.assets());
-        msPacManGameWorldRenderer.scalingProperty().bind(scalingPy);
-        msPacManGameWorldRenderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
-
-        pacManXXLGameWorldRenderer = new PacManXXLGameWorldRenderer(context.assets());
-        pacManXXLGameWorldRenderer.scalingProperty().bind(scalingPy);
-        pacManXXLGameWorldRenderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
-
-        tengenMsPacManGameWorldRenderer = new TengenMsPacManGameWorldRenderer(context.assets());
-        tengenMsPacManGameWorldRenderer.scalingProperty().bind(scalingPy);
-        tengenMsPacManGameWorldRenderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
-
     }
 
     @Override
