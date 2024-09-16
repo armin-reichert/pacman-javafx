@@ -129,7 +129,7 @@ public class GameScene2D implements GameScene {
      * Draws additional scene info, e.g. tile structure or debug info.
      */
     protected void drawSceneInfo() {
-        drawTileGrid();
+        renderer.drawTileGrid(g, numWorldTilesX(), numWorldTilesY());
     }
 
     protected int numWorldTilesX() {
@@ -141,14 +141,7 @@ public class GameScene2D implements GameScene {
     }
 
     protected void drawLevelCounter(GraphicsContext g) {
-        drawLevelCounter(g,context.game().levelCounter(), t(numWorldTilesX() - 4), t(numWorldTilesY() - 2));
-    }
-
-    private void drawLevelCounter(GraphicsContext g, List<Byte> symbols, double x, double y) {
-        for (byte symbol : symbols) {
-            renderer.spriteRenderer().drawSpriteScaled(g, renderer.spriteRenderer().spriteSheet().bonusSymbolSprite(symbol), x, y);
-            x -= TS * 2;
-        }
+        renderer.drawLevelCounter(g, context.game().levelCounter(), t(numWorldTilesX() - 4), t(numWorldTilesY() - 2));
     }
 
     protected void drawPac(GraphicsContext g, Pac pac) {
@@ -217,18 +210,5 @@ public class GameScene2D implements GameScene {
         g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2));
         g.fillText("MIDWAY MFG CO", s(x + TS * 7), s(y + TS * 2));
         g.fillText("1980/1981", s(x + TS * 8), s(y + TS * 4));
-    }
-
-    protected void drawTileGrid() {
-        int numWorldTilesX = numWorldTilesX();
-        int numWorldTilesY = numWorldTilesY();
-        g.setStroke(Color.LIGHTGRAY);
-        g.setLineWidth(0.2);
-        for (int row = 0; row <= numWorldTilesY; ++row) {
-            g.strokeLine(0, s(TS * row), s(numWorldTilesX * TS), s(TS * row));
-        }
-        for (int col = 0; col <= numWorldTilesX; ++col) {
-            g.strokeLine(s(TS * col), 0, s(TS * col), s(numWorldTilesY * TS));
-        }
     }
 }

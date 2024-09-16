@@ -15,6 +15,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.util.List;
+
 import static de.amr.games.pacman.lib.Globals.*;
 
 public interface GameWorldRenderer {
@@ -79,6 +81,13 @@ public interface GameWorldRenderer {
         }
     }
 
+    default void drawLevelCounter(GraphicsContext g, List<Byte> symbols, double x, double y) {
+        for (byte symbol : symbols) {
+            spriteRenderer().drawSpriteScaled(g, spriteRenderer().spriteSheet().bonusSymbolSprite(symbol), x, y);
+            x -= TS * 2;
+        }
+    }
+
     default void drawScore(GraphicsContext g, Score score, String title, double x, double y, Font font, Color color) {
         var pointsText = String.format("%02d", score.points());
         drawText(g, title, color, font, x, y);
@@ -87,4 +96,16 @@ public interface GameWorldRenderer {
             drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
         }
     }
+
+    default void drawTileGrid(GraphicsContext g, int numWorldTilesX, int numWorldTilesY  ) {
+        g.setStroke(Color.LIGHTGRAY);
+        g.setLineWidth(0.2);
+        for (int row = 0; row <= numWorldTilesY; ++row) {
+            g.strokeLine(0, scaled(TS * row), scaled(numWorldTilesX * TS), scaled(TS * row));
+        }
+        for (int col = 0; col <= numWorldTilesX; ++col) {
+            g.strokeLine(scaled(TS * col), 0, scaled(TS * col), scaled(numWorldTilesY * TS));
+        }
+    }
+
 }
