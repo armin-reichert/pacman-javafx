@@ -160,7 +160,7 @@ public class PlayScene2D extends GameScene2D {
         // text indicating that more lives are available than displayed
         int excessLives = numLivesDisplayed - maxLives;
         if (excessLives > 0) {
-            renderer.spriteRenderer().drawText(g, "+" + excessLives, Color.YELLOW,
+            renderer.drawText(g, "+" + excessLives, Color.YELLOW,
                     Font.font("Serif", FontWeight.BOLD, s(8)), x + TS * 10, y + TS);
         }
     }
@@ -172,11 +172,11 @@ public class PlayScene2D extends GameScene2D {
         int tileY = houseOrigin.y() + houseSize.y() + 1;
         if (game.isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
             // "GAME OVER" is drawn in demo mode and when game is over
-            renderer.spriteRenderer().drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(centerTileX - 5), t(tileY));
+            renderer.drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(centerTileX - 5), t(tileY));
         } else {
             switch (context.gameState()) {
-                case READY      -> renderer.spriteRenderer().drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(centerTileX - 3), t(tileY));
-                case LEVEL_TEST -> renderer.spriteRenderer().drawText(g, "TEST    L" + game.levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(tileY));
+                case READY      -> renderer.drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(centerTileX - 3), t(tileY));
+                case LEVEL_TEST -> renderer.drawText(g, "TEST    L" + game.levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(tileY));
             }
         }
     }

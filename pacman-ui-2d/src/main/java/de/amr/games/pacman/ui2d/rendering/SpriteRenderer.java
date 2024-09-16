@@ -12,7 +12,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.HTS;
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
@@ -124,21 +123,5 @@ public class SpriteRenderer {
      */
     public void drawImageScaled(GraphicsContext g, Image image, double x, double y, double width, double height) {
         g.drawImage(image, s(x), s(y), s(width), s(height));
-    }
-
-    /**
-     * Draws a text with the given style at the given (unscaled) position.
-     *
-     * @param g     graphics context
-     * @param text  text
-     * @param color text color
-     * @param font  text font
-     * @param x     unscaled x-position
-     * @param y     unscaled y-position (baseline)
-     */
-    public void drawText(GraphicsContext g, String text, Color color, Font font, double x, double y) {
-        g.setFont(font);
-        g.setFill(color);
-        g.fillText(text, s(x), s(y));
     }
 }

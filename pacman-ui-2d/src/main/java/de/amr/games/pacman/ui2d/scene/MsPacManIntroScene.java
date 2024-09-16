@@ -260,10 +260,10 @@ public class MsPacManIntroScene extends GameScene2D {
         Font font8 = sceneFont(8); // depends on current scaling!
         BitSet marqueeState = computeMarqueeState(data.marqueeTimer.currentTick());
         drawMarquee(marqueeState);
-        renderer.spriteRenderer().drawText(g, "\"MS PAC-MAN\"", assets.color("palette.orange"), font8, data.titlePosition.x(), data.titlePosition.y());
+        renderer.drawText(g, "\"MS PAC-MAN\"", assets.color("palette.orange"), font8, data.titlePosition.x(), data.titlePosition.y());
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
             if (data.ghostIndex == GameModel.RED_GHOST) {
-                renderer.spriteRenderer().drawText(g, "WITH", assets.color("palette.pale"), font8, data.titlePosition.x(), data.topY + t(3));
+                renderer.drawText(g, "WITH", assets.color("palette.pale"), font8, data.titlePosition.x(), data.topY + t(3));
             }
             String ghostName = data.ghosts[data.ghostIndex].name().toUpperCase();
             Color color = switch (data.ghostIndex) {
@@ -274,10 +274,10 @@ public class MsPacManIntroScene extends GameScene2D {
                 default -> throw new IllegalStateException("Illegal ghost index: " + data.ghostIndex);
             };
             double dx = ghostName.length() < 4 ? t(1) : 0;
-            renderer.spriteRenderer().drawText(g, ghostName, color, font8, data.titlePosition.x() + t(3) + dx, data.topY + t(6));
+            renderer.drawText(g, ghostName, color, font8, data.titlePosition.x() + t(3) + dx, data.topY + t(6));
         } else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
-            renderer.spriteRenderer().drawText(g, "STARRING", assets.color("palette.pale"), font8, data.titlePosition.x(), data.topY + t(3));
-            renderer.spriteRenderer().drawText(g, "MS PAC-MAN", assets.color("palette.yellow"), font8, data.titlePosition.x(), data.topY + t(6));
+            renderer.drawText(g, "STARRING", assets.color("palette.pale"), font8, data.titlePosition.x(), data.topY + t(3));
+            renderer.drawText(g, "MS PAC-MAN", assets.color("palette.yellow"), font8, data.titlePosition.x(), data.topY + t(6));
         }
         for (Ghost ghost : data.ghosts) {
             drawGhost(g, ghost);

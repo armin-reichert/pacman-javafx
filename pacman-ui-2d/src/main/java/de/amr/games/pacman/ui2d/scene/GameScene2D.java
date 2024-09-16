@@ -52,7 +52,7 @@ public class GameScene2D implements GameScene {
 
     protected void drawSceneContent() {
         Font font = Font.font("Monospaced", 20);
-        renderer.spriteRenderer().drawText(g, "Implement method drawSceneContent()!", Color.WHITE, font, 10, 100);
+        renderer.drawText(g, "Implement method drawSceneContent()!", Color.WHITE, font, 10, 100);
     }
 
     public void setContext(GameContext context) {
@@ -110,7 +110,7 @@ public class GameScene2D implements GameScene {
             int numRows = context.game().world() != null
                 ? context.game().world().map().terrain().numRows()
                 : GameModel.ARCADE_MAP_TILES_Y;
-            renderer.spriteRenderer().drawText(g, String.format("CREDIT %2d", context.game().credit()),
+            renderer.drawText(g, String.format("CREDIT %2d", context.game().credit()),
                 context.assets().color("palette.pale"), sceneFont(8), t(2), t(numRows) - 1);
         }
         drawSceneContent();
@@ -135,10 +135,10 @@ public class GameScene2D implements GameScene {
         var pointsText = String.format("%02d", score.points());
         var font = sceneFont(TS);
         var color = context.assets().color("palette.pale");
-        renderer.spriteRenderer().drawText(g, title, color, font, x, y);
-        renderer.spriteRenderer().drawText(g, String.format("%7s", pointsText), color, font, x, y + TS + 1);
+        renderer.drawText(g, title, color, font, x, y);
+        renderer.drawText(g, String.format("%7s", pointsText), color, font, x, y + TS + 1);
         if (score.points() != 0) {
-            renderer.spriteRenderer().drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
+            renderer.drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
         }
     }
 
@@ -216,7 +216,7 @@ public class GameScene2D implements GameScene {
     }
 
     protected void drawMidwayCopyright(double x, double y) {
-        renderer.spriteRenderer().drawText(g, "© 1980 MIDWAY MFG.CO.", context.assets().color("palette.pink"), sceneFont(8), x, y);
+        renderer.drawText(g, "© 1980 MIDWAY MFG.CO.", context.assets().color("palette.pink"), sceneFont(8), x, y);
     }
 
     protected void drawMsPacManCopyright(double x, double y) {

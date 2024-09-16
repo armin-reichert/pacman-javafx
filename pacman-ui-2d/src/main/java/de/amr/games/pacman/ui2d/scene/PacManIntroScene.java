@@ -332,7 +332,7 @@ public class PacManIntroScene extends GameScene2D {
 
         int tx = data.leftTileX;
         if (data.titleVisible) {
-            renderer.spriteRenderer().drawText(g, "CHARACTER / NICKNAME", context.assets().color("palette.pale"), font, t(tx + 3), t(6));
+            renderer.drawText(g, "CHARACTER / NICKNAME", context.assets().color("palette.pale"), font, t(tx + 3), t(6));
         }
         for (byte id = 0; id < 4; ++id) {
             if (!data.ghostImageVisible[id]) {
@@ -342,11 +342,11 @@ public class PacManIntroScene extends GameScene2D {
             renderer.spriteRenderer().drawSpriteCenteredOverBox(g, renderer.spriteRenderer().spriteSheet().ghostFacingRight(id), t(tx) + 4, t(ty));
             if (data.ghostCharacterVisible[id]) {
                 var text = "-" + data.ghostCharacters[id];
-                renderer.spriteRenderer().drawText(g, text, data.ghostColors[id], font, t(tx + 3), t(ty + 1));
+                renderer.drawText(g, text, data.ghostColors[id], font, t(tx + 3), t(ty + 1));
             }
             if (data.ghostNicknameVisible[id]) {
                 var text = '"' + data.ghosts.get(id).name().toUpperCase() + '"';
-                renderer.spriteRenderer().drawText(g, text, data.ghostColors[id], font, t(tx + 14), t(ty + 1));
+                renderer.drawText(g, text, data.ghostColors[id], font, t(tx + 14), t(ty + 1));
             }
         }
     }
@@ -376,16 +376,16 @@ public class PacManIntroScene extends GameScene2D {
         var font8 = sceneFont(8);
         var font6 = sceneFont(6);
         int tx = data.leftTileX + 6;
-        int ty = 28;
+        int ty = 25;
         g.setFill(Color.rgb(254, 189, 180));
         g.fillRect(s(t(tx) + 4), s(t(ty - 1) + 4), s(2), s(2));
         if (data.blinking.isOn()) {
             drawEnergizer(TS * tx, TS * (ty+1));
         }
-        renderer.spriteRenderer().drawText(g, "10",  color, font8, t(tx + 2), t(ty));
-        renderer.spriteRenderer().drawText(g, "PTS", color, font6, t(tx + 5), t(ty));
-        renderer.spriteRenderer().drawText(g, "50",  color, font8, t(tx + 2), t(ty + 2));
-        renderer.spriteRenderer().drawText(g, "PTS", color, font6, t(tx + 5), t(ty + 2));
+        renderer.drawText(g, "10",  color, font8, t(tx + 2), t(ty));
+        renderer.drawText(g, "PTS", color, font6, t(tx + 5), t(ty));
+        renderer.drawText(g, "50",  color, font8, t(tx + 2), t(ty + 2));
+        renderer.drawText(g, "PTS", color, font6, t(tx + 5), t(ty + 2));
     }
 
     // draw pixelized "circle"
