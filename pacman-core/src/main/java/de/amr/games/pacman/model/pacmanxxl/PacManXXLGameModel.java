@@ -172,10 +172,6 @@ public class PacManXXLGameModel extends PacManGameModel {
             Logger.warn("No house min tile found in map!");
             map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(v2i(10, 15)));
         }
-        if (!map.terrain().hasProperty(GameWorld.PROPERTY_POS_HOUSE_MAX_TILE)) {
-            Logger.warn("No house max tile found in map!");
-            map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MAX_TILE, TileMap.formatTile(v2i(17, 19)));
-        }
         Vector2i topLeftTile = map.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, null);
         world.createArcadeHouse(topLeftTile.x(), topLeftTile.y());
         return world;

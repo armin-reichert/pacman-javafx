@@ -1,13 +1,14 @@
-/*
- * Copyright (c) 2021-2024 Armin Reichert (MIT License) See file LICENSE in repository root directory for details.
- */
 package de.amr.games.pacman.ui2d.rendering.tengen;
 
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.SpriteArea;
 import javafx.scene.image.Image;
 
-public class TengenMsPacManSpritesheet implements GameSpriteSheet {
+public class TengenMsPacManNonArcadeSpriteSheet implements GameSpriteSheet {
+
+    public TengenMsPacManNonArcadeSpriteSheet(String resourcePath) {
+
+    }
 
     @Override
     public Image getFlashingMazeImage() {

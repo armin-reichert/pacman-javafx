@@ -10,6 +10,8 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacmanxxl.MapSelectionMode;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManArcadeSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManNonArcadeSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.*;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import de.amr.games.pacman.ui2d.util.GameClockFX;
@@ -141,11 +143,14 @@ public class PacManGames2dApp extends Application {
         // Ms. Pac-Man game Tengen
         //
 
-        assets.store("tengen.spritesheet",           new MsPacManGameSpriteSheet("/de/amr/games/pacman/ui2d/graphics/mspacman/"));
-        assets.store("tengen.startpage.image",       rm.loadImage("graphics/tengen/tengen_flyer.jpg"));
-        assets.store("tengen.helpButton.icon",       rm.loadImage("graphics/icons/help-red-64.png"));
-        assets.store("tengen.icon",                  rm.loadImage("graphics/icons/mspacman.png"));
-        assets.store("tengen.logo.midway",           rm.loadImage("graphics/mspacman/midway_logo.png"));
+        // default until Tengen spritesheets are implemented
+        assets.store("tengen.spritesheet",            assets.get("ms_pacman.spritesheet"));
+        assets.store("tengen.spritesheet.arcade",     new TengenMsPacManArcadeSpriteSheet("/de/amr/games/pacman/ui2d/graphics/tengen/"));
+        assets.store("tengen.spritesheet.non_arcade", new TengenMsPacManNonArcadeSpriteSheet("/de/amr/games/pacman/ui2d/graphics/tengen/"));
+        assets.store("tengen.startpage.image",        rm.loadImage("graphics/tengen/tengen_flyer.jpg"));
+        assets.store("tengen.helpButton.icon",        rm.loadImage("graphics/icons/help-red-64.png"));
+        assets.store("tengen.icon",                   rm.loadImage("graphics/icons/mspacman.png"));
+        assets.store("tengen.logo.midway",            rm.loadImage("graphics/mspacman/midway_logo.png"));
 
         // Clips
         assets.store("tengen.audio.bonus_eaten",     rm.loadAudioClip("sound/mspacman/Fruit.mp3"));

@@ -265,10 +265,8 @@ public class MsPacManGameModel extends GameModel {
     private GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
         Vector2i topLeftTile = v2i(10, 15);
-        Vector2i size = v2i(8, 5);
         world.createArcadeHouse(topLeftTile.x(), topLeftTile.y());
         map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(topLeftTile));
-        map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MAX_TILE, TileMap.formatTile(topLeftTile.plus(size).minus(1, 1)));
         return world;
     }
 }
