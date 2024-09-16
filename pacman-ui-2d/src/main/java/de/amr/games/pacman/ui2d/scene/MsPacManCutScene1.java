@@ -262,10 +262,10 @@ public class MsPacManCutScene1 extends GameScene2D {
             context.assets().font("font.arcade", s(8)),
             context.assets().color("palette.pale"),
             clapAnimation, t(3), t(10));
-        renderer.spriteRenderer().drawPac(g, msPac);
-        renderer.spriteRenderer().drawPac(g, pacMan);
-        renderer.spriteRenderer().drawGhost(g, inky);
-        renderer.spriteRenderer().drawGhost(g, pinky);
+        drawPac(g, msPac);
+        drawPac(g, pacMan);
+        drawGhost(g, inky);
+        drawGhost(g, pinky);
         renderer.spriteRenderer().drawEntitySprite(g, heart, sheet.heartSprite());
         drawLevelCounter(g);
     }

@@ -280,9 +280,9 @@ public class MsPacManIntroScene extends GameScene2D {
             renderer.spriteRenderer().drawText(g, "MS PAC-MAN", assets.color("palette.yellow"), font8, data.titlePosition.x(), data.topY + t(6));
         }
         for (Ghost ghost : data.ghosts) {
-            renderer.spriteRenderer().drawGhost(g, ghost);
+            drawGhost(g, ghost);
         }
-        renderer.spriteRenderer().drawPac(g, data.msPacMan);
+        drawPac(g, data.msPacMan);
         drawMsPacManCopyright(t(6), t(28));
         drawLevelCounter(g);
     }

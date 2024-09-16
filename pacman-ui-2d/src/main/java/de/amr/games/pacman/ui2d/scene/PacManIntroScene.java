@@ -352,7 +352,7 @@ public class PacManIntroScene extends GameScene2D {
     }
 
     private void drawGhost(Ghost ghost) {
-        renderer.spriteRenderer().drawGhost(g, ghost);
+        drawGhost(g, ghost);
     }
 
     private void drawGuys(int shakingAmount) {
@@ -368,7 +368,7 @@ public class PacManIntroScene extends GameScene2D {
             drawGhost(data.ghosts.get(2));
             g.restore();
         }
-        renderer.spriteRenderer().drawPac(g, data.pacMan);
+        drawPac(g, data.pacMan);
     }
 
     private void drawPoints() {

@@ -123,11 +123,11 @@ public class PlayScene2D extends GameScene2D {
 
         drawLevelMessage();
 
-        renderer.spriteRenderer().drawPac(g, game.pac());
-        ghostsInZOrder().forEach(ghost -> renderer.spriteRenderer().drawGhost(g, ghost));
+        drawPac(g, game.pac());
+        ghostsInZOrder().forEach(ghost -> drawGhost(g, ghost));
         if (infoVisiblePy.get()) {
-            renderer.spriteRenderer().drawPacInfo(g, game.pac());
-            ghostsInZOrder().forEach(ghost -> renderer.spriteRenderer().drawGhostInfo(g, ghost));
+            drawPacInfo(g, game.pac());
+            ghostsInZOrder().forEach(ghost -> drawGhostInfo(g, ghost));
         }
 
         if (!isCreditVisible()) {

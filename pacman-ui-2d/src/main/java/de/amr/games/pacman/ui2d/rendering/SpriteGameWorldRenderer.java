@@ -55,60 +55,6 @@ public class SpriteGameWorldRenderer {
         g.fillRect(s * (cx - r), s * (cy - r), s * (2 * r), s * (2 * r));
     }
 
-    public void drawPac(GraphicsContext g, Pac pac) {
-        if (pac.isVisible() && pac.animations().isPresent() && pac.animations().get() instanceof SpriteAnimations sa) {
-            drawEntitySprite(g, pac, sa.currentSprite());
-        }
-    }
-
-    public void drawPacInfo(GraphicsContext g, Pac pac) {
-        if (pac.animations().isPresent() && pac.animations().get() instanceof SpriteAnimations sa) {
-            if (sa.currentAnimationName() != null) {
-                var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
-                g.setFill(Color.WHITE);
-                g.setFont(Font.font("Monospaced", s(6)));
-                g.fillText(text, s(pac.posX() - 4), s(pac.posY() - 4));
-            }
-            drawWishDir(g, pac);
-        }
-    }
-
-    public void drawGhost(GraphicsContext g, Ghost ghost) {
-        if (!ghost.isVisible()) {
-            return;
-        }
-        ghost.animations().ifPresent(ga -> {
-            if (ga instanceof SpriteAnimations animations) {
-                drawEntitySprite(g,  ghost, animations.currentSprite());
-            }
-        });
-    }
-
-    public void drawGhostInfo(GraphicsContext g, Ghost ghost) {
-        if (ghost.animations().isPresent() && ghost.animations().get() instanceof SpriteAnimations sa) {
-            if (sa.currentAnimationName() != null) {
-                var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
-                g.setFill(Color.WHITE);
-                g.setFont(Font.font("Monospaced", s(6)));
-                g.fillText(text, s(ghost.posX() - 4), s(ghost.posY() - 4));
-            }
-        }
-        drawWishDir(g, ghost);
-    }
-
-    private void drawWishDir(GraphicsContext g, Creature guy) {
-        if (guy.wishDir() != null) {
-            float r = 2;
-            var pacCenter = guy.center();
-            var indicatorCenter = guy.center().plus(guy.wishDir().vector().toVector2f().scaled(1.5f * TS));
-            var indicatorTopLeft = indicatorCenter.minus(r, r);
-            g.setStroke(Color.WHITE);
-            g.strokeLine(s(pacCenter.x()), s(pacCenter.y()), s(indicatorCenter.x()), s(indicatorCenter.y()));
-            g.setFill(guy.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
-            g.fillOval(s(indicatorTopLeft.x()), s(indicatorTopLeft.y()), s(2 * r), s(2 * r));
-        }
-    }
-
     /**
      * Draws a moving bonus entity at its current position (including jump offset).
      * TODO reconsider this way of implementing the jumping bonus
