@@ -46,34 +46,7 @@ public class SpriteGameWorldRenderer {
         this.spriteSheet = checkNotNull(spriteSheet);
     }
 
-    public void drawPacManWorld(GraphicsContext g, GameWorld world, int tileX, int tileY, boolean flashing, boolean brightPhase) {
-        if (flashing) {
-            drawPacManWorldFlashing(g, tileX, tileY, brightPhase);
-        } else {
-            g.save();
-            g.scale(scalingPy.get(), scalingPy.get());
-            drawSprite(g, spriteSheet.getFullMazeSprite(), t(tileX), t(tileY));
-            g.restore();
-            world.map().food().tiles().filter(world::hasEatenFoodAt).forEach(tile -> overpaintFood(g, world, tile));
-            if (!brightPhase) {
-                world.energizerTiles().forEach(tile -> overpaintFood(g, world, tile));
-            }
-        }
-    }
-
-    private void drawPacManWorldFlashing(GraphicsContext g, int tileX, int tileY, boolean brightPhase) {
-        g.save();
-        g.scale(scalingPy.get(), scalingPy.get());
-        if (brightPhase) {
-            // bright maze is in separate image, not in sprite sheet
-            g.drawImage(spriteSheet.getFlashingMazeImage(), t(tileX), t(tileY));
-        } else {
-            drawSprite(g, spriteSheet.getEmptyMazeSprite(), t(tileX), t(tileY));
-        }
-        g.restore();
-    }
-
-    private void overpaintFood(GraphicsContext g, GameWorld world, Vector2i tile) {
+    public void overpaintFood(GraphicsContext g, GameWorld world, Vector2i tile) {
         double cx = t(tile.x()) + HTS;
         double cy = t(tile.y()) + HTS;
         double s = scalingPy.get();
@@ -96,30 +69,6 @@ public class SpriteGameWorldRenderer {
         int excessLives = numLivesDisplayed - maxLives;
         if (excessLives > 0) {
             drawText(g, "+" + excessLives, Color.YELLOW, Font.font("Serif", FontWeight.BOLD, s(8)), x + TS * 10, y + TS);
-        }
-    }
-
-    public void drawMsPacManWorld(GraphicsContext g, GameWorld world, int mapNumber, boolean flashing, boolean blinkingOn) {
-        double x = 0, y = t(3);
-        if (flashing) {
-            g.save();
-            g.scale(scalingPy.get(), scalingPy.get());
-            if (blinkingOn) {
-                SpriteArea emptyMazeBright = spriteSheet.highlightedMaze(mapNumber);
-                drawSubImage(g, spriteSheet.getFlashingMazesImage(), emptyMazeBright, x - 3, y);
-            } else {
-                drawSprite(g, spriteSheet.emptyMaze(mapNumber), x, y);
-            }
-            g.restore();
-        } else {
-            g.save();
-            g.scale(scalingPy.get(), scalingPy.get());
-            drawSprite(g, spriteSheet.filledMaze(mapNumber), x, y);
-            g.restore();
-            world.map().food().tiles().filter(world::hasEatenFoodAt).forEach(tile -> overpaintFood(g, world, tile));
-            if (!blinkingOn) {
-                world.energizerTiles().forEach(tile -> overpaintFood(g, world, tile));
-            }
         }
     }
 

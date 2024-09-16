@@ -8,6 +8,7 @@ import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.SpriteGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameWorldRenderer;
 import javafx.beans.property.*;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -30,6 +31,7 @@ public class GameScene2D implements GameScene {
     public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
     public final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(this, "backgroundColor", Color.BLACK);
+
 
     protected final SpriteGameWorldRenderer spriteRenderer = new SpriteGameWorldRenderer();
 
