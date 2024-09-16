@@ -213,7 +213,7 @@ public class PacManGames2dApp extends Application {
         assets.store("pacman_xxl.helpButton.icon",          rm.loadImage("graphics/icons/help-blue-64.png"));
         assets.store("pacman_xxl.startpage.image",          rm.loadImage("graphics/pacman_xxl/pacman_xxl_logo.png"));
 
-        assets.store("pacman_xxl.spritesheet", new PacManGameSpriteSheet("/de/amr/games/pacman/ui2d/graphics/pacman/"));
+        assets.store("pacman_xxl.spritesheet",              new PacManGameSpriteSheet("/de/amr/games/pacman/ui2d/graphics/pacman/"));
 
         // Clips
         assets.store("pacman_xxl.audio.bonus_eaten",        rm.loadAudioClip("sound/pacman/eat_fruit.mp3"));

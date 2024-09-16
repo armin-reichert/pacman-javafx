@@ -12,7 +12,7 @@ public interface GameWorldRenderer {
     DoubleProperty scalingProperty();
     ObjectProperty<Color> backgroundColorProperty();
 
-    void drawWorld(GraphicsContext ctx, GameContext context, GameWorld world);
+    void drawWorld(GraphicsContext g, GameContext context, GameWorld world);
     void setFlashMode(boolean on);
     void setBlinkingOn(boolean on);
 }

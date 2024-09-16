@@ -20,6 +20,8 @@ import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.pacman_xxl.PacManXXLGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameWorldRenderer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -38,8 +40,10 @@ import static java.util.function.Predicate.not;
  */
 public class PlayScene2D extends GameScene2D {
 
-    protected PacManGameWorldRenderer pacManGameWorldRenderer;
-    protected MsPacManGameWorldRenderer msPacManGameWorldRenderer;
+    private PacManGameWorldRenderer pacManGameWorldRenderer;
+    private MsPacManGameWorldRenderer msPacManGameWorldRenderer;
+    private PacManXXLGameWorldRenderer pacManXXLGameWorldRenderer;
+    private TengenMsPacManGameWorldRenderer tengenMsPacManGameWorldRenderer;
 
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
@@ -69,6 +73,15 @@ public class PlayScene2D extends GameScene2D {
         msPacManGameWorldRenderer = new MsPacManGameWorldRenderer(context.assets());
         msPacManGameWorldRenderer.scalingProperty().bind(scalingPy);
         msPacManGameWorldRenderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
+
+        pacManXXLGameWorldRenderer = new PacManXXLGameWorldRenderer(context.assets());
+        pacManXXLGameWorldRenderer.scalingProperty().bind(scalingPy);
+        pacManXXLGameWorldRenderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
+
+        tengenMsPacManGameWorldRenderer = new TengenMsPacManGameWorldRenderer(context.assets());
+        tengenMsPacManGameWorldRenderer.scalingProperty().bind(scalingPy);
+        tengenMsPacManGameWorldRenderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
+
     }
 
     @Override
@@ -160,8 +173,11 @@ public class PlayScene2D extends GameScene2D {
                 msPacManGameWorldRenderer.drawWorld(g, context, game.world());
             }
             case MS_PACMAN_TENGEN -> {
-                drawWorld(flashMode, blinkingOn);
-                game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));
+                tengenMsPacManGameWorldRenderer.setFlashMode(flashMode);
+                tengenMsPacManGameWorldRenderer.setBlinkingOn(blinkingOn);
+                tengenMsPacManGameWorldRenderer.drawWorld(g, context, game.world());
+                //drawWorld(flashMode, blinkingOn);
+                //game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));
             }
             case PACMAN -> {
                 pacManGameWorldRenderer.setFlashMode(flashMode);
@@ -169,8 +185,9 @@ public class PlayScene2D extends GameScene2D {
                 pacManGameWorldRenderer.drawWorld(g, context, game.world());
             }
             case PACMAN_XXL -> {
-                drawWorld(flashMode, blinkingOn);
-                game.bonus().ifPresent(bonus -> spriteRenderer.drawStaticBonus(g, bonus));
+                pacManXXLGameWorldRenderer.setFlashMode(flashMode);
+                pacManXXLGameWorldRenderer.setBlinkingOn(blinkingOn);
+                pacManXXLGameWorldRenderer.drawWorld(g, context, game.world());
             }
             default -> throw new IllegalArgumentException("Unsupported game variant: " + game.variant());
         }
@@ -196,33 +213,6 @@ public class PlayScene2D extends GameScene2D {
     private Stream<Ghost> ghostsInZOrder() {
         return Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
             .map(context.game()::ghost);
-    }
-
-    private void drawWorld(boolean flashMode, boolean highlighted) {
-        GameWorld world = context.game().world();
-        TileMap terrain = world.map().terrain();
-        Color wallStrokeColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_STROKE, Color.WHITE);
-        Color wallFillColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, Color.GREEN);
-        Color doorColor = getColorFromMap(terrain, PROPERTY_COLOR_DOOR, Color.YELLOW);
-        if (flashMode) {
-            terrainRenderer.setWallStrokeColor(highlighted ? Color.WHITE : Color.BLACK);
-            terrainRenderer.setWallFillColor(highlighted   ? Color.BLACK : Color.WHITE);
-            terrainRenderer.setDoorColor(Color.BLACK);
-            terrainRenderer.drawMap(g, terrain);
-        }
-        else {
-            terrainRenderer.setWallStrokeColor(wallStrokeColor);
-            terrainRenderer.setWallFillColor(wallFillColor);
-            terrainRenderer.setDoorColor(doorColor);
-            terrainRenderer.drawMap(g, terrain);
-            Color foodColor = getColorFromMap(world.map().food(), PROPERTY_COLOR_FOOD, Color.ORANGE);
-            foodRenderer.setPelletColor(foodColor);
-            foodRenderer.setEnergizerColor(foodColor);
-            world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition)).forEach(tile -> foodRenderer.drawPellet(g, tile));
-            if (highlighted) {
-                world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(g, tile));
-            }
-        }
     }
 
     private void drawLevelMessage() {

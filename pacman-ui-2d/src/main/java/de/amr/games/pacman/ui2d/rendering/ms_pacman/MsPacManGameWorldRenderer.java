@@ -74,16 +74,16 @@ public class MsPacManGameWorldRenderer implements GameWorldRenderer {
                 world.energizerTiles().forEach(tile -> spriteRenderer.overpaintFood(g, world, tile));
             }
         }
-                /*
-                var msPacManGame = (MsPacManGameModel) game;
-                if (msPacManGame.blueMazeBug) {
-                    // no map image available, use vector renderer
-                    drawWorld(flashMode, blinkingOn);
-                } else {
-                    int mapNumber = msPacManGame.currentMapNumber();
-                    spriteRenderer.drawMsPacManWorld(g, game.world(), mapNumber, flashMode, blinkingOn);
-                }
-                */
+        /*
+        var msPacManGame = (MsPacManGameModel) game;
+        if (msPacManGame.blueMazeBug) {
+            // no map image available, use vector renderer
+            drawWorld(flashMode, blinkingOn);
+        } else {
+            int mapNumber = msPacManGame.currentMapNumber();
+            spriteRenderer.drawMsPacManWorld(g, game.world(), mapNumber, flashMode, blinkingOn);
+        }
+        */
         game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));
     }
 }
