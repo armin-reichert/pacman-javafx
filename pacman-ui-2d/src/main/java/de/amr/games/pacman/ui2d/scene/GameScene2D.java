@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
@@ -103,8 +102,10 @@ public class GameScene2D implements GameScene {
         }
         clearCanvas();
         if (context.isScoreVisible()) {
-            drawScore(context.game().score(), "SCORE", t(1), t(1));
-            drawScore(context.game().highScore(), "HIGH SCORE", t(14), t(1));
+            Color color = context.assets().color("palette.pale");
+            Font font = sceneFont(TS);
+            renderer.drawScore(g, context.game().score(), "SCORE", t(1), t(1), font, color);
+            renderer.drawScore(g, context.game().highScore(), "HIGH SCORE", t(14), t(1), font, color);
         }
         if (isCreditVisible()) {
             int numRows = context.game().world() != null
@@ -129,17 +130,6 @@ public class GameScene2D implements GameScene {
      */
     protected void drawSceneInfo() {
         drawTileGrid();
-    }
-
-    protected void drawScore(Score score, String title, double x, double y) {
-        var pointsText = String.format("%02d", score.points());
-        var font = sceneFont(TS);
-        var color = context.assets().color("palette.pale");
-        renderer.drawText(g, title, color, font, x, y);
-        renderer.drawText(g, String.format("%7s", pointsText), color, font, x, y + TS + 1);
-        if (score.points() != 0) {
-            renderer.drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
-        }
     }
 
     protected int numWorldTilesX() {

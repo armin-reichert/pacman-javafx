@@ -2,15 +2,16 @@ package de.amr.games.pacman.ui2d.rendering;
 
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.ui2d.GameContext;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
-import static de.amr.games.pacman.lib.Globals.HTS;
-import static de.amr.games.pacman.lib.Globals.t;
+import static de.amr.games.pacman.lib.Globals.*;
 
 public interface GameWorldRenderer {
 
@@ -25,7 +26,9 @@ public interface GameWorldRenderer {
     SpriteRenderer spriteRenderer();
 
     void drawWorld(GraphicsContext g, GameContext context, GameWorld world);
+
     void setFlashMode(boolean on);
+
     void setBlinkingOn(boolean on);
 
     default void overpaintFood(GraphicsContext g, GameWorld world, Vector2i tile) {
@@ -50,5 +53,34 @@ public interface GameWorldRenderer {
         g.setFont(font);
         g.setFill(color);
         g.fillText(text, scaled(x), scaled(y));
+    }
+
+    default void drawLivesCounter(GraphicsContext g, int numLivesDisplayed, int tileY) {
+        if (numLivesDisplayed == 0) {
+            return;
+        }
+        int maxLives = 5;
+        var x = TS * 2;
+        var y = TS * tileY;
+        for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
+            spriteRenderer().drawSpriteScaled(g,
+                    spriteRenderer().spriteSheet().livesCounterSprite(),
+                    x + TS * (2 * i), y);
+        }
+        // text indicating that more lives are available than displayed
+        int excessLives = numLivesDisplayed - maxLives;
+        if (excessLives > 0) {
+            drawText(g, "+" + excessLives, Color.YELLOW,
+                    Font.font("Serif", FontWeight.BOLD, scaled(8)), x + TS * 10, y + TS);
+        }
+    }
+
+    default void drawScore(GraphicsContext g, Score score, String title, double x, double y, Font font, Color color) {
+        var pointsText = String.format("%02d", score.points());
+        drawText(g, title, color, font, x, y);
+        drawText(g, String.format("%7s", pointsText), color, font, x, y + TS + 1);
+        if (score.points() != 0) {
+            drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
+        }
     }
 }
