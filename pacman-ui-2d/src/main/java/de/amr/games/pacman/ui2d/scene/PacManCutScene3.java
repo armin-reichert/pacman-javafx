@@ -39,10 +39,10 @@ public class PacManCutScene3 extends GameScene2D {
         context.setScoreVisible(true);
 
         pac = new Pac();
-        pac.setAnimations(new PacManGamePacAnimations(pac, spriteRenderer.spriteSheet()));
+        pac.setAnimations(new PacManGamePacAnimations(pac, renderer.spriteRenderer().spriteSheet()));
 
         blinky = Ghost.red();
-        blinky.setAnimations(new PacManGameGhostAnimations(blinky, spriteRenderer.spriteSheet()));
+        blinky.setAnimations(new PacManGameGhostAnimations(blinky, renderer.spriteRenderer().spriteSheet()));
 
         frame = -1;
     }
@@ -90,8 +90,8 @@ public class PacManCutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        spriteRenderer.drawPac(g, pac);
-        spriteRenderer.drawGhost(g, blinky);
+        renderer.spriteRenderer().drawPac(g, pac);
+        renderer.spriteRenderer().drawGhost(g, blinky);
         drawLevelCounter(g);
     }
 
@@ -99,6 +99,6 @@ public class PacManCutScene3 extends GameScene2D {
     protected void drawSceneInfo() {
         drawTileGrid();
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
-        spriteRenderer.drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
+        renderer.spriteRenderer().drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
     }
 }

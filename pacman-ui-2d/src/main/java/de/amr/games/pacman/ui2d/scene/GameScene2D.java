@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.scene;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.Score;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.SpriteGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.pacman_xxl.PacManXXLGameWorldRenderer;
@@ -35,12 +35,12 @@ public class GameScene2D implements GameScene {
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
     public final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(this, "backgroundColor", Color.BLACK);
 
+    protected GameWorldRenderer renderer;
+
     protected PacManGameWorldRenderer pacManGameWorldRenderer;
     protected MsPacManGameWorldRenderer msPacManGameWorldRenderer;
     protected PacManXXLGameWorldRenderer pacManXXLGameWorldRenderer;
     protected TengenMsPacManGameWorldRenderer tengenMsPacManGameWorldRenderer;
-
-    protected final SpriteGameWorldRenderer spriteRenderer = new SpriteGameWorldRenderer();
 
     protected GameContext context;
     protected GraphicsContext g;
@@ -51,7 +51,7 @@ public class GameScene2D implements GameScene {
 
     protected void drawSceneContent() {
         Font font = Font.font("Monospaced", 20);
-        spriteRenderer.drawText(g, "Implement method drawSceneContent()!", Color.WHITE, font, 10, 100);
+        renderer.spriteRenderer().drawText(g, "Implement method drawSceneContent()!", Color.WHITE, font, 10, 100);
     }
 
     public void setContext(GameContext context) {
@@ -82,10 +82,6 @@ public class GameScene2D implements GameScene {
     public void init() {
         backgroundColorPy.bind(PY_CANVAS_COLOR);
 
-        spriteRenderer.scalingPy.bind(scalingPy);
-        spriteRenderer.backgroundColorPy.bind(backgroundColorPy);
-        spriteRenderer.setSpriteSheet(context.spriteSheet(context.game().variant()));
-
         pacManGameWorldRenderer = new PacManGameWorldRenderer(context.assets());
         pacManGameWorldRenderer.scalingProperty().bind(scalingPy);
         pacManGameWorldRenderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
@@ -102,6 +98,12 @@ public class GameScene2D implements GameScene {
         tengenMsPacManGameWorldRenderer.scalingProperty().bind(scalingPy);
         tengenMsPacManGameWorldRenderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
 
+        renderer = switch (context.game().variant()) {
+            case MS_PACMAN -> msPacManGameWorldRenderer;
+            case MS_PACMAN_TENGEN -> tengenMsPacManGameWorldRenderer;
+            case PACMAN -> pacManGameWorldRenderer;
+            case PACMAN_XXL -> pacManXXLGameWorldRenderer;
+        };
     }
 
     @Override
@@ -122,7 +124,7 @@ public class GameScene2D implements GameScene {
             int numRows = context.game().world() != null
                 ? context.game().world().map().terrain().numRows()
                 : GameModel.ARCADE_MAP_TILES_Y;
-            spriteRenderer.drawText(g, String.format("CREDIT %2d", context.game().credit()),
+            renderer.spriteRenderer().drawText(g, String.format("CREDIT %2d", context.game().credit()),
                 context.assets().color("palette.pale"), sceneFont(8), t(2), t(numRows) - 1);
         }
         drawSceneContent();
@@ -147,10 +149,10 @@ public class GameScene2D implements GameScene {
         var pointsText = String.format("%02d", score.points());
         var font = sceneFont(TS);
         var color = context.assets().color("palette.pale");
-        spriteRenderer.drawText(g, title, color, font, x, y);
-        spriteRenderer.drawText(g, String.format("%7s", pointsText), color, font, x, y + TS + 1);
+        renderer.spriteRenderer().drawText(g, title, color, font, x, y);
+        renderer.spriteRenderer().drawText(g, String.format("%7s", pointsText), color, font, x, y + TS + 1);
         if (score.points() != 0) {
-            spriteRenderer.drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
+            renderer.spriteRenderer().drawText(g, "L" + score.levelNumber(), color, font, x + t(8), y + TS + 1);
         }
     }
 
@@ -163,17 +165,17 @@ public class GameScene2D implements GameScene {
     }
 
     protected void drawLevelCounter(GraphicsContext g) {
-        spriteRenderer.drawLevelCounter(g,context.game().levelCounter(),
+        renderer.spriteRenderer().drawLevelCounter(g,context.game().levelCounter(),
             t(numWorldTilesX() - 4), t(numWorldTilesY() - 2));
     }
 
     protected void drawMidwayCopyright(double x, double y) {
-        spriteRenderer.drawText(g, "© 1980 MIDWAY MFG.CO.", context.assets().color("palette.pink"), sceneFont(8), x, y);
+        renderer.spriteRenderer().drawText(g, "© 1980 MIDWAY MFG.CO.", context.assets().color("palette.pink"), sceneFont(8), x, y);
     }
 
     protected void drawMsPacManCopyright(double x, double y) {
         Image logo = context.assets().get("ms_pacman.logo.midway");
-        spriteRenderer.drawImageScaled(g, logo, x, y + 2, t(4) - 2, t(4));
+        renderer.spriteRenderer().drawImageScaled(g, logo, x, y + 2, t(4) - 2, t(4));
         g.setFill(context.assets().color("palette.red"));
         g.setFont(sceneFont(TS));
         g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2));

@@ -266,7 +266,7 @@ public class PacManIntroScene extends GameScene2D {
         data = new Data();
 
         var sheet = (PacManGameSpriteSheet) context.spriteSheet(context.game().variant());
-        spriteRenderer.setSpriteSheet(sheet);
+        renderer.spriteRenderer().setSpriteSheet(sheet);
         context.setScoreVisible(true);
 
         data.pacMan.setAnimations(new PacManGamePacAnimations(data.pacMan, sheet));
@@ -330,33 +330,33 @@ public class PacManIntroScene extends GameScene2D {
 
         int tx = data.leftTileX;
         if (data.titleVisible) {
-            spriteRenderer.drawText(g, "CHARACTER / NICKNAME", context.assets().color("palette.pale"), font, t(tx + 3), t(6));
+            renderer.spriteRenderer().drawText(g, "CHARACTER / NICKNAME", context.assets().color("palette.pale"), font, t(tx + 3), t(6));
         }
         for (byte id = 0; id < 4; ++id) {
             if (!data.ghostImageVisible[id]) {
                 continue;
             }
             int ty = 7 + 3 * id;
-            spriteRenderer.drawSpriteCenteredOverBox(g, spriteRenderer.spriteSheet().ghostFacingRight(id), t(tx) + 4, t(ty));
+            renderer.spriteRenderer().drawSpriteCenteredOverBox(g, renderer.spriteRenderer().spriteSheet().ghostFacingRight(id), t(tx) + 4, t(ty));
             if (data.ghostCharacterVisible[id]) {
                 var text = "-" + data.ghostCharacters[id];
-                spriteRenderer.drawText(g, text, data.ghostColors[id], font, t(tx + 3), t(ty + 1));
+                renderer.spriteRenderer().drawText(g, text, data.ghostColors[id], font, t(tx + 3), t(ty + 1));
             }
             if (data.ghostNicknameVisible[id]) {
                 var text = '"' + data.ghosts.get(id).name().toUpperCase() + '"';
-                spriteRenderer.drawText(g, text, data.ghostColors[id], font, t(tx + 14), t(ty + 1));
+                renderer.spriteRenderer().drawText(g, text, data.ghostColors[id], font, t(tx + 14), t(ty + 1));
             }
         }
     }
 
     private void drawBlinkingEnergizer() {
         if (data.blinking.isOn()) {
-            spriteRenderer.drawSpriteScaled(g, spriteRenderer.spriteSheet().getEnergizerSprite(),t(data.leftTileX),t(20));
+            renderer.spriteRenderer().drawSpriteScaled(g, renderer.spriteRenderer().spriteSheet().getEnergizerSprite(),t(data.leftTileX),t(20));
         }
     }
 
     private void drawGhost(Ghost ghost) {
-        spriteRenderer.drawGhost(g, ghost);
+        renderer.spriteRenderer().drawGhost(g, ghost);
     }
 
     private void drawGuys(int shakingAmount) {
@@ -372,7 +372,7 @@ public class PacManIntroScene extends GameScene2D {
             drawGhost(data.ghosts.get(2));
             g.restore();
         }
-        spriteRenderer.drawPac(g, data.pacMan);
+        renderer.spriteRenderer().drawPac(g, data.pacMan);
     }
 
     private void drawPoints() {
@@ -384,12 +384,12 @@ public class PacManIntroScene extends GameScene2D {
         g.setFill(Color.rgb(254, 189, 180));
         g.fillRect(s(t(tx) + 4), s(t(ty - 1) + 4), s(2), s(2));
         if (data.blinking.isOn()) {
-            spriteRenderer.drawSpriteScaled(g, spriteRenderer.spriteSheet().getEnergizerSprite(),
+            renderer.spriteRenderer().drawSpriteScaled(g, renderer.spriteRenderer().spriteSheet().getEnergizerSprite(),
                 t(tx), t(ty + 1));
         }
-        spriteRenderer.drawText(g, "10",  color, font8, t(tx + 2), t(ty));
-        spriteRenderer.drawText(g, "PTS", color, font6, t(tx + 5), t(ty));
-        spriteRenderer.drawText(g, "50",  color, font8, t(tx + 2), t(ty + 2));
-        spriteRenderer.drawText(g, "PTS", color, font6, t(tx + 5), t(ty + 2));
+        renderer.spriteRenderer().drawText(g, "10",  color, font8, t(tx + 2), t(ty));
+        renderer.spriteRenderer().drawText(g, "PTS", color, font6, t(tx + 5), t(ty));
+        renderer.spriteRenderer().drawText(g, "50",  color, font8, t(tx + 2), t(ty + 2));
+        renderer.spriteRenderer().drawText(g, "PTS", color, font6, t(tx + 5), t(ty + 2));
     }
 }

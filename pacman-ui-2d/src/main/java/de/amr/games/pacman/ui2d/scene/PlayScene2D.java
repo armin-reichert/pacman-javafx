@@ -14,7 +14,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -117,23 +116,17 @@ public class PlayScene2D extends GameScene2D {
         }
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
         boolean blinkingOn = game.blinking().isOn();
-        GameWorldRenderer gameWorldRenderer = switch (game.variant()) {
-            case MS_PACMAN -> msPacManGameWorldRenderer;
-            case MS_PACMAN_TENGEN -> tengenMsPacManGameWorldRenderer;
-            case PACMAN -> pacManGameWorldRenderer;
-            case PACMAN_XXL -> pacManXXLGameWorldRenderer;
-        };
-        gameWorldRenderer.setFlashMode(flashMode);
-        gameWorldRenderer.setBlinkingOn(blinkingOn);
-        gameWorldRenderer.drawWorld(g, context, game.world());
+        renderer.setFlashMode(flashMode);
+        renderer.setBlinkingOn(blinkingOn);
+        renderer.drawWorld(g, context, game.world());
 
         drawLevelMessage();
 
-        spriteRenderer.drawPac(g, game.pac());
-        ghostsInZOrder().forEach(ghost -> spriteRenderer.drawGhost(g, ghost));
+        renderer.spriteRenderer().drawPac(g, game.pac());
+        ghostsInZOrder().forEach(ghost -> renderer.spriteRenderer().drawGhost(g, ghost));
         if (infoVisiblePy.get()) {
-            spriteRenderer.drawPacInfo(g, game.pac());
-            ghostsInZOrder().forEach(ghost -> spriteRenderer.drawGhostInfo(g, ghost));
+            renderer.spriteRenderer().drawPacInfo(g, game.pac());
+            ghostsInZOrder().forEach(ghost -> renderer.spriteRenderer().drawGhostInfo(g, ghost));
         }
 
         if (!isCreditVisible()) {
@@ -141,7 +134,7 @@ public class PlayScene2D extends GameScene2D {
             if (context.gameState() == GameState.READY && !game.pac().isVisible()) {
                 numLivesDisplayed += 1;
             }
-            spriteRenderer.drawLivesCounter(g, numLivesDisplayed, game.world().map().terrain().numRows() - 2);
+            renderer.spriteRenderer().drawLivesCounter(g, numLivesDisplayed, game.world().map().terrain().numRows() - 2);
         }
         drawLevelCounter(g);
     }
@@ -158,11 +151,11 @@ public class PlayScene2D extends GameScene2D {
         int tileY = houseOrigin.y() + houseSize.y() + 1;
         if (game.isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
             // "GAME OVER" is drawn in demo mode and when game is over
-            spriteRenderer.drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(centerTileX - 5), t(tileY));
+            renderer.spriteRenderer().drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(centerTileX - 5), t(tileY));
         } else {
             switch (context.gameState()) {
-                case READY      -> spriteRenderer.drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(centerTileX - 3), t(tileY));
-                case LEVEL_TEST -> spriteRenderer.drawText(g, "TEST    L" + game.levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(tileY));
+                case READY      -> renderer.spriteRenderer().drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(centerTileX - 3), t(tileY));
+                case LEVEL_TEST -> renderer.spriteRenderer().drawText(g, "TEST    L" + game.levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(tileY));
             }
         }
     }

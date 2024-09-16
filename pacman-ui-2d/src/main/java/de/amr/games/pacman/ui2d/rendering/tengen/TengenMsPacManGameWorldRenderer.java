@@ -39,6 +39,11 @@ public class TengenMsPacManGameWorldRenderer implements GameWorldRenderer {
     }
 
     @Override
+    public SpriteGameWorldRenderer spriteRenderer() {
+        return spriteRenderer;
+    }
+
+    @Override
     public void setFlashMode(boolean flashMode) {
         this.flashMode = flashMode;
     }

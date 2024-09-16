@@ -199,7 +199,7 @@ public class MsPacManIntroScene extends GameScene2D {
         context.setScoreVisible(true);
 
         var sheet = (MsPacManGameSpriteSheet) context.spriteSheet(context.game().variant());
-        spriteRenderer.setSpriteSheet(sheet);
+        renderer.spriteRenderer().setSpriteSheet(sheet);
         clearBlueMazeBug();
 
         data = new Data();
@@ -260,10 +260,10 @@ public class MsPacManIntroScene extends GameScene2D {
         Font font8 = sceneFont(8); // depends on current scaling!
         BitSet marqueeState = computeMarqueeState(data.marqueeTimer.currentTick());
         drawMarquee(marqueeState);
-        spriteRenderer.drawText(g, "\"MS PAC-MAN\"", assets.color("palette.orange"), font8, data.titlePosition.x(), data.titlePosition.y());
+        renderer.spriteRenderer().drawText(g, "\"MS PAC-MAN\"", assets.color("palette.orange"), font8, data.titlePosition.x(), data.titlePosition.y());
         if (sceneController.state() == SceneState.GHOSTS_MARCHING_IN) {
             if (data.ghostIndex == GameModel.RED_GHOST) {
-                spriteRenderer.drawText(g, "WITH", assets.color("palette.pale"), font8, data.titlePosition.x(), data.topY + t(3));
+                renderer.spriteRenderer().drawText(g, "WITH", assets.color("palette.pale"), font8, data.titlePosition.x(), data.topY + t(3));
             }
             String ghostName = data.ghosts[data.ghostIndex].name().toUpperCase();
             Color color = switch (data.ghostIndex) {
@@ -274,15 +274,15 @@ public class MsPacManIntroScene extends GameScene2D {
                 default -> throw new IllegalStateException("Illegal ghost index: " + data.ghostIndex);
             };
             double dx = ghostName.length() < 4 ? t(1) : 0;
-            spriteRenderer.drawText(g, ghostName, color, font8, data.titlePosition.x() + t(3) + dx, data.topY + t(6));
+            renderer.spriteRenderer().drawText(g, ghostName, color, font8, data.titlePosition.x() + t(3) + dx, data.topY + t(6));
         } else if (sceneController.state() == SceneState.MS_PACMAN_MARCHING_IN || sceneController.state() == SceneState.READY_TO_PLAY) {
-            spriteRenderer.drawText(g, "STARRING", assets.color("palette.pale"), font8, data.titlePosition.x(), data.topY + t(3));
-            spriteRenderer.drawText(g, "MS PAC-MAN", assets.color("palette.yellow"), font8, data.titlePosition.x(), data.topY + t(6));
+            renderer.spriteRenderer().drawText(g, "STARRING", assets.color("palette.pale"), font8, data.titlePosition.x(), data.topY + t(3));
+            renderer.spriteRenderer().drawText(g, "MS PAC-MAN", assets.color("palette.yellow"), font8, data.titlePosition.x(), data.topY + t(6));
         }
         for (Ghost ghost : data.ghosts) {
-            spriteRenderer.drawGhost(g, ghost);
+            renderer.spriteRenderer().drawGhost(g, ghost);
         }
-        spriteRenderer.drawPac(g, data.msPacMan);
+        renderer.spriteRenderer().drawPac(g, data.msPacMan);
         drawMsPacManCopyright(t(6), t(28));
         drawLevelCounter(g);
     }
