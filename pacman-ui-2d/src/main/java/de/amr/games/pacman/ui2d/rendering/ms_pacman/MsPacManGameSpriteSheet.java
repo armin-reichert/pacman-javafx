@@ -158,16 +158,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
         return null;
     }
 
-    @Override
-    public SpriteArea getEmptyMazeSprite() {
-        return null;
-    }
-
-    @Override
-    public SpriteArea getFullMazeSprite() {
-        return null;
-    }
-
     // Ms. Pac-Man specific:
 
     private static final int MS_PACMAN_MAZE_COUNT = 6;

@@ -67,14 +67,12 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
 
     private final SpriteArea fullMazeSprite = rect(0, 0, 224, 248);
 
-    @Override
     public SpriteArea getFullMazeSprite() {
         return fullMazeSprite;
     }
 
     private final SpriteArea emptyMazeSprite = rect(228, 0, 224, 248);
 
-    @Override
     public SpriteArea getEmptyMazeSprite() {
         return emptyMazeSprite;
     }

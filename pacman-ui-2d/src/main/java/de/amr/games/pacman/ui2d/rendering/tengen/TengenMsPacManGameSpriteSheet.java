@@ -27,16 +27,6 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     @Override
-    public SpriteArea getFullMazeSprite() {
-        return null;
-    }
-
-    @Override
-    public SpriteArea getEmptyMazeSprite() {
-        return null;
-    }
-
-    @Override
     public SpriteArea livesCounterSprite() {
         return null;
     }

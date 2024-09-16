@@ -14,10 +14,6 @@ public interface GameSpriteSheet extends SpriteSheet {
 
     Image getFlashingMazeImage();
 
-    SpriteArea getFullMazeSprite();
-
-    SpriteArea getEmptyMazeSprite();
-
     SpriteArea livesCounterSprite();
 
     SpriteArea highlightedMaze(int mapNumber);
