@@ -6,7 +6,7 @@ import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.SpriteGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
@@ -21,7 +21,7 @@ import static java.util.function.Predicate.not;
 public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
 
     private final PacManGameSpriteSheet spriteSheet;
-    private final SpriteGameWorldRenderer spriteRenderer = new SpriteGameWorldRenderer();
+    private final SpriteRenderer spriteRenderer = new SpriteRenderer();
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
 
@@ -37,7 +37,7 @@ public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public SpriteGameWorldRenderer spriteRenderer() {
+    public SpriteRenderer spriteRenderer() {
         return spriteRenderer;
     }
 

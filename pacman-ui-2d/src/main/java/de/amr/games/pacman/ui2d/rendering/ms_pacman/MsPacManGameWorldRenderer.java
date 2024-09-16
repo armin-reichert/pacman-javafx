@@ -6,7 +6,7 @@ import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.SpriteArea;
-import de.amr.games.pacman.ui2d.rendering.SpriteGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -19,7 +19,7 @@ import static de.amr.games.pacman.lib.Globals.t;
 public class MsPacManGameWorldRenderer implements GameWorldRenderer {
 
     private final MsPacManGameSpriteSheet spriteSheet;
-    private final SpriteGameWorldRenderer spriteRenderer = new SpriteGameWorldRenderer();
+    private final SpriteRenderer spriteRenderer = new SpriteRenderer();
 
     private boolean flashMode;
     private boolean blinkingOn;
@@ -30,7 +30,7 @@ public class MsPacManGameWorldRenderer implements GameWorldRenderer {
     }
 
     @Override
-    public SpriteGameWorldRenderer spriteRenderer() {
+    public SpriteRenderer spriteRenderer() {
         return spriteRenderer;
     }
 
