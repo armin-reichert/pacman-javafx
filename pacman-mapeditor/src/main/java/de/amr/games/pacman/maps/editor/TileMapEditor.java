@@ -48,6 +48,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
 import static de.amr.games.pacman.lib.tilemap.TileMap.formatTile;
@@ -91,6 +92,8 @@ public class TileMapEditor  {
     public static final String PROPERTY_POS_SCATTER_PINK_GHOST   = "pos_scatter_ghost_2_pink";
     public static final String PROPERTY_POS_SCATTER_CYAN_GHOST   = "pos_scatter_ghost_3_cyan";
     public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
+
+    public static final String PROPERTY_POS_HOUSE_MIN_TILE       = "pos_house_min_tile";
 
     public static final String PROPERTY_COLOR_FOOD = "color_food";
     public static final String DEFAULT_FOOD_COLOR  = "rgb(255,0,0)";
@@ -348,15 +351,21 @@ public class TileMapEditor  {
 
                 var miAddCircle2x2 = new MenuItem("2x2 Circle");
                 miAddCircle2x2.setOnAction(actionEvent -> addShape(map().terrain(), CIRCLE_2x2, tile));
+                miAddCircle2x2.disableProperty().bind(editingEnabledPy.not());
 
                 var miAddHouse = new MenuItem(tt("menu.edit.add_house"));
-                miAddHouse.setOnAction(actionEvent -> addShape(map().terrain(), GHOST_HOUSE_SHAPE, tile));
+                miAddHouse.setOnAction(actionEvent -> {
+                    addShapeNotMirrored(map().terrain(), GHOST_HOUSE_SHAPE, tile);
+                    // ensure no mirroring
+                    map().terrain().setProperty(PROPERTY_POS_HOUSE_MIN_TILE, formatTile(tile));
+                    terrainMapPropertiesEditor.rebuildPropertyEditors(); //TODO better solution
+                });
+                miAddHouse.disableProperty().bind(editingEnabledPy.not());
 
                 contextMenu.getItems().setAll(miAddCircle2x2, miAddHouse);
                 contextMenu.show(editCanvas, mouse.getScreenX(), mouse.getScreenY());
             }
         });
-
 
         // Active rendering (good idea?)
         int fps = 10;
@@ -922,6 +931,16 @@ public class TileMapEditor  {
         for (int row = 0; row < numRows; ++row) {
             for (int col = 0; col < numCols; ++col) {
                 setTileValue(map, originTile.plus(col, row), content[row][col]);
+            }
+        }
+        markTileMapEdited(map);
+    }
+
+    private void addShapeNotMirrored(TileMap map, byte[][] content, Vector2i originTile) {
+        int numRows = content.length, numCols = content[0].length;
+        for (int row = 0; row < numRows; ++row) {
+            for (int col = 0; col < numCols; ++col) {
+                map.set(originTile.plus(col, row), content[row][col]);
             }
         }
         markTileMapEdited(map);

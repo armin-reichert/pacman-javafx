@@ -300,7 +300,7 @@ public class PropertyEditorPane extends BorderPane {
         }
     }
 
-    private void rebuildPropertyEditors() {
+    public void rebuildPropertyEditors() {
         Logger.debug("Rebuild editors");
         propertyEditors.clear();
         tileMap().getProperties().stringPropertyNames().stream().sorted().forEach(propertyName -> {

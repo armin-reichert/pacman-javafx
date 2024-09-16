@@ -40,7 +40,6 @@ public class GameWorld {
     public static final String PROPERTY_POS_SCATTER_CYAN_GHOST   = "pos_scatter_ghost_3_cyan";
     public static final String PROPERTY_POS_SCATTER_ORANGE_GHOST = "pos_scatter_ghost_4_orange";
     public static final String PROPERTY_POS_HOUSE_MIN_TILE       = "pos_house_min_tile";
-    public static final String PROPERTY_POS_HOUSE_MAX_TILE       = "pos_house_max_tile";
 
     private final WorldMap map;
     private final Vector2f pacPosition;
