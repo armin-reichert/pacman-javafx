@@ -35,17 +35,14 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
         return null;
     }
 
-    @Override
     public SpriteArea emptyMaze(int mapNumber) {
         return null;
     }
 
-    @Override
     public SpriteArea filledMaze(int mapNumber) {
         return null;
     }
 
-    @Override
     public SpriteArea[] clapperboardSprites() {
         return new SpriteArea[0];
     }

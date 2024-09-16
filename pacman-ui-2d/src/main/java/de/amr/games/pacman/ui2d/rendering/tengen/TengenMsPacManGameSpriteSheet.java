@@ -42,21 +42,6 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     @Override
-    public SpriteArea emptyMaze(int mapNumber) {
-        return null;
-    }
-
-    @Override
-    public SpriteArea filledMaze(int mapNumber) {
-        return null;
-    }
-
-    @Override
-    public SpriteArea[] clapperboardSprites() {
-        return new SpriteArea[0];
-    }
-
-    @Override
     public SpriteArea bonusSymbolSprite(byte symbol) {
         return null;
     }

@@ -20,12 +20,6 @@ public interface GameSpriteSheet extends SpriteSheet {
 
     Image getFlashingMazesImage();
 
-    SpriteArea emptyMaze(int mapNumber);
-
-    SpriteArea filledMaze(int mapNumber);
-
-    SpriteArea[] clapperboardSprites();
-
     SpriteArea bonusSymbolSprite(byte symbol);
 
     SpriteArea bonusValueSprite(byte symbol);

@@ -189,7 +189,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
         }
     }
 
-    @Override
     public SpriteArea emptyMaze(int mazeNumber) {
         return emptyMazeSprites[mazeNumber - 1];
     }
@@ -202,7 +201,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
         }
     }
 
-    @Override
     public SpriteArea filledMaze(int mazeNumber) {
         return filledMazeSprites[mazeNumber - 1];
     }
@@ -241,7 +239,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
         rect(488, 208, 32, 32),  // middle
         rect(520, 208, 32, 32)); // closed
 
-    @Override
     public SpriteArea[] clapperboardSprites() {
         return clapperboardSprites;
     }

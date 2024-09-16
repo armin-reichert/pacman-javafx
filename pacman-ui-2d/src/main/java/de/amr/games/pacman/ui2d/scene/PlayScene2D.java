@@ -14,6 +14,7 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -134,7 +135,7 @@ public class PlayScene2D extends GameScene2D {
             if (context.gameState() == GameState.READY && !game.pac().isVisible()) {
                 numLivesDisplayed += 1;
             }
-            renderer.spriteRenderer().drawLivesCounter(g, numLivesDisplayed, game.world().map().terrain().numRows() - 2);
+            drawLivesCounter(g, numLivesDisplayed, game.world().map().terrain().numRows() - 2);
         }
         drawLevelCounter(g);
     }
@@ -142,6 +143,26 @@ public class PlayScene2D extends GameScene2D {
     private Stream<Ghost> ghostsInZOrder() {
         return Stream.of(GameModel.ORANGE_GHOST, GameModel.CYAN_GHOST, GameModel.PINK_GHOST, GameModel.RED_GHOST)
             .map(context.game()::ghost);
+    }
+
+    public void drawLivesCounter(GraphicsContext g, int numLivesDisplayed, int tileY) {
+        if (numLivesDisplayed == 0) {
+            return;
+        }
+        int maxLives = 5;
+        var x = TS * 2;
+        var y = TS * tileY;
+        for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
+            renderer.spriteRenderer().drawSpriteScaled(g,
+                    renderer.spriteRenderer().spriteSheet().livesCounterSprite(),
+                    x + TS * (2 * i), y);
+        }
+        // text indicating that more lives are available than displayed
+        int excessLives = numLivesDisplayed - maxLives;
+        if (excessLives > 0) {
+            renderer.spriteRenderer().drawText(g, "+" + excessLives, Color.YELLOW,
+                    Font.font("Serif", FontWeight.BOLD, s(8)), x + TS * 10, y + TS);
+        }
     }
 
     private void drawLevelMessage() {

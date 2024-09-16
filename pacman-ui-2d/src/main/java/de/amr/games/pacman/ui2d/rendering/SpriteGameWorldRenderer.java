@@ -55,42 +55,6 @@ public class SpriteGameWorldRenderer {
         g.fillRect(s * (cx - r), s * (cy - r), s * (2 * r), s * (2 * r));
     }
 
-    public void drawLivesCounter(GraphicsContext g, int numLivesDisplayed, int tileY) {
-        if (numLivesDisplayed == 0) {
-            return;
-        }
-        int maxLives = 5;
-        var x = TS * 2;
-        var y = TS * tileY;
-        for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-            drawSpriteScaled(g, spriteSheet.livesCounterSprite(), x + TS * (2 * i), y);
-        }
-        // text indicating that more lives are available than displayed
-        int excessLives = numLivesDisplayed - maxLives;
-        if (excessLives > 0) {
-            drawText(g, "+" + excessLives, Color.YELLOW, Font.font("Serif", FontWeight.BOLD, s(8)), x + TS * 10, y + TS);
-        }
-    }
-
-    public void drawClapperBoard(
-        GraphicsContext g,
-        Font font, Color textColor,
-        ClapperboardAnimation animation, double x, double y)
-    {
-        var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
-        if (sprite != null) {
-            drawSpriteCenteredOverBox(g, sprite, x, y);
-            g.setFont(font);
-            g.setFill(textColor.darker());
-            var numberX = s(x + sprite.width() - 25);
-            var numberY = s(y + 18);
-            g.setFill(textColor);
-            g.fillText(animation.number(), numberX, numberY);
-            var textX = s(x + sprite.width());
-            g.fillText(animation.text(), textX, numberY);
-        }
-    }
-
     public void drawLevelCounter(GraphicsContext g, List<Byte> symbols, double x, double y) {
         for (byte symbol : symbols) {
             drawSpriteScaled(g, spriteSheet.bonusSymbolSprite(symbol), x, y);

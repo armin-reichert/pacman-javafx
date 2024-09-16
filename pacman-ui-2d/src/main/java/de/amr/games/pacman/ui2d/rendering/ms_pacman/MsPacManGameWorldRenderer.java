@@ -12,6 +12,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.t;
 
@@ -90,5 +91,25 @@ public class MsPacManGameWorldRenderer implements GameWorldRenderer {
         }
         */
         game.bonus().ifPresent(bonus -> spriteRenderer.drawMovingBonus(g, (MovingBonus) bonus));
+    }
+
+    public void drawClapperBoard(
+        GraphicsContext g,
+        Font font, Color textColor,
+        ClapperboardAnimation animation, double x, double y)
+    {
+        double scaling = scalingProperty().get();
+        var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());
+        if (sprite != null) {
+            spriteRenderer.drawSpriteCenteredOverBox(g, sprite, x, y);
+            g.setFont(font);
+            g.setFill(textColor.darker());
+            var numberX = scaling * (x + sprite.width() - 25);
+            var numberY = scaling * (y + 18);
+            g.setFill(textColor);
+            g.fillText(animation.number(), numberX, numberY);
+            var textX = scaling * (x + sprite.width());
+            g.fillText(animation.text(), textX, numberY);
+        }
     }
 }
