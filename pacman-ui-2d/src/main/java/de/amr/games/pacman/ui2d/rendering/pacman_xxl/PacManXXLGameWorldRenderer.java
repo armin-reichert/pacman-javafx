@@ -4,6 +4,7 @@ import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
@@ -85,6 +86,16 @@ public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
             if (blinkingOn) {
                 world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(g, tile));
             }
+        }
+        context.game().bonus().ifPresent(bonus -> drawStaticBonus(g, bonus));
+    }
+
+    private void drawStaticBonus(GraphicsContext g, Bonus bonus)
+    {
+        if (bonus.state() == Bonus.STATE_EDIBLE) {
+            spriteRenderer.drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+        } else if (bonus.state() == Bonus.STATE_EATEN) {
+            spriteRenderer.drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
         }
     }
 }

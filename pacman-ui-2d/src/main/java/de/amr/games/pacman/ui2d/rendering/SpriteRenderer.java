@@ -4,9 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.rendering;
 
-import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.actors.*;
+import de.amr.games.pacman.model.actors.Entity;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -16,7 +14,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.games.pacman.lib.Globals.*;
+import static de.amr.games.pacman.lib.Globals.HTS;
+import static de.amr.games.pacman.lib.Globals.checkNotNull;
 
 /**
  * @author Armin Reichert
@@ -39,21 +38,6 @@ public class SpriteRenderer {
 
     public void setSpriteSheet(GameSpriteSheet spriteSheet) {
         this.spriteSheet = checkNotNull(spriteSheet);
-    }
-
-    /**
-     * Draws a static bonus entity.
-     *
-     * @param g     graphics context
-     * @param bonus bonus containing entity
-     */
-    public void drawStaticBonus(GraphicsContext g, Bonus bonus)
-    {
-        if (bonus.state() == Bonus.STATE_EDIBLE) {
-            drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
-        } else if (bonus.state() == Bonus.STATE_EATEN) {
-            drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
-        }
     }
 
     /**

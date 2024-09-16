@@ -1,6 +1,7 @@
 package de.amr.games.pacman.ui2d.rendering.pacman;
 
 import de.amr.games.pacman.model.GameWorld;
+import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
@@ -72,6 +73,15 @@ public class PacManGameWorldRenderer implements GameWorldRenderer {
             }
         }
         g.restore();
-        context.game().bonus().ifPresent(bonus -> spriteRenderer.drawStaticBonus(g, bonus));
+        context.game().bonus().ifPresent(bonus -> drawStaticBonus(g, bonus));
+    }
+
+    private void drawStaticBonus(GraphicsContext g, Bonus bonus)
+    {
+        if (bonus.state() == Bonus.STATE_EDIBLE) {
+            spriteRenderer.drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
+        } else if (bonus.state() == Bonus.STATE_EATEN) {
+            spriteRenderer.drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusValueSprite(bonus.symbol()));
+        }
     }
 }
