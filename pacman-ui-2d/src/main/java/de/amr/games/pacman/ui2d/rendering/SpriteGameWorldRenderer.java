@@ -55,13 +55,6 @@ public class SpriteGameWorldRenderer {
         g.fillRect(s * (cx - r), s * (cy - r), s * (2 * r), s * (2 * r));
     }
 
-    public void drawLevelCounter(GraphicsContext g, List<Byte> symbols, double x, double y) {
-        for (byte symbol : symbols) {
-            drawSpriteScaled(g, spriteSheet.bonusSymbolSprite(symbol), x, y);
-            x -= TS * 2;
-        }
-    }
-
     public void drawPac(GraphicsContext g, Pac pac) {
         if (pac.isVisible() && pac.animations().isPresent() && pac.animations().get() instanceof SpriteAnimations sa) {
             drawEntitySprite(g, pac, sa.currentSprite());

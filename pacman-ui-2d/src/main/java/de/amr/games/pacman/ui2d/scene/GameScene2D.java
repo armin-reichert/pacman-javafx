@@ -21,6 +21,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
+import java.util.List;
+
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_CANVAS_COLOR;
 
@@ -145,8 +147,14 @@ public class GameScene2D implements GameScene {
     }
 
     protected void drawLevelCounter(GraphicsContext g) {
-        renderer.spriteRenderer().drawLevelCounter(g,context.game().levelCounter(),
-            t(numWorldTilesX() - 4), t(numWorldTilesY() - 2));
+        drawLevelCounter(g,context.game().levelCounter(), t(numWorldTilesX() - 4), t(numWorldTilesY() - 2));
+    }
+
+    private void drawLevelCounter(GraphicsContext g, List<Byte> symbols, double x, double y) {
+        for (byte symbol : symbols) {
+            renderer.spriteRenderer().drawSpriteScaled(g, renderer.spriteRenderer().spriteSheet().bonusSymbolSprite(symbol), x, y);
+            x -= TS * 2;
+        }
     }
 
     protected void drawMidwayCopyright(double x, double y) {
