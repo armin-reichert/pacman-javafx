@@ -83,20 +83,9 @@ public class GameScene2D implements GameScene {
         backgroundColorPy.bind(PY_CANVAS_COLOR);
 
         pacManGameWorldRenderer = new PacManGameWorldRenderer(context.assets());
-        pacManGameWorldRenderer.scalingProperty().bind(scalingPy);
-        pacManGameWorldRenderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
-
         msPacManGameWorldRenderer = new MsPacManGameWorldRenderer(context.assets());
-        msPacManGameWorldRenderer.scalingProperty().bind(scalingPy);
-        msPacManGameWorldRenderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
-
         pacManXXLGameWorldRenderer = new PacManXXLGameWorldRenderer(context.assets());
-        pacManXXLGameWorldRenderer.scalingProperty().bind(scalingPy);
-        pacManXXLGameWorldRenderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
-
         tengenMsPacManGameWorldRenderer = new TengenMsPacManGameWorldRenderer(context.assets());
-        tengenMsPacManGameWorldRenderer.scalingProperty().bind(scalingPy);
-        tengenMsPacManGameWorldRenderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
 
         renderer = switch (context.game().variant()) {
             case MS_PACMAN -> msPacManGameWorldRenderer;
@@ -104,6 +93,8 @@ public class GameScene2D implements GameScene {
             case PACMAN -> pacManGameWorldRenderer;
             case PACMAN_XXL -> pacManXXLGameWorldRenderer;
         };
+        renderer.scalingProperty().bind(scalingPy);
+        renderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
     }
 
     @Override
