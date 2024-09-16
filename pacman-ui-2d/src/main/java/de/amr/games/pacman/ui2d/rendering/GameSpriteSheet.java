@@ -35,6 +35,4 @@ public interface GameSpriteSheet extends SpriteSheet {
     SpriteArea bonusValueSprite(byte symbol);
 
     SpriteArea ghostFacingRight(byte id);
-
-    SpriteArea getEnergizerSprite();
 }

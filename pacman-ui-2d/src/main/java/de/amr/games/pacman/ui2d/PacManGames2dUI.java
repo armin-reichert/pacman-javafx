@@ -379,7 +379,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             case MS_PACMAN        -> assets.get("ms_pacman.spritesheet");
             case PACMAN           -> assets.get("pacman.spritesheet");
             case PACMAN_XXL       -> assets.get("pacman_xxl.spritesheet");
-            case MS_PACMAN_TENGEN -> assets.get("tengen.spritesheet");
+            case MS_PACMAN_TENGEN -> assets.get("tengen.spritesheet.tmp"); //TODO
         };
     }
 

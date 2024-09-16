@@ -217,11 +217,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
         return filledMazeSprites[mazeNumber - 1];
     }
 
-    @Override
-    public SpriteArea getEnergizerSprite() {
-        return null; // not needed in Ms. Pac-Man
-    }
-
     private final SpriteArea[][] pacManMunchingSprites = new SpriteArea[4][];
     {
         for (byte d = 0; d < 4; ++d) {

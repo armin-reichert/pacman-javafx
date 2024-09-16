@@ -21,7 +21,10 @@ import static java.util.function.Predicate.not;
 
 public class TengenMsPacManGameWorldRenderer implements GameWorldRenderer {
 
-    private final MsPacManGameSpriteSheet spriteSheet;
+    private final AssetStorage assets;
+    private MsPacManGameSpriteSheet tmpSpriteSheet;
+    private TengenMsPacManGameSpriteSheet tengenSpriteSheet;
+
     private final SpriteGameWorldRenderer spriteRenderer = new SpriteGameWorldRenderer();
     private final TerrainMapRenderer terrainRenderer = new TerrainMapRenderer();
     private final FoodMapRenderer foodRenderer = new FoodMapRenderer();
@@ -30,9 +33,11 @@ public class TengenMsPacManGameWorldRenderer implements GameWorldRenderer {
     private boolean blinkingOn;
 
     public TengenMsPacManGameWorldRenderer(AssetStorage assets) {
-        //TODO use Arcade vs. non-Arcade spritesheet
-        spriteSheet = assets.get("tengen.spritesheet");
-        spriteRenderer.setSpriteSheet(spriteSheet);
+        this.assets = assets;
+        tengenSpriteSheet = assets.get("tengen.spritesheet");
+        // for now, just use Ms Pac-Man spritesheet
+        tmpSpriteSheet = assets.get("tengen.spritesheet.tmp");
+        spriteRenderer.setSpriteSheet(tmpSpriteSheet);
         terrainRenderer.scalingPy.bind(spriteRenderer.scalingPy);
         terrainRenderer.setMapBackgroundColor(spriteRenderer.backgroundColorPy.get());
         foodRenderer.scalingPy.bind(spriteRenderer.scalingPy);

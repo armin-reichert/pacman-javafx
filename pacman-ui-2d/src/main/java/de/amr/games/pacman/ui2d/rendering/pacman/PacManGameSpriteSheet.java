@@ -84,12 +84,6 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
         return null;
     }
 
-    private final SpriteArea energizerSprite = rect(8, 24, 8, 8);
-
-    public SpriteArea getEnergizerSprite() {
-        return energizerSprite;
-    }
-
     private final SpriteArea[] ghostNumberSprites = array(
         rect(456, 133, 15, 7),  // 200
         rect(472, 133, 15, 7),  // 400

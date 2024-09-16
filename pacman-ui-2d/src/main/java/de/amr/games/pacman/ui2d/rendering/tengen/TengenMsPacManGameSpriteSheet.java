@@ -1,13 +1,24 @@
+/*
+ * Copyright (c) 2021-2024 Armin Reichert (MIT License) See file LICENSE in repository root directory for details.
+ */
 package de.amr.games.pacman.ui2d.rendering.tengen;
 
 import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.SpriteArea;
+import de.amr.games.pacman.ui2d.util.ResourceManager;
 import javafx.scene.image.Image;
 
-public class TengenMsPacManNonArcadeSpriteSheet implements GameSpriteSheet {
+public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
 
-    public TengenMsPacManNonArcadeSpriteSheet(String resourcePath) {
+    private final Image arcadeMazesImage;
+    private final Image nonArcadeMazesImage;
+    private final Image spritesImage;
 
+    public TengenMsPacManGameSpriteSheet(String resourcePath) {
+        ResourceManager rm = this::getClass;
+        arcadeMazesImage = rm.loadImage(resourcePath + "arcade_mazes.png");
+        nonArcadeMazesImage = rm.loadImage(resourcePath + "non_arcade_mazes.png");
+        spritesImage = rm.loadImage(resourcePath + "spritesheet.png");
     }
 
     @Override
@@ -71,17 +82,12 @@ public class TengenMsPacManNonArcadeSpriteSheet implements GameSpriteSheet {
     }
 
     @Override
-    public SpriteArea getEnergizerSprite() {
-        return null;
-    }
-
-    @Override
     public int raster() {
-        return 0;
+        return 16;
     }
 
     @Override
     public Image source() {
-        return null;
+        return spritesImage;
     }
 }

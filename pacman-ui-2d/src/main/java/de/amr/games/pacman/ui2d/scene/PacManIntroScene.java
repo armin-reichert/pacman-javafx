@@ -305,7 +305,9 @@ public class PacManIntroScene extends GameScene2D {
             case SHOWING_POINTS -> drawPoints();
             case CHASING_PAC -> {
                 drawPoints();
-                drawBlinkingEnergizer();
+                if (data.blinking.isOn()) {
+                    drawEnergizer(t(data.leftTileX), t(20));
+                }
                 drawGuys(flutter(timer.currentTick()));
                 drawMidwayCopyright(t(4), t(32));
             }
@@ -349,12 +351,6 @@ public class PacManIntroScene extends GameScene2D {
         }
     }
 
-    private void drawBlinkingEnergizer() {
-        if (data.blinking.isOn()) {
-            renderer.spriteRenderer().drawSpriteScaled(g, renderer.spriteRenderer().spriteSheet().getEnergizerSprite(),t(data.leftTileX),t(20));
-        }
-    }
-
     private void drawGhost(Ghost ghost) {
         renderer.spriteRenderer().drawGhost(g, ghost);
     }
@@ -380,16 +376,27 @@ public class PacManIntroScene extends GameScene2D {
         var font8 = sceneFont(8);
         var font6 = sceneFont(6);
         int tx = data.leftTileX + 6;
-        int ty = 25;
+        int ty = 28;
         g.setFill(Color.rgb(254, 189, 180));
         g.fillRect(s(t(tx) + 4), s(t(ty - 1) + 4), s(2), s(2));
         if (data.blinking.isOn()) {
-            renderer.spriteRenderer().drawSpriteScaled(g, renderer.spriteRenderer().spriteSheet().getEnergizerSprite(),
-                t(tx), t(ty + 1));
+            drawEnergizer(TS * tx, TS * (ty+1));
         }
         renderer.spriteRenderer().drawText(g, "10",  color, font8, t(tx + 2), t(ty));
         renderer.spriteRenderer().drawText(g, "PTS", color, font6, t(tx + 5), t(ty));
         renderer.spriteRenderer().drawText(g, "50",  color, font8, t(tx + 2), t(ty + 2));
         renderer.spriteRenderer().drawText(g, "PTS", color, font6, t(tx + 5), t(ty + 2));
+    }
+
+    // draw pixelized "circle"
+    private void drawEnergizer(double x, double y) {
+        double scaling = scalingPy.get();
+        g.save();
+        g.scale(scaling, scaling);
+        g.setFill(Color.rgb(254, 189, 180));
+        g.fillRect(x + 2, y, 4, 8);
+        g.fillRect(x, y + 2, 8, 4);
+        g.fillRect(x + 1, y + 1, 6, 6);
+        g.restore();
     }
 }
