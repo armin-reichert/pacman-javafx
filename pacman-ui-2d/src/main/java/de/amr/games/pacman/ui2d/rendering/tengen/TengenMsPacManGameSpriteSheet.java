@@ -27,11 +27,6 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     @Override
-    public SpriteArea highlightedMaze(int mapNumber) {
-        return null;
-    }
-
-    @Override
     public SpriteArea bonusSymbolSprite(byte symbol) {
         return null;
     }

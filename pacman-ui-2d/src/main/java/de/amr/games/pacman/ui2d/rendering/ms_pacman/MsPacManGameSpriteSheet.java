@@ -170,7 +170,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
         }
     }
 
-    @Override
     public SpriteArea highlightedMaze(int mazeNumber) {
         return highlightedMazeSprites[mazeNumber - 1];
     }

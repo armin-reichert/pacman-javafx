@@ -56,11 +56,6 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
         return emptyMazeSprite;
     }
 
-    @Override
-    public SpriteArea highlightedMaze(int mapNumber) {
-        return null;
-    }
-
     private final SpriteArea[] ghostNumberSprites = array(
         rect(456, 133, 15, 7),  // 200
         rect(472, 133, 15, 7),  // 400
