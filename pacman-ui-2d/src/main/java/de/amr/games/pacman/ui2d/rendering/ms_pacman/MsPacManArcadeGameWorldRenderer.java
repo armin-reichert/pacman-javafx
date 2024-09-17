@@ -21,7 +21,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.t;
 
-public class MsPacManGameWorldRenderer implements GameWorldRenderer {
+public class MsPacManArcadeGameWorldRenderer implements GameWorldRenderer {
 
     private final MsPacManGameSpriteSheet spriteSheet;
     private final SpriteRenderer spriteRenderer = new SpriteRenderer();
@@ -29,7 +29,7 @@ public class MsPacManGameWorldRenderer implements GameWorldRenderer {
     private boolean flashMode;
     private boolean blinkingOn;
 
-    public MsPacManGameWorldRenderer(AssetStorage assets) {
+    public MsPacManArcadeGameWorldRenderer(AssetStorage assets) {
         spriteSheet = assets.get("ms_pacman.spritesheet");
         spriteRenderer.setSpriteSheet(spriteSheet);
     }

@@ -257,7 +257,7 @@ public class MsPacManCutScene1 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        MsPacManGameWorldRenderer rdr = (MsPacManGameWorldRenderer) renderer;
+        MsPacManArcadeGameWorldRenderer rdr = (MsPacManArcadeGameWorldRenderer) renderer;
         rdr.drawClapperBoard(g,
             context.assets().font("font.arcade", s(8)),
             context.assets().color("palette.pale"),

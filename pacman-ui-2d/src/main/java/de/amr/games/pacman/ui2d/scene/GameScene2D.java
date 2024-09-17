@@ -10,8 +10,8 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.pacman_xxl.PacManXXLGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
@@ -23,8 +23,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
-
-import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_CANVAS_COLOR;
@@ -82,9 +80,9 @@ public class GameScene2D implements GameScene {
     public void init() {
         backgroundColorPy.bind(PY_CANVAS_COLOR);
         renderer = switch (context.game().variant()) {
-            case MS_PACMAN -> new MsPacManGameWorldRenderer(context.assets());
+            case MS_PACMAN -> new MsPacManArcadeGameWorldRenderer(context.assets());
             case MS_PACMAN_TENGEN -> new TengenMsPacManGameWorldRenderer(context.assets());
-            case PACMAN -> new PacManGameWorldRenderer(context.assets());
+            case PACMAN -> new PacManArcadeGameWorldRenderer(context.assets());
             case PACMAN_XXL -> new PacManXXLGameWorldRenderer(context.assets());
         };
         renderer.scalingProperty().bind(scalingPy);

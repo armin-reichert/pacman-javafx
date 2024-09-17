@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.t;
 
-public class PacManGameWorldRenderer implements GameWorldRenderer {
+public class PacManArcadeGameWorldRenderer implements GameWorldRenderer {
 
     private final PacManGameSpriteSheet spriteSheet;
     private final SpriteRenderer spriteRenderer = new SpriteRenderer();
@@ -25,7 +25,7 @@ public class PacManGameWorldRenderer implements GameWorldRenderer {
     private boolean flashMode;
     private boolean blinkingOn;
 
-    public PacManGameWorldRenderer(AssetStorage assets) {
+    public PacManArcadeGameWorldRenderer(AssetStorage assets) {
         spriteSheet = assets.get("pacman.spritesheet");
         spriteRenderer.setSpriteSheet(spriteSheet);
     }
