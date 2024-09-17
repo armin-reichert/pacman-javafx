@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d;
 
 import de.amr.games.pacman.controller.GameController;
 import de.amr.games.pacman.controller.GameState;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -35,6 +36,15 @@ public interface GameContext {
     }
     void setScoreVisible(boolean visible);
     boolean isScoreVisible();
+
+    default Vector2i worldSize() {
+        if (game().world() != null) {
+            return new Vector2i(
+                game().world().map().terrain().numCols(),
+                game().world().map().terrain().numRows());
+        }
+        return new Vector2i(GameModel.ARCADE_MAP_TILES_X, GameModel.ARCADE_MAP_TILES_Y);
+    }
 
     // Game scenes
     boolean currentGameSceneIs(GameSceneID gameSceneID);

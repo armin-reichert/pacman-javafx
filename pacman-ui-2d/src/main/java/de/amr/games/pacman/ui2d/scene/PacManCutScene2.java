@@ -6,6 +6,7 @@ package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.lib.Direction;
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
@@ -118,7 +119,8 @@ public class PacManCutScene2 extends GameScene2D {
 
     @Override
     protected void drawDebugInfo() {
-        renderer.drawTileGrid(g, numWorldTilesX(), numWorldTilesY());
+        Vector2i worldSize = context.worldSize();
+        renderer.drawTileGrid(g, worldSize.x(), worldSize.y());
         var text = frame < ANIMATION_START ? String.format("Wait %d", ANIMATION_START - frame) : String.format("Frame %d", frame);
         renderer.drawText(g, text, Color.YELLOW, Font.font("Sans", 16), t(1), t(5));
     }

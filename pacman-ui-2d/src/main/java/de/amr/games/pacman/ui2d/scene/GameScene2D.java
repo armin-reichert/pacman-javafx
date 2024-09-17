@@ -4,6 +4,7 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.scene;
 
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
@@ -11,7 +12,6 @@ import javafx.beans.property.*;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
@@ -104,19 +104,13 @@ public abstract class GameScene2D implements GameScene {
      * Draws additional scene info, e.g. tile structure or debug info.
      */
     protected void drawDebugInfo() {
-        renderer.drawTileGrid(g, numWorldTilesX(), numWorldTilesY());
-    }
-
-    protected int numWorldTilesX() {
-        return context.game().world() != null ? context.game().world().map().terrain().numCols() : GameModel.ARCADE_MAP_TILES_X;
-    }
-
-    protected int numWorldTilesY() {
-        return context.game().world() != null ? context.game().world().map().terrain().numRows() : GameModel.ARCADE_MAP_TILES_Y;
+        Vector2i worldSize = context.worldSize();
+        renderer.drawTileGrid(g, worldSize.x(), worldSize.y());
     }
 
     protected void drawLevelCounter(GraphicsContext g) {
-        renderer.drawLevelCounter(g, context.game().levelCounter(), t(numWorldTilesX() - 4), t(numWorldTilesY() - 2));
+        Vector2i worldSize = context.worldSize();
+        renderer.drawLevelCounter(g, context.game().levelCounter(), t(worldSize.x()) - 4, t(worldSize.y()) - 2);
     }
 
     protected void drawMidwayCopyright(double x, double y) {
