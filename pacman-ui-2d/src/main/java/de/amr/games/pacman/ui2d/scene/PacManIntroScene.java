@@ -368,7 +368,7 @@ public class PacManIntroScene extends GameScene2D {
             drawGhost(data.ghosts.get(2));
             g.restore();
         }
-        drawPac(g, data.pacMan);
+        renderer.drawPac(g, data.pacMan);
     }
 
     private void drawPoints() {

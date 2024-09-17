@@ -142,12 +142,6 @@ public class GameScene2D implements GameScene {
         renderer.drawLevelCounter(g, context.game().levelCounter(), t(numWorldTilesX() - 4), t(numWorldTilesY() - 2));
     }
 
-    protected void drawPac(GraphicsContext g, Pac pac) {
-        if (pac.isVisible() && pac.animations().isPresent() && pac.animations().get() instanceof SpriteAnimations sa) {
-            renderer.spriteRenderer().drawEntitySprite(g, pac, sa.currentSprite());
-        }
-    }
-
     protected void drawPacInfo(GraphicsContext g, Pac pac) {
         if (pac.animations().isPresent() && pac.animations().get() instanceof SpriteAnimations sa) {
             if (sa.currentAnimationName() != null) {

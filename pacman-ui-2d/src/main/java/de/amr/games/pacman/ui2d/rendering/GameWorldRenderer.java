@@ -7,7 +7,9 @@ package de.amr.games.pacman.ui2d.rendering;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
+import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.util.SpriteAnimations;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
@@ -46,6 +48,12 @@ public interface GameWorldRenderer {
         double r = world.isEnergizerPosition(tile) ? 4.5 : 2;
         g.setFill(backgroundColorProperty().get());
         g.fillRect(scaled(cx - r), scaled(cy - r), scaled(2 * r), scaled(2 * r));
+    }
+
+    default void drawPac(GraphicsContext g, Pac pac) {
+        if (pac.isVisible() && pac.animations().isPresent() && pac.animations().get() instanceof SpriteAnimations sa) {
+            spriteRenderer().drawEntitySprite(g, pac, sa.currentSprite());
+        }
     }
 
     /**

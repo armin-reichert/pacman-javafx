@@ -176,8 +176,8 @@ public class MsPacManCutScene2 extends GameScene2D {
             context.assets().font("font.arcade", s(8)),
             context.assets().color("palette.pale"),
             clapAnimation, t(3), t(10));
-        drawPac(g, msPacMan);
-        drawPac(g, pacMan);
+        renderer.drawPac(g, msPacMan);
+        renderer.drawPac(g, pacMan);
         drawLevelCounter(g);
     }
 }

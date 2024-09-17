@@ -282,7 +282,7 @@ public class MsPacManIntroScene extends GameScene2D {
         for (Ghost ghost : data.ghosts) {
             drawGhost(g, ghost);
         }
-        drawPac(g, data.msPacMan);
+        renderer.drawPac(g, data.msPacMan);
         drawMsPacManCopyright(t(6), t(28));
         drawLevelCounter(g);
     }

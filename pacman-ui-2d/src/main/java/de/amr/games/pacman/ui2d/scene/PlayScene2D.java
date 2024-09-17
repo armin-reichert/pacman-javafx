@@ -123,7 +123,7 @@ public class PlayScene2D extends GameScene2D {
 
         drawLevelMessage();
 
-        drawPac(g, game.pac());
+        renderer.drawPac(g, game.pac());
         ghostsInZOrder().forEach(ghost -> drawGhost(g, ghost));
         if (infoVisiblePy.get()) {
             drawPacInfo(g, game.pac());
