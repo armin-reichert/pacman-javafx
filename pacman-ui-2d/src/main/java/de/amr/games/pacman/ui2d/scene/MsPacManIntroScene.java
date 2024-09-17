@@ -18,6 +18,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
+import de.amr.games.pacman.ui2d.rendering.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
@@ -256,6 +257,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
+        MsPacManGameWorldRenderer msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) renderer;
         AssetStorage assets = context.assets();
         Font font8 = sceneFont(8); // depends on current scaling!
         BitSet marqueeState = computeMarqueeState(data.marqueeTimer.currentTick());
@@ -283,7 +285,9 @@ public class MsPacManIntroScene extends GameScene2D {
             renderer.drawGhost(g, ghost);
         }
         renderer.drawPac(g, data.msPacMan);
-        drawMsPacManCopyright(t(6), t(28));
+        msPacManGameWorldRenderer.drawMsPacManMidwayCopyright(g,
+            context.assets().get("ms_pacman.logo.midway"),
+            t(6), t(28), context.assets().color("palette.red"), sceneFont(TS));
         drawLevelCounter(g);
     }
 

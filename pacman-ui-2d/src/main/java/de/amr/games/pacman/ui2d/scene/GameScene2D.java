@@ -122,14 +122,4 @@ public abstract class GameScene2D implements GameScene {
     protected void drawMidwayCopyright(double x, double y) {
         renderer.drawText(g, "© 1980 MIDWAY MFG.CO.", context.assets().color("palette.pink"), sceneFont(8), x, y);
     }
-
-    protected void drawMsPacManCopyright(double x, double y) {
-        Image logo = context.assets().get("ms_pacman.logo.midway");
-        renderer.spriteRenderer().drawImageScaled(g, logo, x, y + 2, t(4) - 2, t(4));
-        g.setFill(context.assets().color("palette.red"));
-        g.setFont(sceneFont(TS));
-        g.fillText("©", scaled(x + TS * 5), scaled(y + TS * 2 + 2));
-        g.fillText("MIDWAY MFG CO", scaled(x + TS * 7), scaled(y + TS * 2));
-        g.fillText("1980/1981", scaled(x + TS * 8), scaled(y + TS * 4));
-    }
 }

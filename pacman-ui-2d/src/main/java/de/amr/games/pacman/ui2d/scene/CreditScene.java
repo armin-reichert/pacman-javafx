@@ -5,8 +5,10 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.ui2d.GameAction;
+import de.amr.games.pacman.ui2d.rendering.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.SpriteArea;
 
+import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
 
 /**
@@ -48,13 +50,16 @@ public class CreditScene extends GameScene2D {
         var rose = context.assets().color("palette.rose");
         switch (context.game().variant()) {
             case MS_PACMAN, MS_PACMAN_TENGEN -> {
+                MsPacManGameWorldRenderer msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) renderer;
                 SpriteArea livesCounterSprite = renderer.spriteRenderer().spriteSheet().livesCounterSprite();
                 renderer.drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(16));
                 renderer.drawText(g, "1 PLAYER ONLY", orange, font8, t(8), t(18));
                 renderer.drawText(g, "ADDITIONAL    AT 10000", orange, font8, t(2), t(25));
                 renderer.spriteRenderer().drawSpriteScaled(g, livesCounterSprite, t(13), t(23) + 1);
                 renderer.drawText(g, "PTS", orange, font6, t(25), t(25));
-                drawMsPacManCopyright(t(6), t(28));
+                msPacManGameWorldRenderer.drawMsPacManMidwayCopyright(g,
+                    context.assets().get("ms_pacman.logo.midway"),
+                    t(6), t(28), context.assets().color("palette.red"), sceneFont(TS));
             }
             case PACMAN, PACMAN_XXL -> {
                 renderer.drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(17));
