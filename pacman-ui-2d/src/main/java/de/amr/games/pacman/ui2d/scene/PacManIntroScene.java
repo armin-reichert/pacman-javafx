@@ -11,12 +11,14 @@ import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.Pulse;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
+import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameSpriteSheet;
@@ -309,12 +311,18 @@ public class PacManIntroScene extends GameScene2D {
                     drawEnergizer(t(data.leftTileX), t(20));
                 }
                 drawGuys(flutter(timer.currentTick()));
-                drawMidwayCopyright(t(4), t(32));
+                if (context.game().variant() == GameVariant.PACMAN) {
+                    var r = (PacManArcadeGameWorldRenderer) renderer;
+                    r.drawMidwayCopyright(g, t(4), t(32), context.assets().color("palette.pink"), sceneFont(8));
+                }
             }
             case CHASING_GHOSTS, READY_TO_PLAY -> {
                 drawPoints();
                 drawGuys(0);
-                drawMidwayCopyright(t(4), t(32));
+                if (context.game().variant() == GameVariant.PACMAN) {
+                    var r = (PacManArcadeGameWorldRenderer) renderer;
+                    r.drawMidwayCopyright(g, t(4), t(32), context.assets().color("palette.pink"), sceneFont(8));
+                }
             }
             default -> {
             }

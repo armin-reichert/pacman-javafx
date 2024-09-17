@@ -112,8 +112,4 @@ public abstract class GameScene2D implements GameScene {
         Vector2i worldSize = context.worldSize();
         renderer.drawLevelCounter(g, context.game().levelCounter(), t(worldSize.x()) - 4, t(worldSize.y()) - 2);
     }
-
-    protected void drawMidwayCopyright(double x, double y) {
-        renderer.drawText(g, "© 1980 MIDWAY MFG.CO.", context.assets().color("palette.pink"), sceneFont(8), x, y);
-    }
 }

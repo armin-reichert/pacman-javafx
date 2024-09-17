@@ -14,6 +14,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.t;
 
@@ -81,6 +82,10 @@ public class PacManArcadeGameWorldRenderer implements GameWorldRenderer {
         }
         g.restore();
         context.game().bonus().ifPresent(bonus -> drawStaticBonus(g, bonus));
+    }
+
+    public void drawMidwayCopyright(GraphicsContext g, double x, double y, Color color, Font font) {
+        drawText(g, "© 1980 MIDWAY MFG.CO.", color, font, x, y);
     }
 
     private void drawStaticBonus(GraphicsContext g, Bonus bonus)

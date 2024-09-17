@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui2d.scene;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.rendering.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.SpriteArea;
+import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
 
 import static de.amr.games.pacman.lib.Globals.TS;
 import static de.amr.games.pacman.lib.Globals.t;
@@ -61,12 +62,19 @@ public class CreditScene extends GameScene2D {
                     context.assets().get("ms_pacman.logo.midway"),
                     t(6), t(28), context.assets().color("palette.red"), sceneFont(TS));
             }
-            case PACMAN, PACMAN_XXL -> {
+            case PACMAN -> {
+                var pacManArcadeGameWorldRenderer = (PacManArcadeGameWorldRenderer) renderer;
                 renderer.drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(17));
                 renderer.drawText(g, "1 PLAYER ONLY", cyan, font8, t(8), t(21));
                 renderer.drawText(g, "BONUS PAC-MAN FOR 10000", rose, font8, t(1), t(25));
                 renderer.drawText(g, "PTS", rose, font6, t(25), t(25));
-                drawMidwayCopyright(t(4), t(29));
+                pacManArcadeGameWorldRenderer.drawMidwayCopyright(g, t(4), t(29), context.assets().color("palette.pink"), sceneFont(8));
+            }
+            case PACMAN_XXL -> {
+                renderer.drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(17));
+                renderer.drawText(g, "1 PLAYER ONLY", cyan, font8, t(8), t(21));
+                renderer.drawText(g, "BONUS PAC-MAN FOR 10000", rose, font8, t(1), t(25));
+                renderer.drawText(g, "PTS", rose, font6, t(25), t(25));
             }
             default -> throw new IllegalArgumentException("Unsupported game variant: " + context.game().variant());
         }
