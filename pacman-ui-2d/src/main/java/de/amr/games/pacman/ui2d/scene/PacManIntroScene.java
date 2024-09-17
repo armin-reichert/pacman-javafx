@@ -351,21 +351,17 @@ public class PacManIntroScene extends GameScene2D {
         }
     }
 
-    private void drawGhost(Ghost ghost) {
-        drawGhost(g, ghost);
-    }
-
     private void drawGuys(int shakingAmount) {
         if (shakingAmount == 0) {
-            data.ghosts.forEach(this::drawGhost);
+            data.ghosts.forEach(ghost -> renderer.drawGhost(g, ghost));
         } else {
-            drawGhost(data.ghosts.get(0));
-            drawGhost(data.ghosts.get(3));
+            renderer.drawGhost(g, data.ghosts.get(0));
+            renderer.drawGhost(g, data.ghosts.get(3));
             // shaking ghosts effect, not quite as in original game
             g.save();
             g.translate(shakingAmount, 0);
-            drawGhost(data.ghosts.get(1));
-            drawGhost(data.ghosts.get(2));
+            renderer.drawGhost(g, data.ghosts.get(1));
+            renderer.drawGhost(g, data.ghosts.get(2));
             g.restore();
         }
         renderer.drawPac(g, data.pacMan);

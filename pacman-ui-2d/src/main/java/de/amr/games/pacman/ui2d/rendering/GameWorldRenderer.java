@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui2d.rendering;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
+import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.util.SpriteAnimations;
@@ -54,6 +55,17 @@ public interface GameWorldRenderer {
         if (pac.isVisible() && pac.animations().isPresent() && pac.animations().get() instanceof SpriteAnimations sa) {
             spriteRenderer().drawEntitySprite(g, pac, sa.currentSprite());
         }
+    }
+
+    default void drawGhost(GraphicsContext g, Ghost ghost) {
+        if (!ghost.isVisible()) {
+            return;
+        }
+        ghost.animations().ifPresent(ghostAnimations -> {
+            if (ghostAnimations instanceof SpriteAnimations animations) {
+                spriteRenderer().drawEntitySprite(g,  ghost, animations.currentSprite());
+            }
+        });
     }
 
     /**

@@ -167,17 +167,6 @@ public class GameScene2D implements GameScene {
         }
     }
 
-    protected void drawGhost(GraphicsContext g, Ghost ghost) {
-        if (!ghost.isVisible()) {
-            return;
-        }
-        ghost.animations().ifPresent(ga -> {
-            if (ga instanceof SpriteAnimations animations) {
-                renderer.spriteRenderer().drawEntitySprite(g,  ghost, animations.currentSprite());
-            }
-        });
-    }
-
     protected void drawGhostInfo(GraphicsContext g, Ghost ghost) {
         if (ghost.animations().isPresent() && ghost.animations().get() instanceof SpriteAnimations sa) {
             if (sa.currentAnimationName() != null) {

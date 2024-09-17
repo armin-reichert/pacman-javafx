@@ -14,7 +14,6 @@ import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -124,7 +123,7 @@ public class PlayScene2D extends GameScene2D {
         drawLevelMessage();
 
         renderer.drawPac(g, game.pac());
-        ghostsInZOrder().forEach(ghost -> drawGhost(g, ghost));
+        ghostsInZOrder().forEach(ghost -> renderer.drawGhost(g, ghost));
         if (infoVisiblePy.get()) {
             drawPacInfo(g, game.pac());
             ghostsInZOrder().forEach(ghost -> drawGhostInfo(g, ghost));

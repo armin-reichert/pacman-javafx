@@ -268,8 +268,8 @@ public class MsPacManCutScene1 extends GameScene2D {
             clapAnimation, t(3), t(10));
         renderer.drawPac(g, msPac);
         renderer.drawPac(g, pacMan);
-        drawGhost(g, inky);
-        drawGhost(g, pinky);
+        renderer.drawGhost(g, inky);
+        renderer.drawGhost(g, pinky);
         renderer.spriteRenderer().drawEntitySprite(g, heart, sheet.heartSprite());
         drawLevelCounter(g);
     }
