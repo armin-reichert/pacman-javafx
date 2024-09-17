@@ -37,9 +37,8 @@ public abstract class GameScene2D implements GameScene {
         return context.game().hasCredit();
     }
 
-    public void setContext(GameContext context) {
-        checkNotNull(context);
-        this.context = context;
+    public void setGameContext(GameContext context) {
+        this.context = checkNotNull(context);
     }
 
     public void setCanvas(Canvas canvas) {
@@ -49,7 +48,7 @@ public abstract class GameScene2D implements GameScene {
     }
 
     public void setRenderer(GameWorldRenderer renderer) {
-        this.renderer = renderer;
+        this.renderer = checkNotNull(renderer);
     }
 
     protected double scaled(double value) {

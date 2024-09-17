@@ -19,7 +19,8 @@ import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.page.StartPage;
-import de.amr.games.pacman.ui2d.rendering.*;
+import de.amr.games.pacman.ui2d.rendering.GameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
@@ -119,7 +120,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         for (GameVariant variant : GameVariant.values()) {
             gameScenesForVariant.get(variant).values().forEach(gameScene -> {
                 if (gameScene instanceof GameScene2D gameScene2D) {
-                    gameScene2D.setContext(this);
+                    gameScene2D.setGameContext(this);
                     gameScene2D.debugInfoPy.bind(PY_DEBUG_INFO);
                 }
             });
@@ -336,9 +337,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     private void configureGameScene2D(GameScene2D gameScene2D) {
         GameWorldRenderer renderer = createRenderer(game().variant());
-        gameScene2D.setRenderer(renderer);
         renderer.scalingProperty().bind(gameScene2D.scalingPy);
         renderer.backgroundColorProperty().bind(gameScene2D.backgroundColorPy);
+        gameScene2D.setRenderer(renderer);
         gameScene2D.backgroundColorPy.bind(PY_CANVAS_COLOR);
     }
 

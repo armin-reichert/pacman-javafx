@@ -6,7 +6,6 @@ package de.amr.games.pacman.ui2d.util;
 
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.ui2d.rendering.SpriteArea;
-import javafx.geometry.Rectangle2D;
 import org.tinylog.Logger;
 
 /**

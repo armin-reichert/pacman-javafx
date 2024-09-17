@@ -66,7 +66,7 @@ public class PictureInPictureView implements GameEventListener {
         canvas.widthProperty().bind(heightPy.multiply(aspectPy));
 
         gameScene = new PlayScene2D();
-        gameScene.setContext(context);
+        gameScene.setGameContext(context);
         gameScene.setCanvas(canvas);
 
         HBox pane = new HBox(canvas);
