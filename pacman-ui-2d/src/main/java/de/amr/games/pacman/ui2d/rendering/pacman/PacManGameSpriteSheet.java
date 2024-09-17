@@ -106,7 +106,6 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
         }
     }
 
-    @Override
     public SpriteArea ghostFacingRight(byte ghostID) {
         return ghostFacingRightSprites[ghostID];
     }

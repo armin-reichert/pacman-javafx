@@ -124,11 +124,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
         return ghostsNormalSprites[id][ORDER.indexOf(dir)];
     }
 
-    @Override
-    public SpriteArea ghostFacingRight(byte id) {
-        return ghostNormalSprites(id, Direction.RIGHT)[0];
-    }
-
     private final SpriteArea[] ghostFrightenedSprites = array(sprite(8, 4), sprite(9, 4));
 
     public SpriteArea[] ghostFrightenedSprites() {

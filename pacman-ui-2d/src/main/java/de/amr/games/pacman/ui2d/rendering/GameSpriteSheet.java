@@ -14,5 +14,4 @@ public interface GameSpriteSheet extends SpriteSheet {
     SpriteArea livesCounterSprite();
     SpriteArea bonusSymbolSprite(byte symbol);
     SpriteArea bonusValueSprite(byte symbol);
-    SpriteArea ghostFacingRight(byte id);
 }

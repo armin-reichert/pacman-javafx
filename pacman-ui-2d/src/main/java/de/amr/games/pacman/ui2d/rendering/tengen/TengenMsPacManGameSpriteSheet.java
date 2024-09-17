@@ -37,11 +37,6 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     @Override
-    public SpriteArea ghostFacingRight(byte id) {
-        return null;
-    }
-
-    @Override
     public int raster() {
         return 16;
     }
