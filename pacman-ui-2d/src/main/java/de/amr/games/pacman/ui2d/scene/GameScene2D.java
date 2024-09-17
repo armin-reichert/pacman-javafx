@@ -79,7 +79,7 @@ public abstract class GameScene2D implements GameScene {
         }
         drawSceneContent();
         if (debugInfoPy.get()) {
-            drawSceneInfo();
+            drawDebugInfo();
         }
         if (isCreditVisible()) {
             int numRows = context.game().world() != null
@@ -104,7 +104,7 @@ public abstract class GameScene2D implements GameScene {
     /**
      * Draws additional scene info, e.g. tile structure or debug info.
      */
-    protected void drawSceneInfo() {
+    protected void drawDebugInfo() {
         renderer.drawTileGrid(g, numWorldTilesX(), numWorldTilesY());
     }
 

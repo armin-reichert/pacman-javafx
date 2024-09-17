@@ -115,9 +115,8 @@ public class PlayScene2D extends GameScene2D {
         }
 
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
-        boolean blinkingOn = context.game().blinking().isOn();
         renderer.setFlashMode(flashMode);
-        renderer.setBlinkingOn(blinkingOn);
+        renderer.setBlinkingOn(context.game().blinking().isOn());
         renderer.drawWorld(g, context, context.game().world());
 
         drawLevelMessage(); // READY, GAME_OVER etc.
@@ -165,11 +164,10 @@ public class PlayScene2D extends GameScene2D {
     }
 
     @Override
-    protected void drawSceneInfo() {
-        GameModel game = context.game();
+    protected void drawDebugInfo() {
         renderer.drawTileGrid(g, numWorldTilesX(), numWorldTilesY());
-        if (game.variant() == GameVariant.PACMAN && game.world() != null) {
-            game.ghosts().forEach(ghost -> {
+        if (context.game().variant() == GameVariant.PACMAN && context.game().world() != null) {
+            context.game().ghosts().forEach(ghost -> {
                 // Are currently the same for each ghost, but who knows what comes...
                 ghost.cannotMoveUpTiles().forEach(tile -> {
                     g.setFill(Color.RED);
