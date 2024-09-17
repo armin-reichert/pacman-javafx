@@ -30,22 +30,16 @@ import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_CANVAS_COLOR;
  */
 public class GameScene2D implements GameScene {
 
-    public final BooleanProperty infoVisiblePy = new SimpleBooleanProperty(this, "infoVisible", false);
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
     public final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(this, "backgroundColor", Color.BLACK);
-
-    protected GameWorldRenderer renderer;
+    public final BooleanProperty debugInfoPy = new SimpleBooleanProperty(this, "debugInfo", false);
 
     protected GameContext context;
     protected GraphicsContext g;
+    protected GameWorldRenderer renderer;
 
     public boolean isCreditVisible() {
         return context.game().hasCredit();
-    }
-
-    protected void drawSceneContent() {
-        Font font = Font.font("Monospaced", 20);
-        renderer.drawText(g, "Implement method drawSceneContent()!", Color.WHITE, font, 10, 100);
     }
 
     public void setContext(GameContext context) {
@@ -96,22 +90,28 @@ public class GameScene2D implements GameScene {
         }
         clearCanvas();
         if (context.isScoreVisible()) {
-            Color color = context.assets().color("palette.pale");
-            Font font = sceneFont(TS);
-            renderer.drawScore(g, context.game().score(), "SCORE", t(1), t(1), font, color);
-            renderer.drawScore(g, context.game().highScore(), "HIGH SCORE", t(14), t(1), font, color);
+            Color scoreColor = context.assets().color("palette.pale");
+            Font scoreFont = sceneFont(TS);
+            renderer.drawScore(g, context.game().score(), "SCORE", t(1), t(1), scoreFont, scoreColor);
+            renderer.drawScore(g, context.game().highScore(), "HIGH SCORE", t(14), t(1), scoreFont, scoreColor);
+        }
+        drawSceneContent();
+        if (debugInfoPy.get()) {
+            drawSceneInfo();
         }
         if (isCreditVisible()) {
             int numRows = context.game().world() != null
                 ? context.game().world().map().terrain().numRows()
                 : GameModel.ARCADE_MAP_TILES_Y;
-            renderer.drawText(g, String.format("CREDIT %2d", context.game().credit()),
-                context.assets().color("palette.pale"), sceneFont(8), t(2), t(numRows) - 1);
+            Color creditColor = context.assets().color("palette.pale");
+            Font creditFont = sceneFont(8);
+            renderer.drawText(g, String.format("CREDIT %2d", context.game().credit()), creditColor, creditFont, t(2), t(numRows) - 1);
         }
-        drawSceneContent();
-        if (infoVisiblePy.get()) {
-            drawSceneInfo();
-        }
+    }
+
+    protected void drawSceneContent() {
+        Font font = Font.font("Monospaced", 20);
+        renderer.drawText(g, "Implement method drawSceneContent()!", Color.WHITE, font, 10, 100);
     }
 
     public void clearCanvas() {

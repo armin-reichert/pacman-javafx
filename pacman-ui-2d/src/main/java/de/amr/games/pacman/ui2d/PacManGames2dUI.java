@@ -116,7 +116,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             gameScenesForVariant.get(variant).values().forEach(gameScene -> {
                 if (gameScene instanceof GameScene2D gameScene2D) {
                     gameScene2D.setContext(this);
-                    gameScene2D.infoVisiblePy.bind(PY_DEBUG_INFO);
+                    gameScene2D.debugInfoPy.bind(PY_DEBUG_INFO);
                 }
             });
         }
