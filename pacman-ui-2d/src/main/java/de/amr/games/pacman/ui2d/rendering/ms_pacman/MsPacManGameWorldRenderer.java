@@ -1,7 +1,7 @@
-package de.amr.games.pacman.ui2d.rendering;
+package de.amr.games.pacman.ui2d.rendering.ms_pacman;
 
 import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
+import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;

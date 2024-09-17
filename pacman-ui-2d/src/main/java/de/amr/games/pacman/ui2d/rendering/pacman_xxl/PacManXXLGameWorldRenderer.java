@@ -94,8 +94,7 @@ public class PacManXXLGameWorldRenderer implements GameWorldRenderer {
         context.game().bonus().ifPresent(bonus -> drawStaticBonus(g, bonus));
     }
 
-    private void drawStaticBonus(GraphicsContext g, Bonus bonus)
-    {
+    private void drawStaticBonus(GraphicsContext g, Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
             spriteRenderer.drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
         } else if (bonus.state() == Bonus.STATE_EATEN) {

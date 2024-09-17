@@ -5,7 +5,7 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.rendering.MsPacManGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.SpriteArea;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
 

@@ -153,11 +153,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
         return ghostEyesSprites[ORDER.indexOf(dir)];
     }
 
-    @Override
-    public Image getFlashingMazeImage() {
-        return null;
-    }
-
     // Ms. Pac-Man specific:
 
     private static final int MS_PACMAN_MAZE_COUNT = 6;

@@ -22,11 +22,6 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     @Override
-    public Image getFlashingMazeImage() {
-        return null;
-    }
-
-    @Override
     public SpriteArea livesCounterSprite() {
         return null;
     }

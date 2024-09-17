@@ -18,7 +18,7 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.rendering.MsPacManGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;

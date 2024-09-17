@@ -35,18 +35,6 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
         return null;
     }
 
-    public SpriteArea emptyMaze(int mapNumber) {
-        return null;
-    }
-
-    public SpriteArea filledMaze(int mapNumber) {
-        return null;
-    }
-
-    public SpriteArea[] clapperboardSprites() {
-        return new SpriteArea[0];
-    }
-
     @Override
     public Image source() {
         return source;
@@ -57,7 +45,6 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
         return 16;
     }
 
-    @Override
     public Image getFlashingMazeImage() {
         return flashingMazeImage;
     }

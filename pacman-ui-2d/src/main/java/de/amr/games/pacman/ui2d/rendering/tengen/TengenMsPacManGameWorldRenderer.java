@@ -11,7 +11,7 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.MsPacManGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
