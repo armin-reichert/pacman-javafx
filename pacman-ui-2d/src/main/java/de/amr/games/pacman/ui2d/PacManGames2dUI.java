@@ -20,12 +20,16 @@ import de.amr.games.pacman.ui2d.page.GamePage;
 import de.amr.games.pacman.ui2d.page.Page;
 import de.amr.games.pacman.ui2d.page.StartPage;
 import de.amr.games.pacman.ui2d.rendering.*;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.pacman_xxl.PacManXXLGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
@@ -292,6 +296,15 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         return text;
     }
 
+    private GameWorldRenderer createRenderer(GameVariant variant) {
+        return switch (variant) {
+            case MS_PACMAN -> new MsPacManArcadeGameWorldRenderer(assets);
+            case MS_PACMAN_TENGEN -> new TengenMsPacManGameWorldRenderer(assets);
+            case PACMAN -> new PacManArcadeGameWorldRenderer(assets);
+            case PACMAN_XXL -> new PacManXXLGameWorldRenderer(assets);
+        };
+    }
+
     protected void updateGameScene(boolean reloadCurrent) {
         GameScene currentGameScene = gameScenePy.get();
         GameScene nextGameScene = gameSceneForCurrentGameState();
@@ -302,6 +315,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                 Logger.info("Game scene ended: {}", displayName(currentGameScene));
             }
             if (nextGameScene != null) {
+                if (nextGameScene instanceof GameScene2D gameScene2D) {
+                    configureGameScene2D(gameScene2D);
+                }
                 nextGameScene.init();
             }
             if (sceneChanging) {
@@ -316,6 +332,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                 gamePage.hideSignature();
             }
         }
+    }
+
+    private void configureGameScene2D(GameScene2D gameScene2D) {
+        GameWorldRenderer renderer = createRenderer(game().variant());
+        gameScene2D.setRenderer(renderer);
+        renderer.scalingProperty().bind(gameScene2D.scalingPy);
+        renderer.backgroundColorProperty().bind(gameScene2D.backgroundColorPy);
+        gameScene2D.backgroundColorPy.bind(PY_CANVAS_COLOR);
     }
 
     protected GameScene gameSceneForCurrentGameState() {

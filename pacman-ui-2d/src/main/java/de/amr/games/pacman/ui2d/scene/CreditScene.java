@@ -26,6 +26,11 @@ public class CreditScene extends GameScene2D {
     }
 
     @Override
+    public void update() {
+        // nothing to do
+    }
+
+    @Override
     public void handleUserInput() {
         if (GameAction.ADD_CREDIT.requested()) {
             context.addCredit();

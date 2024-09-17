@@ -7,10 +7,6 @@ package de.amr.games.pacman.ui2d.scene;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.pacman_xxl.PacManXXLGameWorldRenderer;
-import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameWorldRenderer;
 import javafx.beans.property.*;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -21,14 +17,13 @@ import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.ui2d.PacManGames2dApp.PY_CANVAS_COLOR;
 
 /**
  * Base class of all 2D scenes.
  *
  * @author Armin Reichert
  */
-public class GameScene2D implements GameScene {
+public abstract class GameScene2D implements GameScene {
 
     public final DoubleProperty scalingPy = new SimpleDoubleProperty(this, "scaling", 1.0);
     public final ObjectProperty<Color> backgroundColorPy = new SimpleObjectProperty<>(this, "backgroundColor", Color.BLACK);
@@ -53,6 +48,10 @@ public class GameScene2D implements GameScene {
         clearCanvas();
     }
 
+    public void setRenderer(GameWorldRenderer renderer) {
+        this.renderer = renderer;
+    }
+
     protected double scaled(double value) {
         return value * scalingPy.get();
     }
@@ -64,23 +63,6 @@ public class GameScene2D implements GameScene {
     @Override
     public Node root() {
         return g.getCanvas();
-    }
-
-    @Override
-    public void init() {
-        backgroundColorPy.bind(PY_CANVAS_COLOR);
-        renderer = switch (context.game().variant()) {
-            case MS_PACMAN -> new MsPacManArcadeGameWorldRenderer(context.assets());
-            case MS_PACMAN_TENGEN -> new TengenMsPacManGameWorldRenderer(context.assets());
-            case PACMAN -> new PacManArcadeGameWorldRenderer(context.assets());
-            case PACMAN_XXL -> new PacManXXLGameWorldRenderer(context.assets());
-        };
-        renderer.scalingProperty().bind(scalingPy);
-        renderer.backgroundColorProperty().bind(backgroundColorPy);
-    }
-
-    @Override
-    public void update() {
     }
 
     public void draw() {
