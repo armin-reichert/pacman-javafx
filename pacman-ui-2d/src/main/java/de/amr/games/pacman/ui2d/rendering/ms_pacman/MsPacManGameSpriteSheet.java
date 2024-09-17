@@ -157,7 +157,6 @@ public class MsPacManGameSpriteSheet implements GameSpriteSheet {
 
     private static final int MS_PACMAN_MAZE_COUNT = 6;
 
-    @Override
     public Image getFlashingMazesImage() {
         return flashingMazesImage;
     }

@@ -32,11 +32,6 @@ public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     @Override
-    public Image getFlashingMazesImage() {
-        return null;
-    }
-
-    @Override
     public SpriteArea bonusSymbolSprite(byte symbol) {
         return null;
     }

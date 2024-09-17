@@ -31,11 +31,6 @@ public class PacManGameSpriteSheet implements GameSpriteSheet {
     }
 
     @Override
-    public Image getFlashingMazesImage() {
-        return null;
-    }
-
-    @Override
     public Image source() {
         return source;
     }
