@@ -99,7 +99,7 @@ public class PlayScene2D extends GameScene2D {
             }
             case LEVEL_COMPLETE -> {
                 GameSounds.stopAll();
-                // if cheat has been used to complete level, food might still exist, so eat it:
+                // if cheat has been used to complete level, food might still exist: "Eat it!" (Weird Al Jankovic)
                 GameWorld world = context.game().world();
                 world.map().food().tiles().forEach(world::eatFoodAt);
             }
@@ -109,32 +109,35 @@ public class PlayScene2D extends GameScene2D {
 
     @Override
     protected void drawSceneContent() {
-        GameModel game = context.game();
-        if (game.world() == null) { // This happens on level start
+        if (context.game().world() == null) { // This happens on level start
             Logger.warn("Cannot draw scene content, game world not yet available!");
             return;
         }
+
         boolean flashMode = Boolean.TRUE.equals(context.gameState().getProperty("mazeFlashing"));
-        boolean blinkingOn = game.blinking().isOn();
+        boolean blinkingOn = context.game().blinking().isOn();
         renderer.setFlashMode(flashMode);
         renderer.setBlinkingOn(blinkingOn);
-        renderer.drawWorld(g, context, game.world());
+        renderer.drawWorld(g, context, context.game().world());
 
-        drawLevelMessage();
+        drawLevelMessage(); // READY, GAME_OVER etc.
 
-        renderer.drawPac(g, game.pac());
+        renderer.drawPac(g, context.game().pac());
         ghostsInZOrder().forEach(ghost -> renderer.drawGhost(g, ghost));
+
+        // Debug mode info
         if (infoVisiblePy.get()) {
-            renderer.drawPacInfo(g, game.pac());
+            renderer.drawPacInfo(g, context.game().pac());
             ghostsInZOrder().forEach(ghost -> renderer.drawGhostInfo(g, ghost));
         }
 
         if (!isCreditVisible()) {
-            int numLivesDisplayed = game.lives() - 1;
-            if (context.gameState() == GameState.READY && !game.pac().isVisible()) {
+            //TODO check this
+            int numLivesDisplayed = context.game().lives() - 1;
+            if (context.gameState() == GameState.READY && !context.game().pac().isVisible()) {
                 numLivesDisplayed += 1;
             }
-            renderer.drawLivesCounter(g, numLivesDisplayed, game.world().map().terrain().numRows() - 2);
+            renderer.drawLivesCounter(g, numLivesDisplayed, context.game().world().map().terrain().numRows() - 2);
         }
         drawLevelCounter(g);
     }
@@ -145,17 +148,18 @@ public class PlayScene2D extends GameScene2D {
     }
 
     private void drawLevelMessage() {
-        GameModel game = context.game();
-        Vector2i houseOrigin = game.world().houseTopLeftTile(), houseSize = game.world().houseSize();
+        Vector2i houseOrigin = context.game().world().houseTopLeftTile();
+        Vector2i houseSize = context.game().world().houseSize();
         int centerTileX = houseOrigin.x() + houseSize.x() / 2;
-        int tileY = houseOrigin.y() + houseSize.y() + 1;
-        if (game.isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
-            // "GAME OVER" is drawn in demo mode and when game is over
-            renderer.drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(centerTileX - 5), t(tileY));
+        double msgY = t(houseOrigin.y() + houseSize.y() + 1);
+        // "GAME OVER" is drawn in demo mode and when game is over:
+        if (context.game().isDemoLevel() || context.gameState() == GameState.GAME_OVER) {
+            renderer.drawText(g, "GAME  OVER", Color.RED, sceneFont(8), t(centerTileX - 5), msgY);
         } else {
             switch (context.gameState()) {
-                case READY      -> renderer.drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(centerTileX - 3), t(tileY));
-                case LEVEL_TEST -> renderer.drawText(g, "TEST    L" + game.levelNumber(), Color.YELLOW, sceneFont(8), t(8.5), t(tileY));
+                case READY      -> renderer.drawText(g, "READY!", Color.YELLOW, sceneFont(8), t(centerTileX - 3), msgY);
+                case LEVEL_TEST -> renderer.drawText(g, "TEST    L" + context.game().levelNumber(),
+                    Color.YELLOW, sceneFont(8), t(8.5), msgY);
             }
         }
     }

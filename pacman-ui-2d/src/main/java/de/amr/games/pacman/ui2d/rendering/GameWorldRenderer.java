@@ -107,10 +107,6 @@ public interface GameWorldRenderer {
         }
     }
 
-
-
-
-
     /**
      * Draws a text with the given style at the given (unscaled) position.
      *
