@@ -7,6 +7,11 @@ package de.amr.games.pacman.ui3d;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.page.GamePage;
+import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.pacman_xxl.PacManXXLGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameScene2D;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
@@ -124,6 +129,7 @@ public class GamePage3D extends GamePage {
         contextMenu.hide();
         if (gameScene instanceof PlayScene3D) {
             getChildren().set(0, gameScene.root());
+            dashboardLayer.getPip().setGameVariant(context.game().variant());
         } else if (gameScene instanceof GameScene2D scene2D) {
             setGameScene2D(scene2D);
         } else {

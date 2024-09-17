@@ -189,6 +189,5 @@ public class MsPacManCutScene3 extends GameScene2D {
         renderer.drawPac(g, pacMan);
         renderer.spriteRenderer().drawEntitySprite(g, stork, storkAnimation.currentSprite());
         renderer.spriteRenderer().drawEntitySprite(g, bag, bagOpen ? sheet.juniorPacSprite() : sheet.blueBagSprite());
-        drawLevelCounter(g);
     }
 }

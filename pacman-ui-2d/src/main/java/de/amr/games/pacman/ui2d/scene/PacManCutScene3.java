@@ -93,7 +93,6 @@ public class PacManCutScene3 extends GameScene2D {
     public void drawSceneContent() {
         renderer.drawPac(g, pac);
         renderer.drawGhost(g, blinky);
-        drawLevelCounter(g);
     }
 
     @Override

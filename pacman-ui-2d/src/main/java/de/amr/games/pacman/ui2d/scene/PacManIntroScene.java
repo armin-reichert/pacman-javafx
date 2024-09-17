@@ -327,7 +327,6 @@ public class PacManIntroScene extends GameScene2D {
             default -> {
             }
         }
-        drawLevelCounter(g);
     }
 
     // TODO inspect in MAME what's really going on here

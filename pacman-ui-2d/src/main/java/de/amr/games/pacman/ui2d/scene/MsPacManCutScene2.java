@@ -178,6 +178,5 @@ public class MsPacManCutScene2 extends GameScene2D {
             clapAnimation, t(3), t(10));
         renderer.drawPac(g, msPacMan);
         renderer.drawPac(g, pacMan);
-        drawLevelCounter(g);
     }
 }

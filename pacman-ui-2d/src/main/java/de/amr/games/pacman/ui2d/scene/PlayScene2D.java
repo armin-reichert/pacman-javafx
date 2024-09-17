@@ -138,7 +138,6 @@ public class PlayScene2D extends GameScene2D {
             }
             renderer.drawLivesCounter(g, numLivesDisplayed, context.game().world().map().terrain().numRows() - 2);
         }
-        drawLevelCounter(g);
     }
 
     private Stream<Ghost> ghostsInZOrder() {

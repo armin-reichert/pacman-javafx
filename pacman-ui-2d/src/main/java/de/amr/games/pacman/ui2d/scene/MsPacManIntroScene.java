@@ -288,7 +288,6 @@ public class MsPacManIntroScene extends GameScene2D {
         msPacManGameWorldRenderer.drawMsPacManMidwayCopyright(g,
             context.assets().get("ms_pacman.logo.midway"),
             t(6), t(28), context.assets().color("palette.red"), sceneFont(TS));
-        drawLevelCounter(g);
     }
 
     // TODO This is too cryptic

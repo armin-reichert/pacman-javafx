@@ -9,7 +9,13 @@ import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.GameContext;
+import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.pacman_xxl.PacManXXLGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.scene.PlayScene2D;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.beans.property.BooleanProperty;
@@ -84,6 +90,19 @@ public class PictureInPictureView implements GameEventListener {
 
     public Node node() {
         return layout;
+    }
+
+    public void setGameVariant(GameVariant variant) {
+        GameWorldRenderer renderer = switch (variant) {
+            case MS_PACMAN -> new MsPacManArcadeGameWorldRenderer(context.assets());
+            case MS_PACMAN_TENGEN -> new TengenMsPacManGameWorldRenderer(context.assets());
+            case PACMAN -> new PacManArcadeGameWorldRenderer(context.assets());
+            case PACMAN_XXL -> new PacManXXLGameWorldRenderer(context.assets());
+        };
+        renderer.scalingProperty().bind(gameScene.scalingPy);
+        renderer.backgroundColorProperty().bind(gameScene.backgroundColorPy);
+        gameScene.setRenderer(renderer);
+        gameScene.backgroundColorPy.bind(PY_CANVAS_COLOR);
     }
 
     public void draw() {

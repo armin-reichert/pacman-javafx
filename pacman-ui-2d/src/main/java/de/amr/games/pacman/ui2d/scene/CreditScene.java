@@ -78,6 +78,5 @@ public class CreditScene extends GameScene2D {
             }
             default -> throw new IllegalArgumentException("Unsupported game variant: " + context.game().variant());
         }
-        drawLevelCounter(g);
     }
 }
