@@ -297,15 +297,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         return text;
     }
 
-    private GameWorldRenderer createRenderer(GameVariant variant) {
-        return switch (variant) {
-            case MS_PACMAN -> new MsPacManArcadeGameWorldRenderer(assets);
-            case MS_PACMAN_TENGEN -> new TengenMsPacManGameWorldRenderer(assets);
-            case PACMAN -> new PacManArcadeGameWorldRenderer(assets);
-            case PACMAN_XXL -> new PacManXXLGameWorldRenderer(assets);
-        };
-    }
-
     protected void updateGameScene(boolean reloadCurrent) {
         GameScene currentGameScene = gameScenePy.get();
         GameScene nextGameScene = gameSceneForCurrentGameState();
@@ -336,7 +327,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     private void configureGameScene2D(GameScene2D gameScene2D) {
-        GameWorldRenderer renderer = createRenderer(game().variant());
+        GameWorldRenderer renderer = switch (game().variant()) {
+            case MS_PACMAN -> new MsPacManArcadeGameWorldRenderer(assets);
+            case MS_PACMAN_TENGEN -> new TengenMsPacManGameWorldRenderer(assets);
+            case PACMAN -> new PacManArcadeGameWorldRenderer(assets);
+            case PACMAN_XXL -> new PacManXXLGameWorldRenderer(assets);
+        };
         renderer.scalingProperty().bind(gameScene2D.scalingPy);
         renderer.backgroundColorProperty().bind(gameScene2D.backgroundColorPy);
         gameScene2D.setRenderer(renderer);
