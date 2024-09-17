@@ -9,7 +9,7 @@ import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.SpriteArea;
 import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
@@ -21,7 +21,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.t;
 
-public class MsPacManArcadeGameWorldRenderer implements GameWorldRenderer {
+public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRenderer {
 
     private final MsPacManGameSpriteSheet spriteSheet;
     private final SpriteRenderer spriteRenderer = new SpriteRenderer();
@@ -98,13 +98,7 @@ public class MsPacManArcadeGameWorldRenderer implements GameWorldRenderer {
         game.bonus().ifPresent(bonus -> drawMovingBonus(g, (MovingBonus) bonus));
     }
 
-    /**
-     * Draws a moving bonus entity at its current position (including jump offset).
-     * TODO reconsider this way of implementing the jumping bonus
-     *
-     * @param g     graphics context
-     * @param movingBonus moving bonus entity
-     */
+    @Override
     public void drawMovingBonus(GraphicsContext g, MovingBonus movingBonus) {
         g.save();
         g.translate(0, movingBonus.elongationY());
@@ -116,10 +110,8 @@ public class MsPacManArcadeGameWorldRenderer implements GameWorldRenderer {
         g.restore();
     }
 
-    public void drawClapperBoard(
-        GraphicsContext g,
-        Font font, Color textColor,
-        ClapperboardAnimation animation, double x, double y)
+    @Override
+    public void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y)
     {
         double scaling = scalingProperty().get();
         var sprite = animation.currentSprite(spriteSheet.clapperboardSprites());

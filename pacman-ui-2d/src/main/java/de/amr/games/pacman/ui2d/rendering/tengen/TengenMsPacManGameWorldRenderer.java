@@ -11,20 +11,25 @@ import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.maps.editor.TileMapUtil.getColorFromMap;
 import static de.amr.games.pacman.model.GameWorld.*;
 import static java.util.function.Predicate.not;
 
-public class TengenMsPacManGameWorldRenderer implements GameWorldRenderer {
+/**
+ * @author Armin Reichert
+ */
+public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRenderer {
 
     private final AssetStorage assets;
     private MsPacManGameSpriteSheet tmpSpriteSheet;
@@ -101,13 +106,7 @@ public class TengenMsPacManGameWorldRenderer implements GameWorldRenderer {
         context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, (MovingBonus) bonus));
     }
 
-    /**
-     * Draws a moving bonus entity at its current position (including jump offset).
-     * TODO reconsider this way of implementing the jumping bonus
-     *
-     * @param g     graphics context
-     * @param movingBonus moving bonus entity
-     */
+    @Override
     public void drawMovingBonus(GraphicsContext g, MovingBonus movingBonus) {
         g.save();
         g.translate(0, movingBonus.elongationY());
@@ -121,4 +120,20 @@ public class TengenMsPacManGameWorldRenderer implements GameWorldRenderer {
         g.restore();
     }
 
+    @Override
+    public void drawClapperBoard(GraphicsContext g, Font font, Color textColor, ClapperboardAnimation animation, double x, double y) {
+        double scaling = scalingProperty().get();
+        var sprite = animation.currentSprite(tmpSpriteSheet.clapperboardSprites());
+        if (sprite != null) {
+            spriteRenderer.drawSpriteCenteredOverBox(g, sprite, x, y);
+            g.setFont(font);
+            g.setFill(textColor.darker());
+            var numberX = scaling * (x + sprite.width() - 25);
+            var numberY = scaling * (y + 18);
+            g.setFill(textColor);
+            g.fillText(animation.number(), numberX, numberY);
+            var textX = scaling * (x + sprite.width());
+            g.fillText(animation.text(), textX, numberY);
+        }
+    }
 }

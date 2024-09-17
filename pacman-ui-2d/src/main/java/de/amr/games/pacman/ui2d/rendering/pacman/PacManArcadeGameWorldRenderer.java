@@ -17,6 +17,9 @@ import javafx.scene.paint.Color;
 
 import static de.amr.games.pacman.lib.Globals.t;
 
+/**
+ * @author Armin Reichert
+ */
 public class PacManArcadeGameWorldRenderer implements GameWorldRenderer {
 
     private final PacManGameSpriteSheet spriteSheet;

@@ -19,6 +19,9 @@ import java.util.List;
 
 import static de.amr.games.pacman.lib.Globals.*;
 
+/**
+ * @author Armin Reichert
+ */
 public interface GameWorldRenderer {
 
     DoubleProperty scalingProperty();
@@ -65,19 +68,17 @@ public interface GameWorldRenderer {
         if (numLivesDisplayed == 0) {
             return;
         }
-        int maxLives = 5;
+        int maxSymbols = 5;
         var x = TS * 2;
         var y = TS * tileY;
-        for (int i = 0; i < Math.min(numLivesDisplayed, maxLives); ++i) {
-            spriteRenderer().drawSpriteScaled(g,
-                    spriteRenderer().spriteSheet().livesCounterSprite(),
-                    x + TS * (2 * i), y);
+        for (int i = 0; i < Math.min(numLivesDisplayed, maxSymbols); ++i) {
+            spriteRenderer().drawSpriteScaled(g, spriteRenderer().spriteSheet().livesCounterSprite(), x + TS * (2 * i), y);
         }
-        // text indicating that more lives are available than displayed
-        int excessLives = numLivesDisplayed - maxLives;
-        if (excessLives > 0) {
-            drawText(g, "+" + excessLives, Color.YELLOW,
-                    Font.font("Serif", FontWeight.BOLD, scaled(8)), x + TS * 10, y + TS);
+        // show text indicating that more lives are available than symbols displayed (can happen when lives are added via cheat)
+        int moreLivesThanSymbols = numLivesDisplayed - maxSymbols;
+        if (moreLivesThanSymbols > 0) {
+            Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
+            drawText(g, "+" + moreLivesThanSymbols, Color.YELLOW, font, x + TS * 10, y + TS);
         }
     }
 

@@ -11,10 +11,10 @@ import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.actors.Entity;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameSounds;
+import de.amr.games.pacman.ui2d.rendering.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.SpriteAnimation;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -180,8 +180,8 @@ public class MsPacManCutScene3 extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        MsPacManArcadeGameWorldRenderer rdr = (MsPacManArcadeGameWorldRenderer) renderer;
-        rdr.drawClapperBoard(g,
+        var msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) renderer;
+        msPacManGameWorldRenderer.drawClapperBoard(g,
             context.assets().font("font.arcade", s(8)),
             context.assets().color("palette.pale"),
             clapAnimation, t(3), t(10));
