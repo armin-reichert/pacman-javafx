@@ -40,6 +40,9 @@ import static de.amr.games.pacman.model.actors.GhostState.FRIGHTENED;
  */
 public class PacManIntroScene extends GameScene2D {
 
+    static final Color[] GHOST_COLORS = { Color.RED, Color.rgb(252, 181, 255), Color.CYAN, Color.rgb(251, 190, 88) };
+    static final Color PELLET_COLOR = Color.rgb(254, 189, 180);
+
     /**
      * Intro is controlled by a FSM, here come the states.
      */
@@ -227,7 +230,6 @@ public class PacManIntroScene extends GameScene2D {
         // Ghosts
         final List<Ghost> ghosts = List.of(Ghost.red(), Ghost.pink(), Ghost.cyan(), Ghost.orange());
         final String[]    ghostCharacters = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
-        final Color[]     ghostColors = { Color.RED, Color.rgb(252, 181, 255), Color.CYAN, Color.rgb(251, 190, 88) };
         final boolean[]   ghostImageVisible = new boolean[4];
         final boolean[]   ghostNicknameVisible = new boolean[4];
         final boolean[]   ghostCharacterVisible = new boolean[4];
@@ -349,11 +351,11 @@ public class PacManIntroScene extends GameScene2D {
             renderer.spriteRenderer().drawSpriteCenteredOverBox(g, renderer.spriteRenderer().spriteSheet().ghostFacingRight(id), t(tx) + 4, t(ty));
             if (data.ghostCharacterVisible[id]) {
                 var text = "-" + data.ghostCharacters[id];
-                renderer.drawText(g, text, data.ghostColors[id], font, t(tx + 3), t(ty + 1));
+                renderer.drawText(g, text, GHOST_COLORS[id], font, t(tx + 3), t(ty + 1));
             }
             if (data.ghostNicknameVisible[id]) {
                 var text = '"' + data.ghosts.get(id).name().toUpperCase() + '"';
-                renderer.drawText(g, text, data.ghostColors[id], font, t(tx + 14), t(ty + 1));
+                renderer.drawText(g, text, GHOST_COLORS[id], font, t(tx + 14), t(ty + 1));
             }
         }
     }
@@ -380,10 +382,10 @@ public class PacManIntroScene extends GameScene2D {
         var font6 = sceneFont(6);
         int tx = data.leftTileX + 6;
         int ty = 25;
-        g.setFill(Color.rgb(254, 189, 180));
+        g.setFill(PELLET_COLOR);
         g.fillRect(scaled(t(tx) + 4), scaled(t(ty - 1) + 4), scaled(2), scaled(2));
         if (data.blinking.isOn()) {
-            drawEnergizer(TS * tx, TS * (ty+1));
+            drawEnergizer(t(tx), t(ty + 1));
         }
         renderer.drawText(g, "10",  color, font8, t(tx + 2), t(ty));
         renderer.drawText(g, "PTS", color, font6, t(tx + 5), t(ty));
@@ -391,12 +393,12 @@ public class PacManIntroScene extends GameScene2D {
         renderer.drawText(g, "PTS", color, font6, t(tx + 5), t(ty + 2));
     }
 
-    // draw pixelized "circle"
+    // draw pixelated "circle"
     private void drawEnergizer(double x, double y) {
         double scaling = scalingPy.get();
         g.save();
         g.scale(scaling, scaling);
-        g.setFill(Color.rgb(254, 189, 180));
+        g.setFill(PELLET_COLOR);
         g.fillRect(x + 2, y, 4, 8);
         g.fillRect(x, y + 2, 8, 4);
         g.fillRect(x + 1, y + 1, 6, 6);
