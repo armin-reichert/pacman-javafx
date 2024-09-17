@@ -173,9 +173,9 @@ public class PlayScene2D extends GameScene2D {
                 // Are currently the same for each ghost, but who knows what comes...
                 ghost.cannotMoveUpTiles().forEach(tile -> {
                     g.setFill(Color.RED);
-                    g.fillOval(s(t(tile.x())), s(t(tile.y() - 1)), s(TS), s(TS));
+                    g.fillOval(scaled(t(tile.x())), scaled(t(tile.y() - 1)), scaled(TS), scaled(TS));
                     g.setFill(Color.WHITE);
-                    g.fillRect(s(t(tile.x()) + 1), s(t(tile.y()) - HTS - 1), s(TS - 2), s(2));
+                    g.fillRect(scaled(t(tile.x()) + 1), scaled(t(tile.y()) - HTS - 1), scaled(TS - 2), scaled(2));
                 });
             });
         }

@@ -263,7 +263,7 @@ public class MsPacManCutScene1 extends GameScene2D {
     public void drawSceneContent() {
         var msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) renderer;
         msPacManGameWorldRenderer.drawClapperBoard(g,
-            context.assets().font("font.arcade", s(8)),
+            context.assets().font("font.arcade", scaled(8)),
             context.assets().color("palette.pale"),
             clapAnimation, t(3), t(10));
         renderer.drawPac(g, msPac);

@@ -59,7 +59,7 @@ public class BootScene extends GameScene2D {
         for (int row = 0; row < GameModel.ARCADE_MAP_TILES_Y; ++row) {
             for (int col = 0; col < GameModel.ARCADE_MAP_TILES_X; ++col) {
                 var hexCode = Integer.toHexString(RND.nextInt(16));
-                g.fillText(hexCode, s(t(col)), s(t(row + 1)));
+                g.fillText(hexCode, scaled(t(col)), scaled(t(row + 1)));
             }
         }
     }
@@ -94,14 +94,14 @@ public class BootScene extends GameScene2D {
         var numRows = GameModel.ARCADE_MAP_TILES_Y / 2;
         var numCols = GameModel.ARCADE_MAP_TILES_X / 2;
         g.setStroke(context.assets().color("palette.pale"));
-        g.setLineWidth(s(2.0));
+        g.setLineWidth(scaled(2.0));
         for (int row = 0; row <= numRows; ++row) {
-            g.setLineWidth(row == 0 || row == numRows ? s(4.0) : s(2.0));
-            g.strokeLine(0, s(row * raster), s(width), s(row * raster));
+            g.setLineWidth(row == 0 || row == numRows ? scaled(4.0) : scaled(2.0));
+            g.strokeLine(0, scaled(row * raster), scaled(width), scaled(row * raster));
         }
         for (int col = 0; col <= numCols; ++col) {
-            g.setLineWidth(col == 0 || col == numCols ? s(4.0) : s(2.0));
-            g.strokeLine(s(col * raster), 0, s(col * raster), s(height));
+            g.setLineWidth(col == 0 || col == numCols ? scaled(4.0) : scaled(2.0));
+            g.strokeLine(scaled(col * raster), 0, scaled(col * raster), scaled(height));
         }
     }
 }

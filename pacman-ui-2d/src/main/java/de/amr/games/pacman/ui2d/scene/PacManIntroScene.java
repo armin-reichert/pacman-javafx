@@ -374,7 +374,7 @@ public class PacManIntroScene extends GameScene2D {
         int tx = data.leftTileX + 6;
         int ty = 25;
         g.setFill(Color.rgb(254, 189, 180));
-        g.fillRect(s(t(tx) + 4), s(t(ty - 1) + 4), s(2), s(2));
+        g.fillRect(scaled(t(tx) + 4), scaled(t(ty - 1) + 4), scaled(2), scaled(2));
         if (data.blinking.isOn()) {
             drawEnergizer(TS * tx, TS * (ty+1));
         }

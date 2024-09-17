@@ -53,12 +53,12 @@ public class GameScene2D implements GameScene {
         clearCanvas();
     }
 
-    protected double s(double value) {
+    protected double scaled(double value) {
         return value * scalingPy.get();
     }
 
     protected Font sceneFont(double size) {
-        return context.assets().font("font.arcade", s(size));
+        return context.assets().font("font.arcade", scaled(size));
     }
 
     @Override
@@ -76,7 +76,7 @@ public class GameScene2D implements GameScene {
             case PACMAN_XXL -> new PacManXXLGameWorldRenderer(context.assets());
         };
         renderer.scalingProperty().bind(scalingPy);
-        renderer.backgroundColorProperty().bind(PY_CANVAS_COLOR);
+        renderer.backgroundColorProperty().bind(backgroundColorPy);
     }
 
     @Override
@@ -147,8 +147,8 @@ public class GameScene2D implements GameScene {
         renderer.spriteRenderer().drawImageScaled(g, logo, x, y + 2, t(4) - 2, t(4));
         g.setFill(context.assets().color("palette.red"));
         g.setFont(sceneFont(TS));
-        g.fillText("©", s(x + TS * 5), s(y + TS * 2 + 2));
-        g.fillText("MIDWAY MFG CO", s(x + TS * 7), s(y + TS * 2));
-        g.fillText("1980/1981", s(x + TS * 8), s(y + TS * 4));
+        g.fillText("©", scaled(x + TS * 5), scaled(y + TS * 2 + 2));
+        g.fillText("MIDWAY MFG CO", scaled(x + TS * 7), scaled(y + TS * 2));
+        g.fillText("1980/1981", scaled(x + TS * 8), scaled(y + TS * 4));
     }
 }

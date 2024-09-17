@@ -306,7 +306,7 @@ public class MsPacManIntroScene extends GameScene2D {
 
     private void drawBulb(double x, double y, boolean on) {
         g.setFill(on ? context.assets().color("palette.pale") : context.assets().color("palette.red"));
-        g.fillRect(s(x), s(y), s(2), s(2));
+        g.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
     }
 
     /**
