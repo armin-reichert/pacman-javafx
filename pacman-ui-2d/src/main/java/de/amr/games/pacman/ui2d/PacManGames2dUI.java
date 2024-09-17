@@ -79,15 +79,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     public static List<GameVariant> SUPPORTED_GAME_VARIANTS = List.of(
         GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_TENGEN);
 
-    public static String assetPrefix(GameVariant variant) {
-        return switch (variant) {
-            case MS_PACMAN -> "ms_pacman";
-            case MS_PACMAN_TENGEN -> "tengen";
-            case PACMAN -> "pacman";
-            case PACMAN_XXL -> "pacman_xxl";
-        };
-    }
-
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
     public final ObjectProperty<GameVariant> gameVariantPy = new SimpleObjectProperty<>(this, "gameVariant") {

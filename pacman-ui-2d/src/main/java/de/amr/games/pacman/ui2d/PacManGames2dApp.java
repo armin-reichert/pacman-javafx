@@ -50,6 +50,15 @@ public class PacManGames2dApp extends Application {
     public static final IntegerProperty PY_PIP_OPACITY_PERCENT = new SimpleIntegerProperty(100);
     public static final IntegerProperty PY_SIMULATION_STEPS    = new SimpleIntegerProperty(1);
 
+    public static String assetPrefix(GameVariant variant) {
+        return switch (variant) {
+            case MS_PACMAN -> "ms_pacman";
+            case MS_PACMAN_TENGEN -> "tengen";
+            case PACMAN -> "pacman";
+            case PACMAN_XXL -> "pacman_xxl";
+        };
+    }
+
     public static void addAssets(AssetStorage assets) {
         ResourceManager rm = () -> PacManGames2dApp.class;
 

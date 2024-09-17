@@ -20,7 +20,7 @@ import java.net.URL;
 import java.util.MissingResourceException;
 
 import static de.amr.games.pacman.lib.Globals.checkNotNull;
-import static de.amr.games.pacman.ui2d.PacManGames2dUI.assetPrefix;
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.assetPrefix;
 
 /**
  * @author Armin Reichert

@@ -16,6 +16,7 @@ import javafx.scene.shape.DrawMode;
 
 import java.util.Map;
 
+import static de.amr.games.pacman.ui2d.PacManGames2dApp.assetPrefix;
 import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
