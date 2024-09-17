@@ -5,7 +5,6 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.lib.Vector2i;
-import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import javafx.beans.property.*;
@@ -81,15 +80,17 @@ public abstract class GameScene2D implements GameScene {
             drawDebugInfo();
         }
         if (isCreditVisible()) {
-            int numRows = context.game().world() != null
-                ? context.game().world().map().terrain().numRows()
-                : GameModel.ARCADE_MAP_TILES_Y;
+            Vector2i worldSize = context.worldSize();
+            String creditText = "CREDIT %2d".formatted(context.game().credit());
             Color creditColor = context.assets().color("palette.pale");
             Font creditFont = sceneFont(8);
-            renderer.drawText(g, String.format("CREDIT %2d", context.game().credit()), creditColor, creditFont, t(2), t(numRows) - 1);
+            renderer.drawText(g, creditText, creditColor, creditFont, t(2), t(worldSize.y()) - 1);
         }
     }
 
+    /**
+     * Scenes overwrite this method to draw their specific content.
+     */
     protected void drawSceneContent() {
         Font font = Font.font("Monospaced", 20);
         renderer.drawText(g, "Implement method drawSceneContent()!", Color.WHITE, font, 10, 100);

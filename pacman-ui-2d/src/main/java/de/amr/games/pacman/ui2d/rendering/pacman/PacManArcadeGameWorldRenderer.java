@@ -88,8 +88,7 @@ public class PacManArcadeGameWorldRenderer implements GameWorldRenderer {
         drawText(g, "© 1980 MIDWAY MFG.CO.", color, font, x, y);
     }
 
-    private void drawStaticBonus(GraphicsContext g, Bonus bonus)
-    {
+    private void drawStaticBonus(GraphicsContext g, Bonus bonus) {
         if (bonus.state() == Bonus.STATE_EDIBLE) {
             spriteRenderer.drawEntitySprite(g,  bonus.entity(), spriteSheet.bonusSymbolSprite(bonus.symbol()));
         } else if (bonus.state() == Bonus.STATE_EATEN) {
