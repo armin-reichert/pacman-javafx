@@ -7,6 +7,7 @@ package de.amr.games.pacman.ui2d.rendering;
 import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.Score;
+import de.amr.games.pacman.model.actors.Creature;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
@@ -67,6 +68,48 @@ public interface GameWorldRenderer {
             }
         });
     }
+
+    default void drawPacInfo(GraphicsContext g, Pac pac) {
+        if (pac.animations().isPresent() && pac.animations().get() instanceof SpriteAnimations sa) {
+            if (sa.currentAnimationName() != null) {
+                var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
+                g.setFill(Color.WHITE);
+                g.setFont(Font.font("Monospaced", scaled(6)));
+                g.fillText(text, scaled(pac.posX() - 4), scaled(pac.posY() - 4));
+            }
+            drawWishDir(g, pac);
+        }
+    }
+
+    default void drawGhostInfo(GraphicsContext g, Ghost ghost) {
+        if (ghost.animations().isPresent() && ghost.animations().get() instanceof SpriteAnimations sa) {
+            if (sa.currentAnimationName() != null) {
+                var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
+                g.setFill(Color.WHITE);
+                g.setFont(Font.font("Monospaced", scaled(6)));
+                g.fillText(text, scaled(ghost.posX() - 4), scaled(ghost.posY() - 4));
+            }
+        }
+        drawWishDir(g, ghost);
+    }
+
+
+    default void drawWishDir(GraphicsContext g, Creature guy) {
+        if (guy.wishDir() != null) {
+            float r = 2;
+            var pacCenter = guy.center();
+            var indicatorCenter = guy.center().plus(guy.wishDir().vector().toVector2f().scaled(1.5f * TS));
+            var indicatorTopLeft = indicatorCenter.minus(r, r);
+            g.setStroke(Color.WHITE);
+            g.strokeLine(scaled(pacCenter.x()), scaled(pacCenter.y()), scaled(indicatorCenter.x()), scaled(indicatorCenter.y()));
+            g.setFill(guy.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
+            g.fillOval(scaled(indicatorTopLeft.x()), scaled(indicatorTopLeft.y()), scaled(2 * r), scaled(2 * r));
+        }
+    }
+
+
+
+
 
     /**
      * Draws a text with the given style at the given (unscaled) position.

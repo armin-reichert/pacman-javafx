@@ -125,8 +125,8 @@ public class PlayScene2D extends GameScene2D {
         renderer.drawPac(g, game.pac());
         ghostsInZOrder().forEach(ghost -> renderer.drawGhost(g, ghost));
         if (infoVisiblePy.get()) {
-            drawPacInfo(g, game.pac());
-            ghostsInZOrder().forEach(ghost -> drawGhostInfo(g, ghost));
+            renderer.drawPacInfo(g, game.pac());
+            ghostsInZOrder().forEach(ghost -> renderer.drawGhostInfo(g, ghost));
         }
 
         if (!isCreditVisible()) {

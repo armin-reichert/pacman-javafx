@@ -5,16 +5,12 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.model.GameModel;
-import de.amr.games.pacman.model.actors.Creature;
-import de.amr.games.pacman.model.actors.Ghost;
-import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.GameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.pacman_xxl.PacManXXLGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameWorldRenderer;
-import de.amr.games.pacman.ui2d.util.SpriteAnimations;
 import javafx.beans.property.*;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -140,43 +136,6 @@ public class GameScene2D implements GameScene {
 
     protected void drawLevelCounter(GraphicsContext g) {
         renderer.drawLevelCounter(g, context.game().levelCounter(), t(numWorldTilesX() - 4), t(numWorldTilesY() - 2));
-    }
-
-    protected void drawPacInfo(GraphicsContext g, Pac pac) {
-        if (pac.animations().isPresent() && pac.animations().get() instanceof SpriteAnimations sa) {
-            if (sa.currentAnimationName() != null) {
-                var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
-                g.setFill(Color.WHITE);
-                g.setFont(Font.font("Monospaced", s(6)));
-                g.fillText(text, s(pac.posX() - 4), s(pac.posY() - 4));
-            }
-            drawWishDir(g, pac);
-        }
-    }
-
-    protected void drawWishDir(GraphicsContext g, Creature guy) {
-        if (guy.wishDir() != null) {
-            float r = 2;
-            var pacCenter = guy.center();
-            var indicatorCenter = guy.center().plus(guy.wishDir().vector().toVector2f().scaled(1.5f * TS));
-            var indicatorTopLeft = indicatorCenter.minus(r, r);
-            g.setStroke(Color.WHITE);
-            g.strokeLine(s(pacCenter.x()), s(pacCenter.y()), s(indicatorCenter.x()), s(indicatorCenter.y()));
-            g.setFill(guy.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
-            g.fillOval(s(indicatorTopLeft.x()), s(indicatorTopLeft.y()), s(2 * r), s(2 * r));
-        }
-    }
-
-    protected void drawGhostInfo(GraphicsContext g, Ghost ghost) {
-        if (ghost.animations().isPresent() && ghost.animations().get() instanceof SpriteAnimations sa) {
-            if (sa.currentAnimationName() != null) {
-                var text = sa.currentAnimationName() + " " + sa.currentAnimation().frameIndex();
-                g.setFill(Color.WHITE);
-                g.setFont(Font.font("Monospaced", s(6)));
-                g.fillText(text, s(ghost.posX() - 4), s(ghost.posY() - 4));
-            }
-        }
-        drawWishDir(g, ghost);
     }
 
     protected void drawMidwayCopyright(double x, double y) {
