@@ -13,6 +13,7 @@ pos_scatter_ghost_1_red=(25,0)
 pos_scatter_ghost_2_pink=(2,0)
 pos_scatter_ghost_3_cyan=(27,34)
 pos_scatter_ghost_4_orange=(0,34)
+tengen_category=Arcade
 !data
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0

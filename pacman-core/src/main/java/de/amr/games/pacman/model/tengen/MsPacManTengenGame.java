@@ -82,7 +82,7 @@ public class MsPacManTengenGame extends GameModel {
         }
     }
 
-    private int mapNumberByLevelNumber(int levelNumber) {
+    public int mapNumberByLevelNumber(int levelNumber) {
         int numMaps = maps.size();
         return levelNumber <= numMaps ? levelNumber : Globals.randomInt(1, numMaps + 1);
     }

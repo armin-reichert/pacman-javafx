@@ -51,14 +51,14 @@ public class CreditScene extends GameScene2D {
         var rose = context.assets().color("palette.rose");
         switch (context.game().variant()) {
             case MS_PACMAN -> {
-                MsPacManGameWorldRenderer msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) renderer;
                 SpriteArea livesCounterSprite = renderer.spriteRenderer().spriteSheet().livesCounterSprite();
                 renderer.drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(16));
                 renderer.drawText(g, "1 PLAYER ONLY", orange, font8, t(8), t(18));
                 renderer.drawText(g, "ADDITIONAL    AT 10000", orange, font8, t(2), t(25));
                 renderer.spriteRenderer().drawSpriteScaled(g, livesCounterSprite, t(13), t(23) + 1);
                 renderer.drawText(g, "PTS", orange, font6, t(25), t(25));
-                msPacManGameWorldRenderer.drawMsPacManMidwayCopyright(g,
+                var msPacManGameRenderer = (MsPacManGameWorldRenderer) renderer;
+                msPacManGameRenderer.drawMsPacManMidwayCopyright(g,
                     context.assets().get("ms_pacman.logo.midway"),
                     t(6), t(28), context.assets().color("palette.red"), sceneFont(TS));
             }
@@ -71,12 +71,12 @@ public class CreditScene extends GameScene2D {
                 renderer.drawText(g, "PTS", orange, font6, t(25), t(25));
             }
             case PACMAN -> {
-                var pacManArcadeGameWorldRenderer = (PacManArcadeGameWorldRenderer) renderer;
                 renderer.drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(17));
                 renderer.drawText(g, "1 PLAYER ONLY", cyan, font8, t(8), t(21));
                 renderer.drawText(g, "BONUS PAC-MAN FOR 10000", rose, font8, t(1), t(25));
                 renderer.drawText(g, "PTS", rose, font6, t(25), t(25));
-                pacManArcadeGameWorldRenderer.drawMidwayCopyright(g, t(4), t(29), context.assets().color("palette.pink"), sceneFont(8));
+                var pacManGameRenderer = (PacManArcadeGameWorldRenderer) renderer;
+                pacManGameRenderer.drawMidwayCopyright(g, t(4), t(29), context.assets().color("palette.pink"), sceneFont(8));
             }
             case PACMAN_XXL -> {
                 renderer.drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(17));

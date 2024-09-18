@@ -153,6 +153,8 @@ public class PacManGames2dApp extends Application {
         // default until Tengen spritesheets are implemented
         assets.store("tengen.spritesheet.tmp",        assets.get("ms_pacman.spritesheet"));
         assets.store("tengen.spritesheet",            new TengenMsPacManGameSpriteSheet("/de/amr/games/pacman/ui2d/graphics/tengen/"));
+        assets.store("tengen.mazes.arcade",           rm.loadImage("graphics/tengen/arcade_mazes.png"));
+        assets.store("tengen.mazes.non_arcade",       rm.loadImage("graphics/tengen/non_arcade_mazes.png"));
         assets.store("tengen.startpage.image",        rm.loadImage("graphics/tengen/tengen_flyer.jpg"));
         assets.store("tengen.helpButton.icon",        rm.loadImage("graphics/icons/help-red-64.png"));
         assets.store("tengen.icon",                   rm.loadImage("graphics/icons/mspacman.png"));

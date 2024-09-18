@@ -10,14 +10,10 @@ import javafx.scene.image.Image;
 
 public class TengenMsPacManGameSpriteSheet implements GameSpriteSheet {
 
-    private final Image arcadeMazesImage;
-    private final Image nonArcadeMazesImage;
     private final Image spritesImage;
 
     public TengenMsPacManGameSpriteSheet(String resourcePath) {
         ResourceManager rm = this::getClass;
-        arcadeMazesImage = rm.loadImage(resourcePath + "arcade_mazes.png");
-        nonArcadeMazesImage = rm.loadImage(resourcePath + "non_arcade_mazes.png");
         spritesImage = rm.loadImage(resourcePath + "spritesheet.png");
     }
 

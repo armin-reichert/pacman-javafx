@@ -15,4 +15,5 @@ open module de.amr.games.pacman {
     exports de.amr.games.pacman.model.pacman;
     exports de.amr.games.pacman.model.mspacman;
     exports de.amr.games.pacman.model.pacmanxxl;
+    exports de.amr.games.pacman.model.tengen;
 }

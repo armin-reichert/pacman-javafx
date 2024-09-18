@@ -44,9 +44,10 @@ public interface GameWorldRenderer {
 
     void setBlinkingOn(boolean on);
 
-    default void overpaintFood(GraphicsContext g, GameWorld world, Vector2i tile) {
+    default void overPaintFood(GraphicsContext g, GameWorld world, Vector2i tile) {
         double cx = t(tile.x()) + HTS;
         double cy = t(tile.y()) + HTS;
+        //TODO check if this crap is still needed
         double r = world.isEnergizerPosition(tile) ? 4.5 : 2;
         g.setFill(backgroundColorProperty().get());
         g.fillRect(scaled(cx - r), scaled(cy - r), scaled(2 * r), scaled(2 * r));

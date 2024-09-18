@@ -4,27 +4,31 @@ See file LICENSE in repository root directory for details.
 */
 package de.amr.games.pacman.ui2d.rendering.tengen;
 
+import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.maps.rendering.FoodMapRenderer;
 import de.amr.games.pacman.maps.rendering.TerrainMapRenderer;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
+import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
 import de.amr.games.pacman.ui2d.GameContext;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
+import de.amr.games.pacman.ui2d.rendering.SpriteArea;
 import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.ClapperboardAnimation;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import static de.amr.games.pacman.lib.Globals.*;
 import static de.amr.games.pacman.maps.editor.TileMapUtil.getColorFromMap;
 import static de.amr.games.pacman.model.GameWorld.*;
-import static java.util.function.Predicate.not;
 
 /**
  * @author Armin Reichert
@@ -86,24 +90,83 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
         Color doorColor = getColorFromMap(terrain, PROPERTY_COLOR_DOOR, Color.YELLOW);
         if (flashMode) {
             terrainRenderer.setWallStrokeColor(blinkingOn ? Color.WHITE : Color.BLACK);
-            terrainRenderer.setWallFillColor(blinkingOn   ? Color.BLACK : Color.WHITE);
+            terrainRenderer.setWallFillColor(blinkingOn ? Color.BLACK : Color.WHITE);
             terrainRenderer.setDoorColor(Color.BLACK);
             terrainRenderer.drawMap(g, terrain);
-        }
-        else {
-            terrainRenderer.setWallStrokeColor(wallStrokeColor);
-            terrainRenderer.setWallFillColor(wallFillColor);
-            terrainRenderer.setDoorColor(doorColor);
-            terrainRenderer.drawMap(g, terrain);
-            Color foodColor = getColorFromMap(world.map().food(), PROPERTY_COLOR_FOOD, Color.ORANGE);
-            foodRenderer.setPelletColor(foodColor);
-            foodRenderer.setEnergizerColor(foodColor);
-            world.map().food().tiles().filter(world::hasFoodAt).filter(not(world::isEnergizerPosition)).forEach(tile -> foodRenderer.drawPellet(g, tile));
-            if (blinkingOn) {
-                world.energizerTiles().filter(world::hasFoodAt).forEach(tile -> foodRenderer.drawEnergizer(g, tile));
+        } else {
+            MsPacManTengenGame tengenGame = (MsPacManTengenGame) context.game();
+            int mapNumber = tengenGame.mapNumberByLevelNumber(tengenGame.levelNumber());
+            // Maps 1-9 are the Arcade maps
+            if ("Arcade".equals(terrain.getProperty("tengen_category"))) {
+                drawArcadeWorld(g, world, mapNumber, 0, 3 * TS);
+            } else {
+                // Maps 10- are the non-Arcade maps
+                drawNonArcadeWorld(g, world, mapNumber - 9, 0, 3 * TS);
+            }
+            hideActorSprite(g, terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
+            hideActorSprite(g, terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)), 0, 0);
+            // The ghosts in the house are sitting some pixels below their home position
+            // TODO: check if the ghosts in Tengen all start from the bottom of the house, if yes, change map properties
+            hideActorSprite(g, terrain.getTileProperty("pos_ghost_2_pink", v2i(13, 17)), 0, 4);
+            hideActorSprite(g, terrain.getTileProperty("pos_ghost_3_cyan", v2i(11, 17)), 0, 4);
+            hideActorSprite(g, terrain.getTileProperty("pos_ghost_4_orange", v2i(15, 17)), 0, 4);
+            world.map().food().tiles().filter(world::hasEatenFoodAt).forEach(tile -> overPaintFood(g, world, tile));
+            if (!blinkingOn) {
+                world.energizerTiles().forEach(tile -> overPaintFood(g, world, tile));
             }
         }
         context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, (MovingBonus) bonus));
+    }
+
+    private void hideActorSprite(GraphicsContext g, Vector2i tile, double offX, double offY) {
+        // Parameter tile denotes the left of the two tiles where actor is located between. Compute center position.
+        double cx = tile.x() * TS + TS + offX;
+        double cy = tile.y() * TS + HTS + offY;
+        double spriteSize = 2 * TS;
+        g.setFill(backgroundColorProperty().get());
+        g.fillRect(scaled(cx - TS), scaled(cy - TS), scaled(spriteSize), scaled(spriteSize));
+    }
+
+    private void drawArcadeWorld(GraphicsContext g, GameWorld world, int mapNumber, double x, double y) {
+        Image mazesImage = assets.get("tengen.mazes.arcade");
+        int width = world.map().terrain().numCols() * TS, height = (world.map().terrain().numRows() - 5) * TS;
+        int index = mapNumber - 1;
+        int rowIndex = index / 3, colIndex = index % 3;
+        SpriteArea area = new SpriteArea(colIndex * width, rowIndex * height, width, height);
+        double scaling = scalingProperty().get();
+        g.save();
+        g.scale(scaling, scaling);
+        g.drawImage(mazesImage, area.x(), area.y(), area.width(), area.height(), x, y, area.width(), area.height());
+        g.restore();
+    }
+
+    private void drawNonArcadeWorld(GraphicsContext g, GameWorld world, int mapNumber, double x, double y) {
+        Image mazesImage = assets.get("tengen.mazes.non_arcade");
+        SpriteArea area = nonArcadeMapArea(world, mapNumber);
+        double scaling = scalingProperty().get();
+        g.save();
+        g.scale(scaling, scaling);
+        g.drawImage(mazesImage, area.x(), area.y(), area.width(), area.height(), x, y, area.width(), area.height());
+        g.restore();
+    }
+
+    private SpriteArea nonArcadeMapArea(GameWorld world, int mapNumber) {
+        int width = world.map().terrain().numCols() * TS, height = (world.map().terrain().numRows() - 5) * TS;
+        if (mapNumber <= 8) { // first row
+            int colIndex = mapNumber - 1;
+            return new SpriteArea(colIndex * width, 0, width, height);
+        }
+        if (mapNumber <= 16) { // second row
+            int colIndex = (mapNumber - 1) % 8;
+            return new SpriteArea(colIndex * width, 248, width, height);
+        }
+        if (mapNumber <= 24) {
+            return new SpriteArea(0, 0, 224, 248);
+        }
+        if (mapNumber <= 33){
+            return new SpriteArea(0, 0, 224, 248);
+        }
+        return new SpriteArea(0, 0, 224, 248);
     }
 
     @Override

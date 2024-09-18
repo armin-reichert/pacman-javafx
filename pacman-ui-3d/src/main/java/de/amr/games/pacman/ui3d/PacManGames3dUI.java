@@ -21,10 +21,9 @@ import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
 
 /**
- * User interface for the Pac-Man game variants (Pac-Man, Pac-Man XXL, Ms. Pac-Man) with a 3D
- * play scene ({@link PlayScene3D}). All others scenes are 2D only.
+ * User interface for all Pac-Man game variants with a 3D play scene. All others scenes are in 2D.
  * </p>
- * <p>The separation of the 2D-only UI into its own project was done to create a
+ * <p>The separation of the 2D-only UI into its own project originally was done to create a
  * <a href="https://github.com/armin-reichert/webfx-pacman">WebFX-version</a> of the game.
  * WebFX is a technology that transpiles a JavaFX application into a (very small) GWT application that runs inside
  * any browser supported by GWT. Unfortunately, WebFX has no support for JavaFX 3D so far.</p>

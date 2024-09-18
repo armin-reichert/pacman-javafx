@@ -79,9 +79,9 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
             spriteRenderer.drawSprite(g, spriteSheet.filledMaze(game.currentMapNumber()), x, y);
             g.restore();
             world.map().food().tiles().filter(world::hasEatenFoodAt)
-                .forEach(tile -> overpaintFood(g, world, tile));
+                .forEach(tile -> overPaintFood(g, world, tile));
             if (!blinkingOn) {
-                world.energizerTiles().forEach(tile -> overpaintFood(g, world, tile));
+                world.energizerTiles().forEach(tile -> overPaintFood(g, world, tile));
             }
         }
         /*

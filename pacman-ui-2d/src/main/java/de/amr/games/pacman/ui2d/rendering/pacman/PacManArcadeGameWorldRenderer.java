@@ -75,9 +75,9 @@ public class PacManArcadeGameWorldRenderer implements GameWorldRenderer {
             spriteRenderer.drawSprite(g, spriteSheet.getFullMazeSprite(), t(0), t(3));
             g.restore();
             world.map().food().tiles().filter(world::hasEatenFoodAt)
-                .forEach(tile -> overpaintFood(g, world, tile));
+                .forEach(tile -> overPaintFood(g, world, tile));
             if (!blinkingOn) {
-                world.energizerTiles().forEach(tile -> overpaintFood(g, world, tile));
+                world.energizerTiles().forEach(tile -> overPaintFood(g, world, tile));
             }
         }
         g.restore();
