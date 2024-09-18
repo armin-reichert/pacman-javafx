@@ -102,7 +102,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected final AssetStorage assets = new AssetStorage();
     protected Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant;
     protected final FlashMessageView messageView = new FlashMessageView();
-    protected GameClockFX clock;
+    protected final GameClockFX clock = new GameClockFX();
     protected final StackPane sceneRoot = new StackPane();
     protected Stage stage;
     protected StartPage startPage;
@@ -130,11 +130,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
      * Called from application start method (on JavaFX application thread).
 
      * @param stage primary stage (window)
-     * @param clock game clock driving the simulation
      */
-    public void create(Stage stage, GameClockFX clock) {
+    public void createAndStart(Stage stage) {
         this.stage = checkNotNull(stage);
-        this.clock = checkNotNull(clock);
 
         sceneRoot.getChildren().addAll(new Pane(), messageView, createMutedIcon());
         stage.setScene(createMainScene(initialSize));
@@ -170,6 +168,42 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                  Logger.error(x);
              }
         });
+
+        // start the whole machinery
+        for (var variant : GameVariant.values()) {
+            GameController.it().gameModel(variant).addGameEventListener(this);
+            // TODO: find better way
+            GameController.it().gameModel(variant).addGameEventListener(gamePage.dashboardLayer().getPip());
+        }
+        // Touch all game keys such that they get registered with keyboard
+        for (var gameKey : GameAction.values()) {
+            Logger.debug("Game key '{}' registered", gameKey);
+        }
+
+        // select game variant of current game model
+        gameVariantPy.set(game().variant());
+        GameSounds.gameVariantProperty().bind(gameVariantPy);
+
+        // Not sure where this belongs
+        PacManXXLGame xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
+        PY_MAP_SELECTION_MODE.addListener((py,ov,nv) -> {
+            xxlGame.loadCustomMaps();
+            xxlGame.setMapSelectionMode(nv);
+        });
+        xxlGame.setMapSelectionMode(PY_MAP_SELECTION_MODE.get());
+
+        stage.titleProperty().bind(stageTitleBinding());
+        //TODO this does not work yet correctly
+        Dimension2D minSize = DecoratedCanvas.computeSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y, 1);
+        stage.setMinWidth(minSize.getWidth());
+        stage.setMinHeight(minSize.getHeight());
+        stage.centerOnScreen();
+        stage.setOnShowing(e-> selectStartPage());
+        stage.show();
+    }
+
+    public void stop() {
+        clock.stop();
     }
 
     protected Scene createMainScene(Dimension2D size) {
@@ -201,39 +235,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     public StackPane rootPane() {
         return sceneRoot;
-    }
-
-    public void start() {
-        for (var variant : GameVariant.values()) {
-            GameController.it().gameModel(variant).addGameEventListener(this);
-            // TODO: find better way
-            GameController.it().gameModel(variant).addGameEventListener(gamePage.dashboardLayer().getPip());
-        }
-        // Touch all game keys such that they get registered with keyboard
-        for (var gameKey : GameAction.values()) {
-            Logger.debug("Game key '{}' registered", gameKey);
-        }
-
-        // select game variant of current game model
-        gameVariantPy.set(game().variant());
-        GameSounds.gameVariantProperty().bind(gameVariantPy);
-
-        // Not sure where this belongs
-        PacManXXLGame xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
-        PY_MAP_SELECTION_MODE.addListener((py,ov,nv) -> {
-            xxlGame.loadCustomMaps();
-            xxlGame.setMapSelectionMode(nv);
-        });
-        xxlGame.setMapSelectionMode(PY_MAP_SELECTION_MODE.get());
-
-        stage.titleProperty().bind(stageTitleBinding());
-        //TODO this does not work yet correctly
-        Dimension2D minSize = DecoratedCanvas.computeSize(GameModel.ARCADE_MAP_SIZE_X, GameModel.ARCADE_MAP_SIZE_Y, 1);
-        stage.setMinWidth(minSize.getWidth());
-        stage.setMinHeight(minSize.getHeight());
-        stage.centerOnScreen();
-        stage.setOnShowing(e-> selectStartPage());
-        stage.show();
     }
 
     protected GamePage createGamePage(Scene parentScene) {

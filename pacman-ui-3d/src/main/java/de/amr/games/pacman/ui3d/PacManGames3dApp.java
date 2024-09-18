@@ -10,7 +10,6 @@ import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.PacManGames2dApp;
 import de.amr.games.pacman.ui2d.scene.*;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
-import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui3d.model.Model3D;
 import javafx.application.Application;
@@ -166,7 +165,7 @@ public class PacManGames3dApp extends Application {
         return gameScenesForVariant;
     }
 
-    private final GameClockFX clock = new GameClockFX();
+    private PacManGames3dUI ui;
 
     @Override
     public void init() {
@@ -178,11 +177,10 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        var ui = new PacManGames3dUI(computeInitialSize());
+        ui = new PacManGames3dUI(computeInitialSize());
         addAssets(ui.assets());
-        ui.create(stage, clock);
         ui.setGameScenes(createGameScenes());
-        ui.start();
+        ui.createAndStart(stage);
 
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         Logger.info("Assets: {}", ui.assets().summary(Map.of(
@@ -196,6 +194,6 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void stop() {
-        clock.stop();
+        ui.stop();
     }
 }

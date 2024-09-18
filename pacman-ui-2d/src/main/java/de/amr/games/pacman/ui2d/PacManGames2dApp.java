@@ -13,7 +13,6 @@ import de.amr.games.pacman.ui2d.rendering.pacman.PacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.rendering.tengen.TengenMsPacManGameSpriteSheet;
 import de.amr.games.pacman.ui2d.scene.*;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
-import de.amr.games.pacman.ui2d.util.GameClockFX;
 import de.amr.games.pacman.ui2d.util.ResourceManager;
 import de.amr.games.pacman.ui2d.util.Ufx;
 import javafx.application.Application;
@@ -276,7 +275,7 @@ public class PacManGames2dApp extends Application {
         return gameScenesForVariant;
     }
 
-    private final GameClockFX clock = new GameClockFX();
+    private PacManGames2dUI ui;
 
     @Override
     public void init() {
@@ -287,11 +286,10 @@ public class PacManGames2dApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        var ui = new PacManGames2dUI(computeSize());
+        ui = new PacManGames2dUI(computeSize());
         addAssets(ui.assets());
-        ui.create(stage, clock);
         ui.setGameScenes(createGameScenes());
-        ui.start();
+        ui.createAndStart(stage);
 
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
         Logger.info("Assets loaded: {}", ui.assets().summary(
@@ -302,7 +300,7 @@ public class PacManGames2dApp extends Application {
 
     @Override
     public void stop() {
-        clock.stop();
+        ui.stop();
     }
 
     private Dimension2D computeSize() {
