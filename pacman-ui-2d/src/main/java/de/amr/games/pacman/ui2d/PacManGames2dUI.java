@@ -99,35 +99,47 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible");
 
-    protected final AssetStorage assets;
-    protected final Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant;
-    protected final FlashMessageView messageView;
-    protected final GameClockFX clock;
-    protected final StackPane sceneRoot;
+    protected final AssetStorage assets = new AssetStorage();
+    protected Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant;
+    protected final FlashMessageView messageView = new FlashMessageView();
+    protected GameClockFX clock;
+    protected final StackPane sceneRoot = new StackPane();
     protected Stage stage;
     protected StartPage startPage;
     protected GamePage gamePage;
     protected EditorPage editorPage;
     protected Page currentPage;
 
-    public PacManGames2dUI(
-        GameClockFX clock,
-        Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant)
-    {
+    /**
+     * Called from application start method (on JavaFX application thread).
+
+     * @param stage primary stage (window)
+     * @param size initial window size
+     * @param clock game clock driving the simulation
+     * @param gameScenesForVariant map with game scenes for each game variant
+     */
+    public void create(Stage stage, Dimension2D size, GameClockFX clock, Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant) {
+        this.stage = checkNotNull(stage);
         this.clock = checkNotNull(clock);
         this.gameScenesForVariant = checkNotNull(gameScenesForVariant);
+
+        sceneRoot.getChildren().addAll(new Pane(), messageView, createMutedIcon());
+        stage.setScene(createMainScene(size));
+
+        startPage = new StartPage(this);
+        startPage.gameVariantPy.bind(gameVariantPy);
+
+        gamePage = createGamePage(stage.getScene());
+
         for (GameVariant variant : GameVariant.values()) {
             gameScenesForVariant.get(variant).values().forEach(gameScene -> {
-                if (gameScene instanceof GameScene2D gameScene2D) {
-                    gameScene2D.setGameContext(this);
-                    gameScene2D.debugInfoPy.bind(PY_DEBUG_INFO);
-                }
+             if (gameScene instanceof GameScene2D gameScene2D) {
+                 gameScene2D.setGameContext(this);
+                 gameScene2D.debugInfoPy.bind(PY_DEBUG_INFO);
+             }
             });
         }
 
-        sceneRoot = new StackPane();
-        assets = new AssetStorage();
-        messageView = new FlashMessageView();
         clock.setPauseableCallback(() -> {
             try {
                 gameController().update();
@@ -140,45 +152,20 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             }
         });
         clock.setPermanentCallback(() -> {
-            try {
-                if (currentPage == gamePage) {
-                    currentGameScene()
-                        .filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast)
-                        .ifPresent(GameScene2D::draw);
-                    gamePage.updateDashboard();
-                    messageView.update();
-                }
-            } catch (Exception x) {
-                clock.stop();
-                Logger.error("Game page rendering error: {}", x.getMessage());
-                Logger.error(x);
-            }
+             try {
+                 if (currentPage == gamePage) {
+                     currentGameScene()
+                         .filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast)
+                         .ifPresent(GameScene2D::draw);
+                     gamePage.updateDashboard();
+                     messageView.update();
+                 }
+             } catch (Exception x) {
+                 clock.stop();
+                 Logger.error("Game page rendering error: {}", x.getMessage());
+                 Logger.error(x);
+             }
         });
-    }
-
-    private void logUpdateResult() {
-        var messageList = game().eventLog().createMessageList();
-        if (!messageList.isEmpty()) {
-            Logger.info("Simulation step #{}:", clock.getUpdateCount());
-            for (var msg : messageList) {
-                Logger.info("- " + msg);
-            }
-        }
-    }
-
-    /**
-     * Called from application start method (on JavaFX application thread). Builds UI components.
-
-     * @param stage primary stage (window)
-     * @param size initial window size
-     */
-    public void create(Stage stage, Dimension2D size) {
-        this.stage = checkNotNull(stage);
-        sceneRoot.getChildren().addAll(new Pane(), messageView, createMutedIcon());
-        stage.setScene(createMainScene(size));
-        startPage = new StartPage(this);
-        startPage.gameVariantPy.bind(gameVariantPy);
-        gamePage = createGamePage(stage.getScene());
     }
 
     protected Scene createMainScene(Dimension2D size) {
@@ -350,6 +337,16 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
                 "CUT_SCENE_" + gameState().<Integer>getProperty("intermissionTestNumber")));
             default -> gameScene(variant, GameSceneID.PLAY_SCENE);
         };
+    }
+
+    private void logUpdateResult() {
+        var messageList = game().eventLog().createMessageList();
+        if (!messageList.isEmpty()) {
+            Logger.info("Simulation step #{}:", clock.getUpdateCount());
+            for (var msg : messageList) {
+                Logger.info("- " + msg);
+            }
+        }
     }
 
     // -----------------------------------------------------------------------------------------------------------------
