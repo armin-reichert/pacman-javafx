@@ -27,13 +27,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.games.pacman.lib.Globals.*;
-import static de.amr.games.pacman.maps.editor.TileMapUtil.getColorFromMap;
-import static de.amr.games.pacman.model.GameWorld.*;
 
 /**
  * @author Armin Reichert
  */
 public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRenderer {
+
+    private record TengenMap(Image mazesImage, SpriteArea area) {}
 
     private final AssetStorage assets;
     private MsPacManGameSpriteSheet tmpSpriteSheet;
@@ -94,13 +94,17 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
         } else {
             MsPacManTengenGame tengenGame = (MsPacManTengenGame) context.game();
             int mapNumber = tengenGame.mapNumberByLevelNumber(tengenGame.levelNumber());
-            // Maps 1-9 are the Arcade maps
-            if ("Arcade".equals(terrain.getProperty("tengen_category"))) {
-                drawArcadeWorld(g, world, mapNumber, 0, 3 * TS);
-            } else {
-                // Maps 10- are the non-Arcade maps
-                drawNonArcadeWorld(g, world, mapNumber - 9, 0, 3 * TS);
-            }
+            int width = world.map().terrain().numCols() * TS, height = (world.map().terrain().numRows() - 5) * TS;
+            // Maps 1-9 are the Arcade maps, maps 10+ are the non-Arcade maps
+            TengenMap tengenMap = mapNumber <= 9
+                ? new TengenMap(assets.get("tengen.mazes.arcade"), arcadeWorldSpriteArea(mapNumber, width, height))
+                : new TengenMap(assets.get("tengen.mazes.non_arcade"), nonArcadeWorldSpriteArea(mapNumber - 9, width, height));
+            // cut half pixel on each border to avoid "dirt"
+            g.drawImage(tengenMap.mazesImage,
+                tengenMap.area.x() + 0.5, tengenMap.area.y() + 0.5,
+                tengenMap.area.width() - 1, tengenMap.area.height() - 1,
+                0, scaled(3 * TS),
+                    scaled(tengenMap.area.width()), scaled(tengenMap.area.height()));
             hideActorSprite(g, terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
             hideActorSprite(g, terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)), 0, 0);
             // The ghosts in the house are sitting some pixels below their home position
@@ -125,36 +129,13 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
         g.fillRect(scaled(cx - TS), scaled(cy - TS), scaled(spriteSize), scaled(spriteSize));
     }
 
-    private void drawArcadeWorld(GraphicsContext g, GameWorld world, int mapNumber, double x, double y) {
-        Image mazesImage = assets.get("tengen.mazes.arcade");
-        int width = world.map().terrain().numCols() * TS, height = (world.map().terrain().numRows() - 5) * TS;
+    private SpriteArea arcadeWorldSpriteArea(int mapNumber, int width, int height) {
         int index = mapNumber - 1;
         int rowIndex = index / 3, colIndex = index % 3;
-        SpriteArea area = new SpriteArea(colIndex * width, rowIndex * height, width, height);
-        double scaling = scalingProperty().get();
-        g.save();
-        g.scale(scaling, scaling);
-        g.drawImage(mazesImage, area.x(), area.y(), area.width(), area.height(), x, y, area.width(), area.height());
-        g.restore();
+        return new SpriteArea(colIndex * width, rowIndex * height, width, height);
     }
 
-    private void drawNonArcadeWorld(GraphicsContext g, GameWorld world, int mapNumber, double x, double y) {
-        Image mazesImage = assets.get("tengen.mazes.non_arcade");
-        SpriteArea area = nonArcadeMapArea(world, mapNumber);
-        double scaling = scalingProperty().get();
-        g.save();
-        g.scale(scaling, scaling);
-        g.drawImage(mazesImage, area.x(), area.y(), area.width(), area.height(), x, y, area.width(), area.height());
-        g.restore();
-    }
-
-    /**
-     * @param world game world
-     * @param mapNumber non-arcade map number (1-37)
-     * @return sprite area in non-arcade maps image for given map
-     */
-    private SpriteArea nonArcadeMapArea(GameWorld world, int mapNumber) {
-        int width = world.map().terrain().numCols() * TS, height = (world.map().terrain().numRows() - 5) * TS;
+    private SpriteArea nonArcadeWorldSpriteArea(int mapNumber, int width, int height) {
         if (mapNumber <= 8) { // row #1, maps 1-8
             int colIndex = mapNumber - 1;
             return new SpriteArea(colIndex * width, 0, width, height);
