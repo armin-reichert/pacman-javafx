@@ -70,7 +70,7 @@ import static de.amr.games.pacman.ui2d.util.Ufx.toggle;
 import static java.util.function.Predicate.not;
 
 /**
- * 2D-only user interface for Pac-Man and Ms. Pac-Man games. No 3D scenes.
+ * 2D user interface for all Pac-Man game variants.
  *
  * @author Armin Reichert
  */
@@ -100,7 +100,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     protected final Dimension2D initialSize;
     protected final AssetStorage assets = new AssetStorage();
-    protected Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant;
+    protected Map<GameVariant, Map<GameSceneID, GameScene>> gameSceneMap;
     protected final FlashMessageView messageView = new FlashMessageView();
     protected final GameClockFX clock = new GameClockFX();
     protected final StackPane sceneRoot = new StackPane();
@@ -114,10 +114,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         this.initialSize = checkNotNull(initialSize);
     }
 
-    public void setGameScenes(Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant) {
-        this.gameScenesForVariant = checkNotNull(gameScenesForVariant);
+    public void setGameScenes(Map<GameVariant, Map<GameSceneID, GameScene>> gameSceneMap) {
+        this.gameSceneMap = checkNotNull(gameSceneMap);
         for (GameVariant variant : GameVariant.values()) {
-            gameScenesForVariant.get(variant).values().forEach(gameScene -> {
+            gameSceneMap.get(variant).values().forEach(gameScene -> {
                 if (gameScene instanceof GameScene2D gameScene2D) {
                     gameScene2D.setGameContext(this);
                     gameScene2D.debugInfoPy.bind(PY_DEBUG_INFO);
@@ -142,32 +142,8 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
         gamePage = createGamePage(stage.getScene());
 
-        clock.setPauseableCallback(() -> {
-            try {
-                gameController().update();
-                currentGameScene().ifPresent(GameScene::update);
-                logUpdateResult();
-            } catch (Exception x) {
-                clock.stop();
-                Logger.error("Game update caused an error, game clock stopped!");
-                Logger.error(x);
-            }
-        });
-        clock.setPermanentCallback(() -> {
-             try {
-                 if (currentPage == gamePage) {
-                     currentGameScene()
-                         .filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast)
-                         .ifPresent(GameScene2D::draw);
-                     gamePage.updateDashboard();
-                     messageView.update();
-                 }
-             } catch (Exception x) {
-                 clock.stop();
-                 Logger.error("Game page rendering error: {}", x.getMessage());
-                 Logger.error(x);
-             }
-        });
+        clock.setPauseableCallback(this::onNonPausedClockTick);
+        clock.setPermanentCallback(this::onEveryClockTick);
 
         // start the whole machinery
         for (var variant : GameVariant.values()) {
@@ -200,6 +176,40 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         stage.centerOnScreen();
         stage.setOnShowing(e-> selectStartPage());
         stage.show();
+    }
+
+    /**
+     * Executed on every clock tick if game is not paused.
+     */
+    protected void onNonPausedClockTick() {
+        try {
+            gameController().update();
+            currentGameScene().ifPresent(GameScene::update);
+            logUpdateResult();
+        } catch (Exception x) {
+            clock.stop();
+            Logger.error("Something very bad happened, game clock stopped!");
+            Logger.error(x);
+        }
+    }
+
+    /**
+     * Executed on every clock tick even if game is paused.
+     */
+    protected void onEveryClockTick() {
+        try {
+            if (currentPage == gamePage) {
+                currentGameScene()
+                    .filter(GameScene2D.class::isInstance).map(GameScene2D.class::cast)
+                    .ifPresent(GameScene2D::draw);
+                gamePage.updateDashboard();
+                messageView.update();
+            }
+        } catch (Exception x) {
+            clock.stop();
+            Logger.error("Something very bad happened, game clock stopped!");
+            Logger.error(x);
+        }
     }
 
     public void stop() {
@@ -425,7 +435,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     //TODO maybe return an Optional?
     protected GameScene gameScene(GameVariant variant, GameSceneID sceneID) {
-        GameScene gameScene = gameScenesForVariant.get(variant).get(sceneID);
+        GameScene gameScene = gameSceneMap.get(variant).get(sceneID);
         if (gameScene != null) {
             return gameScene;
         }

@@ -38,10 +38,10 @@ public class PacManGames3dUI extends PacManGames2dUI {
     }
 
     @Override
-    public void setGameScenes(Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant) {
-        super.setGameScenes(gameScenesForVariant);
+    public void setGameScenes(Map<GameVariant, Map<GameSceneID, GameScene>> gameSceneMap) {
+        super.setGameScenes(gameSceneMap);
         for (GameVariant variant : GameVariant.values()) {
-            var playScene3D = (PlayScene3D) gameScenesForVariant.get(variant).get(GameSceneID.PLAY_SCENE_3D);
+            var playScene3D = (PlayScene3D) gameSceneMap.get(variant).get(GameSceneID.PLAY_SCENE_3D);
             playScene3D.setContext(this);
             playScene3D.widthProperty().bind(rootPane().widthProperty());
             playScene3D.heightProperty().bind(rootPane().heightProperty());
