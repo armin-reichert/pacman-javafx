@@ -28,16 +28,10 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 
 /**
- * Ms. Pac-Man game variant.
+ * Ms. Pac-Man Tengen game. Currently, this is just a copy of the Ms. Pac-Man Arcade game with the Tengen mazes.
  *
- * <p>There are however some differences to the original.
- * <ul>
- *     <li>Attract mode is just a random hunting for at least 20 seconds.</li>
- *     <li>Timing of hunting phases unclear, just took all the information I had</li>
- *     <li>Bonus does not follow original "fruit paths" but randomly selects a portal to
- *     enter the maze, turns around the house and leaves the maze at a random portal on the other side</li>
- * </ul>
- * </p>
+ * TODO: use Tengen maze images, sprites
+ * TODO: how do the ghosts in Tengen differ from the Arcade game such that they can handle non-Arcade maze structures?
  *
  * @author Armin Reichert
  */
@@ -58,6 +52,14 @@ public class MsPacManTengenGame extends GameModel {
     private static final int[] HUNTING_TICKS_5_PLUS = {300, 1200, 1, 62220, 1, 62220, 1, -1};
 
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
+
+    private static GameWorld createWorld(WorldMap map) {
+        var world = new GameWorld(map);
+        //TODO is there any Tengen maze where the house is at a different location than in the Arcade mazes?
+        Vector2i houseTopLeftTile = map.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, v2i(10, 15));
+        world.createArcadeHouse(houseTopLeftTile.x(), houseTopLeftTile.y());
+        return world;
+    }
 
     private final List<WorldMap> maps = new ArrayList<>();
     private int mapNumber;
@@ -235,12 +237,5 @@ public class MsPacManTengenGame extends GameModel {
             boolean chase = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
             ghost.followTarget(chase ? chasingTarget(ghost) : scatterTarget(ghost), speed);
         }
-    }
-
-    private GameWorld createWorld(WorldMap map) {
-        var world = new GameWorld(map);
-        Vector2i minTile = map.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, v2i(10, 15));
-        world.createArcadeHouse(minTile.x(), minTile.y());
-        return world;
     }
 }
