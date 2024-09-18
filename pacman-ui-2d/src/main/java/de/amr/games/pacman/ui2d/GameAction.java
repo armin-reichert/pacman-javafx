@@ -8,7 +8,6 @@ import de.amr.games.pacman.ui2d.util.KeyInput;
 import de.amr.games.pacman.ui2d.util.Keyboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import org.tinylog.Logger;
 
 import static de.amr.games.pacman.ui2d.util.KeyInput.*;
 
@@ -51,20 +50,19 @@ public enum GameAction {
     TWO_D_THREE_D       (alt(KeyCode.DIGIT3));
 
     GameAction(KeyCodeCombination... combinations) {
-        input = KeyInput.register(combinations);
-        Logger.info("{} => {}", input, this);
+        trigger = KeyInput.register(combinations);
+    }
+
+    public KeyInput trigger() {
+        return trigger;
     }
 
     /**
      * @return {@code true} if any key combination defined for this game key is pressed
      */
-    public boolean requested() {
-        if (Keyboard.pressed(input)) {
-            Logger.debug("{} pressed", this);
-            return true;
-        }
-        return false;
+    public boolean triggered() {
+        return Keyboard.pressed(trigger);
     }
 
-    private final KeyInput input;
+    private final KeyInput trigger;
 }

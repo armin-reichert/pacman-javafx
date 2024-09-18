@@ -194,19 +194,19 @@ public class StartPage extends StackPane implements Page {
 
     @Override
     public void handleKeyboardInput() {
-        if (GameAction.ENTER_GAME_PAGE.requested()) {
+        if (GameAction.ENTER_GAME_PAGE.triggered()) {
             context.selectGamePage();
-        } else if (GameAction.NEXT_VARIANT.requested()) {
+        } else if (GameAction.NEXT_VARIANT.triggered()) {
             context.selectNextGameVariant();
-        } else if (GameAction.PREV_VARIANT.requested()) {
+        } else if (GameAction.PREV_VARIANT.triggered()) {
             context.selectPrevGameVariant();
-        } else if (GameAction.NEXT_FLYER_PAGE.requested()) {
+        } else if (GameAction.NEXT_FLYER_PAGE.triggered()) {
             switch (context.game().variant()) {
                 case MS_PACMAN  -> browseMsPacManFlyer(true);
                 case PACMAN     -> browsePacManFlyer(true);
                 case PACMAN_XXL -> {}
             }
-        } else if (GameAction.PREV_FLYER_PAGE.requested()) {
+        } else if (GameAction.PREV_FLYER_PAGE.triggered()) {
             switch (context.game().variant()) {
                 case MS_PACMAN  -> browseMsPacManFlyer(false);
                 case PACMAN     -> browsePacManFlyer(false);

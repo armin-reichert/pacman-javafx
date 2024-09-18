@@ -183,19 +183,19 @@ public class PlayScene3D implements GameScene {
 
     @Override
     public void handleUserInput() {
-        if (GameAction.ADD_CREDIT.requested() && this.context.game().isDemoLevel()) {
+        if (GameAction.ADD_CREDIT.triggered() && this.context.game().isDemoLevel()) {
             context.addCredit();
-        } else if (GameAction.PREV_PERSPECTIVE.requested()) {
+        } else if (GameAction.PREV_PERSPECTIVE.triggered()) {
             context.selectPrev3DPerspective();
-        } else if (GameAction.NEXT_PERSPECTIVE.requested()) {
+        } else if (GameAction.NEXT_PERSPECTIVE.triggered()) {
             context.selectNext3DPerspective();
-        } else if (GameAction.CHEAT_EAT_ALL.requested()) {
+        } else if (GameAction.CHEAT_EAT_ALL.triggered()) {
             context.cheatEatAllPellets();
-        } else if (GameAction.CHEAT_ADD_LIVES.requested()) {
+        } else if (GameAction.CHEAT_ADD_LIVES.triggered()) {
             context.cheatAddLives();
-        } else if (GameAction.CHEAT_NEXT_LEVEL.requested()) {
+        } else if (GameAction.CHEAT_NEXT_LEVEL.triggered()) {
             context.cheatEnterNextLevel();
-        } else if (GameAction.CHEAT_KILL_GHOSTS.requested()) {
+        } else if (GameAction.CHEAT_KILL_GHOSTS.triggered()) {
             context.cheatKillAllEatableGhosts();
         }
     }

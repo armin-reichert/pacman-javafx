@@ -151,9 +151,10 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
             // TODO: find better way
             GameController.it().gameModel(variant).addGameEventListener(gamePage.dashboardLayer().getPip());
         }
-        // Touch all game keys such that they get registered with keyboard
-        for (var gameKey : GameAction.values()) {
-            Logger.debug("Game key '{}' registered", gameKey);
+
+        // Touch all game actions such that they get bound to keyboard
+        for (var gameAction : GameAction.values()) {
+            Logger.info("Game Action: {} => {}", gameAction, gameAction.trigger());
         }
 
         // select game variant of current game model
@@ -221,9 +222,9 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         mainScene.addEventFilter(KeyEvent.KEY_PRESSED, Keyboard::onKeyPressed);
         mainScene.addEventFilter(KeyEvent.KEY_RELEASED, Keyboard::onKeyReleased);
         mainScene.setOnKeyPressed(e -> {
-            if (GameAction.FULLSCREEN.requested()) {
+            if (GameAction.FULLSCREEN.triggered()) {
                 stage.setFullScreen(true);
-            } else if (GameAction.MUTE.requested()) {
+            } else if (GameAction.MUTE.triggered()) {
                 GameSounds.toggleMuted();
             } else {
                 currentPage.handleKeyboardInput();
