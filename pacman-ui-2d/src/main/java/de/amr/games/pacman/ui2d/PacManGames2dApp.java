@@ -289,7 +289,8 @@ public class PacManGames2dApp extends Application {
     public void start(Stage stage) {
         var ui = new PacManGames2dUI(computeSize());
         addAssets(ui.assets());
-        ui.create(stage, clock, createGameScenes());
+        ui.create(stage, clock);
+        ui.setGameScenes(createGameScenes());
         ui.start();
 
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));

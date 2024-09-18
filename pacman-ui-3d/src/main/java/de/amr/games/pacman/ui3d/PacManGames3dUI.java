@@ -8,13 +8,11 @@ import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.ui2d.PacManGames2dUI;
 import de.amr.games.pacman.ui2d.scene.GameScene;
 import de.amr.games.pacman.ui2d.scene.GameSceneID;
-import de.amr.games.pacman.ui2d.util.GameClockFX;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 import javafx.scene.shape.DrawMode;
-import javafx.stage.Stage;
 
 import java.util.Map;
 
@@ -39,8 +37,9 @@ public class PacManGames3dUI extends PacManGames2dUI {
         super(initialSize);
     }
 
-    public void create(Stage stage, GameClockFX clock, Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant) {
-        super.create(stage, clock, gameScenesForVariant);
+    @Override
+    public void setGameScenes(Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant) {
+        super.setGameScenes(gameScenesForVariant);
         for (GameVariant variant : GameVariant.values()) {
             var playScene3D = (PlayScene3D) gameScenesForVariant.get(variant).get(GameSceneID.PLAY_SCENE_3D);
             playScene3D.setContext(this);

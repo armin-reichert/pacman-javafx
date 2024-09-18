@@ -114,17 +114,27 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         this.initialSize = checkNotNull(initialSize);
     }
 
+    public void setGameScenes(Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant) {
+        this.gameScenesForVariant = checkNotNull(gameScenesForVariant);
+        for (GameVariant variant : GameVariant.values()) {
+            gameScenesForVariant.get(variant).values().forEach(gameScene -> {
+                if (gameScene instanceof GameScene2D gameScene2D) {
+                    gameScene2D.setGameContext(this);
+                    gameScene2D.debugInfoPy.bind(PY_DEBUG_INFO);
+                }
+            });
+        }
+    }
+
     /**
      * Called from application start method (on JavaFX application thread).
 
      * @param stage primary stage (window)
      * @param clock game clock driving the simulation
-     * @param gameScenesForVariant map with game scenes for each game variant
      */
-    public void create(Stage stage, GameClockFX clock, Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant) {
+    public void create(Stage stage, GameClockFX clock) {
         this.stage = checkNotNull(stage);
         this.clock = checkNotNull(clock);
-        this.gameScenesForVariant = checkNotNull(gameScenesForVariant);
 
         sceneRoot.getChildren().addAll(new Pane(), messageView, createMutedIcon());
         stage.setScene(createMainScene(initialSize));
@@ -133,15 +143,6 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         startPage.gameVariantPy.bind(gameVariantPy);
 
         gamePage = createGamePage(stage.getScene());
-
-        for (GameVariant variant : GameVariant.values()) {
-            gameScenesForVariant.get(variant).values().forEach(gameScene -> {
-             if (gameScene instanceof GameScene2D gameScene2D) {
-                 gameScene2D.setGameContext(this);
-                 gameScene2D.debugInfoPy.bind(PY_DEBUG_INFO);
-             }
-            });
-        }
 
         clock.setPauseableCallback(() -> {
             try {
