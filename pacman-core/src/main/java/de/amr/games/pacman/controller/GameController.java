@@ -9,8 +9,8 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.mspacman.MsPacManGame;
-import de.amr.games.pacman.model.pacman.PacManGame;
+import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
+import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.model.pacmanxxl.PacManXXLGame;
 import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
 import org.tinylog.Logger;
@@ -63,9 +63,9 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     private GameController(File userDir) {
         super(GameState.values());
         checkNotNull(userDir);
-        modelsByVariant.put(GameVariant.MS_PACMAN,        new MsPacManGame(GameVariant.MS_PACMAN, userDir));
+        modelsByVariant.put(GameVariant.MS_PACMAN,        new MsPacManArcadeGame(GameVariant.MS_PACMAN, userDir));
         modelsByVariant.put(GameVariant.MS_PACMAN_TENGEN, new MsPacManTengenGame(GameVariant.MS_PACMAN_TENGEN, userDir));
-        modelsByVariant.put(GameVariant.PACMAN,           new PacManGame(GameVariant.PACMAN, userDir));
+        modelsByVariant.put(GameVariant.PACMAN,           new PacManArcadeGame(GameVariant.PACMAN, userDir));
         modelsByVariant.put(GameVariant.PACMAN_XXL,       new PacManXXLGame(GameVariant.PACMAN_XXL, userDir));
         for (var entry : modelsByVariant.entrySet()) {
             Logger.info("Game variant {} => {}", entry.getKey(), entry.getValue());

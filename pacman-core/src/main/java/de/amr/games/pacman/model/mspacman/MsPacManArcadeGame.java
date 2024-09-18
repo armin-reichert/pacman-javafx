@@ -6,7 +6,6 @@ package de.amr.games.pacman.model.mspacman;
 
 import de.amr.games.pacman.event.GameEventType;
 import de.amr.games.pacman.lib.NavPoint;
-import de.amr.games.pacman.lib.Vector2i;
 import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
@@ -27,7 +26,7 @@ import java.util.stream.Stream;
 import static de.amr.games.pacman.lib.Globals.*;
 
 /**
- * Ms. Pac-Man game variant.
+ * Ms. Pac-Man Arcade game.
  *
  * <p>There are however some differences to the original.
  * <ul>
@@ -40,7 +39,17 @@ import static de.amr.games.pacman.lib.Globals.*;
  *
  * @author Armin Reichert
  */
-public class MsPacManGame extends GameModel {
+public class MsPacManArcadeGame extends GameModel {
+
+    private static final byte HOUSE_X = 10, HOUSE_Y = 15;
+
+    private static GameWorld createWorld(WorldMap map) {
+        var world = new GameWorld(map);
+        world.createArcadeHouse(HOUSE_X, HOUSE_Y);
+        //TODO: store in map files
+        map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(world.houseTopLeftTile()));
+        return world;
+    }
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
@@ -58,7 +67,7 @@ public class MsPacManGame extends GameModel {
     private int mapNumber;
     public boolean blueMazeBug = false;
 
-    public MsPacManGame(GameVariant gameVariant, File userDir) {
+    public MsPacManArcadeGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
         initialLives = 3;
         highScoreFile = new File(userDir, "highscore-ms_pacman.xml");
@@ -255,13 +264,5 @@ public class MsPacManGame extends GameModel {
             boolean chase = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
             ghost.followTarget(chase ? chasingTarget(ghost) : scatterTarget(ghost), speed);
         }
-    }
-
-    private GameWorld createWorld(WorldMap map) {
-        var world = new GameWorld(map);
-        Vector2i topLeftTile = v2i(10, 15);
-        world.createArcadeHouse(topLeftTile.x(), topLeftTile.y());
-        map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(topLeftTile));
-        return world;
     }
 }

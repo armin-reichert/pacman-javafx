@@ -42,10 +42,15 @@ import static de.amr.games.pacman.lib.NavPoint.np;
  *
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
-public class PacManGame extends GameModel {
+public class PacManArcadeGame extends GameModel {
+
+    private static final byte HOUSE_X = 10, HOUSE_Y = 15;
 
     // The Pac-Man Arcade game map
-    private static final WorldMap WORLD_MAP = new WorldMap(PacManGame.class.getResource("/de/amr/games/pacman/maps/pacman.world"));
+    private static final WorldMap WORLD_MAP = new WorldMap(PacManArcadeGame.class.getResource("/de/amr/games/pacman/maps/pacman.world"));
+    static {
+        WORLD_MAP.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(v2i(HOUSE_X, HOUSE_Y)));
+    }
 
     private static final List<Vector2i> CANNOT_MOVE_UP_TILES = List.of(
         v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)
@@ -75,7 +80,7 @@ public class PacManGame extends GameModel {
 
     protected static final Vector2f BONUS_POS = halfTileRightOf(13, 20);
 
-    public PacManGame(GameVariant gameVariant, File userDir) {
+    public PacManArcadeGame(GameVariant gameVariant, File userDir) {
         super(gameVariant, userDir);
         initialLives = 3;
         highScoreFile = new File(userDir, "highscore-pacman.xml");
@@ -96,7 +101,9 @@ public class PacManGame extends GameModel {
     @Override
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
-        setWorldAndCreatePopulation(createWorld());
+        var world = new GameWorld(WORLD_MAP);
+        world.createArcadeHouse(HOUSE_X, HOUSE_Y);
+        setWorldAndCreatePopulation(world);
         pac.setName("Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(false);
@@ -155,13 +162,5 @@ public class PacManGame extends GameModel {
     protected void ghostHuntingBehaviour(Ghost ghost) {
         boolean chasing = isChasingPhase(huntingPhaseIndex) || ghost.id() == RED_GHOST && cruiseElroy > 0;
         ghost.followTarget(chasing ? chasingTarget(ghost) : scatterTarget(ghost), huntingSpeedPct(ghost));
-    }
-
-    private GameWorld createWorld() {
-        var world = new GameWorld(WORLD_MAP);
-        Vector2i topLeftTile = v2i(10, 15);
-        world.createArcadeHouse(topLeftTile.x(), topLeftTile.y());
-        WORLD_MAP.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(topLeftTile));
-        return world;
     }
 }

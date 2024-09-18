@@ -11,7 +11,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.StaticBonus;
-import de.amr.games.pacman.model.pacman.PacManGame;
+import de.amr.games.pacman.model.pacman.PacManArcadeGame;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
@@ -28,7 +28,7 @@ import static de.amr.games.pacman.lib.Globals.*;
  * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only
  * <a href="https://github.com/masonicGIT/pacman">Shaun Williams</a>).
  */
-public class PacManXXLGame extends PacManGame {
+public class PacManXXLGame extends PacManArcadeGame {
 
     private static final int NUM_MAPS = 8;
     private static final String MAP_PATH_PATTERN = "/de/amr/games/pacman/maps/masonic/masonic_%d.world";
