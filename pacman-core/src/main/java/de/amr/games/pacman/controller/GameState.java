@@ -158,7 +158,7 @@ public enum GameState implements FsmState<GameModel> {
                 } else {
                     enterState(LEVEL_TRANSITION);
                 }
-            } else if (timer.atSecond(1)) {
+            } else if (timer.atSecond(1.5)) {
                 game.ghosts().forEach(Ghost::hide);
             } else if (timer.atSecond(2)) {
                 flashCount = 2 * game.level().orElseThrow().numFlashes();
