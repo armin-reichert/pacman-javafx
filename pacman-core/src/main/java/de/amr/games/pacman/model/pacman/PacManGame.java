@@ -42,10 +42,10 @@ import static de.amr.games.pacman.lib.NavPoint.np;
  *
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
-public class PacManGameModel extends GameModel {
+public class PacManGame extends GameModel {
 
     // The Pac-Man Arcade game map
-    private static final WorldMap WORLD_MAP = new WorldMap(PacManGameModel.class.getResource("/de/amr/games/pacman/maps/pacman.world"));
+    private static final WorldMap WORLD_MAP = new WorldMap(PacManGame.class.getResource("/de/amr/games/pacman/maps/pacman.world"));
 
     private static final List<Vector2i> CANNOT_MOVE_UP_TILES = List.of(
         v2i(12, 14), v2i(15, 14), v2i(12, 26), v2i(15, 26)
@@ -75,15 +75,10 @@ public class PacManGameModel extends GameModel {
 
     protected static final Vector2f BONUS_POS = halfTileRightOf(13, 20);
 
-    public PacManGameModel(File userDir) {
-        super(userDir);
+    public PacManGame(GameVariant gameVariant, File userDir) {
+        super(gameVariant, userDir);
         initialLives = 3;
         highScoreFile = new File(userDir, "highscore-pacman.xml");
-    }
-
-    @Override
-    public GameVariant variant() {
-        return GameVariant.PACMAN;
     }
 
     @Override

@@ -107,7 +107,8 @@ public abstract class GameModel {
         return number;
     }
 
-    protected final File userDir;
+    protected final GameVariant    gameVariant;
+    protected final File           userDir;
     protected final Pulse          blinking = new Pulse(10, Pulse.OFF);
     protected final byte[]         bonusSymbols = new byte[2];
     protected final List<Byte>     levelCounter = new ArrayList<>();
@@ -140,11 +141,11 @@ public abstract class GameModel {
 
     protected SimulationStepEventLog eventLog;
 
-    protected GameModel(File userDir) {
+    protected GameModel(GameVariant gameVariant, File userDir) {
+        this.gameVariant = checkNotNull(gameVariant);
         this.userDir = checkNotNull(userDir);
     }
 
-    public abstract GameVariant variant();
     public abstract void activateNextBonus();
 
     protected abstract void buildRegularLevel(int levelNumber);
@@ -154,6 +155,8 @@ public abstract class GameModel {
     protected abstract boolean isPacManKillingIgnoredInDemoLevel();
     protected abstract boolean isBonusReached();
     protected abstract boolean isLevelCounterEnabled();
+
+    public final GameVariant variant() { return gameVariant; }
 
     protected void clearLevel() {
         levelNumber = 0;
@@ -316,7 +319,7 @@ public abstract class GameModel {
         if (isLevelCounterEnabled()) {
             levelCounter.add(bonusSymbols[0]);
             if (levelCounter.size() > LEVEL_COUNTER_MAX_SIZE) {
-                levelCounter.remove(0);
+                levelCounter.removeFirst();
             }
         }
         gateKeeper.init(levelNumber);

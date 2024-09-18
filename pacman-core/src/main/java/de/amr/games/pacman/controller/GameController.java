@@ -9,10 +9,10 @@ import de.amr.games.pacman.event.GameStateChangeEvent;
 import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
-import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
-import de.amr.games.pacman.model.pacman.PacManGameModel;
-import de.amr.games.pacman.model.pacmanxxl.PacManXXLGameModel;
-import de.amr.games.pacman.model.tengen.MsPacManTengenGameModel;
+import de.amr.games.pacman.model.mspacman.MsPacManGame;
+import de.amr.games.pacman.model.pacman.PacManGame;
+import de.amr.games.pacman.model.pacmanxxl.PacManXXLGame;
+import de.amr.games.pacman.model.tengen.MsPacManTengenGame;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -57,19 +57,19 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
         return THE_ONE;
     }
 
-    private final Map<GameVariant, GameModel> gameModelsByVariant = new EnumMap<>(GameVariant.class);
+    private final Map<GameVariant, GameModel> modelsByVariant = new EnumMap<>(GameVariant.class);
     private GameModel currentGame;
 
     private GameController(File userDir) {
         super(GameState.values());
         checkNotNull(userDir);
         Logger.info("Creating game models...");
-        gameModelsByVariant.put(GameVariant.MS_PACMAN,  new MsPacManGameModel(userDir));
-        gameModelsByVariant.put(GameVariant.MS_PACMAN_TENGEN, new MsPacManTengenGameModel(userDir));
-        gameModelsByVariant.put(GameVariant.PACMAN,     new PacManGameModel(userDir));
-        gameModelsByVariant.put(GameVariant.PACMAN_XXL, new PacManXXLGameModel(userDir));
-        for (var entry : gameModelsByVariant.entrySet()) {
-            Logger.info("{}: {}", entry.getKey(), entry.getValue());
+        modelsByVariant.put(GameVariant.MS_PACMAN,        new MsPacManGame(GameVariant.MS_PACMAN, userDir));
+        modelsByVariant.put(GameVariant.MS_PACMAN_TENGEN, new MsPacManTengenGame(GameVariant.MS_PACMAN_TENGEN, userDir));
+        modelsByVariant.put(GameVariant.PACMAN,           new PacManGame(GameVariant.PACMAN, userDir));
+        modelsByVariant.put(GameVariant.PACMAN_XXL,       new PacManXXLGame(GameVariant.PACMAN_XXL, userDir));
+        for (var entry : modelsByVariant.entrySet()) {
+            Logger.info("Game variant {} => {}", entry.getKey(), entry.getValue());
         }
         // map state change events to game events
         addStateChangeListener((oldState, newState) -> currentGame.publishGameEvent(new GameStateChangeEvent(currentGame, oldState, newState)));
@@ -85,11 +85,11 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     @SuppressWarnings("unchecked")
     public <T extends GameModel> T gameModel(GameVariant variant) {
         checkNotNull(variant);
-        if (!gameModelsByVariant.containsKey(variant)) {
+        if (!modelsByVariant.containsKey(variant)) {
             Logger.error("No game model for variant {} exists", variant);
             throw new IllegalArgumentException();
         }
-        return (T) gameModelsByVariant.get(variant);
+        return (T) modelsByVariant.get(variant);
     }
 
     public void selectGame(GameVariant variant) {

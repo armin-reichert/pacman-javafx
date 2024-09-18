@@ -15,7 +15,7 @@ import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
 import de.amr.games.pacman.model.actors.Pac;
-import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
+import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
@@ -319,14 +319,14 @@ public class MsPacManIntroScene extends GameScene2D {
      * @see  <a href="http://www.donhodges.com/ms_pacman_bugs.htm">Ms. Pac-Man blue maze bug</a>
      */
     private void triggerBlueMazeBug() {
-        if (context.game() instanceof MsPacManGameModel msPacManGame) {
+        if (context.game() instanceof MsPacManGame msPacManGame) {
             msPacManGame.blueMazeBug = true;
             Logger.info("Blue maze bug triggered");
         }
     }
 
     private void clearBlueMazeBug() {
-        if (context.game() instanceof MsPacManGameModel msPacManGame) {
+        if (context.game() instanceof MsPacManGame msPacManGame) {
             msPacManGame.blueMazeBug = false;
         }
     }

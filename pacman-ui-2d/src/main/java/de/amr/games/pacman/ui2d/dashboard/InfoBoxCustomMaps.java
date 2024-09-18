@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.dashboard;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.pacmanxxl.MapSelectionMode;
-import de.amr.games.pacman.model.pacmanxxl.PacManXXLGameModel;
+import de.amr.games.pacman.model.pacmanxxl.PacManXXLGame;
 import de.amr.games.pacman.ui2d.GameContext;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -64,7 +64,7 @@ public class InfoBoxCustomMaps extends InfoBox {
     }
 
     public void updateTableView() {
-        PacManXXLGameModel xxlGame = context.gameController().gameModel(GameVariant.PACMAN_XXL);
+        PacManXXLGame xxlGame = context.gameController().gameModel(GameVariant.PACMAN_XXL);
         ObservableList<MapInfo> items = FXCollections.observableArrayList();
         for (File file  : xxlGame.customMapsByFile().keySet().stream().sorted().toList()) {
             WorldMap map = xxlGame.customMapsByFile().get(file);

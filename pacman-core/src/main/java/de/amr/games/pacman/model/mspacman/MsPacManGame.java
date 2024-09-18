@@ -2,12 +2,12 @@
 Copyright (c) 2021-2024 Armin Reichert (MIT License)
 See file LICENSE in repository root directory for details.
 */
-package de.amr.games.pacman.model.tengen;
+package de.amr.games.pacman.model.mspacman;
 
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.lib.NavPoint;
 import de.amr.games.pacman.lib.Vector2i;
+import de.amr.games.pacman.lib.tilemap.TileMap;
 import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
@@ -21,7 +21,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -41,10 +40,7 @@ import static de.amr.games.pacman.lib.Globals.*;
  *
  * @author Armin Reichert
  */
-public class MsPacManTengenGameModel extends GameModel {
-
-    private static final String NON_ARCADE_MAPS_PATH = "/de/amr/games/pacman/maps/tengen/non_arcade/map%02d.world";
-    private static final String ARCADE_MAPS_PATH = "/de/amr/games/pacman/maps/tengen/arcade/map%02d.world";
+public class MsPacManGame extends GameModel {
 
     private static final int DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
@@ -59,35 +55,48 @@ public class MsPacManTengenGameModel extends GameModel {
 
     private static final byte[] BONUS_VALUE_FACTORS = {1, 2, 5, 7, 10, 20, 50};
 
-    private final List<WorldMap> maps = new ArrayList<>();
     private int mapNumber;
+    public boolean blueMazeBug = false;
 
-    public MsPacManTengenGameModel(File userDir) {
-        super(userDir);
+    public MsPacManGame(GameVariant gameVariant, File userDir) {
+        super(gameVariant, userDir);
         initialLives = 3;
-        highScoreFile = new File(userDir, "highscore-ms_pacman_tengen.xml");
-        for (int num = 1; num <= 9; ++num) {
-            URL url = getClass().getResource(ARCADE_MAPS_PATH.formatted(num));
-            if (url != null) {
-                maps.add(new WorldMap(url));
-            }
-        }
-        for (int num = 1; num <= 36; ++num) {
-            URL url = getClass().getResource(NON_ARCADE_MAPS_PATH.formatted(num));
-            if (url != null) {
-                maps.add(new WorldMap(url));
-            }
-        }
+        highScoreFile = new File(userDir, "highscore-ms_pacman.xml");
     }
 
-    @Override
-    public GameVariant variant() {
-        return GameVariant.MS_PACMAN_TENGEN;
-    }
-
+    /**
+     * <p>In Ms. Pac-Man, there are 4 maps and 6 mazes. Let (num_map, num_maze) denote the combination
+     * map #num_map and maze #num_maze.
+     * </p>
+     * <ul>
+     * <li>Levels 1-2: (1, 1): pink maze, white dots
+     * <li>Levels 3-5: (2, 2)): light blue maze, yellow dots
+     * <li>Levels 6-9: (3, 3): orange maze, red dots
+     * <li>Levels 10-13: (4, 4): blue maze, white dots
+     * </ul>
+     * For level 14 and later, (map, maze) alternates every 4th level between (3, 5) and (4, 6):
+     * <ul>
+     * <li>(3, 5): pink maze, cyan dots
+     * <li>(4, 6): orange maze, white dots
+     * </ul>
+     * <p>
+     */
     private int mapNumberByLevelNumber(int levelNumber) {
-        int numMaps = maps.size();
-        return levelNumber <= numMaps ? levelNumber : Globals.randomInt(1, numMaps + 1);
+        return switch (levelNumber) {
+            case 1, 2 -> 1;
+            case 3, 4, 5 -> 2;
+            case 6, 7, 8, 9 -> 3;
+            case 10, 11, 12, 13 -> 4;
+            default -> (levelNumber - 14) % 8 < 4 ? 5 : 6;
+        };
+    }
+
+    /**
+     * Used by sprite based renderer to select the image for the maze.
+     * @return map number (1-6)
+     */
+    public int currentMapNumber() {
+        return mapNumber;
     }
 
     @Override
@@ -100,7 +109,11 @@ public class MsPacManTengenGameModel extends GameModel {
     public void buildRegularLevel(int levelNumber) {
         this.levelNumber = checkLevelNumber(levelNumber);
         mapNumber = mapNumberByLevelNumber(levelNumber);
-        var map = maps.get(mapNumber - 1);
+        URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world".formatted(mapNumber));
+        var map = new WorldMap(mapURL);
+        if (blueMazeBug && levelNumber == 1) {
+            map.terrain().setProperty(GameWorld.PROPERTY_COLOR_WALL_FILL, "rgb(33,33,255)");
+        }
         setWorldAndCreatePopulation(createWorld(map));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
@@ -115,8 +128,10 @@ public class MsPacManTengenGameModel extends GameModel {
     @Override
     public void buildDemoLevel() {
         levelNumber = 1;
-        mapNumber = randomInt(1, maps.size() + 1);
-        setWorldAndCreatePopulation(createWorld(maps.get(mapNumber-1)));
+        mapNumber = randomInt(1, 7);
+        URL mapURL = getClass().getResource("/de/amr/games/pacman/maps/mspacman/mspacman_%d.world".formatted(mapNumber));
+        var map = new WorldMap(mapURL);
+        setWorldAndCreatePopulation(createWorld(map));
         pac.setName("Ms. Pac-Man");
         pac.setAutopilot(new RuleBasedPacSteering(this));
         pac.setUseAutopilot(true);
@@ -244,8 +259,9 @@ public class MsPacManTengenGameModel extends GameModel {
 
     private GameWorld createWorld(WorldMap map) {
         var world = new GameWorld(map);
-        Vector2i minTile = map.terrain().getTileProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, v2i(10, 15));
-        world.createArcadeHouse(minTile.x(), minTile.y());
+        Vector2i topLeftTile = v2i(10, 15);
+        world.createArcadeHouse(topLeftTile.x(), topLeftTile.y());
+        map.terrain().setProperty(GameWorld.PROPERTY_POS_HOUSE_MIN_TILE, TileMap.formatTile(topLeftTile));
         return world;
     }
 }

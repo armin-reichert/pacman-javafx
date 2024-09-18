@@ -7,7 +7,7 @@ package de.amr.games.pacman.ui2d.rendering.ms_pacman;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.Bonus;
 import de.amr.games.pacman.model.actors.MovingBonus;
-import de.amr.games.pacman.model.mspacman.MsPacManGameModel;
+import de.amr.games.pacman.model.mspacman.MsPacManGame;
 import de.amr.games.pacman.ui2d.GameContext;
 import de.amr.games.pacman.ui2d.rendering.SpriteArea;
 import de.amr.games.pacman.ui2d.rendering.SpriteRenderer;
@@ -60,7 +60,7 @@ public class MsPacManArcadeGameWorldRenderer implements MsPacManGameWorldRendere
 
     @Override
     public void drawWorld(GraphicsContext g, GameContext context, GameWorld world) {
-        MsPacManGameModel game = (MsPacManGameModel) context.game();
+        MsPacManGame game = (MsPacManGame) context.game();
         double scaling = scalingProperty().get();
         double x = 0, y = t(3);
         if (flashMode) {

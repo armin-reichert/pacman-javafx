@@ -11,7 +11,7 @@ import de.amr.games.pacman.lib.tilemap.WorldMap;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
 import de.amr.games.pacman.model.actors.StaticBonus;
-import de.amr.games.pacman.model.pacman.PacManGameModel;
+import de.amr.games.pacman.model.pacman.PacManGame;
 import de.amr.games.pacman.steering.RuleBasedPacSteering;
 import org.tinylog.Logger;
 
@@ -28,7 +28,7 @@ import static de.amr.games.pacman.lib.Globals.*;
  * Extension of Arcade Pac-Man with 8 additional mazes (thanks to the one and only
  * <a href="https://github.com/masonicGIT/pacman">Shaun Williams</a>).
  */
-public class PacManXXLGameModel extends PacManGameModel {
+public class PacManXXLGame extends PacManGame {
 
     private static final int NUM_MAPS = 8;
     private static final String MAP_PATH_PATTERN = "/de/amr/games/pacman/maps/masonic/masonic_%d.world";
@@ -38,8 +38,8 @@ public class PacManXXLGameModel extends PacManGameModel {
     private final File customMapDir;
     private MapSelectionMode mapSelectionMode;
 
-    public PacManXXLGameModel(File userDir) {
-        super(userDir);
+    public PacManXXLGame(GameVariant gameVariant, File userDir) {
+        super(gameVariant, userDir);
         initialLives = 3;
         mapSelectionMode = MapSelectionMode.NO_CUSTOM_MAPS;
         customMapDir = new File(userDir, "maps");
@@ -49,11 +49,6 @@ public class PacManXXLGameModel extends PacManGameModel {
             standardMaps.add(new WorldMap(url));
         }
         loadCustomMaps();
-    }
-
-    @Override
-    public GameVariant variant() {
-        return GameVariant.PACMAN_XXL;
     }
 
     public void setMapSelectionMode(MapSelectionMode mapSelectionMode) {

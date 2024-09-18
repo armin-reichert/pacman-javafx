@@ -13,7 +13,7 @@ import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.GameWorld;
-import de.amr.games.pacman.model.pacmanxxl.PacManXXLGameModel;
+import de.amr.games.pacman.model.pacmanxxl.PacManXXLGame;
 import de.amr.games.pacman.ui2d.dashboard.InfoBoxCustomMaps;
 import de.amr.games.pacman.ui2d.page.EditorPage;
 import de.amr.games.pacman.ui2d.page.GamePage;
@@ -220,7 +220,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         GameSounds.gameVariantProperty().bind(gameVariantPy);
 
         // Not sure where this belongs
-        PacManXXLGameModel xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
+        PacManXXLGame xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
         PY_MAP_SELECTION_MODE.addListener((py,ov,nv) -> {
             xxlGame.loadCustomMaps();
             xxlGame.setMapSelectionMode(nv);
@@ -523,7 +523,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
         GameSounds.stopAll();
         clock.stop();
         if (editorPage == null) {
-            var xxlGame = (PacManXXLGameModel) game();
+            var xxlGame = (PacManXXLGame) game();
             editorPage = new EditorPage(stage, this, xxlGame.customMapDir());
             editorPage.setCloseAction(this::quitMapEditor);
         }
@@ -564,7 +564,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void updateCustomMaps() {
-        PacManXXLGameModel xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
+        PacManXXLGame xxlGame = gameController().gameModel(GameVariant.PACMAN_XXL);
         xxlGame.loadCustomMaps();
         Logger.info("Custom maps: {}", xxlGame.customMapsSortedByFile());
         /* TODO: Find better solution
