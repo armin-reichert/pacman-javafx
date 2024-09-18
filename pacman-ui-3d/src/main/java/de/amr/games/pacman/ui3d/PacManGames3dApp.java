@@ -53,6 +53,14 @@ public class PacManGames3dApp extends Application {
     public static final DoubleProperty              PY_3D_WALL_HEIGHT        = new SimpleDoubleProperty(3.5);
     public static final DoubleProperty              PY_3D_WALL_OPACITY       = new SimpleDoubleProperty(0.9);
 
+    private static Dimension2D computeInitialSize() {
+        Rectangle2D screenSize = Screen.getPrimary().getBounds();
+        double aspect = screenSize.getWidth() / screenSize.getHeight();
+        double height = 0.8 * screenSize.getHeight();
+        double width = aspect * height;
+        return new Dimension2D(width, height);
+    }
+
     private static void addAssets(AssetStorage assets) {
         // Load assets for 2D UI from other module
         PacManGames2dApp.addAssets(assets);
@@ -170,9 +178,9 @@ public class PacManGames3dApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        var ui = new PacManGames3dUI();
+        var ui = new PacManGames3dUI(computeInitialSize());
         addAssets(ui.assets());
-        ui.create(stage, computeSize(), clock, createGameScenes());
+        ui.create(stage, clock, createGameScenes());
         ui.start();
 
         Logger.info("JavaFX version: {}", System.getProperty("javafx.runtime.version"));
@@ -188,13 +196,5 @@ public class PacManGames3dApp extends Application {
     @Override
     public void stop() {
         clock.stop();
-    }
-
-    private Dimension2D computeSize() {
-        Rectangle2D screenSize = Screen.getPrimary().getBounds();
-        double aspect = screenSize.getWidth() / screenSize.getHeight();
-        double height = 0.8 * screenSize.getHeight();
-        double width = aspect * height;
-        return new Dimension2D(width, height);
     }
 }

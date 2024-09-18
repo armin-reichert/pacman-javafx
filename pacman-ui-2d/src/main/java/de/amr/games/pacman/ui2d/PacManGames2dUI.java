@@ -9,7 +9,6 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
-import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -99,6 +98,7 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     public final BooleanProperty scoreVisiblePy = new SimpleBooleanProperty(this, "scoreVisible");
 
+    protected final Dimension2D initialSize;
     protected final AssetStorage assets = new AssetStorage();
     protected Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant;
     protected final FlashMessageView messageView = new FlashMessageView();
@@ -110,21 +110,24 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     protected EditorPage editorPage;
     protected Page currentPage;
 
+    public PacManGames2dUI(Dimension2D initialSize) {
+        this.initialSize = checkNotNull(initialSize);
+    }
+
     /**
      * Called from application start method (on JavaFX application thread).
 
      * @param stage primary stage (window)
-     * @param size initial window size
      * @param clock game clock driving the simulation
      * @param gameScenesForVariant map with game scenes for each game variant
      */
-    public void create(Stage stage, Dimension2D size, GameClockFX clock, Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant) {
+    public void create(Stage stage, GameClockFX clock, Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant) {
         this.stage = checkNotNull(stage);
         this.clock = checkNotNull(clock);
         this.gameScenesForVariant = checkNotNull(gameScenesForVariant);
 
         sceneRoot.getChildren().addAll(new Pane(), messageView, createMutedIcon());
-        stage.setScene(createMainScene(size));
+        stage.setScene(createMainScene(initialSize));
 
         startPage = new StartPage(this);
         startPage.gameVariantPy.bind(gameVariantPy);

@@ -35,8 +35,12 @@ import static de.amr.games.pacman.ui3d.PacManGames3dApp.*;
  */
 public class PacManGames3dUI extends PacManGames2dUI {
 
-    public void create(Stage stage, Dimension2D size, GameClockFX clock, Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant) {
-        super.create(stage, size, clock, gameScenesForVariant);
+    public PacManGames3dUI(Dimension2D initialSize) {
+        super(initialSize);
+    }
+
+    public void create(Stage stage, GameClockFX clock, Map<GameVariant, Map<GameSceneID, GameScene>> gameScenesForVariant) {
+        super.create(stage, clock, gameScenesForVariant);
         for (GameVariant variant : GameVariant.values()) {
             var playScene3D = (PlayScene3D) gameScenesForVariant.get(variant).get(GameSceneID.PLAY_SCENE_3D);
             playScene3D.setContext(this);
