@@ -31,14 +31,14 @@ public class KeyboardPacSteering implements Steering {
      * Default steering: unmodified cursor keys.
      */
     public KeyboardPacSteering() {
-        dirByKey.put(KeyInput.of(key(KeyCode.UP)),        Direction.UP);
-        dirByKey.put(KeyInput.of(key(KeyCode.DOWN)),      Direction.DOWN);
-        dirByKey.put(KeyInput.of(key(KeyCode.LEFT)),      Direction.LEFT);
-        dirByKey.put(KeyInput.of(key(KeyCode.RIGHT)),     Direction.RIGHT);
-        dirByKey.put(KeyInput.of(control(KeyCode.UP)),    Direction.UP);
-        dirByKey.put(KeyInput.of(control(KeyCode.DOWN)),  Direction.DOWN);
-        dirByKey.put(KeyInput.of(control(KeyCode.LEFT)),  Direction.LEFT);
-        dirByKey.put(KeyInput.of(control(KeyCode.RIGHT)), Direction.RIGHT);
+        dirByKey.put(KeyInput.register(key(KeyCode.UP)),        Direction.UP);
+        dirByKey.put(KeyInput.register(key(KeyCode.DOWN)),      Direction.DOWN);
+        dirByKey.put(KeyInput.register(key(KeyCode.LEFT)),      Direction.LEFT);
+        dirByKey.put(KeyInput.register(key(KeyCode.RIGHT)),     Direction.RIGHT);
+        dirByKey.put(KeyInput.register(control(KeyCode.UP)),    Direction.UP);
+        dirByKey.put(KeyInput.register(control(KeyCode.DOWN)),  Direction.DOWN);
+        dirByKey.put(KeyInput.register(control(KeyCode.LEFT)),  Direction.LEFT);
+        dirByKey.put(KeyInput.register(control(KeyCode.RIGHT)), Direction.RIGHT);
     }
 
     @Override

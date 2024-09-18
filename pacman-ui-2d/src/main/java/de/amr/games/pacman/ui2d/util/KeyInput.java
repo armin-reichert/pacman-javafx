@@ -18,7 +18,7 @@ public class KeyInput {
 
     private final KeyCodeCombination[] combinations;
 
-    public static KeyInput of(KeyCodeCombination... combinations) {
+    public static KeyInput register(KeyCodeCombination... combinations) {
         var keyInput = new KeyInput(combinations);
         Keyboard.register(keyInput);
         return keyInput;
@@ -31,9 +31,9 @@ public class KeyInput {
     @Override
     public String toString() {
         return Arrays.stream(combinations)
-                .map(KeyCodeCombination::toString)
-                .map(s -> "[" +s + "]")
-                .collect(Collectors.joining(", "));
+            .map(KeyCodeCombination::toString)
+            .map(s -> "[" +s + "]")
+            .collect(Collectors.joining(", "));
     }
 
     public KeyCodeCombination[] getCombinations() {

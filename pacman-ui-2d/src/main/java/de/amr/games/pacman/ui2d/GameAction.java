@@ -16,7 +16,7 @@ import static de.amr.games.pacman.ui2d.util.KeyInput.*;
  * @author Armin Reichert
  */
 public enum GameAction {
-    ADD_CREDIT          (key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5)),
+    ADD_CREDIT          (key(KeyCode.DIGIT5), key(KeyCode.NUMPAD5), key(KeyCode.UP)),
     AUTOPILOT           (alt(KeyCode.A)),
     BOOT                (key(KeyCode.F3)),
     CHEAT_ADD_LIVES     (alt(KeyCode.L)),
@@ -44,14 +44,14 @@ public enum GameAction {
     SIMULATION_SLOWER   (alt(KeyCode.MINUS)),
     SIMULATION_1_STEP   (key(KeyCode.SPACE), shift(KeyCode.P)),
     SIMULATION_10_STEPS (shift(KeyCode.SPACE)),
-    START_GAME          (key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1)),
+    START_GAME          (key(KeyCode.DIGIT1), key(KeyCode.NUMPAD1), key(KeyCode.ENTER), key(KeyCode.SPACE)),
     START_TEST_MODE     (alt(KeyCode.T)),
     TOGGLE_DASHBOARD    (key(KeyCode.F1), alt(KeyCode.B)),
     TOGGLE_PIP_VIEW     (key(KeyCode.F2)),
     TWO_D_THREE_D       (alt(KeyCode.DIGIT3));
 
     GameAction(KeyCodeCombination... combinations) {
-        input = KeyInput.of(combinations);
+        input = KeyInput.register(combinations);
         Logger.info("{} => {}", input, this);
     }
 
