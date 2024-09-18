@@ -63,7 +63,6 @@ public class GameController extends FiniteStateMachine<GameState, GameModel> {
     private GameController(File userDir) {
         super(GameState.values());
         checkNotNull(userDir);
-        Logger.info("Creating game models...");
         modelsByVariant.put(GameVariant.MS_PACMAN,        new MsPacManGame(GameVariant.MS_PACMAN, userDir));
         modelsByVariant.put(GameVariant.MS_PACMAN_TENGEN, new MsPacManTengenGame(GameVariant.MS_PACMAN_TENGEN, userDir));
         modelsByVariant.put(GameVariant.PACMAN,           new PacManGame(GameVariant.PACMAN, userDir));
