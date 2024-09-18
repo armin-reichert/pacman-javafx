@@ -313,7 +313,7 @@ public enum GameState implements FsmState<GameModel> {
         public void onEnter(GameModel game) {
             lastLevelNumber = switch (game.variant()) {
                 case MS_PACMAN -> 17;
-                case MS_PACMAN_TENGEN -> 32;
+                case MS_PACMAN_TENGEN -> 37;
                 case PACMAN -> 21;
                 case PACMAN_XXL -> 8; //TODO what about custom maps?
             };

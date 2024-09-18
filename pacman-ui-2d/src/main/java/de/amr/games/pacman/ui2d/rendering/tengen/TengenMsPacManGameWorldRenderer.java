@@ -152,21 +152,25 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
 
     private SpriteArea nonArcadeMapArea(GameWorld world, int mapNumber) {
         int width = world.map().terrain().numCols() * TS, height = (world.map().terrain().numRows() - 5) * TS;
-        if (mapNumber <= 8) { // first row
+        if (mapNumber <= 8) { // row #1, maps 1-8
             int colIndex = mapNumber - 1;
             return new SpriteArea(colIndex * width, 0, width, height);
         }
-        if (mapNumber <= 16) { // second row
+        if (mapNumber <= 16) { // row #2, maps 9-16
             int colIndex = (mapNumber - 1) % 8;
             return new SpriteArea(colIndex * width, 248, width, height);
         }
-        if (mapNumber <= 24) {
-            return new SpriteArea(0, 0, 224, 248);
+        if (mapNumber <= 24) { // row #3, maps 17-24
+            int colIndex = (mapNumber - 1) % 8;
+            return new SpriteArea(colIndex * width, 544, width, height);
         }
-        if (mapNumber <= 33){
-            return new SpriteArea(0, 0, 224, 248);
+        if (mapNumber <= 33) { // row #4, maps 18-33
+            int colIndex = (mapNumber - 1) % 9;
+            return new SpriteArea(colIndex * width, 840, width, height);
         }
-        return new SpriteArea(0, 0, 224, 248);
+        // row #5, maps 34-37
+        int colIndex = (mapNumber - 1) % 4;
+        return new SpriteArea(colIndex * width, 1136, width, height);
     }
 
     @Override
