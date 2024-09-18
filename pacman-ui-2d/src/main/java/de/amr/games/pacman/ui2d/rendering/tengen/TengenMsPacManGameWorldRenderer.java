@@ -103,8 +103,7 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
             g.drawImage(tengenMap.mazesImage,
                 tengenMap.area.x() + 0.5, tengenMap.area.y() + 0.5,
                 tengenMap.area.width() - 1, tengenMap.area.height() - 1,
-                0, scaled(3 * TS),
-                    scaled(tengenMap.area.width()), scaled(tengenMap.area.height()));
+                0, scaled(3 * TS), scaled(tengenMap.area.width()), scaled(tengenMap.area.height()));
             hideActorSprite(g, terrain.getTileProperty("pos_pac", v2i(14, 26)), 0, 0);
             hideActorSprite(g, terrain.getTileProperty("pos_ghost_1_red", v2i(13, 14)), 0, 0);
             // The ghosts in the house are sitting some pixels below their home position
