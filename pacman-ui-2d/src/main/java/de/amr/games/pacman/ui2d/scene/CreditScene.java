@@ -5,8 +5,8 @@ See file LICENSE in repository root directory for details.
 package de.amr.games.pacman.ui2d.scene;
 
 import de.amr.games.pacman.ui2d.GameAction;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.SpriteArea;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.pacman.PacManArcadeGameWorldRenderer;
 
 import static de.amr.games.pacman.lib.Globals.TS;
@@ -50,7 +50,7 @@ public class CreditScene extends GameScene2D {
         var orange = context.assets().color("palette.orange");
         var rose = context.assets().color("palette.rose");
         switch (context.game().variant()) {
-            case MS_PACMAN, MS_PACMAN_TENGEN -> {
+            case MS_PACMAN -> {
                 MsPacManGameWorldRenderer msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) renderer;
                 SpriteArea livesCounterSprite = renderer.spriteRenderer().spriteSheet().livesCounterSprite();
                 renderer.drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(16));
@@ -61,6 +61,14 @@ public class CreditScene extends GameScene2D {
                 msPacManGameWorldRenderer.drawMsPacManMidwayCopyright(g,
                     context.assets().get("ms_pacman.logo.midway"),
                     t(6), t(28), context.assets().color("palette.red"), sceneFont(TS));
+            }
+            case MS_PACMAN_TENGEN -> {
+                SpriteArea livesCounterSprite = renderer.spriteRenderer().spriteSheet().livesCounterSprite();
+                renderer.drawText(g, "PUSH START BUTTON", orange, font8, t(6), t(16));
+                renderer.drawText(g, "1 PLAYER ONLY", orange, font8, t(8), t(18));
+                renderer.drawText(g, "ADDITIONAL    AT 10000", orange, font8, t(2), t(25));
+                renderer.spriteRenderer().drawSpriteScaled(g, livesCounterSprite, t(13), t(23) + 1);
+                renderer.drawText(g, "PTS", orange, font6, t(25), t(25));
             }
             case PACMAN -> {
                 var pacManArcadeGameWorldRenderer = (PacManArcadeGameWorldRenderer) renderer;

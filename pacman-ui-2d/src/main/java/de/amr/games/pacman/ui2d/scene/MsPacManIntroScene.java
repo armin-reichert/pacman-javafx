@@ -11,6 +11,7 @@ import de.amr.games.pacman.lib.fsm.FiniteStateMachine;
 import de.amr.games.pacman.lib.fsm.FsmState;
 import de.amr.games.pacman.lib.timer.TickTimer;
 import de.amr.games.pacman.model.GameModel;
+import de.amr.games.pacman.model.GameVariant;
 import de.amr.games.pacman.model.actors.Animations;
 import de.amr.games.pacman.model.actors.Ghost;
 import de.amr.games.pacman.model.actors.GhostState;
@@ -18,10 +19,10 @@ import de.amr.games.pacman.model.actors.Pac;
 import de.amr.games.pacman.model.mspacman.MsPacManArcadeGame;
 import de.amr.games.pacman.ui2d.GameAction;
 import de.amr.games.pacman.ui2d.GameSounds;
-import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameGhostAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGamePacAnimations;
 import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameSpriteSheet;
+import de.amr.games.pacman.ui2d.rendering.ms_pacman.MsPacManGameWorldRenderer;
 import de.amr.games.pacman.ui2d.util.AssetStorage;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -257,7 +258,6 @@ public class MsPacManIntroScene extends GameScene2D {
 
     @Override
     public void drawSceneContent() {
-        MsPacManGameWorldRenderer msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) renderer;
         AssetStorage assets = context.assets();
         Font font8 = sceneFont(8); // depends on current scaling!
         BitSet marqueeState = computeMarqueeState(data.marqueeTimer.currentTick());
@@ -285,9 +285,13 @@ public class MsPacManIntroScene extends GameScene2D {
             renderer.drawGhost(g, ghost);
         }
         renderer.drawPac(g, data.msPacMan);
-        msPacManGameWorldRenderer.drawMsPacManMidwayCopyright(g,
-            context.assets().get("ms_pacman.logo.midway"),
-            t(6), t(28), context.assets().color("palette.red"), sceneFont(TS));
+
+        if (context.game().variant() == GameVariant.MS_PACMAN) {
+            MsPacManGameWorldRenderer msPacManGameWorldRenderer = (MsPacManGameWorldRenderer) renderer;
+            msPacManGameWorldRenderer.drawMsPacManMidwayCopyright(g,
+                context.assets().get("ms_pacman.logo.midway"),
+                t(6), t(28), context.assets().color("palette.red"), sceneFont(TS));
+        }
     }
 
     // TODO This is too cryptic
