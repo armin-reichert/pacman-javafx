@@ -85,10 +85,8 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
     @Override
     public void drawWorld(GraphicsContext g, GameContext context, GameWorld world) {
         TileMap terrain = world.map().terrain();
-        Color wallStrokeColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_STROKE, Color.WHITE);
-        Color wallFillColor = getColorFromMap(terrain, PROPERTY_COLOR_WALL_FILL, Color.GREEN);
-        Color doorColor = getColorFromMap(terrain, PROPERTY_COLOR_DOOR, Color.YELLOW);
         if (flashMode) {
+            // Flash mode uses vector rendering
             terrainRenderer.setWallStrokeColor(blinkingOn ? Color.WHITE : Color.BLACK);
             terrainRenderer.setWallFillColor(blinkingOn ? Color.BLACK : Color.WHITE);
             terrainRenderer.setDoorColor(Color.BLACK);
@@ -114,8 +112,8 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
             if (!blinkingOn) {
                 world.energizerTiles().forEach(tile -> overPaintFood(g, world, tile));
             }
+            context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, (MovingBonus) bonus));
         }
-        context.game().bonus().ifPresent(bonus -> drawMovingBonus(g, (MovingBonus) bonus));
     }
 
     private void hideActorSprite(GraphicsContext g, Vector2i tile, double offX, double offY) {
@@ -150,6 +148,11 @@ public class TengenMsPacManGameWorldRenderer implements MsPacManGameWorldRendere
         g.restore();
     }
 
+    /**
+     * @param world game world
+     * @param mapNumber non-arcade map number (1-37)
+     * @return sprite area in non-arcade maps image for given map
+     */
     private SpriteArea nonArcadeMapArea(GameWorld world, int mapNumber) {
         int width = world.map().terrain().numCols() * TS, height = (world.map().terrain().numRows() - 5) * TS;
         if (mapNumber <= 8) { // row #1, maps 1-8
