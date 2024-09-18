@@ -9,6 +9,7 @@ import de.amr.games.pacman.controller.GameState;
 import de.amr.games.pacman.event.GameEvent;
 import de.amr.games.pacman.event.GameEventListener;
 import de.amr.games.pacman.event.GameEventType;
+import de.amr.games.pacman.lib.Globals;
 import de.amr.games.pacman.maps.editor.TileMapEditor;
 import de.amr.games.pacman.model.GameModel;
 import de.amr.games.pacman.model.GameVariant;
@@ -76,8 +77,15 @@ import static java.util.function.Predicate.not;
  */
 public class PacManGames2dUI implements GameEventListener, GameContext {
 
-    public static List<GameVariant> SUPPORTED_GAME_VARIANTS = List.of(
-        GameVariant.PACMAN, GameVariant.MS_PACMAN, GameVariant.PACMAN_XXL, GameVariant.MS_PACMAN_TENGEN);
+    /**
+     * The order here is used by the start page!
+     */
+    public static List<GameVariant> GAME_VARIANTS_IN_ORDER = List.of(
+        GameVariant.PACMAN,
+        GameVariant.PACMAN_XXL,
+        GameVariant.MS_PACMAN,
+        GameVariant.MS_PACMAN_TENGEN
+    );
 
     public final ObjectProperty<GameScene> gameScenePy = new SimpleObjectProperty<>(this, "gameScene");
 
@@ -683,20 +691,14 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
 
     @Override
     public void selectNextGameVariant() {
-        var current = SUPPORTED_GAME_VARIANTS.indexOf(game().variant());
-        var next = current < SUPPORTED_GAME_VARIANTS.size() - 1
-            ? SUPPORTED_GAME_VARIANTS.get(current + 1)
-            : SUPPORTED_GAME_VARIANTS.getFirst();
-        selectGameVariant(next);
+        int nextIndex = GAME_VARIANTS_IN_ORDER.indexOf(game().variant()) + 1;
+        selectGameVariant(GAME_VARIANTS_IN_ORDER.get(nextIndex == GAME_VARIANTS_IN_ORDER.size() ? 0 : nextIndex));
     }
 
     @Override
     public void selectPrevGameVariant() {
-        var current = SUPPORTED_GAME_VARIANTS.indexOf(game().variant());
-        var prev = current > 0
-            ? SUPPORTED_GAME_VARIANTS.get(current - 1)
-            : SUPPORTED_GAME_VARIANTS.getLast();
-        selectGameVariant(prev);
+        int prevIndex = GAME_VARIANTS_IN_ORDER.indexOf(game().variant()) - 1;
+        selectGameVariant(GAME_VARIANTS_IN_ORDER.get(prevIndex < 0 ? GAME_VARIANTS_IN_ORDER.size() - 1 : prevIndex));
     }
 
     private void selectGameVariant(GameVariant variant) {
@@ -706,12 +708,12 @@ public class PacManGames2dUI implements GameEventListener, GameContext {
     }
 
     @Override
-    public void selectNextPerspective() {
+    public void selectNext3DPerspective() {
         // not supported in 2D UI
     }
 
     @Override
-    public void selectPrevPerspective() {
+    public void selectPrev3DPerspective() {
         // not supported in 2D UI
     }
 

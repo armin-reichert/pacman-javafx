@@ -80,9 +80,9 @@ public interface GameContext {
     void restartIntro();
     void selectGamePage();
     void selectNextGameVariant();
-    void selectNextPerspective();
+    void selectNext3DPerspective();
     void selectPrevGameVariant();
-    void selectPrevPerspective();
+    void selectPrev3DPerspective();
     void selectStartPage();
     void showFlashMessage(String message, Object... args);
     void showFlashMessageSeconds(double seconds, String message, Object... args);

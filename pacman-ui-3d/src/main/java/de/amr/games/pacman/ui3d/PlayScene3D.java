@@ -186,9 +186,9 @@ public class PlayScene3D implements GameScene {
         if (GameAction.ADD_CREDIT.requested() && this.context.game().isDemoLevel()) {
             context.addCredit();
         } else if (GameAction.PREV_PERSPECTIVE.requested()) {
-            context.selectPrevPerspective();
+            context.selectPrev3DPerspective();
         } else if (GameAction.NEXT_PERSPECTIVE.requested()) {
-            context.selectNextPerspective();
+            context.selectNext3DPerspective();
         } else if (GameAction.CHEAT_EAT_ALL.requested()) {
             context.cheatEatAllPellets();
         } else if (GameAction.CHEAT_ADD_LIVES.requested()) {

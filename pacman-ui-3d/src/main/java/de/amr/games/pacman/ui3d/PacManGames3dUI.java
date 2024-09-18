@@ -75,14 +75,14 @@ public class PacManGames3dUI extends PacManGames2dUI {
     }
 
     @Override
-    public void selectNextPerspective() {
+    public void selectNext3DPerspective() {
         var next = Perspective.next(PY_3D_PERSPECTIVE.get());
         PY_3D_PERSPECTIVE.set(next);
         showFlashMessage(locText("camera_perspective", locText(next.name())));
     }
 
     @Override
-    public void selectPrevPerspective() {
+    public void selectPrev3DPerspective() {
         var prev = Perspective.previous(PY_3D_PERSPECTIVE.get());
         PY_3D_PERSPECTIVE.set(prev);
         showFlashMessage(locText("camera_perspective", locText(prev.name())));
